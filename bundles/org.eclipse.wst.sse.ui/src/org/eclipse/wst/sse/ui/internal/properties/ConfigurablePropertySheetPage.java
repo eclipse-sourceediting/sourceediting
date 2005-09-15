@@ -29,8 +29,8 @@ import org.eclipse.ui.part.IPageSite;
 import org.eclipse.ui.views.properties.IPropertySheetEntry;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.PropertySheetPage;
-import org.eclipse.wst.sse.ui.internal.provisional.views.properties.IPropertySourceExtension;
-import org.eclipse.wst.sse.ui.internal.provisional.views.properties.PropertySheetConfiguration;
+import org.eclipse.wst.sse.ui.views.properties.IPropertySourceExtension;
+import org.eclipse.wst.sse.ui.views.properties.PropertySheetConfiguration;
 
 
 /**

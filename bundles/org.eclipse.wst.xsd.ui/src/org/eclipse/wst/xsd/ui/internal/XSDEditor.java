@@ -43,7 +43,7 @@ import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.exceptions.SourceEditingRuntimeException;
 import org.eclipse.wst.sse.core.internal.provisional.events.IStructuredDocumentListener;
 import org.eclipse.wst.sse.core.internal.undo.IStructuredTextUndoManager;
-import org.eclipse.wst.sse.ui.internal.StructuredTextEditor;
+import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xsd.ui.internal.graph.XSDGraphViewer;
 import org.eclipse.wst.xsd.ui.internal.text.XSDModelAdapter;

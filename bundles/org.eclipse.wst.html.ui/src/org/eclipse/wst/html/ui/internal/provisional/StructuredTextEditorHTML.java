@@ -17,7 +17,7 @@ import org.eclipse.wst.html.ui.internal.HTMLUIMessages;
 import org.eclipse.wst.html.ui.internal.edit.ui.CleanupActionHTML;
 import org.eclipse.wst.html.ui.internal.editor.IHelpContextIds;
 import org.eclipse.wst.html.ui.internal.search.HTMLFindOccurrencesAction;
-import org.eclipse.wst.sse.ui.internal.StructuredTextEditor;
+import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.actions.ActionDefinitionIds;
 import org.eclipse.wst.sse.ui.internal.actions.StructuredTextEditorActionConstants;
 import org.eclipse.wst.sse.ui.internal.search.FindOccurrencesActionProvider;

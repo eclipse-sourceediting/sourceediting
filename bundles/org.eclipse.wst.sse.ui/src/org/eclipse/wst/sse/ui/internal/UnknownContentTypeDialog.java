@@ -17,7 +17,7 @@ import org.eclipse.ui.dialogs.PreferencesUtil;
  * Message dialog informing user that an editor was open on unsupported
  * content type
  */
-class UnknownContentTypeDialog extends MessageDialogWithToggle {
+public class UnknownContentTypeDialog extends MessageDialogWithToggle {
 
 	public UnknownContentTypeDialog(Shell parent, IPreferenceStore store, String key) {
 		// set message to null in super so that message does not appear twice

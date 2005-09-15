@@ -16,11 +16,11 @@ Export-Package: org.eclipse.wst.dtd.ui.internal,
  org.eclipse.wst.dtd.ui.internal.style,
  org.eclipse.wst.dtd.ui.internal.templates,
  org.eclipse.wst.dtd.ui.internal.text,
- org.eclipse.wst.dtd.ui.internal.views.contentoutline,
  org.eclipse.wst.dtd.ui.internal.views.contentoutline.actions,
  org.eclipse.wst.dtd.ui.internal.views.properties,
  org.eclipse.wst.dtd.ui.internal.wizard,
- org.eclipse.wst.dtd.ui.internal.validation
+ org.eclipse.wst.dtd.ui.internal.validation,
+ org.eclipse.wst.dtd.ui.views.contentoutline
 Require-Bundle: org.eclipse.core.resources,
  org.eclipse.core.runtime,
  org.eclipse.jface.text,

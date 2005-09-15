@@ -41,7 +41,7 @@ import org.eclipse.wst.sse.ui.internal.provisional.extensions.breakpoint.IBreakp
  * Source JSP page
  */
 public class JavaStratumBreakpointProvider implements IBreakpointProvider, IExecutableExtension {
-	private String fClassPattern = null; 
+	private String fClassPattern = null;
 
 	public IStatus addBreakpoint(IDocument document, IEditorInput input, int editorLineNumber, int offset) throws CoreException {
 		// check if there is a valid position to set breakpoint
@@ -50,7 +50,8 @@ public class JavaStratumBreakpointProvider implements IBreakpointProvider, IExec
 		if (pos >= 0) {
 			IResource res = getResourceFromInput(input);
 			if (res != null) {
-				IBreakpoint point = JDIDebugModel.createStratumBreakpoint(res, "JSP", res.getName(), null, getClassPattern(), editorLineNumber, pos, pos, 0, true, null); //$NON-NLS-1$
+				String path = null; //res.getName();// res.getFullPath().removeFirstSegments(2).toString();
+				IBreakpoint point = JDIDebugModel.createStratumBreakpoint(res, "JSP", res.getName(), path, getClassPattern(), editorLineNumber, pos, pos, 0, true, null); //$NON-NLS-1$
 				if (point == null) {
 					status = new Status(IStatus.ERROR, JSPUIPlugin.ID, IStatus.ERROR, "unsupported input type", null); //$NON-NLS-1$
 				}
@@ -62,12 +63,13 @@ public class JavaStratumBreakpointProvider implements IBreakpointProvider, IExec
 				// into the editors.
 				res = ResourcesPlugin.getWorkspace().getRoot();
 				String id = input.getName();
-				if (input instanceof IStorageEditorInput && ((IStorageEditorInput) input).getStorage() != null) {
+				if (input instanceof IStorageEditorInput && ((IStorageEditorInput) input).getStorage() != null && ((IStorageEditorInput) input).getStorage().getFullPath() != null) {
 					id = ((IStorageEditorInput) input).getStorage().getFullPath().toString();
 				}
 				Map attributes = new HashMap();
 				attributes.put(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY, id);
-				IBreakpoint point = JDIDebugModel.createStratumBreakpoint(res, "JSP", input.getName(), null, getClassPattern(), editorLineNumber, pos, pos, 0, true, attributes); //$NON-NLS-1$
+				String path = null;
+				IBreakpoint point = JDIDebugModel.createStratumBreakpoint(res, "JSP", input.getName(), path, getClassPattern(), editorLineNumber, pos, pos, 0, true, attributes); //$NON-NLS-1$
 				if (point == null) {
 					status = new Status(IStatus.ERROR, JSPUIPlugin.ID, IStatus.ERROR, "unsupported input type", null); //$NON-NLS-1$
 				}
@@ -120,7 +122,7 @@ public class JavaStratumBreakpointProvider implements IBreakpointProvider, IExec
 
 				// blank lines or lines with only an open or close brace or
 				// scriptlet tag cannot have a breakpoint
-				if (lineText.equals("") || lineText.equals("{") ||  //$NON-NLS-1$ //$NON-NLS-2$
+				if (lineText.equals("") || lineText.equals("{") || //$NON-NLS-1$ //$NON-NLS-2$
 							lineText.equals("}") || lineText.equals("<%")) //$NON-NLS-1$ //$NON-NLS-2$
 				{
 					result = -1;

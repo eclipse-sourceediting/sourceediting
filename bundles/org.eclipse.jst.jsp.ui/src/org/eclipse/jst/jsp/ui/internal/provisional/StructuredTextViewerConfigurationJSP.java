@@ -63,16 +63,16 @@ import org.eclipse.wst.html.core.internal.format.HTMLFormatProcessorImpl;
 import org.eclipse.wst.html.core.internal.provisional.text.IHTMLPartitionTypes;
 import org.eclipse.wst.html.ui.internal.provisional.StructuredTextViewerConfigurationHTML;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitionTypes;
+import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.format.StructuredFormattingStrategy;
-import org.eclipse.wst.sse.ui.internal.provisional.StructuredTextViewerConfiguration;
 import org.eclipse.wst.sse.ui.internal.provisional.preferences.CommonEditorPreferenceNames;
 import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
 import org.eclipse.wst.sse.ui.internal.reconcile.StructuredRegionProcessor;
 import org.eclipse.wst.sse.ui.internal.taginfo.TextHoverManager;
 import org.eclipse.wst.sse.ui.internal.util.EditorUtility;
 import org.eclipse.wst.xml.core.internal.provisional.text.IXMLPartitions;
-import org.eclipse.wst.xml.ui.internal.provisional.StructuredTextViewerConfigurationXML;
+import org.eclipse.wst.xml.ui.StructuredTextViewerConfigurationXML;
 import org.eclipse.wst.xml.ui.internal.validation.StructuredTextReconcilingStrategyForMarkup;
 
 public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerConfiguration {

@@ -6,7 +6,8 @@ Bundle-Version: 0.7.0
 Bundle-Activator: org.eclipse.wst.css.ui.internal.CSSUIPlugin
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
-Export-Package: org.eclipse.wst.css.ui.internal,
+Export-Package: org.eclipse.wst.css.ui,
+ org.eclipse.wst.css.ui.internal,
  org.eclipse.wst.css.ui.internal.autoedit,
  org.eclipse.wst.css.ui.internal.contentassist,
  org.eclipse.wst.css.ui.internal.contentoutline,
@@ -25,9 +26,9 @@ Export-Package: org.eclipse.wst.css.ui.internal,
  org.eclipse.wst.css.ui.internal.style,
  org.eclipse.wst.css.ui.internal.templates,
  org.eclipse.wst.css.ui.internal.text,
- org.eclipse.wst.css.ui.internal.views.contentoutline,
- org.eclipse.wst.css.ui.internal.views.properties,
- org.eclipse.wst.css.ui.internal.wizard
+ org.eclipse.wst.css.ui.internal.wizard,
+ org.eclipse.wst.css.ui.views.contentoutline,
+ org.eclipse.wst.css.ui.views.properties
 Require-Bundle: org.eclipse.ui.ide,
  org.eclipse.ui.views,
  org.eclipse.jface.text,

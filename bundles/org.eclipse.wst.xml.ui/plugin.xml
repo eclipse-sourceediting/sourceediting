@@ -39,13 +39,13 @@
 		please use org.eclipse.core.runtime.xml instead. -->
 	<extension point="org.eclipse.wst.sse.ui.editorConfiguration">
 		<sourceViewerConfiguration
-			class="org.eclipse.wst.xml.ui.internal.provisional.StructuredTextViewerConfigurationXML"
+			class="org.eclipse.wst.xml.ui.StructuredTextViewerConfigurationXML"
 			target="org.eclipse.core.runtime.xml, org.eclipse.wst.xml.core.xmlsource" />
 		<contentOutlineConfiguration
-			class="org.eclipse.wst.xml.ui.internal.views.contentoutline.XMLContentOutlineConfiguration"
+			class="org.eclipse.wst.xml.ui.views.contentoutline.XMLContentOutlineConfiguration"
 			target="org.eclipse.core.runtime.xml, org.eclipse.wst.xml.core.xmlsource" />
 		<propertySheetConfiguration
-			class="org.eclipse.wst.xml.ui.internal.views.properties.XMLPropertySheetConfiguration"
+			class="org.eclipse.wst.xml.ui.views.properties.XMLPropertySheetConfiguration"
 			target="org.eclipse.core.runtime.xml, org.eclipse.wst.xml.core.xmlsource" />
 		<provisionalConfiguration
 			type="sourceeditingtexttools"
@@ -56,8 +56,12 @@
 			class="org.eclipse.wst.xml.ui.internal.text.XMLDocumentRegionEdgeMatcher"
 			target="org.eclipse.core.runtime.xml, org.eclipse.wst.xml.core.xmlsource" />
 		<provisionalConfiguration
-			type="structuredtextfoldingprovider, org.eclipse.wst.xml.core.xmlsource"
+			type="structuredtextfoldingprovider"
 			class="org.eclipse.wst.xml.ui.internal.projection.StructuredTextFoldingProviderXML"
+			target="org.eclipse.core.runtime.xml, org.eclipse.wst.xml.core.xmlsource" />
+		<provisionalConfiguration
+			type="correctionassistant"
+			class="org.eclipse.wst.xml.ui.internal.correction.CorrectionAssistantProviderXML"
 			target="org.eclipse.core.runtime.xml, org.eclipse.wst.xml.core.xmlsource" />
 		<provisionalDefinition
 			type="preferencepages"

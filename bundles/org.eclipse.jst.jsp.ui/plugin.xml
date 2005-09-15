@@ -24,7 +24,7 @@
 			class="org.eclipse.jst.jsp.ui.internal.views.contentoutline.JSPContentOutlineConfiguration"
 			target="org.eclipse.jst.jsp.core.jspsource" />
 		<propertySheetConfiguration
-			class="org.eclipse.wst.xml.ui.internal.views.properties.XMLPropertySheetConfiguration"
+			class="org.eclipse.wst.xml.ui.views.properties.XMLPropertySheetConfiguration"
 			target="org.eclipse.jst.jsp.core.jspsource" />
 		<provisionalConfiguration
 			type="sourceeditingtexttools"

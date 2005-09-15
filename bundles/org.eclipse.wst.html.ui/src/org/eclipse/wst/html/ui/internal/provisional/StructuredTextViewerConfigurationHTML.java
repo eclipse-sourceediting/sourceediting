@@ -57,9 +57,9 @@ import org.eclipse.wst.javascript.ui.internal.common.style.LineStyleProviderForJ
 import org.eclipse.wst.javascript.ui.internal.common.taginfo.JavaScriptInformationProvider;
 import org.eclipse.wst.javascript.ui.internal.common.taginfo.JavaScriptTagInfoHoverProcessor;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitionTypes;
+import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.format.StructuredFormattingStrategy;
-import org.eclipse.wst.sse.ui.internal.provisional.StructuredTextViewerConfiguration;
 import org.eclipse.wst.sse.ui.internal.provisional.preferences.CommonEditorPreferenceNames;
 import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
 import org.eclipse.wst.sse.ui.internal.reconcile.StructuredRegionProcessor;
@@ -68,7 +68,6 @@ import org.eclipse.wst.sse.ui.internal.util.EditorUtility;
 import org.eclipse.wst.xml.core.internal.provisional.text.IXMLPartitions;
 import org.eclipse.wst.xml.core.internal.text.rules.StructuredTextPartitionerForXML;
 import org.eclipse.wst.xml.ui.internal.autoedit.StructuredAutoEditStrategyXML;
-import org.eclipse.wst.xml.ui.internal.correction.CorrectionProcessorXML;
 import org.eclipse.wst.xml.ui.internal.doubleclick.XMLDoubleClickStrategy;
 import org.eclipse.wst.xml.ui.internal.validation.StructuredTextReconcilingStrategyForMarkup;
 
@@ -78,11 +77,6 @@ public class StructuredTextViewerConfigurationHTML extends StructuredTextViewerC
 	 * it's a String array
 	 */
 	private String[] fConfiguredContentTypes;
-	/*
-	 * One instance per configuration because not sourceviewer-specific and
-	 * requires special uninstall
-	 */
-	private IContentAssistant fCorrectionAssistant;
 	/*
 	 * One instance per configuration
 	 */
@@ -186,33 +180,6 @@ public class StructuredTextViewerConfigurationHTML extends StructuredTextViewerC
 		formatter.setMasterStrategy(new StructuredFormattingStrategy(new HTMLFormatProcessorImpl()));
 
 		return formatter;
-	}
-
-	public IContentAssistant getCorrectionAssistant(ISourceViewer sourceViewer) {
-		/*
-		 * Ensure that only one assistant is ever returned. Creating a second
-		 * assistant that is added to a viewer can cause odd key-eating by the
-		 * wrong one. Also do not create correction assistant if sourceviewer
-		 * is null.
-		 */
-		if (fCorrectionAssistant == null && sourceViewer != null) {
-			ContentAssistant assistant = new ContentAssistant();
-
-			// content assistant configurations
-			assistant.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
-
-			if (sourceViewer != null) {
-				IContentAssistProcessor correctionProcessor = new CorrectionProcessorXML(sourceViewer);
-				assistant.setContentAssistProcessor(correctionProcessor, IHTMLPartitionTypes.HTML_DEFAULT);
-				assistant.setContentAssistProcessor(correctionProcessor, IXMLPartitions.XML_CDATA);
-				assistant.setContentAssistProcessor(correctionProcessor, IXMLPartitions.XML_COMMENT);
-				assistant.setContentAssistProcessor(correctionProcessor, IXMLPartitions.XML_DECLARATION);
-				assistant.setContentAssistProcessor(correctionProcessor, IXMLPartitions.XML_PI);
-				assistant.setContentAssistProcessor(correctionProcessor, IXMLPartitions.DTD_SUBSET);
-			}
-			fCorrectionAssistant = assistant;
-		}
-		return fCorrectionAssistant;
 	}
 
 	public ITextDoubleClickStrategy getDoubleClickStrategy(ISourceViewer sourceViewer, String contentType) {

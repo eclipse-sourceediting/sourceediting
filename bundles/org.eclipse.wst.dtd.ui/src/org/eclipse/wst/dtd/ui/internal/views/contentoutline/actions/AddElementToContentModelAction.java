@@ -18,7 +18,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.wst.dtd.core.internal.CMGroupNode;
 import org.eclipse.wst.dtd.core.internal.DTDNode;
 import org.eclipse.wst.dtd.core.internal.Element;
-import org.eclipse.wst.sse.ui.internal.StructuredTextEditor;
+import org.eclipse.wst.sse.ui.StructuredTextEditor;
 
 
 public class AddElementToContentModelAction extends BaseAction {

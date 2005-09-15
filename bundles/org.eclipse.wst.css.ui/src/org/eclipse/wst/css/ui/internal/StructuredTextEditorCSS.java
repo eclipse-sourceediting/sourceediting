@@ -14,7 +14,7 @@ import org.eclipse.wst.css.ui.internal.editor.IHelpContextIds;
 import org.eclipse.wst.css.ui.internal.selection.StructureSelectEnclosingCSSAction;
 import org.eclipse.wst.css.ui.internal.selection.StructureSelectNextCSSAction;
 import org.eclipse.wst.css.ui.internal.selection.StructureSelectPreviousCSSAction;
-import org.eclipse.wst.sse.ui.internal.StructuredTextEditor;
+import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.actions.ActionDefinitionIds;
 import org.eclipse.wst.sse.ui.internal.actions.StructuredTextEditorActionConstants;
 import org.eclipse.wst.sse.ui.internal.selection.SelectionHistory;

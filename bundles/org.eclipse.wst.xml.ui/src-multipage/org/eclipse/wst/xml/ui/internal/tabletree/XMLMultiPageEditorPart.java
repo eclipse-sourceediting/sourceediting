@@ -40,7 +40,7 @@ import org.eclipse.ui.progress.UIJob;
 import org.eclipse.wst.common.ui.provisional.editors.PostMultiPageEditorSite;
 import org.eclipse.wst.common.ui.provisional.editors.PostMultiPageSelectionProvider;
 import org.eclipse.wst.common.ui.provisional.editors.PostSelectionMultiPageEditorPart;
-import org.eclipse.wst.sse.ui.internal.StructuredTextEditor;
+import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.xml.core.internal.provisional.IXMLPreferenceNames;
 import org.eclipse.wst.xml.ui.internal.Logger;
 import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;

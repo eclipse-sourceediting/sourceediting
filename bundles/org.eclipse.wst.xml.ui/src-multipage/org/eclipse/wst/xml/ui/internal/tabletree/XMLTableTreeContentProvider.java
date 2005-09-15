@@ -25,12 +25,15 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.wst.sse.core.internal.provisional.AbstractAdapterFactory;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
+import org.eclipse.wst.sse.ui.internal.contentoutline.IJFaceNodeAdapter;
+import org.eclipse.wst.sse.ui.internal.contentoutline.IJFaceNodeAdapterFactory;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.CMDocumentManager;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.CMDocumentManagerListener;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.CMDocumentCache;
 import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.ui.internal.Logger;
 import org.eclipse.wst.xml.ui.internal.util.SharedXMLEditorPluginImageHelper;
 import org.w3c.dom.Attr;
@@ -53,17 +56,6 @@ public class XMLTableTreeContentProvider implements ITreeContentProvider, ITable
 	protected CMDocumentManager documentManager;
 
 	public XMLTableTreeContentProvider() {
-	}
-
-	public void getDecendantList(Object element, List list) {
-		Object[] children = getChildren(element);
-		if (children != null) {
-			for (int i = 0; i < children.length; i++) {
-				Object child = children[i];
-				list.add(child);
-				getDecendantList(child, list);
-			}
-		}
 	}
 
 	public void addViewer(Viewer viewer) {
@@ -110,6 +102,20 @@ public class XMLTableTreeContentProvider implements ITreeContentProvider, ITable
 				if (documentManager != null) {
 					documentManager.removeListener(this);
 				}
+			}
+		}
+
+		if (oldInput != null && oldInput instanceof IDOMDocument) {
+			IJFaceNodeAdapterFactory factory = (IJFaceNodeAdapterFactory) ((IDOMDocument) oldInput).getModel().getFactoryRegistry().getFactoryFor(IJFaceNodeAdapter.class);
+			if (factory != null) {
+				factory.removeListener(viewer);
+			}
+		}
+
+		if (newInput != null && newInput instanceof IDOMDocument) {
+			IJFaceNodeAdapterFactory factory = (IJFaceNodeAdapterFactory) ((IDOMDocument) newInput).getModel().getFactoryRegistry().getFactoryFor(IJFaceNodeAdapter.class);
+			if (factory != null) {
+				factory.addListener(viewer);
 			}
 		}
 

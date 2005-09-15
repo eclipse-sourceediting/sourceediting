@@ -15,7 +15,7 @@
 package org.eclipse.wst.dtd.ui.internal.views.contentoutline.actions;
 
 import org.eclipse.wst.dtd.core.internal.DTDNode;
-import org.eclipse.wst.sse.ui.internal.StructuredTextEditor;
+import org.eclipse.wst.sse.ui.StructuredTextEditor;
 
 
 public class AddNotationAction extends BaseAction {

@@ -24,10 +24,10 @@
 			class="org.eclipse.wst.html.ui.internal.provisional.StructuredTextViewerConfigurationHTML"
 			target="org.eclipse.wst.html.core.htmlsource" />
 		<contentOutlineConfiguration
-			class="org.eclipse.wst.html.ui.internal.views.contentoutline.HTMLContentOutlineConfiguration"
+			class="org.eclipse.wst.html.ui.views.contentoutline.HTMLContentOutlineConfiguration"
 			target="org.eclipse.wst.html.core.htmlsource" />
 		<propertySheetConfiguration
-			class="org.eclipse.wst.xml.ui.internal.views.properties.XMLPropertySheetConfiguration"
+			class="org.eclipse.wst.xml.ui.views.properties.XMLPropertySheetConfiguration"
 			target="org.eclipse.wst.html.core.htmlsource" />
 		<provisionalConfiguration
 			type="sourceeditingtexttools"
@@ -40,6 +40,10 @@
 		<provisionalConfiguration
 			type="structuredtextfoldingprovider"
 			class="org.eclipse.wst.html.ui.internal.projection.StructuredTextFoldingProviderHTML"
+			target="org.eclipse.wst.html.core.htmlsource" />
+		<provisionalConfiguration
+			type="correctionassistant"
+			class="org.eclipse.wst.html.ui.internal.correction.CorrectionAssistantProviderHTML"
 			target="org.eclipse.wst.html.core.htmlsource" />
 		<provisionalDefinition
 			type="preferencepages"

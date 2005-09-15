@@ -17,7 +17,7 @@ import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.wst.dtd.core.internal.provisional.text.IDTDPartitionTypes;
 import org.eclipse.wst.dtd.ui.internal.style.LineStyleProviderForDTD;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitionTypes;
-import org.eclipse.wst.sse.ui.internal.provisional.StructuredTextViewerConfiguration;
+import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
 import org.eclipse.wst.sse.ui.internal.provisional.preferences.CommonEditorPreferenceNames;
 import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
 import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProviderForNoOp;

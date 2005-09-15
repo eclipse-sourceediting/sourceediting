@@ -15,7 +15,7 @@ package org.eclipse.wst.xml.ui.internal.provisional;
 import java.util.ResourceBundle;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.wst.sse.ui.internal.StructuredTextEditor;
+import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.actions.ActionDefinitionIds;
 import org.eclipse.wst.sse.ui.internal.actions.StructuredTextEditorActionConstants;
 import org.eclipse.wst.sse.ui.internal.search.FindOccurrencesActionProvider;

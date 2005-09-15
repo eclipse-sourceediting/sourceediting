@@ -53,7 +53,7 @@ import org.eclipse.ui.part.IPageSite;
 import org.eclipse.ui.part.IShowInTarget;
 import org.eclipse.ui.part.ShowInContext;
 import org.eclipse.ui.views.contentoutline.ContentOutlinePage;
-import org.eclipse.wst.sse.ui.internal.provisional.views.contentoutline.ContentOutlineConfiguration;
+import org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration;
 
 
 public class ConfigurableContentOutlinePage extends ContentOutlinePage implements IAdaptable {
@@ -423,6 +423,7 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 				fDropTarget.removeDropListener(fDropAdapter);
 				fDropTarget.setTransfer(new Transfer[0]);
 			}
+			getConfiguration().getContentProvider(getTreeViewer()).inputChanged(getTreeViewer(), fInput, null);
 			// release any ties to this tree viewer
 			getConfiguration().unconfigure(getTreeViewer());
 		}

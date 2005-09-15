@@ -12,7 +12,7 @@ import org.eclipse.jface.text.Region;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
 import org.eclipse.wst.css.ui.internal.CSSUIMessages;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
-import org.eclipse.wst.sse.ui.internal.StructuredTextEditor;
+import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.selection.SelectionHistory;
 import org.w3c.dom.Node;
 

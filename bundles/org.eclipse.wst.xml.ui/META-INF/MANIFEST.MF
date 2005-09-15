@@ -6,7 +6,8 @@ Bundle-Version: 0.7.0
 Bundle-Activator: org.eclipse.wst.xml.ui.internal.XMLUIPlugin
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
-Export-Package: org.eclipse.wst.xml.ui.internal,
+Export-Package: org.eclipse.wst.xml.ui,
+ org.eclipse.wst.xml.ui.internal,
  org.eclipse.wst.xml.ui.internal.actions,
  org.eclipse.wst.xml.ui.internal.autoedit,
  org.eclipse.wst.xml.ui.internal.catalog,
@@ -36,10 +37,10 @@ Export-Package: org.eclipse.wst.xml.ui.internal,
  org.eclipse.wst.xml.ui.internal.validation,
  org.eclipse.wst.xml.ui.internal.validation.core,
  org.eclipse.wst.xml.ui.internal.validation.core.errorinfo,
- org.eclipse.wst.xml.ui.internal.views.contentoutline,
- org.eclipse.wst.xml.ui.internal.views.properties,
  org.eclipse.wst.xml.ui.internal.wizards,
- org.eclipse.wst.xml.ui.internal.wizards.icons
+ org.eclipse.wst.xml.ui.internal.wizards.icons,
+ org.eclipse.wst.xml.ui.views.contentoutline,
+ org.eclipse.wst.xml.ui.views.properties
 Require-Bundle: org.eclipse.ui.ide,
  org.eclipse.ui.views,
  org.eclipse.jface.text,

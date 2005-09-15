@@ -14,8 +14,8 @@ package org.eclipse.wst.sse.ui.internal.selection;
 
 import org.eclipse.jface.text.Region;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
+import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
-import org.eclipse.wst.sse.ui.internal.StructuredTextEditor;
 import org.w3c.dom.Node;
 
 public class StructureSelectEnclosingAction extends StructureSelectAction {
