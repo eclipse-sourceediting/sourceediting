@@ -127,16 +127,6 @@ public class TestViewerConfigurationJSP extends TestCase {
 		assertNotNull("there is no content formatter", cf);
 	}
 	
-	public void testGetCorrectionAssistant() {
-		
-		// probably no display
-		if(!fDisplayExists)
-			return;
-		
-		IContentAssistant ca = fConfig.getCorrectionAssistant(fViewer);
-		assertNull("there is now a correction assistant?", ca);
-	}
-	
 	public void testGetDoubleClickStrategy() {
 		
 		// probably no display
@@ -160,7 +150,7 @@ public class TestViewerConfigurationJSP extends TestCase {
 			return;
 		
 		IHyperlinkDetector[] detectors = fConfig.getHyperlinkDetectors(fViewer);
-		assertNotNull(detectors);
+		assertNotNull("there are no hyperlink detectors", detectors);
 		assertTrue("there are no hyperlink detectors", detectors.length > 1);
 	}
 	
