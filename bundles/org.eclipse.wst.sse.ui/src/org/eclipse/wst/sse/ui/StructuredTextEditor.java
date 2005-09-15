@@ -196,6 +196,13 @@ import org.eclipse.wst.sse.ui.views.contentoutline.StructuredContentOutlineConfi
 import org.eclipse.wst.sse.ui.views.properties.PropertySheetConfiguration;
 import org.eclipse.wst.sse.ui.views.properties.StructuredPropertySheetConfiguration;
 
+/**
+ * A Text Editor for editing structured models and structured documents. This
+ * class is not meant to be subclassed. New content types may associate source
+ * viewer, content outline, and property sheet configurations to extend the
+ * existing functionality.
+ */
+
 public class StructuredTextEditor extends TextEditor {
 	class InternalDocumentListener implements IDocumentListener {
 		// This is for the IDocumentListener interface
@@ -706,7 +713,7 @@ public class StructuredTextEditor extends TextEditor {
 			if (isFiringSelection()) {
 				return;
 			}
-			
+
 			fLastSelection = null;
 			fLastSelectionProvider = null;
 			fLastUpdatedSelectionChangedEvent = null;
@@ -1427,7 +1434,7 @@ public class StructuredTextEditor extends TextEditor {
 			System.out.println("Average time per call: " + (adapterTime / adapterRequests)); //$NON-NLS-1$
 		}
 
-//		 dispose of selection history
+		// dispose of selection history
 		if (fSelectionHistory != null) {
 			fSelectionHistory.dispose();
 			fSelectionHistory = null;
@@ -2031,6 +2038,10 @@ public class StructuredTextEditor extends TextEditor {
 					}
 				}
 			});
+			if (fOutlinePageListener == null) {
+				fOutlinePageListener = new OutlinePageListener();
+			}
+			fViewerSelectionManager.addNodeDoubleClickListener(fOutlinePageListener);
 		}
 		return fViewerSelectionManager;
 	}
