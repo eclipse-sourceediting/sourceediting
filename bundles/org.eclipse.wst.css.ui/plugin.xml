@@ -7,7 +7,7 @@
 			name="%CSS_Source_Page_Editor.name"
 			icon="icons/full/obj16/sourceEditor.gif"
 			contributorClass="org.eclipse.wst.css.ui.internal.ActionContributorCSS"
-			class="org.eclipse.wst.css.ui.internal.StructuredTextEditorCSS"
+			class="org.eclipse.wst.sse.ui.StructuredTextEditor"
 			symbolicFontName="org.eclipse.wst.sse.ui.textfont"
 			id="org.eclipse.wst.css.core.csssource.source">
 			<contentTypeBinding
@@ -162,5 +162,53 @@
 			file="templates/cssdefault-templates.xml"
 			translations="$nl$/templates/cssdefault-templates.properties">
 		</include>
+	</extension>
+
+	<!-- CSS editor actions -->
+	<extension point="org.eclipse.ui.editorActions">
+		<editorContribution
+			id="org.eclipse.wst.css.core.csssource.source.editorActions"
+			targetID="org.eclipse.wst.css.core.csssource.source">
+			<action
+				id="CleanupDocument"
+				label="%CleanupDocument_label"
+				definitionId="org.eclipse.wst.sse.ui.cleanup.document"
+				tooltip="%CleanupDocument_tooltip"
+				class="org.eclipse.wst.css.ui.internal.edit.ui.CleanupActionCSSDelegate"
+				actionID="CleanupDocument">
+			</action>
+			<action
+				id="StructureSelectEnclosing"
+				label="%StructureSelectEnclosing_label"
+				definitionId="org.eclipse.wst.sse.ui.structure.select.enclosing"
+				tooltip="%StructureSelectEnclosing_tooltip"
+				class="org.eclipse.wst.css.ui.internal.selection.StructuredSelectEnclosingCSSActionDelegate"
+				actionID="StructureSelectEnclosing">
+			</action>
+			<action
+				id="StructureSelectNext"
+				label="%StructureSelectNext_label"
+				definitionId="org.eclipse.wst.sse.ui.structure.select.next"
+				tooltip="%StructureSelectNext_tooltip"
+				class="org.eclipse.wst.css.ui.internal.selection.StructuredSelectNextCSSActionDelegate"
+				actionID="StructureSelectNext">
+			</action>
+			<action
+				id="StructureSelectPrevious"
+				label="%StructureSelectPrevious_label"
+				definitionId="org.eclipse.wst.sse.ui.structure.select.previous"
+				tooltip="%StructureSelectPrevious_tooltip"
+				class="org.eclipse.wst.css.ui.internal.selection.StructuredSelectPreviousCSSActionDelegate"
+				actionID="StructureSelectPrevious">
+			</action>
+			<action
+				id="StructureSelectHistory"
+				label="%StructureSelectHistory_label"
+				definitionId="org.eclipse.wst.sse.ui.structure.select.last"
+				tooltip="%StructureSelectHistory_tooltip"
+				class="org.eclipse.wst.sse.ui.internal.selection.StructuredSelectHistoryActionDelegate"
+				actionID="StructureSelectHistory">
+			</action>
+		</editorContribution>
 	</extension>
 </plugin>

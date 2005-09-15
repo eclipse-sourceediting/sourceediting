@@ -44,7 +44,7 @@ import org.eclipse.wst.xsd.ui.internal.refactor.actions.RefactorActionGroup;
 public class XSDActionBarContributor extends MultiPageEditorActionBarContributor
 {
   protected XSDEditor xsdEditor;
-  protected XSDTextEditor textEditor;
+  protected ITextEditor textEditor;
   protected IEditorActionBarContributor sourceViewerActionContributor = null;
   
   protected ReloadDependenciesAction reloadDependenciesAction;

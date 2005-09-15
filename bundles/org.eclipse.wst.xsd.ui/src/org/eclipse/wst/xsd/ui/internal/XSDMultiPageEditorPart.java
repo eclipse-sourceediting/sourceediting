@@ -50,9 +50,9 @@ import org.eclipse.wst.sse.core.internal.provisional.exceptions.SourceEditingRun
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.provisional.extensions.ISourceEditingTextTools;
 import org.eclipse.wst.xml.core.internal.provisional.IXMLPreferenceNames;
+import org.eclipse.wst.xml.core.internal.provisional.contenttype.ContentTypeIdForXML;
 import org.eclipse.wst.xml.ui.internal.Logger;
 import org.eclipse.wst.xml.ui.internal.provisional.IDOMSourceEditingTextTools;
-import org.eclipse.wst.xml.ui.internal.provisional.StructuredTextEditorXML;
 import org.eclipse.wst.xml.ui.internal.tabletree.XMLEditorMessages;
 import org.w3c.dom.Document;
 
@@ -213,6 +213,12 @@ public class XSDMultiPageEditorPart extends PostSelectionMultiPageEditorPart imp
 					IEditorActionBarContributor multiContributor = XSDMultiPageEditorPart.this.getEditorSite().getActionBarContributor();
 					return contributor;
 				}
+				
+				public String getId() {
+					// sets this id so nested editor is considered xml source
+					// page
+					return ContentTypeIdForXML.ContentTypeID_XML + ".source"; //$NON-NLS-1$;
+				}
 			};
 		}
     else {
@@ -243,7 +249,7 @@ public class XSDMultiPageEditorPart extends PostSelectionMultiPageEditorPart imp
    * @return StructuredTextEditor
    */
   protected StructuredTextEditor createTextEditor() {
-    return new StructuredTextEditorXML();
+    return new StructuredTextEditor();
   }
 
   public void dispose()

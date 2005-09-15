@@ -185,10 +185,6 @@ import org.eclipse.wst.sse.ui.internal.provisional.extensions.ConfigurationPoint
 import org.eclipse.wst.sse.ui.internal.provisional.extensions.ISourceEditingTextTools;
 import org.eclipse.wst.sse.ui.internal.provisional.extensions.breakpoint.NullSourceEditingTextTools;
 import org.eclipse.wst.sse.ui.internal.selection.SelectionHistory;
-import org.eclipse.wst.sse.ui.internal.selection.StructureSelectEnclosingAction;
-import org.eclipse.wst.sse.ui.internal.selection.StructureSelectHistoryAction;
-import org.eclipse.wst.sse.ui.internal.selection.StructureSelectNextAction;
-import org.eclipse.wst.sse.ui.internal.selection.StructureSelectPreviousAction;
 import org.eclipse.wst.sse.ui.internal.text.DocumentRegionEdgeMatcher;
 import org.eclipse.wst.sse.ui.internal.util.Assert;
 import org.eclipse.wst.sse.ui.internal.view.events.INodeSelectionListener;
@@ -861,7 +857,8 @@ public class StructuredTextEditor extends TextEditor {
 	/** The text context menu manager to be disposed. */
 	private MenuManager fTextContextMenuManager;
 	private String fViewerConfigurationTargetId;
-
+	/** The selection history of the editor */
+	private SelectionHistory fSelectionHistory;
 	private boolean fUpdateMenuTextPending;
 	int hoverX = -1;
 	int hoverY = -1;
@@ -1201,24 +1198,6 @@ public class StructuredTextEditor extends TextEditor {
 		setAction(StructuredTextEditorActionConstants.ACTION_NAME_OPEN_FILE, action);
 
 		fShowPropertiesAction = new ShowPropertiesAction();
-
-		SelectionHistory selectionHistory = new SelectionHistory(this);
-		action = new StructureSelectEnclosingAction(this, selectionHistory);
-		action.setActionDefinitionId(ActionDefinitionIds.STRUCTURE_SELECT_ENCLOSING);
-		setAction(StructuredTextEditorActionConstants.ACTION_NAME_STRUCTURE_SELECT_ENCLOSING, action);
-
-		action = new StructureSelectNextAction(this, selectionHistory);
-		action.setActionDefinitionId(ActionDefinitionIds.STRUCTURE_SELECT_NEXT);
-		setAction(StructuredTextEditorActionConstants.ACTION_NAME_STRUCTURE_SELECT_NEXT, action);
-
-		action = new StructureSelectPreviousAction(this, selectionHistory);
-		action.setActionDefinitionId(ActionDefinitionIds.STRUCTURE_SELECT_PREVIOUS);
-		setAction(StructuredTextEditorActionConstants.ACTION_NAME_STRUCTURE_SELECT_PREVIOUS, action);
-
-		action = new StructureSelectHistoryAction(this, selectionHistory);
-		action.setActionDefinitionId(ActionDefinitionIds.STRUCTURE_SELECT_HISTORY);
-		setAction(StructuredTextEditorActionConstants.ACTION_NAME_STRUCTURE_SELECT_HISTORY, action);
-		selectionHistory.setHistoryAction((StructureSelectHistoryAction) action);
 	}
 
 	protected LineChangeHover createChangeHover() {
@@ -1446,6 +1425,12 @@ public class StructuredTextEditor extends TextEditor {
 			System.out.println("Total calls to getAdapter: " + adapterRequests); //$NON-NLS-1$
 			System.out.println("Total time in getAdapter: " + adapterTime); //$NON-NLS-1$
 			System.out.println("Average time per call: " + (adapterTime / adapterRequests)); //$NON-NLS-1$
+		}
+
+//		 dispose of selection history
+		if (fSelectionHistory != null) {
+			fSelectionHistory.dispose();
+			fSelectionHistory = null;
 		}
 
 		// dispose of document folding support
@@ -1794,6 +1779,11 @@ public class StructuredTextEditor extends TextEditor {
 		}
 		else if (IShowInTargetList.class.equals(required)) {
 			return new ShowInTargetListAdapter();
+		}
+		else if (SelectionHistory.class.equals(required)) {
+			if (fSelectionHistory == null)
+				fSelectionHistory = new SelectionHistory(this);
+			return fSelectionHistory;
 		}
 		else {
 			if (result == null && getInternalModel() != null) {

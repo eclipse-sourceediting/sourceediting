@@ -15,7 +15,6 @@ import org.eclipse.gef.EditPartViewer;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.wst.xsd.ui.internal.XSDMenuListener;
-import org.eclipse.wst.xsd.ui.internal.XSDTextEditor;
 
 
 public class GraphContextMenuProvider extends ContextMenuProvider
@@ -30,8 +29,7 @@ public class GraphContextMenuProvider extends ContextMenuProvider
    */
   public GraphContextMenuProvider(
     EditPartViewer viewer,
-    ISelectionProvider selectionProvider,
-    XSDTextEditor editor)
+    ISelectionProvider selectionProvider)
   {
     super(viewer);
     this.viewer = viewer;

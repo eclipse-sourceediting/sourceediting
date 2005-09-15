@@ -107,7 +107,7 @@ public abstract class BaseGraphicalViewer extends ScrollingGraphicalViewer imple
     editDomain.addViewer(this);
   
     //jvh - gef port - moved this from below so it is available when adding context menu below
-    menuProvider = new GraphContextMenuProvider(this, menuSelectionProvider, editor.getXSDTextEditor());
+    menuProvider = new GraphContextMenuProvider(this, menuSelectionProvider);
     setContextMenu(menuProvider);
   
     // add context menu to the graph

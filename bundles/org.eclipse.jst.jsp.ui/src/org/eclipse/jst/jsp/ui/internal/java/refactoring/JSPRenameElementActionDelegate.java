@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,10 +7,10 @@
  * 
  * Contributors:
  *     IBM Corporation - initial API and implementation
+ *     
  *******************************************************************************/
-package org.eclipse.jst.jsp.ui.internal.java.refactoring;
 
-import java.util.ResourceBundle;
+package org.eclipse.jst.jsp.ui.internal.java.refactoring;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IJavaElement;
@@ -18,50 +18,47 @@ import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.ui.refactoring.RenameSupport;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jst.jsp.ui.internal.JSPUIMessages;
 import org.eclipse.jst.jsp.ui.internal.Logger;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.ui.IActionDelegate2;
+import org.eclipse.ui.IEditorActionDelegate;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IViewActionDelegate;
+import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.texteditor.ITextEditor;
-import org.eclipse.ui.texteditor.TextEditorAction;
 import org.eclipse.wst.sse.ui.internal.util.PlatformStatusLineUtil;
 
 /**
- * A TextEditorAction that launches JDT rename element wizard
- * 
- * @author pavery
+ * An action delegate that launches JDT rename element wizard
  */
-public class JSPRenameElementAction extends TextEditorAction {
+public class JSPRenameElementActionDelegate implements IEditorActionDelegate, IActionDelegate2, IViewActionDelegate {
+	private IEditorPart fEditor;
+	
+	public void setActiveEditor(IAction action, IEditorPart targetEditor) {
+		fEditor = targetEditor;
+	}
 
-	public JSPRenameElementAction(ResourceBundle bundle, String prefix, ITextEditor editor) {
+	public void dispose() {
+		// nulling out just in case
+		fEditor = null;
+	}
 
-		super(bundle, prefix, editor);
-	}
-	
-	public boolean isEnabled() {
-		// always enabled, just print appropriate status to window
-		// if for some reason the action can't run (like multiple java elements selected)
-		return true;
-	}
-	
-	/**
-	 * @see org.eclipse.ui.texteditor.TextEditorAction#update()
-	 */
-	public void update() {
-		super.update();
-		PlatformStatusLineUtil.clearStatusLine();
-	}
-	
-	private IJavaElement getSelectedElement() {
-		IJavaElement element = null;
-		if (getTextEditor() != null) {
-			IJavaElement[] elements = JSPJavaSelectionProvider.getSelection(getTextEditor());
-			if (elements.length == 1)
-				element = elements[0];
+	public void init(IAction action) {
+		if (action != null) {
+			action.setText(JSPUIMessages.RenameElement_label);
+			action.setToolTipText(JSPUIMessages.RenameElement_label);
 		}
-		return element;
+	}
+
+	public void runWithEvent(IAction action, Event event) {
+		run(action);
 	}
 	
-	public void run() {
+	public void run(IAction action) {
 		IJavaElement element = getSelectedElement();
 		if(element != null) {
 			RenameSupport renameSupport = null;
@@ -90,5 +87,23 @@ public class JSPRenameElementAction extends TextEditorAction {
 			PlatformStatusLineUtil.displayErrorMessage(JSPUIMessages.JSPRenameElementAction_0); //$NON-NLS-1$
 			PlatformStatusLineUtil.addOneTimeClearListener();
 		}
+	}
+	
+	public void selectionChanged(IAction action, ISelection selection) {
+		PlatformStatusLineUtil.clearStatusLine();
+	}
+
+	public void init(IViewPart view) {
+		// do nothing
+	}
+
+	private IJavaElement getSelectedElement() {
+		IJavaElement element = null;
+		if (fEditor instanceof ITextEditor) {
+			IJavaElement[] elements = JSPJavaSelectionProvider.getSelection((ITextEditor)fEditor);
+			if (elements.length == 1)
+				element = elements[0];
+		}
+		return element;
 	}
 }

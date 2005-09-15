@@ -12,7 +12,7 @@
 			icon="icons/full/obj16/sourceEditor.gif"
 			default="true"
 			contributorClass="org.eclipse.wst.html.ui.internal.edit.ui.ActionContributorHTML"
-			class="org.eclipse.wst.html.ui.internal.provisional.StructuredTextEditorHTML"
+			class="org.eclipse.wst.sse.ui.StructuredTextEditor"
 			symbolicFontName="org.eclipse.wst.sse.ui.textfont"
 			id="org.eclipse.wst.html.core.htmlsource.source">
 			<contentTypeBinding
@@ -388,5 +388,83 @@
 				id="org.eclipse.ui.texteditor.BookmarkRulerAction">
 			</action>
 		</viewerContribution>
+	</extension>
+	
+	<extension point="org.eclipse.ui.editorActions">
+		<editorContribution
+			id="org.eclipse.wst.html.core.htmlsource.source.editorActions"
+			targetID="org.eclipse.wst.html.core.htmlsource.source">
+			<action
+				id="CleanupDocument"
+				label="%CleanupDocument_label"
+				definitionId="org.eclipse.wst.sse.ui.cleanup.document"
+				tooltip="%CleanupDocument_tooltip"
+				class="org.eclipse.wst.html.ui.internal.edit.ui.CleanupActionHTMLDelegate"
+				actionID="CleanupDocument">
+			</action>
+			<action
+				id="ToggleComment"
+				label="%ToggleComment_label"
+				definitionId="org.eclipse.wst.sse.ui.toggle.comment"
+				tooltip="%ToggleComment_tooltip"
+				class="org.eclipse.wst.xml.ui.internal.actions.ToggleCommentActionXMLDelegate"
+				actionID="ToggleComment">
+			</action>
+			<action
+				id="AddBlockComment"
+				label="%AddBlockComment_label"
+				definitionId="org.eclipse.wst.sse.ui.add.block.comment"
+				tooltip="%AddBlockComment_tooltip"
+				class="org.eclipse.wst.xml.ui.internal.actions.AddBlockCommentActionXMLDelegate"
+				actionID="AddBlockComment">
+			</action>
+			<action
+				id="RemoveBlockComment"
+				label="%RemoveBlockComment_label"
+				definitionId="org.eclipse.wst.sse.ui.remove.block.comment"
+				tooltip="%RemoveBlockComment_tooltip"
+				class="org.eclipse.wst.xml.ui.internal.actions.RemoveBlockCommentActionXMLDelegate"
+				actionID="RemoveBlockComment">
+			</action>
+			<action
+				id="FindOccurrences"
+				label="%FindOccurrences_label"
+				definitionId="org.eclipse.wst.sse.ui.search.find.occurrences"
+				class="org.eclipse.wst.html.ui.internal.search.HTMLFindOccurrencesActionDelegate"
+				actionID="FindOccurrences">
+			</action>
+			<action
+				id="StructureSelectEnclosing"
+				label="%StructureSelectEnclosing_label"
+				definitionId="org.eclipse.wst.sse.ui.structure.select.enclosing"
+				tooltip="%StructureSelectEnclosing_tooltip"
+				class="org.eclipse.wst.xml.ui.internal.selection.StructuredSelectEnclosingXMLActionDelegate"
+				actionID="StructureSelectEnclosing">
+			</action>
+			<action
+				id="StructureSelectNext"
+				label="%StructureSelectNext_label"
+				definitionId="org.eclipse.wst.sse.ui.structure.select.next"
+				tooltip="%StructureSelectNext_tooltip"
+				class="org.eclipse.wst.xml.ui.internal.selection.StructuredSelectNextXMLActionDelegate"
+				actionID="StructureSelectNext">
+			</action>
+			<action
+				id="StructureSelectPrevious"
+				label="%StructureSelectPrevious_label"
+				definitionId="org.eclipse.wst.sse.ui.structure.select.previous"
+				tooltip="%StructureSelectPrevious_tooltip"
+				class="org.eclipse.wst.xml.ui.internal.selection.StructuredSelectPreviousXMLActionDelegate"
+				actionID="StructureSelectPrevious">
+			</action>
+			<action
+				id="StructureSelectHistory"
+				label="%StructureSelectHistory_label"
+				definitionId="org.eclipse.wst.sse.ui.structure.select.last"
+				tooltip="%StructureSelectHistory_tooltip"
+				class="org.eclipse.wst.sse.ui.internal.selection.StructuredSelectHistoryActionDelegate"
+				actionID="StructureSelectHistory">
+			</action>
+		</editorContribution>
 	</extension>
 </plugin>

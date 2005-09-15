@@ -8,7 +8,7 @@
 			icon="icons//full/obj16/sourceEditor.gif"
 			extensions="jsp, jsf, jspf, jspx, tag, tagf"
 			contributorClass="org.eclipse.jst.jsp.ui.internal.editor.ActionContributorJSP"
-			class="org.eclipse.jst.jsp.ui.internal.editor.StructuredTextEditorJSP"
+			class="org.eclipse.wst.sse.ui.StructuredTextEditor"
 			symbolicFontName="org.eclipse.wst.sse.ui.textfont"
 			id="org.eclipse.jst.jsp.core.jspsource.source">
 			<contentTypeBinding
@@ -277,39 +277,48 @@
 	<!-- JSP Editor specific actions                                                          -->
 	<!--======================================================================================-->
 	<extension point="org.eclipse.ui.commands">
-		<scope
-			name="%scope.structured.text.editor.jsp.name"
-			parent="org.eclipse.ui.textEditorScope"
-			description="%scope.structured.text.editor.jsp.description"
-			id="org.eclipse.jst.jsp.ui.structured.text.editor.jsp.scope" />
-
-		<!-- dmw 6/6 removed from 'scope'      parentId="org.eclipse.ui.textEditorScope" -->
 		<!-- rename refactor -->
 		<command
 			name="%command.jsp.refactor.rename.name"
 			description="%command.jsp.refactor.rename.description"
-			category="org.eclipse.ui.category.edit"
+			categoryId="org.eclipse.ui.category.edit"
 			id="org.eclipse.jst.jsp.ui.refactor.rename" />
-
-		<keyBinding
-			string="Alt+Shift+R"
-			scope="org.eclipse.jst.jsp.ui.structured.text.editor.jsp.scope"
-			command="org.eclipse.jst.jsp.ui.refactor.rename"
-			configuration="org.eclipse.ui.defaultAcceleratorConfiguration" />
 
 		<!-- move refactor -->
 		<command
 			name="%command.jsp.refactor.move.name"
 			description="%command.jsp.refactor.move.description"
-			category="org.eclipse.ui.category.edit"
+			categoryId="org.eclipse.ui.category.edit"
 			id="org.eclipse.jst.jsp.ui.refactor.move" />
+	</extension>
+	
+	<!-- Keybinding scope for jsp source editor -->
+	<extension point="org.eclipse.ui.contexts">
+		<context
+			name="%scope.structured.text.editor.jsp.name"
+			parentId="org.eclipse.ui.textEditorScope"
+			description="%scope.structured.text.editor.jsp.description"
+			id="org.eclipse.jst.jsp.ui.structured.text.editor.jsp.scope">
+		</context>
+	</extension>
+	
+	<!-- Keybindings for jsp source editor -->
+	<extension point="org.eclipse.ui.bindings">
+		<!-- rename refactor -->
+		<key
+			sequence="Alt+Shift+R"
+			contextId="org.eclipse.jst.jsp.ui.structured.text.editor.jsp.scope"
+			commandId="org.eclipse.jst.jsp.ui.refactor.rename"
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+		</key>
 
-		<keyBinding
-			string="Alt+Shift+V"
-			scope="org.eclipse.jst.jsp.ui.structured.text.editor.jsp.scope"
-			command="org.eclipse.jst.jsp.ui.refactor.move"
-			configuration="org.eclipse.ui.defaultAcceleratorConfiguration" />
-
+		<!-- move refactor -->
+		<key
+			sequence="Alt+Shift+V"
+			contextId="org.eclipse.jst.jsp.ui.structured.text.editor.jsp.scope"
+			commandId="org.eclipse.jst.jsp.ui.refactor.move"
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+		</key>
 	</extension>
 
 	<!--======================================================================================-->
@@ -434,5 +443,95 @@
 		</viewerContribution>
 	</extension>
 
-
+	<extension point="org.eclipse.ui.editorActions">
+		<editorContribution
+			id="org.eclipse.jst.jsp.core.jspsource.source.editorActions"
+			targetID="org.eclipse.jst.jsp.core.jspsource.source">
+			<action
+				id="CleanupDocument"
+				label="%CleanupDocument_label"
+				definitionId="org.eclipse.wst.sse.ui.cleanup.document"
+				tooltip="%CleanupDocument_tooltip"
+				class="org.eclipse.wst.html.ui.internal.edit.ui.CleanupActionHTMLDelegate"
+				actionID="CleanupDocument">
+			</action>
+			<action
+				id="ToggleComment"
+				label="%ToggleComment_label"
+				definitionId="org.eclipse.wst.sse.ui.toggle.comment"
+				tooltip="%ToggleComment_tooltip"
+				class="org.eclipse.wst.xml.ui.internal.actions.ToggleCommentActionXMLDelegate"
+				actionID="ToggleComment">
+			</action>
+			<action
+				id="AddBlockComment"
+				label="%AddBlockComment_label"
+				definitionId="org.eclipse.wst.sse.ui.add.block.comment"
+				tooltip="%AddBlockComment_tooltip"
+				class="org.eclipse.wst.xml.ui.internal.actions.AddBlockCommentActionXMLDelegate"
+				actionID="AddBlockComment">
+			</action>
+			<action
+				id="RemoveBlockComment"
+				label="%RemoveBlockComment_label"
+				definitionId="org.eclipse.wst.sse.ui.remove.block.comment"
+				tooltip="%RemoveBlockComment_tooltip"
+				class="org.eclipse.wst.xml.ui.internal.actions.RemoveBlockCommentActionXMLDelegate"
+				actionID="RemoveBlockComment">
+			</action>
+			<action
+				id="RenameElement"
+				label="%RenameElement_label"
+				definitionId="org.eclipse.jst.jsp.ui.refactor.rename"
+				class="org.eclipse.jst.jsp.ui.internal.java.refactoring.JSPRenameElementActionDelegate"
+				actionID="RenameElement">
+			</action>
+			<action
+				id="MoveElement"
+				label="%MoveElement_label"
+				definitionId="org.eclipse.jst.jsp.ui.refactor.move"
+				class="org.eclipse.jst.jsp.ui.internal.java.refactoring.JSPMoveElementActionDelegate"
+				actionID="MoveElement">
+			</action>
+			<action
+				id="FindOccurrences"
+				label="%FindOccurrences_label"
+				definitionId="org.eclipse.wst.sse.ui.search.find.occurrences"
+				class="org.eclipse.jst.jsp.ui.internal.java.search.JSPFindOccurrencesActionDelegate"
+				actionID="FindOccurrences">
+			</action>
+			<action
+				id="StructureSelectEnclosing"
+				label="%StructureSelectEnclosing_label"
+				definitionId="org.eclipse.wst.sse.ui.structure.select.enclosing"
+				tooltip="%StructureSelectEnclosing_tooltip"
+				class="org.eclipse.wst.xml.ui.internal.selection.StructuredSelectEnclosingXMLActionDelegate"
+				actionID="StructureSelectEnclosing">
+			</action>
+			<action
+				id="StructureSelectNext"
+				label="%StructureSelectNext_label"
+				definitionId="org.eclipse.wst.sse.ui.structure.select.next"
+				tooltip="%StructureSelectNext_tooltip"
+				class="org.eclipse.wst.xml.ui.internal.selection.StructuredSelectNextXMLActionDelegate"
+				actionID="StructureSelectNext">
+			</action>
+			<action
+				id="StructureSelectPrevious"
+				label="%StructureSelectPrevious_label"
+				definitionId="org.eclipse.wst.sse.ui.structure.select.previous"
+				tooltip="%StructureSelectPrevious_tooltip"
+				class="org.eclipse.wst.xml.ui.internal.selection.StructuredSelectPreviousXMLActionDelegate"
+				actionID="StructureSelectPrevious">
+			</action>
+			<action
+				id="StructureSelectHistory"
+				label="%StructureSelectHistory_label"
+				definitionId="org.eclipse.wst.sse.ui.structure.select.last"
+				tooltip="%StructureSelectHistory_tooltip"
+				class="org.eclipse.wst.sse.ui.internal.selection.StructuredSelectHistoryActionDelegate"
+				actionID="StructureSelectHistory">
+			</action>
+		</editorContribution>
+	</extension>
 </plugin>

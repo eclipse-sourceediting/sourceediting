@@ -42,9 +42,9 @@ import org.eclipse.wst.common.ui.provisional.editors.PostMultiPageSelectionProvi
 import org.eclipse.wst.common.ui.provisional.editors.PostSelectionMultiPageEditorPart;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.xml.core.internal.provisional.IXMLPreferenceNames;
+import org.eclipse.wst.xml.core.internal.provisional.contenttype.ContentTypeIdForXML;
 import org.eclipse.wst.xml.ui.internal.Logger;
 import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
-import org.eclipse.wst.xml.ui.internal.provisional.StructuredTextEditorXML;
 
 public class XMLMultiPageEditorPart extends PostSelectionMultiPageEditorPart {
 
@@ -467,6 +467,12 @@ public class XMLMultiPageEditorPart extends PostSelectionMultiPageEditorPart {
 					}
 					return contributor;
 				}
+
+				public String getId() {
+					// sets this id so nested editor is considered xml source
+					// page
+					return ContentTypeIdForXML.ContentTypeID_XML + ".source"; //$NON-NLS-1$;
+				}
 			};
 		}
 		else {
@@ -494,7 +500,7 @@ public class XMLMultiPageEditorPart extends PostSelectionMultiPageEditorPart {
 	 * @return StructuredTextEditor
 	 */
 	private StructuredTextEditor createTextEditor() {
-		return new StructuredTextEditorXML();
+		return new StructuredTextEditor();
 	}
 
 	private void disconnectDesignPage() {

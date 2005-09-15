@@ -17,8 +17,6 @@ import java.util.ResourceBundle;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.text.source.ISourceViewer;
-import org.eclipse.jface.text.source.IVerticalRuler;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -26,20 +24,18 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.actions.ActionContext;
 import org.eclipse.ui.actions.ActionGroup;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.ITextEditorActionConstants;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
-import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
+import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.actions.StructuredTextEditorActionConstants;
 import org.eclipse.wst.sse.ui.internal.openon.OpenOnAction;
 import org.eclipse.wst.sse.ui.internal.view.events.INodeSelectionListener;
 import org.eclipse.wst.sse.ui.internal.view.events.NodeSelectionChangedEvent;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
-import org.eclipse.wst.xml.ui.internal.provisional.StructuredTextEditorXML;
 import org.eclipse.wst.xsd.ui.internal.properties.section.XSDTabbedPropertySheetPage;
 import org.eclipse.wst.xsd.ui.internal.provider.CategoryAdapter;
 import org.eclipse.wst.xsd.ui.internal.provider.XSDAdapterFactoryLabelProvider;
@@ -54,7 +50,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 
-public class XSDTextEditor extends StructuredTextEditorXML implements INodeSelectionListener, ISelectionChangedListener
+public class XSDTextEditor extends StructuredTextEditor implements INodeSelectionListener, ISelectionChangedListener
 {
   protected XSDSelectionManager xsdSelectionManager;
   protected XSDModelAdapterFactoryImpl xsdModelAdapterFactory;
@@ -224,15 +220,6 @@ public class XSDTextEditor extends StructuredTextEditorXML implements INodeSelec
     }
   }
 
-  
-  /*
-   * @see ITextEditor#doRevertToSaved()
-   */
-  public void doRevertToSaved()
-  {
-    super.doRevertToSaved();
-  }
-
   /*
    * @see StructuredTextEditor#update()
    */
@@ -263,37 +250,6 @@ public class XSDTextEditor extends StructuredTextEditorXML implements INodeSelec
     });
   }
 
- // private static Color dividerColor;
-
-	protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler verticalRuler, int styles) {
-
-		fAnnotationAccess= createAnnotationAccess();
-		fOverviewRuler= createOverviewRuler(getSharedColors());
-
-		StructuredTextViewer sourceViewer = createStructedTextViewer(parent, verticalRuler, styles);
-		initSourceViewer(sourceViewer);
-
-    // end of super createSourceViewer
-		
-    //StructuredAnnotationAccess annotationAccess = new StructuredAnnotationAccess();
-	 // DefaultMarkerAnnotationAccess annotationAccess = new DefaultMarkerAnnotationAccess();
-		
-	//  ISharedTextColors sharedColors = getTextColorsCache();
-////  fOverviewRuler = new OverviewRuler(annotationAccess, OVERVIEW_RULER_WIDTH, sharedColors);
-	//  fOverviewRuler = new OverviewRuler(createAnnotationAccess(), 12, sharedColors);
-	  
-//	  fOverviewRuler.addHeaderAnnotationType(StructuredAnnotationType.ERROR);
-//	  fOverviewRuler.addHeaderAnnotationType(StructuredAnnotationType.WARNING);
-	  
-	 // fSourceViewerDecorationSupport = new SourceViewerDecorationSupport(sourceViewer, fOverviewRuler, annotationAccess, sharedColors);
-    //configureSourceViewerDecorationSupport(fSourceViewerDecorationSupport);    
-
-// The following method was removed
-//    sourceViewer.setEditor(this);
-
-		return sourceViewer;
-	}
-
   protected IFile file;
 
 
@@ -309,14 +265,6 @@ public class XSDTextEditor extends StructuredTextEditorXML implements INodeSelec
   public XSDEditor getXSDEditor()
   {
     return (XSDEditor)getEditorPart();
-  }
- 
-  /**
-   * @see org.eclipse.ui.texteditor.AbstractTextEditor#safelySanityCheckState(IEditorInput)
-   */
-	public void safelySanityCheckState(IEditorInput input)
-  {
-    super.safelySanityCheckState(input);
   }
 
   protected class WrappedOpenFileAction extends OpenOnAction
