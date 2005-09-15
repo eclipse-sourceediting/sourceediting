@@ -13,14 +13,19 @@
 package org.eclipse.wst.sse.ui.internal.selection;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.util.Assert;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
+import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.w3c.dom.Node;
 
+/**
+ * @deprecated use StructuredSelectActionDelegate instead
+ */
 
 public abstract class StructureSelectAction extends Action {
 	protected StructuredTextEditor fEditor = null;
@@ -28,17 +33,15 @@ public abstract class StructureSelectAction extends Action {
 	protected IStructuredModel fModel = null;
 	protected StructuredTextViewer fViewer = null;
 
-	public StructureSelectAction(StructuredTextEditor editor, SelectionHistory history) {
+	public StructureSelectAction(StructuredTextEditor editor) {
 		super();
 
 		Assert.isNotNull(editor);
-		Assert.isNotNull(history);
 		fEditor = editor;
-		fHistory = history;
+		fHistory = (SelectionHistory) editor.getAdapter(SelectionHistory.class);
 		fViewer = editor.getTextViewer();
 		fModel = editor.getModel();
 		Assert.isNotNull(fViewer);
-		//Assert.isNotNull(fModel);
 	}
 
 	abstract protected IndexedRegion getCursorIndexedRegion();
@@ -47,10 +50,19 @@ public abstract class StructureSelectAction extends Action {
 		IndexedRegion indexedRegion = null;
 
 		int lastOffset = offset;
-		indexedRegion = fModel.getIndexedRegion(lastOffset);
-		while (indexedRegion == null && lastOffset >= 0) {
-			lastOffset--;
-			indexedRegion = fModel.getIndexedRegion(lastOffset);
+		IDocument document = fEditor.getDocumentProvider().getDocument(fEditor.getEditorInput());
+		IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForRead(document);
+		if (model != null) {
+			try {
+				indexedRegion = model.getIndexedRegion(lastOffset);
+				while (indexedRegion == null && lastOffset >= 0) {
+					lastOffset--;
+					indexedRegion = model.getIndexedRegion(lastOffset);
+				}
+			}
+			finally {
+				model.releaseFromRead();
+			}
 		}
 
 		return indexedRegion;
@@ -88,7 +100,8 @@ public abstract class StructureSelectAction extends Action {
 				try {
 					fHistory.ignoreSelectionChanges();
 					fEditor.selectAndReveal(newRegion.getOffset(), newRegion.getLength());
-				} finally {
+				}
+				finally {
 					fHistory.listenToSelectionChanges();
 				}
 			}

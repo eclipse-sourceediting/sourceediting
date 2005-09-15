@@ -32,6 +32,10 @@ import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.exceptions.SourceEditingRuntimeException;
 import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 
+/**
+ * @deprecated use AbstractCommentActionXMLDelegate or
+ *             ToggleCommentActionXMLDelegate instead
+ */
 public class CommentActionXML extends TextEditorAction {
 	protected static final String CLOSE_COMMENT = "-->"; //$NON-NLS-1$
 	protected static final String OPEN_COMMENT = "<!--"; //$NON-NLS-1$

@@ -30,7 +30,7 @@ import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
  * Uses default <code>getSearchQuery()</code>.
  * </p>
  * 
- * @author pavery
+ * @deprecated use XMLFindOccurrencesProcessor instead
  */
 public class XMLFindOccurrencesAction extends BasicFindOccurrencesAction {
 

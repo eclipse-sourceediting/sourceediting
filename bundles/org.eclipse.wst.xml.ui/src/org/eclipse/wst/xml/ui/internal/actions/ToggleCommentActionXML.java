@@ -20,6 +20,9 @@ import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.sse.core.internal.provisional.exceptions.SourceEditingRuntimeException;
 import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 
+/**
+ * @deprecated use ToggleCommentActionXMLDelegate instead
+ */
 public class ToggleCommentActionXML extends UncommentActionXML {
 	public ToggleCommentActionXML(ResourceBundle bundle, String prefix, ITextEditor editor) {
 		super(bundle, prefix, editor);

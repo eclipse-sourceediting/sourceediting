@@ -20,6 +20,9 @@ import org.eclipse.wst.sse.core.internal.provisional.exceptions.SourceEditingRun
 import org.eclipse.wst.xml.core.internal.document.CommentImpl;
 import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 
+/**
+ * @deprecated use RemoveBlockCommentActionXMLDelegate instead
+ */
 public class RemoveBlockCommentActionXML extends AddBlockCommentActionXML {
 	public RemoveBlockCommentActionXML(ResourceBundle bundle, String prefix, ITextEditor editor) {
 		super(bundle, prefix, editor);

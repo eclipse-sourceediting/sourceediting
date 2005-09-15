@@ -13,8 +13,10 @@
 package org.eclipse.wst.sse.ui.internal.selection;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.util.Assert;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -23,9 +25,8 @@ import org.eclipse.ui.texteditor.ITextEditor;
 
 public class SelectionHistory {
 	private ITextEditor fEditor;
-
 	private List fHistory;
-	private StructureSelectHistoryAction fHistoryAction;
+	private List fHistoryActions;
 	private int fSelectionChangeListenerCounter;
 	private ISelectionChangedListener fSelectionListener;
 
@@ -44,13 +45,20 @@ public class SelectionHistory {
 
 	public void dispose() {
 		fEditor.getSelectionProvider().removeSelectionChangedListener(fSelectionListener);
+		fEditor = null;
+		if (fHistory != null && !fHistory.isEmpty()) {
+			fHistory.clear();
+		}
+		if (fHistoryActions != null && !fHistoryActions.isEmpty()) {
+			fHistoryActions.clear();
+		}
 	}
 
 	public void flush() {
 		if (fHistory.isEmpty())
 			return;
 		fHistory.clear();
-		fHistoryAction.update();
+		updateHistoryAction();
 	}
 
 	public IRegion getLast() {
@@ -58,7 +66,7 @@ public class SelectionHistory {
 			return null;
 		int size = fHistory.size();
 		IRegion result = (IRegion) fHistory.remove(size - 1);
-		fHistoryAction.update();
+		updateHistoryAction();
 		return result;
 	}
 
@@ -76,11 +84,34 @@ public class SelectionHistory {
 
 	public void remember(IRegion region) {
 		fHistory.add(region);
-		fHistoryAction.update();
+		updateHistoryAction();
 	}
 
-	public void setHistoryAction(StructureSelectHistoryAction action) {
+	public void setHistoryAction(IAction action) {
 		Assert.isNotNull(action);
-		fHistoryAction = action;
+		
+		if (fHistoryActions == null)
+			fHistoryActions = new ArrayList();
+		if (!fHistoryActions.contains(action))
+			fHistoryActions.add(action);
+		
+		// update action
+		if (fHistory != null && !fHistory.isEmpty())
+			action.setEnabled(true);
+		else
+			action.setEnabled(false);
+	}
+
+	private void updateHistoryAction() {
+		if (fHistoryActions != null && !fHistoryActions.isEmpty()) {
+			boolean enabled = false;
+			if (fHistory != null && !fHistory.isEmpty())
+				enabled = true;
+
+			Iterator iter = fHistoryActions.iterator();
+			while (iter.hasNext()) {
+				((IAction)iter.next()).setEnabled(enabled);
+			}
+		}
 	}
 }

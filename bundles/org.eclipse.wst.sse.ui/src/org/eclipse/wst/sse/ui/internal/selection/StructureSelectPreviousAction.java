@@ -19,8 +19,8 @@ import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.w3c.dom.Node;
 
 public class StructureSelectPreviousAction extends StructureSelectAction {
-	public StructureSelectPreviousAction(StructuredTextEditor editor, SelectionHistory history) {
-		super(editor, history);
+	public StructureSelectPreviousAction(StructuredTextEditor editor) {
+		super(editor);
 		setText(SSEUIMessages.StructureSelectPrevious_label); //$NON-NLS-1$
 		setToolTipText(SSEUIMessages.StructureSelectPrevious_tooltip); //$NON-NLS-1$
 		setDescription(SSEUIMessages.StructureSelectPrevious_description); //$NON-NLS-1$

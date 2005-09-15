@@ -21,8 +21,8 @@ import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.w3c.dom.Node;
 
 public class StructureSelectHistoryAction extends StructureSelectAction implements IUpdate {
-	public StructureSelectHistoryAction(StructuredTextEditor editor, SelectionHistory history) {
-		super(editor, history);
+	public StructureSelectHistoryAction(StructuredTextEditor editor) {
+		super(editor);
 		setText(SSEUIMessages.StructureSelectHistory_label); //$NON-NLS-1$
 		setToolTipText(SSEUIMessages.StructureSelectHistory_tooltip); //$NON-NLS-1$
 		setDescription(SSEUIMessages.StructureSelectHistory_description); //$NON-NLS-1$

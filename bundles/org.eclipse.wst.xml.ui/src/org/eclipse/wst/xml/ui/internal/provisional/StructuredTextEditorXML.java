@@ -27,6 +27,10 @@ import org.eclipse.wst.xml.ui.internal.actions.ToggleCommentActionXML;
 import org.eclipse.wst.xml.ui.internal.editor.IHelpContextIds;
 import org.eclipse.wst.xml.ui.internal.search.XMLFindOccurrencesAction;
 
+/**
+ * @deprecated XML editor is created from StructuredTextEditor with
+ *             XML configurations
+ */
 public class StructuredTextEditorXML extends StructuredTextEditor {
 	private final static String UNDERSCORE = "_"; //$NON-NLS-1$
 	

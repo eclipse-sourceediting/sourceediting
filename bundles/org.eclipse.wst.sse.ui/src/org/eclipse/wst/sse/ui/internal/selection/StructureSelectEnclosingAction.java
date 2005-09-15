@@ -19,8 +19,8 @@ import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.w3c.dom.Node;
 
 public class StructureSelectEnclosingAction extends StructureSelectAction {
-	public StructureSelectEnclosingAction(StructuredTextEditor editor, SelectionHistory history) {
-		super(editor, history);
+	public StructureSelectEnclosingAction(StructuredTextEditor editor) {
+		super(editor);
 		setText(SSEUIMessages.StructureSelectEnclosing_label); //$NON-NLS-1$
 		setToolTipText(SSEUIMessages.StructureSelectEnclosing_tooltip); //$NON-NLS-1$
 		setDescription(SSEUIMessages.StructureSelectEnclosing_description); //$NON-NLS-1$
