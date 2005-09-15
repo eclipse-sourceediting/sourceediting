@@ -157,10 +157,10 @@ class RefreshStructureJob extends Job {
 				for (int i = 0; i < viewers.length; i++) {
 					if (!viewers[i].getControl().isDisposed()) {
 						if (node instanceof Document) {
-							viewers[i].refresh(true);
+							viewers[i].refresh();
 						}
 						else {
-							viewers[i].refresh(node, true);
+							viewers[i].refresh(node);
 						}
 					}
 				}
