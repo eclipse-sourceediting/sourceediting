@@ -15,8 +15,8 @@ import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.jface.text.hyperlink.URLHyperlink;
+import org.eclipse.jst.jsp.core.internal.contentmodel.ITLDRecord;
 import org.eclipse.jst.jsp.core.internal.contentmodel.ITaglibRecord;
-import org.eclipse.jst.jsp.core.internal.contentmodel.TLDRecord;
 import org.eclipse.jst.jsp.core.internal.contentmodel.TaglibIndex;
 import org.eclipse.jst.jsp.core.internal.provisional.JSP11Namespace;
 import org.eclipse.jst.jsp.core.internal.provisional.text.IJSPPartitionTypes;
@@ -58,8 +58,8 @@ public class TaglibHyperlinkDetector implements IHyperlinkDetector {
 								// handle taglibs
 								switch (reference.getRecordType()) {
 									case (ITaglibRecord.TLD) : {
-										TLDRecord record = (TLDRecord) reference;
-										String uriString = record.getLocation().toString();
+										ITLDRecord record = (ITLDRecord) reference;
+										String uriString = record.getPath().toString();
 										IRegion hyperlinkRegion = getHyperlinkRegion(taglibNode);
 										hyperlink = createHyperlink(uriString, hyperlinkRegion, doc, taglibNode);
 									}
@@ -141,7 +141,7 @@ public class TaglibHyperlinkDetector implements IHyperlinkDetector {
 	 * file from uri.
 	 * 
 	 * @param fileString
-	 *            file system path
+	 *            file system or workspace-relative path
 	 * @return returns IFile if fileString exists in the workspace
 	 */
 	private IFile getFile(String fileString) {
@@ -152,6 +152,9 @@ public class TaglibHyperlinkDetector implements IHyperlinkDetector {
 			for (int i = 0; i < files.length && file == null; i++)
 				if (files[i].exists())
 					file = files[i];
+		}
+		if(file == null) {
+			file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(fileString));
 		}
 
 		return file;

@@ -249,7 +249,7 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 				includedFile = null;
 			}
 			if (includedFile != null) {
-				IPath root = TaglibIndex.getContextRoot(getCurrentBaseLocation());
+				IPath root = TaglibIndex.getContextRoot(TaglibController.getFileBuffer(TLDCMDocumentManager.this).getLocation());
 				// strip any extraneous quotes and white space
 				includedFile = StringUtils.strip(includedFile).trim();
 				IPath fileLocation = null;
@@ -257,10 +257,10 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 					fileLocation = root.append(includedFile);
 				}
 				else {
-					fileLocation = new Path(URIHelper.normalize(includedFile, getCurrentBaseLocation().toString(), root.toString()));
+					fileLocation = new Path(URIHelper.normalize(includedFile, TaglibController.getFileBuffer(TLDCMDocumentManager.this).getLocation().toString(), root.toString()));
 				}
 				// check for "loops"
-				if (!getIncludes().contains(fileLocation) && fileLocation != null && !fileLocation.equals(getCurrentBaseLocation())) {
+				if (!getIncludes().contains(fileLocation) && fileLocation != null && !fileLocation.equals(TaglibController.getFileBuffer(TLDCMDocumentManager.this).getLocation())) {
 					/*
 					 * Prevent slow performance when editing scriptlet part of
 					 * the JSP by only processing includes if they've been
@@ -273,7 +273,7 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 						getIncludes().push(fileLocation);
 						if (getParser() != null) {
 							IncludeHelper includeHelper = new IncludeHelper(anchorStructuredDocumentRegion, getParser());
-							includeHelper.parse(fileLocation.toString());
+							includeHelper.parse(FileBuffers.normalizeLocation(fileLocation).toString());
 							List references = includeHelper.taglibReferences;
 							fTLDCMReferencesMap.put(fileLocation.toString(), references);
 						}
@@ -801,16 +801,11 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 	 */
 	IPath getCurrentBaseLocation() {
 		IPath baseLocation = null;
-		if (!getIncludes().isEmpty()) {
-			baseLocation = (IPath) getIncludes().peek();
-		}
-		else {
-			IPath path = TaglibController.getFileBuffer(this).getLocation();
-			if (path.toFile().exists())
-				baseLocation = path;
-			else
-				baseLocation = ResourcesPlugin.getWorkspace().getRoot().getFile(path).getLocation();
-		}
+		IPath path = TaglibController.getFileBuffer(this).getLocation();
+		if (path.toFile().exists())
+			baseLocation = path;
+		else
+			baseLocation = ResourcesPlugin.getWorkspace().getRoot().getFile(path).getLocation();
 		return baseLocation;
 	}
 

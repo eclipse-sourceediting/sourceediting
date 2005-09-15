@@ -17,11 +17,13 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.jst.jsp.core.internal.contentmodel.IJarRecord;
+import org.eclipse.jst.jsp.core.internal.contentmodel.ITLDRecord;
 import org.eclipse.jst.jsp.core.internal.contentmodel.ITaglibRecord;
-import org.eclipse.jst.jsp.core.internal.contentmodel.JarRecord;
-import org.eclipse.jst.jsp.core.internal.contentmodel.TLDRecord;
-import org.eclipse.jst.jsp.core.internal.contentmodel.URLRecord;
+import org.eclipse.jst.jsp.core.internal.contentmodel.IURLRecord;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.JSP11TLDNames;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.JSP12TLDNames;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.JSP20TLDNames;
@@ -606,24 +608,27 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 		CMDocumentImpl document = null;
 		switch (reference.getRecordType()) {
 			case (ITaglibRecord.TLD) : {
-				TLDRecord record = (TLDRecord) reference;
-				document = (CMDocumentImpl) buildCMDocumentFromFile(record.getLocation().toString());
-				if (_debug && document != null && document.getElements().getLength() == 0) {
-					System.out.println("failure parsing " + record.getLocation()); //$NON-NLS-1$
-				}
+				ITLDRecord record = (ITLDRecord) reference;
+				IResource file = ResourcesPlugin.getWorkspace().getRoot().getFile(record.getPath());
+				if (file.getLocation() != null) {
+					document = (CMDocumentImpl) buildCMDocumentFromFile(file.getLocation().toString());
+					if (_debug && document != null && document.getElements().getLength() == 0) {
+						System.out.println("failure parsing " + record.getPath()); //$NON-NLS-1$
+					}
 
-				if (document.getSmallIcon() != null) {
-					String iconPath = URIHelper.normalize(((TLDDocument) document).getSmallIcon(), record.getLocation().toString(), "/"); //$NON-NLS-1$
-					document.setProperty(JSP12TLDNames.SMALL_ICON, "file:" + iconPath); //$NON-NLS-1$
-				}
-				if (document.getLargeIcon() != null) {
-					String iconPath = URIHelper.normalize(((TLDDocument) document).getLargeIcon(), record.getLocation().toString(), "/"); //$NON-NLS-1$
-					document.setProperty(JSP12TLDNames.LARGE_ICON, "file:" + iconPath); //$NON-NLS-1$
+					if (document.getSmallIcon() != null) {
+						String iconPath = URIHelper.normalize(((TLDDocument) document).getSmallIcon(), file.getLocation().toString(), "/"); //$NON-NLS-1$
+						document.setProperty(JSP12TLDNames.SMALL_ICON, "file:" + iconPath); //$NON-NLS-1$
+					}
+					if (document.getLargeIcon() != null) {
+						String iconPath = URIHelper.normalize(((TLDDocument) document).getLargeIcon(), file.getLocation().toString(), "/"); //$NON-NLS-1$
+						document.setProperty(JSP12TLDNames.LARGE_ICON, "file:" + iconPath); //$NON-NLS-1$
+					}
 				}
 			}
 				break;
 			case (ITaglibRecord.JAR) : {
-				JarRecord record = (JarRecord) reference;
+				IJarRecord record = (IJarRecord) reference;
 				document = (CMDocumentImpl) buildCMDocumentFromJar(record.getLocation().toString());
 				if (document.getSmallIcon() != null) {
 					String iconPath = URIHelper.normalize(((TLDDocument) document).getSmallIcon(), record.getLocation().toString() + "!META-INF/", "/"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -645,7 +650,7 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 			}
 				break;
 			case (ITaglibRecord.URL) : {
-				URLRecord record = (URLRecord) reference;
+				IURLRecord record = (IURLRecord) reference;
 				InputStream urlContents = null;
 				URLConnection connection = null;
 				try {

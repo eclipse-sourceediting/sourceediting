@@ -320,12 +320,12 @@ public class TaglibIndex {
 			else {
 				switch (result.getRecordType()) {
 					case (ITaglibRecord.TLD) : {
-						TLDRecord record = (TLDRecord) result;
-						System.out.println("TaglibIndex resolved " + basePath + ":" + reference + " = " + record.getLocation()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						ITLDRecord record = (ITLDRecord) result;
+						System.out.println("TaglibIndex resolved " + basePath + ":" + reference + " = " + record.getPath()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 					}
 						break;
 					case (ITaglibRecord.JAR) : {
-						JarRecord record = (JarRecord) result;
+						IJarRecord record = (IJarRecord) result;
 						System.out.println("TaglibIndex resolved " + basePath + ":" + reference + " = " + record.getLocation()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 					}
 						break;
@@ -333,7 +333,7 @@ public class TaglibIndex {
 					}
 						break;
 					case (ITaglibRecord.URL) : {
-						URLRecord record = (URLRecord) result;
+						IURLRecord record = (IURLRecord) result;
 						System.out.println("TaglibIndex resolved " + basePath + ":" + reference + " = " + record.getURL()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 					}
 						break;
@@ -436,7 +436,7 @@ public class TaglibIndex {
 		}
 	}
 
-	private ITaglibRecord internalResolve(String basePath, String reference, boolean crossProjects) {
+	private ITaglibRecord internalResolve(String basePath, final String reference, boolean crossProjects) {
 		IProject project = null;
 		ITaglibRecord resolved = null;
 		IFile baseResource = FileBuffers.getWorkspaceFileAtLocation(new Path(basePath));
@@ -449,11 +449,25 @@ public class TaglibIndex {
 			// try simple file support outside of the workspace
 			File baseFile = FileBuffers.getSystemFileAtLocation(new Path(basePath));
 			if (baseFile != null) {
-				String normalizedReference = URIHelper.normalize(reference, basePath, "/"); //$NON-NLS-1$
+				final String normalizedReference = URIHelper.normalize(reference, basePath, "/"); //$NON-NLS-1$
 				if (normalizedReference != null) {
-					TLDRecord record = new TLDRecord();
-					record.location = new Path(normalizedReference);
-					record.uri = reference;
+					ITLDRecord record = new ITLDRecord() {
+						public int getRecordType() {
+							return ITaglibRecord.TLD;
+						}
+
+						public String getURI() {
+							return reference;
+						}
+
+						public String getPrefix() {
+							return null;
+						}
+
+						public IPath getPath() {
+							return new Path(normalizedReference);
+						}
+					};
 					resolved = record;
 				}
 			}

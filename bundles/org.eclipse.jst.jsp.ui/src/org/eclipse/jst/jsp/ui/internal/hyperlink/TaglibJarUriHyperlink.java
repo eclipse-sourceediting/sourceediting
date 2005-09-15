@@ -2,9 +2,9 @@ package org.eclipse.jst.jsp.ui.internal.hyperlink;
 
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
+import org.eclipse.jst.jsp.core.internal.contentmodel.IJarRecord;
 import org.eclipse.jst.jsp.core.internal.contentmodel.ITaglibRecord;
-import org.eclipse.jst.jsp.core.internal.contentmodel.JarRecord;
-import org.eclipse.jst.jsp.core.internal.contentmodel.URLRecord;
+import org.eclipse.jst.jsp.core.internal.contentmodel.IURLRecord;
 
 /**
  * Hyperlink for taglib files in jars or specified by urls.
@@ -23,12 +23,12 @@ class TaglibJarUriHyperlink implements IHyperlink {
 		if (fHyperlink == null && fTaglibRecord != null) {
 			switch (fTaglibRecord.getRecordType()) {
 				case (ITaglibRecord.JAR) : {
-					JarRecord record = (JarRecord) fTaglibRecord;
+					IJarRecord record = (IJarRecord) fTaglibRecord;
 					fHyperlink = new TaglibJarHyperlink(fRegion, record.getLocation());
 				}
 					break;
 				case (ITaglibRecord.URL) : {
-					URLRecord record = (URLRecord) fTaglibRecord;
+					IURLRecord record = (IURLRecord) fTaglibRecord;
 					fHyperlink = new URLFileHyperlink(fRegion, record.getURL());
 				}
 			}
