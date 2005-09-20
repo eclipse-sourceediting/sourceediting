@@ -190,6 +190,13 @@ public class ContextRegionContainer implements ITextRegionContainer {
 	}
 
 	public int getStartOffset(ITextRegion containedRegion) {
+		// it is an error to pass null to this method
+		// ISSUE: need better "spec" on error behavior: 
+		// for now will return zero as this will roughly 
+		// work for some cases (and avoid NPE).
+		if (containedRegion == null) {
+			return getStartOffset();
+		}
 		return getStartOffset() + containedRegion.getStart();
 	}
 
