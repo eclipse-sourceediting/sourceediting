@@ -356,15 +356,26 @@ public class AttrImpl extends NodeImpl implements IDOMAttr {
 		return this.valueRegion;
 	}
 
+	/**
+	 * ISSUE: what should behavior be if this.value == null?
+	 * It's an "error" to be in that state, but seems to 
+	 * occur relatively easily ... probably due to threading 
+	 * bugs ... but this just shows its needs to be spec'd. 
+	 * 
+	 */
 	public int getValueRegionStartOffset() {
 		if (this.ownerElement == null)
 			return 0;
 		// assuming the firstStructuredDocumentRegion is the one that contains
-		// attributes
-		IStructuredDocumentRegion flatNode = this.ownerElement.getFirstStructuredDocumentRegion();
-		if (flatNode == null)
+		// the valueRegion -- should make smarter? 
+		IStructuredDocumentRegion structuredDocumentRegion = this.ownerElement.getFirstStructuredDocumentRegion();
+		if (structuredDocumentRegion == null)
 			return 0;
-		return flatNode.getStartOffset(this.valueRegion);
+		// ensure we never pass null to getStartOffset.
+		if (this.valueRegion == null) {
+			return 0;
+		}
+		return structuredDocumentRegion.getStartOffset(this.valueRegion);
 	}
 
 	public String getValueRegionText() {
