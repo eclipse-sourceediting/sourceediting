@@ -495,14 +495,16 @@ class ProjectDescription {
 	 */
 	private TLDRecord createTLDRecord(IResource tld) {
 		TLDRecord record = new TLDRecord();
-		record.path = tld.getLocation();
+		record.path = tld.getFullPath();
 		InputStream contents = null;
 		try {
-			contents = ((IFile) tld).getContents(true);
-			String baseLocation = record.path.toString();
-			TaglibInfo info = extractInfo(baseLocation, contents);
-			if (info != null) {
-				record.info = info;
+			if (tld.getLocation() != null) {
+				contents = ((IFile) tld).getContents(true);
+				String baseLocation = tld.getLocation().toString();
+				TaglibInfo info = extractInfo(baseLocation, contents);
+				if (info != null) {
+					record.info = info;
+				}
 			}
 		}
 		catch (CoreException e) {
