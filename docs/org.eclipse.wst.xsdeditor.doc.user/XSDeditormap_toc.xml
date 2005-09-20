@@ -14,7 +14,7 @@
       <topic label="Creating XML schemas" href="topics/tcxmlsch.html">
          <topic label="Generating an XML schema file from an XML file" href="topics/tcxsdxml.html"/>
          <topic label="Generating an XML schema file from a relational table" href="topics/txmlfddl.html"/>
-         <topic label="Generating an XML schema from a DTD file" href="../com.ibm.dtdeditor.doc/topics/tgenxmls.html"/>
+         <topic label="Generating an XML schema from a DTD file" href="../org.eclipse.wst.dtdeditor.doc.user/topics/tgenxmls.html"/>
       </topic>
       <topic label="Importing an XML schema" href="topics/timpschm.html"/>
       <topic label="Navigating XML schemas" href="topics/tnavsrc.html"/>

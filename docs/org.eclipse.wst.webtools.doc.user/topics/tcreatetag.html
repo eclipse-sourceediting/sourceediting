@@ -3,15 +3,9 @@
   PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<link rel="stylesheet" type="text/css" href="../../com.ibm.help.doc/swg_info_common.css" />
+<link rel="stylesheet" type="text/css" href="../org.eclipse.wst.doc.user/common.css" />
 <title>Creating a custom tag library</title>
-<script language="JavaScript">
-    function popup_window( url, id, width, height )
-    {
-      popup = window.open( url, id, 'toolbar=no,scrollbars=no,location=no,statusbar=no,menubar=no,resizable=no,width=' + width + ',height=' + height + ',left=,top=' );
-      popup.focus();
-    }
-</script><script language="JavaScript" src="help/liveHelp.js"></script></head>
+</head>
 <body>
 
 <div class="nested0" id="tcreatetag"><a name="tcreatetag"><!-- --></a><h1 class="topictitle1">Creating a custom tag library</h1>
@@ -51,7 +45,7 @@ pages. </p>
 <ol><li class="skipspace"><span>Select <span class="uicontrol">YourApp</span>.</span></li>
 <li class="skipspace"><span>Select <span class="menucascade"><span class="uicontrol">File</span> &gt; <span class="uicontrol">New</span> &gt; <span class="uicontrol">Class</span></span>.  Type the following in the New Java Class
 
-window: </span> <ul><li><span class="uicontrol">Package:</span> com.ibm.entry.security </li>
+window: </span> <ul><li><span class="uicontrol">Package:</span> org.eclipse.entry.security </li>
 <li><span class="uicontrol">Name:</span> sslCheck</li>
 <li><span class="uicontrol">Superclass:</span> java.lang.Object</li>
 </ul>
@@ -59,7 +53,7 @@ window: </span> <ul><li><span class="uicontrol">Package:</span> com.ibm.entry.se
 <li class="skipspace"><span>Click <span class="uicontrol">Finish</span>.</span> The source
 
 file will open automatically. </li>
-<li class="skipspace"><span>Delete the automatic code and replace it with the following code:</span> <pre>package com.ibm.entry.security;
+<li class="skipspace"><span>Delete the automatic code and replace it with the following code:</span> <pre>package org.eclipse.entry.security;
 
  import java.io.*;
 
@@ -170,7 +164,7 @@ the following code:  <pre>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 
       &lt;name&gt;sslcheck&lt;/name&gt;
 
-      &lt;tagclass&gt;com.ibm.entry.security.sslCheck&lt;/tagclass&gt;
+      &lt;tagclass&gt;org.eclipse.entry.security.sslCheck&lt;/tagclass&gt;
 
       &lt;bodycontent&gt;empty&lt;/bodycontent&gt;
 
@@ -287,8 +281,5 @@ is using secure connection, the location in the browser will remain <span>"http"
 will not change to <span>"https"</span> .</div>
 </div>
 </div>
-<p>
-		(C) Copyright IBM Corporation 2000, 2005. All Rights Reserved.
-</p>
 </body>
 </html>

@@ -11,11 +11,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/ -->
-   <plugin
-   id="org.eclipse.wst.webtools.doc.user"
-   name="Web tools docs"
-   version="0.7.0"
-   provider-name="Eclipse.org"> 
+   <plugin> 
        <extension point="org.eclipse.help.toc">
          	<toc file="webtools_toc.xml" /> 
          	   </extension>  
