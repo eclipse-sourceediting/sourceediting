@@ -49,15 +49,18 @@ public class JSPTranslationUtil {
 				if (translatedChildTextEdit != null)
 					((MultiTextEdit) translatedTextEdit).addChild(translatedChildTextEdit);
 			}
-		} else if (textEdit instanceof ReplaceEdit) {
+		}
+		else if (textEdit instanceof ReplaceEdit) {
 			if (jspOffset == -1)
 				return null;
 
 			if (!getTranslation().javaSpansMultipleJspPartitions(javaOffset, length))
 				translatedTextEdit = new ReplaceEdit(jspOffset, length, ((ReplaceEdit) textEdit).getText());
-		} else if (textEdit instanceof InsertEdit) {
+		}
+		else if (textEdit instanceof InsertEdit) {
 			translatedTextEdit = new InsertEdit(jspOffset, ((InsertEdit) textEdit).getText());
-		} else if (textEdit instanceof DeleteEdit) {
+		}
+		else if (textEdit instanceof DeleteEdit) {
 			translatedTextEdit = new DeleteEdit(jspOffset, length);
 			TextEdit[] children = ((DeleteEdit) textEdit).getChildren();
 			for (int i = 0; i < children.length; i++) {
@@ -65,20 +68,25 @@ public class JSPTranslationUtil {
 				if (translatedChildTextEdit != null)
 					((DeleteEdit) translatedTextEdit).addChild(translatedChildTextEdit);
 			}
-		} else if (textEdit instanceof CopySourceEdit) {
+		}
+		else if (textEdit instanceof CopySourceEdit) {
 			translatedTextEdit = new CopySourceEdit(jspOffset, length);
 			((CopySourceEdit) translatedTextEdit).setTargetEdit(((CopySourceEdit) textEdit).getTargetEdit());
 			((CopySourceEdit) translatedTextEdit).setSourceModifier(((CopySourceEdit) textEdit).getSourceModifier());
-		} else if (textEdit instanceof CopyTargetEdit) {
+		}
+		else if (textEdit instanceof CopyTargetEdit) {
 			translatedTextEdit = new CopyTargetEdit(jspOffset);
 			((CopyTargetEdit) textEdit).getSourceEdit().setTargetEdit((CopyTargetEdit) translatedTextEdit);
-		} else if (textEdit instanceof MoveSourceEdit) {
+		}
+		else if (textEdit instanceof MoveSourceEdit) {
 			translatedTextEdit = new MoveSourceEdit(jspOffset, length);
 			((MoveSourceEdit) translatedTextEdit).setTargetEdit(((MoveSourceEdit) textEdit).getTargetEdit());
-		} else if (textEdit instanceof MoveTargetEdit) {
+		}
+		else if (textEdit instanceof MoveTargetEdit) {
 			translatedTextEdit = new MoveTargetEdit(jspOffset);
 			((MoveTargetEdit) textEdit).getSourceEdit().setTargetEdit((MoveTargetEdit) translatedTextEdit);
-		} else {
+		}
+		else {
 			System.out.println("Need to translate " + textEdit); //$NON-NLS-1$
 		}
 
@@ -94,8 +102,11 @@ public class JSPTranslationUtil {
 				JSPTranslationAdapter translationAdapter = (JSPTranslationAdapter) xmlDoc.getAdapterFor(IJSPTranslation.class);
 				if (translationAdapter != null)
 					fTranslation = translationAdapter.getJSPTranslation();
-			} finally {
-				xmlModel.releaseFromRead();
+			}
+			finally {
+				if (xmlModel != null) {
+					xmlModel.releaseFromRead();
+				}
 			}
 		}
 

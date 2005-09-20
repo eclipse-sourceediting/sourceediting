@@ -71,22 +71,31 @@ public class ReconcileStepForJspTranslation extends StructuredReconcileStep {
 	 */
 	protected IReconcileResult[] reconcileModel(DirtyRegion dirtyRegion, IRegion subRegion) {
 
-		if(DEBUG)
-            System.out.println("[trace reconciler] > translating JSP in JSP TRANSLATE step"); //$NON-NLS-1$	
 
-		if (isCanceled() || dirtyRegion == null)
-			return EMPTY_RECONCILE_RESULT_SET;
+		if (DEBUG) {
+			System.out.println("[trace reconciler] > translating JSP in JSP TRANSLATE step"); //$NON-NLS-1$
+		}
 
-		// create java model for java reconcile
-		JSPTranslationAdapter adapter = getJSPTranslationAdapter();
-		fJSPTranslation = adapter.getJSPTranslation();
-		fModel = new JSPTranslationWrapper(fJSPTranslation);
+		IReconcileResult[] result = EMPTY_RECONCILE_RESULT_SET;
 
-		if(DEBUG)
-            System.out.println("[trace reconciler] > JSP TRANSLATE step done"); //$NON-NLS-1$	
-		
-		//return EMPTY_RECONCILE_RESULT_SET;
-		return adaptELProblems();
+		if (!(isCanceled() || dirtyRegion == null)) {
+
+			// create java model for java reconcile
+			JSPTranslationAdapter adapter = getJSPTranslationAdapter();
+
+			if (adapter != null) {
+
+				fJSPTranslation = adapter.getJSPTranslation();
+				fModel = new JSPTranslationWrapper(fJSPTranslation);
+
+				result = adaptELProblems();
+			}
+		}
+		if (DEBUG) {
+			System.out.println("[trace reconciler] > JSP TRANSLATE step done"); //$NON-NLS-1$	
+		}
+
+		return result;
 	}
 
 	private IReconcileResult[] adaptELProblems() {
