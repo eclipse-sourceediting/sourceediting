@@ -58,7 +58,7 @@ public class ReconcileStepForJspTranslation extends StructuredReconcileStep {
 	private IReconcileResult[] EMPTY_RECONCILE_RESULT_SET = new IReconcileResult[0];
 	private JSPTranslationAdapter fTranslationAdapter = null;
 	private JSPTranslationExtension fJSPTranslation = null;
-	
+
 	public ReconcileStepForJspTranslation(IReconcileStep step) {
 		super(step);
 	}
@@ -71,31 +71,33 @@ public class ReconcileStepForJspTranslation extends StructuredReconcileStep {
 	 */
 	protected IReconcileResult[] reconcileModel(DirtyRegion dirtyRegion, IRegion subRegion) {
 
-		if(DEBUG)
-            System.out.println("[trace reconciler] > translating JSP in JSP TRANSLATE step"); //$NON-NLS-1$	
+		if (DEBUG)
+			System.out.println("[trace reconciler] > translating JSP in JSP TRANSLATE step"); //$NON-NLS-1$	
 
 		if (isCanceled() || dirtyRegion == null)
 			return EMPTY_RECONCILE_RESULT_SET;
 
 		// create java model for java reconcile
 		JSPTranslationAdapter adapter = getJSPTranslationAdapter();
-		fJSPTranslation = adapter.getJSPTranslation();
-		fModel = new JSPTranslationWrapper(fJSPTranslation);
+		if (adapter != null) {
+			fJSPTranslation = adapter.getJSPTranslation();
+			fModel = new JSPTranslationWrapper(fJSPTranslation);
 
-		if(DEBUG)
-            System.out.println("[trace reconciler] > JSP TRANSLATE step done"); //$NON-NLS-1$	
-		
-		//return EMPTY_RECONCILE_RESULT_SET;
+			if (DEBUG) {
+				System.out.println("[trace reconciler] > JSP TRANSLATE step done"); //$NON-NLS-1$	
+			}
+			return EMPTY_RECONCILE_RESULT_SET;
+		}
 		return adaptELProblems();
 	}
 
 	private IReconcileResult[] adaptELProblems() {
 		List problems = fJSPTranslation.getELProblems();
 		TemporaryAnnotation[] annotations = new TemporaryAnnotation[problems.size()];
-			for (int i = 0; i < problems.size(); i++) {
-				annotations[i] = createTemporaryAnnotationFromProblem((ELProblem) problems.get(i));
-			}
-			return annotations;
+		for (int i = 0; i < problems.size(); i++) {
+			annotations[i] = createTemporaryAnnotationFromProblem((ELProblem) problems.get(i));
+		}
+		return annotations;
 	}
 
 	private TemporaryAnnotation createTemporaryAnnotationFromProblem(ELProblem problem) {
@@ -152,7 +154,7 @@ public class ReconcileStepForJspTranslation extends StructuredReconcileStep {
 		// we filter out unmapped errors here
 		// so they don't show up in the problems view.
 		List filtered = new ArrayList();
-		
+
 		HashMap java2jspRanges = fJSPTranslation.getJava2JspMap();
 		for (int i = 0; i < inputResults.length; i++) {
 			if (isCanceled())
@@ -161,11 +163,11 @@ public class ReconcileStepForJspTranslation extends StructuredReconcileStep {
 				continue;
 			TemporaryAnnotation result = (TemporaryAnnotation) inputResults[i];
 			adaptJava2JspPosition(result, java2jspRanges);
-			
-			if(result.getPosition().offset != -1)
+
+			if (result.getPosition().offset != -1)
 				filtered.add(result);
 		}
-		return (IReconcileResult[])filtered.toArray(new IReconcileResult[filtered.size()]);
+		return (IReconcileResult[]) filtered.toArray(new IReconcileResult[filtered.size()]);
 	}
 
 	/**
@@ -239,17 +241,17 @@ public class ReconcileStepForJspTranslation extends StructuredReconcileStep {
 					// do nothing for usebean for now...
 					break;
 				}
-                // this can actually cause the WRONG node to be underlined
-                // esp in the case of embedded attr regions
-//				else {
-//					// catch all for all other cases for now, at least we'll
-//					// get
-//					// the squiggle in the general area of the problem instead
-//					// of some random place
-//					pos.offset = sdRegion.getStartOffset(r);
-//					pos.length = 1;
-//					break;
-//				}
+				// this can actually cause the WRONG node to be underlined
+				// esp in the case of embedded attr regions
+				// else {
+				// // catch all for all other cases for now, at least we'll
+				// // get
+				// // the squiggle in the general area of the problem instead
+				// // of some random place
+				// pos.offset = sdRegion.getStartOffset(r);
+				// pos.length = 1;
+				// break;
+				// }
 			}
 		}
 	}
@@ -316,17 +318,17 @@ public class ReconcileStepForJspTranslation extends StructuredReconcileStep {
 			}
 		}
 	}
-	
+
 	public void release() {
 		if (fTranslationAdapter != null) {
-			if(DEBUG) {
-				System.out.println("ReconcileStepForJSPTranslation ["+this+"] releasing JSPTranslationAdapter " + fTranslationAdapter); //$NON-NLS-1$ //$NON-NLS-2$
+			if (DEBUG) {
+				System.out.println("ReconcileStepForJSPTranslation [" + this + "] releasing JSPTranslationAdapter " + fTranslationAdapter); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			fTranslationAdapter.release();
 		}
 		super.release();
 	}
-    
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -341,7 +343,7 @@ public class ReconcileStepForJspTranslation extends StructuredReconcileStep {
 			System.out.println("======================================"); //$NON-NLS-1$
 		}
 		super.setInputModel(inputModel);
-		
+
 		reinitTranslationAdapter(inputModel);
 	}
 
@@ -358,7 +360,7 @@ public class ReconcileStepForJspTranslation extends StructuredReconcileStep {
 			IStructuredModel model = null;
 			try {
 				model = StructuredModelManager.getModelManager().getExistingModelForRead(doc);
-				if(getJSPTranslationAdapter() != null)
+				if (getJSPTranslationAdapter() != null)
 					getJSPTranslationAdapter().setXMLModel((IDOMModel) model);
 			}
 			finally {
