@@ -19,7 +19,7 @@
 	<link toc="../org.eclipse.wst.webtools.doc.user/webtools_toc.xml"/>
 	</topic>
 	<topic label="Creating J2EE and enterprise applications">
-	<link toc="../org.eclipse.jst.j2ee.doc.user/j2ee_toc.xml"/>
+	<link toc="../org.eclipse.jst.j2ee.doc.user/jst_j2ee_toc.xml"/>
 	<link toc="../org.eclipse.jst.ejb.doc.user/ejb_toc.xml"/>
 	</topic>
 	<topic label="Editing markup language files" href="../org.eclipse.wst.sse.doc.user/topics/csrcedt004.html">
