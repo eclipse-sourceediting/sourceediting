@@ -32,6 +32,7 @@ import org.eclipse.jst.jsp.core.internal.domdocument.DOMModelForJSP;
 import org.eclipse.jst.jsp.core.internal.encoding.IJSPHeadContentDetector;
 import org.eclipse.jst.jsp.core.internal.encoding.JSPDocumentHeadContentDetector;
 import org.eclipse.jst.jsp.core.internal.encoding.JSPDocumentLoader;
+import org.eclipse.jst.jsp.core.internal.modelquery.JSPModelQueryAdapterImpl;
 import org.eclipse.jst.jsp.core.internal.modelquery.ModelQueryAdapterFactoryForJSP;
 import org.eclipse.jst.jsp.core.internal.parser.JSPReParser;
 import org.eclipse.jst.jsp.core.internal.parser.JSPSourceParser;
@@ -206,45 +207,45 @@ public class JSPModelLoader extends AbstractModelLoader {
 	}
 
 	private IContentDescription getContentDescription(IDocument doc) {
-		if(doc == null)
+		if (doc == null)
 			return null;
 		DocumentInputStream in = new DocumentInputStream(doc);
 		return getContentDescription(in);
 	}
-	
+
 	/**
 	 * 
 	 * @param filePath
-	 * @return the content description, or null if there's no buffer for the filepath
+	 * @return the content description, or null if there's no buffer for the
+	 *         filepath
 	 */
 	private IContentDescription getContentDescription(String filePath) {
-		if(filePath == null)
+		if (filePath == null)
 			return null;
 
 		IDocument doc = null;
-		ITextFileBuffer buf =  FileBuffers.getTextFileBufferManager().getTextFileBuffer(new Path(filePath));
-		if(buf != null) {
+		ITextFileBuffer buf = FileBuffers.getTextFileBufferManager().getTextFileBuffer(new Path(filePath));
+		if (buf != null) {
 			doc = buf.getDocument();
 		}
 		return (doc != null) ? getContentDescription(doc) : null;
 	}
 
 	/**
-	 * Returns content description for an input stream
-	 * Assumes it's JSP content.
-	 * Closes the input stream when finished.
+	 * Returns content description for an input stream Assumes it's JSP
+	 * content. Closes the input stream when finished.
 	 * 
 	 * @param in
 	 * @return the IContentDescription for in, or null if in is null
 	 */
 	private IContentDescription getContentDescription(InputStream in) {
-		
-		if(in == null)
+
+		if (in == null)
 			return null;
-		
+
 		IContentDescription desc = null;
 		try {
-			
+
 			IContentType contentTypeJSP = Platform.getContentTypeManager().getContentType(ContentTypeIdForJSP.ContentTypeID_JSP);
 			desc = contentTypeJSP.getDescriptionFor(in, IContentDescription.ALL);
 		}
@@ -252,7 +253,7 @@ public class JSPModelLoader extends AbstractModelLoader {
 			Logger.logException(e);
 		}
 		finally {
-			if(in != null) {
+			if (in != null) {
 				try {
 					in.close();
 				}
@@ -263,7 +264,7 @@ public class JSPModelLoader extends AbstractModelLoader {
 		}
 		return desc;
 	}
-	
+
 	/**
 	 * Method getLanguage.
 	 * 
@@ -304,7 +305,8 @@ public class JSPModelLoader extends AbstractModelLoader {
 		localHeadParser.set(structuredDocument);
 		try {
 			result = localHeadParser.getLanguage();
-		} catch (IOException e) {
+		}
+		catch (IOException e) {
 			// impossible
 			// TODO need to reconsider design to avoid
 			throw new Error(e);
@@ -369,11 +371,11 @@ public class JSPModelLoader extends AbstractModelLoader {
 		// them be rediscovered (with new, accurate node as target)
 		// pageDirectiveAdapter.clearPageWatchers();
 		if (newEmbeddedContentType != null) {
-		
+
 			// need to null out or else ModelParserAdapter
 			// won't get reinitialized
-			((DOMModelImpl)model).setModelParser(null);
-			
+			((DOMModelImpl) model).setModelParser(null);
+
 			newEmbeddedContentType.initializeFactoryRegistry(model.getFactoryRegistry());
 			newEmbeddedContentType.initializeParser((JSPCapableParser) structuredDocument.getParser());
 
@@ -384,7 +386,8 @@ public class JSPModelLoader extends AbstractModelLoader {
 			if (documentPartitioner != null && documentPartitioner instanceof StructuredTextPartitionerForJSP) {
 				if (newEmbeddedContentType.getFamilyId().equals(ContentTypeIdForXML.ContentTypeID_XML)) {
 					((StructuredTextPartitionerForJSP) documentPartitioner).setEmbeddedPartitioner(new StructuredTextPartitionerForXML());
-				} else if (newEmbeddedContentType.getFamilyId().equals(ContentTypeIdForHTML.ContentTypeID_HTML)) {
+				}
+				else if (newEmbeddedContentType.getFamilyId().equals(ContentTypeIdForHTML.ContentTypeID_HTML)) {
 					((StructuredTextPartitionerForJSP) documentPartitioner).setEmbeddedPartitioner(new StructuredTextPartitionerForHTML());
 				}
 			}
@@ -454,25 +457,25 @@ public class JSPModelLoader extends AbstractModelLoader {
 	}
 
 	protected void initEmbeddedTypePre(IStructuredModel model) {
-		
+
 		// note: this will currently only work for models backed by files
 		EmbeddedTypeHandler embeddedContentType = null;
 		IDOMModel domModel = (IDOMModel) model;
-		
+
 		String possibleFileBaseLocation = model.getBaseLocation();
 		IContentDescription desc = getContentDescription(possibleFileBaseLocation);
-		if(desc != null) {
+		if (desc != null) {
 			Object prop = null;
 			prop = desc.getProperty(IContentDescriptionForJSP.CONTENT_TYPE_ATTRIBUTE);
-			if(prop != null) {
-				embeddedContentType = EmbeddedTypeRegistryImpl.getInstance().getTypeFor((String)prop);
+			if (prop != null) {
+				embeddedContentType = EmbeddedTypeRegistryImpl.getInstance().getTypeFor((String) prop);
 			}
 		}
-		
+
 		IDOMDocument document = domModel.getDocument();
 		PageDirectiveAdapter pageDirectiveAdapter = (PageDirectiveAdapter) document.getAdapterFor(PageDirectiveAdapter.class);
-		
-		if(embeddedContentType != null) {
+
+		if (embeddedContentType != null) {
 			pageDirectiveAdapter.setEmbeddedType(embeddedContentType);
 			embeddedContentType.initializeFactoryRegistry(model.getFactoryRegistry());
 		}
@@ -483,12 +486,12 @@ public class JSPModelLoader extends AbstractModelLoader {
 			embeddedContentType.initializeFactoryRegistry(model.getFactoryRegistry());
 		}
 	}
-	
+
 	protected void initEmbeddedTypePost(IStructuredModel model) {
 		// should already be initialized (from initEmbeddedTypePre)
 		// via IContentDescription
 	}
-	
+
 	/**
 	 * Method initEmbeddedType.
 	 */
@@ -498,7 +501,8 @@ public class JSPModelLoader extends AbstractModelLoader {
 		if (existingEmbeddedType == null) {
 			initEmbeddedTypePre(newModel);
 			initEmbeddedTypePost(newModel);
-		} else {
+		}
+		else {
 			// initEmbeddedType(newModel);
 			initCloneOfEmbeddedType(newModel, existingEmbeddedType, newEmbeddedContentType);
 		}
@@ -526,7 +530,8 @@ public class JSPModelLoader extends AbstractModelLoader {
 			// (documents) adapters,
 			// so need need to use the old one to undo the old state data
 			reInitializeEmbeddedType(model, oldHandler, newHandler);
-		} else {
+		}
+		else {
 			// for language ... we someday MIGHT have to do something
 			// here, but for now, we don't have any model-side language
 			// sensitive adapters.
@@ -567,11 +572,42 @@ public class JSPModelLoader extends AbstractModelLoader {
 			byte[] smallerBuffer = new byte[nRead];
 			System.arraycopy(smallBuffer, 0, smallerBuffer, 0, nRead);
 			returnBuffer = smallerBuffer;
-		} else {
+		}
+		else {
 			returnBuffer = smallBuffer;
 		}
 		return returnBuffer;
 	}
 
+	public IStructuredModel createModel(IStructuredModel oldModel) {
+		IStructuredModel model = super.createModel(oldModel);
+		// For JSPs, the ModelQueryAdapter must be "attached" to the document
+		// before content is set in the model, so taglib initization can
+		// take place.
+		// In this "clone model" case, we create a ModelQuery adapter 
+		// create a new instance from the old data. Note: I think this 
+		// "forced fit" only works here since the implimentaiton of 
+		// ModelQueryAdatper does not 
+		// have to be released. 
+		
+		ModelQueryAdapter modelQueryAdapter =  getModelQueryAdapter(model);
+		if (modelQueryAdapter == null) {
+			modelQueryAdapter = (JSPModelQueryAdapterImpl) getModelQueryAdapter(oldModel);
+			IDOMDocument document = ((IDOMModel) model).getDocument();
+			document.addAdapter(new JSPModelQueryAdapterImpl(modelQueryAdapter.getCMDocumentCache(), modelQueryAdapter.getModelQuery(), modelQueryAdapter.getIdResolver()));
+			
+		}
+
+		
+		
+		return model;
+	}
+
+	private ModelQueryAdapter getModelQueryAdapter(IStructuredModel model) {
+		IDOMDocument document = ((IDOMModel) model).getDocument();
+		
+		ModelQueryAdapter modelQueryAdapter = (ModelQueryAdapter) ((INodeNotifier) document).getAdapterFor(ModelQueryAdapter.class);
+		return modelQueryAdapter;
+	}
 
 }

@@ -89,19 +89,22 @@ public class ModelQueryAdapterFactoryForXML extends AbstractAdapterFactory imple
 				IStructuredModel model = stateNotifier = xmlNode.getModel();
 				stateNotifier.addModelStateListener(this);
 				String baseLocation = null;
-				File file = new Path(model.getBaseLocation()).toFile();
-				if (file.exists()) {
-					baseLocation = file.getAbsolutePath();
-				}
-				else {
-					IPath basePath = new Path(model.getBaseLocation());
-					IPath derivedPath = null;
-					if (basePath.segmentCount() > 1)
-						derivedPath = ResourcesPlugin.getWorkspace().getRoot().getFile(basePath).getLocation();
-					else
-						derivedPath = ResourcesPlugin.getWorkspace().getRoot().getLocation().append(basePath);
-					if (derivedPath != null) {
-						baseLocation = derivedPath.toString();
+				String modelBaseLocation = model.getBaseLocation();
+				if (modelBaseLocation != null) {
+					File file = new Path(modelBaseLocation).toFile();
+					if (file.exists()) {
+						baseLocation = file.getAbsolutePath();
+					}
+					else {
+						IPath basePath = new Path(modelBaseLocation);
+						IPath derivedPath = null;
+						if (basePath.segmentCount() > 1)
+							derivedPath = ResourcesPlugin.getWorkspace().getRoot().getFile(basePath).getLocation();
+						else
+							derivedPath = ResourcesPlugin.getWorkspace().getRoot().getLocation().append(basePath);
+						if (derivedPath != null) {
+							baseLocation = derivedPath.toString();
+						}
 					}
 				}
 				if (org.eclipse.wst.sse.core.internal.util.Debug.displayInfo)
@@ -187,11 +190,11 @@ public class ModelQueryAdapterFactoryForXML extends AbstractAdapterFactory imple
 
 	public void modelAboutToBeReinitialized(IStructuredModel structuredModel) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void modelReinitialized(IStructuredModel structuredModel) {
 		updateResolver(structuredModel);
-		
+
 	}
 }
