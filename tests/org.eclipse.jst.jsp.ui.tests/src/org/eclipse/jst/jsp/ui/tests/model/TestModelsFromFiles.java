@@ -22,6 +22,7 @@ import org.eclipse.jst.jsp.core.internal.text.StructuredTextPartitionerForJSP;
 import org.eclipse.jst.jsp.ui.tests.document.UnzippedProjectTester;
 import org.eclipse.wst.html.core.internal.text.StructuredTextPartitionerForHTML;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
+import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.exceptions.ResourceAlreadyExists;
@@ -30,6 +31,9 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitioning;
 import org.eclipse.wst.sse.core.internal.text.BasicStructuredDocument;
 import org.eclipse.wst.sse.core.internal.util.Utilities;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
+import org.eclipse.wst.xml.core.internal.ssemodelquery.ModelQueryAdapter;
 import org.eclipse.wst.xml.core.internal.text.rules.StructuredTextPartitionerForXML;
 
 
@@ -284,12 +288,30 @@ public class TestModelsFromFiles extends UnzippedProjectTester {
 				setupPartitioner = document.getDocumentPartitioner();
 			}
 			assertTrue("wrong partitioner in document.", expectedPartioner.isInstance(setupPartitioner));
+
+			testClone(model);
+
 		}
 		finally {
 			if (model != null)
 				model.releaseFromEdit();
 		}
 		return contents;
+	}
+
+	private void testClone(IStructuredModel structuredModel) throws IOException {
+		IDOMDocument document = ((IDOMModel) structuredModel).getDocument();
+		INodeNotifier notifier = document;
+		ModelQueryAdapter modelQueryAdapter = (ModelQueryAdapter) notifier.getAdapterFor(ModelQueryAdapter.class);
+		assertNotNull("initial modelQueryAdapter should not be null", modelQueryAdapter);
+		
+		IStructuredModel newModel = structuredModel.newInstance();
+		IDOMDocument newDocument = ((IDOMModel) newModel).getDocument();
+		INodeNotifier newNotifier = newDocument;
+		ModelQueryAdapter result = (ModelQueryAdapter) newNotifier.getAdapterFor(ModelQueryAdapter.class);
+		assertNotNull("newInstance modelQueryAdapter should not be null", result);
+
+
 	}
 
 	/**

@@ -43,9 +43,6 @@ public class TestModelClone extends TestCase {
 		super(name);
 	}
 
-	public static void main(String[] args) {
-	}
-
 	public static Test getTest() {
 		return new TestModelClone("testCreateStructuredModelJSP");
 	}
@@ -148,7 +145,7 @@ public class TestModelClone extends TestCase {
 		EmbeddedTypeHandler embeddedHandler = pageDirectiveAdapter.getEmbeddedType();
 		assertNotNull("model did not have embedded handler", embeddedHandler);
 
-		assertTrue("embeddedHandler is wrong type", embeddedHandler.getClass().equals(expectedType));
+		assertEquals(expectedType, embeddedHandler.getClass());
 
 	}
 
