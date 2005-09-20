@@ -72,10 +72,11 @@ public class ReconcileStepForJspTranslation extends StructuredReconcileStep {
 	protected IReconcileResult[] reconcileModel(DirtyRegion dirtyRegion, IRegion subRegion) {
 
 
-		IReconcileResult[] result = EMPTY_RECONCILE_RESULT_SET;
 		if (DEBUG) {
 			System.out.println("[trace reconciler] > translating JSP in JSP TRANSLATE step"); //$NON-NLS-1$
 		}
+
+		IReconcileResult[] result = EMPTY_RECONCILE_RESULT_SET;
 
 		if (!(isCanceled() || dirtyRegion == null)) {
 
