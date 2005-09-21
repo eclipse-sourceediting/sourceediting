@@ -11,6 +11,15 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/ -->
 <contexts>
+<context id="jspsource_source_HelpId">
+<description>The JSP source page editor lets you edit a JavaServer Pages file. The editor provides many text editing features, such as content assist, user-defined templates, syntax highlighting, unlimited undo and redo, element selection and formatting, and document formatting.
+</description>
+<topic label="Structured text editors for markup languages" href="../org.eclipse.wst.sse.doc.user/topics/csrcedt004.html"/>
+<topic label="Editing text coded in markup languages - overview" href="../org.eclipse.wst.sse.doc.user/topics/tsrcedt000.html"/>
+<topic label="Adding and removing JSP templates" href="../org.eclipse.wst.sse.doc.user/topics/tsrcedt028.html"/>
+<topic label="Making content assist work for JSP files" href="../org.eclipse.wst.sse.doc.user/topics/tsrcedt023.html"/>
+</context>
+
 <context id="jspf1000">
 <description>Select values for the following properties from the drop-down lists:
 -  <b>Character code:</b> Specifies the page directive's pageEncoding value and contentType charset. In HTML documents, this value is also used for the &lt;META&gt; tag's charset property.
