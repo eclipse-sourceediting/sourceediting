@@ -11,13 +11,6 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/ -->
 <contexts>
-<context id="exml0000">
-<description>The XML source page editor lets you edit a file that is coded in the Extensible Markup Language. The editor provides many text editing features, such as content assist, user-defined templates, syntax highlighting, unlimited undo and redo, element selection and formatting, and document formatting.
-</description>
-<topic label="Structured text editors for markup languages" href="../org.eclipse.wst.sse.doc.user/topics/csrcedt004.html"/>
-<topic label="Editing text coded in markup languages - overview" href="../org.eclipse.wst.sse.doc.user/topics/tsrcedt000.html"/>
-<topic label="Adding and removing XML templates" href="../org.eclipse.wst.sse.doc.user/topics/tsrcedt029.html"/>
-</context>
 
 <context id="webx0060">
 <description>This page lets you specify the line delimiter and the text encoding that will be used when you create or save an XML related file.
