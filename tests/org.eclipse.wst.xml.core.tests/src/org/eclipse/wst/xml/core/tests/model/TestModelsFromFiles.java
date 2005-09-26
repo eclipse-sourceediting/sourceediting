@@ -36,7 +36,7 @@ public class TestModelsFromFiles extends UnzippedProjectTester {
 	private static final String NONEXISTENT_FILENAME2 = "testfiles/xml/testnonexistent2.xml";
 	private static final String NONEXISTENT_FILENAME3 = "testfiles/xml/testnonexistent3.xml";
 	private static final String EXISTENT_FILENAME1 = "testfiles/xml/testNormalCase.xml";
-	private final static boolean DEBUG = true;
+	private final static boolean DEBUG = false;
 
 	public void testNonExistentFileWithBuffer() throws ResourceAlreadyExists, ResourceInUse, IOException, CoreException {
 		doTestCreateBuffer(NONEXISTENT_FILENAME1, BasicStructuredDocument.class, StructuredTextPartitionerForXML.class);
