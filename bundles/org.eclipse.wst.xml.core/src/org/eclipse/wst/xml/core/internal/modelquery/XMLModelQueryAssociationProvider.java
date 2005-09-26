@@ -32,6 +32,16 @@ class XMLModelQueryAssociationProvider extends XMLAssociationProvider {
 	}
 
 	protected String resolveGrammarURI(Document document, String publicId, String systemId) {
-		return idResolver.resolve(null, publicId, systemId);
+		
+		String resolvedId = idResolver.resolve(null, publicId, systemId); // initially we had only this call
+		if(resolvedId == null){
+			String location = systemId;
+			if(location == null){
+				location = publicId;
+			}
+			// try physical location
+			resolvedId = idResolver.resolvePhysicalLocation(null, publicId, location);
+		}
+		return resolvedId;
 	}
 }
