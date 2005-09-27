@@ -331,13 +331,14 @@ public class ModelManagerImpl implements IModelManager {
 				_incrCount(sharedObject, rwType);
 			}
 
-			// we expect to always return something
-			Assert.isNotNull(sharedObject, "Program Error: no model recorded for id " + id); //$NON-NLS-1$
-
-			// note: clients must call release for each time they call get.
-			model = sharedObject.theSharedModel;
+			// if we don't know how to create a model
+			// for this type of file, return null
+			if(sharedObject != null) {
+				// note: clients must call release for each time they call get.
+				model = sharedObject.theSharedModel;
+			}
 		}
-
+		
 		return model;
 	}
 
