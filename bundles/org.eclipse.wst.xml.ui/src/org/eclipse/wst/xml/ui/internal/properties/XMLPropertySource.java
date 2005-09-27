@@ -24,7 +24,6 @@ import org.eclipse.ui.views.properties.IPropertySheetEntry;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.IPropertySource2;
 import org.eclipse.ui.views.properties.TextPropertyDescriptor;
-import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.sse.ui.views.properties.IPropertySourceExtension;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
@@ -46,10 +45,9 @@ import org.w3c.dom.Node;
 
 /**
  * An IPropertySource implementation for a JFace viewer used to display
- * properties of DOM nodes. Requires an adapter factory to create JFace
- * adapters for the nodes in the tree.
+ * properties of DOM nodes.
  */
-public class XMLPropertySourceAdapter implements INodeAdapter, IPropertySource, IPropertySourceExtension, IPropertySource2 {
+public class XMLPropertySource implements IPropertySource, IPropertySourceExtension, IPropertySource2 {
 	protected final static String CATEGORY_ATTRIBUTES = XMLUIMessages.XMLPropertySourceAdapter_0; //$NON-NLS-1$
 
 	private static final boolean fSetExpertFilter = false;
@@ -65,7 +63,7 @@ public class XMLPropertySourceAdapter implements INodeAdapter, IPropertySource, 
 
 	private Stack fValuesBeingSet = new Stack();
 
-	public XMLPropertySourceAdapter(INodeNotifier target) {
+	public XMLPropertySource(INodeNotifier target) {
 		super();
 		fNode = (Node) target;
 		if (fNode instanceof IDOMNode) {
@@ -341,7 +339,7 @@ public class XMLPropertySourceAdapter implements INodeAdapter, IPropertySource, 
 	 * 
 	 * @return all valid descriptors.
 	 */
-	public IPropertyDescriptor[] getPropertyDescriptors() {
+	public final IPropertyDescriptor[] getPropertyDescriptors() {
 		if (fDescriptors == null || fDescriptors.length == 0) {
 			fDescriptors = createPropertyDescriptors();
 		}
@@ -389,14 +387,6 @@ public class XMLPropertySourceAdapter implements INodeAdapter, IPropertySource, 
 		return validValues;
 	}
 
-	/**
-	 * Allowing the INodeAdapter to compare itself against the type allows it
-	 * to return true in more than one case.
-	 */
-	public boolean isAdapterForType(Object type) {
-		return type == IPropertySource.class;
-	}
-
 	public boolean isPropertyRemovable(Object id) {
 		return true;
 	}
@@ -439,9 +429,6 @@ public class XMLPropertySourceAdapter implements INodeAdapter, IPropertySource, 
 		if (attrMap != null)
 			return attrMap.getNamedItem(property) != null;
 		return false;
-	}
-
-	public void notifyChanged(INodeNotifier notifier, int eventType, java.lang.Object changedFeature, java.lang.Object oldValue, java.lang.Object newValue, int pos) {
 	}
 
 	/**

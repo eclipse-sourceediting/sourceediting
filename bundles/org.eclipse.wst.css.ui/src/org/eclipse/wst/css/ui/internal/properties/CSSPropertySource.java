@@ -33,20 +33,19 @@ import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSNodeList;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleDeclItem;
 import org.eclipse.wst.css.ui.internal.CSSUIMessages;
-import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.w3c.dom.css.CSSStyleDeclaration;
 
 /**
  * A IPropertySource implementation for a JFace viewer used to display
- * propreties of DOM nodes. This takes an adapter factory to create JFace
- * adapters for the nodes in the tree.
+ * properties of CSS nodes.
  */
-public class CSSPropertySource implements INodeAdapter, IPropertySource {
+public class CSSPropertySource implements IPropertySource {
 	protected ICSSNode fNode = null;
 	// for performance...
 	final static Class ADAPTER_KEY = IPropertySource.class;
-
+	final boolean PERF_GETDESCRIPTORS = true;
+	private long time0;
 	/**
 	 * DOMPropertySource constructor comment.
 	 */
@@ -58,7 +57,7 @@ public class CSSPropertySource implements INodeAdapter, IPropertySource {
 	protected IPropertyDescriptor createDefaultPropertyDescriptor(String attributeName) {
 		// the displayName MUST be set
 		IPropertyDescriptor descriptor = new CSSTextPropertyDescriptor(attributeName, attributeName, fNode);
-		//	IPropertyDescriptor descriptor = new
+		// IPropertyDescriptor descriptor = new
 		// TextPropertyDescriptor(attributeName, attributeName);
 		return descriptor;
 	}
@@ -75,12 +74,12 @@ public class CSSPropertySource implements INodeAdapter, IPropertySource {
 				category = CSSUIMessages.INFO_Not_Categorized_1; //$NON-NLS-1$
 			}
 			descriptor = new CSSTextPropertyDescriptor(name, name, fNode, category);
-			//			if (category == null) {
-			//				descriptor = new CSSTextPropertyDescriptor(name, name, fNode);
-			//			} else {
-			//				descriptor = new CSSTextPropertyDescriptor(name, name, fNode,
+			// if (category == null) {
+			// descriptor = new CSSTextPropertyDescriptor(name, name, fNode);
+			// } else {
+			// descriptor = new CSSTextPropertyDescriptor(name, name, fNode,
 			// category);
-			//			}
+			// }
 		}
 		return descriptor;
 	}
@@ -101,6 +100,8 @@ public class CSSPropertySource implements INodeAdapter, IPropertySource {
 	 * @return a vector containing all descriptors.
 	 */
 	public IPropertyDescriptor[] getPropertyDescriptors() {
+		time0 = System.currentTimeMillis();
+
 		CSSMetaModel metamodel = CSSMetaModelFinder.getInstance().findMetaModelFor(fNode);
 		Iterator iProperties = Collections.EMPTY_LIST.iterator();
 		switch (fNode.getNodeType()) {
@@ -178,6 +179,9 @@ public class CSSPropertySource implements INodeAdapter, IPropertySource {
 		}
 
 		IPropertyDescriptor[] resultArray = new IPropertyDescriptor[descriptors.size()];
+		if (PERF_GETDESCRIPTORS) {
+			System.out.println(getClass().getName() + ".getPropertyDescriptors: " + (System.currentTimeMillis() - time0) + "ms");
+		}
 		return (IPropertyDescriptor[]) descriptors.toArray(resultArray);
 	}
 
@@ -234,14 +238,6 @@ public class CSSPropertySource implements INodeAdapter, IPropertySource {
 	}
 
 	/**
-	 * Allowing the INodeAdapter to compare itself against the type allows it
-	 * to return true in more than one case.
-	 */
-	public boolean isAdapterForType(java.lang.Object type) {
-		return type.equals(ADAPTER_KEY);
-	}
-
-	/**
 	 * Returns whether the property value has changed from the default.
 	 * 
 	 * @return <code>true</code> if the value of the specified property has
@@ -261,11 +257,6 @@ public class CSSPropertySource implements INodeAdapter, IPropertySource {
 		}
 
 		return false;
-	}
-
-	/**
-	 */
-	public void notifyChanged(INodeNotifier notifier, int eventType, java.lang.Object changedFeature, java.lang.Object oldValue, java.lang.Object newValue, int pos) {
 	}
 
 	/**
@@ -303,10 +294,12 @@ public class CSSPropertySource implements INodeAdapter, IPropertySource {
 			try {
 				if (valueString == null || valueString.length() <= 0) {
 					declaration.removeProperty(nameString);
-				} else {
+				}
+				else {
 					declaration.setProperty(nameString, valueString, ""); //$NON-NLS-1$
 				}
-			} catch (Exception e) {
+			}
+			catch (Exception e) {
 				IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 				String title = CSSUIMessages.Title_InvalidValue; //$NON-NLS-1$
 				String message = CSSUIMessages.Message_InvalidValue; //$NON-NLS-1$

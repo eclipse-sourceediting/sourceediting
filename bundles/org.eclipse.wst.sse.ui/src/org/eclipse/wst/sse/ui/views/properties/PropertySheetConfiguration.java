@@ -12,18 +12,14 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.ui.views.properties;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.ui.IEditorPart;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
-import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;
 
 
@@ -32,114 +28,13 @@ import org.eclipse.ui.views.properties.IPropertySourceProvider;
  * 
  * @plannedfor 1.0
  */
-public class PropertySheetConfiguration implements IExecutableExtension {
-
-	private class NullPropertySource implements IPropertySource {
-		private final IPropertyDescriptor[] descriptors = new IPropertyDescriptor[0];
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.ui.views.properties.IPropertySource#getEditableValue()
-		 */
-		public Object getEditableValue() {
-			return null;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.ui.views.properties.IPropertySource#getPropertyDescriptors()
-		 */
-		public IPropertyDescriptor[] getPropertyDescriptors() {
-			return descriptors;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.ui.views.properties.IPropertySource#getPropertyValue(java.lang.Object)
-		 */
-		public Object getPropertyValue(Object id) {
-			return ""; //$NON-NLS-1$
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.ui.views.properties.IPropertySource#isPropertySet(java.lang.Object)
-		 */
-		public boolean isPropertySet(Object id) {
-			return false;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.ui.views.properties.IPropertySource#resetPropertyValue(java.lang.Object)
-		 */
-		public void resetPropertyValue(Object id) {
-			// do nothing
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.ui.views.properties.IPropertySource#setPropertyValue(java.lang.Object,
-		 *      java.lang.Object)
-		 */
-		public void setPropertyValue(Object id, Object value) {
-			// do nothing
-		}
-	}
-
-	private class NullPropertySourceProvider implements IPropertySourceProvider {
-		private IPropertySource fNullPropertySource = null;
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.ui.views.properties.IPropertySourceProvider#getPropertySource(java.lang.Object)
-		 */
-		public IPropertySource getPropertySource(Object object) {
-			if (fNullPropertySource == null)
-				fNullPropertySource = new NullPropertySource();
-			return fNullPropertySource;
-		}
-	}
-
-	private IEditorPart fEditor;
-	protected IPropertySourceProvider fPropertySourceProvider = null;
-
+public abstract class PropertySheetConfiguration {
 	public PropertySheetConfiguration() {
 		super();
 	}
 
 	public void addContributions(IMenuManager menuManager, IToolBarManager toolBarManager, IStatusLineManager statusLineManager) {
 		// do nothing
-	}
-
-	/**
-	 * @return
-	 */
-	protected IPropertySourceProvider createPropertySourceProvider(IPropertySheetPage page) {
-		return new NullPropertySourceProvider();
-	}
-
-	/**
-	 * @return Returns the editor.
-	 */
-	public IEditorPart getEditor() {
-		return fEditor;
-	}
-
-	/**
-	 * Returns the correct IPropertySourceProvider
-	 */
-	public IPropertySourceProvider getPropertySourceProvider(IPropertySheetPage page) {
-		if (fPropertySourceProvider == null)
-			fPropertySourceProvider = createPropertySourceProvider(page);
-		return fPropertySourceProvider;
 	}
 
 	/**
@@ -150,31 +45,25 @@ public class PropertySheetConfiguration implements IExecutableExtension {
 	 * @param selection
 	 * @return
 	 */
-	public ISelection getSelection(IWorkbenchPart selectingPart, ISelection selection) {
-		return selection;
+	public ISelection getInputSelection(IWorkbenchPart selectingPart, ISelection selection) {
+		ISelection preferredSelection = selection;
+		if (selection instanceof IStructuredSelection) {
+			// don't support more than one selected node
+			if (((IStructuredSelection) selection).size() > 1)
+				preferredSelection = StructuredSelection.EMPTY;
+		}
+		return preferredSelection;
 	}
+
+	/**
+	 * Returns the correct IPropertySourceProvider
+	 */
+	public abstract IPropertySourceProvider getPropertySourceProvider(IPropertySheetPage page);
 
 	public void removeContributions(IMenuManager menuManager, IToolBarManager toolBarManager, IStatusLineManager statusLineManager) {
 		// do nothing
 	}
 
-	/**
-	 * @param editor
-	 *            The editor to set.
-	 */
-	public void setEditor(IEditorPart editor) {
-		fEditor = editor;
-	}
-
-	public void setInitializationData(IConfigurationElement config, String propertyName, Object data) throws CoreException {
-		/*
-		 * Currently no need for initialization data but is good practice to
-		 * implement IExecutableExtension since is a class that can be created
-		 * by executable extension
-		 */
-	}
-
 	public void unconfigure() {
-		// do nothing
 	}
 }

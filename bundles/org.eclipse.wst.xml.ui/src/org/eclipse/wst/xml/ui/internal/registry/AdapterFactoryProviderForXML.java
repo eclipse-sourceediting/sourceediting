@@ -13,7 +13,6 @@
 package org.eclipse.wst.xml.ui.internal.registry;
 
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.wst.sse.core.internal.ltk.modelhandler.IDocumentTypeHandler;
 import org.eclipse.wst.sse.core.internal.model.FactoryRegistry;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapterFactory;
@@ -29,7 +28,6 @@ import org.eclipse.wst.xml.ui.internal.DOMObserver;
 import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeAdapterFactory;
 import org.eclipse.wst.xml.ui.internal.preferences.XMLUIPreferenceNames;
-import org.eclipse.wst.xml.ui.internal.properties.XMLPropertySourceAdapterFactory;
 
 /**
  *  
@@ -50,11 +48,6 @@ public class AdapterFactoryProviderForXML implements AdapterFactoryProvider {
 		Assert.isNotNull(factoryRegistry, "Program Error: client caller must ensure model has factory registry"); //$NON-NLS-1$
 		INodeAdapterFactory factory = null;
 
-		factory = factoryRegistry.getFactoryFor(IPropertySource.class);
-		if (factory == null) {
-			factory = new XMLPropertySourceAdapterFactory();
-			factoryRegistry.addFactory(factory);
-		}
 		factory = factoryRegistry.getFactoryFor(IJFaceNodeAdapter.class);
 		if (factory == null) {
 			factory = new JFaceNodeAdapterFactory();

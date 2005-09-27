@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.wst.html.ui.internal.registry;
 
-import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.wst.html.core.internal.modelhandler.ModelHandlerForHTML;
 import org.eclipse.wst.html.ui.internal.contentoutline.JFaceNodeAdapterFactoryForHTML;
 import org.eclipse.wst.sse.core.internal.ltk.modelhandler.IDocumentTypeHandler;
@@ -21,7 +20,6 @@ import org.eclipse.wst.sse.ui.internal.contentoutline.IJFaceNodeAdapter;
 import org.eclipse.wst.sse.ui.internal.provisional.registry.AdapterFactoryProvider;
 import org.eclipse.wst.sse.ui.internal.util.Assert;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
-import org.eclipse.wst.xml.ui.internal.properties.XMLPropertySourceAdapterFactory;
 
 
 public class AdapterFactoryProviderForHTML implements AdapterFactoryProvider {
@@ -43,11 +41,6 @@ public class AdapterFactoryProviderForHTML implements AdapterFactoryProvider {
 		Assert.isNotNull(factoryRegistry, "Program Error: client caller must ensure model has factory registry"); //$NON-NLS-1$
 		INodeAdapterFactory factory = null;
 
-		factory = factoryRegistry.getFactoryFor(IPropertySource.class);
-		if (factory == null) {
-			factory = new XMLPropertySourceAdapterFactory();
-			factoryRegistry.addFactory(factory);
-		}
 		factory = factoryRegistry.getFactoryFor(IJFaceNodeAdapter.class);
 		if (factory == null) {
 			factory = new JFaceNodeAdapterFactoryForHTML();

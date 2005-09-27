@@ -12,9 +12,7 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.ui.views.properties;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -27,9 +25,12 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.progress.UIJob;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
+import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;
 import org.eclipse.ui.views.properties.PropertySheetPage;
-import org.eclipse.wst.sse.ui.views.properties.StructuredPropertySheetConfiguration;
+import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
+import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
+import org.eclipse.wst.sse.ui.views.properties.PropertySheetConfiguration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.CMDocumentManager;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.CMDocumentManagerListener;
@@ -37,10 +38,12 @@ import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.CMDocumentCache;
 import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
 import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
+import org.eclipse.wst.xml.ui.internal.properties.XMLPropertySource;
 import org.w3c.dom.Attr;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-public class XMLPropertySheetConfiguration extends StructuredPropertySheetConfiguration {
+public class XMLPropertySheetConfiguration extends PropertySheetConfiguration {
 	public class CMDocumentManagerListenerImpl implements CMDocumentManagerListener {
 		public void cacheCleared(CMDocumentCache cache) {
 			// nothing to do
@@ -59,36 +62,35 @@ public class XMLPropertySheetConfiguration extends StructuredPropertySheetConfig
 		}
 
 		private void refreshPages() {
-			PropertySheetPage[] pages = getPages();
-			for (int i = 0; i < pages.length; i++) {
-				getPropertiesRefreshJob().addPropertySheetPage(pages[i]);
-				getPropertiesRefreshJob().schedule(PropertiesRefreshJob.UPDATE_DELAY);
-			}
+			getPropertiesRefreshJob().addPropertySheetPage(fPropertySheetPage);
+			getPropertiesRefreshJob().schedule(PropertiesRefreshJob.UPDATE_DELAY);
+
 		}
 	}
 
 	private class PropertiesRefreshJob extends UIJob {
 		public static final int UPDATE_DELAY = 200;
 
-		private List propertySheetPages = null;
+		private Set propertySheetPages = null;
 
 		public PropertiesRefreshJob() {
 			super(XMLUIMessages.JFaceNodeAdapter_1);
 			setSystem(true);
 			setPriority(Job.SHORT);
-			propertySheetPages = new ArrayList(1);
+			propertySheetPages = new HashSet(1);
 		}
 
-		void addPropertySheetPage(PropertySheetPage page) {
+		void addPropertySheetPage(IPropertySheetPage page) {
 			propertySheetPages.add(page);
+			schedule(UPDATE_DELAY);
 		}
 
 		public IStatus runInUIThread(IProgressMonitor monitor) {
-			List pages = propertySheetPages;
-			propertySheetPages = new ArrayList(1);
+			Object[] pages = propertySheetPages.toArray();
+			propertySheetPages.clear();
 
-			for (int i = 0; i < propertySheetPages.size(); i++) {
-				PropertySheetPage page = (PropertySheetPage) propertySheetPages.get(i);
+			for (int i = 0; i < pages.length; i++) {
+				PropertySheetPage page = (PropertySheetPage) pages[i];
 				if (page.getControl() != null && !page.getControl().isDisposed()) {
 					page.refresh();
 				}
@@ -98,93 +100,144 @@ public class XMLPropertySheetConfiguration extends StructuredPropertySheetConfig
 		}
 	}
 
-	private CMDocumentManagerListenerImpl fCMDocumentManagerListener = null;
+	private class XMLPropertySheetRefreshAdapter implements INodeAdapter {
+		public boolean isAdapterForType(Object type) {
+			return false;
+		}
+
+		public void notifyChanged(INodeNotifier notifier, int eventType, Object changedFeature, Object oldValue, Object newValue, int pos) {
+			if (fPropertySheetPage != null) {
+				getPropertiesRefreshJob().addPropertySheetPage(fPropertySheetPage);
+			}
+		}
+	}
+
+	private class XMLPropertySourceProvider implements IPropertySourceProvider {
+		private IPropertySource fPropertySource = null;
+		private INodeNotifier fSource = null;
+
+		public IPropertySource getPropertySource(Object object) {
+			if (fSource != null && object.equals(fSource)) {
+				return fPropertySource;
+			}
+
+			if (object instanceof INodeNotifier) {
+				fSource = (INodeNotifier) object;
+				fPropertySource = new XMLPropertySource((INodeNotifier) object);
+			}
+			else {
+				fSource = null;
+				fPropertySource = null;
+			}
+			return fPropertySource;
+		}
+	}
+
+	private CMDocumentManagerListenerImpl fCMDocumentManagerListener = new CMDocumentManagerListenerImpl();
 	private PropertiesRefreshJob fPropertiesRefreshJob = null;
-	private Set fPropertySheetPages = null;
-	private CMDocumentManager[] fSelectedCMDocumentManagers;
+	IPropertySheetPage fPropertySheetPage = null;
+	private IPropertySourceProvider fPropertySourceProvider = null;
+	private INodeAdapter fRefreshAdapter = new XMLPropertySheetRefreshAdapter();
+	private CMDocumentManager[] fSelectedCMDocumentManagers = new CMDocumentManager[0];
+	private INodeNotifier[] fSelectedNotifiers = new INodeNotifier[0];;
 
 	public XMLPropertySheetConfiguration() {
 		super();
-		fPropertySheetPages = new HashSet(2);
-		fSelectedCMDocumentManagers = new CMDocumentManager[0];
-		// register for CMDocumentManager events
-		fCMDocumentManagerListener = new CMDocumentManagerListenerImpl();
 	}
 
-	protected IPropertySourceProvider createPropertySourceProvider(IPropertySheetPage page) {
-		fPropertySheetPages.add(page);
-		return super.createPropertySourceProvider(page);
+	public ISelection getInputSelection(IWorkbenchPart selectingPart, ISelection selection) {
+		if (fSelectedNotifiers != null) {
+			for (int i = 0; i < fSelectedNotifiers.length; i++) {
+				fSelectedNotifiers[i].removeAdapter(fRefreshAdapter);
+			}
+			fSelectedNotifiers = null;
+		}
+		for (int i = 0; i < fSelectedCMDocumentManagers.length; i++) {
+			fSelectedCMDocumentManagers[i].removeListener(fCMDocumentManagerListener);
+		}
+
+		ISelection preferredSelection = selection;
+		if (selection instanceof IStructuredSelection) {
+			IStructuredSelection structuredSel = (IStructuredSelection) selection;
+
+			/*
+			 * On Attr nodes, select the owner Element. On Text nodes, select
+			 * the parent Element.
+			 */
+			Object[] selectedObjects = new Object[structuredSel.size()];
+			System.arraycopy(structuredSel.toArray(), 0, selectedObjects, 0, selectedObjects.length);
+			for (int i = 0; i < selectedObjects.length; i++) {
+				Object inode = selectedObjects[i];
+				if (inode instanceof Node) {
+					Node node = (Node) inode;
+					// replace Attribute Node with its owner
+					Node parentNode = node.getParentNode();
+					if (node.getNodeType() == Node.ATTRIBUTE_NODE) {
+						Element ownerElement = ((Attr) node).getOwnerElement();
+						selectedObjects[i] = ownerElement;
+					}
+					// replace Text Node with its parent
+					else if ((node.getNodeType() == Node.TEXT_NODE || (node.getNodeType() == Node.CDATA_SECTION_NODE)) && parentNode != null) {
+						selectedObjects[i] = parentNode;
+					}
+				}
+			}
+
+			if (selectedObjects.length > 0) {
+				Set managers = new HashSet(1);
+				Set selectedNotifiers = new HashSet(1);
+
+				for (int i = 0; i < selectedObjects.length; i++) {
+					if (selectedObjects[i] instanceof Node) {
+						ModelQuery query = ModelQueryUtil.getModelQuery(((Node) selectedObjects[i]).getOwnerDocument());
+						if (query != null) {
+							CMDocumentManager mgr = query.getCMDocumentManager();
+							if (mgr != null) {
+								managers.add(mgr);
+								mgr.addListener(fCMDocumentManagerListener);
+							}
+						}
+					}
+					/*
+					 * Add UI refresh adapters and remember notifiers for
+					 * later removal
+					 */
+					if (selectedObjects[i] instanceof INodeNotifier) {
+						selectedNotifiers.add(selectedObjects[i]);
+						((INodeNotifier) selectedObjects[i]).addAdapter(fRefreshAdapter);
+					}
+				}
+				fSelectedCMDocumentManagers = (CMDocumentManager[]) managers.toArray(new CMDocumentManager[managers.size()]);
+				fSelectedNotifiers = (INodeNotifier[]) selectedNotifiers.toArray(new INodeNotifier[selectedNotifiers.size()]);
+			}
+
+
+			preferredSelection = new StructuredSelection(selectedObjects);
+		}
+		return preferredSelection;
 	}
 
-	public PropertySheetPage[] getPages() {
-		PropertySheetPage[] pages = (PropertySheetPage[]) fPropertySheetPages.toArray(new PropertySheetPage[fPropertySheetPages.size()]);
-		return pages;
-	}
-
-	public PropertiesRefreshJob getPropertiesRefreshJob() {
-		if (fPropertiesRefreshJob != null) {
+	PropertiesRefreshJob getPropertiesRefreshJob() {
+		if (fPropertiesRefreshJob == null) {
 			fPropertiesRefreshJob = new PropertiesRefreshJob();
 		}
 		return fPropertiesRefreshJob;
 	}
 
-	public ISelection getSelection(IWorkbenchPart selectingPart, ISelection selection) {
-		// On Attr nodes, select the owner Element. On Text nodes, select the
-		// parent Element.
-		ISelection preferredSelection = selection;
-		if (selection instanceof IStructuredSelection) {
-			for (int i = 0; i < fSelectedCMDocumentManagers.length; i++) {
-				fSelectedCMDocumentManagers[i].removeListener(fCMDocumentManagerListener);
-			}
-			Set managers = new HashSet(1);
-
-			IStructuredSelection structuredSel = (IStructuredSelection) selection;
-
-			List inputList = new ArrayList(structuredSel.toList());
-			for (int i = 0; i < inputList.size(); i++) {
-				Object inode = inputList.get(i);
-				if (inode instanceof Node) {
-					Node node = (Node) inputList.get(i);
-					// replace Attribute Node with its owner
-					if (node.getNodeType() == Node.ATTRIBUTE_NODE) {
-						inputList.set(i, ((Attr) node).getOwnerElement());
-						ModelQuery query = ModelQueryUtil.getModelQuery(((Attr) node).getOwnerElement().getOwnerDocument());
-						if (query != null) {
-							Object o = query.getCMDocumentManager();
-							if (o != null) {
-								managers.add(o);
-							}
-						}
-					}
-					// replace Text Node with its parent
-					else if ((node.getNodeType() == Node.TEXT_NODE || (node.getNodeType() == Node.CDATA_SECTION_NODE)) && node.getParentNode() != null) {
-						inputList.set(i, node.getParentNode());
-						ModelQuery query = ModelQueryUtil.getModelQuery(node.getParentNode().getOwnerDocument());
-						if (query != null) {
-							Object o = query.getCMDocumentManager();
-							if (o != null) {
-								managers.add(o);
-							}
-						}
-					}
-				}
-			}
-
-			fSelectedCMDocumentManagers = (CMDocumentManager[]) managers.toArray(new CMDocumentManager[managers.size()]);
-			for (int i = 0; i < fSelectedCMDocumentManagers.length; i++) {
-				fSelectedCMDocumentManagers[i].addListener(fCMDocumentManagerListener);
-			}
-
-			preferredSelection = new StructuredSelection(inputList);
+	public IPropertySourceProvider getPropertySourceProvider(IPropertySheetPage page) {
+		if (fPropertySourceProvider == null) {
+			fPropertySheetPage = page;
+			fPropertySourceProvider = new XMLPropertySourceProvider();
 		}
-		return preferredSelection;
+		return fPropertySourceProvider;
 	}
+
 
 	public void unconfigure() {
 		super.unconfigure();
 		for (int i = 0; i < fSelectedCMDocumentManagers.length; i++) {
 			fSelectedCMDocumentManagers[i].removeListener(fCMDocumentManagerListener);
 		}
-		fPropertySheetPages.clear();
+		fPropertySheetPage = null;
 	}
 }

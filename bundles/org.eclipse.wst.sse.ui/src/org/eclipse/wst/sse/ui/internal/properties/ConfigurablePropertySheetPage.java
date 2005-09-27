@@ -15,6 +15,7 @@ package org.eclipse.wst.sse.ui.internal.properties;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.action.IToolBarManager;
@@ -27,7 +28,9 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.IPageSite;
 import org.eclipse.ui.views.properties.IPropertySheetEntry;
+import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.eclipse.ui.views.properties.IPropertySource;
+import org.eclipse.ui.views.properties.IPropertySourceProvider;
 import org.eclipse.ui.views.properties.PropertySheetPage;
 import org.eclipse.wst.sse.ui.views.properties.IPropertySourceExtension;
 import org.eclipse.wst.sse.ui.views.properties.PropertySheetConfiguration;
@@ -39,21 +42,27 @@ import org.eclipse.wst.sse.ui.views.properties.PropertySheetConfiguration;
  */
 
 public class ConfigurablePropertySheetPage extends PropertySheetPage {
-	private static final boolean _DEBUG_ENTRY_SELECTION = false;
-	private static final boolean _DEBUG_SELECTION = false;
+	private class NullPropertySheetConfiguration extends PropertySheetConfiguration {
+		public IPropertySourceProvider getPropertySourceProvider(IPropertySheetPage page) {
+			return null;
+		}
+	}
+
+	private static final boolean _DEBUG = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.ui/propertySheet")); //$NON-NLS-1$  //$NON-NLS-2$;;
+
 	private long _DEBUG_TIME = 0;
 
 	private PropertySheetConfiguration fConfiguration;
-
+	private ISelection fInput = null;
 	private IMenuManager fMenuManager;
+
 	private RemoveAction fRemoveAction;
+
 	private IStatusLineManager fStatusLineManager;
 
 	private IToolBarManager fToolBarManager;
 
-	private final PropertySheetConfiguration NULL_CONFIGURATION = new PropertySheetConfiguration();
-
-	private Object selectedEntry = null;
+	private final PropertySheetConfiguration NULL_CONFIGURATION = new NullPropertySheetConfiguration();
 
 	public ConfigurablePropertySheetPage() {
 		super();
@@ -77,10 +86,6 @@ public class ConfigurablePropertySheetPage extends PropertySheetPage {
 	}
 
 	public void handleEntrySelection(ISelection selection) {
-		if (_DEBUG_ENTRY_SELECTION) {
-			System.out.println("(P:entry " + selection);
-		}
-		selectedEntry = selection;
 		if (getControl() != null && !getControl().isDisposed() && selection != null) {
 			super.handleEntrySelection(selection);
 			fRemoveAction.setEnabled(!selection.isEmpty());
@@ -114,7 +119,7 @@ public class ConfigurablePropertySheetPage extends PropertySheetPage {
 				Object data = items[0].getData();
 				if (data instanceof IPropertySheetEntry) {
 					IPropertySheetEntry entry = (IPropertySheetEntry) data;
-					ISelection selection = getConfiguration().getSelection(null, new StructuredSelection(selectedNodes));
+					ISelection selection = getConfiguration().getInputSelection(null, new StructuredSelection(selectedNodes));
 					if (selection != null && !selection.isEmpty() && selection instanceof IStructuredSelection) {
 						IPropertySource source = getConfiguration().getPropertySourceProvider(this).getPropertySource(((IStructuredSelection) selection).getFirstElement());
 						if (source != null && source instanceof IPropertySourceExtension) {
@@ -136,13 +141,29 @@ public class ConfigurablePropertySheetPage extends PropertySheetPage {
 	 */
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 		_DEBUG_TIME = System.currentTimeMillis();
-		if (getControl() != null && getControl().isVisible() && selection != selectedEntry && !getControl().isFocusControl()) {
-			super.selectionChanged(part, getConfiguration().getSelection(part, selection));
-			if (_DEBUG_SELECTION) {
-				System.out.println("(P:service " + (System.currentTimeMillis() - _DEBUG_TIME) + "ms) " + part + " : " + selection);
+		if (getControl() != null && getControl().isVisible() && !getControl().isFocusControl()) {
+			ISelection preferredSelection = getConfiguration().getInputSelection(part, selection);
+			/*
+			 * Do some minor caching of the selection.
+			 * 
+			 * As a PropertySheetPage, we've always notified of selection
+			 * changes, but we've also subscribed to post selection
+			 * notification so we can track caret movements in source viewers.
+			 * When selecting a block of text, we're thus notified of the new
+			 * selection twice. Remembering what our last *effective*
+			 * selection was allows us to cut out most of the
+			 * double-notification penalty.
+			 */
+			if (!preferredSelection.equals(fInput)) {
+				fInput = preferredSelection;
+				super.selectionChanged(part, preferredSelection);
+			}
+
+			if (_DEBUG) {
+				System.out.println("(P:service " + (System.currentTimeMillis() - _DEBUG_TIME) + "ms) " + part + " : " + ((IStructuredSelection) preferredSelection).getFirstElement());
 			}
 		}
-		else if (_DEBUG_SELECTION) {
+		else if (_DEBUG) {
 			System.out.println("[skipped] (P:" + (System.currentTimeMillis() - _DEBUG_TIME) + "ms) " + part + " : " + selection);
 		}
 	}
@@ -163,5 +184,6 @@ public class ConfigurablePropertySheetPage extends PropertySheetPage {
 			setPropertySourceProvider(fConfiguration.getPropertySourceProvider(this));
 			fConfiguration.addContributions(fMenuManager, fToolBarManager, fStatusLineManager);
 		}
+
 	}
 }

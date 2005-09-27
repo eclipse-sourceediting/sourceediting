@@ -17,7 +17,6 @@ import org.eclipse.jst.jsp.core.internal.java.IJSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapterFactory;
 import org.eclipse.jst.jsp.core.internal.modelhandler.ModelHandlerForJSP;
 import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
-import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.wst.html.ui.internal.contentoutline.JFaceNodeAdapterFactoryForHTML;
 import org.eclipse.wst.sse.core.internal.PropagatingAdapter;
 import org.eclipse.wst.sse.core.internal.ltk.modelhandler.IDocumentTypeHandler;
@@ -31,7 +30,6 @@ import org.eclipse.wst.sse.ui.internal.provisional.registry.embedded.EmbeddedAda
 import org.eclipse.wst.sse.ui.internal.util.Assert;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
-import org.eclipse.wst.xml.ui.internal.properties.XMLPropertySourceAdapterFactory;
 
 public class AdapterFactoryProviderForJSP implements AdapterFactoryProvider {
 
@@ -54,11 +52,6 @@ public class AdapterFactoryProviderForJSP implements AdapterFactoryProvider {
 		FactoryRegistry factoryRegistry = structuredModel.getFactoryRegistry();
 		Assert.isNotNull(factoryRegistry, "Program Error: client caller must ensure model has factory registry"); //$NON-NLS-1$
 		INodeAdapterFactory factory = null;
-		factory = factoryRegistry.getFactoryFor(IPropertySource.class);
-		if (factory == null) {
-			factory = new XMLPropertySourceAdapterFactory();
-			factoryRegistry.addFactory(factory);
-		}
 		factory = factoryRegistry.getFactoryFor(IJFaceNodeAdapter.class);
 		if (factory == null) {
 			factory = new JFaceNodeAdapterFactoryForHTML(IJFaceNodeAdapter.class, true);
