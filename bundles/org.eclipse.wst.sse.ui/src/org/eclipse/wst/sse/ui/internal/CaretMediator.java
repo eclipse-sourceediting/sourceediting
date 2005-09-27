@@ -36,6 +36,8 @@ import org.eclipse.wst.sse.ui.internal.view.events.ICaretListener;
  * notify CaretListeners that the caret has moved. Objects which are
  * interested in ALL caret postion changes will also have to listen for
  * textChanged events.
+ * 
+ * @deprecated - use base selection notification
  */
 public class CaretMediator implements Listener {
 

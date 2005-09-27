@@ -12,10 +12,11 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.ui.internal.view.events;
 
-
-
 import java.util.List;
 
+/**
+ * @deprecated - use base selection notification
+ */
 public class NodeSelectionChangedEvent extends java.util.EventObject {
 	/**
 	 * Comment for <code>serialVersionUID</code>

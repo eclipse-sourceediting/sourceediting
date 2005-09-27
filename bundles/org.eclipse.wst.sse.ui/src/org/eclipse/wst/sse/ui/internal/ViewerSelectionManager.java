@@ -26,6 +26,9 @@ import org.eclipse.wst.sse.ui.internal.view.events.INodeSelectionListener;
 import org.eclipse.wst.sse.ui.internal.view.events.ITextSelectionListener;
 
 
+/**
+ * @deprecated
+ */
 public interface ViewerSelectionManager extends ICaretListener, IDoubleClickListener, ISelectionChangedListener, SelectionListener {
 
 	void addNodeDoubleClickListener(IDoubleClickListener listener);

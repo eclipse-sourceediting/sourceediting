@@ -12,9 +12,9 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.ui.internal.view.events;
 
-
-
+/**
+ * @deprecated - use base selection notification
+ */
 public interface ICaretListener extends java.util.EventListener {
-
 	public void caretMoved(CaretEvent event);
 }

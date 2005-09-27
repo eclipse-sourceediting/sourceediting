@@ -12,8 +12,9 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.ui.internal.view.events;
 
-
-
+/**
+ * @deprecated - use base selection notification
+ */
 public class TextSelectionChangedEvent extends java.util.EventObject {
 	/**
 	 * Comment for <code>serialVersionUID</code>

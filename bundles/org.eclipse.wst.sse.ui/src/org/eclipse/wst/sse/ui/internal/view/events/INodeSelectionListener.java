@@ -13,8 +13,10 @@
 package org.eclipse.wst.sse.ui.internal.view.events;
 
 
+/**
+ * @deprecated - use base selection notification
+ */
 
 public interface INodeSelectionListener {
-
 	void nodeSelectionChanged(NodeSelectionChangedEvent event);
 }

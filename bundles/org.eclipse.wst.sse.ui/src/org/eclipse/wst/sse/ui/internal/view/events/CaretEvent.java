@@ -12,9 +12,9 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.ui.internal.view.events;
 
-
-
 /**
+ * @deprecated - use base selection notification
+ * 
  * Simply holds data to be passed to CaretEventListeners
  */
 public class CaretEvent extends java.util.EventObject {
