@@ -81,7 +81,6 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
@@ -106,8 +105,6 @@ import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.IWorkbenchActionConstants;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.editors.text.EditorsUI;
@@ -187,14 +184,8 @@ import org.eclipse.wst.sse.ui.internal.provisional.extensions.breakpoint.NullSou
 import org.eclipse.wst.sse.ui.internal.selection.SelectionHistory;
 import org.eclipse.wst.sse.ui.internal.text.DocumentRegionEdgeMatcher;
 import org.eclipse.wst.sse.ui.internal.util.Assert;
-import org.eclipse.wst.sse.ui.internal.view.events.INodeSelectionListener;
-import org.eclipse.wst.sse.ui.internal.view.events.ITextSelectionListener;
-import org.eclipse.wst.sse.ui.internal.view.events.NodeSelectionChangedEvent;
-import org.eclipse.wst.sse.ui.internal.view.events.TextSelectionChangedEvent;
 import org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration;
-import org.eclipse.wst.sse.ui.views.contentoutline.StructuredContentOutlineConfiguration;
 import org.eclipse.wst.sse.ui.views.properties.PropertySheetConfiguration;
-import org.eclipse.wst.sse.ui.views.properties.StructuredPropertySheetConfiguration;
 
 /**
  * A Text Editor for editing structured models and structured documents. This
@@ -475,19 +466,33 @@ public class StructuredTextEditor extends TextEditor {
 
 			if (getSourceViewer() != null && getSourceViewer().getTextWidget() != null && !getSourceViewer().getTextWidget().isDisposed() && !getSourceViewer().getTextWidget().isFocusControl()) {
 				int start = -1;
+				int length = 0;
 				if (event.getSelection() instanceof IStructuredSelection) {
 					ISelection current = getSelectionProvider().getSelection();
 					if (current instanceof IStructuredSelection) {
 						Object[] currentSelection = ((IStructuredSelection) current).toArray();
 						Object[] newSelection = ((IStructuredSelection) event.getSelection()).toArray();
 						if (!Arrays.equals(currentSelection, newSelection)) {
-							IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-							Object o = selection.getFirstElement();
-							if (o instanceof IndexedRegion) {
-								start = ((IndexedRegion) o).getStartOffset();
-							}
-							else if (o instanceof ITextRegion) {
-								start = ((ITextRegion) o).getStart();
+							if (newSelection.length > 0) {
+								Object o = newSelection[0];
+								Object o2 = newSelection[newSelection.length - 1];
+								/*
+								 * if more than one region is selected,
+								 * actually select all of the text instead of
+								 * just repositioning the caret
+								 */
+								if (o instanceof IndexedRegion) {
+									start = ((IndexedRegion) o).getStartOffset();
+									if (o != o2) {
+										length = ((IndexedRegion) o2).getEndOffset() - start;
+									}
+								}
+								else if (o instanceof ITextRegion) {
+									start = ((ITextRegion) o).getStart();
+									if (o != o2) {
+										length = ((ITextRegion) o2).getEnd() - start;
+									}
+								}
 							}
 						}
 					}
@@ -497,7 +502,7 @@ public class StructuredTextEditor extends TextEditor {
 				}
 				if (start > -1) {
 					updateRangeIndication(event.getSelection());
-					selectAndReveal(start, 0);
+					selectAndReveal(start, length);
 				}
 			}
 		}
@@ -749,9 +754,32 @@ public class StructuredTextEditor extends TextEditor {
 			ISelection updated = selection;
 			if (selection instanceof IStructuredSelection && !(selection instanceof ITextSelection) && !selection.isEmpty()) {
 				Object[] selectedObjects = ((IStructuredSelection) selection).toArray();
-				if (selectedObjects.length > 0 && selectedObjects[0] instanceof IndexedRegion) {
-					int start = ((IndexedRegion) selectedObjects[0]).getStartOffset();
-					updated = new StructuredTextSelection(new TextSelection(getSourceViewer().getDocument(), start, 0), selectedObjects);
+				if (selectedObjects.length > 0) {
+					int start = -1;
+					int length = 0;
+
+					Object o = selectedObjects[0];
+					Object o2 = null;
+					if (selectedObjects.length > 1) {
+						o2 = selectedObjects[selectedObjects.length - 1];
+					}
+					else {
+						o2 = o;
+					}
+					if (o instanceof IndexedRegion) {
+						start = ((IndexedRegion) o).getStartOffset();
+						if (o != o2) {
+							length = ((IndexedRegion) o2).getEndOffset() - start;
+						}
+					}
+					else if (o instanceof ITextRegion) {
+						start = ((ITextRegion) o).getStart();
+						if (o != o2) {
+							length = ((ITextRegion) o2).getEnd() - start;
+						}
+					}
+
+					updated = new StructuredTextSelection(new TextSelection(getSourceViewer().getDocument(), start, length), selectedObjects);
 				}
 			}
 			return updated;
@@ -1369,23 +1397,36 @@ public class StructuredTextEditor extends TextEditor {
 		if (tools == null) {
 			tools = NullSourceEditingTextTools.getInstance();
 		}
+		Method method = null; //$NON-NLS-1$
 		try {
-			Method method = tools.getClass().getMethod("setTextEditor", new Class[]{StructuredTextEditor.class}); //$NON-NLS-1$
-			if (method == null) {
+			method = tools.getClass().getMethod("setTextEditor", new Class[]{StructuredTextEditor.class});
+		}
+		catch (NoSuchMethodException e) {
+		}
+		if (method == null) {
+			try {
 				method = tools.getClass().getMethod("setTextEditor", new Class[]{ITextEditor.class}); //$NON-NLS-1$
 			}
-			if (method == null) {
-				method = tools.getClass().getMethod("setTextEditor", new Class[]{IEditorPart.class}); //$NON-NLS-1$
-			}
-			if (method != null) {
-				if (!method.isAccessible()) {
-					method.setAccessible(true);
-				}
-				method.invoke(tools, new Object[]{this});
+			catch (NoSuchMethodException e) {
 			}
 		}
-		catch (Exception e) {
-			Logger.logException("Problem creating ISourceEditingTextTools implementation", e); //$NON-NLS-1$
+		if (method == null) {
+			try {
+				method = tools.getClass().getMethod("setTextEditor", new Class[]{IEditorPart.class}); //$NON-NLS-1$
+			}
+			catch (NoSuchMethodException e) {
+			}
+		}
+		if (method != null) {
+			if (!method.isAccessible()) {
+				method.setAccessible(true);
+			}
+			try {
+				method.invoke(tools, new Object[]{this});
+			}
+			catch (Exception e) {
+				Logger.logException("Problem creating ISourceEditingTextTools implementation", e); //$NON-NLS-1$
+			}
 		}
 
 		return tools;
@@ -1741,9 +1782,6 @@ public class StructuredTextEditor extends TextEditor {
 			if (fOutlinePage == null || fOutlinePage.getControl() == null || fOutlinePage.getControl().isDisposed()) {
 				ContentOutlineConfiguration cfg = createContentOutlineConfiguration();
 				if (cfg != null) {
-					if (cfg instanceof StructuredContentOutlineConfiguration) {
-						((StructuredContentOutlineConfiguration) cfg).setEditor(getEditorPart());
-					}
 					ConfigurableContentOutlinePage outlinePage = new ConfigurableContentOutlinePage();
 					outlinePage.setConfiguration(cfg);
 					outlinePage.setInput(getInternalModel());
@@ -1765,9 +1803,6 @@ public class StructuredTextEditor extends TextEditor {
 			if (fPropertySheetPage == null || fPropertySheetPage.getControl() == null || fPropertySheetPage.getControl().isDisposed()) {
 				PropertySheetConfiguration cfg = createPropertySheetConfiguration();
 				if (cfg != null) {
-					if (cfg instanceof StructuredPropertySheetConfiguration) {
-						((StructuredPropertySheetConfiguration) cfg).setEditor(getEditorPart());
-					}
 					ConfigurablePropertySheetPage propertySheetPage = new ConfigurablePropertySheetPage();
 					propertySheetPage.setConfiguration(cfg);
 					fPropertySheetPage = propertySheetPage;
@@ -1980,16 +2015,19 @@ public class StructuredTextEditor extends TextEditor {
 	}
 
 	private IStatusLineManager getStatusLineManager() {
-		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-		if (window == null)
-			return null;
-		IWorkbenchPage page = window.getActivePage();
-		if (page == null)
-			return null;
-		IEditorPart editor = page.getActiveEditor();
-		if (editor == null)
-			return null;
-		IEditorActionBarContributor contributor = editor.getEditorSite().getActionBarContributor();
+		IEditorActionBarContributor contributor = getEditorPart().getEditorSite().getActionBarContributor();
+		// IWorkbenchWindow window =
+		// PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		// if (window == null)
+		// return null;
+		// IWorkbenchPage page = window.getActivePage();
+		// if (page == null)
+		// return null;
+		// IEditorPart editor = page.getActiveEditor();
+		// if (editor == null)
+		// return null;
+		// IEditorActionBarContributor contributor =
+		// editor.getEditorSite().getActionBarContributor();
 		if (contributor instanceof EditorActionBarContributor) {
 			return ((EditorActionBarContributor) contributor).getActionBars().getStatusLineManager();
 		}
@@ -2013,35 +2051,10 @@ public class StructuredTextEditor extends TextEditor {
 	 */
 	public ViewerSelectionManager getViewerSelectionManager() {
 		if (fViewerSelectionManager == null) {
-			/*
-			 * Create a VSM for now for migration compatibility. Although our
-			 * selection will reflect the notifications from the VSM, we won't
-			 * notify the VSM when the source viewer selection changes. This
-			 * allows us to "drive" listeners during the migration phase and
-			 * was subjectively judged as more important than listening to VSM
-			 * selection changes. If we had chosen to both listen to and send
-			 * VSM events, selection notification loops could have easily
-			 * resulted.
-			 */
 			fViewerSelectionManager = new ViewerSelectionManagerImpl(getSourceViewer());
-			fViewerSelectionManager.addNodeSelectionListener(new INodeSelectionListener() {
-				public void nodeSelectionChanged(NodeSelectionChangedEvent event) {
-					getSelectionProvider().setSelection(new StructuredSelection(event.getSelectedNodes()));
-				}
-			});
-			fViewerSelectionManager.addTextSelectionListener(new ITextSelectionListener() {
-				public void textSelectionChanged(TextSelectionChangedEvent event) {
-					if (getSourceViewer() != null && getSourceViewer().getTextWidget() != null && !getSourceViewer().getTextWidget().isDisposed()) {
-						int length = event.getTextSelectionEnd() - event.getTextSelectionStart();
-						ISelection textSelection = new TextSelection(getSourceViewer().getDocument(), event.getTextSelectionStart(), length);
-						getSelectionProvider().setSelection(textSelection);
-					}
-				}
-			});
 			if (fOutlinePageListener == null) {
 				fOutlinePageListener = new OutlinePageListener();
 			}
-			fViewerSelectionManager.addNodeDoubleClickListener(fOutlinePageListener);
 		}
 		return fViewerSelectionManager;
 	}
@@ -2276,6 +2289,7 @@ public class StructuredTextEditor extends TextEditor {
 		else {
 			implClass = "document was null"; //$NON-NLS-1$
 		}
+		Logger.log(Logger.WARNING, "        Unexpected IDocumentProvider implementation: " + getDocumentProvider().getClass().getName()); //$NON-NLS-1$
 		Logger.log(Logger.WARNING, "        Unexpected IDocument implementation: " + implClass); //$NON-NLS-1$
 	}
 
@@ -2487,17 +2501,11 @@ public class StructuredTextEditor extends TextEditor {
 	public void update() {
 		if (fOutlinePage != null && fOutlinePage instanceof ConfigurableContentOutlinePage) {
 			ContentOutlineConfiguration cfg = createContentOutlineConfiguration();
-			if (cfg instanceof StructuredContentOutlineConfiguration) {
-				((StructuredContentOutlineConfiguration) cfg).setEditor(this);
-			}
 			((ConfigurableContentOutlinePage) fOutlinePage).setConfiguration(cfg);
 			((ConfigurableContentOutlinePage) fOutlinePage).setInput(getInternalModel());
 		}
 		if (fPropertySheetPage != null && fPropertySheetPage instanceof ConfigurablePropertySheetPage) {
 			PropertySheetConfiguration cfg = createPropertySheetConfiguration();
-			if (cfg instanceof StructuredPropertySheetConfiguration) {
-				((StructuredPropertySheetConfiguration) cfg).setEditor(this);
-			}
 			((ConfigurablePropertySheetPage) fPropertySheetPage).setConfiguration(cfg);
 		}
 		disposeModelDependentFields();
