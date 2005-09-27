@@ -6,10 +6,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceProxy;
 import org.eclipse.core.resources.IResourceProxyVisitor;
 import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
@@ -30,6 +32,7 @@ import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.validation.internal.core.ValidationException;
 import org.eclipse.wst.validation.internal.operations.LocalizedMessage;
+import org.eclipse.wst.validation.internal.operations.WorkbenchContext;
 import org.eclipse.wst.validation.internal.provisional.core.IMessage;
 import org.eclipse.wst.validation.internal.provisional.core.IReporter;
 import org.eclipse.wst.validation.internal.provisional.core.IValidationContext;
@@ -108,10 +111,9 @@ public class JSPValidator implements IValidator {
 	}
 
 	public void validate(IValidationContext helper, IReporter reporter) throws ValidationException {
-
 		String[] uris = helper.getURIs();
 		IWorkspaceRoot wsRoot = ResourcesPlugin.getWorkspace().getRoot();
-		if (uris.length > 0) {
+		if (uris.length > 0 && helper.getBuildKind() == IncrementalProjectBuilder.INCREMENTAL_BUILD) {
 			IFile currentFile = null;
 			for (int i = 0; i < uris.length && !reporter.isCancelled(); i++) {
 				currentFile = wsRoot.getFile(new Path(uris[i]));
@@ -122,12 +124,14 @@ public class JSPValidator implements IValidator {
 				}
 			}
 		}
-		else {
+		else if (helper.getBuildKind() == IncrementalProjectBuilder.FULL_BUILD) {
+			// get's called for each project
+			IProject project = ((WorkbenchContext) helper).getProject();
 			// it's an entire workspace "clean"
 			JSPFileVisitor visitor = new JSPFileVisitor(reporter);
 			try {
 				// collect all jsp files
-				ResourcesPlugin.getWorkspace().getRoot().accept(visitor, IResource.DEPTH_INFINITE);
+				project.accept(visitor, IResource.DEPTH_INFINITE);
 			}
 			catch (CoreException e) {
 				if (DEBUG)

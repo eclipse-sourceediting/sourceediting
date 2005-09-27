@@ -54,4 +54,9 @@ public class IncrementalHelper implements IValidationContext {
 			return new String[]{fURI};
 		return new String[0];
 	}
+	
+	public int getBuildKind() {
+		// there's no building going on
+		return 0;
+	}
 }
