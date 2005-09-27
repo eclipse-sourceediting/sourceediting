@@ -339,7 +339,7 @@ public class ModelQueryTester extends TestCase {
 
 	/**
 	 * Return the valid values for an attribute with the given declaration on
-	 * the given element. Derived from XMLPropertySourceAdapter
+	 * the given element. Derived from XMLPropertySource
 	 */
 	private List getValidStrings(Element element, CMAttributeDeclaration attrDecl) {
 		CMDataType valuesHelper = attrDecl.getAttrType();
