@@ -31,7 +31,6 @@ import org.eclipse.wst.sse.core.internal.cleanup.IStructuredCleanupProcessor;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
 import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
-import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 
@@ -69,8 +68,8 @@ public class CleanupActionHTMLDelegate implements IEditorActionDelegate, IAction
 	}
 
 	public void run(IAction action) {
-		if (fEditor instanceof StructuredTextEditor) {
-			final StructuredTextEditor editor = (StructuredTextEditor) fEditor;
+		if (fEditor instanceof ITextEditor) {
+			final ITextEditor editor = (ITextEditor) fEditor;
 			CleanupDialogHTML cleanupDialog = new CleanupDialogHTML(editor.getSite().getShell());
 			cleanupDialog.setisXHTMLType(isXHTML());
 			if (cleanupDialog.open() == Window.OK) {
@@ -107,7 +106,7 @@ public class CleanupActionHTMLDelegate implements IEditorActionDelegate, IAction
 						model.aboutToChangeModel();
 
 						// run
-						BusyIndicator.showWhile(editor.getTextViewer().getControl().getDisplay(), runnable);
+						BusyIndicator.showWhile(fEditor.getEditorSite().getWorkbenchWindow().getShell().getDisplay(), runnable);
 					}
 				}
 				finally {

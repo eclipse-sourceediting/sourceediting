@@ -24,11 +24,11 @@ import org.eclipse.ui.IEditorActionDelegate;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.sse.core.internal.cleanup.IStructuredCleanupProcessor;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
 import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
-import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.xml.core.internal.cleanup.CleanupProcessorXML;
 import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 
@@ -66,8 +66,8 @@ public class CleanupActionXMLDelegate implements IEditorActionDelegate, IActionD
 	}
 
 	public void run(IAction action) {
-		if (fEditor instanceof StructuredTextEditor) {
-			final StructuredTextEditor editor = (StructuredTextEditor) fEditor;
+		if (fEditor instanceof ITextEditor) {
+			final ITextEditor editor = (ITextEditor) fEditor;
 			Dialog cleanupDialog = new CleanupDialogXML(editor.getSite().getShell());
 			if (cleanupDialog.open() == Window.OK) {
 				// setup runnable
@@ -103,7 +103,7 @@ public class CleanupActionXMLDelegate implements IEditorActionDelegate, IActionD
 						model.aboutToChangeModel();
 
 						// run
-						BusyIndicator.showWhile(editor.getTextViewer().getControl().getDisplay(), runnable);
+						BusyIndicator.showWhile(fEditor.getEditorSite().getWorkbenchWindow().getShell().getDisplay(), runnable);
 					}
 				}
 				finally {
