@@ -15,12 +15,17 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextInputListener;
+import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.IPostSelectionProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.IEditorActionBarContributor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -40,6 +45,8 @@ import org.eclipse.ui.progress.UIJob;
 import org.eclipse.wst.common.ui.provisional.editors.PostMultiPageEditorSite;
 import org.eclipse.wst.common.ui.provisional.editors.PostMultiPageSelectionProvider;
 import org.eclipse.wst.common.ui.provisional.editors.PostSelectionMultiPageEditorPart;
+import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.xml.core.internal.provisional.IXMLPreferenceNames;
 import org.eclipse.wst.xml.core.internal.provisional.contenttype.ContentTypeIdForXML;
@@ -343,9 +350,9 @@ public class XMLMultiPageEditorPart extends PostSelectionMultiPageEditorPart {
 		}
 
 		/*
-		 * Connect selection from the design viewer to the selection provider
-		 * for the XMLMultiPageEditorPart so that selection in the design
-		 * viewer will propogate across the workbench.
+		 * Connect selection from the Design page to the selection provider
+		 * for the XMLMultiPageEditorPart so that selection changes in the
+		 * Design page will propogate across the workbench
 		 */
 		if (fDesignViewer.getSelectionProvider() instanceof IPostSelectionProvider) {
 			((IPostSelectionProvider) fDesignViewer.getSelectionProvider()).addPostSelectionChangedListener(new ISelectionChangedListener() {
@@ -361,9 +368,9 @@ public class XMLMultiPageEditorPart extends PostSelectionMultiPageEditorPart {
 		});
 
 		/*
-		 * Connect selection from the design viewer to the selection provider
-		 * of the source page so that selection in the design viewer will be
-		 * applied to the source page. Prefer post selection.
+		 * Connect selection from the Design page to the selection provider of
+		 * the Source page so that selection in the Design page will drive
+		 * selection in the Source page. Prefer post selection.
 		 */
 		if (fDesignViewer.getSelectionProvider() instanceof IPostSelectionProvider) {
 			((IPostSelectionProvider) fDesignViewer.getSelectionProvider()).addPostSelectionChangedListener(new ISelectionChangedListener() {
@@ -380,8 +387,52 @@ public class XMLMultiPageEditorPart extends PostSelectionMultiPageEditorPart {
 			});
 		}
 
-		/**
-		 * Drive the design viewer from selection in the source page
+		/*
+		 * Handle double-click in the Design page by selecting the
+		 * corresponding amount of text in the Source page.
+		 */
+		fDesignViewer.getControl().addListener(SWT.MouseDoubleClick, new Listener() {
+			public void handleEvent(Event event) {
+				ISelection selection = fDesignViewer.getSelectionProvider().getSelection();
+				int start = -1;
+				int length = -1;
+				if (selection instanceof IStructuredSelection) {
+					/*
+					 * selection goes from the start of the first object to
+					 * the end of the last
+					 */
+					IStructuredSelection structuredSelection = (IStructuredSelection) selection;
+					Object o = structuredSelection.getFirstElement();
+					Object o2 = null;
+					if (structuredSelection.size() > 1) {
+						o2 = structuredSelection.toArray()[structuredSelection.size() - 1];
+					}
+					else {
+						o2 = o;
+					}
+					if (o instanceof IndexedRegion) {
+						start = ((IndexedRegion) o).getStartOffset();
+						length = ((IndexedRegion) o2).getEndOffset() - start;
+					}
+					else if (o2 instanceof ITextRegion) {
+						start = ((ITextRegion) o).getStart();
+						length = ((ITextRegion) o2).getEnd() - start;
+					}
+				}
+				else if (selection instanceof ITextSelection) {
+					start = ((ITextSelection) selection).getOffset();
+					length = ((ITextSelection) selection).getLength();
+				}
+				if (start > -1 && length > -1) {
+					getTextEditor().selectAndReveal(start, length);
+				}
+			}
+		});
+
+		/*
+		 * Connect selection from the Source page to the selection provider of
+		 * the Design page so that selection in the Source page will drive
+		 * selection in the Design page. Prefer post selection.
 		 */
 		ISelectionProvider provider = getTextEditor().getSelectionProvider();
 		if (fTextEditorSelectionListener == null) {
@@ -631,7 +682,6 @@ public class XMLMultiPageEditorPart extends PostSelectionMultiPageEditorPart {
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
 		try {
 			super.init(site, input);
-			site.setSelectionProvider(new PostMultiPageSelectionProvider(this));
 			// we want to listen for our own activation
 			fActivationListener = new ActivationListener(site.getWorkbenchWindow().getPartService());
 		}
@@ -671,7 +721,6 @@ public class XMLMultiPageEditorPart extends PostSelectionMultiPageEditorPart {
 		super.pageChange(newPageIndex);
 		saveLastActivePageIndex(newPageIndex);
 
-		IEditorPart newlyActiveEditor = getEditor(newPageIndex);
 		if (newPageIndex == fDesignPageIndex) {
 			ISelectionProvider selectionProvider = fDesignViewer.getSelectionProvider();
 			if (selectionProvider != null) {
