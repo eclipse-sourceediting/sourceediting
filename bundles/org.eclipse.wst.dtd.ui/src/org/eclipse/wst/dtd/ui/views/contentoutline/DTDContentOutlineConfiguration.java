@@ -33,7 +33,7 @@ import org.eclipse.wst.dtd.ui.internal.DTDUIPlugin;
 import org.eclipse.wst.dtd.ui.internal.dnd.DTDDragAndDropManager;
 import org.eclipse.wst.sse.ui.internal.contentoutline.PropertyChangeUpdateActionContributionItem;
 import org.eclipse.wst.sse.ui.internal.util.Assert;
-import org.eclipse.wst.sse.ui.views.contentoutline.StructuredContentOutlineConfiguration;
+import org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration;
 
 /**
  * A StructuredContentOutlineConfiguration for DTD models
@@ -41,7 +41,7 @@ import org.eclipse.wst.sse.ui.views.contentoutline.StructuredContentOutlineConfi
  * @plannedfor 1.0
  * 
  */
-public class DTDContentOutlineConfiguration extends StructuredContentOutlineConfiguration {
+public class DTDContentOutlineConfiguration extends ContentOutlineConfiguration {
 	private IContentProvider fContentProvider = null;
 	private ILabelProvider fLabelProvider = null;
 

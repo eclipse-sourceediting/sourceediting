@@ -16,8 +16,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IContributionManager;
@@ -31,11 +33,16 @@ import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.util.TransferDragSourceListener;
 import org.eclipse.jface.util.TransferDropTargetListener;
 import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IPostSelectionProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DragSource;
 import org.eclipse.swt.dnd.DropTarget;
@@ -49,8 +56,13 @@ import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.IPageSite;
+import org.eclipse.ui.part.IShowInSource;
 import org.eclipse.ui.part.IShowInTarget;
+import org.eclipse.ui.part.IShowInTargetList;
 import org.eclipse.ui.part.ShowInContext;
+import org.eclipse.ui.texteditor.IDocumentProvider;
+import org.eclipse.ui.texteditor.IDocumentProviderExtension4;
+import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.views.contentoutline.ContentOutlinePage;
 import org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration;
 
@@ -72,6 +84,10 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 		}
 	}
 
+	/**
+	 * Provides double-click registration so it can be done before the Control
+	 * is created.
+	 */
 	private class DoubleClickProvider implements IDoubleClickListener {
 		private IDoubleClickListener[] listeners = null;
 
@@ -141,7 +157,7 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 					getTreeViewer().setSelection(validContentSelection, true);
 				}
 			}
-			if (_DEBUG_SELECTION) {
+			if (_DEBUG) {
 				System.out.println("(O:" + (System.currentTimeMillis() - _DEBUG_TIME) + "ms) " + part + " : " + selection);
 			}
 		}
@@ -201,7 +217,10 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 		}
 
 		public ISelection getSelection() {
-			return getTreeViewer().getSelection();
+			if (getTreeViewer() != null) {
+				return getTreeViewer().getSelection();
+			}
+			return StructuredSelection.EMPTY;
 		}
 
 		public ISelectionChangedListener getSelectionChangedListener() {
@@ -237,14 +256,42 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 		}
 	}
 
-	protected static ContentOutlineConfiguration NULL_CONFIGURATION = new ContentOutlineConfiguration();
+	protected static ContentOutlineConfiguration NULL_CONFIGURATION = new ContentOutlineConfiguration() {
+
+		public IContentProvider getContentProvider(TreeViewer viewer) {
+			return new ITreeContentProvider() {
+				public void dispose() {
+				}
+
+				public Object[] getChildren(Object parentElement) {
+					return null;
+				}
+
+				public Object[] getElements(Object inputElement) {
+					return null;
+				}
+
+				public Object getParent(Object element) {
+					return null;
+				}
+
+				public boolean hasChildren(Object element) {
+					return false;
+				}
+
+				public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+				}
+			};
+		}
+	};
 
 	private static final String OUTLINE_CONTEXT_MENU_ID = "org.eclipse.wst.sse.ui.StructuredTextEditor.OutlineContext"; //$NON-NLS-1$
 
 	private static final String OUTLINE_CONTEXT_MENU_POSTFIX = ".source.OutlineContext"; //$NON-NLS-1$
-	private final boolean _DEBUG_SELECTION = false;
+	private final boolean _DEBUG = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.ui/contentOutline")); //$NON-NLS-1$  //$NON-NLS-2$;
 
 	private long _DEBUG_TIME = 0;
+
 	private TransferDragSourceListener[] fActiveDragListeners;
 	private TransferDropTargetListener[] fActiveDropListeners;
 	private ContentOutlineConfiguration fConfiguration;
@@ -269,13 +316,48 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 	public ConfigurableContentOutlinePage() {
 		super();
 		fGroupAdder = new AdditionGroupAdder();
+		fSelectionProvider = new SelectionProvider();
 	}
 
+	/**
+	 * Adds a listener to a list of those notified when someone double-clicks
+	 * in the page.
+	 * 
+	 * @param newListener -
+	 *            the listener to add
+	 */
 	public void addDoubleClickListener(IDoubleClickListener newListener) {
 		if (fDoubleClickProvider == null) {
 			fDoubleClickProvider = new DoubleClickProvider();
 		}
 		fDoubleClickProvider.addDoubleClickListener(newListener);
+	}
+
+	private String computeContextMenuID() {
+		String id = null;
+		ITextEditor editor = null;
+		if (fOwnerEditor instanceof ITextEditor) {
+			editor = (ITextEditor) fOwnerEditor;
+		}
+		else {
+			editor = (ITextEditor) fOwnerEditor.getAdapter(ITextEditor.class);
+		}
+		if (editor != null) {
+			IDocumentProvider provider = editor.getDocumentProvider();
+			if (provider instanceof IDocumentProviderExtension4) {
+				IContentType type;
+				try {
+					type = ((IDocumentProviderExtension4) provider).getContentType(fOwnerEditor.getEditorInput());
+					if (type != null) {
+						id = type.getId();
+					}
+				}
+				catch (CoreException e) {
+					// do nothing, we'll use a generic ID instead
+				}
+			}
+		}
+		return id;
 	}
 
 	/**
@@ -309,7 +391,6 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 		 * post selection from the tree viewer and forward only post selection
 		 * to the selection service.
 		 */
-		fSelectionProvider = new SelectionProvider();
 		getTreeViewer().addPostSelectionChangedListener(fSelectionProvider.getPostSelectionChangedListener());
 		getTreeViewer().addSelectionChangedListener(fSelectionProvider.getSelectionChangedListener());
 		if (fDoubleClickProvider == null) {
@@ -341,17 +422,31 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 		setConfiguration(NULL_CONFIGURATION);
 	}
 
+	IEditorPart getActiveEditorPart() {
+		return getSite().getWorkbenchWindow().getActivePage().getActiveEditor();
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
 	 */
 	public Object getAdapter(Class key) {
-		Object adapter = getConfiguration().getAdapter(key);
-		if (adapter == null) {
-			if (key.equals(IShowInTarget.class)) {
-				adapter = new ShowInTarget();
-			}
+		Object adapter = null;
+		if (key.equals(IShowInTarget.class)) {
+			adapter = new ShowInTarget();
+		}
+		final IEditorPart editor = getActiveEditorPart();
+
+		if (key.equals(IShowInSource.class) && editor != null) {
+			adapter = new IShowInSource() {
+				public ShowInContext getShowInContext() {
+					return new ShowInContext(editor.getEditorInput(), editor.getEditorSite().getSelectionProvider().getSelection());
+				}
+			};
+		}
+		else if (key.equals(IShowInTargetList.class) && editor != null) {
+			adapter = editor.getAdapter(key);
 		}
 		return adapter;
 	}
@@ -366,8 +461,6 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 	}
 
 	public ISelection getSelection() {
-		if (fSelectionProvider == null)
-			return super.getSelection();
 		return fSelectionProvider.getSelection();
 	}
 
@@ -378,12 +471,19 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 		return fSelectionListener;
 	}
 
+
 	public void init(IPageSite pageSite) {
 		super.init(pageSite);
-		getSite().getWorkbenchWindow().getSelectionService().addPostSelectionListener(getSelectionListener());
+		pageSite.getWorkbenchWindow().getSelectionService().addPostSelectionListener(getSelectionListener());
 	}
 
-
+	/**
+	 * Removes a listener to a list of those notified when someone
+	 * double-clicks in the page.
+	 * 
+	 * @param oldListener -
+	 *            the listener to remove
+	 */
 	public void removeDoubleClickListener(IDoubleClickListener oldListener) {
 		if (fDoubleClickProvider != null) {
 			fDoubleClickProvider.removeDoubleClickListener(oldListener);
@@ -400,8 +500,10 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 			// remove the key listeners
 			if (getTreeViewer().getControl() != null && !getTreeViewer().getControl().isDisposed()) {
 				KeyListener[] listeners = getConfiguration().getKeyListeners(getTreeViewer());
-				for (int i = 0; i < listeners.length; i++) {
-					getTreeViewer().getControl().removeKeyListener(listeners[i]);
+				if (listeners != null) {
+					for (int i = 0; i < listeners.length; i++) {
+						getTreeViewer().getControl().removeKeyListener(listeners[i]);
+					}
 				}
 			}
 			// remove any menu listeners
@@ -417,22 +519,28 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 				removeSelectionChangedListener(getConfiguration().getSelectionChangedListener(getTreeViewer()));
 			if (getConfiguration().getPostSelectionChangedListener(getTreeViewer()) != null)
 				getTreeViewer().removePostSelectionChangedListener(getConfiguration().getPostSelectionChangedListener(getTreeViewer()));
-			IContributionItem[] toolbarItems = getConfiguration().getToolbarContributions(getTreeViewer());
-			if (toolbarItems.length > 0 && getSite() != null && getSite().getActionBars() != null && getSite().getActionBars().getToolBarManager() != null) {
-				IContributionManager toolbar = getSite().getActionBars().getToolBarManager();
-				for (int i = 0; i < toolbarItems.length; i++) {
-					toolbar.remove(toolbarItems[i]);
+
+			IContributionManager toolbar = getSite().getActionBars().getToolBarManager();
+			if (toolbar != null) {
+				IContributionItem[] toolbarItems = getConfiguration().getToolbarContributions(getTreeViewer());
+				if (toolbarItems != null && toolbarItems.length > 0) {
+					for (int i = 0; i < toolbarItems.length; i++) {
+						toolbar.remove(toolbarItems[i]);
+					}
+					toolbar.update(false);
 				}
-				toolbar.update(false);
 			}
-			IContributionItem[] menuItems = getConfiguration().getMenuContributions(getTreeViewer());
-			if (menuItems.length > 0 && getSite().getActionBars().getMenuManager() != null) {
-				IContributionManager menubar = getSite().getActionBars().getMenuManager();
-				for (int i = 0; i < menuItems.length; i++) {
-					menubar.remove(menuItems[i]);
+
+			IContributionManager menubar = getSite().getActionBars().getMenuManager();
+			if (menubar != null) {
+				IContributionItem[] menuItems = getConfiguration().getMenuContributions(getTreeViewer());
+				if (menuItems != null && menuItems.length > 0) {
+					for (int i = 0; i < menuItems.length; i++) {
+						menubar.remove(menuItems[i]);
+					}
+					menubar.remove(IWorkbenchActionConstants.MB_ADDITIONS);
+					menubar.update(false);
 				}
-				menubar.remove(IWorkbenchActionConstants.MB_ADDITIONS);
-				menubar.update(false);
 			}
 			// clear the DnD listeners and transfer types
 			if (fDragAdapter != null && !fDragAdapter.isEmpty() && !fDragSource.isDisposed() && fDragSource.getTransfer().length > 0) {
@@ -482,19 +590,21 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 				getTreeViewer().addPostSelectionChangedListener(getConfiguration().getPostSelectionChangedListener(getTreeViewer()));
 
 			// view toolbar
-			IContributionItem[] toolbarItems = getConfiguration().getToolbarContributions(getTreeViewer());
-			if (toolbarItems.length > 0 && getSite() != null && getSite().getActionBars() != null && getSite().getActionBars().getToolBarManager() != null) {
-				IContributionManager toolbar = getSite().getActionBars().getToolBarManager();
-				for (int i = 0; i < toolbarItems.length; i++) {
-					toolbar.add(toolbarItems[i]);
+			IContributionManager toolbar = getSite().getActionBars().getToolBarManager();
+			if (toolbar != null) {
+				IContributionItem[] toolbarItems = getConfiguration().getToolbarContributions(getTreeViewer());
+				if (toolbarItems != null) {
+					for (int i = 0; i < toolbarItems.length; i++) {
+						toolbar.add(toolbarItems[i]);
+					}
+					toolbar.update(true);
 				}
-				toolbar.update(true);
 			}
 			// view menu
 			IContributionManager menu = getSite().getActionBars().getMenuManager();
 			if (menu != null) {
 				IContributionItem[] menuItems = getConfiguration().getMenuContributions(getTreeViewer());
-				if (menuItems.length > 0) {
+				if (menuItems != null) {
 					for (int i = 0; i < menuItems.length; i++) {
 						menuItems[i].setVisible(true);
 						menu.add(menuItems[i]);
@@ -524,8 +634,10 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 			}
 			// add the key listeners
 			KeyListener[] listeners = getConfiguration().getKeyListeners(getTreeViewer());
-			for (int i = 0; i < listeners.length; i++) {
-				getTreeViewer().getControl().addKeyListener(listeners[i]);
+			if (listeners != null) {
+				for (int i = 0; i < listeners.length; i++) {
+					getTreeViewer().getControl().addKeyListener(listeners[i]);
+				}
 			}
 		}
 
@@ -560,7 +672,7 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 			}
 		}
 
-		contextMenuId = getConfiguration().getContentTypeID(getTreeViewer());
+		contextMenuId = computeContextMenuID();
 
 		if (contextMenuId == null) {
 			contextMenuId = OUTLINE_CONTEXT_MENU_ID;

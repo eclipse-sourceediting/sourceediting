@@ -37,7 +37,7 @@ import org.eclipse.wst.sse.ui.internal.contentoutline.PropertyChangeUpdateAction
 import org.eclipse.wst.sse.ui.internal.contentoutline.PropertyChangeUpdateActionContributionItem;
 import org.eclipse.wst.sse.ui.internal.editor.EditorPluginImageHelper;
 import org.eclipse.wst.sse.ui.internal.editor.EditorPluginImages;
-import org.eclipse.wst.sse.ui.views.contentoutline.StructuredContentOutlineConfiguration;
+import org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDataType;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
@@ -58,7 +58,7 @@ import org.w3c.dom.Node;
  * Configuration for XML, expects that the viewer's input will be the DOM
  * Model
  */
-public class XMLContentOutlineConfiguration extends StructuredContentOutlineConfiguration {
+public class XMLContentOutlineConfiguration extends ContentOutlineConfiguration {
 	private class ActionManagerMenuListener implements IMenuListener, IReleasable {
 		private XMLNodeActionManager fActionManager;
 		private TreeViewer fTreeViewer;

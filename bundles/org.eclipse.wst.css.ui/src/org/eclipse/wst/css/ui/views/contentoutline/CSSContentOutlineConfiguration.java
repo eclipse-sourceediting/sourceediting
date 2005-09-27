@@ -21,9 +21,9 @@ import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleDeclItem;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSValue;
 import org.eclipse.wst.css.ui.internal.CSSUIPlugin;
 import org.eclipse.wst.sse.ui.internal.contentoutline.PropertyChangeUpdateActionContributionItem;
-import org.eclipse.wst.sse.ui.views.contentoutline.StructuredContentOutlineConfiguration;
+import org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration;
 
-public class CSSContentOutlineConfiguration extends StructuredContentOutlineConfiguration {
+public class CSSContentOutlineConfiguration extends ContentOutlineConfiguration {
 	private IContentProvider fContentProvider = null;
 	private ILabelProvider fLabelProvider = null;
 	private final String OUTLINE_SORT_PREF = "outline-sort"; //$NON-NLS-1$

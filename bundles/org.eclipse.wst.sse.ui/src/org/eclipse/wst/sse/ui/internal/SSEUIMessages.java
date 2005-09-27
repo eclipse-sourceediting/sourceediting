@@ -182,8 +182,8 @@ public class SSEUIMessages extends NLS {
 	public static String FindOccurrencesActionProvider_0;
 	public static String RemoveAction_0;
 	public static String ShowPropertiesAction_0;
-	public static String StructuredContentOutlineConfiguration_0;
-	public static String StructuredContentOutlineConfiguration_1;
+	public static String ContentOutlineConfiguration_0;
+	public static String ContentOutlineConfiguration_1;
 	public static String AbstractOpenOn_0;
 	public static String FormatActionDelegate_jobName;
 	public static String FormatActionDelegate_errorStatusMessage;

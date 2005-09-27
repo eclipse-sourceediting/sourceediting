@@ -12,24 +12,27 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.ui.views.contentoutline;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExecutableExtension;
-import org.eclipse.core.runtime.content.IContentTypeManager;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IMenuListener;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.util.TransferDragSourceListener;
 import org.eclipse.jface.util.TransferDropTargetListener;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.events.KeyListener;
+import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
+import org.eclipse.wst.sse.ui.internal.contentoutline.PropertyChangeUpdateAction;
+import org.eclipse.wst.sse.ui.internal.contentoutline.PropertyChangeUpdateActionContributionItem;
+import org.eclipse.wst.sse.ui.internal.editor.EditorPluginImageHelper;
+import org.eclipse.wst.sse.ui.internal.editor.EditorPluginImages;
 
 /**
  * Basic Configuration class for Outline Pages
@@ -37,65 +40,79 @@ import org.eclipse.swt.events.KeyListener;
  * @plannedfor 1.0
  * 
  */
-public class ContentOutlineConfiguration implements IExecutableExtension, IAdaptable {
-	private IContentProvider fContentProvider;
-	private KeyListener[] fKeyListeners;
+public abstract class ContentOutlineConfiguration {
+	/**
+	 * Add a collapse action to help with navigation.
+	 */
+	private class CollapseTreeAction extends Action {
+		private TreeViewer fTreeViewer = null;
+
+		public CollapseTreeAction(TreeViewer viewer) {
+			super(SSEUIMessages.ContentOutlineConfiguration_0, AS_PUSH_BUTTON); //$NON-NLS-1$
+			setImageDescriptor(COLLAPSE_E);
+			setDisabledImageDescriptor(COLLAPSE_D);
+			setToolTipText(getText());
+			fTreeViewer = viewer;
+		}
+
+		public void run() {
+			super.run();
+			fTreeViewer.collapseAll();
+		}
+	}
+
+	private class ToggleLinkAction extends PropertyChangeUpdateAction {
+		public ToggleLinkAction(IPreferenceStore store, String preference) {
+			super(SSEUIMessages.ContentOutlineConfiguration_1, store, preference, true); //$NON-NLS-1$
+			setToolTipText(getText());
+			setDisabledImageDescriptor(SYNCED_D);
+			setImageDescriptor(SYNCED_E);
+			update();
+		}
+
+		public void update() {
+			super.update();
+			setLinkWithEditor(isChecked());
+		}
+	}
+
+	protected ImageDescriptor COLLAPSE_D = EditorPluginImageHelper.getInstance().getImageDescriptor(EditorPluginImages.IMG_DLCL_COLLAPSEALL);
+	protected ImageDescriptor COLLAPSE_E = EditorPluginImageHelper.getInstance().getImageDescriptor(EditorPluginImages.IMG_ELCL_COLLAPSEALL);
+
+	private boolean fIsLinkWithEditor = false;
+
 	private ILabelProvider fLabelProvider;
+	private IContributionItem[] fMenuContributions = null;
+	private IContributionItem[] fToolbarContributions = null;
+	private final String OUTLINE_LINK_PREF = "outline-link-editor"; //$NON-NLS-1$
+	ImageDescriptor SYNCED_D = EditorPluginImageHelper.getInstance().getImageDescriptor(EditorPluginImages.IMG_DLCL_SYNCED);
+	ImageDescriptor SYNCED_E = EditorPluginImageHelper.getInstance().getImageDescriptor(EditorPluginImages.IMG_ELCL_SYNCED);
 
 	public ContentOutlineConfiguration() {
 		super();
 	}
 
-	private IContentProvider createTreeContentProvider() {
-		return new ITreeContentProvider() {
-			public void dispose() {
-				// do nothing
-			}
-
-			public Object[] getChildren(Object parentElement) {
-				return new Object[0];
-			}
-
-			public Object[] getElements(Object inputElement) {
-				return new Object[0];
-			}
-
-			public Object getParent(Object element) {
-				return null;
-			}
-
-			public boolean hasChildren(Object element) {
-				return false;
-			}
-
-			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-				// do nothing
-			}
-		};
+	/**
+	 * @param viewer
+	 * @return
+	 */
+	protected IContributionItem[] createMenuContributions(TreeViewer viewer) {
+		IContributionItem toggleLinkItem = new PropertyChangeUpdateActionContributionItem(new ToggleLinkAction(getPreferenceStore(), OUTLINE_LINK_PREF));
+		IContributionItem[] items = new IContributionItem[]{toggleLinkItem};
+		return items;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
-	 */
-	public Object getAdapter(Class adapter) {
-		return null;
+	protected IContributionItem[] createToolbarContributions(TreeViewer viewer) {
+		IContributionItem collapseAllItem = new ActionContributionItem(new CollapseTreeAction(viewer));
+		IContributionItem[] items = new IContributionItem[]{collapseAllItem};
+		return items;
 	}
 
 	/**
 	 * @param viewer
 	 * @return the ITreeContentProvider to use with this viewer
 	 */
-	public IContentProvider getContentProvider(TreeViewer viewer) {
-		if (fContentProvider == null)
-			fContentProvider = createTreeContentProvider();
-		return fContentProvider;
-	}
-
-	public String getContentTypeID(TreeViewer treeViewer) {
-		return IContentTypeManager.CT_TEXT;
-	}
+	public abstract IContentProvider getContentProvider(TreeViewer viewer);
 
 	/**
 	 * 
@@ -106,9 +123,7 @@ public class ContentOutlineConfiguration implements IExecutableExtension, IAdapt
 	 *         dependent on the Control in the TreeViewer.
 	 */
 	public KeyListener[] getKeyListeners(TreeViewer viewer) {
-		if (fKeyListeners == null)
-			fKeyListeners = new KeyListener[0];
-		return fKeyListeners;
+		return null;
 	}
 
 	/**
@@ -125,8 +140,11 @@ public class ContentOutlineConfiguration implements IExecutableExtension, IAdapt
 	 * @param viewer
 	 * @return IContributionItem[] for the local menu
 	 */
-	public IContributionItem[] getMenuContributions(TreeViewer viewer) {
-		return new IContributionItem[0];
+	public final IContributionItem[] getMenuContributions(TreeViewer viewer) {
+		if (fMenuContributions == null) {
+			fMenuContributions = createMenuContributions(viewer);
+		}
+		return fMenuContributions;
 	}
 
 	/**
@@ -147,6 +165,10 @@ public class ContentOutlineConfiguration implements IExecutableExtension, IAdapt
 		return null;
 	}
 
+	protected IPreferenceStore getPreferenceStore() {
+		return SSEUIPlugin.getInstance().getPreferenceStore();
+	}
+
 	/**
 	 * @param event
 	 * @return The (filtered) selection from this event. Uses include mapping
@@ -158,6 +180,8 @@ public class ContentOutlineConfiguration implements IExecutableExtension, IAdapt
 		return selection;
 	}
 
+
+
 	/**
 	 * @param viewer
 	 * @return the ISelectionChangedListener to notify when the viewer's
@@ -167,12 +191,16 @@ public class ContentOutlineConfiguration implements IExecutableExtension, IAdapt
 		return null;
 	}
 
+
 	/**
 	 * @param viewer
 	 * @return IContributionItem[] for the local toolbar
 	 */
-	public IContributionItem[] getToolbarContributions(TreeViewer viewer) {
-		return new IContributionItem[0];
+	public final IContributionItem[] getToolbarContributions(TreeViewer viewer) {
+		if (fToolbarContributions == null) {
+			fToolbarContributions = createToolbarContributions(viewer);
+		}
+		return fToolbarContributions;
 	}
 
 	/**
@@ -201,24 +229,43 @@ public class ContentOutlineConfiguration implements IExecutableExtension, IAdapt
 	 * @return
 	 */
 	public boolean isLinkedWithEditor(TreeViewer treeViewer) {
-		return false;
+		return fIsLinkWithEditor;
 	}
 
-	public void setInitializationData(IConfigurationElement config, String propertyName, Object data) throws CoreException {
-		/*
-		 * Currently no need for initialization data but is good practice to
-		 * implement IExecutableExtension since in a class that can be created
-		 * by executable extension
-		 */
+	/**
+	 * @param isLinkWithEditor
+	 *            The isLinkWithEditor to set.
+	 */
+	protected void setLinkWithEditor(boolean isLinkWithEditor) {
+		fIsLinkWithEditor = isLinkWithEditor;
 	}
-	
+
 	/**
 	 * General hook for resource releasing and listener removal when
-	 * configurations change or the viewer is disposed of
+	 * configurations change or the viewer is disposed of. This implementation
+	 * stops of any remaining PropertyChangeUpdateActionContributionItem from
+	 * preference listening.
 	 * 
 	 * @param viewer
 	 */
 	public void unconfigure(TreeViewer viewer) {
+		if (fToolbarContributions != null) {
+			for (int i = 0; i < fToolbarContributions.length; i++) {
+				if (fToolbarContributions[i] instanceof PropertyChangeUpdateActionContributionItem) {
+					((PropertyChangeUpdateActionContributionItem) fToolbarContributions[i]).disconnect();
+				}
+			}
+			fToolbarContributions = null;
+		}
+		if (fMenuContributions != null) {
+			for (int i = 0; i < fMenuContributions.length; i++) {
+				if (fMenuContributions[i] instanceof PropertyChangeUpdateActionContributionItem) {
+					((PropertyChangeUpdateActionContributionItem) fMenuContributions[i]).disconnect();
+				}
+			}
+			fMenuContributions = null;
+		}
 	}
+
 
 }
