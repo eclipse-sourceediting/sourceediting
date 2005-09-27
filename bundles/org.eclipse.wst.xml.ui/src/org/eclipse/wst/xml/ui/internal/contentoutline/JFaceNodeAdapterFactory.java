@@ -23,6 +23,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.progress.UIJob;
 import org.eclipse.wst.sse.core.internal.provisional.AbstractAdapterFactory;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
@@ -68,27 +69,33 @@ public class JFaceNodeAdapterFactory extends AbstractAdapterFactory implements I
 			for (int i = 0; i < listeners.length; i++) {
 				if (listeners[i] instanceof StructuredViewer) {
 					final StructuredViewer viewer = (StructuredViewer) listeners[i];
-					Job refresh = new UIJob(XMLUIMessages.refreshoutline_0) {
-						public IStatus runInUIThread(IProgressMonitor monitor) {
-							viewer.refresh(true);
-							return Status.OK_STATUS;
+					Control refreshControl = viewer.getControl();
+					if (refreshControl != null && !refreshControl.isDisposed()) {
+						Job refresh = new UIJob(XMLUIMessages.refreshoutline_0) {
+							public IStatus runInUIThread(IProgressMonitor monitor) {
+								viewer.refresh(true);
+								return Status.OK_STATUS;
+							};
 						};
-					};
-					refresh.setSystem(true);
-					refresh.setPriority(Job.SHORT);
-					refresh.schedule(UPDATE_DELAY);
+						refresh.setSystem(true);
+						refresh.setPriority(Job.SHORT);
+						refresh.schedule(UPDATE_DELAY);
+					}
 				}
 				else if (listeners[i] instanceof Viewer) {
 					final Viewer viewer = (Viewer) listeners[i];
-					Job refresh = new UIJob(XMLUIMessages.refreshoutline_0) {
-						public IStatus runInUIThread(IProgressMonitor monitor) {
-							viewer.refresh();
-							return Status.OK_STATUS;
+					Control refreshControl = viewer.getControl();
+					if (refreshControl != null && !refreshControl.isDisposed()) {
+						Job refresh = new UIJob(XMLUIMessages.refreshoutline_0) {
+							public IStatus runInUIThread(IProgressMonitor monitor) {
+								viewer.refresh();
+								return Status.OK_STATUS;
+							};
 						};
-					};
-					refresh.setSystem(true);
-					refresh.setPriority(Job.SHORT);
-					refresh.schedule(UPDATE_DELAY);
+						refresh.setSystem(true);
+						refresh.setPriority(Job.SHORT);
+						refresh.schedule(UPDATE_DELAY);
+					}
 				}
 			}
 		}
