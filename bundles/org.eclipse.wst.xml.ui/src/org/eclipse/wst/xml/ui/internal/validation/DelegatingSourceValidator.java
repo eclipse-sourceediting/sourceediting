@@ -85,6 +85,10 @@ public abstract class DelegatingSourceValidator implements IValidator {
 			this.file = file;
 		}
 
+		public int getBuildKind() {
+			return 0;
+		}
+		
 		public Object loadModel(String symbolicName, Object[] parms) {
 			if (symbolicName.equals("getFile")) { //$NON-NLS-1$
 				return file;
