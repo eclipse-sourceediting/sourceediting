@@ -10,8 +10,17 @@ package org.eclipse.wst.web.internal.deployables;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jem.util.logger.proxy.Logger;
+import org.eclipse.wst.common.componentcore.ComponentCore;
+import org.eclipse.wst.common.componentcore.ModuleCoreNature;
+import org.eclipse.wst.common.componentcore.internal.StructureEdit;
+import org.eclipse.wst.common.componentcore.internal.util.IModuleConstants;
+import org.eclipse.wst.common.componentcore.resources.IFlexibleProject;
+import org.eclipse.wst.common.componentcore.resources.IVirtualComponent;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.model.ModuleDelegate;
 import org.eclipse.wst.server.core.util.ProjectModuleFactoryDelegate;
@@ -36,37 +45,6 @@ public class StaticWebDeployableFactory extends ProjectModuleFactoryDelegate {
 	 */
 	protected boolean isValidModule(IProject project) {
 		return false;
-	}
-
-	/**
-	 * Creates the deployable project for the given project.
-	 * 
-	 * @param project
-	 *            org.eclipse.core.resources.IProject
-	 * @return com.ibm.etools.server.core.model.IDeployableProject
-	 */
-	protected IModule createModule(IProject project) {
-		//TODO use components API
-//		try {
-//			IModule deployable = null;
-//			StaticWebDeployable projectModule = null;
-//			if (project.hasNature(ISimpleWebNatureConstants.STATIC_NATURE_ID)) {
-//				IBaseWebNature nature = (IBaseWebNature) project.getNature(ISimpleWebNatureConstants.STATIC_NATURE_ID);
-//				deployable = nature.getModule();
-//				if (deployable == null) {
-//					projectModule = new StaticWebDeployable(nature.getProject());
-//					deployable = createModule(projectModule.getId(), projectModule.getName(), projectModule.getType(), projectModule.getVersion(), projectModule.getProject());
-//					nature.setModule(deployable);
-//					projectModule.initialize(deployable);
-//					//deployable = projectModule.getModule();
-//				}
-//				moduleDelegates.add(projectModule);
-//				return deployable;
-//			}
-//		} catch (Exception e) {
-//			//Ignore
-//		}
-		return null;
 	}
 
 	/*
@@ -105,13 +83,65 @@ public class StaticWebDeployableFactory extends ProjectModuleFactoryDelegate {
 
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.server.core.util.ProjectModuleFactoryDelegate#createModules(org.eclipse.core.resources.IProject)
-	 */
+	protected List createModules(ModuleCoreNature nature) {
+		IProject project = nature.getProject();
+		List modules = new ArrayList(1); 
+		StructureEdit moduleCore = null;
+		try {
+			IFlexibleProject flexProj = ComponentCore.createFlexibleProject(project);
+			IVirtualComponent[] components = flexProj.getComponents();
+			modules = createModuleDelegates(components);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if(moduleCore != null) 
+				moduleCore.dispose();
+		}
+		return modules;
+	}
+	
+	protected List createModuleDelegates(IVirtualComponent[] components) throws CoreException {
+		StaticWebDeployable moduleDelegate = null;
+		IModule module = null;
+		List moduleList = new ArrayList(components.length);
+		for (int i = 0; i < components.length; i++) {
+			IVirtualComponent component = components[i];
+			try {
+				if(IModuleConstants.WST_WEB_MODULE.equals(component.getComponentTypeId())) {
+					moduleDelegate = new StaticWebDeployable(component.getProject(),component);
+					module = createModule(component.getName(), component.getName(), moduleDelegate.getType(), moduleDelegate.getVersion(), moduleDelegate.getProject());
+					moduleList.add(module);
+					moduleDelegate.initialize(module);
+				}
+				// adapt(moduleDelegate, (WorkbenchComponent) workBenchModules.get(i));
+			} catch (Exception e) {
+				Logger.getLogger().write(e);
+			} finally {
+				if (module != null) {
+					if (getModuleDelegate(module) == null)
+						moduleDelegates.add(moduleDelegate);
+				}
+			}
+		}
+		return moduleList;
+
+	}
+	
 	protected IModule[] createModules(IProject project) {
-		IModule mod = createModule(project);
-		if (mod == null)
+
+		// List modules = createModules(nature);
+		ModuleCoreNature nature = null;
+		try {
+			nature = (ModuleCoreNature) project.getNature(IModuleConstants.MODULE_NATURE_ID);
+		} catch (CoreException e) {
+			Logger.getLogger().write(e);
+		}
+		List modules = createModules(nature);
+		if (modules == null)
 			return new IModule[0];
-		return new IModule[] {mod};
+		IModule[] moduleArray = new IModule[modules.size()];
+		modules.toArray(moduleArray);
+		return moduleArray;
 	}
 }

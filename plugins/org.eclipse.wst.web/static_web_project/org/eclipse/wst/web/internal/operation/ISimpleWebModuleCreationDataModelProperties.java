@@ -10,8 +10,14 @@
  *******************************************************************************/
 package org.eclipse.wst.web.internal.operation;
 
-import org.eclipse.wst.common.frameworks.internal.operations.IProjectCreationProperties;
+import org.eclipse.wst.common.componentcore.datamodel.properties.IComponentCreationDataModelProperties;
 
-public interface ISimpleWebModuleCreationDataModelProperties extends IProjectCreationProperties{
+public interface ISimpleWebModuleCreationDataModelProperties extends IComponentCreationDataModelProperties {
+	
+	/**
+     * Optional, type String, the user defined name of web contents folder
+     */
+    public static final String WEBCONTENT_FOLDER = "IWebComponentCreationDataModelProperties.WEBCONTENT_FOLDER"; //$NON-NLS-1$  
+
 
 }

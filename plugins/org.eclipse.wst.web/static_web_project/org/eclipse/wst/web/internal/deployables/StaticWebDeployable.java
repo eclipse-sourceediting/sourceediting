@@ -8,10 +8,16 @@
  **************************************************************************************************/
 package org.eclipse.wst.web.internal.deployables;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
+import org.eclipse.wst.common.componentcore.ModuleCoreNature;
+import org.eclipse.wst.common.componentcore.internal.StructureEdit;
+import org.eclipse.wst.common.componentcore.resources.IVirtualComponent;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IModuleType;
 import org.eclipse.wst.server.core.util.IStaticWeb;
@@ -19,9 +25,11 @@ import org.eclipse.wst.server.core.util.ProjectModule;
 
 public class StaticWebDeployable extends ProjectModule implements IStaticWeb {
 
-	public StaticWebDeployable(IProject project) {
+	protected IVirtualComponent component = null;
+	 
+	public StaticWebDeployable(IProject project, IVirtualComponent component) {
 		super(project);
-//		setWebNature(getStaticWebNature());
+		this.component = component;
 	}
 
 	public String getFactoryId() {
@@ -41,11 +49,10 @@ public class StaticWebDeployable extends ProjectModule implements IStaticWeb {
 	}
 
 	public String getContextRoot() {
-		//TODO switch to components API
-//		IStaticWebNature nature = getStaticWebNature();
-//		if (nature != null)
-//			return nature.getContextRoot();
-		return null;
+		Properties props = component.getMetaProperties();
+		if(props.containsKey("context-root"))
+			return props.getProperty("context-root");
+		return component.getName();
 	}
 
 	/*
@@ -53,10 +60,15 @@ public class StaticWebDeployable extends ProjectModule implements IStaticWeb {
 	 * 
 	 * @see org.eclipse.wst.server.core.util.ProjectModule#getRootFolder()
 	 */
-	public IPath getRootFolder() {
-		// TODO fix up for components
-//		return getStaticWebNature().getRootPublishableFolder().getProjectRelativePath();
-		return null;
+	public IPath getRootFolder() {		   
+		IPath path = null;
+	       if ( ModuleCoreNature.getModuleCoreNature(project) != null ) {  
+     	if( component != null ){
+     		IFolder outputContainer = StructureEdit.getOutputContainerRoot(component);
+     		path = outputContainer.getProjectRelativePath();
+     	}
+     }    
+		return path;
 	}
 
 	public String getType() {
@@ -68,34 +80,51 @@ public class StaticWebDeployable extends ProjectModule implements IStaticWeb {
 	}
 
     /* (non-Javadoc)
-     * @see org.eclipse.wst.server.core.IModule#validate(org.eclipse.core.runtime.IProgressMonitor)
-     */
-    public IStatus validate(IProgressMonitor monitor) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    /* (non-Javadoc)
      * @see org.eclipse.wst.server.core.IModule#getModuleType()
      */
     public IModuleType getModuleType() {
-        // TODO Auto-generated method stub
-        return null;
+		return new IModuleType() {
+
+			public String getId() {
+				return getType();
+			}
+
+			public String getName() {
+				return getModuleTypeName();
+			}
+
+			public String getVersion() {
+				return getModuleTypeVersion();
+			}
+		};
+
+	}
+    
+    public String getModuleTypeName(){
+        return getName();
+    }
+    
+    public String getModuleTypeVersion(){
+        return getVersion();
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.wst.server.core.IModule#getChildModules(org.eclipse.core.runtime.IProgressMonitor)
+    /**
+     * Returns the child modules of this module.
+     * 
+     * @return org.eclipse.wst.server.core.model.IModule[]
      */
-    public IModule[] getChildModules(IProgressMonitor monitor) {
-        // TODO Auto-generated method stub
-        return null;
+    public IModule[] getChildModules() {
+        List list = new ArrayList();
+//
+//        if (this.archives != null) {
+//            int size = this.archives.length;
+//            for (int i = 0; i < size; i++)
+//                list.add(this.archives[i]);
+//        }
+//
+        IModule[] children = new IModule[list.size()];
+        list.toArray(children);
+        return children;
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
-     */
-    public Object getAdapter(Class adapter) {
-        // TODO Auto-generated method stub
-        return null;
-    }
 }

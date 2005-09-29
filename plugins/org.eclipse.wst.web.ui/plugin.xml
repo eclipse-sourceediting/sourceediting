@@ -3,12 +3,6 @@
 <plugin>
 
      <!-- static web project wizard -->
-   <!-- <extension
-         point="org.eclipse.wst.common.frameworks.ui.extendableWizard">
-      <extendableWizard
-            id="org.eclipse.wst.web.ui.internal.wizards.SimpleWebModuleCreationWizard">
-      </extendableWizard>
-   </extension>
    <extension
        point="org.eclipse.ui.newWizards">
       <category

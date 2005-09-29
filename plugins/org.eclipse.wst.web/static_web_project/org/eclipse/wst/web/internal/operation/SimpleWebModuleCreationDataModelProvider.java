@@ -10,10 +10,19 @@
  *******************************************************************************/
 package org.eclipse.wst.web.internal.operation;
 
-import org.eclipse.wst.common.frameworks.datamodel.IDataModelOperation;
-import org.eclipse.wst.common.frameworks.internal.operations.ProjectCreationDataModelProvider;
+import java.util.List;
+import java.util.Set;
 
-public class SimpleWebModuleCreationDataModelProvider extends ProjectCreationDataModelProvider {
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.wst.common.componentcore.datamodel.FlexibleProjectCreationDataModelProvider;
+import org.eclipse.wst.common.componentcore.datamodel.properties.IFlexibleProjectCreationDataModelProperties;
+import org.eclipse.wst.common.componentcore.internal.operation.ComponentCreationDataModelProvider;
+import org.eclipse.wst.common.componentcore.internal.util.IModuleConstants;
+import org.eclipse.wst.common.frameworks.datamodel.DataModelFactory;
+import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
+import org.eclipse.wst.common.frameworks.datamodel.IDataModelOperation;
+
+public class SimpleWebModuleCreationDataModelProvider extends ComponentCreationDataModelProvider implements ISimpleWebModuleCreationDataModelProperties {
 
     public SimpleWebModuleCreationDataModelProvider() {
         super();
@@ -25,6 +34,54 @@ public class SimpleWebModuleCreationDataModelProvider extends ProjectCreationDat
 
     public IDataModelOperation getDefaultOperation() {
         return new SimpleWebModuleCreationOperation(getDataModel());
+    }
+    
+    protected EClass getComponentType() {
+    	// TODO Auto-generated method stub
+    	return null;
+    }
+    
+    protected String getComponentID() {
+    	return IModuleConstants.WST_WEB_MODULE;
+    }
+    
+    protected Integer getDefaultComponentVersion() {
+    	// TODO Auto-generated method stub
+    	return null;
+    }
+    
+    protected String getComponentExtension() {
+    	return ".war"; //$NON-NLS-1$
+    }
+    
+    protected void initProjectCreationModel() {
+    	IDataModel dm = DataModelFactory.createDataModel(new FlexibleProjectCreationDataModelProvider());
+		model.addNestedModel(NESTED_PROJECT_CREATION_DM, dm);
+		model.setProperty(LOCATION, dm.getProperty(IFlexibleProjectCreationDataModelProperties.PROJECT_LOCATION));
+    }
+    
+    protected List getProperties() {
+    	// TODO Auto-generated method stub
+    	return null;
+    }
+    
+    public Set getPropertyNames() {
+		Set propertyNames = super.getPropertyNames();
+		propertyNames.add(WEBCONTENT_FOLDER);
+		return propertyNames;
+	}
+    
+    public Object getDefaultProperty(String propertyName) {
+    	if (propertyName.equals(WEBCONTENT_FOLDER))
+			return "WebContent";
+		return super.getDefaultProperty(propertyName);
+    }
+    
+    public boolean propertySet(String propertyName, Object propertyValue) {
+    	boolean result = super.propertySet(propertyName, propertyValue);
+    	if (propertyName.equals(PROJECT_NAME))
+    		setProperty(COMPONENT_NAME,propertyValue);
+    	return result;
     }
 
 }

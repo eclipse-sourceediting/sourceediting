@@ -3,18 +3,19 @@
 <plugin>
 
      
-   <!--  <extension
+   <extension
          point="org.eclipse.wst.server.core.moduleFactories">
       <moduleFactory
             projects="true"
             class="org.eclipse.wst.web.internal.deployables.StaticWebDeployableFactory"
             id="org.eclipse.wst.web.internal.deployables.static">
          <moduleType
-               versions="1.0"
+               versions="1.0, 1.2, 1.3, 1.4"
                types="web.static">
          </moduleType>
-      </moduleFactory> -->
-    
+      </moduleFactory>
+     </extension>
+     
     <extension
          point="org.eclipse.wst.server.core.moduleArtifactAdapters">
        <moduleArtifactAdapter
@@ -35,16 +36,32 @@
         </factory>    
    </extension> 
    
-     <extension
-         point="org.eclipse.wst.server.core.moduleFactories">
-      <moduleFactory
-            projects="true"
-            class="org.eclipse.wst.web.internal.deployables.StaticWebDeployableFactory"
-            id="org.eclipse.wst.web.internal.deployables.static">
-         <moduleType
-               versions="1.2, 1.3, 1.4"
-               types="web.static">
-         </moduleType>
-      </moduleFactory>
-   </extension>
+    <!--============================-->
+   <!-- Builder Provider registrations-->
+   <!--============================-->
+	<extension
+         point="org.eclipse.wst.common.frameworks.DataModelProviderExtension">
+     	<ProviderDefinesType
+      		providerType="wst.web.builder"
+      		providerID="org.eclipse.wst.common.componentcore.internal.builder.WorkbenchComponentBuilderDataModelProvider"/>
+		<DataModelProvider
+            class="org.eclipse.wst.web.internal.operation.SimpleWebModuleCreationDataModelProvider"
+            id="org.eclipse.wst.web.internal.operation.SimpleWebModuleCreationDataModelProvider"/>
+	</extension>
+ <!--  <extension
+         point="org.eclipse.wst.common.frameworks.ExtendableOperation">
+      <extendableOperation
+            class="com.ibm.wtp.web.operations.RemoveServletOperation"
+            id="com.ibm.wtp.web.operations.RemoveServletOperation">
+      </extendableOperation>
+      <extendableOperation
+            class="com.ibm.wtp.web.operations.RemoveWebSecurityRoleOperation"
+            id="com.ibm.wtp.web.operations.RemoveWebSecurityRoleOperation">
+      </extendableOperation>
+      <extendableOperation
+            class="org.eclipse.jst.j2ee.internal.web.operations.AddServletOperation"
+            id="org.eclipse.jst.j2ee.internal.web.operations.AddServletOperation">
+      </extendableOperation> 
+     
+   </extension> -->
 </plugin>
