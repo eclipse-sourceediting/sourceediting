@@ -25,7 +25,7 @@ import org.w3c.dom.Node;
 public class StructuredSelectNextXMLActionDelegate extends StructuredSelectActionDelegate {
 
 	protected IndexedRegion getCursorIndexedRegion(IDocument document, ITextSelection textSelection) {
-		int offset = textSelection.getOffset() + textSelection.getLength();
+		int offset = textSelection.getOffset() + textSelection.getLength() - 1;
 		if (offset < 0)
 			offset = 0;
 
@@ -50,26 +50,10 @@ public class StructuredSelectNextXMLActionDelegate extends StructuredSelectActio
 			}
 
 			Region cursorNodeRegion = new Region(indexedRegion.getStartOffset(), indexedRegion.getEndOffset() - indexedRegion.getStartOffset());
-
-			if (cursorNodeRegion.getOffset() >= textSelection.getOffset() && cursorNodeRegion.getOffset() <= textSelection.getOffset() + textSelection.getLength() && cursorNodeRegion.getOffset() + cursorNodeRegion.getLength() >= textSelection.getOffset() && cursorNodeRegion.getOffset() + cursorNodeRegion.getLength() <= textSelection.getOffset() + textSelection.getLength()) {
-				Node newNode = cursorNode.getNextSibling();
-				if (newNode == null) {
-					newNode = cursorNode.getParentNode();
-
-					if (newNode instanceof IndexedRegion) {
-						IndexedRegion newIndexedRegion = (IndexedRegion) newNode;
-						newRegion = new Region(newIndexedRegion.getStartOffset(), newIndexedRegion.getEndOffset() - newIndexedRegion.getStartOffset());
-					}
-				}
-				else {
-					if (newNode instanceof IndexedRegion) {
-						IndexedRegion newIndexedRegion = (IndexedRegion) newNode;
-						newRegion = new Region(textSelection.getOffset(), newIndexedRegion.getEndOffset() - textSelection.getOffset());
-
-						if (newNode.getNodeType() == Node.TEXT_NODE)
-							newRegion = getNewSelectionRegion(newIndexedRegion, new TextSelection(newRegion.getOffset(), newRegion.getLength()));
-					}
-				}
+			int currentOffset = textSelection.getOffset();
+			int currentEndOffset = currentOffset + textSelection.getLength();
+			if (cursorNodeRegion.getOffset() >= currentOffset && cursorNodeRegion.getOffset() <= currentEndOffset && cursorNodeRegion.getOffset() + cursorNodeRegion.getLength() >= currentOffset && cursorNodeRegion.getOffset() + cursorNodeRegion.getLength() <= currentEndOffset) {
+				newRegion = getNewSelectionRegion2(indexedRegion, textSelection);
 			}
 			else
 				newRegion = cursorNodeRegion;
@@ -85,4 +69,37 @@ public class StructuredSelectNextXMLActionDelegate extends StructuredSelectActio
 		}
 	}
 
+	/**
+	 * This method was separated out from getNewSelectionRegion2 because the
+	 * code in here is allowed to be called recursively.
+	 * 
+	 * @param indexedRegion
+	 * @param textSelection
+	 * @return new region to select or null if none
+	 */
+	private Region getNewSelectionRegion2(IndexedRegion indexedRegion, ITextSelection textSelection) {
+		Region newRegion = null;
+		if (indexedRegion instanceof Node) {
+			Node node = (Node) indexedRegion;
+			Node newNode = node.getNextSibling();
+			if (newNode == null) {
+				newNode = node.getParentNode();
+
+				if (newNode instanceof IndexedRegion) {
+					IndexedRegion newIndexedRegion = (IndexedRegion) newNode;
+					newRegion = new Region(newIndexedRegion.getStartOffset(), newIndexedRegion.getEndOffset() - newIndexedRegion.getStartOffset());
+				}
+			}
+			else {
+				if (newNode instanceof IndexedRegion) {
+					IndexedRegion newIndexedRegion = (IndexedRegion) newNode;
+					newRegion = new Region(textSelection.getOffset(), newIndexedRegion.getEndOffset() - textSelection.getOffset());
+
+					if (newNode.getNodeType() == Node.TEXT_NODE)
+						newRegion = getNewSelectionRegion2(newIndexedRegion, new TextSelection(newRegion.getOffset(), newRegion.getLength()));
+				}
+			}
+		}
+		return newRegion;
+	}
 }

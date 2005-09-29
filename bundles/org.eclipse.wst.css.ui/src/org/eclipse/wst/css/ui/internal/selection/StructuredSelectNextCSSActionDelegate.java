@@ -27,7 +27,7 @@ import org.eclipse.wst.sse.ui.internal.selection.StructuredSelectActionDelegate;
 public class StructuredSelectNextCSSActionDelegate extends StructuredSelectActionDelegate {
 
 	protected IndexedRegion getCursorIndexedRegion(IDocument document, ITextSelection textSelection) {
-		int offset = textSelection.getOffset() + textSelection.getLength();
+		int offset = textSelection.getOffset() + textSelection.getLength() - 1;
 		if (offset < 0)
 			offset = 0;
 
