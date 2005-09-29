@@ -455,8 +455,9 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 	 * @return
 	 */
 	public ContentOutlineConfiguration getConfiguration() {
-		if (fConfiguration == null)
-			return NULL_CONFIGURATION;
+		if (fConfiguration == null) {
+			fConfiguration = NULL_CONFIGURATION;
+		}
 		return fConfiguration;
 	}
 
@@ -569,9 +570,6 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 		}
 
 		fConfiguration = configuration;
-		if (fConfiguration == null) {
-			fConfiguration = NULL_CONFIGURATION;
-		}
 
 		if (getTreeViewer() != null && getControl() != null && !getControl().isDisposed()) {
 			// add a menu listener if one is provided
@@ -614,7 +612,7 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 				}
 			}
 			// add the allowed DnD listeners and types
-			TransferDragSourceListener[] dragListeners = fConfiguration.getTransferDragSourceListeners(getTreeViewer());
+			TransferDragSourceListener[] dragListeners = getConfiguration().getTransferDragSourceListeners(getTreeViewer());
 			if (fDragAdapter != null && dragListeners.length > 0) {
 				for (int i = 0; i < dragListeners.length; i++) {
 					fDragAdapter.addDragSourceListener(dragListeners[i]);
@@ -623,7 +621,7 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 				fDragSource.addDragListener(fDragAdapter);
 				fDragSource.setTransfer(fDragAdapter.getTransfers());
 			}
-			TransferDropTargetListener[] dropListeners = fConfiguration.getTransferDropTargetListeners(getTreeViewer());
+			TransferDropTargetListener[] dropListeners = getConfiguration().getTransferDropTargetListeners(getTreeViewer());
 			if (fDropAdapter != null && dropListeners.length > 0) {
 				for (int i = 0; i < dropListeners.length; i++) {
 					fDropAdapter.addDropTargetListener(dropListeners[i]);
