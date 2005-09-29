@@ -106,7 +106,7 @@ public class XMLHyperlinkDetector implements IHyperlinkDetector {
 						// resolve attribute value
 						uriString = getURIString(currentAttr, document);
 						// verify validity of uri string
-						if (!isValidURI(uriString))
+						if (uriString == null || !isValidURI(uriString))
 							// reset current attribute
 							currentAttr = null;
 					}
@@ -381,6 +381,9 @@ public class XMLHyperlinkDetector implements IHyperlinkDetector {
 			if ((XMLNS.equals(prefix)) || (XMLNS.equals(unprefixedName))) {
 				publicId = attrValue;
 				systemId = getLocationHint(attrNode.getOwnerElement(), publicId);
+				if(systemId == null) {
+					systemId = attrValue;
+				}
 			} else if ((XSI_NAMESPACE_URI.equals(DOMNamespaceHelper.getNamespaceURI(attrNode))) && (SCHEMA_LOCATION.equals(unprefixedName))) {
 				// for now just use the first pair
 				// need to look into being more precise
