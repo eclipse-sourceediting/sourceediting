@@ -1709,16 +1709,20 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	}
 	
 	/**
-	 * In the case of 0 length, the region to the right is returned,
+	 * <p>
+	 * In the case of 0 length, the <code>IStructuredDocumentRegion</code>
+	 * at the character offset is returened.
+	 * In other words, the region to the right of the caret is returned.
 	 * except for at the end of the document, then the last region is returned.
-	 * 
+	 * </p>
+	 * </p>
 	 * Otherwise all the regions "inbetween" the indicated range are returned,
 	 * including the regions which overlap the region.
-	 * 
-	 * eg.
+	 * </p>
+	 * <br>eg.
 	 * <p>
-	 *  &lt;html&gt;[&lt;head&gt;&lt;/head&gt]&lt;/html&gt; -> &lt;head&gt;,&lt;/head&gt;
-	 *  &lt;ht[ml&gt;&lt;head&gt;&lt;/he]ad&gt&lt;/html&gt; -> &lt;html&gt;,&lt;head&gt;,&lt;/head&gt;
+	 *    <pre>&lt;html&gt;[&lt;head&gt;&lt;/head&gt;]&lt;/html&gt; returns &lt;head&gt;,&lt;/head&gt;</pre>
+	 *    <pre>&lt;ht[ml&gt;&lt;head&gt;&lt;/he]ad&gt;&lt;/html&gt; returns &lt;html&gt;,&lt;head&gt;,&lt;/head&gt;</pre>
 	 * </p>
 	 */
 	public IStructuredDocumentRegion[] getStructuredDocumentRegions(int start, int length) {
