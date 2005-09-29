@@ -81,6 +81,7 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
@@ -184,6 +185,10 @@ import org.eclipse.wst.sse.ui.internal.provisional.extensions.breakpoint.NullSou
 import org.eclipse.wst.sse.ui.internal.selection.SelectionHistory;
 import org.eclipse.wst.sse.ui.internal.text.DocumentRegionEdgeMatcher;
 import org.eclipse.wst.sse.ui.internal.util.Assert;
+import org.eclipse.wst.sse.ui.internal.view.events.INodeSelectionListener;
+import org.eclipse.wst.sse.ui.internal.view.events.ITextSelectionListener;
+import org.eclipse.wst.sse.ui.internal.view.events.NodeSelectionChangedEvent;
+import org.eclipse.wst.sse.ui.internal.view.events.TextSelectionChangedEvent;
 import org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration;
 import org.eclipse.wst.sse.ui.views.properties.PropertySheetConfiguration;
 
@@ -2051,10 +2056,33 @@ public class StructuredTextEditor extends TextEditor {
 	 */
 	public ViewerSelectionManager getViewerSelectionManager() {
 		if (fViewerSelectionManager == null) {
+			/*
+			 * Create a VSM for now for migration compatibility. Although our
+			 * selection will reflect the notifications from the VSM, we won't
+			 * notify the VSM when the source viewer selection changes. This
+			 * allows us to "drive" listeners during the migration phase and
+			 * was subjectively judged as more important than listening to VSM
+			 * selection changes. If we had chosen to both listen to and send
+			 * VSM events, selection notification loops could have easily
+			 * resulted.
+			 */
 			fViewerSelectionManager = new ViewerSelectionManagerImpl(getSourceViewer());
-			if (fOutlinePageListener == null) {
-				fOutlinePageListener = new OutlinePageListener();
-			}
+			fViewerSelectionManager.addNodeSelectionListener(new INodeSelectionListener() {
+				public void nodeSelectionChanged(NodeSelectionChangedEvent event) {
+					if(getTextViewer().getTextWidget() != null && !getTextViewer().getTextWidget().isDisposed() && !getTextViewer().getTextWidget().isFocusControl()) {
+						getSelectionProvider().setSelection(new StructuredSelection(event.getSelectedNodes()));
+					}
+				}
+			});
+			fViewerSelectionManager.addTextSelectionListener(new ITextSelectionListener() {
+				public void textSelectionChanged(TextSelectionChangedEvent event) {
+					if(getTextViewer().getTextWidget() != null && !getTextViewer().getTextWidget().isDisposed() && !getTextViewer().getTextWidget().isFocusControl()) {
+						int length = event.getTextSelectionEnd() - event.getTextSelectionStart();
+						ISelection textSelection = new TextSelection(getSourceViewer().getDocument(), event.getTextSelectionStart(), length);
+						getSelectionProvider().setSelection(textSelection);
+					}
+				}
+			});
 		}
 		return fViewerSelectionManager;
 	}
