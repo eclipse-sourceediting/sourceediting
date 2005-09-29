@@ -51,10 +51,9 @@ class JavaPairMatcher implements ICharacterPairMatcher {
 	 *      int)
 	 */
 	public IRegion match(IDocument document, int offset) {
-
 		fOffset = offset;
 
-		if (fOffset < 0)
+		if(offset < 0 || offset >= document.getLength())
 			return null;
 
 		fDocument = document;

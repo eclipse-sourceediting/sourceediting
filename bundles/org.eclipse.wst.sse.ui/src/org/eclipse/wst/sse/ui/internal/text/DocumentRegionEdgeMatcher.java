@@ -80,6 +80,9 @@ public class DocumentRegionEdgeMatcher implements ICharacterPairMatcher {
 	 *      int)
 	 */
 	public IRegion match(IDocument document, int offset) {
+		if(offset < 0 || offset >= document.getLength())
+			return null;
+		
 		IRegion match = null;
 		if (!fRegionTypes.isEmpty() && document instanceof IStructuredDocument) {
 			IStructuredDocumentRegion docRegion = ((IStructuredDocument) document).getRegionAtCharacterOffset(offset);
