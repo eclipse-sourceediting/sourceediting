@@ -378,9 +378,9 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 		getControl().setMenu(menu);
 
 		fDragAdapter = new DelegatingDragAdapter();
-		fDragSource = new DragSource(getTreeViewer().getControl(), DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK);
+		fDragSource = new DragSource(getControl(), DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK);
 		fDropAdapter = new DelegatingDropAdapter();
-		fDropTarget = new DropTarget(getTreeViewer().getControl(), DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK);
+		fDropTarget = new DropTarget(getControl(), DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK);
 
 		setConfiguration(getConfiguration());
 
@@ -498,11 +498,11 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 		// configuration
 		if (getTreeViewer() != null) {
 			// remove the key listeners
-			if (getTreeViewer().getControl() != null && !getTreeViewer().getControl().isDisposed()) {
+			if (getControl() != null && !getControl().isDisposed()) {
 				KeyListener[] listeners = getConfiguration().getKeyListeners(getTreeViewer());
 				if (listeners != null) {
 					for (int i = 0; i < listeners.length; i++) {
-						getTreeViewer().getControl().removeKeyListener(listeners[i]);
+						getControl().removeKeyListener(listeners[i]);
 					}
 				}
 			}
@@ -636,7 +636,7 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 			KeyListener[] listeners = getConfiguration().getKeyListeners(getTreeViewer());
 			if (listeners != null) {
 				for (int i = 0; i < listeners.length; i++) {
-					getTreeViewer().getControl().addKeyListener(listeners[i]);
+					getControl().addKeyListener(listeners[i]);
 				}
 			}
 		}
@@ -706,8 +706,8 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 					fContextMenuManager.addMenuListener(listener);
 				fContextMenuManager.addMenuListener(fGroupAdder);
 
-				fContextMenu = fContextMenuManager.createContextMenu(getTreeViewer().getControl());
-				getTreeViewer().getControl().setMenu(fContextMenu);
+				fContextMenu = fContextMenuManager.createContextMenu(getControl());
+				getControl().setMenu(fContextMenu);
 
 				getSite().registerContextMenu(fContextMenuId, fContextMenuManager, this);
 
