@@ -68,7 +68,7 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 	public static final int ANNOTATION_LENGTH_LIMIT = 25;
 	public static final int ELEMENT_ERROR_LIMIT = 25;
     
-	protected IDocument fDocument = null;
+	protected IStructuredDocument fDocument = null;
 	protected IReconcileStep fFirstStep = null;
 	protected IProgressMonitor fProgressMonitor = null;
 	protected ISourceViewer fSourceViewer = null;
@@ -171,7 +171,8 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 	}
 
 	protected TemporaryAnnotation[] getAnnotationsToRemove(DirtyRegion dr) {
-		IStructuredDocumentRegion[] sdRegions = getStructuredDocumentRegions(dr);
+		
+		IStructuredDocumentRegion[] sdRegions = fDocument.getStructuredDocumentRegions(dr.getOffset(), dr.getLength());
 		List remove = new ArrayList();
 		IAnnotationModel annotationModel = getAnnotationModel();
 		// can be null when closing the editor
@@ -243,35 +244,6 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 		if (fFirstStep instanceof StructuredReconcileStep)
 			return ((StructuredReconcileStep) fFirstStep).getPartitionTypes();
 		return new String[0];
-	}
-
-	/**
-	 * Returns the appropriate (first) IStructuredDocumentRegion for the given
-	 * dirtyRegion.
-	 * 
-	 * @param dirtyRegion
-	 * @return the appropriate StructuredDocumentRegion for the given
-	 *         dirtyRegion.
-	 */
-	private IStructuredDocumentRegion getStructuredDocumentRegion(int offset) {
-		IStructuredDocumentRegion sdRegion = null;
-		if (fDocument instanceof IStructuredDocument) {
-			sdRegion = ((IStructuredDocument) fDocument).getRegionAtCharacterOffset(offset);
-		}
-		return sdRegion;
-	}
-
-	private IStructuredDocumentRegion[] getStructuredDocumentRegions(DirtyRegion dr) {
-		int offset = dr.getOffset();
-		int end = offset + dr.getLength();
-		List regions = new ArrayList();
-		IStructuredDocumentRegion r = getStructuredDocumentRegion(offset);
-		while (r != null && r.getStartOffset() <= end) {
-			if (!r.isDeleted())
-				regions.add(r);
-			r = r.getNext();
-		}
-		return (IStructuredDocumentRegion[]) regions.toArray(new IStructuredDocumentRegion[regions.size()]);
 	}
 
 	public void init() {
@@ -458,10 +430,14 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 
 		if (document == null)
 			release();
-
-		fDocument = document;
-		if (fFirstStep != null)
-			fFirstStep.setInputModel(new DocumentAdapter(document));
+		
+		// we currently only work on IStructuredDocument
+		if(document instanceof IStructuredDocument) {
+			
+			fDocument = (IStructuredDocument)document;
+			if (fFirstStep != null)
+				fFirstStep.setInputModel(new DocumentAdapter(document));
+		}
 	}
 
 	/**
@@ -483,7 +459,7 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 	 */
 	protected void smartProcess(TemporaryAnnotation[] annotationsToRemove, IReconcileResult[] annotationsToAdd) {
         
-        // TODO: investigate a better algorithm, 
+        // pa_TODO: investigate a better algorithm, 
         // also see if this is a bad performance hit.
         
         Comparator comp = getAnnotationComparator();
