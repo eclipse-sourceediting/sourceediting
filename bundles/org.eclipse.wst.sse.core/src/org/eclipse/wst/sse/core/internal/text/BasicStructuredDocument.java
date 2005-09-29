@@ -1702,6 +1702,57 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 
 		return result;
 	}
+	
+	
+	public IStructuredDocumentRegion[] getStructuredDocumentRegions() {
+		return getStructuredDocumentRegions(0, getLength());
+	}
+	
+	/**
+	 * In the case of 0 length, the region to the right is returned,
+	 * except for at the end of the document, then the last region is returned.
+	 * 
+	 * Otherwise all the regions "inbetween" the indicated range are returned,
+	 * including the regions which overlap the region.
+	 * 
+	 * eg.
+	 * <p>
+	 *  &lt;html&gt;[&lt;head&gt;&lt;/head&gt]&lt;/html&gt; -> &lt;head&gt;,&lt;/head&gt;
+	 *  &lt;ht[ml&gt;&lt;head&gt;&lt;/he]ad&gt&lt;/html&gt; -> &lt;html&gt;,&lt;head&gt;,&lt;/head&gt;
+	 * </p>
+	 */
+	public IStructuredDocumentRegion[] getStructuredDocumentRegions(int start, int length) {
+		
+		if(length < 0) 
+			throw new IllegalArgumentException("can't have negative length");
+		
+		// this will make the right edge of the range point into the selection
+		// eg.  <html>[<head></head>]</html>
+		// will return <head>,</head> instead of <head>,</head>,</html>
+		if(length > 0) length--;
+			
+		List results = new ArrayList();
+		
+		// start thread safe block
+		try {
+			acquireLock();
+		
+			IStructuredDocumentRegion currentRegion = getRegionAtCharacterOffset(start);
+			IStructuredDocumentRegion endRegion = getRegionAtCharacterOffset(start + length);
+			while(currentRegion != endRegion && currentRegion != null) {
+				results.add(currentRegion);
+				currentRegion = currentRegion.getNext();
+			}
+			// need to add that last end region
+			results.add(endRegion);
+		}
+		finally {
+			releaseLock();
+		}
+		// end thread safe block
+		
+		return (IStructuredDocumentRegion[])results.toArray(new IStructuredDocumentRegion[results.size()]);
+	}
 
 	/**
 	 * was made public for easier testing. Normally should never be used by

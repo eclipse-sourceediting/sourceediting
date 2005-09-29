@@ -435,4 +435,12 @@ public class MinimalDocument implements IStructuredDocument {
 	public void setLineDelimiter(String delimiter) {
 		
 	}
+	
+	public IStructuredDocumentRegion[] getStructuredDocumentRegions() {
+		throw new NotImplementedException("intentionally not implemented"); //$NON-NLS-1$
+	}
+	
+	public IStructuredDocumentRegion[] getStructuredDocumentRegions(int start, int length) {
+		throw new NotImplementedException("intentionally not implemented"); //$NON-NLS-1$
+	}
 }

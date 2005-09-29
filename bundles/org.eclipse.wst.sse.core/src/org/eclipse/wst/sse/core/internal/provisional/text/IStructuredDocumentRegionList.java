@@ -48,4 +48,5 @@ public interface IStructuredDocumentRegionList {
 	 * @return the region at specified offset.
 	 */
 	IStructuredDocumentRegion item(int i);
+
 }

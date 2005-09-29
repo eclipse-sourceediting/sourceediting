@@ -107,11 +107,33 @@ public interface IStructuredDocument extends IEncodedDocument, IDocumentExtensio
 	 */
 	RegionParser getParser();
 
-	IStructuredDocumentRegion getRegionAtCharacterOffset(int offset);
-
+	/**
+	 * @deprecated use getStructuredDocumentRegions()
+	 * @return
+	 */
 	IStructuredDocumentRegionList getRegionList();
 
-
+	/**
+	 * Returns the <code>IStructuredDocumentRegion</code> at the given character offset.
+	 * @param offset
+	 * @return the <code>IStructuredDocumentRegion</code> at the given character offset.
+	 */
+	IStructuredDocumentRegion getRegionAtCharacterOffset(int offset);
+	
+	/**
+	 * Returns <code>IStructuredDocumentRegion</code>s in the specified range.
+	 * @param offset
+	 * @param length
+	 * @return <code>IStructuredDocumentRegion</code>s in the specified range.
+	 */
+	IStructuredDocumentRegion[] getStructuredDocumentRegions(int offset, int length);
+	
+	/**
+	 * Returns all <code>IStructuredDocumentRegion</code>s in the document.
+	 * @return all <code>IStructuredDocumentRegion</code>s in the document.
+	 */
+	IStructuredDocumentRegion[] getStructuredDocumentRegions();
+	
 	/**
 	 * Note: this method was made public, and part of the interface, for
 	 * easier testing. Clients normally never manipulate the reparser directly
