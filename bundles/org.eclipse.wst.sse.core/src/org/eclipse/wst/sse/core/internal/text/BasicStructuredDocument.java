@@ -59,7 +59,6 @@ import org.eclipse.wst.sse.core.internal.provisional.events.RegionChangedEvent;
 import org.eclipse.wst.sse.core.internal.provisional.events.RegionsReplacedEvent;
 import org.eclipse.wst.sse.core.internal.provisional.events.StructuredDocumentEvent;
 import org.eclipse.wst.sse.core.internal.provisional.events.StructuredDocumentRegionsReplacedEvent;
-import org.eclipse.wst.sse.core.internal.provisional.exceptions.SourceEditingRuntimeException;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegionList;
@@ -464,8 +463,8 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 				// safeguard from listeners that throw exceptions
 				try {
 					if (p instanceof IDocumentPartitionerExtension) {
-						//IRegion changedPartion = 
-							((IDocumentPartitionerExtension) p).documentChanged2(documentEvent);
+						// IRegion changedPartion =
+						((IDocumentPartitionerExtension) p).documentChanged2(documentEvent);
 					}
 					else {
 						p.documentChanged(documentEvent);
@@ -1720,10 +1719,10 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	 * <p>
 	 * 
 	 * <pre>
-	 * &lt;html&gt;[&lt;head&gt;&lt;/head&gt;]&lt;/html&gt; returns &lt;head&gt;,&lt;/head&gt;
+	 *  &lt;html&gt;[&lt;head&gt;&lt;/head&gt;]&lt;/html&gt; returns &lt;head&gt;,&lt;/head&gt;
 	 * </pre>
 	 *    <pre>
-	 * &lt;ht[ml&gt;&lt;head&gt;&lt;/he]ad&gt;&lt;/html&gt; returns &lt;html&gt;,&lt;head&gt;,&lt;/head&gt;
+	 *  &lt;ht[ml&gt;&lt;head&gt;&lt;/he]ad&gt;&lt;/html&gt; returns &lt;html&gt;,&lt;head&gt;,&lt;/head&gt;
 	 * </pre>
 	 * 
 	 * </p>
@@ -1850,7 +1849,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 
 	String internalGet(int offset, int length) {
 		String result = null;
-		//int myLength = getLength();
+		// int myLength = getLength();
 		// if ((0 > offset) || (0 > length) || (offset + length > myLength))
 		// throw new BadLocationException();
 		result = getStore().get(offset, length);
@@ -1951,7 +1950,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 								NoChangeEvent noChangeEvent = new NoChangeEvent(this, requester, changes, start, replacementLength);
 								noChangeEvent.reason = NoChangeEvent.NO_EVENT;
 								fireStructuredDocumentEvent(noChangeEvent);
-								throw new SourceEditingRuntimeException("Program Error: unexpected structured document event: " + result); //$NON-NLS-1$
+								Logger.log(Logger.INFO, "Program Error: unexpected structured document event: " + result); //$NON-NLS-1$
 							}
 						}
 					}
