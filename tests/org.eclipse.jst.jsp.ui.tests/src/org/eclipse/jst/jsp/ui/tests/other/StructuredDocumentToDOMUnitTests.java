@@ -13,6 +13,7 @@ package org.eclipse.jst.jsp.ui.tests.other;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.eclipse.jst.jsp.ui.tests.Logger;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.events.IStructuredDocumentListener;
@@ -21,7 +22,6 @@ import org.eclipse.wst.sse.core.internal.provisional.events.NoChangeEvent;
 import org.eclipse.wst.sse.core.internal.provisional.events.RegionChangedEvent;
 import org.eclipse.wst.sse.core.internal.provisional.events.RegionsReplacedEvent;
 import org.eclipse.wst.sse.core.internal.provisional.events.StructuredDocumentRegionsReplacedEvent;
-import org.eclipse.wst.sse.core.internal.provisional.exceptions.SourceEditingRuntimeException;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegionList;
 import org.eclipse.wst.sse.core.internal.util.Debug;
@@ -45,7 +45,8 @@ public class StructuredDocumentToDOMUnitTests implements IStructuredDocumentList
 	}
 
 	String getTestString3() {
-		//return " <?xml version=\"1.0\" ?>\n    <testTopSibling><p>text</p></testTopSibling>";
+		// return " <?xml version=\"1.0\" ?>\n
+		// <testTopSibling><p>text</p></testTopSibling>";
 		return "<test/>\n\n <html>\n</html>";
 	}
 
@@ -55,7 +56,8 @@ public class StructuredDocumentToDOMUnitTests implements IStructuredDocumentList
 
 	/**
 	 * 
-	 * @param args java.lang.String[]
+	 * @param args
+	 *            java.lang.String[]
 	 */
 	public static void main(String[] args) {
 
@@ -71,14 +73,14 @@ public class StructuredDocumentToDOMUnitTests implements IStructuredDocumentList
 	void makeChange1(IDOMModel tree) {
 
 		//	
-		// pick a parent and ones of its children to delete 
+		// pick a parent and ones of its children to delete
 		// (note: validity of this code is highly dependent on input string)
 		org.w3c.dom.Document dom = tree.getDocument();
 		NodeList nodes = dom.getChildNodes();
 		//
-		/* for "first" test case
-		 Node testParentNode = nodes.item(0);
-		 Node testChildNode = testParentNode.getFirstChild();
+		/*
+		 * for "first" test case Node testParentNode = nodes.item(0); Node
+		 * testChildNode = testParentNode.getFirstChild();
 		 */
 		// for "second" test case
 		Node testParentNode = nodes.item(0);
@@ -98,10 +100,10 @@ public class StructuredDocumentToDOMUnitTests implements IStructuredDocumentList
 	void makeChange3(IDOMModel tree) {
 
 		//	
-		// pick a parent and ones of its children to delete 
+		// pick a parent and ones of its children to delete
 		// (note: validity of this code is highly dependent on input string)
 		org.w3c.dom.Document dom = tree.getDocument();
-		//NodeList nodes = dom.getChildNodes();
+		// NodeList nodes = dom.getChildNodes();
 		//
 		Node testChildNode = dom.getLastChild();
 
@@ -120,7 +122,8 @@ public class StructuredDocumentToDOMUnitTests implements IStructuredDocumentList
 	 * noChange method comment.
 	 */
 	public void noChange(NoChangeEvent structuredDocumentEvent) {
-		throw new SourceEditingRuntimeException("StructuredDocumentToDOMUnitTests::noChange needs to be implemented");
+		// log for now, unless we find reason not to
+		Logger.log(Logger.INFO, "StructuredDocumentToDOMUnitTests::noChange needs to be implemented");
 	}
 
 	/**
@@ -161,16 +164,18 @@ public class StructuredDocumentToDOMUnitTests implements IStructuredDocumentList
 	}
 
 	/**
-	 * Unit test -- tests basic parsing results of inserting a test string into an initial string.
+	 * Unit test -- tests basic parsing results of inserting a test string
+	 * into an initial string.
 	 */
-	void testNodeDeletion()  {
-		//String initialString = "<par><x>\ntextx\n</x>\n<y>\ntexty\n</y></par>";
-		//String initialString = "<par><x>textx</x><y>texty</y></par>";
+	void testNodeDeletion() {
+		// String initialString =
+		// "<par><x>\ntextx\n</x>\n<y>\ntexty\n</y></par>";
+		// String initialString = "<par><x>textx</x><y>texty</y></par>";
 		// test cases for two text nodes left together (remove <b/>):
 		// first case works, second doesn't
-		//	String initialString = "<a>a<b /></a>"; // -> <a>a</a>
-		//	String initialString = "<a>a<b />b</a>"; // -> <a>ab</a>
-		//	String initialString = getTestString1();
+		// String initialString = "<a>a<b /></a>"; // -> <a>a</a>
+		// String initialString = "<a>a<b />b</a>"; // -> <a>ab</a>
+		// String initialString = getTestString1();
 		String initialString = getTestString2();
 
 		// print out what we always can
@@ -180,7 +185,7 @@ public class StructuredDocumentToDOMUnitTests implements IStructuredDocumentList
 		String outString = StringUtils.escape(initialString);
 		System.out.println("Initial String: " + outString);
 		// always start with fresh model
-		IStructuredDocument f = null; 
+		IStructuredDocument f = null;
 
 		IModelManager mm = StructuredModelManager.getModelManager();
 		try {
@@ -192,7 +197,7 @@ public class StructuredDocumentToDOMUnitTests implements IStructuredDocumentList
 
 
 		//
-		//we'll listen to structuredDocument events to print out diagnostics
+		// we'll listen to structuredDocument events to print out diagnostics
 		f.addDocumentChangedListener(this);
 		//
 
@@ -208,7 +213,7 @@ public class StructuredDocumentToDOMUnitTests implements IStructuredDocumentList
 		DebugDocument.dump(tree.getDocument());
 		//
 		//
-		//makeChange1(tree);
+		// makeChange1(tree);
 		makeChange2(f);
 
 		// display resulting text
@@ -216,7 +221,7 @@ public class StructuredDocumentToDOMUnitTests implements IStructuredDocumentList
 		System.out.println(StringUtils.escape(f.getText()));
 		//
 		//
-		// dump post change structuredDocument  
+		// dump post change structuredDocument
 		Debug.dump(f);
 		// dump post change DOM
 		DebugDocument.dump(tree.getDocument());
@@ -226,9 +231,10 @@ public class StructuredDocumentToDOMUnitTests implements IStructuredDocumentList
 	}
 
 	/**
-	 * Unit test -- tests basic parsing results of inserting a test string into an initial string.
+	 * Unit test -- tests basic parsing results of inserting a test string
+	 * into an initial string.
 	 */
-	void testNodeDeletion3()  {
+	void testNodeDeletion3() {
 		String initialString = getTestString3();
 
 		// print out what we always can
@@ -238,7 +244,7 @@ public class StructuredDocumentToDOMUnitTests implements IStructuredDocumentList
 		String outString = StringUtils.escape(initialString);
 		System.out.println("Initial String: " + outString);
 		// always start with fresh model
-		IStructuredDocument f = null; 
+		IStructuredDocument f = null;
 
 		IModelManager mm = StructuredModelManager.getModelManager();
 		try {
@@ -248,7 +254,7 @@ public class StructuredDocumentToDOMUnitTests implements IStructuredDocumentList
 			// do nothing, since dummy
 		}
 		//
-		//we'll listen to structuredDocument events to print out diagnostics
+		// we'll listen to structuredDocument events to print out diagnostics
 		f.addDocumentChangedListener(this);
 		//
 
@@ -264,7 +270,7 @@ public class StructuredDocumentToDOMUnitTests implements IStructuredDocumentList
 		DebugDocument.dump(tree.getDocument());
 		//
 		//
-		//makeChange1(tree);
+		// makeChange1(tree);
 		makeChange3(tree);
 
 		// display resulting text
@@ -272,7 +278,7 @@ public class StructuredDocumentToDOMUnitTests implements IStructuredDocumentList
 		System.out.println(StringUtils.escape(f.getText()));
 		//
 		//
-		// dump post change structuredDocument  
+		// dump post change structuredDocument
 		Debug.dump(f);
 		// dump post change DOM
 		DebugDocument.dump(tree.getDocument());
@@ -294,7 +300,7 @@ public class StructuredDocumentToDOMUnitTests implements IStructuredDocumentList
 		String outString = StringUtils.escape(initialString);
 		System.out.println("Initial String: " + outString);
 		// always start with fresh model
-		IStructuredDocument f = null; 
+		IStructuredDocument f = null;
 
 		IModelManager mm = StructuredModelManager.getModelManager();
 		try {
@@ -304,7 +310,7 @@ public class StructuredDocumentToDOMUnitTests implements IStructuredDocumentList
 			// do nothing, since dummy
 		}
 		//
-		//we'll listen to structuredDocument events to print out diagnostics
+		// we'll listen to structuredDocument events to print out diagnostics
 		f.addDocumentChangedListener(this);
 		//
 
@@ -328,7 +334,7 @@ public class StructuredDocumentToDOMUnitTests implements IStructuredDocumentList
 		System.out.println(StringUtils.escape(f.getText()));
 		//
 		//
-		// dump post change structuredDocument  
+		// dump post change structuredDocument
 		Debug.dump(f);
 		// dump post change DOM
 		DebugDocument.dump(tree.getDocument());
@@ -343,7 +349,7 @@ public class StructuredDocumentToDOMUnitTests implements IStructuredDocumentList
 		System.out.println(StringUtils.escape(f.getText()));
 		//
 		//
-		// dump post change structuredDocument  
+		// dump post change structuredDocument
 		Debug.dump(f);
 		// dump post change DOM
 		DebugDocument.dump(tree.getDocument());
