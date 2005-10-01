@@ -11,7 +11,6 @@
 
 package org.eclipse.wst.dtd.core.internal.saxparser;
 
-import java.util.Enumeration;
 import java.util.Vector;
 
 /**
@@ -348,7 +347,7 @@ public class DTDScanner {
 		this.entityPool = entityPool;
 
 		int scannerState = Att_Scanner_State_Name;
-		;
+		
 		AttNode attNode;
 
 		while (true) {
@@ -854,15 +853,6 @@ public class DTDScanner {
 		return value;
 	}
 
-	void printAttList(Vector attrs) {
-		Enumeration en = attrs.elements();
-		while (en.hasMoreElements()) {
-			AttNode an = (AttNode) en.nextElement();
-			// System.out.println("attNode: " + an);
-		}
-
-	}
-
 	//
 	// [70] EntityDecl ::= GEDecl | PEDecl
 	// [71] GEDecl ::= '<!ENTITY' S Name S EntityDef S? '>'
@@ -954,7 +944,6 @@ public class DTDScanner {
 		prevNodeOffset = 1;
 		nodeOffset = 1;
 		int len;
-		boolean isPEDecl = false;
 		NotationDecl notationDecl = null;
 
 		String name = null;

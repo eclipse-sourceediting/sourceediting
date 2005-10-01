@@ -105,7 +105,7 @@ public class JSPELParser/*@bgen(jjtree)*/implements JSPELParserTreeConstants, JS
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
         case OR1:
         case OR2:
-          ;
+          
           break;
         default:
           jj_la1[1] = jj_gen;
@@ -161,7 +161,7 @@ public class JSPELParser/*@bgen(jjtree)*/implements JSPELParserTreeConstants, JS
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
         case AND1:
         case AND2:
-          ;
+          
           break;
         default:
           jj_la1[3] = jj_gen;
@@ -219,7 +219,7 @@ public class JSPELParser/*@bgen(jjtree)*/implements JSPELParserTreeConstants, JS
         case EQ2:
         case NEQ1:
         case NEQ2:
-          ;
+          
           break;
         default:
           jj_la1[5] = jj_gen;
@@ -287,7 +287,7 @@ public class JSPELParser/*@bgen(jjtree)*/implements JSPELParserTreeConstants, JS
         case LE2:
         case GE1:
         case GE2:
-          ;
+          
           break;
         default:
           jj_la1[7] = jj_gen;
@@ -361,7 +361,7 @@ public class JSPELParser/*@bgen(jjtree)*/implements JSPELParserTreeConstants, JS
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
         case PLUS:
         case MINUS:
-          ;
+          
           break;
         default:
           jj_la1[9] = jj_gen;
@@ -420,7 +420,7 @@ public class JSPELParser/*@bgen(jjtree)*/implements JSPELParserTreeConstants, JS
         case DIVIDE2:
         case MODULUS1:
         case MODULUS2:
-          ;
+          
           break;
         default:
           jj_la1[11] = jj_gen;
@@ -588,7 +588,7 @@ public class JSPELParser/*@bgen(jjtree)*/implements JSPELParserTreeConstants, JS
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
         case DOT:
         case LBRACKET:
-          ;
+          
           break;
         default:
           jj_la1[15] = jj_gen;
@@ -693,7 +693,7 @@ public class JSPELParser/*@bgen(jjtree)*/implements JSPELParserTreeConstants, JS
           break;
         default:
           jj_la1[18] = jj_gen;
-          ;
+          
         }
                                       jjtree.closeNodeScope(jjtn000, true);
                                       jjtc000 = false;
@@ -748,7 +748,7 @@ public class JSPELParser/*@bgen(jjtree)*/implements JSPELParserTreeConstants, JS
         break;
       default:
         jj_la1[20] = jj_gen;
-        ;
+        
       }
             if(null != prefix && null != name)
                     jjtn000.setFullFunctionName(prefix.image + ":" + (null == name ? "" : name.image));
@@ -762,7 +762,7 @@ public class JSPELParser/*@bgen(jjtree)*/implements JSPELParserTreeConstants, JS
         while (true) {
           switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
           case COMMA:
-            ;
+            
             break;
           default:
             jj_la1[21] = jj_gen;
@@ -779,7 +779,7 @@ public class JSPELParser/*@bgen(jjtree)*/implements JSPELParserTreeConstants, JS
         break;
       default:
         jj_la1[22] = jj_gen;
-        ;
+        
       }
     } catch (Throwable jjte000) {
       if (jjtc000) {
@@ -889,7 +889,7 @@ public class JSPELParser/*@bgen(jjtree)*/implements JSPELParserTreeConstants, JS
   private Token jj_scanpos, jj_lastpos;
   private int jj_la;
   public boolean lookingAhead = false;
-  private boolean jj_semLA;
+//  private boolean jj_semLA;
   private int jj_gen;
   final private int[] jj_la1 = new int[24];
   static private int[] jj_la1_0;

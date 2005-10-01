@@ -34,7 +34,7 @@ public abstract class NamedTopLevelNode extends TopLevelNode {
 		// name region is located after the whitespace (which is after
 		// the elementtag
 		RegionIterator iter = iterator();
-		ITextRegion startTag = getNextRegion(iter, tagStartType);
+		getNextRegion(iter, tagStartType);
 
 		if (!iter.hasNext()) {
 			return null;
@@ -85,7 +85,7 @@ public abstract class NamedTopLevelNode extends TopLevelNode {
 		ITextRegion nameRegion = getNameRegion();
 		RegionIterator iter = iterator();
 		// skip past the element tag region
-		ITextRegion elementTagRegion = getNextRegion(iter, tagStartType);
+		getNextRegion(iter, tagStartType);
 		boolean foundName = false;
 		while (iter.hasNext()) {
 			ITextRegion region = iter.next();

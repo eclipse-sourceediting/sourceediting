@@ -83,8 +83,6 @@ public class DTDElementImpl extends EClassImpl implements DTDElement {
 		if (type == null)
 			return null;
 
-		String name = (String) result[1];
-
 		DTDObject obj = null;
 		if (type.equals("Attr")) { //$NON-NLS-1$
 			// TODO: fix port

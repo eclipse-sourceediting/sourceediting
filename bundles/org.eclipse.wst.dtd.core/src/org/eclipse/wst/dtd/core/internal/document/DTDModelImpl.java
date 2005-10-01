@@ -92,7 +92,7 @@ public final class DTDModelImpl extends AbstractStructuredModel implements IStru
 		getReferenceUpdater().clearCache();
 	}
 
-	private void checkIfExternalReferencesChanged(NodesEvent event) {
+	void checkIfExternalReferencesChanged(NodesEvent event) {
 		Iterator iter = event.getNodes().iterator();
 		while (iter.hasNext()) {
 			DTDNode node = (DTDNode) iter.next();

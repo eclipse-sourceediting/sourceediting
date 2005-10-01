@@ -24,7 +24,7 @@ import org.eclipse.wst.xml.ui.internal.style.IStyleConstantsXML;
 
 public class LineStyleProviderForJSP extends AbstractLineStyleProvider implements LineStyleProvider{
 
-	private String language = null;
+	private String fLanguage = null;
 
 	//    private static final String JAVA = "java"; //$NON-NLS-1$
 	//    private static final String[] JAVASCRIPT_LANGUAGE_KEYS = new String[] {
@@ -209,7 +209,7 @@ public class LineStyleProviderForJSP extends AbstractLineStyleProvider implement
 	 * @return String
 	 */
 	public String getLanguage() {
-		return language;
+		return fLanguage;
 	}
 
 	/**
@@ -219,6 +219,6 @@ public class LineStyleProviderForJSP extends AbstractLineStyleProvider implement
 	 *            The language to set
 	 */
 	public void setLanguage(String language) {
-		this.language = language;
+		this.fLanguage = language;
 	}
 }

@@ -151,7 +151,7 @@ public class JSPHeadTokenizer {
   private int zzEndRead;
 
   /** number of newlines encountered up to the start of the matched text */
-  private int yyline;
+//  private int yyline;
 
   /** the number of characters up to the start of the matched text */
   private int yychar;
@@ -160,7 +160,7 @@ public class JSPHeadTokenizer {
    * the number of characters from the last newline up to the start of the 
    * matched text
    */
-  private int yycolumn;
+//  private int yycolumn;
 
   /** 
    * zzAtBOL == true <=> the scanner is currently at the beginning of a line
@@ -223,7 +223,7 @@ public class JSPHeadTokenizer {
                 zzEndRead = 0;
 
                 /* number of newlines encountered up to the start of the matched text */
-                yyline = 0;
+//                yyline = 0;
 
                 /* the number of characters up to the start of the matched text */
                 yychar = 0;
@@ -232,7 +232,7 @@ public class JSPHeadTokenizer {
                  * the number of characters from the last newline up to the start
                  * of the matched text
                  */
-                yycolumn = 0;
+//                yycolumn = 0;
 
                 /**
                  * yy_atBOL == true <=> the scanner is currently at the beginning
@@ -398,7 +398,8 @@ public class JSPHeadTokenizer {
     zzAtEOF  = false;
     zzEndRead = zzStartRead = 0;
     zzCurrentPos = zzMarkedPos = zzPushbackPos = 0;
-    yyline = yychar = yycolumn = 0;
+    //yyline = yychar = yycolumn = 0;
+    yychar = 0;
     zzLexicalState = YYINITIAL;
   }
 

@@ -126,20 +126,9 @@ public class DTDExternalReferenceRemover extends DTDVisitor {
 		super.visitReference(node);
 		String refName = node.getName();
 		if (isMatchingName(refName)) {
-			DTDNode parent = (DTDNode) node.getParentNode();
 			batchDelete.addNode(node);
-			// parent.delete(requestor, node);
 		}
 	}
 
-	// public void
-	// visitExternalParameterEntityReference(ParameterEntityReference
-	// parmEntityRef)
-	// {
-	// super.visitExternalParameterEntityReference(parmEntityRef);
-	// if (isParmEntity && parmEntityRef.getName().equals(oldRefName))
-	// {
-	// nodesToDelete.add(parmEntityRef);
-	// }
-	// }
+
 }

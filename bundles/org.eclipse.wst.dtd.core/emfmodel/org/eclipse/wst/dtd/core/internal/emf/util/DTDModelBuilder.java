@@ -45,7 +45,6 @@ import org.eclipse.wst.dtd.core.internal.emf.DTDOccurrenceType;
 import org.eclipse.wst.dtd.core.internal.emf.DTDPCDataContent;
 import org.eclipse.wst.dtd.core.internal.emf.DTDParameterEntityReference;
 import org.eclipse.wst.dtd.core.internal.emf.DTDType;
-import org.eclipse.wst.dtd.core.internal.emf.impl.DTDAttributeImpl;
 import org.eclipse.wst.dtd.core.internal.emf.impl.DTDFactoryImpl;
 import org.eclipse.wst.dtd.core.internal.saxparser.AttNode;
 import org.eclipse.wst.dtd.core.internal.saxparser.Attlist;
@@ -772,11 +771,6 @@ public class DTDModelBuilder extends DTDSaxArtifactVisitor {
 
 	public DTDEnumerationType createDTDEnumeration(DTDAttribute dtdattr, String[] enumValues, int enumKind) {
 		DTDEnumerationType enumeration = getFactory().createDTDEnumerationType();
-		// This is gross, but this is what was done before.
-		DTDAttributeImpl dtdattrimpl = (DTDAttributeImpl) dtdattr;
-		// enum.setID("Enum_" +
-		// ((DTDElement)dtdattrimpl.getMOFDomain()).getName() + "_" +
-		// dtdattr.getName());
 		DTDEnumGroupKind groupKind = DTDEnumGroupKind.get(enumKind);
 		enumeration.setKind(groupKind);
 		// Enumeration values
@@ -805,11 +799,6 @@ public class DTDModelBuilder extends DTDSaxArtifactVisitor {
 
 	private DTDEnumerationType createDTDEnumeration(DTDAttribute dtdattr, AttNode attdef, int enumKind) {
 		DTDEnumerationType enumeration = getFactory().createDTDEnumerationType();
-		// This is gross, but this is what was done before.
-		DTDAttributeImpl dtdattrimpl = (DTDAttributeImpl) dtdattr;
-		// enum.setID("Enum_" +
-		// ((DTDElement)dtdattrimpl.getMOFDomain()).getName() + "_" +
-		// dtdattr.getName());
 		DTDEnumGroupKind groupKind = DTDEnumGroupKind.get(enumKind);
 		enumeration.setKind(groupKind);
 		dtdattr.getDTDElement().getDTDFile().getDTDEnumerationType().add(enumeration);
@@ -817,7 +806,6 @@ public class DTDModelBuilder extends DTDSaxArtifactVisitor {
 		// Enumeration values
 		Enumeration tokenIter = attdef.elements();
 		if (tokenIter != null) {
-			int i = 0;
 			while (tokenIter.hasMoreElements()) {
 				String val = (String) tokenIter.nextElement();
 				EEnumLiteral enumLiteral = createEEnumLiteral();

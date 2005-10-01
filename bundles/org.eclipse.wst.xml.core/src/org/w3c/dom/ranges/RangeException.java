@@ -23,6 +23,10 @@ package org.w3c.dom.ranges;
  * @since DOM Level 2
  */
 public class RangeException extends RuntimeException {
+	/**
+	 * Default <code>serialVersionUID</code>
+	 */
+	private static final long serialVersionUID = 1L;
 	public RangeException(short code, String message) {
 		super(message);
 		this.code = code;

@@ -13,7 +13,6 @@ package org.eclipse.wst.dtd.core.internal.emf.impl;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EEnum;
-import org.eclipse.emf.ecore.EOperation;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EcorePackage;
@@ -1049,7 +1048,6 @@ public class DTDPackageImpl extends EPackageImpl implements DTDPackage {
 		if (isInitialized)
 			return;
 		isInitialized = true;
-		EOperation op;
 
 		// Initialize package
 		setName(eNAME);

@@ -50,7 +50,7 @@ public class DTDBatchNodeDelete {
 	public void deleteNodes(Object requestor) {
 		for (int i = nodes.size() - 1; i >= 0; i--) {
 			DTDNode node = (DTDNode) nodes.get(i);
-			dtdFile.deleteNode(requestor, (DTDNode) nodes.get(i));
+			dtdFile.deleteNode(requestor, node);
 		}
 		nodes.clear();
 	}

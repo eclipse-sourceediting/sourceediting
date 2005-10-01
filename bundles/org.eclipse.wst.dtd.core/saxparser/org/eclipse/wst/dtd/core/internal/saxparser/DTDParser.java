@@ -241,14 +241,10 @@ public class DTDParser extends DefaultHandler implements ContentHandler, DTDHand
 		startDeclaration(DeclNode.INTERNAL_ENTITY);
 		declString = "<!ENTITY"; //$NON-NLS-1$
 
-		boolean isPEDecl = false;
-		String localName = name;
 		if (entityDepth == 1 || parsingExternalPEReference) {
 			// build up a string: e.g. " % STRDOM "(#PCDATA)">"
 			String xs = " "; //$NON-NLS-1$
 			if (name.startsWith("%")) { //$NON-NLS-1$
-				isPEDecl = true;
-				localName = name.substring(1);
 				xs += "% "; //$NON-NLS-1$
 				xs += name.substring(1);
 			}
@@ -635,18 +631,6 @@ public class DTDParser extends DefaultHandler implements ContentHandler, DTDHand
 		e.setErrorMessage(errorMessage);
 		errorMessage = null;
 		currentDTD.addDecl(e);
-	}
-
-	void printBaseNodes() {
-		Enumeration dtds = dtdList.elements();
-		while (dtds.hasMoreElements()) {
-			DTD dtd = (DTD) dtds.nextElement();
-			Enumeration en = dtd.externalElements();
-
-			while (en.hasMoreElements()) {
-				BaseNode n = (BaseNode) en.nextElement();
-			}
-		}
 	}
 
 	private boolean isDTDLoaded(String uri) {

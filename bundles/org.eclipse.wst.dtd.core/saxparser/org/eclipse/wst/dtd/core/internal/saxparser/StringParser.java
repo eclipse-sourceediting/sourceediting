@@ -386,7 +386,6 @@ public class StringParser {
 	//
 	//
 	public boolean scanAttValue(char qchar) {
-		int offset = fCurrentOffset;
 		boolean result = true;
 		while (true) {
 			if (lookingAtChar(qchar, false)) {

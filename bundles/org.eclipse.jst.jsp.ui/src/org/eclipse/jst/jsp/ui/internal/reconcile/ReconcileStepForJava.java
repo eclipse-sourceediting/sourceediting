@@ -42,18 +42,21 @@ public class ReconcileStepForJava extends StructuredReconcileStep {
 	/**
 	 * Adapts an <code>ICompilationUnit</code> to the
 	 * <code>ITextModel</code> interface.
+	 * 
+	 * ISSUE: according to "never used" compiler warnings, 
+	 * this class doesn't do anything?
 	 */
 	private class CompilationUnitAdapter implements IReconcilableModel {
 
-		private ICompilationUnit fCompilationUnit;
+		// private ICompilationUnit fCompilationUnit;
 
 		CompilationUnitAdapter(ICompilationUnit cu) {
-			fCompilationUnit = cu;
+			// fCompilationUnit = cu;
 		}
-
-		private ICompilationUnit getCompilationUnit() {
-			return fCompilationUnit;
-		}
+		// never used
+		// private ICompilationUnit getCompilationUnit() {
+		// return fCompilationUnit;
+		// }
 	}
 
 	private JSPTranslation fJspTranslation;
@@ -73,17 +76,17 @@ public class ReconcileStepForJava extends StructuredReconcileStep {
 	public ReconcileStepForJava(IReconcileStep step) {
 		super(step);
 	}
-	
+
 	/*
 	 * @see AbstractReconcileStep#reconcileModel(DirtyRegion, IRegion)
 	 */
 	protected IReconcileResult[] reconcileModel(DirtyRegion dirtyRegion, IRegion subRegion) {
 		Assert.isTrue(getInputModel() instanceof JSPTranslationWrapper, "wrong model"); //$NON-NLS-1$
-		
+
 		fJspTranslation = ((JSPTranslationWrapper) getInputModel()).getTranslation();
-		
-        if(DEBUG)
-            System.out.println("[trace reconciler] > reconciling model in JAVA step w/ dirty region: " + dirtyRegion.getText()); //$NON-NLS-1$
+
+		if (DEBUG)
+			System.out.println("[trace reconciler] > reconciling model in JAVA step w/ dirty region: " + dirtyRegion.getText()); //$NON-NLS-1$
 
 		try {
 			fJspTranslation.setProblemCollectingActive(true);
@@ -95,8 +98,8 @@ public class ReconcileStepForJava extends StructuredReconcileStep {
 		}
 
 		List problems = null;
-		// I was frequently seeing null here, especially as editors closed, 
-		// so just gaurding against that. (Not sure why it was null). 
+		// I was frequently seeing null here, especially as editors closed,
+		// so just gaurding against that. (Not sure why it was null).
 		if (fJspTranslation != null) {
 			problems = fJspTranslation.getProblems();
 		}
@@ -147,16 +150,16 @@ public class ReconcileStepForJava extends StructuredReconcileStep {
 
 		return annotation;
 	}
-	
+
 	private IStructuredDocument getInputStructuredDocument() {
 		IStructuredDocument structuredDocument = null;
-		
+
 		IReconcilableModel inputModel = getInputModel();
 		IDocument document = null;
 		if (inputModel instanceof DocumentAdapter)
-			document = ((DocumentAdapter)inputModel).getDocument();
+			document = ((DocumentAdapter) inputModel).getDocument();
 		if (document instanceof IStructuredDocument)
-			structuredDocument = (IStructuredDocument)document;
+			structuredDocument = (IStructuredDocument) document;
 		return structuredDocument;
 	}
 

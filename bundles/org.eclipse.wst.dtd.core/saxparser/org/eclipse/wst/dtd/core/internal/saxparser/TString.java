@@ -347,4 +347,4 @@ public class TString {
 		}
 		return false;
 	}
-};
+}
