@@ -186,7 +186,9 @@ public class TestPageDirective extends TestCase {
 	public void testRelease() {
 		IDOMModel model = createUnmanagedHTMLModel();
 		PageDirectiveAdapter pageDirectiveAdapter = (PageDirectiveAdapter) model.getDocument().getAdapterFor(PageDirectiveAdapter.class);
-		pageDirectiveAdapter.release(MyAdaptedClass.class);
+		pageDirectiveAdapter.release();
+		// considered "success" if doesn't through exception
+		assertTrue(true);
 	}
 	
 	private IDOMModel createUnmanagedHTMLModel() {
