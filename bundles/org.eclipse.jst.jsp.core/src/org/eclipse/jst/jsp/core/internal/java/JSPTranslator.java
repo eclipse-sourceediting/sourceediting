@@ -59,8 +59,6 @@ import org.eclipse.wst.sse.core.internal.util.StringUtils;
 import org.eclipse.wst.sse.core.internal.util.URIResolver;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
-import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
-import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
 import org.eclipse.wst.xml.core.internal.provisional.contentmodel.CMDocumentTracker;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
@@ -135,8 +133,6 @@ public class JSPTranslator {
 
 	private IDOMModel fStructuredModel = null;
 	private IStructuredDocument fStructuredDocument = null;
-	private ModelQuery fModelQuery = null;
-	// private XMLNode fPositionNode; // position in the DOM
 	private IStructuredDocumentRegion fCurrentNode;
 	private boolean fInCodeRegion = false; // flag for if cursor is in the
 	// current region being translated
@@ -222,7 +218,6 @@ public class JSPTranslator {
 		fStructuredModel = node.getModel();
 		// fPositionNode = node;
 
-		fModelQuery = ModelQueryUtil.getModelQuery(node.getOwnerDocument());
 		fStructuredDocument = fStructuredModel.getStructuredDocument();
 
 		String className = createClassname(node);

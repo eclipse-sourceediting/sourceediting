@@ -322,7 +322,7 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 				// attributes
 				else if (nodeName.equals(JSP11TLDNames.ATTRIBUTE)) {
 					CMAttributeDeclaration attr = createAttributeDeclaration(document, child);
-					ed.attributes.setNamedItem(attr.getAttrName(), attr);
+					ed.fAttributes.setNamedItem(attr.getAttrName(), attr);
 				}
 				// variables
 				else if (nodeName.equals(JSP12TLDNames.VARIABLE)) {

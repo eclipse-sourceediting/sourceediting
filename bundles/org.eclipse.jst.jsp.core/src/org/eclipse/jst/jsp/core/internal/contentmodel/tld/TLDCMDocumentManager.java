@@ -714,7 +714,7 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 
 	private List fTaglibTrackers = null;
 
-	private Map fTLDCMReferencesMap = new HashMap();
+	Map fTLDCMReferencesMap = new HashMap();
 
 	public TLDCMDocumentManager() {
 		super();

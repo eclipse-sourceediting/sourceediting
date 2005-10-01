@@ -54,7 +54,7 @@ public class JSPValidator implements IValidator {
 	}
 
 	// for debugging
-	private static final boolean DEBUG;
+	static final boolean DEBUG;
 	static {
 		String value = Platform.getDebugOption("org.eclipse.jst.jsp.core/debug/jspvalidator"); //$NON-NLS-1$
 		DEBUG = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$

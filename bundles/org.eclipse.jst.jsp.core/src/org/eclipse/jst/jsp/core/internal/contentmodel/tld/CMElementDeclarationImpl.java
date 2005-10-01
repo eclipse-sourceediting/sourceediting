@@ -30,7 +30,7 @@ import org.eclipse.wst.xml.core.internal.contentmodel.annotation.AnnotationMap;
 public class CMElementDeclarationImpl implements TLDElementDeclaration {
 
 	// optional attributes
-	public CMNamedNodeMapImpl attributes = new CMNamedNodeMapImpl();
+	CMNamedNodeMapImpl fAttributes = new CMNamedNodeMapImpl();
 	// (empty|JSP|tagdependant|scriptless) - optional, defaults to JSP
 	private String bodycontent = JSP11TLDNames.CONTENT_JSP;
 
@@ -99,7 +99,7 @@ public class CMElementDeclarationImpl implements TLDElementDeclaration {
 	 * Returns CMNamedNodeMap of AttributeDeclaration
 	 */
 	public CMNamedNodeMap getAttributes() {
-		return attributes;
+		return fAttributes;
 	}
 
 	/**

@@ -594,22 +594,6 @@ public class PageDirectiveAdapterImpl implements PageDirectiveAdapter {
 		return notifierAtCreation;
 	}
 
-	public void release(Object type) {
-		if (embeddedTypeHandler != null) {
-			if (embeddedFactoryRegistry != null) {
-				Iterator iterator = embeddedFactoryRegistry.iterator();
-				INodeAdapterFactory factory = null;
-				while (iterator.hasNext()) {
-					factory = (INodeAdapterFactory) iterator.next();
-					if (factory.isFactoryForType(type)) {
-						factory.release();
-					}
-				}
-			}
-			embeddedTypeHandler = null;
-		}
-	}
-	
 	public void release() {
 		if (embeddedTypeHandler != null) {
 			if (embeddedFactoryRegistry != null) {

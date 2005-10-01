@@ -357,7 +357,7 @@ public class TaglibIndex {
 
 	private ClasspathChangeListener fClasspathChangeListener = null;
 
-	private Map fProjectDescriptions;
+	Map fProjectDescriptions;
 	private ResourceChangeListener fResourceChangeListener;
 	private ITaglibIndexListener[] fTaglibIndexListeners = null;
 
