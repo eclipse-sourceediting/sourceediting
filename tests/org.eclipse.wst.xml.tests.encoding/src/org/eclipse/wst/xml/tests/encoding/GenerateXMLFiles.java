@@ -275,12 +275,10 @@ public class GenerateXMLFiles extends GenerateFiles {
 		boolean result = false;
 
 		String newAsciiString = null;
-		String newTrueString = null;
 		byte[] translatedBytes = null;
 		try {
 			translatedBytes = simpleString.getBytes(charsetName);
 			newAsciiString = new String(translatedBytes, "ascii");
-			newTrueString = new String(translatedBytes, charsetName);
 		}
 		catch (UnsupportedEncodingException e) {
 			// impossible, since checked already
@@ -313,12 +311,10 @@ public class GenerateXMLFiles extends GenerateFiles {
 		boolean result = false;
 		String simpleString = "<?";
 		String newAsciiString = null;
-		String newTrueString = null;
 		byte[] translatedBytes = null;
 		try {
 			translatedBytes = simpleString.getBytes(charsetName);
 			newAsciiString = new String(translatedBytes, "ascii");
-			newTrueString = new String(translatedBytes, charsetName);
 		}
 		catch (UnsupportedEncodingException e) {
 			// impossible, since checked already
@@ -338,7 +334,7 @@ public class GenerateXMLFiles extends GenerateFiles {
 	 */
 	 boolean canEncodeCRLF(String charsetName, CharsetEncoder charsetEncoder) {
 		boolean result = true;
-		String charsetCononicalName = charsetEncoder.charset().name();
+		//String charsetCononicalName = charsetEncoder.charset().name();
 		if (!charsetEncoder.canEncode(LF)) {
 			if (DEBUGCRLF) {
 				String stringName = "LF";

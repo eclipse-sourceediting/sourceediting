@@ -32,7 +32,7 @@ import org.eclipse.wst.xml.core.internal.contenttype.ByteReader;
  * The main plugin class to be used in the desktop.
  */
 public class TestsPlugin extends Plugin {
-	//The shared instance.
+	// The shared instance.
 	private static TestsPlugin plugin;
 
 	/**
@@ -58,8 +58,8 @@ public class TestsPlugin extends Plugin {
 	}
 
 	/**
-	 * Returns the string from the plugin's resource bundle,
-	 * or 'key' if not found.
+	 * Returns the string from the plugin's resource bundle, or 'key' if not
+	 * found.
 	 */
 	public static String getResourceString(String key) {
 		return key;
@@ -87,7 +87,7 @@ public class TestsPlugin extends Plugin {
 
 	public static File getTestFile(String filepath) {
 		URL installURL = getInstallLocation();
-		//String scheme = installURL.getProtocol();
+		// String scheme = installURL.getProtocol();
 		String path = installURL.getPath();
 		String location = path + filepath;
 		File result = new File(location);
@@ -97,16 +97,14 @@ public class TestsPlugin extends Plugin {
 	public static List getAllTestFiles(String topDirName) {
 		List result = null;
 		URL installURL = getInstallLocation();
-		//String scheme = installURL.getProtocol();
+		// String scheme = installURL.getProtocol();
 		String path = installURL.getPath();
 		String location = path + topDirName;
 		File topDir = new File(location);
 		if (!topDir.isDirectory()) {
 			throw new IllegalArgumentException(topDirName + " is not a directory");
 		}
-		else {
-			result = getFilesInDir(topDir);
-		}
+		result = getFilesInDir(topDir);
 		return result;
 	}
 
@@ -132,15 +130,16 @@ public class TestsPlugin extends Plugin {
 
 	public static Reader getTestReader(String filepath) throws FileNotFoundException {
 		URL installURL = getInstallLocation();
-		//String scheme = installURL.getProtocol();
+		// String scheme = installURL.getProtocol();
 		String path = installURL.getPath();
 		String location = path + filepath;
 		Reader result = new FileReader(location);
 		return result;
 	}
+
 	public static Reader getByteReader(String filepath) throws FileNotFoundException {
 		URL installURL = getInstallLocation();
-		//String scheme = installURL.getProtocol();
+		// String scheme = installURL.getProtocol();
 		String path = installURL.getPath();
 		String location = path + filepath;
 		Reader result = new ByteReader(new BufferedInputStream(new FileInputStream(location)));
