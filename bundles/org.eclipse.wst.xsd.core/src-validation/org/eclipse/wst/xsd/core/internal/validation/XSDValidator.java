@@ -15,8 +15,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
-import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URL;
 
 import org.apache.xerces.parsers.SAXParser;
@@ -26,10 +24,8 @@ import org.apache.xerces.xni.parser.XMLEntityResolver;
 import org.apache.xerces.xni.parser.XMLInputSource;
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver;
 import org.eclipse.wst.xml.core.internal.validation.XMLValidator;
-import org.eclipse.wst.xml.core.internal.validation.core.LazyURLInputStream;
 import org.eclipse.wst.xml.core.internal.validation.core.ValidationInfo;
 import org.eclipse.wst.xml.core.internal.validation.core.ValidationReport;
-import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -43,16 +39,14 @@ import org.xml.sax.XMLReader;
 public class XSDValidator
 {
 
-  private final boolean WRAPPER_ERROR_SUPPORT_ENABLED = true;
+  private final String XML_INSTANCE_DOC_TOP = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + "<root \n"   //$NON-NLS-1$//$NON-NLS-2$
+  + "  xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"; //$NON-NLS-1$
 
-  private final String XML_INSTANCE_DOC_TOP = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + "<root \n" 
-  + "  xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n";
+  private final String XML_INSTANCE_DOC_MID = " xsi:noNamespaceSchemaLocation=\""; //$NON-NLS-1$
 
-  private final String XML_INSTANCE_DOC_MID = " xsi:noNamespaceSchemaLocation=\"";
+  private final String XML_INSTANCE_DOC_BOT = "\">\n" + "</root>\n";  //$NON-NLS-1$//$NON-NLS-2$
 
-  private final String XML_INSTANCE_DOC_BOT = "\">\n" + "</root>\n";
-
-  private final String DUMMY_URI = "http://example.org/dummy";
+  private final String DUMMY_URI = "http://example.org/dummy"; //$NON-NLS-1$
   
   private URIResolver uriresolver = null;
 

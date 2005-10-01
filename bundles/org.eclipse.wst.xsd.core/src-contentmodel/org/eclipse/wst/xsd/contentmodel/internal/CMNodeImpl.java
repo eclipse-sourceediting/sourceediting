@@ -36,5 +36,6 @@ public abstract class CMNodeImpl extends AdapterImpl implements CMNode
 
   public void setProperty(String propertyName, Object object)
   {
+	  //no propertyes supported? 
   }
 }
