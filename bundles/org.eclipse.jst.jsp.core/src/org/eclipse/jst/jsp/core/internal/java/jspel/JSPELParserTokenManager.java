@@ -329,11 +329,11 @@ private final void jjCheckNAddStates(int start, int end)
       jjCheckNAdd(jjnextStates[start]);
    } while (start++ != end);
 }
-private final void jjCheckNAddStates(int start)
-{
-   jjCheckNAdd(jjnextStates[start]);
-   jjCheckNAdd(jjnextStates[start + 1]);
-}
+//private final void jjCheckNAddStates(int start)
+//{
+//   jjCheckNAdd(jjnextStates[start]);
+//   jjCheckNAdd(jjnextStates[start + 1]);
+//}
 static final long[] jjbitVec0 = {
    0x1ff00000fffffffeL, 0xffffffffffffc000L, 0xffffffffL, 0x600000000000000L
 };

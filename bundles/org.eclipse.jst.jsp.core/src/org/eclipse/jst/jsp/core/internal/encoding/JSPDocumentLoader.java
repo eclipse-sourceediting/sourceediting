@@ -20,11 +20,9 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.jst.jsp.core.internal.Assert;
 import org.eclipse.jst.jsp.core.internal.JSPCoreMessages;
-import org.eclipse.jst.jsp.core.internal.document.PageDirectiveAdapter;
 import org.eclipse.jst.jsp.core.internal.document.PageDirectiveWatcherFactory;
 import org.eclipse.jst.jsp.core.internal.parser.JSPReParser;
 import org.eclipse.jst.jsp.core.internal.parser.JSPSourceParser;
@@ -51,13 +49,11 @@ import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.document.IEncodedDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.text.BasicStructuredDocument;
-import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.ssemodelquery.ModelQueryAdapter;
 import org.w3c.dom.Document;
 
 public class JSPDocumentLoader extends AbstractDocumentLoader {
-	private final static String DEFAULT_LANGUAGE = "java"; //$NON-NLS-1$
 	private final static String DEFAULT_MIME_TYPE = "text/html"; //$NON-NLS-1$
 	private final static String SPEC_DEFAULT_ENCODING = "ISO-8859-1"; //$NON-NLS-1$
 
@@ -192,13 +188,6 @@ public class JSPDocumentLoader extends AbstractDocumentLoader {
 		return fEmbeddedContentTypeRegistry;
 	}
 
-	private EmbeddedTypeHandler getEmbeddedType(IStructuredModel model) {
-		Document doc = ((IDOMModel) model).getDocument();
-		PageDirectiveAdapter pageDirectiveAdapter = (PageDirectiveAdapter) ((INodeNotifier) doc).getAdapterFor(PageDirectiveAdapter.class);
-		EmbeddedTypeHandler embeddedHandler = pageDirectiveAdapter.getEmbeddedType();
-		return embeddedHandler;
-	}
-
 	/**
 	 * Determine the MIME content type specified in a page directive. This
 	 * should appear "as early as possible in the JSP page" according to the
@@ -243,48 +232,6 @@ public class JSPDocumentLoader extends AbstractDocumentLoader {
 		return reg.getTypeFor(getDefaultMimeType());
 	}
 
-	/**
-	 * Method getLanguage.
-	 * 
-	 * @param model
-	 * @return String
-	 */
-	private String getLanguage(IStructuredModel model) throws IOException {
-		String result = null;
-		// first check the model (document itself) to see if contains
-		result = getLanguageFromStructuredDocument(model.getStructuredDocument());
-		// Note: if model contains an unsupported
-		// language, we'll even return it,
-		// since who knows what future holds.
-
-		// always return something
-		if (result == null) {
-			result = DEFAULT_LANGUAGE;
-		}
-		return result;
-	}
-
-	/**
-	 * Method getLanguageFromStructuredDocument.
-	 * 
-	 * @param structuredDocument
-	 * @return String
-	 */
-	private String getLanguageFromStructuredDocument(IDocument document) throws IOException {
-		if (document == null)
-			return null;
-		String result = null;
-		// bascially same algorithm as get encoding or
-		// get content type from structuredDocument.
-		IJSPHeadContentDetector localHeadParser = (IJSPHeadContentDetector) getDocumentEncodingDetector();
-		// we can be assured that its already been
-		// parsed. If not call parseHeaderForPageDirective()
-		// before calling getLanguage;
-		localHeadParser.set(document);
-		result = localHeadParser.getLanguage();
-		return result;
-	}
-
 	public RegionParser getParser() {
 		// remember, the Loader
 		// will need to finish initialization of parser
@@ -304,118 +251,6 @@ public class JSPDocumentLoader extends AbstractDocumentLoader {
 	 */
 	protected String getSpecDefaultEncoding() {
 		return SPEC_DEFAULT_ENCODING;
-	}
-
-	/**
-	 * This is "reinitialize" since there should always be at least the
-	 * default one assigned, before we start checking the stream
-	 */
-	private void initCloneOfEmbeddedType(IStructuredModel model, EmbeddedTypeHandler oldEmbeddedContentType, EmbeddedTypeHandler newEmbeddedContentType) throws IOException {
-		// check program logic
-		Assert.isNotNull(oldEmbeddedContentType, "Program error: invalid call during model initialization"); //$NON-NLS-1$
-		// once we know the embedded content type, we need to set it in the
-		// PageDirectiveAdapter ... the order of initialization is
-		// critical here, the doc must have been created, but its contents not
-		// set
-		// yet,
-		// and all factories must have been set up also.
-		IDOMModel domModel = (IDOMModel) model;
-		IStructuredDocument structuredDocument = model.getStructuredDocument();
-		IDOMDocument document = domModel.getDocument();
-		PageDirectiveAdapter pageDirectiveAdapter = (PageDirectiveAdapter) document.getAdapterFor(PageDirectiveAdapter.class);
-		// ==> // PropagatingAdapter propagatingAdapter = (PropagatingAdapter)
-		// ((INodeNotifier) document).getAdapterFor(PropagatingAdapter.class);
-		// ==> // ModelQueryAdapter modelQueryAdapter = (ModelQueryAdapter)
-		// ((INodeNotifier) document).getAdapterFor(ModelQueryAdapter.class);
-		// because, even in the clone case, the model has been paritally
-		// intialized
-		// with
-		// the old embedded type (during createModel), we need to unitialize
-		// parts of it, based on the old (or default) ones
-		oldEmbeddedContentType.uninitializeFactoryRegistry(model.getFactoryRegistry());
-		oldEmbeddedContentType.uninitializeParser((JSPCapableParser) structuredDocument.getParser());
-		// remember, embedded type factories are automatically cleared when
-		// embededType changed
-		pageDirectiveAdapter.setEmbeddedType(newEmbeddedContentType);
-		if (newEmbeddedContentType != null) {
-			newEmbeddedContentType.initializeFactoryRegistry(model.getFactoryRegistry());
-			newEmbeddedContentType.initializeParser((JSPCapableParser) structuredDocument.getParser());
-		}
-		// adding language here, in this convienent central
-		// location, but some obvious renaming or refactoring
-		// wouldn't hurt, in future.
-		// I needed to add this language setting for JSP Fragment support
-		// Note: this is the one that counts, since at this point,
-		// the model has an ID, so we can look up IFile, etc.
-		String language = getLanguage(model);
-		if (language != null && language.length() > 0) {
-			pageDirectiveAdapter.setLanguage(language);
-		}
-	}
-
-	/**
-	 * Method initEmbeddedType.
-	 */
-	private void initEmbeddedType(IStructuredModel model) {
-		initializeEmbeddedTypeFromDefault(model);
-	}
-
-	/**
-	 * Method initEmbeddedType.
-	 */
-	private void initEmbeddedType(IStructuredModel oldModel, IStructuredModel newModel) throws IOException {
-		EmbeddedTypeHandler existingEmbeddedType = getEmbeddedType(oldModel);
-		EmbeddedTypeHandler newEmbeddedContentType = existingEmbeddedType.newInstance();
-		if (existingEmbeddedType == null) {
-			initEmbeddedType(newModel);
-		}
-		else {
-			// initEmbeddedType(newModel);
-			initCloneOfEmbeddedType(newModel, existingEmbeddedType, newEmbeddedContentType);
-		}
-		setLanguageInPageDirective(newModel);
-	}
-
-	/**
-	 * This is "initialize" since is always assumes it hasn't been initalized
-	 * yet.
-	 */
-	private void initializeEmbeddedType(IStructuredModel model, EmbeddedTypeHandler embeddedContentType) {
-		// check program logic
-		Assert.isNotNull(embeddedContentType, "Program error: invalid call during model initialization"); //$NON-NLS-1$
-		// once we know the embedded content type, we need to set it in the
-		// PageDirectiveAdapter ... the order of initialization is
-		// critical here, the doc must have been created, but its contents not
-		// set
-		// yet,
-		// and all factories must have been set up also.
-		IDOMModel domModel = (IDOMModel) model;
-		IDOMDocument document = domModel.getDocument();
-		PageDirectiveAdapter pageDirectiveAdapter = (PageDirectiveAdapter) document.getAdapterFor(PageDirectiveAdapter.class);
-		pageDirectiveAdapter.setEmbeddedType(embeddedContentType);
-		embeddedContentType.initializeFactoryRegistry(model.getFactoryRegistry());
-		IStructuredDocument structuredDocument = model.getStructuredDocument();
-		embeddedContentType.initializeParser((JSPCapableParser) structuredDocument.getParser());
-		// adding language here, in this convienent central
-		// location, but some obvious renaming or refactoring
-		// wouldn't hurt, in future.
-		// I needed to add this language setting for JSP Fragment support
-		// Note: I don't think this attempted init counts for much.
-		// I think its always executed when model is very first
-		// being initialized, and doesn't even have content
-		// or an ID yet. I thought I'd leave, since it wouldn't
-		// hurt, in case its called in other circumstances.
-		// String language = getLanguage(model);
-		// pageDirectiveAdapter.setLanguage(language);
-	}
-
-	/**
-	 * This init method is for the case where we are creating an empty model,
-	 * which we always do.
-	 */
-	private void initializeEmbeddedTypeFromDefault(IStructuredModel model) {
-		EmbeddedTypeHandler embeddedContentType = getJSPDefaultEmbeddedType();
-		initializeEmbeddedType(model, embeddedContentType);
 	}
 
 	/**
@@ -469,90 +304,6 @@ public class JSPDocumentLoader extends AbstractDocumentLoader {
 		// take place.
 		((INodeNotifier) document).getAdapterFor(ModelQueryAdapter.class);
 		
-	}
-
-	/**
-	 * This is "reinitialize" since there should always be at least the
-	 * default one assigned, before we start checking the stream
-	 */
-	private void reInitializeEmbeddedType(IStructuredModel model, EmbeddedTypeHandler oldEmbeddedContentType, EmbeddedTypeHandler newEmbeddedContentType) throws IOException {
-		// check program logic
-		Assert.isNotNull(oldEmbeddedContentType, "Program error: invalid call during model initialization"); //$NON-NLS-1$
-		// once we know the embedded content type, we need to set it in the
-		// PageDirectiveAdapter ... the order of initialization is
-		// critical here, the doc must have been created, but its contents not
-		// set
-		// yet,
-		// and all factories must have been set up also.
-		IDOMModel domModel = (IDOMModel) model;
-		IStructuredDocument structuredDocument = model.getStructuredDocument();
-		IDOMDocument document = domModel.getDocument();
-		PageDirectiveAdapter pageDirectiveAdapter = (PageDirectiveAdapter) document.getExistingAdapter(PageDirectiveAdapter.class);
-		// ==> // PropagatingAdapter propagatingAdapter = (PropagatingAdapter)
-		// ((INodeNotifier)
-		// document).getExistingAdapter(PropagatingAdapter.class);
-		// ==> // ModelQueryAdapter modelQueryAdapter = (ModelQueryAdapter)
-		// ((INodeNotifier)
-		// document).getExistingAdapter(ModelQueryAdapter.class);
-		oldEmbeddedContentType.uninitializeFactoryRegistry(model.getFactoryRegistry());
-		oldEmbeddedContentType.uninitializeParser((JSPCapableParser) structuredDocument.getParser());
-		// since 'document' is not recreated in this
-		// reinit path, we need to remove all adapters,
-		// except for the propagated adapters (including page
-		// directive adapter, and model query adapter).
-		// to accomplish this, we'll just remove all, then
-		// add back with a call to pre-load adapt.
-		// let clients decide to unload adapters from document
-		// Collection oldAdapters = document.getAdapters();
-		// Iterator oldAdaptersIterator = oldAdapters.iterator();
-		// while (oldAdaptersIterator.hasNext()) {
-		// INodeAdapter oldAdapter = (INodeAdapter)
-		// oldAdaptersIterator.next();
-		// if (oldAdapter != pageDirectiveAdapter && oldAdapter !=
-		// propagatingAdapter && oldAdapter != modelQueryAdapter) {
-		// // DO NOT remove directly!
-		// // can change contents while in notifity loop!
-		// //oldAdaptersIterator.remove();
-		// document.removeAdapter(oldAdapter);
-		// }
-		// }
-		// DMW: I believe something like the following is needed,
-		// since releases cached adapters
-		// if (document instanceof DocumentImpl) {
-		// ((DocumentImpl) document).releaseDocumentType();
-		// ((DocumentImpl) document).releaseStyleSheets();
-		// }
-		// remember, embedded type factories are automatically cleared when
-		// embededType changed
-		pageDirectiveAdapter.setEmbeddedType(newEmbeddedContentType);
-		// // but still need to clear the page directive watchers, and let
-		// them
-		// be
-		// rediscovered (with new, accurate node as target)
-		// pageDirectiveAdapter.clearPageWatchers();
-		if (newEmbeddedContentType != null) {
-			newEmbeddedContentType.initializeFactoryRegistry(model.getFactoryRegistry());
-			newEmbeddedContentType.initializeParser((JSPCapableParser) structuredDocument.getParser());
-		}
-		// adding language here, in this convienent central
-		// location, but some obvious renaming or refactoring
-		// wouldn't hurt, in future.
-		// I needed to add this language setting for JSP Fragment support
-		// Note: this is the one that counts, since at this point,
-		// the model has an ID, so we can look up IFile, etc.
-		String language = getLanguage(model);
-		if (language != null && language.length() > 0) {
-			pageDirectiveAdapter.setLanguage(language);
-		}
-	}
-
-	private void setLanguageInPageDirective(IStructuredModel newModel) throws IOException {
-		if (newModel instanceof IDOMModel) {
-			IDOMDocument document = ((IDOMModel) newModel).getDocument();
-			PageDirectiveAdapter pageDirectiveAdapter = (PageDirectiveAdapter) document.getAdapterFor(PageDirectiveAdapter.class);
-			String language = getLanguage(newModel);
-			pageDirectiveAdapter.setLanguage(language);
-		}
 	}
 
 }
