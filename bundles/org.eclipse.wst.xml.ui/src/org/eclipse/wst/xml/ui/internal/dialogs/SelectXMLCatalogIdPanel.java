@@ -35,11 +35,11 @@ public class SelectXMLCatalogIdPanel extends Composite {
 	protected boolean doTableSizeHack = false;
 
 	protected XMLCatalogTableViewer tableViewer;
-	protected ICatalog xmlCatalog;
+	protected ICatalog fXmlCatalog;
 
 	public SelectXMLCatalogIdPanel(Composite parent, ICatalog xmlCatalog) {
 		super(parent, SWT.NONE);
-		this.xmlCatalog = xmlCatalog;
+		this.fXmlCatalog = xmlCatalog;
 
 		GridLayout gridLayout = new GridLayout();
 		this.setLayout(gridLayout);
@@ -77,7 +77,7 @@ public class SelectXMLCatalogIdPanel extends Composite {
 			public Collection getXMLCatalogEntries() {
 				List result = null;
 
-				if (xmlCatalog == null || doTableSizeHack) {
+				if (fXmlCatalog == null || doTableSizeHack) {
 					// this lets us create a table with an initial height of
 					// 10 rows
 					// otherwise we get stuck with 0 row heigh table... that's
@@ -89,7 +89,7 @@ public class SelectXMLCatalogIdPanel extends Composite {
 					}
 				} else {
 					result = new Vector();
-					 INextCatalog[] nextCatalogs = xmlCatalog.getNextCatalogs();
+					 INextCatalog[] nextCatalogs = fXmlCatalog.getNextCatalogs();
 				        for (int i = 0; i < nextCatalogs.length; i++)
 				        {
 				            INextCatalog catalog = nextCatalogs[i];

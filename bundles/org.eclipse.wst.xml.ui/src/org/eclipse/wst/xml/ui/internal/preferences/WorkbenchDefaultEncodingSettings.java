@@ -100,7 +100,7 @@ public class WorkbenchDefaultEncodingSettings extends Composite {
 		return ResourcesPlugin.getEncoding();
 	}
 
-	private void handleUseDefaultButtonSelected() {
+	void handleUseDefaultButtonSelected() {
 		if (fUseDefaultButton.getSelection()) {
 			fNonDefaultIANA = fEncodingSettings.getIANATag();
 			String workbenchValue = getWorkbenchEncoding();

@@ -75,7 +75,7 @@ public class JFaceNodeAdapterFactory extends AbstractAdapterFactory implements I
 							public IStatus runInUIThread(IProgressMonitor monitor) {
 								viewer.refresh(true);
 								return Status.OK_STATUS;
-							};
+							}
 						};
 						refresh.setSystem(true);
 						refresh.setPriority(Job.SHORT);
@@ -90,7 +90,7 @@ public class JFaceNodeAdapterFactory extends AbstractAdapterFactory implements I
 							public IStatus runInUIThread(IProgressMonitor monitor) {
 								viewer.refresh();
 								return Status.OK_STATUS;
-							};
+							}
 						};
 						refresh.setSystem(true);
 						refresh.setPriority(Job.SHORT);

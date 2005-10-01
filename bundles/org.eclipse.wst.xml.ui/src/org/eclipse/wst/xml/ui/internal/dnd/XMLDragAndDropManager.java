@@ -37,6 +37,7 @@ public class XMLDragAndDropManager implements DragAndDropManager {
 	}
 
 	public XMLDragAndDropManager() {
+		super();
 	}
 	
 	public XMLDragAndDropManager(TreeViewer viewer) {
@@ -46,7 +47,6 @@ public class XMLDragAndDropManager implements DragAndDropManager {
 	public DragAndDropCommand createCommand(Object target, float location, int operations, int operation, Collection source) {
 		DragAndDropCommand result = null;
 		if (target instanceof Node) {
-			Node node = (Node) target;
 			result = new DragNodeCommand(target, location, operations, operation, source, fViewer);
 		}
 		return result;

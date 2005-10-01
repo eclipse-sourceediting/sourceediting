@@ -43,18 +43,19 @@ import org.eclipse.wst.xml.core.internal.provisional.contenttype.ContentTypeIdFo
 public class NewModelWizard extends Wizard implements INewWizard
 {
   
-  protected IStructuredSelection selection;
-  protected IWorkbench workbench;
-  protected String currentDirectory;
+  protected IStructuredSelection fSelection;
+  protected IWorkbench fWorkbench;
+  protected String fCurrentDirectory;
 
   public NewModelWizard()
   {
+	  super();
   }
 
   public void init(IWorkbench workbench, IStructuredSelection selection)
   {
-    this.workbench = workbench;
-    this.selection = selection;
+    this.fWorkbench = workbench;
+    this.fSelection = selection;
   }
 
   public boolean performFinish()
@@ -95,9 +96,9 @@ public class NewModelWizard extends Wizard implements INewWizard
   }
 
 
-  public void setCurrentDirectory(String currentDirectory)
+  public void setCurrentDirectory(String currentDirectory1)
   {
-    this.currentDirectory = currentDirectory;
+    this.fCurrentDirectory = currentDirectory1;
   }
 
 
@@ -298,7 +299,8 @@ public class NewModelWizard extends Wizard implements INewWizard
 		// check for file should be case insensitive
 		String sameName = existsFileAnyCase(fullFileName);
 		if (sameName != null) {
-			String qualifiedFileName = getContainerFullPath().toString() + '/' + fullFileName;
+			//ISSUE: is qualitifedFileName not needed, or is it supposed to be used in error message?
+			//String qualifiedFileName = getContainerFullPath().toString() + '/' + fullFileName;
 			setErrorMessage(XMLWizardsMessages._ERROR_FILE_ALREADY_EXISTS + " " + sameName); //$NON-NLS-1$
 			return false;
 		}

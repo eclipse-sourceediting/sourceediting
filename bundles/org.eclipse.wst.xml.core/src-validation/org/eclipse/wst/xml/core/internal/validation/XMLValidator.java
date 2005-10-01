@@ -298,13 +298,6 @@ public class XMLValidator
   {
     private URIResolver uriResolver;
     
-    /**
-     * The reported exceptions list allows the entity resolver to only
-     * throw an exception the first time a namespace cannot be located.
-     * This prevents Xerces from producing a warning on every line of the
-     * XML document.
-     */
-    private List reportedSchemaReferenceErrors = new ArrayList();
     
     /**
      * Constructor.

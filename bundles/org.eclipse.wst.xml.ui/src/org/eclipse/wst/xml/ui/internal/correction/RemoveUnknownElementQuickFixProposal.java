@@ -24,7 +24,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.text.edits.DeleteEdit;
 import org.eclipse.text.edits.MalformedTreeException;
 import org.eclipse.text.edits.MultiTextEdit;
-import org.eclipse.wst.sse.core.internal.provisional.exceptions.SourceEditingRuntimeException;
+import org.eclipse.wst.xml.ui.internal.Logger;
 import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 
 public class RemoveUnknownElementQuickFixProposal implements ICompletionProposal, ICompletionProposalExtension2 {
@@ -45,6 +45,7 @@ public class RemoveUnknownElementQuickFixProposal implements ICompletionProposal
 	 * @see org.eclipse.jface.text.contentassist.ICompletionProposal#apply(org.eclipse.jface.text.IDocument)
 	 */
 	public void apply(IDocument document) {
+		// not implemented?
 	}
 
 	/*
@@ -71,10 +72,14 @@ public class RemoveUnknownElementQuickFixProposal implements ICompletionProposal
 
 		try {
 			multiTextEdit.apply(viewer.getDocument());
-		} catch (MalformedTreeException e) {
-			throw new SourceEditingRuntimeException(e);
-		} catch (BadLocationException e) {
-			throw new SourceEditingRuntimeException(e);
+		}
+		catch (MalformedTreeException e) {
+			// log for now, unless find reasons not to.
+			Logger.log(Logger.INFO, e.getMessage());
+		}
+		catch (BadLocationException e) {
+			// log for now, unless find reasons not to.
+			Logger.log(Logger.INFO, e.getMessage());
 		}
 	}
 

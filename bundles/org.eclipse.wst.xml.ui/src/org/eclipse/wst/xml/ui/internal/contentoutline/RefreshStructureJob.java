@@ -42,7 +42,7 @@ import org.w3c.dom.Node;
 class RefreshStructureJob extends Job {
 
 	/** debug flag */
-	private static final boolean DEBUG;
+	static final boolean DEBUG;
 	private static final long UPDATE_DELAY = 200;
 	static {
 		String value = Platform.getDebugOption("org.eclipse.wst.sse.ui/debug/outline"); //$NON-NLS-1$

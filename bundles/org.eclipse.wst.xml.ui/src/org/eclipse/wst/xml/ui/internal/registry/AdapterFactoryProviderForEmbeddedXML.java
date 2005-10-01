@@ -16,9 +16,11 @@ import org.eclipse.wst.sse.core.internal.ltk.modelhandler.EmbeddedTypeHandler;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.ui.internal.provisional.registry.embedded.EmbeddedAdapterFactoryProvider;
 import org.eclipse.wst.xml.core.internal.modelhandler.EmbeddedXML;
-import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
-import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 
+/**
+ * @deprecated - be be removed before M9
+	* AdapterFactoryProviderForEmbeddedXML
+ */
 
 public class AdapterFactoryProviderForEmbeddedXML implements EmbeddedAdapterFactoryProvider {
 
@@ -26,9 +28,7 @@ public class AdapterFactoryProviderForEmbeddedXML implements EmbeddedAdapterFact
 	 * @see AdapterFactoryProvider#addAdapterFactories(IStructuredModel)
 	 */
 	public void addAdapterFactories(IStructuredModel structuredModel) {
-		if (structuredModel instanceof IDOMModel) {
-			IDOMDocument doc = ((IDOMModel) structuredModel).getDocument();
-		}
+		// nothing to do
 	}
 
 	/*

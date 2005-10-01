@@ -14,12 +14,12 @@ package org.eclipse.wst.xml.core.internal.provisional.format;
 
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatContraints;
-import org.eclipse.wst.sse.core.internal.provisional.exceptions.SourceEditingRuntimeException;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.sse.core.internal.util.StringUtils;
+import org.eclipse.wst.xml.core.internal.Logger;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.document.AttrImpl;
@@ -71,13 +71,16 @@ public class ElementNodeFormatter extends DocumentNodeFormatter {
 							}
 
 							replaceNodeValue(deepestChild, nodeText);
-						} else
+						}
+						else
 							insertAfterNode(lastChild, lineDelimiter + nodeIndentation);
 					}
-				} else
+				}
+				else
 					// indent end tag
 					insertAfterNode(lastChild, lineDelimiter + nodeIndentation);
-			} else if (lastChild == null && firstStructuredDocumentRegionContainsLineDelimiters(node)) {
+			}
+			else if (lastChild == null && firstStructuredDocumentRegionContainsLineDelimiters(node)) {
 				// indent end tag
 				replace(structuredDocument, node.getFirstStructuredDocumentRegion().getEndOffset(), 0, lineDelimiter + nodeIndentation);
 			}
@@ -152,8 +155,10 @@ public class ElementNodeFormatter extends DocumentNodeFormatter {
 				String text = node.getStructuredDocument().get(lineOffset, nodeNameOffset - lineOffset);
 				int usedWidth = getIndentationLength(text);
 				currentAvailableLineWidth = getFormatPreferences().getLineWidth() - usedWidth;
-			} catch (BadLocationException exception) {
-				throw new SourceEditingRuntimeException(exception);
+			}
+			catch (BadLocationException e) {
+				// log for now, unless we find reason not to
+				Logger.log(Logger.INFO, e.getMessage());
 			}
 
 			StringBuffer stringBuffer = new StringBuffer();
@@ -195,7 +200,8 @@ public class ElementNodeFormatter extends DocumentNodeFormatter {
 									formatContraints.setClearAllBlankLines(getFormatPreferences().getClearAllBlankLines());
 							}
 						}
-					} else {
+					}
+					else {
 						ISourceGenerator generator = node.getModel().getGenerator();
 						String newAttrValue = generator.generateAttrValue(attr);
 
@@ -237,7 +243,8 @@ public class ElementNodeFormatter extends DocumentNodeFormatter {
 						// problem found in valueRegion for now.
 						stringBuffer.append(flatNode.getText(valueRegion).trim());
 					}
-				} else {
+				}
+				else {
 					if (valueRegion != null) {
 						int textLength = 1 + flatNode.getText(nameRegion).length() + 1 + flatNode.getText(valueRegion).length();
 						if (i == attrLength - 1) {
@@ -256,7 +263,8 @@ public class ElementNodeFormatter extends DocumentNodeFormatter {
 						if (currentAvailableLineWidth >= textLength) {
 							stringBuffer.append(SPACE_CHAR);
 							currentAvailableLineWidth--;
-						} else {
+						}
+						else {
 							stringBuffer.append(lineDelimiter + attrIndent);
 							currentAvailableLineWidth = getFormatPreferences().getLineWidth() - attrIndent.length();
 						}
@@ -283,11 +291,13 @@ public class ElementNodeFormatter extends DocumentNodeFormatter {
 						currentAvailableLineWidth -= flatNode.getText(nameRegion).length();
 						currentAvailableLineWidth--;
 						currentAvailableLineWidth -= flatNode.getText(valueRegion).trim().length();
-					} else {
+					}
+					else {
 						if (currentAvailableLineWidth >= 1 + flatNode.getText(nameRegion).length()) {
 							stringBuffer.append(SPACE_CHAR);
 							currentAvailableLineWidth--;
-						} else {
+						}
+						else {
 							stringBuffer.append(lineDelimiter + attrIndent);
 							currentAvailableLineWidth = getFormatPreferences().getLineWidth() - attrIndent.length();
 						}

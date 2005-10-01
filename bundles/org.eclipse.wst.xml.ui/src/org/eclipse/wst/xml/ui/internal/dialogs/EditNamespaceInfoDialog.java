@@ -58,7 +58,7 @@ public class EditNamespaceInfoDialog extends Dialog {
 	protected String errorMessage;
 
 	protected Label errorMessageLabel;
-	protected NamespaceInfo info;
+	protected NamespaceInfo fInfo;
 	protected Text locationHintField;
 
 	protected Button okButton;
@@ -69,14 +69,14 @@ public class EditNamespaceInfoDialog extends Dialog {
 	public EditNamespaceInfoDialog(Shell parentShell, NamespaceInfo info) {
 		super(parentShell);
 		setShellStyle(getShellStyle() | SWT.RESIZE);
-		this.info = info;
+		this.fInfo = info;
 	}
 
 	protected void buttonPressed(int buttonId) {
 		if (buttonId == IDialogConstants.OK_ID) {
-			info.uri = uriField.getText();
-			info.prefix = prefixField.getText();
-			info.locationHint = locationHintField.getText();
+			fInfo.uri = uriField.getText();
+			fInfo.prefix = prefixField.getText();
+			fInfo.locationHint = locationHintField.getText();
 		}
 		super.buttonPressed(buttonId);
 	}
@@ -93,12 +93,12 @@ public class EditNamespaceInfoDialog extends Dialog {
 	}
 
 	protected Control createDialogArea(Composite parent) {
-		Composite dialogArea = (Composite) super.createDialogArea(parent);
-		//TODO... SSE port
-		//WorkbenchHelp.setHelp(dialogArea,
+		Composite dialogsubArea = (Composite) super.createDialogArea(parent);
+		// TODO... SSE port
+		// WorkbenchHelp.setHelp(dialogArea,
 		// XMLCommonUIContextIds.XCUI_NAMESPACE_DIALOG);
 
-		Composite composite = new Composite(dialogArea, SWT.NONE);
+		Composite composite = new Composite(dialogsubArea, SWT.NONE);
 		GridLayout layout = new GridLayout();
 		layout.numColumns = 3;
 		layout.marginWidth = 0;
@@ -124,11 +124,12 @@ public class EditNamespaceInfoDialog extends Dialog {
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.grabExcessHorizontalSpace = true;
 		uriField.setLayoutData(gd);
-		uriField.setText(getDisplayValue(info.uri));
+		uriField.setText(getDisplayValue(fInfo.uri));
 		uriField.addModifyListener(modifyListener);
-		uriField.setEnabled(info.getProperty("uri-readOnly") == null); //$NON-NLS-1$
+		uriField.setEnabled(fInfo.getProperty("uri-readOnly") == null); //$NON-NLS-1$
 
-		Label placeHolder1 = new Label(composite, SWT.NONE);
+		// never read
+		// Label placeHolder1 = new Label(composite, SWT.NONE);
 
 		// row 2
 		//
@@ -139,10 +140,12 @@ public class EditNamespaceInfoDialog extends Dialog {
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.grabExcessHorizontalSpace = true;
 		prefixField.setLayoutData(gd);
-		prefixField.setText(getDisplayValue(info.prefix));
+		prefixField.setText(getDisplayValue(fInfo.prefix));
 		prefixField.addModifyListener(modifyListener);
-		prefixField.setEnabled(info.getProperty("prefix-readOnly") == null); //$NON-NLS-1$
-		Label placeHolder2 = new Label(composite, SWT.NONE);
+		prefixField.setEnabled(fInfo.getProperty("prefix-readOnly") == null); //$NON-NLS-1$
+
+		// never read
+		// Label placeHolder2 = new Label(composite, SWT.NONE);
 
 		// row 3
 		//
@@ -153,9 +156,9 @@ public class EditNamespaceInfoDialog extends Dialog {
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.grabExcessHorizontalSpace = true;
 		locationHintField.setLayoutData(gd);
-		locationHintField.setText(getDisplayValue(info.locationHint));
+		locationHintField.setText(getDisplayValue(fInfo.locationHint));
 		locationHintField.addModifyListener(modifyListener);
-		locationHintField.setEnabled(info.getProperty("locationHint-readOnly") == null); //$NON-NLS-1$
+		locationHintField.setEnabled(fInfo.getProperty("locationHint-readOnly") == null); //$NON-NLS-1$
 
 		SelectionListener selectionListener = new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
@@ -169,13 +172,13 @@ public class EditNamespaceInfoDialog extends Dialog {
 		browseButton.setEnabled(locationHintField.getEnabled());
 
 		// error message
-		errorMessageLabel = new Label(dialogArea, SWT.NONE);
+		errorMessageLabel = new Label(dialogsubArea, SWT.NONE);
 		errorMessageLabel.setText(XMLUIMessages.error_message_goes_here); //$NON-NLS-1$
 		errorMessageLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		Color color = new Color(errorMessageLabel.getDisplay(), 200, 0, 0);
 		errorMessageLabel.setForeground(color);
 
-		return dialogArea;
+		return dialogsubArea;
 	}
 
 	protected String getDisplayValue(String string) {
@@ -199,28 +202,28 @@ public class EditNamespaceInfoDialog extends Dialog {
 				if (resourceLocation != null) {
 					uri = URIHelper.getRelativeURI(file.getLocation(), resourceLocation);
 					grammarURI = file.getLocation().toOSString();
-				} else {
+				}
+				else {
 					uri = file.getLocation().toOSString();
 					grammarURI = uri;
 				}
 				locationHintField.setText(uri);
-			} else if (id != null) {
+			}
+			else if (id != null) {
 				locationHintField.setText(id);
 				URIResolver resolver = URIResolverPlugin.createResolver();
 				grammarURI = resolver.resolve(null, id, id);
 			}
 
-			try {
-				CMDocument document = ContentModelManager.getInstance().createCMDocument(grammarURI, "xsd"); //$NON-NLS-1$
-				List namespaceInfoList = (List) document.getProperty("http://org.eclipse.wst/cm/properties/namespaceInfo"); //$NON-NLS-1$
-				NamespaceInfo info = (NamespaceInfo) namespaceInfoList.get(0);
-				if (uriField.getText().trim().length() == 0 && info.uri != null) {
-					uriField.setText(info.uri);
-				}
-				if (prefixField.getText().trim().length() == 0 && info.prefix != null) {
-					prefixField.setText(info.prefix);
-				}
-			} catch (Exception e) {
+
+			CMDocument document = ContentModelManager.getInstance().createCMDocument(grammarURI, "xsd"); //$NON-NLS-1$
+			List namespaceInfoList = (List) document.getProperty("http://org.eclipse.wst/cm/properties/namespaceInfo"); //$NON-NLS-1$
+			NamespaceInfo info = (NamespaceInfo) namespaceInfoList.get(0);
+			if (uriField.getText().trim().length() == 0 && info.uri != null) {
+				uriField.setText(info.uri);
+			}
+			if (prefixField.getText().trim().length() == 0 && info.prefix != null) {
+				prefixField.setText(info.prefix);
 			}
 		}
 	}

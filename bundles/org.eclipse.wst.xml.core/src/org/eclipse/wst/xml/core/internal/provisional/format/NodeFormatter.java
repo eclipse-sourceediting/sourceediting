@@ -20,12 +20,12 @@ import org.eclipse.wst.sse.core.internal.format.IStructuredFormatPreferences;
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatter;
 import org.eclipse.wst.sse.core.internal.format.StructuredFormatContraints;
 import org.eclipse.wst.sse.core.internal.parser.ContextRegion;
-import org.eclipse.wst.sse.core.internal.provisional.exceptions.SourceEditingRuntimeException;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.sse.core.internal.util.StringUtils;
+import org.eclipse.wst.xml.core.internal.Logger;
 import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
 import org.eclipse.wst.xml.core.internal.document.CDATASectionImpl;
 import org.eclipse.wst.xml.core.internal.document.CharacterDataImpl;
@@ -88,27 +88,33 @@ public class NodeFormatter implements IStructuredFormatter {
 						}
 						compressedString.append(stringArray[i]);
 						cr2 = true;
-					} else if (cr) {
+					}
+					else if (cr) {
 						if (nonSpace) {
 							compressedString.append(CR);
 							nonSpace = false;
 						}
 						compressedString.append(stringArray[i]);
 						cr2 = true;
-					} else
+					}
+					else
 						cr = true;
-				} else if (stringArray[i].compareTo(LF) == 0) {
+				}
+				else if (stringArray[i].compareTo(LF) == 0) {
 					if (cr && lf && cr2) {
 						compressedString.append(stringArray[i]);
-					} else if (lf) {
+					}
+					else if (lf) {
 						if (nonSpace) {
 							compressedString.append(LF);
 							nonSpace = false;
 						}
 						compressedString.append(stringArray[i]);
-					} else
+					}
+					else
 						lf = true;
-				} else if ((stringArray[i].compareTo(SPACE) != 0) && (stringArray[i].compareTo(TAB) != 0) && (stringArray[i].compareTo(FF) != 0)) {
+				}
+				else if ((stringArray[i].compareTo(SPACE) != 0) && (stringArray[i].compareTo(TAB) != 0) && (stringArray[i].compareTo(FF) != 0)) {
 					if (compressedString.length() > 0)
 						compressedString.append(SPACE);
 					compressedString.append(stringArray[i]);
@@ -162,8 +168,10 @@ public class NodeFormatter implements IStructuredFormatter {
 				lineDelimiter = doc.getLineDelimiter(line);
 				if (lineDelimiter == null)
 					lineDelimiter = ""; //$NON-NLS-1$
-			} catch (BadLocationException exception) {
-				throw new SourceEditingRuntimeException(exception);
+			}
+			catch (BadLocationException e) {
+				// log for now, unless we find reason not to
+				Logger.log(Logger.INFO, e.getMessage());
 			}
 
 			if (node.getParentNode() != null) {
@@ -173,7 +181,8 @@ public class NodeFormatter implements IStructuredFormatter {
 							getFormatter(nextSibling).format(nextSibling, formatContraints);
 						else if (nextSibling.getNodeType() == Node.COMMENT_NODE) {
 							// do nothing
-						} else {
+						}
+						else {
 							String lineIndent = formatContraints.getCurrentIndent();
 							insertAfterNode(node, lineDelimiter + lineIndent);
 						}
@@ -185,7 +194,8 @@ public class NodeFormatter implements IStructuredFormatter {
 						getFormatter(nextSibling).format(nextSibling, formatContraints);
 					else if (nextSibling.getNodeType() == Node.COMMENT_NODE) {
 						// do nothing
-					} else {
+					}
+					else {
 						String lineIndent = formatContraints.getCurrentIndent();
 						insertAfterNode(node, lineDelimiter + lineIndent);
 					}
@@ -204,7 +214,8 @@ public class NodeFormatter implements IStructuredFormatter {
 						else if ((lastChild.getNodeType() == Node.TEXT_NODE) && (lastChild.getNodeValue() != null && lastChild.getNodeValue().endsWith(lineDelimiter)))
 							if (clearAllBlankLines) {
 								replaceNodeValue(lastChild, lineDelimiter + lineIndent);
-							} else {
+							}
+							else {
 								// append indentation
 								insertAfterNode(lastChild, lineIndent);
 							}
@@ -212,7 +223,8 @@ public class NodeFormatter implements IStructuredFormatter {
 							if (lastChild.getNodeValue().length() == 0) {
 								// replace
 								replaceNodeValue(lastChild, lineDelimiter + lineIndent);
-							} else {
+							}
+							else {
 								// append indentation
 								insertAfterNode(lastChild, lineDelimiter + lineIndent);
 							}
@@ -238,8 +250,10 @@ public class NodeFormatter implements IStructuredFormatter {
 					if (lineDelimiter == null)
 						lineDelimiter = ""; //$NON-NLS-1$
 				}
-			} catch (BadLocationException exception) {
-				throw new SourceEditingRuntimeException(exception);
+			}
+			catch (BadLocationException e) {
+				// log for now, unless we find reason not to
+				Logger.log(Logger.INFO, e.getMessage());
 			}
 			String lineIndent = formatContraints.getCurrentIndent();
 
@@ -251,7 +265,8 @@ public class NodeFormatter implements IStructuredFormatter {
 						else {
 							insertBeforeNode(node, lineDelimiter + lineIndent);
 						}
-				} else {
+				}
+				else {
 					if (previousSibling == null || previousSibling.getNodeType() != Node.TEXT_NODE) {
 						// 261968 - formatting tag without closing bracket:
 						// <t1><t1
@@ -269,16 +284,19 @@ public class NodeFormatter implements IStructuredFormatter {
 							insertBeforeNode(node, lineDelimiter + lineIndent);
 						}
 
-					} else {
+					}
+					else {
 						if (previousSibling.getNodeValue().length() == 0) {
 							// replace
 							replaceNodeValue(previousSibling, lineDelimiter + lineIndent);
-						} else {
+						}
+						else {
 							// append indentation
 							if (!previousSibling.getNodeValue().endsWith(lineDelimiter + lineIndent)) {
 								if (previousSibling.getNodeValue().endsWith(lineDelimiter)) {
 									insertAfterNode(previousSibling, lineIndent);
-								} else
+								}
+								else
 									getFormatter(previousSibling).format(previousSibling, formatContraints);
 							}
 						}
@@ -323,7 +341,8 @@ public class NodeFormatter implements IStructuredFormatter {
 				else
 					// replace the text node with indentation
 					replaceNodeValue(nextSibling, lineDelimiter + lineIndent);
-			} else {
+			}
+			else {
 				if (nextSibling == null) {
 					lineIndent = parentLineIndent;
 
@@ -352,7 +371,8 @@ public class NodeFormatter implements IStructuredFormatter {
 									insertAfterNode(node, lineDelimiter + lineIndent);
 							else
 								replaceNodeValue(node, lineDelimiter + lineIndent);
-				} else {
+				}
+				else {
 					if ((node.getNodeType() == Node.TEXT_NODE) && (node.getNodeValue().endsWith(lineDelimiter + lineIndent))) {
 						// this text node already ends with the requested
 						// indentation
@@ -610,7 +630,8 @@ public class NodeFormatter implements IStructuredFormatter {
 					else
 						result = parentLineIndent + singleIndent;
 				}
-			} else {
+			}
+			else {
 				String nodeIndent = getNodeIndent(node);
 				if (nodeIndent.length() > parentLineIndent.length())
 					// this node is indented from its parent, its indentation
@@ -706,8 +727,10 @@ public class NodeFormatter implements IStructuredFormatter {
 			String structuredDocumentString = structuredDocument.get(offset, length);
 			if (structuredDocumentString.compareTo(string) != 0)
 				structuredDocument.replaceText(structuredDocument, offset, length, string);
-		} catch (BadLocationException exception) {
-			throw new SourceEditingRuntimeException(exception);
+		}
+		catch (BadLocationException e) {
+			// log for now, unless we find reason not to
+			Logger.log(Logger.INFO, e.getMessage());
 		}
 	}
 
@@ -726,8 +749,10 @@ public class NodeFormatter implements IStructuredFormatter {
 			String structuredDocumentString = structuredDocument.get(offset, length);
 			if (structuredDocumentString.compareTo(string) != 0)
 				replace(structuredDocument, offset, length, string);
-		} catch (BadLocationException exception) {
-			throw new SourceEditingRuntimeException(exception);
+		}
+		catch (BadLocationException e) {
+			// log for now, unless we find reason not to
+			Logger.log(Logger.INFO, e.getMessage());
 		}
 	}
 
@@ -746,30 +771,31 @@ public class NodeFormatter implements IStructuredFormatter {
 
 	/**
 	 * ISSUE: this is a bit of hidden JSP knowledge that was implemented this
-	 * way for expedency. Should be evolved in future to depend on "nestedContext".
+	 * way for expedency. Should be evolved in future to depend on
+	 * "nestedContext".
 	 */
 	private boolean isJSPTag(Node node) {
-	
+
 		final String JSP_CLOSE = "JSP_CLOSE"; //$NON-NLS-1$
 		// final String JSP_COMMENT_CLOSE = "JSP_COMMENT_CLOSE"; //$NON-NLS-1$
-	
+
 		// final String JSP_COMMENT_OPEN = "JSP_COMMENT_OPEN"; //$NON-NLS-1$
 		// final String JSP_COMMENT_TEXT = "JSP_COMMENT_TEXT"; //$NON-NLS-1$
-	
+
 		final String JSP_CONTENT = "JSP_CONTENT"; //$NON-NLS-1$
 		final String JSP_DECLARATION_OPEN = "JSP_DECLARATION_OPEN"; //$NON-NLS-1$
 		final String JSP_DIRECTIVE_CLOSE = "JSP_DIRECTIVE_CLOSE"; //$NON-NLS-1$
 		final String JSP_DIRECTIVE_NAME = "JSP_DIRECTIVE_NAME"; //$NON-NLS-1$
-	
+
 		final String JSP_DIRECTIVE_OPEN = "JSP_DIRECTIVE_OPEN"; //$NON-NLS-1$
 		final String JSP_EXPRESSION_OPEN = "JSP_EXPRESSION_OPEN"; //$NON-NLS-1$
-	
+
 		// final String JSP_ROOT_TAG_NAME = "JSP_ROOT_TAG_NAME"; //$NON-NLS-1$
-	
+
 		final String JSP_SCRIPTLET_OPEN = "JSP_SCRIPTLET_OPEN"; //$NON-NLS-1$
-	
+
 		boolean result = false;
-	
+
 		if (node instanceof IDOMNode) {
 			IStructuredDocumentRegion flatNode = ((IDOMNode) node).getFirstStructuredDocumentRegion();
 			// in some cases, the nodes exists, but hasn't been associated
@@ -790,7 +816,7 @@ public class NodeFormatter implements IStructuredFormatter {
 				}
 			}
 		}
-	
+
 		return result;
 	}
 }

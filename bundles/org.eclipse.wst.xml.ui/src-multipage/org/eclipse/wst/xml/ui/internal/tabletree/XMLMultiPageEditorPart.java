@@ -107,12 +107,14 @@ public class XMLMultiPageEditorPart extends PostSelectionMultiPageEditorPart {
 		 * @see IPartListener#partBroughtToTop(org.eclipse.ui.IWorkbenchPart)
 		 */
 		public void partBroughtToTop(IWorkbenchPart part) {
+			// do nothing
 		}
 
 		/*
 		 * @see IPartListener#partClosed(org.eclipse.ui.IWorkbenchPart)
 		 */
 		public void partClosed(IWorkbenchPart part) {
+			// do nothing
 		}
 
 		/*
@@ -126,13 +128,14 @@ public class XMLMultiPageEditorPart extends PostSelectionMultiPageEditorPart {
 		 * @see IPartListener#partOpened(org.eclipse.ui.IWorkbenchPart)
 		 */
 		public void partOpened(IWorkbenchPart part) {
+			// do nothing
 		}
 
 		/**
 		 * Handles the activation triggering a element state check in the
 		 * editor.
 		 */
-		private void handleActivation() {
+		void handleActivation() {
 			if (fIsHandlingActivation)
 				return;
 
@@ -171,6 +174,7 @@ public class XMLMultiPageEditorPart extends PostSelectionMultiPageEditorPart {
 		 * @since 3.1
 		 */
 		public void windowDeactivated(IWorkbenchWindow window) {
+			// do nothing
 		}
 
 		/*
@@ -178,6 +182,7 @@ public class XMLMultiPageEditorPart extends PostSelectionMultiPageEditorPart {
 		 * @since 3.1
 		 */
 		public void windowClosed(IWorkbenchWindow window) {
+			// do nothing
 		}
 
 		/*
@@ -185,6 +190,7 @@ public class XMLMultiPageEditorPart extends PostSelectionMultiPageEditorPart {
 		 * @since 3.1
 		 */
 		public void windowOpened(IWorkbenchWindow window) {
+			// do nothing
 		}
 	}
 
@@ -279,6 +285,7 @@ public class XMLMultiPageEditorPart extends PostSelectionMultiPageEditorPart {
 
 	class TextInputListener implements ITextInputListener {
 		public void inputDocumentAboutToBeChanged(IDocument oldInput, IDocument newInput) {
+			// do nothing
 		}
 
 		public void inputDocumentChanged(IDocument oldInput, IDocument newInput) {

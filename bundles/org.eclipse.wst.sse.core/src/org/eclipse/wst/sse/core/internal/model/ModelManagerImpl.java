@@ -1184,7 +1184,6 @@ public class ModelManagerImpl implements IModelManager {
 
 	private void handleConvertLineDelimiters(IStructuredDocument structuredDocument, IFile iFile, EncodingRule encodingRule, EncodingMemento encodingMemento) throws CoreException, MalformedOutputExceptionWithDetail, UnsupportedEncodingException {
 		if (structuredDocument.getNumberOfLines() > 1) {
-			String originalText = structuredDocument.get();
 			convertLineDelimiters(structuredDocument, iFile);
 		}
 	}

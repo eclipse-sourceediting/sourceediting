@@ -17,7 +17,6 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -50,17 +49,17 @@ public class EditProcessingInstructionDialog extends Dialog {
 		data = getModelValue(dataField.getText());
 		super.buttonPressed(buttonId);
 	}
-
+ 
 	protected void createButtonsForButtonBar(Composite parent) {
-		Button okButton = createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
+		createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
 		createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
 	}
 
 	protected Control createDialogArea(Composite parent) {
-		Composite dialogArea = (Composite) super.createDialogArea(parent);
-		WorkbenchHelp.setHelp(dialogArea, XMLCommonUIContextIds.XCUI_PROCESSING_DIALOG);
+		Composite dialogArea1 = (Composite) super.createDialogArea(parent);
+		WorkbenchHelp.setHelp(dialogArea1, XMLCommonUIContextIds.XCUI_PROCESSING_DIALOG);
 
-		Composite composite = new Composite(dialogArea, SWT.NONE);
+		Composite composite = new Composite(dialogArea1, SWT.NONE);
 		GridLayout layout = new GridLayout();
 		layout.numColumns = 2;
 		layout.marginWidth = 0;
@@ -85,7 +84,7 @@ public class EditProcessingInstructionDialog extends Dialog {
 		dataField.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		dataField.setText(getDisplayValue(data));
 
-		return dialogArea;
+		return dialogArea1;
 	}
 
 	protected Label createMessageArea(Composite composite) {

@@ -102,7 +102,6 @@ public class DOMObserver {
 				case INodeNotifier.CONTENT_CHANGED : {
 					Node node = (Node) notifier;
 					if (node.getNodeType() == Node.ELEMENT_NODE) {
-						Element element = (Element) node;
 						switch (eventType) {
 							case INodeNotifier.CHANGE :
 							case INodeNotifier.STRUCTURE_CHANGED : {
@@ -145,7 +144,6 @@ public class DOMObserver {
 	private Job timer = new TimerJob();
 	protected Document fDocument;
 	protected boolean isGrammarInferenceEnabled;
-	protected IStructuredModel model;
 
 	public DOMObserver(IStructuredModel model) {
 		fDocument = (model instanceof IDOMModel) ? ((IDOMModel) model).getDocument() : null;
@@ -156,8 +154,6 @@ public class DOMObserver {
 				CMDocumentManager cmDocumentManager = modelQuery.getCMDocumentManager();
 				cmDocumentManager.setPropertyEnabled(CMDocumentManager.PROPERTY_AUTO_LOAD, false);
 			}
-
-			MyDocumentAdapter myDocumentAdapter = new MyDocumentAdapter(fDocument);
 		}
 	}
 

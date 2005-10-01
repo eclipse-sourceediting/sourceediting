@@ -42,6 +42,7 @@ import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
  */
 public class NoRegionContentAssistProcessor implements IContentAssistProcessor, IReleasable {
 
+	private static final boolean DEBUG = false;
 	protected char completionProposalAutoActivationCharacters[] = null;
 	protected char contextInformationAutoActivationCharacters[] = null;
 
@@ -62,13 +63,15 @@ public class NoRegionContentAssistProcessor implements IContentAssistProcessor, 
 	protected void addPartitionProcessor(String key, IContentAssistProcessor processor) {
 		addProcessor(fPartitionToProcessorMap, key, processor);
 	}
+
 	protected void addNameProcessor(String key, IContentAssistProcessor processor) {
 		addProcessor(fNameToProcessorMap, key, processor);
 	}
+
 	protected IContentAssistProcessor getPartitionProcessor(String key) {
-		return (IContentAssistProcessor)fPartitionToProcessorMap.get(key);
+		return (IContentAssistProcessor) fPartitionToProcessorMap.get(key);
 	}
-	
+
 	/**
 	 * Ensures release if it's a duplicate partition type.
 	 * 
@@ -78,14 +81,14 @@ public class NoRegionContentAssistProcessor implements IContentAssistProcessor, 
 	 */
 	private void addProcessor(HashMap map, String key, IContentAssistProcessor processor) {
 		Object o = map.remove(key);
-		if(o != null) {
-			if(o instanceof IReleasable) {
-				((IReleasable)o).release();
+		if (o != null) {
+			if (o instanceof IReleasable) {
+				((IReleasable) o).release();
 			}
 		}
 		map.put(key, processor);
 	}
-	
+
 	/**
 	 * Figures out what the correct ICompletionProposalProcessor is and
 	 * computesCompletionProposals on that.
@@ -168,7 +171,8 @@ public class NoRegionContentAssistProcessor implements IContentAssistProcessor, 
 		try {
 			partition = document.getPartition(documentPosition);
 			partitionType = partition.getType();
-		} catch (BadLocationException e) {
+		}
+		catch (BadLocationException e) {
 			partitionType = null;
 		}
 		return partitionType;
@@ -182,7 +186,7 @@ public class NoRegionContentAssistProcessor implements IContentAssistProcessor, 
 	 * @param documentOffset
 	 */
 	protected IContentAssistProcessor guessContentAssistProcessor(ITextViewer viewer, int documentOffset) {
-		//  mapping logic here...
+		// mapping logic here...
 		// look @ previous region
 		// look @ previous doc partition type
 		// look @ page language
@@ -190,21 +194,22 @@ public class NoRegionContentAssistProcessor implements IContentAssistProcessor, 
 		IStructuredDocumentRegion sdRegion = ContentAssistUtils.getStructuredDocumentRegion((StructuredTextViewer) viewer, documentOffset);
 		if (sdRegion != null) {
 			String currentRegionType = sdRegion.getType();
-			//System.out.println("current region type is >> " +
+			// System.out.println("current region type is >> " +
 			// currentRegionType);
 			if (currentRegionType == DOMRegionContext.UNDEFINED) {
 				IStructuredDocumentRegion sdPrev = sdRegion.getPrevious();
 				if (sdPrev != null) {
-					String prevRegionType = sdPrev.getType();
-					//System.out.println("previous region type is >> " +
-					// prevRegionType);
+					if (DEBUG) {
+						String prevRegionType = sdPrev.getType();
+						System.out.println("previous region type is >> " + prevRegionType);
+					}
 				}
 			}
 		}
 		// working w/ viewer & document partition
 		if (p == null && viewer.getDocument().getLength() > 0) {
 			String prevPartitionType = getPartitionType((StructuredTextViewer) viewer, documentOffset - 1);
-			//System.out.println("previous partition type is > " +
+			// System.out.println("previous partition type is > " +
 			// prevPartitionType);
 			p = (IContentAssistProcessor) fPartitionToProcessorMap.get(prevPartitionType);
 		}
@@ -215,6 +220,7 @@ public class NoRegionContentAssistProcessor implements IContentAssistProcessor, 
 	 * Inits map for extra ContentAssistProcessors (useBean, get/setProperty)
 	 */
 	protected void initNameToProcessorMap() {
+		// nothing to do in this case
 	}
 
 	/**

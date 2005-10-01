@@ -18,7 +18,6 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -27,7 +26,7 @@ import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 import org.eclipse.wst.xml.ui.internal.nsedit.CommonEditNamespacesDialog;
 
 public class EditSchemaInfoDialog extends Dialog implements UpdateListener {
-	//  protected NamespaceInfoTable namespaceInfoTable;
+	// protected NamespaceInfoTable namespaceInfoTable;
 	protected Label errorMessageLabel;
 	protected List namespaceInfoList;
 	protected IPath resourceLocation;
@@ -39,7 +38,7 @@ public class EditSchemaInfoDialog extends Dialog implements UpdateListener {
 	}
 
 	protected void createButtonsForButtonBar(Composite parent) {
-		Button okButton = createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
+		createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
 		createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
 	}
 

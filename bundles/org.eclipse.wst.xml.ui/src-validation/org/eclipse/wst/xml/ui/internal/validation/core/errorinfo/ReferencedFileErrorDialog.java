@@ -115,7 +115,7 @@ public class ReferencedFileErrorDialog extends Dialog
     return dialogArea;
   }
 
-  private String getFullURI(int offset)
+  String getFullURI(int offset)
   {
     String uri = "";
     int index = getIndex(offset);

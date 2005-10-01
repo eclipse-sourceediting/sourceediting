@@ -108,8 +108,8 @@ public class XMLTreeExtension extends TreeExtension {
 		// here we print a message when the document is empty just to give the
 		// user a visual cue
 		// so that they know how to proceed to edit the blank view
-		gc.setForeground(tree.getDisplay().getSystemColor(SWT.COLOR_BLACK));
-		gc.setBackground(tree.getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
+		gc.setForeground(fTree.getDisplay().getSystemColor(SWT.COLOR_BLACK));
+		gc.setBackground(fTree.getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
 		gc.drawString(XMLEditorMessages.XMLTreeExtension_3, 10, 10);
 		gc.drawString(XMLEditorMessages.XMLTreeExtension_4, 10, 10 + gc.getFontMetrics().getHeight());
 	}

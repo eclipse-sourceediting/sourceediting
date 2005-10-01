@@ -45,7 +45,6 @@ import org.eclipse.wst.sse.core.internal.provisional.events.RegionChangedEvent;
 import org.eclipse.wst.sse.core.internal.provisional.events.RegionsReplacedEvent;
 import org.eclipse.wst.sse.core.internal.provisional.events.StructuredDocumentRegionsReplacedEvent;
 import org.eclipse.wst.sse.core.internal.provisional.exceptions.ResourceInUse;
-import org.eclipse.wst.sse.core.internal.provisional.exceptions.SourceEditingRuntimeException;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.undo.IStructuredTextUndoManager;
 import org.eclipse.wst.sse.core.internal.util.URIResolver;
@@ -228,9 +227,9 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 
 	private void _commonRelease() {
 
-		// TODO_future: I suspect ALL this type of logic should be 	
-		// on manager side. 
-		
+		// TODO_future: I suspect ALL this type of logic should be
+		// on manager side.
+
 		if (factoryRegistry != null) {
 			factoryRegistry.release();
 		}
@@ -247,9 +246,9 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 			fStructuredDocument.removeDocumentAboutToChangeListener(fDocumentToModelNotifier);
 			fStructuredDocument.removeDocumentChangedListener(fDocumentToModelNotifier);
 		}
-		
-		// we set document to null, mostly so 
-		// any initiatilation done there can be undone. 
+
+		// we set document to null, mostly so
+		// any initiatilation done there can be undone.
 		// (likely needs some restructured to not need?)
 		setStructuredDocument(null);
 	}
@@ -1089,12 +1088,8 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 			result = _getModelManager().reloadModel(getId(), inputStream);
 		}
 		catch (UnsupportedEncodingException e) {
-			// its a very serious error to get an unsupported encoding
-			// exception,
-			// since we've presumable loaded it once already, so won't
-			// bother
-			// with a checked exception.
-			throw new SourceEditingRuntimeException(e);
+			// log for now, unless we find reason not to
+			Logger.log(Logger.INFO, e.getMessage());
 		}
 		finally {
 			changedModel();
@@ -1442,7 +1437,6 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 			internalModelChanged();
 		}
 	}
-
 
 
 

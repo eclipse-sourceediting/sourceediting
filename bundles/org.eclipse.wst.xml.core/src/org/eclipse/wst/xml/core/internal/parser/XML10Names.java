@@ -171,7 +171,7 @@ public final class XML10Names {
   /* error codes */
   private static final int ZZ_UNKNOWN_ERROR = 0;
   private static final int ZZ_NO_MATCH = 1;
-  private static final int ZZ_PUSHBACK_2BIG = 2;
+  //private static final int ZZ_PUSHBACK_2BIG = 2;
 
   /* error messages for the codes above */
   private static final String ZZ_ERROR_MSG[] = {
@@ -237,21 +237,21 @@ public final class XML10Names {
   private int zzEndRead;
 
   /** number of newlines encountered up to the start of the matched text */
-  private int yyline;
+  //private int yyline;
 
   /** the number of characters up to the start of the matched text */
-  private int yychar;
+  //private int yychar;
 
   /**
    * the number of characters from the last newline up to the start of the 
    * matched text
    */
-  private int yycolumn;
+  //private int yycolumn;
 
   /** 
    * zzAtBOL == true <=> the scanner is currently at the beginning of a line
    */
-  private boolean zzAtBOL = true;
+  //private boolean zzAtBOL = true;
 
   /** zzAtEOF == true <=> the scanner is at the EOF */
   private boolean zzAtEOF;
@@ -368,13 +368,13 @@ public final class XML10Names {
   /**
    * Closes the input stream.
    */
-  private final void yyclose() throws java.io.IOException {
-    zzAtEOF = true;            /* indicate end of file */
-    zzEndRead = zzStartRead;  /* invalidate buffer    */
-
-    if (zzReader != null)
-      zzReader.close();
-  }
+//  private final void yyclose() throws java.io.IOException {
+//    zzAtEOF = true;            /* indicate end of file */
+//    zzEndRead = zzStartRead;  /* invalidate buffer    */
+//
+//    if (zzReader != null)
+//      zzReader.close();
+//  }
 
 
   /**
@@ -389,11 +389,11 @@ public final class XML10Names {
    */
   private final void yyreset(java.io.Reader reader) {
     zzReader = reader;
-    zzAtBOL  = true;
+//    zzAtBOL  = true;
     zzAtEOF  = false;
     zzEndRead = zzStartRead = 0;
     zzCurrentPos = zzMarkedPos = zzPushbackPos = 0;
-    yyline = yychar = yycolumn = 0;
+//    yyline = yychar = yycolumn = 0;
     zzLexicalState = YYINITIAL;
   }
 
@@ -401,9 +401,9 @@ public final class XML10Names {
   /**
    * Returns the current lexical state.
    */
-  private final int yystate() {
-    return zzLexicalState;
-  }
+//  private final int yystate() {
+//    return zzLexicalState;
+//  }
 
 
   /**
@@ -411,17 +411,17 @@ public final class XML10Names {
    *
    * @param newState the new lexical state
    */
-  private final void yybegin(int newState) {
-    zzLexicalState = newState;
-  }
+//  private final void yybegin(int newState) {
+//    zzLexicalState = newState;
+//  }
 
 
   /**
    * Returns the text matched by the current regular expression.
    */
-  private final String yytext() {
-    return new String( zzBuffer, zzStartRead, zzMarkedPos-zzStartRead );
-  }
+//  private final String yytext() {
+//    return new String( zzBuffer, zzStartRead, zzMarkedPos-zzStartRead );
+//  }
 
 
   /**
@@ -435,17 +435,17 @@ public final class XML10Names {
    *
    * @return the character at position pos
    */
-  private final char yycharat(int pos) {
-    return zzBuffer[zzStartRead+pos];
-  }
+//  private final char yycharat(int pos) {
+//    return zzBuffer[zzStartRead+pos];
+//  }
 
 
   /**
    * Returns the length of the matched text region.
    */
-  private final int yylength() {
-    return zzMarkedPos-zzStartRead;
-  }
+//  private final int yylength() {
+//    return zzMarkedPos-zzStartRead;
+//  }
 
 
   /**
@@ -483,12 +483,12 @@ public final class XML10Names {
    * @param number  the number of characters to be read again.
    *                This number must not be greater than yylength()!
    */
-  private void yypushback(int number)  {
-    if ( number > yylength() )
-      zzScanError(ZZ_PUSHBACK_2BIG);
-
-    zzMarkedPos -= number;
-  }
+//  private void yypushback(int number)  {
+//    if ( number > yylength() )
+//      zzScanError(ZZ_PUSHBACK_2BIG);
+//
+//    zzMarkedPos -= number;
+//  }
 
 
   /**

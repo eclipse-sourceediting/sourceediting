@@ -25,7 +25,7 @@ import org.eclipse.jface.text.contentassist.IContextInformationValidator;
 import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.ISourceViewer;
-import org.eclipse.wst.sse.core.internal.provisional.exceptions.SourceEditingRuntimeException;
+import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 
 
@@ -49,8 +49,9 @@ public class StructuredCorrectionProcessor implements IContentAssistProcessor {
 					}
 				}
 			}
-		} catch (Exception e) {
-			throw new SourceEditingRuntimeException();
+		} catch (CoreException e) {
+			// log for now, unless we find reason not to
+			Logger.log(Logger.INFO, e.getMessage());
 		}
 	}
 
@@ -70,7 +71,8 @@ public class StructuredCorrectionProcessor implements IContentAssistProcessor {
 							}
 						}
 					} catch (CoreException e) {
-						throw new SourceEditingRuntimeException();
+						// log for now, unless we find reason not to
+						Logger.log(Logger.INFO, e.getMessage());
 					}
 				}
 			}

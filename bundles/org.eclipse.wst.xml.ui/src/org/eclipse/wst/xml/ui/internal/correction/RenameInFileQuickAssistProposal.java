@@ -27,13 +27,13 @@ import org.eclipse.jface.text.link.LinkedPositionGroup;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.ui.texteditor.link.EditorLinkedModeUI;
-import org.eclipse.wst.sse.core.internal.provisional.exceptions.SourceEditingRuntimeException;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
+import org.eclipse.wst.xml.ui.internal.Logger;
 import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 import org.eclipse.wst.xml.ui.internal.editor.XMLEditorPluginImageHelper;
 import org.eclipse.wst.xml.ui.internal.editor.XMLEditorPluginImages;
@@ -102,7 +102,8 @@ public class RenameInFileQuickAssistProposal implements ICompletionProposal, ICo
 
 			fSelectedRegion = ui.getSelectedRegion();
 		} catch (BadLocationException e) {
-			throw new SourceEditingRuntimeException(e);
+			// log for now, unless find reason not to
+			Logger.log(Logger.INFO, e.getMessage());
 		}
 	}
 

@@ -46,7 +46,6 @@ import org.eclipse.ui.ide.IGotoMarker;
 import org.eclipse.wst.common.ui.provisional.editors.PostMultiPageEditorSite;
 import org.eclipse.wst.common.ui.provisional.editors.PostSelectionMultiPageEditorPart;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
-import org.eclipse.wst.sse.core.internal.provisional.exceptions.SourceEditingRuntimeException;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.provisional.extensions.ISourceEditingTextTools;
 import org.eclipse.wst.xml.core.internal.provisional.IXMLPreferenceNames;
@@ -171,11 +170,12 @@ public class XSDMultiPageEditorPart extends PostSelectionMultiPageEditorPart imp
       // input refresh
       fTextEditor.getTextViewer().addTextInputListener(new TextInputListener());
     }
-    catch (PartInitException exception) {
+    catch (PartInitException e) {
       // dispose editor
       dispose();
 
-      throw new SourceEditingRuntimeException(exception, XSDEditorPlugin.getXSDString("An_error_has_occurred_when1_ERROR_")); //$NON-NLS-1$
+		// log for now, unless we find reason not to
+		Logger.log(Logger.INFO, e.getMessage());
     }
   }
 
@@ -484,13 +484,8 @@ public class XSDMultiPageEditorPart extends PostSelectionMultiPageEditorPart imp
       window.getShell().addShellListener(partListener);
     }
     catch (Exception e) {
-      if (e instanceof SourceEditingRuntimeException) {
-        Throwable t = ((SourceEditingRuntimeException) e).getOriginalException();
-        if (t instanceof IOException) {
-          System.out.println(t);
-          // file not found
-        }
-      }
+		// log for now, unless we find reason not to
+		Logger.log(Logger.INFO, e.getMessage());
     }
     setPartName(input.getName());
   }

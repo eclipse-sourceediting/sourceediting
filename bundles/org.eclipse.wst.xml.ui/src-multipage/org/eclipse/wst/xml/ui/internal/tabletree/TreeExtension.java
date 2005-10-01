@@ -47,9 +47,9 @@ import org.eclipse.ui.PlatformUI;
 
 public class TreeExtension implements PaintListener {
 
-	protected Tree tree;
+	protected Tree fTree;
 	protected EditManager editManager;
-	protected String[] columnProperties;
+	protected String[] fColumnProperties;
 	protected ICellModifier cellModifier;
 	protected int columnPosition = 300;
 	protected int columnHitWidth = 5;
@@ -59,7 +59,7 @@ public class TreeExtension implements PaintListener {
 	private boolean fisUnsupportedInput = false;
 
 	public TreeExtension(Tree tree) {
-		this.tree = tree;
+		this.fTree = tree;
 		InternalMouseListener listener = new InternalMouseListener();
 		tree.addMouseMoveListener(listener);
 		tree.addMouseListener(listener);
@@ -79,6 +79,7 @@ public class TreeExtension implements PaintListener {
 	}
 
 	public void resetCachedData() {
+		// todo: sure seems we should reset something?
 	}
 
 	public ICellModifier getCellModifier() {
@@ -87,7 +88,7 @@ public class TreeExtension implements PaintListener {
 
 	public List getItemList() {
 		List list = new Vector();
-		getItemListHelper(tree.getItems(), list);
+		getItemListHelper(fTree.getItems(), list);
 		return list;
 	}
 
@@ -121,12 +122,13 @@ public class TreeExtension implements PaintListener {
 		public void mouseMove(MouseEvent e) {
 			if (e.x > columnPosition - columnHitWidth && e.x < columnPosition + columnHitWidth) {
 				if (cursor == null) {
-					cursor = new Cursor(tree.getDisplay(), SWT.CURSOR_SIZEWE);
-					tree.setCursor(cursor);
+					cursor = new Cursor(fTree.getDisplay(), SWT.CURSOR_SIZEWE);
+					fTree.setCursor(cursor);
 				}
-			} else {
+			}
+			else {
 				if (cursor != null) {
-					tree.setCursor(null);
+					fTree.setCursor(null);
 					cursor.dispose();
 					cursor = null;
 				}
@@ -155,13 +157,13 @@ public class TreeExtension implements PaintListener {
 			// here we handle selecting tree items when any thing on the 'row'
 			// is clicked
 			//
-			TreeItem item = tree.getItem(new Point(e.x, e.y));
+			TreeItem item = fTree.getItem(new Point(e.x, e.y));
 			if (item == null) {
 				item = getTreeItemOnRow(e.x, e.y);
 				if (item != null) {
 					TreeItem[] items = new TreeItem[1];
 					items[0] = item;
-					tree.setSelection(items);
+					fTree.setSelection(items);
 				}
 			}
 		}
@@ -172,41 +174,41 @@ public class TreeExtension implements PaintListener {
 	}
 
 	public String[] getColumnProperties() {
-		return columnProperties;
+		return fColumnProperties;
 	}
 
 	public void setColumnProperties(String[] columnProperties) {
-		this.columnProperties = columnProperties;
+		this.fColumnProperties = columnProperties;
 	}
 
 	public void paintControl(PaintEvent event) {
 		GC gc = event.gc;
-		Rectangle treeBounds = tree.getBounds();
+		Rectangle treeBounds = fTree.getBounds();
 
 		controlWidth = treeBounds.width;
-		Color bg = tree.getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND);
-		Color bg2 = tree.getDisplay().getSystemColor(SWT.COLOR_LIST_SELECTION);
+		Color bg = fTree.getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND);
+		Color bg2 = fTree.getDisplay().getSystemColor(SWT.COLOR_LIST_SELECTION);
 
 		gc.setBackground(bg2);
 
-		//		// This next part causes problems on LINUX, so let's not do it
+		// // This next part causes problems on LINUX, so let's not do it
 		// there
-		//		if (B2BHacks.IS_UNIX == false) {
-		//			TreeItem[] selectedItems = tree.getSelection();
-		//			if (selectedItems.length > 0) {
-		//				for (int i = 0; i < selectedItems.length; i++) {
-		//					TreeItem item = selectedItems[i];
-		//					Rectangle bounds = item.getBounds();
-		//					if (bounds != null) {
-		//						gc.fillRectangle(bounds.x + bounds.width, bounds.y, controlWidth,
+		// if (B2BHacks.IS_UNIX == false) {
+		// TreeItem[] selectedItems = tree.getSelection();
+		// if (selectedItems.length > 0) {
+		// for (int i = 0; i < selectedItems.length; i++) {
+		// TreeItem item = selectedItems[i];
+		// Rectangle bounds = item.getBounds();
+		// if (bounds != null) {
+		// gc.fillRectangle(bounds.x + bounds.width, bounds.y, controlWidth,
 		// bounds.height);
-		//					}
-		//				}
-		//			}
-		//		}
+		// }
+		// }
+		// }
+		// }
 		//
 		if (!fisUnsupportedInput) {
-			TreeItem[] items = tree.getItems();
+			TreeItem[] items = fTree.getItems();
 			if (items.length > 0) {
 				gc.setForeground(tableLineColor);
 				gc.setBackground(bg);
@@ -249,26 +251,27 @@ public class TreeExtension implements PaintListener {
 		// LINUX we don't trust getItemHeight()
 		// to compute the increment... instead we compute the value based on
 		// distance between two TreeItems.
-		//		if (B2BHacks.IS_UNIX) {
-		//			TreeItem[] items = tree.getItems();
-		//			Rectangle itemBounds = items[0].getBounds();
+		// if (B2BHacks.IS_UNIX) {
+		// TreeItem[] items = tree.getItems();
+		// Rectangle itemBounds = items[0].getBounds();
 		//
-		//			if (items[0].getExpanded()) {
-		//				TreeItem[] children = items[0].getItems();
-		//				if (children.length > 0) {
-		//					result = children[0].getBounds().y - itemBounds.y;
-		//				}
-		//			}
-		//			else if (items.length > 1) {
-		//				result = items[1].getBounds().y - itemBounds.y;
-		//			}
-		//		}
+		// if (items[0].getExpanded()) {
+		// TreeItem[] children = items[0].getItems();
+		// if (children.length > 0) {
+		// result = children[0].getBounds().y - itemBounds.y;
+		// }
+		// }
+		// else if (items.length > 1) {
+		// result = items[1].getBounds().y - itemBounds.y;
+		// }
+		// }
 
-		result = result != -1 ? result : tree.getItemHeight();
+		result = result != -1 ? result : fTree.getItemHeight();
 		return result;
 	}
 
 	protected void addEmptyTreeMessage(GC gc) {
+		// nothing to add here
 	}
 
 	private void addUnableToPopulateTreeMessage(GC gc) {
@@ -276,8 +279,8 @@ public class TreeExtension implements PaintListener {
 		// to give the
 		// user a visual cue
 		// so that they know how to proceed to edit the blank view
-		gc.setForeground(tree.getDisplay().getSystemColor(SWT.COLOR_BLACK));
-		gc.setBackground(tree.getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
+		gc.setForeground(fTree.getDisplay().getSystemColor(SWT.COLOR_BLACK));
+		gc.setBackground(fTree.getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
 		gc.drawString(XMLEditorMessages.TreeExtension_0, 10, 10);
 	}
 
@@ -308,6 +311,7 @@ public class TreeExtension implements PaintListener {
 	}
 
 	protected void paintItem(GC gc, TreeItem item, Rectangle bounds) {
+		// nothing to paint
 	}
 
 	public interface ICellEditorProvider {
@@ -320,8 +324,8 @@ public class TreeExtension implements PaintListener {
 	public class DelayedDrawTimer implements Runnable {
 		protected Control control;
 
-		public DelayedDrawTimer(Control control) {
-			this.control = control;
+		public DelayedDrawTimer(Control control1) {
+			this.control = control1;
 		}
 
 		public void reset(int milliseconds) {
@@ -333,7 +337,7 @@ public class TreeExtension implements PaintListener {
 		}
 	}
 
-	private Display getDisplay() {
+	Display getDisplay() {
 
 		return PlatformUI.getWorkbench().getDisplay();
 	}
@@ -342,12 +346,12 @@ public class TreeExtension implements PaintListener {
 	 * EditManager
 	 */
 	public class EditManager {
-		protected Tree tree;
+		protected Tree fTree1;
 		protected Control cellEditorHolder;
 		protected CellEditorState cellEditorState;
 
 		public EditManager(Tree tree) {
-			this.tree = tree;
+			this.fTree1 = tree;
 			this.cellEditorHolder = new Composite(tree, SWT.NONE);
 
 			final Tree theTree = tree;
@@ -408,25 +412,25 @@ public class TreeExtension implements PaintListener {
 
 		public void applyCellEditorValue() {
 			if (cellEditorState != null && cellModifier != null) {
-				TreeItem treeItem = cellEditorState.treeItem;
+				TreeItem treeItem = cellEditorState.fTreeItem;
 
 				// The area below the cell editor needs to be explicity
 				// repainted on Linux
 				//
-				//				Rectangle r = B2BHacks.IS_UNIX ? treeItem.getBounds() :
+				// Rectangle r = B2BHacks.IS_UNIX ? treeItem.getBounds() :
 				// null;
 
-				Object value = cellEditorState.cellEditor.getValue();
-				String property = cellEditorState.property;
+				Object value = cellEditorState.fCellEditor.getValue();
+				String property = cellEditorState.fProperty;
 
 				deactivateCellEditor();
 
 				cellModifier.modify(treeItem, property, value);
 
-				//				if (r != null) {
-				//					tree.redraw(r.x, r.y, tree.getBounds().width, r.height,
+				// if (r != null) {
+				// tree.redraw(r.x, r.y, tree.getBounds().width, r.height,
 				// false);
-				//				}
+				// }
 			}
 		}
 
@@ -442,8 +446,8 @@ public class TreeExtension implements PaintListener {
 			if (cellModifier instanceof ICellEditorProvider) {
 				ICellEditorProvider cellEditorProvider = (ICellEditorProvider) cellModifier;
 				Object data = treeItem.getData();
-				if (columnProperties.length > column) {
-					String property = columnProperties[column];
+				if (fColumnProperties.length > column) {
+					String property = fColumnProperties[column];
 					if (cellModifier.canModify(data, property)) {
 						CellEditor newCellEditor = cellEditorProvider.getCellEditor(data, column);
 						if (newCellEditor != null) {
@@ -465,46 +469,46 @@ public class TreeExtension implements PaintListener {
 		 * invocation basis
 		 */
 		public class CellEditorState implements ICellEditorListener, FocusListener {
-			public CellEditor cellEditor;
-			public Control control;
-			public TreeItem treeItem;
-			public int columnNumber;
-			public String property;
+			public CellEditor fCellEditor;
+			public Control fControl;
+			public TreeItem fTreeItem;
+			public int fColumnNumber;
+			public String fProperty;
 
 			public CellEditorState(CellEditor cellEditor, Control control, TreeItem treeItem, int columnNumber, String property) {
-				this.cellEditor = cellEditor;
-				this.control = control;
-				this.treeItem = treeItem;
-				this.columnNumber = columnNumber;
-				this.property = property;
+				this.fCellEditor = cellEditor;
+				this.fControl = control;
+				this.fTreeItem = treeItem;
+				this.fColumnNumber = columnNumber;
+				this.fProperty = property;
 			}
 
 			public void activate() {
-				Object element = treeItem.getData();
-				String value = cellModifier.getValue(element, property).toString();
-				if (control instanceof Text) {
-					Text text = (Text) control;
+				Object element = fTreeItem.getData();
+				String value = cellModifier.getValue(element, fProperty).toString();
+				if (fControl instanceof Text) {
+					Text text = (Text) fControl;
 					int requiredSize = value.length() + 100;
 					if (text.getTextLimit() < requiredSize) {
 						text.setTextLimit(requiredSize);
 					}
 				}
-				Rectangle r = treeItem.getBounds();
+				Rectangle r = fTreeItem.getBounds();
 				if (r != null) {
-					control.setBounds(columnPosition + 5, r.y + 1, tree.getClientArea().width - (columnPosition + 5), r.height - 1);
-					control.setVisible(true);
-					cellEditor.setValue(value);
-					cellEditor.addListener(this);
-					cellEditor.setFocus();
-					control.addFocusListener(this);
+					fControl.setBounds(columnPosition + 5, r.y + 1, fTree1.getClientArea().width - (columnPosition + 5), r.height - 1);
+					fControl.setVisible(true);
+					fCellEditor.setValue(value);
+					fCellEditor.addListener(this);
+					fCellEditor.setFocus();
+					fControl.addFocusListener(this);
 				}
 			}
 
 			public void deactivate() {
-				cellEditor.removeListener(this);
-				control.removeFocusListener(this);
-				cellEditor.deactivate();
-				tree.forceFocus();
+				fCellEditor.removeListener(this);
+				fControl.removeFocusListener(this);
+				fCellEditor.deactivate();
+				fTree1.forceFocus();
 			}
 
 			// ICellEditorListener methods
@@ -518,11 +522,13 @@ public class TreeExtension implements PaintListener {
 			}
 
 			public void editorValueChanged(boolean oldValidState, boolean newValidState) {
+				// nothing, for now
 			}
 
 			// FocusListener methods
 			//
 			public void focusGained(FocusEvent e) {
+				// do nothing
 			}
 
 			public void focusLost(FocusEvent e) {

@@ -17,9 +17,9 @@ import java.util.Vector;
 
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatContraints;
-import org.eclipse.wst.sse.core.internal.provisional.exceptions.SourceEditingRuntimeException;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.util.StringUtils;
+import org.eclipse.wst.xml.core.internal.Logger;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.w3c.dom.Node;
 
@@ -34,8 +34,9 @@ public class TextNodeFormatter extends NodeFormatter {
 				lineDelimiter = doc.getLineDelimiter(line);
 				if (lineDelimiter == null)
 					lineDelimiter = ""; //$NON-NLS-1$
-			} catch (BadLocationException exception) {
-				throw new SourceEditingRuntimeException(exception);
+			} catch (BadLocationException e) {
+				// log for now, unless we find reason not to
+				Logger.log(Logger.INFO, e.getMessage());
 			}
 			int lineWidth = getFormatPreferences().getLineWidth();
 			IDOMNode parentNode = (IDOMNode) node.getParentNode();
@@ -49,8 +50,9 @@ public class TextNodeFormatter extends NodeFormatter {
 				String text = node.getStructuredDocument().get(lineOffset, nodeNameOffset - lineOffset);
 				int usedWidth = getIndentationLength(text);
 				currentAvailableLineWidth = getFormatPreferences().getLineWidth() - usedWidth;
-			} catch (BadLocationException exception) {
-				throw new SourceEditingRuntimeException(exception);
+			} catch (BadLocationException e) {
+				// log for now, unless we find reason not to
+				Logger.log(Logger.INFO, e.getMessage());
 			}
 
 			String compressedText = getCompressedNodeText(node, formatContraints);

@@ -25,7 +25,6 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.text.edits.InsertEdit;
 import org.eclipse.text.edits.MultiTextEdit;
-import org.eclipse.wst.sse.core.internal.provisional.exceptions.SourceEditingRuntimeException;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
@@ -33,6 +32,7 @@ import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
+import org.eclipse.wst.xml.ui.internal.Logger;
 import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 import org.eclipse.wst.xml.ui.internal.editor.XMLEditorPluginImageHelper;
 import org.eclipse.wst.xml.ui.internal.editor.XMLEditorPluginImages;
@@ -53,6 +53,7 @@ public class InsertRequiredAttrsQuickAssistProposal implements ICompletionPropos
 	 * @see org.eclipse.jface.text.contentassist.ICompletionProposal#apply(org.eclipse.jface.text.IDocument)
 	 */
 	public void apply(IDocument document) {
+		// not implemented?
 	}
 
 	/*
@@ -69,7 +70,8 @@ public class InsertRequiredAttrsQuickAssistProposal implements ICompletionPropos
 		if (lastRegion.getType() == DOMRegionContext.XML_TAG_CLOSE) {
 			index--;
 			lastRegion = startStructuredDocumentRegion.getRegionAtCharacterOffset(index - 1);
-		} else if (lastRegion.getType() == DOMRegionContext.XML_EMPTY_TAG_CLOSE) {
+		}
+		else if (lastRegion.getType() == DOMRegionContext.XML_EMPTY_TAG_CLOSE) {
 			index = index - 2;
 			lastRegion = startStructuredDocumentRegion.getRegionAtCharacterOffset(index - 1);
 		}
@@ -88,14 +90,17 @@ public class InsertRequiredAttrsQuickAssistProposal implements ICompletionPropos
 				multiTextEdit.addChild(new InsertEdit(index, nameAndDefaultValue));
 				// BUG3381: MultiTextEdit applies all child TextEdit's basing
 				// on offsets
-				//          in the document before the first TextEdit, not after each
-				//          child TextEdit. Therefore, do not need to advance the
+				// in the document before the first TextEdit, not after each
+				// child TextEdit. Therefore, do not need to advance the
 				// index.
-				//index += nameAndDefaultValue.length();
+				// index += nameAndDefaultValue.length();
 			}
 			multiTextEdit.apply(viewer.getDocument());
-		} catch (BadLocationException e) {
-			throw new SourceEditingRuntimeException(e);
+		}
+		catch (BadLocationException e) {
+			// log, for now, unless we find there's reasons why we get some
+			// here.
+			Logger.log(Logger.INFO, e.getMessage());
 		}
 	}
 

@@ -464,7 +464,8 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 				// safeguard from listeners that throw exceptions
 				try {
 					if (p instanceof IDocumentPartitionerExtension) {
-						IRegion changedPartion = ((IDocumentPartitionerExtension)p).documentChanged2(documentEvent);
+						//IRegion changedPartion = 
+							((IDocumentPartitionerExtension) p).documentChanged2(documentEvent);
 					}
 					else {
 						p.documentChanged(documentEvent);
@@ -1514,16 +1515,11 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	}
 
 	/**
-	 * This is public, for use by tag lib classes.
+	 * This is public, temporarily, for use by tag lib classes.
 	 */
 	public RegionParser getParser() {
 		if (fParser == null) {
-			throw new SourceEditingRuntimeException("IStructuredDocument::getParser. Parser needs to be set before use"); //$NON-NLS-1$
-			// fParser = getParserFactory().createParser(fType);
-			// System.out.println("Information:
-			// IStructuredDocument::getParser.
-			// XML Parser assumed.");
-			// fParser = new XMLSourceParser();
+			throw new IllegalStateException("IStructuredDocument::getParser. Parser needs to be set before use"); //$NON-NLS-1$
 		}
 		return fParser;
 	}
@@ -1702,48 +1698,56 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 
 		return result;
 	}
-	
-	
+
+
 	public IStructuredDocumentRegion[] getStructuredDocumentRegions() {
 		return getStructuredDocumentRegions(0, getLength());
 	}
-	
+
 	/**
 	 * <p>
 	 * In the case of 0 length, the <code>IStructuredDocumentRegion</code>
-	 * at the character offset is returened.
-	 * In other words, the region to the right of the caret is returned.
-	 * except for at the end of the document, then the last region is returned.
+	 * at the character offset is returened. In other words, the region to the
+	 * right of the caret is returned. except for at the end of the document,
+	 * then the last region is returned.
 	 * </p>
 	 * </p>
 	 * Otherwise all the regions "inbetween" the indicated range are returned,
 	 * including the regions which overlap the region.
 	 * </p>
-	 * <br>eg.
+	 * <br>
+	 * eg.
 	 * <p>
-	 *    <pre>&lt;html&gt;[&lt;head&gt;&lt;/head&gt;]&lt;/html&gt; returns &lt;head&gt;,&lt;/head&gt;</pre>
-	 *    <pre>&lt;ht[ml&gt;&lt;head&gt;&lt;/he]ad&gt;&lt;/html&gt; returns &lt;html&gt;,&lt;head&gt;,&lt;/head&gt;</pre>
+	 * 
+	 * <pre>
+	 * &lt;html&gt;[&lt;head&gt;&lt;/head&gt;]&lt;/html&gt; returns &lt;head&gt;,&lt;/head&gt;
+	 * </pre>
+	 *    <pre>
+	 * &lt;ht[ml&gt;&lt;head&gt;&lt;/he]ad&gt;&lt;/html&gt; returns &lt;html&gt;,&lt;head&gt;,&lt;/head&gt;
+	 * </pre>
+	 * 
 	 * </p>
 	 */
 	public IStructuredDocumentRegion[] getStructuredDocumentRegions(int start, int length) {
-		
-		if(length < 0) 
+
+		if (length < 0)
 			throw new IllegalArgumentException("can't have negative length");
-		
+
 		// this will make the right edge of the range point into the selection
-		// eg.  <html>[<head></head>]</html>
+		// eg. <html>[<head></head>]</html>
 		// will return <head>,</head> instead of <head>,</head>,</html>
-		if(length > 0) length--;
-			
+		if (length > 0)
+			length--;
+
 		List results = new ArrayList();
-		
+
 		// start thread safe block
 		try {
 			acquireLock();
-		
+
 			IStructuredDocumentRegion currentRegion = getRegionAtCharacterOffset(start);
 			IStructuredDocumentRegion endRegion = getRegionAtCharacterOffset(start + length);
-			while(currentRegion != endRegion && currentRegion != null) {
+			while (currentRegion != endRegion && currentRegion != null) {
 				results.add(currentRegion);
 				currentRegion = currentRegion.getNext();
 			}
@@ -1754,8 +1758,8 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 			releaseLock();
 		}
 		// end thread safe block
-		
-		return (IStructuredDocumentRegion[])results.toArray(new IStructuredDocumentRegion[results.size()]);
+
+		return (IStructuredDocumentRegion[]) results.toArray(new IStructuredDocumentRegion[results.size()]);
 	}
 
 	/**
@@ -1846,7 +1850,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 
 	String internalGet(int offset, int length) {
 		String result = null;
-		int myLength = getLength();
+		//int myLength = getLength();
 		// if ((0 > offset) || (0 > length) || (offset + length > myLength))
 		// throw new BadLocationException();
 		result = getStore().get(offset, length);
@@ -2283,7 +2287,6 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	 * @see set(String)
 	 */
 	public void reparse(Object requester) {
-		NewDocumentEvent result = null;
 		stopPostNotificationProcessing();
 		clearReadOnly();
 

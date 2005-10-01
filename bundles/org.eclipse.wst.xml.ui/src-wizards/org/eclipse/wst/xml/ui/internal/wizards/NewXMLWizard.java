@@ -157,7 +157,7 @@ public class NewXMLWizard extends NewModelWizard
     }
                                    
     // new file page                              
-    newFilePage = new NewFilePage(selection);
+    newFilePage = new NewFilePage(fSelection);
     newFilePage.setTitle(XMLWizardsMessages._UI_WIZARD_CREATE_XML_FILE_HEADING);
     newFilePage.setDescription(XMLWizardsMessages._UI_WIZARD_CREATE_XML_FILE_EXPL); 
     newFilePage.defaultName = (grammarURI != null) ? URIHelper.removeFileExtension(URIHelper.getLastSegment(grammarURI)) : "NewFile"; //$NON-NLS-1$

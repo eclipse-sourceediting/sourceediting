@@ -30,7 +30,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.part.PageBook;
-import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver;
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolverPlugin;
 import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.NamespaceInfo;
@@ -77,7 +76,7 @@ public class CommonAddNamespacesControl extends Composite implements SelectionLi
 			//prefixField.addModifyListener(modifyListener);
 			//prefixField.setEnabled(info.getProperty("prefix-readOnly") ==
 			// null);
-			Label placeHolder1 = new Label(composite, SWT.NONE);
+			new Label(composite, SWT.NONE);
 
 			// row 2
 			//
@@ -90,7 +89,7 @@ public class CommonAddNamespacesControl extends Composite implements SelectionLi
 			//uriField.addModifyListener(modifyListener);
 			//uriField.setEnabled(info.getProperty("uri-readOnly") == null);
 
-			Label placeHolder2 = new Label(composite, SWT.NONE);
+			new Label(composite, SWT.NONE);
 
 			// row 3
 			//
@@ -125,23 +124,24 @@ public class CommonAddNamespacesControl extends Composite implements SelectionLi
 			dialog.open();
 
 			if (dialog.getReturnCode() == Window.OK) {
-				String grammarURI = null;
+				//String grammarURI = null;
 				IFile file = dialog.getFile();
 				String id = dialog.getId();
 				if (file != null) {
 					String uri = null;
 					if (resourceLocation != null) {
 						uri = URIHelper.getRelativeURI(file.getLocation(), resourceLocation);
-						grammarURI = file.getLocation().toOSString();
+						//grammarURI = file.getLocation().toOSString();
 					} else {
 						uri = file.getLocation().toOSString();
-						grammarURI = uri;
+						//grammarURI = uri;
 					}
 					locationHintField.setText(uri);
 				} else if (id != null) {
 					locationHintField.setText(id);
-					URIResolver resolver = URIResolverPlugin.createResolver();
-					grammarURI = resolver.resolve(null, id, id);
+					//URIResolver resolver = 
+						URIResolverPlugin.createResolver();
+					//grammarURI = resolver.resolve(null, id, id);
 				}
 
 				try {

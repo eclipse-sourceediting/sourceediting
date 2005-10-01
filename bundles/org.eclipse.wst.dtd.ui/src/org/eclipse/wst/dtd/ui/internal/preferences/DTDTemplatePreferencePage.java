@@ -25,9 +25,9 @@ public class DTDTemplatePreferencePage extends TemplatePreferencePage {
 	public DTDTemplatePreferencePage() {
 		DTDUIPlugin dtdUIPlugin = DTDUIPlugin.getDefault();
 		
-		setPreferenceStore(DTDUIPlugin.getDefault().getPreferenceStore());
-		setTemplateStore(DTDUIPlugin.getDefault().getTemplateStore());
-		setContextTypeRegistry(DTDUIPlugin.getDefault().getTemplateContextRegistry());
+		setPreferenceStore(dtdUIPlugin.getPreferenceStore());
+		setTemplateStore(dtdUIPlugin.getTemplateStore());
+		setContextTypeRegistry(dtdUIPlugin.getTemplateContextRegistry());
 	}
 	
 	/* (non-Javadoc)

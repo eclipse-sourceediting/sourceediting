@@ -282,7 +282,7 @@ public class CommonEditNamespacesDialog {
 	public void performEdit() {
 		Object selection = getSelection(tableViewer.getSelection());
 		if (selection != null) {
-			EditNamespaceInfoDialog dialog = invokeDialog(XMLUIMessages._UI_LABEL_NEW_NAMESPACE_INFORMATION, (NamespaceInfo) selection); //$NON-NLS-1$
+			invokeDialog(XMLUIMessages._UI_LABEL_NEW_NAMESPACE_INFORMATION, (NamespaceInfo) selection); //$NON-NLS-1$
 			updateErrorMessage(namespaceInfoList);
 			performDelayedUpdate();
 		}

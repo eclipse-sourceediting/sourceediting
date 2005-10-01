@@ -13,7 +13,6 @@
 package org.eclipse.wst.xml.core.internal.parser.regions;
 
 import org.eclipse.wst.sse.core.internal.provisional.events.StructuredDocumentEvent;
-import org.eclipse.wst.sse.core.internal.provisional.exceptions.SourceEditingRuntimeException;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
@@ -36,7 +35,7 @@ public class TagCloseRegion implements ITextRegion {
 	}
 
 	public void adjustLength(int i) {
-		throw new SourceEditingRuntimeException("invalid for this region type"); //$NON-NLS-1$
+		throw new RuntimeException("invalid for this region type"); //$NON-NLS-1$
 
 	}
 

@@ -24,7 +24,7 @@ public class XMLSchemaValidationChecker {
 	/**
 	 * Should this be implemented as a Validator and simply called as such with
 	 * a reporter that only checks the results for severity = error?  Or should
-//	 * the Xerces requirement be broken using a plug-in extension?
+	 * the Xerces requirement be broken using a plug-in extension?
 	 */
 
 	public boolean isValid(String xsdFileName) {
@@ -32,7 +32,8 @@ public class XMLSchemaValidationChecker {
 //		DOMErrorHandler errorHandler = new DOMErrorHandler();
 //		builder.setErrorHandler(errorHandler);
 		try {
-			String uri = URIHelper.getURIForFilePath(xsdFileName);
+			//String uri = 
+				URIHelper.getURIForFilePath(xsdFileName);
 //			ASModel model = builder.parseASURI(uri);
 //			if (errorHandler.hasError())
 //				return false;

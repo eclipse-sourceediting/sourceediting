@@ -18,7 +18,6 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.wst.sse.core.internal.Logger;
 import org.eclipse.wst.sse.core.internal.provisional.events.RegionChangedEvent;
 import org.eclipse.wst.sse.core.internal.provisional.events.StructuredDocumentEvent;
-import org.eclipse.wst.sse.core.internal.provisional.exceptions.SourceEditingRuntimeException;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
@@ -34,7 +33,7 @@ public class BasicStructuredDocumentRegion implements IStructuredDocumentRegion 
 
 	private ITextRegionList _regions;
 	private boolean fIsDeleted = false;
-	//private String fType;
+	// private String fType;
 	/**
 	 * allow a pointer back to this nodes model
 	 */
@@ -44,7 +43,7 @@ public class BasicStructuredDocumentRegion implements IStructuredDocumentRegion 
 	 */
 	// 0 == false, 1 == true
 	private byte hasEnd = 0;
-	protected int length;
+	protected int fLength;
 	private IStructuredDocumentRegion next = null;
 	private IStructuredDocumentRegion previous = null;
 	protected int start;
@@ -74,7 +73,7 @@ public class BasicStructuredDocumentRegion implements IStructuredDocumentRegion 
 	}
 
 	public void adjustLength(int i) {
-		length += i;
+		fLength += i;
 	}
 
 	public void adjustStart(int i) {
@@ -97,7 +96,7 @@ public class BasicStructuredDocumentRegion implements IStructuredDocumentRegion 
 
 	public void equatePositions(ITextRegion region) {
 		start = region.getStart();
-		length = region.getLength();
+		fLength = region.getLength();
 	}
 
 	/**
@@ -105,7 +104,7 @@ public class BasicStructuredDocumentRegion implements IStructuredDocumentRegion 
 	 * IStructuredDocumentRegions
 	 */
 	public int getEnd() {
-		return start + length;
+		return start + fLength;
 	}
 
 	/**
@@ -127,22 +126,27 @@ public class BasicStructuredDocumentRegion implements IStructuredDocumentRegion 
 	}
 
 	public String getFullText() {
+		String result = "";
 		try {
-			return getParentDocument().get(start, length);
-		} catch (BadLocationException e) {
-			// program error
-			throw new SourceEditingRuntimeException(e);
+			result = getParentDocument().get(start, fLength);
 		}
+		catch (BadLocationException e) {
+			// log for now, unless we find reason not to
+			Logger.log(Logger.INFO, e.getMessage());
+		}
+		return result;
 	}
 
 	public String getFullText(ITextRegion aRegion) {
-		String result = null;
+		String result = "";
 		try {
 			int regionStart = aRegion.getStart();
 			int regionLength = aRegion.getLength();
 			result = fParentDocument.get(start + regionStart, regionLength);
-		} catch (BadLocationException e) {
-			throw new SourceEditingRuntimeException(e);
+		}
+		catch (BadLocationException e) {
+			// log for now, unless we find reason not to
+			Logger.log(Logger.INFO, e.getMessage());
 		}
 		return result;
 	}
@@ -150,7 +154,7 @@ public class BasicStructuredDocumentRegion implements IStructuredDocumentRegion 
 	public String getFullText(String context) {
 		// DMW: looping is faster than enumeration,
 		// so switched around 2/12/03
-		//Enumeration e = getRegions().elements();
+		// Enumeration e = getRegions().elements();
 		ITextRegion region = null;
 		String result = ""; //$NON-NLS-1$
 		int length = getRegions().size();
@@ -169,7 +173,7 @@ public class BasicStructuredDocumentRegion implements IStructuredDocumentRegion 
 	}
 
 	public int getLength() {
-		return length;
+		return fLength;
 	}
 
 	public IStructuredDocumentRegion getNext() {
@@ -198,7 +202,7 @@ public class BasicStructuredDocumentRegion implements IStructuredDocumentRegion 
 			// transform the requested offset to the "scale" that
 			// regions are stored in, which are all relative to the
 			// start point.
-			//int transformedOffset = offset - getStartOffset();
+			// int transformedOffset = offset - getStartOffset();
 			//
 			int length = getRegions().size();
 			for (int i = 0; i < length; i++) {
@@ -206,7 +210,7 @@ public class BasicStructuredDocumentRegion implements IStructuredDocumentRegion 
 				if (Debug.debugStructuredDocument) {
 					System.out.println("region(s) in IStructuredDocumentRegion::getRegionAtCharacterOffset: " + region); //$NON-NLS-1$
 					System.out.println("       requested offset: " + offset); //$NON-NLS-1$
-					//System.out.println(" transformedOffset: " +
+					// System.out.println(" transformedOffset: " +
 					// transformedOffset); //$NON-NLS-1$
 					System.out.println("       region start: " + region.getStart()); //$NON-NLS-1$
 					System.out.println("       region end: " + region.getEnd()); //$NON-NLS-1$
@@ -257,11 +261,14 @@ public class BasicStructuredDocumentRegion implements IStructuredDocumentRegion 
 			if (fParentDocument == null) {
 				// likely to happen during inspecting
 				result = TEXT_STORE_NOT_ASSIGNED;
-			} else {
-				result = fParentDocument.get(start, length);
 			}
-		} catch (BadLocationException e) {
-			throw new SourceEditingRuntimeException(e);
+			else {
+				result = fParentDocument.get(start, fLength);
+			}
+		}
+		catch (BadLocationException e) {
+			// log for now, unless we find reason not to
+			Logger.log(Logger.INFO, e.getMessage());
 		}
 		return result;
 	}
@@ -273,7 +280,8 @@ public class BasicStructuredDocumentRegion implements IStructuredDocumentRegion 
 		// by calling code.
 		try {
 			return fParentDocument.get(this.getStartOffset(aRegion), aRegion.getTextLength());
-		} catch (BadLocationException e) {
+		}
+		catch (BadLocationException e) {
 			Logger.logException(e);
 		}
 		return ""; //$NON-NLS-1$
@@ -285,7 +293,7 @@ public class BasicStructuredDocumentRegion implements IStructuredDocumentRegion 
 	public String getText(String context) {
 		// DMW: looping is faster than enumeration,
 		// so switched around 2/12/03
-		//Enumeration e = getRegions().elements();
+		// Enumeration e = getRegions().elements();
 		ITextRegion region = null;
 		String result = ""; //$NON-NLS-1$
 		int length = getRegions().size();
@@ -300,7 +308,7 @@ public class BasicStructuredDocumentRegion implements IStructuredDocumentRegion 
 	}
 
 	public int getTextEnd() {
-		return start + length;
+		return start + fLength;
 	}
 
 	/**
@@ -316,7 +324,7 @@ public class BasicStructuredDocumentRegion implements IStructuredDocumentRegion 
 	}
 
 	public int getTextLength() {
-		return length;
+		return fLength;
 	}
 
 	/**
@@ -333,7 +341,7 @@ public class BasicStructuredDocumentRegion implements IStructuredDocumentRegion 
 		// type
 		// of the first region.
 		// Note: this can be refined as needed.
-		String result = UNDEFINED; //"IStructuredDocumentRegion.UNDEFINED";
+		String result = UNDEFINED; // "IStructuredDocumentRegion.UNDEFINED";
 		// //$NON-NLS-1$
 		// we are assume there is always at least one region in a flatnode!
 		result = getRegions().get(0).getType();
@@ -366,7 +374,8 @@ public class BasicStructuredDocumentRegion implements IStructuredDocumentRegion 
 			// if the regions are the same instance, they are equal
 			if (this == region) {
 				result = true;
-			} else {
+			}
+			else {
 				// this is the non-trivial part
 				// note: we change for type first, then start offset and end
 				// offset,
@@ -390,7 +399,8 @@ public class BasicStructuredDocumentRegion implements IStructuredDocumentRegion 
 			// if the regions are the same instance, they are equal
 			if (oldRegion == newRegion) {
 				result = true;
-			} else {
+			}
+			else {
 				// this is the non-trivial part
 				// note: we change for type first, then start offset and end
 				// offset,
@@ -434,14 +444,10 @@ public class BasicStructuredDocumentRegion implements IStructuredDocumentRegion 
 			if (getText().equals(region.getText())) {
 				result = true;
 			}
-		} catch (SourceEditingRuntimeException e) {
-			if (e.getOriginalException() instanceof BadLocationException || e.getOriginalException() instanceof StringIndexOutOfBoundsException) {
-				// this happens normally if document has been deleted from
-				// and therefore regions are not equal
-				result = false;
-			} else {
-				throw e;
-			}
+		}
+		// ISSUE: we should not need this
+		catch (StringIndexOutOfBoundsException e) {
+			result = false;
 		}
 
 		return result;
@@ -449,18 +455,9 @@ public class BasicStructuredDocumentRegion implements IStructuredDocumentRegion 
 
 	private boolean sameTextAs(ITextRegion oldRegion, IStructuredDocumentRegion documentRegion, ITextRegion newRegion, int shift) {
 		boolean result = false;
-		try {
-			if (getText(oldRegion).equals(documentRegion.getText(newRegion))) {
-				result = true;
-			}
-		} catch (SourceEditingRuntimeException e) {
-			if (e.getOriginalException() instanceof BadLocationException) {
-				// this happens normally if document has been deleted from
-				// and therefore regions are not equal
-				result = false;
-			} else {
-				throw e;
-			}
+
+		if (getText(oldRegion).equals(documentRegion.getText(newRegion))) {
+			result = true;
 		}
 
 		return result;
@@ -484,14 +481,15 @@ public class BasicStructuredDocumentRegion implements IStructuredDocumentRegion 
 	public void setEnded(boolean newHasEnd) {
 		if (newHasEnd) {
 			hasEnd = 1;
-		} else {
+		}
+		else {
 			hasEnd = 0;
 		}
 	}
 
 	public void setLength(int newLength) {
-		//textLength = newLength;
-		length = newLength;
+		// textLength = newLength;
+		fLength = newLength;
 	}
 
 	public void setNext(IStructuredDocumentRegion newNext) {
@@ -575,7 +573,8 @@ public class BasicStructuredDocumentRegion implements IStructuredDocumentRegion 
 			if (getEndOffset(region) == requestStart) {
 				result = region.updateRegion(requester, this, changes, requestStart, lengthToReplace);
 			}
-		} else {
+		}
+		else {
 			if (region != null) {
 				//
 				// If the requested change spans more than one region, then

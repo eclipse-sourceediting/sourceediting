@@ -76,7 +76,6 @@ public class JobSafeStructuredDocument extends BasicStructuredDocument implement
 	 *      int, int, java.lang.String, boolean)
 	 */
 	public StructuredDocumentEvent replaceText(final Object requester, final int start, final int replacementLength, final String changes, final boolean ignoreReadOnlySettings) {
-		Object threadResult = null;
 		StructuredDocumentEvent event = null;
 		if (getExecutionDelegate() == null) {
 			// if the delegate has not been set, we execute on current
@@ -130,7 +129,6 @@ public class JobSafeStructuredDocument extends BasicStructuredDocument implement
 
 	public NewDocumentEvent setText(final Object requester, final String theString) {
 		NewDocumentEvent event = null;
-		Object threadResult = null;
 		if (getExecutionDelegate() == null) {
 			// if the delegate has not been set, we execute on current
 			// thread, like "normal". This is the case for normal

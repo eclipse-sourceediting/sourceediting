@@ -12,13 +12,12 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.core.internal.document;
 
-import org.eclipse.wst.sse.core.internal.provisional.exceptions.SourceEditingRuntimeException;
 
 
 
 /**
  */
-public class StructuredDocumentRegionManagementException extends SourceEditingRuntimeException {
+public class StructuredDocumentRegionManagementException extends RuntimeException {
 
 	/**
 	 * Default <code>serialVersionUID</code>

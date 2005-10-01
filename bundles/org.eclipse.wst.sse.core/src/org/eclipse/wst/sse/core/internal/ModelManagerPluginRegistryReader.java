@@ -76,7 +76,8 @@ public class ModelManagerPluginRegistryReader {
 				Bundle bundle = null;
 				try {
 					bundle = Platform.getBundle(name);
-				} catch (Exception e) {
+				}
+				catch (Exception e) {
 					// if an error occurs here, its probably that the plugin
 					// could not be found/loaded
 					Logger.logException("Could not find bundle: " + name, e); //$NON-NLS-1$
@@ -93,29 +94,37 @@ public class ModelManagerPluginRegistryReader {
 					if (adapterKeyClass != null) {
 						try {
 							Class aClass = null;
-//							aClass = classLoader != null ? classLoader.loadClass(adapterKeyClass) : Class.forName(adapterKeyClass);
+							// aClass = classLoader != null ?
+							// classLoader.loadClass(adapterKeyClass) :
+							// Class.forName(adapterKeyClass);
 							if (bundle.getState() != Bundle.UNINSTALLED) {
 								aClass = bundle.loadClass(adapterKeyClass);
-							} else {
+							}
+							else {
 								aClass = Class.forName(adapterKeyClass);
 							}
 							if (aClass != null) {
 								useExtendedConstructor = true;
 								adapterKey = aClass;
-							} else {
+							}
+							else {
 								adapterKey = adapterKeyClass;
 							}
-						} catch (Exception anyErrors) {
+						}
+						catch (Exception anyErrors) {
 							adapterKey = adapterKeyClass;
 						}
 					}
 
 					try {
 						Class theClass = null;
-//						Class theClass = classLoader != null ? classLoader.loadClass(className) : Class.forName(className);
+						// Class theClass = classLoader != null ?
+						// classLoader.loadClass(className) :
+						// Class.forName(className);
 						if (bundle.getState() != Bundle.UNINSTALLED) {
 							theClass = bundle.loadClass(className);
-						} else {
+						}
+						else {
 							theClass = Class.forName(className);
 						}
 						if (useExtendedConstructor) {
@@ -125,16 +134,31 @@ public class ModelManagerPluginRegistryReader {
 								if (ctors[i].isAccessible() && paramTypes.length == 2 && paramTypes[0].equals(Object.class) && paramTypes[1].equals(boolean.class)) {
 									try {
 										factory = (INodeAdapterFactory) ctors[i].newInstance(new Object[]{adapterKey, new Boolean(doRegisterAdapters)});
-									} catch (IllegalAccessException e) {
-										throw new org.eclipse.wst.sse.core.internal.provisional.exceptions.SourceEditingRuntimeException(e);
-									} catch (IllegalArgumentException e) {
-										throw new org.eclipse.wst.sse.core.internal.provisional.exceptions.SourceEditingRuntimeException(e);
-									} catch (InstantiationException e) {
-										throw new org.eclipse.wst.sse.core.internal.provisional.exceptions.SourceEditingRuntimeException(e);
-									} catch (InvocationTargetException e) {
-										throw new org.eclipse.wst.sse.core.internal.provisional.exceptions.SourceEditingRuntimeException(e);
-									} catch (ExceptionInInitializerError e) {
-										throw new org.eclipse.wst.sse.core.internal.provisional.exceptions.SourceEditingRuntimeException(e);
+									}
+									catch (IllegalAccessException e) {
+										// log for now, unless we find reason
+										// not to
+										Logger.log(Logger.INFO, e.getMessage());
+									}
+									catch (IllegalArgumentException e) {
+										// log for now, unless we find reason
+										// not to
+										Logger.log(Logger.INFO, e.getMessage());
+									}
+									catch (InstantiationException e) {
+										// log for now, unless we find reason
+										// not to
+										Logger.log(Logger.INFO, e.getMessage());
+									}
+									catch (InvocationTargetException e) {
+										// log for now, unless we find reason
+										// not to
+										Logger.log(Logger.INFO, e.getMessage());
+									}
+									catch (ExceptionInInitializerError e) {
+										// log or now, unless we find reason
+										// not to
+										Logger.log(Logger.INFO, e.getMessage());
 									}
 								}
 							}
@@ -142,10 +166,14 @@ public class ModelManagerPluginRegistryReader {
 						if (factory == null) {
 							factory = (INodeAdapterFactory) element.createExecutableExtension(ATTR_CLASS);
 						}
-					} catch (ClassNotFoundException e) {
-						throw new org.eclipse.wst.sse.core.internal.provisional.exceptions.SourceEditingRuntimeException(e);
-					} catch (CoreException e) {
-						throw new org.eclipse.wst.sse.core.internal.provisional.exceptions.SourceEditingRuntimeException(e);
+					}
+					catch (ClassNotFoundException e) {
+						// log or now, unless we find reason not to
+						Logger.log(Logger.INFO, e.getMessage());
+					}
+					catch (CoreException e) {
+						// log or now, unless we find reason not to
+						Logger.log(Logger.INFO, e.getMessage());
 					}
 				}
 			}

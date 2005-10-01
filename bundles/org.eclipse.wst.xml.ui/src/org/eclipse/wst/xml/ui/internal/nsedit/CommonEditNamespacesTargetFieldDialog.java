@@ -22,7 +22,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.NamespaceInfo;
 import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
-import org.eclipse.wst.xml.ui.internal.dialogs.EditNamespaceInfoDialog;
 
 /*
  * This class is an extension of CommonEditNamespacesDialog. This class adds
@@ -41,8 +40,8 @@ public class CommonEditNamespacesTargetFieldDialog extends CommonEditNamespacesD
 	protected String targetNamespace;
 	protected Text targetNamespaceField;
 
-	public CommonEditNamespacesTargetFieldDialog(Composite parent, IPath resourceLocation) {
-		super(parent, resourceLocation, XMLUIMessages._UI_NAMESPACE_DECLARATIONS); //$NON-NLS-1$
+	public CommonEditNamespacesTargetFieldDialog(Composite parent, IPath resourceLocation1) {
+		super(parent, resourceLocation1, XMLUIMessages._UI_NAMESPACE_DECLARATIONS); //$NON-NLS-1$
 
 		Composite targetComp = getTopComposite();
 		targetComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -56,7 +55,7 @@ public class CommonEditNamespacesTargetFieldDialog extends CommonEditNamespacesD
 		targetNamespaceField.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		targetNamespaceField.addModifyListener(new TargetNamespaceModifyListener());
 
-		//		createControlArea();
+		// createControlArea();
 	}
 
 	public String getTargetNamespace() {
@@ -72,7 +71,7 @@ public class CommonEditNamespacesTargetFieldDialog extends CommonEditNamespacesD
 				editTargetNamespace = true;
 			}
 
-			EditNamespaceInfoDialog dialog = invokeDialog(XMLUIMessages._UI_LABEL_NEW_NAMESPACE_INFORMATION, nsInfo); //$NON-NLS-1$
+			invokeDialog(XMLUIMessages._UI_LABEL_NEW_NAMESPACE_INFORMATION, nsInfo); //$NON-NLS-1$
 			updateErrorMessage(namespaceInfoList);
 			performDelayedUpdate();
 
@@ -85,17 +84,18 @@ public class CommonEditNamespacesTargetFieldDialog extends CommonEditNamespacesD
 	public void setTargetNamespace(String theTargetNamespace) {
 		targetNamespace = theTargetNamespace != null ? theTargetNamespace : ""; //$NON-NLS-1$
 		targetNamespaceField.setText(targetNamespace);
-		//updateTargetNamespaceAndNamespaceInfo(targetNamespace);
+		// updateTargetNamespaceAndNamespaceInfo(targetNamespace);
 	}
 
-	private void updateTargetNamespaceAndNamespaceInfo(String oldTargetNamespace, String newTargetNamespace) {
+	void updateTargetNamespaceAndNamespaceInfo(String oldTargetNamespace, String newTargetNamespace) {
 		NamespaceInfo info = getNamespaceInfo(newTargetNamespace);
 		if (info == null) {
 			info = getNamespaceInfo(oldTargetNamespace);
 			if (info == null) {
 				info = new NamespaceInfo(newTargetNamespace, "tns", null); //$NON-NLS-1$
 				namespaceInfoList.add(info);
-			} else {
+			}
+			else {
 				info.uri = targetNamespace;
 			}
 		}

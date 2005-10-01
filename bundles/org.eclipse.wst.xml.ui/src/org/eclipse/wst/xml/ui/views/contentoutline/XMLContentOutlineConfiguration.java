@@ -120,7 +120,7 @@ public class XMLContentOutlineConfiguration extends ContentOutlineConfiguration 
 	 */
 	private final String OUTLINE_SHOW_ATTRIBUTE_PREF = "outline-show-attribute-editor"; //$NON-NLS-1$
 
-	private boolean fShowAttributes = false;
+	boolean fShowAttributes = false;
 
 	public XMLContentOutlineConfiguration() {
 		super();

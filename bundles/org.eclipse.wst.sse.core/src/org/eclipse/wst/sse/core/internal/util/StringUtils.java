@@ -22,7 +22,7 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
-import org.eclipse.wst.sse.core.internal.provisional.exceptions.SourceEditingRuntimeException;
+import org.eclipse.wst.sse.core.internal.Logger;
 
 
 public class StringUtils {
@@ -232,8 +232,9 @@ public class StringUtils {
 				if ((i < lineCount - 1) && (tempDoc.getLineDelimiter(i) != null))
 					newText += lineDelimiterToUse;
 			}
-			catch (BadLocationException exception) {
-				throw new SourceEditingRuntimeException(exception);
+			catch (BadLocationException e) {
+				// log for now, unless we find reason not to
+				Logger.log(Logger.INFO, e.getMessage());
 			}
 		}
 

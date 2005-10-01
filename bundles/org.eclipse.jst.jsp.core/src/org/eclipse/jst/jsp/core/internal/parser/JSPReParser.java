@@ -19,7 +19,6 @@ import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.wst.sse.core.internal.ltk.parser.RegionParser;
 import org.eclipse.wst.sse.core.internal.ltk.parser.StructuredDocumentRegionParser;
 import org.eclipse.wst.sse.core.internal.provisional.events.StructuredDocumentEvent;
-import org.eclipse.wst.sse.core.internal.provisional.exceptions.SourceEditingRuntimeException;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegionList;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredTextReParser;
@@ -190,7 +189,7 @@ public class JSPReParser extends XMLStructuredDocumentReParser {
 		if (parent.getRegions().size() == 1 && region.getType() == DOMRegionContext.XML_TAG_OPEN && (previous == null || (!previous.isEnded() || previous.getType() == DOMRegionContext.XML_CONTENT))) {
 			result = true;
 		}
-		//case 2 test
+		// case 2 test
 		if (region instanceof ITextRegionContainer) {
 			ITextRegionContainer container = (ITextRegionContainer) region;
 			ITextRegion internal = container.getRegions().get(container.getRegions().size() - 1);
@@ -200,11 +199,11 @@ public class JSPReParser extends XMLStructuredDocumentReParser {
 				result = true;
 			}
 		}
-		//case 3 test
+		// case 3 test
 		if (changesIncludeA_lt && (region.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME || region.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE)) {
 			result = true;
 		}
-		//case 4 test
+		// case 4 test
 		if (delsIncludeA_gt && region.getType() == DOMRegionContext.XML_TAG_CLOSE) {
 			result = true;
 		}
@@ -225,15 +224,12 @@ public class JSPReParser extends XMLStructuredDocumentReParser {
 	 * directive
 	 */
 	private boolean isTaglibOrInclude(IStructuredDocumentRegion node, ITextRegionList regions) {
-		boolean sizeAndTypesMatch = (regions.size() > 1) && (regions.get(1).getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_NAME)
-					&& (regions.get(0).getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_OPEN || regions.get(0).getType() == DOMRegionContext.XML_TAG_OPEN);
+		boolean sizeAndTypesMatch = (regions.size() > 1) && (regions.get(1).getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_NAME) && (regions.get(0).getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_OPEN || regions.get(0).getType() == DOMRegionContext.XML_TAG_OPEN);
 		if (!sizeAndTypesMatch)
 			return false;
 		ITextRegion region = regions.get(1);
 		String directiveName = node.getText(region);
-		return sizeAndTypesMatch
-					&& (directiveName.equals(JSP11TLDNames.TAGLIB) || directiveName.equals(JSP11TLDNames.INCLUDE) || directiveName.equals(JSP12Namespace.ElementName.DIRECTIVE_TAGLIB) || directiveName
-								.equals(JSP12Namespace.ElementName.DIRECTIVE_INCLUDE));
+		return sizeAndTypesMatch && (directiveName.equals(JSP11TLDNames.TAGLIB) || directiveName.equals(JSP11TLDNames.INCLUDE) || directiveName.equals(JSP12Namespace.ElementName.DIRECTIVE_TAGLIB) || directiveName.equals(JSP12Namespace.ElementName.DIRECTIVE_INCLUDE));
 	}
 
 	private void clearTaglibInfo() {
@@ -311,7 +307,7 @@ public class JSPReParser extends XMLStructuredDocumentReParser {
 		boolean changesIncludeA_lt = fChanges != null && fChanges.indexOf('<') >= 0;
 		boolean delsIncludeA_gt = fDeletedText != null && fDeletedText.indexOf('>') >= 0;
 
-		//List regions = new ArrayList();
+		// List regions = new ArrayList();
 		IStructuredDocumentRegion node = start;
 		int endReplace = fStart + fLengthToReplace;
 		while (end != null && node != end.getNext()) {
@@ -368,17 +364,6 @@ public class JSPReParser extends XMLStructuredDocumentReParser {
 		if (containsBreakingChange(new CoreNodeList(dirtyStart, dirtyEnd)))
 			return null;
 		return super.quickCheck();
-	}
-
-	public Object clone() {
-		try {
-			return super.clone();
-		}
-		catch (CloneNotSupportedException e) {
-			// could only happen if some changes
-			// superclass someday
-			throw new SourceEditingRuntimeException(e);
-		}
 	}
 
 }

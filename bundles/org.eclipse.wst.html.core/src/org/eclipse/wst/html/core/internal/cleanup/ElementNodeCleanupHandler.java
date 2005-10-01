@@ -24,11 +24,11 @@ import org.eclipse.wst.css.core.internal.format.CSSSourceFormatter;
 import org.eclipse.wst.css.core.internal.provisional.adapters.IStyleDeclarationAdapter;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSModel;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
+import org.eclipse.wst.html.core.internal.Logger;
 import org.eclipse.wst.html.core.internal.preferences.HTMLCorePreferenceNames;
 import org.eclipse.wst.sse.core.internal.cleanup.IStructuredCleanupHandler;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
-import org.eclipse.wst.sse.core.internal.provisional.exceptions.SourceEditingRuntimeException;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
@@ -171,11 +171,15 @@ public class ElementNodeCleanupHandler extends AbstractNodeCleanupHandler {
 			IDOMNode eachAttr = (IDOMNode) attributes.item(i);
 			String oldAttrName = eachAttr.getNodeName();
 			String newAttrName = oldAttrName;
-			// 254961 - all HTML tag names and attribute names should be in English
-			//          even for HTML files in other languages like Japanese or Turkish.
-			//          English locale should be used to convert between uppercase and lowercase
-			//          (otherwise "link" would be converted to "L�NK" in Turkish, where '?' in "L�NK"
-			//          is the "I Overdot Capital" in Turkish).
+			// 254961 - all HTML tag names and attribute names should be in
+			// English
+			// even for HTML files in other languages like Japanese or
+			// Turkish.
+			// English locale should be used to convert between uppercase and
+			// lowercase
+			// (otherwise "link" would be converted to "L�NK" in Turkish,
+			// where '?' in "L�NK"
+			// is the "I Overdot Capital" in Turkish).
 			if (attrNameCase == HTMLCorePreferenceNames.LOWER)
 				newAttrName = oldAttrName.toLowerCase(Locale.US);
 			else if (attrNameCase == HTMLCorePreferenceNames.UPPER)
@@ -210,11 +214,14 @@ public class ElementNodeCleanupHandler extends AbstractNodeCleanupHandler {
 		String newTagName = oldTagName;
 		IDOMNode newNode = node;
 
-		// 254961 - all HTML tag names and attribute names should be in English
-		//          even for HTML files in other languages like Japanese or Turkish.
-		//          English locale should be used to convert between uppercase and lowercase
-		//          (otherwise "link" would be converted to "L�NK" in Turkish, where '?' in "L�NK"
-		//          is the "I Overdot Capital" in Turkish).
+		// 254961 - all HTML tag names and attribute names should be in
+		// English
+		// even for HTML files in other languages like Japanese or Turkish.
+		// English locale should be used to convert between uppercase and
+		// lowercase
+		// (otherwise "link" would be converted to "L�NK" in Turkish, where
+		// '?' in "L�NK"
+		// is the "I Overdot Capital" in Turkish).
 		if (tagNameCase == HTMLCorePreferenceNames.LOWER)
 			newTagName = oldTagName.toLowerCase(Locale.US);
 		else if (tagNameCase == HTMLCorePreferenceNames.UPPER)
@@ -362,7 +369,8 @@ public class ElementNodeCleanupHandler extends AbstractNodeCleanupHandler {
 
 		if (element.isCommentTag()) {
 			// do nothing
-		} else if (isEmptyElement(element)) {
+		}
+		else if (isEmptyElement(element)) {
 			IStructuredDocument structuredDocument = structuredModel.getStructuredDocument();
 			IStructuredDocumentRegion startStructuredDocumentRegion = node.getStartStructuredDocumentRegion();
 			ITextRegionList regions = startStructuredDocumentRegion.getRegions();
@@ -377,7 +385,8 @@ public class ElementNodeCleanupHandler extends AbstractNodeCleanupHandler {
 				if (regionBeforeTagClose.getTextLength() == regionBeforeTagClose.getLength())
 					replaceSource(structuredModel, structuredDocument, startStructuredDocumentRegion.getStartOffset(lastRegion), 0, " "); //$NON-NLS-1$
 			}
-		} else {
+		}
+		else {
 			String tagName = node.getNodeName();
 			String endTag = END_TAG_OPEN.concat(tagName).concat(TAG_CLOSE);
 
@@ -420,12 +429,14 @@ public class ElementNodeCleanupHandler extends AbstractNodeCleanupHandler {
 			ITextRegionList regionList = startTagStructuredDocumentRegion.getRegions();
 			if (startTagStructuredDocumentRegion != null && regionList != null && regionList.get(regionList.size() - 1).getType() == DOMRegionContext.XML_EMPTY_TAG_CLOSE) {
 
-			} else {
+			}
+			else {
 				if (startTagStructuredDocumentRegion == null) {
 					// start tag missing
 					if (isStartTagRequired(newNode))
 						newNode = insertStartTag(newNode);
-				} else if (endTagStructuredDocumentRegion == null) {
+				}
+				else if (endTagStructuredDocumentRegion == null) {
 					// end tag missing
 					if (isEndTagRequired(newNode))
 						newNode = insertEndTag(newNode);
@@ -537,7 +548,8 @@ public class ElementNodeCleanupHandler extends AbstractNodeCleanupHandler {
 						// new
 						// node
 					}
-				} else {
+				}
+				else {
 
 					char quote = StringUtils.isQuoted(oldAttrValue) ? oldAttrValue.charAt(0) : DOUBLE_QUOTE;
 					String newAttrValue = generator.generateAttrValue(eachAttr, quote);
@@ -608,7 +620,8 @@ public class ElementNodeCleanupHandler extends AbstractNodeCleanupHandler {
 					if (lastRegion.getType() == DOMRegionContext.XML_TAG_CLOSE) {
 						index--;
 						lastRegion = startStructuredDocumentRegion.getRegionAtCharacterOffset(index - 1);
-					} else if (lastRegion.getType() == DOMRegionContext.XML_EMPTY_TAG_CLOSE) {
+					}
+					else if (lastRegion.getType() == DOMRegionContext.XML_EMPTY_TAG_CLOSE) {
 						index = index - 2;
 						lastRegion = startStructuredDocumentRegion.getRegionAtCharacterOffset(index - 1);
 					}
@@ -634,8 +647,10 @@ public class ElementNodeCleanupHandler extends AbstractNodeCleanupHandler {
 							// index += nameAndDefaultValue.length();
 						}
 						multiTextEdit.apply(newNode.getStructuredDocument());
-					} catch (BadLocationException e) {
-						throw new SourceEditingRuntimeException(e);
+					}
+					catch (BadLocationException e) {
+						// log or now, unless we find reason not to
+						Logger.log(Logger.INFO, e.getMessage());
 					}
 				}
 			}
@@ -648,7 +663,8 @@ public class ElementNodeCleanupHandler extends AbstractNodeCleanupHandler {
 	protected ModelQuery getModelQuery(Node node) {
 		if (node.getNodeType() == Node.DOCUMENT_NODE) {
 			return ModelQueryUtil.getModelQuery((Document) node);
-		} else {
+		}
+		else {
 			return ModelQueryUtil.getModelQuery(node.getOwnerDocument());
 		}
 	}

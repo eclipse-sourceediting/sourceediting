@@ -16,7 +16,6 @@ package org.eclipse.wst.xml.core.internal.parser.regions;
 
 import org.eclipse.wst.sse.core.internal.provisional.events.RegionChangedEvent;
 import org.eclipse.wst.sse.core.internal.provisional.events.StructuredDocumentEvent;
-import org.eclipse.wst.sse.core.internal.provisional.exceptions.SourceEditingRuntimeException;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.util.Debug;
@@ -98,11 +97,11 @@ public class WhiteSpaceOnlyRegion implements ITextRegion {
 	}
 
 	public void setTextLength(short i) {
-		throw new SourceEditingRuntimeException("invalid call"); //$NON-NLS-1$
+		throw new RuntimeException("invalid call"); //$NON-NLS-1$
 	}
 
 	public void setType(String string) {
-		throw new SourceEditingRuntimeException("invalid call"); //$NON-NLS-1$
+		throw new RuntimeException("invalid call"); //$NON-NLS-1$
 	}
 
 	public String toString() {
@@ -145,13 +144,16 @@ public class WhiteSpaceOnlyRegion implements ITextRegion {
 			// involving whitespace.
 			if ((fStart >= getTextEnd()) || (Math.abs(lengthToReplace) >= getTextEnd() - getStart())) {
 				canHandle = false;
-			} else {
+			}
+			else {
 				canHandle = true;
 			}
-		} else {
+		}
+		else {
 			if (RegionUpdateRule.canHandleAsWhiteSpace(this, parent, changes, requestStart, lengthToReplace)) {
 				canHandle = true;
-			} else {
+			}
+			else {
 				canHandle = false;
 			}
 

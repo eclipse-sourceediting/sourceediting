@@ -47,7 +47,6 @@ import org.eclipse.wst.sse.core.internal.provisional.events.RegionChangedEvent;
 import org.eclipse.wst.sse.core.internal.provisional.events.RegionsReplacedEvent;
 import org.eclipse.wst.sse.core.internal.provisional.events.StructuredDocumentEvent;
 import org.eclipse.wst.sse.core.internal.provisional.events.StructuredDocumentRegionsReplacedEvent;
-import org.eclipse.wst.sse.core.internal.provisional.exceptions.SourceEditingRuntimeException;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegionList;
@@ -540,7 +539,7 @@ public class StructuredDocumentToTextAdapter implements IDocumentAdapter, IDocum
 	 * @param document
 	 *            the document
 	 * @see IRepairableDocument#repairLineInformation()
-	 * @see  Eclipse 3.0
+	 * @see Eclipse 3.0
 	 */
 	private void repairLineInformation(IDocument document) {
 		if (document instanceof IRepairableDocument) {
@@ -1058,7 +1057,8 @@ public class StructuredDocumentToTextAdapter implements IDocumentAdapter, IDocum
 			runOnDisplayThreadIfNeedede(runnable);
 		}
 		catch (BadLocationException e) {
-			throw new SourceEditingRuntimeException(e);
+			// log for now, unless we find reason not to
+			Logger.log(Logger.INFO, e.getMessage());
 		}
 	}
 
@@ -1192,8 +1192,9 @@ public class StructuredDocumentToTextAdapter implements IDocumentAdapter, IDocum
 		try {
 			getDocument().replace(start, replaceLength, text);
 		}
-		catch (BadLocationException x) {
-			throw new SourceEditingRuntimeException(x);
+		catch (BadLocationException e) {
+			// log for now, unless we find reason not to
+			Logger.log(Logger.INFO, e.getMessage());
 		}
 	}
 

@@ -50,7 +50,7 @@ public class XMLFilesPreferencePage extends AbstractPreferencePage {
 		Group creatingGroup = createGroup(parent, 1);
 		creatingGroup.setText(XMLUIMessages.Creating_files);
 
-		Label label = createLabel(creatingGroup, XMLUIMessages.Encoding_desc);
+		createLabel(creatingGroup, XMLUIMessages.Encoding_desc);
 
 		fEncodingSettings = new EncodingSettings(creatingGroup, XMLUIMessages.Encoding);
 	}

@@ -334,7 +334,7 @@ public class NamespaceInfoTable extends Composite {
 		ISelection selection = tableViewer.getSelection();
 		Object selectedObject = (selection instanceof IStructuredSelection) ? ((IStructuredSelection) selection).getFirstElement() : null;
 		if (selectedObject instanceof NamespaceInfo) {
-			EditNamespaceInfoDialog dialog = invokeDialog(XMLUIMessages._UI_LABEL_NEW_NAMESPACE_INFORMATION, (NamespaceInfo) selectedObject); //$NON-NLS-1$
+			invokeDialog(XMLUIMessages._UI_LABEL_NEW_NAMESPACE_INFORMATION, (NamespaceInfo) selectedObject); //$NON-NLS-1$
 			performDelayedUpdate();
 		}
 	}

@@ -139,7 +139,7 @@ public class XMLPropertySheetConfiguration extends PropertySheetConfiguration {
 	private IPropertySourceProvider fPropertySourceProvider = null;
 	private INodeAdapter fRefreshAdapter = new XMLPropertySheetRefreshAdapter();
 	private CMDocumentManager[] fSelectedCMDocumentManagers = new CMDocumentManager[0];
-	private INodeNotifier[] fSelectedNotifiers = new INodeNotifier[0];;
+	private INodeNotifier[] fSelectedNotifiers = new INodeNotifier[0];
 
 	public XMLPropertySheetConfiguration() {
 		super();

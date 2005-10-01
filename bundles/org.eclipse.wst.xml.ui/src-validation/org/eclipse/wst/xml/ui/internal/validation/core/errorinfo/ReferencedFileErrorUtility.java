@@ -108,7 +108,7 @@ public class ReferencedFileErrorUtility
     }
   }
 
-  private static void gotoError(IEditorPart editorPart, int line, int column)
+  static void gotoError(IEditorPart editorPart, int line, int column)
   {
     if (editorPart != null)
     {

@@ -23,7 +23,7 @@ import org.eclipse.jface.text.formatter.ContextBasedFormattingStrategy;
 import org.eclipse.jface.text.formatter.FormattingContextProperties;
 import org.eclipse.jface.text.formatter.IFormattingContext;
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatProcessor;
-import org.eclipse.wst.sse.core.internal.provisional.exceptions.SourceEditingRuntimeException;
+import org.eclipse.wst.sse.ui.internal.Logger;
 
 
 public class StructuredFormattingStrategy extends ContextBasedFormattingStrategy {
@@ -56,10 +56,14 @@ public class StructuredFormattingStrategy extends ContextBasedFormattingStrategy
 		if (document != null && partition != null && fRegion != null && fFormatProcessor != null) {
 			try {
 				fFormatProcessor.formatDocument(document, fRegion.getOffset(), fRegion.getLength());
-			} catch (IOException e) {
-				throw new SourceEditingRuntimeException(e);
-			} catch (CoreException e) {
-				throw new SourceEditingRuntimeException(e);
+			}
+			catch (IOException e) {
+				// log for now, unless we find reason not to
+				Logger.log(Logger.INFO, e.getMessage());
+			}
+			catch (CoreException e) {
+				// log for now, unless we find reason not to
+				Logger.log(Logger.INFO, e.getMessage());
 			}
 		}
 	}

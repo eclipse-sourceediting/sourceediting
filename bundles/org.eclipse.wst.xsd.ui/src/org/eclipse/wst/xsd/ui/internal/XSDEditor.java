@@ -40,7 +40,6 @@ import org.eclipse.ui.editors.text.ILocationProvider;
 import org.eclipse.wst.common.ui.properties.internal.provisional.ITabbedPropertySheetPageContributor;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
-import org.eclipse.wst.sse.core.internal.provisional.exceptions.SourceEditingRuntimeException;
 import org.eclipse.wst.sse.core.internal.provisional.events.IStructuredDocumentListener;
 import org.eclipse.wst.sse.core.internal.undo.IStructuredTextUndoManager;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
@@ -126,9 +125,10 @@ public class XSDEditor extends XSDMultiPageEditorPart implements ITabbedProperty
       
       XSDEditorPlugin.getPlugin().getPreferenceStore().addPropertyChangeListener(preferenceStoreListener);
     }
-    catch (PartInitException exception)
+    catch (PartInitException e)
     {
-      throw new SourceEditingRuntimeException(exception, XSDEditorPlugin.getXSDString("An_error_has_occurred_when1_ERROR_")); //$NON-NLS-1$ = "An error has occurred when initializing the input for the the editor's source page."
+		// log for now, unless we find reason not to
+		Logger.log(Logger.INFO, e.getMessage());
     }
   }
   

@@ -20,12 +20,12 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.text.edits.InsertEdit;
 import org.eclipse.text.edits.MultiTextEdit;
 import org.eclipse.wst.sse.core.internal.cleanup.IStructuredCleanupHandler;
-import org.eclipse.wst.sse.core.internal.provisional.exceptions.SourceEditingRuntimeException;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.sse.core.internal.util.StringUtils;
+import org.eclipse.wst.xml.core.internal.Logger;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
@@ -357,7 +357,8 @@ public class ElementNodeCleanupHandler extends NodeCleanupHandler {
 						}
 						multiTextEdit.apply(newNode.getStructuredDocument());
 					} catch (BadLocationException e) {
-						throw new SourceEditingRuntimeException(e);
+						// log for now, unless we find reason not to
+						Logger.log(Logger.INFO, e.getMessage());
 					}
 				}
 			}
