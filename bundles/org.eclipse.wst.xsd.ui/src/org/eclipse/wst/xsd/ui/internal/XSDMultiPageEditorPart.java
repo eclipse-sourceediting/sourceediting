@@ -18,9 +18,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceStatus;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextInputListener;
@@ -28,7 +26,6 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.events.ShellAdapter;
 import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorActionBarContributor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -643,16 +640,6 @@ public class XSDMultiPageEditorPart extends PostSelectionMultiPageEditorPart imp
     // TextViewer to set us straight
     super.setInput(input);
     setPartName(input.getName());
-  }
-
-  /**
-   * IExtendedMarkupEditor method
-   */
-  public IStatus validateEdit(Shell context) {
-    if (getTextEditor() == null)
-      return new Status(IStatus.ERROR, XSDEditorPlugin.PLUGIN_ID, IStatus.INFO, "", null); //$NON-NLS-1$
-
-    return getTextEditor().validateEdit(context);
   }
   
 }
