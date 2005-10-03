@@ -109,7 +109,6 @@ public class Category implements ModelAdapter
     for (Iterator i = elements.iterator(); i.hasNext(); )
     {
       XSDElementDeclaration elem = (XSDElementDeclaration)i.next();
-      String targetNamespace = elem.getTargetNamespace();
       if (isSameNamespace(elem.getTargetNamespace(),schema.getTargetNamespace()))
       {
         list.add(elem);

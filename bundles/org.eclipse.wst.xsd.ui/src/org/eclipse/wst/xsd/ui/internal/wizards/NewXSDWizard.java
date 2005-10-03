@@ -21,7 +21,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPart;
@@ -113,8 +112,16 @@ public class NewXSDWizard extends Wizard implements INewWizard {
 
 	private void revealSelection(final ISelection selection) {
 		if (selection != null) {
-			IWorkbench workbench = XSDEditorPlugin.getPlugin().getWorkbench();
-			final IWorkbenchWindow workbenchWindow = workbench.getActiveWorkbenchWindow();
+			IWorkbench workbench2;
+			if (workbench == null)
+			{
+			  workbench2 = XSDEditorPlugin.getPlugin().getWorkbench();
+			}
+			else
+			{
+			  workbench2 = workbench;
+			}
+			final IWorkbenchWindow workbenchWindow = workbench2.getActiveWorkbenchWindow();
 			final IWorkbenchPart focusPart = workbenchWindow.getActivePage().getActivePart();
 			if (focusPart instanceof ISetSelectionTarget) {
 				Display.getCurrent().asyncExec(new Runnable() {
@@ -128,13 +135,21 @@ public class NewXSDWizard extends Wizard implements INewWizard {
 
 	public void openEditor(final IFile iFile) {
 		if (iFile != null) {
-			IWorkbench workbench = XSDEditorPlugin.getPlugin().getWorkbench();
-			final IWorkbenchWindow workbenchWindow = workbench.getActiveWorkbenchWindow();
+			IWorkbench workbench2;
+			if (workbench == null)
+			{
+			  workbench2 = XSDEditorPlugin.getPlugin().getWorkbench();
+			}
+			else
+			{
+			  workbench2 = workbench;
+			}
+			final IWorkbenchWindow workbenchWindow = workbench2.getActiveWorkbenchWindow();
 
 			Display.getDefault().asyncExec(new Runnable() {
 				public void run() {
 					try {
-						IEditorPart editorPart = workbenchWindow.getActivePage().openEditor(new FileEditorInput(iFile), XSDEditorPlugin.XSD_EDITOR_ID);
+						workbenchWindow.getActivePage().openEditor(new FileEditorInput(iFile), XSDEditorPlugin.XSD_EDITOR_ID);
 					}
 					catch (PartInitException ex) {
 					}

@@ -33,7 +33,6 @@ public class XSDModelGroupDefinitionAdapter extends XSDAbstractAdapter
   public Image getImage(Object object)
   {
     XSDModelGroupDefinition xsdModelGroupDefinition = ((XSDModelGroupDefinition)object);
-    XSDModelGroupDefinition resolvedModelGroupDefinition = xsdModelGroupDefinition.getResolvedModelGroupDefinition();
 
     if (xsdModelGroupDefinition.isModelGroupDefinitionReference())
     {

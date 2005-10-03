@@ -29,7 +29,6 @@ import org.eclipse.swt.events.MenuEvent;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IWorkbenchActionConstants;
-import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.actions.ActionGroup;
 import org.eclipse.wst.xsd.ui.internal.refactor.RefactoringMessages;
@@ -65,11 +64,7 @@ public class RefactorActionGroup extends ActionGroup {
 	 * @deprecated
 	 * 
 	 */
-	private IWorkbenchSite fSite;
-
 	private ISelectionProvider fSelectionProvider;
-
-	private XSDSchema fSchema;
 
 	private String fGroupName = GROUP_REORGANIZE;
 
@@ -102,7 +97,6 @@ public class RefactorActionGroup extends ActionGroup {
 	public RefactorActionGroup(ISelectionProvider selectionProvider,
 			XSDSchema schema) {
 		fSelectionProvider = selectionProvider;
-		fSchema = schema;
 		fEditorActions = new ArrayList();
 		fRenameAction = new RenameAction(selectionProvider, schema);
 		fRenameAction.setActionDefinitionId(RENAME_ELEMENT);
@@ -164,7 +158,6 @@ public class RefactorActionGroup extends ActionGroup {
 	 * @see ActionGroup#dispose()
 	 */
 	public void dispose() {
-		//ISelectionProvider provider = fSite.getSelectionProvider();
 		disposeAction(fRenameAction, fSelectionProvider);
 		disposeAction(fMakeLocalElementGlobal, fSelectionProvider);
 		super.dispose();

@@ -70,18 +70,4 @@ public class XSDURIConverter extends URIConverterImpl
     }
     return result;
   }
-
-  private String getRelativePathToSchema(String a, String b)
-  {
-    String result;
-    if (b.startsWith(a))
-    {
-      result = b.substring(a.length() + 1);
-      return result;
-    }
-    else
-    {
-      return b;
-    }
-  }
 }

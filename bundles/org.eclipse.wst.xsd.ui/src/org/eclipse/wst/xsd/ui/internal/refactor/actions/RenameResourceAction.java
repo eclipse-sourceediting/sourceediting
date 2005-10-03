@@ -55,7 +55,7 @@ public class RenameResourceAction extends SelectionDispatchAction {
 						RefactoringMessages.getString("RenameComponentWizard.inputPage.description"), //$NON-NLS-1$
 						null);
 				RefactoringWizardOpenOperation op= new RefactoringWizardOpenOperation(wizard);
-				int result= op.run(XSDEditorPlugin.getShell(), wizard.getDefaultPageTitle());
+				op.run(XSDEditorPlugin.getShell(), wizard.getDefaultPageTitle());
 				op.getInitialConditionCheckingStatus();
 			} catch (InterruptedException e) {
 				// do nothing. User action got cancelled

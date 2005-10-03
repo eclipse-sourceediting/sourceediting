@@ -78,10 +78,8 @@ public class MinMaxSection extends AbstractSection
     {
       Element element = particle.getElement();
       String newValue = ""; //$NON-NLS-1$
-      String id = ""; //$NON-NLS-1$
 
       newValue = minCombo.getText();
-      id = XSDConstants.MINOCCURS_ATTRIBUTE;
       beginRecording(XSDEditorPlugin.getXSDString("_UI_MINOCCURS_CHANGE"), element); //$NON-NLS-1$        
       if (newValue.length()==0)
       {
@@ -123,9 +121,7 @@ public class MinMaxSection extends AbstractSection
     {
       Element element = particle.getElement();
       String newValue = "";
-      String id = "";
       newValue = maxCombo.getText();
-      id = XSDConstants.MAXOCCURS_ATTRIBUTE;
       beginRecording(XSDEditorPlugin.getXSDString("_UI_MAXOCCURS_CHANGE"), element); //$NON-NLS-1$
       if (newValue.length()==0)
       {

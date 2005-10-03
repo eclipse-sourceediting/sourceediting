@@ -239,7 +239,6 @@ public class SimpleTypeSection extends AbstractSection
           {
             typesLabel.setText(XSDEditorPlugin.getXSDString("_UI_LABEL_BASE_TYPE_WITH_COLON")); //$NON-NLS-1$
             st.setVariety(XSDVariety.ATOMIC_LITERAL);
-            List attributes = new ArrayList();
             addCreateElementActionIfNotExist(XSDConstants.RESTRICTION_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_RESTRICTION"), parent, null); //$NON-NLS-1$
           }
   	      else if (variety.equals(XSDVariety.UNION_LITERAL.getName()))

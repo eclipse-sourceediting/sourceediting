@@ -67,20 +67,6 @@ public class SimpleTypeUnionSectionDescriptor extends AbstractSectionDescriptor
    */
   public boolean appliesTo(IWorkbenchPart part, ISelection selection)
   {
-    Object object = null;
-//    if (selection instanceof StructuredSelection)
-//    {
-//      StructuredSelection structuredSelection = (StructuredSelection)selection;
-//      object = structuredSelection.getFirstElement();
-//      if (object instanceof XSDSimpleTypeDefinition)
-//      {
-//        XSDSimpleTypeDefinition st = (XSDSimpleTypeDefinition)object;
-//        if (st.getVariety().getValue() == XSDVariety.UNION)
-//        {
-//          return true;
-//        }
-//      }
-//    }
     return false;
   }
 

@@ -35,7 +35,6 @@ import org.w3c.dom.Node;
 
 public class ElementPropertySource extends BasePropertySource implements IPropertySource
 {
-  private static final String PROPERTY_NAME = "org.eclipse.wst.xsd.ui.internal.name";
   private String[] blockComboValues =
     { "", "#all", "extension", "restriction", "substitution" };
   private String[] finalComboValues =

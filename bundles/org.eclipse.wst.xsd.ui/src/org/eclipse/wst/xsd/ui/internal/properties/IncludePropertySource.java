@@ -91,7 +91,6 @@ public class IncludePropertySource
     if (id instanceof String)
      {
       result = element.getAttribute((String) id);
-      String attributeName = (String)id;
       if (result == null)
        {
         result = "";

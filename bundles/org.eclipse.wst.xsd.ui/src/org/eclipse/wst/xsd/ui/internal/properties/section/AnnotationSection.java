@@ -66,20 +66,17 @@ public class AnnotationSection extends AbstractSection
 	 */
 	public void createControls(Composite parent, TabbedPropertySheetWidgetFactory factory)
 	{
-		super.createControls(parent, factory);
-//		Composite composite = getWidgetFactory().createFlatFormComposite(parent);
-//    Composite composite = new Composite(parent, SWT.NONE);
-		FormData data;
+      super.createControls(parent, factory);
 
-    workbook = new XSDWorkbook(parent, SWT.BOTTOM | SWT.FLAT);
+      workbook = new XSDWorkbook(parent, SWT.BOTTOM | SWT.FLAT);
     
-    documentationPage = new DocumentationWorkbookPage(workbook);
-    appInfoPage = new AppInfoWorkbookPage(workbook);
+      documentationPage = new DocumentationWorkbookPage(workbook);
+      appInfoPage = new AppInfoWorkbookPage(workbook);
 
-    documentationPage.activate();
-    appInfoPage.activate();
-    workbook.setSelectedPage(documentationPage);
-  }
+      documentationPage.activate();
+      appInfoPage.activate();
+      workbook.setSelectedPage(documentationPage);
+    }
 
 	/*
 	 * @see org.eclipse.wst.common.ui.properties.internal.provisional.view.ITabbedPropertySection#refresh()

@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.properties.section;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -112,7 +111,6 @@ public class TypesDialog extends Dialog implements SelectionListener, Listener
   //
   public Control createDialogArea(Composite parent)
   {
-    int tabIndex = 0;
     Composite client = (Composite)super.createDialogArea(parent);
     getShell().setText(XSDEditorPlugin.getXSDString("_UI_LABEL_AVAILABLE_TYPES"));
 
@@ -181,7 +179,6 @@ public class TypesDialog extends Dialog implements SelectionListener, Listener
   		tableColumn.setWidth(table.getSize().x);
   	}
   	else if (event.type == SWT.Modify && event.widget == textField) {
-  		List items = null;
   		boolean showAll = false;
   		String inputString = textField.getText();
   		
@@ -241,7 +238,6 @@ public class TypesDialog extends Dialog implements SelectionListener, Listener
   }
   
   private String insertString(String target, String newString, String string) {
-  	ArrayList list = new ArrayList();
   	StringBuffer stringBuffer = new StringBuffer(string);
   	
   	int index = stringBuffer.indexOf(target);
@@ -604,7 +600,6 @@ public class TypesDialog extends Dialog implements SelectionListener, Listener
     String prefix = element.getPrefix();
     prefix = (prefix == null) ? "" : (prefix + ":");
     XSDDOMHelper.updateElementToNotAnonymous(element);
-    boolean hasChildrenElements = hasElementChildren(element);
     Element childNode = null;
     if (xsdType.equals(XSDConstants.COMPLEXTYPE_ELEMENT_TAG))
     {

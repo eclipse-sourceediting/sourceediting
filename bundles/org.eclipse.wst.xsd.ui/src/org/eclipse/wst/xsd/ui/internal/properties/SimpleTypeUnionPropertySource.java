@@ -277,7 +277,6 @@ public class SimpleTypeUnionPropertySource
     //
     public Control createDialogArea(Composite parent)
     {
-      int tabIndex = 0;
       Composite client = (Composite)super.createDialogArea(parent);
       getShell().setText("Union " + XSDConstants.MEMBERTYPES_ATTRIBUTE); //$NON-NLS-1$ 
       
@@ -340,7 +339,7 @@ public class SimpleTypeUnionPropertySource
 
       // Fill table
       handleSetInput();
-      int tableItemCount = table.getItemCount();
+      table.getItemCount();
 
       TableColumn tc = new TableColumn(table, SWT.LEFT);
 //      tc.setImage(XSDEditorPlugin.getXSDImage("icons/XSDElement.gif"));

@@ -155,7 +155,6 @@ public class ReferenceSectionDescriptor extends AbstractSectionDescriptor implem
       else if (object instanceof XSDAttributeUse)
       {
         XSDAttributeUse attributeUse = (XSDAttributeUse)object;
-        XSDAttributeDeclaration attribute = attributeUse.getAttributeDeclaration();
         Element element = attributeUse.getElement();
         if (inputEquals(element, XSDConstants.ATTRIBUTE_ELEMENT_TAG, true))
         {

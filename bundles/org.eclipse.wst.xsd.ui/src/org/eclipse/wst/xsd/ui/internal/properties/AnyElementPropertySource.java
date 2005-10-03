@@ -157,7 +157,6 @@ public class AnyElementPropertySource
       if (((String) id).equals(XSDConstants.MAXOCCURS_ATTRIBUTE))
       {
         String max = (String)value;
-        String min = element.getAttribute(XSDConstants.MINOCCURS_ATTRIBUTE);
         beginRecording(XSDEditorPlugin.getXSDString("_UI_MAXOCCURS_CHANGE"), element);
         if (max.length() > 0)
         {
@@ -172,7 +171,6 @@ public class AnyElementPropertySource
       else if (((String) id).equals(XSDConstants.MINOCCURS_ATTRIBUTE))
       {
         String min = (String)value;
-        String max = element.getAttribute(XSDConstants.MAXOCCURS_ATTRIBUTE);
         beginRecording(XSDEditorPlugin.getXSDString("_UI_MINOCCURS_CHANGE"), element);
         if (min.length() > 0)
         {

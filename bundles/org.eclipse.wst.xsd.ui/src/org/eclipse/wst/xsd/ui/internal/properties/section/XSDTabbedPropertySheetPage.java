@@ -20,7 +20,6 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.wst.common.ui.properties.internal.provisional.ITabbedPropertySheetPageContributor;
 import org.eclipse.wst.common.ui.properties.internal.provisional.TabbedPropertySheetPage;
-import org.eclipse.wst.sse.ui.internal.ViewerSelectionManager;
 import org.eclipse.wst.xsd.ui.internal.XSDSelectionManager;
 import org.eclipse.wst.xsd.ui.internal.graph.model.Category;
 import org.eclipse.wst.xsd.ui.internal.provider.CategoryAdapter;
@@ -30,7 +29,6 @@ import org.eclipse.xsd.XSDSchema;
 public class XSDTabbedPropertySheetPage extends TabbedPropertySheetPage
   implements ISelectionChangedListener, INotifyChangedListener 
 {
-  private ViewerSelectionManager fViewerSelectionManager;
   private XSDSelectionManager selectionManager;
   private XSDModelAdapterFactoryImpl adapterFactory;
   /**

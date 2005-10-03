@@ -50,11 +50,7 @@ public class XSDDragAndDropManager implements DragAndDropManager
   {
     if (target instanceof Node) 
     {
-      Node node = (Node) target;
-//      if (isDirectSchemaChild(node))
-//      {
-        return new DragNodesCommand(target, location, operations, operation, source);
-//      }
+      return new DragNodesCommand(target, location, operations, operation, source);
     }
     return null;
   }

@@ -96,10 +96,6 @@ public class RegexCompositionPage extends WizardPage
   /* Model used to store the current token. */
   private RegexNode node;    
 
-  /* Validator from the xerces regex package. */
-  //private RegularExpression validator;
-  private Pattern validator;
-
   /* The flags passed to the new RegularExpression object.  Default value includes:
       X = XMLSchema mode    */
   private String regexFlags = "X";
@@ -143,7 +139,6 @@ public class RegexCompositionPage extends WizardPage
   {
     // Set up our model and validator
     node = new RegexNode();
-    // validator = new RegularExpression("", regexFlags);
         
     isValidToken = true;
 
@@ -412,10 +407,8 @@ public class RegexCompositionPage extends WizardPage
       displayRegexErrorMessage(null);
       value.setStyleRange(null);
 
-      // validator.setPattern(value.getText());
-      validator = Pattern.compile(value.getText());
+      Pattern.compile(value.getText());
     }
-    // catch (ParseException pe)
     catch (PatternSyntaxException pe)
     {
       isValid = false;

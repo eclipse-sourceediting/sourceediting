@@ -42,7 +42,6 @@ import org.eclipse.wst.xsd.ui.internal.util.XSDDOMHelper;
 import org.eclipse.xsd.XSDComplexTypeDefinition;
 import org.eclipse.xsd.XSDComponent;
 import org.eclipse.xsd.XSDElementDeclaration;
-import org.eclipse.xsd.XSDFactory;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDTypeDefinition;
 import org.eclipse.xsd.util.XSDConstants;
@@ -259,11 +258,8 @@ public class AttributesViewSection extends AbstractSection implements ISelection
 	      ArrayList attributes = null;
 	      if (XSDDOMHelper.inputEquals(parent, XSDConstants.COMPLEXTYPE_ELEMENT_TAG, false))
 	      { //
-	        boolean annotationExists = false;
-	        boolean contentExists = false;
 	        boolean complexOrSimpleContentExists = false;
 	        boolean anyAttributeExists = false;
-	        Node annotationNode = null;
 	        Element contentNode = null;
 	        Node anyAttributeNode = null;
 	        NodeList children = parent.getChildNodes();
@@ -273,19 +269,13 @@ public class AttributesViewSection extends AbstractSection implements ISelection
 	          Node child = children.item(i);
 	          if (child != null && child instanceof Element)
 	          {
-	            if (XSDDOMHelper.inputEquals((Element)child, XSDConstants.ANNOTATION_ELEMENT_TAG, false))
+	            if (XSDDOMHelper.inputEquals((Element)child, XSDConstants.SEQUENCE_ELEMENT_TAG, false) ||
+	                XSDDOMHelper.inputEquals((Element)child, XSDConstants.ALL_ELEMENT_TAG, false) ||
+	                XSDDOMHelper.inputEquals((Element)child, XSDConstants.CHOICE_ELEMENT_TAG, false) ||
+	                XSDDOMHelper.inputEquals((Element)child, XSDConstants.GROUP_ELEMENT_TAG, true) ||
+	                XSDDOMHelper.inputEquals((Element)child, XSDConstants.SIMPLECONTENT_ELEMENT_TAG, false) ||
+	                XSDDOMHelper.inputEquals((Element)child, XSDConstants.COMPLEXCONTENT_ELEMENT_TAG, false))
 	            {
-	              annotationNode = child;
-	              annotationExists = true;
-	            }
-	            else if (XSDDOMHelper.inputEquals((Element)child, XSDConstants.SEQUENCE_ELEMENT_TAG, false) ||
-	                     XSDDOMHelper.inputEquals((Element)child, XSDConstants.ALL_ELEMENT_TAG, false) ||
-	                     XSDDOMHelper.inputEquals((Element)child, XSDConstants.CHOICE_ELEMENT_TAG, false) ||
-	                     XSDDOMHelper.inputEquals((Element)child, XSDConstants.GROUP_ELEMENT_TAG, true) ||
-	                     XSDDOMHelper.inputEquals((Element)child, XSDConstants.SIMPLECONTENT_ELEMENT_TAG, false) ||
-	                     XSDDOMHelper.inputEquals((Element)child, XSDConstants.COMPLEXCONTENT_ELEMENT_TAG, false))
-	            {
-	              contentExists = true;
 	              contentNode = (Element)child;
 
 	              if (XSDDOMHelper.inputEquals((Element)child, XSDConstants.SIMPLECONTENT_ELEMENT_TAG, false) ||
@@ -301,33 +291,6 @@ public class AttributesViewSection extends AbstractSection implements ISelection
 	            }
 	          }
 	        }
-//	        addCreateAnnotationActionIfNotExist(manager, XSDConstants.ANNOTATION_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_ANNOTATION"), attributes, parent, parent.getFirstChild());
-//	        manager.add(new Separator());
-//	        addSetBaseTypeAction(manager, parent);
-//	        if (annotationExists)
-//	        {
-//	          if (!contentExists)
-//	          {
-//	            addCreateElementAction(manager, XSDConstants.SEQUENCE_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_CONTENT_MODEL"), attributes, parent, annotationNode.getNextSibling());
-//	            addCreateSimpleContentAction(manager, XSDConstants.SIMPLECONTENT_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_SIMPLE_CONTENT"), attributes, parent, annotationNode.getNextSibling());
-//	            addCreateSimpleContentAction(manager, XSDConstants.COMPLEXCONTENT_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_COMPLEX_CONTENT"), attributes, parent, annotationNode.getNextSibling());
-//	            addCreateElementRefAction(manager, XSDConstants.GROUP_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ADD_GROUP_REF"), parent, annotationNode.getNextSibling());
-//	            attributes = null;
-//	          }
-//	        }
-//	        else
-//	        {
-//	          if (!contentExists)
-//	          {
-//	            addCreateElementAction(manager, XSDConstants.SEQUENCE_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_CONTENT_MODEL"), attributes, parent, parent.getFirstChild());
-//	            addCreateSimpleContentAction(manager, XSDConstants.SIMPLECONTENT_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_SIMPLE_CONTENT"), attributes, parent, parent.getFirstChild());
-//	            addCreateSimpleContentAction(manager, XSDConstants.COMPLEXCONTENT_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_COMPLEX_CONTENT"), attributes, parent, parent.getFirstChild());
-//	            addCreateElementRefAction(manager, XSDConstants.GROUP_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ADD_GROUP_REF"), parent, parent.getFirstChild());
-//	            attributes = null;
-//	          }
-//	        }
-//
-//	        manager.add(new Separator());
 
 	        if (anyAttributeExists)
 	        {
@@ -380,10 +343,6 @@ public class AttributesViewSection extends AbstractSection implements ISelection
 	      }
 	      else if (parent == null) {	      
 	      	XSDElementDeclaration ed = (XSDElementDeclaration)input;      
-	      	if (ed.getTypeDefinition() != null) 
-	      	{
-	      		XSDComplexTypeDefinition td = XSDFactory.eINSTANCE.createXSDComplexTypeDefinition();
-	      	}
 	      
 	      	// Add Attribute
 	      	attributes = new ArrayList();

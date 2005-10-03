@@ -23,15 +23,12 @@ import org.eclipse.wst.xsd.ui.internal.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.internal.actions.DOMAttribute;
 import org.eclipse.wst.xsd.ui.internal.util.XSDDOMHelper;
 import org.eclipse.wst.xsd.ui.internal.util.XSDSchemaHelper;
-import org.eclipse.xsd.XSDComplexTypeDefinition;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDFacet;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
-import org.eclipse.xsd.XSDTypeDefinition;
 import org.eclipse.xsd.impl.XSDFactoryImpl;
 import org.eclipse.xsd.util.XSDConstants;
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
@@ -39,7 +36,6 @@ public class SimpleRestrictPropertySource
   extends BasePropertySource
   implements IPropertySource
 {
-  private String BASE_TYPE_ID = XSDEditorPlugin.getXSDString("_UI_LABEL_BASE_TYPE");
   private String [] whiteSpaceComboChoices = { "", "preserve", "replace", "collapse" };
   /**
    * 
@@ -171,12 +167,9 @@ public class SimpleRestrictPropertySource
       if (value instanceof String)
       {
         String newValue = (String)value;
-        String origBaseType = getDomHelper().getBaseType(element);
         
         if (((String) id).equals(XSDConstants.BASE_ATTRIBUTE))
         {            
-          Document doc = element.getOwnerDocument();
-          Element childElement = null;
           beginRecording(XSDEditorPlugin.getXSDString("_UI_TYPE_CHANGE"), element);        
 
           Element parent = (Element)element.getParentNode();
@@ -255,7 +248,6 @@ public class SimpleRestrictPropertySource
             childNodeElement.setAttribute(valueAttr.getName(), valueAttr.getValue());
             valueAttr.setValue(newValue);
             childNodeElement.setAttribute(valueAttr.getName(), valueAttr.getValue());  
-            boolean hasChildrenElements = hasElementChildren(derivedByElement);
             element.appendChild(childNodeElement);
           //formatChild(childNodeElement, hasChildrenElements);    
           }
@@ -281,6 +273,7 @@ public class SimpleRestrictPropertySource
 
   protected boolean isAnonymous;
   protected XSDSimpleTypeDefinition xsdSimpleType;
+
   public void setInput(Element element)
   {
     this.element = element;
@@ -288,48 +281,22 @@ public class SimpleRestrictPropertySource
     {
       return;
     }
-    String type = element.getLocalName();
 
     isAnonymous = checkForAnonymousType(element);
     
-    int restrictionType = 0;  // 0 = SimpleType restriction
-    // 1 = SimpleContent restriction
-    // ComplexContent restriction different window
-    
     if (XSDDOMHelper.inputEquals(element, XSDConstants.RESTRICTION_ELEMENT_TAG, false))
     {
-      String baseType = element.getAttribute(XSDConstants.BASE_ATTRIBUTE);
-
-      XSDTypeDefinition baseTypeDefinition = null;
-
       Element parent = (Element)element.getParentNode();
-      if (XSDDOMHelper.inputEquals(parent, XSDConstants.SIMPLECONTENT_ELEMENT_TAG, false))
+      if (XSDDOMHelper.inputEquals(parent, XSDConstants.SIMPLETYPE_ELEMENT_TAG, false))
       {
-        restrictionType = 1;
-        Element grandparent = (Element)parent.getParentNode();
-        XSDConcreteComponent component = null;
-        if (grandparent != null)
-        {
-          component = xsdSchema.getCorrespondingComponent(grandparent);
-        }
-        if (component instanceof XSDComplexTypeDefinition)
-        {
-          XSDComplexTypeDefinition complexType = (XSDComplexTypeDefinition)component;
-          baseTypeDefinition = complexType.getBaseTypeDefinition();
-        }               
-      }
-      else if (XSDDOMHelper.inputEquals(parent, XSDConstants.SIMPLETYPE_ELEMENT_TAG, false))
-      {
-        restrictionType = 0;
         XSDConcreteComponent component = null;
         if (parent != null)
-         {
+        {
           component = xsdSchema.getCorrespondingComponent(parent);
         }
         if (component instanceof XSDSimpleTypeDefinition)
-         {
-          XSDSimpleTypeDefinition simpleType = (XSDSimpleTypeDefinition)component;
-          baseTypeDefinition = simpleType.getBaseTypeDefinition();
+        {
+          xsdSimpleType = (XSDSimpleTypeDefinition)component;
         }
       }
 
@@ -343,7 +310,6 @@ public class SimpleRestrictPropertySource
       {
         xsdSimpleType = (XSDSimpleTypeDefinition)xsdConcreteComponent;
       }
-      //facetViewer.setInput(xsdSimpleType);
     }
   }
 

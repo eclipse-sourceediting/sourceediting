@@ -19,7 +19,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.wst.xsd.ui.internal.XSDEditorPlugin;
-import org.eclipse.wst.xsd.ui.internal.util.TypesHelper;
 import org.eclipse.xsd.XSDIdentityConstraintDefinition;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.util.XSDConstants;
@@ -57,7 +56,6 @@ public class KeyrefPropertySource
   public void setInput(Element element)
   {
     this.element = element;
-    TypesHelper helper = new TypesHelper(xsdSchema);
     java.util.List items = new ArrayList();
 
     

@@ -228,7 +228,6 @@ public class ReferenceSection extends AbstractSection
 	      }
 			  else if (namedComponent instanceof XSDAttributeDeclaration)
 			  {
-			    XSDAttributeDeclaration attr = (XSDAttributeDeclaration)namedComponent;
 	        beginRecording(XSDEditorPlugin.getXSDString("_UI_ATTRIBUTEGROUP_REF_CHANGE"), element); //$NON-NLS-1$
 	        element.setAttribute(XSDConstants.REF_ATTRIBUTE, newValue);
 	        endRecording(element);
@@ -255,7 +254,6 @@ public class ReferenceSection extends AbstractSection
         else if (namedComponent instanceof XSDModelGroupDefinition)
         {
           beginRecording(XSDEditorPlugin.getXSDString("_UI_GROUP_REF_CHANGE"), element); //$NON-NLS-1$
-          XSDModelGroupDefinition modelGroup = (XSDModelGroupDefinition)namedComponent;
           element.setAttribute(XSDConstants.REF_ATTRIBUTE, newValue);
           endRecording(element);
         }

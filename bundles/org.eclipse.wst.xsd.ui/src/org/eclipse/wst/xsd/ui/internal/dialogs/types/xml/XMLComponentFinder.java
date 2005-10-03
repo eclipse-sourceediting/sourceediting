@@ -55,21 +55,6 @@ public class XMLComponentFinder {
     public void addExcludeFiles(List newExclude) {
         excludeFiles.addAll(newExclude);
     }
-    
-/*    
-     private String getNormalizedLocation(String location) {
-        try {
-            URL url = new URL(location);
-            URL resolvedURL = Platform.resolve(url);
-            location = resolvedURL.getPath();
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return location;
-    }
-  */   
 
     /*
      * Returns a List of absolute file locations. For example
@@ -79,7 +64,6 @@ public class XMLComponentFinder {
         List files = new ArrayList();
         
         if (currentIFile != null) {
-            IWorkspaceRoot iwr = ResourcesPlugin.getWorkspace().getRoot();
             IProject project = currentIFile.getProject();
             try {
                 traverseIContainer(project, validExtensions, excludeFiles, files);

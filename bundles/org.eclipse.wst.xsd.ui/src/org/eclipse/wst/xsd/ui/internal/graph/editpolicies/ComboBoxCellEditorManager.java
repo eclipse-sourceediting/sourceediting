@@ -72,12 +72,11 @@ public abstract class ComboBoxCellEditorManager extends DirectEditManager implem
   getCellEditor().addListener(cellEditorListener);
 
     String[] item = combo.getItems();
-    int index = 0;
     for (int i = 0; i < item.length; i++)
     {
       if (item[i].equals(initialLabelText))
       {
-	      getCellEditor().setValue(new Integer(i));
+        getCellEditor().setValue(new Integer(i));
         break;
       }
     } 	
@@ -154,7 +153,6 @@ public abstract class ComboBoxCellEditorManager extends DirectEditManager implem
     int index = combo.getSelectionIndex();              
     if (index != -1)
     {      
-      String value = combo.getItem(index);
       performModify(combo.getItem(index));
     }  
     else

@@ -11,7 +11,6 @@
 package org.eclipse.wst.xsd.ui.internal.properties.section;
 
 import java.util.Iterator;
-import java.util.List;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
@@ -118,7 +117,6 @@ public class NamespaceProcessContentsSection extends AbstractSection
 	    if (input instanceof XSDWildcard)
 	    {
 	      XSDWildcard wildcard = (XSDWildcard)input;
-	      List listNS = wildcard.getNamespaceConstraint();
 	      if (wildcard.isSetLexicalNamespaceConstraint())
 	      {
 	        namespaceCombo.setText(wildcard.getStringLexicalNamespaceConstraint());
@@ -134,8 +132,6 @@ public class NamespaceProcessContentsSection extends AbstractSection
 	      }
 	    }
 	  }
-//	  namespaceCombo.addSelectionListener(this);
-//	  processContentsCombo.addSelectionListener(this);
 	}
 	
   public boolean shouldUseExtraSpace()

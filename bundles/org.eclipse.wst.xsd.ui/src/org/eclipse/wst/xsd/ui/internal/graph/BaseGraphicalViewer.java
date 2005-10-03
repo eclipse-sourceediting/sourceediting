@@ -24,9 +24,6 @@ import org.eclipse.gef.tools.SelectionTool;
 import org.eclipse.gef.ui.parts.ScrollingGraphicalViewer;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ISelectionProvider;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.KeyAdapter;
-import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.wst.xsd.ui.internal.XSDEditor;
@@ -120,19 +117,19 @@ public abstract class BaseGraphicalViewer extends ScrollingGraphicalViewer imple
     // enable popupMenus extension
     editor.getSite().registerContextMenu("org.eclipse.wst.xsd.ui.popup.graph", manager, menuSelectionProvider);
     
-    KeyAdapter keyListener = new KeyAdapter()
-    {
-      /**
-       * @see org.eclipse.swt.events.KeyAdapter#keyReleased(KeyEvent)
-       */
-      public void keyReleased(KeyEvent e)
-      {
-        if (e.character == SWT.DEL)
-        {
-          getMenuListener().getDeleteAction().run();
-        }
-      }
-    };
+//    KeyAdapter keyListener = new KeyAdapter()
+//    {
+//      /**
+//       * @see org.eclipse.swt.events.KeyAdapter#keyReleased(KeyEvent)
+//       */
+//      public void keyReleased(KeyEvent e)
+//      {
+//        if (e.character == SWT.DEL)
+//        {
+//          getMenuListener().getDeleteAction().run();
+//        }
+//      }
+//    };
   
     setKeyHandler(new XSDGraphicalViewerKeyHandler(this).setParent(new KeyHandler()));
     

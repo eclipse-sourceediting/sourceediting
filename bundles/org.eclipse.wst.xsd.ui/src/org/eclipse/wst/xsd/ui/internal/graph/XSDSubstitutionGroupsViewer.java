@@ -58,7 +58,6 @@ public class XSDSubstitutionGroupsViewer extends BaseGraphicalViewer
     {                      
       //System.out.println("XSDComponentViewer.setSelection(" + component + ")");
       List editPartList = new ArrayList();    
-      StructuredSelection selection = new StructuredSelection();
       if (component instanceof XSDElementDeclaration || 
           component instanceof XSDSchema ||
           component instanceof XSDModelGroup ||        

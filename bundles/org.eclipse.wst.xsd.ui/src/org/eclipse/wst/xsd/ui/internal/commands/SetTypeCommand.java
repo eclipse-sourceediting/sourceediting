@@ -42,8 +42,6 @@ public class SetTypeCommand extends AbstractCommand
       XSDSchema schema = element.getSchema();
       if (typeKind == XSDConstants.COMPLEXTYPE_ELEMENT)
       {
-        AddComplexTypeDefinitionCommand ctCommand = new AddComplexTypeDefinitionCommand(element, null);
-//        ctCommand.run();
         AddModelGroupCommand sequenceCommand = new AddModelGroupCommand(element, XSDCompositor.SEQUENCE_LITERAL);
         sequenceCommand.run();
       }

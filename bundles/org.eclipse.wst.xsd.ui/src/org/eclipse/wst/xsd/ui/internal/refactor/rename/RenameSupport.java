@@ -145,11 +145,6 @@ public class RenameSupport {
 		
 	}
 
-	private RenameComponentProcessor getRenameProcessor() {
-		return (RenameComponentProcessor) fRefactoring.getProcessor();
-	}
-
-	
 	
 	/**
 	 * Creates a new rename support for the given {@link IPackageFragment}.

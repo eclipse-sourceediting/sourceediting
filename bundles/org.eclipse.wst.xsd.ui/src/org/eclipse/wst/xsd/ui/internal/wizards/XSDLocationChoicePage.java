@@ -12,7 +12,6 @@ package org.eclipse.wst.xsd.ui.internal.wizards;
 
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -42,7 +41,6 @@ public class XSDLocationChoicePage extends WizardPage
   {
     Composite base = new Composite(parent, SWT.NONE);
     base.setLayout(new GridLayout());
-    GridData data;
       
     ViewUtility.createLabel(base, XSDEditorPlugin.getXSDString("_UI_LABEL_INCLUDE_URL_FILE"));
     Composite radioButtonsGroup = ViewUtility.createComposite(base, 1, true);

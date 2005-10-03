@@ -38,7 +38,6 @@ public abstract class OptionsTextCellEditor extends CellEditor implements Select
 	Button moreButton;
 	Shell dialog;
 
-	private String fSelection;
 	protected Object fValue;
 	int selection;
 	Object typeObject;
@@ -71,7 +70,6 @@ public abstract class OptionsTextCellEditor extends CellEditor implements Select
 	 public OptionsTextCellEditor(Composite parent)
 	 {
 		 super(parent);
-		 fSelection = "";
 	 }
 
   /* (non-Javadoc)

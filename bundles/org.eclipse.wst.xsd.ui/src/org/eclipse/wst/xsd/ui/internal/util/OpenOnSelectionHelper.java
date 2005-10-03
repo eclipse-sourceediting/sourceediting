@@ -76,7 +76,7 @@ public class OpenOnSelectionHelper
 				{
 					try
 					{
-					  IEditorPart editorPart = workbenchWindow.getActivePage().openEditor(new FileEditorInput(schemaFile), XSDEditorPlugin.XSD_EDITOR_ID);
+					  workbenchWindow.getActivePage().openEditor(new FileEditorInput(schemaFile), XSDEditorPlugin.XSD_EDITOR_ID);
 					}
 					catch (PartInitException initEx)
 					{

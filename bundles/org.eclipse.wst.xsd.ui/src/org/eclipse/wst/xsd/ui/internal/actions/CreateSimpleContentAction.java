@@ -9,7 +9,6 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.actions;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -18,8 +17,6 @@ import org.eclipse.wst.xsd.ui.internal.util.XSDDOMHelper;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.util.XSDConstants;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 
 /**
@@ -110,53 +107,9 @@ public class CreateSimpleContentAction extends CreateElementAction
    */
   public void run()
   {
-    ArrayList message = new ArrayList();
     beginRecording(getDescription());
 
-    Element child = createAndAddNewChildElement();
+    createAndAddNewChildElement();
     endRecording();
-
-    NodeList children = parentNode.getChildNodes();
-/*
-    for (int i=0; i < children.getLength(); i++)
-    {
-      Node aChild = children.item(i);
-      if (aChild != null && aChild instanceof Element)
-      {
-        if (XSDDOMHelper.inputEquals((Element)aChild, XSDConstants.ATTRIBUTE_ELEMENT_TAG, false) ||
-            XSDDOMHelper.inputEquals((Element)aChild, XSDConstants.ATTRIBUTEGROUP_ELEMENT_TAG, true))
-        {
-          // REMOVE ATTRIBUTES AND ATTRIBUTE GROUP REFS FROM COMPLEX TYPES LIST OF CHILDREN
-          message.addElement(new ModelMessage
-                                 (XSDPlugin.getSchemaString("_INFO_REMOVE_ATTRIBUTE_FROM") +
-              " <" + parentNode.getAttribute("name") + ">", aChild));
-        }
-      }
-    }
-    domainModel.createMarkers(message);
-*/
-    for (int i=0; i < children.getLength(); i++)
-    {
-      Node aChild = children.item(i);
-      if (aChild != null && aChild instanceof Element)
-      {
-        if (XSDDOMHelper.inputEquals((Element)aChild, XSDConstants.ATTRIBUTE_ELEMENT_TAG, false) ||
-            XSDDOMHelper.inputEquals((Element)aChild, XSDConstants.ATTRIBUTE_ELEMENT_TAG, true) ||
-            XSDDOMHelper.inputEquals((Element)aChild, XSDConstants.ANYATTRIBUTE_ELEMENT_TAG, false) ||
-            XSDDOMHelper.inputEquals((Element)aChild, XSDConstants.ATTRIBUTEGROUP_ELEMENT_TAG, true))
-        {
-          // REMOVE ATTRIBUTES AND ATTRIBUTE GROUP REFS FROM COMPLEX TYPES LIST OF CHILDREN
-// KCPort TODO
-//          ErrorMessage aTask = new ErrorMessage();
-//          Node parent = aChild;
-//          if (parent instanceof NodeImpl)
-//          {
-//            aTask.setModelObject(parent);
-//          }
-//          aTask.setLocalizedMessage(XSDPlugin.getSchemaString("_INFO_REMOVE_ATTRIBUTE_FROM") + " <" + parentNode.getAttribute("name") + ">");
-//          message.add(aTask);
-        }
-      }
-    }    
   }
 }

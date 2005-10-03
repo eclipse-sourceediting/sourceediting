@@ -115,7 +115,6 @@ public class ComponentSelectionDialog extends Dialog {
         // do we need to introduce a method here to contain this
         // so we can add different parent other than 'topComposite'
         Composite filterLabelAndTree = new Composite(mainComposite, SWT.NONE);
-        GridData gd = new GridData(GridData.FILL_BOTH);
         GridLayout layout = new GridLayout();
         layout.marginWidth = 0;
         filterLabelAndTree.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -234,7 +233,6 @@ public class ComponentSelectionDialog extends Dialog {
      * search/filter string.
      */
     private String insertString(String target, String newString, String string) {
-        ArrayList list = new ArrayList();
         StringBuffer stringBuffer = new StringBuffer(string);
 
         int index = stringBuffer.indexOf(target);
@@ -351,7 +349,6 @@ public class ComponentSelectionDialog extends Dialog {
      */
     protected void populateMasterComponentList() {
         masterComponentList.clear();
-        ILabelProvider labelProvider = provider.getLabelProvider();
         
         final ComponentList componentList = new ComponentList();
         provider.getComponents(componentList, true);

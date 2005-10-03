@@ -73,27 +73,9 @@ public class ModelGroupSectionDescriptor extends AbstractSectionDescriptor
     {
       StructuredSelection structuredSelection = (StructuredSelection)selection;
       object = structuredSelection.getFirstElement();
-//      if (object instanceof XSDParticle)
-//      {
-//        XSDParticle particle = (XSDParticle)object;
-//        Element element = particle.getElement();
-//        if (inputEquals(element, XSDConstants.SEQUENCE_ELEMENT_TAG, false) ||
-//            inputEquals(element, XSDConstants.CHOICE_ELEMENT_TAG, false) ||
-//            inputEquals(element, XSDConstants.ALL_ELEMENT_TAG, false))
-//        {
-//          return true;
-//        }
-//      }
       if (object instanceof XSDModelGroup)
       {
-        XSDModelGroup particle = (XSDModelGroup)object;
-//        Element element = particle.getElement();
-//        if (inputEquals(element, XSDConstants.SEQUENCE_ELEMENT_TAG, false) ||
-//            inputEquals(element, XSDConstants.CHOICE_ELEMENT_TAG, false) ||
-//            inputEquals(element, XSDConstants.ALL_ELEMENT_TAG, false))
-//        {
-          return true;
-//        }
+        return true;
       }
     }
     return false;

@@ -67,52 +67,6 @@ public class TypesHelper
     }
   }
 
-  private Vector addExternalImportedUserSimpleTypes(Vector items)
-  {
-    if (xsdSchema != null)
-    {
-      Iterator contents = xsdSchema.getContents().iterator();
-      while (contents.hasNext())
-      {
-        XSDSchemaContent content = (XSDSchemaContent) contents.next();
-        if (content instanceof XSDImportImpl)
-        {
-          XSDImportImpl anImport = (XSDImportImpl) content;
-
-          XSDSchema impSchema = anImport.getResolvedSchema();
-
-          try
-          {
-            if (impSchema == null)
-            {
-              impSchema = anImport.importSchema();
-            }
-          }
-          catch (Exception e)
-          {
-            
-          }
-
-          if (impSchema != null)
-          {
-            Iterator i = impSchema.getTypeDefinitions().iterator();
-            while (i.hasNext())
-            {
-              XSDTypeDefinition typeDefinition = (XSDTypeDefinition) i.next();
-              if (typeDefinition instanceof XSDSimpleTypeDefinition)
-              {
-                if (typeDefinition.getName() != null)
-                {
-                  items.addAll(getPrefixedNames(typeDefinition.getTargetNamespace(), typeDefinition.getName()));
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-    return items;
-  }
 
   private Vector addExternalImportedGlobalElements(Vector items)
   {
@@ -237,53 +191,6 @@ public class TypesHelper
               if (attrib.getName() != null)
               {
                 items.addAll(getPrefixedNames(attrib.getTargetNamespace(), attrib.getName()));
-              }
-            }
-          }
-        }
-      }
-    }
-    return items;
-  }
-
-  private Vector addExternalImportedUserComplexTypes(Vector items)
-  {
-    if (xsdSchema != null)
-    {
-      Iterator contents = xsdSchema.getContents().iterator();
-      while (contents.hasNext())
-      {
-        XSDSchemaContent content = (XSDSchemaContent) contents.next();
-        if (content instanceof XSDImportImpl)
-        {
-          XSDImportImpl anImport = (XSDImportImpl) content;
-
-          XSDSchema impSchema = anImport.getResolvedSchema();
-
-          try
-          {
-            if (impSchema == null)
-            {
-              impSchema = anImport.importSchema();
-            }
-          }
-          catch (Exception e)
-          {
-            
-          }
-
-          if (impSchema != null)
-          {
-            Iterator i = impSchema.getTypeDefinitions().iterator();
-            while (i.hasNext())
-            {
-              XSDTypeDefinition typeDefinition = (XSDTypeDefinition) i.next();
-              if (typeDefinition instanceof XSDComplexTypeDefinition)
-              {
-                if (typeDefinition.getName() != null)
-                {
-                  items.addAll(getPrefixedNames(typeDefinition.getTargetNamespace(), typeDefinition.getName()));
-                }
               }
             }
           }
@@ -419,9 +326,6 @@ public class TypesHelper
 			    items.addAll(getPrefixedNames(typeDefinition.getTargetNamespace(), typeDefinition.getName()));         
         }
       }
-      // remove anyType since it's not user-defined
-      // items.add(getPrefix(xsdSchema.getSchemaForSchemaNamespace(), true) + "anyType");
-      //      items = addExternalImportedUserComplexTypes(items);
       items = (Vector) sortList(items);
     }
     return items;
@@ -504,10 +408,6 @@ public class TypesHelper
 			    items.add(typeDefinition);         
         }
       }
-      // remove anyType since it's not user-defined
-      // items.add(getPrefix(xsdSchema.getSchemaForSchemaNamespace(), true) + "anyType");
-      //      items = addExternalImportedUserComplexTypes(items);
-     // items = (Vector) sortList(items);
     }
     return items;
   }
@@ -800,7 +700,6 @@ public class TypesHelper
   {
     List list = new ArrayList();
     Map map = xsdSchema.getQNamePrefixToNamespaceMap();
-    boolean atLeastOnePrefixFound = false;
     for (Iterator iter = map.keySet().iterator(); iter.hasNext();)
     {
       String prefix = (String) iter.next();

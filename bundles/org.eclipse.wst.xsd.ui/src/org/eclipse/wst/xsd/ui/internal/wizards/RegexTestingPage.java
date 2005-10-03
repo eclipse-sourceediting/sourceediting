@@ -36,7 +36,6 @@ public class RegexTestingPage extends WizardPage
 {
   /* Validator from xerces package. */
 //  private RegularExpression validator;
-  private Pattern validator;
   
   /* Displays the status of the match. */
   private Label matchLabel;
@@ -98,8 +97,6 @@ public class RegexTestingPage extends WizardPage
     separator.setLayoutData(gd);
     
     composite.pack();
-    
-//    validator = new RegularExpression("", getFlags());
 
     setControl(composite);
   }
@@ -120,17 +117,9 @@ public class RegexTestingPage extends WizardPage
     super.setVisible(visible);
 
     String pattern = getPatternValue();
-    String flags = getFlags();
+    getFlags();
 
     value.setText(pattern);
-
-//    try
-//    {
-//      validator.setPattern(pattern, flags);
-//    }
-//    catch (ParseException pe)
-//    {
-//    }
     
     updateMatchStatus();
 

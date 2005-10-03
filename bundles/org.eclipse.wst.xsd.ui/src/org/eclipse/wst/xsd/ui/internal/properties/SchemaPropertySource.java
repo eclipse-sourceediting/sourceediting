@@ -305,17 +305,6 @@ public class SchemaPropertySource
         oldPrefix = aPrefix;
       }
     }
-
-//  For debugging
-//    System.out.println("old Prefix is " + oldPrefix);
-//    System.out.println("old NS is " + oldNamespace);
-    if (xsdSchema != null)
-    {
-      Map map = xsdSchema.getQNamePrefixToNamespaceMap();
-//      System.out.println("SetInput: Prefixes: " + map.values());
-//      System.out.println("SetInput: NS:" + map.keySet());
-    }
-    
   }
   
   
@@ -513,6 +502,7 @@ public class SchemaPropertySource
     try
     {
       URI testURI = new URI(ns);
+      testURI.isAbsolute();
     }
     catch (URISyntaxException e)
     {

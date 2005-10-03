@@ -288,7 +288,6 @@ public class XSDContentOutlinePage extends ContentOutlinePage
     referenceAction.setChecked(initialRef);
     inheritedAction = new FilterAction(new ReferenceFilter("Inherited Content"), XSDEditorPlugin.getXSDString("_UI_OUTLINE_SHOW_INHERITED"), ImageDescriptor.createFromFile(XSDEditorPlugin.getPlugin()
         .getClass(), "icons/XSDComplexContent.gif"));
-    boolean initialInherited = xsdTextEditor.getXSDModelAdapterFactory().getShowReferences();
     IMenuManager menu = actionBars.getMenuManager();
     menu.add(referenceAction);
     menu.add(inheritedAction);

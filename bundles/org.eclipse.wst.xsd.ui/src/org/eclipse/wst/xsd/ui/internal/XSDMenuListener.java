@@ -12,8 +12,6 @@ package org.eclipse.wst.xsd.ui.internal;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.gef.GraphicalEditPart;
-import org.eclipse.gef.ui.parts.AbstractEditPartViewer;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -44,20 +42,14 @@ import org.eclipse.wst.xsd.ui.internal.actions.SetBaseTypeAction;
 import org.eclipse.wst.xsd.ui.internal.actions.SetMultiplicityAction;
 import org.eclipse.wst.xsd.ui.internal.actions.SetTypeAction;
 import org.eclipse.wst.xsd.ui.internal.actions.XSDEditNamespacesAction;
-import org.eclipse.wst.xsd.ui.internal.graph.editparts.ComplexTypeDefinitionEditPart;
-import org.eclipse.wst.xsd.ui.internal.graph.editparts.ElementDeclarationEditPart;
-import org.eclipse.wst.xsd.ui.internal.graph.editparts.ModelGroupDefinitionEditPart;
-import org.eclipse.wst.xsd.ui.internal.graph.editparts.TopLevelComponentEditPart;
 import org.eclipse.wst.xsd.ui.internal.graph.model.Category;
 import org.eclipse.wst.xsd.ui.internal.provider.CategoryAdapter;
 import org.eclipse.wst.xsd.ui.internal.refactor.actions.RefactorActionGroup;
 import org.eclipse.wst.xsd.ui.internal.util.TypesHelper;
 import org.eclipse.wst.xsd.ui.internal.util.XSDDOMHelper;
-import org.eclipse.xsd.XSDComplexTypeDefinition;
 import org.eclipse.xsd.XSDCompositor;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDElementDeclaration;
-import org.eclipse.xsd.XSDModelGroupDefinition;
 import org.eclipse.xsd.XSDNamedComponent;
 import org.eclipse.xsd.XSDParticle;
 import org.eclipse.xsd.XSDSchema;
@@ -531,7 +523,7 @@ public class XSDMenuListener implements IMenuListener
     }
     else if (XSDDOMHelper.inputEquals(parent, XSDConstants.ATTRIBUTEGROUP_ELEMENT_TAG, false))
     { //
-      boolean annotationExists = addCreateAnnotationActionIfNotExist(manager, XSDConstants.ANNOTATION_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_ANNOTATION"), attributes, parent,
+      addCreateAnnotationActionIfNotExist(manager, XSDConstants.ANNOTATION_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_ANNOTATION"), attributes, parent,
           parent.getFirstChild());
       boolean anyAttributeExists = elementExists(XSDConstants.ANYATTRIBUTE_ELEMENT_TAG, parent);
       Node anyAttributeNode = null;
@@ -603,11 +595,7 @@ public class XSDMenuListener implements IMenuListener
     { //
       boolean annotationExists = false;
       boolean contentExists = false;
-      boolean complexOrSimpleContentExists = false;
-      boolean anyAttributeExists = false;
       Node annotationNode = null;
-      Node contentNode = null;
-      Node anyAttributeNode = null;
       NodeList children = parent.getChildNodes();
       for (int i = 0; i < children.getLength(); i++)
       {
@@ -624,16 +612,6 @@ public class XSDMenuListener implements IMenuListener
               || XSDDOMHelper.inputEquals((Element) child, XSDConstants.SIMPLECONTENT_ELEMENT_TAG, false) || XSDDOMHelper.inputEquals((Element) child, XSDConstants.COMPLEXCONTENT_ELEMENT_TAG, false))
           {
             contentExists = true;
-            contentNode = child;
-            if (XSDDOMHelper.inputEquals((Element) child, XSDConstants.SIMPLECONTENT_ELEMENT_TAG, false) || XSDDOMHelper.inputEquals((Element) child, XSDConstants.COMPLEXCONTENT_ELEMENT_TAG, false))
-            {
-              complexOrSimpleContentExists = true;
-            }
-          }
-          else if (XSDDOMHelper.inputEquals((Element) child, XSDConstants.ANYATTRIBUTE_ELEMENT_TAG, false))
-          {
-            anyAttributeExists = true;
-            anyAttributeNode = child;
           }
         }
       }
@@ -701,8 +679,7 @@ public class XSDMenuListener implements IMenuListener
     { //
       XSDDOMHelper xsdDOMHelper = new XSDDOMHelper();
       Element derivedByNode = xsdDOMHelper.getDerivedByElement(parent);
-      String derivedByName = xsdDOMHelper.getDerivedByName(parent);
-      boolean annotationExists = addCreateAnnotationActionIfNotExist(manager, XSDConstants.ANNOTATION_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_ANNOTATION"), attributes, parent,
+      addCreateAnnotationActionIfNotExist(manager, XSDConstants.ANNOTATION_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_ANNOTATION"), attributes, parent,
           parent.getFirstChild());
       manager.add(new Separator());
       if (derivedByNode == null)
@@ -724,8 +701,7 @@ public class XSDMenuListener implements IMenuListener
     { //
       XSDDOMHelper xsdDOMHelper = new XSDDOMHelper();
       Element derivedByNode = xsdDOMHelper.getDerivedByElement(parent);
-      String derivedByName = xsdDOMHelper.getDerivedByName(parent);
-      boolean annotationExists = addCreateAnnotationActionIfNotExist(manager, XSDConstants.ANNOTATION_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_ANNOTATION"), attributes, parent,
+      addCreateAnnotationActionIfNotExist(manager, XSDConstants.ANNOTATION_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_ANNOTATION"), attributes, parent,
           parent.getFirstChild());
       manager.add(new Separator());
       if (derivedByNode == null)
@@ -759,7 +735,7 @@ public class XSDMenuListener implements IMenuListener
             .getFirstChild());
         if (annotationExists)
         {
-          Node annotationNode = getFirstChildNodeIfExists(parent, XSDConstants.ANNOTATION_ELEMENT_TAG, false);
+          getFirstChildNodeIfExists(parent, XSDConstants.ANNOTATION_ELEMENT_TAG, false);
         }
 
         manager.add(new Separator());
@@ -880,11 +856,10 @@ public class XSDMenuListener implements IMenuListener
       //      ...
       if (XSDDOMHelper.inputEquals(parentNode, XSDConstants.SIMPLECONTENT_ELEMENT_TAG, false))
       {
-        boolean annotationExists = false;
         boolean anyAttributeExists = false;
         Node anyAttributeNode = null;
         anyAttributeExists = elementExists(XSDConstants.ANYATTRIBUTE_ELEMENT_TAG, parent);
-        annotationExists = addCreateAnnotationActionIfNotExist(manager, XSDConstants.ANNOTATION_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_ANNOTATION"), attributes, parent, parent
+        addCreateAnnotationActionIfNotExist(manager, XSDConstants.ANNOTATION_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_ANNOTATION"), attributes, parent, parent
             .getFirstChild());
         manager.add(new Separator());
         if (anyAttributeExists)
@@ -983,14 +958,14 @@ public class XSDMenuListener implements IMenuListener
     }
     else if (XSDDOMHelper.inputEquals(parent, XSDConstants.LIST_ELEMENT_TAG, false))
     {
-      boolean annotationExists = addCreateAnnotationActionIfNotExist(manager, XSDConstants.ANNOTATION_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_ANNOTATION"), attributes, parent,
+      addCreateAnnotationActionIfNotExist(manager, XSDConstants.ANNOTATION_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_ANNOTATION"), attributes, parent,
           parent.getFirstChild());
       manager.add(new Separator());
       addCreateLocalSimpleTypeActionIfNotExist(manager, XSDConstants.SIMPLETYPE_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_LOCAL_SIMPLE_TYPE"), attributes, parent, null);
     }
     else if (XSDDOMHelper.inputEquals(parent, XSDConstants.UNION_ELEMENT_TAG, false))
     {
-      boolean annotationExists = addCreateAnnotationActionIfNotExist(manager, XSDConstants.ANNOTATION_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_ANNOTATION"), attributes, parent,
+      addCreateAnnotationActionIfNotExist(manager, XSDConstants.ANNOTATION_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_ANNOTATION"), attributes, parent,
           parent.getFirstChild());
       manager.add(new Separator());
       addCreateLocalSimpleTypeAction(manager, XSDConstants.SIMPLETYPE_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_LOCAL_SIMPLE_TYPE"), attributes, parent, null);
@@ -1077,7 +1052,6 @@ public class XSDMenuListener implements IMenuListener
     }
     else if (XSDDOMHelper.inputEquals(parent, XSDConstants.ANY_ELEMENT_TAG, false))
     {
-      XSDConcreteComponent concreteComponent = getXSDSchema().getCorrespondingComponent(parent);
       addCreateElementActionIfNotExist(manager, XSDConstants.ANNOTATION_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_ANNOTATION"), attributes, parent, parent.getFirstChild());
       // need to add adapters for the ANY element.  I'd rather not provide this menu
       // and let users see that the graph view doesn't update
@@ -1159,13 +1133,6 @@ public class XSDMenuListener implements IMenuListener
         {
           parent = resolvedElementDeclaration.getElement(); 
         
-          Element parentNode = (Element) parent.getParentNode();
-
-          boolean isGlobalElement = false;
-          if (XSDDOMHelper.inputEquals(parentNode, XSDConstants.SCHEMA_ELEMENT_TAG, false))
-          {
-            isGlobalElement = true;
-          }
           boolean annotationExists = addCreateAnnotationActionIfNotExist(manager, XSDConstants.ANNOTATION_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_ANNOTATION"), attributes, parent,
               parent.getFirstChild());
           boolean simpleTypeExists = elementExists(XSDConstants.SIMPLETYPE_ELEMENT_TAG, parent);
@@ -1227,52 +1194,6 @@ public class XSDMenuListener implements IMenuListener
     if (concreteComponent instanceof XSDNamedComponent)
     {
       addRefactorMenuGroup(manager);
-      if (selectionProvider instanceof XSDSelectionManager)
-      {
-        if (sourceContext instanceof AbstractEditPartViewer)
-        {
-          AbstractEditPartViewer viewer = (AbstractEditPartViewer)sourceContext;
-        
-          Object obj = viewer.getSelectedEditParts().get(0);
-          
-          if (obj instanceof GraphicalEditPart)
-          {
-            boolean canEdit = true;
-            if (obj instanceof ElementDeclarationEditPart)
-            {
-              XSDElementDeclaration elem = ((ElementDeclarationEditPart)obj).getXSDElementDeclaration();
-              if (elem.isElementDeclarationReference())
-              {
-                canEdit = false;
-              }
-            }
-            else if (obj instanceof ModelGroupDefinitionEditPart)
-            {
-              XSDModelGroupDefinition group = ((ModelGroupDefinitionEditPart)obj).getXSDModelGroupDefinition();
-              if (group.isModelGroupDefinitionReference())
-              {
-                canEdit = false;
-              }
-            }
-            else if (obj instanceof ComplexTypeDefinitionEditPart)
-            {
-              XSDComplexTypeDefinition ct = ((ComplexTypeDefinitionEditPart)obj).getXSDComplexTypeDefinition();
-              if (ct.getName() == null) // anonymous
-              {
-                canEdit = false;
-              }
-            }
-            else if (obj instanceof TopLevelComponentEditPart)
-            {
-              canEdit = true;
-            }
-            else
-            {
-              canEdit = false;
-            }
-          }
-        }
-      }
     }
   }
 
@@ -1456,7 +1377,6 @@ public class XSDMenuListener implements IMenuListener
     //XMLModel model = getXMLModel();
     //if (model != null)
     {
-      String targetNamespace = "";
       XSDSchema schema = getXSDSchema();
       TypesHelper helper = new TypesHelper(schema);
       String prefix = "";

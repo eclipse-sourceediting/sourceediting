@@ -10,9 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.graph;
 
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 import org.eclipse.gef.EditPart;
 import org.eclipse.jface.viewers.ISelection;
@@ -131,7 +129,6 @@ public class LinkedGraphViewer
     public void selectionChanged(SelectionChangedEvent event)
     {
       ISelection editPartSelection = event.getSelection();
-      List nodeList = new ArrayList();
       if (editPartSelection instanceof IStructuredSelection)
       {
         for (Iterator i = ((IStructuredSelection)editPartSelection).iterator(); i.hasNext(); )

@@ -31,8 +31,6 @@ import org.eclipse.swt.events.TraverseListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.part.PageBook;
@@ -114,11 +112,7 @@ public class XSDGraphViewer implements ISelectionChangedListener
   {
     pageBook = new PageBook(parent, 0);
     
-    //componentViewer = new XSDComponentViewer(editor, internalSelectionProvider);
     componentViewer = new XSDComponentViewer(editor, editor.getSelectionManager());
-    ViewUtility util = new ViewUtility();
-    final Composite client;
-    String designLayoutPosition = XSDEditorPlugin.getPlugin().getDesignLayoutPosition();
     form = new ViewForm(pageBook, SWT.NONE);
     frameBar = new Composite(form, SWT.NONE);
     org.eclipse.swt.layout.GridLayout frameLayout = new org.eclipse.swt.layout.GridLayout();
@@ -143,154 +137,22 @@ public class XSDGraphViewer implements ISelectionChangedListener
       public void widgetSelected(SelectionEvent e)
       {
         editor.getGraphViewer().setInput(editor.getXSDSchema());
-        // internalSelectionProvider.setSelection(new StructuredSelection(editor.getXSDSchema()));
         editor.getSelectionManager().setSelection(new StructuredSelection(editor.getXSDSchema()));
       }
     });
-    // TEMPORARILY REMOVE DIFFERENT VIEWS
-    //    toolItem = new ToolItem(graphToolBar, SWT.DROP_DOWN);
-    //
-    //    // set default to containment
-    //// toolItem.setText(XSDEditorPlugin.getXSDString("_UI_CONTAINMENT"));
-    //    toolItem.addSelectionListener(new SelectionAdapter()
-    //    {
-    //      public void widgetSelected(SelectionEvent e)
-    //      {
-    //        Menu menu = new Menu(graphToolBar);
-    //        if (menu != null)
-    //        {
-    //          if (!showGraphMenu(menu))
-    //          {
-    //            frameBar.setVisible(false);
-    //            return;
-    //          }
-    //          Rectangle b = toolItem.getBounds();
-    //          org.eclipse.swt.graphics.Point p = toolItem.getParent().toDisplay(new
-    // org.eclipse.swt.graphics.Point(b.x, b.y + b.height));
-    //          menu.setLocation(p.x, p.y);
-    //          menu.setVisible(true);
-    //        }
-    //      }
-    //    });
     form.setTopLeft(frameBar);
-    //    createInheritanceViewer(form);
-    //    createSubstitutionGroupViewer(form);
     componentViewerControl = componentViewer.createControl(form);
-    //inheritanceViewerControl = inheritanceViewer.createControl(form);
-    //subGroupsViewerControl = subGroupsViewer.createControl(form);
     c = ViewUtility.createComposite(form, 1);
     form.setContent(componentViewerControl);
-    // componentViewerControl.setData("layout ratio", new Float(0.65));
     form.setData("layout ratio", new Float(0.65));
     if (dividerColor == null)
     {
       dividerColor = new Color(componentViewerControl.getDisplay(), 143, 141, 138);
     }
-    //KCPort
-    //    client.addPaintListener(new PaintListener()
-    //    {
-    //      /**
-    //       * @see org.eclipse.swt.events.PaintListener#paintControl(PaintEvent)
-    //       */
-    //      public void paintControl(PaintEvent e)
-    //      {
-    //        Object source = e.getSource();
-    //        if (source instanceof Composite)
-    //        {
-    //          Composite comp = (Composite)source;
-    //          Rectangle boundary = comp.getClientArea();
-    //          e.gc.setForeground(dividerColor);
-    //          e.gc.drawLine(boundary.x, boundary.y, boundary.x + boundary.width,
-    // boundary.y);
-    //          editor.setDesignWeights(sashForm.getWeights(), true);
-    //        }
-    //      }
-    //    });
-    // KCPort
-    //    designView = new DesignViewer(editor);
-    //    final Control design = designView.createControl(client);
-    //    design.setLayoutData(ViewUtility.createFill());
-    //    client.setData("layout ratio", new Float(0.35));
-    //    enableDesignView(editor.isCombinedDesignAndSourceView());
-    //    pageBook.showPage(sashForm);
     pageBook.showPage(form);
     componentViewer.addSelectionChangedListener(internalSelectionProvider);
-    //inheritanceViewer.addSelectionChangedListener(this);
-    // Temporarily remove graph tool bar
-    //    linkInheritanceViewer.addSelectionChangedListener(this);
-    //    linkSubstitutionGroupViewer.addSelectionChangedListener(this);
     printGraphAction = new PrintGraphAction(componentViewer);
     return pageBook;
-    //    return form;
-  }
-
-  private boolean showGraphMenu(Menu menu)
-  {
-    MenuItem containmentMenuItem = new MenuItem(menu, SWT.RADIO);
-    containmentMenuItem.setText(XSDEditorPlugin.getXSDString("_UI_CONTAINMENT"));
-    containmentMenuItem.addSelectionListener(new SelectionAdapter()
-    {
-      public void widgetSelected(SelectionEvent e)
-      {
-        toolItem.setText(XSDEditorPlugin.getXSDString("_UI_CONTAINMENT"));
-        frameBar.layout(true);
-        graphToolBar.layout(true);
-        form.setContent(componentViewerControl);
-        // retrieve latest input which could have changed...from designView ??
-        // get it directly?
-        // KCPort
-        //        setInput(designView.getInput());
-      }
-    });
-    MenuItem inheritanceMenuItem = new MenuItem(menu, SWT.RADIO);
-    inheritanceMenuItem.setText(XSDEditorPlugin.getXSDString("_UI_INHERITANCE"));
-    inheritanceMenuItem.addSelectionListener(new SelectionAdapter()
-    {
-      public void widgetSelected(SelectionEvent e)
-      {
-        toolItem.setText(XSDEditorPlugin.getXSDString("_UI_INHERITANCE"));
-        frameBar.layout(true);
-        graphToolBar.layout(true);
-        //        form.setContent(inheritanceViewerControl);
-        form.setContent(linkInheritanceViewer.getControl());
-        if (linkInheritanceViewer.getInput() == null)
-        {
-          linkInheritanceViewer.setInput(schema);
-        }
-      }
-    });
-    MenuItem subGroupsMenuItem = new MenuItem(menu, SWT.RADIO);
-    subGroupsMenuItem.setText(XSDEditorPlugin.getXSDString("_UI_SUBSTITUTION_GROUPS"));
-    subGroupsMenuItem.addSelectionListener(new SelectionAdapter()
-    {
-      public void widgetSelected(SelectionEvent e)
-      {
-        toolItem.setText(XSDEditorPlugin.getXSDString("_UI_SUBSTITUTION_GROUPS"));
-        frameBar.layout(true);
-        graphToolBar.layout(true);
-        form.setContent(linkSubstitutionGroupViewer.getControl());
-        // retrieve latest input which could have changed...from designView ??
-        // get it directly?
-        //        setInput(designView.getInput());
-        if (linkSubstitutionGroupViewer.getInput() == null)
-        {
-          linkSubstitutionGroupViewer.setInput(schema);
-        }
-      }
-    });
-    if (toolItem.getText().equals(XSDEditorPlugin.getXSDString("_UI_CONTAINMENT")))
-    {
-      containmentMenuItem.setSelection(true);
-    }
-    else if (toolItem.getText().equals(XSDEditorPlugin.getXSDString("_UI_INHERITANCE")))
-    {
-      inheritanceMenuItem.setSelection(true);
-    }
-    else if (toolItem.getText().equals(XSDEditorPlugin.getXSDString("_UI_SUBSTITUTION_GROUPS")))
-    {
-      subGroupsMenuItem.setSelection(true);
-    }
-    return true;
   }
 
   public Action getPrintGraphAction()

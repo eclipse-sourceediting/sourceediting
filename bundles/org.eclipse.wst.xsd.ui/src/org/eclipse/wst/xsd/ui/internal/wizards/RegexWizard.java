@@ -19,8 +19,6 @@ import org.eclipse.xsd.impl.XSDFactoryImpl;
 
 public class RegexWizard extends Wizard 
 {
-  private static final boolean debug = false;
-  
   private RegexCompositionPage compositionPage;
   private RegexTestingPage testingPage;
 

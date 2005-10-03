@@ -20,7 +20,6 @@ import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.wst.xsd.ui.internal.XSDEditorPlugin;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.util.XSDConstants;
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
@@ -97,7 +96,6 @@ public class SimpleContentPropertySource
    */
   public Object getPropertyValue(Object id)
   {
-    Object result = null;
     if (id instanceof String)
      {
       if (((String) id).equals(DERIVED_BY_ID))
@@ -148,8 +146,6 @@ public class SimpleContentPropertySource
         
         if (((String) id).equals(BASE_TYPE_ID))
         {            
-          Document doc = element.getOwnerDocument();
-          Element childElement = null;
           beginRecording(XSDEditorPlugin.getXSDString("_UI_TYPE_CHANGE"), element); //$NON-NLS-1$        
           getDomHelper().setDerivedByBaseType(element, derivedBy, (String)value);
           endRecording(element);

@@ -156,13 +156,8 @@ public class XSDActionBarContributor extends MultiPageEditorActionBarContributor
     }
   }
 
-  private IMenuManager editMenu;
-
   public void addToMenu(IMenuManager menuManager)
   {
-  	//menuManager.insertAfter(IWorkbenchActionConstants.M_EDIT, refactorMenu);
-    editMenu = menuManager.findMenuUsingPath(IWorkbenchActionConstants.M_EDIT);
-
     MenuManager treeMenu = new MenuManager(XSDEditorPlugin.getXSDString("_UI_MENU_XSD_EDITOR"));
     menuManager.insertAfter(IWorkbenchActionConstants.MB_ADDITIONS, treeMenu);
 

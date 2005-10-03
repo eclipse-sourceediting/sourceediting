@@ -36,7 +36,6 @@ import org.w3c.dom.Node;
 
 public class XSDEditNamespacesAction extends Action {
 	private Element element;
-	private Node node;
 	private String resourceLocation;
 	private XSDSchema xsdSchema;
     private DOMNamespaceInfoManager namespaceInfoManager = new DOMNamespaceInfoManager();
@@ -46,7 +45,6 @@ public class XSDEditNamespacesAction extends Action {
 		setText(label);
 		
 		this.element = element;
-		this.node = node;
 		///////////////////// This needs to be changed....
 		this.resourceLocation = "dummy";		
 	}
@@ -98,7 +96,6 @@ public class XSDEditNamespacesAction extends Action {
 		        Map prefixMapping = createPrefixMapping(oldNamespaceInfoList, namespaceInfoList);
             
             Map map2 = new Hashtable();
-            String xsdNS = "";
             for (Iterator iter = newInfoList.iterator(); iter.hasNext(); )
             {
               NamespaceInfo ni = (NamespaceInfo)iter.next();

@@ -17,7 +17,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.wst.xsd.ui.internal.XSDEditorContextIds;
 import org.eclipse.wst.xsd.ui.internal.XSDEditorPlugin;
@@ -59,10 +58,6 @@ public class TypeSection
    */
   public Composite createClient(Composite parent)
   {
-    //	FlatViewUtility utility = new FlatViewUtility(XSDEditor.isFlatLook());
-    ViewUtility utility = new ViewUtility();
-
-    // Composite client = utility.createComposite(parent, 1);
     Composite client = new Composite(parent, SWT.NONE);
     GridLayout gl = new GridLayout(1, true);
     gl.verticalSpacing = 0;
@@ -96,7 +91,7 @@ public class TypeSection
     if (showDerivedBy)
     {
       Composite derivedByComposite = ViewUtility.createComposite(client, 2);
-      Label derivedByLabel = ViewUtility.createLabel(derivedByComposite, XSDEditorPlugin.getXSDString("_UI_LABEL_DERIVED_BY"));
+      ViewUtility.createLabel(derivedByComposite, XSDEditorPlugin.getXSDString("_UI_LABEL_DERIVED_BY"));
       derivedByCombo = ViewUtility.createComboBox(derivedByComposite);
       populateDerivedByCombo();
       WorkbenchHelp.setHelp(derivedByCombo, XSDEditorContextIds.XSDE_SIMPLE_CONTENT_DERIVED);

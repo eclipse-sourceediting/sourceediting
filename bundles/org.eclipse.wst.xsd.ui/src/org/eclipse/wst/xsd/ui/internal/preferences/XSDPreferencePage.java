@@ -25,7 +25,6 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.help.WorkbenchHelp;
@@ -153,7 +152,6 @@ public class XSDPreferencePage extends PreferencePage implements IWorkbenchPrefe
    */
   public void handleEvent(Event e) 
   {
-    Widget source = e.widget;
   }
 
   /**

@@ -182,32 +182,29 @@ public class NamespaceSection extends AbstractSection
 		
 		public void doHandleEvent(Event event)
 		{
-      errorText.setText("");
-      String prefixValue = prefixText.getText();
-      String tnsValue = targetNamespaceText.getText();
-      if (tnsValue.trim().length() == 0)
-      {
-        if (prefixValue.trim().length() > 0)
-        {
-          errorText.setText(XSDEditorPlugin.getXSDString("_ERROR_TARGET_NAMESPACE_AND_PREFIX"));
-          int length = errorText.getText().length();
-          red = new Color(null, 255, 0, 0);
-          StyleRange style = new StyleRange(0, length, red, targetNamespaceText.getBackground());
-          errorText.setStyleRange(style);
-          return;
-        }
-      }
+          errorText.setText("");
+          String prefixValue = prefixText.getText();
+          String tnsValue = targetNamespaceText.getText();
+          if (tnsValue.trim().length() == 0)
+          {
+            if (prefixValue.trim().length() > 0)
+            {
+              errorText.setText(XSDEditorPlugin.getXSDString("_ERROR_TARGET_NAMESPACE_AND_PREFIX"));
+              int length = errorText.getText().length();
+              red = new Color(null, 255, 0, 0);
+              StyleRange style = new StyleRange(0, length, red, targetNamespaceText.getBackground());
+              errorText.setStyleRange(style);
+              return;
+            }
+          }
 
 		  if (event.widget == prefixText)
 		  {
-        updateNamespaceInfo(prefixValue, tnsValue);
+            updateNamespaceInfo(prefixValue, tnsValue);
 		  }
 		  else if (event.widget == targetNamespaceText)
-      {
-		  	TypesHelper helper = new TypesHelper(xsdSchema);
-			  String aPrefix = helper.getPrefix(xsdSchema.getElement().getAttribute(XSDConstants.TARGETNAMESPACE_ATTRIBUTE), false);
-		  	// updateNamespaceInfo(aPrefix, tnsValue);
-        updateNamespaceInfo(prefixValue, tnsValue);
+          {
+            updateNamespaceInfo(prefixValue, tnsValue);
 		  }
 		}
 		
@@ -407,6 +404,7 @@ public class NamespaceSection extends AbstractSection
       try
       {
         URI testURI = new URI(ns);
+        testURI.isAbsolute();
       }
       catch (URISyntaxException e)
       {

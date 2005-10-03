@@ -141,12 +141,9 @@ public class ModelGroupPropertySource  // all or sequence or choice
       String newValue = (String)value;
       if (property.equals("model group"))
        {
-        Document doc = element.getOwnerDocument();
         Element parent = (Element)element.getParentNode();
         String prefix = element.getPrefix();
         prefix = prefix == null ? "" : prefix + ":";
-        Element newNode = null;
-        // int compositor = XSDCompositor.SEQUENCE;
         beginRecording(XSDEditorPlugin.getXSDString("_UI_GROUP_SCOPE_CHANGE"), parent);
         changeContentModel(parent, newValue);
         endRecording(parent);
@@ -156,7 +153,6 @@ public class ModelGroupPropertySource  // all or sequence or choice
       else if (property.equals(XSDConstants.MAXOCCURS_ATTRIBUTE))
       {
         String max = (String)value;
-        String min = element.getAttribute(XSDConstants.MINOCCURS_ATTRIBUTE);
         beginRecording(XSDEditorPlugin.getXSDString("_UI_MAXOCCURS_CHANGE"), element);
         if (max.length() > 0)
         {
@@ -171,7 +167,6 @@ public class ModelGroupPropertySource  // all or sequence or choice
       else if (((String) id).equals(XSDConstants.MINOCCURS_ATTRIBUTE))
        {
         String min = (String)value;
-        String max = element.getAttribute(XSDConstants.MAXOCCURS_ATTRIBUTE);
         beginRecording(XSDEditorPlugin.getXSDString("_UI_MINOCCURS_CHANGE"), element);
         if (min.length() > 0)
         {

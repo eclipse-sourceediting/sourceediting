@@ -13,7 +13,7 @@ package org.eclipse.wst.xsd.ui.internal.refactor.delete;
 import java.text.MessageFormat;
 import java.util.Iterator;
 
-import org.eclipse.wst.xsd.ui.internal.util.XSDDOMHelper;
+import org.eclipse.wst.xsd.ui.internal.XSDEditorPlugin;
 import org.eclipse.xsd.XSDAttributeDeclaration;
 import org.eclipse.xsd.XSDAttributeGroupContent;
 import org.eclipse.xsd.XSDAttributeUse;
@@ -49,17 +49,14 @@ public class GlobalSimpleOrComplexTypeCleanup extends BaseGlobalCleanup
       String msg = "";
       if (element.isGlobal())
       {
-        // KCPort String pattern = XSDPlugin.getSchemaString("_INFO_RESET_GLOBAL_ELEMENT");
-				String pattern = "_INFO_RESET_GLOBAL_ELEMENT";
+        String pattern = XSDEditorPlugin.getXSDString("_INFO_RESET_GLOBAL_ELEMENT");
         Object args[] = {element.getName()};
         msg = MessageFormat.format(pattern, args);
       }
       else
       {
-        // KCPort msg = XSDPlugin.getSchemaString("_INFO_RESET_ELEMENT");
-				msg = "_INFO_RESET_ELEMENT";
-        // KCPort msg += "<" + element.getName() + "> " + XSDPlugin.getSchemaString("_UI_TO_TYPE_STRING");
-				msg += "<" + element.getName() + "> " + "_UI_TO_TYPE_STRING";
+        msg = XSDEditorPlugin.getXSDString("_INFO_RESET_ELEMENT");
+        msg += "<" + element.getName() + "> " + XSDEditorPlugin.getXSDString("_UI_TO_TYPE_STRING");
       }
       addMessage(msg, element);
     }
@@ -91,11 +88,9 @@ public class GlobalSimpleOrComplexTypeCleanup extends BaseGlobalCleanup
           {
               resetTypeToString(attrDecl.getElement());
               // reset the type of the attribute decl to string
-              // KCPort String msg = XSDPlugin.getSchemaString("_INFO_RESET_ATTRIBUTE") +
-						  String msg = "_INFO_RESET_ATTRIBUTE" +
+              String msg = XSDEditorPlugin.getXSDString("_INFO_RESET_ATTRIBUTE") +
                           " <" + attrDecl.getName() + "> " +
-                          // KCPort XSDPlugin.getSchemaString("_UI_TO_TYPE_STRING");
-						               "_UI_TO_TYPE_STRING"; 
+                          XSDEditorPlugin.getXSDString("_UI_TO_TYPE_STRING");
               addMessage(msg, attrDecl);
               resetTypeToString(attrDecl.getElement());
           }
@@ -105,14 +100,10 @@ public class GlobalSimpleOrComplexTypeCleanup extends BaseGlobalCleanup
     XSDTypeDefinition base = type.getBaseTypeDefinition();
     if (base != null && base == deletedItem)
     {
-      XSDDOMHelper helper = new XSDDOMHelper();
-      Element derivedByNode = helper.getDerivedByElement(type.getElement());
-
-      // KCPort String msg = XSDPlugin.getSchemaString("_INFO_RESET_COMPLEX_TYPE") +
-			String msg = "_INFO_RESET_COMPLEX_TYPE" +
+      String msg = XSDEditorPlugin.getXSDString("_INFO_RESET_COMPLEX_TYPE") +
               " <" + getNamedComponentName(type) + "> " +
-              // KCPort XSDPlugin.getSchemaString("_UI_DERIVATION");
-			        "_UI_DERIVATION";
+              XSDEditorPlugin.getXSDString("_UI_DERIVATION");
+
       addMessage(msg, type);
       
       type.setBaseTypeDefinition(null);

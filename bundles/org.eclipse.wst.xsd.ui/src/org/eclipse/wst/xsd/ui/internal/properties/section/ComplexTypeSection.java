@@ -21,7 +21,6 @@ import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
@@ -42,8 +41,6 @@ import org.w3c.dom.Element;
 
 public class ComplexTypeSection extends AbstractSection
 {
-  private String DERIVED_BY_ID = "derived by"; // XSDEditorPlugin.getXSDString("_UI_LABEL_DERIVED_BY"); //$NON-NLS-1$ 
-  private String BASE_TYPE_ID = "base type"; //  XSDEditorPlugin.getXSDString("_UI_LABEL_BASE_TYPE"); //$NON-NLS-1$
   private String derivedByChoicesComboValues[] =
   {
         "",
@@ -62,19 +59,6 @@ public class ComplexTypeSection extends AbstractSection
 	Text baseTypeCombo;
 	CCombo derivedByCombo;
 	Button button;
-
-	/**
-	 * A helper to listen for events that indicate that a text
-	 * field has been changed.
-	 */
-	private TextChangeHelper listener = new TextChangeHelper()
-	{
-		public void textChanged(Control control)
-		{
-			Object input = getInput();
-			refresh();
-		}
-	};
 
 	/**
 	 * @see org.eclipse.wst.common.ui.properties.internal.provisional.ITabbedPropertySection#createControls(org.eclipse.swt.widgets.Composite, org.eclipse.wst.common.ui.properties.internal.provisional.TabbedPropertySheetWidgetFactory)
@@ -232,7 +216,6 @@ public class ComplexTypeSection extends AbstractSection
       Element contentModelElement = getDomHelper().getContentModelFromParent(ctElement);
       String baseType = getDomHelper().getBaseType(contentModelElement);
       beginRecording(XSDEditorPlugin.getXSDString("_UI_DERIVEDBY_CHANGE"), ctElement); //$NON-NLS-1$
-      Element derivedByElem = getDomHelper().getDerivedByElement(ctElement);
       if (contentModelElement != null)
       {
         getDomHelper().changeDerivedByType(contentModelElement, derivedByCombo.getText(), baseType);

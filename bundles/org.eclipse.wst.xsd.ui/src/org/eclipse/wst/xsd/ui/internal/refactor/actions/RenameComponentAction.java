@@ -118,7 +118,7 @@ public class RenameComponentAction extends SelectionDispatchAction {
 					null);
 			RefactoringWizardOpenOperation op = new RefactoringWizardOpenOperation(
 					wizard);
-			int result = op.run(XSDEditorPlugin.getShell(), wizard
+			op.run(XSDEditorPlugin.getShell(), wizard
 					.getDefaultPageTitle());
 			op.getInitialConditionCheckingStatus();
 			triggerBuild();

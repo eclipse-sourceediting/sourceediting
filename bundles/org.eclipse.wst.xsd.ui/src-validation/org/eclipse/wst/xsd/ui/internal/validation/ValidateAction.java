@@ -39,10 +39,8 @@ public class ValidateAction extends org.eclipse.wst.xml.ui.internal.validation.c
   // Property file strings.
   private static final String _UI_DIALOG_XML_SCHEMA_INVALID_TEXT = "_UI_DIALOG_XML_SCHEMA_INVALID_TEXT";
   private static final String _UI_DIALOG_XML_SCHEMA_INVALID_TITLE = "_UI_DIALOG_XML_SCHEMA_INVALID_TITLE";
-  private static final String _UI_VALIDATION_INTERNAL_ERROR = "_UI_VALIDATION_INTERNAL_ERROR";
   private static final String _UI_DIALOG_XML_SCHEMA_VALID_TITLE = "_UI_DIALOG_XML_SCHEMA_VALID_TITLE";
   private static final String _UI_DIALOG_XML_SCHEMA_VALID_TEXT = "_UI_DIALOG_XML_SCHEMA_VALID_TEXT";
-  private static final String _UI_MESSAGE_LIMIT_EXCEEDED = "_UI_DIALOG_XML_SCHEMA_LIMITE_EXCEEDED";
   private static final String _UI_DIALOG_XML_SCHEMA_VALID_WITH_WARNINGS = "_UI_DIALOG_XML_SCHEMA_VALID_WITH_WARNINGS";
 
   private InputStream inputStream;

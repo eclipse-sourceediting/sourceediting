@@ -38,7 +38,6 @@ public class XSDElementDeclarationAdapter extends XSDAbstractAdapter
   public Image getImage(Object element)
   {
     XSDElementDeclaration xsdElementDeclaration = ((XSDElementDeclaration)element);
-    XSDElementDeclaration resolvedElementDeclaration = xsdElementDeclaration.getResolvedElementDeclaration();
     
     if (!xsdElementDeclaration.isElementDeclarationReference())
     {
@@ -48,15 +47,6 @@ public class XSDElementDeclarationAdapter extends XSDAbstractAdapter
     {
       return XSDEditorPlugin.getXSDImage("icons/XSDElementRef.gif");
     }
-    
-//    return 
-//      XSDEditorPlugin.getPlugin().getIconImage
-//        (resolvedElementDeclaration.getContainer() == null ?
-//           "full/obj16/XSDElementUnresolved" :
-//           xsdElementDeclaration.getResolvedElementDeclaration() == xsdElementDeclaration ?
-//             "full/obj16/XSDElementDeclaration" :
-//             "full/obj16/XSDElementUse");
-
   }
   
   public String getText(Object object)

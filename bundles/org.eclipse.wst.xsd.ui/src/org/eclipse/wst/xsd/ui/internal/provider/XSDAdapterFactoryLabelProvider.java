@@ -28,7 +28,6 @@ public class XSDAdapterFactoryLabelProvider implements ILabelProvider, INotifyCh
   protected Collection labelProviderListeners;
   
   private static final Class ILabelProviderClass = ILabelProvider.class;
-  private static final Class ITableLabelProviderClass = ITableLabelProvider.class;
 
   /**
    * 
@@ -36,11 +35,6 @@ public class XSDAdapterFactoryLabelProvider implements ILabelProvider, INotifyCh
   public XSDAdapterFactoryLabelProvider(XSDModelAdapterFactoryImpl adapterFactory)
   {
     this.adapterFactory = adapterFactory;
-//    if (adapterFactory instanceof IChangeNotifier)
-//    {
-//      ((IChangeNotifier)adapterFactory).addListener(this);
-//    }
-
     labelProviderListeners = new ArrayList();
   }
 

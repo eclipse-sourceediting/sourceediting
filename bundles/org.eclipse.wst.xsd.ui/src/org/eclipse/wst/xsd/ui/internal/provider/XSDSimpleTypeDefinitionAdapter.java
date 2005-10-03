@@ -169,12 +169,7 @@ public class XSDSimpleTypeDefinitionAdapter extends XSDAbstractAdapter
 
   public Object[] getChildren(Object parentElement)
   {
-    XSDSimpleTypeDefinition xsdSimpleTypeDefinition = (XSDSimpleTypeDefinition)parentElement;
     List list = new ArrayList();
-//    list.addAll(xsdSimpleTypeDefinition.getContents());
-//    list.addAll(xsdSimpleTypeDefinition.getFacetContents());
-//    list.addAll(xsdSimpleTypeDefinition.getFundamentalFacets());
-//    list.addAll(xsdSimpleTypeDefinition.getSyntheticFacets());
     return list.toArray();
   
   }

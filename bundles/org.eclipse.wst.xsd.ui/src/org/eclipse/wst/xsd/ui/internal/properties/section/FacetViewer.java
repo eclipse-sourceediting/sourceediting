@@ -215,8 +215,6 @@ public class FacetViewer extends NavigableTableViewer implements ICellModifier
               
               if (targetFacet instanceof XSDMaxFacet || targetFacet instanceof XSDMinFacet)
               {
-                Element elementFacet = targetFacet.getElement();
-
                 if (targetFacet instanceof XSDMaxFacet)
                 {
                   if (targetFacet instanceof XSDMaxExclusiveFacet)
@@ -415,9 +413,6 @@ public class FacetViewer extends NavigableTableViewer implements ICellModifier
 
     public java.lang.Object[] getElements(java.lang.Object inputElement)
     {
-      XSDDOMHelper xsdDomHelper = new XSDDOMHelper();
-
-      String facet = "";
       Vector v = new Vector();
       XSDSimpleTypeDefinition inputXSDSimpleType = (XSDSimpleTypeDefinition)inputElement;
       XSDSimpleTypeDefinition base = inputXSDSimpleType.getBaseTypeDefinition();

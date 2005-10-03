@@ -34,9 +34,6 @@ import org.w3c.dom.Node;
 
 public class XSDContentProvider implements ITreeContentProvider, INotifyChangedListener
 {
-//  protected static XSDItemProviderAdapterFactory syntacticAdapterFactory = new XSDItemProviderAdapterFactory();
-//  protected static XSDSemanticItemProviderAdapterFactory semanticAdapterFactory = new XSDSemanticItemProviderAdapterFactory();
-  
   XSDModelAdapterFactoryImpl xsdModelAdapterFactory;
 
   XSDSchema xsdSchema;
@@ -60,19 +57,13 @@ public class XSDContentProvider implements ITreeContentProvider, INotifyChangedL
    */
   public Object[] getChildren(Object parentElement)
   {
-//  return adapterFactoryContentProvider.getChildren(parentElement);
     XSDConcreteComponent xsdComp = null;
     List list = null;
     if (parentElement instanceof Document)
     {
       xsdComp = xsdSchema;
- 	    // ItemProviderAdapter a = (ItemProviderAdapter)syntacticAdapterFactory.adapt(xsdComp, syntacticAdapterFactory);
-      // ItemProviderAdapter a = (ItemProviderAdapter)semanticAdapterFactory.adapt(xsdComp, semanticAdapterFactory);
  	    
- 	    XSDAbstractAdapter a = (XSDAbstractAdapter)xsdModelAdapterFactory.adapt(xsdComp, xsdModelAdapterFactory);
- 	    
-//      a.removeListener((INotifyChangedListener)this);
-// 	    a.addListener((INotifyChangedListener)this);
+      xsdModelAdapterFactory.adapt(xsdComp, xsdModelAdapterFactory);
 
       list = new ArrayList();
       list.add(xsdComp);
@@ -85,7 +76,6 @@ public class XSDContentProvider implements ITreeContentProvider, INotifyChangedL
     }
     else if (parentElement instanceof ITreeItemContentProvider)
     {
-      // return adapterFactoryContentProvider.getChildren(parentElement);
       return ((ITreeItemContentProvider)parentElement).getChildren(parentElement).toArray();
     }
     else if (parentElement instanceof ITreeContentProvider)
@@ -95,28 +85,21 @@ public class XSDContentProvider implements ITreeContentProvider, INotifyChangedL
     
     if (xsdComp != null)
     {
- 	    // ItemProviderAdapter a = (ItemProviderAdapter)syntacticAdapterFactory.adapt(xsdComp, syntacticAdapterFactory);
-      // ItemProviderAdapter a = (ItemProviderAdapter)semanticAdapterFactory.adapt(xsdComp, semanticAdapterFactory);
- 	    
       XSDAbstractAdapter a = (XSDAbstractAdapter)xsdModelAdapterFactory.adapt(xsdComp, xsdModelAdapterFactory);
       
       if (xsdComp instanceof XSDElementDeclaration || xsdComp instanceof XSDModelGroup || xsdComp instanceof XSDWildcard)
       {
-        XSDAbstractAdapter particleAdapter = (XSDAbstractAdapter)xsdModelAdapterFactory.adapt(((XSDParticleContent)xsdComp).getContainer(), xsdModelAdapterFactory);
+        xsdModelAdapterFactory.adapt(((XSDParticleContent)xsdComp).getContainer(), xsdModelAdapterFactory);
       }
 
- 	    if (a != null)
+      if (a != null)
+      {
+ 	    Object [] obj = a.getChildren(xsdComp);
+ 	    if (obj != null)
  	    {
-// 	      a.removeListener((INotifyChangedListener)this);
-// 	      a.addListener((INotifyChangedListener)this);
- 	    
- 	      Object [] obj = a.getChildren(xsdComp);
- 	      if (obj != null)
- 	      {
- 	        list = Arrays.asList(obj);
- 	      }
+ 	      list = Arrays.asList(obj);
  	    }
-//	     list = (List)a.getChildren(xsdComp);
+ 	  }
     }
     
     list =  list != null ? list : Collections.EMPTY_LIST;

@@ -187,22 +187,12 @@ public class NameSection extends AbstractSection
 	    else if (input instanceof XSDNamedComponent)
 	    {
 	      XSDNamedComponent namedComponent = (XSDNamedComponent)input;
-	      Element element = namedComponent.getElement();
-        String name = namedComponent.getName();
+          String name = namedComponent.getName();
 	      if (name != null)
 	      {
 	        nameText.setText(name);
 	      }
 	    }
-//	    else if (input instanceof XSDParticle)
-//	    {
-//	      XSDParticle xsdParticle = (XSDParticle)input;
-//	      String name = xsdParticle.getElement().getAttribute(XSDConstants.NAME_ATTRIBUTE);
-//	      if (name != null)
-//	      {
-//	        nameText.setText(name);
-//	      }
-//	    }
       else if (input instanceof XSDAttributeDeclaration)
       {
         XSDAttributeDeclaration attribute = (XSDAttributeDeclaration)input;

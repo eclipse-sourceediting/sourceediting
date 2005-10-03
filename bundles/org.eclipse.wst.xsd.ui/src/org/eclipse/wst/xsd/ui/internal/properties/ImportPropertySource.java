@@ -187,8 +187,6 @@ public class ImportPropertySource
           else
           {
             beginRecording(XSDEditorPlugin.getXSDString("_UI_PREFIX_CHANGE"), element);
-            
-            Element schemaElement = xsdSchema.getElement();
             map.remove(oldPrefixValue);
             map.put(newValue, namespace);
             XSDSchemaHelper.updateElement(xsdSchema);
@@ -255,22 +253,6 @@ public class ImportPropertySource
       }
 
       Element schemaElement = xsdSchema.getElement();
-     
-//      String oldPrefix = prefixField.getText();
-//
-//      // Use the existing xmlns if available
-//      if (!map.containsValue(namespace))
-//      {
-//        if (oldPrefix.length() > 0)
-//        {
-//          schemaElement.removeAttribute("xmlns:"+oldPrefix);
-//          map.remove(oldPrefix);
-//        }
-//      }
-
-      XSDImport xsdImport = (XSDImport)comp;
-//      xsdImport.setSchemaLocation(null);
-//      xsdImport.setResolvedSchema(externalSchema);
 
       // update the xmlns in the schema element first, and then update the import element next
       // so that the last change will be in the import element.  This keeps the selection
@@ -306,7 +288,6 @@ public class ImportPropertySource
         }
         else // otherwise add to the map
         {
-//          prefixMap.put(prefix, newLocation);
           schemaElement.setAttribute("xmlns:"+prefix, namespace);
         }
       }
@@ -323,12 +304,6 @@ public class ImportPropertySource
         importElement.removeAttribute(XSDConstants.NAMESPACE_ATTRIBUTE);
       }
       
-//      if (getEditor() != null)
-//       {
-//        getEditor().reparseSchema();
-//        getEditor().getGraphViewer().setSchema(getXSDSchema());
-//      }
-
       endRecording(importElement);
     }
   }

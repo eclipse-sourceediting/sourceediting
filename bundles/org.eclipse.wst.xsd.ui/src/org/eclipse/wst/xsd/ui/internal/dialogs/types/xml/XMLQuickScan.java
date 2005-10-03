@@ -15,8 +15,6 @@ import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.transform.TransformerFactory;
-
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.xml.sax.Attributes;
@@ -52,7 +50,6 @@ public class XMLQuickScan {
         
         // Line below is a hack to get XMLReader working
         Thread.currentThread().setContextClassLoader(XMLQuickScan.class.getClassLoader());
-        TransformerFactory transformerFactory = TransformerFactory.newInstance();
         
     	XMLReader reader = org.xml.sax.helpers.XMLReaderFactory.createXMLReader();
     	reader.setContentHandler(handler);
@@ -124,17 +121,6 @@ public class XMLQuickScan {
     	spec.setTargetNamespace(targetNamespace);
     	spec.setFileLocation(fileLocation);
     	matchingTags.add(spec);
-    }
-    
-    private int getAttributeNameIndex(String attrName) {
-    	for (int index = 0; index < searchAttributes.size(); index++) {
-    		if (searchAttributes.get(index).equals(attrName)) {
-    			return index;
-    		}
-    	}
-    	
-    	// Not found.  We are not looking for this Attribute Name
-    	return -1;
     }
         
     public List getSearchAttributeValues() {

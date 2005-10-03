@@ -59,7 +59,6 @@ public class ComplexTypeDefinitionEditPart extends GraphNodeEditPart
 
   protected GraphNodeFigure createGraphNodeFigure()  
   {
-    XSDComplexTypeDefinition ctd = (XSDComplexTypeDefinition)getModel();
     GraphNodeFigure figure = new GraphNodeFigure();
 
     figure.getOutlinedArea().setBorder(new RoundedLineBorder(1, 6));

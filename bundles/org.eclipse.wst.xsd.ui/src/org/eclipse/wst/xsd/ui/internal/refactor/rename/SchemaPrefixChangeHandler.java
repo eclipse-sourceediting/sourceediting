@@ -159,7 +159,6 @@ public class SchemaPrefixChangeHandler
           Element unionElement = (Element)unionNode;          
           if (unionElement instanceof IDOMNode)
           {
-            Attr typeAttr = unionElement.getAttributeNode(XSDConstants.MEMBERTYPES_ATTRIBUTE);
             StringBuffer sb = new StringBuffer("");
             for (Iterator i = memberTypes.iterator(); i.hasNext(); )
             {

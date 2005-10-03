@@ -13,12 +13,8 @@ package org.eclipse.wst.xsd.ui.internal.properties;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.swt.custom.CLabel;
-import org.eclipse.swt.custom.ViewForm;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.views.properties.PropertySheet;
 import org.eclipse.ui.views.properties.PropertySheetPage;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.ui.internal.ViewerSelectionManager;
@@ -99,21 +95,5 @@ public class XSDPropertySheetPage extends PropertySheetPage implements ISelectio
 		}
 	}
 
-  private void setPropertiesTitle(PropertySheet thePart, String title)
-	{
-		Control control = thePart.getDefaultPage().getControl();
-		for (Composite parent = control.getParent(); parent != null; parent = parent.getParent())
-		{
-			if (parent instanceof ViewForm)
-			{
-				Control[] children = parent.getChildren();
-				if (children.length > 0 && children[0] instanceof CLabel)
-				{
-					CLabel clabel = (CLabel)children[0];
-  				clabel.setText(title);
-				}
-			}
-		}
-	}
   
 }

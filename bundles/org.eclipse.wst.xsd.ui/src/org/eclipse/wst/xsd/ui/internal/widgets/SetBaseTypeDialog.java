@@ -96,8 +96,6 @@ public class SetBaseTypeDialog extends Dialog implements SelectionListener
     layout.numColumns = 2;
     nameComposite.setLayout(layout); 
 
-    ViewUtility utility = new ViewUtility();
-
     ViewUtility.createLabel(nameComposite, XSDEditorPlugin.getXSDString("_UI_LABEL_BASE_TYPE_WITH_COLON"));
     baseTypeCombo = ViewUtility.createComboBox(nameComposite, true); // readonly
     baseTypeCombo.addSelectionListener(this);

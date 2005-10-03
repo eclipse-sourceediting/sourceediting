@@ -119,7 +119,6 @@ public class AnyContentPropertyDescriptor extends PropertyDescriptor
     //
     public Control createDialogArea(Composite parent)
     {
-      int tabIndex = 0;
       Composite client = (Composite)super.createDialogArea(parent);
       getShell().setText(element.getLocalName());
       

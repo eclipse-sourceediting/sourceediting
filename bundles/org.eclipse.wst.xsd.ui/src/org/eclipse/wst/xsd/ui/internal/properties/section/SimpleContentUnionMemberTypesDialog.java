@@ -86,7 +86,6 @@ public class SimpleContentUnionMemberTypesDialog extends Dialog implements Selec
   //
   public Control createDialogArea(Composite parent)
   {
-    int tabIndex = 0;
     Composite client = (Composite)super.createDialogArea(parent);
     getShell().setText("Union " + XSDConstants.MEMBERTYPES_ATTRIBUTE); 
     
@@ -149,11 +148,9 @@ public class SimpleContentUnionMemberTypesDialog extends Dialog implements Selec
 
     // Fill table
     handleSetInput();
-    int tableItemCount = table.getItemCount();
+    table.getItemCount();
 
     TableColumn tc = new TableColumn(table, SWT.LEFT);
-//    tc.setImage(XSDEditorPlugin.getXSDImage("icons/XSDElement.gif"));
-    //tc.setText("Available types:");
     tc.setWidth(200);
     tc.setResizable(true);
     

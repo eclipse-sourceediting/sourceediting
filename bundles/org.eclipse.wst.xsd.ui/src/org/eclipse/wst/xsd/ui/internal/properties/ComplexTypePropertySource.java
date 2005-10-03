@@ -43,13 +43,6 @@ public class ComplexTypePropertySource
     "restriction" //$NON-NLS-1$
   };
   
-  private String derivedByChoicesComboValues[] =
-  {
-        "", //$NON-NLS-1$
-        XSDConstants.RESTRICTION_ELEMENT_TAG,
-        XSDConstants.EXTENSION_ELEMENT_TAG
-  };
-  
   /**
    * 
    */
@@ -86,37 +79,6 @@ public class ComplexTypePropertySource
   {
     List list = new ArrayList();
     // Create a descriptor and set a category
-    boolean isAnonymousType = checkForAnonymousType(element);
-// The three properties name, base type and derived by have been moved to the general tab
-//    if (isAnonymousType)
-//    {
-//      PropertyDescriptor nameDescriptor =
-//      new PropertyDescriptor(
-//          XSDConstants.NAME_ATTRIBUTE,
-//          XSDConstants.NAME_ATTRIBUTE);
-//      list.add(nameDescriptor);
-//    }
-//    else
-//    {
-//      PropertyDescriptor nameDescriptor =
-//      new TextPropertyDescriptor(
-//          XSDConstants.NAME_ATTRIBUTE,
-//          XSDConstants.NAME_ATTRIBUTE);
-//      list.add(nameDescriptor);
-//    }
-
-    Element contentModelElement = getDomHelper().getContentModelFromParent(element);
-//    SimpleContentPropertyDescriptor typeDescriptor = new SimpleContentPropertyDescriptor(
-//        BASE_TYPE_ID,
-//        BASE_TYPE_ID,
-//        contentModelElement, xsdSchema);
-//    list.add(typeDescriptor);
-//    XSDComboBoxPropertyDescriptor derivedByDescriptor =
-//    new XSDComboBoxPropertyDescriptor(
-//        DERIVED_BY_ID,
-//        DERIVED_BY_ID,
-//        derivedByChoicesComboValues);
-//    list.add(derivedByDescriptor);
     
     XSDComboBoxPropertyDescriptor abstractDescriptor =
     new XSDComboBoxPropertyDescriptor(
@@ -278,7 +240,6 @@ public class ComplexTypePropertySource
         Element contentModelElement = getDomHelper().getContentModelFromParent(element);
         String baseType = getDomHelper().getBaseType(contentModelElement);
         beginRecording(XSDEditorPlugin.getXSDString("_UI_DERIVEDBY_CHANGE"), element); //$NON-NLS-1$
-        Element derivedByElem = getDomHelper().getDerivedByElement(element);
         getDomHelper().changeDerivedByType(contentModelElement, newValue, baseType);
         endRecording(element);
       }

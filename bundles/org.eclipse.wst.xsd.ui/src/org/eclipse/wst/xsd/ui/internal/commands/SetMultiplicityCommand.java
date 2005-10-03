@@ -42,7 +42,6 @@ public class SetMultiplicityCommand extends AbstractCommand
   public void run()
   {
     XSDConcreteComponent parent = getParent();
-    XSDConcreteComponent owner = null;
     if (parent instanceof XSDParticleContent)
     {
       XSDParticleContent xsdParticleContent = (XSDParticleContent)parent;

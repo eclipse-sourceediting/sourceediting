@@ -206,7 +206,7 @@ public class XSDMultiPageEditorPart extends PostSelectionMultiPageEditorPart imp
 			site = new PostMultiPageEditorSite(this, editor) {
 				public IEditorActionBarContributor getActionBarContributor() {
 					IEditorActionBarContributor contributor = super.getActionBarContributor();
-					IEditorActionBarContributor multiContributor = XSDMultiPageEditorPart.this.getEditorSite().getActionBarContributor();
+					XSDMultiPageEditorPart.this.getEditorSite().getActionBarContributor();
 					return contributor;
 				}
 				

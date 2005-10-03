@@ -34,7 +34,6 @@ public class XSDAttributeGroupDefinitionAdapter extends XSDAbstractAdapter
   public Image getImage(Object object)
   {
     XSDAttributeGroupDefinition xsdAttributeGroupDefinition = ((XSDAttributeGroupDefinition)object);
-    XSDAttributeGroupDefinition resolvedAttributeGroupDefinition = xsdAttributeGroupDefinition.getResolvedAttributeGroupDefinition();
 
     if (xsdAttributeGroupDefinition.isAttributeGroupDefinitionReference())
     {

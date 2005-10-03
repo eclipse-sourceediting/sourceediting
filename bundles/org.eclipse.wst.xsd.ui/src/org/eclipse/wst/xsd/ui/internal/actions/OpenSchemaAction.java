@@ -16,7 +16,6 @@ import org.eclipse.wst.xsd.ui.internal.util.OpenOnSelectionHelper;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDSchemaDirective;
 import org.eclipse.xsd.impl.XSDImportImpl;
-import org.w3c.dom.Node;
 
 
 public class OpenSchemaAction extends Action
@@ -39,7 +38,6 @@ public class OpenSchemaAction extends Action
   boolean lastResult = false;
   protected boolean revealObject()
   {
-    Node element = component.getElement();
     String schemaLocation = "";
     XSDSchemaDirective dir;
     if (component instanceof XSDSchemaDirective)

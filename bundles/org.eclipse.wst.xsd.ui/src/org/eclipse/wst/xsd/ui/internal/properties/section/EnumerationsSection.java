@@ -27,9 +27,7 @@ import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.widgets.Button;
@@ -194,10 +192,6 @@ public class EnumerationsSection extends AbstractSection
 
     composite = getWidgetFactory().createFlatFormComposite(parent);
     FormData data;
-    
-    GC gc = new GC(parent);
-    Point extent = gc.textExtent("  " + XSDEditorPlugin.getXSDString("_UI_ACTION_DELETE_INCLUDE") + "  "); //$NON-NLS-1$
-    gc.dispose();
 
     enumerationsTable = new EnumerationsTableViewer(getWidgetFactory().createTable(composite, SWT.MULTI | SWT.FULL_SELECTION));
     enumerationsTable.setInput(getInput());
@@ -256,9 +250,6 @@ public class EnumerationsSection extends AbstractSection
       composite.setEnabled(true);
     }
     XSDSimpleTypeDefinition st = (XSDSimpleTypeDefinition)input;
-    Element element = st.getElement();
-    XSDDOMHelper helper = new XSDDOMHelper();
-    Node restrictionElement = helper.getChildNode(element, XSDConstants.RESTRICTION_ELEMENT_TAG);
     
     Iterator validFacets = st.getValidFacets().iterator();
     
@@ -273,7 +264,6 @@ public class EnumerationsSection extends AbstractSection
     }
     
     if (isApplicable)  
-//    if (restrictionElement != null)
     {
       addButton.setEnabled(true);
       addManyButton.setEnabled(true);

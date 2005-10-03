@@ -352,8 +352,7 @@ public class XSDModelAdapterFactoryImpl extends XSDAdapterFactory
 
   public void dispose()
   {
-	  this.instance = null;
-	  //xsdSchemaAdapter = null;
+    instance = null;
     disposable.dispose();
   }
 

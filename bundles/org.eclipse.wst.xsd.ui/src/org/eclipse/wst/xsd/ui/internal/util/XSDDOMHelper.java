@@ -356,8 +356,7 @@ public class XSDDOMHelper
     {
       list = parent.getChildNodes();
     }
-   
-    String name = null;
+
     if (list != null)
     {
       // Performance issue perhaps?
@@ -638,7 +637,6 @@ public class XSDDOMHelper
   public Element getDerivedByElementFromComplexType(Element element)
   {
     NodeList nl = element.getChildNodes();
-    int childNumber = 0;
     int j = 0;
     for (j = 0; j < nl.getLength(); j++)
     {
@@ -663,7 +661,6 @@ public class XSDDOMHelper
   public Element getContentModelFromParent(Element element)
   {
     NodeList nl = element.getChildNodes();
-    int childNumber = 0;
     int j = 0;
     boolean modelExists = false;
     int length = nl.getLength();
@@ -844,7 +841,6 @@ public class XSDDOMHelper
     {
       parentNode.removeChild(nextSibling);
     }
-    Node previousSibling = node.getPreviousSibling();
 
     if (parentNode != null)
     {
@@ -1069,8 +1065,6 @@ public class XSDDOMHelper
   {
     // this assumes that the referenceNode and node to move have the same parent
     Node parent = referenceNode.getParentNode();
-
-    Node previousSibling = referenceNode.getPreviousSibling();
     parent.insertBefore(nodeToInsert, referenceNode);
   }
 

@@ -111,7 +111,6 @@ public class ComplexTypeInheritedContentEditPart extends BaseEditPart
 
   protected void refreshVisuals()
   { 
-    XSDComplexTypeDefinition ctd = (XSDComplexTypeDefinition)getModel();
     List children = getModelChildren();
     figure.setVisible(children.size() > 0);   
     // todo set preferredSize to 0 ?

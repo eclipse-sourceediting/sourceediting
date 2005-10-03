@@ -99,7 +99,6 @@ public class SchemaEditPart extends BaseEditPart
 
   protected List getModelChildren()
   {
-    XSDSchema schema = (XSDSchema) getModel();
     List list = new ArrayList();
     list.add(CategoryRowEditPart.DIRECTIVES_AND_NOTATIONS);
     list.add(CategoryRowEditPart.ELEMENTS_AND_TYPES);

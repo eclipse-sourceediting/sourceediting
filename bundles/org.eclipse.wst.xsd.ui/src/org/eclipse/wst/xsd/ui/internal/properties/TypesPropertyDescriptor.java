@@ -170,17 +170,12 @@ public class TypesPropertyDescriptor extends PropertyDescriptor
     //
     public Control createDialogArea(Composite parent)
     {
-      int tabIndex = 0;
       Composite client = (Composite)super.createDialogArea(parent);
       getShell().setText(XSDEditorPlugin.getXSDString("_UI_LABEL_AVAILABLE_TYPES"));
 
       typeObject = null;
       
       GridLayout gl = new GridLayout(1, true);
-//      gl.marginHeight = 0;
-//      gl.marginWidth = 0;
-//      gl.horizontalSpacing = 0;
-//      gl.verticalSpacing = 0;
       client.setLayout(gl);
 
       GridData gd = new GridData();
@@ -478,7 +473,6 @@ public class TypesPropertyDescriptor extends PropertyDescriptor
       String prefix = element.getPrefix();
       prefix = (prefix == null) ? "" : (prefix + ":");
       updateElementToNotAnonymous(element);
-      boolean hasChildrenElements = hasElementChildren(element);
       Element childNode = null;
       if (xsdType.equals(XSDConstants.COMPLEXTYPE_ELEMENT_TAG))
        {
@@ -494,7 +488,6 @@ public class TypesPropertyDescriptor extends PropertyDescriptor
             prefix + XSDConstants.SIMPLETYPE_ELEMENT_TAG);
       }
       element.appendChild(childNode);
-      //formatChild(childNode, hasChildrenElements);
     }
 
     boolean isSTAnonymous(Element element)
@@ -682,16 +675,12 @@ public class TypesPropertyDescriptor extends PropertyDescriptor
 
       // Fill table and select input type
       handleSetInput();
-      int tableItemCount = table.getItemCount();
 
       TableColumn tc = new TableColumn(table, SWT.LEFT);
       tc.setImage(XSDEditorPlugin.getXSDImage("icons/XSDElement.gif"));
-      //tc.setText("Available types:");
       tc.setResizable(false);
 
       int MAX_ITEMS = 23;
-//      tc.pack();
-//      table.pack();
       Rectangle tableBounds = table.getBounds();
       tableBounds.height = Math.min(tableBounds.height, table.getItemHeight()*MAX_ITEMS);
       table.setBounds(tableBounds);
@@ -729,8 +718,6 @@ public class TypesPropertyDescriptor extends PropertyDescriptor
       {
         public void keyPressed(KeyEvent e)
         {
-          int keyCode = e.keyCode;
-          int stateMask = e.stateMask;
           char character = e.character;
           if (character == SWT.CR || character == SWT.LF)
             ok();
@@ -1027,7 +1014,6 @@ public class TypesPropertyDescriptor extends PropertyDescriptor
       String prefix = element.getPrefix();
       prefix = (prefix == null) ? "" : (prefix + ":");
       updateElementToNotAnonymous(element);
-      boolean hasChildrenElements = hasElementChildren(element);
       Element childNode = null;
       if (xsdType.equals(XSDConstants.COMPLEXTYPE_ELEMENT_TAG))
        {
@@ -1043,7 +1029,6 @@ public class TypesPropertyDescriptor extends PropertyDescriptor
             prefix + XSDConstants.SIMPLETYPE_ELEMENT_TAG);
       }
       element.appendChild(childNode);
-      //formatChild(childNode, hasChildrenElements);
     }
 
     boolean isSTAnonymous(Element element)

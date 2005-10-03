@@ -198,7 +198,6 @@ public class SetBaseTypeAction extends Action
     prefix = (prefix == null) ? "" : (prefix + ":");
 
     DOMAttribute attr = new DOMAttribute(XSDConstants.BASE_ATTRIBUTE, type);
-    boolean hasChildrenElements = domHelper.hasElementChildren(element);
     if (!contentModelExists) // if no content model exists, then add the new nodes
     {
       if (helper.getBuiltInTypeNamesList().contains(type) ||

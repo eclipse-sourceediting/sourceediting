@@ -39,7 +39,6 @@ import org.eclipse.xsd.XSDModelGroupDefinition;
 import org.eclipse.xsd.XSDParticle;
 import org.eclipse.xsd.XSDRedefine;
 import org.eclipse.xsd.XSDSchema;
-import org.eclipse.xsd.XSDSchemaDirective;
 import org.eclipse.xsd.XSDTypeDefinition;
 import org.eclipse.xsd.util.XSDConstants;
 import org.w3c.dom.Node;
@@ -168,7 +167,6 @@ public class DeleteAction extends SelectionListenerAction
         comp instanceof XSDImport ||
         comp instanceof XSDRedefine)
     {
-      XSDSchema resolvedSchema = ((XSDSchemaDirective)comp).getResolvedSchema();
       XSDSchema referencedSchema = null;
       if (comp instanceof XSDInclude)
       {
@@ -182,7 +180,6 @@ public class DeleteAction extends SelectionListenerAction
       }
       else if (comp instanceof XSDImport)
       {
-        XSDImport imp = (XSDImport)comp;
         referencedSchema = ((XSDImport)comp).getResolvedSchema();
         refresh = true;
       }

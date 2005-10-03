@@ -139,17 +139,15 @@ public class FixedOrDefaultTextPropertyDescriptor extends PropertyDescriptor
 	    dialog.setBlockOnOpen(true);
 	    dialog.create();
 	    
-	    String value = (String)getValue();
-	
 	    int result = dialog.open();
 	    
 	    if (result == Window.OK)
 	    {
-	      String newValue = dialog.getValue();
-        fireApplyEditorValue();
+	      dialog.getValue();
+          fireApplyEditorValue();
 	    }
 	    deactivate();
-      return null;
+        return null;
 	  }
   }
   
@@ -158,7 +156,6 @@ public class FixedOrDefaultTextPropertyDescriptor extends PropertyDescriptor
     private int FIXED = 0;
     private int DEFAULT = 1;
     private int type;
-    private int value;
     protected Button fixedButton, defaultButton;
     protected Text valueField;
     protected String valueString = "";

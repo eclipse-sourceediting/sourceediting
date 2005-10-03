@@ -37,7 +37,6 @@ import org.eclipse.xsd.util.XSDParser;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 public class XSDSetTypeHelper {
     private XSDSchema xsdSchema;
@@ -56,7 +55,7 @@ public class XSDSetTypeHelper {
         String previousStringType = "";
         Attr attr = element.getAttributeNode(property);
         if (attr != null) {
-            String value = attr.getValue();
+            attr.getValue();
         }
 
         if (!XSDDOMHelper.inputEquals(element, XSDConstants.UNION_ELEMENT_TAG, false))
@@ -90,13 +89,11 @@ public class XSDSetTypeHelper {
     }
     
     public void addImportIfNecessary(Element element, XMLComponentSpecification spec) {
-        String typeObject = "";
         
         // Get the new type --> typeObject
         if (spec != null) {
             String itemType = spec.getTagPath();
-            typeObject = (String) spec.getAttributeInfo("name");
-            
+           
             if (!itemType.equals("BUILT_IN_SIMPLE_TYPE")) {
                 // Do an actual import if needed
                 XSDParser parser = new XSDParser();
@@ -175,7 +172,6 @@ public class XSDSetTypeHelper {
         String prefix = element.getPrefix();
         prefix = (prefix == null) ? "" : (prefix + ":");
         XSDDOMHelper.updateElementToNotAnonymous(element);
-        boolean hasChildrenElements = hasElementChildren(element);
         Element childNode = null;
         if (xsdType.equals(XSDConstants.COMPLEXTYPE_ELEMENT_TAG)) {
             childNode = element.getOwnerDocument().createElementNS(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001, prefix + XSDConstants.COMPLEXTYPE_ELEMENT_TAG);
@@ -196,20 +192,6 @@ public class XSDSetTypeHelper {
             }
             XSDDOMHelper.formatChild(childNode);
         }
-    }
-
-    private boolean hasElementChildren(Node parentNode) {
-        boolean hasChildrenElements = false;
-        if (parentNode != null && parentNode.hasChildNodes()) {
-            NodeList nodes = parentNode.getChildNodes();
-            for (int i = 0; i < nodes.getLength(); i++) {
-                if (nodes.item(i) instanceof Element) {
-                    hasChildrenElements = true;
-                    break;
-                }
-            }
-        }
-        return hasChildrenElements;
     }
 
     // TODO: We shouldn't need to pass in IPath externalSchemaPath.

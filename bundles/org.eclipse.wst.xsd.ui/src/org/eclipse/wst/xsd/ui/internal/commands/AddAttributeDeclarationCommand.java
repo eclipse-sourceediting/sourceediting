@@ -77,7 +77,6 @@ public class AddAttributeDeclarationCommand extends AbstractCommand
   protected String getNewName(String description)
   {
     String candidateName = "New" + description; //$NON-NLS-1$
-    StringBuffer candidateNameSB = new StringBuffer("New" + description); //$NON-NLS-1$
     XSDConcreteComponent parent = getParent();
     names = new ArrayList();
     int i = 1;

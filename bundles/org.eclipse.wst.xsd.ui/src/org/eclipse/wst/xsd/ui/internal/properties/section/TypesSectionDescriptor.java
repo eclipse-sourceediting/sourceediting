@@ -103,7 +103,6 @@ public class TypesSectionDescriptor extends AbstractSectionDescriptor
       else if (object instanceof XSDAttributeUse)
       {
         XSDAttributeUse attributeUse = (XSDAttributeUse)object;
-        XSDAttributeDeclaration attribute = attributeUse.getAttributeDeclaration();
         Element element = attributeUse.getElement();
         if (inputEquals(element, XSDConstants.ATTRIBUTE_ELEMENT_TAG, false))
         {
@@ -113,20 +112,7 @@ public class TypesSectionDescriptor extends AbstractSectionDescriptor
         {
           return false;
         }
-
       }
-//      else if (object instanceof XSDSimpleTypeDefinition)
-//      {
-//        XSDSimpleTypeDefinition st = (XSDSimpleTypeDefinition)object;
-//        if (st.getVariety() == XSDVariety.LIST_LITERAL)
-//        {
-//          return true;
-//        }
-//        else if (st.getVariety() == XSDVariety.ATOMIC_LITERAL)
-//        {
-//          return true;
-//        }
-//      }
     }
     return false;
   }
