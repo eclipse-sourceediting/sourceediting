@@ -19,7 +19,6 @@ import org.eclipse.wst.common.componentcore.ComponentCore;
 import org.eclipse.wst.common.componentcore.ModuleCoreNature;
 import org.eclipse.wst.common.componentcore.internal.StructureEdit;
 import org.eclipse.wst.common.componentcore.internal.util.IModuleConstants;
-import org.eclipse.wst.common.componentcore.resources.IFlexibleProject;
 import org.eclipse.wst.common.componentcore.resources.IVirtualComponent;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.model.ModuleDelegate;
@@ -88,9 +87,8 @@ public class StaticWebDeployableFactory extends ProjectModuleFactoryDelegate {
 		List modules = new ArrayList(1); 
 		StructureEdit moduleCore = null;
 		try {
-			IFlexibleProject flexProj = ComponentCore.createFlexibleProject(project);
-			IVirtualComponent[] components = flexProj.getComponents();
-			modules = createModuleDelegates(components);
+			IVirtualComponent component = ComponentCore.createComponent(project);
+			modules = createModuleDelegates(component);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -101,27 +99,24 @@ public class StaticWebDeployableFactory extends ProjectModuleFactoryDelegate {
 		return modules;
 	}
 	
-	protected List createModuleDelegates(IVirtualComponent[] components) throws CoreException {
+	protected List createModuleDelegates(IVirtualComponent component) throws CoreException {
 		StaticWebDeployable moduleDelegate = null;
 		IModule module = null;
-		List moduleList = new ArrayList(components.length);
-		for (int i = 0; i < components.length; i++) {
-			IVirtualComponent component = components[i];
-			try {
-				if(IModuleConstants.WST_WEB_MODULE.equals(component.getComponentTypeId())) {
-					moduleDelegate = new StaticWebDeployable(component.getProject(),component);
-					module = createModule(component.getName(), component.getName(), moduleDelegate.getType(), moduleDelegate.getVersion(), moduleDelegate.getProject());
-					moduleList.add(module);
-					moduleDelegate.initialize(module);
-				}
-				// adapt(moduleDelegate, (WorkbenchComponent) workBenchModules.get(i));
-			} catch (Exception e) {
-				Logger.getLogger().write(e);
-			} finally {
-				if (module != null) {
-					if (getModuleDelegate(module) == null)
-						moduleDelegates.add(moduleDelegate);
-				}
+		List moduleList = new ArrayList();
+		try {
+			if(IModuleConstants.WST_WEB_MODULE.equals(component.getComponentTypeId())) {
+				moduleDelegate = new StaticWebDeployable(component.getProject(),component);
+				module = createModule(component.getName(), component.getName(), moduleDelegate.getType(), moduleDelegate.getVersion(), moduleDelegate.getProject());
+				moduleList.add(module);
+				moduleDelegate.initialize(module);
+			}
+			// adapt(moduleDelegate, (WorkbenchComponent) workBenchModules.get(i));
+		} catch (Exception e) {
+			Logger.getLogger().write(e);
+		} finally {
+			if (module != null) {
+				if (getModuleDelegate(module) == null)
+					moduleDelegates.add(moduleDelegate);
 			}
 		}
 		return moduleList;
@@ -137,6 +132,7 @@ public class StaticWebDeployableFactory extends ProjectModuleFactoryDelegate {
 		} catch (CoreException e) {
 			Logger.getLogger().write(e);
 		}
+		if(nature == null) return new IModule[0];
 		List modules = createModules(nature);
 		if (modules == null)
 			return new IModule[0];
