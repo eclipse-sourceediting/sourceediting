@@ -105,4 +105,9 @@ public class AbstractSectionDescriptor implements ISectionDescriptor
   {
     return XSDDOMHelper.inputEquals(input, tagname, isRef);
   }
+  
+  public int getEnablesFor()
+  {
+	return ENABLES_FOR_ANY;
+  }
 }
