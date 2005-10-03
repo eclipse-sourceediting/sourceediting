@@ -56,6 +56,8 @@ public class XSDTextEditor extends StructuredTextEditor implements INodeSelectio
   protected XSDModelAdapterFactoryImpl xsdModelAdapterFactory;
   protected static XSDAdapterFactoryLabelProvider adapterFactoryLabelProvider;
   protected InternalSelectionProvider internalSelectionProvider = new InternalSelectionProvider();
+  private IPropertySheetPage fPropertySheetPage;
+  private IContentOutlinePage fOutlinePage;
 
   public XSDTextEditor(XSDEditor xsdEditor)
   {
