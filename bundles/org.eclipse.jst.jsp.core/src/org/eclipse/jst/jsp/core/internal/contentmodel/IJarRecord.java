@@ -11,8 +11,6 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.core.internal.contentmodel;
 
-import java.util.List;
-
 import org.eclipse.core.runtime.IPath;
 
 public interface IJarRecord extends ITaglibRecord {
@@ -24,10 +22,5 @@ public interface IJarRecord extends ITaglibRecord {
 	/**
 	 * @return Returns the recommended/default prefix if one was given.
 	 */
-	public String getPrefix();
-
-	/**
-	 * 
-	 */
-	public List getURLRecords();
+	public String getShortName();
 }
