@@ -21,9 +21,8 @@ import org.eclipse.core.resources.IProject;
 /**
  * @deprecated
  * 
- * @author nsd
- *
- * Will be removed in M4 and replaced with Flexible Project support
+ * Should use extensible URIResolver from org.eclipse.wst.common.uriresolver
+ * instead.
  */
 
 public interface URIResolver {
@@ -71,7 +70,7 @@ public interface URIResolver {
 	/**
 	 * Attempts to return a direct inputstream to the given URI which must be
 	 * relative to the default point of reference.
-     * @deprecated
+	 * 
 	 */
 	InputStream getURIStream(String uri);
 
