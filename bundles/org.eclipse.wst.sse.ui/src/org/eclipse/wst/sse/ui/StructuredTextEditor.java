@@ -24,11 +24,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.ILog;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
@@ -82,7 +80,6 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.dnd.DND;
@@ -200,6 +197,11 @@ import org.eclipse.wst.sse.ui.views.properties.PropertySheetConfiguration;
  */
 
 public class StructuredTextEditor extends TextEditor {
+	
+	
+	// ISSUE: This use case is not clear to me. 
+	// Is this listner and dance with dirty state for non-editor driven 
+	// updates? 
 	class InternalDocumentListener implements IDocumentListener {
 		// This is for the IDocumentListener interface
 		public void documentAboutToBeChanged(DocumentEvent event) {
@@ -216,11 +218,8 @@ public class StructuredTextEditor extends TextEditor {
 				fCurrentRunnable = new Runnable() {
 					public void run() {
 						if (!fEditorDisposed) {
-							IStatus status = validateEdit(getSite().getShell());
-							if (status != null && status.isOK()) {
-								// nothing to do if 'ok'
-							}
-							else {
+							boolean status = validateEditorInputState();
+							if (!status) {
 								if (internalModel != null) {
 									internalModel.getUndoManager().undo();
 									getSourceViewer().setSelectedRange(offset, 0);
@@ -2069,14 +2068,14 @@ public class StructuredTextEditor extends TextEditor {
 			fViewerSelectionManager = new ViewerSelectionManagerImpl(getSourceViewer());
 			fViewerSelectionManager.addNodeSelectionListener(new INodeSelectionListener() {
 				public void nodeSelectionChanged(NodeSelectionChangedEvent event) {
-					if(getTextViewer().getTextWidget() != null && !getTextViewer().getTextWidget().isDisposed() && !getTextViewer().getTextWidget().isFocusControl()) {
+					if (getTextViewer().getTextWidget() != null && !getTextViewer().getTextWidget().isDisposed() && !getTextViewer().getTextWidget().isFocusControl()) {
 						getSelectionProvider().setSelection(new StructuredSelection(event.getSelectedNodes()));
 					}
 				}
 			});
 			fViewerSelectionManager.addTextSelectionListener(new ITextSelectionListener() {
 				public void textSelectionChanged(TextSelectionChangedEvent event) {
-					if(getTextViewer().getTextWidget() != null && !getTextViewer().getTextWidget().isDisposed() && !getTextViewer().getTextWidget().isFocusControl()) {
+					if (getTextViewer().getTextWidget() != null && !getTextViewer().getTextWidget().isDisposed() && !getTextViewer().getTextWidget().isFocusControl()) {
 						int length = event.getTextSelectionEnd() - event.getTextSelectionStart();
 						ISelection textSelection = new TextSelection(getSourceViewer().getDocument(), event.getTextSelectionStart(), length);
 						getSelectionProvider().setSelection(textSelection);
@@ -2924,52 +2923,6 @@ public class StructuredTextEditor extends TextEditor {
 				field.setText(text == null ? fErrorLabel : text);
 			}
 		}
-	}
-
-	/**
-	 * @deprecated - will be removed in M4 Use getDocumentProvider and
-	 *             IDocumentProviderExtension instead
-	 */
-	public IStatus validateEdit(Shell context) {
-		IStatus status = STATUS_OK;
-		IEditorInput input = getEditorInput();
-		if (input instanceof IFileEditorInput) {
-			if (input == null) {
-				String msg = SSEUIMessages.Error_opening_file_UI_; //$NON-NLS-1$
-				status = new Status(IStatus.ERROR, SSEUIPlugin.ID, IStatus.INFO, msg, null);
-			}
-			else {
-				validateState(input);
-				sanityCheckState(input);
-				if (isEditorInputReadOnly()) {
-					String fname = input.getName();
-					if (input instanceof IStorageEditorInput) {
-						try {
-							IStorage s = ((IStorageEditorInput) input).getStorage();
-							if (s != null) {
-								IPath path = s.getFullPath();
-								if (path != null) {
-									fname += path.toString();
-								}
-								else {
-									fname += s.getName();
-								}
-							}
-						}
-						catch (CoreException e) { // IStorage is just for
-							// file name,
-							// and it's an optional,
-							// therefore
-							// it is safe to ignore this
-							// exception.
-						}
-					}
-					String msg = NLS.bind(SSEUIMessages._UI_File_is_read_only, new Object[]{fname});
-					status = new Status(IStatus.ERROR, SSEUIPlugin.ID, IStatus.INFO, msg, null);
-				}
-			}
-		}
-		return status;
 	}
 
 	protected void validateState(IEditorInput input) {

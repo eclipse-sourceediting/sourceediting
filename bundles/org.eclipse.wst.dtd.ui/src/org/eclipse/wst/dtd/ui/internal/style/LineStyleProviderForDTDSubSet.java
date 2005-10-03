@@ -53,14 +53,6 @@ public class LineStyleProviderForDTDSubSet implements LineStyleProvider {
 		fPartitioning = IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING;
 	}
 
-	/**
-	 * @deprecated - will be removed in M5
-	 * @param partitioning
-	 */
-	public LineStyleProviderForDTDSubSet(String partitioning) {
-		this();
-		fPartitioning = partitioning;
-	}
 
 	/**
 	 * @param lineRequestStart
