@@ -6,9 +6,6 @@
 		id="adapterFactoryDescription"
 		name="%Adapter_Factory_Description_Extension.name" />
 	<extension-point
-		id="embeddedAdapterFactoryProvider"
-		name="%Embedded_Content_Type_Adapter_Factory_Provider_Extension.name" />
-	<extension-point
 		id="extendedEditorActions"
 		name="%Extended_Editor_Actions_Extension.name" />
 	<extension-point

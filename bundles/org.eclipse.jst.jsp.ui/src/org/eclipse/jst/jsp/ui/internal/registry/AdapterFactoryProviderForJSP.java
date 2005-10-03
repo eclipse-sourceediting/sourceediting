@@ -10,13 +10,9 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.ui.internal.registry;
 
-import java.util.Iterator;
-
-import org.eclipse.jst.jsp.core.internal.document.PageDirectiveAdapter;
 import org.eclipse.jst.jsp.core.internal.java.IJSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapterFactory;
 import org.eclipse.jst.jsp.core.internal.modelhandler.ModelHandlerForJSP;
-import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.wst.html.ui.internal.contentoutline.JFaceNodeAdapterFactoryForHTML;
 import org.eclipse.wst.sse.core.internal.PropagatingAdapter;
 import org.eclipse.wst.sse.core.internal.ltk.modelhandler.IDocumentTypeHandler;
@@ -25,8 +21,6 @@ import org.eclipse.wst.sse.core.internal.provisional.INodeAdapterFactory;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.ui.internal.contentoutline.IJFaceNodeAdapter;
 import org.eclipse.wst.sse.ui.internal.provisional.registry.AdapterFactoryProvider;
-import org.eclipse.wst.sse.ui.internal.provisional.registry.AdapterFactoryRegistry;
-import org.eclipse.wst.sse.ui.internal.provisional.registry.embedded.EmbeddedAdapterFactoryProvider;
 import org.eclipse.wst.sse.ui.internal.util.Assert;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
@@ -42,10 +36,6 @@ public class AdapterFactoryProviderForJSP implements AdapterFactoryProvider {
 		// -------
 		// Must update/add to propagating adapters here too
 		addPropagatingAdapters(structuredModel);
-		// -------
-		// Must update/add to "editor side" embedded adapters here too
-		addEmbeddedContentFactories(structuredModel);
-
 	}
 
 	protected void addContentBasedFactories(IStructuredModel structuredModel) {
@@ -63,29 +53,6 @@ public class AdapterFactoryProviderForJSP implements AdapterFactoryProvider {
 			factory = new JSPTranslationAdapterFactory();
 			factoryRegistry.addFactory(factory);
 		}
-	}
-
-	protected void addEmbeddedContentFactories(IStructuredModel structuredModel) {
-
-		if (structuredModel instanceof IDOMModel) {
-			IDOMModel xmlModel = (IDOMModel) structuredModel;
-			IDOMDocument document = xmlModel.getDocument();
-			PageDirectiveAdapter pageDirectiveAdapter = (PageDirectiveAdapter) document.getAdapterFor(PageDirectiveAdapter.class);
-			if (pageDirectiveAdapter != null) {
-				// made into registry mechanism
-				AdapterFactoryRegistry adapterRegistry = JSPUIPlugin.getDefault().getEmbeddedAdapterFactoryRegistry();
-				Iterator adapterList = adapterRegistry.getAdapterFactories();
-				// And all those appropriate for this particular type of
-				// content
-				while (adapterList.hasNext()) {
-					EmbeddedAdapterFactoryProvider provider = (EmbeddedAdapterFactoryProvider) adapterList.next();
-					if (provider.isFor(pageDirectiveAdapter.getEmbeddedType())) {
-						provider.addAdapterFactories(structuredModel);
-					}
-				}
-			}
-		}
-
 	}
 
 	protected void addPropagatingAdapters(IStructuredModel structuredModel) {
@@ -108,10 +75,5 @@ public class AdapterFactoryProviderForJSP implements AdapterFactoryProvider {
 	}
 
 	public void reinitializeFactories(IStructuredModel structuredModel) {
-		// assuming the original ones have been removed already
-		// from the page directives registry. The original ones
-		// are removed when the embeddedContentType is set.
-		addEmbeddedContentFactories(structuredModel);
 	}
-
 }
