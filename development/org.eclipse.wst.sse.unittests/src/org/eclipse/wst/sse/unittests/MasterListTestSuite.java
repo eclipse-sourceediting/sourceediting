@@ -26,8 +26,6 @@ import org.eclipse.wst.html.tests.encoding.HTMLEncodingTestSuite;
 import org.eclipse.wst.html.ui.tests.HTMLUITestSuite;
 import org.eclipse.wst.sse.core.tests.SSEModelTestSuite;
 import org.eclipse.wst.sse.ui.tests.SSEUITestSuite;
-import org.eclipse.wst.wsdl.tests.AllTestCases;
-import org.eclipse.wst.wsi.tests.internal.RegressionBucket;
 import org.eclipse.wst.xml.core.tests.SSEModelXMLTestSuite;
 import org.eclipse.wst.xml.tests.encoding.EncodingTestSuite;
 import org.eclipse.wst.xml.ui.tests.XMLUITestSuite;
@@ -72,8 +70,8 @@ public class MasterListTestSuite extends TestSuite {
 		addTest(JSPUITestSuite.suite());
 		
 		addTest(AllXSDTests.suite());
-		addTest(RegressionBucket.suite());
-		addTest(AllTestCases.suite());
+		//addTest(RegressionBucket.suite());
+		//addTest(AllTestCases.suite());
 
 	}
 
