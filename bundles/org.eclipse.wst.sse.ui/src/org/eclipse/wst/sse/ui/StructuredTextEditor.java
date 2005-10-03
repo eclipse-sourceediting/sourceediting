@@ -872,14 +872,14 @@ public class StructuredTextEditor extends TextEditor {
 	private IDocumentListener fInternalDocumentListener;
 	private InternalModelStateListener fInternalModelStateListener;
 	private MouseTracker fMouseTracker;
-	protected IContentOutlinePage fOutlinePage;
+	private IContentOutlinePage fOutlinePage;
 
 	private OutlinePageListener fOutlinePageListener = null;
 	/** This editor's projection model updater */
 	private IStructuredTextFoldingProvider fProjectionModelUpdater;
 	/** This editor's projection support */
 	private ProjectionSupport fProjectionSupport;
-	protected IPropertySheetPage fPropertySheetPage;
+	private IPropertySheetPage fPropertySheetPage;
 	private String fRememberTitle;
 	/** The ruler context menu to be disposed. */
 	private Menu fRulerContextMenu;
@@ -1775,6 +1775,7 @@ public class StructuredTextEditor extends TextEditor {
 		}
 		Object result = null;
 		// text editor
+		IStructuredModel internalModel = getInternalModel();
 		if (ITextEditor.class.equals(required)) {
 			result = this;
 		}
@@ -1788,7 +1789,10 @@ public class StructuredTextEditor extends TextEditor {
 				if (cfg != null) {
 					ConfigurableContentOutlinePage outlinePage = new ConfigurableContentOutlinePage();
 					outlinePage.setConfiguration(cfg);
-					outlinePage.setInput(getInternalModel());
+					if(internalModel != null) {
+						outlinePage.setInputContentTypeIdentifier(internalModel.getContentTypeIdentifier());
+						outlinePage.setInput(internalModel);
+					}
 
 					if (fOutlinePageListener == null) {
 						fOutlinePageListener = new OutlinePageListener();
@@ -1832,8 +1836,8 @@ public class StructuredTextEditor extends TextEditor {
 			return fSelectionHistory;
 		}
 		else {
-			if (result == null && getInternalModel() != null) {
-				result = getInternalModel().getAdapter(required);
+			if (result == null && internalModel != null) {
+				result = internalModel.getAdapter(required);
 			}
 			// others
 			if (result == null)
@@ -2529,7 +2533,9 @@ public class StructuredTextEditor extends TextEditor {
 		if (fOutlinePage != null && fOutlinePage instanceof ConfigurableContentOutlinePage) {
 			ContentOutlineConfiguration cfg = createContentOutlineConfiguration();
 			((ConfigurableContentOutlinePage) fOutlinePage).setConfiguration(cfg);
-			((ConfigurableContentOutlinePage) fOutlinePage).setInput(getInternalModel());
+			IStructuredModel internalModel = getInternalModel();
+			((ConfigurableContentOutlinePage) fOutlinePage).setInputContentTypeIdentifier(internalModel.getContentTypeIdentifier());
+			((ConfigurableContentOutlinePage) fOutlinePage).setInput(internalModel);
 		}
 		if (fPropertySheetPage != null && fPropertySheetPage instanceof ConfigurablePropertySheetPage) {
 			PropertySheetConfiguration cfg = createPropertySheetConfiguration();
