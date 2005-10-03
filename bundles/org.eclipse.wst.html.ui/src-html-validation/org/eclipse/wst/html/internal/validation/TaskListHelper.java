@@ -14,13 +14,11 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 
 /**
- * pa_TODO moved this class here for now to remove dependency on
- * validation packages
  * 
- * This class is intended to be used only by the validation framework. The
- * TaskListHelper class will be removed in Milestone 4.
+ * Class to help this Problem's list.
+ * 
  */
-public class TaskListHelper {
+class TaskListHelper {
 	private static TaskListHelper _taskListHelper = null;
 
 	public static TaskListHelper getTaskList() {
