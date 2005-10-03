@@ -23,13 +23,9 @@ import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.content.IContentType;
@@ -40,10 +36,8 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.DefaultInformationControl;
 import org.eclipse.jface.text.DocumentEvent;
@@ -110,7 +104,6 @@ import org.eclipse.ui.editors.text.ITextEditorHelpContextIds;
 import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.eclipse.ui.ide.IDEActionFactory;
-import org.eclipse.ui.part.EditorActionBarContributor;
 import org.eclipse.ui.part.IShowInTargetList;
 import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
 import org.eclipse.ui.progress.UIJob;
@@ -118,7 +111,6 @@ import org.eclipse.ui.texteditor.ChainedPreferenceStore;
 import org.eclipse.ui.texteditor.DefaultRangeIndicator;
 import org.eclipse.ui.texteditor.IAbstractTextEditorHelpContextIds;
 import org.eclipse.ui.texteditor.IDocumentProvider;
-import org.eclipse.ui.texteditor.IDocumentProviderExtension;
 import org.eclipse.ui.texteditor.IDocumentProviderExtension4;
 import org.eclipse.ui.texteditor.IStatusField;
 import org.eclipse.ui.texteditor.ITextEditor;
@@ -838,17 +830,7 @@ public class StructuredTextEditor extends TextEditor {
 	private static final String REDO_ACTION_TEXT_DEFAULT = SSEUIMessages._Redo_Text_Change__Ctrl_Y_UI_; //$NON-NLS-1$ = "&Redo Text Change @Ctrl+Y"
 	private static final String RULER_CONTEXT_MENU_ID = "org.eclipse.wst.sse.ui.StructuredTextEditor.RulerContext"; //$NON-NLS-1$
 	private static final String RULER_CONTEXT_MENU_POSTFIX = ".source.RulerContext"; //$NON-NLS-1$
-	protected static final String SSE_MODEL_ID = "org.eclipse.wst.sse.core"; //$NON-NLS-1$
-	/**
-	 * Constant for representing an error status. This is considered a value
-	 * object.
-	 */
-	static final protected IStatus STATUS_ERROR = new Status(IStatus.ERROR, SSEUIPlugin.ID, IStatus.INFO, "ERROR", null); //$NON-NLS-1$
-	/**
-	 * Constant for representing an ok status. This is considered a value
-	 * object.
-	 */
-	static final protected IStatus STATUS_OK = new Status(IStatus.OK, SSEUIPlugin.ID, IStatus.OK, "OK", null); //$NON-NLS-1$
+
 	private final static String UNDERSCORE = "_"; //$NON-NLS-1$
 	/** Translatable strings */
 	private static final String UNDO_ACTION_DESC = SSEUIMessages.Undo___0___UI_; //$NON-NLS-1$ = "Undo: {0}."
@@ -1895,20 +1877,6 @@ public class StructuredTextEditor extends TextEditor {
 		return fEditorPart;
 	}
 
-	/**
-	 * @deprecated - used only by Search and there are alternate means besides
-	 *             making this API
-	 * @return the IFile from the currently active editor
-	 */
-	public IFile getFileInEditor() {
-		IFile result = null;
-		IStructuredModel model = getInternalModel();
-		if (model != null) {
-			result = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(model.getBaseLocation()));
-		}
-		return result;
-	}
-
 	private String getInputContentIdentifier(Object element) {
 		String id = null;
 		if (getInternalModel() != null) {
@@ -2020,26 +1988,6 @@ public class StructuredTextEditor extends TextEditor {
 			return super.getSelectionProvider();
 		}
 		return fStructuredSelectionProvider;
-	}
-
-	private IStatusLineManager getStatusLineManager() {
-		IEditorActionBarContributor contributor = getEditorPart().getEditorSite().getActionBarContributor();
-		// IWorkbenchWindow window =
-		// PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-		// if (window == null)
-		// return null;
-		// IWorkbenchPage page = window.getActivePage();
-		// if (page == null)
-		// return null;
-		// IEditorPart editor = page.getActiveEditor();
-		// if (editor == null)
-		// return null;
-		// IEditorActionBarContributor contributor =
-		// editor.getEditorSite().getActionBarContributor();
-		if (contributor instanceof EditorActionBarContributor) {
-			return ((EditorActionBarContributor) contributor).getActionBars().getStatusLineManager();
-		}
-		return null;
 	}
 
 	/**
@@ -2512,19 +2460,6 @@ public class StructuredTextEditor extends TextEditor {
 		fBusyTimer.schedule(new TimeOutExpired(), BUSY_STATE_DELAY);
 	}
 
-	private void statusError(IStatus status) {
-		statusError(status.getMessage());
-		ErrorDialog.openError(getSite().getShell(), null, null, status);
-	}
-
-	private void statusError(String message) {
-		IStatusLineManager manager = getStatusLineManager();
-		if (manager == null)
-			return;
-		manager.setErrorMessage(message);
-		getSite().getShell().getDisplay().beep();
-	}
-
 	/**
 	 * update() should be called whenever the model is set or changed (as in
 	 * swapped)
@@ -2927,26 +2862,6 @@ public class StructuredTextEditor extends TextEditor {
 				else
 					text = "[ " + offset1 + " ]"; //$NON-NLS-1$ //$NON-NLS-2$
 				field.setText(text == null ? fErrorLabel : text);
-			}
-		}
-	}
-
-	protected void validateState(IEditorInput input) {
-		IDocumentProvider provider = getDocumentProvider();
-		if (provider instanceof IDocumentProviderExtension) {
-			IDocumentProviderExtension extension = (IDocumentProviderExtension) provider;
-			try {
-				boolean wasReadOnly = isEditorInputReadOnly();
-				extension.validateState(input, getSite().getShell());
-				if (getSourceViewer() != null)
-					getSourceViewer().setEditable(isEditable());
-				if (wasReadOnly != isEditorInputReadOnly())
-					updateStateDependentActions();
-			}
-			catch (CoreException x) {
-				ILog log = Platform.getLog(Platform.getBundle(PlatformUI.PLUGIN_ID));
-				log.log(x.getStatus());
-				statusError(x.getStatus());
 			}
 		}
 	}
