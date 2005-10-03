@@ -655,16 +655,18 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 				URLConnection connection = null;
 				try {
 					connection = record.getURL().openConnection();
-					connection.setUseCaches(false);
-					urlContents = connection.getInputStream();
-					document = (CMDocumentImpl) buildCMDocument(record.getBaseLocation(), urlContents);
-					if (document.getSmallIcon() != null) {
-						String iconPath = URIHelper.normalize(((TLDDocument) document).getSmallIcon(), record.getURL().toString(), "/"); //$NON-NLS-1$
-						document.setProperty(JSP12TLDNames.SMALL_ICON, iconPath);
-					}
-					if (document.getLargeIcon() != null) {
-						String iconPath = URIHelper.normalize(((TLDDocument) document).getLargeIcon(), record.getURL().toString(), "/"); //$NON-NLS-1$
-						document.setProperty(JSP12TLDNames.LARGE_ICON, iconPath);
+					if (connection != null) {
+						connection.setUseCaches(false);
+						urlContents = connection.getInputStream();
+						document = (CMDocumentImpl) buildCMDocument(record.getBaseLocation(), urlContents);
+						if (document.getSmallIcon() != null) {
+							String iconPath = URIHelper.normalize(((TLDDocument) document).getSmallIcon(), record.getURL().toString(), "/"); //$NON-NLS-1$
+							document.setProperty(JSP12TLDNames.SMALL_ICON, iconPath);
+						}
+						if (document.getLargeIcon() != null) {
+							String iconPath = URIHelper.normalize(((TLDDocument) document).getLargeIcon(), record.getURL().toString(), "/"); //$NON-NLS-1$
+							document.setProperty(JSP12TLDNames.LARGE_ICON, iconPath);
+						}
 					}
 				}
 				catch (IOException e) {
