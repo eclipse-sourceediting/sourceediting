@@ -56,8 +56,6 @@ import org.eclipse.wst.sse.core.internal.util.StringUtils;
  */
 public class TaglibIndex {
 
-	static boolean ENABLED = true;
-
 	class ClasspathChangeListener implements IElementChangedListener {
 		Stack classpathStack = new Stack();
 		List projectsIndexed = new ArrayList(1);
@@ -248,9 +246,11 @@ public class TaglibIndex {
 	static final boolean _debugChangeListener = false;
 
 	static boolean _debugEvents = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.jst.jsp.core/taglib/events")); //$NON-NLS-1$ //$NON-NLS-2$
+
 	static boolean _debugIndexCreation = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.jst.jsp.core/taglib/indexcreation")); //$NON-NLS-1$ //$NON-NLS-2$
 	static final boolean _debugResolution = "true".equals(Platform.getDebugOption("org.eclipse.jst.jsp.core/taglib/resolve")); //$NON-NLS-1$ //$NON-NLS-2$
 	static TaglibIndex _instance;
+	static boolean ENABLED = true;
 
 	public static void addTaglibIndexListener(ITaglibIndexListener listener) {
 		_instance.internalAddTaglibIndexListener(listener);
@@ -305,7 +305,7 @@ public class TaglibIndex {
 	 *            the workspace-relative path for IResources, full filesystem
 	 *            path otherwise
 	 * @param reference -
-	 *            the URI to lookup, usually the uri value from a taglib
+	 *            the URI to lookup, for example the uri value from a taglib
 	 *            directive
 	 * @param crossProjects -
 	 *            whether to search across projects (currently ignored)
@@ -452,20 +452,20 @@ public class TaglibIndex {
 				final String normalizedReference = URIHelper.normalize(reference, basePath, "/"); //$NON-NLS-1$
 				if (normalizedReference != null) {
 					ITLDRecord record = new ITLDRecord() {
+						public IPath getPath() {
+							return new Path(normalizedReference);
+						}
+
 						public int getRecordType() {
 							return ITaglibRecord.TLD;
 						}
 
-						public String getURI() {
-							return reference;
-						}
-
-						public String getPrefix() {
+						public String getShortName() {
 							return null;
 						}
 
-						public IPath getPath() {
-							return new Path(normalizedReference);
+						public String getURI() {
+							return reference;
 						}
 					};
 					resolved = record;

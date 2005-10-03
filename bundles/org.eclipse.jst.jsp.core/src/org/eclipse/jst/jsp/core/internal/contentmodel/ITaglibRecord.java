@@ -13,10 +13,9 @@ package org.eclipse.jst.jsp.core.internal.contentmodel;
 
 public interface ITaglibRecord {
 	int JAR = 1 << 2;
-	int TAGDIR = 1 << 4;
+	int TAGDIR = 1 << 3;
 	int TLD = 1 << 1;
 	int URL = 1;
-	int WEB_XML = 1 << 3;
 
 	int getRecordType();
 }

@@ -23,7 +23,7 @@ public interface ITLDRecord extends ITaglibRecord {
 	/**
 	 * @return Returns the recommended/default prefix if one was given.
 	 */
-	String getPrefix();
+	String getShortName();
 
 	/**
 	 * @return Returns the uri.
