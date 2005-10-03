@@ -16,10 +16,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IContributionManager;
@@ -60,17 +58,15 @@ import org.eclipse.ui.part.IShowInSource;
 import org.eclipse.ui.part.IShowInTarget;
 import org.eclipse.ui.part.IShowInTargetList;
 import org.eclipse.ui.part.ShowInContext;
-import org.eclipse.ui.texteditor.IDocumentProvider;
-import org.eclipse.ui.texteditor.IDocumentProviderExtension4;
-import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.views.contentoutline.ContentOutlinePage;
 import org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration;
 
 
 public class ConfigurableContentOutlinePage extends ContentOutlinePage implements IAdaptable {
 	/*
-	 * Menu listener to create the additions group; required since the context
-	 * menu is cleared every time it is shown
+	 * Menu listener to create the additions group and add any menu items
+	 * contributed by the configuration; required since the context menu is
+	 * cleared every time it is shown
 	 */
 	class AdditionGroupAdder implements IMenuListener {
 		public void menuAboutToShow(IMenuManager manager) {
@@ -80,6 +76,12 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 			}
 			else {
 				manager.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
+			}
+
+			// add configuration's menu items
+			IMenuListener listener = getConfiguration().getMenuListener(getTreeViewer());
+			if (listener != null) {
+				listener.menuAboutToShow(manager);
 			}
 		}
 	}
@@ -287,7 +289,7 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 
 	private static final String OUTLINE_CONTEXT_MENU_ID = "org.eclipse.wst.sse.ui.StructuredTextEditor.OutlineContext"; //$NON-NLS-1$
 
-	private static final String OUTLINE_CONTEXT_MENU_POSTFIX = ".source.OutlineContext"; //$NON-NLS-1$
+	private static final String OUTLINE_CONTEXT_MENU_SUFFIX = ".source.OutlineContext"; //$NON-NLS-1$
 	private final boolean _DEBUG = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.ui/contentOutline")); //$NON-NLS-1$  //$NON-NLS-2$;
 
 	private long _DEBUG_TIME = 0;
@@ -306,13 +308,19 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 	private DragSource fDragSource;
 	private DelegatingDropAdapter fDropAdapter;
 	private DropTarget fDropTarget;
+	private IEditorPart fEditor;
 	private IMenuListener fGroupAdder = null;
 	private Object fInput = null;
-	private IEditorPart fOwnerEditor;
 
+	private String fInputContentTypeIdentifier = null;
 	private ISelectionListener fSelectionListener = null;
+
 	SelectionProvider fSelectionProvider = null;
 
+	/**
+	 * A ContentOutlinePage that abstract as much behavior as possible away
+	 * from the Controls and varies it by content type.
+	 */
 	public ConfigurableContentOutlinePage() {
 		super();
 		fGroupAdder = new AdditionGroupAdder();
@@ -335,27 +343,8 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 
 	private String computeContextMenuID() {
 		String id = null;
-		ITextEditor editor = null;
-		if (fOwnerEditor instanceof ITextEditor) {
-			editor = (ITextEditor) fOwnerEditor;
-		}
-		else {
-			editor = (ITextEditor) fOwnerEditor.getAdapter(ITextEditor.class);
-		}
-		if (editor != null) {
-			IDocumentProvider provider = editor.getDocumentProvider();
-			if (provider instanceof IDocumentProviderExtension4) {
-				IContentType type;
-				try {
-					type = ((IDocumentProviderExtension4) provider).getContentType(fOwnerEditor.getEditorInput());
-					if (type != null) {
-						id = type.getId();
-					}
-				}
-				catch (CoreException e) {
-					// do nothing, we'll use a generic ID instead
-				}
-			}
+		if (fInputContentTypeIdentifier != null) {
+			id = fInputContentTypeIdentifier + OUTLINE_CONTEXT_MENU_SUFFIX;
 		}
 		return id;
 	}
@@ -368,14 +357,8 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 
 		IWorkbenchPage page = getSite().getWorkbenchWindow().getActivePage();
 		if (page != null) {
-			fOwnerEditor = page.getActiveEditor();
+			fEditor = page.getActiveEditor();
 		}
-
-		// create the context menu
-		fContextMenuManager = new MenuManager("#popup"); //$NON-NLS-1$
-		fContextMenuManager.setRemoveAllWhenShown(true);
-		Menu menu = fContextMenuManager.createContextMenu(getControl());
-		getControl().setMenu(menu);
 
 		fDragAdapter = new DelegatingDragAdapter();
 		fDragSource = new DragSource(getControl(), DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK);
@@ -412,18 +395,11 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 			fContextMenu.dispose();
 		}
 		if (fContextMenuManager != null) {
-			IMenuListener listener = getConfiguration().getMenuListener(getTreeViewer());
-			if (listener != null)
-				fContextMenuManager.removeMenuListener(listener);
 			fContextMenuManager.removeMenuListener(fGroupAdder);
 			fContextMenuManager.removeAll();
 			fContextMenuManager.dispose();
 		}
 		setConfiguration(NULL_CONFIGURATION);
-	}
-
-	IEditorPart getActiveEditorPart() {
-		return getSite().getWorkbenchWindow().getActivePage().getActiveEditor();
 	}
 
 	/*
@@ -436,7 +412,7 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 		if (key.equals(IShowInTarget.class)) {
 			adapter = new ShowInTarget();
 		}
-		final IEditorPart editor = getActiveEditorPart();
+		final IEditorPart editor = fEditor;
 
 		if (key.equals(IShowInSource.class) && editor != null) {
 			adapter = new IShowInSource() {
@@ -452,7 +428,7 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 	}
 
 	/**
-	 * @return
+	 * @return the currently used ContentOutlineConfiguration
 	 */
 	public ContentOutlineConfiguration getConfiguration() {
 		if (fConfiguration == null) {
@@ -461,6 +437,11 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 		return fConfiguration;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.jface.viewers.ISelectionProvider#getSelection()
+	 */
 	public ISelection getSelection() {
 		return fSelectionProvider.getSelection();
 	}
@@ -473,6 +454,11 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 	}
 
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.ui.part.IPageBookViewPage#init(org.eclipse.ui.part.IPageSite)
+	 */
 	public void init(IPageSite pageSite) {
 		super.init(pageSite);
 		pageSite.getWorkbenchWindow().getSelectionService().addPostSelectionListener(getSelectionListener());
@@ -492,6 +478,9 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 	}
 
 	/**
+	 * Configures (or reconfigures) the page according to the given
+	 * configuration.
+	 * 
 	 * @param configuration
 	 */
 	public void setConfiguration(ContentOutlineConfiguration configuration) {
@@ -507,13 +496,7 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 					}
 				}
 			}
-			// remove any menu listeners
-			if (fContextMenuManager != null) {
-				IMenuListener listener = getConfiguration().getMenuListener(getTreeViewer());
-				if (listener != null)
-					fContextMenuManager.removeMenuListener(listener);
-				fContextMenuManager.removeMenuListener(fGroupAdder);
-			}
+
 			// clear the selection changed and double click listeners from the
 			// configuration
 			if (getConfiguration().getSelectionChangedListener(getTreeViewer()) != null)
@@ -572,13 +555,6 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 		fConfiguration = configuration;
 
 		if (getTreeViewer() != null && getControl() != null && !getControl().isDisposed()) {
-			// add a menu listener if one is provided
-			if (fContextMenuManager != null) {
-				IMenuListener listener = getConfiguration().getMenuListener(getTreeViewer());
-				if (listener != null)
-					fContextMenuManager.addMenuListener(listener);
-				fContextMenuManager.addMenuListener(fGroupAdder);
-			}
 			// (re)set the providers
 			getTreeViewer().setLabelProvider(getConfiguration().getLabelProvider(getTreeViewer()));
 			getTreeViewer().setContentProvider(getConfiguration().getContentProvider(getTreeViewer()));
@@ -644,6 +620,20 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 		}
 	}
 
+	/**
+	 * @param editor
+	 *            The IEditorPart that "owns" this page. Used to support the
+	 *            "Show In..." menu.
+	 */
+	public void setEditorPart(IEditorPart editor) {
+		fEditor = editor;
+	}
+
+	/**
+	 * @param newInput
+	 *            The input for the page's viewer. Should only be set after a
+	 *            configuration has been applied.
+	 */
 	public void setInput(Object newInput) {
 		fInput = newInput;
 		/*
@@ -657,31 +647,40 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 	}
 
 	/**
+	 * @param id -
+	 *            the content type identifier to use for further
+	 *            customization, e.g. for saving and retrieving preferences
+	 */
+	public void setInputContentTypeIdentifier(String id) {
+		fInputContentTypeIdentifier = id;
+	}
+
+	/**
 	 * Updates the outline page's context menu for the current input
 	 */
 	private void updateContextMenuId() {
-		String contextMenuId = null;
+		String computedContextMenuId = null;
 		// update outline view's context menu control and ID
 
-		if (fOwnerEditor == null) {
+		if (fEditor == null) {
 			IWorkbenchPage page = getSite().getWorkbenchWindow().getActivePage();
 			if (page != null) {
-				fOwnerEditor = page.getActiveEditor();
+				fEditor = page.getActiveEditor();
 			}
 		}
 
-		contextMenuId = computeContextMenuID();
+		computedContextMenuId = computeContextMenuID();
 
-		if (contextMenuId == null) {
-			contextMenuId = OUTLINE_CONTEXT_MENU_ID;
+		if (computedContextMenuId == null) {
+			computedContextMenuId = OUTLINE_CONTEXT_MENU_ID;
 		}
 
 		/*
 		 * Update outline context menu id if updating to a new id or if
 		 * context menu is not already set up
 		 */
-		if (!contextMenuId.equals(fContextMenuId) || (fContextMenu == null)) {
-			fContextMenuId = contextMenuId;
+		if (!computedContextMenuId.equals(fContextMenuId) || (fContextMenu == null)) {
+			fContextMenuId = computedContextMenuId;
 
 			if (getControl() != null && !getControl().isDisposed()) {
 				// dispose of previous context menu
@@ -689,9 +688,6 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 					fContextMenu.dispose();
 				}
 				if (fContextMenuManager != null) {
-					IMenuListener listener = getConfiguration().getMenuListener(getTreeViewer());
-					if (listener != null)
-						fContextMenuManager.removeMenuListener(listener);
 					fContextMenuManager.removeMenuListener(fGroupAdder);
 					fContextMenuManager.removeAll();
 					fContextMenuManager.dispose();
@@ -699,9 +695,7 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 
 				fContextMenuManager = new MenuManager(fContextMenuId, fContextMenuId);
 				fContextMenuManager.setRemoveAllWhenShown(true);
-				IMenuListener listener = getConfiguration().getMenuListener(getTreeViewer());
-				if (listener != null)
-					fContextMenuManager.addMenuListener(listener);
+
 				fContextMenuManager.addMenuListener(fGroupAdder);
 
 				fContextMenu = fContextMenuManager.createContextMenu(getControl());
@@ -713,10 +707,10 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 				 * also register this menu for source page part and structured
 				 * text outline view ids
 				 */
-				if (fOwnerEditor != null) {
-					String partId = fOwnerEditor.getSite().getId();
+				if (fEditor != null) {
+					String partId = fEditor.getSite().getId();
 					if (partId != null) {
-						getSite().registerContextMenu(partId + OUTLINE_CONTEXT_MENU_POSTFIX, fContextMenuManager, this);
+						getSite().registerContextMenu(partId + OUTLINE_CONTEXT_MENU_SUFFIX, fContextMenuManager, this);
 					}
 				}
 				getSite().registerContextMenu(OUTLINE_CONTEXT_MENU_ID, fContextMenuManager, this);
