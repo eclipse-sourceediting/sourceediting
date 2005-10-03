@@ -11,10 +11,6 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.core.internal.contentmodel;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -48,6 +44,7 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jst.jsp.core.internal.Logger;
+import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.JSP11TLDNames;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.JSP12TLDNames;
 import org.eclipse.jst.jsp.core.internal.util.DocumentProvider;
 import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
@@ -123,8 +120,8 @@ class ProjectDescription {
 
 	static class JarRecord implements IJarRecord {
 		boolean has11TLD;
-		IPath location;
 		TaglibInfo info;
+		IPath location;
 		List urlRecords;
 
 		public boolean equals(Object obj) {
@@ -143,10 +140,10 @@ class ProjectDescription {
 		/**
 		 * @return Returns the recommended/default prefix if one was given.
 		 */
-		public String getPrefix() {
+		public String getShortName() {
 			if (info == null)
 				return null;
-			return info.prefix;
+			return info.shortName;
 		}
 
 		public int getRecordType() {
@@ -209,11 +206,14 @@ class ProjectDescription {
 	}
 
 	static class TaglibInfo {
-		String prefix;
-		String uri;
+		String description;
+		// extract only when asked?
 		float jspVersion;
-		String smallIcon;
 		String largeIcon;
+		String shortName;
+		String smallIcon;
+		float tlibVersion;
+		String uri;
 	}
 
 	class TaglibRecordEvent implements ITaglibRecordEvent {
@@ -254,8 +254,8 @@ class ProjectDescription {
 	}
 
 	static class TLDRecord implements ITLDRecord {
-		IPath path;
 		TaglibInfo info;
+		IPath path;
 
 		public boolean equals(Object obj) {
 			if (!(obj instanceof TLDRecord))
@@ -267,10 +267,10 @@ class ProjectDescription {
 			return path;
 		}
 
-		public String getPrefix() {
+		public String getShortName() {
 			if (info == null)
 				return null;
-			return info.prefix;
+			return info.shortName;
 		}
 
 		public int getRecordType() {
@@ -313,10 +313,10 @@ class ProjectDescription {
 		/**
 		 * @return Returns the recommended/default prefix if one was given.
 		 */
-		public String getPrefix() {
+		public String getShortName() {
 			if (info == null)
 				return null;
-			return info.prefix;
+			return info.shortName;
 		}
 
 		public int getRecordType() {
@@ -344,9 +344,9 @@ class ProjectDescription {
 		}
 	}
 
-	static class WebXMLRecord implements IWebXMLRecord {
-		IPath path;
+	static class WebXMLRecord {
 		TaglibInfo info;
+		IPath path;
 		List tldRecords = new ArrayList(0);
 
 		public boolean equals(Object obj) {
@@ -361,11 +361,7 @@ class ProjectDescription {
 		public String getPrefix() {
 			if (info == null)
 				return null;
-			return info.prefix;
-		}
-
-		public int getRecordType() {
-			return ITaglibRecord.WEB_XML;
+			return info.shortName;
 		}
 
 		/**
@@ -539,24 +535,35 @@ class ProjectDescription {
 			while (child != null) {
 				if (child.getNodeType() == Node.ELEMENT_NODE) {
 					if (child.getNodeName().equals(JSP12TLDNames.URI)) {
-						info.uri = getContents(child);
+						info.uri = getTextContents(child);
 					}
-					else if (child.getNodeName().equals(JSP12TLDNames.SHORT_NAME)) {
-						info.prefix = getContents(child);
+					else if (child.getNodeName().equals(JSP12TLDNames.SHORT_NAME) || child.getNodeName().equals(JSP11TLDNames.SHORTNAME)) {
+						info.shortName = getTextContents(child);
 					}
-					else if (child.getNodeName().equals(JSP12TLDNames.JSP_VERSION)) {
+					else if (child.getNodeName().equals(JSP12TLDNames.DESCRIPTION) || child.getNodeName().equals(JSP11TLDNames.INFO)) {
+						info.description = getTextContents(child);
+					}
+					else if (child.getNodeName().equals(JSP12TLDNames.JSP_VERSION) || child.getNodeName().equals(JSP11TLDNames.JSPVERSION)) {
 						try {
-							info.jspVersion = Float.parseFloat(getContents(child));
+							info.jspVersion = Float.parseFloat(getTextContents(child));
 						}
 						catch (NumberFormatException e) {
-							info.jspVersion = 0;
+							info.jspVersion = -1;
+						}
+					}
+					else if (child.getNodeName().equals(JSP12TLDNames.TLIB_VERSION) || child.getNodeName().equals(JSP11TLDNames.TLIBVERSION)) {
+						try {
+							info.tlibVersion = Float.parseFloat(getTextContents(child));
+						}
+						catch (NumberFormatException e) {
+							info.tlibVersion = -1;
 						}
 					}
 					else if (child.getNodeName().equals(JSP12TLDNames.SMALL_ICON)) {
-						info.smallIcon = getContents(child);
+						info.smallIcon = getTextContents(child);
 					}
 					else if (child.getNodeName().equals(JSP12TLDNames.LARGE_ICON)) {
-						info.largeIcon = getContents(child);
+						info.largeIcon = getTextContents(child);
 					}
 				}
 				child = child.getNextSibling();
@@ -571,35 +578,9 @@ class ProjectDescription {
 		records.addAll(fTLDReferences.values());
 		records.addAll(fTagDirReferences.values());
 		records.addAll(_getJSP11JarReferences(fJARReferences.values()));
-		records.addAll(fWebXMLReferences.values());
 		records.addAll(fClasspathReferences.values());
 		records.addAll(implicitReferences);
 		return records;
-	}
-
-	private String getContents(Node parent) {
-		NodeList children = parent.getChildNodes();
-		if (children.getLength() == 1) {
-			return children.item(0).getNodeValue().trim();
-		}
-		StringBuffer s = new StringBuffer();
-		Node child = parent.getFirstChild();
-		while (child != null) {
-			if (child.getNodeType() == Node.ENTITY_REFERENCE_NODE) {
-				String reference = ((EntityReference) child).getNodeValue();
-				if (reference == null && child.getNodeName() != null) {
-					reference = "&" + child.getNodeName() + ";"; //$NON-NLS-1$ //$NON-NLS-2$
-				}
-				if (reference != null) {
-					s.append(reference.trim());
-				}
-			}
-			else {
-				s.append(child.getNodeValue().trim());
-			}
-			child = child.getNextSibling();
-		}
-		return s.toString().trim();
 	}
 
 	/**
@@ -679,6 +660,31 @@ class ProjectDescription {
 	 */
 	private String getLocalRoot(String basePath) {
 		return getLocalRoot(new Path(basePath)).toString();
+	}
+
+	private String getTextContents(Node parent) {
+		NodeList children = parent.getChildNodes();
+		if (children.getLength() == 1) {
+			return children.item(0).getNodeValue().trim();
+		}
+		StringBuffer s = new StringBuffer();
+		Node child = parent.getFirstChild();
+		while (child != null) {
+			if (child.getNodeType() == Node.ENTITY_REFERENCE_NODE) {
+				String reference = ((EntityReference) child).getNodeValue();
+				if (reference == null && child.getNodeName() != null) {
+					reference = "&" + child.getNodeName() + ";"; //$NON-NLS-1$ //$NON-NLS-2$
+				}
+				if (reference != null) {
+					s.append(reference.trim());
+				}
+			}
+			else {
+				s.append(child.getNodeValue().trim());
+			}
+			child = child.getNextSibling();
+		}
+		return s.toString().trim();
 	}
 
 	/**
@@ -791,12 +797,12 @@ class ProjectDescription {
 		}
 	}
 
-	protected String readTextofChild(Node node, String childName) {
+	private String readTextofChild(Node node, String childName) {
 		NodeList children = node.getChildNodes();
 		for (int i = 0; i < children.getLength(); i++) {
 			Node child = children.item(i);
 			if (child.getNodeType() == Node.ELEMENT_NODE && child.getNodeName().equals(childName)) {
-				return getContents(child);
+				return getTextContents(child);
 			}
 		}
 		return ""; //$NON-NLS-1$
@@ -820,9 +826,12 @@ class ProjectDescription {
 		if (record != null) {
 			URLRecord[] records = (URLRecord[]) record.getURLRecords().toArray(new URLRecord[0]);
 			for (int i = 0; i < records.length; i++) {
+				TaglibIndex.fireTaglibRecordEvent(new TaglibRecordEvent(records[i], ITaglibRecordEvent.REMOVED));
 				getImplicitReferences(jar.getFullPath().toString()).remove(records[i].getURI());
 			}
-			TaglibIndex.fireTaglibRecordEvent(new TaglibRecordEvent(record, ITaglibRecordEvent.REMOVED));
+			if (record.has11TLD) {
+				TaglibIndex.fireTaglibRecordEvent(new TaglibRecordEvent(record, ITaglibRecordEvent.REMOVED));
+			}
 		}
 	}
 
@@ -854,8 +863,8 @@ class ProjectDescription {
 				if (_debugIndexCreation)
 					System.out.println("removed record for " + records[i].getURI() + "@" + records[i].path); //$NON-NLS-1$ //$NON-NLS-2$
 				getImplicitReferences(webxml.getFullPath().toString()).remove(records[i].getURI());
+				TaglibIndex.fireTaglibRecordEvent(new TaglibRecordEvent(records[i], ITaglibRecordEvent.REMOVED));
 			}
-			TaglibIndex.fireTaglibRecordEvent(new TaglibRecordEvent(record, ITaglibRecordEvent.REMOVED));
 		}
 	}
 
@@ -879,9 +888,9 @@ class ProjectDescription {
 			path = URIHelper.normalize(reference, basePath, getLocalRoot(basePath));
 		}
 		// order dictated by JSP spec 2.0 section 7.2.3
-		if (record == null) {
-			record = (ITaglibRecord) fWebXMLReferences.get(path);
-		}
+		// if (record == null) {
+		// record = (ITaglibRecord) fWebXMLReferences.get(path);
+		// }
 		if (record == null) {
 			record = (ITaglibRecord) fJARReferences.get(path);
 			// only if 1.1 TLD was found
@@ -895,11 +904,25 @@ class ProjectDescription {
 		if (record == null) {
 			record = (ITaglibRecord) getImplicitReferences(basePath).get(reference);
 		}
+
+
 		if (record == null) {
 			record = (ITaglibRecord) fTagDirReferences.get(path);
 		}
+
 		if (record == null) {
 			record = (ITaglibRecord) fClasspathReferences.get(reference);
+		}
+
+		// If no records were found and no local-root applies, check ALL of
+		// the web.xml files as a fallback
+		if (record == null && fProject.getFullPath().toString().equals(getLocalRoot(basePath))) {
+			WebXMLRecord[] webxmls = (WebXMLRecord[]) fWebXMLReferences.values().toArray(new WebXMLRecord[0]);
+			for (int i = 0; i < webxmls.length; i++) {
+				if (record != null)
+					continue;
+				record = (ITaglibRecord) getImplicitReferences(webxmls[i].path.toString()).get(reference);
+			}
 		}
 		return record;
 	}
@@ -968,6 +991,7 @@ class ProjectDescription {
 							record.url = new URL("jar:file:" + jarLocationString + "!/" + entries[i]); //$NON-NLS-1$ //$NON-NLS-2$
 							jarRecord.urlRecords.add(record);
 							getImplicitReferences(jar.getFullPath().toString()).put(record.getURI(), record);
+							TaglibIndex.fireTaglibRecordEvent(new TaglibRecordEvent(record, ITaglibRecordEvent.ADDED));
 							if (_debugIndexCreation)
 								System.out.println("created record for " + record.getURI() + "@" + record.getURL()); //$NON-NLS-1$ //$NON-NLS-2$
 						}
@@ -984,7 +1008,9 @@ class ProjectDescription {
 				}
 			}
 		}
-		TaglibIndex.fireTaglibRecordEvent(new TaglibRecordEvent(jarRecord, deltaKind));
+		if (jarRecord.has11TLD) {
+			TaglibIndex.fireTaglibRecordEvent(new TaglibRecordEvent(jarRecord, deltaKind));
+		}
 	}
 
 	void updateTagDir(IResource tagFile, int deltaKind) {
@@ -1043,82 +1069,32 @@ class ProjectDescription {
 		if (_debugIndexCreation)
 			System.out.println("creating records for " + webxml.getFullPath()); //$NON-NLS-1$
 
-		WebXMLRecord servletRecord = new WebXMLRecord();
-		servletRecord.path = webxml.getFullPath();
-		fWebXMLReferences.put(servletRecord.getWebXML().toString(), servletRecord);
+		WebXMLRecord webxmlRecord = new WebXMLRecord();
+		webxmlRecord.path = webxml.getFullPath();
+		fWebXMLReferences.put(webxmlRecord.getWebXML().toString(), webxmlRecord);
 		NodeList taglibs = document.getElementsByTagName(JSP12TLDNames.TAGLIB);
 		for (int i = 0; i < taglibs.getLength(); i++) {
 			String uri = readTextofChild(taglibs.item(i), "taglib-uri").trim(); //$NON-NLS-1$
 			// specified location is relative to root of the webapp
 			String location = readTextofChild(taglibs.item(i), "taglib-location").trim(); //$NON-NLS-1$
-			TLDRecord record = new TLDRecord();
+			IPath path = null;
 			if (location.startsWith("/")) { //$NON-NLS-1$
-				record.path = new Path(getLocalRoot(webxml.getFullPath().toString()) + location);
+				path = new Path(getLocalRoot(webxml.getFullPath().toString()) + location);
 			}
 			else {
-				record.path = new Path(URIHelper.normalize(location, webxml.getFullPath().toString(), getLocalRoot(webxml.getLocation().toString())));
+				path = new Path(URIHelper.normalize(location, webxml.getFullPath().toString(), getLocalRoot(webxml.getLocation().toString())));
 			}
-			TaglibInfo info = extractInfo(record.path.toString(), getContents(record.path));
-			info.uri = uri;
-			record.info = info;
-			servletRecord.tldRecords.add(record);
-			getImplicitReferences(webxml.getFullPath().toString()).put(uri, record);
-			if (_debugIndexCreation)
-				System.out.println("created record for " + uri + "@" + record.path); //$NON-NLS-1$ //$NON-NLS-2$
-		}
-		TaglibIndex.fireTaglibRecordEvent(new TaglibRecordEvent(servletRecord, deltaKind));
-	}
-
-	private InputStream getContents(IPath path) {
-		InputStream contents = null;
-		InputStream input = null;
-		if (path.segmentCount() > 1) {
-			IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
-			if (file != null && file.exists()) {
-				try {
-					input = file.getContents(true);
-				}
-				catch (CoreException e) {
-				}
-			}
-			else {
-				try {
-					input = new FileInputStream(path.toOSString());
-				}
-				catch (FileNotFoundException e) {
-				}
-			}
-			if (input != null) {
-				try {
-					int c;
-					ByteArrayOutputStream buffer = null;
-
-					buffer = new ByteArrayOutputStream();
-
-					// array dim restriction?
-					byte bytes[] = new byte[2048];
-					while ((c = input.read(bytes)) >= 0) {
-						buffer.write(bytes, 0, c);
-					}
-					contents = new ByteArrayInputStream(buffer.toByteArray());
-				}
-				catch (IOException e) {
-					// 
-				}
-				finally {
-					if (input != null) {
-						try {
-							input.close();
-						}
-						catch (IOException e) {
-						}
-					}
+			if (path.segmentCount() > 1) {
+				IFile tldResource = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
+				if (tldResource.isAccessible()) {
+					ITLDRecord record = createTLDRecord(tldResource);
+					webxmlRecord.tldRecords.add(record);
+					getImplicitReferences(webxml.getFullPath().toString()).put(uri, record);
+					if (_debugIndexCreation)
+						System.out.println("created record for " + uri + "@" + record.getPath()); //$NON-NLS-1$ //$NON-NLS-2$
+					TaglibIndex.fireTaglibRecordEvent(new TaglibRecordEvent(record, deltaKind));
 				}
 			}
 		}
-		if (contents == null) {
-			contents = new ByteArrayInputStream(new byte[0]);
-		}
-		return contents;
 	}
 }
