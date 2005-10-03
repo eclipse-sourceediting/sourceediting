@@ -136,7 +136,7 @@ public class XMLMultiPageEditorPart extends PostSelectionMultiPageEditorPart {
 		 * editor.
 		 */
 		void handleActivation() {
-			if (fIsHandlingActivation)
+			if (fIsHandlingActivation || getTextEditor() == null)
 				return;
 
 			if (fActivePart == XMLMultiPageEditorPart.this) {
@@ -735,14 +735,6 @@ public class XMLMultiPageEditorPart extends PostSelectionMultiPageEditorPart {
 				((MultiPageSelectionProvider) getSite().getSelectionProvider()).fireSelectionChanged(event);
 				((PostMultiPageSelectionProvider) getSite().getSelectionProvider()).firePostSelectionChanged(event);
 			}
-		}
-	}
-
-	void safelySanityCheckState() {
-		// If we're called before editor is created, simply ignore since we
-		// delegate this function to our embedded TextEditor
-		if (getTextEditor() != null) {
-			getTextEditor().safelySanityCheckState(getEditorInput());
 		}
 	}
 
