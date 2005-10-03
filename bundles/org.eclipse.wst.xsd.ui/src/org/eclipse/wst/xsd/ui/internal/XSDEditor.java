@@ -41,7 +41,7 @@ import org.eclipse.wst.common.ui.properties.internal.provisional.ITabbedProperty
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.events.IStructuredDocumentListener;
-//import org.eclipse.wst.sse.core.internal.undo.IStructuredTextUndoManager;
+import org.eclipse.wst.sse.core.internal.undo.IStructuredTextUndoManager;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xsd.ui.internal.graph.XSDGraphViewer;
@@ -61,6 +61,8 @@ public class XSDEditor extends XSDMultiPageEditorPart implements ITabbedProperty
   IFile resourceFile;
   XSDSelectionManager xsdSelectionManager;
   XSDModelAdapter schemalNodeAdapter;
+
+  private IStructuredModel result;
 
   public XSDEditor()
   {
@@ -187,7 +189,7 @@ public class XSDEditor extends XSDMultiPageEditorPart implements ITabbedProperty
   {
     if (commandStackListener == null)
     {
-//      IStructuredTextUndoManager undoManager = getModel().getUndoManager();
+      IStructuredTextUndoManager undoManager = getModel().getUndoManager();
         commandStackListener = new CommandStackListener()
         {
           /**
@@ -201,7 +203,7 @@ public class XSDEditor extends XSDMultiPageEditorPart implements ITabbedProperty
               BasicCommandStack stack = (BasicCommandStack) obj;
               Command recentCommand = stack.getMostRecentCommand();
               Command redoCommand = stack.getRedoCommand();
-              stack.getUndoCommand();
+              Command undoCommand = stack.getUndoCommand();
               if (recentCommand == redoCommand)
               {
                 // there must have been an undo reset info tasks 
@@ -225,7 +227,7 @@ public class XSDEditor extends XSDMultiPageEditorPart implements ITabbedProperty
   {
     if (commandStackListener != null)
     {
-//      IStructuredTextUndoManager undoManager = getModel().getUndoManager();
+      IStructuredTextUndoManager undoManager = getModel().getUndoManager();
 //TODO WTP Port      undoManager.getCommandStack().removeCommandStackListener(commandStackListener);
     }
   }
@@ -306,6 +308,7 @@ public class XSDEditor extends XSDMultiPageEditorPart implements ITabbedProperty
     resourceFile = null;
     xsdSelectionManager = null;
     schemalNodeAdapter = null;
+    result = null;
     partListener = null;
     commandStackListener = null;
     preferenceStoreListener = null;
