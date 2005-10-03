@@ -13,6 +13,9 @@ package org.eclipse.jst.jsp.core.internal.contentmodel;
 
 import org.eclipse.core.runtime.IPath;
 
+/**
+ * A record representing a standalone .tld file
+ */
 public interface ITLDRecord extends ITaglibRecord {
 
 	/**

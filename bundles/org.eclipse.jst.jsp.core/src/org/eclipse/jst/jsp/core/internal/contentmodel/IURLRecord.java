@@ -13,6 +13,9 @@ package org.eclipse.jst.jsp.core.internal.contentmodel;
 
 import java.net.URL;
 
+/**
+ * A record representing a .tld that is not a standalone file
+ */
 public interface IURLRecord extends ITaglibRecord {
 
 	String getBaseLocation();

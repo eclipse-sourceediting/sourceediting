@@ -14,7 +14,7 @@ package org.eclipse.jst.jsp.core.internal.contentmodel;
 import org.eclipse.core.runtime.IPath;
 
 /**
- * A record to a .jar file reference "1.1 style".
+ * A record to a .jar file referenced "1.1 style".
  */
 
 public interface IJarRecord extends ITaglibRecord {

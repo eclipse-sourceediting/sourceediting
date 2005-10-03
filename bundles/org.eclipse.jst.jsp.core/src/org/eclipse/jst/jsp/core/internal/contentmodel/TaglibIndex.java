@@ -309,7 +309,10 @@ public class TaglibIndex {
 	 *            directive
 	 * @param crossProjects -
 	 *            whether to search across projects (currently ignored)
-	 * @return
+	 * 
+	 * @return a visible ITaglibRecord or null
+	 * 
+	 * @See ITaglibRecord
 	 */
 	public static ITaglibRecord resolve(String basePath, String reference, boolean crossProjects) {
 		ITaglibRecord result = _instance.internalResolve(basePath, reference, crossProjects);

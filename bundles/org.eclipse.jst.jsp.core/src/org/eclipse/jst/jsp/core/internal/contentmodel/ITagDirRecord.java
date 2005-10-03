@@ -11,6 +11,9 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.core.internal.contentmodel;
 
+/**
+ * A record representing a folder of .tag/.tagx files
+ */
 public interface ITagDirRecord extends ITaglibRecord {
 
 }
