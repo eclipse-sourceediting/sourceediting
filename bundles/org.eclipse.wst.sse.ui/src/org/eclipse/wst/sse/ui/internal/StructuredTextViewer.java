@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.IDocument;
@@ -110,6 +109,7 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 	private static final String TEXT_PASTE = SSEUIMessages.Text_Paste_UI_; //$NON-NLS-1$
 	private static final String TEXT_SHIFT_LEFT = SSEUIMessages.Text_Shift_Left_UI_; //$NON-NLS-1$ = "Text Shift Left"
 	private static final String TEXT_SHIFT_RIGHT = SSEUIMessages.Text_Shift_Right_UI_; //$NON-NLS-1$ = "Text Shift Right"
+	private static final boolean TRACE_EXCEPTIONS = true;
 
 	private boolean fBackgroundupdateInProgress;
 	private StructuredContentCleanupHandler fContentCleanupHandler = null;
@@ -380,7 +380,7 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 	/**
 	 * TODO Temporary workaround for BUG44665
 	 */
-	protected void customizeDocumentCommand(StructuredDocumentCommand command) {
+	private void customizeDocumentCommand(StructuredDocumentCommand command) {
 		if (isIgnoringAutoEditStrategies())
 			return;
 
@@ -388,27 +388,42 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 		if (strategies == null)
 			return;
 
-		switch (strategies.size()) {
-			// optimization
-			case 0 :
-				break;
+		try {
+			switch (strategies.size()) {
+				// optimization
+				case 0 :
+					break;
 
-			case 1 :
-				((IAutoEditStrategy) strategies.iterator().next()).customizeDocumentCommand(getDocument(), command);
-				break;
+				case 1 :
+					((IAutoEditStrategy) strategies.iterator().next()).customizeDocumentCommand(getDocument(), command);
+					break;
 
-			// make iterator robust against adding/removing strategies from
-			// within
-			// strategies
-			default :
-				strategies = new ArrayList(strategies);
+				// make iterator robust against adding/removing strategies
+				// from
+				// within
+				// strategies
+				default :
+					strategies = new ArrayList(strategies);
 
-				IDocument document = getDocument();
-				for (final Iterator iterator = strategies.iterator(); iterator.hasNext();)
-					((IAutoEditStrategy) iterator.next()).customizeDocumentCommand(document, command);
+					IDocument document = getDocument();
+					for (final Iterator iterator = strategies.iterator(); iterator.hasNext();)
+						((IAutoEditStrategy) iterator.next()).customizeDocumentCommand(document, command);
 
-				break;
+					break;
+			}
 		}
+		catch (Exception x) {
+			// note, we catch and log any exception, since we are calling "foriegn code"
+			// since an otherwise can actually prevent typing!
+			// see https://bugs.eclipse.org/bugs/show_bug.cgi?id=111318
+			// ISSUE: I'm not sure we are leaving "command" in right state, though, we should 
+			// re-examine.
+
+			if (TRACE_EXCEPTIONS)
+				Logger.logException("StructuredTextViewer.exception.customizeDocumentCommand", x); //$NON-NLS-1$
+
+		}
+
 	}
 
 	/*
@@ -423,25 +438,11 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 		int selectionLength = selection.y - selection.x;
 		switch (operation) {
 			case UNDO : {
-				IExtendedSimpleEditor editor = getActiveExtendedSimpleEditor();
-				if (editor != null) {
-					IStatus status = editor.validateEdit(getControl().getShell());
-					if (status != null && status.isOK())
-						undo();
-				}
-				else
-					undo();
+				undo();
 				break;
 			}
 			case REDO : {
-				IExtendedSimpleEditor editor = getActiveExtendedSimpleEditor();
-				if (editor != null) {
-					IStatus status = editor.validateEdit(getControl().getShell());
-					if (status != null && status.isOK())
-						redo();
-				}
-				else
-					redo();
+				redo();
 				break;
 			}
 			case CUT :
@@ -592,20 +593,6 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 		enabledRedrawing();
 	}
 
-	private IExtendedSimpleEditor getActiveExtendedSimpleEditor() {
-		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-		if (window != null) {
-			IWorkbenchPage page = window.getActivePage();
-			if (page != null) {
-				IEditorPart editor = page.getActiveEditor();
-				if (editor != null && editor instanceof IExtendedSimpleEditor) {
-					return (IExtendedSimpleEditor) editor;
-				}
-			}
-		}
-		return null;
-	}
-
 	protected void handleDispose() {
 		Logger.trace("Source Editor", "StructuredTextViewer::handleDispose entry"); //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -707,6 +694,16 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 					System.out.println("TextViewer.error.bad_location.verifyText"); //$NON-NLS-1$
 
 			}
+			catch (Exception x) {
+				// note, we catch and log any exception,
+				// since an otherwise can actually prevent typing!
+				// see https://bugs.eclipse.org/bugs/show_bug.cgi?id=111318
+
+				if (TRACE_EXCEPTIONS)
+					Logger.logException("StructuredTextViewer.exception.verifyText", x); //$NON-NLS-1$
+
+			}
+
 			finally {
 
 				if (compoundChange && fUndoManager != null)
@@ -876,7 +873,7 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 	 * 
 	 * @param msg
 	 */
-	protected void setErrorMessage(String msg) {
+	private void setErrorMessage(String msg) {
 		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		if (window != null) {
 			IWorkbenchPage page = window.getActivePage();

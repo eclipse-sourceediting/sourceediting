@@ -254,6 +254,9 @@ public class StructuredAutoEditStrategyCSS implements IAutoEditStrategy {
 			} else if (region.getType() == CSSRegionContexts.CSS_RBRACE || region.getType() == CSSRegionContexts.CSS_SELECTOR_ATTRIBUTE_END || region.getType() == CSSRegionContexts.CSS_DECLARATION_VALUE_PARENTHESIS_CLOSE) {
 				// skip to LBRACE
 				CompoundRegion pc = prevCorrespondence(region);
+				// guard for NPE
+				//https://bugs.eclipse.org/bugs/show_bug.cgi?id=111318
+				if (pc == null) break;
 				it.reset(pc.getDocumentRegion(), pc.getTextRegion());
 				it.prev();
 			} else if (region.getType() == CSSRegionContexts.CSS_STRING) {
