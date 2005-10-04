@@ -25,7 +25,7 @@ import org.w3c.dom.Node;
  * @deprecated use the editor's ISourceEditingTextTools adapter and cast to
  *             IDOMSourceEditingTextTools when appropriate
  */
-public interface IExtendedMarkupEditor extends IExtendedSimpleEditor {
+public interface IExtendedMarkupEditor  {
 
 	/**
 	 * @deprecated - use the IDOMSourceEditingTextTools.getNode(int) method

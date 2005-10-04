@@ -16,10 +16,8 @@ package org.eclipse.wst.sse.ui.internal;
  * @deprecated, obtain a ISourceEditingTextTools adapter from the editor part
  */
 
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
 
 public interface IExtendedSimpleEditor {
@@ -32,10 +30,4 @@ public interface IExtendedSimpleEditor {
 
 	public Point getSelectionRange();
 
-	/**
-	 * @deprecated - validate using the editor's document provider
-	 * @param context
-	 * @return
-	 */
-	public IStatus validateEdit(Shell context);
 }

@@ -55,7 +55,7 @@ public abstract class ContentSettingsPropertyPage extends PropertyPage {
 	 *            org.eclipse.swt.widgets.Shell
 	 * @return IStatus
 	 */
-	public static IStatus validateEdit(IFile file, Shell context) {
+	private static IStatus validateEdit(IFile file, Shell context) {
 		if (file == null || !file.exists())
 			return STATUS_ERROR;
 		if (!(file.isReadOnly()))

@@ -20,11 +20,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.undo.IStructuredTextUndoManager;
@@ -100,10 +97,6 @@ public class DropActionProxy implements InvocationHandler {
 		}
 	}
 
-	private Display getDisplay() {
-		return PlatformUI.getWorkbench().getDisplay();
-	}
-
 	/**
 	 * @see java.lang.reflect.InvocationHandler#invoke(Object, Method,
 	 *      Object[])
@@ -130,10 +123,16 @@ public class DropActionProxy implements InvocationHandler {
 				}
 				beginRecording();
 				if ((editor != null) && !(obj instanceof ISelfValidateEditAction)) {
-					IStatus status = editor.validateEdit(getDisplay().getActiveShell());
-					if (!status.isOK()) {
-						return null;
-					}
+					
+					// TODO: cleanup validateEdit
+					// just leaving this check and following code here for transition. 
+					// I assume we'll remove all need for 'validateEdit'
+					// or move to platform editor's validateState 
+					
+//					IStatus status = editor.validateEdit(getDisplay().getActiveShell());
+//					if (!status.isOK()) {
+//						return null;
+//					}
 				}
 			}
 			result = m.invoke(obj, args);
