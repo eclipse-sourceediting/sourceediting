@@ -143,7 +143,7 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 		public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 			// from selection service
 			_DEBUG_TIME = System.currentTimeMillis();
-			if (getControl() != null && !getControl().isDisposed() && !getControl().isFocusControl() && !fSelectionProvider.isFiringSelection()) {
+			if (getControl() != null && !getControl().isDisposed() && !getControl().isFocusControl() && getControl().isVisible() && !fSelectionProvider.isFiringSelection()) {
 				/*
 				 * Do not allow selection from other parts to affect selection
 				 * in the tree widget if it has focus. Selection events
