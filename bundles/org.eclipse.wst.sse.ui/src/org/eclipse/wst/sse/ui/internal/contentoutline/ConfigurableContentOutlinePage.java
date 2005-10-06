@@ -242,7 +242,7 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 		};
 
 		public void setSelection(ISelection selection) {
-			if (isFiringSelection) {
+			if (!isFiringSelection) {
 				getTreeViewer().setSelection(selection);
 			}
 		};
