@@ -15,8 +15,10 @@ package org.eclipse.wst.sse.ui.internal;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.jface.text.Position;
 import org.eclipse.ui.texteditor.MarkerAnnotation;
+import org.eclipse.ui.texteditor.MarkerUtilities;
 import org.eclipse.ui.texteditor.ResourceMarkerAnnotationModel;
 import org.eclipse.wst.sse.ui.internal.provisional.extensions.breakpoint.IBreakpointConstants;
 
@@ -51,7 +53,16 @@ public class StructuredResourceMarkerAnnotationModel extends ResourceMarkerAnnot
 	 * @see org.eclipse.ui.texteditor.AbstractMarkerAnnotationModel#createMarkerAnnotation(org.eclipse.core.resources.IMarker)
 	 */
 	protected MarkerAnnotation createMarkerAnnotation(IMarker marker) {
-		return new StructuredMarkerAnnotation(marker);
+		/*
+		 * We need to do some special processing if marker is a validation
+		 * (aka problem) marker or if marker is a breakpoint marker so create
+		 * a special marker annotation for those markers. Otherwise, use
+		 * default.
+		 */
+		if (MarkerUtilities.isMarkerType(marker, IBreakpoint.BREAKPOINT_MARKER) || (MarkerUtilities.isMarkerType(marker, IMarker.PROBLEM))) {
+			return new StructuredMarkerAnnotation(marker);
+		}
+		return super.createMarkerAnnotation(marker);
 	}
 
 	/*
@@ -62,7 +73,7 @@ public class StructuredResourceMarkerAnnotationModel extends ResourceMarkerAnnot
 	public Position getMarkerPosition(IMarker marker) {
 		Position pos = super.getMarkerPosition(marker);
 
-		//if ((pos == null || pos.getLength() == 0) && marker.getType() ==
+		// if ((pos == null || pos.getLength() == 0) && marker.getType() ==
 		// IInternalDebugUIConstants.ANN_INSTR_POINTER_CURRENT) {
 		if (pos == null || pos.getLength() == 0) {
 			// We probably should create position from marker if marker
@@ -83,7 +94,8 @@ public class StructuredResourceMarkerAnnotationModel extends ResourceMarkerAnnot
 			Object attr = marker.getAttribute(IBreakpointConstants.ATTR_HIDDEN);
 			if (attr != null && ((Boolean) attr).equals(Boolean.TRUE))
 				return false;
-		} catch (CoreException e) {
+		}
+		catch (CoreException e) {
 			// ignore
 		}
 

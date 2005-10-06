@@ -20,13 +20,11 @@ import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.debug.ui.IDebugModelPresentation;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.source.IAnnotationPresentation;
-import org.eclipse.search.ui.NewSearchUI;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.texteditor.MarkerAnnotation;
 import org.eclipse.ui.texteditor.MarkerUtilities;
 import org.eclipse.wst.sse.ui.internal.reconcile.TemporaryAnnotation;
@@ -77,12 +75,6 @@ public class StructuredMarkerAnnotation extends MarkerAnnotation implements IAnn
 		}
 		else if(fAnnotationType == TemporaryAnnotation.ANNOT_INFO) {
 			image = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_INFO_TSK);
-		}
-		else if(fAnnotationType == TemporaryAnnotation.ANNOT_TASK) {
-			image = PlatformUI.getWorkbench().getSharedImages().getImage(IDE.SharedImages.IMG_OBJS_TASK_TSK);
-		}
-		else if(fAnnotationType == TemporaryAnnotation.ANNOT_BOOKMARK) {
-			image = PlatformUI.getWorkbench().getSharedImages().getImage(IDE.SharedImages.IMG_OBJS_BKMRK_TSK);
 		}
 			
 		if(image != null && isGrayed())
@@ -149,12 +141,7 @@ public class StructuredMarkerAnnotation extends MarkerAnnotation implements IAnn
 							fAnnotationType = TemporaryAnnotation.ANNOT_INFO;
 							break;
 					}
-				} else if (marker.isSubtypeOf(IMarker.TASK))
-					fAnnotationType = TemporaryAnnotation.ANNOT_TASK;
-				else if (marker.isSubtypeOf(NewSearchUI.SEARCH_MARKER)) {
-					fAnnotationType = TemporaryAnnotation.ANNOT_SEARCH;
-				} else if (marker.isSubtypeOf(IMarker.BOOKMARK))
-					fAnnotationType = TemporaryAnnotation.ANNOT_BOOKMARK;
+				}
 
 			} catch (CoreException e) {
 				Logger.logException(e);

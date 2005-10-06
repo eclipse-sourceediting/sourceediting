@@ -34,9 +34,6 @@ import org.eclipse.wst.sse.ui.internal.ITemporaryAnnotation;
  * @author pavery
  */
 public class TemporaryAnnotation extends Annotation implements ITemporaryAnnotation, IReconcileResult, IAnnotationPresentation {
-
-	public final static String ANNOT_BOOKMARK = "org.eclipse.ui.workbench.texteditor.bookmark"; //$NON-NLS-1$
-
 	// remember to change these if it changes in the extension point
 	// may need a different home for them in the future, but they're here for
 	// now
@@ -44,8 +41,6 @@ public class TemporaryAnnotation extends Annotation implements ITemporaryAnnotat
 	public final static String ANNOT_INFO = "org.eclipse.wst.sse.ui.temp.info"; //$NON-NLS-1$
 
 	// pa_TODO what should the ID be for this?
-	public final static String ANNOT_SEARCH = Annotation.TYPE_UNKNOWN;
-	public final static String ANNOT_TASK = "org.eclipse.ui.workbench.texteditor.task"; //$NON-NLS-1$
 	public final static String ANNOT_UNKNOWN = Annotation.TYPE_UNKNOWN;
 	public final static String ANNOT_WARNING = "org.eclipse.wst.sse.ui.temp.warning"; //$NON-NLS-1$
 
@@ -54,26 +49,17 @@ public class TemporaryAnnotation extends Annotation implements ITemporaryAnnotat
     // copied from CompilationUnitDocumentProvider.ProblemAnnotation
     //XXX: To be fully correct these constants should be non-static
 
-    private static final int TASK_LAYER;
-
     private static final int INFO_LAYER;
 
     private static final int WARNING_LAYER;
 
     private static final int ERROR_LAYER;
 
-    private static final int BOOKMARK_LAYER;
-
-    private static final int SEARCH_LAYER;
-
     static {
         AnnotationPreferenceLookup lookup= EditorsUI.getAnnotationPreferenceLookup();
-        TASK_LAYER= computeLayer("org.eclipse.ui.workbench.texteditor.task", lookup); //$NON-NLS-1$
         INFO_LAYER= computeLayer("org.eclipse.wst.sse.ui.temp.info", lookup); //$NON-NLS-1$
         WARNING_LAYER= computeLayer("org.eclipse.wst.sse.ui.temp.warning", lookup); //$NON-NLS-1$
         ERROR_LAYER= computeLayer("org.eclipse.wst.sse.ui.temp.error", lookup); //$NON-NLS-1$
-        BOOKMARK_LAYER= computeLayer("org.eclipse.ui.workbench.texteditor.bookmark", lookup); //$NON-NLS-1$
-        SEARCH_LAYER= computeLayer("org.eclipse.search.results", lookup); //$NON-NLS-1$
     }
     
     private static int computeLayer(String annotationType, AnnotationPreferenceLookup lookup) {
@@ -130,15 +116,6 @@ public class TemporaryAnnotation extends Annotation implements ITemporaryAnnotat
         else if(type.equals(ANNOT_INFO)) {
             fLayer = INFO_LAYER;
         }
-        else if(type.equals(ANNOT_BOOKMARK)) {
-            fLayer = BOOKMARK_LAYER;
-        }
-        else if(type.equals(ANNOT_SEARCH)) {
-            fLayer = SEARCH_LAYER;
-        }
-        else if(type.equals(ANNOT_TASK)) {
-            fLayer = TASK_LAYER;
-        }
     }
     
     private void initImage() {
@@ -151,15 +128,6 @@ public class TemporaryAnnotation extends Annotation implements ITemporaryAnnotat
             fImage = null;
         }
         else if(type.equals(ANNOT_INFO)) {
-            fImage = null;
-        }
-        else if(type.equals(ANNOT_BOOKMARK)) {
-            fImage = null;
-        }
-        else if(type.equals(ANNOT_SEARCH)) {
-            fImage = null;
-        }
-        else if(type.equals(ANNOT_TASK)) {
             fImage = null;
         }
     }
