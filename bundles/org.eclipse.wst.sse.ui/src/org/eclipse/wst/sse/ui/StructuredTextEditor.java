@@ -578,7 +578,7 @@ public class StructuredTextEditor extends TextEditor {
 			}
 
 			public boolean isEmpty() {
-				return super.isEmpty() && selectedStructures.length > 0;
+				return super.isEmpty() && selectedStructures.length == 0;
 			}
 
 			public Iterator iterator() {
