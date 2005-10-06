@@ -12,11 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.wst.common.componentcore.ModuleCoreNature;
-import org.eclipse.wst.common.componentcore.internal.StructureEdit;
 import org.eclipse.wst.common.componentcore.resources.IVirtualComponent;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IModuleType;
@@ -50,25 +46,9 @@ public class StaticWebDeployable extends ProjectModule implements IStaticWeb {
 
 	public String getContextRoot() {
 		Properties props = component.getMetaProperties();
-		if(props.containsKey("context-root"))
-			return props.getProperty("context-root");
+		if(props.containsKey("context-root")) //$NON-NLS-1$
+			return props.getProperty("context-root"); //$NON-NLS-1$
 		return component.getName();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.server.core.util.ProjectModule#getRootFolder()
-	 */
-	public IPath getRootFolder() {		   
-		IPath path = null;
-	       if ( ModuleCoreNature.getModuleCoreNature(project) != null ) {  
-     	if( component != null ){
-     		IFolder outputContainer = StructureEdit.getOutputContainerRoot(component);
-     		path = outputContainer.getProjectRelativePath();
-     	}
-     }    
-		return path;
 	}
 
 	public String getType() {
