@@ -416,7 +416,11 @@ public class DirtyRegionProcessor extends Job implements IReconciler {
 		    // https://bugs.eclipse.org/bugs/show_bug.cgi?id=103676
 			// stop errors from popping up a dialog
 			// from the job manager
-			Logger.logException("problem with as-you-type validation", e);
+			
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=106052
+			// don't log OperationCanceledException
+			if(!(e instanceof OperationCanceledException))
+				Logger.logException("problem with as-you-type validation", e);
 		}
 		finally {
 			monitor.done();
