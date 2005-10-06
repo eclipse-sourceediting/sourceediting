@@ -26,16 +26,22 @@ import org.eclipse.wst.xml.ui.views.properties.XMLPropertySheetConfiguration;
 public class TestEditorConfigurationJSP extends TestCase {
 	public void testGetSourceViewerConfiguration() {
 		Object o = ExtendedConfigurationBuilder.getInstance().getConfiguration(ExtendedConfigurationBuilder.SOURCEVIEWERCONFIGURATION, ContentTypeIdForJSP.ContentTypeID_JSP);
-		assertTrue("unexpected source viewer configuration for " + ContentTypeIdForJSP.ContentTypeID_JSP, (o instanceof StructuredTextViewerConfigurationJSP));
+		assertNotNull("no source viewer configuration for " + ContentTypeIdForJSP.ContentTypeID_JSP, o);
+		// check for over-qualified subclasses
+		assertEquals("unexpected source viewer configuration for " + ContentTypeIdForJSP.ContentTypeID_JSP, o.getClass(), StructuredTextViewerConfigurationJSP.class);
 	}
 
 	public void testGetContentOutlineViewerConfiguration() {
 		Object o = ExtendedConfigurationBuilder.getInstance().getConfiguration(ExtendedConfigurationBuilder.CONTENTOUTLINECONFIGURATION, ContentTypeIdForJSP.ContentTypeID_JSP);
-		assertTrue("unexpected content outline viewer configuration for " + ContentTypeIdForJSP.ContentTypeID_JSP, (o instanceof JSPContentOutlineConfiguration));
+		assertNotNull("no content outline viewer configuration for " + ContentTypeIdForJSP.ContentTypeID_JSP, o);
+		// check for over-qualified subclasses
+		assertEquals("unexpected content outline viewer configuration for " + ContentTypeIdForJSP.ContentTypeID_JSP, o.getClass(), JSPContentOutlineConfiguration.class);
 	}
 
 	public void testGetPropertySheetConfiguration() {
 		Object o = ExtendedConfigurationBuilder.getInstance().getConfiguration(ExtendedConfigurationBuilder.PROPERTYSHEETCONFIGURATION, ContentTypeIdForJSP.ContentTypeID_JSP);
-		assertTrue("unexpected property sheet viewer configuration for " + ContentTypeIdForJSP.ContentTypeID_JSP, (o instanceof XMLPropertySheetConfiguration));
+		assertNotNull("no property sheet configuration for " + ContentTypeIdForJSP.ContentTypeID_JSP, o);
+		// check for over-qualified subclasses
+		assertEquals("unexpected property sheet configuration for " + ContentTypeIdForJSP.ContentTypeID_JSP, o.getClass(), XMLPropertySheetConfiguration.class);
 	}
 }

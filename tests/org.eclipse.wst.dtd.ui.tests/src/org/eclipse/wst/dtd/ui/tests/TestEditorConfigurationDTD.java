@@ -25,11 +25,15 @@ import org.eclipse.wst.sse.ui.internal.ExtendedConfigurationBuilder;
 public class TestEditorConfigurationDTD extends TestCase {
 	public void testGetSourceViewerConfiguration() {
 		Object o = ExtendedConfigurationBuilder.getInstance().getConfiguration(ExtendedConfigurationBuilder.SOURCEVIEWERCONFIGURATION, ContentTypeIdForDTD.ContentTypeID_DTD);
-		assertTrue("unexpected source viewer configuration for " + ContentTypeIdForDTD.ContentTypeID_DTD, (o instanceof StructuredTextViewerConfigurationDTD));
+		assertNotNull("no source viewer configuration for " + ContentTypeIdForDTD.ContentTypeID_DTD, o);
+		// check for over-qualified subclasses
+		assertEquals("unexpected source viewer configuration for " + ContentTypeIdForDTD.ContentTypeID_DTD, o.getClass(), StructuredTextViewerConfigurationDTD.class);
 	}
 
 	public void testGetContentOutlineViewerConfiguration() {
 		Object o = ExtendedConfigurationBuilder.getInstance().getConfiguration(ExtendedConfigurationBuilder.CONTENTOUTLINECONFIGURATION, ContentTypeIdForDTD.ContentTypeID_DTD);
-		assertTrue("unexpected content outline viewer configuration for " + ContentTypeIdForDTD.ContentTypeID_DTD, (o instanceof DTDContentOutlineConfiguration));
+		assertNotNull("no content outline configuration for " + ContentTypeIdForDTD.ContentTypeID_DTD, o);
+		// check for over-qualified subclasses
+		assertEquals("unexpected content outline configuration for " + ContentTypeIdForDTD.ContentTypeID_DTD, o.getClass(), DTDContentOutlineConfiguration.class);
 	}
 }

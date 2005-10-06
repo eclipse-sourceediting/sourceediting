@@ -26,16 +26,22 @@ import org.eclipse.wst.xml.ui.views.properties.XMLPropertySheetConfiguration;
 public class TestEditorConfigurationHTML extends TestCase {
 	public void testGetSourceViewerConfiguration() {
 		Object o = ExtendedConfigurationBuilder.getInstance().getConfiguration(ExtendedConfigurationBuilder.SOURCEVIEWERCONFIGURATION, ContentTypeIdForHTML.ContentTypeID_HTML);
-		assertTrue("unexpected source viewer configuration for " + ContentTypeIdForHTML.ContentTypeID_HTML, (o instanceof StructuredTextViewerConfigurationHTML));
+		assertNotNull("no source viewer configuration for " + ContentTypeIdForHTML.ContentTypeID_HTML, o);
+		// check for over-qualified subclasses
+		assertEquals("unexpected source viewer configuration for " + ContentTypeIdForHTML.ContentTypeID_HTML, o.getClass(), StructuredTextViewerConfigurationHTML.class);
 	}
 
 	public void testGetContentOutlineViewerConfiguration() {
 		Object o = ExtendedConfigurationBuilder.getInstance().getConfiguration(ExtendedConfigurationBuilder.CONTENTOUTLINECONFIGURATION, ContentTypeIdForHTML.ContentTypeID_HTML);
-		assertTrue("unexpected content outline viewer configuration for " + ContentTypeIdForHTML.ContentTypeID_HTML, (o instanceof HTMLContentOutlineConfiguration));
+		assertNotNull("no content outline viewer configuration for " + ContentTypeIdForHTML.ContentTypeID_HTML, o);
+		// check for over-qualified subclasses
+		assertEquals("unexpected content outline viewer configuration for " + ContentTypeIdForHTML.ContentTypeID_HTML, o.getClass(), HTMLContentOutlineConfiguration.class);
 	}
 
 	public void testGetPropertySheetConfiguration() {
 		Object o = ExtendedConfigurationBuilder.getInstance().getConfiguration(ExtendedConfigurationBuilder.PROPERTYSHEETCONFIGURATION, ContentTypeIdForHTML.ContentTypeID_HTML);
-		assertTrue("unexpected property sheet viewer configuration for " + ContentTypeIdForHTML.ContentTypeID_HTML, (o instanceof XMLPropertySheetConfiguration));
+		assertNotNull("no property sheet configuration for " + ContentTypeIdForHTML.ContentTypeID_HTML, o);
+		// check for over-qualified subclasses
+		assertEquals("unexpected property sheet configuration for " + ContentTypeIdForHTML.ContentTypeID_HTML, o.getClass(), XMLPropertySheetConfiguration.class);
 	}
 }

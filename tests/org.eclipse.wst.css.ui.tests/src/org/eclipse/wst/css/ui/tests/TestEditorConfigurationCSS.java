@@ -26,16 +26,22 @@ import org.eclipse.wst.sse.ui.internal.ExtendedConfigurationBuilder;
 public class TestEditorConfigurationCSS extends TestCase {
 	public void testGetSourceViewerConfiguration() {
 		Object o = ExtendedConfigurationBuilder.getInstance().getConfiguration(ExtendedConfigurationBuilder.SOURCEVIEWERCONFIGURATION, ContentTypeIdForCSS.ContentTypeID_CSS);
-		assertTrue("unexpected source viewer configuration for " + ContentTypeIdForCSS.ContentTypeID_CSS, (o instanceof StructuredTextViewerConfigurationCSS));
+		assertNotNull("no source viewer configuration for " + ContentTypeIdForCSS.ContentTypeID_CSS, o);
+		// check for over-qualified subclasses
+		assertEquals("unexpected source viewer configuration for " + ContentTypeIdForCSS.ContentTypeID_CSS, o.getClass(), StructuredTextViewerConfigurationCSS.class);
 	}
 
 	public void testGetContentOutlineViewerConfiguration() {
 		Object o = ExtendedConfigurationBuilder.getInstance().getConfiguration(ExtendedConfigurationBuilder.CONTENTOUTLINECONFIGURATION, ContentTypeIdForCSS.ContentTypeID_CSS);
-		assertTrue("unexpected content outline viewer configuration for " + ContentTypeIdForCSS.ContentTypeID_CSS, (o instanceof CSSContentOutlineConfiguration));
+		assertNotNull("no content outline configuration for " + ContentTypeIdForCSS.ContentTypeID_CSS, o);
+		// check for over-qualified subclasses
+		assertEquals("unexpected content outline configuration for " + ContentTypeIdForCSS.ContentTypeID_CSS, o.getClass(), CSSContentOutlineConfiguration.class);
 	}
-	
+
 	public void testGetPropertySheetConfiguration() {
 		Object o = ExtendedConfigurationBuilder.getInstance().getConfiguration(ExtendedConfigurationBuilder.PROPERTYSHEETCONFIGURATION, ContentTypeIdForCSS.ContentTypeID_CSS);
-		assertTrue("unexpected property sheet viewer configuration for " + ContentTypeIdForCSS.ContentTypeID_CSS, (o instanceof CSSPropertySheetConfiguration));
+		assertNotNull("no property sheet configuration for " + ContentTypeIdForCSS.ContentTypeID_CSS, o);
+		// check for over-qualified subclasses
+		assertEquals("unexpected property sheet configuration for " + ContentTypeIdForCSS.ContentTypeID_CSS, o.getClass(), CSSPropertySheetConfiguration.class);
 	}
 }
