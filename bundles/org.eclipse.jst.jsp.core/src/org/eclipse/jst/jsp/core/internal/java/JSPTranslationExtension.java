@@ -35,6 +35,7 @@ import org.eclipse.text.edits.MalformedTreeException;
 import org.eclipse.text.edits.MultiTextEdit;
 import org.eclipse.text.edits.ReplaceEdit;
 import org.eclipse.text.edits.TextEdit;
+import org.eclipse.text.edits.UndoEdit;
 import org.eclipse.wst.sse.core.internal.FileBufferModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
@@ -104,7 +105,6 @@ public class JSPTranslationExtension extends JSPTranslation {
 	
 	/**
 	 * Returns a corresponding TextEdit for the JSP file given a TextEdit for a Java file.
-	 * Note: This method actually applies the Java edit to the internal Java document.
 	 * 
 	 * @param javaEdit
 	 * @return the corresponding JSP edits (not applied to the document yet)
@@ -148,10 +148,10 @@ public class JSPTranslationExtension extends JSPTranslation {
 				System.out.println("pos[" + deltas[i].preOffset + ":" + deltas[i].preLength + "]" + javaText.substring(deltas[i].preOffset, deltas[i].preOffset + deltas[i].preLength) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			System.out.println("==============================================="); //$NON-NLS-1$
 		}
-		
+		UndoEdit undo = null;
 		// apply the edit to the java document
 		try {
-			javaEdit.apply(getJavaDocument());
+			undo = javaEdit.apply(getJavaDocument());
 		} catch (MalformedTreeException e) {
 			Logger.logException(e);
 		} catch (BadLocationException e) {
@@ -198,10 +198,26 @@ public class JSPTranslationExtension extends JSPTranslation {
 				}
 			}
 		}
-		return createMultiTextEdit((TextEdit[])jspEdits.toArray(new TextEdit[jspEdits.size()]));
+		TextEdit allJspEdits =  createMultiTextEdit((TextEdit[])jspEdits.toArray(new TextEdit[jspEdits.size()]));
+		
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=105632
+		// undo the java edit 
+		// (so the underlying Java document still represents what's in the editor)
+		if(undo != null) {
+			try {
+				undo.apply(getJavaDocument());
+			}
+			catch (MalformedTreeException e) {
+				Logger.logException(e);
+			}
+			catch (BadLocationException e) {
+				Logger.logException(e);
+			}
+		}
+		
+		return allJspEdits;
 	}
 	
-
 	/**
 	 * Combines an array of edits into one MultiTextEdit (with the appropriate coverage region)
 	 * @param edits
