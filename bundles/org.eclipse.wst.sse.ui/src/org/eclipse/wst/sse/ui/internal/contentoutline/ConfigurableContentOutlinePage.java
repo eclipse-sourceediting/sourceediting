@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -258,8 +258,7 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 		}
 	}
 
-	protected static ContentOutlineConfiguration NULL_CONFIGURATION = new ContentOutlineConfiguration() {
-
+	protected static final ContentOutlineConfiguration NULL_CONFIGURATION = new ContentOutlineConfiguration() {
 		public IContentProvider getContentProvider(TreeViewer viewer) {
 			return new ITreeContentProvider() {
 				public void dispose() {
@@ -385,7 +384,7 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 
 	public void dispose() {
 		super.dispose();
-		getSite().getWorkbenchWindow().getSelectionService().removePostSelectionListener(getSelectionListener());
+		getSite().getWorkbenchWindow().getSelectionService().removePostSelectionListener(getSelectionServiceListener());
 		if (fDoubleClickProvider != null) {
 			getTreeViewer().removeDoubleClickListener(fDoubleClickProvider);
 		}
@@ -446,7 +445,7 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 		return fSelectionProvider.getSelection();
 	}
 
-	private ISelectionListener getSelectionListener() {
+	private ISelectionListener getSelectionServiceListener() {
 		if (fSelectionListener == null) {
 			fSelectionListener = new PostSelectionServiceListener();
 		}
@@ -461,7 +460,7 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 	 */
 	public void init(IPageSite pageSite) {
 		super.init(pageSite);
-		pageSite.getWorkbenchWindow().getSelectionService().addPostSelectionListener(getSelectionListener());
+		pageSite.getWorkbenchWindow().getSelectionService().addPostSelectionListener(getSelectionServiceListener());
 	}
 
 	/**
@@ -649,7 +648,7 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 	/**
 	 * @param id -
 	 *            the content type identifier to use for further
-	 *            customization, e.g. for saving and retrieving preferences
+	 *            extension
 	 */
 	public void setInputContentTypeIdentifier(String id) {
 		fInputContentTypeIdentifier = id;
