@@ -26,16 +26,22 @@ import org.eclipse.wst.xml.ui.views.properties.XMLPropertySheetConfiguration;
 public class TestEditorConfigurationXML extends TestCase {
 	public void testGetSourceViewerConfiguration() {
 		Object o = ExtendedConfigurationBuilder.getInstance().getConfiguration(ExtendedConfigurationBuilder.SOURCEVIEWERCONFIGURATION, ContentTypeIdForXML.ContentTypeID_XML);
-		assertTrue("unexpected source viewer configuration for " + ContentTypeIdForXML.ContentTypeID_XML, (o instanceof StructuredTextViewerConfigurationXML));
+		assertNotNull("no source viewer configuration for " + ContentTypeIdForXML.ContentTypeID_XML, o);
+		// check for over-qualified subclasses
+		assertEquals("unexpected source viewer configuration for " + ContentTypeIdForXML.ContentTypeID_XML, o.getClass(), StructuredTextViewerConfigurationXML.class);
 	}
 
 	public void testGetContentOutlineViewerConfiguration() {
 		Object o = ExtendedConfigurationBuilder.getInstance().getConfiguration(ExtendedConfigurationBuilder.CONTENTOUTLINECONFIGURATION, ContentTypeIdForXML.ContentTypeID_XML);
-		assertTrue("unexpected content outline viewer configuration for " + ContentTypeIdForXML.ContentTypeID_XML, (o instanceof XMLContentOutlineConfiguration));
+		assertNotNull("no content outline viewer configuration for " + ContentTypeIdForXML.ContentTypeID_XML, o);
+		// check for over-qualified subclasses
+		assertEquals("unexpected content outline viewer configuration for " + ContentTypeIdForXML.ContentTypeID_XML, o.getClass(), XMLContentOutlineConfiguration.class);
 	}
 
 	public void testGetPropertySheetConfiguration() {
 		Object o = ExtendedConfigurationBuilder.getInstance().getConfiguration(ExtendedConfigurationBuilder.PROPERTYSHEETCONFIGURATION, ContentTypeIdForXML.ContentTypeID_XML);
-		assertTrue("unexpected property sheet viewer configuration for " + ContentTypeIdForXML.ContentTypeID_XML, (o instanceof XMLPropertySheetConfiguration));
+		assertNotNull("no property sheet configuration for " + ContentTypeIdForXML.ContentTypeID_XML, o);
+		// check for over-qualified subclasses
+		assertEquals("unexpected property sheet configuration for " + ContentTypeIdForXML.ContentTypeID_XML, o.getClass(), XMLPropertySheetConfiguration.class);
 	}
 }
