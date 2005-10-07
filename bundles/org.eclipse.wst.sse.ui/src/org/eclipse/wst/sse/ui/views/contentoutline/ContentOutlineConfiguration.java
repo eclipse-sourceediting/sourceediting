@@ -61,6 +61,9 @@ public abstract class ContentOutlineConfiguration {
 		}
 	}
 
+	/**
+	 * Toggles whether incoming selection notification affects us
+	 */
 	private class ToggleLinkAction extends PropertyChangeUpdateAction {
 		public ToggleLinkAction(IPreferenceStore store, String preference) {
 			super(SSEUIMessages.ContentOutlineConfiguration_1, store, preference, true); //$NON-NLS-1$
@@ -93,8 +96,9 @@ public abstract class ContentOutlineConfiguration {
 	}
 
 	/**
+	 * Creates the contributions for the view's local menu.  Subclasses should merge their contributions with these.
 	 * @param viewer
-	 * @return
+	 * @return menu contributions
 	 */
 	protected IContributionItem[] createMenuContributions(TreeViewer viewer) {
 		IContributionItem toggleLinkItem = new PropertyChangeUpdateActionContributionItem(new ToggleLinkAction(getPreferenceStore(), OUTLINE_LINK_PREF));
@@ -102,6 +106,11 @@ public abstract class ContentOutlineConfiguration {
 		return items;
 	}
 
+	/**
+	 * Creates the toolbar contributions.  Subclasses should merge their contributions with these.
+	 * @param viewer
+	 * @return toolbar contributions
+	 */
 	protected IContributionItem[] createToolbarContributions(TreeViewer viewer) {
 		IContributionItem collapseAllItem = new ActionContributionItem(new CollapseTreeAction(viewer));
 		IContributionItem[] items = new IContributionItem[]{collapseAllItem};
@@ -150,7 +159,7 @@ public abstract class ContentOutlineConfiguration {
 	/**
 	 * @param viewer
 	 * @return the IMenuListener to notify when the viewer's context menu is
-	 *         about to be show
+	 *         about to be shown
 	 */
 	public IMenuListener getMenuListener(TreeViewer viewer) {
 		return null;
@@ -165,6 +174,9 @@ public abstract class ContentOutlineConfiguration {
 		return null;
 	}
 
+	/**
+	 * @return the preference store in which to remember preferences (such as the link-with-editor toggle state)
+	 */
 	protected IPreferenceStore getPreferenceStore() {
 		return SSEUIPlugin.getInstance().getPreferenceStore();
 	}
@@ -266,6 +278,4 @@ public abstract class ContentOutlineConfiguration {
 			fMenuContributions = null;
 		}
 	}
-
-
 }
