@@ -21,11 +21,13 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.IBreakpointManager;
 import org.eclipse.debug.core.model.IBreakpoint;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.source.IVerticalRulerInfo;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
@@ -42,6 +44,8 @@ import org.eclipse.wst.sse.ui.internal.provisional.extensions.breakpoint.IBreakp
  * ToggleBreakpointAction
  */
 public class ToggleBreakpointAction extends BreakpointRulerAction {
+	IAction fFallbackAction;
+
 	/**
 	 * @param editor
 	 * @param rulerInfo
@@ -49,6 +53,11 @@ public class ToggleBreakpointAction extends BreakpointRulerAction {
 	public ToggleBreakpointAction(ITextEditor editor, IVerticalRulerInfo rulerInfo) {
 		super(editor, rulerInfo);
 		setText(SSEUIMessages.ToggleBreakpointAction_0); //$NON-NLS-1$
+	}
+
+	public ToggleBreakpointAction(ITextEditor editor, IVerticalRulerInfo rulerInfo, IAction fallbackAction) {
+		this(editor, rulerInfo);
+		fFallbackAction = fallbackAction;
 	}
 
 	protected boolean createBreakpoints(int lineNumber) {
@@ -102,6 +111,16 @@ public class ToggleBreakpointAction extends BreakpointRulerAction {
 				return false;
 			}
 		}
+		/*
+		 * Although no errors were reported, no breakpoints exist on this
+		 * line. Run the fallback action.
+		 */
+		else if (fFallbackAction != null && !hasMarkers()) {
+			if (fFallbackAction instanceof ISelectionListener) {
+				((ISelectionListener) fFallbackAction).selectionChanged(null, null);
+			}
+			fFallbackAction.run();
+		}
 		return true;
 	}
 
@@ -152,15 +171,5 @@ public class ToggleBreakpointAction extends BreakpointRulerAction {
 	 * @see org.eclipse.ui.texteditor.IUpdate#update()
 	 */
 	public void update() {
-		ITextEditor editor = getTextEditor();
-		IEditorInput input = editor.getEditorInput();
-		IDocument document = editor.getDocumentProvider().getDocument(input);
-		if (document != null) {
-			String contentType = getContentType(document);
-			setEnabled(BreakpointProviderBuilder.getInstance().isAvailable(contentType, getFileExtension(input)));
-		}
-		else {
-			setEnabled(false);
-		}
 	}
 }

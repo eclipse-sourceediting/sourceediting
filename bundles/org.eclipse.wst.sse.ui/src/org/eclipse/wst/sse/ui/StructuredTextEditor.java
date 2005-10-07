@@ -28,7 +28,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.ui.actions.IToggleBreakpointsTarget;
 import org.eclipse.emf.common.command.Command;
@@ -103,7 +102,6 @@ import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.editors.text.ITextEditorHelpContextIds;
 import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
-import org.eclipse.ui.ide.IDEActionFactory;
 import org.eclipse.ui.part.IShowInTargetList;
 import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
 import org.eclipse.ui.progress.UIJob;
@@ -111,7 +109,6 @@ import org.eclipse.ui.texteditor.ChainedPreferenceStore;
 import org.eclipse.ui.texteditor.DefaultRangeIndicator;
 import org.eclipse.ui.texteditor.IAbstractTextEditorHelpContextIds;
 import org.eclipse.ui.texteditor.IDocumentProvider;
-import org.eclipse.ui.texteditor.IDocumentProviderExtension4;
 import org.eclipse.ui.texteditor.IStatusField;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.ITextEditorActionConstants;
@@ -189,11 +186,11 @@ import org.eclipse.wst.sse.ui.views.properties.PropertySheetConfiguration;
  */
 
 public class StructuredTextEditor extends TextEditor {
-	
-	
-	// ISSUE: This use case is not clear to me. 
-	// Is this listner and dance with dirty state for non-editor driven 
-	// updates? 
+
+
+	// ISSUE: This use case is not clear to me.
+	// Is this listner and dance with dirty state for non-editor driven
+	// updates?
 	class InternalDocumentListener implements IDocumentListener {
 		// This is for the IDocumentListener interface
 		public void documentAboutToBeChanged(DocumentEvent event) {
@@ -1085,30 +1082,15 @@ public class StructuredTextEditor extends TextEditor {
 	}
 
 	/**
-	 * Compute and set double-click action for the source editor, depending on
-	 * the input.
+	 * Compute and set double-click action for the vertical ruler
 	 */
 	private void computeAndSetDoubleClickAction() {
-		// If we're editing a breakpoint-supported input, make double-clicking
-		// on the ruler toggle a breakpoint instead of toggling a bookmark.
-		String contentTypeIdentifier = getInputContentIdentifier(getEditorInput());
-		String filenameExtension = BreakpointRulerAction.getFileExtension(getEditorInput());
-		if (BreakpointProviderBuilder.getInstance().isAvailable(contentTypeIdentifier, filenameExtension)) {
-			setAction(ITextEditorActionConstants.RULER_DOUBLE_CLICK, getAction(ActionDefinitionIds.TOGGLE_BREAKPOINTS));
-		}
-		else {
-			// The Default Text Editor uses editorContribution to perform this
-			// mapping, but since it relies on the IEditorSite ID, it can't be
-			// relied on for MultiPageEditorParts. Instead, force the action
-			// registration manually.
-			// setAction(ITextEditorActionConstants.RULER_DOUBLE_CLICK, new
-			// MarkerRulerAction(SSEUIMessages.getResourceBundle(),
-			// "Editor_ManageBookmarks_", this, getVerticalRuler(),
-			// IMarker.BOOKMARK, true)); //$NON-NLS-1$
-			// add bookmark action is already registered in
-			// AbstractDecoratedTextEditor, so just get it
-			setAction(ITextEditorActionConstants.RULER_DOUBLE_CLICK, getAction(IDEActionFactory.BOOKMARK.getId()));
-		}
+		/*
+		 * Make double-clicking on the ruler toggle a breakpoint instead of
+		 * toggling a bookmark. For lines where a breakpoint won't be created,
+		 * create a bookmark through the contributed RulerDoubleClick action.
+		 */
+		setAction(ITextEditorActionConstants.RULER_DOUBLE_CLICK, new ToggleBreakpointAction(this, getVerticalRuler(), getAction(ITextEditorActionConstants.RULER_DOUBLE_CLICK)));
 	}
 
 	/*
@@ -1204,7 +1186,9 @@ public class StructuredTextEditor extends TextEditor {
 		setAction(StructuredTextEditorActionConstants.ACTION_NAME_FORMAT_ACTIVE_ELEMENTS, action);
 		markAsStateDependentAction(StructuredTextEditorActionConstants.ACTION_NAME_FORMAT_ACTIVE_ELEMENTS, true);
 		markAsSelectionDependentAction(StructuredTextEditorActionConstants.ACTION_NAME_FORMAT_ACTIVE_ELEMENTS, true);
-		// StructuredTextEditor Action - add breakpoints
+
+		// StructuredTextEditor Action - add breakpoints (falling back to the
+		// current double-click if they can't be added)
 		action = new ToggleBreakpointAction(this, getVerticalRuler());
 		setAction(ActionDefinitionIds.TOGGLE_BREAKPOINTS, action);
 		// StructuredTextEditor Action - manage breakpoints
@@ -1217,6 +1201,8 @@ public class StructuredTextEditor extends TextEditor {
 		action = new OpenHyperlinkAction(resourceBundle, StructuredTextEditorActionConstants.ACTION_NAME_OPEN_FILE + UNDERSCORE, this, getSourceViewer());
 		action.setActionDefinitionId(ActionDefinitionIds.OPEN_FILE);
 		setAction(StructuredTextEditorActionConstants.ACTION_NAME_OPEN_FILE, action);
+
+		computeAndSetDoubleClickAction();
 
 		fShowPropertiesAction = new ShowPropertiesAction();
 	}
@@ -1771,7 +1757,7 @@ public class StructuredTextEditor extends TextEditor {
 				if (cfg != null) {
 					ConfigurableContentOutlinePage outlinePage = new ConfigurableContentOutlinePage();
 					outlinePage.setConfiguration(cfg);
-					if(internalModel != null) {
+					if (internalModel != null) {
 						outlinePage.setInputContentTypeIdentifier(internalModel.getContentTypeIdentifier());
 						outlinePage.setInput(internalModel);
 					}
@@ -1875,25 +1861,6 @@ public class StructuredTextEditor extends TextEditor {
 		if (fEditorPart == null)
 			return this;
 		return fEditorPart;
-	}
-
-	private String getInputContentIdentifier(Object element) {
-		String id = null;
-		if (getInternalModel() != null) {
-			id = getInternalModel().getContentTypeIdentifier();
-		}
-		else if (getDocumentProvider() != null && getDocumentProvider() instanceof IDocumentProviderExtension4) {
-			IContentType type;
-			try {
-				type = ((IDocumentProviderExtension4) getDocumentProvider()).getContentType(element);
-				if (type != null) {
-					id = type.getId();
-				}
-			}
-			catch (CoreException e) {
-			}
-		}
-		return id;
 	}
 
 	private IDocumentListener getInternalDocumentListener() {
@@ -2158,8 +2125,6 @@ public class StructuredTextEditor extends TextEditor {
 	 * viewer-dependent.
 	 */
 	private void initializeSourceViewer() {
-		computeAndSetDoubleClickAction();
-
 		IAction contentAssistAction = getAction(StructuredTextEditorActionConstants.ACTION_NAME_CONTENTASSIST_PROPOSALS);
 		if (contentAssistAction instanceof IUpdate) {
 			((IUpdate) contentAssistAction).update();
@@ -2338,16 +2303,16 @@ public class StructuredTextEditor extends TextEditor {
 	}
 
 	protected void rulerContextMenuAboutToShow(IMenuManager menu) {
+		super.rulerContextMenuAboutToShow(menu);
+
 		IStructuredModel internalModel = getInternalModel();
 		if (internalModel != null) {
 			boolean debuggingAvailable = BreakpointProviderBuilder.getInstance().isAvailable(internalModel.getContentTypeIdentifier(), BreakpointRulerAction.getFileExtension(getEditorInput()));
 			if (debuggingAvailable) {
-				menu.add(getAction(ActionDefinitionIds.TOGGLE_BREAKPOINTS));
-				menu.add(getAction(ActionDefinitionIds.MANAGE_BREAKPOINTS));
-				menu.add(getAction(ActionDefinitionIds.EDIT_BREAKPOINTS));
-				menu.add(new Separator());
+				menu.appendToGroup("debug", getAction(ActionDefinitionIds.TOGGLE_BREAKPOINTS));
+				menu.appendToGroup("debug", getAction(ActionDefinitionIds.MANAGE_BREAKPOINTS));
+				menu.appendToGroup("debug", getAction(ActionDefinitionIds.EDIT_BREAKPOINTS));
 			}
-			super.rulerContextMenuAboutToShow(menu);
 			addExtendedRulerContextMenuActions(menu);
 		}
 	}
@@ -2483,7 +2448,6 @@ public class StructuredTextEditor extends TextEditor {
 		updateSourceViewerConfiguration();
 
 		createModelDependentFields();
-		computeAndSetDoubleClickAction();
 	}
 
 	/**

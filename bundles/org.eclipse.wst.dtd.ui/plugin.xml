@@ -41,6 +41,24 @@
 			target="org.eclipse.wst.xml.dtd.internal_subset" />
 	</extension>
 
+	<extension point="org.eclipse.ui.editorActions">
+        <editorContribution
+            targetID="org.eclipse.wst.dtd.core.dtdsource.source"
+            id="org.eclipse.wst.dtd.core.dtdsource.ruler.actions">
+         <action
+               label="%Dummy.label"
+               helpContextId="org.eclipse.ui.bookmark_action_context"
+               class="org.eclipse.ui.texteditor.BookmarkRulerAction"
+               actionID="RulerDoubleClick"
+               id="org.eclipse.ui.texteditor.BookmarkRulerAction"/>
+         <action
+               label="%Dummy.label"
+               class="org.eclipse.ui.texteditor.SelectRulerAction"
+               actionID="RulerClick"
+               id="org.eclipse.ui.texteditor.SelectRulerAction"/>
+        </editorContribution>
+	</extension>
+
 	<!-- use a specific annotation model with FileBuffers -->
 	<extension
 		point="org.eclipse.core.filebuffers.annotationModelCreation">

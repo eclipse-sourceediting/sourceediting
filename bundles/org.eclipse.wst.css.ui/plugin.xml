@@ -210,5 +210,20 @@
 				actionID="StructureSelectHistory">
 			</action>
 		</editorContribution>
+        <editorContribution
+            targetID="org.eclipse.wst.css.core.csssource.source"
+            id="org.eclipse.wst.css.core.csssource.ruler.actions">
+         <action
+               label="%Dummy.label"
+               helpContextId="org.eclipse.ui.bookmark_action_context"
+               class="org.eclipse.ui.texteditor.BookmarkRulerAction"
+               actionID="RulerDoubleClick"
+               id="org.eclipse.ui.texteditor.BookmarkRulerAction"/>
+         <action
+               label="%Dummy.label"
+               class="org.eclipse.ui.texteditor.SelectRulerAction"
+               actionID="RulerClick"
+               id="org.eclipse.ui.texteditor.SelectRulerAction"/>
+        </editorContribution>
 	</extension>
 </plugin>

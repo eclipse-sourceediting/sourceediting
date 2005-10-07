@@ -425,7 +425,27 @@
 				id="org.eclipse.wst.sse.ui.actions.FileSourceActions.Format">
 			</action>
 		</objectContribution>
-	</extension>
+   	</extension>
+   <extension
+         point="org.eclipse.ui.editorActions">
+      <editorContribution
+            targetID="org.eclipse.wst.sse.ui.StructuredTextEditor"
+            id="org.eclipse.wst.sse.ui.StructuredTextEditor.ruler.actions">
+         <action
+               label="%Dummy.label"
+               helpContextId="org.eclipse.ui.bookmark_action_context"
+               class="org.eclipse.ui.texteditor.BookmarkRulerAction"
+               actionID="RulerDoubleClick"
+               id="org.eclipse.ui.texteditor.BookmarkRulerAction">
+         </action>
+         <action
+               label="%Dummy.label"
+               class="org.eclipse.ui.texteditor.SelectRulerAction"
+               actionID="RulerClick"
+               id="org.eclipse.ui.texteditor.SelectRulerAction">
+         </action>
+      </editorContribution>
+   </extension>
 
 	<!--================================================================================================-->
 	<!-- contribute a SearchResultViewPage for Occurrences in file                                      -->
