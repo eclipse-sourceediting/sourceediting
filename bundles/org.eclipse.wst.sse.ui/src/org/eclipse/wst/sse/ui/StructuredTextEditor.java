@@ -2782,7 +2782,6 @@ public class StructuredTextEditor extends TextEditor {
 				Control rulerControl = getVerticalRuler().getControl();
 				fRulerContextMenu = fRulerContextMenuManager.createContextMenu(rulerControl);
 				rulerControl.setMenu(fRulerContextMenu);
-				rulerControl.addMouseListener(getRulerMouseListener());
 
 				getSite().registerContextMenu(getRulerContextMenuId(), fRulerContextMenuManager, getSelectionProvider());
 
