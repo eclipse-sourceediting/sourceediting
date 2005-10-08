@@ -43,6 +43,10 @@ public class AttributeContextInformationPresenter implements IContextInformation
 	private ContextInfoModelUtil fModelUtil = null;
 	private ITextViewer fViewer = null;
 
+	public AttributeContextInformationPresenter() {
+		super();
+	}
+
 	/**
 	 * @see org.eclipse.jface.text.contentassist.IContextInformationValidator#install(org.eclipse.jface.text.contentassist.IContextInformation,
 	 *      org.eclipse.jface.text.ITextViewer, int)
@@ -61,10 +65,14 @@ public class AttributeContextInformationPresenter implements IContextInformation
 		// determine whether or not this context info should still be
 		// showing...
 		// if cursor still within the element it's valid...
-		IStructuredDocumentRegion startRegion = fModelUtil.getXMLNode(fDocumentPosition).getStartStructuredDocumentRegion();
-		int start = startRegion.getStartOffset();
-		int end = startRegion.getEndOffset();
-		return documentPosition < end && documentPosition > start + 1;
+		boolean result = false;
+		if (fModelUtil != null) {
+			IStructuredDocumentRegion startRegion = fModelUtil.getXMLNode(fDocumentPosition).getStartStructuredDocumentRegion();
+			int start = startRegion.getStartOffset();
+			int end = startRegion.getEndOffset();
+			result = documentPosition < end && documentPosition > start + 1;
+		}
+		return result;
 	}
 
 	/**

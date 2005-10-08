@@ -45,6 +45,7 @@ import org.eclipse.wst.html.core.internal.preferences.HTMLCorePreferenceNames;
 import org.eclipse.wst.html.core.internal.provisional.text.IHTMLPartitionTypes;
 import org.eclipse.wst.html.core.internal.text.StructuredTextPartitionerForHTML;
 import org.eclipse.wst.html.ui.internal.autoedit.AutoEditStrategyForTabs;
+import org.eclipse.wst.html.ui.internal.autoedit.StructuredAutoEditStrategyHTML;
 import org.eclipse.wst.html.ui.internal.contentassist.HTMLContentAssistProcessor;
 import org.eclipse.wst.html.ui.internal.contentassist.NoRegionContentAssistProcessorForHTML;
 import org.eclipse.wst.html.ui.internal.derived.HTMLTextPresenter;
@@ -67,8 +68,7 @@ import org.eclipse.wst.sse.ui.internal.taginfo.TextHoverManager;
 import org.eclipse.wst.sse.ui.internal.util.EditorUtility;
 import org.eclipse.wst.xml.core.internal.provisional.text.IXMLPartitions;
 import org.eclipse.wst.xml.core.internal.text.rules.StructuredTextPartitionerForXML;
-import org.eclipse.wst.xml.ui.internal.autoedit.StructuredAutoEditStrategyXML;
-import org.eclipse.wst.xml.ui.internal.doubleclick.XMLDoubleClickStrategy;
+import org.eclipse.wst.xml.ui.StructuredTextViewerConfigurationXML;
 import org.eclipse.wst.xml.ui.internal.validation.StructuredTextReconcilingStrategyForMarkup;
 
 public class StructuredTextViewerConfigurationHTML extends StructuredTextViewerConfiguration {
@@ -93,6 +93,10 @@ public class StructuredTextViewerConfigurationHTML extends StructuredTextViewerC
 	 * One instance per configuration
 	 */
 	private IReconciler fReconciler;
+	/*
+	 * One instance per configuration
+	 */
+	private StructuredTextViewerConfiguration fXMLSourceViewerConfiguration;
 
 	public IAutoEditStrategy[] getAutoEditStrategies(ISourceViewer sourceViewer, String contentType) {
 		List allStrategies = new ArrayList(0);
@@ -103,7 +107,7 @@ public class StructuredTextViewerConfigurationHTML extends StructuredTextViewerC
 		}
 
 		if (contentType == IHTMLPartitionTypes.HTML_DEFAULT || contentType == IHTMLPartitionTypes.HTML_DECLARATION) {
-			allStrategies.add(new StructuredAutoEditStrategyXML());
+			allStrategies.add(new StructuredAutoEditStrategyHTML());
 		}
 
 		// be sure this is added last in list, so it has a change to modify
@@ -183,9 +187,10 @@ public class StructuredTextViewerConfigurationHTML extends StructuredTextViewerC
 	}
 
 	public ITextDoubleClickStrategy getDoubleClickStrategy(ISourceViewer sourceViewer, String contentType) {
-		if (contentType.compareTo(IHTMLPartitionTypes.HTML_DEFAULT) == 0)
-			// HTML
-			return new XMLDoubleClickStrategy();
+		if (contentType == IHTMLPartitionTypes.HTML_DEFAULT) {
+			// use xml's doubleclick strategy
+			return getXMLSourceViewerConfiguration().getDoubleClickStrategy(sourceViewer, IXMLPartitions.XML_DEFAULT);
+		}
 		else
 			return super.getDoubleClickStrategy(sourceViewer, contentType);
 	}
@@ -414,5 +419,12 @@ public class StructuredTextViewerConfigurationHTML extends StructuredTextViewerC
 			textHover = super.getTextHover(sourceViewer, contentType, stateMask);
 		}
 		return textHover;
+	}
+
+	private StructuredTextViewerConfiguration getXMLSourceViewerConfiguration() {
+		if (fXMLSourceViewerConfiguration == null) {
+			fXMLSourceViewerConfiguration = new StructuredTextViewerConfigurationXML();
+		}
+		return fXMLSourceViewerConfiguration;
 	}
 }

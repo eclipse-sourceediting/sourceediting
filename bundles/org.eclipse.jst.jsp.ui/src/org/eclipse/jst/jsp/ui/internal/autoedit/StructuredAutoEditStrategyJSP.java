@@ -12,6 +12,7 @@ package org.eclipse.jst.jsp.ui.internal.autoedit;
 
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DocumentCommand;
+import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jst.jsp.ui.internal.Logger;
 import org.eclipse.ui.IEditorPart;
@@ -20,53 +21,41 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.ITextEditorExtension3;
-import org.eclipse.wst.html.ui.internal.autoedit.StructuredAutoEditStrategyHTML;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
-import org.eclipse.wst.sse.ui.internal.StructuredDocumentCommand;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 
-public class StructuredAutoEditStrategyJSP extends StructuredAutoEditStrategyHTML {
+public class StructuredAutoEditStrategyJSP implements IAutoEditStrategy {
 	public void customizeDocumentCommand(IDocument document, DocumentCommand command) {
-		StructuredDocumentCommand structuredDocumentCommand = (StructuredDocumentCommand) command;
 		Object textEditor = getActiveTextEditor();
 		if (!(textEditor instanceof ITextEditorExtension3 && ((ITextEditorExtension3) textEditor).getInsertMode() == ITextEditorExtension3.SMART_INSERT))
 			return;
-		
+
 		IStructuredModel model = null;
 		try {
 			model = StructuredModelManager.getModelManager().getExistingModelForRead(document);
 
 			if (model != null) {
-				if (structuredDocumentCommand.text != null) {
-					if (structuredDocumentCommand.text.equals("%")) { //$NON-NLS-1$
+				if (command.text != null) {
+					if (command.text.equals("%")) { //$NON-NLS-1$
 						// scriptlet - add end %>
-						IDOMNode node = (IDOMNode) model.getIndexedRegion(structuredDocumentCommand.offset);
-						try {
-							if (prefixedWith(document, structuredDocumentCommand.offset, "<") && !node.getSource().endsWith("%>")) { //$NON-NLS-1$ //$NON-NLS-2$
-								structuredDocumentCommand.doit = false;
-								structuredDocumentCommand.addCommand(structuredDocumentCommand.offset, 0, " %>", null); //$NON-NLS-1$
-							}
-						}
-						catch (BadLocationException e) {
-							Logger.logException(e);
-						}
-
-					} if (structuredDocumentCommand.text.equals("{")) { //$NON-NLS-1$
-						IDOMNode node = (IDOMNode) model.getIndexedRegion(structuredDocumentCommand.offset);
-						try {
-							if ((prefixedWith(document, structuredDocumentCommand.offset, "$") || prefixedWith(document, structuredDocumentCommand.offset, "#")) &&  //$NON-NLS-1$ //$NON-NLS-2$
-									!node.getSource().endsWith("}")) { //$NON-NLS-1$ //$NON-NLS-2$
-								structuredDocumentCommand.doit = false;
-								structuredDocumentCommand.addCommand(structuredDocumentCommand.offset, 0, " }", null); //$NON-NLS-1$
-							}
-						}
-						catch (BadLocationException e) {
-							Logger.logException(e);
+						IDOMNode node = (IDOMNode) model.getIndexedRegion(command.offset);
+						if (prefixedWith(document, command.offset, "<") && !node.getSource().endsWith("%>")) { //$NON-NLS-1$ //$NON-NLS-2$
+							command.text += " %>"; //$NON-NLS-1$
+							command.shiftsCaret = false;
+							command.caretOffset = command.offset + 1;
+							command.doit = false;
 						}
 					}
-					else {
-						super.customizeDocumentCommand(document, structuredDocumentCommand);
+					if (command.text.equals("{")) { //$NON-NLS-1$
+						IDOMNode node = (IDOMNode) model.getIndexedRegion(command.offset);
+						if ((prefixedWith(document, command.offset, "$") || prefixedWith(document, command.offset, "#")) && //$NON-NLS-1$ //$NON-NLS-2$
+									!node.getSource().endsWith("}")) { //$NON-NLS-1$ //$NON-NLS-2$
+							command.text += " }"; //$NON-NLS-1$
+							command.shiftsCaret = false;
+							command.caretOffset = command.offset + 1;
+							command.doit = false;
+						}
 					}
 				}
 			}
@@ -76,7 +65,7 @@ public class StructuredAutoEditStrategyJSP extends StructuredAutoEditStrategyHTM
 				model.releaseFromRead();
 		}
 	}
-	
+
 	/**
 	 * Return the active text editor if possible, otherwise the active editor
 	 * part.
@@ -101,12 +90,13 @@ public class StructuredAutoEditStrategyJSP extends StructuredAutoEditStrategyHTM
 		}
 		return null;
 	}
-	
+
 	private boolean prefixedWith(IDocument document, int offset, String string) {
 
 		try {
 			return document.getLength() >= string.length() && document.get(offset - string.length(), string.length()).equals(string);
-		} catch (BadLocationException e) {
+		}
+		catch (BadLocationException e) {
 			Logger.logException(e);
 			return false;
 		}

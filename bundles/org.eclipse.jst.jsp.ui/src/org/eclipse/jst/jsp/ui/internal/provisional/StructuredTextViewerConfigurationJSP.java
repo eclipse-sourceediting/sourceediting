@@ -111,9 +111,11 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 		IAutoEditStrategy[] strategies = null;
 
 		if (contentType == IXMLPartitions.XML_DEFAULT) {
+			// xml autoedit strategies
 			strategies = getXMLSourceViewerConfiguration().getAutoEditStrategies(sourceViewer, contentType);
 		}
 		else if (contentType == IJSPPartitionTypes.JSP_CONTENT_JAVA) {
+			// jsp java autoedit strategies
 			List allStrategies = new ArrayList(0);
 
 			IAutoEditStrategy[] javaStrategies = getJavaSourceViewerConfiguration().getAutoEditStrategies(sourceViewer, IJavaPartitions.JAVA_PARTITIONING);
@@ -127,7 +129,22 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 
 			strategies = (IAutoEditStrategy[]) allStrategies.toArray(new IAutoEditStrategy[allStrategies.size()]);
 		}
+		else if (contentType == IHTMLPartitionTypes.HTML_DEFAULT || contentType == IHTMLPartitionTypes.HTML_DECLARATION) {
+			// html and jsp autoedit strategies
+			List allStrategies = new ArrayList(0);
+
+			// add the jsp autoedit strategy first then add all html's
+			allStrategies.add(new StructuredAutoEditStrategyJSP());
+
+			IAutoEditStrategy[] htmlStrategies = getHTMLSourceViewerConfiguration().getAutoEditStrategies(sourceViewer, contentType);
+			for (int i = 0; i < htmlStrategies.length; i++) {
+				allStrategies.add(htmlStrategies[i]);
+			}
+
+			strategies = (IAutoEditStrategy[]) allStrategies.toArray(new IAutoEditStrategy[allStrategies.size()]);
+		}
 		else {
+			// default autoedit strategies
 			List allStrategies = new ArrayList(0);
 
 			IAutoEditStrategy[] superStrategies = super.getAutoEditStrategies(sourceViewer, contentType);
@@ -135,10 +152,6 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 				allStrategies.add(superStrategies[i]);
 			}
 
-
-			if (contentType == IHTMLPartitionTypes.HTML_DEFAULT || contentType == IHTMLPartitionTypes.HTML_DECLARATION) {
-				allStrategies.add(new StructuredAutoEditStrategyJSP());
-			}
 			// be sure this is added last, after others, so it can modify
 			// results from earlier steps.
 			// add auto edit strategy that handles when tab key is pressed
@@ -189,10 +202,12 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 		IContentAssistant htmlContentAssistant = getHTMLSourceViewerConfiguration().getContentAssistant(sourceViewer);
 
 		// jspcontentassistprocessor handles this?
-//		// add processors to content assistant
-//		// HTML
-//		assistant.setContentAssistProcessor(htmlContentAssistant.getContentAssistProcessor(IHTMLPartitionTypes.HTML_DEFAULT), IHTMLPartitionTypes.HTML_DEFAULT);
-//		assistant.setContentAssistProcessor(htmlContentAssistant.getContentAssistProcessor(IHTMLPartitionTypes.HTML_COMMENT), IHTMLPartitionTypes.HTML_COMMENT);
+		// // add processors to content assistant
+		// // HTML
+		// assistant.setContentAssistProcessor(htmlContentAssistant.getContentAssistProcessor(IHTMLPartitionTypes.HTML_DEFAULT),
+		// IHTMLPartitionTypes.HTML_DEFAULT);
+		// assistant.setContentAssistProcessor(htmlContentAssistant.getContentAssistProcessor(IHTMLPartitionTypes.HTML_COMMENT),
+		// IHTMLPartitionTypes.HTML_COMMENT);
 
 		// HTML JavaScript
 		assistant.setContentAssistProcessor(htmlContentAssistant.getContentAssistProcessor(IHTMLPartitionTypes.SCRIPT), IHTMLPartitionTypes.SCRIPT);

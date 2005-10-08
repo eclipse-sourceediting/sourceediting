@@ -12,12 +12,7 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.ui.internal;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentAdapter;
 import org.eclipse.jface.text.IRegion;
@@ -41,7 +36,6 @@ import org.eclipse.jface.text.source.SourceViewerConfiguration;
 import org.eclipse.jface.text.source.projection.ProjectionViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.VerifyEvent;
-import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorPart;
@@ -61,40 +55,6 @@ import org.eclipse.wst.sse.ui.internal.reconcile.StructuredRegionProcessor;
 import org.eclipse.wst.sse.ui.internal.util.PlatformStatusLineUtil;
 
 public class StructuredTextViewer extends ProjectionViewer implements IDocumentSelectionMediator {
-
-	/**
-	 * Internal verify listener.
-	 */
-	class TextVerifyListener implements VerifyListener {
-
-		/**
-		 * Indicates whether verify events are forwarded or ignored.
-		 * 
-		 * @plannedfor 2.0
-		 */
-		private boolean fForward = true;
-
-		/**
-		 * Tells the listener to forward received events.
-		 * 
-		 * @param forward
-		 *            <code>true</code> if forwarding should be enabled.
-		 * @plannedfor 2.0
-		 */
-		public void forward(boolean forward) {
-			fForward = forward;
-		}
-
-		/*
-		 * @see VerifyListener#verifyText(VerifyEvent)
-		 */
-		public void verifyText(VerifyEvent e) {
-			if (fForward) {
-				handleVerifyEvent(e);
-			}
-		}
-	}
-
 	/** Text operation codes */
 	private static final int BASE = ProjectionViewer.EXPAND_ALL; // see
 	// ProjectionViewer.EXPAND_ALL
@@ -117,15 +77,7 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 	private boolean fCorrectionAssistantInstalled;
 	private IDocumentAdapter fDocAdapter;
 
-	/** The most recent widget modification as document command */
-	private StructuredDocumentCommand fDocumentCommand = new StructuredDocumentCommand();
 	private Highlighter fHighlighter;
-
-	/**
-	 * TODO Temporary workaround for BUG44665
-	 */
-	/** Verify listener */
-	private TextVerifyListener fVerifyListener = new TextVerifyListener();
 
 	// private ViewerSelectionManager fViewerSelectionManager;
 	private SourceViewerConfiguration fConfiguration;
@@ -377,55 +329,6 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 		return fDocAdapter;
 	}
 
-	/**
-	 * TODO Temporary workaround for BUG44665
-	 */
-	private void customizeDocumentCommand(StructuredDocumentCommand command) {
-		if (isIgnoringAutoEditStrategies())
-			return;
-
-		List strategies = (List) selectContentTypePlugin(command.offset, fAutoIndentStrategies);
-		if (strategies == null)
-			return;
-
-		try {
-			switch (strategies.size()) {
-				// optimization
-				case 0 :
-					break;
-
-				case 1 :
-					((IAutoEditStrategy) strategies.iterator().next()).customizeDocumentCommand(getDocument(), command);
-					break;
-
-				// make iterator robust against adding/removing strategies
-				// from
-				// within
-				// strategies
-				default :
-					strategies = new ArrayList(strategies);
-
-					IDocument document = getDocument();
-					for (final Iterator iterator = strategies.iterator(); iterator.hasNext();)
-						((IAutoEditStrategy) iterator.next()).customizeDocumentCommand(document, command);
-
-					break;
-			}
-		}
-		catch (Exception x) {
-			// note, we catch and log any exception, since we are calling "foriegn code"
-			// since an otherwise can actually prevent typing!
-			// see https://bugs.eclipse.org/bugs/show_bug.cgi?id=111318
-			// ISSUE: I'm not sure we are leaving "command" in right state, though, we should 
-			// re-examine.
-
-			if (TRACE_EXCEPTIONS)
-				Logger.logException("StructuredTextViewer.exception.customizeDocumentCommand", x); //$NON-NLS-1$
-
-		}
-
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -437,14 +340,6 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 		int cursorPosition = selection.x;
 		int selectionLength = selection.y - selection.x;
 		switch (operation) {
-			case UNDO : {
-				undo();
-				break;
-			}
-			case REDO : {
-				redo();
-				break;
-			}
 			case CUT :
 				beginRecording(TEXT_CUT, TEXT_CUT, cursorPosition, selectionLength);
 				super.doOperation(operation);
@@ -612,11 +507,9 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 		Logger.trace("Source Editor", "StructuredTextViewer::handleDispose exit"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
-	/**
-	 * TODO Temporary workaround for BUG44665
-	 */
-	/**
-	 * @see VerifyListener#verifyText(VerifyEvent)
+	/*
+	 * Overridden for special support of background update and read-only
+	 * regions
 	 */
 	protected void handleVerifyEvent(VerifyEvent e) {
 		IRegion modelRange = event2ModelRange(e);
@@ -642,83 +535,17 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 			return;
 		}
 
-		fDocumentCommand.setEventStructuredDocumentEvent(e, modelRange);
-		customizeDocumentCommand(fDocumentCommand);
-		int widgetCaret = 0;
-		if (!fDocumentCommand.fillEventStructuredDocumentCommand(e, modelRange)) {
+		try {
+			super.handleVerifyEvent(e);
+		}
+		catch (Exception x) {
+			// note, we catch and log any exception,
+			// since an otherwise can actually prevent typing!
+			// see https://bugs.eclipse.org/bugs/show_bug.cgi?id=111318
 
-			boolean compoundChange = fDocumentCommand.getCommandCount() > 1;
-			try {
+			if (TRACE_EXCEPTIONS)
+				Logger.logException("StructuredTextViewer.exception.verifyText", x); //$NON-NLS-1$
 
-				fVerifyListener.forward(false);
-
-				if (compoundChange && fUndoManager != null)
-					fUndoManager.beginCompoundChange();
-
-				if (getSlaveDocumentManager() != null) {
-					IDocument visible = getVisibleDocument();
-					try {
-						getSlaveDocumentManager().setAutoExpandMode(visible, true);
-						fDocumentCommand.executeStructuredDocumentCommand(getDocument());
-					}
-					finally {
-						getSlaveDocumentManager().setAutoExpandMode(visible, false);
-					}
-				}
-				else {
-					fDocumentCommand.executeStructuredDocumentCommand(getDocument());
-				}
-
-				if (getTextWidget() != null) {
-					int documentCaret = fDocumentCommand.caretOffset;
-					if (documentCaret == -1) {
-						// old behavior of document command
-						documentCaret = fDocumentCommand.offset + (fDocumentCommand.text == null ? 0 : fDocumentCommand.text.length());
-					}
-
-					widgetCaret = modelOffset2WidgetOffset(documentCaret);
-					if (widgetCaret == -1) {
-						// try to move it to the closest spot
-						IRegion region = getModelCoverage();
-						if (documentCaret <= region.getOffset())
-							widgetCaret = 0;
-						else if (documentCaret >= region.getOffset() + region.getLength())
-							widgetCaret = getVisibleRegion().getLength();
-					}
-
-				}
-			}
-			catch (BadLocationException x) {
-
-				if (TRACE_ERRORS)
-					System.out.println("TextViewer.error.bad_location.verifyText"); //$NON-NLS-1$
-
-			}
-			catch (Exception x) {
-				// note, we catch and log any exception,
-				// since an otherwise can actually prevent typing!
-				// see https://bugs.eclipse.org/bugs/show_bug.cgi?id=111318
-
-				if (TRACE_EXCEPTIONS)
-					Logger.logException("StructuredTextViewer.exception.verifyText", x); //$NON-NLS-1$
-
-			}
-
-			finally {
-
-				if (compoundChange && fUndoManager != null)
-					fUndoManager.endCompoundChange();
-
-				if (widgetCaret != -1) {
-					// there is a valid widget caret
-					getTextWidget().setCaretOffset(widgetCaret);
-				}
-
-				getTextWidget().showSelection();
-
-				fVerifyListener.forward(true);
-
-			}
 		}
 	}
 
@@ -777,26 +604,6 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 			}
 		}
 		return super.modelRange2WidgetRange(modelRange);
-	}
-
-	/**
-	 * TODO Temporary workaround for BUG44665
-	 */
-	/**
-	 * overridden for read-only support
-	 */
-	/*
-	 * protected void handleVerifyEvent(VerifyEvent e) { // for now, we'll let
-	 * super have a shot first // (may mess up undo stack, or something?)
-	 * 
-	 * super.handleVerifyEvent(e); if (containsReadOnly(getVisibleDocument(),
-	 * e.start, e.end)) { e.doit = false; beep(); } }
-	 */
-
-	private void redo() {
-		ignoreAutoEditStrategies(true);
-		fUndoManager.redo();
-		ignoreAutoEditStrategies(false);
 	}
 
 	/**
@@ -915,12 +722,6 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 		super.unconfigure();
 		fConfiguration = null;
 		Logger.trace("Source Editor", "StructuredTextViewer::unconfigure exit"); //$NON-NLS-1$ //$NON-NLS-2$
-	}
-
-	private void undo() {
-		ignoreAutoEditStrategies(true);
-		fUndoManager.undo();
-		ignoreAutoEditStrategies(false);
 	}
 
 	/*

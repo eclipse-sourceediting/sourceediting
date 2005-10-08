@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,8 @@
  * 
  * Contributors:
  *     IBM Corporation - initial API and implementation
+ *     Jens Lukowski/Innoopract - initial renaming/restructuring
+ *     
  *******************************************************************************/
 package org.eclipse.wst.html.ui.internal.autoedit;
 
@@ -20,18 +22,24 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.ITextEditorExtension3;
-import org.eclipse.wst.html.ui.internal.Logger;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
-import org.eclipse.wst.sse.ui.internal.StructuredDocumentCommand;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
+import org.eclipse.wst.xml.ui.internal.Logger;
 import org.w3c.dom.Node;
 
+/**
+ * Automatically inserts closing comment tag or end tag when appropriate.
+ */
 public class StructuredAutoEditStrategyHTML implements IAutoEditStrategy {
+	/*
+	 * NOTE: copies of this class exists in
+	 * org.eclipse.wst.xml.ui.internal.autoedit
+	 * org.eclipse.wst.html.ui.internal.autoedit
+	 */
 	public void customizeDocumentCommand(IDocument document, DocumentCommand command) {
-		StructuredDocumentCommand structuredDocumentCommand = (StructuredDocumentCommand) command;
 		Object textEditor = getActiveTextEditor();
 		if (!(textEditor instanceof ITextEditorExtension3 && ((ITextEditorExtension3) textEditor).getInsertMode() == ITextEditorExtension3.SMART_INSERT))
 			return;
@@ -40,12 +48,13 @@ public class StructuredAutoEditStrategyHTML implements IAutoEditStrategy {
 		try {
 			model = StructuredModelManager.getModelManager().getExistingModelForRead(document);
 			if (model != null) {
-				if (structuredDocumentCommand.text != null) {
-					smartInsertForComment(structuredDocumentCommand, document, model);
-					smartInsertForEndTag(structuredDocumentCommand, document, model);
+				if (command.text != null) {
+					smartInsertForComment(command, document, model);
+					smartInsertForEndTag(command, document, model);
 				}
 			}
-		} finally {
+		}
+		finally {
 			if (model != null)
 				model.releaseFromRead();
 		}
@@ -59,23 +68,25 @@ public class StructuredAutoEditStrategyHTML implements IAutoEditStrategy {
 		return (node != null && node.getNodeType() == Node.DOCUMENT_NODE);
 	}
 
-	private void smartInsertForComment(StructuredDocumentCommand structuredDocumentCommand, IDocument document, IStructuredModel model) {
+	private void smartInsertForComment(DocumentCommand command, IDocument document, IStructuredModel model) {
 		try {
-			if (structuredDocumentCommand.text.equals("-") && document.getLength() >= 3 && document.get(structuredDocumentCommand.offset - 3, 3).equals("<!-")) { //$NON-NLS-1$ //$NON-NLS-2$
-				structuredDocumentCommand.text += " "; //$NON-NLS-1$
-				structuredDocumentCommand.doit = false;
-				structuredDocumentCommand.addCommand(structuredDocumentCommand.offset, 0, " -->", null); //$NON-NLS-1$
+			if (command.text.equals("-") && document.getLength() >= 3 && document.get(command.offset - 3, 3).equals("<!-")) { //$NON-NLS-1$ //$NON-NLS-2$
+				command.text += "  -->"; //$NON-NLS-1$
+				command.shiftsCaret = false;
+				command.caretOffset = command.offset + 2;
+				command.doit = false;
 			}
-		} catch (BadLocationException e) {
+		}
+		catch (BadLocationException e) {
 			Logger.logException(e);
 		}
 
 	}
 
-	private void smartInsertForEndTag(StructuredDocumentCommand structuredDocumentCommand, IDocument document, IStructuredModel model) {
+	private void smartInsertForEndTag(DocumentCommand command, IDocument document, IStructuredModel model) {
 		try {
-			if (structuredDocumentCommand.text.equals("/") && document.getLength() >= 1 && document.get(structuredDocumentCommand.offset - 1, 1).equals("<")) { //$NON-NLS-1$ //$NON-NLS-2$
-				IDOMNode parentNode = (IDOMNode) ((IDOMNode) model.getIndexedRegion(structuredDocumentCommand.offset - 1)).getParentNode();
+			if (command.text.equals("/") && document.getLength() >= 1 && document.get(command.offset - 1, 1).equals("<")) { //$NON-NLS-1$ //$NON-NLS-2$
+				IDOMNode parentNode = (IDOMNode) ((IDOMNode) model.getIndexedRegion(command.offset - 1)).getParentNode();
 				if (isCommentNode(parentNode)) {
 					// loop and find non comment node parent
 					while (parentNode != null && isCommentNode(parentNode)) {
@@ -84,14 +95,23 @@ public class StructuredAutoEditStrategyHTML implements IAutoEditStrategy {
 				}
 
 				if (!isDocumentNode(parentNode)) {
+					// only add end tag if one does not already exist or if
+					// add '/' does not create one already
 					IStructuredDocumentRegion endTagStructuredDocumentRegion = parentNode.getEndStructuredDocumentRegion();
 					if (endTagStructuredDocumentRegion == null) {
-						structuredDocumentCommand.text += parentNode.getNodeName();
-						structuredDocumentCommand.text += ">"; //$NON-NLS-1$
+						StringBuffer toAdd = new StringBuffer(parentNode.getNodeName());
+						if (toAdd.length() > 0) {
+							toAdd.append(">"); //$NON-NLS-1$
+							String suffix = toAdd.toString();
+							if ((document.getLength() < command.offset + suffix.length()) || (!suffix.equals(document.get(command.offset, suffix.length())))) {
+								command.text += suffix;
+							}
+						}
 					}
 				}
 			}
-		} catch (BadLocationException e) {
+		}
+		catch (BadLocationException e) {
 			Logger.logException(e);
 		}
 	}
@@ -100,7 +120,7 @@ public class StructuredAutoEditStrategyHTML implements IAutoEditStrategy {
 	 * Return the active text editor if possible, otherwise the active editor
 	 * part.
 	 * 
-	 * @return
+	 * @return Object
 	 */
 	private Object getActiveTextEditor() {
 		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
