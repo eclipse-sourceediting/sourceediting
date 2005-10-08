@@ -118,7 +118,7 @@ public class JSPProposalCollector extends CompletionProposalCollector {
 	 */
 	private int calculatePositionAfter(CompletionProposal proposal, String completion, int currentCursorOffset) {
 		// calculate cursor position after
-		int positionAfter = completion.length();
+		int positionAfter = currentCursorOffset+completion.length();
 		int kind = proposal.getKind();
 		
 		// may need better logic here...
