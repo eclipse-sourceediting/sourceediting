@@ -36,8 +36,8 @@ import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
  */
 public class PropagatingAdapterFactoryImpl extends AbstractAdapterFactory implements PropagatingAdapterFactory {
 
-	private PropagatingAdapter adapterInstance;
-	protected List contributedFactories = null;
+	private PropagatingAdapter fAdapterInstance;
+	private List fContributedFactories = null;
 
 	/**
 	 * PropagatingAdapterFactory constructor comment.
@@ -46,32 +46,15 @@ public class PropagatingAdapterFactoryImpl extends AbstractAdapterFactory implem
 		this(PropagatingAdapter.class, true);
 	}
 
-	protected PropagatingAdapterFactoryImpl(Object adapterKey, boolean registerAdapters) { //,
-		// Object
-		// modelType)
-		// {
+	protected PropagatingAdapterFactoryImpl(Object adapterKey, boolean registerAdapters) { // ,
 		super(adapterKey, registerAdapters);
 	}
 
 	public void addContributedFactories(INodeAdapterFactory factory) {
-		if (contributedFactories != null) {
-			contributedFactories.add(factory);
+		if (fContributedFactories != null) {
+			fContributedFactories.add(factory);
 		}
 
-	}
-
-	public INodeAdapterFactory copy() {
-		PropagatingAdapterFactory clonedInstance = new PropagatingAdapterFactoryImpl(this.adapterKey, this.shouldRegisterAdapter);
-		// clone this adapters specific list of adapter factories too
-		if (contributedFactories != null) {
-			Iterator iterator = contributedFactories.iterator();
-			clonedInstance.setContributedFactories(new ArrayList());
-			while (iterator.hasNext()) {
-				INodeAdapterFactory existingFactory = (INodeAdapterFactory) iterator.next();
-				clonedInstance.addContributedFactories(existingFactory.copy());
-			}
-		}
-		return clonedInstance;
 	}
 
 	/**
@@ -88,15 +71,15 @@ public class PropagatingAdapterFactoryImpl extends AbstractAdapterFactory implem
 	 * 
 	 * @return Returns a PropagatingAdapter
 	 */
-	protected PropagatingAdapter getAdapterInstance() {
-		if (adapterInstance == null) {
-			adapterInstance = new PropagatingAdapterImpl();
-			if (contributedFactories != null) {
-				for (int i = 0; i < contributedFactories.size(); i++)
-					adapterInstance.addAdaptOnCreateFactory((PropagatingAdapterFactory) contributedFactories.get(i));
+	private PropagatingAdapter getAdapterInstance() {
+		if (fAdapterInstance == null) {
+			fAdapterInstance = new PropagatingAdapterImpl();
+			if (fContributedFactories != null) {
+				for (int i = 0; i < fContributedFactories.size(); i++)
+					fAdapterInstance.addAdaptOnCreateFactory((PropagatingAdapterFactory) fContributedFactories.get(i));
 			}
 		}
-		return adapterInstance;
+		return fAdapterInstance;
 	}
 
 	public void release() {
@@ -106,8 +89,25 @@ public class PropagatingAdapterFactoryImpl extends AbstractAdapterFactory implem
 	}
 
 	public void setContributedFactories(ArrayList list) {
-		contributedFactories = list;
+		fContributedFactories = list;
 
 	}
+
+	public INodeAdapterFactory copy() {
+		PropagatingAdapterFactory clonedInstance = new PropagatingAdapterFactoryImpl(getAdapterKey(), isShouldRegisterAdapter());
+		// clone this adapters specific list of adapter factories too
+		if (fContributedFactories != null) {
+			
+			Iterator iterator = fContributedFactories.iterator();
+			clonedInstance.setContributedFactories(new ArrayList());
+			while (iterator.hasNext()) {
+				INodeAdapterFactory existingFactory = (INodeAdapterFactory) iterator.next();
+				clonedInstance.addContributedFactories(existingFactory.copy());
+			}
+		}
+		return clonedInstance;
+	}
+
+	
 
 }

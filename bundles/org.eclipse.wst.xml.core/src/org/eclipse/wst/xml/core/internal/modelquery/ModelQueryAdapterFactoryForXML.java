@@ -35,10 +35,11 @@ import org.eclipse.wst.xml.core.internal.ssemodelquery.ModelQueryAdapter;
 import org.eclipse.wst.xml.core.internal.ssemodelquery.ModelQueryAdapterImpl;
 
 
-public class ModelQueryAdapterFactoryForXML extends AbstractAdapterFactory implements IModelStateListener {
+public class ModelQueryAdapterFactoryForXML extends AbstractAdapterFactory {
 
 	protected ModelQueryAdapterImpl modelQueryAdapterImpl;
-	protected IStructuredModel stateNotifier = null;
+	IStructuredModel stateNotifier = null;
+	private InternalModelStateListener internalModelStateListener;
 
 	/**
 	 * ModelQueryAdapterFactoryForXML constructor comment.
@@ -55,8 +56,59 @@ public class ModelQueryAdapterFactoryForXML extends AbstractAdapterFactory imple
 	 * @param registerAdapters
 	 *            boolean
 	 */
-	public ModelQueryAdapterFactoryForXML(Object adapterKey, boolean registerAdapters) {
+	protected ModelQueryAdapterFactoryForXML(Object adapterKey, boolean registerAdapters) {
 		super(adapterKey, registerAdapters);
+	}
+
+	class InternalModelStateListener implements IModelStateListener {
+
+		/**
+		 * @see IModelStateListener#modelAboutToBeChanged(IStructuredModel)
+		 */
+		public void modelAboutToBeChanged(IStructuredModel model) {
+		}
+
+		/**
+		 * @see IModelStateListener#modelChanged(IStructuredModel)
+		 */
+		public void modelChanged(IStructuredModel model) {
+		}
+
+		/**
+		 * @see IModelStateListener#modelDirtyStateChanged(IStructuredModel,
+		 *      boolean)
+		 */
+		public void modelDirtyStateChanged(IStructuredModel model, boolean isDirty) {
+		}
+
+		/**
+		 * @see IModelStateListener#modelResourceDeleted(IStructuredModel)
+		 */
+		public void modelResourceDeleted(IStructuredModel model) {
+		}
+
+		/**
+		 * @see IModelStateListener#modelResourceMoved(IStructuredModel,
+		 *      IStructuredModel)
+		 */
+		public void modelResourceMoved(IStructuredModel oldModel, IStructuredModel newModel) {
+			stateNotifier.removeModelStateListener(this);
+			stateNotifier = newModel;
+			updateResolver(stateNotifier);
+			stateNotifier.addModelStateListener(this);
+		}
+
+		public void modelAboutToBeReinitialized(IStructuredModel structuredModel) {
+			// TODO Auto-generated method stub
+
+		}
+
+		public void modelReinitialized(IStructuredModel structuredModel) {
+			updateResolver(structuredModel);
+
+		}
+
+
 	}
 
 	protected boolean autoLoadCM() {
@@ -73,7 +125,7 @@ public class ModelQueryAdapterFactoryForXML extends AbstractAdapterFactory imple
 
 	public INodeAdapterFactory copy() {
 
-		return new ModelQueryAdapterFactoryForXML(this.adapterKey, this.shouldRegisterAdapter);
+		return new ModelQueryAdapterFactoryForXML(getAdapterKey(), isShouldRegisterAdapter());
 	}
 
 	/**
@@ -86,8 +138,9 @@ public class ModelQueryAdapterFactoryForXML extends AbstractAdapterFactory imple
 		if (modelQueryAdapterImpl == null) {
 			if (target instanceof IDOMNode) {
 				IDOMNode xmlNode = (IDOMNode) target;
-				IStructuredModel model = stateNotifier = xmlNode.getModel();
-				stateNotifier.addModelStateListener(this);
+				IStructuredModel model = xmlNode.getModel();
+				stateNotifier = xmlNode.getModel();
+				stateNotifier.addModelStateListener(getInternalModelStateListener());
 				String baseLocation = null;
 				String modelBaseLocation = model.getBaseLocation();
 				if (modelBaseLocation != null) {
@@ -134,46 +187,10 @@ public class ModelQueryAdapterFactoryForXML extends AbstractAdapterFactory imple
 		return modelQueryAdapterImpl;
 	}
 
-	/**
-	 * @see IModelStateListener#modelAboutToBeChanged(IStructuredModel)
-	 */
-	public void modelAboutToBeChanged(IStructuredModel model) {
-	}
-
-	/**
-	 * @see IModelStateListener#modelChanged(IStructuredModel)
-	 */
-	public void modelChanged(IStructuredModel model) {
-	}
-
-	/**
-	 * @see IModelStateListener#modelDirtyStateChanged(IStructuredModel,
-	 *      boolean)
-	 */
-	public void modelDirtyStateChanged(IStructuredModel model, boolean isDirty) {
-	}
-
-	/**
-	 * @see IModelStateListener#modelResourceDeleted(IStructuredModel)
-	 */
-	public void modelResourceDeleted(IStructuredModel model) {
-	}
-
-	/**
-	 * @see IModelStateListener#modelResourceMoved(IStructuredModel,
-	 *      IStructuredModel)
-	 */
-	public void modelResourceMoved(IStructuredModel oldModel, IStructuredModel newModel) {
-		stateNotifier.removeModelStateListener(this);
-		stateNotifier = newModel;
-		updateResolver(stateNotifier);
-		stateNotifier.addModelStateListener(this);
-	}
-
 	public void release() {
 		super.release();
 		if (stateNotifier != null)
-			stateNotifier.removeModelStateListener(this);
+			stateNotifier.removeModelStateListener(getInternalModelStateListener());
 		stateNotifier = null;
 		if (modelQueryAdapterImpl != null)
 			modelQueryAdapterImpl.release();
@@ -188,13 +205,10 @@ public class ModelQueryAdapterFactoryForXML extends AbstractAdapterFactory imple
 		modelQueryAdapterImpl.setIdResolver(new XMLCatalogIdResolver(baseLocation, model.getResolver()));
 	}
 
-	public void modelAboutToBeReinitialized(IStructuredModel structuredModel) {
-		// TODO Auto-generated method stub
-
-	}
-
-	public void modelReinitialized(IStructuredModel structuredModel) {
-		updateResolver(structuredModel);
-
+	private final InternalModelStateListener getInternalModelStateListener() {
+		if (internalModelStateListener == null) {
+			internalModelStateListener = new InternalModelStateListener();
+		}
+		return internalModelStateListener;
 	}
 }

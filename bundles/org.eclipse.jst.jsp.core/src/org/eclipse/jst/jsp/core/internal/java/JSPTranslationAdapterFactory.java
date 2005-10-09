@@ -35,7 +35,7 @@ public class JSPTranslationAdapterFactory extends AbstractAdapterFactory {
 	}
 	
 	public JSPTranslationAdapterFactory() {
-		super();
+		super(IJSPTranslation.class, true);
 	}
 
 	public INodeAdapterFactory copy() {
@@ -52,10 +52,6 @@ public class JSPTranslationAdapterFactory extends AbstractAdapterFactory {
 		return fAdapter;
 	}
 
-
-	public boolean isFactoryForType(Object type) {
-		return type.equals(IJSPTranslation.class);
-	}
 
 	public void release() {
 		if (fAdapter != null) {

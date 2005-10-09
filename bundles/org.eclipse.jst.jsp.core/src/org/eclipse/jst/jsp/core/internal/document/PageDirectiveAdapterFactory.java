@@ -95,6 +95,6 @@ public class PageDirectiveAdapterFactory extends AbstractAdapterFactory implemen
 
 	public INodeAdapterFactory copy() {
 
-		return new PageDirectiveAdapterFactory(this.adapterKey, this.shouldRegisterAdapter);
+		return new PageDirectiveAdapterFactory(getAdapterKey(), isShouldRegisterAdapter());
 	}
 }

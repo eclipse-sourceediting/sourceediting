@@ -19,6 +19,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver;
+import org.eclipse.wst.html.core.internal.Logger;
 import org.eclipse.wst.sse.core.internal.provisional.AbstractAdapterFactory;
 import org.eclipse.wst.sse.core.internal.provisional.IModelStateListener;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
@@ -36,42 +37,133 @@ import org.eclipse.wst.xml.core.internal.ssemodelquery.ModelQueryAdapterImpl;
 /**
  * Creates a ModelQueryAdapter for HTML models
  */
-public class ModelQueryAdapterFactoryForHTML extends AbstractAdapterFactory implements IModelStateListener {
+public class ModelQueryAdapterFactoryForHTML extends AbstractAdapterFactory {
 
-	protected ModelQueryAdapterImpl modelQueryAdapterImpl;
-	protected IStructuredModel stateNotifier = null;
+	ModelQueryAdapterImpl modelQueryAdapter;
+	IStructuredModel modelStateNotifier;
+	private InternalModelStateListener internalModelStateListener;
+
+	class InternalModelStateListener implements IModelStateListener {
+
+		/**
+		 * @see IModelStateListener#modelAboutToBeChanged(IStructuredModel)
+		 */
+		public void modelAboutToBeChanged(IStructuredModel model) {
+			// ISSUE: should we "freeze" state, or anything?
+		}
+
+		public void modelAboutToBeReinitialized(IStructuredModel structuredModel) {
+			// ISSUE: should we "freeze" state, or anything?
+
+		}
+
+		/**
+		 * @see IModelStateListener#modelChanged(IStructuredModel)
+		 */
+		public void modelChanged(IStructuredModel model) {
+			// nothing to do?
+		}
+
+		/**
+		 * @see IModelStateListener#modelDirtyStateChanged(IStructuredModel,
+		 *      boolean)
+		 */
+		public void modelDirtyStateChanged(IStructuredModel model, boolean isDirty) {
+			// nothing to do
+		}
+
+		public void modelReinitialized(IStructuredModel structuredModel) {
+			updateResolver(structuredModel);
+		}
+
+		/**
+		 * @see IModelStateListener#modelResourceDeleted(IStructuredModel)
+		 */
+		public void modelResourceDeleted(IStructuredModel model) {
+			// nothing to do?
+		}
+
+		/**
+		 * @see IModelStateListener#modelResourceMoved(IStructuredModel,
+		 *      IStructuredModel)
+		 */
+		public void modelResourceMoved(IStructuredModel oldModel, IStructuredModel newModel) {
+			modelStateNotifier.removeModelStateListener(this);
+			modelStateNotifier = newModel;
+			updateResolver(modelStateNotifier);
+			modelStateNotifier.addModelStateListener(this);
+		}
+
+		private void updateResolver(IStructuredModel model) {
+			String baseLocation = model.getBaseLocation();
+			IFile baseFile = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(model.getBaseLocation()));
+			if (baseFile != null) {
+				baseLocation = baseFile.getLocation().toString();
+			}
+			modelQueryAdapter.setIdResolver(new XMLCatalogIdResolver(baseLocation, model.getResolver()));
+		}
+
+	}
+
 
 	/**
 	 * ModelQueryAdapterFactoryForHTML constructor comment.
+	 * Note: this is a case there the key is not exactly same 
+	 * as the class we are after. 
 	 */
 	public ModelQueryAdapterFactoryForHTML() {
-		this(ModelQueryAdapter.class, true);
+		super(ModelQueryAdapter.class, true);
 	}
 
 	/**
-	 * ModelQueryAdapterFactoryForHTML constructor comment.
-	 * 
+	 * We need this protected version to allow subclasses to 
+	 * pass up standard behaviour. 
 	 * @param adapterKey
-	 *            java.lang.Object
 	 * @param registerAdapters
-	 *            boolean
 	 */
-	public ModelQueryAdapterFactoryForHTML(Object adapterKey, boolean registerAdapters) {
+
+	protected ModelQueryAdapterFactoryForHTML(Object adapterKey, boolean registerAdapters) {
 		super(adapterKey, registerAdapters);
+	}
+
+
+
+	public INodeAdapterFactory copy() {
+
+		return new ModelQueryAdapterFactoryForHTML();
+	}
+
+	public void release() {
+		super.release();
+		if (modelStateNotifier != null) {
+			modelStateNotifier.removeModelStateListener(internalModelStateListener);
+		}
+		
+		modelStateNotifier = null;
+		
+		if (modelQueryAdapter != null) {
+			modelQueryAdapter.release();
+		}
 	}
 
 	/**
 	 * createAdapter method comment.
+	 * 
+	 * XXX: we must make this method more independent of 'location'
+	 * (at least provide some fall-back method).
 	 */
 	protected INodeAdapter createAdapter(INodeNotifier target) {
 
-		if (Debug.displayInfo)
-			System.out.println("-----------------------ModelQueryAdapterFactoryForHTML.createAdapter" + target); //$NON-NLS-1$
-		if (modelQueryAdapterImpl == null) {
+		if (Debug.displayInfo) {
+			Logger.log(Logger.INFO_DEBUG, "-----------------------ModelQueryAdapterFactoryForHTML.createAdapter" + target); //$NON-NLS-1$
+		}
+		if (modelQueryAdapter == null) {
 			if (target instanceof IDOMNode) {
 				IDOMNode xmlNode = (IDOMNode) target;
-				IStructuredModel model = stateNotifier = xmlNode.getModel();
-				stateNotifier.addModelStateListener(this);
+				modelStateNotifier = xmlNode.getModel();
+				modelStateNotifier.addModelStateListener(getInternalModelStateListener());
+
+				IStructuredModel model = xmlNode.getModel();
 				String baseLocation = null;
 				String modelsBaseLocation = model.getBaseLocation();
 				if (modelsBaseLocation != null) {
@@ -98,77 +190,18 @@ public class ModelQueryAdapterFactoryForHTML extends AbstractAdapterFactory impl
 				URIResolver idResolver = new XMLCatalogIdResolver(baseLocation, model.getResolver());
 				ModelQuery modelQuery = new HTMLModelQueryImpl(cmDocumentCache, idResolver);
 				modelQuery.setEditMode(ModelQuery.EDIT_MODE_UNCONSTRAINED);
-				modelQueryAdapterImpl = new ModelQueryAdapterImpl(cmDocumentCache, modelQuery, idResolver);
+				modelQueryAdapter = new ModelQueryAdapterImpl(cmDocumentCache, modelQuery, idResolver);
 			}
 		}
-		return modelQueryAdapterImpl;
+		return modelQueryAdapter;
 	}
 
-	protected void updateResolver(IStructuredModel model) {
-		String baseLocation = model.getBaseLocation();
-		IFile baseFile = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(model.getBaseLocation()));
-		if (baseFile != null) {
-			baseLocation = baseFile.getLocation().toString();
+
+
+	private final InternalModelStateListener getInternalModelStateListener() {
+		if (internalModelStateListener == null) {
+			internalModelStateListener = new InternalModelStateListener();
 		}
-		modelQueryAdapterImpl.setIdResolver(new XMLCatalogIdResolver(baseLocation, model.getResolver()));
-	}
-
-	/**
-	 * @see IModelStateListener#modelAboutToBeChanged(IStructuredModel)
-	 */
-	public void modelAboutToBeChanged(IStructuredModel model) {
-	}
-
-	/**
-	 * @see IModelStateListener#modelChanged(IStructuredModel)
-	 */
-	public void modelChanged(IStructuredModel model) {
-	}
-
-	/**
-	 * @see IModelStateListener#modelDirtyStateChanged(IStructuredModel,
-	 *      boolean)
-	 */
-	public void modelDirtyStateChanged(IStructuredModel model, boolean isDirty) {
-	}
-
-	/**
-	 * @see IModelStateListener#modelResourceDeleted(IStructuredModel)
-	 */
-	public void modelResourceDeleted(IStructuredModel model) {
-	}
-
-	/**
-	 * @see IModelStateListener#modelResourceMoved(IStructuredModel,
-	 *      IStructuredModel)
-	 */
-	public void modelResourceMoved(IStructuredModel oldModel, IStructuredModel newModel) {
-		stateNotifier.removeModelStateListener(this);
-		stateNotifier = newModel;
-		updateResolver(stateNotifier);
-		stateNotifier.addModelStateListener(this);
-	}
-
-	public void release() {
-		super.release();
-		if (stateNotifier != null)
-			stateNotifier.removeModelStateListener(this);
-		stateNotifier = null;
-		if (modelQueryAdapterImpl != null)
-			modelQueryAdapterImpl.release();
-	}
-
-	public INodeAdapterFactory copy() {
-
-		return new ModelQueryAdapterFactoryForHTML(this.adapterKey, this.shouldRegisterAdapter);
-	}
-
-	public void modelAboutToBeReinitialized(IStructuredModel structuredModel) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void modelReinitialized(IStructuredModel structuredModel) {
-		updateResolver(structuredModel);		
+		return internalModelStateListener;
 	}
 }

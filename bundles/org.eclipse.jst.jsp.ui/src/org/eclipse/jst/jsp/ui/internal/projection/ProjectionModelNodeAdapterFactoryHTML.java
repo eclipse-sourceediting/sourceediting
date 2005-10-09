@@ -25,8 +25,16 @@ public class ProjectionModelNodeAdapterFactoryHTML extends AbstractAdapterFactor
 
 	private ProjectionViewer fProjectionViewer;
 
+	public ProjectionModelNodeAdapterFactoryHTML(Object adapterKey, boolean registerAdapters) {
+		super(adapterKey, registerAdapters);
+	}
+
+	public ProjectionModelNodeAdapterFactoryHTML(Object adapterKey) {
+		super(adapterKey);
+	}
+
 	public ProjectionModelNodeAdapterFactoryHTML() {
-		adapterKey = ProjectionModelNodeAdapterHTML.class;
+		this(ProjectionModelNodeAdapterHTML.class);
 	}
 
 	/**

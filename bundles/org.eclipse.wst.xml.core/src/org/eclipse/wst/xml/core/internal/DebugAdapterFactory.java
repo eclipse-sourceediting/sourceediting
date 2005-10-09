@@ -24,33 +24,29 @@ import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 public class DebugAdapterFactory extends AbstractAdapterFactory implements PropagatingAdapterFactory {
 
 	/**
-	 * Constructor for PageDirectiveWatcherFactory.
+	 * Constructor for DebugAdapterFactory.
 	 */
 	public DebugAdapterFactory() {
 		this(IDebugAdapter.class, true);
 	}
 
 	/**
-	 * Constructor for PageDirectiveWatcherFactory.
+	 * Constructor for DebugAdapterFactory.
 	 * 
-	 * @param adapterKey
+	 * @param fAdapterKey
 	 * @param registerAdapters
 	 */
-	public DebugAdapterFactory(Object adapterKey, boolean registerAdapters) {
+	private DebugAdapterFactory(Object adapterKey, boolean registerAdapters) {
 		super(adapterKey, registerAdapters);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.sse.core.PropagatingAdapterFactory#addContributedFactories(org.eclipse.wst.sse.core.IAdapterFactory)
-	 */
+	
 	public void addContributedFactories(INodeAdapterFactory factory) {
 		//none expected
 	}
 
 	public INodeAdapterFactory copy() {
-		return new DebugAdapterFactory(this.adapterKey, this.shouldRegisterAdapter);
+		return new DebugAdapterFactory(getAdapterKey(), isShouldRegisterAdapter());
 	}
 
 	protected INodeAdapter createAdapter(INodeNotifier target) {

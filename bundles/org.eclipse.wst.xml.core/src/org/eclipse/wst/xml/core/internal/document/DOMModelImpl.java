@@ -155,7 +155,8 @@ public class DOMModelImpl extends AbstractStructuredModel implements IStructured
 			// end lock before noticiation loop, since directly or indirectly
 			// we may be "called from foriegn code" during notification.
 			endLock();
-
+			// we null out here to avoid spurious"warning" message while debug tracing  is enabled
+			fLockObject = null;
 			// the notifier is what controls adaper notification, which
 			// should be sent out before the 'modelChanged' event.
 			getModelNotifier().endChanging();

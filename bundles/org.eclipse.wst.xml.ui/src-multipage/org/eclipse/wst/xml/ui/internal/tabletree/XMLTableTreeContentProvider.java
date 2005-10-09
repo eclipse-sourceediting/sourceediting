@@ -46,16 +46,14 @@ import org.w3c.dom.Text;
 
 public class XMLTableTreeContentProvider implements ITreeContentProvider, ITableLabelProvider, ILabelProvider, CMDocumentManagerListener {
 
-	protected ViewerNotifyingAdapterFactory viewerNotifyingAdapterFactory = new ViewerNotifyingAdapterFactory();
-	protected XMLTableTreePropertyDescriptorFactory propertyDescriptorFactory;
-	// protected ImageFactory imageFactory =
-	// XMLCommonUIPlugin.getInstance().getImageFactory();
-	protected List viewerList = new Vector();
-	protected TreeContentHelper treeContentHelper = new TreeContentHelper();
+	ViewerNotifyingAdapterFactory viewerNotifyingAdapterFactory = new ViewerNotifyingAdapterFactory();
+	List viewerList = new Vector();
+	private TreeContentHelper treeContentHelper = new TreeContentHelper();
 
 	protected CMDocumentManager documentManager;
 
 	public XMLTableTreeContentProvider() {
+		super();
 	}
 
 	public void addViewer(Viewer viewer) {
@@ -94,7 +92,6 @@ public class XMLTableTreeContentProvider implements ITreeContentProvider, ITable
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		// remove our listeners to the old state
 		if (oldInput != null) {
-			propertyDescriptorFactory = null;
 			Document domDoc = (Document) oldInput;
 			ModelQuery mq = ModelQueryUtil.getModelQuery(domDoc);
 			if (mq != null) {
@@ -124,7 +121,6 @@ public class XMLTableTreeContentProvider implements ITreeContentProvider, ITable
 			ModelQuery mq = ModelQueryUtil.getModelQuery(domDoc);
 
 			if (mq != null) {
-				propertyDescriptorFactory = new XMLTableTreePropertyDescriptorFactory();
 				documentManager = mq.getCMDocumentManager();
 				if (documentManager != null) {
 					documentManager.setPropertyEnabled(CMDocumentManager.PROPERTY_ASYNC_LOAD, true);
@@ -142,6 +138,8 @@ public class XMLTableTreeContentProvider implements ITreeContentProvider, ITable
 	// ILabelProvider stuff
 	//
 	public void addListener(ILabelProviderListener listener) {
+		// since we always return 'false' for "isLabelProperty",
+		// not need to listen. Maybe that should change some day?
 	}
 
 	public void dispose() {
@@ -264,6 +262,8 @@ public class XMLTableTreeContentProvider implements ITreeContentProvider, ITable
 	}
 
 	public void removeListener(ILabelProviderListener listener) {
+		// since we always return 'false' for "isLabelProperty",
+		// not need to listen. Maybe that should change some day?
 	}
 
 	// There is only 1 adapter associated with this factory. This single

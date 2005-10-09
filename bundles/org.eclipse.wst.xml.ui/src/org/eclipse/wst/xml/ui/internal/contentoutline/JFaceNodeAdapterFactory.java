@@ -101,12 +101,12 @@ public class JFaceNodeAdapterFactory extends AbstractAdapterFactory implements I
 		}
 	}
 
-	protected CMDocumentManager cmDocumentManager;
+	private CMDocumentManager cmDocumentManager;
 	private CMDocumentManagerListenerImpl fCMDocumentManagerListener = null;
 	/**
 	 * This keeps track of all the listeners.
 	 */
-	protected Set fListeners = new HashSet();
+	private Set fListeners = new HashSet();
 
 	protected INodeAdapter singletonAdapter;
 
@@ -123,7 +123,7 @@ public class JFaceNodeAdapterFactory extends AbstractAdapterFactory implements I
 	}
 
 	public INodeAdapterFactory copy() {
-		return new JFaceNodeAdapterFactory(this.adapterKey, this.shouldRegisterAdapter);
+		return new JFaceNodeAdapterFactory(getAdapterKey(), isShouldRegisterAdapter());
 	}
 
 	/**

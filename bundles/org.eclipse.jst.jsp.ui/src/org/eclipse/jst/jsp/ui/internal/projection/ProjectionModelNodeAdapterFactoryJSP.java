@@ -18,7 +18,15 @@ import org.w3c.dom.Node;
 
 public class ProjectionModelNodeAdapterFactoryJSP extends ProjectionModelNodeAdapterFactoryHTML {
 	public ProjectionModelNodeAdapterFactoryJSP() {
-		adapterKey = ProjectionModelNodeAdapterJSP.class;
+		this(ProjectionModelNodeAdapterJSP.class);
+	}
+
+	public ProjectionModelNodeAdapterFactoryJSP(Object adapterKey, boolean registerAdapters) {
+		super(adapterKey, registerAdapters);
+	}
+
+	public ProjectionModelNodeAdapterFactoryJSP(Object adapterKey) {
+		super(adapterKey);
 	}
 
 	/**

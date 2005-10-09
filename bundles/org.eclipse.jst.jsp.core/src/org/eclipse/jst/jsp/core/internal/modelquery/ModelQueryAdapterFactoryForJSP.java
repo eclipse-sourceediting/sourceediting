@@ -53,7 +53,7 @@ public class ModelQueryAdapterFactoryForJSP extends AbstractAdapterFactory imple
 	}
 
 	public INodeAdapterFactory copy() {
-		return new ModelQueryAdapterFactoryForJSP(this.adapterKey, this.shouldRegisterAdapter);
+		return new ModelQueryAdapterFactoryForJSP(getAdapterKey(), isShouldRegisterAdapter());
 	}
 
 	/**

@@ -21,7 +21,15 @@ public class ProjectionModelNodeAdapterFactoryCSS extends AbstractAdapterFactory
 	private ProjectionViewer fProjectionViewer;
 
 	public ProjectionModelNodeAdapterFactoryCSS() {
-		adapterKey = ProjectionModelNodeAdapterCSS.class;
+		this(ProjectionModelNodeAdapterCSS.class);
+	}
+
+	public ProjectionModelNodeAdapterFactoryCSS(Object adapterKey, boolean registerAdapters) {
+		super(adapterKey, registerAdapters);
+	}
+
+	public ProjectionModelNodeAdapterFactoryCSS(Object adapterKey) {
+		super(adapterKey);
 	}
 
 	protected INodeAdapter createAdapter(INodeNotifier target) {

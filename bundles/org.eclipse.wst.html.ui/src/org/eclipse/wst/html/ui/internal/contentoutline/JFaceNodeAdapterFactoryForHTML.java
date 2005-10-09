@@ -44,7 +44,7 @@ public class JFaceNodeAdapterFactoryForHTML extends JFaceNodeAdapterFactory {
 	}
 
 	public INodeAdapterFactory copy() {
-		return new JFaceNodeAdapterFactoryForHTML(this.adapterKey, this.shouldRegisterAdapter);
+		return new JFaceNodeAdapterFactoryForHTML(getAdapterKey(), isShouldRegisterAdapter());
 	}
 
 }

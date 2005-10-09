@@ -23,19 +23,12 @@ public class JFaceNodeAdapterFactoryCSS extends JFaceNodeAdapterFactory {
 	}
 
 
-	protected void initAdapter(INodeAdapter adapter, INodeNotifier node) {
-	}
-
 	protected INodeAdapter createAdapter(INodeNotifier node) {
 		if (singletonAdapter == null) {
 			// create the JFaceNodeAdapter
 			singletonAdapter = new CSSNodeAdapter(this);
-			initAdapter(singletonAdapter, node);
 		}
 		return singletonAdapter;
-	}
-
-	public void release() {
 	}
 
 

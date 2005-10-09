@@ -27,28 +27,24 @@ public class ModelQueryAdapterFactoryForEmbeddedXML extends ModelQueryAdapterFac
 	 * Constructor for ModelQueryAdapterFactoryForEmbeddedXML.
 	 */
 	public ModelQueryAdapterFactoryForEmbeddedXML() {
-		this(ModelQueryAdapter.class, false);
-	}
-
-	/**
-	 * Constructor for ModelQueryAdapterFactoryForEmbeddedXML.
-	 * 
-	 * @param adapterKey
-	 * @param registerAdapters
-	 */
-	protected ModelQueryAdapterFactoryForEmbeddedXML(Object adapterKey, boolean registerAdapters) {
-		super(adapterKey, registerAdapters);
-	}
-
-	/**
-	 * @see org.eclipse.wst.sse.core.internal.provisional.INodeAdapterFactory#adapt(INodeNotifier)
-	 */
-	public INodeAdapter adapt(INodeNotifier object) {
-		return adaptNew(object);
+		super(ModelQueryAdapter.class, false);
 	}
 
 	protected void configureDocumentManager(CMDocumentManager mgr) {
 		super.configureDocumentManager(mgr);
 		mgr.setPropertyEnabled(CMDocumentManager.PROPERTY_ASYNC_LOAD, true);
+	}
+	
+	/**
+	 * ISSUE: this "forces" a new one to always be created/returned, 
+	 * not "cached" on the node. That seems incorrect. 
+	 * Simply using shouldRegisterFalse should work, except, 
+	 * there might have been one there that someone else already 
+	 * explicitly put there, so this is only way I know to 
+	 * override that. Especially complicated here since a number
+	 * of adapters are for ModelQueryAdapter.class.
+	 */
+	public INodeAdapter adapt(INodeNotifier object) {
+		return adaptNew(object);
 	}
 }

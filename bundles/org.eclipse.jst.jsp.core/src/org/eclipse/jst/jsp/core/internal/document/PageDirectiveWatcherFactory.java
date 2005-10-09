@@ -29,6 +29,7 @@ public class PageDirectiveWatcherFactory extends PropagatingAdapterFactoryImpl i
 
 	/**
 	 * Constructor for PageDirectiveWatcherFactory.
+	 * 
 	 * @param adapterKey
 	 * @param registerAdapters
 	 */
@@ -41,7 +42,6 @@ public class PageDirectiveWatcherFactory extends PropagatingAdapterFactoryImpl i
 		if (target instanceof IDOMElement) {
 			IDOMElement xmlElement = (IDOMElement) target;
 			if (xmlElement.getNodeType() == Node.ELEMENT_NODE) {
-				//                if (xmlElement.getNodeName() == JSP12Namespace.ElementName.DIRECTIVE_PAGE) {   // not sure why identity to  JSP11Namespace.ElementName.DIRECTIVE_PAGE doesn't work
 				String nodeName = xmlElement.getNodeName();
 				if (nodeName.equals("jsp:directive.page")) { //$NON-NLS-1$
 					result = new PageDirectiveWatcherImpl(xmlElement);
@@ -53,7 +53,6 @@ public class PageDirectiveWatcherFactory extends PropagatingAdapterFactoryImpl i
 
 	}
 
-	public INodeAdapterFactory copy() {
-		return new PageDirectiveWatcherFactory(this.adapterKey, this.shouldRegisterAdapter);
-	}
-}
+public INodeAdapterFactory copy() {
+		return new PageDirectiveWatcherFactory(getAdapterKey(), isShouldRegisterAdapter());
+	}}
