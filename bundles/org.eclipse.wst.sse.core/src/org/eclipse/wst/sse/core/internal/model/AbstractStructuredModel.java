@@ -180,7 +180,9 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 	}
 
 	static final String DEBUG_STATE_TRACE_CATEGORY = "org.eclipse.wst.sse.core/structuredmodel/state"; //$NON-NLS-1$
+	static final String DEBUG_LOCK_TRACE_CATEGORY = "org.eclipse.wst.sse.core/structuredmodel/locks"; //$NON-NLS-1$
 	static final boolean DEBUG_STATE = "true".equalsIgnoreCase(Platform.getDebugOption(DEBUG_STATE_TRACE_CATEGORY)); //$NON-NLS-1$
+	static final boolean DEBUG_LOCK = "true".equalsIgnoreCase(Platform.getDebugOption(DEBUG_LOCK_TRACE_CATEGORY)); //$NON-NLS-1$
 
 	private FactoryRegistry factoryRegistry;
 	private String fBaseLocation;
@@ -193,7 +195,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 	private LifecycleNotificationManager fLifecycleNotificationManager;
 
 	private final Object fListenerLock = new byte[0];
-	private ILock fLockObject;
+	protected ILock fLockObject;
 	// private String fLineDelimiter;
 	// private Object fType;
 	private IModelHandler fModelHandler;
@@ -336,9 +338,24 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 	 * 
 	 */
 	private void beginLock() {
-		fLockObject = getLockObject();
-		if (fLockObject != null)
+
+		// if we get a different lock object
+		// than we had before, besure to release
+		// old one first before losing it.
+		// ISSUE: this smells like an error condition,
+		// when would this happen? better to check in set document?
+		ILock documentLock = getLockObjectFromDocument();
+
+		if (fLockObject != null && fLockObject != documentLock) {
+			fLockObject.release();
+			Logger.log(Logger.INFO_DEBUG, "Model lock released early" + fLockObject + " apparently document switched?");
+
+		}
+		fLockObject = documentLock;
+		if (fLockObject != null) {
 			fLockObject.acquire();
+			Logger.log(Logger.INFO_DEBUG, "Model lock acquired: " + fLockObject);
+		}
 	}
 
 	public void beginRecording(Object requester) {
@@ -486,12 +503,9 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 	protected final void endLock() {
 		if (fLockObject != null) {
 			fLockObject.release();
-		}
-		// fLock being null is used as an indicator that
-		// we are not locked (and used in logic to decide
-		// acquire/release.
-		fLockObject = null;
+			Logger.log(Logger.INFO_DEBUG, "Model lock released: " + fLockObject);
 
+		}
 	}
 
 	public void endRecording(Object requester) {
@@ -535,7 +549,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 		// another thread
 		if (fModelStateListeners != null) {
 			if (DEBUG_STATE) {
-				System.out.println("IModelStateListener event for " + getId() + " : modelAboutToBeReinitialized"); //$NON-NLS-1$ //$NON-NLS-2$
+				Logger.log(Logger.INFO_DEBUG, "IModelStateListener event for " + getId() + " : modelAboutToBeReinitialized"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			Object[] holdListeners = fModelStateListeners;
 			for (int i = 0; i < holdListeners.length; i++) {
@@ -589,7 +603,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 		// another thread
 		if (fModelStateListeners != null) {
 			if (DEBUG_STATE) {
-				System.out.println("IModelStateListener event for " + getId() + " : modelDirtyStateChanged"); //$NON-NLS-1$ //$NON-NLS-2$
+				Logger.log(Logger.INFO_DEBUG, "IModelStateListener event for " + getId() + " : modelDirtyStateChanged"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			Object[] holdListeners = fModelStateListeners;
 			for (int i = 0; i < holdListeners.length; i++) {
@@ -607,7 +621,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 		// another thread
 		if (fModelStateListeners != null) {
 			if (DEBUG_STATE) {
-				System.out.println("IModelStateListener event for " + getId() + " : modelReinitialized"); //$NON-NLS-1$ //$NON-NLS-2$
+				Logger.log(Logger.INFO_DEBUG, "IModelStateListener event for " + getId() + " : modelReinitialized"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			Object[] holdListeners = fModelStateListeners;
 			for (int i = 0; i < holdListeners.length; i++) {
@@ -630,7 +644,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 		// another thread
 		if (fModelStateListeners != null) {
 			if (DEBUG_STATE) {
-				System.out.println("IModelStateListener event for " + getId() + " : modelResourceDeleted"); //$NON-NLS-1$ //$NON-NLS-2$
+				Logger.log(Logger.INFO_DEBUG, "IModelStateListener event for " + getId() + " : modelResourceDeleted"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			Object[] holdListeners = fModelStateListeners;
 			for (int i = 0; i < holdListeners.length; i++) {
@@ -653,7 +667,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 		// another thread
 		if (fModelStateListeners != null) {
 			if (DEBUG_STATE) {
-				System.out.println("IModelStateListener event for " + getId() + " : modelResourceMoved"); //$NON-NLS-1$ //$NON-NLS-2$
+				Logger.log(Logger.INFO_DEBUG, "IModelStateListener event for " + getId() + " : modelResourceMoved"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			Object[] holdListeners = fModelStateListeners;
 			for (int i = 0; i < holdListeners.length; i++) {
@@ -708,7 +722,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 	/**
 	 * @return
 	 */
-	private ILock getLockObject() {
+	private ILock getLockObjectFromDocument() {
 
 		// we always "get afresh" the lock object from our document,
 		// just in case the instance of the document changes.
@@ -826,20 +840,27 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 		fId = id;
 	}
 
-	protected void internalAboutToBeChanged() {
+	final protected void internalAboutToBeChanged() {
 
 		// notice we only fire this event if we are not
 		// already in a model state changing sequence
 		if (fModelStateChanging == 0) {
 
 			if (DEBUG_STATE) {
-				System.out.println("IModelStateListener event for " + getId() + " : modelAboutToBeChanged"); //$NON-NLS-1$ //$NON-NLS-2$
+				Logger.log(Logger.INFO_DEBUG, "IModelStateListener event for " + getId() + " : modelAboutToBeChanged"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 
-			fireModelAboutToBeChanged();
-			// begin lock after listeners notified, otherwise
-			// deadlock could occur if they call us back.
-			beginLock();
+			try {
+				fireModelAboutToBeChanged();
+			}
+			catch (Exception e) {
+				Logger.logException("Exception while notifying model state listers of about to change", e);
+			}
+			finally {
+				// begin lock after listeners notified, otherwise
+				// deadlock could occur if they call us back.
+				beginLock();
+			}
 
 		}
 		// we always increment counter, for every request (so *must* receive
@@ -852,7 +873,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 	 * is now complete. This method must only be called by 'modelChanged'
 	 * since it keeps track of counts.
 	 */
-	protected void internalModelChanged() {
+	final protected void internalModelChanged() {
 
 		// always decrement
 		fModelStateChanging--;
@@ -875,7 +896,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 		// we have aboutToChangeModel.
 		if (fModelStateChanging == 0) {
 			if (DEBUG_STATE) {
-				System.out.println("IModelStateListener event for " + getId() + " : modelChanged"); //$NON-NLS-1$ //$NON-NLS-2$
+				Logger.log(Logger.INFO_DEBUG, "IModelStateListener event for " + getId() + " : modelChanged"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 
 			endLock();
@@ -1005,7 +1026,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 			}
 		}
 		else {
-			System.out.println("indeed!!!"); //$NON-NLS-1$
+			Logger.log(Logger.INFO_DEBUG, "indeed!!!"); //$NON-NLS-1$
 		}
 		return result;
 	}

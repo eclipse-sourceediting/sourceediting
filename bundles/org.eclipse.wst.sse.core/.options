@@ -5,6 +5,7 @@ org.eclipse.wst.sse.core/dom/adapter/notification/time/criteria=10
 org.eclipse.wst.sse.core/resourcechangehandling=false
 org.eclipse.wst.sse.core/structuredmodel/lifecycle=false
 org.eclipse.wst.sse.core/structuredmodel/state=false
+org.eclipse.wst.sse.core/structuredmodel/locks=true
 org.eclipse.wst.sse.core/tasks=false
 org.eclipse.wst.sse.core/tasks/detection=false
 org.eclipse.wst.sse.core/tasks/job=false
