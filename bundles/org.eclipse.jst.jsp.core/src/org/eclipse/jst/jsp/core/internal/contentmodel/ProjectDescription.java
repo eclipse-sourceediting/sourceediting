@@ -782,7 +782,7 @@ class ProjectDescription {
 	 * @param javaProject
 	 */
 	private void indexClasspath(IJavaProject javaProject) {
-		if (javaProject != null && javaProject.exists()) {
+		if (javaProject != null && javaProject.exists() && !fClasspathProjects.contains(javaProject.getElementName())) {
 			fClasspathProjects.push(javaProject.getElementName());
 			try {
 				IClasspathEntry[] entries = javaProject.getResolvedClasspath(true);
@@ -808,7 +808,8 @@ class ProjectDescription {
 		return ""; //$NON-NLS-1$
 	}
 
-	void removeClasspathLibrary(String libraryLocation) {
+	/*
+	private void removeClasspathLibrary(String libraryLocation) {
 		JarRecord record = (JarRecord) fClasspathJars.remove(libraryLocation);
 		if (record != null) {
 			URLRecord[] records = (URLRecord[]) record.getURLRecords().toArray(new URLRecord[0]);
@@ -818,6 +819,7 @@ class ProjectDescription {
 			TaglibIndex.fireTaglibRecordEvent(new TaglibRecordEvent(record, ITaglibRecordEvent.REMOVED));
 		}
 	}
+	*/
 
 	void removeJAR(IResource jar) {
 		if (_debugIndexCreation)

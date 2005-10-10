@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -43,9 +43,7 @@ import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
 import org.eclipse.wst.sse.core.internal.util.StringUtils;
 
 /**
- * @author nitin
- * 
- * A non-extendable index manager for taglibs similar to the J2EE
+ * A non-extendable index manager for taglibs similar to the previous J2EE
  * ITaglibRegistry but lacking any ties to project natures.
  * 
  * Indexing is not persisted between sessions, so new ADD events will be sent
@@ -84,35 +82,44 @@ public class TaglibIndex {
 		}
 
 		private void handleClasspathChange(IJavaProject project) {
-			classpathStack.push(project.getElementName());
-			try {
-				/* Handle changes to this project's build path */
-				IResource resource = project.getCorrespondingResource();
-				if (resource.getType() == IResource.PROJECT && !projectsIndexed.contains(resource)) {
-					projectsIndexed.add(resource);
-					boolean classpathIndexIsOld = fProjectDescriptions.containsKey(resource);
-					ProjectDescription description = createDescription((IProject) resource);
-					if (classpathIndexIsOld) {
-						description.indexClasspath();
+			/*
+			 * Loops in the build paths could cause us to pop more than we
+			 * push
+			 */
+			if (classpathStack.contains(project.getElementName()))
+				return;
+
+			synchronized (project) {
+				classpathStack.push(project.getElementName());
+				try {
+					/* Handle changes to this project's build path */
+					IResource resource = project.getCorrespondingResource();
+					if (resource.getType() == IResource.PROJECT && !projectsIndexed.contains(resource)) {
+						projectsIndexed.add(resource);
+						boolean classpathIndexIsOld = fProjectDescriptions.containsKey(resource);
+						ProjectDescription description = createDescription((IProject) resource);
+						if (classpathIndexIsOld) {
+							description.indexClasspath();
+						}
+					}
+					/*
+					 * Update indeces for projects who include this project in
+					 * their build path (e.g. toggling the "exportation" of a
+					 * taglib JAR in this project affects the JAR's visibility
+					 * in other projects)
+					 */
+					IJavaProject[] projects = project.getJavaModel().getJavaProjects();
+					for (int i = 0; i < projects.length; i++) {
+						IJavaProject otherProject = projects[i];
+						if (StringUtils.contains(otherProject.getRequiredProjectNames(), project.getElementName(), false) && !classpathStack.contains(otherProject.getElementName())) {
+							handleClasspathChange(otherProject);
+						}
 					}
 				}
-				/*
-				 * Update indeces for projects who include this project in
-				 * their build path (e.g. toggling the "exportation" of a
-				 * taglib JAR in this project affects the JAR's visibility in
-				 * other projects)
-				 */
-				IJavaProject[] projects = project.getJavaModel().getJavaProjects();
-				for (int i = 0; i < projects.length; i++) {
-					IJavaProject otherProject = projects[i];
-					if (StringUtils.contains(otherProject.getRequiredProjectNames(), project.getElementName(), false) && !classpathStack.contains(otherProject.getElementName())) {
-						handleClasspathChange(otherProject);
-					}
+				catch (JavaModelException e) {
 				}
+				classpathStack.pop();
 			}
-			catch (JavaModelException e) {
-			}
-			classpathStack.pop();
 		}
 	}
 
