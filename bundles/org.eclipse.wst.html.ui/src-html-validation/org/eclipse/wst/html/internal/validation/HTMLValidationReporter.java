@@ -12,6 +12,7 @@ package org.eclipse.wst.html.internal.validation;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.validate.ValidationMessage;
@@ -89,7 +90,11 @@ public class HTMLValidationReporter implements ValidationReporter {
 			// add by myself?
 			String id = HTMLValidator.class.getName();
 			String location = Integer.toString(mes.getLineNumber());
-			String name = this.file.getFullPath().toString();
+			String name = "";
+			IPath filePath = this.file.getFullPath();
+			if (filePath != null) {
+				name = filePath.toString();
+			}
 			try {
 				TaskListHelper.getTaskList().addTask(id, this.file, location, mes.getId(), mes.getText(), mes.getSeverity(), name, mes.getGroupName(), mes.getOffset(), mes.getLength());
 			}

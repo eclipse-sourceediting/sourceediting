@@ -19,9 +19,13 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.content.IContentType;
+import org.eclipse.core.runtime.content.IContentTypeManager;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.html.core.internal.validate.HTMLValidationAdapterFactory;
 import org.eclipse.wst.html.ui.internal.HTMLUIMessages;
@@ -43,6 +47,9 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 
 public class HTMLValidator implements IValidator {
+	private static final String ORG_ECLIPSE_JST_JSP_CORE_JSPSOURCE = "org.eclipse.jst.jsp.core.jspsource";
+	private static final String ORG_ECLIPSE_WST_HTML_CORE_HTMLSOURCE = "org.eclipse.wst.html.core.htmlsource";
+
 	static boolean shouldValidate(IFile file) {
 		IResource resource = file;
 		do {
@@ -115,25 +122,36 @@ public class HTMLValidator implements IValidator {
 	 * Check file extension to validate
 	 */
 	private boolean canHandle(IFile file) {
-		if (file == null)
-			return false;
-		String name = file.getFullPath().toString();
-		if (name == null)
-			return false;
-		int index = name.lastIndexOf('.');
-		if (index < 0)
-			return false;
-		String ext = name.substring(index + 1);
-		if (ext == null || ext.length() == 0)
-			return false;
-		ext = ext.toLowerCase();
-		return (ext.startsWith("htm") || //$NON-NLS-1$
-					ext.startsWith("jsp") || //$NON-NLS-1$
-					ext.equals("jsf") || //$NON-NLS-1$
-					ext.startsWith("xht") || //$NON-NLS-1$
-					ext.startsWith("shtm") || //$NON-NLS-1$
-					ext.startsWith("wml") || //$NON-NLS-1$
-		ext.equals("jhtml"));//$NON-NLS-1$
+		boolean result = false;
+		if (file != null) {
+			try {
+				IContentTypeManager contentTypeManager = Platform.getContentTypeManager();
+
+				IContentType fileContentType = file.getContentDescription().getContentType();
+
+				IContentType htmlContentType = contentTypeManager.getContentType(ORG_ECLIPSE_WST_HTML_CORE_HTMLSOURCE);
+				if (htmlContentType != null) {
+					if (fileContentType.isKindOf(htmlContentType)) {
+						result = true;
+					}
+					else {
+						// ISSUE: here's a little "backwards" dependancy.
+						// there should be a "JSPEMBEDDEDHTML validator"
+						// contributed by JSP plugin.
+						IContentType jspContentType = contentTypeManager.getContentType(ORG_ECLIPSE_JST_JSP_CORE_JSPSOURCE);
+						if (jspContentType != null) {
+							result = fileContentType.isKindOf(jspContentType);
+						}
+					}
+				}
+			}
+			catch (CoreException e) {
+				// should be rare, but will ignore to avoid logging "encoding
+				// exceptions" and the like here.
+				// Logger.logException(e);
+			}
+		}
+		return result;
 	}
 
 	/**
@@ -206,7 +224,12 @@ public class HTMLValidator implements IValidator {
 		rep.clear();
 		adapter.setReporter(rep);
 		if (reporter != null) {
-			String args[] = new String[]{file.getFullPath().toString()};
+			String fileName = "";
+			IPath filePath = file.getFullPath();
+			if (filePath != null) {
+				fileName = filePath.toString();
+			}
+			String args[] = new String[]{fileName};
 
 			// Message mess = new Message("HTMLValidation", //$NON-NLS-1$
 			// SeverityEnum.LOW_SEVERITY,
@@ -300,6 +323,6 @@ public class HTMLValidator implements IValidator {
 	 * 
 	 */
 	public IResource getResource(String delta) {
-		return  ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(delta));
+		return ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(delta));
 	}
 }
