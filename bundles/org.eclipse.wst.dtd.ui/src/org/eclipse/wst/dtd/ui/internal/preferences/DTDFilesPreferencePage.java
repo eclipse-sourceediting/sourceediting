@@ -26,6 +26,8 @@ import org.eclipse.wst.sse.ui.internal.preferences.ui.AbstractPreferencePage;
 public class DTDFilesPreferencePage extends AbstractPreferencePage {
 
 	protected Control createContents(Composite parent) {
+		noDefaultAndApplyButton();
+		
 		Composite composite = (Composite) super.createContents(parent);
 		WorkbenchHelp.setHelp(composite, IHelpContextIds.DTD_PREFWEBX_FILES_HELPID);
 

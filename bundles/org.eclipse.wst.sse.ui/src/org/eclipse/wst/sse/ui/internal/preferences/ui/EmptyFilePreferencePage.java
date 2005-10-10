@@ -28,6 +28,8 @@ import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 public class EmptyFilePreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 
 	private Composite createComposite(Composite parent, int numColumns) {
+		noDefaultAndApplyButton();
+		
 		Composite composite = new Composite(parent, SWT.NULL);
 
 		// GridLayout
