@@ -415,20 +415,13 @@ public class StructuredTextEditor extends TextEditor {
 					if (!current.equals(newSelection)) {
 						IStructuredSelection selection = (IStructuredSelection) event.getSelection();
 						Object o = selection.getFirstElement();
-						Object o2 = null;
-						if (selection.size() > 1) {
-							o2 = selection.toArray()[selection.size() - 1];
-						}
-						else {
-							o2 = o;
-						}
 						if (o instanceof IndexedRegion) {
 							start = ((IndexedRegion) o).getStartOffset();
-							length = ((IndexedRegion) o2).getEndOffset() - start;
+							length = ((IndexedRegion) o).getEndOffset() - start;
 						}
 						else if (o instanceof ITextRegion) {
 							start = ((ITextRegion) o).getStart();
-							length = ((ITextRegion) o2).getEnd() - start;
+							length = ((ITextRegion) o).getEnd() - start;
 						}
 					}
 				}
@@ -467,23 +460,42 @@ public class StructuredTextEditor extends TextEditor {
 						Object[] newSelection = ((IStructuredSelection) event.getSelection()).toArray();
 						if (!Arrays.equals(currentSelection, newSelection)) {
 							if (newSelection.length > 0) {
-								Object o = newSelection[0];
-								Object o2 = newSelection[newSelection.length - 1];
 								/*
-								 * if more than one region is selected,
-								 * actually select all of the text instead of
-								 * just repositioning the caret
+								 * No ordering is guaranteed for multiple
+								 * selection
 								 */
+								Object o = newSelection[0];
 								if (o instanceof IndexedRegion) {
 									start = ((IndexedRegion) o).getStartOffset();
-									if (o != o2) {
-										length = ((IndexedRegion) o2).getEndOffset() - start;
+									int end = ((IndexedRegion) o).getEndOffset();
+									if (newSelection.length > 1) {
+										for (int i = 1; i < newSelection.length; i++) {
+											start = Math.min(start, ((IndexedRegion) newSelection[i]).getStartOffset());
+											end = Math.max(end, ((IndexedRegion) newSelection[i]).getEndOffset());
+										}
+										length = end - start;
 									}
 								}
 								else if (o instanceof ITextRegion) {
 									start = ((ITextRegion) o).getStart();
-									if (o != o2) {
-										length = ((ITextRegion) o2).getEnd() - start;
+									int end = ((ITextRegion) o).getEnd();
+									if (newSelection.length > 1) {
+										for (int i = 1; i < newSelection.length; i++) {
+											start = Math.min(start, ((ITextRegion) newSelection[i]).getStart());
+											end = Math.max(end, ((ITextRegion) newSelection[i]).getEnd());
+										}
+										length = end - start;
+									}
+								}
+								else if (o instanceof IRegion) {
+									start = ((IRegion) o).getOffset();
+									int end = start + ((IRegion) o).getLength();
+									if (newSelection.length > 1) {
+										for (int i = 1; i < newSelection.length; i++) {
+											start = Math.min(start, ((IRegion) newSelection[i]).getOffset());
+											end = Math.max(end, ((IRegion) newSelection[i]).getOffset() + ((IRegion) newSelection[i]).getLength());
+										}
+										length = end - start;
 									}
 								}
 							}
@@ -751,28 +763,34 @@ public class StructuredTextEditor extends TextEditor {
 					int start = -1;
 					int length = 0;
 
+					// no ordering is guaranteed for multiple selection
 					Object o = selectedObjects[0];
-					Object o2 = null;
-					if (selectedObjects.length > 1) {
-						o2 = selectedObjects[selectedObjects.length - 1];
-					}
-					else {
-						o2 = o;
-					}
 					if (o instanceof IndexedRegion) {
 						start = ((IndexedRegion) o).getStartOffset();
-						if (o != o2) {
-							length = ((IndexedRegion) o2).getEndOffset() - start;
+						int end = ((IndexedRegion) o).getEndOffset();
+						if (selectedObjects.length > 1) {
+							for (int i = 1; i < selectedObjects.length; i++) {
+								start = Math.min(start, ((IndexedRegion) selectedObjects[i]).getStartOffset());
+								end = Math.max(end, ((IndexedRegion) selectedObjects[i]).getEndOffset());
+							}
+							length = end - start;
 						}
 					}
 					else if (o instanceof ITextRegion) {
 						start = ((ITextRegion) o).getStart();
-						if (o != o2) {
-							length = ((ITextRegion) o2).getEnd() - start;
+						int end = ((ITextRegion) o).getEnd();
+						if (selectedObjects.length > 1) {
+							for (int i = 1; i < selectedObjects.length; i++) {
+								start = Math.min(start, ((ITextRegion) selectedObjects[i]).getStart());
+								end = Math.max(end, ((ITextRegion) selectedObjects[i]).getEnd());
+							}
+							length = end - start;
 						}
 					}
 
-					updated = new StructuredTextSelection(new TextSelection(getSourceViewer().getDocument(), start, length), selectedObjects);
+					if (start > -1) {
+						updated = new StructuredTextSelection(new TextSelection(getSourceViewer().getDocument(), start, length), selectedObjects);
+					}
 				}
 			}
 			return updated;
@@ -814,7 +832,7 @@ public class StructuredTextEditor extends TextEditor {
 	private static final long BUSY_STATE_DELAY = 1000;
 	protected static final String DOT = "."; //$NON-NLS-1$
 	private static final String EDITOR_CONTEXT_MENU_ID = "org.eclipse.wst.sse.ui.StructuredTextEditor.EditorContext"; //$NON-NLS-1$
-	private static final String EDITOR_CONTEXT_MENU_POSTFIX = ".source.EditorContext"; //$NON-NLS-1$
+	private static final String EDITOR_CONTEXT_MENU_SUFFIX = ".source.EditorContext"; //$NON-NLS-1$
 	/** Non-NLS strings */
 	private static final String EDITOR_KEYBINDING_SCOPE_ID = "org.eclipse.wst.sse.ui.structuredTextEditorScope"; //$NON-NLS-1$
 	public static final String GROUP_NAME_ADDITIONS = "additions"; //$NON-NLS-1$
@@ -826,7 +844,7 @@ public class StructuredTextEditor extends TextEditor {
 	private static final String REDO_ACTION_TEXT = SSEUIMessages._Redo__0___Ctrl_Y_UI_; //$NON-NLS-1$ = "&Redo {0} @Ctrl+Y"
 	private static final String REDO_ACTION_TEXT_DEFAULT = SSEUIMessages._Redo_Text_Change__Ctrl_Y_UI_; //$NON-NLS-1$ = "&Redo Text Change @Ctrl+Y"
 	private static final String RULER_CONTEXT_MENU_ID = "org.eclipse.wst.sse.ui.StructuredTextEditor.RulerContext"; //$NON-NLS-1$
-	private static final String RULER_CONTEXT_MENU_POSTFIX = ".source.RulerContext"; //$NON-NLS-1$
+	private static final String RULER_CONTEXT_MENU_SUFFIX = ".source.RulerContext"; //$NON-NLS-1$
 
 	private final static String UNDERSCORE = "_"; //$NON-NLS-1$
 	/** Translatable strings */
@@ -2507,7 +2525,7 @@ public class StructuredTextEditor extends TextEditor {
 					// structured text editor ids
 					String partId = getSite().getId();
 					if (partId != null) {
-						getSite().registerContextMenu(partId + EDITOR_CONTEXT_MENU_POSTFIX, fTextContextMenuManager, getSelectionProvider());
+						getSite().registerContextMenu(partId + EDITOR_CONTEXT_MENU_SUFFIX, fTextContextMenuManager, getSelectionProvider());
 					}
 					getSite().registerContextMenu(EDITOR_CONTEXT_MENU_ID, fTextContextMenuManager, getSelectionProvider());
 				}
@@ -2528,8 +2546,8 @@ public class StructuredTextEditor extends TextEditor {
 			updateHelpContextId(ITextEditorHelpContextIds.TEXT_EDITOR);
 		}
 		else {
-			updateEditorContextMenuId(contentType + EDITOR_CONTEXT_MENU_POSTFIX);
-			updateRulerContextMenuId(contentType + RULER_CONTEXT_MENU_POSTFIX);
+			updateEditorContextMenuId(contentType + EDITOR_CONTEXT_MENU_SUFFIX);
+			updateRulerContextMenuId(contentType + RULER_CONTEXT_MENU_SUFFIX);
 			updateHelpContextId(contentType + "_source_HelpId"); //$NON-NLS-1$
 		}
 	}
@@ -2753,7 +2771,7 @@ public class StructuredTextEditor extends TextEditor {
 				// text editor ids
 				String partId = getSite().getId();
 				if (partId != null) {
-					getSite().registerContextMenu(partId + RULER_CONTEXT_MENU_POSTFIX, fRulerContextMenuManager, getSelectionProvider());
+					getSite().registerContextMenu(partId + RULER_CONTEXT_MENU_SUFFIX, fRulerContextMenuManager, getSelectionProvider());
 				}
 				getSite().registerContextMenu(RULER_CONTEXT_MENU_ID, fRulerContextMenuManager, getSelectionProvider());
 			}
