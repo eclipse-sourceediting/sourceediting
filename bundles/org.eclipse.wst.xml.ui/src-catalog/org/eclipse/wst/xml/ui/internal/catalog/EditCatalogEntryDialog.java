@@ -54,7 +54,6 @@ import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalog;
 import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalogElement;
 import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalogEntry;
 import org.eclipse.wst.xml.core.internal.catalog.provisional.INextCatalog;
-import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 
 public class EditCatalogEntryDialog extends Dialog {
 	protected static Image borwseImage = ImageFactory.INSTANCE.getImage("icons/obj16/file_expand.gif");
@@ -321,7 +320,7 @@ public class EditCatalogEntryDialog extends Dialog {
 
 		protected void updateKeyTypeCombo(int type) {
 			keyTypeCombo.removeAll();
-			for (Iterator i = XMLUIPlugin.getXMLCatalogFileTypes().iterator(); i.hasNext();) {
+			for (Iterator i = CatalogFileTypeRegistryReader.getXMLCatalogFileTypes().iterator(); i.hasNext();) {
 				XMLCatalogFileType theFileType = (XMLCatalogFileType) i.next();
 				if (theFileType.extensions != null) {
 					for (Iterator j = theFileType.extensions.iterator(); j.hasNext();) {
@@ -461,7 +460,7 @@ public class EditCatalogEntryDialog extends Dialog {
 
 			filterControl.add(XMLCatalogMessages.UI_TEXT_SELECT_FILE_FILTER_CONTROL);
 
-			for (Iterator i = XMLUIPlugin.getXMLCatalogFileTypes().iterator(); i.hasNext();) {
+			for (Iterator i = CatalogFileTypeRegistryReader.getXMLCatalogFileTypes().iterator(); i.hasNext();) {
 				XMLCatalogFileType fileType = (XMLCatalogFileType) i.next();
 				if (fileType.description != null) {
 					filterControl.add(fileType.description);
@@ -475,7 +474,7 @@ public class EditCatalogEntryDialog extends Dialog {
 			if (fileType == null) {
 				// compute all the supported file extensions
 				List list = new ArrayList();
-				for (Iterator i = XMLUIPlugin.getXMLCatalogFileTypes().iterator(); i.hasNext();) {
+				for (Iterator i = CatalogFileTypeRegistryReader.getXMLCatalogFileTypes().iterator(); i.hasNext();) {
 					XMLCatalogFileType theFileType = (XMLCatalogFileType) i.next();
 					if (theFileType.extensions != null) {
 						list.addAll(theFileType.extensions);
@@ -832,7 +831,7 @@ public class EditCatalogEntryDialog extends Dialog {
 
 	protected XMLCatalogFileType getMatchingFileType(String description) {
 		XMLCatalogFileType fileType = null;
-		for (Iterator i = XMLUIPlugin.getXMLCatalogFileTypes().iterator(); i.hasNext();) {
+		for (Iterator i = CatalogFileTypeRegistryReader.getXMLCatalogFileTypes().iterator(); i.hasNext();) {
 			XMLCatalogFileType theFileType = (XMLCatalogFileType) i.next();
 			if (theFileType.description != null && theFileType.description.equals(description)) {
 				fileType = theFileType;
