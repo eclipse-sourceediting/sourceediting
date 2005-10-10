@@ -163,6 +163,10 @@ class RefreshStructureJob extends Job {
 							viewers[i].refresh(node);
 						}
 					}
+					else {
+						if (DEBUG)
+							System.out.println("   !!! skipped refreshing disposed viewer: " + viewers[i]); //$NON-NLS-1$
+					}
 				}
 			}
 		});
