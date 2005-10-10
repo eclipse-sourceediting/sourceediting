@@ -101,8 +101,13 @@ public class DebugTextEditor extends TextEditor {
 				res = BreakpointProviderBuilder.getInstance().getResource(storageInput, types[i].getId(), ext);
 			}
 			String id = storageInput.getName();
-			if (storageInput.getStorage() != null)
-				id = storageInput.getStorage().getFullPath().toString();
+			if (storageInput.getStorage() != null) {
+				IPath fullPath = storageInput.getStorage().getFullPath();
+				if (fullPath != null)
+					id = fullPath.toString();
+				else
+					id = storageInput.getName();
+			}
 			if (res != null)
 				model = new StructuredResourceMarkerAnnotationModel(res, id);
 			else
@@ -181,7 +186,8 @@ public class DebugTextEditor extends TextEditor {
 				if (provider != null) {
 					IPath location = provider.getPath(getEditorInput());
 					return detectContentType(location).getId();
-				} else if (getEditorInput() instanceof IPathEditorInput) {
+				}
+				else if (getEditorInput() instanceof IPathEditorInput) {
 					IPath location = ((IPathEditorInput) getEditorInput()).getPath();
 					return detectContentType(location).getId();
 				}
@@ -243,7 +249,8 @@ public class DebugTextEditor extends TextEditor {
 					if (d != null) {
 						type = d.getContentType();
 					}
-				} catch (CoreException e) {
+				}
+				catch (CoreException e) {
 					// Should not be possible given the accessible and file
 					// type check above
 				}
@@ -251,20 +258,25 @@ public class DebugTextEditor extends TextEditor {
 					type = Platform.getContentTypeManager().findContentTypeFor(resource.getName());
 				}
 			}
-		} else {
+		}
+		else {
 			File file = FileBuffers.getSystemFileAtLocation(location);
 			if (file != null) {
 				InputStream input = null;
 				try {
 					input = new FileInputStream(file);
 					type = Platform.getContentTypeManager().findContentTypeFor(input, location.toOSString());
-				} catch (FileNotFoundException e) {
-				} catch (IOException e) {
-				} finally {
+				}
+				catch (FileNotFoundException e) {
+				}
+				catch (IOException e) {
+				}
+				finally {
 					if (input != null) {
 						try {
 							input.close();
-						} catch (IOException e1) {
+						}
+						catch (IOException e1) {
 						}
 					}
 				}
@@ -290,7 +302,8 @@ public class DebugTextEditor extends TextEditor {
 		IEditorActionBarContributor c = getEditorSite().getActionBarContributor();
 		if (c instanceof IPopupMenuContributor) {
 			((IPopupMenuContributor) c).contributeToPopupMenu(menu);
-		} else {
+		}
+		else {
 			ExtendedEditorActionBuilder builder = new ExtendedEditorActionBuilder();
 			IExtendedContributor pmc = builder.readActionExtensions(getConfigurationPoints());
 			if (pmc != null) {
@@ -321,7 +334,8 @@ public class DebugTextEditor extends TextEditor {
 
 		if (input.getAdapter(IFile.class) != null) {
 			resource = (IFile) input.getAdapter(IFile.class);
-		} else if (input.getAdapter(IFile.class) != null) {
+		}
+		else if (input.getAdapter(IFile.class) != null) {
 			resource = (IResource) input.getAdapter(IResource.class);
 		}
 		if (resource.getType() == IResource.FILE && resource.isAccessible()) {
@@ -332,7 +346,8 @@ public class DebugTextEditor extends TextEditor {
 				if (d != null) {
 					types = new IContentType[]{d.getContentType()};
 				}
-			} catch (CoreException e) {
+			}
+			catch (CoreException e) {
 				// should not be possible given the accessible and file type
 				// check above
 			}
@@ -374,7 +389,8 @@ public class DebugTextEditor extends TextEditor {
 			menu.add(getAction(ActionDefinitionIds.MANAGE_BREAKPOINTS));
 			menu.add(getAction(ActionDefinitionIds.EDIT_BREAKPOINTS));
 			menu.add(new Separator());
-		} else {
+		}
+		else {
 			Logger.log(Logger.INFO, getClass().getName() + " could not enable debugging actions"); //$NON-NLS-1$
 		}
 		super.rulerContextMenuAboutToShow(menu);
@@ -394,7 +410,8 @@ public class DebugTextEditor extends TextEditor {
 				fStorageInputDocumentProvider = new StorageInputDocumentProvider();
 			}
 			setDocumentProvider(fStorageInputDocumentProvider);
-		} else {
+		}
+		else {
 			super.setDocumentProvider(input);
 		}
 	}

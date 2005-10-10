@@ -60,7 +60,7 @@ class URLFileHyperlink implements IHyperlink {
 		}
 
 		public String getToolTipText() {
-			return fStorage.getFullPath().toString();
+			return fStorage.getFullPath() != null ? fStorage.getFullPath().toString() : fStorage.getName();
 		}
 
 		public Object getAdapter(Class adapter) {
