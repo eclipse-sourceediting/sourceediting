@@ -43,7 +43,8 @@ public class StaticWebDeployableFactory extends ProjectModuleFactoryDelegate {
 	 * @return boolean
 	 */
 	protected boolean isValidModule(IProject project) {
-		return false;
+		IVirtualComponent comp = ComponentCore.createComponent(project);
+		return IModuleConstants.WST_WEB_MODULE.equals(comp.getComponentTypeId());
 	}
 
 	/*
