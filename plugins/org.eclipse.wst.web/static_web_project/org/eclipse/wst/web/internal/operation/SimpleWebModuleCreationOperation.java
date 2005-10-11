@@ -26,7 +26,6 @@ import org.eclipse.wst.common.componentcore.resources.IVirtualComponent;
 import org.eclipse.wst.common.componentcore.resources.IVirtualFolder;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
 import org.eclipse.wst.web.internal.ISimpleWebModuleConstants;
-import org.eclipse.wst.web.internal.WSTWebPlugin;
 
 public class SimpleWebModuleCreationOperation extends ComponentCreationOperation {
 
@@ -36,12 +35,6 @@ public class SimpleWebModuleCreationOperation extends ComponentCreationOperation
 
     public IStatus execute(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
     	return super.execute(IModuleConstants.WST_WEB_MODULE,monitor, info);
-    }
-
-    private String getWebContentFolderPreference() {
-        // TODO implement
-        String webContentFolder = WSTWebPlugin.getDefault().getWSTWebPreferences().getStaticWebContentFolderName();
-        return webContentFolder;
     }
     
     protected void createAndLinkJ2EEComponentsForMultipleComponents() throws CoreException {
@@ -53,7 +46,7 @@ public class SimpleWebModuleCreationOperation extends ComponentCreationOperation
     }
     
     protected void createWebStructure() throws CoreException {
-		IVirtualComponent component = ComponentCore.createComponent(getProject(), getProject().getName());
+		IVirtualComponent component = ComponentCore.createComponent(getProject());
 		component.create(0, null);
 		// create and link webContent and css folder
 		IVirtualFolder webContent = component.getRootFolder().getFolder(new Path("/")); //$NON-NLS-1$       

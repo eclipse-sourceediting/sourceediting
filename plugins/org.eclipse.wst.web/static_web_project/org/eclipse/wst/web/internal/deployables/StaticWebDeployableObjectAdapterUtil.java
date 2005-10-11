@@ -39,7 +39,7 @@ public class StaticWebDeployableObjectAdapterUtil {
 			return new WebResource(getModule((IProject)resource), new Path("")); //$NON-NLS-1$
 
 		IProject project = ProjectUtilities.getProject(resource);
-		IVirtualComponent comp = ComponentCore.createComponent(project,project.getName());
+		IVirtualComponent comp = ComponentCore.createComponent(project);
 		// determine path
 		IPath rootPath = comp.getRootFolder().getProjectRelativePath();
 		IPath resourcePath = resource.getProjectRelativePath();
@@ -80,7 +80,7 @@ public class StaticWebDeployableObjectAdapterUtil {
 	}
 
 	protected static IModule getModule(IProject project) {
-		return getModule(ComponentCore.createComponent(project, project.getName()));
+		return getModule(ComponentCore.createComponent(project));
 	}
 	
 	public static IModule getModule(IVirtualComponent component) {

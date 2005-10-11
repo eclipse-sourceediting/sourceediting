@@ -15,12 +15,12 @@ import java.util.Set;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.wst.common.componentcore.datamodel.FlexibleProjectCreationDataModelProvider;
-import org.eclipse.wst.common.componentcore.datamodel.properties.IFlexibleProjectCreationDataModelProperties;
 import org.eclipse.wst.common.componentcore.internal.operation.ComponentCreationDataModelProvider;
 import org.eclipse.wst.common.componentcore.internal.util.IModuleConstants;
 import org.eclipse.wst.common.frameworks.datamodel.DataModelFactory;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModelOperation;
+import org.eclipse.wst.common.frameworks.internal.operations.IProjectCreationProperties;
 
 public class SimpleWebModuleCreationDataModelProvider extends ComponentCreationDataModelProvider implements ISimpleWebModuleCreationDataModelProperties {
 
@@ -57,7 +57,7 @@ public class SimpleWebModuleCreationDataModelProvider extends ComponentCreationD
     protected void initProjectCreationModel() {
     	IDataModel dm = DataModelFactory.createDataModel(new FlexibleProjectCreationDataModelProvider());
 		model.addNestedModel(NESTED_PROJECT_CREATION_DM, dm);
-		model.setProperty(LOCATION, dm.getProperty(IFlexibleProjectCreationDataModelProperties.PROJECT_LOCATION));
+		model.setProperty(LOCATION, dm.getProperty(IProjectCreationProperties.PROJECT_LOCATION));
     }
     
     protected List getProperties() {
@@ -73,7 +73,7 @@ public class SimpleWebModuleCreationDataModelProvider extends ComponentCreationD
     
     public Object getDefaultProperty(String propertyName) {
     	if (propertyName.equals(WEBCONTENT_FOLDER))
-			return "WebContent";
+			return "WebContent"; //$NON-NLS-1$
 		return super.getDefaultProperty(propertyName);
     }
     
