@@ -11,9 +11,13 @@
 
 package org.eclipse.wst.xml.core.internal.validation;
 
+import java.io.InputStream;
 import java.io.Reader;
+import java.net.URL;
 import java.util.List;
+import java.util.StringTokenizer;
 import java.util.Vector;
+
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver;
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolverPlugin;
 import org.xml.sax.Attributes;
@@ -240,17 +244,59 @@ public class ValidatorHelper
           location = atts.getValue(getPrefixedName(schemaInstancePrefix, "noNamespaceSchemaLocation"));
           if (location == null)
           {
-            location = atts.getValue(getPrefixedName(schemaInstancePrefix, "schemaLocation"));  
+        	String schemaLoc = atts.getValue(getPrefixedName(schemaInstancePrefix, "schemaLocation")); 
+            StringTokenizer st = new StringTokenizer(schemaLoc);
+            while(st.hasMoreTokens())
+            {
+              if(st.nextToken().equals(rootElementNamespace))
+              {
+            	if(st.hasMoreTokens())
+            	{
+            	  location = st.nextToken();
+            	}
+              }
+              else
+              {
+            	if(st.hasMoreTokens())
+            	{
+                  st.nextToken();
+            	}
+              }
+            }
           }
         }  
-        if (location == null && rootElementNamespace != null)
+        if (rootElementNamespace != null)
         {
-          location = URIResolverPlugin.createResolver().resolve(null, rootElementNamespace, null);                                          
+          location = URIResolverPlugin.createResolver().resolvePhysicalLocation(null, rootElementNamespace, location);                                          
         }           
         
         if (location != null)
         {  
-          isGrammarEncountered = true;
+          InputStream is = null;
+          try
+          {
+            URL url = new URL(location);
+            is = url.openStream();
+            isGrammarEncountered = true;
+          }
+          catch(Exception e)
+          {
+        	// Do nothing.
+          }
+          finally
+          {
+        	if(is != null)
+        	{
+        	  try
+        	  {
+        	    is.close();
+        	  }
+        	  catch(Exception e)
+        	  {
+        		// Do nothing.
+        	  }
+        	}
+          }
         }        
       }
     }     
