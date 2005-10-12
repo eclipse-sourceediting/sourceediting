@@ -432,30 +432,10 @@ public class ReconcileStepForMarkup extends StructuredReconcileStep {
 	 * @param dirtyRegion
 	 */
 	private IStructuredDocumentRegion[] getStructuredDocumentRegions(DirtyRegion dirtyRegion) {
-		List regions = new ArrayList();
-        
-        if(getStructuredDocument() == null)
+
+        if(getStructuredDocument() == null || dirtyRegion == null)
             return new IStructuredDocumentRegion[0];
-        
-		IStructuredDocumentRegion sdRegion = getStructuredDocument().getRegionAtCharacterOffset(dirtyRegion.getOffset());
-		if (sdRegion != null) {
-            
-			if (!sdRegion.isDeleted())
-				regions.add(sdRegion);
-            
-            IDOMNode xmlNode = getXMLNode(sdRegion);
-            
-			while (sdRegion != null 
-                    && !sdRegion.isDeleted() 
-                    && xmlNode != null
-                    && sdRegion.getEndOffset() <= xmlNode.getEndOffset()) {
-				if (!sdRegion.isDeleted())
-					regions.add(sdRegion);
-                sdRegion = sdRegion.getNext();
-                xmlNode = getXMLNode(sdRegion);
-			}
-		}
-		return (IStructuredDocumentRegion[]) regions.toArray(new IStructuredDocumentRegion[regions.size()]);
+        return getStructuredDocument().getStructuredDocumentRegions(dirtyRegion.getOffset(), dirtyRegion.getLength());
 	}
 
 	private IDOMNode getXMLNode(IStructuredDocumentRegion sdRegion) {
@@ -585,9 +565,9 @@ public class ReconcileStepForMarkup extends StructuredReconcileStep {
 
 		IReconcileResult[] results = EMPTY_RECONCILE_RESULT_SET;
 
-		// TODO: may need to add back some synch(doc) and/or synch(region[i])
-		// to be thread safe
+
 		IStructuredDocumentRegion[] regions = getStructuredDocumentRegions(dirtyRegion);
+		
 		for (int i = 0; i < regions.length; i++) {
 			// the region may be irrelevant at this point
 			// if the user has deleted it
