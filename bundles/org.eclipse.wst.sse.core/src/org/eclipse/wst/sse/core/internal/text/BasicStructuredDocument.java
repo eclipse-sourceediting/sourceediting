@@ -1710,13 +1710,17 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	 * right of the caret is returned. except for at the end of the document,
 	 * then the last region is returned.
 	 * </p>
-	 * </p>
+	 * <p>
 	 * Otherwise all the regions "inbetween" the indicated range are returned,
 	 * including the regions which overlap the region.
 	 * </p>
+	 * 
 	 * <br>
 	 * eg.
 	 * <p>
+	 *    <br>eg.
+	 *    <pre>&lt;html&gt;[&lt;head&gt;&lt;/head&gt;]&lt;/html&gt; returns &lt;head&gt;,&lt;/head&gt;</pre>
+	 *    <pre>&lt;ht[ml&gt;&lt;head&gt;&lt;/he]ad&gt;&lt;/html&gt; returns &lt;html&gt;,&lt;head&gt;,&lt;/head&gt;</pre>
 	 * 
 	 * <pre>
 	 *  &lt;html&gt;[&lt;head&gt;&lt;/head&gt;]&lt;/html&gt; returns &lt;head&gt;,&lt;/head&gt;
@@ -1751,7 +1755,9 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 				currentRegion = currentRegion.getNext();
 			}
 			// need to add that last end region
-			results.add(endRegion);
+			// can be null in the case of an empty document
+			if(endRegion != null)
+				results.add(endRegion);
 		}
 		finally {
 			releaseLock();
