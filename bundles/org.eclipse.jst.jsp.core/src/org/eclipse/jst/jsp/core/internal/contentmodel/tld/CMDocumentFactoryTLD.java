@@ -189,27 +189,14 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 			result = createCMDocumentFromFile(uri);
 		}
 		if (result == null && url != null) {
-			InputStream istream = null;
 			if (url.getProtocol().equals("file")) { //$NON-NLS-1$
 				result = createCMDocumentFromFile(url.getFile());
 			}
 			else {
-				try {
-					istream = url.openStream();
-					result = buildCMDocument(url.toExternalForm(), istream);
-				}
-				catch (Exception t) {
-					// Logger.log(Logger.INFO, "Exception creating content
-					// model: could not load TLD contents from URI " + uri + "
-					// :" + t);
-				}
-			}
-			try {
-				if (istream != null)
-					istream.close();
-			}
-			catch (IOException e1) {
-				// don't care
+				/**
+				 * Skip anything else since trying to load a TLD from a remote
+				 * location has unpredictable performance impact.
+				 */
 			}
 		}
 		if (result == null)
