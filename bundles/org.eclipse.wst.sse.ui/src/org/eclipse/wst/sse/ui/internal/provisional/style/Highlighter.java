@@ -28,7 +28,6 @@ import org.eclipse.jface.text.ITextViewerExtension5;
 import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.TextUtilities;
-import org.eclipse.jface.text.source.projection.ProjectionViewer;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.custom.LineStyleEvent;
@@ -116,7 +115,8 @@ public class Highlighter implements IHighlighter {
 			double gammaNormalized(double colorComponent) {
 				if (colorComponent < 0.018) {
 					return colorComponent * 0.45;
-				} else {
+				}
+				else {
 					return 1.099 * Math.pow(colorComponent, 0.45) - 0.099;
 				}
 			}
@@ -175,7 +175,8 @@ public class Highlighter implements IHighlighter {
 			double inverseGammaNormalized(double colorComponent) {
 				if (colorComponent < 0.018) {
 					return colorComponent * .222;
-				} else {
+				}
+				else {
 					return Math.pow(((.9099 * colorComponent + 0.09)), 2.22);
 				}
 			}
@@ -199,7 +200,8 @@ public class Highlighter implements IHighlighter {
 			if (y < target) {
 				// is "dark" make lighter
 				y = y + ((target - y) * scaleFactor);
-			} else {
+			}
+			else {
 				// is "light" make darker
 				y = y - ((y - target) * scaleFactor);
 			}
@@ -224,7 +226,8 @@ public class Highlighter implements IHighlighter {
 			if (target < mid) {
 				// is "dark" make lighter
 				y = target + scaleFactor;
-			} else {
+			}
+			else {
 				// is "light" make darker
 				y = target - scaleFactor;
 			}
@@ -311,24 +314,28 @@ public class Highlighter implements IHighlighter {
 	 */
 	protected void adjust(StyleRange[] ranges, int adjustment) {
 		ITextViewer viewer = getTextViewer();
-		ITextViewerExtension5 extension = null;
-		if (viewer instanceof ITextViewerExtension5) {
-			extension = (ITextViewerExtension5) viewer;
-		}
 
-		// convert document regions back to widget regions
-		for (int i = 0; i < ranges.length; i++) {
-			if (extension != null) {
-				// get document range, taking into account folding regions in
-				// viewer
+		if (adjustment != 0) {
+			// just use the adjustment value
+			// convert document regions back to widget regions
+			for (int i = 0; i < ranges.length; i++) {
+				// just adjust the range using the given adjustment
+				ranges[i].start += adjustment;
+			}
+		}
+		else if (viewer instanceof ITextViewerExtension5) {
+			// use ITextViewerExtension5
+			ITextViewerExtension5 extension = (ITextViewerExtension5) viewer;
+
+			// convert document regions back to widget regions
+			for (int i = 0; i < ranges.length; i++) {
+				// get document range, taking into account folding
+				// regions in viewer
 				IRegion region = extension.modelRange2WidgetRange(new Region(ranges[i].start, ranges[i].length));
 				if (region != null) {
 					ranges[i].start = region.getOffset();
 					ranges[i].length = region.getLength();
 				} // else what happens if region is not found?!
-			} else {
-				// just adjust the range using the given adjustment
-				ranges[i].start += adjustment;
 			}
 		}
 	}
@@ -368,7 +375,8 @@ public class Highlighter implements IHighlighter {
 			// oldRGB = getTextWidget().getForeground().getRGB();
 			oldColor = getTextWidget().getBackground();
 			oldRGB = oldColor.getRGB();
-		} else {
+		}
+		else {
 			oldRGB = oldColor.getRGB();
 		}
 		Color newColor = getCachedColorFor(oldRGB);
@@ -473,7 +481,8 @@ public class Highlighter implements IHighlighter {
 			// viewer
 			ITextViewerExtension5 extension = (ITextViewerExtension5) viewer;
 			styleRegion = extension.widgetRange2ModelRange(new Region(offset, length));
-		} else {
+		}
+		else {
 			// get document range, taking into account viewer visible region
 			// get visible region in viewer
 			IRegion vr = null;
@@ -519,7 +528,8 @@ public class Highlighter implements IHighlighter {
 						provider.init(getDocument(), this);
 					}
 					result = provider;
-				} else {
+				}
+				else {
 					result = (LineStyleProvider) getExtendedProviders().get(type);
 				}
 			}
@@ -601,7 +611,8 @@ public class Highlighter implements IHighlighter {
 				// document
 				// it has no length, and there is no node for it!
 				eventStyles = EMPTY_STYLE_RANGE;
-			} else {
+			}
+			else {
 				/*
 				 * LineStyleProviders work using absolute document offsets. To
 				 * support visible regions, adjust the requested range up to
@@ -630,16 +641,9 @@ public class Highlighter implements IHighlighter {
 							IRegion vr = getTextViewer().getVisibleRegion();
 							if (vr != null) {
 								offset = vr.getOffset();
-								if (offset > 0)
-									adjust(eventStyles, -offset);
-							}
-						} else {
-							if (getTextViewer() instanceof ProjectionViewer) {
-								if (((ProjectionViewer) getTextViewer()).isProjectionMode())
-									adjust(eventStyles, -offset);
 							}
 						}
-
+						adjust(eventStyles, -offset);
 					}
 
 					// for debugging only
@@ -652,7 +656,8 @@ public class Highlighter implements IHighlighter {
 
 			}
 
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			// if ANY exception occurs during highlighting,
 			// just return "no highlighting"
 			eventStyles = EMPTY_STYLE_RANGE;
@@ -684,7 +689,8 @@ public class Highlighter implements IHighlighter {
 		 */
 		if (offset == fSavedOffset && length == fSavedLength && fSavedRanges != null) {
 			event.styles = fSavedRanges;
-		} else {
+		}
+		else {
 			// need to assign this array here, or else the field won't get
 			// updated
 			event.styles = lineGetStyle(offset, length);
@@ -707,7 +713,8 @@ public class Highlighter implements IHighlighter {
 
 		if (fHoldStyleResults == null) {
 			fHoldStyleResults = new ArrayList(partitions.length);
-		} else {
+		}
+		else {
 			fHoldStyleResults.clear();
 		}
 
@@ -728,7 +735,8 @@ public class Highlighter implements IHighlighter {
 		int resultSize = fHoldStyleResults.size();
 		if (resultSize > 0) {
 			result = (StyleRange[]) fHoldStyleResults.toArray(new StyleRange[fHoldStyleResults.size()]);
-		} else {
+		}
+		else {
 			result = EMPTY_STYLE_RANGE;
 		}
 		result = convertReadOnlyRegions(result, start, length);
@@ -758,7 +766,8 @@ public class Highlighter implements IHighlighter {
 	public void setDocumentPartitioning(String partitioning) {
 		if (partitioning != null) {
 			fPartitioning = partitioning;
-		} else {
+		}
+		else {
 			fPartitioning = IDocumentExtension3.DEFAULT_PARTITIONING;
 		}
 	}
@@ -819,16 +828,19 @@ public class Highlighter implements IHighlighter {
 				StyleRange last = eventStyles[eventStyles.length - 1];
 				if (startOffset > first.start) {
 					result = false;
-				} else {
+				}
+				else {
 					int lineEndOffset = startOffset + lineLength;
 					int lastOffset = last.start + last.length;
 					if (lastOffset > lineEndOffset) {
 						result = false;
-					} else {
+					}
+					else {
 						result = true;
 					}
 				}
-			} else {
+			}
+			else {
 				// a zero length array is ok
 				result = true;
 			}
