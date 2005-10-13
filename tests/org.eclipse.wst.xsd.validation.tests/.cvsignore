@@ -1,2 +1,4 @@
 bin
 build.xml
+validatexsdtests.jar
+temp.folder
