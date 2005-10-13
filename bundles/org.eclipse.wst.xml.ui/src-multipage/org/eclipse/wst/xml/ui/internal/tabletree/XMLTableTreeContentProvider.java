@@ -270,6 +270,7 @@ public class XMLTableTreeContentProvider implements ITreeContentProvider, ITable
 	// adapter gets added
 	// to the adapter lists of many nodes.
 	public class ViewerNotifyingAdapterFactory extends AbstractAdapterFactory {
+		
 		protected ViewerNotifyingAdapter viewerNotifyingAdapter = new ViewerNotifyingAdapter();
 
 		protected INodeAdapter createAdapter(INodeNotifier target) {
@@ -283,11 +284,15 @@ public class XMLTableTreeContentProvider implements ITreeContentProvider, ITable
 			}
 			return result;
 		}
+
+		public ViewerNotifyingAdapterFactory() {
+			super(ViewerNotifyingAdapter.class, true);
+		}
 	}
 
 	public class ViewerNotifyingAdapter implements INodeAdapter {
 		public boolean isAdapterForType(Object type) {
-			return type.equals(viewerNotifyingAdapterFactory);
+			return type.equals(ViewerNotifyingAdapter.class);
 		}
 
 		public void notifyChanged(INodeNotifier notifier, int eventType, Object changedFeature, Object oldValue, Object newValue, int pos) {
