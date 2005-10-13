@@ -28,6 +28,8 @@ import org.osgi.framework.Bundle;
  * plugin. Other plugins should make their own copy, with appropriate ID.
  */
 public class Logger {
+	public static final boolean DEBUG = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.core/debug")); //$NON-NLS-1$
+
 	private static final String PLUGIN_ID = "org.eclipse.wst.sse.core"; //$NON-NLS-1$
 	public static final int ERROR = IStatus.ERROR; // 4
 	public static final int ERROR_DEBUG = 200 + ERROR;

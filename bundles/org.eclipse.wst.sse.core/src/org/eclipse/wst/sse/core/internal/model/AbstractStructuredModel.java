@@ -348,13 +348,17 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 
 		if (fLockObject != null && fLockObject != documentLock) {
 			fLockObject.release();
-			Logger.log(Logger.INFO_DEBUG, "Model lock released early" + fLockObject + " apparently document switched?");
+			if (Logger.DEBUG) {
+				Logger.log(Logger.INFO_DEBUG, "Model lock released early" + fLockObject + " apparently document switched?");
+			}
 
 		}
 		fLockObject = documentLock;
 		if (fLockObject != null) {
 			fLockObject.acquire();
-			Logger.log(Logger.INFO_DEBUG, "Model lock acquired: " + fLockObject);
+			if (Logger.DEBUG) {
+				Logger.log(Logger.INFO_DEBUG, "Model lock acquired: " + fLockObject);
+			}
 		}
 	}
 
@@ -503,7 +507,9 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 	protected final void endLock() {
 		if (fLockObject != null) {
 			fLockObject.release();
-			Logger.log(Logger.INFO_DEBUG, "Model lock released: " + fLockObject);
+			if (Logger.DEBUG) {
+				Logger.log(Logger.INFO_DEBUG, "Model lock released: " + fLockObject);
+			}
 
 		}
 	}
@@ -548,7 +554,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 		// methods can change the actual instance of the listener array from
 		// another thread
 		if (fModelStateListeners != null) {
-			if (DEBUG_STATE) {
+			if (Logger.DEBUG && DEBUG_STATE) {
 				Logger.log(Logger.INFO_DEBUG, "IModelStateListener event for " + getId() + " : modelAboutToBeReinitialized"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			Object[] holdListeners = fModelStateListeners;
@@ -602,7 +608,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 		// methods can change the actual instance of the listener array from
 		// another thread
 		if (fModelStateListeners != null) {
-			if (DEBUG_STATE) {
+			if (Logger.DEBUG && DEBUG_STATE) {
 				Logger.log(Logger.INFO_DEBUG, "IModelStateListener event for " + getId() + " : modelDirtyStateChanged"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			Object[] holdListeners = fModelStateListeners;
@@ -620,7 +626,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 		// methods can change the actual instance of the listener array from
 		// another thread
 		if (fModelStateListeners != null) {
-			if (DEBUG_STATE) {
+			if (Logger.DEBUG && DEBUG_STATE) {
 				Logger.log(Logger.INFO_DEBUG, "IModelStateListener event for " + getId() + " : modelReinitialized"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			Object[] holdListeners = fModelStateListeners;
@@ -643,7 +649,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 		// methods can change the actual instance of the listener array from
 		// another thread
 		if (fModelStateListeners != null) {
-			if (DEBUG_STATE) {
+			if (Logger.DEBUG && DEBUG_STATE) {
 				Logger.log(Logger.INFO_DEBUG, "IModelStateListener event for " + getId() + " : modelResourceDeleted"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			Object[] holdListeners = fModelStateListeners;
@@ -666,7 +672,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 		// methods can change the actual instance of the listener array from
 		// another thread
 		if (fModelStateListeners != null) {
-			if (DEBUG_STATE) {
+			if (Logger.DEBUG && DEBUG_STATE) {
 				Logger.log(Logger.INFO_DEBUG, "IModelStateListener event for " + getId() + " : modelResourceMoved"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			Object[] holdListeners = fModelStateListeners;
@@ -846,7 +852,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 		// already in a model state changing sequence
 		if (fModelStateChanging == 0) {
 
-			if (DEBUG_STATE) {
+			if (Logger.DEBUG && DEBUG_STATE) {
 				Logger.log(Logger.INFO_DEBUG, "IModelStateListener event for " + getId() + " : modelAboutToBeChanged"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 
@@ -895,7 +901,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 		// That is, if we've received the same number of modelChanged as
 		// we have aboutToChangeModel.
 		if (fModelStateChanging == 0) {
-			if (DEBUG_STATE) {
+			if (Logger.DEBUG && DEBUG_STATE) {
 				Logger.log(Logger.INFO_DEBUG, "IModelStateListener event for " + getId() + " : modelChanged"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 
@@ -1026,7 +1032,9 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 			}
 		}
 		else {
-			Logger.log(Logger.INFO_DEBUG, "indeed!!!"); //$NON-NLS-1$
+			if (Logger.DEBUG) {
+				Logger.log(Logger.INFO_DEBUG, "indeed!!!"); //$NON-NLS-1$
+			}
 		}
 		return result;
 	}
