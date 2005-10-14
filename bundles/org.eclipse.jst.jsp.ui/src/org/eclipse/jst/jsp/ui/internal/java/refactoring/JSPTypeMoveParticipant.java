@@ -69,11 +69,12 @@ public class JSPTypeMoveParticipant extends MoveParticipant {
 		
 		CompositeChange multiChange = null; 
 		Object dest = getArguments().getDestination();
-		Change[] changes = JSPTypeMoveChange.createChangesFor(fType, ((IPackageFragment)dest).getElementName());
 		
-		if(dest instanceof IPackageFragment && changes.length > 0)
-			multiChange = new CompositeChange(JSPUIMessages.JSP_changes, changes); //$NON-NLS-1$
-		
+		if(dest instanceof IPackageFragment) {		
+			Change[] changes = JSPTypeMoveChange.createChangesFor(fType, ((IPackageFragment)dest).getElementName());
+			if(changes.length > 0)
+				multiChange = new CompositeChange(JSPUIMessages.JSP_changes, changes); //$NON-NLS-1$
+		}
 		return multiChange;
 	}
 	
