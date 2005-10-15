@@ -455,33 +455,6 @@ public class TaglibIndex {
 			ProjectDescription description = createDescription(project);
 			resolved = description.resolve(basePath, reference);
 		}
-		else {
-			// try simple file support outside of the workspace
-			File baseFile = FileBuffers.getSystemFileAtLocation(new Path(basePath));
-			if (baseFile != null) {
-				final String normalizedReference = URIHelper.normalize(reference, basePath, "/"); //$NON-NLS-1$
-				if (normalizedReference != null) {
-					ITLDRecord record = new ITLDRecord() {
-						public IPath getPath() {
-							return new Path(normalizedReference);
-						}
-
-						public int getRecordType() {
-							return ITaglibRecord.TLD;
-						}
-
-						public String getShortName() {
-							return null;
-						}
-
-						public String getURI() {
-							return reference;
-						}
-					};
-					resolved = record;
-				}
-			}
-		}
 		return resolved;
 	}
 
