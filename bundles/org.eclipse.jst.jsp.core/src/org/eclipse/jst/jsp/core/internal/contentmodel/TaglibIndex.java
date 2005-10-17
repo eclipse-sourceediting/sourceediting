@@ -279,14 +279,17 @@ public class TaglibIndex {
 	}
 
 	/**
-	 * Returns all of the visible ITaglibRecords for the given path in the
+	 * Finds all of the visible ITaglibRecords for the given path in the
 	 * workspace.
 	 * 
-	 * @param workspacePath
-	 * @return
+	 * @param fullPath -
+	 *            the path within the workspace
+	 * @return All of the visible ITaglibRecords from the given path. Taglib
+	 *         mappings from web.xml files are only visible to paths within
+	 *         the web.xml's corresponding web content folder.
 	 */
-	public static ITaglibRecord[] getAvailableTaglibRecords(IPath workspacePath) {
-		ITaglibRecord[] records = _instance.internalGetAvailableTaglibRecords(workspacePath);
+	public static ITaglibRecord[] getAvailableTaglibRecords(IPath fullPath) {
+		ITaglibRecord[] records = _instance.internalGetAvailableTaglibRecords(fullPath);
 		return records;
 	}
 
