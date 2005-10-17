@@ -262,6 +262,10 @@ public class StructuredTextPartitionerForJSP extends StructuredTextPartitioner {
 			result = new StructuredTextPartitionerForXML();
 			result.connect(structuredDocument);
 		}
+		else {
+			result = new StructuredTextPartitioner();
+			result.connect(structuredDocument);
+		}
 		return result;
 
 	}
