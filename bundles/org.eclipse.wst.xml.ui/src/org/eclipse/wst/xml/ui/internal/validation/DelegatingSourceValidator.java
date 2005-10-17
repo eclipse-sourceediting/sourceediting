@@ -37,7 +37,6 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMText;
-import org.eclipse.wst.xml.ui.internal.Logger;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -52,8 +51,8 @@ import org.w3c.dom.NodeList;
  * @author Mark Hutchinson
  * 
  */
-public abstract class DelegatingSourceValidator implements IValidator { 
-  //the selection strategies:
+public abstract class DelegatingSourceValidator implements IValidator {
+	// the selection strategies:
 	protected static final String ALL_ATTRIBUTES = "ALL_ATTRIBUTES"; //$NON-NLS-1$
 	protected static final String ATTRIBUTE_NAME = "ATTRIBUTE_NAME"; //$NON-NLS-1$
 	protected static final String ATTRIBUTE_VALUE = "ATTRIBUTE_VALUE"; //$NON-NLS-1$
@@ -88,7 +87,7 @@ public abstract class DelegatingSourceValidator implements IValidator {
 		public int getBuildKind() {
 			return 0;
 		}
-		
+
 		public Object loadModel(String symbolicName, Object[] parms) {
 			if (symbolicName.equals("getFile")) { //$NON-NLS-1$
 				return file;
@@ -104,7 +103,7 @@ public abstract class DelegatingSourceValidator implements IValidator {
 		}
 
 		public String[] getURIs() {
-			if(file != null)
+			if (file != null)
 				return new String[]{file.getFullPath().toString()};
 			return new String[0];
 		}
@@ -122,37 +121,28 @@ public abstract class DelegatingSourceValidator implements IValidator {
 			list.add(message);
 		}
 
-		public void displaySubtask(IValidator validator, IMessage message) {// do
-																			// not
-																			// need
-																			// to
-																			// implement
+		public void displaySubtask(IValidator validator, IMessage message) {
+			/* do not need to implement */
 		}
 
 		public IMessageAccess getMessageAccess() {
-			return null; // do not need to implement
+			return null;
 		}
 
 		public boolean isCancelled() {
-			return false; // do not need to implement
+			return false;
 		}
 
 		public void removeAllMessages(IValidator origin, Object object) { // do
-																			// not
-																			// need
-																			// to
-																			// implement
+			/* do not need to implement */
 		}
 
-		public void removeAllMessages(IValidator origin) {// do not need to
-															// implement
+		public void removeAllMessages(IValidator origin) {
+			/* do not need to implement */
 		}
 
 		public void removeMessageSubset(IValidator validator, Object obj, String groupName) {// do
-																								// not
-																								// need
-																								// to
-																								// implement
+			/* do not need to implement */
 		}
 
 		public List getMessages() {
@@ -197,10 +187,7 @@ public abstract class DelegatingSourceValidator implements IValidator {
 					updateValidationMessages(messages, document, reporter);
 				}
 			}
-      catch (Exception e)
-      {
-        Logger.logException(e);
-      }
+
 
 			finally {
 				if (xmlModel != null)
@@ -224,29 +211,28 @@ public abstract class DelegatingSourceValidator implements IValidator {
 		for (int i = 0; i < messages.size(); i++) {
 			IMessage message = (IMessage) messages.get(i);
 			try {
-        if (message.getAttribute(COLUMN_NUMBER_ATTRIBUTE) != null)
-        {
-  				int column = ((Integer) message.getAttribute(COLUMN_NUMBER_ATTRIBUTE)).intValue();
-  				String selectionStrategy = (String) message.getAttribute(SQUIGGLE_SELECTION_STRATEGY_ATTRIBUTE);
-  				String nameOrValue = (String) message.getAttribute(SQUIGGLE_NAME_OR_VALUE_ATTRIBUTE);
-  
-  				// convert the line and Column numbers to an offset:
-  				int start = document.getStructuredDocument().getLineOffset(message.getLineNumber() - 1) + column - 1;
-  
-  				// calculate the "better" start and end offset:
-  				int[] result = computeStartEndLocation(start, message.getText(), selectionStrategy, nameOrValue, document);
-  				if (result != null) {
-  					message.setOffset(result[0]);
-  					message.setLength(result[1] - result[0]);
-  					reporter.addMessage(this, message);
-  				}
-        }
+				if (message.getAttribute(COLUMN_NUMBER_ATTRIBUTE) != null) {
+					int column = ((Integer) message.getAttribute(COLUMN_NUMBER_ATTRIBUTE)).intValue();
+					String selectionStrategy = (String) message.getAttribute(SQUIGGLE_SELECTION_STRATEGY_ATTRIBUTE);
+					String nameOrValue = (String) message.getAttribute(SQUIGGLE_NAME_OR_VALUE_ATTRIBUTE);
+
+					// convert the line and Column numbers to an offset:
+					int start = document.getStructuredDocument().getLineOffset(message.getLineNumber() - 1) + column - 1;
+
+					// calculate the "better" start and end offset:
+					int[] result = computeStartEndLocation(start, message.getText(), selectionStrategy, nameOrValue, document);
+					if (result != null) {
+						message.setOffset(result[0]);
+						message.setLength(result[1] - result[0]);
+						reporter.addMessage(this, message);
+					}
+				}
 			}
 			catch (BadLocationException e) { // this exception should not
-												// occur - it is thrown if
-												// trying to convert an
-												// invalid line number to and
-												// offset
+				// occur - it is thrown if
+				// trying to convert an
+				// invalid line number to and
+				// offset
 			}
 
 		}
@@ -298,12 +284,12 @@ public abstract class DelegatingSourceValidator implements IValidator {
 	 *         position 1 has the endOffset
 	 */
 	/*
-	 * The way the offsets is calculated is:
-	 *  - find the indexed region (element) closest to the given offset - if
-	 * we are between two elements, the one on the left is the one we want -
-	 * based on the selectionStrategy choose the underlining strategy (eg
-	 * START_TAG means underline the start tag of that element) - use
-	 * information from nameOrValue and the DOM to get better offsets
+	 * The way the offsets is calculated is: - find the indexed region
+	 * (element) closest to the given offset - if we are between two elements,
+	 * the one on the left is the one we want - based on the selectionStrategy
+	 * choose the underlining strategy (eg START_TAG means underline the start
+	 * tag of that element) - use information from nameOrValue and the DOM to
+	 * get better offsets
 	 * 
 	 */
 	protected int[] computeStartEndLocation(int startOffset, String errorMessage, String selectionStrategy, String nameOrValue, IDOMDocument document) {
@@ -313,8 +299,9 @@ public abstract class DelegatingSourceValidator implements IValidator {
 			IndexedRegion region = document.getModel().getIndexedRegion(startOffset);
 			IndexedRegion prevRegion = document.getModel().getIndexedRegion(startOffset - 1);
 
-			if (prevRegion != region) { 
-        // if between two regions, the one onthe left is the one we are interested in
+			if (prevRegion != region) {
+				// if between two regions, the one onthe left is the one we
+				// are interested in
 				region = prevRegion;
 			}
 
@@ -328,7 +315,7 @@ public abstract class DelegatingSourceValidator implements IValidator {
 				startEndPositions[1] = startEndPositions[0];
 			}
 			else { // this will message will not get added to the IReporter
-					// since the length is 0
+				// since the length is 0
 				startEndPositions[0] = 0;
 				startEndPositions[1] = 0;
 			}
@@ -336,7 +323,7 @@ public abstract class DelegatingSourceValidator implements IValidator {
 				Node node = (Node) region;
 
 				if (selectionStrategy.equals(START_TAG)) {// then we want to
-				//underline the opening tag
+					// underline the opening tag
 					if (node.getNodeType() == Node.ELEMENT_NODE) {
 						IDOMElement element = (IDOMElement) node;
 						startEndPositions[0] = element.getStartOffset() + 1;
@@ -344,7 +331,7 @@ public abstract class DelegatingSourceValidator implements IValidator {
 					}
 				}
 				else if (selectionStrategy.equals(ATTRIBUTE_NAME)) { // in
-				//underline the attribute's name
+					// underline the attribute's name
 					if (node.getNodeType() == Node.ELEMENT_NODE) {
 						IDOMElement element = (IDOMElement) node;
 						IDOMNode attributeNode = (IDOMNode) (element.getAttributeNode(nameOrValue));
@@ -355,7 +342,7 @@ public abstract class DelegatingSourceValidator implements IValidator {
 					}
 				}
 				else if (selectionStrategy.equals(ATTRIBUTE_VALUE)) {
-          //underline the attribute's value
+					// underline the attribute's value
 					if (node.getNodeType() == Node.ELEMENT_NODE) {
 						IDOMElement element = (IDOMElement) node;
 						IDOMAttr attributeNode = (IDOMAttr) (element.getAttributeNode(nameOrValue));
@@ -366,7 +353,7 @@ public abstract class DelegatingSourceValidator implements IValidator {
 					}
 				}
 				else if (selectionStrategy.equals(ALL_ATTRIBUTES)) {
-          //underline all attributes
+					// underline all attributes
 					if (node.getNodeType() == Node.ELEMENT_NODE) {
 						IDOMElement element = (IDOMElement) node;
 						NamedNodeMap attributes = element.getAttributes();
@@ -381,7 +368,7 @@ public abstract class DelegatingSourceValidator implements IValidator {
 					}
 				}
 				else if (selectionStrategy.equals(TEXT)) {
-          //underline the text between the tags
+					// underline the text between the tags
 					if (node.getNodeType() == Node.TEXT_NODE) {
 						IDOMText textNode = (IDOMText) node;
 						int start = textNode.getStartOffset();
@@ -390,17 +377,17 @@ public abstract class DelegatingSourceValidator implements IValidator {
 						char curChar = value.charAt(index);
 						// here we are finding start offset by skipping over
 						// whitespace:
-            while (curChar == '\n' || curChar == '\t' || curChar == '\r' || curChar == ' ') {
-              curChar = value.charAt(index);
-              index++;
-            }
-            if (index > 0) {
-              index--;
+						while (curChar == '\n' || curChar == '\t' || curChar == '\r' || curChar == ' ') {
+							curChar = value.charAt(index);
+							index++;
+						}
+						if (index > 0) {
+							index--;
 
-            }
-            start = start + index;
-            startEndPositions[0] = start + index;
-            startEndPositions[1] = start + value.trim().length();
+						}
+						start = start + index;
+						startEndPositions[0] = start + index;
+						startEndPositions[1] = start + value.trim().length();
 					}
 					else if (node.getNodeType() == Node.ELEMENT_NODE) {
 						IDOMElement element = (IDOMElement) node;
@@ -412,9 +399,10 @@ public abstract class DelegatingSourceValidator implements IValidator {
 						}
 					}
 				}
-				else if (selectionStrategy.equals(FIRST_NON_WHITESPACE_TEXT)) { 
-          // search through all child nodes and return range of first non-whitespace
-          // text node
+				else if (selectionStrategy.equals(FIRST_NON_WHITESPACE_TEXT)) {
+					// search through all child nodes and return range of
+					// first non-whitespace
+					// text node
 					if (node.getNodeType() == Node.ELEMENT_NODE) {
 						NodeList nodes = node.getChildNodes();
 						for (int i = 0; i < nodes.getLength(); i++) {
@@ -452,6 +440,26 @@ public abstract class DelegatingSourceValidator implements IValidator {
 						startEndPositions[0] = region.getStartOffset();
 						startEndPositions[1] = region.getEndOffset();
 					}
+					else if (node.getNodeType() == Node.ELEMENT_NODE) {
+						/*
+						 * In this case the undeclared entity might be in one
+						 * of the attribute values. Search through the
+						 * attributes to find the range of the undeclared
+						 * entity.
+						 */
+						String entity = "&" + nameOrValue + ";";
+						NamedNodeMap attributes = node.getAttributes();
+						for (int i = 0; i < attributes.getLength(); i++) {
+							IDOMAttr attr = (IDOMAttr) attributes.item(i);
+							String nodeValue = attr.getNodeValue();
+							int index = nodeValue.indexOf(entity);
+							if (index != -1) {
+								startEndPositions[0] = attr.getValueRegionStartOffset() + index + 1;
+								startEndPositions[1] = startEndPositions[0] + entity.length();
+							}
+						}
+					}
+
 				}
 				else if (selectionStrategy.equals(VALUE_OF_ATTRIBUTE_WITH_GIVEN_VALUE)) {
 					if (node.getNodeType() == Node.ELEMENT_NODE) {
@@ -473,8 +481,9 @@ public abstract class DelegatingSourceValidator implements IValidator {
 			}
 			return startEndPositions;
 		}
-		catch (Exception e) { // e.printStackTrace();
-		}
-		return null;
+//		catch (Exception e) { // e.printStackTrace();
+//		}
+		finally {}
+//		return null;
 	}
 }
