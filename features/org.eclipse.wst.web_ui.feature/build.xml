@@ -9,17 +9,15 @@
 	<target name="all.plugins" depends="init">
 		<ant antfile="build.xml" dir="../org.eclipse.wst.html.ui.infopop" target="${target}">
 		</ant>
-		<ant antfile="build.xml" dir="../org.eclipse.wst.css.ui.infopop" target="${target}">
-		</ant>
 		<ant antfile="build.xml" dir="../org.eclipse.wst.javascript.ui.infopop" target="${target}">
 		</ant>
 		<ant antfile="build.xml" dir="../org.eclipse.wst.javascript.ui" target="${target}">
 		</ant>
+		<ant antfile="build.xml" dir="../org.eclipse.wst.web.ui" target="${target}">
+		</ant>
 		<ant antfile="build.xml" dir="../org.eclipse.wst.css.ui" target="${target}">
 		</ant>
 		<ant antfile="build.xml" dir="../org.eclipse.wst.html.ui" target="${target}">
-		</ant>
-		<ant antfile="build.xml" dir="../org.eclipse.wst.web.ui" target="${target}">
 		</ant>
 	</target>
 	<target name="all.features" depends="init">
@@ -80,7 +78,7 @@
 		<copy todir="${feature.base}/features/org.eclipse.wst.web_ui.feature_1.0.0" failonerror="true" overwrite="false">
 			<fileset dir="${basedir}" includes="feature.xml"			/>
 		</copy>
-		<eclipse.idReplacer featureFilePath="${feature.base}/features/org.eclipse.wst.web_ui.feature_1.0.0/feature.xml"  selfVersion="1.0.0" featureIds="org.eclipse.wst.web_core.feature,1.0.0," pluginIds="org.eclipse.wst.css.ui.infopop,1.0.0,org.eclipse.wst.html.ui.infopop,0.7.0,org.eclipse.wst.javascript.ui.infopop,0.7.0,org.eclipse.wst.css.ui,0.7.0,org.eclipse.wst.html.ui,0.7.0,org.eclipse.wst.javascript.ui,0.7.0,org.eclipse.wst.web.ui,0.7.0,"/>
+		<eclipse.idReplacer featureFilePath="${feature.base}/features/org.eclipse.wst.web_ui.feature_1.0.0/feature.xml"  selfVersion="1.0.0" featureIds="org.eclipse.wst.web_core.feature,1.0.0," pluginIds="org.eclipse.wst.html.ui.infopop,0.7.0,org.eclipse.wst.javascript.ui.infopop,0.7.0,org.eclipse.wst.css.ui,0.7.0,org.eclipse.wst.html.ui,0.7.0,org.eclipse.wst.javascript.ui,0.7.0,org.eclipse.wst.web.ui,0.7.0,"/>
 		<antcall target="rootFiles${os}_${ws}_${arch}"/>
 	</target>
 	<target name="rootFiles*_*_*">

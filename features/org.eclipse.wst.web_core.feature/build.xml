@@ -9,15 +9,15 @@
 	<target name="all.plugins" depends="init">
 		<ant antfile="build.xml" dir="../org.eclipse.wst.javascript.core" target="${target}">
 		</ant>
+		<ant antfile="build.xml" dir="../org.eclipse.wst.common.emfworkbench.integration" target="${target}">
+		</ant>
 		<ant antfile="build.xml" dir="../org.eclipse.wst.html.standard.dtds" target="${target}">
+		</ant>
+		<ant antfile="build.xml" dir="../org.eclipse.wst.web" target="${target}">
 		</ant>
 		<ant antfile="build.xml" dir="../org.eclipse.wst.css.core" target="${target}">
 		</ant>
-		<ant antfile="build.xml" dir="../org.eclipse.wst.common.emfworkbench.integration" target="${target}">
-		</ant>
 		<ant antfile="build.xml" dir="../org.eclipse.wst.html.core" target="${target}">
-		</ant>
-		<ant antfile="build.xml" dir="../org.eclipse.wst.web" target="${target}">
 		</ant>
 	</target>
 	<target name="all.features" depends="init">
