@@ -14,11 +14,8 @@ package org.eclipse.wst.sse.core.internal;
 
 
 
-import java.util.StringTokenizer;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
 import org.osgi.framework.Bundle;
 
@@ -28,150 +25,157 @@ import org.osgi.framework.Bundle;
  * plugin. Other plugins should make their own copy, with appropriate ID.
  */
 public class Logger {
-	public static final boolean DEBUG = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.core/debug")); //$NON-NLS-1$
-
 	private static final String PLUGIN_ID = "org.eclipse.wst.sse.core"; //$NON-NLS-1$
-	public static final int ERROR = IStatus.ERROR; // 4
-	public static final int ERROR_DEBUG = 200 + ERROR;
-	public static final int INFO = IStatus.INFO; // 1
-	public static final int INFO_DEBUG = 200 + INFO;
+	/**
+	 * true if both platform and this plugin are in debug mode
+	 */
+	public static final boolean DEBUG = Platform.inDebugMode() && "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.core/debug")); //$NON-NLS-1$ //$NON-NLS-2$
+	/**
+	 * true if platform and plugin are in debug mode and debugging adapter
+	 * notification time
+	 */
+	public static final boolean DEBUG_ADAPTERNOTIFICATIONTIME = DEBUG && "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.core/dom/adapter/notification/time")); //$NON-NLS-1$ //$NON-NLS-2$
+	/**
+	 * true if platform and plugin are in debug mode and debugging structured
+	 * document
+	 */
+	public static final boolean DEBUG_DOCUMENT = DEBUG && "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.core/structureddocument")); //$NON-NLS-1$ //$NON-NLS-2$
+	/**
+	 * true if platform and plugin are in debug mode and debugging file buffer
+	 * model management
+	 */
+	public static final boolean DEBUG_FILEBUFFERMODELMANAGEMENT = DEBUG && "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.core/filebuffers/modelmanagement")); //$NON-NLS-1$ //$NON-NLS-2$
+	/**
+	 * true if platform and plugin are in debug mode and debugging text buffer
+	 * lifecycle
+	 */
+	public static final boolean DEBUG_TEXTBUFFERLIFECYCLE = DEBUG && "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.core/filebuffers/lifecycle")); //$NON-NLS-1$ //$NON-NLS-2$
+	/**
+	 * true if platform and plugin are in debug mode and debugging model
+	 * lifecycle
+	 */
+	public static final boolean DEBUG_LIFECYCLE = DEBUG && "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.core/structuredmodel/lifecycle")); //$NON-NLS-1$ //$NON-NLS-2$
+	/**
+	 * true if platform and plugin are in debug mode and debugging model state
+	 */
+	public static final boolean DEBUG_MODELSTATE = DEBUG && "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.core/structuredmodel/state")); //$NON-NLS-1$ //$NON-NLS-2$
+	/**
+	 * true if platform and plugin are in debug mode and debugging model lock
+	 * state
+	 */
+	public static final boolean DEBUG_MODELLOCK = DEBUG && "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.core/structuredmodel/locks")); //$NON-NLS-1$ //$NON-NLS-2$
+	/**
+	 * true if platform and plugin are in debug mode and debugging model
+	 * manager
+	 */
+	public static final boolean DEBUG_MODELMANAGER = DEBUG && "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.core/structuredmodel/modelmanager")); //$NON-NLS-1$ //$NON-NLS-2$
+	/**
+	 * true if platform and plugin are in debug mode and debugging task tags
+	 */
+	public static final boolean DEBUG_TASKS = DEBUG && "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.core/tasks")); //$NON-NLS-1$ //$NON-NLS-2$
+	/**
+	 * true if platform and plugin are in debug mode and debugging task tags
+	 * content type detection
+	 */
+	public static final boolean DEBUG_TASKSCONTENTTYPE = DEBUG && "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.core/tasks/detection")); //$NON-NLS-1$ //$NON-NLS-2$
+	/**
+	 * true if platform and plugin are in debug mode and debugging task tags
+	 * jobs
+	 */
+	public static final boolean DEBUG_TASKSJOB = DEBUG && "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.core/tasks/job")); //$NON-NLS-1$ //$NON-NLS-2$
+	/**
+	 * true if platform and plugin are in debug mode and debugging task tags
+	 * overall performance
+	 */
+	public static final boolean DEBUG_TASKSOVERALLPERF = DEBUG && "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.core/tasks/overalltime")); //$NON-NLS-1$ //$NON-NLS-2$
+	/**
+	 * true if platform and plugin are in debug mode and debugging task tags
+	 * performance
+	 */
+	public static final boolean DEBUG_TASKSPERF = DEBUG && "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.core/tasks/time")); //$NON-NLS-1$ //$NON-NLS-2$
+	/**
+	 * true if platform and plugin are in debug mode and debugging task tags
+	 * preferences
+	 */
+	public static final boolean DEBUG_TASKSPREFS = DEBUG && "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.core/tasks/preferences")); //$NON-NLS-1$ //$NON-NLS-2$
+	/**
+	 * true if platform and plugin are in debug mode and debugging task tags
+	 * registry
+	 */
+	public static final boolean DEBUG_TASKSREGISTRY = DEBUG && "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.core/tasks/registry")); //$NON-NLS-1$ //$NON-NLS-2$
 
-	public static final int OK = IStatus.OK; // 0
-
-	public static final int OK_DEBUG = 200 + OK;
-
-	private static final String TRACEFILTER_LOCATION = "/debug/tracefilter"; //$NON-NLS-1$
-	public static final int WARNING = IStatus.WARNING; // 2
-	public static final int WARNING_DEBUG = 200 + WARNING;
+	/*
+	 * Keep our own copy in case we want to add other severity levels
+	 */
+	public static final int OK = IStatus.OK;
+	public static final int INFO = IStatus.INFO;
+	public static final int WARNING = IStatus.WARNING;
+	public static final int ERROR = IStatus.ERROR;
 
 	/**
 	 * Adds message to log.
 	 * 
 	 * @param level
 	 *            severity level of the message (OK, INFO, WARNING, ERROR,
-	 *            OK_DEBUG, INFO_DEBUG, WARNING_DEBUG, ERROR_DEBUG)
 	 * @param message
 	 *            text to add to the log
 	 * @param exception
 	 *            exception thrown
 	 */
-	protected static void _log(int level, String message, Throwable exception) {
-		if (level == OK_DEBUG || level == INFO_DEBUG || level == WARNING_DEBUG || level == ERROR_DEBUG) {
-			if (!isDebugging())
-				return;
-		}
-
-		int severity = IStatus.OK;
-		switch (level) {
-			case INFO_DEBUG :
-			case INFO :
-				severity = IStatus.INFO;
-				break;
-			case WARNING_DEBUG :
-			case WARNING :
-				severity = IStatus.WARNING;
-				break;
-			case ERROR_DEBUG :
-			case ERROR :
-				severity = IStatus.ERROR;
-		}
-		message = (message != null) ? message : "null"; //$NON-NLS-1$
-		Status statusObj = new Status(severity, PLUGIN_ID, severity, message, exception);
+	private static void _log(int level, String message, Throwable exception) {
+		message = (message != null) ? message : ""; //$NON-NLS-1$
+		Status statusObj = new Status(level, PLUGIN_ID, level, message, exception);
 		Bundle bundle = Platform.getBundle(PLUGIN_ID);
-		if (bundle != null) 
+		if (bundle != null)
 			Platform.getLog(bundle).log(statusObj);
 	}
 
 	/**
-	 * Prints message to log if category matches /debug/tracefilter option.
+	 * Write a message to the log with the given severity level
 	 * 
+	 * @param level
+	 *            ERROR, WARNING, INFO, OK
 	 * @param message
-	 *            text to print
-	 * @param category
-	 *            category of the message, to be compared with
-	 *            /debug/tracefilter
+	 *            message to add to the log
 	 */
-	protected static void _trace(String category, String message, Throwable exception) {
-		if (isTracing(category)) {
-			message = (message != null) ? message : "null"; //$NON-NLS-1$
-			Status statusObj = new Status(IStatus.OK, PLUGIN_ID, IStatus.OK, message, exception);
-			Bundle bundle = Platform.getBundle(PLUGIN_ID);
-			if (bundle != null) 
-				Platform.getLog(bundle).log(statusObj);
-		}
-	}
-
-	/**
-	 * @deprecated Logger is not responsible for returning plugin
-	 */
-	public static Plugin getPlugin() {
-		return SSECorePlugin.getDefault();
-	}
-
-	/**
-	 * @deprecated Logger is not responsible for returning plugin id
-	 * @return
-	 */
-	public static String getPluginId() {
-		return PLUGIN_ID;
-	}
-
-	/**
-	 * @return true if the platform is debugging
-	 */
-	public static boolean isDebugging() {
-		return Platform.inDebugMode();
-	}
-
-	/**
-	 * Determines if currently tracing a category
-	 * 
-	 * @param category
-	 * @return true if tracing category, false otherwise
-	 */
-	public static boolean isTracing(String category) {
-		if (!isDebugging())
-			return false;
-
-		String traceFilter = Platform.getDebugOption(PLUGIN_ID + TRACEFILTER_LOCATION);
-		if (traceFilter != null) {
-			StringTokenizer tokenizer = new StringTokenizer(traceFilter, ","); //$NON-NLS-1$
-			while (tokenizer.hasMoreTokens()) {
-				String cat = tokenizer.nextToken().trim();
-				if (category.equals(cat)) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-
 	public static void log(int level, String message) {
 		_log(level, message, null);
 	}
 
+	/**
+	 * Writes a message and exception to the log with the given severity level
+	 * 
+	 * @param level
+	 *            ERROR, WARNING, INFO, OK
+	 * @param message
+	 *            message to add to the log
+	 * @param exception
+	 *            exception to add to the log
+	 */
 	public static void log(int level, String message, Throwable exception) {
 		_log(level, message, exception);
 	}
 
+	/**
+	 * Writes the exception as an error in the log along with an accompanying
+	 * message
+	 * 
+	 * @param message
+	 *            message to add to the log
+	 * @param exception
+	 *            exception to add to the log
+	 */
 	public static void logException(String message, Throwable exception) {
-		_log(ERROR, message, exception);
+		_log(IStatus.ERROR, message, exception);
 	}
 
+	/**
+	 * Writes the exception as an error in the log
+	 * 
+	 * @param exception
+	 *            exception to add to the log
+	 */
 	public static void logException(Throwable exception) {
-		_log(ERROR, exception.getMessage(), exception);
+		_log(IStatus.ERROR, exception.getMessage(), exception);
 	}
-
-	public static void trace(String category, String message) {
-		_trace(category, message, null);
-	}
-
-	public static void traceException(String category, String message, Throwable exception) {
-		_trace(category, message, exception);
-	}
-
-	public static void traceException(String category, Throwable exception) {
-		_trace(category, exception.getMessage(), exception);
-	}
-
 }

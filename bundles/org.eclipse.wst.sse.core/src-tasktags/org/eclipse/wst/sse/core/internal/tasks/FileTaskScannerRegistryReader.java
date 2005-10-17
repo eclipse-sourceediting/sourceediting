@@ -52,8 +52,6 @@ public class FileTaskScannerRegistryReader {
 		}
 	}
 
-	private static final boolean _debugReader = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.core/tasks/registry")); //$NON-NLS-1$ //$NON-NLS-2$
-
 	private static FileTaskScannerRegistryReader _instance = null;
 
 	public static FileTaskScannerRegistryReader getInstance() {
@@ -166,7 +164,7 @@ public class FileTaskScannerRegistryReader {
 			}
 			scannerInfos = (ScannerInfo[]) scannerInfoList.toArray(new ScannerInfo[scannerInfoList.size()]);
 			fScannerInfos.put(contentType.getId(), scannerInfos);
-			if (_debugReader) {
+			if (Logger.DEBUG_TASKSREGISTRY) {
 				System.out.println("Created " + scannerInfos.length + " task scanner for " + contentType.getId()); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}

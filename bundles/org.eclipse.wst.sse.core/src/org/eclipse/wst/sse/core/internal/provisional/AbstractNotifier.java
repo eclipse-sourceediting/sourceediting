@@ -30,7 +30,6 @@ import org.eclipse.wst.sse.core.internal.model.FactoryRegistry;
  * Implementers of this INodeNotifier must subclass this class.
  */
 public abstract class AbstractNotifier implements INodeNotifier {
-	private final static boolean debugAdapterNotificationTime = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.core/dom/adapter/notification/time")); //$NON-NLS-1$ //$NON-NLS-2$
 	private final static int growthConstant = 3;
 	private int adapterCount = 0;
 
@@ -186,7 +185,7 @@ public abstract class AbstractNotifier implements INodeNotifier {
 			for (int i = 0; i < localAdapterCount; i++) {
 				INodeAdapter a = localAdapters[i];
 
-				if (debugAdapterNotificationTime) {
+				if (Logger.DEBUG_ADAPTERNOTIFICATIONTIME) {
 					long getAdapterTimeCriteria = getAdapterTimeCriteria();
 					long startTime = System.currentTimeMillis();
 					// ** keep this line identical with non-debug version!!

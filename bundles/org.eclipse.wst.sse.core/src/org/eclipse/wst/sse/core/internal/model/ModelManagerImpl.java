@@ -136,8 +136,7 @@ public class ModelManagerImpl implements IModelManager {
 			referenceCountForEdit = 0;
 		}
 	}
-
-	private static final String IMODELMANAGER_TRACE_CATEGORY = "IModelManager"; //$NON-NLS-1$
+	
 	private Exception debugException = null;
 
 	/**
@@ -779,7 +778,8 @@ public class ModelManagerImpl implements IModelManager {
 			// impossible, since we're not sharing
 			// (even if it really is in use ... we don't care)
 			// this may need to be re-examined.
-			Logger.trace(IMODELMANAGER_TRACE_CATEGORY, "ModelMangerImpl::createUnManagedStructuredModelFor. Model unexpectedly in use."); //$NON-NLS-1$ //$NON-NLS-2$
+			if (Logger.DEBUG_MODELMANAGER)
+				Logger.log(Logger.INFO, "ModelMangerImpl::createUnManagedStructuredModelFor. Model unexpectedly in use."); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 
 		return result;
@@ -824,7 +824,8 @@ public class ModelManagerImpl implements IModelManager {
 			// impossible, since we're not sharing
 			// (even if it really is in use ... we don't care)
 			// this may need to be re-examined.
-			Logger.trace(IMODELMANAGER_TRACE_CATEGORY, "ModelMangerImpl::createUnManagedStructuredModelFor. Model unexpectedly in use."); //$NON-NLS-1$ //$NON-NLS-2$
+			if (Logger.DEBUG_MODELMANAGER)
+				Logger.log(Logger.INFO, "ModelMangerImpl::createUnManagedStructuredModelFor. Model unexpectedly in use."); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		return result;
 	}
@@ -1566,8 +1567,8 @@ public class ModelManagerImpl implements IModelManager {
 	 * Common trace method
 	 */
 	private void trace(String msg, Object id) {
-		if (Logger.isTracing(IMODELMANAGER_TRACE_CATEGORY)) {
-			Logger.trace(IMODELMANAGER_TRACE_CATEGORY, msg + " " + Utilities.makeShortId(id)); //$NON-NLS-1$ //$NON-NLS-2$
+		if (Logger.DEBUG_MODELMANAGER) {
+			Logger.log(Logger.INFO, msg + " " + Utilities.makeShortId(id)); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 
@@ -1575,8 +1576,8 @@ public class ModelManagerImpl implements IModelManager {
 	 * Common trace method
 	 */
 	private void trace(String msg, Object id, int value) {
-		if (Logger.isTracing(IMODELMANAGER_TRACE_CATEGORY)) {
-			Logger.trace(IMODELMANAGER_TRACE_CATEGORY, msg + Utilities.makeShortId(id) + " (" + value + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		if (Logger.DEBUG_MODELMANAGER) {
+			Logger.log(Logger.INFO, msg + Utilities.makeShortId(id) + " (" + value + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
 	}
 }

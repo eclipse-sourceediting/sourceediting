@@ -45,11 +45,6 @@ import org.eclipse.wst.sse.core.internal.util.StringUtils;
  * Dispatcher for scanning based on deltas and requested projects
  */
 class WorkspaceTaskScanner {
-	static final boolean _debug = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.core/tasks")); //$NON-NLS-1$ //$NON-NLS-2$
-	private static final boolean _debugContentTypeDetection = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.core/tasks/detection")); //$NON-NLS-1$ //$NON-NLS-2$
-	private static final boolean _debugOverallPerf = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.core/tasks/overalltime")); //$NON-NLS-1$ //$NON-NLS-2$
-	private static final boolean _debugPreferences = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.core/tasks/preferences")); //$NON-NLS-1$ //$NON-NLS-2$
-
 	private static WorkspaceTaskScanner _instance = null;
 
 	static synchronized WorkspaceTaskScanner getInstance() {
@@ -102,7 +97,7 @@ class WorkspaceTaskScanner {
 			if (types == null) {
 				types = Platform.getContentTypeManager().findContentTypesFor(resource.getName());
 			}
-			if (_debugContentTypeDetection) {
+			if (Logger.DEBUG_TASKSCONTENTTYPE) {
 				if (types.length > 0) {
 					if (types.length > 1) {
 						System.out.println(resource.getFullPath() + ": " + "multiple based on name (probably hierarchical)"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -139,7 +134,7 @@ class WorkspaceTaskScanner {
 
 		boolean proceed = preferencesService.getBoolean(TaskTagPreferenceKeys.TASK_TAG_NODE, TaskTagPreferenceKeys.TASK_TAG_ENABLE, false, lookupOrder);
 
-		if (_debugPreferences) {
+		if (Logger.DEBUG_TASKSPREFS) {
 			System.out.println(getClass().getName() + " scan of " + resource.getFullPath() + ":" + proceed); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 
@@ -147,7 +142,7 @@ class WorkspaceTaskScanner {
 			String[] tags = StringUtils.unpack(preferencesService.getString(TaskTagPreferenceKeys.TASK_TAG_NODE, TaskTagPreferenceKeys.TASK_TAG_TAGS, null, lookupOrder));
 			String[] priorities = StringUtils.unpack(preferencesService.getString(TaskTagPreferenceKeys.TASK_TAG_NODE, TaskTagPreferenceKeys.TASK_TAG_PRIORITIES, null, lookupOrder));
 			String[] currentIgnoreContentTypeIDs = StringUtils.unpack(preferencesService.getString(TaskTagPreferenceKeys.TASK_TAG_NODE, TaskTagPreferenceKeys.TASK_TAG_CONTENTTYPES_IGNORED, null, lookupOrder));
-			if (_debugPreferences) {
+			if (Logger.DEBUG_TASKSPREFS) {
 				System.out.print(getClass().getName() + " tags: "); //$NON-NLS-1$
 				for (int i = 0; i < tags.length; i++) {
 					if (i > 0) {
@@ -281,7 +276,7 @@ class WorkspaceTaskScanner {
 							Logger.logException("exception deleting old tasks", e); //$NON-NLS-1$ 
 						}
 						if (markerAttributes != null && markerAttributes.length > 0) {
-							if (_debug) {
+							if (Logger.DEBUG_TASKS) {
 								System.out.println("" + markerAttributes.length + " tasks for " + file.getFullPath()); //$NON-NLS-1$ //$NON-NLS-2$
 							}
 							for (int i = 0; i < markerAttributes.length; i++) {
@@ -305,17 +300,17 @@ class WorkspaceTaskScanner {
 	void scan(final IProject project, final IProgressMonitor scanMonitor) {
 		if (scanMonitor.isCanceled())
 			return;
-		if (_debug) {
+		if (Logger.DEBUG_TASKS) {
 			System.out.println(getClass().getName() + " scanning project " + project.getName()); //$NON-NLS-1$
 		}
 		if (!project.isAccessible()) {
-			if (_debug) {
+			if (Logger.DEBUG_TASKS) {
 				System.out.println(getClass().getName() + " skipping inaccessible project " + project.getName()); //$NON-NLS-1$
 			}
 			return;
 		}
 
-		if (_debugOverallPerf) {
+		if (Logger.DEBUG_TASKSOVERALLPERF) {
 			time0 = System.currentTimeMillis();
 		}
 		try {
@@ -329,7 +324,7 @@ class WorkspaceTaskScanner {
 		catch (CoreException e) {
 			Logger.logException(e);
 		}
-		if (_debugOverallPerf) {
+		if (Logger.DEBUG_TASKSOVERALLPERF) {
 			System.out.println("" + (System.currentTimeMillis() - time0) + "ms for " + project.getFullPath()); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
@@ -338,7 +333,7 @@ class WorkspaceTaskScanner {
 	void scan(IResourceDelta delta, final IProgressMonitor monitor) {
 		if (monitor.isCanceled())
 			return;
-		if (_debugOverallPerf) {
+		if (Logger.DEBUG_TASKSOVERALLPERF) {
 			time0 = System.currentTimeMillis();
 		}
 		monitor.beginTask("", 1); //$NON-NLS-1$
@@ -347,7 +342,7 @@ class WorkspaceTaskScanner {
 			shutdownDelegates(delta.getResource().getProject());
 		}
 		monitor.done();
-		if (_debugOverallPerf) {
+		if (Logger.DEBUG_TASKSOVERALLPERF) {
 			System.out.println("" + (System.currentTimeMillis() - time0) + "ms for " + delta.getFullPath()); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}

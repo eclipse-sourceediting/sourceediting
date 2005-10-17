@@ -102,8 +102,8 @@ public class ModelHandlerRegistry {
 				}
 			}
 		}
-		else {
-			Logger.log(Logger.WARNING_DEBUG, "There were no Model Handler found in registry"); //$NON-NLS-1$
+		else if (Logger.DEBUG){
+			Logger.log(Logger.WARNING, "There were no Model Handler found in registry"); //$NON-NLS-1$
 		}
 		return found;
 	}
@@ -259,8 +259,8 @@ public class ModelHandlerRegistry {
 					}
 				}
 			}
-			else {
-				Logger.log(Logger.WARNING_DEBUG, "There were no Model Handler found in registry"); //$NON-NLS-1$
+			else if (Logger.DEBUG){
+				Logger.log(Logger.WARNING, "There were no Model Handler found in registry"); //$NON-NLS-1$
 			}
 			if (exactContentTypeElement != null) {
 				handler = reader.getInstance(exactContentTypeElement);

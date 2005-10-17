@@ -57,10 +57,6 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
  * A delegate to create IMarker.TASKs for "todos" and similiar comments.
  */
 public abstract class StructuredFileTaskScanner implements IFileTaskScanner {
-
-	private static final boolean _debug = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.core/tasks")); //$NON-NLS-1$ //$NON-NLS-2$
-	protected static final boolean _debugPerf = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.core/tasks/time")); //$NON-NLS-1$ //$NON-NLS-2$
-
 	// the list of attributes for the new tasks for the current file
 	protected List fNewMarkerAttributeMaps = null;
 
@@ -70,7 +66,7 @@ public abstract class StructuredFileTaskScanner implements IFileTaskScanner {
 	public StructuredFileTaskScanner() {
 		super();
 		fNewMarkerAttributeMaps = new ArrayList();
-		if (_debug) {
+		if (Logger.DEBUG_TASKS) {
 			System.out.println(getClass().getName() + " instance created"); //$NON-NLS-1$
 		}
 	}
@@ -270,13 +266,13 @@ public abstract class StructuredFileTaskScanner implements IFileTaskScanner {
 		if (monitor.isCanceled() || !shouldScan(file)) {
 			return new Map[0];
 		}
-		if (_debugPerf) {
+		if (Logger.DEBUG_TASKSPERF) {
 			time0 = System.currentTimeMillis();
 		}
 		if (taskTags.length > 0) {
 			findTasks(file, taskTags, monitor);
 		}
-		if (_debugPerf) {
+		if (Logger.DEBUG_TASKSPERF) {
 			System.out.println("" + (System.currentTimeMillis() - time0) + "ms for " + file.getLocation()); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		return (Map[]) fNewMarkerAttributeMaps.toArray(new Map[fNewMarkerAttributeMaps.size()]);
@@ -318,19 +314,19 @@ public abstract class StructuredFileTaskScanner implements IFileTaskScanner {
 	}
 
 	public void shutdown(IProject project) {
-		if (_debug) {
+		if (Logger.DEBUG_TASKS) {
 			System.out.println(this + " shutdown for " + project.getName()); //$NON-NLS-1$
 		}
 	}
 
 	public void startup(IProject project) {
-		if (_debug) {
+		if (Logger.DEBUG_TASKS) {
 			System.out.println(this + " startup for " + project.getName()); //$NON-NLS-1$
 		}
-		if (_debugPerf) {
+		if (Logger.DEBUG_TASKSPERF) {
 			time0 = System.currentTimeMillis();
 		}
-		if (_debugPerf) {
+		if (Logger.DEBUG_TASKSPERF) {
 			System.out.println("" + (System.currentTimeMillis() - time0) + "ms loading prefs for " + project.getName()); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}

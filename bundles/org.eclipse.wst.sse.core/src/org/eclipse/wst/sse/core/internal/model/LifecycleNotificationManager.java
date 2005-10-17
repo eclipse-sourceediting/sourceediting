@@ -12,7 +12,6 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.core.internal.model;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.wst.sse.core.internal.Logger;
 import org.eclipse.wst.sse.core.internal.provisional.IModelLifecycleListener;
 import org.eclipse.wst.sse.core.internal.util.Utilities;
@@ -23,10 +22,6 @@ import org.eclipse.wst.sse.core.internal.util.Utilities;
  */
 
 class LifecycleNotificationManager {
-	static final String DEFAULT_TRACE_CATEGORY = "org.eclipse.wst.sse.core/structuredmodel/lifecycle"; //$NON-NLS-1$
-	static final boolean DEBUG = "true".equalsIgnoreCase(Platform.getDebugOption(DEFAULT_TRACE_CATEGORY)); //$NON-NLS-1$
-
-
 	private Object[] fListeners;
 
 	LifecycleNotificationManager() {
@@ -45,8 +40,8 @@ class LifecycleNotificationManager {
 	 * @param listener
 	 */
 	void addListener(IModelLifecycleListener listener) {
-		if (Utilities.contains(fListeners, listener)) {
-			Logger.log(Logger.WARNING_DEBUG, "IModelLifecycleListener " + listener + " listening more than once"); //$NON-NLS-1$ //$NON-NLS-2$
+		if (Logger.DEBUG && Utilities.contains(fListeners, listener)) {
+			Logger.log(Logger.WARNING, "IModelLifecycleListener " + listener + " listening more than once"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		int oldSize = 0;
 		if (fListeners != null) {
@@ -93,14 +88,14 @@ class LifecycleNotificationManager {
 			// one
 			fListeners = newListeners;
 		}
-		if (Utilities.contains(fListeners, listener)) {
-			Logger.log(Logger.WARNING_DEBUG, "IModelLifecycleListener " + listener + " removed once but still listening"); //$NON-NLS-1$ //$NON-NLS-2$
+		if (Logger.DEBUG && Utilities.contains(fListeners, listener)) {
+			Logger.log(Logger.WARNING, "IModelLifecycleListener " + listener + " removed once but still listening"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 
 	void signalLifecycleEvent(ModelLifecycleEvent event) {
-		if (DEBUG) {
-			Logger.trace(DEFAULT_TRACE_CATEGORY, "ModelLifecycleEvent fired for " + event.getModel().getId() + ": " + event.toString()); //$NON-NLS-1$ //$NON-NLS-2$
+		if (Logger.DEBUG_LIFECYCLE) {
+			Logger.log(Logger.INFO, "ModelLifecycleEvent fired for " + event.getModel().getId() + ": " + event.toString()); //$NON-NLS-1$ //$NON-NLS-2$
 			System.out.println("ModelLifecycleEvent fired for " + event.getModel().getId() + ": " + event.toString()); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		// We must assign listeners to local variable, since the add and

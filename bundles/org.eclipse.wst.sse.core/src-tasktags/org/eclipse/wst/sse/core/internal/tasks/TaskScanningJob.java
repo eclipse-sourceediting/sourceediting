@@ -25,6 +25,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.wst.sse.core.internal.Logger;
 import org.eclipse.wst.sse.core.internal.SSECoreMessages;
 import org.eclipse.wst.sse.core.internal.SSECorePlugin;
 import org.eclipse.wst.sse.core.internal.util.StringUtils;
@@ -34,7 +35,6 @@ import org.osgi.framework.Bundle;
  * Queueing Job for processing deltas and projects.
  */
 class TaskScanningJob extends Job {
-	public static final boolean _debugJob = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.core/tasks/job")); //$NON-NLS-1$ //$NON-NLS-2$
 	static final int JOB_DELAY_DELTA = 500;
 	private static final int JOB_DELAY_PROJECT = 1000;
 	static final String TASK_TAG_PROJECTS_ALREADY_SCANNED = "task-tag-projects-already-scanned"; //$NON-NLS-1$
@@ -54,7 +54,7 @@ class TaskScanningJob extends Job {
 
 	synchronized void addDelta(IResourceDelta delta) {
 		fQueue.add(delta);
-		if (_debugJob) {
+		if (Logger.DEBUG_TASKSJOB) {
 			String kind = null;
 			switch (delta.getKind()) {
 				case IResourceDelta.ADDED :
@@ -81,7 +81,7 @@ class TaskScanningJob extends Job {
 	synchronized void addProject(IProject project) {
 		if (isEnabledProject(project)) {
 			fQueue.add(project);
-			if (_debugJob) {
+			if (Logger.DEBUG_TASKSJOB) {
 				System.out.println("Adding project " + project.getName()); //$NON-NLS-1$
 			}
 			schedule(JOB_DELAY_PROJECT);
@@ -100,7 +100,7 @@ class TaskScanningJob extends Job {
 		// this must be done first according to section 4.19.2 from the OSGi
 		// R3 spec.
 		boolean shuttingDown = !Platform.isRunning() || Platform.getBundle(OSGI_FRAMEWORK_ID).getState() == Bundle.STOPPING;
-		if (_debugJob && shuttingDown) {
+		if (Logger.DEBUG_TASKSJOB && shuttingDown) {
 			System.out.println("TaskScanningJob: system is shutting down!"); //$NON-NLS-1$
 		}
 		return shuttingDown;
@@ -113,7 +113,7 @@ class TaskScanningJob extends Job {
 		String name = project.getName();
 		for (int j = 0; shouldScan && j < projectsScanned.length; j++) {
 			if (projectsScanned[j].equals(name)) {
-				if (_debugJob)
+				if (Logger.DEBUG_TASKSJOB)
 					System.out.println("Scanning Job skipping " + project.getName()); //$NON-NLS-1$
 				shouldScan = false;
 			}
@@ -138,7 +138,7 @@ class TaskScanningJob extends Job {
 		List errors = null;
 		int ticks = currentQueue.size();
 		String taskName = null;
-		if (_debugJob) {
+		if (Logger.DEBUG_TASKSJOB) {
 			taskName = "Scanning (" + ticks + " work items)"; //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		else {
@@ -210,7 +210,7 @@ class TaskScanningJob extends Job {
 			if (rememberedProjectExists) {
 				projectNamesToRemember.add(rememberedProjectNames[i]);
 			}
-			else if (_debugJob) {
+			else if (Logger.DEBUG_TASKSJOB) {
 				System.out.println("Removing " + rememberedProjectNames[i] + " removed from " + preferenceName); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}

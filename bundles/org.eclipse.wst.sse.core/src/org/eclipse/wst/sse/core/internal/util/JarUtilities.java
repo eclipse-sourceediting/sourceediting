@@ -50,7 +50,7 @@ public class JarUtilities {
 		}
 		catch (IOException ioe) {
 			// no cleanup can be done
-			Logger.log(Logger.ERROR, "JarUtilities: Could not close file " + file.getName()); //$NON-NLS-1$
+			Logger.logException("JarUtilities: Could not close file " + file.getName(), ioe); //$NON-NLS-1$
 		}
 	}
 

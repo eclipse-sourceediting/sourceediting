@@ -1483,7 +1483,8 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 			result = getTracker().getLineNumberOfOffset(offset);
 		}
 		catch (BadLocationException e) {
-			Logger.traceException("IStructuredDocument", "Dev. Program Info Only: IStructuredDocument::getLineOfOffset: offset out of range, zero assumed. offset = " + offset, e); //$NON-NLS-1$ //$NON-NLS-2$
+			if (Logger.DEBUG_DOCUMENT)
+				Logger.log(Logger.INFO, "Dev. Program Info Only: IStructuredDocument::getLineOfOffset: offset out of range, zero assumed. offset = " + offset, e); //$NON-NLS-1$ //$NON-NLS-2$
 			result = 0;
 		}
 		return result;
@@ -2492,7 +2493,8 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 			preferedDelimiter = delimiter;
 		}
 		else {
-			Logger.trace("IStructuredDocument", "Attempt to set linedelimiter to non-legal delimiter"); //$NON-NLS-1$ //$NON-NLS-2$
+			if (Logger.DEBUG_DOCUMENT)
+				Logger.log(Logger.INFO, "Attempt to set linedelimiter to non-legal delimiter"); //$NON-NLS-1$ //$NON-NLS-2$
 			preferedDelimiter = PlatformLineDelimiter;
 		}
 	}
