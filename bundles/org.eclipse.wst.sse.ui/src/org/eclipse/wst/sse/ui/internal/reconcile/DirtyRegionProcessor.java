@@ -250,11 +250,15 @@ public class DirtyRegionProcessor extends Job implements IReconciler {
 	 * @return
 	 */
 	protected String[] getPartitions(DirtyRegion dirtyRegion) {
-		ITypedRegion regions[] = null;
-        
         int drOffset = dirtyRegion.getOffset();
         int drLength = dirtyRegion.getLength();
-        int docLength = getDocument().getLength();
+        return getPartitions(drOffset, drLength);
+	}
+
+	protected String[] getPartitions(int drOffset, int drLength) {
+		
+		ITypedRegion[] regions = new ITypedRegion[0];
+		int docLength = getDocument().getLength();
         
         if(drOffset > docLength) {
             drOffset = docLength;
@@ -265,7 +269,7 @@ public class DirtyRegionProcessor extends Job implements IReconciler {
         }
             
 		try {
-			regions = TextUtilities.computePartitioning(getDocument(), getDocumentPartitioning(), dirtyRegion.getOffset(), dirtyRegion.getLength(), true);
+			regions = TextUtilities.computePartitioning(getDocument(), getDocumentPartitioning(), drOffset, drLength, true);
 		}
 		catch (BadLocationException e) {
 			Logger.logException(e);
@@ -276,7 +280,7 @@ public class DirtyRegionProcessor extends Job implements IReconciler {
 			partitions[i] = regions[i].getType();
 		return partitions;
 	}
-
+	
 	/**
 	 * contentType is actually partitionType
 	 * @see IReconciler#getReconcilingStrategy(String)

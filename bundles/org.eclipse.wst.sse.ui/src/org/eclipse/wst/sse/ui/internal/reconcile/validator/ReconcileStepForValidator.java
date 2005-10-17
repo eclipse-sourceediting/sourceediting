@@ -21,14 +21,17 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.reconciler.DirtyRegion;
+import org.eclipse.jface.text.reconciler.IReconcilableModel;
 import org.eclipse.jface.text.reconciler.IReconcileResult;
 import org.eclipse.jface.text.reconciler.IReconcileStep;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
 import org.eclipse.wst.sse.ui.internal.Logger;
+import org.eclipse.wst.sse.ui.internal.reconcile.DocumentAdapter;
 import org.eclipse.wst.sse.ui.internal.reconcile.ReconcileAnnotationKey;
 import org.eclipse.wst.sse.ui.internal.reconcile.StructuredReconcileStep;
 import org.eclipse.wst.sse.ui.internal.reconcile.TemporaryAnnotation;
@@ -185,7 +188,12 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 		IReconcileResult[] results = EMPTY_RECONCILE_RESULT_SET;
 		if (dirtyRegion != null) {
 			try {
-				results = validate();
+				if(fValidator instanceof ISourceValidator) {
+					results = validate(dirtyRegion, subRegion);
+				}
+				else {
+					results = validate();
+				}
 			}
 			catch (Exception ex) {
 				Logger.logException("EXEPTION IN RECONCILE STEP FOR VALIDATOR", ex); //$NON-NLS-1$
@@ -204,7 +212,7 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 			debugString.append(fValidator.getClass().toString());
 		return debugString.toString();
 	}
-
+	
 	protected IReconcileResult[] validate() {
 		IReconcileResult[] results = EMPTY_RECONCILE_RESULT_SET;
 
@@ -230,4 +238,58 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 		}
 		return results;
 	}
+	
+	public void setInputModel(IReconcilableModel inputModel) {
+		if(inputModel instanceof DocumentAdapter) {
+			IDocument document = ((DocumentAdapter)inputModel).getDocument();
+			if(document != null) {
+				if(fValidator instanceof ISourceValidator) {
+					// notify that document connecting
+					((ISourceValidator)fValidator).connect(document);
+				}
+			}
+		}
+		super.setInputModel(inputModel);
+	}
+	
+	public void release() {
+		if(fValidator instanceof ISourceValidator) {
+			IDocument document = getDocument();
+			if(document != null) {
+				// notify that document disconnecting
+				((ISourceValidator)fValidator).disconnect(document);
+			}
+		}
+		super.release();
+	}
+	
+	protected IReconcileResult[] validate(DirtyRegion dirtyRegion, IRegion subRegion) {
+ 		IReconcileResult[] results = EMPTY_RECONCILE_RESULT_SET;
+ 
+ 		IFile file = getFile();
+		try {
+			IProject project = null;
+			if (file != null)
+				project = file.getProject();
+ 
+			IncrementalHelper helper = getHelper(project);
+
+			if (file != null)
+				helper.setURI(file.getFullPath().toString());
+ 
+			if(fValidator instanceof ISourceValidator) {
+				IncrementalReporter reporter = getReporter();
+				((ISourceValidator)fValidator).validate(dirtyRegion, helper, reporter);
+				results = createAnnotations(reporter.getMessages());
+				reporter.removeAllMessages(fValidator);
+			}
+
+		} catch (Exception e) {
+			Logger.logException(e);
+ 		}
+ 		return results;
+ 	}
+	
+	
+	
 }

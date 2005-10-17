@@ -29,6 +29,7 @@ import org.eclipse.jface.text.reconciler.DirtyRegion;
 import org.eclipse.jface.text.reconciler.IReconcileResult;
 import org.eclipse.jface.text.reconciler.IReconcileStep;
 import org.eclipse.jface.text.source.ISourceViewer;
+import org.eclipse.wst.sse.ui.internal.IReleasable;
 import org.eclipse.wst.sse.ui.internal.reconcile.AbstractStructuredTextReconcilingStrategy;
 import org.eclipse.wst.sse.ui.internal.reconcile.DocumentAdapter;
 import org.eclipse.wst.sse.ui.internal.reconcile.StructuredReconcileStep;
@@ -198,6 +199,17 @@ public class ValidatorStrategy extends AbstractStructuredTextReconcilingStrategy
 		while (it.hasNext()) {
 			step = (IReconcileStep) it.next();
 			step.setInputModel(new DocumentAdapter(document));
+		}
+	}
+	
+	public void release() {
+		super.release();
+		Iterator it = fVidToVStepMap.values().iterator();
+		IReconcileStep step = null;
+		while (it.hasNext()) {
+			step = (IReconcileStep) it.next();
+			if(step instanceof IReleasable)
+				((IReleasable)step).release();
 		}
 	}
 	

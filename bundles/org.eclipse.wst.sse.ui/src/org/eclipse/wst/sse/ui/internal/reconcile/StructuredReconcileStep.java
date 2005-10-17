@@ -90,7 +90,7 @@ public abstract class StructuredReconcileStep extends AbstractReconcileStep impl
 	 * @param sdRegion
 	 * @return
 	 */
-	private ITypedRegion getPartition(IStructuredDocumentRegion sdRegion) {
+	protected ITypedRegion getPartition(IStructuredDocumentRegion sdRegion) {
 		ITypedRegion tr = null;
 		if (!sdRegion.isDeleted())
 			tr = getPartition(sdRegion.getParentDocument(), sdRegion.getStartOffset());
