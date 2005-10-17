@@ -120,28 +120,10 @@ public class JSPIndexManager implements IResourceChangeListener {
 					boolean removed = (kind & IResourceDelta.REMOVED) == IResourceDelta.REMOVED;
 					if (added || isInterestingChange) {
 
-						// https://w3.opensource.ibm.com/bugzilla/show_bug.cgi?id=3553
-						// quick check if it's even JSP related to improve
-						// performance
-						// checking name from the delta before getting
-						// resource because it's lighter
-						int numSegments = delta.getFullPath().segmentCount();
-						String filename = delta.getFullPath().segment(numSegments - 1);
-						if (getJspContentType().isAssociatedWith(filename)) {
-							IResource r = delta.getResource();
-							if (r != null && r.exists() && r.getType() == IResource.FILE) {
-								this.jspFiles.put(r.getFullPath(), r);
-							}
-						}
+						visitAdded(delta);
 					}
 					else if (removed) {
-						// handle cleanup
-						if (delta.getResource() != null) {
-							IResource r = delta.getResource();
-							if (r.getType() == IResource.FOLDER && r.exists()) {
-								deleteIndex((IFile) r);
-							}
-						}
+						visitRemoved(delta);
 					}
 				}
 			}
@@ -153,6 +135,32 @@ public class JSPIndexManager implements IResourceChangeListener {
 			}
 			// if the delta has children, continue to add/remove files
 			return true;
+		}
+
+		private void visitRemoved(IResourceDelta delta) {
+			// handle cleanup
+			if (delta.getResource() != null) {
+				IResource r = delta.getResource();
+				if (r.getType() == IResource.FOLDER && r.exists()) {
+					deleteIndex((IFile) r);
+				}
+			}
+		}
+
+		private void visitAdded(IResourceDelta delta) {
+			// https://w3.opensource.ibm.com/bugzilla/show_bug.cgi?id=3553
+			// quick check if it's even JSP related to improve
+			// performance
+			// checking name from the delta before getting
+			// resource because it's lighter
+			int numSegments = delta.getFullPath().segmentCount();
+			String filename = delta.getFullPath().segment(numSegments - 1);
+			if (getJspContentType().isAssociatedWith(filename)) {
+				IResource r = delta.getResource();
+				if (r != null && r.exists() && r.getType() == IResource.FILE) {
+					this.jspFiles.put(r.getFullPath(), r);
+				}
+			}
 		}
 
 		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=93463
