@@ -94,6 +94,7 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IPageLayout;
+import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.PartInitException;
@@ -918,6 +919,7 @@ public class StructuredTextEditor extends TextEditor {
 
 	private void abstractTextEditorContextMenuAboutToShow(IMenuManager menu) {
 		menu.add(new Separator(ITextEditorActionConstants.GROUP_UNDO));
+		menu.add(new GroupMarker(ITextEditorActionConstants.GROUP_SAVE));
 		menu.add(new Separator(ITextEditorActionConstants.GROUP_COPY));
 		menu.add(new Separator(ITextEditorActionConstants.GROUP_PRINT));
 		menu.add(new Separator(ITextEditorActionConstants.GROUP_EDIT));
@@ -925,15 +927,14 @@ public class StructuredTextEditor extends TextEditor {
 		menu.add(new Separator(IWorkbenchActionConstants.GROUP_ADD));
 		menu.add(new Separator(ITextEditorActionConstants.GROUP_REST));
 		menu.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-		menu.add(new Separator(ITextEditorActionConstants.GROUP_SAVE));
 
 		if (isEditable()) {
 			addAction(menu, ITextEditorActionConstants.GROUP_UNDO, ITextEditorActionConstants.UNDO);
 			addAction(menu, ITextEditorActionConstants.GROUP_UNDO, ITextEditorActionConstants.REVERT_TO_SAVED);
+			addAction(menu, ITextEditorActionConstants.GROUP_SAVE, ITextEditorActionConstants.SAVE);
 			addAction(menu, ITextEditorActionConstants.GROUP_COPY, ITextEditorActionConstants.CUT);
 			addAction(menu, ITextEditorActionConstants.GROUP_COPY, ITextEditorActionConstants.COPY);
 			addAction(menu, ITextEditorActionConstants.GROUP_COPY, ITextEditorActionConstants.PASTE);
-			addAction(menu, ITextEditorActionConstants.GROUP_SAVE, ITextEditorActionConstants.SAVE);
 		}
 		else {
 			addAction(menu, ITextEditorActionConstants.GROUP_COPY, ITextEditorActionConstants.COPY);
@@ -1452,6 +1453,21 @@ public class StructuredTextEditor extends TextEditor {
 
 	protected StructuredTextViewer createStructedTextViewer(Composite parent, IVerticalRuler verticalRuler, int styles) {
 		return new StructuredTextViewer(parent, verticalRuler, getOverviewRuler(), isOverviewRulerVisible(), styles);
+	}
+
+	protected void createUndoRedoActions() {
+		// overridden to add icons to actions
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=111877
+		super.createUndoRedoActions();
+		IAction action = getAction(ITextEditorActionConstants.UNDO);
+		if (action != null) {
+			action.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_TOOL_UNDO));
+		}
+
+		action = getAction(ITextEditorActionConstants.REDO);
+		if (action != null) {
+			action.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_TOOL_REDO));
+		}
 	}
 
 	/**
