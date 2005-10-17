@@ -13,6 +13,7 @@ package org.eclipse.wst.xml.ui.internal.validation;
 
 import org.eclipse.wst.validation.internal.provisional.ValidationFactory;
 import org.eclipse.wst.validation.internal.provisional.core.IValidator;
+import org.eclipse.wst.xml.ui.internal.Logger;
 
 /**
  * @author Mark Hutchinson
@@ -26,11 +27,13 @@ public class DelegatingSourceValidatorForXML extends DelegatingSourceValidator {
 	}
 
 	protected IValidator getDelegateValidator() {
+		IValidator result = null;
 		try {
-			return ValidationFactory.instance.getValidator(VALIDATOR_CLASS);
+			result = ValidationFactory.instance.getValidator(VALIDATOR_CLASS);
 		}
-		catch (Exception e) { //
+		catch (InstantiationException e) {
+			Logger.logException(e);
 		}
-		return null;
+		return result;
 	}
 }
