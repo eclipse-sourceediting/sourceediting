@@ -79,6 +79,7 @@ public class XMLMessageInfoHelper
     }
     else if (errorKey.equals("EntityNotDeclared"))
     {  	selectionStrategy="TEXT_ENTITY_REFERENCE";
+        nameOrValue = (String)messageArguments[0];
     }
     else if (errorKey.equals("ElementUnterminated"))
 	{
