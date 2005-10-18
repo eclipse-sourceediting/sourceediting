@@ -16,7 +16,6 @@ import java.util.Set;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.wst.common.componentcore.datamodel.FlexibleProjectCreationDataModelProvider;
 import org.eclipse.wst.common.componentcore.internal.operation.ComponentCreationDataModelProvider;
-import org.eclipse.wst.common.componentcore.internal.util.IModuleConstants;
 import org.eclipse.wst.common.frameworks.datamodel.DataModelFactory;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModelOperation;
@@ -39,10 +38,6 @@ public class SimpleWebModuleCreationDataModelProvider extends ComponentCreationD
     protected EClass getComponentType() {
     	// TODO Auto-generated method stub
     	return null;
-    }
-    
-    protected String getComponentID() {
-    	return IModuleConstants.WST_WEB_MODULE;
     }
     
     protected Integer getDefaultComponentVersion() {

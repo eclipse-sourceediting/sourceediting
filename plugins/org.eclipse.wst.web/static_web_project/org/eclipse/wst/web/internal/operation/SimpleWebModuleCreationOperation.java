@@ -21,7 +21,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.wst.common.componentcore.ComponentCore;
 import org.eclipse.wst.common.componentcore.internal.operation.ComponentCreationOperation;
-import org.eclipse.wst.common.componentcore.internal.util.IModuleConstants;
 import org.eclipse.wst.common.componentcore.resources.IVirtualComponent;
 import org.eclipse.wst.common.componentcore.resources.IVirtualFolder;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
@@ -33,8 +32,8 @@ public class SimpleWebModuleCreationOperation extends ComponentCreationOperation
         super(dataModel);
     }
 
-    public IStatus execute(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
-    	return super.execute(IModuleConstants.WST_WEB_MODULE,monitor, info);
+    public IStatus execute(IProgressMonitor monitor, IAdaptable info) {
+    	return super.execute(monitor, info);
     }
     
     protected void createAndLinkJ2EEComponentsForMultipleComponents() throws CoreException {

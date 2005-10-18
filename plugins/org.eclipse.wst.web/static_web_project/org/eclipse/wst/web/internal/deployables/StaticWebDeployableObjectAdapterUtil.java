@@ -96,7 +96,7 @@ public class StaticWebDeployableObjectAdapterUtil {
 	
 	protected static IModule[] getModules(IVirtualComponent component) {
 		IProject project = component.getProject();
-		if (project == null || component.getComponentTypeId() == null)
+		if (project == null)
 			return null;
 		IModule[] modules = ServerUtil.getModules(project);
 		return modules;

@@ -20,6 +20,9 @@ import org.eclipse.wst.common.componentcore.ModuleCoreNature;
 import org.eclipse.wst.common.componentcore.internal.StructureEdit;
 import org.eclipse.wst.common.componentcore.internal.util.IModuleConstants;
 import org.eclipse.wst.common.componentcore.resources.IVirtualComponent;
+import org.eclipse.wst.common.project.facet.core.IFacetedProject;
+import org.eclipse.wst.common.project.facet.core.IProjectFacet;
+import org.eclipse.wst.common.project.facet.core.ProjectFacetsManager;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.model.ModuleDelegate;
 import org.eclipse.wst.server.core.util.ProjectModuleFactoryDelegate;
@@ -43,8 +46,13 @@ public class StaticWebDeployableFactory extends ProjectModuleFactoryDelegate {
 	 * @return boolean
 	 */
 	protected boolean isValidModule(IProject project) {
-		IVirtualComponent comp = ComponentCore.createComponent(project);
-		return IModuleConstants.WST_WEB_MODULE.equals(comp.getComponentTypeId());
+		try {
+			IFacetedProject facetedProject = ProjectFacetsManager.create(project);
+			IProjectFacet webFacet = ProjectFacetsManager.getProjectFacet(IModuleConstants.WST_WEB_MODULE);
+			return facetedProject.hasProjectFacet(webFacet);
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 	/*
@@ -105,7 +113,7 @@ public class StaticWebDeployableFactory extends ProjectModuleFactoryDelegate {
 		IModule module = null;
 		List moduleList = new ArrayList();
 		try {
-			if(IModuleConstants.WST_WEB_MODULE.equals(component.getComponentTypeId())) {
+			if(isValidModule(component.getProject())) {
 				moduleDelegate = new StaticWebDeployable(component.getProject(),component);
 				module = createModule(component.getName(), component.getName(), moduleDelegate.getType(), moduleDelegate.getVersion(), moduleDelegate.getProject());
 				moduleList.add(module);
