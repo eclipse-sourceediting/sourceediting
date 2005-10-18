@@ -115,7 +115,8 @@ public abstract class BaseGraphicalViewer extends ScrollingGraphicalViewer imple
     getControl().setMenu(menu);
     
     // enable popupMenus extension
-    editor.getSite().registerContextMenu("org.eclipse.wst.xsd.ui.popup.graph", manager, menuSelectionProvider);
+    //BUG 68938 eclipse bug fixed. Bug 112955 - Filter out menu contributions.
+    editor.getEditorSite().registerContextMenu("org.eclipse.wst.xsd.ui.popup.graph", manager, menuSelectionProvider, false);
     
 //    KeyAdapter keyListener = new KeyAdapter()
 //    {
