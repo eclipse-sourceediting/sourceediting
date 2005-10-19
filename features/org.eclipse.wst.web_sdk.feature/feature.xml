@@ -20,11 +20,4 @@
          id="org.eclipse.wst.xml_sdk.feature"
          version="0.0.0"/>
 
-   <plugin
-         id="org.eclipse.wst.web.isv.doc"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
 </feature>
