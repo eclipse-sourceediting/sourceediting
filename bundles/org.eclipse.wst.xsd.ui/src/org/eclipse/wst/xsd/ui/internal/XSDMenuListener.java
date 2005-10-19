@@ -107,11 +107,21 @@ public class XSDMenuListener implements IMenuListener
     return ((IStructuredSelection) selection).getFirstElement();
   }
   
+  protected boolean isSchemaReadOnly()
+  {
+	  XSDSchema editorSchema = ((XSDEditor)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor()).getXSDSchema();
+	  if (editorSchema == xsdSchema) {
+		  return false;
+	  }
+
+	  return true; 
+  }
+  
   protected XSDSchema getCurrentSchemaInEditor()
   {
     return ((XSDEditor)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor()).getXSDSchema();
   }
-  
+    
   protected void updateXSDSchema()
   {
     isReadOnly = false;
@@ -120,11 +130,7 @@ public class XSDMenuListener implements IMenuListener
     if (object instanceof XSDConcreteComponent)
     {
       xsdSchema = ((XSDConcreteComponent) object).getSchema();
-      
-      if (getCurrentSchemaInEditor() != xsdSchema)
-      {
-        isReadOnly = true;
-      }
+      isReadOnly = isSchemaReadOnly();
     }
     else if (object instanceof Category)
     {
