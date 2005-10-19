@@ -102,9 +102,12 @@ public class MakeAnonymousTypeGlobalAction extends SelectionDispatchAction {
 		}
 		else if (selectedObject instanceof Node) {
 			Node node = (Node) selectedObject;
-			XSDConcreteComponent concreteComponent = getSchema()
-					.getCorrespondingComponent(node);
-			return canEnable(concreteComponent);
+			XSDSchema xsdSchema = getSchema();
+			if (xsdSchema != null)
+			{
+			  XSDConcreteComponent concreteComponent = xsdSchema.getCorrespondingComponent(node);
+		  	return canEnable(concreteComponent);
+			}
 		}
 		return false;
 		
