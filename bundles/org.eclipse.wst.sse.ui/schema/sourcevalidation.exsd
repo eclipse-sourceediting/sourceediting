@@ -9,6 +9,10 @@
          This extension point is provided to allow clients to contribute a validator (org.eclipse.wst.validation.internal.provisional.core.IValidator)
 for as-you-type (source) validation.
 
+If your validator can handle &quot;partial document&quot; validation, it should also implement ISourceValidator.  The validate call on ISourceValidator gets passed an IRegion representation of the part of the document that&apos;s dirty.  
+
+This should be much more efficient than validating the entire file each time someone types.
+
 The validator is enabled for specific content type/partition combinations.
 
 Required plugins are:
@@ -138,6 +142,15 @@ Required plugins are:
            &lt;/contentTypeIdentifier&gt;
         &lt;/validator&gt;
 &lt;/extension&gt;
+
+Using ISourceValidator
+
+If your validator can handle &quot;partial document&quot; validation, it should  implement ISourceValidator.  
+
+The validate call on ISourceValidator gets passed an IRegion of the document which represents just the part that&apos;s dirty.  This should be much more efficient than validating the entire file each time someone types.
+
+ISourceValidator has its &quot;connect(IDocument doc)&quot; method called when it&apos;s hooked up to the document (when the editor is opened), and &quot;disconnect(IDocument doc)&quot; called when the editor is closed, where any &quot;unhooking&quot; should take place.
+
       </documentation>
    </annotation>
 
@@ -169,6 +182,14 @@ Required plugins are:
         &lt;/validator&gt;
 &lt;/extension&gt;
 
+
+Using ISourceValidator
+
+If your validator can handle &quot;partial document&quot; validation, it should  implement ISourceValidator.  
+
+The validate call on ISourceValidator gets passed an IRegion of the document which represents just the part that&apos;s dirty.  This should be much more efficient than validating the entire file each time someone types.
+
+ISourceValidator has its &quot;connect(IDocument doc)&quot; method called when it&apos;s hooked up to the document (when the editor is opened), and &quot;disconnect(IDocument doc)&quot; called when the editor is closed, where any &quot;unhooking&quot; should take place.
       </documentation>
    </annotation>
 
