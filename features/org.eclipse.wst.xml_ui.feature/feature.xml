@@ -21,48 +21,16 @@
          version="0.0.0"/>
 
    <includes
-         id="org.eclipse.wst.common_core.feature"
-         version="0.0.0"/>
-
-   <includes
          id="org.eclipse.wst.xml_userdoc.feature"
          version="0.0.0"/>
 
+   <includes
+         id="org.eclipse.wst.common_ui.feature"
+         version="0.0.0"/>
+
    <requires>
-      <import plugin="org.eclipse.core.resources"/>
-      <import plugin="org.eclipse.core.runtime"/>
-      <import plugin="org.eclipse.jface.text"/>
-      <import plugin="org.eclipse.ui"/>
-      <import plugin="org.eclipse.ui.editors"/>
-      <import plugin="org.eclipse.ui.ide"/>
-      <import plugin="org.eclipse.ui.views"/>
-      <import plugin="org.eclipse.ui.workbench"/>
-      <import plugin="org.eclipse.ui.workbench.texteditor"/>
-      <import plugin="org.eclipse.wst.common.ui"/>
-      <import plugin="org.eclipse.wst.dtd.core"/>
-      <import plugin="org.eclipse.wst.sse.core"/>
-      <import plugin="org.eclipse.wst.xml.core"/>
-      <import plugin="org.eclipse.wst.validation"/>
-      <import plugin="org.eclipse.debug.core"/>
-      <import plugin="org.eclipse.debug.ui"/>
-      <import plugin="org.eclipse.search"/>
-      <import plugin="org.eclipse.swt"/>
-      <import plugin="org.eclipse.jface"/>
-      <import plugin="org.eclipse.core.filebuffers"/>
-      <import plugin="org.eclipse.emf.common"/>
-      <import plugin="org.eclipse.wst.common.uriresolver"/>
-      <import plugin="org.eclipse.core.runtime.compatibility"/>
-      <import plugin="org.eclipse.xsd"/>
-      <import plugin="org.eclipse.gef"/>
-      <import plugin="org.eclipse.wst.common.ui.properties"/>
-      <import plugin="org.eclipse.xsd.edit"/>
-      <import plugin="org.eclipse.emf.edit"/>
-      <import plugin="org.eclipse.emf.edit.ui"/>
-      <import plugin="org.eclipse.ltk.core.refactoring"/>
-      <import plugin="org.eclipse.ltk.ui.refactoring"/>
-      <import plugin="org.eclipse.wst.xsd.core"/>
       <import feature="org.eclipse.wst.xml_core.feature" version="1.0.0"/>
-      <import feature="org.eclipse.wst.common_core.feature" version="1.0.0"/>
+      <import feature="org.eclipse.wst.common_ui.feature" version="1.0.0"/>
    </requires>
 
    <plugin
