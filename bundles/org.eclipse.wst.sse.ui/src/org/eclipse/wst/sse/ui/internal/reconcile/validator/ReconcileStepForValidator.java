@@ -183,8 +183,6 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 		if (DEBUG)
 			System.out.println("[trace reconciler] > reconciling model in VALIDATOR step w/ dirty region: [" + dirtyRegion.getText() + "]"); //$NON-NLS-1$ //$NON-NLS-2$
 
-		// pa_TODO need to use dirty region if Validators can ever handle
-		// partial file validation
 		IReconcileResult[] results = EMPTY_RECONCILE_RESULT_SET;
 		if (dirtyRegion != null) {
 			try {
