@@ -21,6 +21,8 @@ Object page = null;
 try {
  int include_include_int = 5; 
 javax.swing.JButton includesUseBean = new javax.swing.JButton();
+{ // <gifts:gift>
+} // </gifts:gift>
  String localIncludedString = globalIncludedString;
 for(int i=0; i<5; i++) {
 }
