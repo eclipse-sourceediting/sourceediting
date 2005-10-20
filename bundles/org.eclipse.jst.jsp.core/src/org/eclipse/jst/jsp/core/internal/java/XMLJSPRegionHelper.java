@@ -26,6 +26,8 @@ import org.eclipse.wst.sse.core.internal.ltk.parser.BlockMarker;
 import org.eclipse.wst.sse.core.internal.ltk.parser.StructuredDocumentRegionHandler;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.sse.core.internal.util.Debug;
 import org.eclipse.wst.sse.core.internal.util.StringUtils;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
@@ -128,6 +130,9 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 	public void nodeParsed(IStructuredDocumentRegion sdRegion) {
 
 		try {
+			
+			handleScopingIfNecessary(sdRegion);
+			
 			if (isJSPStartRegion(sdRegion)) {
 				String nameStr = getRegionName(sdRegion);
 				if (isJSPRegion(nameStr))
@@ -178,6 +183,57 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 				// do nothing, since we're just ending
 			}
 		}
+	}
+
+	private void handleScopingIfNecessary(IStructuredDocumentRegion sdRegion) {
+
+		// fix to make sure custom tag block have their own scope
+		// we add '{' for custom tag open and '}' for custom tag close
+		// in the translation
+		if(sdRegion.getFirstRegion().getType() == DOMRegionContext.XML_TAG_OPEN) {
+			if(!isSelfClosingTag(sdRegion)) {
+				String nameStr = getRegionName(sdRegion);
+				if(isPossibleCustomTag(nameStr)) {
+					startScope(nameStr);
+				}
+			}
+		}
+		else if(sdRegion.getFirstRegion().getType() == DOMRegionContext.XML_END_TAG_OPEN) {
+			String nameStr = getRegionName(sdRegion);
+			if(isPossibleCustomTag(nameStr)) {
+				endScope(nameStr);
+			}
+		}
+	}
+	
+	private boolean isSelfClosingTag(ITextRegionCollection containerRegion) {
+		
+		if(containerRegion == null)
+			return false;
+		
+		ITextRegionList regions = containerRegion.getRegions();
+		ITextRegion r = regions.get(regions.size()-1);
+		return r.getType() == DOMRegionContext.XML_EMPTY_TAG_CLOSE;
+	}
+
+	private void startScope(String tagName) {
+		//IStructuredDocumentRegion currentNode = fTranslator.getCurrentNode();
+		StringBuffer text = new StringBuffer();
+		text.append("{ // <");
+		text.append(tagName);
+		text.append(">\n");
+		//this.fTranslator.translateScriptletString(text.toString(), currentNode, currentNode.getStartOffset(), currentNode.getLength()); //$NON-NLS-1$
+		fScriptlets.add(text.toString());
+	}
+
+	private void endScope(String tagName) {
+		//IStructuredDocumentRegion currentNode = fTranslator.getCurrentNode();
+		StringBuffer text = new StringBuffer();
+		text.append("} // </");
+		text.append(tagName);
+		text.append(">\n");
+		//this.fTranslator.translateScriptletString(text.toString(), currentNode, currentNode.getStartOffset(), currentNode.getLength()); //$NON-NLS-1$
+		fScriptlets.add(text.toString());
 	}
 
 	public void resetNodes() {
@@ -375,7 +431,7 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 	}
 
 	protected boolean isPossibleCustomTag(String tagName) {
-		return tagName.indexOf(":") > 1; //$NON-NLS-1$
+		return tagName.indexOf(":") > 0 && !tagName.startsWith("jsp"); //$NON-NLS-1$  //$NON-NLS-2$
 	}
 
 	protected boolean isTaglibDirective(String tagName) {
@@ -387,13 +443,15 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 	}
 
 	protected String getRegionName(IStructuredDocumentRegion sdRegion) {
-		ITextRegion nameRegion = null;
+
 		String nameStr = ""; //$NON-NLS-1$
-		int size = sdRegion.getRegions().size();
-		if (size > 1) {
-			// presumably XML-JSP <jsp:scriptlet> | <jsp:expression> | <jsp:declaration>
-			nameRegion = sdRegion.getRegions().get(1);
-			nameStr = fTextToParse.substring(sdRegion.getStartOffset(nameRegion), sdRegion.getTextEndOffset(nameRegion));
+		ITextRegionList regions = sdRegion.getRegions();
+		for(int i=0; i<regions.size(); i++) {
+			ITextRegion r = regions.get(i);
+			if(r.getType() == DOMRegionContext.XML_TAG_NAME) {
+				nameStr = fTextToParse.substring(sdRegion.getStartOffset(r), sdRegion.getTextEndOffset(r));
+				break;
+			}
 		}
 		return nameStr.trim();
 	}

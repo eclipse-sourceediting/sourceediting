@@ -152,8 +152,6 @@ public class JSPTranslator {
 	private Stack fIncludes = null;
 	/** mostly for helper classes, so they parse correctly */
 	private ArrayList fBlockMarkers = null;
-	/** use only one inclue helper per file location */
-	private HashMap fJSPIncludeHelperMap = null;
 	/**
 	 * for keeping track of offset in user buffers while document is being
 	 * built
@@ -366,8 +364,6 @@ public class JSPTranslator {
 			fIncludes.clear();
 
 		fBlockMarkers = null;
-
-		fJSPIncludeHelperMap = null;
 
 		fOffsetInUserImports = 0;
 		fOffsetInUserDeclarations = 0;
@@ -746,6 +742,10 @@ public class JSPTranslator {
 	protected void translateRegionContainer(ITextRegionCollection container, int JSPType) {
 
 		ITextRegionCollection containerRegion = container;
+
+		// custom tags need their own scope {}
+		handleScopingIfNecessary(containerRegion);
+		
 		Iterator regions = containerRegion.getRegions().iterator();
 		ITextRegion region = null;
 		while (regions.hasNext()) {
@@ -781,6 +781,77 @@ public class JSPTranslator {
 		// }
 	}
 
+	private void handleScopingIfNecessary(ITextRegionCollection containerRegion) {
+		// code within a custom tag gets its own scope
+		// so if we encounter a start of a custom tag, we add '{'
+		// and for the end of a custom tag we add '}'
+		if(containerRegion.getFirstRegion().getType() == DOMRegionContext.XML_TAG_OPEN) {
+			// don't add '{' if it's a self closing tag
+			if(!isSelfClosingTag(containerRegion)) {
+				if(isCustomTag(containerRegion)) {
+					startScope();
+				}
+			}
+		}
+		else if(containerRegion.getFirstRegion().getType() == DOMRegionContext.XML_END_TAG_OPEN) {
+			if(isCustomTag(containerRegion)) {
+				endScope();
+			}
+		}
+	}
+
+	private void startScope() {
+		//fScopeDepth++;
+		StringBuffer text = new StringBuffer();
+		//for(int i=0; i<fScopeDepth; i++) text.append(" "); //$NON-NLS-1$
+		text.append("{ // <");
+		text.append(getRegionName(fCurrentNode));
+		text.append(">\n");
+		appendToBuffer(text.toString(), fUserCode, false, fCurrentNode); //$NON-NLS-1$
+	}
+	
+	private void endScope() {
+		StringBuffer text = new StringBuffer();
+		text.append("} // </");
+		text.append(getRegionName(fCurrentNode));
+		text.append(">\n");
+		appendToBuffer(text.toString(), fUserCode, false, fCurrentNode); //$NON-NLS-1$
+	}
+	
+	private boolean isSelfClosingTag(ITextRegionCollection containerRegion) {
+		
+		if(containerRegion == null)
+			return false;
+		
+		ITextRegionList regions = containerRegion.getRegions();
+		ITextRegion r = regions.get(regions.size()-1);
+		return r.getType() == DOMRegionContext.XML_EMPTY_TAG_CLOSE;
+	}
+
+	private boolean isCustomTag(ITextRegionCollection containerRegion) {
+		String tagName = getRegionName(containerRegion);
+		
+		if(tagName == null)
+			return false;
+		
+		if(tagName.indexOf(":") > 0 && !tagName.startsWith("jsp"))  //$NON-NLS-1$  //$NON-NLS-2$
+			return true;
+		
+		return false;
+	}
+	
+	private String getRegionName(ITextRegionCollection containerRegion) {
+		ITextRegionList regions = containerRegion.getRegions();
+		ITextRegion nameRegion = null;
+		for (int i = 0; i < regions.size(); i++) {
+			ITextRegion r = regions.get(i);
+			if(r.getType() == DOMRegionContext.XML_TAG_NAME) {
+				nameRegion = r;
+				break;
+			}
+		}
+		return nameRegion != null ? containerRegion.getText(nameRegion).trim() : null;
+	}
 	/*
 	 * ////////////////////////////////////////////////////////////////////////////////// **
 	 * TEMP WORKAROUND FOR CMVC 241882 Takes a String and blocks out
@@ -1437,28 +1508,12 @@ public class JSPTranslator {
 			// file path
 			if (!getIncludes().contains(fileLocation) && getBaseLocation() != null && !fileLocation.equals(getBaseLocation())) {
 				getIncludes().push(fileLocation);
-				JSPIncludeRegionHelper helper = getIncludesHelper(fileLocation);
+				JSPIncludeRegionHelper helper = new JSPIncludeRegionHelper(this);
 				helper.parse(fileLocation);
 				helper.writeToBuffers();
 				getIncludes().pop();
 			}
 		}
-	}
-
-	/*
-	 * one helper per fileLocation
-	 */
-	protected JSPIncludeRegionHelper getIncludesHelper(String fileLocation) {
-		// lazy creation
-		if (fJSPIncludeHelperMap == null) {
-			fJSPIncludeHelperMap = new HashMap();
-		}
-		JSPIncludeRegionHelper helper = (JSPIncludeRegionHelper) fJSPIncludeHelperMap.get(fileLocation);
-		if (helper == null) {
-			helper = new JSPIncludeRegionHelper(this);
-			fJSPIncludeHelperMap.put(fileLocation, helper);
-		}
-		return helper;
 	}
 
 	private URIResolver getResolver() {
