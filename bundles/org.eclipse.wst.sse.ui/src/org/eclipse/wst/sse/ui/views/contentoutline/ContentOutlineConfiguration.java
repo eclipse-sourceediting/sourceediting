@@ -23,7 +23,6 @@ import org.eclipse.jface.util.TransferDropTargetListener;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.events.KeyListener;
@@ -166,15 +165,6 @@ public abstract class ContentOutlineConfiguration {
 	}
 
 	/**
-	 * @param viewer
-	 * @return the ISelectionChangedListener to notify when the viewer's
-	 *         selection changes
-	 */
-	public ISelectionChangedListener getPostSelectionChangedListener(TreeViewer viewer) {
-		return null;
-	}
-
-	/**
 	 * @return the preference store in which to remember preferences (such as the link-with-editor toggle state)
 	 */
 	protected IPreferenceStore getPreferenceStore() {
@@ -191,18 +181,6 @@ public abstract class ContentOutlineConfiguration {
 	public ISelection getSelection(TreeViewer viewer, ISelection selection) {
 		return selection;
 	}
-
-
-
-	/**
-	 * @param viewer
-	 * @return the ISelectionChangedListener to notify when the viewer's
-	 *         selection changes
-	 */
-	public ISelectionChangedListener getSelectionChangedListener(TreeViewer viewer) {
-		return null;
-	}
-
 
 	/**
 	 * @param viewer

@@ -496,13 +496,6 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 				}
 			}
 
-			// clear the selection changed and double click listeners from the
-			// configuration
-			if (getConfiguration().getSelectionChangedListener(getTreeViewer()) != null)
-				removeSelectionChangedListener(getConfiguration().getSelectionChangedListener(getTreeViewer()));
-			if (getConfiguration().getPostSelectionChangedListener(getTreeViewer()) != null)
-				getTreeViewer().removePostSelectionChangedListener(getConfiguration().getPostSelectionChangedListener(getTreeViewer()));
-
 			IContributionManager toolbar = getSite().getActionBars().getToolBarManager();
 			if (toolbar != null) {
 				IContributionItem[] toolbarItems = getConfiguration().getToolbarContributions(getTreeViewer());
@@ -557,10 +550,6 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 			// (re)set the providers
 			getTreeViewer().setLabelProvider(getConfiguration().getLabelProvider(getTreeViewer()));
 			getTreeViewer().setContentProvider(getConfiguration().getContentProvider(getTreeViewer()));
-			if (getConfiguration().getSelectionChangedListener(getTreeViewer()) != null)
-				addSelectionChangedListener(getConfiguration().getSelectionChangedListener(getTreeViewer()));
-			if (getConfiguration().getPostSelectionChangedListener(getTreeViewer()) != null)
-				getTreeViewer().addPostSelectionChangedListener(getConfiguration().getPostSelectionChangedListener(getTreeViewer()));
 
 			// view toolbar
 			IContributionManager toolbar = getSite().getActionBars().getToolBarManager();
@@ -647,8 +636,7 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 
 	/**
 	 * @param id -
-	 *            the content type identifier to use for further
-	 *            extension
+	 *            the content type identifier to use for further extension
 	 */
 	public void setInputContentTypeIdentifier(String id) {
 		fInputContentTypeIdentifier = id;
