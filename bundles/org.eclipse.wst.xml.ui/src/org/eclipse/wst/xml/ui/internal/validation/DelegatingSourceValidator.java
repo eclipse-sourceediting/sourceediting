@@ -399,7 +399,7 @@ public abstract class DelegatingSourceValidator implements IValidator {
 						}
 					}
 				}
-				else if (selectionStrategy.equals(FIRST_NON_WHITESPACE_TEXT)) {
+				else if (FIRST_NON_WHITESPACE_TEXT.equals(selectionStrategy)) {
 					// search through all child nodes and return range of
 					// first non-whitespace
 					// text node
@@ -435,7 +435,7 @@ public abstract class DelegatingSourceValidator implements IValidator {
 					}
 				}
 
-				else if (selectionStrategy.equals(TEXT_ENTITY_REFERENCE)) {
+				else if (TEXT_ENTITY_REFERENCE.equals(selectionStrategy)) {
 					if (node.getNodeType() == Node.ENTITY_REFERENCE_NODE) {
 						startEndPositions[0] = region.getStartOffset();
 						startEndPositions[1] = region.getEndOffset();
@@ -461,7 +461,7 @@ public abstract class DelegatingSourceValidator implements IValidator {
 					}
 
 				}
-				else if (selectionStrategy.equals(VALUE_OF_ATTRIBUTE_WITH_GIVEN_VALUE)) {
+				else if (VALUE_OF_ATTRIBUTE_WITH_GIVEN_VALUE.equals(selectionStrategy)) {
 					if (node.getNodeType() == Node.ELEMENT_NODE) {
 						// here we will search through all attributes for the
 						// one with the
