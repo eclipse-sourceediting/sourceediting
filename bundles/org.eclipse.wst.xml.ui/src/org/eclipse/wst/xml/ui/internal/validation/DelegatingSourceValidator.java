@@ -322,7 +322,7 @@ public abstract class DelegatingSourceValidator implements IValidator {
 			if (region instanceof Node) {
 				Node node = (Node) region;
 
-				if (selectionStrategy.equals(START_TAG)) {// then we want to
+				if (START_TAG.equals(selectionStrategy)) {// then we want to
 					// underline the opening tag
 					if (node.getNodeType() == Node.ELEMENT_NODE) {
 						IDOMElement element = (IDOMElement) node;
@@ -330,7 +330,7 @@ public abstract class DelegatingSourceValidator implements IValidator {
 						startEndPositions[1] = startEndPositions[0] + element.getTagName().length();
 					}
 				}
-				else if (selectionStrategy.equals(ATTRIBUTE_NAME)) { // in
+				else if (ATTRIBUTE_NAME.equals(selectionStrategy)) { // in
 					// underline the attribute's name
 					if (node.getNodeType() == Node.ELEMENT_NODE) {
 						IDOMElement element = (IDOMElement) node;
@@ -341,7 +341,7 @@ public abstract class DelegatingSourceValidator implements IValidator {
 						}
 					}
 				}
-				else if (selectionStrategy.equals(ATTRIBUTE_VALUE)) {
+				else if (ATTRIBUTE_VALUE.equals(selectionStrategy)) {
 					// underline the attribute's value
 					if (node.getNodeType() == Node.ELEMENT_NODE) {
 						IDOMElement element = (IDOMElement) node;
@@ -352,7 +352,7 @@ public abstract class DelegatingSourceValidator implements IValidator {
 						}
 					}
 				}
-				else if (selectionStrategy.equals(ALL_ATTRIBUTES)) {
+				else if (ALL_ATTRIBUTES.equals(selectionStrategy)) {
 					// underline all attributes
 					if (node.getNodeType() == Node.ELEMENT_NODE) {
 						IDOMElement element = (IDOMElement) node;
@@ -367,7 +367,7 @@ public abstract class DelegatingSourceValidator implements IValidator {
 						}
 					}
 				}
-				else if (selectionStrategy.equals(TEXT)) {
+				else if (TEXT.equals(selectionStrategy)) {
 					// underline the text between the tags
 					if (node.getNodeType() == Node.TEXT_NODE) {
 						IDOMText textNode = (IDOMText) node;
