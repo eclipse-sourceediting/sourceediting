@@ -14,7 +14,7 @@ import org.eclipse.wst.sse.core.internal.ltk.modelhandler.EmbeddedTypeHandler;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapterFactory;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
-import org.eclipse.wst.sse.ui.internal.provisional.contentproperties.IContentSettingsListener;
+import org.eclipse.wst.sse.internal.contentproperties.IContentSettingsListener;
 
 /**
  * Classes which implement this interface have two responsibilities. 

@@ -10,7 +10,7 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.sse.ui.internal.provisional.contentproperties;
+package org.eclipse.wst.sse.internal.contentproperties;
 
 
 
@@ -31,7 +31,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.wst.sse.ui.internal.Logger;
+import org.eclipse.wst.sse.core.internal.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 

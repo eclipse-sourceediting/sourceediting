@@ -10,14 +10,11 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.sse.ui.internal.provisional.contentproperties;
+package org.eclipse.wst.sse.internal.contentproperties;
 
 
 
-public class ContentSettingsCreator {
+public interface IContentSettingsListener {
 
-	public final static IContentSettings create() {
-		return ContentSettings.getInstance();
-	}
-
+	void contentSettingsChanged(org.eclipse.core.resources.IResource e);
 }

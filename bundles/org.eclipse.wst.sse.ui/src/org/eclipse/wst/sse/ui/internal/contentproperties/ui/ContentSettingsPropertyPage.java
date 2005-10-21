@@ -34,11 +34,11 @@ import org.eclipse.ui.dialogs.PropertyPage;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
+import org.eclipse.wst.sse.internal.contentproperties.ContentSettings;
+import org.eclipse.wst.sse.internal.contentproperties.ContentSettingsCreator;
+import org.eclipse.wst.sse.internal.contentproperties.IContentSettings;
 import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
-import org.eclipse.wst.sse.ui.internal.provisional.contentproperties.ContentSettings;
-import org.eclipse.wst.sse.ui.internal.provisional.contentproperties.ContentSettingsCreator;
-import org.eclipse.wst.sse.ui.internal.provisional.contentproperties.IContentSettings;
 
 public abstract class ContentSettingsPropertyPage extends PropertyPage {
 	private static final IStatus STATUS_ERROR = new Status(IStatus.ERROR, SSEUIPlugin.ID, IStatus.INFO, "ERROR", null); //$NON-NLS-1$

@@ -10,7 +10,7 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.sse.ui.internal.provisional.contentproperties;
+package org.eclipse.wst.sse.internal.contentproperties;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -21,10 +21,7 @@ import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.wst.sse.ui.internal.Logger;
+import org.eclipse.wst.sse.core.internal.Logger;
 
 public class ContentSettingsSynchronizer implements IResourceChangeListener {
 	class ContentSettingsVisitor implements IResourceDeltaVisitor {
@@ -59,8 +56,9 @@ public class ContentSettingsSynchronizer implements IResourceChangeListener {
 					if (this.fEvent.getType() == IResourceChangeEvent.POST_CHANGE && resource.equals(project.getFile(this.contentSettingsName))) {
 						// new object for .contentsettings
 						handler = new ContentSettingsSelfHandler();
-					} else if (this.fEvent.getType() == IResourceChangeEvent.PRE_BUILD && resource.getFileExtension() != null) {
-						//TODO change to content type!
+					}
+					else if (this.fEvent.getType() == IResourceChangeEvent.PRE_BUILD && resource.getFileExtension() != null) {
+						// TODO change to content type!
 						if (resource.getFileExtension().equalsIgnoreCase("shtml") //$NON-NLS-1$
 									|| resource.getFileExtension().equalsIgnoreCase("htm") //$NON-NLS-1$
 									|| resource.getFileExtension().equalsIgnoreCase("html") //$NON-NLS-1$
@@ -76,7 +74,8 @@ public class ContentSettingsSynchronizer implements IResourceChangeListener {
 							handler = null;
 							return true;
 						}
-					} else
+					}
+					else
 						return false; // true or false;motomoto true;
 					break;
 				case IResource.FOLDER :
@@ -84,20 +83,26 @@ public class ContentSettingsSynchronizer implements IResourceChangeListener {
 				default :
 					return true;
 			}
-			final IResourceDelta fDelta = delta;
-			final IContentSettingsHandler deltaHandler = this.handler;
-			Display display = getDisplay();
-			if (display != null && !display.isDisposed()) {
-				display.asyncExec(new Runnable() {
-					public void run() {
-						if (deltaHandler != null) {
-							deltaHandler.handle(fDelta);
-						}
-					}
-				});
-			} else if (deltaHandler != null) {
-				deltaHandler.handle(fDelta);
-			}
+//			final IResourceDelta fDelta = delta;
+//			final IContentSettingsHandler deltaHandler = this.handler;
+			// XXX FIXME
+			// I commented out following to move this to "model" 
+			// packages. Since wasnt't hooked up/working anyway, I think 
+			// ok for now, but need to re-work as Job, once we do implement 
+			// settings for resources again. 
+//			Display display = getDisplay();
+//			if (display != null && !display.isDisposed()) {
+//				display.asyncExec(new Runnable() {
+//					public void run() {
+//						if (deltaHandler != null) {
+//							deltaHandler.handle(fDelta);
+//						}
+//					}
+//				});
+//			}
+//			else if (deltaHandler != null) {
+//				deltaHandler.handle(fDelta);
+//			}
 			handler = null;
 			return true; // true or false;motomoto true;
 		}
@@ -115,15 +120,6 @@ public class ContentSettingsSynchronizer implements IResourceChangeListener {
 	private boolean fListening = false;
 	private IProject fProject;
 
-	Display getDisplay() {
-		IWorkbench workbench = null;
-		if (PlatformUI.isWorkbenchRunning()) {
-			workbench = PlatformUI.getWorkbench();
-		}
-		if (workbench != null)
-			return workbench.getDisplay();
-		return null;
-	}
 
 	private final IProject getProject() {
 		return fProject;
@@ -159,7 +155,8 @@ public class ContentSettingsSynchronizer implements IResourceChangeListener {
 				if (csVisitor == null)
 					csVisitor = new ContentSettingsVisitor(event);
 				delta.accept(csVisitor);
-			} catch (CoreException e) {
+			}
+			catch (CoreException e) {
 				Logger.logException(e);
 			}
 		}

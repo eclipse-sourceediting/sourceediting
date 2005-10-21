@@ -10,13 +10,11 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.sse.ui.internal.provisional.contentproperties;
+package org.eclipse.wst.sse.internal.contentproperties;
 
 
 
-import org.eclipse.core.resources.IResourceDelta;
+interface INotify {
 
-interface IContentSettingsHandler {
-
-	public void handle(final IResourceDelta delta);
+	void notifyListeners(org.eclipse.core.resources.IResource resource);
 }
