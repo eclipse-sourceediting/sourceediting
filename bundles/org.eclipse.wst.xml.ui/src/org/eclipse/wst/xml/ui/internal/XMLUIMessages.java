@@ -280,6 +280,8 @@ public class XMLUIMessages extends NLS {
 	public static String StructureSelectPrevious_label;
 	public static String StructureSelectPrevious_tooltip;
 	public static String StructureSelectPrevious_description;
+	public static String MESSAGE_XML_VALIDATION_MESSAGE_UI_;
+
 
 	static {
 		// load message values from bundle file

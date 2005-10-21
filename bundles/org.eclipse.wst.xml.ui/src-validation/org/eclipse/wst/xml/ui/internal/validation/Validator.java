@@ -15,14 +15,19 @@ package org.eclipse.wst.xml.ui.internal.validation;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Locale;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.osgi.util.NLS;
+import org.eclipse.wst.validation.internal.core.Message;
 import org.eclipse.wst.validation.internal.core.ValidationException;
 import org.eclipse.wst.validation.internal.operations.IRuleGroup;
+import org.eclipse.wst.validation.internal.provisional.core.IMessage;
 import org.eclipse.wst.validation.internal.provisional.core.IReporter;
 import org.eclipse.wst.validation.internal.provisional.core.IValidationContext;
 import org.eclipse.wst.validation.internal.provisional.core.IValidator;
+import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 
 /**
  * A validator to plug the XML validator into the validation framework.
@@ -32,6 +37,48 @@ import org.eclipse.wst.validation.internal.provisional.core.IValidator;
  */
 public class Validator implements IValidator
 {
+	class LocalizedMessage extends Message {
+		private String _message = null;
+
+		public LocalizedMessage(int severity, String messageText) {
+			this(severity, messageText, null);
+		}
+
+		public LocalizedMessage(int severity, String messageText, IResource targetObject) {
+			this(severity, messageText, (Object) targetObject);
+		}
+
+		public LocalizedMessage(int severity, String messageText, Object targetObject) {
+			super(null, severity, null);
+			setLocalizedMessage(messageText);
+			setTargetObject(targetObject);
+		}
+
+		public void setLocalizedMessage(String message) {
+			_message = message;
+		}
+
+		public String getLocalizedMessage() {
+			return _message;
+		}
+
+		public String getText() {
+			return getLocalizedMessage();
+		}
+
+		public String getText(ClassLoader cl) {
+			return getLocalizedMessage();
+		}
+
+		public String getText(Locale l) {
+			return getLocalizedMessage();
+		}
+
+		public String getText(Locale l, ClassLoader cl) {
+			return getLocalizedMessage();
+		}
+	}
+	
   private final String GET_FILE = "getFile";
   public final String GET_PROJECT_FILES = "getAllFiles";
 
@@ -126,11 +173,12 @@ public class Validator implements IValidator
    */
   public void validate(IFile file, IReporter reporter, int ruleGroup)
   {  
+    Message message = new LocalizedMessage(IMessage.LOW_SEVERITY, NLS.bind(XMLUIMessages.MESSAGE_XML_VALIDATION_MESSAGE_UI_, new String[]{file.getFullPath().toString()}));
+    reporter.displaySubtask(this, message);
+
     ValidateAction validateAction = new ValidateAction(file, false);
     validateAction.setValidator(this);
-    validateAction.run();
-
-    
+    validateAction.run();  
   }
   
   /**

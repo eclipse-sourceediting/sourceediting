@@ -14,6 +14,7 @@ package org.eclipse.jst.jsp.core.internal.validation;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
+import java.util.Locale;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -34,6 +35,7 @@ import org.eclipse.jst.jsp.core.internal.java.jspel.TokenMgrError;
 import org.eclipse.jst.jsp.core.internal.preferences.JSPCorePreferenceNames;
 import org.eclipse.jst.jsp.core.internal.provisional.contenttype.ContentTypeIdForJSP;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
@@ -42,14 +44,56 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
 import org.eclipse.wst.validation.internal.core.Message;
 import org.eclipse.wst.validation.internal.core.ValidationException;
-import org.eclipse.wst.validation.internal.operations.LocalizedMessage;
 import org.eclipse.wst.validation.internal.provisional.core.IMessage;
 import org.eclipse.wst.validation.internal.provisional.core.IReporter;
 import org.eclipse.wst.validation.internal.provisional.core.IValidationContext;
+import org.eclipse.wst.validation.internal.provisional.core.IValidator;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
 
-public class JSPELValidator implements org.eclipse.wst.validation.internal.provisional.core.IValidator {
+public class JSPELValidator implements IValidator {
+
+	static private class LocalizedMessage extends Message {
+		private String _message = null;
+
+		public LocalizedMessage(int severity, String messageText) {
+			this(severity, messageText, null);
+		}
+
+		public LocalizedMessage(int severity, String messageText, IResource targetObject) {
+			this(severity, messageText, (Object) targetObject);
+		}
+
+		public LocalizedMessage(int severity, String messageText, Object targetObject) {
+			super(null, severity, null);
+			setLocalizedMessage(messageText);
+			setTargetObject(targetObject);
+		}
+
+		public void setLocalizedMessage(String message) {
+			_message = message;
+		}
+
+		public String getLocalizedMessage() {
+			return _message;
+		}
+
+		public String getText() {
+			return getLocalizedMessage();
+		}
+
+		public String getText(ClassLoader cl) {
+			return getLocalizedMessage();
+		}
+
+		public String getText(Locale l) {
+			return getLocalizedMessage();
+		}
+
+		public String getText(Locale l, ClassLoader cl) {
+			return getLocalizedMessage();
+		}
+	}
 
 	static boolean shouldValidate(IFile file) {
 		IResource resource = file;
@@ -199,6 +243,10 @@ public class JSPELValidator implements org.eclipse.wst.validation.internal.provi
 				if (!shouldValidate2(file)) {
 					continue;
 				}
+
+			    Message message = new LocalizedMessage(IMessage.LOW_SEVERITY, NLS.bind(JSPCoreMessages.MESSAGE_JSP_VALIDATING_MESSAGE_UI_, new String[]{file.getFullPath().toString()}));
+			    reporter.displaySubtask(this, message);
+				
 				IStructuredModel model = null;
 				try {
 					model = StructuredModelManager.getModelManager().getModelForRead(file);

@@ -20,6 +20,8 @@ import org.eclipse.osgi.util.NLS;
 public class JSPCoreMessages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.jst.jsp.core.internal.JSPCorePluginResources"; //$NON-NLS-1$
 
+	public static String MESSAGE_JSP_VALIDATING_MESSAGE_UI_;
+
 	public static String JSPIndexManager_0;
 	public static String JSPIndexManager_2;
 	public static String JSP_Search;
