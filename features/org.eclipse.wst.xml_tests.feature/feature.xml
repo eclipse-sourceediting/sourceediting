@@ -16,13 +16,9 @@
       [Enter License Description here.]
    </license>
 
-   <includes
-         id="org.eclipse.wst.common_tests.feature"
-         version="0.0.0"/>
-
    <requires>
       <import feature="org.eclipse.wst.xml_ui.feature" version="1.0.0"/>
-      <import feature="org.eclipse.wst.xml_core.feature" version="1.0.0"/>
+      <import feature="org.eclipse.test" version="3.1.0"/>
    </requires>
 
    <plugin
