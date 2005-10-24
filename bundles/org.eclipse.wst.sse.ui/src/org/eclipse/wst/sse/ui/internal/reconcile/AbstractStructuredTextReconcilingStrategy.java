@@ -381,6 +381,9 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 		if (document == null)
 			release();
 		
+		if (getFirstStep() != null)
+			getFirstStep().setInputModel(new DocumentAdapter(document));
+		
 		fDocument = document;
 	}
 
