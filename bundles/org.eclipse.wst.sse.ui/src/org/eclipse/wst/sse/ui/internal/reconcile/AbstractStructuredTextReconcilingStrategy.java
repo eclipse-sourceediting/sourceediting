@@ -26,7 +26,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
-import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.reconciler.DirtyRegion;
 import org.eclipse.jface.text.reconciler.IReconcileResult;
 import org.eclipse.jface.text.reconciler.IReconcileStep;
@@ -34,11 +33,6 @@ import org.eclipse.jface.text.reconciler.IReconcilingStrategy;
 import org.eclipse.jface.text.reconciler.IReconcilingStrategyExtension;
 import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.ISourceViewer;
-import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
-import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
-import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.ui.internal.IReleasable;
 import org.eclipse.wst.sse.ui.internal.ITemporaryAnnotation;
 import org.eclipse.wst.sse.ui.internal.Logger;
@@ -46,8 +40,9 @@ import org.eclipse.wst.sse.ui.internal.StructuredMarkerAnnotation;
 
 
 /**
- * A base ReconcilingStrategy. Subclasses must implement
- * createReconcileSteps().
+ * A base ReconcilingStrategy. 
+ * Subclasses must implement createReconcileSteps().
+ * This class should not know about IStructuredDocument, only IDocument.
  * 
  * @author pavery
  */
@@ -68,15 +63,15 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 	public static final int ANNOTATION_LENGTH_LIMIT = 25;
 	public static final int ELEMENT_ERROR_LIMIT = 25;
     
-	protected IStructuredDocument fDocument = null;
-	protected IReconcileStep fFirstStep = null;
-	protected IProgressMonitor fProgressMonitor = null;
-	protected ISourceViewer fSourceViewer = null;
+	private IDocument fDocument = null;
+	private IReconcileStep fFirstStep = null;
+	private IProgressMonitor fProgressMonitor = null;
+	private ISourceViewer fSourceViewer = null;
     private Comparator fComparator;
 
 	// list of "validator" annotations
 	// for gray/un-gray capability
-	private HashSet fMarkerAnnotations = new HashSet();
+	private HashSet fMarkerAnnotations = null;
 	
 	/**
 	 * Creates a new strategy. The editor parameter is for access to the
@@ -172,14 +167,13 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 
 	protected TemporaryAnnotation[] getAnnotationsToRemove(DirtyRegion dr) {
 		
-		IStructuredDocumentRegion[] sdRegions = fDocument.getStructuredDocumentRegions(dr.getOffset(), dr.getLength());
 		List remove = new ArrayList();
 		IAnnotationModel annotationModel = getAnnotationModel();
 		// can be null when closing the editor
 		if (getAnnotationModel() != null) {
 			
 			// clear validator annotations
-			fMarkerAnnotations.clear();
+			getMarkerAnnotations().clear();
 			
 			Iterator i = annotationModel.getAnnotationIterator();
 			while (i.hasNext()) {
@@ -204,7 +198,7 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 				// then if this strategy knows how to add/remove this
 				// partition type
 				if (canHandlePartition(key.getPartitionType()) && containsStep(key.getStep())) {
-					if (key.getScope() == ReconcileAnnotationKey.PARTIAL && overlaps(annotation.getPosition(), sdRegions)) {
+					if (key.getScope() == ReconcileAnnotationKey.PARTIAL && annotation.getPosition().overlapsWith(dr.getOffset(), dr.getLength())) {
 						remove.add(annotation);
 					}
 					else if (key.getScope() == ReconcileAnnotationKey.TOTAL) {
@@ -216,24 +210,6 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 		return (TemporaryAnnotation[]) remove.toArray(new TemporaryAnnotation[remove.size()]);
 	}
 
-	/**
-	 * Returns the corresponding node for the StructuredDocumentRegion.
-	 * 
-	 * @param sdRegion
-	 * @return the corresponding node for sdRegion
-	 */
-	protected IndexedRegion getCorrespondingNode(IStructuredDocumentRegion sdRegion) {
-		IStructuredModel sModel = StructuredModelManager.getModelManager().getExistingModelForRead(fDocument);
-        IndexedRegion indexedRegion = null;
-        try {
-            if (sModel != null) 
-                indexedRegion = sModel.getIndexedRegion(sdRegion.getStart());    
-        } finally {
-            if (sModel != null)
-                sModel.releaseFromRead();
-        }
-        return indexedRegion;
-    }
 
 	/**
 	 * Gets partition types from all steps in this strategy.
@@ -264,32 +240,6 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 		if (DEBUG && (fProgressMonitor != null && fProgressMonitor.isCanceled()))
 			System.out.println("** STRATEGY CANCELED **:" + this.getClass().getName()); //$NON-NLS-1$
 		return fProgressMonitor != null && fProgressMonitor.isCanceled();
-	}
-
-	/**
-	 * Checks if this position overlaps any of the StructuredDocument regions'
-	 * correstponding IndexedRegion.
-	 * 
-	 * @param pos
-	 * @param sdRegions
-	 * @return true if the position overlaps any of the regions, otherwise
-	 *         false.
-	 */
-	protected boolean overlaps(Position pos, IStructuredDocumentRegion[] sdRegions) {
-		int start = -1;
-		int end = -1;
-		for (int i = 0; i < sdRegions.length; i++) {
-		    if(!sdRegions[i].isDeleted()) {
-    			IndexedRegion corresponding = getCorrespondingNode(sdRegions[i]);
-                if(corresponding != null) {
-        			if (start == -1 || start > corresponding.getStartOffset())
-        				start = corresponding.getStartOffset();
-        			if (end == -1 || end < corresponding.getEndOffset())
-        				end = corresponding.getEndOffset();
-                }
-            }
-		}
-		return pos.overlapsWith(start, end - start);
 	}
 
 	/**
@@ -395,7 +345,7 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 
     private StructuredMarkerAnnotation getCorrespondingMarkerAnnotation(TemporaryAnnotation tempAnnotation) {
 		
-		Iterator it = fMarkerAnnotations.iterator();
+		Iterator it = getMarkerAnnotations().iterator();
 		while (it.hasNext()) {
 			StructuredMarkerAnnotation markerAnnotation = (StructuredMarkerAnnotation) it.next();
 			String message = ""; //$NON-NLS-1$
@@ -431,15 +381,13 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 		if (document == null)
 			release();
 		
-		// we currently only work on IStructuredDocument
-		if(document instanceof IStructuredDocument) {
-			
-			fDocument = (IStructuredDocument)document;
-			if (fFirstStep != null)
-				fFirstStep.setInputModel(new DocumentAdapter(document));
-		}
+		fDocument = document;
 	}
 
+	public IDocument getDocument() {
+		return fDocument;
+	}
+	
 	/**
 	 * @param monitor
 	 * @see org.eclipse.jface.text.reconciler.IReconcilingStrategyExtension#setProgressMonitor(org.eclipse.core.runtime.IProgressMonitor)
@@ -452,7 +400,7 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 
 	/**
 	 * Check if the annotation is already there, if it is, no need to 
-     * remove or add again. this will avoid a lot of flickering behavior...
+     * remove or add again. This will avoid a lot of "flickering" behavior.
 	 * 
 	 * @param annotationsToRemove
 	 * @param annotationsToAdd
@@ -515,5 +463,19 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 	
 	public boolean isTotalScope() {
 		return false;
+	}
+
+	public HashSet getMarkerAnnotations() {
+		if(fMarkerAnnotations == null)
+			 fMarkerAnnotations = new HashSet();
+		return fMarkerAnnotations;
+	}
+
+	public IReconcileStep getFirstStep() {
+		return fFirstStep;
+	}
+
+	public void setFirstStep(IReconcileStep firstStep) {
+		fFirstStep = firstStep;
 	}
 }

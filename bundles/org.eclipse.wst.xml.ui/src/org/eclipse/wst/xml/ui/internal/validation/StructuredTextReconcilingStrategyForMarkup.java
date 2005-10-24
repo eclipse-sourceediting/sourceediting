@@ -13,7 +13,7 @@
 package org.eclipse.wst.xml.ui.internal.validation;
 
 import org.eclipse.jface.text.source.ISourceViewer;
-import org.eclipse.wst.sse.ui.internal.reconcile.AbstractStructuredTextReconcilingStrategy;
+import org.eclipse.wst.sse.ui.internal.reconcile.StructuredTextReconcilingStrategy;
 
 
 /**
@@ -21,7 +21,7 @@ import org.eclipse.wst.sse.ui.internal.reconcile.AbstractStructuredTextReconcili
  * @author pavery
  *  
  */
-public class StructuredTextReconcilingStrategyForMarkup extends AbstractStructuredTextReconcilingStrategy {
+public class StructuredTextReconcilingStrategyForMarkup extends StructuredTextReconcilingStrategy {
 
 	public StructuredTextReconcilingStrategyForMarkup(ISourceViewer sourceViewer) {
 		super(sourceViewer);
@@ -29,6 +29,6 @@ public class StructuredTextReconcilingStrategyForMarkup extends AbstractStructur
 
 	public void createReconcileSteps() {
 		// only one step, to check syntax
-		fFirstStep = new ReconcileStepForMarkup();
+		setFirstStep(new ReconcileStepForMarkup());
 	}
 }

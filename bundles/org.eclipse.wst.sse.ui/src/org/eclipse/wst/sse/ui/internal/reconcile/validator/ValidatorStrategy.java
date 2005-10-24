@@ -30,9 +30,9 @@ import org.eclipse.jface.text.reconciler.IReconcileResult;
 import org.eclipse.jface.text.reconciler.IReconcileStep;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.wst.sse.ui.internal.IReleasable;
-import org.eclipse.wst.sse.ui.internal.reconcile.AbstractStructuredTextReconcilingStrategy;
 import org.eclipse.wst.sse.ui.internal.reconcile.DocumentAdapter;
 import org.eclipse.wst.sse.ui.internal.reconcile.StructuredReconcileStep;
+import org.eclipse.wst.sse.ui.internal.reconcile.StructuredTextReconcilingStrategy;
 import org.eclipse.wst.sse.ui.internal.reconcile.TemporaryAnnotation;
 import org.eclipse.wst.validation.internal.provisional.core.IValidator;
 
@@ -43,7 +43,7 @@ import org.eclipse.wst.validation.internal.provisional.core.IValidator;
  * 
  * @author pavery
  */
-public class ValidatorStrategy extends AbstractStructuredTextReconcilingStrategy {
+public class ValidatorStrategy extends StructuredTextReconcilingStrategy {
 	
     private String[] fContentTypeIds = null;
     /** validator id (as declared in ext point) -> ReconcileStepForValidator **/
@@ -145,9 +145,10 @@ public class ValidatorStrategy extends AbstractStructuredTextReconcilingStrategy
 		
 		if(isCanceled())
 			return;
+		IDocument doc = getDocument();
 		
 		// for external files, this can be null
-		if (fDocument != null) {
+		if (doc != null) {
 
 			String partitionType = tr.getType();
 			if (canValidatePartition(partitionType)) {
@@ -170,7 +171,7 @@ public class ValidatorStrategy extends AbstractStructuredTextReconcilingStrategy
 							// if doesn't exist, create one
 							IValidator validator = vmd.createValidator();
 							validatorStep = new ReconcileStepForValidator(validator, vmd.getValidatorScope());
-							validatorStep.setInputModel(new DocumentAdapter(fDocument));
+							validatorStep.setInputModel(new DocumentAdapter(doc));
 
 							fVidToVStepMap.put(vmd.getValidatorId(), validatorStep);
 						}
@@ -190,8 +191,9 @@ public class ValidatorStrategy extends AbstractStructuredTextReconcilingStrategy
 	 * @see org.eclipse.wst.sse.ui.internal.reconcile.AbstractStructuredTextReconcilingStrategy#setDocument(org.eclipse.jface.text.IDocument)
 	 */
 	public void setDocument(IDocument document) {
-
+		
 		super.setDocument(document);
+		
 		// validator steps are in "fVIdToVStepMap" (as opposed to fFirstStep >
 		// next step etc...)
 		Iterator it = fVidToVStepMap.values().iterator();

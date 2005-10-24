@@ -52,6 +52,7 @@ import org.eclipse.wst.validation.internal.provisional.core.IValidator;
 import org.eclipse.wst.xml.core.internal.document.DocumentTypeAdapter;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
+import org.w3c.dom.Text;
 
 public class HTMLValidator implements IValidator, ISourceValidator {
 	private static final String ORG_ECLIPSE_JST_JSP_CORE_JSPSOURCE = "org.eclipse.jst.jsp.core.jspsource";
@@ -234,7 +235,17 @@ public class HTMLValidator implements IValidator, ISourceValidator {
 			if(file == null || !file.exists())
 				return;
 			
+			// this will be the wrong region if it's Text (instead of Element)
+			// we don't know how to validate Text
 			IndexedRegion ir = model.getIndexedRegion(dirtyRegion.getOffset());
+			if(ir instanceof Text) {
+				while(ir != null && ir instanceof Text) {
+					// it's assumed that this gets the IndexedRegion to
+					// the right of the end offset
+					ir = model.getIndexedRegion(ir.getEndOffset());
+				}
+			}
+			
 			if(ir instanceof INodeNotifier) {
 				
 				INodeAdapterFactory factory = HTMLValidationAdapterFactory.getInstance();

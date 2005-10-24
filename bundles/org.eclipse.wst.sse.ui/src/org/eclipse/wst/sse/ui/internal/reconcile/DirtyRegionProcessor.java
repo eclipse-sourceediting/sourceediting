@@ -36,8 +36,6 @@ import org.eclipse.jface.text.reconciler.DirtyRegion;
 import org.eclipse.jface.text.reconciler.IReconciler;
 import org.eclipse.jface.text.reconciler.IReconcilingStrategy;
 import org.eclipse.jface.text.reconciler.IReconcilingStrategyExtension;
-import org.eclipse.wst.sse.core.internal.provisional.events.NewDocumentEvent;
-import org.eclipse.wst.sse.core.internal.provisional.events.NoChangeEvent;
 import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 
@@ -360,13 +358,7 @@ public class DirtyRegionProcessor extends Job implements IReconciler {
 		return fIsInstalled;
 	}
 
-	public void newModel(NewDocumentEvent structuredDocumentEvent) {
-		// do nothing
-	}
 
-	public void noChange(NoChangeEvent structuredDocumentEvent) {
-		// do nothing
-	}
 
 	/**
 	 * Subclasses should implement for specific handling of dirty regions.

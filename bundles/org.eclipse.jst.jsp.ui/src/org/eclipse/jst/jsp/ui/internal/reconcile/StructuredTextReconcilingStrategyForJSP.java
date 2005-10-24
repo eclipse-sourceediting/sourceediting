@@ -31,13 +31,13 @@ import org.eclipse.jst.jsp.core.internal.preferences.JSPCorePreferenceNames;
 import org.eclipse.jst.jsp.core.internal.provisional.contenttype.ContentTypeIdForJSP;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
-import org.eclipse.wst.sse.ui.internal.reconcile.AbstractStructuredTextReconcilingStrategy;
+import org.eclipse.wst.sse.ui.internal.reconcile.StructuredTextReconcilingStrategy;
 
 /**
  * 
  * @author pavery
  */
-public class StructuredTextReconcilingStrategyForJSP extends AbstractStructuredTextReconcilingStrategy {
+public class StructuredTextReconcilingStrategyForJSP extends StructuredTextReconcilingStrategy {
 	private boolean fShouldReconcile = true;
 	private boolean fStepsCreated = false;
 
@@ -50,9 +50,9 @@ public class StructuredTextReconcilingStrategyForJSP extends AbstractStructuredT
 		// the order is:
 		// 1. translation step
 		// 2. java step
-		if (fDocument != null) {
+		if (getDocument() != null) {
 			IReconcileStep javaStep = new ReconcileStepForJava();
-			fFirstStep = new ReconcileStepForJspTranslation(javaStep);
+			setFirstStep(new ReconcileStepForJspTranslation(javaStep));
 			fStepsCreated = true;
 		}
 	}
