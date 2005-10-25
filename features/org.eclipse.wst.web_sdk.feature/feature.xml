@@ -20,4 +20,23 @@
          id="org.eclipse.wst.xml_sdk.feature"
          version="0.0.0"/>
 
+   <includes
+         id="org.eclipse.wst.server_sdk.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.wst.common_sdk.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.wst.web_ui.feature"
+         version="0.0.0"/>
+
+   <requires>
+      <import feature="org.eclipse.wst.xml_sdk.feature" version="1.0.0"/>
+      <import feature="org.eclipse.wst.common_sdk.feature" version="1.0.0"/>
+      <import feature="org.eclipse.wst.server_sdk.feature" version="1.0.0"/>
+      <import feature="org.eclipse.wst.web_ui.feature" version="1.0.0"/>
+   </requires>
+
 </feature>

@@ -25,8 +25,8 @@
          version="0.0.0"/>
 
    <requires>
-      <import plugin="org.eclipse.ui"/>
-      <import plugin="org.eclipse.core.runtime"/>
+      <import feature="org.eclipse.wst.common_sdk.feature" version="1.0.0"/>
+      <import feature="org.eclipse.wst.xml_ui.feature" version="1.0.0"/>
    </requires>
 
 </feature>
