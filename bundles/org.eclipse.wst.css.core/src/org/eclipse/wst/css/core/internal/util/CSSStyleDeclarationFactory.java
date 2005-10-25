@@ -39,18 +39,14 @@ public class CSSStyleDeclarationFactory extends CSSStyleDeclarationFactoryContex
 		if (decl == null) {
 			return null;
 		}
-		// 11/22/2004, nsd, nothing's done with this variable
-//		ICSSStyleDeclaration newNode = createStyleDeclaration();
+		ICSSStyleDeclaration newNode = createStyleDeclaration();
 
-		// 05/11/2004, dmw, unnecessary cast, looks like it was always
-		// returning null!
-		// so something is probably amiss
-		// if (!(newNode instanceof ICSSDocument)) {
-		return null;
-		// }
-		// fOwnerDocument = newNode;
-		// cloneChildNodes(decl, newNode);
-		// return newNode;
+		if (newNode == null) {
+			return null;
+		}
+		fOwnerDocument = newNode;
+		cloneChildNodes(decl, newNode);
+		return newNode;
 	}
 
 	/**
