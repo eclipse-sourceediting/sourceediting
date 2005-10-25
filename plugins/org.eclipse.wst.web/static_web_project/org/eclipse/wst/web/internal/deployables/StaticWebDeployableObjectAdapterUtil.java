@@ -17,13 +17,11 @@ import org.eclipse.wst.common.componentcore.resources.IVirtualComponent;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IModuleArtifact;
 import org.eclipse.wst.server.core.ServerUtil;
-import org.eclipse.wst.server.core.internal.Module;
 import org.eclipse.wst.server.core.util.WebResource;
 
 public class StaticWebDeployableObjectAdapterUtil {
 
 	private final static String[] extensionsToExclude = new String[]{"sql", "xmi"}; //$NON-NLS-1$ //$NON-NLS-2$
-	static String J2EE_NATURE_ID = "org.eclipse.jst.j2ee.web.WebNature"; //$NON-NLS-1$
 	static String INFO_DIRECTORY = "WEB-INF"; //$NON-NLS-1$
 
 	public static IModuleArtifact getModuleObject(Object obj) {
@@ -80,27 +78,6 @@ public class StaticWebDeployableObjectAdapterUtil {
 	}
 
 	protected static IModule getModule(IProject project) {
-		return getModule(ComponentCore.createComponent(project));
+		return ServerUtil.getModule(project);
 	}
-	
-	public static IModule getModule(IVirtualComponent component) {
-		IModule[] modules  = getModules(component);
-		for (int i = 0; i < modules.length; i++) {
-			Module module = (Module) modules[i];
-			if (module.getName().equals(component.getName()))
-				return module;
-		}
-
-		return null;
-	}
-	
-	protected static IModule[] getModules(IVirtualComponent component) {
-		IProject project = component.getProject();
-		if (project == null)
-			return null;
-		IModule[] modules = ServerUtil.getModules(project);
-		return modules;
-	}
-
-
 }

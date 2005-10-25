@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Properties;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.wst.common.componentcore.internal.util.IModuleConstants;
 import org.eclipse.wst.common.componentcore.resources.IVirtualComponent;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IModuleType;
@@ -29,7 +30,7 @@ public class StaticWebDeployable extends ProjectModule implements IStaticWeb {
 	}
 
 	public String getFactoryId() {
-		return "org.eclipse.jst.j2ee.internal.internal.internal.web.deployables.static"; //$NON-NLS-1$
+		return StaticWebDeployableFactory.getFactoryId();
 	}
 
 	/**
@@ -52,7 +53,7 @@ public class StaticWebDeployable extends ProjectModule implements IStaticWeb {
 	}
 
 	public String getType() {
-		return "web.static"; //$NON-NLS-1$
+		return IModuleConstants.WST_WEB_MODULE;
 	}
 
 	public String getVersion() {

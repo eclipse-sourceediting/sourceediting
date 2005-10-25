@@ -34,7 +34,7 @@ public class StaticWebDeployableFactory extends ProjectModuleFactoryDelegate {
 	/*
 	 * @see DeployableProjectFactoryDelegate#getFactoryID()
 	 */
-	public String getFactoryId() {
+	public static String getFactoryId() {
 		return ID;
 	}
 
