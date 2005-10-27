@@ -13,12 +13,7 @@
 <plugin>
 
   <extension point="org.eclipse.help.toc">
-
    <toc file="DTDEditormap_toc.xml"/>
- 
-         <toc file="dtdeditor_reference_toc.xml"/>
-         
-       
   </extension>
 
 </plugin>
