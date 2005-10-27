@@ -43,8 +43,9 @@
 			toc="../org.eclipse.wst.datatools.connection.ui.doc.user/connection_ui_toc.xml" />
 		<link
 			toc="../org.eclipse.wst.datatools.fe.ui.doc.user/fe_ui_toc.xml" />
-		<link
-			toc="../org.eclipse.wst.datatools.server.ui.doc.user/database_explorer_toc.xml" />
+		<link toc="../org.eclipse.wst.datatools.server.ui.doc.user/database_explorer_toc.xml" />
+		<link toc="../org.eclipse.wst.datatools.outputview.ui.doc.user/dataoutput_view_toc.xml" />
+		<link toc="../org.eclipse.wst.datatools.data.ui.doc.user/data_ui_toc.xml" />
 	</topic>
 	<topic label="Using the server tools">
 		<anchor id="server_install" />
