@@ -32,7 +32,7 @@
 		<link
 			toc="../org.eclipse.wst.xmleditor.doc.user/XMLBuildermap_toc.xml" />
 		<link
-			toc="../org.eclipse.wst.xsdeditor.doc.user/WXDeditormap_toc.xml" />
+			toc="../org.eclipse.wst.xsdeditor.doc.user/XSDeditormap_toc.xml" />
 	</topic>
 	<!-- <link toc="../org.eclipse.wst.xml.doc.user/xml_toc.xml"/>-->
 	<topic label="Creating Web service applications">
