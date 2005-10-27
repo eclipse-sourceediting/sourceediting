@@ -49,7 +49,6 @@
 		<link toc="../org.eclipse.wst.sqleditor.doc.user/sqleditor_toc.xml" />
 	</topic>
 	<topic label="Using the server tools">
-		<anchor id="server_install" />
 		<link toc="../org.eclipse.wst.server.ui.doc.user/build_toc.xml" />
 		<link toc="../org.eclipse.jst.server.ui.doc.user/build_toc.xml" />
 	</topic>
