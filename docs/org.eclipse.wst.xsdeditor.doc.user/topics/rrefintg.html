@@ -19,87 +19,74 @@
 <body id="rrefintg"><a name="rrefintg"><!-- --></a>
 
 <h1 class="topictitle1">Referential integrity in the XML schema editor</h1>
+<div><p>The XML schema editor has a built-in mechanism to handle referential
+integrity issues. When you delete certain nodes, clean up for any nodes affected
+will automatically occur.</p>
 <div><p>When you define a complex type, you can add a content model to
 it and reference a global element. </p><div class="skipspace"><div class="p">For example:<pre>&lt;schema&gt;
-    &lt;element name="comment" type="string"&gt;
-    &lt;complexType name="Items"&gt;
-        &lt;sequence&gt;
-               &lt;element ref="comment"&gt;
-        &lt;/sequence&gt;
-    &lt;/complexType&gt;
+ &lt;element name="comment" type="string"&gt;
+ &lt;complexType name="Items"&gt;
+ &lt;sequence&gt;
+ &lt;element ref="comment"&gt;
+ &lt;/sequence&gt;
+ &lt;/complexType&gt;
 &lt;/schema&gt;</pre>
 </div>
 <p>If the global element (comment) was deleted,
-all references to it would be in error. To prevent this, the XML schema editor
-has a built-in mechanism to handle such referential integrity issues. When
-you delete the global element, the XML schema editor will clean up using the
-following algorithm:</p>
+all references to it would be in error. However, when you delete the global
+element, the XML schema editor will clean up using the following algorithm:</p>
 <ul><li>If there are one or more global elements in the schema, it will change
 all existing references to the first global element.</li>
 <li>If there is no global element, then it will delete the element reference
 from the content model.</li>
 </ul>
 <p>Similar cleanup operations are performed when other types of objects
-are deleted.  The following lists describes various  cleanup operations.
- </p>
-<p>Deleting a global attribute will cause the following cleanup:</p>
-<ol><li>Any content model or attribute group that references the deleted global
-attribute will be reset using the above algorithm.</li>
+are deleted.  The following lists describes various cleanup operations. </p>
+<p>Deleting
+a global attribute will cause the following cleanup:</p>
+<ul><li>Any item that references the deleted global attribute will be reset using
+the preceding algorithm.</li>
 </ol>
-<p>Deleting a complex type will cause the following cleanup:</p>
-<ol><li>Any element type that is set to the deleted complex type will be reset
+		</ul>
+		<p>Deleting a complex type will cause the following cleanup:</p>
+		<ul>
+			<li>Any element type that is set to the deleted complex type will be reset
 to the <tt class="sysout">string</tt> type.</li>
-<li>Any complex type that derives from the deleted complex type will be reset
+			<li>Any complex type that derives from the deleted complex type will be reset
 to no derivation.</li>
-</ol>
-<p>Deleting a simple type will cause the following cleanup:</p>
-<ol><li>Any attribute type that is set to the deleted simple type will be reset
+		</ul>
+		<p>Deleting a simple type will cause the following cleanup:</p>
+		<ul>
+			<li>Any attribute type that is set to the deleted simple type will be reset
 to the  <tt class="sysout">string</tt> type.</li>
-<li>Any element type that is set to the deleted simple type will be reset
+			<li>Any element type that is set to the deleted simple type will be reset
 to the  <tt class="sysout">string</tt> type.</li>
-<li>Any simple type that derives from the deleted simple type will be reset
+			<li>Any simple type that derives from the deleted simple type will be reset
 to  <tt class="sysout">string</tt> as its base type.</li>
-</ol>
-<p>Deleting a group or attribute group will cause the following cleanup:</p>
-<ol><li>Any complex type that references the deleted group or attribute group
+		</ul>
+		<p>Deleting a group or attribute group will cause the following cleanup:</p>
+		<ul>
+			<li>Any complex type that references the deleted group or attribute group
 will be reset using the algorithm similar to the one described earlier for
 deleted global elements.</li>
-</ol>
+		</ul>
 </div>
-<div class="skipspace"><h4 class="sectiontitle">Deleting include and import elements</h4><p>When an <samp class="codeph">include</samp> or <samp class="codeph">import</samp> element
-is added to a schema, types from the included or imported schema become visible
-to the current schema. For example, the following schema references the Address
-type from the Address.xsd file</p>
-<div class="p"><pre>&lt;schema targetNamespace="http://www.example.com/IPO"
-xmlns="http://www.w3.org/1999/XMLSchema" 
-xmlns:ipo="http://www.example.com/IPO&gt; 
-&lt;include schemaLocation="F:\vabase\itp\workbench\B2B\Project1\Address.xsd"/&gt;
-&lt;complexType name="PurchaseOrder"&gt;
-&lt;sequence&gt;
-&lt;element name="shipTo" type="ipo:Address"&gt;
-&lt;/sequence&gt;
-&lt;/complexType&gt;
-&lt;/schema&gt;  </pre>
-</div>
-<p>If the included schema is subsequently deleted,
-the <samp class="codeph">include</samp> element would be in error. To prevent this, the
-XML schema editor will perform the necessary cleanup. In this example, the
-type for the element <samp class="codeph">shipTo</samp> would be reset to the  <tt class="sysout">string</tt> data
-type.</p>
-<p>The XML schema editor resets the following type references when
-an include or import element is deleted:</p>
-<ul><li>Global element and element's type</li>
+<div class="section"><h4 class="sectiontitle">Deleting included and imported schema</h4><div class="p">If an included
+or imported schema is deleted, you must manually reset the following type
+references as appropriate: <ul><li>Global element and element's type</li>
 <li>Attribute type</li>
 <li>Complex type derivation</li>
 <li>Simple type derivation</li>
 </ul>
-<p>The cleanup is similar to the other operations outlined above. The
-XML schema editor will write an information message to the Problems view to
-notify you of such operations.</p>
-<p>(c) Copyright 2001, World Wide Web Consortium
-(Massachusetts Institute of Technology, Institut National de Recherche en
-Informatique et en Automatique, Keio University)  </p>
+They will not automatically be reset if an included or imported schema
+is deleted.</div>
 </div>
 </div>
-</body>
+<p><div class="relconcepts"><strong>Related concepts</strong><br />
+<div><a href="../topics/cxmlsced.html" title="XML schemas are an XML language for describing and constraining the content of XML files.">XML schema editor</a></div>
+</p>
+<p class="reltasks"><strong>Related tasks</strong><br />
+<div><a href="../topics/tedtschm.html" title="After you create an XML schema, you can edit its various properties, such as its namespace and prefix.">Editing XML schema properties</a></div>
+</div>
+</p></body>
 </html>

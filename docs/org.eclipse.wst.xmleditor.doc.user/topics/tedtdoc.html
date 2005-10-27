@@ -14,11 +14,10 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/ -->
 <link rel="stylesheet" type="text/css" href="../../org.eclipse.wst.doc.user/common.css" />
-<title>Editing your DOCTYPE declaration</title>
+<title>Editing DOCTYPE declarations</title>
 </head>
-<body id="tedtdoc">
-
-<h1 class="topictitle1">Editing your DOCTYPE declaration</h1>
+<body id="tedtdoc"><a name="tedtdoc"><!-- --></a>
+<h1 class="topictitle1">Editing DOCTYPE declarations</h1>
 <div><p>The DOCTYPE declaration in an XML file is used at the beginning
 of it to associate it with a DTD file. You can edit your DOCTYPE declaration
 to change the DTD file your XML file is associated with.</p><div class="skipspace"><p>The following instructions were written for the Resource perspective,
@@ -27,23 +26,29 @@ but they will also work in many other perspectives.</p>
 declaration, follow these steps:</p>
 </div>
 <ol><li class="skipspace"><span>In the Design view of the XML editor, right-click <span class="uicontrol">DOCTYPE</span> and
-click <span class="uicontrol">Edit DOCTYPE</span>.</span></li>
-<li class="skipspace"><span>The value in the <span class="uicontrol">Root element mame</span> field
+click <b> <span class="uicontrol">Edit DOCTYPE</span></b>.</span></li>
+<li class="skipspace"><span>The value in the <b> <span class="uicontrol">Root element 
+name</span></b> field
 should match the root element of your XML file exactly.</span> You should
 only edit the value in this field if your root element changes.</li>
-<li class="skipspace"><span>You can select a Public ID for any existing XML Catalog entries
-by clicking <span class="uicontrol">Browse</span>. </span> The value in the <span class="uicontrol">Public
-ID</span> field is the Public Identifier. It is used to associate the
+<li class="skipspace"><span>You can select a <b>Public ID</b> for any existing XML Catalog entries
+by clicking <b> <span class="uicontrol">Browse</span></b>. </span> The value in the 
+<b> <span class="uicontrol">Public
+ID</span></b> field is the Public Identifier. It is used to associate the
 XML file (using an XML Catalog entry) with a DTD file. For more information
 on XML Catalog entries, refer to the related tasks below.</li>
-<li class="skipspace"><span>The value in the <span class="uicontrol">System ID</span> field is the
+<li class="skipspace"><span>The value in the <b> <span class="uicontrol">System ID</span> 
+</b>field is the
 DTD the XML file is associated with. Type the path of the DTD file you want
 the XML file associated with in this field. </span>   <b>Note</b>: When
 the XML file is processed by the XML processor, it will first try to use the
 Public ID to locate the DTD, and if this fails, it will use the System ID
 to find it.</li>
-<li class="skipspace"><span>Click  <span class="uicontrol">OK</span>.</span></li>
+<li class="skipspace"><span>Click  <b>  <span class="uicontrol">OK</span></b>.</span></li>
 </ol>
+<div class="section">If you do not have a DOCTYPE declaration in your XML file, you can
+right-click in the Design view and click <b> <span class="uicontrol">Add DTD Information</span></b> to
+add one.</div>
 </div>
 
 <div>
@@ -53,8 +58,9 @@ to find it.</li>
 </p>
 <p><b class="reltaskshd">Related tasks</b><br />
 <a href="../topics/tedtcnst.html" title="In the Design view, when you edit an XML file that has a set of constraints (that is, a set of rules) defined by a DTD or an XML schema, you can turn the constraints on and off to provide flexibility in the way you edit, but still maintain the validity of the document periodically.">Editing with DTD or XML schema constraints</a><br />
-<a href="../topics/txmlcat.html" title="Adding an entry to the XML Catalog"></a><br />
-<a href="../topics/tedtgram.html" title="If you make changes to a DTD file or XML schema associated with an XML file (that is currently open), click XML &gt; Reload Dependencies to update the XML file with these changes.">Updating XML files with changes made to DTDs and schemas</a><br />
+<a href="../topics/txmlcat.html" title="Adding an entry to the XML Catalog">Adding an entry to the XML Catalog</a><br />
+<a href="../topics/tedtgram.html" title="If you make changes to a DTD file or XML schema associated with an XML file (that is currently open), click XML &gt; Reload Dependencies to update the XML file with these changes.">Updating XML files with changes made to DTDs and schemas</a><br>
+<a href="txedtdes.html">Editing in the XML design view</a><br />
 </p>
 </div>
 </body>

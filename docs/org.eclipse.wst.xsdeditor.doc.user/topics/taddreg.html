@@ -14,41 +14,50 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/ -->
 <link rel="stylesheet" type="text/css" href="../../org.eclipse.wst.doc.user/common.css" />
-<title>Adding a pattern facet to a simple type</title>
+<title>Adding pattern facets to simple types</title>
 </head>
 <body id="taddreg"><a name="taddreg"><!-- --></a>
 
-<h1 class="topictitle1">Adding a pattern facet to a simple type</h1>
+<h1 class="topictitle1">Adding pattern facets to simple types</h1>
 <div><div class="skipspace"><p>A pattern facet can be used to constrain the value of a type's
 lexical space (the set of string literals that represent the values of a type),
-which indirectly constrains the value space. The value of the pattern is called
-a regular expression. You can specify it using the <span class="uicontrol">Regular Expression</span> wizard.</p>
+which indirectly constrains the value space. </p>
+	<p>The value of the pattern is called
+a regular expression. You can specify it using the<b> <span class="uicontrol">Regular Expression</span></b> wizard.</p>
 <p>To
-add a pattern to a simple type, follow these steps</p>
+add a pattern to a simple type, follow these steps:</p>
 </div>
 <ol><li class="skipspace"><span>In the Graph view, select the simple type you want to work with.</span></li>
-<li class="skipspace"><span>In the Properties view, click the <span class="uicontrol">Advanced</span> tab,
-then the <span class="uicontrol">Pattern</span> tab.</span> The <span class="uicontrol">Pattern</span> tab
+<li class="skipspace"><span>In the Properties view, click the <b> <span class="uicontrol">Advanced</span></b> tab,
+then the <b> <span class="uicontrol">Patterns</span></b> tab.</span> The <b> <span class="uicontrol">Patterns</span></b> tab
 will only appear if the pattern facet is applicable to the base type of the
 simple type.</li>
-<li class="skipspace"><span>Click <span class="uicontrol">Add</span>.</span> The Regular Expression
+<li class="skipspace"><span>Click <b> <span class="uicontrol">Add</span></b>.</span> The Regular Expression
 Wizard opens.</li>
 <li class="skipspace"><span>Select the token you want to add to the expression.</span></li>
 <li class="skipspace"><span>Indicate how often you want the token to appear in order for a
-match to succeed.</span> If you want the token to repeat, click <span class="uicontrol">Repeat</span> and
+match to succeed.</span> If you want the token to repeat, click <span class="uicontrol">
+<b>Repeat</b> </span>and
 specify the number of times the token must appear. If you want to specify
-a minimum and maximum number of times the token can appear, click <span class="uicontrol">Range</span> and
+a minimum and maximum number of times the token can appear, click <b> <span class="uicontrol">Range</span></b> and
 enter a minimum and maximum value.</li>
-<li class="skipspace"><span>Click <span class="uicontrol">Add</span> to add the token to the regular
-expression. </span></li>
+<li class="skipspace"><span>Click <b> <span class="uicontrol">Add</span></b> to 
+add the token to the regular expression.</span></li>
 <li class="skipspace"><span>Repeat the previous three steps as necessary to create the entire
 expression.</span></li>
-<li class="skipspace"><span>When you are finished, click <span class="uicontrol">Next</span>.</span></li>
+<li class="skipspace"><span>When you are finished, click <b> <span class="uicontrol">Next</span></b>.</span></li>
 <li class="skipspace"><span>(Optional) Enter some sample text to test against the regular expression
 and see if a match occurs. </span></li>
-<li class="skipspace"><span>Click<span class="uicontrol">Finish</span>. </span></li>
+<li class="skipspace"><span>Click<span class="uicontrol"> <b>Finish</b></span>.</span></li>
 </ol>
-<div class="skipspace">The regular expression will appear in the Pattern page.</div>
+<div class="skipspace">The regular expression will appear in the Patterns page.</div>
 </div>
+<p>To edit an existing pattern, select it in the Patterns page and click <b>
+<span class="uicontrol">Edit</span></b>. To delete an existing pattern, select 
+it in the Patterns page and click <b><span class="uicontrol">Delete</span></b>.
+</p>
+<p><b class="reltaskshd">Related tasks</b><br />
+<a title="As schemas become larger, it is often desirable to divide their content among several schema documents for purposes such as ease of maintenance, reuse, and readability. XML schema defines two constructs to support this: include and import. The include element brings in definitions and declarations from the included schema into the current schema. It requires the included schema to be in the same target namespace as the including schema. The import element behaves in a similar way, with the exception that the imported schema can come from a different namespace." href="taddsmpt.html">Adding 
+simple types</a></p>
 </body>
 </html>

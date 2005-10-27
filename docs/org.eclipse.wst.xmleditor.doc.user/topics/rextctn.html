@@ -14,18 +14,18 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/ -->
 <link rel="stylesheet" type="text/css" href="../../org.eclipse.wst.doc.user/common.css" />
-<title>Extending the content model of an XML document</title>
+<!-- US Government Users Restricted Rights -->
+<title>Editing XML documents with multiple namespaces</title>
 </head>
 <body id="rextctn"><a name="rextctn"><!-- --></a>
-
-<h1 class="topictitle1">Extending the content model of an XML document</h1>
+<h1 class="topictitle1">Editing XML documents with multiple namespaces</h1>
 <div><p>You can use the XML schema <samp class="codeph">any</samp> element to extend
 the content model of an XML document.</p><div class="skipspace"><p>For example, you have an XML schema file called Book.xsd which
 contains a complex type called BookType. BookType contains 4 elements (title,
 author, year, and ISBN) and one  <samp class="codeph">any</samp>element. The namespace
 for the <samp class="codeph">any</samp>  element is  <samp class="codeph">##any</samp>. This means
 that in an instance document, you can insert any XML element to extend the
-definition of the BookType. </p>
+definition of the BookType.</p>
 <p>You can also provide a more specific
 namespace. For example, you have another schema called My_Book.xsd, which
 contains a complex type called My_BookType. My_BookType contains 4 elements
@@ -33,7 +33,7 @@ contains a complex type called My_BookType. My_BookType contains 4 elements
 in this case the namespace for the  BookType element is www.wesley.com. This
 means that in an instance document, you can insert any XML element to extend
 the definition of the BookType, provided that they belong to the namespace
-http://www.wesley.com. </p>
+http://www.wesley.com.</p>
 </div>
 </div>
 </body>

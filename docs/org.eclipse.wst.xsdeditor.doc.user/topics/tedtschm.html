@@ -20,48 +20,67 @@
 
 <h1 class="topictitle1">Editing XML schema properties</h1>
 <div><p>After you create an XML schema, you can edit its various properties,
-such as its namespace and prefix.</p><div class="skipspace"><p>The following instructions were written for the Resource perspective,
-but they will also work in many other perspectives. </p>
-<p>To edit an
-XML schemas properties follow these steps:</p>
+such as its namespace and prefix.</p><div class="skipspace"><p>The following 
+		instructions were written for the Resource perspective, but they will 
+		also work in many other perspectives.</p>
+<p>To edit an XML schema's
+properties follow these steps:</p>
 </div>
 <ol><li class="skipspace"><span>Create a new XML schema or double-click an existing schema in the
 Navigator view.</span>  It will automatically open in the XML schema editor.</li>
-<li class="skipspace"><span>In the Properties view, click the <span class="uicontrol">General</span> tab.</span></li>
-<li class="skipspace"><span>You can change the <span class="uicontrol">Prefix</span> associated with
+<li class="skipspace"><span>In the Properties view, click the <b> <span class="uicontrol">General</span></b> tab.</span></li>
+<li class="skipspace"><span>You can change the <b> <span class="uicontrol">Prefix</span></b> associated with
 the current namespace.</span> Element and attribute names that are associated
 with this namespace will be prefixed with this value.</li>
-<li class="skipspace"><span>You can also edit the <span class="uicontrol">Target namespace</span> for
+<li class="skipspace"><span>You can also edit the <b> <span class="uicontrol">Target namespace</span> 
+</b>for
 this schema.</span>  A namespace is a URI that provides a unique name
-to associate with all the elements and type definitions in a schema.<ol type="a"><li><span>Click <span class="uicontrol">Advanced</span> if you want to add more
+to associate with all the elements and type definitions in a schema.<ol type="a"><li><span>Click 
+	<b> <span class="uicontrol">Advanced</span></b> if you want to add more
 namespace declarations to your XML schema.</span></li>
 </ol>
 </li>
-<li class="skipspace"><span>Click the <span class="uicontrol">Other</span> tab.</span> You can
-modify the following values in this page.<ol type="a"><li class="skipspace"><span>The <span class="uicontrol">attributeFormDefault</span> value. </span> Select <span class="uicontrol">qualified</span> if you want attributes in an
+<li class="skipspace"><span>Click the <b> <span class="uicontrol">Other</span></b> tab.</span> You can
+modify the following values in this page.<ol type="a"><li class="skipspace"><span>The 
+	<b> <span class="uicontrol">attributeFormDefault</span></b> value. </span> Select 
+	<b> <span class="uicontrol">qualified</span></b> if you want attributes in an
 XML schema instance to be qualified by the prefix that is associated with
-the schema namespace; otherwise, select <span class="uicontrol">unqualified</span>.</li>
-<li class="skipspace"><span>The <span class="uicontrol">blockDefault</span> value.</span> This
+the schema namespace; otherwise, select <b> <span class="uicontrol">unqualified</span></b>.</li>
+<li class="skipspace"><span>The <b> <span class="uicontrol">blockDefault</span></b> value.</span> This
 field determines whether the types or elements in the schema may be replaced
-by elements or types derived from them.</li>
-<li class="skipspace"><span>The <span class="uicontrol">elementFormDefault</span> value.</span> Select <span class="uicontrol">qualified</span> if
+by elements or types derived from them. The effect of specifying the 
+blockDefault attribute is equivalent to specifying a block attribute on every 
+type definition and element declaration in the schema. You can either select
+<strong>#all</strong> (nothing may be replaced by derivations),<strong> 
+extension</strong> (nothing may be replaced by derivations-by-extension),
+<strong>restriction</strong> (nothing may be replaced by 
+derivations-by-restrictions ) or <strong>substitution</strong> (nothing may be 
+replaced by derivations-by-substitution). </li>
+<li class="skipspace"><span>The <b> <span class="uicontrol">elementFormDefault</span></b> value.</span> Select <span class="uicontrol">qualified</span> if
 you want elements in an XML schema instance to be qualified by the prefix
 that is associated with the schema namespace; otherwise, select <span class="uicontrol">unqualified</span>.</li>
-<li class="skipspace"><span>The <span class="uicontrol">finalDefault</span> value.</span> This
+<li class="skipspace"><span>The <b> <span class="uicontrol">finalDefault</span></b> value.</span> This
 field determines whether the types or elements in the schema may be derived
-from.</li>
-<li class="skipspace"><span>The <span class="uicontrol">version</span> value.</span> Type the
-version number of the schema in the <span class="uicontrol">version</span> field</li>
-<li class="skipspace"><span>The <span class="uicontrol">xml:lang</span> value. </span> Type
+from. The effect of specifying the final default attribute is equivalent to 
+specifying a final attribute on every type definition and element declaration in 
+the schema. If you select <strong>#all</strong>, no types or elements in the 
+schema may be derived from. If you select <strong>extension</strong>, no types 
+or elements in the schema may be derived from using extension. If you select
+<strong>restriction</strong>, no types or elements in the schema may be derived 
+from using restriction. </li>
+<li class="skipspace"><span>The <b> <span class="uicontrol">version</span></b> 
+value.</span> Type the version number of the schema in the <b> <span class="uicontrol">
+version</span></b> field.</li>
+<li class="skipspace"><span>The <b> <span class="uicontrol">xml:lang</span> </b>value. </span> Type
 the appropriate ISO-IETF (for example, en-us) tag in this field. This tag
 may be inserted in documents to specify the language used in the contents
 and attribute values of any element in an XML file.</li>
 </ol>
 </li>
-<li class="skipspace"><span>Click the <span class="uicontrol">Documentation</span> tab if you want
+<li class="skipspace"><span>Click the <b> <span class="uicontrol">Documentation</span></b> tab if you want
 to provide any information about this XML schema.</span> The <span class="uicontrol">Documentation</span> page
 is used for human readable material, such as a description, and the <span class="uicontrol">App
-Info</span> page can be used to provide information for applications. </li>
+Info</span> page can be used to provide information for applications.</li>
 </ol>
 </div>
 </body>

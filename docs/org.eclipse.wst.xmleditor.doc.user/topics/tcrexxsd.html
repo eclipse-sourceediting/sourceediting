@@ -18,12 +18,14 @@
 </head>
 <body id="tcrexxsd"><a name="tcrexxsd"><!-- --></a>
 
-<h1 class="topictitle1">Generating an XML file from an XML schema</h1>
-<div><div class="skipspace"><p>You can generate an XML file from an XML schema file. You can
-then further customize that file in the XML editor.</p>
-<p>Generating an XML
-file from an XML schema can be useful if you want to quickly create an XML
-file that is based on your XML schema.</p>
+<h1 class="topictitle1">Generating XML files from XML schemas</h1>
+<div><p>You can generate an XML file from your XML schema if you want to
+quickly create an XML file based on your XML schema file. Generating an XML
+file from your XML schema saves you time by creating an XML file that is already
+associated with your XML schema, and contains at least some of the elements
+and attributes in your XML schema.</p>
+<div class="section"><p>After you have generated your XML file, you can further customize
+it in the XML editor.</p>
 <p>The following instructions were
 written for the Resource perspective, but they will also work in many other
 perspectives.</p>
@@ -32,47 +34,45 @@ steps:</p>
 </div>
 <ol><li class="skipspace"><span>In the Navigator view, right-click the XML schema file that you
 want to work with.</span></li>
-<li class="skipspace"><span>From its pop-up menu click <span class="menucascade"><span class="uicontrol">Generate</span> &gt; <span class="uicontrol">XML File</span></span>.</span></li>
+<li class="skipspace"><span>From its pop-up menu click <b> <span class="menucascade"><span class="uicontrol">Generate</span> &gt; <span class="uicontrol">XML File</span></span></b>.</span></li>
 <li class="skipspace"><span>Select a project or folder to contain the XML file and type a name
-for it.</span> The name of the file must end in<tt class="sysout">.xml.</tt> .</li>
-<li class="skipspace"><span>Click  <span class="uicontrol">Next</span>.</span></li>
-<li class="skipspace"><span>Click the <span class="uicontrol">Root element</span> of the XML file.</span> The root element of an XML file is the element that contains all other
+for it.</span> The name of the file must end in<tt class="sysout">.xml.</tt> </li>
+<li class="skipspace"><span>Click  <b>  <span class="uicontrol">Next</span></b>.</span></li>
+<li class="skipspace"><span>Click the <b> <span class="uicontrol">Root element</span> 
+</b>of the XML file.</span> The root element of an XML file is the element that contains all other
 elements in that file. All of the global elements you have defined in the
-XML schema will be included in the Root Element list. If you do not have any
+XML schema will be included in the <b>Root Element </b>list. If you do not have any
 global elements in your XML schema, you cannot create an XML file from it.</li>
-<li class="skipspace"><span>Select from the following content options:  </span><ul><li><span class="uicontrol">Create optional attributes</span> - Both mandatory
+<li class="skipspace"><span>Select from the following content options:  </span><ul><li>
+	<b><span class="uicontrol">Create optional attributes</span> </b>- Both mandatory
 and optional attributes will be generated</li>
-<li><span class="uicontrol">Create optional elements</span> - Both mandatory and
+<li><b><span class="uicontrol">Create optional elements</span> </b>- Both mandatory and
 optional elements will be generated.</li>
-<li><span class="uicontrol">Create first choice of required choice</span> - 
+<li><b><span class="uicontrol">Create first choice of required choice</span></b> -
 The first option of a required choice will be generated in your XML file.</li>
-<li><span class="uicontrol">Fill elements and attributes with data</span> - any
+<li><b><span class="uicontrol">Fill elements and attributes with data</span> </b>- any
 elements and attributes generated will be filled with sample data.</li>
 </ul>
  If you do not select any of these options, then only the minimum amount
 of content required for the XML file will be created.</li>
-<li class="skipspace"><span>The Namespace information section contains information about the
-target namespace of the XML schema, its prefix, and the schema location.</span> For more information about namespaces and namespace prefixes, refer
-to the Related reference below. </li>
-<li class="skipspace"><span>Select the entry you want to edit and click <span class="uicontrol">Edit</span>. </span></li>
-<li class="skipspace"><span>The value in the <span class="uicontrol">Namespace Name</span> field is
+<li class="skipspace"><span>The <b>Namespace</b> <b>information</b> section contains information about the
+target namespace of the XML schema, its prefix, and the schema location.</span> 
+For more information about namespaces and namespace prefixes, refer to the 
+Related reference below.</li>
+<li class="skipspace"><span>Select the entry you want to edit and click <b> <span class="uicontrol">Edit</span></b>.</span></li>
+<li class="skipspace"><span>The value in the <b> <span class="uicontrol">Namespace Name</span> 
+</b>field is
 the target namespace of the XML schema.</span> Your XML file should be
 associated with the same namespace as its XML schema is associated with.</li>
 <li class="skipspace"><span>All qualified elements and attributes in the XML file associated
-with the namespace will be prefixed with the <span class="uicontrol">Prefix</span> value. </span></li>
-<li class="skipspace"><span>The  <span class="uicontrol">Location Hint</span> field contains the location
+with the namespace will be prefixed with the <b> <span class="uicontrol">Prefix</span></b> value.</span></li>
+<li class="skipspace"><span>The  <b>  <span class="uicontrol">Location Hint</span> 
+</b>field contains the location
 of the XML schema.</span></li>
-<li class="skipspace"><span>Click  <span class="uicontrol">OK</span>, then <span class="uicontrol">Finish</span>.</span></li>
+<li class="skipspace"><span>Click  <b>  <span class="uicontrol">OK</span></b>, then 
+<b> <span class="uicontrol">Finish</span></b>.</span></li>
 </ol>
-<div class="skipspace"><p>The XML file appears in the Navigator view and, by default, automatically
-opens in the XML source page editor. The XML source page editor offers limited
-functionality compared to the XML editor, so before editing the file, you
-should close it, then right-click the file in the Navigator view and click <span class="uicontrol">Open
-With &gt; XML Editor</span> to open the file in the XML editor. </p>
-<p>To
-make the XML editor the default editor for XML files, select <span class="uicontrol">Window
-&gt; Preferences &gt; Workbench &gt; File Associations</span>, then select <span class="uicontrol">*.xml</span> and <span class="uicontrol">XML
-Editor</span> from the Associated Editors list. Click <span class="uicontrol">OK</span>. </p>
+<div class="skipspace">
 <p>The
 XML file will contain the selected root element and any elements or attributes
 contained in the root element. It also contains information about the XML
@@ -96,8 +96,13 @@ constructs may present problems:</p>
 </p>
 <p><b class="reltaskshd">Related tasks</b><br />
 <a href="../topics/tcretxml.html" title="You can create a new empty XML file, which you can then edit in the XML editor.">Creating an XML file from scratch</a><br />
-<a href="../topics/tcrexdtd.html" title="Generating an XML file from a DTD"></a><br />
-<a href="../topics/txedttag.html" title="Editing XML files"></a><br />
+<a href="../topics/tcrexdtd.html" title="Generating an XML file from a DTD">Generating an XML file from a DTD</a><br />
+<a href="../topics/txedttag.html" title="Editing XML files">Editing XML files</a><br />
+</p>
+
+<p><b class="reltaskshd">Related references</b><br />
+<a href="../../org.eclipse.wst.xsdeditor.doc.user/topics/rnmspc.html">XML 
+namespaces</a><br />
 </p>
 </div>
 </body>

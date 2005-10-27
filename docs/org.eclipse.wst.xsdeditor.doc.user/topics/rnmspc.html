@@ -19,6 +19,9 @@
 <body id="rnmspc"><a name="rnmspc"><!-- --></a>
 
 <h1 class="topictitle1">XML namespaces</h1>
+<div><p>An XML namespace is a collection of names, identified by a URI
+reference, which are used in XML documents as element types and attribute
+names.</p>
 <div><div class="skipspace">XML namespaces are defined by a W3C recommendation, dating 14 January
 1999, called <a href="http://www.w3.org/TR/REC-xml-names/">Namespaces
 in XML</a>. XML tag names should be globally unique, as well as short for
@@ -69,7 +72,7 @@ the default namespace applies to any attributes definitions.</p>
 the default namespace for the schema is defined as the standard XML schema
 namespace <i>http://www.w3.org/2001/XMLSchem</i>a; there is also a schema
 specific namespace <i>http://www.ibm.com</i>.</p>
-<div class="p"><pre>&lt;?xml version="1.0"?&gt;
+<div class="p"><pre>&lt;?xml version="1.0&quot;&gt;
 &lt;schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.ibm.com" xmlns:TestSchema="http://www.ibm.com"&gt;
  &lt;simpleType name="ZipCodeType"&gt;
  &lt;restriction base="integer"&gt;
@@ -80,10 +83,10 @@ specific namespace <i>http://www.ibm.com</i>.</p>
  &lt;!--element definitions skipped --&gt;  
 &lt;/schema&gt;  </pre>
 </div>
-<p>Assuming that the XML schema defined above
+<p>Assuming that the preceding XML schema is
 is saved as <span class="filepath">C:\temp\TestSchema.xsd</span>, a sample XML file
 that validates against this schema is:</p>
-<div class="p"><pre>&lt;?xml version="1.0"?&gt;
+<div class="p"><pre>&lt;?xml version="1.0&quot;&gt;
 &lt;x:addressList xmlns:x="http://www.ibm.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xsi:schemaLocation="http://www.ibm.com file:///C:/temp/TestSchema.xsd"&gt;
  xsi:schemaLocation="http://www.ibm.com file:///C:/temp/TestSchema.xsd"&gt;
 &lt;x:address&gt;
@@ -109,13 +112,13 @@ element are reported as schema validation errors. In our example, the target
 namespace is http://www.ibm.com; it is defined in the  XML schema file and
 referenced twice in the XML file. Any mismatch between these three occurrences
 of the namespace lead to validation errors.</p>
-<p> The following are some
-examples of how target namespace and namespace prefixes work in XML schemas
-and their corresponding XML instance documents. </p>
+<p> The following examples
+show how target namespaces and namespace prefixes work in XML schemas and
+their corresponding XML instance documents.</p>
 </div>
 <div class="skipspace"><h4 class="sectiontitle">Sample 1 - A schema with both a default and target namespace
 and unqualified locals</h4><p>The XML schema:  </p>
-<div class="p"><pre>&lt;?xml version="1.0"?&gt;
+<div class="p"><pre>&lt;?xml version="1.0&quot;&gt;
 &lt;schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.ibm.com" xmlns:x="http://www.ibm.com"&gt;
 &lt;complexType name="AddressType"&gt;
 &lt;sequence&gt;
@@ -127,7 +130,7 @@ and unqualified locals</h4><p>The XML schema:  </p>
  </div>
 <p>A valid XML instance document created from
 this schema looks like this. Local elements and attributes are <i>unqualified</i>.</p>
-<div class="p"><pre>&lt;?xml version="1.0"?&gt;
+<div class="p"><pre>&lt;?xml version="1.0&quot;&gt;
 &lt;x:MyAddress xmlns:x="http://www.ibm.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.ibm.com x.xsd "&gt;
 &lt;name&gt;Peter Smith&lt;/name&gt;
 &lt;/x:MyAddress&gt; </pre>
@@ -139,7 +142,7 @@ to the root element <i>"MyAddress"</i>, associating it with the namespace <i>"ht
 the<i>"x"</i> prefix is not assigned to the local element <i>"name"</i>.</p>
 </div>
 <div class="skipspace"><h4 class="sectiontitle">Sample 2 - A schema with both a default and target namespace
-and qualified locals</h4><div class="p"><pre>&lt;?xml version="1.0"?&gt;
+and qualified locals</h4><div class="p"><pre>&lt;?xml version="1.0&quot;&gt;
 &lt;schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.ibm.com" xmlns:x="http://www.ibm.com" elementFormDefault="qualified"&gt;
 &lt;complexType name="AddressType"&gt;
 &lt;sequence&gt;
@@ -153,7 +156,7 @@ and qualified locals</h4><div class="p"><pre>&lt;?xml version="1.0"?&gt;
 this schema looks like this. Local elements and attributes are <i>qualified</i> This
 is because the elementFormDefault attribute is set to qualified in the XML
 schema.</p>
-<div class="p"><pre>&lt;?xml version="1.0"?&gt;
+<div class="p"><pre>&lt;?xml version="1.0&quot;&gt;
   &lt;x:MyAddress xmlns:x="http://www.ibm.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
  xsi:schemaLocation="http://www.ibm.com x.xsd "&gt; 
 &lt;x:name&gt;Peter Smith&lt;/x:name&gt;
@@ -178,11 +181,11 @@ preferences page. For more information, refer to the related tasks below.</p>
 user defined types belong to the namespace  http://www.ibm.com as defined
 by the targetNamespace attribute, and the prefix is <i>"x"</i> as defined
 by the xmlns:x attribute.</p>
-<div class="p"><pre>&lt;?xml version="1.0"?&gt;
+<div class="p"><pre>&lt;?xml version="1.0&quot;&gt;
 &lt;xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.ibm.com" xmlns:x="http://www.ibm.com"&gt;
 &lt;xsd:complexType name="AddressType"&gt;
 &lt;xsd:sequence&gt;
-     &lt;xsd:element name="name" type="xsd:string"&gt;&lt;/xsd:element&gt;
+ &lt;xsd:element name="name" type="xsd:string"&gt;&lt;/xsd:element&gt;
 &lt;/xsd:sequence&gt;
  &lt;/xsd:complexType&gt;
  &lt;xsd:element name="MyAddress" type="x:AddressType"&gt;&lt;/xsd:element&gt;
@@ -191,7 +194,7 @@ by the xmlns:x attribute.</p>
 <p>A valid XML instance document created
 from this schema looks like this. Local elements and attributes are <i>unqualified</i>.
 The semantics of qualification is the same as Sample 1.</p>
-<div class="p"><pre>&lt;?xml version="1.0"?&gt;
+<div class="p"><pre>&lt;?xml version="1.0&quot;&gt;
  &lt;x:MyAddress xmlns:x="http://www.ibm.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"xsi:schemaLocation="http://www.ibm.com x.xsd "&gt;
 &lt;name&gt;Peter Smith&lt;/name&gt;
  &lt;/x:MyAddress&gt;</pre>
@@ -203,7 +206,7 @@ In this case, it is highly recommended that all XML schema constructs be explici
 qualified with a prefix such as <i>"xsd"</i>. The definitions and declarations
 from this schema such as <i>AddressType</i> are referenced without namespace
 qualification since there is no namespace prefix.  </p>
-<div class="p"><pre>&lt;?xml version="1.0"?&gt;
+<div class="p"><pre>&lt;?xml version="1.0&quot;&gt;
 &lt;xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
 &lt;xsd:complexType name="AddressType"&gt;
 &lt;xsd:sequence&gt;
@@ -217,7 +220,7 @@ qualification since there is no namespace prefix.  </p>
 </div>
 <p>A valid XML instance document created
 from the schema looks like this. All elements are <i>unqualified</i>.</p>
-<div class="p"><pre>&lt;?xml version="1.0"?&gt;
+<div class="p"><pre>&lt;?xml version="1.0&quot;&gt;
 &lt;MyAddress xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="x.xsd"&gt;
 &lt;name&gt;name&lt;/name&gt;
 &lt;/MyAddress&gt;</pre>
@@ -226,7 +229,7 @@ from the schema looks like this. All elements are <i>unqualified</i>.</p>
 <div class="skipspace"><h4 class="sectiontitle">Sample 5 - A schema where the target namespace is the default
 namespace</h4><p>This is an XML schema where the target namespace is the
 default namespace. As well, the namespace has no namespace prefix.</p>
-<div class="p"><pre>&lt;?xml version="1.0"?&gt;
+<div class="p"><pre>&lt;?xml version="1.0&quot;&gt;
  &lt;xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.ibm.com" xmlns="http://www.ibm.com"&gt;
 &lt;xsd:complexType name="AddressType"&gt;
 &lt;xsd:sequence&gt;
@@ -238,12 +241,15 @@ default namespace. As well, the namespace has no namespace prefix.</p>
  </div>
 <p>A valid XML instance document created
 from the schema looks like this:</p>
-<div class="p"><pre>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+<div class="p"><pre>&lt;?xml version="1.0" encoding="UTF-8&quot;&gt;
 &lt;MyAddress xmlns="http://www.ibm.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.ibm.com NewXMLSchema.xsd"&gt;
 &lt;name&gt;name&lt;/name&gt;
  &lt;/MyAddress&gt;  </pre>
  </div>
 </div>
 </div>
-</body>
+<div><div class="reltasks"><strong>Related tasks</strong><br />
+<div><a href="../topics/tedtpref.html" title="You can set various preferences for XML schema files such as the default target namespace and XML Schema language constructs prefix used.">Editing XML schema file preferences</a></div>
+</div>
+</div></body>
 </html>

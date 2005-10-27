@@ -13,12 +13,7 @@
 <plugin>
 
   <extension point="org.eclipse.help.toc">
-
    <toc file="XSDeditormap_toc.xml"/>
-            
-   <toc file="xsdeditor_reference_toc.xml"/>
-                
-
   </extension>
 
 </plugin>
