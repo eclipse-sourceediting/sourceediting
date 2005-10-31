@@ -17,6 +17,8 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -193,9 +195,13 @@ public class OpenOnSelectionHelper
   
   public boolean openOnSelection()
   {
-    List selectedNodes = textEditor.getViewerSelectionManager().getSelectedNodes();
+    List selectedNodes = null;
+    ISelection selection = textEditor.getSelectionProvider().getSelection();
+    if (selection instanceof IStructuredSelection) {
+      selectedNodes = ((IStructuredSelection) selection).toList();
+    }
 
-    if (!selectedNodes.isEmpty())
+    if (selectedNodes != null && !selectedNodes.isEmpty())
     {
       for (Iterator i = selectedNodes.iterator(); i.hasNext();)
       {
