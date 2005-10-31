@@ -78,8 +78,8 @@ public abstract class ContentOutlineConfiguration {
 		}
 	}
 
-	protected ImageDescriptor COLLAPSE_D = EditorPluginImageHelper.getInstance().getImageDescriptor(EditorPluginImages.IMG_DLCL_COLLAPSEALL);
-	protected ImageDescriptor COLLAPSE_E = EditorPluginImageHelper.getInstance().getImageDescriptor(EditorPluginImages.IMG_ELCL_COLLAPSEALL);
+	ImageDescriptor COLLAPSE_D = EditorPluginImageHelper.getInstance().getImageDescriptor(EditorPluginImages.IMG_DLCL_COLLAPSEALL);
+	ImageDescriptor COLLAPSE_E = EditorPluginImageHelper.getInstance().getImageDescriptor(EditorPluginImages.IMG_ELCL_COLLAPSEALL);
 
 	private boolean fIsLinkWithEditor = false;
 
@@ -95,7 +95,9 @@ public abstract class ContentOutlineConfiguration {
 	}
 
 	/**
-	 * Creates the contributions for the view's local menu.  Subclasses should merge their contributions with these.
+	 * Creates the contributions for the view's local menu. Subclasses should
+	 * merge their contributions with these.
+	 * 
 	 * @param viewer
 	 * @return menu contributions
 	 */
@@ -106,7 +108,9 @@ public abstract class ContentOutlineConfiguration {
 	}
 
 	/**
-	 * Creates the toolbar contributions.  Subclasses should merge their contributions with these.
+	 * Creates the toolbar contributions. Subclasses should merge their
+	 * contributions with these.
+	 * 
 	 * @param viewer
 	 * @return toolbar contributions
 	 */
@@ -118,17 +122,17 @@ public abstract class ContentOutlineConfiguration {
 
 	/**
 	 * @param viewer
-	 * @return the ITreeContentProvider to use with this viewer
+	 * @return the IContentProvider to use with this viewer
 	 */
 	public abstract IContentProvider getContentProvider(TreeViewer viewer);
 
 	/**
 	 * 
 	 * @param viewer
-	 * @return an array of KeyListeners to attach to the TreeViewer's Control.
-	 *         The listeners should adhere to the KeyEvent.doit field to
-	 *         ensure proper behaviors. Ordering of the event notifications is
-	 *         dependent on the Control in the TreeViewer.
+	 * @return an array of KeyListeners to attach to the TreeViewer's Control,
+	 *         or null. The listeners should adhere to the KeyEvent.doit field
+	 *         to ensure proper behaviors. Ordering of the event notifications
+	 *         is dependent on the Control in the TreeViewer.
 	 */
 	public KeyListener[] getKeyListeners(TreeViewer viewer) {
 		return null;
@@ -158,14 +162,15 @@ public abstract class ContentOutlineConfiguration {
 	/**
 	 * @param viewer
 	 * @return the IMenuListener to notify when the viewer's context menu is
-	 *         about to be shown
+	 *         about to be shown, or null
 	 */
 	public IMenuListener getMenuListener(TreeViewer viewer) {
 		return null;
 	}
 
 	/**
-	 * @return the preference store in which to remember preferences (such as the link-with-editor toggle state)
+	 * @return the preference store in which to remember preferences (such as
+	 *         the link-with-editor toggle state)
 	 */
 	protected IPreferenceStore getPreferenceStore() {
 		return SSEUIPlugin.getInstance().getPreferenceStore();
@@ -218,7 +223,7 @@ public abstract class ContentOutlineConfiguration {
 	 * 
 	 * @return
 	 */
-	public boolean isLinkedWithEditor(TreeViewer treeViewer) {
+	boolean isLinkedWithEditor(TreeViewer treeViewer) {
 		return fIsLinkWithEditor;
 	}
 
@@ -226,7 +231,7 @@ public abstract class ContentOutlineConfiguration {
 	 * @param isLinkWithEditor
 	 *            The isLinkWithEditor to set.
 	 */
-	protected void setLinkWithEditor(boolean isLinkWithEditor) {
+	void setLinkWithEditor(boolean isLinkWithEditor) {
 		fIsLinkWithEditor = isLinkWithEditor;
 	}
 
