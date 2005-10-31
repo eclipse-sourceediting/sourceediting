@@ -1,12 +1,15 @@
 package org.eclipse.jst.jsp.ui.internal.contentassist;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.eclipse.jdt.core.CompletionProposal;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.Signature;
 import org.eclipse.jdt.ui.text.java.CompletionProposalCollector;
+import org.eclipse.jdt.ui.text.java.CompletionProposalComparator;
 import org.eclipse.jdt.ui.text.java.IJavaCompletionProposal;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jst.jsp.core.internal.java.JSP2ServletNameUtil;
@@ -28,6 +31,7 @@ public class JSPProposalCollector extends CompletionProposalCollector {
 	private String fJspName;
 	private String fMangledName;
 	private JSPTranslation fTranslation;
+	private Comparator fComparator;
 	
 	public JSPProposalCollector(ICompilationUnit cu, JSPTranslation translation) {
 		super(cu);
@@ -60,7 +64,14 @@ public class JSPProposalCollector extends CompletionProposalCollector {
 			if(javaProposals[i] instanceof JSPCompletionProposal)
 				results.add(javaProposals[i]);
 		}
+		Collections.sort(results, getComparator());
 		return (JSPCompletionProposal[])results.toArray(new JSPCompletionProposal[results.size()]);
+	}
+	
+	private Comparator getComparator() {
+		if(fComparator == null)
+			fComparator = new CompletionProposalComparator();
+		return fComparator;
 	}
 	
 	/**
@@ -176,4 +187,5 @@ public class JSPProposalCollector extends CompletionProposalCollector {
 	public JSPTranslation getTranslation() {
 		return fTranslation;
 	}
+	
 }
