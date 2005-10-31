@@ -61,6 +61,8 @@ public class DTDUIMessages extends NLS {
 	public static String NewDTDTemplatesWizardPage_5;
 	public static String NewDTDTemplatesWizardPage_6;
 
+	public static String MESSAGE_DTD_VALIDATION_MESSAGE_UI_;
+
 	static {
 		// load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, DTDUIMessages.class);

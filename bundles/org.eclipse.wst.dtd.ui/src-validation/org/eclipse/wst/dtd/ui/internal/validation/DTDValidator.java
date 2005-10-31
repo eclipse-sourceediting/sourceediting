@@ -14,11 +14,16 @@ package org.eclipse.wst.dtd.ui.internal.validation;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Locale;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.osgi.util.NLS;
+import org.eclipse.wst.dtd.ui.internal.DTDUIMessages;
+import org.eclipse.wst.validation.internal.core.Message;
 import org.eclipse.wst.validation.internal.core.ValidationException;
 import org.eclipse.wst.validation.internal.operations.IRuleGroup;
+import org.eclipse.wst.validation.internal.provisional.core.IMessage;
 import org.eclipse.wst.validation.internal.provisional.core.IReporter;
 import org.eclipse.wst.validation.internal.provisional.core.IValidationContext;
 import org.eclipse.wst.validation.internal.provisional.core.IValidator;
@@ -40,6 +45,48 @@ public class DTDValidator implements IValidator {
 		return true;
 	}
 	
+	class LocalizedMessage extends Message {
+		private String _message = null;
+
+		public LocalizedMessage(int severity, String messageText) {
+			this(severity, messageText, null);
+		}
+
+		public LocalizedMessage(int severity, String messageText, IResource targetObject) {
+			this(severity, messageText, (Object) targetObject);
+		}
+
+		public LocalizedMessage(int severity, String messageText, Object targetObject) {
+			super(null, severity, null);
+			setLocalizedMessage(messageText);
+			setTargetObject(targetObject);
+		}
+
+		public void setLocalizedMessage(String message) {
+			_message = message;
+		}
+
+		public String getLocalizedMessage() {
+			return _message;
+		}
+
+		public String getText() {
+			return getLocalizedMessage();
+		}
+
+		public String getText(ClassLoader cl) {
+			return getLocalizedMessage();
+		}
+
+		public String getText(Locale l) {
+			return getLocalizedMessage();
+		}
+
+		public String getText(Locale l, ClassLoader cl) {
+			return getLocalizedMessage();
+		}
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -109,6 +156,9 @@ public class DTDValidator implements IValidator {
 
 
 	protected void validateIfNeeded(IFile file, IValidationContext context, IReporter reporter) {
+	    Message message = new LocalizedMessage(IMessage.LOW_SEVERITY, NLS.bind(DTDUIMessages.MESSAGE_DTD_VALIDATION_MESSAGE_UI_, new String[]{file.getFullPath().toString()}));
+	    reporter.displaySubtask(this, message);
+
 		Integer ruleGroupInt = (Integer) context.loadModel(IRuleGroup.PASS_LEVEL, null);
 		/*
 		 * pass in a "null" so that loadModel doesn't attempt to cast the
