@@ -1076,24 +1076,24 @@ class ProjectDescription {
 		fWebXMLReferences.put(webxmlRecord.getWebXML().toString(), webxmlRecord);
 		NodeList taglibs = document.getElementsByTagName(JSP12TLDNames.TAGLIB);
 		for (int i = 0; i < taglibs.getLength(); i++) {
-			String uri = readTextofChild(taglibs.item(i), "taglib-uri").trim(); //$NON-NLS-1$
+			String taglibUri = readTextofChild(taglibs.item(i), "taglib-uri").trim(); //$NON-NLS-1$
 			// specified location is relative to root of the webapp
-			String location = readTextofChild(taglibs.item(i), "taglib-location").trim(); //$NON-NLS-1$
+			String taglibLocation = readTextofChild(taglibs.item(i), "taglib-location").trim(); //$NON-NLS-1$
 			IPath path = null;
-			if (location.startsWith("/")) { //$NON-NLS-1$
-				path = new Path(getLocalRoot(webxml.getFullPath().toString()) + location);
+			if (taglibLocation.startsWith("/")) { //$NON-NLS-1$
+				path = new Path(getLocalRoot(webxml.getFullPath().toString()) + taglibLocation);
 			}
 			else {
-				path = new Path(URIHelper.normalize(location, webxml.getFullPath().toString(), getLocalRoot(webxml.getLocation().toString())));
+				path = new Path(URIHelper.normalize(taglibLocation, webxml.getFullPath().toString(), getLocalRoot(webxml.getLocation().toString())));
 			}
 			if (path.segmentCount() > 1) {
 				IFile tldResource = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
 				if (tldResource.isAccessible()) {
 					ITLDRecord record = createTLDRecord(tldResource);
 					webxmlRecord.tldRecords.add(record);
-					getImplicitReferences(webxml.getFullPath().toString()).put(uri, record);
+					getImplicitReferences(webxml.getFullPath().toString()).put(taglibUri, record);
 					if (_debugIndexCreation)
-						System.out.println("created record for " + uri + "@" + record.getPath()); //$NON-NLS-1$ //$NON-NLS-2$
+						System.out.println("created record for " + taglibUri + "@" + record.getPath()); //$NON-NLS-1$ //$NON-NLS-2$
 					TaglibIndex.fireTaglibRecordEvent(new TaglibRecordEvent(record, deltaKind));
 				}
 			}
