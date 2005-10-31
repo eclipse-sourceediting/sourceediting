@@ -223,7 +223,7 @@ public abstract class ContentOutlineConfiguration {
 	 * 
 	 * @return
 	 */
-	boolean isLinkedWithEditor(TreeViewer treeViewer) {
+	public boolean isLinkedWithEditor(TreeViewer treeViewer) {
 		return fIsLinkWithEditor;
 	}
 
