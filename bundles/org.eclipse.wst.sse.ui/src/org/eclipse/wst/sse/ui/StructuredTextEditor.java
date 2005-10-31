@@ -72,7 +72,6 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.dnd.DND;
@@ -145,8 +144,6 @@ import org.eclipse.wst.sse.ui.internal.StorageModelProvider;
 import org.eclipse.wst.sse.ui.internal.StructuredLineChangeHover;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.UnknownContentTypeDialog;
-import org.eclipse.wst.sse.ui.internal.ViewerSelectionManager;
-import org.eclipse.wst.sse.ui.internal.ViewerSelectionManagerImpl;
 import org.eclipse.wst.sse.ui.internal.actions.ActionDefinitionIds;
 import org.eclipse.wst.sse.ui.internal.actions.StructuredTextEditorActionConstants;
 import org.eclipse.wst.sse.ui.internal.contentoutline.ConfigurableContentOutlinePage;
@@ -172,10 +169,6 @@ import org.eclipse.wst.sse.ui.internal.provisional.extensions.breakpoint.NullSou
 import org.eclipse.wst.sse.ui.internal.selection.SelectionHistory;
 import org.eclipse.wst.sse.ui.internal.text.DocumentRegionEdgeMatcher;
 import org.eclipse.wst.sse.ui.internal.util.Assert;
-import org.eclipse.wst.sse.ui.internal.view.events.INodeSelectionListener;
-import org.eclipse.wst.sse.ui.internal.view.events.ITextSelectionListener;
-import org.eclipse.wst.sse.ui.internal.view.events.NodeSelectionChangedEvent;
-import org.eclipse.wst.sse.ui.internal.view.events.TextSelectionChangedEvent;
 import org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration;
 import org.eclipse.wst.sse.ui.views.properties.PropertySheetConfiguration;
 
@@ -423,6 +416,10 @@ public class StructuredTextEditor extends TextEditor {
 						else if (o instanceof ITextRegion) {
 							start = ((ITextRegion) o).getStart();
 							length = ((ITextRegion) o).getEnd() - start;
+						}
+						else if (o instanceof IRegion) {
+							start = ((ITextRegion) o).getStart();
+							length = ((ITextRegion) o).getLength();
 						}
 					}
 				}
@@ -903,8 +900,6 @@ public class StructuredTextEditor extends TextEditor {
 	private boolean shouldClose = false;
 	private long startPerfTime;
 	private boolean fisReleased;
-
-	private ViewerSelectionManager fViewerSelectionManager;
 
 	public StructuredTextEditor() {
 		super();
@@ -1999,44 +1994,6 @@ public class StructuredTextEditor extends TextEditor {
 	 */
 	public StructuredTextViewer getTextViewer() {
 		return (StructuredTextViewer) getSourceViewer();
-	}
-
-	/**
-	 * @deprecated - use normal selection with our ISelectionProvider
-	 * 
-	 * @return
-	 */
-	public ViewerSelectionManager getViewerSelectionManager() {
-		if (fViewerSelectionManager == null) {
-			/*
-			 * Create a VSM for now for migration compatibility. Although our
-			 * selection will reflect the notifications from the VSM, we won't
-			 * notify the VSM when the source viewer selection changes. This
-			 * allows us to "drive" listeners during the migration phase and
-			 * was subjectively judged as more important than listening to VSM
-			 * selection changes. If we had chosen to both listen to and send
-			 * VSM events, selection notification loops could have easily
-			 * resulted.
-			 */
-			fViewerSelectionManager = new ViewerSelectionManagerImpl(getSourceViewer());
-			fViewerSelectionManager.addNodeSelectionListener(new INodeSelectionListener() {
-				public void nodeSelectionChanged(NodeSelectionChangedEvent event) {
-					if (getTextViewer().getTextWidget() != null && !getTextViewer().getTextWidget().isDisposed() && !getTextViewer().getTextWidget().isFocusControl()) {
-						getSelectionProvider().setSelection(new StructuredSelection(event.getSelectedNodes()));
-					}
-				}
-			});
-			fViewerSelectionManager.addTextSelectionListener(new ITextSelectionListener() {
-				public void textSelectionChanged(TextSelectionChangedEvent event) {
-					if (getTextViewer().getTextWidget() != null && !getTextViewer().getTextWidget().isDisposed() && !getTextViewer().getTextWidget().isFocusControl()) {
-						int length = event.getTextSelectionEnd() - event.getTextSelectionStart();
-						ISelection textSelection = new TextSelection(getSourceViewer().getDocument(), event.getTextSelectionStart(), length);
-						getSelectionProvider().setSelection(textSelection);
-					}
-				}
-			});
-		}
-		return fViewerSelectionManager;
 	}
 
 	protected void handleCursorPositionChanged() {
