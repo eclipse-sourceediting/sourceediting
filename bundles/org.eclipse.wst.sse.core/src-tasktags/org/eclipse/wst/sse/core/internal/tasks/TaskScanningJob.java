@@ -129,7 +129,7 @@ class TaskScanningJob extends Job {
 
 	protected IStatus run(IProgressMonitor monitor) {
 		if (frameworkIsShuttingDown())
-			return Status.OK_STATUS;
+			return Status.CANCEL_STATUS;
 
 		validateRememberedProjectList(TASK_TAG_PROJECTS_ALREADY_SCANNED);
 
@@ -150,7 +150,7 @@ class TaskScanningJob extends Job {
 		while (!currentQueue.isEmpty()) {
 			Object o = currentQueue.remove(0);
 			if (frameworkIsShuttingDown())
-				return Status.OK_STATUS;
+				return Status.CANCEL_STATUS;
 			try {
 				scanMonitor = new SubProgressMonitor(monitor, 1);
 				if (o instanceof IResourceDelta) {
