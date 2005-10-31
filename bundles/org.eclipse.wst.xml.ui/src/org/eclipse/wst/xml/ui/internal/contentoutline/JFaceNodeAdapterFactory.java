@@ -69,33 +69,33 @@ public class JFaceNodeAdapterFactory extends AbstractAdapterFactory implements I
 			for (int i = 0; i < listeners.length; i++) {
 				if (listeners[i] instanceof StructuredViewer) {
 					final StructuredViewer viewer = (StructuredViewer) listeners[i];
-					Control refreshControl = viewer.getControl();
-					if (refreshControl != null && !refreshControl.isDisposed()) {
-						Job refresh = new UIJob(XMLUIMessages.refreshoutline_0) {
-							public IStatus runInUIThread(IProgressMonitor monitor) {
+					Job refresh = new UIJob(XMLUIMessages.refreshoutline_0) {
+						public IStatus runInUIThread(IProgressMonitor monitor) {
+							Control refreshControl = viewer.getControl();
+							if (refreshControl != null && !refreshControl.isDisposed()) {
 								viewer.refresh(true);
-								return Status.OK_STATUS;
 							}
-						};
-						refresh.setSystem(true);
-						refresh.setPriority(Job.SHORT);
-						refresh.schedule(UPDATE_DELAY);
-					}
+							return Status.OK_STATUS;
+						}
+					};
+					refresh.setSystem(true);
+					refresh.setPriority(Job.SHORT);
+					refresh.schedule(UPDATE_DELAY);
 				}
 				else if (listeners[i] instanceof Viewer) {
 					final Viewer viewer = (Viewer) listeners[i];
-					Control refreshControl = viewer.getControl();
-					if (refreshControl != null && !refreshControl.isDisposed()) {
-						Job refresh = new UIJob(XMLUIMessages.refreshoutline_0) {
-							public IStatus runInUIThread(IProgressMonitor monitor) {
+					Job refresh = new UIJob(XMLUIMessages.refreshoutline_0) {
+						public IStatus runInUIThread(IProgressMonitor monitor) {
+							Control refreshControl = viewer.getControl();
+							if (refreshControl != null && !refreshControl.isDisposed()) {
 								viewer.refresh();
-								return Status.OK_STATUS;
 							}
-						};
-						refresh.setSystem(true);
-						refresh.setPriority(Job.SHORT);
-						refresh.schedule(UPDATE_DELAY);
-					}
+							return Status.OK_STATUS;
+						}
+					};
+					refresh.setSystem(true);
+					refresh.setPriority(Job.SHORT);
+					refresh.schedule(UPDATE_DELAY);
 				}
 			}
 		}
