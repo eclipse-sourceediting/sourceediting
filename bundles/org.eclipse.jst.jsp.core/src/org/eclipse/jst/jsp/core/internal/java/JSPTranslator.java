@@ -615,7 +615,8 @@ public class JSPTranslator {
 	
 	protected void addTaglibVariables(String tagToAdd) {
 		IFile f = getFile();
-		if(f == null && f.exists()) 
+		
+		if(f == null || !f.exists()) 
 			return;
 		
 		TaglibHelper helper = TaglibHelperManager.getInstance().getTaglibHelper(f);
