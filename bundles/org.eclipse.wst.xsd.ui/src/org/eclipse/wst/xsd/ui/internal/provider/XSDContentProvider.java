@@ -20,23 +20,27 @@ import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.edit.provider.IChangeNotifier;
 import org.eclipse.emf.edit.provider.INotifyChangedListener;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
+import org.eclipse.wst.xsd.ui.internal.text.XSDModelAdapter;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDElementDeclaration;
 import org.eclipse.xsd.XSDModelGroup;
 import org.eclipse.xsd.XSDParticleContent;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDWildcard;
-import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 public class XSDContentProvider implements ITreeContentProvider, INotifyChangedListener
 {
   XSDModelAdapterFactoryImpl xsdModelAdapterFactory;
 
-  XSDSchema xsdSchema;
   public XSDContentProvider(XSDModelAdapterFactoryImpl xsdModelAdapterFactoryImpl)
   {
     this.xsdModelAdapterFactory = xsdModelAdapterFactoryImpl;
@@ -47,11 +51,6 @@ public class XSDContentProvider implements ITreeContentProvider, INotifyChangedL
     }
   }
   
-  public void setXSDSchema(XSDSchema xsdSchema)
-  {
-    this.xsdSchema = xsdSchema;
-  }
-  
   /*
    * @see ITreeContentProvider#getChildren(Object)
    */
@@ -59,15 +58,28 @@ public class XSDContentProvider implements ITreeContentProvider, INotifyChangedL
   {
     XSDConcreteComponent xsdComp = null;
     List list = null;
-    if (parentElement instanceof Document)
-    {
-      xsdComp = xsdSchema;
- 	    
-      xsdModelAdapterFactory.adapt(xsdComp, xsdModelAdapterFactory);
+    
+    // root/input is structuredmodel
+    if (parentElement instanceof IDOMModel) {
+		IDOMDocument domDoc = ((IDOMModel) parentElement).getDocument();
+		if (domDoc != null) {
+			XSDModelAdapter modelAdapter = (XSDModelAdapter) domDoc.getExistingAdapter(XSDModelAdapter.class);
+			/*
+			 * ISSUE: Didn't want to go through initializing
+			 * schema if it does not already exist, so just
+			 * attempted to get existing adapter. If doesn't
+			 * exist, just don't bother working.
+			 */
+			if (modelAdapter != null)
+				xsdComp = modelAdapter.getSchema();
+			if (xsdComp != null) {
+		      xsdModelAdapterFactory.adapt(xsdComp, xsdModelAdapterFactory);
 
-      list = new ArrayList();
-      list.add(xsdComp);
-      return list.toArray();
+		      list = new ArrayList();
+		      list.add(xsdComp);
+		      return list.toArray();
+			}
+		}
     }
     else if (parentElement instanceof XSDConcreteComponent)
     {
@@ -181,4 +193,36 @@ public class XSDContentProvider implements ITreeContentProvider, INotifyChangedL
     this.viewer = viewer;
   }
   
+	/**
+	 * Gets the xsd schema from document
+	 * 
+	 * @param document
+	 * @return XSDSchema or null of one does not exist yet for document
+	 */
+	private XSDSchema getXSDSchema(IDocument document) {
+		XSDSchema schema = null;
+		IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForRead(document);
+		if (model != null) {
+			try {
+				if (model instanceof IDOMModel) {
+					IDOMDocument domDoc = ((IDOMModel) model).getDocument();
+					if (domDoc != null) {
+						XSDModelAdapter modelAdapter = (XSDModelAdapter) domDoc.getExistingAdapter(XSDModelAdapter.class);
+						/*
+						 * ISSUE: Didn't want to go through initializing
+						 * schema if it does not already exist, so just
+						 * attempted to get existing adapter. If doesn't
+						 * exist, just don't bother working.
+						 */
+						if (modelAdapter != null)
+							schema = modelAdapter.getSchema();
+					}
+				}
+			}
+			finally {
+				model.releaseFromRead();
+			}
+		}
+		return schema;
+	}
 }

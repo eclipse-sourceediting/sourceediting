@@ -24,6 +24,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
+import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.xsd.ui.internal.XSDEditor;
 import org.eclipse.wst.xsd.ui.internal.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.internal.XSDTextEditor;
@@ -46,15 +47,22 @@ import org.w3c.dom.Node;
 public class OpenOnSelectionHelper
 {
   
-  protected XSDTextEditor textEditor;
-  
+  protected StructuredTextEditor textEditor;
+  protected XSDSchema xsdSchema;
+
   /**
-   * Constructor for OpenOnSelectionHelper.
+   * @deprecated Constructor for OpenOnSelectionHelper.
    */
   public OpenOnSelectionHelper(XSDTextEditor textEditor)
   {
-    this.textEditor = textEditor;
   }
+  
+  public OpenOnSelectionHelper(StructuredTextEditor textEditor, XSDSchema xsdSchema)
+  {
+  	this.textEditor = textEditor;
+  	this.xsdSchema = xsdSchema;
+  }
+  
 
   boolean lastResult;
   
@@ -94,7 +102,7 @@ public class OpenOnSelectionHelper
   
   protected boolean revealObject(final XSDConcreteComponent component)
   {
-    if (component.getRootContainer().equals(textEditor.getXSDSchema()))
+    if (component.getRootContainer().equals(xsdSchema))
     {
       Node element = component.getElement();
       if (element instanceof IndexedRegion)
@@ -125,7 +133,8 @@ public class OpenOnSelectionHelper
 		        {
 							try
 							{
-							  IEditorPart editorPart = workbenchWindow.getActivePage().openEditor(new FileEditorInput(schemaFile), textEditor.getXSDEditor().getEditorSite().getId());
+							  // IEditorPart editorPart = workbenchWindow.getActivePage().openEditor(new FileEditorInput(schemaFile), textEditor.getXSDEditor().getEditorSite().getId());
+								IEditorPart editorPart = workbenchWindow.getActivePage().openEditor(new FileEditorInput(schemaFile), XSDEditorPlugin.getPlugin().PLUGIN_ID);
 								if (editorPart instanceof XSDEditor)
 								{
 									((XSDEditor)editorPart).openOnGlobalReference(component);
@@ -146,7 +155,7 @@ public class OpenOnSelectionHelper
   
   public void openOnGlobalReference(XSDConcreteComponent comp)
   {
-    XSDSchema schema = textEditor.getXSDSchema();
+    XSDSchema schema = xsdSchema;
     String name = null;
     if (comp instanceof XSDNamedComponent)
     {
@@ -191,7 +200,6 @@ public class OpenOnSelectionHelper
       for (Iterator i = selectedNodes.iterator(); i.hasNext();)
       {
         Object obj = i.next();
-        XSDSchema xsdSchema = textEditor.getXSDSchema();
         if (xsdSchema != null)
         {
           XSDConcreteComponent xsdComp = xsdSchema.getCorrespondingComponent((Node)obj);

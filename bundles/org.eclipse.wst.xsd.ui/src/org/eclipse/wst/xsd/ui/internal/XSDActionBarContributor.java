@@ -201,7 +201,7 @@ public void addToToolBar(IToolBarManager toolBarManager)
       xsdEditor = (XSDEditor) targetEditor;
       reloadDependenciesAction.setEditor((XSDEditor)targetEditor);
 
-      textEditor = ((XSDEditor)targetEditor).getXSDTextEditor();
+      textEditor = ((XSDEditor)targetEditor).getTextEditor();
       if (textEditor != null)
       {      
          

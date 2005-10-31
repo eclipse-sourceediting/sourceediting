@@ -36,10 +36,8 @@ import org.eclipse.wst.sse.ui.internal.openon.OpenOnAction;
 import org.eclipse.wst.sse.ui.internal.view.events.INodeSelectionListener;
 import org.eclipse.wst.sse.ui.internal.view.events.NodeSelectionChangedEvent;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
-import org.eclipse.wst.xsd.ui.internal.properties.section.XSDTabbedPropertySheetPage;
 import org.eclipse.wst.xsd.ui.internal.provider.CategoryAdapter;
 import org.eclipse.wst.xsd.ui.internal.provider.XSDAdapterFactoryLabelProvider;
-import org.eclipse.wst.xsd.ui.internal.provider.XSDContentProvider;
 import org.eclipse.wst.xsd.ui.internal.provider.XSDModelAdapterFactoryImpl;
 import org.eclipse.wst.xsd.ui.internal.refactor.actions.RefactorActionGroup;
 import org.eclipse.wst.xsd.ui.internal.util.SelectionAdapter;
@@ -49,7 +47,9 @@ import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-
+/**
+ * @deprecated Do not use subclass of StructuredTextEditor
+ */
 public class XSDTextEditor extends StructuredTextEditor implements INodeSelectionListener, ISelectionChangedListener
 {
   protected XSDSelectionManager xsdSelectionManager;
@@ -58,7 +58,7 @@ public class XSDTextEditor extends StructuredTextEditor implements INodeSelectio
   protected InternalSelectionProvider internalSelectionProvider = new InternalSelectionProvider();
   private IPropertySheetPage fPropertySheetPage;
   private IContentOutlinePage fOutlinePage;
-
+  
   public XSDTextEditor(XSDEditor xsdEditor)
   {
     super();
@@ -70,7 +70,6 @@ public class XSDTextEditor extends StructuredTextEditor implements INodeSelectio
     xsdModelAdapterFactory = XSDModelAdapterFactoryImpl.getInstance();
     adapterFactoryLabelProvider = new XSDAdapterFactoryLabelProvider(xsdModelAdapterFactory);
   }
-  
   public void dispose()
   {
     super.dispose();
@@ -80,51 +79,51 @@ public class XSDTextEditor extends StructuredTextEditor implements INodeSelectio
     xsdModelAdapterFactory = null;
   }
   
-  public XSDModelAdapterFactoryImpl getXSDModelAdapterFactory()
-  {
-    return xsdModelAdapterFactory;
-  }
+//  public XSDModelAdapterFactoryImpl getXSDModelAdapterFactory()
+//  {
+//    return xsdModelAdapterFactory;
+//  }
+//
+//  public static XSDAdapterFactoryLabelProvider getLabelProvider()
+//  {
+//    return adapterFactoryLabelProvider;
+//  }
 
-  public static XSDAdapterFactoryLabelProvider getLabelProvider()
-  {
-    return adapterFactoryLabelProvider;
-  }
-
-	public Object getAdapter(Class required) {
-	  
-		if (IPropertySheetPage.class.equals(required))
-    {
-	    fPropertySheetPage = new XSDTabbedPropertySheetPage(getXSDEditor());
-      
-	    ((XSDTabbedPropertySheetPage)fPropertySheetPage).setXSDModelAdapterFactory(xsdModelAdapterFactory);
-      ((XSDTabbedPropertySheetPage)fPropertySheetPage).setSelectionManager(getXSDEditor().getSelectionManager());
-	    ((XSDTabbedPropertySheetPage)fPropertySheetPage).setXSDSchema(getXSDSchema());
-
-      return fPropertySheetPage;
-		}
-		else if (IContentOutlinePage.class.equals(required))
-		{
-			if (fOutlinePage == null || fOutlinePage.getControl() == null || fOutlinePage.getControl().isDisposed())
-			{
-				XSDContentOutlinePage outlinePage = new XSDContentOutlinePage(this);
-        XSDContentProvider xsdContentProvider = new XSDContentProvider(xsdModelAdapterFactory);
-        xsdContentProvider.setXSDSchema(getXSDSchema());
-	      outlinePage.setContentProvider(xsdContentProvider);
-	      outlinePage.setLabelProvider(adapterFactoryLabelProvider);
-				outlinePage.setModel(getXSDSchema().getDocument());
-				
-				// Update outline selection from source editor selection:
-	      getViewerSelectionManager().addNodeSelectionListener(this);
-	      internalSelectionProvider.addSelectionChangedListener(getViewerSelectionManager());
-	      internalSelectionProvider.setEventSource(outlinePage);
-
-				fOutlinePage = outlinePage;
-			}
-			return fOutlinePage;
-		}
-	
-		return super.getAdapter(required);
-	}
+//	public Object getAdapter(Class required) {
+//	  
+//		if (IPropertySheetPage.class.equals(required))
+//    {
+//	    fPropertySheetPage = new XSDTabbedPropertySheetPage(getXSDEditor());
+//      
+//	    ((XSDTabbedPropertySheetPage)fPropertySheetPage).setXSDModelAdapterFactory(xsdModelAdapterFactory);
+//      ((XSDTabbedPropertySheetPage)fPropertySheetPage).setSelectionManager(getXSDEditor().getSelectionManager());
+//	    ((XSDTabbedPropertySheetPage)fPropertySheetPage).setXSDSchema(getXSDSchema());
+//
+//      return fPropertySheetPage;
+//		}
+//		else if (IContentOutlinePage.class.equals(required))
+//		{
+//			if (fOutlinePage == null || fOutlinePage.getControl() == null || fOutlinePage.getControl().isDisposed())
+//			{
+//				XSDContentOutlinePage outlinePage = new XSDContentOutlinePage(getXSDEditor());
+//        XSDContentProvider xsdContentProvider = new XSDContentProvider(xsdModelAdapterFactory);
+//        xsdContentProvider.setXSDSchema(getXSDSchema());
+//	      outlinePage.setContentProvider(xsdContentProvider);
+//	      outlinePage.setLabelProvider(adapterFactoryLabelProvider);
+//				outlinePage.setModel(getXSDSchema().getDocument());
+//				
+//				// Update outline selection from source editor selection:
+//	      getViewerSelectionManager().addNodeSelectionListener(this);
+//	      internalSelectionProvider.addSelectionChangedListener(getViewerSelectionManager());
+//	      internalSelectionProvider.setEventSource(outlinePage);
+//
+//				fOutlinePage = outlinePage;
+//			}
+//			return fOutlinePage;
+//		}
+//	
+//		return super.getAdapter(required);
+//	}
   
  
   protected XSDContentOutlinePage outlinePage;
@@ -326,6 +325,6 @@ public class XSDTextEditor extends StructuredTextEditor implements INodeSelectio
 		fRefactorMenuGroup.setContext(context);
 		fRefactorMenuGroup.fillContextMenu(menu);
 		fRefactorMenuGroup.setContext(null);
-	}   
+	}
 }
 

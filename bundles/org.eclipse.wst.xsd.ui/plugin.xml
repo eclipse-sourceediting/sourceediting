@@ -90,6 +90,12 @@
 			type="preferencepages"
 			value="org.eclipse.wst.xsd.ui.internal.preferences.XSDPreferencePage"
 			target="org.eclipse.wst.xsd.ui.internal.XSDEditor.source" />
+		<sourceViewerConfiguration
+			class="org.eclipse.wst.xsd.ui.internal.StructuredTextViewerConfigurationXSD"
+			target="org.eclipse.wst.xsd.core.xsdsource" />
+		<contentOutlineConfiguration
+			class="org.eclipse.wst.xsd.ui.internal.XSDContentOutlineConfiguration"
+			target="org.eclipse.wst.xsd.core.xsdsource" />
 	</extension>
 
 	<!-- ==================================================== -->

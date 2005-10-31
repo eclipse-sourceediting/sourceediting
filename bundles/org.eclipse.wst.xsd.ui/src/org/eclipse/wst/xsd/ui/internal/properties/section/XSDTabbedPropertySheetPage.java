@@ -15,9 +15,11 @@ import org.eclipse.emf.edit.provider.INotifyChangedListener;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.part.IPageSite;
 import org.eclipse.wst.common.ui.properties.internal.provisional.ITabbedPropertySheetPageContributor;
 import org.eclipse.wst.common.ui.properties.internal.provisional.TabbedPropertySheetPage;
 import org.eclipse.wst.xsd.ui.internal.XSDSelectionManager;
@@ -25,10 +27,15 @@ import org.eclipse.wst.xsd.ui.internal.graph.model.Category;
 import org.eclipse.wst.xsd.ui.internal.provider.CategoryAdapter;
 import org.eclipse.wst.xsd.ui.internal.provider.XSDModelAdapterFactoryImpl;
 import org.eclipse.xsd.XSDSchema;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.ProcessingInstruction;
+import org.w3c.dom.Text;
 
 public class XSDTabbedPropertySheetPage extends TabbedPropertySheetPage
   implements ISelectionChangedListener, INotifyChangedListener 
 {
+  XSDSchema xsdSchema;
   private XSDSelectionManager selectionManager;
   private XSDModelAdapterFactoryImpl adapterFactory;
   /**
@@ -39,7 +46,12 @@ public class XSDTabbedPropertySheetPage extends TabbedPropertySheetPage
     super(tabbedPropertySheetPageContributor);
   }
   
-  XSDSchema xsdSchema;
+  public void init(IPageSite pageSite)
+  {
+  	super.init(pageSite);
+  	getSite().getWorkbenchWindow().getSelectionService().addPostSelectionListener(this);
+  }
+
   public void setXSDSchema(XSDSchema xsdSchema)
   {
     this.xsdSchema = xsdSchema;
@@ -81,22 +93,51 @@ public class XSDTabbedPropertySheetPage extends TabbedPropertySheetPage
     // override for category
     if (selection != null)
     {
-      if (selection instanceof StructuredSelection)
+      if (selection instanceof IStructuredSelection)
       {
-        StructuredSelection structuredSelection = (StructuredSelection)selection;
+        IStructuredSelection structuredSelection = (IStructuredSelection) selection;
         if (structuredSelection.isEmpty())
         {
           return;
         }
-        Object obj = structuredSelection.getFirstElement();        
-        if (obj instanceof CategoryAdapter)
+        Object obj = structuredSelection.getFirstElement();
+        if (obj instanceof Element)
+        {
+          try
+          {
+            Object modelObject = xsdSchema.getCorrespondingComponent((Element) obj);
+            if (modelObject != null)
+            {
+              obj = modelObject;
+              selection = new StructuredSelection(obj);
+            }
+          }
+          catch (Exception e)
+          {
+          }
+        }
+        else if (obj instanceof Text)
+        {
+        	Node parent = ((Text)obj).getParentNode();
+          Object modelObject = xsdSchema.getCorrespondingComponent(parent);
+          if (modelObject != null)
+          {
+            obj = modelObject;
+            selection = new StructuredSelection(obj);
+          }
+        }
+        else if (obj instanceof CategoryAdapter)
         {
           selection = new StructuredSelection(((CategoryAdapter)obj).getXSDSchema());
         }
         else if (obj instanceof Category)
         {
           selection = new StructuredSelection(((Category)obj).getXSDSchema());
-        }  
+        }
+        else if (obj instanceof ProcessingInstruction)
+        {
+        	selection = new StructuredSelection(xsdSchema);
+        }
       }
       else if (selection instanceof TextSelection)
       {
@@ -125,6 +166,7 @@ public class XSDTabbedPropertySheetPage extends TabbedPropertySheetPage
     {
       adapterFactory.removeListener(this);
     }
+    getSite().getWorkbenchWindow().getSelectionService().removePostSelectionListener(this);
     super.dispose();
   }
   

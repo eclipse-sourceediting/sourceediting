@@ -15,9 +15,12 @@ import org.eclipse.jface.util.Assert;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
+import org.eclipse.wst.xsd.ui.internal.XSDEditor;
 import org.eclipse.wst.xsd.ui.internal.XSDEditorPlugin;
-import org.eclipse.wst.xsd.ui.internal.XSDTextEditor;
 import org.eclipse.xsd.XSDAttributeDeclaration;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDElementDeclaration;
@@ -50,7 +53,13 @@ public class XSDSectionLabelProvider extends LabelProvider
       
       if (selected instanceof XSDConcreteComponent)
       {
-        return XSDTextEditor.getLabelProvider().getImage((XSDConcreteComponent)selected);
+        IWorkbench workbench = XSDEditorPlugin.getPlugin().getWorkbench();
+        IWorkbenchWindow workbenchWindow = workbench.getActiveWorkbenchWindow();
+        IEditorPart editorPart = workbenchWindow.getActivePage().getActiveEditor();
+        if (editorPart instanceof XSDEditor)
+        {
+          return ((XSDEditor)editorPart).getLabelProvider().getImage((XSDConcreteComponent)selected);
+        }
       }
       
 //      selected  = typeMapper.remapObject(selected);
