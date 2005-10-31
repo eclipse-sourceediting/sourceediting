@@ -215,7 +215,7 @@ public class XMLMultiPageEditorPart extends PostSelectionMultiPageEditorPart {
 		}
 
 		public void selectionChanged(SelectionChangedEvent event) {
-			if (fDesignViewer != null && !fDesignViewer.getControl().isFocusControl()) {
+			if (fDesignViewer != null && ((getActivePage() != fDesignPageIndex) || !XMLMultiPageEditorPart.this.equals(getSite().getPage().getActivePart()))) {
 				if (forcePostSelection) {
 					selection = event.getSelection();
 					schedule(200);
