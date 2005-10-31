@@ -32,7 +32,7 @@ public class SimpleWebModuleCreationDataModelProvider extends ComponentCreationD
     }
 
     public IDataModelOperation getDefaultOperation() {
-        return new SimpleWebModuleCreationOperation(getDataModel());
+    	return new StaticWebModuleCreationFacetOperation(model);
     }
     
     protected EClass getComponentType() {

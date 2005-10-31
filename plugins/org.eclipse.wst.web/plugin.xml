@@ -46,4 +46,31 @@
             class="org.eclipse.wst.web.internal.operation.SimpleWebModuleCreationDataModelProvider"
             id="org.eclipse.wst.web.internal.operation.SimpleWebModuleCreationDataModelProvider"/>
 	</extension>
+	
+  <!-- Project Facets -->
+	<extension point="org.eclipse.wst.common.project.facet.core.facets">
+
+    <project-facet id="wst.web">
+      <label>Static Web Module</label>
+      <description>Enables the project to be deployed as a static web module.</description>
+      <icon>icons/full/obj16/webstatic-deploy.gif</icon>
+    </project-facet>
+
+    <project-facet-version facet="wst.web" version="1.0">
+      <delegate type="install" class="org.eclipse.wst.project.facet.StaticWebFacetInstallDelegate"/>
+      <constraint>
+        <and>
+          <conflicts group="modules"/>
+        </and>
+      </constraint>
+      <group-member id="modules"/>
+    </project-facet-version>
+
+    
+    <template id="template.wst.web">
+      <label>Dynamic Web Project</label>
+      <fixed facet="wst.web"/>
+    </template>
+
+  </extension>	
 </plugin>
