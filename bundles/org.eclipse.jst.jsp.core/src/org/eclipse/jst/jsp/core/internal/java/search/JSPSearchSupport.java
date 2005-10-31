@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.core.internal.java.search;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.zip.CRC32;
 
 import org.eclipse.core.resources.IFile;
@@ -24,9 +22,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jdt.core.IJavaElement;
@@ -261,41 +257,43 @@ public class JSPSearchSupport {
      * frequently)
      */
     public static boolean isJsp(IFile file) {
-
+    	// (pa) 20051025 removing deep content type check
+    	// because this method is called frequently
+    	// and IO is expensive
         boolean isJsp = false;
-        InputStream is = null;
-        try {
+//        InputStream is = null;
+//        try {
             if (file != null && file.exists()) {
-
+            	
                 IContentType contentTypeJSP = Platform.getContentTypeManager().getContentType(ContentTypeIdForJSP.ContentTypeID_JSP);
                 // check this before description, it's less expensive
                 if (contentTypeJSP.isAssociatedWith(file.getName())) {
-
-                    IContentDescription contentDescription = file.getContentDescription();
-                    // it can be null
-                    if (contentDescription == null) {
-                        is = file.getContents();
-                        contentDescription = Platform.getContentTypeManager().getDescriptionFor(is, file.getName(), new QualifiedName[] { IContentDescription.CHARSET });
-                    }
-                    if (contentDescription != null) {
-                        String fileCtId = contentDescription.getContentType().getId();
-                        isJsp = (fileCtId != null && ContentTypeIdForJSP.ContentTypeID_JSP.equals(fileCtId));
-                    }
+                	isJsp = true;
+//                    IContentDescription contentDescription = file.getContentDescription();
+//                    // it can be null
+//                    if (contentDescription == null) {
+//                        is = file.getContents();
+//                        contentDescription = Platform.getContentTypeManager().getDescriptionFor(is, file.getName(), new QualifiedName[] { IContentDescription.CHARSET });
+//                    }
+//                    if (contentDescription != null) {
+//                        String fileCtId = contentDescription.getContentType().getId();
+//                        isJsp = (fileCtId != null && ContentTypeIdForJSP.ContentTypeID_JSP.equals(fileCtId));
+//                    }
                 }
             }
-        } catch (IOException e) {
-            // ignore, assume it's invalid JSP
-        } catch (CoreException e) {
-            // ignore, assume it's invalid JSP
-        } finally {
-            // must close input stream in case others need it
-            if (is != null)
-                try {
-                    is.close();
-                } catch (Exception e) {
-                    // not sure how to recover at this point
-                }
-        }
+//        } catch (IOException e) {
+//            // ignore, assume it's invalid JSP
+//        } catch (CoreException e) {
+//            // ignore, assume it's invalid JSP
+//        } finally {
+//            // must close input stream in case others need it
+//            if (is != null)
+//                try {
+//                    is.close();
+//                } catch (Exception e) {
+//                    // not sure how to recover at this point
+//                }
+//        }
         return isJsp;
     }
 
