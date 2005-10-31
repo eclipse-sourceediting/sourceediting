@@ -35,7 +35,7 @@ public class EditBreakpointAction extends BreakpointRulerAction {
 	}
 
 	public void run() {
-		PropertyDialogAction action = new PropertyDialogAction(getTextEditor().getEditorSite().getShell(), new ISelectionProvider() {
+		PropertyDialogAction action = new PropertyDialogAction(getTextEditor().getEditorSite(), new ISelectionProvider() {
 			public void addSelectionChangedListener(ISelectionChangedListener listener) {
 				// do nothing
 			}
