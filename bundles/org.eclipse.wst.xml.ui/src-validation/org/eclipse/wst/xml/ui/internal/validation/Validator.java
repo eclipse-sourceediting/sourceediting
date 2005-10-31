@@ -173,9 +173,6 @@ public class Validator implements IValidator
    */
   public void validate(IFile file, IReporter reporter, int ruleGroup)
   {  
-    Message message = new LocalizedMessage(IMessage.LOW_SEVERITY, NLS.bind(XMLUIMessages.MESSAGE_XML_VALIDATION_MESSAGE_UI_, new String[]{file.getFullPath().toString()}));
-    reporter.displaySubtask(this, message);
-
     ValidateAction validateAction = new ValidateAction(file, false);
     validateAction.setValidator(this);
     validateAction.run();  
@@ -190,6 +187,9 @@ public class Validator implements IValidator
    */
   protected void validateIfNeeded(IFile file, IValidationContext helper, IReporter reporter)
   {
+    Message message = new LocalizedMessage(IMessage.LOW_SEVERITY, NLS.bind(XMLUIMessages.MESSAGE_XML_VALIDATION_MESSAGE_UI_, new String[]{file.getFullPath().toString()}));
+    reporter.displaySubtask(this, message);
+
     Integer ruleGroupInt = (Integer)helper.loadModel(IRuleGroup.PASS_LEVEL, null); // pass in a "null" so that loadModel doesn't attempt to cast the result into a RefObject
     int ruleGroup = (ruleGroupInt == null) ? IRuleGroup.PASS_FULL : ruleGroupInt.intValue();
 
