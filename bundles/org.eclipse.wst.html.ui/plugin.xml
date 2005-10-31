@@ -319,6 +319,8 @@
 			<contentTypeIdentifier
 				id="org.eclipse.jst.jsp.core.jspsource">
 				<partitionType id="org.eclipse.wst.html.HTML_DEFAULT">
+				</partitionType>				
+				<partitionType id="org.eclipse.jst.jsp.JSP_DIRECTIVE">
 				</partitionType>
 			</contentTypeIdentifier>
 		</validator>
