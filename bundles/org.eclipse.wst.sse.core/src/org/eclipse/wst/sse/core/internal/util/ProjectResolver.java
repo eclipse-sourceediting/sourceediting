@@ -22,6 +22,10 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
 
+/**
+ * @deprecated The URIResolver interface is deprecated. Use the resolver from
+ *             org.eclipse.wst.common.uriresolver.
+ */
 public class ProjectResolver implements URIResolver {
 	private String fFileBaseLocation = null;
 	private IProject fProject = null;
@@ -45,7 +49,7 @@ public class ProjectResolver implements URIResolver {
 		return getLocationByURI(uri, getFileBaseLocation());
 	}
 
-	//	defect 244817 end
+	// defect 244817 end
 	/**
 	 * Resolve the (possibly relative) URI acording to RFC1808 using the
 	 * default file base location. Resolves resource references into absolute
@@ -80,26 +84,27 @@ public class ProjectResolver implements URIResolver {
 			try {
 				URL url = new URL(uri);
 				return getPath(url);
-			} catch (MalformedURLException e) {
+			}
+			catch (MalformedURLException e) {
 			}
 		}
 		// defect 244817 end
-		
+
 		// which of the serveral are we suppose to use here?
 		//
-        
-        // https://bugs.eclipse.org/bugs/show_bug.cgi?id=71223
-        // Workaround for problem in URIHelper; uris starting with '/' are
-        // returned as-is.
-        String location = uri;
-        if (uri.startsWith("/")) { //$NON-NLS-1$
-            IProject p = getProject();
-            if(p != null && p.exists())
-                location = p.getLocation().toString() + uri;
-        }
-        else {
-            location = URIHelper.normalize(uri, baseReference, getRootLocationString());
-        }
+
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=71223
+		// Workaround for problem in URIHelper; uris starting with '/' are
+		// returned as-is.
+		String location = uri;
+		if (uri.startsWith("/")) { //$NON-NLS-1$
+			IProject p = getProject();
+			if (p != null && p.exists())
+				location = p.getLocation().toString() + uri;
+		}
+		else {
+			location = URIHelper.normalize(uri, baseReference, getRootLocationString());
+		}
 		return location;
 	}
 
@@ -123,7 +128,7 @@ public class ProjectResolver implements URIResolver {
 	private String getPath(IPath path, String host) {
 		IPath newPath = path;
 		// They are potentially for only Windows operating system.
-		//  a.) if path has a device, and if it begins with IPath.SEPARATOR,
+		// a.) if path has a device, and if it begins with IPath.SEPARATOR,
 		// remove it
 		final String device = path.getDevice();
 		if ((device != null) && (device.length() > 0)) {
@@ -153,7 +158,8 @@ public class ProjectResolver implements URIResolver {
 		IPath path;
 		if (strPath.length() == 0) {
 			path = Path.ROOT;
-		} else {
+		}
+		else {
 			path = new Path(strPath);
 			String query = null;
 			StringTokenizer parser = new StringTokenizer(strPath, "?"); //$NON-NLS-1$
@@ -189,7 +195,7 @@ public class ProjectResolver implements URIResolver {
 		return null;
 	}
 
-	//	defect 244817 start
+	// defect 244817 start
 	/**
 	 * 
 	 * @param passedSpec
