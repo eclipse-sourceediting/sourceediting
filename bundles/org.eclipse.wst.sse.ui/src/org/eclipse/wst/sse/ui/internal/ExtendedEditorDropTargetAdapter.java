@@ -29,6 +29,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Caret;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.wst.sse.ui.internal.TransferBuilder.TransferProxyForDelayLoading;
 
 /**
  * ExtendedEditorDropTargetAdapter
@@ -43,22 +44,40 @@ public class ExtendedEditorDropTargetAdapter extends DropTargetAdapter {
 
 	private Transfer[] transfers = null;
 
+	private boolean useProxy;
+
+	/**
+	 * @deprecated use ExtendedEditorDropTargetAdapter(boolean useProxy) for
+	 *             the performance
+	 */
 	public ExtendedEditorDropTargetAdapter() {
+		this(false);
+	}
+
+	public ExtendedEditorDropTargetAdapter(boolean useProxy) {
 		super();
+		this.useProxy = useProxy;
 	}
 
 	protected boolean doDrop(Transfer transfer, DropTargetEvent event) {
-		TransferBuilder tb = new TransferBuilder();
+		TransferBuilder tb = new TransferBuilder(useProxy);
 
 		IDropAction[] as = null;
 		if (editorIds != null && editorIds.length > 0)
-			as = tb.getDropActions(editorIds, transfer.getClass().getName());
+			as = tb.getDropActions(editorIds, transfer);
 		else
-			as = tb.getDropActions(getTargetEditor().getClass().getName(), transfer.getClass().getName());
+			as = tb.getDropActions(getTargetEditor().getClass().getName(), transfer);
 
 		for (int i = 0; i < as.length; ++i) {
 			IDropAction da = as[i];
-			if (transfer instanceof FileTransfer) {
+			Transfer actualTransfer;
+			if (transfer instanceof TransferProxyForDelayLoading) {
+				actualTransfer = ((TransferProxyForDelayLoading) transfer).getTransferClass();
+			}
+			else {
+				actualTransfer = transfer;
+			}
+			if (actualTransfer instanceof FileTransfer) {
 				if (event.data == null) {
 					Logger.log(Logger.ERROR, "No data in DropTargetEvent from " + event.widget); //$NON-NLS-1$
 					return false;
@@ -168,14 +187,13 @@ public class ExtendedEditorDropTargetAdapter extends DropTargetAdapter {
 			Point size = ct.getSize();
 
 			GC gc = new GC(st);
-			gc.setXORMode(true);
 			gc.setLineWidth(size.x);
 
 			// erase old caret
 			if (caret != null) {
 				Color originalForeground = gc.getForeground();
 				gc.setForeground(st.getBackground());
-				gc.drawLine(caret.x, caret.y, caret.x, caret.y + size.y);
+				gc.drawRectangle(caret.x, caret.y, size.x, size.y);
 				gc.setForeground(originalForeground);
 			}
 
@@ -186,8 +204,9 @@ public class ExtendedEditorDropTargetAdapter extends DropTargetAdapter {
 			caret = newCaret;
 			if (ct.getImage() != null)
 				gc.drawImage(ct.getImage(), caret.x, caret.y);
-			else
+			else {
 				gc.drawLine(caret.x, caret.y, caret.x, caret.y + size.y);
+			}
 
 			gc.dispose();
 		}
@@ -284,7 +303,7 @@ public class ExtendedEditorDropTargetAdapter extends DropTargetAdapter {
 	 */
 	public Transfer[] getTransfers() {
 		if (transfers == null) {
-			TransferBuilder tb = new TransferBuilder();
+			TransferBuilder tb = new TransferBuilder(useProxy);
 			if (editorIds == null || editorIds.length == 0)
 				transfers = tb.getDropTargetTransfers(getTargetEditor().getClass().getName());
 			else

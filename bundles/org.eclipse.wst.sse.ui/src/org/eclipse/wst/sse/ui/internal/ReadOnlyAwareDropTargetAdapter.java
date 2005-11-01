@@ -21,8 +21,16 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 
 public class ReadOnlyAwareDropTargetAdapter extends ExtendedEditorDropTargetAdapter {
 
+	/**
+	 * @deprecated - use ReadOnlyAwareDropTargetAdapter(boolean useProxy) for
+	 *             the performance
+	 */
 	public ReadOnlyAwareDropTargetAdapter() {
 		super();
+	}
+
+	public ReadOnlyAwareDropTargetAdapter(boolean useProxy) {
+		super(useProxy);
 	}
 
 	public void drop(DropTargetEvent event) {

@@ -26,6 +26,7 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.wst.sse.ui.internal.extension.DropActionProxy;
 import org.eclipse.wst.sse.ui.internal.extension.RegistryReader;
 import org.osgi.framework.Bundle;
@@ -61,6 +62,212 @@ public class TransferBuilder extends RegistryReader {
 
 	public static final String TRUE = "true"; //$NON-NLS-1$
 
+	private boolean useProxy;
+
+	class TransferProxyForDelayLoading extends Transfer {
+	    private IConfigurationElement element;
+	    private String classAttribute;
+	    private Transfer proxy;
+        private Method getTypeIdsMethod, getTypeNamesMethod, javaToNativeMethod, nativeToJavaMethod;
+
+	    TransferProxyForDelayLoading() {
+	        super();
+	    }
+
+	    TransferProxyForDelayLoading(IConfigurationElement elm, String clsAttr) {
+	        super();
+	        this.element = elm;
+	        this.classAttribute = clsAttr;
+	    }
+	    
+	    private Transfer newInstance() {
+	        if ((element != null) && (classAttribute != null)) {
+		        Object o = createExtension(element, classAttribute);
+		        if (o instanceof Transfer) {
+		            element = null;
+		            classAttribute = null;
+		            return (Transfer)o;
+		        }
+	        }
+	        return null;
+	    }
+
+	    public TransferData[] getSupportedTypes() {
+	        if (proxy == null) {
+	            proxy = newInstance();
+	        }
+	        if (proxy != null) {
+	            return proxy.getSupportedTypes();
+	        }
+	        return new TransferData[0];
+        }
+        protected int[] getTypeIds() {
+	        if (proxy == null) {
+	            proxy = newInstance();
+	        }
+	        if (proxy != null) {
+                if (getTypeIdsMethod == null) {
+    	            Class runtimeClass = proxy.getClass();
+                    NoSuchMethodException e = null;
+                    while (runtimeClass != null) {
+        	            try {
+        	                getTypeIdsMethod = runtimeClass.getDeclaredMethod("getTypeIds", new Class[0]);//$NON-NLS-1$
+                            getTypeIdsMethod.setAccessible(true);
+                            break;
+        	            } catch (NoSuchMethodException e1) {
+                            e = e1;
+                            runtimeClass = runtimeClass.getSuperclass();
+        	            } catch (SecurityException e2) {
+                            runtimeClass = runtimeClass.getSuperclass();
+        	            }
+                    }
+                    if ((getTypeIdsMethod == null) && (e != null)) {
+                        Logger.logException(e);
+                    }
+                }
+                if (getTypeIdsMethod != null) {
+                    try {
+                         // changed Integer[] return type to int[]
+                        int[] r = (int[])getTypeIdsMethod.invoke(proxy, new Object[0]);
+                        if ((r != null) && (r.length > 0)) {
+                            int[] ret = new int[r.length];
+                            for(int i = 0; i < r.length; i++) {
+                                ret[i] = r[i];
+                            }
+                            return ret;
+                        }
+                    } catch (IllegalAccessException e2) {
+                        Logger.logException(e2);
+                    } catch (InvocationTargetException e3) {
+                        Logger.logException(e3);
+                    }
+                }
+	        }
+            return new int[0];
+        }
+        protected String[] getTypeNames() {
+	        if (proxy == null) {
+	            proxy = newInstance();
+	        }
+	        if (proxy != null) {
+                if (getTypeNamesMethod == null) {
+    	            Class runtimeClass = proxy.getClass();
+                    NoSuchMethodException e = null;
+                    while (runtimeClass != null) {
+        	            try {
+        	                getTypeNamesMethod = runtimeClass.getDeclaredMethod("getTypeNames", new Class[0]);//$NON-NLS-1$
+                            getTypeNamesMethod.setAccessible(true);
+                            break;
+        	            } catch (NoSuchMethodException e1) {
+                            e = e1;
+                            runtimeClass = runtimeClass.getSuperclass();
+        	            } catch (SecurityException e2) {
+                            runtimeClass = runtimeClass.getSuperclass();
+        	            }
+                    }
+                    if ((getTypeNamesMethod == null) && (e != null)) {
+                        Logger.logException(e);
+                    }
+                }
+                if (getTypeNamesMethod != null) {
+                    try {
+                        return (String[])getTypeNamesMethod.invoke(proxy, new Object[0]);
+                    } catch (IllegalAccessException e2) {
+                        Logger.logException(e2);
+                    } catch (InvocationTargetException e3) {
+                        Logger.logException(e3);
+                    }
+                }
+	        }
+            return new String[0];
+        }
+        public boolean isSupportedType(TransferData transferData) {
+	        if (proxy == null) {
+	            proxy = newInstance();
+	        }
+	        if (proxy != null) {
+	            return proxy.isSupportedType(transferData);
+	        }
+            return false;
+        }
+        protected void javaToNative(Object object, TransferData transferData) {
+	        if (proxy == null) {
+	            proxy = newInstance();
+	        }
+	        if (proxy != null) {
+                if (javaToNativeMethod == null) {
+                    Class runtimeClass = proxy.getClass();
+                    NoSuchMethodException e = null;
+                    while (runtimeClass != null) {
+        	            try {
+        	                javaToNativeMethod = runtimeClass.getDeclaredMethod("javaToNative", new Class[]{object.getClass(), transferData.getClass()});//$NON-NLS-1$
+        	                javaToNativeMethod.setAccessible(true);
+                            break;
+        	            } catch (NoSuchMethodException e1) {
+                            e = e1;
+                            runtimeClass = runtimeClass.getSuperclass();
+        	            } catch (SecurityException e2) {
+                            runtimeClass = runtimeClass.getSuperclass();
+        	            }
+                    }
+                    if ((javaToNativeMethod == null) && (e != null)) {
+                        Logger.logException(e);
+                    }
+                }
+                if (javaToNativeMethod != null) {
+                    try {
+                        javaToNativeMethod.invoke(proxy, new Object[]{object, transferData});
+                    } catch (IllegalAccessException e2) {
+                        Logger.logException(e2);
+                    } catch (InvocationTargetException e3) {
+                        Logger.logException(e3);
+                    }
+                }
+	        }
+        }
+        protected Object nativeToJava(TransferData transferData) {
+	        if (proxy == null) {
+	            proxy = newInstance();
+	        }
+	        if (proxy != null) {
+                if (nativeToJavaMethod == null) {
+                    Class runtimeClass = proxy.getClass();
+                    NoSuchMethodException e = null;
+                    while (runtimeClass != null) {
+                        try {
+                            nativeToJavaMethod = runtimeClass.getDeclaredMethod("nativeToJava", new Class[]{transferData.getClass()});//$NON-NLS-1$
+                            nativeToJavaMethod.setAccessible(true);
+                            break;
+                        } catch (NoSuchMethodException e1) {
+                            e = e1;
+                            runtimeClass = runtimeClass.getSuperclass();
+        	            } catch (SecurityException e2) {
+                            runtimeClass = runtimeClass.getSuperclass();
+        	            }
+                    }
+                    if ((nativeToJavaMethod == null) && (e != null)) {
+                        Logger.logException(e);
+                    }
+                }
+                if (nativeToJavaMethod != null) {
+                    try {
+    	                return nativeToJavaMethod.invoke(proxy, new Object[]{transferData});
+    	            } catch (IllegalAccessException e2) {
+                   		Logger.logException(e2);
+    	            } catch (InvocationTargetException e3) {
+                   		Logger.logException(e3);
+    	            }
+                }
+	        }
+            return new Object();
+        }
+        Transfer getTransferClass() {
+	        if (proxy == null) {
+	            proxy = newInstance();
+	        }
+	        return proxy;
+        }
+	}
 	/**
 	 * @param element
 	 * @param classAttribute
@@ -209,8 +416,12 @@ public class TransferBuilder extends RegistryReader {
 	 * @return Transfer
 	 */
 	protected Transfer createTransfer(IConfigurationElement element) {
-		Object obj = null;
-		obj = createExtension(element, ATT_CLASS);
+	    Object obj = null;
+	    if (useProxy) {
+	        obj = new TransferProxyForDelayLoading(element, ATT_CLASS);
+	    } else {
+	        obj = createExtension(element, ATT_CLASS);
+	    }
 		if (obj == null)
 			return null;
 		return (obj instanceof Transfer) ? (Transfer) obj : null;
@@ -282,6 +493,7 @@ public class TransferBuilder extends RegistryReader {
 	}
 
 	/**
+	 * @deprecated use getDropActions(String editorId, Transfer transfer) for the performance
 	 * @param editorId
 	 * @param className
 	 * @return IDropAction[]
@@ -289,8 +501,17 @@ public class TransferBuilder extends RegistryReader {
 	public IDropAction[] getDropActions(String editorId, String transferClassName) {
 		return getDropActions(new String[]{editorId}, transferClassName);
 	}
-
+	
 	/**
+	 * @param editorId
+	 * @param class
+	 * @return IDropAction[]
+	 */
+	public IDropAction[] getDropActions(String editorId, Transfer transfer) {
+		return getDropActions(new String[]{editorId}, transfer);
+	}
+	/**
+	 * @deprecated use getDropActions(String[] editorIds, Transfer transfer) for the performance
 	 * @param editorId
 	 * @param className
 	 * @return IDropAction[]
@@ -305,6 +526,20 @@ public class TransferBuilder extends RegistryReader {
 		return actions;
 	}
 
+	/**
+	 * @param editorId
+	 * @param class
+	 * @return IDropAction[]
+	 */
+	public IDropAction[] getDropActions(String[] editorIds, Transfer transfer) {
+	    String transferClassName;
+	    if (transfer instanceof TransferProxyForDelayLoading) {
+	        transferClassName = ((TransferProxyForDelayLoading)transfer).getTransferClass().getClass().getName();
+	    } else {
+	        transferClassName = transfer.getClass().getName();
+	    }
+	    return getDropActions(editorIds, transferClassName);
+	}
 	/**
 	 * @param editorId
 	 * @return Transfer[]
@@ -413,4 +648,15 @@ public class TransferBuilder extends RegistryReader {
 		readElementChildren(element);
 		return true;
 	}
+	/**
+	 * @deprecated - use TransferBuilder(boolean useProxy) for the performance
+	 */
+	public TransferBuilder() {
+        this(false);
+    }
+
+    public TransferBuilder(boolean useProxy) {
+        super();
+        this.useProxy = useProxy;
+    }
 }
