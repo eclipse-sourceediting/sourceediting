@@ -25,6 +25,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.content.IContentTypeManager;
 import org.eclipse.jface.text.IDocument;
@@ -137,22 +138,28 @@ public class HTMLValidator implements IValidator, ISourceValidator {
 			try {
 				IContentTypeManager contentTypeManager = Platform.getContentTypeManager();
 
-				IContentType fileContentType = file.getContentDescription().getContentType();
-
+				IContentDescription contentDescription = file.getContentDescription();
 				IContentType htmlContentType = contentTypeManager.getContentType(ORG_ECLIPSE_WST_HTML_CORE_HTMLSOURCE);
-				if (htmlContentType != null) {
-					if (fileContentType.isKindOf(htmlContentType)) {
-						result = true;
-					}
-					else {
-						// ISSUE: here's a little "backwards" dependancy.
-						// there should be a "JSPEMBEDDEDHTML validator"
-						// contributed by JSP plugin.
-						IContentType jspContentType = contentTypeManager.getContentType(ORG_ECLIPSE_JST_JSP_CORE_JSPSOURCE);
-						if (jspContentType != null) {
-							result = fileContentType.isKindOf(jspContentType);
+				if (contentDescription != null) {
+					IContentType fileContentType = contentDescription.getContentType();
+
+					if (htmlContentType != null) {
+						if (fileContentType.isKindOf(htmlContentType)) {
+							result = true;
+						}
+						else {
+							// ISSUE: here's a little "backwards" dependancy.
+							// there should be a "JSPEMBEDDEDHTML validator"
+							// contributed by JSP plugin.
+							IContentType jspContentType = contentTypeManager.getContentType(ORG_ECLIPSE_JST_JSP_CORE_JSPSOURCE);
+							if (jspContentType != null) {
+								result = fileContentType.isKindOf(jspContentType);
+							}
 						}
 					}
+				}
+				else if (htmlContentType != null) {
+					result = htmlContentType.isAssociatedWith(file.getName());
 				}
 			}
 			catch (CoreException e) {
