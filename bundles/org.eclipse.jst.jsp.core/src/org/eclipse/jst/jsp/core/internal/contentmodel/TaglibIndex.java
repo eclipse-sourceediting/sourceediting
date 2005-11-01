@@ -318,7 +318,8 @@ public class TaglibIndex {
 	 * @param crossProjects -
 	 *            whether to search across projects (currently ignored)
 	 * 
-	 * @return a visible ITaglibRecord or null
+	 * @return a visible ITaglibRecord or null, typically the result will have
+	 *         to be cast to a subiinterface of ITaglibRecord
 	 * 
 	 * @See ITaglibRecord
 	 */
