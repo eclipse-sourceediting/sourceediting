@@ -2059,7 +2059,7 @@ public class StructuredTextEditor extends TextEditor {
 	protected void initializeDrop(ITextViewer textViewer) {
 		int operations = DND.DROP_COPY | DND.DROP_MOVE;
 		fDropTarget = new DropTarget(textViewer.getTextWidget(), operations);
-		fDropAdapter = new ReadOnlyAwareDropTargetAdapter();
+		fDropAdapter = new ReadOnlyAwareDropTargetAdapter(true);
 		fDropAdapter.setTargetEditor(this);
 		fDropAdapter.setTargetIDs(getConfigurationPoints());
 		fDropAdapter.setTextViewer(textViewer);
