@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.wst.xml.core.internal.Logger;
 import org.eclipse.wst.xml.core.internal.XMLCoreMessages;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
 import org.eclipse.wst.xml.core.internal.contentmodel.ContentModelManager;
@@ -225,10 +226,11 @@ public CMDocument getCMDocument(String publicId, String systemId, String type)
         {
           try
           {
-            new AsyncBuildOperation(publicId, resolvedURI, type).run();
+        	  buildCMDocument(publicId, resolvedURI, type);
           }
           catch (Exception e)
           {
+        	  Logger.logException(e);
           }
           return Status.OK_STATUS;
         }
@@ -244,26 +246,6 @@ public CMDocument getCMDocument(String publicId, String systemId, String type)
 
     
 
-  protected class AsyncBuildOperation implements Runnable
-  {
-    protected String publicId;
-    protected String resolvedURI;    
-    protected String type;
-
-    public AsyncBuildOperation(String publicId, String resolvedURI, String type)
-    {
-      this.publicId = publicId;
-      this.resolvedURI = resolvedURI;                                          
-      this.type = type;
-    }      
-
-    public void run()
-    {
-      buildCMDocument(publicId, resolvedURI, type);
-    }
-  }
-    
-  
   public synchronized CMDocument buildCMDocument(String publicId, String resolvedURI, String type)
   {                                     
     cmDocumentCache.setStatus(resolvedURI, CMDocumentCache.STATUS_LOADING);

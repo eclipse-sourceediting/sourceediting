@@ -15,6 +15,7 @@ package org.eclipse.wst.xml.core.internal.contentmodel.internal.annotation;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.wst.xml.core.internal.Logger;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
 import org.eclipse.wst.xml.core.internal.contentmodel.ContentModelManager;
 import org.eclipse.wst.xml.core.internal.contentmodel.annotation.AnnotationMap;
@@ -35,6 +36,7 @@ public class AnnotationUtility {
 					parser.parse(map, annotationFileInfo);
 				}
 				catch (Exception e) {
+					Logger.logException(e);
 				}
 			}
 		}
