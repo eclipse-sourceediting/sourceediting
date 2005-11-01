@@ -22,6 +22,7 @@ import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
  * 
  * This class is not intended to be used, its just present to server as a
  * generic starting point for adding new specific region types.
+ * 
  */
 
 public class GenericTemplateRegion implements ITextRegion {
@@ -55,7 +56,7 @@ public class GenericTemplateRegion implements ITextRegion {
 
 
 	public void adjustTextLength(int i) {
-		fTextLength += 1;
+		fTextLength += i;
 
 	}
 
