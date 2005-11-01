@@ -444,14 +444,24 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 	protected void addEndTagProposals(ContentAssistRequest contentAssistRequest) {
 		IDOMNode node = (IDOMNode) contentAssistRequest.getParent();
 
-		// CMVC 241090 for special meta-info comment tags
 		if (isCommentNode(node)) {
 			// loop and find non comment node parent
 			while (node != null && isCommentNode(node)) {
 				node = (IDOMNode) node.getParentNode();
 			}
 		}
-
+		
+		// node is already closed
+		if(node.isClosed()) {
+			// loop and find non comment unclose node parent
+			while (node != null && node.isClosed()) {
+				node = (IDOMNode) node.getParentNode();
+			}
+		}
+		// there were no unclosed tags
+		if(node == null)
+			return;
+		
 		// data to create a CustomCompletionProposal
 		String replaceText = node.getNodeName() + ">"; //$NON-NLS-1$
 		int replaceBegin = contentAssistRequest.getReplacementBeginPosition();
@@ -481,7 +491,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 
 			node = (IDOMNode) node.getModel().getIndexedRegion(xmlEndTagOpen.getStartOffset());
 			node = (IDOMNode) node.getParentNode();
-
+			
 			if (isStartTag(xmlEndTagOpen)) {
 				// this is the case for a start tag w/out end tag
 				// eg:
