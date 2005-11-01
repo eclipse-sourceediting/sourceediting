@@ -267,8 +267,7 @@ public class ActionDescriptor {
 	/**
 	 */
 	private IAction createAction(IConfigurationElement actionElement) {
-
-		Object action = createExtension(actionElement, ATT_CLASS);
+		Object action = new ExtendedEditorActionProxyForDelayLoading(actionElement, ATT_CLASS);
 		if (action == null)
 			return null;
 		if (action instanceof IActionValidator) {

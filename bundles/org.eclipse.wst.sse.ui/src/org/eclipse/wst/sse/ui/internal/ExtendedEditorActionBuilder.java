@@ -45,6 +45,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.part.MultiPageEditorSite;
 import org.eclipse.ui.texteditor.IUpdate;
 import org.eclipse.wst.sse.ui.internal.extension.ActionDescriptor;
+import org.eclipse.wst.sse.ui.internal.extension.IExtendedEditorActionProxyForDelayLoading;
 import org.eclipse.wst.sse.ui.internal.extension.RegistryReader;
 import org.eclipse.wst.sse.ui.internal.provisional.extensions.ISourceEditingTextTools;
 
@@ -153,6 +154,9 @@ public class ExtendedEditorActionBuilder extends RegistryReader {
 							// uncaught exceptions could cause the menu to not
 							// be shown
 							try {
+								if (((ad.getPopupMenuPath() != null) || (ad.getPopupMenuGroup() != null)) && (a instanceof IExtendedEditorActionProxyForDelayLoading)) {
+								    ((IExtendedEditorActionProxyForDelayLoading)a).realize();
+								}
 
 								IExtendedEditorAction eea = (IExtendedEditorAction) a;
 								eea.setActiveExtendedEditor(activeExtendedEditor);
@@ -196,6 +200,9 @@ public class ExtendedEditorActionBuilder extends RegistryReader {
 						ActionDescriptor ad = (ActionDescriptor) obj;
 						IAction a = ad.getAction();
 						if (a instanceof IExtendedEditorAction) {
+							if (((ad.getToolbarPath() != null) || (ad.getToolbarGroup() != null)) && (a instanceof IExtendedEditorActionProxyForDelayLoading)) {
+							    ((IExtendedEditorActionProxyForDelayLoading)a).realize();
+							}
 							IExtendedEditorAction eea = (IExtendedEditorAction) a;
 							eea.setActiveExtendedEditor(activeExtendedEditor);
 							eea.update();
@@ -258,8 +265,9 @@ public class ExtendedEditorActionBuilder extends RegistryReader {
 			else {
 				activeEditorIsVisible = site.getWorkbenchWindow().getPartService().getActivePart().equals(activeExtendedEditor.getEditorPart());
 			}
-			if (!activeEditorIsVisible)
-				return;
+			// due to a delay class loading, don't return now
+//			if (!activeEditorIsVisible)
+//				return;
 
 			IContributionItem[] items = menu.getItems();
 			if (items == null || items.length == 0)
@@ -275,6 +283,7 @@ public class ExtendedEditorActionBuilder extends RegistryReader {
 
 			Set keys = map.keySet();
 			Iterator it = keys.iterator();
+			boolean needActionContributionItemUpdate = false;
 			while (it.hasNext()) {
 				IContributionItem item = (IContributionItem) it.next();
 				IMenuManager mm = (IMenuManager) map.get(item);
@@ -282,22 +291,47 @@ public class ExtendedEditorActionBuilder extends RegistryReader {
 					try {
 						IAction action = ((ActionContributionItem) item).getAction();
 
-						if (action instanceof IUpdate) {
-							((IUpdate) action).update();
+						if (action instanceof IExtendedEditorActionProxyForDelayLoading) {
+						    IExtendedEditorActionProxyForDelayLoading eea = (IExtendedEditorActionProxyForDelayLoading)action;
+						    if (eea.isRealized() == false) {
+						        eea.realize();
+						        needActionContributionItemUpdate = true;
+						    }
 						}
 
-						boolean visible = true;
-						if (action instanceof IExtendedEditorAction) {
-							visible = ((IExtendedEditorAction) action).isVisible();
+						if (activeEditorIsVisible || needActionContributionItemUpdate) {
+							if (action instanceof IUpdate) {
+								((IUpdate) action).update();
+							}
 						}
-						item.setVisible(visible);
+
+						if (activeEditorIsVisible || needActionContributionItemUpdate) {
+							boolean visible = true;
+							if (action instanceof IExtendedEditorAction) {
+								visible = ((IExtendedEditorAction) action).isVisible();
+							}
+							item.setVisible(visible);
+						}
+
+						if (needActionContributionItemUpdate) {
+						    ((ActionContributionItem)item).update();
+						}
+
 					}
 					catch (Exception e) {
 						Logger.logException("updating actions", e); //$NON-NLS-1$
 					}
 				}
 			}
-			menu.update(false);
+			if (activeEditorIsVisible || needActionContributionItemUpdate) {
+			    if (needActionContributionItemUpdate) {
+			        // the action is realized so that need to update the menu w/
+			        // force set to true
+			        menu.update(true);
+			    } else {
+			        menu.update(false);
+			    }
+			}
 		}
 
 		public void setActiveEditor(IEditorPart editor) {
