@@ -33,13 +33,6 @@
       <import feature="org.eclipse.wst.xml_ui.feature" version="1.0.0"/>
       <import feature="org.eclipse.wst.common_ui.feature" version="1.0.0"/>
    </requires>
-
-   <plugin
-         id="org.eclipse.wst.css.ui.infopop"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
    
    <plugin
          id="org.eclipse.wst.html.ui.infopop"
