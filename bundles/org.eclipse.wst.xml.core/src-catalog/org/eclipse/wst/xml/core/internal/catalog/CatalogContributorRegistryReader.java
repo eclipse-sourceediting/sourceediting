@@ -47,12 +47,6 @@ public class CatalogContributorRegistryReader
    *  </catalogContribution> 
    *  </extension>
    *  
-   *  Deprecated:
-   *  <extension point="org.eclipse.wst.xml.uriresolver.catalogContributor">
-      <catalogContributor catalogId="default">
-        <mappingInfo key="http://www.w3.org/2001/XMLSchema" uri="platform:/plugin/org.eclipse.xsd/cache/www.w3.org/2001/XMLSchema.xsd"/>
-      </catalogContributor>
-    </extension>
    */
   protected ICatalog catalog;
 
@@ -78,17 +72,7 @@ public class CatalogContributorRegistryReader
         readElement(elements[i]);
       }
     }
-    // compatability extension point processing start 
-    IExtensionPoint deprecatedEP = pluginRegistry.getExtensionPoint(XMLCorePlugin.getDefault().getBundle().getSymbolicName(), CompatabilityConstants.EXTENSION_POINT_ID);
-    if (point != null)
-    {
-      IConfigurationElement[] elements = deprecatedEP.getConfigurationElements();
-      for (int i = 0; i < elements.length; i++)
-      {
-    	  readElement(elements[i]);
-      }
-    }
-	//  compatability extension point processing end 
+    
   }
   
   public static String resolvePath(URL platformURL, String path) 
@@ -109,21 +93,16 @@ public class CatalogContributorRegistryReader
 		}
       
     }
-    else
-    {  
-      // this is the typical case, where the resource is located relative
-      // to the plugin that declares the extension point
-      //
-		try
-		{
-			URL resolvedURL = Platform.resolve(platformURL);
-			URL absoluteURL = new URL(resolvedURL, path);
-			return absoluteURL.toString();
-		} catch (IOException e)
-		{
-			return path;
-		}
-    }  
+    // this is the typical case, where the resource is located relative
+    // to the plugin that declares the extension point
+    try {
+    	URL resolvedURL = Platform.resolve(platformURL);
+    	URL absoluteURL = new URL(resolvedURL, path);
+    	return absoluteURL.toString();
+    } catch (IOException e) {
+    	return path;
+    }
+     
   }
   
   public static URL getPlatformURL(String pluginId){
@@ -170,15 +149,9 @@ public class CatalogContributorRegistryReader
     	processMappingInfoElements(mappingInfoElementList);
     	IConfigurationElement[] nextCatalogElementList = element.getChildren(OASISCatalogConstants.TAG_NEXT_CATALOG);
     	processNextCatalogElements(nextCatalogElementList);
-    	mappingInfoElementList = element.getChildren(CompatabilityConstants.TAG_MAPPING_INFO);
-    	processCompatabilityElement(mappingInfoElementList);
+    	
     }
-    // compatability extension point processing start 
-    else if (CompatabilityConstants.TAG_CONTRIBUTOR.equals(element.getName())){
-	    IConfigurationElement[] mappingInfoElementList = element.getChildren(CompatabilityConstants.TAG_MAPPING_INFO);
-    	processCompatabilityElement(mappingInfoElementList);
-    }
-	//  compatability extension point processing end 
+    
   }
 
   private void processMappingInfoElements(IConfigurationElement[] childElementList)
@@ -279,81 +252,6 @@ public class CatalogContributorRegistryReader
     }
   }
   
-  //compatability extension point processing start 
-  private void processCompatabilityElement(IConfigurationElement[] childElementList)
-  {
-	  if (catalog == null)
-	      return;
-        for (int i = 0; i < childElementList.length; i++)
-        {
-          try
-          {
-            IConfigurationElement childElement = childElementList[i];
-            String key = childElement.getAttribute(CompatabilityConstants.ATT_KEY);
-            String path = childElement.getAttribute(CompatabilityConstants.ATT_URI.toLowerCase());
-            String uri = resolvePath(path);
-            if (uri != null)
-            {  
-              String typeName = childElement.getAttribute(CompatabilityConstants.ATT_TYPE);
-              int type = ICatalogEntry.ENTRY_TYPE_PUBLIC;
-              if (typeName != null)
-              {
-                if (typeName.compareToIgnoreCase("SYSTEM") == 0)
-                {
-                  type = ICatalogEntry.ENTRY_TYPE_SYSTEM;
-                }
-                else{
-                    type = uri.endsWith("xsd") ? ICatalogEntry.ENTRY_TYPE_URI : ICatalogEntry.ENTRY_TYPE_PUBLIC;
-                }
-              }
-              else
-              { 
-            	  if(key.endsWith("xsd")){
-            		  type = ICatalogEntry.ENTRY_TYPE_SYSTEM;
-            	  }
-            	  else if(uri.endsWith("xsd")){
-                      type = ICatalogEntry.ENTRY_TYPE_URI; 
-            	  }
-              }
-			  ICatalogElement catalogElement = catalog.createCatalogElement(type);
-		      if (catalogElement instanceof ICatalogEntry)
-		      {
-		        ICatalogEntry entry = (ICatalogEntry) catalogElement;
-		        entry.setKey(key);
-				entry.setURI(uri);
-		        String id = childElement.getAttribute(CompatabilityConstants.ATT_ID); // optional
-		        if (id != null && !id.equals(""))
-		        {
-		          entry.setId(id);
-		        }
-			    String webAddress = childElement.getAttribute(CompatabilityConstants.ATT_WEB_URL);
-				if (webAddress != null && !webAddress.equals(""))
-		        {
-				   entry.setAttributeValue(ICatalogEntry.ATTR_WEB_URL, webAddress);
-		        }
-		      }
-			  	catalog.addCatalogElement(catalogElement);
-            } 
-          }
-          catch (Exception e)
-          {
-          }
-        }
-  }
-  
-  interface CompatabilityConstants
-  {
-	  public static final String PLUGIN_ID = "org.eclipse.wst.xml.uriresolver";
-	  public static final String EXTENSION_POINT_ID = "catalogContributor";
-	  public static final String TAG_CONTRIBUTOR = "catalogContributor";
-	  public static final String ATT_CATALOG_ID = "catalogId";
-	  public static final String TAG_MAPPING_INFO = "mappingInfo";
-	  public static final String ATT_KEY = "key";
-	  public static final String ATT_URI = "uri";
-	  public static final String ATT_WEB_URL = "webURL";
-	  public static final String ATT_TYPE = "type";
-	  public static final String ATT_ID = "id";
-  }
-  //compatability extension point processing end 
+ 
  
 }
