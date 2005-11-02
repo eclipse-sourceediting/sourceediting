@@ -21,8 +21,8 @@
          version="0.0.0"/>
 
    <requires>
-      <import feature="org.eclipse.wst.xml_ui.feature" version="0.0.0"/>
-      <import feature="org.eclipse.test" version="3.1.0"/>
+      <import feature="org.eclipse.wst.xml_ui.feature"/>
+      <import feature="org.eclipse.test"/>
    </requires>
 
    <plugin
