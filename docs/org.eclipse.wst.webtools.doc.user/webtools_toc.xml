@@ -13,7 +13,6 @@
 <toc label="Web application development" topic="topics/ccwebvw.html">
 <topic label="Web application - overview" href="topics/ccwtover.html"
 		id="wtoverview">
- <topic label="Web resources - overview" href="topics/ccwebdev.html">
  <topic label="The Web perspective" href="topics/ccwebper.html"/>
  <topic label="Web technologies" href="topics/cwebtechnologies.html" >
       <topic label="Static Web projects" href="topics/ccstatic.html"/>
@@ -29,22 +28,21 @@
       <topic label="Web tools features" href="topics/cwtfeatures.html">
       </topic>
    </topic>
-   </topic>
    <topic label="Project Explorer view and Web development" href="topics/ccwebvw.html">
    <topic label="Web development tools" href="topics/cwebdevelopmenttools.html">
-   <topic label="The Web deployment descriptor editor" href="topics/ccwebxml.html">
+   <!-- <topic label="The Web deployment descriptor editor" href="topics/ccwebxml.html">
       <topic label="Working in the Overview page" href="topics/twedtwbx1.html"/>
       <topic label="Working in the Servlets page" href="topics/twedtwbx2.html"/>
       <topic label="Working in the Filters Page" href="topics/twedtwbxf.html"/>
       <topic label="Working in the Security page" href="topics/twedtwbx3.html"/>
       <topic label="Working in the References Page" href="topics/twedtwbx4.html"/>
-      <!-- <topic label="Working in the WS Handler page" href="topics/twedtwbxwsh.html"/>-->
+      <topic label="Working in the WS Handler page" href="topics/twedtwbxwsh.html"/>
       <topic label="Working in the Pages page" href="topics/twedtwbxp.html"/>
       <topic label="Working in the Variables Page" href="topics/twedtwbxv.html"/>
-      <!-- <topic label="Working in the WS Extensions Page" href="topics/twedtwbxwse.html"/>
-      <topic label="Working in the WS Binding Page" href="topics/twedtwbxwsb.html"/>-->
+      <topic label="Working in the WS Extensions Page" href="topics/twedtwbxwse.html"/>
+      <topic label="Working in the WS Binding Page" href="topics/twedtwbxwsb.html"/>
       <topic label="Working in the Extensions Page" href="topics/twedtwbxe.html"/>
-      </topic>
+      </topic>-->
    </topic>
 			</topic>
 
