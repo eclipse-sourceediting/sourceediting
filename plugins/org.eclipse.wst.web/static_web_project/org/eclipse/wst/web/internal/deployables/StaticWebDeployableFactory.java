@@ -48,6 +48,8 @@ public class StaticWebDeployableFactory extends ProjectModuleFactoryDelegate {
 	protected boolean isValidModule(IProject project) {
 		try {
 			IFacetedProject facetedProject = ProjectFacetsManager.create(project);
+			if (facetedProject == null)
+				return false;
 			IProjectFacet webFacet = ProjectFacetsManager.getProjectFacet(IModuleConstants.WST_WEB_MODULE);
 			return facetedProject.hasProjectFacet(webFacet);
 		} catch (Exception e) {
