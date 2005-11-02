@@ -267,6 +267,7 @@ public class ValidatorHelper
         }  
         if (rootElementNamespace != null)
         {
+          location = URIResolverPlugin.createResolver().resolve(null, rootElementNamespace, location);    
           location = URIResolverPlugin.createResolver().resolvePhysicalLocation(null, rootElementNamespace, location);                                          
         }           
         

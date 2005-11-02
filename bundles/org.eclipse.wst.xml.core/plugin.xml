@@ -43,10 +43,6 @@
             stage="postnormalization"
             class="org.eclipse.wst.xml.core.internal.catalog.XMLCatalogURIResolverExtension">
       </resolverExtension>
-      <resolverExtension
-            stage="physical"
-            class="org.eclipse.wst.xml.core.internal.catalog.XMLCatalogURIResolverExtension">
-      </resolverExtension>
    </extension>
 
 	<extension
