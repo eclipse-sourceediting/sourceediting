@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Simple Web UI Plug-in
 Bundle-SymbolicName: org.eclipse.wst.web.ui; singleton:=true
-Bundle-Version: 0.7.0
+Bundle-Version: 1.0.0
 Bundle-ClassPath: ui.jar
 Bundle-Activator: org.eclipse.wst.web.ui.internal.WSTWebUIPlugin
 Bundle-Vendor: Eclipse.org
