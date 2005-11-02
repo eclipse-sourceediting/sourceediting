@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: XML Validator Tests Plug-in
 Bundle-SymbolicName: org.eclipse.wst.xml.validation.tests
-Bundle-Version: 0.7.0
+Bundle-Version: 1.0.0
 Bundle-ClassPath: validatexmltests.jar
 Bundle-Activator: org.eclipse.wst.xml.validation.tests.internal.XMLValidatorTestsPlugin
 Bundle-Vendor: Eclipse

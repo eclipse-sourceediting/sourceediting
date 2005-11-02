@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Structured Source Editor for JSP Tests
 Bundle-SymbolicName: org.eclipse.jst.jsp.ui.tests; singleton:=true
-Bundle-Version: 0.7.0
+Bundle-Version: 1.0.0
 Bundle-ClassPath: jspuitests.jar
 Bundle-Activator: org.eclipse.jst.jsp.ui.tests.JSPUITestsPlugin
 Bundle-Vendor: Eclipse.org
