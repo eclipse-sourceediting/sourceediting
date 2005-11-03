@@ -68,7 +68,7 @@
 
     
     <template id="template.wst.web">
-      <label>Dynamic Web Project</label>
+      <label>Simple Web Project</label>
       <fixed facet="wst.web"/>
     </template>
 
