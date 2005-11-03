@@ -9,29 +9,34 @@
  *     IBM Corporation - initial API and implementation
  *     
  *******************************************************************************/
-package org.eclipse.jst.jsp.core.internal.contentmodel;
+package org.eclipse.jst.jsp.core.taglib;
 
 import java.net.URL;
 
 /**
  * A record representing a .tld that is not a standalone file
+ * <p>
+ * This interface is not intended to be implemented by clients.
+ * </p>
  */
 public interface IURLRecord extends ITaglibRecord {
 
 	String getBaseLocation();
 
 	/**
-	 * @return Returns the recommended/default prefix if one was given.
+	 * @return Returns the short-name (normally treated as the
+	 *         recommended/default prefix), if one was specified within this
+	 *         TLD's contents.
 	 */
 	String getShortName();
 
 	/**
-	 * @return Returns the uri for this TLD.
+	 * @return Returns the uri specified within this TLD's contents.
 	 */
 	String getURI();
 
 	/**
-	 * @return Returns the URL to this TLD.
+	 * @return Returns the URL to this TLD's contents.
 	 */
 	URL getURL();
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,12 +9,12 @@
  *     IBM Corporation - initial API and implementation
  *     
  *******************************************************************************/
-package org.eclipse.jst.jsp.core.internal.contentmodel;
+package org.eclipse.jst.jsp.core.taglib;
 
 /**
- * A representation of the information about a single tag library descriptor.
- * This interface is common to all record types.
- * <p>
+ * A representation of information about a single tag library descriptor. This
+ * interface is common to all record types.
+ * 
  * 
  * @see IJarRecord
  * @see ITagDirRecord
@@ -22,10 +22,11 @@ package org.eclipse.jst.jsp.core.internal.contentmodel;
  * @see IURLRecord
  *      <p>
  *      This interface is not intended to be implemented by clients.
+ *      </p>
  */
 public interface ITaglibRecord {
 	/** A record to a .jar file referenced "1.1 style". */
-	int JAR = 1 << 2;
+	int JAR = 1 << 1;
 
 	/**
 	 * A record representing a folder of .tag/.tagx files
@@ -35,12 +36,12 @@ public interface ITaglibRecord {
 	/**
 	 * A record representing a standalone .tld file
 	 */
-	int TLD = 1 << 1;
+	int TLD = 1;
 
 	/**
 	 * A record representing a .tld that is not a standalone file
 	 */
-	int URL = 1;
+	int URL = 1 << 2;
 
 	/**
 	 * Returns the type of this record. The returned value will be one of

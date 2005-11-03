@@ -9,22 +9,9 @@
  *     IBM Corporation - initial API and implementation
  *     
  *******************************************************************************/
-package org.eclipse.jst.jsp.core.internal.contentmodel;
+package org.eclipse.jst.jsp.core.taglib;
 
-import org.eclipse.core.runtime.IPath;
 
-/**
- * A record to a .jar file referenced "1.1 style".
- */
-
-public interface IJarRecord extends ITaglibRecord {
-	/**
-	 * @return Returns the location.
-	 */
-	public IPath getLocation();
-
-	/**
-	 * @return Returns the recommended/default prefix if one was given.
-	 */
-	public String getShortName();
+public interface ITaglibIndexListener {
+	void indexChanged(ITaglibRecordEvent event);
 }

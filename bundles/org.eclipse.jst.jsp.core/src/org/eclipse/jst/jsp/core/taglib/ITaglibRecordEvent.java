@@ -9,11 +9,26 @@
  *     IBM Corporation - initial API and implementation
  *     
  *******************************************************************************/
-package org.eclipse.jst.jsp.core.internal.contentmodel;
+package org.eclipse.jst.jsp.core.taglib;
+
+import org.eclipse.core.resources.IResourceDelta;
 
 /**
- * A record representing a folder of .tag/.tagx files
+ * Describes changes to the known records within the TaglibIndex.
  */
-public interface ITagDirRecord extends ITaglibRecord {
+public interface ITaglibRecordEvent {
 
+	/**
+	 * @return the record that was changed
+	 */
+	ITaglibRecord getTaglibRecord();
+
+	/**
+	 * @return the type of change, one of ADDED, CHANGED, or REMOVED
+	 */
+	int getType();
+
+	int ADDED = IResourceDelta.ADDED;
+	int CHANGED = IResourceDelta.CHANGED;
+	int REMOVED = IResourceDelta.REMOVED;
 }

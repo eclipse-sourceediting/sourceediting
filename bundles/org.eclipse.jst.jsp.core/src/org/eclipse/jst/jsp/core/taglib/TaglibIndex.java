@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *     
  *******************************************************************************/
-package org.eclipse.jst.jsp.core.internal.contentmodel;
+package org.eclipse.jst.jsp.core.taglib;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,11 +46,10 @@ import org.eclipse.wst.sse.core.internal.util.StringUtils;
  * 
  * Indexing is not persisted between sessions, so new ADD events will be sent
  * to ITaglibIndexListeners during each workbench session. REMOVE events are
- * not fired on workbench shutdown. Events for TAGDIR, JAR, and WEBXML type
- * records are only fired for the .jar and web.xml file itself. The record's
- * contents should be examined for any further information.
+ * not fired on workbench shutdown. The record's contents should be examined
+ * for any further information.
  */
-public class TaglibIndex {
+public final class TaglibIndex {
 
 	class ClasspathChangeListener implements IElementChangedListener {
 		Stack classpathStack = new Stack();
@@ -164,12 +163,12 @@ public class TaglibIndex {
 							}
 							for (int i = 0; i < projects.length; i++) {
 								if (_debugIndexCreation) {
-									System.out.println("TaglibIndex noticed " + projects[i].getName() + " is about to be deleted/closed"); //$NON-NLS-1$ //$NON-NLS-2$
+									Logger.log(Logger.INFO_DEBUG, "TaglibIndex noticed " + projects[i].getName() + " is about to be deleted/closed"); //$NON-NLS-1$ //$NON-NLS-2$
 								}
 								ProjectDescription description = (ProjectDescription) fProjectDescriptions.remove(projects[i]);
 								if (description != null) {
 									if (_debugIndexCreation) {
-										System.out.println("removing index of " + description.fProject.getName()); //$NON-NLS-1$
+										Logger.log(Logger.INFO_DEBUG, "removing index of " + description.fProject.getName()); //$NON-NLS-1$
 									}
 									description.clear();
 								}
@@ -223,12 +222,12 @@ public class TaglibIndex {
 									}
 									if (!projects[i].isAccessible() || (deltas[i] != null && deltas[i].getKind() == IResourceDelta.REMOVED)) {
 										if (_debugIndexCreation) {
-											System.out.println("TaglibIndex noticed " + projects[i].getName() + " is no longer accessible"); //$NON-NLS-1$ //$NON-NLS-2$
+											Logger.log(Logger.INFO_DEBUG, "TaglibIndex noticed " + projects[i].getName() + " is no longer accessible"); //$NON-NLS-1$ //$NON-NLS-2$
 										}
 										ProjectDescription description = (ProjectDescription) fProjectDescriptions.remove(projects[i]);
 										if (description != null) {
 											if (_debugIndexCreation) {
-												System.out.println("removing index of " + description.fProject.getName()); //$NON-NLS-1$
+												Logger.log(Logger.INFO_DEBUG, "removing index of " + description.fProject.getName()); //$NON-NLS-1$
 											}
 											description.clear();
 										}
@@ -263,7 +262,7 @@ public class TaglibIndex {
 
 	static void fireTaglibRecordEvent(ITaglibRecordEvent event) {
 		if (_debugEvents) {
-			System.out.println("TaglibIndex fired event:" + event); //$NON-NLS-1$
+			Logger.log(Logger.INFO_DEBUG, "TaglibIndex fired event:" + event); //$NON-NLS-1$
 		}
 		ITaglibIndexListener[] listeners = _instance.fTaglibIndexListeners;
 		if (listeners != null) {
@@ -280,13 +279,12 @@ public class TaglibIndex {
 
 	/**
 	 * Finds all of the visible ITaglibRecords for the given path in the
-	 * workspace.
+	 * workspace. Taglib mappings from web.xml files are only visible to paths
+	 * within the web.xml's corresponding web content folder.
 	 * 
 	 * @param fullPath -
-	 *            the path within the workspace
-	 * @return All of the visible ITaglibRecords from the given path. Taglib
-	 *         mappings from web.xml files are only visible to paths within
-	 *         the web.xml's corresponding web content folder.
+	 *            a path within the workspace
+	 * @return All of the visible ITaglibRecords from the given path.
 	 */
 	public static ITaglibRecord[] getAvailableTaglibRecords(IPath fullPath) {
 		ITaglibRecord[] records = _instance.internalGetAvailableTaglibRecords(fullPath);
@@ -307,7 +305,8 @@ public class TaglibIndex {
 	}
 
 	/**
-	 * Find a matching ITaglibRecord given the reference.
+	 * Finds a matching ITaglibRecord given the reference. Typically the
+	 * result will have to be cast to a subiinterface of ITaglibRecord.
 	 * 
 	 * @param basePath -
 	 *            the workspace-relative path for IResources, full filesystem
@@ -318,8 +317,8 @@ public class TaglibIndex {
 	 * @param crossProjects -
 	 *            whether to search across projects (currently ignored)
 	 * 
-	 * @return a visible ITaglibRecord or null, typically the result will have
-	 *         to be cast to a subiinterface of ITaglibRecord
+	 * @return a visible ITaglibRecord or null if the reference points to no
+	 *         known tag library descriptor
 	 * 
 	 * @See ITaglibRecord
 	 */
@@ -327,18 +326,18 @@ public class TaglibIndex {
 		ITaglibRecord result = _instance.internalResolve(basePath, reference, crossProjects);
 		if (_debugResolution) {
 			if (result == null) {
-				System.out.println("TaglibIndex could not resolve \"" + reference + "\" from " + basePath); //$NON-NLS-1$ //$NON-NLS-2$
+				Logger.log(Logger.INFO_DEBUG, "TaglibIndex could not resolve \"" + reference + "\" from " + basePath); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			else {
 				switch (result.getRecordType()) {
 					case (ITaglibRecord.TLD) : {
 						ITLDRecord record = (ITLDRecord) result;
-						System.out.println("TaglibIndex resolved " + basePath + ":" + reference + " = " + record.getPath()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						Logger.log(Logger.INFO_DEBUG, "TaglibIndex resolved " + basePath + ":" + reference + " = " + record.getPath()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 					}
 						break;
 					case (ITaglibRecord.JAR) : {
 						IJarRecord record = (IJarRecord) result;
-						System.out.println("TaglibIndex resolved " + basePath + ":" + reference + " = " + record.getLocation()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						Logger.log(Logger.INFO_DEBUG, "TaglibIndex resolved " + basePath + ":" + reference + " = " + record.getLocation()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 					}
 						break;
 					case (ITaglibRecord.TAGDIR) : {
@@ -346,7 +345,7 @@ public class TaglibIndex {
 						break;
 					case (ITaglibRecord.URL) : {
 						IURLRecord record = (IURLRecord) result;
-						System.out.println("TaglibIndex resolved " + basePath + ":" + reference + " = " + record.getURL()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						Logger.log(Logger.INFO_DEBUG, "TaglibIndex resolved " + basePath + ":" + reference + " = " + record.getURL()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 					}
 						break;
 				}

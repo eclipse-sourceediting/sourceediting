@@ -9,28 +9,26 @@
  *     IBM Corporation - initial API and implementation
  *     
  *******************************************************************************/
-package org.eclipse.jst.jsp.core.internal.contentmodel;
+package org.eclipse.jst.jsp.core.taglib;
 
 import org.eclipse.core.runtime.IPath;
 
 /**
- * A record representing a standalone .tld file
+ * A record to a .jar file directly referencable as a tag library.
+ * 
+ * <p>
+ * This interface is not intended to be implemented by clients.
+ * </p>
  */
-public interface ITLDRecord extends ITaglibRecord {
 
+public interface IJarRecord extends ITaglibRecord {
 	/**
-	 * @return Returns the path within the workspace.
+	 * @return Returns the location of the .jar in the file-system.
 	 */
-	IPath getPath();
+	public IPath getLocation();
 
 	/**
 	 * @return Returns the recommended/default prefix if one was given.
 	 */
-	String getShortName();
-
-	/**
-	 * @return Returns the uri.
-	 */
-	String getURI();
-
+	public String getShortName();
 }

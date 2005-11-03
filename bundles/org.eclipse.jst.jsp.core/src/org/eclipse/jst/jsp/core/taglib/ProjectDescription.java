@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *     
  *******************************************************************************/
-package org.eclipse.jst.jsp.core.internal.contentmodel;
+package org.eclipse.jst.jsp.core.taglib;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -711,7 +711,7 @@ class ProjectDescription {
 		}
 
 		if (_debugIndexTime)
-			System.out.println("indexed " + fProject.getName() + " in " + (System.currentTimeMillis() - time0) + "ms"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			Logger.log(Logger.INFO_DEBUG, "indexed " + fProject.getName() + " in " + (System.currentTimeMillis() - time0) + "ms"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 
 	void indexClasspath() {
@@ -722,7 +722,7 @@ class ProjectDescription {
 		IJavaProject javaProject = JavaCore.create(fProject);
 		indexClasspath(javaProject);
 		if (_debugIndexTime)
-			System.out.println("indexed " + fProject.getName() + " classpath in " + (System.currentTimeMillis() - time0) + "ms"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			Logger.log(Logger.INFO_DEBUG, "indexed " + fProject.getName() + " classpath in " + (System.currentTimeMillis() - time0) + "ms"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 
 	/**
@@ -823,7 +823,7 @@ class ProjectDescription {
 
 	void removeJAR(IResource jar) {
 		if (_debugIndexCreation)
-			System.out.println("removing records for JAR " + jar.getFullPath()); //$NON-NLS-1$
+			Logger.log(Logger.INFO_DEBUG, "removing records for JAR " + jar.getFullPath()); //$NON-NLS-1$
 		JarRecord record = (JarRecord) fJARReferences.remove(jar.getFullPath());
 		if (record != null) {
 			URLRecord[] records = (URLRecord[]) record.getURLRecords().toArray(new URLRecord[0]);
@@ -845,7 +845,7 @@ class ProjectDescription {
 
 	void removeTLD(IResource tld) {
 		if (_debugIndexCreation)
-			System.out.println("removing record for " + tld.getFullPath()); //$NON-NLS-1$
+			Logger.log(Logger.INFO_DEBUG, "removing record for " + tld.getFullPath()); //$NON-NLS-1$
 		TLDRecord record = (TLDRecord) fTLDReferences.remove(tld.getFullPath());
 		if (record != null) {
 			if (record.getURI() != null) {
@@ -857,13 +857,13 @@ class ProjectDescription {
 
 	void removeWebXML(IResource webxml) {
 		if (_debugIndexCreation)
-			System.out.println("removing records for " + webxml.getFullPath()); //$NON-NLS-1$
+			Logger.log(Logger.INFO_DEBUG, "removing records for " + webxml.getFullPath()); //$NON-NLS-1$
 		WebXMLRecord record = (WebXMLRecord) fWebXMLReferences.remove(webxml.getLocation().toString());
 		if (record != null) {
 			TLDRecord[] records = (TLDRecord[]) record.getTLDRecords().toArray(new TLDRecord[0]);
 			for (int i = 0; i < records.length; i++) {
 				if (_debugIndexCreation)
-					System.out.println("removed record for " + records[i].getURI() + "@" + records[i].path); //$NON-NLS-1$ //$NON-NLS-2$
+					Logger.log(Logger.INFO_DEBUG, "removed record for " + records[i].getURI() + "@" + records[i].path); //$NON-NLS-1$ //$NON-NLS-2$
 				getImplicitReferences(webxml.getFullPath().toString()).remove(records[i].getURI());
 				TaglibIndex.fireTaglibRecordEvent(new TaglibRecordEvent(records[i], ITaglibRecordEvent.REMOVED));
 			}
@@ -951,7 +951,7 @@ class ProjectDescription {
 							libraryRecord.urlRecords.add(record);
 							fClasspathReferences.put(record.getURI(), record);
 							if (_debugIndexCreation)
-								System.out.println("created record for " + record.getURI() + "@" + record.getURL()); //$NON-NLS-1$ //$NON-NLS-2$
+								Logger.log(Logger.INFO_DEBUG, "created record for " + record.getURI() + "@" + record.getURL()); //$NON-NLS-1$ //$NON-NLS-2$
 						}
 						catch (MalformedURLException e) {
 							// don't record this URI
@@ -971,7 +971,7 @@ class ProjectDescription {
 
 	void updateJAR(IResource jar, int deltaKind) {
 		if (_debugIndexCreation)
-			System.out.println("creating records for JAR " + jar.getFullPath()); //$NON-NLS-1$
+			Logger.log(Logger.INFO_DEBUG, "creating records for JAR " + jar.getFullPath()); //$NON-NLS-1$
 		String jarLocationString = jar.getLocation().toString();
 		String[] entries = JarUtilities.getEntryNames(jar);
 		JarRecord jarRecord = (JarRecord) createJARRecord(jar);
@@ -995,7 +995,7 @@ class ProjectDescription {
 							getImplicitReferences(jar.getFullPath().toString()).put(record.getURI(), record);
 							TaglibIndex.fireTaglibRecordEvent(new TaglibRecordEvent(record, ITaglibRecordEvent.ADDED));
 							if (_debugIndexCreation)
-								System.out.println("created record for " + record.getURI() + "@" + record.getURL()); //$NON-NLS-1$ //$NON-NLS-2$
+								Logger.log(Logger.INFO_DEBUG, "created record for " + record.getURI() + "@" + record.getURL()); //$NON-NLS-1$ //$NON-NLS-2$
 						}
 						catch (MalformedURLException e) {
 							// don't record this URI
@@ -1032,7 +1032,7 @@ class ProjectDescription {
 
 	void updateTLD(IResource tld, int deltaKind) {
 		if (_debugIndexCreation)
-			System.out.println("creating record for " + tld.getFullPath()); //$NON-NLS-1$
+			Logger.log(Logger.INFO_DEBUG, "creating record for " + tld.getFullPath()); //$NON-NLS-1$
 		TLDRecord record = createTLDRecord(tld);
 		fTLDReferences.put(tld.getFullPath().toString(), record);
 		if (record.getURI() != null) {
@@ -1069,7 +1069,7 @@ class ProjectDescription {
 		if (document == null)
 			return;
 		if (_debugIndexCreation)
-			System.out.println("creating records for " + webxml.getFullPath()); //$NON-NLS-1$
+			Logger.log(Logger.INFO_DEBUG, "creating records for " + webxml.getFullPath()); //$NON-NLS-1$
 
 		WebXMLRecord webxmlRecord = new WebXMLRecord();
 		webxmlRecord.path = webxml.getFullPath();
@@ -1093,7 +1093,7 @@ class ProjectDescription {
 					webxmlRecord.tldRecords.add(record);
 					getImplicitReferences(webxml.getFullPath().toString()).put(taglibUri, record);
 					if (_debugIndexCreation)
-						System.out.println("created record for " + taglibUri + "@" + record.getPath()); //$NON-NLS-1$ //$NON-NLS-2$
+						Logger.log(Logger.INFO_DEBUG, "created record for " + taglibUri + "@" + record.getPath()); //$NON-NLS-1$ //$NON-NLS-2$
 					TaglibIndex.fireTaglibRecordEvent(new TaglibRecordEvent(record, deltaKind));
 				}
 			}

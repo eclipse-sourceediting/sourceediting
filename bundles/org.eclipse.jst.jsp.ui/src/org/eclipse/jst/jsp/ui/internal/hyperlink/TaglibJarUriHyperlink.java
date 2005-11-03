@@ -2,9 +2,9 @@ package org.eclipse.jst.jsp.ui.internal.hyperlink;
 
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
-import org.eclipse.jst.jsp.core.internal.contentmodel.IJarRecord;
-import org.eclipse.jst.jsp.core.internal.contentmodel.ITaglibRecord;
-import org.eclipse.jst.jsp.core.internal.contentmodel.IURLRecord;
+import org.eclipse.jst.jsp.core.taglib.IJarRecord;
+import org.eclipse.jst.jsp.core.taglib.ITaglibRecord;
+import org.eclipse.jst.jsp.core.taglib.IURLRecord;
 
 /**
  * Hyperlink for taglib files in jars or specified by urls.
