@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<component xmlns="http://eclipse.org/wtp/releng/tools/component-model"
-	name="org.eclipse.wst.dtd">
-	<component-depends unrestricted="true"/>
+<component xmlns="http://eclipse.org/wtp/releng/tools/component-model" name="org.eclipse.wst.dtd">
+	<component-depends unrestricted="true" />
 	<plugin id="org.eclipse.wst.dtd.core" />
 	<plugin id="org.eclipse.wst.dtd.ui" />
+	<description url="http://eclipse.org/webtools/wst/components/dtd/overview.html" />
+	<!--	<package name="org.eclipse.wst.dtd.ui">-->
+	<!--		<type name="StructuredTextViewerConfigurationDTD" subclass="true" instantiate="true" />-->
+	<!--	</package>-->
+	<package name="org.eclipse.wst.dtd.ui.views.contentoutline">
+		<type name="DTDContentOutlineConfiguration" subclass="true" instantiate="true" />
+	</package>
 </component>
