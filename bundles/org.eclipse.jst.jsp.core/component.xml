@@ -13,4 +13,5 @@
 		<type name="TaglibIndex" subclass="false" instantiate="false" />
 	</package>
 	<plugin id="org.eclipse.jst.jsp.ui" fragment="false" />
+	<description url="http://eclipse.org/webtools/jst/components/jsp/overview.html" />
 </component>
