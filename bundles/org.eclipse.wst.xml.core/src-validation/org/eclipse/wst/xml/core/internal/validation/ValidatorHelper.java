@@ -61,57 +61,50 @@ public class ValidatorHelper
   protected XMLReader createXMLReader() throws Exception
   {     
     XMLReader reader = null;
-    ClassLoader prevClassLoader = Thread.currentThread().getContextClassLoader();
-    try
-    {
-      Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
-      reader = new org.apache.xerces.parsers.SAXParser();     
+    
+    reader = new org.apache.xerces.parsers.SAXParser();     
 
-      reader.setFeature("http://apache.org/xml/features/continue-after-fatal-error", false);
-      reader.setFeature("http://xml.org/sax/features/namespace-prefixes", true);
-      reader.setFeature("http://xml.org/sax/features/namespaces", false);
-      reader.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
-      reader.setContentHandler(new MyContentHandler());
-      reader.setErrorHandler(new InternalErrorHandler()); 
+    reader.setFeature("http://apache.org/xml/features/continue-after-fatal-error", false);
+    reader.setFeature("http://xml.org/sax/features/namespace-prefixes", true);
+    reader.setFeature("http://xml.org/sax/features/namespaces", false);
+    reader.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+    reader.setContentHandler(new MyContentHandler());
+    reader.setErrorHandler(new InternalErrorHandler()); 
 
-      LexicalHandler lexicalHandler = new LexicalHandler()
-      {      
-        public void startDTD (String name, String publicId, String systemId)
-        {
-          isGrammarEncountered = true;   
-          isDTDEncountered = true;
-        }
+    LexicalHandler lexicalHandler = new LexicalHandler()
+    {      
+      public void startDTD (String name, String publicId, String systemId)
+      {
+        isGrammarEncountered = true;   
+        isDTDEncountered = true;
+      }
 
-        public void endDTD() throws SAXException
-        {
-        }
+      public void endDTD() throws SAXException
+      {
+      }
 
-        public void startEntity(String name) throws SAXException
-        {
-        }
+      public void startEntity(String name) throws SAXException
+      {
+      }
 
-        public void endEntity(String name) throws SAXException
-        {
-        }
+      public void endEntity(String name) throws SAXException
+      {
+      }
 
-        public void startCDATA() throws SAXException
-        {
-        }
-	
-        public void endCDATA() throws SAXException
-        {
-        }
+      public void startCDATA() throws SAXException
+      {
+      }
+
+      public void endCDATA() throws SAXException
+      {
+      }
  
-        public void comment (char ch[], int start, int length) throws SAXException
-        {
-        }
-      };
-      reader.setProperty("http://xml.org/sax/properties/lexical-handler", lexicalHandler);
-    }
-    finally
-    {
-      Thread.currentThread().setContextClassLoader(prevClassLoader);
-    }
+      public void comment (char ch[], int start, int length) throws SAXException
+      {
+      }
+    };
+    reader.setProperty("http://xml.org/sax/properties/lexical-handler", lexicalHandler);
+    
     return reader;
   }  
 
