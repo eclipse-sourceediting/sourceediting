@@ -57,7 +57,11 @@
     </project-facet>
 
     <project-facet-version facet="wst.web" version="1.0">
-      <delegate type="install" class="org.eclipse.wst.project.facet.StaticWebFacetInstallDelegate"/>
+    
+      <action type="install">
+        <delegate class="org.eclipse.wst.project.facet.StaticWebFacetInstallDelegate"/>
+        <config-factory class="org.eclipse.wst.project.facet.StaticWebFacetInstallDataModelProvider"/>
+      </action>
       <constraint>
         <and>
           <conflicts group="modules"/>
@@ -66,7 +70,7 @@
       <group-member id="modules"/>
     </project-facet-version>
 
-    
+        
     <template id="template.wst.web">
       <label>Simple Web Project</label>
       <fixed facet="wst.web"/>
