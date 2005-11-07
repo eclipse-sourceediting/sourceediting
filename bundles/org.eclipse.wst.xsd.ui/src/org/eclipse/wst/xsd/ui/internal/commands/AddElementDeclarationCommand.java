@@ -33,9 +33,9 @@ public final class AddElementDeclarationCommand extends AbstractCommand
     XSDElementDeclaration elementDecl = 
       XSDFactory.eINSTANCE.createXSDElementDeclaration();
     elementDecl.setName(name);
-    
-    if (adopt(elementDecl))
-      setModelObject(elementDecl);
+
+    adopt(elementDecl);
+    setModelObject(elementDecl);
   }
 
   protected boolean adopt(XSDConcreteComponent model)
