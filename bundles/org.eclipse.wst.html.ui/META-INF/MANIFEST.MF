@@ -6,7 +6,8 @@ Bundle-Version: 1.0.0
 Bundle-Activator: org.eclipse.wst.html.ui.internal.HTMLUIPlugin
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
-Export-Package: org.eclipse.wst.html.internal.validation,
+Export-Package: org.eclipse.wst.html.ui,
+ org.eclipse.wst.html.internal.validation,
  org.eclipse.wst.html.ui.internal,
  org.eclipse.wst.html.ui.internal.autoedit,
  org.eclipse.wst.html.ui.internal.contentassist,
@@ -20,7 +21,6 @@ Export-Package: org.eclipse.wst.html.internal.validation,
  org.eclipse.wst.html.ui.internal.preferences,
  org.eclipse.wst.html.ui.internal.preferences.ui,
  org.eclipse.wst.html.ui.internal.projection,
- org.eclipse.wst.html.ui.internal.provisional,
  org.eclipse.wst.html.ui.internal.registry,
  org.eclipse.wst.html.ui.internal.search,
  org.eclipse.wst.html.ui.internal.style,

@@ -21,7 +21,7 @@
 	</extension>
 	<extension point="org.eclipse.wst.sse.ui.editorConfiguration">
 		<sourceViewerConfiguration
-			class="org.eclipse.wst.html.ui.internal.provisional.StructuredTextViewerConfigurationHTML"
+			class="org.eclipse.wst.html.ui.StructuredTextViewerConfigurationHTML"
 			target="org.eclipse.wst.html.core.htmlsource" />
 		<contentOutlineConfiguration
 			class="org.eclipse.wst.html.ui.views.contentoutline.HTMLContentOutlineConfiguration"

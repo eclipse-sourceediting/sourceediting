@@ -4,9 +4,9 @@
 	<plugin id="org.eclipse.wst.html.core" />
 	<plugin id="org.eclipse.wst.html.ui" />
 	<description url="http://eclipse.org/webtools/wst/components/html/overview.html" />
-	<!--	<package name="org.eclipse.wst.html.ui">-->
-	<!--		<type name="StructuredTextViewerConfigurationHTML" subclass="true" instantiate="true" />-->
-	<!--	</package>-->
+	<package name="org.eclipse.wst.html.ui">
+		<type name="StructuredTextViewerConfigurationHTML" subclass="true" instantiate="true" />
+	</package>
 	<package name="org.eclipse.wst.html.ui.views.contentoutline">
 		<type name="HTMLContentOutlineConfiguration" subclass="true" instantiate="true" />
 	</package>

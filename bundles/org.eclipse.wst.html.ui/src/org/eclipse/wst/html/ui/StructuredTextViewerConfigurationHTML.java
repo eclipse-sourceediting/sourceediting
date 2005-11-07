@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.html.ui.internal.provisional;
+package org.eclipse.wst.html.ui;
 
 import java.util.ArrayList;
 import java.util.List;
