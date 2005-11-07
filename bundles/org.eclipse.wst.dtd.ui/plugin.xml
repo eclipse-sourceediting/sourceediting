@@ -20,7 +20,7 @@
 			class="org.eclipse.wst.dtd.ui.views.contentoutline.DTDContentOutlineConfiguration"
 			target="org.eclipse.wst.dtd.core.dtdsource" />
 		<sourceViewerConfiguration
-			class="org.eclipse.wst.dtd.ui.internal.provisional.StructuredTextViewerConfigurationDTD"
+			class="org.eclipse.wst.dtd.ui.StructuredTextViewerConfigurationDTD"
 			target="org.eclipse.wst.dtd.core.dtdsource" />
 		<provisionalConfiguration
 			type="characterpairmatcher"
