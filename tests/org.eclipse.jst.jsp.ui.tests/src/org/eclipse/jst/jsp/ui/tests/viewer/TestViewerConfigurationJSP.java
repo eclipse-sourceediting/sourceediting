@@ -13,7 +13,7 @@ import org.eclipse.jface.text.information.IInformationPresenter;
 import org.eclipse.jface.text.reconciler.IReconciler;
 import org.eclipse.jface.text.source.IAnnotationHover;
 import org.eclipse.jst.jsp.core.internal.provisional.text.IJSPPartitionTypes;
-import org.eclipse.jst.jsp.ui.internal.provisional.StructuredTextViewerConfigurationJSP;
+import org.eclipse.jst.jsp.ui.StructuredTextViewerConfigurationJSP;
 import org.eclipse.jst.jsp.ui.tests.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
