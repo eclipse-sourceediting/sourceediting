@@ -30,6 +30,7 @@ import org.eclipse.jdt.core.search.SearchDocument;
 import org.eclipse.jdt.core.search.SearchMatch;
 import org.eclipse.jdt.core.search.SearchRequestor;
 import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jst.jsp.core.internal.java.search.JSPSearchSupport;
 import org.eclipse.jst.jsp.core.internal.java.search.JavaSearchDocumentDelegate;
@@ -133,6 +134,20 @@ public class BasicRefactorSearchRequestor extends SearchRequestor {
 		
 		public RefactoringStatus isValid(IProgressMonitor pm)throws CoreException {
 			return new RefactoringStatus();
+		}
+		
+		public IDocument getPreviewDocument(IProgressMonitor pm) throws CoreException {
+			IDocument copyDoc = new Document(fJSPDoc.get());
+			try {
+				fEdit.apply(copyDoc);
+			}
+			catch (MalformedTreeException e) {
+				// ignore
+			}
+			catch (BadLocationException e) {
+				// ignore
+			}
+			return copyDoc;
 		}
 		
 		public Change perform(IProgressMonitor pm) throws CoreException {
