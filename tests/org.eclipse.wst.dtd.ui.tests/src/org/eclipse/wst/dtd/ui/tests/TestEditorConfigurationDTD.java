@@ -15,7 +15,7 @@ package org.eclipse.wst.dtd.ui.tests;
 import junit.framework.TestCase;
 
 import org.eclipse.wst.dtd.core.internal.provisional.contenttype.ContentTypeIdForDTD;
-import org.eclipse.wst.dtd.ui.internal.provisional.StructuredTextViewerConfigurationDTD;
+import org.eclipse.wst.dtd.ui.StructuredTextViewerConfigurationDTD;
 import org.eclipse.wst.dtd.ui.views.contentoutline.DTDContentOutlineConfiguration;
 import org.eclipse.wst.sse.ui.internal.ExtendedConfigurationBuilder;
 

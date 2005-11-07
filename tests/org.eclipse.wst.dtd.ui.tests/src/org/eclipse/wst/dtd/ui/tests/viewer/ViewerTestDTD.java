@@ -37,7 +37,7 @@ import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.wst.dtd.core.internal.provisional.contenttype.ContentTypeIdForDTD;
-import org.eclipse.wst.dtd.ui.internal.provisional.StructuredTextViewerConfigurationDTD;
+import org.eclipse.wst.dtd.ui.StructuredTextViewerConfigurationDTD;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;

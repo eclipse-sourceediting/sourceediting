@@ -12,7 +12,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.dtd.core.internal.provisional.text.IDTDPartitionTypes;
-import org.eclipse.wst.dtd.ui.internal.provisional.StructuredTextViewerConfigurationDTD;
+import org.eclipse.wst.dtd.ui.StructuredTextViewerConfigurationDTD;
 import org.eclipse.wst.dtd.ui.tests.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
