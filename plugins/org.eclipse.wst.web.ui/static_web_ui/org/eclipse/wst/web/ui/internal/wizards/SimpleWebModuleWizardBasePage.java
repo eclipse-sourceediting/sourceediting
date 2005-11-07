@@ -29,14 +29,12 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
 import org.eclipse.wst.common.frameworks.internal.datamodel.ui.DataModelWizardPage;
-import org.eclipse.wst.common.frameworks.internal.ui.NewProjectGroup;
 import org.eclipse.wst.common.frameworks.internal.ui.WTPCommonUIResourceHandler;
 import org.eclipse.wst.web.internal.ResourceHandler;
 import org.eclipse.wst.web.internal.WSTWebPlugin;
 import org.eclipse.wst.web.internal.operation.ISimpleWebModuleCreationDataModelProperties;
 
 class SimpleWebModuleWizardBasePage extends DataModelWizardPage implements ISimpleWebModuleCreationDataModelProperties{
-	protected NewProjectGroup projectNameGroup;
 	public Text projectNameField = null;
 	protected Text locationPathField = null;
 	protected Button browseButton = null;

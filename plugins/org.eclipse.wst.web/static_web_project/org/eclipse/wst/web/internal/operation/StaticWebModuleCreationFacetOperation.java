@@ -10,9 +10,6 @@
  *******************************************************************************/
 package org.eclipse.wst.web.internal.operation;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -22,49 +19,44 @@ import org.eclipse.wst.common.componentcore.datamodel.FacetProjectCreationDataMo
 import org.eclipse.wst.common.componentcore.datamodel.properties.IComponentCreationDataModelProperties;
 import org.eclipse.wst.common.componentcore.datamodel.properties.IFacetDataModelProperties;
 import org.eclipse.wst.common.componentcore.datamodel.properties.IFacetProjectCreationDataModelProperties;
+import org.eclipse.wst.common.componentcore.datamodel.properties.IFacetProjectCreationDataModelProperties.FacetDataModelMap;
 import org.eclipse.wst.common.frameworks.datamodel.AbstractDataModelOperation;
 import org.eclipse.wst.common.frameworks.datamodel.DataModelFactory;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
 import org.eclipse.wst.project.facet.IStaticWebFacetInstallDataModelProperties;
 import org.eclipse.wst.project.facet.StaticWebFacetInstallDataModelProvider;
 
-public class StaticWebModuleCreationFacetOperation  extends AbstractDataModelOperation{
+public class StaticWebModuleCreationFacetOperation extends AbstractDataModelOperation {
 
-    public StaticWebModuleCreationFacetOperation(IDataModel dataModel) {
-        super(dataModel);
-    }
+	public StaticWebModuleCreationFacetOperation(IDataModel dataModel) {
+		super(dataModel);
+	}
 
-    public IStatus execute(IProgressMonitor monitor, IAdaptable info) {
+	public IStatus execute(IProgressMonitor monitor, IAdaptable info) {
 
 		IDataModel dm = DataModelFactory.createDataModel(new FacetProjectCreationDataModelProvider());
 		String projectName = model.getStringProperty(IComponentCreationDataModelProperties.PROJECT_NAME);
-		
+
 		dm.setProperty(IFacetProjectCreationDataModelProperties.FACET_PROJECT_NAME, projectName);
-		dm.setProperty(IFacetProjectCreationDataModelProperties.FACET_PROJECT_LOCATION,
-				model.getProperty(IComponentCreationDataModelProperties.LOCATION));
-		
-		List facetDMs = new ArrayList();
 
-		IDataModel newModel = setupWebInstallAction();
-		facetDMs.add(newModel);
+		FacetDataModelMap map = (FacetDataModelMap) dm.getProperty(IFacetProjectCreationDataModelProperties.FACET_DM_MAP);
+		map.add(setupWebInstallAction());
 
-		dm.setProperty(IFacetProjectCreationDataModelProperties.FACET_DM_LIST, facetDMs);
 		IStatus stat = OK_STATUS;
 		try {
 			stat = dm.getDefaultOperation().execute(monitor, info);
 		} catch (ExecutionException e) {
 			Logger.getLogger().logError(e);
 		}
-		return stat;    	
-    }
+		return stat;
+	}
 
 	protected IDataModel setupWebInstallAction() {
-		String versionStr = "1.0"; 
+		String versionStr = "1.0";
 		IDataModel webFacetInstallDataModel = DataModelFactory.createDataModel(new StaticWebFacetInstallDataModelProvider());
 		webFacetInstallDataModel.setProperty(IFacetDataModelProperties.FACET_PROJECT_NAME, model.getStringProperty(IComponentCreationDataModelProperties.PROJECT_NAME));
 		webFacetInstallDataModel.setProperty(IFacetDataModelProperties.FACET_VERSION_STR, versionStr);
-		webFacetInstallDataModel.setProperty(IStaticWebFacetInstallDataModelProperties.CONTENT_DIR,
-				model.getStringProperty(ISimpleWebModuleCreationDataModelProperties.WEBCONTENT_FOLDER));
+		webFacetInstallDataModel.setProperty(IStaticWebFacetInstallDataModelProperties.CONTENT_DIR, model.getStringProperty(ISimpleWebModuleCreationDataModelProperties.WEBCONTENT_FOLDER));
 
 		return webFacetInstallDataModel;
 	}
