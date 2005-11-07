@@ -13,5 +13,11 @@
 		<type name="TaglibIndex" subclass="false" instantiate="false" />
 	</package>
 	<plugin id="org.eclipse.jst.jsp.ui" fragment="false" />
+	<package name="org.eclipse.jst.jsp.ui">
+		<type name="StructuredTextViewerConfigurationJSP" subclass="true" instantiate="true" />
+	</package>
+	<package name="org.eclipse.jst.jsp.ui.views.contentoutline">
+		<type name="JSPContentOutlineConfiguration" subclass="true" instantiate="true" />
+	</package>
 	<description url="http://eclipse.org/webtools/jst/components/jsp/overview.html" />
 </component>

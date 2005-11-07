@@ -6,7 +6,8 @@ Bundle-Version: 1.0.0
 Bundle-Activator: org.eclipse.jst.jsp.ui.internal.JSPUIPlugin
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
-Export-Package: org.eclipse.jst.jsp.ui.internal,
+Export-Package: org.eclipse.jst.jsp.ui,
+ org.eclipse.jst.jsp.ui.internal,
  org.eclipse.jst.jsp.ui.internal.autoedit,
  org.eclipse.jst.jsp.ui.internal.breakpointproviders,
  org.eclipse.jst.jsp.ui.internal.contentassist,
@@ -20,7 +21,6 @@ Export-Package: org.eclipse.jst.jsp.ui.internal,
  org.eclipse.jst.jsp.ui.internal.preferences,
  org.eclipse.jst.jsp.ui.internal.preferences.ui,
  org.eclipse.jst.jsp.ui.internal.projection,
- org.eclipse.jst.jsp.ui.internal.provisional,
  org.eclipse.jst.jsp.ui.internal.reconcile,
  org.eclipse.jst.jsp.ui.internal.registry,
  org.eclipse.jst.jsp.ui.internal.style,
@@ -28,8 +28,8 @@ Export-Package: org.eclipse.jst.jsp.ui.internal,
  org.eclipse.jst.jsp.ui.internal.taginfo,
  org.eclipse.jst.jsp.ui.internal.templates,
  org.eclipse.jst.jsp.ui.internal.text,
- org.eclipse.jst.jsp.ui.internal.views.contentoutline,
- org.eclipse.jst.jsp.ui.internal.wizard
+ org.eclipse.jst.jsp.ui.internal.wizard,
+ org.eclipse.jst.jsp.ui.views.contentoutline
 Require-Bundle: org.eclipse.ui.ide,
  org.eclipse.ui.views,
  org.eclipse.jface.text,
