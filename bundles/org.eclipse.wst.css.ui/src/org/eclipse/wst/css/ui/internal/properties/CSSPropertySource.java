@@ -44,7 +44,7 @@ public class CSSPropertySource implements IPropertySource {
 	protected ICSSNode fNode = null;
 	// for performance...
 	final static Class ADAPTER_KEY = IPropertySource.class;
-	final boolean PERF_GETDESCRIPTORS = true;
+	final boolean PERF_GETDESCRIPTORS = false;
 	private long time0;
 	/**
 	 * DOMPropertySource constructor comment.
