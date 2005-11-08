@@ -49,7 +49,6 @@ import org.eclipse.jst.jsp.ui.internal.format.FormattingStrategyJSPJava;
 import org.eclipse.jst.jsp.ui.internal.hyperlink.JSPJavaHyperlinkDetector;
 import org.eclipse.jst.jsp.ui.internal.hyperlink.TaglibHyperlinkDetector;
 import org.eclipse.jst.jsp.ui.internal.hyperlink.XMLHyperlinkDetector;
-import org.eclipse.jst.jsp.ui.internal.reconcile.StructuredTextReconcilingStrategyForJSP;
 import org.eclipse.jst.jsp.ui.internal.style.LineStyleProviderForJSP;
 import org.eclipse.jst.jsp.ui.internal.style.java.LineStyleProviderForJava;
 import org.eclipse.jst.jsp.ui.internal.style.jspel.LineStyleProviderForJSPEL;
@@ -437,8 +436,7 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 		}
 		return fLineStyleProviderForJSPEL;
 	}
-
-
+	
 	public IReconciler getReconciler(ISourceViewer sourceViewer) {
 		boolean reconcilingEnabled = fPreferenceStore.getBoolean(CommonEditorPreferenceNames.EVALUATE_TEMPORARY_PROBLEMS);
 		if (sourceViewer == null || !reconcilingEnabled)
@@ -455,18 +453,10 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 
 			// reconciling strategies for reconciler
 			IReconcilingStrategy markupStrategy = new StructuredTextReconcilingStrategyForMarkup(sourceViewer);
-			IReconcilingStrategy jspStrategy = new StructuredTextReconcilingStrategyForJSP(sourceViewer);
 
 			// add reconciling strategies
 			reconciler.setReconcilingStrategy(markupStrategy, IStructuredPartitionTypes.DEFAULT_PARTITION);
 			reconciler.setReconcilingStrategy(markupStrategy, IXMLPartitions.XML_DEFAULT);
-
-			reconciler.setReconcilingStrategy(jspStrategy, IJSPPartitionTypes.JSP_DEFAULT);
-			reconciler.setReconcilingStrategy(jspStrategy, IJSPPartitionTypes.JSP_CONTENT_JAVA);
-			reconciler.setReconcilingStrategy(jspStrategy, IJSPPartitionTypes.JSP_CONTENT_DELIMITER);
-			reconciler.setReconcilingStrategy(jspStrategy, IJSPPartitionTypes.JSP_DIRECTIVE);
-			reconciler.setReconcilingStrategy(jspStrategy, IJSPPartitionTypes.JSP_DEFAULT_EL);
-
 			reconciler.setDefaultStrategy(markupStrategy);
 
 			fReconciler = reconciler;

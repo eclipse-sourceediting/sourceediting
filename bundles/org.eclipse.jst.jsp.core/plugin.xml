@@ -204,5 +204,40 @@
 			</run>
 		</validator>
 	</extension>
-
+	<!--======================================================================================-->
+	<!-- source validation for JSP Java				   										  -->
+	<!--======================================================================================-->
+	<extension point="org.eclipse.wst.sse.ui.sourcevalidation">
+		<validator
+			scope="total"
+			class="org.eclipse.jst.jsp.core.internal.validation.JSPValidator"
+			id="org.eclipse.jst.jsp.jspsourcevalidator">
+			<contentTypeIdentifier
+				id="org.eclipse.jst.jsp.core.jspsource">
+				<partitionType id="org.eclipse.jst.jsp.DEFAULT_JSP">
+				</partitionType>
+				<partitionType id="org.eclipse.jst.jsp.SCRIPT.JAVA">
+				</partitionType>
+				<partitionType id="org.eclipse.jst.jsp.SCRIPT.DELIMITER">
+				</partitionType>
+				<partitionType id="org.eclipse.jst.jsp.JSP_DIRECTIVE">
+				</partitionType>
+			</contentTypeIdentifier>
+		</validator>
+	</extension>
+	<!--======================================================================================-->
+	<!-- source validation for JSP EL				   										  -->
+	<!--======================================================================================-->
+	<extension point="org.eclipse.wst.sse.ui.sourcevalidation">
+		<validator
+			scope="total"
+			class="org.eclipse.jst.jsp.core.internal.validation.JSPELValidator"
+			id="org.eclipse.jst.jsp.jspelsourcevalidator">
+			<contentTypeIdentifier
+				id="org.eclipse.jst.jsp.core.jspsource">
+				<partitionType id="org.eclipse.jst.jsp.SCRIPT.JSP_EL">
+				</partitionType>
+			</contentTypeIdentifier>
+		</validator>
+	</extension>
 </plugin>

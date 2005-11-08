@@ -262,7 +262,7 @@ public class JSPValidator implements IValidator {
 	private IMessage createMessageFromProblem(IProblem problem, IFile f, JSPTranslation translation, IStructuredDocument structuredDoc) {
 
 		int sourceStart = translation.getJspOffset(problem.getSourceStart());
-		int sourceEnd = translation.getJspOffset(problem.getSourceStart());
+		int sourceEnd = translation.getJspOffset(problem.getSourceEnd());
 		if (sourceStart == -1)
 			return null;
 		// line number for marker starts @ 1
@@ -275,7 +275,7 @@ public class JSPValidator implements IValidator {
 
 		m.setLineNo(lineNo);
 		m.setOffset(sourceStart);
-		m.setLength(sourceEnd - sourceStart);
+		m.setLength(sourceEnd - sourceStart + 1);
 
 		return m;
 	}
