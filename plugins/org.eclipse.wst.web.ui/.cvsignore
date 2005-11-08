@@ -3,3 +3,5 @@ temp.folder
 build.xml
 ui.jar
 uisrc.zip
+@dot
+src.zip
