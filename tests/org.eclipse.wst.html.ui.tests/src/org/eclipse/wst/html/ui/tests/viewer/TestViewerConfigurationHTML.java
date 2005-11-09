@@ -105,6 +105,9 @@ public class TestViewerConfigurationHTML extends TestCase {
 		assertTrue("there are no configured content types", configuredContentTypes.length > 1);
 	}
 	
+	/**
+	 * Not necessary
+	 */
 	public void testGetContentAssistant() {
 		
 		// probably no display
@@ -167,6 +170,9 @@ public class TestViewerConfigurationHTML extends TestCase {
 		assertTrue("there are no configured indent prefixes", false);
 	}
     
+	/**
+	 * Not necessary
+	 */
     public void testGetInformationControlCreator() {
 		// probably no display
 		if(!fDisplayExists)
@@ -176,6 +182,9 @@ public class TestViewerConfigurationHTML extends TestCase {
 		assertNotNull("InformationControlCreator is null", infoCreator);
     }
 	
+	/**
+	 * Not necessary
+	 */
 	public void testGetInformationPresenter() {
 		
 		// probably no display
@@ -201,6 +210,9 @@ public class TestViewerConfigurationHTML extends TestCase {
 		assertTrue("there are no configured line style providers", false);
 	}
 	
+	/**
+	 * Not necessary
+	 */
 	public void testGetReconciler() {
 		
 		// probably no display

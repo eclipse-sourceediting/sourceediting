@@ -2,7 +2,6 @@ package org.eclipse.wst.sse.ui.tests.viewer;
 
 import junit.framework.TestCase;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.IInformationControlCreator;
 import org.eclipse.jface.text.ITextDoubleClickStrategy;
@@ -139,9 +138,6 @@ public class TestViewerConfiguration extends TestCase {
 		assertNotNull("there is no content assistant", ca);
 	}
 
-	/**
-	 * Not necessary
-	 */
 	public void testGetContentFormatter() {
 
 		// probably no display
@@ -151,7 +147,7 @@ public class TestViewerConfiguration extends TestCase {
 		IContentFormatter cf = fConfig.getContentFormatter(fViewer);
 		assertNull("there is a content formatter", cf);
 	}
-	
+
 	/**
 	 * Not necessary
 	 */
@@ -195,9 +191,6 @@ public class TestViewerConfiguration extends TestCase {
 		assertNotNull("hyperlink presenter shouldn't be null", presenter);
 	}
 
-	/**
-	 * Not necessary
-	 */
 	public void testGetInformationControlCreator() {
 
 		// probably no display
@@ -208,9 +201,6 @@ public class TestViewerConfiguration extends TestCase {
 		assertNotNull("info control creator was null", infoControlCreator);
 	}
 
-	/**
-	 * Not necessary
-	 */
 	public void testGetInformationPresenter() {
 
 		// probably no display
@@ -218,14 +208,14 @@ public class TestViewerConfiguration extends TestCase {
 			return;
 
 		IInformationPresenter presenter = fConfig.getInformationPresenter(fViewer);
-		assertNull("InformationPresenter is not null", presenter);
+		assertNotNull("InformationPresenter was null", presenter);
 	}
 
 	public void testGetLineStyleProviders() {
 		// probably no display
-		if(!fDisplayExists)
+		if (!fDisplayExists)
 			return;
-		
+
 		// there should be no linestyleproviders for default
 		String[] contentTypes = fConfig.getConfiguredContentTypes(fViewer);
 		for (int i = 0; i < contentTypes.length; i++) {
@@ -258,9 +248,6 @@ public class TestViewerConfiguration extends TestCase {
 		assertNull("presentation reconciler was not null", presentationReconciler);
 	}
 
-	/**
-	 * Not necessary
-	 */
 	public void testGetReconciler() {
 
 		// probably no display
@@ -268,7 +255,7 @@ public class TestViewerConfiguration extends TestCase {
 			return;
 
 		IReconciler r = fConfig.getReconciler(fViewer);
-		assertNull("Reconciler is not null", r);
+		assertNotNull("Reconciler was null", r);
 	}
 
 	public void testGetUndoManager() {
@@ -279,17 +266,5 @@ public class TestViewerConfiguration extends TestCase {
 
 		IUndoManager undoManager = fConfig.getUndoManager(fViewer);
 		assertNotNull("undo manager was null", undoManager);
-	}
-	
-	public void testSetInitializationData() {
-		// probably no display
-		if (!fDisplayExists)
-			return;
-		
-		try {
-			fConfig.setInitializationData(null, null, null);
-		} catch (CoreException e) {
-			assertTrue("CoreException thrown during testSetInitializationData", true);
-		}
 	}
 }

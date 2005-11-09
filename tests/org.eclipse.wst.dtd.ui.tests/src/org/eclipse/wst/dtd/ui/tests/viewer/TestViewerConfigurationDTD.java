@@ -134,7 +134,9 @@ public class TestViewerConfigurationDTD extends TestCase {
 		assertTrue("there are no configured line style providers", false);
 	}
 
-
+	/**
+	 * Not necessary
+	 */
 	public void testGetReconciler() {
 
 		// probably no display
