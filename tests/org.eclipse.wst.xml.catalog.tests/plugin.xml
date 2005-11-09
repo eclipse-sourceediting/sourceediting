@@ -24,13 +24,6 @@
                catalog="data/catalog1.xml"/> 
        </catalogContribution> 
 	</extension> 
-
-	   
-	<extension point="org.eclipse.wst.xml.uriresolver.catalogContributor">
-      <catalogContributor catalogId="default">
-        <mappingInfo id="testMappingInfo" key="http://www.w3.org/2001/XMLSchema1" uri="platform:/plugin/org.eclipse.xsd/cache/www.w3.org/2001/XMLSchema.xsd"/>
-      </catalogContributor>
-    </extension>
    
  
 </plugin>
