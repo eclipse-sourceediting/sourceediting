@@ -10,7 +10,7 @@
  *   Jens Lukowski/Innoopract - initial renaming/restructuring
  * 
  */
-package org.eclipse.jst.jsp.ui.internal.derived;
+package org.eclipse.wst.sse.ui.internal.derived;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -20,12 +20,10 @@ import java.util.Iterator;
 import org.eclipse.jface.text.DefaultInformationControl;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.TextPresentation;
-import org.eclipse.jst.jsp.ui.internal.Logger;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.wst.xml.ui.internal.derived.HTML2TextReader;
-import org.eclipse.wst.xml.ui.internal.derived.LineBreakingReader;
+import org.eclipse.wst.sse.ui.internal.Logger;
 
 /*
  * Copied from org.eclipse.jdt.internal.ui.text.HTMLTextPresenter

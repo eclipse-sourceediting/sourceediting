@@ -10,7 +10,7 @@
  *   Jens Lukowski/Innoopract - initial renaming/restructuring
  * 
  */
-package org.eclipse.jst.jsp.ui.internal.derived;
+package org.eclipse.wst.sse.ui.internal.derived;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -115,8 +115,7 @@ public class LineBreakingReader {
 			if (fOffset == fLine.length()) {
 				fLine = null;
 			}
-		}
-		else {
+		} else {
 			res = fLine.substring(fOffset);
 			fLine = null;
 		}

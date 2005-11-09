@@ -14,9 +14,7 @@ import java.util.Vector;
 
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.text.IAutoEditStrategy;
-import org.eclipse.jface.text.contentassist.ContentAssistant;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
-import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.formatter.IContentFormatter;
 import org.eclipse.jface.text.formatter.MultiPassContentFormatter;
 import org.eclipse.jface.text.source.ISourceViewer;
@@ -65,17 +63,14 @@ public class StructuredTextViewerConfigurationCSS extends StructuredTextViewerCo
 		return fConfiguredContentTypes;
 	}
 
-	public IContentAssistant getContentAssistant(ISourceViewer sourceViewer) {
-		ContentAssistant assistant = (ContentAssistant)super.getContentAssistant(sourceViewer);
-		
-		// create content assist processors to be used
-		IContentAssistProcessor cssProcessor = new CSSContentAssistProcessor();
+	protected IContentAssistProcessor[] getContentAssistProcessors(ISourceViewer sourceViewer, String partitionType) {
+		IContentAssistProcessor[] processors = null;
 
-		// add processors to content assistant
-		assistant.setContentAssistProcessor(cssProcessor, ICSSPartitionTypes.STYLE);
-		assistant.setContentAssistProcessor(cssProcessor, IStructuredPartitionTypes.UNKNOWN_PARTITION);
+		if ((partitionType == ICSSPartitionTypes.STYLE) || (partitionType == IStructuredPartitionTypes.UNKNOWN_PARTITION)) {
+			processors = new IContentAssistProcessor[]{new CSSContentAssistProcessor()};
+		}
 
-		return assistant;
+		return processors;
 	}
 
 	/**
@@ -114,7 +109,8 @@ public class StructuredTextViewerConfigurationCSS extends StructuredTextViewerCo
 
 				if (i != 0)
 					appendTab = true;
-			} else {
+			}
+			else {
 				for (int j = 0; j < i; j++)
 					prefix.append(' ');
 

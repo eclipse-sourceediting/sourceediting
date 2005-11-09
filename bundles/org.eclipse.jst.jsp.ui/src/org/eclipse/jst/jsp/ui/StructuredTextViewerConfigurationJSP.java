@@ -18,13 +18,9 @@ import org.eclipse.jdt.ui.text.IJavaPartitions;
 import org.eclipse.jdt.ui.text.JavaSourceViewerConfiguration;
 import org.eclipse.jdt.ui.text.JavaTextTools;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.text.DefaultInformationControl;
 import org.eclipse.jface.text.IAutoEditStrategy;
-import org.eclipse.jface.text.IInformationControl;
-import org.eclipse.jface.text.IInformationControlCreator;
 import org.eclipse.jface.text.ITextDoubleClickStrategy;
 import org.eclipse.jface.text.ITextHover;
-import org.eclipse.jface.text.contentassist.ContentAssistant;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.formatter.IContentFormatter;
@@ -32,7 +28,6 @@ import org.eclipse.jface.text.formatter.MultiPassContentFormatter;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.jface.text.information.IInformationPresenter;
 import org.eclipse.jface.text.information.IInformationProvider;
-import org.eclipse.jface.text.information.InformationPresenter;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jst.jsp.core.internal.provisional.text.IJSPPartitionTypes;
 import org.eclipse.jst.jsp.core.internal.text.StructuredTextPartitionerForJSP;
@@ -42,7 +37,6 @@ import org.eclipse.jst.jsp.ui.internal.contentassist.JSPContentAssistProcessor;
 import org.eclipse.jst.jsp.ui.internal.contentassist.JSPELContentAssistProcessor;
 import org.eclipse.jst.jsp.ui.internal.contentassist.JSPJavaContentAssistProcessor;
 import org.eclipse.jst.jsp.ui.internal.contentassist.NoRegionContentAssistProcessorForJSP;
-import org.eclipse.jst.jsp.ui.internal.derived.HTMLTextPresenter;
 import org.eclipse.jst.jsp.ui.internal.format.FormattingStrategyJSPJava;
 import org.eclipse.jst.jsp.ui.internal.hyperlink.JSPJavaHyperlinkDetector;
 import org.eclipse.jst.jsp.ui.internal.hyperlink.TaglibHyperlinkDetector;
@@ -52,8 +46,6 @@ import org.eclipse.jst.jsp.ui.internal.style.java.LineStyleProviderForJava;
 import org.eclipse.jst.jsp.ui.internal.style.jspel.LineStyleProviderForJSPEL;
 import org.eclipse.jst.jsp.ui.internal.taginfo.JSPJavaJavadocHoverProcessor;
 import org.eclipse.jst.jsp.ui.internal.taginfo.JSPTagInfoHoverProcessor;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.eclipse.wst.css.core.internal.provisional.text.ICSSPartitionTypes;
 import org.eclipse.wst.html.core.internal.format.HTMLFormatProcessorImpl;
@@ -89,7 +81,6 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 	private LineStyleProvider fLineStyleProviderForJSPEL;
 	private StructuredTextViewerConfiguration fHTMLSourceViewerConfiguration;
 	private JavaSourceViewerConfiguration fJavaSourceViewerConfiguration;
-
 	private StructuredTextViewerConfiguration fXMLSourceViewerConfiguration;
 
 	/*
@@ -173,64 +164,45 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 		return fConfiguredContentTypes;
 	}
 
-	/**
-	 * Returns the content assistant ready to be used with the given source
-	 * viewer.
-	 * 
-	 * @param sourceViewer
-	 *            the source viewer to be configured by this configuration
-	 * @return a content assistant or <code>null</code> if content assist
-	 *         should not be supported
-	 */
-	public IContentAssistant getContentAssistant(ISourceViewer sourceViewer) {
-		ContentAssistant assistant = (ContentAssistant) super.getContentAssistant(sourceViewer);
+	protected IContentAssistProcessor[] getContentAssistProcessors(ISourceViewer sourceViewer, String partitionType) {
+		IContentAssistProcessor[] processors = null;
 
-		// create content assist processors to be used
-		IContentAssistProcessor jspContentAssistProcessor = new JSPContentAssistProcessor();
-		IContentAssistProcessor jspJavaContentAssistProcessor = new JSPJavaContentAssistProcessor();
-		IContentAssistProcessor noRegionProcessorJsp = new NoRegionContentAssistProcessorForJSP();
-		IContentAssistProcessor jspELContentAssistProcessor = new JSPELContentAssistProcessor();
-		IContentAssistant htmlContentAssistant = getHTMLSourceViewerConfiguration().getContentAssistant(sourceViewer);
+		if (partitionType == IHTMLPartitionTypes.SCRIPT) {
+			// HTML JavaScript
+			IContentAssistant htmlContentAssistant = getHTMLSourceViewerConfiguration().getContentAssistant(sourceViewer);
+			IContentAssistProcessor processor = htmlContentAssistant.getContentAssistProcessor(IHTMLPartitionTypes.SCRIPT);
+			processors = new IContentAssistProcessor[]{processor};
+		}
+		else if (partitionType == ICSSPartitionTypes.STYLE) {
+			// HTML CSS
+			IContentAssistant htmlContentAssistant = getHTMLSourceViewerConfiguration().getContentAssistant(sourceViewer);
+			IContentAssistProcessor processor = htmlContentAssistant.getContentAssistProcessor(ICSSPartitionTypes.STYLE);
+			processors = new IContentAssistProcessor[]{processor};
+		}
+		// // jspcontentassistprocessor handles this?
+		// else if ((partitionType == IHTMLPartitionTypes.HTML_DEFAULT) ||
+		// (partitionType == IHTMLPartitionTypes.HTML_COMMENT)) {
+		// processors = new IContentAssistProcessor[]{new
+		// HTMLContentAssistProcessor()};
+		// }
+		else if ((partitionType == IXMLPartitions.XML_DEFAULT) || (partitionType == IHTMLPartitionTypes.HTML_DEFAULT) || (partitionType == IHTMLPartitionTypes.HTML_COMMENT) || (partitionType == IJSPPartitionTypes.JSP_DEFAULT) || (partitionType == IJSPPartitionTypes.JSP_DIRECTIVE) || (partitionType == IJSPPartitionTypes.JSP_CONTENT_DELIMITER) || (partitionType == IJSPPartitionTypes.JSP_CONTENT_JAVASCRIPT) || (partitionType == IJSPPartitionTypes.JSP_COMMENT)) {
+			// jsp
+			processors = new IContentAssistProcessor[]{new JSPContentAssistProcessor()};
+		}
+		else if ((partitionType == IXMLPartitions.XML_CDATA) || (partitionType == IJSPPartitionTypes.JSP_CONTENT_JAVA)) {
+			// jsp java
+			processors = new IContentAssistProcessor[]{new JSPJavaContentAssistProcessor()};
+		}
+		else if (partitionType == IJSPPartitionTypes.JSP_DEFAULT_EL) {
+			// jsp el
+			processors = new IContentAssistProcessor[]{new JSPELContentAssistProcessor()};
+		}
+		else if (partitionType == IStructuredPartitionTypes.UNKNOWN_PARTITION) {
+			// unknown
+			processors = new IContentAssistProcessor[]{new NoRegionContentAssistProcessorForJSP()};
+		}
 
-		// jspcontentassistprocessor handles this?
-		// // add processors to content assistant
-		// // HTML
-		// assistant.setContentAssistProcessor(htmlContentAssistant.getContentAssistProcessor(IHTMLPartitionTypes.HTML_DEFAULT),
-		// IHTMLPartitionTypes.HTML_DEFAULT);
-		// assistant.setContentAssistProcessor(htmlContentAssistant.getContentAssistProcessor(IHTMLPartitionTypes.HTML_COMMENT),
-		// IHTMLPartitionTypes.HTML_COMMENT);
-
-		// HTML JavaScript
-		assistant.setContentAssistProcessor(htmlContentAssistant.getContentAssistProcessor(IHTMLPartitionTypes.SCRIPT), IHTMLPartitionTypes.SCRIPT);
-
-		// CSS
-		assistant.setContentAssistProcessor(htmlContentAssistant.getContentAssistProcessor(ICSSPartitionTypes.STYLE), ICSSPartitionTypes.STYLE);
-
-		// JSP
-		//assistant.setContentAssistProcessor(jspContentAssistProcessor, IStructuredPartitionTypes.DEFAULT_PARTITION);
-		assistant.setContentAssistProcessor(jspContentAssistProcessor, IXMLPartitions.XML_DEFAULT);
-		// chances are it's jsp-java, if not you'll just get no proposals
-		assistant.setContentAssistProcessor(jspJavaContentAssistProcessor, IXMLPartitions.XML_CDATA);
-		assistant.setContentAssistProcessor(jspContentAssistProcessor, IHTMLPartitionTypes.HTML_DEFAULT);
-		assistant.setContentAssistProcessor(jspContentAssistProcessor, IHTMLPartitionTypes.HTML_COMMENT);
-		assistant.setContentAssistProcessor(jspContentAssistProcessor, IJSPPartitionTypes.JSP_DEFAULT);
-
-		// JSP directives
-		assistant.setContentAssistProcessor(jspContentAssistProcessor, IJSPPartitionTypes.JSP_DIRECTIVE);
-		// JSP delimiters
-		assistant.setContentAssistProcessor(jspContentAssistProcessor, IJSPPartitionTypes.JSP_CONTENT_DELIMITER);
-		// JSP JavaScript
-		assistant.setContentAssistProcessor(jspContentAssistProcessor, IJSPPartitionTypes.JSP_CONTENT_JAVASCRIPT);
-		// JSP Java
-		assistant.setContentAssistProcessor(jspJavaContentAssistProcessor, IJSPPartitionTypes.JSP_CONTENT_JAVA);
-		// JSP EL
-		assistant.setContentAssistProcessor(jspELContentAssistProcessor, IJSPPartitionTypes.JSP_DEFAULT_EL);
-		// unknown
-		assistant.setContentAssistProcessor(noRegionProcessorJsp, IStructuredPartitionTypes.UNKNOWN_PARTITION);
-		// CMVC 269718
-		// JSP COMMENT
-		assistant.setContentAssistProcessor(jspContentAssistProcessor, IJSPPartitionTypes.JSP_COMMENT);
-		return assistant;
+		return processors;
 	}
 
 	public IContentFormatter getContentFormatter(ISourceViewer sourceViewer) {
@@ -299,69 +271,24 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 		return indentations;
 	}
 
-	/**
-	 * Returns the information control creator. The creator is a factory
-	 * creating information controls for the given source viewer.
-	 * 
-	 * @param sourceViewer
-	 *            the source viewer to be configured by this configuration
-	 * @return the information control creator or <code>null</code> if no
-	 *         information support should be installed
-	 * @since 2.0
-	 */
-	public IInformationControlCreator getInformationControlCreator(ISourceViewer sourceViewer) {
-		// used by hover help
-		return new IInformationControlCreator() {
-			public IInformationControl createInformationControl(Shell parent) {
-				return new DefaultInformationControl(parent, SWT.NONE, new HTMLTextPresenter(false));
-			}
-		};
-	}
-
-	public IInformationPresenter getInformationPresenter(ISourceViewer sourceViewer) {
-		InformationPresenter presenter = new InformationPresenter(getInformationPresenterControlCreator(sourceViewer));
-
-		// information presenter configurations
-		presenter.setSizeConstraints(60, 10, true, true);
-		presenter.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
-
-		// information providers to be used
-		IInformationPresenter htmlPresenter = getHTMLSourceViewerConfiguration().getInformationPresenter(sourceViewer);
-		IInformationProvider htmlInformationProvider = htmlPresenter.getInformationProvider(IHTMLPartitionTypes.HTML_DEFAULT);
-		IInformationProvider javascriptInformationProvider = htmlPresenter.getInformationProvider(IHTMLPartitionTypes.SCRIPT);
-
-		IInformationPresenter xmlPresenter = getXMLSourceViewerConfiguration().getInformationPresenter(sourceViewer);
-		IInformationProvider xmlInformationProvider = xmlPresenter.getInformationProvider(IXMLPartitions.XML_DEFAULT);
-
-		// add information providers to information presenter
-		// HTML
-		presenter.setInformationProvider(htmlInformationProvider, IHTMLPartitionTypes.HTML_DEFAULT);
-
-		// HTML JavaScript
-		presenter.setInformationProvider(javascriptInformationProvider, IHTMLPartitionTypes.SCRIPT);
-
-		// XML
-		presenter.setInformationProvider(xmlInformationProvider, IXMLPartitions.XML_DEFAULT);
-
-		return presenter;
-	}
-
-	/**
-	 * Returns the information presenter control creator. The creator is a
-	 * factory creating the presenter controls for the given source viewer.
-	 * 
-	 * @param sourceViewer
-	 *            the source viewer to be configured by this configuration
-	 * @return an information control creator
-	 */
-	private IInformationControlCreator getInformationPresenterControlCreator(ISourceViewer sourceViewer) {
-		return new IInformationControlCreator() {
-			public IInformationControl createInformationControl(Shell parent) {
-				int shellStyle = SWT.RESIZE | SWT.TOOL;
-				int style = SWT.V_SCROLL | SWT.H_SCROLL;
-				return new DefaultInformationControl(parent, shellStyle, style, new HTMLTextPresenter(false));
-			}
-		};
+	protected IInformationProvider getInformationProvider(ISourceViewer sourceViewer, String partitionType) {
+		IInformationProvider provider = null;
+		if (partitionType == IHTMLPartitionTypes.HTML_DEFAULT) {
+			// HTML
+			IInformationPresenter htmlPresenter = getHTMLSourceViewerConfiguration().getInformationPresenter(sourceViewer);
+			provider = htmlPresenter.getInformationProvider(IHTMLPartitionTypes.HTML_DEFAULT);
+		}
+		else if (partitionType == IHTMLPartitionTypes.SCRIPT) {
+			// HTML JavaScript
+			IInformationPresenter htmlPresenter = getHTMLSourceViewerConfiguration().getInformationPresenter(sourceViewer);
+			provider = htmlPresenter.getInformationProvider(IHTMLPartitionTypes.SCRIPT);
+		}
+		else if (partitionType == IXMLPartitions.XML_DEFAULT) {
+			// XML
+			IInformationPresenter xmlPresenter = getXMLSourceViewerConfiguration().getInformationPresenter(sourceViewer);
+			provider = xmlPresenter.getInformationProvider(IXMLPartitions.XML_DEFAULT);
+		}
+		return provider;
 	}
 
 	private JavaSourceViewerConfiguration getJavaSourceViewerConfiguration() {

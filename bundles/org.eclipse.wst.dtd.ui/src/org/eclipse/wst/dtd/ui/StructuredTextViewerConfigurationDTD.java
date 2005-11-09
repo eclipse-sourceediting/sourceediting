@@ -47,13 +47,14 @@ public class StructuredTextViewerConfigurationDTD extends StructuredTextViewerCo
 		}
 		return fConfiguredContentTypes;
 	}
-	
+
 	public LineStyleProvider[] getLineStyleProviders(ISourceViewer sourceViewer, String partitionType) {
 		LineStyleProvider[] providers = null;
 
 		if (partitionType == IDTDPartitionTypes.DTD_DEFAULT || partitionType == IStructuredPartitionTypes.DEFAULT_PARTITION) {
 			providers = new LineStyleProvider[]{getLineStyleProviderForCSS()};
-		} else if (partitionType == IStructuredPartitionTypes.UNKNOWN_PARTITION) {
+		}
+		else if (partitionType == IStructuredPartitionTypes.UNKNOWN_PARTITION) {
 			providers = new LineStyleProvider[]{getLineStyleProviderForNoop()};
 		}
 
@@ -66,7 +67,7 @@ public class StructuredTextViewerConfigurationDTD extends StructuredTextViewerCo
 		}
 		return fLineStyleProviderForDTD;
 	}
-	
+
 	private LineStyleProvider getLineStyleProviderForNoop() {
 		if (fLineStyleProviderForNoop == null) {
 			fLineStyleProviderForNoop = new LineStyleProviderForNoOp();

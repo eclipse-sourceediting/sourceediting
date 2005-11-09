@@ -15,24 +15,15 @@ import java.util.List;
 import java.util.Vector;
 
 import org.eclipse.core.runtime.Preferences;
-import org.eclipse.jface.text.DefaultInformationControl;
 import org.eclipse.jface.text.IAutoEditStrategy;
-import org.eclipse.jface.text.IInformationControl;
-import org.eclipse.jface.text.IInformationControlCreator;
 import org.eclipse.jface.text.ITextDoubleClickStrategy;
 import org.eclipse.jface.text.ITextHover;
-import org.eclipse.jface.text.contentassist.ContentAssistant;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
-import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.formatter.IContentFormatter;
 import org.eclipse.jface.text.formatter.MultiPassContentFormatter;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
-import org.eclipse.jface.text.information.IInformationPresenter;
 import org.eclipse.jface.text.information.IInformationProvider;
-import org.eclipse.jface.text.information.InformationPresenter;
 import org.eclipse.jface.text.source.ISourceViewer;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.eclipse.wst.css.core.internal.provisional.text.ICSSPartitionTypes;
 import org.eclipse.wst.css.ui.internal.contentassist.CSSContentAssistProcessor;
@@ -46,7 +37,6 @@ import org.eclipse.wst.html.ui.internal.autoedit.AutoEditStrategyForTabs;
 import org.eclipse.wst.html.ui.internal.autoedit.StructuredAutoEditStrategyHTML;
 import org.eclipse.wst.html.ui.internal.contentassist.HTMLContentAssistProcessor;
 import org.eclipse.wst.html.ui.internal.contentassist.NoRegionContentAssistProcessorForHTML;
-import org.eclipse.wst.html.ui.internal.derived.HTMLTextPresenter;
 import org.eclipse.wst.html.ui.internal.hyperlink.XMLHyperlinkDetector;
 import org.eclipse.wst.html.ui.internal.style.LineStyleProviderForHTML;
 import org.eclipse.wst.html.ui.internal.taginfo.HTMLInformationProvider;
@@ -84,7 +74,6 @@ public class StructuredTextViewerConfigurationHTML extends StructuredTextViewerC
 	 * One instance per configuration
 	 */
 	private LineStyleProvider fLineStyleProviderForJavascript;
-
 	/*
 	 * One instance per configuration
 	 */
@@ -127,38 +116,23 @@ public class StructuredTextViewerConfigurationHTML extends StructuredTextViewerC
 		return fConfiguredContentTypes;
 	}
 
-	/**
-	 * Returns the content assistant ready to be used with the given source
-	 * viewer.
-	 * 
-	 * @param sourceViewer
-	 *            the source viewer to be configured by this configuration
-	 * @return a content assistant or <code>null</code> if content assist
-	 *         should not be supported
-	 */
-	public IContentAssistant getContentAssistant(ISourceViewer sourceViewer) {
-		ContentAssistant assistant = (ContentAssistant) super.getContentAssistant(sourceViewer);
+	protected IContentAssistProcessor[] getContentAssistProcessors(ISourceViewer sourceViewer, String partitionType) {
+		IContentAssistProcessor[] processors = null;
 
-		// create content assist processors to be used
-		IContentAssistProcessor htmlContentAssistProcessor = new HTMLContentAssistProcessor();
-		IContentAssistProcessor jsContentAssistProcessor = new JavaScriptContentAssistProcessor();
-		IContentAssistProcessor cssContentAssistProcessor = new CSSContentAssistProcessor();
-		IContentAssistProcessor noRegionProcessorForHTML = new NoRegionContentAssistProcessorForHTML();
+		if ((partitionType == IHTMLPartitionTypes.HTML_DEFAULT) || (partitionType == IHTMLPartitionTypes.HTML_COMMENT)) {
+			processors = new IContentAssistProcessor[]{new HTMLContentAssistProcessor()};
+		}
+		else if (partitionType == IHTMLPartitionTypes.SCRIPT) {
+			processors = new IContentAssistProcessor[]{new JavaScriptContentAssistProcessor()};
+		}
+		else if (partitionType == ICSSPartitionTypes.STYLE) {
+			processors = new IContentAssistProcessor[]{new CSSContentAssistProcessor()};
+		}
+		else if (partitionType == IStructuredPartitionTypes.UNKNOWN_PARTITION) {
+			processors = new IContentAssistProcessor[]{new NoRegionContentAssistProcessorForHTML()};
+		}
 
-		// add processors to content assistant
-		// HTML
-		assistant.setContentAssistProcessor(htmlContentAssistProcessor, IHTMLPartitionTypes.HTML_DEFAULT);
-		assistant.setContentAssistProcessor(htmlContentAssistProcessor, IHTMLPartitionTypes.HTML_COMMENT);
-
-		// JavaScript
-		assistant.setContentAssistProcessor(jsContentAssistProcessor, IHTMLPartitionTypes.SCRIPT);
-
-		// CSS
-		assistant.setContentAssistProcessor(cssContentAssistProcessor, ICSSPartitionTypes.STYLE);
-
-		// unknown
-		assistant.setContentAssistProcessor(noRegionProcessorForHTML, IStructuredPartitionTypes.UNKNOWN_PARTITION);
-		return assistant;
+		return processors;
 	}
 
 	/**
@@ -252,62 +226,17 @@ public class StructuredTextViewerConfigurationHTML extends StructuredTextViewerC
 		return (String[]) vector.toArray(new String[vector.size()]);
 	}
 
-	/**
-	 * Returns the information control creator. The creator is a factory
-	 * creating information controls for the given source viewer.
-	 * 
-	 * @param sourceViewer
-	 *            the source viewer to be configured by this configuration
-	 * @return the information control creator or <code>null</code> if no
-	 *         information support should be installed
-	 * @since 2.0
-	 */
-	public IInformationControlCreator getInformationControlCreator(ISourceViewer sourceViewer) {
-		// used by hover help
-		return new IInformationControlCreator() {
-			public IInformationControl createInformationControl(Shell parent) {
-				return new DefaultInformationControl(parent, SWT.NONE, new HTMLTextPresenter(false));
-			}
-		};
-	}
-
-	public IInformationPresenter getInformationPresenter(ISourceViewer sourceViewer) {
-		InformationPresenter presenter = new InformationPresenter(getInformationPresenterControlCreator(sourceViewer));
-
-		// information presenter configurations
-		presenter.setSizeConstraints(60, 10, true, true);
-		presenter.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
-
-		// information providers to be used
-		IInformationProvider htmlInformationProvider = new HTMLInformationProvider();
-		IInformationProvider javascriptInformationProvider = new JavaScriptInformationProvider();
-
-		// add information providers to information presenter
-		// HTML
-		presenter.setInformationProvider(htmlInformationProvider, IHTMLPartitionTypes.HTML_DEFAULT);
-
-		// JavaScript
-		presenter.setInformationProvider(javascriptInformationProvider, IHTMLPartitionTypes.SCRIPT);
-
-		return presenter;
-	}
-
-	/**
-	 * Returns the information presenter control creator. The creator is a
-	 * factory creating the presenter controls for the given source viewer.
-	 * 
-	 * @param sourceViewer
-	 *            the source viewer to be configured by this configuration
-	 * @return an information control creator
-	 */
-	private IInformationControlCreator getInformationPresenterControlCreator(ISourceViewer sourceViewer) {
-		return new IInformationControlCreator() {
-			public IInformationControl createInformationControl(Shell parent) {
-				int shellStyle = SWT.RESIZE | SWT.TOOL;
-				int style = SWT.V_SCROLL | SWT.H_SCROLL;
-				return new DefaultInformationControl(parent, shellStyle, style, new HTMLTextPresenter(false));
-			}
-		};
+	protected IInformationProvider getInformationProvider(ISourceViewer sourceViewer, String partitionType) {
+		IInformationProvider provider = null;
+		if (partitionType == IHTMLPartitionTypes.HTML_DEFAULT) {
+			// HTML
+			provider = new HTMLInformationProvider();
+		}
+		else if (partitionType == IHTMLPartitionTypes.SCRIPT) {
+			// HTML JavaScript
+			provider = new JavaScriptInformationProvider();
+		}
+		return provider;
 	}
 
 	public LineStyleProvider[] getLineStyleProviders(ISourceViewer sourceViewer, String partitionType) {

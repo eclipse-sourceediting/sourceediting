@@ -17,24 +17,15 @@ import java.util.List;
 import java.util.Vector;
 
 import org.eclipse.core.runtime.Preferences;
-import org.eclipse.jface.text.DefaultInformationControl;
 import org.eclipse.jface.text.IAutoEditStrategy;
-import org.eclipse.jface.text.IInformationControl;
-import org.eclipse.jface.text.IInformationControlCreator;
 import org.eclipse.jface.text.ITextDoubleClickStrategy;
 import org.eclipse.jface.text.ITextHover;
-import org.eclipse.jface.text.contentassist.ContentAssistant;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
-import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.formatter.IContentFormatter;
 import org.eclipse.jface.text.formatter.MultiPassContentFormatter;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
-import org.eclipse.jface.text.information.IInformationPresenter;
 import org.eclipse.jface.text.information.IInformationProvider;
-import org.eclipse.jface.text.information.InformationPresenter;
 import org.eclipse.jface.text.source.ISourceViewer;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitionTypes;
 import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
@@ -52,7 +43,6 @@ import org.eclipse.wst.xml.ui.internal.autoedit.AutoEditStrategyForTabs;
 import org.eclipse.wst.xml.ui.internal.autoedit.StructuredAutoEditStrategyXML;
 import org.eclipse.wst.xml.ui.internal.contentassist.NoRegionContentAssistProcessor;
 import org.eclipse.wst.xml.ui.internal.contentassist.XMLContentAssistProcessor;
-import org.eclipse.wst.xml.ui.internal.derived.HTMLTextPresenter;
 import org.eclipse.wst.xml.ui.internal.doubleclick.XMLDoubleClickStrategy;
 import org.eclipse.wst.xml.ui.internal.hyperlink.XMLHyperlinkDetector;
 import org.eclipse.wst.xml.ui.internal.style.LineStyleProviderForXML;
@@ -75,7 +65,6 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 	 * One instance per configuration
 	 */
 	private LineStyleProvider fLineStyleProviderForXML;
-
 
 	public IAutoEditStrategy[] getAutoEditStrategies(ISourceViewer sourceViewer, String contentType) {
 		List allStrategies = new ArrayList(0);
@@ -110,19 +99,17 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 		return fConfiguredContentTypes;
 	}
 
-	public IContentAssistant getContentAssistant(ISourceViewer sourceViewer) {
-		ContentAssistant assistant = (ContentAssistant) super.getContentAssistant(sourceViewer);
+	protected IContentAssistProcessor[] getContentAssistProcessors(ISourceViewer sourceViewer, String partitionType) {
+		IContentAssistProcessor[] processors = null;
 
-		// create content assist processors to be used
-		IContentAssistProcessor xmlContentAssistProcessor = new XMLContentAssistProcessor();
-		IContentAssistProcessor noRegionProcessor = new NoRegionContentAssistProcessor();
+		if ((partitionType == IStructuredPartitionTypes.DEFAULT_PARTITION) || (partitionType == IXMLPartitions.XML_DEFAULT)) {
+			processors = new IContentAssistProcessor[]{new XMLContentAssistProcessor()};
+		}
+		else if (partitionType == IStructuredPartitionTypes.UNKNOWN_PARTITION) {
+			processors = new IContentAssistProcessor[]{new NoRegionContentAssistProcessor()};
+		}
 
-		// add processors to content assistant
-		assistant.setContentAssistProcessor(xmlContentAssistProcessor, IStructuredPartitionTypes.DEFAULT_PARTITION);
-		assistant.setContentAssistProcessor(xmlContentAssistProcessor, IXMLPartitions.XML_DEFAULT);
-		assistant.setContentAssistProcessor(noRegionProcessor, IStructuredPartitionTypes.UNKNOWN_PARTITION);
-
-		return assistant;
+		return processors;
 	}
 
 	/**
@@ -217,58 +204,12 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 		return (String[]) vector.toArray(new String[vector.size()]);
 	}
 
-	/**
-	 * Returns the information control creator. The creator is a factory
-	 * creating information controls for the given source viewer.
-	 * 
-	 * @param sourceViewer
-	 *            the source viewer to be configured by this configuration
-	 * @return the information control creator or <code>null</code> if no
-	 *         information support should be installed
-	 * @since 2.0
-	 */
-	public IInformationControlCreator getInformationControlCreator(ISourceViewer sourceViewer) {
-		// used by hover help
-		return new IInformationControlCreator() {
-			public IInformationControl createInformationControl(Shell parent) {
-				return new DefaultInformationControl(parent, SWT.NONE, new HTMLTextPresenter(false));
-			}
-		};
-	}
-
-	public IInformationPresenter getInformationPresenter(ISourceViewer sourceViewer) {
-		InformationPresenter presenter = new InformationPresenter(getInformationPresenterControlCreator(sourceViewer));
-
-		// information presenter configurations
-		presenter.setSizeConstraints(60, 10, true, true);
-		presenter.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
-
-		// information providers to be used
-		IInformationProvider xmlInformationProvider = new XMLInformationProvider();
-
-		// add information providers to information presenter
-		presenter.setInformationProvider(xmlInformationProvider, IStructuredPartitionTypes.DEFAULT_PARTITION);
-		presenter.setInformationProvider(xmlInformationProvider, IXMLPartitions.XML_DEFAULT);
-
-		return presenter;
-	}
-
-	/**
-	 * Returns the information presenter control creator. The creator is a
-	 * factory creating the presenter controls for the given source viewer.
-	 * 
-	 * @param sourceViewer
-	 *            the source viewer to be configured by this configuration
-	 * @return an information control creator
-	 */
-	private IInformationControlCreator getInformationPresenterControlCreator(ISourceViewer sourceViewer) {
-		return new IInformationControlCreator() {
-			public IInformationControl createInformationControl(Shell parent) {
-				int shellStyle = SWT.RESIZE | SWT.TOOL;
-				int style = SWT.V_SCROLL | SWT.H_SCROLL;
-				return new DefaultInformationControl(parent, shellStyle, style, new HTMLTextPresenter(false));
-			}
-		};
+	protected IInformationProvider getInformationProvider(ISourceViewer sourceViewer, String partitionType) {
+		IInformationProvider provider = null;
+		if ((partitionType == IStructuredPartitionTypes.DEFAULT_PARTITION) || (partitionType == IXMLPartitions.XML_DEFAULT)) {
+			provider = new XMLInformationProvider();
+		}
+		return provider;
 	}
 
 	public LineStyleProvider[] getLineStyleProviders(ISourceViewer sourceViewer, String partitionType) {

@@ -10,12 +10,10 @@
  *   Jens Lukowski/Innoopract - initial renaming/restructuring
  * 
  */
-package org.eclipse.jst.jsp.ui.internal.derived;
+package org.eclipse.wst.sse.ui.internal.derived;
 
 import java.io.IOException;
 import java.io.Reader;
-
-import org.eclipse.wst.xml.ui.internal.derived.SingleCharReader;
 
 /*
  * Copied from org.eclipse.jdt.internal.ui.text.SubstitutionTextReader.

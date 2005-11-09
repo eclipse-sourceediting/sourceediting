@@ -10,7 +10,7 @@
  *   Jens Lukowski/Innoopract - initial renaming/restructuring
  * 
  */
-package org.eclipse.wst.xml.ui.internal.derived;
+package org.eclipse.wst.sse.ui.internal.derived;
 
 import java.io.IOException;
 import java.io.PushbackReader;
