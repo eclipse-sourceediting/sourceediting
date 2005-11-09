@@ -140,50 +140,52 @@ public class ValidatorStrategy extends StructuredTextReconcilingStrategy {
 		}
 		return (String[]) partitionTypes.toArray(new String[partitionTypes.size()]);
 	}
-
+	/**
+	 * @param tr Partition of the region to reconcile.
+	 * @param dr Dirty region representation of the typed region
+	 */
 	public void reconcile(ITypedRegion tr, DirtyRegion dr) {
 		
 		if(isCanceled())
 			return;
-		IDocument doc = getDocument();
 		
+		IDocument doc = getDocument();
 		// for external files, this can be null
-		if (doc != null) {
+		if (doc == null) 
+			return;
+			
+		String partitionType = tr.getType();
+		if (canValidatePartition(partitionType)) {
+			ValidatorMetaData vmd = null;
 
-			String partitionType = tr.getType();
-			if (canValidatePartition(partitionType)) {
-				ValidatorMetaData vmd = null;
+			// IReconcileResult[]
+			ArrayList annotationsToAdd = new ArrayList();
+            // loop all of the relevant validator meta data
+            // to find new annotations
+			for (int i = 0; i < fMetaData.size() && !isCanceled(); i++) {
+				vmd = (ValidatorMetaData) fMetaData.get(i);
+				if (vmd.canHandleParitionType(getContentTypeIds(), partitionType)) {
+					// get step for partition type
+					Object o = fVidToVStepMap.get(vmd.getValidatorId());
+					ReconcileStepForValidator validatorStep = null;
+					if (o != null) {
+						validatorStep = (ReconcileStepForValidator) o;
+					} else {
+						// if doesn't exist, create one
+						IValidator validator = vmd.createValidator();
+						validatorStep = new ReconcileStepForValidator(validator, vmd.getValidatorScope());
+						validatorStep.setInputModel(new DocumentAdapter(doc));
 
-
-				// IReconcileResult[]
-				ArrayList annotationsToAdd = new ArrayList();
-                // loop all of the relevant validator meta data
-                // to find new annotations
-				for (int i = 0; i < fMetaData.size() && !isCanceled(); i++) {
-					vmd = (ValidatorMetaData) fMetaData.get(i);
-					if (vmd.canHandleParitionType(getContentTypeIds(), partitionType)) {
-						// get step for partition type
-						Object o = fVidToVStepMap.get(vmd.getValidatorId());
-						ReconcileStepForValidator validatorStep = null;
-						if (o != null) {
-							validatorStep = (ReconcileStepForValidator) o;
-						} else {
-							// if doesn't exist, create one
-							IValidator validator = vmd.createValidator();
-							validatorStep = new ReconcileStepForValidator(validator, vmd.getValidatorScope());
-							validatorStep.setInputModel(new DocumentAdapter(doc));
-
-							fVidToVStepMap.put(vmd.getValidatorId(), validatorStep);
-						}
-						annotationsToAdd.addAll(Arrays.asList(validatorStep.reconcile(dr, dr)));
+						fVidToVStepMap.put(vmd.getValidatorId(), validatorStep);
 					}
+					annotationsToAdd.addAll(Arrays.asList(validatorStep.reconcile(dr, dr)));
 				}
-                
-                TemporaryAnnotation[] annotationsToRemove= getAnnotationsToRemove(dr);   
-                if (annotationsToRemove.length + annotationsToAdd.size() > 0)
-                    smartProcess(annotationsToRemove, (IReconcileResult[]) annotationsToAdd.toArray(new IReconcileResult[annotationsToAdd.size()]));
-      
 			}
+            
+            TemporaryAnnotation[] annotationsToRemove= getAnnotationsToRemove(dr);   
+            if (annotationsToRemove.length + annotationsToAdd.size() > 0)
+                smartProcess(annotationsToRemove, (IReconcileResult[]) annotationsToAdd.toArray(new IReconcileResult[annotationsToAdd.size()]));
+  
 		}
 	}
 

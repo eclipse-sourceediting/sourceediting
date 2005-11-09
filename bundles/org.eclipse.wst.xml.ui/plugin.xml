@@ -319,7 +319,21 @@
 			</contentTypeIdentifier>
 		</validator>
 	</extension>
-
+	
+	<extension point="org.eclipse.wst.sse.ui.sourcevalidation">
+		<validator
+			scope="partial"
+			class="org.eclipse.wst.xml.ui.internal.validation.MarkupValidator"
+			id="org.eclipse.wst.xml.ui.internal.validation.sourcemarkupvalidator">
+			<contentTypeIdentifier id="org.eclipse.core.runtime.xml">
+				<partitionType id="org.eclipse.wst.sse.ST_DEFAULT">
+				</partitionType>
+				<partitionType id="org.eclipse.wst.xml.XML_DEFAULT">
+				</partitionType>
+			</contentTypeIdentifier>
+		</validator>
+	</extension>
+	
 	<!--======================================================================================-->
 	<!-- Document provider for ExternalFileEditorInput                                        -->
 	<!--======================================================================================-->

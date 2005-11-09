@@ -84,13 +84,56 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 	 * @param messages
 	 * @return
 	 */
-	protected IReconcileResult[] createAnnotations(List messageList) {
+//	protected IReconcileResult[] createAnnotations(List messageList) {
+//		List annotations = new ArrayList();
+//		for (int i = 0; i < messageList.size(); i++) {
+//			IMessage validationMessage = (IMessage) messageList.get(i);
+//
+//			int offset = validationMessage.getOffset();
+//
+//			if (offset < 0)
+//				continue;
+//
+//			String messageText = null;
+//			try {
+//				messageText = validationMessage.getText(validationMessage.getClass().getClassLoader());
+//			}
+//			catch (Exception t) {
+//				Logger.logException("exception reporting message from validator", t); //$NON-NLS-1$
+//				continue;
+//			}
+//			
+//			String type = getSeverity(validationMessage);
+//			// this position seems like it would be possibly be the wrong
+//			// length
+//			int length = validationMessage.getLength();
+//			if (length >= 0) {
+//				Position p = new Position(offset, length);
+//				ReconcileAnnotationKey key = createKey(getPartitionType(getDocument(), offset), getScope());
+//				annotations.add(new TemporaryAnnotation(p, type, messageText, key));
+//			}
+//		}
+//
+//		return (IReconcileResult[]) annotations.toArray(new IReconcileResult[annotations.size()]);
+//	}
+
+	/**
+	 * Converts a map of IValidatorForReconcile to List to annotations based
+	 * on those messages
+	 * 
+	 * @param messages
+	 * @return
+	 */
+	protected IReconcileResult[] createAnnotations(AnnotationInfo[] infos) {
+		
+	
 		List annotations = new ArrayList();
-		for (int i = 0; i < messageList.size(); i++) {
-			IMessage validationMessage = (IMessage) messageList.get(i);
-
+		for (int i = 0; i < infos.length; i++) {
+			
+			AnnotationInfo info = infos[i];
+			
+			IMessage validationMessage = info.getMessage();
 			int offset = validationMessage.getOffset();
-
 			if (offset < 0)
 				continue;
 
@@ -102,34 +145,49 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 				Logger.logException("exception reporting message from validator", t); //$NON-NLS-1$
 				continue;
 			}
-			String type = TemporaryAnnotation.ANNOT_INFO;
-			switch (validationMessage.getSeverity()) {
-				case IMessage.HIGH_SEVERITY :
-					type = TemporaryAnnotation.ANNOT_ERROR;
-					break;
-				case IMessage.NORMAL_SEVERITY :
-					type = TemporaryAnnotation.ANNOT_WARNING;
-					break;
-				case IMessage.LOW_SEVERITY :
-					type = TemporaryAnnotation.ANNOT_WARNING;
-					break;
-				case IMessage.ERROR_AND_WARNING :
-					type = TemporaryAnnotation.ANNOT_WARNING;
-					break;
-			}
+			String type = getSeverity(validationMessage);
 			// this position seems like it would be possibly be the wrong
 			// length
 			int length = validationMessage.getLength();
 			if (length >= 0) {
+
 				Position p = new Position(offset, length);
 				ReconcileAnnotationKey key = createKey(getPartitionType(getDocument(), offset), getScope());
-				annotations.add(new TemporaryAnnotation(p, type, messageText, key));
+				
+				if(info.getProblemId() == AnnotationInfo.NO_PROBLEM_ID) {
+					// create an annotation w/ no fix info
+					annotations.add(new TemporaryAnnotation(p, type, messageText, key));
+				}
+				else {
+					// create an annotation w/ problem ID and fix info
+					TemporaryAnnotation annotation = new TemporaryAnnotation(p, type, messageText, key, info.getProblemId());
+					annotation.setAdditionalFixInfo(info.getAdditionalFixInfo());
+					annotations.add(annotation);
+				}
 			}
 		}
-
 		return (IReconcileResult[]) annotations.toArray(new IReconcileResult[annotations.size()]);
 	}
 
+	private String getSeverity(IMessage validationMessage) {
+		String type = TemporaryAnnotation.ANNOT_INFO;
+		switch (validationMessage.getSeverity()) {
+			case IMessage.HIGH_SEVERITY :
+				type = TemporaryAnnotation.ANNOT_ERROR;
+				break;
+			case IMessage.NORMAL_SEVERITY :
+				type = TemporaryAnnotation.ANNOT_WARNING;
+				break;
+			case IMessage.LOW_SEVERITY :
+				type = TemporaryAnnotation.ANNOT_WARNING;
+				break;
+			case IMessage.ERROR_AND_WARNING :
+				type = TemporaryAnnotation.ANNOT_WARNING;
+				break;
+		}
+		return type;
+	}
+	
 	private IFile getFile() {
 		IStructuredModel model = null;
 		IFile file = null;
@@ -167,8 +225,7 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 	}
 
 	/**
-	 * remove from extension point
-	 * 
+	 * If this validator is partial or total
 	 * @return
 	 */
 	public int getScope() {
@@ -226,7 +283,8 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 
 				fValidator.validate(helper, reporter);
 
-				results = createAnnotations(reporter.getMessages());
+				//results = createAnnotations(reporter.getMessages());
+				results = createAnnotations(reporter.getAnnotationInfo());
 				reporter.removeAllMessages(fValidator);
 
 			}
@@ -278,7 +336,8 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 			if(fValidator instanceof ISourceValidator) {
 				IncrementalReporter reporter = getReporter();
 				((ISourceValidator)fValidator).validate(dirtyRegion, helper, reporter);
-				results = createAnnotations(reporter.getMessages());
+				//results = createAnnotations(reporter.getMessages());
+				results = createAnnotations(reporter.getAnnotationInfo());
 				reporter.removeAllMessages(fValidator);
 			}
 

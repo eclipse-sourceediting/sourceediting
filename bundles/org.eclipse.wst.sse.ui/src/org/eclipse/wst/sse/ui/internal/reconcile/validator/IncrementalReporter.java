@@ -14,6 +14,8 @@ package org.eclipse.wst.sse.ui.internal.reconcile.validator;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -35,13 +37,18 @@ public class IncrementalReporter implements IReporter {
 	}
 
 	public void addMessage(IValidator validator, IMessage message) {
+		AnnotationInfo info = new AnnotationInfo(message);
+		addAnnotationInfo(validator, info);
+	}
+
+	public final void addAnnotationInfo(IValidator validator, AnnotationInfo info) {
 		Object existingValue = messages.get(validator);
 		if (existingValue != null) {
-			((List) existingValue).add(message);
+			((HashSet) existingValue).add(info);
 		}
 		else {
-			List newValue = new ArrayList(1);
-			newValue.add(message);
+			HashSet newValue = new HashSet(1);
+			newValue.add(info);
 			messages.put(validator, newValue);
 		}
 	}
@@ -57,13 +64,27 @@ public class IncrementalReporter implements IReporter {
 
 	public List getMessages() {
 		List result = new ArrayList();
-		// messages is a list of lists
-		// (one list per validator...)
+		// messages is a list of:
+		// validators => HashSet(AnnotationInfo1, AnnotationInfo2, ...)
+		// (one HashSet per validator...)
 		Object[] lists = messages.values().toArray();
 		for (int i = 0; i < lists.length; i++) {
-			result.addAll((List)lists[i]);
+			Iterator it = ((HashSet)lists[i]).iterator();
+			while (it.hasNext()) {
+				AnnotationInfo info = (AnnotationInfo) it.next();
+				result.add(info.getMessage());
+			}
 		}
 		return result;
+	}
+	
+	public AnnotationInfo[] getAnnotationInfo() {
+		List result = new ArrayList();
+		Object[] infos = messages.values().toArray();
+		for (int i = 0; i < infos.length; i++) {
+			result.addAll((HashSet)infos[i]);
+		}
+		return (AnnotationInfo[])result.toArray(new AnnotationInfo[result.size()]);
 	}
 
 	public boolean isCancelled() {
@@ -74,8 +95,8 @@ public class IncrementalReporter implements IReporter {
 
 	public void removeAllMessages(IValidator validator) {
 		Object o = messages.get(validator);
-		if(o != null && o instanceof List) {
-			((List)o).clear();
+		if(o != null && o instanceof HashSet) {
+			((HashSet)o).clear();
 		}
 	}
 

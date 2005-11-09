@@ -180,19 +180,14 @@ public class DocumentRegionProcessor extends DirtyRegionProcessor implements IDo
 		// that are handled by the same "total scope" strategy
 		ITypedRegion[] filtered = filterTotalScopeRegions(unfiltered);
 
-		IReconcilingStrategy s;
 		DirtyRegion dirty = null;
 		for (int i = 0; i < filtered.length; i++) {
 
 			dirty = createDirtyRegion(filtered[i], DirtyRegion.INSERT);
-			s = getReconcilingStrategy(filtered[i].getType());
-			if (s != null && dirty != null) {
-				s.reconcile(dirty, dirty);
-			}
 
-			// validator for this partition
-			if (fValidatorStrategy != null)
-				fValidatorStrategy.reconcile(filtered[i], dirty);
+			// validator (extension) for this partition
+			if (getValidatorStrategy() != null)
+				getValidatorStrategy().reconcile(filtered[i], dirty);
 		}
 	}
 	/**
@@ -203,7 +198,7 @@ public class DocumentRegionProcessor extends DirtyRegionProcessor implements IDo
 	 * @param unfiltered
 	 * @return
 	 */
-	private ITypedRegion[] filterTotalScopeRegions(ITypedRegion[] unfiltered) {
+	protected ITypedRegion[] filterTotalScopeRegions(ITypedRegion[] unfiltered) {
 		IReconcilingStrategy s = null;
 		// ensure there is only one typed region in the list
 		// for regions handled by "total scope" strategies

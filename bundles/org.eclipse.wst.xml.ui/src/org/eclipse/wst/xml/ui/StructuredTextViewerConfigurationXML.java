@@ -33,7 +33,6 @@ import org.eclipse.jface.text.information.IInformationPresenter;
 import org.eclipse.jface.text.information.IInformationProvider;
 import org.eclipse.jface.text.information.InformationPresenter;
 import org.eclipse.jface.text.reconciler.IReconciler;
-import org.eclipse.jface.text.reconciler.IReconcilingStrategy;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
@@ -62,7 +61,6 @@ import org.eclipse.wst.xml.ui.internal.hyperlink.XMLHyperlinkDetector;
 import org.eclipse.wst.xml.ui.internal.style.LineStyleProviderForXML;
 import org.eclipse.wst.xml.ui.internal.taginfo.XMLInformationProvider;
 import org.eclipse.wst.xml.ui.internal.taginfo.XMLTagInfoHoverProcessor;
-import org.eclipse.wst.xml.ui.internal.validation.StructuredTextReconcilingStrategyForMarkup;
 
 /**
  * This class provides a SourceViewerConfiguration for editing XML content
@@ -310,12 +308,12 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 			// reconciler configurations
 			reconciler.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
 
-			// reconciling strategies for reconciler
-			IReconcilingStrategy markupStrategy = new StructuredTextReconcilingStrategyForMarkup(sourceViewer);
-
-			// add reconciling strategies
-			reconciler.setReconcilingStrategy(markupStrategy, IXMLPartitions.XML_DEFAULT);
-			reconciler.setDefaultStrategy(markupStrategy);
+//			// reconciling strategies for reconciler
+//			IReconcilingStrategy markupStrategy = new StructuredTextReconcilingStrategyForMarkup(sourceViewer);
+//
+//			// add reconciling strategies
+//			reconciler.setReconcilingStrategy(markupStrategy, IXMLPartitions.XML_DEFAULT);
+//			reconciler.setDefaultStrategy(markupStrategy);
 
 			fReconciler = reconciler;
 		}

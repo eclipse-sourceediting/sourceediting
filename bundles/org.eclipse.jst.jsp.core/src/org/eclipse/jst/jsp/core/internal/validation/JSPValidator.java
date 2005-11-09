@@ -269,7 +269,7 @@ public class JSPValidator implements IValidator {
 		// line number from document starts @ 0
 		int lineNo = structuredDoc.getLineOfOffset(sourceStart) + 1;
 
-		int sev = problem.isError() ? IMessage.HIGH_SEVERITY : IMessage.LOW_SEVERITY;
+		int sev = problem.isError() ? IMessage.HIGH_SEVERITY : IMessage.NORMAL_SEVERITY;
 
 		IMessage m = new LocalizedMessage(sev, problem.getMessage(), f);
 

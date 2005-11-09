@@ -130,15 +130,20 @@ public class DirtyRegionProcessor extends Job implements IReconciler {
 	 * @param dirtyRegion
 	 * @return
 	 */
-	protected ITypedRegion[] computePartitioning(DirtyRegion dirtyRegion) {
-		IDocument doc = getDocument();
-		ITypedRegion tr[] = null;
-        
+	protected ITypedRegion[] computePartitioning(DirtyRegion dirtyRegion) {       
         int drOffset = dirtyRegion.getOffset();
         int drLength = dirtyRegion.getLength();
-        int docLength = doc.getLength();
         
-        if(drOffset > docLength) {
+        return computePartitioning(drOffset, drLength);
+	}
+
+	protected ITypedRegion[] computePartitioning(int drOffset, int drLength) {
+		IDocument doc = getDocument();
+		int docLength = doc.getLength();
+		
+		ITypedRegion[] tr = new ITypedRegion[0];
+		
+		if(drOffset > docLength) {
             drOffset = docLength;
             drLength = 0;
         }

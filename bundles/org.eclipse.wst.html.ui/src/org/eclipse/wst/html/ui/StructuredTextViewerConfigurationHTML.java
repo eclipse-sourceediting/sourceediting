@@ -31,7 +31,6 @@ import org.eclipse.jface.text.information.IInformationPresenter;
 import org.eclipse.jface.text.information.IInformationProvider;
 import org.eclipse.jface.text.information.InformationPresenter;
 import org.eclipse.jface.text.reconciler.IReconciler;
-import org.eclipse.jface.text.reconciler.IReconcilingStrategy;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
@@ -69,7 +68,6 @@ import org.eclipse.wst.sse.ui.internal.util.EditorUtility;
 import org.eclipse.wst.xml.core.internal.provisional.text.IXMLPartitions;
 import org.eclipse.wst.xml.core.internal.text.rules.StructuredTextPartitionerForXML;
 import org.eclipse.wst.xml.ui.StructuredTextViewerConfigurationXML;
-import org.eclipse.wst.xml.ui.internal.validation.StructuredTextReconcilingStrategyForMarkup;
 
 public class StructuredTextViewerConfigurationHTML extends StructuredTextViewerConfiguration {
 	/*
@@ -369,13 +367,13 @@ public class StructuredTextViewerConfigurationHTML extends StructuredTextViewerC
 			// reconciler configurations
 			reconciler.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
 
-			// reconciling strategies for reconciler
-			IReconcilingStrategy markupStrategy = new StructuredTextReconcilingStrategyForMarkup(sourceViewer);
-
-			// add reconciling strategies
-			reconciler.setReconcilingStrategy(markupStrategy, IStructuredPartitionTypes.DEFAULT_PARTITION);
-			reconciler.setReconcilingStrategy(markupStrategy, IXMLPartitions.XML_DEFAULT);
-			reconciler.setDefaultStrategy(markupStrategy);
+//			// reconciling strategies for reconciler
+//			IReconcilingStrategy markupStrategy = new StructuredTextReconcilingStrategyForMarkup(sourceViewer);
+//
+//			// add reconciling strategies
+//			reconciler.setReconcilingStrategy(markupStrategy, IStructuredPartitionTypes.DEFAULT_PARTITION);
+//			reconciler.setReconcilingStrategy(markupStrategy, IXMLPartitions.XML_DEFAULT);
+//			reconciler.setDefaultStrategy(markupStrategy);
 
 			fReconciler = reconciler;
 		}

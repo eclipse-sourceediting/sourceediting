@@ -13,6 +13,8 @@
 package org.eclipse.wst.sse.ui.internal.reconcile;
 
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.ITypedRegion;
+import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.reconciler.DirtyRegion;
 import org.eclipse.wst.sse.core.internal.model.ModelLifecycleEvent;
 import org.eclipse.wst.sse.core.internal.provisional.IModelLifecycleListener;
@@ -20,18 +22,101 @@ import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 
 /**
  * An IStructuredModel aware Region Processor.
  * Adds ModelLifecycle listener.  ModelLifecycle listener notifies
  * us that some reinitialization needs to take place.
  * 
+ * Model aware "process()"
  * Implements a DOM based "contains()" method using IStructuredModel.
  * 
  */
 public class StructuredRegionProcessor extends DocumentRegionProcessor implements IModelLifecycleListener {
 
+	protected void process(DirtyRegion dirtyRegion) {
+		
+		if(getDocument() == null)
+			return;
+		
+		// use structured model to determine area to process
+		IStructuredModel sModel = StructuredModelManager.getModelManager().getExistingModelForRead(getDocument());
+		try {
+			if(sModel != null) {
+				
+				int start = dirtyRegion.getOffset();
+				IndexedRegion ir = sModel.getIndexedRegion(start);
+				int end = ir.getEndOffset();
+				
+				ITypedRegion[] unfiltered = computePartitioning(start, end);
+				// remove duplicate typed regions (partitions)
+				// that are handled by the same "total scope" strategy
+				ITypedRegion[] filtered = filterTotalScopeRegions(unfiltered);
+				
+				// iterate dirty partitions
+				for (int i = 0; i < filtered.length; i++) {
+					process(filtered[i]);
+				}
+			}
+		}
+		finally {
+			if(sModel != null) 
+				sModel.releaseFromRead();
+		}
+	}
+	
+	private void process(ITypedRegion partition) {
+		
+		IStructuredDocumentRegion[] sdRegions = ((IStructuredDocument)getDocument()).getStructuredDocumentRegions(partition.getOffset(), partition.getLength());
+		Position coverage = getNodeCoverage(sdRegions);
+		DirtyRegion nodeDirtyRegion = createDirtyRegion(coverage.offset, coverage.length, DirtyRegion.INSERT);
+		// we only run extension point strategy now
+		if (getValidatorStrategy() != null)
+			getValidatorStrategy().reconcile(partition, nodeDirtyRegion);
+	}
 
+	/**
+	 * Expands coverage based on DOM.
+	 * 
+	 * @return node coverage as a position
+	 */
+	protected Position getNodeCoverage(IStructuredDocumentRegion[] sdRegions) {
+		int start = -1;
+		int end = -1;
+		for (int i = 0; i < sdRegions.length; i++) {
+		    if(!sdRegions[i].isDeleted()) {
+    			IndexedRegion corresponding = getCorrespondingNode(sdRegions[i]);
+                if(corresponding != null) {
+        			if (start == -1 || start > corresponding.getStartOffset())
+        				start = corresponding.getStartOffset();
+        			if (end == -1 || end < corresponding.getEndOffset())
+        				end = corresponding.getEndOffset();
+                }
+            }
+		}
+		return new Position(start, end-start);
+	}
+
+	/**
+	 * Returns the corresponding node for the StructuredDocumentRegion.
+	 * 
+	 * @param sdRegion
+	 * @return the corresponding node for sdRegion
+	 */
+	protected IndexedRegion getCorrespondingNode(IStructuredDocumentRegion sdRegion) {
+		IStructuredModel sModel = StructuredModelManager.getModelManager().getExistingModelForRead(getDocument());
+        IndexedRegion indexedRegion = null;
+        try {
+            if (sModel != null) 
+                indexedRegion = sModel.getIndexedRegion(sdRegion.getStart());    
+        } finally {
+            if (sModel != null)
+                sModel.releaseFromRead();
+        }
+        return indexedRegion;
+    }
+	
 	/**
 	 * @see org.eclipse.wst.sse.ui.internal.reconcile.DirtyRegionProcessor#contains(org.eclipse.jface.text.reconciler.DirtyRegion,
 	 *      org.eclipse.jface.text.reconciler.DirtyRegion)
