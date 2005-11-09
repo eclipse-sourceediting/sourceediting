@@ -205,36 +205,36 @@
 		point="org.eclipse.wst.common.snippets.SnippetContributions">
 		<category
 			label="%JSP_Extension_Element.label"
-			icon="icons/snippets/tag-jsp.gif"
+			smallicon="icons/snippets/tag-jsp.gif"
 			id="org.eclipse.jst.jsp.ui.category0"
 			contenttypes="org.eclipse.jst.jsp.core.jspsource">
 			<item
 				label="%jsp_hidden_comment"
-				icon="icons/snippets/tag-generic.gif"
+				smallicon="icons/snippets/tag-generic.gif"
 				id="org.eclipse.jst.jsp.ui.jsp_hidden_comment">
 				<content>%jsp_hidden_comment_content</content>
 			</item>
 			<item
 				label="%jsp_scriptlet"
-				icon="icons/snippets/jspscr.gif"
+				smallicon="icons/snippets/jspscr.gif"
 				id="org.eclipse.jst.jsp.ui.jsp_scriptlet">
 				<content>%jsp_scr_content</content>
 			</item>
 			<item
 				label="%jsp_expression"
-				icon="icons/snippets/jspexp.gif"
+				smallicon="icons/snippets/jspexp.gif"
 				id="org.eclipse.jst.jsp.ui.jsp_expression">
 				<content>%jsp_expression_content</content>
 			</item>
 			<item
 				label="%jsp_declaration"
-				icon="icons/snippets/jspdecl.gif"
+				smallicon="icons/snippets/jspdecl.gif"
 				id="org.eclipse.jst.jsp.ui.jsp_declaration">
 				<content>%jsp_declaration_content</content>
 			</item>
 			<item
 				label="%jsp_include_directive"
-				icon="icons/snippets/jspincl.gif"
+				smallicon="icons/snippets/jspincl.gif"
 				id="org.eclipse.jst.jsp.ui.jsp_include_directive">
 				<content>%jsp_include_directive_content</content>
 			</item>
@@ -245,7 +245,7 @@
 			</item>
 			<item
 				label="%jsp_taglib_directive"
-				icon="icons/snippets/jsptaglib.gif"
+				smallicon="icons/snippets/jsptaglib.gif"
 				id="org.eclipse.jst.jsp.ui.jsp_taglib_directive">
 				<content>%jsp_taglib_directive_content</content>
 				<variable
