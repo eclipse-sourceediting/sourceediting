@@ -33,7 +33,6 @@ import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.jface.text.information.IInformationPresenter;
 import org.eclipse.jface.text.information.IInformationProvider;
 import org.eclipse.jface.text.information.InformationPresenter;
-import org.eclipse.jface.text.reconciler.IReconciler;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jst.jsp.core.internal.provisional.text.IJSPPartitionTypes;
 import org.eclipse.jst.jsp.core.internal.text.StructuredTextPartitionerForJSP;
@@ -64,9 +63,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitionTy
 import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.format.StructuredFormattingStrategy;
-import org.eclipse.wst.sse.ui.internal.provisional.preferences.CommonEditorPreferenceNames;
 import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
-import org.eclipse.wst.sse.ui.internal.reconcile.StructuredRegionProcessor;
 import org.eclipse.wst.sse.ui.internal.taginfo.TextHoverManager;
 import org.eclipse.wst.sse.ui.internal.util.EditorUtility;
 import org.eclipse.wst.xml.core.internal.provisional.text.IXMLPartitions;
@@ -92,10 +89,7 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 	private LineStyleProvider fLineStyleProviderForJSPEL;
 	private StructuredTextViewerConfiguration fHTMLSourceViewerConfiguration;
 	private JavaSourceViewerConfiguration fJavaSourceViewerConfiguration;
-	/*
-	 * One instance per configuration
-	 */
-	private IReconciler fReconciler;
+
 	private StructuredTextViewerConfiguration fXMLSourceViewerConfiguration;
 
 	/*
@@ -433,33 +427,6 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 			fLineStyleProviderForJSPEL = new LineStyleProviderForJSPEL();
 		}
 		return fLineStyleProviderForJSPEL;
-	}
-	
-	public IReconciler getReconciler(ISourceViewer sourceViewer) {
-		boolean reconcilingEnabled = fPreferenceStore.getBoolean(CommonEditorPreferenceNames.EVALUATE_TEMPORARY_PROBLEMS);
-		if (sourceViewer == null || !reconcilingEnabled)
-			return null;
-
-		/*
-		 * Only create reconciler if sourceviewer is present
-		 */
-		if (fReconciler == null && sourceViewer != null) {
-			StructuredRegionProcessor reconciler = new StructuredRegionProcessor();
-
-			// reconciler configurations
-			reconciler.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
-
-			// reconciling strategies for reconciler
-			//IReconcilingStrategy markupStrategy = new StructuredTextReconcilingStrategyForMarkup(sourceViewer);
-
-			// add reconciling strategies
-			//reconciler.setReconcilingStrategy(markupStrategy, IStructuredPartitionTypes.DEFAULT_PARTITION);
-			//reconciler.setReconcilingStrategy(markupStrategy, IXMLPartitions.XML_DEFAULT);
-			//reconciler.setDefaultStrategy(markupStrategy);
-
-			fReconciler = reconciler;
-		}
-		return fReconciler;
 	}
 
 	public ITextHover getTextHover(ISourceViewer sourceViewer, String contentType, int stateMask) {

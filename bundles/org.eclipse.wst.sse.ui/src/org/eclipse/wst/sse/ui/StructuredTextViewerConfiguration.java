@@ -21,6 +21,7 @@ import org.eclipse.jface.text.IUndoManager;
 import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.hyperlink.IHyperlinkPresenter;
 import org.eclipse.jface.text.presentation.IPresentationReconciler;
+import org.eclipse.jface.text.reconciler.IReconciler;
 import org.eclipse.jface.text.source.IAnnotationHover;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.ui.editors.text.EditorsUI;
@@ -31,7 +32,9 @@ import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.StructuredTextAnnotationHover;
 import org.eclipse.wst.sse.ui.internal.contentassist.StructuredContentAssistant;
 import org.eclipse.wst.sse.ui.internal.hyperlink.HighlighterHyperlinkPresenter;
+import org.eclipse.wst.sse.ui.internal.provisional.preferences.CommonEditorPreferenceNames;
 import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
+import org.eclipse.wst.sse.ui.internal.reconcile.StructuredRegionProcessor;
 import org.eclipse.wst.sse.ui.internal.taginfo.AnnotationHoverProcessor;
 import org.eclipse.wst.sse.ui.internal.taginfo.BestMatchHover;
 import org.eclipse.wst.sse.ui.internal.taginfo.ProblemAnnotationHoverProcessor;
@@ -58,6 +61,7 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 	 * is added to a viewer can cause odd key-eating by the wrong one.
 	 */
 	private StructuredContentAssistant fContentAssistant = null;
+	private IReconciler fReconciler;
 
 	public StructuredTextViewerConfiguration() {
 		super();
@@ -213,7 +217,7 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 	public LineStyleProvider[] getLineStyleProviders(ISourceViewer sourceViewer, String partitionType) {
 		return null;
 	}
-	
+
 	public IPresentationReconciler getPresentationReconciler(ISourceViewer sourceViewer) {
 		/*
 		 * This implementation returns null because StructuredTextViewer does
@@ -221,7 +225,7 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 		 */
 		return null;
 	}
-	
+
 	public ITextHover getTextHover(ISourceViewer sourceViewer, String contentType, int stateMask) {
 		ITextHover textHover = null;
 
@@ -268,5 +272,40 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 		 * implement IExecutableExtension since is a class that can be created
 		 * by executable extension
 		 */
+	}
+
+	/**
+	 * Returns the reconciler ready to be used with the given source viewer.<br />
+	 * Note: The same instance of IReconciler is returned regardless of the
+	 * source viewer passed in.
+	 * <p>
+	 * Clients cannot override this method. Instead, clients wanting to add
+	 * their own reconciling strategy should use the
+	 * <code>org.eclipse.wst.sse.ui.extensions.sourcevalidation</code>
+	 * extension point.
+	 * </p>
+	 * 
+	 * @param sourceViewer
+	 *            the source viewer to be configured by this configuration
+	 * @return a reconciler
+	 */
+	final public IReconciler getReconciler(ISourceViewer sourceViewer) {
+		boolean reconcilingEnabled = fPreferenceStore.getBoolean(CommonEditorPreferenceNames.EVALUATE_TEMPORARY_PROBLEMS);
+		if (sourceViewer == null || !reconcilingEnabled)
+			return null;
+
+		/*
+		 * Only create reconciler if sourceviewer is present
+		 */
+		if (fReconciler == null && sourceViewer != null) {
+			StructuredRegionProcessor reconciler = new StructuredRegionProcessor();
+
+			// reconciler configurations
+
+			reconciler.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
+
+			fReconciler = reconciler;
+		}
+		return fReconciler;
 	}
 }

@@ -12,16 +12,13 @@
  *******************************************************************************/
 package org.eclipse.wst.dtd.ui;
 
-import org.eclipse.jface.text.reconciler.IReconciler;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.wst.dtd.core.internal.provisional.text.IDTDPartitionTypes;
 import org.eclipse.wst.dtd.ui.internal.style.LineStyleProviderForDTD;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitionTypes;
 import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
-import org.eclipse.wst.sse.ui.internal.provisional.preferences.CommonEditorPreferenceNames;
 import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
 import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProviderForNoOp;
-import org.eclipse.wst.sse.ui.internal.reconcile.StructuredRegionProcessor;
 
 
 /**
@@ -43,10 +40,6 @@ public class StructuredTextViewerConfigurationDTD extends StructuredTextViewerCo
 	 * One instance per configuration
 	 */
 	private LineStyleProvider fLineStyleProviderForNoop;
-	/*
-	 * One instance per configuration
-	 */
-	private IReconciler fReconciler;
 
 	public String[] getConfiguredContentTypes(ISourceViewer sourceViewer) {
 		if (fConfiguredContentTypes == null) {
@@ -79,31 +72,5 @@ public class StructuredTextViewerConfigurationDTD extends StructuredTextViewerCo
 			fLineStyleProviderForNoop = new LineStyleProviderForNoOp();
 		}
 		return fLineStyleProviderForNoop;
-	}
-
-	public IReconciler getReconciler(ISourceViewer sourceViewer) {
-		boolean reconcilingEnabled = fPreferenceStore.getBoolean(CommonEditorPreferenceNames.EVALUATE_TEMPORARY_PROBLEMS);
-		if (sourceViewer == null || !reconcilingEnabled)
-			return null;
-
-		/*
-		 * Only create reconciler if sourceviewer is present
-		 */
-		if (fReconciler == null && sourceViewer != null) {
-			StructuredRegionProcessor reconciler = new StructuredRegionProcessor();
-
-			// reconciler configurations
-			reconciler.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
-
-			// IReconcilingStrategy markupStrategy = new
-			// StructuredTextReconcilingStrategyForMarkup((ITextEditor)
-			// editorPart);
-			// fReconciler.setReconcilingStrategy(markupStrategy,
-			// IXMLPartitions.XML_DEFAULT);
-			// fReconciler.setDefaultStrategy(markupStrategy);
-
-			fReconciler = reconciler;
-		}
-		return fReconciler;
 	}
 }
