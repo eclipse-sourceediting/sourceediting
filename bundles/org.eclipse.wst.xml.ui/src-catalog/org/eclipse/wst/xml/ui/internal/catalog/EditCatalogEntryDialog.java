@@ -219,6 +219,7 @@ public class EditCatalogEntryDialog extends Dialog {
 			checkboxButton.setSelection(getEntry().getAttributeValue(ICatalogEntry.ATTR_WEB_URL) != null);
 			SelectionListener buttonListener = new SelectionListener() {
 				public void widgetDefaultSelected(SelectionEvent event) {
+					// no impl
 				}
 
 				public void widgetSelected(SelectionEvent event) {
@@ -289,21 +290,15 @@ public class EditCatalogEntryDialog extends Dialog {
 			switch (keyTypeCombo.getSelectionIndex()) {
 				case 0 :
 					if ("schema".equals(keyTypeCombo.getData("keyType"))) {
-						return ICatalogEntry.ENTRY_TYPE_URI;
+						return ICatalogEntry.ENTRY_TYPE_URI; // xsd namespace is URI type key
 					}
-					if (keyTypeCombo.getItemCount() == 1) // only uri entry
-					{
-						return ICatalogEntry.ENTRY_TYPE_URI;
-					}
-					else {
-						return ICatalogEntry.ENTRY_TYPE_PUBLIC;
-					}
+					return ICatalogEntry.ENTRY_TYPE_PUBLIC;
 				case 1 :
 					return ICatalogEntry.ENTRY_TYPE_SYSTEM;
 				case 2 :
 					return ICatalogEntry.ENTRY_TYPE_URI;
 				default :
-					return ICatalogEntry.ENTRY_TYPE_URI;
+					return ICatalogEntry.ENTRY_TYPE_PUBLIC;
 			}
 		}
 
@@ -346,25 +341,14 @@ public class EditCatalogEntryDialog extends Dialog {
 				}
 			}
 			if (keyTypeCombo.getItemCount() == 0) {
-				keyTypeCombo.add(XMLCatalogMessages.UI_KEY_TYPE_DESCRIPTION_URI);
+				keyTypeCombo.add(XMLCatalogMessages.
+						UI_KEY_TYPE_DESCRIPTION_DTD_PUBLIC);
+				keyTypeCombo.add(XMLCatalogMessages.
+						UI_KEY_TYPE_DESCRIPTION_DTD_SYSTEM);
+				keyTypeCombo.add(XMLCatalogMessages.
+						UI_KEY_TYPE_DESCRIPTION_URI);
 			}
-			// if (resourceLocationField.getText().endsWith("xsd"))
-			// {
-			// keyTypeCombo.add(XMLCatalogMessages.
-			// UI_KEY_TYPE_DESCRIPTION_XSD_PUBLIC"));
-			// keyTypeCombo.add(XMLCatalogMessages.
-			// UI_KEY_TYPE_DESCRIPTION_XSD_SYSTEM"));
-			// keyTypeCombo.setData("keyType", "schema");
-			// } else
-			// {
-			// keyTypeCombo.add(XMLCatalogMessages.
-			// UI_KEY_TYPE_DESCRIPTION_DTD_PUBLIC"));
-			// keyTypeCombo.add(XMLCatalogMessages.
-			// UI_KEY_TYPE_DESCRIPTION_DTD_SYSTEM"));
-			// keyTypeCombo.add(XMLCatalogMessages.
-			// UI_KEY_TYPE_DESCRIPTION_URI"));
-			// }
-
+		
 			switch (type) {
 				case ICatalogEntry.ENTRY_TYPE_PUBLIC :
 					keyTypeCombo.select(0);
@@ -372,22 +356,16 @@ public class EditCatalogEntryDialog extends Dialog {
 				case ICatalogEntry.ENTRY_TYPE_SYSTEM :
 					keyTypeCombo.select(1);
 					break;
-				case ICatalogEntry.ENTRY_TYPE_URI :
+				case ICatalogEntry.ENTRY_TYPE_URI: // handle XML Schema, where namespace name is mapped to URI situation
 					if ("schema".equals(keyTypeCombo.getData("keyType"))) {
-						keyTypeCombo.select(0); // namespace name
+						keyTypeCombo.select(0); // namespace name as URI key type
 					}
 					else {
-						if (keyTypeCombo.getItemCount() == 1) {
-							keyTypeCombo.select(0);
-						}
-						else if (keyTypeCombo.getItemCount() == 3) {
-							keyTypeCombo.select(2);
-						}
-
+						keyTypeCombo.select(2); // URI key type
 					}
 					break;
 				default :
-					if (keyTypeCombo.getItemCount() == 1) {
+					if (keyTypeCombo.getItemCount() > 0) {
 						keyTypeCombo.select(0);
 					}
 					break;
@@ -675,10 +653,10 @@ public class EditCatalogEntryDialog extends Dialog {
 
 	protected ToolBar toolBar;
 
-	public EditCatalogEntryDialog(Shell parentShell, ICatalog catalog) {
+	public EditCatalogEntryDialog(Shell parentShell, ICatalog aCatalog) {
 		super(parentShell);
 		setShellStyle(getShellStyle() | SWT.RESIZE);
-		this.catalog = catalog;
+		this.catalog = aCatalog;
 	}
 
 	public EditCatalogEntryDialog(Shell parentShell, ICatalogElement catalogElement) {
@@ -754,10 +732,8 @@ public class EditCatalogEntryDialog extends Dialog {
 
 			return composite1;
 		}
-		else // "add" action
-		{
-			return createMainComponentWithToolbar(composite);
-		}
+		return createMainComponentWithToolbar(composite);
+		
 	}
 
 	protected Composite createMainComponentWithToolbar(Composite composite) {
@@ -882,9 +858,9 @@ public class EditCatalogEntryDialog extends Dialog {
 		private Menu menu = null;
 		private Control control;
 
-		public DropDownSelectionListener(Control control) {
+		public DropDownSelectionListener(Control aControl) {
 			super();
-			this.control = control;
+			this.control = aControl;
 		}
 
 		public void widgetSelected(SelectionEvent event) {
