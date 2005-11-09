@@ -2300,9 +2300,10 @@ public class StructuredTextEditor extends TextEditor {
 		if (internalModel != null) {
 			boolean debuggingAvailable = BreakpointProviderBuilder.getInstance().isAvailable(internalModel.getContentTypeIdentifier(), BreakpointRulerAction.getFileExtension(getEditorInput()));
 			if (debuggingAvailable) {
-				menu.appendToGroup("debug", getAction(ActionDefinitionIds.TOGGLE_BREAKPOINTS));
-				menu.appendToGroup("debug", getAction(ActionDefinitionIds.MANAGE_BREAKPOINTS));
-				menu.appendToGroup("debug", getAction(ActionDefinitionIds.EDIT_BREAKPOINTS));
+				// append actions to "debug" group (created in AbstractDecoratedTextEditor.rulerContextMenuAboutToShow(IMenuManager)
+				menu.appendToGroup("debug", getAction(ActionDefinitionIds.TOGGLE_BREAKPOINTS)); //$NON-NLS-1$
+				menu.appendToGroup("debug", getAction(ActionDefinitionIds.MANAGE_BREAKPOINTS)); //$NON-NLS-1$
+				menu.appendToGroup("debug", getAction(ActionDefinitionIds.EDIT_BREAKPOINTS)); //$NON-NLS-1$
 			}
 			addExtendedRulerContextMenuActions(menu);
 		}
