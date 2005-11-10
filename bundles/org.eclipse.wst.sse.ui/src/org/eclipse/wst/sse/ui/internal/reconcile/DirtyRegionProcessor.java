@@ -383,7 +383,7 @@ public class DirtyRegionProcessor extends Job implements IReconciler {
 			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=106052
 			// don't log OperationCanceledException
 			if(!(e instanceof OperationCanceledException))
-				Logger.logException("problem with as-you-type validation", e);
+				Logger.logException("problem with as-you-type validation", e); //$NON-NLS-1$
 		}
 		finally {
 			monitor.done();

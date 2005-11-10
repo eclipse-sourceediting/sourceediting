@@ -113,7 +113,7 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 			annotationsTable.setContentProvider(new ArrayContentProvider());
 			annotationsTable.getTable().setHeaderVisible(true);
 			annotationsTable.getTable().setLinesVisible(true);
-			String[] columns = new String[]{"Line", "Owner", "Type", "Message"};
+			String[] columns = new String[]{"Line", "Owner", "Type", "Message"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 			annotationsTable.setLabelProvider(new ITableLabelProvider() {
 				public void addListener(ILabelProviderListener listener) {
 				}
@@ -130,13 +130,13 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 					String text = null;
 					switch (columnIndex) {
 						case 0 :
-							text = (annotation instanceof MarkerAnnotation) ? Integer.toString(MarkerUtilities.getLineNumber(((MarkerAnnotation) annotation).getMarker())) : "-1";
+							text = (annotation instanceof MarkerAnnotation) ? Integer.toString(MarkerUtilities.getLineNumber(((MarkerAnnotation) annotation).getMarker())) : "-1"; //$NON-NLS-1$
 							break;
 						case 1 :
-							text = (annotation instanceof MarkerAnnotation) ? ((MarkerAnnotation) annotation).getMarker().getAttribute("owner", "n/a") : "?";
+							text = (annotation instanceof MarkerAnnotation) ? ((MarkerAnnotation) annotation).getMarker().getAttribute("owner", "n/a") : "?"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 							break;
 						case 2 :
-							text = (annotation instanceof MarkerAnnotation) ? MarkerUtilities.getMarkerType(((MarkerAnnotation) annotation).getMarker()) : "?";
+							text = (annotation instanceof MarkerAnnotation) ? MarkerUtilities.getMarkerType(((MarkerAnnotation) annotation).getMarker()) : "?"; //$NON-NLS-1$
 							break;
 						case 3 :
 							text = annotation.getText();
@@ -367,7 +367,7 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 					ISelection sel = fTextEditor.getSelectionProvider().getSelection();
 					ITextSelection textSelection = (ITextSelection) sel;
 					try {
-						String partitionerText = fDocument instanceof IDocumentExtension3 ? ((IDocumentExtension3) fDocument).getDocumentPartitioner(partitioningCombo.getItem(partitioningCombo.getSelectionIndex())).toString() : ("" + fDocument.getDocumentPartitioner());
+						String partitionerText = fDocument instanceof IDocumentExtension3 ? ((IDocumentExtension3) fDocument).getDocumentPartitioner(partitioningCombo.getItem(partitioningCombo.getSelectionIndex())).toString() : ("" + fDocument.getDocumentPartitioner()); //$NON-NLS-1$
 						partitionerInstanceLabel.setText(SSEUIMessages.OffsetStatusLineContributionItem_13 + partitionerText); //$NON-NLS-1$
 						fPartitionTable.setInput(TextUtilities.computePartitioning(fDocument, partitioningCombo.getItem(partitioningCombo.getSelectionIndex()), textSelection.getOffset(), textSelection.getLength(), true));
 					}
@@ -392,7 +392,7 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 				ISelection sel = fTextEditor.getSelectionProvider().getSelection();
 				ITextSelection textSelection = (ITextSelection) sel;
 				fPartitionTable.setInput(TextUtilities.computePartitioning(fDocument, selectedPartitioning, textSelection.getOffset(), textSelection.getLength(), true));
-				String partitionerText = fDocument instanceof IDocumentExtension3 ? ((IDocumentExtension3) fDocument).getDocumentPartitioner(partitioningCombo.getItem(partitioningCombo.getSelectionIndex())).toString() : ("" + fDocument.getDocumentPartitioner());
+				String partitionerText = fDocument instanceof IDocumentExtension3 ? ((IDocumentExtension3) fDocument).getDocumentPartitioner(partitioningCombo.getItem(partitioningCombo.getSelectionIndex())).toString() : ("" + fDocument.getDocumentPartitioner()); //$NON-NLS-1$
 				partitionerInstanceLabel.setText(SSEUIMessages.OffsetStatusLineContributionItem_13 + partitionerText); //$NON-NLS-1$
 			}
 			catch (BadLocationException e1) {
@@ -564,7 +564,7 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 		}
 
 		public Object getPropertyValue(Object id) {
-			return fMarkerAnnotation.getMarker().getAttribute(id.toString(), "");
+			return fMarkerAnnotation.getMarker().getAttribute(id.toString(), ""); //$NON-NLS-1$
 		}
 
 		public boolean isPropertySet(Object id) {
