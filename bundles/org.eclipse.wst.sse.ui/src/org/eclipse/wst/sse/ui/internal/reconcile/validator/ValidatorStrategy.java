@@ -103,6 +103,10 @@ public class ValidatorStrategy extends StructuredTextReconcilingStrategy {
 		}
 		return false;
 	}
+	
+	protected boolean canHandlePartition(String partition) {
+		return canValidatePartition(partition);
+	}
 
 	/*
 	 * so that removal will work properly

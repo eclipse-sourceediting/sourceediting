@@ -20,7 +20,9 @@ import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
+import org.eclipse.jst.jsp.core.internal.java.IELHandler;
 import org.eclipse.jst.jsp.core.internal.java.IJSPTranslation;
+import org.eclipse.jst.jsp.core.internal.java.JSPELHandler;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapter;
 import org.eclipse.jst.jsp.ui.internal.JSPUIMessages;
@@ -82,7 +84,7 @@ public class JSPCompletionProcessor implements IContentAssistProcessor, IReleasa
 				fTranslationAdapter = (JSPTranslationAdapter) xmlDoc.getAdapterFor(IJSPTranslation.class);
 			if (fTranslationAdapter != null) {
 
-				JSPTranslation translation = fTranslationAdapter.getJSPTranslation();
+				JSPTranslation translation = fTranslationAdapter.getJSPTranslation(getELHandler());
 				fJavaPosition = translation.getJavaOffset(getDocumentPosition());
 
 				if (DEBUG)
@@ -125,6 +127,10 @@ public class JSPCompletionProcessor implements IContentAssistProcessor, IReleasa
 				fErrorMessage = JSPUIMessages.Java_Content_Assist_is_not_UI_;
 		}
 		return results;
+	}
+	
+	protected IELHandler getELHandler()	{
+		return JSPELHandler.getJSPELHandler();
 	}
 	
 	protected JSPProposalCollector getProposalCollector(ICompilationUnit cu, JSPTranslation translation) {

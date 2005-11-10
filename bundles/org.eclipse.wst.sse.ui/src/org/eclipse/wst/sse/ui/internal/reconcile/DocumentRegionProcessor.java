@@ -4,7 +4,6 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.runtime.Platform;
@@ -18,7 +17,6 @@ import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jface.text.reconciler.DirtyRegion;
 import org.eclipse.jface.text.reconciler.IReconcilingStrategy;
-import org.eclipse.jface.text.reconciler.IReconcilingStrategyExtension;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.wst.sse.ui.internal.IReleasable;
 import org.eclipse.wst.sse.ui.internal.reconcile.validator.ValidatorBuilder;
@@ -30,7 +28,6 @@ import org.eclipse.wst.sse.ui.internal.reconcile.validator.ValidatorStrategy;
  * 
  * - IDocumentListener
  * - ValidatorStrategy
- * - DefaultStrategy
  * - Text viewer(dispose, input changed) listeners.
  * - default and validator strategies
  * - DirtyRegion processing logic.
@@ -59,10 +56,6 @@ public class DocumentRegionProcessor extends DirtyRegionProcessor implements IDo
 	/** for initital reconcile when document is opened */
 	private SourceTextInputListener fTextInputListener = null;
 
-
-	/** strategy called for unmapped partitions */
-	private IReconcilingStrategy fDefaultStrategy;
-
 	/**
 	 * The strategy that runs validators contributed via
 	 * <code>org.eclipse.wst.sse.ui.extensions.sourcevalidation</code>
@@ -72,6 +65,9 @@ public class DocumentRegionProcessor extends DirtyRegionProcessor implements IDo
 	
 	private final String SSE_EDITOR_ID = "org.eclipse.wst.sse.ui"; //$NON-NLS-1$
 
+	/**
+	 * so we can tell if a partition changed after the last edit
+	 */
 	private String[] fLastPartitions;
 
 	/**
@@ -90,7 +86,6 @@ public class DocumentRegionProcessor extends DirtyRegionProcessor implements IDo
 	public void uninstall() {
 		if (isInstalled()) {
 
-			getLocalProgressMonitor().setCanceled(true);
 			cancel();
 
 			// removes document listeners
@@ -98,29 +93,8 @@ public class DocumentRegionProcessor extends DirtyRegionProcessor implements IDo
 
 			// removes widget listener
 			getTextViewer().removeTextInputListener(fTextInputListener);
-			// getTextViewer().getTextWidget().removeDisposeListener(fDisposeListener);
 
-			// release all strategies
-			List strategyTypes = getStrategyTypes();
-			if (!strategyTypes.isEmpty()) {
-				Iterator it = strategyTypes.iterator();
-				IReconcilingStrategy strategy = null;
-				while (it.hasNext()) {
-					strategy = getReconcilingStrategy((String) it.next());
-					if (strategy instanceof IReleasable) {
-						((IReleasable) strategy).release();
-						strategy = null;
-					}
-				}
-			}
-			
-			IReconcilingStrategy defaultStrategy = getDefaultStrategy();
 			IReconcilingStrategy validatorStrategy = getValidatorStrategy();
-			
-			if(defaultStrategy != null) {
-				if(defaultStrategy instanceof IReleasable)
-					((IReleasable)defaultStrategy).release();
-			}
 			
 			if(validatorStrategy != null) {
 				if(validatorStrategy instanceof IReleasable)
@@ -140,10 +114,16 @@ public class DocumentRegionProcessor extends DirtyRegionProcessor implements IDo
 		if (isInstalled()) {
 
 			reconcilerDocumentChanged(newInput);
-
 			setDocument(newInput);
-			setDocumentOnAllStrategies(newInput);
 			setEntireDocumentDirty(newInput);
+		}
+	}
+	
+	public void setDocument(IDocument doc) {
+		super.setDocument(doc);
+		IReconcilingStrategy validatorStrategy = getValidatorStrategy();
+		if(validatorStrategy != null) {
+			validatorStrategy.setDocument(doc);
 		}
 	}
 	
@@ -246,35 +226,6 @@ public class DocumentRegionProcessor extends DirtyRegionProcessor implements IDo
 	}
 	
 	/**
-	 * @param defaultStrategy
-	 *            The fDefaultStrategy to set.
-	 */
-	public void setDefaultStrategy(IReconcilingStrategy defaultStrategy) {
-		fDefaultStrategy = defaultStrategy;
-		if (fDefaultStrategy != null) {
-			fDefaultStrategy.setDocument(getDocument());
-			if (fDefaultStrategy instanceof IReconcilingStrategyExtension)
-				((IReconcilingStrategyExtension) fDefaultStrategy).setProgressMonitor(getLocalProgressMonitor());
-		}
-	}
-	/**
-	 * @return Returns the fDefaultStrategy.
-	 */
-	public IReconcilingStrategy getDefaultStrategy() {
-		return fDefaultStrategy;
-	}
-
-	/**
-	 * @see org.eclipse.wst.sse.ui.internal.reconcile.DirtyRegionProcessor#getAppropriateStrategy(org.eclipse.jface.text.reconciler.DirtyRegion)
-	 */
-	protected IReconcilingStrategy getStrategy(DirtyRegion dirtyRegion) {
-		IReconcilingStrategy strategy = super.getStrategy(dirtyRegion);
-		if (strategy == null)
-			strategy = getDefaultStrategy();
-		return strategy;
-	}
-
-	/**
 	 * @return Returns the fValidatorStrategy.
 	 */
 	public ValidatorStrategy getValidatorStrategy() {
@@ -330,25 +281,7 @@ public class DocumentRegionProcessor extends DirtyRegionProcessor implements IDo
 		}
 		return contentTypeId;
 	}
-	/**
-	 * @see org.eclipse.wst.sse.ui.internal.reconcile.DirtyRegionProcessor#setDocumentOnAllStrategies(org.eclipse.jface.text.IDocument)
-	 */
-	protected void setDocumentOnAllStrategies(IDocument document) {
 
-		super.setDocumentOnAllStrategies(document);
-
-		IReconcilingStrategy defaultStrategy = getDefaultStrategy();
-		IReconcilingStrategy validatorStrategy = getValidatorStrategy();
-
-		// default strategies
-		if (defaultStrategy != null)
-			defaultStrategy.setDocument(document);
-
-		// external validator strategy
-		if (validatorStrategy != null)
-			validatorStrategy.setDocument(document);
-	}
-	
 	public void documentAboutToBeChanged(DocumentEvent event) {
 		// save partition type (to see if it changes in documentChanged())
 		fLastPartitions = getPartitions(event.getOffset(), event.getLength());			

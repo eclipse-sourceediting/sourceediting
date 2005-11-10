@@ -68,7 +68,7 @@ public abstract class StructuredTextReconcilingStrategy extends AbstractStructur
 				
 				// then if this strategy knows how to add/remove this
 				// partition type
-				if (canHandlePartition(key.getPartitionType()) && containsStep(key.getStep())) {
+				if (canHandlePartition(key.getPartitionType()) /*&& containsStep(key.getStep())*/) {
 					if (key.getScope() == ReconcileAnnotationKey.PARTIAL && overlaps(annotation.getPosition(), sdRegions)) {
 						remove.add(annotation);
 					}

@@ -72,7 +72,7 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 	}
 
 	public ReconcileStepForValidator(IValidator v, IReconcileStep step, int scope) {
-		super(step);
+//		super(step);
 		fValidator = v;
 		fScope = scope;
 	}

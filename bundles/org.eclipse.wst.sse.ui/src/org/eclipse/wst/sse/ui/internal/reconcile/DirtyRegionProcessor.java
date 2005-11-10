@@ -14,14 +14,11 @@ package org.eclipse.wst.sse.ui.internal.reconcile;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
@@ -35,7 +32,6 @@ import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.jface.text.reconciler.DirtyRegion;
 import org.eclipse.jface.text.reconciler.IReconciler;
 import org.eclipse.jface.text.reconciler.IReconcilingStrategy;
-import org.eclipse.jface.text.reconciler.IReconcilingStrategyExtension;
 import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 
@@ -70,18 +66,10 @@ public class DirtyRegionProcessor extends Job implements IReconciler {
 	 */
 	private boolean fIsInstalled = false;
 
-	private IProgressMonitor fLocalProgressMonitor = null;
-
 	/**
 	 * The partitioning this reconciler uses.
 	 */
 	private String fPartitioning;
-
-	/** The map of reconciling strategies. */
-	private Map fStrategies = new HashMap();
-
-	/** the list of partition types for which there are strategies */
-	private List fStrategyTypes = new ArrayList();
 
 	/** the text viewer */
 	private ITextViewer fViewer;
@@ -95,8 +83,7 @@ public class DirtyRegionProcessor extends Job implements IReconciler {
 		super(SSEUIMessages.proc_dirty_regions_0); //$NON-NLS-1$
 		setPriority(Job.LONG);
 		setSystem(true);
-		setLocalProgressMonitor(new NullProgressMonitor());
-		
+
 		// init reconciler stuff
 		setDelay(UPDATE_DELAY);
 	}
@@ -236,17 +223,6 @@ public class DirtyRegionProcessor extends Job implements IReconciler {
 	}
 
 	/**
-	 * We use our own local progress monitor to cancel long running
-	 * strategies/steps. Currently used when widget is disposed (user is
-	 * trying to close the editor), and on uninstall.
-	 * 
-	 * @return the local progress monitor
-	 */
-	IProgressMonitor getLocalProgressMonitor() {
-		return fLocalProgressMonitor;
-	}
-
-	/**
 	 * Utility method to get partitions of a dirty region
 	 * 
 	 * @param dirtyRegion
@@ -289,9 +265,8 @@ public class DirtyRegionProcessor extends Job implements IReconciler {
 	 * @see IReconciler#getReconcilingStrategy(String)
 	 */
 	public IReconcilingStrategy getReconcilingStrategy(String contentType) {
-		if (fStrategies == null)
-			return null;
-		return (IReconcilingStrategy) fStrategies.get(contentType);
+		// we don't use this, we only have a validator strategy
+		return null;
 	}
 
 	/**
@@ -322,16 +297,6 @@ public class DirtyRegionProcessor extends Job implements IReconciler {
 	}
 
 	/**
-	 * A list of strategy types (keys) for this reconciler. Each strategy
-	 * should have a unique key.
-	 * 
-	 * @return
-	 */
-	public List getStrategyTypes() {
-		return fStrategyTypes;
-	}
-
-	/**
 	 * Returns the text viewer this reconciler is installed on.
 	 * 
 	 * @return the text viewer this reconciler is installed on
@@ -344,11 +309,10 @@ public class DirtyRegionProcessor extends Job implements IReconciler {
 	 * @see org.eclipse.jface.text.reconciler.IReconciler#install(ITextViewer)
 	 */
 	public void install(ITextViewer textViewer) {
-		// we might be called multiple times with the same viewer,
+		// we might be called multiple times with the same viewe.r,
 		// maybe after being uninstalled as well, so track separately
 		if (!isInstalled()) {
 			fViewer = textViewer;
-			getLocalProgressMonitor().setCanceled(false);
 			setInstalled(true);
 		}
 	}
@@ -362,8 +326,6 @@ public class DirtyRegionProcessor extends Job implements IReconciler {
 	public boolean isInstalled() {
 		return fIsInstalled;
 	}
-
-
 
 	/**
 	 * Subclasses should implement for specific handling of dirty regions.
@@ -400,7 +362,7 @@ public class DirtyRegionProcessor extends Job implements IReconciler {
 	 */
 	protected void reconcilerDocumentChanged(IDocument document) {
 		setDocument(document);
-		setDocumentOnAllStrategies(document);
+//		setDocumentOnAllStrategies(document);
 	}
 
 	protected IStatus run(IProgressMonitor monitor) {
@@ -435,25 +397,6 @@ public class DirtyRegionProcessor extends Job implements IReconciler {
 
 	public void setDocument(IDocument doc) {
 		fDocument = doc;
-		setDocumentOnAllStrategies(doc);
-	}
-
-	/**
-	 * Propagates a new document to all strategies and steps.
-	 * 
-	 * @param document
-	 */
-	protected void setDocumentOnAllStrategies(IDocument document) {
-		if (isInstalled()) {
-			// set document on all regular strategies
-			if (fStrategies != null) {
-				Iterator e = fStrategies.values().iterator();
-				while (e.hasNext()) {
-					IReconcilingStrategy strategy = (IReconcilingStrategy) e.next();
-					strategy.setDocument(document);
-				}
-			}
-		}
 	}
 
 	/**
@@ -474,49 +417,12 @@ public class DirtyRegionProcessor extends Job implements IReconciler {
 		fIsInstalled = isInstalled;
 	}
 
-	private void setLocalProgressMonitor(IProgressMonitor pm) {
-		fLocalProgressMonitor = pm;
-		List strategyTypes = getStrategyTypes();
-		// set on all other strategies
-		if (!strategyTypes.isEmpty()) {
-			Iterator it = strategyTypes.iterator();
-			String type = null;
-			while (it.hasNext()) {
-				type = (String) it.next();
-				if (getReconcilingStrategy(type) instanceof IReconcilingStrategyExtension)
-					((IReconcilingStrategyExtension) getReconcilingStrategy(type)).setProgressMonitor(pm);
-			}
-		}
-	}
-
-	/**
-	 * Sets the strategy for a given contentType (partitionType)
-	 * 
-	 * @see org.eclipse.jface.text.reconciler.Reconciler#setReconcilingStrategy(org.eclipse.jface.text.reconciler.IReconcilingStrategy,
-	 *      java.lang.String)
-	 */
-	public void setReconcilingStrategy(IReconcilingStrategy strategy, String contentType) {
-
-		if (strategy == null) {
-			fStrategies.remove(contentType);
-		}
-		else {
-			fStrategies.put(contentType, strategy);
-			if (strategy instanceof IReconcilingStrategyExtension && getLocalProgressMonitor() != null) {
-				((IReconcilingStrategyExtension)strategy).setProgressMonitor(getLocalProgressMonitor());
-			}	
-			strategy.setDocument(fDocument);
-		}
-		getStrategyTypes().add(contentType);
-	}
-
 	/**
 	 * @see org.eclipse.jface.text.reconciler.IReconciler#uninstall()
 	 */
 	public void uninstall() {
 		if (isInstalled()) {
 			setInstalled(false);
-			getLocalProgressMonitor().setCanceled(true);
 		}
 		setDocument(null);
 	}

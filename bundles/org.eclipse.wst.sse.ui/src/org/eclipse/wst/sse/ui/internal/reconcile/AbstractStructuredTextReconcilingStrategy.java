@@ -28,7 +28,6 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.reconciler.DirtyRegion;
 import org.eclipse.jface.text.reconciler.IReconcileResult;
-import org.eclipse.jface.text.reconciler.IReconcileStep;
 import org.eclipse.jface.text.reconciler.IReconcilingStrategy;
 import org.eclipse.jface.text.reconciler.IReconcilingStrategyExtension;
 import org.eclipse.jface.text.source.IAnnotationModel;
@@ -64,7 +63,7 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 	public static final int ELEMENT_ERROR_LIMIT = 25;
     
 	private IDocument fDocument = null;
-	private IReconcileStep fFirstStep = null;
+//	private IReconcileStep fFirstStep = null;
 	private IProgressMonitor fProgressMonitor = null;
 	private ISourceViewer fSourceViewer = null;
     private Comparator fComparator;
@@ -110,23 +109,24 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 	 * @return if this strategy is responisble for adding this type of key
 	 */
 	protected boolean canHandlePartition(String partition) {
-		String[] haystack = getPartitionTypes();
-		for (int i = 0; i < haystack.length; i++) {
-			if (haystack[i].equals(partition))
-				return true;
-		}
+//		String[] haystack = getPartitionTypes();
+//		for (int i = 0; i < haystack.length; i++) {
+//			if (haystack[i].equals(partition))
+//				return true;
+//		}
+//		return false;
 		return false;
 	}
 
-	/**
-	 * @param step
-	 * @return
-	 */
-	protected boolean containsStep(IReconcileStep step) {
-		if (fFirstStep instanceof StructuredReconcileStep)
-			return ((StructuredReconcileStep) fFirstStep).isSiblingStep(step);
-		return false;
-	}
+//	/**
+//	 * @param step
+//	 * @return
+//	 */
+//	protected boolean containsStep(IReconcileStep step) {
+//		if (fFirstStep instanceof StructuredReconcileStep)
+//			return ((StructuredReconcileStep) fFirstStep).isSiblingStep(step);
+//		return false;
+//	}
 
 	/**
 	 * This is where you should create the steps for this strategy
@@ -150,7 +150,7 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 				ReconcileAnnotationKey key = (ReconcileAnnotationKey) annotation.getKey();
 				// then if this strategy knows how to add/remove this
 				// partition type
-				if (canHandlePartition(key.getPartitionType()) && containsStep(key.getStep()))
+				if (canHandlePartition(key.getPartitionType()) /*&& containsStep(key.getStep())*/)
 					removals.add(annotation);
 			}
 		}
@@ -197,7 +197,7 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 				
 				// then if this strategy knows how to add/remove this
 				// partition type
-				if (canHandlePartition(key.getPartitionType()) && containsStep(key.getStep())) {
+				if (canHandlePartition(key.getPartitionType()) /*&& containsStep(key.getStep())*/) {
 					if (key.getScope() == ReconcileAnnotationKey.PARTIAL && annotation.getPosition().overlapsWith(dr.getOffset(), dr.getLength())) {
 						remove.add(annotation);
 					}
@@ -216,11 +216,11 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 	 * 
 	 * @return parition types from all steps
 	 */
-	public String[] getPartitionTypes() {
-		if (fFirstStep instanceof StructuredReconcileStep)
-			return ((StructuredReconcileStep) fFirstStep).getPartitionTypes();
-		return new String[0];
-	}
+//	public String[] getPartitionTypes() {
+//		if (fFirstStep instanceof StructuredReconcileStep)
+//			return ((StructuredReconcileStep) fFirstStep).getPartitionTypes();
+//		return new String[0];
+//	}
 
 	public void init() {
 		createReconcileSteps();
@@ -277,19 +277,21 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 	 *      org.eclipse.jface.text.IRegion)
 	 */
 	public void reconcile(DirtyRegion dirtyRegion, IRegion subRegion) {
-
-		// external files may be null
-		if (isCanceled() || fFirstStep == null)
-			return;
-
-        TemporaryAnnotation[] annotationsToRemove = new TemporaryAnnotation[0];
-        IReconcileResult[] annotationsToAdd = new IReconcileResult[0];
-        StructuredReconcileStep structuredStep = (StructuredReconcileStep) fFirstStep;
-        
-        annotationsToRemove = getAnnotationsToRemove(dirtyRegion);
-        annotationsToAdd = structuredStep.reconcile(dirtyRegion, subRegion);
-        
-        smartProcess(annotationsToRemove, annotationsToAdd);
+		// not used
+		// we only have validator strategy now
+		
+//		// external files may be null
+//		if (isCanceled() || fFirstStep == null)
+//			return;
+//
+//        TemporaryAnnotation[] annotationsToRemove = new TemporaryAnnotation[0];
+//        IReconcileResult[] annotationsToAdd = new IReconcileResult[0];
+//        StructuredReconcileStep structuredStep = (StructuredReconcileStep) fFirstStep;
+//        
+//        annotationsToRemove = getAnnotationsToRemove(dirtyRegion);
+//        annotationsToAdd = structuredStep.reconcile(dirtyRegion, subRegion);
+//        
+//        smartProcess(annotationsToRemove, annotationsToAdd);
 	}
     
 	/**
@@ -307,8 +309,8 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 	 */
 	public void release() {
 		// release steps (each step calls release on the next)
-		if (fFirstStep != null && fFirstStep instanceof IReleasable)
-			((IReleasable) fFirstStep).release();
+		//if (fFirstStep != null && fFirstStep instanceof IReleasable)
+		//	((IReleasable) fFirstStep).release();
 		// we don't to null out the steps, in case
 		// it's reconfigured later
 	}
@@ -381,8 +383,8 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 		if (document == null)
 			release();
 		
-		if (getFirstStep() != null)
-			getFirstStep().setInputModel(new DocumentAdapter(document));
+//		if (getFirstStep() != null)
+//			getFirstStep().setInputModel(new DocumentAdapter(document));
 		
 		fDocument = document;
 	}
@@ -396,9 +398,9 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 	 * @see org.eclipse.jface.text.reconciler.IReconcilingStrategyExtension#setProgressMonitor(org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	public void setProgressMonitor(IProgressMonitor monitor) {
-		fProgressMonitor = monitor;
-		if (fFirstStep != null)
-			fFirstStep.setProgressMonitor(fProgressMonitor);
+//		fProgressMonitor = monitor;
+//		if (fFirstStep != null)
+//			fFirstStep.setProgressMonitor(fProgressMonitor);
 	}
 
 	/**
@@ -474,11 +476,11 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 		return fMarkerAnnotations;
 	}
 
-	public IReconcileStep getFirstStep() {
-		return fFirstStep;
-	}
-
-	public void setFirstStep(IReconcileStep firstStep) {
-		fFirstStep = firstStep;
-	}
+//	public IReconcileStep getFirstStep() {
+//		return fFirstStep;
+//	}
+//
+//	public void setFirstStep(IReconcileStep firstStep) {
+//		fFirstStep = firstStep;
+//	}
 }

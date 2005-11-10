@@ -27,7 +27,6 @@ import org.eclipse.jface.text.reconciler.AbstractReconcileStep;
 import org.eclipse.jface.text.reconciler.DirtyRegion;
 import org.eclipse.jface.text.reconciler.IReconcilableModel;
 import org.eclipse.jface.text.reconciler.IReconcileResult;
-import org.eclipse.jface.text.reconciler.IReconcileStep;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitionTypes;
@@ -57,8 +56,7 @@ public abstract class StructuredReconcileStep extends AbstractReconcileStep impl
 	}
 
 	protected final IReconcileResult[] EMPTY_RECONCILE_RESULT_SET = new IReconcileResult[0];
-
-	private StructuredReconcileStep fNextStructuredStep = null;
+	
 	/**
 	 * It's possible for a partial step to get called on the same area twice
 	 * (as w/ a full document reconcile) this list keeps track of area already
@@ -69,13 +67,6 @@ public abstract class StructuredReconcileStep extends AbstractReconcileStep impl
 
 	public StructuredReconcileStep() {
 		super();
-		fPartitionTypes = new HashSet();
-	}
-
-	public StructuredReconcileStep(IReconcileStep step) {
-		super(step);
-		if (step instanceof StructuredReconcileStep)
-			fNextStructuredStep = (StructuredReconcileStep) step;
 		fPartitionTypes = new HashSet();
 	}
 
@@ -149,12 +140,6 @@ public abstract class StructuredReconcileStep extends AbstractReconcileStep impl
 		HashSet tempResults = new HashSet();
 		// add these partition types
 		tempResults.addAll(fPartitionTypes);
-		// add next step's partition types
-		if (fNextStructuredStep != null) {
-			String[] nextResults = fNextStructuredStep.getPartitionTypes();
-			for (int i = 0; i < nextResults.length; i++)
-				tempResults.add(nextResults[i]);
-		}
 		return (String[]) tempResults.toArray(new String[tempResults.size()]);
 	}
 
@@ -164,23 +149,6 @@ public abstract class StructuredReconcileStep extends AbstractReconcileStep impl
 		if (doc instanceof IStructuredDocument)
 			sDoc = (IStructuredDocument) getDocument();
 		return sDoc;
-	}
-
-	/**
-	 * If step passed in is found somewhere in the chain of steps.
-	 * 
-	 * @return true if step passed in is found somewhere in the chain of
-	 *         steps, else false
-	 */
-	public boolean isSiblingStep(IReconcileStep step) {
-		if (step == null)
-			return false;
-		else if (step.equals(this))
-			return true;
-		else if (isLastStep())
-			return false;
-		else
-			return fNextStructuredStep.isSiblingStep(step);
 	}
 
 	/**
@@ -220,10 +188,6 @@ public abstract class StructuredReconcileStep extends AbstractReconcileStep impl
 	 * release through all steps.
 	 */
 	public void release() {
-		if (fNextStructuredStep != null)
-			fNextStructuredStep.release();
-		// we don't to null out the steps, in case
-		// it's reconfigured later
-		// fNextStructuredStep = null;
+		// 
 	}
 }

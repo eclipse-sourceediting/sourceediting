@@ -47,16 +47,20 @@ public class StructuredRegionProcessor extends DocumentRegionProcessor implement
 				
 				int start = dirtyRegion.getOffset();
 				IndexedRegion ir = sModel.getIndexedRegion(start);
-				int end = ir.getEndOffset();
 				
-				ITypedRegion[] unfiltered = computePartitioning(start, end);
-				// remove duplicate typed regions (partitions)
-				// that are handled by the same "total scope" strategy
-				ITypedRegion[] filtered = filterTotalScopeRegions(unfiltered);
-				
-				// iterate dirty partitions
-				for (int i = 0; i < filtered.length; i++) {
-					process(filtered[i]);
+				if(ir != null) {
+					
+					int end = ir.getEndOffset();
+					
+					ITypedRegion[] unfiltered = computePartitioning(start, end);
+					// remove duplicate typed regions (partitions)
+					// that are handled by the same "total scope" strategy
+					ITypedRegion[] filtered = filterTotalScopeRegions(unfiltered);
+					
+					// iterate dirty partitions
+					for (int i = 0; i < filtered.length; i++) {
+						process(filtered[i]);
+					}
 				}
 			}
 		}
@@ -208,7 +212,7 @@ public class StructuredRegionProcessor extends DocumentRegionProcessor implement
 					}
 					setDocument(sDoc);
 					// propagate document change
-					setDocumentOnAllStrategies(sDoc);
+					// setDocumentOnAllStrategies(sDoc);
 					// ensure that the document is re-reconciled
 					setEntireDocumentDirty(sDoc);
 				}
