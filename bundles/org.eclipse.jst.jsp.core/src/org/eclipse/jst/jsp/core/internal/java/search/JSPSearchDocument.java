@@ -24,6 +24,7 @@ import org.eclipse.jdt.core.search.SearchParticipant;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.java.IJSPTranslation;
+import org.eclipse.jst.jsp.core.internal.java.JSPELHandler;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapter;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapterFactory;
@@ -109,7 +110,7 @@ public class JSPSearchDocument {
 				setupAdapterFactory(xmlModel);
 				IDOMDocument doc = xmlModel.getDocument();
 				JSPTranslationAdapter adapter = (JSPTranslationAdapter) doc.getAdapterFor(IJSPTranslation.class);
-				translation = adapter.getJSPTranslation();
+				translation = adapter.getJSPTranslation(JSPELHandler.getJSPELHandler());
 			}
 		}
 		catch (IOException e) {

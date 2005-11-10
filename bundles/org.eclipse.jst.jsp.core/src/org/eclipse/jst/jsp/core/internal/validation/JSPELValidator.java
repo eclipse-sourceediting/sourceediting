@@ -209,14 +209,14 @@ public class JSPELValidator implements IValidator {
 		catch (ParseException e) {
 			Token curTok = e.currentToken;
 			int problemStartOffset = contentStart + curTok.beginColumn;
-			Message message = new LocalizedMessage(IMessage.LOW_SEVERITY, JSPCoreMessages.JSPEL_Syntax);
+			Message message = new LocalizedMessage(IMessage.NORMAL_SEVERITY, JSPCoreMessages.JSPEL_Syntax);
 			message.setOffset(problemStartOffset);
 			message.setLength(curTok.endColumn - curTok.beginColumn + 1);
 			message.setTargetObject(file);
 			reporter.addMessage(this, message);
 		}
 		catch (TokenMgrError te) {
-			Message message = new LocalizedMessage(IMessage.LOW_SEVERITY, JSPCoreMessages.JSPEL_Token);
+			Message message = new LocalizedMessage(IMessage.NORMAL_SEVERITY, JSPCoreMessages.JSPEL_Token);
 			message.setOffset(contentStart);
 			message.setLength(contentLength);
 			message.setTargetObject(file);
@@ -244,7 +244,7 @@ public class JSPELValidator implements IValidator {
 					continue;
 				}
 
-			    Message message = new LocalizedMessage(IMessage.LOW_SEVERITY, NLS.bind(JSPCoreMessages.MESSAGE_JSP_VALIDATING_MESSAGE_UI_, new String[]{file.getFullPath().toString()}));
+			    Message message = new LocalizedMessage(IMessage.NORMAL_SEVERITY, NLS.bind(JSPCoreMessages.MESSAGE_JSP_VALIDATING_MESSAGE_UI_, new String[]{file.getFullPath().toString()}));
 			    reporter.displaySubtask(this, message);
 				
 				IStructuredModel model = null;

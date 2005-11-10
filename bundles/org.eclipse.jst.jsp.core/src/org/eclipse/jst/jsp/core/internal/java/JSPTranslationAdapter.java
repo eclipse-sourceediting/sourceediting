@@ -122,12 +122,12 @@ public class JSPTranslationAdapter implements INodeAdapter, IDocumentListener {
 	 * 
 	 * @return a JSPTranslationExtension
 	 */
-	public synchronized JSPTranslationExtension getJSPTranslation() {
+	public synchronized JSPTranslationExtension getJSPTranslation(IELHandler handler) {
 
 		if (fJSPTranslation == null || fDocumentIsDirty) {
 			JSPTranslator translator = null;
 			if (getXMLModel() != null && getXMLModel().getIndexedRegion(0) != null) {
-				translator = getTranslator((IDOMNode) getXMLModel().getIndexedRegion(0));
+				translator = getTranslator((IDOMNode) getXMLModel().getIndexedRegion(0), handler);
 				translator.translate();
 				StringBuffer javaContents = translator.getTranslation();
 				fJavaDocument = new Document(javaContents.toString());
@@ -161,14 +161,14 @@ public class JSPTranslationAdapter implements INodeAdapter, IDocumentListener {
 	 *            the first node of the JSP document to be translated
 	 * @return the JSPTranslator for this adapter (creates if null)
 	 */
-	private JSPTranslator getTranslator(IDOMNode xmlNode) {
+	private JSPTranslator getTranslator(IDOMNode xmlNode, IELHandler handler) {
 		if (fTranslator == null) {
 			fTranslationMonitor = new NullProgressMonitor();
 			fTranslator = new JSPTranslator();
-			fTranslator.reset(xmlNode, fTranslationMonitor);
+			fTranslator.reset(xmlNode, fTranslationMonitor, handler);
 		}
 		else
-			fTranslator.reset(xmlNode, fTranslationMonitor);
+			fTranslator.reset(xmlNode, fTranslationMonitor, handler);
 		return fTranslator;
 	}
 

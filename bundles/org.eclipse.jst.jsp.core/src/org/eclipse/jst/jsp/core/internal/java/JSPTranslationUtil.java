@@ -29,9 +29,11 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 public class JSPTranslationUtil {
 	protected IDocument fDocument = null;
 	protected JSPTranslationExtension fTranslation = null;
+	protected IELHandler fELHandler;
 
-	public JSPTranslationUtil(IDocument document) {
+	public JSPTranslationUtil(IDocument document, IELHandler handler) {
 		fDocument = document;
+		fELHandler = handler;
 	}
 
 	public TextEdit translateTextEdit(TextEdit textEdit) {
@@ -101,7 +103,7 @@ public class JSPTranslationUtil {
 
 				JSPTranslationAdapter translationAdapter = (JSPTranslationAdapter) xmlDoc.getAdapterFor(IJSPTranslation.class);
 				if (translationAdapter != null)
-					fTranslation = translationAdapter.getJSPTranslation();
+					fTranslation = translationAdapter.getJSPTranslation(fELHandler);
 			}
 			finally {
 				if (xmlModel != null) {
