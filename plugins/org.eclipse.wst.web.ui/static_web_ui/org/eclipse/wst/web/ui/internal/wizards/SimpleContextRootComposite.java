@@ -56,7 +56,7 @@ public class SimpleContextRootComposite extends Composite {
 
 		// New Context Root Label
 		Label contextRootLabel = new Label(this, SWT.CHECK);
-		contextRootLabel.setText(ResourceHandler.getString("StaticContextRootComposite.Context_Root_Label")); //$NON-NLS-1$
+		contextRootLabel.setText(ResourceHandler.StaticContextRootComposite_Context_Root_Label); 
 
 		// New Context Root Entryfield
 		contextRootField = new Text(this, SWT.BORDER);

@@ -49,7 +49,7 @@ public class SimpleWebModuleCreationWizard extends DataModelWizard implements IE
     }
 
     public void init(IWorkbench workbench, IStructuredSelection selection) {
-        setWindowTitle(ResourceHandler.getString("StaticWebProjectCreationWizard.Wizard_Title")); //$NON-NLS-1$
+        setWindowTitle(ResourceHandler.StaticWebProjectCreationWizard_Wizard_Title); 
         setDefaultPageImageDescriptor(WSTWebUIPlugin.getDefault().getImageDescriptor("newwprj_wiz")); //$NON-NLS-1$
     }
 

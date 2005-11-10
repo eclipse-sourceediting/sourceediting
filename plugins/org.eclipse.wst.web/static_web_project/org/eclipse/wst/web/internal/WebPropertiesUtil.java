@@ -35,7 +35,7 @@ public class WebPropertiesUtil {
 		if (name.equals("") || name == null) { //$NON-NLS-1$
 			//  this was added because the error message shouldnt be shown initially. It should be
 			// shown only if context root field is edited to
-			errorMessage = ResourceHandler.getString("StaticWebProjectWizardBasePage.Page_Title"); //$NON-NLS-1$
+			errorMessage = ResourceHandler.StaticWebProjectWizardBasePage_Page_Title; 
 			
 			//errorMessage = ProjectSupportResourceHandler.getString("Context_Root_cannot_be_empty_2"); //$NON-NLS-1$
 			return errorMessage;
@@ -60,7 +60,7 @@ public class WebPropertiesUtil {
 							//	ResourceHandler.getString("_Context_root_cannot_conta_UI_");//$NON-NLS-1$
 							// = " Context root cannot contain whitespaces."
 						} else {
-							errorMessage = ResourceHandler.getString("StaticWebProjectWizardBasePage.Page_Title"); //$NON-NLS-1$
+							errorMessage = ResourceHandler.StaticWebProjectWizardBasePage_Page_Title; 
 							
 							//errorMessage = ProjectSupportResourceHandler.getString("The_character_is_invalid_in_a_context_root", new Object[]{(new Character(token.charAt(i))).toString()}); //$NON-NLS-1$
 							break outer;
@@ -70,7 +70,7 @@ public class WebPropertiesUtil {
 			}
 		} // en/ end of if(name.trim
 		else
-			errorMessage = ResourceHandler.getString("StaticWebProjectWizardBasePage.Page_Title"); //$NON-NLS-1$
+			errorMessage = ResourceHandler.StaticWebProjectWizardBasePage_Page_Title; 
 			//errorMessage = ProjectSupportResourceHandler.getString("Names_cannot_begin_or_end_with_whitespace_5"); //$NON-NLS-1$
 
 		return errorMessage;
@@ -91,12 +91,12 @@ public class WebPropertiesUtil {
 
 	public static String validateFolderName(String folderName) {
 		if (folderName.length() == 0)
-			return ResourceHandler.getString("StaticWebProjectWizardBasePage.Page_Title"); //$NON-NLS-1$
+			return ResourceHandler.StaticWebProjectWizardBasePage_Page_Title; 
 			
 			//return ProjectSupportResourceHandler.getString("Folder_name_cannot_be_empty_2"); //$NON-NLS-1$
 
 		if (contains(folderName, BAD_CHARS))
-			return ResourceHandler.getString("StaticWebProjectWizardBasePage.Page_Title"); //$NON-NLS-1$
+			return ResourceHandler.StaticWebProjectWizardBasePage_Page_Title; 
 			
 			//return ProjectSupportResourceHandler.getString("Folder_name_is_not_valid", new Object[]{folderName}); //$NON-NLS-1$
 

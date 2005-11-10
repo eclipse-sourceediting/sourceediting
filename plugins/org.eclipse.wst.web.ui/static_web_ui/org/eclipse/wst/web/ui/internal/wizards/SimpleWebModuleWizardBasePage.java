@@ -47,8 +47,8 @@ class SimpleWebModuleWizardBasePage extends DataModelWizardPage implements ISimp
 
 	public SimpleWebModuleWizardBasePage(IDataModel dataModel, String pageName) {
 		super(dataModel, pageName);
-		setDescription(ResourceHandler.getString("StaticWebProjectWizardBasePage.Page_Description")); //$NON-NLS-1$
-		setTitle(ResourceHandler.getString("StaticWebProjectWizardBasePage.Page_Title")); //$NON-NLS-1$
+		setDescription(ResourceHandler.StaticWebProjectWizardBasePage_Page_Description); 
+		setTitle(ResourceHandler.StaticWebProjectWizardBasePage_Page_Title); 
 		ImageDescriptor desc = AbstractUIPlugin.imageDescriptorFromPlugin(WSTWebPlugin.PLUGIN_ID, "icons/full/wizban/newwprj_wiz.gif"); //$NON-NLS-1$
 		setImageDescriptor(desc);
 		setPageComplete(false);
