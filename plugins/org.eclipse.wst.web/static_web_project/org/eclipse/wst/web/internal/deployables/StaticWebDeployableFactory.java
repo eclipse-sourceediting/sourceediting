@@ -10,14 +10,12 @@ package org.eclipse.wst.web.internal.deployables;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jem.util.logger.proxy.Logger;
 import org.eclipse.wst.common.componentcore.ComponentCore;
 import org.eclipse.wst.common.componentcore.ModuleCoreNature;
-import org.eclipse.wst.common.componentcore.internal.StructureEdit;
 import org.eclipse.wst.common.componentcore.internal.util.IModuleConstants;
 import org.eclipse.wst.common.componentcore.resources.IVirtualComponent;
 import org.eclipse.wst.common.project.facet.core.IFacetedProject;
@@ -37,7 +35,16 @@ public class StaticWebDeployableFactory extends ProjectModuleFactoryDelegate {
 	public static String getFactoryId() {
 		return ID;
 	}
-
+	protected IModule createModule(ModuleCoreNature nature) {
+		IProject project = nature.getProject();
+		try {
+			IVirtualComponent comp = ComponentCore.createComponent(project);
+			return createModuleDelegates(comp);
+		} catch (Exception e) {
+			Logger.getLogger().write(e);
+		}
+		return null;
+	}
 	/**
 	 * Returns true if the project represents a deployable project of this type.
 	 * 
@@ -72,53 +79,24 @@ public class StaticWebDeployableFactory extends ProjectModuleFactoryDelegate {
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.server.core.model.ModuleFactoryDelegate#getModules()
-	 */
-	public IModule[] getModules() {
-		if (projects == null || projects.isEmpty())
-			cacheModules();
-		int i = 0;
-		Iterator modules = projects.keySet().iterator();
-		IModule[] modulesArray = new IModule[projects.size()];
-		while (modules.hasNext()) {
-			IModule[] module = null;
-			IProject project = (IProject) modules.next();
-			module = (IModule[])projects.get(project);
-			modulesArray[i++] = module[0];
-		}
-		return modulesArray;
-
-	}
-
-	protected List createModules(ModuleCoreNature nature) {
-		IProject project = nature.getProject();
-		List modules = new ArrayList(1); 
-		StructureEdit moduleCore = null;
+	protected IModule createModule(IProject project) {
 		try {
-			IVirtualComponent component = ComponentCore.createComponent(project);
-			modules = createModuleDelegates(component);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			if(moduleCore != null) 
-				moduleCore.dispose();
+			ModuleCoreNature nature = (ModuleCoreNature) project.getNature(IModuleConstants.MODULE_NATURE_ID);
+			if (nature != null)
+				return createModule(nature);
+		} catch (CoreException e) {
+			Logger.getLogger().write(e);
 		}
-		return modules;
+		return null;
 	}
-	
-	protected List createModuleDelegates(IVirtualComponent component) throws CoreException {
+
+	protected IModule createModuleDelegates(IVirtualComponent component) throws CoreException {
 		StaticWebDeployable moduleDelegate = null;
 		IModule module = null;
-		List moduleList = new ArrayList();
 		try {
 			if(isValidModule(component.getProject())) {
 				moduleDelegate = new StaticWebDeployable(component.getProject(),component);
 				module = createModule(component.getName(), component.getName(), moduleDelegate.getType(), moduleDelegate.getVersion(), moduleDelegate.getProject());
-				moduleList.add(module);
 				moduleDelegate.initialize(module);
 			}
 			// adapt(moduleDelegate, (WorkbenchComponent) workBenchModules.get(i));
@@ -130,25 +108,7 @@ public class StaticWebDeployableFactory extends ProjectModuleFactoryDelegate {
 					moduleDelegates.add(moduleDelegate);
 			}
 		}
-		return moduleList;
-
-	}
+		return module;
 	
-	protected IModule[] createModules(IProject project) {
-
-		// List modules = createModules(nature);
-		ModuleCoreNature nature = null;
-		try {
-			nature = (ModuleCoreNature) project.getNature(IModuleConstants.MODULE_NATURE_ID);
-		} catch (CoreException e) {
-			Logger.getLogger().write(e);
-		}
-		if(nature == null) return new IModule[0];
-		List modules = createModules(nature);
-		if (modules == null)
-			return new IModule[0];
-		IModule[] moduleArray = new IModule[modules.size()];
-		modules.toArray(moduleArray);
-		return moduleArray;
 	}
 }
