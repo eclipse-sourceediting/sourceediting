@@ -219,9 +219,9 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 	private void startScope(String tagName) {
 		//IStructuredDocumentRegion currentNode = fTranslator.getCurrentNode();
 		StringBuffer text = new StringBuffer();
-		text.append("{ // <");
+		text.append("{ // <"); //$NON-NLS-1$
 		text.append(tagName);
-		text.append(">\n");
+		text.append(">\n"); //$NON-NLS-1$
 		//this.fTranslator.translateScriptletString(text.toString(), currentNode, currentNode.getStartOffset(), currentNode.getLength()); //$NON-NLS-1$
 		fScriptlets.add(text.toString());
 	}
@@ -229,9 +229,9 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 	private void endScope(String tagName) {
 		//IStructuredDocumentRegion currentNode = fTranslator.getCurrentNode();
 		StringBuffer text = new StringBuffer();
-		text.append("} // </");
+		text.append("} // </"); //$NON-NLS-1$
 		text.append(tagName);
-		text.append(">\n");
+		text.append(">\n"); //$NON-NLS-1$
 		//this.fTranslator.translateScriptletString(text.toString(), currentNode, currentNode.getStartOffset(), currentNode.getLength()); //$NON-NLS-1$
 		fScriptlets.add(text.toString());
 	}

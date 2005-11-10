@@ -46,7 +46,7 @@ class TaglibHelperCache {
             fProjectPath = projectPath;
         }
         public String toString() {
-            return "Taglib Helper Entry [" + getProjectPath() + "]";
+            return "Taglib Helper Entry [" + getProjectPath() + "]"; //$NON-NLS-1$ //$NON-NLS-2$
         }
     }
     
@@ -85,7 +85,7 @@ class TaglibHelperCache {
                     fHelpers.remove(entry);
 	                fHelpers.add(1, entry);
 	                if(DEBUG) {
-	                    Logger.log(Logger.INFO, "(->) TaglibHelperCache moved: " + entry + " to the front of the list");
+	                    Logger.log(Logger.INFO, "(->) TaglibHelperCache moved: " + entry + " to the front of the list"); //$NON-NLS-1$ //$NON-NLS-2$
 	                    printCacheContents();
 	                }
                 }
@@ -113,14 +113,14 @@ class TaglibHelperCache {
         Entry newEntry = new Entry(projectPath, helper);
         fHelpers.add(0, newEntry);
         if(DEBUG) {
-        	Logger.log(Logger.INFO, "(+) TaglibHelperCache added: " + newEntry);
+        	Logger.log(Logger.INFO, "(+) TaglibHelperCache added: " + newEntry); //$NON-NLS-1$
             printCacheContents();
         }
         if(fHelpers.size() > MAX_SIZE) {
             // one too many, remove last
             Object removed = fHelpers.remove(fHelpers.size()-1);
             if(DEBUG) {
-            	Logger.log(Logger.INFO, "(-) TaglibHelperCache removed: " + removed);
+            	Logger.log(Logger.INFO, "(-) TaglibHelperCache removed: " + removed); //$NON-NLS-1$
                 printCacheContents();
             }
         }
@@ -135,7 +135,7 @@ class TaglibHelperCache {
             if(entry.getProjectPath().equals(projectPath)) {
                 fHelpers.remove(entry);
                 if(DEBUG) { 
-                    Logger.log(Logger.INFO, "(-) TaglibHelperCache removed: " + entry);
+                    Logger.log(Logger.INFO, "(-) TaglibHelperCache removed: " + entry); //$NON-NLS-1$
                     printCacheContents();
                 }
                 break;
@@ -145,11 +145,11 @@ class TaglibHelperCache {
     
     private void printCacheContents() {
         StringBuffer debugString = new StringBuffer();
-        debugString.append("\n-----------------------------------------------------------");
-        debugString.append("\ncache contents:");
+        debugString.append("\n-----------------------------------------------------------"); //$NON-NLS-1$
+        debugString.append("\ncache contents:"); //$NON-NLS-1$
         for (int i=0; i<fHelpers.size(); i++)	
-        	debugString.append("\n -" + i + "- " + fHelpers.get(i));
-        debugString.append("\n-----------------------------------------------------------");
+        	debugString.append("\n -" + i + "- " + fHelpers.get(i)); //$NON-NLS-1$ //$NON-NLS-2$
+        debugString.append("\n-----------------------------------------------------------"); //$NON-NLS-1$
         Logger.log(Logger.INFO, debugString.toString());
     }
 }

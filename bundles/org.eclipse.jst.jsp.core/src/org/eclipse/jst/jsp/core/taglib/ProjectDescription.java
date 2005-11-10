@@ -328,7 +328,7 @@ class ProjectDescription {
 		 */
 		public String getURI() {
 			if (info == null)
-				return "";
+				return ""; //$NON-NLS-1$
 			return info.uri;
 		}
 

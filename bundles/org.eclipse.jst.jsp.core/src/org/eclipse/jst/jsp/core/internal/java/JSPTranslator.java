@@ -595,7 +595,7 @@ public class JSPTranslator {
 				}
 			}
 			catch(Exception e) {
-				Logger.logException("JSPTranslation error", e);
+				Logger.logException("JSPTranslation error", e); //$NON-NLS-1$
 			}
 			Logger.log(Logger.INFO_DEBUG, debugString.toString());
 		}
@@ -622,7 +622,7 @@ public class JSPTranslator {
 		TaglibHelper helper = TaglibHelperManager.getInstance().getTaglibHelper(f);
 		IStructuredDocumentRegion customTag = getCurrentNode();
 		TaglibVariable[] taglibVars = helper.getTaglibVariables(tagToAdd, getStructuredDocument(), customTag);
-		String decl = "";
+		String decl = ""; //$NON-NLS-1$
 		for (int i = 0; i < taglibVars.length; i++) {
 			decl = taglibVars[i].getDeclarationString();
 			appendToBuffer(decl, fUserCode, false, fCurrentNode);
@@ -805,17 +805,17 @@ public class JSPTranslator {
 		//fScopeDepth++;
 		StringBuffer text = new StringBuffer();
 		//for(int i=0; i<fScopeDepth; i++) text.append(" "); //$NON-NLS-1$
-		text.append("{ // <");
+		text.append("{ // <"); //$NON-NLS-1$
 		text.append(getRegionName(fCurrentNode));
-		text.append(">\n");
+		text.append(">\n"); //$NON-NLS-1$
 		appendToBuffer(text.toString(), fUserCode, false, fCurrentNode); //$NON-NLS-1$
 	}
 	
 	private void endScope() {
 		StringBuffer text = new StringBuffer();
-		text.append("} // </");
+		text.append("} // </"); //$NON-NLS-1$
 		text.append(getRegionName(fCurrentNode));
-		text.append(">\n");
+		text.append(">\n"); //$NON-NLS-1$
 		appendToBuffer(text.toString(), fUserCode, false, fCurrentNode); //$NON-NLS-1$
 	}
 	
@@ -1074,7 +1074,7 @@ public class JSPTranslator {
 		IStructuredDocumentRegion sdr = getCurrentNode().getNext();
 		int start = sdr.getStartOffset();
 		int end = sdr.getEndOffset();
-		String sdrText = "";
+		String sdrText = ""; //$NON-NLS-1$
 		
 		// read structured document regions until 
 		// </jsp:scriptlet> or EOF
@@ -1087,7 +1087,7 @@ public class JSPTranslator {
 			if(sdr.getType() == DOMRegionContext.XML_CDATA_TEXT){
 				
 				// just to be safe, make sure CDATA start & end are there
-				if(sdrText.startsWith("<![CDATA[") && sdrText.endsWith("]]>")) {
+				if(sdrText.startsWith("<![CDATA[") && sdrText.endsWith("]]>")) { //$NON-NLS-1$ //$NON-NLS-2$
 					
 					start = sdr.getStartOffset() + 9; // <![CDATA[
 					end = sdr.getEndOffset() - 3; // ]]>

@@ -541,11 +541,8 @@ public class JSPIndexManager implements IResourceChangeListener {
 			for (int i = 0; i < files.length; i++) {
 				if (files[i].toLowerCase().endsWith(".index")) { //$NON-NLS-1$
 					locay = jspModelWorkingLocation.toString() + "/" + files[i]; //$NON-NLS-1$
-					index = new Index(locay, "Index for " + locay, true /*
-																		 * reuse
-																		 * index
-																		 * file
-																		 */); //$NON-NLS-1$
+					// reuse index file
+					index = new Index(locay, "Index for " + locay, true); //$NON-NLS-1$
 					indexManager.saveIndex(index);
 				}
 			}
@@ -590,7 +587,7 @@ public class JSPIndexManager implements IResourceChangeListener {
 		// attempt to make sure this indexing job is litterally
 		// done before continuing, since we are shutting down
 		waitTillNotRunning(maxwait, processFilesJob);
-		
+
 		if (indexingJob != null) {
 			indexingJob.cancel();
 		}
@@ -604,7 +601,8 @@ public class JSPIndexManager implements IResourceChangeListener {
 		while (count++ < maxtries && job.getState() == Job.RUNNING) {
 			try {
 				Thread.sleep(pauseTime);
-				//System.out.println("count: " + count + " max: " + maxtries);
+				// System.out.println("count: " + count + " max: " +
+				// maxtries);
 			}
 			catch (InterruptedException e) {
 				Logger.logException(e);

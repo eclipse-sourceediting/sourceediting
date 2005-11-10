@@ -47,11 +47,11 @@ public class TaglibClassLoader extends ClassLoader {
 	 * @param filename - full path to the jar file
 	 */
 	public void addJar(String filename) {
-	    if(DEBUG) System.out.println("trying to add: [" + filename + "] to classpath");
+	    if(DEBUG) System.out.println("trying to add: [" + filename + "] to classpath"); //$NON-NLS-1$ //$NON-NLS-2$
 		// don't add the same entry twice, or search times will get even worse
 		if(!jarsList.contains(filename)) {
 			jarsList.add(filename);
-			if(DEBUG) System.out.println( " + [" + filename + "] added to classpath");
+			if(DEBUG) System.out.println( " + [" + filename + "] added to classpath"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}		
 
@@ -62,13 +62,13 @@ public class TaglibClassLoader extends ClassLoader {
 	 */
 	public void removeJar(String filename) {
 		jarsList.remove(filename);
-		if(DEBUG) System.out.println("removed: [" + filename + "] from classpath");
+		if(DEBUG) System.out.println("removed: [" + filename + "] from classpath"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 	
 	public void addDirectory(String dirPath) {
 	    if(!dirsList.contains(dirPath)) {
 	        dirsList.add(dirPath);
-	        if(DEBUG) System.out.println("added: [" + dirPath + "] to classpath");
+	        if(DEBUG) System.out.println("added: [" + dirPath + "] to classpath"); //$NON-NLS-1$ //$NON-NLS-2$
 	    }
 	}
 
@@ -79,7 +79,7 @@ public class TaglibClassLoader extends ClassLoader {
 	 */
 	public void removeDirectory(String dirPath) {
 		dirsList.remove(dirPath);
-		if(DEBUG) System.out.println("removed: [" + dirPath + "] from classpath");
+		if(DEBUG) System.out.println("removed: [" + dirPath + "] from classpath"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**
@@ -123,7 +123,7 @@ public class TaglibClassLoader extends ClassLoader {
 	 */
 	protected synchronized Class findClass(String className) throws ClassNotFoundException {
 	    
-	    if(DEBUG) System.out.println(">> TaglibClassLoader finding class: " + className);
+	    if(DEBUG) System.out.println(">> TaglibClassLoader finding class: " + className); //$NON-NLS-1$
 
 		Class newClass = null;
 		JarFile jarfile = null;
@@ -137,7 +137,7 @@ public class TaglibClassLoader extends ClassLoader {
 			Iterator dirs = dirsList.iterator();
 			File f;
 			String dirName;
-			String fileToFind = "";
+			String fileToFind = ""; //$NON-NLS-1$
 			while (dirs.hasNext()) {
 				dirName = (String) dirs.next();
 				fileToFind = dirName + "/" + fileName; //$NON-NLS-1$
@@ -147,7 +147,7 @@ public class TaglibClassLoader extends ClassLoader {
 					stream = new FileInputStream(f);
 					usedDirs.add(dirName);
 					//loadedClassFilenames.add(fileToFind);
-					if(DEBUG) System.out.println(">> added file from dir: " + dirName + "/" + fileName);
+					if(DEBUG) System.out.println(">> added file from dir: " + dirName + "/" + fileName); //$NON-NLS-1$ //$NON-NLS-2$
 					break;
 
 				}
@@ -162,7 +162,7 @@ public class TaglibClassLoader extends ClassLoader {
 
 				byte[] byteArray = byteStream.toByteArray();
 				try {
-				    if(DEBUG) System.out.println(">> defining newClass:" + className);
+				    if(DEBUG) System.out.println(">> defining newClass:" + className); //$NON-NLS-1$
 					newClass = defineClass(className, byteArray, 0, byteArray.length);
 					resolveClass(newClass);
 				}
@@ -173,7 +173,7 @@ public class TaglibClassLoader extends ClassLoader {
 					// try parent loader
 				    try {
 				        Class c = getParent().loadClass(className);
-				        if(DEBUG) System.out.println(">> loaded: " + className + " with: " + getParent());
+				        if(DEBUG) System.out.println(">> loaded: " + className + " with: " + getParent()); //$NON-NLS-1$ //$NON-NLS-2$
 				        return c;
 				    }
 				    catch (ClassNotFoundException cnf) {
@@ -202,7 +202,7 @@ public class TaglibClassLoader extends ClassLoader {
 					    jarfile = new JarFile(jarName);
 					}
 					catch (IOException e){
-					    if(DEBUG) Logger.logException("bad jar file", e);
+					    if(DEBUG) Logger.logException("bad jar file", e); //$NON-NLS-1$
 					}
 					if (jarfile == null) {
 						continue;
@@ -210,9 +210,9 @@ public class TaglibClassLoader extends ClassLoader {
 
 					entry = jarfile.getJarEntry(fileName);
 
-					if(DEBUG) System.out.println("looking for filename: " + fileName + " in: " + jarfile.getName());
+					if(DEBUG) System.out.println("looking for filename: " + fileName + " in: " + jarfile.getName()); //$NON-NLS-1$ //$NON-NLS-2$
 					if (entry != null) {
-					    if(DEBUG) System.out.println("found the entry: " + entry + " for filename: " + fileName);
+					    if(DEBUG) System.out.println("found the entry: " + entry + " for filename: " + fileName); //$NON-NLS-1$ //$NON-NLS-2$
 						// found the class
 						if (!usedJars.contains(jarName)) {
 							// add the jar to the list of in-use jars
@@ -242,7 +242,7 @@ public class TaglibClassLoader extends ClassLoader {
 
 					byte[] byteArray = byteStream.toByteArray();
 					try {
-					    if(DEBUG) System.out.println(">> defining newClass:" + className);
+					    if(DEBUG) System.out.println(">> defining newClass:" + className); //$NON-NLS-1$
 						// define the class from the byte array
 						newClass = defineClass(className, byteArray, 0, byteArray.length);
 						resolveClass(newClass);
@@ -254,7 +254,7 @@ public class TaglibClassLoader extends ClassLoader {
 						// try parent
 					    try {
 					        Class c = getParent().loadClass(className);
-					        if(DEBUG) System.out.println(">> loaded: " + className + " with: " + getParent());
+					        if(DEBUG) System.out.println(">> loaded: " + className + " with: " + getParent()); //$NON-NLS-1$ //$NON-NLS-2$
 					        return c;
 					    }
 					    catch (ClassNotFoundException cnf) {
@@ -282,7 +282,7 @@ public class TaglibClassLoader extends ClassLoader {
 		}
 
 		if (newClass != null) {
-		    if(DEBUG) System.out.println(">> loaded: " + newClass + " with: " + this);
+		    if(DEBUG) System.out.println(">> loaded: " + newClass + " with: " + this); //$NON-NLS-1$ //$NON-NLS-2$
 			return newClass;
 		}
 		

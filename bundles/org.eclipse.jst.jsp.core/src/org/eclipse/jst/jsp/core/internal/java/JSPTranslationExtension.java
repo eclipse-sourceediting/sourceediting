@@ -55,7 +55,7 @@ public class JSPTranslationExtension extends JSPTranslation {
 		DEBUG= value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
 	}
 	
-	private static final String CT_ID_JSP_FRAGMENT = "org.eclipse.jst.jsp.core.jspfragmentsource";
+	private static final String CT_ID_JSP_FRAGMENT = "org.eclipse.jst.jsp.core.jspfragmentsource"; //$NON-NLS-1$
 	
 	// just a convenience data structure
 	// to keep track of java position deltas

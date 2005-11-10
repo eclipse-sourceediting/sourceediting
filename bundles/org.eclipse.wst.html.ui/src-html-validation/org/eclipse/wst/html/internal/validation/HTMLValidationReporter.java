@@ -90,7 +90,7 @@ public class HTMLValidationReporter implements ValidationReporter {
 			// add by myself?
 			String id = HTMLValidator.class.getName();
 			String location = Integer.toString(mes.getLineNumber());
-			String name = "";
+			String name = ""; //$NON-NLS-1$
 			IPath filePath = this.file.getFullPath();
 			if (filePath != null) {
 				name = filePath.toString();

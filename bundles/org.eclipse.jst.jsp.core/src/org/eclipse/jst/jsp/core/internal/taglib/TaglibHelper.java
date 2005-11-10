@@ -274,7 +274,7 @@ public class TaglibHelper {
         String message = "teiClassname: ["; //$NON-NLS-1$ 
         if (teiClassname != null)
             message += teiClassname;
-        message += "]";
+        message += "]"; //$NON-NLS-1$
         Logger.logException(message, e);
     }
 
@@ -289,8 +289,8 @@ public class TaglibHelper {
         Hashtable tagDataTable = new Hashtable();
         ITextRegionList regions = customTag.getRegions();
         ITextRegion r = null;
-        String attrName = "";
-        String attrValue = "";
+        String attrName = ""; //$NON-NLS-1$
+        String attrValue = ""; //$NON-NLS-1$
         for (int i = 0; i < regions.size(); i++) {
             r = regions.get(i);
             // check if attr name
@@ -366,7 +366,7 @@ public class TaglibHelper {
 
 		    entry = entries[i];
 		    if(DEBUG)
-		        System.out.println("current entry is: " + entry);
+		        System.out.println("current entry is: " + entry); //$NON-NLS-1$
 		    
 		    switch (entry.getEntryKind()) {
 		        case IClasspathEntry.CPE_SOURCE:
@@ -395,7 +395,7 @@ public class TaglibHelper {
     private void addVariableEntry(TaglibClassLoader loader, IPath wkspaceRoot, IClasspathEntry entry) {
 
         if (DEBUG)
-            System.out.println(" -> adding variable entry: [" + entry + "]");
+            System.out.println(" -> adding variable entry: [" + entry + "]"); //$NON-NLS-1$ //$NON-NLS-2$
         
         // variable should either be a project or a library entry
 
@@ -446,7 +446,7 @@ public class TaglibHelper {
     private void addProjectEntry(TaglibClassLoader loader, IClasspathEntry entry) {
 
         if (DEBUG)
-            System.out.println(" -> project entry: [" + entry + "]");
+            System.out.println(" -> project entry: [" + entry + "]"); //$NON-NLS-1$ //$NON-NLS-2$
         
         IPath path = entry.getPath();
         IProject refereceProj = ResourcesPlugin.getWorkspace().getRoot().getProject(path.toString());

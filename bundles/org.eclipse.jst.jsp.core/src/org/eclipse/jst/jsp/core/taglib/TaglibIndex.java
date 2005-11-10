@@ -362,7 +362,7 @@ public final class TaglibIndex {
 	}
 
 	public static synchronized void startup() {
-		ENABLED = !"false".equalsIgnoreCase(System.getProperty(TaglibIndex.class.getName()));
+		ENABLED = !"false".equalsIgnoreCase(System.getProperty(TaglibIndex.class.getName())); //$NON-NLS-1$
 		_instance = new TaglibIndex();
 	}
 

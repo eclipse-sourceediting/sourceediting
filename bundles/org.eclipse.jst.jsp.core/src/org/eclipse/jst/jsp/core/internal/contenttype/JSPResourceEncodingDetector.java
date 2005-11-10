@@ -345,7 +345,7 @@ public class JSPResourceEncodingDetector implements IResourceCharsetDetector {
 			if (parts.length == 1) {
 				if (parts[0].length() > 6) {
 					String checkForCharset = parts[0].substring(0, 7);
-					if (checkForCharset.equalsIgnoreCase("charset")) {
+					if (checkForCharset.equalsIgnoreCase("charset")) { //$NON-NLS-1$
 						int eqpos = parts[0].indexOf('=');
 						eqpos = eqpos + 1;
 						if (eqpos < parts[0].length()) {

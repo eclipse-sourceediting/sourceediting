@@ -258,7 +258,7 @@ public class StructuredTextPartitionerForJSP extends StructuredTextPartitioner {
 			result = new StructuredTextPartitionerForHTML();
 			result.connect(structuredDocument);
 		}
-		else if (contentType.equalsIgnoreCase(XML_MIME_TYPE) || contentType.endsWith("+xml")) {
+		else if (contentType.equalsIgnoreCase(XML_MIME_TYPE) || contentType.endsWith("+xml")) { //$NON-NLS-1$
 			result = new StructuredTextPartitionerForXML();
 			result.connect(structuredDocument);
 		}

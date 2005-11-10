@@ -56,8 +56,8 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.w3c.dom.Text;
 
 public class HTMLValidator implements IValidator, ISourceValidator {
-	private static final String ORG_ECLIPSE_JST_JSP_CORE_JSPSOURCE = "org.eclipse.jst.jsp.core.jspsource";
-	private static final String ORG_ECLIPSE_WST_HTML_CORE_HTMLSOURCE = "org.eclipse.wst.html.core.htmlsource";
+	private static final String ORG_ECLIPSE_JST_JSP_CORE_JSPSOURCE = "org.eclipse.jst.jsp.core.jspsource"; //$NON-NLS-1$
+	private static final String ORG_ECLIPSE_WST_HTML_CORE_HTMLSOURCE = "org.eclipse.wst.html.core.htmlsource"; //$NON-NLS-1$
 
 	static boolean shouldValidate(IFile file) {
 		IResource resource = file;
@@ -266,7 +266,7 @@ public class HTMLValidator implements IValidator, ISourceValidator {
 					rep.clear();
 					adapter.setReporter(rep);
 					
-					String fileName = "";
+					String fileName = ""; //$NON-NLS-1$
 					IPath filePath = file.getFullPath();
 					if (filePath != null) {
 						fileName = filePath.toString();
@@ -336,7 +336,7 @@ public class HTMLValidator implements IValidator, ISourceValidator {
 		rep.clear();
 		adapter.setReporter(rep);
 		if (reporter != null) {
-			String fileName = "";
+			String fileName = ""; //$NON-NLS-1$
 			IPath filePath = file.getFullPath();
 			if (filePath != null) {
 				fileName = filePath.toString();

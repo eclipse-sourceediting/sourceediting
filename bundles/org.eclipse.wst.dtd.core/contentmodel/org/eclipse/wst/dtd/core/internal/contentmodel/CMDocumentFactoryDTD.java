@@ -37,7 +37,7 @@ public class CMDocumentFactoryDTD implements CMDocumentFactory {
 			result = DTDImpl.buildCMDocument(uri);
 		}
 		catch (Exception e) {
-			Logger.logException("could not create content model for URI: " + uri, e);
+			Logger.logException("could not create content model for URI: " + uri, e); //$NON-NLS-1$
 		}
 		return result;
 	}

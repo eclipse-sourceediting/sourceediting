@@ -9,7 +9,7 @@ public class TaglibVariable {
     
 	private String fVarClass = null;
 	private String fVarName = null;
-	private final String ENDL = "\n";
+	private final String ENDL = "\n"; //$NON-NLS-1$
 	/**
 	 * 
 	 */

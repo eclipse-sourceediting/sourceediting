@@ -89,7 +89,7 @@ public class PageDirectiveAdapterFactory extends AbstractAdapterFactory implemen
 			// if is equal to null, create a new one
 			pageDirectiveAdapterInstance = new PageDirectiveAdapterImpl(target);
 		}
-		Assert.isNotNull(pageDirectiveAdapterInstance, "pageDipageDirectiveAdapterInstance was null");
+		Assert.isNotNull(pageDirectiveAdapterInstance, "pageDipageDirectiveAdapterInstance was null"); //$NON-NLS-1$
 		return pageDirectiveAdapterInstance;
 	}
 

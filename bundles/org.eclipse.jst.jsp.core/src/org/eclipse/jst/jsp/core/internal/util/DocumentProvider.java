@@ -263,7 +263,7 @@ public class DocumentProvider {
 				result.removeChild(children.item(i));
 			}
 			// we're going through this effort to avoid a NS element
-			Element settings = result.createElementNS("http://www.w3.org/XML/1998/namespace", getRootElementName());
+			Element settings = result.createElementNS("http://www.w3.org/XML/1998/namespace", getRootElementName()); //$NON-NLS-1$
 			result.appendChild(settings);
 			return result;
 		}

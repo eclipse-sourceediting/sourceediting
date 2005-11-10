@@ -180,7 +180,7 @@ public class CSSPropertySource implements IPropertySource {
 
 		IPropertyDescriptor[] resultArray = new IPropertyDescriptor[descriptors.size()];
 		if (PERF_GETDESCRIPTORS) {
-			System.out.println(getClass().getName() + ".getPropertyDescriptors: " + (System.currentTimeMillis() - time0) + "ms");
+			System.out.println(getClass().getName() + ".getPropertyDescriptors: " + (System.currentTimeMillis() - time0) + "ms"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		return (IPropertyDescriptor[]) descriptors.toArray(resultArray);
 	}
