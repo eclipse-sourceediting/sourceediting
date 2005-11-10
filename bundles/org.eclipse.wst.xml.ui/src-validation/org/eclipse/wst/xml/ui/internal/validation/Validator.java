@@ -79,8 +79,8 @@ public class Validator implements IValidator
 		}
 	}
 	
-  private final String GET_FILE = "getFile";
-  public final String GET_PROJECT_FILES = "getAllFiles";
+  private final String GET_FILE = "getFile"; //$NON-NLS-1$
+  public final String GET_PROJECT_FILES = "getAllFiles"; //$NON-NLS-1$
 
 	static boolean shouldValidate(IFile file) {
 		IResource resource = file;
@@ -134,9 +134,9 @@ public class Validator implements IValidator
           IFile file = (IFile) helper.loadModel(GET_FILE, parms);
           if (file != null && shouldValidate(file)) 
           { //the helper might not have the file stored in it. could have an InputStream
-            if (helper.loadModel("inputStream") instanceof InputStream)
+            if (helper.loadModel("inputStream") instanceof InputStream) //$NON-NLS-1$
             {
-              validate(file, (InputStream)helper.loadModel("inputStream"), reporter); //do we need the fileName?  what is int ruleGroup?
+              validate(file, (InputStream)helper.loadModel("inputStream"), reporter); //do we need the fileName?  what is int ruleGroup? //$NON-NLS-1$
             }
             else
             {

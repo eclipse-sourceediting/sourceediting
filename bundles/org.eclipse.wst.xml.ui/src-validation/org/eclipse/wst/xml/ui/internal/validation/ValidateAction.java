@@ -36,14 +36,6 @@ import org.eclipse.wst.xml.ui.internal.Logger;
  */
 public class ValidateAction extends org.eclipse.wst.xml.ui.internal.validation.core.ValidateAction
 { 
-  private static final String _UI_VALIDATION_FAILED = "_UI_VALIDATION_FAILED";
-  private static final String _UI_THE_XML_FILE_IS_NOT_VALID = "_UI_THE_XML_FILE_IS_NOT_VALID";
-  private static final String _UI_VALIDATION_SUCEEDED = "_UI_VALIDATION_SUCEEDED";
-  private static final String _UI_THE_XML_FILE_IS_VALID_WITH_WARNINGS = "_UI_THE_XML_FILE_IS_VALID_WITH_WARNINGS";
-  private static final String _UI_THE_XML_FILE_IS_WELL_FORMED_WITH_WARNINGS = "_UI_THE_XML_FILE_IS_WELL_FORMED_WITH_WARNINGS";
-  private static final String _UI_NO_GRAMMAR_WARNING = "_UI_NO_GRAMMAR_WARNING";
-  private static final String _UI_THE_XML_FILE_IS_VALID = "_UI_THE_XML_FILE_IS_VALID";
-  private static final String _UI_THE_XML_FILE_IS_WELL_FORMED = "_UI_THE_XML_FILE_IS_WELL_FORMED";
   //dw private static final String _UI_MESSAGE_LIMITE_EXCEEDED = "_UI_MESSAGE_LIMITE_EXCEEDED";
   
   private InputStream inputStream;
@@ -134,8 +126,8 @@ public class ValidateAction extends org.eclipse.wst.xml.ui.internal.validation.c
         // The file is invalid.
         if (!valoutcome.isValid)
         {
-          String title = resourceBundle.getString(_UI_VALIDATION_FAILED);
-          String message = resourceBundle.getString(_UI_THE_XML_FILE_IS_NOT_VALID);
+          String title = XMLValidationUIMessages._UI_VALIDATION_FAILED;
+          String message = XMLValidationUIMessages._UI_THE_XML_FILE_IS_NOT_VALID;
           openErrorDialog(title, message);
         }
         else
@@ -143,22 +135,22 @@ public class ValidateAction extends org.eclipse.wst.xml.ui.internal.validation.c
           // The file is valid however warnings were issued.
           if(valoutcome.hasMessages)
           {
-            String title = resourceBundle.getString(_UI_VALIDATION_SUCEEDED);
+            String title = XMLValidationUIMessages._UI_VALIDATION_SUCEEDED;
             String message = valoutcome.isGrammarEncountered ?
-            			resourceBundle.getString(_UI_THE_XML_FILE_IS_VALID_WITH_WARNINGS) : 
-            			resourceBundle.getString(_UI_THE_XML_FILE_IS_WELL_FORMED_WITH_WARNINGS) + 
-            			resourceBundle.getString(_UI_NO_GRAMMAR_WARNING);                             
+            			XMLValidationUIMessages._UI_THE_XML_FILE_IS_VALID_WITH_WARNINGS : 
+            				XMLValidationUIMessages._UI_THE_XML_FILE_IS_WELL_FORMED_WITH_WARNINGS + 
+            				XMLValidationUIMessages._UI_NO_GRAMMAR_WARNING;                             
             
             openWarningDialog(title, message);
           }
           // The file is valid with no warnings.
           else
           {
-            String title = resourceBundle.getString(_UI_VALIDATION_SUCEEDED);
+            String title = XMLValidationUIMessages._UI_VALIDATION_SUCEEDED;
             String message = valoutcome.isGrammarEncountered ?
-            			resourceBundle.getString(_UI_THE_XML_FILE_IS_VALID) : 
-            			resourceBundle.getString(_UI_THE_XML_FILE_IS_WELL_FORMED) + 
-            			resourceBundle.getString(_UI_NO_GRAMMAR_WARNING);                             
+            			XMLValidationUIMessages._UI_THE_XML_FILE_IS_VALID : 
+            				XMLValidationUIMessages._UI_THE_XML_FILE_IS_WELL_FORMED + 
+            				XMLValidationUIMessages._UI_NO_GRAMMAR_WARNING;                             
             
             openValidDialog(title, message);
           }

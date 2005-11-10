@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2002 IBM Corporation and others.
+* Copyright (c) 2002, 2005 IBM Corporation and others.
 * All rights reserved.   This program and the accompanying materials
 * are made available under the terms of the Common Public License v1.0
 * which accompanies this distribution, and is available at
@@ -38,7 +38,6 @@ import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 
 public class XMLCatalogEntriesView extends Composite
 {
-  public static final String copyright = "(c) Copyright IBM Corporation 2002.";
   protected Button newButton;
   protected Button editButton;
   protected Button deleteButton;
@@ -58,7 +57,7 @@ public class XMLCatalogEntriesView extends Composite
 
     tableViewer = createTableViewer(this);
     tableViewer.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
-    tableViewer.setInput("dummy");
+    tableViewer.setInput("dummy"); //$NON-NLS-1$
     tableViewer.expandToLevel(2);
     tableViewer.reveal(XMLCatalogTreeViewer.USER_SPECIFIED_ENTRIES_OBJECT);
 
@@ -80,7 +79,7 @@ public class XMLCatalogEntriesView extends Composite
     //       
     if (uri != null)
     {
-      while (uri.startsWith("/") || uri.startsWith("\\"))
+      while (uri.startsWith("/") || uri.startsWith("\\")) //$NON-NLS-1$ //$NON-NLS-2$
       {
         uri = uri.substring(1);
       }

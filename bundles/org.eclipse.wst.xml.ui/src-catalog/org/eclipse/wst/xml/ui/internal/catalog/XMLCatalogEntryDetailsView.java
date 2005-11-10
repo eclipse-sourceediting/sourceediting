@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2002 IBM Corporation and others.
+* Copyright (c) 2002, 2005 IBM Corporation and others.
 * All rights reserved.   This program and the accompanying materials
 * are made available under the terms of the Common Public License v1.0
 * which accompanies this distribution, and is available at
@@ -27,7 +27,6 @@ import org.eclipse.wst.xml.core.internal.catalog.provisional.INextCatalog;
                        
 public class XMLCatalogEntryDetailsView
 {                      
-  public static final String copyright = "(c) Copyright IBM Corporation 2002.";
   protected Text detailsText;
   protected ScrollBar verticalScroll, horizontalScroll;
 
@@ -50,37 +49,37 @@ public class XMLCatalogEntryDetailsView
 
   public void setCatalogElement(ICatalogEntry entry)
   {                       
-    String value = getDisplayValue(entry != null ? entry.getURI() : "");
-    String line1 = XMLCatalogMessages.UI_LABEL_DETAILS_URI_COLON + "\t\t" + value;
+    String value = getDisplayValue(entry != null ? entry.getURI() : ""); //$NON-NLS-1$
+    String line1 = XMLCatalogMessages.UI_LABEL_DETAILS_URI_COLON + "\t\t" + value; //$NON-NLS-1$
     
-    value = entry != null ? getKeyTypeValue(entry) : "";
-    String line2 = XMLCatalogMessages.UI_KEY_TYPE_DETAILS_COLON + "\t" + value;
+    value = entry != null ? getKeyTypeValue(entry) : ""; //$NON-NLS-1$
+    String line2 = XMLCatalogMessages.UI_KEY_TYPE_DETAILS_COLON + "\t" + value; //$NON-NLS-1$
 
-    value = getDisplayValue(entry != null ? entry.getKey() : "");
-    String line3 = XMLCatalogMessages.UI_LABEL_DETAILS_KEY_COLON + "\t\t" + value;
+    value = getDisplayValue(entry != null ? entry.getKey() : ""); //$NON-NLS-1$
+    String line3 = XMLCatalogMessages.UI_LABEL_DETAILS_KEY_COLON + "\t\t" + value; //$NON-NLS-1$
 
-    String entireString = "\n" + line1 + "\n" + line2 + "\n" + line3;
+    String entireString = "\n" + line1 + "\n" + line2 + "\n" + line3; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     detailsText.setText(entireString);
   }  
   
   public void setCatalogElement(INextCatalog nextCatalog)
   {                       
-    String value = getDisplayValue(nextCatalog != null ? nextCatalog.getCatalogLocation() : "");
-    String line1 = XMLCatalogMessages.UI_LABEL_DETAILS_URI_COLON + "\t\t" + value;
+    String value = getDisplayValue(nextCatalog != null ? nextCatalog.getCatalogLocation() : ""); //$NON-NLS-1$
+    String line1 = XMLCatalogMessages.UI_LABEL_DETAILS_URI_COLON + "\t\t" + value; //$NON-NLS-1$
     
-    String entireString = "\n" + line1;
+    String entireString = "\n" + line1; //$NON-NLS-1$
     detailsText.setText(entireString);
   }  
 
   protected String getDisplayValue(String string)
   {
-    return string != null ? string : "";
+    return string != null ? string : ""; //$NON-NLS-1$
   }      
 
   protected String getKeyTypeValue(ICatalogEntry entry)
   {
     String result = null; 
-    if (entry.getURI() != null && entry.getURI().endsWith("xsd"))    
+    if (entry.getURI() != null && entry.getURI().endsWith("xsd"))     //$NON-NLS-1$
     {             
       result = (entry.getEntryType() == ICatalogEntry.ENTRY_TYPE_URI) ?                       
                XMLCatalogMessages.UI_KEY_TYPE_DESCRIPTION_XSD_PUBLIC :

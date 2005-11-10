@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,11 +20,9 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.net.ConnectException;
 import java.net.UnknownHostException;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.ResourceBundle;
 
 import org.apache.xerces.impl.XMLErrorReporter;
 import org.apache.xerces.parsers.StandardParserConfiguration;
@@ -34,6 +32,7 @@ import org.apache.xerces.xni.XMLResourceIdentifier;
 import org.apache.xerces.xni.XNIException;
 import org.apache.xerces.xni.parser.XMLEntityResolver;
 import org.apache.xerces.xni.parser.XMLInputSource;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver;
 import org.eclipse.wst.xml.core.internal.validation.core.LazyURLInputStream;
 import org.eclipse.wst.xml.core.internal.validation.core.logging.LoggerFactory;
@@ -51,31 +50,23 @@ import org.xml.sax.ext.DeclHandler;
  */
 public class XMLValidator
 {
-  public static final String copyright = "(c) Copyright IBM Corporation 2002.";
   protected URIResolver uriResolver = null;
   //protected MyEntityResolver entityResolver = null;
   protected Hashtable ingoredErrorKeyTable = new Hashtable();
-  
-  protected ResourceBundle resourceBundle;
 
-  protected static final String IGNORE_ALWAYS = "IGNORE_ALWAYS";
-  protected static final String IGNORE_IF_DTD_WITHOUT_ELEMENT_DECL = "IGNORE_IF_DTD_WITHOUT_ELEMENT_DECL";
-  protected static final String PREMATURE_EOF = "PrematureEOF";
-  protected static final String ROOT_ELEMENT_TYPE_MUST_MATCH_DOCTYPEDECL = "RootElementTypeMustMatchDoctypedecl";
-  protected static final String MSG_ELEMENT_NOT_DECLARED = "MSG_ELEMENT_NOT_DECLARED";
+  protected static final String IGNORE_ALWAYS = "IGNORE_ALWAYS"; //$NON-NLS-1$
+  protected static final String IGNORE_IF_DTD_WITHOUT_ELEMENT_DECL = "IGNORE_IF_DTD_WITHOUT_ELEMENT_DECL"; //$NON-NLS-1$
+  protected static final String PREMATURE_EOF = "PrematureEOF"; //$NON-NLS-1$
+  protected static final String ROOT_ELEMENT_TYPE_MUST_MATCH_DOCTYPEDECL = "RootElementTypeMustMatchDoctypedecl"; //$NON-NLS-1$
+  protected static final String MSG_ELEMENT_NOT_DECLARED = "MSG_ELEMENT_NOT_DECLARED"; //$NON-NLS-1$
   
-  private static final String _UI_PROBLEMS_VALIDATING_FILE_NOT_FOUND = "_UI_PROBLEMS_VALIDATING_FILE_NOT_FOUND";
-  private static final String _UI_PROBLEMS_VALIDATING_UNKNOWN_HOST = "_UI_PROBLEMS_VALIDATING_UNKNOWN_HOST";
-  private static final String _UI_PROBLEMS_CONNECTION_REFUSED = "_UI_PROBLEMS_CONNECTION_REFUSED";
-  
-  private static final String FILE_NOT_FOUND_KEY = "FILE_NOT_FOUND";
+  private static final String FILE_NOT_FOUND_KEY = "FILE_NOT_FOUND"; //$NON-NLS-1$
 
   /**
    * Constructor.
    */
   public XMLValidator()
   {                          
-	resourceBundle = ResourceBundle.getBundle("org.eclipse.wst.xml.core.internal.validation.xmlvalidation");
     // Here we add some error keys that we need to filter out when we're validation 
     // against a DTD without any element declarations.       
     ingoredErrorKeyTable.put(PREMATURE_EOF, IGNORE_ALWAYS);
@@ -119,18 +110,18 @@ public class XMLValidator
         }
       };
 
-      reader.setFeature("http://apache.org/xml/features/continue-after-fatal-error", false);
-      reader.setFeature("http://xml.org/sax/features/namespace-prefixes", valinfo.isNamespaceEncountered());
-      reader.setFeature("http://xml.org/sax/features/namespaces", valinfo.isNamespaceEncountered());              
-      reader.setFeature("http://xml.org/sax/features/validation", valinfo.isGrammarEncountered()); 
-      reader.setFeature("http://apache.org/xml/features/validation/schema", valinfo.isGrammarEncountered());
+      reader.setFeature("http://apache.org/xml/features/continue-after-fatal-error", false); //$NON-NLS-1$
+      reader.setFeature("http://xml.org/sax/features/namespace-prefixes", valinfo.isNamespaceEncountered()); //$NON-NLS-1$
+      reader.setFeature("http://xml.org/sax/features/namespaces", valinfo.isNamespaceEncountered());               //$NON-NLS-1$
+      reader.setFeature("http://xml.org/sax/features/validation", valinfo.isGrammarEncountered());  //$NON-NLS-1$
+      reader.setFeature("http://apache.org/xml/features/validation/schema", valinfo.isGrammarEncountered()); //$NON-NLS-1$
       
       // MH make sure validation works even when a customer entityResolver is note set (i.e. via setURIResolver())
       if (entityResolver != null)
       {  
-        reader.setProperty("http://apache.org/xml/properties/internal/entity-resolver", entityResolver);
+        reader.setProperty("http://apache.org/xml/properties/internal/entity-resolver", entityResolver); //$NON-NLS-1$
       }  
-      reader.setProperty("http://xml.org/sax/properties/declaration-handler", new MyDeclHandler());     
+      reader.setProperty("http://xml.org/sax/properties/declaration-handler", new MyDeclHandler());      //$NON-NLS-1$
     } 
     catch(Exception e)
     { 
@@ -257,15 +248,15 @@ public class XMLValidator
     {
       if (cause instanceof FileNotFoundException)
       {
-        validationMessageStr = MessageFormat.format(resourceBundle.getString(_UI_PROBLEMS_VALIDATING_FILE_NOT_FOUND), new Object [] { validationMessageStr });
+        validationMessageStr = NLS.bind(XMLValidationMessages._UI_PROBLEMS_VALIDATING_FILE_NOT_FOUND, new Object [] { validationMessageStr });
       }
       else if (cause instanceof UnknownHostException)
       {
-    	validationMessageStr = MessageFormat.format(resourceBundle.getString(_UI_PROBLEMS_VALIDATING_UNKNOWN_HOST), new Object [] { validationMessageStr });
+    	validationMessageStr = NLS.bind(XMLValidationMessages._UI_PROBLEMS_VALIDATING_UNKNOWN_HOST, new Object [] { validationMessageStr });
       }
       else if(cause instanceof ConnectException)
       {
-    	validationMessageStr = resourceBundle.getString(_UI_PROBLEMS_CONNECTION_REFUSED);
+    	validationMessageStr = XMLValidationMessages._UI_PROBLEMS_CONNECTION_REFUSED;
       }
     }
 
@@ -517,7 +508,7 @@ public class XMLValidator
 		          reportError = false;
 		        }
 		      }
-		      if ("schema_reference.4".equals(key) && arguments.length > 0)
+		      if ("schema_reference.4".equals(key) && arguments.length > 0) //$NON-NLS-1$
               {
                 Object location = arguments[0];  
                 if (location != null)

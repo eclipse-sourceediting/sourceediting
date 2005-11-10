@@ -124,7 +124,7 @@ public class Catalog implements ICatalog
                 // TODO CS : do we really want to resolve these here?
                 // I'm guessing we should return the 'platform:' form of the URI
                 // to the caller.
-                if (uri.startsWith("platform:"))
+                if (uri.startsWith("platform:")) //$NON-NLS-1$
                 {  
 				  URL entryURL = new URL(entry.getAbsolutePath(uri));                
 				  uri = Platform.resolve(entryURL).toString();
@@ -132,10 +132,10 @@ public class Catalog implements ICatalog
                   // we need to ensure URI's are of form "file:///D:/XXX" and NOT  
                   // "file:D:/XXX".  Otherwise the EMF URI class gets confused
                   // (see bug 103607) 
-                  String FILE_SCHEME = "file:";
-                  if (uri.startsWith(FILE_SCHEME) && !uri.startsWith(FILE_SCHEME + "/"))
+                  String FILE_SCHEME = "file:"; //$NON-NLS-1$
+                  if (uri.startsWith(FILE_SCHEME) && !uri.startsWith(FILE_SCHEME + "/")) //$NON-NLS-1$
                   {
-                    uri = FILE_SCHEME + "///" + uri.substring(FILE_SCHEME.length());
+                    uri = FILE_SCHEME + "///" + uri.substring(FILE_SCHEME.length()); //$NON-NLS-1$
                   }  
                 }  
                 return uri; 
@@ -243,11 +243,11 @@ public class Catalog implements ICatalog
 		}
 	}
 
-	public static final String DEFAULT_CATALOG_FILE = "default_catalog.xml";
+	public static final String DEFAULT_CATALOG_FILE = "default_catalog.xml"; //$NON-NLS-1$
 
-	public static final String SYSTEM_CATALOG_FILE = "system_catalog.xml";
+	public static final String SYSTEM_CATALOG_FILE = "system_catalog.xml"; //$NON-NLS-1$
 
-	public static final String USER_CATALOG_FILE = "user_catalog.xml";
+	public static final String USER_CATALOG_FILE = "user_catalog.xml"; //$NON-NLS-1$
 
 	protected String base;
 
@@ -308,7 +308,7 @@ public class Catalog implements ICatalog
 				}
 			} else
 			{
-				Logger.log(Logger.ERROR, "argument was null in Catalog.addEntriesFromCatalog");
+				Logger.log(Logger.ERROR, "argument was null in Catalog.addEntriesFromCatalog"); //$NON-NLS-1$
 			}
 		} finally
 		{

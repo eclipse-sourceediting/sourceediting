@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002 IBM Corporation and others.
+ * Copyright (c) 2002, 2005 IBM Corporation and others.
  * All rights reserved.   This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -40,13 +40,12 @@ import org.eclipse.wst.xml.core.internal.catalog.provisional.INextCatalog;
 
 
 public class XMLCatalogTreeViewer extends TreeViewer {
-	public static final String copyright = "(c) Copyright IBM Corporation 2000, 2002.";
-	protected static Image xmlCatalogImage = ImageFactory.INSTANCE.getImage("icons/obj16/xmlcatalog_obj.gif");
-	protected static Image errorImage = ImageFactory.INSTANCE.getImage("icons/ovr16/error-overlay.gif");
-	protected static Image entryImage = ImageFactory.INSTANCE.getImage("icons/obj16/entry_obj.gif");
-	protected static Image nextCatalogImage = ImageFactory.INSTANCE.getImage("icons/obj16/nextCatalog_obj.gif");
+	protected static Image xmlCatalogImage = ImageFactory.INSTANCE.getImage("icons/obj16/xmlcatalog_obj.gif"); //$NON-NLS-1$
+	protected static Image errorImage = ImageFactory.INSTANCE.getImage("icons/ovr16/error-overlay.gif"); //$NON-NLS-1$
+	protected static Image entryImage = ImageFactory.INSTANCE.getImage("icons/obj16/entry_obj.gif"); //$NON-NLS-1$
+	protected static Image nextCatalogImage = ImageFactory.INSTANCE.getImage("icons/obj16/nextCatalog_obj.gif"); //$NON-NLS-1$
 
-	protected static String ERROR_STATE_KEY = "errorstatekey";
+	protected static String ERROR_STATE_KEY = "errorstatekey"; //$NON-NLS-1$
 
 	protected ICatalog fWorkingUserCatalog;
 	protected ICatalog fSystemCatalog;
@@ -204,9 +203,9 @@ public class XMLCatalogTreeViewer extends TreeViewer {
 
 
 	public void menuAboutToShow(IMenuManager menuManager) {
-		Action action = new Action("hello") {
+		Action action = new Action("hello") { //$NON-NLS-1$
 			public void run() {
-				System.out.println("run!");
+				System.out.println("run!"); //$NON-NLS-1$
 			}
 		};
 		menuManager.add(action);

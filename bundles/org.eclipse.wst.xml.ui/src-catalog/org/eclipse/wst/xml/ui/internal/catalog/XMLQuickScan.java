@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2002 IBM Corporation and others.
+* Copyright (c) 2002, 2005 IBM Corporation and others.
 * All rights reserved.   This program and the accompanying materials
 * are made available under the terms of the Common Public License v1.0
 * which accompanies this distribution, and is available at
@@ -28,7 +28,6 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public class XMLQuickScan
 {
-  public static final String copyright = "(c) Copyright IBM Corporation 2002.";
   public static String getTargetNamespaceURIForSchema(String uri)
   {
     String result = null;
@@ -72,12 +71,12 @@ public class XMLQuickScan
 
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException
     {
-      if (localName.equals("schema"))
+      if (localName.equals("schema")) //$NON-NLS-1$
       {
         int nAttributes = attributes.getLength();
         for (int i = 0; i < nAttributes; i++)
         {
-          if (attributes.getLocalName(i).equals("targetNamespace"))
+          if (attributes.getLocalName(i).equals("targetNamespace")) //$NON-NLS-1$
           {
             targetNamespaceURI = attributes.getValue(i);
             break;

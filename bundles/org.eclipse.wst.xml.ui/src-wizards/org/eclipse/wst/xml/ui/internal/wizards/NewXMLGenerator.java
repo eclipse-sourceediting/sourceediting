@@ -164,7 +164,7 @@ public class NewXMLGenerator {
 		if (charset == null) {
 			charset = getUserPreferredCharset();
 			if (charset == null) {
-				charset = "UTF-8";
+				charset = "UTF-8"; //$NON-NLS-1$
 			}
 		}
 		CMDocument cmDocument = getCMDocument();

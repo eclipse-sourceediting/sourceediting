@@ -74,7 +74,7 @@ public class XMLCatalogURIResolverExtension implements URIResolverExtension
         // TODO (bug 103243) remove this lame test once we move to the new URIResolver API
         // since the new API is explicit about namespace and publicId
         // 
-        if (!(systemId != null && systemId.endsWith(".xsd")))
+        if (!(systemId != null && systemId.endsWith(".xsd"))) //$NON-NLS-1$
         {
           try
           {

@@ -13,7 +13,6 @@ package org.eclipse.wst.xml.ui.internal.validation.core.errorinfo;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.ResourceBundle;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
@@ -26,12 +25,11 @@ import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.actions.ActionDelegate;
 import org.eclipse.wst.xml.core.internal.validation.core.ValidationMessage;
+import org.eclipse.wst.xml.ui.internal.validation.XMLValidationUIMessages;
 
 public class ReferencedFileErrorActionDelegate extends ActionDelegate implements IObjectActionDelegate
 {
   protected IMarker selectedMarker;
-  
-  protected ResourceBundle resourceBundle;
 
   /**
    * 
@@ -39,7 +37,6 @@ public class ReferencedFileErrorActionDelegate extends ActionDelegate implements
   public ReferencedFileErrorActionDelegate()
   {
     super();
-    resourceBundle = ResourceBundle.getBundle("org.eclipse.wst.xml.ui.internal.validation.xmlvalidation");
   }
 
   public void run(IAction action)
@@ -52,19 +49,19 @@ public class ReferencedFileErrorActionDelegate extends ActionDelegate implements
         Map map = (Map) selectedMarker.getResource().getSessionProperty(ValidationMessage.ERROR_MESSAGE_MAP_QUALIFIED_NAME);
         if (map == null)
         {
-			String infoUnavailable = resourceBundle.getString("_UI_DETAILS_INFORMATION_UNAVAILABLE");
-			String revalidateToRegenerateErrors = resourceBundle.getString("_UI_DETAILS_INFO_REVALIDATE_TO_REGENERATE");
+			String infoUnavailable = XMLValidationUIMessages._UI_DETAILS_INFORMATION_UNAVAILABLE;
+			String revalidateToRegenerateErrors = XMLValidationUIMessages._UI_DETAILS_INFO_REVALIDATE_TO_REGENERATE;
         	MessageDialog.openInformation(Display.getCurrent().getActiveShell(), infoUnavailable, revalidateToRegenerateErrors);
         }
         else
         {
           String uri = null;
 
-          String groupName = (String) selectedMarker.getAttribute("groupName");
-          if (groupName.startsWith("referencedFileError"))
+          String groupName = (String) selectedMarker.getAttribute("groupName"); //$NON-NLS-1$
+          if (groupName.startsWith("referencedFileError")) //$NON-NLS-1$
           {
-            int index1 = groupName.indexOf("(");
-            int index2 = groupName.lastIndexOf(")");
+            int index1 = groupName.indexOf("("); //$NON-NLS-1$
+            int index2 = groupName.lastIndexOf(")"); //$NON-NLS-1$
             if (index1 != -1 && index2 > index1)
             {
               uri = groupName.substring(index1 + 1, index2);
@@ -82,7 +79,7 @@ public class ReferencedFileErrorActionDelegate extends ActionDelegate implements
             }
 
             String validatedFileURI = selectedMarker.getResource().getLocation().toOSString();//URIHelper.normalize(selectedMarker.getResource().getLocation().toOSString());
-            validatedFileURI = "file:/" + validatedFileURI;
+            validatedFileURI = "file:/" + validatedFileURI; //$NON-NLS-1$
 
             ReferencedFileErrorDialog dialog = new ReferencedFileErrorDialog(Display.getCurrent().getActiveShell(), list, validatedFileURI, uri);
             dialog.createAndOpen();

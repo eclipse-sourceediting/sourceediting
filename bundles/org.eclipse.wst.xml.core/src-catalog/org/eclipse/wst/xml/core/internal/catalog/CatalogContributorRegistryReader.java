@@ -31,8 +31,8 @@ import org.osgi.framework.Bundle;
 
 public class CatalogContributorRegistryReader
 {
-  protected static final String EXTENSION_POINT_ID = "catalogContributions";
-  protected static final String TAG_CONTRIBUTION = "catalogContribution";
+  protected static final String EXTENSION_POINT_ID = "catalogContributions"; //$NON-NLS-1$
+  protected static final String TAG_CONTRIBUTION = "catalogContribution"; //$NON-NLS-1$
   /*
    * this is a sample exptension 
    * <extension point="org.eclipse.wst.xml.core.catalogContributions"> 
@@ -77,7 +77,7 @@ public class CatalogContributorRegistryReader
   
   public static String resolvePath(URL platformURL, String path) 
   {         
-    if (path.startsWith("platform:/plugin"))
+    if (path.startsWith("platform:/plugin")) //$NON-NLS-1$
     {
       // this is the speclial case, where the resource is located relative 
       // to another plugin (not the one that declares the extension point)
@@ -109,7 +109,7 @@ public class CatalogContributorRegistryReader
 	  Bundle bundle = Platform.getBundle(pluginId);
 		if (bundle != null)
 		{
-			URL bundleEntry = bundle.getEntry("/");
+			URL bundleEntry = bundle.getEntry("/"); //$NON-NLS-1$
 			
 			if(bundleEntry != null){
 				try
@@ -184,13 +184,13 @@ public class CatalogContributorRegistryReader
         processNextCatalogElements(new IConfigurationElement[]{childElement});
         continue;
       }
-      if (key == null || key.equals(""))
+      if (key == null || key.equals("")) //$NON-NLS-1$
       {
          Logger.log(Logger.ERROR, XMLCoreMessages.Catalog_entry_key_not_set);
         continue;
       }
       String entryURI = childElement.getAttribute(OASISCatalogConstants.ATTR_URI); // mandatory
-      if (entryURI == null || entryURI.equals(""))
+      if (entryURI == null || entryURI.equals("")) //$NON-NLS-1$
       {
        Logger.log(Logger.ERROR, XMLCoreMessages.Catalog_entry_uri_not_set);
         continue;
@@ -203,7 +203,7 @@ public class CatalogContributorRegistryReader
 		String resolvedPath = resolvePath(entryURI);
 		entry.setURI(resolvedPath);
         String id = childElement.getAttribute(OASISCatalogConstants.ATTR_ID); // optional
-        if (id != null && !id.equals(""))
+        if (id != null && !id.equals("")) //$NON-NLS-1$
         {
           entry.setId(id);
         }
@@ -217,7 +217,7 @@ public class CatalogContributorRegistryReader
             && !attrName.equals(OASISCatalogConstants.ATTR_BASE))
         {
           String attrValue = childElement.getAttribute(attrName);
-          if (attrValue != null && !attrValue.equals(""))
+          if (attrValue != null && !attrValue.equals("")) //$NON-NLS-1$
           {
             catalogElement.setAttributeValue(attrName, attrValue);
           }
@@ -235,7 +235,7 @@ public class CatalogContributorRegistryReader
     {
       IConfigurationElement childElement = childElementList[i];
       String location = childElement.getAttribute(OASISCatalogConstants.ATTR_CATALOG); // mandatory
-      if (location == null || location.equals(""))
+      if (location == null || location.equals("")) //$NON-NLS-1$
       {
         Logger.log(Logger.ERROR, XMLCoreMessages.Catalog_next_catalog_location_uri_not_set);
         continue;
@@ -244,7 +244,7 @@ public class CatalogContributorRegistryReader
 	  String resolvedPath = resolvePath(location);
       nextCatalog.setCatalogLocation(resolvedPath);
 	  String id = childElement.getAttribute(OASISCatalogConstants.ATTR_ID);
-	  if (id != null && !id.equals(""))
+	  if (id != null && !id.equals("")) //$NON-NLS-1$
       { 
 		  nextCatalog.setId(id);
       }

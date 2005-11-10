@@ -167,7 +167,7 @@ public class DOMContentBuilderImpl extends CMVisitor implements DOMContentBuilde
       // for now I'm setting the encoding to UTF-8 just incase this code path is used somewhere
       //
       String piValue = "version=\"1.0\""; //$NON-NLS-1$
-      String encoding = "UTF-8";           
+      String encoding = "UTF-8"; //$NON-NLS-1$
       piValue += " encoding=\"" + encoding + "\""; //$NON-NLS-1$ //$NON-NLS-2$      
       ProcessingInstruction pi = document.createProcessingInstruction("xml", piValue); //$NON-NLS-1$
       document.appendChild(pi);

@@ -23,17 +23,17 @@ import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 public class CatalogFileTypeRegistryReader {
 	private static CatalogFileTypeRegistryReader _instance;
 
-	static final String ATT_DESCRIPTION = "description";
+	static final String ATT_DESCRIPTION = "description"; //$NON-NLS-1$
 
-	static final String ATT_EXTENSIONS = "extensions";
+	static final String ATT_EXTENSIONS = "extensions"; //$NON-NLS-1$
 
-	static final String ATT_ICON = "icon";
+	static final String ATT_ICON = "icon"; //$NON-NLS-1$
 
-	static final String ATT_ID = "id";
+	static final String ATT_ID = "id"; //$NON-NLS-1$
 
-	static final String EXTENSION_POINT_ID = "catalogFileType";
+	static final String EXTENSION_POINT_ID = "catalogFileType"; //$NON-NLS-1$
 
-	static final String TAG_NAME = "fileType";
+	static final String TAG_NAME = "fileType"; //$NON-NLS-1$
 
 	private static CatalogFileTypeRegistryReader getInstance() {
 		if (_instance == null)

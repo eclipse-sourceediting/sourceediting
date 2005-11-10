@@ -105,7 +105,7 @@ public final class CatalogWriter
         default :
           break;
       }
-	  if(childElement != null && id != null && !id.equals("")){
+	  if(childElement != null && id != null && !id.equals("")){ //$NON-NLS-1$
 		  childElement.setAttribute(OASISCatalogConstants.ATTR_ID, id);
 	  }
       
@@ -113,7 +113,7 @@ public final class CatalogWriter
       for (int j = 0; j < attributes.length; j++)
       {
         String attrName = attributes[j];
-        if (attrName != null && !attrName.equals(""))
+        if (attrName != null && !attrName.equals("")) //$NON-NLS-1$
         {
 		  String attrValue = entry.getAttributeValue(attrName);
           if (childElement != null && attrValue != null)
@@ -164,16 +164,16 @@ public final class CatalogWriter
     {
       TransformerFactory transformerFactory = TransformerFactory.newInstance();
       Transformer transformer = transformerFactory.newTransformer();
-      transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-      transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+      transformer.setOutputProperty(OutputKeys.INDENT, "yes"); //$NON-NLS-1$
+      transformer.setOutputProperty(OutputKeys.METHOD, "xml"); //$NON-NLS-1$
       // Unless a width is set, there will be only line breaks but no
       // indentation.
       // The IBM JDK and the Sun JDK don't agree on the property name,
       // so we set them both.
       //
-      transformer.setOutputProperty("{http://xml.apache.org/xalan}indent-amount", "2");
-      transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
-      String encoding = "UTF-8"; // TBD
+      transformer.setOutputProperty("{http://xml.apache.org/xalan}indent-amount", "2"); //$NON-NLS-1$ //$NON-NLS-2$
+      transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2"); //$NON-NLS-1$ //$NON-NLS-2$
+      String encoding = "UTF-8"; // TBD //$NON-NLS-1$
       if (encoding != null)
       {
         transformer.setOutputProperty(OutputKeys.ENCODING, encoding);
@@ -214,7 +214,7 @@ public final class CatalogWriter
   protected static String removeProtocol(String uri)
   {
     String result = uri;  
-    String protocol_pattenrn = ":";
+    String protocol_pattenrn = ":"; //$NON-NLS-1$
     if (uri != null)
     {
       int index = uri.indexOf(protocol_pattenrn);

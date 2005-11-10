@@ -42,12 +42,12 @@ public class ReferencedFileErrorUtility
         URL uri = new URL(uristring);
         if (uri != null)
         {
-          if ("file".equals(uri.getProtocol()))
+          if ("file".equals(uri.getProtocol())) //$NON-NLS-1$
           {
             String pathString = uri.getPath();
             IPath path = new Path(pathString);
             String device = path.getDevice();
-            if (device != null && device.startsWith("/"))
+            if (device != null && device.startsWith("/")) //$NON-NLS-1$
             {
               path = path.setDevice(device.substring(1));
             }
@@ -75,13 +75,13 @@ public class ReferencedFileErrorUtility
                   	}
                   	else
                   	{
-                  	  editorId = XMLUIPlugin.getInstance().getWorkbench().getEditorRegistry().getDefaultEditor(iFile.getName() + ".txt").getId();
+                  	  editorId = XMLUIPlugin.getInstance().getWorkbench().getEditorRegistry().getDefaultEditor(iFile.getName() + ".txt").getId(); //$NON-NLS-1$
                   	}
                     workbenchWindow.getActivePage().openEditor(new FileEditorInput(iFile), editorId);
                   }
                   catch (PartInitException ex)
                   {
-                    LoggerFactory.getLoggerInstance().logError("Exception encountered when attempting to open file: " + iFile + "\n\n", ex);
+                    LoggerFactory.getLoggerInstance().logError("Exception encountered when attempting to open file: " + iFile + "\n\n", ex); //$NON-NLS-1$ //$NON-NLS-2$
                   	//B2BGUIPlugin.getPlugin().getMsgLogger().write("Exception encountered when attempting to open file: " + iFile + "\n\n" + ex);
                   }
                 }

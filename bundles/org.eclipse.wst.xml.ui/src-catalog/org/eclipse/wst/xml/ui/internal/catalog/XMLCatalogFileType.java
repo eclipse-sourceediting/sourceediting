@@ -43,7 +43,7 @@ public class XMLCatalogFileType
   protected List parseExtensions(String string)
   {
 	List list = new ArrayList();
-	for (StringTokenizer st = new StringTokenizer(string, ", "); st.hasMoreTokens(); )
+	for (StringTokenizer st = new StringTokenizer(string, ", "); st.hasMoreTokens(); ) //$NON-NLS-1$
 	{
 	  String token = st.nextToken();
 	  if (token != null)

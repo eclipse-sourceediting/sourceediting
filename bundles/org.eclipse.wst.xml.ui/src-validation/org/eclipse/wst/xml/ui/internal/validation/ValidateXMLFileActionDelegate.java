@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -27,7 +27,6 @@ import org.eclipse.ui.IActionDelegate;
  */
 public class ValidateXMLFileActionDelegate implements IActionDelegate
 {
-  public static final String copyright = "(c) Copyright IBM Corporation 2002.";
   protected ISelection selection;
 
   /* (non-Javadoc)
@@ -41,10 +40,10 @@ public class ValidateXMLFileActionDelegate implements IActionDelegate
       // CS.. for now the following line tests to ensure the user has xerces jars installed
       // so that we can perform some 'fail fast' behaviour
       //
-      Class theClass = Class.forName("org.apache.xerces.xni.parser.XMLParserConfiguration", true, this.getClass().getClassLoader());
+      Class theClass = Class.forName("org.apache.xerces.xni.parser.XMLParserConfiguration", true, this.getClass().getClassLoader()); //$NON-NLS-1$
       if (theClass == null)
       {
-       throw(new Exception("Missing Xerces jars in plugin's 'jars' folder"));       
+       throw(new Exception("Missing Xerces jars in plugin's 'jars' folder"));        //$NON-NLS-1$
       }
         
     if (!selection.isEmpty() && selection instanceof IStructuredSelection)
@@ -79,10 +78,10 @@ public class ValidateXMLFileActionDelegate implements IActionDelegate
  {
       // CS... here's where we need to pop up a dialog to tell the user that xerces is not available
       //
-      String xercesLine1 = "Required files xercesImpl.jar and xmlParserAPIs.jar cannot be found.\n\n";
-      String xercesLine2 = "Download Xerces 2.6.2 and place xercesImpl.jar and xmlParserAPIs.jar in a folder entitled jars in the org.eclipse.wst.xml.validation plugin.\n\n";
-      String xercesLine3 = "For more information see www.eclipse.org/webtools/wst/components/xml/xercesInfo.xml.";
-      MessageDialog.openError(Display.getDefault().getActiveShell(), "Missing Xerces", xercesLine1 + xercesLine2 + xercesLine3);
+      String xercesLine1 = XMLValidationUIMessages.ValidateXMLFileActionDelegate_2;
+      String xercesLine2 = XMLValidationUIMessages.ValidateXMLFileActionDelegate_3;
+      String xercesLine3 = XMLValidationUIMessages.ValidateXMLFileActionDelegate_4;
+      MessageDialog.openError(Display.getDefault().getActiveShell(), XMLValidationUIMessages.ValidateXMLFileActionDelegate_5, xercesLine1 + xercesLine2 + xercesLine3);
  }
   }
 

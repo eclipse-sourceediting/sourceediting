@@ -91,10 +91,10 @@ public class AdvancedOptionsDialog extends Dialog
     buttonGroup.setLayoutData(createGridData());
 
     Button importButton = new Button(buttonGroup, SWT.PUSH | SWT.CENTER);
-    importButton.setText("  " + XMLCatalogMessages.UI_BUTTON_IMPORT + "  ");
+    importButton.setText("  " + XMLCatalogMessages.UI_BUTTON_IMPORT + "  "); //$NON-NLS-1$ //$NON-NLS-2$
 
     Button exportButton = new Button(buttonGroup, SWT.PUSH | SWT.CENTER);
-    exportButton.setText("  " + XMLCatalogMessages.UI_BUTTON_EXPORT + "  ");
+    exportButton.setText("  " + XMLCatalogMessages.UI_BUTTON_EXPORT + "  "); //$NON-NLS-1$ //$NON-NLS-2$
 
     placeHolder = new Composite(buttonComposite, SWT.NONE);
     placeHolder.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -134,7 +134,7 @@ public class AdvancedOptionsDialog extends Dialog
   protected void invokeImportDialog()
   {                          
     SelectSingleFileDialog dialog = new SelectSingleFileDialog(getShell(), null, true); 
-    String[] extensions = {".xmlcatalog", ".xml"};
+    String[] extensions = {".xmlcatalog", ".xml"}; //$NON-NLS-1$ //$NON-NLS-2$
     dialog.addFilterExtensions(extensions);   
     dialog.create();   
     dialog.getShell().setText(XMLCatalogMessages.UI_LABEL_IMPORT_DIALOG_TITLE);
@@ -151,7 +151,7 @@ public class AdvancedOptionsDialog extends Dialog
         try
         {
             CatalogSet tempResourceSet = new CatalogSet(); 
-            ICatalog newCatalog = tempResourceSet.lookupOrCreateCatalog("temp", fileName);      
+            ICatalog newCatalog = tempResourceSet.lookupOrCreateCatalog("temp", fileName);       //$NON-NLS-1$
   		      workingUserCatalog.addEntriesFromCatalog(newCatalog); 
         }
         catch (Exception e)
@@ -170,7 +170,7 @@ public class AdvancedOptionsDialog extends Dialog
     IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
     if (projects.length > 0)
     {
-      originalFilePath = projects[0].getFullPath().append(".xmlcatalog");
+      originalFilePath = projects[0].getFullPath().append(".xmlcatalog"); //$NON-NLS-1$
     }
                                          
     SaveAsDialog dialog = new SaveAsDialog(getShell());

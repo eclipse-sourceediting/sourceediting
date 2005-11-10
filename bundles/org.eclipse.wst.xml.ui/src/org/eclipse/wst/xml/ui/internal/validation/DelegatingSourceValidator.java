@@ -447,7 +447,7 @@ public abstract class DelegatingSourceValidator implements IValidator {
 						 * attributes to find the range of the undeclared
 						 * entity.
 						 */
-						String entity = "&" + nameOrValue + ";";
+						String entity = "&" + nameOrValue + ";"; //$NON-NLS-1$ //$NON-NLS-2$
 						NamedNodeMap attributes = node.getAttributes();
 						for (int i = 0; i < attributes.getLength(); i++) {
 							IDOMAttr attr = (IDOMAttr) attributes.item(i);

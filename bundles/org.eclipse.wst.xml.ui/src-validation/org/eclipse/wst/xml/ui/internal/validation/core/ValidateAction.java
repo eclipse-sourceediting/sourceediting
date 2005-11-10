@@ -11,7 +11,6 @@
 package org.eclipse.wst.xml.ui.internal.validation.core;
 
 import java.util.List;
-import java.util.ResourceBundle;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
@@ -23,6 +22,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -37,7 +37,9 @@ import org.eclipse.wst.validation.internal.provisional.core.IValidator;
 import org.eclipse.wst.xml.core.internal.validation.core.ValidationMessage;
 import org.eclipse.wst.xml.core.internal.validation.core.logging.ILogger;
 import org.eclipse.wst.xml.core.internal.validation.core.logging.LoggerFactory;
+import org.eclipse.wst.xml.ui.internal.Logger;
 import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
+import org.eclipse.wst.xml.ui.internal.validation.XMLValidationUIMessages;
 
 /**
  * A general validate action class that can be extended by validators. This class
@@ -48,23 +50,20 @@ import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 public abstract class ValidateAction extends Action
 {
   // Locally used, non-UI strings.
-  private static final String REFERENCED_FILE_ERROR_OPEN = "referencedFileError(";
+  private static final String REFERENCED_FILE_ERROR_OPEN = "referencedFileError("; //$NON-NLS-1$
 
-  private static final String REFERENCED_FILE_ERROR_CLOSE = ")";
+  private static final String REFERENCED_FILE_ERROR_CLOSE = ")"; //$NON-NLS-1$
 
-  private static final String REFERENCED_FILE_ERROR = "referencedFileError";
+  private static final String REFERENCED_FILE_ERROR = "referencedFileError"; //$NON-NLS-1$
 
-  private static final String GROUP_NAME = "groupName";
+  private static final String GROUP_NAME = "groupName"; //$NON-NLS-1$
   
-  private static final String _UI_SAVE_DIRTY_FILE_MESSAGE = "_UI_SAVE_DIRTY_FILE_MESSAGE";
-  private static final String _UI_SAVE_DIRTY_FILE_TITLE = "_UI_SAVE_DIRTY_FILE_TITLE";
+  private static final String FILE_PROTOCOL_NO_SLASH = "file:"; //$NON-NLS-1$
+  private static final String FILE_PROTOCOL = "file:///"; //$NON-NLS-1$
   
-  private static final String FILE_PROTOCOL_NO_SLASH = "file:";
-  private static final String FILE_PROTOCOL = "file:///";
-  
-  protected static final String COLUMN_NUMBER_ATTRIBUTE = "columnNumber";
-  protected static final String SQUIGGLE_SELECTION_STRATEGY_ATTRIBUTE = "squiggleSelectionStrategy";
-  protected static final String SQUIGGLE_NAME_OR_VALUE_ATTRIBUTE = "squiggleNameOrValue";
+  protected static final String COLUMN_NUMBER_ATTRIBUTE = "columnNumber"; //$NON-NLS-1$
+  protected static final String SQUIGGLE_SELECTION_STRATEGY_ATTRIBUTE = "squiggleSelectionStrategy"; //$NON-NLS-1$
+  protected static final String SQUIGGLE_NAME_OR_VALUE_ATTRIBUTE = "squiggleNameOrValue"; //$NON-NLS-1$
 
   protected boolean showDialog = true;
 
@@ -73,8 +72,6 @@ public abstract class ValidateAction extends Action
   protected IReporter reporter;
 
   protected IValidator validator;
-  
-  protected ResourceBundle resourceBundle;
 
   /**
    * Constructor.
@@ -88,7 +85,6 @@ public abstract class ValidateAction extends Action
   {
     this.showDialog = showDialog;
     this.file = file;
-    resourceBundle = ResourceBundle.getBundle("org.eclipse.wst.xml.ui.internal.validation.xmlvalidation");
   }
 
   /**
@@ -191,7 +187,7 @@ public abstract class ValidateAction extends Action
   		// CS... a temporary test to avoid performing validation in the absence of xerces 
   		//
   		//dw Class theClass = 
-  		Class.forName("org.apache.xerces.xni.parser.XMLParserConfiguration", true, this.getClass().getClassLoader());
+  		Class.forName("org.apache.xerces.xni.parser.XMLParserConfiguration", true, this.getClass().getClassLoader()); //$NON-NLS-1$
   		  		
   		if (fileIsOK(file))
   		{
@@ -208,7 +204,7 @@ public abstract class ValidateAction extends Action
   			catch (Exception e)
   			{
   				ILogger logger = LoggerFactory.getLoggerInstance();
-  				logger.logError("", e);
+  				logger.logError("", e); //$NON-NLS-1$
   				//      e.printStackTrace();
   			}
   		}
@@ -253,8 +249,8 @@ public abstract class ValidateAction extends Action
         FileEditorInput fileEditorInput = (FileEditorInput) editorInput;
         if (fileEditorInput.getFile().equals(file))
         {
-          String message = resourceBundle.getString(_UI_SAVE_DIRTY_FILE_MESSAGE);
-          String title = resourceBundle.getString(_UI_SAVE_DIRTY_FILE_TITLE);
+          String message = XMLValidationUIMessages._UI_SAVE_DIRTY_FILE_MESSAGE;
+          String title = XMLValidationUIMessages._UI_SAVE_DIRTY_FILE_TITLE;
           if (MessageDialog.openQuestion(Display.getDefault().getActiveShell(), title, message))
           {
             dirtyEditors[i].doSave(null);
@@ -386,11 +382,12 @@ public abstract class ValidateAction extends Action
     {
       if (page != null)
       {
-        page.showView("org.eclipse.ui.views.ProblemView");
+        page.showView(IPageLayout.ID_PROBLEM_VIEW);
       }
     }
     catch (PartInitException e)
     {
+    	Logger.logException(e);
     }
     page.activate(activePart);
   }
@@ -405,7 +402,7 @@ public abstract class ValidateAction extends Action
   {
   	if(!filename.startsWith(FILE_PROTOCOL_NO_SLASH))
     {
-      while(filename.startsWith("/"))
+      while(filename.startsWith("/")) //$NON-NLS-1$
       {
         filename = filename.substring(1);
       }

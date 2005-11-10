@@ -22,8 +22,8 @@ public class LoggerFactory
   private static ILogger      logger            = null;
   private static ClassLoader  classloader       = null;
   private static String       loggerClass       = null;
-  private static final String commandlinelogger = "org.eclipse.wst.xml.validation.internal.core.logging.CommandLineLogger";
-  private static final String eclipselogger     = "org.eclipse.wst.xml.validation.internal.core.logging.EclipseLogger";
+  private static final String commandlinelogger = "org.eclipse.wst.xml.validation.internal.core.logging.CommandLineLogger"; //$NON-NLS-1$
+  private static final String eclipselogger     = "org.eclipse.wst.xml.validation.internal.core.logging.EclipseLogger"; //$NON-NLS-1$
   private static String       defaultlogger     = commandlinelogger;
 
   /**

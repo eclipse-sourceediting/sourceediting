@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002 IBM Corporation and others.
+ * Copyright (c) 2002, 2005 IBM Corporation and others.
  * All rights reserved.   This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -41,7 +41,6 @@ import org.eclipse.wst.xml.core.internal.catalog.provisional.INextCatalog;
 public class XMLCatalogPreferencePage extends PreferencePage implements
         IWorkbenchPreferencePage, ICatalogListener
 {
-    public static final String copyright = "(c) Copyright IBM Corporation 2002.";
 
     protected XMLCatalogEntriesView catalogEntriesView;
 
@@ -103,7 +102,7 @@ public class XMLCatalogPreferencePage extends PreferencePage implements
         // we create a working copy of the 'User Settings' for the Catalog
         // that we can modify
         CatalogSet tempCatalogSet = new CatalogSet(); 
-        workingUserCatalog = tempCatalogSet.lookupOrCreateCatalog("working", "");
+        workingUserCatalog = tempCatalogSet.lookupOrCreateCatalog("working", ""); //$NON-NLS-1$ //$NON-NLS-2$
         
         // TODO: add entries from the nested catalogs as well
         workingUserCatalog.addEntriesFromCatalog(userCatalog);
@@ -134,10 +133,10 @@ public class XMLCatalogPreferencePage extends PreferencePage implements
         // wide enough to show
         // the rather long uri and key fields of a catalog entry.
         Label widthFudger = new Label(panel, SWT.NONE);
-        String widthFudgerString = "";
+        String widthFudgerString = ""; //$NON-NLS-1$
         for (int i = 0; i < 55; i++)
         {
-            widthFudgerString += "x";
+            widthFudgerString += "x"; //$NON-NLS-1$
         }
         widthFudger.setText(widthFudgerString);
         widthFudger.setVisible(false);

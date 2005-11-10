@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -37,12 +37,11 @@ import org.eclipse.wst.validation.internal.provisional.core.IMessage;
  */
 public class Helper extends WorkbenchContext
 {
-  public static final String copyright = "(c) Copyright IBM Corporation 2000, 2002.";
-  public static final String GET_PROJECT_FILES = "getAllFiles";
-  public static final String GET_FILE = "getFile";
+  public static final String GET_PROJECT_FILES = "getAllFiles"; //$NON-NLS-1$
+  public static final String GET_FILE = "getFile"; //$NON-NLS-1$
   //dw private static final IContainer[] NO_CONTAINERS = new IContainer[0];
-  public static final String VALIDATION_MARKER = "org.eclipse.wst.validation.problemmarker";
-  public static final String VALIDATION_MARKER_OWNER = "owner";  
+  public static final String VALIDATION_MARKER = "org.eclipse.wst.validation.problemmarker"; //$NON-NLS-1$
+  public static final String VALIDATION_MARKER_OWNER = "owner";   //$NON-NLS-1$
 
   /**
    * Constructor.

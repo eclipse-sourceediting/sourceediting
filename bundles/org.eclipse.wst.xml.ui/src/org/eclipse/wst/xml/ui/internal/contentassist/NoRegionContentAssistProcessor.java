@@ -201,7 +201,7 @@ public class NoRegionContentAssistProcessor implements IContentAssistProcessor, 
 				if (sdPrev != null) {
 					if (DEBUG) {
 						String prevRegionType = sdPrev.getType();
-						System.out.println("previous region type is >> " + prevRegionType);
+						System.out.println("previous region type is >> " + prevRegionType); //$NON-NLS-1$
 					}
 				}
 			}

@@ -56,9 +56,9 @@ import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalogEntry;
 import org.eclipse.wst.xml.core.internal.catalog.provisional.INextCatalog;
 
 public class EditCatalogEntryDialog extends Dialog {
-	protected static Image borwseImage = ImageFactory.INSTANCE.getImage("icons/obj16/file_expand.gif");
-	protected static Image catalogEntryToolBarImage = ImageFactory.INSTANCE.getImage("icons/etool50/catalogEntry.gif");
-	protected static Image nextCatalogToolBarImage = ImageFactory.INSTANCE.getImage("icons/etool50/nextCatalog.gif");
+	protected static Image borwseImage = ImageFactory.INSTANCE.getImage("icons/obj16/file_expand.gif"); //$NON-NLS-1$
+	protected static Image catalogEntryToolBarImage = ImageFactory.INSTANCE.getImage("icons/etool50/catalogEntry.gif"); //$NON-NLS-1$
+	protected static Image nextCatalogToolBarImage = ImageFactory.INSTANCE.getImage("icons/etool50/nextCatalog.gif"); //$NON-NLS-1$
 
 	protected class CatalogEntryPage extends CatalogElementPage {
 
@@ -86,7 +86,7 @@ public class EditCatalogEntryDialog extends Dialog {
 			if (errorMessage == null) {
 				String fileName = resourceLocationField.getText();
 				if (fileName.trim().length() > 0) {
-					if (fileName.indexOf("..") != -1 || fileName.indexOf("./") != -1 || fileName.indexOf("/.") != -1 || fileName.indexOf(".\\") != -1 || fileName.indexOf("\\.") != -1) {
+					if (fileName.indexOf("..") != -1 || fileName.indexOf("./") != -1 || fileName.indexOf("/.") != -1 || fileName.indexOf(".\\") != -1 || fileName.indexOf("\\.") != -1) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 						errorMessage = XMLCatalogMessages.UI_WARNING_URI_MUST_NOT_HAVE_DOTS;
 					}
 
@@ -100,21 +100,22 @@ public class EditCatalogEntryDialog extends Dialog {
 					}
 				}
 				else {
-					errorMessage = ""; // this an error that is not actaully
+					// this an error that is not actaully
 					// reported ... OK is just disabled
+					errorMessage = "";  //$NON-NLS-1$
 				}
 			}
 
 			if (errorMessage == null && checkboxButton.getSelection() && webAddressField.getText().trim().length() == 0) {
-				errorMessage = ""; // this an error that is not actually
-				// reported
-				// ... OK is just disabled
+				// this an error that is not actaully
+				// reported ... OK is just disabled
+				errorMessage = "";  //$NON-NLS-1$
 			}
 
 			if (errorMessage == null && keyField.getText().trim().length() == 0) {
-				errorMessage = ""; // this an error that is not actually
-				// reported
-				// ... OK is just disabled
+				// this an error that is not actaully
+				// reported ... OK is just disabled
+				errorMessage = "";  //$NON-NLS-1$
 			}
 		}
 
@@ -125,7 +126,7 @@ public class EditCatalogEntryDialog extends Dialog {
 					if (e.widget == resourceLocationField) {
 						if (keyField.getText().length() == 0) {
 							String uri = resourceLocationField.getText();
-							if (uri.endsWith("xsd") && !URIHelper.hasProtocol(uri)) {
+							if (uri.endsWith("xsd") && !URIHelper.hasProtocol(uri)) { //$NON-NLS-1$
 								uri = URIHelper.isAbsolute(uri) ? URIHelper.prependFileProtocol(uri) : URIHelper.prependPlatformResourceProtocol(uri);
 								String namespaceURI = XMLQuickScan.getTargetNamespaceURIForSchema(uri);
 								if (namespaceURI != null) {
@@ -289,7 +290,7 @@ public class EditCatalogEntryDialog extends Dialog {
 		protected int getKeyType() {
 			switch (keyTypeCombo.getSelectionIndex()) {
 				case 0 :
-					if ("schema".equals(keyTypeCombo.getData("keyType"))) {
+					if ("schema".equals(keyTypeCombo.getData("keyType"))) { //$NON-NLS-1$ //$NON-NLS-2$
 						return ICatalogEntry.ENTRY_TYPE_URI; // xsd namespace is URI type key
 					}
 					return ICatalogEntry.ENTRY_TYPE_PUBLIC;
@@ -321,12 +322,12 @@ public class EditCatalogEntryDialog extends Dialog {
 					for (Iterator j = theFileType.extensions.iterator(); j.hasNext();) {
 						String extension = (String) j.next();
 						if (resourceLocationField.getText().endsWith(extension)) {
-							if (theFileType.description.equals("XSD Files")) {
+							if (theFileType.description.equals("XSD Files")) { //$NON-NLS-1$
 								keyTypeCombo.add(XMLCatalogMessages.UI_KEY_TYPE_DESCRIPTION_XSD_PUBLIC);
 								keyTypeCombo.add(XMLCatalogMessages.UI_KEY_TYPE_DESCRIPTION_XSD_SYSTEM);
-								keyTypeCombo.setData("keyType", "schema");
+								keyTypeCombo.setData("keyType", "schema"); //$NON-NLS-1$ //$NON-NLS-2$
 							}
-							else if (theFileType.description.equals("DTD Files")) {
+							else if (theFileType.description.equals("DTD Files")) { //$NON-NLS-1$
 								keyTypeCombo.add(XMLCatalogMessages.UI_KEY_TYPE_DESCRIPTION_DTD_PUBLIC);
 								keyTypeCombo.add(XMLCatalogMessages.UI_KEY_TYPE_DESCRIPTION_DTD_SYSTEM);
 								keyTypeCombo.add(XMLCatalogMessages.UI_KEY_TYPE_DESCRIPTION_URI);
@@ -357,7 +358,7 @@ public class EditCatalogEntryDialog extends Dialog {
 					keyTypeCombo.select(1);
 					break;
 				case ICatalogEntry.ENTRY_TYPE_URI: // handle XML Schema, where namespace name is mapped to URI situation
-					if ("schema".equals(keyTypeCombo.getData("keyType"))) {
+					if ("schema".equals(keyTypeCombo.getData("keyType"))) { //$NON-NLS-1$ //$NON-NLS-2$
 						keyTypeCombo.select(0); // namespace name as URI key type
 					}
 					else {
@@ -494,7 +495,7 @@ public class EditCatalogEntryDialog extends Dialog {
 			if (errorMessage == null) {
 				String fileName = catalogLocationField.getText();
 				if (fileName.trim().length() > 0) {
-					if (fileName.indexOf("..") != -1 || fileName.indexOf("./") != -1 || fileName.indexOf("/.") != -1 || fileName.indexOf(".\\") != -1 || fileName.indexOf("\\.") != -1) {
+					if (fileName.indexOf("..") != -1 || fileName.indexOf("./") != -1 || fileName.indexOf("/.") != -1 || fileName.indexOf(".\\") != -1 || fileName.indexOf("\\.") != -1) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 						errorMessage = XMLCatalogMessages.UI_WARNING_URI_MUST_NOT_HAVE_DOTS;
 					}
 
@@ -508,8 +509,9 @@ public class EditCatalogEntryDialog extends Dialog {
 					}
 				}
 				else {
-					errorMessage = ""; // this an error that is not actaully
+					// this an error that is not actually 
 					// reported ... OK is just disabled
+					errorMessage = ""; //$NON-NLS-1$
 				}
 			}
 
@@ -630,7 +632,7 @@ public class EditCatalogEntryDialog extends Dialog {
 		// ambiguity problem
 		//       
 		if (uri != null) {
-			while (uri.startsWith("/") || uri.startsWith("\\")) {
+			while (uri.startsWith("/") || uri.startsWith("\\")) { //$NON-NLS-1$ //$NON-NLS-2$
 				uri = uri.substring(1);
 			}
 		}
@@ -802,7 +804,7 @@ public class EditCatalogEntryDialog extends Dialog {
 	}
 
 	protected String getDisplayValue(String string) {
-		return string != null ? string : "";
+		return string != null ? string : ""; //$NON-NLS-1$
 	}
 
 	protected XMLCatalogFileType getMatchingFileType(String description) {
@@ -828,7 +830,7 @@ public class EditCatalogEntryDialog extends Dialog {
 	}
 
 	protected void updateErrorMessageLabel(Label errorMessageLabel) {
-		errorMessageLabel.setText(errorMessage != null ? errorMessage : "");
+		errorMessageLabel.setText(errorMessage != null ? errorMessage : ""); //$NON-NLS-1$
 	}
 
 	protected void updateOKButtonState() {
@@ -926,7 +928,7 @@ public class EditCatalogEntryDialog extends Dialog {
 				// whole leading slash ambiguity problem
 				//                    
 				String uri = file.getFullPath().toString();
-				while (uri.startsWith("/") || uri.startsWith("\\")) {
+				while (uri.startsWith("/") || uri.startsWith("\\")) { //$NON-NLS-1$ //$NON-NLS-2$
 					uri = uri.substring(1);
 				}
 				if (control instanceof Text) {

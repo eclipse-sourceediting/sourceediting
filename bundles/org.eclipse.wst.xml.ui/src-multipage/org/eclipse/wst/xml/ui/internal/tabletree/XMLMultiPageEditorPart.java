@@ -693,7 +693,7 @@ public class XMLMultiPageEditorPart extends PostSelectionMultiPageEditorPart {
 			fActivationListener = new ActivationListener(site.getWorkbenchWindow().getPartService());
 		}
 		catch (Exception e) {
-			Logger.logException("exception initializing " + getClass().getName(), e);
+			Logger.logException("exception initializing " + getClass().getName(), e); //$NON-NLS-1$
 		}
 		setPartName(input.getName());
 	}

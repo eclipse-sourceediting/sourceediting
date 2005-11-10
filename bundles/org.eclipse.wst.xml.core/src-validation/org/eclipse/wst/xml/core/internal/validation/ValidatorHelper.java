@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -35,15 +35,14 @@ import org.xml.sax.ext.LexicalHandler;
  */
 public class ValidatorHelper
 {                           
-  public static final String copyright = "(c) Copyright IBM Corporation 2002.";
   public List namespaceURIList = new Vector();
   public boolean isGrammarEncountered = false;    
   public boolean isDTDEncountered = false;
   public boolean isNamespaceEncountered = false;
-  public String schemaLocationString = "";
+  public String schemaLocationString = ""; //$NON-NLS-1$
   public int numDTDElements = 0;
 
-  public static final boolean IS_LINUX = java.io.File.separator.equals("/");
+  public static final boolean IS_LINUX = java.io.File.separator.equals("/"); //$NON-NLS-1$
 
   /**
    * Constructor.
@@ -64,10 +63,10 @@ public class ValidatorHelper
     
     reader = new org.apache.xerces.parsers.SAXParser();     
 
-    reader.setFeature("http://apache.org/xml/features/continue-after-fatal-error", false);
-    reader.setFeature("http://xml.org/sax/features/namespace-prefixes", true);
-    reader.setFeature("http://xml.org/sax/features/namespaces", false);
-    reader.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+    reader.setFeature("http://apache.org/xml/features/continue-after-fatal-error", false); //$NON-NLS-1$
+    reader.setFeature("http://xml.org/sax/features/namespace-prefixes", true); //$NON-NLS-1$
+    reader.setFeature("http://xml.org/sax/features/namespaces", false); //$NON-NLS-1$
+    reader.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false); //$NON-NLS-1$
     reader.setContentHandler(new MyContentHandler());
     reader.setErrorHandler(new InternalErrorHandler()); 
 
@@ -103,7 +102,7 @@ public class ValidatorHelper
       {
       }
     };
-    reader.setProperty("http://xml.org/sax/properties/lexical-handler", lexicalHandler);
+    reader.setProperty("http://xml.org/sax/properties/lexical-handler", lexicalHandler); //$NON-NLS-1$
     
     return reader;
   }  
@@ -178,7 +177,7 @@ public class ValidatorHelper
     public String getPrefix(String name)
     {
       String prefix = null;
-      int index = name.indexOf(":");
+      int index = name.indexOf(":"); //$NON-NLS-1$
       if (index != -1)
       {
         prefix = name.substring(0, index);
@@ -188,7 +187,7 @@ public class ValidatorHelper
         
     public String getUnprefixedName(String name)
     {
-      int index = name.indexOf(":");
+      int index = name.indexOf(":"); //$NON-NLS-1$
       if (index != -1)
       {
         name = name.substring(index + 1);
@@ -198,7 +197,7 @@ public class ValidatorHelper
     
     public String getPrefixedName(String prefix, String localName)
     {
-      return prefix != null && prefix.length() > 0 ? prefix + ":" + localName : localName;     
+      return prefix != null && prefix.length() > 0 ? prefix + ":" + localName : localName;      //$NON-NLS-1$
     }
 
     public void startElement(String namespaceURI, String localName, String rawName, Attributes atts)
@@ -213,19 +212,19 @@ public class ValidatorHelper
         for (int i =0; i < nAtts; i++)
         {              
           String attributeName = atts.getQName(i);       
-          if (attributeName.equals("xmlns") || attributeName.startsWith("xmlns:"))
+          if (attributeName.equals("xmlns") || attributeName.startsWith("xmlns:")) //$NON-NLS-1$ //$NON-NLS-2$
           {                                         
             isNamespaceEncountered = true;    
             String value = atts.getValue(i);                 
-            if (value.startsWith("http://www.w3.org/") && value.endsWith("/XMLSchema-instance"))
+            if (value.startsWith("http://www.w3.org/") && value.endsWith("/XMLSchema-instance")) //$NON-NLS-1$ //$NON-NLS-2$
             {
-              schemaInstancePrefix = attributeName.equals("xmlns") ? "" : getUnprefixedName(attributeName);
+              schemaInstancePrefix = attributeName.equals("xmlns") ? "" : getUnprefixedName(attributeName); //$NON-NLS-1$ //$NON-NLS-2$
             }                   
           }                 
         }
         
         String prefix = getPrefix(rawName);
-        String rootElementNamespaceDeclarationName = (prefix != null && prefix.length() > 0) ? "xmlns:" + prefix : "xmlns";
+        String rootElementNamespaceDeclarationName = (prefix != null && prefix.length() > 0) ? "xmlns:" + prefix : "xmlns"; //$NON-NLS-1$ //$NON-NLS-2$
         String rootElementNamespace = rootElementNamespaceDeclarationName != null ? atts.getValue(rootElementNamespaceDeclarationName) : null;        
         
         String location = null;
@@ -234,10 +233,10 @@ public class ValidatorHelper
         // to determine a location
         if (schemaInstancePrefix != null)
         {                     
-          location = atts.getValue(getPrefixedName(schemaInstancePrefix, "noNamespaceSchemaLocation"));
+          location = atts.getValue(getPrefixedName(schemaInstancePrefix, "noNamespaceSchemaLocation")); //$NON-NLS-1$
           if (location == null)
           {
-        	String schemaLoc = atts.getValue(getPrefixedName(schemaInstancePrefix, "schemaLocation")); 
+        	String schemaLoc = atts.getValue(getPrefixedName(schemaInstancePrefix, "schemaLocation"));  //$NON-NLS-1$
             StringTokenizer st = new StringTokenizer(schemaLoc);
             while(st.hasMoreTokens())
             {

@@ -55,8 +55,8 @@ public final class CatalogReader
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException
     {
       // set base
-      String base = attributes.getValue("", OASISCatalogConstants.ATTR_BASE);
-      if (base != null && !base.equals(""))
+      String base = attributes.getValue("", OASISCatalogConstants.ATTR_BASE); //$NON-NLS-1$
+      if (base != null && !base.equals("")) //$NON-NLS-1$
       {
           baseURIStack.push(base);    
       }
@@ -65,10 +65,10 @@ public final class CatalogReader
 	  if (localName.equals(CompatabilityConstants.TAG_USER_ENTRY))
       {
 		int type = ICatalogEntry.ENTRY_TYPE_PUBLIC;
-        String typeName = attributes.getValue("", CompatabilityConstants.ATT_TYPE);
+        String typeName = attributes.getValue("", CompatabilityConstants.ATT_TYPE); //$NON-NLS-1$
         if (typeName != null)
         {
-          if (typeName.compareToIgnoreCase("SYSTEM") == 0)
+          if (typeName.compareToIgnoreCase("SYSTEM") == 0) //$NON-NLS-1$
           {
             type = ICatalogEntry.ENTRY_TYPE_SYSTEM;
           }
@@ -77,11 +77,11 @@ public final class CatalogReader
 	      if (catalogElement instanceof CatalogEntry)
 	      {
 	        CatalogEntry catalogEntry = (CatalogEntry) catalogElement;
-		    String key = attributes.getValue("", CompatabilityConstants.ATT_ID);   		    
+		    String key = attributes.getValue("", CompatabilityConstants.ATT_ID);   		     //$NON-NLS-1$
 	        catalogEntry.setKey(key);
-	        String entryUri = attributes.getValue("", CompatabilityConstants.ATT_URI);   
+	        String entryUri = attributes.getValue("", CompatabilityConstants.ATT_URI);    //$NON-NLS-1$
 	        catalogEntry.setURI(entryUri);  
-	        String webURL = attributes.getValue("", CompatabilityConstants.ATT_WEB_URL);
+	        String webURL = attributes.getValue("", CompatabilityConstants.ATT_WEB_URL); //$NON-NLS-1$
 			if (webURL != null)
 			{
 				catalogEntry.setAttributeValue(
@@ -98,23 +98,23 @@ public final class CatalogReader
 	 //dw String catalogId = attributes.getValue("", OASISCatalogConstants.ATTR_ID);
       if (OASISCatalogConstants.TAG_PUBLIC.equals(localName))
       {
-        key = attributes.getValue("", OASISCatalogConstants.ATTR_PUBLIC_ID);
+        key = attributes.getValue("", OASISCatalogConstants.ATTR_PUBLIC_ID); //$NON-NLS-1$
       }
       else if (OASISCatalogConstants.TAG_SYSTEM.equals(localName))
       {
-        key = attributes.getValue("", OASISCatalogConstants.ATTR_SYSTEM_ID);
+        key = attributes.getValue("", OASISCatalogConstants.ATTR_SYSTEM_ID); //$NON-NLS-1$
         type = ICatalogEntry.ENTRY_TYPE_SYSTEM;
       }
       else if (OASISCatalogConstants.TAG_URI.equals(localName))
       {
-        key = attributes.getValue("", OASISCatalogConstants.ATTR_NAME);
+        key = attributes.getValue("", OASISCatalogConstants.ATTR_NAME); //$NON-NLS-1$
         type = ICatalogEntry.ENTRY_TYPE_URI;
       }
       else if (OASISCatalogConstants.TAG_NEXT_CATALOG.equals(localName))
       {
-        String nextCatalogId = attributes.getValue("", OASISCatalogConstants.ATTR_ID);
+        String nextCatalogId = attributes.getValue("", OASISCatalogConstants.ATTR_ID); //$NON-NLS-1$
 
-        String location = attributes.getValue("", OASISCatalogConstants.ATTR_CATALOG);   
+        String location = attributes.getValue("", OASISCatalogConstants.ATTR_CATALOG);    //$NON-NLS-1$
         NextCatalog delegate = new NextCatalog();
         delegate.setCatalogLocation(location);  
         delegate.setId(nextCatalogId);
@@ -125,13 +125,13 @@ public final class CatalogReader
     	  // do not handle other entries
     	  return;
       }
-      if (key == null || key.equals(""))
+      if (key == null || key.equals("")) //$NON-NLS-1$
       {
         Logger.log(Logger.ERROR, XMLCoreMessages.Catalog_entry_key_not_set);
         return;
       }
-      String entryURI = attributes.getValue("", OASISCatalogConstants.ATTR_URI); // mandatory
-      if (entryURI == null || entryURI.equals(""))
+      String entryURI = attributes.getValue("", OASISCatalogConstants.ATTR_URI); // mandatory //$NON-NLS-1$
+      if (entryURI == null || entryURI.equals("")) //$NON-NLS-1$
       {
         Logger.log(Logger.ERROR, XMLCoreMessages.Catalog_entry_uri_not_set);
         return;
@@ -153,7 +153,7 @@ public final class CatalogReader
             && !attrName.equals(OASISCatalogConstants.ATTR_BASE))
         {
           String attrValue = attributes.getValue(attrName);
-          if (attrValue != null && !attrValue.equals(""))
+          if (attrValue != null && !attrValue.equals("")) //$NON-NLS-1$
           {
             catalogElement.setAttributeValue(attrName, attrValue);
           }
@@ -176,12 +176,12 @@ public final class CatalogReader
   // for backward compatability
   interface CompatabilityConstants{
 	  
-	  public static final String TAG_ID_XML_CATALOG_SETTINGS = "XMLCatalogSettings";
-	  public static final String TAG_ID_USER_ENTRIES = "UserEntries";
-	  public static final String TAG_USER_ENTRY = "UserEntry";
-	  public static final String ATT_TYPE = "TYPE";
-	  public static final String ATT_ID = "ID";
-	  public static final String ATT_URI = "URI";
-	  public static final String ATT_WEB_URL = "WEB_URL";
+	  public static final String TAG_ID_XML_CATALOG_SETTINGS = "XMLCatalogSettings"; //$NON-NLS-1$
+	  public static final String TAG_ID_USER_ENTRIES = "UserEntries"; //$NON-NLS-1$
+	  public static final String TAG_USER_ENTRY = "UserEntry"; //$NON-NLS-1$
+	  public static final String ATT_TYPE = "TYPE"; //$NON-NLS-1$
+	  public static final String ATT_ID = "ID"; //$NON-NLS-1$
+	  public static final String ATT_URI = "URI"; //$NON-NLS-1$
+	  public static final String ATT_WEB_URL = "WEB_URL"; //$NON-NLS-1$
   }
 }

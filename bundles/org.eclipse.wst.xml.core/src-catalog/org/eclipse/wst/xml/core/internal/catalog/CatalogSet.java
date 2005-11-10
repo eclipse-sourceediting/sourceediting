@@ -31,7 +31,7 @@ public class CatalogSet {
 				ok = false;
 				// we catch and log all exceptions, to disallow
 				// one bad extension interfering with others
-				Logger.logException("error loading catalog: " + id + " " + uri, e);
+				Logger.logException("error loading catalog: " + id + " " + uri, e); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			if (ok) {
 				uriResourceMap.put(uri, catalog);

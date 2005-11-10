@@ -29,6 +29,7 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.wst.validation.internal.provisional.core.IMessage;
 import org.eclipse.wst.xml.core.internal.validation.core.ValidationMessage;
 import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
+import org.eclipse.wst.xml.ui.internal.validation.XMLValidationUIMessages;
 
 
 
@@ -39,10 +40,10 @@ public class TaskListTableViewer extends TableViewer
   protected static final int COLUMN_RESOURCE = 3;
   protected static final int COLUMN_LOCATION = 2;
 
-  protected static final String LABEL_ICON = "";
-  protected static final String LABEL_DESCRIPTION = "Description";
-  protected static final String LABEL_RESOURCE = "Resource";
-  protected static final String LABEL_LOCATION = "Location";
+  protected static final String LABEL_ICON = ""; //$NON-NLS-1$
+  protected static final String LABEL_DESCRIPTION = XMLValidationUIMessages.TaskListTableViewer_0;
+  protected static final String LABEL_RESOURCE = XMLValidationUIMessages.TaskListTableViewer_1;
+  protected static final String LABEL_LOCATION = XMLValidationUIMessages.TaskListTableViewer_2;
 
   protected int visibleRows = -1;
 
@@ -161,7 +162,7 @@ public class TaskListTableViewer extends TableViewer
     public String getColumnText(Object object, int column)
     {
       ValidationMessage errorMessage = (ValidationMessage) object;
-      String result = "";
+      String result = ""; //$NON-NLS-1$
       switch (column)
       {
         case COLUMN_DESCRIPTION :
@@ -171,7 +172,7 @@ public class TaskListTableViewer extends TableViewer
           }
         case COLUMN_LOCATION :
           {
-            result = "line " + errorMessage.getLineNumber();
+            result = XMLValidationUIMessages.TaskListTableViewer_3 + errorMessage.getLineNumber();
             break;
           }
       }

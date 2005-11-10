@@ -24,7 +24,7 @@ import org.eclipse.wst.validation.internal.provisional.core.IMessage;
  */
 public class ValidationMessage
 {
-  public static final QualifiedName ERROR_MESSAGE_MAP_QUALIFIED_NAME = new QualifiedName("org.eclipse.wst.xml.validation", "errorMessageMap");
+  public static final QualifiedName ERROR_MESSAGE_MAP_QUALIFIED_NAME = new QualifiedName("org.eclipse.wst.xml.validation", "errorMessageMap"); //$NON-NLS-1$ //$NON-NLS-2$
   protected String message;
   protected int lineNumber;
   protected int columnNumber;

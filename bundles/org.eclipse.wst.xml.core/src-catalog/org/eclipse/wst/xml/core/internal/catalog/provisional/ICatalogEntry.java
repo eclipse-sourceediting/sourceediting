@@ -19,7 +19,7 @@ public interface ICatalogEntry extends ICatalogElement
     public static final int ENTRY_TYPE_URI = 4;
 
     /** Attribute name for Web address of catalog entry */
-    public static final String ATTR_WEB_URL = "webURL";
+    public static final String ATTR_WEB_URL = "webURL"; //$NON-NLS-1$
 
     /**
      * 

@@ -12,11 +12,12 @@ package org.eclipse.wst.xml.core.internal.validation.core;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.ResourceBundle;
+
+import org.eclipse.osgi.util.NLS;
+import org.eclipse.wst.xml.core.internal.validation.XMLValidationMessages;
 
 /**
  * This class handles messages from a validator. This class can handle
@@ -29,14 +30,11 @@ public class ValidationInfo implements ValidationReport
   public static int SEV_ERROR = 0;
   public static int SEV_WARNING = 1;
   
-  private static String _UI_REF_FILE_ERROR_MESSAGE = "_UI_REF_FILE_ERROR_MESSAGE";
   private String validating_file_uri = null;
   private URL validating_file_url = null;
   private boolean valid = true;
   private List messages = new ArrayList();
   private HashMap nestedMessages = new HashMap();
-  
-  protected ResourceBundle resourceBundle;
 
   /**
    * Constructor.
@@ -46,7 +44,6 @@ public class ValidationInfo implements ValidationReport
    */
   public ValidationInfo(String uri)
   {
-	resourceBundle = ResourceBundle.getBundle("org.eclipse.wst.xml.core.internal.validation.xmlvalidation");
     if(uri != null)
     {
       this.validating_file_uri = uri;
@@ -200,7 +197,7 @@ public class ValidationInfo implements ValidationReport
         ValidationMessage container = (ValidationMessage) nestedMessages.get(nesteduri);
         if(container == null)
         {
-          container = new ValidationMessage(MessageFormat.format(resourceBundle.getString(_UI_REF_FILE_ERROR_MESSAGE), new Object [] { nesteduri }), 1, 0, nesteduri);
+          container = new ValidationMessage(NLS.bind(XMLValidationMessages._UI_REF_FILE_ERROR_MESSAGE, new Object [] { nesteduri }), 1, 0, nesteduri);
        
           // Initially set the nested error to a warning. This will automatically be changed
           // to an error if a nested message has a severity of error.
@@ -279,8 +276,8 @@ public class ValidationInfo implements ValidationReport
 //      {
 //      }
 //    }
-    uri = uri.replaceAll("%20"," ");
-    uri = uri.replaceAll("%5E", "^");
+    uri = uri.replaceAll("%20"," "); //$NON-NLS-1$ //$NON-NLS-2$
+    uri = uri.replaceAll("%5E", "^"); //$NON-NLS-1$ //$NON-NLS-2$
     uri = uri.replace('\\','/');
     
     return uri;

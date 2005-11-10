@@ -69,7 +69,7 @@ public class LazyURLInputStream extends InputStream
   {
 	if (pretendFileIsStillOpen) return 0;
 	createInnerStreamIfRequired();
-	if (inner == null) throw new IOException("Stream not available");
+	if (inner == null) throw new IOException("Stream not available"); //$NON-NLS-1$
 	return inner.available();
   }
 
@@ -117,7 +117,7 @@ public class LazyURLInputStream extends InputStream
   {
 	if (pretendFileIsStillOpen) return -1;
 	createInnerStreamIfRequired();
-	if (inner == null) throw new IOException("Stream not available");
+	if (inner == null) throw new IOException("Stream not available"); //$NON-NLS-1$
 	int bytesRead = inner.read();
 	if (bytesRead == -1 && !hasMarks) closeStream();
 	return bytesRead;
@@ -127,7 +127,7 @@ public class LazyURLInputStream extends InputStream
 	public int read(byte[] b) throws IOException {
 		if (pretendFileIsStillOpen) return -1;
 		createInnerStreamIfRequired();
-		if (inner == null) throw new IOException("Stream not available");
+		if (inner == null) throw new IOException("Stream not available"); //$NON-NLS-1$
 		int bytesRead = inner.read(b);
 		if (bytesRead == -1 && !hasMarks) closeStream();
 		return bytesRead;
@@ -137,7 +137,7 @@ public class LazyURLInputStream extends InputStream
   {    
 	if (pretendFileIsStillOpen) return -1;
 	createInnerStreamIfRequired();
-	if (inner == null) throw new IOException("Stream not available");
+	if (inner == null) throw new IOException("Stream not available"); //$NON-NLS-1$
 	int bytesRead = inner.read(b, off, len);
 	if (bytesRead == -1 && !hasMarks) closeStream();
 	return bytesRead;
@@ -147,7 +147,7 @@ public class LazyURLInputStream extends InputStream
   {
 	if (pretendFileIsStillOpen) return;
 	createInnerStreamIfRequired();
-	if (inner == null) throw new IOException("Stream not available");
+	if (inner == null) throw new IOException("Stream not available"); //$NON-NLS-1$
 	inner.reset();
   }
 
@@ -155,7 +155,7 @@ public class LazyURLInputStream extends InputStream
   {   
 	if (pretendFileIsStillOpen) return 0;
 	createInnerStreamIfRequired();
-	if (inner == null) throw new IOException("Stream not available");
+	if (inner == null) throw new IOException("Stream not available"); //$NON-NLS-1$
 	return inner.skip(n);
   }
 }

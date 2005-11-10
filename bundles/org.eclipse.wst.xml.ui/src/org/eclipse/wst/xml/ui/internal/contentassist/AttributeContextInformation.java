@@ -47,7 +47,7 @@ public class AttributeContextInformation implements IContextInformation {
 	 *            information, may not be <code>null</code>
 	 */
 	public AttributeContextInformation(Image image, String contextDisplayString, String informationDisplayString, HashMap attr2RangeMap) {
-		Assert.isNotNull(informationDisplayString, "illegal argument: informationDisplayString can not be null");
+		Assert.isNotNull(informationDisplayString, "illegal argument: informationDisplayString can not be null"); //$NON-NLS-1$
 
 		fImage = image;
 		fContextDisplayString = contextDisplayString;

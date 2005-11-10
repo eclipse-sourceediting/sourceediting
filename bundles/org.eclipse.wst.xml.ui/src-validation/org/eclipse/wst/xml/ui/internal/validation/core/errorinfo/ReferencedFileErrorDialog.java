@@ -10,9 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.ui.internal.validation.core.errorinfo;
 
-import java.text.MessageFormat;
 import java.util.List;
-import java.util.ResourceBundle;
 import java.util.StringTokenizer;
 
 import org.eclipse.jface.dialogs.Dialog;
@@ -20,6 +18,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
@@ -33,6 +32,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.wst.xml.core.internal.validation.core.ValidationMessage;
+import org.eclipse.wst.xml.ui.internal.validation.XMLValidationUIMessages;
 
 
 public class ReferencedFileErrorDialog extends Dialog
@@ -44,14 +44,10 @@ public class ReferencedFileErrorDialog extends Dialog
   protected String referencedFile;
   protected StyledText styledText;
   protected Text fullFileNameField;
-  
-  protected ResourceBundle resourceBundle;
 
   public ReferencedFileErrorDialog(Shell parentShell, List errorList, String contextFile, String referencedFile)
   {
     super(parentShell);
-    
-    resourceBundle = ResourceBundle.getBundle("org.eclipse.wst.xml.ui.internal.validation.xmlvalidation");
 
     int styleBits = getShellStyle() | SWT.RESIZE;
     styleBits &= ~SWT.APPLICATION_MODAL;
@@ -67,7 +63,7 @@ public class ReferencedFileErrorDialog extends Dialog
   public int createAndOpen()
   {
     create();
-    getShell().setText(resourceBundle.getString("_UI_REF_FILE_ERROR_DETAILS"));
+    getShell().setText(XMLValidationUIMessages._UI_REF_FILE_ERROR_DETAILS);
 	
     setBlockOnOpen(false);
     return open();
@@ -117,7 +113,7 @@ public class ReferencedFileErrorDialog extends Dialog
 
   String getFullURI(int offset)
   {
-    String uri = "";
+    String uri = ""; //$NON-NLS-1$
     int index = getIndex(offset);
     if (index != -1)
     {
@@ -154,7 +150,7 @@ public class ReferencedFileErrorDialog extends Dialog
   {
     public void mouseMove(MouseEvent event)
     {
-      String toolTipText = "";
+      String toolTipText = ""; //$NON-NLS-1$
       try
       {
 
@@ -176,19 +172,19 @@ public class ReferencedFileErrorDialog extends Dialog
 
   private String getMarkedUpDetailsMessage()
   {
-	String detailsMessage = "";  	
+	String detailsMessage = "";  	 //$NON-NLS-1$
     // TODO... need to move '_UI_REF_FILE_ERROR_DESCRIPTION' to this plugin's properties file
     //			
-      String string = resourceBundle.getString("_UI_REF_FILE_ERROR_DESCRIPTION");
+      String string = XMLValidationUIMessages._UI_REF_FILE_ERROR_DESCRIPTION;
       // TODO... need to edit the properties file to remove "'" characters from the string
       // I'm using these characters to markup the bold font. It's safer if I add these programtically.
       //
-	  string = removePattern(string, "'");
+	  string = removePattern(string, "'"); //$NON-NLS-1$
 
-      String c = "'" + getLastSegment(contextFile) + "'";
-      String r = "'" + getLastSegment(referencedFile) + "'";
+      String c = "'" + getLastSegment(contextFile) + "'"; //$NON-NLS-1$ //$NON-NLS-2$
+      String r = "'" + getLastSegment(referencedFile) + "'"; //$NON-NLS-1$ //$NON-NLS-2$
 
-      detailsMessage = MessageFormat.format(string, new Object[] { r, c, r, c });    
+      detailsMessage = NLS.bind(string, new Object[] { r, c, r, c });    
     return detailsMessage;
   }
 
@@ -211,8 +207,8 @@ public class ReferencedFileErrorDialog extends Dialog
 
   private void setStyledText(StyledText styledText, String text)
   {
-    String visibleMessage = "";
-    for (StringTokenizer st = new StringTokenizer(markedUpDetailsMessage, "'", false); st.hasMoreTokens();)
+    String visibleMessage = ""; //$NON-NLS-1$
+    for (StringTokenizer st = new StringTokenizer(markedUpDetailsMessage, "'", false); st.hasMoreTokens();) //$NON-NLS-1$
     {
       String token = st.nextToken();
       visibleMessage += token;
@@ -223,11 +219,11 @@ public class ReferencedFileErrorDialog extends Dialog
 
     boolean inQuote = false;
     int position = 0;
-    for (StringTokenizer st = new StringTokenizer(markedUpDetailsMessage, "'", true); st.hasMoreTokens();)
+    for (StringTokenizer st = new StringTokenizer(markedUpDetailsMessage, "'", true); st.hasMoreTokens();) //$NON-NLS-1$
     {
       String token = st.nextToken();
 
-      if (token.equals("'"))
+      if (token.equals("'")) //$NON-NLS-1$
       {
         inQuote = !inQuote;
       }
@@ -262,7 +258,7 @@ public class ReferencedFileErrorDialog extends Dialog
   private static String getLastSegment(String uri)
   {
     String result = uri;
-    int index = Math.max(uri.lastIndexOf("/"), uri.lastIndexOf("\\"));
+    int index = Math.max(uri.lastIndexOf("/"), uri.lastIndexOf("\\")); //$NON-NLS-1$ //$NON-NLS-2$
     if (index != -1)
     {
       result = uri.substring(index + 1);

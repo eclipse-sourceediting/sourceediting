@@ -110,7 +110,7 @@ public class CatalogElement implements ICatalogElement
 		if (catalog != null)
 		{
 			String base = catalog.getBase();
-			if (base == null || base.equals(""))
+			if (base == null || base.equals("")) //$NON-NLS-1$
 			{
 				base = catalog.getLocation();
 			}
