@@ -25,7 +25,6 @@ import org.eclipse.jface.text.formatter.ContextBasedFormattingStrategy;
 import org.eclipse.jface.text.formatter.FormattingContextProperties;
 import org.eclipse.jface.text.formatter.IFormattingContext;
 import org.eclipse.jst.jsp.core.internal.Logger;
-import org.eclipse.jst.jsp.core.internal.java.JSPELHandler;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationUtil;
 import org.eclipse.text.edits.MalformedTreeException;
@@ -59,7 +58,7 @@ public class FormattingStrategyJSPJava extends ContextBasedFormattingStrategy {
 		if (document != null && partition != null) {
 			try {
 
-				JSPTranslationUtil translationUtil = new JSPTranslationUtil(document, JSPELHandler.getJSPELHandler());
+				JSPTranslationUtil translationUtil = new JSPTranslationUtil(document);
 				ICompilationUnit cu = translationUtil.getCompilationUnit();
 				if (cu != null) {
 					String cuSource = cu.getSource();

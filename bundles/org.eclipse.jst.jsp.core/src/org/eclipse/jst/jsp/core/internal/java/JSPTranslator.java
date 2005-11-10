@@ -31,10 +31,17 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.Position;
+import org.eclipse.jst.jsp.core.internal.JSPCoreMessages;
 import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.contentmodel.TaglibController;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.TLDCMDocumentManager;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.JSP12TLDNames;
+import org.eclipse.jst.jsp.core.internal.java.jspel.ASTExpression;
+import org.eclipse.jst.jsp.core.internal.java.jspel.ELGenerator;
+import org.eclipse.jst.jsp.core.internal.java.jspel.JSPELParser;
+import org.eclipse.jst.jsp.core.internal.java.jspel.ParseException;
+import org.eclipse.jst.jsp.core.internal.java.jspel.Token;
+import org.eclipse.jst.jsp.core.internal.java.jspel.TokenMgrError;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.jst.jsp.core.internal.taglib.TaglibHelper;
 import org.eclipse.jst.jsp.core.internal.taglib.TaglibHelperManager;
@@ -176,8 +183,6 @@ public class JSPTranslator {
 	
 	private HashMap fUserELRanges = new HashMap();
 	
-	private IELHandler fELHandler = null;
-	
 	/**
 	 * ranges that don't directly map from java code to JSP code (eg.
 	 * <%@include file="included.jsp"%>
@@ -191,16 +196,21 @@ public class JSPTranslator {
 	 * the file or strucdtured document depending what is available
 	 */
 	private StringBuffer fJspTextBuffer = new StringBuffer();
-
-	private ArrayList fELProblems;
 	
+	/**
+	 * JSP Expression Language Parser.
+	 */
+	private JSPELParser elParser = null;
+
+	private ArrayList fELProblems = new ArrayList();
+
 	/**
 	 * configure using an XMLNode
 	 * 
 	 * @param node
 	 * @param monitor
 	 */
-	private void configure(IDOMNode node, IProgressMonitor monitor, IELHandler handler) {
+	private void configure(IDOMNode node, IProgressMonitor monitor) {
 
 		fProgressMonitor = monitor;
 		fStructuredModel = node.getModel();
@@ -213,8 +223,6 @@ public class JSPTranslator {
 			setClassname(className);
 			fClassHeader = "public class " + className + " extends "; //$NON-NLS-1$ //$NON-NLS-2$
 		}
-		
-		fELHandler = handler;
 	}
 
 	/**
@@ -224,7 +232,7 @@ public class JSPTranslator {
 	 * @param jspFile
 	 * @param monitor
 	 */
-	private void configure(IFile jspFile, IProgressMonitor monitor, IELHandler handler) {
+	private void configure(IFile jspFile, IProgressMonitor monitor) {
 		// when configured on a file
 		// fStructuredModel, fPositionNode, fModelQuery, fStructuredDocument
 		// are all null
@@ -236,8 +244,6 @@ public class JSPTranslator {
 			setClassname(className);
 			fClassHeader = "public class " + className + " extends "; //$NON-NLS-1$ //$NON-NLS-2$
 		}
-		
-		fELHandler = handler;
 	}
 
 	/**
@@ -302,10 +308,10 @@ public class JSPTranslator {
 	/**
 	 * So that the JSPTranslator can be reused.
 	 */
-	public void reset(IDOMNode node, IProgressMonitor progress, IELHandler handler) {
+	public void reset(IDOMNode node, IProgressMonitor progress) {
 
 		// initialize some things on node
-		configure(node, progress, handler);
+		configure(node, progress);
 		reset();
 		// set the jsp text buffer
 		fJspTextBuffer.append(fStructuredDocument.get());
@@ -317,10 +323,10 @@ public class JSPTranslator {
 	 * @param jspFile
 	 * @param progress
 	 */
-	public void reset(IFile jspFile, IProgressMonitor progress, IELHandler handler) {
+	public void reset(IFile jspFile, IProgressMonitor progress) {
 
 		// initialize some things on node
-		configure(jspFile, progress, handler);
+		configure(jspFile, progress);
 		reset();
 		// set the jsp text buffer
 		setJspText(jspFile);
@@ -1174,8 +1180,30 @@ public class JSPTranslator {
 
 	
 	private void translateEL(String elText, IStructuredDocumentRegion currentNode, int contentStart, int contentLength) {
-		fELProblems = fELHandler.translateEL(elText, elText, currentNode, 
-				contentStart, contentLength, fUserELExpressions, fUserELRanges, this);
+		if(null == elParser) {
+			elParser = JSPELParser.createParser(elText);
+		} else {
+			elParser.ReInit(elText);
+		}
+		
+		try {
+			ASTExpression expression = elParser.Expression();
+			ELGenerator gen = new ELGenerator();
+			gen.generate(expression, fUserELExpressions, fUserELRanges, this, currentNode, contentStart, contentLength);
+		} catch (ParseException e) {
+			Token curTok = e.currentToken;
+			int problemStartOffset;
+			int problemEndOffset;
+			Position pos = null;
+			problemStartOffset =  contentStart + curTok.beginColumn;
+			problemEndOffset = contentStart + curTok.endColumn;
+			
+			pos = new Position(problemStartOffset, problemEndOffset - problemStartOffset + 1);
+			fELProblems.add(new ELProblem(pos, e.getLocalizedMessage()));
+		} catch (TokenMgrError te) {
+			Position pos = new Position(contentStart, contentLength);
+			fELProblems.add(new ELProblem(pos, JSPCoreMessages.JSPEL_Token));
+		}
 	}
 
 	/**

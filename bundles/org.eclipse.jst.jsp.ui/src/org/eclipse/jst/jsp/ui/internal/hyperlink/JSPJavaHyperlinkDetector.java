@@ -21,7 +21,6 @@ import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.jst.jsp.core.internal.java.IJSPTranslation;
-import org.eclipse.jst.jsp.core.internal.java.JSPELHandler;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapter;
 import org.eclipse.jst.jsp.ui.internal.Logger;
@@ -180,7 +179,7 @@ public class JSPJavaHyperlinkDetector implements IHyperlinkDetector {
 				IDOMDocument xmlDoc = xmlModel.getDocument();
 				JSPTranslationAdapter adapter = (JSPTranslationAdapter) xmlDoc.getAdapterFor(IJSPTranslation.class);
 				if (adapter != null) {
-					translation = adapter.getJSPTranslation(JSPELHandler.getJSPELHandler());
+					translation = adapter.getJSPTranslation();
 				}
 			}
 		}

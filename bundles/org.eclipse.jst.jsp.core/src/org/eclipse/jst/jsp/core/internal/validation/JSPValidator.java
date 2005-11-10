@@ -23,7 +23,6 @@ import org.eclipse.jdt.core.compiler.IProblem;
 import org.eclipse.jst.jsp.core.internal.JSPCoreMessages;
 import org.eclipse.jst.jsp.core.internal.JSPCorePlugin;
 import org.eclipse.jst.jsp.core.internal.java.IJSPTranslation;
-import org.eclipse.jst.jsp.core.internal.java.JSPELHandler;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapter;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapterFactory;
@@ -221,7 +220,7 @@ public class JSPValidator implements IValidator {
 				setupAdapterFactory(model);
 				IDOMDocument xmlDoc = model.getDocument();
 				JSPTranslationAdapter translationAdapter = (JSPTranslationAdapter) xmlDoc.getAdapterFor(IJSPTranslation.class);
-				JSPTranslation translation = translationAdapter.getJSPTranslation(JSPELHandler.getJSPELHandler());
+				JSPTranslation translation = translationAdapter.getJSPTranslation();
 
 				translation.setProblemCollectingActive(true);
 				translation.reconcileCompilationUnit();

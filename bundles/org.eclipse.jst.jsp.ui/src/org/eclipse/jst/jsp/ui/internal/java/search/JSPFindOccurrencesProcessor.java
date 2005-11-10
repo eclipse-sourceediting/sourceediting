@@ -16,7 +16,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextSelection;
-import org.eclipse.jst.jsp.core.internal.java.IELHandler;
 import org.eclipse.jst.jsp.core.internal.java.IJSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapter;
@@ -36,12 +35,6 @@ import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
  */
 public class JSPFindOccurrencesProcessor extends FindOccurrencesProcessor {
 
-	protected IELHandler fELHandler; 
-
-	public JSPFindOccurrencesProcessor(IELHandler handler) {
-		fELHandler = handler;
-	}
-	
 	protected String[] getPartitionTypes() {
 		return new String[]{IJSPPartitionTypes.JSP_DEFAULT, IJSPPartitionTypes.JSP_CONTENT_JAVA};
 	}
@@ -73,7 +66,7 @@ public class JSPFindOccurrencesProcessor extends FindOccurrencesProcessor {
 				IDOMDocument xmlDoc = ((IDOMModel) model).getDocument();
 				JSPTranslationAdapter adapter = (JSPTranslationAdapter) xmlDoc.getAdapterFor(IJSPTranslation.class);
 				if (adapter != null) {
-					JSPTranslation translation = adapter.getJSPTranslation(fELHandler);
+					JSPTranslation translation = adapter.getJSPTranslation();
 
 					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=102211
 					elements = translation.getElementsFromJspRange(selection.getOffset(), selection.getOffset() + selection.getLength());

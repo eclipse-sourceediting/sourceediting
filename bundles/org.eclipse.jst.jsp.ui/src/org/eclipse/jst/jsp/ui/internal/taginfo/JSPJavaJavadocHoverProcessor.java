@@ -21,7 +21,6 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextHover;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jst.jsp.core.internal.java.IJSPTranslation;
-import org.eclipse.jst.jsp.core.internal.java.JSPELHandler;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapter;
 import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
@@ -107,7 +106,7 @@ public class JSPJavaJavadocHoverProcessor implements ITextHover {
 				IDOMDocument xmlDoc = xmlModel.getDocument();
 				JSPTranslationAdapter adapter = (JSPTranslationAdapter) xmlDoc.getAdapterFor(IJSPTranslation.class);
 				if (adapter != null) {
-					JSPTranslation translation = adapter.getJSPTranslation(JSPELHandler.getJSPELHandler());
+					JSPTranslation translation = adapter.getJSPTranslation();
 					IJavaElement[] result = translation.getElementsFromJspRange(hoverRegion.getOffset(), hoverRegion.getOffset() + hoverRegion.getLength());
 					return getHoverInfo(result);
 				}

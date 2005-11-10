@@ -16,7 +16,6 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jst.jsp.core.internal.java.IJSPTranslation;
-import org.eclipse.jst.jsp.core.internal.java.JSPELHandler;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapter;
 import org.eclipse.ui.texteditor.ITextEditor;
@@ -40,7 +39,7 @@ class JSPJavaSelectionProvider {
 
 					JSPTranslationAdapter adapter = (JSPTranslationAdapter) xmlDoc.getAdapterFor(IJSPTranslation.class);
 					if (adapter != null) {
-						JSPTranslation translation = adapter.getJSPTranslation(JSPELHandler.getJSPELHandler());
+						JSPTranslation translation = adapter.getJSPTranslation();
 						elements = translation.getElementsFromJspRange(textSelection.getOffset(), textSelection.getOffset() + textSelection.getLength());
 					}
 				}

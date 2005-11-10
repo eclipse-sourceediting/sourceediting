@@ -79,7 +79,7 @@ public class JSPDocumentLoader extends AbstractDocumentLoader {
 		super();
 	}
 
-	protected void addNestablePrefix(JSPSourceParser parser, String tagName) {
+	private void addNestablePrefix(JSPSourceParser parser, String tagName) {
 		TagMarker bm = new TagMarker(tagName);
 		parser.addNestablePrefix(bm);
 	}
