@@ -15,6 +15,7 @@ import java.io.InputStream;
 
 import junit.framework.TestCase;
 
+import org.eclipse.jst.jsp.core.internal.java.JSPELHandler;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslator;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
@@ -43,7 +44,7 @@ public class JSPJavaTranslatorTest extends TestCase {
 
 			if (xmlNode != null) {
 				JSPTranslator jspt = new JSPTranslator();
-				jspt.reset(xmlNode, null);
+				jspt.reset(xmlNode, null, JSPELHandler.getJSPELHandler());
 				//int sourceTextPos = text.indexOf("<%= testJspString") + 17;
 				//jspt.setSourceCursor(sourceTextPos); // right after the text
 				jspt.translate();
