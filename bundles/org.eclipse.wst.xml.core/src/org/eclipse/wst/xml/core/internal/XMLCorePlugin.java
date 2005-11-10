@@ -27,9 +27,9 @@ import org.osgi.framework.BundleContext;
 public class XMLCorePlugin extends Plugin {
 	//The shared instance.
 	private static XMLCorePlugin plugin;	
-    public static final String USER_CATALOG_ID = "user_catalog";
-	public static final String DEFAULT_CATALOG_ID = "default_catalog";
-	public static final String SYSTEM_CATALOG_ID = "system_catalog";
+    public static final String USER_CATALOG_ID = "user_catalog"; //$NON-NLS-1$
+	public static final String DEFAULT_CATALOG_ID = "default_catalog"; //$NON-NLS-1$
+	public static final String SYSTEM_CATALOG_ID = "system_catalog"; //$NON-NLS-1$
     private CatalogSet catalogSet = new CatalogSet();
 	   
 
@@ -58,7 +58,7 @@ public class XMLCorePlugin extends Plugin {
     private String getPluginStateLocation(String fileName)
     {
       String location = getStateLocation().append(fileName).toString();
-      String file_protocol = "file:";
+      String file_protocol = "file:"; //$NON-NLS-1$
       if (location != null && !location.startsWith(file_protocol))
       {
     	  location = file_protocol + location;

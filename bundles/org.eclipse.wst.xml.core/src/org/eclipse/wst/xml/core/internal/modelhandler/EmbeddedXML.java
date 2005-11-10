@@ -90,7 +90,7 @@ public class EmbeddedXML implements EmbeddedTypeHandler {
 	public boolean canHandleMimeType(String mimeType) {
 		boolean canHandle = getSupportedMimeTypes().contains(mimeType);
 		if(!canHandle) {
-			canHandle = mimeType.endsWith("+xml");
+			canHandle = mimeType.endsWith("+xml"); //$NON-NLS-1$
 		}
 		return canHandle;
 	}
