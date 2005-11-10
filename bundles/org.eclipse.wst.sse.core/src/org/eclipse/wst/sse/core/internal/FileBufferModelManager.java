@@ -152,7 +152,7 @@ public class FileBufferModelManager {
 		IPath fLocation;
 		IPath fPath;
 		final static String SEPARATOR = "/"; //$NON-NLS-1$ 
-		final static String FILE_PREFIX = "file://";
+		final static String FILE_PREFIX = "file://"; //$NON-NLS-1$
 
 		CommonURIResolver(IPath path, IPath location) {
 			fLocation = location;

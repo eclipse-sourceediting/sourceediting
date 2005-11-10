@@ -138,7 +138,7 @@ public class StructuredDocumentToTextAdapter implements IDocumentAdapter, IDocum
 		 *            the content
 		 */
 		public StringTextStore(String content) {
-			Assert.isNotNull(content, "content can not be null when setting text store");
+			Assert.isNotNull(content, "content can not be null when setting text store"); //$NON-NLS-1$
 			fContent = content;
 		}
 

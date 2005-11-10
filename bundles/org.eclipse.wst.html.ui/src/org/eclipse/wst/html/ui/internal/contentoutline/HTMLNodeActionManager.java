@@ -47,7 +47,7 @@ public class HTMLNodeActionManager extends XMLNodeActionManager {
 		String one = fModel.getModelHandler().getAssociatedContentTypeId();
 		String modelContentTypeId = fModel.getContentTypeIdentifier();
 		if (one != modelContentTypeId) {
-			System.out.println("not equal");
+			System.out.println("not equal"); //$NON-NLS-1$
 		}
 		if (modelContentTypeId.equals(ContentTypeIdForHTML.ContentTypeID_HTML))
 			builder = new HTMLContentBuilder(document);

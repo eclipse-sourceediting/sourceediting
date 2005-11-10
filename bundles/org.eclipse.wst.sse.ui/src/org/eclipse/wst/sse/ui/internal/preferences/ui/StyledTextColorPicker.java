@@ -333,7 +333,7 @@ public class StyledTextColorPicker extends Composite {
 		if (startValue != null)
 			colorDlg.setRGB(startValue);
 		if(colorDlg.getText() == null || colorDlg.getText().length() == 0)
-			colorDlg.setText("Pick a color");
+			colorDlg.setText(SSEUIMessages.StyledTextColorPicker_0);
 		colorDlg.open();
 		RGB newRGB = colorDlg.getRGB();
 		if (newRGB != null)

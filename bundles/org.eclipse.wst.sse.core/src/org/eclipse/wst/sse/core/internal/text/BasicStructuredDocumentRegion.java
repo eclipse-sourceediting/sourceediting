@@ -126,7 +126,7 @@ public class BasicStructuredDocumentRegion implements IStructuredDocumentRegion 
 	}
 
 	public String getFullText() {
-		String result = "";
+		String result = ""; //$NON-NLS-1$
 		try {
 			result = getParentDocument().get(start, fLength);
 		}
@@ -138,7 +138,7 @@ public class BasicStructuredDocumentRegion implements IStructuredDocumentRegion 
 	}
 
 	public String getFullText(ITextRegion aRegion) {
-		String result = "";
+		String result = ""; //$NON-NLS-1$
 		try {
 			int regionStart = aRegion.getStart();
 			int regionLength = aRegion.getLength();

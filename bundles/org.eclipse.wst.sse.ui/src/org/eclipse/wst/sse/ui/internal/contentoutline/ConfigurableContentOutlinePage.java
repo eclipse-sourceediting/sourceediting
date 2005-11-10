@@ -160,7 +160,7 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 				}
 			}
 			if (_DEBUG) {
-				System.out.println("(O:" + (System.currentTimeMillis() - _DEBUG_TIME) + "ms) " + part + " : " + selection);
+				System.out.println("(O:" + (System.currentTimeMillis() - _DEBUG_TIME) + "ms) " + part + " : " + selection); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			}
 		}
 	}

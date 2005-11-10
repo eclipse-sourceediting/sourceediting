@@ -160,11 +160,11 @@ public class ConfigurablePropertySheetPage extends PropertySheetPage {
 			}
 
 			if (_DEBUG) {
-				System.out.println("(P:service " + (System.currentTimeMillis() - _DEBUG_TIME) + "ms) " + part + " : " + ((IStructuredSelection) preferredSelection).getFirstElement());
+				System.out.println("(P:service " + (System.currentTimeMillis() - _DEBUG_TIME) + "ms) " + part + " : " + ((IStructuredSelection) preferredSelection).getFirstElement()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			}
 		}
 		else if (_DEBUG) {
-			System.out.println("[skipped] (P:" + (System.currentTimeMillis() - _DEBUG_TIME) + "ms) " + part + " : " + selection);
+			System.out.println("[skipped] (P:" + (System.currentTimeMillis() - _DEBUG_TIME) + "ms) " + part + " : " + selection); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
 	}
 

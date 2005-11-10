@@ -513,7 +513,7 @@ public class CodedReaderCreator extends CodedIO {
 	}
 
 	public void set(IFile iFile) throws CoreException, IOException {
-		Assert.isNotNull(iFile, "illegal argument");
+		Assert.isNotNull(iFile, "illegal argument"); //$NON-NLS-1$
 		resetAll();
 		fIFile = iFile;
 	}

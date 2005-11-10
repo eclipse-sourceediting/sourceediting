@@ -29,7 +29,7 @@ import org.eclipse.wst.sse.core.internal.util.Utilities;
 
 public class ModelHandlerRegistry {
 	private static ModelHandlerRegistry instance = null;
-	static final String INTERNAL_DEFAULT_EXTENSION = "org.eclipse.wst.xml.core.internal.modelhandler";
+	static final String INTERNAL_DEFAULT_EXTENSION = "org.eclipse.wst.xml.core.internal.modelhandler"; //$NON-NLS-1$
 
 	public synchronized static ModelHandlerRegistry getInstance() {
 		if (instance == null) {

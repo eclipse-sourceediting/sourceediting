@@ -605,7 +605,7 @@ public class StructuredTextEditor extends TextEditor {
 			}
 
 			public String toString() {
-				return getOffset() + ":" + getLength() + "@" + selectedStructures;
+				return getOffset() + ":" + getLength() + "@" + selectedStructures; //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 
@@ -1385,7 +1385,7 @@ public class StructuredTextEditor extends TextEditor {
 		}
 		Method method = null; //$NON-NLS-1$
 		try {
-			method = tools.getClass().getMethod("setTextEditor", new Class[]{StructuredTextEditor.class});
+			method = tools.getClass().getMethod("setTextEditor", new Class[]{StructuredTextEditor.class}); //$NON-NLS-1$
 		}
 		catch (NoSuchMethodException e) {
 		}

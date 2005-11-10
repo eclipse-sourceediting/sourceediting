@@ -401,6 +401,7 @@ public class SSEUIMessages extends NLS {
 	public static String UnknownContentTypeDialog_0;
 	public static String UnknownContentTypeDialog_1;
 	public static String UnknownContentTypeDialog_2;
+	public static String StyledTextColorPicker_0;
 
 	/*
 	 * *****Above are possibly unused strings that may be removed*****

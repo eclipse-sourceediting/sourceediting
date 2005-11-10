@@ -1350,7 +1350,7 @@ public class ModelManagerImpl implements IModelManager {
 		}
 		else {
 			sharedObject = (SharedObject) fManagedObjects.get(id);
-			Assert.isNotNull(sharedObject, "release was requested on a model that was not being managed");
+			Assert.isNotNull(sharedObject, "release was requested on a model that was not being managed"); //$NON-NLS-1$
 
 
 			if (sharedObject != null) {
@@ -1389,7 +1389,7 @@ public class ModelManagerImpl implements IModelManager {
 		else {
 
 			sharedObject = (SharedObject) fManagedObjects.get(id);
-			Assert.isNotNull(sharedObject, "release was requested on a model that was not being managed");
+			Assert.isNotNull(sharedObject, "release was requested on a model that was not being managed"); //$NON-NLS-1$
 		}
 
 		if (sharedObject != null) {

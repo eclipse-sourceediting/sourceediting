@@ -53,7 +53,7 @@ import org.eclipse.wst.sse.core.internal.util.Utilities;
 
 public abstract class AbstractStructuredModel implements IStructuredModel {
 
-	private static final String MODEL_MANAGER_NULL = "Warning: AbstractStructuredModel::close:  model manager was null during a close of a model (which should be impossible)";
+	private static final String MODEL_MANAGER_NULL = "Warning: AbstractStructuredModel::close:  model manager was null during a close of a model (which should be impossible)"; //$NON-NLS-1$
 
 	class DirtyStateWatcher implements IStructuredDocumentListener {
 
@@ -344,7 +344,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 		if (fLockObject != null && fLockObject != documentLock) {
 			fLockObject.release();
 			if (Logger.DEBUG) {
-				Logger.log(Logger.INFO, "Model lock released early" + fLockObject + " apparently document switched?");
+				Logger.log(Logger.INFO, "Model lock released early" + fLockObject + " apparently document switched?"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 
 		}
@@ -352,7 +352,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 		if (fLockObject != null) {
 			fLockObject.acquire();
 			if (Logger.DEBUG) {
-				Logger.log(Logger.INFO, "Model lock acquired: " + fLockObject);
+				Logger.log(Logger.INFO, "Model lock acquired: " + fLockObject); //$NON-NLS-1$
 			}
 		}
 	}
@@ -503,7 +503,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 		if (fLockObject != null) {
 			fLockObject.release();
 			if (Logger.DEBUG) {
-				Logger.log(Logger.INFO, "Model lock released: " + fLockObject);
+				Logger.log(Logger.INFO, "Model lock released: " + fLockObject); //$NON-NLS-1$
 			}
 
 		}
@@ -855,7 +855,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 				fireModelAboutToBeChanged();
 			}
 			catch (Exception e) {
-				Logger.logException("Exception while notifying model state listers of about to change", e);
+				Logger.logException("Exception while notifying model state listers of about to change", e); //$NON-NLS-1$
 			}
 			finally {
 				// begin lock after listeners notified, otherwise
@@ -888,7 +888,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 			fModelStateChanging = 0;
 			// should not be locked, but just in case
 			endLock();
-			throw new IllegalStateException("Program Error: modelStateChanging was less than zero");
+			throw new IllegalStateException("Program Error: modelStateChanging was less than zero"); //$NON-NLS-1$
 		}
 
 

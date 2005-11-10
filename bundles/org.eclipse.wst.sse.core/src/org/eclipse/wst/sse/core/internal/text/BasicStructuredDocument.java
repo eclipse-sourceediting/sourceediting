@@ -1735,7 +1735,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	public IStructuredDocumentRegion[] getStructuredDocumentRegions(int start, int length) {
 
 		if (length < 0)
-			throw new IllegalArgumentException("can't have negative length");
+			throw new IllegalArgumentException("can't have negative length"); //$NON-NLS-1$
 
 		// this will make the right edge of the range point into the selection
 		// eg. <html>[<head></head>]</html>
