@@ -178,17 +178,23 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 			}
 		}
 
-		if (fContentAssistant != null)
-			fContentAssistant.uninstall();
-		fContentAssistant = configuration.getContentAssistant(this);
-		if (fContentAssistant != null) {
-			fContentAssistant.install(this);
-			fContentAssistantInstalled = true;
-		}
-		else {
-			// 248036
-			// disable the content assist operation if no content assistant
-			enableOperation(CONTENTASSIST_PROPOSALS, false);
+		IContentAssistant newAssistant = configuration.getContentAssistant(this);
+		if (newAssistant != fContentAssistant || newAssistant == null || fContentAssistant == null) {
+			if (fContentAssistant != null)
+				fContentAssistant.uninstall();
+
+			fContentAssistant = newAssistant;
+
+			if (fContentAssistant != null) {
+				fContentAssistant.install(this);
+				fContentAssistantInstalled = true;
+			}
+			else {
+				// 248036
+				// disable the content assist operation if no content
+				// assistant
+				enableOperation(CONTENTASSIST_PROPOSALS, false);
+			}
 		}
 
 		fContentFormatter = configuration.getContentFormatter(this);

@@ -94,12 +94,14 @@ public class StructuredContentAssistant extends ContentAssistant {
 					IContentAssistProcessor processor = (IContentAssistProcessor) iter.next();
 					setContentAssistProcessor(processor, partitionType);
 				}
-				// add partition type to list of extended partition types
-				// installed
-				if (fInstalledExtendedContentTypes == null)
-					fInstalledExtendedContentTypes = new ArrayList();
-				fInstalledExtendedContentTypes.add(partitionType);
 			}
+			// add partition type to list of extended partition types
+			// installed (regardless of whether or not any extended content
+			// assist processors were installed because dont want to look it
+			// up every time)
+			if (fInstalledExtendedContentTypes == null)
+				fInstalledExtendedContentTypes = new ArrayList();
+			fInstalledExtendedContentTypes.add(partitionType);
 		}
 
 		IContentAssistProcessor processor = super.getContentAssistProcessor(partitionType);
@@ -115,6 +117,10 @@ public class StructuredContentAssistant extends ContentAssistant {
 				((CompoundContentAssistProcessor) iter.next()).dispose();
 			}
 			fProcessors.clear();
+		}
+		// clear out list of installed content types
+		if (fInstalledExtendedContentTypes != null) {
+			fInstalledExtendedContentTypes.clear();
 		}
 		super.uninstall();
 	}
