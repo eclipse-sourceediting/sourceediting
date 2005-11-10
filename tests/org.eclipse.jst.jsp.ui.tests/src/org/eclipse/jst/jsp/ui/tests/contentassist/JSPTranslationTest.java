@@ -27,7 +27,6 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jst.jsp.core.internal.domdocument.DOMModelForJSP;
 import org.eclipse.jst.jsp.core.internal.java.IJSPTranslation;
-import org.eclipse.jst.jsp.core.internal.java.JSPELHandler;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapter;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapterFactory;
@@ -81,7 +80,7 @@ public class JSPTranslationTest extends TestCase {
 
 		IDOMModel model = getIncludeTestModelForRead();
 		JSPTranslationAdapter adapter = (JSPTranslationAdapter) model.getDocument().getAdapterFor(IJSPTranslation.class);
-		JSPTranslation translation = adapter.getJSPTranslation(JSPELHandler.getJSPELHandler());
+		JSPTranslation translation = adapter.getJSPTranslation();
 		try {
 			HashMap java2jsp = translation.getJava2JspMap();
 			assertEquals("java2jsp map size:", 13, java2jsp.size());
@@ -119,7 +118,7 @@ public class JSPTranslationTest extends TestCase {
 		IDOMModel model = getIncludeTestModelForRead();
 		ScannerUnitTests.verifyLengths(model, model.getStructuredDocument().get());
 		JSPTranslationAdapter adapter = (JSPTranslationAdapter) model.getDocument().getAdapterFor(IJSPTranslation.class);
-		JSPTranslation translation = adapter.getJSPTranslation(JSPELHandler.getJSPELHandler());
+		JSPTranslation translation = adapter.getJSPTranslation();
 		// named as .bin so no line conversion occurs (\n is in use)
 		InputStream in = getClass().getResourceAsStream("translated_text.bin");
 		String knownTranslationText = loadChars(in);
@@ -140,13 +139,13 @@ public class JSPTranslationTest extends TestCase {
 	public void testJSPTranslationAdapter() {
 		IDOMModel model = getIncludeTestModelForRead();
 		JSPTranslationAdapter adapter = (JSPTranslationAdapter) model.getDocument().getAdapterFor(IJSPTranslation.class);
-		JSPTranslation translation = adapter.getJSPTranslation(JSPELHandler.getJSPELHandler());
+		JSPTranslation translation = adapter.getJSPTranslation();
 
 		try {
 			IJavaProject proj = adapter.getJavaProject();
 			assertNotNull("couldn't get java project:" + proj);
 
-			translation = adapter.getJSPTranslation(JSPELHandler.getJSPELHandler());
+			translation = adapter.getJSPTranslation();
 			assertNotNull("couldn't get translation:", translation);
 		}
 		finally {
@@ -167,7 +166,7 @@ public class JSPTranslationTest extends TestCase {
 		try {
 			setupAdapterFactory(sModel);
 			JSPTranslationAdapter adapter = (JSPTranslationAdapter) sModel.getDocument().getAdapterFor(IJSPTranslation.class);
-			JSPTranslation translation = adapter.getJSPTranslation(JSPELHandler.getJSPELHandler());
+			JSPTranslation translation = adapter.getJSPTranslation();
 			String javaText = translation.getJavaText();
 			boolean bean1 = javaText.indexOf("javax.swing.JButton x = null;") != -1;
 			boolean bean2 = javaText.indexOf("javax.swing.JButton y = null;") != -1;
@@ -189,7 +188,7 @@ public class JSPTranslationTest extends TestCase {
 		try {
 			setupAdapterFactory(sModel);
 			JSPTranslationAdapter adapter = (JSPTranslationAdapter) sModel.getDocument().getAdapterFor(IJSPTranslation.class);
-			JSPTranslation translation = adapter.getJSPTranslation(JSPELHandler.getJSPELHandler());
+			JSPTranslation translation = adapter.getJSPTranslation();
 			
 			String javaText = translation.getJavaText();
 			
@@ -211,7 +210,7 @@ public class JSPTranslationTest extends TestCase {
 		try {
 			setupAdapterFactory(sModel);
 			JSPTranslationAdapter adapter = (JSPTranslationAdapter) sModel.getDocument().getAdapterFor(IJSPTranslation.class);
-			JSPTranslation translation = adapter.getJSPTranslation(JSPELHandler.getJSPELHandler());
+			JSPTranslation translation = adapter.getJSPTranslation();
 			
 			HashMap jsp2java = translation.getJsp2JavaMap();
 			Object[] jspRanges = jsp2java.keySet().toArray();
@@ -236,7 +235,7 @@ public class JSPTranslationTest extends TestCase {
 		try {
 			setupAdapterFactory(sModel);
 			JSPTranslationAdapter adapter = (JSPTranslationAdapter) sModel.getDocument().getAdapterFor(IJSPTranslation.class);
-			JSPTranslation translation = adapter.getJSPTranslation(JSPELHandler.getJSPELHandler());
+			JSPTranslation translation = adapter.getJSPTranslation();
 			
 			String transText = translation.getJavaText();
 			

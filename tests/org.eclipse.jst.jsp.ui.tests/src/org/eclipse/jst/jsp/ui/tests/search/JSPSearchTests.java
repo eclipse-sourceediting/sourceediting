@@ -28,7 +28,6 @@ import org.eclipse.jdt.core.search.IJavaSearchConstants;
 import org.eclipse.jdt.core.search.SearchDocument;
 import org.eclipse.jdt.core.search.SearchPattern;
 import org.eclipse.jst.jsp.core.internal.java.IJSPTranslation;
-import org.eclipse.jst.jsp.core.internal.java.JSPELHandler;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapter;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapterFactory;
@@ -212,7 +211,7 @@ public class JSPSearchTests extends TestCase implements IJavaSearchConstants {
 
 			IDOMDocument doc = xmlModel.getDocument();
 			JSPTranslationAdapter adapter = (JSPTranslationAdapter) doc.getAdapterFor(IJSPTranslation.class);
-			JSPTranslation translation = adapter.getJSPTranslation(JSPELHandler.getJSPELHandler());
+			JSPTranslation translation = adapter.getJSPTranslation();
 			IJavaElement element = translation.getElementsFromJspRange(377, 384)[0];
 
 			TestJspSearchRequestor requestor = new TestJspSearchRequestor();
