@@ -18,8 +18,6 @@
 
    <requires>
       <import feature="org.eclipse.test"/>
-      <import feature="org.eclipse.wst.web_ui.feature"/>
-      <import feature="org.eclipse.wst.xml_tests.feature"/>
    </requires>
 
    <plugin
