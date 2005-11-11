@@ -27,6 +27,7 @@ import org.eclipse.wst.xml.core.internal.contentmodel.CMContent;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
+import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.ui.internal.contentassist.AbstractContentAssistProcessor;
 import org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest;
@@ -195,8 +196,8 @@ public class JSPDummyContentAssistProcessor extends AbstractContentAssistProcess
 		return super.getAdditionalInfo(parentOrOwner, cmnode);
 	}
 
-	protected List getAvailableChildrenAtIndex(Element parent, int index) {
-		return super.getAvailableChildrenAtIndex(parent, index);
+	protected List getAvailableChildrenAtIndex(Element parent, int index, int validityChecking) {
+		return super.getAvailableChildrenAtIndex(parent, index, validityChecking);
 	}
 
 	protected List getAvailableRootChildren(Document document, int childIndex) {
@@ -266,10 +267,6 @@ public class JSPDummyContentAssistProcessor extends AbstractContentAssistProcess
 
 	protected String getRequiredText(Node parentOrOwner, CMElementDeclaration elementDecl) {
 		return super.getRequiredText(parentOrOwner, elementDecl);
-	}
-
-	protected List getValidCMNodes(int childPosition, int kindOfAction, List modelQueryActions) {
-		return super.getValidCMNodes(childPosition, kindOfAction, modelQueryActions);
 	}
 
 	protected void init() {
