@@ -63,9 +63,11 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.eclipse.wst.xml.ui.internal.Logger;
 import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
+import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.eclipse.wst.xml.ui.internal.editor.CMImageUtil;
 import org.eclipse.wst.xml.ui.internal.editor.XMLEditorPluginImageHelper;
 import org.eclipse.wst.xml.ui.internal.editor.XMLEditorPluginImages;
+import org.eclipse.wst.xml.ui.internal.preferences.XMLUIPreferenceNames;
 import org.eclipse.wst.xml.ui.internal.taginfo.MarkupTagInfoProvider;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
@@ -761,7 +763,6 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 	protected void addTagInsertionProposals(ContentAssistRequest contentAssistRequest, int childPosition) {
 		List cmnodes = null;
 		Node parent = contentAssistRequest.getParent();
-		List validActions = null;
 		String error = null;
 
 		// CMVC #242943 shouldn't have proposals before XMLPI
@@ -815,10 +816,16 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 				addPCDATAProposal(parentDecl.getNodeName(), contentAssistRequest);
 			}
 			else {
-				// retrieve the list of children
-				validActions = getAvailableChildrenAtIndex((Element) parent, childPosition);
-				cmnodes = getValidCMNodes(childPosition, ModelQueryAction.INSERT, validActions);
-				Iterator nodeIterator = cmnodes.iterator();
+				// retrieve the list of all possible children within this parent context
+				cmnodes = getAvailableChildElementDeclarations((Element)parent, childPosition, ModelQueryAction.INSERT);
+                
+                // retrieve the list of the possible children within this parent context and at this index
+                List strictCMNodeSuggestions = null;
+                if (XMLUIPreferenceNames.SUGGESTION_STRATEGY_VALUE_STRICT.equals(XMLUIPlugin.getInstance().getPreferenceStore().getString(XMLUIPreferenceNames.SUGGESTION_STRATEGY))) 
+                { 
+                  strictCMNodeSuggestions = getValidChildElementDeclarations((Element)parent, childPosition, ModelQueryAction.INSERT);                
+                }
+ 				Iterator nodeIterator = cmnodes.iterator();
 				if (!nodeIterator.hasNext()) {
 					if (getCMElementDeclaration(parent) != null)
 						error = NLS.bind(XMLUIMessages._Has_no_available_child, (new Object[]{parent.getNodeName()}));
@@ -838,9 +845,20 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 						// only add proposals for the child element's that
 						// begin with the matchstring
 						String tagname = getRequiredName(parent, elementDecl);
-						Image image = CMImageUtil.getImage(elementDecl);
+                        boolean isStrictCMNodeSuggestion = strictCMNodeSuggestions != null ? strictCMNodeSuggestions.contains(elementDecl) : false;
+                        
+                        Image image = CMImageUtil.getImage(elementDecl);
+  
 						if (image == null) {
-							image = XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_TAG_GENERIC);
+                            if (strictCMNodeSuggestions != null) {
+                                image = isStrictCMNodeSuggestion ?                                 
+							            XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_TAG_GENERIC_EMPHASIZED) :
+                                        XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_TAG_GENERIC_DEEMPHASIZED);                                                                                        
+                            }
+                            else {
+                                image = XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_TAG_GENERIC);
+                            }
+                              
 						}
 						// Account for the &lt; and &gt;. If attributes were
 						// added, the cursor will be placed
@@ -850,7 +868,8 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 						if (beginsWith(tagname, matchString)) {
 							String proposedText = getRequiredText(parent, elementDecl);
 							String proposedInfo = getAdditionalInfo(parentDecl, elementDecl);
-							CustomCompletionProposal proposal = new CustomCompletionProposal(proposedText, contentAssistRequest.getReplacementBeginPosition(), contentAssistRequest.getReplacementLength(), markupAdjustment, image, tagname, null, proposedInfo, XMLRelevanceConstants.R_TAG_INSERTION);
+                            int relevance = isStrictCMNodeSuggestion ? XMLRelevanceConstants.R_STICTLY_VALID_TAG_INSERTION : XMLRelevanceConstants.R_TAG_INSERTION; 
+							CustomCompletionProposal proposal = new CustomCompletionProposal(proposedText, contentAssistRequest.getReplacementBeginPosition(), contentAssistRequest.getReplacementLength(), markupAdjustment, image, tagname, null, proposedInfo, relevance);
 							contentAssistRequest.addProposal(proposal);
 						}
 					}
@@ -913,13 +932,12 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 		List cmnodes = null;
 		Node parent = contentAssistRequest.getParent();
 		IDOMNode node = (IDOMNode) contentAssistRequest.getNode();
-		List validActions = null;
 		String error = null;
 		String matchString = contentAssistRequest.getMatchString();
 		if (parent.getNodeType() == Node.ELEMENT_NODE) {
 			// retrieve the list of children
-			validActions = getAvailableChildrenAtIndex((Element) parent, childPosition);
-			cmnodes = getValidCMNodes(childPosition, ModelQueryAction.INSERT, validActions);
+			//validActions = getAvailableChildrenAtIndex((Element) parent, childPosition);
+			cmnodes = getAvailableChildElementDeclarations((Element)parent, childPosition, ModelQueryAction.INSERT);
 			Iterator nodeIterator = cmnodes.iterator();
 			// chop off any leading <'s and whitespace from the matchstring
 			while ((matchString.length() > 0) && (Character.isWhitespace(matchString.charAt(0)) || beginsWith(matchString, "<"))) //$NON-NLS-1$
@@ -1596,7 +1614,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 	}
 
 	// returns a list of ModelQueryActions
-	protected List getAvailableChildrenAtIndex(Element parent, int index) {
+	protected List getAvailableChildrenAtIndex(Element parent, int index, int validityChecking) {
 		List list = new ArrayList();
 		CMElementDeclaration parentDecl = getCMElementDeclaration(parent);
 		if (parentDecl != null) {
@@ -1605,8 +1623,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 			// int editMode = modelQuery.getEditMode();
 			int editMode = ModelQuery.EDIT_MODE_UNCONSTRAINED;
 			int ic = (editMode == ModelQuery.EDIT_MODE_CONSTRAINED_STRICT) ? ModelQuery.INCLUDE_CHILD_NODES | ModelQuery.INCLUDE_SEQUENCE_GROUPS : ModelQuery.INCLUDE_CHILD_NODES;
-			int vc = (editMode == ModelQuery.EDIT_MODE_CONSTRAINED_STRICT) ? ModelQuery.VALIDITY_STRICT : ModelQuery.VALIDITY_NONE;
-			modelQuery.getInsertActions(parent, parentDecl, index, ic, vc, list);
+			modelQuery.getInsertActions(parent, parentDecl, index, ic, validityChecking, list);
 		}
 		return list;
 	}
@@ -2043,7 +2060,18 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 		return name;
 	}
 
-	protected List getValidCMNodes(int childPosition, int kindOfAction, List modelQueryActions) {
+    // returns a list of CMNodes that are available within this parent context
+    // Given the grammar shown below and a snippet of XML code (where the '|' indicated the cursor position) 
+    // the list would return all of the element declarations that are potential child elements of Foo. 
+    //
+    // grammar : Foo -> (A, B, C)   
+    // snippet : <Foo><A>|
+    // result  : {A, B, C}
+    // 
+    // TODO cs... do we need to pass in the 'kindOfAction'?  Seems to me we could assume it's always an insert.
+	protected List getAvailableChildElementDeclarations(Element parent, int childPosition, int kindOfAction) 
+    {
+        List modelQueryActions =  getAvailableChildrenAtIndex(parent, childPosition, ModelQuery.VALIDITY_NONE); 
 		Iterator iterator = modelQueryActions.iterator();
 		List cmnodes = new Vector();
 		while (iterator.hasNext()) {
@@ -2056,6 +2084,30 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 		}
 		return cmnodes;
 	}
+
+    // returns a list of CMNodes that can be validly inserted at this childPosition 
+    // Given the grammar shown below and a snippet of XML code (where the '|' indicated the cursor position) 
+    // the list would return only the element declarations can be inserted while maintaing validity of the content. 
+    //
+    // grammar : Foo -> (A, B, C)   
+    // snippet : <Foo><A>|
+    // result  : {B}
+    //    
+    protected List getValidChildElementDeclarations(Element parent, int childPosition, int kindOfAction) 
+    {
+        List modelQueryActions =  getAvailableChildrenAtIndex(parent, childPosition, ModelQuery.VALIDITY_STRICT); 
+        Iterator iterator = modelQueryActions.iterator();
+        List cmnodes = new Vector();
+        while (iterator.hasNext()) {
+            ModelQueryAction action = (ModelQueryAction) iterator.next();      
+            if (childPosition < 0 || (action.getStartIndex() <= childPosition && childPosition <= action.getEndIndex()) && action.getKind() == kindOfAction) {
+                CMNode actionCMNode = action.getCMNode();
+                if (actionCMNode != null && !cmnodes.contains(actionCMNode))
+                    cmnodes.add(actionCMNode);
+            }           
+        }
+        return cmnodes;
+    }
 
 	/**
 	 * Similar to the call in HTMLContentAssistProcessor. Pass in a node, it

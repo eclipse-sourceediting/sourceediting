@@ -19,6 +19,7 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
@@ -42,6 +43,7 @@ public class XMLSourcePreferencePage extends AbstractPreferencePage implements M
 	protected Button fAutoPropose;
 	protected Label fAutoProposeLabel;
 	protected Text fAutoProposeText;
+    protected Combo fSuggestionStrategyCombo;
 	protected Button fClearAllBlankLines;
 
 	// Formatting
@@ -78,6 +80,12 @@ public class XMLSourcePreferencePage extends AbstractPreferencePage implements M
 
 		fAutoProposeLabel = createLabel(contentAssistGroup, XMLUIMessages.Prompt_when_these_characte_UI_);
 		fAutoProposeText = createTextField(contentAssistGroup);
+        
+        createLabel(contentAssistGroup, "Suggestion strategy:");
+        fSuggestionStrategyCombo = new Combo(contentAssistGroup, SWT.READ_ONLY);
+        fSuggestionStrategyCombo.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        fSuggestionStrategyCombo.add("Lax");
+        fSuggestionStrategyCombo.add("Strict");
 	}
 
 	protected void createContentsForFormattingGroup(Composite parent) {
@@ -156,7 +164,8 @@ public class XMLSourcePreferencePage extends AbstractPreferencePage implements M
 	protected void initializeValuesForContentAssistGroup() {
 		// Content Assist
 		fAutoPropose.setSelection(getPreferenceStore().getBoolean(XMLUIPreferenceNames.AUTO_PROPOSE));
-		fAutoProposeText.setText(getPreferenceStore().getString(XMLUIPreferenceNames.AUTO_PROPOSE_CODE));
+		fAutoProposeText.setText(getPreferenceStore().getString(XMLUIPreferenceNames.AUTO_PROPOSE_CODE)); 
+        fSuggestionStrategyCombo.setText(getPreferenceStore().getString(XMLUIPreferenceNames.SUGGESTION_STRATEGY));
 	}
 
 	protected void initializeValuesForFormattingGroup() {
@@ -195,6 +204,9 @@ public class XMLSourcePreferencePage extends AbstractPreferencePage implements M
 		// Content Assist
 		fAutoPropose.setSelection(getPreferenceStore().getDefaultBoolean(XMLUIPreferenceNames.AUTO_PROPOSE));
 		fAutoProposeText.setText(getPreferenceStore().getDefaultString(XMLUIPreferenceNames.AUTO_PROPOSE_CODE));
+        
+        // TODO.. (cs) we need to map the preference value to a translated name
+        fSuggestionStrategyCombo.setText(getPreferenceStore().getDefaultString(XMLUIPreferenceNames.SUGGESTION_STRATEGY));
 	}
 
 	protected void performDefaultsForFormattingGroup() {
@@ -235,6 +247,7 @@ public class XMLSourcePreferencePage extends AbstractPreferencePage implements M
 		// Content Assist
 		getPreferenceStore().setValue(XMLUIPreferenceNames.AUTO_PROPOSE, fAutoPropose.getSelection());
 		getPreferenceStore().setValue(XMLUIPreferenceNames.AUTO_PROPOSE_CODE, fAutoProposeText.getText());
+        getPreferenceStore().setValue(XMLUIPreferenceNames.SUGGESTION_STRATEGY, fSuggestionStrategyCombo.getText());
 	}
 
 	protected void storeValuesForFormattingGroup() {

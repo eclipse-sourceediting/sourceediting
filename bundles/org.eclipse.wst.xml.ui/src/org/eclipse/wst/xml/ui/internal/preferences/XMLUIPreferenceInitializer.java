@@ -21,7 +21,7 @@ public class XMLUIPreferenceInitializer extends AbstractPreferenceInitializer {
 		
 		store.setDefault(XMLUIPreferenceNames.AUTO_PROPOSE, true);
 		store.setDefault(XMLUIPreferenceNames.AUTO_PROPOSE_CODE, "<"); //$NON-NLS-1$
-
+        store.setDefault(XMLUIPreferenceNames.SUGGESTION_STRATEGY, XMLUIPreferenceNames.SUGGESTION_STRATEGY_VALUE_LAX);
 		store.setDefault(
 					XMLUIPreferenceNames.USE_INFERRED_GRAMMAR, true);
 

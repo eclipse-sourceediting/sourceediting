@@ -15,6 +15,9 @@ package org.eclipse.wst.xml.ui.internal.preferences;
  * Preference keys for XML UI
  */
 public class XMLUIPreferenceNames {
+  
+    public final static String SUGGESTION_STRATEGY_VALUE_LAX = "Lax";
+    public final static String SUGGESTION_STRATEGY_VALUE_STRICT = "Strict";  
 	/**
 	 * A named preference that controls if code assist gets auto activated.
 	 * <p>
@@ -65,4 +68,18 @@ public class XMLUIPreferenceNames {
 	private static String getUseInferredGrammarKey() {
 		return "useInferredGrammar"; //$NON-NLS-1$
 	}
+    
+    /**
+     * A named preference that holds the characters that auto activate code
+     * assist.
+     * <p>
+     * Value is of type <code>String</code>. All characters that trigger
+     * auto code assist.
+     * </p>
+     */
+    public static final String SUGGESTION_STRATEGY = getSuggestionStrategeyKey();
+
+    private static String getSuggestionStrategeyKey() {
+        return "suggestionStrategy";//$NON-NLS-1$
+    }    
 }

@@ -41,7 +41,9 @@ public class XMLEditorPluginImages {
 	public static final String IMG_OBJ_LOCAL_VARIABLE = "icons/full/obj16/localvariable_obj.gif"; //$NON-NLS-1$
 	public static final String IMG_OBJ_NOTATION = "icons/full/obj16/notation.gif"; //$NON-NLS-1$
 	public static final String IMG_OBJ_PROCESSINGINSTRUCTION = "icons/full/obj16/proinst_obj.gif"; //$NON-NLS-1$
-	public static final String IMG_OBJ_TAG_GENERIC = "icons/full/obj16/tag-generic.gif"; //$NON-NLS-1$
+    public static final String IMG_OBJ_TAG_GENERIC = "icons/full/obj16/tag-generic.gif"; //$NON-NLS-1$
+    public static final String IMG_OBJ_TAG_GENERIC_DEEMPHASIZED = "icons/full/obj16/tag-generic-deemphasized.gif"; //$NON-NLS-1$    
+    public static final String IMG_OBJ_TAG_GENERIC_EMPHASIZED = "icons/full/obj16/tag-generic-emphasized.gif"; //$NON-NLS-1$        
 	public static final String IMG_OBJ_TAG_MACRO = "icons/full/obj16/tag-macro.gif"; //$NON-NLS-1$
 	public static final String IMG_OBJ_TXTEXT = "icons/full/obj16/text.gif"; //$NON-NLS-1$
 	public static final String IMG_OBJ_WARNING_OBJ = "icons/full/obj16/warning_obj.gif"; //$NON-NLS-1$
