@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.ui.internal.contentassist;
 
-
-
 import java.util.List;
 import java.util.Properties;
 import java.util.Vector;
@@ -27,7 +25,6 @@ import org.eclipse.wst.xml.core.internal.contentmodel.CMContent;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
-import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.ui.internal.contentassist.AbstractContentAssistProcessor;
 import org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest;
@@ -45,7 +42,6 @@ public class JSPDummyContentAssistProcessor extends AbstractContentAssistProcess
 	protected void addAttributeNameProposals(ContentAssistRequest contentAssistRequest) {
 		super.addAttributeNameProposals(contentAssistRequest);
 	}
-
 
 	protected void addAttributeValueProposals(ContentAssistRequest contentAssistRequest) {
 		super.addAttributeValueProposals(contentAssistRequest);
@@ -156,17 +152,19 @@ public class JSPDummyContentAssistProcessor extends AbstractContentAssistProcess
 		return super.computeContentProposals(documentPosition, matchString, completionRegion, nodeAtOffset, node);
 	}
 
+
 	/**
-	 * @see org.eclipse.jface.text.contentassist.IContentAssistProcessor#computeContextInformation(org.eclipse.jface.text.ITextViewer, int)
+	 * @see org.eclipse.jface.text.contentassist.IContentAssistProcessor#computeContextInformation(org.eclipse.jface.text.ITextViewer,
+	 *      int)
 	 */
 	public IContextInformation[] computeContextInformation(ITextViewer viewer, int documentOffset) {
 		return super.computeContextInformation(viewer, documentOffset);
 	}
 
-
 	protected ContentAssistRequest computeEndTagOpenProposals(int documentPosition, String matchString, ITextRegion completionRegion, IDOMNode nodeAtOffset, IDOMNode node) {
 		return super.computeEndTagOpenProposals(documentPosition, matchString, completionRegion, nodeAtOffset, node);
 	}
+
 
 	protected ICompletionProposal[] computeEntityReferenceProposals(int documentPosition, ITextRegion completionRegion, IDOMNode treeNode) {
 		return super.computeEntityReferenceProposals(documentPosition, completionRegion, treeNode);
@@ -247,7 +245,6 @@ public class JSPDummyContentAssistProcessor extends AbstractContentAssistProcess
 		return super.getMatchString(parent, aRegion, offset);
 	}
 
-
 	protected ITextRegion getNameRegion(IStructuredDocumentRegion flatNode) {
 		return super.getNameRegion(flatNode);
 	}
@@ -256,6 +253,7 @@ public class JSPDummyContentAssistProcessor extends AbstractContentAssistProcess
 	protected List getPossibleDataTypeValues(Node node, CMAttributeDeclaration ad) {
 		return super.getPossibleDataTypeValues(node, ad);
 	}
+
 
 	protected String getRequiredName(Node parentOrOwner, CMNode cmnode) {
 		return super.getRequiredName(parentOrOwner, cmnode);
@@ -267,6 +265,10 @@ public class JSPDummyContentAssistProcessor extends AbstractContentAssistProcess
 
 	protected String getRequiredText(Node parentOrOwner, CMElementDeclaration elementDecl) {
 		return super.getRequiredText(parentOrOwner, elementDecl);
+	}
+
+	protected List getValidChildElementDeclarations(Element parent, int childPosition, int kindOfAction) {
+		return super.getValidChildElementDeclarations(parent, childPosition, kindOfAction);
 	}
 
 	protected void init() {
@@ -289,16 +291,16 @@ public class JSPDummyContentAssistProcessor extends AbstractContentAssistProcess
 		return super.mapToProperties(map);
 	}
 
-	protected void setErrorMessage(String errorMessage, String prepend, String append) {
-		super.setErrorMessage(errorMessage, prepend, append);
+	public void setErrorMessage(String errorMessage) {
+		super.setErrorMessage(errorMessage);
 	}
 
 	protected void setErrorMessage(String errorMessage, String append) {
 		super.setErrorMessage(errorMessage, append);
 	}
 
-	public void setErrorMessage(String errorMessage) {
-		super.setErrorMessage(errorMessage);
+	protected void setErrorMessage(String errorMessage, String prepend, String append) {
+		super.setErrorMessage(errorMessage, prepend, append);
 	}
 
 	protected boolean stringsEqual(String a, String b) {
