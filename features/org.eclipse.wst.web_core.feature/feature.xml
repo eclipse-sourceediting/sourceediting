@@ -24,11 +24,6 @@
          id="org.eclipse.wst.server_core.feature"
          version="0.0.0"/>
 
-   <requires>
-      <import feature="org.eclipse.wst.xml_core.feature" version="1.0.0"/>
-      <import feature="org.eclipse.wst.server_core.feature" version="1.0.0"/>
-   </requires>
-
    <plugin
          id="org.eclipse.wst.css.core"
          download-size="0"
