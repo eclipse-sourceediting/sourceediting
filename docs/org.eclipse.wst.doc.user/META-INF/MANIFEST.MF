@@ -1,8 +1,0 @@
-Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
-Bundle-Name: master user doc toc
-Bundle-SymbolicName: org.eclipse.wst.doc.user; singleton:=true
-Bundle-Version: 1.0.0
-Bundle-Vendor: %providerName
-Bundle-Localization: plugin
-Eclipse-AutoStart: true
