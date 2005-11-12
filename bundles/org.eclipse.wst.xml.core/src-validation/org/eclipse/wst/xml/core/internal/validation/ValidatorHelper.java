@@ -42,8 +42,6 @@ public class ValidatorHelper
   public String schemaLocationString = ""; //$NON-NLS-1$
   public int numDTDElements = 0;
 
-  public static final boolean IS_LINUX = java.io.File.separator.equals("/"); //$NON-NLS-1$
-
   /**
    * Constructor.
    */
@@ -57,17 +55,16 @@ public class ValidatorHelper
    * @return An XML Reader if one can be created or null.
    * @throws Exception
    */
-  protected XMLReader createXMLReader() throws Exception
+  protected XMLReader createXMLReader(String uri) throws Exception
   {     
     XMLReader reader = null;
     
     reader = new org.apache.xerces.parsers.SAXParser();     
-
     reader.setFeature("http://apache.org/xml/features/continue-after-fatal-error", false); //$NON-NLS-1$
     reader.setFeature("http://xml.org/sax/features/namespace-prefixes", true); //$NON-NLS-1$
     reader.setFeature("http://xml.org/sax/features/namespaces", false); //$NON-NLS-1$
     reader.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false); //$NON-NLS-1$
-    reader.setContentHandler(new MyContentHandler());
+    reader.setContentHandler(new MyContentHandler(uri));
     reader.setErrorHandler(new InternalErrorHandler()); 
 
     LexicalHandler lexicalHandler = new LexicalHandler()
@@ -136,7 +133,7 @@ public class ValidatorHelper
   {
     try
     {
-      XMLReader reader = createXMLReader();  
+      XMLReader reader = createXMLReader(uri);  
       InputSource inputSource = new InputSource(uri);
       inputSource.setCharacterStream(characterStream);
       reader.parse(inputSource);
@@ -158,6 +155,12 @@ public class ValidatorHelper
      * @see org.xml.sax.ErrorHandler#error(org.xml.sax.SAXParseException)
      */
     boolean isRootElement = true;
+    String baseURI;
+    
+    MyContentHandler(String uri)
+    {
+      this.baseURI = uri;  
+    }
     
     public void error(SAXParseException e) throws SAXException
     {
@@ -235,32 +238,15 @@ public class ValidatorHelper
         {                     
           location = atts.getValue(getPrefixedName(schemaInstancePrefix, "noNamespaceSchemaLocation")); //$NON-NLS-1$
           if (location == null)
-          {
+          {            
         	String schemaLoc = atts.getValue(getPrefixedName(schemaInstancePrefix, "schemaLocation"));  //$NON-NLS-1$
-            StringTokenizer st = new StringTokenizer(schemaLoc);
-            while(st.hasMoreTokens())
-            {
-              if(st.nextToken().equals(rootElementNamespace))
-              {
-            	if(st.hasMoreTokens())
-            	{
-            	  location = st.nextToken();
-            	}
-              }
-              else
-              {
-            	if(st.hasMoreTokens())
-            	{
-                  st.nextToken();
-            	}
-              }
-            }
-          }
+            location = getSchemaLocationForNamespace(schemaLoc, rootElementNamespace);
+          }  
         }  
         if (rootElementNamespace != null)
         {
-          location = URIResolverPlugin.createResolver().resolve(null, rootElementNamespace, location);    
-          location = URIResolverPlugin.createResolver().resolvePhysicalLocation(null, rootElementNamespace, location);                                          
+          location = URIResolverPlugin.createResolver().resolve(baseURI, rootElementNamespace, location);    
+          location = URIResolverPlugin.createResolver().resolvePhysicalLocation(baseURI, rootElementNamespace, location);                                          
         }           
         
         if (location != null)
@@ -300,6 +286,38 @@ public class ValidatorHelper
     {
       numDTDElements++;
     }
+    
+    // The xsiSchemaLocationValue is a list of namespace/location pairs that are separated by whitespace 
+    // this method walks the list of pairs looking for the specified namespace and returns the associated
+    // location.
+    //   
+    protected String getSchemaLocationForNamespace(String xsiSchemaLocationValue, String namespace)
+    {      
+      String result = null;
+      if (xsiSchemaLocationValue != null && namespace != null)
+      {
+        
+        StringTokenizer st = new StringTokenizer(xsiSchemaLocationValue);
+        while(st.hasMoreTokens())
+        {
+          if(st.nextToken().equals(namespace))
+          {
+            if(st.hasMoreTokens())
+            {
+              result = st.nextToken();
+            }
+          }
+          else
+          {
+            if(st.hasMoreTokens())
+            {
+              st.nextToken();
+            }
+          }
+        }
+      }
+      return result;
+    }         
   }   
        
   
