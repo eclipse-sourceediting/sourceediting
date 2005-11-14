@@ -226,6 +226,9 @@ public class XMLUIMessages extends NLS {
 	public static String Clear_all_blank_lines_UI_;
 	public static String Grammar_Constraints;
 	public static String Use_inferred_grammar_in_absence_of;
+	public static String Suggestion_Strategy;
+	public static String Suggestion_Strategy_Lax;
+	public static String Suggestion_Strategy_Strict;
 	public static String Element____1;
 	public static String Content_Model____2;
 	public static String Attribute____3;

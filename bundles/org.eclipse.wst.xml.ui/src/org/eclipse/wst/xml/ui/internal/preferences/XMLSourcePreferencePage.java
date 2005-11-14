@@ -12,6 +12,8 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.ui.internal.preferences;
 
+import java.util.Vector;
+
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.SWT;
@@ -27,7 +29,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbenchPreferencePage;
-import org.eclipse.ui.help.WorkbenchHelp;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.sse.ui.internal.preferences.ui.AbstractPreferencePage;
 import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
 import org.eclipse.wst.xml.core.internal.preferences.XMLCorePreferenceNames;
@@ -43,7 +45,8 @@ public class XMLSourcePreferencePage extends AbstractPreferencePage implements M
 	protected Button fAutoPropose;
 	protected Label fAutoProposeLabel;
 	protected Text fAutoProposeText;
-    protected Combo fSuggestionStrategyCombo;
+	private Combo fSuggestionStrategyCombo;
+	private Vector fSuggestionStrategies = null;
 	protected Button fClearAllBlankLines;
 
 	// Formatting
@@ -59,7 +62,7 @@ public class XMLSourcePreferencePage extends AbstractPreferencePage implements M
 
 	protected Control createContents(Composite parent) {
 		Composite composite = (Composite) super.createContents(parent);
-		WorkbenchHelp.setHelp(composite, IHelpContextIds.XML_PREFWEBX_SOURCE_HELPID);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(composite, IHelpContextIds.XML_PREFWEBX_SOURCE_HELPID);
 
 		createContentsForFormattingGroup(composite);
 		createContentsForContentAssistGroup(composite);
@@ -80,12 +83,15 @@ public class XMLSourcePreferencePage extends AbstractPreferencePage implements M
 
 		fAutoProposeLabel = createLabel(contentAssistGroup, XMLUIMessages.Prompt_when_these_characte_UI_);
 		fAutoProposeText = createTextField(contentAssistGroup);
-        
-        createLabel(contentAssistGroup, "Suggestion strategy:");
-        fSuggestionStrategyCombo = new Combo(contentAssistGroup, SWT.READ_ONLY);
-        fSuggestionStrategyCombo.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        fSuggestionStrategyCombo.add("Lax");
-        fSuggestionStrategyCombo.add("Strict");
+
+		createLabel(contentAssistGroup, XMLUIMessages.Suggestion_Strategy);
+		fSuggestionStrategyCombo = new Combo(contentAssistGroup, SWT.READ_ONLY);
+		fSuggestionStrategies = new Vector();
+		fSuggestionStrategyCombo.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		fSuggestionStrategyCombo.add(XMLUIMessages.Suggestion_Strategy_Lax);
+		fSuggestionStrategies.add(XMLUIPreferenceNames.SUGGESTION_STRATEGY_VALUE_LAX);
+		fSuggestionStrategyCombo.add(XMLUIMessages.Suggestion_Strategy_Strict);
+		fSuggestionStrategies.add(XMLUIPreferenceNames.SUGGESTION_STRATEGY_VALUE_STRICT);
 	}
 
 	protected void createContentsForFormattingGroup(Composite parent) {
@@ -106,8 +112,8 @@ public class XMLSourcePreferencePage extends AbstractPreferencePage implements M
 
 		fIndentUsingTabs = createRadioButton(formattingGroup, XMLUIMessages.Indent_using_tabs);
 		((GridData) fIndentUsingTabs.getLayoutData()).horizontalSpan = 2;
-		
-		fIndentUsingSpaces = createRadioButton(formattingGroup, XMLUIMessages.Indent_using_spaces);		
+
+		fIndentUsingSpaces = createRadioButton(formattingGroup, XMLUIMessages.Indent_using_spaces);
 		((GridData) fIndentUsingSpaces.getLayoutData()).horizontalSpan = 2;
 
 		createLabel(formattingGroup, XMLUIMessages.Indentation_size);
@@ -144,7 +150,8 @@ public class XMLSourcePreferencePage extends AbstractPreferencePage implements M
 			if (fAutoPropose.getSelection()) {
 				fAutoProposeLabel.setEnabled(true);
 				fAutoProposeText.setEnabled(true);
-			} else {
+			}
+			else {
 				fAutoProposeLabel.setEnabled(false);
 				fAutoProposeText.setEnabled(false);
 			}
@@ -153,6 +160,19 @@ public class XMLSourcePreferencePage extends AbstractPreferencePage implements M
 
 	protected Preferences getModelPreferences() {
 		return XMLCorePlugin.getDefault().getPluginPreferences();
+	}
+
+	/**
+	 * Return the currently selected suggestion strategy preference
+	 * 
+	 * @return a suggestion strategy constant from XMLUIPreferenceNames
+	 */
+	private String getCurrentSuggestionStrategy() {
+		int i = fSuggestionStrategyCombo.getSelectionIndex();
+		if (i >= 0) {
+			return (String) (fSuggestionStrategies.elementAt(i));
+		}
+		return ""; //$NON-NLS-1$
 	}
 
 	protected void initializeValues() {
@@ -164,8 +184,12 @@ public class XMLSourcePreferencePage extends AbstractPreferencePage implements M
 	protected void initializeValuesForContentAssistGroup() {
 		// Content Assist
 		fAutoPropose.setSelection(getPreferenceStore().getBoolean(XMLUIPreferenceNames.AUTO_PROPOSE));
-		fAutoProposeText.setText(getPreferenceStore().getString(XMLUIPreferenceNames.AUTO_PROPOSE_CODE)); 
-        fSuggestionStrategyCombo.setText(getPreferenceStore().getString(XMLUIPreferenceNames.SUGGESTION_STRATEGY));
+		fAutoProposeText.setText(getPreferenceStore().getString(XMLUIPreferenceNames.AUTO_PROPOSE_CODE));
+		String suggestionStrategy = getPreferenceStore().getString(XMLUIPreferenceNames.SUGGESTION_STRATEGY);
+		if (suggestionStrategy.length() > 0)
+			setCurrentSuggestionStrategy(suggestionStrategy);
+		else
+			setCurrentSuggestionStrategy(XMLUIPreferenceNames.SUGGESTION_STRATEGY_VALUE_LAX);
 	}
 
 	protected void initializeValuesForFormattingGroup() {
@@ -177,7 +201,8 @@ public class XMLSourcePreferencePage extends AbstractPreferencePage implements M
 		if (XMLCorePreferenceNames.TAB.equals(getModelPreferences().getString(XMLCorePreferenceNames.INDENTATION_CHAR))) {
 			fIndentUsingTabs.setSelection(true);
 			fIndentUsingSpaces.setSelection(false);
-		} else {
+		}
+		else {
 			fIndentUsingSpaces.setSelection(true);
 			fIndentUsingTabs.setSelection(false);
 		}
@@ -204,9 +229,11 @@ public class XMLSourcePreferencePage extends AbstractPreferencePage implements M
 		// Content Assist
 		fAutoPropose.setSelection(getPreferenceStore().getDefaultBoolean(XMLUIPreferenceNames.AUTO_PROPOSE));
 		fAutoProposeText.setText(getPreferenceStore().getDefaultString(XMLUIPreferenceNames.AUTO_PROPOSE_CODE));
-        
-        // TODO.. (cs) we need to map the preference value to a translated name
-        fSuggestionStrategyCombo.setText(getPreferenceStore().getDefaultString(XMLUIPreferenceNames.SUGGESTION_STRATEGY));
+		String suggestionStrategy = getPreferenceStore().getDefaultString(XMLUIPreferenceNames.SUGGESTION_STRATEGY);
+		if (suggestionStrategy.length() > 0)
+			setCurrentSuggestionStrategy(suggestionStrategy);
+		else
+			setCurrentSuggestionStrategy(XMLUIPreferenceNames.SUGGESTION_STRATEGY_VALUE_LAX);
 	}
 
 	protected void performDefaultsForFormattingGroup() {
@@ -218,7 +245,8 @@ public class XMLSourcePreferencePage extends AbstractPreferencePage implements M
 		if (XMLCorePreferenceNames.TAB.equals(getModelPreferences().getDefaultString(XMLCorePreferenceNames.INDENTATION_CHAR))) {
 			fIndentUsingTabs.setSelection(true);
 			fIndentUsingSpaces.setSelection(false);
-		} else {
+		}
+		else {
 			fIndentUsingSpaces.setSelection(true);
 			fIndentUsingTabs.setSelection(false);
 		}
@@ -237,6 +265,22 @@ public class XMLSourcePreferencePage extends AbstractPreferencePage implements M
 		return result;
 	}
 
+	/**
+	 * Set a suggestion strategy in suggestion strategy combo box
+	 * 
+	 * @param strategy
+	 */
+	private void setCurrentSuggestionStrategy(String strategy) {
+		// Clear the current selection.
+		fSuggestionStrategyCombo.clearSelection();
+		fSuggestionStrategyCombo.deselectAll();
+
+		int i = fSuggestionStrategies.indexOf(strategy);
+		if (i >= 0) {
+			fSuggestionStrategyCombo.select(i);
+		}
+	}
+
 	protected void storeValues() {
 		storeValuesForFormattingGroup();
 		storeValuesForContentAssistGroup();
@@ -247,7 +291,7 @@ public class XMLSourcePreferencePage extends AbstractPreferencePage implements M
 		// Content Assist
 		getPreferenceStore().setValue(XMLUIPreferenceNames.AUTO_PROPOSE, fAutoPropose.getSelection());
 		getPreferenceStore().setValue(XMLUIPreferenceNames.AUTO_PROPOSE_CODE, fAutoProposeText.getText());
-        getPreferenceStore().setValue(XMLUIPreferenceNames.SUGGESTION_STRATEGY, fSuggestionStrategyCombo.getText());
+		getPreferenceStore().setValue(XMLUIPreferenceNames.SUGGESTION_STRATEGY, getCurrentSuggestionStrategy());
 	}
 
 	protected void storeValuesForFormattingGroup() {
@@ -258,7 +302,8 @@ public class XMLSourcePreferencePage extends AbstractPreferencePage implements M
 
 		if (fIndentUsingTabs.getSelection()) {
 			getModelPreferences().setValue(XMLCorePreferenceNames.INDENTATION_CHAR, XMLCorePreferenceNames.TAB);
-		} else {
+		}
+		else {
 			getModelPreferences().setValue(XMLCorePreferenceNames.INDENTATION_CHAR, XMLCorePreferenceNames.SPACE);
 		}
 		getModelPreferences().setValue(XMLCorePreferenceNames.INDENTATION_SIZE, fIndentationSize.getSelection());
@@ -278,7 +323,8 @@ public class XMLSourcePreferencePage extends AbstractPreferencePage implements M
 				int formattingLineWidth = Integer.parseInt(widthText);
 				if ((formattingLineWidth < WIDTH_VALIDATION_LOWER_LIMIT) || (formattingLineWidth > WIDTH_VALIDATION_UPPER_LIMIT))
 					throw new NumberFormatException();
-			} catch (NumberFormatException nfexc) {
+			}
+			catch (NumberFormatException nfexc) {
 				setInvalidInputMessage(widthText);
 				setValid(false);
 				isError = true;
@@ -291,7 +337,8 @@ public class XMLSourcePreferencePage extends AbstractPreferencePage implements M
 				indentSize = fIndentationSize.getSelection();
 				if ((indentSize < MIN_INDENTATION_SIZE) || (indentSize > MAX_INDENTATION_SIZE))
 					throw new NumberFormatException();
-			} catch (NumberFormatException nfexc) {
+			}
+			catch (NumberFormatException nfexc) {
 				setInvalidInputMessage(Integer.toString(indentSize));
 				setValid(false);
 				isError = true;

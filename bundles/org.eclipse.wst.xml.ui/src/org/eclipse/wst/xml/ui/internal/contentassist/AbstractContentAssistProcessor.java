@@ -868,7 +868,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 						if (beginsWith(tagname, matchString)) {
 							String proposedText = getRequiredText(parent, elementDecl);
 							String proposedInfo = getAdditionalInfo(parentDecl, elementDecl);
-                            int relevance = isStrictCMNodeSuggestion ? XMLRelevanceConstants.R_STICTLY_VALID_TAG_INSERTION : XMLRelevanceConstants.R_TAG_INSERTION; 
+                            int relevance = isStrictCMNodeSuggestion ? XMLRelevanceConstants.R_STRICTLY_VALID_TAG_INSERTION : XMLRelevanceConstants.R_TAG_INSERTION; 
 							CustomCompletionProposal proposal = new CustomCompletionProposal(proposedText, contentAssistRequest.getReplacementBeginPosition(), contentAssistRequest.getReplacementLength(), markupAdjustment, image, tagname, null, proposedInfo, relevance);
 							contentAssistRequest.addProposal(proposal);
 						}
