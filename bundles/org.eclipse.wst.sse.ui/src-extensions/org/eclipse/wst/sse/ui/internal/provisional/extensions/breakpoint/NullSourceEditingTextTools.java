@@ -55,7 +55,7 @@ public class NullSourceEditingTextTools implements ISourceEditingTextTools {
 		return TextSelection.emptySelection();
 	}
 
-	void setTextEditor(ITextEditor editor) {
+	public void setTextEditor(ITextEditor editor) {
 		fTextEditor = editor;
 	}
 }
