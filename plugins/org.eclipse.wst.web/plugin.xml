@@ -59,8 +59,8 @@
     <project-facet-version facet="wst.web" version="1.0">
     
       <action type="install">
-        <delegate class="org.eclipse.wst.project.facet.StaticWebFacetInstallDelegate"/>
-        <config-factory class="org.eclipse.wst.project.facet.StaticWebFacetInstallDataModelProvider"/>
+        <delegate class="org.eclipse.wst.project.facet.SimpleWebFacetInstallDelegate"/>
+        <config-factory class="org.eclipse.wst.project.facet.SimpleWebFacetInstallDataModelProvider"/>
       </action>
       <constraint>
         <and>

@@ -7,6 +7,7 @@ Bundle-Activator: org.eclipse.wst.web.internal.WSTWebPlugin
 Bundle-Vendor: Eclipse.org
 Bundle-Localization: plugin
 Export-Package: .,
+ org.eclipse.wst.project.facet,
  org.eclipse.wst.web.internal,
  org.eclipse.wst.web.internal.deployables,
  org.eclipse.wst.web.internal.operation

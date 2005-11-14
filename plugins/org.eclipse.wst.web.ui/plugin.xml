@@ -13,9 +13,9 @@
             name="%StaticWebProject.name"
             icon="icons/full/ctool16/newwebprj_wiz.gif"
             category="org.eclipse.wst.web.ui"
-            class="org.eclipse.wst.web.ui.internal.wizards.SimpleWebModuleCreationWizard"
+            class="org.eclipse.wst.web.ui.internal.wizards.SimpleWebProjectWizard"
             project="true"
-            id="org.eclipse.wst.web.ui.internal.wizards.SimpleWebModuleCreation">
+            id="org.eclipse.wst.web.ui.internal.wizards.SimpleWebProjectWizard">
          <description>
             %StaticWebProject.description
          </description>
@@ -92,4 +92,12 @@
             id="org.eclipse.ui.simpleWebProjectNatureImage">
       </image>
    </extension>
+   
+   <extension point="org.eclipse.wst.common.project.facet.ui.wizard">
+    <wizard-pages facet="wst.web" version="1.0">
+      <install>
+        <page class="org.eclipse.wst.web.ui.internal.wizards.SimpleWebFacetInstallPage"/>
+      </install>
+    </wizard-pages>
+  </extension>
 </plugin>

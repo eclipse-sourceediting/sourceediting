@@ -23,8 +23,8 @@ import org.eclipse.wst.common.componentcore.datamodel.properties.IFacetProjectCr
 import org.eclipse.wst.common.frameworks.datamodel.AbstractDataModelOperation;
 import org.eclipse.wst.common.frameworks.datamodel.DataModelFactory;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
-import org.eclipse.wst.project.facet.IStaticWebFacetInstallDataModelProperties;
-import org.eclipse.wst.project.facet.StaticWebFacetInstallDataModelProvider;
+import org.eclipse.wst.project.facet.ISimpleWebFacetInstallDataModelProperties;
+import org.eclipse.wst.project.facet.SimpleWebFacetInstallDataModelProvider;
 
 public class StaticWebModuleCreationFacetOperation extends AbstractDataModelOperation {
 
@@ -53,10 +53,10 @@ public class StaticWebModuleCreationFacetOperation extends AbstractDataModelOper
 
 	protected IDataModel setupWebInstallAction() {
 		String versionStr = "1.0";
-		IDataModel webFacetInstallDataModel = DataModelFactory.createDataModel(new StaticWebFacetInstallDataModelProvider());
+		IDataModel webFacetInstallDataModel = DataModelFactory.createDataModel(new SimpleWebFacetInstallDataModelProvider());
 		webFacetInstallDataModel.setProperty(IFacetDataModelProperties.FACET_PROJECT_NAME, model.getStringProperty(IComponentCreationDataModelProperties.PROJECT_NAME));
 		webFacetInstallDataModel.setProperty(IFacetDataModelProperties.FACET_VERSION_STR, versionStr);
-		webFacetInstallDataModel.setProperty(IStaticWebFacetInstallDataModelProperties.CONTENT_DIR, model.getStringProperty(ISimpleWebModuleCreationDataModelProperties.WEBCONTENT_FOLDER));
+		webFacetInstallDataModel.setProperty(ISimpleWebFacetInstallDataModelProperties.CONTENT_DIR, model.getStringProperty(ISimpleWebModuleCreationDataModelProperties.WEBCONTENT_FOLDER));
 
 		return webFacetInstallDataModel;
 	}

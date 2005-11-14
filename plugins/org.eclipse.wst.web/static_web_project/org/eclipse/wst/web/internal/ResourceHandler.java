@@ -29,6 +29,7 @@ public final class ResourceHandler extends NLS {
 	public static String TargetRuntime;
 	public static String NewDotDotDot;
 	public static String InvalidServerTarget;
+	public static String ConfigureSettings;
 
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, ResourceHandler.class);
