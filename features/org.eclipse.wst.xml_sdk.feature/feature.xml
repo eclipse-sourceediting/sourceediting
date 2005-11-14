@@ -15,15 +15,13 @@
    </license>
 
    <includes
-         id="org.eclipse.wst.common_sdk.feature"
-         version="0.0.0"/>
-   <includes
          id="org.eclipse.wst.xml_ui.feature"
          version="0.0.0"/>
          
    <includes
          id="org.eclipse.wst.xml_ui.feature.source"
          version="0.0.0"/>
+
 
 
 </feature>
