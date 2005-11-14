@@ -26,7 +26,6 @@ Export-Package: org.eclipse.wst.html.core.internal,
  org.eclipse.wst.html.core.internal.text,
  org.eclipse.wst.html.core.internal.validate
 Require-Bundle: org.eclipse.wst.css.core,
- org.eclipse.wst.sse.ui,
  org.eclipse.wst.sse.core,
  org.eclipse.wst.xml.core,
  org.eclipse.wst.common.uriresolver,
