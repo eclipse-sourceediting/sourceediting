@@ -1,8 +1,6 @@
 package org.eclipse.wst.xsd.core.internal;
 
 import org.eclipse.core.runtime.Plugin;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.wst.xsd.contentmodel.internal.XSDCMManager;
 import org.osgi.framework.BundleContext;
 
@@ -44,14 +42,5 @@ public class XSDCorePlugin extends Plugin {
 		return plugin;
 	}
 
-	/**
-	 * Returns an image descriptor for the image file at the given
-	 * plug-in relative path.
-	 *
-	 * @param path the path
-	 * @return the image descriptor
-	 */
-	public static ImageDescriptor getImageDescriptor(String path) {
-		return AbstractUIPlugin.imageDescriptorFromPlugin("org.eclipse.wst.xsd.core", path);
-	}
+
 }
