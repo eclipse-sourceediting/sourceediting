@@ -26,6 +26,9 @@ public final class ResourceHandler extends NLS {
 	public static String StaticContextRootComposite_Context_Root_Label;
 	public static String StaticWebProjectWizardBasePage_Page_Title;
 	public static String StaticWebSettingsPropertiesPage_Not_available_for_closed_projects;
+	public static String TargetRuntime;
+	public static String NewDotDotDot;
+	public static String InvalidServerTarget;
 
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, ResourceHandler.class);
