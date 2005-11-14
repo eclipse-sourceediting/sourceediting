@@ -10,12 +10,12 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.core.internal.document;
 
+import org.eclipse.jst.jsp.core.internal.Assert;
 import org.eclipse.wst.sse.core.internal.provisional.AbstractAdapterFactory;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapterFactory;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.sse.internal.contentproperties.ContentSettingsChangeSubject;
-import org.eclipse.wst.sse.ui.internal.util.Assert;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.w3c.dom.Node;
 
