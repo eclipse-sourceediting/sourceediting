@@ -61,7 +61,6 @@ public class XMLTableTreeViewer extends TreeViewer implements IDesignViewer {
 		this.treeExtension = new XMLTreeExtension(getTree());
 
 		XMLTableTreeContentProvider provider = new XMLTableTreeContentProvider();
-		provider.addViewer(this);
 		setContentProvider(provider);
 		setLabelProvider(provider);
 
@@ -110,6 +109,18 @@ public class XMLTableTreeViewer extends TreeViewer implements IDesignViewer {
 	public void refresh(Object o) {
 		treeExtension.resetCachedData();
 		super.refresh(o);
+	}
+	
+	public void refresh(boolean updateLabels) {
+		treeExtension.resetCachedData();
+		super.refresh(updateLabels);
+		getControl().redraw();
+	}
+	
+	public void refresh(Object element, boolean updateLabels) {
+		treeExtension.resetCachedData();
+		super.refresh(element, updateLabels);
+		getControl().redraw();
 	}
 
 	public void setDocument(IDocument document) {

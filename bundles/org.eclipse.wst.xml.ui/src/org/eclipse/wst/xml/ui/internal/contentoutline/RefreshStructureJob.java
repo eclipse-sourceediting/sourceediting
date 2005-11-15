@@ -160,7 +160,7 @@ class RefreshStructureJob extends Job {
 							viewers[i].refresh();
 						}
 						else {
-							viewers[i].refresh(node);
+							viewers[i].refresh(node, true);
 						}
 					}
 					else {
