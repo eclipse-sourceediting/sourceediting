@@ -434,7 +434,7 @@ public class DTDParser extends DefaultHandler implements ContentHandler, DTDHand
 		startDeclaration(DeclNode.COMMENT);
 
 		if (comment == null)
-			comment = new String(ch);
+			comment = new String(ch, start, length);
 		else
 			comment += "\n" + new String(ch); // append all comments. //$NON-NLS-1$
 		// The comment will get reset after
