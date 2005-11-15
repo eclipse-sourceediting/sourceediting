@@ -185,7 +185,8 @@ public class FileBufferModelManager {
 				reference = FILE_PREFIX + baseReference;
 			}
 			String result = URIResolverPlugin.createResolver().resolve(reference, null, uri);
-			// System.out.println("URIResolverPlugin.createResolver().resolve("
+			// Logger.log(Logger.INFO_DEBUG,
+			// "URIResolverPlugin.createResolver().resolve("
 			// + reference + ", null, " +uri+") = " + result);
 			if (!baseHasPrefix && result.startsWith(FILE_PREFIX) && result.length() > FILE_PREFIX.length()) {
 				result = result.substring(FILE_PREFIX.length());
@@ -238,7 +239,7 @@ public class FileBufferModelManager {
 				if (!(textBuffer.getDocument() instanceof IStructuredDocument))
 					return;
 				if (Logger.DEBUG_TEXTBUFFERLIFECYCLE) {
-					System.out.println("Learned new buffer: " + buffer.getLocation().toString() + " " + buffer + " " + ((ITextFileBuffer) buffer).getDocument()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					Logger.log(Logger.INFO, "Learned new buffer: " + buffer.getLocation().toString() + " " + buffer + " " + ((ITextFileBuffer) buffer).getDocument()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				}
 				DocumentInfo info = new DocumentInfo();
 				info.buffer = textBuffer;
@@ -254,7 +255,7 @@ public class FileBufferModelManager {
 				if (!(textBuffer.getDocument() instanceof IStructuredDocument))
 					return;
 				if (Logger.DEBUG_TEXTBUFFERLIFECYCLE) {
-					System.out.println("Discarded buffer: " + buffer.getLocation().toString() + " " + buffer + " " + ((ITextFileBuffer) buffer).getDocument()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					Logger.log(Logger.INFO, "Discarded buffer: " + buffer.getLocation().toString() + " " + buffer + " " + ((ITextFileBuffer) buffer).getDocument()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				}
 				DocumentInfo info = (DocumentInfo) fDocumentMap.get(textBuffer.getDocument());
 				if (info != null) {
@@ -268,7 +269,7 @@ public class FileBufferModelManager {
 		public void dirtyStateChanged(IFileBuffer buffer, boolean isDirty) {
 			if (buffer instanceof ITextFileBuffer) {
 				if (Logger.DEBUG_TEXTBUFFERLIFECYCLE) {
-					System.out.println("Buffer dirty state changed: (" + isDirty + ") " + buffer.getLocation().toString() + " " + buffer + " " + ((ITextFileBuffer) buffer).getDocument()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+					Logger.log(Logger.INFO, "Buffer dirty state changed: (" + isDirty + ") " + buffer.getLocation().toString() + " " + buffer + " " + ((ITextFileBuffer) buffer).getDocument()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 				}
 				ITextFileBuffer textBuffer = (ITextFileBuffer) buffer;
 				if (!(textBuffer.getDocument() instanceof IStructuredDocument))
@@ -277,7 +278,7 @@ public class FileBufferModelManager {
 				if (info != null && info.model != null) {
 					String msg = "Updating model dirty state for" + info.buffer.getLocation(); //$NON-NLS-1$
 					if (Logger.DEBUG_FILEBUFFERMODELMANAGEMENT || Logger.DEBUG_TEXTBUFFERLIFECYCLE) {
-						System.out.println(msg);
+						Logger.log(Logger.INFO, msg);
 					}
 					info.model.setDirtyState(isDirty);
 
@@ -301,7 +302,7 @@ public class FileBufferModelManager {
 		public void underlyingFileDeleted(IFileBuffer buffer) {
 			if (buffer instanceof ITextFileBuffer) {
 				if (Logger.DEBUG_TEXTBUFFERLIFECYCLE) {
-					System.out.println("Deleted buffer: " + buffer.getLocation().toOSString() + " " + buffer); //$NON-NLS-1$ //$NON-NLS-2$
+					Logger.log(Logger.INFO, "Deleted buffer: " + buffer.getLocation().toOSString() + " " + buffer); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 			}
 		}
@@ -309,8 +310,8 @@ public class FileBufferModelManager {
 		public void underlyingFileMoved(IFileBuffer buffer, IPath path) {
 			if (buffer instanceof ITextFileBuffer) {
 				if (Logger.DEBUG_TEXTBUFFERLIFECYCLE) {
-					System.out.println("Moved buffer from: " + buffer.getLocation().toOSString() + " " + buffer); //$NON-NLS-1$ //$NON-NLS-2$
-					System.out.println("Moved buffer to: " + path.toOSString() + " " + buffer); //$NON-NLS-1$ //$NON-NLS-2$
+					Logger.log(Logger.INFO, "Moved buffer from: " + buffer.getLocation().toOSString() + " " + buffer); //$NON-NLS-1$ //$NON-NLS-2$
+					Logger.log(Logger.INFO, "Moved buffer to: " + path.toOSString() + " " + buffer); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 			}
 		}
@@ -358,6 +359,12 @@ public class FileBufferModelManager {
 	}
 
 	public String calculateId(IFile file) {
+		if (file == null) {
+			Exception iae = new IllegalArgumentException("can not calculate a model ID without an IFile"); //$NON-NLS-1$ 
+			Logger.logException(iae);
+			return null;
+		}
+
 		String id = null;
 		IPath path = file.getLocation();
 		if (path != null) {
@@ -375,7 +382,14 @@ public class FileBufferModelManager {
 
 	}
 
+
 	public String calculateId(IDocument document) {
+		if (document == null) {
+			Exception iae = new IllegalArgumentException("can not calculate a model ID without a document reference"); //$NON-NLS-1$ 
+			Logger.logException(iae);
+			return null;
+		}
+
 		String id = null;
 		ITextFileBuffer buffer = getBuffer(document);
 		if (buffer != null) {
@@ -459,6 +473,12 @@ public class FileBufferModelManager {
 	}
 
 	public ITextFileBuffer getBuffer(IDocument document) {
+		if (document == null) {
+			Exception iae = new IllegalArgumentException("can not get a buffer without a document reference"); //$NON-NLS-1$ 
+			Logger.logException(iae);
+			return null;
+		}
+
 		DocumentInfo info = (DocumentInfo) fDocumentMap.get(document);
 		if (info != null)
 			return info.buffer;
@@ -473,12 +493,18 @@ public class FileBufferModelManager {
 	}
 
 	IStructuredModel getModel(File file) {
+		if (file == null) {
+			Exception iae = new IllegalArgumentException("can not get/create a model without a java.io.File"); //$NON-NLS-1$ 
+			Logger.logException(iae);
+			return null;
+		}
+
 		IStructuredModel model = null;
 		ITextFileBufferManager bufferManager = FileBuffers.getTextFileBufferManager();
 		try {
 			IPath location = new Path(file.getAbsolutePath());
 			if (Logger.DEBUG_FILEBUFFERMODELMANAGEMENT) {
-				System.out.println("FileBufferModelManager connecting to File " + location); //$NON-NLS-1$
+				Logger.log(Logger.INFO, "FileBufferModelManager connecting to File " + location); //$NON-NLS-1$
 			}
 			bufferManager.connect(location, getProgressMonitor());
 			ITextFileBuffer buffer = bufferManager.getTextFileBuffer(location);
@@ -495,11 +521,17 @@ public class FileBufferModelManager {
 	}
 
 	public IStructuredModel getModel(IFile file) {
+		if (file == null) {
+			Exception iae = new IllegalArgumentException("can not get/create a model without an IFile"); //$NON-NLS-1$ 
+			Logger.logException(iae);
+			return null;
+		}
+
 		IStructuredModel model = null;
 		ITextFileBufferManager bufferManager = FileBuffers.getTextFileBufferManager();
 		try {
 			if (Logger.DEBUG_FILEBUFFERMODELMANAGEMENT) {
-				System.out.println("FileBufferModelManager connecting to IFile " + file.getLocation()); //$NON-NLS-1$
+				Logger.log(Logger.INFO, "FileBufferModelManager connecting to IFile " + file.getLocation()); //$NON-NLS-1$
 			}
 			bufferManager.connect(file.getLocation(), getProgressMonitor());
 			ITextFileBuffer buffer = bufferManager.getTextFileBuffer(file.getLocation());
@@ -536,13 +568,16 @@ public class FileBufferModelManager {
 	}
 
 	public IStructuredModel getModel(IStructuredDocument document) {
-		if (document == null)
+		if (document == null) {
+			Exception iae = new IllegalArgumentException("can not get/create a model without a document reference"); //$NON-NLS-1$ 
+			Logger.logException(iae);
 			return null;
+		}
 
 		DocumentInfo info = (DocumentInfo) fDocumentMap.get(document);
 		if (info != null && info.model == null) {
 			if (Logger.DEBUG_FILEBUFFERMODELMANAGEMENT) {
-				System.out.println("FileBufferModelManager creating model for " + info.buffer.getLocation() + " " + info.buffer.getDocument()); //$NON-NLS-1$ //$NON-NLS-2$
+				Logger.log(Logger.INFO, "FileBufferModelManager creating model for " + info.buffer.getLocation() + " " + info.buffer.getDocument()); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			info.modelReferenceCount++;
 
@@ -554,7 +589,7 @@ public class FileBufferModelManager {
 				info.model = model;
 				model.setId(info.buffer.getLocation().toString());
 				// handler now set by loader, for now
-				//model.setModelHandler(handler);
+				// model.setModelHandler(handler);
 				if (model instanceof AbstractStructuredModel) {
 					((AbstractStructuredModel) model).setContentTypeIdentifier(info.contentTypeID);
 				}
@@ -582,24 +617,32 @@ public class FileBufferModelManager {
 	}
 
 	public boolean isExistingBuffer(IDocument document) {
-		if (document == null)
+		if (document == null) {
+			Exception iae = new IllegalArgumentException("can not check for an existing buffer without a document reference"); //$NON-NLS-1$ 
+			Logger.logException(iae);
 			return false;
+		}
 
 		DocumentInfo info = (DocumentInfo) fDocumentMap.get(document);
 		return info != null;
 	}
 
 	public void releaseModel(IDocument document) {
+		if (document == null) {
+			Exception iae = new IllegalArgumentException("can not release a model without a document reference"); //$NON-NLS-1$ 
+			Logger.logException(iae);
+			return;
+		}
 		DocumentInfo info = (DocumentInfo) fDocumentMap.get(document);
 		if (info != null) {
 			if (Logger.DEBUG_FILEBUFFERMODELMANAGEMENT) {
-				System.out.println("FileBufferModelManager noticed full release of model for " + info.buffer.getLocation() + " " + info.buffer.getDocument()); //$NON-NLS-1$ //$NON-NLS-2$
+				Logger.log(Logger.INFO, "FileBufferModelManager noticed full release of model for " + info.buffer.getLocation() + " " + info.buffer.getDocument()); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			info.model = null;
 			info.modelReferenceCount--;
 			if (info.selfConnected) {
 				if (Logger.DEBUG_FILEBUFFERMODELMANAGEMENT) {
-					System.out.println("FileBufferModelManager disconnecting from " + info.buffer.getLocation() + " " + info.buffer.getDocument()); //$NON-NLS-1$ //$NON-NLS-2$
+					Logger.log(Logger.INFO, "FileBufferModelManager disconnecting from " + info.buffer.getLocation() + " " + info.buffer.getDocument()); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 				IPath location = info.buffer.getLocation();
 				try {
