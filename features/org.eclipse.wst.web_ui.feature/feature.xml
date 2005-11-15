@@ -14,17 +14,6 @@
       %license
    </license>
 
-   <includes
-         id="org.eclipse.wst.web_core.feature"
-         version="0.0.0"/>
-
-   <includes
-         id="org.eclipse.wst.xml_ui.feature"
-         version="0.0.0"/>
-
-   <includes
-         id="org.eclipse.wst.server_ui.feature"
-         version="0.0.0"/>
 
    <includes
          id="org.eclipse.wst.web_userdoc.feature"

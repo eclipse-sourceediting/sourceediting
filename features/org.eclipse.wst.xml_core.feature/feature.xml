@@ -14,13 +14,11 @@
       %license
    </license>
 
-   <includes
-         id="org.apache.xerces.feature"
-         version="0.0.0"/>
 
-   <includes
-         id="org.eclipse.wst.common_core.feature"
-         version="0.0.0"/>
+   <requires>
+      <import feature="org.apache.xerces.feature" version="2.7.0"/>
+   </requires>
+
 
    <plugin
          id="org.eclipse.wst.xml.core"
