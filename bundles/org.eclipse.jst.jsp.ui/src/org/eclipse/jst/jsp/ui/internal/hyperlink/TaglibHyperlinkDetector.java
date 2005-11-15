@@ -25,6 +25,7 @@ import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitioning;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.util.StringUtils;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
@@ -124,13 +125,16 @@ public class TaglibHyperlinkDetector implements IHyperlinkDetector {
 				IDOMAttr att = (IDOMAttr) node;
 				// do not include quotes in attribute value region
 				int regOffset = att.getValueRegionStartOffset();
-				int regLength = att.getValueRegion().getTextLength();
-				String attValue = att.getValueRegionText();
-				if (StringUtils.isQuoted(attValue)) {
-					regOffset = ++regOffset;
-					regLength = regLength - 2;
+				ITextRegion valueRegion = att.getValueRegion();
+				if (valueRegion != null) {
+					int regLength = valueRegion.getTextLength();
+					String attValue = att.getValueRegionText();
+					if (StringUtils.isQuoted(attValue)) {
+						regOffset = ++regOffset;
+						regLength = regLength - 2;
+					}
+					hyperRegion = new Region(regOffset, regLength);
 				}
-				hyperRegion = new Region(regOffset, regLength);
 			}
 		}
 		return hyperRegion;
@@ -153,7 +157,7 @@ public class TaglibHyperlinkDetector implements IHyperlinkDetector {
 				if (files[i].exists())
 					file = files[i];
 		}
-		if(file == null) {
+		if (file == null) {
 			file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(fileString));
 		}
 

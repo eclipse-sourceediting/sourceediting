@@ -21,6 +21,7 @@ import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolverPlugin
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.util.StringUtils;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDataType;
@@ -66,7 +67,8 @@ public class XMLHyperlinkDetector implements IHyperlinkDetector {
 
 		if (isHttp(uriString)) {
 			link = new URLHyperlink(hyperlinkRegion, uriString);
-		} else {
+		}
+		else {
 			// try to locate the file in the workspace
 			File systemFile = getFileFromUriString(uriString);
 			if (systemFile != null) {
@@ -76,7 +78,8 @@ public class XMLHyperlinkDetector implements IHyperlinkDetector {
 					// this is a WorkspaceFileHyperlink since file exists in
 					// workspace
 					link = new WorkspaceFileHyperlink(hyperlinkRegion, file);
-				} else {
+				}
+				else {
 					// this is an ExternalFileHyperlink since file does not
 					// exist in workspace
 					link = new ExternalFileHyperlink(hyperlinkRegion, systemFile);
@@ -98,7 +101,8 @@ public class XMLHyperlinkDetector implements IHyperlinkDetector {
 				if (currentNode.getNodeType() == Node.DOCUMENT_TYPE_NODE) {
 					// doctype nodes
 					uriString = getURIString(currentNode, document);
-				} else if (currentNode.getNodeType() == Node.ELEMENT_NODE) {
+				}
+				else if (currentNode.getNodeType() == Node.ELEMENT_NODE) {
 					// element nodes
 					Attr currentAttr = getCurrentAttrNode(currentNode, region.getOffset());
 					if (currentAttr != null) {
@@ -148,14 +152,16 @@ public class XMLHyperlinkDetector implements IHyperlinkDetector {
 				IPath location = new Path(sModel.getBaseLocation());
 				if (location.toFile().exists()) {
 					baseLoc = location.toString();
-				} else {
+				}
+				else {
 					if (location.segmentCount() > 1)
 						baseLoc = ResourcesPlugin.getWorkspace().getRoot().getFile(location).getLocation().toString();
 					else
 						baseLoc = ResourcesPlugin.getWorkspace().getRoot().getLocation().append(location).toString();
 				}
 			}
-		} finally {
+		}
+		finally {
 			if (sModel != null) {
 				sModel.releaseFromRead();
 			}
@@ -220,7 +226,8 @@ public class XMLHyperlinkDetector implements IHyperlinkDetector {
 			inode = sModel.getIndexedRegion(offset);
 			if (inode == null)
 				inode = sModel.getIndexedRegion(offset - 1);
-		} finally {
+		}
+		finally {
 			if (sModel != null)
 				sModel.releaseFromRead();
 		}
@@ -269,7 +276,8 @@ public class XMLHyperlinkDetector implements IHyperlinkDetector {
 			// try to create file from uri
 			URI uri = new URI(uriString);
 			file = new File(uri);
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			// if exception is thrown while trying to create File just ignore
 			// and file will be null
 		}
@@ -285,18 +293,22 @@ public class XMLHyperlinkDetector implements IHyperlinkDetector {
 				// handle doc type node
 				IDOMNode docNode = (IDOMNode) node;
 				hyperRegion = new Region(docNode.getStartOffset(), docNode.getEndOffset() - docNode.getStartOffset());
-			} else if (nodeType == Node.ATTRIBUTE_NODE) {
+			}
+			else if (nodeType == Node.ATTRIBUTE_NODE) {
 				// handle attribute nodes
 				IDOMAttr att = (IDOMAttr) node;
 				// do not include quotes in attribute value region
 				int regOffset = att.getValueRegionStartOffset();
-				int regLength = att.getValueRegion().getTextLength();
-				String attValue = att.getValueRegionText();
-				if (StringUtils.isQuoted(attValue)) {
-					regOffset = ++regOffset;
-					regLength = regLength - 2;
+				ITextRegion valueRegion = att.getValueRegion();
+				if (valueRegion != null) {
+					int regLength = valueRegion.getTextLength();
+					String attValue = att.getValueRegionText();
+					if (StringUtils.isQuoted(attValue)) {
+						regOffset = ++regOffset;
+						regLength = regLength - 2;
+					}
+					hyperRegion = new Region(regOffset, regLength);
 				}
-				hyperRegion = new Region(regOffset, regLength);
 			}
 		}
 		return hyperRegion;
@@ -367,32 +379,37 @@ public class XMLHyperlinkDetector implements IHyperlinkDetector {
 			baseLoc = getBaseLocation(document);
 			publicId = ((DocumentType) node).getPublicId();
 			systemId = ((DocumentType) node).getSystemId();
-		} else if (nodeType == Node.ATTRIBUTE_NODE) {
+		}
+		else if (nodeType == Node.ATTRIBUTE_NODE) {
 			// handle attribute node
 			Attr attrNode = (Attr) node;
-			baseLoc = getBaseLocation(document);
 			String attrName = attrNode.getName();
 			String attrValue = attrNode.getValue();
 			attrValue = StringUtils.strip(attrValue);
-
-			// handle schemaLocation attribute
-			String prefix = DOMNamespaceHelper.getPrefix(attrName);
-			String unprefixedName = DOMNamespaceHelper.getUnprefixedName(attrName);
-			if ((XMLNS.equals(prefix)) || (XMLNS.equals(unprefixedName))) {
-				publicId = attrValue;
-				systemId = getLocationHint(attrNode.getOwnerElement(), publicId);
-				if(systemId == null) {
+			if (attrValue != null && attrValue.length() > 0) {
+				baseLoc = getBaseLocation(document);
+				
+				// handle schemaLocation attribute
+				String prefix = DOMNamespaceHelper.getPrefix(attrName);
+				String unprefixedName = DOMNamespaceHelper.getUnprefixedName(attrName);
+				if ((XMLNS.equals(prefix)) || (XMLNS.equals(unprefixedName))) {
+					publicId = attrValue;
+					systemId = getLocationHint(attrNode.getOwnerElement(), publicId);
+					if (systemId == null) {
+						systemId = attrValue;
+					}
+				}
+				else if ((XSI_NAMESPACE_URI.equals(DOMNamespaceHelper.getNamespaceURI(attrNode))) && (SCHEMA_LOCATION.equals(unprefixedName))) {
+					// for now just use the first pair
+					// need to look into being more precise
+					StringTokenizer st = new StringTokenizer(attrValue);
+					publicId = st.hasMoreTokens() ? st.nextToken() : null;
+					systemId = st.hasMoreTokens() ? st.nextToken() : null;
+					// else check if xmlns publicId = value
+				}
+				else {
 					systemId = attrValue;
 				}
-			} else if ((XSI_NAMESPACE_URI.equals(DOMNamespaceHelper.getNamespaceURI(attrNode))) && (SCHEMA_LOCATION.equals(unprefixedName))) {
-				// for now just use the first pair
-				// need to look into being more precise
-				StringTokenizer st = new StringTokenizer(attrValue);
-				publicId = st.hasMoreTokens() ? st.nextToken() : null;
-				systemId = st.hasMoreTokens() ? st.nextToken() : null;
-				// else check if xmlns publicId = value
-			} else {
-				systemId = attrValue;
 			}
 		}
 
