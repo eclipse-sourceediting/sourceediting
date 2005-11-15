@@ -10,13 +10,16 @@
  *******************************************************************************/
 package org.eclipse.wst.web.ui.internal.wizards;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.jem.util.emf.workbench.ProjectUtilities;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizardPage;
@@ -24,6 +27,8 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
+import org.eclipse.ui.wizards.newresource.BasicNewResourceWizard;
 import org.eclipse.wst.common.componentcore.datamodel.properties.IFacetDataModelProperties;
 import org.eclipse.wst.common.componentcore.datamodel.properties.IFacetProjectCreationDataModelProperties;
 import org.eclipse.wst.common.componentcore.internal.operation.FacetProjectCreationOperation;
@@ -37,12 +42,15 @@ import org.eclipse.wst.common.project.facet.core.runtime.IRuntime;
 import org.eclipse.wst.common.project.facet.ui.AddRemoveFacetsWizard;
 import org.eclipse.wst.common.project.facet.ui.internal.ConflictingFacetsFilter;
 import org.eclipse.wst.common.project.facet.ui.internal.FacetsSelectionPanel;
+import org.eclipse.wst.web.internal.DelegateConfigurationElement;
+import org.eclipse.wst.web.ui.internal.WSTWebUIPlugin;
 
 public abstract class NewProjectDataModelFacetWizard extends AddRemoveFacetsWizard implements INewWizard, IFacetProjectCreationDataModelProperties {
 
 	protected IDataModel model = null;
 	private final IFacetedProjectTemplate template;
 	private IWizardPage firstPage;
+	private IConfigurationElement configurationElement;
 
 	public NewProjectDataModelFacetWizard(IDataModel model){
 		super(null);
@@ -135,11 +143,114 @@ public abstract class NewProjectDataModelFacetWizard extends AddRemoveFacetsWiza
 				FacetProjectCreationOperation operation = new FacetProjectCreationOperation(model);
 				this.fproj = operation.createProject(new NullProgressMonitor());
 				return super.performFinish();
+				
 			} catch (CoreException e) {
 				e.printStackTrace();
+			} finally {
+				try {
+					postPerformFinish();
+				} catch (InvocationTargetException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 		return false;
+	}
+	/**
+	 * <p>
+	 * Override to return the final perspective ID (if any). The final perspective ID can be
+	 * hardcoded by the subclass or determined programmatically (possibly using the value of a field
+	 * on the Wizard's WTP Operation Data Model).
+	 * </p>
+	 * <p>
+	 * Default return value is <b>null </b>.
+	 * </p>
+	 * 
+	 * @return Returns the ID of the Perspective which is preferred by this wizard upon completion.
+	 */
+	protected String getFinalPerspectiveID() {
+		return "org.eclipse.jst.j2ee.J2EEPerspective";
+	}
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * <p>
+	 * The configuration element is saved to use when the wizard completes in order to change the
+	 * current perspective using either (1) the value specified by {@link #getFinalPerspectiveID()}
+	 * or (2) the value specified by the finalPerspective attribute in the Wizard's configuration
+	 * element.
+	 * </p>
+	 * 
+	 * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
+	 *      java.lang.String, java.lang.Object)
+	 */
+	public final void setInitializationData(IConfigurationElement aConfigurationElement, String aPropertyName, Object theData) throws CoreException {
+		configurationElement = aConfigurationElement;
+		doSetInitializeData(aConfigurationElement, aPropertyName, theData);
+
+	}
+	/**
+	 * <p>
+	 * Override method for clients that wish to take advantage of the information provided by
+	 * {@see #setInitializationData(IConfigurationElement, String, Object)}.
+	 * </p>
+	 * 
+	 * @param aConfigurationElement
+	 *            The configuration element provided from the templated method.
+	 * @param aPropertyName
+	 *            The property name provided from the templated method.
+	 * @param theData
+	 *            The data provided from the templated method.
+	 */
+	protected void doSetInitializeData(IConfigurationElement aConfigurationElement, String aPropertyName, Object theData) {
+		// Default do nothing
+	}
+
+	/**
+	 * <p>
+	 * Returns the an id component used for Activity filtering.
+	 * </p>
+	 * 
+	 * <p>
+	 * The Plugin ID is determined from the configuration element specified in
+	 * {@see #setInitializationData(IConfigurationElement, String, Object)}.
+	 * </p>
+	 * 
+	 * @return Returns the plugin id associated with this wizard
+	 */
+	public final String getPluginId() {
+		return (configurationElement != null) ? configurationElement.getDeclaringExtension().getDeclaringPluginDescriptor().getUniqueIdentifier() : ""; //$NON-NLS-1$
+	}
+	/**
+	 * 
+	 * <p>
+	 * Invoked after the user has clicked the "Finish" button of the wizard. The default
+	 * implementation will attempt to update the final perspective to the value specified by
+	 * {@link #getFinalPerspectiveID() }
+	 * </p>
+	 * 
+	 * @throws InvocationTargetException
+	 * 
+	 * @see org.eclipse.wst.common.frameworks.internal.ui.wizard.WTPWizard#postPerformFinish()
+	 */
+	protected void postPerformFinish() throws InvocationTargetException {
+		
+		if (getFinalPerspectiveID() != null && getFinalPerspectiveID().length() > 0) {
+
+			IConfigurationElement element = new DelegateConfigurationElement(configurationElement) {
+				public String getAttribute(String aName) {
+					if (aName.equals("finalPerspective")) { //$NON-NLS-1$
+						return getFinalPerspectiveID();
+					}
+					return super.getAttribute(aName);
+				}
+			};
+			BasicNewProjectResourceWizard.updatePerspective(element);
+		} else
+			BasicNewProjectResourceWizard.updatePerspective(configurationElement);
+		String projName = getProjectName();
+		BasicNewResourceWizard.selectAndReveal(ProjectUtilities.getProject(projName), WSTWebUIPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow());
 	}
 
 	public Object getConfig(IProjectFacetVersion fv, Type type, String pjname) throws CoreException {
