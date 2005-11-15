@@ -1,0 +1,31 @@
+<?xml version = "1.0" ?>
+<!DOCTYPE taglib PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.1//EN" "http://java.sun.com/j2ee/dtds/web-jsptaglib_1_2.dtd">
+<taglib>
+	<tlib-version>1.1</tlib-version>
+	<jsp-version>1.1</jsp-version>
+	<uri>tagdependent</uri>
+	<short-name>tagdependent</short-name>
+	<description>
+		This tag library demonstrates tagdependent tag handling
+		using its "code" tag.
+	</description>
+	<tag>
+		<name>code</name>
+		<tag-class>com.example.tagdep.CodeTag</tag-class>
+		<body-content>tagdependent</body-content>
+		<attribute>
+			<name>fontName</name>
+			<required>true</required>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<name>bold</name>
+			<type>boolean</type>
+		</attribute>
+		<attribute>
+			<name>italic</name>
+			<type>boolean</type>
+		</attribute>
+	</tag>
+	<small-icon>browser_editor.gif</small-icon>
+</taglib>
