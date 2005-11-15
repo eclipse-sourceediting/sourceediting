@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jem.util.emf.workbench.ProjectUtilities;
+import org.eclipse.jem.util.logger.proxy.Logger;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizardPage;
@@ -142,7 +143,12 @@ public abstract class NewProjectDataModelFacetWizard extends AddRemoveFacetsWiza
 			try {
 				FacetProjectCreationOperation operation = new FacetProjectCreationOperation(model);
 				this.fproj = operation.createProject(new NullProgressMonitor());
-				return super.performFinish();
+				boolean success =  super.performFinish();
+				if(success){
+					final Set fixed = this.template.getFixedProjectFacets();
+			        this.fproj.setFixedProjectFacets( fixed );
+				}
+				return success;
 				
 			} catch (CoreException e) {
 				e.printStackTrace();
@@ -150,8 +156,7 @@ public abstract class NewProjectDataModelFacetWizard extends AddRemoveFacetsWiza
 				try {
 					postPerformFinish();
 				} catch (InvocationTargetException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					Logger.getLogger().logError(e);
 				}
 			}
 		}
