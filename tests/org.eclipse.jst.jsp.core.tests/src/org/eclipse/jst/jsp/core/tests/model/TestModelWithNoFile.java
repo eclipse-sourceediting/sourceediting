@@ -33,8 +33,6 @@ import org.eclipse.jst.jsp.core.tests.JSPCoreTestsPlugin;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
-import org.eclipse.wst.sse.core.internal.provisional.exceptions.ResourceAlreadyExists;
-import org.eclipse.wst.sse.core.internal.provisional.exceptions.ResourceInUse;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 
 public class TestModelWithNoFile extends TestCase {
@@ -62,27 +60,22 @@ public class TestModelWithNoFile extends TestCase {
 		IModelManager modelManager = StructuredModelManager.getModelManager();
 		IStructuredModel model = null;
 
+		// Create new project
 		IProject project = createSimpleProject("bug116066", null, null);
+		// Copy a TLD into the project
 		IFile tld = copyBundleEntryIntoWorkspace("/testfiles/116066/tagdep.tld", "/bug116066/tagdep.tld");
 		assertTrue(tld.exists());
 
 		IFile testFile = project.getFile("nonExistant.jsp");
 		assertFalse(testFile.exists());
 
+		// Get the model and set a reference to that tag library into it
 		try {
 			model = modelManager.getNewModelForEdit(testFile, false);
+			assertNotNull("couldn't get new model for " + testFile.getFullPath(), model);
 			model.getStructuredDocument().set("<%@taglib prefix=\"tagdependent\" uri=\"tagdependent\">\n<tagdependent:code> <<< </tagdependent:code>");
 		}
-		catch (ResourceAlreadyExists e) {
-			e.printStackTrace();
-		}
-		catch (ResourceInUse e) {
-			e.printStackTrace();
-		}
-		catch (IOException e) {
-			e.printStackTrace();
-		}
-		catch (CoreException e) {
+		catch (Exception e) {
 			e.printStackTrace();
 		}
 		finally {
@@ -90,8 +83,6 @@ public class TestModelWithNoFile extends TestCase {
 				model.releaseFromEdit();
 			}
 		}
-
-		assertTrue(true);
 	}
 
 	private IFile copyBundleEntryIntoWorkspace(String entryname, String fullPath) {
