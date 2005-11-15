@@ -13,7 +13,7 @@ package org.eclipse.jst.jsp.core.taglib;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
@@ -42,7 +42,8 @@ import org.eclipse.wst.sse.core.internal.util.StringUtils;
 
 /**
  * A non-extendable index manager for taglibs similar to the previous J2EE
- * ITaglibRegistry but lacking any ties to project natures.
+ * ITaglibRegistry but lacking any ties to project natures. Each record
+ * returned from the index represents a single tag library descriptor.
  * 
  * Indexing is not persisted between sessions, so new ADD events will be sent
  * to ITaglibIndexListeners during each workbench session. REMOVE events are
@@ -73,7 +74,9 @@ public final class TaglibIndex {
 			else if (delta.getElement().getElementType() == IJavaElement.JAVA_PROJECT) {
 				if ((delta.getFlags() & IJavaElementDelta.F_CLASSPATH_CHANGED) != 0) {
 					IJavaElement proj = delta.getElement();
-					handleClasspathChange((IJavaProject) proj);
+					synchronized (proj) {
+						handleClasspathChange((IJavaProject) proj);
+					}
 				}
 			}
 		}
@@ -380,22 +383,25 @@ public final class TaglibIndex {
 			ResourcesPlugin.getWorkspace().addResourceChangeListener(fResourceChangeListener, IResourceChangeEvent.POST_CHANGE);
 			JavaCore.addElementChangedListener(fClasspathChangeListener);
 		}
-		fProjectDescriptions = new HashMap();
+		fProjectDescriptions = new Hashtable();
 	}
 
 	/**
 	 * @param project
 	 * @return
 	 */
-	synchronized ProjectDescription createDescription(IProject project) {
-		ProjectDescription description = (ProjectDescription) fProjectDescriptions.get(project);
-		if (description == null) {
-			description = new ProjectDescription(project);
-			if (ENABLED) {
-				description.index();
-				description.indexClasspath();
+	ProjectDescription createDescription(IProject project) {
+		ProjectDescription description = null;
+		synchronized (project) {
+			description = (ProjectDescription) fProjectDescriptions.get(project);
+			if (description == null) {
+				description = new ProjectDescription(project);
+				if (ENABLED) {
+					description.index();
+					description.indexClasspath();
+				}
+				fProjectDescriptions.put(project, description);
 			}
-			fProjectDescriptions.put(project, description);
 		}
 		return description;
 	}
@@ -450,11 +456,25 @@ public final class TaglibIndex {
 	private ITaglibRecord internalResolve(String basePath, final String reference, boolean crossProjects) {
 		IProject project = null;
 		ITaglibRecord resolved = null;
+
 		IFile baseResource = FileBuffers.getWorkspaceFileAtLocation(new Path(basePath));
+		if (baseResource == null) {
+			/*
+			 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=116529
+			 * 
+			 * This method produces a less accurate result, but doesn't require
+			 * that the file exist yet.
+			 */
+			IFile[] files = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocation(new Path(basePath));
+			if (files.length > 0)
+				baseResource = files[0];
+		}
 		if (baseResource != null) {
 			project = baseResource.getProject();
-			ProjectDescription description = createDescription(project);
-			resolved = description.resolve(basePath, reference);
+			synchronized (project) {
+				ProjectDescription description = createDescription(project);
+				resolved = description.resolve(basePath, reference);
+			}
 		}
 		return resolved;
 	}
