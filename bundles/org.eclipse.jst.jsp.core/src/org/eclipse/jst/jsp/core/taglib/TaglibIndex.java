@@ -225,7 +225,7 @@ public final class TaglibIndex {
 									}
 									if (!projects[i].isAccessible() || (deltas[i] != null && deltas[i].getKind() == IResourceDelta.REMOVED)) {
 										if (_debugIndexCreation) {
-											Logger.log(Logger.INFO_DEBUG, "TaglibIndex noticed " + projects[i].getName() + " is no longer accessible"); //$NON-NLS-1$ //$NON-NLS-2$
+											Logger.log(Logger.INFO_DEBUG, "TaglibIndex noticed " + projects[i].getName() + " was removed or is no longer accessible"); //$NON-NLS-1$ //$NON-NLS-2$
 										}
 										ProjectDescription description = (ProjectDescription) fProjectDescriptions.remove(projects[i]);
 										if (description != null) {

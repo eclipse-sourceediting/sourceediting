@@ -806,6 +806,10 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 			baseLocation = path;
 		else
 			baseLocation = ResourcesPlugin.getWorkspace().getRoot().getFile(path).getLocation();
+
+		if (baseLocation == null) {
+			baseLocation = path;
+		}
 		return baseLocation;
 	}
 
@@ -988,12 +992,15 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 				document = getCMDocumentBuilder().createCMDocument(reference);
 			}
 			else {
-				String location = URIResolverPlugin.createResolver().resolve(getCurrentBaseLocation().toString(), null, uri);
-				if (location != null) {
-					if (_debug) {
-						System.out.println("Loading tags from " + uri + " at " + location); //$NON-NLS-2$//$NON-NLS-1$
+				IPath currentBaseLocation = getCurrentBaseLocation();
+				if (currentBaseLocation != null) {
+					String location = URIResolverPlugin.createResolver().resolve(currentBaseLocation.toString(), null, uri);
+					if (location != null) {
+						if (_debug) {
+							System.out.println("Loading tags from " + uri + " at " + location); //$NON-NLS-2$//$NON-NLS-1$
+						}
+						document = getCMDocumentBuilder().createCMDocument(location);
 					}
-					document = getCMDocumentBuilder().createCMDocument(location);
 				}
 			}
 		}
