@@ -262,7 +262,10 @@ public abstract class NewProjectDataModelFacetWizard extends AddRemoveFacetsWiza
 		FacetDataModelMap map = (FacetDataModelMap) model.getProperty(FACET_DM_MAP);
 		IDataModel configDM = (IDataModel) map.get(fv.getProjectFacet().getId());
 		if (configDM == null) {
-			configDM = (IDataModel) fv.createActionConfig(type, pjname);
+            final Object config = fv.createActionConfig(type,pjname);
+            if( config == null || ! ( config instanceof IDataModel ) )
+                return null;
+			configDM = (IDataModel) config;
 			map.add(configDM);
 		}
 		configDM.setProperty(IFacetDataModelProperties.FACET_VERSION, fv);
