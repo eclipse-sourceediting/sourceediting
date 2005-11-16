@@ -38,32 +38,47 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 public class TestModelWithNoFile extends TestCase {
 
 	public void testJSPModel() {
-		IModelManager modelManager = getModelManager();
-
-
-
-		IDOMModel structuredModel = (IDOMModel) modelManager.createUnManagedStructuredModelFor(ContentTypeIdForJSP.ContentTypeID_JSP);
+		IDOMModel structuredModel = (IDOMModel) StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(ContentTypeIdForJSP.ContentTypeID_JSP);
 		boolean test = structuredModel.getId().equals(IModelManager.UNMANAGED_MODEL);
 		assertTrue(test);
 		structuredModel.releaseFromEdit();
 		assertTrue(true);
 	}
 
-	private IModelManager getModelManager() {
-		IModelManager modelManager = StructuredModelManager.getModelManager();
-		return modelManager;
-	}
-
-
-
-	public void testBug116066() {
+	public void testBug116066_1() {
 		IModelManager modelManager = StructuredModelManager.getModelManager();
 		IStructuredModel model = null;
 
 		// Create new project
-		IProject project = createSimpleProject("bug116066", null, null);
+		IProject project = createSimpleProject("bug116066_1", null, null);
+
+		IFile testFile = project.getFile("nonExistant.jsp");
+		assertFalse(testFile.exists());
+
+		// Get the model and set a reference to that tag library into it
+		try {
+			model = modelManager.getNewModelForEdit(testFile, false);
+			assertNotNull("couldn't get new model for " + testFile.getFullPath(), model);
+			model.getStructuredDocument().set("<%@taglib prefix=\"tagdependent\" uri=\"tagdependent\">\n<tagdependent:code> <<< </tagdependent:code>");
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		finally {
+			if (model != null) {
+				model.releaseFromEdit();
+			}
+		}
+	}
+
+	public void testBug116066_2() {
+		IModelManager modelManager = StructuredModelManager.getModelManager();
+		IStructuredModel model = null;
+
+		// Create new project
+		IProject project = createSimpleProject("bug116066_2", null, null);
 		// Copy a TLD into the project
-		IFile tld = copyBundleEntryIntoWorkspace("/testfiles/116066/tagdep.tld", "/bug116066/tagdep.tld");
+		IFile tld = copyBundleEntryIntoWorkspace("/testfiles/116066/tagdep.tld", "/bug116066_2/tagdep.tld");
 		assertTrue(tld.exists());
 
 		IFile testFile = project.getFile("nonExistant.jsp");
