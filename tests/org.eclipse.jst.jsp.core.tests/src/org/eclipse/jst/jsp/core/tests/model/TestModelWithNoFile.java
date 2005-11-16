@@ -53,7 +53,7 @@ public class TestModelWithNoFile extends TestCase {
 		IProject project = createSimpleProject("bug116066_1", null, null);
 
 		IFile testFile = project.getFile("nonExistant.jsp");
-		assertFalse(testFile.exists());
+		assertFalse("nonExistant.jsp test file already exists (not a clean workspace)?", testFile.exists());
 
 		// Get the model and set a reference to that tag library into it
 		try {
@@ -79,10 +79,11 @@ public class TestModelWithNoFile extends TestCase {
 		IProject project = createSimpleProject("bug116066_2", null, null);
 		// Copy a TLD into the project
 		IFile tld = copyBundleEntryIntoWorkspace("/testfiles/116066/tagdep.tld", "/bug116066_2/tagdep.tld");
-		assertTrue(tld.exists());
+		assertNotNull("TLD entry was not copied properly", tld);
+		assertTrue("TLD IFile does not exist", tld.exists());
 
 		IFile testFile = project.getFile("nonExistant.jsp");
-		assertFalse(testFile.exists());
+		assertFalse("nonExistant.jsp test file already exists (not a clean workspace)?", testFile.exists());
 
 		// Get the model and set a reference to that tag library into it
 		try {
@@ -102,11 +103,11 @@ public class TestModelWithNoFile extends TestCase {
 
 	private IFile copyBundleEntryIntoWorkspace(String entryname, String fullPath) {
 		IFile file = null;
-		URL tld = JSPCoreTestsPlugin.getDefault().getBundle().getEntry(entryname);
-		if (tld != null) {
+		URL entry = JSPCoreTestsPlugin.getDefault().getBundle().getEntry(entryname);
+		if (entry != null) {
 			try {
 				byte[] b = new byte[2048];
-				InputStream input = tld.openStream();
+				InputStream input = entry.openStream();
 				ByteArrayOutputStream output = new ByteArrayOutputStream();
 				int i = -1;
 				while ((i = input.read(b)) > -1) {
