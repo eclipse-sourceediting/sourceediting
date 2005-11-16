@@ -26,7 +26,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.help.WorkbenchHelp;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.xml.core.internal.provisional.NameValidator;
 import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 import org.eclipse.wst.xml.ui.internal.util.XMLCommonUIContextIds;
@@ -69,7 +69,7 @@ public class EditElementDialog extends Dialog implements ModifyListener {
 
 	protected Control createDialogArea(Composite parent) {
 		Composite dialogArea = (Composite) super.createDialogArea(parent);
-		WorkbenchHelp.setHelp(dialogArea, XMLCommonUIContextIds.XCUI_ELEMENT_DIALOG);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(dialogArea, XMLCommonUIContextIds.XCUI_ELEMENT_DIALOG);
 
 		Composite composite = new Composite(dialogArea, SWT.NONE);
 		GridLayout layout = new GridLayout();

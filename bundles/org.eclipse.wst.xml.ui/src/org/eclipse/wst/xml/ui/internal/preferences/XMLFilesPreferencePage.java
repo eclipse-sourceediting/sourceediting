@@ -21,7 +21,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.ui.help.WorkbenchHelp;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.sse.core.internal.encoding.CommonEncodingPreferenceNames;
 import org.eclipse.wst.sse.ui.internal.preferences.ui.AbstractPreferencePage;
 import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
@@ -36,7 +36,7 @@ public class XMLFilesPreferencePage extends AbstractPreferencePage {
 
 	protected Control createContents(Composite parent) {
 		Composite composite = (Composite) super.createContents(parent);
-		WorkbenchHelp.setHelp(composite, IHelpContextIds.XML_PREFWEBX_FILES_HELPID);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(composite, IHelpContextIds.XML_PREFWEBX_FILES_HELPID);
 		createContentsForCreatingOrSavingGroup(composite);
 		createContentsForCreatingGroup(composite);
 

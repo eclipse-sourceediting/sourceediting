@@ -23,8 +23,8 @@ import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
  *  
  */
 public interface XMLTableTreeHelpContextIds {
-
-	public static final String PREFIX = XMLUIPlugin.ID + ".design."; //$NON-NLS-1$
+	// org.eclipse.wst.xml.ui.
+	public static final String PREFIX = XMLUIPlugin.ID + "."; //$NON-NLS-1$
 
 	// XML Design View
 	public static final String XML_DESIGN_VIEW_HELPID = PREFIX + "xmlm3000"; //$NON-NLS-1$

@@ -21,7 +21,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.help.WorkbenchHelp;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
@@ -43,7 +43,7 @@ public class XMLColorPage extends AbstractColorPage {
 		((GridData) pageComponent.getLayoutData()).horizontalAlignment = GridData.HORIZONTAL_ALIGN_FILL;
 
 		super.createContents(pageComponent);
-		WorkbenchHelp.setHelp(pageComponent, IHelpContextIds.XML_PREFWEBX_STYLES_HELPID);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(pageComponent, IHelpContextIds.XML_PREFWEBX_STYLES_HELPID);
 		return pageComponent;
 	}
 

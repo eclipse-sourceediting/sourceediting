@@ -162,8 +162,6 @@ public class NewModelWizard extends Wizard implements INewWizard
     public void createControl(Composite parent)
     {
       Composite base = new Composite(parent, SWT.NONE);
-      //TODO... setHelp
-      //WorkbenchHelp.setHelp(base, XMLBuilderContextIds.XMLC_CREATE_PAGE);
       base.setLayout(new GridLayout());
 
       //radio buttons' container	
@@ -178,16 +176,12 @@ public class NewModelWizard extends Wizard implements INewWizard
       gd.heightHint = 300;
       gd.widthHint = 400;
       radioButtonsGroup.setLayoutData(gd);
-      //TODO... set help
-      //WorkbenchHelp.setHelp(radioButtonsGroup, XMLBuilderContextIds.XMLC_RADIO_GROUP);
 
       for (int i = 0; i < radioButtonLabel.length; i++)
       {
         radioButton[i] = new Button(radioButtonsGroup, SWT.RADIO);
         radioButton[i].setText(radioButtonLabel[i]);
         radioButton[i].setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        //TODO... set help
-        //WorkbenchHelp.setHelp(radioButton[i], new ControlContextComputer(radioButton[i], XMLBuilderContextIds.XMLC_RADIO_BUTTON));
         //radioButton[i].addListener(SWT.Modify, this);
       }
       setControl(base);

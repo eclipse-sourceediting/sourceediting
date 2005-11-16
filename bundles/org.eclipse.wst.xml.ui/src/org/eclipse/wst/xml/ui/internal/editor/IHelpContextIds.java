@@ -12,7 +12,6 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.ui.internal.editor;
 
-import org.eclipse.wst.xml.core.internal.provisional.contenttype.ContentTypeIdForXML;
 import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 
 /**
@@ -21,14 +20,16 @@ import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
  * This interface contains constants only; it is not intended to be
  * implemented.
  * </p>
- *  
+ * 
  */
 public interface IHelpContextIds {
 	// org.eclipse.wst.xml.ui.
 	public static final String PREFIX = XMLUIPlugin.ID + "."; //$NON-NLS-1$
 
-	// XML Source page editor
-	public static final String XML_SOURCEVIEW_HELPID = ContentTypeIdForXML.ContentTypeID_XML +"_source_HelpId"; //$NON-NLS-1$
+	// figured out on the fly
+	// // XML Source page editor
+	// public static final String XML_SOURCEVIEW_HELPID =
+	// ContentTypeIdForXML.ContentTypeID_XML +"_source_HelpId"; //$NON-NLS-1$
 
 	// XML Files Preference page
 	public static final String XML_PREFWEBX_FILES_HELPID = PREFIX + "webx0060"; //$NON-NLS-1$

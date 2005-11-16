@@ -22,7 +22,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.help.WorkbenchHelp;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.sse.core.internal.encoding.CommonEncodingPreferenceNames;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
@@ -66,7 +66,7 @@ public class CleanupDialogXML extends Dialog implements SelectionListener {
 
 	protected void createDialogAreaInComposite(Composite composite) {
 
-		WorkbenchHelp.setHelp(composite, IHelpContextIds.CLEANUP_XML_HELPID); // use
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(composite, IHelpContextIds.CLEANUP_XML_HELPID); // use
 		// XML
 		// specific
 		// help

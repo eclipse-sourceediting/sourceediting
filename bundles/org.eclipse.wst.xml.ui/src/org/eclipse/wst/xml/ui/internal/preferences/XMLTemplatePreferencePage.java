@@ -14,7 +14,7 @@ package org.eclipse.wst.xml.ui.internal.preferences;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.help.WorkbenchHelp;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.texteditor.templates.TemplatePreferencePage;
 import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.eclipse.wst.xml.ui.internal.editor.IHelpContextIds;
@@ -40,7 +40,7 @@ public class XMLTemplatePreferencePage extends TemplatePreferencePage {
 	 */
 	protected Control createContents(Composite ancestor) {
 		Control c = super.createContents(ancestor);
-		WorkbenchHelp.setHelp(c, IHelpContextIds.XML_PREFWEBX_TEMPLATES_HELPID);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(c, IHelpContextIds.XML_PREFWEBX_TEMPLATES_HELPID);
 		return c;
 	}
 

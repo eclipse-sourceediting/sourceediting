@@ -34,6 +34,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver;
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolverPlugin;
 import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
@@ -41,6 +42,7 @@ import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
 import org.eclipse.wst.xml.core.internal.contentmodel.ContentModelManager;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.NamespaceInfo;
 import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
+import org.eclipse.wst.xml.ui.internal.util.XMLCommonUIContextIds;
 
 public class EditNamespaceInfoDialog extends Dialog {
 
@@ -94,9 +96,7 @@ public class EditNamespaceInfoDialog extends Dialog {
 
 	protected Control createDialogArea(Composite parent) {
 		Composite dialogsubArea = (Composite) super.createDialogArea(parent);
-		// TODO... SSE port
-		// WorkbenchHelp.setHelp(dialogArea,
-		// XMLCommonUIContextIds.XCUI_NAMESPACE_DIALOG);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(dialogArea, XMLCommonUIContextIds.XCUI_NAMESPACE_DIALOG);
 
 		Composite composite = new Composite(dialogsubArea, SWT.NONE);
 		GridLayout layout = new GridLayout();

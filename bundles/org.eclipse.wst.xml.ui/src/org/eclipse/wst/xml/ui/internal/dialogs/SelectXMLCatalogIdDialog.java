@@ -25,9 +25,11 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
 import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalog;
 import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalogEntry;
+import org.eclipse.wst.xml.ui.internal.util.XMLCommonUIContextIds;
 
 
 
@@ -78,9 +80,7 @@ public class SelectXMLCatalogIdDialog extends Dialog {
 
 	protected Control createDialogArea(Composite parent) {
 		Composite dialogArea = (Composite) super.createDialogArea(parent);
-		// TODO... SSE port
-		//WorkbenchHelp.setHelp(dialogArea,
-		// XMLCommonUIContextIds.XCUI_CATALOG_DIALOG);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(dialogArea, XMLCommonUIContextIds.XCUI_CATALOG_DIALOG);
 
 		ICatalog xmlCatalog = XMLCorePlugin.getDefault().getDefaultXMLCatalog();
 		panel = new SelectXMLCatalogIdPanel(dialogArea, xmlCatalog);

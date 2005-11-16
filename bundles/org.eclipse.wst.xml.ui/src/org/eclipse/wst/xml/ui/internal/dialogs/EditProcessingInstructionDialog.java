@@ -22,7 +22,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.help.WorkbenchHelp;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 import org.eclipse.wst.xml.ui.internal.util.XMLCommonUIContextIds;
 import org.w3c.dom.ProcessingInstruction;
@@ -57,7 +57,7 @@ public class EditProcessingInstructionDialog extends Dialog {
 
 	protected Control createDialogArea(Composite parent) {
 		Composite dialogArea1 = (Composite) super.createDialogArea(parent);
-		WorkbenchHelp.setHelp(dialogArea1, XMLCommonUIContextIds.XCUI_PROCESSING_DIALOG);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(dialogArea1, XMLCommonUIContextIds.XCUI_PROCESSING_DIALOG);
 
 		Composite composite = new Composite(dialogArea1, SWT.NONE);
 		GridLayout layout = new GridLayout();

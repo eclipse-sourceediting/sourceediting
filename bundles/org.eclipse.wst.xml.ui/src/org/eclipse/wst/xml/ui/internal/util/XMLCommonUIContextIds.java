@@ -20,15 +20,6 @@ package org.eclipse.wst.xml.ui.internal.util;
 public interface XMLCommonUIContextIds {
 	public static final String PLUGIN_NAME = "org.eclipse.wst.xml.ui"; //$NON-NLS-1$
 
-
-	/* CONTEXT_IDs for "Assign an XSL Stylesheet To The XML File" dialog */
-	/* CONTEXT_ID comn0010 for the dropdown menu. Follow comnxxxx */
-	public static final String XCUI_ASSIGN_XSL_TO_XML_DROPDOWN = PLUGIN_NAME + ".xcui1000"; //$NON-NLS-1$
-	/* CONTEXT_ID comn0030 for the import button. Follow comnxxxx */
-	public static final String XCUI_ASSIGN_XSL_TO_XML_IMPORT = PLUGIN_NAME + ".xcui3000"; //$NON-NLS-1$
-	/* CONTEXT_ID comn0020 for the workbench button. Follow comnxxxx */
-	public static final String XCUI_ASSIGN_XSL_TO_XML_WORKBENCH = PLUGIN_NAME + ".xcui2000"; //$NON-NLS-1$
-
 	/* CONTEXT_ID xcui0500 for Edit Attribute Instruction Dialog */
 	public static final String XCUI_ATTRIBUTE_DIALOG = PLUGIN_NAME + ".xcui0500"; //$NON-NLS-1$
 
@@ -41,14 +32,10 @@ public interface XMLCommonUIContextIds {
 	public static final String XCUI_DOCTYPE_DIALOG = PLUGIN_NAME + ".xcui0010"; //$NON-NLS-1$
 	/* CONTEXT_ID xcui0030 for Public ID Text Edit */
 	public static final String XCUI_DOCTYPE_PUBLIC = PLUGIN_NAME + ".xcui0030"; //$NON-NLS-1$
-	/* CONTEXT_ID xcui0030 for Public ID Browse Button */
-	public static final String XCUI_DOCTYPE_PUBLIC_BROWSE = PLUGIN_NAME + ".xcui0040"; //$NON-NLS-1$
 	/* CONTEXT_ID xcui0020 for Root Element Name Text Edit */
 	public static final String XCUI_DOCTYPE_ROOT = PLUGIN_NAME + ".xcui0020"; //$NON-NLS-1$
 	/* CONTEXT_ID xcui0040 for System ID Text Edit */
 	public static final String XCUI_DOCTYPE_SYSTEM = PLUGIN_NAME + ".xcui0050"; //$NON-NLS-1$
-	/* CONTEXT_ID xcui0030 for System ID Browse Button */
-	public static final String XCUI_DOCTYPE_SYSTEM_BROWSE = PLUGIN_NAME + ".xcui0060"; //$NON-NLS-1$
 
 	/* CONTEXT_ID xcui0300 for Edit Element Instruction Dialog */
 	public static final String XCUI_ELEMENT_DIALOG = PLUGIN_NAME + ".xcui0600"; //$NON-NLS-1$
