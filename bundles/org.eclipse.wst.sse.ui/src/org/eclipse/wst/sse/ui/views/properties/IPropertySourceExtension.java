@@ -28,11 +28,11 @@ public interface IPropertySourceExtension {
 	boolean isPropertyRemovable(Object id);
 
 	/**
-	 * Removes the property with the given ID. If no such property exists,
-	 * nothing is done.
+	 * Removes the property with the given displayed name. If no such property
+	 * exists, nothing is done.
 	 * 
 	 * @param id
-	 *            the ID of the property
+	 *            the displayed name of the property
 	 */
-	void removeProperty(Object id);
+	void removeProperty(Object name);
 }

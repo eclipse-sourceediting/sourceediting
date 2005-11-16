@@ -12,19 +12,13 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.ui.internal.properties;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Tree;
-import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.IPageSite;
 import org.eclipse.ui.views.properties.IPropertySheetEntry;
@@ -53,6 +47,7 @@ public class ConfigurablePropertySheetPage extends PropertySheetPage {
 	private long _DEBUG_TIME = 0;
 
 	private PropertySheetConfiguration fConfiguration;
+	private Object[] fSelectedEntries = null;
 	private ISelection fInput = null;
 	private IMenuManager fMenuManager;
 
@@ -88,6 +83,12 @@ public class ConfigurablePropertySheetPage extends PropertySheetPage {
 	public void handleEntrySelection(ISelection selection) {
 		if (getControl() != null && !getControl().isDisposed() && selection != null) {
 			super.handleEntrySelection(selection);
+			if (selection instanceof IStructuredSelection) {
+				fSelectedEntries = ((IStructuredSelection) selection).toArray();
+			}
+			else {
+				fSelectedEntries = null;
+			}
 			fRemoveAction.setEnabled(!selection.isEmpty());
 		}
 	}
@@ -112,17 +113,15 @@ public class ConfigurablePropertySheetPage extends PropertySheetPage {
 	}
 
 	void remove() {
-		if (getControl() instanceof Tree) {
-			TreeItem[] items = ((Tree) getControl()).getSelection();
-			List selectedNodes = new ArrayList(0);
-			if (items != null && items.length == 1 && selectedNodes != null) {
-				Object data = items[0].getData();
-				if (data instanceof IPropertySheetEntry) {
-					IPropertySheetEntry entry = (IPropertySheetEntry) data;
-					ISelection selection = getConfiguration().getInputSelection(null, new StructuredSelection(selectedNodes));
-					if (selection != null && !selection.isEmpty() && selection instanceof IStructuredSelection) {
-						IPropertySource source = getConfiguration().getPropertySourceProvider(this).getPropertySource(((IStructuredSelection) selection).getFirstElement());
-						if (source != null && source instanceof IPropertySourceExtension) {
+		if (fSelectedEntries != null) {
+			Object[] entries = fSelectedEntries;
+			ISelection selection = fInput;
+			if (selection != null && !selection.isEmpty() && selection instanceof IStructuredSelection) {
+				IPropertySource source = getConfiguration().getPropertySourceProvider(this).getPropertySource(((IStructuredSelection) selection).getFirstElement());
+				if (source != null && source instanceof IPropertySourceExtension) {
+					for (int i = 0; i < entries.length; i++) {
+						if (entries[i] instanceof IPropertySheetEntry) {
+							IPropertySheetEntry entry = (IPropertySheetEntry) entries[i];
 							((IPropertySourceExtension) source).removeProperty(entry.getDisplayName());
 						}
 					}
@@ -156,6 +155,7 @@ public class ConfigurablePropertySheetPage extends PropertySheetPage {
 			 */
 			if (!preferredSelection.equals(fInput)) {
 				fInput = preferredSelection;
+				fSelectedEntries = null;
 				super.selectionChanged(part, preferredSelection);
 			}
 
