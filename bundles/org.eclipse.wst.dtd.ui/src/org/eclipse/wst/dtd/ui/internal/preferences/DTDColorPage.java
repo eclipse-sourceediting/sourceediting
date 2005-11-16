@@ -21,7 +21,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.help.WorkbenchHelp;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.dtd.core.internal.parser.DTDRegionTypes;
 import org.eclipse.wst.dtd.core.internal.provisional.contenttype.ContentTypeIdForDTD;
 import org.eclipse.wst.dtd.ui.internal.DTDUIMessages;
@@ -42,7 +42,7 @@ public class DTDColorPage extends AbstractColorPage {
 		((GridData) pageComponent.getLayoutData()).horizontalAlignment = GridData.HORIZONTAL_ALIGN_FILL;
 
 		super.createContents(pageComponent);
-		WorkbenchHelp.setHelp(pageComponent, IHelpContextIds.DTD_PREFWEBX_STYLES_HELPID);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(pageComponent, IHelpContextIds.DTD_PREFWEBX_STYLES_HELPID);
 
 		return pageComponent;
 	}

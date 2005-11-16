@@ -52,10 +52,12 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.eclipse.wst.dtd.ui.internal.DTDUIMessages;
 import org.eclipse.wst.dtd.ui.internal.DTDUIPlugin;
 import org.eclipse.wst.dtd.ui.internal.Logger;
+import org.eclipse.wst.dtd.ui.internal.editor.IHelpContextIds;
 import org.eclipse.wst.dtd.ui.internal.preferences.DTDUIPreferenceNames;
 import org.eclipse.wst.dtd.ui.internal.templates.TemplateContextTypeIdsDTD;
 
@@ -287,6 +289,7 @@ public class NewDTDTemplatesWizardPage extends WizardPage {
 		configureTableResizing(innerParent, table, column1, column2);
 		loadLastSavedPreferences();
 
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, IHelpContextIds.DTD_NEWWIZARD_TEMPLATE_HELPID);
 		Dialog.applyDialogFont(parent);
 		setControl(parent);
 	}

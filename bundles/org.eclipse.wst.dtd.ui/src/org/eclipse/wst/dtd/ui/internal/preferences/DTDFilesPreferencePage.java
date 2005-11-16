@@ -16,7 +16,7 @@ import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.help.WorkbenchHelp;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.dtd.core.internal.DTDCorePlugin;
 import org.eclipse.wst.dtd.ui.internal.DTDUIPlugin;
 import org.eclipse.wst.dtd.ui.internal.editor.IHelpContextIds;
@@ -29,7 +29,7 @@ public class DTDFilesPreferencePage extends AbstractPreferencePage {
 		noDefaultAndApplyButton();
 		
 		Composite composite = (Composite) super.createContents(parent);
-		WorkbenchHelp.setHelp(composite, IHelpContextIds.DTD_PREFWEBX_FILES_HELPID);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(composite, IHelpContextIds.DTD_PREFWEBX_FILES_HELPID);
 
 		setSize(composite);
 		loadPreferences();
