@@ -13,10 +13,11 @@
  
 <toc label="DTD Editor">
    <topic label="Working with DTDs" topic="topics/cworkdtds.html">
-      <topic label="Creating DTDs" href="topics/tcretdtd.html"/>
+      <topic label="Creating DTDs" href="topics/tcretdtd.html">
          <topic label="Document type definitions (DTDs) - overview" href="topics/cdtdover.html"/>
+      </topic>
       <topic label="Importing DTDs" href="topics/timptdtd.html"/>
             <topic label="Validating DTDs" href="topics/tvaldtd.html"/>
       <topic label="Icons used in the DTD editor" href="topics/rdtdicons.html"/>
-</topic>
+   </topic>
 </toc>
