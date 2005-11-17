@@ -4,15 +4,15 @@
 	<component-depends unrestricted="true"></component-depends>
 	<plugin id="org.eclipse.wst.sse.core" />
 	<plugin id="org.eclipse.wst.sse.ui" />
-	<package name="org.eclipse.wst.sse.ui.views.properties">
+	<package name="org.eclipse.wst.sse.ui.views.properties" api="false">
 		<type name="PropertySheetConfiguration" subclass="true" instantiate="true" />
 		<type name="IPropertySourceExtension" implement="true" />
 	</package>
-	<package name="org.eclipse.wst.sse.ui">
+	<package name="org.eclipse.wst.sse.ui" api="false">
 		<type name="StructuredTextEditor" subclass="false" instantiate="true" />
 		<type name="StructuredTextViewerConfiguration" subclass="true" instantiate="true" />
 	</package>
-	<package name="org.eclipse.wst.sse.ui.views.contentoutline">
+	<package name="org.eclipse.wst.sse.ui.views.contentoutline" api="false">
 		<type name="ContentOutlineConfiguration" subclass="true" instantiate="true" />
 	</package>
 </component>

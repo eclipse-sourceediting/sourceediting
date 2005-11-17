@@ -4,13 +4,13 @@
 	<plugin id="org.eclipse.wst.xml.core" />
 	<plugin id="org.eclipse.wst.xml.ui" />
 	<description url="http://eclipse.org/webtools/wst/components/xml/overview.html" />
-	<package name="org.eclipse.wst.xml.ui">
+	<package name="org.eclipse.wst.xml.ui" api="false">
 		<type name="StructuredTextViewerConfigurationXML" subclass="true" instantiate="true" />
 	</package>
-	<package name="org.eclipse.wst.xml.ui.views.contentoutline">
+	<package name="org.eclipse.wst.xml.ui.views.contentoutline" api="false">
 		<type name="XMLContentOutlineConfiguration" subclass="true" instantiate="true" />
 	</package>
-	<package name="org.eclipse.wst.xml.ui.views.properties">
+	<package name="org.eclipse.wst.xml.ui.views.properties" api="false">
 		<type name="XMLPropertySheetConfiguration" subclass="true" instantiate="true" />
 	</package>
 </component>

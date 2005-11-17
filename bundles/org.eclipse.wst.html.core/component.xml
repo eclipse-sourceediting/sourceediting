@@ -4,10 +4,10 @@
 	<plugin id="org.eclipse.wst.html.core" />
 	<plugin id="org.eclipse.wst.html.ui" />
 	<description url="http://eclipse.org/webtools/wst/components/html/overview.html" />
-	<package name="org.eclipse.wst.html.ui">
+	<package name="org.eclipse.wst.html.ui" api="false">
 		<type name="StructuredTextViewerConfigurationHTML" subclass="true" instantiate="true" />
 	</package>
-	<package name="org.eclipse.wst.html.ui.views.contentoutline">
+	<package name="org.eclipse.wst.html.ui.views.contentoutline" api="false">
 		<type name="HTMLContentOutlineConfiguration" subclass="true" instantiate="true" />
 	</package>
 </component>
