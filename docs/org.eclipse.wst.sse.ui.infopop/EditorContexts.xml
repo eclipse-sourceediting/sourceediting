@@ -72,4 +72,14 @@ If your cursor is in a position where content assist is available, a pop-up list
 </description>
 </context>
 
+<context id="ecss0000">
+<description>The CSS source page editor lets you edit a cascading style sheet. The editor provides many text editing features, such as content assist, syntax highlighting, unlimited undo and redo, element selection and formatting, and document formatting.
+</description>
+<topic label="Structured text editors for markup languages" href="../org.eclipse.wst.sse.doc.user/topics/csrcedt004.html"/>
+<topic label="Editing text coded in markup languages - overview" href="../org.eclipse.wst.sse.doc.user/topics/tsrcedt000.html"/>
+</context>
+<context id="misc0180">
+ <description>Use this dialog to edit the CSS content settings for a CSS file. You can specify CSS profile or restore the default by clicking <b>Restore Defaults</b>.
+ </description>
+</context>
 </contexts>
