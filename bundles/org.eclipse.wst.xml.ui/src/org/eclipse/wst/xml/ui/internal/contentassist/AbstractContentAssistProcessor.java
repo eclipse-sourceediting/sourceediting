@@ -782,7 +782,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 		if (parent != null && parent instanceof IDOMNode && isCommentNode((IDOMNode) parent)) {
 			// loop and find non comment node?
 			while (parent != null && isCommentNode((IDOMNode) parent)) {
-				parent = (IDOMNode) parent.getParentNode();
+				parent = parent.getParentNode();
 			}
 		}
 

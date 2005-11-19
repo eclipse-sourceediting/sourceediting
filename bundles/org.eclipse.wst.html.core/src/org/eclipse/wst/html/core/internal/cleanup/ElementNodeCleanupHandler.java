@@ -273,10 +273,10 @@ public class ElementNodeCleanupHandler extends AbstractNodeCleanupHandler {
 				childNode = cleanupHandler.cleanup(childNode);
 
 				// get new parent node
-				parentNode = (IDOMNode) childNode.getParentNode();
+				parentNode = childNode.getParentNode();
 
 				// get next child node
-				childNode = (IDOMNode) childNode.getNextSibling();
+				childNode = childNode.getNextSibling();
 			}
 		}
 

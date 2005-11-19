@@ -177,7 +177,7 @@ public class XMLCatalogTreeViewer extends TreeViewer {
 			List nextCatalogsList = Arrays.asList(nextCatalogs);
 			result.addAll(nextCatalogsList);
 
-			return (ICatalogElement[]) result.toArray(new ICatalogElement[result.size()]);
+			return  result.toArray(new ICatalogElement[result.size()]);
 		}
 
 		public Object getParent(Object element) {

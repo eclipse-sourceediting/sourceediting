@@ -2278,7 +2278,7 @@ public class XMLModelParser {
 			return;
 		}
 
-		parent = (NodeImpl) end.getParentNode();
+		parent = end.getParentNode();
 		if (parent != null) {
 			this.context.setParentNode(parent);
 			removeStructuredDocumentRegion(oldStructuredDocumentRegion);
