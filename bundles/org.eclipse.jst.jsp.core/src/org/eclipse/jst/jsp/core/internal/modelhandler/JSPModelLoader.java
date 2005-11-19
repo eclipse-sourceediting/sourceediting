@@ -592,7 +592,7 @@ public class JSPModelLoader extends AbstractModelLoader {
 		
 		ModelQueryAdapter modelQueryAdapter =  getModelQueryAdapter(model);
 		if (modelQueryAdapter == null) {
-			modelQueryAdapter = (JSPModelQueryAdapterImpl) getModelQueryAdapter(oldModel);
+			modelQueryAdapter = getModelQueryAdapter(oldModel);
 			IDOMDocument document = ((IDOMModel) model).getDocument();
 			document.addAdapter(new JSPModelQueryAdapterImpl(modelQueryAdapter.getCMDocumentCache(), modelQueryAdapter.getModelQuery(), modelQueryAdapter.getIdResolver()));
 			

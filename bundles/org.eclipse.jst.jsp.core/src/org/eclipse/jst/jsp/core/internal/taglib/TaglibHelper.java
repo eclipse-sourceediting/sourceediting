@@ -184,7 +184,7 @@ public class TaglibHelper {
         try {
             teiClass = Class.forName(teiClassname, true, loader);
             if (teiClass != null) {
-                Object teiObject = (TagExtraInfo) teiClass.newInstance();
+                Object teiObject = teiClass.newInstance();
                 if (TagExtraInfo.class.isInstance(teiObject)) {
                     TagExtraInfo tei = (TagExtraInfo) teiObject;
                     Hashtable tagDataTable = extractTagData(customTag);
