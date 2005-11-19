@@ -117,7 +117,7 @@ public class ScannerUnitTests extends TestCase {
 		StringBuffer s = new StringBuffer();
 		try {
 			int c = -1;
-			while ((c = (char) input.read()) >= 0) {
+			while ((c = input.read()) >= 0) {
 				if (c > 255)
 					break;
 				s.append((char) c);

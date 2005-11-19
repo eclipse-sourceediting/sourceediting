@@ -7,7 +7,6 @@ import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.xml.core.internal.provisional.contenttype.ContentTypeIdForXML;
-import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 
 public class GetDocumentRegionsTest extends TestCase {
 	
@@ -18,7 +17,7 @@ public class GetDocumentRegionsTest extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		if(!fAlreadySetup) {
-			IStructuredModel sModel = (IDOMModel) createModel(ContentTypeIdForXML.ContentTypeID_XML);
+			IStructuredModel sModel = createModel(ContentTypeIdForXML.ContentTypeID_XML);
 			fDoc = sModel.getStructuredDocument();
 			fText = "<html><head></head><body> text </body></html>";
 			fDoc.set(fText);
