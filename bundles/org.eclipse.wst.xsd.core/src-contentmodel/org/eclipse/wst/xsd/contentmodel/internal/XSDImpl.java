@@ -195,16 +195,20 @@ public class XSDImpl
       }
       else
       { 	
-      ResourceSet resourceSet = new ResourceSetImpl();
-      //resourceSet.getAdapterFactories().add(new XSDSchemaLocationResolverAdapterFactory());
-      resourceSet.getAdapterFactories().add(new XSDSchemaLocatorAdapterFactory());
-                  
-      URI uri = createURI(uriString);    
-      XSDResourceImpl resource = (XSDResourceImpl)resourceSet.createResource(URI.createURI("*.xsd"));
-      resource.setURI(uri);
-      resource.load(null);
-      
-      xsdSchema = resource.getSchema();    
+        ResourceSet resourceSet = new ResourceSetImpl();
+        //resourceSet.getAdapterFactories().add(new XSDSchemaLocationResolverAdapterFactory());
+        resourceSet.getAdapterFactories().add(new XSDSchemaLocatorAdapterFactory());
+          
+        URI uri = createURI(uriString);   
+        
+        // CS ... ensure we perform physical resolution before opening a stream for the resource
+        //
+        String physicalLocation = URIResolverPlugin.createResolver().resolvePhysicalLocation(uriString, "", uriString);       
+        InputStream inputStream = resourceSet.getURIConverter().createInputStream(URI.createURI(physicalLocation));
+        XSDResourceImpl resource = (XSDResourceImpl)resourceSet.createResource(URI.createURI("*.xsd"));
+        resource.setURI(uri);
+        resource.load(inputStream, null);         
+        xsdSchema = resource.getSchema();      
       }
     }
     catch (Exception e)
