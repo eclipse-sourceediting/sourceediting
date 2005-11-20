@@ -12,8 +12,10 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.core.internal.modelquery;
 
+
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolverPlugin;
 import org.eclipse.wst.sse.core.internal.util.URIResolver;
+import org.eclipse.wst.xml.core.internal.Logger;
 
 
 // TODO cs : remove this class and utilize the common URIResolver directly
@@ -66,6 +68,9 @@ public class XMLCatalogIdResolver implements org.eclipse.wst.common.uriresolver.
 	}
     
     public String resolvePhysicalLocation(String baseLocation, String publicId, String logicalLocation) {
-      return URIResolverPlugin.createResolver().resolvePhysicalLocation(baseLocation, publicId, logicalLocation);
+      // This class should never be called to perform physical resolution!
+      // If it does we should log it as an error
+      Logger.log(Logger.ERROR_DEBUG, "XMLCatalogIDResolver.resolvePhysicalLocation() called unexpectedly");
+      return logicalLocation; 
     }
 }

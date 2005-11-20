@@ -201,9 +201,9 @@ public class XSDImpl
           
         URI uri = createURI(uriString);   
         
-        // CS ... ensure we perform physical resolution before opening a stream for the resource
+        // CS : bug 113537 ensure we perform physical resolution before opening a stream for the resource
         //
-        String physicalLocation = URIResolverPlugin.createResolver().resolvePhysicalLocation(uriString, "", uriString);       
+        String physicalLocation = URIResolverPlugin.createResolver().resolvePhysicalLocation("", "", uriString);       
         InputStream inputStream = resourceSet.getURIConverter().createInputStream(URI.createURI(physicalLocation));
         XSDResourceImpl resource = (XSDResourceImpl)resourceSet.createResource(URI.createURI("*.xsd"));
         resource.setURI(uri);
