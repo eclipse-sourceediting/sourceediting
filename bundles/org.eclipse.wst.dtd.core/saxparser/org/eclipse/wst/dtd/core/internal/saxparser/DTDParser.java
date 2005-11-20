@@ -25,6 +25,7 @@ import javax.xml.parsers.SAXParserFactory;
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver;
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolverPlugin;
 import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
+import org.eclipse.wst.xml.core.internal.validation.core.LazyURLInputStream;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.DTDHandler;
 import org.xml.sax.ErrorHandler;
@@ -110,18 +111,20 @@ public class DTDParser extends DefaultHandler implements ContentHandler, DTDHand
 	}
 
 	/* Prints the output from the SAX callbacks. */
-	public void parse(String uri) {
-		try {
-			boolean isReadable = URIHelper.isReadableURI(uri, true);
+	public void parse(String logicalURI) {
+		try {			
+			// CS ensure that the physical URI is considered where streams are required
+			// and the logicalURI is used as the DTD's baseLocation
+			String physicalURI = URIResolverPlugin.createResolver().resolvePhysicalLocation("", "", logicalURI);
+			boolean isReadable = URIHelper.isReadableURI(physicalURI, true);
 			if (!isReadable) {
-				throw new Exception("DTD parse error. Can not read the specified URI : " + uri); //$NON-NLS-1$
-			}
-
-			String document = "<!DOCTYPE root SYSTEM \"" + uri + "\"><root/>"; //$NON-NLS-1$ //$NON-NLS-2$
+				throw new Exception("DTD parse error. Can not read the specified URI : " + logicalURI); //$NON-NLS-1$
+			}			
+			String document = "<!DOCTYPE root SYSTEM \"" + physicalURI + "\"><root/>"; //$NON-NLS-1$ //$NON-NLS-2$
 			entityDepth = 0;
-			currentDTD = new DTD(uri);
+			currentDTD = new DTD(logicalURI);
 			InputSource inputSource = new InputSource(new StringReader(document));
-			inputSource.setSystemId(uri + ".xml"); //$NON-NLS-1$
+			inputSource.setSystemId(logicalURI + ".xml"); //$NON-NLS-1$
 			reader.parse(inputSource);
 		}
 		catch (SAXParseException se) {
@@ -654,11 +657,12 @@ public class DTDParser extends DefaultHandler implements ContentHandler, DTDHand
 	public InputSource resolveEntity(String publicId, String systemId) throws SAXException {
 		InputSource result = null;
 		URIResolver idResolver = URIResolverPlugin.createResolver();
-		String uri = idResolver.resolve(currentDTD.getName(), publicId, systemId);
-		if(uri == null){
-			uri = systemId;
-		}
-		result = new InputSource(uri);
+		String logicalURI = idResolver.resolve(currentDTD.getName(), publicId, systemId);
+        // bug 113537, ensure physical resolution gets done here
+		// right before we attempt to open a stream
+		String physicalURI = idResolver.resolvePhysicalLocation(currentDTD.getName(), publicId, logicalURI);
+		result = new InputSource(logicalURI);
+		result.setByteStream(new LazyURLInputStream(physicalURI));
 		return result;
 	}
 

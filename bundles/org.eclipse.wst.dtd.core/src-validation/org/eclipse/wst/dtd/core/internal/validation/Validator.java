@@ -13,19 +13,20 @@ package org.eclipse.wst.dtd.core.internal.validation;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.StringTokenizer;
+
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver;
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolverPlugin;
+import org.eclipse.wst.xml.core.internal.validation.core.LazyURLInputStream;
 import org.eclipse.wst.xml.core.internal.validation.core.ValidationInfo;
 import org.eclipse.wst.xml.core.internal.validation.core.ValidationReport;
 import org.xml.sax.ContentHandler;
@@ -95,18 +96,12 @@ public class Validator {
 			InputSource is = null;
 			if (location != null && !location.equals("")) //$NON-NLS-1$
 			{
-                try {
-                    String physical = fURIResolver.resolvePhysicalLocation(fBaseLocation, publicId, location); 
-					URL url = new URL(physical);		
-					is = new InputSource(location);
-					is.setByteStream(url.openStream());
-				}
-				catch (MalformedURLException e) {
-					throw new IOException(e.getMessage());
-				}
-                catch (Exception e)
-                {
-                }
+			  // CS : while working on bug 113537 I noticed we're not using the LazyURLInputStream
+		      // so fixed this to avoid leaking file handles
+			  //
+              String physical = fURIResolver.resolvePhysicalLocation(fBaseLocation, publicId, location); 
+			  is = new InputSource(location);
+			  is.setByteStream(new LazyURLInputStream(physical));
 			}
 			return is;
 		}
