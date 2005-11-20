@@ -32,23 +32,17 @@ class XMLModelQueryAssociationProvider extends XMLAssociationProvider {
 	}
 
 	protected String resolveGrammarURI(Document document, String publicId, String systemId) {
+				
+		// CS : spooky code alert!
+		// this look really strange because we're passing null in as the first argument
+		// however we're assuming the use of a 'fudged' URIResolver that knows the 
+		// correct baseLocation and will call to the URIResolver framework properly
 		
-		/*
-		 * Fix for bug 110356
-		 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=110356
-		 * 
-		 * TODO: XMLCatalogURIResolverExtension was contributed to "postnormalization" 
-		 * stage, but not to "physical" stage.  We have to reconcile that.
-		 */
-		String resolvedId = idResolver.resolve(null, publicId, systemId); // initially we had only this call
-		if(resolvedId == null){
-			String location = systemId;
-			if(location == null){
-				location = publicId;
-			}
-			// try physical location
-			resolvedId = idResolver.resolvePhysicalLocation(null, publicId, location);
-		}
-		return resolvedId;
+		// CS : note that we should never call resolvePhysical at this point.
+		// Physical resolution should only occur when we're interesting to opening the actual stream.
+		// The CMDocumentFactory implementation would be responsible for calling resolvePhysical.
+		// All we need to do here is return a 'logical' URI
+			
+		return idResolver.resolve(null, publicId, systemId);
 	}
 }
