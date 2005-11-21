@@ -14,6 +14,7 @@ package org.eclipse.wst.xml.core.internal.modelquery;
 
 
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolverPlugin;
+import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
 import org.eclipse.wst.sse.core.internal.util.URIResolver;
 import org.eclipse.wst.xml.core.internal.Logger;
 
@@ -61,6 +62,8 @@ public class XMLCatalogIdResolver implements org.eclipse.wst.common.uriresolver.
 		
 		if (base == null) {
 			base = getResourceLocation();
+			// bug 117320, ensure base URI is 'protocal' qualified before passing it thru to URIResolver
+			base= URIHelper.addImpliedFileProtocol(base);
 		}
 		
 		result = URIResolverPlugin.createResolver().resolve(base, publicId, systemId);	
