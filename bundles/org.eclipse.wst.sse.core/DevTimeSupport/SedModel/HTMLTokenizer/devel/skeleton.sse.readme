@@ -1,6 +1,0 @@
-The skeleton.sed file contains the modified JFlex 1.2.2 skeleton file with
-changes for use with the tokenizers within the org.eclipse.wst.sse.core.xml and
-org.eclipse.wst.sse.core.jsp plugins.
-
-The skeleton file's method definitions are copied into the generated output
-directly.
