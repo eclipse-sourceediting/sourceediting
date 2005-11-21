@@ -146,4 +146,17 @@ public class BugFixesTest extends BaseTestCase
     
     runTest(testfile, loglocation, idealloglocation);
   }
+  
+  /**
+   * Test /BugFixes/ImportWithIncorrectSlash/A.xsd
+   */
+  public void testImportWithIncorrectSlash()
+  {
+    String testname = "A";
+    String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + BUGFIXES_DIR + "ImportWithIncorrectSlash/" + testname + ".xsd";
+    String loglocation = PLUGIN_ABSOLUTE_PATH + GENERATED_RESULTS_DIR + BUGFIXES_DIR + "ImportWithIncorrectSlash/" + testname + ".xsd-log";
+    String idealloglocation = PLUGIN_ABSOLUTE_PATH + IDEAL_RESULTS_DIR + BUGFIXES_DIR + "ImportWithIncorrectSlash/" + testname + ".xsd-log";
+    
+    runTest(testfile, loglocation, idealloglocation);
+  }
 }
