@@ -71,8 +71,12 @@ public class TestCatalogRetrivalAndModelCreation extends TestCase {
 	 */
 	public void testXHTML11_xmlresolver() throws MalformedURLException, IOException {
 		String EXPECTED_PUBLICID = "-//W3C//DTD XHTML 1.1//EN";
-		XMLCatalogIdResolver resolver = new XMLCatalogIdResolver(null, null);
-		String resolvedXML_Id = resolver.resolve(null, EXPECTED_PUBLICID, null);
+		
+		// bug 117424, here ewe make up a base location to satisfy the resolver API
+		// that expects a non-null base location
+		String baseLocation = "http://www.example.org/testXHTML11.xml";
+		XMLCatalogIdResolver resolver = new XMLCatalogIdResolver(baseLocation, null);
+		String resolvedXML_Id = resolver.resolve(baseLocation, EXPECTED_PUBLICID, null);
 		
 		ICatalog xmlCatalog = XMLCorePlugin.getDefault().getDefaultXMLCatalog();
 		String resolvedXL_Cat = xmlCatalog.resolvePublic(EXPECTED_PUBLICID, null);
