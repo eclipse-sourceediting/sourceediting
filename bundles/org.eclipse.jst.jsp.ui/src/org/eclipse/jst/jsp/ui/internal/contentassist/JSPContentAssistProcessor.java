@@ -513,7 +513,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor {
 		return elementDecls;
 	}
 
-	protected List getAvailableChildrenAtIndex(Element parent, int index) {
+	protected List getAvailableChildrenAtIndex(Element parent, int index, int validityChecking) {
 		List list = new ArrayList();
 		List additionalElements = getAdditionalChildren(new ArrayList(), parent, index);
 		for (int i = 0; i < additionalElements.size(); i++) {
