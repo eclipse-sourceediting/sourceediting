@@ -112,9 +112,19 @@ public class TestCatalogRetrivalAndModelCreation extends TestCase {
 	public void test2001SchemaCMDirect() throws MalformedURLException, IOException {
 		doCM_directURITest("http://www.w3.org/2001/XMLSchema.xsd");
 	}
+	
 	public void test2001SchemaCMCatalog() throws MalformedURLException, IOException {
 		doURI_CMTest("http://www.w3.org/2001/XMLSchema");
 	}
+	
+	public void testInvoiceRemote() throws MalformedURLException, IOException {
+		doCM_directURITest_checkElementCount("http://www.eclipse.org/webtools/wst/components/xsd/tests/dtd-references/Invoice.dtd", 18);
+	}	
+	
+	public void testInvoiceRemoteIndirect() throws MalformedURLException, IOException {
+		doCM_directURITest_checkElementCount("http://www.eclipse.org/webtools/wst/components/xsd/tests/dtd-references/IndirectInvoice.dtd", 18);
+	}
+	
 	private void doTest(String EXPECTED_PUBLICID) throws MalformedURLException, IOException {
 		ICatalog xmlCatalog = XMLCorePlugin.getDefault().getDefaultXMLCatalog();
 		String resolved = xmlCatalog.resolvePublic(EXPECTED_PUBLICID, null);
@@ -134,6 +144,14 @@ public class TestCatalogRetrivalAndModelCreation extends TestCase {
 		CMDocument contentModel = contentModelManager.createCMDocument(EXPECTED_URI, null);
 		assertNotNull("expected to create content model for " + EXPECTED_URI, contentModel);
 	}
+	
+	private void doCM_directURITest_checkElementCount(String EXPECTED_URI, int count) throws MalformedURLException, IOException {
+		ContentModelManager contentModelManager = ContentModelManager.getInstance();
+		CMDocument contentModel = contentModelManager.createCMDocument(EXPECTED_URI, null);
+		assertNotNull("expected to create content model for " + EXPECTED_URI, contentModel);
+		int actualCount = contentModel.getElements().getLength(); 
+		assertTrue("expected to create content model with '" + count + "' element declarations for " + EXPECTED_URI + " but found " + actualCount, contentModel.getElements().getLength() == count);		
+	}	
 
 	private void doURITest(String EXPECTED_URI) throws MalformedURLException, IOException {
  
