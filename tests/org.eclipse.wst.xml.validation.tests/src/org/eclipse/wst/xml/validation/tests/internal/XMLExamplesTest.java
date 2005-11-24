@@ -48,6 +48,34 @@ public class XMLExamplesTest extends BaseTestCase
   }
   
   /**
+   * Test /XMLExamples/InvoiceRemote/Invoice.xml.
+   */
+  public void testInvoiceRemote()
+  {
+  	String testname = "Invoice";
+    String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + XMLExamples_DIR + "InvoiceRemote/" + testname + ".xml";
+	List keys = new ArrayList();
+	int numErrors = 0;
+	int numWarnings = 0;
+
+	runTest(testfile, keys, numErrors, numWarnings);
+  }  
+  
+  /**
+   * Test /XMLExamples/InvoiceRemote/Invoice.xml.
+   */
+  public void testInvoiceRemoteIndirect()
+  {
+  	String testname = "InvoiceIndirect";
+    String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + XMLExamples_DIR + "InvoiceRemote/" + testname + ".xml";
+	List keys = new ArrayList();
+	int numErrors = 0;
+	int numWarnings = 0;
+
+	runTest(testfile, keys, numErrors, numWarnings);
+  }    
+  
+  /**
    * Test /XMLExamples/InvoiceInvalid/Invoice.xml.
    */
   public void testInvoiceInvalid()
