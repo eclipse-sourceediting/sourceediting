@@ -120,7 +120,7 @@ public class DTDParser extends DefaultHandler implements ContentHandler, DTDHand
 			if (!isReadable) {
 				throw new Exception("DTD parse error. Can not read the specified URI : " + logicalURI); //$NON-NLS-1$
 			}			
-			String document = "<!DOCTYPE root SYSTEM \"" + physicalURI + "\"><root/>"; //$NON-NLS-1$ //$NON-NLS-2$
+			String document = "<!DOCTYPE root SYSTEM \"" + logicalURI + "\"><root/>"; //$NON-NLS-1$ //$NON-NLS-2$
 			entityDepth = 0;
 			currentDTD = new DTD(logicalURI);
 			InputSource inputSource = new InputSource(new StringReader(document));
