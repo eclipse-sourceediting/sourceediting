@@ -8,8 +8,8 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
 
- This file contains definitions of data used internally 
- by CSS code, needs no translation, 
- and in no way should be considered API.
+ * None of the files in this directory 
+ * need to be translated 
+ * except for cssprofile.properties
  *******************************************************************************/
  
