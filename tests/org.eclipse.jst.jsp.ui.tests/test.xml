@@ -20,7 +20,7 @@
 	<!-- This target defines the tests that need to be run. -->
 	<target name="suite">
 		<delete dir="${workspace}" quiet="true" />
-		<ant target="core-test" antfile="${library-file}" dir="${eclipse-home}">
+		<ant target="ui-test" antfile="${library-file}" dir="${eclipse-home}">
 			<property name="data-dir" value="${workspace}" />
 			<property name="plugin-name" value="${plugin-name}" />
 			<property name="classname" value="org.eclipse.jst.jsp.ui.tests.JSPUITestSuite" />
@@ -41,7 +41,7 @@
 			<property name="includes" value="org.eclipse.jst.jsp.ui.tests.*xml" />
 			<property name="output-file" value="${plugin-name}.xml" />
 		</ant>
-		<!--		<emailResults resultsFile="${wsad-home}/${plugin-name}.xml" addresslist="david_williams@us.ibm.com,kitlo@us.ibm.com" /> -->
+		<!--		<emailResults resultsFile="${build-results-home}/${plugin-name}.xml" addresslist="david_williams@us.ibm.com" /> -->
 	</target>
 
 </project>

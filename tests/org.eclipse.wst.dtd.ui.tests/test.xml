@@ -40,7 +40,7 @@
 			dir="${workspace}"
 			quiet="true" />
 		<ant
-			target="core-test"
+			target="ui-test"
 			antfile="${library-file}"
 			dir="${eclipse-home}">
 			<property
@@ -81,7 +81,7 @@
 				name="output-file"
 				value="${plugin-name}.xml" />
 		</ant>
-		<!--		<emailResults resultsFile="${wsad-home}/${plugin-name}.xml" addresslist="nitind@us.ibm.com,david_williams@us.ibm.com" /> -->
+		<!--		<emailResults resultsFile="${build-results-home}/${plugin-name}.xml" addresslist="nitind@us.ibm.com,david_williams@us.ibm.com" /> -->
 	</target>
 
 </project>

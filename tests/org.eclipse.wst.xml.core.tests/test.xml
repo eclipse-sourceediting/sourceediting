@@ -45,7 +45,7 @@
 			<property name="includes" value="org.eclipse.wst.xml.core.tests.*xml" />
 			<property name="output-file" value="${plugin-name}.xml" />
 		</ant>
-		<!--		<emailResults resultsFile="${wsad-home}/${plugin-name}.xml" addresslist="david_williams@us.ibm.com,kitlo@us.ibm.com" /> -->
+		<!--		<emailResults resultsFile="${build-results-home}/${plugin-name}.xml" addresslist="david_williams@us.ibm.com" /> -->
 	</target>
 
 </project>
