@@ -36,8 +36,7 @@ public interface IHelpContextIds {
 	// Cleanup Document
 	// public static final String CONTMNU_CLEANUP_DOC_HELPID = PREFIX +
 	// "xmlm1050"; //$NON-NLS-1$
-	// Preferences
-	public static final String CONTMNU_PREFERENCES_HELPID = PREFIX + "xmlm1060"; //$NON-NLS-1$
+
 	// Properties
 	public static final String CONTMNU_PROPERTIES_HELPID = PREFIX + "xmlm1070"; //$NON-NLS-1$
 
@@ -46,10 +45,9 @@ public interface IHelpContextIds {
 	public static final String PREFSTE_APPEARANCE_HELPID = PREFIX + "sted0001"; //$NON-NLS-1$
 	// Hovers
 	public static final String PREFSTE_HOVERS_HELPID = PREFIX + "sted0003"; //$NON-NLS-1$
-	// Navigation
-	public static final String PREFSTE_NAVIGATION_HELPID = PREFIX + "sted0002"; //$NON-NLS-1$
-	// Read-Only Text Style
-	public static final String PREFWEBX_READONLY_HELPID = PREFIX + "webx0001"; //$NON-NLS-1$
+
+//	// Read-Only Text Style
+//	public static final String PREFWEBX_READONLY_HELPID = PREFIX + "webx0001"; //$NON-NLS-1$
 
 	// Web and XML Preference Page
 	// Task Tags

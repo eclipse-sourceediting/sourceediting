@@ -17,7 +17,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.help.WorkbenchHelp;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.css.core.internal.parserz.CSSRegionContexts;
 import org.eclipse.wst.css.core.internal.provisional.contenttype.ContentTypeIdForCSS;
 import org.eclipse.wst.css.ui.internal.CSSUIMessages;
@@ -58,7 +58,7 @@ public class CSSColorPage extends AbstractColorPage {
 		super.createContents(pageComponent);
 
 		// assigning one help for whole group
-		WorkbenchHelp.setHelp(pageComponent, IHelpContextIds.CSS_PREFWEBX_STYLES_HELPID);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(pageComponent, IHelpContextIds.CSS_PREFWEBX_STYLES_HELPID);
 
 		return pageComponent;
 	}

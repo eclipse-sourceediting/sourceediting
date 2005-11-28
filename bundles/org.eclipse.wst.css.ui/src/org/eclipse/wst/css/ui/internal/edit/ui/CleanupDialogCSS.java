@@ -16,7 +16,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.help.WorkbenchHelp;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.css.core.internal.cleanup.CSSCleanupStrategy;
 import org.eclipse.wst.css.core.internal.cleanup.CSSCleanupStrategyImpl;
 import org.eclipse.wst.css.ui.internal.CSSUIMessages;
@@ -68,7 +68,7 @@ public class CleanupDialogCSS extends Dialog {
 		layout.makeColumnsEqualWidth = true;
 		panel.setLayout(layout);
 
-		WorkbenchHelp.setHelp(panel, IHelpContextIds.CSS_CLEANUP_HELPID);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(panel, IHelpContextIds.CSS_CLEANUP_HELPID);
 
 		// Convert ident case
 		// ACC: Group radio buttons together so associated label is read

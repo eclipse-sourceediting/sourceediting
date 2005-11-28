@@ -50,7 +50,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.help.WorkbenchHelp;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.editor.IHelpContextIds;
@@ -288,7 +288,7 @@ public class TextHoverPreferenceTab extends AbstractPreferenceTab {
 
 		Dialog.applyDialogFont(hoverComposite);
 
-		WorkbenchHelp.setHelp(hoverComposite, IHelpContextIds.PREFSTE_HOVERS_HELPID);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(hoverComposite, IHelpContextIds.PREFSTE_HOVERS_HELPID);
 		return hoverComposite;
 	}
 

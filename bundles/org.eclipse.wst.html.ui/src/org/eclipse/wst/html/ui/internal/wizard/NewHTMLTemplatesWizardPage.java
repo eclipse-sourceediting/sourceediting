@@ -41,10 +41,12 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.eclipse.wst.html.ui.internal.HTMLUIMessages;
 import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
 import org.eclipse.wst.html.ui.internal.Logger;
+import org.eclipse.wst.html.ui.internal.editor.IHelpContextIds;
 import org.eclipse.wst.html.ui.internal.preferences.HTMLUIPreferenceNames;
 import org.eclipse.wst.html.ui.internal.templates.TemplateContextTypeIdsHTML;
 
@@ -276,6 +278,7 @@ public class NewHTMLTemplatesWizardPage extends WizardPage {
 		configureTableResizing(innerParent, table, column1, column2);
 		loadLastSavedPreferences();
 
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, IHelpContextIds.HTML_NEWWIZARD_TEMPLATE_HELPID);
 		Dialog.applyDialogFont(parent);
 		setControl(parent);
 	}

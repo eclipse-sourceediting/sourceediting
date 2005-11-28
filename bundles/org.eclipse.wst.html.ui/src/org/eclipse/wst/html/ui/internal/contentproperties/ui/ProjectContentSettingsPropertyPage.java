@@ -18,7 +18,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Widget;
-import org.eclipse.ui.help.WorkbenchHelp;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.html.ui.internal.HTMLUIMessages;
 import org.eclipse.wst.html.ui.internal.Logger;
 import org.eclipse.wst.html.ui.internal.editor.IHelpContextIds;
@@ -139,7 +139,7 @@ public final class ProjectContentSettingsPropertyPage extends ContentSettingsPro
 				createCSSComboBox();
 				createDeviceComboBox();
 				computeMaxWidthHint();
-				WorkbenchHelp.setHelp(propertyPage, IHelpContextIds.WEB_CONTENT_SETTINGS_HELPID);
+				PlatformUI.getWorkbench().getHelpSystem().setHelp(propertyPage, IHelpContextIds.WEB_CONTENT_SETTINGS_HELPID);
 				break;
 
 			default :

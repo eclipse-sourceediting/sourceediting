@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.ui.internal.editor;
 
-import org.eclipse.jst.jsp.core.internal.provisional.contenttype.ContentTypeIdForJSP;
 import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 
 /**
@@ -24,8 +23,11 @@ public interface IHelpContextIds {
 	// org.eclipse.jst.jsp.ui.
 	public static final String PREFIX = JSPUIPlugin.ID + "."; //$NON-NLS-1$
 	
-	// JSP Source page editor
-	public static final String JSP_SOURCEVIEW_HELPID = ContentTypeIdForJSP.ContentTypeID_JSP +"_source_HelpId"; //$NON-NLS-1$
+
+	// // figured out on the fly
+	// // JSP Source page editor
+	// public static final String JSP_SOURCEVIEW_HELPID =
+	// ContentTypeIdForJSP.ContentTypeID_JSP +"_source_HelpId"; //$NON-NLS-1$
 	
 	// JSP Files Preference page
 	public static final String JSP_PREFWEBX_FILES_HELPID = PREFIX + "webx0050"; //$NON-NLS-1$
@@ -34,10 +36,18 @@ public interface IHelpContextIds {
 	// JSP Templates Preference page
 	public static final String JSP_PREFWEBX_TEMPLATES_HELPID = PREFIX + "webx0052"; //$NON-NLS-1$
 			
-	// JSP Fragment Property Page
-	public static final String JSP_FRAGMENT_HELPID = PREFIX + "jspf1000"; //$NON-NLS-1$
+
+	// // JSP Fragment Property Page
+	// public static final String JSP_FRAGMENT_HELPID = PREFIX + "jspf1000";
+	// //$NON-NLS-1$
 	
-	// JSP Source Editor Context Menu
-	// Refactor Rename TODO infopop needed
-	// Refactor Move TODO infopop needed
+//	// JSP Source Editor Context Menu
+//	// Refactor Rename
+//	public static final String JSP_REFACTORRENAME_HELPID = PREFIX + "jspr0010"; //$NON-NLS-1$
+//	
+//	// Refactor Move
+//	public static final String JSP_REFACTORMOVE_HELPID = PREFIX + "jspr0020"; //$NON-NLS-1$
+	
+	// JSP New File Wizard - Template Page
+	public static final String JSP_NEWWIZARD_TEMPLATE_HELPID = PREFIX + "jspw0010"; //$NON-NLS-1$
 }

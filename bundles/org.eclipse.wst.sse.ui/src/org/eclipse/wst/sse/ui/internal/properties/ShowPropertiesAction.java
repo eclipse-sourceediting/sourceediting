@@ -12,7 +12,7 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.ui.internal.properties;
 
-import org.eclipse.ui.help.WorkbenchHelp;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.sse.ui.internal.ShowViewAction;
 import org.eclipse.wst.sse.ui.internal.editor.EditorPluginImageHelper;
@@ -29,7 +29,7 @@ public class ShowPropertiesAction extends ShowViewAction {
 
 	public ShowPropertiesAction() {
 		super(SSEUIMessages.ShowPropertiesAction_0, EditorPluginImageHelper.getInstance().getImageDescriptor(EditorPluginImages.IMG_OBJ_PROP_PS)); //$NON-NLS-1$
-		WorkbenchHelp.setHelp(this, IHelpContextIds.CONTMNU_PROPERTIES_HELPID);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IHelpContextIds.CONTMNU_PROPERTIES_HELPID);
 	}
 
 	protected String getViewID() {

@@ -16,7 +16,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
-import org.eclipse.ui.help.WorkbenchHelp;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
 import org.eclipse.wst.html.core.internal.preferences.HTMLCorePreferenceNames;
 import org.eclipse.wst.html.ui.internal.HTMLUIMessages;
@@ -133,7 +133,7 @@ public class HTMLSourcePreferencePage extends XMLSourcePreferencePage {
 	 */
 	protected Control createContents(Composite parent) {
 		Control c = super.createContents(parent);
-		WorkbenchHelp.setHelp(c, IHelpContextIds.HTML_PREFWEBX_SOURCE_HELPID);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(c, IHelpContextIds.HTML_PREFWEBX_SOURCE_HELPID);
 		return c;
 	}
 }

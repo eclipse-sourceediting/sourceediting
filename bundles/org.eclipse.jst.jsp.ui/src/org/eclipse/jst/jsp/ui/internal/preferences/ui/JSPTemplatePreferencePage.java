@@ -14,7 +14,7 @@ import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.jst.jsp.ui.internal.editor.IHelpContextIds;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.help.WorkbenchHelp;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.texteditor.templates.TemplatePreferencePage;
 
 
@@ -52,7 +52,7 @@ public class JSPTemplatePreferencePage extends TemplatePreferencePage {
 	 */
 	protected Control createContents(Composite ancestor) {
 		Control c = super.createContents(ancestor);
-		WorkbenchHelp.setHelp(c, IHelpContextIds.JSP_PREFWEBX_TEMPLATES_HELPID);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(c, IHelpContextIds.JSP_PREFWEBX_TEMPLATES_HELPID);
 		return c;
 	}
 }

@@ -13,7 +13,7 @@ package org.eclipse.wst.css.ui.internal.contentproperties.ui;
 import java.util.Map;
 
 import org.eclipse.core.resources.IResource;
-import org.eclipse.ui.help.WorkbenchHelp;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.css.ui.internal.Logger;
 import org.eclipse.wst.css.ui.internal.contentproperties.ContentSettingsRegistry;
 import org.eclipse.wst.css.ui.internal.editor.IHelpContextIds;
@@ -59,7 +59,7 @@ public final class CSSContentSettingsPropertyPage extends ContentSettingsPropert
 			case IResource.FILE :
 				//composite = createComposite(propertyPage,numCols,numRows);
 				createCSSComboBox();
-				WorkbenchHelp.setHelp(propertyPage, IHelpContextIds.CSS_CONTENT_SETTINGS_HELPID);
+				PlatformUI.getWorkbench().getHelpSystem().setHelp(propertyPage, IHelpContextIds.CSS_CONTENT_SETTINGS_HELPID);
 				break;
 
 			default :

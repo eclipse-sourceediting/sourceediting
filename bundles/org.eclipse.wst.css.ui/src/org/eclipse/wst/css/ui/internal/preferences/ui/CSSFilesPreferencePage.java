@@ -12,7 +12,7 @@ import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.help.WorkbenchHelp;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.css.core.internal.CSSCorePlugin;
 import org.eclipse.wst.css.ui.internal.CSSUIPlugin;
 import org.eclipse.wst.css.ui.internal.editor.IHelpContextIds;
@@ -33,7 +33,7 @@ public class CSSFilesPreferencePage extends XMLFilesPreferencePage {
 
 	protected Control createContents(Composite parent) {
 		Control c = super.createContents(parent);
-		WorkbenchHelp.setHelp(c, IHelpContextIds.CSS_PREFWEBX_FILES_HELPID);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(c, IHelpContextIds.CSS_PREFWEBX_FILES_HELPID);
 		return c;
 	}
 }

@@ -24,7 +24,7 @@ import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.swt.custom.BusyIndicator;
-import org.eclipse.ui.help.WorkbenchHelp;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.sse.ui.internal.IActionValidator;
 import org.eclipse.wst.sse.ui.internal.Logger;
 import org.osgi.framework.Bundle;
@@ -193,7 +193,7 @@ public class ActionDescriptor {
 				// For backward compatibility we auto qualify the id if it is
 				// not qualified)
 				fullID = actionElement.getDeclaringExtension().getNamespace() + "." + helpContextId; //$NON-NLS-1$
-			WorkbenchHelp.setHelp(action, fullID);
+			PlatformUI.getWorkbench().getHelpSystem().setHelp(action, fullID);
 		}
 
 		String description = actionElement.getAttribute(ATT_DESCRIPTION);

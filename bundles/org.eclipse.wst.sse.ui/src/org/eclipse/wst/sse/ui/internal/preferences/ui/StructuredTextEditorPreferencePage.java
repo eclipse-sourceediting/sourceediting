@@ -42,7 +42,7 @@ import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
-import org.eclipse.ui.help.WorkbenchHelp;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.editor.IHelpContextIds;
@@ -240,7 +240,7 @@ public class StructuredTextEditorPreferencePage extends PreferencePage implement
 			}
 		});
 		
-		WorkbenchHelp.setHelp(appearanceComposite, IHelpContextIds.PREFSTE_APPEARANCE_HELPID);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(appearanceComposite, IHelpContextIds.PREFSTE_APPEARANCE_HELPID);
 		return appearanceComposite;
 	}
 

@@ -21,7 +21,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.help.WorkbenchHelp;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.css.core.internal.CSSCorePlugin;
 import org.eclipse.wst.css.core.internal.preferences.CSSCorePreferenceNames;
 import org.eclipse.wst.css.ui.internal.CSSUIMessages;
@@ -73,7 +73,7 @@ public class CSSSourcePreferencePage extends AbstractPreferencePage {
 	 */
 	protected Control createContents(Composite parent) {
 		Composite composite = (Composite) super.createContents(parent);
-		WorkbenchHelp.setHelp(composite, IHelpContextIds.CSS_PREFWEBX_SOURCE_HELPID);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(composite, IHelpContextIds.CSS_PREFWEBX_SOURCE_HELPID);
 
 		createContentsForFormattingGroup(composite);
 		createContentsForContentAssistGroup(composite);

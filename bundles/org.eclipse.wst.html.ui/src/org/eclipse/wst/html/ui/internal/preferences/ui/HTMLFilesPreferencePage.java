@@ -17,7 +17,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.ui.help.WorkbenchHelp;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
 import org.eclipse.wst.html.ui.internal.HTMLUIMessages;
 import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
@@ -54,7 +54,7 @@ public class HTMLFilesPreferencePage extends XMLFilesPreferencePage {
 		createContentsForCreatingGroup(scrolledComposite);
 		createContentsForLoadingGroup(scrolledComposite);
 		
-		WorkbenchHelp.setHelp(scrolledComposite, IHelpContextIds.HTML_PREFWEBX_FILES_HELPID);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(scrolledComposite, IHelpContextIds.HTML_PREFWEBX_FILES_HELPID);
 		
 		setSize(scrolledComposite);
 		loadPreferences();

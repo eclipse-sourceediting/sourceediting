@@ -12,7 +12,7 @@ package org.eclipse.wst.html.ui.internal.preferences.ui;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.help.WorkbenchHelp;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.texteditor.templates.TemplatePreferencePage;
 import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
 import org.eclipse.wst.html.ui.internal.editor.IHelpContextIds;
@@ -52,7 +52,7 @@ public class HTMLTemplatePreferencePage extends TemplatePreferencePage {
 	 */
 	protected Control createContents(Composite ancestor) {
 		Control c = super.createContents(ancestor);
-		WorkbenchHelp.setHelp(c, IHelpContextIds.HTML_PREFWEBX_TEMPLATES_HELPID);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(c, IHelpContextIds.HTML_PREFWEBX_TEMPLATES_HELPID);
 		return c;
 	}
 }

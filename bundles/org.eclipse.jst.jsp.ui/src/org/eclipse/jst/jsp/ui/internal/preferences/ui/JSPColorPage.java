@@ -26,7 +26,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.help.WorkbenchHelp;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.html.ui.internal.style.IStyleConstantsHTML;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
@@ -148,7 +148,7 @@ public class JSPColorPage extends XMLColorPage {
 	protected Control createContents(Composite parent) {
 		
 		Control c = super.createContents(parent);
-		WorkbenchHelp.setHelp(c, IHelpContextIds.JSP_PREFWEBX_STYLES_HELPID);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(c, IHelpContextIds.JSP_PREFWEBX_STYLES_HELPID);
 		return c;
 	}
 	

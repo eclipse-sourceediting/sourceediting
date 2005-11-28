@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.wst.css.ui.internal.editor;
 
-import org.eclipse.wst.css.core.internal.provisional.contenttype.ContentTypeIdForCSS;
 import org.eclipse.wst.css.ui.internal.CSSUIPlugin;
 
 /**
@@ -25,8 +24,10 @@ public interface IHelpContextIds {
 	// org.eclipse.wst.css.ui.
 	public static final String PREFIX = CSSUIPlugin.ID + "."; //$NON-NLS-1$
 
-	// CSS Source page editor
-	public static final String CSS_SOURCEVIEW_HELPID = ContentTypeIdForCSS.ContentTypeID_CSS +"_source_HelpId"; //$NON-NLS-1$
+	// // figured out on the fly
+	// // CSS Source page editor
+	// public static final String CSS_SOURCEVIEW_HELPID =
+	// ContentTypeIdForCSS.ContentTypeID_CSS +"_source_HelpId"; //$NON-NLS-1$
 
 	// CSS Files Preference page
 	public static final String CSS_PREFWEBX_FILES_HELPID = PREFIX + "webx0010"; //$NON-NLS-1$
@@ -34,7 +35,7 @@ public interface IHelpContextIds {
 	public static final String CSS_PREFWEBX_SOURCE_HELPID = PREFIX + "webx0011"; //$NON-NLS-1$
 	// CSS Styles Preference page
 	public static final String CSS_PREFWEBX_STYLES_HELPID = PREFIX + "webx0012"; //$NON-NLS-1$
-	// CSS Template Preference page (no id for this yet)
+	// CSS Template Preference page
 	public static final String CSS_PREFWEBX_TEMPLATES_HELPID = PREFIX + "webx0013"; //$NON-NLS-1$
 
 	// CSS Cleanup dialog
@@ -42,4 +43,7 @@ public interface IHelpContextIds {
 
 	// CSS Content Settings
 	public static final String CSS_CONTENT_SETTINGS_HELPID = PREFIX + "misc0180"; //$NON-NLS-1$
+	
+	// CSS New File Wizard - Template Page
+	public static final String CSS_NEWWIZARD_TEMPLATE_HELPID = PREFIX + "cssw0010"; //$NON-NLS-1$
 }

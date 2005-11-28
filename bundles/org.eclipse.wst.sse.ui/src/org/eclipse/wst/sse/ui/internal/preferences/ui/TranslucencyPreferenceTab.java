@@ -25,10 +25,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
-import org.eclipse.wst.sse.ui.internal.editor.IHelpContextIds;
 import org.eclipse.wst.sse.ui.internal.preferences.EditorPreferenceNames;
 
 public class TranslucencyPreferenceTab implements IPreferenceTab {
@@ -80,7 +78,7 @@ public class TranslucencyPreferenceTab implements IPreferenceTab {
 		fTranslucencyScale.load();
 		fTranslucencyScale.setPropertyChangeListener(validityChangeListener);
 
-		WorkbenchHelp.setHelp(composite, IHelpContextIds.PREFWEBX_READONLY_HELPID);
+//		PlatformUI.getWorkbench().getHelpSystem().setHelp(composite, IHelpContextIds.PREFWEBX_READONLY_HELPID);
 		return composite;
 	}
 

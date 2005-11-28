@@ -27,6 +27,7 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.jst.jsp.ui.internal.JSPUIMessages;
 import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.jst.jsp.ui.internal.Logger;
+import org.eclipse.jst.jsp.ui.internal.editor.IHelpContextIds;
 import org.eclipse.jst.jsp.ui.internal.preferences.JSPUIPreferenceNames;
 import org.eclipse.jst.jsp.ui.internal.templates.TemplateContextTypeIdsJSP;
 import org.eclipse.swt.SWT;
@@ -46,6 +47,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 
 /**
@@ -276,6 +278,7 @@ public class NewJSPTemplatesWizardPage extends WizardPage {
 		configureTableResizing(innerParent, table, column1, column2);
 		loadLastSavedPreferences();
 
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, IHelpContextIds.JSP_NEWWIZARD_TEMPLATE_HELPID);
 		Dialog.applyDialogFont(parent);
 		setControl(parent);
 	}

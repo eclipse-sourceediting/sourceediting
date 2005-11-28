@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.wst.html.ui.internal.editor;
 
-import org.eclipse.wst.html.core.internal.provisional.contenttype.ContentTypeIdForHTML;
 import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
 
 /**
@@ -24,8 +23,11 @@ public interface IHelpContextIds {
 	// org.eclipse.wst.html.ui.
 	public static final String PREFIX = HTMLUIPlugin.ID + "."; //$NON-NLS-1$
 
-	// HTML Source page editor
-	public static final String HTML_SOURCEVIEW_HELPID = ContentTypeIdForHTML.ContentTypeID_HTML +"_source_HelpId"; //$NON-NLS-1$
+	// // figured out on the fly
+	// // HTML Source page editor
+	// public static final String HTML_SOURCEVIEW_HELPID =
+	// ContentTypeIdForHTML.ContentTypeID_HTML +"_source_HelpId";
+	// //$NON-NLS-1$
 	
 	// HTML Files Preference page
 	public static final String HTML_PREFWEBX_FILES_HELPID = PREFIX + "webx0030"; //$NON-NLS-1$
@@ -41,4 +43,7 @@ public interface IHelpContextIds {
 	
 	// HTML Content Settings
 	public static final String WEB_CONTENT_SETTINGS_HELPID = PREFIX + "misc0170"; //$NON-NLS-1$
+	
+	// HTML New File Wizard - Template Page
+	public static final String HTML_NEWWIZARD_TEMPLATE_HELPID = PREFIX + "htmlw0010"; //$NON-NLS-1$
 }
