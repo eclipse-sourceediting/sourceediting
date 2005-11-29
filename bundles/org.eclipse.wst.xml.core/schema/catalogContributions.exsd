@@ -3,7 +3,7 @@
 <schema targetNamespace="org.eclipse.wst.xml.core">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.eclipse.wst.xml.core" id="catalogContributions" name="%XML_Catalog_Contributtions_Extension_Point.name"/>
+         <meta.schema plugin="org.eclipse.wst.xml.core" id="catalogContributions" name="XML Catalog Contributions Extension Point"/>
       </appInfo>
       <documentation>
          
@@ -15,7 +15,6 @@
          <documentation>
             This extension poing allows to specifiy entries for XML Catalog.  Catalog entries have format specified in http://www.oasis-open.org/committees/entity/spec.html.  
 Each catalog extension consists of a single catalogContribution element.
-
          </documentation>
       </annotation>
       <complexType>
@@ -25,21 +24,21 @@ Each catalog extension consists of a single catalogContribution element.
          <attribute name="point" type="string" use="required">
             <annotation>
                <documentation>
-                  org.eclipse.wst.xml.core.catalog.catalogContributions 
+                  a fully qualified identifier of the target extension point
                </documentation>
             </annotation>
          </attribute>
          <attribute name="id" type="string">
             <annotation>
                <documentation>
-                  Id of the extension, optional.
+                  an optional identifier of the extension instance
                </documentation>
             </annotation>
          </attribute>
          <attribute name="name" type="string">
             <annotation>
                <documentation>
-                  Name of the extension, optional.
+                  an optional name of the extension instance
                </documentation>
                <appInfo>
                   <meta.attribute translatable="true"/>
@@ -274,13 +273,11 @@ Each catalog extension consists of a single catalogContribution element.
          <meta.section type="copyright"/>
       </appInfo>
       <documentation>
-         Copyright (c) 2002 IBM Corporation and others.
-All rights reserved.   This program and the accompanying materials
-are made available under the terms of the Common Public License v1.0
-which accompanies this distribution, and is available at
-http://www.eclipse.org/legal/cpl-v10.html
-
-Contributors: IBM
+         Copyright (c) 2005 IBM Corporation and others.&lt;br&gt;
+All rights reserved. This program and the accompanying materials are made 
+available under the terms of the Eclipse Public License v1.0 which accompanies 
+this distribution, and is available at &lt;a
+href=&quot;http://www.eclipse.org/legal/epl-v10.html&quot;&gt;http://www.eclipse.org/legal/epl-v10.html&lt;/a&gt;
       </documentation>
    </annotation>
 
