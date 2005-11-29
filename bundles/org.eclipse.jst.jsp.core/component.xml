@@ -19,5 +19,6 @@
 	<package name="org.eclipse.jst.jsp.ui.views.contentoutline" api="false">
 		<type name="JSPContentOutlineConfiguration" subclass="true" instantiate="true" />
 	</package>
+	<plugin id="org.eclipse.jst.jsp.ui.infopop" fragment="false" />
 	<description url="http://eclipse.org/webtools/jst/components/jsp/overview.html" />
 </component>
