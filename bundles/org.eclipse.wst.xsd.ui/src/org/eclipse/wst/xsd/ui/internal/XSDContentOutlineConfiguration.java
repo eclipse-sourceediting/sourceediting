@@ -350,7 +350,6 @@ public class XSDContentOutlineConfiguration extends ContentOutlineConfiguration 
 
 	  public void unconfigure(TreeViewer viewer) {
 		  super.unconfigure(viewer);
-		  System.out.println("UNCONFIGURE OUTLINE");
 		  getXSDEditor().getSelectionManager().removeSelectionChangedListener(selectionManagerSelectionChangeListener);
 	  }
 }
