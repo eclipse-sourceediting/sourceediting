@@ -120,7 +120,7 @@ public class DTDContentOutlineConfiguration extends ContentOutlineConfiguration 
 	public IMenuListener getMenuListener(TreeViewer viewer) {
 		if (fMenuHelper == null) {
 //			fMenuHelper = new DTDContextMenuHelper(getEditor());
-			System.out.println("DTDContextMenuHelper not implemented"); //$NON-NLS-1$
+//			System.out.println("DTDContextMenuHelper not implemented"); //$NON-NLS-1$
 		}
 //		fMenuHelper.createMenuListenersFor(viewer);
 //		return fMenuHelper.getMenuListener();
