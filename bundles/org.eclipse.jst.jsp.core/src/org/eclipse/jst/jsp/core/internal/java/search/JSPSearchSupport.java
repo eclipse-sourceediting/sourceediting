@@ -261,39 +261,16 @@ public class JSPSearchSupport {
     	// because this method is called frequently
     	// and IO is expensive
         boolean isJsp = false;
-//        InputStream is = null;
-//        try {
-            if (file != null && file.exists()) {
-            	
-                IContentType contentTypeJSP = Platform.getContentTypeManager().getContentType(ContentTypeIdForJSP.ContentTypeID_JSP);
-                // check this before description, it's less expensive
-                if (contentTypeJSP.isAssociatedWith(file.getName())) {
-                	isJsp = true;
-//                    IContentDescription contentDescription = file.getContentDescription();
-//                    // it can be null
-//                    if (contentDescription == null) {
-//                        is = file.getContents();
-//                        contentDescription = Platform.getContentTypeManager().getDescriptionFor(is, file.getName(), new QualifiedName[] { IContentDescription.CHARSET });
-//                    }
-//                    if (contentDescription != null) {
-//                        String fileCtId = contentDescription.getContentType().getId();
-//                        isJsp = (fileCtId != null && ContentTypeIdForJSP.ContentTypeID_JSP.equals(fileCtId));
-//                    }
-                }
+
+        if (file != null && file.exists()) {
+        	
+            IContentType contentTypeJSP = Platform.getContentTypeManager().getContentType(ContentTypeIdForJSP.ContentTypeID_JSP);
+            // check this before description, it's less expensive
+            if (contentTypeJSP.isAssociatedWith(file.getName())) {
+            	isJsp = true;
             }
-//        } catch (IOException e) {
-//            // ignore, assume it's invalid JSP
-//        } catch (CoreException e) {
-//            // ignore, assume it's invalid JSP
-//        } finally {
-//            // must close input stream in case others need it
-//            if (is != null)
-//                try {
-//                    is.close();
-//                } catch (Exception e) {
-//                    // not sure how to recover at this point
-//                }
-//        }
+        }
+
         return isJsp;
     }
 

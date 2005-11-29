@@ -59,6 +59,7 @@ import org.eclipse.wst.sse.core.internal.util.StringUtils;
 import org.eclipse.wst.sse.core.internal.util.URIResolver;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
+import org.eclipse.wst.xml.core.internal.parser.ContextRegionContainer;
 import org.eclipse.wst.xml.core.internal.provisional.contentmodel.CMDocumentTracker;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
@@ -750,10 +751,11 @@ public class JSPTranslator {
 		Iterator regions = containerRegion.getRegions().iterator();
 		ITextRegion region = null;
 		while (regions.hasNext()) {
+			
 			region = (ITextRegion) regions.next();
+			
 			String type = region.getType();
-			// PMR 91930
-			// CMVC 241869
+
 			// content assist was not showing up in JSP inside a javascript
 			// region
 			if (type == DOMRegionContext.BLOCK_TEXT) {
@@ -773,7 +775,8 @@ public class JSPTranslator {
 			}
 			if (type != null && isJSP(type)) // <%, <%=, <%!, <%@
 			{
-				translateJSPNode(region, regions, type, JSPType);
+				// translateJSPNode(region, regions, type, JSPType);
+				translateJSPNode(containerRegion, regions, type, JSPType);
 			}
 			else if (type != null && type == DOMRegionContext.XML_TAG_OPEN) {
 				translateXMLNode(containerRegion, regions);
@@ -937,15 +940,8 @@ public class JSPTranslator {
 				{
 					if (st.hasMoreTokens()) {
 						String jspTagName = st.nextToken();
-						if (jspTagName.equals("useBean")) //$NON-NLS-1$
-						{
-							// https://bugs.eclipse.org/bugs/show_bug.cgi?id=103004
-							//advanceNextNode(); // get the content
-							if (getCurrentNode() != null) {
-								translateUseBean(container); // 'regions'
-							}
-						}
-						else if (jspTagName.equals("scriptlet")) //$NON-NLS-1$
+						
+						if (jspTagName.equals("scriptlet")) //$NON-NLS-1$
 						{
 							translateXMLJSPContent(SCRIPTLET);
 						}
@@ -982,73 +978,101 @@ public class JSPTranslator {
 								}
 								else if (directiveName.equals("page")) { //$NON-NLS-1$
 
-									// 20040702 commenting this out
 									// bad if currentNode is referenced after
 									// here w/ the current list
 									// see:
 									// https://w3.opensource.ibm.com/bugzilla/show_bug.cgi?id=3035
 									// setCurrentNode(getCurrentNode().getNext());
 									if (getCurrentNode() != null) {
-										translatePageDirectiveAttributes(regions); // 'regions'
-										// are
-										// attributes
-										// for
-										// the
-										// directive
+										// 'regions' contain the attrs
+										translatePageDirectiveAttributes(regions); 
 									}
 								}
 							}
 						}
-						
-//						https://bugs.eclipse.org/bugs/show_bug.cgi?id=91281
-//						else if (jspTagName.equals("include")) { //$NON-NLS-1$
-							
-							// 
-//							// <jsp:include page="filename") />
-//							while (regions.hasNext()) {
-//								r = (ITextRegion) regions.next();
-//								if (r.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME && getCurrentNode().getText(r).equals("page")) { //$NON-NLS-1$
-//									String filename = getAttributeValue(r, regions);
-//									handleIncludeFile(filename);
-//									break;
-//								}
-//							}
-//						}
-						
+						else if (jspTagName.equals("include")) { //$NON-NLS-1$
+							// <jsp:include page="filename") />
+							checkAttributeValueContainer(regions, "page"); //$NON-NLS-1$
+						}
+						else if(jspTagName.equals("forward")) { //$NON-NLS-1$
+							checkAttributeValueContainer(regions, "page"); //$NON-NLS-1$
+						}
+						else if(jspTagName.equals("param")) { //$NON-NLS-1$
+							checkAttributeValueContainer(regions, "value"); //$NON-NLS-1$
+						}
+						else if(jspTagName.equals("setProperty")) { //$NON-NLS-1$
+							checkAttributeValueContainer(regions, "value"); //$NON-NLS-1$
+						}
+						else if (jspTagName.equals("useBean")) //$NON-NLS-1$
+						{
+							checkAttributeValueContainer(regions, "name"); //$NON-NLS-1$
+							// https://bugs.eclipse.org/bugs/show_bug.cgi?id=103004
+							//advanceNextNode(); // get the content
+							if (getCurrentNode() != null) {
+								translateUseBean(container); // 'regions'
+							}
+						}
+	
 					}
 				}
 				else {
-					// tag name is not jsp
-					// handle embedded jsp attributes...
-					ITextRegion embedded = null;
-					Iterator attrRegions = null;
-					ITextRegion attrChunk = null;
-					while (regions.hasNext()) {
-						embedded = (ITextRegion) regions.next();
-						if (embedded instanceof ITextRegionContainer) {
-							// parse out container
-							attrRegions = ((ITextRegionContainer) embedded).getRegions().iterator();
-							while (attrRegions.hasNext()) {
-								attrChunk = (ITextRegion) attrRegions.next();
-								String type = attrChunk.getType();
-								// CMVC 263661, embedded JSP in attribute
-								// support
-								// only want to translate one time per
-								// embedded region
-								// so we only translate on the JSP open tags
-								// (not content)
-								if (type == DOMJSPRegionContexts.JSP_EXPRESSION_OPEN || type == DOMJSPRegionContexts.JSP_SCRIPTLET_OPEN || type == DOMJSPRegionContexts.JSP_DECLARATION_OPEN || type == DOMJSPRegionContexts.JSP_DIRECTIVE_OPEN || type == DOMJSPRegionContexts.JSP_EL_OPEN) {
-									// now call jsptranslate
-									translateEmbeddedJSPInAttribute((ITextRegionContainer) embedded);
-								}
-							}
-						}
+					checkAllAttributeValueContainers(regions);
+				}
+			}
+		}
+	}
+	/**
+	 * translates embedded containers for ALL attribute values
+	 * @param regions
+	 */
+	private void checkAllAttributeValueContainers(Iterator regions) {
+		// tag name is not jsp
+		// handle embedded jsp attributes...
+		ITextRegion embedded = null;
+		Iterator attrRegions = null;
+		ITextRegion attrChunk = null;
+		while (regions.hasNext()) {
+			embedded = (ITextRegion) regions.next();
+			if (embedded instanceof ITextRegionContainer) {
+				// parse out container
+				attrRegions = ((ITextRegionContainer) embedded).getRegions().iterator();
+				while (attrRegions.hasNext()) {
+					attrChunk = (ITextRegion) attrRegions.next();
+					String type = attrChunk.getType();
+					// embedded JSP in attribute support only want to translate one time per
+					// embedded region so we only translate on the JSP open tags (not content)
+					if (type == DOMJSPRegionContexts.JSP_EXPRESSION_OPEN || type == DOMJSPRegionContexts.JSP_SCRIPTLET_OPEN || type == DOMJSPRegionContexts.JSP_DECLARATION_OPEN || type == DOMJSPRegionContexts.JSP_DIRECTIVE_OPEN || type == DOMJSPRegionContexts.JSP_EL_OPEN) {
+						// now call jsptranslate
+						translateEmbeddedJSPInAttribute((ITextRegionContainer) embedded);
 					}
 				}
 			}
 		}
 	}
-
+	/**
+	 * translates embedded container for specified attribute
+	 * @param regions
+	 * @param attrName
+	 */
+	private void checkAttributeValueContainer(Iterator regions, String attrName) {
+		ITextRegion r = null;
+		while (regions.hasNext()) {
+			r = (ITextRegion) regions.next();
+			if (r.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME && getCurrentNode().getText(r).equals(attrName)) { //$NON-NLS-1$
+				// skip to attribute value
+				while((r = (ITextRegion)regions.next()) != null) {
+					if( r.getType() ==  DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE)
+						break;
+				}
+				// forces embedded region to be translated
+				if(r instanceof ContextRegionContainer) {
+					translateEmbeddedJSPInAttribute((ContextRegionContainer)r);
+				}
+				break;
+			}
+		}
+	}
+	
 	/* 
 	 * example:
 	 * 
@@ -1154,7 +1178,7 @@ public class JSPTranslator {
 				contentRegion = getCurrentNode();
 			}
 			else if (JSPType == EMBEDDED_JSP && region instanceof ITextRegionCollection) {
-				// CMVC 263661
+
 				translateEmbeddedJSPInBlock((ITextRegionCollection) region);
 				// ensure the rest of this method won't be called
 				contentRegion = null;
@@ -1229,9 +1253,8 @@ public class JSPTranslator {
 	 * for example: <a href="index.jsp?p=<%=abc%>b=<%=xyz%>">abc</a>
 	 */
 	private void translateEmbeddedJSPInAttribute(ITextRegionCollection embeddedContainer) {
-		// THIS METHOD IS A FIX FOR CMVC 263661 (jsp embedded in attribute
-		// regions)
-
+		// THIS METHOD IS A FIX FOR 
+		// jsp embedded in attribute regions
 		// loop all regions
 		ITextRegionList embeddedRegions = embeddedContainer.getRegions();
 		ITextRegion delim = null;
@@ -1262,15 +1285,18 @@ public class JSPTranslator {
 
 				if (type == DOMJSPRegionContexts.JSP_EXPRESSION_OPEN) {
 					fLastJSPType = EXPRESSION;
-					translateExpressionString(embeddedContainer.getText(content), fCurrentNode, contentStart, content.getLength());
+					//translateExpressionString(embeddedContainer.getText(content), fCurrentNode, contentStart, content.getLength());
+					translateExpressionString(embeddedContainer.getText(content), embeddedContainer, contentStart, content.getLength());
 				}
 				else if (type == DOMJSPRegionContexts.JSP_SCRIPTLET_OPEN) {
 					fLastJSPType = SCRIPTLET;
-					translateScriptletString(embeddedContainer.getText(content), fCurrentNode, contentStart, content.getLength());
+					//translateScriptletString(embeddedContainer.getText(content), fCurrentNode, contentStart, content.getLength());
+					translateScriptletString(embeddedContainer.getText(content), embeddedContainer, contentStart, content.getLength());
 				}
 				else if (type == DOMJSPRegionContexts.JSP_DECLARATION_OPEN) {
 					fLastJSPType = DECLARATION;
-					translateDeclarationString(embeddedContainer.getText(content), fCurrentNode, contentStart, content.getLength());
+					//translateDeclarationString(embeddedContainer.getText(content), fCurrentNode, contentStart, content.getLength());
+					translateDeclarationString(embeddedContainer.getText(content), embeddedContainer, contentStart, content.getLength());
 				} else if (type == DOMJSPRegionContexts.JSP_EL_OPEN) {
 					fLastJSPType = EXPRESSION;
 					translateEL(embeddedContainer.getText(content), fCurrentNode, contentStart, content.getLength());
@@ -1425,7 +1451,6 @@ public class JSPTranslator {
 		if (r.getType().equals(DOMRegionContext.XML_TAG_ATTRIBUTE_NAME)) {
 			if (remainingRegions.hasNext() && (r = (ITextRegion) remainingRegions.next()) != null && r.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS) {
 				if (remainingRegions.hasNext() && (r = (ITextRegion) remainingRegions.next()) != null && r.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
-					// handle include for the filename
 					return StringUtils.stripQuotes(getCurrentNode().getText(r));
 				}
 			}

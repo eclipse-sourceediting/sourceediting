@@ -34,6 +34,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredTextPartitioner;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.sse.core.internal.text.rules.StructuredTextPartitioner;
 import org.eclipse.wst.sse.core.internal.util.StringUtils;
@@ -442,7 +443,9 @@ public class StructuredTextPartitionerForJSP extends StructuredTextPartitioner {
 				setInternalPartition(offset, containedChildRegion.getLength(), IJSPPartitionTypes.JSP_DIRECTIVE);
 				return true;
 			}
-			if (fEnableJSPActionPartitions && isAction(sdRegion, offset)) {
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=113346
+			if (fEnableJSPActionPartitions && isAction(sdRegion, offset) && !(containedChildRegion instanceof ITextRegionContainer)) {
+			//if (fEnableJSPActionPartitions && isAction(sdRegion, offset)) {
 				setInternalPartition(offset, containedChildRegion.getLength(), IJSPPartitionTypes.JSP_DIRECTIVE);
 				return true;
 			}
