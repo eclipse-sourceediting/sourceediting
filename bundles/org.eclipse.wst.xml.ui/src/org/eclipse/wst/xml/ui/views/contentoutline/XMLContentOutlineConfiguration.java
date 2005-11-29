@@ -55,8 +55,10 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
 /**
- * Configuration for XML, expects that the viewer's input will be the DOM
- * Model
+ * Outline Configuration for generic XML support, expects that the viewer's
+ * input will be the DOM Model.
+ * 
+ * @since 1.0
  */
 public class XMLContentOutlineConfiguration extends ContentOutlineConfiguration {
 	private class ActionManagerMenuListener implements IMenuListener, IReleasable {
@@ -67,6 +69,11 @@ public class XMLContentOutlineConfiguration extends ContentOutlineConfiguration 
 			fTreeViewer = viewer;
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see org.eclipse.jface.action.IMenuListener#menuAboutToShow(org.eclipse.jface.action.IMenuManager)
+		 */
 		public void menuAboutToShow(IMenuManager manager) {
 			if (fActionManager == null) {
 				fActionManager = createNodeActionManager(fTreeViewer);
@@ -74,6 +81,11 @@ public class XMLContentOutlineConfiguration extends ContentOutlineConfiguration 
 			fActionManager.fillContextMenu(manager, fTreeViewer.getSelection());
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see org.eclipse.wst.sse.ui.internal.IReleasable#release()
+		 */
 		public void release() {
 			fTreeViewer = null;
 			if (fActionManager != null) {
@@ -83,6 +95,11 @@ public class XMLContentOutlineConfiguration extends ContentOutlineConfiguration 
 	}
 
 	private class AttributeShowingLabelProvider extends JFaceNodeLabelProvider {
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
+		 */
 		public String getText(Object o) {
 			StringBuffer text = new StringBuffer(super.getText(o));
 			if (o instanceof Node) {
@@ -187,9 +204,20 @@ public class XMLContentOutlineConfiguration extends ContentOutlineConfiguration 
 			update();
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see org.eclipse.ui.texteditor.IUpdate#update()
+		 */
 		public void update() {
 			super.update();
-			updateShowAttributes(isChecked(), fTreeViewer);
+			fShowAttributes = isChecked();
+
+			// notify the configuration of the change
+			enableShowAttributes(fShowAttributes, fTreeViewer);
+
+			// refresh the outline view
+			fTreeViewer.refresh(true);
 		}
 	}
 
@@ -209,10 +237,18 @@ public class XMLContentOutlineConfiguration extends ContentOutlineConfiguration 
 	 */
 	private final String OUTLINE_SHOW_ATTRIBUTE_PREF = "outline-show-attribute-editor"; //$NON-NLS-1$
 
+	/**
+	 * Default constructor required for use as an extension.
+	 */
 	public XMLContentOutlineConfiguration() {
 		super();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration#createMenuContributions(org.eclipse.jface.viewers.TreeViewer)
+	 */
 	protected IContributionItem[] createMenuContributions(TreeViewer viewer) {
 		IContributionItem[] items;
 		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=88444
@@ -230,10 +266,33 @@ public class XMLContentOutlineConfiguration extends ContentOutlineConfiguration 
 		return items;
 	}
 
+	/**
+	 * @param treeViewer
+	 * @return a node action manager for use with this tree viewer
+	 */
 	protected XMLNodeActionManager createNodeActionManager(TreeViewer treeViewer) {
 		return new XMLNodeActionManager((IStructuredModel) treeViewer.getInput(), treeViewer);
 	}
 
+	/**
+	 * Notifies this configuration that the flag that indicates whether or not
+	 * to show attribute values in the tree viewer has changed. The tree
+	 * viewer is automatically refreshed afterwards to update the labels.
+	 * 
+	 * Clients should not call this method, but rather should react to it.
+	 * 
+	 * @param showAttributes
+	 * @param treeViewer
+	 */
+	protected void enableShowAttributes(boolean showAttributes, TreeViewer treeViewer) {
+		// nothing by default
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration#getContentProvider(org.eclipse.jface.viewers.TreeViewer)
+	 */
 	public IContentProvider getContentProvider(TreeViewer viewer) {
 		if (fContentProvider == null) {
 			fContentProvider = new JFaceNodeContentProvider();
@@ -263,7 +322,9 @@ public class XMLContentOutlineConfiguration extends ContentOutlineConfiguration 
 		return filteredNodes;
 	}
 
-	/**
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration#getLabelProvider(org.eclipse.jface.viewers.TreeViewer)
 	 */
 	public ILabelProvider getLabelProvider(TreeViewer viewer) {
@@ -273,7 +334,9 @@ public class XMLContentOutlineConfiguration extends ContentOutlineConfiguration 
 		return fLabelProvider;
 	}
 
-	/**
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration#getMenuListener(org.eclipse.jface.viewers.TreeViewer)
 	 */
 	public IMenuListener getMenuListener(TreeViewer viewer) {
@@ -286,7 +349,7 @@ public class XMLContentOutlineConfiguration extends ContentOutlineConfiguration 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.wst.sse.ui.views.contentoutline.StructuredContentOutlineConfiguration#getPreferenceStore()
+	 * @see org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration#getPreferenceStore()
 	 */
 	protected IPreferenceStore getPreferenceStore() {
 		return XMLUIPlugin.getDefault().getPreferenceStore();
@@ -301,7 +364,9 @@ public class XMLContentOutlineConfiguration extends ContentOutlineConfiguration 
 		return filteredSelection;
 	}
 
-	/**
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration#getTransferDragSourceListeners(org.eclipse.jface.viewers.TreeViewer)
 	 */
 	public TransferDragSourceListener[] getTransferDragSourceListeners(TreeViewer treeViewer) {
@@ -376,6 +441,11 @@ public class XMLContentOutlineConfiguration extends ContentOutlineConfiguration 
 		return fTransferDropTargetListeners;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration#unconfigure(org.eclipse.jface.viewers.TreeViewer)
+	 */
 	public void unconfigure(TreeViewer viewer) {
 		super.unconfigure(viewer);
 		fTransferDragSourceListeners = null;
@@ -384,19 +454,5 @@ public class XMLContentOutlineConfiguration extends ContentOutlineConfiguration 
 			fContextMenuFiller.release();
 			fContextMenuFiller = null;
 		}
-	}
-
-	/**
-	 * Updates show attributes flag in JFaceNodeAdapter to indicate whether or
-	 * not to show attributes in outline view. Also refreshes tree view due to
-	 * label updates.
-	 * 
-	 * @param showAttr
-	 * @param viewer
-	 */
-	void updateShowAttributes(boolean showAttr, TreeViewer viewer) {
-		fShowAttributes = showAttr;
-		// refresh the outline view
-		viewer.refresh();
 	}
 }
