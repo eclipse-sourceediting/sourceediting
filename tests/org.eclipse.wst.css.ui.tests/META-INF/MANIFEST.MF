@@ -21,3 +21,4 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.wst.sse.core,
  org.junit
 Eclipse-AutoStart: true
+Bundle-ClassPath: cssuitests.jar
