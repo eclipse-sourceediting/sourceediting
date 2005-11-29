@@ -1,5 +1,5 @@
 /*****************************************************************************
- * Copyright (c) 2004 IBM Corporation and others. All rights reserved. This
+ * Copyright (c) 2004, 2005 IBM Corporation and others. All rights reserved. This
  * program and the accompanying materials are made available under the terms
  * of the Eclipse Public License v1.0 which accompanies this distribution, and
  * is available at http://www.eclipse.org/legal/epl-v10.html
@@ -34,6 +34,12 @@ import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.sse.ui.views.properties.PropertySheetConfiguration;
 import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 
+/**
+ * Configuration for property sheet page which shows CSS content.
+ * 
+ * @see org.eclipse.wst.sse.ui.views.properties.PropertySheetConfiguration
+ * @since 1.0
+ */
 public class CSSPropertySheetConfiguration extends PropertySheetConfiguration {
 	private class CSSPropertySheetRefreshAdapter implements INodeAdapter {
 		public boolean isAdapterForType(Object type) {
@@ -109,10 +115,6 @@ public class CSSPropertySheetConfiguration extends PropertySheetConfiguration {
 	private INodeAdapter fRefreshAdapter = new CSSPropertySheetRefreshAdapter();
 
 	private INodeNotifier[] fSelectedNotifiers;
-
-	public CSSPropertySheetConfiguration() {
-		super();
-	}
 
 	public ISelection getInputSelection(IWorkbenchPart selectingPart, ISelection selection) {
 		// remove UI refresh adapters

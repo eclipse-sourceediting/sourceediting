@@ -1,5 +1,5 @@
 /*****************************************************************************
- * Copyright (c) 2004 IBM Corporation and others. All rights reserved. This
+ * Copyright (c) 2004, 2005 IBM Corporation and others. All rights reserved. This
  * program and the accompanying materials are made available under the terms
  * of the Eclipse Public License v1.0 which accompanies this distribution, and
  * is available at http://www.eclipse.org/legal/epl-v10.html
@@ -30,6 +30,16 @@ import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
 import org.eclipse.wst.sse.ui.internal.format.StructuredFormattingStrategy;
 import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
 
+/**
+ * Configuration for a source viewer which shows CSS.
+ * <p>
+ * Clients can subclass and override just those methods which must be specific
+ * to their needs.
+ * </p>
+ * 
+ * @see org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration
+ * @since 1.0
+ */
 public class StructuredTextViewerConfigurationCSS extends StructuredTextViewerConfiguration {
 	/*
 	 * One instance per configuration because not sourceviewer-specific and
@@ -73,15 +83,6 @@ public class StructuredTextViewerConfigurationCSS extends StructuredTextViewerCo
 		return processors;
 	}
 
-	/**
-	 * Returns the content formatter ready to be used with the given source
-	 * viewer.
-	 * 
-	 * @param sourceViewer
-	 *            the source viewer to be configured by this configuration
-	 * @return a content formatter or <code>null</code> if formatting should
-	 *         not be supported
-	 */
 	public IContentFormatter getContentFormatter(ISourceViewer sourceViewer) {
 		final MultiPassContentFormatter formatter = new MultiPassContentFormatter(getConfiguredDocumentPartitioning(sourceViewer), ICSSPartitionTypes.STYLE);
 

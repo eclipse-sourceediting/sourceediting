@@ -1,5 +1,5 @@
 /*****************************************************************************
- * Copyright (c) 2004 IBM Corporation and others. All rights reserved. This
+ * Copyright (c) 2004, 2005 IBM Corporation and others. All rights reserved. This
  * program and the accompanying materials are made available under the terms
  * of the Eclipse Public License v1.0 which accompanies this distribution, and
  * is available at http://www.eclipse.org/legal/epl-v10.html
@@ -23,14 +23,16 @@ import org.eclipse.wst.css.ui.internal.CSSUIPlugin;
 import org.eclipse.wst.sse.ui.internal.contentoutline.PropertyChangeUpdateActionContributionItem;
 import org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration;
 
+/**
+ * Configuration for outline view page which shows CSS content.
+ * 
+ * @see org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration
+ * @since 1.0
+ */
 public class CSSContentOutlineConfiguration extends ContentOutlineConfiguration {
 	private IContentProvider fContentProvider = null;
 	private ILabelProvider fLabelProvider = null;
 	private final String OUTLINE_SORT_PREF = "outline-sort"; //$NON-NLS-1$
-
-	public CSSContentOutlineConfiguration() {
-		super();
-	}
 
 	public IContributionItem[] createToolbarContributions(TreeViewer viewer) {
 		IContributionItem[] items = super.createToolbarContributions(viewer);
