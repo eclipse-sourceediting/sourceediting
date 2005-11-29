@@ -13,6 +13,8 @@ package org.eclipse.jst.jsp.ui.internal.contentassist;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.IDocumentExtension3;
 import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
@@ -24,6 +26,7 @@ import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.jst.jsp.ui.internal.JSPUIMessages;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitioning;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
@@ -201,15 +204,22 @@ public class JSPJavaContentAssistProcessor implements IContentAssistProcessor, I
 	public IContextInformation[] computeContextInformation(ITextViewer viewer, int documentOffset) {
 		List results = new ArrayList();
 		// need to compute context info here, if it's JSP, call java computer
-		IDocumentPartitioner dp = viewer.getDocument().getDocumentPartitioner();
-		String type = dp.getPartition(documentOffset).getType();
-		if (type == IJSPPartitionTypes.JSP_DEFAULT || type == IJSPPartitionTypes.JSP_CONTENT_JAVA) {
-			// get context info from completion results...
-			ICompletionProposal[] proposals = computeCompletionProposals(viewer, documentOffset);
-			for (int i = 0; i < proposals.length; i++) {
-				IContextInformation ci = proposals[i].getContextInformation();
-				if (ci != null)
-					results.add(ci);
+		IDocument doc = viewer.getDocument();
+		IDocumentPartitioner dp = null;
+		if(doc instanceof IDocumentExtension3) {
+			dp = ((IDocumentExtension3)doc).getDocumentPartitioner(IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING);
+		}
+		if(dp != null) {
+			//IDocumentPartitioner dp = viewer.getDocument().getDocumentPartitioner();
+			String type = dp.getPartition(documentOffset).getType();
+			if (type == IJSPPartitionTypes.JSP_DEFAULT || type == IJSPPartitionTypes.JSP_CONTENT_JAVA) {
+				// get context info from completion results...
+				ICompletionProposal[] proposals = computeCompletionProposals(viewer, documentOffset);
+				for (int i = 0; i < proposals.length; i++) {
+					IContextInformation ci = proposals[i].getContextInformation();
+					if (ci != null)
+						results.add(ci);
+				}
 			}
 		}
 		return (IContextInformation[]) results.toArray(new IContextInformation[results.size()]);
