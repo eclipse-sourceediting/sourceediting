@@ -29,7 +29,6 @@ import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.xsd.ui.internal.XSDEditor;
 import org.eclipse.wst.xsd.ui.internal.XSDEditorPlugin;
-import org.eclipse.wst.xsd.ui.internal.XSDTextEditor;
 import org.eclipse.xsd.XSDAttributeDeclaration;
 import org.eclipse.xsd.XSDAttributeGroupDefinition;
 import org.eclipse.xsd.XSDConcreteComponent;
@@ -52,13 +51,7 @@ public class OpenOnSelectionHelper
   protected StructuredTextEditor textEditor;
   protected XSDSchema xsdSchema;
 
-  /**
-   * @deprecated Constructor for OpenOnSelectionHelper.
-   */
-  public OpenOnSelectionHelper(XSDTextEditor textEditor)
-  {
-  }
-  
+ 
   public OpenOnSelectionHelper(StructuredTextEditor textEditor, XSDSchema xsdSchema)
   {
   	this.textEditor = textEditor;

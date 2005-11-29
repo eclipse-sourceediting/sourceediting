@@ -15,37 +15,6 @@
                 
 		</editor>
 	</extension>
-	<!-- drop targets for XSDTextEditor-->
-	<extension point="org.eclipse.wst.sse.ui.dropTargetTransfers">
-		<dropTargetContribution
-			targetID="org.eclipse.wst.xsd.ui.internal.XSDTextEditor"
-			id="org.eclipse.wst.xsd.ui.ExtendedTransfers">
-			<transfer
-				priority="mid"
-				singleton="true"
-				class="org.eclipse.swt.dnd.FileTransfer"
-				method="getInstance"
-				id="org.eclipse.swt.dnd.FileTransfer">
-			</transfer>
-			<dropAction
-				class="org.eclipse.wst.sse.ui.internal.FileDropAction"
-				transferID="org.eclipse.swt.dnd.FileTransfer"
-				id="org.eclipse.wst.sse.ui.internal.FileDropAction">
-			</dropAction>
-			<transfer
-				priority="low"
-				singleton="true"
-				class="org.eclipse.swt.dnd.TextTransfer"
-				method="getInstance"
-				id="org.eclipse.swt.dnd.TextTransfer">
-			</transfer>
-			<dropAction
-				class="org.eclipse.wst.sse.ui.internal.TextDropAction"
-				transferID="org.eclipse.swt.dnd.TextTransfer"
-				id="org.eclipse.wst.sse.ui.internal.TextDropAction">
-			</dropAction>
-		</dropTargetContribution>
-	</extension>
 
 	<extension point="org.eclipse.ui.editorActions">
         <editorContribution
