@@ -53,7 +53,7 @@
     <project-facet id="wst.web">
       <label>Static Web Module</label>
       <description>Enables the project to be deployed as a static web module.</description>
-      <icon>icons/full/obj16/webstatic-deploy.gif</icon>
+      <icon>icons/full/obj16/webstatic_deploy.gif</icon>
     </project-facet>
 
     <project-facet-version facet="wst.web" version="1.0">
