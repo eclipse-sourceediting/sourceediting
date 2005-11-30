@@ -17,4 +17,5 @@
 	<plugin id="org.eclipse.wst.xml.ui.infopop" fragment="false" />
 	<plugin id="org.eclipse.wst.xml_core.feature.source" fragment="false" />
 	<plugin id="org.eclipse.wst.xml_ui.feature.source" fragment="false" />
+	<plugin id="org.apache.xerces" fragment="false" />
 </component>
