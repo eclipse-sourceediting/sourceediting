@@ -1008,6 +1008,9 @@ class ProjectDescription {
 					catch (IOException e) {
 					}
 				}
+				else {
+					Logger.log(Logger.ERROR, getClass().getName() + "could not read resource " + jar.getFullPath()); //$NON-NLS-1$
+				}
 			}
 		}
 		if (jarRecord.has11TLD) {

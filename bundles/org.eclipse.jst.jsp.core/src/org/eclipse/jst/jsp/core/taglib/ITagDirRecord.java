@@ -16,6 +16,8 @@ package org.eclipse.jst.jsp.core.taglib;
  * <p>
  * This interface is not intended to be implemented by clients.
  * </p>
+ * 
+ * @since 1.0
  */
 public interface ITagDirRecord extends ITaglibRecord {
 

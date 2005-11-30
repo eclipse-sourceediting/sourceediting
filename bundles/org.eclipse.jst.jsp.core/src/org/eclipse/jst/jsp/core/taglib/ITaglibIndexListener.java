@@ -12,6 +12,19 @@
 package org.eclipse.jst.jsp.core.taglib;
 
 
+/**
+ * A listener for changes in the index's records.
+ * 
+ * <p>
+ * This interface is not intended to be implemented by clients.
+ * </p>
+ */
 public interface ITaglibIndexListener {
+
+	/**
+	 * Notifies this listener that an ITaglibRecordEvent has occurred
+	 * 
+	 * @param event
+	 */
 	void indexChanged(ITaglibRecordEvent event);
 }

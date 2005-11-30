@@ -15,6 +15,10 @@ import org.eclipse.core.resources.IResourceDelta;
 
 /**
  * Describes changes to the known records within the TaglibIndex.
+ * 
+ * <p>
+ * This interface is not intended to be implemented by clients.
+ * </p>
  */
 public interface ITaglibRecordEvent {
 

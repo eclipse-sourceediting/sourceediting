@@ -49,6 +49,8 @@ import org.eclipse.wst.sse.core.internal.util.StringUtils;
  * to ITaglibIndexListeners during each workbench session. REMOVE events are
  * not fired on workbench shutdown. The record's contents should be examined
  * for any further information.
+ * 
+ * @since 1.0
  */
 public final class TaglibIndex {
 
@@ -221,7 +223,9 @@ public final class TaglibIndex {
 								try {
 									if (deltas[i] != null && deltas[i].getKind() != IResourceDelta.REMOVED && projects[i].isAccessible()) {
 										ProjectDescription description = createDescription(projects[i]);
-										deltas[i].accept(description.getVisitor());
+										synchronized (projects[i]) {
+											deltas[i].accept(description.getVisitor());
+										}
 									}
 									if (!projects[i].isAccessible() || (deltas[i] != null && deltas[i].getKind() == IResourceDelta.REMOVED)) {
 										if (_debugIndexCreation) {
