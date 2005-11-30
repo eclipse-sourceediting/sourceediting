@@ -73,7 +73,9 @@
    <topic label="Creating a static Web project" href="topics/twcresta.html"/>
    <topic label="Exporting Web Archive (WAR) files" href="topics/twcrewar.html"/>
    <topic label="Setting CVS repository defaults" href="topics/twcvsr.html"/>
+   <!--
    <topic label="Configuring Web applications using the Web deployment descriptor editor" href="topics/twedtwbx.html"/>
+   -->
    <topic label="Creating a new filter class" href="topics/twfltrwz.html"/>
    <topic label="Importing Web archive (WAR) files" href="topics/twimpwar.html"/>
    <topic label="Importing existing Web resources using HTTP or FTP" href="topics/twimpweb.html"/>
