@@ -112,9 +112,21 @@ public class XMLSourceParser implements RegionParser, BlockTagParser, Structured
 	}
 
 	protected void fireNodeParsed(IStructuredDocumentRegion fCurrentNode) {
-		if (fCurrentNode != null && fStructuredDocumentRegionHandlers != null) {
-			for (int i = 0; i < fStructuredDocumentRegionHandlers.size(); i++)
-				((StructuredDocumentRegionHandler) fStructuredDocumentRegionHandlers.get(i)).nodeParsed(fCurrentNode);
+		// never let an Exceptions from foreign code interfere with completion
+		// of parsing. To get an exception here is definitely a program error
+		// somewhere,
+		// we can't afford to interrupt the flow of control. or backwards
+		// typing can result!
+		// 
+		// 
+		try {
+			if (fCurrentNode != null && fStructuredDocumentRegionHandlers != null) {
+				for (int i = 0; i < fStructuredDocumentRegionHandlers.size(); i++)
+					((StructuredDocumentRegionHandler) fStructuredDocumentRegionHandlers.get(i)).nodeParsed(fCurrentNode);
+			}
+		}
+		catch (Exception e) {
+			Logger.log(Logger.ERROR, e.getMessage());
 		}
 	}
 
@@ -125,7 +137,8 @@ public class XMLSourceParser implements RegionParser, BlockTagParser, Structured
 			if (marker.isCaseSensitive()) {
 				if (marker.getTagName().equals(tagName))
 					return marker;
-			} else {
+			}
+			else {
 				if (marker.getTagName().equalsIgnoreCase(tagName))
 					return marker;
 			}
@@ -151,7 +164,7 @@ public class XMLSourceParser implements RegionParser, BlockTagParser, Structured
 				stopTime = System.currentTimeMillis();
 				System.out.println(" -- creating nodes of IStructuredDocument -- "); //$NON-NLS-1$
 				System.out.println(" Time parse and init all regions: " + (stopTime - startTime) + " (msecs)"); //$NON-NLS-2$//$NON-NLS-1$
-				//System.out.println(" for " + fRegions.size() + "
+				// System.out.println(" for " + fRegions.size() + "
 				// Regions");//$NON-NLS-2$//$NON-NLS-1$
 				System.out.println("      and " + _countNodes(headnode) + " Nodes"); //$NON-NLS-2$//$NON-NLS-1$
 			}
@@ -164,14 +177,16 @@ public class XMLSourceParser implements RegionParser, BlockTagParser, Structured
 		try {
 			region = getTokenizer().getNextToken();
 			// DMW: 2/12/03 Removed state
-			//		if (region != null) {
-			//			fRegions.add(region);
-			//		}
+			// if (region != null) {
+			// fRegions.add(region);
+			// }
 			return region;
-		} catch (StackOverflowError e) {
+		}
+		catch (StackOverflowError e) {
 			Logger.logException(getClass().getName() + ": input could not be parsed correctly at position " + getTokenizer().getOffset(), e); //$NON-NLS-1$
 			throw e;
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			Logger.logException(getClass().getName() + ": input could not be parsed correctly at position " + getTokenizer().getOffset() + " (" + e.getLocalizedMessage() + ")", e); //$NON-NLS-3$//$NON-NLS-2$//$NON-NLS-1$
 		}
 		return null;
@@ -185,7 +200,7 @@ public class XMLSourceParser implements RegionParser, BlockTagParser, Structured
 		IStructuredDocumentRegion headNode = null;
 		if (!getTokenizer().isEOF()) {
 			headNode = getDocumentRegions();
-			//		throw new IllegalStateException("parsing has not finished");
+			// throw new IllegalStateException("parsing has not finished");
 		}
 		// for memory recovery, we assume if someone
 		// requests all regions, we can reset our big
@@ -238,18 +253,22 @@ public class XMLSourceParser implements RegionParser, BlockTagParser, Structured
 			int start = fOffset + offset;
 			int end = start + length;
 			text = fCharSequenceSource.subSequence(start, end).toString();
-		} else if (fDocumentInput != null) {
+		}
+		else if (fDocumentInput != null) {
 			try {
 				text = fDocumentInput.get(offset, length);
-			} catch (BadLocationException e) {
+			}
+			catch (BadLocationException e) {
 				text = ""; //$NON-NLS-1$
 			}
-		} else {
+		}
+		else {
 			if (fStringInput == null || fStringInput.length() == 0 || offset + length > fStringInput.length() || offset < 0) {
 				text = ""; //$NON-NLS-1$
-			} else {
+			}
+			else {
 				// offset is entirely valid during parsing as the parse
-				//   numbers haven't been adjusted.
+				// numbers haven't been adjusted.
 				text = fStringInput.substring(offset, offset + length);
 			}
 		}
@@ -293,8 +312,9 @@ public class XMLSourceParser implements RegionParser, BlockTagParser, Structured
 					currentNode.setLength(region.getStart() + region.getLength() - currentNode.getStart());
 					region.adjustStart(-currentNode.getStart());
 					// DW 4/16/2003 regions no longer have parents
-					//region.setParent(currentNode);
-				} else {
+					// region.setParent(currentNode);
+				}
+				else {
 					// not continuing a IStructuredDocumentRegion
 					if (currentNode != null) {
 						// ensure that any existing node is at least
@@ -306,12 +326,7 @@ public class XMLSourceParser implements RegionParser, BlockTagParser, Structured
 						}
 						lastNode = currentNode;
 					}
-					try {
-						fireNodeParsed(currentNode);
-					}
-					catch (Exception e) {
-						Logger.log(Logger.ERROR, e.getMessage());
-					}
+					fireNodeParsed(currentNode);
 					currentNode = createStructuredDocumentRegion(type);
 					if (lastNode != null) {
 						lastNode.setNext(currentNode);
@@ -323,7 +338,7 @@ public class XMLSourceParser implements RegionParser, BlockTagParser, Structured
 					region.adjustStart(-currentNode.getStart());
 					currentNode.addRegion(region);
 					// DW 4/16/2003 regions no longer have parents
-					//region.setParent(currentNode);
+					// region.setParent(currentNode);
 				}
 			}
 			// the following contexts OPEN new StructuredDocumentRegions
@@ -337,12 +352,7 @@ public class XMLSourceParser implements RegionParser, BlockTagParser, Structured
 					}
 					lastNode = currentNode;
 				}
-				try {
-					fireNodeParsed(currentNode);
-				}
-				catch (Exception e) {
-					Logger.log(Logger.ERROR, e.getMessage());
-				}
+				fireNodeParsed(currentNode);
 				currentNode = createStructuredDocumentRegion(type);
 				if (lastNode != null) {
 					lastNode.setNext(currentNode);
@@ -353,7 +363,7 @@ public class XMLSourceParser implements RegionParser, BlockTagParser, Structured
 				currentNode.setLength(region.getStart() + region.getLength() - currentNode.getStart());
 				region.adjustStart(-currentNode.getStart());
 				// DW 4/16/2003 regions no longer have parents
-				//region.setParent(currentNode);
+				// region.setParent(currentNode);
 			}
 			// the following contexts neither open nor close
 			// StructuredDocumentRegions; just add to them
@@ -362,7 +372,7 @@ public class XMLSourceParser implements RegionParser, BlockTagParser, Structured
 				currentNode.setLength(region.getStart() + region.getLength() - currentNode.getStart());
 				region.adjustStart(-currentNode.getStart());
 				// DW 4/16/2003 regions no longer have parents
-				//region.setParent(currentNode);
+				// region.setParent(currentNode);
 			}
 			// the following contexts close off StructuredDocumentRegions
 			// cleanly
@@ -372,7 +382,7 @@ public class XMLSourceParser implements RegionParser, BlockTagParser, Structured
 				currentNode.addRegion(region);
 				region.adjustStart(-currentNode.getStart());
 				// DW 4/16/2003 regions no longer have parents
-				//region.setParent(currentNode);
+				// region.setParent(currentNode);
 			}
 			// this is extremely rare, but valid
 			else if (type == DOMRegionContext.WHITE_SPACE) {
@@ -386,12 +396,13 @@ public class XMLSourceParser implements RegionParser, BlockTagParser, Structured
 					// where else to do, so will do here for now.
 					container.setParent(currentNode);
 					// DW 4/16/2003 regions no longer have parents
-					//region.setParent(container);
+					// region.setParent(container);
 					region.adjustStart(container.getLength() - region.getStart());
 				}
 				currentNode.getLastRegion().adjustLength(region.getLength());
 				currentNode.adjustLength(region.getLength());
-			} else if (type == DOMRegionContext.UNDEFINED && currentNode != null) {
+			}
+			else if (type == DOMRegionContext.UNDEFINED && currentNode != null) {
 				// skip on a very-first region situation as the default
 				// behavior is good enough
 				// combine with previous if also undefined
@@ -405,7 +416,8 @@ public class XMLSourceParser implements RegionParser, BlockTagParser, Structured
 					currentNode.setLength(region.getStart() + region.getLength() - currentNode.getStart());
 					region.adjustStart(-currentNode.getStart());
 				}
-			} else {
+			}
+			else {
 				// if an unknown type is the first region in the document,
 				// ensure that a node exists
 				if (currentNode == null) {
@@ -416,7 +428,7 @@ public class XMLSourceParser implements RegionParser, BlockTagParser, Structured
 				currentNode.setLength(region.getStart() + region.getLength() - currentNode.getStart());
 				region.adjustStart(-currentNode.getStart());
 				// DW 4/16/2003 regions no longer have parents
-				//region.setParent(currentNode);
+				// region.setParent(currentNode);
 				if (Debug.debugTokenizer)
 					System.out.println(getClass().getName() + " found region of not specifically handled type " + region.getType() + " @ " + region.getStart() + "[" + region.getLength() + "]"); //$NON-NLS-4$//$NON-NLS-3$//$NON-NLS-2$//$NON-NLS-1$
 				//$NON-NLS-3$//$NON-NLS-2$//$NON-NLS-1$
@@ -436,28 +448,23 @@ public class XMLSourceParser implements RegionParser, BlockTagParser, Structured
 			}
 		}
 		if (currentNode != null) {
-			try {
-				fireNodeParsed(currentNode);
-			}
-			catch (Exception e) {
-				Logger.log(Logger.ERROR, e.getMessage());
-			}
+			fireNodeParsed(currentNode);
 			currentNode.setPrevious(lastNode);
 		}
-		//fStringInput = null;
+		// fStringInput = null;
 		primReset();
 		return headNode;
 	}
 
 	protected void primReset() {
-		//fNodes = null;
-		//fRegions = null;
-		//fInput = null;
+		// fNodes = null;
+		// fRegions = null;
+		// fInput = null;
 		fStringInput = null;
 		fCharSequenceSource = null;
 		fDocumentInput = null;
 		fOffset = 0;
-		//fCurrentNode = null;
+		// fCurrentNode = null;
 		// DMW: also reset tokenizer so it doesn't hold on
 		// to large arrays
 		getTokenizer().reset(new char[0]);
@@ -477,12 +484,14 @@ public class XMLSourceParser implements RegionParser, BlockTagParser, Structured
 		boolean result = false;
 		if (fCharSequenceSource != null && fCharSequenceSource instanceof IRegionComparible) {
 			result = ((IRegionComparible) fCharSequenceSource).regionMatches(offset, length, stringToCompare);
-		} else {
+		}
+		else {
 			// old fashioned ways
 			String test = null;
 			if (fCharSequenceSource != null) {
 				test = fCharSequenceSource.subSequence(offset, offset + length).toString();
-			} else if (fStringInput != null) {
+			}
+			else if (fStringInput != null) {
 				test = fStringInput.substring(offset, offset + length);
 			}
 			result = stringToCompare.equals(test);
@@ -498,12 +507,14 @@ public class XMLSourceParser implements RegionParser, BlockTagParser, Structured
 		boolean result = false;
 		if (fCharSequenceSource != null && fCharSequenceSource instanceof IRegionComparible) {
 			result = ((IRegionComparible) fCharSequenceSource).regionMatchesIgnoreCase(offset, length, stringToCompare);
-		} else {
+		}
+		else {
 			// old fashioned ways
 			String test = null;
 			if (fCharSequenceSource != null) {
 				test = fCharSequenceSource.subSequence(offset, offset + length).toString();
-			} else if (fStringInput != null) {
+			}
+			else if (fStringInput != null) {
 				test = fStringInput.substring(offset, offset + length);
 			}
 			result = stringToCompare.equalsIgnoreCase(test);
@@ -531,7 +542,7 @@ public class XMLSourceParser implements RegionParser, BlockTagParser, Structured
 	 */
 	public void reset(java.io.FileInputStream instream) {
 		primReset();
-		//fInput = instream;
+		// fInput = instream;
 		getTokenizer().reset(instream);
 	}
 
@@ -553,12 +564,14 @@ public class XMLSourceParser implements RegionParser, BlockTagParser, Structured
 			IDocument doc = ((DocumentReader) reader).getDocument();
 			if (doc instanceof CharSequence) {
 				fCharSequenceSource = (CharSequence) doc;
-			} else {
+			}
+			else {
 				// old fashioned IDocument
 				fDocumentInput = ((DocumentReader) reader).getDocument();
 			}
 
-		} else if (reader instanceof CharSequenceReader) {
+		}
+		else if (reader instanceof CharSequenceReader) {
 			fCharSequenceSource = ((CharSequenceReader) reader).getOriginalSource();
 		}
 	}

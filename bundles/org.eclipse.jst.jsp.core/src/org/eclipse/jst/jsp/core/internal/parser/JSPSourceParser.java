@@ -13,7 +13,6 @@ package org.eclipse.jst.jsp.core.internal.parser;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.JSP12TLDNames;
 import org.eclipse.jst.jsp.core.internal.parser.internal.JSPTokenizer;
 import org.eclipse.jst.jsp.core.internal.provisional.JSP12Namespace;
@@ -92,7 +91,7 @@ public class JSPSourceParser extends XMLSourceParser implements JSPCapableParser
 					}
 				}
 				catch (StringIndexOutOfBoundsException sioobExc) {
-					//do nothing
+					// do nothing
 				}
 			}
 			// could test > 1, but since we only care if there are 5 (<,
@@ -247,7 +246,7 @@ public class JSPSourceParser extends XMLSourceParser implements JSPCapableParser
 					currentNode.setLength(region.getStart() + region.getLength() - currentNode.getStart());
 					region.adjustStart(-currentNode.getStart());
 					// DW, 4/16/2003 token regions no longer have parents
-					//region.setParent(currentNode);
+					// region.setParent(currentNode);
 					if (region instanceof ITextRegionContainer) {
 						((ITextRegionContainer) region).setParent(currentNode);
 					}
@@ -276,7 +275,7 @@ public class JSPSourceParser extends XMLSourceParser implements JSPCapableParser
 					region.adjustStart(-currentNode.getStart());
 					currentNode.addRegion(region);
 					// DW, 4/16/2003 token regions no longer have parents
-					//region.setParent(currentNode);
+					// region.setParent(currentNode);
 					if (region instanceof ITextRegionContainer) {
 						((ITextRegionContainer) region).setParent(currentNode);
 					}
@@ -284,10 +283,7 @@ public class JSPSourceParser extends XMLSourceParser implements JSPCapableParser
 				}
 			}
 			// the following contexts OPEN new StructuredDocumentRegions
-			else if ((currentNode != null && currentNode.isEnded()) || (type == DOMRegionContext.XML_CONTENT) || (type == DOMRegionContext.XML_CHAR_REFERENCE) || (type == DOMRegionContext.XML_ENTITY_REFERENCE)
-						|| (type == DOMRegionContext.XML_PI_OPEN) || (type == DOMRegionContext.XML_TAG_OPEN) || (type == DOMRegionContext.XML_END_TAG_OPEN) || (type == DOMRegionContext.XML_COMMENT_OPEN) || (type == DOMRegionContext.XML_CDATA_OPEN)
-						|| (type == DOMRegionContext.XML_DECLARATION_OPEN) || (type == DOMJSPRegionContexts.JSP_COMMENT_OPEN) || (type == DOMJSPRegionContexts.JSP_DECLARATION_OPEN) || (type == DOMJSPRegionContexts.JSP_DIRECTIVE_OPEN)
-						|| (type == DOMJSPRegionContexts.JSP_EXPRESSION_OPEN) || (type == DOMJSPRegionContexts.JSP_SCRIPTLET_OPEN) || (type == DOMJSPRegionContexts.JSP_CLOSE) || type == DOMJSPRegionContexts.JSP_EL_OPEN) {
+			else if ((currentNode != null && currentNode.isEnded()) || (type == DOMRegionContext.XML_CONTENT) || (type == DOMRegionContext.XML_CHAR_REFERENCE) || (type == DOMRegionContext.XML_ENTITY_REFERENCE) || (type == DOMRegionContext.XML_PI_OPEN) || (type == DOMRegionContext.XML_TAG_OPEN) || (type == DOMRegionContext.XML_END_TAG_OPEN) || (type == DOMRegionContext.XML_COMMENT_OPEN) || (type == DOMRegionContext.XML_CDATA_OPEN) || (type == DOMRegionContext.XML_DECLARATION_OPEN) || (type == DOMJSPRegionContexts.JSP_COMMENT_OPEN) || (type == DOMJSPRegionContexts.JSP_DECLARATION_OPEN) || (type == DOMJSPRegionContexts.JSP_DIRECTIVE_OPEN) || (type == DOMJSPRegionContexts.JSP_EXPRESSION_OPEN) || (type == DOMJSPRegionContexts.JSP_SCRIPTLET_OPEN) || (type == DOMJSPRegionContexts.JSP_CLOSE) || type == DOMJSPRegionContexts.JSP_EL_OPEN) {
 				if (currentNode != null) {
 					// ensure that any existing node is at least terminated
 					if (!currentNode.isEnded()) {
@@ -308,7 +304,7 @@ public class JSPSourceParser extends XMLSourceParser implements JSPCapableParser
 				currentNode.setLength(region.getStart() + region.getLength() - currentNode.getStart());
 				region.adjustStart(-currentNode.getStart());
 				// DW, 4/16/2003 token regions no longer have parents
-				//region.setParent(currentNode);
+				// region.setParent(currentNode);
 				if (region instanceof ITextRegionContainer) {
 					((ITextRegionContainer) region).setParent(currentNode);
 				}
@@ -316,29 +312,25 @@ public class JSPSourceParser extends XMLSourceParser implements JSPCapableParser
 			}
 			// the following contexts NEITHER open nor close
 			// StructuredDocumentRegions; just add to them
-			else if ((type == DOMRegionContext.XML_TAG_NAME) || (type == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME) || (type == DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS) || (type == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE)
-						|| (type == DOMRegionContext.XML_COMMENT_TEXT) || (type == DOMRegionContext.XML_PI_CONTENT) || (type == DOMRegionContext.XML_DOCTYPE_INTERNAL_SUBSET) || (type == DOMJSPRegionContexts.JSP_COMMENT_TEXT)
-						|| (type == DOMJSPRegionContexts.JSP_ROOT_TAG_NAME) || (type == DOMJSPRegionContexts.JSP_DIRECTIVE_NAME) || type == DOMJSPRegionContexts.JSP_EL_CONTENT) {
+			else if ((type == DOMRegionContext.XML_TAG_NAME) || (type == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME) || (type == DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS) || (type == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) || (type == DOMRegionContext.XML_COMMENT_TEXT) || (type == DOMRegionContext.XML_PI_CONTENT) || (type == DOMRegionContext.XML_DOCTYPE_INTERNAL_SUBSET) || (type == DOMJSPRegionContexts.JSP_COMMENT_TEXT) || (type == DOMJSPRegionContexts.JSP_ROOT_TAG_NAME) || (type == DOMJSPRegionContexts.JSP_DIRECTIVE_NAME) || type == DOMJSPRegionContexts.JSP_EL_CONTENT) {
 				currentNode.addRegion(region);
 				currentNode.setLength(region.getStart() + region.getLength() - currentNode.getStart());
 				region.adjustStart(-currentNode.getStart());
 				// DW, 4/16/2003 token regions no longer have parents
-				//region.setParent(currentNode);
+				// region.setParent(currentNode);
 				if (region instanceof ITextRegionContainer) {
 					((ITextRegionContainer) region).setParent(currentNode);
 				}
 			}
 			// the following contexts close off StructuredDocumentRegions
 			// cleanly
-			else if ((type == DOMRegionContext.XML_PI_CLOSE) || (type == DOMRegionContext.XML_TAG_CLOSE) || (type == DOMRegionContext.XML_EMPTY_TAG_CLOSE) || (type == DOMRegionContext.XML_COMMENT_CLOSE) || (type == DOMRegionContext.XML_CDATA_CLOSE)
-						|| (type == DOMJSPRegionContexts.JSP_CLOSE) || (type == DOMJSPRegionContexts.JSP_COMMENT_CLOSE) || (type == DOMJSPRegionContexts.JSP_DIRECTIVE_CLOSE) || (type == DOMRegionContext.XML_DECLARATION_CLOSE)
-						|| type == DOMJSPRegionContexts.JSP_EL_CLOSE) {
+			else if ((type == DOMRegionContext.XML_PI_CLOSE) || (type == DOMRegionContext.XML_TAG_CLOSE) || (type == DOMRegionContext.XML_EMPTY_TAG_CLOSE) || (type == DOMRegionContext.XML_COMMENT_CLOSE) || (type == DOMRegionContext.XML_CDATA_CLOSE) || (type == DOMJSPRegionContexts.JSP_CLOSE) || (type == DOMJSPRegionContexts.JSP_COMMENT_CLOSE) || (type == DOMJSPRegionContexts.JSP_DIRECTIVE_CLOSE) || (type == DOMRegionContext.XML_DECLARATION_CLOSE) || type == DOMJSPRegionContexts.JSP_EL_CLOSE) {
 				currentNode.setEnded(true);
 				currentNode.setLength(region.getStart() + region.getLength() - currentNode.getStart());
 				currentNode.addRegion(region);
 				region.adjustStart(-currentNode.getStart());
 				// DW, 4/16/2003 token regions no longer have parents
-				//region.setParent(currentNode);
+				// region.setParent(currentNode);
 				if (region instanceof ITextRegionContainer) {
 					((ITextRegionContainer) region).setParent(currentNode);
 				}
@@ -355,7 +347,7 @@ public class JSPSourceParser extends XMLSourceParser implements JSPCapableParser
 					// but for now, will (re)set each time through
 					container.setParent(currentNode);
 					// DW, 4/16/2003 token regions no longer have parents
-					//region.setParent(container);
+					// region.setParent(container);
 					region.adjustStart(container.getLength() - region.getStart());
 				}
 				currentNode.getLastRegion().adjustLength(region.getLength());
@@ -390,7 +382,7 @@ public class JSPSourceParser extends XMLSourceParser implements JSPCapableParser
 				currentNode.setLength(region.getStart() + region.getLength() - currentNode.getStart());
 				region.adjustStart(-currentNode.getStart());
 				// DW, 4/16/2003 token regions no longer have parents
-				//region.setParent(currentNode);
+				// region.setParent(currentNode);
 				if (region instanceof ITextRegionContainer) {
 					((ITextRegionContainer) region).setParent(currentNode);
 				}
@@ -406,8 +398,7 @@ public class JSPSourceParser extends XMLSourceParser implements JSPCapableParser
 			// be more readable if that is handled here as well, but the
 			// current layout
 			// ensures that they open StructuredDocumentRegions the same way
-			if ((type == DOMRegionContext.XML_CONTENT) || (type == DOMRegionContext.XML_CHAR_REFERENCE) || (type == DOMRegionContext.XML_ENTITY_REFERENCE) || (type == DOMJSPRegionContexts.JSP_DECLARATION_OPEN)
-						|| (type == DOMJSPRegionContexts.JSP_EXPRESSION_OPEN) || (type == DOMJSPRegionContexts.JSP_SCRIPTLET_OPEN) || (type == DOMJSPRegionContexts.JSP_CONTENT) || (type == DOMJSPRegionContexts.JSP_CLOSE)) {
+			if ((type == DOMRegionContext.XML_CONTENT) || (type == DOMRegionContext.XML_CHAR_REFERENCE) || (type == DOMRegionContext.XML_ENTITY_REFERENCE) || (type == DOMJSPRegionContexts.JSP_DECLARATION_OPEN) || (type == DOMJSPRegionContexts.JSP_EXPRESSION_OPEN) || (type == DOMJSPRegionContexts.JSP_SCRIPTLET_OPEN) || (type == DOMJSPRegionContexts.JSP_CONTENT) || (type == DOMJSPRegionContexts.JSP_CLOSE)) {
 				currentNode.setEnded(true);
 			}
 			if (headNode == null && currentNode != null) {
@@ -415,12 +406,7 @@ public class JSPSourceParser extends XMLSourceParser implements JSPCapableParser
 			}
 		}
 		if (currentNode != null) {
-			try {
-				fireNodeParsed(currentNode);
-			}
-			catch (Exception e) {
-				Logger.log(Logger.ERROR, e.getMessage());
-			}
+			fireNodeParsed(currentNode);
 			currentNode.setPrevious(lastNode);
 		}
 		primReset();
