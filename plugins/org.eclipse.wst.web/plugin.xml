@@ -65,9 +65,11 @@
       <constraint>
         <and>
           <conflicts group="modules"/>
+          <conflicts group="java"/>
         </and>
       </constraint>
       <group-member id="modules"/>
+      <group-member id="java"/>
     </project-facet-version>
 
         
