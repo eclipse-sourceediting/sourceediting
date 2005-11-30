@@ -366,7 +366,7 @@ public class FileBufferModelManager {
 		}
 
 		String id = null;
-		IPath path = file.getLocation();
+		IPath path = file.getFullPath();
 		if (path != null) {
 			/*
 			 * The ID of models must be the same as the normalized paths
@@ -533,31 +533,36 @@ public class FileBufferModelManager {
 			if (Logger.DEBUG_FILEBUFFERMODELMANAGEMENT) {
 				Logger.log(Logger.INFO, "FileBufferModelManager connecting to IFile " + file.getLocation()); //$NON-NLS-1$
 			}
-			bufferManager.connect(file.getLocation(), getProgressMonitor());
-			ITextFileBuffer buffer = bufferManager.getTextFileBuffer(file.getLocation());
-			if (buffer != null) {
-				DocumentInfo info = (DocumentInfo) fDocumentMap.get(buffer.getDocument());
-				if (info != null) {
+			// see TextFileDocumentProvider#createFileInfo about why we use IFile#getFullPath
+			// here, not IFile#getLocation.
+			IPath location= file.getFullPath();
+			if (location != null) {
+				bufferManager.connect(location, getProgressMonitor());
+				ITextFileBuffer buffer = bufferManager.getTextFileBuffer(location);
+				if (buffer != null) {
+					DocumentInfo info = (DocumentInfo) fDocumentMap.get(buffer.getDocument());
+					if (info != null) {
+						/*
+						 * Note: "info" being null at this point is a slight
+						 * error.
+						 * 
+						 * The connect call from above (or at some time earlier in
+						 * the session) would have notified the FileBufferMapper
+						 * of the creation of the corresponding text buffer and
+						 * created the DocumentInfo object for
+						 * IStructuredDocuments.
+						 */
+						info.selfConnected = true;
+					}
 					/*
-					 * Note: "info" being null at this point is a slight
-					 * error.
-					 * 
-					 * The connect call from above (or at some time earlier in
-					 * the session) would have notified the FileBufferMapper
-					 * of the creation of the corresponding text buffer and
-					 * created the DocumentInfo object for
-					 * IStructuredDocuments.
+					 * Check the document type. Although returning null for
+					 * unknown documents would be fair, try to get a model if the
+					 * document is at least a valid type.
 					 */
-					info.selfConnected = true;
-				}
-				/*
-				 * Check the document type. Although returning null for
-				 * unknown documents would be fair, try to get a model if the
-				 * document is at least a valid type.
-				 */
-				IDocument bufferDocument = buffer.getDocument();
-				if (bufferDocument instanceof IStructuredDocument) {
-					model = getModel((IStructuredDocument) bufferDocument);
+					IDocument bufferDocument = buffer.getDocument();
+					if (bufferDocument instanceof IStructuredDocument) {
+						model = getModel((IStructuredDocument) bufferDocument);
+					}
 				}
 			}
 		}
@@ -646,7 +651,7 @@ public class FileBufferModelManager {
 				}
 				IPath location = info.buffer.getLocation();
 				try {
-					FileBuffers.getTextFileBufferManager().disconnect(info.buffer.getLocation(), getProgressMonitor());
+					FileBuffers.getTextFileBufferManager().disconnect(location, getProgressMonitor());
 				}
 				catch (CoreException e) {
 					Logger.logException("Error releasing model for " + location, e); //$NON-NLS-1$
