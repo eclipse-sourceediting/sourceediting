@@ -21,8 +21,9 @@ import org.eclipse.wst.xml.core.internal.Logger;
 
 
 // TODO cs : remove this class and utilize the common URIResolver directly
-// We need to update some of the ModelQuery related code to pass the 'baseLocation' thru
-// and then there'll be node need for this class. 
+// We need to update some of the ModelQuery related code to pass the
+// 'baseLocation' thru
+// and then there'll be node need for this class.
 // 
 public class XMLCatalogIdResolver implements org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver {
 	protected String resourceLocation;
@@ -32,12 +33,21 @@ public class XMLCatalogIdResolver implements org.eclipse.wst.common.uriresolver.
 	private XMLCatalogIdResolver() {
 		super();
 	}
+
 	private XMLCatalogIdResolver(String resourceLocation) {
 		this.resourceLocation = resourceLocation;
 	}
 
 	public XMLCatalogIdResolver(String resourceLocation, URIResolver uriresolver) {
 		this(resourceLocation);
+// this constructor should not be called with two null arguments.
+// If so, an assert will occur later when resolve is called. 
+// See 118371 XMLCatalogIdResolver#resolve throws AssertionFailedException
+//
+// but, I'm not enabling this check now due to lateness in cycle. 		
+//		if (resourceLocation == null && uriresolver == null) {
+//			throw new IllegalArgumentException("both location and resolver can not be null");
+//		}
 		this.uriresolver = uriresolver;
 	}
 
@@ -61,20 +71,22 @@ public class XMLCatalogIdResolver implements org.eclipse.wst.common.uriresolver.
 
 		String result = systemId;
 		if (base == null) {
-		  base = getResourceLocation();
-		  // bug 117320, ensure base URI is 'protocal' qualified before passing it thru to URIResolver
-		  // bug 117424, we should be able to assume that the base location is non-null
-	      Assert.isNotNull(base, "Base location is expected to be non null.");
-		  base = URIHelper.addImpliedFileProtocol(base);			 
+			base = getResourceLocation();
+			// bug 117320, ensure base URI is 'protocal' qualified before
+			// passing it thru to URIResolver
+			// bug 117424, we should be able to assume that the base location
+			// is non-null
+			Assert.isNotNull(base, "Base location is expected to be non null.");
+			base = URIHelper.addImpliedFileProtocol(base);
 		}
-		result = URIResolverPlugin.createResolver().resolve(base, publicId, systemId);			  			
+		result = URIResolverPlugin.createResolver().resolve(base, publicId, systemId);
 		return result;
 	}
-    
-    public String resolvePhysicalLocation(String baseLocation, String publicId, String logicalLocation) {
-      // This class should never be called to perform physical resolution!
-      // If it does we should log it as an error
-      Logger.log(Logger.ERROR_DEBUG, "XMLCatalogIDResolver.resolvePhysicalLocation() called unexpectedly");
-      return logicalLocation; 
-    }
+
+	public String resolvePhysicalLocation(String baseLocation, String publicId, String logicalLocation) {
+		// This class should never be called to perform physical resolution!
+		// If it does we should log it as an error
+		Logger.log(Logger.ERROR_DEBUG, "XMLCatalogIDResolver.resolvePhysicalLocation() called unexpectedly");
+		return logicalLocation;
+	}
 }

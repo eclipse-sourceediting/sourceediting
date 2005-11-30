@@ -32,17 +32,24 @@ class XMLModelQueryAssociationProvider extends XMLAssociationProvider {
 	}
 
 	protected String resolveGrammarURI(Document document, String publicId, String systemId) {
-				
+
 		// CS : spooky code alert!
-		// this look really strange because we're passing null in as the first argument
-		// however we're assuming the use of a 'fudged' URIResolver that knows the 
-		// correct baseLocation and will call to the URIResolver framework properly
-		
+		// this look really strange because we're passing null in as the first
+		// argument
+		// however we're assuming the use of a 'fudged' URIResolver that knows
+		// the
+		// correct baseLocation and will call to the URIResolver framework
+		// properly
+
 		// CS : note that we should never call resolvePhysical at this point.
-		// Physical resolution should only occur when we're interesting to opening the actual stream.
-		// The CMDocumentFactory implementation would be responsible for calling resolvePhysical.
+		// Physical resolution should only occur when we're interesting to
+		// opening the actual stream.
+		// The CMDocumentFactory implementation would be responsible for
+		// calling resolvePhysical.
 		// All we need to do here is return a 'logical' URI
-			
+
+		if (idResolver == null)
+			return null;
 		return idResolver.resolve(null, publicId, systemId);
 	}
 }

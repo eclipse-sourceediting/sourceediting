@@ -169,7 +169,10 @@ public class ModelQueryAdapterFactoryForXML extends AbstractAdapterFactory {
 
 				if (org.eclipse.wst.sse.core.internal.util.Debug.displayInfo)
 					System.out.println("********XMLModelQueryImpl"); //$NON-NLS-1$
-				idResolver = new XMLCatalogIdResolver(baseLocation, model.getResolver());
+				org.eclipse.wst.sse.core.internal.util.URIResolver resolver = model.getResolver();
+				if (baseLocation != null || resolver != null) {
+					idResolver = new XMLCatalogIdResolver(baseLocation, resolver);
+				}
 				modelQuery = new XMLModelQueryImpl(cmDocumentCache, idResolver);
 
 				// cs todo...

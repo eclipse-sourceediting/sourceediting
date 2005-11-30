@@ -107,17 +107,17 @@ public class ModelQueryAdapterFactoryForHTML extends AbstractAdapterFactory {
 
 
 	/**
-	 * ModelQueryAdapterFactoryForHTML constructor comment.
-	 * Note: this is a case there the key is not exactly same 
-	 * as the class we are after. 
+	 * ModelQueryAdapterFactoryForHTML constructor comment. Note: this is a
+	 * case there the key is not exactly same as the class we are after.
 	 */
 	public ModelQueryAdapterFactoryForHTML() {
 		super(ModelQueryAdapter.class, true);
 	}
 
 	/**
-	 * We need this protected version to allow subclasses to 
-	 * pass up standard behaviour. 
+	 * We need this protected version to allow subclasses to pass up standard
+	 * behaviour.
+	 * 
 	 * @param adapterKey
 	 * @param registerAdapters
 	 */
@@ -138,9 +138,9 @@ public class ModelQueryAdapterFactoryForHTML extends AbstractAdapterFactory {
 		if (modelStateNotifier != null) {
 			modelStateNotifier.removeModelStateListener(internalModelStateListener);
 		}
-		
+
 		modelStateNotifier = null;
-		
+
 		if (modelQueryAdapter != null) {
 			modelQueryAdapter.release();
 		}
@@ -149,8 +149,8 @@ public class ModelQueryAdapterFactoryForHTML extends AbstractAdapterFactory {
 	/**
 	 * createAdapter method comment.
 	 * 
-	 * XXX: we must make this method more independent of 'location'
-	 * (at least provide some fall-back method).
+	 * XXX: we must make this method more independent of 'location' (at least
+	 * provide some fall-back method).
 	 */
 	protected INodeAdapter createAdapter(INodeNotifier target) {
 
@@ -187,7 +187,12 @@ public class ModelQueryAdapterFactoryForHTML extends AbstractAdapterFactory {
 					System.out.println("----------------ModelQueryAdapterFactoryForHTML... baseLocation : " + baseLocation); //$NON-NLS-1$
 
 				CMDocumentCache cmDocumentCache = new CMDocumentCache();
-				URIResolver idResolver = new XMLCatalogIdResolver(baseLocation, model.getResolver());
+				URIResolver idResolver = null;
+
+				org.eclipse.wst.sse.core.internal.util.URIResolver resolver = model.getResolver();
+				if (baseLocation != null || resolver != null) {
+					idResolver = new XMLCatalogIdResolver(baseLocation, resolver);
+				}
 				ModelQuery modelQuery = new HTMLModelQueryImpl(cmDocumentCache, idResolver);
 				modelQuery.setEditMode(ModelQuery.EDIT_MODE_UNCONSTRAINED);
 				modelQueryAdapter = new ModelQueryAdapterImpl(cmDocumentCache, modelQuery, idResolver);
