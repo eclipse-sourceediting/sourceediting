@@ -96,10 +96,9 @@ public class StaticWebDeployableFactory extends ProjectModuleFactoryDelegate {
 		try {
 			if(isValidModule(component.getProject())) {
 				moduleDelegate = new StaticWebDeployable(component.getProject(),component);
-				module = createModule(component.getName(), component.getName(), moduleDelegate.getType(), moduleDelegate.getVersion(), moduleDelegate.getProject());
+				module = createModule(component.getName(), component.getName(), IModuleConstants.WST_WEB_MODULE, moduleDelegate.getVersion(), moduleDelegate.getProject());
 				moduleDelegate.initialize(module);
 			}
-			// adapt(moduleDelegate, (WorkbenchComponent) workBenchModules.get(i));
 		} catch (Exception e) {
 			Logger.getLogger().write(e);
 		} finally {
@@ -109,6 +108,5 @@ public class StaticWebDeployableFactory extends ProjectModuleFactoryDelegate {
 			}
 		}
 		return module;
-	
 	}
 }
