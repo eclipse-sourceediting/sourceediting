@@ -10,7 +10,13 @@
  *******************************************************************************/
 package org.eclipse.wst.web.ui.internal.wizards;
 
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+
 import org.eclipse.jem.util.emf.workbench.ProjectUtilities;
+import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -23,12 +29,15 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.wst.common.componentcore.datamodel.properties.IFacetDataModelProperties;
 import org.eclipse.wst.common.componentcore.datamodel.properties.IFacetProjectCreationDataModelProperties;
 import org.eclipse.wst.common.frameworks.datamodel.DataModelPropertyDescriptor;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
+import org.eclipse.wst.common.frameworks.datamodel.IDataModelListener;
 import org.eclipse.wst.common.frameworks.internal.datamodel.ui.DataModelWizardPage;
 import org.eclipse.wst.common.frameworks.internal.operations.IProjectCreationPropertiesNew;
 import org.eclipse.wst.common.frameworks.internal.ui.NewProjectGroup;
+import org.eclipse.wst.common.project.facet.ui.internal.FacetsSelectionPage;
 import org.eclipse.wst.server.ui.ServerUIUtil;
 import org.eclipse.wst.web.internal.ResourceHandler;
 
@@ -102,6 +111,30 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
 		synchHelper.synchCombo(serverTargetCombo, FACET_RUNTIME, deps);
 		if (serverTargetCombo.getSelectionIndex() == -1 && serverTargetCombo.getVisibleItemCount() != 0)
 			serverTargetCombo.select(0);
+		
+		//temporary code for  bugzilla #116699
+		synchHelper.getDataModel().addListener(new IDataModelListener(){
+			public void propertyChanged(org.eclipse.wst.common.frameworks.datamodel.DataModelEvent event) {
+				if(FACET_RUNTIME.equals(event.getPropertyName())){
+					IWizardPage page = getNextPage();
+					FacetsSelectionPage facetPage = (FacetsSelectionPage) page;
+					
+					IDataModel dm = event.getDataModel();
+
+					Set projectFacetVersions = new HashSet();
+					Map facetDMs = (Map) dm.getProperty(FACET_DM_MAP);
+					for (Iterator iterator = facetDMs.values().iterator(); iterator.hasNext();) {
+						IDataModel facetDataModel = (IDataModel) iterator.next();
+						projectFacetVersions.add(facetDataModel.getProperty(IFacetDataModelProperties.FACET_VERSION));
+					}		
+					
+					//set  IProjectFacetVersion
+					facetPage.panel.setSelectedProjectFacets( projectFacetVersions );
+				}
+			};
+		});
+		
+		
 	}
 
 	protected void createProjectGroup(Composite parent) {
