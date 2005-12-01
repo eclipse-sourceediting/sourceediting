@@ -7,16 +7,19 @@ import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
 import org.eclipse.wst.common.project.facet.core.IFacetedProjectTemplate;
 import org.eclipse.wst.common.project.facet.core.ProjectFacetsManager;
 import org.eclipse.wst.project.facet.SimpleWebFacetProjectCreationDataModelProvider;
+import org.eclipse.wst.web.internal.ResourceHandler;
 import org.eclipse.wst.web.ui.internal.WSTWebUIPlugin;
 
 public class SimpleWebProjectWizard extends NewProjectDataModelFacetWizard {
 
 	public SimpleWebProjectWizard(IDataModel model) {
 		super(model);
+		setWindowTitle(ResourceHandler.StaticWebProjectCreationWizard_Wizard_Title);
 	}
 
 	public SimpleWebProjectWizard() {
 		super();
+		setWindowTitle(ResourceHandler.StaticWebProjectCreationWizard_Wizard_Title);
 	}
 
 	protected IDataModel createDataModel() {
