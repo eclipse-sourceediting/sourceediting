@@ -141,7 +141,12 @@ public class EMF2DOMSSERenderer extends EMF2DOMRenderer implements IModelStateLi
 			resource.setModified(false);
 			long stamp = WorkbenchResourceHelper.computeModificationStamp(resource);
 			WorkbenchResourceHelper.setSynhronizationStamp(resource, stamp);
+			ResourceSetWorkbenchEditSynchronizer synchronizer = (ResourceSetWorkbenchEditSynchronizer) ((ProjectResourceSet) resource.getResourceSet()).getSynchronizer();
+			IFile aFile = WorkbenchResourceHelper.getFile(resource);
+			synchronizer.preSave(aFile);
 		}
+		if (isDirty) 
+			resource.setModified(true);
 	}
 
 	public void modelResourceDeleted(IStructuredModel model) {
