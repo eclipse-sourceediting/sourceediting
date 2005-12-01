@@ -21,17 +21,17 @@ package org.eclipse.wst.sse.ui.views.properties;
 public interface IPropertySourceExtension {
 
 	/**
-	 * @param id
-	 *            the ID of the property
+	 * @param name
+	 *            the name of the property
 	 * @return whether the property matching this ID can be removed
 	 */
-	boolean isPropertyRemovable(Object id);
+	boolean isPropertyRemovable(Object name);
 
 	/**
 	 * Removes the property with the given displayed name. If no such property
 	 * exists, nothing is done.
 	 * 
-	 * @param id
+	 * @param name
 	 *            the displayed name of the property
 	 */
 	void removeProperty(Object name);
