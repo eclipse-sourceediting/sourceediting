@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -43,8 +43,14 @@ import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
+/**
+ * Configuration for property sheet page which shows XML content.
+ * 
+ * @see org.eclipse.wst.sse.ui.views.properties.PropertySheetConfiguration
+ * @since 1.0
+ */
 public class XMLPropertySheetConfiguration extends PropertySheetConfiguration {
-	public class CMDocumentManagerListenerImpl implements CMDocumentManagerListener {
+	private class CMDocumentManagerListenerImpl implements CMDocumentManagerListener {
 		public void cacheCleared(CMDocumentCache cache) {
 			// nothing to do
 		}
@@ -141,7 +147,12 @@ public class XMLPropertySheetConfiguration extends PropertySheetConfiguration {
 	private CMDocumentManager[] fSelectedCMDocumentManagers = new CMDocumentManager[0];
 	private INodeNotifier[] fSelectedNotifiers = new INodeNotifier[0];
 
+
+	/**
+	 * Create new instance of XMLPropertySheetConfiguration
+	 */
 	public XMLPropertySheetConfiguration() {
+		// Must have empty constructor to createExecutableExtension
 		super();
 	}
 

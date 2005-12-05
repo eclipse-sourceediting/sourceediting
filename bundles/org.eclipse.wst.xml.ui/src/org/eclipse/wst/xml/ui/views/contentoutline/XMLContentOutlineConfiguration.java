@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -58,6 +58,7 @@ import org.w3c.dom.Node;
  * Outline Configuration for generic XML support, expects that the viewer's
  * input will be the DOM Model.
  * 
+ * @see org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration
  * @since 1.0
  */
 public class XMLContentOutlineConfiguration extends ContentOutlineConfiguration {
@@ -223,6 +224,9 @@ public class XMLContentOutlineConfiguration extends ContentOutlineConfiguration 
 
 	private IContentProvider fContentProvider = null;
 
+	/**
+	 * Populates the ouline view's context menu
+	 */
 	protected ActionManagerMenuListener fContextMenuFiller = null;
 
 	private ILabelProvider fLabelProvider = null;
@@ -238,9 +242,10 @@ public class XMLContentOutlineConfiguration extends ContentOutlineConfiguration 
 	private final String OUTLINE_SHOW_ATTRIBUTE_PREF = "outline-show-attribute-editor"; //$NON-NLS-1$
 
 	/**
-	 * Default constructor required for use as an extension.
+	 * Create new instance of XMLContentOutlineConfiguration
 	 */
 	public XMLContentOutlineConfiguration() {
+		// Must have empty constructor to createExecutableExtension
 		super();
 	}
 
@@ -267,7 +272,10 @@ public class XMLContentOutlineConfiguration extends ContentOutlineConfiguration 
 	}
 
 	/**
+	 * Returns the NodeActionManager to use for the given treeViewer.
+	 * 
 	 * @param treeViewer
+	 *            the TreeViewer associated with this configuration
 	 * @return a node action manager for use with this tree viewer
 	 */
 	protected XMLNodeActionManager createNodeActionManager(TreeViewer treeViewer) {
@@ -282,7 +290,10 @@ public class XMLContentOutlineConfiguration extends ContentOutlineConfiguration 
 	 * Clients should not call this method, but rather should react to it.
 	 * 
 	 * @param showAttributes
+	 *            flag indicating whether or not to show attribute values in
+	 *            the tree viewer
 	 * @param treeViewer
+	 *            the TreeViewer associated with this configuration
 	 */
 	protected void enableShowAttributes(boolean showAttributes, TreeViewer treeViewer) {
 		// nothing by default
@@ -355,6 +366,12 @@ public class XMLContentOutlineConfiguration extends ContentOutlineConfiguration 
 		return XMLUIPlugin.getDefault().getPreferenceStore();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration#getSelection(org.eclipse.jface.viewers.TreeViewer,
+	 *      org.eclipse.jface.viewers.ISelection)
+	 */
 	public ISelection getSelection(TreeViewer viewer, ISelection selection) {
 		ISelection filteredSelection = selection;
 		if (selection instanceof IStructuredSelection) {
