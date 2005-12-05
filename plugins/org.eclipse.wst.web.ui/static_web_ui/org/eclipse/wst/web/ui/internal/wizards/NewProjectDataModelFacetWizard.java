@@ -88,13 +88,16 @@ public abstract class NewProjectDataModelFacetWizard extends AddRemoveFacetsWiza
 
 		this.facetsSelectionPage.setFixedProjectFacets(fixed);
 
-		Set facetVersions = new HashSet();
+        // Disabling this as it interfers with the facet selection based on the
+        // runtime.
+        
+		/*Set facetVersions = new HashSet();
 		FacetDataModelMap map = (FacetDataModelMap) model.getProperty(FACET_DM_MAP);
 		for (Iterator iterator = map.values().iterator(); iterator.hasNext();) {
 			IDataModel model = (IDataModel) iterator.next();
 			facetVersions.add(model.getProperty(IFacetDataModelProperties.FACET_VERSION));
 		}
-		this.facetsSelectionPage.setInitialSelection(facetVersions);
+		this.facetsSelectionPage.setInitialSelection(facetVersions);*/
 
 
 		final ConflictingFacetsFilter filter = new ConflictingFacetsFilter(fixed);

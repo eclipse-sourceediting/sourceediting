@@ -111,30 +111,6 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
 		synchHelper.synchCombo(serverTargetCombo, FACET_RUNTIME, deps);
 		if (serverTargetCombo.getSelectionIndex() == -1 && serverTargetCombo.getVisibleItemCount() != 0)
 			serverTargetCombo.select(0);
-		
-		//temporary code for  bugzilla #116699
-		synchHelper.getDataModel().addListener(new IDataModelListener(){
-			public void propertyChanged(org.eclipse.wst.common.frameworks.datamodel.DataModelEvent event) {
-				if(FACET_RUNTIME.equals(event.getPropertyName())){
-					IWizardPage page = getNextPage();
-					FacetsSelectionPage facetPage = (FacetsSelectionPage) page;
-					
-					IDataModel dm = event.getDataModel();
-
-					Set projectFacetVersions = new HashSet();
-					Map facetDMs = (Map) dm.getProperty(FACET_DM_MAP);
-					for (Iterator iterator = facetDMs.values().iterator(); iterator.hasNext();) {
-						IDataModel facetDataModel = (IDataModel) iterator.next();
-						projectFacetVersions.add(facetDataModel.getProperty(IFacetDataModelProperties.FACET_VERSION));
-					}		
-					
-					//set  IProjectFacetVersion
-					facetPage.panel.setSelectedProjectFacets( projectFacetVersions );
-				}
-			};
-		});
-		
-		
 	}
 
 	protected void createProjectGroup(Composite parent) {
