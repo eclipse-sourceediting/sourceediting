@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,12 +18,19 @@ import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.xml.ui.internal.contentoutline.XMLNodeActionManager;
 import org.eclipse.wst.xml.ui.views.contentoutline.XMLContentOutlineConfiguration;
 
+/**
+ * Configuration for outline view page which shows HTML content.
+ * 
+ * @see org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration
+ * @since 1.0
+ */
 public class HTMLContentOutlineConfiguration extends XMLContentOutlineConfiguration {
 
 	/**
-	 * @param editor
+	 * Create new instance of HTMLContentOutlineConfiguration
 	 */
 	public HTMLContentOutlineConfiguration() {
+		// Must have empty constructor to createExecutableExtension
 		super();
 	}
 

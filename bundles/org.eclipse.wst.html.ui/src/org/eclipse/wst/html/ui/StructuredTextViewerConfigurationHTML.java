@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -56,6 +56,16 @@ import org.eclipse.wst.xml.core.internal.provisional.text.IXMLPartitions;
 import org.eclipse.wst.xml.core.internal.text.rules.StructuredTextPartitionerForXML;
 import org.eclipse.wst.xml.ui.StructuredTextViewerConfigurationXML;
 
+/**
+ * Configuration for a source viewer which shows HTML content.
+ * <p>
+ * Clients can subclass and override just those methods which must be specific
+ * to their needs.
+ * </p>
+ * 
+ * @see org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration
+ * @since 1.0
+ */
 public class StructuredTextViewerConfigurationHTML extends StructuredTextViewerConfiguration {
 	/*
 	 * One instance per configuration because not sourceviewer-specific and
@@ -78,6 +88,14 @@ public class StructuredTextViewerConfigurationHTML extends StructuredTextViewerC
 	 * One instance per configuration
 	 */
 	private StructuredTextViewerConfiguration fXMLSourceViewerConfiguration;
+
+	/**
+	 * Create new instance of StructuredTextViewerConfigurationHTML
+	 */
+	public StructuredTextViewerConfigurationHTML() {
+		// Must have empty constructor to createExecutableExtension
+		super();
+	}
 
 	public IAutoEditStrategy[] getAutoEditStrategies(ISourceViewer sourceViewer, String contentType) {
 		List allStrategies = new ArrayList(0);
@@ -135,15 +153,6 @@ public class StructuredTextViewerConfigurationHTML extends StructuredTextViewerC
 		return processors;
 	}
 
-	/**
-	 * Returns the content formatter ready to be used with the given source
-	 * viewer.
-	 * 
-	 * @param sourceViewer
-	 *            the source viewer to be configured by this configuration
-	 * @return a content formatter or <code>null</code> if formatting should
-	 *         not be supported
-	 */
 	public IContentFormatter getContentFormatter(ISourceViewer sourceViewer) {
 		final MultiPassContentFormatter formatter = new MultiPassContentFormatter(getConfiguredDocumentPartitioning(sourceViewer), IHTMLPartitionTypes.HTML_DEFAULT);
 
@@ -161,11 +170,6 @@ public class StructuredTextViewerConfigurationHTML extends StructuredTextViewerC
 			return super.getDoubleClickStrategy(sourceViewer, contentType);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ui.editors.text.TextSourceViewerConfiguration#getHyperlinkDetectors(org.eclipse.jface.text.source.ISourceViewer)
-	 */
 	public IHyperlinkDetector[] getHyperlinkDetectors(ISourceViewer sourceViewer) {
 		if (sourceViewer == null || !fPreferenceStore.getBoolean(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_HYPERLINKS_ENABLED))
 			return null;
