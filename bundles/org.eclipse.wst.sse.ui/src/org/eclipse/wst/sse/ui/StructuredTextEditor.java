@@ -153,7 +153,6 @@ import org.eclipse.wst.sse.ui.internal.debug.EditBreakpointAction;
 import org.eclipse.wst.sse.ui.internal.debug.ManageBreakpointAction;
 import org.eclipse.wst.sse.ui.internal.debug.ToggleBreakpointAction;
 import org.eclipse.wst.sse.ui.internal.debug.ToggleBreakpointsTarget;
-import org.eclipse.wst.sse.ui.internal.editor.EditorExecutionContext;
 import org.eclipse.wst.sse.ui.internal.editor.EditorModelUtil;
 import org.eclipse.wst.sse.ui.internal.editor.IHelpContextIds;
 import org.eclipse.wst.sse.ui.internal.editor.StructuredModelDocumentProvider;
@@ -1012,12 +1011,12 @@ public class StructuredTextEditor extends TextEditor {
 
 
 	/**
-	 * Starts a background operation.
+	 * Starts background mode.
 	 * <p>
 	 * Not API. May be removed in the future.
 	 * </p>
 	 */
-	public void beginBackgroundOperation() {
+	void beginBackgroundOperation() {
 		fBackgroundJobEnded = false;
 		// if already in busy state, no need to do anything
 		// and, we only start, or reset, the timed busy
@@ -1765,13 +1764,12 @@ public class StructuredTextEditor extends TextEditor {
 	}
 
 	/**
-	 * This is the public method to be called to notifiy us that document is
-	 * being updated by backround job.
+	 * End background mode.
 	 * <p>
 	 * Not API. May be removed in the future.
 	 * </p>
 	 */
-	public void endBackgroundOperation() {
+	void endBackgroundOperation() {
 		fBackgroundJobEnded = true;
 		// note, we don't immediately end our 'internal busy' state,
 		// since we may get many calls in a short period of
@@ -2010,6 +2008,8 @@ public class StructuredTextEditor extends TextEditor {
 					fisReleased = false;
 				}
 			}
+			
+			// ISSUE: this looks bad ... edit-time factories not initialized unless someone calls getModel? 
 			// factories will not be re-added if already exists
 			EditorModelUtil.addFactoriesTo(fStructuredModel);
 
@@ -2751,7 +2751,7 @@ public class StructuredTextEditor extends TextEditor {
 		}
 	}
 
-	protected void updateMenuText() {
+	private void updateMenuText() {
 		if (fStructuredModel != null && !fStructuredModel.isModelStateChanging() && getTextViewer().getTextWidget() != null) {
 			// performance: don't force an update of the action bars unless
 			// required as it is expensive

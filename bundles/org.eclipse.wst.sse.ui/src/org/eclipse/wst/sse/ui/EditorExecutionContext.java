@@ -10,17 +10,16 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.sse.ui.internal.editor;
+package org.eclipse.wst.sse.ui;
 
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.sse.core.internal.IExecutionDelegate;
-import org.eclipse.wst.sse.ui.StructuredTextEditor;
 
 
 
-public class EditorExecutionContext implements IExecutionDelegate {
+class EditorExecutionContext implements IExecutionDelegate {
 
 
 	StructuredTextEditor fEditor;
