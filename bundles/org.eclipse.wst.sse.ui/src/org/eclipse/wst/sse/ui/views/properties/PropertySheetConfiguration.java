@@ -30,6 +30,14 @@ import org.eclipse.ui.views.properties.IPropertySourceProvider;
  */
 public abstract class PropertySheetConfiguration {
 	/**
+	 * Create new instance of PropertySheetConfiguration
+	 */
+	public PropertySheetConfiguration() {
+		// Must have empty constructor to createExecutableExtension
+		super();
+	}
+
+	/**
 	 * Adds contribution menu items to the given menuManager, toolbarManager,
 	 * statusLineManager.
 	 * 

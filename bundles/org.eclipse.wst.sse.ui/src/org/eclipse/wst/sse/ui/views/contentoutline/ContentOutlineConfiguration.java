@@ -90,6 +90,14 @@ public abstract class ContentOutlineConfiguration {
 	ImageDescriptor SYNCED_E = EditorPluginImageHelper.getInstance().getImageDescriptor(EditorPluginImages.IMG_ELCL_SYNCED);
 
 	/**
+	 * Create new instance of ContentOutlineConfiguration
+	 */
+	public ContentOutlineConfiguration() {
+		// Must have empty constructor to createExecutableExtension
+		super();
+	}
+
+	/**
 	 * Creates the contributions for the view's local menu. Subclasses should
 	 * merge their contributions with these.
 	 * 
