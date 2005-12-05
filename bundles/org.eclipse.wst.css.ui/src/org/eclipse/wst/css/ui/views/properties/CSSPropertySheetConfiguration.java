@@ -116,6 +116,14 @@ public class CSSPropertySheetConfiguration extends PropertySheetConfiguration {
 
 	private INodeNotifier[] fSelectedNotifiers;
 
+	/**
+	 * Create new instance of CSSPropertySheetConfiguration
+	 */
+	public CSSPropertySheetConfiguration() {
+		// Must have empty constructor to createExecutableExtension
+		super();
+	}
+
 	public ISelection getInputSelection(IWorkbenchPart selectingPart, ISelection selection) {
 		// remove UI refresh adapters
 		if (fSelectedNotifiers != null) {

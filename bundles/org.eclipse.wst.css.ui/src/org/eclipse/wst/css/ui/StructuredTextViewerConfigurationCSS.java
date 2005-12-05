@@ -51,6 +51,14 @@ public class StructuredTextViewerConfigurationCSS extends StructuredTextViewerCo
 	 */
 	private LineStyleProvider fLineStyleProviderForCSS;
 
+	/**
+	 * Create new instance of StructuredTextViewerConfigurationCSS
+	 */
+	public StructuredTextViewerConfigurationCSS() {
+		// Must have empty constructor to createExecutableExtension
+		super();
+	}
+
 	public IAutoEditStrategy[] getAutoEditStrategies(ISourceViewer sourceViewer, String contentType) {
 		List allStrategies = new ArrayList(0);
 

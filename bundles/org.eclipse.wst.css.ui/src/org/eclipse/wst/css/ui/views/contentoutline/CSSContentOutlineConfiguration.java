@@ -34,6 +34,14 @@ public class CSSContentOutlineConfiguration extends ContentOutlineConfiguration 
 	private ILabelProvider fLabelProvider = null;
 	private final String OUTLINE_SORT_PREF = "outline-sort"; //$NON-NLS-1$
 
+	/**
+	 * Create new instance of CSSContentOutlineConfiguration
+	 */
+	public CSSContentOutlineConfiguration() {
+		// Must have empty constructor to createExecutableExtension
+		super();
+	}
+
 	public IContributionItem[] createToolbarContributions(TreeViewer viewer) {
 		IContributionItem[] items = super.createToolbarContributions(viewer);
 
