@@ -224,10 +224,7 @@ public class XMLContentOutlineConfiguration extends ContentOutlineConfiguration 
 
 	private IContentProvider fContentProvider = null;
 
-	/**
-	 * Populates the ouline view's context menu
-	 */
-	protected ActionManagerMenuListener fContextMenuFiller = null;
+	private ActionManagerMenuListener fContextMenuFiller = null;
 
 	private ILabelProvider fLabelProvider = null;
 
@@ -273,6 +270,9 @@ public class XMLContentOutlineConfiguration extends ContentOutlineConfiguration 
 
 	/**
 	 * Returns the NodeActionManager to use for the given treeViewer.
+	 * <p>
+	 * Not API. May be removed in the future.
+	 * </p>
 	 * 
 	 * @param treeViewer
 	 *            the TreeViewer associated with this configuration
