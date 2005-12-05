@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -36,8 +36,7 @@ import org.eclipse.wst.sse.ui.internal.editor.EditorPluginImages;
 /**
  * Basic Configuration class for Outline Pages
  * 
- * @plannedfor 1.0
- * 
+ * @since 1.0
  */
 public abstract class ContentOutlineConfiguration {
 	/**
@@ -90,15 +89,12 @@ public abstract class ContentOutlineConfiguration {
 	ImageDescriptor SYNCED_D = EditorPluginImageHelper.getInstance().getImageDescriptor(EditorPluginImages.IMG_DLCL_SYNCED);
 	ImageDescriptor SYNCED_E = EditorPluginImageHelper.getInstance().getImageDescriptor(EditorPluginImages.IMG_ELCL_SYNCED);
 
-	public ContentOutlineConfiguration() {
-		super();
-	}
-
 	/**
 	 * Creates the contributions for the view's local menu. Subclasses should
 	 * merge their contributions with these.
 	 * 
 	 * @param viewer
+	 *            the TreeViewer associated with this configuration
 	 * @return menu contributions
 	 */
 	protected IContributionItem[] createMenuContributions(TreeViewer viewer) {
@@ -112,6 +108,7 @@ public abstract class ContentOutlineConfiguration {
 	 * contributions with these.
 	 * 
 	 * @param viewer
+	 *            the TreeViewer associated with this configuration
 	 * @return toolbar contributions
 	 */
 	protected IContributionItem[] createToolbarContributions(TreeViewer viewer) {
@@ -121,14 +118,20 @@ public abstract class ContentOutlineConfiguration {
 	}
 
 	/**
+	 * Returns the ContentProvider to use with the given viewer.
+	 * 
 	 * @param viewer
+	 *            the TreeViewer associated with this configuration
 	 * @return the IContentProvider to use with this viewer
 	 */
 	public abstract IContentProvider getContentProvider(TreeViewer viewer);
 
 	/**
+	 * Returns an array of KeyListeners to attach to the given viewer's
+	 * control or null.
 	 * 
 	 * @param viewer
+	 *            the TreeViewer associated with this configuration
 	 * @return an array of KeyListeners to attach to the TreeViewer's Control,
 	 *         or null. The listeners should adhere to the KeyEvent.doit field
 	 *         to ensure proper behaviors. Ordering of the event notifications
@@ -139,7 +142,10 @@ public abstract class ContentOutlineConfiguration {
 	}
 
 	/**
+	 * Returns the LabelProvider for the items within the given viewer.
+	 * 
 	 * @param viewer
+	 *            the TreeViewer associated with this configuration
 	 * @return the ILabelProvider for items within the viewer
 	 */
 	public ILabelProvider getLabelProvider(TreeViewer viewer) {
@@ -149,7 +155,10 @@ public abstract class ContentOutlineConfiguration {
 	}
 
 	/**
+	 * Returns the menu contribution items for the local menu in the outline.
+	 * 
 	 * @param viewer
+	 *            the TreeViewer associated with this configuration
 	 * @return IContributionItem[] for the local menu
 	 */
 	public final IContributionItem[] getMenuContributions(TreeViewer viewer) {
@@ -160,7 +169,11 @@ public abstract class ContentOutlineConfiguration {
 	}
 
 	/**
+	 * Returns the menu listener to notify when the given viewer's context
+	 * menu is about to be shown or null.
+	 * 
 	 * @param viewer
+	 *            the TreeViewer associated with this configuration
 	 * @return the IMenuListener to notify when the viewer's context menu is
 	 *         about to be shown, or null
 	 */
@@ -169,6 +182,8 @@ public abstract class ContentOutlineConfiguration {
 	}
 
 	/**
+	 * Returns the PreferenceStore to use for this configuration.
+	 * 
 	 * @return the preference store in which to remember preferences (such as
 	 *         the link-with-editor toggle state)
 	 */
@@ -177,7 +192,12 @@ public abstract class ContentOutlineConfiguration {
 	}
 
 	/**
-	 * @param event
+	 * Returns the (filtered) selection from the given selection.
+	 * 
+	 * @param selection
+	 *            model selection
+	 * @param viewer
+	 *            the TreeViewer associated with this configuration
 	 * @return The (filtered) selection from this event. Uses include mapping
 	 *         model selection onto elements provided by the content provider.
 	 *         Should only return elements that will be shown in the Tree
@@ -188,7 +208,10 @@ public abstract class ContentOutlineConfiguration {
 	}
 
 	/**
+	 * Returns contribution items for the local toolbar in the outline.
+	 * 
 	 * @param viewer
+	 *            the TreeViewer associated with this configuration
 	 * @return IContributionItem[] for the local toolbar
 	 */
 	public final IContributionItem[] getToolbarContributions(TreeViewer viewer) {
@@ -199,35 +222,46 @@ public abstract class ContentOutlineConfiguration {
 	}
 
 	/**
-	 * Adopted since you can't easily removeDragSupport from StructuredViewers
+	 * Adopted since you can't easily removeDragSupport from
+	 * StructuredViewers.
 	 * 
 	 * @param treeViewer
-	 * @return
+	 *            the TreeViewer associated with this configuration
+	 * @return an array of TransferDragSourceListeners
 	 */
 	public TransferDragSourceListener[] getTransferDragSourceListeners(TreeViewer treeViewer) {
 		return new TransferDragSourceListener[0];
 	}
 
 	/**
-	 * Adopted since you can't easily removeDropSupport from StructuredViewers
+	 * Adopted since you can't easily removeDropSupport from
+	 * StructuredViewers.
 	 * 
 	 * @param treeViewer
-	 * @return
+	 *            the TreeViewer associated with this configuration
+	 * @return an array of TransferDropTargetListeners
 	 */
 	public TransferDropTargetListener[] getTransferDropTargetListeners(TreeViewer treeViewer) {
 		return new TransferDropTargetListener[0];
 	}
 
 	/**
-	 * Should node selection changes affect selection in the TreeViewer?
+	 * Returns true if node selection changes affect selection in the
+	 * TreeViewer.
 	 * 
-	 * @return
+	 * @param treeViewer
+	 *            the TreeViewer associated with this configuration
+	 * @return true if outline is currently linked to selection in editor,
+	 *         false otherwise
 	 */
 	public boolean isLinkedWithEditor(TreeViewer treeViewer) {
 		return fIsLinkWithEditor;
 	}
 
 	/**
+	 * Sets whether or not outline view should be linked with selection in
+	 * editor.
+	 * 
 	 * @param isLinkWithEditor
 	 *            The isLinkWithEditor to set.
 	 */
@@ -242,6 +276,7 @@ public abstract class ContentOutlineConfiguration {
 	 * preference listening.
 	 * 
 	 * @param viewer
+	 *            the TreeViewer associated with this configuration
 	 */
 	public void unconfigure(TreeViewer viewer) {
 		if (fToolbarContributions != null) {

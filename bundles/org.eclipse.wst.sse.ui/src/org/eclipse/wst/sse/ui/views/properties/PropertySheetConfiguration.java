@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,24 +26,32 @@ import org.eclipse.ui.views.properties.IPropertySourceProvider;
 /**
  * Configuration class for Property Sheet Pages. Not finalized.
  * 
- * @plannedfor 1.0
+ * @since 1.0
  */
 public abstract class PropertySheetConfiguration {
-	public PropertySheetConfiguration() {
-		super();
-	}
-
+	/**
+	 * Adds contribution menu items to the given menuManager, toolbarManager,
+	 * statusLineManager.
+	 * 
+	 * @param menuManager
+	 *            the local menu manager of the property sheet
+	 * @param toolBarManager
+	 *            the local toolbar manager of the property sheet
+	 * @param statusLineManager
+	 *            the status line manager of the property sheet
+	 */
 	public void addContributions(IMenuManager menuManager, IToolBarManager toolBarManager, IStatusLineManager statusLineManager) {
 		// do nothing
 	}
 
 	/**
-	 * Allows for filteration of selection before being sent to the viewer
+	 * Allows for filteration of selection before being sent to the viewer.
 	 * 
-	 * @param selectingPart -
+	 * @param selectingPart
 	 *            may be null
 	 * @param selection
-	 * @return
+	 *            model selection
+	 * @return the (filtered) selection to be sent to the viewer
 	 */
 	public ISelection getInputSelection(IWorkbenchPart selectingPart, ISelection selection) {
 		ISelection preferredSelection = selection;
@@ -56,14 +64,33 @@ public abstract class PropertySheetConfiguration {
 	}
 
 	/**
-	 * Returns the correct IPropertySourceProvider
+	 * Returns the correct IPropertySourceProvider.
+	 * 
+	 * @param page
+	 *            the page to be configured by this configuration
+	 * @return the IPropertySourceProvider for the given page
 	 */
 	public abstract IPropertySourceProvider getPropertySourceProvider(IPropertySheetPage page);
 
+	/**
+	 * Removes contribution menu items from the given menuManager,
+	 * toolbarManager, statusLineManager.
+	 * 
+	 * @param menuManager
+	 *            the local menu manager of the property sheet
+	 * @param toolBarManager
+	 *            the local toolbar manager of the property sheet
+	 * @param statusLineManager
+	 *            the status line manager of the property sheet
+	 */
 	public void removeContributions(IMenuManager menuManager, IToolBarManager toolBarManager, IStatusLineManager statusLineManager) {
 		// do nothing
 	}
 
+	/**
+	 * General hook for resource releasing and listener removal when
+	 * configurations change.
+	 */
 	public void unconfigure() {
 	}
 }

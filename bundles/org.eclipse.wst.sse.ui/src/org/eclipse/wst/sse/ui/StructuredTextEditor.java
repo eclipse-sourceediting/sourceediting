@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -173,10 +173,18 @@ import org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration;
 import org.eclipse.wst.sse.ui.views.properties.PropertySheetConfiguration;
 
 /**
- * A Text Editor for editing structured models and structured documents. This
- * class is not meant to be subclassed. New content types may associate source
- * viewer, content outline, and property sheet configurations to extend the
- * existing functionality.
+ * A Text Editor for editing structured models and structured documents.
+ * <p>
+ * This class is not meant to be subclassed.<br />
+ * New content types may associate source viewer, content outline, and
+ * property sheet configurations to extend the existing functionality.
+ * </p>
+ * 
+ * @see org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration
+ * @see org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration
+ * @see org.eclipse.wst.sse.ui.views.properties.PropertySheetConfiguration
+ * 
+ * @since 1.0
  */
 
 public class StructuredTextEditor extends TextEditor {
@@ -825,16 +833,31 @@ public class StructuredTextEditor extends TextEditor {
 		}
 	}
 
+	/**
+	 * Not API. May be removed in the future.
+	 */
 	protected final static char[] BRACKETS = {'{', '}', '(', ')', '[', ']'};
 
 	private static final long BUSY_STATE_DELAY = 1000;
+	/**
+	 * Not API. May be removed in the future.
+	 */
 	protected static final String DOT = "."; //$NON-NLS-1$
 	private static final String EDITOR_CONTEXT_MENU_ID = "org.eclipse.wst.sse.ui.StructuredTextEditor.EditorContext"; //$NON-NLS-1$
 	private static final String EDITOR_CONTEXT_MENU_SUFFIX = ".source.EditorContext"; //$NON-NLS-1$
 	/** Non-NLS strings */
 	private static final String EDITOR_KEYBINDING_SCOPE_ID = "org.eclipse.wst.sse.ui.structuredTextEditorScope"; //$NON-NLS-1$
+	/**
+	 * Not API. May be removed in the future.
+	 */
 	public static final String GROUP_NAME_ADDITIONS = "additions"; //$NON-NLS-1$
+	/**
+	 * Not API. May be removed in the future.
+	 */
 	public static final String GROUP_NAME_FORMAT = "Format"; //$NON-NLS-1$
+	/**
+	 * Not API. May be removed in the future.
+	 */
 	public static final String GROUP_NAME_FORMAT_EXT = "Format.ext"; //$NON-NLS-1$
 
 	private static final String REDO_ACTION_DESC = SSEUIMessages.Redo___0___UI_; //$NON-NLS-1$ = "Redo: {0}."
@@ -901,6 +924,9 @@ public class StructuredTextEditor extends TextEditor {
 	private long startPerfTime;
 	private boolean fisReleased;
 
+	/**
+	 * Creates a new Structured Text Editor.
+	 */
 	public StructuredTextEditor() {
 		super();
 		initializeDocumentProvider(null);
@@ -986,7 +1012,10 @@ public class StructuredTextEditor extends TextEditor {
 
 
 	/**
-	 * 
+	 * Starts a background operation.
+	 * <p>
+	 * Not API. May be removed in the future.
+	 * </p>
 	 */
 	public void beginBackgroundOperation() {
 		fBackgroundJobEnded = false;
@@ -998,9 +1027,6 @@ public class StructuredTextEditor extends TextEditor {
 		}
 	}
 
-	/**
-	 * 
-	 */
 	private void beginBusyStateInternal() {
 
 		fBusyState = true;
@@ -1026,8 +1052,11 @@ public class StructuredTextEditor extends TextEditor {
 	// }
 
 	/**
+	 * {@inheritDoc}
+	 * <p>
 	 * Instead of us closing directly, we have to close with our containing
 	 * (multipage) editor, if it exists.
+	 * </p>
 	 */
 	public void close(final boolean save) {
 		if (getSite() == null) {
@@ -1296,8 +1325,11 @@ public class StructuredTextEditor extends TextEditor {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 * <p>
 	 * Use StructuredTextViewerConfiguration if a viewerconfiguration has not
 	 * already been set. Also initialize StructuredTextViewer.
+	 * </p>
 	 * 
 	 * @see org.eclipse.ui.texteditor.AbstractDecoratedTextEditor#createPartControl(org.eclipse.swt.widgets.Composite)
 	 */
@@ -1465,8 +1497,10 @@ public class StructuredTextEditor extends TextEditor {
 		}
 	}
 
-	/**
-	 * @see DekstopPart#dispose
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.ui.IWorkbenchPart#dispose()
 	 */
 	public void dispose() {
 		Logger.trace("Source Editor", "StructuredTextEditor::dispose entry"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -1592,8 +1626,10 @@ public class StructuredTextEditor extends TextEditor {
 		// none at this level
 	}
 
-	/**
-	 * @see ITextEditor#doRevertToSaved
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.ui.texteditor.ITextEditor#doRevertToSaved()
 	 */
 	public void doRevertToSaved() {
 		super.doRevertToSaved();
@@ -1610,6 +1646,11 @@ public class StructuredTextEditor extends TextEditor {
 		updateMenuText();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.ui.ISaveablePart#doSave(org.eclipse.core.runtime.IProgressMonitor)
+	 */
 	public void doSave(IProgressMonitor progressMonitor) {
 		try {
 			aboutToSaveModel();
@@ -1697,6 +1738,9 @@ public class StructuredTextEditor extends TextEditor {
 
 	/**
 	 * Sets up this editor's context menu before it is made visible.
+	 * <p>
+	 * Not API. May be reduced to protected method in the future.
+	 * </p>
 	 * 
 	 * @param menu
 	 *            the menu
@@ -1723,6 +1767,9 @@ public class StructuredTextEditor extends TextEditor {
 	/**
 	 * This is the public method to be called to notifiy us that document is
 	 * being updated by backround job.
+	 * <p>
+	 * Not API. May be removed in the future.
+	 * </p>
 	 */
 	public void endBackgroundOperation() {
 		fBackgroundJobEnded = true;
@@ -1766,6 +1813,11 @@ public class StructuredTextEditor extends TextEditor {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
+	 */
 	public Object getAdapter(Class required) {
 		if (org.eclipse.wst.sse.core.internal.util.Debug.perfTestAdapterClassLoading) {
 			startPerfTime = System.currentTimeMillis();
@@ -1886,6 +1938,14 @@ public class StructuredTextEditor extends TextEditor {
 		return PlatformUI.getWorkbench().getDisplay();
 	}
 
+	/**
+	 * Returns this editor part.
+	 * <p>
+	 * Not API. May be removed in the future.
+	 * </p>
+	 * 
+	 * @return this editor part
+	 */
 	public IEditorPart getEditorPart() {
 		if (fEditorPart == null)
 			return this;
@@ -1911,6 +1971,12 @@ public class StructuredTextEditor extends TextEditor {
 	}
 
 	/**
+	 * Returns this editor's StructuredModel.
+	 * <p>
+	 * Not API. Will be removed in the future.
+	 * </p>
+	 * 
+	 * @return returns this editor's IStructuredModel
 	 * @deprecated - This method allowed for uncontrolled access to the model
 	 *             instance and will be removed in the future. It is
 	 *             recommended that the current document provider be asked for
@@ -1968,11 +2034,21 @@ public class StructuredTextEditor extends TextEditor {
 		return fStructuredModel;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.ui.part.IWorkbenchPartOrientation#getOrientation()
+	 */
 	public int getOrientation() {
 		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=88714
 		return SWT.LEFT_TO_RIGHT;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.ui.texteditor.ITextEditor#getSelectionProvider()
+	 */
 	public ISelectionProvider getSelectionProvider() {
 		if (fStructuredSelectionProvider == null) {
 			ISelectionProvider parentProvider = super.getSelectionProvider();
@@ -1989,6 +2065,9 @@ public class StructuredTextEditor extends TextEditor {
 	/**
 	 * Returns the editor's source viewer. This method was created to expose
 	 * the protected final getSourceViewer() method.
+	 * <p>
+	 * Not API. May be removed in the future.
+	 * </p>
 	 * 
 	 * @return the editor's source viewer
 	 */
@@ -1996,6 +2075,11 @@ public class StructuredTextEditor extends TextEditor {
 		return (StructuredTextViewer) getSourceViewer();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.ui.texteditor.AbstractTextEditor#handleCursorPositionChanged()
+	 */
 	protected void handleCursorPositionChanged() {
 		super.handleCursorPositionChanged();
 		updateStatusField(StructuredTextEditorActionConstants.STATUS_CATEGORY_OFFSET);
@@ -2031,13 +2115,16 @@ public class StructuredTextEditor extends TextEditor {
 		super.handlePreferenceStoreChanged(event);
 	}
 
-	/**
-	 * @return
-	 */
 	private boolean inBusyState() {
 		return fBusyState;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.ui.IEditorPart#init(org.eclipse.ui.IEditorSite,
+	 *      org.eclipse.ui.IEditorInput)
+	 */
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
 		// if we've gotten an error elsewhere, before
 		// we've actually opened, then don't open.
@@ -2050,6 +2137,15 @@ public class StructuredTextEditor extends TextEditor {
 		}
 	}
 
+	/**
+	 * Set the document provider for this editor.
+	 * <p>
+	 * Not API. May be removed in the future.
+	 * </p>
+	 * 
+	 * @param documentProvider
+	 *            documentProvider to initialize
+	 */
 	public void initializeDocumentProvider(IDocumentProvider documentProvider) {
 		if (documentProvider != null) {
 			setDocumentProvider(documentProvider);
@@ -2067,6 +2163,11 @@ public class StructuredTextEditor extends TextEditor {
 		fDropTarget.addDropListener(fDropAdapter);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.ui.texteditor.AbstractDecoratedTextEditor#initializeEditor()
+	 */
 	protected void initializeEditor() {
 		super.initializeEditor();
 		// FIXME: here's where to add back in our custom encoding support
@@ -2144,6 +2245,11 @@ public class StructuredTextEditor extends TextEditor {
 		initializeDrop(sourceViewer);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.ui.editors.text.TextEditor#installEncodingSupport()
+	 */
 	protected void installEncodingSupport() {
 		// TODO: install our custom support that can
 		// update document appropriately
@@ -2258,12 +2364,16 @@ public class StructuredTextEditor extends TextEditor {
 	}
 
 	/**
-	 * This method was made public for use by editors that use
-	 * StructuredTextEditor (like PageDesigner)
-	 * 
-	 * @see org.eclipse.ui.texteditor.AbstractTextEditor#rememberSelection()
+	 * {@inheritDoc}
+	 * <p>
+	 * Not API. May be reduced to protected method in the future.
+	 * </p>
 	 */
 	public void rememberSelection() {
+		/*
+		 * This method was made public for use by editors that use
+		 * StructuredTextEditor (like some clients)
+		 */
 		super.rememberSelection();
 	}
 
@@ -2280,12 +2390,16 @@ public class StructuredTextEditor extends TextEditor {
 	}
 
 	/**
-	 * This method was made public for use by editors that use
-	 * StructuredTextEditor (like PageDesigner)
-	 * 
-	 * @see org.eclipse.ui.texteditor.AbstractTextEditor#restoreSelection()
+	 * {@inheritDoc}
+	 * <p>
+	 * Not API. May be reduced to protected method in the future.
+	 * </p>
 	 */
 	public void restoreSelection() {
+		/*
+		 * This method was made public for use by editors that use
+		 * StructuredTextEditor (like some clients)
+		 */
 		// catch odd case where source viewer has no text
 		// widget (defect
 		// 227670)
@@ -2293,6 +2407,11 @@ public class StructuredTextEditor extends TextEditor {
 			super.restoreSelection();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.ui.texteditor.AbstractTextEditor#rulerContextMenuAboutToShow(org.eclipse.jface.action.IMenuManager)
+	 */
 	protected void rulerContextMenuAboutToShow(IMenuManager menu) {
 		super.rulerContextMenuAboutToShow(menu);
 
@@ -2300,7 +2419,8 @@ public class StructuredTextEditor extends TextEditor {
 		if (internalModel != null) {
 			boolean debuggingAvailable = BreakpointProviderBuilder.getInstance().isAvailable(internalModel.getContentTypeIdentifier(), BreakpointRulerAction.getFileExtension(getEditorInput()));
 			if (debuggingAvailable) {
-				// append actions to "debug" group (created in AbstractDecoratedTextEditor.rulerContextMenuAboutToShow(IMenuManager)
+				// append actions to "debug" group (created in
+				// AbstractDecoratedTextEditor.rulerContextMenuAboutToShow(IMenuManager)
 				menu.appendToGroup("debug", getAction(ActionDefinitionIds.TOGGLE_BREAKPOINTS)); //$NON-NLS-1$
 				menu.appendToGroup("debug", getAction(ActionDefinitionIds.MANAGE_BREAKPOINTS)); //$NON-NLS-1$
 				menu.appendToGroup("debug", getAction(ActionDefinitionIds.EDIT_BREAKPOINTS)); //$NON-NLS-1$
@@ -2310,7 +2430,13 @@ public class StructuredTextEditor extends TextEditor {
 	}
 
 	/**
-	 * Overridden to expose part activation handling for multi-page editors
+	 * {@inheritDoc}
+	 * <p>
+	 * Overridden to expose part activation handling for multi-page editors.
+	 * </p>
+	 * <p>
+	 * Not API. May be reduced to protected method in the future.
+	 * </p>
 	 * 
 	 * @see org.eclipse.ui.texteditor.AbstractTextEditor#safelySanityCheckState(org.eclipse.ui.IEditorInput)
 	 */
@@ -2345,6 +2471,15 @@ public class StructuredTextEditor extends TextEditor {
 		}
 	}
 
+	/**
+	 * Set editor part associated with this editor.
+	 * <p>
+	 * Not API. May be removed in the future.
+	 * </p>
+	 * 
+	 * @param editorPart
+	 *            editor part associated with this editor
+	 */
 	public void setEditorPart(IEditorPart editorPart) {
 		fEditorPart = editorPart;
 	}
@@ -2396,6 +2531,11 @@ public class StructuredTextEditor extends TextEditor {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.ui.part.WorkbenchPart#showBusy(boolean)
+	 */
 	public void showBusy(boolean busy) {
 		if (busy) {
 			fRememberTitle = getPartName();
@@ -2418,8 +2558,11 @@ public class StructuredTextEditor extends TextEditor {
 	}
 
 	/**
-	 * update() should be called whenever the model is set or changed (as in
+	 * Update should be called whenever the model is set or changed (as in
 	 * swapped)
+	 * <p>
+	 * Not API. May be removed in the future.
+	 * </p>
 	 */
 	public void update() {
 		if (fOutlinePage != null && fOutlinePage instanceof ConfigurableContentOutlinePage) {

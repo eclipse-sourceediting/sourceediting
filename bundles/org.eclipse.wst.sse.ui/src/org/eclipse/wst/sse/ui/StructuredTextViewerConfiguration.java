@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -62,6 +62,7 @@ import org.eclipse.wst.sse.ui.internal.taginfo.TextHoverManager;
  * 
  * @see org.eclipse.wst.sse.ui.StructuredTextEditor
  * @see org.eclipse.wst.sse.ui.internal.StructuredTextViewer
+ * @since 1.0
  */
 public class StructuredTextViewerConfiguration extends TextSourceViewerConfiguration {
 	/*
@@ -74,6 +75,10 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 	 */
 	private IReconciler fReconciler;
 
+
+	/**
+	 * Creates a structured text viewer configuration.
+	 */
 	public StructuredTextViewerConfiguration() {
 		super();
 		// initialize fPreferenceStore with same preference store used in
@@ -373,6 +378,9 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 	 * See <code>getLineStyleProviders(ISourceViewer, String)</code> for
 	 * alternative way to provide highlighting information.
 	 * 
+	 * @param sourceViewer
+	 *            the source viewer to be configured by this configuration
+	 * @return always returns null
 	 * @see #getLineStyleProviders(ISourceViewer, String)
 	 */
 	final public IPresentationReconciler getPresentationReconciler(ISourceViewer sourceViewer) {
