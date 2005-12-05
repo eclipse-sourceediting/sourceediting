@@ -22,9 +22,14 @@ import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProviderForNoO
 
 
 /**
- * A source viewer configuration for DTDs.
+ * Configuration for a source viewer which shows DTD content.
+ * <p>
+ * Clients can subclass and override just those methods which must be specific
+ * to their needs.
+ * </p>
  * 
- * @plannedfor 1.0
+ * @see org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration
+ * @since 1.0
  */
 public class StructuredTextViewerConfigurationDTD extends StructuredTextViewerConfiguration {
 	/*
@@ -40,6 +45,14 @@ public class StructuredTextViewerConfigurationDTD extends StructuredTextViewerCo
 	 * One instance per configuration
 	 */
 	private LineStyleProvider fLineStyleProviderForNoop;
+
+	/**
+	 * Create new instance of StructuredTextViewerConfigurationDTD
+	 */
+	public StructuredTextViewerConfigurationDTD() {
+		// Must have empty constructor to createExecutableExtension
+		super();
+	}
 
 	public String[] getConfiguredContentTypes(ISourceViewer sourceViewer) {
 		if (fConfiguredContentTypes == null) {

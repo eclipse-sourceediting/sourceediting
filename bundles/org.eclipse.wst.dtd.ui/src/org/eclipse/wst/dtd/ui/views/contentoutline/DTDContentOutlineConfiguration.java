@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -36,10 +36,10 @@ import org.eclipse.wst.sse.ui.internal.util.Assert;
 import org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration;
 
 /**
- * A StructuredContentOutlineConfiguration for DTD models
+ * Configuration for outline view page which shows DTD content.
  * 
- * @plannedfor 1.0
- * 
+ * @see org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration
+ * @since 1.0
  */
 public class DTDContentOutlineConfiguration extends ContentOutlineConfiguration {
 	private IContentProvider fContentProvider = null;
@@ -52,7 +52,11 @@ public class DTDContentOutlineConfiguration extends ContentOutlineConfiguration 
 	private final String OUTLINE_ORDER_PREF = "outline-order"; //$NON-NLS-1$
 	private final String OUTLINE_SORT_PREF = "outline-sort"; //$NON-NLS-1$
 
+	/**
+	 * Default constructor for DTDContentOutlineConfiguration.
+	 */
 	public DTDContentOutlineConfiguration() {
+		// Must have empty constructor to createExecutableExtension
 		super();
 		fViewerContributions = new HashMap(2);
 	}
@@ -60,7 +64,7 @@ public class DTDContentOutlineConfiguration extends ContentOutlineConfiguration 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.wst.sse.ui.views.contentoutline.StructuredContentOutlineConfiguration#createToolbarContributions(org.eclipse.jface.viewers.TreeViewer)
+	 * @see org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration#createToolbarContributions(org.eclipse.jface.viewers.TreeViewer)
 	 */
 	public IContributionItem[] createToolbarContributions(TreeViewer viewer) {
 		Assert.isTrue(getContentProvider(viewer) instanceof DTDTreeContentProvider, "invalid content provider on viewer"); //$NON-NLS-1$
@@ -119,18 +123,19 @@ public class DTDContentOutlineConfiguration extends ContentOutlineConfiguration 
 	 */
 	public IMenuListener getMenuListener(TreeViewer viewer) {
 		if (fMenuHelper == null) {
-//			fMenuHelper = new DTDContextMenuHelper(getEditor());
-//			System.out.println("DTDContextMenuHelper not implemented"); //$NON-NLS-1$
+			// fMenuHelper = new DTDContextMenuHelper(getEditor());
+			// System.out.println("DTDContextMenuHelper not implemented");
+			// //$NON-NLS-1$
 		}
-//		fMenuHelper.createMenuListenersFor(viewer);
-//		return fMenuHelper.getMenuListener();
+		// fMenuHelper.createMenuListenersFor(viewer);
+		// return fMenuHelper.getMenuListener();
 		return null;
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.wst.sse.ui.views.contentoutline.StructuredContentOutlineConfiguration#getPreferenceStore()
+	 * @see org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration#getPreferenceStore()
 	 */
 	protected IPreferenceStore getPreferenceStore() {
 		return DTDUIPlugin.getDefault().getPreferenceStore();
@@ -222,7 +227,7 @@ public class DTDContentOutlineConfiguration extends ContentOutlineConfiguration 
 		super.unconfigure(viewer);
 		fViewerContributions.remove(viewer);
 		if (fMenuHelper != null) {
-//			fMenuHelper.removeMenuListenersFor(viewer);
+			// fMenuHelper.removeMenuListenersFor(viewer);
 		}
 	}
 }
