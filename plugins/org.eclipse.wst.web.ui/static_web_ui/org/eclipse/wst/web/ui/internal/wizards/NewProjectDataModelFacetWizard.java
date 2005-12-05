@@ -11,8 +11,6 @@
 package org.eclipse.wst.web.ui.internal.wizards;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
