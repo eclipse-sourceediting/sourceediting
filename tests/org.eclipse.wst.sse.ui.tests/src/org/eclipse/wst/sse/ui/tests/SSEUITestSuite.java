@@ -29,5 +29,6 @@ public class SSEUITestSuite extends TestSuite {
 		addTest(new TestSuite(VerifyEditorPlugin.class));
 		addTest(new TestSuite(CommonEditorPreferencesTest.class));
 		addTest(new TestSuite(TestViewerConfiguration.class));
+		addTest(new TestSuite(TestStructuredTextEditor.class));
 	}
 }
