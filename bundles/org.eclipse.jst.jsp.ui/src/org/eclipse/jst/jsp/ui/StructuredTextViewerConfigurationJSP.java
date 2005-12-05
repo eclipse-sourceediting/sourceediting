@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -61,6 +61,16 @@ import org.eclipse.wst.sse.ui.internal.util.EditorUtility;
 import org.eclipse.wst.xml.core.internal.provisional.text.IXMLPartitions;
 import org.eclipse.wst.xml.ui.StructuredTextViewerConfigurationXML;
 
+/**
+ * Configuration for a source viewer which shows JSP content.
+ * <p>
+ * Clients can subclass and override just those methods which must be specific
+ * to their needs.
+ * </p>
+ * 
+ * @see org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration
+ * @since 1.0
+ */
 public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerConfiguration {
 	/*
 	 * One instance per configuration because not sourceviewer-specific and
@@ -82,6 +92,14 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 	private StructuredTextViewerConfiguration fHTMLSourceViewerConfiguration;
 	private JavaSourceViewerConfiguration fJavaSourceViewerConfiguration;
 	private StructuredTextViewerConfiguration fXMLSourceViewerConfiguration;
+
+	/**
+	 * Create new instance of StructuredTextViewerConfigurationJSP
+	 */
+	public StructuredTextViewerConfigurationJSP() {
+		// Must have empty constructor to createExecutableExtension
+		super();
+	}
 
 	/*
 	 * (non-Javadoc)
