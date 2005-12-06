@@ -210,7 +210,6 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 	public long fSynchronizationStamp = IResource.NULL_STAMP;
 	private boolean reinitializationNeeded;
 	private Object reinitializeStateData;
-	private ILock fModelOnlyLock = Platform.getJobManager().newLock();
 
 	/**
 	 * AbstractStructuredModel constructor comment.
@@ -744,16 +743,6 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 	}
 
 	/**
-	 * This lock is for "large" data strcutured, of the model, such as set/get
-	 * the document, releaseing themodel.
-	 * 
-	 */
-	protected final void beginModelOnlyLock() {
-		fModelOnlyLock.acquire();
-	}
-
-
-	/**
 	 * Gets the contentTypeDescription.
 	 * 
 	 * @return Returns a ContentTypeDescription
@@ -825,13 +814,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 	public IStructuredDocument getStructuredDocument() {
 
 		IStructuredDocument result = null;
-		beginModelOnlyLock();
-		try {
-			result = fStructuredDocument;
-		}
-		finally {
-			endModelOnlyLock();
-		}
+		result = fStructuredDocument;
 		return result;
 	}
 
@@ -1063,34 +1046,30 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 	 */
 	public void releaseFromEdit() {
 
-		beginModelOnlyLock();
-		try {
-			if (getModelManager() == null) {
-				throw new IllegalStateException(MODEL_MANAGER_NULL); //$NON-NLS-1$
+
+		if (getModelManager() == null) {
+			throw new IllegalStateException(MODEL_MANAGER_NULL); //$NON-NLS-1$
+		}
+		else {
+			// be sure to check the shared state before releasing. (Since
+			// isShared assumes a count
+			// of 1 means not shared ... and we want our '1' to be that
+			// one.)
+			boolean isShared = isShared();
+
+			if (!isShared) {
+				signalPreLifeCycleEventRelease(this);
 			}
-			else {
-				// be sure to check the shared state before releasing. (Since
-				// isShared assumes a count
-				// of 1 means not shared ... and we want our '1' to be that
-				// one.)
-				boolean isShared = isShared();
 
-				if (!isShared) {
-					signalPreLifeCycleEventRelease(this);
-				}
-
-				_getModelManager().releaseFromEdit(getId());
-				// if no one else is using us, free up
-				// our resources
-				if (!isShared) {
-					_commonRelease();
-					signalPostLifeCycleListenerRelease(this);
-				}
+			_getModelManager().releaseFromEdit(getId());
+			// if no one else is using us, free up
+			// our resources
+			if (!isShared) {
+				_commonRelease();
+				signalPostLifeCycleListenerRelease(this);
 			}
 		}
-		finally {
-			endModelOnlyLock();
-		}
+
 	}
 
 	/**
@@ -1099,35 +1078,28 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 	 */
 	public void releaseFromRead() {
 
-		beginModelOnlyLock();
-		try {
-
-			if (getModelManager() == null) {
-				throw new IllegalStateException(MODEL_MANAGER_NULL); //$NON-NLS-1$
-			}
-			else {
-				// be sure to check the shared state before
-				// releasing. (Since isShared assumes a count
-				// of 1 means not shared ... and we want
-				// our '1' to be that one.)
-				boolean isShared = isShared();
-
-				if (!isShared) {
-					signalPreLifeCycleEventRelease(this);
-				}
-
-				_getModelManager().releaseFromRead(getId());
-				// if no one else is using us, free up
-				// an resources
-				if (!isShared) {
-					// factoryRegistry.release();
-					_commonRelease();
-					signalPostLifeCycleListenerRelease(this);
-				}
-			}
+		if (getModelManager() == null) {
+			throw new IllegalStateException(MODEL_MANAGER_NULL); //$NON-NLS-1$
 		}
-		finally {
-			endModelOnlyLock();
+		else {
+			// be sure to check the shared state before
+			// releasing. (Since isShared assumes a count
+			// of 1 means not shared ... and we want
+			// our '1' to be that one.)
+			boolean isShared = isShared();
+
+			if (!isShared) {
+				signalPreLifeCycleEventRelease(this);
+			}
+
+			_getModelManager().releaseFromRead(getId());
+			// if no one else is using us, free up
+			// an resources
+			if (!isShared) {
+				// factoryRegistry.release();
+				_commonRelease();
+				signalPostLifeCycleListenerRelease(this);
+			}
 		}
 	}
 
@@ -1538,55 +1510,38 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 
 
 	public void setStructuredDocument(IStructuredDocument newStructuredDocument) {
-		beginModelOnlyLock();
-		try {
-			boolean lifeCycleNotification = false;
-			if (fStructuredDocument != null) {
-				fStructuredDocument.removeDocumentChangedListener(fDirtyStateWatcher);
-				fStructuredDocument.removeDocumentAboutToChangeListener(fDocumentToModelNotifier);
-				fStructuredDocument.removeDocumentChangedListener(fDocumentToModelNotifier);
-				// prechange notificaiton
-				lifeCycleNotification = true;
-				ModelLifecycleEvent modelLifecycleEvent = new DocumentChanged(ModelLifecycleEvent.PRE_EVENT, this, fStructuredDocument, newStructuredDocument);
-				signalLifecycleEvent(modelLifecycleEvent);
-			}
-
-			// hold for life cycle notification
-			IStructuredDocument previousDocument = fStructuredDocument;
-			// the actual change
-			fStructuredDocument = newStructuredDocument;
-
-
-			// at the super class level, we'll listen for structuredDocument
-			// changes
-			// so we can set our dirty state flag
-			if (fStructuredDocument != null) {
-				fStructuredDocument.addDocumentChangedListener(fDirtyStateWatcher);
-				fStructuredDocument.addDocumentAboutToChangeListener(fDocumentToModelNotifier);
-				fStructuredDocument.addDocumentChangedListener(fDocumentToModelNotifier);
-			}
-
-			if (lifeCycleNotification) {
-				// post change notification
-				ModelLifecycleEvent modelLifecycleEvent = new DocumentChanged(ModelLifecycleEvent.POST_EVENT, this, previousDocument, newStructuredDocument);
-				signalLifecycleEvent(modelLifecycleEvent);
-			}
-		}
-		finally {
-			endModelOnlyLock();
+		boolean lifeCycleNotification = false;
+		if (fStructuredDocument != null) {
+			fStructuredDocument.removeDocumentChangedListener(fDirtyStateWatcher);
+			fStructuredDocument.removeDocumentAboutToChangeListener(fDocumentToModelNotifier);
+			fStructuredDocument.removeDocumentChangedListener(fDocumentToModelNotifier);
+			// prechange notificaiton
+			lifeCycleNotification = true;
+			ModelLifecycleEvent modelLifecycleEvent = new DocumentChanged(ModelLifecycleEvent.PRE_EVENT, this, fStructuredDocument, newStructuredDocument);
+			signalLifecycleEvent(modelLifecycleEvent);
 		}
 
-	}
+		// hold for life cycle notification
+		IStructuredDocument previousDocument = fStructuredDocument;
+		// the actual change
+		fStructuredDocument = newStructuredDocument;
 
-	/**
-	 * This lock is for "large" data strcutured, of the model, such as set/get
-	 * the document, releaseing themodel.
-	 * 
-	 */
-	protected final void endModelOnlyLock() {
-		fModelOnlyLock.release();
-	}
 
+		// at the super class level, we'll listen for structuredDocument
+		// changes
+		// so we can set our dirty state flag
+		if (fStructuredDocument != null) {
+			fStructuredDocument.addDocumentChangedListener(fDirtyStateWatcher);
+			fStructuredDocument.addDocumentAboutToChangeListener(fDocumentToModelNotifier);
+			fStructuredDocument.addDocumentChangedListener(fDocumentToModelNotifier);
+		}
+
+		if (lifeCycleNotification) {
+			// post change notification
+			ModelLifecycleEvent modelLifecycleEvent = new DocumentChanged(ModelLifecycleEvent.POST_EVENT, this, previousDocument, newStructuredDocument);
+			signalLifecycleEvent(modelLifecycleEvent);
+		}
+	}
 
 	/**
 	 * Insert the method's description here. Creation date: (9/7/2001 2:30:26

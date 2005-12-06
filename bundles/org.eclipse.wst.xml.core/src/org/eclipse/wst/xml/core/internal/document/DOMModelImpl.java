@@ -860,21 +860,15 @@ public class DOMModelImpl extends AbstractStructuredModel implements IStructured
 	 * @param structuredDocument
 	 */
 	public void setStructuredDocument(IStructuredDocument structuredDocument) {
-		beginLock();
-		try {
-			IStructuredDocument oldStructuredDocument = super.getStructuredDocument();
-			if (structuredDocument == oldStructuredDocument)
-				return; // nothing to do
-			if (oldStructuredDocument != null)
-				oldStructuredDocument.removeDocumentChangingListener(this);
-			super.setStructuredDocument(structuredDocument);
-			if (structuredDocument != null) {
-				internalSetNewDocument(structuredDocument);
-				structuredDocument.addDocumentChangingListener(this);
-			}
-		}
-		finally {
-			endLock();
+		IStructuredDocument oldStructuredDocument = super.getStructuredDocument();
+		if (structuredDocument == oldStructuredDocument)
+			return; // nothing to do
+		if (oldStructuredDocument != null)
+			oldStructuredDocument.removeDocumentChangingListener(this);
+		super.setStructuredDocument(structuredDocument);
+		if (structuredDocument != null) {
+			internalSetNewDocument(structuredDocument);
+			structuredDocument.addDocumentChangingListener(this);
 		}
 	}
 
