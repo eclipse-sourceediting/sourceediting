@@ -21,6 +21,7 @@ import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IResourceDeltaVisitor;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -30,6 +31,7 @@ import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
+import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jdt.internal.core.JavaModelManager;
@@ -47,9 +49,10 @@ import org.osgi.framework.Bundle;
  * 
  * @author pavery
  */
-public class JSPIndexManager implements IResourceChangeListener {
+public class JSPIndexManager {
 
 	// for debugging
+	// TODO move this to Logger, as we have in SSE
 	static final boolean DEBUG;
 	static {
 		String value = Platform.getDebugOption("org.eclipse.jst.jsp.core/debug/jspindexmanager"); //$NON-NLS-1$
@@ -58,10 +61,11 @@ public class JSPIndexManager implements IResourceChangeListener {
 
 	private static final String PKEY_INDEX_STATE = "jspIndexState"; //$NON-NLS-1$
 
-	final IndexWorkspaceJob indexingJob = new IndexWorkspaceJob();
+	private IndexWorkspaceJob indexingJob = new IndexWorkspaceJob();
 
 
 
+	// TODO: consider enumeration for these int constants
 	// set to S_UPDATING once a resource change comes in
 	// set to S_STABLE if:
 	// - we know we aren't interested in the resource change
@@ -201,7 +205,8 @@ public class JSPIndexManager implements IResourceChangeListener {
 	 */
 	private class ProcessFilesJob extends Job {
 		List fileList = null;
-		private final int maximumToRemember = 50;
+
+		// private final int maximumToRemember = 50;
 
 		ProcessFilesJob(String taskName) {
 			super(taskName);
@@ -215,18 +220,21 @@ public class JSPIndexManager implements IResourceChangeListener {
 			if (DEBUG) {
 				System.out.println("JSPIndexManager queuing " + files.length + " files"); //$NON-NLS-2$ //$NON-NLS-1$
 			}
-			schedule(20);
 		}
 
 		synchronized IFile[] getFiles() {
 			IFile[] files = (IFile[]) fileList.toArray(new IFile[fileList.size()]);
-			if (fileList.size() > maximumToRemember) {
-				fileList = new ArrayList();
-			}
-			else {
-				fileList.clear();
-			}
+			// if (fileList.size() > maximumToRemember) {
+			// fileList = new ArrayList();
+			// }
+			// else {
+			// fileList.clear();
+			// }
 			return files;
+		}
+
+		synchronized void clearFiles() {
+			fileList.clear();
 		}
 
 		protected IStatus run(IProgressMonitor monitor) {
@@ -240,6 +248,8 @@ public class JSPIndexManager implements IResourceChangeListener {
 
 			try {
 				IFile[] filesToBeProcessed = getFiles();
+				clearFiles();
+
 				if (DEBUG) {
 					System.out.println("JSPIndexManager indexing " + filesToBeProcessed.length + " files"); //$NON-NLS-2$ //$NON-NLS-1$
 				}
@@ -325,13 +335,19 @@ public class JSPIndexManager implements IResourceChangeListener {
 	// end class ProcessFilesJob
 
 	private static JSPIndexManager fSingleton = null;
+	private boolean initialized;
+	private boolean initializing = true;
+
+	private IndexJobCoordinator indexJobCoordinator;
+	private IResourceChangeListener jspResourceChangeListener;
+
 	private JSPResourceVisitor fVisitor = null;
 	private IContentType fContentTypeJSP = null;
 
 	static long fTotalTime = 0;
 
 	// Job for processing resource delta
-	ProcessFilesJob processFilesJob = null;
+	private ProcessFilesJob processFilesJob = null;
 
 	private JSPIndexManager() {
 		processFilesJob = new ProcessFilesJob(JSPCoreMessages.JSPIndexManager_0);
@@ -353,75 +369,36 @@ public class JSPIndexManager implements IResourceChangeListener {
 		return fSingleton;
 	}
 
-	/**
-	 * @see org.eclipse.core.resources.IResourceChangeListener#resourceChanged(org.eclipse.core.resources.IResourceChangeEvent)
-	 */
-	public void resourceChanged(IResourceChangeEvent event) {
+	public void initialize() {
 
-		// ignore resource changes if already rebuilding
-		if (getIndexState() == S_REBUILDING)
-			return;
-		// previously canceled, needs entire index rebuild
-		if (getIndexState() == S_CANCELED) {
-			rebuildIndex();
-			return;
-		}
+		JSPIndexManager singleInstance = getInstance();
 
-		// set flag, so we know if a job is going to be started
-		// and the state will eventually be set back to S_STABLE
-		boolean beganProcess = false;
-		setUpdatingState();
 
-		IResourceDelta delta = event.getDelta();
-		if (delta != null) {
-			// only care about adds or changes right now...
-			int kind = delta.getKind();
-			boolean added = (kind & IResourceDelta.ADDED) == IResourceDelta.ADDED;
-			boolean changed = (kind & IResourceDelta.CHANGED) == IResourceDelta.CHANGED;
-			if (added || changed) {
+		if (!singleInstance.initialized) {
+			singleInstance.initialized = true;
 
-				// only analyze the full (starting at root) delta hierarchy
-				if (delta.getFullPath().toString().equals("/")) { //$NON-NLS-1$
-					try {
-						JSPResourceVisitor v = getVisitor();
-						// clear from last run
-						v.reset();
-						// count files, possibly do this in a job too...
-						// don't include PHANTOM resources
-						delta.accept(v, false);
+			singleInstance.indexJobCoordinator = new IndexJobCoordinator();
+			singleInstance.jspResourceChangeListener = new JSPResourceChangeListener();
 
-						// process files from this delta
-						IFile[] files = v.getFiles();
-						if (files.length > 0) {
-							// processFiles(files);
-							indexFiles(files);
-							beganProcess = true;
-						}
-					}
-					catch (CoreException e) {
-						// need to set state here somehow, and reindex
-						// otherwise index will be unreliable
-						if (DEBUG)
-							Logger.logException(e);
-					}
-					catch (Exception e) {
-						// need to set state here somehow, and reindex
-						// otherwise index will be unreliable
-						if (DEBUG)
-							Logger.logException(e);
-					}
-				}
-			}
+			// added as JobChange listener so JSPIndexManager can be smarter
+			// about when it runs
+			Platform.getJobManager().addJobChangeListener(singleInstance.indexJobCoordinator);
+
+			// add JSPIndexManager to keep JSP Index up to date
+			// listening for IResourceChangeEvent.PRE_DELETE and
+			// IResourceChangeEvent.POST_CHANGE
+			ResourcesPlugin.getWorkspace().addResourceChangeListener(jspResourceChangeListener, IResourceChangeEvent.POST_CHANGE);
+
+			// https://w3.opensource.ibm.com/bugzilla/show_bug.cgi?id=5091
+			// makes sure IndexManager is aware of our indexes
+			saveIndexes();
+			singleInstance.initializing = false;
 
 		}
-		// if we never kicked off process, job won't set back to stable
-		// so we set it here
-		if (!beganProcess) {
-			setStableState();
-		}
+
 	}
 
-	public synchronized void setIndexState(int state) {
+	synchronized void setIndexState(int state) {
 		if (DEBUG) {
 			System.out.println("JSPIndexManager setting index state to: " + state2String(state)); //$NON-NLS-1$
 		}
@@ -450,41 +427,41 @@ public class JSPIndexManager implements IResourceChangeListener {
 		return s;
 	}
 
-	public int getIndexState() {
+	int getIndexState() {
 		return JSPCorePlugin.getDefault().getPluginPreferences().getInt(PKEY_INDEX_STATE);
 	}
 
-	public void setUpdatingState() {
+	void setUpdatingState() {
 		if (getIndexState() != S_CANCELED)
 			setIndexState(S_UPDATING);
 	}
 
-	public void setCanceledState() {
+	void setCanceledState() {
 		setIndexState(JSPIndexManager.S_CANCELED);
 	}
 
 	// ca
-	public void setStableState() {
+	void setStableState() {
 		if (getIndexState() != S_CANCELED)
 			setIndexState(S_STABLE);
 	}
 
-	public void setRebuildingState() {
+	void setRebuildingState() {
 		setIndexState(S_REBUILDING);
 	}
 
-	public synchronized void rebuildIndexIfNeeded() {
+	synchronized void rebuildIndexIfNeeded() {
 		if (getIndexState() != S_STABLE) {
 			rebuildIndex();
 		}
 	}
 
-	private void rebuildIndex() {
+	void rebuildIndex() {
 
 		if (DEBUG)
 			System.out.println("*** JSP Index unstable, requesting re-indexing"); //$NON-NLS-1$
 
-		indexingJob.addJobChangeListener(new JobChangeAdapter() {
+		getIndexingJob().addJobChangeListener(new JobChangeAdapter() {
 			public void aboutToRun(IJobChangeEvent event) {
 				super.aboutToRun(event);
 				setRebuildingState();
@@ -493,10 +470,10 @@ public class JSPIndexManager implements IResourceChangeListener {
 			public void done(IJobChangeEvent event) {
 				super.done(event);
 				setStableState();
-				indexingJob.removeJobChangeListener(this);
+				getIndexingJob().removeJobChangeListener(this);
 			}
 		});
-		indexingJob.schedule();
+		getIndexingJob().schedule();
 
 	}
 
@@ -506,7 +483,7 @@ public class JSPIndexManager implements IResourceChangeListener {
 	 * 
 	 * @param files
 	 */
-	public final void indexFiles(IFile[] files) {
+	final void indexFiles(IFile[] files) {
 		// don't use this rule
 		// https://w3.opensource.ibm.com/bugzilla/show_bug.cgi?id=4931
 		// processFiles.setRule(new IndexFileRule());
@@ -529,7 +506,7 @@ public class JSPIndexManager implements IResourceChangeListener {
 
 	// https://w3.opensource.ibm.com/bugzilla/show_bug.cgi?id=5091
 	// makes sure IndexManager is aware of our indexes
-	public void saveIndexes() {
+	void saveIndexes() {
 		IndexManager indexManager = JavaModelManager.getJavaModelManager().getIndexManager();
 		IPath jspModelWorkingLocation = JSPSearchSupport.getInstance().getModelJspPluginWorkingLocation();
 
@@ -580,6 +557,18 @@ public class JSPIndexManager implements IResourceChangeListener {
 
 
 	public void shutdown() {
+
+		// stop listening
+		ResourcesPlugin.getWorkspace().removeResourceChangeListener(jspResourceChangeListener);
+
+
+		// stop any searching
+		JSPSearchSupport.getInstance().setCanceled(true);
+
+		// stop listening to jobs
+		Platform.getJobManager().removeJobChangeListener(indexJobCoordinator);
+
+
 		int maxwait = 5000;
 		if (processFilesJob != null) {
 			processFilesJob.cancel();
@@ -609,4 +598,138 @@ public class JSPIndexManager implements IResourceChangeListener {
 			}
 		}
 	}
+
+	private class IndexJobCoordinator implements IJobChangeListener {
+
+		public void aboutToRun(IJobChangeEvent event) {
+			// do nothing
+		}
+
+		public void awake(IJobChangeEvent event) {
+			// do nothing
+		}
+
+		public void done(IJobChangeEvent event) {
+
+			Job jobToCoordinate = event.getJob();
+			if (isJobToAvoid(jobToCoordinate)) {
+				if (getProcessFilesJob().getFiles().length > 0)
+					getProcessFilesJob().schedule(500);
+
+			}
+		}
+
+		private boolean isJobToAvoid(Job jobToCoordinate) {
+			boolean result = false;
+			if (jobToCoordinate.belongsTo(ResourcesPlugin.FAMILY_AUTO_BUILD) || jobToCoordinate.belongsTo(ResourcesPlugin.FAMILY_MANUAL_BUILD) || jobToCoordinate.belongsTo(ResourcesPlugin.FAMILY_AUTO_REFRESH)) {
+				result = true;
+			}
+			return result;
+
+		}
+
+		public void running(IJobChangeEvent event) {
+			// do nothing
+
+		}
+
+		public void scheduled(IJobChangeEvent event) {
+			// do nothing
+		}
+
+		public void sleeping(IJobChangeEvent event) {
+			// do nothing
+		}
+
+	}
+
+	private class JSPResourceChangeListener implements IResourceChangeListener {
+
+
+		/**
+		 * @see org.eclipse.core.resources.IResourceChangeListener#resourceChanged(org.eclipse.core.resources.IResourceChangeEvent)
+		 */
+		public void resourceChanged(IResourceChangeEvent event) {
+
+			if (isInitializing())
+				return;
+
+			// ignore resource changes if already rebuilding
+			if (getIndexState() == S_REBUILDING)
+				return;
+			// previously canceled, needs entire index rebuild
+			if (getIndexState() == S_CANCELED) {
+				rebuildIndex();
+				return;
+			}
+
+			// set flag, so we know if a job is going to be started
+			// and the state will eventually be set back to S_STABLE
+			boolean beganProcess = false;
+			setUpdatingState();
+
+			IResourceDelta delta = event.getDelta();
+			if (delta != null) {
+				// only care about adds or changes right now...
+				int kind = delta.getKind();
+				boolean added = (kind & IResourceDelta.ADDED) == IResourceDelta.ADDED;
+				boolean changed = (kind & IResourceDelta.CHANGED) == IResourceDelta.CHANGED;
+				if (added || changed) {
+
+					// only analyze the full (starting at root) delta
+					// hierarchy
+					if (delta.getFullPath().toString().equals("/")) { //$NON-NLS-1$
+						try {
+							JSPResourceVisitor v = getVisitor();
+							// clear from last run
+							v.reset();
+							// count files, possibly do this in a job too...
+							// don't include PHANTOM resources
+							delta.accept(v, false);
+
+							// process files from this delta
+							IFile[] files = v.getFiles();
+							if (files.length > 0) {
+								// processFiles(files);
+								indexFiles(files);
+								beganProcess = true;
+							}
+						}
+						catch (CoreException e) {
+							// need to set state here somehow, and reindex
+							// otherwise index will be unreliable
+							if (DEBUG)
+								Logger.logException(e);
+						}
+						catch (Exception e) {
+							// need to set state here somehow, and reindex
+							// otherwise index will be unreliable
+							if (DEBUG)
+								Logger.logException(e);
+						}
+					}
+				}
+
+			}
+			// if we never kicked off process, job won't set back to stable
+			// so we set it here
+			if (!beganProcess) {
+				setStableState();
+			}
+		}
+
+	}
+
+	IndexWorkspaceJob getIndexingJob() {
+		return indexingJob;
+	}
+
+	ProcessFilesJob getProcessFilesJob() {
+		return processFilesJob;
+	}
+
+	boolean isInitializing() {
+		return initializing;
+	}
+
 }
