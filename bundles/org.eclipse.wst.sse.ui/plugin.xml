@@ -432,14 +432,14 @@
             targetID="org.eclipse.wst.sse.ui.StructuredTextEditor"
             id="org.eclipse.wst.sse.ui.StructuredTextEditor.ruler.actions">
          <action
-               label="%Dummy.label"
+               label="%AddBookmark.label"
                helpContextId="org.eclipse.ui.bookmark_action_context"
                class="org.eclipse.ui.texteditor.BookmarkRulerAction"
                actionID="RulerDoubleClick"
                id="org.eclipse.ui.texteditor.BookmarkRulerAction">
          </action>
          <action
-               label="%Dummy.label"
+               label="%SelectRuler.label"
                class="org.eclipse.ui.texteditor.SelectRulerAction"
                actionID="RulerClick"
                id="org.eclipse.ui.texteditor.SelectRulerAction">

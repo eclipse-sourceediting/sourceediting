@@ -466,13 +466,13 @@
             targetID="org.eclipse.wst.html.core.htmlsource.source"
             id="org.eclipse.wst.html.core.htmlsource.ruler.actions">
          <action
-               label="%Dummy.label"
+               label="%AddBookmark.label"
                helpContextId="org.eclipse.ui.bookmark_action_context"
                class="org.eclipse.ui.texteditor.BookmarkRulerAction"
                actionID="RulerDoubleClick"
                id="org.eclipse.ui.texteditor.BookmarkRulerAction"/>
          <action
-               label="%Dummy.label"
+               label="%SelectRuler.label"
                class="org.eclipse.ui.texteditor.SelectRulerAction"
                actionID="RulerClick"
                id="org.eclipse.ui.texteditor.SelectRulerAction"/>
