@@ -2,9 +2,7 @@
 <?eclipse version="3.0"?>
 <plugin>
 
-	<extension-point
-		id="catalogFileType"
-		name="%XML_Catalog_File_Type_Extension_Point.name" />
+	<extension-point id="catalogFileType" name="%XML_Catalog_File_Type_Extension_Point.name" schema="schema/catalogFileType.exsd"/>
 
 	<extension point="org.eclipse.ui.preferencePages">
 		<page
