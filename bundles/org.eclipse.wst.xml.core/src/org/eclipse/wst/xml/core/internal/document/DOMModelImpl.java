@@ -155,7 +155,8 @@ public class DOMModelImpl extends AbstractStructuredModel implements IStructured
 			// end lock before noticiation loop, since directly or indirectly
 			// we may be "called from foriegn code" during notification.
 			endLock();
-			// we null out here to avoid spurious"warning" message while debug tracing  is enabled
+			// we null out here to avoid spurious"warning" message while debug
+			// tracing is enabled
 			fLockObject = null;
 			// the notifier is what controls adaper notification, which
 			// should be sent out before the 'modelChanged' event.
@@ -549,8 +550,15 @@ public class DOMModelImpl extends AbstractStructuredModel implements IStructured
 		if (structuredDocument == null)
 			return;
 		// this should not happen, but for the case
-		if (structuredDocument != getStructuredDocument())
+		if (fStructuredDocument != null && fStructuredDocument != structuredDocument)
 			setStructuredDocument(structuredDocument);
+
+		internalSetNewDocument(structuredDocument);
+	}
+
+	private void internalSetNewDocument(IStructuredDocument structuredDocument) {
+		if (structuredDocument == null)
+			return;
 		IStructuredDocumentRegionList flatNodes = structuredDocument.getRegionList();
 		if ((flatNodes == null) || (flatNodes.getLength() == 0)) {
 			return;
@@ -598,7 +606,6 @@ public class DOMModelImpl extends AbstractStructuredModel implements IStructured
 			// ignore refresh
 			this.refresh = false;
 		}
-		// checkForReinit();
 	}
 
 	/**
@@ -853,17 +860,21 @@ public class DOMModelImpl extends AbstractStructuredModel implements IStructured
 	 * @param structuredDocument
 	 */
 	public void setStructuredDocument(IStructuredDocument structuredDocument) {
-		IStructuredDocument oldStructuredDocument = super.getStructuredDocument();
-		if (structuredDocument == oldStructuredDocument)
-			return; // nothing to do
-		if (oldStructuredDocument != null)
-			oldStructuredDocument.removeDocumentChangingListener(this);
-		super.setStructuredDocument(structuredDocument);
-		if (structuredDocument != null) {
-			if (structuredDocument.getLength() > 0) {
-				newModel(new NewDocumentEvent(structuredDocument, this));
+		beginLock();
+		try {
+			IStructuredDocument oldStructuredDocument = super.getStructuredDocument();
+			if (structuredDocument == oldStructuredDocument)
+				return; // nothing to do
+			if (oldStructuredDocument != null)
+				oldStructuredDocument.removeDocumentChangingListener(this);
+			super.setStructuredDocument(structuredDocument);
+			if (structuredDocument != null) {
+				internalSetNewDocument(structuredDocument);
+				structuredDocument.addDocumentChangingListener(this);
 			}
-			structuredDocument.addDocumentChangingListener(this);
+		}
+		finally {
+			endLock();
 		}
 	}
 

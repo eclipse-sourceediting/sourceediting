@@ -28,7 +28,6 @@ import org.eclipse.wst.sse.core.internal.encoding.EncodingMemento;
 import org.eclipse.wst.sse.core.internal.ltk.parser.RegionParser;
 import org.eclipse.wst.sse.core.internal.provisional.events.IModelAboutToBeChangedListener;
 import org.eclipse.wst.sse.core.internal.provisional.events.IStructuredDocumentListener;
-import org.eclipse.wst.sse.core.internal.provisional.events.NewDocumentEvent;
 import org.eclipse.wst.sse.core.internal.provisional.events.StructuredDocumentEvent;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
@@ -384,7 +383,7 @@ public class MinimalDocument implements IStructuredDocument {
 		throw new NotImplementedException("intentionally not implemented"); //$NON-NLS-1$
 	}
 
-	public NewDocumentEvent setText(Object requester, String allText) {
+	public StructuredDocumentEvent setText(Object requester, String allText) {
 		throw new NotImplementedException("intentionally not implemented"); //$NON-NLS-1$
 	}
 

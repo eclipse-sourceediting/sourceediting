@@ -25,7 +25,7 @@ import org.eclipse.wst.sse.core.internal.provisional.events.StructuredDocumentEv
 public class JobSafeStructuredDocument extends BasicStructuredDocument implements IExecutionDelegatable, ILockable {
 
 	private IExecutionDelegate fExecutionDelegate;
-	private ILock fLockable = null;
+	private ILock fLockable = Platform.getJobManager().newLock();
 
 	public JobSafeStructuredDocument() {
 		super();
@@ -55,9 +55,6 @@ public class JobSafeStructuredDocument extends BasicStructuredDocument implement
 	 */
 
 	public ILock getLockObject() {
-		if (fLockable == null) {
-			fLockable = Platform.getJobManager().newLock();
-		}
 		return fLockable;
 	}
 
@@ -127,8 +124,8 @@ public class JobSafeStructuredDocument extends BasicStructuredDocument implement
 	}
 
 
-	public NewDocumentEvent setText(final Object requester, final String theString) {
-		NewDocumentEvent event = null;
+	public StructuredDocumentEvent setText(final Object requester, final String theString) {
+		StructuredDocumentEvent event = null;
 		if (getExecutionDelegate() == null) {
 			// if the delegate has not been set, we execute on current
 			// thread, like "normal". This is the case for normal

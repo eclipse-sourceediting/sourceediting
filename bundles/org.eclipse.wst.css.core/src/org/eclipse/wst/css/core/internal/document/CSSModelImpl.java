@@ -281,16 +281,22 @@ public class CSSModelImpl extends AbstractStructuredModel implements ICSSModel, 
 	}
 
 	public IStructuredDocument getStructuredDocument() {
-		IStructuredDocument structuredDocument = super.getStructuredDocument();
-		if (structuredDocument != null)
-			return structuredDocument;
+		IStructuredDocument structuredDocument = null;
+		beginLock();
+		try {
+			structuredDocument = super.getStructuredDocument();
+			if (structuredDocument != null)
+				return structuredDocument;
 
-		// the first time
-		Assert.isNotNull(getModelHandler());
-		structuredDocument = (IStructuredDocument) getModelHandler().getDocumentLoader().createNewStructuredDocument();
+			// the first time
+			Assert.isNotNull(getModelHandler());
+			structuredDocument = (IStructuredDocument) getModelHandler().getDocumentLoader().createNewStructuredDocument();
 
-		setStructuredDocument(structuredDocument);
-
+			setStructuredDocument(structuredDocument);
+		}
+		finally {
+			endLock();
+		}
 		return structuredDocument;
 	}
 
@@ -537,19 +543,25 @@ public class CSSModelImpl extends AbstractStructuredModel implements ICSSModel, 
 	}
 
 	public void setStructuredDocument(IStructuredDocument newStructuredDocument) {
-		IStructuredDocument oldStructuredDocument = super.getStructuredDocument();
-		if (newStructuredDocument == oldStructuredDocument)
-			return; // noting to do
+		beginLock();
+		try {
+			IStructuredDocument oldStructuredDocument = super.getStructuredDocument();
+			if (newStructuredDocument == oldStructuredDocument)
+				return; // noting to do
 
-		if (oldStructuredDocument != null)
-			oldStructuredDocument.removeDocumentChangingListener(this);
-		super.setStructuredDocument(newStructuredDocument);
+			if (oldStructuredDocument != null)
+				oldStructuredDocument.removeDocumentChangingListener(this);
+			super.setStructuredDocument(newStructuredDocument);
 
-		if (newStructuredDocument != null) {
-			if (newStructuredDocument.getLength() > 0) {
-				newModel(new NewDocumentEvent(newStructuredDocument, this));
+			if (newStructuredDocument != null) {
+				if (newStructuredDocument.getLength() > 0) {
+					newModel(new NewDocumentEvent(newStructuredDocument, this));
+				}
+				newStructuredDocument.addDocumentChangingListener(this);
 			}
-			newStructuredDocument.addDocumentChangingListener(this);
+		}
+		finally {
+			endLock();
 		}
 	}
 

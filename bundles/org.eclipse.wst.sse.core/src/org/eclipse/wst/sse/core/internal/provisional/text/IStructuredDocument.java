@@ -19,7 +19,6 @@ import org.eclipse.wst.sse.core.internal.ltk.parser.RegionParser;
 import org.eclipse.wst.sse.core.internal.provisional.document.IEncodedDocument;
 import org.eclipse.wst.sse.core.internal.provisional.events.IModelAboutToBeChangedListener;
 import org.eclipse.wst.sse.core.internal.provisional.events.IStructuredDocumentListener;
-import org.eclipse.wst.sse.core.internal.provisional.events.NewDocumentEvent;
 import org.eclipse.wst.sse.core.internal.provisional.events.StructuredDocumentEvent;
 import org.eclipse.wst.sse.core.internal.undo.IStructuredTextUndoManager;
 
@@ -212,7 +211,7 @@ public interface IStructuredDocument extends IEncodedDocument, IDocumentExtensio
 	 * 
 	 * The setText method replaces all text in the model.
 	 */
-	NewDocumentEvent setText(Object requester, String allText);
+	StructuredDocumentEvent setText(Object requester, String allText);
 
 	void setUndoManager(IStructuredTextUndoManager undoManager);
 

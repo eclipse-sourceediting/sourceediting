@@ -53,7 +53,6 @@ import org.eclipse.wst.sse.core.internal.ltk.parser.RegionParser;
 import org.eclipse.wst.sse.core.internal.provisional.events.AboutToBeChangedEvent;
 import org.eclipse.wst.sse.core.internal.provisional.events.IModelAboutToBeChangedListener;
 import org.eclipse.wst.sse.core.internal.provisional.events.IStructuredDocumentListener;
-import org.eclipse.wst.sse.core.internal.provisional.events.NewDocumentEvent;
 import org.eclipse.wst.sse.core.internal.provisional.events.NoChangeEvent;
 import org.eclipse.wst.sse.core.internal.provisional.events.RegionChangedEvent;
 import org.eclipse.wst.sse.core.internal.provisional.events.RegionsReplacedEvent;
@@ -477,34 +476,6 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 		}
 	}
 
-	private void _fireEvent(Object[] listeners, NewDocumentEvent event) {
-		// we must assign listeners to local variable, since the add and
-		// remove
-		// listner
-		// methods can change the actual instance of the listener array from
-		// another thread
-		if (listeners != null) {
-			Object[] holdListeners = listeners;
-			for (int i = 0; i < holdListeners.length; i++) {
-				if (Debug.perfTest || Debug.perfTestStructuredDocumentEventOnly) {
-					startTime = System.currentTimeMillis();
-				}
-				// safeguard from listeners that throw exceptions
-				try {
-					// this is a safe cast, since addListners requires a
-					// IStructuredDocumentListener
-					((IStructuredDocumentListener) holdListeners[i]).newModel(event);
-				}
-				catch (Exception exception) {
-					Logger.logException(exception);
-				}
-				if (Debug.perfTest || Debug.perfTestStructuredDocumentEventOnly) {
-					long stopTime = System.currentTimeMillis();
-					System.out.println("\n\t\t\t\t IStructuredDocument::fireStructuredDocumentEvent. Time was " + (stopTime - startTime) + " msecs to fire NewModelEvent to instance of " + holdListeners[i].getClass()); //$NON-NLS-2$//$NON-NLS-1$
-				}
-			}
-		}
-	}
 
 	private void _fireEvent(Object[] listeners, NoChangeEvent event) {
 		// we must assign listeners to local variable, since the add and
@@ -1179,15 +1150,6 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 		// _clearDocumentEvent();
 	}
 
-	private void fireStructuredDocumentEvent(NewDocumentEvent event) {
-		_fireEvent(fStructuredDocumentChangingListeners, event);
-		_fireEvent(fStructuredDocumentChangedListeners, event);
-		_fireDocumentChanged(fPrenotifiedDocumentListeners, event);
-		notifyDocumentPartitionersDocumentChanged(event);
-		_fireDocumentChanged(fDocumentListeners, event);
-		_clearDocumentEvent();
-	}
-
 	private void fireStructuredDocumentEvent(NoChangeEvent event) {
 		_fireEvent(fStructuredDocumentChangingListeners, event);
 		_fireEvent(fStructuredDocumentChangedListeners, event);
@@ -1719,15 +1681,21 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	 * <br>
 	 * eg.
 	 * <p>
-	 *    <br>eg.
-	 *    <pre>&lt;html&gt;[&lt;head&gt;&lt;/head&gt;]&lt;/html&gt; returns &lt;head&gt;,&lt;/head&gt;</pre>
-	 *    <pre>&lt;ht[ml&gt;&lt;head&gt;&lt;/he]ad&gt;&lt;/html&gt; returns &lt;html&gt;,&lt;head&gt;,&lt;/head&gt;</pre>
+	 * <br>
+	 * eg.
 	 * 
 	 * <pre>
-	 *  &lt;html&gt;[&lt;head&gt;&lt;/head&gt;]&lt;/html&gt; returns &lt;head&gt;,&lt;/head&gt;
+	 * &lt;html&gt;[&lt;head&gt;&lt;/head&gt;]&lt;/html&gt; returns &lt;head&gt;,&lt;/head&gt;
 	 * </pre>
 	 *    <pre>
-	 *  &lt;ht[ml&gt;&lt;head&gt;&lt;/he]ad&gt;&lt;/html&gt; returns &lt;html&gt;,&lt;head&gt;,&lt;/head&gt;
+	 * &lt;ht[ml&gt;&lt;head&gt;&lt;/he]ad&gt;&lt;/html&gt; returns &lt;html&gt;,&lt;head&gt;,&lt;/head&gt;
+	 * </pre>
+	 * 
+	 * <pre>
+	 *   &lt;html&gt;[&lt;head&gt;&lt;/head&gt;]&lt;/html&gt; returns &lt;head&gt;,&lt;/head&gt;
+	 * </pre>
+	 *    <pre>
+	 *   &lt;ht[ml&gt;&lt;head&gt;&lt;/he]ad&gt;&lt;/html&gt; returns &lt;html&gt;,&lt;head&gt;,&lt;/head&gt;
 	 * </pre>
 	 * 
 	 * </p>
@@ -1757,7 +1725,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 			}
 			// need to add that last end region
 			// can be null in the case of an empty document
-			if(endRegion != null)
+			if (endRegion != null)
 				results.add(endRegion);
 		}
 		finally {
@@ -2536,40 +2504,12 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	/**
 	 * One of the APIs to manipulate the IStructuredDocument in terms of text.
 	 */
-	public NewDocumentEvent setText(Object requester, String theString) {
+	public StructuredDocumentEvent setText(Object requester, String theString) {
 
-		NewDocumentEvent result = null;
-		stopPostNotificationProcessing();
-		clearReadOnly();
-		// Note: event must be computed before 'fire' method called
-		// Note: judging from code in AbstractDocument, apparently the
-		// length in this event is the current length of
-		// the document.
-		fDocumentEvent = new DocumentEvent(this, 0, length(), theString);
-		fireDocumentAboutToChanged();
+		StructuredDocumentEvent result = null;
 
-		acquireLock();
-
-		try {
-			getStore().set(theString);
-			getTracker().set(theString);
-			//
-			CharSequenceReader subSetTextStoreReader = new CharSequenceReader((CharSequence) getStore(), 0, getStore().getLength());
-			resetParser(subSetTextStoreReader, 0);
-			//
-			setCachedDocumentRegion(getParser().getDocumentRegions());
-			// when starting afresh, our cachedNode should be our firstNode,
-			// so be sure to initialize the firstNode and lastNode
-			initializeFirstAndLastDocumentRegion();
-			StructuredDocumentRegionIterator.setParentDocument(getCachedDocumentRegion(), this);
-		}
-		finally {
-			releaseLock();
-		}
-
-		result = new NewDocumentEvent(this, requester);
-		fireStructuredDocumentEvent(result);
-		resumePostNotificationProcessing();
+		result = replaceText(requester, 0, getLength(), theString, true);
+		
 		return result;
 	}
 
