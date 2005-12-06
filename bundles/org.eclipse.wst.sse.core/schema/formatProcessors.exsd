@@ -49,6 +49,9 @@
                <documentation>
                   
                </documentation>
+               <appInfo>
+                  <meta.attribute kind="java"/>
+               </appInfo>
             </annotation>
          </attribute>
          <attribute name="contentTypeId" type="string" use="required">
@@ -66,7 +69,7 @@
          <meta.section type="since"/>
       </appInfo>
       <documentation>
-         1.0
+         &lt;b&gt;This extension point is internal and should not be used by any other plugins.&lt;/b&gt;
       </documentation>
    </annotation>
 
@@ -89,7 +92,7 @@
          <meta.section type="apiInfo"/>
       </appInfo>
       <documentation>
-         [Enter API information here.]
+         
       </documentation>
    </annotation>
 
@@ -98,7 +101,7 @@
          <meta.section type="implementation"/>
       </appInfo>
       <documentation>
-         [Enter information about supplied implementation of this extension point.]
+         
       </documentation>
    </annotation>
 
