@@ -17,6 +17,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
@@ -127,7 +128,7 @@ class ProjectDescription {
 		public boolean equals(Object obj) {
 			if (!(obj instanceof JarRecord))
 				return false;
-			return ((JarRecord) obj).location.equals(location);
+			return ((JarRecord) obj).location.equals(location) && ((JarRecord) obj).has11TLD == has11TLD;
 		}
 
 		/**
@@ -212,7 +213,7 @@ class ProjectDescription {
 		String largeIcon;
 		String shortName;
 		String smallIcon;
-		float tlibVersion;
+		String tlibVersion;
 		String uri;
 	}
 
@@ -260,7 +261,7 @@ class ProjectDescription {
 		public boolean equals(Object obj) {
 			if (!(obj instanceof TLDRecord))
 				return false;
-			return ((TLDRecord) obj).path.equals(path);
+			return ((TLDRecord) obj).path.equals(path) && ((TLDRecord) obj).getURI().equals(getURI());
 		}
 
 		public IPath getPath() {
@@ -303,7 +304,7 @@ class ProjectDescription {
 		public boolean equals(Object obj) {
 			if (!(obj instanceof URLRecord))
 				return false;
-			return ((URLRecord) obj).baseLocation.equals(baseLocation) || ((URLRecord) obj).getURI().equals(getURI()) || ((URLRecord) obj).url.equals(url);
+			return ((URLRecord) obj).baseLocation.equals(baseLocation) && ((URLRecord) obj).url.equals(url);
 		}
 
 		public String getBaseLocation() {
@@ -398,15 +399,19 @@ class ProjectDescription {
 
 	Stack fClasspathProjects = null;
 
-	// holds references by URI to TLDs
+	// holds references by URI to JARs
 	Hashtable fClasspathReferences;
 
 	// this table is special in that it holds tables of references according
 	// to local roots
 	Hashtable fImplicitReferences;
+
 	Hashtable fJARReferences;
+
 	IProject fProject;
+
 	Hashtable fTagDirReferences;
+
 	Hashtable fTLDReferences;
 
 	IResourceDeltaVisitor fVisitor;
@@ -548,16 +553,11 @@ class ProjectDescription {
 							info.jspVersion = Float.parseFloat(getTextContents(child));
 						}
 						catch (NumberFormatException e) {
-							info.jspVersion = -1;
+							info.jspVersion = 1;
 						}
 					}
 					else if (child.getNodeName().equals(JSP12TLDNames.TLIB_VERSION) || child.getNodeName().equals(JSP11TLDNames.TLIBVERSION)) {
-						try {
-							info.tlibVersion = Float.parseFloat(getTextContents(child));
-						}
-						catch (NumberFormatException e) {
-							info.tlibVersion = -1;
-						}
+						info.tlibVersion = getTextContents(child);
 					}
 					else if (child.getNodeName().equals(JSP12TLDNames.SMALL_ICON)) {
 						info.smallIcon = getTextContents(child);
@@ -572,15 +572,21 @@ class ProjectDescription {
 		return info;
 	}
 
-	synchronized List getAvailableTaglibRecords(IPath path) {
+	List getAvailableTaglibRecords(IPath path) {
 		Collection implicitReferences = getImplicitReferences(path.toString()).values();
-		List records = new ArrayList(fTLDReferences.size() + fTagDirReferences.size() + fJARReferences.size() + fWebXMLReferences.size());
+		Collection records = new HashSet(fTLDReferences.size() + fTagDirReferences.size() + fJARReferences.size() + fWebXMLReferences.size());
+		records.addAll(implicitReferences);
 		records.addAll(fTLDReferences.values());
 		records.addAll(fTagDirReferences.values());
-		records.addAll(_getJSP11JarReferences(fJARReferences.values()));
+		Collection jars = fJARReferences.values();
+		records.addAll(_getJSP11JarReferences(jars));
+		Iterator i = jars.iterator();
+		while (i.hasNext()) {
+			JarRecord record = (JarRecord) i.next();
+			records.addAll(record.urlRecords);
+		}
 		records.addAll(fClasspathReferences.values());
-		records.addAll(implicitReferences);
-		return records;
+		return new ArrayList(records);
 	}
 
 	/**
@@ -606,27 +612,38 @@ class ProjectDescription {
 		// existing workspace resources - this is the 93% case
 		IResource file = null;
 
-		IFile[] files = workspaceRoot.findFilesForLocation(basePath.makeAbsolute());
-		for (int i = 0; file == null && i < files.length; i++) {
-			IPath normalizedPath = null;
-			/*
-			 * existing workspace resources referenced by their file system
-			 * path files that do not exist (including non-accessible files)
-			 * do not pass
-			 */
-			if (files[i].exists()) {
-				normalizedPath = files[i].getFullPath();
+		if (file == null) {
+			IFile[] files = workspaceRoot.findFilesForLocation(basePath.makeAbsolute());
+			for (int i = 0; file == null && i < files.length; i++) {
+				IPath normalizedPath = null;
+				/*
+				 * existing workspace resources referenced by their file
+				 * system path files that do not exist (including
+				 * non-accessible files) do not pass
+				 */
+				if (files[i].exists()) {
+					normalizedPath = files[i].getFullPath();
 
-				if (normalizedPath.segmentCount() > 1 && normalizedPath.segment(0).equals(fProject.getFullPath().segment(0))) {
-					// @see IContainer#getFile for the required number of
-					// segments
-					file = workspaceRoot.getFile(normalizedPath);
+					if (normalizedPath.segmentCount() > 1 && normalizedPath.segment(0).equals(fProject.getFullPath().segment(0))) {
+						// @see IContainer#getFile for the required number of
+						// segments
+						file = workspaceRoot.getFile(normalizedPath);
+					}
 				}
 			}
 		}
 
 		if (file == null) {
 			file = FileBuffers.getWorkspaceFileAtLocation(basePath);
+		}
+
+		// Try it as a folder first
+		if (basePath.segmentCount() > 1) {
+			file = workspaceRoot.getFolder(basePath);
+		}
+		// If not a folder, then try as a file
+		if (file != null && !file.exists()) {
+			file = workspaceRoot.getFile(basePath);
 		}
 
 		while (file != null) {
@@ -711,7 +728,7 @@ class ProjectDescription {
 		}
 
 		if (_debugIndexTime)
-			Logger.log(Logger.INFO_DEBUG, "indexed " + fProject.getName() + " in " + (System.currentTimeMillis() - time0) + "ms"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			Logger.log(Logger.INFO_DEBUG, "indexed " + fProject.getName() + " contents in " + (System.currentTimeMillis() - time0) + "ms"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 
 	void indexClasspath() {
@@ -749,6 +766,12 @@ class ProjectDescription {
 							updateClasspathLibrary(libPath.toString(), ITaglibRecordEvent.CHANGED);
 						}
 						else {
+							/*
+							 * Note: .jars on the classpath inside of the
+							 * project will have duplicate entries in the JAR
+							 * references table that will e returned to
+							 * getAvailableTaglibRecords().
+							 */
 							IFile libFile = ResourcesPlugin.getWorkspace().getRoot().getFile(libPath);
 							if (libFile != null && libFile.exists()) {
 								updateClasspathLibrary(libFile.getLocation().toString(), ITaglibRecordEvent.CHANGED);
@@ -809,22 +832,20 @@ class ProjectDescription {
 	}
 
 	/*
-	private void removeClasspathLibrary(String libraryLocation) {
-		JarRecord record = (JarRecord) fClasspathJars.remove(libraryLocation);
-		if (record != null) {
-			URLRecord[] records = (URLRecord[]) record.getURLRecords().toArray(new URLRecord[0]);
-			for (int i = 0; i < records.length; i++) {
-				fClasspathReferences.remove(records[i].getURI());
-			}
-			TaglibIndex.fireTaglibRecordEvent(new TaglibRecordEvent(record, ITaglibRecordEvent.REMOVED));
-		}
-	}
-	*/
+	 * private void removeClasspathLibrary(String libraryLocation) { JarRecord
+	 * record = (JarRecord) fClasspathJars.remove(libraryLocation); if (record !=
+	 * null) { URLRecord[] records = (URLRecord[])
+	 * record.getURLRecords().toArray(new URLRecord[0]); for (int i = 0; i <
+	 * records.length; i++) {
+	 * fClasspathReferences.remove(records[i].getURI()); }
+	 * TaglibIndex.fireTaglibRecordEvent(new TaglibRecordEvent(record,
+	 * ITaglibRecordEvent.REMOVED)); } }
+	 */
 
 	void removeJAR(IResource jar) {
 		if (_debugIndexCreation)
 			Logger.log(Logger.INFO_DEBUG, "removing records for JAR " + jar.getFullPath()); //$NON-NLS-1$
-		JarRecord record = (JarRecord) fJARReferences.remove(jar.getFullPath());
+		JarRecord record = (JarRecord) fJARReferences.remove(jar.getFullPath().toString());
 		if (record != null) {
 			URLRecord[] records = (URLRecord[]) record.getURLRecords().toArray(new URLRecord[0]);
 			for (int i = 0; i < records.length; i++) {
@@ -978,8 +999,8 @@ class ProjectDescription {
 		fJARReferences.put(jar.getFullPath().toString(), jarRecord);
 		for (int i = 0; i < entries.length; i++) {
 			if (entries[i].endsWith(".tld")) { //$NON-NLS-1$
-				jarRecord.has11TLD = true;
 				if (entries[i].equals(JarUtilities.JSP11_TAGLIB)) {
+					jarRecord.has11TLD = true;
 				}
 				InputStream contents = JarUtilities.getInputStream(jar, entries[i]);
 				if (contents != null) {
@@ -1096,7 +1117,7 @@ class ProjectDescription {
 					webxmlRecord.tldRecords.add(record);
 					getImplicitReferences(webxml.getFullPath().toString()).put(taglibUri, record);
 					if (_debugIndexCreation)
-						Logger.log(Logger.INFO_DEBUG, "created record for " + taglibUri + "@" + record.getPath()); //$NON-NLS-1$ //$NON-NLS-2$
+						Logger.log(Logger.INFO_DEBUG, "created web.xml record for " + taglibUri + "@" + record.getPath()); //$NON-NLS-1$ //$NON-NLS-2$
 					TaglibIndex.fireTaglibRecordEvent(new TaglibRecordEvent(record, deltaKind));
 				}
 			}
