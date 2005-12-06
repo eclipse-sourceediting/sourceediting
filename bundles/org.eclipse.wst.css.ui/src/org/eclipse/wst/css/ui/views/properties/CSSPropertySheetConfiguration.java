@@ -55,16 +55,16 @@ public class CSSPropertySheetConfiguration extends PropertySheetConfiguration {
 
 	private class CSSPropertySourceProvider implements IPropertySourceProvider {
 		private IPropertySource fPropertySource = null;
-		private INodeNotifier fSource = null;
+		private ICSSNode fSource = null;
 
 		public IPropertySource getPropertySource(Object object) {
 			if (fSource != null && object.equals(fSource)) {
 				return fPropertySource;
 			}
 
-			if (object instanceof INodeNotifier) {
-				fSource = (INodeNotifier) object;
-				fPropertySource = new CSSPropertySource((INodeNotifier) object);
+			if (object instanceof ICSSNode) {
+				fSource = (ICSSNode)object;
+				fPropertySource = new CSSPropertySource(fSource);
 			}
 			else {
 				fSource = null;
