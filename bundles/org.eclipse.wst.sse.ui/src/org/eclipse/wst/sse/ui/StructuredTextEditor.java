@@ -1050,14 +1050,16 @@ public class StructuredTextEditor extends TextEditor {
 	// menu.appendToGroup(ITextEditorActionConstants.GROUP_EDIT, action);
 	// }
 
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Instead of us closing directly, we have to close with our containing
-	 * (multipage) editor, if it exists.
-	 * </p>
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.ui.texteditor.ITextEditor#close(boolean)
 	 */
 	public void close(final boolean save) {
+		/*
+		 * Instead of us closing directly, we have to close with our
+		 * containing (multipage) editor, if it exists.
+		 */
 		if (getSite() == null) {
 			// if site hasn't been set yet, then we're not
 			// completely open
@@ -2008,8 +2010,9 @@ public class StructuredTextEditor extends TextEditor {
 					fisReleased = false;
 				}
 			}
-			
-			// ISSUE: this looks bad ... edit-time factories not initialized unless someone calls getModel? 
+
+			// ISSUE: this looks bad ... edit-time factories not initialized
+			// unless someone calls getModel?
 			// factories will not be re-added if already exists
 			EditorModelUtil.addFactoriesTo(fStructuredModel);
 

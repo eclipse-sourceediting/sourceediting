@@ -359,6 +359,9 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 	/**
 	 * Returns the line style providers that will be used for syntax
 	 * highlighting in the given source viewer.
+	 * <p>
+	 * Not fully API since return type LineStyleProvider is not API.
+	 * </p>
 	 * 
 	 * @param sourceViewer
 	 *            the source viewer to be configured by this configuration
