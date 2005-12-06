@@ -9,7 +9,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.osgi.service.datalocation.Location;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
@@ -55,10 +54,6 @@ public class TestStructuredModel extends TestCase {
 		File zipFile = FileUtil.makeFileFor(ProjectUnzipUtility.PROJECT_ZIPS_FOLDER, fZipFileName, ProjectUnzipUtility.PROJECT_ZIPS_FOLDER);
 		unzipUtil.unzipAndImport(zipFile, platformLocation.getURL().getFile());
 		unzipUtil.initJavaProject(fProjectName);
-	}
-
-	private IFile getFile() {
-		return ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(fProjectName + "/files/simple.xml"));
 	}
 
 	public void testAboutToChangeModel() throws IOException, CoreException {

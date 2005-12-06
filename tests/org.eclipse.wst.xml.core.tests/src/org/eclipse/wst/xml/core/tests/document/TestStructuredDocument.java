@@ -289,11 +289,12 @@ public class TestStructuredDocument extends TestCase {
 	}
 
 	public void testGetDetectedLineDelimiter() throws IOException, CoreException {
+		String platformDelimiter = System.getProperty("line.separator");
 		IStructuredModel model = getTestModel();
 		try {
 			IStructuredDocument sDoc = model.getStructuredDocument();
 			String delim = sDoc.getLineDelimiter();
-			assertEquals("wrong preferred line delmiter", "\r\n", delim);
+			assertEquals("wrong preferred line delmiter", platformDelimiter, delim);
 		}
 		finally {
 			if (model != null) {

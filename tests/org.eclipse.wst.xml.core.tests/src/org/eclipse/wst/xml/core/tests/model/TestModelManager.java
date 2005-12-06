@@ -167,15 +167,18 @@ public class TestModelManager extends TestCase {
 
 	public void testGetExistingModelFromDocument() {
 		IStructuredModel model = null;
+		IStructuredModel gottenModel = null;
 		try {
 			model = getStructuredModelForEdit();
 			IStructuredDocument doc = model.getStructuredDocument();
-			IStructuredModel gottenModel = getMM().getExistingModelForEdit(doc);
+			gottenModel = getMM().getExistingModelForEdit(doc);
 			assertTrue("models should be the same instance", model == gottenModel);
 		}
 		finally {
 			if (model != null)
 				model.releaseFromEdit();
+			if (gottenModel != null)
+				gottenModel.releaseFromEdit();
 		}
 	}
 	
@@ -194,22 +197,27 @@ public class TestModelManager extends TestCase {
 
 	public void testGetModelFromDocument() {
 		IStructuredModel model = null;
+		IStructuredModel gottenModel = null;
 		try {
 			model = getStructuredModelForEdit();
 			IStructuredDocument doc = model.getStructuredDocument();
-			IStructuredModel gottenModel = getMM().getModelForEdit(doc);
+		    gottenModel = getMM().getModelForEdit(doc);
 			assertTrue("models should be the same instance", model == gottenModel);
 		}
 		finally {
 			if (model != null)
 				model.releaseFromEdit();
+			if (gottenModel != null)
+				gottenModel.releaseFromEdit();
 		}
 	}
 
 	public void testIsShared() {
 		IStructuredModel model = null;
+		IStructuredModel model2 = null;
 		try {
 			model = getStructuredModelForEdit();
+			model2 = getStructuredModelForEdit();
 			// TODO: will change when API added to MM
 			boolean isShared = getMM().isShared(model.getId());
 			assertTrue("model should be shared", isShared);
@@ -217,6 +225,8 @@ public class TestModelManager extends TestCase {
 		finally {
 			if (model != null)
 				model.releaseFromEdit();
+			if (model2 != null)
+				model2.releaseFromEdit();
 		}
 	}
 
