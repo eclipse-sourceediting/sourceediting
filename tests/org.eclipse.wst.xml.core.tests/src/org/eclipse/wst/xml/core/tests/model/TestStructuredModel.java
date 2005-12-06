@@ -6,16 +6,17 @@ import java.io.IOException;
 import junit.framework.TestCase;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.osgi.service.datalocation.Location;
+import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IModelStateListener;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
-import org.eclipse.wst.sse.core.internal.provisional.exceptions.ResourceInUse;
+import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
-import org.eclipse.wst.xml.core.internal.modelhandler.ModelHandlerForXML;
 import org.eclipse.wst.xml.core.internal.modelhandler.XMLModelLoader;
 import org.eclipse.wst.xml.core.internal.provisional.contenttype.ContentTypeIdForXML;
 import org.eclipse.wst.xml.core.tests.util.FileUtil;
@@ -56,166 +57,273 @@ public class TestStructuredModel extends TestCase {
 		unzipUtil.initJavaProject(fProjectName);
 	}
 
-	public IStructuredModel getUnmanagedModel() {
-		// from a file
-		IFile f = getFile();
-		IStructuredModel model = null;
-		try {
-			model = fLoader.createModel();
-			fLoader.load(f, model);
-			ModelHandlerForXML xmlModelHandler = new ModelHandlerForXML();
-			model.setModelHandler(xmlModelHandler);
-			model.setBaseLocation(fProjectName + "/files/simple.xml");
-			try {
-				model.setId(fProjectName + "/files/simple.xml");
-			}
-			catch (ResourceInUse e) {
-				// ignore
-			}
-		}
-		catch (IOException e) {
-			e.printStackTrace();
-		}
-		catch (CoreException e) {
-			e.printStackTrace();
-		}
-		return model;
-	}
-
 	private IFile getFile() {
 		return ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(fProjectName + "/files/simple.xml"));
 	}
 
-	public void testAboutToChangeModel() {
-		IStructuredModel model = getUnmanagedModel();
-		model.aboutToChangeModel();
+	public void testAboutToChangeModel() throws IOException, CoreException {
+		IStructuredModel model = getTestModel();
+		try {
+			model.aboutToChangeModel();
+			assertTrue(true);
+		}
+		finally {
+			if (model != null) {
+				model.releaseFromEdit();
+			}
+		}
 	}
 
-	public void testAddRemoveModelStateListener() {
-		IStructuredModel model = getUnmanagedModel();
-		IModelStateListener listener = new IModelStateListener() {
+	public void testAddRemoveModelStateListener() throws IOException, CoreException {
+		IStructuredModel model = getTestModel();
+		try {
+			IModelStateListener listener = new IModelStateListener() {
 
-			public void modelAboutToBeChanged(IStructuredModel model) {
-				//
+				public void modelAboutToBeChanged(IStructuredModel model) {
+					//
+				}
+
+				public void modelChanged(IStructuredModel model) {
+					// 	
+				}
+
+				public void modelDirtyStateChanged(IStructuredModel model, boolean isDirty) {
+					//
+				}
+
+				public void modelResourceDeleted(IStructuredModel model) {
+					// 
+				}
+
+				public void modelResourceMoved(IStructuredModel oldModel, IStructuredModel newModel) {
+					// 		
+				}
+
+				public void modelAboutToBeReinitialized(IStructuredModel structuredModel) {
+					// 	
+				}
+
+				public void modelReinitialized(IStructuredModel structuredModel) {
+					// 
+				}
+			};
+
+			model.aboutToChangeModel();
+
+			model.removeModelStateListener(listener);
+		}
+		finally {
+			if (model != null) {
+				model.releaseFromEdit();
 			}
-
-			public void modelChanged(IStructuredModel model) {
-				// 	
-			}
-
-			public void modelDirtyStateChanged(IStructuredModel model, boolean isDirty) {
-				//
-			}
-
-			public void modelResourceDeleted(IStructuredModel model) {
-				// 
-			}
-
-			public void modelResourceMoved(IStructuredModel oldModel, IStructuredModel newModel) {
-				// 		
-			}
-
-			public void modelAboutToBeReinitialized(IStructuredModel structuredModel) {
-				// 	
-			}
-
-			public void modelReinitialized(IStructuredModel structuredModel) {
-				// 
-			}
-		};
-
-		model.aboutToChangeModel();
-
-		model.removeModelStateListener(listener);
+		}
 	}
 
 
 	/**
-	 * Test expectes an exception since only a changedModel sent, 
-	 * without beginning 'aboutToChangeModel'
-	 *
+	 * Test expectes an exception since only a changedModel sent, without
+	 * beginning 'aboutToChangeModel'
+	 * 
+	 * @throws CoreException
+	 * @throws IOException
+	 * 
 	 */
-	public void testChangedModel() {
-		IStructuredModel model = getUnmanagedModel();
+	public void testChangedModel() throws IOException, CoreException {
+		IStructuredModel model = getTestModel();
 		try {
-			model.changedModel();
+			try {
+				model.changedModel();
+			}
+			catch (Exception e) {
+				assertTrue(e instanceof IllegalStateException);
+			}
 		}
-		catch (Exception e) {
-			assertTrue(e instanceof IllegalStateException);
+		finally {
+			if (model != null) {
+				model.releaseFromEdit();
+			}
 		}
 	}
 
-	public void testGetContentType() {
-		IStructuredModel model = getUnmanagedModel();
-		String ct = model.getContentTypeIdentifier();
-		assertTrue("model has wrong content type:" + ct + " != " + ContentTypeIdForXML.ContentTypeID_XML, ct.equals(ContentTypeIdForXML.ContentTypeID_XML));
+	public void testGetContentType() throws IOException, CoreException {
+		IStructuredModel model = getTestModel();
+		try {
+			String ct = model.getContentTypeIdentifier();
+			assertTrue("model has wrong content type:" + ct + " != " + ContentTypeIdForXML.ContentTypeID_XML, ct.equals(ContentTypeIdForXML.ContentTypeID_XML));
+		}
+		finally {
+			if (model != null) {
+				model.releaseFromEdit();
+			}
+		}
 	}
 
-	public void testGetBaseLocation() {
-		IStructuredModel model = getUnmanagedModel();
-		String location = model.getBaseLocation();
-		assertTrue("wrong base location", location.equals(fProjectName + "/files/simple.xml"));
+	public void testGetBaseLocation() throws IOException, CoreException {
+		IStructuredModel model = getTestModel();
+		try {
+			String location = model.getBaseLocation();
+			assertTrue("wrong base location", location.equals("/" + fProjectName + "/files/simple.xml"));
+		}
+		finally {
+			if (model != null) {
+				model.releaseFromEdit();
+			}
+		}
 	}
 
 
-	public void testGetFactoryRegistry() {
-		IStructuredModel model = getUnmanagedModel();
-		model.getFactoryRegistry();
+	public void testGetFactoryRegistry() throws IOException, CoreException {
+		IStructuredModel model = getTestModel();
+		try {
+			model.getFactoryRegistry();
+			assertTrue(true);
+		}
+		finally {
+			if (model != null) {
+				model.releaseFromEdit();
+			}
+		}
 	}
 
-	public void testGetIndexedRegion() {
-		IStructuredModel model = getUnmanagedModel();
-		model.getIndexedRegion(0);
+	public void testGetIndexedRegion() throws IOException, CoreException {
+		IStructuredModel model = getTestModel();
+		try {
+			model.getIndexedRegion(0);
+			assertTrue(true);
+		}
+		finally {
+			if (model != null) {
+				model.releaseFromEdit();
+			}
+		}
 	}
 
-	public void testGetIndexedRegions() {
-		IStructuredModel model = getUnmanagedModel();
-		// not implemented yet...
-		// model.getIndexedRegions();
+	public void testGetIndexedRegions() throws IOException, CoreException {
+		IStructuredModel model = getTestModel();
+		try {
+			// not implemented yet...
+			// model.getIndexedRegions();
+		}
+		finally {
+			if (model != null) {
+				model.releaseFromEdit();
+			}
+		}
+
 	}
 
-	public void testGetStructuredDocument() {
-		IStructuredModel model = getUnmanagedModel();
-		IStructuredDocument doc = model.getStructuredDocument();
-		assertNotNull("document is null", doc);
+	public void testGetStructuredDocument() throws IOException, CoreException {
+		IStructuredModel model = getTestModel();
+		try {
+			IStructuredDocument doc = model.getStructuredDocument();
+			assertNotNull("document is null", doc);
+		}
+		finally {
+			if (model != null) {
+				model.releaseFromEdit();
+			}
+		}
 	}
 
-	public void testIsDirty() {
-		IStructuredModel model = getUnmanagedModel();
-		assertFalse("model should not be dirty", model.isDirty());
+	public void testIsDirty() throws IOException, CoreException {
+		IStructuredModel model = getTestModel();
+		try {
+			assertFalse("model should not be dirty", model.isDirty());
+		}
+		finally {
+			if (model != null) {
+				model.releaseFromEdit();
+			}
+		}
 	}
 
-	public void testIsModelStateChanging() {
-		IStructuredModel model = getUnmanagedModel();
+	public void testIsModelStateChanging() throws IOException, CoreException {
+		IStructuredModel model = getTestModel();
+		try {
 		assertFalse("model should not be changing", model.isModelStateChanging());
+		}
+		finally {
+			if (model != null) {
+				model.releaseFromEdit();
+			}
+		}
 	}
 
-	public void testIsNew() {
-		IStructuredModel model = getUnmanagedModel();
+	public void testIsNew() throws IOException, CoreException {
+		IStructuredModel model = getTestModel();
+		try {
 		// this API seems strange
 		// assertFalse("new model check failed", model.isNew());
+		}
+		finally {
+			if (model != null) {
+				model.releaseFromEdit();
+			}
+		}
 	}
 
-	public void testIsReinitializationNeeded() {
-		IStructuredModel model = getUnmanagedModel();
-		assertFalse("reinitialization should not be needed", model.isReinitializationNeeded());
-	}
-
-
-	public void testIsSaveNeeded() {
-		IStructuredModel model = getUnmanagedModel();
-		assertFalse("save should not be needed", model.isSaveNeeded());
-	}
-
-	public void testNewInstance() {
-		IStructuredModel model = getUnmanagedModel();
-		IStructuredModel newInstance = null;
+	public void testIsReinitializationNeeded() throws IOException, CoreException {
+		IStructuredModel model = getTestModel();
 		try {
-			newInstance = model.newInstance();
+		assertFalse("reinitialization should not be needed", model.isReinitializationNeeded());
 		}
-		catch (IOException e) {
-			assertTrue("IOException during model new instance", false);
+		finally {
+			if (model != null) {
+				model.releaseFromEdit();
+			}
 		}
-		assertNotNull("new instance is null", newInstance);
+	}
+
+
+	public void testIsSaveNeeded() throws IOException, CoreException {
+		IStructuredModel model = getTestModel();
+		try {
+			assertFalse("save should not be needed", model.isSaveNeeded());
+		}
+		finally {
+			if (model != null) {
+				model.releaseFromEdit();
+			}
+		}
+	}
+
+	public void testNewInstance() throws IOException, CoreException {
+		IStructuredModel model = getTestModel();
+		try {
+			IStructuredModel newInstance = null;
+			try {
+				newInstance = model.newInstance();
+			}
+			catch (IOException e) {
+				assertTrue("IOException during model new instance", false);
+			}
+			assertNotNull("new instance is null", newInstance);
+		}
+		finally {
+			if (model != null) {
+				model.releaseFromEdit();
+			}
+		}
+	}
+
+	/**
+	 * Be sure to release any models obtained from this method.
+	 * 
+	 */
+	IStructuredModel getTestModel() throws IOException, CoreException {
+
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(fProjectName);
+		IFile iFile = (IFile) project.findMember("/files/simple.xml");
+		// fProjectName + "/files/simple.xml"
+
+
+		IStructuredModel model = null;
+		IModelManager modelManager = StructuredModelManager.getModelManager();
+
+		model = modelManager.getModelForEdit(iFile);
+
+
+		return model;
+
 	}
 }

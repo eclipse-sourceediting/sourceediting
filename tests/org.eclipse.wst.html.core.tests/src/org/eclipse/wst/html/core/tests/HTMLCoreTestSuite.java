@@ -15,6 +15,7 @@ import junit.framework.TestSuite;
 
 import org.eclipse.wst.html.core.tests.misc.HTMLCorePreferencesTest;
 import org.eclipse.wst.html.core.tests.misc.HTMLTagInfoTest;
+import org.eclipse.wst.html.core.tests.model.ModelModifications;
 
 
 
@@ -22,6 +23,7 @@ public class HTMLCoreTestSuite extends TestSuite {
 
 	/**
 	 * to get picked up by BVT
+	 * 
 	 * @return
 	 */
 	public static Test suite() {
@@ -34,5 +36,6 @@ public class HTMLCoreTestSuite extends TestSuite {
 		addTest(ModelParserTests.suite());
 		addTest(new TestSuite(HTMLCorePreferencesTest.class));
 		addTest(new TestSuite(HTMLTagInfoTest.class));
+		addTest(new TestSuite(ModelModifications.class));
 	}
 }
