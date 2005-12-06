@@ -13,7 +13,7 @@
    <element name="extension">
       <annotation>
          <documentation>
-            This extension poing allows to specifiy entries for XML Catalog.  Catalog entries have format specified in http://www.oasis-open.org/committees/entity/spec.html.  
+            This extension point allows to specify entries for XML Catalog.  Catalog entries have format specified in http://www.oasis-open.org/committees/entity/spec.html.  
 Each catalog extension consists of a single catalogContribution element.
          </documentation>
       </annotation>

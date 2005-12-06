@@ -142,17 +142,11 @@
 			class="org.eclipse.wst.xml.core.internal.preferences.XMLCorePreferenceInitializer" />
 	</extension>
 
-	<extension-point
-		name="%Content_Model_Document_Factories_Extension.name"
-		id="documentFactories" />
+	<extension-point id="documentFactories" name="%Content_Model_Document_Factories_Extension.name" schema="schema/documentFactories.exsd"/>
 
-	<extension-point
-		name="%Model_Query_Extension.name"
-		id="modelQueryExtensions" />
+	<extension-point id="modelQueryExtensions" name="%Model_Query_Extension.name" schema="schema/modelQueryExtensions.exsd"/>
 
-	<extension-point
-		name="%Content_Model_Annotation_Files_Extension.name"
-		id="annotationFiles" />	
+	<extension-point id="annotationFiles" name="%Content_Model_Annotation_Files_Extension.name" schema="schema/annotationFiles.exsd"/>	
 		
 	<extension 
        point="org.eclipse.jem.util.uiContextSensitiveClass">
