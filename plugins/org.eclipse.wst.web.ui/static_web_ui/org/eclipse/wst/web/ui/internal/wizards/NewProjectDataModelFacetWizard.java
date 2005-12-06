@@ -15,8 +15,10 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jem.util.emf.workbench.ProjectUtilities;
 import org.eclipse.jem.util.logger.proxy.Logger;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -138,31 +140,35 @@ public abstract class NewProjectDataModelFacetWizard extends AddRemoveFacetsWiza
 		return model.getStringProperty(IFacetProjectCreationDataModelProperties.FACET_PROJECT_NAME);
 	}
 
-	public boolean performFinish() {
-		IStatus status = model.validate();
-		if (status.isOK()) {
-			try {
-				FacetProjectCreationOperation operation = new FacetProjectCreationOperation(model);
-				this.fproj = operation.createProject(new NullProgressMonitor());
-				boolean success =  super.performFinish();
-				if(success){
-					final Set fixed = this.template.getFixedProjectFacets();
-			        this.fproj.setFixedProjectFacets( fixed );
-				}
-				return success;
-				
-			} catch (CoreException e) {
-				e.printStackTrace();
-			} finally {
-				try {
-					postPerformFinish();
-				} catch (InvocationTargetException e) {
-					Logger.getLogger().logError(e);
-				}
-			}
-		}
-		return false;
-	}
+    protected void performFinish( final IProgressMonitor monitor )
+    
+        throws CoreException
+        
+    {
+        monitor.beginTask( "", 10 );
+        
+        try
+        {
+            FacetProjectCreationOperation operation = new FacetProjectCreationOperation(model);
+            this.fproj = operation.createProject(new SubProgressMonitor(monitor, 2));
+
+            super.performFinish( new SubProgressMonitor( monitor, 8 ) );
+            
+            final Set fixed = this.template.getFixedProjectFacets();
+            this.fproj.setFixedProjectFacets( fixed );
+            
+            try {
+                postPerformFinish();
+            } catch (InvocationTargetException e) {
+                Logger.getLogger().logError(e);
+            }
+        }
+        finally
+        {
+            monitor.done();
+        }
+    }
+    
 	/**
 	 * <p>
 	 * Override to return the final perspective ID (if any). The final perspective ID can be
