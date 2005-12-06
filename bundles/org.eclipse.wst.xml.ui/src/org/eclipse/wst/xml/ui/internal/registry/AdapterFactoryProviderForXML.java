@@ -75,8 +75,8 @@ public class AdapterFactoryProviderForXML implements AdapterFactoryProvider {
 		}
 	}
 
-	/*
-	 * @see AdapterFactoryProvider#isFor(ContentTypeDescription)
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.sse.ui.internal.provisional.registry.AdapterFactoryProvider#isFor(org.eclipse.wst.sse.core.internal.ltk.modelhandler.IDocumentTypeHandler)
 	 */
 	public boolean isFor(IDocumentTypeHandler contentTypeDescription) {
 		return (contentTypeDescription instanceof ModelHandlerForXML);
