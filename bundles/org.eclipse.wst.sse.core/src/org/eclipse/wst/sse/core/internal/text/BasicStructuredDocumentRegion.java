@@ -356,7 +356,7 @@ public class BasicStructuredDocumentRegion implements IStructuredDocumentRegion 
 	 * @see org.eclipse.wst.sse.core.text.IStructuredDocumentRegion#isDeleted()
 	 */
 	public boolean isDeleted() {
-		return fIsDeleted;
+		return fIsDeleted || (fParentDocument == null);
 	}
 
 	/**

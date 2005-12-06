@@ -268,7 +268,7 @@ class StructuredDocumentRegionProxy implements IStructuredDocumentRegion {
 
 	public boolean isDeleted() {
 		// I'll assume never really needed here
-		return false;
+		return true;
 	}
 
 	public boolean isEnded() {

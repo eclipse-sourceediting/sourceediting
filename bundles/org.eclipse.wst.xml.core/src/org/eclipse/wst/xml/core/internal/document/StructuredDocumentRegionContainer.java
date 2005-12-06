@@ -308,11 +308,6 @@ class StructuredDocumentRegionContainer implements IStructuredDocumentRegion {
 		this.flatNodes.insertElementAt(flatNode, index);
 	}
 
-	public boolean isDeleted() {
-		// I'll assume never really needed here
-		return false;
-	}
-
 	public boolean isEnded() {
 		throw new Error("intentionally not implemented since should never be called"); //$NON-NLS-1$
 	}
@@ -369,10 +364,6 @@ class StructuredDocumentRegionContainer implements IStructuredDocumentRegion {
 		throw new Error("intentionally not implemented since should never be called"); //$NON-NLS-1$
 	}
 
-	public void setDeleted(boolean deleted) {
-		// I'll assume never really needed here
-	}
-
 	public void setEnded(boolean hasEnd) {
 		throw new Error("intentionally not implemented since should never be called"); //$NON-NLS-1$
 	}
@@ -427,5 +418,18 @@ class StructuredDocumentRegionContainer implements IStructuredDocumentRegion {
 
 	public StructuredDocumentEvent updateRegion(Object requester, IStructuredDocumentRegion flatnode, String changes, int start, int end) {
 		throw new Error("intentionally not implemented since should never be called"); //$NON-NLS-1$
+	}
+
+
+	public boolean isDeleted() {
+		// if someone "gets" these temp regions by
+		// accident, we'll always return "deleted".
+		return true;
+	}
+
+
+	public void setDeleted(boolean deleted) {
+		// do nothing
+
 	}
 }
