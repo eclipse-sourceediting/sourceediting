@@ -37,6 +37,7 @@ import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.CMDocumentManag
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.CMDocumentCache;
 import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 import org.eclipse.wst.xml.ui.internal.properties.XMLPropertySource;
 import org.w3c.dom.Attr;
@@ -70,7 +71,6 @@ public class XMLPropertySheetConfiguration extends PropertySheetConfiguration {
 		private void refreshPages() {
 			getPropertiesRefreshJob().addPropertySheetPage(fPropertySheetPage);
 			getPropertiesRefreshJob().schedule(PropertiesRefreshJob.UPDATE_DELAY);
-
 		}
 	}
 
@@ -127,9 +127,12 @@ public class XMLPropertySheetConfiguration extends PropertySheetConfiguration {
 				return fPropertySource;
 			}
 
-			if (object instanceof INodeNotifier) {
+			if (object instanceof IDOMNode) {
 				fSource = (INodeNotifier) object;
-				fPropertySource = new XMLPropertySource((INodeNotifier) object);
+				fPropertySource = (IPropertySource) fSource.getAdapterFor(IPropertySource.class);
+				if (fPropertySource == null) {
+					fPropertySource = new XMLPropertySource((INodeNotifier) object);
+				}
 			}
 			else {
 				fSource = null;

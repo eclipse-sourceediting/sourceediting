@@ -33,7 +33,6 @@ import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSNodeList;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleDeclItem;
 import org.eclipse.wst.css.ui.internal.CSSUIMessages;
-import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.w3c.dom.css.CSSStyleDeclaration;
 
 /**
@@ -46,12 +45,10 @@ public class CSSPropertySource implements IPropertySource {
 	final static Class ADAPTER_KEY = IPropertySource.class;
 	final boolean PERF_GETDESCRIPTORS = false;
 	private long time0;
-	/**
-	 * DOMPropertySource constructor comment.
-	 */
-	public CSSPropertySource(INodeNotifier target) {
+
+	public CSSPropertySource(ICSSNode target) {
 		super();
-		fNode = (ICSSNode) target;
+		fNode =  target;
 	}
 
 	protected IPropertyDescriptor createDefaultPropertyDescriptor(String attributeName) {
