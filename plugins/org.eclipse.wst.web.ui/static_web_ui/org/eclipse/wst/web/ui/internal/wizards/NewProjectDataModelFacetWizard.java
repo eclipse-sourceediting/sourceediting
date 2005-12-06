@@ -122,7 +122,10 @@ public abstract class NewProjectDataModelFacetWizard extends AddRemoveFacetsWiza
 		model.addListener(new IDataModelListener() {
 			public void propertyChanged(DataModelEvent event) {
 				if (FACET_RUNTIME.equals(event.getPropertyName())) {
-					setRuntime((IRuntime) event.getProperty());
+					IRuntime runtime = (IRuntime) event.getProperty();
+					if(runtime != getRuntime()){
+						setRuntime(runtime);
+					}
 				}
 			}
 		});
