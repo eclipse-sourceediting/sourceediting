@@ -146,7 +146,7 @@ public class TestPropertySheetConfiguration extends TestCase {
 				}
 			}
 		}
-		// if we get to here, alwasy fail, since something went wrong.
+		// if we get to here, always fail, since something went wrong.
 		assertTrue("testPropertySourceRemoval test did not take expected path", false);
 	}
 }
