@@ -23,6 +23,10 @@ import java.net.URL;
  */
 public interface IURLRecord extends ITaglibRecord {
 
+	/**
+	 * @return the base location to use for further resolution of resources
+	 *         from the TLD
+	 */
 	String getBaseLocation();
 
 	/**
