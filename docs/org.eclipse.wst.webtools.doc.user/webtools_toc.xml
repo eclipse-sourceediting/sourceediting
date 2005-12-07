@@ -44,7 +44,7 @@
       </topic>-->
    	</topic>
    </topic>
-   <topic label="Workbench integration with Web editors" href="topics/cwwedtvw.html">
+  <topic label="Workbench integration with Web editors" href="topics/cwwedtvw.html">
    <topic label="Web application overview" href="topics/ccwtover.html"/>
    <topic label="Defining HTML file preferences" href="topics/tjprefs.html"/>
    <topic label="Creating and editing Web pages - overview" href="topics/tjdetags.html"/>
@@ -54,9 +54,10 @@
    <topic label="Web technologies" href="topics/cwebtechnologies.html"/>
    <topic label="Web tools features" href="topics/cwtfeatures.html"/>
    <topic label="Links view" href="topics/cwlnkvew.html"/>
-   <topic label="Importing class files to Web projects" href="topics/teimpclass.html"/>
    </topic>
-   <topic label="Specifying an implicit document type for an HTML, XHTML, or JSP fragment" href="topics/tjchgxdt.html"/>
+   <!-- This function is broken in WTP 1.0. Will likely be fixed in some form in WTP 1.5. 
+      <topic label="Specifying an implicit document type for an HTML, XHTML, or JSP fragment" href="topics/tjchgxdt.html"/>
+   -->
    <topic label="Creating HTML and XHTML files and framesets" href="topics/tjcrehtm.html"/>
    <topic label="Creating JavaServer Pages (JSP) files" href="topics/tjcrejsp.html"/>
    <topic label="Viewing and navigating links" href="topics/tjlnknav.html"/>
