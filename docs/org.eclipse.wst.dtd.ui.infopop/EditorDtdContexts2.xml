@@ -13,10 +13,14 @@
  *******************************************************************************/ -->
 
 <contexts>
-<context id="dtdsource_source_HelpId">
-<description>The DTD source page editor lets you edit a document type definition. The editor provides text editing features such as syntax highlighting and unlimited undo and redo.
-</description>
-<topic label="Structured text editors for markup languages" href="../org.eclipse.wst.sse.doc.user/topics/csrcedt004.html"/>
-<topic label="Editing text coded in markup languages - overview" href="../org.eclipse.wst.sse.doc.user/topics/tsrcedt000.html"/>
-</context>
+	<context id="csh_outer_container">
+		<description/>
+	</context>
+	<context id="dtdsource_source_HelpId">
+		<description>
+			The DTD editor lets you edit a document type definition.
+
+			The editor provides text editing features such as syntax highlighting and unlimited undo and redo.
+		</description>
+	</context>
 </contexts>
