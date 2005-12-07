@@ -142,6 +142,7 @@ public class TestPropertySheetConfiguration extends TestCase {
 						assertTrue("Current property cannot be removed", true);
 						// force return here, to avoid last fall through
 						// failing assert
+						return;
 					}
 				}
 			}
