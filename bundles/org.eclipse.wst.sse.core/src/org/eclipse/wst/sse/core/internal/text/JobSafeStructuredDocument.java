@@ -17,7 +17,6 @@ import org.eclipse.core.runtime.jobs.ILock;
 import org.eclipse.wst.sse.core.internal.IExecutionDelegate;
 import org.eclipse.wst.sse.core.internal.ILockable;
 import org.eclipse.wst.sse.core.internal.ltk.parser.RegionParser;
-import org.eclipse.wst.sse.core.internal.provisional.events.NewDocumentEvent;
 import org.eclipse.wst.sse.core.internal.provisional.events.StructuredDocumentEvent;
 
 
@@ -165,7 +164,7 @@ public class JobSafeStructuredDocument extends BasicStructuredDocument implement
 			if (resultSlot[0] instanceof Throwable) {
 				throw new RuntimeException((Throwable) resultSlot[0]);
 			} else {
-				event = (NewDocumentEvent) resultSlot[0];
+				event = (StructuredDocumentEvent) resultSlot[0];
 			}
 		}
 		return event;
