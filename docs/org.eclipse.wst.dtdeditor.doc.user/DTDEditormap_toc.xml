@@ -15,6 +15,8 @@
    <topic label="Working with DTDs" topic="topics/cworkdtds.html">
       <topic label="Creating DTDs" href="topics/tcretdtd.html">
          <topic label="Document type definitions (DTDs) - overview" href="topics/cdtdover.html"/>
+           <topic label="Setting source highlighting styles" href="topics/tedtsrcst.html"/>
+            <topic label="Working with DTD templates" href="topics/tdtemplt.html"/>
       </topic>
       <topic label="Importing DTDs" href="topics/timptdtd.html"/>
             <topic label="Validating DTDs" href="topics/tvaldtd.html"/>
