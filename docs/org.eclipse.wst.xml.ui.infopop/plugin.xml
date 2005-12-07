@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.1"?>
 <!-- /*******************************************************************************
  * Copyright (c) 2000, 2005 IBM Corporation and others.
@@ -15,6 +15,9 @@
 <extension point="org.eclipse.help.contexts">
        <contexts file="EditorXmlContexts.xml" plugin ="org.eclipse.wst.xml.ui"/>
        <contexts file="EditorXmlContexts2.xml" plugin ="org.eclipse.core.runtime"/>
+       <contexts file="TableTree.xml" plugin ="org.eclipse.wst.xml.ui"/>
+       <contexts file="XMLWizardContexts.xml" plugin ="org.eclipse.wst.xml.ui"/>
+
 </extension>
 
 
