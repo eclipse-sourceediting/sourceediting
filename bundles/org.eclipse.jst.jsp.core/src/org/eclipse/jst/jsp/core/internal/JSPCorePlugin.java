@@ -10,14 +10,10 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.core.internal;
 
-import org.eclipse.core.resources.IResourceChangeEvent;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jst.jsp.core.internal.contentmodel.TaglibController;
 import org.eclipse.jst.jsp.core.internal.java.search.JSPIndexManager;
-import org.eclipse.jst.jsp.core.internal.java.search.JSPSearchSupport;
 import org.eclipse.jst.jsp.core.internal.taglib.TaglibHelperManager;
 import org.eclipse.jst.jsp.core.taglib.TaglibIndex;
 import org.osgi.framework.BundleContext;
@@ -39,16 +35,11 @@ public class JSPCorePlugin extends Plugin {
 
 	/**
 	 * Returns the shared instance.
+	 * @deprecated - will be removed. Currently used to get 
+	 * "model preferences", but there are other, better ways. 
 	 */
 	public static JSPCorePlugin getDefault() {
 		return plugin;
-	}
-
-	/**
-	 * Returns the workspace instance.
-	 */
-	public static IWorkspace getWorkspace() {
-		return ResourcesPlugin.getWorkspace();
 	}
 
 	/* (non-Javadoc)
@@ -65,23 +56,16 @@ public class JSPCorePlugin extends Plugin {
 		// listen for classpath changes
 		JavaCore.addElementChangedListener(TaglibHelperManager.getInstance());
 		
-		// add JSPIndexManager to keep JSP Index up to date
-		// listening for IResourceChangeEvent.PRE_DELETE and IResourceChangeEvent.POST_CHANGE
-		ResourcesPlugin.getWorkspace().addResourceChangeListener(JSPIndexManager.getInstance(), IResourceChangeEvent.POST_CHANGE);
 		
-		// https://w3.opensource.ibm.com/bugzilla/show_bug.cgi?id=5091
-		// makes sure IndexManager is aware of our indexes
-		JSPIndexManager.getInstance().saveIndexes();
+		JSPIndexManager.getInstance().initialize();
+		
 	}
 	
 	/* (non-Javadoc)
 	 * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
 	 */
 	public void stop(BundleContext context) throws Exception {
-		// stop listening
-		ResourcesPlugin.getWorkspace().removeResourceChangeListener(JSPIndexManager.getInstance());
-		// stop any searching
-		JSPSearchSupport.getInstance().setCanceled(true);
+
 		// stop any indexing
 		JSPIndexManager.getInstance().shutdown();
 		
