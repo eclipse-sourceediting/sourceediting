@@ -96,7 +96,7 @@ public class EditNamespaceInfoDialog extends Dialog {
 
 	protected Control createDialogArea(Composite parent) {
 		Composite dialogsubArea = (Composite) super.createDialogArea(parent);
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(dialogArea, XMLCommonUIContextIds.XCUI_NAMESPACE_DIALOG);
+               PlatformUI.getWorkbench().getHelpSystem().setHelp(dialogsubArea, XMLCommonUIContextIds.XCUI_NAMESPACE_DIALOG);
 
 		Composite composite = new Composite(dialogsubArea, SWT.NONE);
 		GridLayout layout = new GridLayout();
@@ -129,7 +129,8 @@ public class EditNamespaceInfoDialog extends Dialog {
 		uriField.setEnabled(fInfo.getProperty("uri-readOnly") == null); //$NON-NLS-1$
 
 		// never read
-		// Label placeHolder1 = new Label(composite, SWT.NONE);
+               Label placeHolder1 = new Label(composite, SWT.NONE);
+               placeHolder1.setText("");
 
 		// row 2
 		//
@@ -145,7 +146,8 @@ public class EditNamespaceInfoDialog extends Dialog {
 		prefixField.setEnabled(fInfo.getProperty("prefix-readOnly") == null); //$NON-NLS-1$
 
 		// never read
-		// Label placeHolder2 = new Label(composite, SWT.NONE);
+                Label placeHolder2 = new Label(composite, SWT.NONE);
+                placeHolder2.setText("");
 
 		// row 3
 		//
