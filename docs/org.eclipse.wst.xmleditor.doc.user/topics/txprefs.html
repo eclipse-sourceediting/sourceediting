@@ -21,8 +21,8 @@
 <h1 class="topictitle1">Defining XML editor preferences</h1>
 <div><p>You can set various preferences for the Source view of the XML
 editor such as the formatter indentation style, line wrapping rules, and content
-assist rules.</p><div class="skipspace"><p>The following instructions were written for the XML perspective,
-but they will also work in many other perspectives.</p>
+assist rules. To apply the formatting styles, right-click in in the Source view 
+	for your XML document, and click<b> Format &gt;&nbsp; Document</b>.</p><div class="skipspace">
 <p>To define XML preferences,
 perform the following steps:</p>
 </div>
@@ -34,14 +34,22 @@ width</span> </b>field.</span> The default value is <b>72</b>.</li>
 start every attribute on a new line.</span></li>
 	<li class="skipspace"><span>If you want blank lines to be removed when the document is formatted,
 select the <b> <span class="uicontrol">Clear all blank lines</span> </b>check box. </span> By default, blank lines are preserved in a formatted document.</li>
-<li class="skipspace"><span>The<b> <span class="uicontrol">Indent using tabs</span> 
-</b>check box is selected
-by default.</span> If you clear it, spaces are used instead of tab characters.</li>
+	<li class="skipspace">Select <b>Indent using tabs </b>if you want to use tab 
+	characters (\t) as the standard formatting indentation, or, if you prefer to 
+	use spaces, select <b>Indent using spaces.</b></li>
+	<li class="skipspace">You can also specify the <b>Indentation size</b> which 
+	is the number of tabs or space characters used for formatting indentation.</li>
 <li class="skipspace"><span>You can specify certain characters ('&lt;' is default) that will
 cause the content assist list to pop up automatically. Ensure the<b> <span class="uicontrol">Automatically
 make suggestions</span></b> check box is selected and specify the characters
 in the  <b>  <span class="uicontrol">Prompt when these characters are inserted</span> 
 </b>field. </span></li>
+	<li class="skipspace">If you select <b>Strict</b> from the <b>Suggestion 
+	strategy</b> list, suggestions that are grammatically valid will be shown 
+	first (with bold icons) in the content assist list. Other suggestions that 
+	are applicable to the element scope, but not grammatically valid, will be 
+	shown below them with a de-emphasized icon. The default value for this field 
+	is <b>Lax</b>.</li>
 <li class="skipspace"><span>The<b> <span class="uicontrol">Use inferred grammar in absence of DTD/Schema </span>
 </b>check
 box is selected by default. </span> If this box is selected, when you
