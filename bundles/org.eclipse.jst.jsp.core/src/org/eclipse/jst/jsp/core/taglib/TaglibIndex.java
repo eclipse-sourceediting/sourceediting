@@ -263,6 +263,12 @@ public final class TaglibIndex {
 	static TaglibIndex _instance;
 	static boolean ENABLED = true;
 
+	/**
+	 * NOT API.
+	 * 
+	 * @param listener
+	 *            the listener to be added
+	 */
 	public static void addTaglibIndexListener(ITaglibIndexListener listener) {
 		_instance.internalAddTaglibIndexListener(listener);
 	}
@@ -299,14 +305,25 @@ public final class TaglibIndex {
 	}
 
 	/**
+	 * Returns the IPath considered to be the web-app root for the given path.
+	 * All resolution from the given path beginning with '/' will be relative
+	 * to the computed web-app root.
+	 * 
 	 * @deprecated - is not correct in flexible projects
-	 * @param path
+	 * @param path -
+	 *            a path under the web-app root
 	 * @return
 	 */
 	public static IPath getContextRoot(IPath path) {
 		return _instance.internalGetContextRoot(path);
 	}
 
+	/**
+	 * NOT API.
+	 * 
+	 * @param listener
+	 *            the listener to be removed
+	 */
 	public static void removeTaglibIndexListener(ITaglibIndexListener listener) {
 		_instance.internalRemoveTaglibIndexListener(listener);
 	}
@@ -361,6 +378,10 @@ public final class TaglibIndex {
 		return result;
 	}
 
+	/**
+	 * Instructs the index to stop listening for resource and classpath
+	 * changes, and to forget all information about the workspace.
+	 */
 	public static synchronized void shutdown() {
 		if (_instance != null) {
 			_instance.stop();
@@ -368,6 +389,10 @@ public final class TaglibIndex {
 		_instance = null;
 	}
 
+	/**
+	 * Instructs the index to begin listening for resource and classpath
+	 * changes.
+	 */
 	public static synchronized void startup() {
 		ENABLED = !"false".equalsIgnoreCase(System.getProperty(TaglibIndex.class.getName())); //$NON-NLS-1$
 		_instance = new TaglibIndex();
@@ -466,8 +491,8 @@ public final class TaglibIndex {
 			/*
 			 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=116529
 			 * 
-			 * This method produces a less accurate result, but doesn't require
-			 * that the file exist yet.
+			 * This method produces a less accurate result, but doesn't
+			 * require that the file exist yet.
 			 */
 			IFile[] files = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocation(new Path(basePath));
 			if (files.length > 0)
