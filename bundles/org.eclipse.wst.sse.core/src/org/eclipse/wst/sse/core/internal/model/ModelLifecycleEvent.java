@@ -23,18 +23,16 @@ import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 public class ModelLifecycleEvent {
 
 
-	private final static int MASK = 0x00FF;
-	public static final int MODEL_DIRTY_STATE = 0x0004;
-	public static final int MODEL_DOCUMENT_CHANGED = 0x0003;
-	public static final int MODEL_RELEASED = 0x00002;
 	// this list is for "public" consumption
 	public static final int MODEL_SAVED = 0x0001;
-	protected static final int POST_EVENT = 0x0200;
+	public static final int MODEL_RELEASED = 0x00002;
+	public static final int MODEL_DOCUMENT_CHANGED = 0x0003;
+	public static final int MODEL_DIRTY_STATE = 0x0004;
+	public static final int MODEL_REVERT= 0x0005;
 
 	// TODO: finish support for these
 	// following not implemented yet
-	//public static final int MODEL_REINITIALIZED = 0x0005;
-	//public static final int MODEL_RELOADED = 0x0006;
+	public static final int MODEL_REINITIALIZED = 0x0006;
 	//public static final int ADAPTERS_NOTIFIED = 0x0007;
 	//public static final int MODEL_RESOURCE_MOVED = 0x0008;
 	//public static final int MODEL_RESOURCE_DELETED = 0x0009;
@@ -43,6 +41,8 @@ public class ModelLifecycleEvent {
 	// subclasses
 	// For simplicity they are "masked out" when client calls getType()
 	protected static final int PRE_EVENT = 0x0100;
+	private final static int MASK = 0x00FF;
+	protected static final int POST_EVENT = 0x0200;
 
 
 	private IStructuredModel fModel;

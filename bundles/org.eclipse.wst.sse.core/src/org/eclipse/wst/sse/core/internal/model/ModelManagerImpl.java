@@ -1361,9 +1361,14 @@ public class ModelManagerImpl implements IModelManager {
 				// if edit goes to zero, but still open for read,
 				// then we should reload here, so we are in synch with
 				// contents on disk.
-				// ISSUE: should we check isDirty here?
-				if ((sharedObject.referenceCountForRead > 0) && (sharedObject.referenceCountForEdit == 0)) {
+				// ISSUE: should we check isDirty here? 
+				// ANSWER: here, for now now. model still has its own dirty flag for some reason. 
+				// we need to address * that * too. 
+				if ((sharedObject.referenceCountForRead > 0) && (sharedObject.referenceCountForEdit == 0) && sharedObject.theSharedModel.isDirty()) {
+					signalPreLifeCycleListenerRevert(sharedObject.theSharedModel);
 					revertModel(id, sharedObject);
+					sharedObject.theSharedModel.setDirtyState(false);
+					signalPostLifeCycleListenerRevert(sharedObject.theSharedModel);
 				}
 			}
 		}
@@ -1373,6 +1378,18 @@ public class ModelManagerImpl implements IModelManager {
 	private void revertModel(Object id, SharedObject sharedObject) {
 		IStructuredDocument structuredDocument = sharedObject.theSharedModel.getStructuredDocument();
 		FileBufferModelManager.getInstance().revert(structuredDocument);
+	}
+	private void signalPreLifeCycleListenerRevert(IStructuredModel structuredModel) {
+		int type = ModelLifecycleEvent.MODEL_REVERT | ModelLifecycleEvent.PRE_EVENT;
+		// what's wrong with this design that a cast is needed here!?
+		ModelLifecycleEvent event = new ModelLifecycleEvent(structuredModel, type);
+		((AbstractStructuredModel) structuredModel).signalLifecycleEvent(event);
+	}
+	private void signalPostLifeCycleListenerRevert(IStructuredModel structuredModel) {
+		int type = ModelLifecycleEvent.MODEL_REVERT | ModelLifecycleEvent.POST_EVENT;
+		// what's wrong with this design that a cast is needed here!?
+		ModelLifecycleEvent event = new ModelLifecycleEvent(structuredModel, type);
+		((AbstractStructuredModel) structuredModel).signalLifecycleEvent(event);
 	}
 
 	private void discardModel(Object id, SharedObject sharedObject) {

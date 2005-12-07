@@ -1568,7 +1568,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 	 * to be called only be "friendly" classes, such as ModelManger, and
 	 * subclasses.
 	 */
-	protected void signalLifecycleEvent(ModelLifecycleEvent event) {
+	void signalLifecycleEvent(ModelLifecycleEvent event) {
 
 		if (fLifecycleNotificationManager == null)
 			return;
