@@ -18,6 +18,7 @@ import org.eclipse.jst.jsp.core.tests.contenttypeidentifier.contentspecific.Test
 import org.eclipse.jst.jsp.core.tests.contenttypeidentifier.contentspecific.TestModelHandlers;
 import org.eclipse.jst.jsp.core.tests.model.TestModelRelease;
 import org.eclipse.jst.jsp.core.tests.model.TestModelWithNoFile;
+import org.eclipse.jst.jsp.core.tests.taglibindex.TestIndex;
 
 
 
@@ -37,5 +38,6 @@ public class JSPCoreTestSuite extends TestSuite {
 		addTest(new TestSuite(FormatTester.class, "FormatTester"));
 		addTest(new TestSuite(TestModelRelease.class, "JSP Model Tests"));
 		addTest(new TestSuite(TestModelWithNoFile.class, "JSP Model Tests"));
+		addTest(new TestSuite(TestIndex.class, "TaglibIndex Tests"));
 	}
 }

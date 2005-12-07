@@ -1,0 +1,3 @@
+The accompanying jar contains a TLD with a URI specified in
+it as well as a big long file that should slow down the
+taglib indexing.
