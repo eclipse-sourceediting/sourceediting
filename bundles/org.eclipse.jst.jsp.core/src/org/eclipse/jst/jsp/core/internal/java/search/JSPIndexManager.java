@@ -31,7 +31,6 @@ import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
-import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jdt.internal.core.JavaModelManager;
@@ -205,8 +204,8 @@ public class JSPIndexManager {
 	 */
 	private class ProcessFilesJob extends Job {
 		List fileList = null;
-
-		// private final int maximumToRemember = 50;
+		// keep track of how many files we've indexed
+		int lastFileCursor = 0;
 
 		ProcessFilesJob(String taskName) {
 			super(taskName);
@@ -223,18 +222,13 @@ public class JSPIndexManager {
 		}
 
 		synchronized IFile[] getFiles() {
-			IFile[] files = (IFile[]) fileList.toArray(new IFile[fileList.size()]);
-			// if (fileList.size() > maximumToRemember) {
-			// fileList = new ArrayList();
-			// }
-			// else {
-			// fileList.clear();
-			// }
-			return files;
+			return (IFile[]) fileList.toArray(new IFile[fileList.size()]);
 		}
 
 		synchronized void clearFiles() {
 			fileList.clear();
+			lastFileCursor = 0;
+			//System.out.println("cleared files");
 		}
 
 		protected IStatus run(IProgressMonitor monitor) {
@@ -248,7 +242,6 @@ public class JSPIndexManager {
 
 			try {
 				IFile[] filesToBeProcessed = getFiles();
-				clearFiles();
 
 				if (DEBUG) {
 					System.out.println("JSPIndexManager indexing " + filesToBeProcessed.length + " files"); //$NON-NLS-2$ //$NON-NLS-1$
@@ -259,21 +252,21 @@ public class JSPIndexManager {
 				String processingNFiles = ""; //$NON-NLS-1$
 
 
-				for (int i = 0; i < filesToBeProcessed.length; i++) {
+				for (;lastFileCursor < filesToBeProcessed.length; lastFileCursor++) {
 
 					if (isCanceled(monitor) || frameworkIsShuttingDown()) {
 						setCanceledState();
 						return Status.CANCEL_STATUS;
 					}
 					try {
-						ss.addJspFile(filesToBeProcessed[i]);
+						ss.addJspFile(filesToBeProcessed[lastFileCursor]);
 						// JSP Indexer processing n files
-						processingNFiles = NLS.bind(JSPCoreMessages.JSPIndexManager_2, new String[]{Integer.toString((filesToBeProcessed.length - i))});
-						monitor.subTask(processingNFiles + " - " + filesToBeProcessed[i].getName()); //$NON-NLS-1$
+						processingNFiles = NLS.bind(JSPCoreMessages.JSPIndexManager_2, new String[]{Integer.toString((filesToBeProcessed.length - lastFileCursor))});
+						monitor.subTask(processingNFiles + " - " + filesToBeProcessed[lastFileCursor].getName()); //$NON-NLS-1$
 						monitor.worked(1);
 
 						if (DEBUG) {
-							System.out.println("JSPIndexManager Job added file: " + filesToBeProcessed[i].getName()); //$NON-NLS-1$
+							System.out.println("JSPIndexManager Job added file: " + filesToBeProcessed[lastFileCursor].getName()); //$NON-NLS-1$
 						}
 					}
 					catch (Exception e) {
@@ -291,7 +284,7 @@ public class JSPIndexManager {
 						// and only log a certain amt of the same one,
 						// otherwise skip it.
 						if (!frameworkIsShuttingDown()) {
-							String filename = filesToBeProcessed[i] != null ? filesToBeProcessed[i].getFullPath().toString() : ""; //$NON-NLS-1$
+							String filename = filesToBeProcessed[lastFileCursor] != null ? filesToBeProcessed[lastFileCursor].getFullPath().toString() : ""; //$NON-NLS-1$
 							Logger.logException("JSPIndexer problem indexing:" + filename, e); //$NON-NLS-1$
 						}
 					}
@@ -303,6 +296,9 @@ public class JSPIndexManager {
 					monitor.done();
 			}
 
+			// successfully finished, clear files list
+			clearFiles();
+			
 			long finish = System.currentTimeMillis();
 			long diff = finish - start;
 			if (DEBUG) {
@@ -330,6 +326,7 @@ public class JSPIndexManager {
 			}
 			return canceled;
 		}
+		
 	}
 
 	// end class ProcessFilesJob
@@ -397,7 +394,7 @@ public class JSPIndexManager {
 		}
 
 	}
-
+	
 	synchronized void setIndexState(int state) {
 		if (DEBUG) {
 			System.out.println("JSPIndexManager setting index state to: " + state2String(state)); //$NON-NLS-1$
@@ -432,18 +429,17 @@ public class JSPIndexManager {
 	}
 
 	void setUpdatingState() {
-		if (getIndexState() != S_CANCELED)
-			setIndexState(S_UPDATING);
+		//if (getIndexState() != S_CANCELED)
+		setIndexState(S_UPDATING);
 	}
 
 	void setCanceledState() {
 		setIndexState(JSPIndexManager.S_CANCELED);
 	}
 
-	// ca
 	void setStableState() {
-		if (getIndexState() != S_CANCELED)
-			setIndexState(S_STABLE);
+		//if (getIndexState() != S_CANCELED)
+		setIndexState(S_STABLE);
 	}
 
 	void setRebuildingState() {
@@ -473,6 +469,8 @@ public class JSPIndexManager {
 				getIndexingJob().removeJobChangeListener(this);
 			}
 		});
+		// we're about to reindex everything anyway
+		getProcessFilesJob().clearFiles();
 		getIndexingJob().schedule();
 
 	}
@@ -599,22 +597,27 @@ public class JSPIndexManager {
 		}
 	}
 
-	private class IndexJobCoordinator implements IJobChangeListener {
-
+	private class IndexJobCoordinator extends JobChangeAdapter {
+		
 		public void aboutToRun(IJobChangeEvent event) {
-			// do nothing
-		}
-
-		public void awake(IJobChangeEvent event) {
-			// do nothing
+			Job jobToCoordinate = event.getJob();
+			if (isJobToAvoid(jobToCoordinate)) {
+				// job will be rescheduled when the job we
+				// are avoiding (eg. build) is done
+				getProcessFilesJob().cancel();
+				//System.out.println("cancel:" + jobToCoordinate.getName());
+			}
 		}
 
 		public void done(IJobChangeEvent event) {
 
 			Job jobToCoordinate = event.getJob();
 			if (isJobToAvoid(jobToCoordinate)) {
-				if (getProcessFilesJob().getFiles().length > 0)
+				if (getProcessFilesJob().getFiles().length > 0) {
 					getProcessFilesJob().schedule(500);
+					//System.out.println("schedule:" + jobToCoordinate.getName());
+				}
+					
 
 			}
 		}
@@ -626,19 +629,6 @@ public class JSPIndexManager {
 			}
 			return result;
 
-		}
-
-		public void running(IJobChangeEvent event) {
-			// do nothing
-
-		}
-
-		public void scheduled(IJobChangeEvent event) {
-			// do nothing
-		}
-
-		public void sleeping(IJobChangeEvent event) {
-			// do nothing
 		}
 
 	}
@@ -659,7 +649,10 @@ public class JSPIndexManager {
 				return;
 			// previously canceled, needs entire index rebuild
 			if (getIndexState() == S_CANCELED) {
-				rebuildIndex();
+				// rebuildIndex();
+				// just resume indexing
+				getProcessFilesJob().schedule(500);
+				//System.out.println("schedule: resource changed, previously canceled");
 				return;
 			}
 
