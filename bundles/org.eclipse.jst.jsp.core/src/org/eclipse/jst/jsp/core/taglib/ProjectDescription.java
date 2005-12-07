@@ -17,7 +17,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
@@ -572,21 +571,15 @@ class ProjectDescription {
 		return info;
 	}
 
-	List getAvailableTaglibRecords(IPath path) {
+	synchronized List getAvailableTaglibRecords(IPath path) {
 		Collection implicitReferences = getImplicitReferences(path.toString()).values();
-		Collection records = new HashSet(fTLDReferences.size() + fTagDirReferences.size() + fJARReferences.size() + fWebXMLReferences.size());
-		records.addAll(implicitReferences);
+		List records = new ArrayList(fTLDReferences.size() + fTagDirReferences.size() + fJARReferences.size() + fWebXMLReferences.size());
 		records.addAll(fTLDReferences.values());
 		records.addAll(fTagDirReferences.values());
-		Collection jars = fJARReferences.values();
-		records.addAll(_getJSP11JarReferences(jars));
-		Iterator i = jars.iterator();
-		while (i.hasNext()) {
-			JarRecord record = (JarRecord) i.next();
-			records.addAll(record.urlRecords);
-		}
+		records.addAll(_getJSP11JarReferences(fJARReferences.values()));
 		records.addAll(fClasspathReferences.values());
-		return new ArrayList(records);
+		records.addAll(implicitReferences);
+		return records;
 	}
 
 	/**
