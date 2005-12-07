@@ -108,47 +108,45 @@ public class TestPropertySheetConfiguration extends TestCase {
 		return blankFile;
 	}
 
-	public void testPropertySourceRemoval() {
+	public void testPropertySourceRemoval() throws BadLocationException {
 		IDocument document = (IDocument) fEditor.getAdapter(IDocument.class);
-		try {
-			// set up the editor document
-			document.replace(0, 0, "<test><myproperty props=\"yes\" /></test>");
+		// set up the editor document
+		document.replace(0, 0, "<test><myproperty props=\"yes\" /></test>");
 
-			// set current selection in editor
-			ISelection setSelection = new TextSelection(9, 0);
-			fEditor.getSelectionProvider().setSelection(setSelection);
+		// set current selection in editor
+		ISelection setSelection = new TextSelection(9, 0);
+		fEditor.getSelectionProvider().setSelection(setSelection);
 
-			// get current selection in editor
-			Object item = null;
-			ISelection selection = fEditor.getSelectionProvider().getSelection();
-			if (selection instanceof IStructuredSelection) {
-				item = ((IStructuredSelection) selection).getFirstElement();
+		// get current selection in editor
+		Object item = null;
+		ISelection selection = fEditor.getSelectionProvider().getSelection();
+		if (selection instanceof IStructuredSelection) {
+			item = ((IStructuredSelection) selection).getFirstElement();
 
-				IPropertySheetPage propertySheet = (IPropertySheetPage) fEditor.getAdapter(IPropertySheetPage.class);
-				assertTrue("No ConfigurablePropertySheetPage found", propertySheet instanceof ConfigurablePropertySheetPage);
-				if (propertySheet instanceof ConfigurablePropertySheetPage) {
-					ConfigurablePropertySheetPage cps = (ConfigurablePropertySheetPage) propertySheet;
-					PropertySheetConfiguration config = cps.getConfiguration();
-					assertNotNull("No property sheet configuration found", config);
+			IPropertySheetPage propertySheet = (IPropertySheetPage) fEditor.getAdapter(IPropertySheetPage.class);
+			assertTrue("No ConfigurablePropertySheetPage found", propertySheet instanceof ConfigurablePropertySheetPage);
+			if (propertySheet instanceof ConfigurablePropertySheetPage) {
+				ConfigurablePropertySheetPage cps = (ConfigurablePropertySheetPage) propertySheet;
+				PropertySheetConfiguration config = cps.getConfiguration();
+				assertNotNull("No property sheet configuration found", config);
 
-					IPropertySourceProvider provider = config.getPropertySourceProvider(cps);
-					assertNotNull("No property sheet provider found", provider);
+				IPropertySourceProvider provider = config.getPropertySourceProvider(cps);
+				assertNotNull("No property sheet provider found", provider);
 
-					IPropertySource source = provider.getPropertySource(item);
-					if (source instanceof IPropertySourceExtension) {
-						boolean canRemove = ((IPropertySourceExtension) source).isPropertyRemovable("props");
-						assertTrue("Current property cannot be removed", canRemove);
-						if (canRemove) {
-							((IPropertySourceExtension) source).removeProperty("props");
-							assertTrue("Current property cannot be removed", true);
-						}
+				IPropertySource source = provider.getPropertySource(item);
+				if (source instanceof IPropertySourceExtension) {
+					boolean canRemove = ((IPropertySourceExtension) source).isPropertyRemovable("props");
+					assertTrue("Current property cannot be removed", canRemove);
+					if (canRemove) {
+						((IPropertySourceExtension) source).removeProperty("props");
+						assertTrue("Current property cannot be removed", true);
+						// force return here, to avoid last fall through
+						// failing assert
 					}
 				}
 			}
 		}
-		catch (BadLocationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		// if we get to here, alwasy fail, since something went wrong.
+		assertTrue("testPropertySourceRemoval test did not take expected path", false);
 	}
 }
