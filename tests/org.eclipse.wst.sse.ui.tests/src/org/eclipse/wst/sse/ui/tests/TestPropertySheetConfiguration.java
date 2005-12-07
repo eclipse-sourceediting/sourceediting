@@ -41,7 +41,7 @@ import org.eclipse.wst.sse.ui.views.properties.IPropertySourceExtension;
 import org.eclipse.wst.sse.ui.views.properties.PropertySheetConfiguration;
 
 public class TestPropertySheetConfiguration extends TestCase {
-	private final String PROJECT_NAME = "TestStructuredTextEditor";
+	private final String PROJECT_NAME = "TestPropertySheetConfiguration";
 	private final String FILE_NAME = "testPropertySheetConfiguration.xml";
 
 	private static StructuredTextEditor fEditor;
