@@ -16,113 +16,46 @@
 <link rel="stylesheet" type="text/css" href="../../org.eclipse.wst.doc.user/common.css" />
 <title>Creating JavaServer Pages (JSP) files</title>
 </head>
-<body id="tjcrejsp"><a name="tjcrejsp"><!-- --></a>
+<body id="tjcrejsp"><a name="tjcrejsp"></a>
 
 <h1 class="topictitle1">Creating JavaServer Pages (JSP) files</h1>
-<div><div class="skipspace"> <p>You can create and edit a JSP file,
-HTML file, or JSP tagging. This includes placing Java™ source code inside of scriptlet tags.
-</p>
- <div class="p">Most types of JSP files can be
+<div><div class="skipspace"> 
+    <p>Most types of JSP files can be
 created using the New JSP File wizard.
- </div>
-To create a basic JSP file using the JSP file wizard, complete the
+ </p>
+ To create a basic JSP file using the JSP file wizard, complete the
 following steps: </div>
-<ol><li class="skipspace"><span>Create a dynamic Web project if you have not already done so.</span></li>
-<li class="skipspace"><span>Open the <b>Web</b> perspective.</span></li>
-<li class="skipspace"><span>Select the Web project, and then select <span class="menucascade"><span class="uicontrol">File</span> &gt; <span class="uicontrol">New</span> &gt; <span class="uicontrol">JSP File</span></span>.</span> The New JSP File window appears.</li>
-<li class="skipspace"><span>Select the <b>Browse</b> button and select an appropriate container
-for the file from the list of project folders (and subfolders). </span> <p>The
-folder that you choose should be under the Web content folder of a dynamic
-Web project. If a JSP file is <i>not</i> under this folder, then it will not
+  <ol>
+    <li class="skipspace"><span>Create a dynamic Web project if you have not already done so.</span></li>
+    <li class="skipspace"><span>In the Project Explorer, expand your project and right click on  your  <b>WebContent </b>folder or on a subfolder under WebContent.<br>
+      <br>
+      Note that if you choose any other folder in which to create the JSP, then it will not
 be included in the WAR file that is deployed to the server. In addition, link
-validation will not encompass files that are not under the Web content folder.</p>
-</li>
-<li class="skipspace"><span>Type a file name into the appropriate field.</span></li>
-<li class="skipspace"><span>Ensure that the appropriate option is displayed in the <span class="uicontrol">Markup
-language</span> drop-down list. </span> Note that the option you
-choose will determine the model of JSP that appears in the <b>Model</b> pull-down
-list.<p>In addition, if you select the <span class="uicontrol">Create as JSP fragment</span> check
-box, this file will be created as a fragment that can be added to another
-JSP file. Other JSP files can include JSP fragments using a JSP include directive.
-Creating a fragment causes the resulting file to end in a .jspf or .jsf extension.
-You will not be prompted for DOCTYPE information, because a fragment cannot
-stand alone as a Web page, and it would invalidate any JSP file that included
-it.</p>
- <p>Also, depending on the markup language you select, you can select
-the <span class="uicontrol">Use XML style syntax</span> option to create a JSP file
-that adheres to XML style tagging.</p>
-</li>
-<li class="skipspace"><span> You have several options for proceeding: (Note that the windows
-that appear in this wizard are determined by the options that you select) </span><ul><li>To accept the defaults associated with a new JSP file, select <span class="uicontrol">None</span> in
-the <span class="uicontrol">Model</span> drop-down list, and  then select <span class="uicontrol">Finish</span>. </li>
-<li> To use one of the sample templates provided, select <span class="uicontrol">Create
-from page template</span>, and then select <b>Next</b>. (Note that this
-is only available for HTML and XHTML markup languages.) If you choose this
-option, a window appears in which you can choose a sample template or a user-defined
-template.</li>
-<li>If you want to specify or customize the file options, select the <span class="uicontrol">Configure
-advanced options</span> check box and click <span class="uicontrol">Next</span>.</li>
-</ul>
-</li>
-<li class="skipspace"><span> Click the <span class="uicontrol">Add</span> button to locate a Tag Library
-Descriptor (TLD) file or a JAR file that contains a TLD file to add tag libraries
-from a variety of sources.</span> <p>Tag library Universal Resource Identifier
-(URIs) can be located in one of the following places:</p>
-<ul><li>Defined in the web.xml file</li>
-<li>Within a JAR file located in the project lib directory that contains /META-INF/taglib.tld</li>
-<li>Within a JAR file external to the project</li>
-<li>In a "loose" TLD anywhere in the project</li>
-</ul>
-<ol type="a"><li class="skipspace"><span>In the <span class="uicontrol">Select a tag library</span> dialog, either
-select one of the available tag libraries, or click the <span class="uicontrol">Import</span> button
-to locate and add a tag library to the list, and then select it.</span> The
-dialog will automatically populate the informational fields that describe
-the tag library and its contents. You must specify a <span class="uicontrol">Prefix</span> value.</li>
-<li class="skipspace"><span>Click <span class="uicontrol">OK</span> to add the tag library.</span> Note that if the selected TLD files hasn't been registered in
-the web.xml file, it will be added automatically.</li>
-</ol>
-</li>
-<li class="skipspace"><span>Click <span class="uicontrol">Next</span>.</span></li>
-<li class="skipspace"><span>If you want to select an encoding type, deselect the <span class="uicontrol">Use
-workbench encoding</span> check box to select a new encoding attribute.
-Select the appropriate encoding value to add to the file's HTML declaration
-from the <span class="uicontrol">Encoding</span> drop-down list.</span> The default
-is the value set in the <span class="uicontrol">HTML Files</span> preferences page,
-which is accessed by selecting <span class="uicontrol">Window &gt; Preferences</span>,
-and then expanding the <span class="uicontrol">Web and XML Files</span> preferences.</li>
-<li class="skipspace"><span>Ensure that the proper content type is selected in the <span class="uicontrol">Content
-Type</span> drop-down list. The default depends on the markup language.</span></li>
-<li class="skipspace"><span>Select the <span class="uicontrol">Document Type</span> that you wish to
-associate with the JSP file. The default depends on the markup language.</span></li>
-<li class="skipspace"><span>Specify a cascading style sheet (CSS) file to be referenced by
-the new JSP file. Typically, CSS files are located in the theme folder under
-the Web content folder. You can use <b>Add</b> to choose a style sheet from
-the file system. Use <b>Remove</b> to delete a style sheet from the list,
-or use the arrow buttons to rearrange the order in which the file references
-the style sheets. If a style sheet is already associated with the project
-in which you are creating the new file, that style sheet is the default.</span></li>
-<li class="skipspace"><span>Click <span class="uicontrol">Next</span> to select specific method stubs
-and add deployment information to the Web project's web.xml file. </span> <p>Select
-any appropriate method stubs to be created in the servlet that is deployed
-for this JSP file.</p>
-<p>If you select the <span class="uicontrol">Add to web.xml</span> check
-box, the JSP file, along with its display name, and any URL mappings and initialization
-parameters associated with the JSP file will be automatically included in
-the Web project deployment descriptor file. Note that the <span class="uicontrol">File
-Name</span> value provided in the first page of the wizard is automatically
-mapped to the <span class="uicontrol">Servlet Name</span> value on this page, as well
-the <span class="uicontrol">URL Pattern</span> mappings. These mappings are not updated
-if you change the original value in the <span class="uicontrol">File Name</span> field.</p>
-</li>
-<li class="skipspace"><span>Click <span class="uicontrol">Finish</span> to create the file in the project
-that you have selected.</span></li>
-</ol>
+validation will not encompass files that are not under the WebContent folder.</span><br>
+      <br>
+    </li>
+    <li><span>From the context menu, select<span class="menucascade"><b> <span class="uicontrol">New</span> &gt; <span class="uicontrol">JSP</span></b></span>.</span> The New JavaServer Page window appears with your  folder selected.<br>
+      <br>
+    </li>
+    <li class="skipspace"><span>Type a file name into the File name field, making sure you include the jsp extension  (jsp, jsv, jtpl, or jspx)  in the file name.<br>
+      <br>
+      </span></li>
+    <li class="skipspace"><span> You have several options for proceeding: </span>
+      <ul>
+        <li>To accept the defaults associated with a new JSP file, select <span class="uicontrol"><b>Finish</b></span>. </li>
+        <li>To link to a file in the file system and specify path variables, select <b>Advanced</b> and then make your selections using the <b>Browse</b> and <b>Variables</b> buttons.</li>
+        <li> To use a template file for the initial content of your JSP page, select <b>Next</b>. The Select JSP Template window appears. Select the  <b>Use JSP Template</b> check box,  and then select one of the sample templates. You can also select the <b>JSP Templates</b> link to add or remove JSP templates to your list of templates.</li>
+      </ul>
+    </li>
+  </ol>
 </div>
 <div><p><b class="relconceptshd">Related concepts</b><br />
-<a href="../../org.eclipse.wst.webtoolscore.doc.user/topics/cpdjsps.html">JavaServer Pages (JSP) technology </a><br />
+<a href="../../org.eclipse.wst.webtools.doc.user/topics/cpdjsps.html">JavaServer Pages (JSP) technology </a><br />
 </p>
 <p><b class="reltaskshd">Related tasks</b><br />
 <a href="twcreprj.html" title="">Creating a dynamic Web project</a><br />
+    <a href="../../org.eclipse.wst.sse.doc.user/topics/tsrcedt028.html">Adding and removing JSP templates</a><br />
+	<a href="../../org.eclipse.platform.doc.user/tasks/tasks-45.htm">Creating linked resources</a><br />
 </p>
 </div>
 </body>
