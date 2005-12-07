@@ -2,9 +2,7 @@
 <?eclipse version="3.0"?>
 <plugin>
 
-	<extension-point
-		id="deviceProfileEntryProvider"
-		name="%Device_Profile_Entry_Provider_Extension.name" />
+	<extension-point id="deviceProfileEntryProvider" name="%Device_Profile_Entry_Provider_Extension.name" schema="schema/deviceProfileEntryProvider.exsd"/>
 
 	<extension point="org.eclipse.ui.editors">
 		<editor
