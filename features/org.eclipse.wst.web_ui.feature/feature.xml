@@ -8,16 +8,17 @@
       %description
    </description>
 
-
-
    <license url="license.html">
       %license
    </license>
 
-
    <includes
          id="org.eclipse.wst.web_userdoc.feature"
          version="0.0.0"/>
+
+   <requires>
+      <import feature="org.eclipse.wst.web_core.feature" version="1.0.0"/>
+   </requires>
 
    <plugin
          id="org.eclipse.wst.html.ui.infopop"

@@ -8,24 +8,20 @@
       %description
    </description>
 
-
-
    <license url="license.html">
       %license
    </license>
-
-   <requires>
-      <import feature="org.apache.xerces.feature" version="2.7.0"/>
-      <import feature="org.eclipse.wst.xml_core.feature" version="0.0.0"/>
-      <import feature="org.eclipse.wst.common_ui.feature" version="0.0.0"/>
-   </requires>
-
-
 
    <includes
          id="org.eclipse.wst.xml_userdoc.feature"
          version="0.0.0"/>
 
+   <requires>
+      <import feature="org.apache.xerces.feature" version="2.7.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.wst.xml_core.feature" version="1.0.0" match="equivalent"/>
+      <import feature="org.eclipse.wst.common_ui.feature" version="1.0.0" match="equivalent"/>
+      <import feature="org.eclipse.gef" version="3.1.1" match="equivalent"/>
+   </requires>
 
    <plugin
          id="org.eclipse.wst.dtd.ui"
