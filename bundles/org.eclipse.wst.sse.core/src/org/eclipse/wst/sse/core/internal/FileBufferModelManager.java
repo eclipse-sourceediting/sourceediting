@@ -533,9 +533,10 @@ public class FileBufferModelManager {
 			if (Logger.DEBUG_FILEBUFFERMODELMANAGEMENT) {
 				Logger.log(Logger.INFO, "FileBufferModelManager connecting to IFile " + file.getLocation()); //$NON-NLS-1$
 			}
-			// see TextFileDocumentProvider#createFileInfo about why we use IFile#getFullPath
+			// see TextFileDocumentProvider#createFileInfo about why we use
+			// IFile#getFullPath
 			// here, not IFile#getLocation.
-			IPath location= file.getFullPath();
+			IPath location = file.getFullPath();
 			if (location != null) {
 				bufferManager.connect(location, getProgressMonitor());
 				ITextFileBuffer buffer = bufferManager.getTextFileBuffer(location);
@@ -546,18 +547,18 @@ public class FileBufferModelManager {
 						 * Note: "info" being null at this point is a slight
 						 * error.
 						 * 
-						 * The connect call from above (or at some time earlier in
-						 * the session) would have notified the FileBufferMapper
-						 * of the creation of the corresponding text buffer and
-						 * created the DocumentInfo object for
-						 * IStructuredDocuments.
+						 * The connect call from above (or at some time
+						 * earlier in the session) would have notified the
+						 * FileBufferMapper of the creation of the
+						 * corresponding text buffer and created the
+						 * DocumentInfo object for IStructuredDocuments.
 						 */
 						info.selfConnected = true;
 					}
 					/*
 					 * Check the document type. Although returning null for
-					 * unknown documents would be fair, try to get a model if the
-					 * document is at least a valid type.
+					 * unknown documents would be fair, try to get a model if
+					 * the document is at least a valid type.
 					 */
 					IDocument bufferDocument = buffer.getDocument();
 					if (bufferDocument instanceof IStructuredDocument) {
@@ -656,6 +657,31 @@ public class FileBufferModelManager {
 				catch (CoreException e) {
 					Logger.logException("Error releasing model for " + location, e); //$NON-NLS-1$
 				}
+			}
+		}
+	}
+
+	public void revert(IDocument document) {
+		if (document == null) {
+			Exception iae = new IllegalArgumentException("can not release a model without a document reference"); //$NON-NLS-1$ 
+			Logger.logException(iae);
+			return;
+		}
+		DocumentInfo info = (DocumentInfo) fDocumentMap.get(document);
+		if (info == null) {
+			Logger.log(Logger.ERROR, "FileBufferModelManager was asked to revert a document but was not being managed");
+		}
+		else {
+			// get path just for potential error message
+			IPath location = info.buffer.getLocation();
+			try {
+				// ISSUE: in future, clients should provide progress monitor
+				info.buffer.revert(getProgressMonitor());
+			}
+			catch (CoreException e) {
+				// ISSUE: shoudl we not be re-throwing CoreExceptions? Or
+				// not catch them at all?
+				Logger.logException("Error reverting model for " + location, e); //$NON-NLS-1$
 			}
 		}
 	}

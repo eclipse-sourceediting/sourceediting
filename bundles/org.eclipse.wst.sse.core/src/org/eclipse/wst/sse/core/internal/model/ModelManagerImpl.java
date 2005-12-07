@@ -1358,11 +1358,21 @@ public class ModelManagerImpl implements IModelManager {
 				if ((sharedObject.referenceCountForRead == 0) && (sharedObject.referenceCountForEdit == 0)) {
 					discardModel(id, sharedObject);
 				}
-				// ISSUE: if edit goes to zero, but still open for read,
+				// if edit goes to zero, but still open for read,
 				// then we should reload here, so we are in synch with
 				// contents on disk.
+				// ISSUE: should we check isDirty here?
+				if ((sharedObject.referenceCountForRead > 0) && (sharedObject.referenceCountForEdit == 0)) {
+					revertModel(id, sharedObject);
+				}
 			}
 		}
+	}
+	
+	// private for now, though public forms have been requested, in past.
+	private void revertModel(Object id, SharedObject sharedObject) {
+		IStructuredDocument structuredDocument = sharedObject.theSharedModel.getStructuredDocument();
+		FileBufferModelManager.getInstance().revert(structuredDocument);
 	}
 
 	private void discardModel(Object id, SharedObject sharedObject) {
