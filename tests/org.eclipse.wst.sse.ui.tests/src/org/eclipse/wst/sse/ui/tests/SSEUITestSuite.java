@@ -30,6 +30,6 @@ public class SSEUITestSuite extends TestSuite {
 		addTest(new TestSuite(CommonEditorPreferencesTest.class));
 		addTest(new TestSuite(TestViewerConfiguration.class));
 		addTest(new TestSuite(TestStructuredTextEditor.class));
-		addTest((new TestSuite(TestPropertySheetConfiguration.class)));
+		//addTest((new TestSuite(TestPropertySheetConfiguration.class)));
 	}
 }
