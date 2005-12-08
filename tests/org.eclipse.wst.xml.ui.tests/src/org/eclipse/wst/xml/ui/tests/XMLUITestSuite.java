@@ -29,6 +29,7 @@ public class XMLUITestSuite extends TestSuite {
 		addTest(new TestSuite(TestViewerConfigurationXML.class));
 		addTest(new TestSuite(TestEditorConfigurationXML.class));
 		addTest(new TestSuite(TestOpenEditorXML.class));
+		addTest((new TestSuite(TestPropertySheetConfiguration.class)));
 
 	}
 }

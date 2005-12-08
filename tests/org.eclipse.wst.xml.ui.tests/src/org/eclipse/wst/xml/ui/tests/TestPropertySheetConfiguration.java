@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *     
  *******************************************************************************/
-package org.eclipse.wst.sse.ui.tests;
+package org.eclipse.wst.xml.ui.tests;
 
 import java.io.ByteArrayInputStream;
 
@@ -32,6 +32,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
+import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;
@@ -45,6 +46,7 @@ public class TestPropertySheetConfiguration extends TestCase {
 	private final String FILE_NAME = "testPropertySheetConfiguration.xml";
 
 	private static StructuredTextEditor fEditor;
+	private static IEditorPart fMainEditor;
 	private static IFile fFile;
 	private static boolean fIsSetup = false;
 
@@ -60,24 +62,30 @@ public class TestPropertySheetConfiguration extends TestCase {
 			fIsSetup = true;
 		}
 		// editor is opened each time
-		if (fIsSetup && fEditor == null) {
+		if (fIsSetup && fMainEditor == null) {
 			IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 			IWorkbenchPage page = workbenchWindow.getActivePage();
-			IEditorPart editor = IDE.openEditor(page, fFile, true, true);
-			if (editor instanceof StructuredTextEditor)
-				fEditor = (StructuredTextEditor) editor;
-			else
+			fMainEditor = IDE.openEditor(page, fFile, true, true);
+			if (fMainEditor instanceof StructuredTextEditor)
+				fEditor = (StructuredTextEditor) fMainEditor;
+			else if (fMainEditor != null) {
+				Object adapter = fMainEditor.getAdapter(ITextEditor.class);
+				if (adapter instanceof StructuredTextEditor)
+					fEditor = (StructuredTextEditor) adapter;
+			}
+			if (fEditor == null)
 				assertTrue("Unable to open structured text editor", false);
 		}
 	}
 
 	protected void tearDown() throws Exception {
 		// editor is closed each time
-		if (fEditor != null) {
+		if (fMainEditor != null) {
 			IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 			IWorkbenchPage page = workbenchWindow.getActivePage();
-			page.closeEditor(fEditor, false);
+			page.closeEditor(fMainEditor, false);
 			assertTrue("Unable to close editor", true);
+			fMainEditor = null;
 			fEditor = null;
 		}
 	}
