@@ -78,12 +78,15 @@
          <meta.section type="examples"/>
       </appInfo>
       <documentation>
-         &lt;extension point=&quot;org.eclipse.wst.sse.core.formatProcessors&quot;&gt;
-    &lt;processor
-        class=&quot;org.eclipse.wst.sse.core.xml.format.FormatProcessorXML&quot;
-        contentTypeId=&quot;org.eclipse.core.runtime.xml&quot;&gt;
-    &lt;/processor&gt;
-&lt;/extension&gt;
+         &lt;pre&gt;
+   &lt;extension
+         point=&quot;org.eclipse.wst.sse.core.formatProcessors&quot;&gt;
+      &lt;processor
+            class=&quot;org.eclipse.wst.sse.core.xml.format.FormatProcessorXML&quot;
+            contentTypeId=&quot;org.eclipse.core.runtime.xml&quot;&gt;
+      &lt;/processor&gt;
+   &lt;/extension&gt;
+&lt;/pre&gt;
       </documentation>
    </annotation>
 

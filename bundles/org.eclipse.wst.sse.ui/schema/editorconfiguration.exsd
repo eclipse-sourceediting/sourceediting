@@ -206,22 +206,21 @@
       </appInfo>
       <documentation>
          &lt;pre&gt;
-&lt;extension point=&quot;org.eclipse.wst.sse.ui.editorConfiguration&quot;&gt;
-&lt;!-- associating a source viewer configuration to an input&apos;s content type--&gt;
-     &lt;sourceViewerConfiguration
-          class=&quot;org.eclipse.wst.html.ui.StructuredTextViewerConfigurationHTML&quot;
-          target=&quot;org.eclipse.wst.html.core.htmlsource&quot;/&gt;
-
-&lt;!-- associating an outline configuration to an input&apos;s content type --&gt;
-     &lt;contentOutlineConfiguration
-          class=&quot;org.eclipse.wst.sse.xml.ui.views.contentoutline.XMLContentOutlineConfiguration&quot;
-          target=&quot;org.eclipse.core.runtime.xml&quot;/&gt;
-
-&lt;!-- associating a property sheet configuration to multiple content types --&gt;
-     &lt;propertySheetConfiguration
-          class=&quot;org.eclipse.wst.xml.ui.views.properties.XMLPropertySheetConfiguration&quot;
-          target=&quot;org.eclipse.wst.sse.contenttype.xml, org.eclipse.wst.html.core.htmlsource, org.eclipse.jst.jsp.core.jspsource&quot;/&gt;
-&lt;/extension&gt;
+   &lt;extension 
+         point=&quot;org.eclipse.wst.sse.ui.editorConfiguration&quot;&gt;
+      &lt;!-- associating a source viewer configuration to an input&apos;s content type--&gt;
+      &lt;sourceViewerConfiguration
+            class=&quot;org.eclipse.wst.html.ui.StructuredTextViewerConfigurationHTML&quot;
+            target=&quot;org.eclipse.wst.html.core.htmlsource&quot;/&gt;
+      &lt;!-- associating an outline configuration to an input&apos;s content type --&gt;
+      &lt;contentOutlineConfiguration
+           class=&quot;org.eclipse.wst.sse.xml.ui.views.contentoutline.XMLContentOutlineConfiguration&quot;
+            target=&quot;org.eclipse.core.runtime.xml&quot;/&gt;
+      &lt;!-- associating a property sheet configuration to multiple content types --&gt;
+      &lt;propertySheetConfiguration
+            class=&quot;org.eclipse.wst.xml.ui.views.properties.XMLPropertySheetConfiguration&quot;
+            target=&quot;org.eclipse.wst.sse.contenttype.xml, org.eclipse.wst.html.core.htmlsource, org.eclipse.jst.jsp.core.jspsource&quot;/&gt;
+   &lt;/extension&gt;
 &lt;/pre&gt;
       </documentation>
    </annotation>

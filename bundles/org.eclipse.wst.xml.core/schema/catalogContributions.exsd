@@ -6,17 +6,12 @@
          <meta.schema plugin="org.eclipse.wst.xml.core" id="catalogContributions" name="XML Catalog Contributions Extension Point"/>
       </appInfo>
       <documentation>
-         
+         This extension point allows to specify entries for XML Catalog.  Catalog entries have format specified in &lt;a href=&quot;http://www.oasis-open.org/committees/download.php/14041/xml-catalogs.html&quot;&gt;http://www.oasis-open.org/committees/entity/spec.html&lt;/a&gt;.  
+Each catalog extension consists of a single catalogContribution element.
       </documentation>
    </annotation>
 
    <element name="extension">
-      <annotation>
-         <documentation>
-            This extension point allows to specify entries for XML Catalog.  Catalog entries have format specified in &lt;a href=&quot;http://www.oasis-open.org/committees/download.php/14041/xml-catalogs.html&quot;&gt;http://www.oasis-open.org/committees/entity/spec.html&lt;/a&gt;.  
-Each catalog extension consists of a single catalogContribution element.
-         </documentation>
-      </annotation>
       <complexType>
          <choice>
             <element ref="catalogContribution"/>
@@ -228,26 +223,31 @@ Each catalog extension consists of a single catalogContribution element.
       </appInfo>
       <documentation>
          &lt;pre&gt;
-&lt;extension point=&quot;org.eclipse.wst.xml.uriresolver.catalogContributions&quot;&gt;
-  &lt;catalogContribution&gt; 
-    &lt;system 
-     systemId=&quot;http://schemas.xmlsoap.org/wsdl/&quot;
-     uri=&quot;data/xsd/wsdl.xml&quot; &gt; 
-      &lt;property name=&quot;webURL&quot; value=&quot;http://schemas.xmlsoap.org/wsdl/&quot;/&gt;
-    &lt;/system&gt;
-    &lt;uri
-     name=&quot;http://schemas.xmlsoap.org/wsdl/soap/&quot; 
-     uri=&quot;data/xsd/soap.xsd&quot;/&gt; 
-    &lt;public
-     publicId=&quot;http://www.w3.org/1999/XSL/Transform&quot;
-     uri=&quot;data/xsd/XSLSchema.xsd&quot;&gt;
-      &lt;property name=&quot;webURL&quot; value=&quot;http://schemas.xmlsoap.org/wsdl/&quot;/&gt;
-    &lt;/public&gt;
-    &lt;nextCatalog
-     id=&quot;nestedCatalog&quot; 
-     catalog=&quot;data/catalog1.xml&quot;/&gt; 
-  &lt;/catalogContribution&gt; 
-&lt;/extension&gt;
+   &lt;extension 
+         point=&quot;org.eclipse.wst.xml.uriresolver.catalogContributions&quot;&gt;
+      &lt;catalogContribution&gt; 
+         &lt;system 
+               systemId=&quot;http://schemas.xmlsoap.org/wsdl/&quot;
+               uri=&quot;data/xsd/wsdl.xml&quot; &gt; 
+            &lt;property 
+                  name=&quot;webURL&quot;
+                  value=&quot;http://schemas.xmlsoap.org/wsdl/&quot;/&gt;
+         &lt;/system&gt;
+         &lt;uri
+               name=&quot;http://schemas.xmlsoap.org/wsdl/soap/&quot; 
+               uri=&quot;data/xsd/soap.xsd&quot;/&gt; 
+         &lt;public
+               publicId=&quot;http://www.w3.org/1999/XSL/Transform&quot;
+               uri=&quot;data/xsd/XSLSchema.xsd&quot;&gt;
+            &lt;property 
+                  name=&quot;webURL&quot;
+                  value=&quot;http://schemas.xmlsoap.org/wsdl/&quot;/&gt;
+         &lt;/public&gt;
+         &lt;nextCatalog
+               id=&quot;nestedCatalog&quot; 
+               catalog=&quot;data/catalog1.xml&quot;/&gt; 
+      &lt;/catalogContribution&gt; 
+   &lt;/extension&gt;
 &lt;/pre&gt;
       </documentation>
    </annotation>

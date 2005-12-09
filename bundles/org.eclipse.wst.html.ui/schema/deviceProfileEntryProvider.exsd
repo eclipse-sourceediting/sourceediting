@@ -6,7 +6,7 @@
          <meta.schema plugin="org.eclipse.wst.html.ui" id="deviceProfileEntryProvider" name="Device Profile Entry Provider Extension"/>
       </appInfo>
       <documentation>
-         &lt;b&gt;This extension point is deprecated and should not be used.&lt;/b&gt;
+         
       </documentation>
    </annotation>
 
