@@ -51,7 +51,7 @@
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="plublicId" type="string" use="required">
+         <attribute name="publicId" type="string" use="required">
             <annotation>
                <documentation>
                   
