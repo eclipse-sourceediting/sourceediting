@@ -19,6 +19,7 @@
 <extension point="org.eclipse.help.contexts">
        <contexts file="EditorHtmlContexts.xml" plugin ="org.eclipse.wst.html.ui"/>
        <contexts file="EditorHtmlContexts2.xml" plugin ="org.eclipse.wst.html.core"/>
+         <contexts file="HTMLWizContexts.xml" plugin="org.eclipse.wst.html.ui"/>
 </extension>
 
 

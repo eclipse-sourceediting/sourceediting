@@ -1,10 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?eclipse version="3.1"?>
-
-<!-- ================================================= -->
-<!-- This is the plugin for declaring the help         -->
-<!-- contributions for using the tool.                 -->
-<!-- ================================================= -->
+<?NLS type="org.eclipse.help.contexts"?>
 <!-- /*******************************************************************************
  * Copyright (c) 2000, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
@@ -15,13 +10,12 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/ -->
-<plugin>
-
-<extension point="org.eclipse.help.contexts">
-       <contexts file="EditorJspContexts.xml" plugin="org.eclipse.jst.jsp.ui"/>
-       <contexts file="EditorJspContexts2.xml" plugin="org.eclipse.jst.jsp.core"/>
-       <contexts file="JspWizContexts.xml" plugin="org.eclipse.jst.jsp.ui"/>
-</extension>
+<contexts>
+<context id="htmlw0010">
+<description>Select the HTML template checkbox to create your HTML file based on a default template. Choose one of the frameset templates if you are developing a Web site with frames. If you do not select a template, your newly created JSP file will be completely blank.
+</description>
+</context>
 
 
-</plugin>
+
+</contexts>
