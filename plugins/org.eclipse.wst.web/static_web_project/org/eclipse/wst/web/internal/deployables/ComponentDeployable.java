@@ -129,7 +129,7 @@ public abstract class ComponentDeployable extends ProjectModule {
 				list.add(mf);
 			} else {
 				IFile f = (IFile) res[j];
-				ModuleFile mf = new ModuleFile(f, f.getName(), path, f.getModificationStamp());
+				ModuleFile mf = new ModuleFile(f, f.getName(), path, f.getModificationStamp() + f.getLocalTimeStamp());
 				list.add(mf);
 			}
 		}
