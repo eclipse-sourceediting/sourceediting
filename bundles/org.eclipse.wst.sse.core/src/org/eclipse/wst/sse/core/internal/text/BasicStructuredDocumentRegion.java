@@ -329,24 +329,19 @@ public class BasicStructuredDocumentRegion implements IStructuredDocumentRegion 
 
 	/**
 	 * Provides the type of IStructuredDocumentRegion ... not to be confused
-	 * with type of XML node!
+	 * with type of XML node! This is subclassed, if something other than type
+	 * of first region is desired.
+	 * 
 	 */
-	// For now return a String.
 	public String getType() {
-		// for a "named" XML node (e.g. start tag), but type of
-		// flatnode is "named xml node" (which is always the second region).
-		// Therefore, if there's two or more regions, the type for the
-		// flatnode
-		// will be the type of the second region. Otherwise it will be the
-		// type
-		// of the first region.
-		// Note: this can be refined as needed.
-		String result = UNDEFINED; // "IStructuredDocumentRegion.UNDEFINED";
-		// //$NON-NLS-1$
-		// we are assume there is always at least one region in a flatnode!
-		result = getRegions().get(0).getType();
-		// typcially subclassed, if something other than first region is
-		// desired
+		String result = UNDEFINED;
+		ITextRegionList subregions = getRegions();
+		if (subregions != null && subregions.size() > 0) {
+			ITextRegion firstRegion = subregions.get(0);
+			if (firstRegion != null) {
+				result = firstRegion.getType();
+			}
+		}
 		return result;
 	}
 
