@@ -8,12 +8,12 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.css.core.tests.model;
+package org.eclipse.wst.html.core.tests.model;
 
 
 import junit.framework.TestCase;
 
-import org.eclipse.wst.css.core.tests.util.FileUtil;
+import org.eclipse.wst.html.core.tests.utils.FileUtil;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

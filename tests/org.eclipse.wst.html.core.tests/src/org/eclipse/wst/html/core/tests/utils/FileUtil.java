@@ -16,6 +16,11 @@ import java.io.IOException;
 import java.net.URL;
 
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.wst.sse.core.internal.encoding.util.NullInputStream;
+import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.osgi.framework.Bundle;
 
 /**
@@ -24,6 +29,7 @@ import org.osgi.framework.Bundle;
  */
 public class FileUtil {
 	private static final String PLUGIN_ID = "org.eclipse.wst.html.core.tests";
+	public static final String commonEOL = "\r\n";
 	public static String fLineSeparator = System.getProperty("line.separator");
 	public static String fPathSeparator = System.getProperty("path.separator");
 	public static String fFileSeparator = System.getProperty("file.separator");
@@ -32,6 +38,7 @@ public class FileUtil {
 	static private String logSubDirectoryPath;
 
 	private static boolean notTriedYet = true;
+	static int uniqueNum = 0;
 
 	public static class DirFilenameFilter implements FilenameFilter {
 		String startOfAcceptableNames;
@@ -160,6 +167,26 @@ public class FileUtil {
 		String nowStr = String.valueOf(now);
 		result = directoryName + FileUtil.fFileSeparator + baseName + nowStr + extension;
 		return result;
+	}
+	public static IDOMModel createHTMLModel() {
+		IStructuredModel model = null;
+		try {
+
+			IModelManager modelManager = StructuredModelManager.getModelManager();
+
+			model = modelManager.getModelForEdit("test" + uniqueNum++ + ".html", new NullInputStream(), null); //$NON-NLS-1$
+
+			// always use the same line delimiter for these tests, regardless
+			// of plaform or preference settings
+			model.getStructuredDocument().setLineDelimiter(commonEOL);
+
+
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		return  (IDOMModel) model;
+
 	}
 
 }

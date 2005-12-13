@@ -10,18 +10,15 @@
  *     
  *******************************************************************************/
 
-package org.eclipse.wst.css.core.tests.model;
-
-import java.io.IOException;
+package org.eclipse.wst.html.core.tests.model;
 
 import junit.framework.TestCase;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.wst.css.core.internal.provisional.adapters.IStyleSheetAdapter;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleRule;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleSheet;
-import org.eclipse.wst.css.core.tests.util.FileUtil;
 import org.eclipse.wst.html.core.internal.provisional.HTML40Namespace;
+import org.eclipse.wst.html.core.tests.utils.FileUtil;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
@@ -73,17 +70,10 @@ public class TestForNPEInCSSCreation extends TestCase {
 			rule.getStyle().setProperty("background-color", "blue", "");
 			rule.getStyle().setProperty("background-color", "#0080ff", "");
 
-			model.save();
+			//model.save();
 
 
 		}
-		catch (IOException e) {
-			e.printStackTrace();
-		}
-		catch (CoreException e) {
-			e.printStackTrace();
-		}
-
 
 
 		finally {
