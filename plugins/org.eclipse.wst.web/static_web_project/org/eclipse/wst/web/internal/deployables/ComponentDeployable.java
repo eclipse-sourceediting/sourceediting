@@ -23,8 +23,10 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.wst.common.componentcore.ComponentCore;
 import org.eclipse.wst.common.componentcore.resources.IVirtualComponent;
+import org.eclipse.wst.common.componentcore.resources.IVirtualContainer;
 import org.eclipse.wst.common.componentcore.resources.IVirtualFolder;
 import org.eclipse.wst.common.componentcore.resources.IVirtualReference;
+import org.eclipse.wst.common.componentcore.resources.IVirtualResource;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.ServerUtil;
 import org.eclipse.wst.server.core.internal.ModuleFile;
@@ -51,7 +53,11 @@ public abstract class ComponentDeployable extends ProjectModule {
 	}
 	
 	private void addMembersToModuleFolder(ModuleFolder mf, IModuleResource[] mr) {
-		IModuleResource[] existingMembers = mf.members();
+		IModuleResource[] existingMembers = null;
+		if (mf == null || mf.members() == null)
+			existingMembers = new IModuleResource[0];
+		else
+			existingMembers = mf.members();
 		if (existingMembers==null)
 			existingMembers = new IModuleResource[0];
 		List membersJoin = new ArrayList();
@@ -70,7 +76,8 @@ public abstract class ComponentDeployable extends ProjectModule {
 			if (!found)
 				membersJoin.add(newMember);
 		}
-		mf.setMembers((IModuleResource[]) membersJoin.toArray(new IModuleResource[membersJoin.size()]));
+		if (mf !=null)
+			mf.setMembers((IModuleResource[]) membersJoin.toArray(new IModuleResource[membersJoin.size()]));
 	}
 	
 	 /**
@@ -84,17 +91,19 @@ public abstract class ComponentDeployable extends ProjectModule {
     
     public IModule[] getModules() {
 		List modules = new ArrayList();
-    	IVirtualReference[] components = component.getReferences();
-    	for (int i = 0; i < components.length; i++) {
-			IVirtualReference reference = components[i];
-			IVirtualComponent virtualComp = reference.getReferencedComponent();
-			if (virtualComp.getProject()!=component.getProject()) {
-				Object module = ServerUtil.getModule(virtualComp.getProject());
-				if (module != null && !modules.contains(module))
-					modules.add(module);
+		if (component != null) {
+	    	IVirtualReference[] components = component.getReferences();
+	    	for (int i = 0; i < components.length; i++) {
+				IVirtualReference reference = components[i];
+				IVirtualComponent virtualComp = reference.getReferencedComponent();
+				if (virtualComp != null && virtualComp.getProject()!=component.getProject()) {
+					Object module = ServerUtil.getModule(virtualComp.getProject());
+					if (module != null && !modules.contains(module))
+						modules.add(module);
+				}
 			}
 		}
-      return (IModule[]) modules.toArray(new IModule[modules.size()]);
+        return (IModule[]) modules.toArray(new IModule[modules.size()]);
 	}
     
     /**
@@ -115,22 +124,32 @@ public abstract class ComponentDeployable extends ProjectModule {
 		for (int j = 0; j < size2; j++) {
 			if (res[j] instanceof IContainer) {
 				IContainer cc = (IContainer) res[j];
-				// Retrieve already existing module folder if applicable
-				ModuleFolder mf = (ModuleFolder) getExistingModuleResource(members,new Path(cc.getName()));
-				if (mf == null)
-					mf = new ModuleFolder(cc, cc.getName(), path);
-				IModuleResource[] mr = getMembers(cc, path.append(cc.getName()), javaPath, javaCont);
-				IPath curPath = path.append(cc.getName());
 				
-				if (javaPath != null && curPath.isPrefixOf(javaPath))
-					mr = handleJavaPath(path, javaPath, curPath, javaCont, mr, cc);
+				IPath newPath = path.append(cc.getName());
+				// Retrieve already existing module folder if applicable
+				ModuleFolder mf = (ModuleFolder) getExistingModuleResource(members,newPath);
+				if (mf == null) {
+					mf = new ModuleFolder(cc, cc.getName(), path);
+					list.add(mf);
+				}
+				IModuleResource[] mr = getMembers(cc, newPath, javaPath, javaCont);
+				
+				if (javaPath != null && newPath.isPrefixOf(javaPath))
+					mr = handleJavaPath(path, javaPath, newPath, javaCont, mr, cc);
 
 				addMembersToModuleFolder(mf, mr);
-				list.add(mf);
+				
 			} else {
 				IFile f = (IFile) res[j];
-				ModuleFile mf = new ModuleFile(f, f.getName(), path, f.getModificationStamp() + f.getLocalTimeStamp());
-				list.add(mf);
+				// Handle the default package case
+				if (path.equals(javaPath)) {
+					ModuleFolder mFolder = (ModuleFolder) getExistingModuleResource(members,javaPath);
+					ModuleFile mFile = new ModuleFile(f, f.getName(), javaPath, f.getModificationStamp() + f.getLocalTimeStamp());
+					addMembersToModuleFolder(mFolder,new IModuleResource[]{mFile});
+				} else {
+					ModuleFile mf = new ModuleFile(f, f.getName(), path, f.getModificationStamp() + f.getLocalTimeStamp());
+					list.add(mf);
+				}
 			}
 		}
 		IModuleResource[] mr = new IModuleResource[list.size()];
@@ -138,6 +157,37 @@ public abstract class ComponentDeployable extends ProjectModule {
 		return mr;
 	}
 	
+	protected IModuleResource[] getMembers(IVirtualContainer cont, IPath path) throws CoreException {
+		IVirtualResource[] res = cont.members();
+		int size2 = res.length;
+		List list = new ArrayList(size2);
+		for (int j = 0; j < size2; j++) {
+			if (res[j] instanceof IVirtualContainer) {
+				IVirtualContainer cc = (IVirtualContainer) res[j];
+				// Retrieve already existing module folder if applicable
+				ModuleFolder mf = (ModuleFolder) getExistingModuleResource(members,new Path(cc.getName()));
+				if (mf == null) {
+					mf = new ModuleFolder((IContainer)cc.getUnderlyingResource(), cc.getName(), path);
+					list.add(mf);
+				}
+				IModuleResource[] mr = getMembers(cc, path.append(cc.getName()));
+				addMembersToModuleFolder(mf, mr);
+			} else {
+				IFile f = (IFile) res[j].getUnderlyingResource();
+				if (!isFileInSourceContainer(f)) {
+					ModuleFile mf = new ModuleFile(f, f.getName(), path, f.getModificationStamp() + f.getLocalTimeStamp());
+					list.add(mf);
+				}
+			}
+		}
+		IModuleResource[] mr = new IModuleResource[list.size()];
+		list.toArray(mr);
+		return mr;
+	}
+	
+	protected boolean isFileInSourceContainer(IFile file) {
+		return false;
+	}
 	private IModuleResource getExistingModuleResource(List aList, IPath path) {
     	IModuleResource result = null;
     	// If the list is empty, return null
@@ -165,14 +215,12 @@ public abstract class ComponentDeployable extends ProjectModule {
 	
 	public IModuleResource[] members() throws CoreException {
 		members.clear();
-		IPath javaPath = null;
-		IContainer[] javaCont = null;
-		IContainer[] cont = getResourceFolders();
-		int size = cont.length;
-		for (int i = 0; i < size; i++) {
-			IModuleResource[] mr = getMembers(cont[i], Path.EMPTY, javaPath, javaCont);
-			int size2 = mr.length;
-			for (int j = 0; j < size2; j++) {
+		IVirtualComponent vc = ComponentCore.createComponent(getProject());
+		if (vc != null) {
+			IVirtualFolder vFolder = vc.getRootFolder();
+			IModuleResource[] mr = getMembers(vFolder, Path.EMPTY);
+			int size = mr.length;
+			for (int j = 0; j < size; j++) {
 				if (!members.contains(mr[j]))
 					members.add(mr[j]);
 			}
