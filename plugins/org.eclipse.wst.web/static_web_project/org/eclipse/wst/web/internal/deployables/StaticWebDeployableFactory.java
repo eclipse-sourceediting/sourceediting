@@ -13,6 +13,8 @@ import java.util.Iterator;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jem.util.logger.proxy.Logger;
 import org.eclipse.wst.common.componentcore.ComponentCore;
 import org.eclipse.wst.common.componentcore.ModuleCoreNature;
@@ -108,5 +110,20 @@ public class StaticWebDeployableFactory extends ProjectModuleFactoryDelegate {
 			}
 		}
 		return module;
+	}
+	
+	/**
+	 * Returns the list of resources that the module should listen to
+	 * for state changes. The paths should be project relative paths.
+	 * Subclasses can override this method to provide the paths.
+	 *
+	 * @return a possibly empty array of paths
+	 */
+	protected IPath[] getListenerPaths() {
+		return new IPath[] {
+			new Path(".project"), // nature
+			new Path(".settings/.component"), // component
+			new Path(".settings/org.eclipse.wst.common.project.facet.core.xml") // facets
+		};
 	}
 }
