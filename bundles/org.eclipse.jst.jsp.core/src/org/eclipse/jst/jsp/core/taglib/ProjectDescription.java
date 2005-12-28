@@ -287,7 +287,7 @@ class ProjectDescription {
 		}
 
 		public String toString() {
-			return "TLDRecord: " + path + " <-> " + getURI(); //$NON-NLS-1$ //$NON-NLS-2$
+			return "TLDRecord: " + getURI() + " <-> " + path; //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 
@@ -1106,7 +1106,9 @@ class ProjectDescription {
 			if (path.segmentCount() > 1) {
 				IFile tldResource = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
 				if (tldResource.isAccessible()) {
-					ITLDRecord record = createTLDRecord(tldResource);
+					TLDRecord record = createTLDRecord(tldResource);
+					// the stored URI should reflect the web.xml's value
+					record.info.uri = taglibUri;
 					webxmlRecord.tldRecords.add(record);
 					getImplicitReferences(webxml.getFullPath().toString()).put(taglibUri, record);
 					if (_debugIndexCreation)
