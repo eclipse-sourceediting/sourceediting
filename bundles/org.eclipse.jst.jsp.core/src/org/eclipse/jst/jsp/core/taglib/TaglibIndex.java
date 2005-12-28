@@ -312,7 +312,8 @@ public final class TaglibIndex {
 	 * @deprecated - is not correct in flexible projects
 	 * @param path -
 	 *            a path under the web-app root
-	 * @return
+	 * @return the IPath considered to be the web-app's root for the given
+	 *         path
 	 */
 	public static IPath getContextRoot(IPath path) {
 		return _instance.internalGetContextRoot(path);
