@@ -15,13 +15,13 @@
 package org.eclipse.wst.dtd.ui.internal.views.contentoutline.actions;
 
 import org.eclipse.wst.dtd.core.internal.DTDNode;
-import org.eclipse.wst.sse.ui.StructuredTextEditor;
+import org.eclipse.wst.dtd.core.internal.document.DTDModelImpl;
 
 
 public class AddNotationAction extends BaseAction {
 
-	public AddNotationAction(StructuredTextEditor editor, String label) {
-		super(editor, label);
+	public AddNotationAction(DTDModelImpl model, String label) {
+		super(model, label);
 	}
 
 	public void run() {

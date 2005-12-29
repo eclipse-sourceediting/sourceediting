@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,46 +7,38 @@
  * 
  * Contributors:
  *     IBM Corporation - initial API and implementation
- *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-
-
 package org.eclipse.wst.dtd.ui.internal.views.contentoutline.actions;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.wst.dtd.core.internal.CMGroupNode;
+import org.eclipse.wst.dtd.core.internal.CMNode;
 import org.eclipse.wst.dtd.core.internal.DTDNode;
 import org.eclipse.wst.dtd.core.internal.Element;
 import org.eclipse.wst.dtd.core.internal.document.DTDModelImpl;
 
+public class ReplaceEmptyContentModelWithGroupAction extends BaseAction {
 
-public class AddElementToContentModelAction extends BaseAction {
-
-	public AddElementToContentModelAction(DTDModelImpl model, String label) {
+	public ReplaceEmptyContentModelWithGroupAction(DTDModelImpl model, String label) {
 		super(model, label);
 	}
 
 	public void run() {
 		DTDNode node = getFirstNodeSelected();
-
-		if (node instanceof CMGroupNode) {
-			((CMGroupNode) node).addChild();
-		}
-		else if (node instanceof Element) {
-			((Element) node).addChild();
+		if (node instanceof Element) {
+			CMNode contentModel = ((Element) node).getContentModel();
+			if (CMNode.EMPTY.equals(contentModel.getType())) {
+				getModel().beginRecording(this, getText());
+				((Element) node).replaceContentModel(this, "()"); //$NON-NLS-1$
+				getModel().endRecording(this);
+			}
 		}
 	}
 
 	protected boolean updateSelection(IStructuredSelection selection) {
 		boolean rc = super.updateSelection(selection);
 		DTDNode node = getFirstNodeSelected(selection);
-		if (node instanceof CMGroupNode) {
-			setEnabled(true);
-		}
-		else {
-			setEnabled(false);
-		}
+		setEnabled(node instanceof Element);
 		return rc;
 	}
 }
