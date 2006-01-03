@@ -145,7 +145,10 @@ public abstract class ComponentDeployable extends ProjectModule {
 				if (path.equals(javaPath)) {
 					ModuleFolder mFolder = (ModuleFolder) getExistingModuleResource(members,javaPath);
 					ModuleFile mFile = new ModuleFile(f, f.getName(), javaPath, f.getModificationStamp() + f.getLocalTimeStamp());
-					addMembersToModuleFolder(mFolder,new IModuleResource[]{mFile});
+					if (mFolder != null)
+						addMembersToModuleFolder(mFolder,new IModuleResource[]{mFile});
+					else
+						list.add(mFile);
 				} else {
 					ModuleFile mf = new ModuleFile(f, f.getName(), path, f.getModificationStamp() + f.getLocalTimeStamp());
 					list.add(mf);
