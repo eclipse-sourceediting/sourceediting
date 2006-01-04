@@ -12,7 +12,9 @@ package org.eclipse.wst.web.internal.deployables;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -53,33 +55,15 @@ public abstract class ComponentDeployable extends ProjectModule {
 	}
 	
 	private void addMembersToModuleFolder(ModuleFolder mf, IModuleResource[] mr) {
-		IModuleResource[] existingMembers = null;
-		if (mf == null || mf.members() == null)
-			existingMembers = new IModuleResource[0];
-		else
-			existingMembers = mf.members();
-		if (existingMembers==null)
-			existingMembers = new IModuleResource[0];
-		List membersJoin = new ArrayList();
-		membersJoin.addAll(Arrays.asList(existingMembers));
-		List newMembers = Arrays.asList(mr);
-		for (int i=0; i<newMembers.size(); i++) {
-			boolean found = false;
-			IModuleResource newMember = (IModuleResource) newMembers.get(i);
-			for (int k=0; k<membersJoin.size(); k++) {
-				IModuleResource existingResource = (IModuleResource) membersJoin.get(k);
-				if (existingResource.equals(newMember)) {
-					found = true;
-					break;
-				}
-			}
-			if (!found)
-				membersJoin.add(newMember);
-		}
-		if (mf !=null)
-			mf.setMembers((IModuleResource[]) membersJoin.toArray(new IModuleResource[membersJoin.size()]));
+		if (mf == null) return;
+		Set membersJoin = new HashSet();
+		if (mf.members() != null)
+			membersJoin.addAll(Arrays.asList(mf.members()));
+		if (mr != null && mr.length > 0)
+			membersJoin.addAll(Arrays.asList(mr));
+		mf.setMembers((IModuleResource[]) membersJoin.toArray(new IModuleResource[membersJoin.size()]));
 	}
-	
+
 	 /**
      * Returns the child modules of this module.
      * 
