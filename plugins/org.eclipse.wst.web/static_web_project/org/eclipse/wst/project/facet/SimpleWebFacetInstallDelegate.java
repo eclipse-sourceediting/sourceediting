@@ -9,6 +9,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jem.util.logger.proxy.Logger;
 import org.eclipse.wst.common.componentcore.ComponentCore;
 import org.eclipse.wst.common.componentcore.datamodel.FacetDataModelProvider;
+import org.eclipse.wst.common.componentcore.internal.util.ComponentUtilities;
 import org.eclipse.wst.common.componentcore.internal.util.IModuleConstants;
 import org.eclipse.wst.common.componentcore.resources.IVirtualComponent;
 import org.eclipse.wst.common.componentcore.resources.IVirtualFolder;
@@ -27,6 +28,7 @@ public class SimpleWebFacetInstallDelegate implements IDelegate {
 		c.create(0, null);
 		final IVirtualFolder webroot = c.getRootFolder();
 		webroot.createLink(new Path("/" + model.getStringProperty(ISimpleWebFacetInstallDataModelProperties.CONTENT_DIR)), 0, null); //$NON-NLS-1$
+		ComponentUtilities.setServerContextRoot(project,model.getStringProperty(ISimpleWebFacetInstallDataModelProperties.CONTEXT_ROOT));
 		try {
 			((IDataModelOperation) model.getProperty(FacetDataModelProvider.NOTIFICATION_OPERATION)).execute(monitor, null);
 		} catch (ExecutionException e) {
