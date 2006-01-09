@@ -20,18 +20,24 @@ import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.jdt.core.compiler.IProblem;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.jst.jsp.core.internal.JSPCoreMessages;
 import org.eclipse.jst.jsp.core.internal.JSPCorePlugin;
 import org.eclipse.jst.jsp.core.internal.java.IJSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapter;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapterFactory;
+import org.eclipse.jst.jsp.core.internal.java.JSPTranslationExtension;
 import org.eclipse.jst.jsp.core.internal.preferences.JSPCorePreferenceNames;
 import org.eclipse.jst.jsp.core.internal.provisional.contenttype.ContentTypeIdForJSP;
+import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.validation.internal.core.Message;
 import org.eclipse.wst.validation.internal.core.ValidationException;
 import org.eclipse.wst.validation.internal.operations.IWorkbenchContext;
@@ -41,6 +47,7 @@ import org.eclipse.wst.validation.internal.provisional.core.IValidationContext;
 import org.eclipse.wst.validation.internal.provisional.core.IValidator;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
 public class JSPValidator implements IValidator {
 
@@ -265,6 +272,7 @@ public class JSPValidator implements IValidator {
 		int sourceEnd = translation.getJspOffset(problem.getSourceEnd());
 		if (sourceStart == -1)
 			return null;
+		
 		// line number for marker starts @ 1
 		// line number from document starts @ 0
 		int lineNo = structuredDoc.getLineOfOffset(sourceStart) + 1;
@@ -277,7 +285,91 @@ public class JSPValidator implements IValidator {
 		m.setOffset(sourceStart);
 		m.setLength(sourceEnd - sourceStart + 1);
 
+		// need additional adjustment for problems from
+		// indirect (included) files
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=119633
+		if(translation.isIndirect(problem.getSourceStart())) {
+			adjustIndirectPosition(m, translation);
+		}
+		
 		return m;
+	}
+
+	/**
+	 * Assumed the message offset is an indirect position.
+	 * In other words, an error from an included file.
+	 * 
+	 * @param m
+	 * @param translation
+	 */
+	private void adjustIndirectPosition(IMessage m, JSPTranslation translation) {
+		
+		if(!(translation instanceof JSPTranslationExtension))
+			return;
+		
+		IDocument jspDoc = ((JSPTranslationExtension)translation).getJspDocument();
+		if(!(jspDoc instanceof IStructuredDocument))
+			return;
+		
+		IStructuredDocument sDoc = (IStructuredDocument)jspDoc;
+		IStructuredDocumentRegion[] regions = sDoc.getStructuredDocumentRegions(0, m.getOffset());
+		// iterate backwards until you hit the include directive
+		for(int i=regions.length-1; i>=0; i--) {
+			
+			IStructuredDocumentRegion region = regions[i];
+			if(region.getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_NAME) {
+				if(getDirectiveName(region).equals("include")) { //$NON-NLS-1$
+					ITextRegion fileValueRegion = getAttributeValueRegion(region, "file"); //$NON-NLS-1$
+					m.setOffset(region.getStartOffset(fileValueRegion));
+					m.setLength(fileValueRegion.getTextLength());
+					break;
+				}
+			}
+		}
+	}
+	
+	/**
+	 * 
+	 * @param sdr
+	 * @return the jsp directive name
+	 */
+	private String getDirectiveName(IStructuredDocumentRegion sdr) {
+		String name = "";
+		ITextRegionList subRegions = sdr.getRegions();
+		for (int j = 0; j < subRegions.size(); j++) {
+			ITextRegion subRegion = subRegions.get(j);
+			if(subRegion.getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_NAME) {
+				name = sdr.getText(subRegion);
+				break;
+			}
+		}
+		return name;
+	}
+	
+	/**
+	 * 
+	 * @param sdr
+	 * @param attrName
+	 * @return the ITextRegion for the attribute value of the given attribute name
+	 */
+	private ITextRegion getAttributeValueRegion(IStructuredDocumentRegion sdr, String attrName) {
+		ITextRegion valueRegion = null;
+		ITextRegionList subRegions = sdr.getRegions();
+		for (int i = 0; i < subRegions.size(); i++) {
+			ITextRegion subRegion = subRegions.get(i);
+			if(subRegion.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME && sdr.getText(subRegion).equals(attrName)) {
+				
+				for(int j=i+1; i<subRegions.size(); j++) {
+					subRegion = subRegions.get(j);
+					if(subRegion.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
+						valueRegion = subRegion;
+						break;
+					}
+				}
+				break;
+			}
+		}
+		return valueRegion;
 	}
 
 	/**
