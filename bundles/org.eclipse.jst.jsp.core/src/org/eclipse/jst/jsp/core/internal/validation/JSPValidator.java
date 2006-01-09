@@ -312,7 +312,7 @@ public class JSPValidator implements IValidator {
 			return;
 		
 		IStructuredDocument sDoc = (IStructuredDocument)jspDoc;
-		IStructuredDocumentRegion[] regions = sDoc.getStructuredDocumentRegions(0, m.getOffset());
+		IStructuredDocumentRegion[] regions = sDoc.getStructuredDocumentRegions(0, m.getOffset() + m.getLength());
 		// iterate backwards until you hit the include directive
 		for(int i=regions.length-1; i>=0; i--) {
 			
