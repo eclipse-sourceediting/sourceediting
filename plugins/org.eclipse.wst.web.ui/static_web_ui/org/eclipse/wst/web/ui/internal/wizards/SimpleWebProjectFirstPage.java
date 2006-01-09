@@ -11,6 +11,7 @@ public class SimpleWebProjectFirstPage extends DataModelFacetCreationWizardPage 
 		setDescription(ResourceHandler.StaticWebProjectWizardBasePage_Page_Description); 
 		setTitle(ResourceHandler.StaticWebProjectWizardBasePage_Page_Title); 
 		setImageDescriptor(WSTWebUIPlugin.getDefault().getImageDescriptor("newwprj_wiz")); //$NON-NLS-1$
+		setInfopopID(IWstWebUIContextIds.NEW_STATIC_WEB_PROJECT_PAGE1);
 	}
 
 }

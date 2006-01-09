@@ -27,6 +27,7 @@ public class SimpleWebFacetInstallPage extends DataModelFacetInstallPage impleme
 	}
 
 	protected Composite createTopLevelComposite(Composite parent) {
+		setInfopopID(IWstWebUIContextIds.NEW_STATIC_WEB_PROJECT_PAGE3);
 		final Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout(1, false));
 		
