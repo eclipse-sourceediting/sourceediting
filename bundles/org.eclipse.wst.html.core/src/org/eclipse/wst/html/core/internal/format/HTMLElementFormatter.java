@@ -28,6 +28,7 @@ import org.eclipse.wst.xml.core.internal.provisional.format.IStructuredFormatPre
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.w3c.dom.Attr;
 import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
 
 // nakamori_TODO: check and remove CSS formatting
 
@@ -58,6 +59,14 @@ public class HTMLElementFormatter extends HTMLFormatter {
 	/**
 	 */
 	private void formatEndTag(IDOMElement element, HTMLFormatContraints contraints) {
+		Node lastChild = element.getLastChild();
+		
+		if(lastChild != null && lastChild instanceof IDOMElement && lastChild.getNodeName().equals("jsp:scriptlet")) { //$NON-NLS-1$
+			insertBreakAfter((IDOMElement)lastChild, contraints);
+			return;
+		}
+		
+		
 		IStructuredDocumentRegion endStructuredDocumentRegion = element.getEndStructuredDocumentRegion();
 		if (endStructuredDocumentRegion == null)
 			return;
@@ -117,6 +126,12 @@ public class HTMLElementFormatter extends HTMLFormatter {
 	/**
 	 */
 	private void formatStartTag(IDOMElement element, HTMLFormatContraints contraints) {
+		
+		if(element.getNodeName().equals("jsp:scriptlet")) { //$NON-NLS-1$
+			insertBreakBefore(element, contraints);
+			return;
+		}
+		
 		IStructuredDocumentRegion startStructuredDocumentRegion = element.getStartStructuredDocumentRegion();
 		if (startStructuredDocumentRegion == null)
 			return;
