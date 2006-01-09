@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import org.eclipse.core.filebuffers.ITextFileBuffer;
 import org.eclipse.core.resources.IFile;
@@ -28,7 +29,9 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.Position;
+import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.jst.jsp.core.internal.Logger;
+import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.text.edits.DeleteEdit;
 import org.eclipse.text.edits.InsertEdit;
 import org.eclipse.text.edits.MalformedTreeException;
@@ -39,6 +42,9 @@ import org.eclipse.text.edits.UndoEdit;
 import org.eclipse.wst.sse.core.internal.FileBufferModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
 
 /**
@@ -181,6 +187,11 @@ public class JSPTranslationExtension extends JSPTranslation {
 				}
 				else {
 					replaceText = newJavaText.substring(deltas[i].postOffset, deltas[i].postOffset + deltas[i].postLength);
+					
+					// get rid of pre and post white space or fine tuned adjustment later.
+					// fix text here...
+					replaceText = fixJspReplaceText(replaceText, jspPos.offset);
+					
 					jspEdits.add(new ReplaceEdit(jspPos.offset, jspPos.length, replaceText));
 				}
 				if(DEBUG) 
@@ -218,6 +229,97 @@ public class JSPTranslationExtension extends JSPTranslation {
 		return allJspEdits;
 	}
 	
+	private String fixJspReplaceText(String replaceText, int jspOffset) {
+		
+		// result is the text inbetween the delimiters
+		// eg.
+		// 
+		// <%  result 
+		// %>
+		String result = replaceText.trim();
+		String preDelimiterWhitespace = "";
+		
+		IDocument jspDoc = getJspDocument();
+		if(jspDoc instanceof IStructuredDocument) {
+			IStructuredDocument sDoc = (IStructuredDocument)jspDoc;
+			IStructuredDocumentRegion[] regions = sDoc.getStructuredDocumentRegions(0, jspOffset);
+			IStructuredDocumentRegion lastRegion = regions[regions.length-1];
+			
+			// only specifically modify scriptlets
+			if(lastRegion != null && lastRegion.getType() == DOMJSPRegionContexts.JSP_SCRIPTLET_OPEN) {
+				for (int i = regions.length-1; i >= 0; i--) {
+					IStructuredDocumentRegion region = regions[i];
+					
+					// is there a better way to check whitespace?
+					if(region.getType() == DOMRegionContext.XML_CONTENT && region.getFullText().trim().equals("")) {
+						
+						preDelimiterWhitespace = region.getFullText();
+						preDelimiterWhitespace = preDelimiterWhitespace.replaceAll("\r", "");
+						preDelimiterWhitespace = preDelimiterWhitespace.replaceAll("\n", "");
+						
+						// need to determine indent for that first line...
+						 String initialIndent = getInitialIndent(result);
+						 
+						 // fix the first line of java code
+						result = TextUtilities.getDefaultLineDelimiter(sDoc) 
+									+ initialIndent 
+									+ result;
+						
+						result = adjustIndent(result, preDelimiterWhitespace, TextUtilities.getDefaultLineDelimiter(sDoc));
+						
+						// add whitespace before last delimiter to match
+					    // it w/ the opening delimiter
+						result = result + TextUtilities.getDefaultLineDelimiter(sDoc) + preDelimiterWhitespace;
+						break;
+					}
+				}
+			}
+		}
+		return result;
+	}
+	
+	private String adjustIndent(String textBefore, String indent, String delim) {
+		
+		// get indent after 2nd line break
+		StringBuffer textAfter = new StringBuffer();
+		// will this work on mac?
+		textBefore = textBefore.replaceAll("\r", "");
+		StringTokenizer st = new StringTokenizer(textBefore, "\n", true);
+		while(st.hasMoreTokens()) {
+			String tok = st.nextToken();
+			if(tok.equals("\n")) {
+				textAfter.append(delim);
+			}
+			else {
+				// prepend each line w/ specified indent
+				textAfter.append(indent);
+				textAfter.append(tok);
+			}
+		}
+		return textAfter.toString();
+		
+	}
+	
+	private String getInitialIndent(String result) {
+		
+		// get indent after 2nd line break
+		String indent = "";
+		StringTokenizer st = new StringTokenizer(result, "\r\n", false);
+		if(st.countTokens() > 1) {
+			String tok = st.nextToken();
+			tok = st.nextToken();
+			int index =0;
+			if(tok != null) {
+				while(tok.charAt(index) == ' ' || tok.charAt(index) == '\t') {
+					indent += tok.charAt(index);
+					index++;
+				}
+			}
+		}
+		return indent;
+	}
+
+
 	/**
 	 * Combines an array of edits into one MultiTextEdit (with the appropriate coverage region)
 	 * @param edits
