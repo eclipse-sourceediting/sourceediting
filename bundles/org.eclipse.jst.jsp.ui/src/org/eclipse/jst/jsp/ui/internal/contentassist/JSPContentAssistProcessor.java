@@ -866,7 +866,47 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor {
 				jspResults = merge(jspResults, htmlResults);
 			}
 		}
+
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=86656
+		if(partitionType == IJSPPartitionTypes.JSP_DIRECTIVE) {
+			ICompletionProposal[] importProposals = getImportProposals(viewer, documentPosition);
+			if(importProposals.length > 0)
+				jspResults = merge(jspResults, importProposals);			
+		}
 		return jspResults;
+	}
+	
+	private ICompletionProposal[] getImportProposals(ITextViewer viewer, int documentPosition) {
+		List importProposals = new ArrayList();
+		ICompletionProposal[] proposals =  getJSPJavaCompletionProposals(viewer, documentPosition);
+		for (int i = 0; i < proposals.length; i++) {
+			if(proposals[i] instanceof JSPCompletionProposal) {
+				
+				ICompletionProposal importProposal = adjustImportProposal((JSPCompletionProposal)proposals[i]);
+				importProposals.add(importProposal);
+			}
+		}
+		return (ICompletionProposal[])importProposals.toArray(new ICompletionProposal[importProposals.size()]);
+	}
+
+	
+	private ICompletionProposal adjustImportProposal(JSPCompletionProposal importProposal) {
+		
+		// just need to remove the ";"
+		// and adjust offsets for the change
+		String newReplace = importProposal.getReplacementString().replaceAll(";", ""); 
+		importProposal.setReplacementString(newReplace);
+		
+		String newDisplay = importProposal.getDisplayString().replaceAll(";", "");
+		importProposal.setDisplayString(newDisplay);
+		
+		int newReplacementLength = importProposal.getReplacementLength()-1;
+		importProposal.setReplacementLength(newReplacementLength);
+		
+		int newCursorPosition = importProposal.getCursorPosition() - 1;
+		importProposal.setCursorPosition(newCursorPosition);
+		
+		return importProposal;
 	}
 
 	/**
@@ -956,7 +996,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor {
 		JSPJavaContentAssistProcessor p = (JSPJavaContentAssistProcessor) fPartitionToProcessorMap.get(IJSPPartitionTypes.JSP_DEFAULT);
 		return p.computeCompletionProposals(viewer, documentPosition);
 	}
-
+	
 	/**
 	 * @param viewer
 	 * @param documentPosition
