@@ -48,6 +48,10 @@ Export-Package: org.eclipse.wst.xml.core.internal,
  org.eclipse.wst.xml.core.internal.validation,
  org.eclipse.wst.xml.core.internal.validation.core,
  org.eclipse.wst.xml.core.internal.validation.core.logging,
+ org.eclipse.wst.xml.core.internal.search,
+ org.eclipse.wst.xml.core.internal.search.impl,
+ org.eclipse.wst.xml.core.internal.search.quickscan, 
+ org.eclipse.wst.xml.core.internal.search.matching,  
  org.w3c.dom,
  org.w3c.dom.ranges,
  org.w3c.dom.traversal,
@@ -65,6 +69,6 @@ Require-Bundle: org.apache.xerces;visibility:=reexport,
  org.eclipse.emf.ecore.edit;resolution:=optional,
  org.eclipse.wst.common.emf;resolution:=optional,
  org.eclipse.emf.ecore.xmi;resolution:=optional,
- org.eclipse.wst.common.emfworkbench.integration;resolution:=optional
- 
+ org.eclipse.wst.common.emfworkbench.integration;resolution:=optional,
+ org.eclipse.wst.common.core
 Eclipse-AutoStart: true; exceptions="org.eclipse.wst.xml.core.internal.contenttype"
