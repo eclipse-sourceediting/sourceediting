@@ -45,8 +45,9 @@ final class AttributeCollection extends CMNamedNodeMapImpl implements HTML40Name
 
 	/**
 	 * Create an attribute declaration.
-
-	 * @param attrName java.lang.String
+	 * 
+	 * @param attrName
+	 *            java.lang.String
 	 */
 	private HTMLAttrDeclImpl create(String attrName) {
 		HTMLAttrDeclImpl attr = null;
@@ -405,7 +406,8 @@ final class AttributeCollection extends CMNamedNodeMapImpl implements HTML40Name
 		}
 		else if (attrName.equalsIgnoreCase(ATTR_NAME_FRAME)) {
 			// (frame %TFrame; #IMPLIED)
-			// %TFrame; is (void|above|below|hsides|lhs|rhs|vsides|box|border).
+			// %TFrame; is
+			// (void|above|below|hsides|lhs|rhs|vsides|box|border).
 			atype = new HTMLCMDataTypeImpl(CMDataType.ENUM);
 			String[] values = {ATTR_VALUE_VOID, ATTR_VALUE_ABOVE, ATTR_VALUE_BELOW, ATTR_VALUE_HSIDES, ATTR_VALUE_LHS, ATTR_VALUE_RHS, ATTR_VALUE_VSIDES, ATTR_VALUE_BOX, ATTR_VALUE_BORDER};
 			atype.setEnumValues(values);
@@ -420,13 +422,13 @@ final class AttributeCollection extends CMNamedNodeMapImpl implements HTML40Name
 			atype.setImpliedValue(CMDataType.IMPLIED_VALUE_DEFAULT, ATTR_VALUE_1);
 			attr = new HTMLAttrDeclImpl(ATTR_NAME_FRAMEBORDER, atype, CMAttributeDeclaration.OPTIONAL);
 
-			//<<D215684
+			// <<D215684
 		}
 		else if (attrName.equalsIgnoreCase(ATTR_NAME_FRAMESPACING)) {
 			// (framespacing CDATA; #IMPLIED)
 			atype = new HTMLCMDataTypeImpl(CMDataType.CDATA);
 			attr = new HTMLAttrDeclImpl(ATTR_NAME_FRAMESPACING, atype, CMAttributeDeclaration.OPTIONAL);
-			//D215684
+			// D215684
 		}
 		else if (attrName.equalsIgnoreCase(ATTR_NAME_HEADERS)) {
 			// (HEADERS IDREFS; #IMPLIED)
@@ -658,7 +660,7 @@ final class AttributeCollection extends CMNamedNodeMapImpl implements HTML40Name
 
 		}
 		else if (attrName.equalsIgnoreCase(ATTR_NAME_ONFOCUS)) {
-			//	(onfocus %Script; #IMPLIED)
+			// (onfocus %Script; #IMPLIED)
 			atype = new HTMLCMDataTypeImpl(HTMLCMDataType.SCRIPT);
 			attr = new HTMLAttrDeclImpl(ATTR_NAME_ONFOCUS, atype, CMAttributeDeclaration.OPTIONAL);
 
@@ -914,8 +916,8 @@ final class AttributeCollection extends CMNamedNodeMapImpl implements HTML40Name
 		else if (attrName.equalsIgnoreCase(ATTR_NAME_SRC)) {
 			// (src %URI; #IMPLIED)
 			// NOTE: "src" attributes are defined in several elements.
-			//		 The definition of IMG is different from others.
-			//		 So, it should be locally defined.
+			// The definition of IMG is different from others.
+			// So, it should be locally defined.
 			atype = new HTMLCMDataTypeImpl(CMDataType.URI);
 			attr = new HTMLAttrDeclImpl(ATTR_NAME_SRC, atype, CMAttributeDeclaration.OPTIONAL);
 
@@ -957,8 +959,8 @@ final class AttributeCollection extends CMNamedNodeMapImpl implements HTML40Name
 
 		}
 		else if (attrName.equalsIgnoreCase(ATTR_NAME_TEXT)) {
-			// (text CDATA #IMPLIED)
-			atype = new HTMLCMDataTypeImpl(CMDataType.CDATA);
+			// (text %Color; #IMPLIED)
+			atype = new HTMLCMDataTypeImpl(HTMLCMDataType.COLOR);
 			attr = new HTMLAttrDeclImpl(ATTR_NAME_TEXT, atype, CMAttributeDeclaration.OPTIONAL);
 
 		}
@@ -1108,9 +1110,9 @@ final class AttributeCollection extends CMNamedNodeMapImpl implements HTML40Name
 	}
 
 	/**
-	 * Get align attribute which has %CAlign; as values..
-	 * At this time (4/19/2001), it is identical to %LAlign;.
-	 *
+	 * Get align attribute which has %CAlign; as values.. At this time
+	 * (4/19/2001), it is identical to %LAlign;.
+	 * 
 	 */
 	public static final HTMLAttrDeclImpl createAlignForCaption() {
 		// align (local)
@@ -1152,13 +1154,12 @@ final class AttributeCollection extends CMNamedNodeMapImpl implements HTML40Name
 	}
 
 	/**
-	 * Create an attribute declaration for <code>align</code>
-	 * in several elements, like <code>P</code>, <code>DIV</code>.
-	 * The values are different from attributes those have the same name
-	 * in other elements (<code>IMG</code> and <code>TABLE</code>).
-	 * So, it can't treat as global attributes.
-	 * <strong>NOTE: These attribute declaration has
-	 * no owner CMDocument instance.</strong>
+	 * Create an attribute declaration for <code>align</code> in several
+	 * elements, like <code>P</code>, <code>DIV</code>. The values are
+	 * different from attributes those have the same name in other elements (<code>IMG</code>
+	 * and <code>TABLE</code>). So, it can't treat as global attributes.
+	 * <strong>NOTE: These attribute declaration has no owner CMDocument
+	 * instance.</strong>
 	 */
 	public static final HTMLAttrDeclImpl createAlignForParagraph() {
 		HTMLCMDataTypeImpl atype = new HTMLCMDataTypeImpl(CMDataType.ENUM);
@@ -1171,8 +1172,8 @@ final class AttributeCollection extends CMNamedNodeMapImpl implements HTML40Name
 	}
 
 	/**
-	 * Get %attrs; declarations.
-	 * %attrs; consists of %coreattrs;, %i18n, and %events;.
+	 * Get %attrs; declarations. %attrs; consists of %coreattrs;, %i18n, and
+	 * %events;.
 	 */
 	public void getAttrs(CMNamedNodeMapImpl declarations) {
 		// %coreattrs;
@@ -1195,11 +1196,9 @@ final class AttributeCollection extends CMNamedNodeMapImpl implements HTML40Name
 	}
 
 	/**
-	 * Get %cellhalign; declarations.
-	 * %cellhaligh; consists of:
-	 *  - (align (left|center|right|justify|char) #IMPLIED)
-	 *  - (char %Character; #IMPLIED)
-	 *  - (charoff %Length; #IMPLIED)
+	 * Get %cellhalign; declarations. %cellhaligh; consists of: - (align
+	 * (left|center|right|justify|char) #IMPLIED) - (char %Character;
+	 * #IMPLIED) - (charoff %Length; #IMPLIED)
 	 */
 	public void getCellhalign(CMNamedNodeMapImpl declarations) {
 		// (align (left|center|right|justify|char) #IMPLIED) should be defined
@@ -1218,9 +1217,8 @@ final class AttributeCollection extends CMNamedNodeMapImpl implements HTML40Name
 	}
 
 	/**
-	 * Get %cellvalign; declarations.
-	 * %cellhaligh; is:
-	 *  - (valign (top|middle|bottom|baseline) #IMPLIED)
+	 * Get %cellvalign; declarations. %cellhaligh; is: - (valign
+	 * (top|middle|bottom|baseline) #IMPLIED)
 	 */
 	public void getCellvalign(CMNamedNodeMapImpl declarations) {
 		HTMLAttributeDeclaration dec = getDeclaration(HTML40Namespace.ATTR_NAME_VALIGN);
@@ -1238,7 +1236,9 @@ final class AttributeCollection extends CMNamedNodeMapImpl implements HTML40Name
 
 	/**
 	 * Get a global attribute declaration.
-	 * @param attrName java.lang.String
+	 * 
+	 * @param attrName
+	 *            java.lang.String
 	 */
 	public HTMLAttributeDeclaration getDeclaration(String attrName) {
 		CMNode cmnode = getNamedItem(attrName);
@@ -1254,7 +1254,9 @@ final class AttributeCollection extends CMNamedNodeMapImpl implements HTML40Name
 
 	/**
 	 * Get declarations which are specified by names.
-	 * @param names java.util.Iterator
+	 * 
+	 * @param names
+	 *            java.util.Iterator
 	 */
 	public void getDeclarations(CMNamedNodeMapImpl declarations, Iterator names) {
 		while (names.hasNext()) {
