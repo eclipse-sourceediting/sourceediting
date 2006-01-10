@@ -13,7 +13,6 @@ package org.eclipse.wst.xsd.ui.internal.properties;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Display;
@@ -23,7 +22,7 @@ import org.eclipse.ui.views.properties.PropertyDescriptor;
 import org.eclipse.ui.views.properties.TextPropertyDescriptor;
 import org.eclipse.wst.xsd.ui.internal.XSDEditorContextIds;
 import org.eclipse.wst.xsd.ui.internal.XSDEditorPlugin;
-import org.eclipse.wst.xsd.ui.internal.refactor.delete.XSDExternalFileCleanup;
+import org.eclipse.wst.xsd.ui.internal.refactor.rename.XSDExternalFileCleanup;
 import org.eclipse.wst.xsd.ui.internal.util.TypesHelper;
 import org.eclipse.wst.xsd.ui.internal.util.XSDSchemaHelper;
 import org.eclipse.xsd.XSDConcreteComponent;

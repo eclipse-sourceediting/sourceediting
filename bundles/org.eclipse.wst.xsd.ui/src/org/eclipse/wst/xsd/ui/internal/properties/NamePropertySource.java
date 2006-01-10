@@ -12,7 +12,6 @@ package org.eclipse.wst.xsd.ui.internal.properties;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
@@ -20,13 +19,8 @@ import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
 import org.eclipse.ui.views.properties.TextPropertyDescriptor;
 import org.eclipse.wst.xsd.ui.internal.XSDEditorPlugin;
-import org.eclipse.wst.xsd.ui.internal.refactor.rename.GlobalAttributeGroupRenamer;
-import org.eclipse.wst.xsd.ui.internal.refactor.rename.GlobalGroupRenamer;
 import org.eclipse.wst.xsd.ui.internal.util.XSDDOMHelper;
-import org.eclipse.xsd.XSDAttributeGroupDefinition;
 import org.eclipse.xsd.XSDConcreteComponent;
-import org.eclipse.xsd.XSDModelGroupDefinition;
-import org.eclipse.xsd.XSDNamedComponent;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.util.XSDConstants;
 
@@ -143,11 +137,13 @@ public class NamePropertySource
           if (xsdSchema != null)
           {
             XSDConcreteComponent comp = xsdSchema.getCorrespondingComponent(element);
-            if (comp != null && comp instanceof XSDAttributeGroupDefinition && comp.getContainer().equals(xsdSchema))
-            {
-              GlobalAttributeGroupRenamer renamer = new GlobalAttributeGroupRenamer((XSDNamedComponent)comp, (String)value);
-              renamer.visitSchema(xsdSchema);
-            }
+            
+            // TODO cs : revisit
+            //if (comp != null && comp instanceof XSDAttributeGroupDefinition && comp.getContainer().equals(xsdSchema))
+            //{
+            //  GlobalAttributeGroupRenamer renamer = new GlobalAttributeGroupRenamer((XSDNamedComponent)comp, (String)value);
+            //  renamer.visitSchema(xsdSchema);
+            //}
           }
           element.setAttribute(XSDConstants.NAME_ATTRIBUTE, (String)value);
           endRecording(element);
@@ -192,12 +188,13 @@ public class NamePropertySource
             // now rename any references to this element
             if (xsdSchema != null)
              {
-              XSDConcreteComponent comp = xsdSchema.getCorrespondingComponent(element);
-              if (comp != null && comp instanceof XSDModelGroupDefinition && comp.getContainer().equals(xsdSchema))
-              {
-                GlobalGroupRenamer renamer = new GlobalGroupRenamer((XSDNamedComponent)comp, newValue);
-                renamer.visitSchema(xsdSchema);
-              }
+              // TODO cs : revisit
+              //XSDConcreteComponent comp = xsdSchema.getCorrespondingComponent(element);
+              //if (comp != null && comp instanceof XSDModelGroupDefinition && comp.getContainer().equals(xsdSchema))
+              //{
+              //  GlobalGroupRenamer renamer = new GlobalGroupRenamer((XSDNamedComponent)comp, newValue);
+              //  renamer.visitSchema(xsdSchema);
+              //}
             }
             element.setAttribute(XSDConstants.NAME_ATTRIBUTE, newValue);
             endRecording(element);

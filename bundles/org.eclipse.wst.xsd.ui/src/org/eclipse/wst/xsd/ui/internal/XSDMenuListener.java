@@ -11,7 +11,6 @@
 package org.eclipse.wst.xsd.ui.internal;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -23,7 +22,6 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.actions.ActionContext;
 import org.eclipse.wst.xsd.ui.internal.actions.AddEnumsAction;
 import org.eclipse.wst.xsd.ui.internal.actions.AddModelGroupAction;
 import org.eclipse.wst.xsd.ui.internal.actions.BackAction;
@@ -44,7 +42,6 @@ import org.eclipse.wst.xsd.ui.internal.actions.SetTypeAction;
 import org.eclipse.wst.xsd.ui.internal.actions.XSDEditNamespacesAction;
 import org.eclipse.wst.xsd.ui.internal.graph.model.Category;
 import org.eclipse.wst.xsd.ui.internal.provider.CategoryAdapter;
-import org.eclipse.wst.xsd.ui.internal.refactor.actions.RefactorActionGroup;
 import org.eclipse.wst.xsd.ui.internal.util.TypesHelper;
 import org.eclipse.wst.xsd.ui.internal.util.XSDDOMHelper;
 import org.eclipse.xsd.XSDCompositor;
@@ -67,7 +64,7 @@ public class XSDMenuListener implements IMenuListener
   protected XSDSchema xsdSchema;
   protected boolean isReadOnly;
   protected Object sourceContext;
-  private RefactorActionGroup fRefactorMenuGroup;
+  //private RefactorActionGroup fRefactorMenuGroup;
 
   /**
    * Constructor for XSDMenuListener.
@@ -1675,11 +1672,13 @@ public class XSDMenuListener implements IMenuListener
   }
   
   protected void addRefactorMenuGroup(IMenuManager manager){
+    /*
 	  	fRefactorMenuGroup = new RefactorActionGroup(selectionProvider, getXSDSchema());
      	ActionContext context= new ActionContext(selectionProvider.getSelection());
     	fRefactorMenuGroup.setContext(context);
     	fRefactorMenuGroup.fillContextMenu(manager);
     	fRefactorMenuGroup.setContext(null);
+    */    
   }
 
   protected void addCreateAnnotationAction(IMenuManager manager, String elementTag, String label, List attributes, Element parent, Node relativeNode)

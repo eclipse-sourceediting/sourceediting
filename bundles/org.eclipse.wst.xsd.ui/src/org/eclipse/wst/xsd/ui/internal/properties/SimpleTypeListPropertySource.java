@@ -12,7 +12,6 @@ package org.eclipse.wst.xsd.ui.internal.properties;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Display;

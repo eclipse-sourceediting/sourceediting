@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
-
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
@@ -39,7 +38,6 @@ import org.eclipse.wst.sse.ui.internal.actions.StructuredTextEditorActionConstan
 import org.eclipse.wst.xsd.ui.internal.actions.ISchemaEditorActionConstants;
 import org.eclipse.wst.xsd.ui.internal.actions.ReloadDependenciesAction;
 import org.eclipse.wst.xsd.ui.internal.actions.SourcePageActionContributor;
-import org.eclipse.wst.xsd.ui.internal.refactor.actions.RefactorActionGroup;
 
 public class XSDActionBarContributor extends MultiPageEditorActionBarContributor
 {
@@ -53,7 +51,7 @@ public class XSDActionBarContributor extends MultiPageEditorActionBarContributor
 
   protected RetargetAction retargetReloadDependenciesAction;
   private RetargetTextEditorAction renameElementAction = null;
-  private IMenuManager refactorMenu = null;
+  //private IMenuManager refactorMenu = null;
  
   /**
    * Constructor for XSDActionBarContributor.
@@ -77,8 +75,8 @@ public class XSDActionBarContributor extends MultiPageEditorActionBarContributor
 	renameElementAction.setActionDefinitionId("org.eclipse.wst.xsd.ui.refactor.rename.element"); // TODO: add to contstants command id
 		
 	// the refactor menu, add the menu itself to add all refactor actions
-	refactorMenu = new MenuManager(XSDEditorPlugin.getXSDString("refactoring.menu.label"), RefactorActionGroup.MENU_ID); //TODO: externalize string
-	refactorMenu.add(this.renameElementAction);
+	//refactorMenu = new MenuManager(XSDEditorPlugin.getXSDString("refactoring.menu.label"), RefactorActionGroup.MENU_ID); //TODO: externalize string
+	//refactorMenu.add(this.renameElementAction);
   }
 
   protected void updateActions()

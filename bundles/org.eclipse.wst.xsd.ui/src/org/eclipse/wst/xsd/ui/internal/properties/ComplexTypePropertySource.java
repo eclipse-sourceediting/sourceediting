@@ -12,18 +12,15 @@ package org.eclipse.wst.xsd.ui.internal.properties;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.wst.xsd.ui.internal.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.internal.actions.SetBaseTypeAction;
-import org.eclipse.wst.xsd.ui.internal.refactor.rename.GlobalSimpleOrComplexTypeRenamer;
 import org.eclipse.wst.xsd.ui.internal.util.XSDDOMHelper;
 import org.eclipse.xsd.XSDComplexTypeDefinition;
 import org.eclipse.xsd.XSDConcreteComponent;
-import org.eclipse.xsd.XSDNamedComponent;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.util.XSDConstants;
 import org.w3c.dom.Element;
@@ -222,8 +219,9 @@ public class ComplexTypePropertySource
               {
 //                XSDComplexTypeDefinition ct = (XSDComplexTypeDefinition)comp;
 //                ct.setName(newValue);
-                GlobalSimpleOrComplexTypeRenamer renamer = new GlobalSimpleOrComplexTypeRenamer((XSDNamedComponent)comp, newValue);
-                renamer.visitSchema(xsdSchema);
+                //TODO : cs revisit
+                //GlobalSimpleOrComplexTypeRenamer renamer = new GlobalSimpleOrComplexTypeRenamer((XSDNamedComponent)comp, newValue);
+                //renamer.visitSchema(xsdSchema);
               }
             }
             element.setAttribute(XSDConstants.NAME_ATTRIBUTE, newValue);

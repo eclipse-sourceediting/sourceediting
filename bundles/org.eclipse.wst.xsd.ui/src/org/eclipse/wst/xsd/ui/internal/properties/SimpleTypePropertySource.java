@@ -12,7 +12,6 @@ package org.eclipse.wst.xsd.ui.internal.properties;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
@@ -20,10 +19,8 @@ import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
 import org.eclipse.ui.views.properties.TextPropertyDescriptor;
 import org.eclipse.wst.xsd.ui.internal.XSDEditorPlugin;
-import org.eclipse.wst.xsd.ui.internal.refactor.rename.GlobalSimpleOrComplexTypeRenamer;
 import org.eclipse.wst.xsd.ui.internal.util.XSDDOMHelper;
 import org.eclipse.xsd.XSDConcreteComponent;
-import org.eclipse.xsd.XSDNamedComponent;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.eclipse.xsd.util.XSDConstants;
@@ -156,8 +153,9 @@ public class SimpleTypePropertySource
             if (comp != null && comp instanceof XSDSimpleTypeDefinition && comp.getContainer().equals(xsdSchema))
             {
 //                ((XSDNamedComponent)comp).setName(name);
-              GlobalSimpleOrComplexTypeRenamer renamer = new GlobalSimpleOrComplexTypeRenamer((XSDNamedComponent)comp, name);
-              renamer.visitSchema(xsdSchema);
+              // TODO CS : revisit
+              //GlobalSimpleOrComplexTypeRenamer renamer = new GlobalSimpleOrComplexTypeRenamer((XSDNamedComponent)comp, name);
+              //renamer.visitSchema(xsdSchema);
             }
           }
           element.setAttribute(XSDConstants.NAME_ATTRIBUTE, name);

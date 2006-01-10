@@ -12,7 +12,6 @@ package org.eclipse.wst.xsd.ui.internal.properties;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
@@ -20,7 +19,6 @@ import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
 import org.eclipse.ui.views.properties.TextPropertyDescriptor;
 import org.eclipse.wst.xsd.ui.internal.XSDEditorPlugin;
-import org.eclipse.wst.xsd.ui.internal.refactor.rename.GlobalAttributeRenamer;
 import org.eclipse.wst.xsd.ui.internal.util.XSDDOMHelper;
 import org.eclipse.xsd.XSDAttributeDeclaration;
 import org.eclipse.xsd.XSDConcreteComponent;
@@ -223,8 +221,9 @@ public class AttributePropertySource
           {
             XSDAttributeDeclaration xsdAttributeDeclaration = (XSDAttributeDeclaration)comp;
             xsdAttributeDeclaration.setName((String)value);
-            GlobalAttributeRenamer renamer = new GlobalAttributeRenamer(xsdAttributeDeclaration, (String)value);
-            renamer.visitSchema(xsdSchema);
+            //TODO : cs revisit
+            //GlobalAttributeRenamer renamer = new GlobalAttributeRenamer(xsdAttributeDeclaration, (String)value);
+            //renamer.visitSchema(xsdSchema);
           }
         }
         element.setAttribute(XSDConstants.NAME_ATTRIBUTE, (String)value);

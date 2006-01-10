@@ -11,7 +11,6 @@
 package org.eclipse.wst.xsd.ui.internal.actions;
 
 import java.util.Iterator;
-
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -20,26 +19,10 @@ import org.eclipse.ui.actions.SelectionListenerAction;
 import org.eclipse.wst.xml.core.internal.document.DocumentImpl;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xsd.ui.internal.XSDEditorPlugin;
-import org.eclipse.wst.xsd.ui.internal.refactor.delete.BaseGlobalCleanup;
-import org.eclipse.wst.xsd.ui.internal.refactor.delete.GlobalAttributeCleanup;
-import org.eclipse.wst.xsd.ui.internal.refactor.delete.GlobalAttributeGroupCleanup;
-import org.eclipse.wst.xsd.ui.internal.refactor.delete.GlobalElementCleanup;
-import org.eclipse.wst.xsd.ui.internal.refactor.delete.GlobalGroupCleanup;
-import org.eclipse.wst.xsd.ui.internal.refactor.delete.GlobalSimpleOrComplexTypeCleanup;
-import org.eclipse.wst.xsd.ui.internal.refactor.delete.XSDExternalFileCleanup;
-import org.eclipse.wst.xsd.ui.internal.util.TypesHelper;
 import org.eclipse.wst.xsd.ui.internal.util.XSDDOMHelper;
-import org.eclipse.xsd.XSDAttributeDeclaration;
-import org.eclipse.xsd.XSDAttributeGroupDefinition;
 import org.eclipse.xsd.XSDConcreteComponent;
-import org.eclipse.xsd.XSDElementDeclaration;
-import org.eclipse.xsd.XSDImport;
-import org.eclipse.xsd.XSDInclude;
-import org.eclipse.xsd.XSDModelGroupDefinition;
 import org.eclipse.xsd.XSDParticle;
-import org.eclipse.xsd.XSDRedefine;
 import org.eclipse.xsd.XSDSchema;
-import org.eclipse.xsd.XSDTypeDefinition;
 import org.eclipse.xsd.util.XSDConstants;
 import org.w3c.dom.Node;
 
@@ -161,6 +144,7 @@ public class DeleteAction extends SelectionListenerAction
   protected boolean cleanupReferences(Node deletedNode)
   {
     boolean refresh = false;
+    /*
     XSDConcreteComponent comp = getSchema().getCorrespondingComponent(deletedNode);
     
     if (comp instanceof XSDInclude ||
@@ -227,7 +211,7 @@ public class DeleteAction extends SelectionListenerAction
       {
         cleanHelper.visitSchema(getSchema());
       }
-    }
+    }*/
     return refresh;
   }
 

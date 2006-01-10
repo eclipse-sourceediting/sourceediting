@@ -14,7 +14,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -23,7 +22,7 @@ import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
 import org.eclipse.wst.xsd.ui.internal.actions.CreateElementAction;
 import org.eclipse.wst.xsd.ui.internal.actions.DOMAttribute;
 import org.eclipse.wst.xsd.ui.internal.dialogs.types.xml.XMLComponentSpecification;
-import org.eclipse.wst.xsd.ui.internal.refactor.delete.XSDExternalFileCleanup;
+import org.eclipse.wst.xsd.ui.internal.refactor.rename.XSDExternalFileCleanup;
 import org.eclipse.wst.xsd.ui.internal.util.TypesHelper;
 import org.eclipse.wst.xsd.ui.internal.util.XSDDOMHelper;
 import org.eclipse.xsd.XSDImport;
@@ -236,14 +235,14 @@ public class XSDSetTypeHelper {
         // Referential integrity on old import
         // How can we be sure that if the newlocation is the same as the oldlocation
         // the file hasn't changed
-        
+                
         XSDSchema referencedSchema = xsdImport.getResolvedSchema();
         if (referencedSchema != null)
         {
           XSDExternalFileCleanup cleanHelper = new XSDExternalFileCleanup(referencedSchema);
           cleanHelper.visitSchema(xsdSchema);
         }
-
+         
         Element schemaElement = xsdSchema.getElement();
 
         // update the xmlns in the schema element first, and then update the import element next

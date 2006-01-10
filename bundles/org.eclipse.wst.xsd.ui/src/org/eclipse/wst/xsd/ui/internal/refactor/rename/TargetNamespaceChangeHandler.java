@@ -11,9 +11,7 @@
 package org.eclipse.wst.xsd.ui.internal.refactor.rename;
 
 import java.util.Iterator;
-
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.wst.xsd.ui.internal.refactor.XSDVisitor;
 import org.eclipse.xsd.XSDAttributeDeclaration;
 import org.eclipse.xsd.XSDAttributeGroupContent;
 import org.eclipse.xsd.XSDAttributeGroupDefinition;

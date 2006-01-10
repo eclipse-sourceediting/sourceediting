@@ -20,20 +20,11 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.wst.common.ui.properties.internal.provisional.ITabbedPropertyConstants;
 import org.eclipse.wst.common.ui.properties.internal.provisional.TabbedPropertySheetWidgetFactory;
 import org.eclipse.wst.xsd.ui.internal.XSDEditorPlugin;
-import org.eclipse.wst.xsd.ui.internal.refactor.rename.GlobalAttributeGroupRenamer;
-import org.eclipse.wst.xsd.ui.internal.refactor.rename.GlobalAttributeRenamer;
-import org.eclipse.wst.xsd.ui.internal.refactor.rename.GlobalElementRenamer;
-import org.eclipse.wst.xsd.ui.internal.refactor.rename.GlobalGroupRenamer;
-import org.eclipse.wst.xsd.ui.internal.refactor.rename.GlobalSimpleOrComplexTypeRenamer;
 import org.eclipse.wst.xsd.ui.internal.util.XSDDOMHelper;
 import org.eclipse.xsd.XSDAttributeDeclaration;
-import org.eclipse.xsd.XSDAttributeGroupDefinition;
 import org.eclipse.xsd.XSDAttributeUse;
 import org.eclipse.xsd.XSDComplexTypeDefinition;
 import org.eclipse.xsd.XSDComponent;
-import org.eclipse.xsd.XSDConcreteComponent;
-import org.eclipse.xsd.XSDElementDeclaration;
-import org.eclipse.xsd.XSDModelGroupDefinition;
 import org.eclipse.xsd.XSDNamedComponent;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.eclipse.xsd.XSDTypeDefinition;
@@ -234,6 +225,8 @@ public class NameSection extends AbstractSection
 
 	private void doReferentialIntegrityCheck(XSDComponent xsdComponent, String newValue)
 	{
+    }
+/*    
     Element element = xsdComponent.getElement();
     if (XSDDOMHelper.inputEquals(element, XSDConstants.ELEMENT_ELEMENT_TAG, false))
     {
@@ -401,7 +394,7 @@ public class NameSection extends AbstractSection
     
 
 
-	}
+	}*/
 
   boolean checkForAnonymousType(Element element)
   {

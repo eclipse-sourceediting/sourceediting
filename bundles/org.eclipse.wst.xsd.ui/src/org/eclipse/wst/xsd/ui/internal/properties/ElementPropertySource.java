@@ -12,7 +12,6 @@ package org.eclipse.wst.xsd.ui.internal.properties;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
@@ -20,12 +19,9 @@ import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
 import org.eclipse.ui.views.properties.TextPropertyDescriptor;
 import org.eclipse.wst.xsd.ui.internal.XSDEditorPlugin;
-import org.eclipse.wst.xsd.ui.internal.refactor.rename.GlobalElementRenamer;
 import org.eclipse.wst.xsd.ui.internal.util.TypesHelper;
 import org.eclipse.wst.xsd.ui.internal.util.XSDDOMHelper;
 import org.eclipse.xsd.XSDConcreteComponent;
-import org.eclipse.xsd.XSDElementDeclaration;
-import org.eclipse.xsd.XSDNamedComponent;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.util.XSDConstants;
 import org.w3c.dom.Attr;
@@ -330,11 +326,13 @@ public class ElementPropertySource extends BasePropertySource implements IProper
           if (xsdSchema != null)
           {
             XSDConcreteComponent comp = xsdSchema.getCorrespondingComponent(element);
-            if (comp != null && comp instanceof XSDElementDeclaration && comp.getContainer().equals(xsdSchema))
-            {
-              GlobalElementRenamer renamer = new GlobalElementRenamer((XSDNamedComponent)comp, newValue);
-              renamer.visitSchema(xsdSchema);
-            }
+            
+            // TODO cs : revisit
+            //if (comp != null && comp instanceof XSDElementDeclaration && comp.getContainer().equals(xsdSchema))
+            //{
+              //GlobalElementRenamer renamer = new GlobalElementRenamer((XSDNamedComponent)comp, newValue);
+              //renamer.visitSchema(xsdSchema);
+            //}
           }
         }
       }

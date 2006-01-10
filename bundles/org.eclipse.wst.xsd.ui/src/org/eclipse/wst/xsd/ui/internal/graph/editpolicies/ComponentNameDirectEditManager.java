@@ -14,14 +14,7 @@ import org.eclipse.draw2d.Label;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.wst.xsd.ui.internal.graph.editparts.TopLevelComponentEditPart;
-import org.eclipse.wst.xsd.ui.internal.refactor.rename.GlobalElementRenamer;
-import org.eclipse.wst.xsd.ui.internal.refactor.rename.GlobalGroupRenamer;
-import org.eclipse.wst.xsd.ui.internal.refactor.rename.GlobalSimpleOrComplexTypeRenamer;
-import org.eclipse.xsd.XSDElementDeclaration;
-import org.eclipse.xsd.XSDModelGroupDefinition;
 import org.eclipse.xsd.XSDNamedComponent;
-import org.eclipse.xsd.XSDTypeDefinition;
-import org.eclipse.xsd.util.XSDSwitch;
 
 
 
@@ -57,8 +50,10 @@ public class ComponentNameDirectEditManager extends TextCellEditorManager
       this.name = name;
     }                                                              
 
-    public void run()
-    {                             
+    public void run()       
+    { 
+      //TODO cs : revisit
+      /*                            
       XSDSwitch xsdSwitch = new XSDSwitch()
       {                   
         public Object caseXSDTypeDefinition(XSDTypeDefinition object)
@@ -82,7 +77,7 @@ public class ComponentNameDirectEditManager extends TextCellEditorManager
           return null;
         }
       };
-      xsdSwitch.doSwitch(component); 
+      xsdSwitch.doSwitch(component);*/ 
       component.setName(name);
       if (mySource instanceof TopLevelComponentEditPart)
       {

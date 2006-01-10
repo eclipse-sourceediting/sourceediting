@@ -11,7 +11,6 @@
 package org.eclipse.wst.xsd.ui.internal.properties.section;
 
 import java.util.Map;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ViewerFilter;
@@ -34,7 +33,7 @@ import org.eclipse.wst.common.ui.properties.internal.provisional.ITabbedProperty
 import org.eclipse.wst.common.ui.properties.internal.provisional.TabbedPropertySheetWidgetFactory;
 import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
 import org.eclipse.wst.xsd.ui.internal.XSDEditorPlugin;
-import org.eclipse.wst.xsd.ui.internal.refactor.delete.XSDExternalFileCleanup;
+import org.eclipse.wst.xsd.ui.internal.refactor.rename.XSDExternalFileCleanup;
 import org.eclipse.wst.xsd.ui.internal.util.TypesHelper;
 import org.eclipse.wst.xsd.ui.internal.util.XSDSchemaHelper;
 import org.eclipse.wst.xsd.ui.internal.wizards.XSDSelectIncludeFileWizard;
