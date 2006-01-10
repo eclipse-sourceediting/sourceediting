@@ -280,6 +280,18 @@ public class JSPTranslationExtension extends JSPTranslation {
 	
 	private String adjustIndent(String textBefore, String indent, String delim) {
 		
+		// first replace multiple indent with single indent
+		// the triple indent occurs because the scriptlet code
+		// actually occurs under:
+		// 
+		//    class
+		//       method
+		//          code
+		// 
+		// in the translated java document
+		
+		textBefore = textBefore.replaceAll("\t\t\t", "\t");
+		
 		// get indent after 2nd line break
 		StringBuffer textAfter = new StringBuffer();
 		// will this work on mac?
