@@ -188,7 +188,7 @@ public class CustomCompletionProposal implements ICompletionProposal, ICompletio
     public int getContextInformationPosition() {
         return getCursorPosition();
     }
-
+    
     public int getCursorPosition() {
         return fCursorPosition;
     }
@@ -197,6 +197,10 @@ public class CustomCompletionProposal implements ICompletionProposal, ICompletio
         fCursorPosition = pos;
     }
 
+    public void setDisplayString(String newDisplayString) {
+    	fDisplayString = newDisplayString;
+    }
+    
     public String getDisplayString() {
         // return fProposal.getDisplayString();
         return fDisplayString;
@@ -211,6 +215,9 @@ public class CustomCompletionProposal implements ICompletionProposal, ICompletio
         return fRelevance;
     }
 
+    public void setReplacementLength(int newReplacementLength) {
+        fReplacementLength = newReplacementLength;
+    }  
     public int getReplacementLength() {
         return fReplacementLength;
     }
