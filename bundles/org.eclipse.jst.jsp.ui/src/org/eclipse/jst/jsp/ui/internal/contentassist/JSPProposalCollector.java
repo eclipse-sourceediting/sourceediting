@@ -91,7 +91,7 @@ public class JSPProposalCollector extends CompletionProposalCollector {
 			if(proposal.getKind() == CompletionProposal.TYPE_REF) {
 				String signature = String.valueOf(proposal.getDeclarationSignature());
 				String completion = String.valueOf(proposal.getCompletion());
-				if(completion.contains(signature)) {
+				if(completion.indexOf(signature) != -1) {
 					jspProposal = createAutoImportProposal(proposal);			
 				}
 			}
@@ -115,7 +115,7 @@ public class JSPProposalCollector extends CompletionProposalCollector {
 		// it's fully qualified so we should
 		// add an import statement
 		// create an autoimport proposal
-		String newCompletion = completion.replace(signature + ".", "");
+		String newCompletion = completion.replaceAll(signature + ".", "");
 		
 		// java offset
 		int offset = proposal.getReplaceStart();
