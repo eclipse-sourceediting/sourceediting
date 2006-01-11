@@ -85,36 +85,90 @@ public class JSPProposalCollector extends CompletionProposalCollector {
 		
 		JSPCompletionProposal jspProposal = null;
 		
-		// from proposal
-		String completion = String.valueOf(proposal.getCompletion());
-		String mangledName = getMangledName();
-		
-		// ignore constructor proposals
-		// (they will include mangled servlet name)
-		if(mangledName != null && completion.indexOf(mangledName) == -1) {
+		// ignore constructor proposals (they're not relevant for our JSP proposal list)
+		if(!proposal.isConstructor()) {
 			
-			// java offset
-			int offset = proposal.getReplaceStart();
-			// replacement length
-			int length = proposal.getReplaceEnd() - offset;
-			// translate offset from Java > JSP
-			offset = fTranslation.getJspOffset(offset);
-			// cursor position after must be calculated
-			int positionAfter = calculatePositionAfter(proposal, completion, offset);
+			if(proposal.getKind() == CompletionProposal.TYPE_REF) {
+				String signature = String.valueOf(proposal.getDeclarationSignature());
+				String completion = String.valueOf(proposal.getCompletion());
+				if(completion.contains(signature)) {
+					jspProposal = createAutoImportProposal(proposal);			
+				}
+			}
 			
-			// from java proposal
-			IJavaCompletionProposal javaProposal = super.createJavaCompletionProposal(proposal);
-			Image image = javaProposal.getImage();
-			String displayString = javaProposal.getDisplayString();
-			displayString = fixupDisplayString(displayString);
-			IContextInformation contextInformation = javaProposal.getContextInformation();
-			String additionalInfo = javaProposal.getAdditionalProposalInfo();
-			int relevance = javaProposal.getRelevance();
-			
-			boolean updateLengthOnValidate = true;
-			
-			jspProposal = new JSPCompletionProposal(completion, offset, length, positionAfter, image, displayString, contextInformation, additionalInfo, relevance, updateLengthOnValidate);
+			// default behavior
+			if(jspProposal == null)
+				jspProposal = createJspProposal(proposal);		
 		}
+		return jspProposal;
+	}
+
+	
+	
+	private JSPCompletionProposal createAutoImportProposal(CompletionProposal proposal) {
+		
+		JSPCompletionProposal jspProposal = null;
+
+		String signature = new String(proposal.getDeclarationSignature());
+		String completion = new String(proposal.getCompletion());
+		
+		// it's fully qualified so we should
+		// add an import statement
+		// create an autoimport proposal
+		String newCompletion = completion.replace(signature + ".", "");
+		
+		// java offset
+		int offset = proposal.getReplaceStart();
+		// replacement length
+		int length = proposal.getReplaceEnd() - offset;
+		// translate offset from Java > JSP
+		offset = fTranslation.getJspOffset(offset);
+		// cursor position after must be calculated
+		int positionAfter = calculatePositionAfter(proposal, newCompletion, offset);
+		
+		// from java proposal
+		IJavaCompletionProposal javaProposal = super.createJavaCompletionProposal(proposal);
+		proposal.getDeclarationSignature();
+		Image image = javaProposal.getImage();
+		String displayString = javaProposal.getDisplayString();
+		displayString = fixupDisplayString(displayString);
+		IContextInformation contextInformation = javaProposal.getContextInformation();
+		String additionalInfo = javaProposal.getAdditionalProposalInfo();
+		int relevance = javaProposal.getRelevance();
+		
+		boolean updateLengthOnValidate = true;
+		
+		jspProposal = new AutoImportProposal(completion, newCompletion, offset, length, positionAfter, image, displayString, contextInformation, additionalInfo, relevance, updateLengthOnValidate);
+		
+		return jspProposal;
+	}
+
+	private JSPCompletionProposal createJspProposal(CompletionProposal proposal) {
+		
+		JSPCompletionProposal jspProposal;
+		String completion = String.valueOf(proposal.getCompletion());
+		// java offset
+		int offset = proposal.getReplaceStart();
+		// replacement length
+		int length = proposal.getReplaceEnd() - offset;
+		// translate offset from Java > JSP
+		offset = fTranslation.getJspOffset(offset);
+		// cursor position after must be calculated
+		int positionAfter = calculatePositionAfter(proposal, completion, offset);
+		
+		// from java proposal
+		IJavaCompletionProposal javaProposal = super.createJavaCompletionProposal(proposal);
+		proposal.getDeclarationSignature();
+		Image image = javaProposal.getImage();
+		String displayString = javaProposal.getDisplayString();
+		displayString = fixupDisplayString(displayString);
+		IContextInformation contextInformation = javaProposal.getContextInformation();
+		String additionalInfo = javaProposal.getAdditionalProposalInfo();
+		int relevance = javaProposal.getRelevance();
+		
+		boolean updateLengthOnValidate = true;
+		
+		jspProposal = new JSPCompletionProposal(completion, offset, length, positionAfter, image, displayString, contextInformation, additionalInfo, relevance, updateLengthOnValidate);
 		return jspProposal;
 	}
 
