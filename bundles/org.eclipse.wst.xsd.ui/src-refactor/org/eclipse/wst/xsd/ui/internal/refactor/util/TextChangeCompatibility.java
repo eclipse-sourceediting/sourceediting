@@ -1,6 +1,6 @@
 package org.eclipse.wst.xsd.ui.internal.refactor.util;
 
-import org.eclipse.core.internal.utils.Assert;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.ltk.core.refactoring.TextChange;
 import org.eclipse.text.edits.MultiTextEdit;
 import org.eclipse.text.edits.TextEdit;

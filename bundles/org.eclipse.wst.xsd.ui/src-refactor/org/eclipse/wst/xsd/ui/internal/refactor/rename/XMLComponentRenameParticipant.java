@@ -2,7 +2,8 @@ package org.eclipse.wst.xsd.ui.internal.refactor.rename;
 
 import java.util.Iterator;
 import java.util.List;
-import org.eclipse.core.internal.utils.Assert;
+
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;

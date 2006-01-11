@@ -13,10 +13,11 @@ package  org.eclipse.wst.xsd.ui.internal.refactor.rename;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import org.eclipse.core.internal.runtime.Assert;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.ltk.core.refactoring.Change;
