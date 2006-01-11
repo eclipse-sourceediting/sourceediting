@@ -12,6 +12,7 @@ import org.eclipse.text.edits.MalformedTreeException;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
@@ -64,28 +65,33 @@ public class AutoImportProposal extends JSPCompletionProposal {
 	 * 
 	 * @param doc
 	 * @param isXml
-	 * @return position after <jsp:root> if xml, otherwise 0
+	 * @return position after <jsp:root> if xml, otherwise right before the document element
 	 */
 	private int getInsertPosition(IDocument doc, boolean isXml) {
 		int pos = 0;
-		if(isXml) {
-			// insert after root
-			IStructuredModel sModel = StructuredModelManager.getModelManager().getExistingModelForRead(doc);
-			try {
-				if(sModel != null) {
-					if(sModel instanceof IDOMModel) {
-						IDOMDocument documentNode = ((IDOMModel)sModel).getDocument();
-						Node docElement = documentNode.getDocumentElement();
-						if(docElement != null && docElement instanceof IDOMElement) {
-							pos = ((IDOMElement)docElement).getFirstStructuredDocumentRegion().getEndOffset();
+		IStructuredModel sModel = StructuredModelManager.getModelManager().getExistingModelForRead(doc);
+		try {
+			if(sModel != null) {
+				if(sModel instanceof IDOMModel) {
+					IDOMDocument documentNode = ((IDOMModel)sModel).getDocument();
+					Node docElement = documentNode.getDocumentElement();
+					if(docElement != null && docElement instanceof IDOMElement) {
+						IStructuredDocumentRegion sdRegion = ((IDOMElement)docElement).getFirstStructuredDocumentRegion();
+						if(isXml) {
+							// insert right after document element
+							pos = sdRegion.getEndOffset();
+						}
+						else {
+							// insert before document element
+							pos = sdRegion.getStartOffset();
 						}
 					}
 				}
 			}
-			finally {
-				if(sModel != null)
-					sModel.releaseFromRead();
-			}
+		}
+		finally {
+			if(sModel != null)
+				sModel.releaseFromRead();
 		}
 		return pos;
 	}
