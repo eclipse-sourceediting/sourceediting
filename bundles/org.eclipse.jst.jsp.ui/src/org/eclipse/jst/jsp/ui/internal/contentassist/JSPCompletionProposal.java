@@ -22,6 +22,7 @@ public class JSPCompletionProposal extends CustomCompletionProposal implements I
 	 */
 	public void apply(ITextViewer viewer, char trigger, int stateMask, int offset) {
 		super.apply(viewer, trigger, stateMask, offset);
-		viewer.setSelectedRange(getCursorPosition(), 0);
+		// not sure why we needed this
+		//viewer.setSelectedRange(getCursorPosition(), 0);
 	}
 }
