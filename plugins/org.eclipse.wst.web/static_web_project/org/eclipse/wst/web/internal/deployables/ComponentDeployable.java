@@ -20,10 +20,12 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.wst.common.componentcore.ComponentCore;
+import org.eclipse.wst.common.componentcore.internal.resources.VirtualArchiveComponent;
 import org.eclipse.wst.common.componentcore.resources.IVirtualComponent;
 import org.eclipse.wst.common.componentcore.resources.IVirtualContainer;
 import org.eclipse.wst.common.componentcore.resources.IVirtualFolder;
@@ -211,6 +213,9 @@ public abstract class ComponentDeployable extends ProjectModule {
 				if (!members.contains(mr[j]))
 					members.add(mr[j]);
 			}
+			List utilMembers = getUtilMembers(vc);
+			if (!utilMembers.isEmpty())
+				members.addAll(utilMembers);
 		}
 		
 		IModuleResource[] mr = new IModuleResource[members.size()];
@@ -218,6 +223,25 @@ public abstract class ComponentDeployable extends ProjectModule {
 		return mr;
 	}
 	
+	protected List getUtilMembers(IVirtualComponent vc) {
+		List utilMembers = new ArrayList();
+		IVirtualReference[] components = vc.getReferences();
+    	for (int i = 0; i < components.length; i++) {
+			IVirtualReference reference = components[i];
+			IVirtualComponent virtualComp = reference.getReferencedComponent();
+			if (virtualComp != null && virtualComp.isBinary()) {
+				IPath archivePath = ((VirtualArchiveComponent)virtualComp).getWorkspaceRelativePath();
+				if (archivePath != null) { //TODO Only supporting workspace files for now
+					IFile utilFile = ResourcesPlugin.getWorkspace().getRoot().getFile(archivePath);
+					ModuleFile mf = new ModuleFile(utilFile, utilFile.getName(), reference.getRuntimePath(), utilFile.getModificationStamp() + utilFile.getLocalTimeStamp());
+					utilMembers.add(mf);
+				}
+			}
+    	}
+    	return utilMembers;
+			
+	}
+
 	/**
 	 * Returns the root folders for the resources in this module.
 	 * 
