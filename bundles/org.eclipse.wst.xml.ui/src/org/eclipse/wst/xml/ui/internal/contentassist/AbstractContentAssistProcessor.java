@@ -212,6 +212,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 	}
 
 	protected void addAttributeValueProposals(ContentAssistRequest contentAssistRequest) {
+		
 		IDOMNode node = (IDOMNode) contentAssistRequest.getNode();
 
 		// Find the attribute region and name for which this position should
@@ -288,8 +289,14 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 							String possibleValue = (String) j.next();
 							currentValid = currentValid || possibleValue.equals(currentValue);
 							if (matchString.length() == 0 || possibleValue.startsWith(matchString)) {
-								CustomCompletionProposal proposal = new CustomCompletionProposal("\"" + possibleValue + "\"", //$NON-NLS-2$//$NON-NLS-1$
-											contentAssistRequest.getReplacementBeginPosition(), contentAssistRequest.getReplacementLength(), possibleValue.length() + 1, image, possibleValue, null, proposedInfo, XMLRelevanceConstants.R_XML_ATTRIBUTE_VALUE);
+								
+								String rString = "\"" + possibleValue + "\""; //$NON-NLS-2$//$NON-NLS-1$
+								int rOffset = contentAssistRequest.getReplacementBeginPosition();
+								int rLength = contentAssistRequest.getReplacementLength();
+								int cursorAfter = possibleValue.length() + 1;
+								String displayString = "\"" + possibleValue + "\""; //$NON-NLS-2$//$NON-NLS-1$
+								
+								CustomCompletionProposal proposal = new CustomCompletionProposal(rString, rOffset, rLength, cursorAfter, image, displayString, null, proposedInfo, XMLRelevanceConstants.R_XML_ATTRIBUTE_VALUE);
 								contentAssistRequest.addProposal(proposal);
 							}
 						}
@@ -299,12 +306,14 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 					// FIXED values
 					String value = attrDecl.getAttrType().getImpliedValue();
 					if (value != null && value.length() > 0) {
-						CustomCompletionProposal proposal = new CustomCompletionProposal("\"" + value + "\"", //$NON-NLS-2$//$NON-NLS-1$
-									contentAssistRequest.getReplacementBeginPosition(), contentAssistRequest.getReplacementLength(), value.length() + 1, image, value, null, proposedInfo, XMLRelevanceConstants.R_XML_ATTRIBUTE_VALUE);
+						String rValue = "\"" + value + "\"";//$NON-NLS-2$//$NON-NLS-1$
+						CustomCompletionProposal proposal = new CustomCompletionProposal(rValue, 
+									contentAssistRequest.getReplacementBeginPosition(), contentAssistRequest.getReplacementLength(), rValue.length() + 1, image, rValue, null, proposedInfo, XMLRelevanceConstants.R_XML_ATTRIBUTE_VALUE);
 						contentAssistRequest.addProposal(proposal);
 						if (currentValue.length() > 0 && !value.equals(currentValue)) {
-							proposal = new CustomCompletionProposal("\"" + currentValue + "\"", //$NON-NLS-2$//$NON-NLS-1$
-										contentAssistRequest.getReplacementBeginPosition(), contentAssistRequest.getReplacementLength(), currentValue.length() + 1, image, currentValue, null, proposedInfo, XMLRelevanceConstants.R_XML_ATTRIBUTE_VALUE);
+							rValue = "\"" + currentValue + "\""; //$NON-NLS-2$//$NON-NLS-1$
+							proposal = new CustomCompletionProposal(rValue,
+										contentAssistRequest.getReplacementBeginPosition(), contentAssistRequest.getReplacementLength(), rValue.length() + 1, image, rValue, null, proposedInfo, XMLRelevanceConstants.R_XML_ATTRIBUTE_VALUE);
 							contentAssistRequest.addProposal(proposal);
 						}
 					}
@@ -315,8 +324,9 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 				proposedInfo = getAdditionalInfo(null, elementDecl);
 				CustomCompletionProposal proposal = null;
 				if (currentValue != null && currentValue.length() > 0) {
-					proposal = new CustomCompletionProposal("\"" + currentValue + "\"", //$NON-NLS-2$//$NON-NLS-1$
-								contentAssistRequest.getReplacementBeginPosition(), contentAssistRequest.getReplacementLength(), 1, image, "\"" + currentValue + "\"", //$NON-NLS-2$//$NON-NLS-1$
+					String rValue = "\"" + currentValue + "\""; //$NON-NLS-2$//$NON-NLS-1$
+					proposal = new CustomCompletionProposal(rValue,
+								contentAssistRequest.getReplacementBeginPosition(), contentAssistRequest.getReplacementLength(), 1, image, rValue, //$NON-NLS-2$//$NON-NLS-1$
 								null, proposedInfo, XMLRelevanceConstants.R_XML_ATTRIBUTE_VALUE);
 					contentAssistRequest.addProposal(proposal);
 				}

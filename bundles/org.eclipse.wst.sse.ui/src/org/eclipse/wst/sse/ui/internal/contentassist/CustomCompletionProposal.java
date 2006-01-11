@@ -268,13 +268,15 @@ public class CustomCompletionProposal implements ICompletionProposal, ICompletio
 
     // code is borrowed from JavaCompletionProposal
     protected boolean startsWith(IDocument document, int offset, String word) {
-        int wordLength = word == null ? 0 : word.length();
+	
+    	int wordLength = word == null ? 0 : word.length();
         if (offset > fReplacementOffset + wordLength)
             return false;
 
         try {
             int length = offset - fReplacementOffset;
             String start = document.get(fReplacementOffset, length);
+
             return word.substring(0, length).equalsIgnoreCase(start);
         } catch (BadLocationException x) {
         }
@@ -298,11 +300,20 @@ public class CustomCompletionProposal implements ICompletionProposal, ICompletio
         if (offset < fReplacementOffset)
             return false;
         boolean validated = startsWith(document, offset, fDisplayString);
-        // CMVC 269884
+
         if (fUpdateLengthOnValidate) {
+
+            // it would be better to use "originalCursorPosition" instead of
+            // getReplacementOffset(), but we don't have that info.
             int newLength = offset - getReplacementOffset();
             int delta = newLength - fOriginalReplacementLength;
             fReplacementLength = delta + fOriginalReplacementLength;
+            
+        	// if it's an attribute value, replacement offset is
+            // going to be one off from the actual cursor offset...
+        	char firstChar = document.get().charAt(getReplacementOffset());
+        	if(firstChar == '"' || firstChar == '\'')
+        		fReplacementLength ++;
         }
         return validated;
     }
