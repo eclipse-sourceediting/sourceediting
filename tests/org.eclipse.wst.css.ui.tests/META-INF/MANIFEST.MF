@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: CSS UI Tests Plug-in
 Bundle-SymbolicName: org.eclipse.wst.css.ui.tests
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 1.0.0
 Bundle-Activator: org.eclipse.wst.css.ui.tests.CSSUITestsPlugin
 Bundle-Vendor: Eclipse
 Bundle-Localization: plugin
