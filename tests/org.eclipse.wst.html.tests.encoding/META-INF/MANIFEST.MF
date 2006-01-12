@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: HTML Encoding Tests Plug-in
 Bundle-SymbolicName: org.eclipse.wst.html.tests.encoding
-Bundle-Version: 1.0.0
+Bundle-Version: 1.0.0.qualifier
 Bundle-ClassPath: htmlencodingtests.jar
 Bundle-Activator: org.eclipse.wst.html.tests.encoding.HTMLEncodingTestsPlugin
 Bundle-Vendor: Eclipse.org
