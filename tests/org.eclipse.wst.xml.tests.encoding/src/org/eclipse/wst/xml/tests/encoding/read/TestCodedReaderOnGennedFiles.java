@@ -696,13 +696,13 @@ public class TestCodedReaderOnGennedFiles extends TestCodedReader {
 		doGenTest(charsetName);
 	}
 
-	public void testFile129() throws CoreException, IOException {
-		String charsetName = "X-UnicodeBig";
-		doGenTest(charsetName);
-	}
+//	public void testFile129() throws CoreException, IOException {
+//		String charsetName = "X-UnicodeBig";
+//		doGenTest(charsetName);
+//	}
 
-	public void testFile130() throws CoreException, IOException {
-		String charsetName = "X-UnicodeLittle";
-		doGenTest(charsetName);
-	}
+//	public void testFile130() throws CoreException, IOException {
+//		String charsetName = "X-UnicodeLittle";
+//		doGenTest(charsetName);
+//	}
 }
