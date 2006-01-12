@@ -149,7 +149,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 			if (attributes != null) {
 				for (int i = 0; i < attributes.getLength(); i++) {
 					CMAttributeDeclaration attrDecl = (CMAttributeDeclaration) attributes.item(i);
-					// CMVC 246618
+					
 					int isRequired = 0;
 					if (attrDecl.getUsage() == CMAttributeDeclaration.REQUIRED) {
 						isRequired = XMLRelevanceConstants.R_REQUIRED;
@@ -180,8 +180,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 						if (attrAtLocationHasValue) {
 							// only propose the name
 							proposedText = getRequiredName(node, attrDecl);
-							proposal = new CustomCompletionProposal(proposedText, contentAssistRequest.getReplacementBeginPosition(), contentAssistRequest.getReplacementLength(), proposedText.length(), attrImage, proposedText, null, proposedInfo, XMLRelevanceConstants.R_XML_ATTRIBUTE_NAME + isRequired, true); // CMVC
-							// 269884
+							proposal = new CustomCompletionProposal(proposedText, contentAssistRequest.getReplacementBeginPosition(), contentAssistRequest.getReplacementLength(), proposedText.length(), attrImage, proposedText, null, proposedInfo, XMLRelevanceConstants.R_XML_ATTRIBUTE_NAME + isRequired, true);		
 						}
 						// no attribute exists or is elsewhere, generate
 						// minimally
@@ -487,7 +486,6 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 		boolean addProposal = false;
 
 		if (node.getNodeType() == Node.ELEMENT_NODE) {
-			// fix for CMVC 261790
 			// ////////////////////////////////////////////////////////////////////////////////////
 			IStructuredDocument sDoc = (IStructuredDocument) fTextViewer.getDocument();
 			IStructuredDocumentRegion xmlEndTagOpen = sDoc.getRegionAtCharacterOffset(contentAssistRequest.getReplacementBeginPosition());
@@ -546,9 +544,8 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 				addProposal = true;
 			}
 		}
-		// fix for CMVC 261790
 		// ////////////////////////////////////////////////////////////////////////////////////
-		// fix for CMVC 263163, sometimes the node is not null, but
+		// sometimes the node is not null, but
 		// getNodeValue() is null, put in a null check
 		else if (node.getNodeValue() != null && node.getNodeValue().indexOf("</") != -1) { //$NON-NLS-1$
 			// the case where "</" is started, but the nodes comes in as a
@@ -563,7 +560,6 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 				addProposal = true;
 			}
 		}
-		// end fix for CMVC 261790
 		// ////////////////////////////////////////////////////////////////////////////////////
 		else if (node.getNodeType() == Node.DOCUMENT_NODE) {
 			setErrorMessage(UNKNOWN_CONTEXT);
@@ -632,8 +628,6 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 
 		// make sure xmlpi is root element
 		// don't want doctype proposal if XMLPI isn't first element...
-		// CMVC 242943
-		// CMVC 245532
 		Node first = owningDocument.getFirstChild();
 		boolean xmlpiIsFirstElement = (first != null && first.getNodeType() == Node.PROCESSING_INSTRUCTION_NODE);
 		boolean insertDoctype = xmlpiIsFirstElement;
@@ -651,7 +645,6 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 				}
 				// check if theres a node inbetween XMLPI and cursor position
 				if (child != null && child instanceof IDOMNode) {
-					// CMVC 257486
 					if (contentAssistRequest.getReplacementBeginPosition() >= ((IDOMNode) child).getEndOffset() || !xmlpiIsFirstElement) {
 						insertDoctype = false;
 					}
@@ -716,7 +709,6 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 					// prompt with the closer for the start tag and an end tag
 					// if one is not present
 					if (node.getEndStructuredDocumentRegion() == null) {
-						// FIX FOR CMVC 247482
 						// make sure tag name is actually what it thinks it
 						// is...(eg. <%@ vs. <jsp:directive)
 						IStructuredDocumentRegion sdr = contentAssistRequest.getDocumentRegion();
@@ -775,7 +767,6 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 		Node parent = contentAssistRequest.getParent();
 		String error = null;
 
-		// CMVC #242943 shouldn't have proposals before XMLPI
 		// (nsd) This is only valid at the document element level
 		// only valid if it's XML (check added 2/17/2004)
 		if (parent != null && parent.getNodeType() == Node.DOCUMENT_NODE && ((IDOMDocument) parent).isXMLType() && !isCursorAfterXMLPI(contentAssistRequest)) {
@@ -784,8 +775,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 		// only want proposals if cursor is after doctype...
 		if (!isCursorAfterDoctype(contentAssistRequest))
 			return;
-
-		// CMVC 248081
+		
 		// fix for meta-info comment nodes.. they currently "hide" other
 		// proposals because the don't
 		// have a content model (so can't propose any children..)
@@ -870,13 +860,18 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
                             }
                               
 						}
-						// Account for the &lt; and &gt;. If attributes were
-						// added, the cursor will be placed
-						// at the offset before of the first character of the
-						// first attribute name.
-						int markupAdjustment = getContentGenerator().getMinimalStartTagLength(parent, elementDecl);
+
+						//int markupAdjustment = getContentGenerator().getMinimalStartTagLength(parent, elementDecl);
 						if (beginsWith(tagname, matchString)) {
 							String proposedText = getRequiredText(parent, elementDecl);
+							
+							// https://bugs.eclipse.org/bugs/show_bug.cgi?id=89811
+							// place cursor in first empty quotes
+							int markupAdjustment = proposedText.indexOf("\"\"") + 1; //$NON-NLS-1$
+							// otherwise, after the first tag
+							if(markupAdjustment==0)
+								markupAdjustment = proposedText.indexOf('>') + 1;
+							
 							String proposedInfo = getAdditionalInfo(parentDecl, elementDecl);
                             int relevance = isStrictCMNodeSuggestion ? XMLRelevanceConstants.R_STRICTLY_VALID_TAG_INSERTION : XMLRelevanceConstants.R_TAG_INSERTION; 
 							CustomCompletionProposal proposal = new CustomCompletionProposal(proposedText, contentAssistRequest.getReplacementBeginPosition(), contentAssistRequest.getReplacementLength(), markupAdjustment, image, tagname, null, proposedInfo, relevance);
@@ -980,8 +975,19 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 								cursorAdjustment = proposedText.length();
 							}
 							else {
-								cursorAdjustment = proposedText.length() + 1;
-								proposedText += "></" + getRequiredName(parent, elementDecl) + ">"; //$NON-NLS-2$//$NON-NLS-1$
+								// https://bugs.eclipse.org/bugs/show_bug.cgi?id=89811
+								StringBuffer sb = new StringBuffer();
+								getContentGenerator().generateTag(parent, ed, sb);
+								// since it's a name proposal, assume '<' is already there
+								// only return the rest of the tag
+								proposedText = sb.toString().substring(1);
+								cursorAdjustment = proposedText.indexOf("\"\"") + 1;//$NON-NLS-1$
+								// if no quotes
+								if(cursorAdjustment == 0)
+									cursorAdjustment = proposedText.indexOf('>') + 1;
+								
+								//cursorAdjustment = proposedText.length() + 1;
+								//proposedText += "></" + getRequiredName(parent, elementDecl) + ">"; //$NON-NLS-2$//$NON-NLS-1$
 							}
 						}
 					}
@@ -1099,7 +1105,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 	protected boolean beginsWith(String aString, String prefix) {
 		if (aString == null || prefix == null)
 			return true;
-		// (pa) 221190 matching independent of case to be consistant with Java
+		// (pa) matching independent of case to be consistant with Java
 		// editor CA
 		return aString.toLowerCase().startsWith(prefix.toLowerCase());
 	}
