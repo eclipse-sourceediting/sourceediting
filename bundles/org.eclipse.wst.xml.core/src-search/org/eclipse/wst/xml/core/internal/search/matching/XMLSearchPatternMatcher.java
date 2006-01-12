@@ -11,7 +11,6 @@
 
 package org.eclipse.wst.xml.core.internal.search.matching;
 
-import org.apache.xml.utils.PrefixResolverDefault;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.wst.common.core.search.SearchRequestor;
 import org.eclipse.wst.common.core.search.pattern.SearchPattern;
@@ -19,10 +18,31 @@ import org.eclipse.wst.xml.core.internal.search.XMLComponentSearchPattern;
 import org.eclipse.wst.xml.core.internal.search.XMLSearchPattern;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+
 
 public class XMLSearchPatternMatcher extends PatternMatcher{
 	
 
+	protected String computeNamespaceForPrefix(Element element, String prefix)
+	{
+	  String result = null;
+	  for (Node node = element; node != null; node = node.getParentNode())
+	  {
+		if (node.getNodeType() == Node.ELEMENT_NODE)
+		{
+		  Element e = (Element)node;
+		  String attributeName = (prefix != null && prefix.length() > 0) ? ("xmlns:" + prefix) : "xmlns"; 
+		  result = e.getAttribute(attributeName);
+		  if (result != null)
+		  {
+			 break;  
+		  }	  
+		}	
+	  }	  
+	  return result;
+	}
+	
 
 	protected void initialize(XMLSearchPattern pattern, Element domElement) {
 	
@@ -33,9 +53,10 @@ public class XMLSearchPatternMatcher extends PatternMatcher{
 					int n = actualValue.indexOf(":");
 					if(n > 0){
 						String prefix = actualValue.substring(0, n);
-						pattern.setSearchName(actualValue.substring(n+1));                       
-						PrefixResolverDefault prefixresolver = new PrefixResolverDefault(domElement.getOwnerDocument());
-						pattern.setSearchNamespace(prefixresolver.getNamespaceForPrefix(prefix, domElement));
+						pattern.setSearchName(actualValue.substring(n+1));      
+						
+						String namespace = computeNamespaceForPrefix(domElement, prefix);
+						pattern.setSearchNamespace(namespace);
 					
 					}
 					else {
