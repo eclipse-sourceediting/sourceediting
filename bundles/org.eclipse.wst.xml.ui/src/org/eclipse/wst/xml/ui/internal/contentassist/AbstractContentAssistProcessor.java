@@ -642,6 +642,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 				}
 				// skip white space and text
 				while ((child = child.getNextSibling()) != null && (child.getNodeType() == Node.TEXT_NODE)) {
+					// just skipping
 				}
 				// check if theres a node inbetween XMLPI and cursor position
 				if (child != null && child instanceof IDOMNode) {
@@ -867,10 +868,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 							
 							// https://bugs.eclipse.org/bugs/show_bug.cgi?id=89811
 							// place cursor in first empty quotes
-							int markupAdjustment = proposedText.indexOf("\"\"") + 1; //$NON-NLS-1$
-							// otherwise, after the first tag
-							if(markupAdjustment==0)
-								markupAdjustment = proposedText.indexOf('>') + 1;
+							int markupAdjustment = getCursorPositionForProposedText(proposedText);
 							
 							String proposedInfo = getAdditionalInfo(parentDecl, elementDecl);
                             int relevance = isStrictCMNodeSuggestion ? XMLRelevanceConstants.R_STRICTLY_VALID_TAG_INSERTION : XMLRelevanceConstants.R_TAG_INSERTION; 
@@ -981,10 +979,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 								// since it's a name proposal, assume '<' is already there
 								// only return the rest of the tag
 								proposedText = sb.toString().substring(1);
-								cursorAdjustment = proposedText.indexOf("\"\"") + 1;//$NON-NLS-1$
-								// if no quotes
-								if(cursorAdjustment == 0)
-									cursorAdjustment = proposedText.indexOf('>') + 1;
+								cursorAdjustment = getCursorPositionForProposedText(proposedText);
 								
 								//cursorAdjustment = proposedText.length() + 1;
 								//proposedText += "></" + getRequiredName(parent, elementDecl) + ">"; //$NON-NLS-2$//$NON-NLS-1$
@@ -1020,35 +1015,52 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 					continue;
 				String proposedText = null;
 				int cursorAdjustment = 0;
-				proposedText = getRequiredName(parent, ed);
-				if (!beginsWith(proposedText, matchString))
-					continue;
-				if ((node != null && node.getAttributes() != null && node.getAttributes().getLength() > 0) || ((node.getNodeType() != Node.TEXT_NODE) && node.getFirstStructuredDocumentRegion().isEnded())) {
-					cursorAdjustment = proposedText.length();
-				}
-				else {
-					cursorAdjustment = proposedText.length();
+				if(ed instanceof CMElementDeclaration) {
+					// proposedText = getRequiredName(parent, ed);
+					StringBuffer sb = new StringBuffer();
+					getContentGenerator().generateTag(parent, (CMElementDeclaration)ed, sb);
+					// tag starts w/ '<', but we want to compare to name
+					proposedText = sb.toString().substring(1);
+					
+					if (!beginsWith(proposedText, matchString))
+						continue;
+					
+					cursorAdjustment = getCursorPositionForProposedText(proposedText);
+				
 					if (ed instanceof CMElementDeclaration) {
 						CMElementDeclaration elementDecl = (CMElementDeclaration) ed;
 						if (elementDecl.getContentType() == CMElementDeclaration.EMPTY) {
 							proposedText += getContentGenerator().getStartTagClose(parent, elementDecl);
 							cursorAdjustment = proposedText.length();
 						}
-						else {
-							cursorAdjustment = proposedText.length() + 1;
-							proposedText += "></" + getRequiredName(parent, elementDecl) + ">"; //$NON-NLS-2$//$NON-NLS-1$
-						}
 					}
+				
+					String proposedInfo = getAdditionalInfo(null, ed);
+					Image image = CMImageUtil.getImage(ed);
+					if (image == null) {
+						image = XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_TAG_GENERIC);
+					}
+					CustomCompletionProposal proposal = new CustomCompletionProposal(proposedText, contentAssistRequest.getReplacementBeginPosition(), contentAssistRequest.getReplacementLength(), cursorAdjustment, image, getRequiredName(parent, ed), null, proposedInfo, XMLRelevanceConstants.R_TAG_NAME);
+					contentAssistRequest.addProposal(proposal);
 				}
-				String proposedInfo = getAdditionalInfo(null, ed);
-				Image image = CMImageUtil.getImage(ed);
-				if (image == null) {
-					image = XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_TAG_GENERIC);
-				}
-				CustomCompletionProposal proposal = new CustomCompletionProposal(proposedText, contentAssistRequest.getReplacementBeginPosition(), contentAssistRequest.getReplacementLength(), cursorAdjustment, image, getRequiredName(parent, ed), null, proposedInfo, XMLRelevanceConstants.R_TAG_NAME);
-				contentAssistRequest.addProposal(proposal);
 			}
 		}
+	}
+	/**
+	 * this is the position the cursor should be in after the proposal is applied
+	 * @param proposedText
+	 * @return  the position the cursor should be in after the proposal is applied
+	 */
+	private int getCursorPositionForProposedText(String proposedText) {
+		int cursorAdjustment;
+		cursorAdjustment = proposedText.indexOf("\"\"") + 1; //$NON-NLS-1$
+		// otherwise, after the first tag
+		if(cursorAdjustment==0)
+			cursorAdjustment = proposedText.indexOf('>') + 1;
+		if(cursorAdjustment==0)
+			cursorAdjustment = proposedText.length() + 1;
+		
+		return cursorAdjustment;
 	}
 
 	protected void addXMLProposal(ContentAssistRequest contentAssistRequest) {
@@ -1536,7 +1548,8 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 			}
 			else {
 				if (sdRegion.getRegions().get(0).getType() != DOMRegionContext.XML_END_TAG_OPEN) {
-					contentAssistRequest = newContentAssistRequest(node, node.getParentNode(), sdRegion, completionRegion, sdRegion.getStartOffset(completionRegion), completionRegion.getTextLength(), matchString);
+					int replaceLength = documentPosition - sdRegion.getStartOffset(completionRegion);
+					contentAssistRequest = newContentAssistRequest(node, node.getParentNode(), sdRegion, completionRegion, sdRegion.getStartOffset(completionRegion), replaceLength, matchString);
 					addTagNameProposals(contentAssistRequest, getElementPositionForModelQuery(nodeAtOffset));
 				}
 				else {
