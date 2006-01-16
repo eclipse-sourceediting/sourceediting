@@ -130,8 +130,12 @@ public class DocumentProvider {
 	 * @return Document
 	 */
 	public Document getDocument() {
+		return getDocument(true);
+	}
+
+	public Document getDocument(boolean createEmptyOnFailure) {
 		if (document == null)
-			load();
+			load(createEmptyOnFailure);
 		return document;
 	}
 
@@ -165,7 +169,7 @@ public class DocumentProvider {
 	public Element getElement(String name) {
 		Element result = null;
 		if (document == null)
-			load();
+			load(false);
 		if (document != null) {
 			result = (Element) getNode(getRootElement(), name);
 		}
@@ -180,6 +184,9 @@ public class DocumentProvider {
 		if (resolver == null) {
 			resolver = new EntityResolver() {
 				public InputSource resolveEntity(String publicID, String systemID) throws SAXException, IOException {
+					if (!isValidating())
+						return null;
+
 					InputSource result = null;
 					if (getBaseReference() != null) {
 						try {
@@ -380,7 +387,7 @@ public class DocumentProvider {
 		return fValidating;
 	}
 
-	public void load() {
+	void load(boolean createEmptyOnFailure) {
 		// rootElementName and fileName are expected to be defined at this
 		// point
 		document = getParsedDocument();
@@ -392,18 +399,20 @@ public class DocumentProvider {
 		}
 
 		if (document == null || rootElement == null) {
-			document = getNewDocument();
-			if (document != null) {
-				NodeList children = document.getChildNodes();
-				for (int i = 0; i < children.getLength(); i++) {
-					if (children.item(i).getNodeType() == Node.ELEMENT_NODE && children.item(i).getNodeName().equals(getRootElementName()))
-						rootElement =  children.item(i);
-				}
-				if (rootElement == null) {
+			if (createEmptyOnFailure) {
+				document = getNewDocument();
+				if (document != null) {
+					NodeList children = document.getChildNodes();
 					for (int i = 0; i < children.getLength(); i++) {
-						if (children.item(i).getNodeType() == Node.ELEMENT_NODE) {
+						if (children.item(i).getNodeType() == Node.ELEMENT_NODE && children.item(i).getNodeName().equals(getRootElementName()))
 							rootElement = children.item(i);
-							break;
+					}
+					if (rootElement == null) {
+						for (int i = 0; i < children.getLength(); i++) {
+							if (children.item(i).getNodeType() == Node.ELEMENT_NODE) {
+								rootElement = children.item(i);
+								break;
+							}
 						}
 					}
 				}

@@ -1068,8 +1068,9 @@ class ProjectDescription {
 			DocumentProvider provider = new DocumentProvider();
 			provider.setInputStream(webxmlContents);
 			provider.setValidating(false);
+			provider.setRootElementName("web-app"); //$NON-NLS-1$
 			provider.setBaseReference(webxml.getParent().getLocation().toString());
-			document = provider.getDocument();
+			document = provider.getDocument(false);
 		}
 		catch (CoreException e) {
 			Logger.logException(e);
