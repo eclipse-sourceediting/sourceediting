@@ -16,6 +16,7 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentAdapter;
 import org.eclipse.jface.text.IRegion;
+import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.text.ITextViewerExtension2;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.TextSelection;
@@ -736,8 +737,11 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 	 * @see org.eclipse.wst.sse.core.undo.IDocumentSelectionMediator#undoOperationSelectionChanged(org.eclipse.wst.sse.core.undo.UndoDocumentEvent)
 	 */
 	public void undoOperationSelectionChanged(UndoDocumentEvent event) {
-		if (event.getRequester() != null && event.getRequester().equals(this) && event.getDocument().equals(getDocument()))
-			setSelectedRange(event.getOffset(), event.getLength());
+		if (event.getRequester() != null && event.getRequester().equals(this) && event.getDocument().equals(getDocument())) {
+			//BUG107687: Undo/redo do not scroll editor
+			ITextSelection selection = new TextSelection(event.getOffset(), event.getLength());
+			setSelection(selection, true);
+		}
 	}
 
 	/**
