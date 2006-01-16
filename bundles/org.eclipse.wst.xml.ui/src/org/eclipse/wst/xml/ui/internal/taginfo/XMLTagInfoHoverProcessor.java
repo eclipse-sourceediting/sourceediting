@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -27,6 +27,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.sse.core.internal.util.Debug;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
+import org.eclipse.wst.sse.ui.internal.taginfo.AbstractHoverProcessor;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
@@ -44,16 +45,16 @@ import org.w3c.dom.Node;
 /**
  * Provides hover help documentation for xml tags
  * 
- * @author amywu
  * @see org.eclipse.jface.text.ITextHover
  */
-public class XMLTagInfoHoverProcessor implements ITextHover {
+public class XMLTagInfoHoverProcessor extends AbstractHoverProcessor {
 	protected MarkupTagInfoProvider fInfoProvider = null;
 
 	/**
 	 * Constructor for XMLTextHoverProcessor.
 	 */
 	public XMLTagInfoHoverProcessor() {
+		// nothing
 	}
 
 	/**
@@ -61,7 +62,7 @@ public class XMLTagInfoHoverProcessor implements ITextHover {
 	 * 
 	 * @return String any documentation information to display
 	 *         <code>null</code> if there is nothing to display.
-	 *  
+	 * 
 	 */
 	protected String computeHoverHelp(ITextViewer textViewer, int documentPosition) {
 		String result = null;
@@ -273,7 +274,8 @@ public class XMLTagInfoHoverProcessor implements ITextHover {
 							return new Region(flatNode.getStartOffset(region), region.getTextLength());
 						}
 					}
-				} catch (BadLocationException e) {
+				}
+				catch (BadLocationException e) {
 					Logger.logException(e);
 				}
 			}
@@ -311,7 +313,8 @@ public class XMLTagInfoHoverProcessor implements ITextHover {
 							return new Region(flatNode.getStartOffset(region), region.getTextLength());
 						}
 					}
-				} catch (BadLocationException e) {
+				}
+				catch (BadLocationException e) {
 					Logger.logException(e);
 				}
 			}

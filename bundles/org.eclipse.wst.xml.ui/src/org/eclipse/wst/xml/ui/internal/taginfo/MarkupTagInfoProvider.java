@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -98,6 +98,7 @@ public class MarkupTagInfoProvider {
 				sb.append(PARAGRAPH_START + BOLD_START + XMLUIMessages.Element____1 + SPACE + BOLD_END);
 				sb.append(node.getNodeName());
 				sb.append(PARAGRAPH_END);
+				printDocumentation(sb, node);
 				if (ed.getContentType() == CMElementDeclaration.PCDATA) {
 					CMDataType dataType = ed.getDataType();
 					if (dataType != null) {
@@ -111,17 +112,16 @@ public class MarkupTagInfoProvider {
 						sb.append(description + PARAGRAPH_END);
 					}
 				}
-				printDocumentation(sb, node);
 			} else if (node.getNodeType() == CMNode.ATTRIBUTE_DECLARATION) {
 				CMAttributeDeclaration ad = (CMAttributeDeclaration) node;
 				sb.append(PARAGRAPH_START + BOLD_START + XMLUIMessages.Attribute____3 + SPACE + BOLD_END);
 				sb.append(node.getNodeName());
 				sb.append(PARAGRAPH_END);
+				printDocumentation(sb, node);
 				CMDataType dataType = ad.getAttrType();
 				if (dataType != null) {
 					printDataTypeInfo(sb, dataType);
 				}
-				printDocumentation(sb, node);
 			} else if (node.getNodeType() == CMNode.DATA_TYPE) {
 				sb.append(PARAGRAPH_START + BOLD_START + XMLUIMessages.Data_Type____4 + SPACE + BOLD_END);
 				sb.append(node.getNodeName());
@@ -150,7 +150,6 @@ public class MarkupTagInfoProvider {
 	protected void printDocumentation(StringBuffer sb, CMNode node) {
 		CMNodeList nodeList = (CMNodeList) node.getProperty("documentation"); //$NON-NLS-1$
 		if ((nodeList != null) && (nodeList.getLength() > 0)) {
-			sb.append(NEW_LINE);
 			for (int i = 0; i < nodeList.getLength(); i++) {
 				CMDocumentation documentation = (CMDocumentation) nodeList.item(i);
 				String doc = documentation.getValue();
@@ -158,6 +157,7 @@ public class MarkupTagInfoProvider {
 					sb.append(PARAGRAPH_START + doc.trim() + PARAGRAPH_END);
 				}
 			}
+			sb.append(NEW_LINE);
 		}
 	}
 

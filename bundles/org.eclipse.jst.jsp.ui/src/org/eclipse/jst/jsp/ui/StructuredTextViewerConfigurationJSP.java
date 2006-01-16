@@ -44,7 +44,9 @@ import org.eclipse.jst.jsp.ui.internal.hyperlink.XMLHyperlinkDetector;
 import org.eclipse.jst.jsp.ui.internal.style.LineStyleProviderForJSP;
 import org.eclipse.jst.jsp.ui.internal.style.java.LineStyleProviderForJava;
 import org.eclipse.jst.jsp.ui.internal.style.jspel.LineStyleProviderForJSPEL;
+import org.eclipse.jst.jsp.ui.internal.taginfo.JSPInformationProvider;
 import org.eclipse.jst.jsp.ui.internal.taginfo.JSPJavaJavadocHoverProcessor;
+import org.eclipse.jst.jsp.ui.internal.taginfo.JSPJavaJavadocInformationProvider;
 import org.eclipse.jst.jsp.ui.internal.taginfo.JSPTagInfoHoverProcessor;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.eclipse.wst.css.core.internal.provisional.text.ICSSPartitionTypes;
@@ -305,6 +307,14 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 			// XML
 			IInformationPresenter xmlPresenter = getXMLSourceViewerConfiguration().getInformationPresenter(sourceViewer);
 			provider = xmlPresenter.getInformationProvider(IXMLPartitions.XML_DEFAULT);
+		}
+		else if ((partitionType == IJSPPartitionTypes.JSP_DEFAULT) || (partitionType == IJSPPartitionTypes.JSP_DIRECTIVE)) {
+			// JSP tags
+			provider = new JSPInformationProvider();
+		}
+		else if (partitionType == IJSPPartitionTypes.JSP_CONTENT_JAVA) {
+			// JSP java
+			provider = new JSPJavaJavadocInformationProvider();
 		}
 		return provider;
 	}

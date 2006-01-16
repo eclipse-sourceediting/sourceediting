@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,7 +18,6 @@ import java.util.List;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IRegion;
-import org.eclipse.jface.text.ITextHover;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.Region;
@@ -39,13 +38,13 @@ import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
  * 
  * @author amywu
  */
-public class AnnotationHoverProcessor implements ITextHover {
+public class AnnotationHoverProcessor extends AbstractHoverProcessor {
 	private final static String LIST_BEGIN = "<ul>"; //$NON-NLS-1$
 	private final static String LIST_ELEMENT = "<li>"; //$NON-NLS-1$
 	private final static String PARAGRAPH_END = "</p>"; //$NON-NLS-1$
-
 	private final static String PARAGRAPH_START = "<p>"; //$NON-NLS-1$
-	protected IPreferenceStore fPreferenceStore = null;
+
+	private IPreferenceStore fPreferenceStore = null;
 
 	/**
 	 * 
@@ -61,7 +60,7 @@ public class AnnotationHoverProcessor implements ITextHover {
 	 *            assumes msg is neither null nor empty string
 	 * @return
 	 */
-	protected String formatMessage(String msg) {
+	private String formatMessage(String msg) {
 		StringBuffer buf = new StringBuffer();
 		buf.append(PARAGRAPH_START);
 		buf.append(StringUtils.convertToHTMLContent(msg));
@@ -75,7 +74,7 @@ public class AnnotationHoverProcessor implements ITextHover {
 	 * @param messages
 	 * @return
 	 */
-	protected String formatMessages(List messages) {
+	private String formatMessages(List messages) {
 		StringBuffer buffer = new StringBuffer();
 		buffer.append(PARAGRAPH_START);
 		buffer.append(SSEUIMessages.Multiple_errors); //$NON-NLS-1$
@@ -104,7 +103,6 @@ public class AnnotationHoverProcessor implements ITextHover {
 			return null;
 		return EditorsUI.getAnnotationPreferenceLookup().getAnnotationPreference(annotation);
 	}
-
 
 	public String getHoverInfo(ITextViewer viewer, IRegion hoverRegion) {
 		IAnnotationModel model = ((SourceViewer) viewer).getAnnotationModel();
@@ -184,7 +182,7 @@ public class AnnotationHoverProcessor implements ITextHover {
 	 * Retreives the preference store If no preference store is currently
 	 * stored, retreive the appropriate preference store
 	 */
-	protected IPreferenceStore getPreferenceStore() {
+	private IPreferenceStore getPreferenceStore() {
 		if (fPreferenceStore == null) {
 			IPreferenceStore sseEditorPrefs = SSEUIPlugin.getDefault().getPreferenceStore();
 			IPreferenceStore baseEditorPrefs = EditorsUI.getPreferenceStore();
@@ -193,7 +191,7 @@ public class AnnotationHoverProcessor implements ITextHover {
 		return fPreferenceStore;
 	}
 
-	protected boolean isAnnotationValid(Annotation a) {
+	boolean isAnnotationValid(Annotation a) {
 		AnnotationPreference preference = getAnnotationPreference(a);
 		if (preference == null)
 			return false;

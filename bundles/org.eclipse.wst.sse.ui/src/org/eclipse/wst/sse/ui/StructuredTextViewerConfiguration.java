@@ -282,7 +282,7 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 		// used by hover help
 		return new IInformationControlCreator() {
 			public IInformationControl createInformationControl(Shell parent) {
-				return new DefaultInformationControl(parent, SWT.NONE, new HTMLTextPresenter(false));
+				return new DefaultInformationControl(parent, SWT.NONE, new HTMLTextPresenter(true));
 			}
 		};
 	}

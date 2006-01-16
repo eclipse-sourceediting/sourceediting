@@ -16,8 +16,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.jface.text.IInformationControlCreator;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextHover;
+import org.eclipse.jface.text.ITextHoverExtension;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.wst.sse.ui.internal.Logger;
 
@@ -26,11 +28,11 @@ import org.eclipse.wst.sse.ui.internal.Logger;
  * processors) Priority of hover help processors is: ProblemHoverProcessor,
  * TagInfoProcessor, AnnotationHoverProcessor
  */
-public class BestMatchHover implements ITextHover {
+public class BestMatchHover implements ITextHover, ITextHoverExtension {
 	private ITextHover fBestMatchHover; // current best match text hover
 	private ITextHover fTagInfoHover; // documentation/information hover
 	private List fTextHovers; // list of text hovers to consider in best
-								// match
+	// match
 
 	public BestMatchHover(ITextHover infotaghover) {
 		fTagInfoHover = infotaghover;
@@ -56,6 +58,15 @@ public class BestMatchHover implements ITextHover {
 		}
 		hoverList.add(new AnnotationHoverProcessor());
 		return hoverList;
+	}
+
+	public IInformationControlCreator getHoverControlCreator() {
+		IInformationControlCreator creator = null;
+
+		if (fBestMatchHover instanceof ITextHoverExtension) {
+			creator = ((ITextHoverExtension) fBestMatchHover).getHoverControlCreator();
+		}
+		return creator;
 	}
 
 	/*

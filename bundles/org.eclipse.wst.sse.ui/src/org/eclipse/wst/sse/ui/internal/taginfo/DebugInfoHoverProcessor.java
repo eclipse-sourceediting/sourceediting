@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,10 +24,9 @@ import org.eclipse.jface.text.ITypedRegion;
 /**
  * Provides debug hover help
  * 
- * @author amywu
  * @see org.eclipse.jface.text.ITextHover
  */
-public class DebugInfoHoverProcessor implements ITextHover {
+public class DebugInfoHoverProcessor extends AbstractHoverProcessor {
 	public static final String TRACEFILTER = "debuginfohover"; //$NON-NLS-1$
 	protected IPreferenceStore fPreferenceStore = null;
 
@@ -44,7 +43,8 @@ public class DebugInfoHoverProcessor implements ITextHover {
 		String displayText = null;
 		if ((hoverRegion == null) || (viewer == null) || (viewer.getDocument() == null)) {
 			displayText = null;
-		} else {
+		}
+		else {
 			int offset = hoverRegion.getOffset();
 
 			ITypedRegion region;
@@ -52,10 +52,12 @@ public class DebugInfoHoverProcessor implements ITextHover {
 				region = viewer.getDocument().getPartition(offset);
 				if (region != null) {
 					displayText = region.getType();
-				} else {
+				}
+				else {
 					displayText = "Null Region was returned?!"; //$NON-NLS-1$
 				}
-			} catch (BadLocationException e) {
+			}
+			catch (BadLocationException e) {
 				displayText = "BadLocationException Occurred!?"; //$NON-NLS-1$
 			}
 
@@ -78,11 +80,13 @@ public class DebugInfoHoverProcessor implements ITextHover {
 		ITypedRegion region = null;
 		if ((textViewer == null) || (textViewer.getDocument() == null)) {
 			region = null;
-		} else {
+		}
+		else {
 
 			try {
 				region = textViewer.getDocument().getPartition(offset);
-			} catch (BadLocationException e) {
+			}
+			catch (BadLocationException e) {
 				region = null;
 			}
 		}

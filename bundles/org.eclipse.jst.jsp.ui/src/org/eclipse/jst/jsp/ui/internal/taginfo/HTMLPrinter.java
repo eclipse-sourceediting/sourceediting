@@ -17,6 +17,7 @@ import java.net.URL;
 
 import org.eclipse.jst.jsp.ui.internal.Logger;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.SWTError;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 
@@ -31,34 +32,28 @@ class HTMLPrinter {
 	static RGB BG_COLOR_RGB = null;
 
 	static {
-		// try to do in advance
-		getSystemBGColor();
-	}
-
-	private static RGB getSystemBGColor() {
-		RGB result = null;
-		if (BG_COLOR_RGB == null) {
-			final Display display = Display.getCurrent();
-			if (display != null && !display.isDisposed()) {
-
+		final Display display = Display.getDefault();
+		if (display != null && !display.isDisposed()) {
+			try {
 				display.asyncExec(new Runnable() {
+					/*
+					 * @see java.lang.Runnable#run()
+					 */
 					public void run() {
-						if (display != null && !display.isDisposed()) {
-							BG_COLOR_RGB = display.getSystemColor(SWT.COLOR_INFO_BACKGROUND).getRGB();
-						}
+						BG_COLOR_RGB = display.getSystemColor(SWT.COLOR_INFO_BACKGROUND).getRGB();
 					}
 				});
-
+			}
+			catch (SWTError err) {
+				// see: https://bugs.eclipse.org/bugs/show_bug.cgi?id=45294
+				if (err.code != SWT.ERROR_DEVICE_DISPOSED)
+					throw err;
 			}
 		}
-		else {
-			result = BG_COLOR_RGB;
-		}
-		return result;
 	}
 
 	private HTMLPrinter() {
-		super();
+		// nothing
 	}
 
 	private static String replace(String text, char c, String s) {
@@ -82,6 +77,8 @@ class HTMLPrinter {
 	}
 
 	public static String convertToHTMLContent(String content) {
+		content = replace(content, '&', "&amp;"); //$NON-NLS-1$
+		content = replace(content, '"', "&quot;"); //$NON-NLS-1$
 		content = replace(content, '<', "&lt;"); //$NON-NLS-1$
 		return replace(content, '>', "&gt;"); //$NON-NLS-1$
 	}
@@ -101,7 +98,7 @@ class HTMLPrinter {
 		}
 		catch (IOException x) {
 			// never expected
-			Logger.logException(x);
+			Logger.log(Logger.WARNING_DEBUG, x.getMessage(), x);
 		}
 
 		return null;
@@ -159,22 +156,18 @@ class HTMLPrinter {
 	}
 
 	public static void insertPageProlog(StringBuffer buffer, int position) {
-		insertPageProlog(buffer, position, getBgColor()); //$NON-NLS-1$
+		insertPageProlog(buffer, position, getBgColor());
 	}
 
 	public static void insertPageProlog(StringBuffer buffer, int position, URL styleSheetURL) {
-		insertPageProlog(buffer, position, getBgColor(), styleSheetURL); //$NON-NLS-1$
+		insertPageProlog(buffer, position, getBgColor(), styleSheetURL);
 	}
 
-	static RGB getBgColor() {
-		RGB result = getSystemBGColor();
-		if (result == null) {
-			// use RGB value of default info bg color
-			// on WindowsXP
-			result = new RGB(255, 255, 225);
-		}
-		return result;
-
+	private static RGB getBgColor() {
+		if (BG_COLOR_RGB != null)
+			return BG_COLOR_RGB;
+		// RGB value of info bg color on WindowsXP
+		return new RGB(255, 255, 225);
 	}
 
 	public static void addPageProlog(StringBuffer buffer) {
