@@ -29,6 +29,7 @@ import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.wst.common.ui.internal.dnd.ObjectTransfer;
 import org.eclipse.wst.common.ui.internal.dnd.ViewerDragAdapter;
 import org.eclipse.wst.common.ui.internal.dnd.ViewerDropAdapter;
+import org.eclipse.wst.dtd.core.internal.document.DTDModelImpl;
 import org.eclipse.wst.dtd.ui.internal.DTDUIPlugin;
 import org.eclipse.wst.dtd.ui.internal.dnd.DTDDragAndDropManager;
 import org.eclipse.wst.sse.ui.internal.contentoutline.PropertyChangeUpdateActionContributionItem;
@@ -122,14 +123,15 @@ public class DTDContentOutlineConfiguration extends ContentOutlineConfiguration 
 	 * @see org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration#getMenuListener(org.eclipse.jface.viewers.TreeViewer)
 	 */
 	public IMenuListener getMenuListener(TreeViewer viewer) {
-		if (fMenuHelper == null) {
-			// fMenuHelper = new DTDContextMenuHelper(getEditor());
-			// System.out.println("DTDContextMenuHelper not implemented");
-			// //$NON-NLS-1$
+		IMenuListener listener = null;
+		if (fMenuHelper == null && viewer.getInput() instanceof DTDModelImpl) {
+			fMenuHelper = new DTDContextMenuHelper((DTDModelImpl) viewer.getInput());
+			fMenuHelper.createMenuListenersFor(viewer);
 		}
-		// fMenuHelper.createMenuListenersFor(viewer);
-		// return fMenuHelper.getMenuListener();
-		return null;
+		if (fMenuHelper != null) {
+			listener = fMenuHelper.getMenuListener();
+		}
+		return listener;
 	}
 
 	/*
@@ -227,7 +229,8 @@ public class DTDContentOutlineConfiguration extends ContentOutlineConfiguration 
 		super.unconfigure(viewer);
 		fViewerContributions.remove(viewer);
 		if (fMenuHelper != null) {
-			// fMenuHelper.removeMenuListenersFor(viewer);
+			fMenuHelper.removeMenuListenersFor(viewer);
+			fMenuHelper = null;
 		}
 	}
 }

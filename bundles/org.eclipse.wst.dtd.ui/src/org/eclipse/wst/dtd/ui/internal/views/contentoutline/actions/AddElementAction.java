@@ -14,14 +14,14 @@ package org.eclipse.wst.dtd.ui.internal.views.contentoutline.actions;
 
 import org.eclipse.wst.dtd.core.internal.DTDFile;
 import org.eclipse.wst.dtd.core.internal.DTDNode;
+import org.eclipse.wst.dtd.core.internal.document.DTDModelImpl;
 import org.eclipse.wst.dtd.core.internal.util.DTDUniqueNameHelper;
-import org.eclipse.wst.sse.ui.StructuredTextEditor;
 
 
 public class AddElementAction extends BaseAction {
 
-	public AddElementAction(StructuredTextEditor editor, String label) {
-		super(editor, label);
+	public AddElementAction(DTDModelImpl model, String label) {
+		super(model, label);
 	}
 
 	public void run() {
