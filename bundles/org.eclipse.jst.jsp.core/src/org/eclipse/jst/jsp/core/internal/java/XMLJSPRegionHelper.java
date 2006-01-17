@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.parser.JSPSourceParser;
+import org.eclipse.jst.jsp.core.internal.provisional.JSP11Namespace;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.wst.sse.core.internal.ltk.parser.BlockMarker;
 import org.eclipse.wst.sse.core.internal.ltk.parser.StructuredDocumentRegionHandler;
@@ -139,8 +140,23 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 					fTagname = nameStr;
 				else
 					fTagname = null;
+				
+
+				// this section assumes important content (to translate)
+				// IS the opening tag
+				
+				// handle include and directive
+				if(fTagname != null && sdRegion.getFirstRegion().getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_OPEN) {
+					processOtherRegions(sdRegion);	
+				}
+				// handle jsp:useBean
+				if(fTagname != null && fTagname.equals(JSP11Namespace.ElementName.USEBEAN)) {
+					processUseBean(sdRegion);
+				}
 			}
 			else if (sdRegion.getFirstRegion().getType() == DOMJSPRegionContexts.JSP_CONTENT || sdRegion.getFirstRegion().getType() == DOMRegionContext.XML_CONTENT) {
+				// this section assumes important content (to translate)
+				// is AFTER the opening tag
 				if (fTagname != null) {
 					// assign contents to one of the tables
 					if (isScriptlet(fTagname)) {
@@ -152,20 +168,8 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 					else if (isDeclaration(fTagname)) {
 						processDeclaration(sdRegion);
 					}
-					else {
-						if (fTagname != null) {
-							processUseBean(sdRegion);
-							processOtherRegions(sdRegion);
-						}
-					}
 				}
 			}
-//			else if (sdRegion.getFirstRegion().getType() == DOMRegionContext.XML_CONTENT) {
-//				if (fTagname != null) {
-//					processUseBean(sdRegion);
-//					processOtherRegions(sdRegion);
-//				}
-//			}
 			else {
 				fTagname = null;
 			}
@@ -289,8 +293,7 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 
 	protected void processUseBean(IStructuredDocumentRegion sdRegion) {
 		if (fTagname != null && isUseBean(fTagname)) {
-			// previous region has the actual attributes
-			sdRegion = sdRegion.getPrevious();
+
 			String beanClass, beanType, beanId, beanDecl = ""; //$NON-NLS-1$
 			beanClass = getAttributeValue("class", sdRegion); //$NON-NLS-1$
 			beanType = getAttributeValue("type", sdRegion); //$NON-NLS-1$
