@@ -101,7 +101,10 @@ public abstract class NewProjectDataModelFacetWizard extends AddRemoveFacetsWiza
 		final ConflictingFacetsFilter filter = new ConflictingFacetsFilter(fixed);
 
 		this.facetsSelectionPage.setFilters(new FacetsSelectionPanel.IFilter[]{filter});
-
+		
+		IRuntime runtime = (IRuntime)model.getProperty(FACET_RUNTIME);
+		if(runtime != null)
+			setRuntime(runtime);
 		synchRuntimes();
 	}
 
