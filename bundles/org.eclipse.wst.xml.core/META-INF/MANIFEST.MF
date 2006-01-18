@@ -71,4 +71,4 @@ Require-Bundle: org.apache.xerces;visibility:=reexport,
  org.eclipse.emf.ecore.xmi;resolution:=optional,
  org.eclipse.wst.common.emfworkbench.integration;resolution:=optional,
  org.eclipse.wst.common.core
-Eclipse-AutoStart: true; exceptions="org.eclipse.wst.xml.core.internal.contenttype"
+Eclipse-LazyStart: true; exceptions="org.eclipse.wst.xml.core.internal.contenttype"
