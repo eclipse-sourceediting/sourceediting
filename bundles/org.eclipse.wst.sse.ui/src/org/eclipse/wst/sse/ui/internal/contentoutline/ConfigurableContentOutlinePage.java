@@ -153,7 +153,7 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 				 * have focus.
 				 */
 				ISelection validContentSelection = getConfiguration().getSelection(getTreeViewer(), selection);
-				getTreeViewer().refresh(true);
+//				getTreeViewer().refresh(true);
 				boolean isLinked = getConfiguration().isLinkedWithEditor(getTreeViewer());
 				if (isLinked) {
 					getTreeViewer().setSelection(validContentSelection, true);
@@ -383,7 +383,6 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 	}
 
 	public void dispose() {
-		super.dispose();
 		getSite().getWorkbenchWindow().getSelectionService().removePostSelectionListener(getSelectionServiceListener());
 		if (fDoubleClickProvider != null) {
 			getTreeViewer().removeDoubleClickListener(fDoubleClickProvider);
@@ -399,6 +398,7 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 			fContextMenuManager.dispose();
 		}
 		setConfiguration(NULL_CONFIGURATION);
+		super.dispose();
 	}
 
 	/*
