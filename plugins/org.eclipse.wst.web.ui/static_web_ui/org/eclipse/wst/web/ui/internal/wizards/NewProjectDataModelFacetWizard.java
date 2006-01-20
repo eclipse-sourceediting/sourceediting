@@ -36,6 +36,7 @@ import org.eclipse.wst.common.componentcore.internal.operation.FacetProjectCreat
 import org.eclipse.wst.common.frameworks.datamodel.DataModelEvent;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModelListener;
+import org.eclipse.wst.common.frameworks.internal.datamodel.ui.DataModelWizardPage;
 import org.eclipse.wst.common.project.facet.core.IFacetedProject;
 import org.eclipse.wst.common.project.facet.core.IFacetedProjectTemplate;
 import org.eclipse.wst.common.project.facet.core.IProjectFacetVersion;
@@ -161,7 +162,7 @@ public abstract class NewProjectDataModelFacetWizard extends AddRemoveFacetsWiza
 
 	{
 		monitor.beginTask("", 10);
-
+		storeDefaultSettings();
 		try {
 			FacetProjectCreationOperation operation = new FacetProjectCreationOperation(model);
 			this.fproj = operation.createProject(new SubProgressMonitor(monitor, 2));
@@ -332,5 +333,23 @@ public abstract class NewProjectDataModelFacetWizard extends AddRemoveFacetsWiza
 		configDM.setProperty(IFacetDataModelProperties.FACET_VERSION, fv);
 		return configDM;
 	}
+	
+	protected void storeDefaultSettings() {
+		IWizardPage[] pages = getPages();
+		for (int i = 0; i < pages.length; i++)
+			storeDefaultSettings(pages[i], i);
+	}
+
+	/**
+	 * Subclasses may override if they need to do something special when storing the default
+	 * settings for a particular page.
+	 * 
+	 * @param page
+	 * @param pageIndex
+	 */
+	protected void storeDefaultSettings(IWizardPage page, int pageIndex) {
+		if (page instanceof DataModelWizardPage)
+			((DataModelWizardPage) page).storeDefaultSettings();
+	}	
 
 }
