@@ -11,6 +11,8 @@
 package org.eclipse.wst.web.ui.internal.wizards;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
@@ -34,6 +36,7 @@ import org.eclipse.wst.common.componentcore.internal.operation.FacetProjectCreat
 import org.eclipse.wst.common.frameworks.datamodel.DataModelEvent;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModelListener;
+import org.eclipse.wst.common.project.facet.core.IFacetedProject;
 import org.eclipse.wst.common.project.facet.core.IFacetedProjectTemplate;
 import org.eclipse.wst.common.project.facet.core.IProjectFacetVersion;
 import org.eclipse.wst.common.project.facet.core.IFacetedProject.Action.Type;
@@ -51,21 +54,21 @@ public abstract class NewProjectDataModelFacetWizard extends AddRemoveFacetsWiza
 	private IWizardPage firstPage;
 	private IConfigurationElement configurationElement;
 
-	public NewProjectDataModelFacetWizard(IDataModel model){
+	public NewProjectDataModelFacetWizard(IDataModel model) {
 		super(null);
 		this.model = model;
 		template = getTemplate();
 		this.setDefaultPageImageDescriptor(getDefaultPageImageDescriptor());
 	}
-	
+
 	public NewProjectDataModelFacetWizard() {
 		super(null);
 		model = createDataModel();
 		template = getTemplate();
 		this.setDefaultPageImageDescriptor(getDefaultPageImageDescriptor());
 	}
-	
-	public IDataModel getDataModel(){
+
+	public IDataModel getDataModel() {
 		return model;
 	}
 
@@ -86,24 +89,30 @@ public abstract class NewProjectDataModelFacetWizard extends AddRemoveFacetsWiza
 
 		this.facetsSelectionPage.setFixedProjectFacets(fixed);
 
-        // Disabling this as it interfers with the facet selection based on the
-        // runtime.
-        
-		/*Set facetVersions = new HashSet();
-		FacetDataModelMap map = (FacetDataModelMap) model.getProperty(FACET_DM_MAP);
-		for (Iterator iterator = map.values().iterator(); iterator.hasNext();) {
-			IDataModel model = (IDataModel) iterator.next();
-			facetVersions.add(model.getProperty(IFacetDataModelProperties.FACET_VERSION));
-		}
-		this.facetsSelectionPage.setInitialSelection(facetVersions);*/
+		this.facetsSelectionPage.addSelectedFacetsChangedListener(new Listener() {
+			public void handleEvent(Event event) {
+				facetSelectionChangedEvent(event);
+			}
+		});
+
+		// Disabling this as it interfers with the facet selection based on the
+		// runtime.
+
+		/*
+		 * Set facetVersions = new HashSet(); FacetDataModelMap map = (FacetDataModelMap)
+		 * model.getProperty(FACET_DM_MAP); for (Iterator iterator = map.values().iterator();
+		 * iterator.hasNext();) { IDataModel model = (IDataModel) iterator.next();
+		 * facetVersions.add(model.getProperty(IFacetDataModelProperties.FACET_VERSION)); }
+		 * this.facetsSelectionPage.setInitialSelection(facetVersions);
+		 */
 
 
 		final ConflictingFacetsFilter filter = new ConflictingFacetsFilter(fixed);
 
 		this.facetsSelectionPage.setFilters(new FacetsSelectionPanel.IFilter[]{filter});
-		
-		IRuntime runtime = (IRuntime)model.getProperty(FACET_RUNTIME);
-		if(runtime != null)
+
+		IRuntime runtime = (IRuntime) model.getProperty(FACET_RUNTIME);
+		if (runtime != null)
 			setRuntime(runtime);
 		synchRuntimes();
 	}
@@ -124,10 +133,12 @@ public abstract class NewProjectDataModelFacetWizard extends AddRemoveFacetsWiza
 	protected void synchRuntimes() {
 		model.addListener(new IDataModelListener() {
 			public void propertyChanged(DataModelEvent event) {
-				if (FACET_RUNTIME.equals(event.getPropertyName())) {
-					IRuntime runtime = (IRuntime) event.getProperty();
-					if(runtime != getRuntime()){
-						setRuntime(runtime);
+				if (IDataModel.VALUE_CHG == event.getFlag() || IDataModel.DEFAULT_CHG == event.getFlag()) {
+					if (FACET_RUNTIME.equals(event.getPropertyName())) {
+						IRuntime runtime = (IRuntime) event.getProperty();
+						if (runtime != getRuntime()) {
+							setRuntime(runtime);
+						}
 					}
 				}
 			}
@@ -144,35 +155,32 @@ public abstract class NewProjectDataModelFacetWizard extends AddRemoveFacetsWiza
 		return model.getStringProperty(IFacetProjectCreationDataModelProperties.FACET_PROJECT_NAME);
 	}
 
-    protected void performFinish( final IProgressMonitor monitor )
-    
-        throws CoreException
-        
-    {
-        monitor.beginTask( "", 10 );
-        
-        try
-        {
-            FacetProjectCreationOperation operation = new FacetProjectCreationOperation(model);
-            this.fproj = operation.createProject(new SubProgressMonitor(monitor, 2));
+	protected void performFinish(final IProgressMonitor monitor)
 
-            super.performFinish( new SubProgressMonitor( monitor, 8 ) );
-            
-            final Set fixed = this.template.getFixedProjectFacets();
-            this.fproj.setFixedProjectFacets( fixed );
-            
-            try {
-                postPerformFinish();
-            } catch (InvocationTargetException e) {
-                Logger.getLogger().logError(e);
-            }
-        }
-        finally
-        {
-            monitor.done();
-        }
-    }
-    
+	throws CoreException
+
+	{
+		monitor.beginTask("", 10);
+
+		try {
+			FacetProjectCreationOperation operation = new FacetProjectCreationOperation(model);
+			this.fproj = operation.createProject(new SubProgressMonitor(monitor, 2));
+
+			super.performFinish(new SubProgressMonitor(monitor, 8));
+
+			final Set fixed = this.template.getFixedProjectFacets();
+			this.fproj.setFixedProjectFacets(fixed);
+
+			try {
+				postPerformFinish();
+			} catch (InvocationTargetException e) {
+				Logger.getLogger().logError(e);
+			}
+		} finally {
+			monitor.done();
+		}
+	}
+
 	/**
 	 * <p>
 	 * Override to return the final perspective ID (if any). The final perspective ID can be
@@ -188,6 +196,7 @@ public abstract class NewProjectDataModelFacetWizard extends AddRemoveFacetsWiza
 	protected String getFinalPerspectiveID() {
 		return "org.eclipse.jst.j2ee.J2EEPerspective";
 	}
+
 	/**
 	 * {@inheritDoc}
 	 * 
@@ -206,6 +215,7 @@ public abstract class NewProjectDataModelFacetWizard extends AddRemoveFacetsWiza
 		doSetInitializeData(aConfigurationElement, aPropertyName, theData);
 
 	}
+
 	/**
 	 * <p>
 	 * Override method for clients that wish to take advantage of the information provided by
@@ -238,6 +248,7 @@ public abstract class NewProjectDataModelFacetWizard extends AddRemoveFacetsWiza
 	public final String getPluginId() {
 		return (configurationElement != null) ? configurationElement.getDeclaringExtension().getDeclaringPluginDescriptor().getUniqueIdentifier() : ""; //$NON-NLS-1$
 	}
+
 	/**
 	 * 
 	 * <p>
@@ -251,7 +262,7 @@ public abstract class NewProjectDataModelFacetWizard extends AddRemoveFacetsWiza
 	 * @see org.eclipse.wst.common.frameworks.internal.ui.wizard.WTPWizard#postPerformFinish()
 	 */
 	protected void postPerformFinish() throws InvocationTargetException {
-		
+
 		if (getFinalPerspectiveID() != null && getFinalPerspectiveID().length() > 0) {
 
 			IConfigurationElement element = new DelegateConfigurationElement(configurationElement) {
@@ -269,13 +280,52 @@ public abstract class NewProjectDataModelFacetWizard extends AddRemoveFacetsWiza
 		BasicNewResourceWizard.selectAndReveal(ProjectUtilities.getProject(projName), WSTWebUIPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow());
 	}
 
+	/**
+	 * Need to keep the model in sync with the UI. This method will pickup changes coming from the
+	 * UI and push them into the model
+	 * 
+	 * @param event
+	 */
+	protected void facetSelectionChangedEvent(Event event) {
+		Set actions = this.facetsSelectionPage.getActions();
+		Iterator iterator = actions.iterator();
+		Set activeIds = new HashSet();
+		while (iterator.hasNext()) {
+			IFacetedProject.Action action = (IFacetedProject.Action) iterator.next();
+			String id = action.getProjectFacetVersion().getProjectFacet().getId();
+			activeIds.add(id);
+		}
+		// First handle all the actions tracked by IDataModels
+		FacetDataModelMap dataModelMap = (FacetDataModelMap) model.getProperty(FACET_DM_MAP);
+		iterator = dataModelMap.keySet().iterator();
+		while (iterator.hasNext()) {
+			String id = (String) iterator.next();
+			IDataModel configDM = (IDataModel) dataModelMap.get(id);
+			boolean active = activeIds.contains(id);
+			configDM.setBooleanProperty(IFacetDataModelProperties.SHOULD_EXECUTE, active);
+			activeIds.remove(id);
+		}
+		// Now handle the actions not tracked by IDataModels
+		FacetActionMap actionMap = (FacetActionMap) model.getProperty(FACET_ACTION_MAP);
+		actionMap.clear();
+		iterator = actions.iterator();
+		while (iterator.hasNext()) {
+			IFacetedProject.Action action = (IFacetedProject.Action) iterator.next();
+			String id = action.getProjectFacetVersion().getProjectFacet().getId();
+			if (activeIds.contains(id)) {
+				actionMap.add(action);
+			}
+		}
+		model.notifyPropertyChange(FACET_RUNTIME, IDataModel.VALID_VALUES_CHG);
+	}
+
 	public Object getConfig(IProjectFacetVersion fv, Type type, String pjname) throws CoreException {
 		FacetDataModelMap map = (FacetDataModelMap) model.getProperty(FACET_DM_MAP);
 		IDataModel configDM = (IDataModel) map.get(fv.getProjectFacet().getId());
 		if (configDM == null) {
-            final Object config = fv.createActionConfig(type,pjname);
-            if( config == null || ! ( config instanceof IDataModel ) )
-                return null;
+			final Object config = fv.createActionConfig(type, pjname);
+			if (config == null || !(config instanceof IDataModel))
+				return null;
 			configDM = (IDataModel) config;
 			map.add(configDM);
 		}
