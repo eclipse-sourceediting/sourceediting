@@ -660,7 +660,7 @@ public class XSDEditor extends XSDMultiPageEditorPart implements ITabbedProperty
 		if (key == ISelectionProvider.class) {
 			result = xsdSelectionManager;
 		}
-		if (IPropertySheetPage.class.equals(key)) {
+        else if (IPropertySheetPage.class.equals(key)) {
 			fPropertySheetPage = new XSDTabbedPropertySheetPage(this);
 
 			((XSDTabbedPropertySheetPage) fPropertySheetPage).setXSDModelAdapterFactory(xsdModelAdapterFactory);
