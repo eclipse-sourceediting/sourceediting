@@ -11,13 +11,11 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/ -->
 <contexts>
-	<context id="csh_outer_container">
-		<description/>
-	</context>
-	<context id="xml_source_HelpId">
-		<description>
-			The XML source view lets you edit a file that is coded in the Extensible Markup Language. The editor provides many text editing features, such as content assist, user-defined templates, syntax highlighting, unlimited undo and redo, element selection and formatting, and document formatting.
-		</description>
-		<topic href="../org.eclipse.wst.xmleditor.doc.user/topics/txedtsrc.html" label="Editing in the Source view"/>
-	</context>
+<context id="csh_outer_container">
+<description/>
+</context>
+<context id="xml_source_HelpId">
+<description>The XML source view lets you edit a file that is coded in the Extensible Markup Language. The editor provides many text editing features, such as content assist, user-defined templates, syntax highlighting, unlimited undo and redo, element selection and formatting, and document formatting.</description>
+<topic href="../org.eclipse.wst.xmleditor.doc.user/topics/txedtsrc.html" label="Editing in the Source view"/>
+</context>
 </contexts>
