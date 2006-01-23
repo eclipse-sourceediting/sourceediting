@@ -360,18 +360,32 @@
    <extension point="org.eclipse.ui.popupMenus"> 
       <objectContribution 
          id="org.eclipse.wst.xsd.ui.refactoring.menu.objectContrib" 
-         objectClass="org.eclipse.xsd.XSDComponent"> 
+         objectClass="org.eclipse.xsd.XSDComponent">  
+         <action
+            id="org.eclipse.wst.xsd.ui.search.declarations.action" 
+            enablesFor="1"
+            style="pulldown"
+            menubarPath="search-slot"
+            label="Declarations"
+            class="org.eclipse.wst.xsd.ui.internal.search.actions.XSDSearchDeclarationsGroupActionDelegate"> 
+         </action>          
+         <action
+            id="org.eclipse.wst.xsd.ui.search.references.action" 
+            enablesFor="1"
+            style="pulldown"
+            menubarPath="search-slot"
+            label="References"
+            class="org.eclipse.wst.xsd.ui.internal.search.actions.XSDSearchReferencesGroupActionDelegate"> 
+         </action>
          <action
             id="org.eclipse.wst.xsd.ui.refactoring.menu.refactorGroup.object" 
             enablesFor="1"
             style="pulldown"
-            menubarPath="additions"
+            menubarPath="refactoring-slot"
             label="%refactoring.menu.label" 
             class="org.eclipse.wst.xsd.ui.internal.refactor.actions.XSDRefactorGroupActionDelegate"> 
-         </action> 
-      </objectContribution> 
- 
-   
+         </action>          
+      </objectContribution>         
     <viewerContribution
         id="org.eclipse.wst.xsd.ui.refactoring.menu.source"
         targetID="org.eclipse.wst.xsd.core.xsdsource.source.EditorContext">

@@ -150,7 +150,7 @@ public class XSDMenuListener implements IMenuListener
     updateXSDSchema();
     if (xsdSchema == null)
     {
-      manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+      manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));    
       return;
     }
     
@@ -324,9 +324,15 @@ public class XSDMenuListener implements IMenuListener
     {
       manager.add(deleteAction);
     }
+
+    manager.add(new Separator());       
+    manager.add(new Separator("refactoring_slot")); 
+    manager.add(new Separator());       
+    manager.add(new Separator("search_slot"));       
+    manager.add(new Separator());
     
     // insertion point for popupMenus extension
-    manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));    
+    manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS)); 
   }
 
   protected String getBuiltInStringQName()
