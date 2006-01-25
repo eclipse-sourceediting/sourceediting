@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,7 +20,17 @@ public class XMLCorePreferenceNames {
 	private XMLCorePreferenceNames() {
 		// empty private constructor so users cannot instantiate class
 	}
-	
+
+	/**
+	 * The default extension to use when none is specified in the New File
+	 * Wizard.
+	 * <p>
+	 * Value is of type <code>String</code>.
+	 * </p>
+	 */
+	public static final String DEFAULT_EXTENSION = "defaultExtension"; //$NON-NLS-1$
+
+
 	/**
 	 * The maximum width of a line before a line split is needed.
 	 * <p>
@@ -28,7 +38,7 @@ public class XMLCorePreferenceNames {
 	 * </p>
 	 */
 	public static final String LINE_WIDTH = "lineWidth";//$NON-NLS-1$
-	
+
 	/**
 	 * Indicates if all blanks lines should be cleared during formatting.
 	 * Blank lines will be kept when false.
@@ -81,7 +91,7 @@ public class XMLCorePreferenceNames {
 	 * </p>
 	 */
 	public static final String SPLIT_MULTI_ATTRS = "splitMultiAttrs";//$NON-NLS-1$
-	
+
 	/**
 	 * Indicates whether or not cleanup processor should format source.
 	 * <p>
@@ -136,8 +146,8 @@ public class XMLCorePreferenceNames {
 	 * delimiters.
 	 * <p>
 	 * Value is of type <code>String</code>.<br />
-	 * Possible values: {CR, CRLF, LF, NO_TRANSLATION} 
-	 * </p> 
+	 * Possible values: {CR, CRLF, LF, NO_TRANSLATION}
+	 * </p>
 	 * 
 	 */
 	public static final String CLEANUP_EOL_CODE = "cleanupEOLCode";//$NON-NLS-1$

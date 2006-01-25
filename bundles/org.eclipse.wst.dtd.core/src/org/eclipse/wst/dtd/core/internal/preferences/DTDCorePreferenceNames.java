@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,33 +7,26 @@
  * 
  * Contributors:
  *     IBM Corporation - initial API and implementation
- *     
  *******************************************************************************/
-package org.eclipse.jst.jsp.core.internal.preferences;
+
+package org.eclipse.wst.dtd.core.internal.preferences;
 
 /**
- * Common preference keys used by JSP core
+ * Common preference keys used by DTD core
+ * 
+ * @plannedfor 1.0
  */
-public class JSPCorePreferenceNames {
-	private JSPCorePreferenceNames() {
+public class DTDCorePreferenceNames {
+	private DTDCorePreferenceNames() {
 		// empty private constructor so users cannot instantiate class
 	}
 
 	/**
-	 * The default extension to use when none is specified in the New JSP File
+	 * The default extension to use when none is specified in the New File
 	 * Wizard.
 	 * <p>
 	 * Value is of type <code>String</code>.
 	 * </p>
 	 */
 	public static final String DEFAULT_EXTENSION = "defaultExtension"; //$NON-NLS-1$
-
-	/**
-	 * Indicates if JSP fragments should be compiled/validated. JSP fragments
-	 * will be validated when true.
-	 * <p>
-	 * Value is of type <code>Boolean</code>.
-	 * </p>
-	 */
-	public static final String VALIDATE_FRAGMENTS = "validateFragments";//$NON-NLS-1$
 }

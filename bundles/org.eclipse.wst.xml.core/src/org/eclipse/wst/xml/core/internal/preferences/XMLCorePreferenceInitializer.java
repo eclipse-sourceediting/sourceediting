@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -28,14 +28,14 @@ public class XMLCorePreferenceInitializer extends AbstractPreferenceInitializer 
 	 */
 	public void initializeDefaultPreferences() {
 		IEclipsePreferences node = new DefaultScope().getNode(XMLCorePlugin.getDefault().getBundle().getSymbolicName());
-		
+
 		// formatting preferences
 		node.putInt(XMLCorePreferenceNames.LINE_WIDTH, 72);
 		node.putBoolean(XMLCorePreferenceNames.CLEAR_ALL_BLANK_LINES, false);
 		node.put(XMLCorePreferenceNames.INDENTATION_CHAR, XMLCorePreferenceNames.TAB);
 		node.putInt(XMLCorePreferenceNames.INDENTATION_SIZE, 1);
 		node.putBoolean(XMLCorePreferenceNames.SPLIT_MULTI_ATTRS, false);
-		
+
 		// cleanup preferences
 		node.putBoolean(XMLCorePreferenceNames.COMPRESS_EMPTY_ELEMENT_TAGS, true);
 		node.putBoolean(XMLCorePreferenceNames.INSERT_REQUIRED_ATTRS, true);
@@ -47,5 +47,9 @@ public class XMLCorePreferenceInitializer extends AbstractPreferenceInitializer 
 		node.put(CommonEncodingPreferenceNames.INPUT_CODESET, ""); //$NON-NLS-1$
 		node.put(CommonEncodingPreferenceNames.OUTPUT_CODESET, "UTF-8");//$NON-NLS-1$
 		node.put(CommonEncodingPreferenceNames.END_OF_LINE_CODE, ""); //$NON-NLS-1$
+
+		// this could be made smarter by actually looking up the content
+		// type's valid extensions
+		node.put(XMLCorePreferenceNames.DEFAULT_EXTENSION, "xml"); //$NON-NLS-1$
 	}
 }

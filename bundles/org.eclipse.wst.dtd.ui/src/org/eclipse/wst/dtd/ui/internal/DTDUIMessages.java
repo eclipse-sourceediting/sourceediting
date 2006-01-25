@@ -36,6 +36,9 @@ public class DTDUIMessages extends NLS {
 	public static String _UI_MOVE_NODE;
 	public static String _UI_MOVE_NODES;
 	public static String _ERROR_FILENAME_MUST_END_DTD;
+	public static String Creating_files;
+	public static String DTDFilesPreferencePage_ExtensionLabel;
+	public static String DTDFilesPreferencePage_ExtensionError;
 	public static String DTDColorPage_0;
 	public static String DTDColorPage_1;
 	public static String DTDColorPage_2;
@@ -53,6 +56,7 @@ public class DTDUIMessages extends NLS {
 	public static String _UI_WIZARD_NEW_DTD_TITLE;
 	public static String _UI_WIZARD_NEW_DTD_EXPL;
 	public static String _UI_LABEL_DTD_FILE_DELETE;
+	public static String ResourceGroup_nameExists;
 	public static String NewDTDTemplatesWizardPage_0;
 	public static String NewDTDTemplatesWizardPage_1;
 	public static String NewDTDTemplatesWizardPage_2;

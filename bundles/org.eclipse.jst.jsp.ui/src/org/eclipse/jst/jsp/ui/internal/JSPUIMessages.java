@@ -45,6 +45,7 @@ public class JSPUIMessages extends NLS {
 	public static String _UI_WIZARD_NEW_HEADING;
 	public static String _UI_WIZARD_NEW_DESCRIPTION;
 	public static String _ERROR_FILENAME_MUST_END_JSP;
+	public static String ResourceGroup_nameExists;
 	public static String NewJSPTemplatesWizardPage_0;
 	public static String NewJSPTemplatesWizardPage_1;
 	public static String NewJSPTemplatesWizardPage_2;

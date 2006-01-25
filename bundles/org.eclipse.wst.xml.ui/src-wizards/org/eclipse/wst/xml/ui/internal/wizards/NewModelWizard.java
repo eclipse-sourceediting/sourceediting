@@ -277,9 +277,8 @@ public class NewModelWizard extends Wizard implements INewWizard
 			setErrorMessage(XMLWizardsMessages._ERROR_BAD_FILENAME_EXTENSION);
 			return false;
 		}
-		// no fileExtension, let's check for this file with an .xml
-		// extension
-		fullFileName += ".xml"; //$NON-NLS-1$
+		// no fileExtension, let's check for this file with default file extension
+		fullFileName += defaultFileExtension;
 		if ((getContainerFullPath() != null) && (getContainerFullPath().isEmpty() == false) && (getFileName().compareTo("") != 0)) //$NON-NLS-1$
 		{
 			Path fullPath = new Path(getContainerFullPath().toString() + '/' + fullFileName);

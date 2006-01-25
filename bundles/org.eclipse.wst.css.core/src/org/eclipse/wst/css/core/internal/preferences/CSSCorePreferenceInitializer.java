@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -44,7 +44,11 @@ public class CSSCorePreferenceInitializer extends AbstractPreferenceInitializer 
 		}
 		node.put(CommonEncodingPreferenceNames.OUTPUT_CODESET, defaultEnc);
 		node.put(CommonEncodingPreferenceNames.END_OF_LINE_CODE, ""); //$NON-NLS-1$
-		
+
+		// this could be made smarter by actually looking up the content
+		// type's valid extensions
+		node.put(CSSCorePreferenceNames.DEFAULT_EXTENSION, "css"); //$NON-NLS-1$
+
 		// additional css core preferences
 		node.putInt(CSSCorePreferenceNames.FORMAT_PROP_PRE_DELIM, 0);
 		node.putInt(CSSCorePreferenceNames.FORMAT_PROP_POST_DELIM, 1);

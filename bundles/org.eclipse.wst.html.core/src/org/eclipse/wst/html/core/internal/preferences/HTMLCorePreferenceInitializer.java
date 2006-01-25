@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -55,5 +55,9 @@ public class HTMLCorePreferenceInitializer extends AbstractPreferenceInitializer
 
 		node.putInt(HTMLCorePreferenceNames.TAG_NAME_CASE, HTMLCorePreferenceNames.LOWER);
 		node.putInt(HTMLCorePreferenceNames.ATTR_NAME_CASE, HTMLCorePreferenceNames.LOWER);
+
+		// this could be made smarter by actually looking up the content
+		// type's valid extensions
+		node.put(HTMLCorePreferenceNames.DEFAULT_EXTENSION, "html"); //$NON-NLS-1$
 	}
 }

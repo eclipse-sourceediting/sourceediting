@@ -213,6 +213,8 @@ public class XMLUIMessages extends NLS {
 	public static String EOL_Unix;
 	public static String EOL_Mac;
 	public static String EOL_NoTranslation;
+	public static String XMLFilesPreferencePage_ExtensionLabel;
+	public static String XMLFilesPreferencePage_ExtensionError;
 	public static String Content_assist_UI_;
 	public static String Automatically_make_suggest_UI_;
 	public static String Prompt_when_these_characte_UI_;

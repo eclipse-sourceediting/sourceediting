@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,10 +10,13 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.ui.internal.preferences.ui;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Preferences;
+import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jst.jsp.core.internal.JSPCorePlugin;
 import org.eclipse.jst.jsp.core.internal.preferences.JSPCorePreferenceNames;
+import org.eclipse.jst.jsp.core.internal.provisional.contenttype.ContentTypeIdForJSP;
 import org.eclipse.jst.jsp.ui.internal.JSPUIMessages;
 import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.jst.jsp.ui.internal.editor.IHelpContextIds;
@@ -52,7 +55,7 @@ public class JSPFilesPreferencePage extends HTMLFilesPreferencePage {
 	protected Control createContents(Composite parent) {
 		Control c = super.createContents(parent);
 
-		Group g = createGroup((Composite)c, 1);
+		Group g = createGroup((Composite) c, 1);
 		g.setText(JSPUIMessages.JSPFilesPreferencePage_0);
 		fValidateFragments = createCheckBox(g, JSPUIMessages.JSPFilesPreferencePage_1);
 		boolean validateFragments = getModelPreferences().getBoolean(JSPCorePreferenceNames.VALIDATE_FRAGMENTS);
@@ -69,6 +72,10 @@ public class JSPFilesPreferencePage extends HTMLFilesPreferencePage {
 	 */
 	protected void createContentsForLoadingGroup(Composite parent) {
 		// no loading preferences
+	}
+
+	protected IContentType getContentType() {
+		return Platform.getContentTypeManager().getContentType(ContentTypeIdForJSP.ContentTypeID_JSP);
 	}
 
 	/*

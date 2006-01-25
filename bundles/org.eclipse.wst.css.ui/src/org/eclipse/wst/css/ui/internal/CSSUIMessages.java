@@ -88,6 +88,7 @@ public class CSSUIMessages extends NLS {
 	public static String StructureSelectPrevious_tooltip;
 	public static String StructureSelectPrevious_description;
 	public static String Creating_files_encoding;
+	public static String ResourceGroup_nameExists;
 	public static String NewCSSTemplatesWizardPage_0;
 	public static String NewCSSTemplatesWizardPage_1;
 	public static String NewCSSTemplatesWizardPage_2;

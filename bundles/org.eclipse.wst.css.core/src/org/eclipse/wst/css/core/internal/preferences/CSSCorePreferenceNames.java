@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -38,6 +38,15 @@ public class CSSCorePreferenceNames {
 	public static final String CLEANUP_CASE_PROPERTY_VALUE = "cleanupPropValueCase"; //$NON-NLS-1$
 	public static final String CLEANUP_CASE_SELECTOR = "cleanupSelectorCase"; //$NON-NLS-1$
 
+	/**
+	 * The default extension to use when none is specified in the New CSS File
+	 * Wizard.
+	 * <p>
+	 * Value is of type <code>String</code>.
+	 * </p>
+	 */
+	public static final String DEFAULT_EXTENSION = "defaultExtension"; //$NON-NLS-1$
+	
 	/**
 	 * The maximum width of a line before a line split is needed.
 	 * <p>

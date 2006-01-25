@@ -8,12 +8,15 @@
  ****************************************************************************/
 package org.eclipse.wst.css.ui.internal.preferences.ui;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Preferences;
+import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.css.core.internal.CSSCorePlugin;
+import org.eclipse.wst.css.core.internal.provisional.contenttype.ContentTypeIdForCSS;
 import org.eclipse.wst.css.ui.internal.CSSUIPlugin;
 import org.eclipse.wst.css.ui.internal.editor.IHelpContextIds;
 import org.eclipse.wst.xml.ui.internal.preferences.XMLFilesPreferencePage;
@@ -35,5 +38,9 @@ public class CSSFilesPreferencePage extends XMLFilesPreferencePage {
 		Control c = super.createContents(parent);
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(c, IHelpContextIds.CSS_PREFWEBX_FILES_HELPID);
 		return c;
+	}
+
+	protected IContentType getContentType() {
+		return Platform.getContentTypeManager().getContentType(ContentTypeIdForCSS.ContentTypeID_CSS);
 	}
 }

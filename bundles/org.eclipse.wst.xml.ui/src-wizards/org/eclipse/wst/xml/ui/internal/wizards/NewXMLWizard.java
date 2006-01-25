@@ -18,6 +18,7 @@ import java.util.Vector;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.util.Assert;
@@ -49,12 +50,14 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.PageBook;
 import org.eclipse.ui.wizards.newresource.BasicNewResourceWizard;
 import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
+import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
 import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalogEntry;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.DOMContentBuilder;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.NamespaceInfo;
+import org.eclipse.wst.xml.core.internal.preferences.XMLCorePreferenceNames;
 import org.eclipse.wst.xml.ui.internal.Logger;
 import org.eclipse.wst.xml.ui.internal.dialogs.NamespaceInfoErrorHelper;
 import org.eclipse.wst.xml.ui.internal.dialogs.SelectFileOrXMLCatalogIdPanel;
@@ -149,7 +152,9 @@ public class NewXMLWizard extends NewModelWizard {
 		newFilePage.setTitle(XMLWizardsMessages._UI_WIZARD_CREATE_XML_FILE_HEADING);
 		newFilePage.setDescription(XMLWizardsMessages._UI_WIZARD_CREATE_XML_FILE_EXPL);
 		newFilePage.defaultName = (grammarURI != null) ? URIHelper.removeFileExtension(URIHelper.getLastSegment(grammarURI)) : "NewFile"; //$NON-NLS-1$
-		newFilePage.defaultFileExtension = ".xml"; //$NON-NLS-1$
+		Preferences preference = XMLCorePlugin.getDefault().getPluginPreferences();
+		String ext = preference.getString(XMLCorePreferenceNames.DEFAULT_EXTENSION);
+		newFilePage.defaultFileExtension = "."+ext; //$NON-NLS-1$
 		newFilePage.filterExtensions = filePageFilterExtensions;
 		addPage(newFilePage);
 
@@ -252,7 +257,7 @@ public class NewXMLWizard extends NewModelWizard {
 			if (result) {
 				fileName = newFilePage.getFileName();
 				if ((new Path(fileName)).getFileExtension() == null) {
-					newFilePage.setFileName(fileName.concat(".xml")); //$NON-NLS-1$
+					newFilePage.setFileName(fileName.concat(newFilePage.defaultFileExtension));
 				}
 
 				IFile newFile = newFilePage.createNewFile();
