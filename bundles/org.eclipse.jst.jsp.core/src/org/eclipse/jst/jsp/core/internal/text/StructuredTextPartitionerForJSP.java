@@ -170,7 +170,7 @@ public class StructuredTextPartitionerForJSP extends StructuredTextPartitioner {
 	private static final String XHTML_MIME_TYPE = "text/xhtml"; //$NON-NLS-1$
 	private static final String XML_MIME_TYPE = "text/xml"; //$NON-NLS-1$
 
-	private final static String[] fConfiguredContentTypes = new String[]{IJSPPartitionTypes.JSP_DEFAULT, IJSPPartitionTypes.JSP_DEFAULT_EL, IJSPPartitionTypes.JSP_DEFAULT_VBL, IJSPPartitionTypes.JSP_DIRECTIVE, IJSPPartitionTypes.JSP_CONTENT_DELIMITER, IJSPPartitionTypes.JSP_CONTENT_JAVA, IJSPPartitionTypes.JSP_CONTENT_JAVASCRIPT, IJSPPartitionTypes.JSP_COMMENT};
+	private final static String[] fConfiguredContentTypes = new String[]{IJSPPartitionTypes.JSP_DEFAULT, IJSPPartitionTypes.JSP_DEFAULT_EL, IJSPPartitionTypes.JSP_DEFAULT_EL2, IJSPPartitionTypes.JSP_DIRECTIVE, IJSPPartitionTypes.JSP_CONTENT_DELIMITER, IJSPPartitionTypes.JSP_CONTENT_JAVA, IJSPPartitionTypes.JSP_CONTENT_JAVASCRIPT, IJSPPartitionTypes.JSP_COMMENT};
 
 	/**
 	 * @return
@@ -374,7 +374,7 @@ public class StructuredTextPartitionerForJSP extends StructuredTextPartitioner {
 			result = IJSPPartitionTypes.JSP_DEFAULT_EL;
 		else if (region_type == DOMJSPRegionContexts.JSP_VBL_OPEN || region_type == DOMJSPRegionContexts.JSP_VBL_CONTENT || region_type == DOMJSPRegionContexts.JSP_VBL_CLOSE || region_type == DOMJSPRegionContexts.JSP_VBL_DQUOTE
 					|| region_type == DOMJSPRegionContexts.JSP_VBL_SQUOTE || region_type == DOMJSPRegionContexts.JSP_VBL_QUOTED_CONTENT)
-			result = IJSPPartitionTypes.JSP_DEFAULT_VBL;
+			result = IJSPPartitionTypes.JSP_DEFAULT_EL2;
 		else if (region_type == DOMRegionContext.XML_CONTENT) {
 			// possibly between <jsp:scriptlet>, <jsp:expression>,
 			// <jsp:declaration>
