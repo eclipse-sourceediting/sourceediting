@@ -872,7 +872,6 @@ public class JSPTranslator {
 		helper.reset(blockText, startOfBlock);
 		// force parse
 		helper.forceParse();
-		helper.writeToBuffers();
 	}
 
 	/*
@@ -1536,7 +1535,6 @@ public class JSPTranslator {
 				getIncludes().push(fileLocation);
 				JSPIncludeRegionHelper helper = new JSPIncludeRegionHelper(this);
 				helper.parse(fileLocation);
-				helper.writeToBuffers();
 				getIncludes().pop();
 			}
 		}

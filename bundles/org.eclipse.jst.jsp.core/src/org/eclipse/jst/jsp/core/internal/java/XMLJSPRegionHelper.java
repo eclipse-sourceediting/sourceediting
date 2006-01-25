@@ -11,7 +11,6 @@
 package org.eclipse.jst.jsp.core.internal.java;
 
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -48,10 +47,6 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 	protected String fTextToParse = null;
 	// need this if not at the start of the document (eg. parsing just a script block)
 	protected int fStartOfTextToParse = 0;
-	// buffers for text that this class parses	
-	protected List fScriptlets = new ArrayList();
-	protected List fExpressions = new ArrayList();
-	protected List fDeclarations = new ArrayList();
 	// name of the open tag that was last handled (if we are interested in it)
 	protected String fTagname = null;
 	protected String fTextBefore = ""; //$NON-NLS-1$
@@ -105,23 +100,6 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 		forceParse();
 	}
 
-	/*
-	 * writes out scriptlet, expression, and declaration buffers
-	 * to the ongoing buffers in the JSPTranslator (calls to outer JSPTranslator methods)
-	 */
-	public void writeToBuffers() {
-		IStructuredDocumentRegion currentNode = fTranslator.getCurrentNode();
-		// currentNode should be the <%@page include="xxx"%> StructuredDocumentRegion
-		for (int i = 0; i < fScriptlets.size(); i++) {
-			this.fTranslator.translateScriptletString((String) fScriptlets.get(i), currentNode, currentNode.getStartOffset(), currentNode.getLength());
-		}
-		for (int i = 0; i < fExpressions.size(); i++) {
-			this.fTranslator.translateExpressionString((String) fExpressions.get(i), currentNode, currentNode.getStartOffset(), currentNode.getLength());
-		}
-		for (int i = 0; i < fDeclarations.size(); i++) {
-			this.fTranslator.translateDeclarationString((String) fDeclarations.get(i), currentNode, currentNode.getStartOffset(), currentNode.getLength());
-		}
-	}
 
 	/*
 	 * listens to parser node parsed events
@@ -221,23 +199,23 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 	}
 
 	private void startScope(String tagName) {
-		//IStructuredDocumentRegion currentNode = fTranslator.getCurrentNode();
+		IStructuredDocumentRegion currentNode = fTranslator.getCurrentNode();
 		StringBuffer text = new StringBuffer();
 		text.append("{ // <"); //$NON-NLS-1$
 		text.append(tagName);
 		text.append(">\n"); //$NON-NLS-1$
-		//this.fTranslator.translateScriptletString(text.toString(), currentNode, currentNode.getStartOffset(), currentNode.getLength()); //$NON-NLS-1$
-		fScriptlets.add(text.toString());
+		this.fTranslator.translateScriptletString(text.toString(), currentNode, currentNode.getStartOffset(), currentNode.getLength()); //$NON-NLS-1$
+
 	}
 
 	private void endScope(String tagName) {
-		//IStructuredDocumentRegion currentNode = fTranslator.getCurrentNode();
+		IStructuredDocumentRegion currentNode = fTranslator.getCurrentNode();
 		StringBuffer text = new StringBuffer();
 		text.append("} // </"); //$NON-NLS-1$
 		text.append(tagName);
 		text.append(">\n"); //$NON-NLS-1$
-		//this.fTranslator.translateScriptletString(text.toString(), currentNode, currentNode.getStartOffset(), currentNode.getLength()); //$NON-NLS-1$
-		fScriptlets.add(text.toString());
+		this.fTranslator.translateScriptletString(text.toString(), currentNode, currentNode.getStartOffset(), currentNode.getLength()); //$NON-NLS-1$
+
 	}
 
 	public void resetNodes() {
@@ -264,19 +242,22 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 
 	protected void processDeclaration(IStructuredDocumentRegion sdRegion) {
 		prepareText(sdRegion);
-		fDeclarations.add(fStrippedText);
+		IStructuredDocumentRegion currentNode = fTranslator.getCurrentNode();
+		this.fTranslator.translateDeclarationString(fStrippedText, currentNode, currentNode.getStartOffset(), currentNode.getLength());
 		fPossibleOwner = JSPTranslator.DECLARATION;
 	}
 
 	protected void processExpression(IStructuredDocumentRegion sdRegion) {
 		prepareText(sdRegion);
-		fExpressions.add(fStrippedText);
+		IStructuredDocumentRegion currentNode = fTranslator.getCurrentNode();
+		this.fTranslator.translateExpressionString(fStrippedText, currentNode, currentNode.getStartOffset(), currentNode.getLength());
 		fPossibleOwner = JSPTranslator.EXPRESSION;
 	}
 
 	protected void processScriptlet(IStructuredDocumentRegion sdRegion) {
 		prepareText(sdRegion);
-		fScriptlets.add(fStrippedText);
+		IStructuredDocumentRegion currentNode = fTranslator.getCurrentNode();
+		this.fTranslator.translateScriptletString(fStrippedText, currentNode, currentNode.getStartOffset(), currentNode.getLength());
 		fPossibleOwner = JSPTranslator.SCRIPTLET;
 	}
 
@@ -308,8 +289,9 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 					suffix = "new " + beanClass + "();\n"; //$NON-NLS-1$ //$NON-NLS-2$
 				beanDecl = prefix + suffix;
 			}	
-			
-			fScriptlets.add(beanDecl);
+
+			IStructuredDocumentRegion currentNode = fTranslator.getCurrentNode();
+			this.fTranslator.translateScriptletString(beanDecl, currentNode, currentNode.getStartOffset(), currentNode.getLength());
 			fPossibleOwner = JSPTranslator.SCRIPTLET;
 		}
 	}
@@ -385,7 +367,7 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 		while (it.hasNext()) {
 			nameRegion = (ITextRegion) it.next();
 			if (nameRegion.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME) {
-				textRegionText = sdRegionText.substring(nameRegion.getStart(), nameRegion.getEnd());
+				textRegionText = sdRegionText.substring(nameRegion.getStart(), nameRegion.getTextEnd());
 				if (textRegionText.equalsIgnoreCase(attrName)) {
 					while (it.hasNext()) {
 						valueRegion = (ITextRegion) it.next();
