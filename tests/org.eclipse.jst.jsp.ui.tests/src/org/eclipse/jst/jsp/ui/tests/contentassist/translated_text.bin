@@ -5,9 +5,9 @@ import javax.servlet.jsp.*;
 public class __2F_INCLUDES_TESTS_2F_jsp_include_test_2E_jsp extends javax.servlet.http.HttpServlet{
  String argh = "argh"; 
 
- protected String with_space = "withspace";
-
  public String globalIncludedString = "included";
+
+ protected String with_space = "withspace";
 
 public void _jspService(javax.servlet.http.HttpServletRequest request, javax.servlet.http.HttpServletResponse response)
 		throws java.io.IOException, javax.servlet.ServletException {
@@ -19,17 +19,17 @@ javax.servlet.jsp.JspWriter out = null;
 Object page = null;
 
 try {
+ String localIncludedString = globalIncludedString;
+for(int i=0; i<5; i++) {
+out.print(""+
+i
+);
+}
+javax.swing.JButton BEAN_includedBean = new javax.swing.JButton();
  int include_include_int = 5; 
 javax.swing.JButton includesUseBean = new javax.swing.JButton();
 { // <gifts:gift>
 } // </gifts:gift>
- String localIncludedString = globalIncludedString;
-for(int i=0; i<5; i++) {
-}
-javax.swing.JButton BEAN_includedBean = new javax.swing.JButton();
-out.print(""+
-i
-);
 out.print(""+
    
 );
