@@ -64,5 +64,5 @@ Require-Bundle: org.eclipse.core.runtime.compatibility,
  org.eclipse.ltk.ui.refactoring,
  org.eclipse.wst.xsd.core,
  org.eclipse.search
-Eclipse-AutoStart: true
+Eclipse-LazyStart: true
 Plugin-Class: org.eclipse.wst.xsd.ui.internal.XSDEditorPlugin

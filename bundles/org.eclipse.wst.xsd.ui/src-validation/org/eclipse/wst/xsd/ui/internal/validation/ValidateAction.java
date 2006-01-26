@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.wst.validation.internal.provisional.core.IMessage;
 import org.eclipse.wst.xml.core.internal.validation.core.ValidationMessage;
 import org.eclipse.wst.xml.core.internal.validation.core.ValidationReport;
+import org.eclipse.wst.xsd.ui.internal.XSDEditorPlugin;
 
 
 
@@ -113,8 +114,8 @@ public class ValidateAction extends org.eclipse.wst.xml.ui.internal.validation.c
       {
         if (!valoutcome.isValid)
         {
-          String message = XSDValidatorManager.getString(_UI_DIALOG_XML_SCHEMA_INVALID_TEXT);
-          String title = XSDValidatorManager.getString(_UI_DIALOG_XML_SCHEMA_INVALID_TITLE);
+          String message = XSDEditorPlugin.getXSDString(_UI_DIALOG_XML_SCHEMA_INVALID_TEXT);
+          String title = XSDEditorPlugin.getXSDString(_UI_DIALOG_XML_SCHEMA_INVALID_TITLE);
           if (internalErrorMessage != null)
           {
             message = message + "\n" + internalErrorMessage;
@@ -123,14 +124,14 @@ public class ValidateAction extends org.eclipse.wst.xml.ui.internal.validation.c
         } 
         else if (valoutcome.isValid && valoutcome.hasMessages)
         {
-          String message = XSDValidatorManager.getString(_UI_DIALOG_XML_SCHEMA_VALID_WITH_WARNINGS);
-          String title = XSDValidatorManager.getString(_UI_DIALOG_XML_SCHEMA_VALID_TITLE);
+          String message = XSDEditorPlugin.getXSDString(_UI_DIALOG_XML_SCHEMA_VALID_WITH_WARNINGS);
+          String title = XSDEditorPlugin.getXSDString(_UI_DIALOG_XML_SCHEMA_VALID_TITLE);
           openWarningDialog(title, message);
         } 
         else
         {
-          String message = XSDValidatorManager.getString(_UI_DIALOG_XML_SCHEMA_VALID_TEXT);
-          String title = XSDValidatorManager.getString(_UI_DIALOG_XML_SCHEMA_VALID_TITLE);
+          String message = XSDEditorPlugin.getXSDString(_UI_DIALOG_XML_SCHEMA_VALID_TEXT);
+          String title = XSDEditorPlugin.getXSDString(_UI_DIALOG_XML_SCHEMA_VALID_TITLE);
           //String message = validator.isGrammarEncountered() ?
           //                 XSDValidatorManager.getString("_UI_THE_XML_FILE_IS_VALID") :
           //                XSDValidatorManager.getString("_UI_THE_XML_FILE_IS_WELL_FORMED") +
