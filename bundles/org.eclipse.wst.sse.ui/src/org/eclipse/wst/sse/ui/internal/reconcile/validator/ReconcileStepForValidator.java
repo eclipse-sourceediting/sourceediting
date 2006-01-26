@@ -273,7 +273,7 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 
 		IFile file = getFile();
 
-		if (file != null) {
+		if (file != null && file.exists()) {
 			try {
 				IProject project = file.getProject();
 				IncrementalHelper helper = getHelper(project);
@@ -323,30 +323,25 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
  		IReconcileResult[] results = EMPTY_RECONCILE_RESULT_SET;
  
  		IFile file = getFile();
-		try {
-			IProject project = null;
-			if (file != null)
-				project = file.getProject();
- 
-			IncrementalHelper helper = getHelper(project);
-
-			if (file != null)
+ 		
+ 		if(file != null && file.exists()) {
+			try {
+				IProject project = file.getProject();
+				IncrementalHelper helper = getHelper(project);
 				helper.setURI(file.getFullPath().toString());
- 
-			if(fValidator instanceof ISourceValidator) {
-				IncrementalReporter reporter = getReporter();
-				((ISourceValidator)fValidator).validate(dirtyRegion, helper, reporter);
-				//results = createAnnotations(reporter.getMessages());
-				results = createAnnotations(reporter.getAnnotationInfo());
-				reporter.removeAllMessages(fValidator);
-			}
-
-		} catch (Exception e) {
-			Logger.logException(e);
+				
+				if(fValidator instanceof ISourceValidator) {
+					IncrementalReporter reporter = getReporter();
+					((ISourceValidator)fValidator).validate(dirtyRegion, helper, reporter);
+					//results = createAnnotations(reporter.getMessages());
+					results = createAnnotations(reporter.getAnnotationInfo());
+					reporter.removeAllMessages(fValidator);
+				}
+	
+			} catch (Exception e) {
+				Logger.logException(e);
+	 		}
  		}
  		return results;
  	}
-	
-	
-	
 }
