@@ -11,6 +11,7 @@
 package org.eclipse.wst.web.ui.internal.wizards;
 
 import org.eclipse.jem.util.emf.workbench.ProjectUtilities;
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -29,10 +30,13 @@ import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
 import org.eclipse.wst.common.frameworks.internal.datamodel.ui.DataModelWizardPage;
 import org.eclipse.wst.common.frameworks.internal.operations.IProjectCreationPropertiesNew;
 import org.eclipse.wst.common.frameworks.internal.ui.NewProjectGroup;
+import org.eclipse.wst.common.project.facet.core.runtime.IRuntime;
 import org.eclipse.wst.server.ui.ServerUIUtil;
 import org.eclipse.wst.web.internal.ResourceHandler;
 
 public class DataModelFacetCreationWizardPage extends DataModelWizardPage implements IFacetProjectCreationDataModelProperties {
+
+	private static final String LAST_RUNTIME_STORE = "LAST_RUNTIME"; //$NON-NLS-1$
 
 	protected static GridData gdhfill() {
 		return new GridData(GridData.FILL_HORIZONTAL);
@@ -118,5 +122,36 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
 		super.dispose();
 		if (projectNameGroup != null)
 			projectNameGroup.dispose();
+	}
+
+	public void storeDefaultSettings() {
+		IDialogSettings settings = getDialogSettings();
+		if (settings != null) {
+			IRuntime runtime = (IRuntime) model.getProperty(IFacetProjectCreationDataModelProperties.FACET_RUNTIME);
+			String runtimeName = runtime == null ? "" : runtime.getName(); //$NON-NLS-1$
+			settings.put(LAST_RUNTIME_STORE, runtimeName);
+		}
+	}
+
+	public void restoreDefaultSettings() {
+		IDialogSettings settings = getDialogSettings();
+		if (settings != null) {
+			if (!model.isPropertySet(IFacetProjectCreationDataModelProperties.FACET_RUNTIME)) {
+				boolean runtimeSet = false;
+				String lastRuntimeName = settings.get(LAST_RUNTIME_STORE);
+				DataModelPropertyDescriptor[] descriptors = model.getValidPropertyDescriptors(IFacetProjectCreationDataModelProperties.FACET_RUNTIME);
+				if (lastRuntimeName != null) {
+					for (int i = 0; i < descriptors.length && !runtimeSet; i++) {
+						if (lastRuntimeName.equals(descriptors[i].getPropertyDescription())) {
+							model.setProperty(IFacetProjectCreationDataModelProperties.FACET_RUNTIME, descriptors[i].getPropertyValue());
+							runtimeSet = true;
+						}
+					}
+				}
+				if (!runtimeSet && descriptors.length > 0) {
+					model.setProperty(IFacetProjectCreationDataModelProperties.FACET_RUNTIME, descriptors[0].getPropertyValue());
+				}
+			}
+		}
 	}
 }
