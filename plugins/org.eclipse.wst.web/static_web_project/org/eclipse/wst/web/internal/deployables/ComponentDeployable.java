@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.web.internal.deployables;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -231,9 +232,14 @@ public abstract class ComponentDeployable extends ProjectModule {
 			IVirtualComponent virtualComp = reference.getReferencedComponent();
 			if (virtualComp != null && virtualComp.isBinary()) {
 				IPath archivePath = ((VirtualArchiveComponent)virtualComp).getWorkspaceRelativePath();
-				if (archivePath != null) { //TODO Only supporting workspace files for now
+				if (archivePath != null) { //In Workspace
 					IFile utilFile = ResourcesPlugin.getWorkspace().getRoot().getFile(archivePath);
-					ModuleFile mf = new ModuleFile(utilFile, utilFile.getName(), reference.getRuntimePath(), utilFile.getModificationStamp() + utilFile.getLocalTimeStamp());
+					ModuleFile mf = new ModuleFile(utilFile, utilFile.getName(), reference.getRuntimePath());
+					utilMembers.add(mf);
+				}
+				else {
+					File extFile = ((VirtualArchiveComponent)virtualComp).getUnderlyingDiskFile();
+					ModuleFile mf = new ModuleFile(extFile, extFile.getName(), reference.getRuntimePath());
 					utilMembers.add(mf);
 				}
 			}
