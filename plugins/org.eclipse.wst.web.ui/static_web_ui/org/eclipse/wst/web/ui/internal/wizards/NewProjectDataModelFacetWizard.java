@@ -17,7 +17,9 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IProduct;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jem.util.emf.workbench.ProjectUtilities;
 import org.eclipse.jem.util.logger.proxy.Logger;
@@ -189,13 +191,27 @@ public abstract class NewProjectDataModelFacetWizard extends AddRemoveFacetsWiza
 	 * on the Wizard's WTP Operation Data Model).
 	 * </p>
 	 * <p>
-	 * Default return value is <b>null </b>.
+	 * The default implementation returns the J2EE perspective id unless
+     * overriden by product definition via the "wtp.project.final.perspective"
+     * property.
 	 * </p>
 	 * 
 	 * @return Returns the ID of the Perspective which is preferred by this wizard upon completion.
 	 */
-	protected String getFinalPerspectiveID() {
-		return "org.eclipse.jst.j2ee.J2EEPerspective";
+    
+	protected String getFinalPerspectiveID() 
+    {
+        final IProduct product = Platform.getProduct();
+        
+        String perspective 
+            = product.getProperty( IProductConstants.FINAL_PERSPECTIVE );
+        
+        if( perspective == null )
+        {
+            perspective = "org.eclipse.jst.j2ee.J2EEPerspective"; //$NON-NLS-1$
+        }
+        
+		return perspective;
 	}
 
 	/**
