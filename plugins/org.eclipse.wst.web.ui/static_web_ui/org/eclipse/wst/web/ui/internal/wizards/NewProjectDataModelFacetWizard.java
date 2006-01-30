@@ -202,15 +202,11 @@ public abstract class NewProjectDataModelFacetWizard extends AddRemoveFacetsWiza
 	protected String getFinalPerspectiveID() 
     {
         final IProduct product = Platform.getProduct();
-        
-        String perspective 
-            = product.getProperty( IProductConstants.FINAL_PERSPECTIVE );
-        
-        if( perspective == null )
-        {
-            perspective = "org.eclipse.jst.j2ee.J2EEPerspective"; //$NON-NLS-1$
-        }
-        
+        String perspective = null;
+        if (product != null)
+        	perspective = product.getProperty( IProductConstants.FINAL_PERSPECTIVE );
+        if(perspective == null)
+        	perspective = "org.eclipse.jst.j2ee.J2EEPerspective"; //$NON-NLS-1$
 		return perspective;
 	}
 
