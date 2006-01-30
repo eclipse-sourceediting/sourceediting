@@ -17,12 +17,12 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.wst.common.core.search.document.Entry;
-import org.eclipse.wst.common.core.search.document.FileReferenceEntry;
 import org.eclipse.wst.common.core.search.document.SearchDocument;
 import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
@@ -90,12 +90,6 @@ public class XMLSearchDocument extends SearchDocument {
 			if(values == null){
 				entries.put(entry.getCategory(), values=new HashSet());
 			}
-            if (entry instanceof FileReferenceEntry && getPath().endsWith("CancelSelection.wsdl")
-                && getPath().indexOf("clone1") != -1)              
-            {
-              FileReferenceEntry fileReferenceEntry = (FileReferenceEntry)entry;
-              System.out.println("fileReferenceEntry(" + fileReferenceEntry.getCategory() + ", " + fileReferenceEntry.getRelativeFilePath() + ")");
-            }  
 			values.add(entry);
 		}
 		
