@@ -67,7 +67,7 @@ public class ELGeneratorVisitor implements JSPELParserVisitor {
 	private StringBuffer fResult;
 	private Map fCodeMap;
 	private int fOffsetInUserCode;
-	private int methodCounter = 0;
+	private static int methodCounter = 0;
 	private JSPTranslator fTranslator = null;
 	private int fContentStart;
 	private static Map fOperatorMap;
@@ -195,6 +195,10 @@ public class ELGeneratorVisitor implements JSPELParserVisitor {
 		return(node.childrenAccept(this, data));
 	}
 
+	static synchronized int getMethodCounter() {
+		return methodCounter++;
+	}
+	
 	/**
 	 * Handle top-level expression
 	 */
@@ -202,7 +206,7 @@ public class ELGeneratorVisitor implements JSPELParserVisitor {
 		int start = node.getFirstToken().beginColumn - 1;
 		int end = node.lastToken.endColumn - 1;
 		append(fExpressionHeader1, start, start);
-		append(Integer.toString(methodCounter++), start, start);
+		append(Integer.toString(getMethodCounter()), start, start);
 		append(fExpressionHeader2, start, start);
 		
 		Object retval = node.childrenAccept(this, data);
