@@ -48,21 +48,24 @@ public abstract class PatternMatcher {
 	 * This method only answers if the pattern matches element, it does not give actual match location
 	 */
 	public abstract boolean matches(SearchPattern pattern, Object element);
+    
+    protected SearchMatch createSearchMatch(IFile file, Attr attributeNode)
+    {
+        int start = 0;
+        int length = 0;
+        if(attributeNode instanceof IDOMAttr){
+            IDOMAttr domAttr = (IDOMAttr)attributeNode;
+            start = domAttr.getValueRegionStartOffset();
+            length = domAttr.getValueRegionText().length();
+        }
+        SearchMatch match = new SearchMatch(attributeNode, start, length, file);
+        return match;
+    }
 	
 	protected void addMatch(SearchPattern pattern, IFile file, Attr attributeNode, SearchRequestor requestor) {
         //System.out.println("addMatch " + pattern + " " + attributeNode.getName() + "=" + attributeNode.getValue());
 		if (attributeNode != null) {
-				int start = 0;
-				int length = 0;
-				if(attributeNode instanceof IDOMAttr){
-					IDOMAttr domAttr = (IDOMAttr)attributeNode;
-					start = domAttr.getValueRegionStartOffset();
-					length = domAttr.getValueRegionText().length();
-				}
-				SearchMatch match = new SearchMatch(attributeNode,
-						start,
-						length,
-						file);
+				SearchMatch match = createSearchMatch(file, attributeNode);                
 				if(requestor != null){
 					try {
 						requestor.acceptSearchMatch(match);

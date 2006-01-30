@@ -12,7 +12,9 @@
 package org.eclipse.wst.xml.core.internal.search.matching;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.wst.common.core.search.SearchMatch;
 import org.eclipse.wst.common.core.search.SearchRequestor;
+import org.eclipse.wst.common.core.search.pattern.QualifiedName;
 import org.eclipse.wst.common.core.search.pattern.SearchPattern;
 import org.eclipse.wst.xml.core.internal.search.XMLComponentSearchPattern;
 import org.eclipse.wst.xml.core.internal.search.XMLSearchPattern;
@@ -162,10 +164,17 @@ public class XMLSearchPatternMatcher extends PatternMatcher{
 	protected boolean matchesPattern(SearchPattern pattern) {
 		if(searchPattern != null && pattern instanceof XMLSearchPattern){
 			XMLSearchPattern decodedPattern = (XMLSearchPattern)pattern;
-			if(searchPattern.getElementName().equals(decodedPattern.getElementName()) &&
+            if(searchPattern.getElementName().equals(decodedPattern.getElementName()) &&
 					searchPattern.getElementNamespace().equals(decodedPattern.getElementNamespace())){
-				if(searchPattern.getSearchName() == null) return false;
-				if(searchPattern.getSearchNamespace() == null){
+				if(searchPattern.getSearchName() == null)
+                {  
+                  return false;
+                }
+                else if ("*".equals(searchPattern.getSearchName()))
+                {
+                  return true;
+                }  
+                else if(searchPattern.getSearchNamespace() == null){
 					return searchPattern.getSearchName().equals(decodedPattern.getSearchName());
 				}
 				else{
@@ -178,5 +187,21 @@ public class XMLSearchPatternMatcher extends PatternMatcher{
 		return false;
 	}
 	
+    
+    protected SearchMatch createSearchMatch(IFile file, Attr attributeNode)
+    {
+      SearchMatch match = super.createSearchMatch(file, attributeNode);
+      // todo... remove this ugly hack!!
+      if ("name".equals(attributeNode.getName()))
+      {
+        QualifiedName qualifiedName = new QualifiedName("todo-compute-targetNamespace", attributeNode.getValue());
+        match.map.put("name", qualifiedName);
+      }
+      //Element element = attributeNode.getOwnerDocument().getDocumentElement();
+      //if (element.getAttribute("targetNamespace"))
+      //{        
+      //}  
+      return match;
+    }
 
 }

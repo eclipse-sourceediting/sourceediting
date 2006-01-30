@@ -18,8 +18,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.wst.common.core.search.SearchMatch;
 import org.eclipse.wst.common.core.search.SearchParticipant;
 import org.eclipse.wst.common.core.search.SearchRequestor;
+import org.eclipse.wst.common.core.search.document.ComponentDeclarationEntry;
 import org.eclipse.wst.common.core.search.document.Entry;
 import org.eclipse.wst.common.core.search.document.FileReferenceEntry;
 import org.eclipse.wst.common.core.search.document.SearchDocument;
@@ -83,7 +85,31 @@ public abstract class XMLSearchParticipant extends SearchParticipant {
 	private void locateMatches(SearchPattern pattern, SearchDocument document,
 			SearchRequestor requestor, IProgressMonitor monitor) {
 
-		if (document.getModel() instanceof IDOMModel) {
+        // TODO... utilize search options (that should get passed down via the SearchEngine)
+        // to specify if accurate source coordinates are req'd if not, simply use the SAX results
+        //
+        if (pattern.getMatchRule() == SearchPattern.R_PATTERN_MATCH)
+        {          
+          IFile file = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(new Path(document.getPath()));
+          // TODO.. don't assume the category is COMPONENT_DECL... handle any arbitarty category
+          Entry[] entries = document.getEntries(IXMLSearchConstants.COMPONENT_DECL, null, 0);
+          for (int i = 0; i < entries.length; i++)
+          {
+            // TODO.. don't assume this is just a component declaration entry            
+            ComponentDeclarationEntry entry = (ComponentDeclarationEntry)entries[i];
+            SearchMatch searchMatch = new SearchMatch(null, 0, 0, file);
+            searchMatch.map.put("name", entry.getName());
+            try
+            {
+              requestor.acceptSearchMatch(searchMatch);
+            }
+            catch (Exception e)
+            {              
+            }
+          }  
+        }
+        else 
+        {  if (document.getModel() instanceof IDOMModel) {
 			IDOMModel domModel = (IDOMModel) document.getModel();
 			IDOMElement contextNode = (IDOMElement) domModel.getDocument()
 					.getDocumentElement();
@@ -91,7 +117,7 @@ public abstract class XMLSearchParticipant extends SearchParticipant {
 					requestor);
 			visitor.visit(contextNode);
 		}
-
+        }
 	}
 	
 	private PatternMatcher getAdapter(Object adaptableObject, Class adapterType) {

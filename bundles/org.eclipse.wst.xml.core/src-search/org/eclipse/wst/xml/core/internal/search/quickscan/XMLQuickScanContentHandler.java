@@ -132,9 +132,11 @@ public class XMLQuickScanContentHandler extends DefaultHandler
 				else if(pattern instanceof XMLComponentDeclarationPattern){
 					ComponentDeclarationEntry documentEntry = new ComponentDeclarationEntry();
 					documentEntry.setCategory(IXMLSearchConstants.COMPONENT_DECL);
-					QualifiedName name = new QualifiedName(uri, localName);
+                    QualifiedName name = new QualifiedName(targetNamespace, attributes.getValue("name"));
+					QualifiedName metaName = new QualifiedName(uri, localName);                    
 					documentEntry.setKey(name.toString());
-					documentEntry.setName(name);
+                    documentEntry.setName(name);
+					documentEntry.setMetaName(metaName);
 					document.putEntry(documentEntry);
 				}
 			}
