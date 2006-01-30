@@ -46,16 +46,16 @@ import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDSchema;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-
+//import org.apache.xerces.util.XMLChar;
 
 public class AbstractSection implements ISection, IPropertyChangeListener, Listener, SelectionListener
 {
-	private TabbedPropertySheetWidgetFactory factory;
-	protected IWorkbenchPart part;
-	protected ISelection selection;
-	protected Object input;
+    private TabbedPropertySheetWidgetFactory factory;
+    protected IWorkbenchPart part;
+    protected ISelection selection;
+    protected Object input;
   protected boolean doRefresh = true;
-	XSDSchema xsdSchema;
+    XSDSchema xsdSchema;
   protected boolean isReadOnly = false;
   private IStatusLineManager statusLine;
   protected Composite composite;
@@ -70,7 +70,7 @@ public class AbstractSection implements ISection, IPropertyChangeListener, Liste
     super();
   }
   
-  public void createControls(Composite parent,	TabbedPropertySheetPage tabbedPropertySheetPage)
+  public void createControls(Composite parent,  TabbedPropertySheetPage tabbedPropertySheetPage)
   {
     createControls(parent, tabbedPropertySheetPage.getWidgetFactory());
   }
@@ -80,7 +80,7 @@ public class AbstractSection implements ISection, IPropertyChangeListener, Liste
    */
   public void createControls(Composite parent, TabbedPropertySheetWidgetFactory aFactory)
   {
-		this.factory = aFactory;
+        this.factory = aFactory;
     GC gc = new GC(parent);
     Point extent = gc.textExtent("  ...  ");
     rightMarginSpace = extent.x;
@@ -92,10 +92,10 @@ public class AbstractSection implements ISection, IPropertyChangeListener, Liste
    */
   public void setInput(IWorkbenchPart part, ISelection selection)
   {
-		Assert.isTrue(selection instanceof IStructuredSelection);
-		this.part = part;
-		this.selection = selection;
-		Object input = ((IStructuredSelection)selection).getFirstElement();
+        Assert.isTrue(selection instanceof IStructuredSelection);
+        this.part = part;
+        this.selection = selection;
+        Object input = ((IStructuredSelection)selection).getFirstElement();
     this.input = input;
     
     if (input instanceof XSDConcreteComponent)
@@ -115,7 +115,7 @@ public class AbstractSection implements ISection, IPropertyChangeListener, Liste
     statusLine = getStatusLine();
     clearErrorMessage();
 
-//		refresh();
+//      refresh();
   }
 
   /* (non-Javadoc)
@@ -176,20 +176,20 @@ public class AbstractSection implements ISection, IPropertyChangeListener, Liste
     return xsdSchema;
   }
   
-	/**
-	 * Get the widget factory.
-	 * @return the widget factory.
-	 */
-	public TabbedPropertySheetWidgetFactory getWidgetFactory() {
-		return factory;
-	}
+    /**
+     * Get the widget factory.
+     * @return the widget factory.
+     */
+    public TabbedPropertySheetWidgetFactory getWidgetFactory() {
+        return factory;
+    }
 
-	public void propertyChange(PropertyChangeEvent event)
-	{
+    public void propertyChange(PropertyChangeEvent event)
+    {
     refresh();
-	}
+    }
 
-	
+    
   public void doWidgetDefaultSelected(SelectionEvent e)
   {}
   
@@ -409,10 +409,9 @@ public class AbstractSection implements ISection, IPropertyChangeListener, Liste
     return true;
   }
 
-  // TODO
   protected boolean validatePrefix(String prefix)
   {
-    return true;
+    return true;//XMLChar.isValidNCName(prefix);
   }
 
   

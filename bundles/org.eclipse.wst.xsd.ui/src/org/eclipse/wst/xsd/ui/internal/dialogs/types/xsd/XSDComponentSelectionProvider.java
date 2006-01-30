@@ -22,6 +22,7 @@ import org.eclipse.wst.xsd.ui.internal.dialogs.types.common.IComponentList;
 import org.eclipse.wst.xsd.ui.internal.dialogs.types.xml.XMLComponentFinder;
 import org.eclipse.wst.xsd.ui.internal.dialogs.types.xml.XMLComponentSelectionProvider;
 import org.eclipse.wst.xsd.ui.internal.dialogs.types.xml.XMLComponentSpecification;
+import org.eclipse.wst.xsd.ui.internal.search.IXSDSearchConstants;
 import org.eclipse.wst.xsd.ui.internal.util.TypesHelper;
 import org.eclipse.wst.xsd.ui.internal.util.XSDDOMHelper;
 import org.eclipse.xsd.XSDComplexTypeDefinition;
@@ -118,10 +119,10 @@ public class XSDComponentSelectionProvider extends XMLComponentSelectionProvider
         Iterator itemsIterator = comps.iterator();
         while (itemsIterator.hasNext()) {
             XMLComponentSpecification tagItem = (XMLComponentSpecification) itemsIterator.next();
-            if (tagItem.getTagPath().equals("/schema/complexType")) {
+            if (tagItem.getMetaName() == IXSDSearchConstants.COMPLEX_TYPE_META_NAME) {
                 complex.add(tagItem);
             }               
-            else if (tagItem.getTagPath().equals("/schema/simpleType")) {
+            else if (tagItem.getMetaName() == IXSDSearchConstants.SIMPLE_TYPE_META_NAME) {
                 simple.add(tagItem);
             }
         }
@@ -159,7 +160,7 @@ public class XSDComponentSelectionProvider extends XMLComponentSelectionProvider
             Object item = it.next();
             String itemString = item.toString();
             
-            XMLComponentSpecification builtInTypeItem = new XMLComponentSpecification("BUILT_IN_SIMPLE_TYPE");
+            XMLComponentSpecification builtInTypeItem = new XMLComponentSpecification(null);
             builtInTypeItem.addAttributeInfo("name", itemString);
             builtInTypeItem.setTargetNamespace(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001);
 //            String normalizedFile = getNormalizedLocation(schema.getSchemaLocation());
@@ -291,11 +292,11 @@ public class XSDComponentSelectionProvider extends XMLComponentSelectionProvider
             if (proceed) {
                 XMLComponentSpecification typeItem =  null;
                 if (showComplexTypes && item instanceof XSDComplexTypeDefinition) {
-                    typeItem = new XMLComponentSpecification("/schema/complexType");
+                    typeItem = new XMLComponentSpecification(IXSDSearchConstants.COMPLEX_TYPE_META_NAME);
                     typeItem.addAttributeInfo("name", ((XSDComplexTypeDefinition) item).getName());
                 }
                 else if (item instanceof XSDSimpleTypeDefinition) {
-                    typeItem = new XMLComponentSpecification("/schema/simpleType");
+                    typeItem = new XMLComponentSpecification(IXSDSearchConstants.SIMPLE_TYPE_META_NAME);
                     typeItem.addAttributeInfo("name", ((XSDSimpleTypeDefinition) item).getName());
                 }
                 
@@ -320,13 +321,13 @@ public class XSDComponentSelectionProvider extends XMLComponentSelectionProvider
         public Image getImage(Object element) {
             XMLComponentTreeObject specification = (XMLComponentTreeObject) element;
             XMLComponentSpecification spec = (XMLComponentSpecification) specification.getXMLComponentSpecification().get(0);
-            if (spec.getTagPath().equals("/schema/complexType")) {
+            if (spec.getMetaName() == IXSDSearchConstants.COMPLEX_TYPE_META_NAME) {
                 return XSDEditorPlugin.getXSDImage("icons/XSDComplexType.gif");
             }
-            else if (spec.getTagPath().equals("/schema/simpleType")) {
+            else if (spec.getMetaName() == IXSDSearchConstants.SIMPLE_TYPE_META_NAME) {
                 return XSDEditorPlugin.getXSDImage("icons/XSDSimpleType.gif");
             }
-            else if (spec.getTagPath().equals("BUILT_IN_SIMPLE_TYPE")) {
+            else if (spec.getMetaName() == null) {
                 return XSDEditorPlugin.getXSDImage("icons/XSDSimpleType.gif");
             }
     

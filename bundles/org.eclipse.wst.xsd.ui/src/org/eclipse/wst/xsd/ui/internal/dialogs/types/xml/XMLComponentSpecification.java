@@ -11,19 +11,21 @@
 package org.eclipse.wst.xsd.ui.internal.dialogs.types.xml;
 
 import java.util.Hashtable;
+import org.eclipse.wst.common.core.search.pattern.QualifiedName;
 
 /*
  * Simple class which keeps track of attribute information.
  * This class is basically a Hashtable with convenience methods.
  */
 public class XMLComponentSpecification {
-    String tagPath;
+  
+    QualifiedName metaName;    
     Hashtable hashtable;
     String targetNamespace;
     String fileLocation;
     
-    public XMLComponentSpecification(String path) {
-        this.tagPath = path;
+    public XMLComponentSpecification(QualifiedName metaName) {
+        this.metaName = metaName;
         hashtable = new Hashtable();
     }
     
@@ -35,8 +37,8 @@ public class XMLComponentSpecification {
         return hashtable.get(attribute);
     }
     
-    public String getTagPath() {
-        return tagPath;
+    public QualifiedName getMetaName() {
+        return metaName;
     }
     
     public String getTargetNamespace() {

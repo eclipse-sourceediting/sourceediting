@@ -18,6 +18,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.wst.common.core.search.pattern.QualifiedName;
 import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
 import org.eclipse.wst.xsd.ui.internal.actions.CreateElementAction;
 import org.eclipse.wst.xsd.ui.internal.actions.DOMAttribute;
@@ -58,7 +59,7 @@ public class XSDSetTypeHelper {
         }
 
         if (!XSDDOMHelper.inputEquals(element, XSDConstants.UNION_ELEMENT_TAG, false))
-        {
+        {/*
             if (spec != null && spec.getTagPath().equals("**anonymous**"))
             {
               if (spec.getTagPath().equals("ANONYMOUS_SIMPLE_TYPE"))
@@ -78,7 +79,7 @@ public class XSDSetTypeHelper {
               // element.removeAttribute(XSDConstants.TYPE_ATTRIBUTE);
               element.removeAttribute(property);
             }
-            else
+            else*/
             {
               XSDDOMHelper.updateElementToNotAnonymous(element);
               //element.setAttribute(XSDConstants.TYPE_ATTRIBUTE, typeObject.toString());
@@ -91,9 +92,9 @@ public class XSDSetTypeHelper {
         
         // Get the new type --> typeObject
         if (spec != null) {
-            String itemType = spec.getTagPath();
+            QualifiedName metaName = spec.getMetaName();
            
-            if (!itemType.equals("BUILT_IN_SIMPLE_TYPE")) {
+            if (metaName != null) {
                 // Do an actual import if needed
                 XSDParser parser = new XSDParser();
                 parser.parse(spec.getFileLocation());

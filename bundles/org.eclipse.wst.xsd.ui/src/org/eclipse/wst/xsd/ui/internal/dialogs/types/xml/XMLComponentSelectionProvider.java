@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.wst.common.core.search.pattern.QualifiedName;
 import org.eclipse.wst.xsd.ui.internal.dialogs.types.common.IComponentList;
 import org.eclipse.wst.xsd.ui.internal.dialogs.types.common.IComponentSelectionProvider;
 
@@ -52,8 +53,8 @@ public abstract class XMLComponentSelectionProvider implements IComponentSelecti
             if (treeObject.getName().equals(dataItem.getAttributeInfo("name"))) {
                 // If the existing data item and the new data item have the same names
                 if (treeObject.getXMLComponentSpecification().size() > 0) {
-                    String existingPath = ((XMLComponentSpecification) treeObject.getXMLComponentSpecification().get(0)).getTagPath();
-                    if (existingPath.equals(dataItem.getTagPath())) {
+                    QualifiedName metaName = ((XMLComponentSpecification) treeObject.getXMLComponentSpecification().get(0)).getMetaName();
+                    if (metaName.equals(dataItem.getMetaName())) {
                         // If they are the same 'type' of items (according to the path value)
                         containingTreeObject = treeObject;
                         foundMatch = true;
