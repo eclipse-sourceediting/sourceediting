@@ -232,20 +232,25 @@ public abstract class ComponentDeployable extends ProjectModule {
 			IVirtualComponent virtualComp = reference.getReferencedComponent();
 			if (virtualComp != null && virtualComp.isBinary()) {
 				IPath archivePath = ((VirtualArchiveComponent)virtualComp).getWorkspaceRelativePath();
+				ModuleFile mf = null;
 				if (archivePath != null) { //In Workspace
 					IFile utilFile = ResourcesPlugin.getWorkspace().getRoot().getFile(archivePath);
-					ModuleFile mf = new ModuleFile(utilFile, utilFile.getName(), reference.getRuntimePath());
-					utilMembers.add(mf);
+					mf = new ModuleFile(utilFile, utilFile.getName(), reference.getRuntimePath().makeRelative());
 				}
 				else {
 					File extFile = ((VirtualArchiveComponent)virtualComp).getUnderlyingDiskFile();
-					ModuleFile mf = new ModuleFile(extFile, extFile.getName(), reference.getRuntimePath());
-					utilMembers.add(mf);
+					mf = new ModuleFile(extFile, extFile.getName(), reference.getRuntimePath().makeRelative());
 				}
+				if (mf == null)
+					continue;
+				IModuleResource moduleParent = getExistingModuleResource(members, mf.getModuleRelativePath());
+				if (moduleParent != null && moduleParent instanceof ModuleFolder)
+					addMembersToModuleFolder((ModuleFolder)moduleParent, new IModuleResource[]{mf});
+				else
+					utilMembers.add(mf);
 			}
     	}
-    	return utilMembers;
-			
+    	return utilMembers;	
 	}
 
 	/**
