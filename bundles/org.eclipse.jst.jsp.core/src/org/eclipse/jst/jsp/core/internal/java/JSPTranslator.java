@@ -276,7 +276,6 @@ public class JSPTranslator {
 	 */
 	private void setJspText(IFile jspFile) {
 		try {
-			fELTranslatorID = getELTranslatorProperty(jspFile);
 			BufferedInputStream in = new BufferedInputStream(jspFile.getContents());
 			BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 			String line = null;
