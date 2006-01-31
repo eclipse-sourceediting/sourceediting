@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
 <plugin>
+   <extension-point id="elTranslator" name="org.eclipse.jst.jsp.core.eltranslator" schema="schema/eltranslator.exsd"/>
 
 	<extension point="org.eclipse.wst.sse.core.modelHandler">
 		<modelHandler
@@ -240,4 +241,11 @@
 			</contentTypeIdentifier>
 		</validator>
 	</extension>
+    <extension
+       point="org.eclipse.jst.jsp.core.elTranslator">
+       <elTranslator
+          class="org.eclipse.jst.jsp.core.internal.java.jspel.JSPELTranslator"
+          name="Default JSP 2.0 EL Translator"
+          id="org.eclipse.jst.jsp.defaultJSP20"/>
+    </extension>
 </plugin>
