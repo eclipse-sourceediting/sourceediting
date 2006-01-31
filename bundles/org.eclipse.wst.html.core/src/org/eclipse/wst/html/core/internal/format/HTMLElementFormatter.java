@@ -60,13 +60,13 @@ public class HTMLElementFormatter extends HTMLFormatter {
 	 */
 	private void formatEndTag(IDOMElement element, HTMLFormatContraints contraints) {
 		Node lastChild = element.getLastChild();
-		
-		if(lastChild != null && lastChild instanceof IDOMElement && lastChild.getNodeName().equals("jsp:scriptlet")) { //$NON-NLS-1$
-			insertBreakAfter((IDOMElement)lastChild, contraints);
+
+		if (lastChild != null && lastChild instanceof IDOMElement && lastChild.getNodeName().equals("jsp:scriptlet")) { //$NON-NLS-1$
+			insertBreakAfter((IDOMElement) lastChild, contraints);
 			return;
 		}
-		
-		
+
+
 		IStructuredDocumentRegion endStructuredDocumentRegion = element.getEndStructuredDocumentRegion();
 		if (endStructuredDocumentRegion == null)
 			return;
@@ -103,10 +103,12 @@ public class HTMLElementFormatter extends HTMLFormatter {
 			removeTailingSpaces(endStructuredDocumentRegion, prevRegion);
 		}
 
-		String newEndTag = endStructuredDocumentRegion.getText();
-		if (newEndTag != null && newEndTag.length() > 0) {
-			setWidth(contraints, newEndTag);
-		}
+		// BUG123890 (end tag length was already prefactored into
+		// formatStartTag so no need to do it here)
+		// String newEndTag = endStructuredDocumentRegion.getText();
+		// if (newEndTag != null && newEndTag.length() > 0) {
+		// setWidth(contraints, newEndTag);
+		//		}
 	}
 
 	/**
@@ -126,12 +128,12 @@ public class HTMLElementFormatter extends HTMLFormatter {
 	/**
 	 */
 	private void formatStartTag(IDOMElement element, HTMLFormatContraints contraints) {
-		
-		if(element.getNodeName().equals("jsp:scriptlet")) { //$NON-NLS-1$
+
+		if (element.getNodeName().equals("jsp:scriptlet")) { //$NON-NLS-1$
 			insertBreakBefore(element, contraints);
 			return;
 		}
-		
+
 		IStructuredDocumentRegion startStructuredDocumentRegion = element.getStartStructuredDocumentRegion();
 		if (startStructuredDocumentRegion == null)
 			return;
@@ -260,8 +262,11 @@ public class HTMLElementFormatter extends HTMLFormatter {
 				compressTailingSpaces(startStructuredDocumentRegion, lastBreakRegion);
 				count++;
 			}
-			else
+			else {
 				removeTailingSpaces(startStructuredDocumentRegion, lastBreakRegion);
+				// BUG123890 (pre-factor in end tag)
+				count += element.getTagName().length() + 3;
+			}
 			addWidth(contraints, count);
 		}
 		else {
