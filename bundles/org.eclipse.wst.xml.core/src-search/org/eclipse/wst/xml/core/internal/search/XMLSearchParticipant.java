@@ -49,14 +49,14 @@ import org.w3c.dom.NodeList;
  */
 public abstract class XMLSearchParticipant extends SearchParticipant {
 	
-	String[] supportedContentTypes;
-	
 	protected static final boolean debugPerf = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.xml.core.internal.search/perf")); //$NON-NLS-1$ //$NON-NLS-2$
 
 	public XMLSearchParticipant() {
 		super();
 	}
+
 	
+	/*
  public  boolean initialize(SearchPattern pattern, String[] contentTypes){
 		
 	    super.initialize(pattern, contentTypes);
@@ -66,11 +66,11 @@ public abstract class XMLSearchParticipant extends SearchParticipant {
 			return true;
 		}
 		return false;
-	}
+	}*/
 
 	
 
-	public SearchDocument getDocument(String documentPath) {
+	public SearchDocument createSearchDocument(String documentPath) {
 
 		return new XMLSearchDocument(documentPath, this);
 
@@ -223,9 +223,7 @@ public abstract class XMLSearchParticipant extends SearchParticipant {
 	 * @param pattern the search pattern that is searched for
 	 * @return content type's unique identifiers that could be searched for the given pattern.
 	 */
-	public String[] getSupportedContentTypes(){
-		return supportedContentTypes;
-	}
+	public abstract String[] getSupportedContentTypes();
 
 	public void populateSearchDocument(SearchDocument document, SearchPattern pattern)
 	{
@@ -259,6 +257,8 @@ public abstract class XMLSearchParticipant extends SearchParticipant {
 			IFile file = files[i];
 			String path = file.getLocation().toString();
 			SearchDocument document = documentSet.getSearchDocument(path, id); 
+			if (document != null)
+			{	
 			Entry[] entries = document.getEntries(getSearchEntryCategory(pattern), null, 0);           
 			if(entries != null && entries.length > 0)
             {
@@ -289,6 +289,7 @@ public abstract class XMLSearchParticipant extends SearchParticipant {
 			    this.locateMatches(pattern, document, requestor, monitor);
               }  
             }
+			}
 		}
 		
 		

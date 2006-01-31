@@ -26,24 +26,24 @@ import org.xml.sax.XMLReader;
  */
 public class XMLQuickScan
 {
-
+    /*
 	public static String getTargetNamespace(String fullFilePath)
 	{
 		XMLQuickScanContentHandler handler = new XMLQuickScanContentHandler();
 		parseFile(fullFilePath, handler);
 		return handler.getTargetNamespace();
-	}
+	}*/
 	
 	/*
 	 * Returns information about matches encountered based on the criteria
 	 * provided.
-	 */
+	 *
 	public static boolean hasMatch(String fullFilePath, PatternMatcher matcher, SearchPattern pattern)
 	{
 		XMLQuickScanContentHandler handler = new XMLQuickScanContentHandler(matcher, pattern);
 		parseFile(fullFilePath, handler);
 		return handler.hasMatch();
-	}
+	}*/
 	
 	public static boolean populateSearchDocument(SearchDocument document, PatternMatcher matcher, SearchPattern pattern)
 	{
@@ -60,8 +60,8 @@ public class XMLQuickScan
 		{
 			inputStream = new FileInputStream(new File(fullFilePath));
 			SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
-			
 			XMLReader reader = parser.getXMLReader();
+			//System.out.println("parseFile" + reader + " (" +  fullFilePath + ")");			
 			reader.setFeature("http://xml.org/sax/features/namespaces", true);
 			reader.setContentHandler(handler);
 			reader.parse(new InputSource(inputStream));

@@ -20,10 +20,20 @@ public class XSDSearchParticipant extends XMLSearchParticipant {
 
 	private static String ID = "org.eclipse.wst.xsd.search.XSDSearchParticipant";
 
-	public  boolean initialize(SearchPattern pattern, String[] contentTypes){
-		
-		super.initialize(pattern, contentTypes);
-		id = ID;
+	public XSDSearchParticipant()
+	{
+	  super();
+      id = ID;
+	}	
+	
+	public String[] getSupportedContentTypes()
+	{
+	  String[] result = { "org.eclipse.wst.xsd.core.xsdsource" };
+	  return result;
+	}
+	
+	public boolean isApplicable(SearchPattern pattern)
+	{
 		if(pattern instanceof XMLComponentSearchPattern ){
 			XMLComponentSearchPattern componentPattern = (XMLComponentSearchPattern)pattern;
 			String namespace = componentPattern.getMetaName().getNamespace();
@@ -33,11 +43,8 @@ public class XSDSearchParticipant extends XMLSearchParticipant {
 		}
 		return false;
 	}
-
-	
-	public ComponentSearchContributor getSearchContributor() {
 		
+	public ComponentSearchContributor getSearchContributor() {		
 		return new XSDSearchContributor();
 	}
-
 }

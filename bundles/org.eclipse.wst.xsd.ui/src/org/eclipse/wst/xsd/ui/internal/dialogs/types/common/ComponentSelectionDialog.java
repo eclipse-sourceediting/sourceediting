@@ -364,6 +364,7 @@ public class ComponentSelectionDialog extends Dialog {
               fireUpdateList(componentList);
             }
             catch (Exception e) {
+            	e.printStackTrace();
             }
             return Status.OK_STATUS;
           }          

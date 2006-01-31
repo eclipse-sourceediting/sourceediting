@@ -13,6 +13,8 @@ package org.eclipse.wst.xsd.ui.internal.dialogs.types.xsd;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.wst.common.core.search.SearchEngine;
@@ -46,6 +48,7 @@ public class XSDComponentFinder extends XMLComponentFinder {
           
           XMLComponentDeclarationPattern pattern = new XMLComponentDeclarationPattern(new QualifiedName("*", "*"), metaName, SearchPattern.R_PATTERN_MATCH);
           SearchParticipant particpant = SearchPlugin.getDefault().getSearchParticipant("org.eclipse.wst.xsd.search.XSDSearchParticipant");
+          Assert.isNotNull(particpant);
           
           // for now we assume that we only want to include the xsd related participant
           // that way we don't get SearchMatches for things withing WSDL files
