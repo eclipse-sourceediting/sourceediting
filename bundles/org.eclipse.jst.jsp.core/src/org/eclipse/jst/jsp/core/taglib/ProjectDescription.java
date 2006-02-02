@@ -137,6 +137,10 @@ class ProjectDescription {
 			return location;
 		}
 
+		public int getRecordType() {
+			return ITaglibRecord.JAR;
+		}
+
 		/**
 		 * @return Returns the recommended/default prefix if one was given.
 		 */
@@ -144,10 +148,6 @@ class ProjectDescription {
 			if (info == null)
 				return null;
 			return info.shortName;
-		}
-
-		public int getRecordType() {
-			return ITaglibRecord.JAR;
 		}
 
 		/**
@@ -267,14 +267,14 @@ class ProjectDescription {
 			return path;
 		}
 
+		public int getRecordType() {
+			return ITaglibRecord.TLD;
+		}
+
 		public String getShortName() {
 			if (info == null)
 				return null;
 			return info.shortName;
-		}
-
-		public int getRecordType() {
-			return ITaglibRecord.TLD;
 		}
 
 		/**
@@ -310,6 +310,10 @@ class ProjectDescription {
 			return baseLocation;
 		}
 
+		public int getRecordType() {
+			return ITaglibRecord.URL;
+		}
+
 		/**
 		 * @return Returns the recommended/default prefix if one was given.
 		 */
@@ -317,10 +321,6 @@ class ProjectDescription {
 			if (info == null)
 				return null;
 			return info.shortName;
-		}
-
-		public int getRecordType() {
-			return ITaglibRecord.URL;
 		}
 
 		/**
@@ -450,11 +450,11 @@ class ProjectDescription {
 	 * @param resource
 	 * @return
 	 */
-	private ITaglibRecord createJARRecord(IResource jar) {
+	private JarRecord createJARRecord(IResource jar) {
 		return createJARRecord(jar.getLocation().toString());
 	}
 
-	private ITaglibRecord createJARRecord(String fileLocation) {
+	private JarRecord createJARRecord(String fileLocation) {
 		JarRecord record = new JarRecord();
 		record.location = new Path(fileLocation);
 		record.urlRecords = new ArrayList(0);
@@ -813,17 +813,6 @@ class ProjectDescription {
 		}
 	}
 
-	private String readTextofChild(Node node, String childName) {
-		NodeList children = node.getChildNodes();
-		for (int i = 0; i < children.getLength(); i++) {
-			Node child = children.item(i);
-			if (child.getNodeType() == Node.ELEMENT_NODE && child.getNodeName().equals(childName)) {
-				return getTextContents(child);
-			}
-		}
-		return ""; //$NON-NLS-1$
-	}
-
 	/*
 	 * private void removeClasspathLibrary(String libraryLocation) { JarRecord
 	 * record = (JarRecord) fClasspathJars.remove(libraryLocation); if (record !=
@@ -834,6 +823,17 @@ class ProjectDescription {
 	 * TaglibIndex.fireTaglibRecordEvent(new TaglibRecordEvent(record,
 	 * ITaglibRecordEvent.REMOVED)); } }
 	 */
+
+	private String readTextofChild(Node node, String childName) {
+		NodeList children = node.getChildNodes();
+		for (int i = 0; i < children.getLength(); i++) {
+			Node child = children.item(i);
+			if (child.getNodeType() == Node.ELEMENT_NODE && child.getNodeName().equals(childName)) {
+				return getTextContents(child);
+			}
+		}
+		return ""; //$NON-NLS-1$
+	}
 
 	void removeJAR(IResource jar) {
 		if (_debugIndexCreation)
@@ -940,12 +940,13 @@ class ProjectDescription {
 				record = (ITaglibRecord) getImplicitReferences(webxmls[i].path.toString()).get(reference);
 			}
 		}
+
 		return record;
 	}
 
 	void updateClasspathLibrary(String libraryLocation, int deltaKind) {
 		String[] entries = JarUtilities.getEntryNames(libraryLocation);
-		JarRecord libraryRecord = (JarRecord) createJARRecord(libraryLocation);
+		JarRecord libraryRecord = createJARRecord(libraryLocation);
 		fClasspathJars.put(libraryLocation, libraryRecord);
 		for (int i = 0; i < entries.length; i++) {
 			if (entries[i].equals(JarUtilities.JSP11_TAGLIB)) {
@@ -986,9 +987,10 @@ class ProjectDescription {
 	void updateJAR(IResource jar, int deltaKind) {
 		if (_debugIndexCreation)
 			Logger.log(Logger.INFO_DEBUG, "creating records for JAR " + jar.getFullPath()); //$NON-NLS-1$
+
 		String jarLocationString = jar.getLocation().toString();
 		String[] entries = JarUtilities.getEntryNames(jar);
-		JarRecord jarRecord = (JarRecord) createJARRecord(jar);
+		JarRecord jarRecord = createJARRecord(jar);
 		fJARReferences.put(jar.getFullPath().toString(), jarRecord);
 		for (int i = 0; i < entries.length; i++) {
 			if (entries[i].endsWith(".tld")) { //$NON-NLS-1$
@@ -1105,15 +1107,50 @@ class ProjectDescription {
 				path = new Path(URIHelper.normalize(taglibLocation, webxml.getFullPath().toString(), getLocalRoot(webxml.getLocation().toString())));
 			}
 			if (path.segmentCount() > 1) {
-				IFile tldResource = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
-				if (tldResource.isAccessible()) {
-					TLDRecord record = createTLDRecord(tldResource);
-					// the stored URI should reflect the web.xml's value
-					record.info.uri = taglibUri;
+				IFile resource = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
+				if (resource.isAccessible()) {
+					ITaglibRecord record = null;
+					/*
+					 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=125960
+					 * 
+					 * Also support mappings to .jar files
+					 */
+					if (resource.getFileExtension().equalsIgnoreCase(("jar"))) {
+						JarRecord jarRecord = createJARRecord(resource);
+						String[] entries = JarUtilities.getEntryNames(resource);
+						for (int j = 0; j < entries.length; j++) {
+							if (entries[j].endsWith(".tld")) { //$NON-NLS-1$
+								if (entries[j].equals(JarUtilities.JSP11_TAGLIB)) {
+									jarRecord.has11TLD = true;
+									InputStream contents = JarUtilities.getInputStream(resource, entries[i]);
+									if (contents != null) {
+										TaglibInfo info = extractInfo(resource.getLocation().toString(), contents);
+										jarRecord.info = info;
+									}
+									try {
+										contents.close();
+									}
+									catch (IOException e) {
+									}
+								}
+							}
+						}
+						record = jarRecord;
+						// the stored URI should reflect the web.xml's value
+						jarRecord.info.uri = taglibUri;
+						if (_debugIndexCreation)
+							Logger.log(Logger.INFO_DEBUG, "created web.xml record for " + taglibUri + "@" + jarRecord.getLocation()); //$NON-NLS-1$ //$NON-NLS-2$
+					}
+					else {
+						TLDRecord tldRecord = createTLDRecord(resource);
+						record = tldRecord;
+						// the stored URI should reflect the web.xml's value
+						tldRecord.info.uri = taglibUri;
+						if (_debugIndexCreation)
+							Logger.log(Logger.INFO_DEBUG, "created web.xml record for " + taglibUri + "@" + tldRecord.getPath()); //$NON-NLS-1$ //$NON-NLS-2$
+					}
 					webxmlRecord.tldRecords.add(record);
 					getImplicitReferences(webxml.getFullPath().toString()).put(taglibUri, record);
-					if (_debugIndexCreation)
-						Logger.log(Logger.INFO_DEBUG, "created web.xml record for " + taglibUri + "@" + record.getPath()); //$NON-NLS-1$ //$NON-NLS-2$
 					TaglibIndex.fireTaglibRecordEvent(new TaglibRecordEvent(record, deltaKind));
 				}
 			}
