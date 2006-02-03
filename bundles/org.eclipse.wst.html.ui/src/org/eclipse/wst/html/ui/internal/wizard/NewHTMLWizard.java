@@ -101,28 +101,31 @@ public class NewHTMLWizard extends Wizard implements INewWizard {
 			protected boolean validatePage() {
 				IContentType type = getContentType();
 				String fileName = getFileName();
-				// check that filename does not contain invalid extension
-				if ((fileName.lastIndexOf('.') != -1) && (!type.isAssociatedWith(fileName))) {
-					setErrorMessage(NLS.bind(HTMLUIMessages._ERROR_FILENAME_MUST_END_HTML, getValidExtensions().toString()));
-					return false;
-				}
-				// no file extension specified so check adding default
-				// extension doesn't equal a file that already exists
-				if (fileName.lastIndexOf('.') == -1) {
-					String newFileName = addDefaultExtension(fileName);
-					IPath resourcePath = getContainerFullPath().append(newFileName);
-
-					IWorkspace workspace = ResourcesPlugin.getWorkspace();
-					IStatus result = workspace.validatePath(resourcePath.toString(), IResource.FOLDER);
-					if (!result.isOK()) {
-						// path invalid
-						setErrorMessage(result.getMessage());
+				IPath fullPath = getContainerFullPath();
+				if ((fullPath != null) && (fullPath.isEmpty() == false) && (fileName != null)) {
+					// check that filename does not contain invalid extension
+					if ((fileName.lastIndexOf('.') != -1) && (!type.isAssociatedWith(fileName))) {
+						setErrorMessage(NLS.bind(HTMLUIMessages._ERROR_FILENAME_MUST_END_HTML, getValidExtensions().toString()));
 						return false;
 					}
+					// no file extension specified so check adding default
+					// extension doesn't equal a file that already exists
+					if (fileName.lastIndexOf('.') == -1) {
+						String newFileName = addDefaultExtension(fileName);
+						IPath resourcePath = fullPath.append(newFileName);
 
-					if ((workspace.getRoot().getFolder(resourcePath).exists() || workspace.getRoot().getFile(resourcePath).exists())) {
-						setErrorMessage(HTMLUIMessages.ResourceGroup_nameExists);
-						return false;
+						IWorkspace workspace = ResourcesPlugin.getWorkspace();
+						IStatus result = workspace.validatePath(resourcePath.toString(), IResource.FOLDER);
+						if (!result.isOK()) {
+							// path invalid
+							setErrorMessage(result.getMessage());
+							return false;
+						}
+
+						if ((workspace.getRoot().getFolder(resourcePath).exists() || workspace.getRoot().getFile(resourcePath).exists())) {
+							setErrorMessage(HTMLUIMessages.ResourceGroup_nameExists);
+							return false;
+						}
 					}
 				}
 
