@@ -11,6 +11,10 @@
    <license url="license.html">
       %license
    </license>
+   
+   <url>
+      <update label="Web Tools Project Update Site" url="http://download.eclipse.org/webtools/updates/"/>
+   </url>
 
    <requires>
       <import feature="org.apache.xerces.feature" version="2.7.0" match="equivalent"/>
