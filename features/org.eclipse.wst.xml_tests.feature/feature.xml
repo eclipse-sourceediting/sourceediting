@@ -1,22 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.eclipse.wst.xml_tests.feature"
-      label="org.eclipse.wst.xml_tests.feature"
-      version="1.0.0">
+      label="WTP XML Tests"
+      version="1.0.1.qualifier"
+      provider-name="%providerName">
 
    <description>
       %description
    </description>
 
-
-
    <license url="license.html">
       %license
    </license>
 
+   <url>
+      <update label="Web Tools Project Update Site" url="http://download.eclipse.org/webtools/updates/"/>
+   </url>
+
+
    <requires>
       <import feature="org.eclipse.wst.xml_ui.feature"/>
-      <import feature="org.eclipse.test"/>
+      <import feature="org.eclipse.test" />
    </requires>
 
    <plugin
