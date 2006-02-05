@@ -47,6 +47,7 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.w3c.dom.Node;
 
+
 public class EMF2DOMSSERenderer extends EMF2DOMRenderer implements IModelStateListener, IModelLifecycleListener {
 
 	/** The XML DOM model */
@@ -121,12 +122,14 @@ public class EMF2DOMSSERenderer extends EMF2DOMRenderer implements IModelStateLi
 				try {
 					xmlModelReverted = true;
 					resource.unload();
-				} finally {
+				}
+				finally {
 					if (getXMLModel() != null)
 						getXMLModel().releaseFromEdit();
 				}
 			}
-		} finally {
+		}
+		finally {
 			aboutToChangeNode = null;
 		}
 	}
@@ -148,7 +151,7 @@ public class EMF2DOMSSERenderer extends EMF2DOMRenderer implements IModelStateLi
 	}
 
 	public void modelDirtyStateChanged(IStructuredModel model, boolean isDirty) {
-		if (!isDirty && resource.isModified()) { //The XMLModel was saved
+		if (!isDirty && resource.isModified()) { // The XMLModel was saved
 			resource.setModified(false);
 			long stamp = WorkbenchResourceHelper.computeModificationStamp(resource);
 			WorkbenchResourceHelper.setSynhronizationStamp(resource, stamp);
@@ -156,21 +159,21 @@ public class EMF2DOMSSERenderer extends EMF2DOMRenderer implements IModelStateLi
 			IFile aFile = WorkbenchResourceHelper.getFile(resource);
 			synchronizer.preSave(aFile);
 		}
-		if (isDirty) 
+		if (isDirty)
 			resource.setModified(true);
 	}
 
 	public void modelResourceDeleted(IStructuredModel model) {
-		//Do nothing
+		// Do nothing
 	}
 
 	public void modelResourceMoved(IStructuredModel oldModel, IStructuredModel newModel) {
-		//Do nothing
+		// Do nothing
 	}
 
 	/**
-	 * This method is called just prior to being removed from the ResourceSet. Ensure that all
-	 * reference counts to the XMLModel are removed.
+	 * This method is called just prior to being removed from the ResourceSet.
+	 * Ensure that all reference counts to the XMLModel are removed.
 	 */
 	public void preDelete() {
 		if (resource.isLoaded())
@@ -191,10 +194,11 @@ public class EMF2DOMSSERenderer extends EMF2DOMRenderer implements IModelStateLi
 		// Calling getModelManager() can result in a class cast exception that
 		// should
 		// be ignored.
-		//ModelManager mgr = null;
+		// ModelManager mgr = null;
 		try {
 			getModelManager();
-		} catch (ClassCastException exc) {
+		}
+		catch (ClassCastException exc) {
 			return;
 		}
 		if (xmlModel != null) {
@@ -214,7 +218,8 @@ public class EMF2DOMSSERenderer extends EMF2DOMRenderer implements IModelStateLi
 	}
 
 	/**
-	 * Insert the method's description here. Creation date: (9/7/2001 10:49:53 AM)
+	 * Insert the method's description here. Creation date: (9/7/2001 10:49:53
+	 * AM)
 	 */
 	public void registerAsModelStateListener() {
 		this.xmlModel.addModelStateListener(this);
@@ -242,7 +247,8 @@ public class EMF2DOMSSERenderer extends EMF2DOMRenderer implements IModelStateLi
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.ibm.etools.emf2xml.Renderer#doSave(java.io.OutputStream, java.util.Map)
+	 * @see com.ibm.etools.emf2xml.Renderer#doSave(java.io.OutputStream,
+	 *      java.util.Map)
 	 */
 	public void doSave(OutputStream outputStream, Map options) throws IOException {
 
@@ -256,12 +262,14 @@ public class EMF2DOMSSERenderer extends EMF2DOMRenderer implements IModelStateLi
 			try {
 				synchronizer.preSave(aFile);
 				xmlModel.save(aFile);
-			} catch (CoreException ex) {
+			}
+			catch (CoreException ex) {
 				synchronizer.removeFromRecentlySavedList(aFile);
 				Logger.getLogger().logError(ex);
 			}
 			cacheSynchronizationStamp();
-		} finally {
+		}
+		finally {
 			isSaving = false;
 		}
 	}
@@ -287,7 +295,8 @@ public class EMF2DOMSSERenderer extends EMF2DOMRenderer implements IModelStateLi
 			IFile file = WorkbenchResourceHelper.getFile(getResource());
 			if (file != null) {
 				xmlModelId = getModelManager().calculateId(file);
-			} else {
+			}
+			else {
 				xmlModelId = resource.getURI() + Long.toString(System.currentTimeMillis());
 			}
 		}
@@ -347,15 +356,18 @@ public class EMF2DOMSSERenderer extends EMF2DOMRenderer implements IModelStateLi
 				}
 				file.create(is, true, null);
 				file.setLocal(true, 1, null);
-			} catch (CoreException e1) {
+			}
+			catch (CoreException e1) {
 				org.eclipse.jem.util.logger.proxy.Logger.getLogger().logError(e1);
-			} finally {
+			}
+			finally {
 				if (null != is) {
 					is.close();
 				}
 			}
 			initializeXMLModel(file, true);
-		} catch (java.io.IOException ex) {
+		}
+		catch (java.io.IOException ex) {
 			org.eclipse.jem.util.logger.proxy.Logger.getLogger().logError(UIResourceHandler.getString("Unexpected_IO_exception_occurred_creating_xml_document_1_EXC_"));//$NON-NLS-1$
 			org.eclipse.jem.util.logger.proxy.Logger.getLogger().logError(ex);
 		}
@@ -378,7 +390,8 @@ public class EMF2DOMSSERenderer extends EMF2DOMRenderer implements IModelStateLi
 			}
 			setXMLModelId(getXMLModel().getId());
 			needsToCreateDOM = false;
-		} catch (CoreException e) {
+		}
+		catch (CoreException e) {
 			org.eclipse.jem.util.logger.proxy.Logger.getLogger().logError(e);
 			return null;
 		}
@@ -419,18 +432,74 @@ public class EMF2DOMSSERenderer extends EMF2DOMRenderer implements IModelStateLi
 		}
 	}
 
+
+	/**
+	 * @deprecated use batchModeStart and BatchModeEnd instead
+	 * even if you do not use batchModelStart/End, you still need to 
+	 * use the try/finally pattern documented there. 
+	 */
+
 	public void setBatchMode(boolean isBatch) {
+		
+		// This is some extra processing for clients to know they may be using incorrectly
 		if (isBatch) {
-			isBatchChanges = true;
-			getXMLModel().aboutToChangeModel();
-			setRootNodeAdapterNotificationEnabled(false);
+			if (isBatchChanges) {
+				org.eclipse.wst.xml.core.internal.Logger.log(org.eclipse.wst.xml.core.internal.Logger.INFO, "setBatch was set to true when it was already true. This can be an inidcation of invalid calling order");
+			}
+		}
+
+
+		if (isBatch) {
+			batchModeStart();
 		}
 		else {
-			getXMLModel().changedModel();
-			setRootNodeAdapterNotificationEnabled(true);
-			isBatchChanges = false;
+			batchModeEnd();
 		}
 	}
+
+	/**
+	 * batchModeStart and batchModeEnd is a pair that controls notifications, and tread access. 
+	 * They should always be called in a try/finally block.
+	 * 
+	 * setBatchModel begins the processing where notifications are not sent
+	 * out on each change, but saved up until the endBatchMode called.
+	 * 
+	 * This pair of calls can also, indirectly, "lock" the DOM Model to access
+	 * from only one thread, so it should not be locked for long periods of
+	 * time. That's also why it is important to have the endBatchMode in a
+	 * finally block to be sure it is always called, or the DOM will be left
+	 * in a locked, unusable, state and only shortly away from severere program error.
+	 * 
+	 * <pre><code>Example</code>
+	 * 
+	 * try { 
+	 * 		batchModelStart();
+	 * 		...do a some work ...
+	 * 		}
+	 * 	finally {
+	 * 		endBatchMode();
+	 * 		}
+	 * 
+	 * 
+	 * </pre>
+	 */
+	public void batchModeStart() {
+		isBatchChanges = true;
+		getXMLModel().aboutToChangeModel();
+		setRootNodeAdapterNotificationEnabled(false);
+	}
+
+	/**
+	 * see batchModelEnd
+	 * 
+	 */
+
+	public void batchModeEnd() {
+		getXMLModel().changedModel();
+		setRootNodeAdapterNotificationEnabled(true);
+		isBatchChanges = false;
+	}
+
 	public boolean isBatchMode() {
 		return isBatchChanges;
 	}
@@ -439,8 +508,11 @@ public class EMF2DOMSSERenderer extends EMF2DOMRenderer implements IModelStateLi
 		EObject root = resource.getRootObject();
 		if (root != null) {
 			EMF2DOMAdapter adapter = (EMF2DOMAdapter) EcoreUtil.getExistingAdapter(root, EMF2DOMAdapter.ADAPTER_CLASS);
-			if (adapter != null)
+			if (adapter != null) {
 				adapter.setNotificationEnabled(b);
+				if (b)
+					adapter.updateDOM();
+			}
 		}
 	}
 
@@ -499,11 +571,11 @@ public class EMF2DOMSSERenderer extends EMF2DOMRenderer implements IModelStateLi
 
 	public void modelAboutToBeReinitialized(IStructuredModel structuredModel) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void modelReinitialized(IStructuredModel structuredModel) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }
