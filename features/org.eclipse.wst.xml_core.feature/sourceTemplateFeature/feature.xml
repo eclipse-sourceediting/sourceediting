@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.wst.xml_core.feature.source"
       label="%featureName"
-      version="1.0.1.qualifier"
+      version="1.1.0.qualifier"
       provider-name="%providerName">
 
    <description>
@@ -21,18 +21,8 @@
       <update label="Web Tools Project Update Site" url="http://download.eclipse.org/webtools/updates/"/>
    </url>
 
-   <includes
-         id="org.eclipse.wst.xml_core.feature"
-         version="0.0.0"
-         search-location="both"/>
-
-   <includes
-         id="org.eclipse.wst.xml_core.feature.source"
-         version="0.0.0"
-         search-location="both"/>
-
    <plugin
-         id="org.eclipse.wst.xml_ui.feature.source"
+         id="org.eclipse.wst.xml_core.feature.source"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
