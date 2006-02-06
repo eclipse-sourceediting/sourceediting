@@ -156,6 +156,12 @@ public class XMLMalformedInputTests extends TestCase {
 //		String filename = fileLocation + "MalformedNoEncoding.xml";
 //		doTestMalformedInput(filename, new XMLResourceEncodingDetector(), 51);
 //	}
+	
+	// since above test was only one im this class, put in this no op to avoid 
+	// a failure due to no tests in class! 
+	public void testNoOp() {
+		assertTrue(true);
+	}
 
 	private void handleMalFormedInput_DetailChecking(Reader reader, String encodingName) throws IOException, MalformedInputExceptionWithDetail {
 		int charPostion = -1;
