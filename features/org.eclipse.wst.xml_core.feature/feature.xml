@@ -18,11 +18,11 @@
 
    <requires>
       <import feature="org.apache.xerces.feature" version="2.7.0" match="greaterOrEqual"/>
-      <import feature="org.eclipse.rcp" version="3.1.1" match="equivalent"/>
-      <import feature="org.eclipse.platform" version="3.1.1" match="equivalent"/>
-      <import feature="org.eclipse.emf" version="2.1.1" match="equivalent"/>
+      <import feature="org.eclipse.rcp" version="3.2" match="equivalent"/>
+      <import feature="org.eclipse.platform" version="3.2" match="equivalent"/>
+      <import feature="org.eclipse.emf" version="2.2" match="equivalent"/>
       <import feature="org.eclipse.wst.common_core.feature" version="1.0.0" match="equivalent"/>
-      <import feature="org.eclipse.xsd" version="2.1.1" match="equivalent"/>
+      <import feature="org.eclipse.xsd" version="2.2" match="equivalent"/>
    </requires>
 
    <plugin
