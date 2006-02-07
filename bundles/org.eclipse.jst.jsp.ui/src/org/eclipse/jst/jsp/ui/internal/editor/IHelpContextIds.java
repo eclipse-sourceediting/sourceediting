@@ -41,12 +41,12 @@ public interface IHelpContextIds {
 	// public static final String JSP_FRAGMENT_HELPID = PREFIX + "jspf1000";
 	// //$NON-NLS-1$
 	
-//	// JSP Source Editor Context Menu
-//	// Refactor Rename
-//	public static final String JSP_REFACTORRENAME_HELPID = PREFIX + "jspr0010"; //$NON-NLS-1$
-//	
-//	// Refactor Move
-//	public static final String JSP_REFACTORMOVE_HELPID = PREFIX + "jspr0020"; //$NON-NLS-1$
+	// JSP Source Editor Context Menu
+	// Refactor Rename
+	public static final String JSP_REFACTORRENAME_HELPID = PREFIX + "jspr0010"; //$NON-NLS-1$
+
+	// Refactor Move
+	public static final String JSP_REFACTORMOVE_HELPID = PREFIX + "jspr0020"; //$NON-NLS-1$
 	
 	// JSP New File Wizard - Template Page
 	public static final String JSP_NEWWIZARD_TEMPLATE_HELPID = PREFIX + "jspw0010"; //$NON-NLS-1$
