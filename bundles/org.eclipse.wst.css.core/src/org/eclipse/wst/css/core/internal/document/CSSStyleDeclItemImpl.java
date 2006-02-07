@@ -24,6 +24,8 @@ import org.eclipse.wst.sse.core.internal.document.IDocumentLoader;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
+import org.eclipse.wst.sse.core.internal.text.TextRegionListImpl;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.css.CSSValue;
 
@@ -228,31 +230,35 @@ class CSSStyleDeclItemImpl extends CSSStructuredDocumentRegionContainer implemen
 		}
 		setCssValueTextCore(value);
 	}
+
 	private void setCssValueTextCore(String value) throws DOMException {
 		// use temporary document
-		synchronized(CSSStyleDeclarationImpl.class) {
+		synchronized (CSSStyleDeclarationImpl.class) {
 			if (sharedStructuredDocument == null) {
 				IDocumentLoader loader = new CSSDocumentLoader();
 				sharedStructuredDocument = (IStructuredDocument) loader.createNewStructuredDocument();
 				((CSSSourceParser) sharedStructuredDocument.getParser()).setParserMode(CSSSourceParser.MODE_DECLARATION_VALUE);
-				
+
 			}
 			sharedStructuredDocument.set(value);
 			IStructuredDocumentRegion node = sharedStructuredDocument.getFirstStructuredDocumentRegion();
-			
+
 			if (node == null) {
 				return;
 			}
 			if (node.getNext() != null) {
 				throw new DOMException(DOMException.INVALID_MODIFICATION_ERR, "");//$NON-NLS-1$
 			}
-			
+
 			CSSDeclarationItemParser itemParser = new CSSDeclarationItemParser(getOwnerDocument());
 			itemParser.setStructuredDocumentTemporary(true);
-			itemParser.setupValues(this, node, node.getRegions());
+			// make a copy of nodelist because setupValues will destroy list
+			ITextRegionList nodeList = new TextRegionListImpl(node.getRegions());
+			itemParser.setupValues(this, node, nodeList);
 		}
 	}
-	private static IStructuredDocument sharedStructuredDocument; 
+
+	private static IStructuredDocument sharedStructuredDocument;
 
 	/**
 	 * @param newPriority
