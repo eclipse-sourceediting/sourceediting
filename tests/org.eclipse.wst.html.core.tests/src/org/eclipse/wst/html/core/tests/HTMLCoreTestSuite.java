@@ -15,6 +15,7 @@ import junit.framework.TestSuite;
 
 import org.eclipse.wst.html.core.tests.misc.HTMLCorePreferencesTest;
 import org.eclipse.wst.html.core.tests.misc.HTMLTagInfoTest;
+import org.eclipse.wst.html.core.tests.model.BUG124835SetStyleAttributeValueTest;
 import org.eclipse.wst.html.core.tests.model.GetOverrideStyleTest;
 import org.eclipse.wst.html.core.tests.model.ModelModifications;
 import org.eclipse.wst.html.core.tests.model.TestForNPEInCSSCreation;
@@ -41,5 +42,6 @@ public class HTMLCoreTestSuite extends TestSuite {
 		addTest(new TestSuite(ModelModifications.class));
 		addTest(new TestSuite(TestForNPEInCSSCreation.class));
 		addTest(new TestSuite(GetOverrideStyleTest.class));
+		addTest(new TestSuite(BUG124835SetStyleAttributeValueTest.class));
 	}
 }
