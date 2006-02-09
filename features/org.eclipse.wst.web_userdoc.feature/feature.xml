@@ -2,13 +2,11 @@
 <feature
       id="org.eclipse.wst.web_userdoc.feature"
       label="org.eclipse.wst.web_userdoc.feature"
-      version="1.0.0">
+      version="1.0.1">
 
    <description>
       %description
    </description>
-
-
 
    <license url="license.html">
       %license
@@ -20,7 +18,7 @@
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-         
+
    <plugin
          id="org.eclipse.wst.webtools.doc.user"
          download-size="0"

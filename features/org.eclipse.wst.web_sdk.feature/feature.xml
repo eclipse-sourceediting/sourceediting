@@ -2,21 +2,17 @@
 <feature
       id="org.eclipse.wst.web_sdk.feature"
       label="org.eclipse.wst.web_sdk.feature"
-      version="1.0.0">
+      version="1.0.1">
 
    <description>
       %description
    </description>
 
-
-
    <license url="license.html">
       %license
    </license>
 
-
-
-  <includes
+   <includes
          id="org.eclipse.wst.web_ui.feature.source"
          version="0.0.0"/>
 
