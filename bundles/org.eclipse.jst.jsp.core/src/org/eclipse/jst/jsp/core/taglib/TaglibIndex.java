@@ -30,6 +30,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.jobs.ILock;
 import org.eclipse.jdt.core.ElementChangedEvent;
 import org.eclipse.jdt.core.IElementChangedListener;
 import org.eclipse.jdt.core.IJavaElement;
@@ -39,6 +40,7 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.wst.sse.core.internal.util.StringUtils;
+import org.osgi.framework.Bundle;
 
 /**
  * A non-extendable index manager for taglibs similar to the previous J2EE
@@ -53,7 +55,6 @@ import org.eclipse.wst.sse.core.internal.util.StringUtils;
  * @since 1.0
  */
 public final class TaglibIndex {
-
 	class ClasspathChangeListener implements IElementChangedListener {
 		Stack classpathStack = new Stack();
 		List projectsIndexed = new ArrayList(1);
@@ -61,12 +62,21 @@ public final class TaglibIndex {
 		public void elementChanged(ElementChangedEvent event) {
 			if (!isIndexAvailable())
 				return;
-			classpathStack.clear();
-			projectsIndexed.clear();
-			elementChanged(event.getDelta());
+			try {
+				LOCK.acquire();
+				classpathStack.clear();
+				projectsIndexed.clear();
+				elementChanged(event.getDelta());
+			}
+			finally {
+				LOCK.release();
+			}
 		}
 
 		private void elementChanged(IJavaElementDelta delta) {
+			if (frameworkIsShuttingDown())
+				return;
+
 			if (delta.getElement().getElementType() == IJavaElement.JAVA_MODEL) {
 				IJavaElementDelta[] changed = delta.getChangedChildren();
 				for (int i = 0; i < changed.length; i++) {
@@ -76,14 +86,15 @@ public final class TaglibIndex {
 			else if (delta.getElement().getElementType() == IJavaElement.JAVA_PROJECT) {
 				if ((delta.getFlags() & IJavaElementDelta.F_CLASSPATH_CHANGED) != 0) {
 					IJavaElement proj = delta.getElement();
-					synchronized (proj) {
-						handleClasspathChange((IJavaProject) proj);
-					}
+					handleClasspathChange((IJavaProject) proj);
 				}
 			}
 		}
 
 		private void handleClasspathChange(IJavaProject project) {
+			if (frameworkIsShuttingDown())
+				return;
+
 			/*
 			 * Loops in the build paths could cause us to pop more than we
 			 * push
@@ -91,37 +102,35 @@ public final class TaglibIndex {
 			if (classpathStack.contains(project.getElementName()))
 				return;
 
-			synchronized (project) {
-				classpathStack.push(project.getElementName());
-				try {
-					/* Handle changes to this project's build path */
-					IResource resource = project.getCorrespondingResource();
-					if (resource.getType() == IResource.PROJECT && !projectsIndexed.contains(resource)) {
+			classpathStack.push(project.getElementName());
+			try {
+				/* Handle changes to this project's build path */
+				IResource resource = project.getCorrespondingResource();
+				if (resource.getType() == IResource.PROJECT && !projectsIndexed.contains(resource)) {
+					ProjectDescription description = getDescription((IProject) resource);
+					if (description != null && !frameworkIsShuttingDown()) {
 						projectsIndexed.add(resource);
-						boolean classpathIndexIsOld = fProjectDescriptions.containsKey(resource);
-						ProjectDescription description = createDescription((IProject) resource);
-						if (classpathIndexIsOld) {
-							description.indexClasspath();
-						}
-					}
-					/*
-					 * Update indeces for projects who include this project in
-					 * their build path (e.g. toggling the "exportation" of a
-					 * taglib JAR in this project affects the JAR's visibility
-					 * in other projects)
-					 */
-					IJavaProject[] projects = project.getJavaModel().getJavaProjects();
-					for (int i = 0; i < projects.length; i++) {
-						IJavaProject otherProject = projects[i];
-						if (StringUtils.contains(otherProject.getRequiredProjectNames(), project.getElementName(), false) && !classpathStack.contains(otherProject.getElementName())) {
-							handleClasspathChange(otherProject);
-						}
+						description.indexClasspath();
 					}
 				}
-				catch (JavaModelException e) {
+				/*
+				 * Update indeces for projects who include this project in
+				 * their build path (e.g. toggling the "exportation" of a
+				 * taglib JAR in this project affects the JAR's visibility in
+				 * other projects)
+				 */
+				IJavaProject[] projects = project.getJavaModel().getJavaProjects();
+				for (int i = 0; i < projects.length; i++) {
+					IJavaProject otherProject = projects[i];
+					if (StringUtils.contains(otherProject.getRequiredProjectNames(), project.getElementName(), false) && !classpathStack.contains(otherProject.getElementName()) && !frameworkIsShuttingDown()) {
+						handleClasspathChange(otherProject);
+					}
 				}
-				classpathStack.pop();
 			}
+			catch (JavaModelException e) {
+			}
+			classpathStack.pop();
+
 		}
 	}
 
@@ -129,127 +138,133 @@ public final class TaglibIndex {
 		public void resourceChanged(IResourceChangeEvent event) {
 			if (!isIndexAvailable())
 				return;
-			switch (event.getType()) {
-				case IResourceChangeEvent.PRE_CLOSE :
-				case IResourceChangeEvent.PRE_DELETE : {
-					try {
-						// pair deltas with projects
-						IResourceDelta[] deltas = new IResourceDelta[]{event.getDelta()};
-						IProject[] projects = null;
+			try {
+				LOCK.acquire();
+				switch (event.getType()) {
+					case IResourceChangeEvent.PRE_CLOSE :
+					case IResourceChangeEvent.PRE_DELETE : {
+						try {
+							// pair deltas with projects
+							IResourceDelta[] deltas = new IResourceDelta[]{event.getDelta()};
+							IProject[] projects = null;
 
-						if (deltas != null && deltas.length > 0) {
-							IResource resource = null;
-							if (deltas[0] != null) {
-								resource = deltas[0].getResource();
-							}
-							else {
-								resource = event.getResource();
-							}
-
-							if (resource != null) {
-								if (resource.getType() == IResource.ROOT) {
-									deltas = deltas[0].getAffectedChildren();
-									projects = new IProject[deltas.length];
-									for (int i = 0; i < deltas.length; i++) {
-										if (deltas[i].getResource().getType() == IResource.PROJECT) {
-											projects[i] = (IProject) deltas[i].getResource();
-										}
-									}
+							if (deltas != null && deltas.length > 0) {
+								IResource resource = null;
+								if (deltas[0] != null) {
+									resource = deltas[0].getResource();
 								}
 								else {
-									projects = new IProject[1];
-									if (resource.getType() != IResource.PROJECT) {
-										projects[0] = resource.getProject();
-									}
-									else {
-										projects[0] = (IProject) resource;
-									}
+									resource = event.getResource();
 								}
-							}
-							for (int i = 0; i < projects.length; i++) {
-								if (_debugIndexCreation) {
-									Logger.log(Logger.INFO_DEBUG, "TaglibIndex noticed " + projects[i].getName() + " is about to be deleted/closed"); //$NON-NLS-1$ //$NON-NLS-2$
-								}
-								ProjectDescription description = (ProjectDescription) fProjectDescriptions.remove(projects[i]);
-								if (description != null) {
-									if (_debugIndexCreation) {
-										Logger.log(Logger.INFO_DEBUG, "removing index of " + description.fProject.getName()); //$NON-NLS-1$
-									}
-									description.clear();
-								}
-							}
-						}
-					}
-					catch (Exception e) {
-						Logger.logException("Exception while processing resource deletion", e); //$NON-NLS-1$
-					}
-				}
-				case IResourceChangeEvent.POST_CHANGE : {
-					try {
-						// pair deltas with projects
-						IResourceDelta[] deltas = new IResourceDelta[]{event.getDelta()};
-						IProject[] projects = null;
 
-						if (deltas != null && deltas.length > 0) {
-							IResource resource = null;
-							if (deltas[0] != null) {
-								resource = deltas[0].getResource();
-							}
-							else {
-								resource = event.getResource();
-							}
-
-							if (resource != null) {
-								if (resource.getType() == IResource.ROOT) {
-									deltas = deltas[0].getAffectedChildren();
-									projects = new IProject[deltas.length];
-									for (int i = 0; i < deltas.length; i++) {
-										if (deltas[i].getResource().getType() == IResource.PROJECT) {
-											projects[i] = (IProject) deltas[i].getResource();
-										}
-									}
-								}
-								else {
-									projects = new IProject[1];
-									if (resource.getType() != IResource.PROJECT) {
-										projects[0] = resource.getProject();
-									}
-									else {
-										projects[0] = (IProject) resource;
-									}
-								}
-							}
-							for (int i = 0; i < projects.length; i++) {
-								try {
-									if (deltas[i] != null && deltas[i].getKind() != IResourceDelta.REMOVED && projects[i].isAccessible()) {
-										ProjectDescription description = createDescription(projects[i]);
-										synchronized (projects[i]) {
-											deltas[i].accept(description.getVisitor());
-										}
-									}
-									if (!projects[i].isAccessible() || (deltas[i] != null && deltas[i].getKind() == IResourceDelta.REMOVED)) {
-										if (_debugIndexCreation) {
-											Logger.log(Logger.INFO_DEBUG, "TaglibIndex noticed " + projects[i].getName() + " was removed or is no longer accessible"); //$NON-NLS-1$ //$NON-NLS-2$
-										}
-										ProjectDescription description = (ProjectDescription) fProjectDescriptions.remove(projects[i]);
-										if (description != null) {
-											if (_debugIndexCreation) {
-												Logger.log(Logger.INFO_DEBUG, "removing index of " + description.fProject.getName()); //$NON-NLS-1$
+								if (resource != null) {
+									if (resource.getType() == IResource.ROOT) {
+										deltas = deltas[0].getAffectedChildren();
+										projects = new IProject[deltas.length];
+										for (int i = 0; i < deltas.length; i++) {
+											if (deltas[i].getResource().getType() == IResource.PROJECT) {
+												projects[i] = (IProject) deltas[i].getResource();
 											}
-											description.clear();
+										}
+									}
+									else {
+										projects = new IProject[1];
+										if (resource.getType() != IResource.PROJECT) {
+											projects[0] = resource.getProject();
+										}
+										else {
+											projects[0] = (IProject) resource;
 										}
 									}
 								}
-								catch (CoreException e) {
-									Logger.logException(e);
+								for (int i = 0; i < projects.length; i++) {
+									if (_debugIndexCreation) {
+										Logger.log(Logger.INFO_DEBUG, "TaglibIndex noticed " + projects[i].getName() + " is about to be deleted/closed"); //$NON-NLS-1$ //$NON-NLS-2$
+									}
+									ProjectDescription description = (ProjectDescription) fProjectDescriptions.remove(projects[i]);
+									if (description != null) {
+										if (_debugIndexCreation) {
+											Logger.log(Logger.INFO_DEBUG, "removing index of " + description.fProject.getName()); //$NON-NLS-1$
+										}
+										description.clear();
+									}
 								}
 							}
 						}
+						catch (Exception e) {
+							Logger.logException("Exception while processing resource deletion", e); //$NON-NLS-1$
+						}
 					}
-					catch (Exception e) {
-						Logger.logException("Exception while processing resource change", e); //$NON-NLS-1$
+					case IResourceChangeEvent.POST_CHANGE : {
+						try {
+							// pair deltas with projects
+							IResourceDelta[] deltas = new IResourceDelta[]{event.getDelta()};
+							IProject[] projects = null;
+
+							if (deltas != null && deltas.length > 0) {
+								IResource resource = null;
+								if (deltas[0] != null) {
+									resource = deltas[0].getResource();
+								}
+								else {
+									resource = event.getResource();
+								}
+
+								if (resource != null) {
+									if (resource.getType() == IResource.ROOT) {
+										deltas = deltas[0].getAffectedChildren();
+										projects = new IProject[deltas.length];
+										for (int i = 0; i < deltas.length; i++) {
+											if (deltas[i].getResource().getType() == IResource.PROJECT) {
+												projects[i] = (IProject) deltas[i].getResource();
+											}
+										}
+									}
+									else {
+										projects = new IProject[1];
+										if (resource.getType() != IResource.PROJECT) {
+											projects[0] = resource.getProject();
+										}
+										else {
+											projects[0] = (IProject) resource;
+										}
+									}
+								}
+								for (int i = 0; i < projects.length; i++) {
+									try {
+										if (deltas[i] != null && deltas[i].getKind() != IResourceDelta.REMOVED && projects[i].isAccessible()) {
+											ProjectDescription description = getDescription(projects[i]);
+											if (description != null && !frameworkIsShuttingDown()) {
+												deltas[i].accept(description.getVisitor());
+											}
+										}
+										if (!projects[i].isAccessible() || (deltas[i] != null && deltas[i].getKind() == IResourceDelta.REMOVED)) {
+											if (_debugIndexCreation) {
+												Logger.log(Logger.INFO_DEBUG, "TaglibIndex noticed " + projects[i].getName() + " was removed or is no longer accessible"); //$NON-NLS-1$ //$NON-NLS-2$
+											}
+											ProjectDescription description = (ProjectDescription) fProjectDescriptions.remove(projects[i]);
+											if (description != null) {
+												if (_debugIndexCreation) {
+													Logger.log(Logger.INFO_DEBUG, "removing index of " + description.fProject.getName()); //$NON-NLS-1$
+												}
+												description.clear();
+											}
+										}
+									}
+									catch (CoreException e) {
+										Logger.logException(e);
+									}
+								}
+							}
+						}
+						catch (Exception e) {
+							Logger.logException("Exception while processing resource change", e); //$NON-NLS-1$
+						}
 					}
 				}
+			}
+			finally {
+				LOCK.release();
 			}
 		}
 	}
@@ -259,9 +274,13 @@ public final class TaglibIndex {
 	static boolean _debugEvents = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.jst.jsp.core/taglib/events")); //$NON-NLS-1$ //$NON-NLS-2$
 
 	static boolean _debugIndexCreation = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.jst.jsp.core/taglib/indexcreation")); //$NON-NLS-1$ //$NON-NLS-2$
+
 	static final boolean _debugResolution = "true".equals(Platform.getDebugOption("org.eclipse.jst.jsp.core/taglib/resolve")); //$NON-NLS-1$ //$NON-NLS-2$
+
 	static TaglibIndex _instance;
-	static boolean ENABLED = true;
+
+	static boolean ENABLED = false;
+	static ILock LOCK = null;
 
 	/**
 	 * NOT API.
@@ -270,7 +289,13 @@ public final class TaglibIndex {
 	 *            the listener to be added
 	 */
 	public static void addTaglibIndexListener(ITaglibIndexListener listener) {
-		_instance.internalAddTaglibIndexListener(listener);
+		try {
+			LOCK.acquire();
+			_instance.internalAddTaglibIndexListener(listener);
+		}
+		finally {
+			LOCK.release();
+		}
 	}
 
 	static void fireTaglibRecordEvent(ITaglibRecordEvent event) {
@@ -316,7 +341,13 @@ public final class TaglibIndex {
 	 *         path
 	 */
 	public static IPath getContextRoot(IPath path) {
-		return _instance.internalGetContextRoot(path);
+		try {
+			LOCK.acquire();
+			return _instance.internalGetContextRoot(path);
+		}
+		finally {
+			LOCK.release();
+		}
 	}
 
 	/**
@@ -326,7 +357,13 @@ public final class TaglibIndex {
 	 *            the listener to be removed
 	 */
 	public static void removeTaglibIndexListener(ITaglibIndexListener listener) {
-		_instance.internalRemoveTaglibIndexListener(listener);
+		try {
+			LOCK.acquire();
+			_instance.internalRemoveTaglibIndexListener(listener);
+		}
+		finally {
+			LOCK.release();
+		}
 	}
 
 	/**
@@ -348,7 +385,14 @@ public final class TaglibIndex {
 	 * @See ITaglibRecord
 	 */
 	public static ITaglibRecord resolve(String basePath, String reference, boolean crossProjects) {
-		ITaglibRecord result = _instance.internalResolve(basePath, reference, crossProjects);
+		ITaglibRecord result = null;
+		try {
+			LOCK.acquire();
+			result = _instance.internalResolve(basePath, reference, crossProjects);
+		}
+		finally {
+			LOCK.release();
+		}
 		if (_debugResolution) {
 			if (result == null) {
 				Logger.log(Logger.INFO_DEBUG, "TaglibIndex could not resolve \"" + reference + "\" from " + basePath); //$NON-NLS-1$ //$NON-NLS-2$
@@ -402,8 +446,12 @@ public final class TaglibIndex {
 	private ClasspathChangeListener fClasspathChangeListener = null;
 
 	Map fProjectDescriptions;
+
 	private ResourceChangeListener fResourceChangeListener;
+
 	private ITaglibIndexListener[] fTaglibIndexListeners = null;
+	/** symbolic name for OSGI framework */
+	private final String OSGI_FRAMEWORK_ID = "org.eclipse.osgi"; //$NON-NLS-1$
 
 	private TaglibIndex() {
 		super();
@@ -413,6 +461,7 @@ public final class TaglibIndex {
 			ResourcesPlugin.getWorkspace().addResourceChangeListener(fResourceChangeListener, IResourceChangeEvent.POST_CHANGE);
 			JavaCore.addElementChangedListener(fClasspathChangeListener);
 		}
+		LOCK = Platform.getJobManager().newLock();
 		fProjectDescriptions = new Hashtable();
 	}
 
@@ -422,21 +471,40 @@ public final class TaglibIndex {
 	 */
 	ProjectDescription createDescription(IProject project) {
 		ProjectDescription description = null;
-		synchronized (project) {
-			description = (ProjectDescription) fProjectDescriptions.get(project);
-			if (description == null) {
-				description = new ProjectDescription(project);
-				if (ENABLED) {
-					description.index();
-					description.indexClasspath();
-				}
-				fProjectDescriptions.put(project, description);
+		description = (ProjectDescription) fProjectDescriptions.get(project);
+		if (description == null) {
+			description = new ProjectDescription(project);
+			if (ENABLED) {
+				description.index();
+				description.indexClasspath();
 			}
+			fProjectDescriptions.put(project, description);
 		}
 		return description;
 	}
 
-	private synchronized void internalAddTaglibIndexListener(ITaglibIndexListener listener) {
+	/**
+	 * A check to see if the OSGI framework is shutting down.
+	 * 
+	 * @return true if the System Bundle is stopped (ie. the framework is
+	 *         shutting down)
+	 */
+	boolean frameworkIsShuttingDown() {
+		// in the Framework class there's a note:
+		// set the state of the System Bundle to STOPPING.
+		// this must be done first according to section 4.19.2 from the OSGi
+		// R3 spec.
+		boolean shuttingDown = !Platform.isRunning() || Platform.getBundle(OSGI_FRAMEWORK_ID).getState() == Bundle.STOPPING;
+		return shuttingDown;
+	}
+
+	ProjectDescription getDescription(IProject project) {
+		ProjectDescription description = null;
+		description = (ProjectDescription) fProjectDescriptions.get(project);
+		return description;
+	}
+
+	private void internalAddTaglibIndexListener(ITaglibIndexListener listener) {
 		if (fTaglibIndexListeners == null) {
 			fTaglibIndexListeners = new ITaglibIndexListener[]{listener};
 		}
@@ -475,7 +543,7 @@ public final class TaglibIndex {
 		return root;
 	}
 
-	private synchronized void internalRemoveTaglibIndexListener(ITaglibIndexListener listener) {
+	private void internalRemoveTaglibIndexListener(ITaglibIndexListener listener) {
 		if (fTaglibIndexListeners != null) {
 			List listeners = new ArrayList(Arrays.asList(fTaglibIndexListeners));
 			listeners.remove(listener);
@@ -501,16 +569,14 @@ public final class TaglibIndex {
 		}
 		if (baseResource != null) {
 			project = baseResource.getProject();
-			synchronized (project) {
-				ProjectDescription description = createDescription(project);
-				resolved = description.resolve(basePath, reference);
-			}
+			ProjectDescription description = createDescription(project);
+			resolved = description.resolve(basePath, reference);
 		}
 		return resolved;
 	}
 
 	boolean isIndexAvailable() {
-		return _instance != null;
+		return _instance != null && ENABLED;
 	}
 
 	private void stop() {
