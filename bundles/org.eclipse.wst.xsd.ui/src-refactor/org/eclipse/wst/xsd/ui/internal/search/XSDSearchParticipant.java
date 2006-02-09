@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.search;
 
+import java.util.Map;
 import org.eclipse.wst.common.core.search.pattern.SearchPattern;
 import org.eclipse.wst.xml.core.internal.search.ComponentSearchContributor;
 import org.eclipse.wst.xml.core.internal.search.XMLComponentSearchPattern;
@@ -32,7 +33,7 @@ public class XSDSearchParticipant extends XMLSearchParticipant {
 	  return result;
 	}
 	
-	public boolean isApplicable(SearchPattern pattern)
+	public boolean isApplicable(SearchPattern pattern, Map searchOptions)
 	{
 		if(pattern instanceof XMLComponentSearchPattern ){
 			XMLComponentSearchPattern componentPattern = (XMLComponentSearchPattern)pattern;

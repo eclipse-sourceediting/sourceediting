@@ -45,7 +45,7 @@ public class ReferencesSearchGroup extends SearchGroup  {
     
     private FindReferencesAction fFindReferencesAction;
     private FindReferencesAction fFindReferencesInProjectAction;
-    private FindReferencesAction fFindReferencesInHierarchyAction;
+    //private FindReferencesAction fFindReferencesInHierarchyAction;
     private FindReferencesAction fFindReferencesInWorkingSetAction;
 
 
@@ -68,12 +68,12 @@ public class ReferencesSearchGroup extends SearchGroup  {
         fFindReferencesInProjectAction.setText("Project");        
         fFindReferencesInProjectAction.setActionDefinitionId("SEARCH_REFERENCES_IN_PROJECT");
         //fEditor.setAction("SearchReferencesInProject", fFindReferencesInProjectAction); //$NON-NLS-1$
-
+/*
         fFindReferencesInHierarchyAction= new FindReferencesAction(fEditor);
         fFindReferencesInHierarchyAction.setText("Hierarchy");          
         fFindReferencesInHierarchyAction.setActionDefinitionId("SEARCH_REFERENCES_IN_HIERARCHY");
         //fEditor.setAction("SearchReferencesInHierarchy", fFindReferencesInHierarchyAction); //$NON-NLS-1$
-        
+ */       
         fFindReferencesInWorkingSetAction= new FindReferencesAction(fEditor);
         fFindReferencesInWorkingSetAction.setText("Working Set...");         
         fFindReferencesInWorkingSetAction.setActionDefinitionId(".SEARCH_REFERENCES_IN_WORKING_SET");
@@ -98,7 +98,7 @@ public class ReferencesSearchGroup extends SearchGroup  {
     public void fillActions(List list)
     {
       list.add(fFindReferencesAction);
-      list.add(fFindReferencesInHierarchyAction);
+      //list.add(fFindReferencesInHierarchyAction);
       list.add(fFindReferencesInProjectAction);
       list.add(new Separator());
       list.add(fFindReferencesInWorkingSetAction);
@@ -164,12 +164,12 @@ public class ReferencesSearchGroup extends SearchGroup  {
         if (provider != null) {
             disposeAction(fFindReferencesAction, provider);
             disposeAction(fFindReferencesInProjectAction, provider);
-            disposeAction(fFindReferencesInHierarchyAction, provider);
+          //  disposeAction(fFindReferencesInHierarchyAction, provider);
             disposeAction(fFindReferencesInWorkingSetAction, provider);
         }
         fFindReferencesAction= null;
         fFindReferencesInProjectAction= null;
-        fFindReferencesInHierarchyAction= null;
+        //fFindReferencesInHierarchyAction= null;
         fFindReferencesInWorkingSetAction= null;
         updateGlobalActionHandlers();
         super.dispose();

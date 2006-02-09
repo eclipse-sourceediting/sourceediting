@@ -12,6 +12,7 @@
 package org.eclipse.wst.xml.core.internal.search;
 
 import java.util.HashMap;
+import java.util.Map;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -83,7 +84,7 @@ public abstract class XMLSearchParticipant extends SearchParticipant {
 
 
 	private void locateMatches(SearchPattern pattern, SearchDocument document,
-			SearchRequestor requestor, IProgressMonitor monitor) {
+			SearchRequestor requestor, Map searchOptions, IProgressMonitor monitor) {
 
         // TODO... utilize search options (that should get passed down via the SearchEngine)
         // to specify if accurate source coordinates are req'd if not, simply use the SAX results
@@ -173,7 +174,7 @@ public abstract class XMLSearchParticipant extends SearchParticipant {
 
 	}
 
-	public SearchScope selectDocumentLocations(SearchPattern pattern, SearchScope scope, IProgressMonitor monitor) {
+	public SearchScope selectDocumentLocations(SearchPattern pattern, SearchScope scope, Map searchOptions, IProgressMonitor monitor) {
 		/*
 		 * gate #1: reduce the scope to the files with the content type that
 		 * could be searched using this participant
@@ -182,15 +183,15 @@ public abstract class XMLSearchParticipant extends SearchParticipant {
 		if(contentTypes != null && contentTypes.length > 0){
 			scope = new ContentTypeSearchScope(scope, contentTypes);
 		}
-		return super.selectDocumentLocations(pattern, scope, monitor);
+		return super.selectDocumentLocations(pattern, scope, searchOptions, monitor);
 	}
 	
 	public abstract ComponentSearchContributor getSearchContributor();
 
 
-	public void beginSearching(SearchPattern pattern) {
+	public void beginSearching(SearchPattern pattern, Map searchOptions) {
 		
-		super.beginSearching(pattern);
+		super.beginSearching(pattern, searchOptions);
 		if(pattern instanceof XMLComponentDeclarationPattern){
 			XMLComponentDeclarationPattern componentPattern = (XMLComponentDeclarationPattern)pattern;
 			XMLSearchPattern childPattern = getSearchContributor().getDeclarationPattern(componentPattern.getMetaName());
@@ -234,7 +235,7 @@ public abstract class XMLSearchParticipant extends SearchParticipant {
 		XMLQuickScan.populateSearchDocument(document, matcher, pattern);		
 	}
 
-	public void locateMatches(SearchDocumentSet documentSet, SearchPattern pattern, SearchScope scope, SearchRequestor requestor, IProgressMonitor monitor) throws CoreException
+	public void locateMatches(SearchDocumentSet documentSet, SearchPattern pattern, SearchScope scope, SearchRequestor requestor, Map searchOptions, IProgressMonitor monitor) throws CoreException
 	{
 		long time = System.currentTimeMillis();
 		
@@ -286,7 +287,7 @@ public abstract class XMLSearchParticipant extends SearchParticipant {
               }              
               if (isInScope)
               { 
-			    this.locateMatches(pattern, document, requestor, monitor);
+			    this.locateMatches(pattern, document, requestor, searchOptions, monitor);
               }  
             }
 			}

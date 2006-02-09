@@ -55,7 +55,7 @@ public class XSDComponentFinder extends XMLComponentFinder {
           // TODO... rethink this... since folks should be capable of changing the 'xsd' search participant impl
           // without killing this logic
           SearchParticipant[] participants = { particpant };          
-          searchEngine.search(pattern, requestor, participants, searchScope, new NullProgressMonitor());
+          searchEngine.search(pattern, requestor, participants, searchScope, null, new NullProgressMonitor());
           
           for (Iterator i = requestor.getResults().iterator(); i.hasNext(); )
           {

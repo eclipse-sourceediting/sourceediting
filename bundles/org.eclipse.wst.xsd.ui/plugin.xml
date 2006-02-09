@@ -311,8 +311,6 @@
 				  </with>
 				</or>
 			</enablement>
-			 <contentTypeBinding
-                contentTypeId="org.eclipse.wst.xsd.core.xsdsource" />
 		</searchParticipant>
 	 </extension>
 	

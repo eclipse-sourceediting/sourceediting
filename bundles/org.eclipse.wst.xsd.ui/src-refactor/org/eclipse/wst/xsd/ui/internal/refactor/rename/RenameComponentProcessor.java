@@ -120,7 +120,7 @@ public class RenameComponentProcessor extends RenameProcessor implements INameUp
 		CollectingSearchRequestor requestor = new CollectingSearchRequestor();
 		SearchPattern pattern = new XMLComponentDeclarationPattern(file, elementQName, typeQName);
 		SearchEngine searchEngine = new SearchEngine();
-		searchEngine.search(pattern, requestor, scope, new NullProgressMonitor());
+		searchEngine.search(pattern, requestor, scope, null, new NullProgressMonitor());
 		List results = requestor.getResults();
 		for (Iterator iter = results.iterator(); iter.hasNext();) {
 			SearchMatch match = (SearchMatch) iter.next();
@@ -150,7 +150,7 @@ public class RenameComponentProcessor extends RenameProcessor implements INameUp
 
 		SortingSearchRequestor requestor = new SortingSearchRequestor();
 		SearchPattern pattern = new XMLComponentReferencePattern(file, elementQName, typeQName);
-		searchEngine.search(pattern, requestor, new WorkspaceSearchScope(), new NullProgressMonitor());
+		searchEngine.search(pattern, requestor, new WorkspaceSearchScope(), null, new NullProgressMonitor());
 		references = requestor.getResults();
 		// for (Iterator iter = references.iterator(); iter.hasNext();) {
 		// SearchMatch match = (SearchMatch) iter.next();
