@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.wst.web_ui.feature"
       label="org.eclipse.wst.web_ui.feature"
-      version="1.0.1">
+      version="1.0.100.qualifier">
 
    <description>
       %description
@@ -33,7 +33,7 @@
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-         
+
    <plugin
          id="org.eclipse.wst.web.ui.infopop"
          download-size="0"
