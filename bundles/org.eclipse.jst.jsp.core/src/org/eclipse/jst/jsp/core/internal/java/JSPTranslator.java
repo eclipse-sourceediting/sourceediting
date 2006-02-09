@@ -1120,7 +1120,7 @@ public class JSPTranslator {
 			r = (ITextRegion) regions.next();
 			if (r.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME && getCurrentNode().getText(r).equals(attrName)) { //$NON-NLS-1$
 				// skip to attribute value
-				while((r = (ITextRegion)regions.next()) != null) {
+				while(regions.hasNext() && (r = (ITextRegion)regions.next()) != null) {
 					if( r.getType() ==  DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE)
 						break;
 				}
