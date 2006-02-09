@@ -21,15 +21,18 @@ public interface TLDVariable {
 	 */
 	boolean getDeclare();
 
+	/**
+	 * @returnthe the description for this variable
+	 */
 	String getDescription();
 
 	/**
-	 * The name of an attribute whose (translation time) value will give the name of the variable.
+	 * The name of an attribute whose (translation time) value will give the name of the variable, or null of the name is not to be obtained this way.
 	 */
 	String getNameFromAttribute();
 
 	/**
-	 * The variable name given as a constant
+	 * The variable name given as a constant, or null of the name is not specified.
 	 */
 	String getNameGiven();
 	
