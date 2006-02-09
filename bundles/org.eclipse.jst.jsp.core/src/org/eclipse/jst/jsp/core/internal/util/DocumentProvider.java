@@ -12,12 +12,12 @@ package org.eclipse.jst.jsp.core.internal.util;
 
 
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.StringTokenizer;
@@ -53,7 +53,7 @@ public class DocumentProvider {
 	private ErrorHandler errorHandler = null;
 	private String fBaseReference;
 	private String fileName = null;
-	private boolean fValidating = true;
+	private boolean fValidating = false;
 	private InputStream inputStream = null;
 	private String jarFileName = null;
 	private EntityResolver resolver = null;
@@ -184,11 +184,8 @@ public class DocumentProvider {
 		if (resolver == null) {
 			resolver = new EntityResolver() {
 				public InputSource resolveEntity(String publicID, String systemID) throws SAXException, IOException {
-					if (!isValidating())
-						return null;
-
 					InputSource result = null;
-					if (getBaseReference() != null) {
+					if (isValidating()) {
 						try {
 							URL spec = new URL("file://" + getBaseReference()); //$NON-NLS-1$
 							URL url = new URL(spec, systemID);
@@ -203,8 +200,9 @@ public class DocumentProvider {
 							result = null;
 						}
 					}
+
 					if (result == null) {
-						result = new InputSource(new StringReader("")); //$NON-NLS-1$
+						result = new InputSource(new ByteArrayInputStream(new byte[0]));
 						result.setPublicId(publicID);
 						result.setSystemId(systemID != null ? systemID : "/_" + getClass().getName()); //$NON-NLS-1$
 					}
