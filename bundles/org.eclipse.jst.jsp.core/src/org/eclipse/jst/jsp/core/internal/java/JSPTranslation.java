@@ -82,6 +82,8 @@ public class JSPTranslation implements IJSPTranslation {
 	private IProgressMonitor fProgressMonitor = null;
 	/** lock to synchronize access to the compilation unit **/
 	private byte[] fLock = null;
+	private String fMangledName;
+	private String fJspName;
 
 	public JSPTranslation(IJavaProject javaProj, JSPTranslator translator) {
 
@@ -345,6 +347,54 @@ public class JSPTranslation implements IJSPTranslation {
 		}
 		return fCompilationUnit;
 	}
+
+	private String getMangledName() {
+		return fMangledName;
+	}
+	private void setMangledName(String mangledName) {
+		fMangledName = mangledName;
+	}
+	private String getJspName() {
+		return fJspName;
+	}
+
+	private void setJspName(String jspName) {
+		fJspName = jspName;
+	}
+
+	/**
+	 * Replaces mangled (servlet) name with jsp file name.
+	 * 
+	 * @param displayString
+	 * @return
+	 */
+	public String fixupDisplayString(String displayString) {
+		
+		if(getJspName() == null || getMangledName() == null) {
+			// names not set yet
+			initJspAndServletNames();
+		}
+		return displayString.replaceAll(getMangledName(), getJspName());
+	}
+
+	private void initJspAndServletNames() {
+		ICompilationUnit cu = getCompilationUnit();
+		if(cu != null) {
+			String cuName = null;
+			synchronized(cu) {
+				// set some names for fixing up mangled name in proposals
+				// set mangled (servlet) name
+				 cuName = cu.getPath().lastSegment();
+			}
+			if(cuName != null) {
+				setMangledName(cuName.substring(0, cuName.lastIndexOf('.')));
+				// set name of jsp file
+				String unmangled = JSP2ServletNameUtil.unmangle(cuName);
+				setJspName(unmangled.substring(unmangled.lastIndexOf('/') + 1, unmangled.lastIndexOf('.')));
+			}
+		}
+	}
+
 	
 	/**
 	 * Originally from ReconcileStepForJava.  Creates an ICompilationUnit from the contents of the JSP document.

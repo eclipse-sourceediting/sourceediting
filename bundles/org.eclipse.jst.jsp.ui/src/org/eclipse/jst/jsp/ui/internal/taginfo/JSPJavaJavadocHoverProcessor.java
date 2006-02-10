@@ -100,8 +100,9 @@ public class JSPJavaJavadocHoverProcessor extends AbstractHoverProcessor {
 				JSPTranslationAdapter adapter = (JSPTranslationAdapter) xmlDoc.getAdapterFor(IJSPTranslation.class);
 				if (adapter != null) {
 					JSPTranslation translation = adapter.getJSPTranslation();
+					
 					IJavaElement[] result = translation.getElementsFromJspRange(hoverRegion.getOffset(), hoverRegion.getOffset() + hoverRegion.getLength());
-					return getHoverInfo(result);
+					return translation.fixupDisplayString(getHoverInfo(result));
 				}
 			}
 		}

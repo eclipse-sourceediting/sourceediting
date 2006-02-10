@@ -12,7 +12,6 @@ import org.eclipse.jdt.ui.text.java.CompletionProposalCollector;
 import org.eclipse.jdt.ui.text.java.CompletionProposalComparator;
 import org.eclipse.jdt.ui.text.java.IJavaCompletionProposal;
 import org.eclipse.jface.text.contentassist.IContextInformation;
-import org.eclipse.jst.jsp.core.internal.java.JSP2ServletNameUtil;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslation;
 import org.eclipse.swt.graphics.Image;
 
@@ -28,23 +27,12 @@ import org.eclipse.swt.graphics.Image;
  */
 public class JSPProposalCollector extends CompletionProposalCollector {
 
-	private String fJspName;
-	private String fMangledName;
 	private JSPTranslation fTranslation;
 	private Comparator fComparator;
 	
 	public JSPProposalCollector(ICompilationUnit cu, JSPTranslation translation) {
 		super(cu);
-		if(cu != null) {
-			// set some names for fixing up mangled name in proposals
-			// set mangled (servlet) name
-			String cuName = cu.getPath().lastSegment();
-			setMangledName(cuName.substring(0, cuName.lastIndexOf('.')));
-			// set name of jsp file
-			String unmangled = JSP2ServletNameUtil.unmangle(cuName);
-			setJspName(unmangled.substring(unmangled.lastIndexOf('/') + 1));
-		}
-		
+	
 		if(translation == null)
 			throw new IllegalArgumentException("JSPTranslation cannot be null"); //$NON-NLS-1$
 		
@@ -131,7 +119,7 @@ public class JSPProposalCollector extends CompletionProposalCollector {
 		proposal.getDeclarationSignature();
 		Image image = javaProposal.getImage();
 		String displayString = javaProposal.getDisplayString();
-		displayString = fixupDisplayString(displayString);
+		displayString = getTranslation().fixupDisplayString(displayString);
 		IContextInformation contextInformation = javaProposal.getContextInformation();
 		String additionalInfo = javaProposal.getAdditionalProposalInfo();
 		int relevance = javaProposal.getRelevance();
@@ -161,7 +149,7 @@ public class JSPProposalCollector extends CompletionProposalCollector {
 		proposal.getDeclarationSignature();
 		Image image = javaProposal.getImage();
 		String displayString = javaProposal.getDisplayString();
-		displayString = fixupDisplayString(displayString);
+		displayString = getTranslation().fixupDisplayString(displayString);
 		IContextInformation contextInformation = javaProposal.getContextInformation();
 		String additionalInfo = javaProposal.getAdditionalProposalInfo();
 		int relevance = javaProposal.getRelevance();
@@ -198,43 +186,6 @@ public class JSPProposalCollector extends CompletionProposalCollector {
 				positionAfter--;
 		}
 		return positionAfter;
-	}
-
-	/**
-	 * Replaces mangled (servlet) name with jsp file name.
-	 * 
-	 * @param displayString
-	 * @return
-	 */
-	private String fixupDisplayString(String displayString) {
-		StringBuffer fixedName = new StringBuffer(displayString);
-		String mangledName = getMangledName();
-		if(mangledName != null) {
-			int index = displayString.indexOf(mangledName);
-			if(index != -1) {
-				fixedName = new StringBuffer();
-				fixedName.append(displayString.substring(0, index));
-				fixedName.append(getJspName());
-				fixedName.append(displayString.substring(index + mangledName.length()));
-			}
-		}
-		return fixedName.toString();
-	}
-	
-	private String getMangledName() {
-		return fMangledName;
-	}
-
-	private void setMangledName(String mangledName) {
-		fMangledName = mangledName;
-	}
-
-	private String getJspName() {
-		return fJspName;
-	}
-
-	private void setJspName(String jspName) {
-		fJspName = jspName;
 	}
 	
 	static char[] getTypeTriggers() {
