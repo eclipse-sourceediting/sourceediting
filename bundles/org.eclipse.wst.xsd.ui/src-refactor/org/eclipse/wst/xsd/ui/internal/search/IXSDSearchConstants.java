@@ -17,7 +17,8 @@ public interface IXSDSearchConstants {
 	
 	public static final String XMLSCHEMA_NAMESPACE = "http://www.w3.org/2001/XMLSchema";
 	public static String XSD_CONTENT_TYPE_ID = "org.eclipse.wst.xsd.core.xsdsource";
-	
+
+    public static final QualifiedName   TYPE_META_NAME =  new QualifiedName (XMLSCHEMA_NAMESPACE, "type");
     public static final QualifiedName   COMPLEX_TYPE_META_NAME =  new QualifiedName (XMLSCHEMA_NAMESPACE, "complexType");
     public static final QualifiedName   SIMPLE_TYPE_META_NAME =  new QualifiedName (XMLSCHEMA_NAMESPACE, "simpleType");
     public static final QualifiedName   ELEMENT_META_NAME =  new QualifiedName (XMLSCHEMA_NAMESPACE, "element");

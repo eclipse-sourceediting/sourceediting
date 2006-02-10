@@ -100,6 +100,7 @@ public abstract class XMLSearchParticipant extends SearchParticipant {
             ComponentDeclarationEntry entry = (ComponentDeclarationEntry)entries[i];
             SearchMatch searchMatch = new SearchMatch(null, 0, 0, file);
             searchMatch.map.put("name", entry.getName());
+            searchMatch.map.put("metaName", entry.getMetaName());
             try
             {
               requestor.acceptSearchMatch(searchMatch);
