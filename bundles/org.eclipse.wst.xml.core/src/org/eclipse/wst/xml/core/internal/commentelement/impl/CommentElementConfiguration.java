@@ -18,7 +18,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IPluginDescriptor;
 import org.eclipse.wst.xml.core.internal.Logger;
 import org.eclipse.wst.xml.core.internal.commentelement.CommentElementAdapter;
 import org.eclipse.wst.xml.core.internal.commentelement.CommentElementHandler;
@@ -169,12 +168,6 @@ public class CommentElementConfiguration {
 		return fID;
 	}
 
-	/**
-	 * @deprecated this should not be needed by anyone
-	 */
-	public IPluginDescriptor getHandlerPluginDescriptor() {
-		return fElement.getDeclaringExtension().getDeclaringPluginDescriptor();
-	}
 
 	public String[] getPrefix() {
 		if (fPrefix == null) {

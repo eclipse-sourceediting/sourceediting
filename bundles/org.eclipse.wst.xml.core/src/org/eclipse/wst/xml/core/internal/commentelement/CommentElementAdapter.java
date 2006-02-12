@@ -14,7 +14,6 @@ package org.eclipse.wst.xml.core.internal.commentelement;
 
 
 
-import org.eclipse.core.runtime.IPluginDescriptor;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.xml.core.internal.commentelement.impl.CommentElementConfiguration;
 import org.eclipse.wst.xml.core.internal.document.TagAdapter;
@@ -64,12 +63,6 @@ public class CommentElementAdapter implements TagAdapter {
 		return getConfiguration().getHandlerID();
 	}
 
-	/**
-	 * @deprecated this should not be needed by anyone
-	 */
-	public IPluginDescriptor getHandlerPluginDescriptor() {
-		return fConfiguration.getHandlerPluginDescriptor();
-	}
 
 	public String getProperty(String name) {
 		return getConfiguration().getProperty(name);
