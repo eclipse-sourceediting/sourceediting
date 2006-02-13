@@ -15,11 +15,7 @@ package org.eclipse.jst.jsp.ui.internal.java.refactoring;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jdt.internal.corext.refactoring.reorg.JavaMoveProcessor;
-import org.eclipse.jdt.internal.ui.refactoring.actions.RefactoringStarter;
-import org.eclipse.jdt.internal.ui.refactoring.reorg.CreateTargetQueries;
 import org.eclipse.jdt.internal.ui.refactoring.reorg.ReorgMoveWizard;
-import org.eclipse.jdt.internal.ui.refactoring.reorg.ReorgQueries;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jst.jsp.ui.internal.JSPUIMessages;
@@ -27,13 +23,11 @@ import org.eclipse.jst.jsp.ui.internal.Logger;
 import org.eclipse.ltk.core.refactoring.participants.MoveRefactoring;
 import org.eclipse.ltk.ui.refactoring.RefactoringWizard;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionDelegate2;
 import org.eclipse.ui.IEditorActionDelegate;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.sse.ui.internal.util.PlatformStatusLineUtil;
 
@@ -68,50 +62,53 @@ public class JSPMoveElementActionDelegate implements IEditorActionDelegate, IAct
 	}
 
 	public void run(IAction action) {
-		IJavaElement[] elements = getSelectedElements();
-		if (elements.length > 0) {
-
-			// need to check if it's movable
-			try {
-				JavaMoveProcessor processor = JavaMoveProcessor.create(getResources(elements), elements/*
-																										 * ,
-																										 * getCodeGenerationSettings()
-																										 */);
-				Shell parent = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-
-				MoveRefactoring refactoring = new MoveRefactoring(processor);
-
-				RefactoringWizard wizard = createWizard(refactoring);
-
-				/*
-				 * We want to get the shell from the refactoring dialog but
-				 * it's not known at this point, so we pass the wizard and
-				 * then, once the dialog is open, we will have access to its
-				 * shell.
-				 */
-
-				processor.setCreateTargetQueries(new CreateTargetQueries(wizard));
-				processor.setReorgQueries(new ReorgQueries(wizard));
-				// String openRefactoringWizMsg =
-				// RefactoringMessages.getString("OpenRefactoringWizardAction.refactoring");
-				// //$NON-NLS-1$
-				String openRefactoringWizMsg = JSPUIMessages.MoveElementWizard; // "Move
-																				// the
-																				// selected
-																				// elements";
-																				// //$NON-NLS-1$
-				new RefactoringStarter().activate(refactoring, wizard, parent, openRefactoringWizMsg, true);
-
-				PlatformStatusLineUtil.clearStatusLine();
-
-			}
-			catch (JavaModelException e) {
-				Logger.logException(e);
-			}
-		}
-		else {
-			PlatformStatusLineUtil.displayErrorMessage(JSPUIMessages.JSPMoveElementAction_0); //$NON-NLS-1$
-		}
+		
+		// no-op until we know how we're supposed to use this 
+		// eclipse 3.2M5
+		// public move support: https://bugs.eclipse.org/bugs/show_bug.cgi?id=61817
+		
+//		IJavaElement[] elements = getSelectedElements();
+//		if (elements.length > 0) {
+//
+//			// need to check if it's movable
+//			try {
+//				JavaMoveProcessor processor = JavaMoveProcessor.create(getResources(elements), elements);
+//				
+//				Shell parent = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+//				MoveRefactoring refactoring = new MoveRefactoring(processor);
+//
+//				RefactoringWizard wizard = createWizard(refactoring);
+//
+//				/*
+//				 * We want to get the shell from the refactoring dialog but
+//				 * it's not known at this point, so we pass the wizard and
+//				 * then, once the dialog is open, we will have access to its
+//				 * shell.
+//				 */
+//
+//				processor.setCreateTargetQueries(new CreateTargetQueries(wizard));
+//				processor.setReorgQueries(new ReorgQueries(wizard));
+//				// String openRefactoringWizMsg =
+//				// RefactoringMessages.getString("OpenRefactoringWizardAction.refactoring");
+//				// //$NON-NLS-1$
+//				String openRefactoringWizMsg = JSPUIMessages.MoveElementWizard; // "Move
+//																				// the
+//																				// selected
+//																				// elements";
+//																				// //$NON-NLS-1$
+//				new RefactoringStarter().activate(refactoring, wizard, parent, openRefactoringWizMsg, true);
+//
+//				PlatformStatusLineUtil.clearStatusLine();
+//
+//			}
+//			catch (JavaModelException e) {
+//				Logger.logException(e);
+//			}
+//		}
+//		else {
+//			PlatformStatusLineUtil.displayErrorMessage(JSPUIMessages.JSPMoveElementAction_0); //$NON-NLS-1$
+//		}
+		
 	}
 
 	public void selectionChanged(IAction action, ISelection selection) {
