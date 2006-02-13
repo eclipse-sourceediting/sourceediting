@@ -1,8 +1,0 @@
-Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
-Bundle-Name: Static Web infopop
-Bundle-SymbolicName: org.eclipse.wst.web.ui.infopop; singleton:=true
-Bundle-Version: 1.0.1
-Bundle-Vendor: %pluginProvider
-Bundle-Localization: plugin
-Eclipse-AutoStart: true
