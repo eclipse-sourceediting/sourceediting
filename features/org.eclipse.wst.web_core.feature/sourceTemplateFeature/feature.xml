@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="org.eclipse.wst.web_ui.feature.source"
-      label="Source for WST Web UI Feature"
+      id="org.eclipse.wst.web_core.feature.source"
+      label="%featureName"
       version="1.0.1.qualifier"
       provider-name="%providerName">
 
@@ -22,16 +22,9 @@
    </url>
 
 
-   <includes
-         id="org.eclipse.wst.web_core.feature"
-         version="0.0.0"/>
-
-   <includes
-         id="org.eclipse.wst.web_core.feature.source"
-         version="0.0.0"/>
 
    <plugin
-         id="org.eclipse.wst.web_ui.feature.source"
+         id="org.eclipse.wst.web_core.feature.source"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
