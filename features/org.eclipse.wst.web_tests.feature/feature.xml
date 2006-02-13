@@ -13,6 +13,11 @@
       %license
    </license>
 
+   <url>
+      <update label="Web Tools Platform (WTP) Updates" url="http://download.eclipse.org/webtools/updates/"/>
+   </url>
+
+
    <requires>
       <import feature="org.eclipse.test"/>
    </requires>
