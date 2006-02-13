@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.eclipse.wst.web_core.feature"
-      label="org.eclipse.wst.web_core.feature"
-      version="1.0.1">
+      label="WDT Web Core Feature"
+      version="1.0.1"
+      provider-name="Eclipse.org">
 
    <description>
       %description
