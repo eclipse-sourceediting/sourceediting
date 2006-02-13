@@ -21,7 +21,7 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocumentExtension3;
 import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.jface.text.ITypedRegion;
-import org.eclipse.wst.html.core.internal.provisional.text.IHTMLPartitionTypes;
+import org.eclipse.wst.html.core.text.IHTMLPartitions;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
@@ -29,7 +29,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitioning;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredTextPartitioner;
 import org.eclipse.wst.sse.core.internal.util.StringUtils;
-import org.eclipse.wst.xml.core.internal.provisional.text.IXMLPartitions;
+import org.eclipse.wst.xml.core.text.IXMLPartitions;
 
 public class TestStructuredPartitionerHTML extends TestCase {
 
@@ -156,7 +156,7 @@ public class TestStructuredPartitionerHTML extends TestCase {
 		int nPartitions = doComputePartitioningTest("testfiles/html/example01.html");
 		assertTrue("wrong number of partitions", nPartitions == expectedPartitions);
 		checkSeams();
-		verifyPartitionTypes(partitions, new String[]{IHTMLPartitionTypes.HTML_DECLARATION, IHTMLPartitionTypes.HTML_DEFAULT, IHTMLPartitionTypes.HTML_COMMENT, IHTMLPartitionTypes.HTML_DEFAULT});
+		verifyPartitionTypes(partitions, new String[]{IHTMLPartitions.HTML_DECLARATION, IHTMLPartitions.HTML_DEFAULT, IHTMLPartitions.HTML_COMMENT, IHTMLPartitions.HTML_DEFAULT});
 	}
 
 	public void testHTML2() throws IOException, BadLocationException {
@@ -165,7 +165,7 @@ public class TestStructuredPartitionerHTML extends TestCase {
 		int nPartitions = doComputePartitioningTest("testfiles/html/example02.html");
 		assertTrue("wrong number of partitions", nPartitions == expectedPartitions);
 		checkSeams();
-		verifyPartitionTypes(partitions, new String[]{IHTMLPartitionTypes.HTML_DEFAULT, IHTMLPartitionTypes.SCRIPT, IHTMLPartitionTypes.HTML_DEFAULT, IHTMLPartitionTypes.SCRIPT, IHTMLPartitionTypes.HTML_DEFAULT, IHTMLPartitionTypes.SCRIPT, IHTMLPartitionTypes.HTML_DEFAULT});
+		verifyPartitionTypes(partitions, new String[]{IHTMLPartitions.HTML_DEFAULT, IHTMLPartitions.SCRIPT, IHTMLPartitions.HTML_DEFAULT, IHTMLPartitions.SCRIPT, IHTMLPartitions.HTML_DEFAULT, IHTMLPartitions.SCRIPT, IHTMLPartitions.HTML_DEFAULT});
 	}
 
 	public void testHTML3() throws IOException, BadLocationException {
@@ -174,7 +174,7 @@ public class TestStructuredPartitionerHTML extends TestCase {
 		int nPartitions = doComputePartitioningTest(file);
 		assertTrue("wrong number of partitions", nPartitions == expectedPartitions);
 		checkSeams();
-		verifyPartitionTypes(partitions, new String[]{IHTMLPartitionTypes.HTML_DEFAULT});
+		verifyPartitionTypes(partitions, new String[]{IHTMLPartitions.HTML_DEFAULT});
 
 		// 121 if CRLF
 		//  ITypedRegion scriptPartition = getPartitionTest(file, 121);
@@ -186,7 +186,7 @@ public class TestStructuredPartitionerHTML extends TestCase {
 
 //		assertEquals("partition is wrong type!", scriptPartition.getType(), IHTMLPartitions.ST_SCRIPT);
 		// the critical position is surrounded with HTML > 5 characters in either direction; this should be good enough
-		assertTrue("partition is wrong type! :(" + part1.getType() + "|" + part2.getType() + ")", part1.getType().equals(IHTMLPartitionTypes.SCRIPT) || part2.getType().equals(IHTMLPartitionTypes.SCRIPT));
+		assertTrue("partition is wrong type! :(" + part1.getType() + "|" + part2.getType() + ")", part1.getType().equals(IHTMLPartitions.SCRIPT) || part2.getType().equals(IHTMLPartitions.SCRIPT));
 		assertTrue("partition is not zero length!", (part1.getLength() == 0 || part2.getLength() == 0));
 	}
 	

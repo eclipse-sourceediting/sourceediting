@@ -17,7 +17,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.wst.html.core.internal.provisional.text.IHTMLPartitionTypes;
+import org.eclipse.wst.html.core.text.IHTMLPartitions;
 import org.eclipse.wst.html.ui.StructuredTextViewerConfigurationHTML;
 import org.eclipse.wst.html.ui.tests.Logger;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
@@ -89,7 +89,7 @@ public class TestViewerConfigurationHTML extends TestCase {
 		if(!fDisplayExists)
 			return;
 		
-		IAutoEditStrategy[] strategies = fConfig.getAutoEditStrategies(fViewer, IHTMLPartitionTypes.HTML_DEFAULT);
+		IAutoEditStrategy[] strategies = fConfig.getAutoEditStrategies(fViewer, IHTMLPartitions.HTML_DEFAULT);
 		assertNotNull(strategies);
 		assertTrue("there are no auto edit strategies", strategies.length>0);
 	}
@@ -229,7 +229,7 @@ public class TestViewerConfigurationHTML extends TestCase {
 		if(!fDisplayExists)
 			return;
 
-		String[] hoverPartitions = new String[]{IHTMLPartitionTypes.HTML_DEFAULT, IHTMLPartitionTypes.SCRIPT};
+		String[] hoverPartitions = new String[]{IHTMLPartitions.HTML_DEFAULT, IHTMLPartitions.SCRIPT};
 		for (int i = 0; i < hoverPartitions.length; i++) {
 			ITextHover hover = fConfig.getTextHover(fViewer, hoverPartitions[i], SWT.NONE);
 			assertNotNull("hover was null for partition: " + hoverPartitions[i], hover);

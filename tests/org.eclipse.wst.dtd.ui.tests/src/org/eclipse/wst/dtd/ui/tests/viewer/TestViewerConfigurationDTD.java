@@ -11,7 +11,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.wst.dtd.core.internal.provisional.text.IDTDPartitionTypes;
+import org.eclipse.wst.dtd.core.text.IDTDPartitions;
 import org.eclipse.wst.dtd.ui.StructuredTextViewerConfigurationDTD;
 import org.eclipse.wst.dtd.ui.tests.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
@@ -71,7 +71,7 @@ public class TestViewerConfigurationDTD extends TestCase {
 		if (!fDisplayExists)
 			return;
 
-		IAutoEditStrategy[] strategies = fConfig.getAutoEditStrategies(fViewer, IDTDPartitionTypes.DTD_DEFAULT);
+		IAutoEditStrategy[] strategies = fConfig.getAutoEditStrategies(fViewer, IDTDPartitions.DTD_DEFAULT);
 		assertNotNull(strategies);
 		assertTrue("there are no auto edit strategies", strategies.length > 0);
 	}

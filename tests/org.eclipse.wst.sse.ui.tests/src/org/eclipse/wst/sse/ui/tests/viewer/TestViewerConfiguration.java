@@ -19,8 +19,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitionTypes;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitioning;
+import org.eclipse.wst.sse.core.text.IStructuredPartitions;
 import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
@@ -89,7 +89,7 @@ public class TestViewerConfiguration extends TestCase {
 		if (!fDisplayExists)
 			return;
 
-		IAutoEditStrategy[] strategies = fConfig.getAutoEditStrategies(fViewer, IStructuredPartitionTypes.DEFAULT_PARTITION);
+		IAutoEditStrategy[] strategies = fConfig.getAutoEditStrategies(fViewer, IStructuredPartitions.DEFAULT_PARTITION);
 		assertNotNull(strategies);
 		assertTrue("there are no auto edit strategies", strategies.length > 0);
 	}
@@ -124,7 +124,7 @@ public class TestViewerConfiguration extends TestCase {
 		if (!fDisplayExists)
 			return;
 
-		int[] masks = fConfig.getConfiguredTextHoverStateMasks(fViewer, IStructuredPartitionTypes.DEFAULT_PARTITION);
+		int[] masks = fConfig.getConfiguredTextHoverStateMasks(fViewer, IStructuredPartitions.DEFAULT_PARTITION);
 		assertEquals(2, masks.length);
 	}
 

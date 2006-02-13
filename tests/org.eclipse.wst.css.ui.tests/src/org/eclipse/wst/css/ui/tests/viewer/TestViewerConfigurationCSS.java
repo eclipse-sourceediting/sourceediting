@@ -16,7 +16,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.wst.css.core.internal.provisional.text.ICSSPartitionTypes;
+import org.eclipse.wst.css.core.text.ICSSPartitions;
 import org.eclipse.wst.css.ui.StructuredTextViewerConfigurationCSS;
 import org.eclipse.wst.css.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
@@ -73,7 +73,7 @@ public class TestViewerConfigurationCSS extends TestCase {
 		if (!fDisplayExists)
 			return;
 
-		IAutoEditStrategy[] strategies = fConfig.getAutoEditStrategies(fViewer, ICSSPartitionTypes.STYLE);
+		IAutoEditStrategy[] strategies = fConfig.getAutoEditStrategies(fViewer, ICSSPartitions.STYLE);
 		assertNotNull(strategies);
 		assertTrue("there are no auto edit strategies", strategies.length > 0);
 	}
@@ -222,7 +222,7 @@ public class TestViewerConfigurationCSS extends TestCase {
 		if (!fDisplayExists)
 			return;
 
-		String[] hoverPartitions = new String[]{ICSSPartitionTypes.STYLE};
+		String[] hoverPartitions = new String[]{ICSSPartitions.STYLE};
 		for (int i = 0; i < hoverPartitions.length; i++) {
 			ITextHover hover = fConfig.getTextHover(fViewer, hoverPartitions[i], SWT.NONE);
 			assertNotNull("hover was null for partition: " + hoverPartitions[i], hover);

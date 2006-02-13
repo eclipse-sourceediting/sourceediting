@@ -27,7 +27,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitioning;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredTextPartitioner;
 import org.eclipse.wst.sse.core.internal.util.StringUtils;
-import org.eclipse.wst.xml.core.internal.provisional.text.IXMLPartitions;
+import org.eclipse.wst.xml.core.text.IXMLPartitions;
 
 public class TestStructuredPartitionerXML extends TestCase {
 	

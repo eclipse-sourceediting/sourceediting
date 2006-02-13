@@ -12,7 +12,7 @@ import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.jface.text.information.IInformationPresenter;
 import org.eclipse.jface.text.reconciler.IReconciler;
 import org.eclipse.jface.text.source.IAnnotationHover;
-import org.eclipse.jst.jsp.core.internal.provisional.text.IJSPPartitionTypes;
+import org.eclipse.jst.jsp.core.text.IJSPPartitions;
 import org.eclipse.jst.jsp.ui.StructuredTextViewerConfigurationJSP;
 import org.eclipse.jst.jsp.ui.tests.Logger;
 import org.eclipse.swt.SWT;
@@ -20,10 +20,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.wst.html.core.internal.provisional.text.IHTMLPartitionTypes;
+import org.eclipse.wst.html.core.text.IHTMLPartitions;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
-import org.eclipse.wst.xml.core.internal.provisional.text.IXMLPartitions;
+import org.eclipse.wst.xml.core.text.IXMLPartitions;
 
 /**
  * @author pavery
@@ -91,7 +91,7 @@ public class TestViewerConfigurationJSP extends TestCase {
 		if(!fDisplayExists)
 			return;
 		
-		IAutoEditStrategy[] strategies = fConfig.getAutoEditStrategies(fViewer, IJSPPartitionTypes.JSP_DEFAULT);
+		IAutoEditStrategy[] strategies = fConfig.getAutoEditStrategies(fViewer, IJSPPartitions.JSP_DEFAULT);
 		assertNotNull(strategies);
 		assertTrue("there are no auto edit strategies", strategies.length > 0);
 	}
@@ -231,11 +231,11 @@ public class TestViewerConfigurationJSP extends TestCase {
 		if(!fDisplayExists)
 			return;
 
-		String[] hoverPartitions = new String[]{IHTMLPartitionTypes.HTML_DEFAULT,
-													IHTMLPartitionTypes.SCRIPT,
-													IJSPPartitionTypes.JSP_DEFAULT,
-													IJSPPartitionTypes.JSP_DIRECTIVE,
-													IJSPPartitionTypes.JSP_CONTENT_JAVA,
+		String[] hoverPartitions = new String[]{IHTMLPartitions.HTML_DEFAULT,
+													IHTMLPartitions.SCRIPT,
+													IJSPPartitions.JSP_DEFAULT,
+													IJSPPartitions.JSP_DIRECTIVE,
+													IJSPPartitions.JSP_CONTENT_JAVA,
 													IXMLPartitions.XML_DEFAULT};
 		
 		for (int i = 0; i < hoverPartitions.length; i++) {

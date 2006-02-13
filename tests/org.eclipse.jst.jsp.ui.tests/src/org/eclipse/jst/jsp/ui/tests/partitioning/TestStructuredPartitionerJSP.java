@@ -19,15 +19,15 @@ import junit.framework.TestCase;
 
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.ITypedRegion;
-import org.eclipse.jst.jsp.core.internal.provisional.text.IJSPPartitionTypes;
-import org.eclipse.wst.css.core.internal.provisional.text.ICSSPartitionTypes;
-import org.eclipse.wst.html.core.internal.provisional.text.IHTMLPartitionTypes;
+import org.eclipse.jst.jsp.core.text.IJSPPartitions;
+import org.eclipse.wst.css.core.text.ICSSPartitions;
+import org.eclipse.wst.html.core.text.IHTMLPartitions;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.util.StringUtils;
-import org.eclipse.wst.xml.core.internal.provisional.text.IXMLPartitions;
+import org.eclipse.wst.xml.core.text.IXMLPartitions;
 
 public class TestStructuredPartitionerJSP extends TestCase {
 
@@ -50,7 +50,7 @@ public class TestStructuredPartitionerJSP extends TestCase {
 		int nPartitions = doComputePartitioningTest("testfiles/jsp/example01.jsp");
 		assertTrue("wrong number of partitions", nPartitions == expectedPartitions);
 		checkSeams();
-		verifyPartitionTypes(partitions, new String[]{IJSPPartitionTypes.JSP_DIRECTIVE, IHTMLPartitionTypes.HTML_DEFAULT, IJSPPartitionTypes.JSP_DIRECTIVE, IHTMLPartitionTypes.HTML_DEFAULT, IJSPPartitionTypes.JSP_CONTENT_DELIMITER, IJSPPartitionTypes.JSP_CONTENT_JAVA, IJSPPartitionTypes.JSP_CONTENT_DELIMITER, IHTMLPartitionTypes.HTML_DEFAULT});
+		verifyPartitionTypes(partitions, new String[]{IJSPPartitions.JSP_DIRECTIVE, IHTMLPartitions.HTML_DEFAULT, IJSPPartitions.JSP_DIRECTIVE, IHTMLPartitions.HTML_DEFAULT, IJSPPartitions.JSP_CONTENT_DELIMITER, IJSPPartitions.JSP_CONTENT_JAVA, IJSPPartitions.JSP_CONTENT_DELIMITER, IHTMLPartitions.HTML_DEFAULT});
 	}
 
 	public void testJSP2() throws IOException, BadLocationException {
@@ -58,7 +58,7 @@ public class TestStructuredPartitionerJSP extends TestCase {
 		int nPartitions = doComputePartitioningTest("testfiles/jsp/example02.jsp");
 		assertTrue("wrong number of partitions", nPartitions == expectedPartitions);
 		checkSeams();
-		verifyPartitionTypes(partitions, new String[]{IHTMLPartitionTypes.HTML_DEFAULT, IJSPPartitionTypes.JSP_CONTENT_DELIMITER, IJSPPartitionTypes.JSP_CONTENT_JAVA, IJSPPartitionTypes.JSP_CONTENT_DELIMITER, IHTMLPartitionTypes.HTML_DEFAULT, IHTMLPartitionTypes.HTML_COMMENT, IHTMLPartitionTypes.HTML_DEFAULT, IJSPPartitionTypes.JSP_CONTENT_DELIMITER, IJSPPartitionTypes.JSP_CONTENT_JAVA, IJSPPartitionTypes.JSP_CONTENT_DELIMITER, IHTMLPartitionTypes.HTML_DEFAULT,});
+		verifyPartitionTypes(partitions, new String[]{IHTMLPartitions.HTML_DEFAULT, IJSPPartitions.JSP_CONTENT_DELIMITER, IJSPPartitions.JSP_CONTENT_JAVA, IJSPPartitions.JSP_CONTENT_DELIMITER, IHTMLPartitions.HTML_DEFAULT, IHTMLPartitions.HTML_COMMENT, IHTMLPartitions.HTML_DEFAULT, IJSPPartitions.JSP_CONTENT_DELIMITER, IJSPPartitions.JSP_CONTENT_JAVA, IJSPPartitions.JSP_CONTENT_DELIMITER, IHTMLPartitions.HTML_DEFAULT,});
 	}
 
 	public void testJSP3() throws IOException, BadLocationException {
@@ -66,7 +66,7 @@ public class TestStructuredPartitionerJSP extends TestCase {
 		int nPartitions = doComputePartitioningTest("testfiles/jsp/example03.jsp");
 		assertTrue("wrong number of partitions", nPartitions == expectedPartitions);
 		checkSeams();
-		verifyPartitionTypes(partitions, new String[]{IHTMLPartitionTypes.HTML_DEFAULT, IHTMLPartitionTypes.SCRIPT, IHTMLPartitionTypes.HTML_DEFAULT, ICSSPartitionTypes.STYLE, IHTMLPartitionTypes.HTML_DEFAULT,});
+		verifyPartitionTypes(partitions, new String[]{IHTMLPartitions.HTML_DEFAULT, IHTMLPartitions.SCRIPT, IHTMLPartitions.HTML_DEFAULT, ICSSPartitions.STYLE, IHTMLPartitions.HTML_DEFAULT,});
 	}
 
 	public void testJSP4() throws IOException, BadLocationException {
@@ -74,7 +74,7 @@ public class TestStructuredPartitionerJSP extends TestCase {
 		int nPartitions = doComputePartitioningTest("testfiles/jsp/example04.jsp");
 		assertTrue("wrong number of partitions", nPartitions == expectedPartitions);
 		checkSeams();
-		verifyPartitionTypes(partitions, new String[]{IHTMLPartitionTypes.HTML_DEFAULT, IJSPPartitionTypes.JSP_CONTENT_DELIMITER, IJSPPartitionTypes.JSP_CONTENT_JAVA, IJSPPartitionTypes.JSP_CONTENT_DELIMITER, "org.eclipse.wst.html.SCRIPT.language.MYLANGUAGE", IHTMLPartitionTypes.HTML_DEFAULT, IJSPPartitionTypes.JSP_COMMENT, IHTMLPartitionTypes.HTML_DEFAULT});
+		verifyPartitionTypes(partitions, new String[]{IHTMLPartitions.HTML_DEFAULT, IJSPPartitions.JSP_CONTENT_DELIMITER, IJSPPartitions.JSP_CONTENT_JAVA, IJSPPartitions.JSP_CONTENT_DELIMITER, "org.eclipse.wst.html.SCRIPT.language.MYLANGUAGE", IHTMLPartitions.HTML_DEFAULT, IJSPPartitions.JSP_COMMENT, IHTMLPartitions.HTML_DEFAULT});
 	}
 
 	public void testJSP5() throws IOException, BadLocationException {
@@ -82,7 +82,7 @@ public class TestStructuredPartitionerJSP extends TestCase {
 		int nPartitions = doComputePartitioningTest("testfiles/jsp/example05.jsp");
 		assertTrue("wrong number of partitions", nPartitions == expectedPartitions);
 		checkSeams();
-		verifyPartitionTypes(partitions, new String[]{IHTMLPartitionTypes.HTML_DEFAULT, IHTMLPartitionTypes.SCRIPT, IHTMLPartitionTypes.HTML_DEFAULT, IJSPPartitionTypes.JSP_CONTENT_DELIMITER, IJSPPartitionTypes.JSP_CONTENT_JAVA, IJSPPartitionTypes.JSP_CONTENT_DELIMITER, IHTMLPartitionTypes.HTML_DEFAULT, IJSPPartitionTypes.JSP_COMMENT, IHTMLPartitionTypes.HTML_DEFAULT, IJSPPartitionTypes.JSP_CONTENT_DELIMITER, IJSPPartitionTypes.JSP_CONTENT_JAVA, IJSPPartitionTypes.JSP_CONTENT_DELIMITER, IHTMLPartitionTypes.HTML_DEFAULT, IJSPPartitionTypes.JSP_CONTENT_DELIMITER, IJSPPartitionTypes.JSP_CONTENT_JAVA, IJSPPartitionTypes.JSP_CONTENT_DELIMITER, IHTMLPartitionTypes.HTML_DEFAULT});
+		verifyPartitionTypes(partitions, new String[]{IHTMLPartitions.HTML_DEFAULT, IHTMLPartitions.SCRIPT, IHTMLPartitions.HTML_DEFAULT, IJSPPartitions.JSP_CONTENT_DELIMITER, IJSPPartitions.JSP_CONTENT_JAVA, IJSPPartitions.JSP_CONTENT_DELIMITER, IHTMLPartitions.HTML_DEFAULT, IJSPPartitions.JSP_COMMENT, IHTMLPartitions.HTML_DEFAULT, IJSPPartitions.JSP_CONTENT_DELIMITER, IJSPPartitions.JSP_CONTENT_JAVA, IJSPPartitions.JSP_CONTENT_DELIMITER, IHTMLPartitions.HTML_DEFAULT, IJSPPartitions.JSP_CONTENT_DELIMITER, IJSPPartitions.JSP_CONTENT_JAVA, IJSPPartitions.JSP_CONTENT_DELIMITER, IHTMLPartitions.HTML_DEFAULT});
 	}
 
 	public void testJSP6() throws IOException, BadLocationException {
@@ -90,7 +90,7 @@ public class TestStructuredPartitionerJSP extends TestCase {
 		int nPartitions = doComputePartitioningTest("testfiles/jsp/example06.jsp");
 		assertTrue("wrong number of partitions", nPartitions == expectedPartitions);
 		checkSeams();
-		verifyPartitionTypes(partitions, new String[]{IJSPPartitionTypes.JSP_DIRECTIVE,});
+		verifyPartitionTypes(partitions, new String[]{IJSPPartitions.JSP_DIRECTIVE,});
 	}
 
 	public void testPerfJSP() throws IOException, BadLocationException {
