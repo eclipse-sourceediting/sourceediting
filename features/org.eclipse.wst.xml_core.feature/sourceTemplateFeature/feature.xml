@@ -18,7 +18,7 @@
    </license>
 
    <url>
-      <update label="Web Tools Project Update Site" url="http://download.eclipse.org/webtools/updates/"/>
+      <update label="Web Tools Platform (WTP) Updates" url="http://download.eclipse.org/webtools/updates/"/>
    </url>
 
 
