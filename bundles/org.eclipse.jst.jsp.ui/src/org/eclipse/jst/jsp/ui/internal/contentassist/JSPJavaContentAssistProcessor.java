@@ -21,8 +21,8 @@ import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
-import org.eclipse.jst.jsp.core.internal.provisional.text.IJSPPartitionTypes;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
+import org.eclipse.jst.jsp.core.text.IJSPPartitions;
 import org.eclipse.jst.jsp.ui.internal.JSPUIMessages;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
@@ -212,7 +212,7 @@ public class JSPJavaContentAssistProcessor implements IContentAssistProcessor, I
 		if(dp != null) {
 			//IDocumentPartitioner dp = viewer.getDocument().getDocumentPartitioner();
 			String type = dp.getPartition(documentOffset).getType();
-			if (type == IJSPPartitionTypes.JSP_DEFAULT || type == IJSPPartitionTypes.JSP_CONTENT_JAVA) {
+			if (type == IJSPPartitions.JSP_DEFAULT || type == IJSPPartitions.JSP_CONTENT_JAVA) {
 				// get context info from completion results...
 				ICompletionProposal[] proposals = computeCompletionProposals(viewer, documentOffset);
 				for (int i = 0; i < proposals.length; i++) {

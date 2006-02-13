@@ -13,8 +13,8 @@
 package org.eclipse.wst.xml.ui.internal.search;
 
 import org.eclipse.wst.sse.ui.internal.search.FindOccurrencesProcessor;
-import org.eclipse.wst.xml.core.internal.provisional.text.IXMLPartitions;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
+import org.eclipse.wst.xml.core.text.IXMLPartitions;
 
 /**
  * Configures a FindOccurrencesProcessor with XML partitions and regions

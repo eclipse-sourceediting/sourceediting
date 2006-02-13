@@ -13,9 +13,9 @@
 package org.eclipse.wst.dtd.ui;
 
 import org.eclipse.jface.text.source.ISourceViewer;
-import org.eclipse.wst.dtd.core.internal.provisional.text.IDTDPartitionTypes;
+import org.eclipse.wst.dtd.core.text.IDTDPartitions;
 import org.eclipse.wst.dtd.ui.internal.style.LineStyleProviderForDTD;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitionTypes;
+import org.eclipse.wst.sse.core.text.IStructuredPartitions;
 import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
 import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
 import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProviderForNoOp;
@@ -56,7 +56,7 @@ public class StructuredTextViewerConfigurationDTD extends StructuredTextViewerCo
 
 	public String[] getConfiguredContentTypes(ISourceViewer sourceViewer) {
 		if (fConfiguredContentTypes == null) {
-			fConfiguredContentTypes = new String[]{IDTDPartitionTypes.DTD_DEFAULT, IStructuredPartitionTypes.DEFAULT_PARTITION, IStructuredPartitionTypes.UNKNOWN_PARTITION};
+			fConfiguredContentTypes = new String[]{IDTDPartitions.DTD_DEFAULT, IStructuredPartitions.DEFAULT_PARTITION, IStructuredPartitions.UNKNOWN_PARTITION};
 		}
 		return fConfiguredContentTypes;
 	}
@@ -64,10 +64,10 @@ public class StructuredTextViewerConfigurationDTD extends StructuredTextViewerCo
 	public LineStyleProvider[] getLineStyleProviders(ISourceViewer sourceViewer, String partitionType) {
 		LineStyleProvider[] providers = null;
 
-		if (partitionType == IDTDPartitionTypes.DTD_DEFAULT || partitionType == IStructuredPartitionTypes.DEFAULT_PARTITION) {
+		if (partitionType == IDTDPartitions.DTD_DEFAULT || partitionType == IStructuredPartitions.DEFAULT_PARTITION) {
 			providers = new LineStyleProvider[]{getLineStyleProviderForCSS()};
 		}
-		else if (partitionType == IStructuredPartitionTypes.UNKNOWN_PARTITION) {
+		else if (partitionType == IStructuredPartitions.UNKNOWN_PARTITION) {
 			providers = new LineStyleProvider[]{getLineStyleProviderForNoop()};
 		}
 

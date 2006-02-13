@@ -23,8 +23,8 @@ import org.eclipse.jst.jsp.core.internal.encoding.JSPDocumentHeadContentDetector
 import org.eclipse.jst.jsp.core.internal.parser.JSPSourceParser;
 import org.eclipse.jst.jsp.core.internal.provisional.JSP11Namespace;
 import org.eclipse.jst.jsp.core.internal.provisional.JSP12Namespace;
-import org.eclipse.jst.jsp.core.internal.provisional.text.IJSPPartitionTypes;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
+import org.eclipse.jst.jsp.core.text.IJSPPartitions;
 import org.eclipse.wst.html.core.internal.text.StructuredTextPartitionerForHTML;
 import org.eclipse.wst.sse.core.internal.ltk.parser.StructuredDocumentRegionHandler;
 import org.eclipse.wst.sse.core.internal.ltk.parser.StructuredDocumentRegionHandlerExtension;
@@ -170,7 +170,7 @@ public class StructuredTextPartitionerForJSP extends StructuredTextPartitioner {
 	private static final String XHTML_MIME_TYPE = "text/xhtml"; //$NON-NLS-1$
 	private static final String XML_MIME_TYPE = "text/xml"; //$NON-NLS-1$
 
-	private final static String[] fConfiguredContentTypes = new String[]{IJSPPartitionTypes.JSP_DEFAULT, IJSPPartitionTypes.JSP_DEFAULT_EL, IJSPPartitionTypes.JSP_DEFAULT_EL2, IJSPPartitionTypes.JSP_DIRECTIVE, IJSPPartitionTypes.JSP_CONTENT_DELIMITER, IJSPPartitionTypes.JSP_CONTENT_JAVA, IJSPPartitionTypes.JSP_CONTENT_JAVASCRIPT, IJSPPartitionTypes.JSP_COMMENT};
+	private final static String[] fConfiguredContentTypes = new String[]{IJSPPartitions.JSP_DEFAULT, IJSPPartitions.JSP_DEFAULT_EL, IJSPPartitions.JSP_DEFAULT_EL2, IJSPPartitions.JSP_DIRECTIVE, IJSPPartitions.JSP_CONTENT_DELIMITER, IJSPPartitions.JSP_CONTENT_JAVA, IJSPPartitions.JSP_CONTENT_JAVASCRIPT, IJSPPartitions.JSP_COMMENT};
 
 	/**
 	 * @return
@@ -362,19 +362,19 @@ public class StructuredTextPartitionerForJSP extends StructuredTextPartitioner {
 			result = getPartitionTypeForDocumentLanguage();
 		}
 		else if (region_type == DOMJSPRegionContexts.JSP_COMMENT_TEXT || region_type == DOMJSPRegionContexts.JSP_COMMENT_OPEN || region_type == DOMJSPRegionContexts.JSP_COMMENT_CLOSE)
-			result = IJSPPartitionTypes.JSP_COMMENT;
+			result = IJSPPartitions.JSP_COMMENT;
 		else if (region_type == DOMJSPRegionContexts.JSP_DIRECTIVE_NAME || region_type == DOMJSPRegionContexts.JSP_DIRECTIVE_OPEN || region_type == DOMJSPRegionContexts.JSP_DIRECTIVE_CLOSE)
-			result = IJSPPartitionTypes.JSP_DIRECTIVE;
+			result = IJSPPartitions.JSP_DIRECTIVE;
 		else if (region_type == DOMJSPRegionContexts.JSP_CLOSE || region_type == DOMJSPRegionContexts.JSP_SCRIPTLET_OPEN || region_type == DOMJSPRegionContexts.JSP_EXPRESSION_OPEN || region_type == DOMJSPRegionContexts.JSP_DECLARATION_OPEN)
-			result = IJSPPartitionTypes.JSP_CONTENT_DELIMITER;
+			result = IJSPPartitions.JSP_CONTENT_DELIMITER;
 		else if (region_type == DOMJSPRegionContexts.JSP_ROOT_TAG_NAME)
-			result = IJSPPartitionTypes.JSP_DEFAULT;
+			result = IJSPPartitions.JSP_DEFAULT;
 		else if (region_type == DOMJSPRegionContexts.JSP_EL_OPEN || region_type == DOMJSPRegionContexts.JSP_EL_CONTENT || region_type == DOMJSPRegionContexts.JSP_EL_CLOSE || region_type == DOMJSPRegionContexts.JSP_EL_DQUOTE
 					|| region_type == DOMJSPRegionContexts.JSP_EL_SQUOTE || region_type == DOMJSPRegionContexts.JSP_EL_QUOTED_CONTENT)
-			result = IJSPPartitionTypes.JSP_DEFAULT_EL;
+			result = IJSPPartitions.JSP_DEFAULT_EL;
 		else if (region_type == DOMJSPRegionContexts.JSP_VBL_OPEN || region_type == DOMJSPRegionContexts.JSP_VBL_CONTENT || region_type == DOMJSPRegionContexts.JSP_VBL_CLOSE || region_type == DOMJSPRegionContexts.JSP_VBL_DQUOTE
 					|| region_type == DOMJSPRegionContexts.JSP_VBL_SQUOTE || region_type == DOMJSPRegionContexts.JSP_VBL_QUOTED_CONTENT)
-			result = IJSPPartitionTypes.JSP_DEFAULT_EL2;
+			result = IJSPPartitions.JSP_DEFAULT_EL2;
 		else if (region_type == DOMRegionContext.XML_CONTENT) {
 			// possibly between <jsp:scriptlet>, <jsp:expression>,
 			// <jsp:declaration>
@@ -397,13 +397,13 @@ public class StructuredTextPartitionerForJSP extends StructuredTextPartitioner {
 	private String getPartitionTypeForDocumentLanguage() {
 		String result;
 		if (fLanguage == null || fLanguage.equalsIgnoreCase("java")) { //$NON-NLS-1$
-			result = IJSPPartitionTypes.JSP_CONTENT_JAVA;
+			result = IJSPPartitions.JSP_CONTENT_JAVA;
 		}
 		else if (fLanguage.equalsIgnoreCase("javascript")) { //$NON-NLS-1$
-			result = IJSPPartitionTypes.JSP_CONTENT_JAVASCRIPT;
+			result = IJSPPartitions.JSP_CONTENT_JAVASCRIPT;
 		}
 		else {
-			result = IJSPPartitionTypes.JSP_SCRIPT_PREFIX + getLanguage().toUpperCase(Locale.ENGLISH);
+			result = IJSPPartitions.JSP_SCRIPT_PREFIX + getLanguage().toUpperCase(Locale.ENGLISH);
 		}
 		return result;
 	}
@@ -443,13 +443,13 @@ public class StructuredTextPartitionerForJSP extends StructuredTextPartitioner {
 		String documentRegionContext = sdRegion.getType();
 		if (containedChildRegion != null) {
 			if (documentRegionContext.equals(DOMJSPRegionContexts.JSP_DIRECTIVE_NAME) || documentRegionContext.equals(DOMJSPRegionContexts.JSP_ROOT_TAG_NAME)) {
-				setInternalPartition(offset, containedChildRegion.getLength(), IJSPPartitionTypes.JSP_DIRECTIVE);
+				setInternalPartition(offset, containedChildRegion.getLength(), IJSPPartitions.JSP_DIRECTIVE);
 				return true;
 			}
 			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=113346
 			if (fEnableJSPActionPartitions && isAction(sdRegion, offset) && !(containedChildRegion instanceof ITextRegionContainer)) {
 			//if (fEnableJSPActionPartitions && isAction(sdRegion, offset)) {
-				setInternalPartition(offset, containedChildRegion.getLength(), IJSPPartitionTypes.JSP_DIRECTIVE);
+				setInternalPartition(offset, containedChildRegion.getLength(), IJSPPartitions.JSP_DIRECTIVE);
 				return true;
 			}
 		}

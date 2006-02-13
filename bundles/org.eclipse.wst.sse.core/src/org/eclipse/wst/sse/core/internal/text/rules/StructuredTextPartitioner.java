@@ -27,11 +27,11 @@ import org.eclipse.wst.sse.core.internal.parser.ForeignRegion;
 import org.eclipse.wst.sse.core.internal.provisional.events.StructuredDocumentRegionsReplacedEvent;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitionTypes;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredTextPartitioner;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
+import org.eclipse.wst.sse.core.text.IStructuredPartitions;
 
 
 /**
@@ -57,7 +57,7 @@ public class StructuredTextPartitioner implements IDocumentPartitioner, IStructu
 
 	private CachedComputedPartitions cachedPartitions = new CachedComputedPartitions(-1, -1, null);
 	protected String[] fSupportedTypes = null;
-	protected IStructuredTypedRegion internalReusedTempInstance = new SimpleStructuredTypedRegion(0, 0, IStructuredPartitionTypes.DEFAULT_PARTITION);
+	protected IStructuredTypedRegion internalReusedTempInstance = new SimpleStructuredTypedRegion(0, 0, IStructuredPartitions.DEFAULT_PARTITION);
 	protected IStructuredDocument fStructuredDocument;
 
 	/**
@@ -266,7 +266,7 @@ public class StructuredTextPartitioner implements IDocumentPartitioner, IStructu
 	 */
 	public String getDefaultPartitionType() {
 
-		return IStructuredPartitionTypes.DEFAULT_PARTITION;
+		return IStructuredPartitions.DEFAULT_PARTITION;
 	}
 
 	/**
@@ -474,14 +474,14 @@ public class StructuredTextPartitioner implements IDocumentPartitioner, IStructu
 	 * about are attempt to partition
 	 */
 	protected String getUnknown() {
-		return IStructuredPartitionTypes.UNKNOWN_PARTITION;
+		return IStructuredPartitions.UNKNOWN_PARTITION;
 	}
 
 	/**
 	 * to be abstract eventually
 	 */
 	protected void initLegalContentTypes() {
-		fSupportedTypes = new String[]{IStructuredPartitionTypes.DEFAULT_PARTITION, IStructuredPartitionTypes.UNKNOWN_PARTITION};
+		fSupportedTypes = new String[]{IStructuredPartitions.DEFAULT_PARTITION, IStructuredPartitions.UNKNOWN_PARTITION};
 	}
 
 	/**

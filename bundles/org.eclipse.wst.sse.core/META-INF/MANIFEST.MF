@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.wst.sse.core; singleton:=true
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 1.1.0.qualifier
 Bundle-Activator: org.eclipse.wst.sse.core.internal.SSECorePlugin
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
@@ -33,7 +33,8 @@ Export-Package: org.eclipse.wst.sse.core.internal,
  org.eclipse.wst.sse.core.internal.undo,
  org.eclipse.wst.sse.core.internal.util,
  org.eclipse.wst.sse.core.internal.validate,
- org.eclipse.wst.sse.internal.contentproperties
+ org.eclipse.wst.sse.internal.contentproperties,
+ org.eclipse.wst.sse.core.text
 Require-Bundle: org.eclipse.core.resources,
  org.eclipse.text;visibility:=reexport,
  org.eclipse.core.runtime,

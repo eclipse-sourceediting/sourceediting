@@ -29,8 +29,8 @@ import org.eclipse.jface.text.reconciler.IReconcilableModel;
 import org.eclipse.jface.text.reconciler.IReconcileResult;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitionTypes;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitioning;
+import org.eclipse.wst.sse.core.text.IStructuredPartitions;
 import org.eclipse.wst.sse.ui.internal.IReleasable;
 import org.eclipse.wst.sse.ui.internal.Logger;
 
@@ -73,7 +73,7 @@ public abstract class StructuredReconcileStep extends AbstractReconcileStep impl
 	public ReconcileAnnotationKey createKey(IStructuredDocumentRegion sdRegion, int scope) {
 
 		ITypedRegion tr = getPartition(sdRegion);
-		String partitionType = (tr != null) ? tr.getType() : IStructuredPartitionTypes.UNKNOWN_PARTITION;
+		String partitionType = (tr != null) ? tr.getType() : IStructuredPartitions.UNKNOWN_PARTITION;
 		return createKey(partitionType, scope);
 	}
 
@@ -132,7 +132,7 @@ public abstract class StructuredReconcileStep extends AbstractReconcileStep impl
 
 	public String getPartitionType(IDocument doc, int offset) {
 		ITypedRegion tr = getPartition(doc, offset);
-		return (tr != null) ? tr.getType() : IStructuredPartitionTypes.UNKNOWN_PARTITION;
+		return (tr != null) ? tr.getType() : IStructuredPartitions.UNKNOWN_PARTITION;
 	}
 
 	public String[] getPartitionTypes() {

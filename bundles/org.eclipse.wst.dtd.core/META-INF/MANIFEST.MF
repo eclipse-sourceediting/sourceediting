@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.wst.dtd.core; singleton:=true
-Bundle-Version: 1.0.100.qualifier
+Bundle-Version: 1.1.0.qualifier
 Bundle-Activator: org.eclipse.wst.dtd.core.internal.DTDCorePlugin
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
@@ -17,16 +17,16 @@ Export-Package: org.eclipse.wst.dtd.core.internal,
  org.eclipse.wst.dtd.core.internal.event,
  org.eclipse.wst.dtd.core.internal.modelhandler,
  org.eclipse.wst.dtd.core.internal.parser,
-  org.eclipse.wst.dtd.core.internal.preferences,
+ org.eclipse.wst.dtd.core.internal.preferences,
  org.eclipse.wst.dtd.core.internal.provisional.contenttype,
  org.eclipse.wst.dtd.core.internal.provisional.document,
- org.eclipse.wst.dtd.core.internal.provisional.text,
  org.eclipse.wst.dtd.core.internal.saxparser,
  org.eclipse.wst.dtd.core.internal.tasks,
  org.eclipse.wst.dtd.core.internal.text,
  org.eclipse.wst.dtd.core.internal.tokenizer,
  org.eclipse.wst.dtd.core.internal.util,
  org.eclipse.wst.dtd.core.internal.validation,
+ org.eclipse.wst.dtd.core.text,
  rose
 Require-Bundle: org.eclipse.core.resources,
  org.eclipse.core.runtime,

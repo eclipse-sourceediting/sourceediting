@@ -1,4 +1,4 @@
-package org.eclipse.wst.xml.core.internal.provisional.text;
+package org.eclipse.wst.xml.core.text;
 
 
 
@@ -7,7 +7,7 @@ package org.eclipse.wst.xml.core.internal.provisional.text;
  * It defines the partition types for XML.
  * Clients should reference the partition type Strings defined here directly.
  * 
- * @plannedfor 1.0
+ * @since 1.1
  */
 public interface IXMLPartitions {
 	

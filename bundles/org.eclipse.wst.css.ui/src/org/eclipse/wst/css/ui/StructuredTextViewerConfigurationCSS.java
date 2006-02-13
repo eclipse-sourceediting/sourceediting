@@ -21,11 +21,11 @@ import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.wst.css.core.internal.CSSCorePlugin;
 import org.eclipse.wst.css.core.internal.format.FormatProcessorCSS;
 import org.eclipse.wst.css.core.internal.preferences.CSSCorePreferenceNames;
-import org.eclipse.wst.css.core.internal.provisional.text.ICSSPartitionTypes;
+import org.eclipse.wst.css.core.text.ICSSPartitions;
 import org.eclipse.wst.css.ui.internal.autoedit.StructuredAutoEditStrategyCSS;
 import org.eclipse.wst.css.ui.internal.contentassist.CSSContentAssistProcessor;
 import org.eclipse.wst.css.ui.internal.style.LineStyleProviderForCSS;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitionTypes;
+import org.eclipse.wst.sse.core.text.IStructuredPartitions;
 import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
 import org.eclipse.wst.sse.ui.internal.format.StructuredFormattingStrategy;
 import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
@@ -67,7 +67,7 @@ public class StructuredTextViewerConfigurationCSS extends StructuredTextViewerCo
 			allStrategies.add(superStrategies[i]);
 		}
 
-		if (contentType == ICSSPartitionTypes.STYLE) {
+		if (contentType == ICSSPartitions.STYLE) {
 			allStrategies.add(new StructuredAutoEditStrategyCSS());
 		}
 
@@ -76,7 +76,7 @@ public class StructuredTextViewerConfigurationCSS extends StructuredTextViewerCo
 
 	public String[] getConfiguredContentTypes(ISourceViewer sourceViewer) {
 		if (fConfiguredContentTypes == null) {
-			fConfiguredContentTypes = new String[]{ICSSPartitionTypes.STYLE, IStructuredPartitionTypes.DEFAULT_PARTITION, IStructuredPartitionTypes.UNKNOWN_PARTITION};
+			fConfiguredContentTypes = new String[]{ICSSPartitions.STYLE, IStructuredPartitions.DEFAULT_PARTITION, IStructuredPartitions.UNKNOWN_PARTITION};
 		}
 		return fConfiguredContentTypes;
 	}
@@ -84,7 +84,7 @@ public class StructuredTextViewerConfigurationCSS extends StructuredTextViewerCo
 	protected IContentAssistProcessor[] getContentAssistProcessors(ISourceViewer sourceViewer, String partitionType) {
 		IContentAssistProcessor[] processors = null;
 
-		if ((partitionType == ICSSPartitionTypes.STYLE) || (partitionType == IStructuredPartitionTypes.UNKNOWN_PARTITION)) {
+		if ((partitionType == ICSSPartitions.STYLE) || (partitionType == IStructuredPartitions.UNKNOWN_PARTITION)) {
 			processors = new IContentAssistProcessor[]{new CSSContentAssistProcessor()};
 		}
 
@@ -92,7 +92,7 @@ public class StructuredTextViewerConfigurationCSS extends StructuredTextViewerCo
 	}
 
 	public IContentFormatter getContentFormatter(ISourceViewer sourceViewer) {
-		final MultiPassContentFormatter formatter = new MultiPassContentFormatter(getConfiguredDocumentPartitioning(sourceViewer), ICSSPartitionTypes.STYLE);
+		final MultiPassContentFormatter formatter = new MultiPassContentFormatter(getConfiguredDocumentPartitioning(sourceViewer), ICSSPartitions.STYLE);
 
 		formatter.setMasterStrategy(new StructuredFormattingStrategy(new FormatProcessorCSS()));
 
@@ -145,7 +145,7 @@ public class StructuredTextViewerConfigurationCSS extends StructuredTextViewerCo
 	public LineStyleProvider[] getLineStyleProviders(ISourceViewer sourceViewer, String partitionType) {
 		LineStyleProvider[] providers = null;
 
-		if (partitionType == ICSSPartitionTypes.STYLE) {
+		if (partitionType == ICSSPartitions.STYLE) {
 			providers = new LineStyleProvider[]{getLineStyleProviderForCSS()};
 		}
 

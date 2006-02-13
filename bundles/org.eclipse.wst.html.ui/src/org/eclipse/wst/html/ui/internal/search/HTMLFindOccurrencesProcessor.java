@@ -12,10 +12,10 @@
 
 package org.eclipse.wst.html.ui.internal.search;
 
-import org.eclipse.wst.html.core.internal.provisional.text.IHTMLPartitionTypes;
+import org.eclipse.wst.html.core.text.IHTMLPartitions;
 import org.eclipse.wst.sse.ui.internal.search.FindOccurrencesProcessor;
-import org.eclipse.wst.xml.core.internal.provisional.text.IXMLPartitions;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
+import org.eclipse.wst.xml.core.text.IXMLPartitions;
 
 /**
  * Configures a FindOccurrencesProcessor with HTML partitions and regions
@@ -23,7 +23,7 @@ import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 public class HTMLFindOccurrencesProcessor extends FindOccurrencesProcessor {
 
 	protected String[] getPartitionTypes() {
-		return new String[]{IHTMLPartitionTypes.HTML_DEFAULT, IXMLPartitions.XML_DEFAULT};
+		return new String[]{IHTMLPartitions.HTML_DEFAULT, IXMLPartitions.XML_DEFAULT};
 	}
 
 	protected String[] getRegionTypes() {

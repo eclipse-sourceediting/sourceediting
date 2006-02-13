@@ -16,10 +16,10 @@ import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.jface.text.hyperlink.URLHyperlink;
 import org.eclipse.jst.jsp.core.internal.provisional.JSP11Namespace;
-import org.eclipse.jst.jsp.core.internal.provisional.text.IJSPPartitionTypes;
 import org.eclipse.jst.jsp.core.taglib.ITLDRecord;
 import org.eclipse.jst.jsp.core.taglib.ITaglibRecord;
 import org.eclipse.jst.jsp.core.taglib.TaglibIndex;
+import org.eclipse.jst.jsp.core.text.IJSPPartitions;
 import org.eclipse.jst.jsp.ui.internal.Logger;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
@@ -48,7 +48,7 @@ public class TaglibHyperlinkDetector implements IHyperlinkDetector {
 				try {
 					// check if jsp tag/directive first
 					ITypedRegion partition = TextUtilities.getPartition(doc, IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING, region.getOffset(), false);
-					if (partition != null && partition.getType() == IJSPPartitionTypes.JSP_DIRECTIVE) {
+					if (partition != null && partition.getType() == IJSPPartitions.JSP_DIRECTIVE) {
 						// check if jsp taglib directive
 						Node currentNode = getCurrentNode(doc, region.getOffset());
 						if (currentNode != null && currentNode.getNodeType() == Node.ELEMENT_NODE && JSP11Namespace.ElementName.DIRECTIVE_TAGLIB.equalsIgnoreCase(currentNode.getNodeName())) {

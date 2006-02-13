@@ -1,4 +1,4 @@
-package org.eclipse.jst.jsp.core.internal.provisional.text;
+package org.eclipse.jst.jsp.core.text;
 
 
 /**
@@ -6,9 +6,9 @@ package org.eclipse.jst.jsp.core.internal.provisional.text;
  * It defines the partition types for JSP.
  * Clients should reference the partition type Strings defined here directly.
  * 
- * @plannedfor 1.0
+ * @since 1.1
  */
-public interface IJSPPartitionTypes {
+public interface IJSPPartitions {
 
 	String JSP_DEFAULT = "org.eclipse.jst.jsp.DEFAULT_JSP"; //$NON-NLS-1$
 	String JSP_COMMENT = "org.eclipse.jst.jsp.JSP_COMMENT"; //$NON-NLS-1$

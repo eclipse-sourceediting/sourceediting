@@ -16,9 +16,9 @@ import org.eclipse.jface.text.contentassist.ContentAssistant;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.source.ISourceViewer;
-import org.eclipse.wst.html.core.internal.provisional.text.IHTMLPartitionTypes;
+import org.eclipse.wst.html.core.text.IHTMLPartitions;
 import org.eclipse.wst.sse.ui.internal.correction.CorrectionAssistantProvider;
-import org.eclipse.wst.xml.core.internal.provisional.text.IXMLPartitions;
+import org.eclipse.wst.xml.core.text.IXMLPartitions;
 import org.eclipse.wst.xml.ui.internal.correction.CorrectionProcessorXML;
 
 /**
@@ -34,7 +34,7 @@ public class CorrectionAssistantProviderHTML extends CorrectionAssistantProvider
 
 			if (sourceViewer != null) {
 				IContentAssistProcessor correctionProcessor = new CorrectionProcessorXML(sourceViewer);
-				assistant.setContentAssistProcessor(correctionProcessor, IHTMLPartitionTypes.HTML_DEFAULT);
+				assistant.setContentAssistProcessor(correctionProcessor, IHTMLPartitions.HTML_DEFAULT);
 				assistant.setContentAssistProcessor(correctionProcessor, IXMLPartitions.XML_CDATA);
 				assistant.setContentAssistProcessor(correctionProcessor, IXMLPartitions.XML_COMMENT);
 				assistant.setContentAssistProcessor(correctionProcessor, IXMLPartitions.XML_DECLARATION);

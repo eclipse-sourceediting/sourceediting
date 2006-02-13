@@ -13,9 +13,9 @@ package org.eclipse.wst.html.core.internal.text;
 import java.util.Locale;
 
 import org.eclipse.jface.text.IDocumentPartitioner;
-import org.eclipse.wst.css.core.internal.provisional.text.ICSSPartitionTypes;
+import org.eclipse.wst.css.core.text.ICSSPartitions;
 import org.eclipse.wst.html.core.internal.provisional.HTML40Namespace;
-import org.eclipse.wst.html.core.internal.provisional.text.IHTMLPartitionTypes;
+import org.eclipse.wst.html.core.text.IHTMLPartitions;
 import org.eclipse.wst.sse.core.internal.parser.ForeignRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredTextPartitioner;
@@ -34,7 +34,7 @@ import org.eclipse.wst.xml.core.internal.text.rules.StructuredTextPartitionerFor
  */
 public class StructuredTextPartitionerForHTML extends StructuredTextPartitionerForXML implements IStructuredTextPartitioner {
 
-	private final static String[] configuredContentTypes = new String[]{IHTMLPartitionTypes.HTML_DEFAULT, IHTMLPartitionTypes.HTML_DECLARATION, IHTMLPartitionTypes.HTML_COMMENT, IHTMLPartitionTypes.SCRIPT, ICSSPartitionTypes.STYLE};
+	private final static String[] configuredContentTypes = new String[]{IHTMLPartitions.HTML_DEFAULT, IHTMLPartitions.HTML_DECLARATION, IHTMLPartitions.HTML_COMMENT, IHTMLPartitions.SCRIPT, ICSSPartitions.STYLE};
 
 	public static final String JAVASCRIPT = "javascript"; //$NON-NLS-1$
 	public static final String JAVASCRIPT_APPLICATION = "application/x-javascript"; //$NON-NLS-1$
@@ -44,7 +44,7 @@ public class StructuredTextPartitionerForHTML extends StructuredTextPartitionerF
 	}
 
 	public IStructuredTypedRegion createPartition(int offset, int length, String type) {
-		if (type == IHTMLPartitionTypes.SCRIPT) {
+		if (type == IHTMLPartitions.SCRIPT) {
 			IStructuredDocumentRegion node = fStructuredDocument.getRegionAtCharacterOffset(offset);
 			if (node != null) {
 				String stype = getScriptingPartitionType(node);
@@ -56,7 +56,7 @@ public class StructuredTextPartitionerForHTML extends StructuredTextPartitionerF
 
 	protected void setInternalPartition(int offset, int length, String type) {
 		String localType = type;
-		if (type == IHTMLPartitionTypes.SCRIPT) {
+		if (type == IHTMLPartitions.SCRIPT) {
 			IStructuredDocumentRegion node = fStructuredDocument.getRegionAtCharacterOffset(offset);
 			if (node != null) {
 				localType = getScriptingPartitionType(node);
@@ -68,7 +68,7 @@ public class StructuredTextPartitionerForHTML extends StructuredTextPartitionerF
 	private String getScriptingPartitionType(IStructuredDocumentRegion coreNode) {
 		String language = null;
 		String type = null;
-		String result = IHTMLPartitionTypes.SCRIPT;
+		String result = IHTMLPartitions.SCRIPT;
 		IStructuredDocumentRegion node = coreNode;
 		ITextRegion attrNameRegion = null;
 		while (node != null && isValidScriptingRegionType(node.getType())) {
@@ -116,23 +116,23 @@ public class StructuredTextPartitionerForHTML extends StructuredTextPartitionerF
 	private String lookupScriptType(String type) {
 		for (int i = 0; i < ScriptLanguageKeys.JAVASCRIPT_MIME_TYPE_KEYS.length; i++)
 			if (ScriptLanguageKeys.JAVASCRIPT_MIME_TYPE_KEYS[i].equalsIgnoreCase(type))
-				return IHTMLPartitionTypes.SCRIPT;
-		return IHTMLPartitionTypes.SCRIPT + ".type." + type.toUpperCase(Locale.ENGLISH); //$NON-NLS-1$
+				return IHTMLPartitions.SCRIPT;
+		return IHTMLPartitions.SCRIPT + ".type." + type.toUpperCase(Locale.ENGLISH); //$NON-NLS-1$
 	}
 
 	private String lookupScriptLanguage(String language) {
 		for (int i = 0; i < ScriptLanguageKeys.JAVASCRIPT_LANGUAGE_KEYS.length; i++)
 			if (ScriptLanguageKeys.JAVASCRIPT_LANGUAGE_KEYS[i].equalsIgnoreCase(language))
-				return IHTMLPartitionTypes.SCRIPT;
-		return IHTMLPartitionTypes.SCRIPT + ".language." + language.toUpperCase(Locale.ENGLISH); //$NON-NLS-1$
+				return IHTMLPartitions.SCRIPT;
+		return IHTMLPartitions.SCRIPT + ".language." + language.toUpperCase(Locale.ENGLISH); //$NON-NLS-1$
 	}
 
 	public String getPartitionType(ITextRegion region, int offset) {
 		String result = null;
 		if (region.getType() == DOMRegionContext.XML_COMMENT_TEXT || region.getType() == DOMRegionContext.XML_COMMENT_OPEN)
-			result = IHTMLPartitionTypes.HTML_COMMENT;
+			result = IHTMLPartitions.HTML_COMMENT;
 		else if (region.getType() == DOMRegionContext.XML_DOCTYPE_DECLARATION || region.getType() == DOMRegionContext.XML_DECLARATION_OPEN)
-			result = IHTMLPartitionTypes.HTML_DECLARATION;
+			result = IHTMLPartitions.HTML_DECLARATION;
 		else
 			result = super.getPartitionType(region, offset);
 		return result;
@@ -159,7 +159,7 @@ public class StructuredTextPartitionerForHTML extends StructuredTextPartitionerF
 		}
 		
 		if(previousStartTagNameRegion == null || nextEndTagNameRegion == null)
-			return IHTMLPartitionTypes.HTML_DEFAULT;
+			return IHTMLPartitions.HTML_DEFAULT;
 		
 		String name1 = previousNode.getText(previousStartTagNameRegion);
 		String name2 = nextNode.getText(nextEndTagNameRegion);
@@ -167,7 +167,7 @@ public class StructuredTextPartitionerForHTML extends StructuredTextPartitionerF
 			//			return ST_SCRIPT;
 			return getScriptingPartitionType(fStructuredDocument.getRegionAtCharacterOffset(previousNode.getStartOffset(previousStartTagNameRegion)));
 		else if (name1.equalsIgnoreCase(HTML40Namespace.ElementName.STYLE) && name2.equalsIgnoreCase(HTML40Namespace.ElementName.STYLE))
-			return ICSSPartitionTypes.STYLE;
+			return ICSSPartitions.STYLE;
 		return super.getPartitionTypeBetween(previousNode, nextNode);
 	}
 
@@ -181,9 +181,9 @@ public class StructuredTextPartitionerForHTML extends StructuredTextPartitionerF
 			result = getUnknown();
 		}
 		else if (tagname.equalsIgnoreCase(HTML40Namespace.ElementName.SCRIPT))
-			result = IHTMLPartitionTypes.SCRIPT;
+			result = IHTMLPartitions.SCRIPT;
 		else if (tagname.equalsIgnoreCase(HTML40Namespace.ElementName.STYLE))
-			result = ICSSPartitionTypes.STYLE;
+			result = ICSSPartitions.STYLE;
 		else
 			result = super.getPartitionType(region, offset);
 
@@ -191,7 +191,7 @@ public class StructuredTextPartitionerForHTML extends StructuredTextPartitionerF
 	}
 
 	public String getDefaultPartitionType() {
-		return IHTMLPartitionTypes.HTML_DEFAULT;
+		return IHTMLPartitions.HTML_DEFAULT;
 	}
 
 	public IDocumentPartitioner newInstance() {

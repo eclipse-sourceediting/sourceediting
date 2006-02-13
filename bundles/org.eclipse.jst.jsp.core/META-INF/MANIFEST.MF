@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.jst.jsp.core; singleton:=true
-Bundle-Version: 1.0.100.qualifier
+Bundle-Version: 1.1.0.qualifier
 Bundle-Activator: org.eclipse.jst.jsp.core.internal.JSPCorePlugin
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
@@ -24,12 +24,12 @@ Export-Package: org.eclipse.jst.jsp.core.internal,
  org.eclipse.jst.jsp.core.internal.preferences,
  org.eclipse.jst.jsp.core.internal.provisional,
  org.eclipse.jst.jsp.core.internal.provisional.contenttype,
- org.eclipse.jst.jsp.core.internal.provisional.text,
  org.eclipse.jst.jsp.core.internal.regions,
  org.eclipse.jst.jsp.core.internal.tasks,
  org.eclipse.jst.jsp.core.internal.text,
  org.eclipse.jst.jsp.core.internal.util,
- org.eclipse.jst.jsp.core.taglib
+ org.eclipse.jst.jsp.core.taglib,
+ org.eclipse.jst.jsp.core.text
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.resources,
  org.eclipse.core.filebuffers,

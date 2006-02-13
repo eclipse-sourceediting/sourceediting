@@ -19,8 +19,8 @@ import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jst.jsp.core.internal.java.IJSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapter;
-import org.eclipse.jst.jsp.core.internal.provisional.text.IJSPPartitionTypes;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
+import org.eclipse.jst.jsp.core.text.IJSPPartitions;
 import org.eclipse.search.ui.ISearchQuery;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
@@ -36,7 +36,7 @@ import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 public class JSPFindOccurrencesProcessor extends FindOccurrencesProcessor {
 
 	protected String[] getPartitionTypes() {
-		return new String[]{IJSPPartitionTypes.JSP_DEFAULT, IJSPPartitionTypes.JSP_CONTENT_JAVA};
+		return new String[]{IJSPPartitions.JSP_DEFAULT, IJSPPartitions.JSP_CONTENT_JAVA};
 	}
 
 	protected String[] getRegionTypes() {

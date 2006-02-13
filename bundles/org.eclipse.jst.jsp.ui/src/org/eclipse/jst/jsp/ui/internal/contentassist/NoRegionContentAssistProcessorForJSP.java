@@ -13,14 +13,14 @@ package org.eclipse.jst.jsp.ui.internal.contentassist;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jst.jsp.core.internal.provisional.JSP11Namespace;
-import org.eclipse.jst.jsp.core.internal.provisional.text.IJSPPartitionTypes;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
-import org.eclipse.wst.html.core.internal.provisional.text.IHTMLPartitionTypes;
+import org.eclipse.jst.jsp.core.text.IJSPPartitions;
+import org.eclipse.wst.html.core.text.IHTMLPartitions;
 import org.eclipse.wst.html.ui.internal.contentassist.NoRegionContentAssistProcessorForHTML;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitionTypes;
-import org.eclipse.wst.xml.core.internal.provisional.text.IXMLPartitions;
+import org.eclipse.wst.sse.core.text.IStructuredPartitions;
+import org.eclipse.wst.xml.core.text.IXMLPartitions;
 
 /**
  * @plannedfor 1.0
@@ -42,17 +42,17 @@ public class NoRegionContentAssistProcessorForJSP extends NoRegionContentAssistP
 		IContentAssistProcessor jspContentAssistProcessor = new JSPContentAssistProcessor();
 
 		// JSP
-		addPartitionProcessor(IStructuredPartitionTypes.DEFAULT_PARTITION, jspContentAssistProcessor);
+		addPartitionProcessor(IStructuredPartitions.DEFAULT_PARTITION, jspContentAssistProcessor);
 		addPartitionProcessor(IXMLPartitions.XML_DEFAULT, jspContentAssistProcessor);
-		addPartitionProcessor(IHTMLPartitionTypes.HTML_DEFAULT, jspContentAssistProcessor);
-		addPartitionProcessor(IHTMLPartitionTypes.HTML_COMMENT, jspContentAssistProcessor);
-		addPartitionProcessor(IJSPPartitionTypes.JSP_DEFAULT, jspContentAssistProcessor);
-		addPartitionProcessor(IJSPPartitionTypes.JSP_DIRECTIVE, jspContentAssistProcessor);
-		addPartitionProcessor(IJSPPartitionTypes.JSP_CONTENT_DELIMITER, jspContentAssistProcessor);
-		addPartitionProcessor(IJSPPartitionTypes.JSP_CONTENT_JAVASCRIPT, jspContentAssistProcessor);
+		addPartitionProcessor(IHTMLPartitions.HTML_DEFAULT, jspContentAssistProcessor);
+		addPartitionProcessor(IHTMLPartitions.HTML_COMMENT, jspContentAssistProcessor);
+		addPartitionProcessor(IJSPPartitions.JSP_DEFAULT, jspContentAssistProcessor);
+		addPartitionProcessor(IJSPPartitions.JSP_DIRECTIVE, jspContentAssistProcessor);
+		addPartitionProcessor(IJSPPartitions.JSP_CONTENT_DELIMITER, jspContentAssistProcessor);
+		addPartitionProcessor(IJSPPartitions.JSP_CONTENT_JAVASCRIPT, jspContentAssistProcessor);
 
 		IContentAssistProcessor jspJavaContentAssistProcessor = new JSPJavaContentAssistProcessor();
-		addPartitionProcessor(IJSPPartitionTypes.JSP_CONTENT_JAVA, jspJavaContentAssistProcessor);
+		addPartitionProcessor(IJSPPartitions.JSP_CONTENT_JAVA, jspJavaContentAssistProcessor);
 
 	}
 
@@ -89,7 +89,7 @@ public class NoRegionContentAssistProcessorForJSP extends NoRegionContentAssistP
 		if (p == null) {
 			IStructuredDocumentRegion sdRegion = ((IStructuredDocument) viewer.getDocument()).getRegionAtCharacterOffset(documentOffset);
 			if (isJSPRegion(sdRegion))
-				p = getPartitionProcessor(IJSPPartitionTypes.JSP_CONTENT_JAVA);
+				p = getPartitionProcessor(IJSPPartitions.JSP_CONTENT_JAVA);
 		}
 		return p;
 	}

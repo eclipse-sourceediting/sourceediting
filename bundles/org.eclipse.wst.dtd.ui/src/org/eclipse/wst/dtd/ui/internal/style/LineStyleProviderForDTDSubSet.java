@@ -25,7 +25,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.wst.dtd.core.internal.provisional.contenttype.ContentTypeIdForDTD;
-import org.eclipse.wst.dtd.core.internal.provisional.text.IDTDPartitionTypes;
+import org.eclipse.wst.dtd.core.text.IDTDPartitions;
 import org.eclipse.wst.dtd.ui.internal.DTDUIPlugin;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
@@ -121,7 +121,7 @@ public class LineStyleProviderForDTDSubSet implements LineStyleProvider {
 	 *      int, int, java.util.Collection)
 	 */
 	public boolean prepareRegions(ITypedRegion typedRegion, int lineRequestStart, int lineRequestLength, Collection holdResults) {
-		if (!IDTDPartitionTypes.DTD_DEFAULT.equals(typedRegion.getType())) {
+		if (!IDTDPartitions.DTD_DEFAULT.equals(typedRegion.getType())) {
 			// compute an internal DTD model and return linestyles for it
 			ITextRegion dtdContentRegion = null;
 			IStructuredDocumentRegion doctype = fDocument.getRegionAtCharacterOffset(typedRegion.getOffset());

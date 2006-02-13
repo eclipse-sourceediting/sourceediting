@@ -29,8 +29,8 @@ import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.jface.text.information.IInformationPresenter;
 import org.eclipse.jface.text.information.IInformationProvider;
 import org.eclipse.jface.text.source.ISourceViewer;
-import org.eclipse.jst.jsp.core.internal.provisional.text.IJSPPartitionTypes;
 import org.eclipse.jst.jsp.core.internal.text.StructuredTextPartitionerForJSP;
+import org.eclipse.jst.jsp.core.text.IJSPPartitions;
 import org.eclipse.jst.jsp.ui.internal.autoedit.AutoEditStrategyForTabs;
 import org.eclipse.jst.jsp.ui.internal.autoedit.StructuredAutoEditStrategyJSP;
 import org.eclipse.jst.jsp.ui.internal.contentassist.JSPContentAssistProcessor;
@@ -49,18 +49,18 @@ import org.eclipse.jst.jsp.ui.internal.taginfo.JSPJavaJavadocHoverProcessor;
 import org.eclipse.jst.jsp.ui.internal.taginfo.JSPJavaJavadocInformationProvider;
 import org.eclipse.jst.jsp.ui.internal.taginfo.JSPTagInfoHoverProcessor;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
-import org.eclipse.wst.css.core.internal.provisional.text.ICSSPartitionTypes;
+import org.eclipse.wst.css.core.text.ICSSPartitions;
 import org.eclipse.wst.html.core.internal.format.HTMLFormatProcessorImpl;
-import org.eclipse.wst.html.core.internal.provisional.text.IHTMLPartitionTypes;
+import org.eclipse.wst.html.core.text.IHTMLPartitions;
 import org.eclipse.wst.html.ui.StructuredTextViewerConfigurationHTML;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitionTypes;
+import org.eclipse.wst.sse.core.text.IStructuredPartitions;
 import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.format.StructuredFormattingStrategy;
 import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
 import org.eclipse.wst.sse.ui.internal.taginfo.TextHoverManager;
 import org.eclipse.wst.sse.ui.internal.util.EditorUtility;
-import org.eclipse.wst.xml.core.internal.provisional.text.IXMLPartitions;
+import org.eclipse.wst.xml.core.text.IXMLPartitions;
 import org.eclipse.wst.xml.ui.StructuredTextViewerConfigurationXML;
 
 /**
@@ -116,7 +116,7 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 			// xml autoedit strategies
 			strategies = getXMLSourceViewerConfiguration().getAutoEditStrategies(sourceViewer, contentType);
 		}
-		else if (contentType == IJSPPartitionTypes.JSP_CONTENT_JAVA) {
+		else if (contentType == IJSPPartitions.JSP_CONTENT_JAVA) {
 			// jsp java autoedit strategies
 			List allStrategies = new ArrayList(0);
 
@@ -131,7 +131,7 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 
 			strategies = (IAutoEditStrategy[]) allStrategies.toArray(new IAutoEditStrategy[allStrategies.size()]);
 		}
-		else if (contentType == IHTMLPartitionTypes.HTML_DEFAULT || contentType == IHTMLPartitionTypes.HTML_DECLARATION) {
+		else if (contentType == IHTMLPartitions.HTML_DEFAULT || contentType == IHTMLPartitions.HTML_DECLARATION) {
 			// html and jsp autoedit strategies
 			List allStrategies = new ArrayList(0);
 
@@ -187,16 +187,16 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 	protected IContentAssistProcessor[] getContentAssistProcessors(ISourceViewer sourceViewer, String partitionType) {
 		IContentAssistProcessor[] processors = null;
 
-		if (partitionType == IHTMLPartitionTypes.SCRIPT) {
+		if (partitionType == IHTMLPartitions.SCRIPT) {
 			// HTML JavaScript
 			IContentAssistant htmlContentAssistant = getHTMLSourceViewerConfiguration().getContentAssistant(sourceViewer);
-			IContentAssistProcessor processor = htmlContentAssistant.getContentAssistProcessor(IHTMLPartitionTypes.SCRIPT);
+			IContentAssistProcessor processor = htmlContentAssistant.getContentAssistProcessor(IHTMLPartitions.SCRIPT);
 			processors = new IContentAssistProcessor[]{processor};
 		}
-		else if (partitionType == ICSSPartitionTypes.STYLE) {
+		else if (partitionType == ICSSPartitions.STYLE) {
 			// HTML CSS
 			IContentAssistant htmlContentAssistant = getHTMLSourceViewerConfiguration().getContentAssistant(sourceViewer);
-			IContentAssistProcessor processor = htmlContentAssistant.getContentAssistProcessor(ICSSPartitionTypes.STYLE);
+			IContentAssistProcessor processor = htmlContentAssistant.getContentAssistProcessor(ICSSPartitions.STYLE);
 			processors = new IContentAssistProcessor[]{processor};
 		}
 		// // jspcontentassistprocessor handles this?
@@ -205,19 +205,19 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 		// processors = new IContentAssistProcessor[]{new
 		// HTMLContentAssistProcessor()};
 		// }
-		else if ((partitionType == IXMLPartitions.XML_DEFAULT) || (partitionType == IHTMLPartitionTypes.HTML_DEFAULT) || (partitionType == IHTMLPartitionTypes.HTML_COMMENT) || (partitionType == IJSPPartitionTypes.JSP_DEFAULT) || (partitionType == IJSPPartitionTypes.JSP_DIRECTIVE) || (partitionType == IJSPPartitionTypes.JSP_CONTENT_DELIMITER) || (partitionType == IJSPPartitionTypes.JSP_CONTENT_JAVASCRIPT) || (partitionType == IJSPPartitionTypes.JSP_COMMENT)) {
+		else if ((partitionType == IXMLPartitions.XML_DEFAULT) || (partitionType == IHTMLPartitions.HTML_DEFAULT) || (partitionType == IHTMLPartitions.HTML_COMMENT) || (partitionType == IJSPPartitions.JSP_DEFAULT) || (partitionType == IJSPPartitions.JSP_DIRECTIVE) || (partitionType == IJSPPartitions.JSP_CONTENT_DELIMITER) || (partitionType == IJSPPartitions.JSP_CONTENT_JAVASCRIPT) || (partitionType == IJSPPartitions.JSP_COMMENT)) {
 			// jsp
 			processors = new IContentAssistProcessor[]{new JSPContentAssistProcessor()};
 		}
-		else if ((partitionType == IXMLPartitions.XML_CDATA) || (partitionType == IJSPPartitionTypes.JSP_CONTENT_JAVA)) {
+		else if ((partitionType == IXMLPartitions.XML_CDATA) || (partitionType == IJSPPartitions.JSP_CONTENT_JAVA)) {
 			// jsp java
 			processors = new IContentAssistProcessor[]{new JSPJavaContentAssistProcessor()};
 		}
-		else if (partitionType == IJSPPartitionTypes.JSP_DEFAULT_EL) {
+		else if (partitionType == IJSPPartitions.JSP_DEFAULT_EL) {
 			// jsp el
 			processors = new IContentAssistProcessor[]{new JSPELContentAssistProcessor()};
 		}
-		else if (partitionType == IStructuredPartitionTypes.UNKNOWN_PARTITION) {
+		else if (partitionType == IStructuredPartitions.UNKNOWN_PARTITION) {
 			// unknown
 			processors = new IContentAssistProcessor[]{new NoRegionContentAssistProcessorForJSP()};
 		}
@@ -229,7 +229,7 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 		MultiPassContentFormatter formatter = new MultiPassContentFormatter(getConfiguredDocumentPartitioning(sourceViewer), IXMLPartitions.XML_DEFAULT);
 
 		formatter.setMasterStrategy(new StructuredFormattingStrategy(new HTMLFormatProcessorImpl()));
-		formatter.setSlaveStrategy(new FormattingStrategyJSPJava(), IJSPPartitionTypes.JSP_CONTENT_JAVA);
+		formatter.setSlaveStrategy(new FormattingStrategyJSPJava(), IJSPPartitions.JSP_CONTENT_JAVA);
 
 		return formatter;
 	}
@@ -238,14 +238,14 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 		ITextDoubleClickStrategy strategy = null;
 
 		// html or javascript
-		if (contentType == IHTMLPartitionTypes.HTML_DEFAULT || contentType == IHTMLPartitionTypes.SCRIPT)
+		if (contentType == IHTMLPartitions.HTML_DEFAULT || contentType == IHTMLPartitions.SCRIPT)
 			strategy = getHTMLSourceViewerConfiguration().getDoubleClickStrategy(sourceViewer, contentType);
-		else if (contentType == IJSPPartitionTypes.JSP_CONTENT_JAVA || contentType == IJSPPartitionTypes.JSP_CONTENT_JAVASCRIPT)
+		else if (contentType == IJSPPartitions.JSP_CONTENT_JAVA || contentType == IJSPPartitions.JSP_CONTENT_JAVASCRIPT)
 			// JSP Java or JSP JavaScript
 			strategy = getJavaSourceViewerConfiguration().getDoubleClickStrategy(sourceViewer, contentType);
-		else if (contentType == IJSPPartitionTypes.JSP_DEFAULT)
+		else if (contentType == IJSPPartitions.JSP_DEFAULT)
 			// JSP (just treat like html)
-			strategy = getHTMLSourceViewerConfiguration().getDoubleClickStrategy(sourceViewer, IHTMLPartitionTypes.HTML_DEFAULT);
+			strategy = getHTMLSourceViewerConfiguration().getDoubleClickStrategy(sourceViewer, IHTMLPartitions.HTML_DEFAULT);
 		else
 			strategy = super.getDoubleClickStrategy(sourceViewer, contentType);
 
@@ -293,26 +293,26 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 
 	protected IInformationProvider getInformationProvider(ISourceViewer sourceViewer, String partitionType) {
 		IInformationProvider provider = null;
-		if (partitionType == IHTMLPartitionTypes.HTML_DEFAULT) {
+		if (partitionType == IHTMLPartitions.HTML_DEFAULT) {
 			// HTML
 			IInformationPresenter htmlPresenter = getHTMLSourceViewerConfiguration().getInformationPresenter(sourceViewer);
-			provider = htmlPresenter.getInformationProvider(IHTMLPartitionTypes.HTML_DEFAULT);
+			provider = htmlPresenter.getInformationProvider(IHTMLPartitions.HTML_DEFAULT);
 		}
-		else if (partitionType == IHTMLPartitionTypes.SCRIPT) {
+		else if (partitionType == IHTMLPartitions.SCRIPT) {
 			// HTML JavaScript
 			IInformationPresenter htmlPresenter = getHTMLSourceViewerConfiguration().getInformationPresenter(sourceViewer);
-			provider = htmlPresenter.getInformationProvider(IHTMLPartitionTypes.SCRIPT);
+			provider = htmlPresenter.getInformationProvider(IHTMLPartitions.SCRIPT);
 		}
 		else if (partitionType == IXMLPartitions.XML_DEFAULT) {
 			// XML
 			IInformationPresenter xmlPresenter = getXMLSourceViewerConfiguration().getInformationPresenter(sourceViewer);
 			provider = xmlPresenter.getInformationProvider(IXMLPartitions.XML_DEFAULT);
 		}
-		else if ((partitionType == IJSPPartitionTypes.JSP_DEFAULT) || (partitionType == IJSPPartitionTypes.JSP_DIRECTIVE)) {
+		else if ((partitionType == IJSPPartitions.JSP_DEFAULT) || (partitionType == IJSPPartitions.JSP_DIRECTIVE)) {
 			// JSP tags
 			provider = new JSPInformationProvider();
 		}
-		else if (partitionType == IJSPPartitionTypes.JSP_CONTENT_JAVA) {
+		else if (partitionType == IJSPPartitions.JSP_CONTENT_JAVA) {
 			// JSP java
 			provider = new JSPJavaJavadocInformationProvider();
 		}
@@ -338,25 +338,25 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 	public LineStyleProvider[] getLineStyleProviders(ISourceViewer sourceViewer, String partitionType) {
 		LineStyleProvider[] providers = null;
 
-		if (partitionType == IHTMLPartitionTypes.HTML_DEFAULT || partitionType == IHTMLPartitionTypes.HTML_COMMENT || partitionType == IHTMLPartitionTypes.HTML_DECLARATION) {
-			providers = getHTMLSourceViewerConfiguration().getLineStyleProviders(sourceViewer, IHTMLPartitionTypes.HTML_DEFAULT);
+		if (partitionType == IHTMLPartitions.HTML_DEFAULT || partitionType == IHTMLPartitions.HTML_COMMENT || partitionType == IHTMLPartitions.HTML_DECLARATION) {
+			providers = getHTMLSourceViewerConfiguration().getLineStyleProviders(sourceViewer, IHTMLPartitions.HTML_DEFAULT);
 		}
-		else if (partitionType == IHTMLPartitionTypes.SCRIPT || partitionType == IJSPPartitionTypes.JSP_CONTENT_JAVASCRIPT) {
-			providers = getHTMLSourceViewerConfiguration().getLineStyleProviders(sourceViewer, IHTMLPartitionTypes.SCRIPT);
+		else if (partitionType == IHTMLPartitions.SCRIPT || partitionType == IJSPPartitions.JSP_CONTENT_JAVASCRIPT) {
+			providers = getHTMLSourceViewerConfiguration().getLineStyleProviders(sourceViewer, IHTMLPartitions.SCRIPT);
 		}
-		else if (partitionType == ICSSPartitionTypes.STYLE) {
-			providers = getHTMLSourceViewerConfiguration().getLineStyleProviders(sourceViewer, ICSSPartitionTypes.STYLE);
+		else if (partitionType == ICSSPartitions.STYLE) {
+			providers = getHTMLSourceViewerConfiguration().getLineStyleProviders(sourceViewer, ICSSPartitions.STYLE);
 		}
 		else if (partitionType == IXMLPartitions.XML_DEFAULT || partitionType == IXMLPartitions.XML_CDATA || partitionType == IXMLPartitions.XML_COMMENT || partitionType == IXMLPartitions.XML_DECLARATION || partitionType == IXMLPartitions.XML_PI) {
 			providers = getXMLSourceViewerConfiguration().getLineStyleProviders(sourceViewer, IXMLPartitions.XML_DEFAULT);
 		}
-		else if (partitionType == IJSPPartitionTypes.JSP_CONTENT_JAVA) {
+		else if (partitionType == IJSPPartitions.JSP_CONTENT_JAVA) {
 			providers = new LineStyleProvider[]{getLineStyleProviderForJava()};
 		}
-		else if (partitionType == IJSPPartitionTypes.JSP_DEFAULT_EL) {
+		else if (partitionType == IJSPPartitions.JSP_DEFAULT_EL) {
 			providers = new LineStyleProvider[]{getLineStyleProviderForJSPEL()};
 		}
-		else if (partitionType == IJSPPartitionTypes.JSP_COMMENT || partitionType == IJSPPartitionTypes.JSP_CONTENT_DELIMITER || partitionType == IJSPPartitionTypes.JSP_DEFAULT || partitionType == IJSPPartitionTypes.JSP_DIRECTIVE) {
+		else if (partitionType == IJSPPartitions.JSP_COMMENT || partitionType == IJSPPartitions.JSP_CONTENT_DELIMITER || partitionType == IJSPPartitions.JSP_DEFAULT || partitionType == IJSPPartitions.JSP_DIRECTIVE) {
 			providers = new LineStyleProvider[]{getLineStyleProviderForJSP()};
 		}
 
@@ -387,7 +387,7 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 	public ITextHover getTextHover(ISourceViewer sourceViewer, String contentType, int stateMask) {
 		ITextHover hover = null;
 
-		if (contentType == IHTMLPartitionTypes.HTML_DEFAULT || contentType == IHTMLPartitionTypes.SCRIPT) {
+		if (contentType == IHTMLPartitions.HTML_DEFAULT || contentType == IHTMLPartitions.SCRIPT) {
 			// html and javascript regions
 			hover = getHTMLSourceViewerConfiguration().getTextHover(sourceViewer, contentType, stateMask);
 		}
@@ -395,7 +395,7 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 			// xml regions
 			hover = getXMLSourceViewerConfiguration().getTextHover(sourceViewer, contentType, stateMask);
 		}
-		else if ((contentType == IJSPPartitionTypes.JSP_DEFAULT) || (contentType == IJSPPartitionTypes.JSP_DIRECTIVE) || (contentType == IJSPPartitionTypes.JSP_CONTENT_JAVA)) {
+		else if ((contentType == IJSPPartitions.JSP_DEFAULT) || (contentType == IJSPPartitions.JSP_DIRECTIVE) || (contentType == IJSPPartitions.JSP_CONTENT_JAVA)) {
 			TextHoverManager manager = SSEUIPlugin.getDefault().getTextHoverManager();
 			TextHoverManager.TextHoverDescriptor[] hoverDescs = manager.getTextHovers();
 			int i = 0;
@@ -403,7 +403,7 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 				if (hoverDescs[i].isEnabled() && EditorUtility.computeStateMask(hoverDescs[i].getModifierString()) == stateMask) {
 					String hoverType = hoverDescs[i].getId();
 					if (TextHoverManager.COMBINATION_HOVER.equalsIgnoreCase(hoverType)) {
-						if ((contentType == IJSPPartitionTypes.JSP_DEFAULT) || (contentType == IJSPPartitionTypes.JSP_DIRECTIVE)) {
+						if ((contentType == IJSPPartitions.JSP_DEFAULT) || (contentType == IJSPPartitions.JSP_DIRECTIVE)) {
 							// JSP
 							hover = manager.createBestMatchHover(new JSPTagInfoHoverProcessor());
 						}
@@ -413,7 +413,7 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 						}
 					}
 					else if (TextHoverManager.DOCUMENTATION_HOVER.equalsIgnoreCase(hoverType)) {
-						if ((contentType == IJSPPartitionTypes.JSP_DEFAULT) || (contentType == IJSPPartitionTypes.JSP_DIRECTIVE)) {
+						if ((contentType == IJSPPartitions.JSP_DEFAULT) || (contentType == IJSPPartitions.JSP_DIRECTIVE)) {
 							// JSP
 							hover = new JSPTagInfoHoverProcessor();
 						}

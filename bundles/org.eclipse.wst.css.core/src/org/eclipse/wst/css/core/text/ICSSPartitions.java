@@ -1,15 +1,15 @@
-package org.eclipse.wst.css.core.internal.provisional.text;
+package org.eclipse.wst.css.core.text;
 
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitionTypes;
+import org.eclipse.wst.sse.core.text.IStructuredPartitions;
 
 /**
  * This interface is not intended to be implemented. It defines the
  * partitioning for CSS and all its partitions. Clients should reference the
  * partition type Strings defined here directly.
  * 
- * @plannedfor 1.0
+ * @since 1.1
  */
-public interface ICSSPartitionTypes extends IStructuredPartitionTypes {
+public interface ICSSPartitions extends IStructuredPartitions {
 
 	String STYLE = "org.eclipse.wst.css.STYLE"; //$NON-NLS-1$
 }

@@ -1,4 +1,4 @@
-package org.eclipse.wst.html.core.internal.provisional.text;
+package org.eclipse.wst.html.core.text;
 
 
 /**
@@ -6,9 +6,9 @@ package org.eclipse.wst.html.core.internal.provisional.text;
  * types for HTML. Clients should reference the partition type Strings defined
  * here directly.
  * 
- * @plannedfor 1.0
+ * @since 1.1
  */
-public interface IHTMLPartitionTypes {
+public interface IHTMLPartitions {
 
 	String HTML_DEFAULT = "org.eclipse.wst.html.HTML_DEFAULT"; //$NON-NLS-1$
 	String HTML_DECLARATION = "org.eclipse.wst.html.HTML_DECLARATION"; //$NON-NLS-1$

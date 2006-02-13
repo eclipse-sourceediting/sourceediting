@@ -44,7 +44,7 @@ public interface IStructuredTextPartitioner extends IDocumentPartitioner {
 	 * <br><code>org.eclipse.wst.html.core.text.IHTMLPartitions.HTML_DEFAULT</code>
 	 * <br><code>org.eclipse.wst.jsp.core.text.IJSPPartitions.JSP_DEFAULT</code>
 	 * </p>
-	 * @see org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitionTypes
+	 * @see org.eclipse.wst.sse.core.text.IStructuredPartitions
 	 * @see org.eclipse.wst.xml.core.text.IXMLPartitions
 	 * @see org.eclipse.wst.html.core.text.IHTMLPartitions
 	 * @see org.eclipse.wst.jsp.core.text.IJSPPartitions

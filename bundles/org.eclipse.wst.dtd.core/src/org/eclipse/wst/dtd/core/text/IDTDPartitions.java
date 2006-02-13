@@ -9,16 +9,16 @@
  *     IBM Corporation - initial API and implementation
  *     
  *******************************************************************************/
-package org.eclipse.wst.dtd.core.internal.provisional.text;
+package org.eclipse.wst.dtd.core.text;
 
 /**
  * This interface is not intended to be implemented.
  * It defines the partition types DTD.
  * Clients should reference the partition type Strings defined here directly.
  * 
- * @plannedfor 1.0
+ * @since 1.1
  */
-public interface IDTDPartitionTypes {
+public interface IDTDPartitions {
 	
 	String DTD_DEFAULT = "org.eclipse.wst.dtd.DEFAULT"; //$NON-NLS-1$
 }

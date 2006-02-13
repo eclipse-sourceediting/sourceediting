@@ -27,7 +27,7 @@ import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.jface.text.information.IInformationProvider;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitionTypes;
+import org.eclipse.wst.sse.core.text.IStructuredPartitions;
 import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.format.StructuredFormattingStrategy;
@@ -37,8 +37,8 @@ import org.eclipse.wst.sse.ui.internal.util.EditorUtility;
 import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
 import org.eclipse.wst.xml.core.internal.preferences.XMLCorePreferenceNames;
 import org.eclipse.wst.xml.core.internal.provisional.format.FormatProcessorXML;
-import org.eclipse.wst.xml.core.internal.provisional.text.IXMLPartitions;
 import org.eclipse.wst.xml.core.internal.text.rules.StructuredTextPartitionerForXML;
+import org.eclipse.wst.xml.core.text.IXMLPartitions;
 import org.eclipse.wst.xml.ui.internal.autoedit.AutoEditStrategyForTabs;
 import org.eclipse.wst.xml.ui.internal.autoedit.StructuredAutoEditStrategyXML;
 import org.eclipse.wst.xml.ui.internal.contentassist.NoRegionContentAssistProcessor;
@@ -103,8 +103,8 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 		if (fConfiguredContentTypes == null) {
 			String[] xmlTypes = StructuredTextPartitionerForXML.getConfiguredContentTypes();
 			fConfiguredContentTypes = new String[xmlTypes.length + 2];
-			fConfiguredContentTypes[0] = IStructuredPartitionTypes.DEFAULT_PARTITION;
-			fConfiguredContentTypes[1] = IStructuredPartitionTypes.UNKNOWN_PARTITION;
+			fConfiguredContentTypes[0] = IStructuredPartitions.DEFAULT_PARTITION;
+			fConfiguredContentTypes[1] = IStructuredPartitions.UNKNOWN_PARTITION;
 			int index = 0;
 			System.arraycopy(xmlTypes, 0, fConfiguredContentTypes, index += 2, xmlTypes.length);
 		}
@@ -114,10 +114,10 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 	protected IContentAssistProcessor[] getContentAssistProcessors(ISourceViewer sourceViewer, String partitionType) {
 		IContentAssistProcessor[] processors = null;
 
-		if ((partitionType == IStructuredPartitionTypes.DEFAULT_PARTITION) || (partitionType == IXMLPartitions.XML_DEFAULT)) {
+		if ((partitionType == IStructuredPartitions.DEFAULT_PARTITION) || (partitionType == IXMLPartitions.XML_DEFAULT)) {
 			processors = new IContentAssistProcessor[]{new XMLContentAssistProcessor()};
 		}
-		else if (partitionType == IStructuredPartitionTypes.UNKNOWN_PARTITION) {
+		else if (partitionType == IStructuredPartitions.UNKNOWN_PARTITION) {
 			processors = new IContentAssistProcessor[]{new NoRegionContentAssistProcessor()};
 		}
 
@@ -204,7 +204,7 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 
 	protected IInformationProvider getInformationProvider(ISourceViewer sourceViewer, String partitionType) {
 		IInformationProvider provider = null;
-		if ((partitionType == IStructuredPartitionTypes.DEFAULT_PARTITION) || (partitionType == IXMLPartitions.XML_DEFAULT)) {
+		if ((partitionType == IStructuredPartitions.DEFAULT_PARTITION) || (partitionType == IXMLPartitions.XML_DEFAULT)) {
 			provider = new XMLInformationProvider();
 		}
 		return provider;
@@ -231,7 +231,7 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 
 		// look for appropriate text hover processor to return based on
 		// content type and state mask
-		if ((contentType == IStructuredPartitionTypes.DEFAULT_PARTITION) || (contentType == IXMLPartitions.XML_DEFAULT)) {
+		if ((contentType == IStructuredPartitions.DEFAULT_PARTITION) || (contentType == IXMLPartitions.XML_DEFAULT)) {
 			// check which of xml's text hover is handling stateMask
 			TextHoverManager manager = SSEUIPlugin.getDefault().getTextHoverManager();
 			TextHoverManager.TextHoverDescriptor[] hoverDescs = manager.getTextHovers();
