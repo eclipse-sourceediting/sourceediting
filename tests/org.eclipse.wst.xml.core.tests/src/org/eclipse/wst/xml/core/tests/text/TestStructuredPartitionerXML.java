@@ -12,7 +12,6 @@ package org.eclipse.wst.xml.core.tests.text;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.DecimalFormat;
 
 import junit.framework.TestCase;
 
@@ -28,6 +27,8 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitionin
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredTextPartitioner;
 import org.eclipse.wst.sse.core.internal.util.StringUtils;
 import org.eclipse.wst.xml.core.text.IXMLPartitions;
+
+import com.ibm.icu.text.DecimalFormat;
 
 public class TestStructuredPartitionerXML extends TestCase {
 	

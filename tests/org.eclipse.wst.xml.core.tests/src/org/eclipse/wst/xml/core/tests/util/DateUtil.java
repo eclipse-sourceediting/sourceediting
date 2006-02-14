@@ -10,8 +10,8 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.core.tests.util;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import com.ibm.icu.text.DateFormat;
+import com.ibm.icu.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
