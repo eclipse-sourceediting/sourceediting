@@ -13,7 +13,6 @@ package org.eclipse.jst.jsp.ui.tests.partitioning;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringBufferInputStream;
-import java.text.DecimalFormat;
 
 import junit.framework.TestCase;
 
@@ -28,6 +27,8 @@ import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.util.StringUtils;
 import org.eclipse.wst.xml.core.text.IXMLPartitions;
+
+import com.ibm.icu.text.DecimalFormat;
 
 public class TestStructuredPartitionerJSP extends TestCase {
 
