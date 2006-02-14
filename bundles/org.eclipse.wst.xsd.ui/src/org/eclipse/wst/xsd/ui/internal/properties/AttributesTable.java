@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.properties;
 
-//import java.text.Collator;
+//import com.ibm.icu.text.Collator;
 //import java.util.Comparator;
 //import java.util.List;
 //

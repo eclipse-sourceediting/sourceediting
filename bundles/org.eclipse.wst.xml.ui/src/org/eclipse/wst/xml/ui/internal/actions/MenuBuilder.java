@@ -14,7 +14,7 @@
 
 package org.eclipse.wst.xml.ui.internal.actions;
 
-import java.text.Collator;
+import com.ibm.icu.text.Collator;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;

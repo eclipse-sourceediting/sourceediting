@@ -12,7 +12,7 @@
 package org.eclipse.wst.dtd.core.internal.emf.impl;
 
 import java.text.CharacterIterator;
-import java.text.StringCharacterIterator;
+import com.ibm.icu.text.StringCharacterIterator;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;

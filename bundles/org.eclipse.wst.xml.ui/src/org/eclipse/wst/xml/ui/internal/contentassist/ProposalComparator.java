@@ -39,7 +39,7 @@ public class ProposalComparator implements Comparator {
 				if (displayString1 != null && displayString2 != null)
 					//relevance = displayString1.compareTo(displayString2);
 					// // this didn't mix caps w/ lowercase
-					relevance = java.text.Collator.getInstance().compare(displayString1, displayString2);
+					relevance = com.ibm.icu.text.Collator.getInstance().compare(displayString1, displayString2);
 			}
 		}
 		// otherwise if it's not ISEDRelevanceCompletionProposal, don't sort

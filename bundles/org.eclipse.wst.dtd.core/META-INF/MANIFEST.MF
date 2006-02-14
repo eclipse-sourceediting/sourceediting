@@ -36,5 +36,6 @@ Require-Bundle: org.eclipse.core.resources,
  org.eclipse.wst.common.uriresolver,
  org.eclipse.wst.sse.core,
  org.eclipse.wst.xml.core,
- org.eclipse.wst.validation
+ org.eclipse.wst.validation,
+ com.ibm.icu
 Eclipse-LazyStart: true

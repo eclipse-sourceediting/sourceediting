@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.refactor.rename;
 
-import java.text.Collator;
+import com.ibm.icu.text.Collator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;

@@ -63,6 +63,7 @@ Require-Bundle: org.eclipse.core.runtime.compatibility,
  org.eclipse.ltk.core.refactoring,
  org.eclipse.ltk.ui.refactoring,
  org.eclipse.wst.xsd.core,
- org.eclipse.search
+ org.eclipse.search,
+ com.ibm.icu
 Eclipse-LazyStart: true
 Plugin-Class: org.eclipse.wst.xsd.ui.internal.XSDEditorPlugin
