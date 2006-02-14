@@ -11,7 +11,7 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.ui.internal.preferences.ui;
 
-import java.text.Collator;
+import com.ibm.icu.text.Collator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

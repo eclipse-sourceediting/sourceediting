@@ -13,7 +13,7 @@
 package org.eclipse.wst.sse.ui.internal.preferences.ui;
 
 import java.io.CharArrayReader;
-import java.text.Collator;
+import com.ibm.icu.text.Collator;
 import java.util.Dictionary;
 import java.util.List;
 

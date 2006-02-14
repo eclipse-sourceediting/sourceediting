@@ -15,7 +15,7 @@ package org.eclipse.wst.sse.ui.internal.derived;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
-import java.text.BreakIterator;
+import com.ibm.icu.text.BreakIterator;
 
 import org.eclipse.swt.graphics.GC;
 
