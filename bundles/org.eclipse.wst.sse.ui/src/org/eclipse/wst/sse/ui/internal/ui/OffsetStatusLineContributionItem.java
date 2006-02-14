@@ -29,6 +29,7 @@ import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.jface.text.source.Annotation;
+import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnWeightData;
@@ -39,6 +40,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
@@ -98,7 +100,7 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 			setShellStyle(getShellStyle() | SWT.RESIZE);
 		}
 
-		private void createAnnotationContents(Composite annotationsTabComposite) {
+		private void createAnnotationTabContents(Composite annotationsTabComposite) {
 			annotationsTabComposite.setLayout(new GridLayout());
 			annotationsTabComposite.setLayoutData(new GridData());
 
@@ -169,11 +171,16 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 			annotationsTable.setColumnProperties(columns);
 			// textSelection.getOffset(), textSelection.getLength()
 			List matchingAnnotations = new ArrayList(0);
-			Iterator iterator = fTextEditor.getDocumentProvider().getAnnotationModel(fTextEditor.getEditorInput()).getAnnotationIterator();
-			while (iterator.hasNext()) {
-				Annotation element = (Annotation) iterator.next();
-				if (true) {
-					matchingAnnotations.add(element);
+			if (fTextEditor != null) {
+				IAnnotationModel annotationModel = fTextEditor.getDocumentProvider().getAnnotationModel(fTextEditor.getEditorInput());
+				if (annotationModel != null) {
+					Iterator iterator = annotationModel.getAnnotationIterator();
+					while (iterator.hasNext()) {
+						Annotation element = (Annotation) iterator.next();
+						if (true) {
+							matchingAnnotations.add(element);
+						}
+					}
 				}
 			}
 			annotationsTable.setInput(matchingAnnotations);
@@ -218,7 +225,7 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 			partitionTab.setText(SSEUIMessages.OffsetStatusLineContributionItem_2); //$NON-NLS-1$
 			Composite partitions = new Composite(tabfolder, SWT.NONE);
 			partitionTab.setControl(partitions);
-			createPartitionContents(partitions);
+			createPartitionTabContents(partitions);
 
 			// only create the ITextRegions tab for IStructuredDocuments
 			if (fDocument instanceof IStructuredDocument) {
@@ -227,14 +234,20 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 				SashForm regions = new SashForm(tabfolder, SWT.NONE);
 				regions.setOrientation(SWT.HORIZONTAL);
 				regionTab.setControl(regions);
-				createRegionsContents(regions);
+				createRegionTabContents(regions);
 			}
 
 			TabItem annotationsTab = new TabItem(tabfolder, SWT.BORDER);
 			annotationsTab.setText("Annotations"); //$NON-NLS-1$
 			Composite annotations = new Composite(tabfolder, SWT.NONE);
 			annotationsTab.setControl(annotations);
-			createAnnotationContents(annotations);
+			createAnnotationTabContents(annotations);
+
+			TabItem selectionTab = new TabItem(tabfolder, SWT.BORDER);
+			selectionTab.setText(SSEUIMessages.OffsetStatusLineContributionItem_14);
+			Composite selection = new Composite(tabfolder, SWT.NONE);
+			selectionTab.setControl(selection);
+			createSelectionTabContents(selection);
 
 			return composite;
 		}
@@ -242,7 +255,7 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 		/**
 		 * @param area
 		 */
-		private void createPartitionContents(Composite area) {
+		private void createPartitionTabContents(Composite area) {
 			area.setLayout(new GridLayout());
 			area.setLayoutData(new GridData());
 
@@ -401,11 +414,37 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 			partitioningCombo.setFocus();
 		}
 
+		private void createSelectionTabContents(Composite area) {
+			area.setLayout(new GridLayout());
+			area.setLayoutData(new GridData());
+
+			ISelection sel = fTextEditor.getSelectionProvider().getSelection();
+
+			Text typeName = new Text(area, SWT.WRAP);
+			typeName.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+			typeName.setText(sel.getClass().getName());
+			typeName.setBackground(area.getBackground());
+
+			(new Label(area, SWT.NONE)).setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+
+			ListViewer objectList = new ListViewer(area, SWT.SINGLE | SWT.BORDER);
+			objectList.setContentProvider(new ArrayContentProvider());
+			if (sel instanceof IStructuredSelection) {
+				Object[] toArray = ((IStructuredSelection) sel).toArray();
+				objectList.setInput(toArray);
+				typeName.setText(toArray.length + " objects in " + sel.getClass().getName());
+			}
+			else {
+				objectList.setInput(new Object[0]);
+			}
+			objectList.getControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		}
+
 		/**
 		 * @param composite
 		 * @return
 		 */
-		private Composite createRegionsContents(SashForm sashForm) {
+		private Composite createRegionTabContents(SashForm sashForm) {
 			ISelection sel = fTextEditor.getSelectionProvider().getSelection();
 			final ITextSelection textSelection = (ITextSelection) sel;
 			final List documentRegions = new ArrayList();
@@ -442,10 +481,10 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 						children.add(((ITextRegionCollection) parentElement).getRegions().toArray());
 					}
 					if (parentElement instanceof ITextRegion) {
-						children.add(new Pair(CONTEXT, ((ITextRegion) parentElement).getType()));
-						children.add(new Pair(START, Integer.toString(((ITextRegion) parentElement).getStart())));
-						children.add(new Pair(TEXTLENGTH, Integer.toString(((ITextRegion) parentElement).getTextLength())));
-						children.add(new Pair(LENGTH, Integer.toString(((ITextRegion) parentElement).getLength())));
+						children.add(new KeyValuePair(CONTEXT, ((ITextRegion) parentElement).getType()));
+						children.add(new KeyValuePair(START, Integer.toString(((ITextRegion) parentElement).getStart())));
+						children.add(new KeyValuePair(TEXTLENGTH, Integer.toString(((ITextRegion) parentElement).getTextLength())));
+						children.add(new KeyValuePair(LENGTH, Integer.toString(((ITextRegion) parentElement).getLength())));
 					}
 					if (parentElement instanceof ITextRegionList) {
 						children.add(Arrays.asList(((ITextRegionList) parentElement).toArray()));
@@ -473,7 +512,7 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 				}
 
 				public boolean hasChildren(Object element) {
-					return !(element instanceof Pair);
+					return !(element instanceof KeyValuePair);
 				}
 
 				public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
@@ -481,8 +520,8 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 			});
 			tree.setLabelProvider(new LabelProvider() {
 				public String getText(Object element) {
-					if (element instanceof Pair)
-						return ((Pair) element).fKey.toString().toLowerCase() + ": " + ((Pair) element).fValue; //$NON-NLS-1$
+					if (element instanceof KeyValuePair)
+						return ((KeyValuePair) element).fKey.toString().toLowerCase() + ": " + ((KeyValuePair) element).fValue; //$NON-NLS-1$
 					if (element instanceof IStructuredDocumentRegion) {
 						IStructuredDocumentRegion documentRegion = (IStructuredDocumentRegion) element;
 						int packageNameLength = documentRegion.getClass().getPackage().getName().length();
@@ -505,14 +544,16 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 				}
 			});
 			tree.setInput(fDocument);
+
+
 			final Text displayText = new Text(sashForm, SWT.V_SCROLL | SWT.H_SCROLL | SWT.READ_ONLY | SWT.BORDER);
 			displayText.setBackground(sashForm.getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
 			tree.addSelectionChangedListener(new ISelectionChangedListener() {
 				public void selectionChanged(SelectionChangedEvent event) {
 					if (event.getSelection() instanceof IStructuredSelection) {
 						Object o = ((IStructuredSelection) event.getSelection()).getFirstElement();
-						if (o instanceof Pair)
-							displayText.setText(((Pair) o).fValue.toString());
+						if (o instanceof KeyValuePair)
+							displayText.setText(((KeyValuePair) o).fValue.toString());
 						else if (o instanceof ITextSelection) {
 							ITextSelection text = (ITextSelection) o;
 							try {
@@ -521,6 +562,10 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 							catch (BadLocationException e) {
 								displayText.setText(""); //$NON-NLS-1$
 							}
+						}
+						else if (o instanceof ITextRegionCollection) {
+							ITextRegionCollection region = (ITextRegionCollection) o;
+							displayText.setText(region.getFullText());
 						}
 						else
 							displayText.setText("" + o); //$NON-NLS-1$
@@ -590,11 +635,11 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 		}
 	}
 
-	static class Pair {
+	static class KeyValuePair {
 		Object fKey;
 		String fValue;
 
-		public Pair(Object key, String value) {
+		public KeyValuePair(Object key, String value) {
 			fKey = key;
 			fValue = value;
 		}
