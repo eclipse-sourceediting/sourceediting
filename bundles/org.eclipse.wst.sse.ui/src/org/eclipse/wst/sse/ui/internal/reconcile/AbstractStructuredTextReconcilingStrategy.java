@@ -475,12 +475,4 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 			 fMarkerAnnotations = new HashSet();
 		return fMarkerAnnotations;
 	}
-
-//	public IReconcileStep getFirstStep() {
-//		return fFirstStep;
-//	}
-//
-//	public void setFirstStep(IReconcileStep firstStep) {
-//		fFirstStep = firstStep;
-//	}
 }

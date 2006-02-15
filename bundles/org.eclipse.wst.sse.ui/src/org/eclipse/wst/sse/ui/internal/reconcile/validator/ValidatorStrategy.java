@@ -32,7 +32,6 @@ import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.wst.sse.ui.internal.IReleasable;
 import org.eclipse.wst.sse.ui.internal.reconcile.DocumentAdapter;
 import org.eclipse.wst.sse.ui.internal.reconcile.ReconcileAnnotationKey;
-import org.eclipse.wst.sse.ui.internal.reconcile.StructuredReconcileStep;
 import org.eclipse.wst.sse.ui.internal.reconcile.StructuredTextReconcilingStrategy;
 import org.eclipse.wst.sse.ui.internal.reconcile.TemporaryAnnotation;
 import org.eclipse.wst.validation.internal.provisional.core.IValidator;
@@ -95,7 +94,11 @@ public class ValidatorStrategy extends StructuredTextReconcilingStrategy {
      * @return true if the strategy contains at least one ValidatorMetaData
      *          that says it can handle the partition type (for a given content type) 
      */
-	public boolean canValidatePartition(String partitionType) {
+    public final boolean canValidatePartition(String partitionType) {
+    	return canHandlePartition(partitionType);
+    }
+    
+	protected boolean canHandlePartition(String partitionType) {
 		ValidatorMetaData vmd = null;
 		for (int i = 0; i < fMetaData.size(); i++) {
 			vmd = (ValidatorMetaData) fMetaData.get(i);
@@ -105,18 +108,7 @@ public class ValidatorStrategy extends StructuredTextReconcilingStrategy {
 		return false;
 	}
 	
-	protected boolean canHandlePartition(String partition) {
-		return canValidatePartition(partition);
-	}
-
-	/*
-	 * so that removal will work properly
-	 * 
-	 * @see org.eclipse.wst.sse.ui.reconcile.AbstractStructuredTextReconcilingStrategy#containsStep(org.eclipse.jface.text.reconciler.IReconcileStep)
-	 */
-	protected boolean containsStep(IReconcileStep step) {
-		return step != null ? fVidToVStepMap.values().contains(step) : false;
-	}
+	
 
 	/**
 	 * @see org.eclipse.wst.sse.ui.internal.provisional.reconcile.AbstractStructuredTextReconcilingStrategy#createReconcileSteps()
@@ -132,22 +124,6 @@ public class ValidatorStrategy extends StructuredTextReconcilingStrategy {
 		return fContentTypeIds;
 	}
 
-	/*
-	 * so that removal will work properly
-	 * 
-	 * @see org.eclipse.wst.sse.ui.reconcile.AbstractStructuredTextReconcilingStrategy#getPartitionTypes()
-	 */
-	public String[] getPartitionTypes() {
-		List partitionTypes = new ArrayList();
-		Iterator keys = fVidToVStepMap.keySet().iterator();
-		String key = null;
-		while (keys.hasNext()) {
-			key = (String) keys.next();
-			StructuredReconcileStep step = (StructuredReconcileStep) fVidToVStepMap.get(key);
-			partitionTypes.addAll(Arrays.asList(step.getPartitionTypes()));
-		}
-		return (String[]) partitionTypes.toArray(new String[partitionTypes.size()]);
-	}
 	/**
 	 * @param tr Partition of the region to reconcile.
 	 * @param dr Dirty region representation of the typed region
@@ -163,7 +139,7 @@ public class ValidatorStrategy extends StructuredTextReconcilingStrategy {
 			return;
 			
 		String partitionType = tr.getType();
-		if (canValidatePartition(partitionType)) {
+		if (canHandlePartition(partitionType)) {
 			ValidatorMetaData vmd = null;
 
 			// IReconcileResult[]
@@ -228,7 +204,8 @@ public class ValidatorStrategy extends StructuredTextReconcilingStrategy {
 	 * 
 	 * @param partitionType
 	 * @return true if all validators associated with this 
-	 * 			parition type are total scope, otherwise return false
+	 * 			parition type are total scope (will validate the
+	 * 			entire document), otherwise return false
 	 */
 	public boolean allTotalScope(String partitionType) {
 		Iterator vmds = fMetaData.iterator();
