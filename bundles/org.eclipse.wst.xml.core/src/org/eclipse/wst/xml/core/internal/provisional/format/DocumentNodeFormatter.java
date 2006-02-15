@@ -8,6 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
+ *     Jesper Steen Møller - xml:space='preserve' support
  *     
  *******************************************************************************/
 package org.eclipse.wst.xml.core.internal.provisional.format;
@@ -35,6 +36,7 @@ public class DocumentNodeFormatter extends NodeFormatter {
 				String childIndent = lineIndent + singleIndent;
 				childFormatContraints.setCurrentIndent(childIndent);
 				childFormatContraints.setClearAllBlankLines(formatContraints.getClearAllBlankLines());
+				childFormatContraints.setInPreserveSpaceElement(formatContraints.getInPreserveSpaceElement());
 
 				// format each child
 				formatter.format(eachChildNode, childFormatContraints);

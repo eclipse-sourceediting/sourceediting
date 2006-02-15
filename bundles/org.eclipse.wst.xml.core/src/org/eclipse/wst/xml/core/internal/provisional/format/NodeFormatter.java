@@ -8,6 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
+ *     Jesper Steen Møller - xml:space='preserve' support
  *     
  *******************************************************************************/
 package org.eclipse.wst.xml.core.internal.provisional.format;
@@ -159,6 +160,8 @@ public class NodeFormatter implements IStructuredFormatter {
 	}
 
 	protected void formatIndentationAfterNode(IDOMNode node, IStructuredFormatContraints formatContraints) {
+		// [111674] If inside xml:space="preserve" element, we bail
+		if (formatContraints.getInPreserveSpaceElement()) return;
 		if (node != null) {
 			IDOMNode nextSibling = (IDOMNode) node.getNextSibling();
 			IStructuredDocument doc = node.getModel().getStructuredDocument();
@@ -239,6 +242,8 @@ public class NodeFormatter implements IStructuredFormatter {
 	}
 
 	protected void formatIndentationBeforeNode(IDOMNode node, IStructuredFormatContraints formatContraints) {
+		// [111674] If inside xml:space="preserve" element, we bail
+		if (formatContraints.getInPreserveSpaceElement()) return;
 		if (node != null) {
 			IDOMNode previousSibling = (IDOMNode) node.getPreviousSibling();
 			IStructuredDocument doc = node.getModel().getStructuredDocument();
@@ -322,6 +327,9 @@ public class NodeFormatter implements IStructuredFormatter {
 	 * needed anymore?
 	 */
 	protected void formatTrailingText(IDOMNode node, IStructuredFormatContraints formatContraints) {
+		// [111674] If inside xml:space="preserve" element, we bail
+		if (formatContraints.getInPreserveSpaceElement()) return;
+
 		String lineDelimiter = node.getModel().getStructuredDocument().getLineDelimiter();
 		String lineIndent = formatContraints.getCurrentIndent();
 		String parentLineIndent = getNodeIndent(node.getParentNode());

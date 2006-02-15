@@ -8,15 +8,16 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
+ *     Jesper Steen Møller - xml:space='preserve' support
  *     
  *******************************************************************************/
 package org.eclipse.wst.sse.core.internal.format;
 
 public class StructuredFormatContraints implements IStructuredFormatContraints {
-	protected int fAvailableLineWidth;
-	protected boolean fClearAllBlankLines;
-	protected String fCurrentIndent = ""; //$NON-NLS-1$
-	protected boolean fFormatWithSiblingIndent = false;
+	private boolean fClearAllBlankLines;
+	private String fCurrentIndent = ""; //$NON-NLS-1$
+	private boolean fFormatWithSiblingIndent = false;
+	private boolean fInPreserveSpaceElement = false;
 
 	public boolean getClearAllBlankLines() {
 		return fClearAllBlankLines;
@@ -40,5 +41,13 @@ public class StructuredFormatContraints implements IStructuredFormatContraints {
 
 	public void setFormatWithSiblingIndent(boolean formatWithSiblingIndent) {
 		fFormatWithSiblingIndent = formatWithSiblingIndent;
+	}
+
+	public boolean getInPreserveSpaceElement() {
+		return fInPreserveSpaceElement;
+	}
+
+	public void setInPreserveSpaceElement(boolean inPreserveSpaceElement) {
+		fInPreserveSpaceElement = inPreserveSpaceElement;		
 	}
 }

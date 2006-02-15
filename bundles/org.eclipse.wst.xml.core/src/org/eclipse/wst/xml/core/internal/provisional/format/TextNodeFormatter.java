@@ -8,6 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
+ *     Jesper Steen Møller - xml:space='preserve' support
  *     
  *******************************************************************************/
 package org.eclipse.wst.xml.core.internal.provisional.format;
@@ -26,6 +27,8 @@ import org.w3c.dom.Node;
 
 public class TextNodeFormatter extends NodeFormatter {
 	protected void formatNode(IDOMNode node, IStructuredFormatContraints formatContraints) {
+		// [111674] If inside xml:space="preserve" element, we bail
+		if (formatContraints.getInPreserveSpaceElement()) return;
 		if (node != null) {
 			IStructuredDocument doc = node.getModel().getStructuredDocument();
 			int line = doc.getLineOfOffset(node.getStartOffset());

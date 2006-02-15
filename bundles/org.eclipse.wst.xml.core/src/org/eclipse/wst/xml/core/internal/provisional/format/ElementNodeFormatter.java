@@ -8,6 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
+ *     Jesper Steen Møller - xml:space='preserve' support
  *     
  *******************************************************************************/
 package org.eclipse.wst.xml.core.internal.provisional.format;
@@ -22,6 +23,7 @@ import org.eclipse.wst.sse.core.internal.util.StringUtils;
 import org.eclipse.wst.xml.core.internal.Logger;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
 import org.eclipse.wst.xml.core.internal.document.AttrImpl;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
@@ -104,6 +106,7 @@ public class ElementNodeFormatter extends DocumentNodeFormatter {
 			int startTagStartOffset = node.getStartOffset();
 			IDOMModel structuredModel = node.getModel();
 
+			boolean currentlyInXmlSpacePreserve = formatContraints.getInPreserveSpaceElement();
 			formatStartTag(node, formatContraints);
 			// save new node
 			newNode = (IDOMNode) structuredModel.getIndexedRegion(startTagStartOffset);
@@ -125,6 +128,7 @@ public class ElementNodeFormatter extends DocumentNodeFormatter {
 				}
 			}
 
+			formatContraints.setInPreserveSpaceElement(currentlyInXmlSpacePreserve);
 			// format indentation after node
 			formatIndentationAfterNode(newNode, formatContraints);
 		}
@@ -165,6 +169,8 @@ public class ElementNodeFormatter extends DocumentNodeFormatter {
 			String lineDelimiter = node.getModel().getStructuredDocument().getLineDelimiter();
 			int attrLength = attributes.getLength();
 			int lastUndefinedRegionOffset = 0;
+			boolean sawXmlSpace = false;
+			
 			for (int i = 0; i < attrLength; i++) {
 				AttrImpl attr = (AttrImpl) attributes.item(i);
 				ITextRegion nameRegion = attr.getNameRegion();
@@ -179,27 +185,9 @@ public class ElementNodeFormatter extends DocumentNodeFormatter {
 				// check for xml:space attribute
 				if (flatNode.getText(nameRegion).compareTo(XML_SPACE) == 0) {
 					if (valueRegion == null) {
-						ModelQueryAdapter adapter = (ModelQueryAdapter) ((IDOMDocument) node.getOwnerDocument()).getAdapterFor(ModelQueryAdapter.class);
-						CMElementDeclaration elementDeclaration = (CMElementDeclaration) adapter.getModelQuery().getCMNode(node);
-						if (elementDeclaration == null)
-							// CMElementDeclaration not found, default to
-							// PRESERVE
-							formatContraints.setClearAllBlankLines(false);
-						else {
-							CMAttributeDeclaration attributeDeclaration = (CMAttributeDeclaration) elementDeclaration.getAttributes().getNamedItem(XML_SPACE);
-							if (attributeDeclaration == null)
-								// CMAttributeDeclaration not found, default
-								// to PRESERVE
-								formatContraints.setClearAllBlankLines(false);
-							else {
-								String defaultValue = attributeDeclaration.getAttrType().getImpliedValue();
-
-								if (defaultValue.compareTo(PRESERVE) == 0)
-									formatContraints.setClearAllBlankLines(false);
-								else
-									formatContraints.setClearAllBlankLines(getFormatPreferences().getClearAllBlankLines());
-							}
-						}
+						// [111674] If nothing has been written yet, treat as preserve, but only as hint
+						formatContraints.setInPreserveSpaceElement(true);
+						// Note we don't set 'sawXmlSpace', so that default or fixed DTD/XSD values may override.
 					}
 					else {
 						ISourceGenerator generator = node.getModel().getGenerator();
@@ -216,9 +204,10 @@ public class ElementNodeFormatter extends DocumentNodeFormatter {
 						}
 
 						if (newAttrValue.compareTo(PRESERVE_QUOTED) == 0)
-							formatContraints.setClearAllBlankLines(false);
+							formatContraints.setInPreserveSpaceElement(true);
 						else
-							formatContraints.setClearAllBlankLines(getFormatPreferences().getClearAllBlankLines());
+							formatContraints.setInPreserveSpaceElement(false);
+						sawXmlSpace = true;
 					}
 				}
 
@@ -338,7 +327,34 @@ public class ElementNodeFormatter extends DocumentNodeFormatter {
 				}
 			}
 
+			
 			replace(structuredDocument, offset, length, stringBuffer.toString());
+
+			// If we didn't see a xml:space attribute above, we'll look for one in the DTD.
+			// We do not check for a conflict between a DTD's 'fixed' value
+			// and the attribute value found in the instance document, we leave that to the validator.
+			if (! sawXmlSpace)
+			{
+				ModelQueryAdapter adapter = (ModelQueryAdapter) ((IDOMDocument) node.getOwnerDocument()).getAdapterFor(ModelQueryAdapter.class);
+				CMElementDeclaration elementDeclaration = (CMElementDeclaration) adapter.getModelQuery().getCMNode(node);
+				if (elementDeclaration != null)
+				{
+					CMNamedNodeMap cmAttributes = elementDeclaration.getAttributes();
+					// Check implied values from the DTD way.
+					CMAttributeDeclaration attributeDeclaration = (CMAttributeDeclaration) cmAttributes.getNamedItem(XML_SPACE);
+					if (attributeDeclaration != null)
+					{
+						// CMAttributeDeclaration found, check it out.
+						String defaultValue = attributeDeclaration.getAttrType().getImpliedValue();
+						
+						// xml:space="preserve" means preserve space, everything else means back to default.
+						if (defaultValue.compareTo(PRESERVE) == 0)
+							formatContraints.setInPreserveSpaceElement(true);
+						else
+							formatContraints.setInPreserveSpaceElement(false);
+					}
+				}
+			}
 		}
 	}
 

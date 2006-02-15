@@ -24,6 +24,8 @@ public interface IStructuredFormatContraints {
 
 	boolean getFormatWithSiblingIndent();
 
+	boolean getInPreserveSpaceElement();
+
 	/** 
 	 * some special elements can ignore clearing blank lines
 	 * */
@@ -32,4 +34,6 @@ public interface IStructuredFormatContraints {
 	void setCurrentIndent(String currentIndent);
 
 	void setFormatWithSiblingIndent(boolean formatWithSiblingIndent);
+	
+	void setInPreserveSpaceElement(boolean inPreserveSpaceElement);
 }
