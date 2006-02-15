@@ -184,16 +184,22 @@ public class DocumentRegionProcessor extends DirtyRegionProcessor implements IDo
 		// for regions handled by "total scope" strategies
 		HashMap totalScopeRegions = new HashMap();
 		HashMap partialScopeRegions = new HashMap();
+		List partialScopeRegionList = new ArrayList();
 		List allRegions = new ArrayList();
 		for (int i = 0; i < unfiltered.length; i++) {
 
 			String partitionType = unfiltered[i].getType();
 
 			// short circuit loop
-			if (totalScopeRegions.containsKey(partitionType) || partialScopeRegions.containsKey(partitionType))
+			if (totalScopeRegions.containsKey(partitionType))
 				continue;
-
-			s = getReconcilingStrategy(partitionType);
+			if(partialScopeRegions.containsKey(partitionType)) {
+				partialScopeRegionList.add(unfiltered[i]);
+				continue;
+			}
+			
+			// currently don't have any
+			// s = getReconcilingStrategy(partitionType);
 
 			// might be the validator strategy
 			if (s == null) {
@@ -204,19 +210,24 @@ public class DocumentRegionProcessor extends DirtyRegionProcessor implements IDo
 				}
 			}
 
-			if (s instanceof AbstractStructuredTextReconcilingStrategy) {
+			if (s instanceof ValidatorStrategy) {
 				// only allow one dirty region for a strategy
 				// that has "total scope"
-				if (((AbstractStructuredTextReconcilingStrategy) s).isTotalScope())
+				// if (((AbstractStructuredTextReconcilingStrategy) s).isTotalScope())
+				if(((ValidatorStrategy)s).allTotalScope(partitionType))
 					totalScopeRegions.put(partitionType, unfiltered[i]);
-				else
+				else {
 					partialScopeRegions.put(partitionType, unfiltered[i]);
+					partialScopeRegionList.add(unfiltered[i]);
+				}
 			}
-			else
+			else {
 				partialScopeRegions.put(partitionType, unfiltered[i]);
+				partialScopeRegionList.add(unfiltered[i]);
+			}
 		}
 		allRegions.addAll(totalScopeRegions.values());
-		allRegions.addAll(partialScopeRegions.values());
+		allRegions.addAll(partialScopeRegionList);
 		ITypedRegion[] filtered = (ITypedRegion[]) allRegions.toArray(new ITypedRegion[allRegions.size()]);
 
 		if (DEBUG)
@@ -328,7 +339,14 @@ public class DocumentRegionProcessor extends DirtyRegionProcessor implements IDo
 	 */
 	private boolean partitionsChanged(DocumentEvent event) {
 		boolean changed = false;
-		String[] newPartitions = getPartitions(event.getOffset(), event.getLength());
+		int length = event.getLength();
+		
+		if(event.getLength() == 0 && event.getText().length() > 0) {
+			// it's an insert, we want partitions of the new text
+			length = event.getText().length();
+		}
+			
+		String[] newPartitions = getPartitions(event.getOffset(), length);
 		if(fLastPartitions != null) {
 			if(fLastPartitions.length != newPartitions.length) {
 				changed = true;

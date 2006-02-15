@@ -200,7 +200,10 @@ public class ValidatorMetaData {
 		e.printStackTrace();
 		result[0] = null;
 	}
-
+	/**
+	 * ReconcileAnnotationKey.TOTAL or  ReconcileAnnotationKey.PARTIAL
+	 * @return
+	 */
     public int getValidatorScope() {
         return fScope.equalsIgnoreCase("total") ? ReconcileAnnotationKey.TOTAL : ReconcileAnnotationKey.PARTIAL; //$NON-NLS-1$
     }

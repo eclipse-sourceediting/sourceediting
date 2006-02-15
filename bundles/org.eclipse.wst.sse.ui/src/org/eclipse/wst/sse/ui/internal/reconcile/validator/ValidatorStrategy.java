@@ -31,6 +31,7 @@ import org.eclipse.jface.text.reconciler.IReconcileStep;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.wst.sse.ui.internal.IReleasable;
 import org.eclipse.wst.sse.ui.internal.reconcile.DocumentAdapter;
+import org.eclipse.wst.sse.ui.internal.reconcile.ReconcileAnnotationKey;
 import org.eclipse.wst.sse.ui.internal.reconcile.StructuredReconcileStep;
 import org.eclipse.wst.sse.ui.internal.reconcile.StructuredTextReconcilingStrategy;
 import org.eclipse.wst.sse.ui.internal.reconcile.TemporaryAnnotation;
@@ -123,7 +124,10 @@ public class ValidatorStrategy extends StructuredTextReconcilingStrategy {
 	public void createReconcileSteps() {
 		// do nothing, steps are created
 	}
-
+	/**
+	 * All content types on which this ValidatorStrategy can run
+	 * @return
+	 */
 	public String[] getContentTypeIds() {
 		return fContentTypeIds;
 	}
@@ -219,6 +223,23 @@ public class ValidatorStrategy extends StructuredTextReconcilingStrategy {
 			if(step instanceof IReleasable)
 				((IReleasable)step).release();
 		}
+	}
+	/**
+	 * 
+	 * @param partitionType
+	 * @return true if all validators associated with this 
+	 * 			parition type are total scope, otherwise return false
+	 */
+	public boolean allTotalScope(String partitionType) {
+		Iterator vmds = fMetaData.iterator();
+		while(vmds.hasNext()) {
+			ValidatorMetaData vmd = (ValidatorMetaData)vmds.next();
+			if(vmd.canHandleParitionType(getContentTypeIds(), partitionType)) {
+				if(vmd.getValidatorScope() ==  ReconcileAnnotationKey.PARTIAL)
+					return false;
+			}
+		}
+		return true;
 	}
 	
 	public boolean isTotalScope() {
