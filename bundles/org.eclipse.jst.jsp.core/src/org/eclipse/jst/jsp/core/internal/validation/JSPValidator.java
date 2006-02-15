@@ -19,16 +19,19 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.core.runtime.content.IContentType;
+import org.eclipse.jst.jsp.core.internal.JSPCoreMessages;
 import org.eclipse.jst.jsp.core.internal.JSPCorePlugin;
 import org.eclipse.jst.jsp.core.internal.preferences.JSPCorePreferenceNames;
 import org.eclipse.jst.jsp.core.internal.provisional.contenttype.ContentTypeIdForJSP;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.validation.internal.core.Message;
 import org.eclipse.wst.validation.internal.core.ValidationException;
 import org.eclipse.wst.validation.internal.operations.IWorkbenchContext;
+import org.eclipse.wst.validation.internal.provisional.core.IMessage;
 import org.eclipse.wst.validation.internal.provisional.core.IReporter;
 import org.eclipse.wst.validation.internal.provisional.core.IValidationContext;
 import org.eclipse.wst.validation.internal.provisional.core.IValidator;
@@ -139,8 +142,13 @@ public class JSPValidator implements IValidator {
 			for (int i = 0; i < uris.length && !reporter.isCancelled(); i++) {
 				currentFile = wsRoot.getFile(new Path(uris[i]));
 				if (currentFile != null && currentFile.exists()) {
-					if(shouldValidate(currentFile) && shouldValidate2(currentFile))
+					if(shouldValidate(currentFile) && shouldValidate2(currentFile)) {
+
+					    Message message = new LocalizedMessage(IMessage.LOW_SEVERITY, NLS.bind(JSPCoreMessages.MESSAGE_JSP_VALIDATING_MESSAGE_UI_, new String[]{currentFile.getFullPath().toString()}));
+					    reporter.displaySubtask(this, message);
+					    
 						validateFile(currentFile, reporter);
+					}
 					if (DEBUG)
 						System.out.println("validating: [" + uris[i] + "]"); //$NON-NLS-1$ //$NON-NLS-2$
 				}
@@ -163,8 +171,13 @@ public class JSPValidator implements IValidator {
 				}
 				IFile[] files = visitor.getFiles();
 				for (int i = 0; i < files.length && !reporter.isCancelled(); i++) {
-					if(shouldValidate(files[i]) && shouldValidate2(files[i]))
+					if(shouldValidate(files[i]) && shouldValidate2(files[i])) {
+						
+					    Message message = new LocalizedMessage(IMessage.LOW_SEVERITY, NLS.bind(JSPCoreMessages.MESSAGE_JSP_VALIDATING_MESSAGE_UI_, new String[]{files[i].getFullPath().toString()}));
+					    reporter.displaySubtask(this, message);
+					    
 						validateFile(files[i], reporter);
+					}
 					if (DEBUG)
 						System.out.println("validating: [" + files[i] + "]"); //$NON-NLS-1$ //$NON-NLS-2$
 				}
