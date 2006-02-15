@@ -192,4 +192,9 @@ public class DelegateConfigurationElement implements IConfigurationElement {
 		return delegateElement.toString();
 	}
 
+	public IConfigurationElement toEquinox() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
