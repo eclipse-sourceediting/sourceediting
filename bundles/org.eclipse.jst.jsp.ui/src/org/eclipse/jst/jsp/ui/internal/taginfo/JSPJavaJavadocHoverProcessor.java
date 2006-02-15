@@ -102,7 +102,7 @@ public class JSPJavaJavadocHoverProcessor extends AbstractHoverProcessor {
 					JSPTranslation translation = adapter.getJSPTranslation();
 					
 					IJavaElement[] result = translation.getElementsFromJspRange(hoverRegion.getOffset(), hoverRegion.getOffset() + hoverRegion.getLength());
-					return translation.fixupDisplayString(getHoverInfo(result));
+					return translation.fixupMangledName(getHoverInfo(result));
 				}
 			}
 		}

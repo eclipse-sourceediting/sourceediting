@@ -368,7 +368,10 @@ public class JSPTranslation implements IJSPTranslation {
 	 * @param displayString
 	 * @return
 	 */
-	public String fixupDisplayString(String displayString) {
+	public String fixupMangledName(String displayString) {
+		
+		if(displayString == null)
+			return null;
 		
 		if(getJspName() == null || getMangledName() == null) {
 			// names not set yet

@@ -119,7 +119,7 @@ public class JSPProposalCollector extends CompletionProposalCollector {
 		proposal.getDeclarationSignature();
 		Image image = javaProposal.getImage();
 		String displayString = javaProposal.getDisplayString();
-		displayString = getTranslation().fixupDisplayString(displayString);
+		displayString = getTranslation().fixupMangledName(displayString);
 		IContextInformation contextInformation = javaProposal.getContextInformation();
 		String additionalInfo = javaProposal.getAdditionalProposalInfo();
 		int relevance = javaProposal.getRelevance();
@@ -149,7 +149,7 @@ public class JSPProposalCollector extends CompletionProposalCollector {
 		proposal.getDeclarationSignature();
 		Image image = javaProposal.getImage();
 		String displayString = javaProposal.getDisplayString();
-		displayString = getTranslation().fixupDisplayString(displayString);
+		displayString = getTranslation().fixupMangledName(displayString);
 		IContextInformation contextInformation = javaProposal.getContextInformation();
 		String additionalInfo = javaProposal.getAdditionalProposalInfo();
 		int relevance = javaProposal.getRelevance();
