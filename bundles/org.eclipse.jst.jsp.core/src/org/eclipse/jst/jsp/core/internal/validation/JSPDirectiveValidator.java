@@ -128,6 +128,9 @@ public class JSPDirectiveValidator extends JSPValidator implements ISourceValida
 		if (getDirectiveName(sdRegion).equals("taglib")) { //$NON-NLS-1$
 
 			ITextRegion valueRegion = getAttributeValueRegion(sdRegion, JSP11Namespace.ATTR_NAME_PREFIX);
+			if(valueRegion == null)
+				return;
+			
 			String taglibPrefix = sdRegion.getText(valueRegion);
 			int start = sdRegion.getStartOffset(valueRegion);
 			// length before stripquotes
