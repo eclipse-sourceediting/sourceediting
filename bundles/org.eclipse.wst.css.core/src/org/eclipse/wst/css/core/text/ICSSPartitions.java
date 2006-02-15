@@ -1,6 +1,5 @@
 package org.eclipse.wst.css.core.text;
 
-import org.eclipse.wst.sse.core.text.IStructuredPartitions;
 
 /**
  * This interface is not intended to be implemented. It defines the
@@ -9,7 +8,7 @@ import org.eclipse.wst.sse.core.text.IStructuredPartitions;
  * 
  * @since 1.1
  */
-public interface ICSSPartitions extends IStructuredPartitions {
+public interface ICSSPartitions {
 
 	String STYLE = "org.eclipse.wst.css.STYLE"; //$NON-NLS-1$
 }
