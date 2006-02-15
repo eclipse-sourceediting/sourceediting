@@ -19,6 +19,7 @@ import org.eclipse.wst.xml.core.tests.document.TestStructuredDocument;
 import org.eclipse.wst.xml.core.tests.document.TestXMLDocumentLoader;
 import org.eclipse.wst.xml.core.tests.document.TransitionTests;
 import org.eclipse.wst.xml.core.tests.dom.NameValidatorTests;
+import org.eclipse.wst.xml.core.tests.format.TestFormatProcessorXML;
 import org.eclipse.wst.xml.core.tests.model.TestModelManager;
 import org.eclipse.wst.xml.core.tests.model.TestModelsFromFiles;
 import org.eclipse.wst.xml.core.tests.model.TestStructuredModel;
@@ -48,5 +49,7 @@ public class SSEModelXMLTestSuite extends TestSuite {
 		addTest(new TestSuite(TestCatalogRetrivalAndModelCreation.class));
 		
 		addTest(new TestSuite(GetDocumentRegionsTest.class));
+
+		addTest(new TestSuite(TestFormatProcessorXML.class));
 	}
 }
