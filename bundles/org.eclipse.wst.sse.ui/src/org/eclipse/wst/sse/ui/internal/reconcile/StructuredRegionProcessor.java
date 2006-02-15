@@ -44,31 +44,24 @@ public class StructuredRegionProcessor extends DocumentRegionProcessor implement
 		IStructuredModel sModel = StructuredModelManager.getModelManager().getExistingModelForRead(getDocument());
 		try {
 			if(sModel != null) {
+				
 				int start = dirtyRegion.getOffset();
-				int end = start;
-				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=104815
-				// this logic is wrong, could be a self closing tag
-				// need to get document element, but sse doesn't know about DOM
-				IDocument doc = getDocument();
-				if(dirtyRegion.getLength() == doc.getLength()) {
-					end = dirtyRegion.getLength();
-				}
-				else {
-					IndexedRegion ir = sModel.getIndexedRegion(start);
-					if(ir != null) 
-						end = ir.getEndOffset();
-				}
+				IndexedRegion ir = sModel.getIndexedRegion(start);
 				
-				ITypedRegion[] unfiltered = computePartitioning(start, end);
-				// remove duplicate typed regions (partitions)
-				// that are handled by the same "total scope" strategy
-				ITypedRegion[] filtered = filterTotalScopeRegions(unfiltered);
-				
-				// iterate dirty partitions
-				for (int i = 0; i < filtered.length; i++) {
-					process(filtered[i]);
+				if(ir != null) {
+					
+					int end = ir.getEndOffset();
+					
+					ITypedRegion[] unfiltered = computePartitioning(start, end);
+					// remove duplicate typed regions (partitions)
+					// that are handled by the same "total scope" strategy
+					ITypedRegion[] filtered = filterTotalScopeRegions(unfiltered);
+					
+					// iterate dirty partitions
+					for (int i = 0; i < filtered.length; i++) {
+						process(filtered[i]);
+					}
 				}
-			
 			}
 		}
 		finally {
