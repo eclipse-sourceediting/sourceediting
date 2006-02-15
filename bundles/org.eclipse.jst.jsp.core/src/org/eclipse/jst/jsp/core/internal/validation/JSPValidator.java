@@ -213,7 +213,7 @@ public class JSPValidator implements IValidator {
 			ITextRegion subRegion = subRegions.get(i);
 			if(subRegion.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME && sdr.getText(subRegion).equals(attrName)) {
 				
-				for(int j=i+1; i<subRegions.size(); j++) {
+				for(int j=i; j<subRegions.size(); j++) {
 					subRegion = subRegions.get(j);
 					if(subRegion.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
 						valueRegion = subRegion;
