@@ -19,39 +19,28 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.core.runtime.content.IContentType;
-import org.eclipse.jdt.core.compiler.IProblem;
-import org.eclipse.jface.text.IDocument;
-import org.eclipse.jst.jsp.core.internal.JSPCoreMessages;
 import org.eclipse.jst.jsp.core.internal.JSPCorePlugin;
-import org.eclipse.jst.jsp.core.internal.java.IJSPTranslation;
-import org.eclipse.jst.jsp.core.internal.java.JSPTranslation;
-import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapter;
-import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapterFactory;
-import org.eclipse.jst.jsp.core.internal.java.JSPTranslationExtension;
 import org.eclipse.jst.jsp.core.internal.preferences.JSPCorePreferenceNames;
 import org.eclipse.jst.jsp.core.internal.provisional.contenttype.ContentTypeIdForJSP;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
-import org.eclipse.osgi.util.NLS;
-import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
-import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.validation.internal.core.Message;
 import org.eclipse.wst.validation.internal.core.ValidationException;
 import org.eclipse.wst.validation.internal.operations.IWorkbenchContext;
-import org.eclipse.wst.validation.internal.provisional.core.IMessage;
 import org.eclipse.wst.validation.internal.provisional.core.IReporter;
 import org.eclipse.wst.validation.internal.provisional.core.IValidationContext;
 import org.eclipse.wst.validation.internal.provisional.core.IValidator;
-import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
-import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
+/**
+ * Performs some common JSP validation tasks
+ */
 public class JSPValidator implements IValidator {
 
-	static private class LocalizedMessage extends Message {
+	protected class LocalizedMessage extends Message {
+
 		private String _message = null;
 
 		public LocalizedMessage(int severity, String messageText) {
@@ -93,26 +82,7 @@ public class JSPValidator implements IValidator {
 		}
 	}
 
-	static boolean shouldValidate(IFile file) {
-		IResource resource = file;
-		do {
-			if (resource.isDerived() || resource.isTeamPrivateMember() || !resource.isAccessible() || resource.getName().charAt(0) == '.') {
-				return false;
-			}
-			resource = resource.getParent();
-		}
-		while ((resource.getType() & IResource.PROJECT) == 0);
-		return true;
-	}
-
-	// for debugging
-	static final boolean DEBUG;
-	static {
-		String value = Platform.getDebugOption("org.eclipse.jst.jsp.core/debug/jspvalidator"); //$NON-NLS-1$
-		DEBUG = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
-	}
-
-	private class JSPFileVisitor implements IResourceProxyVisitor {
+	protected class JSPFileVisitor implements IResourceProxyVisitor {
 
 		private List fFiles = new ArrayList();
 		private IContentType fContentTypeJSP = null;
@@ -169,7 +139,8 @@ public class JSPValidator implements IValidator {
 			for (int i = 0; i < uris.length && !reporter.isCancelled(); i++) {
 				currentFile = wsRoot.getFile(new Path(uris[i]));
 				if (currentFile != null && currentFile.exists()) {
-					validateFile(currentFile, reporter);
+					if(shouldValidate(currentFile) && shouldValidate2(currentFile))
+						validateFile(currentFile, reporter);
 					if (DEBUG)
 						System.out.println("validating: [" + uris[i] + "]"); //$NON-NLS-1$ //$NON-NLS-2$
 				}
@@ -192,7 +163,8 @@ public class JSPValidator implements IValidator {
 				}
 				IFile[] files = visitor.getFiles();
 				for (int i = 0; i < files.length && !reporter.isCancelled(); i++) {
-					validateFile(files[i], reporter);
+					if(shouldValidate(files[i]) && shouldValidate2(files[i]))
+						validateFile(files[i], reporter);
 					if (DEBUG)
 						System.out.println("validating: [" + files[i] + "]"); //$NON-NLS-1$ //$NON-NLS-2$
 				}
@@ -206,126 +178,8 @@ public class JSPValidator implements IValidator {
 	 * @param f
 	 * @param reporter
 	 */
-	private void validateFile(IFile f, IReporter reporter) {
-		if (!shouldValidate(f)) {
-			return;
-		}
-		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=87351
-		if (!shouldValidate2(f)) {
-			return;
-		}
-
-	    Message message = new LocalizedMessage(IMessage.LOW_SEVERITY, NLS.bind(JSPCoreMessages.MESSAGE_JSP_VALIDATING_MESSAGE_UI_, new String[]{f.getFullPath().toString()}));
-	    reporter.displaySubtask(this, message);
-		
-		IDOMModel model = null;
-		try {
-			// get jsp model, get tranlsation
-			model = (IDOMModel) StructuredModelManager.getModelManager().getModelForRead(f);
-			if (model != null) {
-
-				setupAdapterFactory(model);
-				IDOMDocument xmlDoc = model.getDocument();
-				JSPTranslationAdapter translationAdapter = (JSPTranslationAdapter) xmlDoc.getAdapterFor(IJSPTranslation.class);
-				JSPTranslation translation = translationAdapter.getJSPTranslation();
-
-				translation.setProblemCollectingActive(true);
-				translation.reconcileCompilationUnit();
-				List problems = translation.getProblems();
-				// remove old messages
-				reporter.removeAllMessages(this, f);
-				// add new messages
-				for (int i = 0; i < problems.size() && !reporter.isCancelled(); i++) {
-					IMessage m = createMessageFromProblem((IProblem) problems.get(i), f, translation, model.getStructuredDocument());
-					if (m != null)
-						reporter.addMessage(this, m);
-				}
-			}
-		}
-		catch (IOException e) {
-			if (DEBUG)
-				e.printStackTrace();
-		}
-		catch (CoreException e) {
-			if (DEBUG)
-				e.printStackTrace();
-		}
-		finally {
-			if (model != null)
-				model.releaseFromRead();
-		}
-	}
-
-	/**
-	 * Creates an IMessage from an IProblem
-	 * 
-	 * @param problem
-	 * @param f
-	 * @param translation
-	 * @param structuredDoc
-	 * @return message representation of the problem, or null if it could not
-	 *         create one
-	 */
-	private IMessage createMessageFromProblem(IProblem problem, IFile f, JSPTranslation translation, IStructuredDocument structuredDoc) {
-
-		int sourceStart = translation.getJspOffset(problem.getSourceStart());
-		int sourceEnd = translation.getJspOffset(problem.getSourceEnd());
-		if (sourceStart == -1)
-			return null;
-		
-		// line number for marker starts @ 1
-		// line number from document starts @ 0
-		int lineNo = structuredDoc.getLineOfOffset(sourceStart) + 1;
-
-		int sev = problem.isError() ? IMessage.HIGH_SEVERITY : IMessage.NORMAL_SEVERITY;
-
-		IMessage m = new LocalizedMessage(sev, problem.getMessage(), f);
-
-		m.setLineNo(lineNo);
-		m.setOffset(sourceStart);
-		m.setLength(sourceEnd - sourceStart + 1);
-
-		// need additional adjustment for problems from
-		// indirect (included) files
-		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=119633
-		if(translation.isIndirect(problem.getSourceStart())) {
-			adjustIndirectPosition(m, translation);
-		}
-		
-		return m;
-	}
-
-	/**
-	 * Assumed the message offset is an indirect position.
-	 * In other words, an error from an included file.
-	 * 
-	 * @param m
-	 * @param translation
-	 */
-	private void adjustIndirectPosition(IMessage m, JSPTranslation translation) {
-		
-		if(!(translation instanceof JSPTranslationExtension))
-			return;
-		
-		IDocument jspDoc = ((JSPTranslationExtension)translation).getJspDocument();
-		if(!(jspDoc instanceof IStructuredDocument))
-			return;
-		
-		IStructuredDocument sDoc = (IStructuredDocument)jspDoc;
-		IStructuredDocumentRegion[] regions = sDoc.getStructuredDocumentRegions(0, m.getOffset() + m.getLength());
-		// iterate backwards until you hit the include directive
-		for(int i=regions.length-1; i>=0; i--) {
-			
-			IStructuredDocumentRegion region = regions[i];
-			if(region.getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_NAME) {
-				if(getDirectiveName(region).equals("include")) { //$NON-NLS-1$
-					ITextRegion fileValueRegion = getAttributeValueRegion(region, "file"); //$NON-NLS-1$
-					m.setOffset(region.getStartOffset(fileValueRegion));
-					m.setLength(fileValueRegion.getTextLength());
-					break;
-				}
-			}
-		}
+	protected void validateFile(IFile f, IReporter reporter) {
+		// subclasses should implement (for batch validation)
 	}
 	
 	/**
@@ -333,7 +187,7 @@ public class JSPValidator implements IValidator {
 	 * @param sdr
 	 * @return the jsp directive name
 	 */
-	private String getDirectiveName(IStructuredDocumentRegion sdr) {
+	protected String getDirectiveName(IStructuredDocumentRegion sdr) {
 		String name = "";
 		ITextRegionList subRegions = sdr.getRegions();
 		for (int j = 0; j < subRegions.size(); j++) {
@@ -352,7 +206,7 @@ public class JSPValidator implements IValidator {
 	 * @param attrName
 	 * @return the ITextRegion for the attribute value of the given attribute name
 	 */
-	private ITextRegion getAttributeValueRegion(IStructuredDocumentRegion sdr, String attrName) {
+	protected ITextRegion getAttributeValueRegion(IStructuredDocumentRegion sdr, String attrName) {
 		ITextRegion valueRegion = null;
 		ITextRegionList subRegions = sdr.getRegions();
 		for (int i = 0; i < subRegions.size(); i++) {
@@ -371,16 +225,12 @@ public class JSPValidator implements IValidator {
 		}
 		return valueRegion;
 	}
-
-	/**
-	 * When loading model from a file, you need to explicitly add adapter
-	 * factory.
-	 * 
-	 * @param sm
-	 */
-	private void setupAdapterFactory(IStructuredModel sm) {
-		JSPTranslationAdapterFactory factory = new JSPTranslationAdapterFactory();
-		sm.getFactoryRegistry().addFactory(factory);
+	
+	protected String getAttributeValue(IStructuredDocumentRegion sdr, String attrName) {
+		ITextRegion r = getAttributeValueRegion(sdr, attrName);
+		if(r != null)
+			return sdr.getText(r).trim();
+		return "";
 	}
 
 	/**
@@ -428,7 +278,26 @@ public class JSPValidator implements IValidator {
 		}
 		return isFragment;
 	}
+	
+	private boolean shouldValidate(IFile file) {
+		IResource resource = file;
+		do {
+			if (resource.isDerived() || resource.isTeamPrivateMember() || !resource.isAccessible() || resource.getName().charAt(0) == '.') {
+				return false;
+			}
+			resource = resource.getParent();
+		}
+		while ((resource.getType() & IResource.PROJECT) == 0);
+		return true;
+	}
 
+	// for debugging
+	static final boolean DEBUG;
+	static {
+		String value = Platform.getDebugOption("org.eclipse.jst.jsp.core/debug/jspvalidator"); //$NON-NLS-1$
+		DEBUG = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
+	}
+	
 	/**
 	 * Performs extra checks on the file to see if file should really be
 	 * validated.
@@ -438,7 +307,7 @@ public class JSPValidator implements IValidator {
 	 *            should not be null and does exist
 	 * @return true if should validate file, false otherwise
 	 */
-	private boolean shouldValidate2(IFile file) {
+	 private boolean shouldValidate2(IFile file) {
 		// get preference for validate jsp fragments
 		boolean shouldValidate = Platform.getPreferencesService().getBoolean(JSPCorePlugin.getDefault().getBundle().getSymbolicName(), JSPCorePreferenceNames.VALIDATE_FRAGMENTS, true, null);
 
