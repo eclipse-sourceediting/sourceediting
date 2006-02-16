@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.common.command.BasicCommandStack;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.command.CommandStackListener;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
@@ -251,6 +252,19 @@ public class XSDEditor extends XSDMultiPageEditorPart implements ITabbedProperty
 			else if (object instanceof CategoryAdapter) {
 				node = ((CategoryAdapter) object).getXSDSchema().getElement();
 			}
+            else if (object instanceof String) {
+
+              // The string is expected to be a URI fragment use to identify an XSD component. 
+              // The URI fragment should be relative to the schema being edited in this editor.
+              
+              String uriFragment = (String)object;
+              XSDSchema schema = getXSDSchema();
+              EObject eObject = schema.eResource().getEObject(uriFragment);
+              
+              if (eObject != null) {
+                node = ((XSDComponent)eObject).getElement();
+              }
+            }
 
 			// the text editor can only accept sed nodes!
 			//

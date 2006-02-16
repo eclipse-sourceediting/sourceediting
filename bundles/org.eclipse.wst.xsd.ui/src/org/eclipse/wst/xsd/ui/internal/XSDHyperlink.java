@@ -9,6 +9,7 @@
  *     IBM Corporation - Initial API and implementation
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *******************************************************************************/
+
 package org.eclipse.wst.xsd.ui.internal;
 
 import org.eclipse.core.resources.IFile;
@@ -25,62 +26,79 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
 import org.eclipse.xsd.XSDConcreteComponent;
+import org.eclipse.xsd.XSDSchema;
 
 /**
- * WSDL Hyperlink that knows how to open links from wsdl files
+ * XSDHyperlink knows how to open links from XSD files.
+ * 
+ * @see XSDHyperlinkDetector
  */
-public class XSDHyperlink implements IHyperlink {
-	private IRegion fRegion;
-	private XSDConcreteComponent fComponent;
+public class XSDHyperlink implements IHyperlink
+{
+  private IRegion fRegion;
+  private XSDConcreteComponent fComponent;
 
-	public XSDHyperlink(IRegion region, XSDConcreteComponent component) {
-		fRegion = region;
-		fComponent = component;
-	}
+  public XSDHyperlink(IRegion region, XSDConcreteComponent component)
+  {
+    fRegion = region;
+    fComponent = component;
+  }
 
-	public IRegion getHyperlinkRegion() {
-		return fRegion;
-	}
+  public IRegion getHyperlinkRegion()
+  {
+    return fRegion;
+  }
 
-	public String getTypeLabel() {
-		return null;
-	}
+  public String getTypeLabel()
+  {
+    return null;
+  }
 
-	public String getHyperlinkText() {
-		return null;
-	}
+  public String getHyperlinkText()
+  {
+    return null;
+  }
 
-	public void open() {
-		// if hyperlink points to schema already in editor, select the correct
-		// node
-		// if (fComponent.getRootContainer().equals(xsdSchema)) {
-		// Node element = fComponent.getElement();
-		// if (element instanceof IndexedRegion) {
-		// IndexedRegion indexNode = (IndexedRegion) element;
-		// textEditor.getTextViewer().setRangeIndication(indexNode.getStartOffset(),
-		// indexNode.getEndOffset() - indexNode.getStartOffset(), true);
-		// }
-		// }
-		// else {
-		if (fComponent.getSchema() != null) {
-			String schemaLocation = URIHelper.removePlatformResourceProtocol(fComponent.getSchema().getSchemaLocation());
-			IPath schemaPath = new Path(schemaLocation);
-			IFile schemaFile = ResourcesPlugin.getWorkspace().getRoot().getFile(schemaPath);
-			if (schemaFile != null && schemaFile.exists()) {
-				IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-				if (workbenchWindow != null) {
-					IWorkbenchPage page = workbenchWindow.getActivePage();
-					try {
-						IEditorPart editorPart = IDE.openEditor(page, schemaFile, true);
-						if (editorPart instanceof XSDEditor) {
-							((XSDEditor) editorPart).openOnGlobalReference(fComponent);
-						}
-					}
-					catch (PartInitException pie) {
-						Logger.log(Logger.WARNING_DEBUG, pie.getMessage(), pie);
-					}
-				}
-			}
-		}
-	}
+  public void open()
+  {
+    XSDSchema schema = fComponent.getSchema();
+
+    if (schema == null)
+    {
+      return;
+    }
+
+    String schemaLocation = schema.getSchemaLocation();
+    schemaLocation = URIHelper.removePlatformResourceProtocol(schemaLocation);
+    IPath schemaPath = new Path(schemaLocation);
+    IFile schemaFile = ResourcesPlugin.getWorkspace().getRoot().getFile(schemaPath);
+
+    boolean fileExists = schemaFile != null && schemaFile.exists();
+
+    if (!fileExists)
+    {
+      return;
+    }
+    IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+    if (workbenchWindow != null)
+    {
+      IWorkbenchPage workbenchPage = workbenchWindow.getActivePage();
+      IEditorPart editorPart = workbenchPage.getActiveEditor();
+      
+      workbenchPage.getNavigationHistory().markLocation(editorPart);
+      
+      try
+      {
+        editorPart = IDE.openEditor(workbenchPage, schemaFile, true);
+        if (editorPart instanceof XSDEditor)
+        {
+          ((XSDEditor) editorPart).openOnGlobalReference(fComponent);
+        }
+      }
+      catch (PartInitException pie)
+      {
+        Logger.log(Logger.WARNING_DEBUG, pie.getMessage(), pie);
+      }
+    }
+  }
 }

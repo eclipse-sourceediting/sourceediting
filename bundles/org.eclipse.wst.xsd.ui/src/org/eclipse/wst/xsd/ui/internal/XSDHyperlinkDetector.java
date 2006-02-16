@@ -9,22 +9,19 @@
  *     IBM Corporation - Initial API and implementation
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *******************************************************************************/
+
 package org.eclipse.wst.xsd.ui.internal;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
-import org.eclipse.jface.text.ITextViewer;
-import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
-import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
-import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xsd.ui.internal.text.XSDModelAdapter;
 import org.eclipse.xsd.XSDAttributeDeclaration;
 import org.eclipse.xsd.XSDAttributeGroupDefinition;
@@ -41,211 +38,242 @@ import org.w3c.dom.Attr;
 import org.w3c.dom.Node;
 
 /**
- * Detects hyperlinks for XSD files
+ * Detects hyperlinks for XSD files. Used by the XSD text editor to provide a
+ * "Go to declaration" functionality similar with the one provided by the Java
+ * editor.
  */
-public class XSDHyperlinkDetector implements IHyperlinkDetector {
-	/**
-	 * Gets the xsd schema from document
-	 * 
-	 * @param document
-	 * @return XSDSchema or null of one does not exist yet for document
-	 */
-	private XSDSchema getXSDSchema(IDocument document) {
-		XSDSchema schema = null;
-		IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForRead(document);
-		if (model != null) {
-			try {
-				if (model instanceof IDOMModel) {
-					IDOMDocument domDoc = ((IDOMModel) model).getDocument();
-					if (domDoc != null) {
-						XSDModelAdapter modelAdapter = (XSDModelAdapter) domDoc.getExistingAdapter(XSDModelAdapter.class);
-						/*
-						 * ISSUE: Didn't want to go through initializing
-						 * schema if it does not already exist, so just
-						 * attempted to get existing adapter. If doesn't
-						 * exist, just don't bother working.
-						 */
-						if (modelAdapter != null)
-							schema = modelAdapter.getSchema();
-					}
-				}
-			}
-			finally {
-				model.releaseFromRead();
-			}
-		}
-		return schema;
-	}
+public class XSDHyperlinkDetector extends BaseHyperlinkDetector
+{
+  /**
+   * Determines whether an attribute is "linkable" that is, the component it
+   * points to can be the target of a "go to definition" navigation. Derived
+   * classes should override.
+   * 
+   * @param name the attribute name. Must not be null.
+   * @return true if the attribute is linkable, false otherwise.
+   */
+  protected boolean isLinkableAttribute(String name)
+  {
+    boolean isLinkable = name.equals(XSDConstants.TYPE_ATTRIBUTE) ||
+      name.equals(XSDConstants.REFER_ATTRIBUTE) || 
+      name.equals(XSDConstants.REF_ATTRIBUTE) || 
+      name.equals(XSDConstants.BASE_ATTRIBUTE) || 
+      name.equals(XSDConstants.SCHEMALOCATION_ATTRIBUTE) || 
+      name.equals(XSDConstants.SUBSTITUTIONGROUP_ATTRIBUTE) ||
+      name.equals(XSDConstants.ITEMTYPE_ATTRIBUTE) ||
+      name.equals(XSDConstants.MEMBERTYPES_ATTRIBUTE)
+      ;
 
-	/**
-	 * 
-	 * @param xsdSchema
-	 *            cannot be null
-	 * @param node
-	 *            cannot be null
-	 * @return XSDConcreteComponent
-	 */
-	private XSDConcreteComponent getXSDComponent(XSDSchema xsdSchema, Node node) {
-		XSDConcreteComponent objectToReveal = null;
+    return isLinkable;
+  }
 
-		XSDConcreteComponent xsdComp = xsdSchema.getCorrespondingComponent((Node) node);
-		if (xsdComp instanceof XSDElementDeclaration) {
-			XSDElementDeclaration elementDecl = (XSDElementDeclaration) xsdComp;
-			if (elementDecl.isElementDeclarationReference()) {
-				objectToReveal = elementDecl.getResolvedElementDeclaration();
-			}
-			else {
-				XSDConcreteComponent typeDef = null;
-				if (elementDecl.getAnonymousTypeDefinition() == null) {
-					typeDef = elementDecl.getTypeDefinition();
-				}
+  /**
+   * Creates a hyperlink based on the selected node. Derived classes should
+   * override.
+   * 
+   * @param document the source document.
+   * @param node the node under the cursor.
+   * @param region the text region to use to create the hyperlink.
+   * @return a new IHyperlink for the node or null if one cannot be created.
+   */
+  protected IHyperlink createHyperlink(IDocument document, IDOMNode node, IRegion region)
+  {
+    XSDSchema xsdSchema = getXSDSchema(document);
 
-				XSDConcreteComponent subGroupAffiliation = elementDecl.getSubstitutionGroupAffiliation();
+    if (xsdSchema == null)
+    {
+      return null;
+    }
 
-				if (typeDef != null && subGroupAffiliation != null) {
-					// we have 2 things we can navigate to, if the
-					// cursor is anywhere on the substitution
-					// attribute
-					// then jump to that, otherwise just go to the
-					// typeDef.
-					if (node instanceof Attr && ((Attr) node).getLocalName().equals(XSDConstants.SUBSTITUTIONGROUP_ATTRIBUTE)) {
-						objectToReveal = subGroupAffiliation;
-					}
-					else {
-						// try to reveal the type now. On success,
-						// then we return true.
-						// if we fail, set the substitution group
-						// as
-						// the object to reveal as a backup plan.
-						// ISSUE: how to set backup?
-						// if (revealObject(typeDef)) {
-						objectToReveal = typeDef;
-						// }
-						// else {
-						// objectToReveal = subGroupAffiliation;
-						// }
-					}
-				}
-				else {
-					// one or more of these is null. If the
-					// typeDef is
-					// non-null, use it. Otherwise
-					// try and use the substitution group
-					objectToReveal = typeDef != null ? typeDef : subGroupAffiliation;
-				}
-			}
-		}
-		else if (xsdComp instanceof XSDModelGroupDefinition) {
-			XSDModelGroupDefinition elementDecl = (XSDModelGroupDefinition) xsdComp;
-			if (elementDecl.isModelGroupDefinitionReference()) {
-				objectToReveal = elementDecl.getResolvedModelGroupDefinition();
-			}
-		}
-		else if (xsdComp instanceof XSDAttributeDeclaration) {
-			XSDAttributeDeclaration attrDecl = (XSDAttributeDeclaration) xsdComp;
-			if (attrDecl.isAttributeDeclarationReference()) {
-				objectToReveal = attrDecl.getResolvedAttributeDeclaration();
-			}
-			else if (attrDecl.getAnonymousTypeDefinition() == null) {
-				objectToReveal = attrDecl.getTypeDefinition();
-			}
-		}
-		else if (xsdComp instanceof XSDAttributeGroupDefinition) {
-			XSDAttributeGroupDefinition attrGroupDef = (XSDAttributeGroupDefinition) xsdComp;
-			if (attrGroupDef.isAttributeGroupDefinitionReference()) {
-				objectToReveal = attrGroupDef.getResolvedAttributeGroupDefinition();
-			}
-		}
-		else if (xsdComp instanceof XSDIdentityConstraintDefinition) {
-			XSDIdentityConstraintDefinition idConstraintDef = (XSDIdentityConstraintDefinition) xsdComp;
-			if (idConstraintDef.getReferencedKey() != null) {
-				objectToReveal = idConstraintDef.getReferencedKey();
-			}
-		}
-		else if (xsdComp instanceof XSDSimpleTypeDefinition) {
-			XSDSimpleTypeDefinition typeDef = (XSDSimpleTypeDefinition) xsdComp;
-			objectToReveal = typeDef.getItemTypeDefinition();
-			if (objectToReveal == null) {
-				// if itemType attribute is not set, then check
-				// for memberType
-				List memberTypes = typeDef.getMemberTypeDefinitions();
-				if (memberTypes != null && memberTypes.size() > 0) {
-					objectToReveal = (XSDConcreteComponent) memberTypes.get(0);
-				}
-			}
-		}
-		else if (xsdComp instanceof XSDTypeDefinition) {
-			XSDTypeDefinition typeDef = (XSDTypeDefinition) xsdComp;
-			objectToReveal = typeDef.getBaseType();
-		}
-		else if (xsdComp instanceof XSDSchemaDirective) {
-			XSDSchemaDirective directive = (XSDSchemaDirective) xsdComp;
-			// String schemaLocation =
-			// URIHelper.removePlatformResourceProtocol(directive.getResolvedSchema().getSchemaLocation());
-			// openXSDEditor(schemaLocation);
-			// return false;
-			objectToReveal = directive.getResolvedSchema();
-		}
-		return objectToReveal;
-	}
+    XSDConcreteComponent targetComponent = getTargetXSDComponent(xsdSchema, node);
 
-	public IHyperlink[] detectHyperlinks(ITextViewer textViewer, IRegion region, boolean canShowMultipleHyperlinks) {
-		// for now, only capable of creating 1 hyperlink
-		List hyperlinks = new ArrayList(0);
+    if (targetComponent != null)
+    {
+      IRegion nodeRegion = getHyperlinkRegion(node);
 
-		if (region != null && textViewer != null) {
-			IDocument document = textViewer.getDocument();
-			Node node = getCurrentNode(document, region.getOffset());
-			if (node != null) {
-				XSDSchema xsdSchema = getXSDSchema(textViewer.getDocument());
-				if (xsdSchema != null) {
-					XSDConcreteComponent objectToReveal = getXSDComponent(xsdSchema, node);
-					// now reveal the object if this isn't null
-					if (objectToReveal != null) {
-						IRegion nodeRegion = region;
-						if (node instanceof IndexedRegion) {
-							IndexedRegion indexed = (IndexedRegion) node;
-							int start = indexed.getStartOffset();
-							int end = indexed.getEndOffset();
-							nodeRegion = new Region(start, end - start);
-						}
-						hyperlinks.add(new XSDHyperlink(nodeRegion, objectToReveal));
-					}
-				}
-			}
-		}
+      return new XSDHyperlink(nodeRegion, targetComponent);
+    }
 
-		if (hyperlinks.size() == 0)
-			return null;
-		return (IHyperlink[]) hyperlinks.toArray(new IHyperlink[0]);
-	}
+    return null;
+  }
 
-	/**
-	 * Returns the node the cursor is currently on in the document. null if no
-	 * node is selected
-	 * 
-	 * @param offset
-	 * @return Node either element, doctype, text, or null
-	 */
-	private Node getCurrentNode(IDocument document, int offset) {
-		// get the current node at the offset (returns either: element,
-		// doctype, text)
-		IndexedRegion inode = null;
-		IStructuredModel sModel = null;
-		try {
-			sModel = StructuredModelManager.getModelManager().getExistingModelForRead(document);
-			inode = sModel.getIndexedRegion(offset);
-			if (inode == null)
-				inode = sModel.getIndexedRegion(offset - 1);
-		}
-		finally {
-			if (sModel != null)
-				sModel.releaseFromRead();
-		}
+  /**
+   * Finds the XSD component for the given node.
+   * 
+   * @param xsdSchema cannot be null
+   * @param node cannot be null
+   * @return XSDConcreteComponent
+   */
+  private XSDConcreteComponent getTargetXSDComponent(XSDSchema xsdSchema, IDOMNode node)
+  {
+    XSDConcreteComponent component = null;
 
-		if (inode instanceof Node) {
-			return (Node) inode;
-		}
-		return null;
-	}
+    XSDConcreteComponent xsdComp = xsdSchema.getCorrespondingComponent((Node) node);
+    if (xsdComp instanceof XSDElementDeclaration)
+    {
+      XSDElementDeclaration elementDecl = (XSDElementDeclaration) xsdComp;
+      if (elementDecl.isElementDeclarationReference())
+      {
+        component = elementDecl.getResolvedElementDeclaration();
+      }
+      else
+      {
+        XSDConcreteComponent typeDef = null;
+        if (elementDecl.getAnonymousTypeDefinition() == null)
+        {
+          typeDef = elementDecl.getTypeDefinition();
+        }
+
+        XSDConcreteComponent subGroupAffiliation = elementDecl.getSubstitutionGroupAffiliation();
+
+        if (typeDef != null && subGroupAffiliation != null)
+        {
+          // we have 2 things we can navigate to, if the
+          // cursor is anywhere on the substitution
+          // attribute
+          // then jump to that, otherwise just go to the
+          // typeDef.
+          if (node instanceof Attr && ((Attr) node).getLocalName().equals(XSDConstants.SUBSTITUTIONGROUP_ATTRIBUTE))
+          {
+            component = subGroupAffiliation;
+          }
+          else
+          {
+            // try to reveal the type now. On success,
+            // then we return true.
+            // if we fail, set the substitution group
+            // as
+            // the object to reveal as a backup plan.
+            // ISSUE: how to set backup?
+            // if (revealObject(typeDef)) {
+            component = typeDef;
+            // }
+            // else {
+            // objectToReveal = subGroupAffiliation;
+            // }
+          }
+        }
+        else
+        {
+          // one or more of these is null. If the
+          // typeDef is
+          // non-null, use it. Otherwise
+          // try and use the substitution group
+          component = typeDef != null ? typeDef : subGroupAffiliation;
+        }
+      }
+    }
+    else if (xsdComp instanceof XSDModelGroupDefinition)
+    {
+      XSDModelGroupDefinition elementDecl = (XSDModelGroupDefinition) xsdComp;
+      if (elementDecl.isModelGroupDefinitionReference())
+      {
+        component = elementDecl.getResolvedModelGroupDefinition();
+      }
+    }
+    else if (xsdComp instanceof XSDAttributeDeclaration)
+    {
+      XSDAttributeDeclaration attrDecl = (XSDAttributeDeclaration) xsdComp;
+      if (attrDecl.isAttributeDeclarationReference())
+      {
+        component = attrDecl.getResolvedAttributeDeclaration();
+      }
+      else if (attrDecl.getAnonymousTypeDefinition() == null)
+      {
+        component = attrDecl.getTypeDefinition();
+      }
+    }
+    else if (xsdComp instanceof XSDAttributeGroupDefinition)
+    {
+      XSDAttributeGroupDefinition attrGroupDef = (XSDAttributeGroupDefinition) xsdComp;
+      if (attrGroupDef.isAttributeGroupDefinitionReference())
+      {
+        component = attrGroupDef.getResolvedAttributeGroupDefinition();
+      }
+    }
+    else if (xsdComp instanceof XSDIdentityConstraintDefinition)
+    {
+      XSDIdentityConstraintDefinition idConstraintDef = (XSDIdentityConstraintDefinition) xsdComp;
+      if (idConstraintDef.getReferencedKey() != null)
+      {
+        component = idConstraintDef.getReferencedKey();
+      }
+    }
+    else if (xsdComp instanceof XSDSimpleTypeDefinition)
+    {
+      XSDSimpleTypeDefinition typeDef = (XSDSimpleTypeDefinition) xsdComp;
+
+      // Simple types can be one of restriction, list or union.
+      // TODO Is there a better way of determining what type we have?
+      
+      component = typeDef.getBaseTypeDefinition();
+      
+      if (component == null)
+      {
+        component = typeDef.getItemTypeDefinition();
+
+        if (component == null)
+        {
+          // if itemType attribute is not set, then check
+          // for memberTypes
+          List memberTypes = typeDef.getMemberTypeDefinitions();
+          if (memberTypes != null && memberTypes.size() > 0)
+          {
+            // ISSUE: What if there are more than one type?
+            // This could be a case for multiple hyperlinks at the same location?
+            component = (XSDConcreteComponent) memberTypes.get(0);
+          }
+        }
+      }
+    }
+    else if (xsdComp instanceof XSDTypeDefinition)
+    {
+      XSDTypeDefinition typeDef = (XSDTypeDefinition) xsdComp;
+      component = typeDef.getBaseType();
+    }
+    else if (xsdComp instanceof XSDSchemaDirective)
+    {
+      XSDSchemaDirective directive = (XSDSchemaDirective) xsdComp;
+      component = directive.getResolvedSchema();
+    }
+    return component;
+  }
+
+  /**
+   * Gets the xsd schema from document
+   * 
+   * @param document
+   * @return XSDSchema or null of one does not exist yet for document
+   */
+  private XSDSchema getXSDSchema(IDocument document)
+  {
+    XSDSchema schema = null;
+    IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForRead(document);
+    if (model != null)
+    {
+      try
+      {
+        if (model instanceof IDOMModel)
+        {
+          IDOMDocument domDoc = ((IDOMModel) model).getDocument();
+          if (domDoc != null)
+          {
+            XSDModelAdapter modelAdapter = (XSDModelAdapter) domDoc.getExistingAdapter(XSDModelAdapter.class);
+            /*
+             * ISSUE: Didn't want to go through initializing schema if it does
+             * not already exist, so just attempted to get existing adapter. If
+             * doesn't exist, just don't bother working.
+             */
+            if (modelAdapter != null)
+              schema = modelAdapter.getSchema();
+          }
+        }
+      }
+      finally
+      {
+        model.releaseFromRead();
+      }
+    }
+    return schema;
+  }
 }
