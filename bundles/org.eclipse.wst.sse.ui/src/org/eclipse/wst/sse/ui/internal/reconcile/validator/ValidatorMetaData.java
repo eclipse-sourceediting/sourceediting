@@ -106,7 +106,7 @@ public class ValidatorMetaData {
         return false;
 	}
 
-	public boolean canHandleParitionType(String contentTypeIds[], String paritionType) {
+	public boolean canHandlePartitionType(String contentTypeIds[], String paritionType) {
         for(int i=0; i<contentTypeIds.length; i++) {
     		if (fMatrix.containsKey(contentTypeIds[i])) {
     			List partitions = (List) fMatrix.get(contentTypeIds[i]);

@@ -28,6 +28,7 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.reconciler.DirtyRegion;
 import org.eclipse.jface.text.reconciler.IReconcileResult;
+import org.eclipse.jface.text.reconciler.IReconcileStep;
 import org.eclipse.jface.text.reconciler.IReconcilingStrategy;
 import org.eclipse.jface.text.reconciler.IReconcilingStrategyExtension;
 import org.eclipse.jface.text.source.IAnnotationModel;
@@ -197,7 +198,7 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 				
 				// then if this strategy knows how to add/remove this
 				// partition type
-				if (canHandlePartition(key.getPartitionType()) /*&& containsStep(key.getStep())*/) {
+				if (canHandlePartition(key.getPartitionType()) && containsStep(key.getStep())) {
 					if (key.getScope() == ReconcileAnnotationKey.PARTIAL && annotation.getPosition().overlapsWith(dr.getOffset(), dr.getLength())) {
 						remove.add(annotation);
 					}
@@ -210,6 +211,8 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 		return (TemporaryAnnotation[]) remove.toArray(new TemporaryAnnotation[remove.size()]);
 	}
 
+
+	protected abstract boolean containsStep(IReconcileStep step);
 
 	/**
 	 * Gets partition types from all steps in this strategy.
@@ -466,10 +469,6 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
         return fComparator;
     }
 	
-	public boolean isTotalScope() {
-		return false;
-	}
-
 	public HashSet getMarkerAnnotations() {
 		if(fMarkerAnnotations == null)
 			 fMarkerAnnotations = new HashSet();

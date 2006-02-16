@@ -27,7 +27,6 @@ import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.reconciler.DirtyRegion;
 import org.eclipse.jface.text.reconciler.IReconcilableModel;
 import org.eclipse.jface.text.reconciler.IReconcileResult;
-import org.eclipse.jface.text.reconciler.IReconcileStep;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
 import org.eclipse.wst.sse.ui.internal.Logger;
@@ -67,12 +66,6 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 		if (v == null)
 			throw new IllegalArgumentException("validator cannot be null"); //$NON-NLS-1$
 
-		fValidator = v;
-		fScope = scope;
-	}
-
-	public ReconcileStepForValidator(IValidator v, IReconcileStep step, int scope) {
-//		super(step);
 		fValidator = v;
 		fScope = scope;
 	}

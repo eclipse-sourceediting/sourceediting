@@ -60,3 +60,5 @@ org.eclipse.wst.sse.ui/debug/reconcilerjob=false
 org.eclipse.wst.sse.ui/gotoNextAnnotation=false
 
 org.eclipse.wst.sse.ui/preferences-properties=false
+
+org.eclipse.wst.sse.ui/debug/reconcilerSpelling=false
