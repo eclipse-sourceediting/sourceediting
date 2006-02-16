@@ -13,8 +13,10 @@ package org.eclipse.wst.sse.ui.internal.spelling;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.InstanceScope;
@@ -30,6 +32,7 @@ import org.eclipse.jface.text.reconciler.DirtyRegion;
 import org.eclipse.jface.text.reconciler.IReconcileResult;
 import org.eclipse.jface.text.reconciler.IReconcileStep;
 import org.eclipse.jface.text.source.IAnnotationModel;
+import org.eclipse.jface.text.source.IAnnotationModelExtension;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
@@ -258,11 +261,23 @@ public class SpellcheckStrategy extends StructuredTextReconcilingStrategy {
 				if (isSupportedPartitionType(partitions[i].getType())) {
 					annotationsToRemove = getSpellingAnnotationsToRemove(partitions[i]);
 					annotationsToAdd = structuredStep.reconcile(dirtyRegion, partitions[i]);
-					for (int j = 0; j < annotationsToAdd.length; j++) {
-						annotationModel.addAnnotation((TemporaryAnnotation) annotationsToAdd[j], ((TemporaryAnnotation) annotationsToAdd[j]).getPosition());
+
+					if (annotationModel instanceof IAnnotationModelExtension) {
+						IAnnotationModelExtension modelExtension = (IAnnotationModelExtension) annotationModel;
+						Map annotationsToAddMap = new HashMap();
+						for (int j = 0; j < annotationsToAdd.length; j++) {
+							annotationsToAddMap.put(annotationsToAdd[j], ((TemporaryAnnotation) annotationsToAdd[j]).getPosition());
+						}
+						modelExtension.replaceAnnotations(annotationsToRemove, annotationsToAddMap);
 					}
-					for (int j = 0; j < annotationsToRemove.length; j++) {
-						annotationModel.removeAnnotation(annotationsToRemove[j]);
+
+					else {
+						for (int j = 0; j < annotationsToAdd.length; j++) {
+							annotationModel.addAnnotation((TemporaryAnnotation) annotationsToAdd[j], ((TemporaryAnnotation) annotationsToAdd[j]).getPosition());
+						}
+						for (int j = 0; j < annotationsToRemove.length; j++) {
+							annotationModel.removeAnnotation(annotationsToRemove[j]);
+						}
 					}
 				}
 			}

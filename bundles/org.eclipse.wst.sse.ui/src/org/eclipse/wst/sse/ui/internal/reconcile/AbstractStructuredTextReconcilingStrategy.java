@@ -16,9 +16,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
@@ -32,6 +34,7 @@ import org.eclipse.jface.text.reconciler.IReconcileStep;
 import org.eclipse.jface.text.reconciler.IReconcilingStrategy;
 import org.eclipse.jface.text.reconciler.IReconcilingStrategyExtension;
 import org.eclipse.jface.text.source.IAnnotationModel;
+import org.eclipse.jface.text.source.IAnnotationModelExtension;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.wst.sse.ui.internal.IReleasable;
 import org.eclipse.wst.sse.ui.internal.ITemporaryAnnotation;
@@ -40,21 +43,21 @@ import org.eclipse.wst.sse.ui.internal.StructuredMarkerAnnotation;
 
 
 /**
- * A base ReconcilingStrategy. 
- * Subclasses must implement createReconcileSteps().
- * This class should not know about IStructuredDocument, only IDocument.
+ * A base ReconcilingStrategy. Subclasses must implement
+ * createReconcileSteps(). This class should not know about
+ * IStructuredDocument, only IDocument.
  * 
  * @author pavery
  */
 public abstract class AbstractStructuredTextReconcilingStrategy implements IReconcilingStrategy, IReconcilingStrategyExtension, IReleasable {
 
-    /** debug flag */
-    protected static final boolean DEBUG;
-    static {
-        String value = Platform.getDebugOption("org.eclipse.wst.sse.ui/debug/reconcilerjob"); //$NON-NLS-1$
-        DEBUG = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
-    }
-    
+	/** debug flag */
+	protected static final boolean DEBUG;
+	static {
+		String value = Platform.getDebugOption("org.eclipse.wst.sse.ui/debug/reconcilerjob"); //$NON-NLS-1$
+		DEBUG = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
+	}
+
 	// these limits are safetys for "runaway" validation cases
 	// should be used to safeguard potentially dangerous loops or potentially
 	// long annotations
@@ -62,17 +65,17 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 	// annotations)
 	public static final int ANNOTATION_LENGTH_LIMIT = 25;
 	public static final int ELEMENT_ERROR_LIMIT = 25;
-    
+
 	private IDocument fDocument = null;
-//	private IReconcileStep fFirstStep = null;
+	// private IReconcileStep fFirstStep = null;
 	private IProgressMonitor fProgressMonitor = null;
 	private ISourceViewer fSourceViewer = null;
-    private Comparator fComparator;
+	private Comparator fComparator;
 
 	// list of "validator" annotations
 	// for gray/un-gray capability
 	private HashSet fMarkerAnnotations = null;
-	
+
 	/**
 	 * Creates a new strategy. The editor parameter is for access to the
 	 * annotation model.
@@ -94,13 +97,13 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 		// can be null when closing the editor
 		if (getAnnotationModel() != null) {
 			TemporaryAnnotation tempAnnotation = (TemporaryAnnotation) result;
-			
+
 			StructuredMarkerAnnotation sma = getCorrespondingMarkerAnnotation(tempAnnotation);
-			if(sma != null) {
+			if (sma != null) {
 				// un-gray out the marker annotation
 				sma.setGrayed(false);
 			}
-			
+
 			getAnnotationModel().addAnnotation(tempAnnotation, tempAnnotation.getPosition());
 		}
 	}
@@ -110,24 +113,24 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 	 * @return if this strategy is responisble for adding this type of key
 	 */
 	protected boolean canHandlePartition(String partition) {
-//		String[] haystack = getPartitionTypes();
-//		for (int i = 0; i < haystack.length; i++) {
-//			if (haystack[i].equals(partition))
-//				return true;
-//		}
-//		return false;
+		// String[] haystack = getPartitionTypes();
+		// for (int i = 0; i < haystack.length; i++) {
+		// if (haystack[i].equals(partition))
+		// return true;
+		// }
+		// return false;
 		return false;
 	}
 
-//	/**
-//	 * @param step
-//	 * @return
-//	 */
-//	protected boolean containsStep(IReconcileStep step) {
-//		if (fFirstStep instanceof StructuredReconcileStep)
-//			return ((StructuredReconcileStep) fFirstStep).isSiblingStep(step);
-//		return false;
-//	}
+	// /**
+	// * @param step
+	// * @return
+	// */
+	// protected boolean containsStep(IReconcileStep step) {
+	// if (fFirstStep instanceof StructuredReconcileStep)
+	// return ((StructuredReconcileStep) fFirstStep).isSiblingStep(step);
+	// return false;
+	// }
 
 	/**
 	 * This is where you should create the steps for this strategy
@@ -151,7 +154,10 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 				ReconcileAnnotationKey key = (ReconcileAnnotationKey) annotation.getKey();
 				// then if this strategy knows how to add/remove this
 				// partition type
-				if (canHandlePartition(key.getPartitionType()) /*&& containsStep(key.getStep())*/)
+				if (canHandlePartition(key.getPartitionType()) /*
+																 * &&
+																 * containsStep(key.getStep())
+																 */)
 					removals.add(annotation);
 			}
 		}
@@ -167,35 +173,35 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 	}
 
 	protected TemporaryAnnotation[] getAnnotationsToRemove(DirtyRegion dr) {
-		
+
 		List remove = new ArrayList();
 		IAnnotationModel annotationModel = getAnnotationModel();
 		// can be null when closing the editor
 		if (getAnnotationModel() != null) {
-			
+
 			// clear validator annotations
 			getMarkerAnnotations().clear();
-			
+
 			Iterator i = annotationModel.getAnnotationIterator();
 			while (i.hasNext()) {
-				
+
 				Object obj = i.next();
-				
+
 				// check if it's a validator marker annotation
 				// if it is save it for comparision later (to "gray" icons)
-				if(obj instanceof StructuredMarkerAnnotation) {
-					StructuredMarkerAnnotation sma = (StructuredMarkerAnnotation)obj;
-					
-					if(sma.getAnnotationType() == TemporaryAnnotation.ANNOT_ERROR || sma.getAnnotationType() == TemporaryAnnotation.ANNOT_WARNING)
+				if (obj instanceof StructuredMarkerAnnotation) {
+					StructuredMarkerAnnotation sma = (StructuredMarkerAnnotation) obj;
+
+					if (sma.getAnnotationType() == TemporaryAnnotation.ANNOT_ERROR || sma.getAnnotationType() == TemporaryAnnotation.ANNOT_WARNING)
 						fMarkerAnnotations.add(sma);
 				}
-				
+
 				if (!(obj instanceof TemporaryAnnotation))
 					continue;
 
 				TemporaryAnnotation annotation = (TemporaryAnnotation) obj;
 				ReconcileAnnotationKey key = (ReconcileAnnotationKey) annotation.getKey();
-				
+
 				// then if this strategy knows how to add/remove this
 				// partition type
 				if (canHandlePartition(key.getPartitionType()) && containsStep(key.getStep())) {
@@ -219,12 +225,11 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 	 * 
 	 * @return parition types from all steps
 	 */
-//	public String[] getPartitionTypes() {
-//		if (fFirstStep instanceof StructuredReconcileStep)
-//			return ((StructuredReconcileStep) fFirstStep).getPartitionTypes();
-//		return new String[0];
-//	}
-
+	// public String[] getPartitionTypes() {
+	// if (fFirstStep instanceof StructuredReconcileStep)
+	// return ((StructuredReconcileStep) fFirstStep).getPartitionTypes();
+	// return new String[0];
+	// }
 	public void init() {
 		createReconcileSteps();
 	}
@@ -257,16 +262,16 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 		if (results == null)
 			return;
 
-		for (int i = 0; i<results.length && i<ELEMENT_ERROR_LIMIT && !isCanceled(); i++) {
+		for (int i = 0; i < results.length && i < ELEMENT_ERROR_LIMIT && !isCanceled(); i++) {
 
 			if (isCanceled()) {
-                if(DEBUG)
-				    System.out.println("[trace reconciler] >** PROCESS (adding) WAS CANCELLED **"); //$NON-NLS-1$
+				if (DEBUG)
+					System.out.println("[trace reconciler] >** PROCESS (adding) WAS CANCELLED **"); //$NON-NLS-1$
 				return;
 			}
 			addResultToAnnotationModel(results[i]);
 		}
-        
+
 		if (DEBUG) {
 			StringBuffer traceString = new StringBuffer();
 			for (int j = 0; j < results.length; j++)
@@ -282,28 +287,31 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 	public void reconcile(DirtyRegion dirtyRegion, IRegion subRegion) {
 		// not used
 		// we only have validator strategy now
-		
-//		// external files may be null
-//		if (isCanceled() || fFirstStep == null)
-//			return;
-//
-//        TemporaryAnnotation[] annotationsToRemove = new TemporaryAnnotation[0];
-//        IReconcileResult[] annotationsToAdd = new IReconcileResult[0];
-//        StructuredReconcileStep structuredStep = (StructuredReconcileStep) fFirstStep;
-//        
-//        annotationsToRemove = getAnnotationsToRemove(dirtyRegion);
-//        annotationsToAdd = structuredStep.reconcile(dirtyRegion, subRegion);
-//        
-//        smartProcess(annotationsToRemove, annotationsToAdd);
+
+		// // external files may be null
+		// if (isCanceled() || fFirstStep == null)
+		// return;
+		//
+		// TemporaryAnnotation[] annotationsToRemove = new
+		// TemporaryAnnotation[0];
+		// IReconcileResult[] annotationsToAdd = new IReconcileResult[0];
+		// StructuredReconcileStep structuredStep = (StructuredReconcileStep)
+		// fFirstStep;
+		//        
+		// annotationsToRemove = getAnnotationsToRemove(dirtyRegion);
+		// annotationsToAdd = structuredStep.reconcile(dirtyRegion,
+		// subRegion);
+		//        
+		// smartProcess(annotationsToRemove, annotationsToAdd);
 	}
-    
+
 	/**
 	 * @param partition
 	 * @see org.eclipse.jface.text.reconciler.IReconcilingStrategy#reconcile(org.eclipse.jface.text.IRegion)
 	 */
 	public void reconcile(IRegion partition) {
 		// not used, we use:
-        // reconcile(DirtyRegion dirtyRegion, IRegion subRegion)
+		// reconcile(DirtyRegion dirtyRegion, IRegion subRegion)
 	}
 
 	/**
@@ -312,34 +320,34 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 	 */
 	public void release() {
 		// release steps (each step calls release on the next)
-		//if (fFirstStep != null && fFirstStep instanceof IReleasable)
-		//	((IReleasable) fFirstStep).release();
+		// if (fFirstStep != null && fFirstStep instanceof IReleasable)
+		// ((IReleasable) fFirstStep).release();
 		// we don't to null out the steps, in case
 		// it's reconfigured later
 	}
 
 	private void removeAnnotations(TemporaryAnnotation[] annotationsToRemove) {
-		
+
 		IAnnotationModel annotationModel = getAnnotationModel();
 		// can be null when closing the editor
 		if (annotationModel != null) {
 			for (int i = 0; i < annotationsToRemove.length; i++) {
 				if (isCanceled()) {
-                    if(DEBUG)
-					    System.out.println("[trace reconciler] >** REMOVAL WAS CANCELLED **"); //$NON-NLS-1$
+					if (DEBUG)
+						System.out.println("[trace reconciler] >** REMOVAL WAS CANCELLED **"); //$NON-NLS-1$
 					return;
 				}
 				StructuredMarkerAnnotation sma = getCorrespondingMarkerAnnotation(annotationsToRemove[i]);
-				if(sma != null) {
+				if (sma != null) {
 					// gray out the marker annotation
 					sma.setGrayed(true);
 				}
 				// remove the temp one
 				annotationModel.removeAnnotation(annotationsToRemove[i]);
-				
+
 			}
 		}
-        
+
 		if (DEBUG) {
 			StringBuffer traceString = new StringBuffer();
 			for (int i = 0; i < annotationsToRemove.length; i++)
@@ -348,29 +356,29 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 		}
 	}
 
-    private StructuredMarkerAnnotation getCorrespondingMarkerAnnotation(TemporaryAnnotation tempAnnotation) {
-		
+	private StructuredMarkerAnnotation getCorrespondingMarkerAnnotation(TemporaryAnnotation tempAnnotation) {
+
 		Iterator it = getMarkerAnnotations().iterator();
 		while (it.hasNext()) {
 			StructuredMarkerAnnotation markerAnnotation = (StructuredMarkerAnnotation) it.next();
 			String message = ""; //$NON-NLS-1$
 			try {
 				message = (String) markerAnnotation.getMarker().getAttribute(IMarker.MESSAGE);
-			} 
+			}
 			catch (CoreException e) {
-				if(DEBUG)
+				if (DEBUG)
 					Logger.logException(e);
 			}
 			// it would be nice to check line number here...
-			if(message != null && message.equals(tempAnnotation.getText()))
+			if (message != null && message.equals(tempAnnotation.getText()))
 				return markerAnnotation;
 		}
 		return null;
 	}
 
 	private void removeAllAnnotations() {
-        removeAnnotations(getAllAnnotationsToRemove());
-    }
+		removeAnnotations(getAllAnnotationsToRemove());
+	}
 
 	/**
 	 * Set the document for this strategy.
@@ -381,97 +389,129 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 	public void setDocument(IDocument document) {
 
 		// remove all old annotations since it's a new document
-	    removeAllAnnotations();
+		removeAllAnnotations();
 
 		if (document == null)
 			release();
-		
-//		if (getFirstStep() != null)
-//			getFirstStep().setInputModel(new DocumentAdapter(document));
-		
+
+		// if (getFirstStep() != null)
+		// getFirstStep().setInputModel(new DocumentAdapter(document));
+
 		fDocument = document;
 	}
 
 	public IDocument getDocument() {
 		return fDocument;
 	}
-	
+
 	/**
 	 * @param monitor
 	 * @see org.eclipse.jface.text.reconciler.IReconcilingStrategyExtension#setProgressMonitor(org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	public void setProgressMonitor(IProgressMonitor monitor) {
-//		fProgressMonitor = monitor;
-//		if (fFirstStep != null)
-//			fFirstStep.setProgressMonitor(fProgressMonitor);
+		// fProgressMonitor = monitor;
+		// if (fFirstStep != null)
+		// fFirstStep.setProgressMonitor(fProgressMonitor);
 	}
 
 	/**
-	 * Check if the annotation is already there, if it is, no need to 
-     * remove or add again. This will avoid a lot of "flickering" behavior.
+	 * Check if the annotation is already there, if it is, no need to remove
+	 * or add again. This will avoid a lot of "flickering" behavior.
 	 * 
 	 * @param annotationsToRemove
 	 * @param annotationsToAdd
 	 */
 	protected void smartProcess(TemporaryAnnotation[] annotationsToRemove, IReconcileResult[] annotationsToAdd) {
-        
-        // pa_TODO: investigate a better algorithm, 
-        // also see if this is a bad performance hit.
-        
-        Comparator comp = getAnnotationComparator();
-        List sortedRemovals = Arrays.asList(annotationsToRemove);
-	    Collections.sort(sortedRemovals, comp);
-        
-        List sortedAdditions = Arrays.asList(annotationsToAdd);
-        Collections.sort(sortedAdditions, comp);
-        
-        List filteredRemovals = new ArrayList(sortedRemovals);
-        List filteredAdditions = new ArrayList(sortedAdditions);
-        
-        boolean ignore = false;
-        int lastFoundAdded = 0;
-        for(int i=0; i<sortedRemovals.size(); i++) {
-            TemporaryAnnotation removal = (TemporaryAnnotation)sortedRemovals.get(i);       
-            for(int j=lastFoundAdded; j<sortedAdditions.size(); j++) {             
-                TemporaryAnnotation addition = (TemporaryAnnotation)sortedAdditions.get(j);
-                // quick position check here
-                if(removal.getPosition().equals(addition.getPosition())) {
-                    lastFoundAdded = j;
-                    // remove performs TemporaryAnnotation.equals()
-                    // which checks text as well
-                    filteredAdditions.remove(addition);
-                    ignore = true;
-                    if(DEBUG)
-                        System.out.println(" ~ smart process ignoring: " + removal.getPosition().getOffset()); //$NON-NLS-1$
-                    break;
-                }
-            }
-            if(ignore) {
-                filteredRemovals.remove(removal);
-            }
-            ignore = false;
-        }
-        
-        removeAnnotations((TemporaryAnnotation[])filteredRemovals.toArray(new TemporaryAnnotation[filteredRemovals.size()]));
-        process((IReconcileResult[])filteredAdditions.toArray(new IReconcileResult[filteredAdditions.size()]));
+
+		// pa_TODO: investigate a better algorithm,
+		// also see if this is a bad performance hit.
+
+		Comparator comp = getTemporaryAnnotationComparator();
+		List sortedRemovals = Arrays.asList(annotationsToRemove);
+		Collections.sort(sortedRemovals, comp);
+
+		List sortedAdditions = Arrays.asList(annotationsToAdd);
+		Collections.sort(sortedAdditions, comp);
+
+		List filteredRemovals = new ArrayList(sortedRemovals);
+		List filteredAdditions = new ArrayList(sortedAdditions);
+
+		boolean ignore = false;
+		int lastFoundAdded = 0;
+		for (int i = 0; i < sortedRemovals.size(); i++) {
+			TemporaryAnnotation removal = (TemporaryAnnotation) sortedRemovals.get(i);
+			for (int j = lastFoundAdded; j < sortedAdditions.size(); j++) {
+				TemporaryAnnotation addition = (TemporaryAnnotation) sortedAdditions.get(j);
+				// quick position check here
+				if (removal.getPosition().equals(addition.getPosition())) {
+					lastFoundAdded = j;
+					// remove performs TemporaryAnnotation.equals()
+					// which checks text as well
+					filteredAdditions.remove(addition);
+					ignore = true;
+					if (DEBUG)
+						System.out.println(" ~ smart process ignoring: " + removal.getPosition().getOffset()); //$NON-NLS-1$
+					break;
+				}
+			}
+			if (ignore) {
+				filteredRemovals.remove(removal);
+			}
+			ignore = false;
+		}
+		if (getAnnotationModel() instanceof IAnnotationModelExtension) {
+			TemporaryAnnotation[] filteredRemovalArray = (TemporaryAnnotation[]) filteredRemovals.toArray(new TemporaryAnnotation[filteredRemovals.size()]);
+			// apply "grey"-ness
+			for (int i = 0; i < filteredRemovalArray.length; i++) {
+				if (isCanceled()) {
+					if (DEBUG)
+						System.out.println("[trace reconciler] >** replacing WAS CANCELLED **"); //$NON-NLS-1$
+					return;
+				}
+				StructuredMarkerAnnotation sma = getCorrespondingMarkerAnnotation(filteredRemovalArray[i]);
+				if (sma != null) {
+					// gray out the marker annotation
+					sma.setGrayed(true);
+				}
+			}
+			Map annotationsToAddMap = new HashMap();
+			for (int i = 0; i < filteredAdditions.size(); i++) {
+				TemporaryAnnotation temporaryAnnotation = (TemporaryAnnotation) filteredAdditions.get(i);
+				annotationsToAddMap.put(temporaryAnnotation, temporaryAnnotation.getPosition());
+			}
+			if (isCanceled()) {
+				if (DEBUG)
+					System.out.println("[trace reconciler] >** PROCESS (replacing) WAS CANCELLED **"); //$NON-NLS-1$
+				return;
+			}
+			/*
+			 * Using the extension means we can't enforce the
+			 * ELEMENT_ERROR_LIMIT limit.
+			 */
+			((IAnnotationModelExtension) getAnnotationModel()).replaceAnnotations(filteredRemovalArray, annotationsToAddMap);
+		}
+		else {
+			removeAnnotations((TemporaryAnnotation[]) filteredRemovals.toArray(new TemporaryAnnotation[filteredRemovals.size()]));
+			process((IReconcileResult[]) filteredAdditions.toArray(new IReconcileResult[filteredAdditions.size()]));
+		}
 	}
-    
-    private Comparator getAnnotationComparator() {
-        if(fComparator == null) {
-            fComparator = new Comparator( ) {
-                public int compare(Object arg0, Object arg1) {
-                    TemporaryAnnotation ta1 = (TemporaryAnnotation)arg0;
-                    TemporaryAnnotation ta2 = (TemporaryAnnotation)arg1;
-                    return ta1.getPosition().getOffset() - ta2.getPosition().getOffset();
-                }
-            };
-        }
-        return fComparator;
-    }
-	
+
+	private Comparator getTemporaryAnnotationComparator() {
+		if (fComparator == null) {
+			fComparator = new Comparator() {
+				public int compare(Object arg0, Object arg1) {
+					TemporaryAnnotation ta1 = (TemporaryAnnotation) arg0;
+					TemporaryAnnotation ta2 = (TemporaryAnnotation) arg1;
+					return ta1.getPosition().getOffset() - ta2.getPosition().getOffset();
+				}
+			};
+		}
+		return fComparator;
+	}
+
 	public HashSet getMarkerAnnotations() {
-		if(fMarkerAnnotations == null)
-			 fMarkerAnnotations = new HashSet();
+		if (fMarkerAnnotations == null)
+			fMarkerAnnotations = new HashSet();
 		return fMarkerAnnotations;
 	}
 }
