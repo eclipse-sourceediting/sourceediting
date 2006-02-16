@@ -18,13 +18,13 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.wst.dtd.core.internal.CMGroupNode;
 import org.eclipse.wst.dtd.core.internal.DTDNode;
 import org.eclipse.wst.dtd.core.internal.Element;
-import org.eclipse.wst.sse.ui.StructuredTextEditor;
+import org.eclipse.wst.dtd.core.internal.document.DTDModelImpl;
 
 
 public class AddElementToContentModelAction extends BaseAction {
 
-	public AddElementToContentModelAction(StructuredTextEditor editor, String label) {
-		super(editor, label);
+	public AddElementToContentModelAction(DTDModelImpl model, String label) {
+		super(model, label);
 	}
 
 	public void run() {

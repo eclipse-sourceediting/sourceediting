@@ -305,7 +305,7 @@ public class XMLMultiPageEditorPart extends PostSelectionMultiPageEditorPart {
 	IPropertyListener fPropertyListener = null;
 
 	/** The source page index. */
-	private int fSourcePageIndex;
+	int fSourcePageIndex;
 
 	/** The text editor. */
 	private StructuredTextEditor fTextEditor;
@@ -382,14 +382,26 @@ public class XMLMultiPageEditorPart extends PostSelectionMultiPageEditorPart {
 		if (fDesignViewer.getSelectionProvider() instanceof IPostSelectionProvider) {
 			((IPostSelectionProvider) fDesignViewer.getSelectionProvider()).addPostSelectionChangedListener(new ISelectionChangedListener() {
 				public void selectionChanged(SelectionChangedEvent event) {
-					getTextEditor().getSelectionProvider().setSelection(event.getSelection());
+					/*
+					 * Only force selection update if source page is not
+					 * active
+					 */
+					if (getActivePage() != fSourcePageIndex) {
+						getTextEditor().getSelectionProvider().setSelection(event.getSelection());
+					}
 				}
 			});
 		}
 		else {
 			fDesignViewer.getSelectionProvider().addSelectionChangedListener(new ISelectionChangedListener() {
 				public void selectionChanged(SelectionChangedEvent event) {
-					getTextEditor().getSelectionProvider().setSelection(event.getSelection());
+					/*
+					 * Only force selection update if source page is not
+					 * active
+					 */
+					if (getActivePage() != fSourcePageIndex) {
+						getTextEditor().getSelectionProvider().setSelection(event.getSelection());
+					}
 				}
 			});
 		}
@@ -649,7 +661,7 @@ public class XMLMultiPageEditorPart extends PostSelectionMultiPageEditorPart {
 	private IPreferenceStore getPreferenceStore() {
 		return XMLUIPlugin.getDefault().getPreferenceStore();
 	}
-
+	
 	StructuredTextEditor getTextEditor() {
 		return fTextEditor;
 	}

@@ -287,7 +287,7 @@ class ProjectDescription {
 		}
 
 		public String toString() {
-			return "TLDRecord: " + path + " <-> " + getURI(); //$NON-NLS-1$ //$NON-NLS-2$
+			return "TLDRecord: " + getURI() + " <-> " + path; //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 
@@ -1068,6 +1068,7 @@ class ProjectDescription {
 			DocumentProvider provider = new DocumentProvider();
 			provider.setInputStream(webxmlContents);
 			provider.setValidating(false);
+			provider.setRootElementName("web-app"); //$NON-NLS-1$
 			provider.setBaseReference(webxml.getParent().getLocation().toString());
 			document = provider.getDocument();
 		}
@@ -1104,13 +1105,50 @@ class ProjectDescription {
 				path = new Path(URIHelper.normalize(taglibLocation, webxml.getFullPath().toString(), getLocalRoot(webxml.getLocation().toString())));
 			}
 			if (path.segmentCount() > 1) {
-				IFile tldResource = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
-				if (tldResource.isAccessible()) {
-					ITLDRecord record = createTLDRecord(tldResource);
+				IFile resource = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
+				if (resource.isAccessible()) {
+					ITaglibRecord record = null;
+					/*
+					 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=125960
+					 * 
+					 * Also support mappings to .jar files
+					 */
+					if (resource.getFileExtension().equalsIgnoreCase(("jar"))) {
+						JarRecord jarRecord = (JarRecord) createJARRecord(resource);
+						String[] entries = JarUtilities.getEntryNames(resource);
+						for (int j = 0; j < entries.length; j++) {
+							if (entries[j].endsWith(".tld")) { //$NON-NLS-1$
+								if (entries[j].equals(JarUtilities.JSP11_TAGLIB)) {
+									jarRecord.has11TLD = true;
+									InputStream contents = JarUtilities.getInputStream(resource, entries[i]);
+									if (contents != null) {
+										TaglibInfo info = extractInfo(resource.getLocation().toString(), contents);
+										jarRecord.info = info;
+									}
+									try {
+										contents.close();
+									}
+									catch (IOException e) {
+									}
+								}
+							}
+						}
+						record = jarRecord;
+						// the stored URI should reflect the web.xml's value
+						jarRecord.info.uri = taglibUri;
+						if (_debugIndexCreation)
+							Logger.log(Logger.INFO_DEBUG, "created web.xml record for " + taglibUri + "@" + jarRecord.getLocation()); //$NON-NLS-1$ //$NON-NLS-2$
+					}
+					else {
+						TLDRecord tldRecord = createTLDRecord(resource);
+						record = tldRecord;
+						// the stored URI should reflect the web.xml's value
+						tldRecord.info.uri = taglibUri;
+						if (_debugIndexCreation)
+							Logger.log(Logger.INFO_DEBUG, "created web.xml record for " + taglibUri + "@" + tldRecord.getPath()); //$NON-NLS-1$ //$NON-NLS-2$
+					}
 					webxmlRecord.tldRecords.add(record);
 					getImplicitReferences(webxml.getFullPath().toString()).put(taglibUri, record);
-					if (_debugIndexCreation)
-						Logger.log(Logger.INFO_DEBUG, "created web.xml record for " + taglibUri + "@" + record.getPath()); //$NON-NLS-1$ //$NON-NLS-2$
 					TaglibIndex.fireTaglibRecordEvent(new TaglibRecordEvent(record, deltaKind));
 				}
 			}

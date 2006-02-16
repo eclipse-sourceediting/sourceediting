@@ -37,7 +37,6 @@ import org.eclipse.wst.dtd.core.internal.ParameterEntityReference;
 import org.eclipse.wst.dtd.core.internal.document.DTDModelImpl;
 import org.eclipse.wst.dtd.core.internal.event.IDTDFileListener;
 import org.eclipse.wst.dtd.core.internal.event.NodesEvent;
-import org.eclipse.wst.dtd.core.internal.parser.DTDRegionTypes;
 
 class DTDTreeContentProvider implements ITreeContentProvider, IDTDFileListener {
 
@@ -235,7 +234,12 @@ class DTDTreeContentProvider implements ITreeContentProvider, IDTDFileListener {
 	}
 
 	private boolean isVisibleNodeList(NodeList nodeList) {
-		return !nodeList.getListType().equals(DTDRegionTypes.ATTLIST_TAG);
+		/*
+		 * All NodesLists should be visible because you can momentarily have
+		 * an ATTLIST (for example) without a corresponding ELEMENT
+		 * declaration
+		 */
+		return true;// !nodeList.getListType().equals(DTDRegionTypes.ATTLIST_TAG);
 	}
 
 	public void nodeChanged(DTDNode node) {

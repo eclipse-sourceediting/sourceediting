@@ -25,27 +25,27 @@ import java.util.StringTokenizer;
 
 import org.eclipse.core.filebuffers.FileBuffers;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExtension;
+import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.Position;
-import org.eclipse.jst.jsp.core.internal.JSPCoreMessages;
 import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.contentmodel.TaglibController;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.TLDCMDocumentManager;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.JSP12TLDNames;
-import org.eclipse.jst.jsp.core.internal.java.jspel.ASTExpression;
-import org.eclipse.jst.jsp.core.internal.java.jspel.ELGenerator;
-import org.eclipse.jst.jsp.core.internal.java.jspel.JSPELParser;
-import org.eclipse.jst.jsp.core.internal.java.jspel.ParseException;
-import org.eclipse.jst.jsp.core.internal.java.jspel.Token;
-import org.eclipse.jst.jsp.core.internal.java.jspel.TokenMgrError;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.jst.jsp.core.internal.taglib.TaglibHelper;
 import org.eclipse.jst.jsp.core.internal.taglib.TaglibHelperManager;
 import org.eclipse.jst.jsp.core.internal.taglib.TaglibVariable;
+import org.eclipse.jst.jsp.core.jspel.IJSPELTranslator;
 import org.eclipse.wst.sse.core.internal.ltk.parser.BlockMarker;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
@@ -73,8 +73,22 @@ import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
  * @author pavery
  */
 public class JSPTranslator {
+	
+	private static final String EL_TRANSLATOR_EXTENSION_NAME = "elTranslator"; //$NON-NLS-1$ 
+
+	private static final String ELTRANSLATOR_PROP_NAME = "ELTranslator"; //$NON-NLS-1$ 
+
+	// Default EL Translator
+	private static final String DEFAULT_JSP_EL_TRANSLATOR_ID = "org.eclipse.jst.jsp.defaultJSP20"; //$NON-NLS-1$ 
+	
+	// handy plugin ID constant
+	private static final String JSP_CORE_PLUGIN_ID = "org.eclipse.jst.jsp.core"; //$NON-NLS-1$ 
+
 	// for debugging
 	private static final boolean DEBUG;
+
+	private IJSPELTranslator fELTranslator = null;
+	
 	static {
 		String value = Platform.getDebugOption("org.eclipse.jst.jsp.core/debug/jspjavamapping"); //$NON-NLS-1$
 		DEBUG = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
@@ -148,7 +162,7 @@ public class JSPTranslator {
 	protected final static int DECLARATION = 2;
 	protected final static int EXPRESSION = 4;
 	protected final static int SCRIPTLET = 8;
-
+	
 	/** used to avoid infinite looping include files */
 	private Stack fIncludes = null;
 	/** mostly for helper classes, so they parse correctly */
@@ -198,12 +212,16 @@ public class JSPTranslator {
 	 */
 	private StringBuffer fJspTextBuffer = new StringBuffer();
 	
-	/**
-	 * JSP Expression Language Parser.
-	 */
-	private JSPELParser elParser = null;
 
+	/** 
+	 * List of EL problems to be translated
+	 */
 	private ArrayList fELProblems = new ArrayList();
+
+	/**
+	 * EL Translator ID
+	 */
+	private String fELTranslatorID;
 
 	/**
 	 * configure using an XMLNode
@@ -215,6 +233,10 @@ public class JSPTranslator {
 
 		fProgressMonitor = monitor;
 		fStructuredModel = node.getModel();
+		String baseLocation = fStructuredModel.getBaseLocation();
+		
+		fELTranslatorID = getELTranslatorProperty(baseLocation);
+		
 		// fPositionNode = node;
 
 		fStructuredDocument = fStructuredModel.getStructuredDocument();
@@ -237,9 +259,9 @@ public class JSPTranslator {
 		// when configured on a file
 		// fStructuredModel, fPositionNode, fModelQuery, fStructuredDocument
 		// are all null
-
 		fProgressMonitor = monitor;
-
+		
+		fELTranslatorID = getELTranslatorProperty(jspFile);
 		String className = createClassname(jspFile);
 		if (className.length() > 0) {
 			setClassname(className);
@@ -269,6 +291,45 @@ public class JSPTranslator {
 		catch (IOException e) {
 			Logger.logException(e);
 		}
+	}
+
+	/**
+	 * Get the value of the ELTranslator property from a workspace relative 
+	 * path string
+	 * 
+	 * @param baseLocation Workspace-relative string path
+	 * @return Value of the ELTranslator property associated with the project.
+	 */
+	private String getELTranslatorProperty(String baseLocation){
+		IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
+		String elTranslatorValue = null;
+		IFile file = workspaceRoot.getFile(new Path(baseLocation));
+		elTranslatorValue = getELTranslatorProperty(file);
+		return elTranslatorValue;
+	}
+
+	/**
+	 * Get the value of the ELTranslator property from an IFile
+	 *  
+	 * @param file IFile 
+	 * @return Value of the ELTranslator property associated with the project.
+	 */
+	private String getELTranslatorProperty(IFile file) {
+		String elTranslatorValue = null;
+		try {
+			elTranslatorValue = file.getPersistentProperty(new QualifiedName(JSP_CORE_PLUGIN_ID, ELTRANSLATOR_PROP_NAME)); //$NON-NLS-1$
+		} catch (CoreException e) {
+			Logger.logException(e);
+		}
+		
+		if(null == elTranslatorValue) {
+			try {
+				elTranslatorValue = file.getProject().getPersistentProperty(new QualifiedName(JSP_CORE_PLUGIN_ID, ELTRANSLATOR_PROP_NAME)); //$NON-NLS-1$
+			} catch (CoreException e) {
+				Logger.logException(e);
+			}
+		}
+		return elTranslatorValue;
 	}
 
 	/**
@@ -1203,31 +1264,59 @@ public class JSPTranslator {
  }
 
 	
-	private void translateEL(String elText, IStructuredDocumentRegion currentNode, int contentStart, int contentLength) {
-		if(null == elParser) {
-			elParser = JSPELParser.createParser(elText);
-		} else {
-			elParser.ReInit(elText);
+	private void translateEL(String elText, String delim, IStructuredDocumentRegion currentNode, int contentStart, int contentLength) {
+		IJSPELTranslator translator = getELTranslator();
+		if(null != translator) {
+			translator.translateEL(elText, delim, currentNode, contentStart, contentLength, fUserELExpressions, fUserELRanges, fStructuredDocument);
 		}
-		
-		try {
-			ASTExpression expression = elParser.Expression();
-			ELGenerator gen = new ELGenerator();
-			gen.generate(expression, fUserELExpressions, fUserELRanges, this, currentNode, contentStart, contentLength);
-		} catch (ParseException e) {
-			Token curTok = e.currentToken;
-			int problemStartOffset;
-			int problemEndOffset;
-			Position pos = null;
-			problemStartOffset =  contentStart + curTok.beginColumn;
-			problemEndOffset = contentStart + curTok.endColumn;
+	}
+	
+	/**
+	 * Discover and instantiate an EL translator.
+	 */
+	public IJSPELTranslator getELTranslator() {
+		if(fELTranslator == null) {
 			
-			pos = new Position(problemStartOffset, problemEndOffset - problemStartOffset + 1);
-			fELProblems.add(new ELProblem(pos, e.getLocalizedMessage()));
-		} catch (TokenMgrError te) {
-			Position pos = new Position(contentStart, contentLength);
-			fELProblems.add(new ELProblem(pos, JSPCoreMessages.JSPEL_Token));
+			IExtensionPoint extensionPoint = Platform.getExtensionRegistry().getExtensionPoint(
+					JSP_CORE_PLUGIN_ID, // name of plugin that exposes this extension point
+					EL_TRANSLATOR_EXTENSION_NAME); // - extension id
+
+			// Iterate over all declared extensions of this extension point.  
+			// A single plugin may extend the extension point more than once, although it's not recommended.
+			IConfigurationElement bestTranslator = null;
+			IExtension[] extensions = extensionPoint.getExtensions();
+			for(int curExtension=0; curExtension < extensions.length; curExtension++) {
+				IExtension extension = extensions[curExtension];
+				
+				IConfigurationElement[] translators = extension.getConfigurationElements();
+				for(int curTranslator = 0; curTranslator < translators.length; curTranslator++) {
+					
+					IConfigurationElement elTranslator = translators[curTranslator];
+					
+					if (!EL_TRANSLATOR_EXTENSION_NAME.equals(elTranslator.getName())) { // - name of configElement 
+						continue;
+					}
+					
+					String idString = elTranslator.getAttribute("id"); //$NON-NLS-1$
+					if(null != idString && idString.equals(fELTranslatorID) || 
+							(null == bestTranslator && DEFAULT_JSP_EL_TRANSLATOR_ID.equals(idString))) {
+						bestTranslator = elTranslator;
+					}
+				}
+			}
+
+			if(null != bestTranslator) {
+				try {
+					Object execExt = bestTranslator.createExecutableExtension("class"); //$NON-NLS-1$
+					if (execExt instanceof IJSPELTranslator) {
+						return fELTranslator = (IJSPELTranslator)execExt;
+					} 
+				} catch (CoreException e) {
+					Logger.logException(e);
+				}
+			}
 		}
+		return fELTranslator;
 	}
 
 	/**
@@ -1299,7 +1388,7 @@ public class JSPTranslator {
 					translateDeclarationString(embeddedContainer.getText(content), embeddedContainer, contentStart, content.getLength());
 				} else if (type == DOMJSPRegionContexts.JSP_EL_OPEN) {
 					fLastJSPType = EXPRESSION;
-					translateEL(embeddedContainer.getText(content), fCurrentNode, contentStart, content.getLength());
+					translateEL(embeddedContainer.getText(content), embeddedContainer.getText(delim), fCurrentNode, contentStart, content.getLength());
 				}
 
 				// calculate relative offset in buffer

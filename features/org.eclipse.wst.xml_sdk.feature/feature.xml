@@ -1,28 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.eclipse.wst.xml_sdk.feature"
-      label="org.eclipse.wst.xml_sdk.feature"
-      version="1.0.0">
+      label="SDK for XML Components"
+      version="1.0.1.qualifier">
 
    <description>
       %description
    </description>
 
-
-
    <license url="license.html">
       %license
    </license>
 
-   <requires>
-      <import feature="org.eclipse.wst.xml_ui.feature" version="0.0.0"/>
-   </requires>
+   <url>
+      <update label="Web Tools Platform (WTP) Updates" url="http://download.eclipse.org/webtools/updates/"/>
+   </url>
 
-         
    <includes
          id="org.eclipse.wst.xml_ui.feature.source"
          version="0.0.0"/>
 
-
+   <requires>
+      <import feature="org.eclipse.wst.xml_ui.feature" version="0.0.0"/>
+   </requires>
 
 </feature>

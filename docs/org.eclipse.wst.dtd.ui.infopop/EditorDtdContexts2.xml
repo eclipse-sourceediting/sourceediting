@@ -13,14 +13,13 @@
  *******************************************************************************/ -->
 
 <contexts>
-	<context id="csh_outer_container">
-		<description/>
-	</context>
-	<context id="dtdsource_source_HelpId">
-		<description>
-			The DTD editor lets you edit a document type definition.
+<context id="csh_outer_container">
+<description/>
+</context>
+<context id="dtdsource_source_HelpId">
+<description>The DTD editor lets you edit a document type definition.
 
-			The editor provides text editing features such as syntax highlighting and unlimited undo and redo.
-		</description>
-	</context>
+The editor provides text editing features such as syntax highlighting and unlimited undo and redo.
+</description>
+</context>
 </contexts>
