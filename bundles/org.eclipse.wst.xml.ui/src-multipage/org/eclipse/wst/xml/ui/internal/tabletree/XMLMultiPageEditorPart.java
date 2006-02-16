@@ -40,11 +40,10 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.ide.IGotoMarker;
+import org.eclipse.ui.part.MultiPageEditorPart;
+import org.eclipse.ui.part.MultiPageEditorSite;
 import org.eclipse.ui.part.MultiPageSelectionProvider;
 import org.eclipse.ui.progress.UIJob;
-import org.eclipse.wst.common.ui.provisional.editors.PostMultiPageEditorSite;
-import org.eclipse.wst.common.ui.provisional.editors.PostMultiPageSelectionProvider;
-import org.eclipse.wst.common.ui.provisional.editors.PostSelectionMultiPageEditorPart;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
@@ -53,7 +52,7 @@ import org.eclipse.wst.xml.core.internal.provisional.contenttype.ContentTypeIdFo
 import org.eclipse.wst.xml.ui.internal.Logger;
 import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 
-public class XMLMultiPageEditorPart extends PostSelectionMultiPageEditorPart {
+public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 
 	/**
 	 * Internal part activation listener, copied from AbstractTextEditor
@@ -364,7 +363,7 @@ public class XMLMultiPageEditorPart extends PostSelectionMultiPageEditorPart {
 		if (fDesignViewer.getSelectionProvider() instanceof IPostSelectionProvider) {
 			((IPostSelectionProvider) fDesignViewer.getSelectionProvider()).addPostSelectionChangedListener(new ISelectionChangedListener() {
 				public void selectionChanged(SelectionChangedEvent event) {
-					((PostMultiPageSelectionProvider) getSite().getSelectionProvider()).firePostSelectionChanged(event);
+					((MultiPageSelectionProvider) getSite().getSelectionProvider()).firePostSelectionChanged(event);
 				}
 			});
 		}
@@ -525,7 +524,7 @@ public class XMLMultiPageEditorPart extends PostSelectionMultiPageEditorPart {
 	protected IEditorSite createSite(IEditorPart editor) {
 		IEditorSite site = null;
 		if (editor == fTextEditor) {
-			site = new PostMultiPageEditorSite(this, editor) {
+			site = new MultiPageEditorSite(this, editor) {
 				/**
 				 * @see org.eclipse.ui.part.MultiPageEditorSite#getActionBarContributor()
 				 */
@@ -661,7 +660,7 @@ public class XMLMultiPageEditorPart extends PostSelectionMultiPageEditorPart {
 	private IPreferenceStore getPreferenceStore() {
 		return XMLUIPlugin.getDefault().getPreferenceStore();
 	}
-	
+
 	StructuredTextEditor getTextEditor() {
 		return fTextEditor;
 	}
@@ -741,11 +740,13 @@ public class XMLMultiPageEditorPart extends PostSelectionMultiPageEditorPart {
 		saveLastActivePageIndex(newPageIndex);
 
 		if (newPageIndex == fDesignPageIndex) {
+			// design page isn't an IEditorPart, therefore we have to send
+			// selection changes ourselves
 			ISelectionProvider selectionProvider = fDesignViewer.getSelectionProvider();
 			if (selectionProvider != null) {
 				SelectionChangedEvent event = new SelectionChangedEvent(selectionProvider, selectionProvider.getSelection());
 				((MultiPageSelectionProvider) getSite().getSelectionProvider()).fireSelectionChanged(event);
-				((PostMultiPageSelectionProvider) getSite().getSelectionProvider()).firePostSelectionChanged(event);
+				((MultiPageSelectionProvider) getSite().getSelectionProvider()).firePostSelectionChanged(event);
 			}
 		}
 	}
