@@ -50,10 +50,13 @@ import org.eclipse.ui.texteditor.TextEditorAction;
  * the org.eclipse.jdt.internal.ui.JavaEditor's gotoError() method. Rewritten
  * based on 3.0M7 version to operate generically.
  * 
+ * @deprecated - use org.eclipse.ui.texteditor.GotoAnnotationAction
+ * 
  */
 public class GotoAnnotationAction extends TextEditorAction {
 
 	private static final boolean _debug = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.ui/gotoNextAnnotation")); //$NON-NLS-1$  //$NON-NLS-2$
+
 	/**
 	 * Clears the status line on selection changed.
 	 */
