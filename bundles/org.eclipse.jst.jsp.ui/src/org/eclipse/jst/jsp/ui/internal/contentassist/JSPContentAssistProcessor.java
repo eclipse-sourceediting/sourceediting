@@ -385,7 +385,8 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor {
 							if (provider.isFor(internalModel.getModelHandler())) {
 								provider.addAdapterFactories(internalModel);
 							}
-						} catch (Exception e) {
+						}
+						catch (Exception e) {
 							Logger.logException(e);
 						}
 					}
@@ -402,7 +403,8 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor {
 						}
 					}
 				}
-			} catch (Exception e) {
+			}
+			catch (Exception e) {
 				Logger.logException("Error in embedded JSP Content Assist", e); //$NON-NLS-1$
 			}
 		}
@@ -422,7 +424,8 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor {
 				Node nodeAlreadyAtIndex = children.item(childIndex);
 				if (nodeAlreadyAtIndex instanceof IDOMNode)
 					textInsertionOffset = ((IDOMNode) nodeAlreadyAtIndex).getEndOffset();
-			} else {
+			}
+			else {
 				textInsertionOffset = ((IDOMNode) node).getStartOffset();
 			}
 			TLDCMDocumentManager mgr = TaglibController.getTLDCMDocumentManager(((IDOMNode) node).getStructuredDocument());
@@ -453,9 +456,8 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor {
 
 			if (mqAdapter != null) {
 				CMDocument doc = mqAdapter.getModelQuery().getCorrespondingCMDocument(node);
-				// this shouldn't have to have the prefix coded in
-				if (!(doc != null && (doc instanceof JSPCMDocument || doc instanceof CMNodeWrapper || node.getNodeName().startsWith("jsp:")))) { //$NON-NLS-1$
-					// get jsp namespace elements and insert their contents
+				if (doc != null) {
+
 					CMDocument JCMDoc = HTMLCMDocumentFactory.getCMDocument(CMDocType.JSP11_DOC_TYPE);
 					CMNamedNodeMap jspelements = JCMDoc.getElements();
 
@@ -468,32 +470,36 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor {
 							domDoc = (Document) node;
 						else
 							domDoc = node.getOwnerDocument();
+						
 						// Show XML tag forms of JSP markers if jsp:root is
 						// the document element OR it's HTML but
 						// isn't really in the text.
 						// If the document isn't strictly XML, pull out the
-						// XML tag forms
-						if (!isXMLFormat(domDoc)) {
-							rejectElements.add(JSP12Namespace.ElementName.SCRIPTLET);
-							rejectElements.add(JSP12Namespace.ElementName.EXPRESSION);
-							rejectElements.add(JSP12Namespace.ElementName.DECLARATION);
-							rejectElements.add(JSP12Namespace.ElementName.DIRECTIVE_INCLUDE);
-							rejectElements.add(JSP12Namespace.ElementName.DIRECTIVE_PAGE);
-							rejectElements.add(JSP12Namespace.ElementName.TEXT);
-						}
-						// always exclude jsp:directive.taglib
-						if (isInternalAdapter) {
-							rejectElements.add(JSP12Namespace.ElementName.DIRECTIVE_TAGLIB);
-							rejectElements.add(JSP12Namespace.ElementName.DIRECTIVE_TAGLIB);
+						// XML tag forms it is xml format
+						rejectElements.add(JSP12Namespace.ElementName.SCRIPTLET);
+						rejectElements.add(JSP12Namespace.ElementName.EXPRESSION);
+						rejectElements.add(JSP12Namespace.ElementName.DECLARATION);
+						rejectElements.add(JSP12Namespace.ElementName.DIRECTIVE_INCLUDE);
+						rejectElements.add(JSP12Namespace.ElementName.DIRECTIVE_PAGE);
+						rejectElements.add(JSP12Namespace.ElementName.TEXT);
+						rejectElements.add(JSP12Namespace.ElementName.DIRECTIVE_TAGLIB);
+							
+						if (isXMLFormat(domDoc)) {
+
+							// jsp actions
 							rejectElements.add(JSP12Namespace.ElementName.FALLBACK);
 							rejectElements.add(JSP12Namespace.ElementName.USEBEAN);
+							rejectElements.add(JSP12Namespace.ElementName.GETPROPERTY);
 							rejectElements.add(JSP12Namespace.ElementName.SETPROPERTY);
+							rejectElements.add(JSP12Namespace.ElementName.INCLUDE);
 							rejectElements.add(JSP12Namespace.ElementName.FORWARD);
 							rejectElements.add(JSP12Namespace.ElementName.PLUGIN);
 							rejectElements.add(JSP12Namespace.ElementName.FALLBACK);
+							rejectElements.add(JSP12Namespace.ElementName.PARAM);
 							rejectElements.add(JSP12Namespace.ElementName.PARAMS);
 						}
-
+						
+						
 						// don't show jsp:root if a document element already
 						// exists
 						Element docElement = domDoc.getDocumentElement();
@@ -506,6 +512,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor {
 								continue;
 							elementDecls.add(ed);
 						}
+					
 					}
 				}
 			}
@@ -583,7 +590,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor {
 	 */
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer, int documentPosition) {
 		fTemplateContexts.clear();
-		
+
 		IStructuredDocumentRegion sdRegion = ContentAssistUtils.getStructuredDocumentRegion((StructuredTextViewer) viewer, documentPosition);
 		fViewer = viewer;
 		ICompletionProposal[] jspResults = EMPTY_PROPOSAL_SET;
@@ -591,8 +598,8 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor {
 
 		// check the actual partition type
 		String partitionType = getPartitionType((StructuredTextViewer) viewer, documentPosition);
-		IStructuredDocument structuredDocument = (IStructuredDocument)viewer.getDocument();
-		
+		IStructuredDocument structuredDocument = (IStructuredDocument) viewer.getDocument();
+
 		IStructuredDocumentRegion fn = structuredDocument.getRegionAtCharacterOffset(documentPosition);
 
 		// ////////////////////////////////////////////////////////////////////////////
@@ -606,9 +613,11 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor {
 				ITextRegion xmlOpenOrClose = regions.get(0);
 				if (xmlOpenOrClose.getType() == DOMRegionContext.XML_TAG_OPEN && documentPosition == possibleXMLJSP.getStartOffset()) {
 					// do regular jsp content assist
-				} else if (xmlOpenOrClose.getType() == DOMRegionContext.XML_END_TAG_OPEN && documentPosition > possibleXMLJSP.getStartOffset()) {
+				}
+				else if (xmlOpenOrClose.getType() == DOMRegionContext.XML_END_TAG_OPEN && documentPosition > possibleXMLJSP.getStartOffset()) {
 					// do regular jsp content assist
-				} else {
+				}
+				else {
 					// possible xml-jsp
 					ITextRegion nameRegion = regions.get(1);
 					String name = possibleXMLJSP.getText(nameRegion);
@@ -639,14 +648,17 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor {
 						if (documentPosition >= fn.getStartOffset() + sdr.getStartOffset() && documentPosition <= fn.getStartOffset() + sdr.getEndOffset()) {
 							return getJSPJavaCompletionProposals(viewer, documentPosition);
 						}
-					} else if (sdr.getType() == DOMRegionContext.XML_TAG_NAME) {
+					}
+					else if (sdr.getType() == DOMRegionContext.XML_TAG_NAME) {
 						if (documentPosition > fn.getStartOffset() + sdr.getStartOffset() && documentPosition < fn.getStartOffset() + sdr.getEndOffset()) {
 							return EMPTY_PROPOSAL_SET;
-						} else if (documentPosition == fn.getStartOffset() + sdr.getEndOffset() && sdr.getNext() != null && sdr.getNext().getType() == DOMJSPRegionContexts.JSP_CONTENT) {
+						}
+						else if (documentPosition == fn.getStartOffset() + sdr.getEndOffset() && sdr.getNext() != null && sdr.getNext().getType() == DOMJSPRegionContexts.JSP_CONTENT) {
 							// the end of an open tag <script>
 							// <jsp:scriptlet>| blah </jsp:scriptlet>
 							return getJSPJavaCompletionProposals(viewer, documentPosition);
-						} else if (documentPosition == fn.getStartOffset() + sdr.getStartOffset() && sdr.getPrevious() != null && sdr.getPrevious().getType() == DOMRegionContext.XML_TAG_NAME) {
+						}
+						else if (documentPosition == fn.getStartOffset() + sdr.getStartOffset() && sdr.getPrevious() != null && sdr.getPrevious().getType() == DOMRegionContext.XML_TAG_NAME) {
 							return getJSPJavaCompletionProposals(viewer, documentPosition);
 						}
 					}
@@ -686,7 +698,8 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor {
 									partitionType = getPartitionType((StructuredTextViewer) viewer, documentPosition - 1);
 									break;
 								}
-							} else if (XMLContentAssistUtilities.isJSPCloseDelimiter(temp.getType()) && documentPosition == trc.getStartOffset(temp)) {
+							}
+							else if (XMLContentAssistUtilities.isJSPCloseDelimiter(temp.getType()) && documentPosition == trc.getStartOffset(temp)) {
 								// JSP content assist
 								return getJSPJavaCompletionProposals(viewer, documentPosition);
 							}
@@ -706,7 +719,8 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor {
 					// macros etc...
 					// return getHTMLCompletionProposals(viewer,
 					// documentPosition);
-				} else if (fnDelim.getStartOffset() == documentPosition && (firstRegion.getType() == DOMRegionContext.XML_END_TAG_OPEN)) {
+				}
+				else if (fnDelim.getStartOffset() == documentPosition && (firstRegion.getType() == DOMRegionContext.XML_END_TAG_OPEN)) {
 					// <jsp:scriptlet> |</jsp:scriptlet>
 					// check previous partition type to see if it's JAVASCRIPT
 					// if it is, we're just gonna let the embedded JAVASCRIPT
@@ -724,14 +738,16 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor {
 							// not
 							// javascript...)
 							return getJSPJavaCompletionProposals(viewer, documentPosition);
-						} 
+						}
 						partitionType = IJSPPartitions.JSP_CONTENT_JAVASCRIPT;
 					}
-				} else if ((firstRegion.getType() == DOMRegionContext.XML_TAG_OPEN) && documentPosition >= fnDelim.getEndOffset()) {
+				}
+				else if ((firstRegion.getType() == DOMRegionContext.XML_TAG_OPEN) && documentPosition >= fnDelim.getEndOffset()) {
 					// anything else inbetween
 					return getJSPJavaCompletionProposals(viewer, documentPosition);
 				}
-			} else if (XMLContentAssistUtilities.isJSPDelimiter(fnDelim)) {
+			}
+			else if (XMLContentAssistUtilities.isJSPDelimiter(fnDelim)) {
 				// the delimiter <%, <%=, <%!, ...
 				if (XMLContentAssistUtilities.isJSPCloseDelimiter(fnDelim)) {
 					if (documentPosition == fnDelim.getStartOffset()) {
@@ -743,16 +759,18 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor {
 							String checkType = getPartitionType((StructuredTextViewer) viewer, documentPosition - 1);
 							if (checkType != IJSPPartitions.JSP_CONTENT_JAVASCRIPT) {
 								return getJSPJavaCompletionProposals(viewer, documentPosition);
-							} 
+							}
 							partitionType = IJSPPartitions.JSP_CONTENT_JAVASCRIPT;
 						}
 					}
-				} else if (XMLContentAssistUtilities.isJSPOpenDelimiter(fnDelim)) {
+				}
+				else if (XMLContentAssistUtilities.isJSPOpenDelimiter(fnDelim)) {
 					// if it's the first position of open delimiter
 					// use embedded HTML results
 					if (documentPosition == fnDelim.getStartOffset()) {
 						embeddedResults = getHTMLCompletionProposals(viewer, documentPosition);
-					} else if (documentPosition == fnDelim.getEndOffset()) {
+					}
+					else if (documentPosition == fnDelim.getEndOffset()) {
 						// it's at the EOF <%|
 						return getJSPJavaCompletionProposals(viewer, documentPosition);
 					}
@@ -803,7 +821,8 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor {
 					if (XMLContentAssistUtilities.isJSPOpenDelimiter(testRegion.getType())) {
 						if (!(((ITextRegionContainer) attrContainer).getEndOffset(testRegion) <= documentPosition))
 							return EMPTY_PROPOSAL_SET;
-					} else if (XMLContentAssistUtilities.isJSPCloseDelimiter(testRegion.getType())) {
+					}
+					else if (XMLContentAssistUtilities.isJSPCloseDelimiter(testRegion.getType())) {
 						if (!(((ITextRegionContainer) attrContainer).getStartOffset(testRegion) >= documentPosition))
 							return EMPTY_PROPOSAL_SET;
 					}
@@ -828,7 +847,8 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor {
 					embeddedResults = added;
 				}
 			}
-		} else {
+		}
+		else {
 			// the partition type is probably not mapped
 		}
 
@@ -868,44 +888,44 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor {
 		}
 
 		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=86656
-		if(partitionType == IJSPPartitions.JSP_DIRECTIVE) {
+		if (partitionType == IJSPPartitions.JSP_DIRECTIVE) {
 			ICompletionProposal[] importProposals = getImportProposals(viewer, documentPosition);
-			if(importProposals.length > 0)
-				jspResults = merge(jspResults, importProposals);			
+			if (importProposals.length > 0)
+				jspResults = merge(jspResults, importProposals);
 		}
 		return jspResults;
 	}
-	
+
 	private ICompletionProposal[] getImportProposals(ITextViewer viewer, int documentPosition) {
 		List importProposals = new ArrayList();
-		ICompletionProposal[] proposals =  getJSPJavaCompletionProposals(viewer, documentPosition);
+		ICompletionProposal[] proposals = getJSPJavaCompletionProposals(viewer, documentPosition);
 		for (int i = 0; i < proposals.length; i++) {
-			if(proposals[i] instanceof JSPCompletionProposal) {
-				
-				ICompletionProposal importProposal = adjustImportProposal((JSPCompletionProposal)proposals[i]);
+			if (proposals[i] instanceof JSPCompletionProposal) {
+
+				ICompletionProposal importProposal = adjustImportProposal((JSPCompletionProposal) proposals[i]);
 				importProposals.add(importProposal);
 			}
 		}
-		return (ICompletionProposal[])importProposals.toArray(new ICompletionProposal[importProposals.size()]);
+		return (ICompletionProposal[]) importProposals.toArray(new ICompletionProposal[importProposals.size()]);
 	}
 
-	
+
 	private ICompletionProposal adjustImportProposal(JSPCompletionProposal importProposal) {
-		
+
 		// just need to remove the ";"
 		// and adjust offsets for the change
-		String newReplace = importProposal.getReplacementString().replaceAll(";", ""); 
+		String newReplace = importProposal.getReplacementString().replaceAll(";", "");
 		importProposal.setReplacementString(newReplace);
-		
+
 		String newDisplay = importProposal.getDisplayString().replaceAll(";", "");
 		importProposal.setDisplayString(newDisplay);
-		
-		int newReplacementLength = importProposal.getReplacementLength()-1;
+
+		int newReplacementLength = importProposal.getReplacementLength() - 1;
 		importProposal.setReplacementLength(newReplacementLength);
-		
+
 		int newCursorPosition = importProposal.getCursorPosition() - 1;
 		importProposal.setCursorPosition(newCursorPosition);
-		
+
 		return importProposal;
 	}
 
@@ -996,7 +1016,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor {
 		JSPJavaContentAssistProcessor p = (JSPJavaContentAssistProcessor) fPartitionToProcessorMap.get(IJSPPartitions.JSP_DEFAULT);
 		return p.computeCompletionProposals(viewer, documentPosition);
 	}
-	
+
 	/**
 	 * @param viewer
 	 * @param documentPosition
@@ -1006,7 +1026,8 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor {
 		String partitionType = null;
 		try {
 			partitionType = TextUtilities.getContentType(viewer.getDocument(), IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING, viewer.modelOffset2WidgetOffset(documentPosition), false);
-		} catch (BadLocationException e) {
+		}
+		catch (BadLocationException e) {
 			partitionType = IDocument.DEFAULT_CONTENT_TYPE;
 		}
 		return partitionType;
@@ -1091,7 +1112,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor {
 				Object key = null;
 				while (it.hasNext()) {
 					key = it.next();
-					if (map.get(key) instanceof IReleasable ) {
+					if (map.get(key) instanceof IReleasable) {
 						((IReleasable) map.get(key)).release();
 					}
 				}
@@ -1149,7 +1170,8 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor {
 					if (directiveNames[i].startsWith(nameString) || documentPosition <= begin)
 						request.addProposal(new CustomCompletionProposal(directiveNames[i], begin, length, directiveNames[i].length(), JSPEditorPluginImageHelper.getInstance().getImage(JSPEditorPluginImages.IMG_OBJ_TAG_GENERIC), directiveNames[i], null, null, XMLRelevanceConstants.R_JSP));
 				}
-			} else { // by default, JSP_DIRECTIVE_NAME
+			}
+			else { // by default, JSP_DIRECTIVE_NAME
 				if (request == null)
 					request = newContentAssistRequest(xmlnode, xmlnode, sdRegion, completionRegion, sdRegion.getStartOffset(completionRegion), completionRegion.getTextLength(), matchString);
 				for (int i = 0; i < directiveNames.length; i++) {
@@ -1157,7 +1179,8 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor {
 						request.addProposal(new CustomCompletionProposal(directiveNames[i], request.getReplacementBeginPosition(), request.getReplacementLength(), directiveNames[i].length(), JSPEditorPluginImageHelper.getInstance().getImage(JSPEditorPluginImages.IMG_OBJ_TAG_GENERIC), directiveNames[i], null, null, XMLRelevanceConstants.R_JSP));
 				}
 			}
-		} else if ((completionRegion.getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_NAME && documentPosition > sdRegion.getTextEndOffset(completionRegion)) || (completionRegion.getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_CLOSE && documentPosition <= sdRegion.getStartOffset(completionRegion))) {
+		}
+		else if ((completionRegion.getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_NAME && documentPosition > sdRegion.getTextEndOffset(completionRegion)) || (completionRegion.getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_CLOSE && documentPosition <= sdRegion.getStartOffset(completionRegion))) {
 			if (request == null)
 				request = computeAttributeProposals(documentPosition, matchString, completionRegion, treeNode, xmlnode);
 			super.addTagCloseProposals(request);
@@ -1184,7 +1207,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor {
 				}
 			}
 		}
-		
+
 		addTemplates(request, TemplateContextTypeIdsJSP.ALL);
 		return request;
 	}
@@ -1205,7 +1228,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor {
 	private void addTemplates(ContentAssistRequest contentAssistRequest, String context) {
 		if (contentAssistRequest == null)
 			return;
-		
+
 		// if already adding template proposals for a certain context type, do
 		// not add again
 		if (!fTemplateContexts.contains(context)) {
