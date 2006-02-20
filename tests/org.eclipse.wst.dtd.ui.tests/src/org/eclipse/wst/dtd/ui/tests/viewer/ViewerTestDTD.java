@@ -227,7 +227,7 @@ public class ViewerTestDTD extends ViewPart {
 				}
 			});
 			mgr.add(new Separator());
-			// no longer able to set input to NULL
+			// no longer able to set fInput to NULL
 			// mgr.add(new Action() {
 			// public String getText() {
 			// return getToolTipText();
@@ -333,7 +333,7 @@ public class ViewerTestDTD extends ViewPart {
 	}
 
 	/**
-	 * Hooks up the viewer to follow the selection made in the active editor
+	 * Hooks up the viewer to follow the fSelection made in the active editor
 	 */
 	private void followSelection() {
 		ITextEditor editor = getActiveEditor();
@@ -394,13 +394,13 @@ public class ViewerTestDTD extends ViewPart {
 	}
 
 	/**
-	 * Sets up the viewer with the same document/input as the given editor
+	 * Sets up the viewer with the same document/fInput as the given editor
 	 * 
 	 * @param ITextEditor
 	 *            editor - the editor to use *cannot to be null*
 	 */
 	private void setupViewerForEditor(ITextEditor editor) {
-		stopFollowSelection(); // if was following selection, stop
+		stopFollowSelection(); // if was following fSelection, stop
 		IDocument doc = editor.getDocumentProvider().getDocument(editor.getEditorInput());
 		fSourceViewer.setDocument(doc);
 
@@ -412,7 +412,7 @@ public class ViewerTestDTD extends ViewPart {
 	 * Set up source viewer with a new document & configure it
 	 */
 	private void setupViewerForNew() {
-		stopFollowSelection(); // if was following selection, stop
+		stopFollowSelection(); // if was following fSelection, stop
 
 		IModelManager modelManager = StructuredModelManager.getModelManager();
 		IDocument doc = modelManager.createStructuredDocumentFor(ContentTypeIdForDTD.ContentTypeID_DTD);
@@ -432,7 +432,7 @@ public class ViewerTestDTD extends ViewPart {
 	}
 
 	/**
-	 * Cease following the selection made in the editor
+	 * Cease following the fSelection made in the editor
 	 */
 	private void stopFollowSelection() {
 		if (fContentOutlinePage != null) {
