@@ -26,7 +26,8 @@ import java.util.TimerTask;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.ListenerList;
+import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.ui.actions.IToggleBreakpointsTarget;
@@ -68,7 +69,6 @@ import org.eclipse.jface.text.source.LineChangeHover;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
 import org.eclipse.jface.text.source.projection.ProjectionSupport;
 import org.eclipse.jface.text.source.projection.ProjectionViewer;
-import org.eclipse.jface.util.ListenerList;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.DoubleClickEvent;
@@ -663,7 +663,7 @@ public class StructuredTextEditor extends TextEditor {
 			isFiringSelection = true;
 			for (int i = 0; i < listeners.length; ++i) {
 				final ISelectionChangedListener l = (ISelectionChangedListener) listeners[i];
-				Platform.run(new SafeRunnable() {
+				SafeRunner.run(new SafeRunnable() {
 					public void run() {
 						l.selectionChanged(event);
 					}
@@ -1562,6 +1562,7 @@ public class StructuredTextEditor extends TextEditor {
 		}
 		if (tools == null) {
 			tools = NullSourceEditingTextTools.getInstance();
+			((NullSourceEditingTextTools)tools).setTextEditor(this);
 		}
 		Method method = null; //$NON-NLS-1$
 		try {
