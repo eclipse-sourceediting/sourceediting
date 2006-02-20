@@ -54,7 +54,7 @@ public class LineStyleProviderForEmbeddedCSS extends LineStyleProviderForCSS {
 				if (regionStart <= start && start < regionEnd) {
 					TextAttribute attribute = getAttributeFor(token.kind);
 					if (attribute != null) {
-						holdResults.add(new StyleRange(start, token.length, attribute.getForeground(), attribute.getBackground()));
+						holdResults.add(new StyleRange(start, token.length, attribute.getForeground(), attribute.getBackground(), attribute.getStyle()));
 					}
 					else {
 						holdResults.add(new StyleRange(start, token.length, null, null));
