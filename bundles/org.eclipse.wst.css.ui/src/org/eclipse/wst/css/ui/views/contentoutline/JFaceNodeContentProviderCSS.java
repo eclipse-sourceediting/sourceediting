@@ -21,6 +21,10 @@ import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSPrimitiveValue;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleDeclItem;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleDeclaration;
+import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.sse.ui.internal.contentoutline.IJFaceNodeAdapter;
+import org.eclipse.wst.sse.ui.internal.contentoutline.IJFaceNodeAdapterFactory;
 import org.w3c.dom.css.CSSRule;
 import org.w3c.dom.stylesheets.MediaList;
 
@@ -80,6 +84,13 @@ class JFaceNodeContentProviderCSS implements ITreeContentProvider {
 	public Object[] getChildren(Object object) {
 		if (object instanceof ICSSNode) {
 			ICSSNode node = (ICSSNode) object;
+
+			// required to correctly connect the refreshing behavior to the
+			// tree
+			if (node instanceof INodeNotifier) {
+				((INodeNotifier) node).getAdapterFor(IJFaceNodeAdapter.class);
+			}
+
 			short nodeType = node.getNodeType();
 			if (nodeType == ICSSNode.STYLERULE_NODE || nodeType == ICSSNode.PAGERULE_NODE || nodeType == ICSSNode.FONTFACERULE_NODE) {
 				for (node = node.getFirstChild(); node != null && !(node instanceof ICSSStyleDeclaration); node.getNextSibling()) {
@@ -112,7 +123,16 @@ class JFaceNodeContentProviderCSS implements ITreeContentProvider {
 			ArrayList v = new ArrayList();
 			// internalGetElements(object, v);
 			addElements(object, v);
-			return v.toArray();
+			Object[] toArray = v.toArray();
+			
+			for (int i = 0; i < toArray.length; i++) {
+				// required to correctly connect the refreshing behavior to
+				// the tree
+				if (toArray[i] instanceof INodeNotifier) {
+					((INodeNotifier) toArray[i]).getAdapterFor(IJFaceNodeAdapter.class);
+				}
+			}
+			return toArray;
 		}
 		return new Object[0];
 
@@ -148,6 +168,11 @@ class JFaceNodeContentProviderCSS implements ITreeContentProvider {
 	public boolean hasChildren(Object object) {
 		// return getAdapter(object).hasChildren((ICSSNode) object);
 		if (object instanceof ICSSNode) {
+			// required to correctly connect the refreshing behavior to the
+			// tree
+			if (object instanceof INodeNotifier) {
+				((INodeNotifier) object).getAdapterFor(IJFaceNodeAdapter.class);
+			}
 			if (object instanceof ICSSStyleDeclItem)
 				return false;
 			else
@@ -163,6 +188,18 @@ class JFaceNodeContentProviderCSS implements ITreeContentProvider {
 	 *      java.lang.Object, java.lang.Object)
 	 */
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+		if (oldInput != null && oldInput instanceof IStructuredModel) {
+			IJFaceNodeAdapterFactory factory = (IJFaceNodeAdapterFactory) ((IStructuredModel) oldInput).getFactoryRegistry().getFactoryFor(IJFaceNodeAdapter.class);
+			if (factory != null) {
+				factory.removeListener(viewer);
+			}
+		}
+		if (newInput != null && newInput instanceof IStructuredModel) {
+			IJFaceNodeAdapterFactory factory = (IJFaceNodeAdapterFactory) ((IStructuredModel) newInput).getFactoryRegistry().getFactoryFor(IJFaceNodeAdapter.class);
+			if (factory != null) {
+				factory.addListener(viewer);
+			}
+		}
 	}
 
 	/**
