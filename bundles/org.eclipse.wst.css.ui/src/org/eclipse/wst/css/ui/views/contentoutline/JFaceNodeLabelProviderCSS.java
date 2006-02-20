@@ -14,7 +14,6 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSMediaRule;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
-import org.eclipse.wst.css.core.internal.provisional.document.ICSSPageRule;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSPrimitiveValue;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleDeclItem;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleRule;
@@ -91,7 +90,7 @@ class JFaceNodeLabelProviderCSS extends LabelProvider {
 					}
 					break;
 				case ICSSNode.PAGERULE_NODE :
-					result = ((ICSSPageRule) element).getSelectors().getString();
+					result = "@page";//$NON-NLS-1$
 					break;
 				case ICSSNode.STYLEDECLARATION_NODE :
 					result = "properties";//$NON-NLS-1$
