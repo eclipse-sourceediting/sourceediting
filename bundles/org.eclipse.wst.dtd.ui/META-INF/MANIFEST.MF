@@ -12,6 +12,7 @@ Export-Package: org.eclipse.wst.dtd.ui,
  org.eclipse.wst.dtd.ui.internal.editor,
  org.eclipse.wst.dtd.ui.internal.preferences,
  org.eclipse.wst.dtd.ui.internal.projection,
+ org.eclipse.wst.dtd.ui.internal.properties.section,
  org.eclipse.wst.dtd.ui.internal.registry,
  org.eclipse.wst.dtd.ui.internal.style,
  org.eclipse.wst.dtd.ui.internal.templates,
@@ -36,5 +37,8 @@ Require-Bundle: org.eclipse.core.resources,
  org.eclipse.wst.sse.ui,
  org.eclipse.wst.xml.core,
  org.eclipse.wst.validation,
- org.eclipse.wst.xml.ui
-Eclipse-AutoStart: true
+ org.eclipse.wst.xml.ui,
+ org.eclipse.wst.common.ui.properties,
+ org.eclipse.wst.common.ui,
+ org.eclipse.wst.common.uriresolver
+Eclipse-LazyStart: true

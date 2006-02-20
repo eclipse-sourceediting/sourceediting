@@ -32,13 +32,13 @@ public class ValidateDTDAction extends ValidateAction {
 	/**
 	 * Constructor.
 	 * 
-	 * @param file
+	 * @param f
 	 *            The file to validate.
-	 * @param showDialog
+	 * @param doShowDialog
 	 *            Whether or not to show dialogs during validation.
 	 */
-	public ValidateDTDAction(IFile file, boolean showDialog) {
-		super(file, showDialog);
+	public ValidateDTDAction(IFile f, boolean doShowDialog) {
+		super(f, doShowDialog);
 	}
 
 	protected void validate(final IFile fileToValidate) {
