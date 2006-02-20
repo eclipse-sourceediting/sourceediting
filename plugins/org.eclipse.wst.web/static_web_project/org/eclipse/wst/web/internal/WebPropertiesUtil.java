@@ -8,7 +8,7 @@
  **************************************************************************************************/
 package org.eclipse.wst.web.internal;
 
-import java.util.StringTokenizer;
+import com.ibm.icu.util.StringTokenizer;
 
 public class WebPropertiesUtil {
 	private static final char[] BAD_CHARS = {'/', '\\', ':'};
