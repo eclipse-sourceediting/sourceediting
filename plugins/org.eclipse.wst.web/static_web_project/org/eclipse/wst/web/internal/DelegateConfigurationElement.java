@@ -8,6 +8,7 @@ package org.eclipse.wst.web.internal;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IContributor;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.InvalidRegistryObjectException;
 
@@ -195,6 +196,18 @@ public class DelegateConfigurationElement implements IConfigurationElement {
 	public IConfigurationElement toEquinox() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public IContributor getContributor() throws InvalidRegistryObjectException {
+		if (delegateElement == null)
+			throw new InvalidRegistryObjectException();
+		return delegateElement.getContributor();
+	}
+
+	public String getNamespaceIdentifier() throws InvalidRegistryObjectException {
+		if (delegateElement == null)
+			return DELEGATE_NAMESPACE;
+		return delegateElement.getNamespaceIdentifier();
 	}
 
 }
