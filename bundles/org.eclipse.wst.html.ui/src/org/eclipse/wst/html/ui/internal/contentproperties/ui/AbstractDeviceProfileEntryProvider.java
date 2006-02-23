@@ -12,6 +12,9 @@ package org.eclipse.wst.html.ui.internal.contentproperties.ui;
 
 import java.util.Iterator;
 
+/**
+ * @deprecated Not needed.  See BUG118359
+ */
 public class AbstractDeviceProfileEntryProvider implements
 		DeviceProfileEntryProvider {
 

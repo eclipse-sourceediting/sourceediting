@@ -32,6 +32,8 @@ public class CSSCoreMessages extends NLS {
 	public static String _6concat_ERROR_;
 	public static String _7concat_ERROR_;
 	public static String _8concat_ERROR_;
+	public static String CSSContentPropertiesManager_Updating;
+	public static String CSSContentPropertiesManager_Problems_Updating;
 
 	static {
 		// load message values from bundle file

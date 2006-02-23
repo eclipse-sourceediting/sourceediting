@@ -18,6 +18,9 @@ import java.util.List;
 
 import org.eclipse.core.filebuffers.FileBuffers;
 import org.eclipse.core.filebuffers.ITextFileBuffer;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.content.IContentDescription;
@@ -25,6 +28,7 @@ import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.jst.jsp.core.internal.Logger;
+import org.eclipse.jst.jsp.core.internal.contentproperties.JSPFContentProperties;
 import org.eclipse.jst.jsp.core.internal.document.PageDirectiveAdapter;
 import org.eclipse.jst.jsp.core.internal.document.PageDirectiveAdapterFactory;
 import org.eclipse.jst.jsp.core.internal.document.PageDirectiveWatcherFactory;
@@ -108,9 +112,19 @@ public class JSPModelLoader extends AbstractModelLoader {
 	 * 
 	 * Specification cites HTML as the default contentType.
 	 */
-	private EmbeddedTypeHandler getJSPDefaultEmbeddedType() {
+	private EmbeddedTypeHandler getJSPDefaultEmbeddedType(IStructuredModel model) {
 		EmbeddedTypeRegistry reg = getEmbeddedContentTypeRegistry();
-		return reg.getTypeFor(getDefaultMimeType());
+
+		String mimeType = null;
+		// default embedded type for fragments
+		if (model != null) {
+			IFile file = getFile(model);
+			if (file != null) {
+				mimeType = JSPFContentProperties.getProperty(JSPFContentProperties.JSPCONTENTTYPE, file, true);
+			}
+		}
+		mimeType = mimeType == null ? getDefaultMimeType() : mimeType;
+		return reg.getTypeFor(mimeType);
 	}
 
 	/**
@@ -142,7 +156,7 @@ public class JSPModelLoader extends AbstractModelLoader {
 		// even though this is an "empty model" ... we want it to have at
 		// least the
 		// default embeddeded content type handler
-		EmbeddedTypeHandler embeddedType = getJSPDefaultEmbeddedType();
+		EmbeddedTypeHandler embeddedType = getJSPDefaultEmbeddedType(null);
 		embeddedType.initializeParser((JSPCapableParser) structuredDocument.getParser());
 		return structuredDocument;
 	}
@@ -265,6 +279,19 @@ public class JSPModelLoader extends AbstractModelLoader {
 		return desc;
 	}
 
+	private IFile getFile(IStructuredModel model) {
+		if (model != null) {
+			String location = model.getBaseLocation();
+			if (location != null) {
+				IPath path = new Path(location);
+				if (!path.toFile().exists() && path.segmentCount() > 1) {
+					return ResourcesPlugin.getWorkspace().getRoot().getFile(path);
+				}
+			}
+		}
+		return null;
+	}
+
 	/**
 	 * Method getLanguage.
 	 * 
@@ -278,6 +305,10 @@ public class JSPModelLoader extends AbstractModelLoader {
 		// Note: if model contains an unsupported
 		// language, we'll even return it,
 		// since who knows what future holds.
+
+		// get default language specified in properties page
+		IFile file = getFile(model);
+		result = JSPFContentProperties.getProperty(JSPFContentProperties.JSPLANGUAGE, file, true);
 
 		// always return something
 		if (result == null) {
@@ -481,7 +512,7 @@ public class JSPModelLoader extends AbstractModelLoader {
 		}
 		else {
 			// use default embeddedType if it couldn't determine one
-			embeddedContentType = getJSPDefaultEmbeddedType();
+			embeddedContentType = getJSPDefaultEmbeddedType(model);
 			pageDirectiveAdapter.setEmbeddedType(embeddedContentType);
 			embeddedContentType.initializeFactoryRegistry(model.getFactoryRegistry());
 		}
@@ -490,6 +521,7 @@ public class JSPModelLoader extends AbstractModelLoader {
 	protected void initEmbeddedTypePost(IStructuredModel model) {
 		// should already be initialized (from initEmbeddedTypePre)
 		// via IContentDescription
+		setLanguageInPageDirective(model);
 	}
 
 	/**
@@ -505,8 +537,8 @@ public class JSPModelLoader extends AbstractModelLoader {
 		else {
 			// initEmbeddedType(newModel);
 			initCloneOfEmbeddedType(newModel, existingEmbeddedType, newEmbeddedContentType);
+			setLanguageInPageDirective(newModel);
 		}
-		setLanguageInPageDirective(newModel);
 	}
 
 	protected void setLanguageInPageDirective(IStructuredModel newModel) {
@@ -584,28 +616,28 @@ public class JSPModelLoader extends AbstractModelLoader {
 		// For JSPs, the ModelQueryAdapter must be "attached" to the document
 		// before content is set in the model, so taglib initization can
 		// take place.
-		// In this "clone model" case, we create a ModelQuery adapter 
-		// create a new instance from the old data. Note: I think this 
-		// "forced fit" only works here since the implimentaiton of 
-		// ModelQueryAdatper does not 
-		// have to be released. 
-		
-		ModelQueryAdapter modelQueryAdapter =  getModelQueryAdapter(model);
+		// In this "clone model" case, we create a ModelQuery adapter
+		// create a new instance from the old data. Note: I think this
+		// "forced fit" only works here since the implimentaiton of
+		// ModelQueryAdatper does not
+		// have to be released.
+
+		ModelQueryAdapter modelQueryAdapter = getModelQueryAdapter(model);
 		if (modelQueryAdapter == null) {
 			modelQueryAdapter = getModelQueryAdapter(oldModel);
 			IDOMDocument document = ((IDOMModel) model).getDocument();
 			document.addAdapter(new JSPModelQueryAdapterImpl(modelQueryAdapter.getCMDocumentCache(), modelQueryAdapter.getModelQuery(), modelQueryAdapter.getIdResolver()));
-			
+
 		}
 
-		
-		
+
+
 		return model;
 	}
 
 	private ModelQueryAdapter getModelQueryAdapter(IStructuredModel model) {
 		IDOMDocument document = ((IDOMModel) model).getDocument();
-		
+
 		ModelQueryAdapter modelQueryAdapter = (ModelQueryAdapter) ((INodeNotifier) document).getAdapterFor(ModelQueryAdapter.class);
 		return modelQueryAdapter;
 	}

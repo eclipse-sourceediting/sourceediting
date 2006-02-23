@@ -10,6 +10,9 @@
  *******************************************************************************/
 package org.eclipse.wst.html.ui.internal.contentproperties.ui;
 
+/**
+ * @deprecated Not needed. See BUG118359
+ */
 public class AbstractDeviceProfileEntry implements DeviceProfileEntry {
 
 	public AbstractDeviceProfileEntry() {

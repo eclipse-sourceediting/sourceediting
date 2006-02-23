@@ -47,6 +47,8 @@ public class HTMLCoreMessages extends NLS {
 	public static String CDATA_section_not_closed__ERROR_;
 	public static String _ERROR_Tag___0___should_be_an_empty_element_tag_1;
 	public static String _ERROR_Attribute_value___0___not_closed__1;
+	public static String HTMLContentPropertiesManager_Updating;
+	public static String HTMLContentPropertiesManager_Problems_Updating;
 
 	static {
 		// load message values from bundle file

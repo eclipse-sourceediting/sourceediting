@@ -20,8 +20,7 @@ import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.jst.jsp.core.internal.JSPCoreMessages;
-import org.eclipse.jst.jsp.core.internal.JSPCorePlugin;
-import org.eclipse.jst.jsp.core.internal.preferences.JSPCorePreferenceNames;
+import org.eclipse.jst.jsp.core.internal.contentproperties.JSPFContentProperties;
 import org.eclipse.jst.jsp.core.internal.provisional.contenttype.ContentTypeIdForJSP;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.osgi.util.NLS;
@@ -322,7 +321,7 @@ public class JSPValidator implements IValidator {
 	 */
 	 private boolean shouldValidate2(IFile file) {
 		// get preference for validate jsp fragments
-		boolean shouldValidate = Platform.getPreferencesService().getBoolean(JSPCorePlugin.getDefault().getBundle().getSymbolicName(), JSPCorePreferenceNames.VALIDATE_FRAGMENTS, true, null);
+		boolean shouldValidate = Boolean.valueOf(JSPFContentProperties.getProperty(JSPFContentProperties.VALIDATE_FRAGMENTS, file, true)).booleanValue();
 
 		/*
 		 * if jsp fragments should not be validated, check if file is jsp

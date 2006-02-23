@@ -10,25 +10,20 @@
  *******************************************************************************/
 package org.eclipse.wst.css.core.internal.metamodel.util;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.wst.css.core.internal.contentproperties.CSSContentProperties;
 import org.eclipse.wst.css.core.internal.metamodel.CSSProfile;
 import org.eclipse.wst.css.core.internal.metamodel.CSSProfileRegistry;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSDocument;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSModel;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
-import org.eclipse.wst.sse.internal.contentproperties.ContentSettingsCreator;
-import org.eclipse.wst.sse.internal.contentproperties.IContentSettings;
 
 
 public class CSSProfileFinder {
-
-	final static private String CSS_PROFILE = "css-profile"; //$NON-NLS-1$
-
 	/**
 	 * Constructor for CSSProfileFinder.
 	 */
@@ -76,22 +71,12 @@ public class CSSProfileFinder {
 		CSSProfile profile = null;
 
 		if (baseLocation != null) {
-			IContentSettings cs = ContentSettingsCreator.create();
 			IPath path = new Path(baseLocation);
 			IResource resource = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(path);
 			if (resource == null && path.segmentCount() > 1)
 				resource = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
 			if (resource != null) {
-				IProject project = resource.getProject();
-				// at first, initialized with project settings
-				if (project != null) {
-					String profileID = cs.getProperty(project, CSS_PROFILE);
-					if (profileID != null && 0 < profileID.length()) {
-						profile = reg.getProfile(profileID);
-					}
-				}
-				// if resource settings exist, overwrite with project settings
-				String profileID = cs.getProperty(resource, CSS_PROFILE);
+				String profileID = CSSContentProperties.getProperty(CSSContentProperties.CSS_PROFILE, resource, true);
 				if (profileID != null && 0 < profileID.length()) {
 					profile = reg.getProfile(profileID);
 				}

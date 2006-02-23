@@ -400,20 +400,20 @@
 	<!-- Add new JSP wizard to J2EE Project Navigator -->
 	<extension
 		id="org.eclipse.jst.jsp.commonWizard.newJSP"
-		point="org.eclipse.wst.common.navigator.workbench.commonWizard">
+		point="org.eclipse.ui.navigator.navigatorContent">
 		<commonWizard
 			type="new"
 			wizardId="org.eclipse.jst.jsp.ui.internal.wizard.NewJSPWizard">
 			<enablement>
 				<or>
-					<objectClass
-						name="org.eclipse.core.resources.IProject" />
+					<instanceof
+						value="org.eclipse.core.resources.IProject" />
 
-					<objectClass
-						name="org.eclipse.core.resources.IFolder" />
+					<instanceof
+						value="org.eclipse.core.resources.IFolder" />
 
-					<objectClass
-						name="org.eclipse.core.resources.IFile" />
+					<instanceof
+						value="org.eclipse.core.resources.IFile" />
 
 				</or>
 			</enablement>
@@ -548,5 +548,31 @@
                actionID="RulerClick"
                id="org.eclipse.ui.texteditor.SelectRulerAction"/>
         </editorContribution>
+	</extension>
+	<!-- JSP Fragment Property Page -->
+	<extension point="org.eclipse.ui.propertyPages">
+		<!-- for j2ee web project -->
+		<page
+			objectClass="org.eclipse.core.resources.IProject"
+			adaptable="true"
+			name="%JSPFragmentContentSettings.name"
+			class="org.eclipse.jst.jsp.ui.internal.contentproperties.ui.ProjectJSPFContentSettingsPropertyPage"
+			id="org.eclipse.jst.jsp.ui.internal.contentproperties.ProjectJSPFContentSettingsPropertyPage">
+			<filter
+				name="nature"
+				value="org.eclipse.wst.common.project.facet.core.nature">
+			</filter>
+		</page>
+		<page
+			objectClass="org.eclipse.core.resources.IFile"
+			adaptable="true"
+			name="%JSPFragmentContentSettings.name"
+			class="org.eclipse.jst.jsp.ui.internal.contentproperties.ui.JSPFContentSettingsPropertyPage"
+			id="org.eclipse.jst.jsp.ui.internal.contentproperties.JSPFContentSettingsPropertyPage.jspf">
+			<filter
+				name="contentTypeId"
+				value="org.eclipse.jst.jsp.core.jspfragmentsource">
+			</filter>
+		</page>
 	</extension>
 </plugin>

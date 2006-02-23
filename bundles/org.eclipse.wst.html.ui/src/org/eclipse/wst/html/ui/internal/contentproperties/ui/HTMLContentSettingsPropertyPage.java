@@ -26,6 +26,9 @@ import org.eclipse.wst.sse.internal.contentproperties.IContentSettings;
 import org.eclipse.wst.sse.ui.internal.contentproperties.ui.ComboListOnPropertyPage;
 import org.eclipse.wst.sse.ui.internal.contentproperties.ui.ContentSettingsPropertyPage;
 
+/**
+ * @deprecated Use WebContentSettingsPropertyPage instead
+ */
 public final class HTMLContentSettingsPropertyPage extends ContentSettingsPropertyPage implements org.eclipse.swt.events.SelectionListener {
 
 

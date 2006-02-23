@@ -23,6 +23,26 @@ public class HTMLUIMessages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.wst.html.ui.internal.HTMLUIPluginResources";//$NON-NLS-1$
 	private static ResourceBundle fResourceBundle;
 
+	static {
+		// load message values from bundle file
+		NLS.initializeMessages(BUNDLE_NAME, HTMLUIMessages.class);
+	}
+	
+	private HTMLUIMessages() {
+		// cannot create new instance of this class
+	}
+	
+	public static ResourceBundle getResourceBundle() {
+		try {
+			if (fResourceBundle == null)
+				fResourceBundle = ResourceBundle.getBundle(BUNDLE_NAME);
+		}
+		catch (MissingResourceException x) {
+			fResourceBundle = null;
+		}
+		return fResourceBundle;
+	}
+	
 	public static String Sample_HTML_doc;
 	public static String HTMLFilesPreferencePage_0;
 	public static String _UI_WIZARD_NEW_TITLE;
@@ -55,9 +75,14 @@ public class HTMLUIMessages extends NLS {
 	public static String Creating_files;
 	public static String Encoding_desc;
 	public static String UI_Description_of_role_of_following_DOCTYPE;
+	public static String UI_Default_HTML_DOCTYPE_ID___1;
 	public static String UI_Public_ID;
 	public static String UI_System_ID;
 	public static String UI_none;
+	public static String UI_CSS_profile___2;
+	public static String WebContentSettingsPropertyPage_0;
+	public static String ProjectWebContentSettingsPropertyPage_0;
+	
 	public static String Preferred_markup_case_UI_;
 	public static String Tag_names__UI_;
 	public static String Tag_names_Upper_case_UI_;
@@ -88,24 +113,4 @@ public class HTMLUIMessages extends NLS {
 	public static String HTMLFilesPreferencePage_2;
 	public static String HTMLFilesPreferencePage_3;
 	// above are possibly unused strings that may be deleted
-	
-	static {
-		// load message values from bundle file
-		NLS.initializeMessages(BUNDLE_NAME, HTMLUIMessages.class);
-	}
-	
-	private HTMLUIMessages() {
-		// cannot create new instance of this class
-	}
-	
-	public static ResourceBundle getResourceBundle() {
-		try {
-			if (fResourceBundle == null)
-				fResourceBundle = ResourceBundle.getBundle(BUNDLE_NAME);
-		}
-		catch (MissingResourceException x) {
-			fResourceBundle = null;
-		}
-		return fResourceBundle;
-	}
 }

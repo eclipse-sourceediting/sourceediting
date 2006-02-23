@@ -16,13 +16,12 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.IDocumentExtension3;
 import org.eclipse.jface.text.IDocumentPartitioner;
+import org.eclipse.jst.jsp.core.internal.contentproperties.JSPFContentProperties;
 import org.eclipse.jst.jsp.core.internal.modelhandler.EmbeddedTypeStateData;
 import org.eclipse.jst.jsp.core.internal.text.StructuredTextPartitionerForJSP;
 import org.eclipse.wst.sse.core.internal.ltk.modelhandler.EmbeddedTypeHandler;
@@ -38,14 +37,13 @@ import org.eclipse.wst.sse.core.internal.util.StringUtils;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 
 /**
- * This class has the responsibility to provide 
- * an embedded factory registry for JSP Aware INodeAdapter Factories
- * to use. 
+ * This class has the responsibility to provide an embedded factory registry
+ * for JSP Aware INodeAdapter Factories to use.
  * 
- * Typically, the embedded type is to be considered a feature of 
- * the document, so JSP Aware AdpaterFactories should call
- * getAdapter(PageDirectiveAdapter.class) directoy on the document
- * (or owning document) node.
+ * Typically, the embedded type is to be considered a feature of the document,
+ * so JSP Aware AdpaterFactories should call
+ * getAdapter(PageDirectiveAdapter.class) directoy on the document (or owning
+ * document) node.
  */
 public class PageDirectiveAdapterImpl implements PageDirectiveAdapter {
 
@@ -61,7 +59,7 @@ public class PageDirectiveAdapterImpl implements PageDirectiveAdapter {
 	public PageDirectiveAdapterImpl(INodeNotifier target) {
 		super();
 		notifierAtCreation = target;
-		// we need to remember our instance of model, 
+		// we need to remember our instance of model,
 		// in case we need to "signal" a re-init needed.
 		if (target instanceof IDOMNode) {
 			IDOMNode node = (IDOMNode) target;
@@ -71,11 +69,11 @@ public class PageDirectiveAdapterImpl implements PageDirectiveAdapter {
 	}
 
 	/**
-	 * parses the full contentType value into its two parts
-	 * the contentType, and the charset, if present. Note: this 
-	 * method is a lightly modified version of a method in AbstractHeadParser.
-	 * There, we're mostly interested in the charset part of contentTypeValue. 
-	 * Here, we're mostly interested in the mimeType part.
+	 * parses the full contentType value into its two parts the contentType,
+	 * and the charset, if present. Note: this method is a lightly modified
+	 * version of a method in AbstractHeadParser. There, we're mostly
+	 * interested in the charset part of contentTypeValue. Here, we're mostly
+	 * interested in the mimeType part.
 	 */
 	private String getMimeTypeFromContentTypeValue(String contentTypeValue) {
 		if (contentTypeValue == null)
@@ -83,7 +81,8 @@ public class PageDirectiveAdapterImpl implements PageDirectiveAdapter {
 		String cleanContentTypeValue = StringUtils.stripNonLetterDigits(contentTypeValue);
 		StringTokenizer tokenizer = new StringTokenizer(cleanContentTypeValue, ";= \t\n\r\f"); //$NON-NLS-1$
 		int tLen = tokenizer.countTokens();
-		// if contains encoding should have three tokens, the mimetype, the word 'charset', and the encoding value
+		// if contains encoding should have three tokens, the mimetype, the
+		// word 'charset', and the encoding value
 		String[] tokens = new String[tLen];
 		int j = 0;
 		while (tokenizer.hasMoreTokens()) {
@@ -91,9 +90,9 @@ public class PageDirectiveAdapterImpl implements PageDirectiveAdapter {
 			j++;
 		}
 		// 
-		// Following is the common form for target expression		
+		// Following is the common form for target expression
 		// <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		// But apparrently is also valid without the content type there, 
+		// But apparrently is also valid without the content type there,
 		// just the charset, as follows:
 		// <META http-equiv="Content-Type" content="charset=UTF-8">
 		// So we'll loop through tokens and key off of 'charset'
@@ -105,21 +104,21 @@ public class PageDirectiveAdapterImpl implements PageDirectiveAdapter {
 				break;
 			}
 		}
-		//String charset = null;
+		// String charset = null;
 		String contentType = null;
 		if (charsetPos > -1) {
 			// case where charset was present
-			//			int charsetValuePos = charsetPos + 1;
-			//			if (charsetValuePos < tokens.length) {
-			//				charset = tokens[charsetValuePos];
-			//			}
+			// int charsetValuePos = charsetPos + 1;
+			// if (charsetValuePos < tokens.length) {
+			// charset = tokens[charsetValuePos];
+			// }
 			int contentTypeValuePos = charsetPos - 1;
 			if (contentTypeValuePos > -1) {
 				contentType = tokens[contentTypeValuePos];
 			}
 		}
 		else {
-			// charset was not present, so if there's 
+			// charset was not present, so if there's
 			// a value, we assume its the contentType value
 			if (tokens.length > 0) {
 				contentType = tokens[0];
@@ -137,8 +136,6 @@ public class PageDirectiveAdapterImpl implements PageDirectiveAdapter {
 	private int firstLanguagePosition = -1;
 	private int firstContentTypePosition = -1;
 
-	private boolean reinitializing;
-
 	/*
 	 * @see INodeAdapter#isAdapterForType(Object)
 	 */
@@ -147,7 +144,8 @@ public class PageDirectiveAdapterImpl implements PageDirectiveAdapter {
 	}
 
 	/*
-	 * @see INodeAdapter#notifyChanged(INodeNotifier, int, Object, Object, Object, int)
+	 * @see INodeAdapter#notifyChanged(INodeNotifier, int, Object, Object,
+	 *      Object, int)
 	 */
 	public void notifyChanged(INodeNotifier notifier, int eventType, Object changedFeature, Object oldValue, Object newValue, int pos) {
 	}
@@ -157,7 +155,7 @@ public class PageDirectiveAdapterImpl implements PageDirectiveAdapter {
 		if (embeddedTypeHandler == handler) {
 			return;
 		}
-		// then one exists, and the new one is truely different, so we need to 
+		// then one exists, and the new one is truely different, so we need to
 		// release and remove current factories
 		if (embeddedTypeHandler != null) {
 			Iterator list = embeddedFactoryRegistry.iterator();
@@ -187,7 +185,7 @@ public class PageDirectiveAdapterImpl implements PageDirectiveAdapter {
 	 */
 	public INodeAdapter adapt(INodeNotifier notifier, Object type) {
 		INodeAdapter result = null;
-		// if embeddedContentType hasn't been set, 
+		// if embeddedContentType hasn't been set,
 		// then we can not adapt it.
 		if (embeddedTypeHandler != null) {
 			if (embeddedFactoryRegistry != null) {
@@ -221,77 +219,90 @@ public class PageDirectiveAdapterImpl implements PageDirectiveAdapter {
 		embeddedFactoryRegistry.add(factory);
 	}
 
-	//	/**
-	//	 * Used by PageDirectiveWatchers to signal that some important attribute has changed, and 
-	//	 * any cached values should be re-calcuated
-	//	 */
-	//	void changed() {
-	//		// we won't actually check if change is needed, if the model state is already changing.
-	//		if (!model.isReinitializationNeeded()) {
-	//			// go through our list of page watcher adapters, and updates the attributes 
-	//			// we're interested in, if and only if they are the earliest occurance in the resource
-	//			String potentialContentType = null;
-	//			String potentialLanguage = null;
-	//			int contentTypePosition = -1;
-	//			int languagePosition = -1;
-	//			Iterator iterator = pageDirectiveWatchers.iterator();
-	//			while (iterator.hasNext()) {
-	//				PageDirectiveWatcher pdWatcher = (PageDirectiveWatcher) iterator.next();
-	//				String contentType = pdWatcher.getContentType();
-	//				String language = pdWatcher.getLanguage();
-	//				int offset = pdWatcher.getOffset();
-	//				if (potentialContentType == null || (hasValue(contentType) && (offset < contentTypePosition))) {
-	//					potentialContentType = contentType;
-	//					contentTypePosition = offset;
-	//				}
-	//			}
-	//			// now we have the best candiates for cached values, let's see if they've really changed from 
-	//			// what we had. If so, note we go through the setters so side effects can take place there.
-	//			potentialContentType = getMimeTypeFromContentTypeValue(potentialContentType);
-	//			if (potentialContentType == null || potentialContentType.length() == 0) {
-	//				//potentialContentType = getDefaultContentType();
-	//			} else {
-	//				setCachedContentType(potentialContentType);
-	//			}
+	// /**
+	// * Used by PageDirectiveWatchers to signal that some important attribute
+	// has changed, and
+	// * any cached values should be re-calcuated
+	// */
+	// void changed() {
+	// // we won't actually check if change is needed, if the model state is
+	// already changing.
+	// if (!model.isReinitializationNeeded()) {
+	// // go through our list of page watcher adapters, and updates the
+	// attributes
+	// // we're interested in, if and only if they are the earliest occurance
+	// in the resource
+	// String potentialContentType = null;
+	// String potentialLanguage = null;
+	// int contentTypePosition = -1;
+	// int languagePosition = -1;
+	// Iterator iterator = pageDirectiveWatchers.iterator();
+	// while (iterator.hasNext()) {
+	// PageDirectiveWatcher pdWatcher = (PageDirectiveWatcher)
+	// iterator.next();
+	// String contentType = pdWatcher.getContentType();
+	// String language = pdWatcher.getLanguage();
+	// int offset = pdWatcher.getOffset();
+	// if (potentialContentType == null || (hasValue(contentType) && (offset <
+	// contentTypePosition))) {
+	// potentialContentType = contentType;
+	// contentTypePosition = offset;
+	// }
+	// }
+	// // now we have the best candiates for cached values, let's see if
+	// they've really changed from
+	// // what we had. If so, note we go through the setters so side effects
+	// can take place there.
+	// potentialContentType =
+	// getMimeTypeFromContentTypeValue(potentialContentType);
+	// if (potentialContentType == null || potentialContentType.length() == 0)
+	// {
+	// //potentialContentType = getDefaultContentType();
+	// } else {
+	// setCachedContentType(potentialContentType);
+	// }
 	//
-	//			if (potentialLanguage != null && hasValue(potentialLanguage)) {
-	//				setCachedLanguage(potentialLanguage);
-	//			}
-	//		}
-	//	}
+	// if (potentialLanguage != null && hasValue(potentialLanguage)) {
+	// setCachedLanguage(potentialLanguage);
+	// }
+	// }
+	// }
 	void changedContentType(int elementOffset, String newValue) {
-		// only need to process if this new value is 
+		// only need to process if this new value is
 		// earlier in the file than our current value
 		if (firstContentTypePosition == -1 || elementOffset <= firstContentTypePosition) {
-			// dw_TODO: update embedded partitioner in JSP document partitioner
-			// nsd_TODO: update embedded partitioner in JSP document partitioner
+			// dw_TODO: update embedded partitioner in JSP document
+			// partitioner
+			// nsd_TODO: update embedded partitioner in JSP document
+			// partitioner
 
-			// no need to change current value, if we're told some 
+			// no need to change current value, if we're told some
 			// earlier value is null or blank (sounds like an error, anyway)
 			if (hasValue(newValue)) {
 				firstContentTypePosition = elementOffset;
 				String potentialContentType = getMimeTypeFromContentTypeValue(newValue);
 				// only do the set processing if different
 				// from what it already is
-				//	if (!potentialContentType.equalsIgnoreCase(cachedLanguage)) {
+				// if (!potentialContentType.equalsIgnoreCase(cachedLanguage))
+				// {
 				setCachedContentType(potentialContentType);
-				//	}
+				// }
 			}
 		}
 	}
 
 	/**
-	 * Used by PageDirectiveWatchers to signal that some important attribute has changed, and 
-	 * any cached values should be re-calcuated
+	 * Used by PageDirectiveWatchers to signal that some important attribute
+	 * has changed, and any cached values should be re-calcuated
 	 */
 	void changedLanguage(int elementOffset, String newValue) {
-		// only need to process if this new value is 
+		// only need to process if this new value is
 		// earlier in the file than our current value
-		// has to be less than or equal to, in case our previous earliest one, 
+		// has to be less than or equal to, in case our previous earliest one,
 		// is itself changing!
 		if (firstLanguagePosition == -1 || elementOffset <= firstLanguagePosition) {
 
-			// no need to change current value, if we're told some 
+			// no need to change current value, if we're told some
 			// earlier value is null or blank (sounds like an error, anyway)
 			if (hasValue(newValue)) {
 				firstLanguagePosition = elementOffset;
@@ -308,20 +319,21 @@ public class PageDirectiveAdapterImpl implements PageDirectiveAdapter {
 	}
 
 	/**
-	 * Used by PageDirectiveWatchers to signal that some important attribute has changed, and 
-	 * any cached values should be re-calcuated
+	 * Used by PageDirectiveWatchers to signal that some important attribute
+	 * has changed, and any cached values should be re-calcuated
 	 */
 	void changedPageEncoding(int elementOffset, String newValue) {
 
 		// we don't currently track active value, since
-		// just need during read and write (where its 
-		// calculated. We will need in future, to 
-		// acurately clone a model and to display 
+		// just need during read and write (where its
+		// calculated. We will need in future, to
+		// acurately clone a model and to display
 		// "current encoding" to user in status bar.
 	}
 
 	/**
 	 * Method hasValue.
+	 * 
 	 * @param contentType
 	 * @return boolean
 	 */
@@ -334,6 +346,7 @@ public class PageDirectiveAdapterImpl implements PageDirectiveAdapter {
 
 	/**
 	 * Returns the cachedContentType.
+	 * 
 	 * @return String
 	 */
 	public String getContentType() {
@@ -345,14 +358,23 @@ public class PageDirectiveAdapterImpl implements PageDirectiveAdapter {
 
 	/**
 	 * Method getDefaultContentType.
+	 * 
 	 * @return String
 	 */
 	private String getDefaultContentType() {
-		return "text/html"; //$NON-NLS-1$
+		String type = null;
+		IFile file = getFile(model);
+		if (file != null) {
+			type = JSPFContentProperties.getProperty(JSPFContentProperties.JSPCONTENTTYPE, file, true);
+		}
+		else
+			type = "text/html"; //$NON-NLS-1$
+		return type;
 	}
 
 	/**
 	 * Returns the cachedLanguage.
+	 * 
 	 * @return String
 	 */
 	public String getLanguage() {
@@ -363,62 +385,81 @@ public class PageDirectiveAdapterImpl implements PageDirectiveAdapter {
 
 	/**
 	 * Method getDefaultLanguage.
+	 * 
 	 * @return String
 	 */
 	private String getDefaultLanguage() {
-		return "java"; //$NON-NLS-1$
+		String language = null;
+		IFile file = getFile(model);
+		if (file != null) {
+			language = JSPFContentProperties.getProperty(JSPFContentProperties.JSPLANGUAGE, file, true);
+		}
+		else
+			language = "java"; //$NON-NLS-1$
+		return language;
 	}
 
 	/**
 	 * Sets the cachedContentType.
-	 * @param cachedContentType The cachedContentType to set
+	 * 
+	 * @param cachedContentType
+	 *            The cachedContentType to set
 	 */
 	public void setCachedContentType(String newContentType) {
-		// if the passed in value is the same as existing, there's nothing to do.
+		// if the passed in value is the same as existing, there's nothing to
+		// do.
 		// if its different, then we need to change the contentHandler as well
 		// and, more to the point, signal a re-initializtation is needed.
-		// Note: if the value we're getting set to does not have a handler in the registry, 
-		// we'll actually not set it to null or anything, we'll just continue on with the one
-		// we have. This is pretty important to avoid re-initializing on every key stroke if someone 
-		// is typing in a new content type, but haven't yet finished the whole "word".
-		// However, if an contentType is not recognized, the registry returns the one 
+		// Note: if the value we're getting set to does not have a handler in
+		// the registry,
+		// we'll actually not set it to null or anything, we'll just continue
+		// on with the one
+		// we have. This is pretty important to avoid re-initializing on every
+		// key stroke if someone
+		// is typing in a new content type, but haven't yet finished the whole
+		// "word".
+		// However, if an contentType is not recognized, the registry returns
+		// the one
 		// for XML.
-		//		if (this.cachedContentType != null && this.cachedContentType.equalsIgnoreCase(newContentType)) { // then do nothing
-		//		} else {
+		// if (this.cachedContentType != null &&
+		// this.cachedContentType.equalsIgnoreCase(newContentType)) { // then
+		// do nothing
+		// } else {
 		this.cachedContentType = newContentType;
 		// see if we can update embedded handler
-		//		if (this.cachedContentType == null || this.cachedContentType.length() == 0) { // do nothing, don't can't get a new handler, so we'll keep what we have
-		//		} else {
+		// if (this.cachedContentType == null ||
+		// this.cachedContentType.length() == 0) { // do nothing, don't can't
+		// get a new handler, so we'll keep what we have
+		// } else {
 
-		// getHandler should always return something (never null), based 
-		// on the rules in the factory. 
+		// getHandler should always return something (never null), based
+		// on the rules in the factory.
 		EmbeddedTypeHandler handler = getHandlerFor(this.cachedContentType);
-		// we do this check for re-init here, instead of in setEmbeddedType, 
-		// since setEmbeddedType is called during the normal initializtion 
+		// we do this check for re-init here, instead of in setEmbeddedType,
+		// since setEmbeddedType is called during the normal initializtion
 		// process, when re-init is not needed (since there is no content)
 		if (embeddedTypeHandler != null && handler != null && embeddedTypeHandler != handler) {
-			// changing this embedded handler here may 
+			// changing this embedded handler here may
 			// be in the middle of anotify loop, not sure
 			// if that'll cause problems.
-			
+
 			// be sure to hold oldHandler in temp var
 			// or else setEmbeddedType will "reset" it
 			// before modelReinitNeeded(oldHandler, handler) is called
-		    EmbeddedTypeHandler oldHandler = embeddedTypeHandler;
+			EmbeddedTypeHandler oldHandler = embeddedTypeHandler;
 			setEmbeddedType(handler);
 			modelReinitNeeded(oldHandler, handler);
 		}
-		//		}
+		// }
 
-		//		}
+		// }
 
 	}
 
 	/**
-	 * This method is used to re-init based on embeddedTypeHandler
-	 * changing. It is given priority over the language change, since
-	 * there its more important to have old and new handlers's in the 
-	 * stateData field.
+	 * This method is used to re-init based on embeddedTypeHandler changing.
+	 * It is given priority over the language change, since there its more
+	 * important to have old and new handlers's in the stateData field.
 	 */
 	private void modelReinitNeeded(EmbeddedTypeHandler oldHandler, EmbeddedTypeHandler newHandler) {
 		if (model.isReinitializationNeeded()) {
@@ -439,7 +480,8 @@ public class PageDirectiveAdapterImpl implements PageDirectiveAdapter {
 	 * Method modelReinitNeeded.
 	 */
 	private void modelReinitNeeded(String oldlanguage, String newLanguage) {
-		// bit of a short cut for now .... we dont' need language at the moment, 
+		// bit of a short cut for now .... we dont' need language at the
+		// moment,
 		// but should set the state data
 		if (model.isReinitializationNeeded()) {
 			if (Debug.displayWarnings) {
@@ -448,7 +490,7 @@ public class PageDirectiveAdapterImpl implements PageDirectiveAdapter {
 		}
 		else {
 			try {
-				// if already being re-initialized, we don't want to 
+				// if already being re-initialized, we don't want to
 				// reset the data in the stateData field.
 				model.aboutToChangeModel();
 				model.setReinitializeStateData(newLanguage);
@@ -461,15 +503,29 @@ public class PageDirectiveAdapterImpl implements PageDirectiveAdapter {
 	}
 
 	public void setCachedLanguage(String newLanguage) {
-		if (cachedLanguage != null && languageStateChanged(cachedLanguage, newLanguage)) { // a complete re-init overkill in current system, since really just need for 
-			// the line style providers, 
-			// BUT, a change in language could effect other things, 
-			// and we don't expect to happen often so a little overkill isn't too bad.
-			// The deep problem is that there is no way to get at the "edit side" adpapters
+		if (cachedLanguage != null && languageStateChanged(cachedLanguage, newLanguage)) { // a
+			// complete
+			// re-init
+			// overkill
+			// in
+			// current
+			// system,
+			// since
+			// really
+			// just
+			// need
+			// for
+			// the line style providers,
+			// BUT, a change in language could effect other things,
+			// and we don't expect to happen often so a little overkill isn't
+			// too bad.
+			// The deep problem is that there is no way to get at the "edit
+			// side" adpapters
 			// specifically here in model class.
-			// we have to do the model changed sequence to get the 
+			// we have to do the model changed sequence to get the
 			// screen to update.
-			// do not signal again, if signaled once (the reinit state data will be wrong.
+			// do not signal again, if signaled once (the reinit state data
+			// will be wrong.
 			// (this needs to be improved in future)
 			if (!model.isReinitializationNeeded()) {
 				modelReinitNeeded(cachedLanguage, newLanguage);
@@ -479,8 +535,8 @@ public class PageDirectiveAdapterImpl implements PageDirectiveAdapter {
 	}
 
 	/**
-	 * This is public access method, used especially
-	 * from loader, for JSP Fragment support. 
+	 * This is public access method, used especially from loader, for JSP
+	 * Fragment support.
 	 */
 	public void setLanguage(String newLanguage) {
 		this.cachedLanguage = newLanguage;
@@ -492,12 +548,14 @@ public class PageDirectiveAdapterImpl implements PageDirectiveAdapter {
 
 	/**
 	 * Method languageStateChange.
+	 * 
 	 * @param cachedLanguage
 	 * @param newLanguage
 	 * @return boolean
 	 */
 	private boolean languageStateChanged(String cachedLanguage, String newLanguage) {
-		boolean result = false; // languages are equal, then no change in state
+		boolean result = false; // languages are equal, then no change in
+		// state
 		if (!cachedLanguage.equalsIgnoreCase(newLanguage)) {
 			boolean oldLanguageKnown = languageKnown(cachedLanguage);
 			boolean newLanguageKnown = languageKnown(newLanguage);
@@ -508,6 +566,7 @@ public class PageDirectiveAdapterImpl implements PageDirectiveAdapter {
 
 	/**
 	 * Method languageKnown.
+	 * 
 	 * @param cachedLanguage
 	 * @return boolean
 	 */
@@ -534,6 +593,7 @@ public class PageDirectiveAdapterImpl implements PageDirectiveAdapter {
 
 	/**
 	 * Gets the embeddedContentTypeRegistry.
+	 * 
 	 * @return Returns a EmbeddedContentTypeRegistry
 	 */
 	private EmbeddedTypeRegistry getEmbeddedContentTypeRegistry() {
@@ -541,53 +601,14 @@ public class PageDirectiveAdapterImpl implements PageDirectiveAdapter {
 	}
 
 	/**
-	 * For JSP files, text/html is the default 
-	 * content type. This may want this different 
-	 * for types like jsv (jsp for voice xml)
-	 * For now, hard code to new instance.
-	 * In future, should get instance from registry.
+	 * For JSP files, text/html is the default content type. This may want
+	 * this different for types like jsv (jsp for voice xml) For now, hard
+	 * code to new instance. In future, should get instance from registry.
 	 * 
 	 * Specification cites HTML as the default contentType.
 	 */
 	protected EmbeddedTypeHandler getDefaultEmbeddedType() {
 		return getHandlerFor(getDefaultContentType());
-	}
-
-	public void contentSettingsChanged(IResource resource) {
-		// Note: we currently get notified multiple times, 
-		// I assume since there's mulitple fields in the properties.
-		// For now, I'll assume that once we get notified, all the 
-		// fields are accurate, so if we're reinitializing, don't 
-		// check any further. To NOT do this causes concurrent modification
-		// exceptions. To do it, may cause us to miss when user changes
-		// two fields at once. Will need to test. 
-		if (reinitializing)
-			return;
-		if (resource == null)
-			return;
-		IFile file = getFile(model);
-		if (file == null)
-			return;
-		//        String filename = null;
-		//        if (resource.FILE == resource.getType()) {
-		//        	filename = resource.getLocation().toString();
-		//        }
-		IProject project = file.getProject();
-		if (project == null)
-			return;
-		if (!project.equals(resource.getProject()))
-			return;
-		// Note: these change notifications appear to be coming 
-		// in based on any change in project. I'm not sure how
-		// to tell if they are for my particular file, or 
-		// if there's some other error I'm making in listeners.
-		// the setters below should be smart enough 
-		// to know if a meaningful change occurred, or 
-		// not. Note: we seem to get called a lot (for resources other than our own?)
-		// with lots of 'null' values. The logic below may prevent the correct unsetting
-		// of a property (such as changing from a language setting back to 'none'). 
-		// We may need a 'none' id, or something, to help detect that case, since we can't 
-		// always assume the 'null' is accurate.
 	}
 
 	public INodeNotifier getTarget() {

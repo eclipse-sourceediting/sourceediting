@@ -35,6 +35,10 @@ import org.eclipse.wst.sse.core.internal.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+/**
+ * @deprecated See
+ *             org.eclipse.html.core.internal.contentproperties.HTMLContentProperties
+ */
 public class ContentSettings implements IContentSettings {
 	private static final String contentSettingsName = ".contentsettings";//$NON-NLS-1$
 
@@ -85,27 +89,32 @@ public class ContentSettings implements IContentSettings {
 			if (!existsContentSettings()) {
 				// create DOM tree for new XML Document
 				createNewDOMTree();
-			} else {
+			}
+			else {
 				// create DOM tree from existing contentsettings.
 				createDOMTree();
 			}
 
-		} catch (SimpleNodeOperator.ReadContentSettingsFailureException e) {
+		}
+		catch (SimpleNodeOperator.ReadContentSettingsFailureException e) {
 			Logger.logException(e);
 			try {
 				createNewDOMTree();
 				writeDOMDocument();
-			} catch (SimpleNodeOperator.CreateContentSettingsFailureException e2) {
+			}
+			catch (SimpleNodeOperator.CreateContentSettingsFailureException e2) {
 				Logger.logException(e2);
 				preProject = currProject;
 				return;
-			} catch (SimpleNodeOperator.WriteContentSettingsFailureException e2) {
+			}
+			catch (SimpleNodeOperator.WriteContentSettingsFailureException e2) {
 				Logger.logException(e2);
 				preProject = currProject;
 				return;
 			}
 
-		} catch (SimpleNodeOperator.CreateContentSettingsFailureException e) {
+		}
+		catch (SimpleNodeOperator.CreateContentSettingsFailureException e) {
 			Logger.logException(e);
 			preProject = currProject;
 			return;
@@ -118,7 +127,8 @@ public class ContentSettings implements IContentSettings {
 				// create project Element and add it into tree
 				e = (Element) domOperator.addElementUnderRoot(this.projectElementName);
 			}
-		} else if (resource.getType() == IResource.FILE) {
+		}
+		else if (resource.getType() == IResource.FILE) {
 			// check exists file Element
 			e = (Element) domOperator.getElementWithAttribute(getPathAttr(), getRelativePathFromProject(resource));
 			if (e == null) {
@@ -151,7 +161,8 @@ public class ContentSettings implements IContentSettings {
 		// write dom tree into .contentsettings
 		try {
 			writeDOMDocument();
-		} catch (SimpleNodeOperator.WriteContentSettingsFailureException ex) {
+		}
+		catch (SimpleNodeOperator.WriteContentSettingsFailureException ex) {
 			Logger.logException(ex);
 			preProject = currProject;
 			return;
@@ -178,27 +189,32 @@ public class ContentSettings implements IContentSettings {
 			if (!existsContentSettings()) {
 				// create DOM tree for new XML Document
 				createNewDOMTree();
-			} else {
+			}
+			else {
 				// create DOM tree from existing contentsettings.
 				createDOMTree();
 			}
 
-		} catch (SimpleNodeOperator.ReadContentSettingsFailureException e) {
+		}
+		catch (SimpleNodeOperator.ReadContentSettingsFailureException e) {
 			Logger.logException(e);
 			try {
 				createNewDOMTree();
 				writeDOMDocument();
-			} catch (SimpleNodeOperator.CreateContentSettingsFailureException e2) {
+			}
+			catch (SimpleNodeOperator.CreateContentSettingsFailureException e2) {
 				Logger.logException(e2);
 				preProject = currProject;
 				return;
-			} catch (SimpleNodeOperator.WriteContentSettingsFailureException e2) {
+			}
+			catch (SimpleNodeOperator.WriteContentSettingsFailureException e2) {
 				Logger.logException(e2);
 				preProject = currProject;
 				return;
 			}
 
-		} catch (SimpleNodeOperator.CreateContentSettingsFailureException e) {
+		}
+		catch (SimpleNodeOperator.CreateContentSettingsFailureException e) {
 			Logger.logException(e);
 			preProject = currProject;
 			return;
@@ -211,7 +227,8 @@ public class ContentSettings implements IContentSettings {
 				// create project Element and add it into tree
 				e = (Element) domOperator.addElementUnderRoot(this.projectElementName);
 			}
-		} else if (resource.getType() == IResource.FILE) {
+		}
+		else if (resource.getType() == IResource.FILE) {
 			// check exists file Element
 			e = (Element) domOperator.getElementWithAttribute(getPathAttr(), getRelativePathFromProject(resource));
 			if (e == null) {
@@ -235,7 +252,8 @@ public class ContentSettings implements IContentSettings {
 		// write dom tree into .contentsettings
 		try {
 			writeDOMDocument();
-		} catch (SimpleNodeOperator.WriteContentSettingsFailureException ex) {
+		}
+		catch (SimpleNodeOperator.WriteContentSettingsFailureException ex) {
 			Logger.logException(ex);
 			preProject = currProject;
 			return;
@@ -266,9 +284,11 @@ public class ContentSettings implements IContentSettings {
 		Document document = null;
 		try {
 			document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-		} catch (ParserConfigurationException e) {
+		}
+		catch (ParserConfigurationException e) {
 			Logger.logException("exception creating document", e); //$NON-NLS-1$
-		} catch (FactoryConfigurationError e) {
+		}
+		catch (FactoryConfigurationError e) {
 			Logger.logException("exception creating document", e); //$NON-NLS-1$
 		}
 		if (document != null) {
@@ -279,17 +299,17 @@ public class ContentSettings implements IContentSettings {
 
 
 	/**
-	 *  
+	 * 
 	 */
 	public synchronized void deleteAllProperties(final IResource deletedFile) {
 		if (deletedFile == null)
 			return;
-		//	if (deletedFile.exists()) return;
+		// if (deletedFile.exists()) return;
 		if ((deletedFile).getType() != IResource.FILE && (deletedFile).getType() != IResource.PROJECT)
 			return;
 
 
-		contentSettingsPath = getContentSettingsPath(deletedFile);//getProjectOf((IResource)deletedFile)
+		contentSettingsPath = getContentSettingsPath(deletedFile);// getProjectOf((IResource)deletedFile)
 		// +
 		// IPath.SEPARATOR
 		// +
@@ -301,7 +321,8 @@ public class ContentSettings implements IContentSettings {
 
 		try {
 			createDOMTree();
-		} catch (SimpleNodeOperator.ReadContentSettingsFailureException e) {
+		}
+		catch (SimpleNodeOperator.ReadContentSettingsFailureException e) {
 			Logger.logException(e);
 			return;
 		}
@@ -328,7 +349,8 @@ public class ContentSettings implements IContentSettings {
 		// write dom tree into .contentsettings
 		try {
 			writeDOMDocument();
-		} catch (SimpleNodeOperator.WriteContentSettingsFailureException ex) {
+		}
+		catch (SimpleNodeOperator.WriteContentSettingsFailureException ex) {
 			Logger.logException(ex);
 			preProject = currProject;
 			return;
@@ -353,16 +375,19 @@ public class ContentSettings implements IContentSettings {
 		}
 		try {
 			createDOMTree();
-		} catch (SimpleNodeOperator.ReadContentSettingsFailureException e) {
+		}
+		catch (SimpleNodeOperator.ReadContentSettingsFailureException e) {
 			Logger.logException(e);
 			try {
 				createNewDOMTree();
 				writeDOMDocument();
-			} catch (SimpleNodeOperator.CreateContentSettingsFailureException e2) {
+			}
+			catch (SimpleNodeOperator.CreateContentSettingsFailureException e2) {
 				Logger.logException(e2);
 				preProject = currProject;
 				return;
-			} catch (SimpleNodeOperator.WriteContentSettingsFailureException e2) {
+			}
+			catch (SimpleNodeOperator.WriteContentSettingsFailureException e2) {
 				Logger.logException(e2);
 				preProject = currProject;
 				return;
@@ -382,7 +407,8 @@ public class ContentSettings implements IContentSettings {
 			// write dom tree into .contentsettings
 			try {
 				writeDOMDocument();
-			} catch (SimpleNodeOperator.WriteContentSettingsFailureException ex) {
+			}
+			catch (SimpleNodeOperator.WriteContentSettingsFailureException ex) {
 				Logger.logException(ex);
 				preProject = currProject;
 				return;
@@ -424,7 +450,8 @@ public class ContentSettings implements IContentSettings {
 
 		try {
 			createDOMTree();
-		} catch (SimpleNodeOperator.ReadContentSettingsFailureException e1) {
+		}
+		catch (SimpleNodeOperator.ReadContentSettingsFailureException e1) {
 			return false;
 		}
 
@@ -456,7 +483,8 @@ public class ContentSettings implements IContentSettings {
 			strbuf.append(projectPath);
 			strbuf.append(IPath.SEPARATOR);
 			strbuf.append(contentSettingsName);
-		} else
+		}
+		else
 			return null;
 
 		String str = strbuf.toString();
@@ -470,9 +498,9 @@ public class ContentSettings implements IContentSettings {
 
 
 	private String getProjectOf(IResource resource) {
-		//if (resource==null) return null;
+		// if (resource==null) return null;
 		currProject = resource.getProject();
-		//String projectPath=null;
+		// String projectPath=null;
 
 		IPath path = currProject.getLocation();
 		if (path == null) {
@@ -505,17 +533,20 @@ public class ContentSettings implements IContentSettings {
 
 		try {
 			createDOMTree();
-		} catch (SimpleNodeOperator.ReadContentSettingsFailureException e1) {
+		}
+		catch (SimpleNodeOperator.ReadContentSettingsFailureException e1) {
 			Logger.logException(e1);
 			// create DOM tree for new XML Document
 			try {
 				createNewDOMTree();
 				writeDOMDocument();
-			} catch (SimpleNodeOperator.CreateContentSettingsFailureException e2) {
+			}
+			catch (SimpleNodeOperator.CreateContentSettingsFailureException e2) {
 				Logger.logException(e2);
 				preProject = currProject;
 				return null;
-			} catch (SimpleNodeOperator.WriteContentSettingsFailureException e2) {
+			}
+			catch (SimpleNodeOperator.WriteContentSettingsFailureException e2) {
 				Logger.logException(e2);
 				preProject = currProject;
 				return null;
@@ -542,7 +573,8 @@ public class ContentSettings implements IContentSettings {
 				return null;
 			properties.remove(getPathAttr());
 			return properties;
-		} else {
+		}
+		else {
 			preProject = currProject;
 			return null;// when project or file element is NOT exist.
 		}
@@ -566,17 +598,20 @@ public class ContentSettings implements IContentSettings {
 
 		try {
 			createDOMTree();
-		} catch (SimpleNodeOperator.ReadContentSettingsFailureException e1) {
+		}
+		catch (SimpleNodeOperator.ReadContentSettingsFailureException e1) {
 			Logger.logException(e1);
 			// create DOM tree for new XML Document
 			try {
 				createNewDOMTree();
 				writeDOMDocument();
-			} catch (SimpleNodeOperator.CreateContentSettingsFailureException e2) {
+			}
+			catch (SimpleNodeOperator.CreateContentSettingsFailureException e2) {
 				Logger.logException(e2);
 				preProject = currProject;
 				return null;
-			} catch (SimpleNodeOperator.WriteContentSettingsFailureException e2) {
+			}
+			catch (SimpleNodeOperator.WriteContentSettingsFailureException e2) {
 				Logger.logException(e2);
 				preProject = currProject;
 				return null;
@@ -597,7 +632,8 @@ public class ContentSettings implements IContentSettings {
 			String result = e.getAttribute(propertyName);
 			preProject = currProject;
 			return result;
-		} else {
+		}
+		else {
 			preProject = currProject;
 			return null;// when project or file element is NOT exist.
 		}
@@ -655,10 +691,12 @@ public class ContentSettings implements IContentSettings {
 				outputFile.create(inputStream, true, null);
 
 			inputStream.close();
-		} catch (CoreException e) {
+		}
+		catch (CoreException e) {
 			Logger.logException(e);
 			throw new SimpleNodeOperator.WriteContentSettingsFailureException("invalid outputFile in writeDOMDocument()");//$NON-NLS-1$
-		} catch (IOException e) {
+		}
+		catch (IOException e) {
 			Logger.logException(e);
 			throw new SimpleNodeOperator.WriteContentSettingsFailureException("invalid outputStream or inputStream in writeDOMDocument()");//$NON-NLS-1$
 		}

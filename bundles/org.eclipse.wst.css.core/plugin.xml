@@ -81,5 +81,4 @@
 		<initializer
 			class="org.eclipse.wst.css.core.internal.preferences.CSSCorePreferenceInitializer" />
 	</extension>
-	
 </plugin>

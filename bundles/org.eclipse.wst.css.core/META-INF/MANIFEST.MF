@@ -9,6 +9,7 @@ Bundle-Localization: plugin
 Export-Package: org.eclipse.wst.css.core.internal,
  org.eclipse.wst.css.core.internal.cleanup,
  org.eclipse.wst.css.core.internal.contentmodel,
+ org.eclipse.wst.css.core.internal.contentproperties,
  org.eclipse.wst.css.core.internal.contenttype,
  org.eclipse.wst.css.core.internal.document,
  org.eclipse.wst.css.core.internal.encoding,

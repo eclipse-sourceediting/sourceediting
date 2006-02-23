@@ -15,6 +15,10 @@ import org.eclipse.wst.css.core.internal.metamodel.CSSProfileRegistry;
 import org.eclipse.wst.css.ui.internal.CSSUIMessages;
 import org.eclipse.wst.sse.ui.internal.contentproperties.ui.ComboList;
 
+/**
+ * @deprecated This class only contains helper methods that you should
+ *             actually implement yourself.
+ */
 public final class ContentSettingsRegistry {
 	private static final String NONE = CSSUIMessages.UI_none;
 

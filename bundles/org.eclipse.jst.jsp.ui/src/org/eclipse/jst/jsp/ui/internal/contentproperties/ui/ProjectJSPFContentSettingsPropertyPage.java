@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,20 +8,12 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.html.ui.internal.contentproperties.ui;
+package org.eclipse.jst.jsp.ui.internal.contentproperties.ui;
 
-/**
- * <p>
- * This interface is not intended to be implemented by clients directly.
- * Instead, please use abstract class(AbstractDeviceProfileEntry) instead.
- * </p>
- * 
- * @deprecated Not needed. See BUG118359
- */
-public interface DeviceProfileEntry {
-	public String getEntryId();
+import org.eclipse.jst.jsp.ui.internal.JSPUIMessages;
 
-	public String getEntryName();
-
-	public void release();
+public class ProjectJSPFContentSettingsPropertyPage extends JSPFContentSettingsPropertyPage {
+	public ProjectJSPFContentSettingsPropertyPage() {
+		setDescription(JSPUIMessages.ProjectJSPFContentSettingsPropertyPage_0);
+	}
 }

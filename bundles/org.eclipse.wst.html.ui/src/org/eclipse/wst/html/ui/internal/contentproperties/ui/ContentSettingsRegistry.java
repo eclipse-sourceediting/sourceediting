@@ -21,6 +21,10 @@ import org.eclipse.wst.html.ui.internal.HTMLUIMessages;
 import org.eclipse.wst.sse.core.internal.encoding.CommonCharsetNames;
 import org.eclipse.wst.sse.ui.internal.contentproperties.ui.ComboList;
 
+/**
+ * @deprecated This class only contains helper methods that you should
+ *             actually implement yourself.
+ */
 public final class ContentSettingsRegistry {
 
 	private static final String NONE = HTMLUIMessages.UI_none;
@@ -58,16 +62,16 @@ public final class ContentSettingsRegistry {
 	}
 
 	public static void setCSSMetaModelRegistryInto(ComboList combo) {
-		 combo.add(NONE, ""); //$NON-NLS-1$
-		 CSSProfileRegistry reg = CSSProfileRegistry.getInstance();
-		 Iterator i = reg.getProfiles();
-		 while (i.hasNext()) {
-		 	CSSProfile profile = (CSSProfile) i.next();
-		 	String id = profile.getProfileID();
-		 	String name = profile.getProfileName();
-		 	combo.add(name, id);
-		 }
-		 combo.sortByKey(1);
+		combo.add(NONE, ""); //$NON-NLS-1$
+		CSSProfileRegistry reg = CSSProfileRegistry.getInstance();
+		Iterator i = reg.getProfiles();
+		while (i.hasNext()) {
+			CSSProfile profile = (CSSProfile) i.next();
+			String id = profile.getProfileID();
+			String name = profile.getProfileName();
+			combo.add(name, id);
+		}
+		combo.sortByKey(1);
 	}
 
 	public static void setDeviceProfileRegistryInto(ComboList combo) {
@@ -111,7 +115,7 @@ public final class ContentSettingsRegistry {
 					"text/html", //$NON-NLS-1$
 					"text/xml",}; //$NON-NLS-1$
 		String[] displayName = {NONE, "application/xhtml+xml", //$NON-NLS-1$
-		//$NON-NLS-1$
+					//$NON-NLS-1$
 					"application/xml", //$NON-NLS-1$
 					"text/html", //$NON-NLS-1$
 					"text/xml",}; //$NON-NLS-1$
@@ -127,7 +131,7 @@ public final class ContentSettingsRegistry {
 	public static void setCharacterCodeInto(ComboList combo) {
 		combo.add(NONE, ""); //$NON-NLS-1$
 		String max = ""; //$NON-NLS-1$
-		//CommonCharsetNames encoding = new CommonCharsetNames();
+		// CommonCharsetNames encoding = new CommonCharsetNames();
 		String[] charCode = CommonCharsetNames.getCommonCharsetNames();
 		for (int i = 0; i < charCode.length; i++) {
 			String displayName = CommonCharsetNames.getDisplayString(charCode[i]);
@@ -140,17 +144,14 @@ public final class ContentSettingsRegistry {
 			else
 				combo.add(charCode[i], charCode[i]);
 		}
-		/*	
-		 charCode = encoding.getSupportedJavaEncodings();
-		 for(int i=0;i<charCode.length;i++){
-		 String displayName = encoding.getDisplayString(charCode[i]);
-		 if (displayName!=null && displayName.length()!=0)
-		 combo.add(displayName,charCode[i]);
-		 else
-		 combo.add(charCode[i],charCode[i]);
-		 }
+		/*
+		 * charCode = encoding.getSupportedJavaEncodings(); for(int i=0;i<charCode.length;i++){
+		 * String displayName = encoding.getDisplayString(charCode[i]); if
+		 * (displayName!=null && displayName.length()!=0)
+		 * combo.add(displayName,charCode[i]); else
+		 * combo.add(charCode[i],charCode[i]); }
 		 */
-		//	combo.sortByKey(1);
+		// combo.sortByKey(1);
 		maxLengthStringInCharacterCodeRegistry = max;
 	}
 
@@ -159,7 +160,7 @@ public final class ContentSettingsRegistry {
 					"java", //$NON-NLS-1$
 					"javascript",}; //$NON-NLS-1$
 		String[] displayName = {NONE, "java", //$NON-NLS-1$
-		//$NON-NLS-1$
+					//$NON-NLS-1$
 					"javascript",}; //$NON-NLS-1$
 		for (int i = 0; i < lang.length; i++) {
 			if (displayName[i] != null && displayName[i].length() != 0)

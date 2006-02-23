@@ -13,17 +13,12 @@ package org.eclipse.wst.html.core.internal.document;
 
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.wst.html.core.internal.contentproperties.HTMLContentProperties;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
-import org.eclipse.wst.sse.internal.contentproperties.ContentSettings;
-import org.eclipse.wst.sse.internal.contentproperties.ContentSettingsChangeSubject;
-import org.eclipse.wst.sse.internal.contentproperties.IContentSettings;
-import org.eclipse.wst.sse.internal.contentproperties.IContentSettingsListener;
 import org.eclipse.wst.xml.core.internal.document.DocumentTypeAdapter;
 import org.eclipse.wst.xml.core.internal.document.DocumentTypeAdapterImpl;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
@@ -36,7 +31,7 @@ import org.w3c.dom.Node;
 
 /**
  */
-public class HTMLDocumentTypeAdapter extends DocumentTypeAdapterImpl implements IContentSettingsListener, HTMLDocumentTypeConstants {
+public class HTMLDocumentTypeAdapter extends DocumentTypeAdapterImpl implements HTMLDocumentTypeConstants {
 
 	private HTMLDocumentTypeAdapterFactory fFactory = null;
 	private HTMLDocumentTypeEntry entry = null;
@@ -61,30 +56,6 @@ public class HTMLDocumentTypeAdapter extends DocumentTypeAdapterImpl implements 
 
 		// initialize
 		documentTypeChanged();
-
-		ContentSettingsChangeSubject.getSubject().addListener(this);
-	}
-
-	/**
-	 */
-	public void contentSettingsChanged(IResource resource) {
-		if (resource == null)
-			return;
-		IDOMDocument document = getDocument();
-		if (document == null)
-			return;
-		IDOMModel model = document.getModel();
-		if (model == null)
-			return;
-		IFile file = getFile(model);
-		if (file == null)
-			return;
-		IProject project = file.getProject();
-		if (project == null)
-			return;
-		if (!project.equals(resource.getProject()))
-			return;
-		documentTypeChanged();
 	}
 
 	/**
@@ -104,9 +75,10 @@ public class HTMLDocumentTypeAdapter extends DocumentTypeAdapterImpl implements 
 		DocumentType newDocumentType = findDocumentType(document);
 		if (newDocumentType != null) {
 			publicId = newDocumentType.getPublicId();
-		} else {
+		}
+		else {
 			// lookup default set by contentsettings
-			publicId = getDefaultPublicId(file);
+			publicId = HTMLContentProperties.getProperty(HTMLContentProperties.DOCUMENT_TYPE, file, true);
 		}
 
 		// lookup DOCTYPE registry
@@ -149,7 +121,8 @@ public class HTMLDocumentTypeAdapter extends DocumentTypeAdapterImpl implements 
 				else
 					newEntry = HTMLDocumentTypeRegistry.getInstance().getDefaultEntry(HTMLDocumentTypeRegistry.DEFAULT_XHTML);
 
-			} else {
+			}
+			else {
 				newEntry = HTMLDocumentTypeRegistry.getInstance().getDefaultEntry(HTMLDocumentTypeRegistry.DEFAULT_HTML);
 			}
 			if (newEntry == null)
@@ -217,25 +190,6 @@ public class HTMLDocumentTypeAdapter extends DocumentTypeAdapterImpl implements 
 		return this.fFactory.getAttrNameCase();
 	}
 
-	/**
-	 */
-	private String getDefaultPublicId(IFile file) {
-		if (file == null)
-			return null;
-		IProject project = file.getProject();
-		if (project == null)
-			return null;
-		IContentSettings settings = ContentSettings.getInstance();
-		if (settings == null)
-			return null;
-		String publicId = settings.getProperty(file, IContentSettings.HTML_DOCUMENT_TYPE);
-		if (publicId == null || publicId.length() == 0) {
-			// look up project default
-			publicId = settings.getProperty(project, IContentSettings.HTML_DOCUMENT_TYPE);
-		}
-		return publicId;
-	}
-
 	private IFile getFile(IStructuredModel model) {
 		IFile result = null;
 		String location = model.getBaseLocation();
@@ -287,7 +241,8 @@ public class HTMLDocumentTypeAdapter extends DocumentTypeAdapterImpl implements 
 		if (notifier instanceof IDOMDocument) {
 			if (eventType != INodeNotifier.STRUCTURE_CHANGED)
 				return;
-		} else {
+		}
+		else {
 			if (eventType != INodeNotifier.CHANGE)
 				return;
 		}
@@ -297,7 +252,6 @@ public class HTMLDocumentTypeAdapter extends DocumentTypeAdapterImpl implements 
 	/**
 	 */
 	public void release() {
-		ContentSettingsChangeSubject.getSubject().removeListener(this);
 		super.release();
 	}
 }

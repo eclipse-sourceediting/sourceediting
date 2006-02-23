@@ -13,6 +13,7 @@ package org.eclipse.jst.jsp.core.internal;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jst.jsp.core.internal.contentmodel.TaglibController;
+import org.eclipse.jst.jsp.core.internal.contentproperties.JSPFContentPropertiesManager;
 import org.eclipse.jst.jsp.core.internal.java.search.JSPIndexManager;
 import org.eclipse.jst.jsp.core.internal.taglib.TaglibHelperManager;
 import org.eclipse.jst.jsp.core.taglib.TaglibIndex;
@@ -22,8 +23,8 @@ import org.osgi.framework.BundleContext;
  * The main plugin class to be used in the desktop.
  */
 public class JSPCorePlugin extends Plugin {
-	//The shared instance.
-	private static JSPCorePlugin plugin;	
+	// The shared instance.
+	private static JSPCorePlugin plugin;
 
 	/**
 	 * The constructor.
@@ -35,43 +36,54 @@ public class JSPCorePlugin extends Plugin {
 
 	/**
 	 * Returns the shared instance.
-	 * @deprecated - will be removed. Currently used to get 
-	 * "model preferences", but there are other, better ways. 
+	 * 
+	 * @deprecated - will be removed. Currently used to get "model
+	 *             preferences", but there are other, better ways.
 	 */
 	public static JSPCorePlugin getDefault() {
 		return plugin;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.core.runtime.Plugin#start(org.osgi.framework.BundleContext)
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-		
+
 		TaglibIndex.startup();
 		// JSPIndexManager depends on TaglibController, so TaglibController
 		// should be started first
 		TaglibController.startup();
-		
+
 		// listen for classpath changes
 		JavaCore.addElementChangedListener(TaglibHelperManager.getInstance());
-		
-		
+
+
 		JSPIndexManager.getInstance().initialize();
-		
+
+		// listen for resource changes to update content properties keys
+		JSPFContentPropertiesManager.startup();
+
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
 	 */
 	public void stop(BundleContext context) throws Exception {
+		// stop listenning for resource changes to update content properties
+		// keys
+		JSPFContentPropertiesManager.shutdown();
 
 		// stop any indexing
 		JSPIndexManager.getInstance().shutdown();
-		
+
 		// stop listening for classpath changes
 		JavaCore.removeElementChangedListener(TaglibHelperManager.getInstance());
-		
+
 		// stop taglib controller
 		TaglibController.shutdown();
 		TaglibIndex.shutdown();

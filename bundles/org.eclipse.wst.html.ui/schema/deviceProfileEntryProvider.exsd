@@ -62,7 +62,7 @@
          <meta.section type="since"/>
       </appInfo>
       <documentation>
-         &lt;b&gt;This extension point is internal and should not be used by any other plugins.&lt;/b&gt;
+         &lt;b&gt;This extension point is deprecated and should not be used by any other plugins.&lt;/b&gt;
       </documentation>
    </annotation>
 

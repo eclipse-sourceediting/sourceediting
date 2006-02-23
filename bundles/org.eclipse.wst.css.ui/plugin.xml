@@ -81,14 +81,18 @@
 		</page>
 	</extension>
 
+	<!-- CSS Content Settings Property Page -->
 	<extension point="org.eclipse.ui.propertyPages">
 		<page
 			objectClass="org.eclipse.core.resources.IFile"
 			adaptable="true"
 			name="%WebContentSettings.name"
-			nameFilter="*.css"
-			class="org.eclipse.wst.css.ui.internal.contentproperties.ui.CSSContentSettingsPropertyPage"
-			id="org.eclipse.wst.css.ui.csspropertypage">
+			class="org.eclipse.wst.css.ui.internal.contentproperties.ui.CSSWebContentSettingsPropertyPage"
+			id="org.eclipse.wst.css.ui.internal.contentproperties.CSSWebContentSettingsPropertyPage.css">
+			<filter
+				name="contentTypeId"
+				value="org.eclipse.wst.css.core.csssource">
+			</filter>
 		</page>
 	</extension>
 

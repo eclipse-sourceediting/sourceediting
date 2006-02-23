@@ -40,6 +40,13 @@ import org.eclipse.wst.sse.internal.contentproperties.IContentSettings;
 import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 
+/**
+ * @deprecated Please use
+ *             org.eclipse.wst.html.ui.internal.contentproperties.ui.WebContentSettingsPropertyPage
+ *             or
+ *             eclipse.wst.css.ui.internal.contentproperties.ui.CSSWebContentSettingsPropertyPage
+ *             instead
+ */
 public abstract class ContentSettingsPropertyPage extends PropertyPage {
 	private static final IStatus STATUS_ERROR = new Status(IStatus.ERROR, SSEUIPlugin.ID, IStatus.INFO, "ERROR", null); //$NON-NLS-1$
 
@@ -80,12 +87,15 @@ public abstract class ContentSettingsPropertyPage extends PropertyPage {
 				if (!model.isDirty()) {
 					try {
 						file.refreshLocal(IResource.DEPTH_ONE, null);
-					} catch (CoreException e) {
+					}
+					catch (CoreException e) {
 						return STATUS_ERROR;
-					} finally {
+					}
+					finally {
 						model.releaseFromRead();
 					}
-				} else {
+				}
+				else {
 					model.releaseFromRead();
 				}
 			}
@@ -136,7 +146,7 @@ public abstract class ContentSettingsPropertyPage extends PropertyPage {
 		ComboListOnPropertyPage combo = new ComboListOnPropertyPage(propertyPage, SWT.READ_ONLY);
 		GridData data = new GridData();
 		data.verticalAlignment = GridData.FILL;
-		//data.horizontalAlignment= GridData.FILL;
+		// data.horizontalAlignment= GridData.FILL;
 		data.grabExcessHorizontalSpace = true;
 		combo.setLayoutData(data);
 		return combo;
@@ -147,18 +157,18 @@ public abstract class ContentSettingsPropertyPage extends PropertyPage {
 	protected Composite createComposite(Composite parent, int numColumns, int numRows) {
 		Composite composite = new Composite(parent, SWT.NONE);
 
-		//GridLayout
+		// GridLayout
 		GridLayout layout = new GridLayout();
 		layout.numColumns = numColumns;
 		composite.setLayout(layout);
 
-		//GridData
+		// GridData
 		GridData data = new GridData();
 		data.verticalAlignment = GridData.FILL;
 		data.horizontalAlignment = GridData.FILL;
 		data.grabExcessHorizontalSpace = true;
-		//		data.horizontalSpan=numColumns;
-		//		data.verticalSpan=numRows;
+		// data.horizontalSpan=numColumns;
+		// data.verticalSpan=numRows;
 
 		composite.setLayoutData(data);
 		return composite;
@@ -180,7 +190,7 @@ public abstract class ContentSettingsPropertyPage extends PropertyPage {
 
 	protected abstract void createSettingsPageGUI();
 
-	//protected abstract void applySelectedPropertyValue(String str,int
+	// protected abstract void applySelectedPropertyValue(String str,int
 	// index);
 	protected abstract void deleteNoneProperty(int index);
 
@@ -200,8 +210,8 @@ public abstract class ContentSettingsPropertyPage extends PropertyPage {
 		super.performDefaults();
 		// selected(applied) item is restored.
 		for (int i = 0; i < numberOfCombo; i++) {
-			//String appliedValue = combo[i].getApplyValue();
-			//setSelectionItem(combo[i],appliedValue);
+			// String appliedValue = combo[i].getApplyValue();
+			// setSelectionItem(combo[i],appliedValue);
 			combo[i].select(0); // select none.
 
 		}
@@ -228,7 +238,7 @@ public abstract class ContentSettingsPropertyPage extends PropertyPage {
 				deleteNoneProperty(i);
 			else
 				putSelectedPropertyInto(properties, str, i);
-			//applySelectedPropertyValue(str,i);
+			// applySelectedPropertyValue(str,i);
 
 			// set apply value in ComboListOnPropertyPage.
 			combo[i].setApplyValue(str);
@@ -273,11 +283,11 @@ public abstract class ContentSettingsPropertyPage extends PropertyPage {
 		IFile file = project.getFile(name);
 
 		if (file != null && !file.exists())
-			return true; //Is this really OK?
-		//If false should be returned,
-		//This statemant can be removed,
-		//since ModelManagerUtil.validateEdit()
-		//returns error to this case.
+			return true; // Is this really OK?
+		// If false should be returned,
+		// This statemant can be removed,
+		// since ModelManagerUtil.validateEdit()
+		// returns error to this case.
 
 		Shell shell = getControl().getShell();
 		IStatus status = validateEdit(file, shell);

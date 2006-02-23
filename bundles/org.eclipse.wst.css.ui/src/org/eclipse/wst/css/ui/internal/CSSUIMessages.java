@@ -18,6 +18,22 @@ public class CSSUIMessages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.wst.css.ui.internal.CSSUIPluginResources";//$NON-NLS-1$
 	private static ResourceBundle fResourceBundle;
 
+	static {
+		// load message values from bundle file
+		NLS.initializeMessages(BUNDLE_NAME, CSSUIMessages.class);
+	}
+
+	public static ResourceBundle getResourceBundle() {
+		try {
+			if (fResourceBundle == null)
+				fResourceBundle = ResourceBundle.getBundle(BUNDLE_NAME);
+		}
+		catch (MissingResourceException x) {
+			fResourceBundle = null;
+		}
+		return fResourceBundle;
+	}
+	
 	public static String INFO_Not_Categorized_1;
 	public static String PrefsLabel_WrappingWithoutAttr;
 	public static String PrefsLabel_WrappingInsertLineBreak;
@@ -96,20 +112,6 @@ public class CSSUIMessages extends NLS {
 	public static String NewCSSTemplatesWizardPage_4;
 	public static String NewCSSTemplatesWizardPage_5;
 	public static String NewCSSTemplatesWizardPage_6;
-
-	static {
-		// load message values from bundle file
-		NLS.initializeMessages(BUNDLE_NAME, CSSUIMessages.class);
-	}
-
-	public static ResourceBundle getResourceBundle() {
-		try {
-			if (fResourceBundle == null)
-				fResourceBundle = ResourceBundle.getBundle(BUNDLE_NAME);
-		}
-		catch (MissingResourceException x) {
-			fResourceBundle = null;
-		}
-		return fResourceBundle;
-	}
+	public static String CSSContentSettingsPropertyPage_0;
+	public static String CSSContentSettingsPropertyPage_1;
 }

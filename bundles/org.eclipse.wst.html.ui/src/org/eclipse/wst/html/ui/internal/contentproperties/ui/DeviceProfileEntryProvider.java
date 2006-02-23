@@ -14,11 +14,15 @@ import java.util.Iterator;
 
 /**
  * <p>
- * This interface is not intended to be implemented by clients
- * directly. Instead, please use abstract class(AbstractDeviceProfileEntryProvider) instead.
+ * This interface is not intended to be implemented by clients directly.
+ * Instead, please use abstract class(AbstractDeviceProfileEntryProvider)
+ * instead.
  * </p>
+ * 
+ * @deprecated Not needed. See BUG118359
  */
 public interface DeviceProfileEntryProvider {
 	public Iterator getDeviceProfileEntries();
+
 	public void release();
 }

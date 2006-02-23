@@ -17,6 +17,10 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * @deprecated See
+ *             org.eclipse.html.core.internal.contentproperties.HTMLContentProperties
+ */
 public abstract class AbstractSubject implements INotify, ISubject {
 
 

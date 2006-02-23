@@ -21,6 +21,9 @@ import org.eclipse.wst.sse.internal.contentproperties.IContentSettings;
 import org.eclipse.wst.sse.ui.internal.contentproperties.ui.ComboListOnPropertyPage;
 import org.eclipse.wst.sse.ui.internal.contentproperties.ui.ContentSettingsPropertyPage;
 
+/**
+ * @deprecated Use CSSWebContentSettingsPropertyPage instead
+ */
 public final class CSSContentSettingsPropertyPage extends ContentSettingsPropertyPage {
 
 	private final int N_CSS_PROFILE = 0;

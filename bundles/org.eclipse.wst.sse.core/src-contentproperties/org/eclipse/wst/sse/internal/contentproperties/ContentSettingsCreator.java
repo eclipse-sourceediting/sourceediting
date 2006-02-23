@@ -13,7 +13,10 @@
 package org.eclipse.wst.sse.internal.contentproperties;
 
 
-
+/**
+ * @deprecated See
+ *             org.eclipse.html.core.internal.contentproperties.HTMLContentProperties
+ */
 public class ContentSettingsCreator {
 
 	public final static IContentSettings create() {

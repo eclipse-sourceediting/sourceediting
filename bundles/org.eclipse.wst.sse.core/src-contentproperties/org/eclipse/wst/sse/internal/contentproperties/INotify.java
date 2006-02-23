@@ -13,7 +13,9 @@
 package org.eclipse.wst.sse.internal.contentproperties;
 
 
-
+/**
+* @deprecated This is package protected so no one cares anyways.
+*/
 interface INotify {
 
 	void notifyListeners(org.eclipse.core.resources.IResource resource);

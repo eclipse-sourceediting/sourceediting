@@ -16,6 +16,9 @@ import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.Platform;
 
+/**
+ * @deprecated Not needed.  See BUG118359
+ */
 public class DeviceProfileEntryProviderBuilder {
 	private static final String EXTENSION_POINT_PLUGINID = "org.eclipse.wst.html.ui";  //$NON-NLS-1$
 	private static final String EXTENSION_POINT_NAME = "deviceProfileEntryProvider"; //$NON-NLS-1$

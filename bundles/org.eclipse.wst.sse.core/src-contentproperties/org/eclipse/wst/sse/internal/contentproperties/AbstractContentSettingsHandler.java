@@ -14,6 +14,9 @@ package org.eclipse.wst.sse.internal.contentproperties;
 
 import org.eclipse.core.resources.IResourceDelta;
 
+/**
+ * @deprecated This is package protected so no one cares anyways.
+ */
 abstract class AbstractContentSettingsHandler implements IContentSettingsHandler {
 
 

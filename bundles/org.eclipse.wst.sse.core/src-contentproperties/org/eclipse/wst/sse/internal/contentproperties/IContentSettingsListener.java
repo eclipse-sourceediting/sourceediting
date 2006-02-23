@@ -12,8 +12,10 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.internal.contentproperties;
 
-
-
+/**
+ * @deprecated See
+ *             org.eclipse.html.core.internal.contentproperties.HTMLContentProperties
+ */
 public interface IContentSettingsListener {
 
 	void contentSettingsChanged(org.eclipse.core.resources.IResource e);

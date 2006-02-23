@@ -23,6 +23,10 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.wst.sse.core.internal.Logger;
 
+/**
+ * @deprecated See
+ *             org.eclipse.html.core.internal.contentproperties.HTMLContentProperties
+ */
 public class ContentSettingsSynchronizer implements IResourceChangeListener {
 	class ContentSettingsVisitor implements IResourceDeltaVisitor {
 		// redefinition in ContentSettings.java

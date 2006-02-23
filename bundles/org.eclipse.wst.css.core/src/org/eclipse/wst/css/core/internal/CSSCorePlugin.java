@@ -13,6 +13,8 @@ package org.eclipse.wst.css.core.internal;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Plugin;
+import org.eclipse.wst.css.core.internal.contentproperties.CSSContentPropertiesManager;
+import org.osgi.framework.BundleContext;
 
 /**
  * The main plugin class to be used in the desktop.
@@ -41,5 +43,20 @@ public class CSSCorePlugin extends Plugin {
 	 */
 	public static IWorkspace getWorkspace() {
 		return ResourcesPlugin.getWorkspace();
+	}
+	
+	public void start(BundleContext context) throws Exception {
+		super.start(context);
+
+		// listen for resource changes to update content properties keys
+		CSSContentPropertiesManager.startup();
+	}
+
+	public void stop(BundleContext context) throws Exception {
+		// stop listenning for resource changes to update content properties
+		// keys
+		CSSContentPropertiesManager.shutdown();
+
+		super.stop(context);
 	}
 }

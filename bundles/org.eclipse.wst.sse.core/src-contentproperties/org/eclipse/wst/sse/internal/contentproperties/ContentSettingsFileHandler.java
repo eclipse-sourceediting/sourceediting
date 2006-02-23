@@ -23,6 +23,9 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 
+/**
+* @deprecated This is package protected so no one cares anyways.
+*/
 class ContentSettingsFileHandler extends AbstractContentSettingsHandler {
 
 

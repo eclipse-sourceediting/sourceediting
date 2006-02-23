@@ -14,7 +14,6 @@ import org.eclipse.wst.sse.core.internal.ltk.modelhandler.EmbeddedTypeHandler;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapterFactory;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
-import org.eclipse.wst.sse.internal.contentproperties.IContentSettingsListener;
 
 /**
  * Classes which implement this interface have two responsibilities. 
@@ -24,7 +23,7 @@ import org.eclipse.wst.sse.internal.contentproperties.IContentSettingsListener;
  * a change in embedded type is is made, it will signal 
  * the structuredModel that it needs to reinitialize itself.
  */
-public interface PageDirectiveAdapter extends INodeAdapter, IContentSettingsListener {
+public interface PageDirectiveAdapter extends INodeAdapter {
 
 	public String getContentType();
 

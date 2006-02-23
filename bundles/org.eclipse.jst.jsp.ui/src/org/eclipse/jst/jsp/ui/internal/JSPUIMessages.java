@@ -22,6 +22,22 @@ import org.eclipse.osgi.util.NLS;
 public class JSPUIMessages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.jst.jsp.ui.internal.JSPUIPluginResources";//$NON-NLS-1$
 	private static ResourceBundle fResourceBundle;
+	
+	static {
+		// load message values from bundle file
+		NLS.initializeMessages(BUNDLE_NAME, JSPUIMessages.class);
+	}
+
+	public static ResourceBundle getResourceBundle() {
+		try {
+			if (fResourceBundle == null)
+				fResourceBundle = ResourceBundle.getBundle(BUNDLE_NAME);
+		}
+		catch (MissingResourceException x) {
+			fResourceBundle = null;
+		}
+		return fResourceBundle;
+	}
 
 	public static String Sample_JSP_doc;
 	public static String JSP_Delimiters_UI_;
@@ -78,20 +94,10 @@ public class JSPUIMessages extends NLS {
 	public static String JSPColorPage_jsp_content;
 	public static String JSPFilesPreferencePage_0;
 	public static String JSPFilesPreferencePage_1;
-	
-	static {
-		// load message values from bundle file
-		NLS.initializeMessages(BUNDLE_NAME, JSPUIMessages.class);
-	}
-
-	public static ResourceBundle getResourceBundle() {
-		try {
-			if (fResourceBundle == null)
-				fResourceBundle = ResourceBundle.getBundle(BUNDLE_NAME);
-		}
-		catch (MissingResourceException x) {
-			fResourceBundle = null;
-		}
-		return fResourceBundle;
-	}
+	public static String JSPFContentSettingsPropertyPage_0;
+	public static String JSPFContentSettingsPropertyPage_1;
+	public static String JSPFContentSettingsPropertyPage_2;
+	public static String JSPFContentSettingsPropertyPage_3;
+	public static String JSPFContentSettingsPropertyPage_4;
+	public static String ProjectJSPFContentSettingsPropertyPage_0;
 }

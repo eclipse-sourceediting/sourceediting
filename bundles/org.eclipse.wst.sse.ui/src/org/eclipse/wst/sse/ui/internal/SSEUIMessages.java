@@ -27,7 +27,8 @@ public class SSEUIMessages extends NLS {
 		try {
 			if (fResourceBundle == null)
 				fResourceBundle = ResourceBundle.getBundle(BUNDLE_NAME);
-		} catch (MissingResourceException x) {
+		}
+		catch (MissingResourceException x) {
 			fResourceBundle = null;
 		}
 		return fResourceBundle;
@@ -166,6 +167,8 @@ public class SSEUIMessages extends NLS {
 	public static String EditorModelUtil_0;
 	public static String EditorModelUtil_1;
 
+	// TODO: These should be removed when ContentSettingsPropertyPage is
+	// deleted
 	// web content settings
 	public static String UI_Default_HTML_DOCTYPE_ID___1;
 	public static String UI_CSS_profile___2;
@@ -275,9 +278,9 @@ public class SSEUIMessages extends NLS {
 	public static String OccurrencesSearchQuery_2;
 	public static String ShowView_errorTitle;
 	public static String proc_dirty_regions_0;
-	
+
 	public static String textHoverMakeStickyHint;
-	
+
 	// Encoding
 	public static String EncodingPreferencePage_0;
 	public static String EncodingPreferencePage_1;
@@ -368,7 +371,7 @@ public class SSEUIMessages extends NLS {
 	public static String EnableProjectSettings;
 
 	public static String LoadingReferencedGrammars;
-	
+
 	public static String Folding;
 	public static String StructuredTextEditorPreferencePage_3;
 	public static String Projection_Toggle_label;

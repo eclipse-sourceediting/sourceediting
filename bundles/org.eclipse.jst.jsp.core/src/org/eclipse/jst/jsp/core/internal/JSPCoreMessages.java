@@ -28,6 +28,8 @@ public class JSPCoreMessages extends NLS {
 	public static String JSPEL_Syntax;
 	public static String JSPEL_Token;
 	public static String JSPDocumentLoader_1;
+	public static String JSPFContentPropertiesManager_Updating;
+	public static String JSPFContentPropertiesManager_Problems_Updating;
 	
 	private JSPCoreMessages() {
 	}

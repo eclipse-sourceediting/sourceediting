@@ -26,6 +26,9 @@ import org.eclipse.wst.sse.internal.contentproperties.IContentSettings;
 import org.eclipse.wst.sse.ui.internal.contentproperties.ui.ComboListOnPropertyPage;
 import org.eclipse.wst.sse.ui.internal.contentproperties.ui.ContentSettingsPropertyPage;
 
+/**
+ * @deprecated Use ProjectHTMLContentSettingsPropertyPage instead
+ */
 public final class ProjectContentSettingsPropertyPage extends ContentSettingsPropertyPage implements org.eclipse.swt.events.SelectionListener {
 
 
@@ -49,7 +52,7 @@ public final class ProjectContentSettingsPropertyPage extends ContentSettingsPro
 
 	protected void createDocumentTypeComboBox() {
 
-		// create description of implecit DOCTYPE	
+		// create description of implecit DOCTYPE
 		Label label = new Label(propertyPage, SWT.LEFT);
 		label.setText(HTMLUIMessages.UI_Description_of_role_of_following_DOCTYPE);
 		GridData data = new GridData();
@@ -62,7 +65,7 @@ public final class ProjectContentSettingsPropertyPage extends ContentSettingsPro
 		super.combo[this.N_DOCUMENT_TYPE].addSelectionListener(this);
 		// set entry list into Combo
 		ContentSettingsRegistry.setHTMLDocumentTypeRegistryInto(combo[N_DOCUMENT_TYPE]);
-		//	create TextField
+		// create TextField
 		createIDTextField();
 		if (combo[N_DOCUMENT_TYPE].getItemCount() <= 0)
 			return;
@@ -134,7 +137,7 @@ public final class ProjectContentSettingsPropertyPage extends ContentSettingsPro
 		int type = ((IResource) getElement()).getType();
 		switch (type) {
 			case IResource.PROJECT :
-				//	composite = createComposite(propertyPage,numCols,numRows);
+				// composite = createComposite(propertyPage,numCols,numRows);
 				createDocumentTypeComboBox();
 				createCSSComboBox();
 				createDeviceComboBox();
@@ -222,7 +225,8 @@ public final class ProjectContentSettingsPropertyPage extends ContentSettingsPro
 
 
 	private void computeMaxWidthHint() {
-		// maxLengthString was set when HTMLDocumentTypeEntry was set in class ContentSettingsRegistry.
+		// maxLengthString was set when HTMLDocumentTypeEntry was set in class
+		// ContentSettingsRegistry.
 		String maxLengthString = ContentSettingsRegistry.maxLengthStringInHTMLDocumentTypeRegistry;
 		String backup = this.systemIdText.getText();
 		this.systemIdText.setText(maxLengthString);
@@ -276,4 +280,3 @@ public final class ProjectContentSettingsPropertyPage extends ContentSettingsPro
 	}
 
 }
-

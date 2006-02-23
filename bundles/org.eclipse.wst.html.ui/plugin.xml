@@ -95,14 +95,15 @@
 			objectClass="org.eclipse.core.resources.IProject"
 			adaptable="true"
 			name="%WebContentSettings.name"
-			class="org.eclipse.wst.html.ui.internal.contentproperties.ui.ProjectContentSettingsPropertyPage"
+			class="org.eclipse.wst.html.ui.internal.contentproperties.ui.ProjectWebContentSettingsPropertyPage"
 			id="org.eclipse.wst.html.ui.dynamicprojectpropertypage">
 			<filter
 				name="nature"
-				value="org.eclipse.wst.webproject.WebNature">
+				value="org.eclipse.wst.common.project.facet.core.nature">
 			</filter>
 		</page>
 		<!-- for static web project -->
+		<!--
 		<page
 			objectClass="org.eclipse.core.resources.IProject"
 			adaptable="true"
@@ -111,72 +112,42 @@
 			id="org.eclipse.wst.html.ui.staticprojectpropertypage">
 			<filter
 				name="nature"
-				value="org.eclipse.wst.webproject.StaticWebNature">
+				value="org.eclipse.wst.common.project.facet.core.nature">
+			</filter>
+		</page>
+		-->
+		<page
+			objectClass="org.eclipse.core.resources.IFile"
+			adaptable="true"
+			name="%WebContentSettings.name"
+			class="org.eclipse.wst.html.ui.internal.contentproperties.ui.WebContentSettingsPropertyPage"
+			id="org.eclipse.wst.html.ui.internal.contentproperties.ui.WebContentSettingsPropertyPage.html">
+			<filter
+				name="contentTypeId"
+				value="org.eclipse.wst.html.core.htmlsource">
 			</filter>
 		</page>
 		<page
 			objectClass="org.eclipse.core.resources.IFile"
 			adaptable="true"
 			name="%WebContentSettings.name"
-			nameFilter="*.htm*"
-			class="org.eclipse.wst.html.ui.internal.contentproperties.ui.HTMLContentSettingsPropertyPage"
-			id="org.eclipse.wst.html.ui.htmlpropertypage">
+			class="org.eclipse.wst.html.ui.internal.contentproperties.ui.WebContentSettingsPropertyPage"
+			id="org.eclipse.wst.html.ui.internal.contentproperties.ui.WebContentSettingsPropertyPage.jsp">
+			<filter
+				name="contentTypeId"
+				value="org.eclipse.jst.jsp.core.jspsource">
+			</filter>
 		</page>
 		<page
 			objectClass="org.eclipse.core.resources.IFile"
 			adaptable="true"
 			name="%WebContentSettings.name"
-			nameFilter="*.shtml"
-			class="org.eclipse.wst.html.ui.internal.contentproperties.ui.HTMLContentSettingsPropertyPage"
-			id="org.eclipse.wst.html.ui.htmlpropertypage">
-		</page>
-		<page
-			objectClass="org.eclipse.core.resources.IFile"
-			adaptable="true"
-			name="%WebContentSettings.name"
-			nameFilter="*.xhtml"
-			class="org.eclipse.wst.html.ui.internal.contentproperties.ui.HTMLContentSettingsPropertyPage"
-			id="org.eclipse.wst.html.ui.htmlpropertypage">
-		</page>
-		<page
-			objectClass="org.eclipse.core.resources.IFile"
-			adaptable="true"
-			name="%WebContentSettings.name"
-			nameFilter="*.jhtml"
-			class="org.eclipse.wst.html.ui.internal.contentproperties.ui.HTMLContentSettingsPropertyPage"
-			id="org.eclipse.wst.html.ui.htmlpropertypage">
-		</page>
-		<page
-			objectClass="org.eclipse.core.resources.IFile"
-			adaptable="true"
-			name="%WebContentSettings.name"
-			nameFilter="*.jsp"
-			class="org.eclipse.wst.html.ui.internal.contentproperties.ui.HTMLContentSettingsPropertyPage"
-			id="org.eclipse.wst.html.ui.htmlpropertypage">
-		</page>
-		<page
-			objectClass="org.eclipse.core.resources.IFile"
-			adaptable="true"
-			name="%WebContentSettings.name"
-			nameFilter="*.jspf"
-			class="org.eclipse.wst.html.ui.internal.contentproperties.ui.HTMLContentSettingsPropertyPage"
-			id="org.eclipse.wst.html.ui.htmlpropertypage">
-		</page>
-		<page
-			objectClass="org.eclipse.core.resources.IFile"
-			adaptable="true"
-			name="%WebContentSettings.name"
-			nameFilter="*.jsf"
-			class="org.eclipse.wst.html.ui.internal.contentproperties.ui.HTMLContentSettingsPropertyPage"
-			id="org.eclipse.wst.html.ui.htmlpropertypage">
-		</page>
-		<page
-			objectClass="org.eclipse.core.resources.IFile"
-			adaptable="true"
-			name="%WebContentSettings.name"
-			nameFilter="*.wml"
-			class="org.eclipse.wst.html.ui.internal.contentproperties.ui.HTMLContentSettingsPropertyPage"
-			id="org.eclipse.wst.html.ui.htmlpropertypage">
+			class="org.eclipse.wst.html.ui.internal.contentproperties.ui.WebContentSettingsPropertyPage"
+			id="org.eclipse.wst.html.ui.internal.contentproperties.ui.WebContentSettingsPropertyPage.jspf">
+			<filter
+				name="contentTypeId"
+				value="org.eclipse.jst.jsp.core.jspfragmentsource">
+			</filter>
 		</page>
 	</extension>
 	<!-- Editor actionsets -->
@@ -341,21 +312,18 @@
 	<!-- Add new HTML wizard to J2EE Project Navigator -->
 	<extension
 		id="org.eclipse.wst.html.commonWizard.newHTML"
-		point="org.eclipse.wst.common.navigator.workbench.commonWizard">
+		point="org.eclipse.ui.navigator.navigatorContent">
 		<commonWizard
 			type="new"
 			wizardId="org.eclipse.wst.html.ui.internal.wizard.NewHTMLWizard">
 			<enablement>
 				<or>
-					<objectClass
-						name="org.eclipse.core.resources.IProject">
-					</objectClass>
-					<objectClass
-						name="org.eclipse.core.resources.IFolder">
-					</objectClass>
-					<objectClass
-						name="org.eclipse.core.resources.IFile">
-					</objectClass>
+					<instanceof
+						value="org.eclipse.core.resources.IProject" />
+					<instanceof
+						value="org.eclipse.core.resources.IFolder" />
+					<instanceof
+						value="org.eclipse.core.resources.IFile" />
 				</or>
 			</enablement>
 		</commonWizard>

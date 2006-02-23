@@ -46,6 +46,9 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.traversal.NodeIterator;
 import org.xml.sax.SAXException;
 
+/**
+* @deprecated This is package protected so no one cares anyways.
+*/
 class SimpleNodeOperator {
 
 	class CreateContentSettingsFailureException extends Exception {

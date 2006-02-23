@@ -15,7 +15,6 @@ import org.eclipse.wst.sse.core.internal.provisional.AbstractAdapterFactory;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapterFactory;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
-import org.eclipse.wst.sse.internal.contentproperties.ContentSettingsChangeSubject;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.w3c.dom.Node;
 
@@ -55,7 +54,6 @@ public class PageDirectiveAdapterFactory extends AbstractAdapterFactory implemen
 			IDOMNode node = (IDOMNode) target;
 			if (node.getNodeType() == Node.DOCUMENT_NODE) {
 				result = getAdapterInstance(target);
-				ContentSettingsChangeSubject.getSubject().addListener(result);
 			}
 
 		}
@@ -64,7 +62,6 @@ public class PageDirectiveAdapterFactory extends AbstractAdapterFactory implemen
 
 	public void release() {
 		if (pageDirectiveAdapterInstance != null) {
-			ContentSettingsChangeSubject.getSubject().removeListener(pageDirectiveAdapterInstance);
 			pageDirectiveAdapterInstance.release();
 		}
 	}
