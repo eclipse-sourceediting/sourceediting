@@ -23,16 +23,7 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.texteditor.ITextEditorActionConstants;
 
-/**
- * Action group that adds the search for references actions to a
- * context menu and the global menu bar.
- * 
- * <p>
- * This class may be instantiated; it is not intended to be subclassed.
- * </p>
- * 
- * @since 2.0
- */
+
 public class ReferencesSearchGroup extends SearchGroup  {
 
     private static final String MENU_TEXT= "References...";//SearchMessages.group_references; 
@@ -44,9 +35,8 @@ public class ReferencesSearchGroup extends SearchGroup  {
     private String fGroupId;
     
     private FindReferencesAction fFindReferencesAction;
-    private FindReferencesAction fFindReferencesInProjectAction;
-    //private FindReferencesAction fFindReferencesInHierarchyAction;
-    private FindReferencesAction fFindReferencesInWorkingSetAction;
+    private FindReferencesInProjectAction fFindReferencesInProjectAction;
+    private FindReferencesInWorkingSetAction fFindReferencesInWorkingSetAction;
 
 
     /**
@@ -64,17 +54,12 @@ public class ReferencesSearchGroup extends SearchGroup  {
         fFindReferencesAction.setActionDefinitionId("SEARCH_REFERENCES_IN_WORKSPACE");
         //fEditor.setAction("SearchReferencesInWorkspace", fFindReferencesAction); //$NON-NLS-1$
 
-        fFindReferencesInProjectAction= new FindReferencesAction(fEditor);
+        fFindReferencesInProjectAction= new FindReferencesInProjectAction(fEditor);
         fFindReferencesInProjectAction.setText("Project");        
         fFindReferencesInProjectAction.setActionDefinitionId("SEARCH_REFERENCES_IN_PROJECT");
         //fEditor.setAction("SearchReferencesInProject", fFindReferencesInProjectAction); //$NON-NLS-1$
-/*
-        fFindReferencesInHierarchyAction= new FindReferencesAction(fEditor);
-        fFindReferencesInHierarchyAction.setText("Hierarchy");          
-        fFindReferencesInHierarchyAction.setActionDefinitionId("SEARCH_REFERENCES_IN_HIERARCHY");
-        //fEditor.setAction("SearchReferencesInHierarchy", fFindReferencesInHierarchyAction); //$NON-NLS-1$
- */       
-        fFindReferencesInWorkingSetAction= new FindReferencesAction(fEditor);
+    
+        fFindReferencesInWorkingSetAction= new FindReferencesInWorkingSetAction(fEditor);
         fFindReferencesInWorkingSetAction.setText("Working Set...");         
         fFindReferencesInWorkingSetAction.setActionDefinitionId(".SEARCH_REFERENCES_IN_WORKING_SET");
         //fEditor.setAction("SearchReferencesInWorkingSet", fFindReferencesInWorkingSetAction); //$NON-NLS-1$

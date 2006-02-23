@@ -29,63 +29,105 @@ import org.eclipse.xsd.XSDElementDeclaration;
 import org.eclipse.xsd.XSDNamedComponent;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
 
-public class FindReferencesAction extends FindAction
-{
-  public FindReferencesAction(IEditorPart editor)
-  {   
-    super(editor);
-  }
-  
-  public void setActionDefinitionId(String string)
-  {
-    
-  }
-
-  public void run()
-  {
-    String pattern = "";
-    if (editor != null)
-    {  
-      IEditorInput input = editor.getEditorInput();
-      if (input instanceof IFileEditorInput)
-      {
-        IFileEditorInput fileEditorInput = (IFileEditorInput)input;               
-        IFile file = fileEditorInput.getFile();        
-        ISelectionProvider provider = (ISelectionProvider)editor.getAdapter(ISelectionProvider.class);
-        if (provider != null)
-        {  
-          ISelection selection = provider.getSelection();
-          if (selection != null && selection instanceof IStructuredSelection)
-          {
-            IStructuredSelection s = (IStructuredSelection)selection;
-            Object o = s.getFirstElement();
-            if (o != null && o instanceof XSDNamedComponent)
-            {  
-              XSDNamedComponent c = (XSDNamedComponent)o;
-              QualifiedName metaName = null;
-              if (c instanceof XSDComplexTypeDefinition)
-              {             
-                metaName = IXSDSearchConstants.COMPLEX_TYPE_META_NAME;
-              }
-              else if (c instanceof XSDSimpleTypeDefinition)
-              {
-                metaName = IXSDSearchConstants.SIMPLE_TYPE_META_NAME;
-              }  
-              else if (c instanceof XSDElementDeclaration)
-              {
-               metaName = IXSDSearchConstants.ELEMENT_META_NAME; 
-              }  
-              QualifiedName elementQName = new QualifiedName(c.getTargetNamespace(), c.getName());
-              System.out.println("name" + c.getTargetNamespace() + ":" + c.getName());
-              SearchScope scope = new WorkspaceSearchScope();
-              String scopeDescription = "Workspace";    
-              XSDSearchQuery searchQuery= new XSDSearchQuery(pattern, file, elementQName, metaName, XSDSearchQuery.LIMIT_TO_REFERENCES, scope, scopeDescription);    
-              NewSearchUI.activateSearchResultView();
-              NewSearchUI.runQueryInBackground(searchQuery);
-            }
-          }
-        }
-      }
-    }
-  }     
+public class FindReferencesAction extends FindAction{
+	public FindReferencesAction(IEditorPart editor)
+	{   
+		super(editor);
+	}
+	
+	public void setActionDefinitionId(String string)
+	{
+		
+	}
+	
+	/**
+	 * To be used by subclass in its run()
+	 * Returns the file where the selection of a component (from the user) occurs
+	 * ie. Returns the file that the user is currently working on.
+	 * @return The IFile representation of the current working file.
+	 */
+	protected IFile getCurrentFile(){
+		if (editor != null){
+			IEditorInput input = editor.getEditorInput();
+			if (input instanceof IFileEditorInput){
+				IFileEditorInput fileEditorInput = (IFileEditorInput)input;               
+				return  fileEditorInput.getFile();
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * To be used by subclass in its run()
+	 * Works with the Editor to return the selected XSD component which the user
+	 * wants to do the search on.
+	 * @return
+	 * 	The XSDNamedComponent that the user points to (using cursor).
+	 */
+	protected XSDNamedComponent getXSDNamedComponent(){
+		if (editor != null){     
+			ISelectionProvider provider = 
+				(ISelectionProvider) editor.getAdapter(ISelectionProvider.class);
+			if (provider != null)
+			{
+				ISelection selection = provider.getSelection();
+				if (selection != null && selection instanceof IStructuredSelection)
+				{
+					IStructuredSelection s = (IStructuredSelection) selection;
+					Object o = s.getFirstElement();
+					if (o != null && o instanceof XSDNamedComponent)
+					{
+						return (XSDNamedComponent) o;
+					}
+				}
+			}			
+		}
+		 //The expected component we get from the editor does not meet
+		 //  our expectation 
+		return null;
+	}
+	
+	/**
+	 * To be used by subclass in its run()..
+	 * Determines the metaName of the XSD component given to this method.
+	 * @param component The component of which we want to determine the name
+	 * @return
+	 */
+	protected QualifiedName determineMetaName(XSDNamedComponent component){
+		QualifiedName metaName = null;
+		if (component instanceof XSDComplexTypeDefinition)
+		{             
+			metaName = IXSDSearchConstants.COMPLEX_TYPE_META_NAME;
+		}
+		else if (component instanceof XSDSimpleTypeDefinition)
+		{
+			metaName = IXSDSearchConstants.SIMPLE_TYPE_META_NAME;
+		}  
+		else if (component instanceof XSDElementDeclaration)
+		{
+			metaName = IXSDSearchConstants.ELEMENT_META_NAME; 
+		} 
+		return metaName;
+	}
+	
+	public void run()
+	{
+		String pattern = "";
+		
+		XSDNamedComponent component = getXSDNamedComponent();
+		IFile file = getCurrentFile();
+		if ( file != null && component != null){
+			QualifiedName metaName = determineMetaName(component);
+			
+			QualifiedName elementQName = 
+				new QualifiedName(component.getTargetNamespace(), component.getName());
+			
+			SearchScope scope = new WorkspaceSearchScope();
+			String scopeDescription = "Workspace";    
+			XSDSearchQuery searchQuery = 
+				new XSDSearchQuery(pattern, file, elementQName, metaName, XSDSearchQuery.LIMIT_TO_REFERENCES, scope, scopeDescription);    
+			NewSearchUI.activateSearchResultView();
+			NewSearchUI.runQueryInBackground(searchQuery);
+		}
+	}
 }
