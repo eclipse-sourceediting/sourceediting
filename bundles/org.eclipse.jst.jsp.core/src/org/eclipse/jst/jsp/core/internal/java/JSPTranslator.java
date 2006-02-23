@@ -1793,7 +1793,7 @@ public class JSPTranslator {
 			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=128490
 			// length of 11 is the length of jsp:useBean
 			// and saves the expensive getText.equals call
-			if (r.getType() == DOMRegionContext.XML_TAG_NAME && r.getLength() == 11 && jspReferenceRegion.getText(r).equals("jsp:useBean")) { //$NON-NLS-1$
+			if (r.getType() == DOMRegionContext.XML_TAG_NAME && r.getTextLength() == 11 && jspReferenceRegion.getText(r).equals("jsp:useBean")) { //$NON-NLS-1$
 				isUseBean = true;
 				break;
 			}
