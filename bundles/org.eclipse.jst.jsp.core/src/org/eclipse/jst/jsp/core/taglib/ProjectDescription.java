@@ -1040,6 +1040,10 @@ class ProjectDescription {
 					if (resolvedString == null || resolvedString.trim().length() == 0) {
 						resolvedString = catalog.resolveURI(reference);
 					}
+					// Check as public ID
+					if (resolvedString == null || resolvedString.trim().length() == 0) {
+						resolvedString = catalog.resolvePublic(reference, basePath);
+					}
 				}
 				catch (Exception e) {
 					Logger.logException(e);
