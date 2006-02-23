@@ -53,8 +53,8 @@ public abstract class XMLComponentSelectionProvider implements IComponentSelecti
             if (treeObject.getName().equals(dataItem.getAttributeInfo("name"))) {
                 // If the existing data item and the new data item have the same names
                 if (treeObject.getXMLComponentSpecification().size() > 0) {
-                    QualifiedName metaName = ((XMLComponentSpecification) treeObject.getXMLComponentSpecification().get(0)).getMetaName();
-                    if (metaName.equals(dataItem.getMetaName())) {
+                    QualifiedName metaName = ((XMLComponentSpecification) treeObject.getXMLComponentSpecification().get(0)).getMetaName();                   
+                    if (metaName != null && metaName.equals(dataItem.getMetaName())) {
                         // If they are the same 'type' of items (according to the path value)
                         containingTreeObject = treeObject;
                         foundMatch = true;
