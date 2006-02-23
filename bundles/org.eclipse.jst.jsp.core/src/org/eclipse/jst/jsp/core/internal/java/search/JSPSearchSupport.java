@@ -284,7 +284,7 @@ public class JSPSearchSupport {
      * @throws CoreException
      */
     public SearchDocument addJspFile(IFile file) {
-        if (JSPSearchSupport.getInstance().isCanceled()) {
+        if (JSPSearchSupport.getInstance().isCanceled() || !file.isAccessible()) {
             return null;
         }
 
