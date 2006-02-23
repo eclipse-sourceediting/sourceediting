@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
-import org.eclipse.core.filebuffers.FileBuffers;
 import org.eclipse.core.filebuffers.ITextFileBuffer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -252,15 +251,15 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 				IPath root = TaglibIndex.getContextRoot(TaglibController.getFileBuffer(TLDCMDocumentManager.this).getLocation());
 				// strip any extraneous quotes and white space
 				includedFile = StringUtils.strip(includedFile).trim();
-				IPath fileLocation = null;
+				IPath filePath = null;
 				if (includedFile.startsWith("/")) { //$NON-NLS-1$
-					fileLocation = root.append(includedFile);
+					filePath = root.append(includedFile);
 				}
 				else {
-					fileLocation = new Path(URIHelper.normalize(includedFile, TaglibController.getFileBuffer(TLDCMDocumentManager.this).getLocation().toString(), root.toString()));
+					filePath = new Path(URIHelper.normalize(includedFile, TaglibController.getFileBuffer(TLDCMDocumentManager.this).getLocation().toString(), root.toString()));
 				}
 				// check for "loops"
-				if (!getIncludes().contains(fileLocation) && fileLocation != null && !fileLocation.equals(TaglibController.getFileBuffer(TLDCMDocumentManager.this).getLocation())) {
+				if (!getIncludes().contains(filePath) && filePath != null && !filePath.equals(TaglibController.getFileBuffer(TLDCMDocumentManager.this).getLocation())) {
 					/*
 					 * Prevent slow performance when editing scriptlet part of
 					 * the JSP by only processing includes if they've been
@@ -269,13 +268,13 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 					 * prefix/tagdir allows us to just enable the CMDocument
 					 * when the previously parsed files.
 					 */
-					if (hasAnyIncludeBeenModified(fileLocation.toString())) {
-						getIncludes().push(fileLocation);
+					if (hasAnyIncludeBeenModified(filePath)) {
+						getIncludes().push(filePath);
 						if (getParser() != null) {
 							IncludeHelper includeHelper = new IncludeHelper(anchorStructuredDocumentRegion, getParser());
-							includeHelper.parse(FileBuffers.normalizeLocation(fileLocation).toString());
+							includeHelper.parse(filePath);
 							List references = includeHelper.taglibReferences;
-							fTLDCMReferencesMap.put(fileLocation.toString(), references);
+							fTLDCMReferencesMap.put(filePath.toString(), references);
 						}
 						else
 							Logger.log(Logger.WARNING, "Warning: parser text was requested by " + getClass().getName() + " but none was available; taglib support disabled"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -283,7 +282,7 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 					}
 					else {
 						// Add from that saved list of uris/prefixes/documents
-						List references = (List) fTLDCMReferencesMap.get(fileLocation.toString());
+						List references = (List) fTLDCMReferencesMap.get(filePath.toString());
 						for (int i = 0; references != null && i < references.size(); i++) {
 							TLDCMDocumentReference reference = (TLDCMDocumentReference) references.get(i);
 							enableTaglibFromURI(reference.prefix, reference.uri, includeStructuredDocumentRegion);
@@ -293,7 +292,7 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 				}
 				else {
 					if (Debug.debugTokenizer)
-						System.out.println("LOOP IN @INCLUDES FOUND: " + fileLocation); //$NON-NLS-1$
+						System.out.println("LOOP IN @INCLUDES FOUND: " + filePath); //$NON-NLS-1$
 				}
 			}
 		}
@@ -541,9 +540,9 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 			return ResourcesPlugin.getEncoding();
 		}
 
-		protected String getContents(String fileName) {
+		protected String getContents(IPath filePath) {
 			StringBuffer s = new StringBuffer();
-			IFile iFile = FileBuffers.getWorkspaceFileAtLocation(new Path(fileName));
+			IFile iFile = ResourcesPlugin.getWorkspace().getRoot().getFile(filePath);
 			if (iFile != null && iFile.exists()) {
 				String charset = detectCharset(iFile);
 				InputStream contents = null;
@@ -559,7 +558,7 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 				}
 				catch (Exception e) {
 					if (Debug.debugStructuredDocument)
-						Logger.log(Logger.WARNING, "An exception occured while scanning " + fileName, e); //$NON-NLS-1$
+						Logger.log(Logger.WARNING, "An exception occured while scanning " + filePath, e); //$NON-NLS-1$
 				}
 				finally {
 					try {
@@ -579,7 +578,7 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 				File file = null;
 				FileInputStream fis = null;
 				try {
-					file = new File(fileName);
+					file = new File(filePath.toString());
 					length = (int) file.length();
 					fis = new FileInputStream(file);
 					while (((c = fis.read()) >= 0) && (count < length)) {
@@ -589,7 +588,7 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 				}
 				catch (FileNotFoundException e) {
 					if (Debug.debugStructuredDocument)
-						System.out.println("File not found : \"" + fileName + "\""); //$NON-NLS-2$//$NON-NLS-1$
+						System.out.println("File not found : \"" + filePath + "\""); //$NON-NLS-2$//$NON-NLS-1$
 				}
 				catch (ArrayIndexOutOfBoundsException e) {
 					if (Debug.debugStructuredDocument)
@@ -644,19 +643,14 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 			}
 		}
 
-		public void parse(String filename) {
+		/**
+		 * @param path - the fullpath for the resource to be parsed 
+		 */
+		void parse(IPath path) {
 			JSPSourceParser p = new JSPSourceParser();
 			fLocalParser = p;
 			List blockTags = fParentParser.getBlockMarkers();
-			String includedFilename = filename;
-			File baseFile = FileBuffers.getSystemFileAtLocation(new Path(includedFilename));
-			try {
-				if (baseFile != null)
-					includedFilename = baseFile.getCanonicalPath();
-			}
-			catch (IOException e) {
-			}
-			String s = getContents(includedFilename);
+			String s = getContents(path);
 			fLocalParser.addStructuredDocumentRegionHandler(this);
 			fLocalParser.reset(s);
 			for (int i = 0; i < blockTags.size(); i++) {
@@ -703,7 +697,7 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 	private Hashtable fDocuments = null;
 	// timestamp cache to prevent excessive reparsing
 	// of included files
-	// String (filepath) > Long (modification stamp)
+	// IPath (filepath) > Long (modification stamp)
 	HashMap fInclude2TimestampMap = new HashMap();
 	private Stack fIncludes = null;
 
@@ -896,21 +890,20 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 	}
 
 	/**
-	 * @param fileLocation
-	 *            the "root" file
+	 * @param filePath the path to check for modification
 	 */
-	boolean hasAnyIncludeBeenModified(String fileLocation) {
+	boolean hasAnyIncludeBeenModified(IPath filePath) {
 
 		boolean result = false;
 		// check the top level
-		if (hasBeenModified(fileLocation)) {
+		if (hasBeenModified(filePath)) {
 			result = true;
 		}
 		else {
 			// check all includees
 			Iterator iter = fInclude2TimestampMap.keySet().iterator();
 			while (iter.hasNext()) {
-				if (hasBeenModified((String) iter.next())) {
+				if (hasBeenModified((IPath) iter.next())) {
 					result = true;
 					break;
 				}
@@ -923,32 +916,30 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 	 * @param filename
 	 * @return
 	 */
-	boolean hasBeenModified(String filename) {
-
+	boolean hasBeenModified(IPath filePath) {
 		boolean result = false;
 		// quick filename/timestamp cache check here...
-		IPath filePath = new Path(filename);
-		IFile f = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(filePath);
+		IFile f = null;
 		if (f == null && filePath.segmentCount() > 1) {
 			f = ResourcesPlugin.getWorkspace().getRoot().getFile(filePath);
 		}
 		if (f != null && f.exists()) {
 			Long currentStamp = new Long(f.getModificationStamp());
-			Object o = fInclude2TimestampMap.get(filename);
+			Object o = fInclude2TimestampMap.get(filePath);
 			if (o != null) {
 				Long previousStamp = (Long) o;
 				// stamps don't match, file changed
 				if (currentStamp.longValue() != previousStamp.longValue()) {
 					result = true;
 					// store for next time
-					fInclude2TimestampMap.put(filename, currentStamp);
+					fInclude2TimestampMap.put(filePath, currentStamp);
 				}
 			}
 			else {
 				// return true, since we've not encountered this file yet.
 				result = true;
 				// store for next time
-				fInclude2TimestampMap.put(filename, currentStamp);
+				fInclude2TimestampMap.put(filePath, currentStamp);
 			}
 		}
 		return result;
