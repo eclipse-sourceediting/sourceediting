@@ -11,15 +11,19 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.core.taglib;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Stack;
 
 import org.eclipse.core.filebuffers.FileBuffers;
@@ -49,6 +53,8 @@ import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.JSP12TLDNa
 import org.eclipse.jst.jsp.core.internal.util.DocumentProvider;
 import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
 import org.eclipse.wst.sse.core.internal.util.JarUtilities;
+import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
+import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalog;
 import org.w3c.dom.Document;
 import org.w3c.dom.EntityReference;
 import org.w3c.dom.Node;
@@ -444,6 +450,98 @@ class ProjectDescription {
 	}
 
 	void clear() {
+	}
+
+	private ITaglibRecord createCatalogRecord(String urlString) {
+		ITaglibRecord record = null;
+		if (urlString.toLowerCase(Locale.US).endsWith((".jar")) && urlString.startsWith("file:")) {
+			String fileLocation = null;
+			try {
+				URL url = new URL(urlString);
+				fileLocation = url.getFile();
+			}
+			catch (MalformedURLException e) {
+				// not worth reporting
+			}
+			if (fileLocation != null) {
+				JarRecord jarRecord = createJARRecord(fileLocation);
+				String[] entries = JarUtilities.getEntryNames(fileLocation);
+				for (int j = 0; j < entries.length; j++) {
+					if (entries[j].endsWith(".tld")) { //$NON-NLS-1$
+						if (entries[j].equals(JarUtilities.JSP11_TAGLIB)) {
+							jarRecord.has11TLD = true;
+							InputStream contents = JarUtilities.getInputStream(fileLocation, entries[j]);
+							if (contents != null) {
+								TaglibInfo info = extractInfo(fileLocation, contents);
+								jarRecord.info = info;
+							}
+							try {
+								contents.close();
+							}
+							catch (IOException e) {
+							}
+						}
+					}
+				}
+				if (jarRecord.has11TLD) {
+					if (_debugIndexCreation)
+						Logger.log(Logger.INFO_DEBUG, "created catalog record for " + urlString + "@" + jarRecord.getLocation()); //$NON-NLS-1$ //$NON-NLS-2$
+					record = jarRecord;
+				}
+
+			}
+		}
+		else {
+			URL url = null;
+			ByteArrayInputStream cachedContents = null;
+			InputStream tldStream = null;
+			try {
+				url = new URL(urlString);
+				URLConnection connection = url.openConnection();
+				connection.setDefaultUseCaches(false);
+				tldStream = connection.getInputStream();
+			}
+			catch (Exception e1) {
+				Logger.logException(e1);
+			}
+
+			int c;
+			ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+			// array dim restriction?
+			byte bytes[] = new byte[2048];
+			try {
+				while ((c = tldStream.read(bytes)) >= 0) {
+					buffer.write(bytes, 0, c);
+				}
+				cachedContents = new ByteArrayInputStream(buffer.toByteArray());
+			}
+			catch (IOException ioe) {
+				// no cleanup can be done
+			}
+			finally {
+				try {
+					tldStream.close();
+				}
+				catch (IOException e) {
+				}
+			}
+
+			URLRecord urlRecord = null;
+			TaglibInfo info = extractInfo(urlString, cachedContents);
+			if (info != null) {
+				urlRecord = new URLRecord();
+				urlRecord.info = info;
+				urlRecord.baseLocation = urlString;
+				urlRecord.url = url; //$NON-NLS-1$ //$NON-NLS-2$
+			}
+			try {
+				cachedContents.close();
+			}
+			catch (IOException e) {
+			}
+			record = urlRecord;
+		}
+		return record;
 	}
 
 	/**
@@ -930,6 +1028,28 @@ class ProjectDescription {
 			record = (ITaglibRecord) fClasspathReferences.get(reference);
 		}
 
+		// Check the XML Catalog
+		if (record == null) {
+			ICatalog catalog = XMLCorePlugin.getDefault().getDefaultXMLCatalog();
+			if (catalog != null) {
+				String resolvedString = null;
+				try {
+					// Check as system reference first
+					resolvedString = catalog.resolveSystem(reference);
+					// Check as URI
+					if (resolvedString == null || resolvedString.trim().length() == 0) {
+						resolvedString = catalog.resolveURI(reference);
+					}
+				}
+				catch (Exception e) {
+					Logger.logException(e);
+				}
+				if (resolvedString != null && resolvedString.trim().length() > 0) {
+					record = createCatalogRecord(resolvedString);
+				}
+			}
+		}
+
 		// If no records were found and no local-root applies, check ALL of
 		// the web.xml files as a fallback
 		if (record == null && fProject.getFullPath().toString().equals(getLocalRoot(basePath))) {
@@ -940,6 +1060,7 @@ class ProjectDescription {
 				record = (ITaglibRecord) getImplicitReferences(webxmls[i].path.toString()).get(reference);
 			}
 		}
+
 
 		return record;
 	}

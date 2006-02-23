@@ -319,6 +319,9 @@ public final class TaglibIndex {
 	 * Finds all of the visible ITaglibRecords for the given path in the
 	 * workspace. Taglib mappings from web.xml files are only visible to paths
 	 * within the web.xml's corresponding web content folder.
+	 * <p>
+	 * Values defined within the XML Catalog will not be returned.
+	 * </p>
 	 * 
 	 * @param fullPath -
 	 *            a path within the workspace
@@ -532,7 +535,7 @@ public final class TaglibIndex {
 			IProject project = baseResource.getProject();
 			ProjectDescription description = _instance.createDescription(project);
 			IPath rootPath = description.getLocalRoot(baseResource.getFullPath());
-			return ResourcesPlugin.getWorkspace().getRoot().getLocation().append(rootPath);
+			return rootPath;
 		}
 		// try to handle out-of-workspace paths
 		IPath root = path;
