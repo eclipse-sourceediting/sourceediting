@@ -1,17 +1,19 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: JSP Core Tests
+Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.eclipse.jst.jsp.core.tests
 Bundle-Version: 1.0.0
 Bundle-ClassPath: jspcoretests.jar
 Bundle-Activator: org.eclipse.jst.jsp.core.tests.JSPCoreTestsPlugin
-Bundle-Vendor: Eclipse.org
+Bundle-Vendor: %Bundle-Vendor.0
 Bundle-Localization: plugin
 Export-Package: org.eclipse.jst.jsp.core.tests,
  org.eclipse.jst.jsp.core.tests.cleanupformat,
  org.eclipse.jst.jsp.core.tests.cleanupformat.testfiles,
  org.eclipse.jst.jsp.core.tests.contenttypeidentifier.contentspecific,
- org.eclipse.jst.jsp.core.tests.dom
+ org.eclipse.jst.jsp.core.tests.dom,
+ org.eclipse.jst.jsp.core.tests.model,
+ org.eclipse.jst.jsp.core.tests.taglibindex
 Require-Bundle: org.junit,
  org.eclipse.wst.html.core,
  org.eclipse.wst.xml.core,
@@ -20,4 +22,4 @@ Require-Bundle: org.junit,
  org.eclipse.core.runtime,
  org.eclipse.jst.jsp.core,
  org.eclipse.wst.css.core
-Eclipse-AutoStart: true
+Eclipse-LazyStart: true

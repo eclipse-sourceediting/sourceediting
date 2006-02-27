@@ -24,6 +24,7 @@ import java.util.ResourceBundle;
 
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.wst.xml.core.internal.contenttype.ByteReader;
@@ -76,7 +77,7 @@ public class TestsPlugin extends Plugin {
 		URL installLocation = Platform.getBundle("org.eclipse.wst.xml.tests.encoding").getEntry("/");
 		URL resolvedLocation = null;
 		try {
-			resolvedLocation = Platform.resolve(installLocation);
+			resolvedLocation = FileLocator.resolve(installLocation);
 		}
 		catch (IOException e) {
 			// impossible

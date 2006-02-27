@@ -12,17 +12,19 @@ package org.eclipse.jst.jsp.ui.tests.contentassist;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 
 import junit.framework.TestCase;
 
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslator;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
-import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 
 /**
  * This class tests the sed JSPJavaTranslator class
+ * 
  * @author pavery
  */
 public class JSPJavaTranslatorTest extends TestCase {
@@ -31,12 +33,12 @@ public class JSPJavaTranslatorTest extends TestCase {
 		super(name);
 	}
 
-	public void testAllFiles() {
-		// this test is for PMR: 91930  CMVC:218469
+	public void testAllFiles() throws UnsupportedEncodingException, IOException {
+		// this test is for PMR: 91930 CMVC:218469
 		testJSPInJavascript("testfiles/jspInJavascript.jsp");
-	}
+	} 
 
-	public void testJSPInJavascript(String filename) {
+	public void testJSPInJavascript(String filename) throws UnsupportedEncodingException, IOException {
 		IStructuredModel sm = getStructuredModelForRead(filename);
 		if (sm != null) {
 			IDOMNode xmlNode = (IDOMNode) sm.getIndexedRegion(0);
@@ -44,14 +46,17 @@ public class JSPJavaTranslatorTest extends TestCase {
 			if (xmlNode != null) {
 				JSPTranslator jspt = new JSPTranslator();
 				jspt.reset(xmlNode, null);
-				//int sourceTextPos = text.indexOf("<%= testJspString") + 17;
-				//jspt.setSourceCursor(sourceTextPos); // right after the text
+				// int sourceTextPos = text.indexOf("<%= testJspString") + 17;
+				// jspt.setSourceCursor(sourceTextPos); // right after the
+				// text
 				jspt.translate();
 				String translation = jspt.getTranslation().toString();
 				// offsets are found using JSPTranslation now
-				//int translatedCursorPosition = jspt.getCursorPosition();
-				//assertEquals("incorrect cursor position >" + translatedCursorPosition, 519, translatedCursorPosition);
-				//assertEquals("translation was incorrect", "testJspString", translation.substring(519, 532));
+				// int translatedCursorPosition = jspt.getCursorPosition();
+				// assertEquals("incorrect cursor position >" +
+				// translatedCursorPosition, 519, translatedCursorPosition);
+				// assertEquals("translation was incorrect", "testJspString",
+				// translation.substring(519, 532));
 				int cursorStart = translation.indexOf("out.print(\"\"+\n testJspString") + 14;
 				assertEquals("incorrect cursor position >" + cursorStart, 667, cursorStart);
 			}
@@ -60,21 +65,19 @@ public class JSPJavaTranslatorTest extends TestCase {
 	}
 
 	/**
-	 * IMPORTANT whoever calls this must releaseFromRead after they are done using it.
+	 * IMPORTANT whoever calls this must releaseFromRead after they are done
+	 * using it.
+	 * 
 	 * @param filename
 	 * @return
+	 * @throws IOException 
+	 * @throws UnsupportedEncodingException  
 	 */
-	protected IStructuredModel getStructuredModelForRead(String filename) {
-		try {
-			// create model
-			IModelManager modelManager = StructuredModelManager.getModelManager();
-			InputStream inStream = getClass().getResourceAsStream(filename);
-			IStructuredModel sModel = modelManager.getModelForRead(filename, inStream, null);
-			return sModel;
-		}
-		catch (IOException ioex) {
-			System.out.println("couldn't open file > " + filename);
-		}
-		return null;
+	protected IStructuredModel getStructuredModelForRead(String filename) throws UnsupportedEncodingException, IOException {
+		// create model
+		IModelManager modelManager = StructuredModelManager.getModelManager();
+		InputStream inStream = getClass().getResourceAsStream(filename);
+		IStructuredModel sModel = modelManager.getModelForRead(filename, inStream, null);
+		return sModel;
 	}
 }

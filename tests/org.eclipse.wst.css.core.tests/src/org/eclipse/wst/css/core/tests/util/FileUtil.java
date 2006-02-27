@@ -20,11 +20,12 @@ import java.io.Reader;
 import java.io.Writer;
 import java.net.URL;
 
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSModel;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
-import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
 import org.osgi.framework.Bundle;
 
 /**
@@ -36,7 +37,7 @@ public class FileUtil {
 	public static File createFile(String directory, String filename) throws IOException {
 		Bundle bundle = Platform.getBundle("org.eclipse.wst.css.core.tests"); //$NON-NLS-1$
 		URL url = bundle.getEntry("/"); //$NON-NLS-1$
-		URL localURL = Platform.asLocalURL(url);
+		URL localURL = FileLocator.toFileURL(url);
 		String installPath = localURL.getPath();
 		String totalDirectory = installPath + directory;
 		String totalPath = totalDirectory + "/" + filename; //$NON-NLS-1$

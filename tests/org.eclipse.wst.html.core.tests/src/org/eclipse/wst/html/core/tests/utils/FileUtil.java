@@ -15,11 +15,12 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.URL;
 
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.encoding.util.NullInputStream;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
-import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.osgi.framework.Bundle;
 
@@ -65,7 +66,7 @@ public class FileUtil {
 			// add known file so URL method below can be used
 			// (doesn't seem to work for directory?)
 			URL totalURL = new URL(url, "plugin.xml");
-			URL finalurl = Platform.asLocalURL(totalURL);
+			URL finalurl = FileLocator.toFileURL(totalURL);
 			String finalFile = finalurl.getFile();
 			File file = new File(finalFile);
 			String finalPath = file.getParent();
@@ -96,7 +97,7 @@ public class FileUtil {
 	public static File makeFileFor(String directory, String filename, String testResultsDirectoryPrefix) throws IOException {
 		Bundle bundle = Platform.getBundle(PLUGIN_ID);
 		URL url = bundle.getEntry("/");  //$NON-NLS-1$
-		URL localURL = Platform.asLocalURL(url);
+		URL localURL = FileLocator.toFileURL(url);
 		String installPath = localURL.getPath();
 		String totalDirectory = installPath + directory;
 		String totalPath = totalDirectory + "/" + filename;

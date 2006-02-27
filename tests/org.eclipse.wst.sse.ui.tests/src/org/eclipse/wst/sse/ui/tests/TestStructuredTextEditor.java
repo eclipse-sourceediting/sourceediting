@@ -33,7 +33,6 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.IShowInTargetList;
-import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 
@@ -140,11 +139,6 @@ public class TestStructuredTextEditor extends TestCase {
 	public void testInitializeDocumentProvider() {
 		fEditor.initializeDocumentProvider(null);
 		assertTrue("Unable to initialize document provider", true);
-	}
-
-	public void testGetModel() {
-		IStructuredModel model = fEditor.getModel();
-		assertNotNull("Editor's model was null", model);
 	}
 
 	public void testGetOrientation() {

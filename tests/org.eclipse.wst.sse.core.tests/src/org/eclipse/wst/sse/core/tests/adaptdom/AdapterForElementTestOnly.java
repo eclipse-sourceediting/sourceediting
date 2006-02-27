@@ -16,8 +16,8 @@ import org.w3c.dom.Element;
 
 
 /**
- * Insert the type's description here. 
- * Creation date: (1/9/01 3:37:01 PM)
+ * Insert the type's description here. Creation date: (1/9/01 3:37:01 PM)
+ * 
  * @author: David Williams
  */
 public class AdapterForElementTestOnly implements INodeAdapter {
@@ -29,19 +29,20 @@ public class AdapterForElementTestOnly implements INodeAdapter {
 	}
 
 	/**
-	 * Allowing the INodeAdapter to compare itself against the type
-	 * allows it to return true in more than one case.
+	 * Allowing the INodeAdapter to compare itself against the type allows it
+	 * to return true in more than one case.
 	 */
 	public boolean isAdapterForType(Object type) {
-		if (type instanceof Element)
-			return true;
-		else
-			return false;
+		boolean result = false;
+		if (type instanceof Element) {
+			result = true;
+		}
+		return result;
 	}
 
 	/**
 	 */
 	public void notifyChanged(INodeNotifier notifier, int eventType, Object changedFeature, Object oldValue, Object newValue, int pos) {
-		System.out.println("INodeAdapter AdapterForElementTestOnly " +  this.hashCode() + " has been notified of " + INodeNotifier.EVENT_TYPE_STRINGS[eventType] + " (when " + notifier + " notified it)");
+		System.out.println("INodeAdapter AdapterForElementTestOnly " + this.hashCode() + " has been notified of " + INodeNotifier.EVENT_TYPE_STRINGS[eventType] + " (when " + notifier + " notified it)");
 	}
 }

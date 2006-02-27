@@ -14,8 +14,8 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.eclipse.jst.jsp.ui.tests.Logger;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
-import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.events.IStructuredDocumentListener;
 import org.eclipse.wst.sse.core.internal.provisional.events.NewDocumentEvent;
 import org.eclipse.wst.sse.core.internal.provisional.events.NoChangeEvent;
@@ -25,7 +25,7 @@ import org.eclipse.wst.sse.core.internal.provisional.events.StructuredDocumentRe
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegionList;
 import org.eclipse.wst.sse.core.internal.util.Debug;
-import org.eclipse.wst.sse.core.internal.util.StringUtils;
+import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.xml.core.internal.document.DOMModelImpl;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.w3c.dom.Node;

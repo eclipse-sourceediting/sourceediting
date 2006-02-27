@@ -19,13 +19,13 @@ import junit.framework.TestCase;
 
 import org.eclipse.wst.html.core.internal.cleanup.HTMLCleanupProcessorImpl;
 import org.eclipse.wst.html.core.internal.preferences.HTMLCorePreferenceNames;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.cleanup.AbstractStructuredCleanupProcessor;
 import org.eclipse.wst.sse.core.internal.cleanup.IStructuredCleanupPreferences;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
-import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.util.Debug;
-import org.eclipse.wst.sse.core.internal.util.StringUtils;
+import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.xml.core.internal.cleanup.CleanupProcessorXML;
 
 public class CleanupTester extends TestCase {

@@ -1,11 +1,11 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: HTML Encoding Tests Plug-in
+Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.eclipse.wst.html.tests.encoding
 Bundle-Version: 1.0.0
 Bundle-ClassPath: htmlencodingtests.jar
 Bundle-Activator: org.eclipse.wst.html.tests.encoding.HTMLEncodingTestsPlugin
-Bundle-Vendor: Eclipse.org
+Bundle-Vendor: %Bundle-Vendor.0
 Bundle-Localization: plugin
 Export-Package: org.eclipse.wst.html.tests.encoding,
  org.eclipse.wst.html.tests.encoding.html
@@ -16,4 +16,4 @@ Require-Bundle: org.eclipse.core.resources,
  org.eclipse.wst.xml.core,
  org.junit,
  org.eclipse.wst.sse.core
-Eclipse-AutoStart: true
+Eclipse-LazyStart: true

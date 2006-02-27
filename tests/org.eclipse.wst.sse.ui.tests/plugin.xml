@@ -5,9 +5,9 @@
 	<extension point="org.eclipse.ui.editors">
 		<editor
 			default="true"
-			name="Generic Structured Text Editor"
+			name="%editor.name.0"
 			extensions="project, classpath, websettings, serverPreference"
-			icon="icons/sourceEditor.gif"
+			icon="$nl$/icons/sourceEditor.gif"
 			class="org.eclipse.wst.sse.ui.StructuredTextEditor"
 			contributorClass="org.eclipse.wst.sse.ui.internal.actions.ActionContributor"
 			id="org.eclipse.wst.sse.ui.StructuredTextEditor.test">
@@ -32,17 +32,17 @@
 
 	<extension point="org.eclipse.ui.views">
 		<category
-			name="SSE Testing"
+			name="%category.name.0"
 			id="org.eclipse.wst.sse.ui.tests">
 		</category>
 		<view
-			name="ExtendedStorageEditorInput Management Tester"
+			name="%view.name.0"
 			category="org.eclipse.wst.sse.ui.tests"
 			class="org.eclipse.wst.sse.ui.tests.ExtendedStorageEditorInputView"
 			id="org.eclipse.wst.sse.ui.tests.ExtendedStorageEditorInputView">
 		</view>
 		<view
-			name="Action Tester"
+			name="%view.name.1"
 			category="org.eclipse.wst.sse.ui.tests"
 			class="org.eclipse.wst.sse.ui.tests.ActionTestView"
 			id="org.eclipse.wst.sse.ui.tests.ActionTestView">
@@ -54,7 +54,7 @@
 			targetID="org.eclipse.wst.sse.ui.StructuredTextEditor.EditorContext"
 			id="org.eclipse.wst.sse.ui.tests.test">
 			<action
-				label="org.eclipse.ui.popupMenus Test Action"
+				label="%action.label.0"
 				class="org.eclipse.wst.sse.ui.tests.TestActionDelegate"
 				menubarPath="additions"
 				id="org.eclipse.wst.sse.ui.tests.test.1" />

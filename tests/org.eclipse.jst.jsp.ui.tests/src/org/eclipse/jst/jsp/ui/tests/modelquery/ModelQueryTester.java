@@ -21,14 +21,15 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.jst.jsp.ui.tests.JSPUITestsPlugin;
 import org.eclipse.jst.jsp.ui.tests.Logger;
 import org.eclipse.wst.html.core.internal.provisional.HTML40Namespace;
 import org.eclipse.wst.html.core.internal.provisional.contenttype.ContentTypeIdForHTML;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
-import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
 import org.eclipse.wst.sse.ui.internal.provisional.registry.AdapterFactoryProvider;
 import org.eclipse.wst.sse.ui.internal.provisional.registry.AdapterFactoryRegistry;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
@@ -71,7 +72,8 @@ public class ModelQueryTester extends TestCase {
 	public static void main(java.lang.String[] args) {
 		if (args == null || args.length == 0) {
 			runAll();
-		} else if (args.length == 1) {
+		}
+		else if (args.length == 1) {
 			String methodToRun = args[0].trim();
 			runOne(methodToRun);
 		}
@@ -209,17 +211,16 @@ public class ModelQueryTester extends TestCase {
 	 * 
 	 * Note: May require a functioning network connection for the references
 	 * to be resolved properly.
+	 * 
+	 * @throws IOException
 	 */
-	public void testDTDLoadFromSystemID_1() {
+	public void testDTDLoadFromSystemID_1() throws IOException {
 		if (testShippedDTDLookup) {
 			setUpXML();
 			URL installationPath = Platform.getBundle(JSPUITestsPlugin.ID).getEntry("/");
 			String diskLocation = null;
-			try {
-				diskLocation = Platform.resolve(installationPath).toExternalForm();
-			} catch (IOException e) {
-			} catch (NullPointerException e) {
-			}
+			diskLocation = FileLocator.resolve(installationPath).toExternalForm();
+
 			assertTrue("failed to resolve plugin install path", diskLocation != null);
 			String content = "<?xml version=\"1.0\"?><!DOCTYPE html SYSTEM " + diskLocation + "TestFiles/DTDs/wapDTDs/WAP-2-0/wml20.dtd\"" + "><html xmlns=\"http://www.w3.org/1999/xhtml\" xmlns:wml=\"http://www.wapforum.org/2001/wml\"></html>";
 			fModel.getStructuredDocument().set(content);
@@ -240,16 +241,15 @@ public class ModelQueryTester extends TestCase {
 	 * 
 	 * Note: May require a functioning network connection for the references
 	 * to be resolved properly.
+	 * @throws IOException 
 	 */
-	public void testDTDLoadFromSystemID_2() {
+	public void testDTDLoadFromSystemID_2() throws IOException {
 		if (testShippedDTDLookup) {
 			URL installationPath = Platform.getBundle(JSPUITestsPlugin.ID).getEntry("/");
 			String diskLocation = null;
-			try {
-				diskLocation = Platform.resolve(installationPath).toExternalForm();
-			} catch (IOException e) {
-			} catch (NullPointerException e) {
-			}
+
+			diskLocation = FileLocator.resolve(installationPath).toExternalForm();
+
 			assertTrue("failed to resolve plugin install path", diskLocation != null);
 			setUpXML();
 			String content = "<?xml version=\"1.0\"?><!DOCTYPE html SYSTEM " + diskLocation + "testfiles/XHTML/xhtml1-transitional.dtd\"" + "><html></html>";
@@ -292,26 +292,41 @@ public class ModelQueryTester extends TestCase {
 	public void testDTDLoadFromPublicID() {
 		// No longer provided in WTP
 		// TODO: provide DTD?
-//		if (testShippedDTDLookup) {
-//			setUpXML();
-//			String contents = "<!DOCTYPE taglib PUBLIC \"-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN\"> <taglib><tag>foo</tag></taglib>";
-//			fModel.getStructuredDocument().set(contents);
-//
-//			CMDocumentManager documentManagaer = fModelQuery.getCMDocumentManager();
-//			documentManagaer.setPropertyEnabled(CMDocumentManager.PROPERTY_ASYNC_LOAD, false);
-//			documentManagaer.setPropertyEnabled(CMDocumentManager.PROPERTY_AUTO_LOAD, true);
-//
-//
-//			// taglib
-//			CMNode node = fModelQuery.getCMNode((Node) fModel.getIndexedRegion(contents.length() - 2));
-//			assertTrue("web-jsptaglibrary_1_2.dtd failed to load through catalog", node != null && node.getNodeType() == CMNode.ELEMENT_DECLARATION && node.getNodeName().equalsIgnoreCase("taglib"));
-//
-//			// tag
-//			node = fModelQuery.getCMNode((Node) fModel.getIndexedRegion(contents.length() - 12));
-//			assertTrue("CMElementDeclaration for \"tag\" from web-jsptaglibrary_1_2.dtd is missing", node != null && node.getNodeType() == CMNode.ELEMENT_DECLARATION && node.getNodeName().equalsIgnoreCase("tag"));
-//			CMContent content = ((CMElementDeclaration) node).getContent();
-//			assertTrue("only one occurrence of child group allowed", content.getNodeType() == CMNode.GROUP && content.getMaxOccur() == 1);
-//		}
+		// if (testShippedDTDLookup) {
+		// setUpXML();
+		// String contents = "<!DOCTYPE taglib PUBLIC \"-//Sun Microsystems,
+		// Inc.//DTD JSP Tag Library 1.2//EN\">
+		// <taglib><tag>foo</tag></taglib>";
+		// fModel.getStructuredDocument().set(contents);
+		//
+		// CMDocumentManager documentManagaer =
+		// fModelQuery.getCMDocumentManager();
+		// documentManagaer.setPropertyEnabled(CMDocumentManager.PROPERTY_ASYNC_LOAD,
+		// false);
+		// documentManagaer.setPropertyEnabled(CMDocumentManager.PROPERTY_AUTO_LOAD,
+		// true);
+		//
+		//
+		// // taglib
+		// CMNode node = fModelQuery.getCMNode((Node)
+		// fModel.getIndexedRegion(contents.length() - 2));
+		// assertTrue("web-jsptaglibrary_1_2.dtd failed to load through
+		// catalog", node != null && node.getNodeType() ==
+		// CMNode.ELEMENT_DECLARATION &&
+		// node.getNodeName().equalsIgnoreCase("taglib"));
+		//
+		// // tag
+		// node = fModelQuery.getCMNode((Node)
+		// fModel.getIndexedRegion(contents.length() - 12));
+		// assertTrue("CMElementDeclaration for \"tag\" from
+		// web-jsptaglibrary_1_2.dtd is missing", node != null &&
+		// node.getNodeType() == CMNode.ELEMENT_DECLARATION &&
+		// node.getNodeName().equalsIgnoreCase("tag"));
+		// CMContent content = ((CMElementDeclaration) node).getContent();
+		// assertTrue("only one occurrence of child group allowed",
+		// content.getNodeType() == CMNode.GROUP && content.getMaxOccur() ==
+		// 1);
+		// }
 	}
 
 
@@ -330,7 +345,8 @@ public class ModelQueryTester extends TestCase {
 				if (provider.isFor(model.getModelHandler())) {
 					provider.addAdapterFactories(model);
 				}
-			} catch (Exception e) {
+			}
+			catch (Exception e) {
 				Logger.logException(e);
 			}
 		}
@@ -348,7 +364,8 @@ public class ModelQueryTester extends TestCase {
 		if (valuesHelper.getImpliedValueKind() == CMDataType.IMPLIED_VALUE_FIXED && valuesHelper.getImpliedValue() != null) {
 			// FIXED value
 			values.add(valuesHelper.getImpliedValue());
-		} else {
+		}
+		else {
 			// ENUMERATED values
 			String[] valueStrings = null;
 			// new way

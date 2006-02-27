@@ -18,10 +18,10 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import org.eclipse.jst.jsp.core.internal.parser.JSPSourceParser;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.document.StructuredDocumentFactory;
 import org.eclipse.wst.sse.core.internal.ltk.parser.BlockMarker;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
-import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.events.IStructuredDocumentListener;
 import org.eclipse.wst.sse.core.internal.provisional.events.NewDocumentEvent;
 import org.eclipse.wst.sse.core.internal.provisional.events.NoChangeEvent;

@@ -11,6 +11,7 @@
 
 package org.eclipse.wst.xml.validation.tests.internal;
 
+import java.io.IOException;
 import java.util.List;
 
 import junit.framework.TestCase;
@@ -38,7 +39,7 @@ public class BaseTestCase extends TestCase
   /* (non-Javadoc)
    * @see junit.framework.TestCase#setUp()
    */
-  protected void setUp()
+  protected void setUp() throws IOException
   {
     PLUGIN_ABSOLUTE_PATH = XMLValidatorTestsPlugin.getPluginLocation().toString() + "/";
   }

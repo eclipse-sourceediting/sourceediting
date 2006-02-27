@@ -50,15 +50,6 @@ public class TestAboutToBeChangedEvent extends TestCase {
 		assertTrue(true);
 	}
 
-	/*
-	 * Class under test for String toString()
-	 */
-	public void testToString() {
-		AboutToBeChangedEvent event = getBasicEvent();
-		String r = event.toString();
-		assertNotNull(r);
-	}
-
 	private AboutToBeChangedEvent getBasicEvent() {
 		IStructuredDocument document = StructuredDocumentFactory.getNewStructuredDocumentInstance(new NullParser());
 		AboutToBeChangedEvent event = new AboutToBeChangedEvent(document, this, "test", 0, 0);

@@ -1,11 +1,11 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Structured Source Editor for HTML Tests
+Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.eclipse.wst.html.ui.tests; singleton:=true
 Bundle-Version: 1.0.0
 Bundle-ClassPath: htmluitests.jar
 Bundle-Activator: org.eclipse.wst.html.ui.tests.HTMLUITestsPlugin
-Bundle-Vendor: Eclipse.org
+Bundle-Vendor: %Bundle-Vendor.0
 Bundle-Localization: plugin
 Export-Package: org.eclipse.wst.html.ui.tests,
  org.eclipse.wst.html.ui.tests.viewer
@@ -13,7 +13,6 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.jface.text,
  org.eclipse.wst.html.ui,
  org.eclipse.wst.sse.ui,
- org.eclipse.ui.editors,
  org.eclipse.ui.workbench.texteditor,
  org.eclipse.wst.sse.core,
  org.eclipse.wst.xml.core,
@@ -22,4 +21,4 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.views,
  org.eclipse.core.runtime,
  org.eclipse.wst.xml.ui
-Eclipse-AutoStart: true
+Eclipse-LazyStart: true

@@ -15,8 +15,8 @@ package org.eclipse.jst.jsp.core.tests.model;
 import junit.framework.TestCase;
 
 import org.eclipse.jst.jsp.core.internal.provisional.contenttype.ContentTypeIdForJSP;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
-import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 
 public class TestModelRelease extends TestCase {

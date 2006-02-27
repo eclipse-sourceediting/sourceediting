@@ -1,14 +1,15 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: HTML Core Tests
+Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.eclipse.wst.html.core.tests
 Bundle-Version: 1.0.0
 Bundle-ClassPath: htmlcoretests.jar
 Bundle-Activator: org.eclipse.wst.html.core.tests.HTMLCoreTestsPlugin
-Bundle-Vendor: Eclipse.org
+Bundle-Vendor: %Bundle-Vendor.0
 Bundle-Localization: plugin
 Export-Package: org.eclipse.wst.html.core.tests,
  org.eclipse.wst.html.core.tests.misc,
+ org.eclipse.wst.html.core.tests.model,
  org.eclipse.wst.html.core.tests.parser,
  org.eclipse.wst.html.core.tests.parser.css,
  org.eclipse.wst.html.core.tests.text,
@@ -18,8 +19,8 @@ Require-Bundle: org.junit,
  org.eclipse.wst.html.core,
  org.eclipse.wst.xml.core,
  org.eclipse.wst.sse.core,
- org.eclipse.core.resources,
  org.eclipse.core.runtime,
  org.eclipse.wst.css.core,
- com.ibm.icu
-Eclipse-AutoStart: true
+ com.ibm.icu,
+ org.eclipse.core.resources
+Eclipse-LazyStart: true

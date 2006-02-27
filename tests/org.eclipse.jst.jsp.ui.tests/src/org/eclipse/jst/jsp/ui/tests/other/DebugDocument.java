@@ -84,7 +84,7 @@ public class DebugDocument {
 			int end = lastStructuredDocumentRegion.getEnd();
 
 			String outString = topNode.toString();
-			outString = org.eclipse.wst.sse.core.internal.util.StringUtils.escape(outString);
+			outString = org.eclipse.wst.sse.core.utils.StringUtils.escape(outString);
 			out.println("[" + start + ", " + end + "]" + outString); //$NON-NLS-3$//$NON-NLS-2$//$NON-NLS-1$
 		}
 		// now do its children

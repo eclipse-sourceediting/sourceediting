@@ -14,7 +14,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
-import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.FileLocator;
 
 /**
  * @author davidw
@@ -36,7 +36,7 @@ class FileUtil {
 		String totalDirectory = installPath + directory;
 		String totalPath = totalDirectory + "/" + filename;
 		URL totalURL = new URL(url, totalPath);
-		URL finalurl = Platform.asLocalURL(totalURL);
+		URL finalurl = FileLocator.toFileURL(totalURL);
 		String finalFile = finalurl.getFile();
 		File file = new File(finalFile);
 		String finalPath = file.getParent();

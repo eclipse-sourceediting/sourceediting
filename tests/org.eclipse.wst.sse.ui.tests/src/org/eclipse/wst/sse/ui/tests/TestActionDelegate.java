@@ -25,7 +25,7 @@ import org.eclipse.ui.IEditorPart;
  */
 public class TestActionDelegate extends Action implements IEditorActionDelegate {
 	IEditorPart editor = null;
-	IAction action = null;
+	IAction faction = null;
 
 	/**
 	 * 
@@ -65,7 +65,7 @@ public class TestActionDelegate extends Action implements IEditorActionDelegate 
 	 */
 	public void setActiveEditor(IAction targetAction, IEditorPart targetEditor) {
 		editor = targetEditor;
-		action = targetAction;
+		faction = targetAction;
 	}
 
 	/*
@@ -84,5 +84,6 @@ public class TestActionDelegate extends Action implements IEditorActionDelegate 
 	 *      org.eclipse.jface.viewers.ISelection)
 	 */
 	public void selectionChanged(IAction action, ISelection selection) {
+		// do nothing
 	}
 }

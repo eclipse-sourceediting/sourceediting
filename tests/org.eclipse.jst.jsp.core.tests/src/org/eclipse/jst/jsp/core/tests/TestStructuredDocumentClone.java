@@ -16,8 +16,8 @@ import java.io.InputStream;
 import junit.framework.Test;
 import junit.framework.TestCase;
 
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
-import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 
 /**

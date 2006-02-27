@@ -34,9 +34,9 @@ import org.eclipse.jst.jsp.ui.tests.other.ScannerUnitTests;
 import org.eclipse.jst.jsp.ui.tests.util.FileUtil;
 import org.eclipse.jst.jsp.ui.tests.util.ProjectUnzipUtility;
 import org.eclipse.osgi.service.datalocation.Location;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
-import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 
 /**

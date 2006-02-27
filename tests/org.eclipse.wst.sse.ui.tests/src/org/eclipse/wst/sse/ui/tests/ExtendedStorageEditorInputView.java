@@ -80,7 +80,7 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.texteditor.IElementStateListener;
 import org.eclipse.ui.texteditor.IUpdate;
-import org.eclipse.wst.sse.core.internal.util.StringUtils;
+import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.provisional.extensions.breakpoint.IExtendedStorageEditorInput;
 
@@ -139,9 +139,11 @@ public class ExtendedStorageEditorInputView extends ViewPart {
 		ILabelProvider baseProvider = new WorkbenchLabelProvider();
 
 		public void addListener(ILabelProviderListener listener) {
+			// not implemented
 		}
 
 		public void dispose() {
+			// no need
 		}
 
 		public Image getColumnImage(Object element, int columnIndex) {
@@ -195,7 +197,7 @@ public class ExtendedStorageEditorInputView extends ViewPart {
 		}
 
 		public void removeListener(ILabelProviderListener listener) {
-
+			// not implemented
 		}
 	}
 

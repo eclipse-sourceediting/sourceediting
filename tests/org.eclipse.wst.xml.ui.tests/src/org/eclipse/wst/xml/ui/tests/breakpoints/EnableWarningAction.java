@@ -18,6 +18,8 @@ import org.eclipse.wst.xml.ui.tests.XMLUITestsPlugin;
 
 
 public class EnableWarningAction extends Action implements IExtendedEditorAction {
+	IExtendedSimpleEditor activeEditor;
+
 	public EnableWarningAction() {
 		super();
 		XMLUITestsPlugin.getDefault().getPreferenceStore().setDefault("break-error", false);
@@ -93,6 +95,7 @@ public class EnableWarningAction extends Action implements IExtendedEditorAction
 	 * @see org.eclipse.wst.sse.ui.extension.IExtendedEditorAction#setActiveExtendedEditor(org.eclipse.wst.sse.ui.extension.IExtendedSimpleEditor)
 	 */
 	public void setActiveExtendedEditor(IExtendedSimpleEditor targetEditor) {
+		activeEditor = targetEditor;
 	}
 
 	/*

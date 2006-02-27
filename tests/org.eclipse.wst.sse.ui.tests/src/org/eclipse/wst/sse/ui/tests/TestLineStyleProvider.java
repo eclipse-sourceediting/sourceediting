@@ -41,6 +41,7 @@ public class TestLineStyleProvider implements LineStyleProvider {
 	 *      org.eclipse.wst.sse.ui.style.Highlighter)
 	 */
 	public void init(IStructuredDocument document, Highlighter highlighter) {
+		// nothing to init
 	}
 
 	/*
@@ -63,6 +64,7 @@ public class TestLineStyleProvider implements LineStyleProvider {
 	 * @see org.eclipse.wst.sse.ui.style.LineStyleProvider#release()
 	 */
 	public void release() {
+		// nothing to release
 	}
 
 }

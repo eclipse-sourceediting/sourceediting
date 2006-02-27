@@ -1,17 +1,16 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: XSD Validation Tests Plug-in
+Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.eclipse.wst.xsd.validation.tests
 Bundle-Version: 1.0.100
 Bundle-ClassPath: validatexsdtests.jar
 Bundle-Activator: org.eclipse.wst.xsd.validation.tests.internal.XSDValidationTestsPlugin
-Bundle-Vendor: Eclipse
+Bundle-Vendor: %Bundle-Vendor.0
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.core.resources,
  org.junit,
  org.eclipse.wst.xml.core,
  org.eclipse.core.runtime,
- org.eclipse.wst.xsd.core,
  org.eclipse.wst.xsd.ui
-Eclipse-AutoStart: true
-Export-Package: org.eclipse.wst.xsd.validation.tests.internal
+Eclipse-LazyStart: true
+Export-Package: org.eclipse.wst.xsd.validation.tests.internal;x-internal:=true

@@ -22,11 +22,13 @@ import org.w3c.dom.Element;
 
 /**
  * This class exists only to satisfy some of the unit tests.
- *
+ * 
  * To test, use following line in client, such as when it intitialized.
- *  FactoryRegistry.getFactoryRegistry().addFactory(new AdapterFactoryTestOnly());
- *
+ * FactoryRegistry.getFactoryRegistry().addFactory(new
+ * AdapterFactoryTestOnly());
+ * 
  * Creation date: (11/14/00 7:08:18 PM)
+ * 
  * @author: David Williams
  */
 public class AdapterFactoryTestOnly implements INodeAdapterFactory {
@@ -44,19 +46,20 @@ public class AdapterFactoryTestOnly implements INodeAdapterFactory {
 	}
 
 	/**
-	 * Method that returns the adapter associated with the this factory and the given object,
-	 * and "sets up" the adaptable object to use the adapter.
-	 *
-	 * The adapter may be a singleton or not ... depending on the needs of the INodeAdapter  ...
-	 * but in general it is recommended for an adapter to be stateless, 
-	 * so the efficiencies of a singleton can be gained.
-	 *
+	 * Method that returns the adapter associated with the this factory and
+	 * the given object, and "sets up" the adaptable object to use the
+	 * adapter.
+	 * 
+	 * The adapter may be a singleton or not ... depending on the needs of the
+	 * INodeAdapter ... but in general it is recommended for an adapter to be
+	 * stateless, so the efficiencies of a singleton can be gained.
+	 * 
 	 * The implementation of this method should call addAdapter on the adapted
 	 * object with the correct instance of the adapter.
 	 */
 	public INodeAdapter adapt(INodeNotifier target) {
-		//object.addAdapter(adapterInstance);
-		//return adapterInstance;
+		// object.addAdapter(adapterInstance);
+		// return adapterInstance;
 		INodeAdapter result = null;
 
 		Iterator adaptersList = adapters.iterator();
@@ -65,8 +68,8 @@ public class AdapterFactoryTestOnly implements INodeAdapterFactory {
 			if (adapter.isAdapterForType(target)) {
 				INodeAdapter existingAdapter = target.getExistingAdapter(adapter);
 				if (existingAdapter == null) {
-				target.addAdapter(adapter);
-				result = adapter;
+					target.addAdapter(adapter);
+					result = adapter;
 				}
 			}
 		}
@@ -101,9 +104,11 @@ public class AdapterFactoryTestOnly implements INodeAdapterFactory {
 	}
 
 	/**
-	 *
+	 * 
 	 */
 	public void release() {
+		// TODO: create unit test
+
 	}
 
 	public INodeAdapterFactory copy() {

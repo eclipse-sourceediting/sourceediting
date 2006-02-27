@@ -1,4 +1,4 @@
-#Fri May 27 23:39:55 EDT 2005
+#Mon Feb 27 00:58:25 EST 2006
 eclipse.preferences.version=1
 org.eclipse.jdt.core.builder.cleanOutputFolder=clean
 org.eclipse.jdt.core.builder.duplicateResourceTask=warning
@@ -29,7 +29,8 @@ org.eclipse.jdt.core.compiler.problem.overridingPackageDefaultMethod=warning
 org.eclipse.jdt.core.compiler.problem.possibleAccidentalBooleanAssignment=warning
 org.eclipse.jdt.core.compiler.problem.specialParameterHidingField=enabled
 org.eclipse.jdt.core.compiler.problem.staticAccessReceiver=error
-org.eclipse.jdt.core.compiler.problem.syntheticAccessEmulation=warning
+org.eclipse.jdt.core.compiler.problem.syntheticAccessEmulation=ignore
+org.eclipse.jdt.core.compiler.problem.typeParameterHiding=ignore
 org.eclipse.jdt.core.compiler.problem.undocumentedEmptyBlock=warning
 org.eclipse.jdt.core.compiler.problem.unnecessaryElse=warning
 org.eclipse.jdt.core.compiler.problem.unnecessaryTypeCheck=error

@@ -109,7 +109,7 @@ public class CMUtility
 
   protected static class IsRepeatableVisitor extends CMVisitor
   {                                             
-    public boolean result = false;;
+    public boolean result = false;
     protected CMGroup currentGroup;
 
     protected CMNode root;

@@ -12,9 +12,9 @@
 
 package org.eclipse.wst.xml.core.tests.dom;
 
-import org.eclipse.wst.xml.core.internal.provisional.NameValidator;
-
 import junit.framework.TestCase;
+
+import org.eclipse.wst.xml.core.internal.provisional.NameValidator;
 
 public class NameValidatorTests extends TestCase {
 

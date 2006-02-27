@@ -24,6 +24,8 @@ import org.eclipse.wst.xml.ui.tests.XMLUITestsPlugin;
 
 public class BreakpointErrorProvider implements IBreakpointProvider {
 
+	ISourceEditingTextTools fTool;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -57,5 +59,6 @@ public class BreakpointErrorProvider implements IBreakpointProvider {
 	 * @see org.eclipse.wst.sse.ui.extensions.breakpoint.IBreakpointProvider#setSourceEditingTextTools(org.eclipse.wst.sse.ui.extensions.breakpoint.SourceEditingTextTools)
 	 */
 	public void setSourceEditingTextTools(ISourceEditingTextTools tool) {
+		fTool = tool;
 	}
 }

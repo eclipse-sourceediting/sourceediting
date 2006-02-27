@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 
@@ -59,7 +60,7 @@ public class SSEModelXMLTestsPlugin extends Plugin {
 		URL installLocation = Platform.getBundle("org.eclipse.wst.xml.core.tests").getEntry("/");
 		URL resolvedLocation = null;
 		try {
-			resolvedLocation = Platform.resolve(installLocation);
+			resolvedLocation = FileLocator.resolve(installLocation);
 		}
 		catch (IOException e) {
 			// impossible

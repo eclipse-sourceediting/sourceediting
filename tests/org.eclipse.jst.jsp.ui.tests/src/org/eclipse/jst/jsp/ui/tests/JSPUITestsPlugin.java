@@ -16,6 +16,7 @@ import java.net.URL;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 
@@ -75,7 +76,7 @@ public class JSPUITestsPlugin extends Plugin {
 		URL installLocation = Platform.getBundle("org.eclipse.jst.jsp.ui.tests").getEntry("/");
 		URL resolvedLocation = null;
 		try {
-			resolvedLocation = Platform.resolve(installLocation);
+			resolvedLocation = FileLocator.resolve(installLocation);
 		}
 		catch (IOException e) {
 			// impossible

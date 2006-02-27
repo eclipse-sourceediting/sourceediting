@@ -25,7 +25,7 @@ public class CSSHeadTokenizerTester extends TestCase {
 	private String fcharset;
 	private final String fileDir = "css/";
 	private final String fileHome = "testfiles/";
-	private final String fileLocation = fileHome + fileDir;
+	private final String fileLocation = this.fileHome + this.fileDir;
 
 	private void doTestFile(String filename, String expectedName) throws IOException {
 		doTestFile(filename, expectedName, null);
@@ -35,7 +35,7 @@ public class CSSHeadTokenizerTester extends TestCase {
 		CSSHeadTokenizer tokenizer = null;
 		Reader fileReader = null;
 		try {
-			if (DEBUG) {
+			if (this.DEBUG) {
 				System.out.println();
 				System.out.println("       " + filename);
 				System.out.println();
@@ -50,7 +50,7 @@ public class CSSHeadTokenizerTester extends TestCase {
 
 		HeadParserToken resultToken = null;
 		HeadParserToken token = parseHeader(tokenizer);
-		String resultValue = fcharset;
+		String resultValue = this.fcharset;
 		fileReader.close();
 		if (finalTokenType != null) {
 			assertTrue("did not end as expected. found:  " + token.getType(), finalTokenType.equals(token.getType()));
@@ -67,10 +67,14 @@ public class CSSHeadTokenizerTester extends TestCase {
 	}
 
 	private boolean isLegalString(String tokenType) {
-		if (tokenType == null)
-			return false;
-		else
-			return tokenType.equals(EncodingParserConstants.StringValue) || tokenType.equals(EncodingParserConstants.UnDelimitedStringValue) || tokenType.equals(EncodingParserConstants.InvalidTerminatedStringValue) || tokenType.equals(EncodingParserConstants.InvalidTermintatedUnDelimitedStringValue);
+		boolean result = false;
+		if (tokenType == null) {
+			result = false;
+		}
+		else {
+			result = tokenType.equals(EncodingParserConstants.StringValue) || tokenType.equals(EncodingParserConstants.UnDelimitedStringValue) || tokenType.equals(EncodingParserConstants.InvalidTerminatedStringValue) || tokenType.equals(EncodingParserConstants.InvalidTermintatedUnDelimitedStringValue);
+		}
+		return result;
 	}
 
 	/**
@@ -88,7 +92,7 @@ public class CSSHeadTokenizerTester extends TestCase {
 					HeadParserToken valueToken = tokenizer.getNextToken();
 					String valueTokenType = valueToken.getType();
 					if (isLegalString(valueTokenType)) {
-						fcharset = valueToken.getText();
+						this.fcharset = valueToken.getText();
 
 					}
 				}
@@ -101,43 +105,43 @@ public class CSSHeadTokenizerTester extends TestCase {
 	}
 
 	public void testBestCase() throws IOException {
-		String filename = fileLocation + "nonStandard.css";
+		String filename = this.fileLocation + "nonStandard.css";
 		doTestFile(filename, "ISO-8859-6");
 
 	}
 
 	public void testEmptyFile() throws IOException {
-		String filename = fileLocation + "emptyFile.css";
+		String filename = this.fileLocation + "emptyFile.css";
 		doTestFile(filename, null);
 	}
 
 	public void testEUCJP() throws IOException {
-		String filename = fileLocation + "encoding_test_eucjp.css";
+		String filename = this.fileLocation + "encoding_test_eucjp.css";
 		doTestFile(filename, "EUC-JP");
 	}
 
 	public void testJIS() throws IOException {
-		String filename = fileLocation + "encoding_test_jis.css";
+		String filename = this.fileLocation + "encoding_test_jis.css";
 		doTestFile(filename, "ISO-2022-JP");
 	}
 
 	public void testNoEncoding() throws IOException {
-		String filename = fileLocation + "noEncoding.css";
+		String filename = this.fileLocation + "noEncoding.css";
 		doTestFile(filename, null);
 	}
 
 	public void testnonStandardIllFormed() throws IOException {
-		String filename = fileLocation + "nonStandardIllFormed.css";
+		String filename = this.fileLocation + "nonStandardIllFormed.css";
 		doTestFile(filename, "ISO-8859-6");
 	}
 
 	public void testnonStandardIllFormed2() throws IOException {
-		String filename = fileLocation + "nonStandardIllFormed2.css";
+		String filename = this.fileLocation + "nonStandardIllFormed2.css";
 		doTestFile(filename, "ISO-8859-6");
 	}
 
 	public void testShiftJIS() throws IOException {
-		String filename = fileLocation + "encoding_test_sjis.css";
+		String filename = this.fileLocation + "encoding_test_sjis.css";
 		doTestFile(filename, "SHIFT_JIS");
 	}
 }

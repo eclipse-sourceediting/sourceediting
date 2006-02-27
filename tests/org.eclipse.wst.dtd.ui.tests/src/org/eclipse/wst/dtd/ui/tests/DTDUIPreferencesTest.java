@@ -48,14 +48,6 @@ public class DTDUIPreferencesTest extends TestCase {
 		}
 	}
 
-	private void bundleGetPreference(String bundleName, String prefKey) {
-		String defaultValue = Long.toString(System.currentTimeMillis()); // random
-																			// string
-
-		String value = Platform.getPreferencesService().getString(bundleName, prefKey, defaultValue, null);
-		assertNotSame("Get preference value failed using Platform.getPreferencesService. Key: " + prefKey, defaultValue, value);
-	}
-
 	/**
 	 * Tests default values of preferences.
 	 * 
@@ -64,11 +56,7 @@ public class DTDUIPreferencesTest extends TestCase {
 	 */
 	public void testPluginGetDefaultPreferences() {
 		IPreferenceStore store = DTDUIPlugin.getDefault().getPreferenceStore();
-	}
-
-	private void pluginGetDefaultPreference(IPreferenceStore store, String prefKey, String expected) {
-		String defaultValue = store.getDefaultString(prefKey);
-		assertEquals("Get default preference value failed using plugin.getPreferenceStore. Key: " + prefKey, expected, defaultValue);
+		assertNotNull("dtd preference store was null", store);
 	}
 
 	/**
@@ -76,29 +64,8 @@ public class DTDUIPreferencesTest extends TestCase {
 	 * certain value, then getting the preference value to verify it was set.
 	 */
 	public void testPluginSetPreferences() {
+		//ISSUE: this does NOT use SET
 		IPreferenceStore store = DTDUIPlugin.getDefault().getPreferenceStore();
-	}
-
-	private void pluginSetPreferenceBoolean(IPreferenceStore store, String prefKey) {
-		boolean originalValue = store.getBoolean(prefKey);
-		boolean expectedValue = !originalValue;
-		store.setValue(prefKey, expectedValue);
-		boolean foundValue = store.getBoolean(prefKey);
-		assertEquals("Set preference value failed using plugin.getPreferenceStore. Key: " + prefKey + "  expected: " + expectedValue + " found: " + foundValue, expectedValue, foundValue);
-
-		// attempt to restore original preference value
-		store.setValue(prefKey, originalValue);
-	}
-
-	private void pluginSetPreferenceString(IPreferenceStore store, String prefKey) {
-		String originalValue = store.getString(prefKey);
-		String expectedValue = Long.toString(System.currentTimeMillis()); // random
-																			// string
-		store.setValue(prefKey, expectedValue);
-		String foundValue = store.getString(prefKey);
-		assertEquals("Set preference value failed using plugin.getPreferenceStore. Key: " + prefKey + "  expected: " + expectedValue + " found: " + foundValue, expectedValue, foundValue);
-
-		// attempt to restore original preference value
-		store.setValue(prefKey, originalValue);
+		assertNotNull("dtd preference store was null", store);
 	}
 }

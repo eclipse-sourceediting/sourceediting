@@ -23,6 +23,7 @@ import java.util.ResourceBundle;
 
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 
@@ -43,9 +44,7 @@ public class HTMLEncodingTestsPlugin extends Plugin {
 		if (!topDir.isDirectory()) {
 			throw new IllegalArgumentException(topDirName + " is not a directory");
 		}
-		else {
-			result = getFilesInDir(topDir);
-		}
+		result = getFilesInDir(topDir);
 		return result;
 	}
 
@@ -76,7 +75,7 @@ public class HTMLEncodingTestsPlugin extends Plugin {
 		URL installLocation = Platform.getBundle("org.eclipse.wst.html.tests.encoding").getEntry("/");
 		URL resolvedLocation = null;
 		try {
-			resolvedLocation = Platform.resolve(installLocation);
+			resolvedLocation = FileLocator.resolve(installLocation);
 		}
 		catch (IOException e) {
 			// impossible

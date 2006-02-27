@@ -10,33 +10,27 @@
  *******************************************************************************/
 
 package org.eclipse.wst.xml.validation.tests.internal;
+
 import java.io.IOException;
 
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
+
 /**
  * The plugin class for this test plugin.
  * 
  * @author Lawrence Mandel, IBM
  */
-public class XMLValidatorTestsPlugin extends Plugin
-{
-  private static XMLValidatorTestsPlugin plugin = null;
- 
-  public XMLValidatorTestsPlugin()
-  {
-  	plugin = this;
-  }
+public class XMLValidatorTestsPlugin extends Plugin {
+	private static XMLValidatorTestsPlugin plugin = null;
 
- public static String getPluginLocation()
-  {
-    try
-    {
-      return new Path(Platform.resolve(plugin.getBundle().getEntry("/")).getFile()).removeTrailingSeparator().toString();
-    } catch (IOException e)
-    {
-    }
-    return null;
-  }
+	public XMLValidatorTestsPlugin() {
+		plugin = this;
+	}
+
+	public static String getPluginLocation() throws IOException {
+		String file = FileLocator.resolve(plugin.getBundle().getEntry("/")).getFile();
+		return new Path(file).removeTrailingSeparator().toString();
+	}
 }

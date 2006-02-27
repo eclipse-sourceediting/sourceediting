@@ -5,8 +5,8 @@
 	<extension point="org.eclipse.ui.views">
 
 		<view
-			name="Embedded XML Structured Text Viewer"
-			icon="icons/sourceEditor.gif"
+			name="%view.name.0"
+			icon="$nl$/icons/sourceEditor.gif"
 			category="org.eclipse.wst.sse.ui.tests"
 			class="org.eclipse.wst.xml.ui.tests.viewer.ViewerTestXML"
 			id="org.eclipse.wst.xml.ui.tests.viewer.ViewerTestXML">

@@ -50,6 +50,7 @@ public class TestAbstractAdapterFactory extends TestCase {
 //	}
 	
 	public void testCreate() {
+		// TODO: create unit test
 
 	}
 }

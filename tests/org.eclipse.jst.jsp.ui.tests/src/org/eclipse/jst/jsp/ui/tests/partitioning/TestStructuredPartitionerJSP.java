@@ -21,11 +21,11 @@ import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jst.jsp.core.text.IJSPPartitions;
 import org.eclipse.wst.css.core.text.ICSSPartitions;
 import org.eclipse.wst.html.core.text.IHTMLPartitions;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
-import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
-import org.eclipse.wst.sse.core.internal.util.StringUtils;
+import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.xml.core.text.IXMLPartitions;
 
 import com.ibm.icu.text.DecimalFormat;
