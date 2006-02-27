@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDValidator;
-import org.eclipse.wst.sse.core.internal.util.StringUtils;
+import org.eclipse.wst.sse.core.utils.StringUtils;
 
 
 public class TLDValidatorImpl implements TLDValidator {

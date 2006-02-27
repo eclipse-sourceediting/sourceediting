@@ -1,0 +1,4 @@
+we reexport eclipse.ui.editors 
+since one of our APIs, StructuredSourceViewerConfiguration 
+requires it. 
+

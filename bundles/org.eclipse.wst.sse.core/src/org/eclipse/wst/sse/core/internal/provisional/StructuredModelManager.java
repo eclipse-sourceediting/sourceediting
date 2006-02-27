@@ -20,6 +20,8 @@ import org.osgi.framework.Bundle;
  * Class to allow access to ModelManager. Not intended to be subclassed.
  * 
  * @plannedfor 1.0
+ * @deprecated - use the one that is in
+ *             org.eclipse.wst.sse.core.SttructuredModelManager
  */
 final public class StructuredModelManager {
 	/**
@@ -36,6 +38,8 @@ final public class StructuredModelManager {
 	 * 
 	 * @return IModelManager - returns the one model manager for structured
 	 *         model
+	 * @deprecated - use the one that is in
+	 *             org.eclipse.wst.sse.core.SttructuredModelManager
 	 */
 	public static IModelManager getModelManager() {
 		boolean isReady = false;

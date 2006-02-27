@@ -6,7 +6,7 @@
 		<!-- class="org.eclipse.wst.sse.ui.StructuredTextEditor" -->
 		<editor
 			name="%DTD_Source_Page_Editor.name"
-			icon="icons/full/obj16/DTDFile.gif"
+			icon="$nl$/icons/full/obj16/DTDFile.gif"
 			contributorClass="org.eclipse.wst.dtd.ui.internal.editor.ActionContributorDTD"
 			class="org.eclipse.wst.dtd.ui.internal.DTDEditor"
 			symbolicFontName="org.eclipse.wst.sse.ui.textfont"
@@ -117,7 +117,7 @@
 			name="%_UI_WIZARD_NEW_DTD"
 			class="org.eclipse.wst.dtd.ui.internal.wizard.NewDTDWizard"
 			category="org.eclipse.wst.XMLCategory"
-			icon="icons/full/etool16/newdtd_wiz.gif">
+			icon="$nl$/icons/full/etool16/newdtd_wiz.gif">
 			<description>%_UI_CREATE_NEW_DTD_FILE</description>
 			<selection class="org.eclipse.core.resources.IResource" />
 		</wizard>

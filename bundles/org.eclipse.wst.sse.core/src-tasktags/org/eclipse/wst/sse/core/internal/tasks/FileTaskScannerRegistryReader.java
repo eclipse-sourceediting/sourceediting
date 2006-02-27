@@ -26,7 +26,7 @@ import org.eclipse.core.runtime.content.IContentTypeManager;
 import org.eclipse.wst.sse.core.internal.Logger;
 import org.eclipse.wst.sse.core.internal.SSECorePlugin;
 import org.eclipse.wst.sse.core.internal.provisional.tasks.IFileTaskScanner;
-import org.eclipse.wst.sse.core.internal.util.StringUtils;
+import org.eclipse.wst.sse.core.utils.StringUtils;
 
 public class FileTaskScannerRegistryReader {
 	private class ScannerInfo {

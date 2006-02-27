@@ -157,7 +157,7 @@
 	<extension point="org.eclipse.ui.editors">
 		<editor
 			name="%XML_Editor.name"
-			icon="icons/xmldoc.gif"
+			icon="$nl$/icons/xmldoc.gif"
 			default="true"
 			contributorClass="org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorActionBarContributor"
 			class="org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart"
@@ -198,7 +198,7 @@
 		</category>
 		<wizard
 			name="%_UI_WIZARD_NEW_XML"
-			icon="icons/XMLFile.gif"
+			icon="$nl$/icons/XMLFile.gif"
 			category="org.eclipse.wst.XMLCategory"
 			class="org.eclipse.wst.xml.ui.internal.wizards.NewXMLWizard"
 			id="org.eclipse.wst.xml.ui.internal.wizards.NewXMLWizard">
@@ -273,7 +273,7 @@
 			category="org.eclipse.ui.Examples/org.eclipse.wst.xml.examples"
 			id="org.eclipse.wst.xml.ui.XMLExampleProjectCreationWizard"
 			project="true"
-			icon="icons/newSampleProject_wiz.gif">
+			icon="$nl$/icons/newSampleProject_wiz.gif">
 			<description>
 				%XMLExampleProjectCreationWizard.description
 			</description>

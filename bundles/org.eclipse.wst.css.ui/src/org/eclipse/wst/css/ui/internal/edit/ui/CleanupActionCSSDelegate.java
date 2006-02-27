@@ -15,9 +15,9 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.css.core.internal.cleanup.CleanupProcessorCSS;
 import org.eclipse.wst.css.ui.internal.CSSUIMessages;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.cleanup.IStructuredCleanupProcessor;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
-import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
 import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 
 /**

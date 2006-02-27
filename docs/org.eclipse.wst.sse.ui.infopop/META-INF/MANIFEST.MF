@@ -1,8 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: SSE infopops
+Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.eclipse.wst.sse.ui.infopop; singleton:=true
 Bundle-Version: 1.0.1.qualifier
-Bundle-Vendor: Eclipse.org
+Bundle-Vendor: %Bundle-Vendor.0
 Bundle-Localization: plugin
-Eclipse-AutoStart: true

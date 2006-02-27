@@ -383,7 +383,7 @@
 	<extension point="org.eclipse.ui.editors">
 		<editor
 			name="%Standalone_Structured_Source_Editor.name"
-			icon="icons/sourceEditor.gif"
+			icon="$nl$/icons/sourceEditor.gif"
 			contributorClass="org.eclipse.wst.sse.ui.internal.actions.ActionContributor"
 			class="org.eclipse.wst.sse.ui.StructuredTextEditor"
 			symbolicFontName="org.eclipse.wst.sse.ui.textfont"

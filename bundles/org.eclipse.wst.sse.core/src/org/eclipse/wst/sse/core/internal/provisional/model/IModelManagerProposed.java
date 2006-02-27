@@ -41,7 +41,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
  * 
  * Clients can reference this interface, but should not implement.
  * 
- * @see org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager
+ * @see org.eclipse.wst.sse.core.StructuredModelManager
  * @plannedfor 1.0
  */
 public interface IModelManagerProposed {

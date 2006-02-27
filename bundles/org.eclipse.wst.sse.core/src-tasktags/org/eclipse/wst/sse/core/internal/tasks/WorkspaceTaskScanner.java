@@ -39,7 +39,7 @@ import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.wst.sse.core.internal.Logger;
 import org.eclipse.wst.sse.core.internal.provisional.tasks.IFileTaskScanner;
 import org.eclipse.wst.sse.core.internal.provisional.tasks.TaskTag;
-import org.eclipse.wst.sse.core.internal.util.StringUtils;
+import org.eclipse.wst.sse.core.utils.StringUtils;
 
 /**
  * Dispatcher for scanning based on deltas and requested projects

@@ -31,7 +31,7 @@ import org.eclipse.wst.common.ui.internal.dnd.ObjectTransfer;
 import org.eclipse.wst.common.ui.internal.dnd.ViewerDragAdapter;
 import org.eclipse.wst.common.ui.internal.dnd.ViewerDropAdapter;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
-import org.eclipse.wst.sse.core.internal.util.StringUtils;
+import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.sse.ui.internal.IReleasable;
 import org.eclipse.wst.sse.ui.internal.contentoutline.PropertyChangeUpdateAction;
 import org.eclipse.wst.sse.ui.internal.contentoutline.PropertyChangeUpdateActionContributionItem;

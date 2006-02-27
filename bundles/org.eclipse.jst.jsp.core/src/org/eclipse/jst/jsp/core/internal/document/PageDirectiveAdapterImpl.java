@@ -33,7 +33,7 @@ import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitioning;
 import org.eclipse.wst.sse.core.internal.util.Debug;
-import org.eclipse.wst.sse.core.internal.util.StringUtils;
+import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 
 /**
@@ -576,9 +576,11 @@ public class PageDirectiveAdapterImpl implements PageDirectiveAdapter {
 
 	private IFile getFile(IStructuredModel model) {
 		String location = model.getBaseLocation();
-		IPath path = new Path(location);
-		if (!path.toFile().exists() && path.segmentCount() > 1) {
-			return ResourcesPlugin.getWorkspace().getRoot().getFile(path);
+		if (location != null) {
+			IPath path = new Path(location);
+			if (!path.toFile().exists() && path.segmentCount() > 1) {
+				return ResourcesPlugin.getWorkspace().getRoot().getFile(path);
+			}
 		}
 		return null;
 	}
