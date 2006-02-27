@@ -24,7 +24,16 @@
              <adapt type="org.eclipse.core.resources.IProject"/>
            </with>
          </enablement>
-       </moduleArtifactAdapter>    
+       </moduleArtifactAdapter>
+       <moduleArtifactAdapter
+            id="org.eclipse.jst.web.server.webstatic2"
+            class="org.eclipse.wst.web.internal.deployables.StaticWebDeployableObjectAdapter">
+         <enablement>
+           <with variable="selection">
+             <adapt type="org.eclipse.core.resources.IFile"/>
+           </with>
+         </enablement>
+      </moduleArtifactAdapter>   
    </extension>
    <extension point="org.eclipse.core.runtime.adapters">
          <factory
