@@ -1,10 +1,10 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Simple Web Plug-in
+Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.eclipse.wst.web; singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.eclipse.wst.web.internal.WSTWebPlugin
-Bundle-Vendor: Eclipse.org
+Bundle-Vendor: %Bundle-Vendor.0
 Bundle-Localization: plugin
 Export-Package: .,
  org.eclipse.wst.project.facet,
