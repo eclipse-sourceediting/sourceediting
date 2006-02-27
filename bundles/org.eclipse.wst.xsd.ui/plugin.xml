@@ -364,7 +364,7 @@
             enablesFor="1"
             style="pulldown"
             menubarPath="search-slot"
-            label="Declarations"
+            label="%action.label.0"
             class="org.eclipse.wst.xsd.ui.internal.search.actions.XSDSearchDeclarationsGroupActionDelegate"> 
          </action>          
          <action
@@ -372,7 +372,7 @@
             enablesFor="1"
             style="pulldown"
             menubarPath="search-slot"
-            label="References"
+            label="%action.label.1"
             class="org.eclipse.wst.xsd.ui.internal.search.actions.XSDSearchReferencesGroupActionDelegate"> 
          </action>
          <action
