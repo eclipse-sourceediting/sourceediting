@@ -15,9 +15,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.MessageFormat;
 
-import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IPluginDescriptor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.edit.ui.provider.ExtendedImageRegistry;
@@ -43,26 +42,13 @@ public class XSDEditorPlugin extends AbstractUIPlugin {
 	// protected XMLSchemaPackage xmlschemaPackage;
 	// KCPort private static MsgLogger myMsgLogger;
 
-	public XSDEditorPlugin(IPluginDescriptor descriptor) {
-		super(descriptor);
+	public XSDEditorPlugin() {
+		super();
 		plugin = this;
 		// KCPort myMsgLogger = getMsgLogger();
 		// myMsgLogger.write(Level.CONFIG, new BuildInfo());
 		// myMsgLogger.write(Level.CONFIG, BuildInfo.getWSABuildLevel());
 	}
-
-	/**
-	 * Copy the w3c XMLSchema.dtd and datatypes.dtd into the plugin metadata
-	 * directory for validation purposes
-	 * 
-	 * @throws CoreException
-	 * 
-	 * ISSUE: should be removed.
-	 */
-	public void startup() throws CoreException {
-		super.startup();
-	}
-
 
 	/**
 	 * @deprecated use StructuredModelManager.getModelManager(); instead.
@@ -76,7 +62,14 @@ public class XSDEditorPlugin extends AbstractUIPlugin {
 	 * Get the Install URL
 	 */
 	public static URL getInstallURL() {
-		return getPlugin().getDescriptor().getInstallURL();
+		try
+	    {
+	      return FileLocator.resolve(plugin.getBundle().getEntry("/"));
+	    }
+	    catch (IOException e)
+	    {
+	      return null;
+	    }
 	}
 
 	/**
@@ -85,7 +78,7 @@ public class XSDEditorPlugin extends AbstractUIPlugin {
 	public static IPath getPluginLocation() {
 		try {
 			IPath installPath = new Path(getInstallURL().toExternalForm()).removeTrailingSeparator();
-			String installStr = Platform.asLocalURL(new URL(installPath.toString())).getFile();
+			String installStr = FileLocator.toFileURL(new URL(installPath.toString())).getFile();
 			return new Path(installStr);
 		}
 		catch (IOException e) {
@@ -311,7 +304,14 @@ public class XSDEditorPlugin extends AbstractUIPlugin {
 	protected URL baseURL;
 
 	public URL getBaseURL() {
-		return getDescriptor().getInstallURL();
+		try
+	    {
+	      return FileLocator.resolve(getBundle().getEntry("/"));
+	    }
+	    catch (IOException e)
+	    {
+	      return null;
+	    }
 	}
 
 	public Image getIconImage(String object) {

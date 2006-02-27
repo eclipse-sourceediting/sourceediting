@@ -2,8 +2,8 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %_UI_PLUGIN_NAME
 Bundle-SymbolicName: org.eclipse.wst.xsd.ui; singleton:=true
-Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: org.eclipse.core.internal.compatibility.PluginActivator
+Bundle-Version: 1.0.100.qualifier
+Bundle-Activator: org.eclipse.wst.xsd.ui.internal.XSDEditorPlugin
 Bundle-Vendor: %Bundle-Vendor.0
 Bundle-Localization: plugin
 Export-Package: org.eclipse.wst.xsd.ui.internal,
@@ -37,7 +37,7 @@ Export-Package: org.eclipse.wst.xsd.ui.internal,
  org.eclipse.wst.xsd.ui.internal.validation,
  org.eclipse.wst.xsd.ui.internal.widgets,
  org.eclipse.wst.xsd.ui.internal.wizards
-Require-Bundle: org.eclipse.core.runtime.compatibility,
+Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.wst.common.uriresolver,
  org.eclipse.wst.sse.ui,
  org.eclipse.wst.sse.core,
@@ -66,4 +66,3 @@ Require-Bundle: org.eclipse.core.runtime.compatibility,
  org.eclipse.search,
  com.ibm.icu
 Eclipse-LazyStart: true
-Plugin-Class: org.eclipse.wst.xsd.ui.internal.XSDEditorPlugin
