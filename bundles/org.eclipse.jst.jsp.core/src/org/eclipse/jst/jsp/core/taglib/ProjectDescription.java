@@ -466,11 +466,11 @@ class ProjectDescription {
 			if (fileLocation != null) {
 				JarRecord jarRecord = createJARRecord(fileLocation);
 				String[] entries = JarUtilities.getEntryNames(fileLocation);
-				for (int j = 0; j < entries.length; j++) {
-					if (entries[j].endsWith(".tld")) { //$NON-NLS-1$
-						if (entries[j].equals(JarUtilities.JSP11_TAGLIB)) {
+				for (int jEntry = 0; jEntry < entries.length; jEntry++) {
+					if (entries[jEntry].endsWith(".tld")) { //$NON-NLS-1$
+						if (entries[jEntry].equals(JarUtilities.JSP11_TAGLIB)) {
 							jarRecord.has11TLD = true;
-							InputStream contents = JarUtilities.getInputStream(fileLocation, entries[j]);
+							InputStream contents = JarUtilities.getInputStream(fileLocation, entries[jEntry]);
 							if (contents != null) {
 								TaglibInfo info = extractInfo(fileLocation, contents);
 								jarRecord.info = info;
@@ -1220,11 +1220,11 @@ class ProjectDescription {
 		webxmlRecord.path = webxml.getFullPath();
 		fWebXMLReferences.put(webxmlRecord.getWebXML().toString(), webxmlRecord);
 		NodeList taglibs = document.getElementsByTagName(JSP12TLDNames.TAGLIB);
-		for (int i = 0; i < taglibs.getLength(); i++) {
-			String taglibUri = readTextofChild(taglibs.item(i), "taglib-uri").trim(); //$NON-NLS-1$
+		for (int iTaglib = 0; iTaglib < taglibs.getLength(); iTaglib++) {
+			String taglibUri = readTextofChild(taglibs.item(iTaglib), "taglib-uri").trim(); //$NON-NLS-1$
 			// specified location is relative to root of the webapp
-			String taglibLocation = readTextofChild(taglibs.item(i), "taglib-location").trim(); //$NON-NLS-1$
-			IPath path = null;
+			String taglibLocation = readTextofChild(taglibs.item(iTaglib), "taglib-location").trim(); //$NON-NLS-1$
+			IPath path = null; 
 			if (taglibLocation.startsWith("/")) { //$NON-NLS-1$
 				path = new Path(getLocalRoot(webxml.getFullPath().toString()) + taglibLocation);
 			}
@@ -1243,11 +1243,11 @@ class ProjectDescription {
 					if (resource.getFileExtension().equalsIgnoreCase(("jar"))) {
 						JarRecord jarRecord = createJARRecord(resource);
 						String[] entries = JarUtilities.getEntryNames(resource);
-						for (int j = 0; j < entries.length; j++) {
-							if (entries[j].endsWith(".tld")) { //$NON-NLS-1$
-								if (entries[j].equals(JarUtilities.JSP11_TAGLIB)) {
+						for (int jEntry = 0; jEntry < entries.length; jEntry++) {
+							if (entries[jEntry].endsWith(".tld")) { //$NON-NLS-1$
+								if (entries[jEntry].equals(JarUtilities.JSP11_TAGLIB)) {
 									jarRecord.has11TLD = true;
-									InputStream contents = JarUtilities.getInputStream(resource, entries[i]);
+									InputStream contents = JarUtilities.getInputStream(resource, entries[jEntry]);
 									if (contents != null) {
 										TaglibInfo info = extractInfo(resource.getLocation().toString(), contents);
 										jarRecord.info = info;
