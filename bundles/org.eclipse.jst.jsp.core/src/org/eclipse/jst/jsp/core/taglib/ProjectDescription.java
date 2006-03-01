@@ -1116,11 +1116,11 @@ class ProjectDescription {
 					if (resource.getFileExtension().equalsIgnoreCase(("jar"))) {
 						JarRecord jarRecord = (JarRecord) createJARRecord(resource);
 						String[] entries = JarUtilities.getEntryNames(resource);
-						for (int j = 0; j < entries.length; j++) {
-							if (entries[j].endsWith(".tld")) { //$NON-NLS-1$
-								if (entries[j].equals(JarUtilities.JSP11_TAGLIB)) {
+						for (int jEntry = 0; jEntry < entries.length; jEntry++) {
+							if (entries[jEntry].endsWith(".tld")) { //$NON-NLS-1$
+								if (entries[jEntry].equals(JarUtilities.JSP11_TAGLIB)) {
 									jarRecord.has11TLD = true;
-									InputStream contents = JarUtilities.getInputStream(resource, entries[i]);
+									InputStream contents = JarUtilities.getInputStream(resource, entries[jEntry]);
 									if (contents != null) {
 										TaglibInfo info = extractInfo(resource.getLocation().toString(), contents);
 										jarRecord.info = info;
