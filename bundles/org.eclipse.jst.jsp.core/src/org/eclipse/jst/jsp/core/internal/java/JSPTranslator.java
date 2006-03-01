@@ -73,7 +73,7 @@ import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
  * @author pavery
  */
 public class JSPTranslator {
-	
+
 	// the name of the element in the extension point
 	private static final String EL_TRANSLATOR_EXTENSION_NAME = "elTranslator"; //$NON-NLS-1$
 
@@ -81,7 +81,7 @@ public class JSPTranslator {
 
 	// Default EL Translator
 	private static final String DEFAULT_JSP_EL_TRANSLATOR_ID = "org.eclipse.jst.jsp.defaultJSP20"; //$NON-NLS-1$
-	
+
 	// handy plugin ID constant
 	private static final String JSP_CORE_PLUGIN_ID = "org.eclipse.jst.jsp.core"; //$NON-NLS-1$
 
@@ -89,7 +89,7 @@ public class JSPTranslator {
 	private static final boolean DEBUG;
 
 	private IJSPELTranslator fELTranslator = null;
-	
+
 	static {
 		String value = Platform.getDebugOption("org.eclipse.jst.jsp.core/debug/jspjavamapping"); //$NON-NLS-1$
 		DEBUG = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
@@ -99,11 +99,11 @@ public class JSPTranslator {
 
 	private String fClassHeader = "public class _JSPServlet extends "; //$NON-NLS-1$
 	private String fClassname = "_JSPServlet"; //$NON-NLS-1$
-    
+
 	private String fImplicitImports = "import javax.servlet.*;" + ENDL + //$NON-NLS-1$
-										"import javax.servlet.http.*;" + ENDL +  //$NON-NLS-1$
-										"import javax.servlet.jsp.*;" + ENDL + ENDL; //$NON-NLS-1$
-    
+				"import javax.servlet.http.*;" + ENDL + //$NON-NLS-1$
+				"import javax.servlet.jsp.*;" + ENDL + ENDL; //$NON-NLS-1$
+
 	private String fServiceHeader = "public void _jspService(javax.servlet.http.HttpServletRequest request," + //$NON-NLS-1$
 				" javax.servlet.http.HttpServletResponse response)" + ENDL + //$NON-NLS-1$
 				"\t\tthrows java.io.IOException, javax.servlet.ServletException {" + ENDL + //$NON-NLS-1$
@@ -163,7 +163,7 @@ public class JSPTranslator {
 	protected final static int DECLARATION = 2;
 	protected final static int EXPRESSION = 4;
 	protected final static int SCRIPTLET = 8;
-	
+
 	/** used to avoid infinite looping include files */
 	private Stack fIncludes = null;
 	/** mostly for helper classes, so they parse correctly */
@@ -196,9 +196,9 @@ public class JSPTranslator {
 	private HashMap fDeclarationRanges = new HashMap();
 
 	private HashMap fUseBeanRanges = new HashMap();
-	
+
 	private HashMap fUserELRanges = new HashMap();
-	
+
 	/**
 	 * ranges that don't directly map from java code to JSP code (eg.
 	 * <%@include file="included.jsp"%>
@@ -212,9 +212,9 @@ public class JSPTranslator {
 	 * the file or strucdtured document depending what is available
 	 */
 	private StringBuffer fJspTextBuffer = new StringBuffer();
-	
 
-	/** 
+
+	/**
 	 * List of EL problems to be translated
 	 */
 	private ArrayList fELProblems = new ArrayList();
@@ -235,7 +235,7 @@ public class JSPTranslator {
 		fProgressMonitor = monitor;
 		fStructuredModel = node.getModel();
 		String baseLocation = fStructuredModel.getBaseLocation();
-		
+
 		fELTranslatorID = getELTranslatorProperty(baseLocation);
 
 		fStructuredDocument = fStructuredModel.getStructuredDocument();
@@ -259,9 +259,9 @@ public class JSPTranslator {
 		// fStructuredModel, fPositionNode, fModelQuery, fStructuredDocument
 		// are all null
 		fProgressMonitor = monitor;
-		
+
 		fELTranslatorID = getELTranslatorProperty(jspFile);
-		
+
 		String className = createClassname(jspFile);
 		if (className.length() > 0) {
 			setClassname(className);
@@ -294,39 +294,46 @@ public class JSPTranslator {
 	}
 
 	/**
-	 * Get the value of the ELTranslator property from a workspace relative 
+	 * Get the value of the ELTranslator property from a workspace relative
 	 * path string
 	 * 
-	 * @param baseLocation Workspace-relative string path
+	 * @param baseLocation
+	 *            Workspace-relative string path
 	 * @return Value of the ELTranslator property associated with the project.
 	 */
-	private String getELTranslatorProperty(String baseLocation){
+	private String getELTranslatorProperty(String baseLocation) {
 		IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
 		String elTranslatorValue = null;
 		IFile file = workspaceRoot.getFile(new Path(baseLocation));
-		elTranslatorValue = getELTranslatorProperty(file);
+		if (file != null) {
+			elTranslatorValue = getELTranslatorProperty(file);
+		}
 		return elTranslatorValue;
 	}
 
 	/**
 	 * Get the value of the ELTranslator property from an IFile
-	 *  
-	 * @param file IFile 
+	 * 
+	 * @param file
+	 *            IFile
 	 * @return Value of the ELTranslator property associated with the project.
 	 */
 	private String getELTranslatorProperty(IFile file) {
 		String elTranslatorValue = null;
-		try {
-			elTranslatorValue = file.getPersistentProperty(new QualifiedName(JSP_CORE_PLUGIN_ID, ELTRANSLATOR_PROP_NAME)); //$NON-NLS-1$
-		} catch (CoreException e) {
-			Logger.logException(e);
-		}
-		
-		if(null == elTranslatorValue) {
-			try {
-				elTranslatorValue = file.getProject().getPersistentProperty(new QualifiedName(JSP_CORE_PLUGIN_ID, ELTRANSLATOR_PROP_NAME)); //$NON-NLS-1$
-			} catch (CoreException e) {
-				Logger.logException(e);
+		if (file != null) {
+			if (file.exists()) {
+				try {
+					elTranslatorValue = file.getPersistentProperty(new QualifiedName(JSP_CORE_PLUGIN_ID, ELTRANSLATOR_PROP_NAME));
+					if (null == elTranslatorValue) {
+
+						elTranslatorValue = file.getProject().getPersistentProperty(new QualifiedName(JSP_CORE_PLUGIN_ID, ELTRANSLATOR_PROP_NAME));
+					}
+				}
+				catch (CoreException e) {
+					// ISSUE: why do we log this here? Instead of allowing to throwup?
+					Logger.logException(e);
+				}
+
 			}
 		}
 		return elTranslatorValue;
@@ -440,9 +447,9 @@ public class JSPTranslator {
 		fIndirectRanges.clear();
 
 		fJspTextBuffer = new StringBuffer();
-		
+
 		fELProblems = new ArrayList();
-		
+
 	}
 
 	/**
@@ -476,12 +483,12 @@ public class JSPTranslator {
 					+ fUserCode.length() + fTryCatchEnd.length() // try/catch
 					// end
 					+ fFooter.length());
-		
+
 		int javaOffset = 0;
-		
+
 		fResult.append(fImplicitImports);
 		javaOffset += fImplicitImports.length();
-		
+
 		// updateRanges(fIndirectImports, javaOffset);
 		updateRanges(fImportRanges, javaOffset);
 		// user imports
@@ -498,7 +505,7 @@ public class JSPTranslator {
 		// user declarations
 		append(fUserDeclarations);
 		javaOffset += fUserDeclarations.length();
-		
+
 		updateRanges(fUserELRanges, javaOffset);
 		append(fUserELExpressions);
 		javaOffset += fUserELExpressions.length();
@@ -533,7 +540,7 @@ public class JSPTranslator {
 		fJava2JspRanges.putAll(fDeclarationRanges);
 		fJava2JspRanges.putAll(fCodeRanges);
 		fJava2JspRanges.putAll(fUserELRanges);
-		
+
 	}
 
 	/**
@@ -630,13 +637,13 @@ public class JSPTranslator {
 
 	/**
 	 * Only valid after a configure(...), translate(...) or
-	 * translateFromFile(...) call	
+	 * translateFromFile(...) call
 	 * 
 	 * @return the current result (java translation) buffer
 	 */
 	public final StringBuffer getTranslation() {
 
-		if (DEBUG) {	
+		if (DEBUG) {
 			StringBuffer debugString = new StringBuffer();
 			try {
 				Iterator it = fJava2JspRanges.keySet().iterator();
@@ -656,7 +663,7 @@ public class JSPTranslator {
 					debugString.append("\n"); //$NON-NLS-1$
 				}
 			}
-			catch(Exception e) {
+			catch (Exception e) {
 				Logger.logException("JSPTranslation error", e); //$NON-NLS-1$
 			}
 			Logger.log(Logger.INFO_DEBUG, debugString.toString());
@@ -674,13 +681,13 @@ public class JSPTranslator {
 	public final String getJspText() {
 		return fJspTextBuffer.toString();
 	}
-	
+
 	protected void addTaglibVariables(String tagToAdd) {
 		IFile f = getFile();
-		
-		if(f == null || !f.exists()) 
+
+		if (f == null || !f.exists())
 			return;
-		
+
 		TaglibHelper helper = TaglibHelperManager.getInstance().getTaglibHelper(f);
 		IStructuredDocumentRegion customTag = getCurrentNode();
 		TaglibVariable[] taglibVars = helper.getTaglibVariables(tagToAdd, getStructuredDocument(), customTag);
@@ -690,16 +697,16 @@ public class JSPTranslator {
 			appendToBuffer(decl, fUserCode, false, fCurrentNode);
 		}
 	}
-	
+
 	private IFile getFile() {
 		IFile f = null;
 		IStructuredModel sModel = StructuredModelManager.getModelManager().getExistingModelForRead(getStructuredDocument());
 		try {
-			if(sModel != null) 
+			if (sModel != null)
 				f = FileBuffers.getWorkspaceFileAtLocation(new Path(sModel.getBaseLocation()));
 		}
 		finally {
-			if(sModel != null)
+			if (sModel != null)
 				sModel.releaseFromRead();
 		}
 		return f;
@@ -808,13 +815,13 @@ public class JSPTranslator {
 
 		// custom tags need their own scope {}
 		handleScopingIfNecessary(containerRegion);
-		
+
 		Iterator regions = containerRegion.getRegions().iterator();
 		ITextRegion region = null;
 		while (regions.hasNext()) {
-			
+
 			region = (ITextRegion) regions.next();
-			
+
 			String type = region.getType();
 
 			// content assist was not showing up in JSP inside a javascript
@@ -850,31 +857,31 @@ public class JSPTranslator {
 		// code within a custom tag gets its own scope
 		// so if we encounter a start of a custom tag, we add '{'
 		// and for the end of a custom tag we add '}'
-		if(containerRegion.getFirstRegion().getType() == DOMRegionContext.XML_TAG_OPEN) {
+		if (containerRegion.getFirstRegion().getType() == DOMRegionContext.XML_TAG_OPEN) {
 			// don't add '{' if it's a self closing tag
-			if(!isSelfClosingTag(containerRegion)) {
-				if(isCustomTag(containerRegion)) {
+			if (!isSelfClosingTag(containerRegion)) {
+				if (isCustomTag(containerRegion)) {
 					startScope();
 				}
 			}
 		}
-		else if(containerRegion.getFirstRegion().getType() == DOMRegionContext.XML_END_TAG_OPEN) {
-			if(isCustomTag(containerRegion)) {
+		else if (containerRegion.getFirstRegion().getType() == DOMRegionContext.XML_END_TAG_OPEN) {
+			if (isCustomTag(containerRegion)) {
 				endScope();
 			}
 		}
 	}
 
 	private void startScope() {
-		//fScopeDepth++;
+		// fScopeDepth++;
 		StringBuffer text = new StringBuffer();
-		//for(int i=0; i<fScopeDepth; i++) text.append(" "); //$NON-NLS-1$
+		// for(int i=0; i<fScopeDepth; i++) text.append(" "); //$NON-NLS-1$
 		text.append("{ // <"); //$NON-NLS-1$
 		text.append(getRegionName(fCurrentNode));
 		text.append(">\n"); //$NON-NLS-1$
 		appendToBuffer(text.toString(), fUserCode, false, fCurrentNode); //$NON-NLS-1$
 	}
-	
+
 	private void endScope() {
 		StringBuffer text = new StringBuffer();
 		text.append("} // </"); //$NON-NLS-1$
@@ -882,41 +889,42 @@ public class JSPTranslator {
 		text.append(">\n"); //$NON-NLS-1$
 		appendToBuffer(text.toString(), fUserCode, false, fCurrentNode); //$NON-NLS-1$
 	}
-	
+
 	private boolean isSelfClosingTag(ITextRegionCollection containerRegion) {
-		
-		if(containerRegion == null)
+
+		if (containerRegion == null)
 			return false;
-		
+
 		ITextRegionList regions = containerRegion.getRegions();
-		ITextRegion r = regions.get(regions.size()-1);
+		ITextRegion r = regions.get(regions.size() - 1);
 		return r.getType() == DOMRegionContext.XML_EMPTY_TAG_CLOSE;
 	}
 
 	private boolean isCustomTag(ITextRegionCollection containerRegion) {
 		String tagName = getRegionName(containerRegion);
-		
-		if(tagName == null)
+
+		if (tagName == null)
 			return false;
-		
-		if(tagName.indexOf(":") > 0 && !tagName.startsWith("jsp"))  //$NON-NLS-1$  //$NON-NLS-2$
+
+		if (tagName.indexOf(":") > 0 && !tagName.startsWith("jsp")) //$NON-NLS-1$  //$NON-NLS-2$
 			return true;
-		
+
 		return false;
 	}
-	
+
 	private String getRegionName(ITextRegionCollection containerRegion) {
 		ITextRegionList regions = containerRegion.getRegions();
 		ITextRegion nameRegion = null;
 		for (int i = 0; i < regions.size(); i++) {
 			ITextRegion r = regions.get(i);
-			if(r.getType() == DOMRegionContext.XML_TAG_NAME) {
+			if (r.getType() == DOMRegionContext.XML_TAG_NAME) {
 				nameRegion = r;
 				break;
 			}
 		}
 		return nameRegion != null ? containerRegion.getText(nameRegion).trim() : null;
 	}
+
 	/*
 	 * ////////////////////////////////////////////////////////////////////////////////// **
 	 * TEMP WORKAROUND FOR CMVC 241882 Takes a String and blocks out
@@ -988,7 +996,7 @@ public class JSPTranslator {
 		if (regions.hasNext()) {
 			r = (ITextRegion) regions.next();
 			// <jsp:directive.xxx > comes in as this
-			if (r.getType() == DOMRegionContext.XML_TAG_NAME || r.getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_NAME) 
+			if (r.getType() == DOMRegionContext.XML_TAG_NAME || r.getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_NAME)
 
 			{
 				String fullTagName = container.getFullText(r).trim();
@@ -1000,7 +1008,7 @@ public class JSPTranslator {
 				{
 					if (st.hasMoreTokens()) {
 						String jspTagName = st.nextToken();
-						
+
 						if (jspTagName.equals("scriptlet")) //$NON-NLS-1$
 						{
 							translateXMLJSPContent(SCRIPTLET);
@@ -1024,7 +1032,7 @@ public class JSPTranslator {
 								else if (directiveName.equals("include")) { //$NON-NLS-1$
 
 									String fileLocation = ""; //$NON-NLS-1$
-									
+
 									// skip to required "file" attribute,
 									// should be safe because
 									// "file" is the only attribute for the
@@ -1045,7 +1053,7 @@ public class JSPTranslator {
 									// setCurrentNode(getCurrentNode().getNext());
 									if (getCurrentNode() != null) {
 										// 'regions' contain the attrs
-										translatePageDirectiveAttributes(regions); 
+										translatePageDirectiveAttributes(regions);
 									}
 								}
 							}
@@ -1054,25 +1062,25 @@ public class JSPTranslator {
 							// <jsp:include page="filename") />
 							checkAttributeValueContainer(regions, "page"); //$NON-NLS-1$
 						}
-						else if(jspTagName.equals("forward")) { //$NON-NLS-1$
+						else if (jspTagName.equals("forward")) { //$NON-NLS-1$
 							checkAttributeValueContainer(regions, "page"); //$NON-NLS-1$
 						}
-						else if(jspTagName.equals("param")) { //$NON-NLS-1$
+						else if (jspTagName.equals("param")) { //$NON-NLS-1$
 							checkAttributeValueContainer(regions, "value"); //$NON-NLS-1$
 						}
-						else if(jspTagName.equals("setProperty")) { //$NON-NLS-1$
+						else if (jspTagName.equals("setProperty")) { //$NON-NLS-1$
 							checkAttributeValueContainer(regions, "value"); //$NON-NLS-1$
 						}
 						else if (jspTagName.equals("useBean")) //$NON-NLS-1$
 						{
 							checkAttributeValueContainer(regions, "name"); //$NON-NLS-1$
 							// https://bugs.eclipse.org/bugs/show_bug.cgi?id=103004
-							//advanceNextNode(); // get the content
+							// advanceNextNode(); // get the content
 							if (getCurrentNode() != null) {
 								translateUseBean(container); // 'regions'
 							}
 						}
-	
+
 					}
 				}
 				else {
@@ -1081,8 +1089,10 @@ public class JSPTranslator {
 			}
 		}
 	}
+
 	/**
 	 * translates embedded containers for ALL attribute values
+	 * 
 	 * @param regions
 	 */
 	private void checkAllAttributeValueContainers(Iterator regions) {
@@ -1099,8 +1109,10 @@ public class JSPTranslator {
 				while (attrRegions.hasNext()) {
 					attrChunk = (ITextRegion) attrRegions.next();
 					String type = attrChunk.getType();
-					// embedded JSP in attribute support only want to translate one time per
-					// embedded region so we only translate on the JSP open tags (not content)
+					// embedded JSP in attribute support only want to
+					// translate one time per
+					// embedded region so we only translate on the JSP open
+					// tags (not content)
 					if (type == DOMJSPRegionContexts.JSP_EXPRESSION_OPEN || type == DOMJSPRegionContexts.JSP_SCRIPTLET_OPEN || type == DOMJSPRegionContexts.JSP_DECLARATION_OPEN || type == DOMJSPRegionContexts.JSP_DIRECTIVE_OPEN || type == DOMJSPRegionContexts.JSP_EL_OPEN) {
 						// now call jsptranslate
 						translateEmbeddedJSPInAttribute((ITextRegionContainer) embedded);
@@ -1109,8 +1121,10 @@ public class JSPTranslator {
 			}
 		}
 	}
+
 	/**
 	 * translates embedded container for specified attribute
+	 * 
 	 * @param regions
 	 * @param attrName
 	 */
@@ -1120,59 +1134,51 @@ public class JSPTranslator {
 			r = (ITextRegion) regions.next();
 			if (r.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME && getCurrentNode().getText(r).equals(attrName)) { //$NON-NLS-1$
 				// skip to attribute value
-				while(regions.hasNext() && (r = (ITextRegion)regions.next()) != null) {
-					if( r.getType() ==  DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE)
+				while (regions.hasNext() && (r = (ITextRegion) regions.next()) != null) {
+					if (r.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE)
 						break;
 				}
 				// forces embedded region to be translated
-				if(r instanceof ContextRegionContainer) {
-					translateEmbeddedJSPInAttribute((ContextRegionContainer)r);
+				if (r instanceof ContextRegionContainer) {
+					translateEmbeddedJSPInAttribute((ContextRegionContainer) r);
 				}
 				break;
 			}
 		}
 	}
-	
-	/* 
+
+	/*
 	 * example:
 	 * 
-	 * <jsp:scriptlet>scriptlet
-	 * jsp-java content
-	 * <![CDATA[ 
-	 *   more jsp java
-	 *  ]]>
-	 * jsp-java content...
-	 *   <![CDATA[ 
-	 *      more jsp java
-	 *    ]]>
-	 * </jsp:scriptlet>
-	 *
+	 * <jsp:scriptlet>scriptlet jsp-java content <![CDATA[ more jsp java ]]>
+	 * jsp-java content... <![CDATA[ more jsp java ]]> </jsp:scriptlet>
+	 * 
 	 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=93366
-	 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=88590
-	 * translate everything inbetween <scriptlet> tags, which may 
-	 * be more than one region (esp. CDATA)
+	 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=88590 translate
+	 * everything inbetween <scriptlet> tags, which may be more than one
+	 * region (esp. CDATA)
 	 * 
 	 */
 	private void translateXMLJSPContent(int type) {
-		
+
 		IStructuredDocumentRegion sdr = getCurrentNode().getNext();
 		int start = sdr.getStartOffset();
 		int end = sdr.getEndOffset();
 		String sdrText = ""; //$NON-NLS-1$
-		
-		// read structured document regions until 
+
+		// read structured document regions until
 		// </jsp:scriptlet> or EOF
-		while(sdr != null && sdr.getType() != DOMRegionContext.XML_TAG_NAME) {
-			
+		while (sdr != null && sdr.getType() != DOMRegionContext.XML_TAG_NAME) {
+
 			// setup for next region
 			start = sdr.getStartOffset();
 			sdrText = sdr.getText();
-			
-			if(sdr.getType() == DOMRegionContext.XML_CDATA_TEXT){
-				
+
+			if (sdr.getType() == DOMRegionContext.XML_CDATA_TEXT) {
+
 				// just to be safe, make sure CDATA start & end are there
-				if(sdrText.startsWith("<![CDATA[") && sdrText.endsWith("]]>")) { //$NON-NLS-1$ //$NON-NLS-2$
-					
+				if (sdrText.startsWith("<![CDATA[") && sdrText.endsWith("]]>")) { //$NON-NLS-1$ //$NON-NLS-2$
+
 					start = sdr.getStartOffset() + 9; // <![CDATA[
 					end = sdr.getEndOffset() - 3; // ]]>
 					sdrText = sdrText.substring(9, sdrText.length() - 3);
@@ -1180,9 +1186,9 @@ public class JSPTranslator {
 				}
 			}
 			else {
-				
+
 				// handle entity references
-				sdrText = EscapedTextUtil.getUnescapedText(sdrText);		
+				sdrText = EscapedTextUtil.getUnescapedText(sdrText);
 				end = sdr.getEndOffset();
 				writeToBuffer(type, sdrText, start, end);
 			}
@@ -1193,15 +1199,15 @@ public class JSPTranslator {
 	}
 
 	private void writeToBuffer(int type, String content, int jspStart, int jspEnd) {
-		switch(type) {
-			case SCRIPTLET:
-				translateScriptletString(content, getCurrentNode(), jspStart, jspEnd-jspStart);
+		switch (type) {
+			case SCRIPTLET :
+				translateScriptletString(content, getCurrentNode(), jspStart, jspEnd - jspStart);
 				break;
-			case EXPRESSION:
-				translateExpressionString(content, getCurrentNode(), jspStart, jspEnd-jspStart);
+			case EXPRESSION :
+				translateExpressionString(content, getCurrentNode(), jspStart, jspEnd - jspStart);
 				break;
-			case DECLARATION:
-				translateDeclarationString(content, getCurrentNode(), jspStart, jspEnd-jspStart);
+			case DECLARATION :
+				translateDeclarationString(content, getCurrentNode(), jspStart, jspEnd - jspStart);
 				break;
 		}
 	}
@@ -1260,57 +1266,67 @@ public class JSPTranslator {
 				setCursorOwner(getJSPTypeForRegion(region));
 			}
 		}
- }
+	}
 
-	
+
 	private void translateEL(String elText, String delim, IStructuredDocumentRegion currentNode, int contentStart, int contentLength) {
 		IJSPELTranslator translator = getELTranslator();
-		if(null != translator) {
+		if (null != translator) {
 			translator.translateEL(elText, delim, currentNode, contentStart, contentLength, fUserELExpressions, fUserELRanges, fStructuredDocument);
 		}
 	}
-	
+
 	/**
 	 * Discover and instantiate an EL translator.
 	 */
 	public IJSPELTranslator getELTranslator() {
-		if(fELTranslator == null) {
-			
-			IExtensionPoint extensionPoint = Platform.getExtensionRegistry().getExtensionPoint(
-					JSP_CORE_PLUGIN_ID, // name of plugin that exposes this extension point
-					EL_TRANSLATOR_EXTENSION_NAME); // - extension id
+		if (fELTranslator == null) {
 
-			// Iterate over all declared extensions of this extension point.  
-			// A single plugin may extend the extension point more than once, although it's not recommended.
+			IExtensionPoint extensionPoint = Platform.getExtensionRegistry().getExtensionPoint(JSP_CORE_PLUGIN_ID, // name
+						// of
+						// plugin
+						// that
+						// exposes
+						// this
+						// extension
+						// point
+						EL_TRANSLATOR_EXTENSION_NAME); // - extension id
+
+			// Iterate over all declared extensions of this extension point.
+			// A single plugin may extend the extension point more than once,
+			// although it's not recommended.
 			IConfigurationElement bestTranslator = null;
 			IExtension[] extensions = extensionPoint.getExtensions();
-			for(int curExtension=0; curExtension < extensions.length; curExtension++) {
+			for (int curExtension = 0; curExtension < extensions.length; curExtension++) {
 				IExtension extension = extensions[curExtension];
-				
+
 				IConfigurationElement[] translators = extension.getConfigurationElements();
-				for(int curTranslator = 0; curTranslator < translators.length; curTranslator++) {
-					
+				for (int curTranslator = 0; curTranslator < translators.length; curTranslator++) {
+
 					IConfigurationElement elTranslator = translators[curTranslator];
-					
-					if (!EL_TRANSLATOR_EXTENSION_NAME.equals(elTranslator.getName())) { // - name of configElement 
+
+					if (!EL_TRANSLATOR_EXTENSION_NAME.equals(elTranslator.getName())) { // -
+						// name
+						// of
+						// configElement
 						continue;
 					}
-					
+
 					String idString = elTranslator.getAttribute("id"); //$NON-NLS-1$
-					if(null != idString && idString.equals(fELTranslatorID) || 
-							(null == bestTranslator && DEFAULT_JSP_EL_TRANSLATOR_ID.equals(idString))) {
+					if (null != idString && idString.equals(fELTranslatorID) || (null == bestTranslator && DEFAULT_JSP_EL_TRANSLATOR_ID.equals(idString))) {
 						bestTranslator = elTranslator;
 					}
 				}
 			}
 
-			if(null != bestTranslator) {
+			if (null != bestTranslator) {
 				try {
 					Object execExt = bestTranslator.createExecutableExtension("class"); //$NON-NLS-1$
 					if (execExt instanceof IJSPELTranslator) {
-						return fELTranslator = (IJSPELTranslator)execExt;
-					} 
-				} catch (CoreException e) {
+						return fELTranslator = (IJSPELTranslator) execExt;
+					}
+				}
+				catch (CoreException e) {
 					Logger.logException(e);
 				}
 			}
@@ -1341,7 +1357,7 @@ public class JSPTranslator {
 	 * for example: <a href="index.jsp?p=<%=abc%>b=<%=xyz%>">abc</a>
 	 */
 	private void translateEmbeddedJSPInAttribute(ITextRegionCollection embeddedContainer) {
-		// THIS METHOD IS A FIX FOR 
+		// THIS METHOD IS A FIX FOR
 		// jsp embedded in attribute regions
 		// loop all regions
 		ITextRegionList embeddedRegions = embeddedContainer.getRegions();
@@ -1359,7 +1375,7 @@ public class JSPTranslator {
 				String regionType = embeddedRegions.get(i + 1).getType();
 				if (regionType == DOMJSPRegionContexts.JSP_CONTENT || regionType == DOMJSPRegionContexts.JSP_EL_CONTENT)
 					content = embeddedRegions.get(i + 1);
-				
+
 			}
 
 			if (content != null) {
@@ -1373,19 +1389,23 @@ public class JSPTranslator {
 
 				if (type == DOMJSPRegionContexts.JSP_EXPRESSION_OPEN) {
 					fLastJSPType = EXPRESSION;
-					//translateExpressionString(embeddedContainer.getText(content), fCurrentNode, contentStart, content.getLength());
+					// translateExpressionString(embeddedContainer.getText(content),
+					// fCurrentNode, contentStart, content.getLength());
 					translateExpressionString(embeddedContainer.getText(content), embeddedContainer, contentStart, content.getLength());
 				}
 				else if (type == DOMJSPRegionContexts.JSP_SCRIPTLET_OPEN) {
 					fLastJSPType = SCRIPTLET;
-					//translateScriptletString(embeddedContainer.getText(content), fCurrentNode, contentStart, content.getLength());
+					// translateScriptletString(embeddedContainer.getText(content),
+					// fCurrentNode, contentStart, content.getLength());
 					translateScriptletString(embeddedContainer.getText(content), embeddedContainer, contentStart, content.getLength());
 				}
 				else if (type == DOMJSPRegionContexts.JSP_DECLARATION_OPEN) {
 					fLastJSPType = DECLARATION;
-					//translateDeclarationString(embeddedContainer.getText(content), fCurrentNode, contentStart, content.getLength());
+					// translateDeclarationString(embeddedContainer.getText(content),
+					// fCurrentNode, contentStart, content.getLength());
 					translateDeclarationString(embeddedContainer.getText(content), embeddedContainer, contentStart, content.getLength());
-				} else if (type == DOMJSPRegionContexts.JSP_EL_OPEN) {
+				}
+				else if (type == DOMJSPRegionContexts.JSP_EL_OPEN) {
 					fLastJSPType = EXPRESSION;
 					translateEL(embeddedContainer.getText(content), embeddedContainer.getText(delim), fCurrentNode, contentStart, content.getLength());
 				}
@@ -1495,9 +1515,10 @@ public class JSPTranslator {
 			while (it.hasNext()) {
 				tracker = (CMDocumentTracker) it.next();
 				sdRegion = tracker.getStructuredDocumentRegion();
-				// since may be call from another thread (like a background job)
+				// since may be call from another thread (like a background
+				// job)
 				// this check is to be safer
-				if(sdRegion != null && !sdRegion.isDeleted()) {
+				if (sdRegion != null && !sdRegion.isDeleted()) {
 					taglibRegions = sdRegion.getRegions().iterator();
 					while (sdRegion != null && !sdRegion.isDeleted() && taglibRegions.hasNext()) {
 						r = (ITextRegion) taglibRegions.next();
@@ -1729,9 +1750,9 @@ public class JSPTranslator {
 	 * @param addToMap
 	 */
 	private void appendToBuffer(String newText, StringBuffer buffer, boolean addToMap, ITextRegionCollection jspReferenceRegion, int jspPositionStart, int jspPositionLength, boolean isIndirect) {
-		
+
 		int origNewTextLength = newText.length();
-		
+
 		// nothing to append
 		if (jspReferenceRegion == null)
 			return;
@@ -2143,7 +2164,7 @@ public class JSPTranslator {
 		}
 		else if (r != null && r.getType() == DOMRegionContext.XML_CDATA_TEXT) {
 			if (r instanceof ITextRegionContainer) // only interested in
-													// contents
+			// contents
 			{
 				// navigate to next region container (which should be a JSP
 				// region)
