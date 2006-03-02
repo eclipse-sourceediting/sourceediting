@@ -12,23 +12,15 @@
 
 package org.eclipse.jst.jsp.ui.internal.java.refactoring;
 
-import org.eclipse.core.resources.IResource;
-import org.eclipse.jdt.core.IJavaElement;
-import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jdt.internal.ui.refactoring.reorg.ReorgMoveWizard;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jst.jsp.ui.internal.JSPUIMessages;
-import org.eclipse.jst.jsp.ui.internal.Logger;
-import org.eclipse.ltk.core.refactoring.participants.MoveRefactoring;
-import org.eclipse.ltk.ui.refactoring.RefactoringWizard;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.ui.IActionDelegate2;
 import org.eclipse.ui.IEditorActionDelegate;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.sse.ui.internal.util.PlatformStatusLineUtil;
 
 /**
@@ -119,32 +111,6 @@ public class JSPMoveElementActionDelegate implements IEditorActionDelegate, IAct
 		// do nothing
 	}
 
-	private IJavaElement[] getSelectedElements() {
 
-		IJavaElement[] elements = new IJavaElement[0];
-		if (fEditor instanceof ITextEditor)
-			elements = JSPJavaSelectionProvider.getSelection((ITextEditor) fEditor);
-		return elements;
-	}
-
-	private IResource[] getResources(IJavaElement[] elements) {
-		IResource[] resources = new IResource[elements.length];
-		for (int i = 0; i < elements.length; i++) {
-			try {
-				resources[i] = elements[i].getPrimaryElement().getCorrespondingResource();// elements[i].getResource();
-			}
-			catch (JavaModelException e) {
-				Logger.logException(e);
-			}
-		}
-		return resources;
-	}
 	
-	/**
-	 * will change post 3.0 with public move support
-	 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=61817
-	 */
-	private RefactoringWizard createWizard(MoveRefactoring refactoring) {
-		return new ReorgMoveWizard(refactoring);
-	}
 }
