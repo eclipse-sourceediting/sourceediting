@@ -11,7 +11,6 @@ package org.eclipse.wst.web.internal.deployables;
 import java.util.Properties;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.wst.common.componentcore.ComponentCore;
 import org.eclipse.wst.common.componentcore.internal.util.IModuleConstants;
 import org.eclipse.wst.common.componentcore.resources.IVirtualComponent;
@@ -49,21 +48,6 @@ public class StaticWebDeployable extends ComponentDeployable implements IStaticW
     		aURI = aURI.substring(1);
     	return aURI;
 	 }
-	 
-	 private boolean isProjectOfType(IProject project, String typeID) {
-		IFacetedProject facetedProject = null;
-		try {
-			facetedProject = ProjectFacetsManager.create(project);
-		} catch (CoreException e) {
-			return false;
-		}
-		
-		if (facetedProject !=null && ProjectFacetsManager.isProjectFacetDefined(typeID)) {
-			IProjectFacet projectFacet = ProjectFacetsManager.getProjectFacet(typeID);
-			return projectFacet!=null && facetedProject.hasProjectFacet(projectFacet);
-		}
-		return false;
-	}
 	 
 	public String getVersion() {
 		IFacetedProject facetedProject = null;

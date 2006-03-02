@@ -32,6 +32,9 @@ import org.eclipse.wst.common.componentcore.resources.IVirtualContainer;
 import org.eclipse.wst.common.componentcore.resources.IVirtualFolder;
 import org.eclipse.wst.common.componentcore.resources.IVirtualReference;
 import org.eclipse.wst.common.componentcore.resources.IVirtualResource;
+import org.eclipse.wst.common.project.facet.core.IFacetedProject;
+import org.eclipse.wst.common.project.facet.core.IProjectFacet;
+import org.eclipse.wst.common.project.facet.core.ProjectFacetsManager;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.ServerUtil;
 import org.eclipse.wst.server.core.internal.ModuleFile;
@@ -82,11 +85,13 @@ public abstract class ComponentDeployable extends ProjectModule {
 	    	IVirtualReference[] components = component.getReferences();
 	    	for (int i = 0; i < components.length; i++) {
 				IVirtualReference reference = components[i];
-				IVirtualComponent virtualComp = reference.getReferencedComponent();
-				if (virtualComp != null && virtualComp.getProject()!=component.getProject()) {
-					Object module = ServerUtil.getModule(virtualComp.getProject());
-					if (module != null && !modules.contains(module))
-						modules.add(module);
+				if (reference != null && reference.getDependencyType()==IVirtualReference.DEPENDENCY_TYPE_USES) {
+					IVirtualComponent virtualComp = reference.getReferencedComponent();
+					if (virtualComp != null && virtualComp.getProject()!=component.getProject()) {
+						Object module = ServerUtil.getModule(virtualComp.getProject());
+						if (module != null && !modules.contains(module))
+							modules.add(module);
+					}
 				}
 			}
 		}
@@ -112,12 +117,19 @@ public abstract class ComponentDeployable extends ProjectModule {
 			if (res[j] instanceof IContainer) {
 				IContainer cc = (IContainer) res[j];
 				
-				IPath newPath = path.append(cc.getName());
+				IPath newPath = path.append(cc.getName()).makeRelative();
 				// Retrieve already existing module folder if applicable
 				ModuleFolder mf = (ModuleFolder) getExistingModuleResource(members,newPath);
 				if (mf == null) {
-					mf = new ModuleFolder(cc, cc.getName(), path);
-					list.add(mf);
+					mf = new ModuleFolder(cc, cc.getName(), newPath);
+					ModuleFolder parent = (ModuleFolder) getExistingModuleResource(members, path);
+					if (path.isEmpty())
+						members.add(mf);
+					else {
+						if (parent == null)
+							parent = ensureParentExists(path, cc);
+						addMembersToModuleFolder(parent, new IModuleResource[] {mf});
+					}
 				}
 				IModuleResource[] mr = getMembers(cc, newPath, javaPath, javaCont);
 				
@@ -155,10 +167,17 @@ public abstract class ComponentDeployable extends ProjectModule {
 			if (res[j] instanceof IVirtualContainer) {
 				IVirtualContainer cc = (IVirtualContainer) res[j];
 				// Retrieve already existing module folder if applicable
-				ModuleFolder mf = (ModuleFolder) getExistingModuleResource(members,new Path(cc.getName()));
+				ModuleFolder mf = (ModuleFolder) getExistingModuleResource(members,path.append(new Path(cc.getName()).makeRelative()));
 				if (mf == null) {
 					mf = new ModuleFolder((IContainer)cc.getUnderlyingResource(), cc.getName(), path);
-					list.add(mf);
+					ModuleFolder parent = (ModuleFolder) getExistingModuleResource(members, path);
+					if (path.isEmpty())
+						members.add(mf);
+					else {
+						if (parent == null)
+							parent = ensureParentExists(path, (IContainer)cc.getUnderlyingResource());
+						addMembersToModuleFolder(parent, new IModuleResource[] {mf});
+					}
 				}
 				IModuleResource[] mr = getMembers(cc, path.append(cc.getName()));
 				addMembersToModuleFolder(mf, mr);
@@ -175,10 +194,25 @@ public abstract class ComponentDeployable extends ProjectModule {
 		return mr;
 	}
 	
+	protected ModuleFolder ensureParentExists(IPath path, IContainer cc) {
+		ModuleFolder parent = (ModuleFolder) getExistingModuleResource(members, path);
+		if (parent == null) {
+			String folderName = path.lastSegment();
+			IPath folderPath = Path.EMPTY;
+			if (path.segmentCount()>1)
+				folderPath = path.removeLastSegments(1);
+			parent = new ModuleFolder(cc, folderName, folderPath);
+			if (path.segmentCount()>1)
+				addMembersToModuleFolder(ensureParentExists(path.removeLastSegments(1),cc), new IModuleResource[] {parent});
+			else
+				members.add(parent);
+		}
+		return parent;
+	}
 	protected boolean isFileInSourceContainer(IFile file) {
 		return false;
 	}
-	private IModuleResource getExistingModuleResource(List aList, IPath path) {
+	protected IModuleResource getExistingModuleResource(List aList, IPath path) {
     	IModuleResource result = null;
     	// If the list is empty, return null
     	if (aList==null || aList.isEmpty())
@@ -191,7 +225,8 @@ public abstract class ComponentDeployable extends ProjectModule {
 	    			result = moduleResource;
 	    		// if it is a folder, check its children for the resource path
 	    		else if (moduleResource instanceof IModuleFolder) {
-	    			result = getExistingModuleResource(Arrays.asList(((IModuleFolder)moduleResource).members()),path);
+	    			if (((IModuleFolder)moduleResource).members()!=null)
+	    				result = getExistingModuleResource(Arrays.asList(((IModuleFolder)moduleResource).members()),path);
 	    		}
 	    		i++;
     	} while (result == null && i<aList.size() );
@@ -244,13 +279,36 @@ public abstract class ComponentDeployable extends ProjectModule {
 				if (mf == null)
 					continue;
 				IModuleResource moduleParent = getExistingModuleResource(members, mf.getModuleRelativePath());
+				
 				if (moduleParent != null && moduleParent instanceof ModuleFolder)
 					addMembersToModuleFolder((ModuleFolder)moduleParent, new IModuleResource[]{mf});
-				else
-					utilMembers.add(mf);
+				else {
+					if (mf.getModuleRelativePath().isEmpty())
+						members.add(mf);
+					else {
+						if (moduleParent == null)
+							moduleParent = ensureParentExists(mf.getModuleRelativePath(), (IContainer)vc.getRootFolder().getUnderlyingResource());
+						addMembersToModuleFolder((ModuleFolder)moduleParent, new IModuleResource[] {mf});
+					}
+				}
 			}
     	}
     	return utilMembers;	
+	}
+	
+	protected static boolean isProjectOfType(IProject project, String typeID) {
+		IFacetedProject facetedProject = null;
+		try {
+			facetedProject = ProjectFacetsManager.create(project);
+		} catch (CoreException e) {
+			return false;
+		}
+		
+		if (facetedProject !=null && ProjectFacetsManager.isProjectFacetDefined(typeID)) {
+			IProjectFacet projectFacet = ProjectFacetsManager.getProjectFacet(typeID);
+			return projectFacet!=null && facetedProject.hasProjectFacet(projectFacet);
+		}
+		return false;
 	}
 
 	/**
