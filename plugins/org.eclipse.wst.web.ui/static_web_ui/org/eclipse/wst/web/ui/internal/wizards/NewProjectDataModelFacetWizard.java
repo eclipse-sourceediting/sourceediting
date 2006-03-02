@@ -15,10 +15,14 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProduct;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jem.util.emf.workbench.ProjectUtilities;
@@ -35,9 +39,13 @@ import org.eclipse.ui.wizards.newresource.BasicNewResourceWizard;
 import org.eclipse.wst.common.componentcore.datamodel.properties.IFacetDataModelProperties;
 import org.eclipse.wst.common.componentcore.datamodel.properties.IFacetProjectCreationDataModelProperties;
 import org.eclipse.wst.common.componentcore.internal.operation.FacetProjectCreationOperation;
+import org.eclipse.wst.common.frameworks.datamodel.AbstractDataModelOperation;
+import org.eclipse.wst.common.frameworks.datamodel.AbstractDataModelProvider;
 import org.eclipse.wst.common.frameworks.datamodel.DataModelEvent;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModelListener;
+import org.eclipse.wst.common.frameworks.datamodel.IDataModelOperation;
+import org.eclipse.wst.common.frameworks.internal.datamodel.ExtendableOperationImpl;
 import org.eclipse.wst.common.frameworks.internal.datamodel.ui.DataModelWizardPage;
 import org.eclipse.wst.common.project.facet.core.IFacetedProject;
 import org.eclipse.wst.common.project.facet.core.IFacetedProjectTemplate;
@@ -275,9 +283,7 @@ public abstract class NewProjectDataModelFacetWizard extends AddRemoveFacetsWiza
 	 * @see org.eclipse.wst.common.frameworks.internal.ui.wizard.WTPWizard#postPerformFinish()
 	 */
 	protected void postPerformFinish() throws InvocationTargetException {
-
 		if (getFinalPerspectiveID() != null && getFinalPerspectiveID().length() > 0) {
-
 			IConfigurationElement element = new DelegateConfigurationElement(configurationElement) {
 				public String getAttribute(String aName) {
 					if (aName.equals("finalPerspective")) { //$NON-NLS-1$
@@ -289,8 +295,26 @@ public abstract class NewProjectDataModelFacetWizard extends AddRemoveFacetsWiza
 			BasicNewProjectResourceWizard.updatePerspective(element);
 		} else
 			BasicNewProjectResourceWizard.updatePerspective(configurationElement);
+		
 		String projName = getProjectName();
 		BasicNewResourceWizard.selectAndReveal(ProjectUtilities.getProject(projName), WSTWebUIPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow());
+		try {
+			getFacetProjectNotificationOperation().execute(new NullProgressMonitor(), null);
+		} catch (ExecutionException e) {
+			throw new InvocationTargetException(e);
+		}
+	}
+
+	protected IDataModelOperation getFacetProjectNotificationOperation() {
+		return new ExtendableOperationImpl(new AbstractDataModelOperation(this.model) {
+			public String getID() {
+				return "org.eclipse.wst.common.componentcore.internal.operation.FacetProjectCreationOperation"; //$NON-NLS-1$
+			}
+
+			public IStatus execute(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
+				return AbstractDataModelProvider.OK_STATUS;
+			}
+		});
 	}
 
 	/**
