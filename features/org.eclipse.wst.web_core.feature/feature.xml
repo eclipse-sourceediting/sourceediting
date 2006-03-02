@@ -17,8 +17,8 @@
       <import feature="org.eclipse.platform" version="3.2" match="equivalent"/>
       <import feature="org.eclipse.emf" version="2.2" match="equivalent"/>
       <import feature="org.eclipse.jem" version="1.2" match="equivalent"/>
-      <import feature="org.eclipse.wst.server_core.feature" version="1.0.0" match="equivalent"/>
-      <import feature="org.eclipse.wst.common_core.feature" version="1.0.0" match="equivalent"/>
+      <import feature="org.eclipse.wst.server_core.feature" version="1.0.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.wst.common_core.feature" version="1.0.0" match="greaterOrEqual"/>
    </requires>
 
    <plugin
