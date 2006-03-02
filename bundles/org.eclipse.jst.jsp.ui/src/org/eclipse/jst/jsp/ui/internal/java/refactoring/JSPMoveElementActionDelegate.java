@@ -31,15 +31,15 @@ import org.eclipse.wst.sse.ui.internal.util.PlatformStatusLineUtil;
  * https://bugs.eclipse.org/bugs/show_bug.cgi?id=61817 
  */
 public class JSPMoveElementActionDelegate implements IEditorActionDelegate, IActionDelegate2, IViewActionDelegate {
-	private IEditorPart fEditor;
+	//private IEditorPart fEditor;
 
 	public void setActiveEditor(IAction action, IEditorPart targetEditor) {
-		fEditor = targetEditor;
+		//fEditor = targetEditor;
 	}
 
 	public void dispose() {
 		// nulling out just in case
-		fEditor = null;
+		//fEditor = null;
 	}
 
 	public void init(IAction action) {
