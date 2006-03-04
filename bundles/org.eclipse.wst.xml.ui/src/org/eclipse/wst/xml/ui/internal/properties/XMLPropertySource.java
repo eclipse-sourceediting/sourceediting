@@ -52,12 +52,20 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 
 	private static final boolean fSetExpertFilter = false;
 
-	// derive categories from CMDataTypes; disabled until display strings can
-	// be planned
+	/**
+	 * derive categories from CMDataTypes; disabled until display strings can
+	 * be planned
+	 */
 	private final static boolean fShouldDeriveCategories = false;
 
 	private final static boolean fSortEnumeratedValues = true;
-	private boolean fCaseSensitive = true;
+
+	/**
+	 * Note: we want the default fCaseSensitive to be true, but, to avoid
+	 * meaningless double initialization, we leave default here, and set in
+	 * constructor only.
+	 */
+	private boolean fCaseSensitive;
 	private IPropertyDescriptor[] fDescriptors = null;
 	private Node fNode = null;
 
@@ -65,17 +73,60 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 
 	public XMLPropertySource(INodeNotifier target) {
 		super();
-		fNode = (Node) target;
-		if (fNode instanceof IDOMNode) {
-			Document ownerDocument = fNode.getOwnerDocument();
-			if (ownerDocument == null) {
-				// if ownerDocument is null, then it must be the Document Node
-				ownerDocument = (Document) fNode;
-			}
-			DocumentTypeAdapter adapter = (DocumentTypeAdapter) ((INodeNotifier) ownerDocument).getAdapterFor(DocumentTypeAdapter.class);
-			if (adapter != null)
-				fCaseSensitive = adapter.getTagNameCase() == DocumentTypeAdapter.STRICT_CASE;
+		fNode = initNode(target);
+		fCaseSensitive = initCaseSensitive(fNode);
+
+	}
+
+	/** seperate method just to isolate error processing */
+	private Node initNode(INodeNotifier target) {
+		Node node = null;
+		if (target instanceof Node) {
+			node = (Node) target;
 		}
+		else {
+			throw new IllegalArgumentException("XMLPropertySource is only for Nodes");
+		}
+		return node;
+	}
+
+	private boolean initCaseSensitive(Node node) {
+		// almost all tags are case senstive, except that old HTML
+		boolean caseSensitive = true;
+		DocumentTypeAdapter adapter = null;
+		if (node instanceof IDOMNode) {
+			adapter = getDocTypeFromDOMNode(node);
+		}
+		if (adapter != null) {
+			caseSensitive = (adapter.getTagNameCase() == DocumentTypeAdapter.STRICT_CASE);
+		}
+		return caseSensitive;
+	}
+
+	/**
+	 * by "internal spec" the DOCTYPE adapter is only available from Document
+	 * Node
+	 * 
+	 * @return {@link DocumentTypeAdapter}
+	 */
+	private DocumentTypeAdapter getDocTypeFromDOMNode(Node node) {
+		DocumentTypeAdapter adapter = null;
+		Document ownerDocument = node.getOwnerDocument();
+		if (ownerDocument == null) {
+			// if ownerDocument is null, then fNode must be the Document Node
+			// [old, old comment]
+			// hmmmm, guess not. See
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=130233
+			// guess this is used for many INodeNotifiers, not just XML.
+			// (and DTD's use IDOMNode? ... that doesn't sound quite right
+			// ... but, maybe a seperate issue).
+			if (node instanceof Document) {
+				ownerDocument = (Document) node;
+			}
+		}
+		adapter = (DocumentTypeAdapter) ((INodeNotifier) ownerDocument).getAdapterFor(DocumentTypeAdapter.class);
+
+		return adapter;
 	}
 
 	private String[] _getValidFixedStrings(CMAttributeDeclaration attrDecl, CMDataType helper) {
