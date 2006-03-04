@@ -353,6 +353,15 @@ public class ELGeneratorVisitor implements JSPELParserVisitor {
 	 * Value node
 	 */
 	public Object visit(ASTValue node, Object data) {
+		if(node.jjtGetNumChildren() >= 2) {
+			if(node.jjtGetChild(0) instanceof ASTValuePrefix && node.jjtGetChild(1) instanceof ASTValueSuffix) {
+				ASTValuePrefix prefix = (ASTValuePrefix) node.jjtGetChild(0);
+				ASTValueSuffix suffix = (ASTValueSuffix) node.jjtGetChild(1);
+				if(prefix.firstToken.image.equals("pageContext") && suffix.getPropertyNameToken().image.equals("request")) {
+					append("((HTTPServletRequest)");
+				}
+			}
+		}
 		return node.childrenAccept(this, data);	
 	}
 
@@ -396,8 +405,21 @@ public class ELGeneratorVisitor implements JSPELParserVisitor {
 		} else if(null != node.getPropertyNameToken()) {
 			Token suffix = node.getPropertyNameToken();
 			String ucaseName = suffix.image.substring(0, 1).toUpperCase() + suffix.image.substring(1, suffix.image.length()); 
+
+			// This is a special case.  Note that the type system, no matter how much type information
+			// we would have wouldn't give us the correct result.  We're looking for "pageContext.request" 
+			// here and will add a downcast to (HTTPServletRequest)
+			
 			append(node.firstToken);
 			append("get" + ucaseName + "()", suffix); //$NON-NLS-1$ //$NON-NLS-2$
+			
+			SimpleNode parent = (SimpleNode) node.jjtGetParent();
+			if(suffix.image.equals("request") && parent instanceof ASTValue && //$NON-NLS-1$
+					parent.jjtGetParent() instanceof ASTUnaryExpression && parent.firstToken.image.equals("pageContext")) { //$NON-NLS-1$
+				append(")");
+			} 
+
+
 		} else {
 			append(node.firstToken);
 		}
