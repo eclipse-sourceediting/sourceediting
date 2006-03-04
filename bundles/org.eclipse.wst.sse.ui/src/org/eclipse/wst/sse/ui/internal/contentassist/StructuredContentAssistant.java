@@ -49,7 +49,7 @@ public class StructuredContentAssistant extends ContentAssistant {
 		if (fProcessors == null)
 			fProcessors = new HashMap();
 
-		CompoundContentAssistProcessor compoundProcessor = (CompoundContentAssistProcessor) getContentAssistProcessor(partitionType);
+		CompoundContentAssistProcessor compoundProcessor = getExistingContentAssistProcessor(partitionType);
 
 		// if processor is null, you want to remove all processors of
 		// contentType
@@ -70,6 +70,21 @@ public class StructuredContentAssistant extends ContentAssistant {
 			fProcessors.put(partitionType, compoundProcessor);
 		}
 		super.setContentAssistProcessor(compoundProcessor, partitionType);
+	}
+
+	private CompoundContentAssistProcessor getExistingContentAssistProcessor(String partitionType) {
+		CompoundContentAssistProcessor compoundContentAssistProcessor = null;
+		IContentAssistProcessor processor = super.getContentAssistProcessor(partitionType);
+		if (processor != null) {
+			if (processor instanceof CompoundContentAssistProcessor) {
+				compoundContentAssistProcessor = (CompoundContentAssistProcessor) processor;
+			}
+			else {
+				throw new IllegalStateException("StructuredContentAssistant use CompoundContentAssistProcessor");
+			}
+		}
+		return compoundContentAssistProcessor;
+
 	}
 
 	/**
