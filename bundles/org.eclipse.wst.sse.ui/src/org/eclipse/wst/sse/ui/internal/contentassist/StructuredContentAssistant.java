@@ -80,7 +80,7 @@ public class StructuredContentAssistant extends ContentAssistant {
 				compoundContentAssistProcessor = (CompoundContentAssistProcessor) processor;
 			}
 			else {
-				throw new IllegalStateException("StructuredContentAssistant use CompoundContentAssistProcessor");
+				throw new IllegalStateException("StructuredContentAssistant use CompoundContentAssistProcessor"); //$NON-NLS-1$
 			}
 		}
 		return compoundContentAssistProcessor;
