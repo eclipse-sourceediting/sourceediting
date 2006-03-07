@@ -96,15 +96,40 @@ public class NewJSPWizard extends Wizard implements INewWizard {
 		return fValidExtensions;
 	}
 
+	/**
+	 * Verifies if fileName is valid name for content type. Takes base content
+	 * type into consideration.
+	 * 
+	 * @param fileName
+	 * @return true if extension is valid for this content type
+	 */
+	boolean extensionValidForContentType(String fileName) {
+		boolean valid = false;
+
+		IContentType type = getContentType();
+		// there is currently an extension
+		if (fileName.lastIndexOf('.') != -1) {
+			// check what content types are associated with current extension
+			IContentType[] types = Platform.getContentTypeManager().findContentTypesFor(fileName);
+			int i = 0;
+			while (i < types.length && !valid) {
+				valid = types[i].isKindOf(type);
+				++i;
+			}
+		}
+		else
+			valid = true; // no extension so valid
+		return valid;
+	}
+
 	public void addPages() {
 		fNewFilePage = new WizardNewFileCreationPage("JSPWizardNewFileCreationPage", new StructuredSelection(IDE.computeSelectedResources(fSelection))) { //$NON-NLS-1$
 			protected boolean validatePage() {
-				IContentType type = getContentType();
 				String fileName = getFileName();
 				IPath fullPath = getContainerFullPath();
 				if ((fullPath != null) && (fullPath.isEmpty() == false) && (fileName != null)) {
 					// check that filename does not contain invalid extension
-					if ((fileName.lastIndexOf('.') != -1) && (!type.isAssociatedWith(fileName))) {
+					if (!extensionValidForContentType(fileName)) {
 						setErrorMessage(NLS.bind(JSPUIMessages._ERROR_FILENAME_MUST_END_JSP, getValidExtensions().toString()));
 						return false;
 					}

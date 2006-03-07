@@ -26,6 +26,7 @@ import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -272,9 +273,8 @@ public class NewModelWizard extends Wizard implements INewWizard
 
     protected boolean validatePage() {
 		String fullFileName = getFileName();
-		String fileExtension = (new Path(fullFileName)).getFileExtension();
-		if (fileExtension != null && (!getValidExtensions().contains(fileExtension))) {
-			setErrorMessage(XMLWizardsMessages._ERROR_BAD_FILENAME_EXTENSION);
+		if (!extensionValidForContentType(fullFileName)) {
+			setErrorMessage(NLS.bind(XMLWizardsMessages._ERROR_BAD_FILENAME_EXTENSION, getValidExtensions().toString()));
 			return false;
 		}
 		// no fileExtension, let's check for this file with default file extension
@@ -320,6 +320,32 @@ public class NewModelWizard extends Wizard implements INewWizard
 			fValidExtensions = new ArrayList(Arrays.asList(type.getFileSpecs(IContentType.FILE_EXTENSION_SPEC)));
 		}
 		return fValidExtensions;
+	}
+	
+	/**
+	 * Verifies if fileName is valid name for content type. Takes base content
+	 * type into consideration.
+	 * 
+	 * @param fileName
+	 * @return true if extension is valid for this content type
+	 */
+	boolean extensionValidForContentType(String fileName) {
+		boolean valid = false;
+
+		IContentType type = Platform.getContentTypeManager().getContentType(ContentTypeIdForXML.ContentTypeID_XML);
+		// there is currently an extension
+		if (fileName.lastIndexOf('.') != -1) {
+			// check what content types are associated with current extension
+			IContentType[] types = Platform.getContentTypeManager().findContentTypesFor(fileName);
+			int i = 0;
+			while (i < types.length && !valid) {
+				valid = types[i].isKindOf(type);
+				++i;
+			}
+		}
+		else
+			valid = true; // no extension so valid
+		return valid;
 	}
   }
 }
