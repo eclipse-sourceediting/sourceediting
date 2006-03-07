@@ -17,6 +17,7 @@ import java.util.List;
 import org.eclipse.wst.common.core.search.pattern.SearchPattern;
 import org.eclipse.wst.xml.core.internal.search.ComponentSearchContributor;
 import org.eclipse.wst.xml.core.internal.search.XMLSearchPattern;
+import org.eclipse.xsd.util.XSDConstants;
 
 public class XSDSearchContributor extends ComponentSearchContributor  {
  
@@ -26,21 +27,22 @@ public class XSDSearchContributor extends ComponentSearchContributor  {
 		String ns = IXSDSearchConstants.XMLSCHEMA_NAMESPACE;
 
 		List patterns = new ArrayList();
-		patterns.add(new XMLSearchPattern( ns, "element", "ref"));
-		patterns.add(new XMLSearchPattern( ns, "element", "substitutionGroup"));
+		patterns.add(new XMLSearchPattern( ns, XSDConstants.ELEMENT_ELEMENT_TAG, XSDConstants.REF_ATTRIBUTE));
+		patterns.add(new XMLSearchPattern( ns, XSDConstants.ELEMENT_ELEMENT_TAG, XSDConstants.SUBSTITUTIONGROUP_ATTRIBUTE));
 		references.put(IXSDSearchConstants.ELEMENT_META_NAME, patterns);
 
 		patterns = new ArrayList();
-		patterns.add(new XMLSearchPattern( ns, "restriction", "base"));
-		patterns.add(new XMLSearchPattern( ns, "extension", "base"));
-		patterns.add(new XMLSearchPattern( ns, "element", "type"));
+		patterns.add(new XMLSearchPattern( ns, XSDConstants.RESTRICTION_ELEMENT_TAG, XSDConstants.BASE_ATTRIBUTE));
+		patterns.add(new XMLSearchPattern( ns, XSDConstants.EXTENSION_ELEMENT_TAG, XSDConstants.BASE_ATTRIBUTE));
+		patterns.add(new XMLSearchPattern( ns, XSDConstants.ELEMENT_ELEMENT_TAG, XSDConstants.TYPE_ATTRIBUTE));
 		references.put(IXSDSearchConstants.COMPLEX_TYPE_META_NAME, patterns);
 
 		patterns = new ArrayList();
-		patterns.add(new XMLSearchPattern( ns, "restriction", "base"));
-		patterns.add(new XMLSearchPattern( ns, "extension", "base"));
-		patterns.add(new XMLSearchPattern( ns, "attribute", "type"));
-		patterns.add(new XMLSearchPattern( ns, "union", "memberTypes"));
+		patterns.add(new XMLSearchPattern( ns, XSDConstants.RESTRICTION_ELEMENT_TAG, XSDConstants.BASE_ATTRIBUTE));
+		patterns.add(new XMLSearchPattern( ns, XSDConstants.ELEMENT_ELEMENT_TAG, XSDConstants.TYPE_ATTRIBUTE));
+		patterns.add(new XMLSearchPattern( ns, XSDConstants.ATTRIBUTE_ELEMENT_TAG, XSDConstants.TYPE_ATTRIBUTE));
+		patterns.add(new XMLSearchPattern( ns, XSDConstants.UNION_ELEMENT_TAG, XSDConstants.MEMBERTYPES_ATTRIBUTE));
+		patterns.add(new XMLSearchPattern( ns, XSDConstants.LIST_ELEMENT_TAG, XSDConstants.ITEMTYPE_ATTRIBUTE));
 
 		references.put(IXSDSearchConstants.SIMPLE_TYPE_META_NAME, patterns);
 
