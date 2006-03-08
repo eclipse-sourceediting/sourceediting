@@ -13,6 +13,7 @@ package org.eclipse.wst.xsd.ui.internal.wizards;
 import java.io.ByteArrayInputStream;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -21,11 +22,13 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.ISetSelectionTarget;
 import org.eclipse.wst.sse.core.internal.encoding.CommonEncodingPreferenceNames;
@@ -149,9 +152,17 @@ public class NewXSDWizard extends Wizard implements INewWizard {
 			Display.getDefault().asyncExec(new Runnable() {
 				public void run() {
 					try {
-						workbenchWindow.getActivePage().openEditor(new FileEditorInput(iFile), XSDEditorPlugin.XSD_EDITOR_ID);
+						String editorId = null;
+						IEditorDescriptor editor = PlatformUI.getWorkbench().getEditorRegistry().getDefaultEditor(iFile.getLocation().toOSString(), iFile.getContentDescription().getContentType());
+						if (editor != null) {
+							editorId = editor.getId();
+						}
+						workbenchWindow.getActivePage().openEditor(new FileEditorInput(iFile), editorId);
+						
 					}
 					catch (PartInitException ex) {
+					}
+					catch (CoreException ex) {
 					}
 				}
 			});
