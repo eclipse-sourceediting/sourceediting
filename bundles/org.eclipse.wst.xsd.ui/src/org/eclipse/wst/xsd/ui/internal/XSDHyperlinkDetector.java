@@ -33,6 +33,7 @@ import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDSchemaDirective;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.eclipse.xsd.XSDTypeDefinition;
+import org.eclipse.xsd.XSDVariety;
 import org.eclipse.xsd.util.XSDConstants;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Node;
@@ -204,26 +205,34 @@ public class XSDHyperlinkDetector extends BaseHyperlinkDetector
       XSDSimpleTypeDefinition typeDef = (XSDSimpleTypeDefinition) xsdComp;
 
       // Simple types can be one of restriction, list or union.
-      // TODO Is there a better way of determining what type we have?
-      
-      component = typeDef.getBaseTypeDefinition();
-      
-      if (component == null)
-      {
-        component = typeDef.getItemTypeDefinition();
 
-        if (component == null)
-        {
-          // if itemType attribute is not set, then check
-          // for memberTypes
-          List memberTypes = typeDef.getMemberTypeDefinitions();
-          if (memberTypes != null && memberTypes.size() > 0)
+      XSDVariety variety = typeDef.getVariety();
+      int varietyType = variety.getValue();
+      
+      switch (varietyType)
+      {
+        case XSDVariety.ATOMIC : 
           {
-            // ISSUE: What if there are more than one type?
-            // This could be a case for multiple hyperlinks at the same location?
-            component = (XSDConcreteComponent) memberTypes.get(0);
+            component = typeDef.getBaseTypeDefinition();
           }
-        }
+          break;
+        case XSDVariety.LIST : 
+          {
+            component = typeDef.getItemTypeDefinition();
+          }
+          break;
+        case XSDVariety.UNION : 
+          {
+            List memberTypes = typeDef.getMemberTypeDefinitions();
+            if (memberTypes != null && memberTypes.size() > 0)
+            {
+              // ISSUE: What if there are more than one type?
+              // This could be a case for multiple hyperlinks at the same
+              // location.
+              component = (XSDConcreteComponent) memberTypes.get(0);
+            }
+          }
+          break;
       }
     }
     else if (xsdComp instanceof XSDTypeDefinition)
@@ -236,6 +245,19 @@ public class XSDHyperlinkDetector extends BaseHyperlinkDetector
       XSDSchemaDirective directive = (XSDSchemaDirective) xsdComp;
       component = directive.getResolvedSchema();
     }
+
+    // Avoid types located in the schema for schema (the built in XSD types) 
+    // as we don't want to navigate to their definition.
+    
+    if (component != null)
+    {
+      XSDSchema schema =  component.getSchema();
+
+      if (schema.equals(schema.getSchemaForSchema())) {
+        component = null;
+      }
+    }
+    
     return component;
   }
 
