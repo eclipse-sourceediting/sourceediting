@@ -1099,25 +1099,30 @@ public class JSPTranslator {
 		// tag name is not jsp
 		// handle embedded jsp attributes...
 		ITextRegion embedded = null;
-		Iterator attrRegions = null;
-		ITextRegion attrChunk = null;
+		//Iterator attrRegions = null;
+		//ITextRegion attrChunk = null;
 		while (regions.hasNext()) {
 			embedded = (ITextRegion) regions.next();
 			if (embedded instanceof ITextRegionContainer) {
 				// parse out container
-				attrRegions = ((ITextRegionContainer) embedded).getRegions().iterator();
-				while (attrRegions.hasNext()) {
-					attrChunk = (ITextRegion) attrRegions.next();
-					String type = attrChunk.getType();
-					// embedded JSP in attribute support only want to
-					// translate one time per
-					// embedded region so we only translate on the JSP open
-					// tags (not content)
-					if (type == DOMJSPRegionContexts.JSP_EXPRESSION_OPEN || type == DOMJSPRegionContexts.JSP_SCRIPTLET_OPEN || type == DOMJSPRegionContexts.JSP_DECLARATION_OPEN || type == DOMJSPRegionContexts.JSP_DIRECTIVE_OPEN || type == DOMJSPRegionContexts.JSP_EL_OPEN) {
-						// now call jsptranslate
-						translateEmbeddedJSPInAttribute((ITextRegionContainer) embedded);
-					}
-				}
+				
+				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=130606
+				// fix exponential iteration problem w/ embedded expressions
+				translateEmbeddedJSPInAttribute((ITextRegionContainer) embedded);
+//				attrRegions = ((ITextRegionContainer) embedded).getRegions().iterator();
+//				while (attrRegions.hasNext()) {
+//					attrChunk = (ITextRegion) attrRegions.next();
+//					String type = attrChunk.getType();
+//					// embedded JSP in attribute support only want to
+//					// translate one time per
+//					// embedded region so we only translate on the JSP open
+//					// tags (not content)
+//					if (type == DOMJSPRegionContexts.JSP_EXPRESSION_OPEN || type == DOMJSPRegionContexts.JSP_SCRIPTLET_OPEN || type == DOMJSPRegionContexts.JSP_DECLARATION_OPEN || type == DOMJSPRegionContexts.JSP_DIRECTIVE_OPEN || type == DOMJSPRegionContexts.JSP_EL_OPEN) {
+//						// now call jsptranslate
+//						translateEmbeddedJSPInAttribute((ITextRegionContainer) embedded);
+//						break;
+//					}
+//				}
 			}
 		}
 	}
@@ -1814,8 +1819,11 @@ public class JSPTranslator {
 			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=128490
 			// length of 11 is the length of jsp:useBean
 			// and saves the expensive getText.equals call
-			if (r.getType() == DOMRegionContext.XML_TAG_NAME && r.getTextLength() == 11 && jspReferenceRegion.getText(r).equals("jsp:useBean")) { //$NON-NLS-1$
-				isUseBean = true;
+			if(r.getType() == DOMRegionContext.XML_TAG_NAME) {
+				if (r.getTextLength() == 11 && jspReferenceRegion.getText(r).equals("jsp:useBean")) { //$NON-NLS-1$
+					isUseBean = true;
+				}
+				// break no matter what if you hit tagname
 				break;
 			}
 		}
