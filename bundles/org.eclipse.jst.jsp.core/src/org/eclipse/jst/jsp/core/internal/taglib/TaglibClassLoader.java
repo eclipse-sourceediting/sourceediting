@@ -16,9 +16,10 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.jst.jsp.core.internal.Logger;
 
 
+
 /**
- * Custom classloader which allows you to add source directories
- * (folders containing .class files) and jars to the classpath.
+ * Custom classloader which allows you to add source directories (folders
+ * containing .class files) and jars to the classpath.
  * 
  * @author pavery
  */
@@ -27,15 +28,19 @@ public class TaglibClassLoader extends ClassLoader {
 	// for debugging
 	private static final boolean DEBUG;
 	static {
-		String value= Platform.getDebugOption("com.ibm.sse.model.jsp/debug/taglibclassloader"); //$NON-NLS-1$
-		DEBUG= value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
+		String value = Platform.getDebugOption("org.eclipse.jst.jsp.core/debug/taglibclassloader"); //$NON-NLS-1$
+		DEBUG = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
 	}
-    
+
 	private List jarsList = new ArrayList();
 	private List dirsList = new ArrayList();
 	private List usedJars = new ArrayList();
 	private List usedDirs = new ArrayList();
-	//private List loadedClassFilenames = new ArrayList();
+
+	private List failedClasses = new ArrayList(); // CL: added to optimize
+													// failed loading
+
+	// private List loadedClassFilenames = new ArrayList();
 
 	public TaglibClassLoader(ClassLoader parentLoader) {
 		super(parentLoader);
@@ -44,47 +49,59 @@ public class TaglibClassLoader extends ClassLoader {
 	/**
 	 * Adds a new jar to classpath.
 	 * 
-	 * @param filename - full path to the jar file
+	 * @param filename -
+	 *            full path to the jar file
 	 */
 	public void addJar(String filename) {
-	    if(DEBUG) System.out.println("trying to add: [" + filename + "] to classpath"); //$NON-NLS-1$ //$NON-NLS-2$
+		if (DEBUG)
+			System.out.println("trying to add: [" + filename + "] to classpath"); //$NON-NLS-1$ //$NON-NLS-2$
 		// don't add the same entry twice, or search times will get even worse
-		if(!jarsList.contains(filename)) {
+		if (!jarsList.contains(filename)) {
 			jarsList.add(filename);
-			if(DEBUG) System.out.println( " + [" + filename + "] added to classpath"); //$NON-NLS-1$ //$NON-NLS-2$
+			failedClasses = new ArrayList();
+			if (DEBUG)
+				System.out.println(" + [" + filename + "] added to classpath"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
-	}		
+	}
 
 	/**
 	 * Removes a jar from the classpath.
 	 * 
-	 * @param filename - full path to the jar file
+	 * @param filename -
+	 *            full path to the jar file
 	 */
 	public void removeJar(String filename) {
 		jarsList.remove(filename);
-		if(DEBUG) System.out.println("removed: [" + filename + "] from classpath"); //$NON-NLS-1$ //$NON-NLS-2$
+		failedClasses = new ArrayList();
+		if (DEBUG)
+			System.out.println("removed: [" + filename + "] from classpath"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
-	
+
 	public void addDirectory(String dirPath) {
-	    if(!dirsList.contains(dirPath)) {
-	        dirsList.add(dirPath);
-	        if(DEBUG) System.out.println("added: [" + dirPath + "] to classpath"); //$NON-NLS-1$ //$NON-NLS-2$
-	    }
+		if (!dirsList.contains(dirPath)) {
+			dirsList.add(dirPath);
+			failedClasses = new ArrayList();
+			if (DEBUG)
+				System.out.println("added: [" + dirPath + "] to classpath"); //$NON-NLS-1$ //$NON-NLS-2$
+		}
 	}
 
 	/**
 	 * Removes a directory from the classpath.
 	 * 
-	 * @param dirPath - full path of the directory
+	 * @param dirPath -
+	 *            full path of the directory
 	 */
 	public void removeDirectory(String dirPath) {
 		dirsList.remove(dirPath);
-		if(DEBUG) System.out.println("removed: [" + dirPath + "] from classpath"); //$NON-NLS-1$ //$NON-NLS-2$
+		failedClasses = new ArrayList();
+		if (DEBUG)
+			System.out.println("removed: [" + dirPath + "] from classpath"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**
-	 * Returns the list of JARs on this loader's classpath that contain classes
-	 * that have been loaded.
+	 * Returns the list of JARs on this loader's classpath that contain
+	 * classes that have been loaded.
 	 * 
 	 * @return List - the list of JARs
 	 */
@@ -96,7 +113,8 @@ public class TaglibClassLoader extends ClassLoader {
 	 * Returns a list of directories on this loader's classpath that contain
 	 * classes that have been loaded.
 	 * 
-	 * @return List - the list of directories (fully-qualified filename Strings)
+	 * @return List - the list of directories (fully-qualified filename
+	 *         Strings)
 	 */
 	public List getDirectoriesInUse() {
 		return usedDirs;
@@ -108,13 +126,12 @@ public class TaglibClassLoader extends ClassLoader {
 	 * 
 	 * @return List - the list of class filenames
 	 */
-//	public List getClassFilenamesFromDirectories() {
-//		return loadedClassFilenames;
-//	}
-
+	// public List getClassFilenamesFromDirectories() {
+	// return loadedClassFilenames;
+	// }
 	/**
-	 * Searches for the given class name on the defined classpath - directories
-	 * are checked before JARs.
+	 * Searches for the given class name on the defined classpath -
+	 * directories are checked before JARs.
 	 * 
 	 * @param className -
 	 *            the name of the class to find
@@ -122,8 +139,20 @@ public class TaglibClassLoader extends ClassLoader {
 	 * @throws ClassNotFoundException
 	 */
 	protected synchronized Class findClass(String className) throws ClassNotFoundException {
-	    
-	    if(DEBUG) System.out.println(">> TaglibClassLoader finding class: " + className); //$NON-NLS-1$
+		Class oldClass = findLoadedClass(className);
+		if (oldClass != null) {
+			if (DEBUG)
+				System.out.println(">> TaglibClassLoader " + this + " returning existing class: " + className); //$NON-NLS-1$
+			return oldClass;
+		}
+		if (failedClasses.contains(className)) {
+			if (DEBUG)
+				System.out.println(">> TaglibClassLoader " + this + " known missing class: " + className); //$NON-NLS-1$
+			throw new ClassNotFoundException();
+		}
+
+		if (DEBUG)
+			System.out.println(">> TaglibClassLoader " + this + " finding class: " + className); //$NON-NLS-1$
 
 		Class newClass = null;
 		JarFile jarfile = null;
@@ -141,13 +170,14 @@ public class TaglibClassLoader extends ClassLoader {
 			while (dirs.hasNext()) {
 				dirName = (String) dirs.next();
 				fileToFind = dirName + "/" + fileName; //$NON-NLS-1$
-				
+
 				f = new File(fileToFind);
 				if (f.exists()) {
 					stream = new FileInputStream(f);
 					usedDirs.add(dirName);
-					//loadedClassFilenames.add(fileToFind);
-					if(DEBUG) System.out.println(">> added file from dir: " + dirName + "/" + fileName); //$NON-NLS-1$ //$NON-NLS-2$
+					// loadedClassFilenames.add(fileToFind);
+					if (DEBUG)
+						System.out.println(">> added file from dir: " + dirName + "/" + fileName); //$NON-NLS-1$ //$NON-NLS-2$
 					break;
 
 				}
@@ -162,29 +192,33 @@ public class TaglibClassLoader extends ClassLoader {
 
 				byte[] byteArray = byteStream.toByteArray();
 				try {
-				    if(DEBUG) System.out.println(">> defining newClass:" + className); //$NON-NLS-1$
+					if (DEBUG)
+						System.out.println(">> defining newClass:" + className); //$NON-NLS-1$
 					newClass = defineClass(className, byteArray, 0, byteArray.length);
 					resolveClass(newClass);
 				}
-				catch (Throwable t){
-				    
-				    // j9 can give ClassCircularityError
-				    // parent should already have the class then
+				catch (Throwable t) {
+
+					// j9 can give ClassCircularityError
+					// parent should already have the class then
 					// try parent loader
-				    try {
-				        Class c = getParent().loadClass(className);
-				        if(DEBUG) System.out.println(">> loaded: " + className + " with: " + getParent()); //$NON-NLS-1$ //$NON-NLS-2$
-				        return c;
-				    }
-				    catch (ClassNotFoundException cnf) {
-				        if(DEBUG) cnf.printStackTrace();
-			        }
+					try {
+						Class c = getParent().loadClass(className);
+						if (DEBUG)
+							System.out.println(">> loaded: " + className + " with: " + getParent()); //$NON-NLS-1$ //$NON-NLS-2$
+						return c;
+					}
+					catch (ClassNotFoundException cnf) {
+						if (DEBUG)
+							cnf.printStackTrace();
+					}
 				}
 				stream.close();
 			}
 
 			if (stream == null) {
-				// still haven't found the class, so now try searching the jars
+				// still haven't found the class, so now try searching the
+				// jars
 				// search each of the jars until we find an entry matching the
 				// classname
 				Iterator jars = jarsList.iterator();
@@ -199,10 +233,11 @@ public class TaglibClassLoader extends ClassLoader {
 						continue;
 					}
 					try {
-					    jarfile = new JarFile(jarName);
+						jarfile = new JarFile(jarName);
 					}
-					catch (IOException e){
-					    if(DEBUG) Logger.logException("bad jar file", e); //$NON-NLS-1$
+					catch (IOException e) {
+						if (DEBUG)
+							Logger.logException("bad jar file", e); //$NON-NLS-1$
 					}
 					if (jarfile == null) {
 						continue;
@@ -210,9 +245,11 @@ public class TaglibClassLoader extends ClassLoader {
 
 					entry = jarfile.getJarEntry(fileName);
 
-					if(DEBUG) System.out.println("looking for filename: " + fileName + " in: " + jarfile.getName()); //$NON-NLS-1$ //$NON-NLS-2$
+					if (DEBUG)
+						System.out.println("looking for filename: " + fileName + " in: " + jarfile.getName()); //$NON-NLS-1$ //$NON-NLS-2$
 					if (entry != null) {
-					    if(DEBUG) System.out.println("found the entry: " + entry + " for filename: " + fileName); //$NON-NLS-1$ //$NON-NLS-2$
+						if (DEBUG)
+							System.out.println("found the entry: " + entry + " for filename: " + fileName); //$NON-NLS-1$ //$NON-NLS-2$
 						// found the class
 						if (!usedJars.contains(jarName)) {
 							// add the jar to the list of in-use jars
@@ -242,32 +279,38 @@ public class TaglibClassLoader extends ClassLoader {
 
 					byte[] byteArray = byteStream.toByteArray();
 					try {
-					    if(DEBUG) System.out.println(">> defining newClass:" + className); //$NON-NLS-1$
+						if (DEBUG)
+							System.out.println(">> defining newClass:" + className); //$NON-NLS-1$
 						// define the class from the byte array
 						newClass = defineClass(className, byteArray, 0, byteArray.length);
 						resolveClass(newClass);
 					}
-					catch(Throwable t) {
-					    // j9 can give ClassCircularityError
-					    // parent should already have the class then
-					    
+					catch (Throwable t) {
+						// j9 can give ClassCircularityError
+						// parent should already have the class then
+
 						// try parent
-					    try {
-					        Class c = getParent().loadClass(className);
-					        if(DEBUG) System.out.println(">> loaded: " + className + " with: " + getParent()); //$NON-NLS-1$ //$NON-NLS-2$
-					        return c;
-					    }
-					    catch (ClassNotFoundException cnf) {
-					        if(DEBUG) cnf.printStackTrace();
-				        }
-					}					    			
+						try {
+							Class c = getParent().loadClass(className);
+							if (DEBUG)
+								System.out.println(">> loaded: " + className + " with: " + getParent()); //$NON-NLS-1$ //$NON-NLS-2$
+							return c;
+						}
+						catch (ClassNotFoundException cnf) {
+							if (DEBUG)
+								cnf.printStackTrace();
+						}
+					}
 					stream.close();
 					jarfile.close();
 				}
 			}
-		} catch (Throwable t) {
+		}
+		catch (Throwable t) {
+			failedClasses.add(className);
 			return null;
-		} finally {
+		}
+		finally {
 			try {
 				if (stream != null) {
 					stream.close();
@@ -275,21 +318,24 @@ public class TaglibClassLoader extends ClassLoader {
 				if (jarfile != null) {
 					jarfile.close();
 				}
-			} catch (IOException ioe) {
+			}
+			catch (IOException ioe) {
 				// ioe.printStackTrace();
 				// just trying to close down anyway - ignore
 			}
 		}
 
 		if (newClass != null) {
-		    if(DEBUG) System.out.println(">> loaded: " + newClass + " with: " + this); //$NON-NLS-1$ //$NON-NLS-2$
+			if (DEBUG)
+				System.out.println(">> loaded: " + newClass + " with: " + this); //$NON-NLS-1$ //$NON-NLS-2$
 			return newClass;
 		}
-		
+
+		failedClasses.add(className);
 		throw new ClassNotFoundException();
 	}
 
-    /**
+	/**
 	 * Replaces '.' in the classname with '/' and appends '.class' if needed.
 	 * 
 	 * @return String - the properly-formed class name

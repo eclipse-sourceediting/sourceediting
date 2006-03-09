@@ -32,3 +32,5 @@ org.eclipse.jst.jsp.core/debug/jspjavamapping=false
 
 org.eclipse.jst.jsp.core/debug/jspvalidator=false
 org.eclipse.jst.jsp.core/debug/taglibvars=false
+
+org.eclipse.jst.jsp.core/debug/taglibclassloader
