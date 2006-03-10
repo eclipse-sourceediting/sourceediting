@@ -106,7 +106,7 @@ public class XMLContentAssistUtilities extends ContentAssistUtils {
 		if (!hasEndTag && !isJSPTag) {
 
 			// create appropriate close tag text
-			String proposedText = proposedText = "</" + tagName; //$NON-NLS-1$
+			String proposedText = "</" + tagName; //$NON-NLS-1$
 			String viewerText = viewer.getTextWidget().getText();
 			if (viewerText.length() >= documentPosition && viewerText.length() >= 2 && documentPosition >= 2) {
 				String last2chars = viewerText.substring(documentPosition - 2, documentPosition);
@@ -125,7 +125,7 @@ public class XMLContentAssistUtilities extends ContentAssistUtils {
 		else if (!hasEndTag && isJSPTag) {
 
 			// create appropriate close tag text
-			String proposedText = proposedText = "%"; //$NON-NLS-1$
+			String proposedText = "%"; //$NON-NLS-1$
 			String viewerText = viewer.getTextWidget().getText();
 
 			// TODO (pa) make it smarter to add "%>" or just ">" if % is
@@ -196,7 +196,7 @@ public class XMLContentAssistUtilities extends ContentAssistUtils {
 		if (!hasEndTag) {
 
 			// create appropriate close tag text
-			String proposedText = proposedText = "</" + tagName; //$NON-NLS-1$
+			String proposedText = "</" + tagName; //$NON-NLS-1$
 			String viewerText = viewer.getTextWidget().getText();
 			if (viewerText.length() >= documentPosition && viewerText.length() >= 2 && documentPosition >= 2) {
 				String last2chars = viewerText.substring(documentPosition - 2, documentPosition);

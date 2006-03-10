@@ -130,7 +130,7 @@ public class TaglibHyperlinkDetector implements IHyperlinkDetector {
 					int regLength = valueRegion.getTextLength();
 					String attValue = att.getValueRegionText();
 					if (StringUtils.isQuoted(attValue)) {
-						regOffset = ++regOffset;
+						++regOffset;
 						regLength = regLength - 2;
 					}
 					hyperRegion = new Region(regOffset, regLength);

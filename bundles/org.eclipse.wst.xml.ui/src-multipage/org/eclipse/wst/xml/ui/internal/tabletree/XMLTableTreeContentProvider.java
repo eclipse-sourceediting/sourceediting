@@ -149,7 +149,7 @@ public class XMLTableTreeContentProvider implements ITreeContentProvider, ITable
 					break;
 				}
 				case Node.ENTITY_REFERENCE_NODE : {
-					image = image = SharedXMLEditorPluginImageHelper.getImage(SharedXMLEditorPluginImageHelper.IMG_OBJ_ENTITY_REFERENCE);
+					image = SharedXMLEditorPluginImageHelper.getImage(SharedXMLEditorPluginImageHelper.IMG_OBJ_ENTITY_REFERENCE);
 					break;
 				}
 			}
