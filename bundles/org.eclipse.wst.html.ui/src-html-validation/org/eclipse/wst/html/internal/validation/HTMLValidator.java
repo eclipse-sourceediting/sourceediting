@@ -21,16 +21,20 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.content.IContentTypeManager;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.wst.html.core.internal.Logger;
 import org.eclipse.wst.html.core.internal.validate.HTMLValidationAdapterFactory;
 import org.eclipse.wst.html.ui.internal.HTMLUIMessages;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -44,18 +48,19 @@ import org.eclipse.wst.sse.core.internal.util.URIResolver;
 import org.eclipse.wst.sse.core.internal.validate.ValidationAdapter;
 import org.eclipse.wst.sse.ui.internal.reconcile.validator.ISourceValidator;
 import org.eclipse.wst.validation.internal.core.Message;
+import org.eclipse.wst.validation.internal.core.ValidationException;
 import org.eclipse.wst.validation.internal.operations.IWorkbenchContext;
 import org.eclipse.wst.validation.internal.operations.WorkbenchReporter;
 import org.eclipse.wst.validation.internal.provisional.core.IMessage;
 import org.eclipse.wst.validation.internal.provisional.core.IReporter;
 import org.eclipse.wst.validation.internal.provisional.core.IValidationContext;
-import org.eclipse.wst.validation.internal.provisional.core.IValidator;
+import org.eclipse.wst.validation.internal.provisional.core.IValidatorJob;
 import org.eclipse.wst.xml.core.internal.document.DocumentTypeAdapter;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.w3c.dom.Text;
 
-public class HTMLValidator implements IValidator, ISourceValidator {
+public class HTMLValidator implements IValidatorJob, ISourceValidator {
 	private static final String ORG_ECLIPSE_JST_JSP_CORE_JSPSOURCE = "org.eclipse.jst.jsp.core.jspsource"; //$NON-NLS-1$
 	private static final String ORG_ECLIPSE_WST_HTML_CORE_HTMLSOURCE = "org.eclipse.wst.html.core.htmlsource"; //$NON-NLS-1$
 
@@ -203,76 +208,78 @@ public class HTMLValidator implements IValidator, ISourceValidator {
 			validateFull(helper, reporter);
 		}
 	}
-	
+
 	/**
-	 * This validate call is for the ISourceValidator partial document validation approach
+	 * This validate call is for the ISourceValidator partial document
+	 * validation approach
+	 * 
 	 * @param dirtyRegion
 	 * @param helper
 	 * @param reporter
-	 *  @see org.eclipse.wst.sse.ui.internal.reconcile.validator.ISourceValidator
+	 * @see org.eclipse.wst.sse.ui.internal.reconcile.validator.ISourceValidator
 	 */
 	public void validate(IRegion dirtyRegion, IValidationContext helper, IReporter reporter) {
-		
+
 		if (helper == null || fDocument == null)
 			return;
-		
+
 		if ((reporter != null) && (reporter.isCancelled() == true)) {
 			throw new OperationCanceledException();
 		}
-		
+
 		IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForRead(fDocument);
 		if (model == null)
 			return; // error
-	
+
 		try {
-		
+
 			IDOMDocument document = null;
-			if(model instanceof IDOMModel) {
-				document = ((IDOMModel)model).getDocument();
+			if (model instanceof IDOMModel) {
+				document = ((IDOMModel) model).getDocument();
 			}
 
 			if (document == null || !hasHTMLFeature(document))
-				return ; // ignore
-	
+				return; // ignore
+
 			ITextFileBuffer fb = FileBufferModelManager.getInstance().getBuffer(fDocument);
-			if(fb == null)
+			if (fb == null)
 				return;
-			
+
 			IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(fb.getLocation());
-			if(file == null || !file.exists())
+			if (file == null || !file.exists())
 				return;
-			
+
 			// this will be the wrong region if it's Text (instead of Element)
 			// we don't know how to validate Text
 			IndexedRegion ir = model.getIndexedRegion(dirtyRegion.getOffset());
-			if(ir instanceof Text) {
-				while(ir != null && ir instanceof Text) {
+			if (ir instanceof Text) {
+				while (ir != null && ir instanceof Text) {
 					// it's assumed that this gets the IndexedRegion to
 					// the right of the end offset
 					ir = model.getIndexedRegion(ir.getEndOffset());
 				}
 			}
-			
-			if(ir instanceof INodeNotifier) {
-				
+
+			if (ir instanceof INodeNotifier) {
+
 				INodeAdapterFactory factory = HTMLValidationAdapterFactory.getInstance();
-				ValidationAdapter adapter = (ValidationAdapter) factory.adapt((INodeNotifier)ir);
+				ValidationAdapter adapter = (ValidationAdapter) factory.adapt((INodeNotifier) ir);
 				if (adapter == null)
 					return; // error
-				
+
 				if (reporter != null) {
 					HTMLValidationReporter rep = null;
-					rep = getReporter(reporter, file, (IDOMModel)model);
+					rep = getReporter(reporter, file, (IDOMModel) model);
 					rep.clear();
 					adapter.setReporter(rep);
-					
+
 					String fileName = ""; //$NON-NLS-1$
 					IPath filePath = file.getFullPath();
 					if (filePath != null) {
 						fileName = filePath.toString();
 					}
 					String args[] = new String[]{fileName};
-		
+
 					Message mess = new LocalizedMessage(IMessage.LOW_SEVERITY, NLS.bind(HTMLUIMessages.MESSAGE_HTML_VALIDATION_MESSAGE_UI_, args));
 					mess.setParams(args);
 					reporter.displaySubtask(this, mess);
@@ -281,7 +288,7 @@ public class HTMLValidator implements IValidator, ISourceValidator {
 			}
 		}
 		finally {
-			if(model != null)
+			if (model != null)
 				model.releaseFromRead();
 		}
 	}
@@ -292,13 +299,14 @@ public class HTMLValidator implements IValidator, ISourceValidator {
 	public void connect(IDocument document) {
 		fDocument = document;
 	}
+
 	/**
 	 * @see org.eclipse.wst.sse.ui.internal.reconcile.validator.ISourceValidator
 	 */
 	public void disconnect(IDocument document) {
 		// don't need to do anything
 	}
-	
+
 	/**
 	 */
 	protected HTMLValidationResult validate(IDOMModel model, IFile file) {
@@ -436,5 +444,20 @@ public class HTMLValidator implements IValidator, ISourceValidator {
 	 */
 	public IResource getResource(String delta) {
 		return ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(delta));
+	}
+
+	public ISchedulingRule getSchedulingRule(IValidationContext helper) {
+		return null;
+	}
+
+	public IStatus validateInJob(IValidationContext helper, IReporter reporter) throws ValidationException {
+		IStatus status = Status.OK_STATUS;
+		try {
+			validate(helper, reporter);
+		}
+		catch (Exception e) {
+			Logger.logException(e);
+		}
+		return status;
 	}
 }

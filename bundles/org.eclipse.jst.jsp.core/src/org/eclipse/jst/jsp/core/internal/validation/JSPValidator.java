@@ -14,12 +14,16 @@ import org.eclipse.core.resources.IResourceProxyVisitor;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.QualifiedName;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.core.runtime.content.IContentType;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jst.jsp.core.internal.JSPCoreMessages;
+import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.contentproperties.JSPFContentProperties;
 import org.eclipse.jst.jsp.core.internal.provisional.contenttype.ContentTypeIdForJSP;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
@@ -33,13 +37,15 @@ import org.eclipse.wst.validation.internal.operations.IWorkbenchContext;
 import org.eclipse.wst.validation.internal.provisional.core.IMessage;
 import org.eclipse.wst.validation.internal.provisional.core.IReporter;
 import org.eclipse.wst.validation.internal.provisional.core.IValidationContext;
-import org.eclipse.wst.validation.internal.provisional.core.IValidator;
+import org.eclipse.wst.validation.internal.provisional.core.IValidatorJob;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
 /**
  * Performs some common JSP validation tasks
  */
-public class JSPValidator implements IValidator {
+public class JSPValidator implements IValidatorJob {
+
+	private static final String PLUGIN_ID_JSP_CORE = "org.eclipse.jst.jsp.core"; //$NON-NLS-1$
 
 	protected class LocalizedMessage extends Message {
 
@@ -333,5 +339,21 @@ public class JSPValidator implements IValidator {
 		}
 
 		return shouldValidate;
+	}
+	 
+	 public ISchedulingRule getSchedulingRule(IValidationContext helper) {
+		return null;
+	}
+	 
+	 public IStatus validateInJob(IValidationContext helper, IReporter reporter) throws ValidationException {
+		IStatus status = Status.OK_STATUS;
+		try{
+			validate(helper, reporter);
+		}
+		catch (ValidationException e){
+			Logger.logException(e);
+			status = new Status(IStatus.ERROR, PLUGIN_ID_JSP_CORE, IStatus.ERROR, e.getLocalizedMessage(),  e);
+		}
+		return status;
 	}
 }

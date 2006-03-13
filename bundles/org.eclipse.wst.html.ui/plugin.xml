@@ -265,7 +265,7 @@
 				class="org.eclipse.wst.html.internal.validation.HTMLValidationWorkbenchHelper">
 			</helper>
 			<run
-				enabled="false"
+				enabled="true"
 				class="org.eclipse.wst.html.internal.validation.HTMLValidator">
 			</run>
 		</validator>
