@@ -19,7 +19,7 @@ import org.eclipse.jface.text.reconciler.IReconcilingStrategy;
  * dirty regions which contain partitions of a specific type need to be
  * reconciled.
  * 
- * @since 1.5
+ * @since 1.1
  */
 public interface IConfigurableReconciler {
 	/**
