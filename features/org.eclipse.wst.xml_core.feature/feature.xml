@@ -17,7 +17,7 @@
    </url>
 
    <requires>
-      <import feature="org.apache.xerces.feature" version="2.7.0" match="greaterOrEqual"/>
+      <import feature="org.apache.xerces.feature" version="2.8.0" match="greaterOrEqual"/>
       <import feature="org.eclipse.rcp" version="3.2" match="equivalent"/>
       <import feature="org.eclipse.platform" version="3.2" match="equivalent"/>
       <import feature="org.eclipse.emf" version="2.2" match="equivalent"/>
