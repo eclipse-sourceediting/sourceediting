@@ -51,7 +51,9 @@ public class JSPSearchDocument {
 	private String fJSPPathString = UNKNOWN_PATH;
 	private String fCUPath = UNKNOWN_PATH;
 	private SearchParticipant fParticipant = null;
-
+	private long fLastModifiedStamp;
+	private char[] fCachedCharContents;
+	
 	/**
 	 * @param file
 	 * @param participant
@@ -71,8 +73,13 @@ public class JSPSearchDocument {
 	 * @see org.eclipse.jdt.core.search.SearchDocument#getCharContents()
 	 */
 	public char[] getCharContents() {
-		JSPTranslation trans = getJSPTranslation();
-		return trans != null ? trans.getJavaText().toCharArray() : new char[0];
+		
+		if(fCachedCharContents == null || isDirty()) {
+		    JSPTranslation trans = getJSPTranslation();    
+		    fCachedCharContents = trans != null ? trans.getJavaText().toCharArray() : new char[0];
+		    fCUPath = trans.getJavaPath();
+		}
+		return fCachedCharContents;
 	}
 
 	public String getJavaText() {
@@ -146,12 +153,16 @@ public class JSPSearchDocument {
 	 * @see org.eclipse.jdt.core.search.SearchDocument#getPath()
 	 */
 	public String getPath() {
-		JSPTranslation trans = getJSPTranslation();
-		// caching the path since it's expensive to get translation
-		if (this.fCUPath == null || this.fCUPath == UNKNOWN_PATH) {
-			if (trans != null)
-				this.fCUPath = trans.getJavaPath();
-		}
+	    // caching the path since it's expensive to get translation
+		// important that isDirty() check is second to cache modification stamp
+	    if(this.fCUPath == null || isDirty() || this.fCUPath == UNKNOWN_PATH) {
+	        JSPTranslation trans = getJSPTranslation();
+	        if(trans != null) {
+	            this.fCUPath = trans.getJavaPath();
+	            // save since it's expensive to calculate again later
+	            fCachedCharContents = trans.getJavaText().toCharArray();
+	        }
+	    }
 		return fCUPath != null ? fCUPath : UNKNOWN_PATH;
 	}
 
@@ -197,6 +208,19 @@ public class JSPSearchDocument {
 		return jspFile;
 	}
 
+	
+	private boolean isDirty() {
+		boolean modified = false;
+		IFile f = getFile();
+		if(f != null) {
+			long currentStamp = f.getModificationStamp();
+			if(currentStamp != fLastModifiedStamp)
+				modified = true;
+			fLastModifiedStamp = currentStamp;
+		}
+		return modified;
+	}
+	
 	public void release() {
 		// nothing to do now since JSPTranslation is created on the fly
 	}
