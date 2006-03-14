@@ -6,12 +6,14 @@ package org.eclipse.wst.web.internal.operation;
  * restricted by GSA ADP Schedule Contract with IBM Corp. 
  */
 
-import java.lang.reflect.InvocationTargetException;
-
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.wst.common.componentcore.internal.util.ComponentUtilities;
-import org.eclipse.wst.common.frameworks.internal.operations.IHeadlessRunnableWithProgress;
+import org.eclipse.wst.common.frameworks.datamodel.AbstractDataModelOperation;
+import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
 
 
 
@@ -20,26 +22,22 @@ import org.eclipse.wst.common.frameworks.internal.operations.IHeadlessRunnableWi
  * @version 	1.0
  * @author
  */
-public class WebProjectPropertiesUpdateOperation implements IHeadlessRunnableWithProgress {
-
-	protected IProject project;
-	protected String contextRoot; 
-
+public class WebProjectPropertiesUpdateOperation 
+ extends  AbstractDataModelOperation 
+ implements IWebProjectPropertiesUpdateDataModelProperties{
 	
 
-	public WebProjectPropertiesUpdateOperation(IProject project, String contextRoot) {
-		this.project = project;
-		this.contextRoot = contextRoot;
+	public WebProjectPropertiesUpdateOperation(IDataModel model) {
+		super(model);
 	}
-	/*
-	 * @see IHeadlessRunnableWithProgress#run(IProgressMonitor)
-	 */
-	public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-		// Update the context root 
+
+	public IStatus execute(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
+		IProject project = (IProject)model.getProperty( IWebProjectPropertiesUpdateDataModelProperties.PROJECT );
+		String contextRoot = model.getStringProperty( IWebProjectPropertiesUpdateDataModelProperties.CONTEXT_ROOT );
 		if (contextRoot != null) {
-			ComponentUtilities.setServerContextRoot(project, contextRoot);
-		}	
-	
+			ComponentUtilities.setServerContextRoot(project, contextRoot);			
+		}
+		return OK_STATUS;
 	}
 
 }
