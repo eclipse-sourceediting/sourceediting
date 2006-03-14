@@ -19,6 +19,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
 import java.net.ConnectException;
+import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -342,6 +343,23 @@ public class XMLValidator
       {                     
         String physical = uriResolver.resolvePhysicalLocation(rid.getBaseSystemId(), id, location);
         is = new XMLInputSource(rid.getPublicId(), location, location);
+        
+        // This block checks that the file exists. If it doesn't we need to throw
+        // an exception so Xerces will report an error. note: This may not be
+        // necessary with all versions of Xerces but has specifically been 
+        // experienced with the version included in IBM's 1.4.2 JDK.
+        InputStream isTemp = null;
+        try
+        {
+          isTemp = new URL(physical).openStream();
+        }
+        finally
+        {
+          if(isTemp != null)
+          {
+            isTemp.close();
+          }
+        }
         is.setByteStream(new LazyURLInputStream(physical));      
       }
     }
