@@ -36,16 +36,22 @@ public class DocumentRegionProcessor extends DirtyRegionProcessor {
 	 */
 	private ValidatorStrategy fValidatorStrategy;
 
-	private final String SSE_EDITOR_ID = "org.eclipse.wst.sse.ui"; //$NON-NLS-1$
+	private final String SSE_UI_ID = "org.eclipse.wst.sse.ui"; //$NON-NLS-1$
 
 	protected void beginProcessing() {
 		super.beginProcessing();
-		getValidatorStrategy().beginProcessing();
+		ValidatorStrategy validatorStrategy = getValidatorStrategy();
+		if (validatorStrategy != null) {
+			validatorStrategy.beginProcessing();
+		}
 	}
 
 	protected void endProcessing() {
 		super.endProcessing();
-		getValidatorStrategy().endProcessing();
+		ValidatorStrategy validatorStrategy = getValidatorStrategy();
+		if (validatorStrategy != null) {
+			validatorStrategy.endProcessing();
+		}
 	}
 
 	protected String getContentType(IDocument doc) {
@@ -106,10 +112,9 @@ public class DocumentRegionProcessor extends DirtyRegionProcessor {
 				contentTypeId = getContentType(doc);
 
 				if (contentTypeId != null) {
-
 					validatorStrategy = new ValidatorStrategy(viewer, contentTypeId);
 					ValidatorBuilder vBuilder = new ValidatorBuilder();
-					ValidatorMetaData[] vmds = vBuilder.getValidatorMetaData(SSE_EDITOR_ID);
+					ValidatorMetaData[] vmds = vBuilder.getValidatorMetaData(SSE_UI_ID);
 					for (int i = 0; i < vmds.length; i++) {
 						if (vmds[i].canHandleContentType(contentTypeId))
 							validatorStrategy.addValidatorMetaData(vmds[i]);
