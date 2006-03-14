@@ -53,8 +53,6 @@ import org.eclipse.wst.common.project.facet.core.IProjectFacetVersion;
 import org.eclipse.wst.common.project.facet.core.IFacetedProject.Action.Type;
 import org.eclipse.wst.common.project.facet.core.runtime.IRuntime;
 import org.eclipse.wst.common.project.facet.ui.AddRemoveFacetsWizard;
-import org.eclipse.wst.common.project.facet.ui.internal.ConflictingFacetsFilter;
-import org.eclipse.wst.common.project.facet.ui.internal.FacetsSelectionPanel;
 import org.eclipse.wst.web.internal.DelegateConfigurationElement;
 import org.eclipse.wst.web.ui.internal.WSTWebUIPlugin;
 
@@ -117,10 +115,6 @@ public abstract class NewProjectDataModelFacetWizard extends AddRemoveFacetsWiza
 		 * this.facetsSelectionPage.setInitialSelection(facetVersions);
 		 */
 
-
-		final ConflictingFacetsFilter filter = new ConflictingFacetsFilter(fixed);
-
-		this.facetsSelectionPage.setFilters(new FacetsSelectionPanel.IFilter[]{filter});
 
 		IRuntime runtime = (IRuntime) model.getProperty(FACET_RUNTIME);
 		if (runtime != null)
