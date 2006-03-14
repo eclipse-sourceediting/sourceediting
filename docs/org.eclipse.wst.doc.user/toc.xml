@@ -13,7 +13,7 @@
 <!-- ============================================================================= -->
 <!-- Define the top level topics                                                   -->
 <!-- ============================================================================= -->
-<toc label="Web Application Development Guide"
+<toc label="Web Application Development User Guide"
 	topic="topics/overview.html">
 
 	<topic label="Creating Web applications">
