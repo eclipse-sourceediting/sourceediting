@@ -1808,8 +1808,6 @@ public class JSPTranslator {
 				// break no matter what if you hit tagname
 				break;
 			}
-			// no matter what if you hit tagname
-			break;
 		}
 		return isUseBean;
 	}
