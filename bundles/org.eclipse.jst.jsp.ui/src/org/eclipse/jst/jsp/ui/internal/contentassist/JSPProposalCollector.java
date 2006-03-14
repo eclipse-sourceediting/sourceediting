@@ -121,12 +121,17 @@ public class JSPProposalCollector extends CompletionProposalCollector {
 		String displayString = javaProposal.getDisplayString();
 		displayString = getTranslation().fixupMangledName(displayString);
 		IContextInformation contextInformation = javaProposal.getContextInformation();
-		String additionalInfo = javaProposal.getAdditionalProposalInfo();
+		// don't do this, it's slow
+		// String additionalInfo = javaProposal.getAdditionalProposalInfo();
 		int relevance = javaProposal.getRelevance();
 		
 		boolean updateLengthOnValidate = true;
 		
-		jspProposal = new AutoImportProposal(completion, newCompletion, offset, length, positionAfter, image, displayString, contextInformation, additionalInfo, relevance, updateLengthOnValidate);
+		jspProposal = new AutoImportProposal(completion, newCompletion, offset, length, positionAfter, image, displayString, contextInformation, null, relevance, updateLengthOnValidate);
+		
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=124483
+		// set wrapped java proposal so additional info can be calculated on demand
+		jspProposal.setJavaCompletionProposal(javaProposal);
 		
 		return jspProposal;
 	}
@@ -151,12 +156,17 @@ public class JSPProposalCollector extends CompletionProposalCollector {
 		String displayString = javaProposal.getDisplayString();
 		displayString = getTranslation().fixupMangledName(displayString);
 		IContextInformation contextInformation = javaProposal.getContextInformation();
-		String additionalInfo = javaProposal.getAdditionalProposalInfo();
+		// String additionalInfo = javaProposal.getAdditionalProposalInfo();
 		int relevance = javaProposal.getRelevance();
 		
 		boolean updateLengthOnValidate = true;
 		
-		jspProposal = new JSPCompletionProposal(completion, offset, length, positionAfter, image, displayString, contextInformation, additionalInfo, relevance, updateLengthOnValidate);
+		jspProposal = new JSPCompletionProposal(completion, offset, length, positionAfter, image, displayString, contextInformation, null, relevance, updateLengthOnValidate);
+		
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=124483
+		// set wrapped java proposal so additional info can be calculated on demand
+		jspProposal.setJavaCompletionProposal(javaProposal);
+		
 		return jspProposal;
 	}
 

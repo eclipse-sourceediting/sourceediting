@@ -60,6 +60,11 @@ public class JSPELProposalCollector extends JSPProposalCollector {
 			boolean updateLengthOnValidate = true;
 			
 			jspProposal = new JSPCompletionProposal(completion, offset, length, positionAfter, image, displayString, contextInformation, additionalInfo, relevance, updateLengthOnValidate);
+			
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=124483
+			// set wrapped java proposal so additional info can be calculated on demand
+			jspProposal.setJavaCompletionProposal(javaProposal);
+			
 			return jspProposal;
 		} else {
 			return null;
