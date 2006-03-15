@@ -27,7 +27,9 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentExtension3;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.text.ITypedRegion;
+import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.TextUtilities;
+import org.eclipse.jface.text.reconciler.IReconcileStep;
 import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -40,32 +42,41 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.FormAttachment;
+import org.eclipse.swt.layout.FormData;
+import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Sash;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.ISelectionService;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.MarkerAnnotation;
 import org.eclipse.ui.texteditor.MarkerUtilities;
+import org.eclipse.ui.texteditor.SimpleMarkerAnnotation;
 import org.eclipse.ui.texteditor.StatusLineContributionItem;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
@@ -73,6 +84,7 @@ import org.eclipse.ui.views.properties.IPropertySourceProvider;
 import org.eclipse.ui.views.properties.PropertySheetPage;
 import org.eclipse.ui.views.properties.TextPropertyDescriptor;
 import org.eclipse.wst.sse.core.StructuredModelManager;
+import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
@@ -83,13 +95,157 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.sse.core.internal.util.Utilities;
 import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
+import org.eclipse.wst.sse.ui.internal.contentoutline.IJFaceNodeAdapter;
+import org.eclipse.wst.sse.ui.internal.reconcile.ReconcileAnnotationKey;
+import org.eclipse.wst.sse.ui.internal.reconcile.TemporaryAnnotation;
 
 /**
  * @author nsd A Status Line contribution intended to display the selected
  *         offsets in an editor. Double-clicking shows information about
- *         partitions and the Structured Document regions.
+ *         partitions, document regions, annotations, and selection.
  */
 public class OffsetStatusLineContributionItem extends StatusLineContributionItem {
+
+	class AnnotationPropertySource implements IPropertySource {
+		Annotation fAnnotation = null;
+		IPropertyDescriptor[] fDescriptors = null;
+		String[] TEMPORARY_ANNOTATION_KEYS = new String[]{"Partition Type", "Step", "Scope", "Offset", "Length", "Description"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
+
+		public AnnotationPropertySource(Annotation annotation) {
+			super();
+			fAnnotation = annotation;
+		}
+
+		public Object getEditableValue() {
+			return null;
+		}
+
+		public IPropertyDescriptor[] getPropertyDescriptors() {
+			if (fDescriptors == null) {
+				try {
+					if (fAnnotation instanceof SimpleMarkerAnnotation) {
+						Map attrs = ((SimpleMarkerAnnotation) fAnnotation).getMarker().getAttributes();
+						Object[] keys = attrs.keySet().toArray();
+
+						fDescriptors = new IPropertyDescriptor[keys.length];
+						for (int i = 0; i < keys.length; i++) {
+							TextPropertyDescriptor descriptor = new TextPropertyDescriptor(keys[i].toString(), keys[i].toString());
+							fDescriptors[i] = descriptor;
+						}
+					}
+					else if (fAnnotation instanceof TemporaryAnnotation) {
+						Object key = ((TemporaryAnnotation) fAnnotation).getKey();
+						if (key != null && key instanceof ReconcileAnnotationKey) {
+							String[] keys = TEMPORARY_ANNOTATION_KEYS;
+							fDescriptors = new IPropertyDescriptor[keys.length];
+							for (int i = 0; i < keys.length; i++) {
+								TextPropertyDescriptor descriptor = new TextPropertyDescriptor(keys[i].toString(), keys[i].toString());
+								fDescriptors[i] = descriptor;
+							}
+						}
+					}
+				}
+				catch (CoreException e) {
+					e.printStackTrace();
+				}
+			}
+			if (fDescriptors == null)
+				fDescriptors = new IPropertyDescriptor[0];
+			return fDescriptors;
+		}
+
+		public Object getPropertyValue(Object id) {
+			String value = null;
+			if (fAnnotation instanceof SimpleMarkerAnnotation) {
+				Object o;
+				try {
+					o = ((SimpleMarkerAnnotation) fAnnotation).getMarker().getAttributes().get(id);
+					if (o != null) {
+						value = o.toString();
+					}
+				}
+				catch (CoreException e) {
+				}
+			}
+			else if (fAnnotation instanceof TemporaryAnnotation) {
+				if (TEMPORARY_ANNOTATION_KEYS[0].equals(id)) {
+					Object key = ((TemporaryAnnotation) fAnnotation).getKey();
+					if (key != null && key instanceof ReconcileAnnotationKey) {
+						value = ((ReconcileAnnotationKey) key).getPartitionType();
+					}
+				}
+				else if (TEMPORARY_ANNOTATION_KEYS[1].equals(id)) {
+					Object key = ((TemporaryAnnotation) fAnnotation).getKey();
+					if (key != null && key instanceof ReconcileAnnotationKey) {
+						IReconcileStep step = ((ReconcileAnnotationKey) key).getStep();
+						if (step != null) {
+							value = step.getClass().getName();
+						}
+					}
+				}
+				else if (TEMPORARY_ANNOTATION_KEYS[2].equals(id)) {
+					Object key = ((TemporaryAnnotation) fAnnotation).getKey();
+					if (key != null && key instanceof ReconcileAnnotationKey) {
+						int scope = ((ReconcileAnnotationKey) key).getScope();
+						if (scope == ReconcileAnnotationKey.PARTIAL) {
+							value = "PARTIAL"; //$NON-NLS-1$
+						}
+						if (scope == ReconcileAnnotationKey.TOTAL) {
+							value = "TOTAL"; //$NON-NLS-1$
+						}
+					}
+				}
+				else if (TEMPORARY_ANNOTATION_KEYS[3].equals(id)) {
+					IAnnotationModel annotationModel = fTextEditor.getDocumentProvider().getAnnotationModel(fTextEditor.getEditorInput());
+					Position p = annotationModel.getPosition(fAnnotation);
+					if (p != null) {
+						value = String.valueOf(p.getOffset());
+					}
+				}
+				else if (TEMPORARY_ANNOTATION_KEYS[4].equals(id)) {
+					IAnnotationModel annotationModel = fTextEditor.getDocumentProvider().getAnnotationModel(fTextEditor.getEditorInput());
+					Position p = annotationModel.getPosition(fAnnotation);
+					if (p != null) {
+						value = String.valueOf(p.getLength());
+					}
+				}
+				else if (TEMPORARY_ANNOTATION_KEYS[5].equals(id)) {
+					value = ((TemporaryAnnotation) fAnnotation).getDescription();
+				}
+			}
+			return value;
+		}
+
+		public boolean isPropertySet(Object id) {
+			return false;
+		}
+
+		public void resetPropertyValue(Object id) {
+			try {
+				if (fAnnotation instanceof SimpleMarkerAnnotation) {
+					((SimpleMarkerAnnotation) fAnnotation).getMarker().getAttributes().remove(id);
+				}
+				else if (fAnnotation instanceof TemporaryAnnotation) {
+				}
+			}
+			catch (CoreException e) {
+				e.printStackTrace();
+			}
+		}
+
+		public void setPropertyValue(Object id, Object value) {
+			try {
+				if (fAnnotation instanceof SimpleMarkerAnnotation) {
+					((MarkerAnnotation) fAnnotation).getMarker().setAttribute(id.toString(), value);
+				}
+				else if (fAnnotation instanceof TemporaryAnnotation) {
+				}
+			}
+			catch (CoreException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 
 	class InformationDialog extends Dialog {
 
@@ -104,18 +260,14 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 			annotationsTabComposite.setLayout(new GridLayout());
 			annotationsTabComposite.setLayoutData(new GridData());
 
-			Composite annotationsComposite = new Composite(annotationsTabComposite, SWT.NONE);
-			annotationsComposite.setLayout(new GridLayout(2, false));
+			final Composite annotationsComposite = new Composite(annotationsTabComposite, SWT.NONE);
 			annotationsComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
-			final TableViewer annotationsTable = new TableViewer(annotationsComposite, SWT.FULL_SELECTION);
-			GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
-			gd.horizontalSpan = 2;
-			annotationsTable.getControl().setLayoutData(gd);
+			final TableViewer annotationsTable = new TableViewer(annotationsComposite, SWT.SINGLE | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
 			annotationsTable.setContentProvider(new ArrayContentProvider());
 			annotationsTable.getTable().setHeaderVisible(true);
 			annotationsTable.getTable().setLinesVisible(true);
-			String[] columns = new String[]{"Line", "Owner", "Type", "Message"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+			String[] columns = new String[]{"Line", "Owner", "Type", "Class", "Message"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 			annotationsTable.setLabelProvider(new ITableLabelProvider() {
 				public void addListener(ILabelProviderListener listener) {
 				}
@@ -132,15 +284,18 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 					String text = null;
 					switch (columnIndex) {
 						case 0 :
-							text = (annotation instanceof MarkerAnnotation) ? Integer.toString(MarkerUtilities.getLineNumber(((MarkerAnnotation) annotation).getMarker())) : "-1"; //$NON-NLS-1$
+							text = getLineNumber(annotation);
 							break;
 						case 1 :
-							text = (annotation instanceof MarkerAnnotation) ? ((MarkerAnnotation) annotation).getMarker().getAttribute("owner", "n/a") : "?"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+							text = getOwner(annotation);
 							break;
 						case 2 :
-							text = (annotation instanceof MarkerAnnotation) ? MarkerUtilities.getMarkerType(((MarkerAnnotation) annotation).getMarker()) : "?"; //$NON-NLS-1$
+							text = getType(annotation); //$NON-NLS-1$
 							break;
 						case 3 :
+							text = annotation.getClass().getName();
+							break;
+						case 4 :
 							text = annotation.getText();
 							break;
 					}
@@ -149,8 +304,40 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 					return text;
 				}
 
+
+				private String getOwner(Annotation annotation) {
+					String owner = null;
+					if (annotation instanceof MarkerAnnotation) {
+						owner = ((MarkerAnnotation) annotation).getMarker().getAttribute("owner", ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$				
+					}
+					else if (annotation instanceof TemporaryAnnotation) {
+						Object key = ((TemporaryAnnotation) annotation).getKey();
+						if (key != null) {
+							if (key instanceof ReconcileAnnotationKey) {
+								key = key.getClass().getName();
+							}
+							if (key != null)
+								owner = key.toString();
+						}
+					}
+					return owner;
+				}
+
+				private String getType(Annotation annotation) {
+					String type = null;
+					if (annotation instanceof MarkerAnnotation) {
+						type = MarkerUtilities.getMarkerType(((MarkerAnnotation) annotation).getMarker());
+					}
+					else {
+						type = annotation.getType();
+					}
+					if (type == null)
+						type = "";
+					return type;
+				}
+
 				public boolean isLabelProperty(Object element, String property) {
-					return false;
+					return true;
 				}
 
 				public void removeListener(ILabelProviderListener listener) {
@@ -159,7 +346,7 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 
 			TableLayout tlayout = new TableLayout();
 			CellEditor[] cellEditors = new CellEditor[columns.length];
-			int columnWidths[] = new int[]{Display.getCurrent().getBounds().width / 14, Display.getCurrent().getBounds().width / 7, Display.getCurrent().getBounds().width / 7, Display.getCurrent().getBounds().width / 7};
+			int columnWidths[] = new int[]{Display.getCurrent().getBounds().width / 14, Display.getCurrent().getBounds().width / 7, Display.getCurrent().getBounds().width / 7, Display.getCurrent().getBounds().width / 14, Display.getCurrent().getBounds().width / 7};
 			for (int i = 0; i < columns.length; i++) {
 				tlayout.addColumnData(new ColumnWeightData(1));
 				TableColumn tc = new TableColumn(annotationsTable.getTable(), SWT.NONE);
@@ -169,7 +356,6 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 			}
 			annotationsTable.setCellEditors(cellEditors);
 			annotationsTable.setColumnProperties(columns);
-			// textSelection.getOffset(), textSelection.getLength()
 			List matchingAnnotations = new ArrayList(0);
 			if (fTextEditor != null) {
 				IAnnotationModel annotationModel = fTextEditor.getDocumentProvider().getAnnotationModel(fTextEditor.getEditorInput());
@@ -183,18 +369,18 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 					}
 				}
 			}
+			annotationsTable.setSorter(new ViewerSorter());
 			annotationsTable.setInput(matchingAnnotations);
+
+			final Sash sash = new Sash(annotationsComposite, SWT.HORIZONTAL);
 
 			final PropertySheetPage propertySheet = new PropertySheetPage();
 			propertySheet.createControl(annotationsComposite);
-			gd = new GridData(SWT.FILL, SWT.FILL, true, true);
-			gd.horizontalSpan = 2;
-			propertySheet.getControl().setLayoutData(gd);
 			propertySheet.setPropertySourceProvider(new IPropertySourceProvider() {
 				public IPropertySource getPropertySource(Object object) {
-					if (object instanceof MarkerAnnotation) {
-						IPropertySource markerAnnotationPropertySource = new MarkerAnnotationPropertySource(((MarkerAnnotation) object));
-						return markerAnnotationPropertySource;
+					if (object instanceof Annotation) {
+						IPropertySource annotationPropertySource = new AnnotationPropertySource(((Annotation) object));
+						return annotationPropertySource;
 					}
 					return null;
 				}
@@ -205,6 +391,36 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 					propertySheet.selectionChanged(null, event.getSelection());
 				}
 			});
+
+			final FormLayout form = new FormLayout();
+			annotationsComposite.setLayout(form);
+
+			FormData tableData = new FormData();
+			tableData.top = new FormAttachment(0, 0);
+			tableData.bottom = new FormAttachment(sash, 2);
+			tableData.left = new FormAttachment(0, 0);
+			tableData.right = new FormAttachment(100, 0);
+			annotationsTable.getControl().setLayoutData(tableData);
+
+			FormData propertiesData = new FormData();
+			propertiesData.top = new FormAttachment(sash, 2);
+			propertiesData.left = new FormAttachment(0, 0);
+			propertiesData.right = new FormAttachment(100, 0);
+			propertiesData.bottom = new FormAttachment(100, 0);
+			propertySheet.getControl().setLayoutData(propertiesData);
+
+			final FormData sashData = new FormData();
+			sashData.top = new FormAttachment(60, 0);
+			sashData.left = new FormAttachment(0, 0);
+			sashData.right = new FormAttachment(100, 0);
+			sash.setLayoutData(sashData);
+			sash.addListener(SWT.Selection, new org.eclipse.swt.widgets.Listener() {
+				public void handleEvent(Event e) {
+					sashData.top = new FormAttachment(0, e.y);
+					annotationsComposite.layout();
+				}
+			});
+			annotationsComposite.pack(true);
 		}
 
 		/*
@@ -217,6 +433,47 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 			ITextSelection textSelection = (ITextSelection) sel;
 			parent.getShell().setText(SSEUIMessages.OffsetStatusLineContributionItem_0 + textSelection.getOffset() + "-" + (textSelection.getOffset() + textSelection.getLength())); //$NON-NLS-1$ //$NON-NLS-2$
 			Composite composite = (Composite) super.createDialogArea(parent);
+
+			Text documentTypeLabel = new Text(composite, SWT.SINGLE | SWT.READ_ONLY);
+			GridData gd = new GridData(SWT.FILL, SWT.FILL, true, false);
+			gd.horizontalSpan = 2;
+			documentTypeLabel.setLayoutData(gd);
+			documentTypeLabel.setText(SSEUIMessages.OffsetStatusLineContributionItem_6 + fDocument.getClass().getName()); //$NON-NLS-1$
+
+			Text documentProviderLabel = new Text(composite, SWT.SINGLE | SWT.READ_ONLY);
+			gd = new GridData(SWT.FILL, SWT.FILL, true, false);
+			gd.horizontalSpan = 2;
+			documentProviderLabel.setLayoutData(gd);
+			documentProviderLabel.setText(SSEUIMessages.OffsetStatusLineContributionItem_7 + fTextEditor.getDocumentProvider().getClass().getName()); //$NON-NLS-1$
+
+			Text editorInputLabel = new Text(composite, SWT.SINGLE | SWT.READ_ONLY);
+			gd = new GridData(SWT.FILL, SWT.FILL, true, false);
+			gd.horizontalSpan = 2;
+			editorInputLabel.setLayoutData(gd);
+			editorInputLabel.setText(SSEUIMessages.OffsetStatusLineContributionItem_12 + fTextEditor.getEditorInput().getClass().getName()); //$NON-NLS-1$
+
+			IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForRead(fDocument);
+			if (model != null) {
+				Text modelContentTypeLabel = new Text(composite, SWT.SINGLE | SWT.READ_ONLY);
+				gd = new GridData(SWT.FILL, SWT.FILL, true, false);
+				gd.horizontalSpan = 2;
+				modelContentTypeLabel.setLayoutData(gd);
+				modelContentTypeLabel.setText(SSEUIMessages.OffsetStatusLineContributionItem_4 + model.getContentTypeIdentifier()); //$NON-NLS-1$
+
+				Text modelHandlerContentTypeLabel = new Text(composite, SWT.MULTI | SWT.WRAP | SWT.READ_ONLY);
+				gd = new GridData(SWT.FILL, SWT.FILL, true, false);
+				gd.horizontalSpan = 2;
+				modelHandlerContentTypeLabel.setLayoutData(gd);
+				modelHandlerContentTypeLabel.setText(SSEUIMessages.OffsetStatusLineContributionItem_5 + model.getModelHandler() + " (" + model.getModelHandler().getAssociatedContentTypeId() + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+
+				Label blankRow = new Label(composite, SWT.NONE);
+				gd = new GridData(SWT.FILL, SWT.FILL, true, false);
+				gd.horizontalSpan = 2;
+				blankRow.setLayoutData(gd);
+			}
+			if (model != null) {
+				model.releaseFromRead();
+			}
 
 			TabFolder tabfolder = new TabFolder(composite, SWT.NONE);
 			tabfolder.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -243,11 +500,26 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 			annotationsTab.setControl(annotations);
 			createAnnotationTabContents(annotations);
 
-			TabItem selectionTab = new TabItem(tabfolder, SWT.BORDER);
-			selectionTab.setText(SSEUIMessages.OffsetStatusLineContributionItem_14);
-			Composite selection = new Composite(tabfolder, SWT.NONE);
-			selectionTab.setControl(selection);
-			createSelectionTabContents(selection);
+			TabItem editorSelectionTab = new TabItem(tabfolder, SWT.BORDER);
+			editorSelectionTab.setText(SSEUIMessages.OffsetStatusLineContributionItem_14);
+			Composite editorSelectionComposite = new Composite(tabfolder, SWT.NONE);
+			editorSelectionTab.setControl(editorSelectionComposite);
+			fillSelectionTabContents(editorSelectionComposite, fTextEditor.getSelectionProvider().getSelection());
+
+			IEditorSite site = fTextEditor.getEditorSite();
+			if (site != null) {
+				IWorkbenchWindow window = site.getWorkbenchWindow();
+				if (window != null) {
+					ISelectionService service = window.getSelectionService();
+					if (service != null && !service.getSelection().equals(fTextEditor.getSelectionProvider().getSelection())) {
+						TabItem selectionServiceTab = new TabItem(tabfolder, SWT.BORDER);
+						selectionServiceTab.setText(SSEUIMessages.OffsetStatusLineContributionItem_19);
+						Composite selectionServiceComposite = new Composite(tabfolder, SWT.NONE);
+						selectionServiceTab.setControl(selectionServiceComposite);
+						fillSelectionTabContents(selectionServiceComposite, service.getSelection());
+					}
+				}
+			}
 
 			return composite;
 		}
@@ -263,47 +535,6 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 			partioningComposite.setLayout(new GridLayout(2, false));
 			partioningComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
-			Text documentTypeLabel = new Text(partioningComposite, SWT.SINGLE | SWT.READ_ONLY);
-			GridData gd = new GridData(SWT.FILL, SWT.FILL, true, false);
-			gd.horizontalSpan = 2;
-			documentTypeLabel.setLayoutData(gd);
-			documentTypeLabel.setText(SSEUIMessages.OffsetStatusLineContributionItem_6 + fDocument.getClass().getName()); //$NON-NLS-1$
-
-			Text documentProviderLabel = new Text(partioningComposite, SWT.SINGLE | SWT.READ_ONLY);
-			gd = new GridData(SWT.FILL, SWT.FILL, true, false);
-			gd.horizontalSpan = 2;
-			documentProviderLabel.setLayoutData(gd);
-			documentProviderLabel.setText(SSEUIMessages.OffsetStatusLineContributionItem_7 + fTextEditor.getDocumentProvider().getClass().getName()); //$NON-NLS-1$
-
-			Text editorInputLabel = new Text(partioningComposite, SWT.SINGLE | SWT.READ_ONLY);
-			gd = new GridData(SWT.FILL, SWT.FILL, true, false);
-			gd.horizontalSpan = 2;
-			editorInputLabel.setLayoutData(gd);
-			editorInputLabel.setText(SSEUIMessages.OffsetStatusLineContributionItem_12 + fTextEditor.getEditorInput().getClass().getName()); //$NON-NLS-1$
-
-			IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForRead(fDocument);
-			if (model != null) {
-				Text modelContentTypeLabel = new Text(partioningComposite, SWT.SINGLE | SWT.READ_ONLY);
-				gd = new GridData(SWT.FILL, SWT.FILL, true, false);
-				gd.horizontalSpan = 2;
-				modelContentTypeLabel.setLayoutData(gd);
-				modelContentTypeLabel.setText(SSEUIMessages.OffsetStatusLineContributionItem_4 + model.getContentTypeIdentifier()); //$NON-NLS-1$
-
-				Text modelHandlerContentTypeLabel = new Text(partioningComposite, SWT.MULTI | SWT.WRAP | SWT.READ_ONLY);
-				gd = new GridData(SWT.FILL, SWT.FILL, true, false);
-				gd.horizontalSpan = 2;
-				modelHandlerContentTypeLabel.setLayoutData(gd);
-				modelHandlerContentTypeLabel.setText(SSEUIMessages.OffsetStatusLineContributionItem_5 + model.getModelHandler() + " (" + model.getModelHandler().getAssociatedContentTypeId() + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-
-				Label blankRow = new Label(partioningComposite, SWT.NONE);
-				gd = new GridData(SWT.FILL, SWT.FILL, true, false);
-				gd.horizontalSpan = 2;
-				blankRow.setLayoutData(gd);
-			}
-			if (model != null) {
-				model.releaseFromRead();
-			}
-
 			Text label = new Text(partioningComposite, SWT.SINGLE | SWT.READ_ONLY);
 			label.setText(SSEUIMessages.OffsetStatusLineContributionItem_8); //$NON-NLS-1$
 			label.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false));
@@ -311,7 +542,7 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 			partitioningCombo.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 
 			final Text partitionerInstanceLabel = new Text(partioningComposite, SWT.SINGLE | SWT.READ_ONLY);
-			gd = new GridData(SWT.FILL, SWT.FILL, true, false);
+			GridData gd = new GridData(SWT.FILL, SWT.FILL, true, false);
 			gd.horizontalSpan = 2;
 			partitionerInstanceLabel.setLayoutData(gd);
 
@@ -390,54 +621,36 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 				}
 			});
 			try {
-				String selectedPartitioning = partitioningCombo.getItem(0);
-				if (Utilities.contains(partitionings, IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING)) {
-					selectedPartitioning = IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING;
-					for (int i = 0; i < partitionings.length; i++) {
-						if (partitionings[i].equals(IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING)) {
-							partitioningCombo.select(i);
+				if (partitionings.length > 0) {
+					String selectedPartitioning = partitioningCombo.getItem(0);
+					if (Utilities.contains(partitionings, IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING)) {
+						selectedPartitioning = IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING;
+						for (int i = 0; i < partitionings.length; i++) {
+							if (partitionings[i].equals(IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING)) {
+								partitioningCombo.select(i);
+							}
 						}
 					}
+					else {
+						partitioningCombo.select(0);
+					}
+					ISelection sel = fTextEditor.getSelectionProvider().getSelection();
+					ITextSelection textSelection = (ITextSelection) sel;
+					ITypedRegion[] partitions = TextUtilities.computePartitioning(fDocument, selectedPartitioning, textSelection.getOffset(), textSelection.getLength(), true);
+					fPartitionTable.setInput(partitions);
+					String partitionerText = fDocument instanceof IDocumentExtension3 ? ((IDocumentExtension3) fDocument).getDocumentPartitioner(partitioningCombo.getItem(partitioningCombo.getSelectionIndex())).toString() : ("" + fDocument.getDocumentPartitioner()); //$NON-NLS-1$
+					partitionerInstanceLabel.setText(SSEUIMessages.OffsetStatusLineContributionItem_13 + partitionerText); //$NON-NLS-1$
 				}
 				else {
-					partitioningCombo.select(0);
+					ISelection sel = fTextEditor.getSelectionProvider().getSelection();
+					ITextSelection textSelection = (ITextSelection) sel;
+					fPartitionTable.setInput(fDocument.computePartitioning(textSelection.getOffset(), textSelection.getLength()));
 				}
-				ISelection sel = fTextEditor.getSelectionProvider().getSelection();
-				ITextSelection textSelection = (ITextSelection) sel;
-				fPartitionTable.setInput(TextUtilities.computePartitioning(fDocument, selectedPartitioning, textSelection.getOffset(), textSelection.getLength(), true));
-				String partitionerText = fDocument instanceof IDocumentExtension3 ? ((IDocumentExtension3) fDocument).getDocumentPartitioner(partitioningCombo.getItem(partitioningCombo.getSelectionIndex())).toString() : ("" + fDocument.getDocumentPartitioner()); //$NON-NLS-1$
-				partitionerInstanceLabel.setText(SSEUIMessages.OffsetStatusLineContributionItem_13 + partitionerText); //$NON-NLS-1$
 			}
 			catch (BadLocationException e1) {
 				fPartitionTable.setInput(new ITypedRegion[0]);
 			}
 			partitioningCombo.setFocus();
-		}
-
-		private void createSelectionTabContents(Composite area) {
-			area.setLayout(new GridLayout());
-			area.setLayoutData(new GridData());
-
-			ISelection sel = fTextEditor.getSelectionProvider().getSelection();
-
-			Text typeName = new Text(area, SWT.WRAP);
-			typeName.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
-			typeName.setText(sel.getClass().getName());
-			typeName.setBackground(area.getBackground());
-
-			(new Label(area, SWT.NONE)).setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
-
-			ListViewer objectList = new ListViewer(area, SWT.SINGLE | SWT.BORDER);
-			objectList.setContentProvider(new ArrayContentProvider());
-			if (sel instanceof IStructuredSelection) {
-				Object[] toArray = ((IStructuredSelection) sel).toArray();
-				objectList.setInput(toArray);
-				typeName.setText(toArray.length + " objects in " + sel.getClass().getName());
-			}
-			else {
-				objectList.setInput(new Object[0]);
-			}
-			objectList.getControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		}
 
 		/**
@@ -575,63 +788,136 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 			sashForm.setWeights(new int[]{3, 2});
 			return sashForm;
 		}
-	}
 
-	class MarkerAnnotationPropertySource implements IPropertySource {
-		MarkerAnnotation fMarkerAnnotation = null;
-		IPropertyDescriptor[] fDescriptors = null;
+		private void fillSelectionTabContents(Composite area, ISelection sel) {
+			area.setLayout(new GridLayout());
+			area.setLayoutData(new GridData());
 
-		public MarkerAnnotationPropertySource(MarkerAnnotation markerAnnotation) {
-			super();
-			fMarkerAnnotation = markerAnnotation;
+			Label typeName = new Label(area, SWT.WRAP);
+			typeName.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+			typeName.setText(sel.getClass().getName());
+
+			if (sel instanceof IStructuredSelection) {
+				(new Label(area, SWT.NONE)).setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+
+				final TableViewer structuredSelectionTable = new TableViewer(area, SWT.FULL_SELECTION | SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+
+				structuredSelectionTable.getTable().setHeaderVisible(true);
+				structuredSelectionTable.getTable().setLinesVisible(true);
+
+				structuredSelectionTable.setLabelProvider(new ITableLabelProvider() {
+					public void addListener(ILabelProviderListener listener) {
+					}
+
+					public void dispose() {
+					}
+
+					public Image getColumnImage(Object element, int columnIndex) {
+						if (columnIndex == 2) {
+							if (element instanceof INodeNotifier) {
+								IJFaceNodeAdapter adapter = (IJFaceNodeAdapter) ((INodeNotifier) element).getAdapterFor(IJFaceNodeAdapter.class);
+								if (adapter != null) {
+									return adapter.getLabelImage(element);
+								}
+							}
+						}
+						return null;
+					}
+
+					public String getColumnText(Object element, int columnIndex) {
+						String text = null;
+						if (element != null) {
+							switch (columnIndex) {
+								case 0 : {
+									text = String.valueOf(((List) structuredSelectionTable.getInput()).indexOf(element));
+								}
+									break;
+								case 1 : {
+									text = element.getClass().getName();
+								}
+									break;
+								case 2 : {
+									if (element instanceof INodeNotifier) {
+										IJFaceNodeAdapter adapter = (IJFaceNodeAdapter) ((INodeNotifier) element).getAdapterFor(IJFaceNodeAdapter.class);
+										if (adapter != null) {
+											text = adapter.getLabelText(element);
+										}
+									}
+									else {
+										text = ""; //$NON-NLS-1$
+									}
+								}
+									break;
+								case 3 : {
+									text = element.toString();
+								}
+									break;
+								default :
+									text = ""; //$NON-NLS-1$
+							}
+						}
+						return text;
+					}
+
+					public boolean isLabelProperty(Object element, String property) {
+						return false;
+					}
+
+					public void removeListener(ILabelProviderListener listener) {
+					}
+				});
+
+				TableLayout tlayout = new TableLayout();
+				tlayout.addColumnData(new ColumnWeightData(7, true));
+				tlayout.addColumnData(new ColumnWeightData(28, true));
+				tlayout.addColumnData(new ColumnWeightData(15, true));
+				tlayout.addColumnData(new ColumnWeightData(50, true));
+				structuredSelectionTable.getTable().setLayout(tlayout);
+
+				TableColumn tc = new TableColumn(structuredSelectionTable.getTable(), SWT.NONE);
+				tc.setText("Item"); //$NON-NLS-1$
+				tc.setResizable(true);
+				tc.setWidth(40);
+
+				tc = new TableColumn(structuredSelectionTable.getTable(), SWT.NONE);
+				tc.setText("Class"); //$NON-NLS-1$
+				tc.setResizable(true);
+				tc.setWidth(40);
+
+				tc = new TableColumn(structuredSelectionTable.getTable(), SWT.NONE);
+				tc.setText("Label"); //$NON-NLS-1$
+				tc.setResizable(true);
+				tc.setWidth(40);
+
+				tc = new TableColumn(structuredSelectionTable.getTable(), SWT.NONE);
+				tc.setText("Text"); //$NON-NLS-1$
+				tc.setResizable(true);
+				tc.setWidth(40);
+
+				structuredSelectionTable.setContentProvider(new ArrayContentProvider());
+				List input = ((IStructuredSelection) sel).toList();
+				structuredSelectionTable.setInput(input);
+				structuredSelectionTable.getControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+			}
 		}
 
-		public Object getEditableValue() {
-			return null;
-		}
-
-		public IPropertyDescriptor[] getPropertyDescriptors() {
-			if (fDescriptors == null) {
-				try {
-					Map attrs = fMarkerAnnotation.getMarker().getAttributes();
-					Object[] keys = attrs.keySet().toArray();
-					fDescriptors = new IPropertyDescriptor[keys.length];
-					for (int i = 0; i < keys.length; i++) {
-						TextPropertyDescriptor descriptor = new TextPropertyDescriptor(keys[i].toString(), keys[i].toString());
-						fDescriptors[i] = descriptor;
+		private String getLineNumber(Annotation annotation) {
+			int line = -1;
+			if (annotation instanceof MarkerAnnotation) {
+				line = MarkerUtilities.getLineNumber(((MarkerAnnotation) annotation).getMarker());//$NON-NLS-1$
+			}
+			else {
+				IAnnotationModel annotationModel = fTextEditor.getDocumentProvider().getAnnotationModel(fTextEditor.getEditorInput());
+				Position p = annotationModel.getPosition(annotation);
+				if (p != null && !p.isDeleted()) {
+					try {
+						line = fDocument.getLineOfOffset(p.getOffset());
+					}
+					catch (BadLocationException e) {
 					}
 				}
-				catch (CoreException e) {
-					e.printStackTrace();
-				}
 			}
-			return fDescriptors;
-		}
-
-		public Object getPropertyValue(Object id) {
-			return fMarkerAnnotation.getMarker().getAttribute(id.toString(), ""); //$NON-NLS-1$
-		}
-
-		public boolean isPropertySet(Object id) {
-			return fMarkerAnnotation.getMarker().getAttribute(id.toString(), null) != null;
-		}
-
-		public void resetPropertyValue(Object id) {
-			try {
-				fMarkerAnnotation.getMarker().getAttributes().remove(id);
-			}
-			catch (CoreException e) {
-				e.printStackTrace();
-			}
-		}
-
-		public void setPropertyValue(Object id, Object value) {
-			try {
-				fMarkerAnnotation.getMarker().setAttribute(id.toString(), value);
-			}
-			catch (CoreException e) {
-				e.printStackTrace();
-			}
+			return Integer.toString(line);
 		}
 	}
 
@@ -645,8 +931,8 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 		}
 	}
 
-	class ShowPartitionAction extends Action {
-		public ShowPartitionAction() {
+	class ShowEditorInformationAction extends Action {
+		public ShowEditorInformationAction() {
 			super();
 		}
 
@@ -661,7 +947,7 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 		}
 	}
 
-	IAction fShowPartitionAction = new ShowPartitionAction();
+	IAction fShowEditorInformationAction = new ShowEditorInformationAction();
 
 	ITextEditor fTextEditor = null;
 
@@ -683,6 +969,6 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 
 	public void setActiveEditor(ITextEditor textEditor) {
 		fTextEditor = textEditor;
-		setActionHandler(fShowPartitionAction);
+		setActionHandler(fShowEditorInformationAction);
 	}
 }
