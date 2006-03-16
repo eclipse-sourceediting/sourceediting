@@ -25,9 +25,11 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentExtension3;
+import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jface.text.Position;
+import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.jface.text.reconciler.IReconcileStep;
 import org.eclipse.jface.text.source.Annotation;
@@ -86,6 +88,7 @@ import org.eclipse.ui.views.properties.TextPropertyDescriptor;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitioning;
@@ -484,6 +487,12 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 			partitionTab.setControl(partitions);
 			createPartitionTabContents(partitions);
 
+			TabItem annotationsTab = new TabItem(tabfolder, SWT.BORDER);
+			annotationsTab.setText("Annotations"); //$NON-NLS-1$
+			Composite annotations = new Composite(tabfolder, SWT.NONE);
+			annotationsTab.setControl(annotations);
+			createAnnotationTabContents(annotations);
+
 			// only create the ITextRegions tab for IStructuredDocuments
 			if (fDocument instanceof IStructuredDocument) {
 				TabItem regionTab = new TabItem(tabfolder, SWT.BORDER);
@@ -493,12 +502,6 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 				regionTab.setControl(regions);
 				createRegionTabContents(regions);
 			}
-
-			TabItem annotationsTab = new TabItem(tabfolder, SWT.BORDER);
-			annotationsTab.setText("Annotations"); //$NON-NLS-1$
-			Composite annotations = new Composite(tabfolder, SWT.NONE);
-			annotationsTab.setControl(annotations);
-			createAnnotationTabContents(annotations);
 
 			TabItem editorSelectionTab = new TabItem(tabfolder, SWT.BORDER);
 			editorSelectionTab.setText(SSEUIMessages.OffsetStatusLineContributionItem_14);
@@ -535,13 +538,13 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 			partioningComposite.setLayout(new GridLayout(2, false));
 			partioningComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
-			Text label = new Text(partioningComposite, SWT.SINGLE | SWT.READ_ONLY);
+			Label label = new Label(partioningComposite, SWT.SINGLE);
 			label.setText(SSEUIMessages.OffsetStatusLineContributionItem_8); //$NON-NLS-1$
 			label.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false));
 			final Combo partitioningCombo = new Combo(partioningComposite, SWT.READ_ONLY);
 			partitioningCombo.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 
-			final Text partitionerInstanceLabel = new Text(partioningComposite, SWT.SINGLE | SWT.READ_ONLY);
+			final Label partitionerInstanceLabel = new Label(partioningComposite, SWT.SINGLE);
 			GridData gd = new GridData(SWT.FILL, SWT.FILL, true, false);
 			gd.horizontalSpan = 2;
 			partitionerInstanceLabel.setLayoutData(gd);
@@ -555,7 +558,6 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 			fPartitionTable.getTable().setLinesVisible(true);
 			String[] columns = new String[]{SSEUIMessages.OffsetStatusLineContributionItem_9, SSEUIMessages.OffsetStatusLineContributionItem_10, SSEUIMessages.OffsetStatusLineContributionItem_11}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			fPartitionTable.setLabelProvider(new ITableLabelProvider() {
-
 				public void addListener(ILabelProviderListener listener) {
 				}
 
@@ -795,12 +797,15 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 
 			Label typeName = new Label(area, SWT.WRAP);
 			typeName.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
-			typeName.setText(sel.getClass().getName());
+			typeName.setText("Class: " + sel.getClass().getName());
 
 			if (sel instanceof IStructuredSelection) {
-				(new Label(area, SWT.NONE)).setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+				(new Label(area, SWT.NONE)).setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false));
+				SashForm structuredSashForm = new SashForm(area, SWT.NONE);
+				structuredSashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+				structuredSashForm.setOrientation(SWT.VERTICAL);
 
-				final TableViewer structuredSelectionTable = new TableViewer(area, SWT.FULL_SELECTION | SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+				final TableViewer structuredSelectionTable = new TableViewer(structuredSashForm, SWT.FULL_SELECTION | SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
 
 				structuredSelectionTable.getTable().setHeaderVisible(true);
 				structuredSelectionTable.getTable().setLinesVisible(true);
@@ -813,14 +818,6 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 					}
 
 					public Image getColumnImage(Object element, int columnIndex) {
-						if (columnIndex == 2) {
-							if (element instanceof INodeNotifier) {
-								IJFaceNodeAdapter adapter = (IJFaceNodeAdapter) ((INodeNotifier) element).getAdapterFor(IJFaceNodeAdapter.class);
-								if (adapter != null) {
-									return adapter.getLabelImage(element);
-								}
-							}
-						}
 						return null;
 					}
 
@@ -837,18 +834,6 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 								}
 									break;
 								case 2 : {
-									if (element instanceof INodeNotifier) {
-										IJFaceNodeAdapter adapter = (IJFaceNodeAdapter) ((INodeNotifier) element).getAdapterFor(IJFaceNodeAdapter.class);
-										if (adapter != null) {
-											text = adapter.getLabelText(element);
-										}
-									}
-									else {
-										text = ""; //$NON-NLS-1$
-									}
-								}
-									break;
-								case 3 : {
 									text = element.toString();
 								}
 									break;
@@ -870,7 +855,6 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 				TableLayout tlayout = new TableLayout();
 				tlayout.addColumnData(new ColumnWeightData(7, true));
 				tlayout.addColumnData(new ColumnWeightData(28, true));
-				tlayout.addColumnData(new ColumnWeightData(15, true));
 				tlayout.addColumnData(new ColumnWeightData(50, true));
 				structuredSelectionTable.getTable().setLayout(tlayout);
 
@@ -885,19 +869,98 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 				tc.setWidth(40);
 
 				tc = new TableColumn(structuredSelectionTable.getTable(), SWT.NONE);
-				tc.setText("Label"); //$NON-NLS-1$
-				tc.setResizable(true);
-				tc.setWidth(40);
-
-				tc = new TableColumn(structuredSelectionTable.getTable(), SWT.NONE);
 				tc.setText("Text"); //$NON-NLS-1$
 				tc.setResizable(true);
 				tc.setWidth(40);
 
 				structuredSelectionTable.setContentProvider(new ArrayContentProvider());
-				List input = ((IStructuredSelection) sel).toList();
+				final List input = ((IStructuredSelection) sel).toList();
 				structuredSelectionTable.setInput(input);
-				structuredSelectionTable.getControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+
+				final TreeViewer infoTree = new TreeViewer(structuredSashForm, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+				infoTree.setLabelProvider(new LabelProvider() {
+					public Image getImage(Object element) {
+						if (element instanceof TreeViewer && infoTree.getInput() instanceof INodeNotifier) {
+							IJFaceNodeAdapter adapter = (IJFaceNodeAdapter) ((INodeNotifier) infoTree.getInput()).getAdapterFor(IJFaceNodeAdapter.class);
+							if (adapter != null) {
+								return adapter.getLabelImage((infoTree.getInput()));
+							}
+						}
+						return super.getImage(element);
+					}
+
+					public String getText(Object element) {
+						if (element instanceof Class) {
+							return "Class: " + ((Class) element).getName();
+						}
+						if (element instanceof Collection) {
+							return "Registered Adapters:";
+						}
+						if (element instanceof IRegion) {
+							return "Indexed Region offset span: [" + ((IRegion) element).getOffset() + "-" + ((IRegion) element).getLength() + "]";
+						}
+						if (element instanceof TreeViewer && infoTree.getInput() instanceof INodeNotifier) {
+							IJFaceNodeAdapter adapter = (IJFaceNodeAdapter) ((INodeNotifier) infoTree.getInput()).getAdapterFor(IJFaceNodeAdapter.class);
+							if (adapter != null) {
+								return adapter.getLabelText((infoTree.getInput()));
+							}
+						}
+						return super.getText(element);
+					}
+				});
+				infoTree.setContentProvider(new ITreeContentProvider() {
+					public void dispose() {
+					}
+
+					public Object[] getChildren(Object parentElement) {
+						if (parentElement instanceof Collection)
+							return ((Collection) parentElement).toArray();
+						return new Object[0];
+					}
+
+					public Object[] getElements(Object inputElement) {
+						List elements = new ArrayList(4);
+						if (inputElement != null) {
+							if (inputElement instanceof INodeNotifier && ((INodeNotifier) inputElement).getAdapterFor(IJFaceNodeAdapter.class) != null) {
+								elements.add(infoTree);
+							}
+							elements.add(inputElement.getClass());
+							if (inputElement instanceof IndexedRegion) {
+								elements.add(new Region(((IndexedRegion) inputElement).getStartOffset(), ((IndexedRegion) inputElement).getEndOffset()));
+							}
+							if (inputElement instanceof INodeNotifier) {
+								elements.add(((INodeNotifier) inputElement).getAdapters());
+							}
+						}
+						return elements.toArray();
+					}
+
+					public Object getParent(Object element) {
+						return null;
+					}
+
+					public boolean hasChildren(Object element) {
+						return element instanceof Collection;
+					}
+
+					public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+					}
+				});
+
+				structuredSelectionTable.addSelectionChangedListener(new ISelectionChangedListener() {
+					public void selectionChanged(SelectionChangedEvent event) {
+						int selectionIndex = structuredSelectionTable.getTable().getSelectionIndex();
+						if (selectionIndex != -1) {
+							infoTree.setInput(input.get(selectionIndex));
+						}
+						else {
+							infoTree.setInput(event.getSelectionProvider().getSelection());
+						}
+						infoTree.expandToLevel(2);
+					}
+				});
+
+				structuredSashForm.setWeights(new int[]{3, 2});
 			}
 		}
 
