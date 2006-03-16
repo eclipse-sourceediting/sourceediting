@@ -40,6 +40,8 @@ import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.util.URIResolver;
 import org.eclipse.wst.sse.core.internal.validate.ValidationAdapter;
 import org.eclipse.wst.sse.ui.internal.reconcile.validator.ISourceValidator;
@@ -204,75 +206,78 @@ public class HTMLValidator implements IValidator, ISourceValidator {
 		}
 	}
 	
+
 	/**
-	 * This validate call is for the ISourceValidator partial document validation approach
+	 * This validate call is for the ISourceValidator partial document
+	 * validation approach
+	 * 
 	 * @param dirtyRegion
 	 * @param helper
 	 * @param reporter
-	 *  @see org.eclipse.wst.sse.ui.internal.reconcile.validator.ISourceValidator
+	 * @see org.eclipse.wst.sse.ui.internal.reconcile.validator.ISourceValidator
 	 */
 	public void validate(IRegion dirtyRegion, IValidationContext helper, IReporter reporter) {
-		
+
 		if (helper == null || fDocument == null)
 			return;
-		
+
 		if ((reporter != null) && (reporter.isCancelled() == true)) {
 			throw new OperationCanceledException();
 		}
-		
+
 		IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForRead(fDocument);
 		if (model == null)
 			return; // error
-	
+
 		try {
-		
+
 			IDOMDocument document = null;
-			if(model instanceof IDOMModel) {
-				document = ((IDOMModel)model).getDocument();
+			if (model instanceof IDOMModel) {
+				document = ((IDOMModel) model).getDocument();
 			}
 
 			if (document == null || !hasHTMLFeature(document))
-				return ; // ignore
-	
+				return; // ignore
+
 			ITextFileBuffer fb = FileBufferModelManager.getInstance().getBuffer(fDocument);
-			if(fb == null)
+			if (fb == null)
 				return;
-			
+
 			IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(fb.getLocation());
-			if(file == null || !file.exists())
+			if (file == null || !file.exists())
 				return;
-			
+
 			// this will be the wrong region if it's Text (instead of Element)
 			// we don't know how to validate Text
-			IndexedRegion ir = model.getIndexedRegion(dirtyRegion.getOffset());
-			if(ir instanceof Text) {
-				while(ir != null && ir instanceof Text) {
+			IndexedRegion ir = getCoveringNode(dirtyRegion); //  model.getIndexedRegion(dirtyRegion.getOffset());
+			if (ir instanceof Text) {
+				while (ir != null && ir instanceof Text) {
 					// it's assumed that this gets the IndexedRegion to
 					// the right of the end offset
 					ir = model.getIndexedRegion(ir.getEndOffset());
 				}
 			}
 			
-			if(ir instanceof INodeNotifier) {
-				
+			if (ir instanceof INodeNotifier) {
+
 				INodeAdapterFactory factory = HTMLValidationAdapterFactory.getInstance();
-				ValidationAdapter adapter = (ValidationAdapter) factory.adapt((INodeNotifier)ir);
+				ValidationAdapter adapter = (ValidationAdapter) factory.adapt((INodeNotifier) ir);
 				if (adapter == null)
 					return; // error
-				
+
 				if (reporter != null) {
 					HTMLValidationReporter rep = null;
-					rep = getReporter(reporter, file, (IDOMModel)model);
+					rep = getReporter(reporter, file, (IDOMModel) model);
 					rep.clear();
 					adapter.setReporter(rep);
-					
+
 					String fileName = ""; //$NON-NLS-1$
 					IPath filePath = file.getFullPath();
 					if (filePath != null) {
 						fileName = filePath.toString();
 					}
 					String args[] = new String[]{fileName};
-		
+
 					Message mess = new LocalizedMessage(IMessage.LOW_SEVERITY, NLS.bind(HTMLUIMessages.MESSAGE_HTML_VALIDATION_MESSAGE_UI_, args));
 					mess.setParams(args);
 					reporter.displaySubtask(this, mess);
@@ -281,10 +286,66 @@ public class HTMLValidator implements IValidator, ISourceValidator {
 			}
 		}
 		finally {
-			if(model != null)
+			if (model != null)
 				model.releaseFromRead();
 		}
 	}
+
+	private IndexedRegion getCoveringNode(IRegion dirtyRegion) {
+		
+		IndexedRegion largestRegion = null;
+		if(fDocument instanceof IStructuredDocument) {
+			IStructuredModel sModel = StructuredModelManager.getModelManager().getExistingModelForRead(fDocument);
+			try {
+				if(sModel != null) {
+					IStructuredDocumentRegion[] regions = ((IStructuredDocument)fDocument).getStructuredDocumentRegions(dirtyRegion.getOffset(), dirtyRegion.getLength());
+				    largestRegion = getLargest(regions);
+				}
+			}
+			finally {
+				if(sModel != null)
+					sModel.releaseFromRead();
+			}
+		}
+		return largestRegion;
+	}
+	protected IndexedRegion getLargest(IStructuredDocumentRegion[] sdRegions) {
+		
+		if(sdRegions == null || sdRegions.length == 0)
+			return null;
+		 
+		IndexedRegion currentLargest = getCorrespondingNode(sdRegions[0]);
+		for (int i = 0; i < sdRegions.length; i++) {
+		    if(!sdRegions[i].isDeleted()) {
+    			IndexedRegion corresponding = getCorrespondingNode(sdRegions[i]);
+    			
+    			if(currentLargest instanceof Text)
+    				currentLargest = corresponding;
+    			
+                if(corresponding != null) {
+                	if(!(corresponding instanceof Text)) {
+	        			if (corresponding.getStartOffset() <= currentLargest.getStartOffset()  
+	        						&&  corresponding.getEndOffset() >= currentLargest.getEndOffset() )
+	        				currentLargest = corresponding;
+                	}
+                }
+                
+            }
+		}
+		return currentLargest;
+	}
+	protected IndexedRegion getCorrespondingNode(IStructuredDocumentRegion sdRegion) {
+		IStructuredModel sModel = StructuredModelManager.getModelManager().getExistingModelForRead(fDocument);
+        IndexedRegion indexedRegion = null;
+        try {
+            if (sModel != null) 
+                indexedRegion = sModel.getIndexedRegion(sdRegion.getStart());    
+        } finally {
+            if (sModel != null)
+                sModel.releaseFromRead();
+        }
+        return indexedRegion;
+    }
 
 	/**
 	 * @see org.eclipse.wst.sse.ui.internal.reconcile.validator.ISourceValidator
