@@ -44,6 +44,8 @@ import org.eclipse.wst.sse.core.internal.provisional.INodeAdapterFactory;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.util.URIResolver;
 import org.eclipse.wst.sse.core.internal.validate.ValidationAdapter;
 import org.eclipse.wst.sse.ui.internal.reconcile.validator.ISourceValidator;
@@ -251,7 +253,7 @@ public class HTMLValidator implements IValidatorJob, ISourceValidator {
 
 			// this will be the wrong region if it's Text (instead of Element)
 			// we don't know how to validate Text
-			IndexedRegion ir = model.getIndexedRegion(dirtyRegion.getOffset());
+			IndexedRegion ir = getCoveringNode(dirtyRegion); //  model.getIndexedRegion(dirtyRegion.getOffset());
 			if (ir instanceof Text) {
 				while (ir != null && ir instanceof Text) {
 					// it's assumed that this gets the IndexedRegion to
@@ -259,7 +261,7 @@ public class HTMLValidator implements IValidatorJob, ISourceValidator {
 					ir = model.getIndexedRegion(ir.getEndOffset());
 				}
 			}
-
+			
 			if (ir instanceof INodeNotifier) {
 
 				INodeAdapterFactory factory = HTMLValidationAdapterFactory.getInstance();
@@ -292,6 +294,62 @@ public class HTMLValidator implements IValidatorJob, ISourceValidator {
 				model.releaseFromRead();
 		}
 	}
+
+	private IndexedRegion getCoveringNode(IRegion dirtyRegion) {
+		
+		IndexedRegion largestRegion = null;
+		if(fDocument instanceof IStructuredDocument) {
+			IStructuredModel sModel = StructuredModelManager.getModelManager().getExistingModelForRead(fDocument);
+			try {
+				if(sModel != null) {
+					IStructuredDocumentRegion[] regions = ((IStructuredDocument)fDocument).getStructuredDocumentRegions(dirtyRegion.getOffset(), dirtyRegion.getLength());
+				    largestRegion = getLargest(regions);
+				}
+			}
+			finally {
+				if(sModel != null)
+					sModel.releaseFromRead();
+			}
+		}
+		return largestRegion;
+	}
+	protected IndexedRegion getLargest(IStructuredDocumentRegion[] sdRegions) {
+		
+		if(sdRegions == null || sdRegions.length == 0)
+			return null;
+		 
+		IndexedRegion currentLargest = getCorrespondingNode(sdRegions[0]);
+		for (int i = 0; i < sdRegions.length; i++) {
+		    if(!sdRegions[i].isDeleted()) {
+    			IndexedRegion corresponding = getCorrespondingNode(sdRegions[i]);
+    			
+    			if(currentLargest instanceof Text)
+    				currentLargest = corresponding;
+    			
+                if(corresponding != null) {
+                	if(!(corresponding instanceof Text)) {
+	        			if (corresponding.getStartOffset() <= currentLargest.getStartOffset()  
+	        						&&  corresponding.getEndOffset() >= currentLargest.getEndOffset() )
+	        				currentLargest = corresponding;
+                	}
+                }
+                
+            }
+		}
+		return currentLargest;
+	}
+	protected IndexedRegion getCorrespondingNode(IStructuredDocumentRegion sdRegion) {
+		IStructuredModel sModel = StructuredModelManager.getModelManager().getExistingModelForRead(fDocument);
+        IndexedRegion indexedRegion = null;
+        try {
+            if (sModel != null) 
+                indexedRegion = sModel.getIndexedRegion(sdRegion.getStart());    
+        } finally {
+            if (sModel != null)
+                sModel.releaseFromRead();
+        }
+        return indexedRegion;
+    }
 
 	/**
 	 * @see org.eclipse.wst.sse.ui.internal.reconcile.validator.ISourceValidator
