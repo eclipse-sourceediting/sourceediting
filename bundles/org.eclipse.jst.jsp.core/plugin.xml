@@ -85,7 +85,7 @@
 	</extension>
 
 	<extension point="org.eclipse.core.runtime.contentTypes">
-		<!-- associate JSP file types -->
+		<!-- create content type for JSP files -->
 		<content-type
 			file-extensions="jsp,jsv,jtpl,jspx"
 			priority="high"
@@ -96,6 +96,7 @@
 			<describer
 				class="org.eclipse.jst.jsp.core.internal.contenttype.ContentDescriberForJSP" />
 		</content-type>
+		<!-- create content type for JSP fragment files -->
 		<content-type
 			file-extensions="jspf,jsf"
 			priority="high"
@@ -106,19 +107,22 @@
 			<describer
 				class="org.eclipse.jst.jsp.core.internal.contenttype.ContentDescriberForJSP" />
 		</content-type>
-		<!-- associate JSP 2.0 Tag file types -->
+		<!-- create content type for JSP 2.0 Tag file types -->
 		<content-type
 			file-extensions="tag,tagx,tagf"
 			priority="high"
 			name="%JSP_Tag_Content_Type_Extension_Element.name"
 			id="tagsource"
 			base-type="org.eclipse.jst.jsp.core.jspsource"
-			default-charset="UTF-8">
-		</content-type>
-		<!-- associate .tld files with the XML content type -->
-		<file-association
-			content-type="org.eclipse.core.runtime.xml"
-			file-extensions="tld" />
+			default-charset="UTF-8"/>
+		<!-- create content type for .tld files -->
+		<content-type
+			file-extensions="tld"
+			priority="high"
+			name="%JSP_TLD_Content_Type_Extension_Element.name"
+			id="tldsource"
+			base-type="org.eclipse.core.runtime.xml"
+			default-charset="UTF-8"/>
 	</extension>
 
 	<!-- initialize jsp core preferences -->
