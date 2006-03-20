@@ -14,7 +14,7 @@ package org.eclipse.wst.sse.ui.internal.editor;
 
 import java.util.Iterator;
 
-import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.wst.sse.core.internal.model.FactoryRegistry;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
@@ -61,7 +61,7 @@ public class EditorModelUtil {
 				 * don't specify a content type
 				 */
 				if (provider.isFor(structuredModel.getModelHandler())) {
-					Platform.run(new SafeRunnable(SSEUIMessages.EditorModelUtil_1) { //$NON-NLS-1$
+					SafeRunner.run(new SafeRunnable(SSEUIMessages.EditorModelUtil_1) { //$NON-NLS-1$
 									public void run() {
 										provider.addAdapterFactories(structuredModel);
 									}
