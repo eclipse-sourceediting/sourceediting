@@ -1,0 +1,26 @@
+/*******************************************************************************
+ * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
+package org.eclipse.wst.xsd.adt.edit;
+
+import org.eclipse.wst.xsd.adt.search.ComponentSpecification;
+import org.eclipse.wst.xsd.adt.search.IComponentDescriptionProvider;
+
+public interface ComponentReferenceEditManager
+{
+  public IComponentDialog getBrowseDialog();
+  public IComponentDialog getNewDialog();
+  public void modifyComponentReference(Object referencingObject, ComponentSpecification referencedComponent);
+  public IComponentDescriptionProvider getComponentDescriptionProvider();
+  
+  public ComponentSpecification[] getQuickPicks();
+  public ComponentSpecification[] getHistory();
+  public void addToHistory(ComponentSpecification component);  
+}
