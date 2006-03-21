@@ -55,7 +55,8 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.wst.common.core.search.scope.SearchScope;
-import org.eclipse.wst.xsd.ui.internal.XSDEditorPlugin;
+import org.eclipse.wst.xsd.editor.Messages;
+import org.eclipse.wst.xsd.editor.XSDEditorPlugin;
 
 
 public class ComponentSearchListDialog extends Dialog {
@@ -70,7 +71,7 @@ public class ComponentSearchListDialog extends Dialog {
     protected Composite topComposite;
     protected Composite bottomComposite; 
     private String filterTextLabel = "";
-    private String componentListLabel = XSDEditorPlugin.getXSDString("_UI_LABEL_COMPONENTS");
+    private String componentListLabel = Messages.UI_LABEL_COMPONENTS;
     private Text textFilter;
     protected TableViewer componentTableViewer;
     
