@@ -40,7 +40,6 @@ public class CatalogContributorRegistryReaderTest extends AbstractCatalogTest
 		for (int i = 0; i < entries.size(); i++)
 		{
 			ICatalogEntry entry = (ICatalogEntry)entries.get(i);
-			assertNotNull(entry.getId());
 			if("testSystemId".equals(entry.getId()))
 			{
 				String resolvedURI = resolvePath(pluginId, "data/Personal/personal.dtd");
@@ -89,6 +88,12 @@ public class CatalogContributorRegistryReaderTest extends AbstractCatalogTest
 				String resolvedURI = resolvePath(pluginId, "platform:/plugin/org.eclipse.xsd/cache/www.w3.org/2001/XMLSchema.xsd");
 				assertEquals(resolvedURI, entry.getURI());
 				assertEquals("http://www.w3.org/2001/XMLSchema", entry.getKey());
+			}
+			else if("testURIId3".equals(entry.getId()))
+			{
+				String resolvedURI = resolvePath(pluginId, "jar:platform:/plugin/org.eclipse.wst.xml.catalog.tests/data/schemas.jar!/data/catalog.xsd");
+				assertEquals(resolvedURI, entry.getURI());
+				assertEquals("http://oasis.names.tc.entity.xmlns.xml.catalog", entry.getKey());
 			}
 		}
       
