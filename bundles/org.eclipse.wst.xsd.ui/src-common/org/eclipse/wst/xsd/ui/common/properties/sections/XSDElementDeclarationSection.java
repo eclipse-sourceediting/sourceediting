@@ -22,7 +22,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -65,7 +64,6 @@ public class XSDElementDeclarationSection extends MultiplicitySection
   protected Text typeCombo;
   protected Button typesBrowseButton;
   protected CCombo componentNameCombo;
-  static Image browseIcon = XSDEditorPlugin.getImageDescriptor("icons/browsebutton.gif").createImage();
   boolean isElementReference;
 
   private XSDTypeDefinition typeDefinition;
@@ -173,7 +171,7 @@ public class XSDElementDeclarationSection extends MultiplicitySection
     data.grabExcessHorizontalSpace = false;
 
     typesBrowseButton = getWidgetFactory().createButton(composite, "", SWT.PUSH);
-    typesBrowseButton.setImage(browseIcon);
+    typesBrowseButton.setImage(XSDEditorPlugin.getXSDImage("icons/browsebutton.gif"));
     typesBrowseButton.addSelectionListener(this);
     typesBrowseButton.setLayoutData(data);
 

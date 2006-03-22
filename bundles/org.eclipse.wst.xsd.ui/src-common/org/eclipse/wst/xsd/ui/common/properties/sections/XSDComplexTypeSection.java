@@ -19,7 +19,6 @@ import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -52,7 +51,6 @@ public class XSDComplexTypeSection extends AbstractSection implements SelectionL
   protected CCombo derivedByCombo;
   protected Button button;
   private String derivedByChoicesComboValues[] = { "", XSDConstants.RESTRICTION_ELEMENT_TAG, XSDConstants.EXTENSION_ELEMENT_TAG };
-  static Image browseIcon = XSDEditorPlugin.getImageDescriptor("icons/browsebutton.gif").createImage();
 
   public XSDComplexTypeSection()
   {
@@ -126,7 +124,7 @@ public class XSDComplexTypeSection extends AbstractSection implements SelectionL
     data.grabExcessHorizontalSpace = false;
 
     button = getWidgetFactory().createButton(composite, "", SWT.PUSH);
-    button.setImage(browseIcon);
+    button.setImage(XSDEditorPlugin.getXSDImage("icons/browsebutton.gif"));
     button.addSelectionListener(this);
     button.setLayoutData(data);
 

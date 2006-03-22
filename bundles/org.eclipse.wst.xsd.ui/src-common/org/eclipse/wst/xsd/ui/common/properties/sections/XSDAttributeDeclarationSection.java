@@ -14,7 +14,6 @@ import org.apache.xerces.util.XMLChar;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -34,7 +33,6 @@ public class XSDAttributeDeclarationSection extends AbstractSection
   protected Text nameText;
   protected Text typeCombo;
   protected Button button;
-  static Image browseIcon = XSDEditorPlugin.getImageDescriptor("icons/browsebutton.gif").createImage();
   boolean isAttributeReference;
   
   public XSDAttributeDeclarationSection()
@@ -104,7 +102,7 @@ public class XSDAttributeDeclarationSection extends AbstractSection
     data.grabExcessHorizontalSpace = false;
 
     button = getWidgetFactory().createButton(composite, "", SWT.PUSH);
-    button.setImage(browseIcon);
+    button.setImage(XSDEditorPlugin.getXSDImage("icons/browsebutton.gif"));
     button.addSelectionListener(this);
     button.setLayoutData(data);
   }
