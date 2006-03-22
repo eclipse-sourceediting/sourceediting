@@ -212,23 +212,6 @@
 
   <extension-point id="XSDEditorExtensionConfiguration" name="XSDEditorExtensionConfiguration"/>
 
-		
-   <extension point="org.eclipse.ui.popupMenus"> 
-      <objectContribution 
-         id="org.eclipse.wst.xsd.editor.refactoring.menu.objectContrib" 
-         objectClass="org.eclipse.wst.xsd.editor.internal.adapters.XSDBaseAdapter">  
-         <action
-            id="org.eclipse.wst.xsdeditor.refactoring.menu.refactorGroup.object" 
-            enablesFor="1"
-            style="pulldown"
-            menubarPath="refactoring-slot-temp"
-            label="Refactor" 
-            class="org.eclipse.wst.xsd.editor.internal.refactor.actions.XSDRefactorGroupActionDelegate"> 
-         </action>          
-      </objectContribution>               
-    </extension>
-
-
 	<extension
 		point="org.eclipse.wst.xml.core.catalogContributions">
 		<catalogContribution id="default">
@@ -242,62 +225,13 @@
 		</catalogContribution>
 	</extension>
 
-
-	<!-- intialize xsd reconcile validator -->
-	<!--
-	<extension point="org.eclipse.wst.sse.ui.sourcevalidation">
-		<validator
-			scope="total"
-			class="org.eclipse.wst.xsd.ui.internal.validation.DelegatingSourceValidatorForXSD"
-			id="org.eclipse.wst.xsd.ui.internal.validation.DelegatingSourceValidatorForXSD">
-			<contentTypeIdentifier
-				id="org.eclipse.wst.xsd.core.xsdsource">
-				<partitionType id="org.eclipse.wst.xml.XML_DEFAULT">
-				</partitionType>
-			</contentTypeIdentifier>
-		</validator>
-	</extension>
--->
 	<extension point="org.eclipse.ui.contexts">
 		<context
 			id="org.eclipse.wst.xsd.ui.text.editor.context"
 			name="%context.text.editor.xsd.name"
 			parentId="org.eclipse.ui.textEditorScope" />
 	</extension>
-<!--
-	<extension point="org.eclipse.ui.commands">
-		<command
-			name="%command.xsd.refactor.rename.element.name"
-			description="%command.xsd.refactor.rename.element.description"
-			categoryId="org.eclipse.ui.category.edit"
-			id="org.eclipse.wst.xsd.ui.refactor.rename.element">
-		</command>
-		<keyBinding
-			keySequence="Alt+Shift+R"
-			contextId="org.eclipse.wst.xsd.ui.text.editor.context"
-			commandId="org.eclipse.wst.xsd.ui.refactor.rename.element"
-			keyConfigurationId="org.eclipse.ui.defaultAcceleratorConfiguration">
-		</keyBinding>
-	</extension>
 
-	<extension point="org.eclipse.ui.commands">
-		<command
-			name="%command.xsd.refactor.makeElementGlobal.element.name"
-			description="%command.xsd.refactor.makeElementGlobal.element.description"
-			categoryId="org.eclipse.ui.category.edit"
-			id="org.eclipse.wst.xsd.ui.refactor.makeElementGlobal">
-		</command>
-	</extension>
-
-	<extension point="org.eclipse.ui.commands">
-		<command
-			name="%command.xsd.refactor.makeTypeGlobal.element.name"
-			description="%command.xsd.refactor.makeTypeGlobal.element.description"
-			categoryId="org.eclipse.ui.category.edit"
-			id="org.eclipse.wst.xsd.ui.refactor.makeTypeGlobal">
-		</command>
-	</extension>
--->
 	<!-- this extension point is used to augment the ModelQuery to provide schema specific guided editing -->
 	<extension point="org.eclipse.wst.xml.core.modelQueryExtensions">
 		<modelQueryExtension
@@ -306,62 +240,6 @@
 		</modelQueryExtension>
 	</extension>
 
-	<!--extension
-		point="org.eclipse.ltk.core.refactoring.renameParticipants">
-		<renameParticipant
-		name="%xsd.resource.rename.participant.name"
-		class="org.eclipse.wst.xsd.ui.internal.refactor.rename.XSDResourceRenameParticipant"
-		id="org.eclipse.wst.xsd.ui.refactoring.XSDResourceRenameParticipant">
-		<enablement>
-		<with
-		variable="element">
-		<instanceof
-		value="org.eclipse.core.resources.IResource">
-		</instanceof>
-		</with>
-		</enablement>
-		</renameParticipant>
-		</extension-->
-
-	<!-- 
-		The following extension to the file context menu is temporary until resource 
-		navigator will provide allow to extend refactor menu        
-	-->
-	<!--
-		<extension point="org.eclipse.ui.popupMenus">
-		<objectContribution
-		objectClass="org.eclipse.core.resources.IFile"
-		nameFilter="*.xsd"
-		id="org.wst.xsd.ui.rename">
-		<menu id="refactorXSDResource" path="additions" label="%refactoring.menu.label">
-		<separator name="refactor"/>
-		</menu>
-		<action
-		label="%refactoring.renameAction.label"
-		menubarPath="refactorXSDResource/refactor"
-		class="org.eclipse.wst.xsd.ui.internal.refactor.actions.RenameResourceActionDelegate"
-		enablesFor="1"
-		id="org.eclipse.wst.xsd.ui.refactoring.actions.RenameResource">
-		</action>
-		</objectContribution>
-		</extension>
-	-->
-<!--
-   <extension point="org.eclipse.ui.popupMenus"> 
-      <objectContribution 
-         id="org.eclipse.wst.xsd.editor.refactoring.menu.objectContrib" 
-         objectClass="org.eclipse.wst.xsd.editor.internal.adapters.XSDBaseAdapter">  
-         <action
-            id="org.eclipse.wst.xsdeditor.refactoring.menu.refactorGroup.object" 
-            enablesFor="1"
-            style="pulldown"
-            menubarPath="refactoring-slot-temp"
-            label="Refactor" 
-            class="org.eclipse.wst.xsd.editor.internal.refactor.actions.XSDRefactorGroupActionDelegate"> 
-         </action>          
-      </objectContribution>               
-    </extension>
-	-->
 	<!-- ====================================================== -->
 	<!-- Define Assign Validate action on .xsd file             -->
 	<!-- ====================================================== -->
@@ -405,7 +283,6 @@
 	<!-- ============================================================================== -->
 	<!-- Register the XSDSearchParticpant against for XMLComponentSearchPatterns 		-->
 	<!-- ============================================================================== -->	
-<!--
 	 <extension   
 		point="org.eclipse.wst.common.core.searchParticipants">
 		<searchParticipant
@@ -419,13 +296,12 @@
 				</or>
 			</enablement>
 		</searchParticipant>
-	 </extension>
--->	
+	</extension>
+
 	<!-- ============================================================================== -->	 
     <!-- Register a 'rename' participant this enables us to provide refactoring for     --> 
     <!-- renamed XML Schema components (e.g. elements, types etc.)                      --> 
 	<!-- ============================================================================== -->	 
-<!--
 	<extension
 		point="org.eclipse.ltk.core.refactoring.renameParticipants">
 		<renameParticipant
@@ -443,7 +319,6 @@
 		
 	</extension>
 	
--->
 	<!-- ============================================================================== -->	 
     <!-- Register a 'rename' participant this enables us to provide refactoring for     --> 
     <!-- renamed resources.                                                             --> 
@@ -463,17 +338,19 @@
 		</renameParticipant>
 	</extension>
 	-->
-<!--	
+	<!-- ============================================================================================== -->
+	<!-- Register the  'Refactor', 'References' and 'Declarations' items to the design view	            -->
+	<!-- ============================================================================================== -->	    
    <extension point="org.eclipse.ui.popupMenus"> 
       <objectContribution 
          id="org.eclipse.wst.xsd.ui.refactoring.menu.objectContrib" 
-         objectClass="org.eclipse.xsd.XSDComponent">  
+         objectClass="org.eclipse.wst.xsd.editor.internal.adapters.XSDBaseAdapter">  
          <action
             id="org.eclipse.wst.xsd.ui.search.declarations.action" 
             enablesFor="1"
             style="pulldown"
             menubarPath="search-slot"
-            label="%action.label.0"
+            label="%search.declarations.label"
             class="org.eclipse.wst.xsd.ui.internal.search.actions.XSDSearchDeclarationsGroupActionDelegate"> 
          </action>          
          <action
@@ -481,7 +358,7 @@
             enablesFor="1"
             style="pulldown"
             menubarPath="search-slot"
-            label="%action.label.1"
+            label="%search.references.label"
             class="org.eclipse.wst.xsd.ui.internal.search.actions.XSDSearchReferencesGroupActionDelegate"> 
          </action>
          <action
@@ -489,11 +366,12 @@
             enablesFor="1"
             style="pulldown"
             menubarPath="refactoring-slot"
-            label="%refactoring.menu.label" 
+            label="%refactoringActionSet.label" 
             class="org.eclipse.wst.xsd.ui.internal.refactor.actions.XSDRefactorGroupActionDelegate"> 
-         </action>          
+         </action>   
       </objectContribution>         
-    <viewerContribution
+      <!-- here we add the 'refactor' menu item to the source view -->
+      <viewerContribution
         id="org.eclipse.wst.xsd.ui.refactoring.menu.source"
         targetID="org.eclipse.wst.xsd.core.xsdsource.source.EditorContext">
 	    <action id="org.eclipse.wst.xsd.ui.refactoring.menu.refactorGroup.source"
@@ -502,38 +380,9 @@
             label="%refactoring.menu.label" 
             class="org.eclipse.wst.xsd.ui.internal.refactor.actions.XSDRefactorGroupActionDelegate"> 
   	    </action>
-       </viewerContribution>
-       
+       </viewerContribution>       
      </extension>
--->
-<!--
-	<extension point="org.eclipse.ui.commands">
-		<command
-			name="%command.xsd.refactor.rename.element.name"
-			description="%command.xsd.refactor.rename.element.description"
-			categoryId="org.eclipse.ui.category.edit"
-			id="org.eclipse.wst.xsd.ui.refactor.rename.element">
-		</command>
-		<command
-			name="%command.xsd.refactor.makeElementGlobal.element.name"
-			description="%command.xsd.refactor.makeElementGlobal.element.description"
-			categoryId="org.eclipse.ui.category.edit"
-			id="org.eclipse.wst.xsd.ui.refactor.makeElementGlobal">
-		</command>
-		<command
-			name="%command.xsd.refactor.makeTypeGlobal.element.name"
-			description="%command.xsd.refactor.makeTypeGlobal.element.description"
-			categoryId="org.eclipse.ui.category.edit"
-			id="org.eclipse.wst.xsd.ui.refactor.makeTypeGlobal">
-		</command>
-		<command
-			name="%command.xsd.refactor.renameTargetNamespace.name"
-			description="%command.xsd.refactor.renameTargetNamespace.description"
-			categoryId="org.eclipse.ui.category.edit"
-			id="org.eclipse.wst.xsd.ui.refactor.renameTargetNamespace">
-		</command>
-	</extension>
--->
+
 	
 	<!-- 
 		The following extension to the file context menu is temporary until resource 
