@@ -32,7 +32,7 @@ import org.eclipse.wst.common.core.search.scope.ProjectSearchScope;
 import org.eclipse.wst.common.core.search.scope.SearchScope;
 //import org.eclipse.wst.common.core.search.scope.WorkingSetSearchScope;
 import org.eclipse.wst.common.core.search.scope.WorkspaceSearchScope;
-import org.eclipse.wst.xsd.ui.internal.XSDEditorPlugin;
+import org.eclipse.wst.xsd.editor.XSDEditorPlugin;
 
 public class ScopedComponentSearchListDialog extends ComponentSearchListDialog
 {
