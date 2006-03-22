@@ -76,33 +76,45 @@ public class CatalogContributorRegistryReader
   }
   
   public static String resolvePath(URL platformURL, String path) 
-  {         
-    if (path.startsWith("platform:/plugin")) //$NON-NLS-1$
+  {      
+	String fileLocation = path;
+	int jarPathStart = path.indexOf("jar:");
+	jarPathStart = jarPathStart < 0 ? 0 : jarPathStart + "jar:".length();
+	int jarPathEnd = path.indexOf("!");
+	jarPathEnd = jarPathEnd < 0 ? path.length() : jarPathEnd;
+	fileLocation = path.substring(jarPathStart, jarPathEnd);
+	
+	String result = path;
+	String resolvedLocation = fileLocation;
+	URL resolvedURL = null;
+    if (fileLocation.startsWith("platform:/plugin")) //$NON-NLS-1$
     {
       // this is the speclial case, where the resource is located relative 
       // to another plugin (not the one that declares the extension point)
       //
-		URL resolvedURL;
 		try
 		{
-			resolvedURL = Platform.resolve(new URL(path));
-			return resolvedURL.toString();
+			resolvedURL = Platform.resolve(new URL(fileLocation));
 		} catch (IOException e)
 		{
-			return path;
-		}
-      
+			// do nothing
+		} 
     }
-    // this is the typical case, where the resource is located relative
-    // to the plugin that declares the extension point
-    try {
-    	URL resolvedURL = Platform.resolve(platformURL);
-    	URL absoluteURL = new URL(resolvedURL, path);
-    	return absoluteURL.toString();
-    } catch (IOException e) {
-    	return path;
+    else{
+    	 // this is the typical case, where the resource is located relative
+        // to the plugin that declares the extension point
+    	 try {
+    	     	resolvedURL = new URL(Platform.resolve(platformURL), fileLocation);
+    	 } catch (IOException e) {
+    	    	// do nothing
+    	 }
     }
-     
+   
+   if(resolvedURL != null){
+    	resolvedLocation = resolvedURL.toExternalForm().replace('\\', '/');
+    	result = result.replaceFirst(fileLocation, resolvedLocation);
+    }
+    return result;
   }
   
   public static URL getPlatformURL(String pluginId){

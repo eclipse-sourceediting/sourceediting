@@ -103,7 +103,7 @@ public class XMLCatalogTreeViewer extends TreeViewer {
 				base = image;
 
 				if (base != null) {
-					if (URIHelper.isReadableURI(uri, false)) {
+					if (URIHelper.isReadableURI(uri, true)) {
 						result = base;
 					}
 					else {
