@@ -105,7 +105,7 @@ public class BaseFieldEditPart extends BaseTypeConnectingEditPart implements INa
         {
           connectionFigure.setSourceAnchor(new CenteredConnectionAnchor(getFigure(), CenteredConnectionAnchor.RIGHT, 5));
         }
-        int targetAnchorYOffset = 16;
+        int targetAnchorYOffset = 8;
 
         connectionFigure.setTargetAnchor(new CenteredConnectionAnchor(referenceTypePart.getFigure(), CenteredConnectionAnchor.HEADER_LEFT, 0, targetAnchorYOffset)); 
         connectionFigure.setHighlight(false);
