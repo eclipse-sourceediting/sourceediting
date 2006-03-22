@@ -15,7 +15,7 @@ import org.eclipse.ltk.core.refactoring.participants.RenameRefactoring;
 import org.eclipse.ltk.ui.refactoring.RefactoringWizard;
 import org.eclipse.ltk.ui.refactoring.RefactoringWizardOpenOperation;
 import org.eclipse.wst.xml.core.internal.document.DocumentImpl;
-import org.eclipse.wst.xsd.ui.internal.XSDEditorPlugin;
+import org.eclipse.wst.xsd.editor.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.internal.refactor.structure.MakeAnonymousTypeGlobalCommand;
 import org.eclipse.wst.xsd.ui.internal.refactor.structure.MakeTypeGlobalProcessor;
 import org.eclipse.wst.xsd.ui.internal.refactor.wizard.RefactoringWizardMessages;
