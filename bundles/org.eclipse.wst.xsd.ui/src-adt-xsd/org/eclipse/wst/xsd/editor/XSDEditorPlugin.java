@@ -33,7 +33,8 @@ public class XSDEditorPlugin extends AbstractUIPlugin
   public static final String CONST_PREFERED_BUILT_IN_TYPES = "org.eclipse.wst.xmlschema.preferedBuiltInTypes"; 
   public static final String CUSTOM_LIST_SEPARATOR = "\n";
   public static final String APPINFO_EXTENSIONID = "org.eclipse.wst.xsd.ui.ApplicationInformationDescription";
-	
+  public final static String DEFAULT_TARGET_NAMESPACE = "http://www.example.org";
+  
 	//The shared instance.
 	private static XSDEditorPlugin plugin;
 	//Resource bundle.
