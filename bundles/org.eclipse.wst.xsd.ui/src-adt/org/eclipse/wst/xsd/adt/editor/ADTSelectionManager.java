@@ -100,6 +100,10 @@ public class ADTSelectionManager extends MultiPageSelectionProvider implements I
           listener.selectionChanged(event);
         }
       }
+      catch (Exception e)
+      {
+        e.printStackTrace();
+      }
       finally
       {
         enableNotify = true;
