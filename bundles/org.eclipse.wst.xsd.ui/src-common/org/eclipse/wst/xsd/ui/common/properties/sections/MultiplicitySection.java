@@ -31,6 +31,10 @@ public class MultiplicitySection extends AbstractSection
   protected Button requiredButton;
   protected boolean isRequired;
  
+  public MultiplicitySection()
+  {
+    super();
+  }
 
   protected void createContents(Composite parent)
   {

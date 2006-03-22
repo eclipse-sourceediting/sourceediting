@@ -102,9 +102,9 @@ public class DesignViewContextMenuProvider extends ContextMenuProvider
           }
         }
         menu.add(new Separator());       
-        menu.add(new Separator("refactoring-slot-temp")); 
+        menu.add(new Separator("refactoring-slot")); 
         menu.add(new Separator());       
-        menu.add(new Separator("search_slot_temp"));       
+        menu.add(new Separator("search-slot"));       
         menu.add(new Separator());
       }
     }    

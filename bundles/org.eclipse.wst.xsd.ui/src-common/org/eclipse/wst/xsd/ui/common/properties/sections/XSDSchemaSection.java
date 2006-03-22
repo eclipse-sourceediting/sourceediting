@@ -332,6 +332,7 @@ public class XSDSchemaSection extends AbstractSection
 
     XSDSchemaHelper.updateElement(xsdSchema);
 
+    
     doc.getModel().endRecording(this);
 
     // For debugging
