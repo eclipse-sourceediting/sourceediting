@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.EventObject;
 import java.util.Iterator;
 import java.util.List;
+
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -44,10 +45,7 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IFileEditorInput;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.part.MultiPageEditorPart;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
@@ -205,20 +203,6 @@ public abstract class ADTMultiPageEditor extends MultiPageEditorPart implements 
       title = getEditorInput().getName();
     }
     setPartName(title);
-
-    IWorkbenchWindow dw = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-    IWorkbenchPage page = dw.getActivePage();
-    //getSite().getPage().addPartListener(partListener);
-    try {
-      if (page != null) {
-        // page.showView("org.eclipse.ui.views.ContentOutline");
-        page.showView("org.eclipse.ui.views.PropertySheet");
-      }
-    }
-    catch (PartInitException e) {
-      // e.printStackTrace();
-    }
-
   }
 
   /*
