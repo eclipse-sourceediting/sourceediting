@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.common.commands;
 
+import org.eclipse.xsd.XSDAttributeDeclaration;
 import org.eclipse.xsd.XSDElementDeclaration;
 import org.eclipse.xsd.XSDFactory;
 import org.eclipse.xsd.XSDFeature;
@@ -45,6 +46,10 @@ public class ChangeToLocalSimpleTypeCommand extends BaseCommand
     if (parent instanceof XSDElementDeclaration)
     {
       ((XSDElementDeclaration)parent).setAnonymousTypeDefinition(anonymousSimpleType);
+    }
+    else if (parent instanceof XSDAttributeDeclaration)
+    {
+      ((XSDAttributeDeclaration)parent).setAnonymousTypeDefinition(anonymousSimpleType);
     }
     formatChild(parent.getElement());
   }
