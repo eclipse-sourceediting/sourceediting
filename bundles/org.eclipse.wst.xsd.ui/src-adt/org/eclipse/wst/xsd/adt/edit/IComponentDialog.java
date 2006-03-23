@@ -10,9 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.adt.edit;
 
-import org.eclipse.wst.xsd.adt.search.ComponentSpecification;
-
-
+import org.eclipse.wst.common.ui.internal.search.dialogs.ComponentSpecification;
 
 public interface IComponentDialog  {
   

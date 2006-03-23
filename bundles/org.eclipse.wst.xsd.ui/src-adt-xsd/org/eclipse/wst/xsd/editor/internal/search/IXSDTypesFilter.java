@@ -8,19 +8,18 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.xsd.editor.internal.dialogs;
+package org.eclipse.wst.xsd.editor.internal.search;
 
-import org.eclipse.wst.common.ui.internal.search.dialogs.INewComponentHandler;
-
-public class NewTypeButtonHandler implements INewComponentHandler
-{
-  public NewTypeButtonHandler()
-  {
-  }
-
-  public void openNewComponentDialog()
-  {
-    NewTypeDialog newTypeDialog = new NewTypeDialog();
-    newTypeDialog.open();
-  }
+public interface IXSDTypesFilter {	
+	/**
+	 * Give me an Object o, if I know it and it should be filtered out, I will 
+	 * return true. Otherwise I'll return false, even if I don't know the object 
+	 * @param o
+	 * @return
+	 */
+	public boolean shouldFilterOut(Object o);
+	
+	public void turnOn();
+	public void turnOff();
+	public boolean isOn();
 }

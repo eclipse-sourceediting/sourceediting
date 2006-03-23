@@ -19,11 +19,11 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.common.core.search.pattern.QualifiedName;
+import org.eclipse.wst.common.ui.internal.search.dialogs.ComponentSearchListDialog;
+import org.eclipse.wst.common.ui.internal.search.dialogs.ComponentSearchListDialogConfiguration;
+import org.eclipse.wst.common.ui.internal.search.dialogs.ComponentSpecification;
+import org.eclipse.wst.common.ui.internal.search.dialogs.ScopedComponentSearchListDialog;
 import org.eclipse.wst.xsd.adt.edit.IComponentDialog;
-import org.eclipse.wst.xsd.adt.search.ComponentSearchListDialog;
-import org.eclipse.wst.xsd.adt.search.ComponentSearchListDialogConfiguration;
-import org.eclipse.wst.xsd.adt.search.ComponentSpecification;
-import org.eclipse.wst.xsd.adt.search.ScopedComponentSearchListDialog;
 import org.eclipse.wst.xsd.editor.XSDEditorPlugin;
 import org.eclipse.wst.xsd.editor.internal.dialogs.NewTypeButtonHandler;
 import org.eclipse.wst.xsd.ui.internal.search.IXSDSearchConstants;
@@ -89,13 +89,8 @@ public class XSDSearchListDialogDelegate implements IComponentDialog
       };
       configuration.setDescriptionProvider(descriptionProvider);
       configuration.setSearchListProvider(searchListProvider);
+      configuration.setNewComponentHandler(new NewTypeButtonHandler());
       dialog = new ScopedComponentSearchListDialog(shell, XSDEditorPlugin.getXSDString("_UI_LABEL_SET_TYPE"), configuration);
-      dialog.setFilterLabel("Text:");
-            
-
-      
-      // TODO another non-open-source thing needs to be removed
-      dialog.setNewButtonSelectionListener(new NewTypeButtonHandler());
     }
     
     if (dialog != null)

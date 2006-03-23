@@ -12,7 +12,6 @@ package org.eclipse.wst.xsd.ui.common.properties.sections;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.apache.xerces.util.XMLChar;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.gef.commands.Command;
@@ -35,10 +34,10 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
-import org.eclipse.wst.xsd.adt.search.ComponentSearchListDialog;
-import org.eclipse.wst.xsd.adt.search.ComponentSearchListDialogConfiguration;
-import org.eclipse.wst.xsd.adt.search.ComponentSpecification;
-import org.eclipse.wst.xsd.adt.search.ScopedComponentSearchListDialog;
+import org.eclipse.wst.common.ui.internal.search.dialogs.ComponentSearchListDialog;
+import org.eclipse.wst.common.ui.internal.search.dialogs.ComponentSearchListDialogConfiguration;
+import org.eclipse.wst.common.ui.internal.search.dialogs.ComponentSpecification;
+import org.eclipse.wst.common.ui.internal.search.dialogs.ScopedComponentSearchListDialog;
 import org.eclipse.wst.xsd.editor.Messages;
 import org.eclipse.wst.xsd.editor.XSDEditorPlugin;
 import org.eclipse.wst.xsd.editor.internal.dialogs.NewTypeButtonHandler;
@@ -389,9 +388,9 @@ public class XSDElementDeclarationSection extends MultiplicitySection
       };
       configuration.setDescriptionProvider(new XSDComponentDescriptionProvider() );
       configuration.setSearchListProvider(searchListProvider);      
+      configuration.setNewComponentHandler(new NewTypeButtonHandler());
       ComponentSearchListDialog dialog = new ScopedComponentSearchListDialog(shell, XSDEditorPlugin.getXSDString("_UI_LABEL_SET_TYPE"), configuration);
-      dialog.setFilterLabel("Text:");
-      dialog.setNewButtonSelectionListener(new NewTypeButtonHandler());
+      //dialog.setFilterLabel("Text:");
 
       if (input instanceof XSDAttributeDeclaration)
       {

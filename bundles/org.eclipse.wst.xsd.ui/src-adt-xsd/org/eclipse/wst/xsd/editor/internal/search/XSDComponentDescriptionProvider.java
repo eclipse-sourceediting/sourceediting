@@ -18,8 +18,8 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.common.core.search.SearchMatch;
 import org.eclipse.wst.common.core.search.pattern.QualifiedName;
-import org.eclipse.wst.xsd.adt.search.ComponentSpecification;
-import org.eclipse.wst.xsd.adt.search.IComponentDescriptionProvider;
+import org.eclipse.wst.common.ui.internal.search.dialogs.ComponentSpecification;
+import org.eclipse.wst.common.ui.internal.search.dialogs.IComponentDescriptionProvider;
 import org.eclipse.wst.xsd.editor.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.internal.search.IXSDSearchConstants;
 import org.eclipse.xsd.XSDComplexTypeDefinition;
@@ -31,6 +31,13 @@ import org.eclipse.xsd.XSDSimpleTypeDefinition;
 
 public class XSDComponentDescriptionProvider extends LabelProvider implements IComponentDescriptionProvider
 {
+  public boolean isApplicable(Object component)
+  {
+    // TODO (cs) if this provider is used in a multi language context
+    // we'll need to provide some logic here
+    return true;
+  }
+
   private static final Image SIMPLE_TYPE_IMAGE =  XSDEditorPlugin.getXSDImage("icons/XSDSimpleType.gif");
   private static final Image COMPLEX_TYPE_IMAGE = XSDEditorPlugin.getXSDImage("icons/XSDComplexType.gif");
   private static final Image ELEMENT_IMAGE = XSDEditorPlugin.getXSDImage("icons/XSDElement.gif");
