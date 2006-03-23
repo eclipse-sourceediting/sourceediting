@@ -12,7 +12,6 @@ package org.eclipse.wst.xsd.editor.internal.search;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -28,12 +27,10 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
-import org.eclipse.wst.xsd.adt.search.ComponentSearchListDialog;
-import org.eclipse.wst.xsd.adt.search.IXSDTypesFilter;
+import org.eclipse.wst.common.ui.internal.search.dialogs.ComponentSearchListDialog;
 import org.eclipse.wst.xsd.editor.XSDEditorPlugin;
 import org.eclipse.wst.xsd.editor.internal.dialogs.BuiltInTypesTreeViewerProvider;
 import org.eclipse.wst.xsd.editor.internal.dialogs.SelectBuiltInTypesForFilteringDialog;
-
 import org.eclipse.wst.xsd.ui.internal.dialogs.types.xml.XMLComponentSpecification;
 import org.eclipse.xsd.XSDTypeDefinition;
 
