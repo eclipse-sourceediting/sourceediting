@@ -171,15 +171,13 @@ public class ElementNodeCleanupHandler extends AbstractNodeCleanupHandler {
 			IDOMNode eachAttr = (IDOMNode) attributes.item(i);
 			String oldAttrName = eachAttr.getNodeName();
 			String newAttrName = oldAttrName;
-			// 254961 - all HTML tag names and attribute names should be in
-			// English
-			// even for HTML files in other languages like Japanese or
-			// Turkish.
-			// English locale should be used to convert between uppercase and
-			// lowercase
-			// (otherwise "link" would be converted to "L�NK" in Turkish,
-			// where '?' in "L�NK"
-			// is the "I Overdot Capital" in Turkish).
+			/*
+			 * 254961 - all HTML tag names and attribute names should be in
+			 * English even for HTML files in other languages like Japanese or
+			 * Turkish. English locale should be used to convert between
+			 * uppercase and lowercase (otherwise "link" would be converted to
+			 * Turkish "I Overdot Capital").
+			 */
 			if (attrNameCase == HTMLCorePreferenceNames.LOWER)
 				newAttrName = oldAttrName.toLowerCase(Locale.US);
 			else if (attrNameCase == HTMLCorePreferenceNames.UPPER)
@@ -214,14 +212,13 @@ public class ElementNodeCleanupHandler extends AbstractNodeCleanupHandler {
 		String newTagName = oldTagName;
 		IDOMNode newNode = node;
 
-		// 254961 - all HTML tag names and attribute names should be in
-		// English
-		// even for HTML files in other languages like Japanese or Turkish.
-		// English locale should be used to convert between uppercase and
-		// lowercase
-		// (otherwise "link" would be converted to "L�NK" in Turkish, where
-		// '?' in "L�NK"
-		// is the "I Overdot Capital" in Turkish).
+		/*
+		 * 254961 - all HTML tag names and attribute names should be in
+		 * English even for HTML files in other languages like Japanese or
+		 * Turkish. English locale should be used to convert between uppercase
+		 * and lowercase (otherwise "link" would be converted to Turkish "I
+		 * Overdot Capital").
+		 */
 		if (tagNameCase == HTMLCorePreferenceNames.LOWER)
 			newTagName = oldTagName.toLowerCase(Locale.US);
 		else if (tagNameCase == HTMLCorePreferenceNames.UPPER)
@@ -661,12 +658,14 @@ public class ElementNodeCleanupHandler extends AbstractNodeCleanupHandler {
 
 
 	protected ModelQuery getModelQuery(Node node) {
+		ModelQuery result = null;
 		if (node.getNodeType() == Node.DOCUMENT_NODE) {
-			return ModelQueryUtil.getModelQuery((Document) node);
+			result = ModelQueryUtil.getModelQuery((Document) node);
 		}
 		else {
-			return ModelQueryUtil.getModelQuery(node.getOwnerDocument());
+			result = ModelQueryUtil.getModelQuery(node.getOwnerDocument());
 		}
+		return result;
 	}
 
 	protected List getRequiredAttrs(Node node) {
