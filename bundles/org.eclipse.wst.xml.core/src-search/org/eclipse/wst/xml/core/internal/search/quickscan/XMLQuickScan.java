@@ -52,18 +52,35 @@ public class XMLQuickScan
 		return handler.hasMatch();
 	}
 
+    private static XMLReader reader;
+    private static XMLReader getOrCreateReader()
+    {
+       if (reader == null)
+       {
+         try
+         {
+          SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
+          reader = parser.getXMLReader();  
+          reader.setFeature("http://xml.org/sax/features/namespaces", true);
+         }
+         catch (Exception e)
+         {           
+         }
+       } 
+       return reader;
+    }
+    
+    
 	private static void parseFile(String fullFilePath,
 			XMLQuickScanContentHandler handler)
 	{
 		FileInputStream inputStream = null;
 		try
-		{
+		{            
 			inputStream = new FileInputStream(new File(fullFilePath));
-			SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
-			XMLReader reader = parser.getXMLReader();
+			XMLReader reader = getOrCreateReader();
+            reader.setContentHandler(handler);
 			//System.out.println("parseFile" + reader + " (" +  fullFilePath + ")");			
-			reader.setFeature("http://xml.org/sax/features/namespaces", true);
-			reader.setContentHandler(handler);
 			reader.parse(new InputSource(inputStream));
 		} catch (Exception e)
 		{
