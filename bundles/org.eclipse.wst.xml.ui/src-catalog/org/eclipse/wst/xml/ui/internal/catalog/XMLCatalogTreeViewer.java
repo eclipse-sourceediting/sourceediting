@@ -234,6 +234,10 @@ public class XMLCatalogTreeViewer extends TreeViewer {
 					}
 				}
 			}
+			else if ( element.equals(XMLCatalogTreeViewer.PLUGIN_SPECIFIED_ENTRIES_OBJECT ) ||
+					element.equals(XMLCatalogTreeViewer.USER_SPECIFIED_ENTRIES_OBJECT) ) {
+				return true;
+			}
 			return result;
 		}
 	}

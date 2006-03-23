@@ -210,10 +210,14 @@ public class XMLCatalogPreferencePage extends PreferencePage implements
                 {
                     ICatalogEntry entry = (ICatalogEntry) selectedObject;
                     detailsView.setCatalogElement(entry);
-                } else if (selectedObject instanceof INextCatalog)
+                }
+                else if (selectedObject instanceof INextCatalog)
                 {
                 	INextCatalog entry = (INextCatalog) selectedObject;
                     detailsView.setCatalogElement(entry);
+                }
+                else {
+                	detailsView.setCatalogElement((ICatalogEntry) null); 
                 }
                 
             }
