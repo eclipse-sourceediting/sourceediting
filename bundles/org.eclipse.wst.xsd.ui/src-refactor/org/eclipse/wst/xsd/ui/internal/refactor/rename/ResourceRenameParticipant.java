@@ -53,6 +53,8 @@ public class ResourceRenameParticipant extends RenameParticipant {
 			IFile aFile = (IFile) element;
 			try {
 				IContentDescription description = aFile.getContentDescription();
+				if ( description == null )
+  				return false;
 				IContentType contentType = description.getContentType();
 				if(contentType != null){
 					if(XSD_CONTENT_TYPE_ID.equals(contentType.getId()) ||
