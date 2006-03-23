@@ -71,7 +71,7 @@ public class XMLQuickScan
     }
     
     
-	private static void parseFile(String fullFilePath,
+	private synchronized static void parseFile(String fullFilePath,
 			XMLQuickScanContentHandler handler)
 	{
 		FileInputStream inputStream = null;
