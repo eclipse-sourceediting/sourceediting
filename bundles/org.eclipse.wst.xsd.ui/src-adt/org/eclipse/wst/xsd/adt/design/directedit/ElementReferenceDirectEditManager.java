@@ -1,17 +1,8 @@
-/*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- *
- * Contributors:
- *     IBM Corporation - initial API and implementation
- *******************************************************************************/
 package org.eclipse.wst.xsd.adt.design.directedit;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.eclipse.draw2d.Label;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.jface.viewers.CellEditor;
@@ -24,14 +15,14 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.common.ui.internal.search.dialogs.ComponentSpecification;
 import org.eclipse.wst.xsd.adt.edit.ComponentReferenceEditManager;
 import org.eclipse.wst.xsd.adt.facade.IField;
-import org.eclipse.wst.xsd.editor.XSDTypeReferenceEditManager;
+import org.eclipse.wst.xsd.editor.XSDElementReferenceEditManager;
 
-public class TypeReferenceDirectEditManager extends ComboBoxCellEditorManager
+public class ElementReferenceDirectEditManager extends ComboBoxCellEditorManager
 {
   protected AbstractGraphicalEditPart editPart;
   protected IField setObject;
 
-  public TypeReferenceDirectEditManager(IField parameter, AbstractGraphicalEditPart source, Label label)
+  public ElementReferenceDirectEditManager(IField parameter, AbstractGraphicalEditPart source, Label label)
   {
     super(source, label);
     editPart = source;
@@ -127,7 +118,7 @@ public class TypeReferenceDirectEditManager extends ComboBoxCellEditorManager
     {
       // we need to perform an asyncExec here since the 'host' editpart may be
       // removed as a side effect of performing the action           
-      DelayedSetTypeRunnable runnable = new DelayedSetTypeRunnable(editManager, setObject, (ComponentSpecification)value);
+      DelayedSetElementReferenceRunnable runnable = new DelayedSetElementReferenceRunnable(editManager, setObject, (ComponentSpecification)value);
       //runnable.run();
       Display.getCurrent().asyncExec(runnable);
     }
@@ -152,7 +143,7 @@ public class TypeReferenceDirectEditManager extends ComboBoxCellEditorManager
     IEditorPart editor = getActiveEditor();
     if (editor != null)
     {
-        result = (ComponentReferenceEditManager)editor.getAdapter(XSDTypeReferenceEditManager.class);
+      result = (ComponentReferenceEditManager)editor.getAdapter(XSDElementReferenceEditManager.class);
     }  
     return result;
   }
@@ -165,13 +156,14 @@ public class TypeReferenceDirectEditManager extends ComboBoxCellEditorManager
     return editorPart;
   }    
   
-  protected static class DelayedSetTypeRunnable implements Runnable
+  protected static class DelayedSetElementReferenceRunnable implements Runnable
   {
     protected ComponentReferenceEditManager componentReferenceEditManager;
     protected ComponentSpecification newValue;
     protected IField field;
 
-    public DelayedSetTypeRunnable(ComponentReferenceEditManager componentReferenceEditManager, IField setObject, ComponentSpecification selectedValue)
+    public DelayedSetElementReferenceRunnable(ComponentReferenceEditManager componentReferenceEditManager,
+    		IField setObject, ComponentSpecification selectedValue)
     {
       this.componentReferenceEditManager = componentReferenceEditManager;
       newValue = selectedValue;

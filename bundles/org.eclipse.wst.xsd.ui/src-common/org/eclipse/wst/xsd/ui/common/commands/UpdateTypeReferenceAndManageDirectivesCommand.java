@@ -13,7 +13,7 @@ package org.eclipse.wst.xsd.ui.common.commands;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.gef.commands.Command;
+import org.eclipse.xsd.XSDComponent;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDFactory;
 import org.eclipse.xsd.XSDImport;
@@ -23,47 +23,41 @@ import org.eclipse.xsd.XSDTypeDefinition;
 import org.eclipse.xsd.util.XSDConstants;
 import org.eclipse.xsd.util.XSDResourceImpl;
 
-public class UpdateTypeReferenceAndManageDirectivesCommand extends Command
+public class UpdateTypeReferenceAndManageDirectivesCommand extends UpdateComponentReferenceAndManageDirectivesCommand
 {
-  XSDConcreteComponent concreteComponent;
-  String typeName;
-  String typeNamespace;
-  IFile file;
-  
-  public UpdateTypeReferenceAndManageDirectivesCommand(XSDConcreteComponent concreteComponent, String typeName, String typeNamespace, IFile file)
+
+  public UpdateTypeReferenceAndManageDirectivesCommand(XSDConcreteComponent concreteComponent,
+		  String componentName, String componentNamespace, IFile file)
   {
-    this.concreteComponent = concreteComponent;
-    this.typeName = typeName;
-    this.typeNamespace = typeNamespace;
-    this.file = file;
-  }  
- 
-  private XSDTypeDefinition computeType()
+	  super(concreteComponent, componentName, componentNamespace, file);
+  }
+
+  public XSDComponent computeComponent()
   {
-    XSDTypeDefinition result = null;
+    XSDComponent result = null;
     XSDSchema schema = concreteComponent.getSchema();
     XSDSchemaDirective directive = null;
     
     // TODO (cs) handle case where namespace==null
     //
-    if (typeNamespace != null)
+    if (componentNamespace != null)
     {  
-      if (XSDConstants.isSchemaForSchemaNamespace(typeNamespace))
+      if (XSDConstants.isSchemaForSchemaNamespace(componentNamespace))
       {
         // this is the easy case, its just a built-in type
         //
-        result = getDefinedType(schema, typeName, typeNamespace);        
+        result = getDefinedComponent(schema, componentName, componentNamespace);        
       }  
       else
       {
         // lets see if the type is already visible to our schema
-        result = getDefinedType(schema, typeName, typeNamespace);                     
+        result = getDefinedComponent(schema, componentName, componentNamespace);                     
         if (result == null)
         {
           // TODO (cs) we need to provide a separate command to do this part
-          //
+          // TODO (trung) directives in the outline view does not get updated
           // apparently the type is not yet visible, we need to add includes/imports to get to it
-          if (typeNamespace.equals(schema.getTargetNamespace()))
+          if (componentNamespace.equals(schema.getTargetNamespace()))
           {
             // we need to add an include
             directive =XSDFactory.eINSTANCE.createXSDInclude();
@@ -72,7 +66,7 @@ public class UpdateTypeReferenceAndManageDirectivesCommand extends Command
           {
             // we need to add an import
             XSDImport xsdImport = XSDFactory.eINSTANCE.createXSDImport();
-            xsdImport.setNamespace(typeNamespace);
+            xsdImport.setNamespace(componentNamespace);
             directive = xsdImport;              
           }  
           
@@ -116,7 +110,7 @@ public class UpdateTypeReferenceAndManageDirectivesCommand extends Command
           }
           if (resolvedSchema != null)
           {  
-            result = getDefinedType(resolvedSchema, typeName, typeNamespace);
+            result = getDefinedComponent(resolvedSchema, componentName, componentNamespace);
           }    
           else 
           {
@@ -130,9 +124,9 @@ public class UpdateTypeReferenceAndManageDirectivesCommand extends Command
   }
  
   
-  private XSDTypeDefinition getDefinedType(XSDSchema schema, String typeName, String typeNamespace)
+  private XSDTypeDefinition getDefinedComponent(XSDSchema schema, String componentName, String componentNamespace)
   {
-    XSDTypeDefinition result = schema.resolveTypeDefinition(typeNamespace, typeName);
+    XSDTypeDefinition result = schema.resolveTypeDefinition(componentNamespace, componentName);
     if (result.eContainer() == null)
     {
       result = null;
@@ -145,10 +139,11 @@ public class UpdateTypeReferenceAndManageDirectivesCommand extends Command
   {
     try
     {
-    XSDTypeDefinition td = computeType();
-    if (td != null)
+    XSDComponent td = computeComponent();
+    if (td != null && td instanceof XSDTypeDefinition)
     {
-      UpdateTypeReferenceCommand command = new UpdateTypeReferenceCommand(concreteComponent, td);
+      UpdateTypeReferenceCommand command = new UpdateTypeReferenceCommand(
+    		  concreteComponent, (XSDTypeDefinition) td);
       command.execute();
     }
     }

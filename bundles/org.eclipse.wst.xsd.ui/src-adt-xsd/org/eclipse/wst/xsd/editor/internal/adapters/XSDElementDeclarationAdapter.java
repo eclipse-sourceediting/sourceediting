@@ -212,6 +212,11 @@ public class XSDElementDeclarationAdapter extends XSDParticleAdapter implements 
   {
     return getXSDElementDeclaration().eContainer() instanceof XSDSchema;
   }
+  
+  public boolean isElementDeclarationReference()
+  {
+	  return ((XSDElementDeclaration) target).isElementDeclarationReference();
+  }
 
   public Command getUpdateMaxOccursCommand(int maxOccurs)
   {

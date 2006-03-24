@@ -69,7 +69,6 @@ import org.eclipse.wst.xsd.adt.actions.DeleteAction;
 import org.eclipse.wst.xsd.adt.actions.SetInputToGraphView;
 import org.eclipse.wst.xsd.adt.actions.ShowPropertiesViewAction;
 import org.eclipse.wst.xsd.adt.design.editparts.RootContentEditPart;
-import org.eclipse.wst.xsd.adt.edit.ComponentReferenceEditManager;
 import org.eclipse.wst.xsd.adt.editor.ADTMultiPageEditor;
 import org.eclipse.wst.xsd.adt.facade.IModel;
 import org.eclipse.wst.xsd.editor.internal.adapters.CategoryAdapter;
@@ -242,7 +241,23 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
         return page;
       }
     }
-    else if (type == ComponentReferenceEditManager.class)
+    else if (type == XSDElementReferenceEditManager.class)
+    {
+    	IEditorInput editorInput = getEditorInput();
+    	if (editorInput instanceof IFileEditorInput)
+    	{
+    		IFileEditorInput fileEditorInput = (IFileEditorInput) editorInput;
+    		// TODO (cs) currently we assume the schema editor will only ever edit a
+    		// single schema
+    		/// but if we want to enable the schema editor to edit wsdl files we
+    		// should pass in
+    		// an array of schemas
+    		// hmm.. perhaps just pass in a ResourceSet
+    		XSDSchema[] schemas = {xsdSchema};
+    		return new XSDElementReferenceEditManager(fileEditorInput.getFile(), schemas);
+    	}
+    }
+    else if (type == XSDTypeReferenceEditManager.class)
     {
       IEditorInput editorInput = getEditorInput();
       if (editorInput instanceof IFileEditorInput)
@@ -255,7 +270,7 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
         // an array of schemas
         // hmm.. perhaps just pass in a ResourceSet
         XSDSchema[] schemas = {xsdSchema};
-        return new XSDComponentReferenceEditManager(fileEditorInput.getFile(), schemas);
+        return new XSDTypeReferenceEditManager(fileEditorInput.getFile(), schemas);
       }
     }
     else if (type == ITextEditor.class)

@@ -35,6 +35,7 @@ public class AddXSDElementCommand extends BaseCommand
   XSDModelGroup xsdModelGroup;
   XSDSchema xsdSchema;
   boolean isReference;
+private String nameToAdd;
 
   public AddXSDElementCommand()
   {
@@ -77,6 +78,10 @@ public class AddXSDElementCommand extends BaseCommand
   public void setReference(boolean isReference)
   {
     this.isReference = isReference;
+  }
+  
+  public void setNameToAdd(String name){
+	  nameToAdd = name;
   }
   
   /*
@@ -160,7 +165,8 @@ public class AddXSDElementCommand extends BaseCommand
 
     ArrayList usedAttributeNames = new ArrayList();
     usedAttributeNames.addAll(XSDCommonUIUtils.getChildElements(xsdModelGroup));
-    element.setName(XSDCommonUIUtils.createUniqueElementName("NewElement", usedAttributeNames));
+    element.setName(XSDCommonUIUtils.createUniqueElementName(
+    		nameToAdd == null ? "NewElement" : nameToAdd , xsdSchema.getElementDeclarations()));
     element.setTypeDefinition(type);
 
     XSDParticle particle = XSDFactory.eINSTANCE.createXSDParticle();
@@ -203,7 +209,8 @@ public class AddXSDElementCommand extends BaseCommand
     ArrayList usedAttributeNames = new ArrayList();
     usedAttributeNames.addAll(XSDCommonUIUtils.getAllAttributes(xsdComplexTypeDefinition));
     usedAttributeNames.addAll(XSDCommonUIUtils.getInheritedAttributes(xsdComplexTypeDefinition));
-    element.setName(XSDCommonUIUtils.createUniqueElementName("NewElement", usedAttributeNames));
+    element.setName(XSDCommonUIUtils.createUniqueElementName(
+    		nameToAdd == null ? "NewElement" : nameToAdd , usedAttributeNames));
     element.setTypeDefinition(type);
 
     XSDParticle particle = XSDFactory.eINSTANCE.createXSDParticle();
@@ -218,7 +225,8 @@ public class AddXSDElementCommand extends BaseCommand
     XSDFactory factory = XSDSchemaBuildingTools.getXSDFactory();
     XSDElementDeclaration element = factory.createXSDElementDeclaration();
 
-    element.setName(XSDCommonUIUtils.createUniqueElementName("NewElement", xsdSchema.getElementDeclarations()));
+    element.setName(XSDCommonUIUtils.createUniqueElementName(
+    		nameToAdd == null ? "NewElement" : nameToAdd , xsdSchema.getElementDeclarations()));
     element.setTypeDefinition(type);
 
     return element;

@@ -53,19 +53,25 @@ import org.w3c.dom.Element;
 
 public class AddApplicationInfoDialog extends SelectionDialog implements ISelectionChangedListener, SelectionListener
 {
+  // when this dialog is created it needs to know which registry it is going to use,the WSDL or the XSD,
+  // hence we need this field
+  ApplicationInformationPropertiesRegistry registry;
+  
   protected static final Image DEFAULT_ELEMENT_ICON = XSDEditorPlugin.getXSDImage("icons/XSDElement.gif");
   
   /** A temporary Document in which we create temporary DOM element for each element in the
    * Element view.  */ 
-  protected Document tempDoc = new DocumentImpl();
+  protected static Document tempDoc = new DocumentImpl();
   
   Button addButton, removeButton;
 
-  public AddApplicationInfoDialog(Shell parent)
+  public AddApplicationInfoDialog(Shell parent, ApplicationInformationPropertiesRegistry registry)
   {
     super(parent);
     setTitle("Add Application Information Elements");
     setShellStyle(SWT.APPLICATION_MODAL | SWT.RESIZE | SWT.CLOSE);
+    
+    this.registry = registry;
   }
 
   private IStructuredContentProvider categoryContentProvider, elementContentProvider;
@@ -290,7 +296,7 @@ public class AddApplicationInfoDialog extends SelectionDialog implements ISelect
           SpecificationForAppinfoSchema properties = (SpecificationForAppinfoSchema) obj;
 
           XSDSchema xsdSchema = getASISchemaModel(properties);
-          
+
           if (xsdSchema == null){
         	  // TODO display an error Dialog telling the user that
         	  // her selected schema file is invalid. 
@@ -438,9 +444,7 @@ public class AddApplicationInfoDialog extends SelectionDialog implements ISelect
      * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
      */
     public Image getImage(Object element)
-    {
-      ApplicationInformationPropertiesRegistry registry = XSDEditorPlugin.getDefault().getApplicationInformationPropertiesRegistry();
-        
+    {        
       if ( element instanceof XSDElementDeclaration){
     	  
     	  // Workaround trick: (trung) we create a temporary Dom element and put it in the label provider
@@ -476,7 +480,6 @@ public class AddApplicationInfoDialog extends SelectionDialog implements ISelect
 
   public boolean close()
   {
-    tempDoc = null;
     return super.close();
   }
 }

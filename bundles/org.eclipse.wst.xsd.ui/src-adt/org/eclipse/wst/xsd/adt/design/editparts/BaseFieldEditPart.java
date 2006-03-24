@@ -26,6 +26,7 @@ import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.gef.requests.DirectEditRequest;
 import org.eclipse.gef.requests.LocationRequest;
 import org.eclipse.wst.xsd.adt.design.directedit.ComboBoxCellEditorManager;
+import org.eclipse.wst.xsd.adt.design.directedit.ElementReferenceDirectEditManager;
 import org.eclipse.wst.xsd.adt.design.directedit.LabelCellEditorLocator;
 import org.eclipse.wst.xsd.adt.design.directedit.LabelEditManager;
 import org.eclipse.wst.xsd.adt.design.directedit.TypeReferenceDirectEditManager;
@@ -36,12 +37,14 @@ import org.eclipse.wst.xsd.adt.design.editpolicies.IADTUpdateCommand;
 import org.eclipse.wst.xsd.adt.design.figures.IFieldFigure;
 import org.eclipse.wst.xsd.adt.facade.IField;
 import org.eclipse.wst.xsd.adt.facade.IType;
+import org.eclipse.wst.xsd.editor.internal.adapters.XSDElementDeclarationAdapter;
 
 public class BaseFieldEditPart extends BaseTypeConnectingEditPart implements INamedEditPart
 {
   protected TypeReferenceConnection connectionFigure;
   protected ADTDirectEditPolicy adtDirectEditPolicy = new ADTDirectEditPolicy();
   TypeUpdateCommand typeUpdateCommand = new TypeUpdateCommand();
+  ElementReferenceUpdateCommand elementUpdateCommand = new ElementReferenceUpdateCommand();
   
   protected IFigure createFigure()
   {          
@@ -205,10 +208,22 @@ public class BaseFieldEditPart extends BaseTypeConnectingEditPart implements INa
         }
         else if (hitTest(fieldFigure.getNameLabel(), p))
         {
-          LabelEditManager manager = new LabelEditManager(this, new LabelCellEditorLocator(this, p));
-          NameUpdateCommandWrapper wrapper = new NameUpdateCommandWrapper();
-          adtDirectEditPolicy.setUpdateCommand(wrapper);
-          manager.show();
+        	if ( model instanceof XSDElementDeclarationAdapter ){
+        		XSDElementDeclarationAdapter elementDecAdapter = ((XSDElementDeclarationAdapter) model);
+        		if ( elementDecAdapter.isElementDeclarationReference() ){
+        			ElementReferenceDirectEditManager manager =
+        				new ElementReferenceDirectEditManager((IField)model, this, fieldFigure.getNameLabel());
+        			elementUpdateCommand.setDelegate(manager);
+        			adtDirectEditPolicy.setUpdateCommand(elementUpdateCommand);
+        			manager.show();
+        		}
+        		else {
+        			LabelEditManager manager = new LabelEditManager(this, new LabelCellEditorLocator(this, p));
+        			NameUpdateCommandWrapper wrapper = new NameUpdateCommandWrapper();
+        			adtDirectEditPolicy.setUpdateCommand(wrapper);
+        			manager.show();
+        		}
+        	}
         }
       }
     }
@@ -276,6 +291,41 @@ public class BaseFieldEditPart extends BaseTypeConnectingEditPart implements INa
       return true;
     }
   }
+  
+  class ElementReferenceUpdateCommand extends Command implements IADTUpdateCommand
+  {
+	    protected ComboBoxCellEditorManager delegate;
+	    protected DirectEditRequest request;
+	    
+	    public ElementReferenceUpdateCommand()
+	    {
+	      super("Update element reference");
+	    }
+
+	    public void setDelegate(ComboBoxCellEditorManager delegate)
+	    {
+	      this.delegate = delegate;
+	    }
+
+	    public void setRequest(DirectEditRequest request)
+	    {
+	      this.request = request;
+	    }
+
+	    public void execute()
+	    {
+	      if (delegate != null)
+	      {
+	        delegate.performEdit(request.getCellEditor());
+	      }
+	    }
+
+	    public boolean canExecute()
+	    {
+	      return true;
+	    }
+  }
+
 
   TypeReferenceConnection connectionFeedbackFigure;
 

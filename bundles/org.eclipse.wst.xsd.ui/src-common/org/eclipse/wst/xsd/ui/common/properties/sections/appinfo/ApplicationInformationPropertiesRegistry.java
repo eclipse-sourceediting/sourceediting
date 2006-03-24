@@ -50,7 +50,6 @@ public class ApplicationInformationPropertiesRegistry
     {
       return nsURIProperties;
     }
-
     IConfigurationElement[] asiPropertiesList = Platform.getExtensionRegistry().getConfigurationElementsFor(extensionId);
 
     nsURIProperties = new ArrayList();

@@ -26,13 +26,13 @@ import org.eclipse.wst.common.ui.internal.search.dialogs.ScopedComponentSearchLi
 import org.eclipse.wst.xsd.adt.edit.IComponentDialog;
 import org.eclipse.wst.xsd.editor.XSDEditorPlugin;
 import org.eclipse.wst.xsd.editor.internal.dialogs.NewTypeButtonHandler;
-import org.eclipse.wst.xsd.ui.internal.search.IXSDSearchConstants;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.util.XSDConstants;
 
 public class XSDSearchListDialogDelegate implements IComponentDialog
 {
   public final static QualifiedName TYPE_META_NAME = new QualifiedName(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001, "type");
+  public final static QualifiedName ELEMENT_META_NAME = new QualifiedName(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001, "element");
   // protected Object setObject;
   protected ComponentSpecification selection;
   protected IFile currentFile;
@@ -62,14 +62,22 @@ public class XSDSearchListDialogDelegate implements IComponentDialog
     Shell shell = XSDEditorPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getShell();
     int returnValue = Window.CANCEL;
     ComponentSearchListDialog dialog = null;
-    if (metaName == IXSDSearchConstants.ELEMENT_META_NAME)
+    if ( metaName == ELEMENT_META_NAME)
     {
-      // TODO
+    	XSDComponentDescriptionProvider descriptionProvider = new XSDComponentDescriptionProvider();
+    	final XSDElementsSearchListProvider searchListProvider = new XSDElementsSearchListProvider(currentFile, schemas);
+    	ComponentSearchListDialogConfiguration configuration = new ComponentSearchListDialogConfiguration();
+    	
+        configuration.setDescriptionProvider(descriptionProvider);
+        configuration.setSearchListProvider(searchListProvider);
+        configuration.setFilterLabelText("Name:");
+        //TODO externalize string
+        dialog = new ScopedComponentSearchListDialog(shell, "Set element reference", configuration);
     }
     else if (metaName == TYPE_META_NAME)
     {
       XSDComponentDescriptionProvider descriptionProvider = new XSDComponentDescriptionProvider();
-      final XSDComponentSearchListProvider searchListProvider = new XSDComponentSearchListProvider(currentFile, schemas);
+      final XSDTypesSearchListProvider searchListProvider = new XSDTypesSearchListProvider(currentFile, schemas);
  
       //ComponentSearchListDialogConfiguration configuration = new ThingerooDialogConfiguration()      
       ComponentSearchListDialogConfiguration configuration = new ComponentSearchListDialogConfiguration()

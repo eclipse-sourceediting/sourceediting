@@ -43,7 +43,7 @@ import org.eclipse.wst.xsd.editor.XSDEditorPlugin;
 import org.eclipse.wst.xsd.editor.internal.dialogs.NewTypeButtonHandler;
 import org.eclipse.wst.xsd.editor.internal.search.FilterMenuContributor;
 import org.eclipse.wst.xsd.editor.internal.search.XSDComponentDescriptionProvider;
-import org.eclipse.wst.xsd.editor.internal.search.XSDComponentSearchListProvider;
+import org.eclipse.wst.xsd.editor.internal.search.XSDTypesSearchListProvider;
 import org.eclipse.wst.xsd.ui.common.commands.UpdateMaxOccursCommand;
 import org.eclipse.wst.xsd.ui.common.commands.UpdateMinOccursCommand;
 import org.eclipse.wst.xsd.ui.common.commands.UpdateNameCommand;
@@ -372,8 +372,8 @@ public class XSDElementDeclarationSection extends MultiplicitySection
       IFile currentIFile = ((IFileEditorInput) getActiveEditor().getEditorInput()).getFile();
 
       /** Initialize the Set types Dialog */
-      final XSDComponentSearchListProvider searchListProvider = 
-    	  new XSDComponentSearchListProvider(currentIFile, new XSDSchema[] {xsdSchema} );      
+      final XSDTypesSearchListProvider searchListProvider = 
+    	  new XSDTypesSearchListProvider(currentIFile, new XSDSchema[] {xsdSchema} );      
       ComponentSearchListDialogConfiguration configuration = new ComponentSearchListDialogConfiguration()
       {
         public void createToolBarItems(ToolBar toolBar)
