@@ -37,7 +37,7 @@ import org.eclipse.xsd.XSDTypeDefinition;
 public class FilterMenuContributor {
 	private static final String CONST_PREFERED_BUILT_IN_TYPES = XSDEditorPlugin.CONST_PREFERED_BUILT_IN_TYPES;
 	
-	private XSDComponentSearchListProvider searchListProvider;
+	private XSDTypesSearchListProvider searchListProvider;
 	private ComponentSearchListDialog parentDialog;
 
 	private MenuManager fMenuManager;
@@ -56,7 +56,7 @@ public class FilterMenuContributor {
 	 * @param searchListProvider
 	 * @param parentDialog
 	 */
-	public FilterMenuContributor(XSDComponentSearchListProvider searchListProvider,
+	public FilterMenuContributor(XSDTypesSearchListProvider searchListProvider,
 			ComponentSearchListDialog parentDialog) {
 		this.searchListProvider = searchListProvider;		
 		this.parentDialog = parentDialog;
