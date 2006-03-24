@@ -225,6 +225,21 @@
 		</catalogContribution>
 	</extension>
 
+
+	<!-- intialize xsd reconcile validator -->
+	<extension point="org.eclipse.wst.sse.ui.sourcevalidation">
+		<validator
+			scope="total"
+			class="org.eclipse.wst.xsd.ui.internal.validation.DelegatingSourceValidatorForXSD"
+			id="org.eclipse.wst.xsd.ui.internal.validation.DelegatingSourceValidatorForXSD">
+			<contentTypeIdentifier
+				id="org.eclipse.wst.xsd.core.xsdsource">
+				<partitionType id="org.eclipse.wst.xml.XML_DEFAULT">
+				</partitionType>
+			</contentTypeIdentifier>
+		</validator>
+	</extension>
+
 	<extension point="org.eclipse.ui.contexts">
 		<context
 			id="org.eclipse.wst.xsd.ui.text.editor.context"
@@ -407,4 +422,30 @@
 	 </objectContribution>
 	</extension-->	
 
+	<extension point="org.eclipse.ui.commands">
+		<command
+			name="%command.xsd.refactor.rename.element.name"
+			description="%command.xsd.refactor.rename.element.description"
+			categoryId="org.eclipse.ui.category.edit"
+			id="org.eclipse.wst.xsd.ui.refactor.rename.element">
+		</command>
+		<command
+			name="%command.xsd.refactor.makeElementGlobal.element.name"
+			description="%command.xsd.refactor.makeElementGlobal.element.description"
+			categoryId="org.eclipse.ui.category.edit"
+			id="org.eclipse.wst.xsd.ui.refactor.makeElementGlobal">
+		</command>
+		<command
+			name="%command.xsd.refactor.makeTypeGlobal.element.name"
+			description="%command.xsd.refactor.makeTypeGlobal.element.description"
+			categoryId="org.eclipse.ui.category.edit"
+			id="org.eclipse.wst.xsd.ui.refactor.makeTypeGlobal">
+		</command>
+		<command
+			name="%command.xsd.refactor.renameTargetNamespace.name"
+			description="%command.xsd.refactor.renameTargetNamespace.description"
+			categoryId="org.eclipse.ui.category.edit"
+			id="org.eclipse.wst.xsd.ui.refactor.renameTargetNamespace">
+		</command>
+	</extension>
 </plugin>
