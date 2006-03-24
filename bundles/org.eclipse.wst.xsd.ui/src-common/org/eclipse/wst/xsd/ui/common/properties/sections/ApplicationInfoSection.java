@@ -327,10 +327,10 @@ public class ApplicationInfoSection extends AbstractSection
   {
     if (event.widget == addButton)
     {
-      AddApplicationInfoDialog dialog = new AddApplicationInfoDialog(composite.getShell());
-
-      ApplicationInformationPropertiesRegistry registry = XSDEditorPlugin.getDefault().getApplicationInformationPropertiesRegistry();
-
+      ApplicationInformationPropertiesRegistry registry = 
+        XSDEditorPlugin.getDefault().getApplicationInformationPropertiesRegistry();
+      AddApplicationInfoDialog dialog = new AddApplicationInfoDialog(composite.getShell(), registry);
+      
       List properties = 
     	  registry.getAllApplicationSpecificSchemaProperties();
 
