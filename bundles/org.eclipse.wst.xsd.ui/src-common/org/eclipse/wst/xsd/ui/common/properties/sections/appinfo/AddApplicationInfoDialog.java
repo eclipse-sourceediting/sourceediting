@@ -46,6 +46,7 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.dialogs.SelectionDialog;
 import org.eclipse.wst.xsd.contentmodel.internal.XSDImpl;
 import org.eclipse.wst.xsd.editor.XSDEditorPlugin;
+import org.eclipse.xsd.XSDAttributeDeclaration;
 import org.eclipse.xsd.XSDElementDeclaration;
 import org.eclipse.xsd.XSDSchema;
 import org.w3c.dom.Document;
@@ -58,9 +59,10 @@ public class AddApplicationInfoDialog extends SelectionDialog implements ISelect
   ApplicationInformationPropertiesRegistry registry;
   
   protected static final Image DEFAULT_ELEMENT_ICON = XSDEditorPlugin.getXSDImage("icons/XSDElement.gif");
-  
+  protected static final Image DEFAULT_ATTRIBUTE_ICON = XSDEditorPlugin.getXSDImage("icons/XSDAttribute.gif");
+
   /** A temporary Document in which we create temporary DOM element for each element in the
-   * Element view.  */ 
+   * Element view. (required by LabelProvider)  */ 
   protected static Document tempDoc = new DocumentImpl();
   
   Button addButton, removeButton;
@@ -139,7 +141,7 @@ public class AddApplicationInfoDialog extends SelectionDialog implements ISelect
       categoryTableViewer.setSelection(new StructuredSelection(initialSelection));
 
     Label elementLabel = new Label(categoryComposite, SWT.LEFT);
-    elementLabel.setText("Available Elements to Add:");
+    elementLabel.setText("Available components to Add:");
 
     new Label(categoryComposite, SWT.NONE);
 
@@ -265,11 +267,11 @@ public class AddApplicationInfoDialog extends SelectionDialog implements ISelect
     	}
     	categoryTableViewer.refresh(false);
 
-    	// make the element view blank
-		elementTableViewer.setInput(null);
-		elementTableViewer.refresh();
-		
-		getButton(IDialogConstants.OK_ID).setEnabled(false);
+    	elementTableViewer.setInput(null);
+    	elementTableViewer.refresh();
+    	
+        // TODO auto select either the prev category, the next category or the first category in the Table
+    	getButton(IDialogConstants.OK_ID).setEnabled(false);
     }
   }
 
@@ -303,14 +305,46 @@ public class AddApplicationInfoDialog extends SelectionDialog implements ISelect
         	  return;
           }
           
-          List elements = xsdSchema.getElementDeclarations();
-          elementTableViewer.setInput(elements);
+          List allItems = buildInput(xsdSchema);
+          elementTableViewer.setInput(allItems);
           getButton(IDialogConstants.OK_ID).setEnabled(false);
         }
       }
     }
   }
+  private List buildInput(XSDSchema xsdSchema)
+  {
+    List elements = xsdSchema.getElementDeclarations();
+    List attributes = xsdSchema.getAttributeDeclarations();
+    String targetNamespace = xsdSchema.getTargetNamespace();
 
+    // For safety purpose: We don't append 'attributes' to 'elements'
+    // ArrayStoreException(or similar one) may occur
+    List allItems = new ArrayList(attributes.size() + elements.size());
+    {
+      // getElementDeclarations returns a lot of elements from import
+      // statement, we
+      // only add non-imported elements here. (trung)
+      for (int i = 0; i < elements.size(); i++)
+      {
+        XSDElementDeclaration currentElement = (XSDElementDeclaration) elements.get(i);
+        if (currentElement.getTargetNamespace().equals(targetNamespace))
+          allItems.add(currentElement);
+      }
+      // getAttributeDeclarations also returns a lot of elements from
+      // import statement, we
+      // only add non-imported elements here. (trung)
+      for (int i = 0; i < attributes.size(); i++)
+      {
+        XSDAttributeDeclaration currentAttribute = (XSDAttributeDeclaration) attributes.get(i);
+        if (currentAttribute.isGlobal() && currentAttribute.getTargetNamespace().equals(targetNamespace))
+          allItems.add(currentAttribute);
+      }
+    }
+    return allItems;
+  }
+
+  
   private XSDSchema getASISchemaModel(SpecificationForAppinfoSchema appInfoSchemaSpec)
   {
     XSDSchema xsdSchema = XSDImpl.buildXSDModel(appInfoSchemaSpec.getLocation());
@@ -324,7 +358,7 @@ public class AddApplicationInfoDialog extends SelectionDialog implements ISelect
     return xsdSchema;
   }
 
-  class CategoryContentProvider implements IStructuredContentProvider
+  static class CategoryContentProvider implements IStructuredContentProvider
   {
     /*
      * (non-Javadoc)
@@ -370,7 +404,7 @@ public class AddApplicationInfoDialog extends SelectionDialog implements ISelect
     }
   }
 
-  class CategoryLabelProvider extends LabelProvider
+  static class CategoryLabelProvider extends LabelProvider
   {
     /*
      * (non-Javadoc)
@@ -396,7 +430,7 @@ public class AddApplicationInfoDialog extends SelectionDialog implements ISelect
     }
   }
 
-  class ElementContentProvider implements IStructuredContentProvider
+  static class ElementContentProvider implements IStructuredContentProvider
   {
     /*
      * (non-Javadoc)
@@ -444,7 +478,7 @@ public class AddApplicationInfoDialog extends SelectionDialog implements ISelect
      * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
      */
     public Image getImage(Object element)
-    {        
+    {
       if ( element instanceof XSDElementDeclaration){
     	  
     	  // Workaround trick: (trung) we create a temporary Dom element and put it in the label provider
@@ -460,8 +494,12 @@ public class AddApplicationInfoDialog extends SelectionDialog implements ISelect
     			  return img;
     		  }
     	  }
+    	  return DEFAULT_ELEMENT_ICON;
       }
-      return DEFAULT_ELEMENT_ICON;
+      else if ( element instanceof XSDAttributeDeclaration){
+    	  return DEFAULT_ATTRIBUTE_ICON;
+      }
+      return null;
     }
 
     /*
@@ -473,7 +511,8 @@ public class AddApplicationInfoDialog extends SelectionDialog implements ISelect
     {
       if (element instanceof XSDElementDeclaration)
         return ((XSDElementDeclaration) element).getName();
-
+      if (element instanceof XSDAttributeDeclaration )
+        return ((XSDAttributeDeclaration) element).getName();
       return super.getText(element);
     }
   }
