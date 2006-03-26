@@ -13,14 +13,13 @@ package org.eclipse.wst.xsd.editor.internal.dialogs;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.CheckedTreeSelectionDialog;
+import org.eclipse.wst.common.ui.internal.search.dialogs.ComponentSpecification;
 import org.eclipse.wst.xsd.editor.XSDEditorPlugin;
-import org.eclipse.wst.xsd.ui.internal.dialogs.types.xml.XMLComponentSpecification;
 
 /**
  * The BuiltInTypesFilteringDialog is a SelectionDialog that allows the user to
@@ -65,11 +64,11 @@ public class SelectBuiltInTypesForFilteringDialog extends CheckedTreeSelectionDi
 	public static String getTypesListInString(Object[] chosenTypes) {
 		String returningList = "";
 		for (int i = 0; i < chosenTypes.length; i++){
-			if ( chosenTypes[i] instanceof XMLComponentSpecification){
-				XMLComponentSpecification aType = 
-					(XMLComponentSpecification) chosenTypes[i];
+			if ( chosenTypes[i] instanceof ComponentSpecification){
+				ComponentSpecification aType = 
+					(ComponentSpecification) chosenTypes[i];
 
-				returningList += aType.getAttributeInfo("name") + CUSTOM_LIST_SEPARATOR;
+				returningList += aType.getName() + CUSTOM_LIST_SEPARATOR;
 			}
 			/* else selectedBuiltInTypes[i] instanceof List, ie. a parentNode
 			 * we ignore it. */
@@ -93,9 +92,9 @@ public class SelectBuiltInTypesForFilteringDialog extends CheckedTreeSelectionDi
 		// ignore the 'header' item in the container, starting from i = 1
 		for (int i = 1; i < aContainer.size(); i++){
 			Object o = aContainer.get(i);
-			if ( o instanceof XMLComponentSpecification){
-				XMLComponentSpecification aType = (XMLComponentSpecification) o;
-				String typeName = (String) aType.getAttributeInfo("name");
+			if ( o instanceof ComponentSpecification){
+				ComponentSpecification aType = (ComponentSpecification) o;
+				String typeName = (String) aType.getName();
 				// if typeName's name appears in 'listString'
 				if ( listString.indexOf(typeName + CUSTOM_LIST_SEPARATOR) != -1)
 					selectedTypes.add(o);

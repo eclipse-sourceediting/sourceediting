@@ -43,7 +43,6 @@ public class RootContentEditPart extends AbstractGraphicalEditPart
     clayout.setBorder(60);
     panel.setLayoutManager(clayout);
     
-    // issue (cs) : why did we need a free form layer?
     contentPane = new Figure();
     panel.add(contentPane);
         

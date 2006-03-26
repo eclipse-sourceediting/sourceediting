@@ -14,15 +14,13 @@ package org.eclipse.wst.xsd.editor.internal.dialogs;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.wst.common.ui.internal.search.dialogs.ComponentSpecification;
 import org.eclipse.wst.xsd.editor.XSDEditorPlugin;
-import org.eclipse.wst.xsd.ui.internal.dialogs.types.xml.XMLComponentSpecification;
-import org.eclipse.wst.xsd.ui.internal.util.XSDDOMHelper;
 import org.eclipse.xsd.util.XSDConstants;
 
 
@@ -57,35 +55,27 @@ public class BuiltInTypesTreeViewerProvider {
 	
     public static List getAllBuiltInTypes() {
         List items = new ArrayList();
-        for (int i = 0; i < XSDDOMHelper.dataType.length; i++) {
-          items.add(XSDDOMHelper.dataType[i][0]);
-        }
+        //for (int i = 0; i < XSDDOMHelper.dataType.length; i++) {
+        //  items.add(XSDDOMHelper.dataType[i][0]);
+        //}
         Iterator it = items.iterator();
         
         List mainContainer = new ArrayList(BUILT_IN_TYPES_SUB_GROUP);
-        XMLComponentSpecification header = new XMLComponentSpecification(null);
-        header.addAttributeInfo("name", "Root");
-        header.addAttributeInfo(CONST_PARENT, "None");
+        ComponentSpecification header = new ComponentSpecification("", "Root", null);
         mainContainer.add(header);
         
         List numbersGroup = new ArrayList();
-        header = new XMLComponentSpecification(null);
-        header.addAttributeInfo("name", "Numbers");
-        header.addAttributeInfo(CONST_PARENT, mainContainer);
+        header = new ComponentSpecification("", "Numbers", null);
         numbersGroup.add(header);
         mainContainer.add(numbersGroup);
         
         List dateAndTimeGroup = new ArrayList();
-        header = new XMLComponentSpecification(null);
-        header.addAttributeInfo("name", "Date and Time");
-        header.addAttributeInfo(CONST_PARENT, mainContainer);
+        header = new ComponentSpecification("", "Date and Time", null);
         dateAndTimeGroup.add(header);
         mainContainer.add(dateAndTimeGroup);
         
         List otherGroup = new ArrayList();
-        header = new XMLComponentSpecification(null);
-        header.addAttributeInfo("name", "Other");
-        header.addAttributeInfo(CONST_PARENT, mainContainer);
+        header = new ComponentSpecification("", "Other", null);
         otherGroup.add(header);
         mainContainer.add(otherGroup);
 
@@ -93,26 +83,23 @@ public class BuiltInTypesTreeViewerProvider {
         	Object item = it.next();
             String name = item.toString();
 
-            XMLComponentSpecification builtInTypeItem = new XMLComponentSpecification(null);
-            builtInTypeItem.addAttributeInfo("name", name);
-            builtInTypeItem.setTargetNamespace(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001);
-            builtInTypeItem.setFileLocation("Built-In");
-
+            ComponentSpecification builtInTypeItem = new ComponentSpecification(name, XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001, null);
+          
             // if this built-In Type is in Number group 
             if ( partOf(name, numberTypes) ){
             	// Set parent
-            	builtInTypeItem.addAttributeInfo(CONST_PARENT, numbersGroup);
+            	//builtInTypeItem.addAttributeInfo(CONST_PARENT, numbersGroup);
             	
             	numbersGroup.add(builtInTypeItem);
             }
             // if this built-In Type is in Date-and-Time group 
             else if ( partOf(name, dateAndTimeTypes)){
-            	builtInTypeItem.addAttributeInfo(CONST_PARENT, dateAndTimeGroup);
+            	//builtInTypeItem.addAttributeInfo(CONST_PARENT, dateAndTimeGroup);
             	dateAndTimeGroup.add(builtInTypeItem);
             }
             // otherwise, put in Other group
             else {
-            	builtInTypeItem.addAttributeInfo(CONST_PARENT, otherGroup);
+            	//builtInTypeItem.addAttributeInfo(CONST_PARENT, otherGroup);
             	otherGroup.add(builtInTypeItem);
             }
         }
@@ -159,24 +146,24 @@ public class BuiltInTypesTreeViewerProvider {
 				return XSDEditorPlugin.getXSDImage("icons/XSDDateAndTimeTypes.gif");
 			if ( getText(element).equals("Other") )
 				return XSDEditorPlugin.getXSDImage("icons/browsebutton.gif");
-			if ( element instanceof XMLComponentSpecification ){
+			if ( element instanceof ComponentSpecification ){
 				return XSDEditorPlugin.getXSDImage("icons/XSDSimpleType.gif");
 			}
 			return null;
 		}
 
 		public String getText(Object element) {
-			XMLComponentSpecification spec = null;
+			ComponentSpecification spec = null;
 			
 			/* if not non-leaf node, the first element has the name for 
 			 * the whole list */
 			if (element instanceof List){
-				spec = (XMLComponentSpecification) ((List) element).get(0);
+				spec = (ComponentSpecification) ((List) element).get(0);
 			}
-			else if (element instanceof XMLComponentSpecification ){
-				spec = (XMLComponentSpecification) element;
+			else if (element instanceof ComponentSpecification ){
+				spec = (ComponentSpecification) element;
 			}
-			return (String) spec.getAttributeInfo("name");
+			return (String) spec.getName();
 		}
 
 		public void addListener(ILabelProviderListener listener) {
@@ -215,18 +202,7 @@ public class BuiltInTypesTreeViewerProvider {
 		}
 
 		public Object getParent(Object element) {
-			if ( element instanceof XMLComponentSpecification){
-				XMLComponentSpecification spec = 
-					(XMLComponentSpecification) element;
-				return spec.getAttributeInfo(CONST_PARENT);
-			}
-			if ( element instanceof List){
-				XMLComponentSpecification header = 
-					(XMLComponentSpecification) ((List) element).get(0);
-				return header.getAttributeInfo(CONST_PARENT);
-			}
-			else
-				return null;
+		    return null;
 		}
 
 		public boolean hasChildren(Object element) {

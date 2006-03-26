@@ -13,7 +13,6 @@ package org.eclipse.wst.xsd.ui.common.properties.sections;
 import org.apache.xerces.util.XMLChar;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.gef.commands.Command;
-import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.CLabel;
@@ -31,11 +30,6 @@ import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.wst.xsd.editor.Messages;
 import org.eclipse.wst.xsd.editor.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.common.commands.UpdateNameCommand;
-import org.eclipse.wst.xsd.ui.internal.actions.SetBaseTypeAction;
-import org.eclipse.wst.xsd.ui.internal.dialogs.types.xml.XMLComponentSpecification;
-import org.eclipse.wst.xsd.ui.internal.dialogs.types.xsd.XSDComponentSelectionDialog;
-import org.eclipse.wst.xsd.ui.internal.dialogs.types.xsd.XSDComponentSelectionProvider;
-import org.eclipse.wst.xsd.ui.internal.dialogs.types.xsd.XSDSetTypeHelper;
 import org.eclipse.xsd.XSDComplexTypeDefinition;
 import org.eclipse.xsd.XSDDerivationMethod;
 import org.eclipse.xsd.XSDNamedComponent;
@@ -244,7 +238,9 @@ public class XSDComplexTypeSection extends AbstractSection implements SelectionL
       IFile currentIFile = ((IFileEditorInput) getActiveEditor().getEditorInput()).getFile();
 
       XSDSchema schema = xsdComplexType.getSchema();
-
+      
+      // issue ... need to move the common.ui's selection dialog
+      /*
       XSDComponentSelectionProvider provider = new XSDComponentSelectionProvider(currentIFile, schema);
       XSDComponentSelectionDialog dialog = new XSDComponentSelectionDialog(shell, Messages.UI_LABEL_SET_TYPE, provider);
       provider.setDialog(dialog);
@@ -293,7 +289,8 @@ public class XSDComplexTypeSection extends AbstractSection implements SelectionL
       // getDomHelper().changeDerivedByType(contentModelElement,
       // derivedByCombo.getText(), baseType);
       // }
-      // endRecording(ctElement);
+      // endRecording(ctElement);       
+       */
     }
   }
 

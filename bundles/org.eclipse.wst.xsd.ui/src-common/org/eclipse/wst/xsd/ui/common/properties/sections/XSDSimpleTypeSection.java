@@ -14,14 +14,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
-
 import org.apache.xerces.util.XMLChar;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.CLabel;
@@ -42,9 +40,6 @@ import org.eclipse.wst.xsd.editor.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.common.commands.UpdateNameCommand;
 import org.eclipse.wst.xsd.ui.internal.actions.CreateElementAction;
 import org.eclipse.wst.xsd.ui.internal.actions.DOMAttribute;
-import org.eclipse.wst.xsd.ui.internal.dialogs.types.xsd.XSDComponentSelectionDialog;
-import org.eclipse.wst.xsd.ui.internal.dialogs.types.xsd.XSDComponentSelectionProvider;
-import org.eclipse.wst.xsd.ui.internal.dialogs.types.xsd.XSDSetTypeHelper;
 import org.eclipse.wst.xsd.ui.internal.util.XSDDOMHelper;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDNamedComponent;
@@ -314,7 +309,9 @@ public class XSDSimpleTypeSection extends AbstractSection
       Element secondaryElement = null;
 
       IFile currentIFile = ((IFileEditorInput) getActiveEditor().getEditorInput()).getFile();
-
+      
+      // issue : need to move to common.ui's selection dialog
+      /*
       XSDComponentSelectionProvider provider = new XSDComponentSelectionProvider(currentIFile, xsdSchema);
       dialog = new XSDComponentSelectionDialog(shell, XSDEditorPlugin.getXSDString("_UI_LABEL_SET_TYPE"), provider);
       provider.setDialog((XSDComponentSelectionDialog) dialog);
@@ -406,10 +403,10 @@ public class XSDSimpleTypeSection extends AbstractSection
 
         XSDSimpleTypeDefinition st = (XSDSimpleTypeDefinition) input;
         st.setElement(element);
-        updateSimpleTypeFacets();
+        updateSimpleTypeFacets();*/
       }
       // endRecording(element);
-    }
+    
     refresh();
   }
 

@@ -27,6 +27,7 @@ import org.eclipse.xsd.XSDSchemaContent;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.eclipse.xsd.XSDTypeDefinition;
 import org.eclipse.xsd.impl.XSDImportImpl;
+import org.eclipse.xsd.impl.XSDSchemaImpl;
 import org.eclipse.xsd.util.XSDConstants;
 import org.w3c.dom.Element;
 
@@ -248,39 +249,47 @@ public class TypesHelper
     Vector items = new Vector();
     if (xsdSchema != null)
     {
-      String xsdForXSDPrefix = xsdSchema.getSchemaForSchemaQNamePrefix();
-      if (xsdForXSDPrefix != null && xsdForXSDPrefix.length() > 0)
+      String prefix = xsdSchema.getSchemaForSchemaQNamePrefix();
+      if (prefix != null && prefix.length() > 0)
       {
-        xsdForXSDPrefix = xsdForXSDPrefix + ":";
+        prefix = prefix + ":";
       }
       else
       {
-        xsdForXSDPrefix = "";
+        prefix = "";
       }
-
-      for (int i = 0; i < XSDDOMHelper.dataType.length; i++)
+      List result = new ArrayList();
+      if (xsdSchema != null)
       {
-        items.add(xsdForXSDPrefix + XSDDOMHelper.dataType[i][0]);
+        XSDSchema schemaForSchema = XSDSchemaImpl.getSchemaForSchema(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001);
+        for (Iterator i = schemaForSchema.getSimpleTypeIdMap().values().iterator(); i.hasNext();)
+        {
+          XSDTypeDefinition td = (XSDTypeDefinition) i.next();  
+          String localName = td.getName(); 
+          String prefixedName = (prefix != null && prefix.length() > 0) ? prefix + ":" + localName : localName; 
+          result.add(prefixedName);        
+        }
       }
     }
     return items;
   }
-  
+
+  // issue : do we still need this?  it can likely be remove now
+  // was used for content assist but I don't think we really need it
   public java.util.List getBuiltInTypeNamesList2()
   {
     List result = new ArrayList();
     if (xsdSchema != null)
     {
       List prefixes = getPrefixesForNamespace(xsdSchema.getSchemaForSchemaNamespace());
-      for (int i = 0; i < XSDDOMHelper.dataType.length; i++)
+      XSDSchema schemaForSchema = XSDSchemaImpl.getSchemaForSchema(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001);
+      for (Iterator i = schemaForSchema.getSimpleTypeIdMap().values().iterator(); i.hasNext();)
       {
-        for (Iterator j = prefixes.iterator(); j.hasNext();)
-        {
-          String prefix = (String) j.next();
-          String localName = XSDDOMHelper.dataType[i][0]; 
-          String prefixedName = (prefix != null && prefix.length() > 0) ? prefix + ":" + localName : localName; 
-          result.add(prefixedName);
-        }
+        XSDTypeDefinition td = (XSDTypeDefinition) i.next();  
+        String localName = td.getName();
+        String prefix = prefixes.size() > 0 ? (String)prefixes.get(0) : null;
+        String prefixedName = (prefix != null && prefix.length() > 0) ? prefix + ":" + localName : localName; 
+        result.add(prefixedName);        
       }
     }
     return result;
