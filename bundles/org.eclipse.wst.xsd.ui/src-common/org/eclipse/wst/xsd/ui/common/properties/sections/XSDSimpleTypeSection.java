@@ -415,6 +415,8 @@ public class XSDSimpleTypeSection extends AbstractSection
     return false;
   }
 
+  // issue (cs) this method seems to be utilizing 'old' classes, can we reimplement?
+  // (e.g. ChangeElementAction, XSDDOMHelper, etc)
   protected boolean addCreateElementActionIfNotExist(String elementTag, String label, Element parent, Node relativeNode)
   {
     XSDSimpleTypeDefinition st = (XSDSimpleTypeDefinition) input;

@@ -12,8 +12,10 @@ package org.eclipse.wst.xsd.ui.common.properties.sections;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.Map;
-
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.StyleRange;
@@ -32,7 +34,7 @@ import org.eclipse.wst.xsd.editor.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.internal.actions.XSDEditNamespacesAction;
 import org.eclipse.wst.xsd.ui.internal.nsedit.TargetNamespaceChangeHandler;
 import org.eclipse.wst.xsd.ui.internal.util.TypesHelper;
-import org.eclipse.wst.xsd.ui.internal.util.XSDSchemaHelper;
+import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.util.XSDConstants;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -330,7 +332,7 @@ public class XSDSchemaSection extends AbstractSection
     TargetNamespaceChangeHandler targetNamespaceChangeHandler = new TargetNamespaceChangeHandler(xsdSchema, oldNamespace, targetNamespace);
     targetNamespaceChangeHandler.resolve();
 
-    XSDSchemaHelper.updateElement(xsdSchema);
+    updateElement(xsdSchema);
 
     
     doc.getModel().endRecording(this);
@@ -341,6 +343,49 @@ public class XSDSchemaSection extends AbstractSection
     // System.out.println("2. SW Map keys are " + map.keySet());
   }
 
+  // issue (cs) I don't have a clue why we need to call this method
+  //
+  private static void updateElement(XSDConcreteComponent concreteComp)
+  {
+    try
+    {
+      concreteComp.updateElement();
+    }
+    catch (Exception e)
+    {
+      for (Iterator containments = concreteComp.eClass().getEAllReferences().iterator(); containments.hasNext(); )
+      {
+        EReference eReference = (EReference)containments.next();
+        if (eReference.isContainment())
+        {
+          if (eReference.isMany())
+          {
+            for (Iterator objects = ((Collection)concreteComp.eGet(eReference)).iterator(); objects.hasNext(); )
+            {
+              XSDConcreteComponent xsdConcreteComponent = (XSDConcreteComponent)objects.next();
+              try
+              {
+                xsdConcreteComponent.updateElement();
+              }
+              catch (Exception ex) {}
+            }
+          }
+          else
+          {
+            XSDConcreteComponent xsdConcreteComponent = (XSDConcreteComponent)concreteComp.eGet(eReference);
+            if (xsdConcreteComponent != null)
+            {
+              try
+              {
+                xsdConcreteComponent.updateElement();
+              }
+              catch (Exception ex) {}
+            }
+          }
+        }
+      }
+    }
+  }      
   private String getUniqueSchemaForSchemaPrefix(String xsdForXSDPrefix, Map map)
   {
     if (xsdForXSDPrefix == null || (xsdForXSDPrefix != null && xsdForXSDPrefix.trim().length() == 0))

@@ -45,6 +45,8 @@ import org.w3c.dom.Attr;
 import org.w3c.dom.Node;
 
 
+// issue (cs) can we remove this?
+//
 public class OpenOnSelectionHelper
 {
   

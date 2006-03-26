@@ -19,28 +19,23 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.List;
-import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
 
+// issue (cs) can we get rid of this class?
+// I've stripped it down a whole lot... but it'd be great to get rid of it
+//
 public class ViewUtility
 {
   private static Font font;
 
-  public static Font getFont()
+  private static Font getFont()
   {
     if (font == null)
     {              
       font = new Font(Display.getCurrent(), "ms sans serif", 8, SWT.NORMAL);  
     }
     return font;
-  }
-
-  public static void setFont(Font newFont)
-  {
-    font = newFont;
   }
 
   public static void setComposite(Composite comp)
@@ -83,31 +78,6 @@ public class ViewUtility
     data.verticalAlignment = GridData.FILL;
     data.horizontalAlignment = GridData.FILL;
     data.grabExcessHorizontalSpace = true;
-    composite.setLayoutData(data);
-
-    return composite;
-  }
-
-  public static Composite createComposite(Composite parent, int numColumns, boolean horizontalFill, boolean verticalFill)
-  {
-    if (!horizontalFill && !verticalFill)
-    {
-      createComposite(parent, numColumns);
-    }
-
-    Composite composite = new Composite(parent, SWT.NONE);
-
-    composite.setFont(getFont());
-
-    GridLayout layout = new GridLayout();
-    layout.numColumns = numColumns;
-    composite.setLayout(layout);
-
-    GridData data = new GridData();
-    data.verticalAlignment = GridData.FILL;
-    data.horizontalAlignment = GridData.FILL;
-    data.grabExcessHorizontalSpace = true;
-    data.grabExcessVerticalSpace = true;
     composite.setLayoutData(data);
 
     return composite;
@@ -161,32 +131,8 @@ public class ViewUtility
     return label;
   }
 
-  /**
-   * Helper method for creating buttons.
-   */
-  public static Button createPushButton(Composite parent, String label) 
-  {
-    Button button = new Button(parent, SWT.PUSH);
-    button.setText(label);
+ 
 
-    GridData data = new GridData();
-    data.horizontalAlignment = GridData.FILL;
-    button.setLayoutData(data);
-
-    return button;
-  }
-
-  public static Table createTable(Composite parent)
-  {
-    Table table = new Table(parent, SWT.SINGLE | SWT.BORDER);
-
-    GridData data = new GridData();
-    data.horizontalAlignment = GridData.FILL;
-    data.grabExcessHorizontalSpace = true;
-    table.setLayoutData(data);
-
-    return table;
-  }
 
   /**
    * Create radio button
@@ -235,46 +181,7 @@ public class ViewUtility
     return combo;
   }
 
-  public static List createListBox(Composite parent, int width, boolean isMultiSelect)
-  {
-    int style = isMultiSelect ? SWT.MULTI : SWT.SINGLE;
-    List list = new List(parent, style | SWT.BORDER);
 
-    GridData data = new GridData();
-    data.horizontalAlignment = GridData.FILL;
-    data.grabExcessHorizontalSpace = true;
-    data.widthHint = width;
-    list.setLayoutData(data);
-
-    return list;
-  }
-
-  public static List createListBox(Composite parent, int style)
-  {
-    List list = new List(parent, style);
-
-    GridData data = new GridData();
-    data.horizontalAlignment = GridData.FILL;
-    data.verticalAlignment = GridData.FILL;
-    data.grabExcessHorizontalSpace = true;
-    data.grabExcessVerticalSpace = true;
-    list.setLayoutData(data);
-
-    return list;
-  }
-
-	public Text createTextField(Composite parent)
-	{
-		Text text = new Text(parent, SWT.SINGLE | SWT.BORDER);
-		GridData data = new GridData();
-		data.horizontalAlignment = GridData.FILL;
-		data.verticalAlignment = GridData.FILL;
-		data.grabExcessHorizontalSpace = true;
-		text.setLayoutData(data);
-//		text.addKeyListener(keyboardHandler);
-		return text;
-	}
-  
   public static Text createTextField(Composite parent, int width)
   {
     Text text = new Text(parent, SWT.SINGLE | SWT.BORDER);
@@ -335,95 +242,5 @@ public class ViewUtility
     text.setLayoutData(data);
 
     return text;
-  }
-
-  public static Group createGroup(Composite parent, int numColumns, String text, boolean verticalFill) 
-  {
-    Group group = new Group(parent, SWT.SHADOW_ETCHED_IN);
-    group.setText(text);
-
-    GridData data = new GridData();
-    data.horizontalAlignment = GridData.FILL;
-    data.grabExcessHorizontalSpace = true;
-    if (verticalFill)
-    {
-      data.verticalAlignment = GridData.FILL;
-      data.grabExcessVerticalSpace = true;
-    }      
-    group.setLayoutData(data);
-
-    GridLayout layout = new GridLayout();
-    layout.numColumns = numColumns;
-    group.setLayout(layout);
-    return group;
-  }
-
- public static Group createGroup(Composite parent, int numColumns, String text, boolean verticalFill, int alignment) 
-  {
-    Group group = new Group(parent, SWT.SHADOW_ETCHED_IN);
-    group.setText(text);
-
-    GridData data = new GridData();
-    data.horizontalAlignment = GridData.FILL;
-    data.grabExcessHorizontalSpace = true;
-    data.verticalAlignment = alignment;
-    if (verticalFill)
-    {
-      data.verticalAlignment = GridData.FILL;
-      data.grabExcessVerticalSpace = true;
-    }      
-    group.setLayoutData(data);
-
-    GridLayout layout = new GridLayout();
-    layout.numColumns = numColumns;
-    group.setLayout(layout);
-    return group;
-  }
-
-  public static Label createVerticalFiller(Composite parent, int verticalSpan) 
-  {
-    Label label = new Label(parent, SWT.LEFT);
-    label.setFont(getFont());
-
-    GridData data = new GridData();
-    data.verticalAlignment = GridData.FILL;
-    data.verticalSpan = verticalSpan;
-    label.setLayoutData(data);
-
-    return label;
-  }
-
-  /**
-   * Creates a grid data object that occupies vertical and horizontal
-   * space.
-   */
-  static public GridData createFill()
-  {
-    GridData gd= new GridData();
-    gd.horizontalAlignment= GridData.FILL;
-    gd.grabExcessHorizontalSpace= true;
-    gd.verticalAlignment= GridData.FILL;
-    gd.grabExcessVerticalSpace= true;
-    return gd;
-  }
-  /**
-   * Creates a grid data object that occupies horizontal space.
-   */
-  static public GridData createHorizontalFill()
-  {
-    GridData gd= new GridData();
-    gd.horizontalAlignment= GridData.FILL;
-    gd.grabExcessHorizontalSpace= true;
-    return gd;
-  }
-  /**
-   * Creates a grid data object that occupies vertical space.
-   */
-  static public GridData createVerticalFill()
-  {
-    GridData gd= new GridData();
-    gd.verticalAlignment= GridData.FILL;
-    gd.grabExcessVerticalSpace= true;
-    return gd;
   }
 }

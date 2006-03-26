@@ -35,6 +35,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.Text;
 
+// issue (cs) can we remove this?
+//
 public class CreateElementAction extends Action
 {
   protected String description;
