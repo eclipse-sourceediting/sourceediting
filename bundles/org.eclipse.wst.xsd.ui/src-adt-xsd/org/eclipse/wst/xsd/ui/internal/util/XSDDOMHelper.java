@@ -377,18 +377,8 @@ public class XSDDOMHelper
     }
   }
   
-  public static Node getLastElementNode(Node parent)
-  {
-    Node lastChild = parent.getLastChild();
-    
-    while (!(lastChild instanceof Element) && lastChild != null)
-    {
-      lastChild = lastChild.getPreviousSibling();
-    }
-    return lastChild;
-  }
 
-  public static Node getNextElementNode(Node node)
+  private static Node getNextElementNode(Node node)
   {
     Node next = node.getNextSibling();
     
@@ -403,7 +393,7 @@ public class XSDDOMHelper
     return next;
   }
 
-	public static Node getPreviousElementNode(Node node)
+	private static Node getPreviousElementNode(Node node)
 	{
 		Node previous = node.getPreviousSibling();
     
@@ -420,10 +410,8 @@ public class XSDDOMHelper
 
  
 
-
-
-
-
+  // issue (cs) what's this method supposed to do?
+  // bizzare name
   public static boolean inputEquals(Object input, String tagname, boolean isRef)
   {
     if (input instanceof Element)
@@ -439,54 +427,5 @@ public class XSDDOMHelper
     return false;
   }
 
-  public static void updateElementToNotAnonymous(Element element)
-  {
-    if (element != null)
-    {
-      NodeList children = element.getChildNodes();
-      if (children != null)
-      {
-        for (int i = 0; i < children.getLength(); i++)
-        {
-          Node node = (Node)children.item(i);
-          if (node instanceof Element)
-          {
-            if (node.getLocalName().equals(XSDConstants.SIMPLETYPE_ELEMENT_TAG) ||
-                node.getLocalName().equals(XSDConstants.COMPLEXTYPE_ELEMENT_TAG))
-            {
-              XSDDOMHelper.removeNodeAndWhitespace(node);
-              i=0;
-            }
-          }
-        }
-      }
-    }
-  }
-  
-  public static boolean isAttributeRef(Element ct, String attrName, String ns)
-  {
-    NodeList list = ct.getChildNodes();
-    int length = list.getLength();
-    for (int i = 0; i < length; i++)
-    {
-      if (list.item(i) instanceof Element)
-      {
-        Element aChild = (Element)list.item(i);
-        if (aChild.getLocalName().equals(XSDConstants.ATTRIBUTE_ELEMENT_TAG))
-        {
-          if (aChild.hasAttribute(XSDConstants.REF_ATTRIBUTE))
-          {
-            String refValue = aChild.getAttribute(XSDConstants.REF_ATTRIBUTE);
-            if (refValue.equals(attrName))
-            {
-              return true;
-            }
-          }
-        }
-      }
-      
-    }
-    
-    return false;
-  }
+ 
 }
