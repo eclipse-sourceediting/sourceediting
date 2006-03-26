@@ -30,7 +30,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.wst.xml.core.internal.document.DocumentImpl;
 import org.eclipse.wst.xsd.editor.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.internal.actions.XSDEditNamespacesAction;
-import org.eclipse.wst.xsd.ui.internal.refactor.rename.TargetNamespaceChangeHandler;
+import org.eclipse.wst.xsd.ui.internal.nsedit.TargetNamespaceChangeHandler;
 import org.eclipse.wst.xsd.ui.internal.util.TypesHelper;
 import org.eclipse.wst.xsd.ui.internal.util.XSDSchemaHelper;
 import org.eclipse.xsd.util.XSDConstants;

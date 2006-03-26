@@ -23,7 +23,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 
-// issue (cs) remove this class
+// issue (cs) remove this class!!
 public class XSDDOMHelper
 {
 

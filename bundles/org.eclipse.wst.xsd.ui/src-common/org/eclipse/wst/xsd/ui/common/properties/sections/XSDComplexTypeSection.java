@@ -239,7 +239,7 @@ public class XSDComplexTypeSection extends AbstractSection implements SelectionL
 
       XSDSchema schema = xsdComplexType.getSchema();
       
-      // issue ... need to move the common.ui's selection dialog
+      // issuec (cs) need to move the common.ui's selection dialog
       /*
       XSDComponentSelectionProvider provider = new XSDComponentSelectionProvider(currentIFile, schema);
       XSDComponentSelectionDialog dialog = new XSDComponentSelectionDialog(shell, Messages.UI_LABEL_SET_TYPE, provider);

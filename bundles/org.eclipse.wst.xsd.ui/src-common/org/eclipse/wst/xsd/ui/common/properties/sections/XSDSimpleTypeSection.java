@@ -310,7 +310,7 @@ public class XSDSimpleTypeSection extends AbstractSection
 
       IFile currentIFile = ((IFileEditorInput) getActiveEditor().getEditorInput()).getFile();
       
-      // issue : need to move to common.ui's selection dialog
+      // issue (cs) need to move to common.ui's selection dialog
       /*
       XSDComponentSelectionProvider provider = new XSDComponentSelectionProvider(currentIFile, xsdSchema);
       dialog = new XSDComponentSelectionDialog(shell, XSDEditorPlugin.getXSDString("_UI_LABEL_SET_TYPE"), provider);

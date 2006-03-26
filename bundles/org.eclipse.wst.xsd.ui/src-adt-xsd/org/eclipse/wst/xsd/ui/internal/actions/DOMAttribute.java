@@ -10,8 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.actions;
 
-// TODO Remove this
-
+// issue (cs) remove this
 /**
  * @version 	1.0
  * @author

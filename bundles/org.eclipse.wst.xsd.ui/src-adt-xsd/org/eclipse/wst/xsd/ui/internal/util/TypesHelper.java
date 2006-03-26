@@ -274,7 +274,7 @@ public class TypesHelper
     return items;
   }
 
-  // issue : do we still need this?  it can likely be remove now
+  // issue (cs) do we still need this?  it can likely be remove now
   // was used for content assist but I don't think we really need it
   public java.util.List getBuiltInTypeNamesList2()
   {
