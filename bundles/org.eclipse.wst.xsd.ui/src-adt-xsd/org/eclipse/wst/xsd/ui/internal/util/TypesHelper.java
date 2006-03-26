@@ -41,7 +41,7 @@ public class TypesHelper
     this.xsdSchema = xsdSchema;
   }
 
-  public void updateExternalImportGlobals()
+  private void updateExternalImportGlobals()
   {
     if (xsdSchema != null)
     {
@@ -68,181 +68,6 @@ public class TypesHelper
     }
   }
 
-
-  private Vector addExternalImportedGlobalElements(Vector items)
-  {
-    if (xsdSchema != null)
-    {
-      Iterator contents = xsdSchema.getContents().iterator();
-      while (contents.hasNext())
-      {
-        XSDSchemaContent content = (XSDSchemaContent) contents.next();
-        if (content instanceof XSDImportImpl)
-        {
-          XSDImportImpl anImport = (XSDImportImpl) content;
-
-          XSDSchema impSchema = anImport.getResolvedSchema();
-
-          try
-          {
-            if (impSchema == null)
-            {
-              impSchema = anImport.importSchema();
-            }
-          }
-          catch (Exception e)
-          {
-            
-          }
-
-          if (impSchema != null)
-          {
-            Iterator i = impSchema.getElementDeclarations().iterator();
-            while (i.hasNext())
-            {
-              XSDElementDeclaration anElement = (XSDElementDeclaration) i.next();
-              if (anElement.getName() != null)
-              {
-                items.addAll(getPrefixedNames(anElement.getTargetNamespace(), anElement.getName()));
-              }
-            }
-          }
-        }
-      }
-    }
-    return items;
-  }
-
-  private Vector addExternalImportedAttributes(Vector items)
-  {
-    if (xsdSchema != null)
-    {
-      Iterator contents = xsdSchema.getContents().iterator();
-      while (contents.hasNext())
-      {
-        XSDSchemaContent content = (XSDSchemaContent) contents.next();
-        if (content instanceof XSDImportImpl)
-        {
-          XSDImportImpl anImport = (XSDImportImpl) content;
-
-          XSDSchema impSchema = anImport.getResolvedSchema();
-
-          try
-          {
-            if (impSchema == null)
-            {
-              impSchema = anImport.importSchema();
-            }
-          }
-          catch (Exception e)
-          {
-            
-          }
-
-          if (impSchema != null)
-          {
-            Iterator i = impSchema.getAttributeDeclarations().iterator();
-            while (i.hasNext())
-            {
-              XSDAttributeDeclaration attrib = (XSDAttributeDeclaration) i.next();
-              if (attrib.getName() != null)
-              {
-                items.addAll(getPrefixedNames(attrib.getTargetNamespace(), attrib.getName()));
-              }
-            }
-          }
-        }
-      }
-    }
-    return items;
-  }
-
-  private Vector addExternalImportedAttributeGroups(Vector items)
-  {
-    if (xsdSchema != null)
-    {
-      Iterator contents = xsdSchema.getContents().iterator();
-      while (contents.hasNext())
-      {
-        XSDSchemaContent content = (XSDSchemaContent) contents.next();
-        if (content instanceof XSDImportImpl)
-        {
-          XSDImportImpl anImport = (XSDImportImpl) content;
-
-          XSDSchema impSchema = anImport.getResolvedSchema();
-
-          try
-          {
-            if (impSchema == null)
-            {
-              impSchema = anImport.importSchema();
-            }
-          }
-          catch (Exception e)
-          {
-            
-          }
-
-          if (impSchema != null)
-          {
-            Iterator i = impSchema.getAttributeGroupDefinitions().iterator();
-            while (i.hasNext())
-            {
-              XSDAttributeGroupDefinition attrib = (XSDAttributeGroupDefinition) i.next();
-              if (attrib.getName() != null)
-              {
-                items.addAll(getPrefixedNames(attrib.getTargetNamespace(), attrib.getName()));
-              }
-            }
-          }
-        }
-      }
-    }
-    return items;
-  }
-
-  private Vector addExternalImportedGroups(Vector items)
-  {
-    if (xsdSchema != null)
-    {
-      Iterator contents = xsdSchema.getContents().iterator();
-      while (contents.hasNext())
-      {
-        XSDSchemaContent content = (XSDSchemaContent) contents.next();
-        if (content instanceof XSDImportImpl)
-        {
-          XSDImportImpl anImport = (XSDImportImpl) content;
-
-          XSDSchema impSchema = anImport.getResolvedSchema();
-
-          try
-          {
-            if (impSchema == null)
-            {
-              impSchema = anImport.importSchema();
-            }
-          }
-          catch (Exception e)
-          {
-          }
-
-          if (impSchema != null)
-          {
-            Iterator i = impSchema.getModelGroupDefinitions().iterator();
-            while (i.hasNext())
-            {
-              XSDModelGroupDefinition aGroup = (XSDModelGroupDefinition) i.next();
-              if (aGroup.getName() != null)
-              {
-                items.addAll(getPrefixedNames(aGroup.getTargetNamespace(), aGroup.getName()));
-              }
-            }
-          }
-        }
-      }
-    }
-    return items;
-  }
 
   public java.util.List getBuiltInTypeNamesList()
   {
@@ -402,25 +227,6 @@ public class TypesHelper
     return key;
   }
 
-  public java.util.List getUserComplexTypes()
-  {
-    Vector items = new Vector();
-    if (xsdSchema != null)
-    {
-      updateExternalImportGlobals();
-      Iterator i = xsdSchema.getTypeDefinitions().iterator();
-      while (i.hasNext())
-      {
-        XSDTypeDefinition typeDefinition = (XSDTypeDefinition) i.next();
-        if (typeDefinition instanceof XSDComplexTypeDefinition)
-        {
-			    items.add(typeDefinition);         
-        }
-      }
-    }
-    return items;
-  }
-  
   public java.util.List getGlobalElements()
   {
     Vector items = new Vector();
@@ -444,34 +250,6 @@ public class TypesHelper
       items = (Vector) sortList(items);
     }
     return items;
-  }
-
-  public String getGlobalElement(XSDSchema relativeComponent)
-  {
-    if (xsdSchema != null)
-    {
-      updateExternalImportGlobals();
-      if (xsdSchema.getElementDeclarations() != null)
-      {
-        Iterator i = xsdSchema.getElementDeclarations().iterator();
-        while (i.hasNext()) // just get the first one
-        {
-          XSDElementDeclaration elementDeclaration = (XSDElementDeclaration) i.next();
-          if (elementDeclaration.getQName(relativeComponent) != null)
-          {
-            return elementDeclaration.getQName(relativeComponent);
-          }
-        }
-      }
-
-      Vector items = new Vector();
-      items = addExternalImportedGlobalElements(items);
-      if (items != null && items.size() > 0)
-      {
-        return items.get(0).toString();
-      }
-    }
-    return null; // for disabling menu
   }
 
   public java.util.List getGlobalAttributes()
@@ -502,38 +280,6 @@ public class TypesHelper
     return items;
   }
 
-  public String getGlobalAttribute(XSDSchema relativeComponent)
-  {
-    if (xsdSchema != null)
-    {
-      updateExternalImportGlobals();
-      if (xsdSchema.getAttributeDeclarations() != null)
-      {
-        Iterator i = xsdSchema.getAttributeDeclarations().iterator();
-        while (i.hasNext()) // just get the first one
-        {
-          XSDAttributeDeclaration attributeDeclaration = (XSDAttributeDeclaration) i.next();
-          // Filter out attributes from the schema namespace
-          if (!(attributeDeclaration.getTargetNamespace().equals(XSDConstants.SCHEMA_INSTANCE_URI_2001)))
-          {
-            if (attributeDeclaration.getQName(relativeComponent) != null)
-            {
-              return attributeDeclaration.getQName(relativeComponent);
-            }
-          }
-        }
-      }
-
-      Vector items = new Vector();
-      items = addExternalImportedAttributes(items);
-      if (items != null && items.size() > 0)
-      {
-        return items.get(0).toString();
-      }
-    }
-    return null; // for disabling menu
-  }
-
   public java.util.List getGlobalAttributeGroups()
   {
     Vector items = new Vector();
@@ -557,34 +303,6 @@ public class TypesHelper
       items = (Vector) sortList(items);
     }
     return items;
-  }
-
-  public String getGlobalAttributeGroup(XSDSchema relativeComponent)
-  {
-    if (xsdSchema != null)
-    {
-      updateExternalImportGlobals();
-      if (xsdSchema.getAttributeGroupDefinitions() != null)
-      {
-        Iterator i = xsdSchema.getAttributeGroupDefinitions().iterator();
-        while (i.hasNext()) // just get the first one
-        {
-          XSDAttributeGroupDefinition attributeGroupDefinition = (XSDAttributeGroupDefinition) i.next();
-          if (attributeGroupDefinition.getQName(relativeComponent) != null)
-          {
-            return attributeGroupDefinition.getQName(relativeComponent);
-          }
-        }
-      }
-
-      Vector items = new Vector();
-      items = addExternalImportedAttributeGroups(items);
-      if (items != null && items.size() > 0)
-      {
-        return items.get(0).toString();
-      }
-    }
-    return null; // for disabling menu
   }
 
   public java.util.List getModelGroups()
@@ -612,6 +330,7 @@ public class TypesHelper
     return items;
   }
 
+  // issue (cs) ssems like a rather goofy util method?
   public static java.util.List sortList(java.util.List types)
   {
     try
@@ -625,34 +344,7 @@ public class TypesHelper
     return types;
   }
 
-  public String getModelGroup(XSDSchema relativeComponent)
-  {
-    if (xsdSchema != null)
-    {
-      updateExternalImportGlobals();
-      if (xsdSchema.getModelGroupDefinitions() != null)
-      {
-        Iterator i = xsdSchema.getModelGroupDefinitions().iterator();
-        while (i.hasNext()) // just get the first one
-        {
-          XSDModelGroupDefinition modelGroupDefinition = (XSDModelGroupDefinition) i.next();
-          if (modelGroupDefinition.getQName(relativeComponent) != null)
-          {
-            return modelGroupDefinition.getQName(relativeComponent);
-          }
-        }
-      }
-
-      Vector items = new Vector();
-      items = addExternalImportedGroups(items);
-      if (items != null && items.size() > 0)
-      {
-        return items.get(0).toString();
-      }
-    }
-    return null; // for disabling menu
-  }
-
+  // issue (cs) do we still need this?
   public void updateMapAfterDelete(XSDImport deletedNode)
   {
     String ns = deletedNode.getNamespace();
