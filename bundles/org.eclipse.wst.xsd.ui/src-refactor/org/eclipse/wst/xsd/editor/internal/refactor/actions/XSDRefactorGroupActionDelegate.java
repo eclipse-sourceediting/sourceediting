@@ -22,6 +22,7 @@ import org.eclipse.wst.xsd.ui.internal.refactor.wizard.RefactorGroupActionDelega
 import org.eclipse.wst.xsd.ui.internal.refactor.wizard.RefactorGroupSubMenu;
 import org.eclipse.xsd.XSDSchema;
 
+// issue get rid of this class
 public class XSDRefactorGroupActionDelegate extends RefactorGroupActionDelegate {
 
 	public XSDRefactorGroupActionDelegate() {

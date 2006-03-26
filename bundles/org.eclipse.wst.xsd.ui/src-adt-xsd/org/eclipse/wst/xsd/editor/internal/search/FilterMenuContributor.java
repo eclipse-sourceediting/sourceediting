@@ -28,10 +28,10 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.wst.common.ui.internal.search.dialogs.ComponentSearchListDialog;
+import org.eclipse.wst.common.ui.internal.search.dialogs.ComponentSpecification;
 import org.eclipse.wst.xsd.editor.XSDEditorPlugin;
 import org.eclipse.wst.xsd.editor.internal.dialogs.BuiltInTypesTreeViewerProvider;
 import org.eclipse.wst.xsd.editor.internal.dialogs.SelectBuiltInTypesForFilteringDialog;
-import org.eclipse.wst.xsd.ui.internal.dialogs.types.xml.XMLComponentSpecification;
 import org.eclipse.xsd.XSDTypeDefinition;
 
 public class FilterMenuContributor {
@@ -160,7 +160,7 @@ public class FilterMenuContributor {
 				// removed grayed checked elements (parent node)
 				List nonGrayItems = new ArrayList();
 				for(int i = 0; i < selectedBuiltInTypes.length; i++ ){
-					if ( selectedBuiltInTypes[i] instanceof XMLComponentSpecification){
+					if ( selectedBuiltInTypes[i] instanceof ComponentSpecification){
 						nonGrayItems.add(selectedBuiltInTypes[i]);
 					}
 				}
