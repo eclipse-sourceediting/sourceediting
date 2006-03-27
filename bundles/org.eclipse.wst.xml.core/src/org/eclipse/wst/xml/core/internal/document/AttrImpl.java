@@ -14,7 +14,6 @@ package org.eclipse.wst.xml.core.internal.document;
 
 
 
-
 import java.util.Iterator;
 
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
@@ -115,7 +114,7 @@ public class AttrImpl extends NodeImpl implements IDOMAttr {
 		return 0;
 	}
 
-	
+
 	public ITextRegion getEqualRegion() {
 		return this.equalRegion;
 	}
@@ -357,17 +356,16 @@ public class AttrImpl extends NodeImpl implements IDOMAttr {
 	}
 
 	/**
-	 * ISSUE: what should behavior be if this.value == null?
-	 * It's an "error" to be in that state, but seems to 
-	 * occur relatively easily ... probably due to threading 
-	 * bugs ... but this just shows its needs to be spec'd. 
+	 * ISSUE: what should behavior be if this.value == null? It's an "error"
+	 * to be in that state, but seems to occur relatively easily ... probably
+	 * due to threading bugs ... but this just shows its needs to be spec'd.
 	 * 
 	 */
 	public int getValueRegionStartOffset() {
 		if (this.ownerElement == null)
 			return 0;
 		// assuming the firstStructuredDocumentRegion is the one that contains
-		// the valueRegion -- should make smarter? 
+		// the valueRegion -- should make smarter?
 		IStructuredDocumentRegion structuredDocumentRegion = this.ownerElement.getFirstStructuredDocumentRegion();
 		if (structuredDocumentRegion == null)
 			return 0;
@@ -462,7 +460,7 @@ public class AttrImpl extends NodeImpl implements IDOMAttr {
 	/**
 	 * Check if Attr has JSP in value
 	 */
-public boolean hasNestedValue() {
+	public boolean hasNestedValue() {
 		if (this.valueRegion == null)
 			return false;
 		if (!(this.valueRegion instanceof ITextRegionContainer))
@@ -561,10 +559,13 @@ public boolean hasNestedValue() {
 			return (this.name == null);
 		if (this.name == null)
 			return false;
-		if (!ignoreCase())
-			return this.name.equals(name);
-		return this.name.equalsIgnoreCase(name);
+		if (this.name.length() != name.length())
+			return false;
+		if (this.name.equals(name))
+			return true;
+		return this.name.equalsIgnoreCase(name) && ignoreCase();
 	}
+
 
 	/**
 	 * notifyValueChanged method
@@ -736,6 +737,7 @@ public boolean hasNestedValue() {
 
 	/**
 	 * Subclasses must override
+	 * 
 	 * @param regionType
 	 * @return
 	 */
