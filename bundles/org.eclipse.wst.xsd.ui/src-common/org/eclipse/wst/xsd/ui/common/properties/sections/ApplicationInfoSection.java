@@ -44,7 +44,7 @@ import org.eclipse.wst.xsd.ui.common.commands.AddAppInfoAttributeCommand;
 import org.eclipse.wst.xsd.ui.common.commands.AddAppInfoCommand;
 import org.eclipse.wst.xsd.ui.common.commands.AddAppInfoElementCommand;
 import org.eclipse.wst.xsd.ui.common.commands.RemoveAppInfoAttrCommand;
-import org.eclipse.wst.xsd.ui.common.commands.RemoveAppInfoCommand;
+import org.eclipse.wst.xsd.ui.common.commands.RemoveAppInfoElementCommand;
 import org.eclipse.wst.xsd.ui.common.properties.sections.appinfo.AddApplicationInfoDialog;
 import org.eclipse.wst.xsd.ui.common.properties.sections.appinfo.ApplicationInformationPropertiesRegistry;
 import org.eclipse.wst.xsd.ui.common.properties.sections.appinfo.ApplicationInformationTableTreeViewer;
@@ -369,7 +369,7 @@ public class ApplicationInfoSection extends AbstractSection
         {
             XSDAnnotation xsdAnnotation = (XSDAnnotation) extensibleElementsTable.getInput();
         	Node appInfoElement = ((Element) o).getParentNode();
-        	command = new RemoveAppInfoCommand("Remove AppInfo Element",
+        	command = new RemoveAppInfoElementCommand("Remove AppInfo Element",
         			xsdAnnotation, appInfoElement);
         }
         else if (o instanceof Attr){
