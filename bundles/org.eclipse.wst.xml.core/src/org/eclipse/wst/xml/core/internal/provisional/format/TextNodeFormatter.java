@@ -28,7 +28,8 @@ import org.w3c.dom.Node;
 public class TextNodeFormatter extends NodeFormatter {
 	protected void formatNode(IDOMNode node, IStructuredFormatContraints formatContraints) {
 		// [111674] If inside xml:space="preserve" element, we bail
-		if (formatContraints.getInPreserveSpaceElement()) return;
+		if (formatContraints.getInPreserveSpaceElement())
+			return;
 		if (node != null) {
 			IStructuredDocument doc = node.getModel().getStructuredDocument();
 			int line = doc.getLineOfOffset(node.getStartOffset());
@@ -37,7 +38,8 @@ public class TextNodeFormatter extends NodeFormatter {
 				lineDelimiter = doc.getLineDelimiter(line);
 				if (lineDelimiter == null)
 					lineDelimiter = ""; //$NON-NLS-1$
-			} catch (BadLocationException e) {
+			}
+			catch (BadLocationException e) {
 				// log for now, unless we find reason not to
 				Logger.log(Logger.INFO, e.getMessage());
 			}
@@ -53,14 +55,15 @@ public class TextNodeFormatter extends NodeFormatter {
 				String text = node.getStructuredDocument().get(lineOffset, nodeNameOffset - lineOffset);
 				int usedWidth = getIndentationLength(text);
 				currentAvailableLineWidth = getFormatPreferences().getLineWidth() - usedWidth;
-			} catch (BadLocationException e) {
+			}
+			catch (BadLocationException e) {
 				// log for now, unless we find reason not to
 				Logger.log(Logger.INFO, e.getMessage());
 			}
 
 			String compressedText = getCompressedNodeText(node, formatContraints);
 
-			if (((compressedText.length() <= (currentAvailableLineWidth - node.getParentNode().getNodeName().length() - 3) && !StringUtils.containsLineDelimiter(compressedText)) && (!nodeHasSiblings(node) || (!StringUtils.containsLineDelimiter(node.getNodeValue()) && node.getNextSibling() != null && node.getNextSibling().getNodeType() == Node.COMMENT_NODE && !StringUtils.containsLineDelimiter(node.getNextSibling().getNodeValue()))) && !firstStructuredDocumentRegionContainsLineDelimiters((IDOMNode) node.getParentNode())) || node.getStartStructuredDocumentRegion().getStartOffset() == 0) {
+			if (((enoughSpace(parentNode, currentAvailableLineWidth, compressedText)) && (noSiblingsAndNoFollowingComment(node)) && !firstStructuredDocumentRegionContainsLineDelimiters(parentNode)) || node.getStartOffset() == 0) {
 				// enough space
 				// and text has no line delimiters
 				// and (node has no siblings or followed by inline comment)
@@ -86,7 +89,8 @@ public class TextNodeFormatter extends NodeFormatter {
 					compressedText = EMPTY_STRING;
 
 				replaceNodeValue(node, compressedText);
-			} else {
+			}
+			else {
 				// not enough space, need to reflow text
 
 				currentAvailableLineWidth = lineWidth - getIndentationLength(nodeIndentation);
@@ -116,7 +120,8 @@ public class TextNodeFormatter extends NodeFormatter {
 							reflowedText = StringUtils.appendIfNotEndWith(reflowedText, nodeIndentation);
 						}
 					}
-				} else {
+				}
+				else {
 					if (!reflowedText.endsWith(lineDelimiter + nodeIndentation)) {
 						// not already ended with the expected indentation
 
@@ -141,7 +146,8 @@ public class TextNodeFormatter extends NodeFormatter {
 								reflowedText = StringUtils.appendIfNotEndWith(reflowedText, lineDelimiter);
 								reflowedText = StringUtils.appendIfNotEndWith(reflowedText, nodeIndentation);
 							}
-						} else {
+						}
+						else {
 							// not a comment, just add add indentation to end
 							reflowedText = StringUtils.appendIfNotEndWith(reflowedText, lineDelimiter);
 							reflowedText = StringUtils.appendIfNotEndWith(reflowedText, nodeIndentation);
@@ -153,6 +159,31 @@ public class TextNodeFormatter extends NodeFormatter {
 			}
 
 		}
+	}
+
+	private boolean noSiblingsAndNoFollowingComment(IDOMNode node) {
+		IDOMNode nextSibling = (IDOMNode) node.getNextSibling();
+		return !nodeHasSiblings(node) || (noLineDelimiter(node) && isComment(nextSibling) && noLineDelimiter(nextSibling));
+	}
+
+	private boolean isComment(IDOMNode node) {
+		boolean result = false;
+		if (node != null) {
+			result = node.getNodeType() == Node.COMMENT_NODE;
+		}
+		return result;
+	}
+
+	private boolean noLineDelimiter(IDOMNode node) {
+		boolean result = false;
+		if (node != null) {
+			result = !StringUtils.containsLineDelimiter(node.getNodeValue());
+		}
+		return result;
+	}
+
+	private boolean enoughSpace(IDOMNode parentNode, int currentAvailableLineWidth, String compressedText) {
+		return compressedText.length() <= (currentAvailableLineWidth - parentNode.getNodeName().length() - 3) && !StringUtils.containsLineDelimiter(compressedText);
 	}
 
 	protected Vector reflowText(String text, int availableWidth) {
@@ -178,13 +209,15 @@ public class TextNodeFormatter extends NodeFormatter {
 					if ((bufferLength + 1 + eachString.length() > availableWidth) || (eachString.compareTo(CR) == 0) || (eachString.compareTo(LF) == 0)) {
 						if ((eachString.compareTo(LF) == 0) && cr) {
 							// do nothing
-						} else {
+						}
+						else {
 							output.add(buffer.toString());
 							buffer = new StringBuffer();
 							bufferLength = 0;
 						}
 						cr = eachString.compareTo(CR) == 0;
-					} else if (buffer.toString().trim().length() > 0) {
+					}
+					else if (buffer.toString().trim().length() > 0) {
 						buffer.append(SPACE);
 						bufferLength++;
 					}
@@ -195,7 +228,8 @@ public class TextNodeFormatter extends NodeFormatter {
 				}
 			}
 			output.add(buffer.toString());
-		} else
+		}
+		else
 			output.add(text);
 
 		return output;

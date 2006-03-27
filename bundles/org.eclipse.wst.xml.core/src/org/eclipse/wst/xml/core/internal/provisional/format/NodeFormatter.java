@@ -136,7 +136,7 @@ public class NodeFormatter implements IStructuredFormatter {
 
 		if (node != null) {
 			IStructuredDocumentRegion firstStructuredDocumentRegion = node.getFirstStructuredDocumentRegion();
-			if (firstStructuredDocumentRegion != null && firstStructuredDocumentRegion.getText() != null) {
+			if (firstStructuredDocumentRegion != null) {
 				String firstStructuredDocumentRegionText = firstStructuredDocumentRegion.getText();
 				result = StringUtils.containsLineDelimiter(firstStructuredDocumentRegionText);
 			}
