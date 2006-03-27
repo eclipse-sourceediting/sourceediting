@@ -389,7 +389,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 	 * Add the proposals for a completely empty document
 	 */
 	protected void addEmptyDocumentProposals(ContentAssistRequest contentAssistRequest) {
-		addXMLProposal(contentAssistRequest);
+		// nothing
 	}
 
 	/**
@@ -654,10 +654,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 			}
 		}
 
-		if (!xmlpiFound) {
-			addXMLProposal(contentAssistRequest);
-		}
-		else if (owningDocument.getDoctype() == null && isCursorAfterXMLPI(contentAssistRequest) && insertDoctype) {
+		if (xmlpiFound && owningDocument.getDoctype() == null && isCursorAfterXMLPI(contentAssistRequest) && insertDoctype) {
 			addDocTypeProposal(contentAssistRequest);
 		}
 	}
@@ -905,9 +902,6 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 				xmlpiFound = xmlpiFound || xmlpi;
 				doctypeFound = doctypeFound || doctype;
 			}
-			if (!xmlpiFound && contentAssistRequest.getReplacementBeginPosition() < minimumOffset) {
-				addXMLProposal(contentAssistRequest);
-			}
 
 			if (contentAssistRequest.getReplacementBeginPosition() >= minimumOffset) {
 				List childDecls = getAvailableRootChildren((Document) parent, childPosition);
@@ -1063,6 +1057,9 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 		return cursorAdjustment;
 	}
 
+	/**
+	 * @deprecated XML proposal is added via xml declaration template instead
+	 */
 	protected void addXMLProposal(ContentAssistRequest contentAssistRequest) {
 		String proposedText = "<?xml version=\"1.0\" encoding=\"" + ContentTypeEncodingPreferences.getUserPreferredCharsetName(ContentTypeIdForXML.ContentTypeID_XML) + "\"?>"; //$NON-NLS-2$//$NON-NLS-1$
 		ICompletionProposal proposal = new CustomCompletionProposal(proposedText, contentAssistRequest.getReplacementBeginPosition(), contentAssistRequest.getReplacementLength(), proposedText.length(), XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_PROCESSINGINSTRUCTION), proposedText, null, null, XMLRelevanceConstants.R_XML_DECLARATION);

@@ -83,14 +83,6 @@ public class HTMLContentAssistProcessor extends AbstractContentAssistProcessor i
 	}
 
 	/**
-	 * @see AbstractContentAssistProcessor#addXMLProposal(ContentAssistRequest)
-	 */
-	protected void addXMLProposal(ContentAssistRequest contentAssistRequest) {
-		if (isXHTML)
-			super.addXMLProposal(contentAssistRequest);
-	}
-
-	/**
 	 * Add the proposals for a completely empty document
 	 */
 	protected void addEmptyDocumentProposals(ContentAssistRequest contentAssistRequest) {

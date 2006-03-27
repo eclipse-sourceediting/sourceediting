@@ -112,12 +112,6 @@ public class JSPDummyContentAssistProcessor extends AbstractContentAssistProcess
 		super.addTagNameProposals(contentAssistRequest, childPosition);
 	}
 
-
-	protected void addXMLProposal(ContentAssistRequest contentAssistRequest) {
-		super.addXMLProposal(contentAssistRequest);
-	}
-
-
 	protected boolean attributeInList(IDOMNode node, Node parent, CMNode cmnode) {
 		return super.attributeInList(node, parent, cmnode);
 	}
