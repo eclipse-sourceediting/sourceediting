@@ -24,7 +24,7 @@ import org.osgi.service.prefs.Preferences;
 
 public class ContentBasedPreferenceGateway {
 	private static String DEFAULT_LOCATION = "org.eclipse.wst.sse.core"; //$NON-NLS-1$
-	private static String RUNTIME_XML_ID = "org.eclipse.runtime.xml"; //$NON-NLS-1$
+	private static String RUNTIME_XML_ID = "org.eclipse.core.runtime.xml"; //$NON-NLS-1$
 	private static String SSE_XML_ID = "org.eclipse.wst.xml.core.xmlsource"; //$NON-NLS-1$
 
 	/**
@@ -51,13 +51,13 @@ public class ContentBasedPreferenceGateway {
 		} else {
 			fullId = contentType.getId();
 		}
-		String pluginId = inferPluginId(fullId);
 		// only one known case, so far, of hard coded re-direction
 		// (not sure this is even needed, but just in case).
 		// We don't want to store/change runtime.xml preferences
-		if (RUNTIME_XML_ID.equals(pluginId)) {
-			pluginId = SSE_XML_ID;
+		if (RUNTIME_XML_ID.equals(fullId)) {
+			fullId = SSE_XML_ID;
 		}
+		String pluginId = inferPluginId(fullId);
 		return pluginId;
 	}
 
