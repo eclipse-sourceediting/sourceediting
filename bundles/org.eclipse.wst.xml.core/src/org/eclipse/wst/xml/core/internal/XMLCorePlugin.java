@@ -18,7 +18,6 @@ import org.eclipse.core.runtime.Plugin;
 import org.eclipse.wst.xml.core.internal.catalog.Catalog;
 import org.eclipse.wst.xml.core.internal.catalog.CatalogSet;
 import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalog;
-import org.osgi.framework.BundleContext;
 
 
 /**
@@ -30,7 +29,7 @@ public class XMLCorePlugin extends Plugin {
     public static final String USER_CATALOG_ID = "user_catalog"; //$NON-NLS-1$
 	public static final String DEFAULT_CATALOG_ID = "default_catalog"; //$NON-NLS-1$
 	public static final String SYSTEM_CATALOG_ID = "system_catalog"; //$NON-NLS-1$
-    private CatalogSet catalogSet = new CatalogSet();
+    private CatalogSet catalogSet = null;
 	   
 
 	/**
@@ -41,7 +40,7 @@ public class XMLCorePlugin extends Plugin {
 	}
 
 	/**
-	 * @deprecated use ResourcesPlugin.getWorkspace();
+	 * @deprecated use ResourcesPlugin.getWorkspace() directly
 	 */
 	public static IWorkspace getWorkspace() {
 		return ResourcesPlugin.getWorkspace();
@@ -66,16 +65,15 @@ public class XMLCorePlugin extends Plugin {
       return location;
     }
     
-	public void start(BundleContext context) throws Exception 
-	{
-		super.start(context);
-	    catalogSet.putCatalogPersistenceLocation(DEFAULT_CATALOG_ID, getPluginStateLocation(Catalog.DEFAULT_CATALOG_FILE));
-	    catalogSet.putCatalogPersistenceLocation(SYSTEM_CATALOG_ID, getPluginStateLocation(Catalog.SYSTEM_CATALOG_FILE));
-	    catalogSet.putCatalogPersistenceLocation(USER_CATALOG_ID, getPluginStateLocation(Catalog.USER_CATALOG_FILE));
-	}
-	
 	public ICatalog getDefaultXMLCatalog()
 	{
+		if (catalogSet == null) {
+			catalogSet = new CatalogSet();
+
+			catalogSet.putCatalogPersistenceLocation(DEFAULT_CATALOG_ID, getPluginStateLocation(Catalog.DEFAULT_CATALOG_FILE));
+			catalogSet.putCatalogPersistenceLocation(SYSTEM_CATALOG_ID, getPluginStateLocation(Catalog.SYSTEM_CATALOG_FILE));
+			catalogSet.putCatalogPersistenceLocation(USER_CATALOG_ID, getPluginStateLocation(Catalog.USER_CATALOG_FILE));
+		}
 	    return catalogSet.lookupOrCreateCatalog(DEFAULT_CATALOG_ID, getPluginStateLocation(Catalog.DEFAULT_CATALOG_FILE));
 	}
 
