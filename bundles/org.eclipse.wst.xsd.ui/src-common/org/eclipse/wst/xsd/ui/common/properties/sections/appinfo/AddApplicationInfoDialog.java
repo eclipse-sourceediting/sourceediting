@@ -70,7 +70,7 @@ public class AddApplicationInfoDialog extends SelectionDialog implements ISelect
   public AddApplicationInfoDialog(Shell parent, ApplicationInformationPropertiesRegistry registry)
   {
     super(parent);
-    setTitle("Add Application Information Elements");
+    setTitle("Add Extension Components");
     setShellStyle(SWT.APPLICATION_MODAL | SWT.RESIZE | SWT.CLOSE);
     
     this.registry = registry;
@@ -102,7 +102,7 @@ public class AddApplicationInfoDialog extends SelectionDialog implements ISelect
     categoryComposite.setLayout(gl);
 
     Label label = new Label(categoryComposite, SWT.LEFT);
-    label.setText("Application Information Categories:");
+    label.setText("Extension Categories:");
 
     new Label(categoryComposite, SWT.NONE);
 

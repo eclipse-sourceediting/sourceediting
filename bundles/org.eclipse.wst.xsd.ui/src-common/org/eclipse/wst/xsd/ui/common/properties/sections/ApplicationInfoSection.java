@@ -146,7 +146,7 @@ public class ApplicationInfoSection extends AbstractSection
     gridLayout.numColumns = 1;
     leftContent.setLayout(gridLayout);
 
-    extensibilityElementsLabel = getWidgetFactory().createLabel(leftContent, "Application Information Items");
+    extensibilityElementsLabel = getWidgetFactory().createLabel(leftContent, "Extensibility Items");
     extensibleElementsTable = new TableViewer(leftContent, SWT.FLAT | SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.LINE_SOLID);
     gridLayout = new GridLayout();
     gridLayout.numColumns = 1;
@@ -252,11 +252,11 @@ public class ApplicationInfoSection extends AbstractSection
     addButton = getWidgetFactory().createButton(buttonComposite, "Add...", SWT.FLAT);
     addButton.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
     addButton.addSelectionListener(this);
-    addButton.setToolTipText("Add Application Specific Information");
+    addButton.setToolTipText("Add Extension Component");
     removeButton = getWidgetFactory().createButton(buttonComposite, "Remove", SWT.FLAT);
     removeButton.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
     removeButton.addSelectionListener(this);
-    removeButton.setToolTipText("Remove Application Specific Information");
+    removeButton.setToolTipText("Remove Extension Component");
 
     pageBook.showPage(pageBook2);
   }

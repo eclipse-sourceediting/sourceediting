@@ -229,7 +229,7 @@ public class AddNewCategoryDialog extends Dialog
       dialog.addFilterExtensions(new String[] { XSD_FILE_EXTENSION });
       dialog.create();
       dialog.setTitle("Select XSD file");
-      dialog.setMessage("Choose an XSD file containing schema for your AppInfo component");
+      dialog.setMessage("Choose an XSD file containing schema for your extensible components");
 
       if (dialog.open() == Window.OK)
       {
