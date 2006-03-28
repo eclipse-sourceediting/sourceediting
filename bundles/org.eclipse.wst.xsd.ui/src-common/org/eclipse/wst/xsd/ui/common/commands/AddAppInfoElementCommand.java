@@ -72,10 +72,11 @@ public class AddAppInfoElementCommand extends AddAppInfoCommand
       Document doc = appInfo.getOwnerDocument();
 
       Element rootElement = doc.createElementNS(asiProperties.getNamespaceURI(), element.getName());
-      //TODO: create unique prefix
-      rootElement.setPrefix("asi");
+      
+      String prefix = createUniquePrefix(input);
+      rootElement.setPrefix(prefix);
 
-      Attr nsURIAttribute = doc.createAttribute("xmlns:asi");
+      Attr nsURIAttribute = doc.createAttribute("xmlns:"+prefix);
       nsURIAttribute.setValue(asiProperties.getNamespaceURI());
       rootElement.setAttributeNode(nsURIAttribute);
       appInfo.appendChild(rootElement);

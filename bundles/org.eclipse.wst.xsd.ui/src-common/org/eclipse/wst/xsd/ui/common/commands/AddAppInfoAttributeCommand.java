@@ -12,7 +12,6 @@ package org.eclipse.wst.xsd.ui.common.commands;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.wst.xml.core.internal.contentmodel.util.DOMNamespaceInfoManager;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.NamespaceInfo;
@@ -81,14 +80,7 @@ public class AddAppInfoAttributeCommand extends AddAppInfoCommand
     // Create unquie namespace prefix
     if ( prefix == null){
       prefixAdded = true;
-      Map prefMapper = component.getSchema().getQNamePrefixToNamespaceMap();
-      prefix = "sdo";
-      if ( prefMapper.get(prefix) != null){
-        int i = 1;
-        while ( prefMapper.get(prefix + i) != null)
-          i++;
-        prefix += i;
-      }
+      prefix = createUniquePrefix(component);
     }
 
     NamespaceInfo info = new NamespaceInfo(attribute.getTargetNamespace(), prefix, "");
