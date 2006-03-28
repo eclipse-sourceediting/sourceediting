@@ -13,7 +13,6 @@ package org.eclipse.wst.xsd.editor.internal.search;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -78,23 +77,8 @@ public class XSDSearchListDialogDelegate implements IComponentDialog
     {
       XSDComponentDescriptionProvider descriptionProvider = new XSDComponentDescriptionProvider();
       final XSDTypesSearchListProvider searchListProvider = new XSDTypesSearchListProvider(currentFile, schemas);
- 
-      //ComponentSearchListDialogConfiguration configuration = new ThingerooDialogConfiguration()      
-      ComponentSearchListDialogConfiguration configuration = new ComponentSearchListDialogConfiguration()
-      {
-        public void createToolBarItems(ToolBar toolBar)
-        {
-          // TODO Extra thing for RAD product. Not for open source
-          FilterMenuContributor contributor = new FilterMenuContributor(searchListProvider, getDialog());      
-          // TODO The icons gif files should be put in the icons directory of the old XSDEditor
-          // make changes when this new editor is separated from the old editor
-          contributor.setToolItemIconFile("icons/TriangleToolBar.gif");
-          contributor.setOn_off_filter_actionText("Uncommon built-in types");
-          contributor.setConfigureFilterDialogText("Filter");
-          contributor.setFilterIconFile("filter.gif");
-          contributor.createToolItem(toolBar);
-        }
-      };
+     
+      ComponentSearchListDialogConfiguration configuration = new ComponentSearchListDialogConfiguration();
       configuration.setDescriptionProvider(descriptionProvider);
       configuration.setSearchListProvider(searchListProvider);
       configuration.setNewComponentHandler(new NewTypeButtonHandler());
