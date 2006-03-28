@@ -12,6 +12,7 @@ package org.eclipse.wst.xsd.ui.common.properties.sections;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.apache.xerces.util.XMLChar;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.gef.commands.Command;
@@ -30,7 +31,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
@@ -41,7 +41,6 @@ import org.eclipse.wst.common.ui.internal.search.dialogs.ScopedComponentSearchLi
 import org.eclipse.wst.xsd.editor.Messages;
 import org.eclipse.wst.xsd.editor.XSDEditorPlugin;
 import org.eclipse.wst.xsd.editor.internal.dialogs.NewTypeButtonHandler;
-import org.eclipse.wst.xsd.editor.internal.search.FilterMenuContributor;
 import org.eclipse.wst.xsd.editor.internal.search.XSDComponentDescriptionProvider;
 import org.eclipse.wst.xsd.editor.internal.search.XSDTypesSearchListProvider;
 import org.eclipse.wst.xsd.ui.common.commands.UpdateMaxOccursCommand;
@@ -374,18 +373,7 @@ public class XSDElementDeclarationSection extends MultiplicitySection
       /** Initialize the Set types Dialog */
       final XSDTypesSearchListProvider searchListProvider = 
     	  new XSDTypesSearchListProvider(currentIFile, new XSDSchema[] {xsdSchema} );      
-      ComponentSearchListDialogConfiguration configuration = new ComponentSearchListDialogConfiguration()
-      {
-        public void createToolBarItems(ToolBar toolBar)
-        {
-          FilterMenuContributor contributor = new FilterMenuContributor(searchListProvider, getDialog());
-          contributor.setToolItemIconFile("icons/TriangleToolBar.gif");
-          contributor.setOn_off_filter_actionText("Uncommon built-in types");
-          contributor.setConfigureFilterDialogText("Filter");
-          contributor.setFilterIconFile("filter.gif");
-          contributor.createToolItem(toolBar);
-        }
-      };
+      ComponentSearchListDialogConfiguration configuration = new ComponentSearchListDialogConfiguration();
       configuration.setDescriptionProvider(new XSDComponentDescriptionProvider() );
       configuration.setSearchListProvider(searchListProvider);      
       configuration.setNewComponentHandler(new NewTypeButtonHandler());
