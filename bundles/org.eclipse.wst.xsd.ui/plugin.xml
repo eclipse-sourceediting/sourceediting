@@ -121,10 +121,10 @@
 				id="property.tab.documentation">
 			</propertyTab>
 			<propertyTab
-				label="%_UI_LABEL_APPLICATION_INFO"
+				label="%_UI_LABEL_EXTENSIONS"
 				category="Documentation"
 				afterTab="property.tab.general"
-				id="property.tab.applicationinfo">
+				id="property.tab.extensions">
 			</propertyTab>
     </propertyTabs>
  </extension>
@@ -199,9 +199,9 @@
 	    <input type="org.eclipse.xsd.XSDConcreteComponent">
 	    </input>
 	 </propertySection>
-	 <propertySection tab="property.tab.applicationinfo" 
+	 <propertySection tab="property.tab.extensions" 
 	 	class="org.eclipse.wst.xsd.ui.common.properties.sections.ApplicationInfoSection" 
-	 	id="prop.section.ApplicationInfoSection">
+	 	id="prop.section.ExtensionsSection">
 	    <input type="org.eclipse.xsd.XSDConcreteComponent">
 	    </input>
 	 </propertySection>
