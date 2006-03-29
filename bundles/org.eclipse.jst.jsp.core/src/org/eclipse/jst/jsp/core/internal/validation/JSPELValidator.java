@@ -43,10 +43,11 @@ public class JSPELValidator extends JSPValidator {
 			DOMModelForJSP jspModel = (DOMModelForJSP) model;
 			IStructuredDocument structuredDoc = jspModel.getStructuredDocument();
 			IStructuredDocumentRegion curNode = structuredDoc.getFirstStructuredDocumentRegion();
-			while (null != (curNode = curNode.getNext()) && !reporter.isCancelled()) {
+			while (null != curNode && !reporter.isCancelled()) {
 				if (curNode.getType() != DOMRegionContext.XML_COMMENT_TEXT && curNode.getType() != DOMRegionContext.XML_CDATA_TEXT && curNode.getType() != DOMRegionContext.UNDEFINED) {
 					validateRegionContainer(curNode, reporter, file);
 				}
+				curNode = curNode.getNext();
 			}
 		}
 		catch (Exception e) {
@@ -58,7 +59,6 @@ public class JSPELValidator extends JSPValidator {
 	}
 	
 	protected void validateRegionContainer(ITextRegionCollection container, IReporter reporter, IFile file) {
-
 		ITextRegionCollection containerRegion = container;
 		Iterator regions = containerRegion.getRegions().iterator();
 		ITextRegion region = null;

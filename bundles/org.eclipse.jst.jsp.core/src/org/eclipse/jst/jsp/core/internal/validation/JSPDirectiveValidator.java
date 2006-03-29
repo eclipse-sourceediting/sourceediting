@@ -22,10 +22,9 @@ import org.eclipse.wst.validation.internal.provisional.core.IReporter;
 import org.eclipse.wst.validation.internal.provisional.core.IValidationContext;
 
 /**
- * Checks for:
- * - duplicate taglib prefix values
- * - reserved taglib prefix values
- *
+ * Checks for: - duplicate taglib prefix values - reserved taglib prefix
+ * values
+ * 
  */
 public class JSPDirectiveValidator extends JSPValidator implements ISourceValidator {
 
@@ -41,11 +40,12 @@ public class JSPDirectiveValidator extends JSPValidator implements ISourceValida
 		fReservedPrefixes.put("sun", ""); //$NON-NLS-1$ //$NON-NLS-2$ 
 		fReservedPrefixes.put("sunw", ""); //$NON-NLS-1$ //$NON-NLS-2$ 
 	}
+
 	/**
 	 * batch validation call
 	 */
 	protected void validateFile(IFile f, IReporter reporter) {
-		
+
 		// when validating an entire file
 		// need to clear dupes or else you're comparing between files
 		fDuplicatePrefixes.clear();
@@ -59,9 +59,14 @@ public class JSPDirectiveValidator extends JSPValidator implements ISourceValida
 				// need to set this for partial validate call to work
 				fDocument = sDoc;
 				// iterate all document regions
-				IStructuredDocumentRegion[] regions = sDoc.getStructuredDocumentRegions(0, sDoc.getLength());
-				for (int i = 0; i < regions.length; i++) 
-					validateDocumentRegion(f, reporter, regions[i]);
+				IStructuredDocumentRegion region = sDoc.getFirstStructuredDocumentRegion();
+				while (region != null && !reporter.isCancelled()) {
+					// only checking directives
+					if (region.getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_NAME) {
+						validateDirective(reporter, f, sDoc, region);
+					}
+					region = region.getNext();
+				}
 			}
 		}
 		catch (IOException e) {
@@ -74,22 +79,6 @@ public class JSPDirectiveValidator extends JSPValidator implements ISourceValida
 			if (sModel != null)
 				sModel.releaseFromRead();
 		}
-	}
-
-	private void validateDocumentRegion(IFile f, IReporter reporter, IStructuredDocumentRegion sdRegion) {
-		
-		final int start = sdRegion.getStartOffset();
-		final int length = sdRegion.getEndOffset() - start;
-		IRegion r = new IRegion() {
-			public int getLength() {
-				return length;
-			}
-			public int getOffset() {
-				return start;
-			}
-		};
-		// call w/ batch validator reporter
-		validate(r, null, reporter, f);
 	}
 
 	public void connect(IDocument document) {
@@ -123,14 +112,14 @@ public class JSPDirectiveValidator extends JSPValidator implements ISourceValida
 	}
 
 	private void validateDirective(IReporter reporter, IFile file, IStructuredDocument sDoc, IStructuredDocumentRegion sdRegion) {
-		
+
 		// we only care about taglib directive
 		if (getDirectiveName(sdRegion).equals("taglib")) { //$NON-NLS-1$
 
 			ITextRegion valueRegion = getAttributeValueRegion(sdRegion, JSP11Namespace.ATTR_NAME_PREFIX);
-			if(valueRegion == null)
+			if (valueRegion == null)
 				return;
-			
+
 			String taglibPrefix = sdRegion.getText(valueRegion);
 			int start = sdRegion.getStartOffset(valueRegion);
 			// length before stripquotes
