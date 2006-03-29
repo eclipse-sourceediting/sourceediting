@@ -11,5 +11,8 @@ Export-Package: org.eclipse.wst.xml.validation.tests.internal;x-internal:=true
 Require-Bundle: org.junit,
  org.eclipse.core.runtime,
  org.eclipse.wst.xml.core,
- org.eclipse.wst.xml.ui
+ org.eclipse.wst.xml.ui,
+ org.eclipse.wst.validation,
+ org.eclipse.core.resources,
+ org.eclipse.wst.common.uriresolver
 Eclipse-LazyStart: true

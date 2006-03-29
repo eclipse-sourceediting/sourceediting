@@ -16,9 +16,10 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
+import org.eclipse.wst.xml.core.internal.validation.XMLValidationConfiguration;
 import org.eclipse.wst.xml.core.internal.validation.core.ValidationMessage;
 import org.eclipse.wst.xml.core.internal.validation.core.ValidationReport;
-import org.eclipse.wst.xml.ui.internal.validation.XMLValidator;
+import org.eclipse.wst.xml.core.internal.validation.eclipse.XMLValidator;
 
 
 /**
@@ -26,8 +27,6 @@ import org.eclipse.wst.xml.ui.internal.validation.XMLValidator;
  * - create logs
  * - read from logs
  * - run log comparison tests
- * 
- * @author Lawrence Mandel, IBM
  */
 public class BaseTestCase extends TestCase
 {
@@ -35,6 +34,7 @@ public class BaseTestCase extends TestCase
   protected String PLUGIN_ABSOLUTE_PATH;
   protected String SAMPLES_DIR = "testresources/samples/";
   protected XMLValidator validator = XMLValidator.getInstance();
+  protected XMLValidationConfiguration configuration;
   
   /* (non-Javadoc)
    * @see junit.framework.TestCase#setUp()
@@ -42,6 +42,15 @@ public class BaseTestCase extends TestCase
   protected void setUp() throws IOException
   {
     PLUGIN_ABSOLUTE_PATH = XMLValidatorTestsPlugin.getPluginLocation().toString() + "/";
+    configuration = new XMLValidationConfiguration();
+    try
+    {
+      configuration.setFeature(XMLValidationConfiguration.WARN_NO_GRAMMAR, false);
+    }
+    catch(Exception e)
+    {
+      fail("Unable to set the feature on the XML validation configuration.");
+    }
   }
   
   /**
@@ -55,7 +64,7 @@ public class BaseTestCase extends TestCase
    */
   public void runTest(String testfile, List keys, int numErrors, int numWarnings)
   {
-    ValidationReport valreport = validator.validate(testfile);
+    ValidationReport valreport = validator.validate(testfile, null, configuration);
 	
 	ValidationMessage[] valmessages = valreport.getValidationMessages();
     int nummessages = valmessages.length;

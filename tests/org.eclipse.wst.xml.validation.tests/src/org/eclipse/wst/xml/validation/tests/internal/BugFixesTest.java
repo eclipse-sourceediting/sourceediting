@@ -15,6 +15,8 @@ import java.util.List;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
+
+import org.eclipse.wst.xml.core.internal.validation.XMLValidationConfiguration;
 /**
  * Test class for the XML validator to test bug fixes.
  * 
@@ -134,5 +136,36 @@ public class BugFixesTest extends BaseTestCase
 	int numWarnings = 1;
 
 	runTest(testfile, keys, numErrors, numWarnings);
+  }
+  
+  /**
+   * Test /bugfixes/NoGrammar/NoGrammar.xml.
+   */
+  public void testNoGrammar()
+  {
+  	String testname = "NoGrammar";
+    String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + BUGFIXES_DIR + "NoGrammar/" + testname + ".xml";
+	List keys = new ArrayList();
+	keys.add("NO_GRAMMAR_FOUND");
+	int numErrors = 0;
+	int numWarnings = 1;
+
+	try
+	{
+	  configuration.setFeature(XMLValidationConfiguration.WARN_NO_GRAMMAR, true);
+	}
+	catch(Exception e)
+	{
+	  fail("Unable to set configuration WARN_NO_GRAMMAR.");
+	}
+	runTest(testfile, keys, numErrors, numWarnings);
+	try
+	{
+	  configuration.setFeature(XMLValidationConfiguration.WARN_NO_GRAMMAR, false);
+	}
+	catch(Exception e)
+	{
+	  fail("Unable to set configuration WARN_NO_GRAMMAR.");
+	}
   }
 }

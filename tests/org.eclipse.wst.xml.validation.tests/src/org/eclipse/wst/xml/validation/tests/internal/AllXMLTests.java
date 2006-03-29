@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,10 +11,14 @@
 
 package org.eclipse.wst.xml.validation.tests.internal;
 import junit.framework.Test;
+
+import org.eclipse.wst.xml.core.internal.validation.XMLValidationConfigurationTest;
+import org.eclipse.wst.xml.core.internal.validation.eclipse.ValidatorTest;
+import org.eclipse.wst.xml.core.internal.validation.eclipse.XMLMessageInfoHelperTest;
+import org.eclipse.wst.xml.core.internal.validation.eclipse.XMLValidatorTest;
+
 /**
  * The root test suite that contains all other XML validator test suites.
- * 
- * @author Lawrence Mandel, IBM
  */
 public class AllXMLTests extends junit.framework.TestSuite
 {
@@ -34,6 +38,10 @@ public class AllXMLTests extends junit.framework.TestSuite
   public AllXMLTests()
   {
     super("XMLTestsTestSuite");
+    addTest(XMLValidationConfigurationTest.suite());
+    addTest(ValidatorTest.suite());
+    addTest(XMLMessageInfoHelperTest.suite());
+    addTest(XMLValidatorTest.suite());
     addTest(XMLExamplesTest.suite());
     addTest(BugFixesTest.suite());
     addTest(PathsTest.suite());
