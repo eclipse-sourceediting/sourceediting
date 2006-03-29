@@ -17,7 +17,7 @@ import org.eclipse.ltk.core.refactoring.participants.RenameRefactoring;
 import org.eclipse.ltk.ui.refactoring.RefactoringWizard;
 import org.eclipse.ltk.ui.refactoring.RefactoringWizardOpenOperation;
 import org.eclipse.ui.actions.GlobalBuildAction;
-import org.eclipse.wst.xsd.ui.internal.XSDEditorPlugin;
+import org.eclipse.wst.xsd.editor.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.internal.refactor.rename.RenameTargetNamespaceProcessor;
 import org.eclipse.wst.xsd.ui.internal.refactor.wizard.RefactoringWizardMessages;
 import org.eclipse.wst.xsd.ui.internal.refactor.wizard.RenameRefactoringWizard;

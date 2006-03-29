@@ -5,14 +5,15 @@
 	<extension point="org.eclipse.ui.editors">
 		<editor
 			name="%_UI_EDITOR_NAME"
+			extensions="xsd"
 			default="true"
 			icon="icons/XSDFile.gif"
-			contributorClass="org.eclipse.wst.xsd.ui.internal.XSDActionBarContributor"
-			class="org.eclipse.wst.xsd.ui.internal.XSDEditor"
-			id="org.eclipse.wst.xsd.ui.XSDEditor">
-            <contentTypeBinding
+            contributorClass="org.eclipse.wst.xsd.editor.XSDMultiPageEditorContributor"
+            class="org.eclipse.wst.xsd.editor.InternalXSDMultiPageEditor"
+            id="org.eclipse.wst.xsd.editor.InternalXSDMultiPageEditor">
+<!--            <contentTypeBinding
                 contentTypeId="org.eclipse.wst.xsd.core.xsdsource" />
-                
+                -->
 		</editor>
 	</extension>
 
@@ -50,22 +51,23 @@
 		<page
 			name="%_UI_XML_SCHEMA_PREFERENCE"
 			category="org.eclipse.wst.sse.ui.internal.provisional.preferences"
-			class="org.eclipse.wst.xsd.ui.internal.preferences.XSDPreferencePage"
-			id="org.eclipse.wst.xsd.ui.internal.preferences.XSDPreferencePage">
+			class="org.eclipse.wst.xsd.editor.internal.preferences.XSDPreferencePage"
+			id="org.eclipse.wst.xsd.editor.internal.preferences.XSDPreferencePage">
 		</page>
 	</extension>
+<!--
 	<extension point="org.eclipse.wst.sse.ui.editorConfiguration">
 		<provisionalDefinition
 			type="preferencepages"
 			value="org.eclipse.wst.xsd.ui.internal.preferences.XSDPreferencePage"
 			target="org.eclipse.wst.xsd.ui.internal.XSDEditor.source" />
-		<sourceViewerConfiguration
+     		<sourceViewerConfiguration
 			class="org.eclipse.wst.xsd.ui.internal.StructuredTextViewerConfigurationXSD"
 			target="org.eclipse.wst.xsd.core.xsdsource" />
 		<contentOutlineConfiguration
 			class="org.eclipse.wst.xsd.ui.internal.XSDContentOutlineConfiguration"
-			target="org.eclipse.wst.xsd.core.xsdsource" />
-	</extension>
+			target="org.eclipse.wst.xsd.core.xsdsource" /> 
+	</extension>  -->
 
 	<!-- ==================================================== -->
 	<!-- Support help on the tags                             -->
@@ -78,66 +80,137 @@
 		</annotationFile>
 		</extension>
 	-->
-	<extension
-		point="org.eclipse.wst.common.ui.properties.propertyContributor">
-		<propertyContributor
-			contributorId="org.eclipse.wst.xsd.ui.internal.XSDEditor"
-			sectionDescriptorProvider="org.eclipse.wst.xsd.ui.internal.properties.section.XSDSectionDescriptorProvider"
-			labelProvider="org.eclipse.wst.xsd.ui.internal.properties.section.XSDSectionLabelProvider">
-			<propertyCategory category="general"></propertyCategory>
-			<propertyCategory category="namespace"></propertyCategory>
-			<propertyCategory category="other"></propertyCategory>
-			<propertyCategory category="attributes"></propertyCategory>
-			<propertyCategory category="enumerations">
-			</propertyCategory>
-			<propertyCategory category="documentation">
-			</propertyCategory>
-			<propertyCategory category="facets"></propertyCategory>
-		</propertyContributor>
-	</extension>
-	<extension
-		point="org.eclipse.wst.common.ui.properties.propertyTabs">
-		<propertyTabs
-			contributorId="org.eclipse.wst.xsd.ui.internal.XSDEditor">
+	
+	
+   <extension 
+   		point="org.eclipse.ui.views.properties.tabbed.propertyContributor">
+     <propertyContributor
+           contributorId="org.eclipse.wst.xsd.editor"
+           labelProvider="org.eclipse.wst.xsd.ui.common.properties.providers.XSDSectionLabelProvider">
+         <propertyCategory category="General"/>
+   		 <propertyCategory category="Documentation"/>
+         <propertyCategory category="Advanced"/>
+     </propertyContributor>
+   </extension>
+
+   <extension 
+    	point="org.eclipse.ui.views.properties.tabbed.propertyTabs">
+      <propertyTabs 
+            contributorId="org.eclipse.wst.xsd.editor">
 			<propertyTab
 				label="%_UI_LABEL_GENERAL"
-				category="general"
-				id="org.eclipse.wst.xmlwebservices.general">
+				category="General"
+				id="property.tab.general">
 			</propertyTab>
 			<propertyTab
-				label="%_UI_LABEL_NAMESPACE"
-				category="namespace"
-				afterTab="org.eclipse.wst.xmlwebservices.general"
-				id="org.eclipse.wst.xmlwebservices.namespace">
-			</propertyTab>
-			<propertyTab
-				label="%_UI_LABEL_OTHER"
-				category="other"
-				id="org.eclipse.wst.xmlwebservices.other">
-			</propertyTab>
-			<propertyTab
-				label="%_UI_LABEL_ATTRIBUTES"
-				category="attributes"
-				id="org.eclipse.wst.xmlwebservices.attributes">
+				label="%_UI_LABEL_TYPE_CONSTRAINTS"
+				category="General"
+				afterTab="property.tab.general"
+				id="property.tab.typeconstraints">
 			</propertyTab>
 			<propertyTab
 				label="%_UI_LABEL_ENUMERATIONS"
-				category="enumerations"
-				id="org.eclipse.wst.xmlwebservices.enumerations">
+				category="General"
+				afterTab="property.tab.general"
+				id="property.tab.enumerations">
 			</propertyTab>
 			<propertyTab
 				label="%_UI_LABEL_DOCUMENTATION"
-				category="documentation"
-				id="org.eclipse.wst.xmlwebservices.documentation">
+				category="Documentation"
+				afterTab="property.tab.general"
+				id="property.tab.documentation">
 			</propertyTab>
 			<propertyTab
-				label="%_UI_SECTION_ADVANCED_ATTRIBUTES"
-				category="facets"
-				id="org.eclipse.wst.xmlwebservices.facets">
+				label="%_UI_LABEL_EXTENSIONS"
+				category="Documentation"
+				afterTab="property.tab.general"
+				id="property.tab.extensions">
 			</propertyTab>
-		</propertyTabs>
-	</extension>
+    </propertyTabs>
+ </extension>
 
+
+<extension point="org.eclipse.ui.views.properties.tabbed.propertySections">
+   <propertySections contributorId="org.eclipse.wst.xsd.editor">
+	 <propertySection tab="property.tab.general" 
+        class="org.eclipse.wst.xsd.ui.common.properties.sections.XSDSchemaSection"  
+	 	id="prop.section.XSDSchemaSection">
+	    <input type="org.eclipse.xsd.XSDSchema">
+	    </input>
+	 </propertySection>
+	 <propertySection tab="property.tab.general" 
+        class="org.eclipse.wst.xsd.ui.common.properties.sections.SchemaLocationSection" 
+	 	id="prop.section.SchemaLocationSection">
+	    <input type="org.eclipse.xsd.XSDSchemaCompositor">
+	    </input>
+	 </propertySection>
+	 <propertySection tab="property.tab.general" 
+        class="org.eclipse.wst.xsd.ui.common.properties.sections.XSDComplexTypeSection"  
+	 	id="prop.section.XSDComplexTypeSection">
+	    <input type="org.eclipse.xsd.XSDComplexTypeDefinition">
+	    </input>
+	 </propertySection>
+	 <propertySection tab="property.tab.general" 
+        class="org.eclipse.wst.xsd.ui.common.properties.sections.XSDElementDeclarationSection"  
+	 	id="prop.section.XSDElementDeclarationSection">
+	    <input type="org.eclipse.xsd.XSDElementDeclaration">
+	    </input>
+	 </propertySection>
+	 <propertySection tab="property.tab.general" 
+        class="org.eclipse.wst.xsd.ui.common.properties.sections.XSDAttributeDeclarationSection"
+	 	id="prop.section.XSDAttributeDeclarationSection">
+	    <input type="org.eclipse.xsd.XSDAttributeDeclaration">
+	    </input>
+	 </propertySection>
+	 <propertySection tab="property.tab.general" 
+        class="org.eclipse.wst.xsd.ui.common.properties.sections.XSDAttributeGroupDefinitionSection"  
+	 	id="prop.section.XSDAttributeGroupDefinitionSection">
+	    <input type="org.eclipse.xsd.XSDAttributeGroupDefinition">
+	    </input>
+	 </propertySection>	
+	 <propertySection tab="property.tab.general" 
+        class="org.eclipse.wst.xsd.ui.common.properties.sections.XSDModelGroupSection"  
+	 	id="prop.section.XSDModelGroupSection">
+	    <input type="org.eclipse.xsd.XSDModelGroup">
+	    </input>
+	 </propertySection>
+	 <propertySection tab="property.tab.general" 
+        class="org.eclipse.wst.xsd.ui.common.properties.sections.XSDModelGroupDefinitionSection"  
+	 	id="prop.section.XSDModelGroupDefinitionSection">
+	    <input type="org.eclipse.xsd.XSDModelGroupDefinition">
+	    </input>
+	 </propertySection>
+	 <propertySection tab="property.tab.general" 
+        class="org.eclipse.wst.xsd.ui.common.properties.sections.XSDSimpleTypeSection"
+	 	id="prop.section.XSDSimpleTypeSection">
+	    <input type="org.eclipse.xsd.XSDSimpleTypeDefinition">
+	    </input>
+	 </propertySection>
+	 <propertySection tab="property.tab.typeconstraints" 
+        class="org.eclipse.wst.xsd.ui.common.properties.sections.XSDFacetSection"
+        filter="org.eclipse.wst.xsd.ui.common.properties.sections.XSDFacetSectionFilter"
+	 	id="prop.section.XSDFacetSection">
+	    <input type="org.eclipse.xsd.XSDConcreteComponent">
+	    </input>
+	 </propertySection>
+	 <propertySection tab="property.tab.documentation" 
+	 	class="org.eclipse.wst.xsd.ui.common.properties.sections.AnnotationSection" 
+	 	id="prop.section.AnnotationSection">
+	    <input type="org.eclipse.xsd.XSDConcreteComponent">
+	    </input>
+	 </propertySection>
+	 <propertySection tab="property.tab.extensions" 
+	 	class="org.eclipse.wst.xsd.ui.common.properties.sections.ApplicationInfoSection" 
+	 	id="prop.section.ExtensionsSection">
+	    <input type="org.eclipse.xsd.XSDConcreteComponent">
+	    </input>
+	 </propertySection>
+  </propertySections>
+</extension>
+
+  <extension-point id="ApplicationInformationDescription" name="ApplicationInformationDescription"/>
+
+  <extension-point id="XSDEditorExtensionConfiguration" name="XSDEditorExtensionConfiguration"/>
 
 	<extension
 		point="org.eclipse.wst.xml.core.catalogContributions">
@@ -174,39 +247,6 @@
 			parentId="org.eclipse.ui.textEditorScope" />
 	</extension>
 
-	<extension point="org.eclipse.ui.commands">
-		<command
-			name="%command.xsd.refactor.rename.element.name"
-			description="%command.xsd.refactor.rename.element.description"
-			categoryId="org.eclipse.ui.category.edit"
-			id="org.eclipse.wst.xsd.ui.refactor.rename.element">
-		</command>
-		<keyBinding
-			keySequence="Alt+Shift+R"
-			contextId="org.eclipse.wst.xsd.ui.text.editor.context"
-			commandId="org.eclipse.wst.xsd.ui.refactor.rename.element"
-			keyConfigurationId="org.eclipse.ui.defaultAcceleratorConfiguration">
-		</keyBinding>
-	</extension>
-
-	<extension point="org.eclipse.ui.commands">
-		<command
-			name="%command.xsd.refactor.makeElementGlobal.element.name"
-			description="%command.xsd.refactor.makeElementGlobal.element.description"
-			categoryId="org.eclipse.ui.category.edit"
-			id="org.eclipse.wst.xsd.ui.refactor.makeElementGlobal">
-		</command>
-	</extension>
-
-	<extension point="org.eclipse.ui.commands">
-		<command
-			name="%command.xsd.refactor.makeTypeGlobal.element.name"
-			description="%command.xsd.refactor.makeTypeGlobal.element.description"
-			categoryId="org.eclipse.ui.category.edit"
-			id="org.eclipse.wst.xsd.ui.refactor.makeTypeGlobal">
-		</command>
-	</extension>
-
 	<!-- this extension point is used to augment the ModelQuery to provide schema specific guided editing -->
 	<extension point="org.eclipse.wst.xml.core.modelQueryExtensions">
 		<modelQueryExtension
@@ -215,47 +255,6 @@
 		</modelQueryExtension>
 	</extension>
 
-	<!--extension
-		point="org.eclipse.ltk.core.refactoring.renameParticipants">
-		<renameParticipant
-		name="%xsd.resource.rename.participant.name"
-		class="org.eclipse.wst.xsd.ui.internal.refactor.rename.XSDResourceRenameParticipant"
-		id="org.eclipse.wst.xsd.ui.refactoring.XSDResourceRenameParticipant">
-		<enablement>
-		<with
-		variable="element">
-		<instanceof
-		value="org.eclipse.core.resources.IResource">
-		</instanceof>
-		</with>
-		</enablement>
-		</renameParticipant>
-		</extension-->
-
-	<!-- 
-		The following extension to the file context menu is temporary until resource 
-		navigator will provide allow to extend refactor menu        
-	-->
-	<!--
-		<extension point="org.eclipse.ui.popupMenus">
-		<objectContribution
-		objectClass="org.eclipse.core.resources.IFile"
-		nameFilter="*.xsd"
-		id="org.wst.xsd.ui.rename">
-		<menu id="refactorXSDResource" path="additions" label="%refactoring.menu.label">
-		<separator name="refactor"/>
-		</menu>
-		<action
-		label="%refactoring.renameAction.label"
-		menubarPath="refactorXSDResource/refactor"
-		class="org.eclipse.wst.xsd.ui.internal.refactor.actions.RenameResourceActionDelegate"
-		enablesFor="1"
-		id="org.eclipse.wst.xsd.ui.refactoring.actions.RenameResource">
-		</action>
-		</objectContribution>
-		</extension>
-	-->
-	
 	<!-- ====================================================== -->
 	<!-- Define Assign Validate action on .xsd file             -->
 	<!-- ====================================================== -->
@@ -312,8 +311,8 @@
 				</or>
 			</enablement>
 		</searchParticipant>
-	 </extension>
-	
+	</extension>
+
 	<!-- ============================================================================== -->	 
     <!-- Register a 'rename' participant this enables us to provide refactoring for     --> 
     <!-- renamed XML Schema components (e.g. elements, types etc.)                      --> 
@@ -335,11 +334,11 @@
 		
 	</extension>
 	
-
 	<!-- ============================================================================== -->	 
     <!-- Register a 'rename' participant this enables us to provide refactoring for     --> 
     <!-- renamed resources.                                                             --> 
 	<!-- ============================================================================== -->	 
+<!--
     <extension
 		point="org.eclipse.ltk.core.refactoring.renameParticipants">
 		<renameParticipant
@@ -353,18 +352,20 @@
 			</enablement>
 		</renameParticipant>
 	</extension>
-	
-	
+	-->
+	<!-- ============================================================================================== -->
+	<!-- Register the  'Refactor', 'References' and 'Declarations' items to the design view	            -->
+	<!-- ============================================================================================== -->	    
    <extension point="org.eclipse.ui.popupMenus"> 
       <objectContribution 
          id="org.eclipse.wst.xsd.ui.refactoring.menu.objectContrib" 
-         objectClass="org.eclipse.xsd.XSDComponent">  
+         objectClass="org.eclipse.wst.xsd.editor.internal.adapters.XSDBaseAdapter">  
          <action
             id="org.eclipse.wst.xsd.ui.search.declarations.action" 
             enablesFor="1"
             style="pulldown"
             menubarPath="search-slot"
-            label="%action.label.0"
+            label="%search.declarations.label"
             class="org.eclipse.wst.xsd.ui.internal.search.actions.XSDSearchDeclarationsGroupActionDelegate"> 
          </action>          
          <action
@@ -372,7 +373,7 @@
             enablesFor="1"
             style="pulldown"
             menubarPath="search-slot"
-            label="%action.label.1"
+            label="%search.references.label"
             class="org.eclipse.wst.xsd.ui.internal.search.actions.XSDSearchReferencesGroupActionDelegate"> 
          </action>
          <action
@@ -380,11 +381,12 @@
             enablesFor="1"
             style="pulldown"
             menubarPath="refactoring-slot"
-            label="%refactoring.menu.label" 
+            label="%refactoringActionSet.label" 
             class="org.eclipse.wst.xsd.ui.internal.refactor.actions.XSDRefactorGroupActionDelegate"> 
-         </action>          
+         </action>   
       </objectContribution>         
-    <viewerContribution
+      <!-- here we add the 'refactor' menu item to the source view -->
+      <viewerContribution
         id="org.eclipse.wst.xsd.ui.refactoring.menu.source"
         targetID="org.eclipse.wst.xsd.core.xsdsource.source.EditorContext">
 	    <action id="org.eclipse.wst.xsd.ui.refactoring.menu.refactorGroup.source"
@@ -393,10 +395,32 @@
             label="%refactoring.menu.label" 
             class="org.eclipse.wst.xsd.ui.internal.refactor.actions.XSDRefactorGroupActionDelegate"> 
   	    </action>
-       </viewerContribution>
-       
+       </viewerContribution>       
      </extension>
-  
+
+	
+	<!-- 
+		The following extension to the file context menu is temporary until resource 
+		navigator will provide allow to extend refactor menu        
+	-->
+	
+	<!--extension point="org.eclipse.ui.popupMenus">
+	 <objectContribution
+		objectClass="org.eclipse.core.resources.IFile"
+		nameFilter="*.xsd"
+		id="org.wst.xsd.ui.rename">
+		<menu id="refactorXSDResource" path="additions" label="%refactoring.menu.label">
+		  <separator name="refactor"/>
+		</menu>
+	<action
+		label="%refactoring.renameAction.label"
+		menubarPath="refactorXSDResource/refactor"
+		class="org.eclipse.wst.xsd.ui.internal.refactor.actions.RenameResourceActionDelegate"
+		enablesFor="1"
+		id="org.eclipse.wst.xsd.ui.refactoring.actions.RenameResource">
+	 </action>
+	 </objectContribution>
+	</extension-->	
 
 	<extension point="org.eclipse.ui.commands">
 		<command
@@ -424,29 +448,4 @@
 			id="org.eclipse.wst.xsd.ui.refactor.renameTargetNamespace">
 		</command>
 	</extension>
-	
-	
-	<!-- 
-		The following extension to the file context menu is temporary until resource 
-		navigator will provide allow to extend refactor menu        
-	-->
-	
-	<!--extension point="org.eclipse.ui.popupMenus">
-	 <objectContribution
-		objectClass="org.eclipse.core.resources.IFile"
-		nameFilter="*.xsd"
-		id="org.wst.xsd.ui.rename">
-		<menu id="refactorXSDResource" path="additions" label="%refactoring.menu.label">
-		  <separator name="refactor"/>
-		</menu>
-	<action
-		label="%refactoring.renameAction.label"
-		menubarPath="refactorXSDResource/refactor"
-		class="org.eclipse.wst.xsd.ui.internal.refactor.actions.RenameResourceActionDelegate"
-		enablesFor="1"
-		id="org.eclipse.wst.xsd.ui.refactoring.actions.RenameResource">
-	 </action>
-	 </objectContribution>
-	</extension-->	
-
 </plugin>
