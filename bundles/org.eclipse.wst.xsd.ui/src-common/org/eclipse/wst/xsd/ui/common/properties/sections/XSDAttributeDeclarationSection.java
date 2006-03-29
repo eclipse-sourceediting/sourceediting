@@ -26,7 +26,6 @@ import org.eclipse.wst.xsd.ui.common.commands.UpdateNameCommand;
 import org.eclipse.xsd.XSDAttributeDeclaration;
 import org.eclipse.xsd.XSDTypeDefinition;
 import org.eclipse.xsd.util.XSDConstants;
-import org.w3c.dom.Element;
 
 public class XSDAttributeDeclarationSection extends AbstractSection
 {
@@ -135,12 +134,10 @@ public class XSDAttributeDeclarationSection extends AbstractSection
     typeCombo.setText(""); //$NON-NLS-1$
     if (input != null)
     {
-      Element element = null;
       if (input instanceof XSDAttributeDeclaration)
       {
         XSDAttributeDeclaration xsdAttribute = ((XSDAttributeDeclaration) input).getResolvedAttributeDeclaration();
         isAttributeReference = ((XSDAttributeDeclaration)input).isAttributeDeclarationReference();
-        element = xsdAttribute.getElement();
         XSDTypeDefinition typeDef = xsdAttribute.getTypeDefinition();
         boolean isAnonymous = xsdAttribute.getAnonymousTypeDefinition() != null;
 

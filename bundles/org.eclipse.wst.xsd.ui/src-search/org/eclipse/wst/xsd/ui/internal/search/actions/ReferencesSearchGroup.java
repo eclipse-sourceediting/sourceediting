@@ -12,7 +12,7 @@
 package org.eclipse.wst.xsd.ui.internal.search.actions;
 
 import java.util.List;
-import org.eclipse.jface.action.IAction;
+
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.util.Assert;
@@ -21,7 +21,6 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchSite;
-import org.eclipse.ui.texteditor.ITextEditorActionConstants;
 
 
 public class ReferencesSearchGroup extends SearchGroup  {
@@ -32,7 +31,7 @@ public class ReferencesSearchGroup extends SearchGroup  {
     private IEditorPart fEditor;
     private IActionBars fActionBars;
     
-    private String fGroupId;
+//    private String fGroupId;
     
     private FindReferencesAction fFindReferencesAction;
     private FindReferencesInProjectAction fFindReferencesInProjectAction;
@@ -47,7 +46,7 @@ public class ReferencesSearchGroup extends SearchGroup  {
         Assert.isNotNull(editor);
         fEditor= editor;
         fSite= fEditor.getSite();
-        fGroupId= ITextEditorActionConstants.GROUP_FIND;
+//        fGroupId= ITextEditorActionConstants.GROUP_FIND;
 
         fFindReferencesAction= new FindReferencesAction(editor);
         fFindReferencesAction.setText("Workspace");
@@ -100,11 +99,11 @@ public class ReferencesSearchGroup extends SearchGroup  {
     }
 
     
-    private void addAction(IAction action, IMenuManager manager) {
-        if (action.isEnabled()) {
-            manager.add(action);
-        }
-    }
+//    private void addAction(IAction action, IMenuManager manager) {
+//        if (action.isEnabled()) {
+//            manager.add(action);
+//        }
+//    }
 
     /*
     private void addWorkingSetAction(IWorkingSet[] workingSets, IMenuManager manager) {
@@ -161,14 +160,12 @@ public class ReferencesSearchGroup extends SearchGroup  {
     }
 
     private void updateGlobalActionHandlers() {
-      /*
         if (fActionBars != null) {
-            fActionBars.setGlobalActionHandler(JdtActionConstants.FIND_REFERENCES_IN_WORKSPACE, fFindReferencesAction);
-            fActionBars.setGlobalActionHandler(JdtActionConstants.FIND_REFERENCES_IN_PROJECT, fFindReferencesInProjectAction);
-            fActionBars.setGlobalActionHandler(JdtActionConstants.FIND_REFERENCES_IN_HIERARCHY, fFindReferencesInHierarchyAction);
-            fActionBars.setGlobalActionHandler(JdtActionConstants.FIND_REFERENCES_IN_WORKING_SET, fFindReferencesInWorkingSetAction);
+//            fActionBars.setGlobalActionHandler(JdtActionConstants.FIND_REFERENCES_IN_WORKSPACE, fFindReferencesAction);
+//            fActionBars.setGlobalActionHandler(JdtActionConstants.FIND_REFERENCES_IN_PROJECT, fFindReferencesInProjectAction);
+//            fActionBars.setGlobalActionHandler(JdtActionConstants.FIND_REFERENCES_IN_HIERARCHY, fFindReferencesInHierarchyAction);
+//            fActionBars.setGlobalActionHandler(JdtActionConstants.FIND_REFERENCES_IN_WORKING_SET, fFindReferencesInWorkingSetAction);
         }
-        */
     }
 
     private void disposeAction(ISelectionChangedListener action, ISelectionProvider provider) {

@@ -37,7 +37,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.part.PageBook;
 import org.eclipse.wst.xsd.editor.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.common.commands.AddAppInfoAttributeCommand;
@@ -70,9 +69,7 @@ public class ApplicationInfoSection extends AbstractSection
   protected Label extensibilityElementsLabel, contentLabel;
   protected ISelectionChangedListener elementSelectionChangedListener;
 
-  private Text simpleText;
-  private Composite page, pageBook1, pageBook2;
-  private Button textRadioButton, structureRadioButton;
+  private Composite page, pageBook2;
   private Button addButton, removeButton;
   private PageBook pageBook;
 
@@ -545,8 +542,6 @@ public class ApplicationInfoSection extends AbstractSection
 
     public String getColumnText(Object input, int columnIndex)
     {
-      ApplicationInformationPropertiesRegistry registry = XSDEditorPlugin.getDefault().getApplicationInformationPropertiesRegistry();
-
       if (input instanceof Element)
       {
         Element domElement = (Element) input;

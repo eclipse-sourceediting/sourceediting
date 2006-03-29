@@ -24,13 +24,13 @@ public class RenameResourceActionDelegate implements IObjectActionDelegate {
 	
 	private ISelection fCurrentSelection;
 
-	private IWorkbenchPart fPart;
+//	private IWorkbenchPart fPart;
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.action.IAction, org.eclipse.ui.IWorkbenchPart)
 	 */
 	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
-		fPart = targetPart;
+//		fPart = targetPart;
 	}
 	/* (non-Javadoc)
 	 * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)

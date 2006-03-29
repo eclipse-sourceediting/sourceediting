@@ -112,7 +112,6 @@ public class XSDModelGroupDefinitionAdapter extends XSDBaseAdapter implements IS
   public List getFields()
   {
     List fields = new ArrayList();
-    boolean showGroups = false;
     XSDVisitorForFields visitor = new XSDVisitorForFields();
     visitor.visitModelGroupDefinition(getXSDModelGroupDefinition());
     populateAdapterList(visitor.concreteComponentList, fields);
