@@ -39,7 +39,11 @@
 			</helper>
 			
 			<run
-				class="org.eclipse.wst.xsd.core.internal.validation.eclipse.Validator">
+         async="true"
+         class="org.eclipse.wst.xsd.core.internal.validation.eclipse.Validator"
+         enabled="true"
+         fullBuild="true"
+         incremental="true">
 			</run>
 		</validator>
 	</extension>

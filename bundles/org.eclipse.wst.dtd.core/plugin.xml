@@ -103,7 +103,11 @@
 				class="org.eclipse.wst.xml.core.internal.validation.core.Helper">
 			</helper>
 			<run
-				class="org.eclipse.wst.dtd.core.internal.validation.eclipse.Validator">
+         async="true"
+         class="org.eclipse.wst.dtd.core.internal.validation.eclipse.Validator"
+         enabled="true"
+         fullBuild="true"
+         incremental="true">
 			</run>
 		</validator>
 	</extension>
