@@ -34,7 +34,7 @@ import org.w3c.dom.DOMError;
  */
 public class XSDValidator
 {
-  private URIResolver uriresolver = null;
+  protected URIResolver uriresolver = null;
 
   public ValidationReport validate(String uri)
   {

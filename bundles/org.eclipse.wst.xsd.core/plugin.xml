@@ -18,5 +18,30 @@
 			class="org.eclipse.wst.xsd.contentmodel.internal.CMDocumentFactoryXSD">
 		</factory>
 	</extension>
+	
+	<!-- ====================================================== -->
+	<!-- Register the XSD validator with the validation 		-->
+	<!-- framework. 										    -->
+	<!-- ====================================================== -->
+	<extension
+		id="xsdValidator"
+		name="%_UI_XML_SCHEMA_VALIDATOR"
+		point="org.eclipse.wst.validation.validator">
+		<validator>
+			<filter
+				objectClass="org.eclipse.core.resources.IFile"
+				caseSensitive="false"
+				nameFilter="*.xsd">
+			</filter>
+			
+			<helper
+				class="org.eclipse.wst.xml.core.internal.validation.core.Helper">
+			</helper>
+			
+			<run
+				class="org.eclipse.wst.xsd.core.internal.validation.eclipse.Validator">
+			</run>
+		</validator>
+	</extension>
 
 </plugin>

@@ -9,24 +9,20 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.wst.xsd.ui.internal.validation;
-
-import java.io.InputStream;
+package org.eclipse.wst.xsd.core.internal.validation.eclipse;
 
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolverPlugin;
-import org.eclipse.wst.xml.core.internal.validation.core.ValidationReport;
 
 
 /**
  * An XSD validator specific to Eclipse. This validator will wrap the internal
- * XSD validator an provide automatic URI resolver support.
+ * XSD validator an provide automatic URI resolution support.
  * Using this class is equivalent to using the internal XSD validator and registering
- * the URI resolver.
+ * the URI resolver from the URI resolution framework.
  */
-public class XSDValidator
+public class XSDValidator extends org.eclipse.wst.xsd.core.internal.validation.XSDValidator
 {
   private static XSDValidator instance = null;
-  private org.eclipse.wst.xsd.core.internal.validation.XSDValidator validator = null;
   
   /**
    * Return the one and only instance of the XSD validator. The validator
@@ -47,20 +43,6 @@ public class XSDValidator
    */
   protected XSDValidator()
   {
-    validator = new org.eclipse.wst.xsd.core.internal.validation.XSDValidator();
-    validator.setURIResolver(URIResolverPlugin.createResolver());
-  }
-  /**
-   * Validate the file at the given URI.
-   * 
-   * @param uri The URI of the file to validate.
-   */
-  /*public ValidationReport validate(String uri)
-  {
-    return validator.validate(uri);
-  }*/
-  public ValidationReport validate(String uri, InputStream inputStream)
-  {
-    return validator.validate(uri, inputStream);
+    this.setURIResolver(URIResolverPlugin.createResolver());
   }
 }

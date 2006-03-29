@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src-validation"/>
 	<classpathentry kind="src" path="src-refactor"/>
 	<classpathentry kind="src" path="src-adt"/>
 	<classpathentry kind="src" path="src-adt-xsd"/>

@@ -9,7 +9,8 @@ Bundle-Localization: plugin
 Export-Package: org.eclipse.wst.xsd.contentmodel.internal;x-internal:=true,
  org.eclipse.wst.xsd.contentmodel.internal.util;x-internal:=true,
  org.eclipse.wst.xsd.core.internal;x-internal:=true,
- org.eclipse.wst.xsd.core.internal.validation;x-internal:=true
+ org.eclipse.wst.xsd.core.internal.validation,
+ org.eclipse.wst.xsd.core.internal.validation.eclipse
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecore,
  org.eclipse.wst.common.uriresolver,
