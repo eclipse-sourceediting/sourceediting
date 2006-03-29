@@ -43,14 +43,10 @@ import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * DTD validation.
- * 
- * @author Lawrence Mandel, IBM
  */
-public class Validator {
+public class DTDValidator {
 	/**
 	 * An entity resolver that wraps a URI resolver.
-	 * 
-	 * @author Lawrence Mandel, IBM
 	 */
 	class DTDEntityResolver implements EntityResolver {
 		private String fBaseLocation = null;
@@ -366,18 +362,11 @@ public class Validator {
 		}
 	}
 
-	private static Validator _instance = null;
-
-	public static Validator getInstance() {
-		if (_instance == null) {
-			_instance = new Validator();
-		}
-		return _instance;
-	}
+	
 
 	private URIResolver fResolver = null;
 
-	private Validator() {
+	public DTDValidator() {
 		super();
 	}
 
