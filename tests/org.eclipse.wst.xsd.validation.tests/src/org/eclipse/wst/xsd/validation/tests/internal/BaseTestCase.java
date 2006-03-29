@@ -32,7 +32,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.wst.xml.core.internal.validation.core.ValidationMessage;
 import org.eclipse.wst.xml.core.internal.validation.core.ValidationReport;
-import org.eclipse.wst.xsd.ui.internal.validation.XSDValidator;
+import org.eclipse.wst.xsd.core.internal.validation.eclipse.XSDValidator;
 
 /**
  * Base test case class which provides methods to 

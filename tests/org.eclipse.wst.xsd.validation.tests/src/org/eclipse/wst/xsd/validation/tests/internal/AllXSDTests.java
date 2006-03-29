@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,10 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.validation.tests.internal;
 import junit.framework.Test;
+
+import org.eclipse.wst.xsd.core.internal.validation.eclipse.ValidatorTest;
+import org.eclipse.wst.xsd.core.internal.validation.eclipse.XSDMessageInfoHelperTest;
+import org.eclipse.wst.xsd.core.internal.validation.eclipse.XSDValidatorTest;
 /**
  * The root test suite that contains all other XSD validator test suites.
  */
@@ -31,6 +35,9 @@ public class AllXSDTests extends junit.framework.TestSuite
   public AllXSDTests()
   {
     super("AllXSDTests");
+    addTest(ValidatorTest.suite());
+    addTest(XSDMessageInfoHelperTest.suite());
+    addTest(XSDValidatorTest.suite());
     addTest(BugFixesTest.suite());
     addTest(PathsTest.suite());
   }
