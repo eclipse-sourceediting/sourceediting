@@ -76,8 +76,6 @@ public class AddApplicationInfoDialog extends SelectionDialog implements ISelect
     this.registry = registry;
   }
 
-  private IStructuredContentProvider categoryContentProvider, elementContentProvider;
-  private ILabelProvider categoryLabelProvider, elementLabelProvider;
   private List fInput;
 
   private TableViewer categoryTableViewer, elementTableViewer;
@@ -358,7 +356,7 @@ public class AddApplicationInfoDialog extends SelectionDialog implements ISelect
     return xsdSchema;
   }
 
-  static class CategoryContentProvider implements IStructuredContentProvider
+  class CategoryContentProvider implements IStructuredContentProvider
   {
     /*
      * (non-Javadoc)
@@ -404,7 +402,7 @@ public class AddApplicationInfoDialog extends SelectionDialog implements ISelect
     }
   }
 
-  static class CategoryLabelProvider extends LabelProvider
+  class CategoryLabelProvider extends LabelProvider
   {
     /*
      * (non-Javadoc)
@@ -430,7 +428,7 @@ public class AddApplicationInfoDialog extends SelectionDialog implements ISelect
     }
   }
 
-  static class ElementContentProvider implements IStructuredContentProvider
+  class ElementContentProvider implements IStructuredContentProvider
   {
     /*
      * (non-Javadoc)

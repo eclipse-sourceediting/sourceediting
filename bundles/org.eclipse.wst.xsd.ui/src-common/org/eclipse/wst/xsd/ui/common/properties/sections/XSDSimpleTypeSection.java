@@ -14,11 +14,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
+
 import org.apache.xerces.util.XMLChar;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
@@ -29,11 +28,8 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 import org.eclipse.wst.xsd.editor.XSDEditorPlugin;
@@ -41,7 +37,6 @@ import org.eclipse.wst.xsd.ui.common.commands.UpdateNameCommand;
 import org.eclipse.wst.xsd.ui.internal.actions.CreateElementAction;
 import org.eclipse.wst.xsd.ui.internal.actions.DOMAttribute;
 import org.eclipse.wst.xsd.ui.internal.util.XSDDOMHelper;
-import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDNamedComponent;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.eclipse.xsd.XSDVariety;
@@ -210,8 +205,6 @@ public class XSDSimpleTypeSection extends AbstractSection
         nameText.setText("**anonymous**");
       }
       
-      Element simpleTypeElement = st.getElement();
-      Element element = null;
       String variety = st.getVariety().getName();
       int intVariety = st.getVariety().getValue();
 
@@ -302,13 +295,13 @@ public class XSDSimpleTypeSection extends AbstractSection
     }
     else if (e.widget == button)
     {
-      Shell shell = Display.getCurrent().getActiveShell();
-      Element element = ((XSDConcreteComponent) input).getElement();
-      Dialog dialog = null;
-      String property = "";
-      Element secondaryElement = null;
+//      Shell shell = Display.getCurrent().getActiveShell();
+//      Element element = ((XSDConcreteComponent) input).getElement();
+//      Dialog dialog = null;
+//      String property = "";
+//      Element secondaryElement = null;
 
-      IFile currentIFile = ((IFileEditorInput) getActiveEditor().getEditorInput()).getFile();
+//      IFile currentIFile = ((IFileEditorInput) getActiveEditor().getEditorInput()).getFile();
       
       // issue (cs) need to move to common.ui's selection dialog
       /*

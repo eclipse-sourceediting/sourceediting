@@ -461,7 +461,7 @@ public class XSDCommonUIUtils
       }
       else if (next instanceof XSDAttributeGroupDefinition)
       {
-        XSDAttributeGroupDefinition attrGroup = (XSDAttributeGroupDefinition) next;
+        //XSDAttributeGroupDefinition attrGroup = (XSDAttributeGroupDefinition) next;
       }
     }
     return attrs;

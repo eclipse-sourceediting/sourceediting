@@ -283,21 +283,15 @@ public class XSDElementDeclarationSection extends MultiplicitySection
 
     XSDElementDeclaration xsdElementDeclaration = ((XSDElementDeclaration) input).getResolvedElementDeclaration();
 
-      // refresh name
-      nameText.setText("");
-      typeCombo.setText(""); //$NON-NLS-1$
-      typesBrowseButton.setEnabled(true);
-//
-//      if (input instanceof XSDNamedComponent)
-//      {
-//        XSDNamedComponent namedComponent = (XSDNamedComponent) input;
-//
-        String name = xsdElementDeclaration.getName();
-        if (name != null)
-        {
-          nameText.setText(name);
-        }
-//      }
+    // refresh name
+    nameText.setText("");
+    typeCombo.setText(""); //$NON-NLS-1$
+    typesBrowseButton.setEnabled(true);
+    String name = xsdElementDeclaration.getName();
+    if (name != null)
+    {
+      nameText.setText(name);
+    }
     
     if (isElementReference)
     {
@@ -307,22 +301,11 @@ public class XSDElementDeclarationSection extends MultiplicitySection
     // refresh type
     if (input != null)
     {
-      Element element = null;
       if (input instanceof XSDElementDeclaration)
       {
-        element = xsdElementDeclaration.getElement();
         boolean isAnonymous = xsdElementDeclaration.getAnonymousTypeDefinition() != null;
         //XSDTypeDefinition typeDef = XSDUtils.getResolvedType(xsdElementDeclaration);
         XSDTypeDefinition typeDef = xsdElementDeclaration.getResolvedElementDeclaration().getTypeDefinition();
-        XSDTypeDefinition typeValue = xsdElementDeclaration.getType();
-        boolean isPrimitive = false;
-        if (typeValue != null)
-        {
-          if (typeValue.getTargetNamespace() != null)
-          {
-            isPrimitive = typeValue.getTargetNamespace().equals(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001);
-          }
-        }
         
         String typeName = ""; //$NON-NLS-1$
         if (typeDef != null)

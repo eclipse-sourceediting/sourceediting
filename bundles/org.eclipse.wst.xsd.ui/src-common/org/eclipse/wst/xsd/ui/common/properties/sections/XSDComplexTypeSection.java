@@ -11,7 +11,6 @@
 package org.eclipse.wst.xsd.ui.common.properties.sections;
 
 import org.apache.xerces.util.XMLChar;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
@@ -24,19 +23,15 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.wst.xsd.editor.Messages;
 import org.eclipse.wst.xsd.editor.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.common.commands.UpdateNameCommand;
 import org.eclipse.xsd.XSDComplexTypeDefinition;
 import org.eclipse.xsd.XSDDerivationMethod;
 import org.eclipse.xsd.XSDNamedComponent;
-import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDTypeDefinition;
 import org.eclipse.xsd.util.XSDConstants;
-import org.w3c.dom.Element;
 
 public class XSDComplexTypeSection extends AbstractSection implements SelectionListener
 {
@@ -217,16 +212,16 @@ public class XSDComplexTypeSection extends AbstractSection implements SelectionL
    */
   public void widgetSelected(SelectionEvent e)
   {
-    XSDComplexTypeDefinition xsdComplexType = (XSDComplexTypeDefinition) input;
-    Element ctElement = xsdComplexType.getElement();
+//    XSDComplexTypeDefinition xsdComplexType = (XSDComplexTypeDefinition) input;
+//    Element ctElement = xsdComplexType.getElement();
     if (e.widget == button)
     {
-      Shell shell = Display.getCurrent().getActiveShell();
-      Element element = null;
-      if (xsdComplexType.getContent() != null)
-      {
-        element = xsdComplexType.getContent().getElement();
-      }
+//      Shell shell = Display.getCurrent().getActiveShell();
+//      Element element = null;
+//      if (xsdComplexType.getContent() != null)
+//      {
+//        element = xsdComplexType.getContent().getElement();
+//      }
 
       // SimpleContentBaseTypeOptionsDialog dialog = new
       // SimpleContentBaseTypeOptionsDialog(shell, element, BASE_TYPE_ID,
@@ -235,9 +230,9 @@ public class XSDComplexTypeSection extends AbstractSection implements SelectionL
       // dialog.create();
       // int result = dialog.open();
 
-      IFile currentIFile = ((IFileEditorInput) getActiveEditor().getEditorInput()).getFile();
+//      IFile currentIFile = ((IFileEditorInput) getActiveEditor().getEditorInput()).getFile();
 
-      XSDSchema schema = xsdComplexType.getSchema();
+//      XSDSchema schema = xsdComplexType.getSchema();
       
       // issuec (cs) need to move the common.ui's selection dialog
       /*
