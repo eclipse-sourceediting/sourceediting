@@ -23,6 +23,7 @@ import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -45,12 +46,14 @@ public class XMLFilesPreferencePage extends AbstractPreferencePage {
 	private Vector fEOLCodes = null;
 	private Text fDefaultSuffix = null;
 	private List fValidExtensions = null;
+	private Button fWarnNoGrammar = null;
 
 	protected Control createContents(Composite parent) {
 		Composite composite = (Composite) super.createContents(parent);
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(composite, IHelpContextIds.XML_PREFWEBX_FILES_HELPID);
 		createContentsForCreatingOrSavingGroup(composite);
 		createContentsForCreatingGroup(composite);
+		createContentsForValidatingGroup(composite);
 
 		setSize(composite);
 		loadPreferences();
@@ -84,6 +87,13 @@ public class XMLFilesPreferencePage extends AbstractPreferencePage {
 		createLabel(creatingOrSavingGroup, XMLUIMessages.End_of_line_code);
 		fEndOfLineCode = createDropDownBox(creatingOrSavingGroup);
 		populateLineDelimiters();
+	}
+	
+	protected void createContentsForValidatingGroup(Composite parent) {
+		Group validatingGroup = createGroup(parent, 2);
+		validatingGroup.setText(XMLUIMessages.Validating_files);
+
+		fWarnNoGrammar = createCheckBox(validatingGroup, XMLUIMessages.Warn_no_grammar_specified);
 	}
 
 	public void dispose() {
@@ -142,6 +152,7 @@ public class XMLFilesPreferencePage extends AbstractPreferencePage {
 	protected void initializeValues() {
 		initializeValuesForCreatingOrSavingGroup();
 		initializeValuesForCreatingGroup();
+		initializeValuesForValidatingGroup();
 	}
 
 	protected void initializeValuesForCreatingGroup() {
@@ -161,10 +172,17 @@ public class XMLFilesPreferencePage extends AbstractPreferencePage {
 		else
 			setCurrentEOLCode(CommonEncodingPreferenceNames.NO_TRANSLATION);
 	}
+	
+	protected void initializeValuesForValidatingGroup(){
+		boolean warnNoGrammarButtonSelected = getModelPreferences().getBoolean(XMLCorePreferenceNames.WARN_NO_GRAMMAR);
+		
+		fWarnNoGrammar.setSelection(warnNoGrammarButtonSelected);
+	}
 
 	protected void performDefaults() {
 		performDefaultsForCreatingOrSavingGroup();
 		performDefaultsForCreatingGroup();
+		performDefaultsForValidatingGroup();
 
 		super.performDefaults();
 	}
@@ -186,6 +204,12 @@ public class XMLFilesPreferencePage extends AbstractPreferencePage {
 			setCurrentEOLCode(endOfLineCode);
 		else
 			setCurrentEOLCode(CommonEncodingPreferenceNames.NO_TRANSLATION);
+	}
+	
+	protected void performDefaultsForValidatingGroup(){
+		boolean warnNoGrammarButtonSelected = getModelPreferences().getDefaultBoolean(XMLCorePreferenceNames.WARN_NO_GRAMMAR);
+		
+		fWarnNoGrammar.setSelection(warnNoGrammarButtonSelected);
 	}
 
 	public boolean performOk() {
@@ -233,6 +257,7 @@ public class XMLFilesPreferencePage extends AbstractPreferencePage {
 	protected void storeValues() {
 		storeValuesForCreatingOrSavingGroup();
 		storeValuesForCreatingGroup();
+		storeValuesForValidatingGroup();
 	}
 
 	protected void storeValuesForCreatingGroup() {
@@ -245,6 +270,11 @@ public class XMLFilesPreferencePage extends AbstractPreferencePage {
 	protected void storeValuesForCreatingOrSavingGroup() {
 		String eolCode = getCurrentEOLCode();
 		getModelPreferences().setValue(CommonEncodingPreferenceNames.END_OF_LINE_CODE, eolCode);
+	}
+	
+	protected void storeValuesForValidatingGroup(){
+		boolean warnNoGrammarButtonSelected = fWarnNoGrammar.getSelection();
+		getModelPreferences().setValue(XMLCorePreferenceNames.WARN_NO_GRAMMAR, warnNoGrammarButtonSelected);
 	}
 
 	protected void validateValues() {

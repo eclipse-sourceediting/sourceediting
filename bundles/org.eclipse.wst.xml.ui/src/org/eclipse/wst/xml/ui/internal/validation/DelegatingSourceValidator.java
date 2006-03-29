@@ -31,6 +31,7 @@ import org.eclipse.wst.validation.internal.provisional.core.IMessage;
 import org.eclipse.wst.validation.internal.provisional.core.IReporter;
 import org.eclipse.wst.validation.internal.provisional.core.IValidationContext;
 import org.eclipse.wst.validation.internal.provisional.core.IValidator;
+import org.eclipse.wst.validation.internal.provisional.core.IValidatorJob;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
@@ -180,7 +181,14 @@ public abstract class DelegatingSourceValidator implements IValidator {
 					// Validate the file:
 					IValidationContext vHelper = new MyHelper(new ByteArrayInputStream(byteArray), file);
 					MyReporter vReporter = new MyReporter();
-					validator.validate(vHelper, vReporter);
+					if(validator instanceof IValidatorJob)
+					{
+					  ((IValidatorJob)validator).validateInJob(vHelper, vReporter);
+					}
+					else
+					{
+					  validator.validate(vHelper, vReporter);
+					}
 					List messages = vReporter.list;
 
 					// set the offset and length

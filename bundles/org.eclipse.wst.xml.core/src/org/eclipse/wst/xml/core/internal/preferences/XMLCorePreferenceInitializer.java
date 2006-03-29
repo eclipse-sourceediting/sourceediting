@@ -51,5 +51,7 @@ public class XMLCorePreferenceInitializer extends AbstractPreferenceInitializer 
 		// this could be made smarter by actually looking up the content
 		// type's valid extensions
 		node.put(XMLCorePreferenceNames.DEFAULT_EXTENSION, "xml"); //$NON-NLS-1$
+		
+		node.putBoolean(XMLCorePreferenceNames.WARN_NO_GRAMMAR, false);
 	}
 }

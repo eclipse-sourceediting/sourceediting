@@ -151,4 +151,15 @@ public class XMLCorePreferenceNames {
 	 * 
 	 */
 	public static final String CLEANUP_EOL_CODE = "cleanupEOLCode";//$NON-NLS-1$
+	
+	/**
+	 * Indicates whether or not a warning should be produced when validating a
+	 * file that specifies not grammar.
+	 * <p>
+	 * Value is of type <code>boolean</code>.<br />
+	 * Possible values: {TRUE, FALSE}
+	 * </p>
+	 * 
+	 */
+	public static final String WARN_NO_GRAMMAR = "warnNoGrammar";//$NON-NLS-1$
 }

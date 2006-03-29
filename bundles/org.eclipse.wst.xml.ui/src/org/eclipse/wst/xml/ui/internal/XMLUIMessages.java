@@ -286,6 +286,8 @@ public class XMLUIMessages extends NLS {
 	public static String StructureSelectPrevious_tooltip;
 	public static String StructureSelectPrevious_description;
 	public static String MESSAGE_XML_VALIDATION_MESSAGE_UI_;
+	public static String Warn_no_grammar_specified;
+	public static String Validating_files;
 
 
 	static {

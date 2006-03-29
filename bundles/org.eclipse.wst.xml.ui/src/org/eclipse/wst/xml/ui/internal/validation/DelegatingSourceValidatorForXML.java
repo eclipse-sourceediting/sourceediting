@@ -20,7 +20,7 @@ import org.eclipse.wst.xml.ui.internal.Logger;
  * 
  */
 public class DelegatingSourceValidatorForXML extends DelegatingSourceValidator {
-	private final static String VALIDATOR_CLASS = "org.eclipse.wst.xml.ui.internal.validation.Validator"; //$NON-NLS-1$
+	private final static String VALIDATOR_CLASS = "org.eclipse.wst.xml.core.internal.validation.eclipse.Validator"; //$NON-NLS-1$
 
 	public DelegatingSourceValidatorForXML() {
 		super();

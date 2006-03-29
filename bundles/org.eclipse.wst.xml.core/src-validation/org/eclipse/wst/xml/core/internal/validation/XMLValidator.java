@@ -61,6 +61,9 @@ public class XMLValidator
   protected static final String ROOT_ELEMENT_TYPE_MUST_MATCH_DOCTYPEDECL = "RootElementTypeMustMatchDoctypedecl"; //$NON-NLS-1$
   protected static final String MSG_ELEMENT_NOT_DECLARED = "MSG_ELEMENT_NOT_DECLARED"; //$NON-NLS-1$
   
+  // WTP XML validator specific key.
+  protected static final String NO_GRAMMAR_FOUND = "NO_GRAMMAR_FOUND"; //$NON-NLS-1$
+  
   private static final String FILE_NOT_FOUND_KEY = "FILE_NOT_FOUND"; //$NON-NLS-1$
 
   /**
@@ -144,7 +147,7 @@ public class XMLValidator
    */
   public XMLValidationReport validate(String uri)
   {
-    return validate(uri, null);  
+    return validate(uri, null, new XMLValidationConfiguration());  
   }
 
   final String createStringForInputStream(InputStream inputStream)
@@ -179,6 +182,22 @@ public class XMLValidator
    */
   public XMLValidationReport validate(String uri, InputStream inputStream)
   {
+	return validate(uri, inputStream, new XMLValidationConfiguration());
+  }
+  /**
+   * Validate the inputStream
+   * 
+   * @param uri 
+   * 		The URI of the file to validate.
+   * @param inputstream
+   * 		The inputStream of the file to validate
+   * @param configuration
+   * 		A configuration for this validation session.
+   * @return 
+   * 		Returns an XML validation report.
+   */
+  public XMLValidationReport validate(String uri, InputStream inputStream, XMLValidationConfiguration configuration)
+  {
     Reader reader1 = null; // Used for the preparse.
     Reader reader2 = null; // Used for validation parse.
     
@@ -197,15 +216,21 @@ public class XMLValidator
         helper.computeValidationInformation(uri, reader1, uriResolver);
         valinfo.setDTDEncountered(helper.isDTDEncountered);
         valinfo.setElementDeclarationCount(helper.numDTDElements);
-        valinfo.setNamespaceEncountered(helper.isNamespaceEncountered);
+        //valinfo.setNamespaceEncountered(helper.isNamespaceEncountered);
         valinfo.setGrammarEncountered(helper.isGrammarEncountered);
+        
         XMLReader reader = createXMLReader(valinfo, entityResolver);
         XMLErrorHandler errorhandler = new XMLErrorHandler(valinfo);
         reader.setErrorHandler(errorhandler);
         
         InputSource inputSource = new InputSource(uri);
         inputSource.setCharacterStream(reader2);
-        reader.parse(inputSource);      
+        reader.parse(inputSource);   
+        if(configuration.getFeature(XMLValidationConfiguration.WARN_NO_GRAMMAR) && 
+        		valinfo.isValid() && !helper.isGrammarEncountered)
+        {
+          valinfo.addWarning(XMLValidationMessages._WARN_NO_GRAMMAR, 1, 0, uri, NO_GRAMMAR_FOUND, null);
+        }
     }
     catch (SAXParseException saxParseException)
     {

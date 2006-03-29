@@ -27,16 +27,6 @@ public class XMLValidationUIMessages extends NLS {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, XMLValidationUIMessages.class);
 	}
-	public static String _UI_VALIDATION_INTERNAL_ERROR;
-	public static String _UI_VALIDATION_FAILED;
-	public static String _UI_VALIDATION_SUCEEDED;
-	public static String _UI_THE_XML_FILE_IS_NOT_VALID;
-	public static String _UI_THE_XML_FILE_IS_VALID;
-	public static String _UI_THE_XML_FILE_IS_VALID_WITH_WARNINGS;
-	public static String _UI_THE_XML_FILE_IS_WELL_FORMED;
-	public static String _UI_THE_XML_FILE_IS_WELL_FORMED_WITH_WARNINGS;
-	public static String _UI_NO_GRAMMAR_WARNING;
-	public static String _UI_MESSAGE_LIMITE_EXCEEDED;
 	public static String _UI_REF_FILE_ERROR_DESCRIPTION;
 	public static String _UI_REF_FILE_ERROR_MESSAGE;
 	public static String _UI_REF_FILE_ERROR_DETAILS;
@@ -44,10 +34,6 @@ public class XMLValidationUIMessages extends NLS {
 	public static String _UI_DETAILS_INFO_REVALIDATE_TO_REGENERATE;
 	public static String _UI_SAVE_DIRTY_FILE_MESSAGE;
 	public static String _UI_SAVE_DIRTY_FILE_TITLE;
-	public static String ValidateXMLFileActionDelegate_2;
-	public static String ValidateXMLFileActionDelegate_3;
-	public static String ValidateXMLFileActionDelegate_4;
-	public static String ValidateXMLFileActionDelegate_5;
 	public static String TaskListTableViewer_0;
 	public static String TaskListTableViewer_1;
 	public static String TaskListTableViewer_2;

@@ -9,25 +9,19 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.wst.xml.ui.internal.validation;
-
-import java.io.InputStream;
+package org.eclipse.wst.xml.core.internal.validation.eclipse;
 
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolverPlugin;
-import org.eclipse.wst.xml.core.internal.validation.XMLValidationReport;
 
 /**
  * An XML validator specific to Eclipse. This validator will wrap the internal
- * XML validator an provide automatic URI resolver support.
+ * XML validator an provide automatic URI resolution support.
  * Using this class is equivalent to using the internal XML validator and registering
  * the URI resolver.
- * 
- * @author Lawrence Mandel, IBM
  */
-public class XMLValidator
+public class XMLValidator extends org.eclipse.wst.xml.core.internal.validation.XMLValidator
 {
   private static XMLValidator instance = null;
-  private org.eclipse.wst.xml.core.internal.validation.XMLValidator validator = null;
   
   /**
    * Return the one and only instance of the XML validator. The validator
@@ -48,26 +42,6 @@ public class XMLValidator
    */
   protected XMLValidator()
   {
-    validator = new org.eclipse.wst.xml.core.internal.validation.XMLValidator();
-    validator.setURIResolver(URIResolverPlugin.createResolver());
-  }
-  /**
-   * Validate the file at the given URI.
-   * 
-   * @param uri The URI of the file to validate.
-   */
-  public XMLValidationReport validate(String uri)
-  {
-    return validator.validate(uri);
-  }
-  /**
-   * Validate the InputStream
-   * 
-   * @param uri The URI of the file to validate.
-   * @param inputStream The input stream to validate.
-   */
-  public XMLValidationReport validate(String uri, InputStream inputStream)
-  {
-    return validator.validate(uri, inputStream);
+    setURIResolver(URIResolverPlugin.createResolver());
   }
 }
