@@ -1,6 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html
-  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<?xml version="1.0" encoding="utf-8"?>
+<!--Arbortext, Inc., 1988-2005, v.4002-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
 <!-- /*******************************************************************************
@@ -13,81 +14,62 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/ -->
-<link rel="stylesheet" type="text/css" href="../../org.eclipse.wst.doc.user/common.css" />
+<link href="../../org.eclipse.wst.doc.user/common.css" rel="stylesheet" type="text/css"/>
 <title>Adding import elements</title>
 </head>
-<body id="taddimpt"><a name="taddimpt"><!-- --></a>
-
-<h1 class="topictitle1">Adding import elements</h1>
-<p>As schemas become larger, it is often desirable to divide their content among 
-several schema documents for purposes such as ease of maintenance, reuse, and 
-readability. You can use an <samp class="codeph">import</samp> element to bring 
-in definitions and declarations from an imported schema into the current schema.
-</p>
-<div class="section">
-	The imported schema can come from a different namespace than the current 
-	schema does.</div>
-<div class="skipspace">
-	<p>You can add multiple import elements
-to an XML schema, however, prefixes and namespaces have to unique amongst
-the imported schemas.</p>
-	<p>The following instructions were written for the Resource perspective, but 
-	they will also work in many other perspectives.</p>
-	<p>To add an import element,
-follow these steps:</p></div>
-<ol>
-	<li class="skipspace"><span>Open your XML schema in the XML schema editor.</span></li>
-	<li class="skipspace"><span>In the Outline view, select your schema.</span> The entire
-schema and its contents should be displayed in the Graph view.</li>
-	<li class="skipspace"><span>In the Graph view, right click in the <b>Directives</b> section
+<body id="taddimpt"><a name="taddimpt"><!-- --></a>  <h1 class="topictitle1">Adding
+import elements</h1> <p>As schemas become larger, it is often desirable to
+divide their content among  several schema documents for purposes such as
+ease of maintenance, reuse, and  readability. You can use an <samp class="codeph">import</samp> element
+to bring  in definitions and declarations from an imported schema into the
+current schema. </p> <div class="section"> 	The imported schema can come from
+a different namespace than the current  	schema does.</div> <div class="skipspace"> 	<p>You
+can add multiple import elements to an XML schema, however, prefixes and namespaces
+have to unique amongst the imported schemas.</p> 	<p>The following instructions
+were written for the Resource perspective, but  	they will also work in many
+other perspectives.</p> 	<p>To add an import element, follow these steps:</p></div> <ol>
+<li class="skipspace"><span>Open your XML schema in the XML schema editor.</span></li>
+<li class="skipspace"><span>In the Outline view, select your schema.</span> The
+entire schema and its contents should be displayed in the Graph view.</li>
+<li class="skipspace"><span>In the Graph view, right click in the <b>Directives</b> section
 and click <b><span class="uicontrol">Add Import</span></b>.</span></li>
-	<li class="skipspace"><span>In the Properties view, click the <b>General</b> tab and click
-the <b><span class="uicontrol">More</span></b> button 
-	<img border="0" src="../images/More.gif" width="22" height="18"> to the right of the
-	<b><span class="uicontrol">Schema
-location</span></b> field.</span></li>
-	<li class="skipspace"><span>If you want to import an XML schema located in the workbench, select
-the <b><span class="uicontrol">Workbench projects</span></b> radio button and click 
-	<b><span class="uicontrol">Next</span></b>. </span>
-	<ol type="a">
-		<li><span>Select the schema you want to import and click <b>
-		<span class="uicontrol">Finish</span></b>.</span></li>
-	</ol></li>
-	<li class="skipspace"><span>If you want to import an XML schema located on the Web, select
-the <b><span class="uicontrol">HTTP</span></b> radio button and click <b>
-	<span class="uicontrol">Next</span></b>.</span><ol type="a">
-		<li class="skipspace"><span>Type the <b>URL</b> of the XML schema and click
-		<b><span class="uicontrol">Finish</span></b>.</span>
-		<div class="note"><span class="notetitle"><b>Note</b>: </span>A local copy of the schema will not be stored in the workbench.
-Every time you validate your schema, the schema's contents will be checked
-from the URL you specify.</div></li>
-	</ol></li>
-	<li class="skipspace"><span>The XML schema editor will retrieve the namespace for the imported
-XML schema file and display it as read-only in the <b><span class="uicontrol">Namespace</span></b> field.</span></li>
-	<li class="skipspace"><span>If necessary, type a unique prefix for this namespace in the 
-	<b><span class="uicontrol">Prefix</span></b> field.</span></li>
-	<li class="skipspace"><span>Click the <b><span class="uicontrol">Documentation</span></b> tab if you want
-to provide any information about this import element.</span> The 
-	<span class="uicontrol">Documentation</span> page
-is used for human readable material, such as a description, and the 
-	<span class="uicontrol">App
-Info</span> page can be used to provide information for applications.</li>
-</ol>
-<div class="skipspace">
-	<p>Once you have added an import element to your XML schema, when
-you define new elements, attributes, complex types, or simple types where
-you can specify type information, any declarations from the included schema
-will be available in the <b><span class="uicontrol">Type</span></b> list for the element,
-attribute, complex or simple type.</p></div>
-<div class="skipspace"></div>
-
-<div><p><b class="reltaskshd">Related tasks</b><br />
-<a href="../topics/taddincl.html" title="As schemas become larger, it is often desirable to divide their content among several schema documents for purposes such as ease of maintenance, reuse, and readability. XML schema defines two constructs to support this: include and import. The include element brings in definitions and declarations from the included schema into the current schema. It requires the included schema to be in the same target namespace as the including schema. The import element behaves in a similar way, with the exception that the imported schema can come from a different namespace.">Adding an include element</a><br />
-<a href="../topics/taddrdfn.html" title="You can use the redefine mechanism to redefine simple and complex types, groups, and attribute groups obtained from external schema files. Like the include mechanism, redefine requires the external components to be in the same target namespace as the redefining schema, although external components from schemas that have no namespace can also be redefined.">Adding a redefine element</a><br />
-</p>
-<p><b class="relrefhd">Related reference</b><br />
-<a href="../topics/rnmspc.html" title="">XML namespaces</a><br />
-</p>
-</div>
-</body>
+<li class="skipspace"><span>In the Properties view, click the <b>General</b> tab
+and click the <b><span class="uicontrol">Browse</span></b> button  	<img border="0"
+height="18" src="../images/Browse.gif" width="22"/> to the right of the 	<b><span
+class="uicontrol">Schema location</span></b> field.</span></li>
+<li class="skipspace"><span>If you want to import an XML schema located in
+the workbench, select the <b><span class="uicontrol">Workbench projects</span></b> radio
+button and click  	<b><span class="uicontrol">Next</span></b>. </span> 	<ol
+type="a">
+<li><span>Select the schema you want to import and click <b> 		<span class="uicontrol">Finish</span></b>.</span></li>
+</ol></li>
+<li class="skipspace"><span>If you want to import an XML schema located on
+the Web, select the <b><span class="uicontrol">HTTP</span></b> radio button
+and click <b> 	<span class="uicontrol">Next</span></b>.</span><ol type="a">
+<li class="skipspace"><span>Type the <b>URL</b> of the XML schema and click
+		<b><span class="uicontrol">Finish</span></b>.</span> 		<div class="note"><span
+class="notetitle"><b>Note</b>: </span>A local copy of the schema will not
+be stored in the workbench. Every time you validate your schema, the schema's
+contents will be checked from the URL you specify.</div></li>
+</ol></li>
+<li class="skipspace"><span>The XML schema editor will retrieve the namespace
+for the imported XML schema file and display it as read-only in the <b><span
+class="uicontrol">Namespace</span></b> field.</span></li>
+<li class="skipspace"><span>If necessary, type a unique prefix for this namespace
+in the  	<b><span class="uicontrol">Prefix</span></b> field.</span></li>
+<li class="skipspace"><span>Click the <b><span class="uicontrol">Documentation</span></b> tab
+if you want to provide any information about this import element.</span> The
+ 	<span class="uicontrol">Documentation</span> page is used for human readable
+material, such as a description, and the  	<span class="uicontrol">App Info</span> page
+can be used to provide information for applications.</li>
+</ol> <div class="skipspace"> 	<p>Once you have added an import element to
+your XML schema, when you define new elements, attributes, complex types,
+or simple types where you can specify type information, any declarations from
+the included schema will be available in the <b><span class="uicontrol">Type</span></b> list
+for the element, attribute, complex or simple type.</p></div> <div class="skipspace"></div>  <div><p><b
+class="reltaskshd">Related tasks</b><br/> <a href="../topics/taddincl.html"
+title="As schemas become larger, it is often desirable to divide their content among several schema documents for purposes such as ease of maintenance, reuse, and readability. XML schema defines two constructs to support this: include and import. The include element brings in definitions and declarations from the included schema into the current schema. It requires the included schema to be in the same target namespace as the including schema. The import element behaves in a similar way, with the exception that the imported schema can come from a different namespace."
+>Adding an include element</a><br/> <a href="../topics/taddrdfn.html" title="You can use the redefine mechanism to redefine simple and complex types, groups, and attribute groups obtained from external schema files. Like the include mechanism, redefine requires the external components to be in the same target namespace as the redefining schema, although external components from schemas that have no namespace can also be redefined."
+>Adding a redefine element</a><br/> </p> <p><b class="relrefhd">Related reference</b><br/> <a
+href="../topics/rnmspc.html" title="">XML namespaces</a><br/> </p> </div> </body>
 </html>
