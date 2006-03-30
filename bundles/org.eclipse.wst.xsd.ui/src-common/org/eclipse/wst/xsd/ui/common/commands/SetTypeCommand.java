@@ -18,6 +18,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.common.ui.internal.search.dialogs.ComponentSpecification;
 import org.eclipse.wst.xsd.adt.edit.ComponentReferenceEditManager;
 import org.eclipse.wst.xsd.adt.edit.IComponentDialog;
+import org.eclipse.wst.xsd.editor.XSDTypeReferenceEditManager;
 import org.eclipse.wst.xsd.editor.internal.adapters.XSDBaseAdapter;
 import org.eclipse.wst.xsd.ui.common.actions.SetTypeAction;
 import org.eclipse.xsd.XSDConcreteComponent;
@@ -92,7 +93,7 @@ public class SetTypeCommand extends BaseCommand
     IEditorPart editor = getActiveEditor();
     if (editor != null)
     {
-      result = (ComponentReferenceEditManager)editor.getAdapter(ComponentReferenceEditManager.class);
+      result = (ComponentReferenceEditManager)editor.getAdapter(XSDTypeReferenceEditManager.class);
     }  
     return result;
   }
