@@ -27,6 +27,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
@@ -80,6 +81,8 @@ public class AddApplicationInfoDialog extends SelectionDialog implements ISelect
 
   private TableViewer categoryTableViewer, elementTableViewer;
   private ArrayList existingNames;
+
+  private ViewerFilter elementTableViewerFilter;
 
   public void setInput(List input)
   {
@@ -154,6 +157,9 @@ public class AddApplicationInfoDialog extends SelectionDialog implements ISelect
         okPressed();
       }
     });
+    if ( elementTableViewerFilter != null){
+      elementTableViewer.addFilter(elementTableViewerFilter);
+    }
     
     gd = new GridData(GridData.FILL_BOTH);
     table = elementTableViewer.getTable();
@@ -186,6 +192,10 @@ public class AddApplicationInfoDialog extends SelectionDialog implements ISelect
 	}
 	
 	getButton(IDialogConstants.OK_ID).setEnabled(false);
+  }
+  
+  public void addElementsTableFilter(ViewerFilter filter){
+	elementTableViewerFilter = filter;
   }
 
   protected Point getInitialSize()
