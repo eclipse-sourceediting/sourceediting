@@ -13,7 +13,6 @@
 package org.eclipse.wst.xml.ui.internal.contentoutline;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -43,9 +42,9 @@ class RefreshStructureJob extends Job {
 
 	/** debug flag */
 	static final boolean DEBUG;
-	private static final long UPDATE_DELAY = 200;
+	private static final long UPDATE_DELAY = 250;
 	static {
-		String value = Platform.getDebugOption("org.eclipse.wst.sse.ui/debug/outline"); //$NON-NLS-1$
+		String value = Platform.getDebugOption("org.eclipse.wst.sse.ui/debug/refreshStructure"); //$NON-NLS-1$
 		DEBUG = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
 	}
 	/** List of refresh requests (Nodes) */
@@ -57,24 +56,33 @@ class RefreshStructureJob extends Job {
 		super(XMLUIMessages.refreshoutline_0); //$NON-NLS-1$
 		setPriority(Job.LONG);
 		setSystem(true);
-		fRequests = new ArrayList(1);
+		fRequests = new ArrayList(2);
 	}
 
 	private synchronized void addRequest(Node node) {
-		// if we already have a request which contains the new request,
-		// discare the new request
 		int size = fRequests.size();
-		for (int i = 0; i < size; i++) {
-			if (contains((Node) fRequests.get(i), node))
-				return;
+		if (size > 0) {
+			for (int i = 0; i < size; i++) {
+				/*
+				 * If we already have a request which contains the new
+				 * request, discard the new request
+				 */
+				Node node2 = (Node) fRequests.get(i);
+				if (contains(node2, node))
+					return;
+				/*
+				 * If new request contains any existing requests, replace it
+				 * with new request
+				 */
+				if (contains(node, node2)) {
+					fRequests.set(i, node);
+					return;
+				}
+			}
 		}
-		// if new request is contains any existing requests,
-		// remove those
-		for (Iterator it = fRequests.iterator(); it.hasNext();) {
-			if (contains(node, (Node) it.next()))
-				it.remove();
+		else {
+			fRequests.add(node);
 		}
-		fRequests.add(node);
 	}
 
 	private synchronized void addViewer(StructuredViewer viewer) {
@@ -84,6 +92,8 @@ class RefreshStructureJob extends Job {
 	}
 
 	/**
+	 * @param root
+	 * @param possible
 	 * @return if the root is parent of possible, return true, otherwise
 	 *         return false
 	 */
@@ -143,21 +153,17 @@ class RefreshStructureJob extends Job {
 	 * 
 	 * @param node
 	 */
-	private void doRefresh(final Node node) {
+	private void doRefresh(final Node node, final StructuredViewer[] viewers) {
 		final Display display = PlatformUI.getWorkbench().getDisplay();
 		display.asyncExec(new Runnable() {
 			public void run() {
-
 				if (DEBUG)
 					System.out.println("refresh on: [" + node.getNodeName() + "]"); //$NON-NLS-1$ //$NON-NLS-2$
 
-				StructuredViewer[] viewers = (StructuredViewer[]) fViewers.toArray(new StructuredViewer[0]);
-				fViewers.clear();
-
 				for (int i = 0; i < viewers.length; i++) {
 					if (!viewers[i].getControl().isDisposed()) {
-						if (node instanceof Document) {
-							viewers[i].refresh();
+						if (node.getNodeType() == Node.DOCUMENT_NODE) {
+							viewers[i].refresh(true);
 						}
 						else {
 							viewers[i].refresh(node, true);
@@ -174,13 +180,19 @@ class RefreshStructureJob extends Job {
 
 	/**
 	 * This method also synchronized because it accesses the fRequests queue
+	 * and fViewers list
 	 * 
-	 * @return an array of the currently requested Nodes to refresh
+	 * @return an array containing and array of the currently requested Nodes
+	 *         to refresh and the viewers in which to refresh them
 	 */
-	private synchronized Node[] getRequests() {
+	private synchronized Object[] getRequests() {
 		Node[] toRefresh = (Node[]) fRequests.toArray(new Node[fRequests.size()]);
 		fRequests.clear();
-		return toRefresh;
+
+		StructuredViewer[] viewers = (StructuredViewer[]) fViewers.toArray(new StructuredViewer[fViewers.size()]);
+		fViewers.clear();
+
+		return new Object[]{toRefresh, viewers};
 	}
 
 	/**
@@ -192,20 +204,23 @@ class RefreshStructureJob extends Job {
 		if (node == null)
 			return;
 
-		cancel();
-		addRequest(node);
 		addViewer(viewer);
+		addRequest(node);
 		schedule(UPDATE_DELAY);
 	}
 
 	protected IStatus run(IProgressMonitor monitor) {
 		IStatus status = Status.OK_STATUS;
 		try {
-			Node[] toRefresh = getRequests();
-			for (int i = 0; i < toRefresh.length; i++) {
+			// Retrieve BOTH viewers and Nodes on one block
+			Object[] requests = getRequests();
+			Node[] nodes = (Node[]) requests[0];
+			StructuredViewer[] viewers = (StructuredViewer[]) requests[1];
+
+			for (int i = 0; i < nodes.length; i++) {
 				if (monitor.isCanceled())
 					throw new OperationCanceledException();
-				doRefresh(toRefresh[i]);
+				doRefresh(nodes[i], viewers);
 			}
 		}
 		finally {

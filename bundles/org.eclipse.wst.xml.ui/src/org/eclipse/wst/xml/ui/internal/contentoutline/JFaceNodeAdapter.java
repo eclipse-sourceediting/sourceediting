@@ -47,7 +47,7 @@ public class JFaceNodeAdapter implements IJFaceNodeAdapter {
 	}
 
 	JFaceNodeAdapterFactory fAdapterFactory;
-	private BufferedStructureUpdater fUpdater = null;
+	private RefreshStructureJob fRefreshJob = null;
 
 	public JFaceNodeAdapter(JFaceNodeAdapterFactory adapterFactory) {
 		super();
@@ -169,17 +169,18 @@ public class JFaceNodeAdapter implements IJFaceNodeAdapter {
 		return nodeName.toString();
 	}
 
+
 	public Object getParent(Object object) {
 		Node node = (Node) object;
 		return node.getParentNode();
 	}
 
-	private BufferedStructureUpdater getStructureUpdater() {
-		if (fUpdater == null) {
-			fUpdater = new BufferedStructureUpdater();
-		}
-		return fUpdater;
+	private synchronized RefreshStructureJob getRefreshJob() {
+		if (fRefreshJob == null)
+			fRefreshJob = new RefreshStructureJob();
+		return fRefreshJob;
 	}
+
 
 	public boolean hasChildren(Object object) {
 		// (pa) 20021217
@@ -216,26 +217,28 @@ public class JFaceNodeAdapter implements IJFaceNodeAdapter {
 		// (That is, may be be worthy of job manager management). If they are
 		// found to be important enough to leave in,
 		// there's probably some optimization that can be done.
-		Collection listeners = fAdapterFactory.getListeners();
-		Iterator iterator = listeners.iterator();
+		if (notifier instanceof Node) {
+			Collection listeners = fAdapterFactory.getListeners();
+			Iterator iterator = listeners.iterator();
 
-		while (iterator.hasNext()) {
-			Object listener = iterator.next();
-			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=90637
-			// if (notifier instanceof Node && (listener instanceof
-			// StructuredViewer) && (eventType ==
-			// INodeNotifier.STRUCTURE_CHANGED || (eventType ==
-			// INodeNotifier.CHANGE && changedFeature == null))) {
-			if (notifier instanceof Node && (listener instanceof StructuredViewer) && (eventType == INodeNotifier.STRUCTURE_CHANGED || (eventType == INodeNotifier.CHANGE))) {
-				if (DEBUG) {
-					System.out.println("JFaceNodeAdapter notified on event type > " + eventType); //$NON-NLS-1$
-				}
+			while (iterator.hasNext()) {
+				Object listener = iterator.next();
+				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=90637
+				// if (notifier instanceof Node && (listener instanceof
+				// StructuredViewer) && (eventType ==
+				// INodeNotifier.STRUCTURE_CHANGED || (eventType ==
+				// INodeNotifier.CHANGE && changedFeature == null))) {
+				if ((listener instanceof StructuredViewer) && (eventType == INodeNotifier.STRUCTURE_CHANGED || eventType == INodeNotifier.CONTENT_CHANGED || (eventType == INodeNotifier.CHANGE))) {
+					if (DEBUG) {
+						System.out.println("JFaceNodeAdapter notified on event type > " + eventType); //$NON-NLS-1$
+					}
 
-				// refresh on structural and "unknown" changes
-				StructuredViewer structuredViewer = (StructuredViewer) listener;
-				// https://w3.opensource.ibm.com/bugzilla/show_bug.cgi?id=5230
-				if (structuredViewer.getControl() != null) {
-					getStructureUpdater().processNode(structuredViewer, (Node) notifier);
+					// refresh on structural and "unknown" changes
+					StructuredViewer structuredViewer = (StructuredViewer) listener;
+					// https://w3.opensource.ibm.com/bugzilla/show_bug.cgi?id=5230
+					if (structuredViewer.getControl() != null) {
+						getRefreshJob().refresh(structuredViewer, (Node) notifier);
+					}
 				}
 			}
 		}
