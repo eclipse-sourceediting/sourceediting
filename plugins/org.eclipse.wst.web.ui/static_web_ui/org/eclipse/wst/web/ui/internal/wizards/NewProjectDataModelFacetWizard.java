@@ -45,7 +45,7 @@ import org.eclipse.wst.common.frameworks.datamodel.DataModelEvent;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModelListener;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModelOperation;
-import org.eclipse.wst.common.frameworks.internal.datamodel.ExtendableOperationImpl;
+import org.eclipse.wst.common.frameworks.internal.datamodel.DataModelPausibleOperationImpl;
 import org.eclipse.wst.common.frameworks.internal.datamodel.ui.DataModelWizardPage;
 import org.eclipse.wst.common.project.facet.core.IFacetedProject;
 import org.eclipse.wst.common.project.facet.core.IFacetedProjectTemplate;
@@ -300,7 +300,7 @@ public abstract class NewProjectDataModelFacetWizard extends AddRemoveFacetsWiza
 	}
 
 	protected IDataModelOperation getFacetProjectNotificationOperation() {
-		return new ExtendableOperationImpl(new AbstractDataModelOperation(this.model) {
+		return new DataModelPausibleOperationImpl(new AbstractDataModelOperation(this.model) {
 			public String getID() {
 				return "org.eclipse.wst.common.componentcore.internal.operation.FacetProjectCreationOperation"; //$NON-NLS-1$
 			}
