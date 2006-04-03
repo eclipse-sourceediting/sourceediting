@@ -10,12 +10,15 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.editor.internal.design.editparts;
 
+import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.wst.xsd.adt.design.IAnnotationProvider;
 import org.eclipse.wst.xsd.adt.design.editparts.BaseFieldEditPart;
 import org.eclipse.wst.xsd.adt.design.figures.IFieldFigure;
 import org.eclipse.wst.xsd.adt.facade.IField;
 import org.eclipse.wst.xsd.adt.outline.ITreeElement;
+import org.eclipse.wst.xsd.editor.internal.design.editpolicies.DragAndDropEditPolicy;
+import org.eclipse.wst.xsd.editor.internal.design.editpolicies.SelectionHandlesEditPolicyImpl;
 
 public class XSDBaseFieldEditPart extends BaseFieldEditPart
 {
@@ -65,4 +68,11 @@ public class XSDBaseFieldEditPart extends BaseFieldEditPart
     getFieldFigure().editPartAttached(this);
   }
 
+  protected SelectionHandlesEditPolicyImpl selectionHandlesEditPolicy = new SelectionHandlesEditPolicyImpl();
+  protected void createEditPolicies()
+  {
+    installEditPolicy(EditPolicy.DIRECT_EDIT_ROLE, adtDirectEditPolicy);
+    installEditPolicy(EditPolicy.SELECTION_FEEDBACK_ROLE, selectionHandlesEditPolicy);
+    installEditPolicy(EditPolicy.PRIMARY_DRAG_ROLE, new DragAndDropEditPolicy(getViewer(), selectionHandlesEditPolicy));
+  }
 }

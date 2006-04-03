@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.xsd.adt.design.editpolicies;
+package org.eclipse.wst.xsd.editor.internal.design.editpolicies;
                                  
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +33,8 @@ import org.eclipse.gef.handles.MoveHandleLocator;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.wst.xsd.adt.design.editparts.BaseEditPart;
+import org.eclipse.wst.xsd.adt.design.editpolicies.ADTSelectionFeedbackEditPolicy;
+import org.eclipse.wst.xsd.editor.internal.commands.DragAndDropCommand;
 
 
 public class SelectionHandlesEditPolicyImpl	extends ADTSelectionFeedbackEditPolicy

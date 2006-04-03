@@ -8,11 +8,12 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.xsd.adt.design.editpolicies;
+package org.eclipse.wst.xsd.editor.internal.design.editpolicies;
 
 import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
+import org.eclipse.wst.xsd.editor.internal.commands.DragAndDropCommand;
 
 public class DragAndDropEditPolicy extends org.eclipse.gef.editpolicies.GraphicalEditPolicy
 { 

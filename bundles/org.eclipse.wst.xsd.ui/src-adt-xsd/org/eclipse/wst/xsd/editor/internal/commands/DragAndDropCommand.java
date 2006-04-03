@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.xsd.adt.design.editpolicies;
+package org.eclipse.wst.xsd.editor.internal.commands;
 
 import java.util.ArrayList;
 import java.util.Iterator;
