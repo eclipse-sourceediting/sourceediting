@@ -30,7 +30,9 @@ public class MultiPageEditorTextSelectionNavigationLocation extends TextSelectio
   protected IEditorPart getEditorPart()
   {
     IEditorPart part = super.getEditorPart();
-    return (ITextEditor) part.getAdapter(ITextEditor.class);
+    if (part != null)
+      return (ITextEditor) part.getAdapter(ITextEditor.class);
+    return null;
   }
 
   public String getText()
