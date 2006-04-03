@@ -5,15 +5,13 @@
 	<extension point="org.eclipse.ui.editors">
 		<editor
 			name="%_UI_EDITOR_NAME"
-			extensions="xsd"
 			default="true"
 			icon="icons/XSDFile.gif"
             contributorClass="org.eclipse.wst.xsd.editor.XSDMultiPageEditorContributor"
             class="org.eclipse.wst.xsd.editor.InternalXSDMultiPageEditor"
             id="org.eclipse.wst.xsd.editor.InternalXSDMultiPageEditor">
-<!--            <contentTypeBinding
+            <contentTypeBinding
                 contentTypeId="org.eclipse.wst.xsd.core.xsdsource" />
-                -->
 		</editor>
 	</extension>
 
