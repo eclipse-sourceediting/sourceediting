@@ -19,6 +19,7 @@ public class SpecificationForAppinfoSchema
   private String namespaceURI;
   private String location;
   private ILabelProvider labelProvider;
+  private boolean isDefaultSchema = false;
 
   public SpecificationForAppinfoSchema()
   {
@@ -101,5 +102,13 @@ public class SpecificationForAppinfoSchema
   public void setLabelProvider(ILabelProvider labelProvider)
   {
     this.labelProvider = labelProvider;
+  }
+  
+  public boolean isDefautSchema(){
+	  return isDefaultSchema ;
+  }
+
+  public void setDefautSchema(){
+	  isDefaultSchema = true;
   }
 }

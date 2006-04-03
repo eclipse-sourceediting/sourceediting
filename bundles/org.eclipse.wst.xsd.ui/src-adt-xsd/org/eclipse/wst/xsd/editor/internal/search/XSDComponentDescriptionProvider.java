@@ -182,4 +182,8 @@ public class XSDComponentDescriptionProvider extends LabelProvider implements IC
       result = ELEMENT_IMAGE;
     return result;
   }
+
+  public Image getFileIcon(Object component) {
+	return XSDEditorPlugin.getXSDImage("icons/XSDFile.gif");
+  }
 }

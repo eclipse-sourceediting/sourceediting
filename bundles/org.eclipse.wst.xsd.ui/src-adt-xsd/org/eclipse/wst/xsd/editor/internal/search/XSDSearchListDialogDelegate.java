@@ -69,7 +69,8 @@ public class XSDSearchListDialogDelegate implements IComponentDialog
     	
         configuration.setDescriptionProvider(descriptionProvider);
         configuration.setSearchListProvider(searchListProvider);
-        configuration.setFilterLabelText("Name:");
+        configuration.setFilterLabelText("Name (? = any character, * = any string):");
+        configuration.setListLabelText("Elements:");
         //TODO externalize string
         dialog = new ScopedComponentSearchListDialog(shell, "Set element reference", configuration);
     }
@@ -82,6 +83,8 @@ public class XSDSearchListDialogDelegate implements IComponentDialog
       configuration.setDescriptionProvider(descriptionProvider);
       configuration.setSearchListProvider(searchListProvider);
       configuration.setNewComponentHandler(new NewTypeButtonHandler());
+      configuration.setFilterLabelText("Name (? = any character, * = any string):");
+      configuration.setListLabelText("Types:");
       dialog = new ScopedComponentSearchListDialog(shell, XSDEditorPlugin.getXSDString("_UI_LABEL_SET_TYPE"), configuration);
     }
     

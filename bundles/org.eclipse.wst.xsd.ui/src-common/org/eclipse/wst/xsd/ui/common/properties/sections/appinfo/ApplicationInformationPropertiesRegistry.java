@@ -73,8 +73,6 @@ public class ApplicationInformationPropertiesRegistry
           // If there is no display name, force the user
           // to manually create a name. Therefore, we ignore entry without
           // a display name.
-          // TODO (trung) still in testing phase,
-          // remove the comment for "continue;" when needed
           continue;
         }
 
@@ -84,11 +82,10 @@ public class ApplicationInformationPropertiesRegistry
         }
 
         SpecificationForAppinfoSchema asiAppinfoSpec = createEntry();
-        if (displayName == null)
-          displayName = namespaceURI;
         asiAppinfoSpec.setDescription(description);
         asiAppinfoSpec.setDisplayName(displayName);
         asiAppinfoSpec.setNamespaceURI(namespaceURI);
+        asiAppinfoSpec.setDefautSchema();
 
         if (labelProviderClass != null)
         {

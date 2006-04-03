@@ -41,6 +41,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
@@ -66,7 +67,7 @@ public class AddApplicationInfoDialog extends SelectionDialog implements ISelect
    * Element view. (required by LabelProvider)  */ 
   protected static Document tempDoc = new DocumentImpl();
   
-  Button addButton, removeButton;
+  Button addButton, removeButton, editButton;
 
   public AddApplicationInfoDialog(Shell parent, ApplicationInformationPropertiesRegistry registry)
   {
@@ -136,7 +137,12 @@ public class AddApplicationInfoDialog extends SelectionDialog implements ISelect
     removeButton.setText("Remove");
     removeButton.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
     removeButton.addSelectionListener(this);
-
+    
+    editButton = new Button(buttonComposite, SWT.PUSH);
+    editButton.setText("Edit");
+    editButton.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+    editButton.addSelectionListener(this);
+    
     List initialSelection = getInitialElementSelections();
     if (initialSelection != null)
       categoryTableViewer.setSelection(new StructuredSelection(initialSelection));
@@ -250,12 +256,8 @@ public class AddApplicationInfoDialog extends SelectionDialog implements ISelect
     	
     	addNewCategoryDialog.setUnavailableCategoryNames(existingNames);
     	
-    	if ( addNewCategoryDialog.open() == Window.OK ){
-    		String location = addNewCategoryDialog.getAppInfoSchemaLocation();
-    		
-    		SpecificationForAppinfoSchema schemaSpec = new SpecificationForAppinfoSchema();
-    		schemaSpec.setDisplayName(addNewCategoryDialog.getNewCategoryName());
-    		schemaSpec.setLocation(location);
+    	if ( addNewCategoryDialog.open() == Window.OK ){    		
+    		SpecificationForAppinfoSchema schemaSpec = addNewCategoryDialog.getAppinfoSpec();
     		
     		fInput.add(schemaSpec);
     		existingNames.add(schemaSpec.getDisplayName());
@@ -281,6 +283,20 @@ public class AddApplicationInfoDialog extends SelectionDialog implements ISelect
         // TODO auto select either the prev category, the next category or the first category in the Table
     	getButton(IDialogConstants.OK_ID).setEnabled(false);
     }
+    else if (e.widget == editButton)
+    {
+        // use this dialog not for adding but for editing purpose.
+        AddNewCategoryDialog dialog = new AddNewCategoryDialog(getShell(), "Edit Category");
+        if ( dialog.open() == Window.OK){
+        	TableItem[] selections = categoryTableViewer.getTable().getSelection();        	
+        	SpecificationForAppinfoSchema spec = (SpecificationForAppinfoSchema) selections[0].getData();
+        	
+			spec.setDisplayName(dialog.getNewCategoryName());
+        	spec.setLocation(dialog.getCategoryLocation());
+        	categoryTableViewer.update(spec, null);
+        	refreshElementsViewer(spec);
+        }
+    }
   }
 
   /*
@@ -303,24 +319,42 @@ public class AddApplicationInfoDialog extends SelectionDialog implements ISelect
         Object obj = ((StructuredSelection) selection).getFirstElement();
         if (obj instanceof SpecificationForAppinfoSchema)
         {
-          SpecificationForAppinfoSchema properties = (SpecificationForAppinfoSchema) obj;
+          SpecificationForAppinfoSchema spec = (SpecificationForAppinfoSchema) obj;
 
-          XSDSchema xsdSchema = getASISchemaModel(properties);
+          refreshElementsViewer(spec);
 
-          if (xsdSchema == null){
-        	  // TODO display an error Dialog telling the user that
-        	  // her selected schema file is invalid. 
-        	  return;
+          if ( spec.isDefautSchema() ){
+        	editButton.setEnabled(false);
+        	removeButton.setEnabled(false);
           }
-          
-          List allItems = buildInput(xsdSchema);
-          elementTableViewer.setInput(allItems);
+          else{
+        	editButton.setEnabled(true);
+        	removeButton.setEnabled(true);
+          }
+
           getButton(IDialogConstants.OK_ID).setEnabled(false);
         }
       }
     }
   }
-  private List buildInput(XSDSchema xsdSchema)
+  
+  private void refreshElementsViewer(SpecificationForAppinfoSchema spec) {
+	  XSDSchema xsdSchema = getASISchemaModel(spec);
+	  
+	  if (xsdSchema == null){
+		  MessageBox errDialog = new MessageBox(getShell(), SWT.ICON_ERROR);
+		  errDialog.setText("Invalid Category");
+		  errDialog.setMessage("The xsd file of the selected category cannot be parsed. \n"
+				  +"Please validate the file.");
+		  errDialog.open();
+		  return;
+	  }
+	  
+	  List allItems = buildInput(xsdSchema);
+	  elementTableViewer.setInput(allItems);
+  }
+  
+  private static List buildInput(XSDSchema xsdSchema)
   {
     List elements = xsdSchema.getElementDeclarations();
     List attributes = xsdSchema.getAttributeDeclarations();
@@ -353,7 +387,7 @@ public class AddApplicationInfoDialog extends SelectionDialog implements ISelect
   }
 
   
-  private XSDSchema getASISchemaModel(SpecificationForAppinfoSchema appInfoSchemaSpec)
+  private static XSDSchema getASISchemaModel(SpecificationForAppinfoSchema appInfoSchemaSpec)
   {
     XSDSchema xsdSchema = XSDImpl.buildXSDModel(appInfoSchemaSpec.getLocation());
     

@@ -45,8 +45,8 @@ public class AddNewCategoryDialog extends Dialog
 {
 
   private static final String SCHEMA_LABEL = "Schema:";
-  private static final String DIALOG_TITLE = "Add Category";
   private static final String NAME_LABEL = "Name:";
+  private String dialogTitle = "Add Category";
   private MenuManager browseMenu;
   private Label name;
   private Text nameText;
@@ -67,6 +67,12 @@ public class AddNewCategoryDialog extends Dialog
     super(parentShell);
   }
 
+  public AddNewCategoryDialog(Shell parentShell, String dialogTitle)
+  {
+    super(parentShell);
+    this.dialogTitle = dialogTitle;
+  }
+  
   /**
    * receive a List of names which have already been added to the category list
    * 
@@ -78,6 +84,24 @@ public class AddNewCategoryDialog extends Dialog
     invalidNames = unavailNames;
   }
 
+  public String getNewCategoryName()
+  {
+    return categoryName.trim();
+  }
+
+  public String getCategoryLocation()
+  {
+    return appInfoSchemaLocation;
+  }
+  
+  public SpecificationForAppinfoSchema getAppinfoSpec(){
+	SpecificationForAppinfoSchema schemaSpec = new SpecificationForAppinfoSchema();
+	schemaSpec.setDisplayName(getNewCategoryName());
+	schemaSpec.setLocation(getCategoryLocation());
+	
+	return schemaSpec;
+  }
+  
   // we initially disable the Ok button
   protected Control createButtonBar(Composite parent)
   {
@@ -88,7 +112,7 @@ public class AddNewCategoryDialog extends Dialog
 
   protected Control createDialogArea(Composite parent)
   {
-    getShell().setText(DIALOG_TITLE);
+    getShell().setText(dialogTitle);
 
     Composite mainComposite = (Composite) super.createDialogArea(parent);
     GridLayout layout = new GridLayout(3, false);
@@ -292,13 +316,4 @@ public class AddNewCategoryDialog extends Dialog
     }
   }
 
-  public String getNewCategoryName()
-  {
-    return categoryName.trim();
-  }
-
-  public String getAppInfoSchemaLocation()
-  {
-    return appInfoSchemaLocation;
-  }
 }
