@@ -104,7 +104,7 @@ public class NewComponentDialog extends Dialog implements ModifyListener
     composite.setLayoutData(gdFill);
 
     Label nameLabel = new Label(composite, SWT.NONE);
-    nameLabel.setText("name");//XSDEditorPlugin.getXSDString("_UI_LABEL_NAME")); //$NON-NLS-1$
+    nameLabel.setText("Name:");//XSDEditorPlugin.getXSDString("_UI_LABEL_NAME")); //$NON-NLS-1$
 
     nameField = new Text(composite, SWT.SINGLE | SWT.BORDER);
     GridData gd= new GridData();

@@ -24,6 +24,7 @@ import org.eclipse.wst.common.ui.internal.search.dialogs.ComponentSpecification;
 import org.eclipse.wst.common.ui.internal.search.dialogs.ScopedComponentSearchListDialog;
 import org.eclipse.wst.xsd.adt.edit.IComponentDialog;
 import org.eclipse.wst.xsd.editor.XSDEditorPlugin;
+import org.eclipse.wst.xsd.editor.internal.dialogs.NewElementButtonHandler;
 import org.eclipse.wst.xsd.editor.internal.dialogs.NewTypeButtonHandler;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.util.XSDConstants;
@@ -71,6 +72,7 @@ public class XSDSearchListDialogDelegate implements IComponentDialog
         configuration.setSearchListProvider(searchListProvider);
         configuration.setFilterLabelText("Name (? = any character, * = any string):");
         configuration.setListLabelText("Elements:");
+        configuration.setNewComponentHandler(new NewElementButtonHandler());
         //TODO externalize string
         dialog = new ScopedComponentSearchListDialog(shell, "Set element reference", configuration);
     }

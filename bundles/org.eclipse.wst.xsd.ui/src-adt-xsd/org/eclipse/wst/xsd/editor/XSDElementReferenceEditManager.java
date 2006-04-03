@@ -10,6 +10,7 @@ import org.eclipse.wst.common.ui.internal.search.dialogs.ComponentSpecification;
 import org.eclipse.wst.common.ui.internal.search.dialogs.IComponentDescriptionProvider;
 import org.eclipse.wst.xsd.adt.edit.ComponentReferenceEditManager;
 import org.eclipse.wst.xsd.adt.edit.IComponentDialog;
+import org.eclipse.wst.xsd.editor.internal.dialogs.NewElementDialog;
 import org.eclipse.wst.xsd.editor.internal.search.XSDSearchListDialogDelegate;
 import org.eclipse.wst.xsd.ui.common.commands.AddXSDElementCommand;
 import org.eclipse.wst.xsd.ui.common.commands.UpdateElementReferenceAndManageDirectivesCommand;
@@ -63,7 +64,7 @@ public class XSDElementReferenceEditManager implements ComponentReferenceEditMan
 
   public IComponentDialog getNewDialog()
   {
-    return null;
+    return new NewElementDialog();
   }
 
   public ComponentSpecification[] getQuickPicks()
