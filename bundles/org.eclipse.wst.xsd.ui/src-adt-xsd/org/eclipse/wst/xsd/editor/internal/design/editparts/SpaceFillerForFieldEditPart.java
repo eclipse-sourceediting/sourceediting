@@ -13,10 +13,10 @@ package org.eclipse.wst.xsd.editor.internal.design.editparts;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.MarginBorder;
-import org.eclipse.wst.xsd.adt.design.editparts.BaseEditPart;
+import org.eclipse.wst.xsd.adt.design.editparts.BaseFieldEditPart;
 import org.eclipse.wst.xsd.editor.XSDEditorPlugin;
 
-public class SpaceFillerForFieldEditPart extends BaseEditPart
+public class SpaceFillerForFieldEditPart extends BaseFieldEditPart
 {
   Label space;
   public SpaceFillerForFieldEditPart()
@@ -38,5 +38,6 @@ public class SpaceFillerForFieldEditPart extends BaseEditPart
 
   protected void createEditPolicies()
   {
+
   }
 }

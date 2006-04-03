@@ -32,8 +32,10 @@ import org.eclipse.wst.xsd.adt.design.directedit.LabelEditManager;
 import org.eclipse.wst.xsd.adt.design.directedit.TypeReferenceDirectEditManager;
 import org.eclipse.wst.xsd.adt.design.editparts.model.FocusTypeColumn;
 import org.eclipse.wst.xsd.adt.design.editpolicies.ADTDirectEditPolicy;
-import org.eclipse.wst.xsd.adt.design.editpolicies.ADTSelectionFeedbackEditPolicy;
+import org.eclipse.wst.xsd.adt.design.editpolicies.DragAndDropEditPolicy;
+import org.eclipse.wst.xsd.adt.design.editpolicies.GraphNodeDragTracker;
 import org.eclipse.wst.xsd.adt.design.editpolicies.IADTUpdateCommand;
+import org.eclipse.wst.xsd.adt.design.editpolicies.SelectionHandlesEditPolicyImpl;
 import org.eclipse.wst.xsd.adt.design.figures.IFieldFigure;
 import org.eclipse.wst.xsd.adt.facade.IField;
 import org.eclipse.wst.xsd.adt.facade.IType;
@@ -117,13 +119,14 @@ public class BaseFieldEditPart extends BaseTypeConnectingEditPart implements INa
     return connectionFigure;
   }
 
-
+  protected SelectionHandlesEditPolicyImpl selectionHandlesEditPolicy = new SelectionHandlesEditPolicyImpl();
   protected void createEditPolicies()
   {
     installEditPolicy(EditPolicy.DIRECT_EDIT_ROLE, adtDirectEditPolicy);
-    installEditPolicy(EditPolicy.SELECTION_FEEDBACK_ROLE, new ADTSelectionFeedbackEditPolicy());
+    installEditPolicy(EditPolicy.SELECTION_FEEDBACK_ROLE, selectionHandlesEditPolicy);
+    installEditPolicy(EditPolicy.PRIMARY_DRAG_ROLE, new DragAndDropEditPolicy(getViewer(), selectionHandlesEditPolicy));
   }
-
+ 
   public void refresh()
   {
     super.refresh();
@@ -152,7 +155,7 @@ public class BaseFieldEditPart extends BaseTypeConnectingEditPart implements INa
 
   public DragTracker getDragTracker(Request request)
   {
-    return super.getDragTracker(request);
+    return new GraphNodeDragTracker((EditPart)this);
   }
   
   /*
