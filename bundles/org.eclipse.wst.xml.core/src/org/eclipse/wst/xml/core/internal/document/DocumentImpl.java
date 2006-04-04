@@ -20,6 +20,7 @@ package org.eclipse.wst.xml.core.internal.document;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.xerces.dom.TreeWalkerImpl;
 import org.eclipse.wst.sse.core.internal.ltk.modelhandler.IModelHandler;
 import org.eclipse.wst.xml.core.internal.commentelement.impl.CommentElementRegistry;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
@@ -114,7 +115,7 @@ public class DocumentImpl extends NodeContainer implements IDOMDocument {
 	// is not needed.
 	private static final boolean usetagnamecache = true;
 
-	//private DocumentTypeAdapter documentTypeAdapter = null;
+	// private DocumentTypeAdapter documentTypeAdapter = null;
 
 	private DOMModelImpl model = null;
 	private TagNameCache tagNameCache;
@@ -303,6 +304,7 @@ public class DocumentImpl extends NodeContainer implements IDOMDocument {
 	}
 
 	public Element createCommentElement(String tagName, boolean isJSPTag) throws DOMException {
+		Element result = null;
 		if (!isJSPType() && isJSPTag) {
 			throw new DOMException(DOMException.INVALID_MODIFICATION_ERR, new String());
 		}
@@ -310,11 +312,12 @@ public class DocumentImpl extends NodeContainer implements IDOMDocument {
 		element.setJSPTag(isJSPTag);
 		CommentElementRegistry registry = CommentElementRegistry.getInstance();
 		if (registry.setupCommentElement(element)) {
-			return element;
+			result = element;
 		}
 		else {
 			throw new DOMException(DOMException.INVALID_CHARACTER_ERR, new String());
 		}
+		return result;
 	}
 
 	/**
@@ -463,10 +466,20 @@ public class DocumentImpl extends NodeContainer implements IDOMDocument {
 	}
 
 	/**
+	 * Return an instance of tree walk
+	 */
+	/* (non-Javadoc)
+	 * @see org.w3c.dom.traversal.DocumentTraversal#createTreeWalker(org.w3c.dom.Node, int, org.w3c.dom.traversal.NodeFilter, boolean)
 	 */
 	public TreeWalker createTreeWalker(Node root, int whatToShow, NodeFilter filter, boolean entityReferenceExpansion) {
-		// not suppoerted
-		return null;
+		if (root == null) {
+			String msg = "Program Error: root node can not be null for TreeWalker";
+			throw new DOMException(DOMException.NOT_SUPPORTED_ERR, msg);
+		}
+		//ISSUE: we just use Xerces implementation for now, but longer term, we should make a 
+		// thread/job safe version (as well as not rely on Xerces "impl" class. 
+		return new TreeWalkerImpl(root, whatToShow, filter, entityReferenceExpansion);
+
 	}
 
 	private DocumentType findDoctype(Node node) {
@@ -667,20 +680,20 @@ public class DocumentImpl extends NodeContainer implements IDOMDocument {
 
 	/**
 	 */
-//	protected DocumentTypeAdapter getDocumentTypeAdapter() {
-//		// be sure to release since possibly changing
-//		if (this.documentTypeAdapter != null) {
-//			this.documentTypeAdapter.release();
-//		}
-//		this.documentTypeAdapter = (DocumentTypeAdapter) getAdapterFor(DocumentTypeAdapter.class);
-//		if (this.documentTypeAdapter == null) {
-//			// add default adapter
-//			this.documentTypeAdapter = new DocumentTypeAdapterImpl(this);
-//			addAdapter(this.documentTypeAdapter);
-//		}
-//		return this.documentTypeAdapter;
-//	}
-
+	// protected DocumentTypeAdapter getDocumentTypeAdapter() {
+	// // be sure to release since possibly changing
+	// if (this.documentTypeAdapter != null) {
+	// this.documentTypeAdapter.release();
+	// }
+	// this.documentTypeAdapter = (DocumentTypeAdapter)
+	// getAdapterFor(DocumentTypeAdapter.class);
+	// if (this.documentTypeAdapter == null) {
+	// // add default adapter
+	// this.documentTypeAdapter = new DocumentTypeAdapterImpl(this);
+	// addAdapter(this.documentTypeAdapter);
+	// }
+	// return this.documentTypeAdapter;
+	// }
 	/**
 	 */
 	public String getDocumentTypeId() {
@@ -992,13 +1005,12 @@ public class DocumentImpl extends NodeContainer implements IDOMDocument {
 
 	/**
 	 */
-//	protected void releaseDocumentType() {
-//		if (this.documentTypeAdapter == null)
-//			return;
-//		this.documentTypeAdapter.release();
-//		this.documentTypeAdapter = null;
-//	}
-
+	// protected void releaseDocumentType() {
+	// if (this.documentTypeAdapter == null)
+	// return;
+	// this.documentTypeAdapter.release();
+	// this.documentTypeAdapter = null;
+	// }
 	/**
 	 * <p>
 	 * EXPERIMENTAL! Based on the <a
