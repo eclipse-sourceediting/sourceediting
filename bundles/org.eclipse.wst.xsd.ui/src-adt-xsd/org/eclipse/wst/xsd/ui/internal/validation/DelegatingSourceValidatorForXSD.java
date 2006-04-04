@@ -21,7 +21,7 @@ import org.eclipse.wst.xml.ui.internal.validation.DelegatingSourceValidator;
  */
 public class DelegatingSourceValidatorForXSD extends DelegatingSourceValidator
 {                                                
-  final private static String VALIDATOR_CLASS = "org.eclipse.wst.xsd.core.internal.validation.eclipse.Validator"; 
+  final private static String VALIDATOR_CLASS = "org.eclipse.wst.xsd.core.internal.validation.eclipse.XSDDelegatingValidator"; 
 
   public DelegatingSourceValidatorForXSD()
   { super();
