@@ -19,17 +19,16 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IProduct;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jem.util.emf.workbench.ProjectUtilities;
 import org.eclipse.jem.util.logger.proxy.Logger;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizardPage;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.INewWizard;
@@ -193,7 +192,7 @@ public abstract class NewProjectDataModelFacetWizard extends AddRemoveFacetsWiza
 	 * on the Wizard's WTP Operation Data Model).
 	 * </p>
 	 * <p>
-	 * The default implementation returns the J2EE perspective id unless
+	 * The default implementation returns no perspective id unless
      * overriden by product definition via the "wtp.project.final.perspective"
      * property.
 	 * </p>
@@ -201,17 +200,10 @@ public abstract class NewProjectDataModelFacetWizard extends AddRemoveFacetsWiza
 	 * @return Returns the ID of the Perspective which is preferred by this wizard upon completion.
 	 */
     
-	protected String getFinalPerspectiveID() 
-    {
-        final IProduct product = Platform.getProduct();
-        String perspective = null;
-        if (product != null)
-        	perspective = product.getProperty( IProductConstants.FINAL_PERSPECTIVE );
-        if(perspective == null)
-        	perspective = "org.eclipse.jst.j2ee.J2EEPerspective"; //$NON-NLS-1$
-		return perspective;
+	protected String getFinalPerspectiveID() {
+		return null;
 	}
-
+    
 	/**
 	 * {@inheritDoc}
 	 * 
@@ -278,7 +270,7 @@ public abstract class NewProjectDataModelFacetWizard extends AddRemoveFacetsWiza
 	 */
 	protected void postPerformFinish() throws InvocationTargetException {
 		if (getFinalPerspectiveID() != null && getFinalPerspectiveID().length() > 0) {
-			IConfigurationElement element = new DelegateConfigurationElement(configurationElement) {
+			final IConfigurationElement element = new DelegateConfigurationElement(configurationElement) {
 				public String getAttribute(String aName) {
 					if (aName.equals("finalPerspective")) { //$NON-NLS-1$
 						return getFinalPerspectiveID();
@@ -286,9 +278,18 @@ public abstract class NewProjectDataModelFacetWizard extends AddRemoveFacetsWiza
 					return super.getAttribute(aName);
 				}
 			};
-			BasicNewProjectResourceWizard.updatePerspective(element);
-		} else
-			BasicNewProjectResourceWizard.updatePerspective(configurationElement);
+			Display.getDefault().asyncExec(new Runnable() {
+			    public void run() {
+			    	BasicNewProjectResourceWizard.updatePerspective(element);
+			    }
+			});
+		} else {
+			Display.getDefault().asyncExec(new Runnable() {
+			    public void run() {
+			    	BasicNewProjectResourceWizard.updatePerspective(configurationElement);
+			    }
+			});
+		}
 		
 		String projName = getProjectName();
 		BasicNewResourceWizard.selectAndReveal(ProjectUtilities.getProject(projName), WSTWebUIPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow());

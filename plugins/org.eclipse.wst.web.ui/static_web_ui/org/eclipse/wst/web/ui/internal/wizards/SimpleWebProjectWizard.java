@@ -6,6 +6,8 @@ import org.eclipse.wst.common.frameworks.datamodel.DataModelFactory;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
 import org.eclipse.wst.common.project.facet.core.IFacetedProjectTemplate;
 import org.eclipse.wst.common.project.facet.core.ProjectFacetsManager;
+import org.eclipse.wst.project.facet.IProductConstants;
+import org.eclipse.wst.project.facet.ProductManager;
 import org.eclipse.wst.project.facet.SimpleWebFacetProjectCreationDataModelProvider;
 import org.eclipse.wst.web.internal.ResourceHandler;
 import org.eclipse.wst.web.ui.internal.WSTWebUIPlugin;
@@ -36,6 +38,10 @@ public class SimpleWebProjectWizard extends NewProjectDataModelFacetWizard {
 
 	protected IWizardPage createFirstPage() {
 		return new SimpleWebProjectFirstPage(model, "first.page"); //$NON-NLS-1$
+	}
+	
+	protected String getFinalPerspectiveID() {
+        return ProductManager.getProperty(IProductConstants.FINAL_PERSPECTIVE_STATICWEB);
 	}
 
 }
