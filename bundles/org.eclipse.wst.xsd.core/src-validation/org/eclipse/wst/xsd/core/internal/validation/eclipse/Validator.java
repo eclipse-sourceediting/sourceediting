@@ -73,4 +73,16 @@ public class Validator extends AbstractNestedValidator
 	  message.setAttribute(SQUIGGLE_NAME_OR_VALUE_ATTRIBUTE, messageInfo[1]);
 	}
   }
+
+  /*
+   * (non-Javadoc)
+   * @see org.eclipse.wst.xml.core.internal.validation.core.AbstractNestedValidator#getValidatorID()
+   */
+  protected String getValidatorID()
+  {
+    // Because this class is used as a delegate, return the id of the validator
+    // which delegates to this class.
+
+    return XSDDelegatingValidator.class.getName();
+  }
 }

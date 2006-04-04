@@ -100,7 +100,7 @@ public abstract class AbstractNestedValidator implements IValidatorJob
 	// Should I know that I'm validating a project as opposed to files?
 	else 
     {
-      Object []parms = {this.getClass().getName()};
+      Object []parms = {getValidatorID()};
       Collection files = (Collection) context.loadModel(GET_PROJECT_FILES, parms);
       Iterator iter = files.iterator();
       while (iter.hasNext() && !reporter.isCancelled()) 
@@ -117,6 +117,18 @@ public abstract class AbstractNestedValidator implements IValidatorJob
 	if(reporter.isCancelled())
 	  return Status.CANCEL_STATUS;
     return Status.OK_STATUS;
+  }
+  
+  /**
+   * Provides the id of this validator. The ID is used by the validation
+   * framework. It usually is the fully qualified class name of the class
+   * implementing the IValidator interface.
+   * 
+   * @return a String with the ID of this validator.
+   */
+  protected String getValidatorID()
+  {
+    return this.getClass().getName();
   }
   
   /**

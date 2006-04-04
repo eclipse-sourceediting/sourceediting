@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
@@ -28,6 +29,7 @@ import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.validation.internal.core.IMessageAccess;
 import org.eclipse.wst.validation.internal.core.ValidationException;
 import org.eclipse.wst.validation.internal.provisional.core.IMessage;
+import org.eclipse.wst.validation.internal.provisional.core.IProjectValidationContext;
 import org.eclipse.wst.validation.internal.provisional.core.IReporter;
 import org.eclipse.wst.validation.internal.provisional.core.IValidationContext;
 import org.eclipse.wst.validation.internal.provisional.core.IValidator;
@@ -75,7 +77,7 @@ public abstract class DelegatingSourceValidator implements IValidator {
 	}
 
 	// My Implementation of IHelper
-	class MyHelper implements IValidationContext {
+	class MyHelper implements IProjectValidationContext {
 		InputStream inputStream;
 
 		IFile file;
@@ -107,6 +109,13 @@ public abstract class DelegatingSourceValidator implements IValidator {
 			if (file != null)
 				return new String[]{file.getFullPath().toString()};
 			return new String[0];
+		}
+
+		public IProject getProject() {
+      if (file != null) {        
+        return file.getProject();
+      }
+      return null;
 		}
 	}
 

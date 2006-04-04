@@ -40,12 +40,20 @@
 			
 			<run
          async="true"
-         class="org.eclipse.wst.xsd.core.internal.validation.eclipse.Validator"
+         class="org.eclipse.wst.xsd.core.internal.validation.eclipse.XSDDelegatingValidator"
          enabled="true"
          fullBuild="true"
          incremental="true">
 			</run>
 		</validator>
 	</extension>
+
+	<extension
+       point="org.eclipse.wst.validation.validatorDelegates">
+    	<delegate
+        	class="org.eclipse.wst.xsd.core.internal.validation.eclipse.Validator"
+			name="%_UI_XERCES_VALIDATOR_DELEGATE"
+        	target="org.eclipse.wst.xsd.core.internal.validation.eclipse.XSDDelegatingValidator"/>
+	 </extension>	
 
 </plugin>
