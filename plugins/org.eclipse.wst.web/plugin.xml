@@ -60,8 +60,8 @@
 	<extension point="org.eclipse.wst.common.project.facet.core.facets">
 
     <project-facet id="wst.web">
-      <label>Static Web Module</label>
-      <description>Enables the project to be deployed as a static web module.</description>
+      <label>%SIMPLE_WEB_LABEL</label>
+      <description>%SIMPLE_WEB_DESCRIPTION</description>
       <icon>icons/full/obj16/webstatic_deploy.gif</icon>
     </project-facet>
 
@@ -83,7 +83,7 @@
 
         
     <template id="template.wst.web">
-      <label>Simple Web Project</label>
+      <label>%SIMPLE_WEB_TEMPLATE</label>
       <fixed facet="wst.web"/>
     </template>
 
