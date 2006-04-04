@@ -1145,7 +1145,8 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor {
 			}
 		}
 		
-		addTemplates(request, TemplateContextTypeIdsJSP.ALL);
+		// bug115927 use original document position for all/any region templates
+		addTemplates(request, TemplateContextTypeIdsJSP.ALL, documentPosition);
 		return request;
 	}
 
@@ -1163,6 +1164,17 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor {
 	 * @param context
 	 */
 	private void addTemplates(ContentAssistRequest contentAssistRequest, String context) {
+		addTemplates(contentAssistRequest, context, contentAssistRequest.getReplacementBeginPosition());
+	}
+	
+	/**
+	 * Adds templates to the list of proposals
+	 * 
+	 * @param contentAssistRequest
+	 * @param context
+	 * @param startOffset
+	 */
+	private void addTemplates(ContentAssistRequest contentAssistRequest, String context, int startOffset) {
 		if (contentAssistRequest == null)
 			return;
 		
@@ -1174,7 +1186,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor {
 
 			if (getTemplateCompletionProcessor() != null) {
 				getTemplateCompletionProcessor().setContextType(context);
-				ICompletionProposal[] proposals = getTemplateCompletionProcessor().computeCompletionProposals(fTextViewer, contentAssistRequest.getReplacementBeginPosition());
+				ICompletionProposal[] proposals = getTemplateCompletionProcessor().computeCompletionProposals(fTextViewer, startOffset);
 				for (int i = 0; i < proposals.length; ++i) {
 					if (useProposalList)
 						contentAssistRequest.addProposal(proposals[i]);
@@ -1184,8 +1196,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor {
 			}
 		}
 	}
-
-
+	
 	protected void addEntityProposals(ContentAssistRequest contentAssistRequest, int documentPosition, ITextRegion completionRegion, IDOMNode treeNode) {
 		// ignore
 	}
