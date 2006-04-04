@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -111,9 +111,20 @@ public class HTMLContentAssistProcessor extends AbstractContentAssistProcessor i
 	 * @param context
 	 */
 	private void addTemplates(ContentAssistRequest contentAssistRequest, String context) {
+		addTemplates(contentAssistRequest, context, contentAssistRequest.getReplacementBeginPosition());
+	}
+	
+	/**
+	 * Adds templates to the list of proposals
+	 * 
+	 * @param contentAssistRequest
+	 * @param context
+	 * @param startOffset
+	 */
+	private void addTemplates(ContentAssistRequest contentAssistRequest, String context, int startOffset) {
 		if (contentAssistRequest == null)
 			return;
-
+		
 		// if already adding template proposals for a certain context type, do
 		// not add again
 		if (!fTemplateContexts.contains(context)) {
@@ -122,7 +133,7 @@ public class HTMLContentAssistProcessor extends AbstractContentAssistProcessor i
 
 			if (getTemplateCompletionProcessor() != null) {
 				getTemplateCompletionProcessor().setContextType(context);
-				ICompletionProposal[] proposals = getTemplateCompletionProcessor().computeCompletionProposals(fTextViewer, contentAssistRequest.getReplacementBeginPosition());
+				ICompletionProposal[] proposals = getTemplateCompletionProcessor().computeCompletionProposals(fTextViewer, startOffset);
 				for (int i = 0; i < proposals.length; ++i) {
 					if (useProposalList)
 						contentAssistRequest.addProposal(proposals[i]);
@@ -143,7 +154,8 @@ public class HTMLContentAssistProcessor extends AbstractContentAssistProcessor i
 
 	protected ContentAssistRequest computeCompletionProposals(int documentPosition, String matchString, ITextRegion completionRegion, IDOMNode treeNode, IDOMNode xmlnode) {
 		ContentAssistRequest request = super.computeCompletionProposals(documentPosition, matchString, completionRegion, treeNode, xmlnode);
-		addTemplates(request, TemplateContextTypeIdsHTML.ALL);
+		// bug115927 use original document position for all/any region templates
+		addTemplates(request, TemplateContextTypeIdsHTML.ALL, documentPosition);
 		return request;
 	}
 

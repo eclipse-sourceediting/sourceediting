@@ -65,9 +65,20 @@ public class XMLContentAssistProcessor extends AbstractContentAssistProcessor im
 	 * @param context
 	 */
 	private void addTemplates(ContentAssistRequest contentAssistRequest, String context) {
+		addTemplates(contentAssistRequest, context, contentAssistRequest.getReplacementBeginPosition());
+	}
+	
+	/**
+	 * Adds templates to the list of proposals
+	 * 
+	 * @param contentAssistRequest
+	 * @param context
+	 * @param startOffset
+	 */
+	private void addTemplates(ContentAssistRequest contentAssistRequest, String context, int startOffset) {
 		if (contentAssistRequest == null)
 			return;
-
+		
 		// if already adding template proposals for a certain context type, do
 		// not add again
 		if (!fTemplateContexts.contains(context)) {
@@ -76,7 +87,7 @@ public class XMLContentAssistProcessor extends AbstractContentAssistProcessor im
 
 			if (getTemplateCompletionProcessor() != null) {
 				getTemplateCompletionProcessor().setContextType(context);
-				ICompletionProposal[] proposals = getTemplateCompletionProcessor().computeCompletionProposals(fTextViewer, contentAssistRequest.getReplacementBeginPosition());
+				ICompletionProposal[] proposals = getTemplateCompletionProcessor().computeCompletionProposals(fTextViewer, startOffset);
 				for (int i = 0; i < proposals.length; ++i) {
 					if (useProposalList)
 						contentAssistRequest.addProposal(proposals[i]);
@@ -89,7 +100,8 @@ public class XMLContentAssistProcessor extends AbstractContentAssistProcessor im
 	
 	protected ContentAssistRequest computeCompletionProposals(int documentPosition, String matchString, ITextRegion completionRegion, IDOMNode treeNode, IDOMNode xmlnode) {
 		ContentAssistRequest request = super.computeCompletionProposals(documentPosition, matchString, completionRegion, treeNode, xmlnode);
-		addTemplates(request, TemplateContextTypeIdsXML.ALL);
+		// bug115927 use original document position for all/any region templates
+		addTemplates(request, TemplateContextTypeIdsXML.ALL, documentPosition);
 		return request;
 	}
 	
