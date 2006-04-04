@@ -164,7 +164,7 @@ public class DragAndDropCommand extends BaseCommand
         	previousRefComponent = (XSDConcreteComponent)((XSDBaseAdapter)previousChildRefEditPart.getModel()).getTarget();
           }
         }
-        System.out.println(previousRefComponent + "\n   " + nextRefComponent);
+//        System.out.println(previousRefComponent + "\n   " + nextRefComponent);
         action = new MoveAction(targetModelGroup, concreteComponentList, previousRefComponent, nextRefComponent);
         canExecute = action.canMove();
       }            
