@@ -88,12 +88,14 @@ public class XMLFilesPreferencePage extends AbstractPreferencePage {
 		fEndOfLineCode = createDropDownBox(creatingOrSavingGroup);
 		populateLineDelimiters();
 	}
-	
+
 	protected void createContentsForValidatingGroup(Composite parent) {
 		Group validatingGroup = createGroup(parent, 2);
 		validatingGroup.setText(XMLUIMessages.Validating_files);
 
-		fWarnNoGrammar = createCheckBox(validatingGroup, XMLUIMessages.Warn_no_grammar_specified);
+		if (fWarnNoGrammar == null) {
+			fWarnNoGrammar = createCheckBox(validatingGroup, XMLUIMessages.Warn_no_grammar_specified);
+		}
 	}
 
 	public void dispose() {
@@ -172,11 +174,14 @@ public class XMLFilesPreferencePage extends AbstractPreferencePage {
 		else
 			setCurrentEOLCode(CommonEncodingPreferenceNames.NO_TRANSLATION);
 	}
-	
-	protected void initializeValuesForValidatingGroup(){
+
+	protected void initializeValuesForValidatingGroup() {
 		boolean warnNoGrammarButtonSelected = getModelPreferences().getBoolean(XMLCorePreferenceNames.WARN_NO_GRAMMAR);
-		
-		fWarnNoGrammar.setSelection(warnNoGrammarButtonSelected);
+
+
+		if (fWarnNoGrammar != null) {
+			fWarnNoGrammar.setSelection(warnNoGrammarButtonSelected);
+		}
 	}
 
 	protected void performDefaults() {
@@ -205,11 +210,13 @@ public class XMLFilesPreferencePage extends AbstractPreferencePage {
 		else
 			setCurrentEOLCode(CommonEncodingPreferenceNames.NO_TRANSLATION);
 	}
-	
-	protected void performDefaultsForValidatingGroup(){
+
+	protected void performDefaultsForValidatingGroup() {
 		boolean warnNoGrammarButtonSelected = getModelPreferences().getDefaultBoolean(XMLCorePreferenceNames.WARN_NO_GRAMMAR);
-		
-		fWarnNoGrammar.setSelection(warnNoGrammarButtonSelected);
+
+		if (fWarnNoGrammar != null) {
+			fWarnNoGrammar.setSelection(warnNoGrammarButtonSelected);
+		}
 	}
 
 	public boolean performOk() {
@@ -271,10 +278,12 @@ public class XMLFilesPreferencePage extends AbstractPreferencePage {
 		String eolCode = getCurrentEOLCode();
 		getModelPreferences().setValue(CommonEncodingPreferenceNames.END_OF_LINE_CODE, eolCode);
 	}
-	
-	protected void storeValuesForValidatingGroup(){
-		boolean warnNoGrammarButtonSelected = fWarnNoGrammar.getSelection();
-		getModelPreferences().setValue(XMLCorePreferenceNames.WARN_NO_GRAMMAR, warnNoGrammarButtonSelected);
+
+	protected void storeValuesForValidatingGroup() {
+		if (fWarnNoGrammar != null) {
+			boolean warnNoGrammarButtonSelected = fWarnNoGrammar.getSelection();
+			getModelPreferences().setValue(XMLCorePreferenceNames.WARN_NO_GRAMMAR, warnNoGrammarButtonSelected);
+		}
 	}
 
 	protected void validateValues() {
