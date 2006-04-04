@@ -28,13 +28,19 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
+import org.eclipse.wst.common.frameworks.internal.DoNotUseMeThisWillBeDeletedPost15;
 import org.eclipse.wst.common.frameworks.internal.datamodel.ui.DataModelWizardPage;
 import org.eclipse.wst.common.frameworks.internal.ui.WTPCommonUIResourceHandler;
 import org.eclipse.wst.web.internal.ResourceHandler;
 import org.eclipse.wst.web.internal.WSTWebPlugin;
 import org.eclipse.wst.web.internal.operation.ISimpleWebModuleCreationDataModelProperties;
 
-class SimpleWebModuleWizardBasePage extends DataModelWizardPage implements ISimpleWebModuleCreationDataModelProperties{
+/**
+ * This has been slated for removal post WTP 1.5. Do not use this class/interface
+ * 
+ * @deprecated
+ */
+class SimpleWebModuleWizardBasePage extends DataModelWizardPage implements ISimpleWebModuleCreationDataModelProperties, DoNotUseMeThisWillBeDeletedPost15{
 	public Text projectNameField = null;
 	protected Text locationPathField = null;
 	protected Button browseButton = null;

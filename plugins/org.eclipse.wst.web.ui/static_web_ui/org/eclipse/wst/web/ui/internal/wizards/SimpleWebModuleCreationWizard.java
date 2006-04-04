@@ -17,12 +17,18 @@ import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModelProvider;
+import org.eclipse.wst.common.frameworks.internal.DoNotUseMeThisWillBeDeletedPost15;
 import org.eclipse.wst.common.frameworks.internal.datamodel.ui.DataModelWizard;
 import org.eclipse.wst.web.internal.ResourceHandler;
 import org.eclipse.wst.web.internal.operation.SimpleWebModuleCreationDataModelProvider;
 import org.eclipse.wst.web.ui.internal.WSTWebUIPlugin;
 
-public class SimpleWebModuleCreationWizard extends DataModelWizard implements IExecutableExtension, INewWizard {
+/**
+ * This has been slated for removal post WTP 1.5. Do not use this class/interface
+ * 
+ * @deprecated
+ */
+public class SimpleWebModuleCreationWizard extends DataModelWizard implements IExecutableExtension, INewWizard, DoNotUseMeThisWillBeDeletedPost15 {
 
 	public SimpleWebModuleCreationWizard(IDataModel model) {
 		super(model);

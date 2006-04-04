@@ -23,10 +23,16 @@ import org.eclipse.wst.common.componentcore.datamodel.properties.IFacetProjectCr
 import org.eclipse.wst.common.frameworks.datamodel.AbstractDataModelOperation;
 import org.eclipse.wst.common.frameworks.datamodel.DataModelFactory;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
+import org.eclipse.wst.common.frameworks.internal.DoNotUseMeThisWillBeDeletedPost15;
 import org.eclipse.wst.project.facet.ISimpleWebFacetInstallDataModelProperties;
 import org.eclipse.wst.project.facet.SimpleWebFacetInstallDataModelProvider;
 
-public class StaticWebModuleCreationFacetOperation extends AbstractDataModelOperation {
+/**
+ * This has been slated for removal post WTP 1.5. Do not use this class/interface
+ * 
+ * @deprecated
+ */
+public class StaticWebModuleCreationFacetOperation extends AbstractDataModelOperation implements DoNotUseMeThisWillBeDeletedPost15 {
 
 	public StaticWebModuleCreationFacetOperation(IDataModel dataModel) {
 		super(dataModel);

@@ -11,8 +11,15 @@
 package org.eclipse.wst.web.internal.operation;
 
 import org.eclipse.wst.common.componentcore.datamodel.properties.IComponentCreationDataModelProperties;
+import org.eclipse.wst.common.frameworks.internal.DoNotUseMeThisWillBeDeletedPost15;
 
-public interface ISimpleWebModuleCreationDataModelProperties extends IComponentCreationDataModelProperties {
+/**
+ * This has been slated for removal post WTP 1.5. Do not use this class/interface
+ * 
+ * @deprecated
+ * 
+ */
+public interface ISimpleWebModuleCreationDataModelProperties extends IComponentCreationDataModelProperties, DoNotUseMeThisWillBeDeletedPost15 {
 	
 	/**
      * Optional, type String, the user defined name of web contents folder

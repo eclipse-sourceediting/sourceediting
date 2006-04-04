@@ -19,9 +19,15 @@ import org.eclipse.wst.common.componentcore.internal.operation.ComponentCreation
 import org.eclipse.wst.common.frameworks.datamodel.DataModelFactory;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModelOperation;
+import org.eclipse.wst.common.frameworks.internal.DoNotUseMeThisWillBeDeletedPost15;
 import org.eclipse.wst.common.frameworks.internal.operations.IProjectCreationProperties;
 
-public class SimpleWebModuleCreationDataModelProvider extends ComponentCreationDataModelProvider implements ISimpleWebModuleCreationDataModelProperties {
+/**
+ * This has been slated for removal post WTP 1.5. Do not use this class/interface
+ * 
+ * @deprecated
+ */
+public class SimpleWebModuleCreationDataModelProvider extends ComponentCreationDataModelProvider implements ISimpleWebModuleCreationDataModelProperties, DoNotUseMeThisWillBeDeletedPost15{
 
     public SimpleWebModuleCreationDataModelProvider() {
         super();

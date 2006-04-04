@@ -19,10 +19,16 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.wst.common.frameworks.internal.DoNotUseMeThisWillBeDeletedPost15;
 import org.eclipse.wst.web.internal.ResourceHandler;
 import org.eclipse.wst.web.internal.WebPropertiesUtil;
 
-public class SimpleContextRootComposite extends Composite {
+/**
+ * This has been slated for removal post WTP 1.5. Do not use this class/interface
+ * 
+ * @deprecated
+ */
+public class SimpleContextRootComposite extends Composite implements DoNotUseMeThisWillBeDeletedPost15 {
 	protected Text contextRootField;
 	private String errorMessage = null;
 
