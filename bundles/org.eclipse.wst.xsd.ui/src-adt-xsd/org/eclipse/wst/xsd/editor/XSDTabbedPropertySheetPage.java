@@ -38,7 +38,6 @@ public class XSDTabbedPropertySheetPage extends TabbedPropertySheetPage implemen
   public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 
       Object selected = ((StructuredSelection)selection).getFirstElement();
-      System.out.println(selected);
       if (selected instanceof XSDBaseAdapter)
       {
         XSDBaseAdapter adapter = (XSDBaseAdapter)selected;
