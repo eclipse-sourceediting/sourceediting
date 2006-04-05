@@ -54,11 +54,11 @@ import org.eclipse.xsd.XSDSchema;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-public class AddApplicationInfoDialog extends SelectionDialog implements ISelectionChangedListener, SelectionListener
+public class AddExtensionsComponentDialog extends SelectionDialog implements ISelectionChangedListener, SelectionListener
 {
   // when this dialog is created it needs to know which registry it is going to use,the WSDL or the XSD,
   // hence we need this field
-  ApplicationInformationPropertiesRegistry registry;
+  static ExtensionsSchemasRegistry registry;
   
   protected static final Image DEFAULT_ELEMENT_ICON = XSDEditorPlugin.getXSDImage("icons/XSDElement.gif");
   protected static final Image DEFAULT_ATTRIBUTE_ICON = XSDEditorPlugin.getXSDImage("icons/XSDAttribute.gif");
@@ -69,7 +69,7 @@ public class AddApplicationInfoDialog extends SelectionDialog implements ISelect
   
   Button addButton, removeButton, editButton;
 
-  public AddApplicationInfoDialog(Shell parent, ApplicationInformationPropertiesRegistry registry)
+  public AddExtensionsComponentDialog(Shell parent, ExtensionsSchemasRegistry registry)
   {
     super(parent);
     setTitle("Add Extension Components");
@@ -257,7 +257,7 @@ public class AddApplicationInfoDialog extends SelectionDialog implements ISelect
     	addNewCategoryDialog.setUnavailableCategoryNames(existingNames);
     	
     	if ( addNewCategoryDialog.open() == Window.OK ){    		
-    		SpecificationForAppinfoSchema schemaSpec = addNewCategoryDialog.getAppinfoSpec();
+    		SpecificationForExtensionsSchema schemaSpec = addNewCategoryDialog.getExtensionsSchemaSpec();
     		
     		fInput.add(schemaSpec);
     		existingNames.add(schemaSpec.getDisplayName());
@@ -289,7 +289,7 @@ public class AddApplicationInfoDialog extends SelectionDialog implements ISelect
         AddNewCategoryDialog dialog = new AddNewCategoryDialog(getShell(), "Edit Category");
         if ( dialog.open() == Window.OK){
         	TableItem[] selections = categoryTableViewer.getTable().getSelection();        	
-        	SpecificationForAppinfoSchema spec = (SpecificationForAppinfoSchema) selections[0].getData();
+        	SpecificationForExtensionsSchema spec = (SpecificationForExtensionsSchema) selections[0].getData();
         	
 			spec.setDisplayName(dialog.getNewCategoryName());
         	spec.setLocation(dialog.getCategoryLocation());
@@ -317,9 +317,9 @@ public class AddApplicationInfoDialog extends SelectionDialog implements ISelect
       if (selection instanceof StructuredSelection)
       {
         Object obj = ((StructuredSelection) selection).getFirstElement();
-        if (obj instanceof SpecificationForAppinfoSchema)
+        if (obj instanceof SpecificationForExtensionsSchema)
         {
-          SpecificationForAppinfoSchema spec = (SpecificationForAppinfoSchema) obj;
+          SpecificationForExtensionsSchema spec = (SpecificationForExtensionsSchema) obj;
 
           refreshElementsViewer(spec);
 
@@ -338,7 +338,7 @@ public class AddApplicationInfoDialog extends SelectionDialog implements ISelect
     }
   }
   
-  private void refreshElementsViewer(SpecificationForAppinfoSchema spec) {
+  private void refreshElementsViewer(SpecificationForExtensionsSchema spec) {
 	  XSDSchema xsdSchema = getASISchemaModel(spec);
 	  
 	  if (xsdSchema == null){
@@ -387,20 +387,20 @@ public class AddApplicationInfoDialog extends SelectionDialog implements ISelect
   }
 
   
-  private static XSDSchema getASISchemaModel(SpecificationForAppinfoSchema appInfoSchemaSpec)
+  private static XSDSchema getASISchemaModel(SpecificationForExtensionsSchema extensionsSchemaSpec)
   {
-    XSDSchema xsdSchema = XSDImpl.buildXSDModel(appInfoSchemaSpec.getLocation());
+    XSDSchema xsdSchema = XSDImpl.buildXSDModel(extensionsSchemaSpec.getLocation());
     
     // now that the .xsd file is read, we can retrieve the namespace of this xsd file
     // and set the namespace for 'properties'
-    if ( appInfoSchemaSpec.getNamespaceURI() == null){
-    	appInfoSchemaSpec.setNamespaceURI( xsdSchema.getTargetNamespace());
+    if ( extensionsSchemaSpec.getNamespaceURI() == null){
+    	extensionsSchemaSpec.setNamespaceURI( xsdSchema.getTargetNamespace());
     }
     
     return xsdSchema;
   }
 
-  class CategoryContentProvider implements IStructuredContentProvider
+  static class CategoryContentProvider implements IStructuredContentProvider
   {
     /*
      * (non-Javadoc)
@@ -409,17 +409,17 @@ public class AddApplicationInfoDialog extends SelectionDialog implements ISelect
      */
     public Object[] getElements(Object inputElement)
     {    
-      SpecificationForAppinfoSchema[] appInfoSchemaSpecs = null;
+      SpecificationForExtensionsSchema[] extensionsSchemaSpecs = null;
       try
       {
         List inputList = (List) inputElement;
-        appInfoSchemaSpecs = (SpecificationForAppinfoSchema[]) inputList.toArray(new SpecificationForAppinfoSchema[0]);
+        extensionsSchemaSpecs = (SpecificationForExtensionsSchema[]) inputList.toArray(new SpecificationForExtensionsSchema[0]);
       }
       catch (Exception e)
       {
         e.printStackTrace();
       }
-      return appInfoSchemaSpecs;
+      return extensionsSchemaSpecs;
     }
 
     /*
@@ -446,7 +446,7 @@ public class AddApplicationInfoDialog extends SelectionDialog implements ISelect
     }
   }
 
-  class CategoryLabelProvider extends LabelProvider
+  static class CategoryLabelProvider extends LabelProvider
   {
     /*
      * (non-Javadoc)
@@ -465,14 +465,14 @@ public class AddApplicationInfoDialog extends SelectionDialog implements ISelect
      */
     public String getText(Object element)
     {
-      if (element instanceof SpecificationForAppinfoSchema)
-        return ((SpecificationForAppinfoSchema) element).getDisplayName();
+      if (element instanceof SpecificationForExtensionsSchema)
+        return ((SpecificationForExtensionsSchema) element).getDisplayName();
 
       return super.getText(element);
     }
   }
 
-  class ElementContentProvider implements IStructuredContentProvider
+  static class ElementContentProvider implements IStructuredContentProvider
   {
     /*
      * (non-Javadoc)
@@ -512,7 +512,7 @@ public class AddApplicationInfoDialog extends SelectionDialog implements ISelect
     }
   }
 
-  class ElementLabelProvider extends LabelProvider
+  static class ElementLabelProvider extends LabelProvider
   {
     /*
      * (non-Javadoc)

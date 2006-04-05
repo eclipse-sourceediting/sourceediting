@@ -12,7 +12,7 @@ package org.eclipse.wst.xsd.ui.common.properties.sections.appinfo;
 
 import org.eclipse.jface.viewers.ILabelProvider;
 
-public class SpecificationForAppinfoSchema
+public class SpecificationForExtensionsSchema
 {
   private String description;
   private String displayName;
@@ -21,7 +21,7 @@ public class SpecificationForAppinfoSchema
   private ILabelProvider labelProvider;
   private boolean isDefaultSchema = false;
 
-  public SpecificationForAppinfoSchema()
+  public SpecificationForExtensionsSchema()
   {
     super();
   }

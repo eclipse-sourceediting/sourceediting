@@ -11,7 +11,7 @@
 package org.eclipse.wst.xsd.ui.common.commands;
 
 import org.eclipse.gef.commands.Command;
-import org.eclipse.wst.xsd.ui.common.properties.sections.appinfo.SpecificationForAppinfoSchema;
+import org.eclipse.wst.xsd.ui.common.properties.sections.appinfo.SpecificationForExtensionsSchema;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -19,7 +19,7 @@ import org.w3c.dom.Element;
 public class AddExtensibilityElementCommand extends Command
 {
   Element input, elementToAdd;
-  SpecificationForAppinfoSchema appInfoSchemaSpec;
+  SpecificationForExtensionsSchema extensionSchemaSpec;
 
   public AddExtensibilityElementCommand(String label, Element input, Element elementToAdd)
   {
@@ -40,9 +40,9 @@ public class AddExtensibilityElementCommand extends Command
     // TODO
   }
 
-  public void setSchemaProperties(SpecificationForAppinfoSchema appInfoSchemaSpec)
+  public void setSchemaProperties(SpecificationForExtensionsSchema appInfoSchemaSpec)
   {
-    this.appInfoSchemaSpec = appInfoSchemaSpec;
+    this.extensionSchemaSpec = appInfoSchemaSpec;
   }
 
   private void addElement()
@@ -53,12 +53,12 @@ public class AddExtensibilityElementCommand extends Command
       String name = elementToAdd.getAttribute("name");
       try
       {
-        Element rootElement = doc.createElementNS(appInfoSchemaSpec.getNamespaceURI(), name);
+        Element rootElement = doc.createElementNS(extensionSchemaSpec.getNamespaceURI(), name);
         String prefix = input.getPrefix();
         rootElement.setPrefix(prefix);
         String xmlns = (prefix == null || prefix.equals("")) ? "xmlns" : "xmlns:" + prefix;
         Attr nsURIAttribute = doc.createAttribute(xmlns);
-        nsURIAttribute.setValue(appInfoSchemaSpec.getNamespaceURI());
+        nsURIAttribute.setValue(extensionSchemaSpec.getNamespaceURI());
         rootElement.setAttributeNode(nsURIAttribute);
         input.appendChild(rootElement);
 

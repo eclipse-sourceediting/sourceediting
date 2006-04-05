@@ -94,8 +94,8 @@ public class AddNewCategoryDialog extends Dialog
     return appInfoSchemaLocation;
   }
   
-  public SpecificationForAppinfoSchema getAppinfoSpec(){
-	SpecificationForAppinfoSchema schemaSpec = new SpecificationForAppinfoSchema();
+  public SpecificationForExtensionsSchema getExtensionsSchemaSpec(){
+	SpecificationForExtensionsSchema schemaSpec = new SpecificationForExtensionsSchema();
 	schemaSpec.setDisplayName(getNewCategoryName());
 	schemaSpec.setLocation(getCategoryLocation());
 	

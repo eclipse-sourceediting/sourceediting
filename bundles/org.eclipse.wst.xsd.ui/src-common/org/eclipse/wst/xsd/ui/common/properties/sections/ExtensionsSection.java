@@ -44,10 +44,10 @@ import org.eclipse.wst.xsd.ui.common.commands.AddAppInfoCommand;
 import org.eclipse.wst.xsd.ui.common.commands.AddAppInfoElementCommand;
 import org.eclipse.wst.xsd.ui.common.commands.RemoveAppInfoAttrCommand;
 import org.eclipse.wst.xsd.ui.common.commands.RemoveAppInfoElementCommand;
-import org.eclipse.wst.xsd.ui.common.properties.sections.appinfo.AddApplicationInfoDialog;
-import org.eclipse.wst.xsd.ui.common.properties.sections.appinfo.ApplicationInformationPropertiesRegistry;
-import org.eclipse.wst.xsd.ui.common.properties.sections.appinfo.ApplicationInformationTableTreeViewer;
-import org.eclipse.wst.xsd.ui.common.properties.sections.appinfo.SpecificationForAppinfoSchema;
+import org.eclipse.wst.xsd.ui.common.properties.sections.appinfo.AddExtensionsComponentDialog;
+import org.eclipse.wst.xsd.ui.common.properties.sections.appinfo.ExtensionsSchemasRegistry;
+import org.eclipse.wst.xsd.ui.common.properties.sections.appinfo.ExtensionsComponentTableTreeViewer;
+import org.eclipse.wst.xsd.ui.common.properties.sections.appinfo.SpecificationForExtensionsSchema;
 import org.eclipse.wst.xsd.ui.common.util.XSDCommonUIUtils;
 import org.eclipse.xsd.XSDAnnotation;
 import org.eclipse.xsd.XSDAttributeDeclaration;
@@ -60,11 +60,11 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public class ApplicationInfoSection extends AbstractSection
+public class ExtensionsSection extends AbstractSection
 {
   protected static final Image DEFAULT_ELEMENT_ICON = XSDEditorPlugin.getXSDImage("icons/XSDElement.gif");
   protected static final Image DEFAULT_ATTR_ICON = XSDEditorPlugin.getXSDImage("icons/XSDAttribute.gif");
-  protected ApplicationInformationTableTreeViewer tableTree;
+  protected ExtensionsComponentTableTreeViewer tableTree;
   protected TableViewer extensibleElementsTable;
   protected Label extensibilityElementsLabel, contentLabel;
   protected ISelectionChangedListener elementSelectionChangedListener;
@@ -76,7 +76,7 @@ public class ApplicationInfoSection extends AbstractSection
   /**
    * 
    */
-  public ApplicationInfoSection()
+  public ExtensionsSection()
   {
     super();
   }
@@ -169,19 +169,19 @@ public class ApplicationInfoSection extends AbstractSection
           if (obj instanceof Element)
           {
             Element element = (Element) obj;
-            ApplicationInformationPropertiesRegistry registry = XSDEditorPlugin.getDefault().getApplicationInformationPropertiesRegistry();
+            ExtensionsSchemasRegistry registry = XSDEditorPlugin.getDefault().getExtensionsSchemasRegistry();
             // ApplicationSpecificSchemaProperties[] properties =
             // registry.getAllApplicationSpecificSchemaProperties();
             // ApplicationSpecificSchemaProperties[] properties =
             // (ApplicationSpecificSchemaProperties[])
             // registry.getAllApplicationSpecificSchemaProperties().toArray(new
             // ApplicationSpecificSchemaProperties[0]);
-            List properties = registry.getAllApplicationSpecificSchemaProperties();
+            List properties = registry.getAllExtensionsSchemasContribution();
 
             int length = properties.size();
             for (int i = 0; i < length; i++)
             {
-              SpecificationForAppinfoSchema current = (SpecificationForAppinfoSchema) properties.get(i);
+              SpecificationForExtensionsSchema current = (SpecificationForExtensionsSchema) properties.get(i);
               if (current.getNamespaceURI().equals(element.getNamespaceURI()))
               {
                 extensibleElementsTable.getTable().setToolTipText(current.getDescription());
@@ -260,7 +260,7 @@ public class ApplicationInfoSection extends AbstractSection
 
   protected void createElementContentWidget(Composite parent)
   {
-    tableTree = new ApplicationInformationTableTreeViewer(parent);
+    tableTree = new ExtensionsComponentTableTreeViewer(parent);
     GridData gridData = new GridData();
     gridData.grabExcessHorizontalSpace = true;
     gridData.grabExcessVerticalSpace = true;
@@ -312,10 +312,10 @@ public class ApplicationInfoSection extends AbstractSection
   {
     if (event.widget == addButton)
     {
-        ApplicationInformationPropertiesRegistry registry = XSDEditorPlugin.getDefault().getApplicationInformationPropertiesRegistry();
-      AddApplicationInfoDialog dialog = new AddApplicationInfoDialog(composite.getShell(), registry);
+        ExtensionsSchemasRegistry registry = XSDEditorPlugin.getDefault().getExtensionsSchemasRegistry();
+      AddExtensionsComponentDialog dialog = new AddExtensionsComponentDialog(composite.getShell(), registry);
 
-      List properties = registry.getAllApplicationSpecificSchemaProperties();
+      List properties = registry.getAllExtensionsSchemasContribution();
 
       dialog.setInput(properties);
       dialog.setBlockOnOpen(true);
@@ -325,7 +325,7 @@ public class ApplicationInfoSection extends AbstractSection
         Object[] result = dialog.getResult();
         if (result != null)
         {
-          SpecificationForAppinfoSchema appInfoSchemaSpec = (SpecificationForAppinfoSchema) result[1];
+          SpecificationForExtensionsSchema extensionsSchemaSpec = (SpecificationForExtensionsSchema) result[1];
           if (input instanceof XSDConcreteComponent)
           {
             AddAppInfoCommand addAppInfo = null;
@@ -342,7 +342,7 @@ public class ApplicationInfoSection extends AbstractSection
             else
               return;
 
-            addAppInfo.setSchemaProperties(appInfoSchemaSpec);
+            addAppInfo.setSchemaProperties(extensionsSchemaSpec);
             if (getCommandStack() != null)
             {
               getCommandStack().execute(addAppInfo);
@@ -522,7 +522,7 @@ public class ApplicationInfoSection extends AbstractSection
   {
     public Image getColumnImage(Object element, int columnIndex)
     {
-      ApplicationInformationPropertiesRegistry registry = XSDEditorPlugin.getDefault().getApplicationInformationPropertiesRegistry();
+      ExtensionsSchemasRegistry registry = XSDEditorPlugin.getDefault().getExtensionsSchemasRegistry();
       if (element instanceof Element)
       {
         Element domElement = (Element) element;

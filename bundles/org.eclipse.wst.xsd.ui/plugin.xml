@@ -198,7 +198,7 @@
 	    </input>
 	 </propertySection>
 	 <propertySection tab="property.tab.extensions" 
-	 	class="org.eclipse.wst.xsd.ui.common.properties.sections.ApplicationInfoSection" 
+	 	class="org.eclipse.wst.xsd.ui.common.properties.sections.ExtensionsSection" 
 	 	id="prop.section.ExtensionsSection">
 	    <input type="org.eclipse.xsd.XSDConcreteComponent">
 	    </input>
@@ -206,7 +206,7 @@
   </propertySections>
 </extension>
 
-  <extension-point id="ApplicationInformationDescription" name="ApplicationInformationDescription"/>
+  <extension-point id="ExtensionsSchemasDescription" name="ExtensionsSchemasDescription"/>
 
   <extension-point id="XSDEditorExtensionConfiguration" name="XSDEditorExtensionConfiguration"/>
 

@@ -23,7 +23,7 @@ import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalogEntry;
 import org.eclipse.wst.xml.core.internal.catalog.provisional.INextCatalog;
 import org.w3c.dom.Element;
 
-public class ApplicationInformationPropertiesRegistry
+public class ExtensionsSchemasRegistry
 {
   private static final String LOCATION_PREFIX = "platform:/plugin/";
   public static final String DESCRIPTION = "description";
@@ -38,12 +38,12 @@ public class ApplicationInformationPropertiesRegistry
   ArrayList nsURIProperties;
   private ICatalog systemCatalog;
 
-  public ApplicationInformationPropertiesRegistry(String appinfo_extensionid)
+  public ExtensionsSchemasRegistry(String appinfo_extensionid)
   {
     extensionId = appinfo_extensionid;
   }
 
-  public List getAllApplicationSpecificSchemaProperties()
+  public List getAllExtensionsSchemasContribution()
   {
     // If we read the registry, then let's not do it again.
     if (nsURIProperties != null)
@@ -81,11 +81,11 @@ public class ApplicationInformationPropertiesRegistry
           xsdFileURL = locateFileUsingCatalog(namespaceURI);
         }
 
-        SpecificationForAppinfoSchema asiAppinfoSpec = createEntry();
-        asiAppinfoSpec.setDescription(description);
-        asiAppinfoSpec.setDisplayName(displayName);
-        asiAppinfoSpec.setNamespaceURI(namespaceURI);
-        asiAppinfoSpec.setDefautSchema();
+        SpecificationForExtensionsSchema extensionsSchemaSpec = createEntry();
+        extensionsSchemaSpec.setDescription(description);
+        extensionsSchemaSpec.setDisplayName(displayName);
+        extensionsSchemaSpec.setNamespaceURI(namespaceURI);
+        extensionsSchemaSpec.setDefautSchema();
 
         if (labelProviderClass != null)
         {
@@ -100,7 +100,7 @@ public class ApplicationInformationPropertiesRegistry
               if (labelProvider != null)
               {
                 propertyMap.put(namespaceURI, labelProvider);
-                asiAppinfoSpec.setLabelProvider(labelProvider);
+                extensionsSchemaSpec.setLabelProvider(labelProvider);
               }
             }
           }
@@ -110,9 +110,9 @@ public class ApplicationInformationPropertiesRegistry
           }
         }
         String plugin = asiPropertiesElement.getDeclaringExtension().getContributor().getName();
-        asiAppinfoSpec.setLocation(LOCATION_PREFIX + plugin + "/" + xsdFileURL);
+        extensionsSchemaSpec.setLocation(LOCATION_PREFIX + plugin + "/" + xsdFileURL);
 
-        nsURIProperties.add(asiAppinfoSpec);
+        nsURIProperties.add(extensionsSchemaSpec);
       }
 
     }
@@ -128,7 +128,7 @@ public class ApplicationInformationPropertiesRegistry
     // Didn't retrieve the config elements yet.
     if (propertyMap == null)
     {
-      getAllApplicationSpecificSchemaProperties();
+      getAllExtensionsSchemasContribution();
     }
 
     Object object = propertyMap.get(uri);
@@ -139,9 +139,9 @@ public class ApplicationInformationPropertiesRegistry
     return null;
   }
 
-  public SpecificationForAppinfoSchema createEntry()
+  public SpecificationForExtensionsSchema createEntry()
   {
-    return new SpecificationForAppinfoSchema();
+    return new SpecificationForExtensionsSchema();
   }
 
   /**

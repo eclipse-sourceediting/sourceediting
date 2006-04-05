@@ -3,21 +3,21 @@ package org.eclipse.wst.xsd.ui.common.commands;
 import java.util.Map;
 
 import org.eclipse.gef.commands.Command;
-import org.eclipse.wst.xsd.ui.common.properties.sections.appinfo.SpecificationForAppinfoSchema;
+import org.eclipse.wst.xsd.ui.common.properties.sections.appinfo.SpecificationForExtensionsSchema;
 import org.eclipse.xsd.XSDConcreteComponent;
 
 public class AddAppInfoCommand extends Command
 {
-  protected SpecificationForAppinfoSchema appInfoSchemaSpec;
+  protected SpecificationForExtensionsSchema extensionsSchemaSpec;
 
   protected AddAppInfoCommand(String label)
   {
     super(label);
   }
 
-  public void setSchemaProperties(SpecificationForAppinfoSchema appInfoSchemaSpec)
+  public void setSchemaProperties(SpecificationForExtensionsSchema appInfoSchemaSpec)
   {
-    this.appInfoSchemaSpec = appInfoSchemaSpec;
+    this.extensionsSchemaSpec = appInfoSchemaSpec;
   }
   
   protected String createUniquePrefix(XSDConcreteComponent component)

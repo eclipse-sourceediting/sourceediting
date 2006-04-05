@@ -12,7 +12,7 @@ package org.eclipse.wst.xsd.ui.common.commands;
 
 import java.util.List;
 
-import org.eclipse.wst.xsd.ui.common.properties.sections.appinfo.SpecificationForAppinfoSchema;
+import org.eclipse.wst.xsd.ui.common.properties.sections.appinfo.SpecificationForExtensionsSchema;
 import org.eclipse.wst.xsd.ui.common.util.XSDCommonUIUtils;
 import org.eclipse.xsd.XSDAnnotation;
 import org.eclipse.xsd.XSDConcreteComponent;
@@ -38,7 +38,7 @@ public class AddAppInfoElementCommand extends AddAppInfoCommand
   public void execute()
   {
     super.execute();
-    addAnnotationSet(input.getSchema(), appInfoSchemaSpec);
+    addAnnotationSet(input.getSchema(), extensionsSchemaSpec);
   }
 
   public void undo()
@@ -52,32 +52,32 @@ public class AddAppInfoElementCommand extends AddAppInfoCommand
 
   }
 
-  public void setSchemaProperties(SpecificationForAppinfoSchema appInfoSchemaSpec)
+  public void setSchemaProperties(SpecificationForExtensionsSchema spec)
   {
-    this.appInfoSchemaSpec = appInfoSchemaSpec;
+    this.extensionsSchemaSpec = spec;
   }
 
-  public void addAnnotationSet(XSDSchema xsdSchema, SpecificationForAppinfoSchema asiSpec)
+  public void addAnnotationSet(XSDSchema xsdSchema, SpecificationForExtensionsSchema spec)
   {
     XSDAnnotation xsdAnnotation = XSDCommonUIUtils.getInputXSDAnnotation(input, true);
-    addAnnotationSet(asiSpec, xsdAnnotation);
+    addAnnotationSet(spec, xsdAnnotation);
   }
 
-  private void addAnnotationSet(SpecificationForAppinfoSchema asiProperties, XSDAnnotation xsdAnnotation)
+  private void addAnnotationSet(SpecificationForExtensionsSchema spec, XSDAnnotation xsdAnnotation)
   {
-    appInfo = xsdAnnotation.createApplicationInformation(asiProperties.getNamespaceURI());
+    appInfo = xsdAnnotation.createApplicationInformation(spec.getNamespaceURI());
 
     if (appInfo != null)
     {
       Document doc = appInfo.getOwnerDocument();
 
-      Element rootElement = doc.createElementNS(asiProperties.getNamespaceURI(), element.getName());
+      Element rootElement = doc.createElementNS(spec.getNamespaceURI(), element.getName());
       
       String prefix = createUniquePrefix(input);
       rootElement.setPrefix(prefix);
 
       Attr nsURIAttribute = doc.createAttribute("xmlns:"+prefix);
-      nsURIAttribute.setValue(asiProperties.getNamespaceURI());
+      nsURIAttribute.setValue(spec.getNamespaceURI());
       rootElement.setAttributeNode(nsURIAttribute);
       appInfo.appendChild(rootElement);
 

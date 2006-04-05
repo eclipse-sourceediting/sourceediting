@@ -40,11 +40,11 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.Text;
 
-public class ApplicationInformationTableTreeViewer extends XMLTableTreeViewer
+public class ExtensionsComponentTableTreeViewer extends XMLTableTreeViewer
 {
   private CommandStack commandStack;
   
-  public ApplicationInformationTableTreeViewer(Composite parent)
+  public ExtensionsComponentTableTreeViewer(Composite parent)
   {
     super(parent);
 
@@ -130,7 +130,7 @@ public class ApplicationInformationTableTreeViewer extends XMLTableTreeViewer
       // if the model is not the XML model, then we can't support the table viewer.
       if (model != null)
       {
-        XSDActionManager actionManager = new XSDActionManager(model, ApplicationInformationTableTreeViewer.this);
+        XSDActionManager actionManager = new XSDActionManager(model, ExtensionsComponentTableTreeViewer.this);
         actionManager.setCommandStack(commandStack);
         
         // add general actions
