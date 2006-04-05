@@ -40,7 +40,7 @@ public class CenteredIconFigure extends RectangleFigure
     if (image != null)
     {                         
       Rectangle r = getBounds();
-      Dimension imageSize = new Dimension(15, 15);
+      Dimension imageSize = new Dimension(16, 16);
       g.drawImage(image, r.x + (r.width - imageSize.width)/2, r.y + (r.height - imageSize.height)/2);
     }
   }

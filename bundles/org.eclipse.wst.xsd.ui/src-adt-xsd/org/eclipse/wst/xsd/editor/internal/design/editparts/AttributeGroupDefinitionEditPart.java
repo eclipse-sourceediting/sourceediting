@@ -29,7 +29,7 @@ import org.eclipse.xsd.XSDAttributeGroupDefinition;
 
 public class AttributeGroupDefinitionEditPart extends ConnectableEditPart
 {
-  public static final Image ATTRIBUTE_GROUP_REF_ICON_IMAGE = XSDEditorPlugin.getImageDescriptor("obj16/attributeGroupRef.gif", true).createImage();
+  public static final Image ATTRIBUTE_GROUP_REF_ICON_IMAGE = XSDEditorPlugin.getImageDescriptor("attgrref_obj.gif", true).createImage();
 
   public AttributeGroupDefinitionEditPart()
   {
