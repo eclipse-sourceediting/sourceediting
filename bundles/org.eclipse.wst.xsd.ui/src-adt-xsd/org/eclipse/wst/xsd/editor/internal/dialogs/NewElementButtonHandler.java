@@ -21,6 +21,6 @@ public class NewElementButtonHandler implements INewComponentHandler
   public void openNewComponentDialog()
   {
     NewElementDialog newElementDialog = new NewElementDialog();
-    newElementDialog.open();
+    newElementDialog.createAndOpen();
   }
 }

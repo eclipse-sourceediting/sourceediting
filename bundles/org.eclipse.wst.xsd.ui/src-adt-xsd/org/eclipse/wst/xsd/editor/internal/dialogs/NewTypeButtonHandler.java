@@ -21,6 +21,6 @@ public class NewTypeButtonHandler implements INewComponentHandler
   public void openNewComponentDialog()
   {
     NewTypeDialog newTypeDialog = new NewTypeDialog();
-    newTypeDialog.open();
+    newTypeDialog.createAndOpen();
   }
 }
