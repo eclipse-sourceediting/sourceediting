@@ -2,6 +2,10 @@
 <?eclipse version="3.0"?>
 <plugin>
 
+   <!-- An extension for contributing a XML validation error customizer. -->
+   <extension-point id="errorCustomizer" name="%XML_Validation_Error_Customizer.name" schema="schema/errorCustomizer.exsd"/>
+
+
 	<extension point="org.eclipse.wst.sse.core.modelHandler">
 		<modelHandler
 			default="true"

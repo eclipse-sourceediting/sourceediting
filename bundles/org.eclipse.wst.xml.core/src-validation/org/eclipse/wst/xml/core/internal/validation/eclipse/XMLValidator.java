@@ -15,9 +15,9 @@ import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolverPlugin
 
 /**
  * An XML validator specific to Eclipse. This validator will wrap the internal
- * XML validator an provide automatic URI resolution support.
- * Using this class is equivalent to using the internal XML validator and registering
- * the URI resolver.
+ * XML validator and provide automatic URI resolution support. This class also
+ * reads from the plug-in registry and registers all error customizers with the
+ * registry.
  */
 public class XMLValidator extends org.eclipse.wst.xml.core.internal.validation.XMLValidator
 {
@@ -38,10 +38,12 @@ public class XMLValidator extends org.eclipse.wst.xml.core.internal.validation.X
     return instance;
   }
   /**
-   * Constructor. Create the XML validator and set the URI resolver.
+   * Constructor. Create the XML validator, set the URI resolver and
+   * get the extension error customizers from the registry.
    */
   protected XMLValidator()
   {
     setURIResolver(URIResolverPlugin.createResolver());
+    new ErrorCustomizationPluginRegistryReader().readRegistry();
   }
 }
