@@ -15,7 +15,6 @@ public interface IProductConstants {
     public static final String APPLICATION_CONTENT_FOLDER = "earContent"; //$NON-NLS-1$
 	public static final String WEB_CONTENT_FOLDER = "webContent"; //$NON-NLS-1$
 	public static final String ADD_TO_EAR_BY_DEFAULT = "addToEarByDefault"; //$NON-NLS-1$
-	public static final String DEFAULT_SERVER = "defaultServer"; //$NON-NLS-1$
 	public static final String OUTPUT_FOLDER = "outputFolder"; //$NON-NLS-1$
 	
 	/**
