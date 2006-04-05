@@ -191,5 +191,11 @@ public class ValidationMessage
   {
 	  return this.messageArguments;
   }
+  
+
+  public void setMessage(String message)
+  {
+    this.message = message;
+  }  
                                      
 }

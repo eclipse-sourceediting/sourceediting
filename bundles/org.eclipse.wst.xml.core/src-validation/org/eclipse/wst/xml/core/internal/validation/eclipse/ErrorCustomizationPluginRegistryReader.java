@@ -68,7 +68,7 @@ public class ErrorCustomizationPluginRegistryReader {
 	      {
 	        try
 	        {
-	          Bundle pluginBundle = Platform.getBundle(element.getDeclaringExtension().getContributor().getName());
+	          Bundle pluginBundle = Platform.getBundle(element.getDeclaringExtension().getNamespace());
 	          ErrorMessageCustomizerDelegate delegate = new ErrorMessageCustomizerDelegate(pluginBundle, errorCustomizerClass);
 	          ErrorCustomizationRegistry.getInstance().addErrorMessageCustomizer(namespace, delegate);
 	        }

@@ -15,6 +15,7 @@ import java.io.InputStream;
 
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolverPlugin;
 import org.eclipse.wst.xml.core.internal.validation.XMLValidationReport;
+import org.eclipse.wst.xml.core.internal.validation.eclipse.ErrorCustomizationPluginRegistryReader;
 
 /**
  * An XML validator specific to Eclipse. This validator will wrap the internal
@@ -50,6 +51,7 @@ public class XMLValidator
   {
     validator = new org.eclipse.wst.xml.core.internal.validation.XMLValidator();
     validator.setURIResolver(URIResolverPlugin.createResolver());
+    new ErrorCustomizationPluginRegistryReader().readRegistry();
   }
   /**
    * Validate the file at the given URI.
