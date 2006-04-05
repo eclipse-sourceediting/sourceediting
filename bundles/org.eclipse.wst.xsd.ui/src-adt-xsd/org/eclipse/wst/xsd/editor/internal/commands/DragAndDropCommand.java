@@ -25,7 +25,6 @@ import org.eclipse.gef.ui.parts.ScrollingGraphicalViewer;
 import org.eclipse.wst.xsd.adt.design.editparts.BaseFieldEditPart;
 import org.eclipse.wst.xsd.adt.design.editparts.CompartmentEditPart;
 import org.eclipse.wst.xsd.adt.design.editparts.ComplexTypeEditPart;
-import org.eclipse.wst.xsd.adt.design.editparts.model.Compartment;
 import org.eclipse.wst.xsd.editor.internal.actions.MoveAction;
 import org.eclipse.wst.xsd.editor.internal.actions.MoveAttributeAction;
 import org.eclipse.wst.xsd.editor.internal.adapters.XSDBaseAdapter;
@@ -123,7 +122,7 @@ public class DragAndDropCommand extends BaseCommand
           parentAttributeGroupEditPart = null;
           calculateAttributeGroupList();
           EditPart compartment = target.getParent();
-          System.out.println(((Compartment)compartment.getModel()).getKind());
+
           parentEditPart = null;
           if (compartment != null)
           {
