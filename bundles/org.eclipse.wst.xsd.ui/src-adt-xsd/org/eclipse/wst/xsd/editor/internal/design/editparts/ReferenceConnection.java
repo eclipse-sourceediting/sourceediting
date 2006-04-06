@@ -20,7 +20,7 @@ public class ReferenceConnection extends PolylineConnection
   protected boolean highlight = false;
 
   protected static final Color activeConnection = ColorConstants.black;
-  protected static final Color inactiveConnection = new Color(null, 198, 195, 198);
+  public static final Color inactiveConnection = new Color(null, 198, 195, 198);
 
   public ReferenceConnection()
   {

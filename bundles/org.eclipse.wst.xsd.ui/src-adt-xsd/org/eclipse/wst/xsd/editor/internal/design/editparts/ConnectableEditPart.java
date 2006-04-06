@@ -13,12 +13,10 @@ package org.eclipse.wst.xsd.editor.internal.design.editparts;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.IFigure;
-import org.eclipse.draw2d.RectangleFigure;
-import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartFactory;
 import org.eclipse.gef.EditPolicy;
@@ -27,6 +25,7 @@ import org.eclipse.gef.LayerConstants;
 import org.eclipse.wst.xsd.adt.design.editparts.BaseEditPart;
 import org.eclipse.wst.xsd.adt.design.editpolicies.ADTSelectionFeedbackEditPolicy;
 import org.eclipse.wst.xsd.editor.internal.adapters.XSDBaseAdapter;
+import org.eclipse.wst.xsd.editor.internal.design.figures.CenteredIconFigure;
 import org.eclipse.wst.xsd.editor.internal.design.figures.GenericGroupFigure;
 import org.eclipse.wst.xsd.editor.internal.design.figures.IExtendedFigureFactory;
 import org.eclipse.xsd.XSDConcreteComponent;
@@ -139,7 +138,6 @@ public abstract class ConnectableEditPart extends BaseEditPart
     }
   }
   
-  RectangleFigure selectionFeedbackFigure;
   public void addFeedback()
   {
     ReferenceConnection connectionFigure;
@@ -152,15 +150,8 @@ public abstract class ConnectableEditPart extends BaseEditPart
       }
     }
     GenericGroupFigure figure = (GenericGroupFigure)getFigure();
-    Rectangle r = figure.getIconFigure().getBounds();
-    Rectangle zoomedRect = getZoomedBounds(r);
-    selectionFeedbackFigure = new RectangleFigure();
-    selectionFeedbackFigure.setForegroundColor(ColorConstants.blue);
-    selectionFeedbackFigure.setBounds(zoomedRect);
-    selectionFeedbackFigure.setFill(false);
-    selectionFeedbackFigure.setOpaque(true);
-    selectionFeedbackFigure.setLineWidth(1);
-    getLayer(LayerConstants.FEEDBACK_LAYER).add(selectionFeedbackFigure);
+    figure.getIconFigure().setMode(CenteredIconFigure.SELECTED);
+    figure.getIconFigure().refresh();
   }
   
   public void removeFeedback()
@@ -174,25 +165,16 @@ public abstract class ConnectableEditPart extends BaseEditPart
         connectionFigure.setHighlight(false);
       }
     }
-    if (selectionFeedbackFigure != null)
-    {
-      getLayer(LayerConstants.FEEDBACK_LAYER).remove(selectionFeedbackFigure);
-    }
-    selectionFeedbackFigure = null;
+    GenericGroupFigure figure = (GenericGroupFigure)getFigure();
+    figure.getIconFigure().setMode(CenteredIconFigure.NORMAL);
+    figure.getIconFigure().refresh();
   }
   
   protected void refreshVisuals()
   {
     super.refreshVisuals();
-    if (selectionFeedbackFigure != null)
-    {
-      GenericGroupFigure figure = (GenericGroupFigure)getFigure();
-      Rectangle r = figure.getIconFigure().getBounds();
-      Rectangle zoomedRect = getZoomedBounds(r);
-      selectionFeedbackFigure.setBounds(zoomedRect);
-      selectionFeedbackFigure.repaint();
-      selectionFeedbackFigure.revalidate();
-    }
+    GenericGroupFigure figure = (GenericGroupFigure)getFigure();
+    figure.getIconFigure().refresh();
   }
 
   protected void createEditPolicies()

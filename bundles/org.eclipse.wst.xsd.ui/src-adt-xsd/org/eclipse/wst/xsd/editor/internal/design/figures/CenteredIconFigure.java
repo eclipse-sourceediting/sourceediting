@@ -10,28 +10,50 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.editor.internal.design.figures;
             
+import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.Label;
-import org.eclipse.draw2d.RectangleFigure;
+import org.eclipse.draw2d.RoundedRectangle;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.wst.xsd.editor.internal.design.editparts.ReferenceConnection;
 
-public class CenteredIconFigure extends RectangleFigure
-{                                                
+public class CenteredIconFigure extends RoundedRectangle
+{                         
+  public static final int NORMAL = 0;
+  public static final int SELECTED = 1;
+  public static final int HOVER = 2;
   public Image image;
   protected Label toolTipLabel;
-                               
+  protected int mode = 0;
+  
   public CenteredIconFigure()
   {
     super();
     setFill(true);   
     toolTipLabel = new Label();
+    setCornerDimensions(new Dimension(5,5));
   }
   
+  public void refresh()
+  {
+    repaint();
+  }
   
   protected void outlineShape(Graphics graphics)
   {
+    graphics.pushState();
+    if (mode == NORMAL)
+    { // TODO: common up and organize colors....
+      graphics.setForegroundColor(ReferenceConnection.inactiveConnection);
+    }
+    else if (mode == SELECTED)
+    {
+      graphics.setForegroundColor(ColorConstants.black);
+    }
+    super.outlineShape(graphics);
+    graphics.popState();
   }
 
   protected void fillShape(Graphics g)
@@ -40,14 +62,19 @@ public class CenteredIconFigure extends RectangleFigure
     if (image != null)
     {                         
       Rectangle r = getBounds();
-      Dimension imageSize = new Dimension(16, 16);
-      g.drawImage(image, r.x + (r.width - imageSize.width)/2, r.y + (r.height - imageSize.height)/2);
+      Dimension imageSize = new Dimension(15, 15);
+      g.drawImage(image, r.x + (r.width - imageSize.width)/2 - 1, r.y + (r.height - imageSize.height)/2);
     }
   }
-  
+
   public Label getToolTipLabel()
   {
     return toolTipLabel;
+  }
+  
+  public void setMode(int mode)
+  {
+    this.mode = mode;  
   }
   
   public void setToolTipText(String text)

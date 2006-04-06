@@ -26,7 +26,7 @@ public class GenericGroupFigure extends Figure
     setLayoutManager(new ModelGroupLayout(true));
    
     centeredIconFigure = new CenteredIconFigure();
-    centeredIconFigure.setPreferredSize(new Dimension(16, 16));
+    centeredIconFigure.setPreferredSize(new Dimension(15, 15));
 
     add(centeredIconFigure);
     contentFigure = new Figure();
