@@ -206,7 +206,7 @@ public class JSPValidator implements IValidatorJob {
 	 * @return the jsp directive name
 	 */
 	protected String getDirectiveName(IStructuredDocumentRegion sdr) {
-		String name = "";
+		String name = ""; //$NON-NLS-1$
 		ITextRegionList subRegions = sdr.getRegions();
 		for (int j = 0; j < subRegions.size(); j++) {
 			ITextRegion subRegion = subRegions.get(j);
@@ -248,7 +248,7 @@ public class JSPValidator implements IValidatorJob {
 		ITextRegion r = getAttributeValueRegion(sdr, attrName);
 		if(r != null)
 			return sdr.getText(r).trim();
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 
 	/**

@@ -59,7 +59,7 @@ public class ErrorCustomizationRegistry
 	// To register a customizer for the no namespace use an empty string.
 	if(namespace == null)
 	{
-	  namespace = "";
+	  namespace = ""; //$NON-NLS-1$
 	}
 	List customizersForNS = (List)customizers.get(namespace);
 	if(customizersForNS == null)
@@ -85,7 +85,7 @@ public class ErrorCustomizationRegistry
   {
 	if(namespace == null)
 	{
-	  namespace = "";
+	  namespace = ""; //$NON-NLS-1$
 	}
 	List customizersForNS = (List)customizers.get(namespace);
 	if(customizersForNS == null)

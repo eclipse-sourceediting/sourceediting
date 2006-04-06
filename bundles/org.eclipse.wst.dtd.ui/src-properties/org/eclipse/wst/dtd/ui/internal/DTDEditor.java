@@ -41,7 +41,7 @@ public class DTDEditor extends StructuredTextEditor {
 		 * @return String[]
 		 */
 		public String[] getPropertyCategories() {
-			return new String[]{"general", "other", "attributes", "documentation"};
+			return new String[]{DTDPropertiesMessages.DTDEditor_0, DTDPropertiesMessages.DTDEditor_1, DTDPropertiesMessages.DTDEditor_2, DTDPropertiesMessages.DTDEditor_3};
 		}
 
 	}

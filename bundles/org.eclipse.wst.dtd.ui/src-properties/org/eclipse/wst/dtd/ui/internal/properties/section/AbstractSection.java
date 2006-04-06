@@ -58,7 +58,7 @@ public class AbstractSection implements ISection, IPropertyChangeListener, Liste
 	public void createControls(Composite parent, TabbedPropertySheetWidgetFactory aFactory) {
 		this.factory = aFactory;
 		GC gc = new GC(parent);
-		Point extent = gc.textExtent("  ...  ");
+		Point extent = gc.textExtent("  ...  "); //$NON-NLS-1$
 		rightMarginSpace = extent.x;
 		gc.dispose();
 	}
@@ -70,7 +70,7 @@ public class AbstractSection implements ISection, IPropertyChangeListener, Liste
 	 *      org.eclipse.jface.viewers.ISelection)
 	 */
 	public void setInput(IWorkbenchPart part, ISelection sel) {
-		Assert.isTrue(sel instanceof IStructuredSelection, "selection " + sel.getClass() + "is not structured");
+		Assert.isTrue(sel instanceof IStructuredSelection, "selection " + sel.getClass() + "is not structured"); //$NON-NLS-1$ //$NON-NLS-2$
 		this.fWorkbenchPart = part;
 		this.fSelection = sel;
 		this.fInput = ((IStructuredSelection) fSelection).getFirstElement();

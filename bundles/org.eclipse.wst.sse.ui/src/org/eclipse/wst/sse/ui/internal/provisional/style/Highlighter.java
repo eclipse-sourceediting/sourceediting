@@ -289,7 +289,7 @@ public class Highlighter implements IHighlighter {
 		// in the 'limitSize' method, we make this strong assumption, so, will check here, 
 		// so if tweaked in future, we'll get a quick reminder. 
 		if (LEFT_STYLES_SIZE + MIDDLE_STYLES_SIZE + RIGHT_STYLES_SIZE > MAX_NUMBER_STYLES) {
-			throw new IllegalStateException("Highligher constants are not defined correctly");
+			throw new IllegalStateException("Highligher constants are not defined correctly"); //$NON-NLS-1$
 		}
 	}
 

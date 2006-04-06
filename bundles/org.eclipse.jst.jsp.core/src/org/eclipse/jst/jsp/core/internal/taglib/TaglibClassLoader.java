@@ -142,17 +142,17 @@ public class TaglibClassLoader extends ClassLoader {
 		Class oldClass = findLoadedClass(className);
 		if (oldClass != null) {
 			if (DEBUG)
-				System.out.println(">> TaglibClassLoader " + this + " returning existing class: " + className); //$NON-NLS-1$
+				System.out.println(">> TaglibClassLoader " + this + " returning existing class: " + className); //$NON-NLS-1$ //$NON-NLS-2$
 			return oldClass;
 		}
 		if (failedClasses.contains(className)) {
 			if (DEBUG)
-				System.out.println(">> TaglibClassLoader " + this + " known missing class: " + className); //$NON-NLS-1$
+				System.out.println(">> TaglibClassLoader " + this + " known missing class: " + className); //$NON-NLS-1$ //$NON-NLS-2$
 			throw new ClassNotFoundException();
 		}
 
 		if (DEBUG)
-			System.out.println(">> TaglibClassLoader " + this + " finding class: " + className); //$NON-NLS-1$
+			System.out.println(">> TaglibClassLoader " + this + " finding class: " + className); //$NON-NLS-1$ //$NON-NLS-2$
 
 		Class newClass = null;
 		JarFile jarfile = null;

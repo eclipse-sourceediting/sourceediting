@@ -73,7 +73,7 @@ public class NameSection extends AbstractSection {
 		setListenerEnabled(false);
 		nameText.setEnabled(true);
 		Object input = getInput();
-		nameText.setText("");
+		nameText.setText(""); //$NON-NLS-1$
 		if (input != null) {
 			if (input instanceof DTDNode)
 				nameText.setText(((DTDNode) input).getName());

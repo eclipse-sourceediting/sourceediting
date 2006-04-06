@@ -61,7 +61,7 @@ public class XMLQuickScan
          {
           SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
           reader = parser.getXMLReader();  
-          reader.setFeature("http://xml.org/sax/features/namespaces", true);
+          reader.setFeature("http://xml.org/sax/features/namespaces", true); //$NON-NLS-1$
          }
          catch (Exception e)
          {           

@@ -92,9 +92,9 @@ public class SpellcheckStrategy extends StructuredTextReconcilingStrategy {
 
 	private class SpellingStep extends StructuredReconcileStep {
 		protected IReconcileResult[] reconcileModel(final DirtyRegion dirtyRegion, IRegion subRegion) {
-			SpellingService service = getSpellingService(fContentTypeId + "." + SpellingService.PREFERENCE_SPELLING_ENGINE);
+			SpellingService service = getSpellingService(fContentTypeId + "." + SpellingService.PREFERENCE_SPELLING_ENGINE); //$NON-NLS-1$
 			if (_DEBUG_SPELLING) {
-				Logger.log(Logger.INFO_DEBUG, "Spell checking [" + subRegion.getOffset() + "-" + (subRegion.getOffset() + subRegion.getLength()) + "]"); //$NON-NLS-1$
+				Logger.log(Logger.INFO_DEBUG, "Spell checking [" + subRegion.getOffset() + "-" + (subRegion.getOffset() + subRegion.getLength()) + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			}
 			service.check(getDocument(), new IRegion[]{subRegion}, fSpellingContext, fProblemCollector, getProgressMonitor());
 			IReconcileResult[] results = fProblemCollector.getResults();

@@ -29,7 +29,7 @@ public class AbstractSectionDescriptor implements ISectionDescriptor {
 	 * @see org.eclipse.wst.common.ui.properties.internal.provisional.ISectionDescriptor#getId()
 	 */
 	public String getId() {
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 
 	/*
@@ -97,7 +97,7 @@ public class AbstractSectionDescriptor implements ISectionDescriptor {
 	 * @see org.eclipse.wst.common.ui.properties.internal.provisional.ISectionDescriptor#getAfterSection()
 	 */
 	public String getAfterSection() {
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 
 	protected boolean inputEquals(Object input, String tagname, boolean isRef) {

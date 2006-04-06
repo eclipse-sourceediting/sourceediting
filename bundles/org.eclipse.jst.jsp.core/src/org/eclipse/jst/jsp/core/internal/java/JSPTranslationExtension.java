@@ -237,7 +237,7 @@ public class JSPTranslationExtension extends JSPTranslation {
 		// <%  result 
 		// %>
 		String result = replaceText.trim();
-		String preDelimiterWhitespace = "";
+		String preDelimiterWhitespace = ""; //$NON-NLS-1$
 		
 		IDocument jspDoc = getJspDocument();
 		if(jspDoc instanceof IStructuredDocument) {
@@ -251,11 +251,11 @@ public class JSPTranslationExtension extends JSPTranslation {
 					IStructuredDocumentRegion region = regions[i];
 					
 					// is there a better way to check whitespace?
-					if(region.getType() == DOMRegionContext.XML_CONTENT && region.getFullText().trim().equals("")) {
+					if(region.getType() == DOMRegionContext.XML_CONTENT && region.getFullText().trim().equals("")) { //$NON-NLS-1$
 						
 						preDelimiterWhitespace = region.getFullText();
-						preDelimiterWhitespace = preDelimiterWhitespace.replaceAll("\r", "");
-						preDelimiterWhitespace = preDelimiterWhitespace.replaceAll("\n", "");
+						preDelimiterWhitespace = preDelimiterWhitespace.replaceAll("\r", ""); //$NON-NLS-1$ //$NON-NLS-2$
+						preDelimiterWhitespace = preDelimiterWhitespace.replaceAll("\n", ""); //$NON-NLS-1$ //$NON-NLS-2$
 						
 						// need to determine indent for that first line...
 						 String initialIndent = getInitialIndent(result);
@@ -290,16 +290,16 @@ public class JSPTranslationExtension extends JSPTranslation {
 		// 
 		// in the translated java document
 		
-		textBefore = textBefore.replaceAll("\t\t\t", "\t");
+		textBefore = textBefore.replaceAll("\t\t\t", "\t"); //$NON-NLS-1$ //$NON-NLS-2$
 		
 		// get indent after 2nd line break
 		StringBuffer textAfter = new StringBuffer();
 		// will this work on mac?
-		textBefore = textBefore.replaceAll("\r", "");
-		StringTokenizer st = new StringTokenizer(textBefore, "\n", true);
+		textBefore = textBefore.replaceAll("\r", ""); //$NON-NLS-1$ //$NON-NLS-2$
+		StringTokenizer st = new StringTokenizer(textBefore, "\n", true); //$NON-NLS-1$
 		while(st.hasMoreTokens()) {
 			String tok = st.nextToken();
-			if(tok.equals("\n")) {
+			if(tok.equals("\n")) { //$NON-NLS-1$
 				textAfter.append(delim);
 			}
 			else {
@@ -315,8 +315,8 @@ public class JSPTranslationExtension extends JSPTranslation {
 	private String getInitialIndent(String result) {
 		
 		// get indent after 2nd line break
-		String indent = "";
-		StringTokenizer st = new StringTokenizer(result, "\r\n", false);
+		String indent = ""; //$NON-NLS-1$
+		StringTokenizer st = new StringTokenizer(result, "\r\n", false); //$NON-NLS-1$
 		if(st.countTokens() > 1) {
 			String tok = st.nextToken();
 			tok = st.nextToken();

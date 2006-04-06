@@ -20,7 +20,7 @@ public class SAXSearchElement{
 	String elementName;
 	String elementNamespace;
 	Map namespaceMap = new HashMap(); // Map of string prefix keys and namespace
-	String targetNamespace = "";
+	String targetNamespace = ""; //$NON-NLS-1$
 	
 	public SAXSearchElement() {
 		super();

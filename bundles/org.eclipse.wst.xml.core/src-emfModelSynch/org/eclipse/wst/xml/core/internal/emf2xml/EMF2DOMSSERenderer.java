@@ -444,7 +444,7 @@ public class EMF2DOMSSERenderer extends EMF2DOMRenderer implements IModelStateLi
 		// This is some extra processing for clients to know they may be using incorrectly
 		if (isBatch) {
 			if (isBatchChanges) {
-				org.eclipse.wst.xml.core.internal.Logger.log(org.eclipse.wst.xml.core.internal.Logger.INFO, "setBatch was set to true when it was already true. This can be an inidcation of invalid calling order");
+				org.eclipse.wst.xml.core.internal.Logger.log(org.eclipse.wst.xml.core.internal.Logger.INFO, "setBatch was set to true when it was already true. This can be an inidcation of invalid calling order"); //$NON-NLS-1$
 			}
 		}
 

@@ -130,7 +130,7 @@ public class EditNamespaceInfoDialog extends Dialog {
 
 		// never read
                Label placeHolder1 = new Label(composite, SWT.NONE);
-               placeHolder1.setText("");
+               placeHolder1.setText(""); //$NON-NLS-1$
 
 		// row 2
 		//
@@ -147,7 +147,7 @@ public class EditNamespaceInfoDialog extends Dialog {
 
 		// never read
                 Label placeHolder2 = new Label(composite, SWT.NONE);
-                placeHolder2.setText("");
+                placeHolder2.setText(""); //$NON-NLS-1$
 
 		// row 3
 		//

@@ -669,7 +669,7 @@ public class FileBufferModelManager {
 		}
 		DocumentInfo info = (DocumentInfo) fDocumentMap.get(document);
 		if (info == null) {
-			Logger.log(Logger.ERROR, "FileBufferModelManager was asked to revert a document but was not being managed");
+			Logger.log(Logger.ERROR, "FileBufferModelManager was asked to revert a document but was not being managed"); //$NON-NLS-1$
 		}
 		else {
 			// get path just for potential error message

@@ -69,12 +69,8 @@ class JSPTemplateCompletionProcessor extends TemplateCompletionProcessor {
 		if (context == null)
 			return new ICompletionProposal[0];
 
-		context.setVariable("selection", selection.getText()); // name of the
-																// selection
-																// variables
-																// {line,
-																// word}_selection
-																// //$NON-NLS-1$
+		// name of the selection variables {line, word}_selection
+		context.setVariable("selection", selection.getText()); // //$NON-NLS-1$
 
 		Template[] templates = getTemplates(context.getContextType().getId());
 
@@ -115,7 +111,8 @@ class JSPTemplateCompletionProcessor extends TemplateCompletionProcessor {
 	 *         given location, or <code>null</code>
 	 */
 	private TemplateContext createContext(ITextViewer viewer, IRegion region, int offset) {
-		// pretty much same code as super.createContext except create SmartReplaceTemplateContext
+		// pretty much same code as super.createContext except create
+		// SmartReplaceTemplateContext
 		TemplateContextType contextType = getContextType(viewer, region);
 		if (contextType != null) {
 			IDocument document = viewer.getDocument();
@@ -123,7 +120,7 @@ class JSPTemplateCompletionProcessor extends TemplateCompletionProcessor {
 		}
 		return null;
 	}
-	
+
 	protected ICompletionProposal createProposal(Template template, TemplateContext context, IRegion region, int relevance) {
 		return new CustomTemplateProposal(template, context, region, getImage(template), relevance);
 	}

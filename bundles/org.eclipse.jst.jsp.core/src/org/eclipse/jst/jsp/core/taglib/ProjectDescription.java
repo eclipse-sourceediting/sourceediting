@@ -454,7 +454,7 @@ class ProjectDescription {
 
 	private ITaglibRecord createCatalogRecord(String urlString) {
 		ITaglibRecord record = null;
-		if (urlString.toLowerCase(Locale.US).endsWith((".jar")) && urlString.startsWith("file:")) {
+		if (urlString.toLowerCase(Locale.US).endsWith((".jar")) && urlString.startsWith("file:")) { //$NON-NLS-1$ //$NON-NLS-2$
 			String fileLocation = null;
 			try {
 				URL url = new URL(urlString);
@@ -1240,7 +1240,7 @@ class ProjectDescription {
 					 * 
 					 * Also support mappings to .jar files
 					 */
-					if (resource.getFileExtension().equalsIgnoreCase(("jar"))) {
+					if (resource.getFileExtension().equalsIgnoreCase(("jar"))) { //$NON-NLS-1$
 						JarRecord jarRecord = createJARRecord(resource);
 						String[] entries = JarUtilities.getEntryNames(resource);
 						for (int jEntry = 0; jEntry < entries.length; jEntry++) {

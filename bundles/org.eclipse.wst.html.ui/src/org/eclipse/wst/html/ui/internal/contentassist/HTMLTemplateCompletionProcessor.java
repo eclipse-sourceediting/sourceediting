@@ -69,13 +69,8 @@ class HTMLTemplateCompletionProcessor extends TemplateCompletionProcessor {
 		TemplateContext context = createContext(viewer, region, offset);
 		if (context == null)
 			return new ICompletionProposal[0];
-
-		context.setVariable("selection", selection.getText()); // name of the
-		// selection
-		// variables
-		// {line,
-		// word}_selection
-		// //$NON-NLS-1$
+		// name of the selection variables {line, word}_selection
+		context.setVariable("selection", selection.getText()); //$NON-NLS-1$
 
 		Template[] templates = getTemplates(context.getContextType().getId());
 

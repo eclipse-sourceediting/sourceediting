@@ -90,7 +90,7 @@ public class ContentModelTypeSection extends AbstractSection {
 					if (node instanceof Element && typeCombo.indexOf(nodeName) == -1)
 						typeCombo.add(nodeName);
 					else if (node instanceof Entity && ((Entity) node).isParameterEntity() && typeCombo.indexOf(nodeName) == -1)
-						typeCombo.add("%" + nodeName + ";");
+						typeCombo.add("%" + nodeName + ";"); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 				if (input instanceof CMGroupNode)
 					typeCombo.setText(((CMGroupNode) input).getType());
@@ -109,7 +109,7 @@ public class ContentModelTypeSection extends AbstractSection {
 				if (CMNode.MIXED.equals(selected))
 					node.setMixedContent();
 				else if (CMNode.CHILDREN.equals(selected))
-					node.setChildrenContent("");
+					node.setChildrenContent(""); //$NON-NLS-1$
 				else if (CMNode.EMPTY.equals(selected) || CMNode.ANY.equals(selected) || CMNode.PCDATA.equals(selected))
 					node.setContent(selected);
 				else

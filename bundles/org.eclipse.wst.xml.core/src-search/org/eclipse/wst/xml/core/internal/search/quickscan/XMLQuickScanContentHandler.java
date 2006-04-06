@@ -35,7 +35,7 @@ import org.xml.sax.helpers.DefaultHandler;
 public class XMLQuickScanContentHandler extends DefaultHandler
 {
 	private Map namespaceMap = new HashMap(); // Map of string prefix keys and namespace
-	private String targetNamespace = "";
+	private String targetNamespace = ""; //$NON-NLS-1$
 	
 	private SearchPattern pattern;
 	private SearchDocument document;  // we'll add useful entries in the search document as we parsing
@@ -45,7 +45,7 @@ public class XMLQuickScanContentHandler extends DefaultHandler
 	private  StringBuffer currentPath = new StringBuffer();
 	private PatternMatcher matcher;
 	
-	public static final String XMLSCHEMA_NAMESPACE = "http://www.w3.org/2001/XMLSchema";
+	public static final String XMLSCHEMA_NAMESPACE = "http://www.w3.org/2001/XMLSchema"; //$NON-NLS-1$
 
 	
 	public XMLQuickScanContentHandler(PatternMatcher matcher, SearchPattern pattern) {
@@ -69,15 +69,15 @@ public class XMLQuickScanContentHandler extends DefaultHandler
 			Attributes attributes) throws SAXException
 	{
 	
-		currentPath.append("/" + localName);
+		currentPath.append("/" + localName); //$NON-NLS-1$
 
 		// Search for targetNamespace if we haven't encountered it yet.
-		if (targetNamespace.equals(""))
+		if (targetNamespace.equals("")) //$NON-NLS-1$
 		{
 			int nAttributes = attributes.getLength();
 			for (int i = 0; i < nAttributes; i++)
 			{
-				if ("targetNamespace".equals(attributes.getQName(i)))
+				if ("targetNamespace".equals(attributes.getQName(i))) //$NON-NLS-1$
 				{
 					targetNamespace = attributes.getValue(i);
 					break;
@@ -86,22 +86,22 @@ public class XMLQuickScanContentHandler extends DefaultHandler
 		}
 		
 		// collect link info
-		if("import".equals(localName) && XMLSCHEMA_NAMESPACE.equals(uri)){
+		if("import".equals(localName) && XMLSCHEMA_NAMESPACE.equals(uri)){ //$NON-NLS-1$
 			FileReferenceEntry documentEntry = new FileReferenceEntry();
 			documentEntry.setCategory(IXMLSearchConstants.REF);
-			documentEntry.setKey("import");
-			String namespace = attributes.getValue("namespace");
-			String location = attributes.getValue("schemaLocation");
+			documentEntry.setKey("import"); //$NON-NLS-1$
+			String namespace = attributes.getValue("namespace"); //$NON-NLS-1$
+			String location = attributes.getValue("schemaLocation"); //$NON-NLS-1$
 			documentEntry.setPublicIdentifier(namespace);
 			documentEntry.setRelativeFilePath(location);            
 			document.putEntry(documentEntry);
 		}
-		if(("redefine".equals(localName)|| "include".equals(localName)) &&
+		if(("redefine".equals(localName)|| "include".equals(localName)) && //$NON-NLS-1$ //$NON-NLS-2$
 				XMLSCHEMA_NAMESPACE.equals(uri)){
 			FileReferenceEntry documentEntry = new FileReferenceEntry();
 			documentEntry.setCategory(IXMLSearchConstants.REF);
-			documentEntry.setKey("include");
-			String location = attributes.getValue("schemaLocation");
+			documentEntry.setKey("include"); //$NON-NLS-1$
+			String location = attributes.getValue("schemaLocation"); //$NON-NLS-1$
 			documentEntry.setPublicIdentifier(uri);
 			documentEntry.setRelativeFilePath(location);
 			document.putEntry(documentEntry);
@@ -132,7 +132,7 @@ public class XMLQuickScanContentHandler extends DefaultHandler
 				else if(pattern instanceof XMLComponentDeclarationPattern){
 					ComponentDeclarationEntry documentEntry = new ComponentDeclarationEntry();
 					documentEntry.setCategory(IXMLSearchConstants.COMPONENT_DECL);
-                    QualifiedName name = new QualifiedName(targetNamespace, attributes.getValue("name"));
+                    QualifiedName name = new QualifiedName(targetNamespace, attributes.getValue("name")); //$NON-NLS-1$
 					QualifiedName metaName = new QualifiedName(uri, localName);                    
 					documentEntry.setKey(name.toString());
                     documentEntry.setName(name);
@@ -147,7 +147,7 @@ public class XMLQuickScanContentHandler extends DefaultHandler
 	public void endElement(String uri, String localName, String qName)
 			throws SAXException
 	{
-		int slashIndex = currentPath.lastIndexOf("/");
+		int slashIndex = currentPath.lastIndexOf("/"); //$NON-NLS-1$
 		currentPath.delete(slashIndex, currentPath.length());
 	}
 

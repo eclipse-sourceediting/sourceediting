@@ -335,7 +335,7 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 						type = annotation.getType();
 					}
 					if (type == null)
-						type = "";
+						type = ""; //$NON-NLS-1$
 					return type;
 				}
 
@@ -797,7 +797,7 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 
 			Label typeName = new Label(area, SWT.WRAP);
 			typeName.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
-			typeName.setText("Class: " + sel.getClass().getName());
+			typeName.setText("Class: " + sel.getClass().getName()); //$NON-NLS-1$
 
 			if (sel instanceof IStructuredSelection) {
 				(new Label(area, SWT.NONE)).setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false));
@@ -891,13 +891,13 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 
 					public String getText(Object element) {
 						if (element instanceof Class) {
-							return "Class: " + ((Class) element).getName();
+							return "Class: " + ((Class) element).getName(); //$NON-NLS-1$
 						}
 						if (element instanceof Collection) {
-							return "Registered Adapters:";
+							return "Registered Adapters:"; //$NON-NLS-1$
 						}
 						if (element instanceof IRegion) {
-							return "Indexed Region offset span: [" + ((IRegion) element).getOffset() + "-" + ((IRegion) element).getLength() + "]";
+							return "Indexed Region offset span: [" + ((IRegion) element).getOffset() + "-" + ((IRegion) element).getLength() + "]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 						}
 						if (element instanceof TreeViewer && infoTree.getInput() instanceof INodeNotifier) {
 							IJFaceNodeAdapter adapter = (IJFaceNodeAdapter) ((INodeNotifier) infoTree.getInput()).getAdapterFor(IJFaceNodeAdapter.class);

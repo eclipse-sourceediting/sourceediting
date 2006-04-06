@@ -37,7 +37,7 @@ public class DocumentSectionDescriptor extends AbstractSectionDescriptor {
 	 * @see org.eclipse.wst.common.ui.properties.internal.provisional.ISectionDescriptor#getId()
 	 */
 	public String getId() {
-		return "org.eclipse.wst.dtd.ui.internal.section.document";
+		return "org.eclipse.wst.dtd.ui.internal.section.document"; //$NON-NLS-1$
 	}
 
 	/*
@@ -65,7 +65,7 @@ public class DocumentSectionDescriptor extends AbstractSectionDescriptor {
 	 * @see org.eclipse.wst.common.ui.properties.internal.provisional.ISectionDescriptor#getTargetTab()
 	 */
 	public String getTargetTab() {
-		return "org.eclipse.wst.dtd.ui.internal.documentation";
+		return "org.eclipse.wst.dtd.ui.internal.documentation"; //$NON-NLS-1$
 	}
 
 	/*

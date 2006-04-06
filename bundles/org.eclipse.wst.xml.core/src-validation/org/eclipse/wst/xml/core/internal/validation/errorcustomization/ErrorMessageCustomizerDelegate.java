@@ -64,7 +64,7 @@ public class ErrorMessageCustomizerDelegate implements IErrorMessageCustomizer
 			  new Status(IStatus.WARNING, 
 					     XMLCorePlugin.getDefault().getBundle().getSymbolicName(), 
 					     IStatus.OK, 
-					     "The XML validator error customizer was unable to load class " + classname, e));
+					     "The XML validator error customizer was unable to load class " + classname, e)); //$NON-NLS-1$
 	}
   }
   

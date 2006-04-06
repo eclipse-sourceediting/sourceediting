@@ -264,7 +264,7 @@ public class NewEntitySection extends AbstractSection {
 		else if (e.widget == wizardButton) {
 			Shell shell = Display.getCurrent().getActiveShell();
 			IFile currentIFile = ((IFileEditorInput) getActiveEditor().getEditorInput()).getFile();
-			ViewerFilter filter = new ResourceFilter(new String[]{".dtd"}, new IFile[]{currentIFile}, null);
+			ViewerFilter filter = new ResourceFilter(new String[]{".dtd"}, new IFile[]{currentIFile}, null); //$NON-NLS-1$
 
 			DTDSelectIncludeFileWizard fileSelectWizard = new DTDSelectIncludeFileWizard(DTDPropertiesMessages._UI_FILEDIALOG_SELECT_DTD, DTDPropertiesMessages._UI_FILEDIALOG_SELECT_DTD_DESC, filter, (IStructuredSelection) fSelection);
 
@@ -291,7 +291,7 @@ public class NewEntitySection extends AbstractSection {
 	public void refresh() {
 		setListenerEnabled(false);
 		Object input = getInput();
-		nameText.setText("");
+		nameText.setText(""); //$NON-NLS-1$
 		if (input != null) {
 			if (input instanceof Entity) {
 				Entity entity = (Entity) input;

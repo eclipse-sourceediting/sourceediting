@@ -100,8 +100,8 @@ public class NotationSection extends AbstractSection {
 	public void refresh() {
 		setListenerEnabled(false);
 		Object input = getInput();
-		publicIdText.setText("");
-		systemIdText.setText("");
+		publicIdText.setText(""); //$NON-NLS-1$
+		systemIdText.setText(""); //$NON-NLS-1$
 
 		if (input != null && input instanceof Notation) {
 			Notation notation = (Notation) input;

@@ -23,10 +23,10 @@ import org.osgi.framework.Bundle;
  */
 public class ErrorCustomizationPluginRegistryReader {
 	
-	  protected static final String PLUGIN_ID = "org.eclipse.wst.xml.core";
-	  protected static final String ATT_CLASS = "class";
-	  protected static final String ATT_NAMESPACE = "namespace";
-	  protected static final String EXTENSION_POINT_ID = "errorCustomizer";
+	  protected static final String PLUGIN_ID = "org.eclipse.wst.xml.core"; //$NON-NLS-1$
+	  protected static final String ATT_CLASS = "class"; //$NON-NLS-1$
+	  protected static final String ATT_NAMESPACE = "namespace"; //$NON-NLS-1$
+	  protected static final String EXTENSION_POINT_ID = "errorCustomizer"; //$NON-NLS-1$
 	  protected static final String tagName = EXTENSION_POINT_ID;
 
 	  /**

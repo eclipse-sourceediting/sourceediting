@@ -64,7 +64,7 @@ public class XMLSearchDocument extends SearchDocument {
 			if(values == null){
 				return new Entry[0];
 			}
-			if(key == null || "".equals(key) || "*".equals(key)){
+			if(key == null || "".equals(key) || "*".equals(key)){ //$NON-NLS-1$ //$NON-NLS-2$
 				// entries with any key in the given category
 				results.addAll(values);
 			}

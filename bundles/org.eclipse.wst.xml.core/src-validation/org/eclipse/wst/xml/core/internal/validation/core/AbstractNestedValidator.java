@@ -249,7 +249,7 @@ public abstract class AbstractNestedValidator implements IValidatorJob
 	}
 	catch(CoreException e)
 	{
-	  System.out.println("Unable to set nested messages property.");
+	  System.out.println("Unable to set nested messages property."); //$NON-NLS-1$
 	}
   }
 	

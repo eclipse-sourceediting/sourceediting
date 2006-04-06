@@ -34,7 +34,7 @@ public class XMLSearchPatternMatcher extends PatternMatcher{
 		if (node.getNodeType() == Node.ELEMENT_NODE)
 		{
 		  Element e = (Element)node;
-		  String attributeName = (prefix != null && prefix.length() > 0) ? ("xmlns:" + prefix) : "xmlns"; 
+		  String attributeName = (prefix != null && prefix.length() > 0) ? ("xmlns:" + prefix) : "xmlns";  //$NON-NLS-1$ //$NON-NLS-2$
 		  result = e.getAttribute(attributeName);
 		  if (result != null)
 		  {
@@ -52,7 +52,7 @@ public class XMLSearchPatternMatcher extends PatternMatcher{
 			pattern.setElementNamespace(domElement.getNamespaceURI());
 			String actualValue = domElement.getAttribute(pattern.getAttributeName());
 			 if(actualValue != null){
-					int n = actualValue.indexOf(":");
+					int n = actualValue.indexOf(":"); //$NON-NLS-1$
 					if(n > 0){
 						String prefix = actualValue.substring(0, n);
 						pattern.setSearchName(actualValue.substring(n+1));      
@@ -63,7 +63,7 @@ public class XMLSearchPatternMatcher extends PatternMatcher{
 					}
 					else {
 						pattern.setSearchName(actualValue);
-						pattern.setSearchNamespace(domElement.getOwnerDocument().getDocumentElement().getAttribute("targetNamespace"));
+						pattern.setSearchNamespace(domElement.getOwnerDocument().getDocumentElement().getAttribute("targetNamespace")); //$NON-NLS-1$
 					}
 			    }
 		
@@ -75,7 +75,7 @@ public class XMLSearchPatternMatcher extends PatternMatcher{
 		pattern.setElementNamespace(saxElement.getElementNamespace());
 		String actualValue = saxElement.getAttributes().getValue(pattern.getAttributeName());
 		 if(actualValue != null){
-				int n = actualValue.indexOf(":");
+				int n = actualValue.indexOf(":"); //$NON-NLS-1$
 				if(n > 0){
 					String prefix = actualValue.substring(0, n);
 					pattern.setSearchName(actualValue.substring(n+1));
@@ -170,7 +170,7 @@ public class XMLSearchPatternMatcher extends PatternMatcher{
                 {  
                   return false;
                 }
-                else if ("*".equals(searchPattern.getSearchName()))
+                else if ("*".equals(searchPattern.getSearchName())) //$NON-NLS-1$
                 {
                   return true;
                 }  
@@ -192,10 +192,10 @@ public class XMLSearchPatternMatcher extends PatternMatcher{
     {
       SearchMatch match = super.createSearchMatch(file, attributeNode);
       // todo... remove this ugly hack!!
-      if ("name".equals(attributeNode.getName()))
+      if ("name".equals(attributeNode.getName())) //$NON-NLS-1$
       {
-        QualifiedName qualifiedName = new QualifiedName("todo-compute-targetNamespace", attributeNode.getValue());
-        match.map.put("name", qualifiedName);
+        QualifiedName qualifiedName = new QualifiedName("todo-compute-targetNamespace", attributeNode.getValue()); //$NON-NLS-1$
+        match.map.put("name", qualifiedName); //$NON-NLS-1$
       }
       //Element element = attributeNode.getOwnerDocument().getDocumentElement();
       //if (element.getAttribute("targetNamespace"))

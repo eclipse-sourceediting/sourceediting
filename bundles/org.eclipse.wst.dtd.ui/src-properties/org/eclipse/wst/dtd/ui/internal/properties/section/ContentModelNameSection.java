@@ -80,7 +80,7 @@ public class ContentModelNameSection extends AbstractSection {
 					if (!isForRootContent && node instanceof Element)
 						typeCombo.add(node.getName());
 					if (node instanceof Entity && ((Entity) node).isParameterEntity())
-						typeCombo.add("%" + node.getName() + ";");
+						typeCombo.add("%" + node.getName() + ";"); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 
 				typeCombo.setText(((CMBasicNode) input).getName());

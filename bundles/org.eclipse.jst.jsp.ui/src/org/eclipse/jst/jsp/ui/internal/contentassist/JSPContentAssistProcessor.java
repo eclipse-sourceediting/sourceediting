@@ -914,10 +914,10 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor {
 
 		// just need to remove the ";"
 		// and adjust offsets for the change
-		String newReplace = importProposal.getReplacementString().replaceAll(";", "");
+		String newReplace = importProposal.getReplacementString().replaceAll(";", ""); //$NON-NLS-1$ //$NON-NLS-2$
 		importProposal.setReplacementString(newReplace);
 
-		String newDisplay = importProposal.getDisplayString().replaceAll(";", "");
+		String newDisplay = importProposal.getDisplayString().replaceAll(";", ""); //$NON-NLS-1$ //$NON-NLS-2$
 		importProposal.setDisplayString(newDisplay);
 
 		int newReplacementLength = importProposal.getReplacementLength() - 1;

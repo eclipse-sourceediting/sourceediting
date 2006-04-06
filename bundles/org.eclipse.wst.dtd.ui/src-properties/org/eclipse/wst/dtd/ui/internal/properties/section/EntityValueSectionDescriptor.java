@@ -26,7 +26,7 @@ public class EntityValueSectionDescriptor extends AbstractSectionDescriptor impl
 	 * @see org.eclipse.wst.common.ui.properties.internal.provisional.ISectionDescriptor#getId()
 	 */
 	public String getId() {
-		return "org.eclipse.wst.dtd.ui.internal.section.entityValue";
+		return "org.eclipse.wst.dtd.ui.internal.section.entityValue"; //$NON-NLS-1$
 	}
 
 	/*
@@ -44,7 +44,7 @@ public class EntityValueSectionDescriptor extends AbstractSectionDescriptor impl
 	 * @see org.eclipse.wst.common.ui.properties.internal.provisional.ISectionDescriptor#getTargetTab()
 	 */
 	public String getTargetTab() {
-		return "org.eclipse.wst.dtd.ui.internal.other";
+		return "org.eclipse.wst.dtd.ui.internal.other"; //$NON-NLS-1$
 	}
 
 	/*

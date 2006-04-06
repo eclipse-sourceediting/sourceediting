@@ -85,7 +85,7 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 			node = (Node) target;
 		}
 		else {
-			throw new IllegalArgumentException("XMLPropertySource is only for Nodes");
+			throw new IllegalArgumentException("XMLPropertySource is only for Nodes"); //$NON-NLS-1$
 		}
 		return node;
 	}

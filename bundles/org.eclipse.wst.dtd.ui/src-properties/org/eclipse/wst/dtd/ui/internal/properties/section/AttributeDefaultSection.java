@@ -85,18 +85,18 @@ public class AttributeDefaultSection extends AbstractSection {
 		if (input != null) {
 			if (input instanceof Attribute) {
 				String kind = ((Attribute) input).getDefaultKind();
-				if ("".equals(kind))
+				if ("".equals(kind)) //$NON-NLS-1$
 					usageCombo.setText(DTDPropertiesMessages._UI_DEFAULT);
 				else
 					usageCombo.setText(kind);
 
-				if ("".equals(kind) || FIXED.equals(kind)) {
+				if ("".equals(kind) || FIXED.equals(kind)) { //$NON-NLS-1$
 					defaultValueLabel.setVisible(true);
 					defaultValueText.setEnabled(true);
 					defaultValueText.setText(((Attribute) input).getDefaultValue());
 				}
 				else {
-					defaultValueText.setText("");
+					defaultValueText.setText(""); //$NON-NLS-1$
 					defaultValueLabel.setVisible(false);
 					defaultValueText.setEnabled(false);
 				}
@@ -112,7 +112,7 @@ public class AttributeDefaultSection extends AbstractSection {
 				String usage = usageCombo.getText();
 				Attribute attribute = (Attribute) input;
 				if (usage.equals(DTDPropertiesMessages._UI_DEFAULT))
-					attribute.setDefaultKind("");
+					attribute.setDefaultKind(""); //$NON-NLS-1$
 				else
 					attribute.setDefaultKind(usage);
 

@@ -78,9 +78,9 @@ public class CatalogContributorRegistryReader
   public static String resolvePath(URL platformURL, String path) 
   {      
 	String fileLocation = path;
-	int jarPathStart = path.indexOf("jar:");
-	jarPathStart = jarPathStart < 0 ? 0 : jarPathStart + "jar:".length();
-	int jarPathEnd = path.indexOf("!");
+	int jarPathStart = path.indexOf("jar:"); //$NON-NLS-1$
+	jarPathStart = jarPathStart < 0 ? 0 : jarPathStart + "jar:".length(); //$NON-NLS-1$
+	int jarPathEnd = path.indexOf("!"); //$NON-NLS-1$
 	jarPathEnd = jarPathEnd < 0 ? path.length() : jarPathEnd;
 	fileLocation = path.substring(jarPathStart, jarPathEnd);
 	

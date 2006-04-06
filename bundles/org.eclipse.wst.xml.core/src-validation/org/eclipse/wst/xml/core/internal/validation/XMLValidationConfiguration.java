@@ -37,7 +37,7 @@ public class XMLValidationConfiguration
 	if(WARN_NO_GRAMMAR.equals(feature))
 	  warn_no_grammar_value = value;
 	else
-	  throw new Exception("Feature not recognized.");
+	  throw new Exception("Feature not recognized."); //$NON-NLS-1$
 	
   }
   
@@ -58,7 +58,7 @@ public class XMLValidationConfiguration
 	if(WARN_NO_GRAMMAR.equals(feature))
 	  return warn_no_grammar_value;
 	
-	throw new Exception("Feature not recognized.");
+	throw new Exception("Feature not recognized."); //$NON-NLS-1$
   }
 
 }

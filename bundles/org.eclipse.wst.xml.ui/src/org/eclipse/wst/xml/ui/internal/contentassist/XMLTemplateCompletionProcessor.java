@@ -38,8 +38,8 @@ import org.eclipse.wst.xml.ui.internal.editor.XMLEditorPluginImages;
 
 
 /**
- * Completion processor for XML Templates. Most of the work is already done
- * by the XML Content Assist processor, so by the time the
+ * Completion processor for XML Templates. Most of the work is already done by
+ * the XML Content Assist processor, so by the time the
  * XMLTemplateCompletionProcessor is asked for content assist proposals, the
  * XML content assist processor has already set the context type for
  * templates.
@@ -72,12 +72,8 @@ class XMLTemplateCompletionProcessor extends TemplateCompletionProcessor {
 		if (context == null)
 			return new ICompletionProposal[0];
 
-		context.setVariable("selection", selection.getText()); // name of the
-																// selection
-																// variables
-																// {line,
-																// word}_selection
-																// //$NON-NLS-1$
+		// name of the selection variables {line, word}_selection
+		context.setVariable("selection", selection.getText()); //$NON-NLS-1$
 
 		Template[] templates = getTemplates(context.getContextType().getId());
 
@@ -118,7 +114,8 @@ class XMLTemplateCompletionProcessor extends TemplateCompletionProcessor {
 	 *         given location, or <code>null</code>
 	 */
 	private TemplateContext createContext(ITextViewer viewer, IRegion region, int offset) {
-		// pretty much same code as super.createContext except create SmartReplaceTemplateContext
+		// pretty much same code as super.createContext except create
+		// SmartReplaceTemplateContext
 		TemplateContextType contextType = getContextType(viewer, region);
 		if (contextType != null) {
 			IDocument document = viewer.getDocument();
@@ -126,7 +123,7 @@ class XMLTemplateCompletionProcessor extends TemplateCompletionProcessor {
 		}
 		return null;
 	}
-	
+
 	protected ICompletionProposal createProposal(Template template, TemplateContext context, IRegion region, int relevance) {
 		return new CustomTemplateProposal(template, context, region, getImage(template), relevance);
 	}

@@ -76,7 +76,7 @@ public class XMLCatalogIdResolver implements org.eclipse.wst.common.uriresolver.
 			// passing it thru to URIResolver
 			// bug 117424, we should be able to assume that the base location
 			// is non-null
-			Assert.isNotNull(base, "Base location is expected to be non null.");
+			Assert.isNotNull(base, "Base location is expected to be non null."); //$NON-NLS-1$
 			base = URIHelper.addImpliedFileProtocol(base);
 		}
 		result = URIResolverPlugin.createResolver().resolve(base, publicId, systemId);
@@ -86,7 +86,7 @@ public class XMLCatalogIdResolver implements org.eclipse.wst.common.uriresolver.
 	public String resolvePhysicalLocation(String baseLocation, String publicId, String logicalLocation) {
 		// This class should never be called to perform physical resolution!
 		// If it does we should log it as an error
-		Logger.log(Logger.ERROR_DEBUG, "XMLCatalogIDResolver.resolvePhysicalLocation() called unexpectedly");
+		Logger.log(Logger.ERROR_DEBUG, "XMLCatalogIDResolver.resolvePhysicalLocation() called unexpectedly"); //$NON-NLS-1$
 		return logicalLocation;
 	}
 }

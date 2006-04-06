@@ -79,6 +79,18 @@ public class DTDPropertiesMessages extends NLS {
 	public static String _UI_LABEL_OTHER;
 	public static String _UI_LABEL_ATTRIBUTES;
 	public static String _UI_LABEL_DOCUMENTATION;
+	public static String DTDEditor_0;
+	public static String DTDEditor_1;
+	public static String DTDEditor_2;
+	public static String DTDEditor_3;
+	public static String DTDSectionLabelProvider_0;
+	public static String DTDSectionLabelProvider_1;
+	public static String DTDSectionLabelProvider_10;
+	public static String DTDSectionLabelProvider_11;
+	public static String DTDSectionLabelProvider_6;
+	public static String DTDSectionLabelProvider_7;
+	public static String DTDSectionLabelProvider_8;
+	public static String DTDSectionLabelProvider_9;
 
 	private static ResourceBundle fResourceBundle;
 

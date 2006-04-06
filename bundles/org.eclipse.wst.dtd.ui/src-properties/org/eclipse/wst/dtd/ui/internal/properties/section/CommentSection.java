@@ -31,7 +31,7 @@ public class CommentSection extends AbstractSection {
 		super.createControls(parent, factory);
 
 		Composite composite = getWidgetFactory().createFlatFormComposite(parent);
-		commentText = getWidgetFactory().createText(composite, "", SWT.MULTI | SWT.NONE);
+		commentText = getWidgetFactory().createText(composite, "", SWT.MULTI | SWT.NONE); //$NON-NLS-1$
 		commentText.addListener(SWT.Modify, CommentSection.this);
 
 		FormData data = new FormData();
@@ -49,7 +49,7 @@ public class CommentSection extends AbstractSection {
 		setListenerEnabled(false);
 		commentText.setEnabled(true);
 		Object input = getInput();
-		commentText.setText("");
+		commentText.setText(""); //$NON-NLS-1$
 		if (input != null) {
 			if (input instanceof Comment)
 				commentText.setText(((Comment) input).getText());

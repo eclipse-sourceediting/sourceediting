@@ -7,6 +7,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
+import org.eclipse.jst.jsp.core.internal.JSPCoreMessages;
 import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.provisional.JSP11Namespace;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
@@ -133,12 +134,12 @@ public class JSPDirectiveValidator extends JSPValidator implements ISourceValida
 			// use file if available (for markers)
 			if (isReservedPrefix(taglibPrefix)) {
 
-				String msgText = "Reserved prefix  '" + taglibPrefix + "'";
+				String msgText = JSPCoreMessages.JSPDirectiveValidator_0 + taglibPrefix + "'"; //$NON-NLS-2$ //$NON-NLS-1$
 				message = (file == null ? new LocalizedMessage(sev, msgText) : new LocalizedMessage(sev, msgText, file));
 			}
 			else if (isDuplicatePrefix(sdRegion, taglibPrefix)) {
 
-				String msgText = "Duplicate prefix  '" + taglibPrefix + "'";
+				String msgText = JSPCoreMessages.JSPDirectiveValidator_2 + taglibPrefix + "'"; //$NON-NLS-2$ //$NON-NLS-1$
 				message = (file == null ? new LocalizedMessage(sev, msgText) : new LocalizedMessage(sev, msgText, file));
 			}
 

@@ -35,7 +35,7 @@ public class ContentModelTypeSectionDescriptor extends AbstractSectionDescriptor
 	 * @see org.eclipse.wst.common.ui.properties.internal.provisional.ISectionDescriptor#getId()
 	 */
 	public String getId() {
-		return "org.eclipse.wst.dtd.ui.internal.section.contentmodeltype";
+		return "org.eclipse.wst.dtd.ui.internal.section.contentmodeltype"; //$NON-NLS-1$
 	}
 
 	/*
@@ -63,7 +63,7 @@ public class ContentModelTypeSectionDescriptor extends AbstractSectionDescriptor
 	 * @see org.eclipse.wst.common.ui.properties.internal.provisional.ISectionDescriptor#getTargetTab()
 	 */
 	public String getTargetTab() {
-		return "org.eclipse.wst.dtd.ui.internal.general";
+		return "org.eclipse.wst.dtd.ui.internal.general"; //$NON-NLS-1$
 	}
 
 	/*

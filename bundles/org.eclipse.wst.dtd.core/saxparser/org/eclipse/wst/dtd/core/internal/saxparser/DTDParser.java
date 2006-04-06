@@ -115,7 +115,7 @@ public class DTDParser extends DefaultHandler implements ContentHandler, DTDHand
 		try {			
 			// CS ensure that the physical URI is considered where streams are required
 			// and the logicalURI is used as the DTD's baseLocation
-			String physicalURI = URIResolverPlugin.createResolver().resolvePhysicalLocation("", "", logicalURI);
+			String physicalURI = URIResolverPlugin.createResolver().resolvePhysicalLocation("", "", logicalURI); //$NON-NLS-1$ //$NON-NLS-2$
 			boolean isReadable = URIHelper.isReadableURI(physicalURI, true);
 			if (!isReadable) {
 				throw new Exception("DTD parse error. Can not read the specified URI : " + logicalURI); //$NON-NLS-1$
@@ -662,9 +662,9 @@ public class DTDParser extends DefaultHandler implements ContentHandler, DTDHand
 		// right before we attempt to open a stream
 		String physicalURI = idResolver.resolvePhysicalLocation(currentDTD.getName(), publicId, logicalURI);
 		result = new InputSource(logicalURI);
-		if(!(physicalURI == null || physicalURI.equals("") || URIHelper.hasProtocol(physicalURI)))
+		if(!(physicalURI == null || physicalURI.equals("") || URIHelper.hasProtocol(physicalURI))) //$NON-NLS-1$
 		{
-		  physicalURI = "file:///" + physicalURI;
+		  physicalURI = "file:///" + physicalURI; //$NON-NLS-1$
 		}
 		result.setByteStream(new LazyURLInputStream(physicalURI));
 		return result;

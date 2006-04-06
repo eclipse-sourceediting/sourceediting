@@ -99,8 +99,8 @@ public abstract class XMLSearchParticipant extends SearchParticipant {
             // TODO.. don't assume this is just a component declaration entry            
             ComponentDeclarationEntry entry = (ComponentDeclarationEntry)entries[i];
             SearchMatch searchMatch = new SearchMatch(null, 0, 0, file);
-            searchMatch.map.put("name", entry.getName());
-            searchMatch.map.put("metaName", entry.getMetaName());
+            searchMatch.map.put("name", entry.getName()); //$NON-NLS-1$
+            searchMatch.map.put("metaName", entry.getMetaName()); //$NON-NLS-1$
             try
             {
               requestor.acceptSearchMatch(searchMatch);
@@ -275,7 +275,7 @@ public abstract class XMLSearchParticipant extends SearchParticipant {
               {
                 try
                 {
-                  isInScope = isLinked(documentSet, "file:///" + path, "file:///" + targetFile.getLocation().toString());
+                  isInScope = isLinked(documentSet, "file:///" + path, "file:///" + targetFile.getLocation().toString()); //$NON-NLS-1$ //$NON-NLS-2$
                   //if (path.endsWith("CancelSelection.wsdl")  && path.indexOf("clone1") != -1)
                   //{
                   //  fileReferenceTable.debug(qualifiedPath, 0, 5);
@@ -298,7 +298,7 @@ public abstract class XMLSearchParticipant extends SearchParticipant {
 		if (debugPerf)
 		{
 			System.out
-					.println(""
+					.println("" //$NON-NLS-1$
 							+ getDescription()
 							+ ": " + (System.currentTimeMillis() - time) + "ms for locateMatches"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
@@ -316,7 +316,7 @@ public abstract class XMLSearchParticipant extends SearchParticipant {
       if (source.equals(target))
         return true;
       
-      String fileProtocol = "file:///";            
+      String fileProtocol = "file:///";             //$NON-NLS-1$
       if (source.startsWith(fileProtocol))
       {    
         

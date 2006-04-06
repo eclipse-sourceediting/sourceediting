@@ -81,40 +81,40 @@ public class DTDSectionLabelProvider extends LabelProvider {
 				String name = node.getName();
 				if (node instanceof CMGroupNode) {
 					if (((CMGroupNode) node).getConnector() == CMGroupNode.CHOICE)
-						name = "choice";
+						name = DTDPropertiesMessages.DTDSectionLabelProvider_0;
 					else
-						name = "sequence";
+						name = DTDPropertiesMessages.DTDSectionLabelProvider_1;
 				}
 				char occurrence = node.getOccurrence();
 				switch (occurrence) {
 					case CMRepeatableNode.ONCE :
-						name += " [1..1]";
+						name += " [1..1]"; //$NON-NLS-1$
 						break;
 					case CMRepeatableNode.OPTIONAL :
-						name += " [0..1]";
+						name += " [0..1]"; //$NON-NLS-1$
 						break;
 					case CMRepeatableNode.ONE_OR_MORE :
-						name += " [1..*]";
+						name += " [1..*]"; //$NON-NLS-1$
 						break;
 					case CMRepeatableNode.ZERO_OR_MORE :
-						name += " [0..*]";
+						name += " [0..*]"; //$NON-NLS-1$
 						break;
 				}
 				return name;
 			}
 			else if (selected instanceof DTDNode) {
 				if (selected instanceof Element)
-					return "element";
+					return DTDPropertiesMessages.DTDSectionLabelProvider_6;
 				else if (selected instanceof Attribute)
-					return "attribute";
+					return DTDPropertiesMessages.DTDSectionLabelProvider_7;
 				else if (selected instanceof AttributeList)
-					return "attribute list";
+					return DTDPropertiesMessages.DTDSectionLabelProvider_8;
 				else if (selected instanceof Comment)
-					return "comment";
+					return DTDPropertiesMessages.DTDSectionLabelProvider_9;
 				else if (selected instanceof Entity)
-					return "entity";
+					return DTDPropertiesMessages.DTDSectionLabelProvider_10;
 				else if (selected instanceof Notation)
-					return "notation";
+					return DTDPropertiesMessages.DTDSectionLabelProvider_11;
 				else if (selected instanceof ParameterEntityReference)
 					// return "parameter entity reference";
 					return null;
@@ -125,10 +125,10 @@ public class DTDSectionLabelProvider extends LabelProvider {
 				return ((org.w3c.dom.Element) selected).getLocalName();
 			}
 			else
-				return "";
+				return ""; //$NON-NLS-1$
 		}
 		else if (object instanceof TextSelection) {
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 		else
 			return object.toString();

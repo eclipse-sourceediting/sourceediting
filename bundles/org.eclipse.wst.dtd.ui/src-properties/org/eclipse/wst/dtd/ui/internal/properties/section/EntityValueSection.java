@@ -135,8 +135,8 @@ public class EntityValueSection extends AbstractSection {
 			systemIdLabel.setVisible(true);
 			systemIdText.setVisible(true);
 
-			publicIdText.setText("");
-			systemIdText.setText("");
+			publicIdText.setText(""); //$NON-NLS-1$
+			systemIdText.setText(""); //$NON-NLS-1$
 			if (input != null && input instanceof Entity) {
 				Entity entity = (Entity) input;
 				publicIdText.setText((entity).getPublicID());
@@ -151,7 +151,7 @@ public class EntityValueSection extends AbstractSection {
 			systemIdLabel.setVisible(false);
 			systemIdText.setVisible(false);
 
-			valueText.setText("");
+			valueText.setText(""); //$NON-NLS-1$
 			if (input != null && input instanceof Entity)
 				valueText.setText(((Entity) input).getValue());
 		}
