@@ -120,7 +120,7 @@ public class XSDAdapterFactory extends AdapterFactoryImpl
       public Object caseXSDSchema(XSDSchema object)
       {
         return new XSDSchemaAdapter();
-      }
+      }         
     };
     Object o = xsdSwitch.doSwitch((EObject) target);
     Adapter result = null;

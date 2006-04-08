@@ -10,16 +10,19 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.editor.internal.adapters;
 
+import org.eclipse.gef.commands.Command;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.wst.xsd.adt.facade.IField;
+import org.eclipse.wst.xsd.adt.facade.IModel;
+import org.eclipse.wst.xsd.adt.facade.IType;
 import org.eclipse.wst.xsd.editor.XSDEditorPlugin;
 import org.eclipse.xsd.XSDParticle;
 import org.eclipse.xsd.XSDWildcard;
 import org.eclipse.xsd.util.XSDConstants;
 import org.w3c.dom.Element;
 
-public class XSDWildcardAdapter extends XSDBaseAdapter
+public class XSDWildcardAdapter extends XSDParticleAdapter implements IField
 {
-
   public XSDWildcardAdapter()
   {
 
@@ -102,5 +105,71 @@ public class XSDWildcardAdapter extends XSDBaseAdapter
   {
     XSDWildcard xsdWildcard = (XSDWildcard) target;
     return xsdWildcard.getContainer();
+  }
+
+  public Command getDeleteCommand()
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  public String getKind()
+  {
+    return "element";
+  }
+
+  public IModel getModel()
+  {
+    return null;
+  }
+
+  public String getName()
+  {
+    return "anyElement";
+  }
+  
+  public IType getType()
+  {
+    return null;
+  }
+
+  public String getTypeName()
+  {
+    return "anyType";
+  }
+
+  public String getTypeNameQualifier()
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  public Command getUpdateMaxOccursCommand(int maxOccurs)
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  public Command getUpdateMinOccursCommand(int minOccurs)
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  public Command getUpdateNameCommand(String name)
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  public Command getUpdateTypeNameCommand(String typeName, String quailifier)
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  public boolean isGlobal()
+  {
+    return false;
   }
 }

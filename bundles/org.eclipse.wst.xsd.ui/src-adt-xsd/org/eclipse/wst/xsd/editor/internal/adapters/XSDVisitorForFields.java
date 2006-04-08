@@ -27,6 +27,7 @@ import org.eclipse.xsd.XSDModelGroup;
 import org.eclipse.xsd.XSDModelGroupDefinition;
 import org.eclipse.xsd.XSDParticle;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
+import org.eclipse.xsd.XSDWildcard;
 
 public class XSDVisitorForFields extends XSDVisitor
 {
@@ -130,6 +131,11 @@ public class XSDVisitorForFields extends XSDVisitor
   {
     thingsWeNeedToListenTo.add(particle);
     super.visitParticle(particle);
+  }
+  
+  public void visitWildcard(XSDWildcard wildcard)
+  {
+    concreteComponentList.add(wildcard);
   }
 
   public void visitElementDeclaration(XSDElementDeclaration element)
