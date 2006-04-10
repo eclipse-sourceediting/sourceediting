@@ -44,16 +44,22 @@ public class CenteredIconFigure extends RoundedRectangle
   protected void outlineShape(Graphics graphics)
   {
     graphics.pushState();
-    if (mode == NORMAL)
-    { // TODO: common up and organize colors....
-      graphics.setForegroundColor(ReferenceConnection.inactiveConnection);
-    }
-    else if (mode == SELECTED)
+    try
     {
-      graphics.setForegroundColor(ColorConstants.black);
+      if (mode == NORMAL)
+      { // TODO: common up and organize colors....
+        graphics.setForegroundColor(ReferenceConnection.inactiveConnection);
+      }
+      else if (mode == SELECTED)
+      {
+        graphics.setForegroundColor(ColorConstants.black);
+      }
+      super.outlineShape(graphics);
     }
-    super.outlineShape(graphics);
-    graphics.popState();
+    finally
+    {
+      graphics.popState();
+    }
   }
 
   protected void fillShape(Graphics g)
