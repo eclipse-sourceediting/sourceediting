@@ -170,10 +170,11 @@ public abstract class ADTMultiPageEditor extends MultiPageEditorPart implements 
    */
   public void doSaveAs()
   {
-    IEditorPart editor = getEditor(0);
+    IEditorPart editor = getEditor(1);
     editor.doSaveAs();
-    setPageText(0, editor.getTitle());
+    setPageText(1, editor.getTitle());
     setInput(editor.getEditorInput());
+    getCommandStack().markSaveLocation();
   }
 
   /*
