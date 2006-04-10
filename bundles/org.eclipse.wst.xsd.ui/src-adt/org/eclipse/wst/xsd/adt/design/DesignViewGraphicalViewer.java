@@ -60,7 +60,8 @@ public class DesignViewGraphicalViewer extends ScrollingGraphicalViewer implemen
     {
       if (selectedObject instanceof IStructure)
       {
-        if ((getInput() instanceof IModel) && (event.getSource() instanceof ADTContentOutlinePage))
+        if (((getInput() instanceof IModel) && (event.getSource() instanceof ADTContentOutlinePage)) ||
+            (!(getInput() instanceof IModel)))
         {
           ((RootContentEditPart) getContents()).setInput(selectedObject);
         }
@@ -68,7 +69,8 @@ public class DesignViewGraphicalViewer extends ScrollingGraphicalViewer implemen
       else if (selectedObject instanceof IField)
       {
         IField field = (IField)selectedObject;
-        if (field.isGlobal() && (getInput() instanceof IModel) && (event.getSource() instanceof ADTContentOutlinePage))
+        if ( (field.isGlobal() && (getInput() instanceof IModel) && (event.getSource() instanceof ADTContentOutlinePage)) ||
+            ( (field.isGlobal() && !(getInput() instanceof IModel))))
         {  
           ((RootContentEditPart) getContents()).setInput(selectedObject);
         }
