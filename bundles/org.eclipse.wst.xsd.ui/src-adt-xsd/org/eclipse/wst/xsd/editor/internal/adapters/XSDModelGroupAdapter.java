@@ -38,9 +38,10 @@ import org.w3c.dom.Element;
 
 public class XSDModelGroupAdapter extends XSDParticleAdapter implements IActionProvider
 {
-  public static final Image SEQUENCE_ICON_IMAGE = XSDEditorPlugin.getImageDescriptor("newSequence2.gif", true).createImage();
-  public static final Image CHOICE_ICON_IMAGE = XSDEditorPlugin.getImageDescriptor("newChoice.gif", true).createImage();
-  public static final Image ALL_ICON_IMAGE = XSDEditorPlugin.getImageDescriptor("obj16/all.gif", true).createImage();
+  // TODO: common these up with ModelGroupFigure's
+  public static final Image SEQUENCE_ICON_IMAGE = XSDEditorPlugin.getImageDescriptor("seq_obj.gif", true).createImage();
+  public static final Image CHOICE_ICON_IMAGE = XSDEditorPlugin.getImageDescriptor("choice_obj.gif", true).createImage();
+  public static final Image ALL_ICON_IMAGE = XSDEditorPlugin.getImageDescriptor("all_obj.gif", true).createImage();
 
   XSDModelGroup getXSDModelGroup()
   {
