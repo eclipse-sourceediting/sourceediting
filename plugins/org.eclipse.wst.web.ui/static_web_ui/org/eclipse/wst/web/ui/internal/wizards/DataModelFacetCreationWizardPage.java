@@ -98,7 +98,8 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
 		newServerTargetButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				if (!launchNewRuntimeWizard(getShell(), model)) {
-					setErrorMessage(ResourceHandler.InvalidServerTarget);
+					//Bugzilla 135288
+					//setErrorMessage(ResourceHandler.InvalidServerTarget);
 				}
 			}
 		});
