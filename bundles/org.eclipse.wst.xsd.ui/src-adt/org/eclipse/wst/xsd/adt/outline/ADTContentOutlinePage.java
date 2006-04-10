@@ -15,7 +15,7 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
-import org.eclipse.jface.viewers.IStructuredSelection;
+//import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -41,7 +41,7 @@ public class ADTContentOutlinePage extends ContentOutlinePage
   protected ILabelProvider labelProvider;
   protected MultiPageSelectionProvider selectionManager;
   protected SelectionManagerSelectionChangeListener selectionManagerSelectionChangeListener = new SelectionManagerSelectionChangeListener();
-  protected TreeSelectionChangeListener treeSelectionChangeListener = new TreeSelectionChangeListener();
+//  protected TreeSelectionChangeListener treeSelectionChangeListener = new TreeSelectionChangeListener();
 
   /**
    * 
@@ -157,14 +157,14 @@ public class ADTContentOutlinePage extends ContentOutlinePage
     if (selectionManager != null)
     {
       selectionManager.removeSelectionChangedListener(selectionManagerSelectionChangeListener);
-      treeViewer.removeSelectionChangedListener(treeSelectionChangeListener);
+//      treeViewer.removeSelectionChangedListener(treeSelectionChangeListener);
     }
     selectionManager = newSelectionManager;
     // connect to new one
     if (selectionManager != null)
     {
       selectionManager.addSelectionChangedListener(selectionManagerSelectionChangeListener);
-      treeViewer.addSelectionChangedListener(treeSelectionChangeListener);
+//      treeViewer.addSelectionChangedListener(treeSelectionChangeListener);
     }
   }
 
@@ -172,30 +172,30 @@ public class ADTContentOutlinePage extends ContentOutlinePage
   {
     public void selectionChanged(SelectionChangedEvent event)
     {
-      if (event.getSelectionProvider() != getTreeViewer())
+      if (event.getSelectionProvider() != ADTContentOutlinePage.this)  //getTreeViewer())
       {
         getTreeViewer().setSelection(event.getSelection(), true);
       }
     }
   }
 
-  class TreeSelectionChangeListener implements ISelectionChangedListener
-  {
-    public void selectionChanged(SelectionChangedEvent event)
-    {
-      if (selectionManager != null)
-      {
-        ISelection selection = event.getSelection();
-        if (selection instanceof IStructuredSelection)
-        {
-          IStructuredSelection structuredSelection = (IStructuredSelection) selection;
-          Object o = structuredSelection.getFirstElement();
-          if (o != null)
-          {
-            selectionManager.setSelection(structuredSelection);
-          }
-        }
-      }
-    }
-  }
+//  class TreeSelectionChangeListener implements ISelectionChangedListener
+//  {
+//    public void selectionChanged(SelectionChangedEvent event)
+//    {
+//      if (selectionManager != null)
+//      {
+//        ISelection selection = event.getSelection();
+//        if (selection instanceof IStructuredSelection)
+//        {
+//          IStructuredSelection structuredSelection = (IStructuredSelection) selection;
+//          Object o = structuredSelection.getFirstElement();
+//          if (o != null)
+//          {
+//            selectionManager.setSelection(structuredSelection);
+//          }
+//        }
+//      }
+//    }
+//  }
 }
