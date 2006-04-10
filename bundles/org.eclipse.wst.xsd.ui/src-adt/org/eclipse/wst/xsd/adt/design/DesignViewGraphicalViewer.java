@@ -28,6 +28,7 @@ import org.eclipse.wst.xsd.adt.facade.IADTObject;
 import org.eclipse.wst.xsd.adt.facade.IField;
 import org.eclipse.wst.xsd.adt.facade.IModel;
 import org.eclipse.wst.xsd.adt.facade.IStructure;
+import org.eclipse.wst.xsd.adt.outline.ADTContentOutlinePage;
 
 public class DesignViewGraphicalViewer extends ScrollingGraphicalViewer implements ISelectionChangedListener
 {
@@ -44,7 +45,6 @@ public class DesignViewGraphicalViewer extends ScrollingGraphicalViewer implemen
     internalSelectionProvider.addSelectionChangedListener(manager);
   }
   
-
   // this method is called when something changes in the selection manager
   // (e.g. a selection occured from another view)
   public void selectionChanged(SelectionChangedEvent event)
@@ -60,30 +60,23 @@ public class DesignViewGraphicalViewer extends ScrollingGraphicalViewer implemen
     {
       if (selectedObject instanceof IStructure)
       {
-        ((RootContentEditPart) getContents()).setInput(selectedObject);
+        if ((getInput() instanceof IModel) && (event.getSource() instanceof ADTContentOutlinePage))
+        {
+          ((RootContentEditPart) getContents()).setInput(selectedObject);
+        }
       }
       else if (selectedObject instanceof IField)
       {
         IField field = (IField)selectedObject;
-        if (field.isGlobal())
+        if (field.isGlobal() && (getInput() instanceof IModel) && (event.getSource() instanceof ADTContentOutlinePage))
         {  
           ((RootContentEditPart) getContents()).setInput(selectedObject);
         }
       }
       else if (selectedObject instanceof IModel)
       {
-        IModel model = (IModel)selectedObject;
-        if (model.getTypes().size() > 0)
-        {  
-          selectedObject = model.getTypes().get(0);
+        if (((RootContentEditPart) getContents()).getInput() != selectedObject)
           ((RootContentEditPart) getContents()).setInput(selectedObject);
-        }  
-        EditPart editPart = getEditPart(getRootEditPart(), selectedObject);
-        if (editPart != null)
-          setSelection(new StructuredSelection(editPart));
-        else
-          setInput(null);
-        return;
       }
       
       EditPart editPart = getEditPart(getRootEditPart(), selectedObject);

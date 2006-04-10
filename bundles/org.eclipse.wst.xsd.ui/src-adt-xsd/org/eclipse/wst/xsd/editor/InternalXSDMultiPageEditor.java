@@ -59,7 +59,6 @@ import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
-import org.eclipse.wst.sse.ui.internal.contentoutline.ConfigurableContentOutlinePage;
 import org.eclipse.wst.xml.core.internal.document.NodeImpl;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
@@ -182,10 +181,10 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
     structuredModel.releaseFromEdit();
     if (fOutlinePage != null)
     {
-      if (fOutlinePage instanceof ConfigurableContentOutlinePage && fOutlineListener != null)
-      {
-        ((ConfigurableContentOutlinePage) fOutlinePage).removeDoubleClickListener(fOutlineListener);
-      }
+//      if (fOutlinePage instanceof ConfigurableContentOutlinePage && fOutlineListener != null)
+//      {
+//        ((ConfigurableContentOutlinePage) fOutlinePage).removeDoubleClickListener(fOutlineListener);
+//      }
       if (fOutlineListener != null)
       {
         fOutlinePage.removeSelectionChangedListener(fOutlineListener);
@@ -195,6 +194,13 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
     super.dispose();
   }
 
+  protected void initializeGraphicalViewer()
+  {
+    RootContentEditPart root = new RootContentEditPart();
+    root.setModel(model);
+    graphicalViewer.setContents(root);
+  }
+  
   protected void configureGraphicalViewer()
   {
     super.configureGraphicalViewer();
@@ -234,10 +240,11 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
         IContentOutlinePage page = (IContentOutlinePage) adapter;
         fOutlineListener = new OutlineTreeSelectionChangeListener();
         page.addSelectionChangedListener(fOutlineListener);
-        if (page instanceof ConfigurableContentOutlinePage)
-        {
-          ((ConfigurableContentOutlinePage) page).addDoubleClickListener(fOutlineListener);
-        }
+        
+//        if (page instanceof ConfigurableContentOutlinePage)
+//        {
+//          ((ConfigurableContentOutlinePage) page).addDoubleClickListener(fOutlineListener);
+//        }
         return page;
       }
     }
@@ -609,7 +616,16 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
         IStructuredSelection structuredSelection = (IStructuredSelection) selection;
         Object o = structuredSelection.getFirstElement();
         if (o != null)
-          sel = new StructuredSelection(o);
+        {
+          if (o instanceof CategoryAdapter)
+          {
+            XSDBaseAdapter baseAdapter = (XSDBaseAdapter)XSDAdapterFactory.getInstance().adapt(xsdSchema);
+            sel = new StructuredSelection(baseAdapter);
+          }
+          else
+            sel = new StructuredSelection(o);
+        }
+          
       }
       return sel;
     }

@@ -94,7 +94,9 @@ public class RootContentEditPart extends AbstractGraphicalEditPart
       }  
       else if (obj instanceof IModel)
       {
-        focusObject = getSelectedComplexType();
+        focusObject = (IModel)obj;
+        collections.add(focusObject);
+        return collections;
       }
       else if (obj instanceof IType)
       {

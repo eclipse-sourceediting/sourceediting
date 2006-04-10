@@ -21,9 +21,11 @@ import org.eclipse.wst.xsd.adt.design.figures.IStructureFigure;
 import org.eclipse.wst.xsd.adt.facade.IField;
 import org.eclipse.wst.xsd.adt.typeviz.design.figures.TypeVizFigureFactory;
 import org.eclipse.wst.xsd.editor.XSDEditorPlugin;
+import org.eclipse.wst.xsd.editor.internal.adapters.CategoryAdapter;
 import org.eclipse.wst.xsd.editor.internal.adapters.XSDAttributeGroupDefinitionAdapter;
 import org.eclipse.wst.xsd.editor.internal.adapters.XSDModelGroupAdapter;
 import org.eclipse.wst.xsd.editor.internal.adapters.XSDModelGroupDefinitionAdapter;
+import org.eclipse.wst.xsd.editor.internal.adapters.XSDSchemaAdapter;
 import org.eclipse.wst.xsd.editor.internal.adapters.XSDSimpleTypeDefinitionAdapter;
 import org.eclipse.wst.xsd.editor.internal.design.editparts.model.SpaceFiller;
 import org.eclipse.wst.xsd.editor.internal.design.editparts.model.TargetConnectionSpaceFiller;
@@ -56,6 +58,14 @@ public class XSDEditPartFactory extends ADTEditPartFactory implements IExtendedF
       {  
         child = new XSDBaseFieldEditPart();
       }
+    }
+    else if (model instanceof XSDSchemaAdapter)
+    {
+      child = new XSDSchemaEditPart();
+    }
+    else if (model instanceof CategoryAdapter)
+    {
+      child = new CategoryEditPart();
     }
     else if (model instanceof XSDSimpleTypeDefinitionAdapter)
     {

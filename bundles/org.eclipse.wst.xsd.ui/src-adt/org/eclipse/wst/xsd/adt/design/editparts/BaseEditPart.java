@@ -30,7 +30,8 @@ import org.eclipse.wst.xsd.adt.facade.IADTObjectListener;
 public abstract class BaseEditPart extends AbstractGraphicalEditPart implements IActionProvider, IADTObjectListener, IFeedbackHandler
 {
   protected static final String[] EMPTY_ACTION_ARRAY = {};
- 
+  protected boolean isSelected = false;
+  
   public IFigureFactory getFigureFactory()
   {
     EditPartFactory factory = getViewer().getEditPartFactory();
@@ -118,10 +119,14 @@ public abstract class BaseEditPart extends AbstractGraphicalEditPart implements 
 
   public void addFeedback()
   {
+    isSelected = true;
+    refreshVisuals();
   }
 
   public void removeFeedback()
   {
+    isSelected = false;
+    refreshVisuals();
   }
   
   public ZoomManager getZoomManager()

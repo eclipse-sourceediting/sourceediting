@@ -12,11 +12,13 @@ package org.eclipse.wst.xsd.editor.internal.adapters;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.xsd.adt.design.editparts.model.IActionProvider;
 import org.eclipse.wst.xsd.adt.facade.IADTObjectListener;
+import org.eclipse.wst.xsd.adt.facade.IModel;
 import org.eclipse.wst.xsd.adt.outline.ITreeElement;
 import org.eclipse.wst.xsd.ui.common.actions.AddXSDAttributeDeclarationAction;
 import org.eclipse.wst.xsd.ui.common.actions.AddXSDAttributeGroupDefinitionAction;
@@ -26,7 +28,7 @@ import org.eclipse.wst.xsd.ui.common.actions.AddXSDModelGroupDefinitionAction;
 import org.eclipse.wst.xsd.ui.common.actions.AddXSDSimpleTypeDefinitionAction;
 import org.eclipse.xsd.XSDSchema;
 
-public class CategoryAdapter extends XSDBaseAdapter implements IActionProvider, IADTObjectListener
+public class CategoryAdapter extends XSDBaseAdapter implements IModel, IActionProvider, IADTObjectListener
 {
   protected String text;
   protected Image image;
@@ -122,6 +124,7 @@ public class CategoryAdapter extends XSDBaseAdapter implements IActionProvider, 
       }
       case ATTRIBUTES : {
         actionIDs.add(AddXSDAttributeDeclarationAction.ID);
+        actionIDs.add(AddXSDAttributeGroupDefinitionAction.ID);
         break;
       }
       case ATTRIBUTE_GROUPS : {
@@ -139,5 +142,10 @@ public class CategoryAdapter extends XSDBaseAdapter implements IActionProvider, 
   {
     if (getText().equals(property))
       notifyListeners(this, property);
+  }
+
+  public List getTypes()
+  {
+    return null;
   }
 }
