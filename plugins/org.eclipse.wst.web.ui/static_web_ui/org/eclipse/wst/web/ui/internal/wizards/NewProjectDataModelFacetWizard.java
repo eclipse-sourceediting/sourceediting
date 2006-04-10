@@ -59,7 +59,7 @@ public abstract class NewProjectDataModelFacetWizard extends AddRemoveFacetsWiza
 
 	protected IDataModel model = null;
 	private final IFacetedProjectTemplate template;
-	private IWizardPage firstPage;
+	private IWizardPage[] beginingPages;
 	private IConfigurationElement configurationElement;
 
 	public NewProjectDataModelFacetWizard(IDataModel model) {
@@ -86,11 +86,30 @@ public abstract class NewProjectDataModelFacetWizard extends AddRemoveFacetsWiza
 
 	protected abstract IFacetedProjectTemplate getTemplate();
 
+	/**
+	 * Returns the first page that shows up before the facets page. If multiple pages are required,
+	 * also override {@link #createBeginingPages()}.
+	 * 
+	 * @return
+	 */
 	protected abstract IWizardPage createFirstPage();
 
+	/**
+	 * Subclasses should override to add more than one page before the facets page. If only one page
+	 * is required, then use {@link #createFirstPage()}. The default implementation will return the
+	 * result of {@link #createFirstPage()}.
+	 * 
+	 * @return
+	 */
+	protected IWizardPage[] createBeginingPages() {
+		return new IWizardPage[]{createFirstPage()};
+	}
+
 	public void addPages() {
-		firstPage = createFirstPage();
-		addPage(firstPage);
+		beginingPages = createBeginingPages();
+		for (int i = 0; i < beginingPages.length; i++) {
+			addPage(beginingPages[i]);
+		}
 
 		super.addPages();
 		final Set fixed = this.template.getFixedProjectFacets();
@@ -123,10 +142,13 @@ public abstract class NewProjectDataModelFacetWizard extends AddRemoveFacetsWiza
 
 	public IWizardPage[] getPages() {
 		final IWizardPage[] base = super.getPages();
-		final IWizardPage[] pages = new IWizardPage[base.length + 1];
+		final IWizardPage[] pages = new IWizardPage[base.length + beginingPages.length];
 
-		pages[0] = this.firstPage;
-		System.arraycopy(base, 0, pages, 1, base.length);
+		for (int i = 0; i < beginingPages.length; i++) {
+			pages[i] = beginingPages[i];
+		}
+
+		System.arraycopy(base, 0, pages, beginingPages.length, base.length);
 
 		return pages;
 	}
@@ -192,18 +214,17 @@ public abstract class NewProjectDataModelFacetWizard extends AddRemoveFacetsWiza
 	 * on the Wizard's WTP Operation Data Model).
 	 * </p>
 	 * <p>
-	 * The default implementation returns no perspective id unless
-     * overriden by product definition via the "wtp.project.final.perspective"
-     * property.
+	 * The default implementation returns no perspective id unless overriden by product definition
+	 * via the "wtp.project.final.perspective" property.
 	 * </p>
 	 * 
 	 * @return Returns the ID of the Perspective which is preferred by this wizard upon completion.
 	 */
-    
+
 	protected String getFinalPerspectiveID() {
 		return null;
 	}
-    
+
 	/**
 	 * {@inheritDoc}
 	 * 
@@ -279,18 +300,18 @@ public abstract class NewProjectDataModelFacetWizard extends AddRemoveFacetsWiza
 				}
 			};
 			Display.getDefault().asyncExec(new Runnable() {
-			    public void run() {
-			    	BasicNewProjectResourceWizard.updatePerspective(element);
-			    }
+				public void run() {
+					BasicNewProjectResourceWizard.updatePerspective(element);
+				}
 			});
 		} else {
 			Display.getDefault().asyncExec(new Runnable() {
-			    public void run() {
-			    	BasicNewProjectResourceWizard.updatePerspective(configurationElement);
-			    }
+				public void run() {
+					BasicNewProjectResourceWizard.updatePerspective(configurationElement);
+				}
 			});
 		}
-		
+
 		String projName = getProjectName();
 		BasicNewResourceWizard.selectAndReveal(ProjectUtilities.getProject(projName), WSTWebUIPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow());
 		try {
@@ -364,7 +385,7 @@ public abstract class NewProjectDataModelFacetWizard extends AddRemoveFacetsWiza
 		configDM.setProperty(IFacetDataModelProperties.FACET_VERSION, fv);
 		return configDM;
 	}
-	
+
 	protected void storeDefaultSettings() {
 		IWizardPage[] pages = getPages();
 		for (int i = 0; i < pages.length; i++)
@@ -381,6 +402,6 @@ public abstract class NewProjectDataModelFacetWizard extends AddRemoveFacetsWiza
 	protected void storeDefaultSettings(IWizardPage page, int pageIndex) {
 		if (page instanceof DataModelWizardPage)
 			((DataModelWizardPage) page).storeDefaultSettings();
-	}	
+	}
 
 }
