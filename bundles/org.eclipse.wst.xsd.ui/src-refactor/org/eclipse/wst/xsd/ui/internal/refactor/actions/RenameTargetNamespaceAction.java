@@ -34,7 +34,7 @@ public class RenameTargetNamespaceAction extends XSDSelectionDispatchAction {
 
 	protected boolean canEnable(Object selectedObject) {
 
-		return getSchema() != null;
+		return super.canEnable(selectedObject);
 
 	}
 	

@@ -12,6 +12,7 @@
 package org.eclipse.wst.xsd.ui.internal.refactor.actions;
 
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDSchema;
 
 public class XSDSelectionDispatchAction extends SelectionDispatchAction
@@ -34,7 +35,20 @@ public class XSDSelectionDispatchAction extends SelectionDispatchAction
 	
 		return null;
 	}
-
 	
+	protected boolean canEnable(Object selectedComponent)
+	{
+		XSDSchema selectedComponentSchema = null;
+		if (selectedComponent instanceof XSDConcreteComponent)
+		{
+			selectedComponentSchema = ((XSDConcreteComponent)selectedComponent).getSchema();
+		}
+		
+		if (selectedComponentSchema != null && selectedComponentSchema == getSchema() )
+		{
+			return true;
+		}
+		return false;
+	}
 
 }

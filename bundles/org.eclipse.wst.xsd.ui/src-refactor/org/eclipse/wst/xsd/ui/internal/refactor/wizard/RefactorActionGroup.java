@@ -137,7 +137,7 @@ public abstract class RefactorActionGroup extends ActionGroup {
 			}
 			for (Iterator iter = fEditorActions.iterator(); iter.hasNext();) {
 				Action action = (Action) iter.next();
-				if (action != null && action.isEnabled()) {
+				if (action != null) {
 					enabledActions.add(action);
 				}
 			}

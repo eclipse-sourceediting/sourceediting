@@ -77,14 +77,17 @@ public class RenameComponentAction extends XSDSelectionDispatchAction {
 
 	protected boolean canEnable(Object selectedObject) {
 
-		if (selectedObject instanceof XSDConcreteComponent) {
-			return canEnable((XSDConcreteComponent) selectedObject);
-		} else if (selectedObject instanceof Node) {
+		if (selectedObject instanceof XSDConcreteComponent) 
+		{
+			return canEnable((XSDConcreteComponent) selectedObject) && super.canEnable(selectedObject);
+		} else if (selectedObject instanceof Node) 
+		{
 			Node node = (Node) selectedObject;
-			if (getSchema() != null) {
+			if (getSchema() != null) 
+			{
 				XSDConcreteComponent concreteComponent = getSchema()
 						.getCorrespondingComponent(node);
-				return canEnable(concreteComponent);
+				return canEnable(concreteComponent) && super.canEnable(concreteComponent);
 			}
 		}
 		return false;

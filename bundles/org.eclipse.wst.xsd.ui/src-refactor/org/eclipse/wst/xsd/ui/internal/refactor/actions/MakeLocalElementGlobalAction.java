@@ -50,13 +50,13 @@ public class MakeLocalElementGlobalAction extends XSDSelectionDispatchAction {
 	protected boolean canEnable(Object selectedObject) {
 		
 		if (selectedObject instanceof XSDConcreteComponent) {
-			return canEnable((XSDConcreteComponent)selectedObject);
+			return canEnable((XSDConcreteComponent)selectedObject) && super.canEnable(selectedObject);
 		}
 		else if (selectedObject instanceof Node) {
 			Node node = (Node) selectedObject;
 			XSDConcreteComponent concreteComponent = getSchema()
 					.getCorrespondingComponent(node);
-			return canEnable(concreteComponent);
+			return canEnable(concreteComponent) && super.canEnable(concreteComponent);
 		}
 		return false;
 		
