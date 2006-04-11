@@ -12,7 +12,7 @@ package org.eclipse.wst.xsd.ui.internal.wizards;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.wst.xsd.editor.XSDEditorPlugin;
+import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.xsd.XSDPatternFacet;
 import org.eclipse.xsd.impl.XSDFactoryImpl;
 

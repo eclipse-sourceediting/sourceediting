@@ -18,7 +18,7 @@ import org.eclipse.ltk.ui.refactoring.RefactoringWizard;
 import org.eclipse.ltk.ui.refactoring.RefactoringWizardOpenOperation;
 import org.eclipse.ui.actions.GlobalBuildAction;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
-import org.eclipse.wst.xsd.editor.XSDEditorPlugin;
+import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.internal.refactor.RefactoringComponent;
 import org.eclipse.wst.xsd.ui.internal.refactor.XMLRefactoringComponent;
 import org.eclipse.wst.xsd.ui.internal.refactor.rename.RenameComponentProcessor;

@@ -16,7 +16,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ltk.core.refactoring.participants.RenameRefactoring;
 import org.eclipse.ltk.ui.refactoring.RefactoringWizard;
 import org.eclipse.ltk.ui.refactoring.RefactoringWizardOpenOperation;
-import org.eclipse.wst.xsd.editor.XSDEditorPlugin;
+import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.internal.refactor.rename.RenameResourceProcessor;
 import org.eclipse.wst.xsd.ui.internal.refactor.wizard.RefactoringWizardMessages;
 import org.eclipse.wst.xsd.ui.internal.refactor.wizard.RenameRefactoringWizard;

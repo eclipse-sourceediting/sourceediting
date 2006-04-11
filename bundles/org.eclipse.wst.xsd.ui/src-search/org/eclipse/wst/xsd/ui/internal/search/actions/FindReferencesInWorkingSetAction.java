@@ -22,7 +22,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.IWorkingSetSelectionDialog;
 import org.eclipse.wst.common.core.search.pattern.QualifiedName;
 import org.eclipse.wst.common.core.search.scope.WorkingSetSearchScope;
-import org.eclipse.wst.xsd.editor.XSDEditorPlugin;
+import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.internal.search.XSDSearchQuery;
 import org.eclipse.xsd.XSDNamedComponent;
 

@@ -7,9 +7,9 @@
 			name="%_UI_EDITOR_NAME"
 			default="true"
 			icon="icons/XSDFile.gif"
-            contributorClass="org.eclipse.wst.xsd.editor.XSDMultiPageEditorContributor"
-            class="org.eclipse.wst.xsd.editor.InternalXSDMultiPageEditor"
-            id="org.eclipse.wst.xsd.editor.InternalXSDMultiPageEditor">
+            contributorClass="org.eclipse.wst.xsd.ui.internal.editor.XSDMultiPageEditorContributor"
+            class="org.eclipse.wst.xsd.ui.internal.editor.InternalXSDMultiPageEditor"
+            id="org.eclipse.wst.xsd.ui.internal.editor.InternalXSDMultiPageEditor">
             <contentTypeBinding
                 contentTypeId="org.eclipse.wst.xsd.core.xsdsource" />
 		</editor>
@@ -49,8 +49,8 @@
 		<page
 			name="%_UI_XML_SCHEMA_PREFERENCE"
 			category="org.eclipse.wst.sse.ui.internal.provisional.preferences"
-			class="org.eclipse.wst.xsd.editor.internal.preferences.XSDPreferencePage"
-			id="org.eclipse.wst.xsd.editor.internal.preferences.XSDPreferencePage">
+			class="org.eclipse.wst.xsd.ui.internal.preferences.XSDPreferencePage"
+			id="org.eclipse.wst.xsd.ui.internal.preferences.XSDPreferencePage">
 		</page>
 	</extension>
 <!--
@@ -83,8 +83,8 @@
    <extension 
    		point="org.eclipse.ui.views.properties.tabbed.propertyContributor">
      <propertyContributor
-           contributorId="org.eclipse.wst.xsd.editor"
-           labelProvider="org.eclipse.wst.xsd.ui.common.properties.providers.XSDSectionLabelProvider">
+           contributorId="org.eclipse.wst.xsd.ui.internal.editor"
+           labelProvider="org.eclipse.wst.xsd.ui.internal.common.properties.providers.XSDSectionLabelProvider">
          <propertyCategory category="General"/>
    		 <propertyCategory category="Documentation"/>
          <propertyCategory category="Advanced"/>
@@ -94,7 +94,7 @@
    <extension 
     	point="org.eclipse.ui.views.properties.tabbed.propertyTabs">
       <propertyTabs 
-            contributorId="org.eclipse.wst.xsd.editor">
+            contributorId="org.eclipse.wst.xsd.ui.internal.editor">
 			<propertyTab
 				label="%_UI_LABEL_GENERAL"
 				category="General"
@@ -129,76 +129,76 @@
 
 
 <extension point="org.eclipse.ui.views.properties.tabbed.propertySections">
-   <propertySections contributorId="org.eclipse.wst.xsd.editor">
+   <propertySections contributorId="org.eclipse.wst.xsd.ui.internal.editor">
 	 <propertySection tab="property.tab.general" 
-        class="org.eclipse.wst.xsd.ui.common.properties.sections.XSDSchemaSection"  
+        class="org.eclipse.wst.xsd.ui.internal.common.properties.sections.XSDSchemaSection"  
 	 	id="prop.section.XSDSchemaSection">
 	    <input type="org.eclipse.xsd.XSDSchema">
 	    </input>
 	 </propertySection>
 	 <propertySection tab="property.tab.general" 
-        class="org.eclipse.wst.xsd.ui.common.properties.sections.SchemaLocationSection" 
+        class="org.eclipse.wst.xsd.ui.internal.common.properties.sections.SchemaLocationSection" 
 	 	id="prop.section.SchemaLocationSection">
 	    <input type="org.eclipse.xsd.XSDSchemaCompositor">
 	    </input>
 	 </propertySection>
 	 <propertySection tab="property.tab.general" 
-        class="org.eclipse.wst.xsd.ui.common.properties.sections.XSDComplexTypeSection"  
+        class="org.eclipse.wst.xsd.ui.internal.common.properties.sections.XSDComplexTypeSection"  
 	 	id="prop.section.XSDComplexTypeSection">
 	    <input type="org.eclipse.xsd.XSDComplexTypeDefinition">
 	    </input>
 	 </propertySection>
 	 <propertySection tab="property.tab.general" 
-        class="org.eclipse.wst.xsd.ui.common.properties.sections.XSDElementDeclarationSection"  
+        class="org.eclipse.wst.xsd.ui.internal.common.properties.sections.XSDElementDeclarationSection"  
 	 	id="prop.section.XSDElementDeclarationSection">
 	    <input type="org.eclipse.xsd.XSDElementDeclaration">
 	    </input>
 	 </propertySection>
 	 <propertySection tab="property.tab.general" 
-        class="org.eclipse.wst.xsd.ui.common.properties.sections.XSDAttributeDeclarationSection"
+        class="org.eclipse.wst.xsd.ui.internal.common.properties.sections.XSDAttributeDeclarationSection"
 	 	id="prop.section.XSDAttributeDeclarationSection">
 	    <input type="org.eclipse.xsd.XSDAttributeDeclaration">
 	    </input>
 	 </propertySection>
 	 <propertySection tab="property.tab.general" 
-        class="org.eclipse.wst.xsd.ui.common.properties.sections.XSDAttributeGroupDefinitionSection"  
+        class="org.eclipse.wst.xsd.ui.internal.common.properties.sections.XSDAttributeGroupDefinitionSection"  
 	 	id="prop.section.XSDAttributeGroupDefinitionSection">
 	    <input type="org.eclipse.xsd.XSDAttributeGroupDefinition">
 	    </input>
 	 </propertySection>	
 	 <propertySection tab="property.tab.general" 
-        class="org.eclipse.wst.xsd.ui.common.properties.sections.XSDModelGroupSection"  
+        class="org.eclipse.wst.xsd.ui.internal.common.properties.sections.XSDModelGroupSection"  
 	 	id="prop.section.XSDModelGroupSection">
 	    <input type="org.eclipse.xsd.XSDModelGroup">
 	    </input>
 	 </propertySection>
 	 <propertySection tab="property.tab.general" 
-        class="org.eclipse.wst.xsd.ui.common.properties.sections.XSDModelGroupDefinitionSection"  
+        class="org.eclipse.wst.xsd.ui.internal.common.properties.sections.XSDModelGroupDefinitionSection"  
 	 	id="prop.section.XSDModelGroupDefinitionSection">
 	    <input type="org.eclipse.xsd.XSDModelGroupDefinition">
 	    </input>
 	 </propertySection>
 	 <propertySection tab="property.tab.general" 
-        class="org.eclipse.wst.xsd.ui.common.properties.sections.XSDSimpleTypeSection"
+        class="org.eclipse.wst.xsd.ui.internal.common.properties.sections.XSDSimpleTypeSection"
 	 	id="prop.section.XSDSimpleTypeSection">
 	    <input type="org.eclipse.xsd.XSDSimpleTypeDefinition">
 	    </input>
 	 </propertySection>
 	 <propertySection tab="property.tab.typeconstraints" 
-        class="org.eclipse.wst.xsd.ui.common.properties.sections.XSDFacetSection"
-        filter="org.eclipse.wst.xsd.ui.common.properties.sections.XSDFacetSectionFilter"
+        class="org.eclipse.wst.xsd.ui.internal.common.properties.sections.XSDFacetSection"
+        filter="org.eclipse.wst.xsd.ui.internal.common.properties.sections.XSDFacetSectionFilter"
 	 	id="prop.section.XSDFacetSection">
 	    <input type="org.eclipse.xsd.XSDConcreteComponent">
 	    </input>
 	 </propertySection>
 	 <propertySection tab="property.tab.documentation" 
-	 	class="org.eclipse.wst.xsd.ui.common.properties.sections.AnnotationSection" 
+	 	class="org.eclipse.wst.xsd.ui.internal.common.properties.sections.AnnotationSection" 
 	 	id="prop.section.AnnotationSection">
 	    <input type="org.eclipse.xsd.XSDConcreteComponent">
 	    </input>
 	 </propertySection>
 	 <propertySection tab="property.tab.extensions" 
-	 	class="org.eclipse.wst.xsd.ui.common.properties.sections.ExtensionsSection" 
+	 	class="org.eclipse.wst.xsd.ui.internal.common.properties.sections.ExtensionsSection" 
 	 	id="prop.section.ExtensionsSection">
 	    <input type="org.eclipse.xsd.XSDConcreteComponent">
 	    </input>
@@ -317,7 +317,7 @@
    <extension point="org.eclipse.ui.popupMenus"> 
       <objectContribution 
          id="org.eclipse.wst.xsd.ui.refactoring.menu.objectContrib" 
-         objectClass="org.eclipse.wst.xsd.editor.internal.adapters.XSDBaseAdapter">  
+         objectClass="org.eclipse.wst.xsd.ui.internal.adapters.XSDBaseAdapter">  
          <action
             id="org.eclipse.wst.xsd.ui.search.declarations.action" 
             enablesFor="1"

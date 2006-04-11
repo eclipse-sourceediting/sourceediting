@@ -24,7 +24,7 @@ import org.eclipse.wst.xml.core.internal.contentmodel.util.NamespaceInfo;
 import org.eclipse.wst.xml.core.internal.document.DocumentImpl;
 import org.eclipse.wst.xml.ui.internal.actions.ReplacePrefixAction;
 import org.eclipse.wst.xml.ui.internal.util.XMLCommonResources;
-import org.eclipse.wst.xsd.editor.XSDEditorPlugin;
+import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.internal.nsedit.SchemaPrefixChangeHandler;
 import org.eclipse.wst.xsd.ui.internal.nsedit.TargetNamespaceChangeHandler;
 import org.eclipse.wst.xsd.ui.internal.widgets.XSDEditSchemaInfoDialog;

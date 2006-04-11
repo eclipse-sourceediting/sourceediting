@@ -21,7 +21,7 @@ import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.wst.common.core.search.pattern.QualifiedName;
 import org.eclipse.wst.common.core.search.scope.SearchScope;
 import org.eclipse.wst.common.core.search.scope.WorkspaceSearchScope;
-import org.eclipse.wst.xsd.editor.ISelectionMapper;
+import org.eclipse.wst.xsd.ui.internal.editor.ISelectionMapper;
 import org.eclipse.wst.xsd.ui.internal.search.IXSDSearchConstants;
 import org.eclipse.wst.xsd.ui.internal.search.XSDSearchQuery;
 import org.eclipse.xsd.XSDComplexTypeDefinition;
