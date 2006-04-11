@@ -97,6 +97,8 @@ public class XSDSchemaEditPart extends BaseEditPart
   {
     XSDSchemaAdapter schemaAdapter = (XSDSchemaAdapter) getModel();
     List list = new ArrayList();
+    
+    schemaAdapter.updateCategories();
 
     List templist = new ArrayList();
     templist.add(schemaAdapter.getCategory(CategoryAdapter.DIRECTIVES));

@@ -233,9 +233,15 @@ public class XSDSchemaAdapter extends XSDBaseAdapter implements IActionProvider,
     super.notifyChanged(msg);
   }
   
+  public void updateCategories()
+  {
+    // TODO: revisit this
+    getChildren();
+  }
+  
   public CategoryAdapter getCategory(int category)
   {
-    if (children == null) getChildren(); // init categories
+    if (children == null) updateCategories(); // init categories
     int length = children.size();
     CategoryAdapter adapter = null;
     for (int i = 0; i < length; i++)
