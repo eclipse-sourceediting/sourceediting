@@ -12,29 +12,29 @@ import org.eclipse.wst.xml.core.internal.Logger;
 public class CatalogSet {
 	protected Map uriResourceMap = new HashMap();
 	protected Map catalogPersistenceLocations = new HashMap();
-
-	// protected boolean isPluginEnvironment = false;
-
 	public CatalogSet() {
 		super();
 	}
 
+	/**
+	 * Find a Catalog with the given ID.  If one is not found, create one at the given URI.
+	 * 
+	 * @param id
+	 * @param uri - the URI, the parent of this file path must already exist
+	 * @return
+	 */
 	public Catalog lookupOrCreateCatalog(String id, String uri) {
 		Catalog catalog = getCatalog(id, uri);
 		if (catalog == null) {
-			boolean ok = true;
 			catalog = new Catalog(this, id, uri);
 			try {
 				catalog.load();
+				uriResourceMap.put(uri, catalog);
 			}
 			catch (Exception e) {
-				ok = false;
 				// we catch and log all exceptions, to disallow
 				// one bad extension interfering with others
 				Logger.logException("error loading catalog: " + id + " " + uri, e); //$NON-NLS-1$ //$NON-NLS-2$
-			}
-			if (ok) {
-				uriResourceMap.put(uri, catalog);
 			}
 		}
 		return catalog;
@@ -48,13 +48,8 @@ public class CatalogSet {
 		catalogPersistenceLocations.put(logicalURI, actualURI);
 	}
 
+	// Never used?
 	public String getCatalogPersistenceLocation(String id) {
 		return (String) catalogPersistenceLocations.get(id);
 	}
-	/*
-	 * public boolean isPluginEnvironment() { return isPluginEnvironment; }
-	 * 
-	 * public void setPluginEnvironment(boolean isPluginEnvironment) {
-	 * this.isPluginEnvironment = isPluginEnvironment; }
-	 */
 }

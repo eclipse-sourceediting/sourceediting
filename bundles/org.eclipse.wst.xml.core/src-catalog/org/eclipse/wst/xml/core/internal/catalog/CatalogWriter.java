@@ -33,7 +33,7 @@ public final class CatalogWriter
   public void write(ICatalog xmlCatalog, String uri) throws FileNotFoundException, IOException
   {
     visitCatalog(xmlCatalog);
-    OutputStream outputStream = getOutputStream(uri, true);
+    OutputStream outputStream = getOutputStream(uri);
     serialize(outputStream);
   }
 
@@ -186,41 +186,24 @@ public final class CatalogWriter
     }
   }
 
-  private OutputStream getOutputStream(String uri, boolean overwrite) throws FileNotFoundException, IOException
+  private OutputStream getOutputStream(String uri) throws FileNotFoundException, IOException
   {
     String filePath = removeProtocol(uri);
     File file = new File(filePath);
-    if (file.exists() && overwrite)
-    {
-      file.delete();
-    }
-    File parent = file.getParentFile();
-    if (!parent.exists())
-    {
-      parent.mkdirs();
-    }
-    try
-    {
-      file.createNewFile();
-    }
-    catch (IOException e)
-    {
-      Logger.logException(e);
-    }
-    OutputStream stream = new FileOutputStream(filePath);
+    OutputStream stream = new FileOutputStream(file);
     return stream;
   }
   
   protected static String removeProtocol(String uri)
   {
     String result = uri;  
-    String protocol_pattenrn = ":"; //$NON-NLS-1$
+    String protocol_pattern = ":"; //$NON-NLS-1$
     if (uri != null)
     {
-      int index = uri.indexOf(protocol_pattenrn);
+      int index = uri.indexOf(protocol_pattern);
       if (index > 2)
       {
-        result = result.substring(index + protocol_pattenrn.length());                 
+        result = result.substring(index + protocol_pattern.length());                 
       }
     }
     return result;

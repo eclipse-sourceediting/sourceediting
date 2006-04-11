@@ -40,7 +40,7 @@ public class Catalog implements ICatalog
 		{
 		}
 
-		public void save()
+		public synchronized void save()
 		{
 			try
 			{
@@ -68,7 +68,7 @@ public class Catalog implements ICatalog
 
 			/*
 			 * Here we save the file in order to 'reflect' the catalog that
-			 * we've created from plugin extensions to disk. The 'default'
+			 * we've created from plug-in extensions to disk. The 'default'
 			 * catalog is only ever written to disk and never read from disk.
 			 */
 			save();
