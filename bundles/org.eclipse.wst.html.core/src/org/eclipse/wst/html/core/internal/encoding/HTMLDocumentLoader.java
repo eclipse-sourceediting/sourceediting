@@ -13,6 +13,7 @@ package org.eclipse.wst.html.core.internal.encoding;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.wst.html.core.internal.contenttype.EncodingGuesser;
 import org.eclipse.wst.html.core.internal.document.HTMLDocumentTypeAdapterFactory;
@@ -125,8 +126,11 @@ public class HTMLDocumentLoader extends AbstractDocumentLoader {
 		return result;
 	}
 
-	protected String getPreferredNewLineDelimiter() {
-		return ContentTypeEncodingPreferences.getPreferredNewLineDelimiter(ContentTypeIdForHTML.ContentTypeID_HTML);
+	protected String getPreferredNewLineDelimiter(IFile file) {
+		String delimiter = ContentTypeEncodingPreferences.getPreferredNewLineDelimiter(ContentTypeIdForHTML.ContentTypeID_HTML);
+		if (delimiter == null)
+			delimiter = super.getPreferredNewLineDelimiter(file);
+		return delimiter;
 	}
 
 	public IDocumentCharsetDetector getDocumentEncodingDetector() {

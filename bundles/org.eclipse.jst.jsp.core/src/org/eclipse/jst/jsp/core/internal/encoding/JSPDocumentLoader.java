@@ -242,8 +242,11 @@ public class JSPDocumentLoader extends AbstractDocumentLoader {
 		return parser;
 	}
 
-	protected String getPreferredNewLineDelimiter() {
-		return ContentTypeEncodingPreferences.getPreferredNewLineDelimiter(ContentTypeIdForJSP.ContentTypeID_JSP);
+	protected String getPreferredNewLineDelimiter(IFile file) {
+		String delimiter = ContentTypeEncodingPreferences.getPreferredNewLineDelimiter(ContentTypeIdForJSP.ContentTypeID_JSP);
+		if (delimiter == null)
+			delimiter = super.getPreferredNewLineDelimiter(file);
+		return delimiter;
 	}
 
 	/**
@@ -303,7 +306,7 @@ public class JSPDocumentLoader extends AbstractDocumentLoader {
 		// before content is set in the model, so taglib initization can
 		// take place.
 		((INodeNotifier) document).getAdapterFor(ModelQueryAdapter.class);
-		
+
 	}
 
 }

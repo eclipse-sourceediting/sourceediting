@@ -12,13 +12,16 @@
  *******************************************************************************/
 package org.eclipse.wst.dtd.core.internal.encoding;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.wst.dtd.core.internal.parser.DTDRegionParser;
+import org.eclipse.wst.dtd.core.internal.provisional.contenttype.ContentTypeIdForDTD;
 import org.eclipse.wst.dtd.core.internal.text.DTDStructuredDocumentReParser;
 import org.eclipse.wst.dtd.core.internal.text.StructuredTextPartitionerForDTD;
 import org.eclipse.wst.sse.core.internal.document.AbstractDocumentLoader;
 import org.eclipse.wst.sse.core.internal.document.IDocumentCharsetDetector;
 import org.eclipse.wst.sse.core.internal.document.StructuredDocumentFactory;
+import org.eclipse.wst.sse.core.internal.encoding.ContentTypeEncodingPreferences;
 import org.eclipse.wst.sse.core.internal.ltk.parser.RegionParser;
 import org.eclipse.wst.sse.core.internal.provisional.document.IEncodedDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
@@ -44,6 +47,13 @@ public final class DTDDocumentLoader extends AbstractDocumentLoader {
 
 	public RegionParser getParser() {
 		return new DTDRegionParser();
+	}
+	
+	protected String getPreferredNewLineDelimiter(IFile file) {
+		String delimiter = ContentTypeEncodingPreferences.getPreferredNewLineDelimiter(ContentTypeIdForDTD.ContentTypeID_DTD);
+		if (delimiter == null)
+			delimiter = super.getPreferredNewLineDelimiter(file);
+		return delimiter;
 	}
 
 	protected String getSpecDefaultEncoding() {

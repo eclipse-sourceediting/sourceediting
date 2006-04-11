@@ -11,6 +11,7 @@
 package org.eclipse.wst.css.core.internal.encoding;
 
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.wst.css.core.internal.contenttype.EncodingGuesser;
 import org.eclipse.wst.css.core.internal.parser.CSSSourceParser;
@@ -65,8 +66,11 @@ public class CSSDocumentLoader extends AbstractDocumentLoader {
 		return new CSSSourceParser();
 	}
 
-	protected String getPreferredNewLineDelimiter() {
-		return ContentTypeEncodingPreferences.getPreferredNewLineDelimiter(CSS_ID);
+	protected String getPreferredNewLineDelimiter(IFile file) {
+		String delimiter = ContentTypeEncodingPreferences.getPreferredNewLineDelimiter(CSS_ID);
+		if (delimiter == null)
+			delimiter = super.getPreferredNewLineDelimiter(file);
+		return delimiter;
 	}
 
 	public IDocumentCharsetDetector getDocumentEncodingDetector() {

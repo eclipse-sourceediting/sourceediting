@@ -1291,6 +1291,36 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 			throw new BadPartitioningException();
 	}
 
+	/*
+	 * This method can be used when this class implements IDocumentExtension4.
+	 * 
+	 * @see org.eclipse.jface.text.IDocumentExtension4#getDefaultLineDelimiter()
+	 */
+	private String getDefaultLineDelimiter() {
+		// specific preferred line delimiter
+		if (preferedDelimiter != null)
+			return preferedDelimiter;
+
+
+		// no line delimiter has been used so just use platform's default
+		String lineDelimiter = null;
+		String sysLineDelimiter = PlatformLineDelimiter;
+		String[] delimiters = getLegalLineDelimiters();
+		Assert.isTrue(delimiters.length > 0);
+		for (int i = 0; i < delimiters.length; i++) {
+			if (delimiters[i].equals(sysLineDelimiter)) {
+				lineDelimiter = sysLineDelimiter;
+				break;
+			}
+		}
+
+		// no platform default so just use first legal delimiter
+		if (lineDelimiter == null)
+			lineDelimiter = delimiters[0];
+
+		return lineDelimiter;
+	}
+
 	/**
 	 * Returns the document's partitioner.
 	 * 
@@ -1372,11 +1402,13 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 		return getStore().getLength();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument#getLineDelimiter()
+	 */
 	public String getLineDelimiter() {
-		if (preferedDelimiter == null) {
-			preferedDelimiter = PlatformLineDelimiter;
-		}
-		return preferedDelimiter;
+		return getDefaultLineDelimiter();
 	}
 
 	/**
@@ -1685,17 +1717,17 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	 * eg.
 	 * 
 	 * <pre>
-	 * &lt;html&gt;[&lt;head&gt;&lt;/head&gt;]&lt;/html&gt; returns &lt;head&gt;,&lt;/head&gt;
+	 *             &lt;html&gt;[&lt;head&gt;&lt;/head&gt;]&lt;/html&gt; returns &lt;head&gt;,&lt;/head&gt;
 	 * </pre>
 	 *    <pre>
-	 * &lt;ht[ml&gt;&lt;head&gt;&lt;/he]ad&gt;&lt;/html&gt; returns &lt;html&gt;,&lt;head&gt;,&lt;/head&gt;
+	 *             &lt;ht[ml&gt;&lt;head&gt;&lt;/he]ad&gt;&lt;/html&gt; returns &lt;html&gt;,&lt;head&gt;,&lt;/head&gt;
 	 * </pre>
 	 * 
 	 * <pre>
-	 *   &lt;html&gt;[&lt;head&gt;&lt;/head&gt;]&lt;/html&gt; returns &lt;head&gt;,&lt;/head&gt;
+	 *               &lt;html&gt;[&lt;head&gt;&lt;/head&gt;]&lt;/html&gt; returns &lt;head&gt;,&lt;/head&gt;
 	 * </pre>
 	 *    <pre>
-	 *   &lt;ht[ml&gt;&lt;head&gt;&lt;/he]ad&gt;&lt;/html&gt; returns &lt;html&gt;,&lt;head&gt;,&lt;/head&gt;
+	 *               &lt;ht[ml&gt;&lt;head&gt;&lt;/he]ad&gt;&lt;/html&gt; returns &lt;html&gt;,&lt;head&gt;,&lt;/head&gt;
 	 * </pre>
 	 * 
 	 * </p>
@@ -2446,15 +2478,12 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 
 	}
 
-	void setLastDocumentRegion(IStructuredDocumentRegion region) {
-		lastDocumentRegion = region;
-
-	}
-
-	/**
-	 * @see IStructuredDocument#setLineDelimiter(String)
+	/*
+	 * This method can be used when this class implements IDocumentExtension4.
+	 * 
+	 * @see org.eclipse.jface.text.IDocumentExtension4#setInitialLineDelimiter(String)
 	 */
-	public void setLineDelimiter(String delimiter) {
+	private void setInitialLineDelimiter(String delimiter) {
 		// make sure our preferred delimiter is
 		// one of the legal ones
 		if (Utilities.containsString(getLegalLineDelimiters(), delimiter)) {
@@ -2465,6 +2494,20 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 				Logger.log(Logger.INFO, "Attempt to set linedelimiter to non-legal delimiter"); //$NON-NLS-1$ //$NON-NLS-2$
 			preferedDelimiter = PlatformLineDelimiter;
 		}
+	}
+
+	void setLastDocumentRegion(IStructuredDocumentRegion region) {
+		lastDocumentRegion = region;
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument#setLineDelimiter(java.lang.String)
+	 */
+	public void setLineDelimiter(String delimiter) {
+		setInitialLineDelimiter(delimiter);
 	}
 
 	/**
@@ -2509,7 +2552,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 		StructuredDocumentEvent result = null;
 
 		result = replaceText(requester, 0, getLength(), theString, true);
-		
+
 		return result;
 	}
 
@@ -2621,12 +2664,22 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 		return result;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.wst.sse.core.internal.provisional.document.IEncodedDocument#getPreferredLineDelimiter()
+	 */
 	public String getPreferredLineDelimiter() {
-		return getLineDelimiter();
+		return getDefaultLineDelimiter();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.wst.sse.core.internal.provisional.document.IEncodedDocument#setPreferredLineDelimiter(java.lang.String)
+	 */
 	public void setPreferredLineDelimiter(String probableLineDelimiter) {
-		setLineDelimiter(probableLineDelimiter);
+		setInitialLineDelimiter(probableLineDelimiter);
 
 	}
 }

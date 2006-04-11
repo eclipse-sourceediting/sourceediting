@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.core.internal.encoding;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.wst.sse.core.internal.document.AbstractDocumentLoader;
 import org.eclipse.wst.sse.core.internal.document.IDocumentCharsetDetector;
@@ -53,8 +54,11 @@ public class XMLDocumentLoader extends AbstractDocumentLoader {
 		return new XMLSourceParser();
 	}
 
-	protected String getPreferredNewLineDelimiter() {
-		return ContentTypeEncodingPreferences.getPreferredNewLineDelimiter(ContentTypeIdForXML.ContentTypeID_XML);
+	protected String getPreferredNewLineDelimiter(IFile file) {
+		String delimiter = ContentTypeEncodingPreferences.getPreferredNewLineDelimiter(ContentTypeIdForXML.ContentTypeID_XML);
+		if (delimiter == null)
+			delimiter = super.getPreferredNewLineDelimiter(file);
+		return delimiter;
 	}
 
 	protected String getSpecDefaultEncoding() {

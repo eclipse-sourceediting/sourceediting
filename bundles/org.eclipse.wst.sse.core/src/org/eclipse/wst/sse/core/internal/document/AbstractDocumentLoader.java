@@ -21,7 +21,11 @@ import java.nio.charset.MalformedInputException;
 import java.nio.charset.UnmappableCharacterException;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.preferences.IScopeContext;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentExtension3;
@@ -100,6 +104,10 @@ public abstract class AbstractDocumentLoader implements IDocumentLoader {
 		String specDefaultCharset = getDocumentEncodingDetector().getSpecDefaultEncoding();
 		structuredDocument.setEncodingMemento(CodedIO.createEncodingMemento(charset, EncodingMemento.DEFAULTS_ASSUMED_FOR_EMPTY_INPUT, specDefaultCharset));
 
+		String lineDelimiter = getPreferredNewLineDelimiter(null);
+		if (lineDelimiter != null)
+			structuredDocument.setPreferredLineDelimiter(lineDelimiter);
+
 		IDocumentPartitioner defaultPartitioner = getDefaultDocumentPartitioner();
 		if (structuredDocument instanceof IDocumentExtension3) {
 			((IDocumentExtension3) structuredDocument).setDocumentPartitioner(IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING, defaultPartitioner);
@@ -118,6 +126,11 @@ public abstract class AbstractDocumentLoader implements IDocumentLoader {
 	 */
 	public IEncodedDocument createNewStructuredDocument(IFile iFile) throws IOException, CoreException {
 		IEncodedDocument structuredDocument = createNewStructuredDocument();
+
+		String lineDelimiter = getPreferredNewLineDelimiter(iFile);
+		if (lineDelimiter != null)
+			structuredDocument.setPreferredLineDelimiter(lineDelimiter);
+
 		try {
 
 			CodedReaderCreator creator = getCodedReaderCreator();
@@ -237,10 +250,39 @@ public abstract class AbstractDocumentLoader implements IDocumentLoader {
 	}
 
 	/**
-	 * If subclass doesn't implement, return null
+	 * Returns the default line delimiter preference for the given file.
+	 * 
+	 * @param file
+	 *            the file
+	 * @return the default line delimiter
+	 * @since 3.1
+	 */
+	private String getPlatformLineDelimiterPreference(IFile file) {
+		IScopeContext[] scopeContext;
+		if (file != null && file.getProject() != null) {
+			// project preference
+			scopeContext = new IScopeContext[]{new ProjectScope(file.getProject())};
+			String lineDelimiter = Platform.getPreferencesService().getString(Platform.PI_RUNTIME, Platform.PREF_LINE_SEPARATOR, null, scopeContext);
+			if (lineDelimiter != null)
+				return lineDelimiter;
+		}
+		// workspace preference
+		scopeContext = new IScopeContext[]{new InstanceScope()};
+		return Platform.getPreferencesService().getString(Platform.PI_RUNTIME, Platform.PREF_LINE_SEPARATOR, null, scopeContext);
+	}
+
+	/**
+	 * @deprecated use getPreferredNewLineDelimiter(IFile) instead
 	 */
 	protected String getPreferredNewLineDelimiter() {
-		return null;
+		return getPreferredNewLineDelimiter(null);
+	}
+
+	/**
+	 * If subclass doesn't implement, return platform default
+	 */
+	protected String getPreferredNewLineDelimiter(IFile file) {
+		return getPlatformLineDelimiterPreference(file);
 	}
 
 	/**
@@ -264,7 +306,7 @@ public abstract class AbstractDocumentLoader implements IDocumentLoader {
 		// based on text, make a guess on what's being used as
 		// line delimiter
 		String probableLineDelimiter = TextUtilities.determineLineDelimiter(originalString, theFlatModel.getLegalLineDelimiters(), System.getProperty("line.separator")); //$NON-NLS-1$
-		String preferredLineDelimiter = getPreferredNewLineDelimiter();
+		String preferredLineDelimiter = getPreferredNewLineDelimiter(null);
 		if (preferredLineDelimiter == null) {
 			// when preferredLineDelimiter is null, it means "leave alone"
 			// so no conversion needed.
