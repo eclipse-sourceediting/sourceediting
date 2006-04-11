@@ -66,21 +66,18 @@
     </project-facet>
 
     <project-facet-version facet="wst.web" version="1.0">
-    
-      <action type="install">
+      <action type="install" id="wst.web.install">
         <delegate class="org.eclipse.wst.project.facet.SimpleWebFacetInstallDelegate"/>
         <config-factory class="org.eclipse.wst.project.facet.SimpleWebFacetInstallDataModelProvider"/>
       </action>
       <constraint>
         <and>
           <conflicts group="modules"/>
-          <conflicts group="java"/>
+          <conflicts facet="jst.java"/>
         </and>
       </constraint>
       <group-member id="modules"/>
-      <group-member id="java"/>
     </project-facet-version>
-
         
     <template id="template.wst.web">
       <label>%SIMPLE_WEB_TEMPLATE</label>

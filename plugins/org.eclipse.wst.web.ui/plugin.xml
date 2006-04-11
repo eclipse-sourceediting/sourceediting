@@ -93,11 +93,10 @@
       </image>
    </extension>
    
-   <extension point="org.eclipse.wst.common.project.facet.ui.wizard">
-    <wizard-pages facet="wst.web" version="1.0">
-      <install>
-        <page class="org.eclipse.wst.web.ui.internal.wizards.SimpleWebFacetInstallPage"/>
-      </install>
+  <extension point="org.eclipse.wst.common.project.facet.ui.wizardPages">
+    <wizard-pages action="wst.web.install">
+      <page class="org.eclipse.wst.web.ui.internal.wizards.SimpleWebFacetInstallPage"/>
     </wizard-pages>
   </extension>
+
 </plugin>
