@@ -86,6 +86,7 @@ import org.eclipse.ui.views.properties.IPropertySourceProvider;
 import org.eclipse.ui.views.properties.PropertySheetPage;
 import org.eclipse.ui.views.properties.TextPropertyDescriptor;
 import org.eclipse.wst.sse.core.StructuredModelManager;
+import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
@@ -881,8 +882,9 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 				infoTree.setLabelProvider(new LabelProvider() {
 					public Image getImage(Object element) {
 						if (element instanceof TreeViewer && infoTree.getInput() instanceof INodeNotifier) {
-							IJFaceNodeAdapter adapter = (IJFaceNodeAdapter) ((INodeNotifier) infoTree.getInput()).getAdapterFor(IJFaceNodeAdapter.class);
-							if (adapter != null) {
+							INodeAdapter adapterFor = ((INodeNotifier) infoTree.getInput()).getAdapterFor(IJFaceNodeAdapter.class);
+							if (adapterFor != null && adapterFor instanceof IJFaceNodeAdapter) {
+								IJFaceNodeAdapter adapter = (IJFaceNodeAdapter) adapterFor;
 								return adapter.getLabelImage((infoTree.getInput()));
 							}
 						}
