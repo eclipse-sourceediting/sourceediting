@@ -34,8 +34,8 @@ public class XSDSchemaEditPart extends BaseEditPart
 {
   protected Label label;
 
-  Figure outer, contentFigure;
-  HeadingFigure headingFigure;
+  protected Figure outer, contentFigure;
+  protected HeadingFigure headingFigure;
 
   public IFigure getContentPane()
   {
