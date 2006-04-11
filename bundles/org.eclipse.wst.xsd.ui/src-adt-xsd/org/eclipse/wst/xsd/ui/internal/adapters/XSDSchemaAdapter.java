@@ -18,6 +18,8 @@ import java.util.List;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.NotificationImpl;
+import org.eclipse.wst.xsd.ui.internal.adt.actions.BaseSelectionAction;
+import org.eclipse.wst.xsd.ui.internal.adt.actions.ShowPropertiesViewAction;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IActionProvider;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IADTObjectListener;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IModel;
@@ -411,7 +413,9 @@ public class XSDSchemaAdapter extends XSDBaseAdapter implements IActionProvider,
      Collection actionIDs = new ArrayList();
      actionIDs.add(AddXSDElementAction.ID);
      actionIDs.add(AddXSDComplexTypeDefinitionAction.ID);
-        
+
+     actionIDs.add(BaseSelectionAction.SEPARATOR_ID);
+     actionIDs.add(ShowPropertiesViewAction.ID);
      return (String [])actionIDs.toArray(new String[0]);
   }
 
