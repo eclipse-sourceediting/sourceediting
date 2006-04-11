@@ -656,11 +656,6 @@ public class JSPIndexManager {
 				return;
 			}
 
-			// set flag, so we know if a job is going to be started
-			// and the state will eventually be set back to S_STABLE
-			boolean beganProcess = false;
-			setUpdatingState();
-
 			IResourceDelta delta = event.getDelta();
 			if (delta != null) {
 				// only care about adds or changes right now...
@@ -683,9 +678,13 @@ public class JSPIndexManager {
 							// process files from this delta
 							IFile[] files = v.getFiles();
 							if (files.length > 0) {
+								/*
+								 * Job change listener should set back to
+								 * stable when finished
+								 */
+								setUpdatingState();
 								// processFiles(files);
 								indexFiles(files);
-								beganProcess = true;
 							}
 						}
 						catch (CoreException e) {
@@ -703,11 +702,6 @@ public class JSPIndexManager {
 					}
 				}
 
-			}
-			// if we never kicked off process, job won't set back to stable
-			// so we set it here
-			if (!beganProcess) {
-				setStableState();
 			}
 		}
 

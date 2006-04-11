@@ -46,7 +46,6 @@ public class JSPSearchParticipant extends SearchParticipant {
 	 * will break.
 	 */
 	public SearchDocument getDocument(String documentPath) {
-
 		SearchDocument sDoc = JSPSearchSupport.getInstance().getSearchDocument(documentPath);
 
 		if (sDoc == null) {
@@ -95,20 +94,6 @@ public class JSPSearchParticipant extends SearchParticipant {
 
 		indexMatches = (SearchDocument[]) filtered.toArray(new SearchDocument[filtered.size()]);
 		SearchEngine.getDefaultSearchParticipant().locateMatches(indexMatches, pattern, scope, requestor, monitor);
-	}
-
-	/**
-	 * @see org.eclipse.jdt.core.search.SearchParticipant#beginSearching()
-	 */
-	public void beginSearching() {
-		// nothing to do
-	}
-
-	/**
-	 * @see org.eclipse.jdt.core.search.SearchParticipant#doneSearching()
-	 */
-	public void doneSearching() {
-		// nothing to do
 	}
 
 	/**
