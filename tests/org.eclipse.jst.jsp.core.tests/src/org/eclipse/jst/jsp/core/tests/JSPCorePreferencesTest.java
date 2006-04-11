@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *     
  *******************************************************************************/
-package org.eclipse.wst.xml.core.tests;
+package org.eclipse.jst.jsp.core.tests;
 
 import junit.framework.TestCase;
 
@@ -17,20 +17,20 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.eclipse.jst.jsp.core.internal.JSPCorePlugin;
+import org.eclipse.jst.jsp.core.internal.encoding.JSPDocumentLoader;
+import org.eclipse.jst.jsp.core.internal.preferences.JSPCorePreferenceNames;
+import org.eclipse.jst.jsp.core.internal.provisional.contenttype.ContentTypeIdForJSP;
 import org.eclipse.wst.sse.core.internal.encoding.CommonEncodingPreferenceNames;
 import org.eclipse.wst.sse.core.internal.encoding.ContentBasedPreferenceGateway;
 import org.eclipse.wst.sse.core.internal.encoding.ContentTypeEncodingPreferences;
 import org.eclipse.wst.sse.core.internal.provisional.document.IEncodedDocument;
-import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
-import org.eclipse.wst.xml.core.internal.encoding.XMLDocumentLoader;
-import org.eclipse.wst.xml.core.internal.preferences.XMLCorePreferenceNames;
-import org.eclipse.wst.xml.core.internal.provisional.contenttype.ContentTypeIdForXML;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleException;
 import org.osgi.service.prefs.Preferences;
 
 /**
- * The purpose of this test is to verify the validity of the XML Source editor
+ * The purpose of this test is to verify the validity of the JSP Source editor
  * preferences. Tests include setting/getting preferences.
  * 
  * NOTE: This test should be preformed on a clean workspace. If performed on
@@ -38,13 +38,13 @@ import org.osgi.service.prefs.Preferences;
  * workspace, though attempts will be made to restore original values after
  * testing.
  */
-public class XMLCorePreferencesTest extends TestCase {
+public class JSPCorePreferencesTest extends TestCase {
 	/**
 	 * Tests existance of preference values when getting preference values
 	 * through Platform.getPreferencesService()
 	 */
 	public void testBundleGetPreferences() {
-		final String bundleName = "org.eclipse.wst.xml.core";
+		final String bundleName = "org.eclipse.jst.jsp.core";
 
 		// need to start up bundle for default values to be loaded
 		Bundle bundle = Platform.getBundle(bundleName);
@@ -58,14 +58,13 @@ public class XMLCorePreferencesTest extends TestCase {
 			fail("Get preference value failed because of exception starting bundle: " + bundleName + " exception: " + e);
 		}
 
-		bundleGetPreference(bundleName, XMLCorePreferenceNames.INDENTATION_SIZE);
-		bundleGetPreference(bundleName, XMLCorePreferenceNames.LINE_WIDTH);
+		bundleGetPreference(bundleName, JSPCorePreferenceNames.DEFAULT_EXTENSION);
 	}
 
 	private void bundleGetPreference(String bundleName, String prefKey) {
-		int defaultValue = -1;
+		String defaultValue = null;
 
-		int value = Platform.getPreferencesService().getInt(bundleName, prefKey, defaultValue, null);
+		String value = Platform.getPreferencesService().getString(bundleName, prefKey, defaultValue, null);
 		assertTrue("Get preference value failed using Platform.getPreferencesService. Key: " + prefKey, defaultValue != value);
 	}
 
@@ -76,10 +75,9 @@ public class XMLCorePreferencesTest extends TestCase {
 	 * get changed, assertions need to be updated as well
 	 */
 	public void testPluginGetDefaultPreferences() {
-		IEclipsePreferences node = new DefaultScope().getNode(XMLCorePlugin.getDefault().getBundle().getSymbolicName());
+		IEclipsePreferences node = new DefaultScope().getNode(JSPCorePlugin.getDefault().getBundle().getSymbolicName());
 
-		pluginGetDefaultPreference(node, XMLCorePreferenceNames.SPLIT_MULTI_ATTRS, Boolean.toString(false));
-		pluginGetDefaultPreference(node, XMLCorePreferenceNames.INDENTATION_CHAR, XMLCorePreferenceNames.TAB);
+		pluginGetDefaultPreference(node, JSPCorePreferenceNames.VALIDATE_FRAGMENTS, Boolean.toString(true));
 	}
 
 	private void pluginGetDefaultPreference(IEclipsePreferences node, String prefKey, String expected) {
@@ -95,10 +93,9 @@ public class XMLCorePreferencesTest extends TestCase {
 	 * certain value, then getting the preference value to verify it was set.
 	 */
 	public void testPluginSetPreferences() {
-		IEclipsePreferences node = new InstanceScope().getNode(XMLCorePlugin.getDefault().getBundle().getSymbolicName());
+		IEclipsePreferences node = new InstanceScope().getNode(JSPCorePlugin.getDefault().getBundle().getSymbolicName());
 
-		pluginSetPreferenceBoolean(node, XMLCorePreferenceNames.CLEAR_ALL_BLANK_LINES);
-		pluginSetPreferenceString(node, XMLCorePreferenceNames.INDENTATION_CHAR);
+		pluginSetPreferenceBoolean(node, JSPCorePreferenceNames.VALIDATE_FRAGMENTS);
 	}
 
 	private void pluginSetPreferenceBoolean(IEclipsePreferences node, String prefKey) {
@@ -142,8 +139,8 @@ public class XMLCorePreferencesTest extends TestCase {
 	 */
 	public void testDelimiterPreferences() {
 		// check if content type preferences match
-		String preferredDelimiter = ContentTypeEncodingPreferences.getPreferredNewLineDelimiter(ContentTypeIdForXML.ContentTypeID_XML);
-		Preferences prefs = ContentBasedPreferenceGateway.getPreferences(ContentTypeIdForXML.ContentTypeID_XML);
+		String preferredDelimiter = ContentTypeEncodingPreferences.getPreferredNewLineDelimiter(ContentTypeIdForJSP.ContentTypeID_JSP);
+		Preferences prefs = ContentBasedPreferenceGateway.getPreferences(ContentTypeIdForJSP.ContentTypeID_JSP);
 		String gatewayDelimiter = prefs.get(CommonEncodingPreferenceNames.END_OF_LINE_CODE, null);
 		assertEquals("ContentTypeEncodingPreferences and ContentBasedPreferenceGateway preferences do not match", gatewayDelimiter, preferredDelimiter);
 
@@ -151,7 +148,7 @@ public class XMLCorePreferencesTest extends TestCase {
 		prefs.put(CommonEncodingPreferenceNames.END_OF_LINE_CODE, CommonEncodingPreferenceNames.LF);
 
 		// create document
-		XMLDocumentLoader loader = new XMLDocumentLoader();
+		JSPDocumentLoader loader = new JSPDocumentLoader();
 		IEncodedDocument document = loader.createNewStructuredDocument();
 		String documentDelimiter = document.getPreferredLineDelimiter();
 

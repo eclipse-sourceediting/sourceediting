@@ -39,5 +39,6 @@ public class JSPCoreTestSuite extends TestSuite {
 		addTest(new TestSuite(TestModelRelease.class, "JSP Model Tests"));
 		addTest(new TestSuite(TestModelWithNoFile.class, "JSP Model Tests"));
 		addTest(new TestSuite(TestIndex.class, "TaglibIndex Tests"));
+		addTest(new TestSuite(JSPCorePreferencesTest.class));
 	}
 }

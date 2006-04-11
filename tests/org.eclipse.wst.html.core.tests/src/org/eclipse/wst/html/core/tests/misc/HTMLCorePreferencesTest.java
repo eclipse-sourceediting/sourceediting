@@ -18,9 +18,16 @@ import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
+import org.eclipse.wst.html.core.internal.encoding.HTMLDocumentLoader;
 import org.eclipse.wst.html.core.internal.preferences.HTMLCorePreferenceNames;
+import org.eclipse.wst.html.core.internal.provisional.contenttype.ContentTypeIdForHTML;
+import org.eclipse.wst.sse.core.internal.encoding.CommonEncodingPreferenceNames;
+import org.eclipse.wst.sse.core.internal.encoding.ContentBasedPreferenceGateway;
+import org.eclipse.wst.sse.core.internal.encoding.ContentTypeEncodingPreferences;
+import org.eclipse.wst.sse.core.internal.provisional.document.IEncodedDocument;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleException;
+import org.osgi.service.prefs.Preferences;
 
 /**
  * The purpose of this test is to verify the validity of the HTML Source
@@ -46,7 +53,8 @@ public class HTMLCorePreferencesTest extends TestCase {
 				bundle.start();
 			else
 				fail("Get preference value failed because could not find bundle: " + bundleName);
-		} catch (BundleException e) {
+		}
+		catch (BundleException e) {
 			fail("Get preference value failed because of exception starting bundle: " + bundleName + " exception: " + e);
 		}
 
@@ -77,7 +85,7 @@ public class HTMLCorePreferencesTest extends TestCase {
 	private void pluginGetDefaultPreference(IEclipsePreferences node, String prefKey, String expected) {
 		String defaultValue = Long.toString(System.currentTimeMillis()); // random
 		// string
-		
+
 		String theDefaultValue = node.get(prefKey, defaultValue);
 		assertEquals("Get default preference value failed using plugin.getPreferenceStore. Key: " + prefKey, expected, theDefaultValue);
 	}
@@ -96,7 +104,7 @@ public class HTMLCorePreferencesTest extends TestCase {
 	private void pluginSetPreferenceBoolean(IEclipsePreferences node, String prefKey) {
 		boolean originalValue = false;
 		boolean expectedValue = true;
-		
+
 		String originalString = node.get(prefKey, "bogus");
 		if (!"bogus".equals(originalString)) {
 			originalValue = Boolean.valueOf(originalString).booleanValue();
@@ -105,7 +113,7 @@ public class HTMLCorePreferencesTest extends TestCase {
 		node.putBoolean(prefKey, expectedValue);
 		boolean foundValue = node.getBoolean(prefKey, true);
 		assertEquals("Set preference value failed using plugin.getPreferenceStore. Key: " + prefKey + "  expected: " + expectedValue + " found: " + foundValue, expectedValue, foundValue);
-		
+
 		// attempt to restore original preference value
 		if ("bogus".equals(originalString))
 			node.remove(prefKey);
@@ -116,7 +124,7 @@ public class HTMLCorePreferencesTest extends TestCase {
 	private void pluginSetPreferenceString(IEclipsePreferences node, String prefKey) {
 		String originalValue = node.get(prefKey, "bogus");
 		String expectedValue = Long.toString(System.currentTimeMillis()); // random
-																			// string
+		// string
 		node.put(prefKey, expectedValue);
 		String foundValue = node.get(prefKey, "");
 		assertEquals("Set preference value failed using plugin.getPreferenceStore. Key: " + prefKey + "  expected: " + expectedValue + " found: " + foundValue, expectedValue, foundValue);
@@ -126,5 +134,31 @@ public class HTMLCorePreferencesTest extends TestCase {
 			node.remove(prefKey);
 		else
 			node.put(prefKey, originalValue);
+	}
+
+	/**
+	 * Tests line delimiter preferences by making sure document created
+	 * follows line delimiter preference.
+	 */
+	public void testDelimiterPreferences() {
+		// check if content type preferences match
+		String preferredDelimiter = ContentTypeEncodingPreferences.getPreferredNewLineDelimiter(ContentTypeIdForHTML.ContentTypeID_HTML);
+		Preferences prefs = ContentBasedPreferenceGateway.getPreferences(ContentTypeIdForHTML.ContentTypeID_HTML);
+		String gatewayDelimiter = prefs.get(CommonEncodingPreferenceNames.END_OF_LINE_CODE, null);
+		assertEquals("ContentTypeEncodingPreferences and ContentBasedPreferenceGateway preferences do not match", gatewayDelimiter, preferredDelimiter);
+
+		// set a particular line delimiter
+		prefs.put(CommonEncodingPreferenceNames.END_OF_LINE_CODE, CommonEncodingPreferenceNames.LF);
+
+		// create document
+		HTMLDocumentLoader loader = new HTMLDocumentLoader();
+		IEncodedDocument document = loader.createNewStructuredDocument();
+		String documentDelimiter = document.getPreferredLineDelimiter();
+
+		// verify delimiter in document matches preference
+		assertEquals("Delimiter in document does not match preference", CommonEncodingPreferenceNames.STRING_LF, documentDelimiter);
+
+		// return to original preference
+		prefs.remove(CommonEncodingPreferenceNames.END_OF_LINE_CODE);
 	}
 }

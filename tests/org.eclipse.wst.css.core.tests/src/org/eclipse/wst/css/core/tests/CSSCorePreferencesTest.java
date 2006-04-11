@@ -18,13 +18,20 @@ import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.wst.css.core.internal.CSSCorePlugin;
+import org.eclipse.wst.css.core.internal.encoding.CSSDocumentLoader;
 import org.eclipse.wst.css.core.internal.preferences.CSSCorePreferenceNames;
+import org.eclipse.wst.css.core.internal.provisional.contenttype.ContentTypeIdForCSS;
+import org.eclipse.wst.sse.core.internal.encoding.CommonEncodingPreferenceNames;
+import org.eclipse.wst.sse.core.internal.encoding.ContentBasedPreferenceGateway;
+import org.eclipse.wst.sse.core.internal.encoding.ContentTypeEncodingPreferences;
+import org.eclipse.wst.sse.core.internal.provisional.document.IEncodedDocument;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleException;
+import org.osgi.service.prefs.Preferences;
 
 /**
- * The purpose of this test is to verify the validity of the XML Source
- * editor preferences. Tests include setting/getting preferences.
+ * The purpose of this test is to verify the validity of the XML Source editor
+ * preferences. Tests include setting/getting preferences.
  * 
  * NOTE: This test should be preformed on a clean workspace. If performed on
  * an existing workspace, this test will manipulate preferences in the
@@ -46,7 +53,8 @@ public class CSSCorePreferencesTest extends TestCase {
 				bundle.start();
 			else
 				fail("Get preference value failed because could not find bundle: " + bundleName);
-		} catch (BundleException e) {
+		}
+		catch (BundleException e) {
 			fail("Get preference value failed because of exception starting bundle: " + bundleName + " exception: " + e);
 		}
 
@@ -77,7 +85,7 @@ public class CSSCorePreferencesTest extends TestCase {
 	private void pluginGetDefaultPreference(IEclipsePreferences node, String prefKey, String expected) {
 		String defaultValue = Long.toString(System.currentTimeMillis()); // random
 		// string
-		
+
 		String theDefaultValue = node.get(prefKey, defaultValue);
 		assertEquals("Get default preference value failed using plugin.getPreferenceStore. Key: " + prefKey, expected, theDefaultValue);
 	}
@@ -96,7 +104,7 @@ public class CSSCorePreferencesTest extends TestCase {
 	private void pluginSetPreferenceBoolean(IEclipsePreferences node, String prefKey) {
 		boolean originalValue = false;
 		boolean expectedValue = true;
-		
+
 		String originalString = node.get(prefKey, "bogus");
 		if (!"bogus".equals(originalString)) {
 			originalValue = Boolean.valueOf(originalString).booleanValue();
@@ -105,7 +113,7 @@ public class CSSCorePreferencesTest extends TestCase {
 		node.putBoolean(prefKey, expectedValue);
 		boolean foundValue = node.getBoolean(prefKey, true);
 		assertEquals("Set preference value failed using plugin.getPreferenceStore. Key: " + prefKey + "  expected: " + expectedValue + " found: " + foundValue, expectedValue, foundValue);
-		
+
 		// attempt to restore original preference value
 		if ("bogus".equals(originalString))
 			node.remove(prefKey);
@@ -125,5 +133,31 @@ public class CSSCorePreferencesTest extends TestCase {
 			node.remove(prefKey);
 		else
 			node.putInt(prefKey, originalValue);
+	}
+
+	/**
+	 * Tests line delimiter preferences by making sure document created
+	 * follows line delimiter preference.
+	 */
+	public void testDelimiterPreferences() {
+		// check if content type preferences match
+		String preferredDelimiter = ContentTypeEncodingPreferences.getPreferredNewLineDelimiter(ContentTypeIdForCSS.ContentTypeID_CSS);
+		Preferences prefs = ContentBasedPreferenceGateway.getPreferences(ContentTypeIdForCSS.ContentTypeID_CSS);
+		String gatewayDelimiter = prefs.get(CommonEncodingPreferenceNames.END_OF_LINE_CODE, null);
+		assertEquals("ContentTypeEncodingPreferences and ContentBasedPreferenceGateway preferences do not match", gatewayDelimiter, preferredDelimiter);
+
+		// set a particular line delimiter
+		prefs.put(CommonEncodingPreferenceNames.END_OF_LINE_CODE, CommonEncodingPreferenceNames.LF);
+
+		// create document
+		CSSDocumentLoader loader = new CSSDocumentLoader();
+		IEncodedDocument document = loader.createNewStructuredDocument();
+		String documentDelimiter = document.getPreferredLineDelimiter();
+
+		// verify delimiter in document matches preference
+		assertEquals("Delimiter in document does not match preference", CommonEncodingPreferenceNames.STRING_LF, documentDelimiter);
+
+		// return to original preference
+		prefs.remove(CommonEncodingPreferenceNames.END_OF_LINE_CODE);
 	}
 }
