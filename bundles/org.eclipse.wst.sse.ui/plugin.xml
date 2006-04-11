@@ -203,27 +203,28 @@
 	</extension>
 	<!-- Keybindings for source editor -->
 	<extension point="org.eclipse.ui.bindings">
+	    <!--  win32:  M1=CTRL, M2=SHIFT, M3=ALT -->
 		<!-- Edit commands -->
 		<key
-			sequence="Alt+Shift+ARROW_UP"
+			sequence="M2+M3+ARROW_UP"
 			contextId="org.eclipse.wst.sse.ui.structuredTextEditorScope"
 			commandId="org.eclipse.wst.sse.ui.structure.select.enclosing"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
 		</key>
 		<key
-			sequence="Alt+Shift+ARROW_RIGHT"
+			sequence="M2+M3+ARROW_RIGHT"
 			contextId="org.eclipse.wst.sse.ui.structuredTextEditorScope"
 			commandId="org.eclipse.wst.sse.ui.structure.select.next"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
 		</key>
 		<key
-			sequence="Alt+Shift+ARROW_LEFT"
+			sequence="M2+M3+ARROW_LEFT"
 			contextId="org.eclipse.wst.sse.ui.structuredTextEditorScope"
 			commandId="org.eclipse.wst.sse.ui.structure.select.previous"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
 		</key>
 		<key
-			sequence="Alt+Shift+ARROW_DOWN"
+			sequence="M2+M3+ARROW_DOWN"
 			contextId="org.eclipse.wst.sse.ui.structuredTextEditorScope"
 			commandId="org.eclipse.wst.sse.ui.structure.select.last"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
@@ -235,38 +236,38 @@
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
 		</key>
 		<key
-			sequence="Ctrl+1"
+			sequence="M1+1"
 			contextId="org.eclipse.wst.sse.ui.structuredTextEditorScope"
 			commandId="org.eclipse.wst.sse.ui.edit.text.java.correction.assist.proposals"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
 		</key>
 		<!-- Source commands -->
 		<key
-			sequence="Ctrl+Shift+C"
+			sequence="M1+M2+C"
 			contextId="org.eclipse.wst.sse.ui.structuredTextEditorScope"
 			commandId="org.eclipse.wst.sse.ui.toggle.comment"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
 		</key>
 		<key
-			sequence="Ctrl+Shift+/"
+			sequence="M1+M2+/"
 			contextId="org.eclipse.wst.sse.ui.structuredTextEditorScope"
 			commandId="org.eclipse.wst.sse.ui.add.block.comment"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
 		</key>
 		<key
-			sequence="Ctrl+Shift+\"
+			sequence="M1+M2+\"
 			contextId="org.eclipse.wst.sse.ui.structuredTextEditorScope"
 			commandId="org.eclipse.wst.sse.ui.remove.block.comment"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
 		</key>
 		<key
-			sequence="Ctrl+Shift+F"
+			sequence="M1+M2+F"
 			contextId="org.eclipse.wst.sse.ui.structuredTextEditorScope"
 			commandId="org.eclipse.wst.sse.ui.format.document"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
 		</key>
 		<key
-			sequence="Ctrl+I"
+			sequence="M1+I"
 			contextId="org.eclipse.wst.sse.ui.structuredTextEditorScope"
 			commandId="org.eclipse.wst.sse.ui.format.active.elements"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
@@ -280,7 +281,7 @@
 		</key>
 		<!-- Find Occurrences -->
 		<key
-			sequence="Ctrl+Shift+A"
+			sequence="M1+M2+A"
 			contextId="org.eclipse.wst.sse.ui.structuredTextEditorScope"
 			commandId="org.eclipse.wst.sse.ui.search.find.occurrences"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
