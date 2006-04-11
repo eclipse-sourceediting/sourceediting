@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.wst.web.ui.internal.wizards;
 
-import org.eclipse.jem.util.emf.workbench.ProjectUtilities;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -70,7 +69,7 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
 			for (int i = 0; i < postAddition.length; i++) {
 				postAddition[i] = postAdditionDescriptors[i].getPropertyValue();
 			}
-			Object newAddition = ProjectUtilities.getNewObject(preAddition, postAddition);
+			Object newAddition = getNewObject(preAddition, postAddition);
 
 			model.notifyPropertyChange(FACET_RUNTIME, IDataModel.VALID_VALUES_CHG);
 			if (newAddition != null)
@@ -154,5 +153,34 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
 				}
 			}
 		}
+	}
+	
+	/**
+	 * Find first newObject that is not in the oldObjects array (using "==").
+	 * 
+	 * @param oldObjects
+	 * @param newObjects
+	 * @return first newObject not found in oldObjects, or <code>null</code> if all found.
+	 * 
+	 * @since 1.0.0
+	 */
+	private static Object getNewObject(Object[] oldObjects, Object[] newObjects) {
+		if (oldObjects != null && newObjects != null && oldObjects.length < newObjects.length) {
+			for (int i = 0; i < newObjects.length; i++) {
+				boolean found = false;
+				Object object = newObjects[i];
+				for (int j = 0; j < oldObjects.length; j++) {
+					if (oldObjects[j] == object) {
+						found = true;
+						break;
+					}
+				}
+				if (!found)
+					return object;
+			}
+		}
+		if (oldObjects == null && newObjects != null && newObjects.length == 1)
+			return newObjects[0];
+		return null;
 	}
 }

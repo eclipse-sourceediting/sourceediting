@@ -13,7 +13,6 @@ import java.net.URL;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jem.util.logger.proxy.Logger;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.Bundle;
@@ -76,8 +75,7 @@ public class WSTWebUIPlugin extends AbstractUIPlugin {
 			try {
 				return new URL(bundle.getEntry("/"), path.toString()); //$NON-NLS-1$
 			} catch (MalformedURLException exception) {
-				Logger.getLogger().logWarning("Load_Image_Error_"); //$NON-NLS-1$
-				exception.printStackTrace();
+				Logger.log(Logger.WARNING, "Load_Image_Error_", exception); //$NON-NLS-1$
 				continue;
 			}
 		}

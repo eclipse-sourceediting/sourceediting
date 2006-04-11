@@ -16,6 +16,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -23,8 +24,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.eclipse.jem.util.emf.workbench.ProjectUtilities;
-import org.eclipse.jem.util.logger.proxy.Logger;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizardPage;
@@ -53,6 +52,7 @@ import org.eclipse.wst.common.project.facet.core.IFacetedProject.Action.Type;
 import org.eclipse.wst.common.project.facet.core.runtime.IRuntime;
 import org.eclipse.wst.common.project.facet.ui.AddRemoveFacetsWizard;
 import org.eclipse.wst.web.internal.DelegateConfigurationElement;
+import org.eclipse.wst.web.ui.internal.Logger;
 import org.eclipse.wst.web.ui.internal.WSTWebUIPlugin;
 
 public abstract class NewProjectDataModelFacetWizard extends AddRemoveFacetsWizard implements INewWizard, IFacetProjectCreationDataModelProperties {
@@ -200,7 +200,7 @@ public abstract class NewProjectDataModelFacetWizard extends AddRemoveFacetsWiza
 			try {
 				postPerformFinish();
 			} catch (InvocationTargetException e) {
-				Logger.getLogger().logError(e);
+				Logger.logException(e);
 			}
 		} finally {
 			monitor.done();
@@ -313,7 +313,7 @@ public abstract class NewProjectDataModelFacetWizard extends AddRemoveFacetsWiza
 		}
 
 		String projName = getProjectName();
-		BasicNewResourceWizard.selectAndReveal(ProjectUtilities.getProject(projName), WSTWebUIPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow());
+		BasicNewResourceWizard.selectAndReveal(ResourcesPlugin.getWorkspace().getRoot().getProject(projName), WSTWebUIPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow());
 		try {
 			getFacetProjectNotificationOperation().execute(new NullProgressMonitor(), null);
 		} catch (ExecutionException e) {
