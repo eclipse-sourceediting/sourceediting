@@ -415,13 +415,15 @@ public class XSDElementDeclarationSection extends MultiplicitySection
     else if (e.widget == componentNameCombo)
     {
       String newValue = componentNameCombo.getText();
-      if (input instanceof XSDElementDeclaration)
+      String newName = newValue.substring(newValue.indexOf(":") + 1);
+      if (isElementReference)
       {
-        XSDElementDeclaration element = (XSDElementDeclaration)input;
-// TODO: We should set the ref using the model, and not the DOM.        
-        element.setResolvedElementDeclaration(element.resolveElementDeclaration(newValue));
-//        element.getElement().setAttribute(XSDConstants.REF_ATTRIBUTE, newValue);
+        XSDElementDeclaration elementRef = (XSDElementDeclaration)input;
+        elementRef.getElement().setAttribute(XSDConstants.REF_ATTRIBUTE, newValue);
+        nameText.setText(newName);
+        //refresh();
       }
+
     }
     else if (e.widget == maxCombo)
     {
@@ -481,21 +483,6 @@ public class XSDElementDeclarationSection extends MultiplicitySection
         if (command != null && getCommandStack() != null)
         {
           getCommandStack().execute(command);
-        }
-        
-        if (isElementReference)
-        {
-          XSDElementDeclaration elementRef = (XSDElementDeclaration)input;
-          String qname = elementRef.getResolvedElementDeclaration().getQName();
-          elementRef.getElement().setAttribute(XSDConstants.REF_ATTRIBUTE, qname);
-          
-          TypesHelper helper = new TypesHelper(xsdSchema);
-          List items = new ArrayList();
-          items = helper.getGlobalElements();
-          items.add(0, "");
-          componentNameCombo.setItems((String [])items.toArray(new String[0]));
-
-          refreshRefCombo();
         }
 
         // doReferentialIntegrityCheck(namedComponent, newValue);
