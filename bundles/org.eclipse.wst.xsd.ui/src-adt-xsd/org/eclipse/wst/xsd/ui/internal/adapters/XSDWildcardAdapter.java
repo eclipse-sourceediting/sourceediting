@@ -172,4 +172,10 @@ public class XSDWildcardAdapter extends XSDParticleAdapter implements IField
   {
     return false;
   }
+
+  public boolean isReference()
+  {
+    // TODO Auto-generated method stub
+    return false;
+  }
 }

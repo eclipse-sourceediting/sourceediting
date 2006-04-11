@@ -111,4 +111,10 @@ public class XSDEmptyFieldAdapter extends XSDBaseAdapter implements IField
     // TODO Auto-generated method stub
     return null;
   }
+
+  public boolean isReference()
+  {
+    // TODO Auto-generated method stub
+    return false;
+  }
 }

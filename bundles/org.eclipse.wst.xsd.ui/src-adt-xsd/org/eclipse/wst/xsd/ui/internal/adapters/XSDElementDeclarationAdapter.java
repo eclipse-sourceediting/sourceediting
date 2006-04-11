@@ -213,7 +213,7 @@ public class XSDElementDeclarationAdapter extends XSDParticleAdapter implements 
     return getXSDElementDeclaration().eContainer() instanceof XSDSchema;
   }
   
-  public boolean isElementDeclarationReference()
+  public boolean isReference()
   {
 	  return ((XSDElementDeclaration) target).isElementDeclarationReference();
   }

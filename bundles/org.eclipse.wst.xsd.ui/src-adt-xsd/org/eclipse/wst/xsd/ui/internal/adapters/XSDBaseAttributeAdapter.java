@@ -178,6 +178,11 @@ public abstract class XSDBaseAttributeAdapter extends XSDBaseAdapter implements 
     return false;
   }
   
+  public boolean isReference()
+  {
+    return false;
+  }
+  
   public IModel getModel()
   {
     Adapter adapter = XSDAdapterFactory.getInstance().adapt(getXSDAttributeDeclaration().getSchema());

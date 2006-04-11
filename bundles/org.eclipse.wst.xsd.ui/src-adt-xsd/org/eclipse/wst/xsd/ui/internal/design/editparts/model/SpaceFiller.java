@@ -152,6 +152,12 @@ public class SpaceFiller implements IField
     // TODO Auto-generated method stub
     return null;
   }
+
+  public boolean isReference()
+  {
+    // TODO Auto-generated method stub
+    return false;
+  }
 }
 
 
