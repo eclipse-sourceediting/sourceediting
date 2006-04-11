@@ -143,7 +143,7 @@ public class XSDSchemaEditPart extends BaseEditPart
 
   }
 
-  class Holder
+  protected class Holder
   {
     List list;
 
@@ -158,7 +158,7 @@ public class XSDSchemaEditPart extends BaseEditPart
     }
   }
 
-  class CategoryRowEditPart extends BaseEditPart
+  protected class CategoryRowEditPart extends BaseEditPart
   {
     protected XSDSchema schema;
     protected Figure contentPane;
