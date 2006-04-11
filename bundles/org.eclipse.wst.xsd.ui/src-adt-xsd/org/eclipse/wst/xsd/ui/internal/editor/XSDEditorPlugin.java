@@ -128,7 +128,7 @@ public class XSDEditorPlugin extends AbstractUIPlugin
 	 * @return the image descriptor
 	 */
 	public static ImageDescriptor getImageDescriptor(String path) {
-		return AbstractUIPlugin.imageDescriptorFromPlugin("org.eclipse.wst.xsd.ui.internal", path);
+		return AbstractUIPlugin.imageDescriptorFromPlugin("org.eclipse.wst.xsd.ui", path);
 	}
 	
 	public static ImageDescriptor getImageDescriptor(String name, boolean getBaseURL) {
