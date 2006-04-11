@@ -198,6 +198,8 @@ public class XSDEditorPlugin extends AbstractUIPlugin
   {
     store.setDefault(CONST_SHOW_INHERITED_CONTENT, false);
     store.setDefault(CONST_XSD_DEFAULT_PREFIX_TEXT, "xsd");
+    store.setDefault(CONST_XSD_LANGUAGE_QUALIFY, false);
+    store.setDefault(CONST_DEFAULT_TARGET_NAMESPACE, DEFAULT_TARGET_NAMESPACE);
     
     //Even the last item in the list must contain a trailing List separator
     store.setDefault(CONST_PREFERED_BUILT_IN_TYPES,     		
