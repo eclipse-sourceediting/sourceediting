@@ -12,16 +12,10 @@ package org.eclipse.wst.css.ui.views.contentoutline;
 
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.wst.css.core.internal.provisional.document.ICSSMediaRule;
-import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
-import org.eclipse.wst.css.core.internal.provisional.document.ICSSPrimitiveValue;
-import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleDeclItem;
-import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleRule;
-import org.eclipse.wst.css.ui.internal.image.CSSImageHelper;
-import org.eclipse.wst.css.ui.internal.image.CSSImageType;
-import org.w3c.dom.css.CSSImportRule;
-import org.w3c.dom.css.CSSRule;
-import org.w3c.dom.stylesheets.MediaList;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSModel;
+import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
+import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
+import org.eclipse.wst.sse.ui.internal.contentoutline.IJFaceNodeAdapter;
 
 class JFaceNodeLabelProviderCSS extends LabelProvider {
 
@@ -30,6 +24,25 @@ class JFaceNodeLabelProviderCSS extends LabelProvider {
 	 */
 	public JFaceNodeLabelProviderCSS() {
 		super();
+	}
+
+	/**
+	 * Returns the JFace adapter for the specified object.
+	 * 
+	 * @param adaptable
+	 *            java.lang.Object The object to get the adapter for
+	 */
+	private IJFaceNodeAdapter getAdapter(Object adaptable) {
+		IJFaceNodeAdapter adapter = null;
+		if (adaptable instanceof ICSSModel) {
+			adaptable = ((ICSSModel) adaptable).getDocument();
+		}
+		if (adaptable instanceof INodeNotifier) {
+			INodeAdapter nodeAdapter = ((INodeNotifier) adaptable).getAdapterFor(IJFaceNodeAdapter.class);
+			if (nodeAdapter instanceof IJFaceNodeAdapter)
+				adapter = (IJFaceNodeAdapter) nodeAdapter;
+		}
+		return adapter;
 	}
 
 	/**
@@ -44,16 +57,11 @@ class JFaceNodeLabelProviderCSS extends LabelProvider {
 	 *            to the viewer.
 	 */
 	public Image getImage(Object element) {
-
-
-		if (element instanceof ICSSNode) {
-			CSSImageHelper helper = CSSImageHelper.getInstance();
-			return helper.getImage(CSSImageType.getImageType((ICSSNode) element));
-			// Image image = getCSSNodeImage(element);
-			// return image;
-			// return getAdapter(element).getLabelImage((ICSSNode) element);
-		}
-		return null;
+		Image image = null;
+		IJFaceNodeAdapter adapter = getAdapter(element);
+		if (adapter != null)
+			image = adapter.getLabelImage(element);
+		return image;
 	}
 
 	/**
@@ -68,80 +76,19 @@ class JFaceNodeLabelProviderCSS extends LabelProvider {
 	 *            the viewer.
 	 */
 	public String getText(Object element) {
-		// This was returning null, on occasion ... probably should not be,
-		// but
-		// took the quick and easy way out for now. (dmw 3/8/01)
-
-		String result = "";//$NON-NLS-1$
-		String mediaText;
-		if (element instanceof ICSSNode) {
-			switch (((ICSSNode) element).getNodeType()) {
-				case ICSSNode.STYLERULE_NODE :
-					result = ((ICSSStyleRule) element).getSelectors().getString();
-					break;
-				case ICSSNode.FONTFACERULE_NODE :
-					result = "@font-face";//$NON-NLS-1$
-					break;
-				case ICSSNode.IMPORTRULE_NODE :
-					result = ((CSSImportRule) element).getHref();
-					mediaText = getMediaText((CSSImportRule) element);
-					if (mediaText != null && 0 < mediaText.length()) {
-						result += " (" + mediaText + ")"; //$NON-NLS-1$ //$NON-NLS-2$
-					}
-					break;
-				case ICSSNode.PAGERULE_NODE :
-					result = "@page";//$NON-NLS-1$
-					break;
-				case ICSSNode.STYLEDECLARATION_NODE :
-					result = "properties";//$NON-NLS-1$
-					break;
-				case ICSSNode.STYLEDECLITEM_NODE :
-					result = ((ICSSStyleDeclItem) element).getPropertyName();
-					break;
-				case ICSSNode.PRIMITIVEVALUE_NODE :
-					result = ((ICSSPrimitiveValue) element).getStringValue();
-					break;
-				case ICSSNode.MEDIARULE_NODE :
-					result = "@media";//$NON-NLS-1$
-					mediaText = getMediaText((ICSSMediaRule) element);
-					if (mediaText != null && 0 < mediaText.length()) {
-						result += " (" + mediaText + ")"; //$NON-NLS-1$ //$NON-NLS-2$
-					}
-					break;
-				case ICSSNode.CHARSETRULE_NODE :
-					result = "@charset";//$NON-NLS-1$
-					break;
-				case ICSSNode.MEDIALIST_NODE :
-					result = ((MediaList) element).getMediaText();
-					break;
-				default :
-					break;
-			}
+		String text = null;
+		IJFaceNodeAdapter adapter = getAdapter(element);
+		if (adapter != null) {
+			text = adapter.getLabelText(element);
 		}
-
-		// if (element instanceof ICSSNode) {
-		// ICSSNode node = ((ICSSNode)element);
-		// result = getAdapter(element).getLabelText((ICSSNode) element);
-		// }
-		return result;
-	}
-
-	private String getMediaText(CSSRule rule) {
-		String result = ""; //$NON-NLS-1$
-		ICSSNode child = (rule != null) ? ((ICSSNode) rule).getFirstChild() : null;
-		while (child != null) {
-			if (child.getNodeType() == ICSSNode.MEDIALIST_NODE) {
-				result = ((MediaList) child).getMediaText();
-				break;
-			}
-			child = child.getNextSibling();
-		}
-		return result;
+		return text;
 	}
 
 	/**
 	 * Checks whether this label provider is affected by the given domain
 	 * event.
+	 * 
+	 * @deprecated
 	 */
 	public boolean isAffected(Object dummy) {// DomainEvent event) {
 		// return event.isModifier(DomainEvent.NON_STRUCTURE_CHANGE);

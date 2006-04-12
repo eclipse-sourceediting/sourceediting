@@ -11,22 +11,18 @@
 package org.eclipse.wst.css.ui.views.contentoutline;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSDocument;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSModel;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
-import org.eclipse.wst.css.core.internal.provisional.document.ICSSPrimitiveValue;
-import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleDeclItem;
-import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleDeclaration;
+import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.ui.internal.contentoutline.IJFaceNodeAdapter;
 import org.eclipse.wst.sse.ui.internal.contentoutline.IJFaceNodeAdapterFactory;
 import org.w3c.dom.css.CSSRule;
-import org.w3c.dom.stylesheets.MediaList;
 
 /**
  * A Content provider for a JFace viewer used to display CSS nodes. This
@@ -39,6 +35,7 @@ class JFaceNodeContentProviderCSS implements ITreeContentProvider {
 	}
 
 	/**
+	 * @deprecated
 	 */
 	protected void addElements(Object element, ArrayList v) {
 
@@ -82,32 +79,10 @@ class JFaceNodeContentProviderCSS implements ITreeContentProvider {
 	 * root node, too.
 	 */
 	public Object[] getChildren(Object object) {
-		if (object instanceof ICSSNode) {
-			ICSSNode node = (ICSSNode) object;
+		IJFaceNodeAdapter adapter = getAdapter(object);
+		if (adapter != null)
+			return adapter.getChildren(object);
 
-			short nodeType = node.getNodeType();
-			if (nodeType == ICSSNode.STYLERULE_NODE || nodeType == ICSSNode.PAGERULE_NODE || nodeType == ICSSNode.FONTFACERULE_NODE) {
-				for (node = node.getFirstChild(); node != null && !(node instanceof ICSSStyleDeclaration); node.getNextSibling()) {
-					// nop
-				}
-			}
-			List children = new ArrayList();
-			ICSSNode child = (node != null) ? node.getFirstChild() : null;
-			while (child != null) {
-				if (!(child instanceof ICSSPrimitiveValue) && !(child instanceof MediaList)) {
-					children.add(child);
-				}
-				/*
-				 * Required to correctly connect the refreshing behavior to
-				 * the tree
-				 */
-				if (child instanceof INodeNotifier) {
-					((INodeNotifier) child).getAdapterFor(IJFaceNodeAdapter.class);
-				}
-				child = child.getNextSibling();
-			}
-			return children.toArray();
-		}
 		return new Object[0];
 	}
 
@@ -117,29 +92,11 @@ class JFaceNodeContentProviderCSS implements ITreeContentProvider {
 	 * list etc.
 	 */
 	public Object[] getElements(Object object) {
-		// The root is usually an instance of an XMLStructuredModel in
-		// which case we want to extract the document.
+		IJFaceNodeAdapter adapter = getAdapter(object);
+		if (adapter != null)
+			return adapter.getElements(object);
 
-		if (object instanceof ICSSModel) {
-			ArrayList v = new ArrayList();
-			// internalGetElements(object, v);
-			addElements(object, v);
-			Object[] elements = v.toArray();
-
-			for (int i = 0; i < elements.length; i++) {
-				/*
-				 * Required to correctly connect the refreshing behavior to
-				 * the tree
-				 */
-				if (elements[i] instanceof INodeNotifier) {
-					((INodeNotifier) elements[i]).getAdapterFor(IJFaceNodeAdapter.class);
-				}
-			}
-
-			return elements;
-		}
 		return new Object[0];
-
 	}
 
 	/**
@@ -149,20 +106,10 @@ class JFaceNodeContentProviderCSS implements ITreeContentProvider {
 	 * requested.
 	 */
 	public Object getParent(Object object) {
-		if (object instanceof ICSSNode) {
-			ICSSNode node = ((ICSSNode) object).getParentNode();
-			if (node != null && node.getNodeType() == ICSSNode.STYLEDECLARATION_NODE) {
-				/*
-				 * Required to also correctly connect style declaration to the
-				 * refreshing behavior in the tree
-				 */
-				if (node instanceof INodeNotifier) {
-					((INodeNotifier) node).getAdapterFor(IJFaceNodeAdapter.class);
-				}
-				node = node.getParentNode();
-			}
-			return node;
-		}
+		IJFaceNodeAdapter adapter = getAdapter(object);
+		if (adapter != null)
+			return adapter.getParent(object);
+
 		return null;
 	}
 
@@ -171,21 +118,10 @@ class JFaceNodeContentProviderCSS implements ITreeContentProvider {
 	 * Otherwise <code>false</code> is returned.
 	 */
 	public boolean hasChildren(Object object) {
-		// return getAdapter(object).hasChildren((ICSSNode) object);
-		if (object instanceof ICSSNode) {
-			/*
-			 * Required to correctly connect the refreshing behavior to the
-			 * tree
-			 */
-			if (object instanceof INodeNotifier) {
-				((INodeNotifier) object).getAdapterFor(IJFaceNodeAdapter.class);
-			}
+		IJFaceNodeAdapter adapter = getAdapter(object);
+		if (adapter != null)
+			return adapter.hasChildren(object);
 
-			if (object instanceof ICSSStyleDeclItem)
-				return false;
-			else
-				return ((ICSSNode) object).hasChildNodes();
-		}
 		return false;
 	}
 
@@ -207,39 +143,34 @@ class JFaceNodeContentProviderCSS implements ITreeContentProvider {
 			if (factory != null) {
 				factory.addListener(viewer);
 			}
-			if (newInput instanceof ICSSModel) {
-				((INodeNotifier) ((ICSSModel) newInput).getDocument()).getAdapterFor(IJFaceNodeAdapter.class);
-			}
 		}
 	}
 
 	/**
-	 */
-	/*
-	 * protected void internalGetElements(Object element, ArrayList v) {
-	 * 
-	 * ICSSNode node;
-	 * 
-	 * if (element instanceof ICSSModel) { ICSSModel model =
-	 * (ICSSModel)element; ICSSDocument doc = model.getDocument();
-	 * adapterFactory.adapt((INodeNotifier)doc); node = doc.getFirstChild(); }
-	 * else if (element instanceof ICSSNode) { node =
-	 * ((ICSSNode)element).getFirstChild(); } else { return; }
-	 * 
-	 * while (node != null) { switch (node.getNodeType()) { case
-	 * ICSSNode.STYLEDECLARATION_NODE: adapterFactory.adapt((INodeNotifier)
-	 * node); break; case ICSSNode.STYLERULE_NODE: case
-	 * ICSSNode.FONTFACERULE_NODE: case ICSSNode.PAGERULE_NODE: case
-	 * ICSSNode.IMPORTRULE_NODE: case ICSSNode.MEDIARULE_NODE: v.add(node);
-	 * adapterFactory.adapt((INodeNotifier) node); break; default:
-	 * adapterFactory.adapt((INodeNotifier) node); break; }
-	 * 
-	 * node = node.getNextSibling(); } }
-	 */
-	/**
 	 * Checks whether the given element is deleted or not.
+	 * 
+	 * @deprecated
 	 */
 	public boolean isDeleted(Object element) {
 		return false;
+	}
+
+	/**
+	 * Returns the JFace adapter for the specified object.
+	 * 
+	 * @param adaptable
+	 *            java.lang.Object The object to get the adapter for
+	 */
+	private IJFaceNodeAdapter getAdapter(Object adaptable) {
+		IJFaceNodeAdapter adapter = null;
+		if (adaptable instanceof ICSSModel) {
+			adaptable = ((ICSSModel) adaptable).getDocument();
+		}
+		if (adaptable instanceof INodeNotifier) {
+			INodeAdapter nodeAdapter = ((INodeNotifier) adaptable).getAdapterFor(IJFaceNodeAdapter.class);
+			if (nodeAdapter instanceof IJFaceNodeAdapter)
+				adapter = (IJFaceNodeAdapter) nodeAdapter;
+		}
+		return adapter;
 	}
 }
