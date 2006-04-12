@@ -60,21 +60,15 @@ public class DesignViewNavigationLocation extends NavigationLocation
     {
       DesignViewNavigationLocation loc = (DesignViewNavigationLocation) currentLocation;
       result = loc.path.toString().equals(path.toString());
-      //System.out.println("path1=" + loc.path.toString());
-      //System.out.println("path2=" + path.toString());
     }
     else
     {
-//      System.out.println("this.editorPart = " + getEditorPart());
-//      System.out.println("that.editorPart = " + currentLocation.getInput());
-//      System.out.println(currentLocation.getClass().getName());
     }
     return result;
   }
 
   public void restoreLocation()
   {
-    //System.out.println("resourceLocation " + path.toString());
     XSDSchema schema = (XSDSchema) getEditorPart().getAdapter(XSDSchema.class);
     Object viewer = getEditorPart().getAdapter(GraphicalViewer.class);
     if (viewer instanceof DesignViewGraphicalViewer)

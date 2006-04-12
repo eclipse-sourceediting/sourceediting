@@ -129,7 +129,6 @@ public class XSDModelGroupDefinitionAdapter extends XSDBaseAdapter implements IS
         adtObject.registerListener(this);
       }
     }*/
-    // System.out.println("fields[" + this + "].size() = " + fields.size());
     return fields;
   }
 

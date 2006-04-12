@@ -130,7 +130,6 @@ public class XSDAdapterFactory extends AdapterFactoryImpl
     }
     else
     {
-      System.out.println(target);
       Thread.dumpStack();
     }
     return result;

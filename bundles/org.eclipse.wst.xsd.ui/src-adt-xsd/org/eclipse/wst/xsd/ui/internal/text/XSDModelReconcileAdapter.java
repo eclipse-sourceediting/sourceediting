@@ -64,7 +64,6 @@ public class XSDModelReconcileAdapter extends DocumentAdapter
 
     public void handleNotifyChange(INodeNotifier notifier, int eventType, Object feature, Object oldValue, Object newValue, int index)
     {
-//      System.out.println(eventType + " : HandleNotifyChange " + notifier.hashCode() + " notifier " + notifier);
       switch (eventType)
       {
         case INodeNotifier.ADD:
@@ -157,7 +156,6 @@ public class XSDModelReconcileAdapter extends DocumentAdapter
     protected DelayedEvent delayedTask;
     protected void startDelayedEvent(INodeNotifier notifier, int eventType, Object feature, Object oldValue, Object newValue, int index)
     {
-//      System.out.println("start delayed event");
       // check if there is already a delayed task for the same notifier and eventType
 //      if (delayedTask != null)
 //      {

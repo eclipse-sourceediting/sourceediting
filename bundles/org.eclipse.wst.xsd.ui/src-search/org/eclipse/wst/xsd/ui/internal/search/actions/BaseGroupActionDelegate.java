@@ -37,7 +37,7 @@ public abstract class BaseGroupActionDelegate implements IObjectActionDelegate, 
 
     public BaseGroupActionDelegate() 
     {
-      System.out.println("Create ActionDelegate " + this.getClass().getName());
+
     }
     
     /*

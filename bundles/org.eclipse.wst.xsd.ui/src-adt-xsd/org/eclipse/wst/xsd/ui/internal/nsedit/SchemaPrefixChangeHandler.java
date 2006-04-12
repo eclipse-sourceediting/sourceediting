@@ -107,7 +107,6 @@ public class SchemaPrefixChangeHandler
         String ns = baseType.getTargetNamespace();
         if (ns == null) ns = "";
 //        if (ns.equals(xsdSchema.getSchemaForSchemaNamespace()))
-//        System.out.println(xsdSchema.getSchemaForSchemaNamespace());
         if (ns.equals(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001))
         {
           XSDDOMHelper domHelper = new XSDDOMHelper();

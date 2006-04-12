@@ -184,7 +184,7 @@ public class XSDEditorPlugin extends AbstractUIPlugin
 			return ExtendedImageRegistry.getInstance().getImage(new URL(getBaseURL() + "icons/" + object + ".gif"));
 		}
 		catch (MalformedURLException exception) {
-			System.out.println("Failed to load image for '" + object + "'");
+
 		}
 		return null;
 	}

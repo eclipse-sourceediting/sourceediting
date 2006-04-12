@@ -73,7 +73,6 @@ public class RowLayout extends AbstractLayout
   {    
     List children = container.getChildren();
     Dimension prefSize = calculateChildrenSize(container, children, wHint, hHint, true);
-    //System.out.println("preferredSize=" + prefSize);
     return prefSize;
   }
 
@@ -111,7 +110,6 @@ public class RowLayout extends AbstractLayout
         //columnData.stretchColumnWidthIfNeeded(columnIdentifier, childSize.width);        
         columnWidth = columnData.getColumnWidth(columnIdentifier);
         totalColumnWeight += columnData.getColumnWeight(columnIdentifier);
-        //System.out.println("columnWidth(" + columnIdentifier + ")=" + columnWidth);        
       }  
       r.width = Math.max(childSize.width, columnWidth);
       requiredWidth += r.width;
@@ -122,9 +120,7 @@ public class RowLayout extends AbstractLayout
     {
       totalColumnWeight = 1;
     }
-    //System.out.println("clientArea.width=" + clientArea.width + ", " + r.x);
     int extraWidth = Math.max(clientArea.width - requiredWidth, 0);    
-    //System.out.println("extraWidth=" + extraWidth + " totalColumnWeight=" + totalColumnWeight);  
     int extraWidthAllocated = 0;
     for (int i = 0; i < childrenSize; i++)
     {
@@ -138,7 +134,7 @@ public class RowLayout extends AbstractLayout
           int weight = columnData.getColumnWeight(columnIdentifier);
           float fraction = (float)weight / (float)totalColumnWeight;
           int extraWidthForChild = (int)(extraWidth * fraction);
-          //System.out.println("extraWidthForChild(" + fraction + ")=" + extraWidthForChild);        
+       
           b.width += extraWidthForChild;        
           b.x += extraWidthAllocated;
           extraWidthAllocated += extraWidthForChild;
@@ -177,7 +173,7 @@ public class RowLayout extends AbstractLayout
     //figureToContstraintMap.clear();
     //this.columnData.clearColumnWidths();
     super.invalidate();
-    //System.out.println("invalidate");    
+   
   }
 }
 

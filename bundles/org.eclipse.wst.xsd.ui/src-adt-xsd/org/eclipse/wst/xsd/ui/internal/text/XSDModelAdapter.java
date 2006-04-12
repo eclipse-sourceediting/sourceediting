@@ -59,7 +59,6 @@ public class XSDModelAdapter implements INodeAdapter
     {
       IDOMNode domNode = (IDOMNode)element;
       String baseLocation = domNode.getModel().getBaseLocation();
-//      System.out.println("XSDSchemalNodeAdapter.baseLocation=" + baseLocation);
            
       schema = XSDFactory.eINSTANCE.createXSDSchema();
       
@@ -82,7 +81,6 @@ public class XSDModelAdapter implements INodeAdapter
       {
         uri = URI.createFileURI(baseLocation);
       }  
-      //System.out.println("uri=" + uri.toString());
       Resource resource = new XSDResourceImpl();
       resource.setURI(uri);
       schema = XSDFactory.eINSTANCE.createXSDSchema(); 

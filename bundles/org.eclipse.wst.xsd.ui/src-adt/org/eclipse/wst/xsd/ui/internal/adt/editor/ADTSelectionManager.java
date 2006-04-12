@@ -42,7 +42,6 @@ public class ADTSelectionManager extends MultiPageSelectionProvider implements I
    */
   public ISelection getSelection()
   {
-//    System.out.println("getSelection() = " + currentSelection);
     return currentSelection;
   }
 
@@ -85,7 +84,6 @@ public class ADTSelectionManager extends MultiPageSelectionProvider implements I
   
   public void setSelection(ISelection selection, ISelectionProvider source)
   {  
-    //System.out.println("ADTSelectionManager.setSelection(" + selection + ")");
     if (enableNotify)
     {
       currentSelection = selection;

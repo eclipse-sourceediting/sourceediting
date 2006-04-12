@@ -133,7 +133,6 @@ public class TypesHelper
         if (typeDefinition instanceof XSDSimpleTypeDefinition)
         {
           items.addAll(getPrefixedNames(typeDefinition.getTargetNamespace(), typeDefinition.getName()));
-          //System.out.println(typeDefinition.getQName(xsdSchema));
           //items.add(typeDefinition.getQName(xsdSchema));
         }
       }
@@ -178,7 +177,6 @@ public class TypesHelper
         if (typeDefinition instanceof XSDSimpleTypeDefinition)
         {
           items.add(typeDefinition);
-          //System.out.println(typeDefinition.getQName(xsdSchema));
           //items.add(typeDefinition.getQName(xsdSchema));
         }
       }

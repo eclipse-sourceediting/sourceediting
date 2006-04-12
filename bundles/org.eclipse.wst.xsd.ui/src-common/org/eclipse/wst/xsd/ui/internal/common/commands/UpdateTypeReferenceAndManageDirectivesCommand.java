@@ -87,7 +87,6 @@ public class UpdateTypeReferenceAndManageDirectivesCommand extends UpdateCompone
          
           if (resolvedSchema == null)
           {
-            System.out.println("resolvedSchema is null!!!");
             Resource resource  = concreteComponent.eResource().getResourceSet().createResource(URI.createURI(fileURI));          
             if (resource instanceof XSDResourceImpl)
             {
@@ -98,7 +97,6 @@ public class UpdateTypeReferenceAndManageDirectivesCommand extends UpdateCompone
               resolvedSchema = resourceImpl.getSchema();
               if (resolvedSchema != null)
               {
-                System.out.println("Strange... managed to make the schema resovle myself 8-P" + resource);
                 directive.setResolvedSchema(resolvedSchema);
               }
               }

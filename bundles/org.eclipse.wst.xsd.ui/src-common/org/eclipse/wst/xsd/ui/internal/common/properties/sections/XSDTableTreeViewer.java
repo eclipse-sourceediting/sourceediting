@@ -103,7 +103,6 @@ public class XSDTableTreeViewer extends XMLTableTreeViewer
     // if (element instanceof Element) {
     // added = true;
     // Element elem = (Element)element;
-    // System.out.println("getChildren " + elem.getLocalName());
     // if (elem instanceof INodeNotifier) {
     // viewerNotifyingAdapterFactory.adapt((INodeNotifier) elem);
     // }

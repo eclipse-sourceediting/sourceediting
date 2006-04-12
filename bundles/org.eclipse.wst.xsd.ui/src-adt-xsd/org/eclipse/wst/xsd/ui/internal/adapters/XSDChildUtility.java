@@ -206,7 +206,6 @@ public class XSDChildUtility
 
     public void visitXSDSchema(XSDSchema xsdSchema)
     {         
-//      printIndented("XSDSchema");
       indent += 2;
       for (Iterator iterator = xsdSchema.getElementDeclarations().iterator(); iterator.hasNext(); )
       {
@@ -217,7 +216,6 @@ public class XSDChildUtility
 
     public void visitXSDElementDeclaration(XSDElementDeclaration xsdElementDeclaration)
     {      
-//      printIndented(xsdElementDeclaration.getName());
       indent += 2;         
       XSDTypeDefinition td = xsdElementDeclaration.getTypeDefinition();
       if (td == null)
@@ -230,7 +228,6 @@ public class XSDChildUtility
    
     public void visitXSDComplexTypeDefinition(XSDComplexTypeDefinition xsdComplexTypeDefinition)
     {
-//      printIndented("XSDComplexTypeDefinition : " + xsdComplexTypeDefinition.getContent());
       indent += 2;
       for (Iterator i = xsdComplexTypeDefinition.getAttributeUses().iterator(); i.hasNext(); )
       {        
@@ -242,7 +239,6 @@ public class XSDChildUtility
 
     public void visitXSDModelGroup(XSDModelGroup xsdModelGroup)
     {
-//      printIndented("XSDModelGroup");
       indent += 2;
       for (Iterator iterator = xsdModelGroup.getContents().iterator(); iterator.hasNext(); )
       {
@@ -253,7 +249,6 @@ public class XSDChildUtility
 
     public void visitXSDModelGroupDefinition(XSDModelGroupDefinition xsdModelGroupDefinition)
     {
-//      printIndented("XSDModelGroupDefinition");
       indent += 2;
       visitXSDObject(xsdModelGroupDefinition.getResolvedModelGroupDefinition().getModelGroup());
       indent -= 2;
@@ -261,7 +256,6 @@ public class XSDChildUtility
 
     public void visitXSDParticle(XSDParticle xsdParticle)
     {
-//      printIndented("XSDParticle");
       indent += 2;                 
       if (xsdParticle.getContent() != null)
         visitXSDObject(xsdParticle.getContent());
@@ -270,7 +264,7 @@ public class XSDChildUtility
 
     public void visitXSDWildcard(XSDWildcard object)
     { 
-//      printIndented("XSDWildcard");
+
     }
 
     public void printIndented(String string)
@@ -280,7 +274,7 @@ public class XSDChildUtility
       //{
       //  spaces += " ";
       //}               
-      //System.out.println(spaces + string);      
+     
     }
   } 
 }

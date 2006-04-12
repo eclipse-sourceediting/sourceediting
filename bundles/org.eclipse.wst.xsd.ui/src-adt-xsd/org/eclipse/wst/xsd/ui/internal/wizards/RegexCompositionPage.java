@@ -358,7 +358,7 @@ public class RegexCompositionPage extends WizardPage
   
       if (debug)
       {
-        System.out.println("POINT: " + p);
+        System.out.println("POINT: " + p); //$NON-NLS-1$
       }
       
       caretLabel.setLocation(p);
@@ -427,8 +427,8 @@ public class RegexCompositionPage extends WizardPage
 
       if (debug)
       {
-        System.out.println("Parse Error location: " + pe.getIndex());
-        System.out.println("currentError.start: " + currentError.start);
+        System.out.println("Parse Error location: " + pe.getIndex());  //$NON-NLS-1$
+        System.out.println("currentError.start: " + currentError.start); //$NON-NLS-1$
       }
 
       value.setStyleRange(currentError);
@@ -691,9 +691,6 @@ public class RegexCompositionPage extends WizardPage
     {
       if (!isValidToken) // should never happen
       {
-        System.out.println("Attempted to add an invalid token.");
-        System.out.println(node.toString());
-        System.out.println(getAllFieldValues());
         return;
       }
 
@@ -779,7 +776,7 @@ public class RegexCompositionPage extends WizardPage
 
       if (debug)
       {
-        System.out.println("Inside TextListener handler");
+        System.out.println("Inside TextListener handler");  //$NON-NLS-1$
         System.out.println(e);
         System.out.println(getAllFieldValues());
       }
@@ -861,7 +858,7 @@ public class RegexCompositionPage extends WizardPage
       
       if (debug)
       {
-        System.out.println("AutoEscape Status: " + node.getAutoEscapeStatus());
+        System.out.println("AutoEscape Status: " + node.getAutoEscapeStatus());  //$NON-NLS-1$ 
       }
     }
 

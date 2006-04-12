@@ -64,7 +64,6 @@ public final class MakeLocalElementGlobalCommand extends AbstractCommand
  		}
  	}
  	else if(parent instanceof XSDTypeDefinition){
-		System.out.println("MakeLocalElementGlobalCommand.run: parent instanceof XSDTypeDefinition");
 		 		
  	}
  	

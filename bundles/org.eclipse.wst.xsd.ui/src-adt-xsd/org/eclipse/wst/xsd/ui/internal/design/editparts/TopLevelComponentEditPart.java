@@ -92,9 +92,8 @@ public class TopLevelComponentEditPart extends BaseEditPart implements IFeedback
           // we can't call this directly since the methods are OS dependant
           // fontData.data.lfUnderline = 1
           // so instead we use reflection
-          Object data = fontData.getClass().getField("data").get(fontData);
-          // System.out.println("data" + data.getClass());
-          data.getClass().getField("lfUnderline").setByte(data, (byte) 1);
+          Object data = fontData.getClass().getField("data").get(fontData); //$NON-NLS-1$
+          data.getClass().getField("lfUnderline").setByte(data, (byte) 1); //$NON-NLS-1$
           font = new Font(Display.getCurrent(), fontData);
           label.setFont(font);
         }

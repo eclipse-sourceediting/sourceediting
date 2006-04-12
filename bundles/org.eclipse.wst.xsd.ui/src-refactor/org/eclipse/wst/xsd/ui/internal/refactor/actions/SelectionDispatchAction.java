@@ -136,7 +136,7 @@ public abstract class SelectionDispatchAction extends Action implements ISelecti
 	 * does nothing.
 	 */
 	public void run(ISelection selection) {
-		System.out.println("SelectionDispatchAction.run");
+
 	}
 
 	/* (non-Javadoc)

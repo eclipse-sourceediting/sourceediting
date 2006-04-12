@@ -158,7 +158,6 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
                 NodeImpl nodeImpl = (NodeImpl)notifier;
                 if (!nodeImpl.getModel().isModelStateChanging())
                 {  
-                  //System.out.println("handleNotifyChange " + eventType);
                   super.handleNotifyChange(notifier, eventType, feature, oldValue, newValue, index);
                 }  
               }

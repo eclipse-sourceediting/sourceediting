@@ -86,7 +86,6 @@ public class XMLComponentRenameParticipant extends RenameParticipant {
 
 	public Change createChange(IProgressMonitor pm) throws CoreException,
 			OperationCanceledException {
-		//System.out.println("createChange("  + getChangeManager() + ")" + matches.size());
 		for (Iterator iter = matches.iterator(); iter.hasNext();) {
 			SearchMatch match = (SearchMatch) iter.next();
 			TextChange textChange = getChangeManager().get(match.getFile());
@@ -107,7 +106,6 @@ public class XMLComponentRenameParticipant extends RenameParticipant {
 			
 			ReplaceEdit replaceEdit = new ReplaceEdit(match.getOffset(), match.getLength(), newName );
 			String editName = RefactoringMessages.getString("RenameComponentProcessor.Component_Refactoring_update_reference");
-          //  System.out.println("textChange " + textChange + "/ replaceEdit " + replaceEdit);
 			TextChangeCompatibility.addTextEdit(textChange, editName, replaceEdit);
    		}
 		// don't create any change now, all the changes are in changeManger variable and will be combined in RenameComponentProcessor.postCreateChange method

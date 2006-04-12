@@ -243,10 +243,6 @@ public class XSDSchemaSection extends AbstractSection
     String xsdForXSDPrefix = xsdSchema.getSchemaForSchemaQNamePrefix();
     Map map = xsdSchema.getQNamePrefixToNamespaceMap();
 
-    // For debugging
-    // System.out.println("1. SW Map is " + map.values());
-    // System.out.println("1. SW Map keys are " + map.keySet());
-
     // Check if prefix is blank
     // if it is, then make sure we have a prefix
     // for schema for schema
@@ -325,22 +321,13 @@ public class XSDSchemaSection extends AbstractSection
       }
     }
 
-    // System.out.println("1.5 SW Map is " + map.values());
-    // System.out.println("1.5 SW Map keys are " + map.keySet());
-
     // do our own referential integrity
     TargetNamespaceChangeHandler targetNamespaceChangeHandler = new TargetNamespaceChangeHandler(xsdSchema, oldNamespace, targetNamespace);
     targetNamespaceChangeHandler.resolve();
 
     updateElement(xsdSchema);
-
     
     doc.getModel().endRecording(this);
-
-    // For debugging
-    // map = xsdSchema.getQNamePrefixToNamespaceMap();
-    // System.out.println("2. SW Map is " + map.values());
-    // System.out.println("2. SW Map keys are " + map.keySet());
   }
 
   // issue (cs) I don't have a clue why we need to call this method

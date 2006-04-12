@@ -120,7 +120,6 @@ public class XSDComplexTypeDefinitionAdapter extends XSDTypeDefinitionAdapter im
         }
       }
     }
-    // System.out.println("fields[" + this + "].size() = " + fields.size());
     return fields;
   }
 

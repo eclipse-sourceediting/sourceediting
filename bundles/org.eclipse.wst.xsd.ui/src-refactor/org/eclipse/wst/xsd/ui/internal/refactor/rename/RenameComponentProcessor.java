@@ -269,11 +269,9 @@ public class RenameComponentProcessor extends RenameProcessor implements INameUp
 
 	private TextChangeManager updateChangeManager(IProgressMonitor pm, RefactoringStatus status) throws CoreException {
 		TextChangeManager manager = getChangeManager();
-		System.out.println("addDeclarationUpate-------------------");
 		// only one declaration gets updated
 		addDeclarationUpdate(manager);
 		if (getUpdateReferences()) {
-			System.out.println("addOccurences--------------------------");
 			addOccurrences(manager, pm, status);
 		}
 		return manager;
@@ -452,10 +450,6 @@ public class RenameComponentProcessor extends RenameProcessor implements INameUp
 		try {
 			String changeName = RefactoringMessages.getString("RenameComponentProcessor.Component_Refactoring_updates");
 			TextChange[] changes = changeManager.getAllChanges();
-			// System.out.println("all changes(" + getChangeManager() + ")" +
-			// changes.length);
-			// System.out.println("add cus " +
-			// changeManager.getAllCompilationUnits().length);
 			Comparator c = new Comparator() {
 				public int compare(Object o1, Object o2) {
 					TextFileChange c1 = (TextFileChange) o1;

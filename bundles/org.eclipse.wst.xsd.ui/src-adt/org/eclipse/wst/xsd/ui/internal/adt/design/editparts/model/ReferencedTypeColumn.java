@@ -125,7 +125,6 @@ public class ReferencedTypeColumn extends AbstractModelCollection
       }
       else if (object instanceof IField)
       {
-        System.out.println("field changed!!! " + fields.size() + " " + object);
       }  
       notifyListeners(object, property);
     }
