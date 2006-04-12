@@ -13,6 +13,7 @@ package org.eclipse.wst.xsd.ui.internal.adt.actions;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.wst.xsd.ui.internal.adt.editor.Messages;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 
 
@@ -30,10 +31,10 @@ public class ShowPropertiesViewAction extends BaseSelectionAction
   {
 		super(part);
 		setId(ID);
-		setText("Show properties");
+		setText(Messages._UI_ACTION_SHOW_PROPERTIES);
 		setToolTipText(getText());
-    setImageDescriptor(XSDEditorPlugin.getImageDescriptor("icons/elcl16/showproperties_obj.gif") );
-	  setDisabledImageDescriptor(XSDEditorPlugin.getImageDescriptor("icons/dlcl16/showproperties_obj.gif") );
+    setImageDescriptor(XSDEditorPlugin.getImageDescriptor("icons/elcl16/showproperties_obj.gif") ); //$NON-NLS-1$
+	  setDisabledImageDescriptor(XSDEditorPlugin.getImageDescriptor("icons/dlcl16/showproperties_obj.gif") ); //$NON-NLS-1$
 	}
   
   protected boolean calculateEnabled()

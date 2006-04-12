@@ -32,6 +32,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.wst.xsd.ui.internal.adt.edit.ComponentReferenceEditManager;
 import org.eclipse.wst.xsd.ui.internal.adt.edit.IComponentDialog;
+import org.eclipse.wst.xsd.ui.internal.adt.editor.Messages;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 
 /*
@@ -145,11 +146,11 @@ public class ADTComboBoxCellEditor extends CellEditor
         selection = comboBox.getSelectionIndex();
         String stringSelection = items[selection];
 
-        if (stringSelection.equals("Browse..."))
+        if (stringSelection.equals(Messages._UI_ACTION_BROWSE))
         {
            newValue = invokeDialog(componentReferenceEditManager.getBrowseDialog());
         }
-        else if (stringSelection.equals("New..."))
+        else if (stringSelection.equals(Messages._UI_ACTION_NEW))
         {
            newValue = invokeDialog(componentReferenceEditManager.getNewDialog());
         }

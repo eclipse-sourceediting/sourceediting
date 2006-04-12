@@ -15,6 +15,7 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDAdapterFactory;
+import org.eclipse.wst.xsd.ui.internal.adt.editor.Messages;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IComplexType;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IField;
 import org.eclipse.wst.xsd.ui.internal.common.commands.BaseCommand;
@@ -22,13 +23,13 @@ import org.eclipse.wst.xsd.ui.internal.common.commands.BaseCommand;
 
 public class AddFieldAction extends BaseSelectionAction
 {   
-  public static String ID = "AddFieldAction"; 
+  public static String ID = "AddFieldAction";  //$NON-NLS-1$
   
   public AddFieldAction(IWorkbenchPart part)
   {
     super(part);
     setId(ID);
-    setText("Add Field");  
+    setText(Messages._UI_ACTION_ADD_FIELD);  
   }
   
   public void run()
@@ -49,7 +50,7 @@ public class AddFieldAction extends BaseSelectionAction
       }
       if (type != null)
       {
-        Command command = ((IComplexType)type).getAddNewFieldCommand("");
+        Command command = ((IComplexType)type).getAddNewFieldCommand(""); //$NON-NLS-1$
         if (command != null)
         {  
           getCommandStack().execute(command);

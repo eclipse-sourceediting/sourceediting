@@ -87,8 +87,8 @@ public class StructureEditPart extends BaseTypeConnectingEditPart implements INa
       compartmentList = new ArrayList();
       
       // TODO.. this needs to be moved to the xsd specific version of this class 
-      compartmentList.add(new Compartment(getStructure(), "attribute"));
-      compartmentList.add(new Compartment(getStructure(), "element"));   
+      compartmentList.add(new Compartment(getStructure(), "attribute")); //$NON-NLS-1$
+      compartmentList.add(new Compartment(getStructure(), "element"));    //$NON-NLS-1$
     }  
     return compartmentList;
   }

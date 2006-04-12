@@ -93,7 +93,7 @@ public abstract class ADTMultiPageEditor extends MultiPageEditorPart implements 
 
   public String getContributorId()
   {
-    return "org.eclipse.wst.xsd.ui.internal.editor";
+    return "org.eclipse.wst.xsd.ui.internal.editor"; //$NON-NLS-1$
   }
   
   
@@ -119,7 +119,7 @@ public abstract class ADTMultiPageEditor extends MultiPageEditorPart implements 
     hookGraphicalViewer();
     initializeGraphicalViewer();
     int index = addPage(parent);
-    setPageText(index, "Design");
+    setPageText(index, Messages._UI_LABEL_DESIGN);
   }
 
   protected ADTSelectionManager selectionProvider;
@@ -193,7 +193,7 @@ public abstract class ADTMultiPageEditor extends MultiPageEditorPart implements 
   public void init(IEditorSite site, IEditorInput editorInput) throws PartInitException
   {
     if (!(editorInput instanceof IFileEditorInput))
-      throw new PartInitException("Invalid Input: Must be IFileEditorInput");
+      throw new PartInitException("Invalid Input: Must be IFileEditorInput"); //$NON-NLS-1$
     super.init(site, editorInput);
     
     getCommandStack().addCommandStackListener(this);

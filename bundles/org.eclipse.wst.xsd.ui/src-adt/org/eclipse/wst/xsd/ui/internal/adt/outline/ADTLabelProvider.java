@@ -43,7 +43,7 @@ public class ADTLabelProvider implements ILabelProvider
     {
       return ((ITreeElement)element).getText();
     }
-    return "";
+    return ""; //$NON-NLS-1$
   }
 
   /* (non-Javadoc)

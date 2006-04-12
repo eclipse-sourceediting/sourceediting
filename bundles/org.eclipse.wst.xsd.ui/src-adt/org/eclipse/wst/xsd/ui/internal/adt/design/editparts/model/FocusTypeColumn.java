@@ -22,7 +22,7 @@ public class FocusTypeColumn extends AbstractModelCollection
 {  
   public FocusTypeColumn(IADTObject model)
   {
-    super(model, "FocusTypeColumn");
+    super(model, "FocusTypeColumn"); //$NON-NLS-1$
   }
 
   public List getChildren()

@@ -19,18 +19,19 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.xsd.ui.internal.adt.design.DesignViewGraphicalViewer;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.RootContentEditPart;
+import org.eclipse.wst.xsd.ui.internal.adt.editor.Messages;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IComplexType;
 
 public class SetInputToGraphView extends BaseSelectionAction
 {
-  public static String ID = "SetAsFocus";
+  public static String ID = "SetAsFocus"; //$NON-NLS-1$
   IEditorPart editorPart;
 
   public SetInputToGraphView(IWorkbenchPart part)
   {
     super(part);
     setId(ID);
-    setText("Set As Focus");
+    setText(Messages._UI_ACTION_SET_AS_FOCUS);
     if (part instanceof IEditorPart)
     {
       editorPart = (IEditorPart)part;

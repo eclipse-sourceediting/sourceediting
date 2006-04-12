@@ -218,7 +218,7 @@ public abstract class ComboBoxCellEditorManager extends DirectEditManager// impl
 
   protected String getLocalName(String string)
   {
-    int index = string.indexOf(":");
+    int index = string.indexOf(":"); //$NON-NLS-1$
     return (index != -1) ? string.substring(index + 1) : string;
   }
 }

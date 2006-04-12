@@ -23,6 +23,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.common.ui.internal.search.dialogs.ComponentSpecification;
 import org.eclipse.wst.xsd.ui.internal.adt.edit.ComponentReferenceEditManager;
+import org.eclipse.wst.xsd.ui.internal.adt.editor.Messages;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IField;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDTypeReferenceEditManager;
 
@@ -49,8 +50,8 @@ public class TypeReferenceDirectEditManager extends ComboBoxCellEditorManager
     ComponentReferenceEditManager editManager = getComponentReferenceEditManager();
     if (editManager != null)
     {
-       list.add("Browse...");
-       list.add("New...");
+       list.add(Messages._UI_ACTION_BROWSE);
+       list.add(Messages._UI_ACTION_NEW);
        ComponentSpecification[] quickPicks = editManager.getQuickPicks();
        if (quickPicks != null)
        {

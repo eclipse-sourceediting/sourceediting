@@ -35,7 +35,7 @@ public abstract class BaseEditPart extends AbstractGraphicalEditPart implements 
   public IFigureFactory getFigureFactory()
   {
     EditPartFactory factory = getViewer().getEditPartFactory();
-    Assert.isTrue(factory instanceof IFigureFactory, "EditPartFactory must be an instanceof of IFigureFactory");    
+    Assert.isTrue(factory instanceof IFigureFactory, "EditPartFactory must be an instanceof of IFigureFactory");     //$NON-NLS-1$
     return (IFigureFactory)factory; 
   }
   

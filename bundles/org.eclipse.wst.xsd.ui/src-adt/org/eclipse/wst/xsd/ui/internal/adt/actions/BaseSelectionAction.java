@@ -19,9 +19,9 @@ import org.eclipse.wst.xsd.ui.internal.adt.facade.IField;
 
 public abstract class BaseSelectionAction extends SelectionAction
 {
-  public static final String SEPARATOR_ID = "org.eclipse.jface.action.Separator";
-  public static final String SUBMENU_START_ID = "SUBMENU_START_ID: ";
-  public static final String SUBMENU_END_ID = "SUBMENU_END_ID: ";
+  public static final String SEPARATOR_ID = "org.eclipse.jface.action.Separator"; //$NON-NLS-1$
+  public static final String SUBMENU_START_ID = "SUBMENU_START_ID: "; //$NON-NLS-1$
+  public static final String SUBMENU_END_ID = "SUBMENU_END_ID: "; //$NON-NLS-1$
 
   protected ISelectionProvider provider;
   

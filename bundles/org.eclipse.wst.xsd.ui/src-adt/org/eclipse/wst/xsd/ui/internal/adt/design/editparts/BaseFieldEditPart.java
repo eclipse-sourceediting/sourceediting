@@ -35,6 +35,7 @@ import org.eclipse.wst.xsd.ui.internal.adt.design.editpolicies.ADTDirectEditPoli
 import org.eclipse.wst.xsd.ui.internal.adt.design.editpolicies.ADTSelectionFeedbackEditPolicy;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editpolicies.IADTUpdateCommand;
 import org.eclipse.wst.xsd.ui.internal.adt.design.figures.IFieldFigure;
+import org.eclipse.wst.xsd.ui.internal.adt.editor.Messages;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IField;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IType;
 import org.eclipse.wst.xsd.ui.internal.design.editpolicies.GraphNodeDragTracker;
@@ -238,7 +239,7 @@ public class BaseFieldEditPart extends BaseTypeConnectingEditPart implements INa
     
     public NameUpdateCommandWrapper()
     {
-      super("Update Name");
+      super(Messages._UI_ACTION_UPDATE_NAME);
     }
 
     public void setRequest(DirectEditRequest request)
@@ -266,7 +267,7 @@ public class BaseFieldEditPart extends BaseTypeConnectingEditPart implements INa
     
     public TypeUpdateCommand()
     {
-      super("Update type");
+      super(Messages._UI_ACTION_UPDATE_TYPE);
     }
 
     public void setDelegate(ComboBoxCellEditorManager delegate)
@@ -300,7 +301,7 @@ public class BaseFieldEditPart extends BaseTypeConnectingEditPart implements INa
 	    
 	    public ElementReferenceUpdateCommand()
 	    {
-	      super("Update element reference");
+	      super(Messages._UI_ACTION_UPDATE_ELEMENT_REFERENCE);
 	    }
 
 	    public void setDelegate(ComboBoxCellEditorManager delegate)

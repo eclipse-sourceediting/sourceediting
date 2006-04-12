@@ -19,6 +19,7 @@ import org.eclipse.gef.requests.DirectEditRequest;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IFeedbackHandler;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editpolicies.IADTUpdateCommand;
+import org.eclipse.wst.xsd.ui.internal.adt.editor.Messages;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IType;
 
 /**
@@ -115,7 +116,7 @@ public abstract class BaseTypeConnectingEditPart extends BaseEditPart implements
     
     public NameUpdateCommandWrapper()
     {
-      super("Update Name");
+      super(Messages._UI_ACTION_UPDATE_NAME);
     }
 
     public void setRequest(DirectEditRequest request)

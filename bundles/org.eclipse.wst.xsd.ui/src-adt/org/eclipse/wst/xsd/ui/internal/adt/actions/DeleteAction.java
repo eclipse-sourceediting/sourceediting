@@ -14,6 +14,7 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.wst.xsd.ui.internal.adt.editor.Messages;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IComplexType;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IField;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IModel;
@@ -21,13 +22,13 @@ import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 
 public class DeleteAction extends BaseSelectionAction
 {
-  public final static String ID = "org.eclipse.wst.xsd.ui.internal.editor.DeleteAction"; 
+  public final static String ID = "org.eclipse.wst.xsd.ui.internal.editor.DeleteAction";  //$NON-NLS-1$
   public DeleteAction(IWorkbenchPart part)
   {
     super(part);
-    setText("Delete");
+    setText(Messages._UI_ACTION_DELETE);
     setId(ID);
-    setImageDescriptor(XSDEditorPlugin.getImageDescriptor("icons/delete_obj.gif") );
+    setImageDescriptor(XSDEditorPlugin.getImageDescriptor("icons/delete_obj.gif") ); //$NON-NLS-1$
   }
   
   public void run()

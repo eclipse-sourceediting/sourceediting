@@ -30,7 +30,7 @@ public class ReferencedTypeColumn extends AbstractModelCollection
   //
   public ReferencedTypeColumn(IADTObject model)
   {
-    super(model, "ReferencedTypeColumn");
+    super(model, "ReferencedTypeColumn"); //$NON-NLS-1$
     model.registerListener(internalListener);
     internalListener.recomputeSubListeners();
   }
