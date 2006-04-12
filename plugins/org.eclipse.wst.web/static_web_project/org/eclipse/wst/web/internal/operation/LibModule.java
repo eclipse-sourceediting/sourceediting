@@ -11,14 +11,17 @@ package org.eclipse.wst.web.internal.operation;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.wst.common.frameworks.internal.DoNotUseMeThisWillBeDeletedPost15;
 import org.eclipse.wst.web.internal.ISimpleWebModuleConstants;
 import org.eclipse.wst.web.internal.WSTWebPlugin;
 
 /**
+ * This has been slated for removal post WTP 1.5. Do not use this class/interface/method/field
+ * 
  * @deprecated
- *
+ * 
  */
-public class LibModule implements ILibModule {
+public class LibModule implements ILibModule, DoNotUseMeThisWillBeDeletedPost15 {
 	protected static final IPath LIB_PATH = new Path(ISimpleWebModuleConstants.INFO_DIRECTORY).append(ISimpleWebModuleConstants.LIBRARY_DIRECTORY);
 
 	private String jarName;

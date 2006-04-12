@@ -9,13 +9,15 @@
 package org.eclipse.wst.web.internal.operation;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.wst.common.frameworks.internal.DoNotUseMeThisWillBeDeletedPost15;
 
-//TODO DELETE jsholl
 /**
+ * This has been slated for removal post WTP 1.5. Do not use this class/interface/method/field
+ * 
  * @deprecated
- *
+ * 
  */
-public interface ILibModule {
+public interface ILibModule extends DoNotUseMeThisWillBeDeletedPost15{
 	String getJarName();
 
 	String getProjectName();
