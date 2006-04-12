@@ -47,20 +47,20 @@ public class MakeAnonymousTypeGlobalAction extends XSDSelectionDispatchAction {
 	
 
 	private String getNewDefaultName(){
-		if(fParentName != null && !"".equals(fParentName)){
+		if(fParentName != null && !"".equals(fParentName)){ //$NON-NLS-1$
 			if(isComplexType){
-				return fParentName + "ComplexType";
+				return fParentName + "ComplexType"; //$NON-NLS-1$
 			}
 			else{
-				return fParentName + "SimpleType";
+				return fParentName + "SimpleType"; //$NON-NLS-1$
 			}
 		}
 		else{
 			if(isComplexType){
-				return "NewComplexType";
+				return "NewComplexType"; //$NON-NLS-1$
 			}
 			else{
-				return "NewSimpleType";
+				return "NewSimpleType"; //$NON-NLS-1$
 			}
 		}
 		
