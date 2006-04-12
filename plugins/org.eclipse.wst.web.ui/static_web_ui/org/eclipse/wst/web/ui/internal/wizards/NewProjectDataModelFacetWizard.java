@@ -27,7 +27,6 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizardPage;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.INewWizard;
@@ -196,16 +195,26 @@ public abstract class NewProjectDataModelFacetWizard extends AddRemoveFacetsWiza
 
 			final Set fixed = this.template.getFixedProjectFacets();
 			this.fproj.setFixedProjectFacets(fixed);
-
-			try {
-				postPerformFinish();
-			} catch (InvocationTargetException e) {
-				Logger.logException(e);
-			}
 		} finally {
 			monitor.done();
 		}
 	}
+	
+	public boolean performFinish()
+    {
+        if( super.performFinish() == false )
+        {
+            return false;
+        }
+        
+        try {
+            postPerformFinish();
+        } catch (InvocationTargetException e) {
+            Logger.logException(e);
+        }
+        
+        return true;
+    }
 
 	/**
 	 * <p>
@@ -299,18 +308,9 @@ public abstract class NewProjectDataModelFacetWizard extends AddRemoveFacetsWiza
 					return super.getAttribute(aName);
 				}
 			};
-			Display.getDefault().asyncExec(new Runnable() {
-				public void run() {
-					BasicNewProjectResourceWizard.updatePerspective(element);
-				}
-			});
-		} else {
-			Display.getDefault().asyncExec(new Runnable() {
-				public void run() {
-					BasicNewProjectResourceWizard.updatePerspective(configurationElement);
-				}
-			});
-		}
+			BasicNewProjectResourceWizard.updatePerspective(element);
+		} else
+			BasicNewProjectResourceWizard.updatePerspective(configurationElement);
 
 		String projName = getProjectName();
 		BasicNewResourceWizard.selectAndReveal(ResourcesPlugin.getWorkspace().getRoot().getProject(projName), WSTWebUIPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow());
