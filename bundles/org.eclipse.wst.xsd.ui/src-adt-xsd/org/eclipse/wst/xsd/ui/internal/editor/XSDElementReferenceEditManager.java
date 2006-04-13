@@ -95,14 +95,14 @@ public class XSDElementReferenceEditManager implements ComponentReferenceEditMan
           XSDElementDeclaration elementDec = null;
           if (component.getMetaName() == IXSDSearchConstants.ELEMENT_META_NAME)
           {  
-            AddXSDElementCommand command = new AddXSDElementCommand("Add Element", concreteComponent.getSchema());
+            AddXSDElementCommand command = new AddXSDElementCommand(Messages._UI_ACTION_ADD_ELEMENT, concreteComponent.getSchema());
             command.setNameToAdd(component.getName());
             command.execute();
             elementDec = (XSDElementDeclaration) command.getAddedComponent();
           }
           if (elementDec != null && elementDec instanceof XSDElementDeclaration)
           {
-            Command command = new UpdateElementReferenceCommand("Update Element reference",
+            Command command = new UpdateElementReferenceCommand(Messages._UI_ACTION_UPDATE_ELEMENT_REFERENCE,
             		concreteComponent, elementDec);
             command.execute();
           }  

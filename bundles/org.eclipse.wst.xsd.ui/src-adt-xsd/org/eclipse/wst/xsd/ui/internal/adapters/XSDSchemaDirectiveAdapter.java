@@ -16,6 +16,7 @@ import java.util.List;
 
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.xsd.ui.internal.adt.outline.ITreeElement;
+import org.eclipse.wst.xsd.ui.internal.editor.Messages;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.xsd.XSDAttributeGroupDefinition;
 import org.eclipse.xsd.XSDComplexTypeDefinition;
@@ -35,15 +36,15 @@ public class XSDSchemaDirectiveAdapter extends XSDBaseAdapter
     XSDSchemaDirective object = (XSDSchemaDirective) target;
     if (object instanceof XSDImport)
     {
-      return XSDEditorPlugin.getXSDImage("icons/XSDImport.gif");
+      return XSDEditorPlugin.getXSDImage("icons/XSDImport.gif"); //$NON-NLS-1$
     }
     else if (object instanceof XSDInclude)
     {
-      return XSDEditorPlugin.getXSDImage("icons/XSDInclude.gif");
+      return XSDEditorPlugin.getXSDImage("icons/XSDInclude.gif"); //$NON-NLS-1$
     }
     else if (object instanceof XSDRedefine)
     {
-      return XSDEditorPlugin.getXSDImage("icons/XSDRedefine.gif");
+      return XSDEditorPlugin.getXSDImage("icons/XSDRedefine.gif"); //$NON-NLS-1$
     }
     return null;
   }
@@ -53,9 +54,9 @@ public class XSDSchemaDirectiveAdapter extends XSDBaseAdapter
     XSDSchemaDirective directive = (XSDSchemaDirective) target;
     String result = directive.getSchemaLocation();
     if (result == null)
-      result = "(" + XSDEditorPlugin.getXSDString("_UI_LABEL_NO_LOCATION_SPECIFIED") + ")";
-    if (result.equals(""))
-      result = "(" + XSDEditorPlugin.getXSDString("_UI_LABEL_NO_LOCATION_SPECIFIED") + ")";
+      result = "(" + Messages._UI_LABEL_NO_LOCATION_SPECIFIED + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+    if (result.equals("")) //$NON-NLS-1$
+      result = "(" + Messages._UI_LABEL_NO_LOCATION_SPECIFIED + ")"; //$NON-NLS-1$ //$NON-NLS-2$
     return result;
 
   }

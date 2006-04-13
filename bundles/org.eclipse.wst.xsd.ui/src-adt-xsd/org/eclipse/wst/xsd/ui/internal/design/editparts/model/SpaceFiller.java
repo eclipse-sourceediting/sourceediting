@@ -34,13 +34,13 @@ public class SpaceFiller implements IField
 
   public Image getImage()
   {
-    if (kind.equals("attribute"))
+    if (kind.equals("attribute")) //$NON-NLS-1$
     {
-      return XSDEditorPlugin.getXSDImage("icons/XSDAttribute.gif");
+      return XSDEditorPlugin.getXSDImage("icons/XSDAttribute.gif"); //$NON-NLS-1$
     }
     else
     {
-      return XSDEditorPlugin.getXSDImage("icons/XSDElement.gif");
+      return XSDEditorPlugin.getXSDImage("icons/XSDElement.gif"); //$NON-NLS-1$
     }
   }
   

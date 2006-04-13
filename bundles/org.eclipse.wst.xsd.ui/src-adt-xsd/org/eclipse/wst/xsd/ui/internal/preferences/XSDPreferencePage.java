@@ -28,6 +28,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.help.WorkbenchHelp;
+import org.eclipse.wst.xsd.ui.internal.editor.Messages;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorContextIds;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.internal.util.ViewUtility;
@@ -49,12 +50,12 @@ public class XSDPreferencePage extends PreferencePage implements IWorkbenchPrefe
     WorkbenchHelp.setHelp(parent, XSDEditorContextIds.XSDP_PREFERENCE_PAGE);
 
     Group group = createGroup(parent, 2);   
-    group.setText(XSDEditorPlugin.getXSDString("_UI_TEXT_XSD_NAMESPACE_PREFIX"));
+    group.setText(Messages._UI_TEXT_XSD_NAMESPACE_PREFIX);
 
-    qualifyXSDLanguage = ViewUtility.createCheckBox(group, XSDEditorPlugin.getXSDString("_UI_QUALIFY_XSD"));
+    qualifyXSDLanguage = ViewUtility.createCheckBox(group, Messages._UI_QUALIFY_XSD);
     ViewUtility.createLabel(group, " ");
 
-    createLabel(group, XSDEditorPlugin.getXSDString("_UI_TEXT_XSD_DEFAULT_PREFIX"));
+    createLabel(group, Messages._UI_TEXT_XSD_DEFAULT_PREFIX);
     schemaNsPrefixField = createTextField(group);
     schemaNsPrefixField.addKeyListener(new KeyAdapter()
     {
@@ -64,7 +65,7 @@ public class XSDPreferencePage extends PreferencePage implements IWorkbenchPrefe
       }      
     });
     
-    createLabel(group, XSDEditorPlugin.getXSDString("_UI_TEXT_XSD_DEFAULT_TARGET_NAMESPACE"));
+    createLabel(group, Messages._UI_TEXT_XSD_DEFAULT_TARGET_NAMESPACE);
     defaultTargetNamespaceText = createTextField(group);
 
     initializeValues();
@@ -246,7 +247,7 @@ public class XSDPreferencePage extends PreferencePage implements IWorkbenchPrefe
     }
     else
     {
-      setErrorMessage(XSDEditorPlugin.getXSDString("_ERROR_LABEL_INVALID_PREFIX"));
+      setErrorMessage(Messages._ERROR_LABEL_INVALID_PREFIX);
       setValid(false);
       return false;
     }

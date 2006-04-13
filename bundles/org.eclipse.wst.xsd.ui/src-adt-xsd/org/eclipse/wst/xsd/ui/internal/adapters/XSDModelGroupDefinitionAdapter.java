@@ -25,6 +25,7 @@ import org.eclipse.wst.xsd.ui.internal.adt.outline.ITreeElement;
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDElementAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDModelGroupAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.DeleteXSDConcreteComponentAction;
+import org.eclipse.wst.xsd.ui.internal.editor.Messages;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.xsd.XSDModelGroup;
 import org.eclipse.xsd.XSDModelGroupDefinition;
@@ -47,11 +48,11 @@ public class XSDModelGroupDefinitionAdapter extends XSDBaseAdapter implements IS
 
     if (xsdModelGroupDefinition.isModelGroupDefinitionReference())
     {
-      return XSDEditorPlugin.getXSDImage("icons/XSDGroupRef.gif");
+      return XSDEditorPlugin.getXSDImage("icons/XSDGroupRef.gif"); //$NON-NLS-1$
     }
     else
     {
-      return XSDEditorPlugin.getXSDImage("icons/XSDGroup.gif");
+      return XSDEditorPlugin.getXSDImage("icons/XSDGroup.gif"); //$NON-NLS-1$
     }
   }
 
@@ -59,7 +60,7 @@ public class XSDModelGroupDefinitionAdapter extends XSDBaseAdapter implements IS
   {
     XSDModelGroupDefinition xsdModelGroupDefinition = (XSDModelGroupDefinition) target;
     String result = xsdModelGroupDefinition.isModelGroupDefinitionReference() ? xsdModelGroupDefinition.getQName() : xsdModelGroupDefinition.getName();
-    return result == null ? "'absent'" : result;
+    return result == null ? Messages._UI_LABEL_ABSENT : result;
   }
 
   public ITreeElement[] getChildren()

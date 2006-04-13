@@ -26,8 +26,8 @@ public class SpaceFillerForFieldEditPart extends BaseFieldEditPart
 
   protected IFigure createFigure()
   {
-    space = new Label("");
-    space.setIcon(XSDEditorPlugin.getXSDImage("icons/Dot.gif"));
+    space = new Label(""); //$NON-NLS-1$
+    space.setIcon(XSDEditorPlugin.getXSDImage("icons/Dot.gif")); //$NON-NLS-1$
     space.setBorder(new MarginBorder(3, 0, 3, 0));
     return space;
   }

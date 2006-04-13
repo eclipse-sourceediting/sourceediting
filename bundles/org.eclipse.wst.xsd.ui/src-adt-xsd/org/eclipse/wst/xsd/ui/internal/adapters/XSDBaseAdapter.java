@@ -100,7 +100,7 @@ public class XSDBaseAdapter extends AdapterImpl implements IADTObject, ITreeElem
   
   public String getText()
   {
-    return "";
+    return ""; //$NON-NLS-1$
   }
   
   public ITreeElement getParent()

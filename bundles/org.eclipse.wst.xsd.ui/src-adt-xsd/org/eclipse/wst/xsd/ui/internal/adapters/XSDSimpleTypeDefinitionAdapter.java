@@ -15,6 +15,7 @@ import java.util.List;
 
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IType;
+import org.eclipse.wst.xsd.ui.internal.editor.Messages;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.eclipse.xsd.XSDVariety;
@@ -28,39 +29,39 @@ public class XSDSimpleTypeDefinitionAdapter extends XSDTypeDefinitionAdapter imp
 
     if (xsdSimpleTypeDefinition.getContainer() == null)
     {
-      return XSDEditorPlugin.getXSDImage("icons/XSDSimpleType.gif");
+      return XSDEditorPlugin.getXSDImage("icons/XSDSimpleType.gif"); //$NON-NLS-1$
     }
 
     if (XSDVariety.LIST_LITERAL == xsdSimpleTypeDefinition.getVariety())
     {
-      return XSDEditorPlugin.getPlugin().getIconImage("obj16/smpl_list_obj");
+      return XSDEditorPlugin.getPlugin().getIconImage("obj16/smpl_list_obj"); //$NON-NLS-1$
     }
     else if (XSDVariety.UNION_LITERAL == xsdSimpleTypeDefinition.getVariety())
     {
-      return XSDEditorPlugin.getPlugin().getIconImage("obj16/smpl_union_obj");
+      return XSDEditorPlugin.getPlugin().getIconImage("obj16/smpl_union_obj"); //$NON-NLS-1$
     }
     else if (XSDVariety.ATOMIC_LITERAL == xsdSimpleTypeDefinition.getVariety())
     {
       if (xsdSimpleTypeDefinition.getPrimitiveTypeDefinition() != null)
       {
-        return XSDEditorPlugin.getPlugin().getIconImage("obj16/smpl_restrict_obj");
+        return XSDEditorPlugin.getPlugin().getIconImage("obj16/smpl_restrict_obj"); //$NON-NLS-1$
       }
-      return XSDEditorPlugin.getXSDImage("icons/XSDSimpleType.gif");
+      return XSDEditorPlugin.getXSDImage("icons/XSDSimpleType.gif"); //$NON-NLS-1$
     }
     else if (xsdSimpleTypeDefinition.isSetVariety())
     {
-      return XSDEditorPlugin.getXSDImage("icons/XSDSimpleType.gif");
+      return XSDEditorPlugin.getXSDImage("icons/XSDSimpleType.gif"); //$NON-NLS-1$
     }
     else
     {
-      return XSDEditorPlugin.getXSDImage("icons/XSDSimpleType.gif");
+      return XSDEditorPlugin.getXSDImage("icons/XSDSimpleType.gif"); //$NON-NLS-1$
     }
   }
   
   public String getDisplayName()
   {
     XSDSimpleTypeDefinition xsdSimpleTypeDefinition = (XSDSimpleTypeDefinition) target;
-    return (xsdSimpleTypeDefinition.getName() == null ? "local type" : xsdSimpleTypeDefinition.getName());
+    return (xsdSimpleTypeDefinition.getName() == null ? Messages._UI_LABEL_LOCAL_TYPE : xsdSimpleTypeDefinition.getName());
   }
 
   public String getText()
@@ -74,7 +75,7 @@ public class XSDSimpleTypeDefinitionAdapter extends XSDTypeDefinitionAdapter imp
 
     StringBuffer result = new StringBuffer();
 
-    result.append(xsdSimpleTypeDefinition.getName() == null ? "local type" : xsdSimpleTypeDefinition.getName());
+    result.append(xsdSimpleTypeDefinition.getName() == null ? Messages._UI_LABEL_LOCAL_TYPE : xsdSimpleTypeDefinition.getName());
 
     if (showType)
     {
@@ -83,7 +84,7 @@ public class XSDSimpleTypeDefinitionAdapter extends XSDTypeDefinitionAdapter imp
       {
         if (baseTypeDefinition.getName() != null && !xsdSimpleTypeDefinition.getContents().contains(baseTypeDefinition) && !XSDConstants.isAnySimpleType(baseTypeDefinition))
         {
-          result.append(" : ");
+          result.append(" : "); //$NON-NLS-1$
           result.append(baseTypeDefinition.getQName(xsdSimpleTypeDefinition));
         }
       }
@@ -94,7 +95,7 @@ public class XSDSimpleTypeDefinitionAdapter extends XSDTypeDefinitionAdapter imp
         {
           if (itemTypeDefinition.getName() != null)
           {
-            result.append(" : ");
+            result.append(" : "); //$NON-NLS-1$
             result.append(itemTypeDefinition.getQName(xsdSimpleTypeDefinition));
           }
         }
@@ -111,12 +112,12 @@ public class XSDSimpleTypeDefinitionAdapter extends XSDTypeDefinitionAdapter imp
               {
                 if (first)
                 {
-                  result.append(" : ");
+                  result.append(" : "); //$NON-NLS-1$
                   first = false;
                 }
                 else
                 {
-                  result.append(" | ");
+                  result.append(" | "); //$NON-NLS-1$
                 }
                 result.append(memberTypeDefinition.getQName(xsdSimpleTypeDefinition));
               }
@@ -128,7 +129,7 @@ public class XSDSimpleTypeDefinitionAdapter extends XSDTypeDefinitionAdapter imp
           }
           else if (result.length() == 0)
           {
-            result.append("'absent'");
+            result.append(Messages._UI_LABEL_ABSENT);
           }
         }
       }

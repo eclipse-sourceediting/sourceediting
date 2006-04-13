@@ -18,8 +18,8 @@ public class SpacingFigure extends Label
 {
   public SpacingFigure()
   {
-    super("");
-    setIcon(XSDEditorPlugin.getXSDImage("icons/Dot.gif"));
+    super(""); //$NON-NLS-1$
+    setIcon(XSDEditorPlugin.getXSDImage("icons/Dot.gif")); //$NON-NLS-1$
     setBorder(new MarginBorder(3, 0, 3, 0));
   }
 }

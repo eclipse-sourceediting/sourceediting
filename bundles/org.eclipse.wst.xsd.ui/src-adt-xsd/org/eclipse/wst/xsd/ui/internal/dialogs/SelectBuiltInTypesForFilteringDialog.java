@@ -19,6 +19,7 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.CheckedTreeSelectionDialog;
 import org.eclipse.wst.common.ui.internal.search.dialogs.ComponentSpecification;
+import org.eclipse.wst.xsd.ui.internal.editor.Messages;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 
 /**
@@ -44,9 +45,8 @@ public class SelectBuiltInTypesForFilteringDialog extends CheckedTreeSelectionDi
 		// grey state enable
 		setContainerMode(true);
 		
-		// TODO externalize String
-		setTitle("Set common Built-In types");
-		setMessage("Select the types that you do not want to filter out: ");
+		setTitle(Messages._UI_LABEL_SET_COMMON_BUILT_IN_TYPES);
+		setMessage(Messages._UI_LABEL_SELECT_TYPES_FILTER_OUT);
 		
 		//super.create();
 		//super.getTreeViewer().setSorter(new ViewerSorter());
@@ -62,7 +62,7 @@ public class SelectBuiltInTypesForFilteringDialog extends CheckedTreeSelectionDi
 	 * use this method for conversion
 	 */
 	public static String getTypesListInString(Object[] chosenTypes) {
-		String returningList = "";
+		String returningList = ""; //$NON-NLS-1$
 		for (int i = 0; i < chosenTypes.length; i++){
 			if ( chosenTypes[i] instanceof ComponentSpecification){
 				ComponentSpecification aType = 

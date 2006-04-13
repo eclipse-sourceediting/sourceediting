@@ -14,6 +14,7 @@ import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.wst.common.ui.internal.search.dialogs.ComponentSpecification;
 import org.eclipse.wst.xsd.ui.internal.adt.edit.IComponentDialog;
+import org.eclipse.wst.xsd.ui.internal.editor.Messages;
 import org.eclipse.wst.xsd.ui.internal.search.IXSDSearchConstants;
 
 public class NewElementDialog extends NewComponentDialog implements IComponentDialog
@@ -24,7 +25,7 @@ public class NewElementDialog extends NewComponentDialog implements IComponentDi
 
 	  public NewElementDialog()
 	  {
-	    super(Display.getCurrent().getActiveShell(), "New Element", "NewElement");    
+	    super(Display.getCurrent().getActiveShell(), Messages._UI_LABEL_NEW_ELEMENT, "NewElement");     //$NON-NLS-1$
 	  }
 	  
 	  public int createAndOpen()

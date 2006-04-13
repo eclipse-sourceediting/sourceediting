@@ -24,6 +24,7 @@ import org.eclipse.wst.xsd.ui.internal.adt.facade.IStructure;
 import org.eclipse.wst.xsd.ui.internal.adt.outline.ITreeElement;
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDAttributeDeclarationAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.DeleteXSDConcreteComponentAction;
+import org.eclipse.wst.xsd.ui.internal.editor.Messages;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.xsd.XSDAttributeGroupDefinition;
 import org.eclipse.xsd.XSDWildcard;
@@ -46,11 +47,11 @@ public class XSDAttributeGroupDefinitionAdapter extends XSDBaseAdapter implement
     XSDAttributeGroupDefinition xsdAttributeGroupDefinition = (XSDAttributeGroupDefinition) target;
     if (xsdAttributeGroupDefinition.isAttributeGroupDefinitionReference())
     {
-      return XSDEditorPlugin.getXSDImage("icons/XSDAttributeGroupRef.gif");
+      return XSDEditorPlugin.getXSDImage("icons/XSDAttributeGroupRef.gif"); //$NON-NLS-1$
     }
     else
     {
-      return XSDEditorPlugin.getXSDImage("icons/XSDAttributeGroup.gif");
+      return XSDEditorPlugin.getXSDImage("icons/XSDAttributeGroup.gif"); //$NON-NLS-1$
     }
   }
 
@@ -58,7 +59,7 @@ public class XSDAttributeGroupDefinitionAdapter extends XSDBaseAdapter implement
   {
     XSDAttributeGroupDefinition xsdAttributeGroupDefinition = (XSDAttributeGroupDefinition) target;
     String result = xsdAttributeGroupDefinition.isAttributeGroupDefinitionReference() ? xsdAttributeGroupDefinition.getQName() : xsdAttributeGroupDefinition.getName();
-    return result == null ? "'absent'" : result;
+    return result == null ? Messages._UI_LABEL_ABSENT : result;
   }
 
   public ITreeElement[] getChildren()

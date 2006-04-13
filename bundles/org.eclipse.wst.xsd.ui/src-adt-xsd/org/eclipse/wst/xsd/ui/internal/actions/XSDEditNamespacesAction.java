@@ -74,16 +74,16 @@ public class XSDEditNamespacesAction extends Action {
 		      {
 		        NamespaceInfo info = (NamespaceInfo)i.next();
 		        NamespaceInfo oldCopy = new NamespaceInfo(info);
-		        info.setProperty("oldCopy", oldCopy);
+		        info.setProperty("oldCopy", oldCopy); //$NON-NLS-1$
 		      }
 		                              
 		      dialog.setNamespaceInfoList(namespaceInfoList);   
 		      dialog.create();      
 		      //dialog.getShell().setSize(500, 300);
-		      dialog.getShell().setText(XMLCommonResources.getInstance().getString("_UI_MENU_EDIT_SCHEMA_INFORMATION_TITLE"));
+		      dialog.getShell().setText(XMLCommonResources.getInstance().getString("_UI_MENU_EDIT_SCHEMA_INFORMATION_TITLE")); //$NON-NLS-1$
 		      dialog.setBlockOnOpen(true);                                 
 		      dialog.open();
-          String xsdPrefix = "";    
+          String xsdPrefix = "";     //$NON-NLS-1$
 
 		      if (dialog.getReturnCode() == Window.OK)
 		      {
@@ -101,8 +101,8 @@ public class XSDEditNamespacesAction extends Action {
               NamespaceInfo ni = (NamespaceInfo)iter.next();
               String pref = ni.prefix;
               String uri = ni.uri;
-              if (pref == null) pref = "";
-              if (uri == null) uri = "";
+              if (pref == null) pref = ""; //$NON-NLS-1$
+              if (uri == null) uri = ""; //$NON-NLS-1$
               if (XSDConstants.isSchemaForSchemaNamespace(uri))
               {
                 xsdPrefix = pref;
@@ -173,7 +173,7 @@ public class XSDEditNamespacesAction extends Action {
 	    for (Iterator i = newList.iterator(); i.hasNext(); )
 	    {
 	      NamespaceInfo newInfo = (NamespaceInfo)i.next();
-	      NamespaceInfo oldInfo = (NamespaceInfo)oldURIToPrefixTable.get(newInfo.uri != null ? newInfo.uri : ""); 
+	      NamespaceInfo oldInfo = (NamespaceInfo)oldURIToPrefixTable.get(newInfo.uri != null ? newInfo.uri : "");  //$NON-NLS-1$
 
 
 	      // if oldInfo is non null ... there's a matching URI in the old set
@@ -183,13 +183,13 @@ public class XSDEditNamespacesAction extends Action {
 	      // assuming that the user changed the URI and the prefix
 	      if (oldInfo == null)                                            
 	      {
-	        oldInfo = (NamespaceInfo)newInfo.getProperty("oldCopy");           
+	        oldInfo = (NamespaceInfo)newInfo.getProperty("oldCopy");            //$NON-NLS-1$
 	      } 
 
 	      if (oldInfo != null)
 	      {
-	        String newPrefix = newInfo.prefix != null ? newInfo.prefix : "";
-	        String oldPrefix = oldInfo.prefix != null ? oldInfo.prefix : "";
+	        String newPrefix = newInfo.prefix != null ? newInfo.prefix : ""; //$NON-NLS-1$
+	        String oldPrefix = oldInfo.prefix != null ? oldInfo.prefix : ""; //$NON-NLS-1$
 	        if (!oldPrefix.equals(newPrefix))
 	        {
 	          map.put(oldPrefix, newPrefix);    

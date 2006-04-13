@@ -79,11 +79,11 @@ public class XSDEditPartFactory extends ADTEditPartFactory implements IExtendedF
     {
       Annotation annotation = (Annotation) model;
       String kind = annotation.getCompartment().getKind();
-      if (kind.equals("element"))
+      if (kind.equals("element")) //$NON-NLS-1$
       {
         child = new XSDGroupsForAnnotationEditPart();
       }
-      else if (kind.equals("attribute"))
+      else if (kind.equals("attribute")) //$NON-NLS-1$
       {
         child = new XSDAttributesForAnnotationEditPart();
       }

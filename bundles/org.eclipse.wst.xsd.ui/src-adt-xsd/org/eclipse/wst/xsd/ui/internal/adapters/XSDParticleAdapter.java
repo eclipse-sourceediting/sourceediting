@@ -11,6 +11,7 @@
 package org.eclipse.wst.xsd.ui.internal.adapters;
 
 import org.eclipse.wst.xsd.ui.internal.adt.design.IAnnotationProvider;
+import org.eclipse.wst.xsd.ui.internal.editor.Messages;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDParticle;
 
@@ -99,8 +100,8 @@ public class XSDParticleAdapter extends XSDBaseAdapter implements IAnnotationPro
 
   protected String buildAnnotationString(boolean isForLabel)
   {
-    String occurenceDescription = "";
-    String toolTipDescription = "";
+    String occurenceDescription = ""; //$NON-NLS-1$
+    String toolTipDescription = ""; //$NON-NLS-1$
     // TODO: set int values as defined constants
     // -2 means the user didn't specify (so the default is 1)
     int minOccurs = getMinOccurs();
@@ -110,41 +111,41 @@ public class XSDParticleAdapter extends XSDBaseAdapter implements IAnnotationPro
     // occurrence attributes
     if (minOccurs == -3 && maxOccurs == -3)
     {
-      occurenceDescription = "";
+      occurenceDescription = ""; //$NON-NLS-1$
     }
     else if (minOccurs == 0 && (maxOccurs == -2 || maxOccurs == 1))
     {
-      occurenceDescription = "[0..1]";
-      toolTipDescription = "optional";
+      occurenceDescription = "[0..1]"; //$NON-NLS-1$
+      toolTipDescription = Messages._UI_LABEL_OPTIONAL;
     }
     else if (minOccurs == 0 && maxOccurs == -1)
     {
-      occurenceDescription = "[0..*]";
-      toolTipDescription = "Zero or more";
+      occurenceDescription = "[0..*]"; //$NON-NLS-1$
+      toolTipDescription = Messages._UI_LABEL_ZERO_OR_MORE;
     }
     else if ((minOccurs == 1 && maxOccurs == -1) || (minOccurs == -2 && maxOccurs == -1))
     {
-      occurenceDescription = "[1..*]";
-      toolTipDescription = "One or more";
+      occurenceDescription = "[1..*]"; //$NON-NLS-1$
+      toolTipDescription = Messages._UI_LABEL_ONE_OR_MORE;
     }
     else if ((minOccurs == 1 && maxOccurs == 1) || (minOccurs == -2 && maxOccurs == 1) || (minOccurs == 1 && maxOccurs == -2))
     {
-      occurenceDescription = "[1..1]";
-      toolTipDescription = "required";
+      occurenceDescription = "[1..1]"; //$NON-NLS-1$
+      toolTipDescription = Messages._UI_LABEL_REQUIRED;
     }
     else if (minOccurs == -2 && maxOccurs == -2)
     {
-      occurenceDescription = "";
+      occurenceDescription = ""; //$NON-NLS-1$
       // none specified, so don't have any toolTip description
     }
     else
     {
       if (maxOccurs == -2)
         maxOccurs = 1;
-      String maxSymbol = maxOccurs == -1 ? "*" : "" + maxOccurs;
-      String minSymbol = minOccurs == -2 ? "1" : "" + minOccurs;
-      occurenceDescription = "[" + minSymbol + ".." + maxSymbol + "]";
-      toolTipDescription = "array";
+      String maxSymbol = maxOccurs == -1 ? "*" : "" + maxOccurs; //$NON-NLS-1$ //$NON-NLS-2$
+      String minSymbol = minOccurs == -2 ? "1" : "" + minOccurs; //$NON-NLS-1$ //$NON-NLS-2$
+      occurenceDescription = "[" + minSymbol + ".." + maxSymbol + "]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      toolTipDescription = Messages._UI_LABEL_ARRAY;
     }
 
     if (isForLabel)

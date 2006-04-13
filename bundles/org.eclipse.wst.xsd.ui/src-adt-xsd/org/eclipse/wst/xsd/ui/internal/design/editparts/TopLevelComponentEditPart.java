@@ -46,7 +46,7 @@ import org.eclipse.wst.xsd.ui.internal.adt.design.editpolicies.SimpleDirectEditP
 import org.eclipse.wst.xsd.ui.internal.adt.typeviz.design.figures.FieldFigure;
 import org.eclipse.wst.xsd.ui.internal.design.editpolicies.SelectionHandlesEditPolicyImpl;
 import org.eclipse.wst.xsd.ui.internal.design.layouts.FillLayout;
-import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
+import org.eclipse.wst.xsd.ui.internal.editor.Messages;
 
 public class TopLevelComponentEditPart extends BaseEditPart implements IFeedbackHandler
 {
@@ -80,7 +80,7 @@ public class TopLevelComponentEditPart extends BaseEditPart implements IFeedback
       // evil hack to provide underlines
       Object model = getModel();
 
-      boolean isLinux = java.io.File.separator.equals("/");
+      boolean isLinux = java.io.File.separator.equals("/"); //$NON-NLS-1$
       if (model instanceof XSDComplexTypeDefinitionAdapter || model instanceof XSDElementDeclarationAdapter || model instanceof XSDModelGroupDefinitionAdapter)
       {
         if (!isLinux)
@@ -133,7 +133,7 @@ public class TopLevelComponentEditPart extends BaseEditPart implements IFeedback
     }
     else
     {
-      label.setText(XSDEditorPlugin.getXSDString("_UI_GRAPH_UNKNOWN_OBJECT") + getModel().getClass().getName());
+      label.setText(Messages._UI_GRAPH_UNKNOWN_OBJECT + getModel().getClass().getName());
       // arrowLabel.setVisible(false);
     }
 

@@ -28,12 +28,12 @@ import java.util.*;
 
 public class XSDEditorPlugin extends AbstractUIPlugin
 {
-  public static final String PLUGIN_ID = "org.eclipse.wst.xsd.ui";
-  public static final String CONST_XSD_DEFAULT_PREFIX_TEXT = "org.eclipse.wst.xmlschema.xsdDefaultPrefixText";
-  public static final String CONST_PREFERED_BUILT_IN_TYPES = "org.eclipse.wst.xmlschema.preferedBuiltInTypes"; 
-  public static final String CUSTOM_LIST_SEPARATOR = "\n";
-  public static final String EXTENSIONS_SCHEMAS_EXTENSIONID = "org.eclipse.wst.xsd.ui.ExtensionsSchemasDescription";
-  public final static String DEFAULT_TARGET_NAMESPACE = "http://www.example.org";
+  public static final String PLUGIN_ID = "org.eclipse.wst.xsd.ui"; //$NON-NLS-1$
+  public static final String CONST_XSD_DEFAULT_PREFIX_TEXT = "org.eclipse.wst.xmlschema.xsdDefaultPrefixText"; //$NON-NLS-1$
+  public static final String CONST_PREFERED_BUILT_IN_TYPES = "org.eclipse.wst.xmlschema.preferedBuiltInTypes";  //$NON-NLS-1$
+  public static final String CUSTOM_LIST_SEPARATOR = "\n"; //$NON-NLS-1$
+  public static final String EXTENSIONS_SCHEMAS_EXTENSIONID = "org.eclipse.wst.xsd.ui.ExtensionsSchemasDescription"; //$NON-NLS-1$
+  public final static String DEFAULT_TARGET_NAMESPACE = "http://www.example.org"; //$NON-NLS-1$
   
 	//The shared instance.
 	private static XSDEditorPlugin plugin;
@@ -42,11 +42,11 @@ public class XSDEditorPlugin extends AbstractUIPlugin
   private ExtensionsSchemasRegistry registry;
   private XSDEditorConfiguration xsdEditorConfiguration = null;
   
-  public static final String CONST_USE_SIMPLE_EDIT_MODE = PLUGIN_ID + ".useSimpleEditMode";
-  public static final String CONST_SHOW_INHERITED_CONTENT = PLUGIN_ID + ".showInheritedContent";
+  public static final String CONST_USE_SIMPLE_EDIT_MODE = PLUGIN_ID + ".useSimpleEditMode"; //$NON-NLS-1$
+  public static final String CONST_SHOW_INHERITED_CONTENT = PLUGIN_ID + ".showInheritedContent"; //$NON-NLS-1$
 
-  public static final String CONST_XSD_LANGUAGE_QUALIFY = "org.eclipse.wst.xmlschema.xsdQualify";
-  public static final String CONST_DEFAULT_TARGET_NAMESPACE = "org.eclipse.wst.xmlschema.defaultTargetnamespaceText";
+  public static final String CONST_XSD_LANGUAGE_QUALIFY = "org.eclipse.wst.xmlschema.xsdQualify"; //$NON-NLS-1$
+  public static final String CONST_DEFAULT_TARGET_NAMESPACE = "org.eclipse.wst.xmlschema.defaultTargetnamespaceText"; //$NON-NLS-1$
 	/**
 	 * The constructor.
 	 */
@@ -128,13 +128,13 @@ public class XSDEditorPlugin extends AbstractUIPlugin
 	 * @return the image descriptor
 	 */
 	public static ImageDescriptor getImageDescriptor(String path) {
-		return AbstractUIPlugin.imageDescriptorFromPlugin("org.eclipse.wst.xsd.ui", path);
+		return AbstractUIPlugin.imageDescriptorFromPlugin("org.eclipse.wst.xsd.ui", path); //$NON-NLS-1$
 	}
 	
 	public static ImageDescriptor getImageDescriptor(String name, boolean getBaseURL) {
 		try {
 			URL installURL = getDefault().getBundle().getEntry("/"); //$NON-NLS-1$
-			String imageString = getBaseURL ? "icons/" + name : name;
+			String imageString = getBaseURL ? "icons/" + name : name; //$NON-NLS-1$
 
 			URL imageURL = new URL(installURL, imageString);
 			return ImageDescriptor.createFromURL(imageURL);
@@ -181,7 +181,7 @@ public class XSDEditorPlugin extends AbstractUIPlugin
 
 	public Image getIconImage(String object) {
 		try {
-			return ExtendedImageRegistry.getInstance().getImage(new URL(getBaseURL() + "icons/" + object + ".gif"));
+			return ExtendedImageRegistry.getInstance().getImage(new URL(getBaseURL() + "icons/" + object + ".gif")); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		catch (MalformedURLException exception) {
 
@@ -197,21 +197,21 @@ public class XSDEditorPlugin extends AbstractUIPlugin
   protected void initializeDefaultPreferences(IPreferenceStore store)
   {
     store.setDefault(CONST_SHOW_INHERITED_CONTENT, false);
-    store.setDefault(CONST_XSD_DEFAULT_PREFIX_TEXT, "xsd");
+    store.setDefault(CONST_XSD_DEFAULT_PREFIX_TEXT, "xsd"); //$NON-NLS-1$
     store.setDefault(CONST_XSD_LANGUAGE_QUALIFY, false);
     store.setDefault(CONST_DEFAULT_TARGET_NAMESPACE, DEFAULT_TARGET_NAMESPACE);
     
     //Even the last item in the list must contain a trailing List separator
     store.setDefault(CONST_PREFERED_BUILT_IN_TYPES,     		
-    		"boolean"+ CUSTOM_LIST_SEPARATOR +
-    		"date" + CUSTOM_LIST_SEPARATOR +
-    		"dateTime" + CUSTOM_LIST_SEPARATOR +
-    		"double" + CUSTOM_LIST_SEPARATOR +
-    		"float" + CUSTOM_LIST_SEPARATOR +
-    		"hexBinary" + CUSTOM_LIST_SEPARATOR +
-    		"int" + CUSTOM_LIST_SEPARATOR +
-    		"string" + CUSTOM_LIST_SEPARATOR +
-    		"time" + CUSTOM_LIST_SEPARATOR);
+    		"boolean"+ CUSTOM_LIST_SEPARATOR + //$NON-NLS-1$
+    		"date" + CUSTOM_LIST_SEPARATOR + //$NON-NLS-1$
+    		"dateTime" + CUSTOM_LIST_SEPARATOR + //$NON-NLS-1$
+    		"double" + CUSTOM_LIST_SEPARATOR + //$NON-NLS-1$
+    		"float" + CUSTOM_LIST_SEPARATOR + //$NON-NLS-1$
+    		"hexBinary" + CUSTOM_LIST_SEPARATOR + //$NON-NLS-1$
+    		"int" + CUSTOM_LIST_SEPARATOR + //$NON-NLS-1$
+    		"string" + CUSTOM_LIST_SEPARATOR + //$NON-NLS-1$
+    		"time" + CUSTOM_LIST_SEPARATOR); //$NON-NLS-1$
   }
 
   public ExtensionsSchemasRegistry getExtensionsSchemasRegistry()
@@ -254,8 +254,8 @@ public class XSDEditorPlugin extends AbstractUIPlugin
    */
   public String getXMLSchemaTargetNamespace() {
     String targetNamespace = getPreferenceStore().getString(CONST_DEFAULT_TARGET_NAMESPACE);
-    if (!targetNamespace.endsWith("/")) {
-      targetNamespace = targetNamespace + "/";
+    if (!targetNamespace.endsWith("/")) { //$NON-NLS-1$
+      targetNamespace = targetNamespace + "/"; //$NON-NLS-1$
     }
     return targetNamespace;
   }

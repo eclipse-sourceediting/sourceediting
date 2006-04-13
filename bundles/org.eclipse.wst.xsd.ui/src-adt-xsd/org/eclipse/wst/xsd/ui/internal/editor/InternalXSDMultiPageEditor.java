@@ -292,7 +292,7 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
 
   public String getContributorId()
   {
-    return "org.eclipse.wst.xsd.ui.internal.editor";
+    return "org.eclipse.wst.xsd.ui.internal.editor"; //$NON-NLS-1$
   }
 
   public XSDSchema getXSDSchema()
@@ -311,7 +311,7 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
     {
       structuredTextEditor = new StructuredTextEditor();
       int index = addPage(structuredTextEditor, getEditorInput());
-      setPageText(index, "Source");
+      setPageText(index, Messages._UI_LABEL_SOURCE);
       structuredTextEditor.update();
       structuredTextEditor.setEditorPart(this);
       structuredTextEditor.addPropertyListener(this);
@@ -389,10 +389,10 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
     action = new DeleteAction(this);
     action.setSelectionProvider(getSelectionManager());
     registry.registerAction(action);
-    action = new AddXSDElementAction(this, AddXSDElementAction.ID, "Add Element", false);
+    action = new AddXSDElementAction(this, AddXSDElementAction.ID, Messages._UI_ACTION_ADD_ELEMENT, false);
     action.setSelectionProvider(getSelectionManager());
     registry.registerAction(action);
-    action = new AddXSDElementAction(this, AddXSDElementAction.REF_ID, "Add Element Ref", true);
+    action = new AddXSDElementAction(this, AddXSDElementAction.REF_ID, Messages._UI_ACTION_ADD_ELEMENT_REF, true);
     action.setSelectionProvider(getSelectionManager());
     registry.registerAction(action);
     action = new AddXSDModelGroupAction(this, XSDCompositor.SEQUENCE_LITERAL, AddXSDModelGroupAction.SEQUENCE_ID);
@@ -433,11 +433,11 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
     action.setSelectionProvider(getSelectionManager());
     registry.registerAction(action);
     
-    SetTypeAction setNewComplexTypeAction = new SetTypeAction("New...", SetTypeAction.SET_NEW_TYPE_ID, this);
+    SetTypeAction setNewComplexTypeAction = new SetTypeAction(Messages._UI_ACTION_NEW, SetTypeAction.SET_NEW_TYPE_ID, this);
     setNewComplexTypeAction.setSelectionProvider(getSelectionManager());
     registry.registerAction(setNewComplexTypeAction);
         
-    SetTypeAction setExistingTypeAction = new SetTypeAction("Browse...", SetTypeAction.SELECT_EXISTING_TYPE_ID, this);
+    SetTypeAction setExistingTypeAction = new SetTypeAction(Messages._UI_ACTION_BROWSE, SetTypeAction.SELECT_EXISTING_TYPE_ID, this);
     setExistingTypeAction.setSelectionProvider(getSelectionManager());
     registry.registerAction(setExistingTypeAction);
 
@@ -446,25 +446,25 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
   
   protected void addMultiplicityMenu(ActionRegistry registry)
   {
-    SetMultiplicityAction oneMultiplicity = new SetMultiplicityAction(this, "1..1 (" + "Required" + ")", SetMultiplicityAction.REQUIRED_ID);
+    SetMultiplicityAction oneMultiplicity = new SetMultiplicityAction(this, "1..1 (" + Messages._UI_LABEL_REQUIRED + ")", SetMultiplicityAction.REQUIRED_ID); //$NON-NLS-1$ //$NON-NLS-2$
     oneMultiplicity.setMaxOccurs(1);
     oneMultiplicity.setMinOccurs(1);
     oneMultiplicity.setSelectionProvider(getSelectionManager());
     registry.registerAction(oneMultiplicity);
 
-    SetMultiplicityAction zeroOrMoreMultiplicity = new SetMultiplicityAction(this, "0..* (" + "Zero or more" + ")", SetMultiplicityAction.ZERO_OR_MORE_ID);
+    SetMultiplicityAction zeroOrMoreMultiplicity = new SetMultiplicityAction(this, "0..* (" + Messages._UI_LABEL_ZERO_OR_MORE + ")", SetMultiplicityAction.ZERO_OR_MORE_ID); //$NON-NLS-1$ //$NON-NLS-2$
     zeroOrMoreMultiplicity.setMaxOccurs(-1);
     zeroOrMoreMultiplicity.setMinOccurs(0);
     zeroOrMoreMultiplicity.setSelectionProvider(getSelectionManager());
     registry.registerAction(zeroOrMoreMultiplicity);
     
-    SetMultiplicityAction zeroOrOneMultiplicity = new SetMultiplicityAction(this, "0..1 (" + "Optional" + ")", SetMultiplicityAction.ZERO_OR_ONE_ID);
+    SetMultiplicityAction zeroOrOneMultiplicity = new SetMultiplicityAction(this, "0..1 (" + Messages._UI_LABEL_OPTIONAL + ")", SetMultiplicityAction.ZERO_OR_ONE_ID); //$NON-NLS-1$ //$NON-NLS-2$
     zeroOrOneMultiplicity.setMaxOccurs(1);
     zeroOrOneMultiplicity.setMinOccurs(0);
     zeroOrOneMultiplicity.setSelectionProvider(getSelectionManager());
     registry.registerAction(zeroOrOneMultiplicity);
 
-    SetMultiplicityAction oneOrMoreMultiplicity = new SetMultiplicityAction(this, "1..* (" + "One or more" + ")", SetMultiplicityAction.ONE_OR_MORE_ID);
+    SetMultiplicityAction oneOrMoreMultiplicity = new SetMultiplicityAction(this, "1..* (" + Messages._UI_LABEL_ONE_OR_MORE + ")", SetMultiplicityAction.ONE_OR_MORE_ID); //$NON-NLS-1$ //$NON-NLS-2$
     oneOrMoreMultiplicity.setMaxOccurs(-1);
     oneOrMoreMultiplicity.setMinOccurs(1);
     oneOrMoreMultiplicity.setSelectionProvider(getSelectionManager());

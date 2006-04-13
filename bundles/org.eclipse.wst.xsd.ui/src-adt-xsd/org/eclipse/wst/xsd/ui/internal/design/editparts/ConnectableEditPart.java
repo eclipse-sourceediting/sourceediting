@@ -37,7 +37,7 @@ public abstract class ConnectableEditPart extends BaseEditPart
   public IExtendedFigureFactory getExtendedFigureFactory()
   {
     EditPartFactory factory = getViewer().getEditPartFactory();
-    Assert.isTrue(factory instanceof IExtendedFigureFactory, "EditPartFactory must be an instanceof of IExtendedFigureFactory");    
+    Assert.isTrue(factory instanceof IExtendedFigureFactory, "EditPartFactory must be an instanceof of IExtendedFigureFactory");     //$NON-NLS-1$
     return (IExtendedFigureFactory)factory; 
   }
   

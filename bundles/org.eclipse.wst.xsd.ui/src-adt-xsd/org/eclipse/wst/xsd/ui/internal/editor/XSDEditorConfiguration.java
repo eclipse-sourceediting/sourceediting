@@ -23,12 +23,12 @@ import org.eclipse.wst.xsd.ui.internal.design.figures.IExtendedFigureFactory;
 
 public class XSDEditorConfiguration
 {
-  public static final String XSDEDITORCONFIGURATIONEXTENSIONID = "org.eclipse.wst.xsd.ui.XSDEditorExtensionConfiguration";
-  public static final String CLASSNAME = "class";
-  public static final String ADAPTERFACTORY = "adapterFactory";
-  public static final String TOOLBARACTION = "toolbarAction";
-  public static final String FIGUREFACTORY = "figureFactory";
-  public static final String EDITPARTFACTORY = "editPartFactory";
+  public static final String XSDEDITORCONFIGURATIONEXTENSIONID = "org.eclipse.wst.xsd.ui.XSDEditorExtensionConfiguration"; //$NON-NLS-1$
+  public static final String CLASSNAME = "class"; //$NON-NLS-1$
+  public static final String ADAPTERFACTORY = "adapterFactory"; //$NON-NLS-1$
+  public static final String TOOLBARACTION = "toolbarAction"; //$NON-NLS-1$
+  public static final String FIGUREFACTORY = "figureFactory"; //$NON-NLS-1$
+  public static final String EDITPARTFACTORY = "editPartFactory"; //$NON-NLS-1$
 
   List definedExtensionsList = null;
 

@@ -104,7 +104,7 @@ public class NewComponentDialog extends Dialog implements ModifyListener
     composite.setLayoutData(gdFill);
 
     Label nameLabel = new Label(composite, SWT.NONE);
-    nameLabel.setText("Name:");//XSDEditorPlugin.getXSDString("_UI_LABEL_NAME")); //$NON-NLS-1$
+    nameLabel.setText("Name:");//XSDEditorPlugin.getXSDString("_UI_LABEL_NAME"));
 
     nameField = new Text(composite, SWT.SINGLE | SWT.BORDER);
     GridData gd= new GridData();
@@ -119,7 +119,7 @@ public class NewComponentDialog extends Dialog implements ModifyListener
 
     // error message
     errorMessageLabel = new Label(dialogArea, SWT.NONE);
-    errorMessageLabel.setText("error message goes here");         
+    errorMessageLabel.setText("error message goes here");
     GridData gd2 = new GridData();
     gd2.horizontalAlignment= GridData.FILL;
     gd2.grabExcessHorizontalSpace= true;
@@ -144,7 +144,7 @@ public class NewComponentDialog extends Dialog implements ModifyListener
   	Iterator iterator = usedNames.iterator();
   	while (iterator.hasNext()) {
   		if (name.equalsIgnoreCase((String) iterator.next())) {
-  			return "_UI_LABEL_WARNING_DUPLICATE_NAME_EXISTS";
+  			return "_UI_LABEL_WARNING_DUPLICATE_NAME_EXISTS"; //$NON-NLS-1$
   		}
   	}
   	
@@ -161,9 +161,9 @@ public class NewComponentDialog extends Dialog implements ModifyListener
     }   
     else
     {
-      errorMessage = "";
+      errorMessage = ""; //$NON-NLS-1$
     }  
-    errorMessageLabel.setText(errorMessage != null ? errorMessage : "");
+    errorMessageLabel.setText(errorMessage != null ? errorMessage : ""); //$NON-NLS-1$
 //    okButton.setEnabled(errorMessage == null);
   }
  

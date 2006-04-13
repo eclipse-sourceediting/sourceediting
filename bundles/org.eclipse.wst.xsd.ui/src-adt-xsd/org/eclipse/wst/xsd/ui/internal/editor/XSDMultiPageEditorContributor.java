@@ -124,7 +124,7 @@ public class XSDMultiPageEditorContributor extends MultiPageEditorActionBarContr
 
   public void contributeToMenu(IMenuManager manager)
   {
-    IMenuManager menu = new MenuManager("&XSD Editor");
+    IMenuManager menu = new MenuManager(Messages._UI_MENU_XSD_EDITOR);
     manager.prependToGroup(IWorkbenchActionConstants.MB_ADDITIONS, menu);
 
     // Add extension menu actions

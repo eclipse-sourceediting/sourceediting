@@ -30,6 +30,7 @@ import org.eclipse.wst.xsd.ui.internal.common.actions.SetMultiplicityAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.SetTypeAction;
 import org.eclipse.wst.xsd.ui.internal.common.commands.DeleteCommand;
 import org.eclipse.wst.xsd.ui.internal.common.commands.UpdateNameCommand;
+import org.eclipse.wst.xsd.ui.internal.editor.Messages;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.xsd.XSDComplexTypeDefinition;
 import org.eclipse.xsd.XSDElementDeclaration;
@@ -49,7 +50,7 @@ public class XSDElementDeclarationAdapter extends XSDParticleAdapter implements 
   public String getName()
   {
     String name = getXSDElementDeclaration().getResolvedElementDeclaration().getName();
-    return (name == null) ? "" : name;
+    return (name == null) ? "" : name; //$NON-NLS-1$
   }
 
   public String getTypeName()
@@ -81,11 +82,11 @@ public class XSDElementDeclarationAdapter extends XSDParticleAdapter implements 
 
     if (!xsdElementDeclaration.isElementDeclarationReference())
     {
-      return XSDEditorPlugin.getXSDImage("icons/XSDElement.gif");
+      return XSDEditorPlugin.getXSDImage("icons/XSDElement.gif"); //$NON-NLS-1$
     }
     else
     {
-      return XSDEditorPlugin.getXSDImage("icons/XSDElementRef.gif");
+      return XSDEditorPlugin.getXSDImage("icons/XSDElementRef.gif"); //$NON-NLS-1$
     }
   }
 
@@ -99,7 +100,7 @@ public class XSDElementDeclarationAdapter extends XSDParticleAdapter implements 
     StringBuffer result = new StringBuffer();
     if (name == null)
     {
-      result.append("'absent'");
+      result.append(Messages._UI_LABEL_ABSENT);
     }
     else
     {
@@ -114,13 +115,13 @@ public class XSDElementDeclarationAdapter extends XSDParticleAdapter implements 
 
       if (hasMinOccurs || hasMaxOccurs)
       {
-        result.append(" [");
+        result.append(" ["); //$NON-NLS-1$
         if (hasMinOccurs)
         {
           int min = ((XSDParticle) xsdElementDeclaration.getContainer()).getMinOccurs();
           if (min == XSDParticle.UNBOUNDED)
           {
-            result.append("*");
+            result.append("*"); //$NON-NLS-1$
           }
           else
           {
@@ -136,10 +137,10 @@ public class XSDElementDeclarationAdapter extends XSDParticleAdapter implements 
         if (hasMaxOccurs)
         {
           int max = ((XSDParticle) xsdElementDeclaration.getContainer()).getMaxOccurs();
-          result.append("..");
+          result.append(".."); //$NON-NLS-1$
           if (max == XSDParticle.UNBOUNDED)
           {
-            result.append("*");
+            result.append("*"); //$NON-NLS-1$
           }
           else
           {
@@ -149,18 +150,18 @@ public class XSDElementDeclarationAdapter extends XSDParticleAdapter implements 
         else
         // print default
         {
-          result.append("..");
+          result.append(".."); //$NON-NLS-1$
           int max = ((XSDParticle) xsdElementDeclaration.getContainer()).getMaxOccurs();
           result.append(String.valueOf(max));
 
         }
-        result.append("]");
+        result.append("]"); //$NON-NLS-1$
       }
     }
 
     if (resolvedElementDeclaration.getAnonymousTypeDefinition() == null && resolvedElementDeclaration.getTypeDefinition() != null)
     {
-      result.append(" : ");
+      result.append(" : "); //$NON-NLS-1$
       // result.append(resolvedElementDeclaration.getTypeDefinition().getQName(xsdElementDeclaration));
       result.append(resolvedElementDeclaration.getTypeDefinition().getName());
     }
@@ -205,7 +206,7 @@ public class XSDElementDeclarationAdapter extends XSDParticleAdapter implements 
   
   public String getKind()
   {
-    return "element";
+    return "element"; //$NON-NLS-1$
   }
   
   public boolean isGlobal()
@@ -232,7 +233,7 @@ public class XSDElementDeclarationAdapter extends XSDParticleAdapter implements 
 
   public Command getUpdateNameCommand(String name)
   {
-    return new UpdateNameCommand("Update Name", getXSDElementDeclaration().getResolvedElementDeclaration(), name);
+    return new UpdateNameCommand(Messages._UI_ACTION_UPDATE_NAME, getXSDElementDeclaration().getResolvedElementDeclaration(), name);
   }
 
   public Command getUpdateTypeNameCommand(String typeName, String quailifier)
@@ -244,7 +245,7 @@ public class XSDElementDeclarationAdapter extends XSDParticleAdapter implements 
   public Command getDeleteCommand()
   {
     // TODO Auto-generated method stub
-    return new DeleteCommand("", getXSDElementDeclaration());
+    return new DeleteCommand("", getXSDElementDeclaration()); //$NON-NLS-1$
   }
   
   public String[] getActions(Object object)
@@ -253,12 +254,12 @@ public class XSDElementDeclarationAdapter extends XSDParticleAdapter implements 
     if (!isGlobal())
       list.add(AddXSDElementAction.ID);
 
-    list.add(BaseSelectionAction.SUBMENU_START_ID + "Set Type");
+    list.add(BaseSelectionAction.SUBMENU_START_ID + Messages._UI_ACTION_SET_TYPE);
     list.add(SetTypeAction.SET_NEW_TYPE_ID);
     list.add(SetTypeAction.SELECT_EXISTING_TYPE_ID);
     list.add(BaseSelectionAction.SUBMENU_END_ID);
 
-    list.add(BaseSelectionAction.SUBMENU_START_ID + "Set Multiplicity");
+    list.add(BaseSelectionAction.SUBMENU_START_ID + Messages._UI_ACTION_SET_MULTIPLICITY);
     list.add(SetMultiplicityAction.REQUIRED_ID);
     list.add(SetMultiplicityAction.ZERO_OR_ONE_ID);
     list.add(SetMultiplicityAction.ZERO_OR_MORE_ID);

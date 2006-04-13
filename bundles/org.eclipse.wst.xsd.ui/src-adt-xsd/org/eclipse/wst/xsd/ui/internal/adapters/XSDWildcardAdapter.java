@@ -31,7 +31,7 @@ public class XSDWildcardAdapter extends XSDParticleAdapter implements IField
   public Image getImage()
   {
     XSDWildcard xsdWildcard = (XSDWildcard) target;
-    return XSDEditorPlugin.getXSDImage(xsdWildcard.eContainer() instanceof XSDParticle ? "icons/XSDAny.gif" : "icons/XSDAnyAttribute.gif");
+    return XSDEditorPlugin.getXSDImage(xsdWildcard.eContainer() instanceof XSDParticle ? "icons/XSDAny.gif" : "icons/XSDAnyAttribute.gif"); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   public String getText()
@@ -56,7 +56,7 @@ public class XSDWildcardAdapter extends XSDParticleAdapter implements IField
           int min = ((XSDParticle) xsdWildcard.getContainer()).getMinOccurs();
           if (min == XSDParticle.UNBOUNDED)
           {
-            result.append("*");
+            result.append("*"); //$NON-NLS-1$
           }
           else
           {
@@ -72,10 +72,10 @@ public class XSDWildcardAdapter extends XSDParticleAdapter implements IField
         if (hasMaxOccurs)
         {
           int max = ((XSDParticle) xsdWildcard.getContainer()).getMaxOccurs();
-          result.append("..");
+          result.append(".."); //$NON-NLS-1$
           if (max == XSDParticle.UNBOUNDED)
           {
-            result.append("*");
+            result.append("*"); //$NON-NLS-1$
           }
           else
           {
@@ -85,11 +85,11 @@ public class XSDWildcardAdapter extends XSDParticleAdapter implements IField
         else
         // print default
         {
-          result.append("..");
+          result.append(".."); //$NON-NLS-1$
           int max = ((XSDParticle) xsdWildcard.getContainer()).getMaxOccurs();
           result.append(String.valueOf(max));
         }
-        result.append("]");
+        result.append("]"); //$NON-NLS-1$
       }
     }
     return result.toString();
@@ -115,7 +115,7 @@ public class XSDWildcardAdapter extends XSDParticleAdapter implements IField
 
   public String getKind()
   {
-    return "element";
+    return "element"; //$NON-NLS-1$
   }
 
   public IModel getModel()
@@ -125,7 +125,7 @@ public class XSDWildcardAdapter extends XSDParticleAdapter implements IField
 
   public String getName()
   {
-    return "anyElement";
+    return "anyElement"; //$NON-NLS-1$
   }
   
   public IType getType()
@@ -135,7 +135,7 @@ public class XSDWildcardAdapter extends XSDParticleAdapter implements IField
 
   public String getTypeName()
   {
-    return "anyType";
+    return "anyType"; //$NON-NLS-1$
   }
 
   public String getTypeNameQualifier()

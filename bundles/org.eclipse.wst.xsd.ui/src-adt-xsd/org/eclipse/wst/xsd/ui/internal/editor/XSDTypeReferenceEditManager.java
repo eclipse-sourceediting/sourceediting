@@ -85,15 +85,15 @@ public class XSDTypeReferenceEditManager implements ComponentReferenceEditManage
     // for now let's hard code some values
     //
     List list = new ArrayList();
-    list.add(new ComponentSpecification(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001, "boolean", null));
-    list.add(new ComponentSpecification(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001, "date", null));
-    list.add(new ComponentSpecification(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001, "dateTime", null));    
-    list.add(new ComponentSpecification(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001, "double", null));
-    list.add(new ComponentSpecification(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001, "float", null)); 
-    list.add(new ComponentSpecification(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001, "hexBinary", null));
-    list.add(new ComponentSpecification(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001, "int", null));    
-    list.add(new ComponentSpecification(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001, "string", null));
-    list.add(new ComponentSpecification(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001, "time", null));       
+    list.add(new ComponentSpecification(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001, "boolean", null)); //$NON-NLS-1$
+    list.add(new ComponentSpecification(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001, "date", null)); //$NON-NLS-1$
+    list.add(new ComponentSpecification(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001, "dateTime", null));     //$NON-NLS-1$
+    list.add(new ComponentSpecification(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001, "double", null)); //$NON-NLS-1$
+    list.add(new ComponentSpecification(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001, "float", null));  //$NON-NLS-1$
+    list.add(new ComponentSpecification(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001, "hexBinary", null)); //$NON-NLS-1$
+    list.add(new ComponentSpecification(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001, "int", null));     //$NON-NLS-1$
+    list.add(new ComponentSpecification(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001, "string", null)); //$NON-NLS-1$
+    list.add(new ComponentSpecification(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001, "time", null));        //$NON-NLS-1$
     ComponentSpecification result[] = new ComponentSpecification[list.size()];
     list.toArray(result);
     return result;
@@ -123,14 +123,14 @@ public class XSDTypeReferenceEditManager implements ComponentReferenceEditManage
         XSDTypeDefinition td = null;
         if (component.getMetaName() == IXSDSearchConstants.COMPLEX_TYPE_META_NAME)
         {  
-          AddXSDComplexTypeDefinitionCommand command = new AddXSDComplexTypeDefinitionCommand("Add Complex Type", concreteComponent.getSchema());
+          AddXSDComplexTypeDefinitionCommand command = new AddXSDComplexTypeDefinitionCommand(Messages._UI_ACTION_ADD_COMPLEX_TYPE, concreteComponent.getSchema());
           command.setNameToAdd(component.getName());
           command.execute();
           td = command.getCreatedComplexType();
         }
         else
         {
-          AddXSDSimpleTypeDefinitionCommand command = new AddXSDSimpleTypeDefinitionCommand("Add Simple Type", concreteComponent.getSchema());
+          AddXSDSimpleTypeDefinitionCommand command = new AddXSDSimpleTypeDefinitionCommand(Messages._UI_ACTION_ADD_SIMPLE_TYPE, concreteComponent.getSchema());
           command.setNameToAdd(component.getName());
           command.execute();
           td = command.getCreatedSimpleType();

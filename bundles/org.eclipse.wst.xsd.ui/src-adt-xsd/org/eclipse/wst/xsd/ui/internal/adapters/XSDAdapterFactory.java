@@ -102,7 +102,7 @@ public class XSDAdapterFactory extends AdapterFactoryImpl
         // so we adapt it in a specialized way so that it's treated as simple type
         // that way it doesn't show up as a reference from a field
         //
-        if ("anyType".equals(object.getName()))
+        if ("anyType".equals(object.getName())) //$NON-NLS-1$
         {
           return new XSDAnyTypeDefinitionAdapter(); 
         }  

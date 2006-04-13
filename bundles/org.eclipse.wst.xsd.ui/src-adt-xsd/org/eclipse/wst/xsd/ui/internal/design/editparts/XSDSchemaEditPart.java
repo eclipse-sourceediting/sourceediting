@@ -27,7 +27,7 @@ import org.eclipse.wst.xsd.ui.internal.adapters.XSDSchemaAdapter;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.BaseEditPart;
 import org.eclipse.wst.xsd.ui.internal.adt.typeviz.design.figures.HeadingFigure;
 import org.eclipse.wst.xsd.ui.internal.design.layouts.FillLayout;
-import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
+import org.eclipse.wst.xsd.ui.internal.editor.Messages;
 import org.eclipse.xsd.XSDSchema;
 
 public class XSDSchemaEditPart extends BaseEditPart
@@ -134,9 +134,9 @@ public class XSDSchemaEditPart extends BaseEditPart
     String targetNamespaceValue = ((XSDSchema) ((XSDSchemaAdapter) getModel()).getTarget()).getTargetNamespace();
     if (targetNamespaceValue == null || targetNamespaceValue.length() == 0)
     {
-      targetNamespaceValue = XSDEditorPlugin.getXSDString("_UI_GRAPH_XSDSCHEMA_NO_NAMESPACE");
+      targetNamespaceValue = Messages._UI_GRAPH_XSDSCHEMA_NO_NAMESPACE;
     }
-    headingFigure.getLabel().setText(XSDEditorPlugin.getXSDString("_UI_GRAPH_XSDSCHEMA") + " : " + targetNamespaceValue);
+    headingFigure.getLabel().setText(Messages._UI_GRAPH_XSDSCHEMA + " : " + targetNamespaceValue);  //$NON-NLS-1$  
   }
 
   protected void createEditPolicies()

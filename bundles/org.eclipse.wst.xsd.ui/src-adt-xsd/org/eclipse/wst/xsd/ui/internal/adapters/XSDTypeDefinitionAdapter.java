@@ -36,7 +36,7 @@ public abstract class XSDTypeDefinitionAdapter extends XSDBaseAdapter implements
       if (o instanceof XSDNamedComponent)
       {
          XSDNamedComponent ed = (XSDNamedComponent)o;
-         return "(" + ed.getName() + "Type)";               
+         return "(" + ed.getName() + "Type)";                //$NON-NLS-1$ //$NON-NLS-2$
       }
     }
     return null;

@@ -45,6 +45,7 @@ import org.eclipse.wst.xsd.ui.internal.common.commands.DeleteCommand;
 import org.eclipse.wst.xsd.ui.internal.common.commands.UpdateNameCommand;
 import org.eclipse.wst.xsd.ui.internal.design.editparts.model.SpaceFiller;
 import org.eclipse.wst.xsd.ui.internal.design.editparts.model.TargetConnectionSpaceFiller;
+import org.eclipse.wst.xsd.ui.internal.editor.Messages;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.xsd.XSDAttributeGroupContent;
 import org.eclipse.xsd.XSDAttributeGroupDefinition;
@@ -74,7 +75,7 @@ public class XSDComplexTypeDefinitionAdapter extends XSDTypeDefinitionAdapter im
 
     // test to filter out the 'anyType' type ... don't want to see that
     //
-    if (td != null && !td.getName().equals("anyType"))
+    if (td != null && !td.getName().equals("anyType")) //$NON-NLS-1$
     {
       return (IType) XSDAdapterFactory.getInstance().adapt(td);
     }
@@ -150,7 +151,7 @@ public class XSDComplexTypeDefinitionAdapter extends XSDTypeDefinitionAdapter im
             attrGroup = attrGroup.getResolvedAttributeGroupDefinition();
             if (attrGroup.getContents().size() == 0)
             {
-              concreteComponentList.add(new SpaceFiller("attribute"));
+              concreteComponentList.add(new SpaceFiller("attribute")); //$NON-NLS-1$
             }
             visitAttributeGroupDefinition(attrGroup);
           }
@@ -163,7 +164,7 @@ public class XSDComplexTypeDefinitionAdapter extends XSDTypeDefinitionAdapter im
       int numOfChildren = modelGroup.getContents().size();
       if (numOfChildren == 0)
       {
-        concreteComponentList.add(new SpaceFiller("element"));
+        concreteComponentList.add(new SpaceFiller("element")); //$NON-NLS-1$
       }
       super.visitModelGroup(modelGroup);
     }
@@ -214,17 +215,17 @@ public class XSDComplexTypeDefinitionAdapter extends XSDTypeDefinitionAdapter im
 
   public Command getUpdateNameCommand(String newName)
   {
-    return new UpdateNameCommand("Update Name", getXSDComplexTypeDefinition(), newName);
+    return new UpdateNameCommand(Messages._UI_ACTION_UPDATE_NAME, getXSDComplexTypeDefinition(), newName);
   }
 
   public Command getAddNewFieldCommand(String fieldKind)
   {
-    return new AddXSDElementCommand("whyDoWeUseThisLabel?", getXSDComplexTypeDefinition());
+    return new AddXSDElementCommand(Messages._UI_ACTION_ADD_FIELD, getXSDComplexTypeDefinition());
   }
 
   public Command getDeleteCommand()
   {
-    return new DeleteCommand("", getXSDComplexTypeDefinition());
+    return new DeleteCommand("", getXSDComplexTypeDefinition()); //$NON-NLS-1$
   }
 
   protected class AddNewFieldCommand extends Command
@@ -358,7 +359,7 @@ public class XSDComplexTypeDefinitionAdapter extends XSDTypeDefinitionAdapter im
 
   public Image getImage()
   {
-    return XSDEditorPlugin.getXSDImage("icons/XSDComplexType.gif");
+    return XSDEditorPlugin.getXSDImage("icons/XSDComplexType.gif"); //$NON-NLS-1$
   }
 
   public String getText()
@@ -367,12 +368,12 @@ public class XSDComplexTypeDefinitionAdapter extends XSDTypeDefinitionAdapter im
 
     StringBuffer result = new StringBuffer();
 
-    result.append(xsdComplexTypeDefinition.getName() == null ? "local type" : xsdComplexTypeDefinition.getName());
+    result.append(xsdComplexTypeDefinition.getName() == null ? "local type" : xsdComplexTypeDefinition.getName()); //$NON-NLS-1$
 
     XSDTypeDefinition baseTypeDefinition = xsdComplexTypeDefinition.getBaseTypeDefinition();
     if (baseTypeDefinition != null && baseTypeDefinition != xsdComplexTypeDefinition.getContent() && baseTypeDefinition.getName() != null && !XSDConstants.isURType(baseTypeDefinition))
     {
-      result.append(" : ");
+      result.append(" : "); //$NON-NLS-1$
       result.append(baseTypeDefinition.getQName(xsdComplexTypeDefinition));
     }
 

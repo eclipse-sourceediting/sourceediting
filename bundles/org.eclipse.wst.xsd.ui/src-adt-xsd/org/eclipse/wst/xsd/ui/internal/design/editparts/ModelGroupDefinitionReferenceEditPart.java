@@ -26,7 +26,7 @@ import org.eclipse.xsd.XSDModelGroupDefinition;
 
 public class ModelGroupDefinitionReferenceEditPart extends ConnectableEditPart
 {
-  public static final Image image = XSDEditorPlugin.getImageDescriptor("grref_obj.gif", true).createImage();
+  public static final Image image = XSDEditorPlugin.getImageDescriptor("grref_obj.gif", true).createImage(); //$NON-NLS-1$
 
   public ModelGroupDefinitionReferenceEditPart()
   {

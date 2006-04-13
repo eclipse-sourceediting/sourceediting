@@ -60,9 +60,9 @@ public class XSDFileEditorInput extends FileEditorInput
     {
       String ns = schema.getTargetNamespace();
       if (ns != null && ns.length() > 0)
-        return "Target Namespace: " + ns;
+        return Messages._UI_LABEL_TARGET_NAMESPACE + ns;
       else
-        return "No Namespace";
+        return Messages._UI_LABEL_NO_NAMESPACE;
     }
     return super.getToolTipText();
   }

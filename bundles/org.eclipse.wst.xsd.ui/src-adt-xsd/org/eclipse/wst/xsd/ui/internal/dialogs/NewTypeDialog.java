@@ -23,6 +23,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.wst.common.ui.internal.search.dialogs.ComponentSpecification;
 import org.eclipse.wst.xsd.ui.internal.adt.edit.IComponentDialog;
+import org.eclipse.wst.xsd.ui.internal.editor.Messages;
 import org.eclipse.wst.xsd.ui.internal.search.IXSDSearchConstants;
 
 public class NewTypeDialog extends NewComponentDialog implements IComponentDialog
@@ -35,7 +36,7 @@ public class NewTypeDialog extends NewComponentDialog implements IComponentDialo
 
   public NewTypeDialog()
   {
-    super(Display.getCurrent().getActiveShell(), "New Type", "NewType");    
+    super(Display.getCurrent().getActiveShell(), Messages._UI_LABEL_NEW_TYPE, "NewType");     //$NON-NLS-1$
   }
   
   public int createAndOpen()
@@ -67,10 +68,10 @@ public class NewTypeDialog extends NewComponentDialog implements IComponentDialo
   protected void createHeaderContent(Composite parent)
   {
     final Button complexTypeButton = new Button(parent, SWT.RADIO);
-    complexTypeButton.setText("Complex Type");
+    complexTypeButton.setText(Messages._UI_LABEL_COMPLEX_TYPE);
     
     final Button simpleTypeButton = new Button(parent, SWT.RADIO);
-    simpleTypeButton.setText("Simple Type");
+    simpleTypeButton.setText(Messages._UI_LABEL_SIMPLE_TYPE);
 
     SelectionAdapter listener = new SelectionAdapter()
     {

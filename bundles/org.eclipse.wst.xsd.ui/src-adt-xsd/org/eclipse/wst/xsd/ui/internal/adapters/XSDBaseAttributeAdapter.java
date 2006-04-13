@@ -25,6 +25,7 @@ import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDAttributeDeclaration
 import org.eclipse.wst.xsd.ui.internal.common.actions.DeleteXSDConcreteComponentAction;
 import org.eclipse.wst.xsd.ui.internal.common.commands.DeleteCommand;
 import org.eclipse.wst.xsd.ui.internal.common.commands.UpdateNameCommand;
+import org.eclipse.wst.xsd.ui.internal.editor.Messages;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.xsd.XSDAttributeDeclaration;
 import org.eclipse.xsd.XSDTypeDefinition;
@@ -55,12 +56,12 @@ public abstract class XSDBaseAttributeAdapter extends XSDBaseAdapter implements 
 
   public Command getDeleteCommand()
   {
-    return new DeleteCommand("", getXSDAttributeDeclaration());
+    return new DeleteCommand("", getXSDAttributeDeclaration()); //$NON-NLS-1$
   }
 
   public String getKind()
   {
-    return "attribute";
+    return "attribute"; //$NON-NLS-1$
   }
 
   public int getMaxOccurs()
@@ -79,7 +80,7 @@ public abstract class XSDBaseAttributeAdapter extends XSDBaseAdapter implements 
   {
     XSDAttributeDeclaration resolvedAttributeDeclaration = getResolvedXSDAttributeDeclaration();
     String name = resolvedAttributeDeclaration.getName();
-    return (name == null) ? "" : name;
+    return (name == null) ? "" : name; //$NON-NLS-1$
   }
 
   public IType getType()
@@ -91,7 +92,7 @@ public abstract class XSDBaseAttributeAdapter extends XSDBaseAdapter implements 
   public String getTypeName()
   {
     XSDTypeDefinition td = getResolvedXSDAttributeDeclaration().getTypeDefinition();
-    return (td != null) ? td.getName() : "(no type defined)";
+    return (td != null) ? td.getName() : Messages._UI_NO_TYPE_DEFINED;
   }
 
   public String getTypeNameQualifier()
@@ -114,7 +115,7 @@ public abstract class XSDBaseAttributeAdapter extends XSDBaseAdapter implements 
 
   public Command getUpdateNameCommand(String name)
   {
-    return new UpdateNameCommand("Update Name", getResolvedXSDAttributeDeclaration(), name);
+    return new UpdateNameCommand(Messages._UI_ACTION_UPDATE_NAME, getResolvedXSDAttributeDeclaration(), name);
   }
 
   public Command getUpdateTypeNameCommand(String typeName, String quailifier)
@@ -133,11 +134,11 @@ public abstract class XSDBaseAttributeAdapter extends XSDBaseAdapter implements 
     XSDAttributeDeclaration xsdAttributeDeclaration = getXSDAttributeDeclaration();  // don't want the resolved attribute
     if (xsdAttributeDeclaration.isAttributeDeclarationReference())
     {
-      return XSDEditorPlugin.getXSDImage("icons/XSDAttributeRef.gif");
+      return XSDEditorPlugin.getXSDImage("icons/XSDAttributeRef.gif"); //$NON-NLS-1$
     }
     else
     {
-      return XSDEditorPlugin.getXSDImage("icons/XSDAttribute.gif");
+      return XSDEditorPlugin.getXSDImage("icons/XSDAttribute.gif"); //$NON-NLS-1$
     }
   }
 
@@ -158,7 +159,7 @@ public abstract class XSDBaseAttributeAdapter extends XSDBaseAdapter implements 
     StringBuffer result = new StringBuffer();
     if (name == null)
     {
-      result.append("'absent'");
+      result.append(" " + Messages._UI_LABEL_ABSENT + " ");  //$NON-NLS-1$ //$NON-NLS-2$
     }
     else
     {
@@ -166,7 +167,7 @@ public abstract class XSDBaseAttributeAdapter extends XSDBaseAdapter implements 
     }
     if (ad.getAnonymousTypeDefinition() == null && ad.getTypeDefinition() != null)
     {
-      result.append(" : ");
+      result.append(" : "); //$NON-NLS-1$
       // result.append(resolvedAttributeDeclaration.getTypeDefinition().getQName(xsdAttributeDeclaration));
       result.append(ad.getTypeDefinition().getName());
     }

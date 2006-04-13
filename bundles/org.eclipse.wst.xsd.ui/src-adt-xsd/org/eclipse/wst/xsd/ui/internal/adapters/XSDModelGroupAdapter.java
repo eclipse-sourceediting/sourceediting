@@ -25,6 +25,7 @@ import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDModelGroupAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDModelGroupDefinitionAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.DeleteXSDConcreteComponentAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.SetMultiplicityAction;
+import org.eclipse.wst.xsd.ui.internal.editor.Messages;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.xsd.XSDCompositor;
 import org.eclipse.xsd.XSDElementDeclaration;
@@ -39,9 +40,9 @@ import org.w3c.dom.Element;
 public class XSDModelGroupAdapter extends XSDParticleAdapter implements IActionProvider
 {
   // TODO: common these up with ModelGroupFigure's
-  public static final Image SEQUENCE_ICON_IMAGE = XSDEditorPlugin.getImageDescriptor("seq_obj.gif", true).createImage();
-  public static final Image CHOICE_ICON_IMAGE = XSDEditorPlugin.getImageDescriptor("choice_obj.gif", true).createImage();
-  public static final Image ALL_ICON_IMAGE = XSDEditorPlugin.getImageDescriptor("all_obj.gif", true).createImage();
+  public static final Image SEQUENCE_ICON_IMAGE = XSDEditorPlugin.getImageDescriptor("seq_obj.gif", true).createImage(); //$NON-NLS-1$
+  public static final Image CHOICE_ICON_IMAGE = XSDEditorPlugin.getImageDescriptor("choice_obj.gif", true).createImage(); //$NON-NLS-1$
+  public static final Image ALL_ICON_IMAGE = XSDEditorPlugin.getImageDescriptor("all_obj.gif", true).createImage(); //$NON-NLS-1$
 
   XSDModelGroup getXSDModelGroup()
   {
@@ -100,13 +101,13 @@ public class XSDModelGroupAdapter extends XSDParticleAdapter implements IActionP
 
       if (hasMinOccurs || hasMaxOccurs)
       {
-        result.append(" [");
+        result.append(" ["); //$NON-NLS-1$
         if (hasMinOccurs)
         {
           int min = ((XSDParticle) xsdModelGroup.getContainer()).getMinOccurs();
           if (min == XSDParticle.UNBOUNDED)
           {
-            result.append("*");
+            result.append("*"); //$NON-NLS-1$
           }
           else
           {
@@ -122,10 +123,10 @@ public class XSDModelGroupAdapter extends XSDParticleAdapter implements IActionP
         if (hasMaxOccurs)
         {
           int max = ((XSDParticle) xsdModelGroup.getContainer()).getMaxOccurs();
-          result.append("..");
+          result.append(".."); //$NON-NLS-1$
           if (max == XSDParticle.UNBOUNDED)
           {
-            result.append("*");
+            result.append("*"); //$NON-NLS-1$
           }
           else
           {
@@ -135,11 +136,11 @@ public class XSDModelGroupAdapter extends XSDParticleAdapter implements IActionP
         else
         // print default
         {
-          result.append("..");
+          result.append(".."); //$NON-NLS-1$
           int max = ((XSDParticle) xsdModelGroup.getContainer()).getMaxOccurs();
           result.append(String.valueOf(max));
         }
-        result.append("]");
+        result.append("]"); //$NON-NLS-1$
       }
     }
     return result.toString();
@@ -197,7 +198,7 @@ public class XSDModelGroupAdapter extends XSDParticleAdapter implements IActionP
      actionIDs.add(BaseSelectionAction.SEPARATOR_ID);
      // Add Any
 
-     actionIDs.add(BaseSelectionAction.SUBMENU_START_ID + "Set Multiplicity");
+     actionIDs.add(BaseSelectionAction.SUBMENU_START_ID + Messages._UI_ACTION_SET_MULTIPLICITY);
      actionIDs.add(SetMultiplicityAction.REQUIRED_ID);
      actionIDs.add(SetMultiplicityAction.ZERO_OR_ONE_ID);
      actionIDs.add(SetMultiplicityAction.ZERO_OR_MORE_ID);

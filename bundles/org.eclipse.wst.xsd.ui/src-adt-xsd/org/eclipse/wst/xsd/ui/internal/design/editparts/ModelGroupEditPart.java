@@ -62,7 +62,7 @@ public class ModelGroupEditPart extends ConnectableEditPart
   
   protected void refreshVisuals()
   {
-    String iconName = "icons/newSequence.gif";
+    String iconName = "icons/newSequence.gif"; //$NON-NLS-1$
     GenericGroupFigure modelGroupFigure = (GenericGroupFigure)getFigure();
     switch (getXSDModelGroup().getCompositor().getValue())
     {
@@ -92,33 +92,33 @@ public class ModelGroupEditPart extends ConnectableEditPart
     // -2 means the user didn't specify (so the default is 1)
     int minOccurs = adapter.getMinOccurs();
     int maxOccurs = adapter.getMaxOccurs();
-    String occurenceDescription = "";
+    String occurenceDescription = ""; //$NON-NLS-1$
     
     if (minOccurs == -3 && maxOccurs == -3)
     {
-      occurenceDescription = "";
+      occurenceDescription = ""; //$NON-NLS-1$
     }
     else if (minOccurs == 0 && (maxOccurs == -2 || maxOccurs == 1))
     {
-      occurenceDescription = "[0..1]";
+      occurenceDescription = "[0..1]"; //$NON-NLS-1$
     }
     else if ((minOccurs == 1 && maxOccurs == 1) ||
              (minOccurs == -2 && maxOccurs == 1) ||
              (minOccurs == 1 && maxOccurs == -2))
     {
-      occurenceDescription = "[1..1]";
+      occurenceDescription = "[1..1]"; //$NON-NLS-1$
     }
     else if (minOccurs == -2 && maxOccurs == -2)
     {
-      occurenceDescription = "";
+      occurenceDescription = ""; //$NON-NLS-1$
     }
     else
     {
       if (maxOccurs == -2) maxOccurs = 1;
-      String maxSymbol = maxOccurs == -1 ? "*" : "" + maxOccurs;
+      String maxSymbol = maxOccurs == -1 ? "*" : "" + maxOccurs; //$NON-NLS-1$ //$NON-NLS-2$
       
-      String minSymbol = minOccurs == -2 ? "1" : "" + minOccurs;
-      occurenceDescription = "[" + minSymbol + ".." + maxSymbol + "]";
+      String minSymbol = minOccurs == -2 ? "1" : "" + minOccurs; //$NON-NLS-1$ //$NON-NLS-2$
+      occurenceDescription = "[" + minSymbol + ".." + maxSymbol + "]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
 
     modelGroupFigure.getIconFigure().setToolTipText(occurenceDescription);

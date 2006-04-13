@@ -26,6 +26,7 @@ import org.eclipse.wst.xsd.ui.internal.adt.facade.IModel;
 import org.eclipse.wst.xsd.ui.internal.adt.outline.ITreeElement;
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDComplexTypeDefinitionAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDElementAction;
+import org.eclipse.wst.xsd.ui.internal.editor.Messages;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.xsd.XSDAttributeDeclaration;
 import org.eclipse.xsd.XSDAttributeGroupDefinition;
@@ -38,6 +39,7 @@ import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDSchemaDirective;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.eclipse.xsd.XSDTypeDefinition;
+import org.eclipse.xsd.util.XSDConstants;
 
 public class XSDSchemaAdapter extends XSDBaseAdapter implements IActionProvider, IModel, IADTObjectListener
 {
@@ -64,19 +66,19 @@ public class XSDSchemaAdapter extends XSDBaseAdapter implements IActionProvider,
     List types = getComplexTypes(xsdSchema);
     types.addAll(getSimpleTypes(xsdSchema));
 
-    fDirectivesCategory = new CategoryAdapter(XSDEditorPlugin.getResourceString("_UI_GRAPH_DIRECTIVES"), XSDEditorPlugin.getDefault().getIconImage("obj16/directivesheader"), directivesList, xsdSchema, CategoryAdapter.DIRECTIVES);
+    fDirectivesCategory = new CategoryAdapter(Messages._UI_GRAPH_DIRECTIVES, XSDEditorPlugin.getDefault().getIconImage("obj16/directivesheader"), directivesList, xsdSchema, CategoryAdapter.DIRECTIVES); //$NON-NLS-1$
     registerListener(fDirectivesCategory);
 
-    fElementsCategory = new CategoryAdapter(XSDEditorPlugin.getResourceString("_UI_GRAPH_ELEMENTS"), XSDEditorPlugin.getDefault().getIconImage("obj16/elementsheader"), elementsList, xsdSchema, CategoryAdapter.ELEMENTS);
+    fElementsCategory = new CategoryAdapter(Messages._UI_GRAPH_ELEMENTS, XSDEditorPlugin.getDefault().getIconImage("obj16/elementsheader"), elementsList, xsdSchema, CategoryAdapter.ELEMENTS);  //$NON-NLS-1$
     registerListener(fElementsCategory);
 
-    fAttributesCategory = new CategoryAdapter(XSDEditorPlugin.getResourceString("_UI_GRAPH_ATTRIBUTES"), XSDEditorPlugin.getDefault().getIconImage("obj16/attributesheader"), attributesList, xsdSchema, CategoryAdapter.ATTRIBUTES);
+    fAttributesCategory = new CategoryAdapter(Messages._UI_GRAPH_ATTRIBUTES, XSDEditorPlugin.getDefault().getIconImage("obj16/attributesheader"), attributesList, xsdSchema, CategoryAdapter.ATTRIBUTES);   //$NON-NLS-1$
     registerListener(fAttributesCategory);
 
-    fTypesCategory = new CategoryAdapter(XSDEditorPlugin.getResourceString("_UI_GRAPH_TYPES"), XSDEditorPlugin.getDefault().getIconImage("obj16/typesheader"), types, xsdSchema, CategoryAdapter.TYPES);
+    fTypesCategory = new CategoryAdapter(Messages._UI_GRAPH_TYPES, XSDEditorPlugin.getDefault().getIconImage("obj16/typesheader"), types, xsdSchema, CategoryAdapter.TYPES);  //$NON-NLS-1$
     registerListener(fTypesCategory);
 
-    fGroupsCategory = new CategoryAdapter(XSDEditorPlugin.getResourceString("_UI_GRAPH_GROUPS"), XSDEditorPlugin.getDefault().getIconImage("obj16/groupsheader"), groups, xsdSchema, CategoryAdapter.GROUPS);
+    fGroupsCategory = new CategoryAdapter(Messages._UI_GRAPH_GROUPS, XSDEditorPlugin.getDefault().getIconImage("obj16/groupsheader"), groups, xsdSchema, CategoryAdapter.GROUPS); //$NON-NLS-1$
     registerListener(fGroupsCategory);
   }
 
@@ -344,7 +346,7 @@ public class XSDSchemaAdapter extends XSDBaseAdapter implements IActionProvider,
         {
           if (attr.getTargetNamespace() != null)
           {
-            if (!(attr.getTargetNamespace().equals("http://www.w3.org/2001/XMLSchema-instance")))
+            if (!(attr.getTargetNamespace().equals(XSDConstants.SCHEMA_INSTANCE_URI_2001)))
             {
 //              if (attr.getRootContainer() == xsdSchema)
               {

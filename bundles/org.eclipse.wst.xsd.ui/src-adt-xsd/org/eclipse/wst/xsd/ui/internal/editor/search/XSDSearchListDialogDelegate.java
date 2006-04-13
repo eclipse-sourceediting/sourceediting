@@ -25,14 +25,15 @@ import org.eclipse.wst.common.ui.internal.search.dialogs.ScopedComponentSearchLi
 import org.eclipse.wst.xsd.ui.internal.adt.edit.IComponentDialog;
 import org.eclipse.wst.xsd.ui.internal.dialogs.NewElementButtonHandler;
 import org.eclipse.wst.xsd.ui.internal.dialogs.NewTypeButtonHandler;
+import org.eclipse.wst.xsd.ui.internal.editor.Messages;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.util.XSDConstants;
 
 public class XSDSearchListDialogDelegate implements IComponentDialog
 {
-  public final static QualifiedName TYPE_META_NAME = new QualifiedName(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001, "type");
-  public final static QualifiedName ELEMENT_META_NAME = new QualifiedName(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001, "element");
+  public final static QualifiedName TYPE_META_NAME = new QualifiedName(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001, "type"); //$NON-NLS-1$
+  public final static QualifiedName ELEMENT_META_NAME = new QualifiedName(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001, "element"); //$NON-NLS-1$
   // protected Object setObject;
   protected ComponentSpecification selection;
   protected IFile currentFile;
@@ -70,11 +71,11 @@ public class XSDSearchListDialogDelegate implements IComponentDialog
     	
         configuration.setDescriptionProvider(descriptionProvider);
         configuration.setSearchListProvider(searchListProvider);
-        configuration.setFilterLabelText("Name (? = any character, * = any string):");
-        configuration.setListLabelText("Elements:");
+        configuration.setFilterLabelText(Messages._UI_LABEL_NAME_SEARCH_FILTER_TEXT);
+        configuration.setListLabelText(Messages._UI_LABEL_ELEMENTS_COLON);
         configuration.setNewComponentHandler(new NewElementButtonHandler());
         //TODO externalize string
-        dialog = new ScopedComponentSearchListDialog(shell, "Set element reference", configuration);
+        dialog = new ScopedComponentSearchListDialog(shell, Messages._UI_LABEL_SET_ELEMENT_REFERENCE, configuration);
     }
     else if (metaName == TYPE_META_NAME)
     {
@@ -85,9 +86,9 @@ public class XSDSearchListDialogDelegate implements IComponentDialog
       configuration.setDescriptionProvider(descriptionProvider);
       configuration.setSearchListProvider(searchListProvider);
       configuration.setNewComponentHandler(new NewTypeButtonHandler());
-      configuration.setFilterLabelText("Name (? = any character, * = any string):");
-      configuration.setListLabelText("Types:");
-      dialog = new ScopedComponentSearchListDialog(shell, XSDEditorPlugin.getXSDString("_UI_LABEL_SET_TYPE"), configuration);
+      configuration.setFilterLabelText(Messages._UI_LABEL_NAME_SEARCH_FILTER_TEXT);
+      configuration.setListLabelText(Messages._UI_LABEL_TYPES_COLON);
+      dialog = new ScopedComponentSearchListDialog(shell, Messages._UI_LABEL_SET_TYPE, configuration); //$NON-NLS-1$
     }
     
     if (dialog != null)

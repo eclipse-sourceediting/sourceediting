@@ -42,7 +42,7 @@ public class XSDBaseFieldEditPart extends BaseFieldEditPart
     figure.getTypeLabel().setText(field.getTypeName());
     figure.refreshVisuals(getModel());
 
-    String occurrenceDescription = "";
+    String occurrenceDescription = ""; //$NON-NLS-1$
     if (field instanceof IAnnotationProvider)
     {
       occurrenceDescription = ((IAnnotationProvider)field).getNameAnnotationString();

@@ -144,7 +144,7 @@ public class CreateElementAction extends Action
   public Element createAndAddNewChildElement()
   {
     String prefix = parentNode.getPrefix();
-    prefix = (prefix == null) ? "" : (prefix + ":");
+    prefix = (prefix == null) ? "" : (prefix + ":"); //$NON-NLS-1$ //$NON-NLS-2$
     Element childNode = getDocument().createElementNS(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001, prefix + elementTag);
     if (getAttributes() != null)
     {
@@ -166,12 +166,12 @@ public class CreateElementAction extends Action
     
     if (isGlobal && getRelativeNode() == null)
     {
-      Text textNode = getDocument().createTextNode("\n\n");
+      Text textNode = getDocument().createTextNode("\n\n"); //$NON-NLS-1$
       parentNode.appendChild(textNode);
     }
     else if (isGlobal && getRelativeNode() != null)
     {
-      Text textNode = getDocument().createTextNode("\n\n");
+      Text textNode = getDocument().createTextNode("\n\n"); //$NON-NLS-1$
       parentNode.insertBefore(textNode, getRelativeNode());
     }
 

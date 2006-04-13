@@ -47,7 +47,7 @@ public class XSDSimpleTypeEditPart extends BaseTypeConnectingEditPart
     ToolbarLayout toolbarLayout = new ToolbarLayout();
     toolbarLayout.setStretchMinorAxis(true);
     figure.setLayoutManager(toolbarLayout);
-    figure.getHeadingFigure().getLabel().setIcon(XSDEditorPlugin.getXSDImage("icons/XSDSimpleType.gif"));
+    figure.getHeadingFigure().getLabel().setIcon(XSDEditorPlugin.getXSDImage("icons/XSDSimpleType.gif")); //$NON-NLS-1$
     return figure;
   }
   
