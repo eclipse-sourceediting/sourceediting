@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<templates>
-<template name="%Templates.newcss.name" description="%Templates.newcss.desc" id="org.eclipse.wst.css.ui.internal.templates.newcss" context="css_new" enabled="true">@CHARSET "${encoding}";</template>
-</templates>
