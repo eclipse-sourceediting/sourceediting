@@ -45,7 +45,7 @@
          fullBuild="true"
          incremental="true">
 			</run>
-        <markerId markerIdValue="org.eclipse.xsd.diagnostic"/>
+       <!-- <markerId markerIdValue="org.eclipse.xsd.diagnostic"/>-->
 		</validator>
 	</extension>
 
