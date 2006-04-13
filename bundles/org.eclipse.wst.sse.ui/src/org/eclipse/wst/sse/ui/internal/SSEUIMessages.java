@@ -204,6 +204,7 @@ public class SSEUIMessages extends NLS {
 	public static String StructuredTextEditorPreferencePage_30;
 	public static String StructuredTextEditorPreferencePage_37;
 	public static String StructuredTextEditorPreferencePage_38;
+	public static String StructuredTextEditorPreferencePage_40;
 	public static String TaskTagPreferenceTab_0;
 	public static String TaskTagPreferenceTab_1;
 	public static String TaskTagPreferenceTab_2;

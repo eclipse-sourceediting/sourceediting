@@ -43,6 +43,8 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.dialogs.PreferenceLinkArea;
+import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.editor.IHelpContextIds;
@@ -151,6 +153,12 @@ public class StructuredTextEditorPreferencePage extends PreferencePage implement
 
 		label = SSEUIMessages.StructuredTextEditorPreferencePage_30; //$NON-NLS-1$
 		addCheckBox(appearanceComposite, label, CommonEditorPreferenceNames.EVALUATE_TEMPORARY_PROBLEMS, 0);
+		
+		PreferenceLinkArea contentTypeArea = new PreferenceLinkArea(appearanceComposite, SWT.NONE, "ValidationPreferencePage", SSEUIMessages.StructuredTextEditorPreferencePage_40, (IWorkbenchPreferenceContainer) getContainer(), null); //$NON-NLS-1$
+
+		GridData data = new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL);
+		data.horizontalIndent = 20;
+		contentTypeArea.getControl().setLayoutData(data);
 		
 		label = SSEUIMessages.StructuredTextEditorPreferencePage_39;
 		addCheckBox(appearanceComposite, label, EditorPreferenceNames.SHOW_UNKNOWN_CONTENT_TYPE_MSG, 0);

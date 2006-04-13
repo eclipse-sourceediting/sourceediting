@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.ui.internal.reconcile.validator;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -20,6 +21,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.content.IContentTypeManager;
@@ -29,11 +35,17 @@ import org.eclipse.jface.text.reconciler.DirtyRegion;
 import org.eclipse.jface.text.reconciler.IReconcileResult;
 import org.eclipse.jface.text.reconciler.IReconcileStep;
 import org.eclipse.jface.text.source.ISourceViewer;
+import org.eclipse.wst.sse.core.StructuredModelManager;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.ui.internal.IReleasable;
+import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.reconcile.DocumentAdapter;
 import org.eclipse.wst.sse.ui.internal.reconcile.ReconcileAnnotationKey;
 import org.eclipse.wst.sse.ui.internal.reconcile.StructuredTextReconcilingStrategy;
 import org.eclipse.wst.sse.ui.internal.reconcile.TemporaryAnnotation;
+import org.eclipse.wst.validation.internal.ConfigurationManager;
+import org.eclipse.wst.validation.internal.ProjectConfiguration;
+import org.eclipse.wst.validation.internal.ValidationRegistryReader;
 import org.eclipse.wst.validation.internal.provisional.core.IValidator;
 
 
@@ -50,6 +62,7 @@ public class ValidatorStrategy extends StructuredTextReconcilingStrategy {
 	private List fMetaData = null;
 	/** validator id (as declared in ext point) -> ReconcileStepForValidator * */
 	private HashMap fVidToVStepMap = null;
+	private ProjectConfiguration fProjectConfiguration = null;
 
 	/*
 	 * List of ValidatorMetaDatas of total scope validators that have been run
@@ -164,29 +177,35 @@ public class ValidatorStrategy extends StructuredTextReconcilingStrategy {
 		for (int i = 0; i < fMetaData.size() && !isCanceled(); i++) {
 			vmd = (ValidatorMetaData) fMetaData.get(i);
 			if (vmd.canHandlePartitionType(getContentTypeIds(), partitionType)) {
-				int validatorScope = vmd.getValidatorScope();
-				ReconcileStepForValidator validatorStep = null;
-				// get step for partition type
-				Object o = fVidToVStepMap.get(vmd.getValidatorId());
-				if (o != null) {
-					validatorStep = (ReconcileStepForValidator) o;
-				}
-				else {
-					// if doesn't exist, create one
-					IValidator validator = vmd.createValidator();
+				/*
+				 * Check if validator is enabled according to validation
+				 * preferences before attempting to create/use it
+				 */
+				if (isValidatorEnabled(vmd)) {
+					int validatorScope = vmd.getValidatorScope();
+					ReconcileStepForValidator validatorStep = null;
+					// get step for partition type
+					Object o = fVidToVStepMap.get(vmd.getValidatorId());
+					if (o != null) {
+						validatorStep = (ReconcileStepForValidator) o;
+					}
+					else {
+						// if doesn't exist, create one
+						IValidator validator = vmd.createValidator();
 
-					validatorStep = new ReconcileStepForValidator(validator, validatorScope);
-					validatorStep.setInputModel(new DocumentAdapter(doc));
+						validatorStep = new ReconcileStepForValidator(validator, validatorScope);
+						validatorStep.setInputModel(new DocumentAdapter(doc));
 
-					fVidToVStepMap.put(vmd.getValidatorId(), validatorStep);
-				}
+						fVidToVStepMap.put(vmd.getValidatorId(), validatorStep);
+					}
 
-				if (!fTotalScopeValidatorsAlreadyRun.contains(vmd)) {
-					annotationsToAdd.addAll(Arrays.asList(validatorStep.reconcile(dr, dr)));
+					if (!fTotalScopeValidatorsAlreadyRun.contains(vmd)) {
+						annotationsToAdd.addAll(Arrays.asList(validatorStep.reconcile(dr, dr)));
 
-					if (validatorScope == ReconcileAnnotationKey.TOTAL) {
-						// mark this validator as "run"
-						fTotalScopeValidatorsAlreadyRun.add(vmd);
+						if (validatorScope == ReconcileAnnotationKey.TOTAL) {
+							// mark this validator as "run"
+							fTotalScopeValidatorsAlreadyRun.add(vmd);
+						}
 					}
 				}
 			}
@@ -223,5 +242,76 @@ public class ValidatorStrategy extends StructuredTextReconcilingStrategy {
 			step = (IReconcileStep) it.next();
 			step.setInputModel(new DocumentAdapter(document));
 		}
+	}
+
+	/**
+	 * Checks if validator is enabled according to Validation preferences
+	 * 
+	 * @param vmd
+	 * @return
+	 */
+	private boolean isValidatorEnabled(ValidatorMetaData vmd) {
+		boolean enabled = false;
+		ProjectConfiguration configuration = getProjectConfiguration();
+		org.eclipse.wst.validation.internal.ValidatorMetaData metadata = ValidationRegistryReader.getReader().getValidatorMetaData(vmd.getValidatorClass());
+		if (configuration != null && metadata != null) {
+			if (configuration.isBuildEnabled(metadata) || configuration.isManualEnabled(metadata))
+				enabled = true;
+		}
+		return enabled;
+	}
+
+	/**
+	 * Gets current validation project configuration based on current project
+	 * (which is based on current document)
+	 * 
+	 * @return ProjectConfiguration
+	 */
+	private ProjectConfiguration getProjectConfiguration() {
+		if (fProjectConfiguration == null) {
+			IFile file = getFile();
+			if (file != null) {
+				IProject project = file.getProject();
+				if (project != null) {
+					try {
+						fProjectConfiguration = ConfigurationManager.getManager().getProjectConfiguration(project);
+					}
+					catch (InvocationTargetException e) {
+						Logger.log(Logger.WARNING_DEBUG, e.getMessage(), e);
+					}
+				}
+			}
+		}
+
+		return fProjectConfiguration;
+	}
+
+	/**
+	 * Gets IFile from current document
+	 * 
+	 * @return IFile
+	 */
+	private IFile getFile() {
+		IStructuredModel model = null;
+		IFile file = null;
+		try {
+			model = StructuredModelManager.getModelManager().getExistingModelForRead(getDocument());
+			if (model != null) {
+				String baseLocation = model.getBaseLocation();
+				// The baseLocation may be a path on disk or relative to the
+				// workspace root. Don't translate on-disk paths to
+				// in-workspace resources.
+				IPath basePath = new Path(baseLocation);
+				if (basePath.segmentCount() > 1 && !basePath.toFile().exists()) {
+					file = ResourcesPlugin.getWorkspace().getRoot().getFile(basePath);
+				}
+			}
+		}
+		finally {
+			if (model != null) {
+				model.releaseFromRead();
+			}
+		}
+		return file;
 	}
 }

@@ -112,10 +112,10 @@ public abstract class DelegatingSourceValidator implements IValidator {
 		}
 
 		public IProject getProject() {
-      if (file != null) {        
-        return file.getProject();
-      }
-      return null;
+			if (file != null) {
+				return file.getProject();
+			}
+			return null;
 		}
 	}
 
@@ -185,23 +185,23 @@ public abstract class DelegatingSourceValidator implements IValidator {
 				// any threading problems
 				byte[] byteArray = xmlModel.getStructuredDocument().get().getBytes();
 
-				IValidator validator = getDelegateValidator();
-				if (validator != null) {
-					// Validate the file:
-					IValidationContext vHelper = new MyHelper(new ByteArrayInputStream(byteArray), file);
-					MyReporter vReporter = new MyReporter();
-					if(validator instanceof IValidatorJob)
-					{
-					  ((IValidatorJob)validator).validateInJob(vHelper, vReporter);
-					}
-					else
-					{
-					  validator.validate(vHelper, vReporter);
-					}
-					List messages = vReporter.list;
+				if (isDelegateValidatorEnabled(file)) {
+					IValidator validator = getDelegateValidator();
+					if (validator != null) {
+						// Validate the file:
+						IValidationContext vHelper = new MyHelper(new ByteArrayInputStream(byteArray), file);
+						MyReporter vReporter = new MyReporter();
+						if (validator instanceof IValidatorJob) {
+							((IValidatorJob) validator).validateInJob(vHelper, vReporter);
+						}
+						else {
+							validator.validate(vHelper, vReporter);
+						}
+						List messages = vReporter.list;
 
-					// set the offset and length
-					updateValidationMessages(messages, document, reporter);
+						// set the offset and length
+						updateValidationMessages(messages, document, reporter);
+					}
 				}
 			}
 
@@ -498,9 +498,22 @@ public abstract class DelegatingSourceValidator implements IValidator {
 			}
 			return startEndPositions;
 		}
-//		catch (Exception e) { // e.printStackTrace();
-//		}
-		finally {}
-//		return null;
+		// catch (Exception e) { // e.printStackTrace();
+		// }
+		finally {
+		}
+		// return null;
+	}
+
+	/**
+	 * Returns true if delegate validator is enabled based on Validation
+	 * preferences
+	 * 
+	 * @param file
+	 * @return false if delegate validator is not enabled based on Validatoin
+	 *         preferences, true otherwise
+	 */
+	protected boolean isDelegateValidatorEnabled(IFile file) {
+		return true;
 	}
 }
