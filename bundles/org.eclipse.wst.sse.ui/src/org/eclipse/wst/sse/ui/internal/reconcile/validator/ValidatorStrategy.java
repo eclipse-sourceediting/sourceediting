@@ -251,12 +251,12 @@ public class ValidatorStrategy extends StructuredTextReconcilingStrategy {
 	 * @return
 	 */
 	private boolean isValidatorEnabled(ValidatorMetaData vmd) {
-		boolean enabled = false;
+		boolean enabled = true;
 		ProjectConfiguration configuration = getProjectConfiguration();
 		org.eclipse.wst.validation.internal.ValidatorMetaData metadata = ValidationRegistryReader.getReader().getValidatorMetaData(vmd.getValidatorClass());
 		if (configuration != null && metadata != null) {
-			if (configuration.isBuildEnabled(metadata) || configuration.isManualEnabled(metadata))
-				enabled = true;
+			if (!configuration.isBuildEnabled(metadata) && !configuration.isManualEnabled(metadata))
+				enabled = false;
 		}
 		return enabled;
 	}
