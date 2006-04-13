@@ -27,6 +27,7 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizardPage;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.INewWizard;
@@ -139,6 +140,21 @@ public abstract class NewProjectDataModelFacetWizard extends AddRemoveFacetsWiza
 		synchRuntimes();
 	}
 
+	public void createPageControls(Composite container) {
+		super.createPageControls(container);
+		/*
+		 * This does not interfere with the rutines selection
+		 */
+		Set facetVersions = new HashSet();
+		FacetDataModelMap map = (FacetDataModelMap) model.getProperty(FACET_DM_MAP);
+		for (Iterator iterator = map.values().iterator(); iterator.hasNext();) {
+			IDataModel facetModel = (IDataModel) iterator.next();
+			facetVersions.add(facetModel.getProperty(IFacetDataModelProperties.FACET_VERSION));
+		}
+		facetsSelectionPage.panel.setSelectedProjectFacets(facetVersions);
+	}
+
+	
 	public IWizardPage[] getPages() {
 		final IWizardPage[] base = super.getPages();
 		final IWizardPage[] pages = new IWizardPage[base.length + beginingPages.length];
@@ -199,22 +215,20 @@ public abstract class NewProjectDataModelFacetWizard extends AddRemoveFacetsWiza
 			monitor.done();
 		}
 	}
-	
-	public boolean performFinish()
-    {
-        if( super.performFinish() == false )
-        {
-            return false;
-        }
-        
-        try {
-            postPerformFinish();
-        } catch (InvocationTargetException e) {
-            Logger.logException(e);
-        }
-        
-        return true;
-    }
+
+	public boolean performFinish() {
+		if (super.performFinish() == false) {
+			return false;
+		}
+
+		try {
+			postPerformFinish();
+		} catch (InvocationTargetException e) {
+			Logger.logException(e);
+		}
+
+		return true;
+	}
 
 	/**
 	 * <p>
