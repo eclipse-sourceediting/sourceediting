@@ -45,6 +45,7 @@
          fullBuild="true"
          incremental="true">
 			</run>
+        <markerId markerIdValue="org.eclipse.xsd.diagnostic"/>
 		</validator>
 	</extension>
 
@@ -54,6 +55,6 @@
         	class="org.eclipse.wst.xsd.core.internal.validation.eclipse.Validator"
 			name="%_UI_XERCES_VALIDATOR_DELEGATE"
         	target="org.eclipse.wst.xsd.core.internal.validation.eclipse.XSDDelegatingValidator"/>
-	 </extension>	
+	 </extension>
 
 </plugin>
