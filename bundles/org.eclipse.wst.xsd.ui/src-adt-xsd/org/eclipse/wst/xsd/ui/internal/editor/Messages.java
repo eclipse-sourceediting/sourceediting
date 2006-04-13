@@ -16,7 +16,7 @@ public class Messages extends NLS
 {
   static 
   {
-    NLS.initializeMessages("org.eclipse.wst.xsd.ui.internal.editor" + ".Messages", Messages.class); //$NON-NLS-1$ //$NON-NLS-2$
+    NLS.initializeMessages("org.eclipse.wst.xsd.ui.internal.editor.messages", Messages.class); //$NON-NLS-1$
   }
 
   public Messages()
