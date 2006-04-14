@@ -52,7 +52,7 @@ public abstract class AbstractNestedValidator implements IValidatorJob
   private static final String GROUP_NAME = "groupName"; //$NON-NLS-1$
   private final String GET_FILE = "getFile"; //$NON-NLS-1$
   private final String GET_PROJECT_FILES = "getAllFiles"; //$NON-NLS-1$
-  private final String GET_INPUTSTREAM = "inputstream"; //$NON-NLS-1$
+  private final String GET_INPUTSTREAM = "inputStream"; //$NON-NLS-1$
   
   // Internal strings. These strings are common addition information types.
   protected static final String COLUMN_NUMBER_ATTRIBUTE = "columnNumber"; //$NON-NLS-1$
