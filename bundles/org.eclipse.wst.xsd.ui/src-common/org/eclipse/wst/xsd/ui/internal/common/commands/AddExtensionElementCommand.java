@@ -22,13 +22,14 @@ import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-public class AddAppInfoElementCommand extends AddAppInfoCommand
+public class AddExtensionElementCommand extends AddExtensionCommand
 {
   XSDConcreteComponent input;
   XSDElementDeclaration element;
   Element appInfo;
+  Element newElement;
 
-  public AddAppInfoElementCommand(String label, XSDConcreteComponent input, XSDElementDeclaration element)
+  public AddExtensionElementCommand(String label, XSDConcreteComponent input, XSDElementDeclaration element)
   {
     super(label);
     this.input = input;
@@ -75,7 +76,8 @@ public class AddAppInfoElementCommand extends AddAppInfoCommand
       
       String prefix = createUniquePrefix(input);
       rootElement.setPrefix(prefix);
-
+      newElement = rootElement;
+      
       Attr nsURIAttribute = doc.createAttribute("xmlns:"+prefix);
       nsURIAttribute.setValue(spec.getNamespaceURI());
       rootElement.setAttributeNode(nsURIAttribute);
@@ -86,5 +88,10 @@ public class AddAppInfoElementCommand extends AddAppInfoCommand
       appInfos.add(appInfo);
       xsdAnnotation.updateElement();
     }
+  }
+
+  public Object getNewObject()
+  {
+    return newElement;
   }
 }

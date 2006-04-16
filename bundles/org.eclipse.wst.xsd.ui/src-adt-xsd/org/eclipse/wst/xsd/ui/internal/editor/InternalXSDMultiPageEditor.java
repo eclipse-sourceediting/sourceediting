@@ -54,6 +54,7 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.ui.views.properties.tabbed.ITabbedPropertySheetPageContributor;
+import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
@@ -84,6 +85,7 @@ import org.eclipse.wst.xsd.ui.internal.common.actions.DeleteXSDConcreteComponent
 import org.eclipse.wst.xsd.ui.internal.common.actions.OpenInNewEditor;
 import org.eclipse.wst.xsd.ui.internal.common.actions.SetMultiplicityAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.SetTypeAction;
+import org.eclipse.wst.xsd.ui.internal.common.properties.sections.IDocumentChangedNotifier;
 import org.eclipse.wst.xsd.ui.internal.design.editparts.XSDEditPartFactory;
 import org.eclipse.wst.xsd.ui.internal.navigation.DesignViewNavigationLocation;
 import org.eclipse.wst.xsd.ui.internal.navigation.MultiPageEditorTextSelectionNavigationLocation;
@@ -111,7 +113,34 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
   private SourceEditorSelectionListener fSourceEditorSelectionListener;
   private XSDSelectionManagerSelectionListener fXSDSelectionListener;
   private StructuredTextEditor structuredTextEditor;
+  private InternalDocumentChangedNotifier internalDocumentChangedNotifier = new InternalDocumentChangedNotifier();
+  
+  
+  class InternalDocumentChangedNotifier implements IDocumentChangedNotifier
+  {
+    List list = new ArrayList();
+    
+    public void addListener(INodeAdapter adapter)
+    {
+      list.add(adapter);
+    }
 
+    public void removeListener(INodeAdapter adapter)
+    {
+      list.remove(adapter);
+    }
+    
+    public void notifyListeners(INodeNotifier notifier, int eventType, Object changedFeature, Object oldValue, Object newValue, int pos)
+    {
+      List clone = new ArrayList(list.size());     
+      clone.addAll(list);
+      for (Iterator i = clone.iterator(); i.hasNext(); )
+      {
+        INodeAdapter adapter = (INodeAdapter)i.next();
+        adapter.notifyChanged(notifier, eventType, changedFeature, oldValue, newValue, pos);
+      }
+    }
+  }
   public IModel buildModel(IFileEditorInput editorInput)
   {
     try
@@ -157,8 +186,9 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
               {
                 NodeImpl nodeImpl = (NodeImpl)notifier;
                 if (!nodeImpl.getModel().isModelStateChanging())
-                {  
+                {             
                   super.handleNotifyChange(notifier, eventType, feature, oldValue, newValue, index);
+                  internalDocumentChangedNotifier.notifyListeners(notifier, eventType, feature, oldValue, newValue, index);
                 }  
               }
             }
@@ -286,6 +316,10 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
     else if (type == ISelectionMapper.class)
     {
       return new XSDSelectionMapper();
+    }
+    else if (type == IDocumentChangedNotifier.class)
+    {
+      return internalDocumentChangedNotifier;
     }  
     return super.getAdapter(type);
   }

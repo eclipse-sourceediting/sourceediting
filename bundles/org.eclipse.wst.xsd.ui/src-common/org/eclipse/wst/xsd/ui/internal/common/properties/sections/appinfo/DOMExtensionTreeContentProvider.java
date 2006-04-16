@@ -1,0 +1,55 @@
+package org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.viewers.Viewer;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+
+public class DOMExtensionTreeContentProvider implements ITreeContentProvider
+{
+  protected String facet;
+  public void inputChanged(Viewer viewer, Object oldInput, Object newInput)
+  {
+  }
+  
+  
+  public Object[] getChildren(Object parentElement)
+  {
+    if (parentElement instanceof Element)
+    {
+      Element element = (Element)parentElement;        
+      ArrayList list = new ArrayList();
+      for (Node node = element.getFirstChild(); node != null; node = node.getNextSibling())
+      {
+        if (node.getNodeType() == Node.ELEMENT_NODE)
+        {
+          list.add(node);
+        }  
+      }  
+      return list.toArray();      
+    }
+    return Collections.EMPTY_LIST.toArray();
+  }
+  
+  public boolean hasChildren(Object element)
+  {
+    Object[] children = getChildren(element);
+    return children.length > 0;
+  }
+  
+  public Object getParent(Object element)
+  {
+    return null;
+  }
+
+  public java.lang.Object[] getElements(java.lang.Object inputElement)
+  {
+    return getChildren(inputElement);
+  }
+
+  public void dispose()
+  {
+  }
+}

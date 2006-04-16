@@ -14,12 +14,12 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.xsd.XSDAnnotation;
 import org.w3c.dom.Node;
 
-public class RemoveAppInfoElementCommand extends Command
+public class RemoveExtensionElementCommand extends Command
 {
   XSDAnnotation xsdAnnotation;
   Node appInfo;
 
-  public RemoveAppInfoElementCommand(String label, XSDAnnotation xsdAnnotation, Node appInfo)
+  public RemoveExtensionElementCommand(String label, XSDAnnotation xsdAnnotation, Node appInfo)
   {
     super(label);
     this.xsdAnnotation = xsdAnnotation;

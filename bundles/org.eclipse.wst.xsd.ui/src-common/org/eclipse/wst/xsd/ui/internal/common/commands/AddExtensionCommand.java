@@ -6,11 +6,11 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo.SpecificationForExtensionsSchema;
 import org.eclipse.xsd.XSDConcreteComponent;
 
-public class AddAppInfoCommand extends Command
+public class AddExtensionCommand extends Command
 {
   protected SpecificationForExtensionsSchema extensionsSchemaSpec;
 
-  protected AddAppInfoCommand(String label)
+  protected AddExtensionCommand(String label)
   {
     super(label);
   }
@@ -31,5 +31,10 @@ public class AddAppInfoCommand extends Command
       prefix += i;
     }
     return prefix;
+  }
+  
+  public Object getNewObject()
+  {
+    return null;
   }
 }

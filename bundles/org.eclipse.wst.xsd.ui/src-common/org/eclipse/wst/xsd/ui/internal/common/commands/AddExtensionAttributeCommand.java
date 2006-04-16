@@ -19,7 +19,7 @@ import org.eclipse.xsd.XSDAttributeDeclaration;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.w3c.dom.Element;
 
-public class AddAppInfoAttributeCommand extends AddAppInfoCommand
+public class AddExtensionAttributeCommand extends AddExtensionCommand
 {
   private static DOMNamespaceInfoManager manager = new DOMNamespaceInfoManager();
   private XSDAttributeDeclaration attribute;
@@ -31,7 +31,7 @@ public class AddAppInfoAttributeCommand extends AddAppInfoCommand
   XSDConcreteComponent component;
 
 
-  public AddAppInfoAttributeCommand(String label, XSDConcreteComponent component,
+  public AddExtensionAttributeCommand(String label, XSDConcreteComponent component,
       XSDAttributeDeclaration attribute)
   {
     super(label);

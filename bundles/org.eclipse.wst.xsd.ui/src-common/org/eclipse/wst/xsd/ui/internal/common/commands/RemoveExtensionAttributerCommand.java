@@ -14,12 +14,12 @@ import org.eclipse.gef.commands.Command;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 
-public class RemoveAppInfoAttrCommand extends Command 
+public class RemoveExtensionAttributerCommand extends Command 
 {
 	Element hostElement;
 	Attr attr;
 	
-	public RemoveAppInfoAttrCommand(String label, Element hostElement, Attr attr)
+	public RemoveExtensionAttributerCommand(String label, Element hostElement, Attr attr)
 	{
 		super(label);
 		this.hostElement = hostElement;
