@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.wst.xml_core.feature"
       label="XML Core Feature"
-      version="1.0.1.qualifier">
+      version="1.0.2.qualifier">
 
    <description>
       %description
@@ -18,10 +18,10 @@
 
    <requires>
       <import feature="org.apache.xerces.feature" version="2.7.0" match="equivalent"/>
-      <import feature="org.eclipse.rcp" version="3.1.1" match="equivalent"/>
-      <import feature="org.eclipse.platform" version="3.1.1" match="equivalent"/>
+      <import feature="org.eclipse.rcp" version="3.1.2" match="equivalent"/>
+      <import feature="org.eclipse.platform" version="3.1.2" match="equivalent"/>
       <import feature="org.eclipse.emf" version="2.1.1" match="equivalent"/>
-      <import feature="org.eclipse.wst.common_core.feature" version="1.0.0" match="equivalent"/>
+      <import feature="org.eclipse.wst.common_core.feature" version="1.0.2" match="equivalent"/>
       <import feature="org.eclipse.xsd" version="2.1.1" match="equivalent"/>
    </requires>
 

@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.wst.web_ui.feature"
       label="org.eclipse.wst.web_ui.feature"
-      version="1.0.1.qualifier"
+      version="1.0.2.qualifier"
       provider-name="Eclipse.org">
 
    <description>
@@ -22,7 +22,7 @@
          version="0.0.0"/>
 
    <requires>
-      <import feature="org.eclipse.wst.web_core.feature" version="1.0.0"/>
+      <import feature="org.eclipse.wst.web_core.feature" version="1.0.2" match="equivalent" />
    </requires>
 
    <plugin

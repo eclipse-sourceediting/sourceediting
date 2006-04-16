@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.wst.xml_ui.feature"
       label="XML UI Feature"
-      version="1.0.1.qualifier"
+      version="1.0.2.qualifier"
       provider-name="%providerName">
 
    <description>
@@ -23,8 +23,8 @@
 
    <requires>
       <import feature="org.apache.xerces.feature" version="2.7.0" match="greaterOrEqual"/>
-      <import feature="org.eclipse.wst.xml_core.feature" version="1.0.0" match="equivalent"/>
-      <import feature="org.eclipse.wst.common_ui.feature" version="1.0.0" match="equivalent"/>
+      <import feature="org.eclipse.wst.xml_core.feature" version="1.0.2" match="equivalent"/>
+      <import feature="org.eclipse.wst.common_ui.feature" version="1.0.2" match="equivalent"/>
       <import feature="org.eclipse.gef" version="3.1.1" match="equivalent"/>
    </requires>
 
