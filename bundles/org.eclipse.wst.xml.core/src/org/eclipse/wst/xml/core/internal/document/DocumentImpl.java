@@ -672,7 +672,7 @@ public class DocumentImpl extends NodeContainer implements IDOMDocument {
 	/**
 	 */
 	protected DocumentType getDocumentType() {
-		DocumentTypeAdapter adapter = (DocumentTypeAdapter) getAdapterFor(DocumentTypeAdapter.class);;
+		DocumentTypeAdapter adapter = (DocumentTypeAdapter) getAdapterFor(DocumentTypeAdapter.class);
 		if (adapter == null)
 			return getDoctype();
 		return adapter.getDocumentType();

@@ -828,98 +828,98 @@ public abstract class NodeImpl extends AbstractNotifier implements IDOMNode {
 	 */
 	public short compareDocumentPosition(Node other) throws DOMException {
 		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implemented in this version."); //$NON-NLS-1$
-	};
+	}
 
 	/**
 	 * NOT IMPLEMENTED, is defined here in preparation of DOM Level 3
 	 */
 	public String getBaseURI() {
 		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implemented in this version."); //$NON-NLS-1$
-	};
+	}
 
 	/**
 	 * NOT IMPLEMENTED, is defined here in preparation of DOM Level 3
 	 */
 	public Object getFeature(String feature, String version) {
 		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implemented in this version."); //$NON-NLS-1$
-	};
+	}
 
 	/**
 	 * NOT IMPLEMENTED, is defined here in preparation of DOM Level 3
 	 */
 	public String getTextContent() throws DOMException {
 		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implemented in this version."); //$NON-NLS-1$
-	};
+	}
 
 	/**
 	 * NOT IMPLEMENTED, is defined here in preparation of DOM Level 3
 	 */
 	public Object getUserData(String key) {
 		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implemented in this version."); //$NON-NLS-1$
-	};
+	}
 
 	/**
 	 * NOT IMPLEMENTED, is defined here in preparation of DOM Level 3
 	 */
 	public boolean isDefaultNamespace(String namespaceURI) {
 		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implemented in this version."); //$NON-NLS-1$
-	};
+	}
 
 	/**
 	 * NOT IMPLEMENTED, is defined here in preparation of DOM Level 3
 	 */
 	public boolean isEqualNode(Node arg) {
 		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implemented in this version."); //$NON-NLS-1$
-	};
+	}
 
 	/**
 	 * NOT IMPLEMENTED, is defined here in preparation of DOM Level 3
 	 */
 	public boolean isSameNode(Node other) {
 		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implemented in this version."); //$NON-NLS-1$
-	};
+	}
 
 	/**
 	 * NOT IMPLEMENTED, is defined here in preparation of DOM Level 3
 	 */
 	public String lookupNamespaceURI(String prefix) {
 		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implemented in this version."); //$NON-NLS-1$
-	};
+	}
 
 	/**
 	 * NOT IMPLEMENTED, is defined here in preparation of DOM Level 3
 	 */
 	public String lookupPrefix(String namespaceURI) {
 		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implemented in this version."); //$NON-NLS-1$
-	};
+	}
 
 	/**
 	 * NOT IMPLEMENTED, is defined here in preparation of DOM Level 3
 	 */
 	public void setTextContent(String textContent) throws DOMException {
 		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implemented in this version."); //$NON-NLS-1$
-	};
+	}
 
 	/**
 	 * NOT IMPLEMENTED, is defined here in preparation of DOM Level 3
 	 */
 	public Object setUserData(String key, Object data, UserDataHandler handler) {
 		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implemented in this version."); //$NON-NLS-1$
-	};
+	}
 
 	/**
 	 * NOT IMPLEMENTED, is defined here in preparation of DOM Level 3
 	 */
 	public TypeInfo getSchemaTypeInfo() {
 		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implemented in this version."); //$NON-NLS-1$
-	};
+	}
 
 	/**
 	 * NOT IMPLEMENTED, is defined here in preparation of DOM Level 3
 	 */
 	public boolean isId() {
 		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implemented in this version."); //$NON-NLS-1$
-	};
+	}
 
 
 }
