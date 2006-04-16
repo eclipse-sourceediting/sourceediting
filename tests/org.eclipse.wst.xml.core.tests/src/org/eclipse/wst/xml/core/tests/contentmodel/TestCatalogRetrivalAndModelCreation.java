@@ -160,7 +160,7 @@ public class TestCatalogRetrivalAndModelCreation extends TestCase {
 		assertNotNull("expected to find " + EXPECTED_URI, resolved);
 
 	}
-	private void doURI_CMTest(String EXPECTED_URI) throws MalformedURLException, IOException {
+	 void doURI_CMTest(String EXPECTED_URI) throws MalformedURLException, IOException {
 		 
 		ICatalog xmlCatalog = XMLCorePlugin.getDefault().getDefaultXMLCatalog();
 		String resolved = xmlCatalog.resolveURI(EXPECTED_URI);

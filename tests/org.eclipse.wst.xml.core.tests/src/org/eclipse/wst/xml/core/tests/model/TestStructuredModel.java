@@ -16,7 +16,6 @@ import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IModelStateListener;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
-import org.eclipse.wst.xml.core.internal.modelhandler.XMLModelLoader;
 import org.eclipse.wst.xml.core.internal.provisional.contenttype.ContentTypeIdForXML;
 import org.eclipse.wst.xml.core.tests.util.FileUtil;
 import org.eclipse.wst.xml.core.tests.util.ProjectUnzipUtility;
@@ -24,7 +23,7 @@ import org.eclipse.wst.xml.core.tests.util.ProjectUnzipUtility;
 public class TestStructuredModel extends TestCase {
 
 	private boolean isSetup = false;
-	private XMLModelLoader fLoader = null;
+	
 
 	private final String fProjectName = "DOCUMENT-LOADER";
 	// is it a problem to unzip the same project in
@@ -39,7 +38,7 @@ public class TestStructuredModel extends TestCase {
 
 		super.setUp();
 		if (!this.isSetup) {
-			fLoader = new XMLModelLoader();
+			
 			doSetup();
 			this.isSetup = true;
 		}

@@ -27,7 +27,6 @@ import org.eclipse.wst.sse.core.internal.provisional.events.StructuredDocumentRe
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegionList;
-import org.eclipse.wst.xml.core.internal.modelhandler.XMLModelLoader;
 import org.eclipse.wst.xml.core.tests.util.FileUtil;
 import org.eclipse.wst.xml.core.tests.util.ProjectUnzipUtility;
 
@@ -63,7 +62,7 @@ public class TestStructuredDocument extends TestCase {
 	}
 
 	private boolean isSetup = false;
-	private XMLModelLoader fLoader = null;
+	
 
 	private final String fProjectName = "DOCUMENT-LOADER";
 	private final String fZipFileName = "xml-document-loader-tests.zip";
@@ -76,7 +75,7 @@ public class TestStructuredDocument extends TestCase {
 
 		super.setUp();
 		if (!this.isSetup) {
-			fLoader = new XMLModelLoader();
+			
 			doSetup();
 			this.isSetup = true;
 		}

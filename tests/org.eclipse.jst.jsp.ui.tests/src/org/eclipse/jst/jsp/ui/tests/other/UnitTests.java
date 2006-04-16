@@ -816,7 +816,7 @@ public class UnitTests extends TestCase {
 
 		fModel.setText(null, startString);
 
-		StructuredDocumentEvent event = fModel.replaceText(null, startOfChanges, lengthToReplace, changes);
+		fModel.replaceText(null, startOfChanges, lengthToReplace, changes);
 		String resultString = fModel.getText();
 
 		boolean result = (expectedString.equals(resultString));
@@ -899,7 +899,7 @@ public class UnitTests extends TestCase {
 
 		fModel.setText(null, startString);
 
-		StructuredDocumentEvent event = fModel.replaceText(null, startOfChanges, lengthToReplace, changes);
+		fModel.replaceText(null, startOfChanges, lengthToReplace, changes);
 		String resultString = fModel.getText();
 
 		boolean result = (expectedString.equals(resultString));
@@ -961,7 +961,7 @@ public class UnitTests extends TestCase {
 		((XMLSourceParser) fModel.getParser()).addBlockMarker(new BlockMarker("script", null, DOMRegionContext.BLOCK_TEXT, false)); //$NON-NLS-1$
 		fModel.setText(null, startString);
 
-		IStructuredDocumentRegionList nodes = fModel.getRegionList();
+		fModel.getRegionList();
 
 		IStructuredDocumentRegion scriptBlockRegion = fModel.getRegionAtCharacterOffset(21);
 		ITextRegionList blockRegions = scriptBlockRegion.getRegions();

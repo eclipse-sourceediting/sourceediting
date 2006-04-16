@@ -114,7 +114,6 @@ public class JSPSearchTests extends TestCase implements IJavaSearchConstants {
 	}
 
 	private ProjectUnzipUtility projUtil = null;
-	private JSPSearchSupport searchSupport = null;
 	private boolean isSetup = false;
 
 	public JSPSearchTests() {

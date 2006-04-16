@@ -96,7 +96,9 @@ public class TestStructuredPartitionerJSP extends TestCase {
 
 	public void testPerfJSP() throws IOException, BadLocationException {
 		//int expectedPartitions = 6;
-		int nPartitions = doTimedComputePartitioningTest("testfiles/jsp/company300k.jsp");
+		//XXX FIXME! 
+		//nt nPartitions = 
+			doTimedComputePartitioningTest("testfiles/jsp/company300k.jsp");
 		//assertTrue("wrong number of partitions", nPartitions == expectedPartitions);
 		//checkSeams();
 		//verifyPartitionTypes(partitions, new String[]{IXMLPartitions.ST_XML_PI, IXMLPartitions.ST_DEFAULT_XML, IXMLPartitions.ST_XML_DECLARATION, IXMLPartitions.ST_DEFAULT_XML, IXMLPartitions.ST_XML_COMMENT, IXMLPartitions.ST_DEFAULT_XML});

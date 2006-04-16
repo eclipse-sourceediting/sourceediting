@@ -30,13 +30,16 @@ import org.eclipse.wst.sse.core.internal.exceptions.MalformedInputExceptionWithD
 import org.eclipse.wst.xml.core.internal.contenttype.XMLResourceEncodingDetector;
 import org.eclipse.wst.xml.tests.encoding.TestsPlugin;
 
+/**
+ * FIXME: this might be a good starting point to create a "file peeker"? But,
+ * its not otherwised used -- delete if not fixed/improved soon
+ * XMLMalformedInputTests
+ */
 
 public class XMLMalformedInputTests extends TestCase {
 	private int READ_BUFFER_SIZE = 8000;
 	private boolean DEBUG = false;
-	private final String fileRoot = "testfiles/";
-	private final String fileDir = "xml/";
-	private final String fileLocation = fileRoot + fileDir;
+
 
 	public XMLMalformedInputTests(String name) {
 		super(name);
@@ -48,7 +51,7 @@ public class XMLMalformedInputTests extends TestCase {
 	 * happens when no encoding is specified, so the default is used, but
 	 * there are characters that the default encoding does not recognize
 	 */
-	private void doTestMalformedInput(String filename, IResourceCharsetDetector detector, int expectedPosition) throws IOException {
+	void doTestMalformedInput(String filename, IResourceCharsetDetector detector, int expectedPosition) throws IOException {
 		Exception foundException = null;
 		int badCharPosition = -1;
 		File file = TestsPlugin.getTestFile(filename);
@@ -59,7 +62,7 @@ public class XMLMalformedInputTests extends TestCase {
 		detector.set(istream);
 		// IEncodedDocument doc =
 		// detector.createNewStructuredDocument(filename, istream);
-		EncodingMemento encodingMemento = ((XMLResourceEncodingDetector)detector).getEncodingMemento();
+		EncodingMemento encodingMemento = ((XMLResourceEncodingDetector) detector).getEncodingMemento();
 		String foundIANAEncoding = encodingMemento.getJavaCharsetName();
 
 		Charset charset = Charset.forName(foundIANAEncoding);
@@ -148,17 +151,16 @@ public class XMLMalformedInputTests extends TestCase {
 		return buffer;
 	}
 
-	/* 
-	removed for PPC machine with IBM VM 
-	https://bugs.eclipse.org/bugs/show_bug.cgi?id=126503
-	*/ 
-//	public void testXMLMalformedInput() throws IOException {
-//		String filename = fileLocation + "MalformedNoEncoding.xml";
-//		doTestMalformedInput(filename, new XMLResourceEncodingDetector(), 51);
-//	}
-	
-	// since above test was only one im this class, put in this no op to avoid 
-	// a failure due to no tests in class! 
+	/*
+	 * removed for PPC machine with IBM VM
+	 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=126503
+	 */
+	// public void testXMLMalformedInput() throws IOException {
+	// String filename = fileLocation + "MalformedNoEncoding.xml";
+	// doTestMalformedInput(filename, new XMLResourceEncodingDetector(), 51);
+	// }
+	// since above test was only one im this class, put in this no op to avoid
+	// a failure due to no tests in class!
 	public void testNoOp() {
 		assertTrue(true);
 	}

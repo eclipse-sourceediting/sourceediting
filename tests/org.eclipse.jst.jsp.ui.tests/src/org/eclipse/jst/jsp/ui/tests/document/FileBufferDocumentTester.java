@@ -18,7 +18,6 @@ import org.eclipse.core.filebuffers.ITextFileBufferManager;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentExtension3;
 import org.eclipse.jface.text.IDocumentPartitioner;
@@ -54,36 +53,7 @@ public class FileBufferDocumentTester extends UnzippedProjectTester {
 		 
 	}
 
-	/**
-	 * @param file
-	 * @param expectedDocumentClass
-	 * @param expectedPartioner
-	 * @throws CoreException
-	 * @throws IOException
-	 */
-//	private void doTestCreateWithFacade(IFile file, Class expectedDocumentClass, Class expectedPartioner) throws IOException, CoreException {
-//		DocumentLoaderForXML documentLoaderForXML = new DocumentLoaderForXML();
-//		IDocument document = documentLoaderForXML.createNewStructuredDocument(file, null);
-//		assertNotNull(document);
-//	}
 
-	private void doTestCreateCreateEmpty(String filePath, Class expectedDocumentClass, Class expectedPartioner) throws CoreException {
-		IFile file = (IFile) fTestProject.findMember(filePath);
-		assertTrue("Test Case in error. Non-existent file existed! " + filePath, file == null);
-		IPath locationPath = new Path(filePath);
-		IFile nonExistingFile = fTestProject.getFile(locationPath);
-		locationPath = nonExistingFile.getFullPath();
-		ITextFileBufferManager bufferManager = FileBuffers.getTextFileBufferManager();
-		// can not "connect" to non-existant location
-		//bufferManager.connect(locationPath, BasicStructuredDocument.class,
-		// StructuredTextPartitionerForXML.class);
-		IDocument document = bufferManager.createEmptyDocument(locationPath);
-		assertNotNull(document);
-		assertTrue("wrong class of document", expectedDocumentClass.isInstance(document));
-		assertTrue("wrong partitioner in document", expectedPartioner.isInstance(document.getDocumentPartitioner()));
-		bufferManager.disconnect(locationPath, null);
-
-	}
 
 /*
 

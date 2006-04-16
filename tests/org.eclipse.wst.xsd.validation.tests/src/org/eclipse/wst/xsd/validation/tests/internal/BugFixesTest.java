@@ -13,8 +13,6 @@ package org.eclipse.wst.xsd.validation.tests.internal;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
 import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalog;
 import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalogEntry;
@@ -70,8 +68,8 @@ public class BugFixesTest extends BaseTestCase
     String loglocation = PLUGIN_ABSOLUTE_PATH + GENERATED_RESULTS_DIR + BUGFIXES_DIR + "InvalidSchemaInXMLCatalog/" + testname + ".xsd-log";
     String idealloglocation = PLUGIN_ABSOLUTE_PATH + IDEAL_RESULTS_DIR + BUGFIXES_DIR + "InvalidSchemaInXMLCatalog/" + testname + ".xsd-log";
     
-    IProject project = createSimpleProject("Project", new String[]{testfile});
-    IFile file = project.getFile(testname + ".xsd");
+    createSimpleProject("Project", new String[]{testfile});
+    
     
     ICatalog catalog = XMLCorePlugin.getDefault().getDefaultXMLCatalog();
     INextCatalog[] nextCatalogs = catalog.getNextCatalogs();
