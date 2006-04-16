@@ -18,6 +18,7 @@ import java.util.List;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.IBreakpointManager;
 import org.eclipse.debug.core.model.IBreakpoint;
@@ -28,6 +29,8 @@ import org.eclipse.jface.text.source.IVerticalRulerInfo;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.ISelectionListener;
+import org.eclipse.ui.texteditor.IDocumentProvider;
+import org.eclipse.ui.texteditor.IDocumentProviderExtension4;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
@@ -61,11 +64,12 @@ public class ToggleBreakpointAction extends BreakpointRulerAction {
 	}
 
 	protected boolean createBreakpoints(int lineNumber) {
-		// Note: we'll always allow processing to continue, even
-		// for a "read only" IStorageEditorInput, for the ActiveScript
-		// debugger. But this means sometimes the ActiveScript provider
-		// might get an input from CVS or something that is not related
-		// to debugging.
+		/*
+		 * Note: we'll always allow processing to continue, even for a "read
+		 * only" IStorageEditorInput, for the ActiveScript debugger. But this
+		 * means sometimes the ActiveScript provider might get an input from
+		 * CVS or something that is not related to debugging.
+		 */
 
 		ITextEditor editor = getTextEditor();
 		IEditorInput input = editor.getEditorInput();
@@ -104,16 +108,18 @@ public class ToggleBreakpointAction extends BreakpointRulerAction {
 		if (errors.size() > 0) {
 			Shell shell = editor.getSite().getShell();
 			MultiStatus allStatus = new MultiStatus(SSEUIPlugin.ID, IStatus.INFO, (IStatus[]) errors.toArray(new IStatus[0]), SSEUIMessages.ManageBreakpoints_error_adding_message1, null); //$NON-NLS-1$
-			// show for conditions more severe than INFO or when no
-			// breakpoints were created
+			/*
+			 * Show for conditions more severe than INFO or when no
+			 * breakpoints were created
+			 */
 			if (allStatus.getSeverity() > IStatus.INFO || getBreakpoints(getMarkers()).length < 1) {
 				ErrorDialog.openError(shell, SSEUIMessages.ManageBreakpoints_error_adding_title1, SSEUIMessages.ManageBreakpoints_error_adding_message1, allStatus); //$NON-NLS-1$ //$NON-NLS-2$
 				return false;
 			}
 		}
 		/*
-		 * Although no errors were reported, no breakpoints exist on this
-		 * line. Run the fallback action.
+		 * Although no errors were reported, no breakpoints exist on this line
+		 * after having run the existing providers. Run the fallback action.
 		 */
 		else if (fFallbackAction != null && !hasMarkers()) {
 			if (fFallbackAction instanceof ISelectionListener) {
@@ -127,16 +133,35 @@ public class ToggleBreakpointAction extends BreakpointRulerAction {
 	protected String getContentType(IDocument document) {
 		IModelManager mgr = StructuredModelManager.getModelManager();
 		String contentType = null;
-		IStructuredModel model = null;
-		try {
-			model = mgr.getExistingModelForRead(document);
-			if (model != null) {
-				contentType = model.getContentTypeIdentifier();
+
+		IDocumentProvider provider = fTextEditor.getDocumentProvider();
+		if (provider instanceof IDocumentProviderExtension4) {
+			try {
+				IContentType type = ((IDocumentProviderExtension4) provider).getContentType(fTextEditor.getEditorInput());
+				if (type != null)
+					contentType = type.getId();
+			}
+			catch (CoreException e) {
+				/*
+				 * A failure accessing the underlying store really isn't
+				 * interesting, although it can be a problem for
+				 * IStorageEditorInputs.
+				 */
 			}
 		}
-		finally {
-			if (model != null) {
-				model.releaseFromRead();
+
+		if (contentType == null) {
+			IStructuredModel model = null;
+			try {
+				model = mgr.getExistingModelForRead(document);
+				if (model != null) {
+					contentType = model.getContentTypeIdentifier();
+				}
+			}
+			finally {
+				if (model != null) {
+					model.releaseFromRead();
+				}
 			}
 		}
 		return contentType;

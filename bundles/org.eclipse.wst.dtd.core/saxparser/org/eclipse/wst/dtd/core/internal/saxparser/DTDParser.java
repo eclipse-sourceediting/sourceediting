@@ -662,6 +662,10 @@ public class DTDParser extends DefaultHandler implements ContentHandler, DTDHand
 		// right before we attempt to open a stream
 		String physicalURI = idResolver.resolvePhysicalLocation(currentDTD.getName(), publicId, logicalURI);
 		result = new InputSource(logicalURI);
+		if(!(physicalURI == null || physicalURI.equals("") || URIHelper.hasProtocol(physicalURI)))
+		{
+		  physicalURI = "file:///" + physicalURI;
+		}
 		result.setByteStream(new LazyURLInputStream(physicalURI));
 		return result;
 	}

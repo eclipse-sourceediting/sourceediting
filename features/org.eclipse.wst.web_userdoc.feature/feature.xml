@@ -1,18 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.eclipse.wst.web_userdoc.feature"
-      label="org.eclipse.wst.web_userdoc.feature"
-      version="1.0.0">
+      label="WST Web User Doc Feature"
+      version="1.0.2.qualifier"
+      provider-name="Eclipse.org">
 
    <description>
       %description
    </description>
 
-
-
    <license url="license.html">
       %license
    </license>
+
+   <url>
+      <update label="Web Tools Platform (WTP) Updates" url="http://download.eclipse.org/webtools/updates/"/>
+   </url>
+
+
 
    <plugin
          id="org.eclipse.wst.doc.user"
@@ -20,7 +25,7 @@
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-         
+
    <plugin
          id="org.eclipse.wst.webtools.doc.user"
          download-size="0"

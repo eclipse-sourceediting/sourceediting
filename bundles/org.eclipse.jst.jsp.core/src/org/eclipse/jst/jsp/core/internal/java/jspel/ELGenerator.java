@@ -13,7 +13,9 @@
 package org.eclipse.jst.jsp.core.internal.java.jspel;
 
 import java.util.Map;
-import org.eclipse.jst.jsp.core.internal.java.JSPTranslator;
+
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
 
 /**
@@ -36,8 +38,8 @@ public final class ELGenerator {
      * @param contentStart 
      * @param contentLength 
      */
-    public void generate(ASTExpression root, StringBuffer result, Map codeMap, JSPTranslator translator, ITextRegionCollection jspReferenceRegion, int contentStart, int contentLength) {
-		ELGeneratorVisitor visitor = new ELGeneratorVisitor(result, codeMap, translator, jspReferenceRegion, contentStart);
+    public void generate(ASTExpression root, IStructuredDocumentRegion currentNode, StringBuffer result, Map codeMap, IStructuredDocument document, ITextRegionCollection jspReferenceRegion, int contentStart, int contentLength) {
+		ELGeneratorVisitor visitor = new ELGeneratorVisitor(result, currentNode, codeMap, document, jspReferenceRegion, contentStart);
 		root.jjtAccept(visitor, null);
     }
 }

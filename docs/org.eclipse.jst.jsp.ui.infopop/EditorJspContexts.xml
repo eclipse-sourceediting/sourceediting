@@ -22,13 +22,13 @@
 </context>
 
 <context id="jspr0010">
-<description>Select this option to open the <b>Refactor Rename</b> dialog, if applicable, which lets you rename the currently selected Java element and references to that element.
+<description>Select this option to open the <b>Rename Resource</b> dialog, if applicable, which lets you rename the currently selected Java element and references to that element.
 </description>
 <topic label="Source editors for markup languages" href="../org.eclipse.wst.sse.doc.user/topics/csrcedt004.html"/>
 <topic label="Editing source code - overview" href="../org.eclipse.wst.sse.doc.user/topics/tsrcedt000.html"/>
 </context>
 <context id="jspr0020">
-<description>Select this option to open the <b>Refactor Move</b> dialog, if applicable, which lets you move the currently selected Java element. For example, you can move a method from one class to another.
+<description>Select this option to open the <b>Move</b> dialog, if applicable, which lets you move the currently selected Java element. For example, you can move a method from one class to another.
 </description>
 <topic label="Source editors for markup languages" href="../org.eclipse.wst.sse.doc.user/topics/csrcedt004.html"/>
 <topic label="Editing source code - overview" href="../org.eclipse.wst.sse.doc.user/topics/tsrcedt000.html"/>

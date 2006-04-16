@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html
-  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html>
-<head>
+  PUBLIC "-//IETF//DTD HTML 4.0//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head>
 <!-- /*******************************************************************************
- * Copyright (c) 2000, 2005 IBM Corporation and others.
+ * Copyright (c) 2000, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,84 +12,47 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/ -->
-<link rel="stylesheet" type="text/css" href="../../org.eclipse.wst.doc.user/common.css" />
+<link rel="stylesheet" type="text/css" href="../../org.eclipse.wst.doc.user/common.css"/>
 <title>Creating servlets</title>
 </head>
-<body id="twsrvwiz"><a name="twsrvwiz"><!-- --></a>
-
+<body xml:lang="en-us" id="twsrvwiz"><a name="twsrvwiz"><!-- --></a>
 <h1 class="topictitle1">Creating servlets</h1>
-<div><div class="skipspace"> <p>The servlet wizard helps you create Java™ servlets by walking you through the
-
-creation process and by providing you with output files that you can use or that you can modify for use with your Web application. The servlets
-
-can run on J2EE-compliant Web
-
-servers.</p>
-<p>To create a servlet using the Servlet wizard, complete the
-
-following steps: </p>
+<div><p>The servlet wizard helps you create Java&#8482; servlets by walking you through the
+creation process and by providing you with output files that you can use or
+that you can modify for use with your Web application. The servlets can run
+on J2EE-compliant Web servers.</p>
+<div class="section"> <p>To create a servlet, complete the following steps: </p>
 </div>
-  <ol>
-    <li class="skipspace"><span>From the J2EE perspective, expand your  <a href="../../org.eclipse.wst.webtoolscore.doc.user/topics/ccwebprj.html">dynamic project</a> in the Project Explorer view.</span></li>
-    <li class="skipspace"><span>Right click on the <b>Servlet</b> icon, and select <span class="menucascade"><span class="uicontrol">New</span> &gt; <span class="uicontrol">Servlet</span></span> from
-
-the pop-up menu.</span>  The <span class="uicontrol">Create Servlet</span> wizard
-
+<ol><li class="stepexpand"><span>From the J2EE perspective, expand your  <a href="ccwebprj.html">dynamic project</a> in the Project Explorer view.</span></li>
+<li class="stepexpand"><span>Right click on the <strong>Servlet</strong> icon, and select <span class="menucascade"><b>New</b> &gt; <b>Servlet</b></span> from
+the pop-up menu.</span>  The <b>Create Servlet</b> wizard
 appears.</li>
-    <li class="skipspace"><span>In the <span class="uicontrol">Create a Servlet</span> page, supply the
-
-following: </span>
-      <ol type="a">
-        <li class="skipspace"><span>Type the name and description of the servlet.</span> Notice
-
-that the name that you type in the name field is used as the default URL mapping.</li>
-        <li class="skipspace"><span>Optionally add or remove initialization parameters and URL mappings.</span></li>
-        <li class="skipspace"><span>Either click <b>Finish</b>
-
- or select <b>Next</b> for more options<b>. </b></span></li>
-      </ol>
-    </li>
-    <li class="skipspace"><span>Select a modifier to specify whether your servlet class is public,
-
-abstract, or final.</span> (Classes cannot be both abstract and final.)
-      <ol type="a">
-        <li class="skipspace"><span> The javax.servlet.Servlet is provided as the default <span class="uicontrol">Interface</span>.
-
-You can also add additional interfaces to implement. Click <span class="uicontrol">Add</span> to
-
-open the <span><span class="uicontrol">Interface Selection</span></span> dialog.</span> 
-          <p>In this dialog, as you type the name of the interface that you are
-
-interested in adding in the <span><span class="uicontrol">Choose interfaces</span></span> field,
-
-the list of available interfaces listed in the <span><span class="uicontrol">Matching types</span></span> list
-
-box updates dynamically to display only the interfaces that match the pattern.
-
-Choose an interface to see the <span class="uicontrol">Qualifier</span>, and then
-
-click <span class="uicontrol">Add</span>. Click <span class="uicontrol">OK</span> when you
-
-are finished.</p>
-        </li>
-        <li class="skipspace"><span>Select any appropriate method stubs to be created in the servlet
-
-file. The stubs created by using the <span class="uicontrol">Inherited abstract methods</span> option
-
-must be implemented if you do not intend to create an abstract servlet. This
-
-is not true for <span class="uicontrol">Constructors from superclass</span>.</span></li>
-        <li class="skipspace"><span>Click <span class="uicontrol"><b>Finish</b></span>.</span> The servlet
-
-is generated.</li>
-      </ol>
-    </li>
-  </ol>
+<li class="stepexpand"><span>Follow the project wizard prompts.</span></li>
+</ol>
+<div class="section"><p><strong>General Information</strong></p>
+<dl><dt class="dlterm">Modifiers</dt>
+<dd>You can select a modifier in the wizard to specify whether your servlet
+class is public, abstract, or final. Note that classes cannot be both abstract
+and final.</dd>
+<dt class="dlterm">javax.servlet.Servlet</dt>
+<dd>Although javax.servlet.Servlet is provided as the default interface, you
+can use the wizard to add additional interfaces to implement.</dd>
+<dt class="dlterm">Interface selection dialog</dt>
+<dd>This dialog appears if you elect to add an interface to your servlet.
+As you type the name of the interface that you are adding, a list of available
+interfaces listed in the Matching types list box updates dynamically to display
+only the interfaces that match the pattern. You should choose an interface
+to see the qualifier, and then click OK when finished.</dd>
+<dt class="dlterm">Method stubs</dt>
+<dd>You can select any appropriate method stubs to be created in the servlet
+file. The stubs created by using the Inherited abstract methods option must
+be implemented if you do not intend to create an abstract servlet. Note that
+this is not true for Constructors from superclass</dd>
+</dl>
 </div>
-<div><p><b class="relconceptshd">Related concepts</b><br />
-<a href="../../org.eclipse.wst.webtoolscore.doc.user/topics/cwservbn.html">Servlets</a><br />
-</p>
-  <p>&nbsp;</p>
 </div>
-</body>
-</html>
+<div><div class="relconcepts"><strong>Related concepts</strong><br>
+<div><a href="cwservbn.html">Servlets</a></div>
+</div>
+</div>
+</body></html>

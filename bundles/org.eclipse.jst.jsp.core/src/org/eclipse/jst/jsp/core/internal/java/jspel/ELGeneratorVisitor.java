@@ -22,7 +22,8 @@ import org.eclipse.jst.jsp.core.internal.contentmodel.tld.CMDocumentImpl;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.TLDCMDocumentManager;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.TaglibTracker;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDFunction;
-import org.eclipse.jst.jsp.core.internal.java.JSPTranslator;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
 
 public class ELGeneratorVisitor implements JSPELParserVisitor {
@@ -68,13 +69,15 @@ public class ELGeneratorVisitor implements JSPELParserVisitor {
 	private Map fCodeMap;
 	private int fOffsetInUserCode;
 	private int methodCounter = 0;
-	private JSPTranslator fTranslator = null;
+	private IStructuredDocument fDocument = null;
 	private int fContentStart;
 	private static Map fOperatorMap;
 	
 	// this flag lets us know if we were unable to generate for some reason.  One possible reason is that the expression 
 	// contains a reference to a variable for which information is only available at runtime.
 	private boolean fCanGenerate = true;
+
+	private IStructuredDocumentRegion fCurrentNode;
 
 	/**
 	 * Tranlsation of XML-style operators to java
@@ -98,13 +101,14 @@ public class ELGeneratorVisitor implements JSPELParserVisitor {
 	 * @param jspReferenceRegion
 	 * @param contentStart
 	 */
-	public ELGeneratorVisitor(StringBuffer result, Map codeMap, JSPTranslator translator, ITextRegionCollection jspReferenceRegion, int contentStart)
+	public ELGeneratorVisitor(StringBuffer result, IStructuredDocumentRegion currentNode, Map codeMap, IStructuredDocument document, ITextRegionCollection jspReferenceRegion, int contentStart)
 	{
 		fResult = result;
 		fCodeMap = codeMap;
 		fOffsetInUserCode = result.length();
 		fContentStart = contentStart;
-		fTranslator = translator;
+		fDocument = document;
+		fCurrentNode = currentNode;
 	}
 
 	/**
@@ -163,14 +167,14 @@ public class ELGeneratorVisitor implements JSPELParserVisitor {
 	 * @return
 	 */
 	protected String genFunction(String fullFunctionName) {
-		TLDCMDocumentManager docMgr = TaglibController.getTLDCMDocumentManager(fTranslator.getStructuredDocument());
+		TLDCMDocumentManager docMgr = TaglibController.getTLDCMDocumentManager(fDocument);
 		int colonIndex = fullFunctionName.indexOf(':');
 		String prefix = fullFunctionName.substring(0, colonIndex);
 		String functionName = fullFunctionName.substring(colonIndex + 1);
 		if (docMgr == null)
 			return null;
 		
-		Iterator taglibs = docMgr.getCMDocumentTrackers(fTranslator.getCurrentNode().getStartOffset()).iterator();
+		Iterator taglibs = docMgr.getCMDocumentTrackers(fCurrentNode.getStartOffset()).iterator();
 		while (taglibs.hasNext()) {
 			TaglibTracker tracker = (TaglibTracker)taglibs.next();
 			if(tracker.getPrefix().equals(prefix)) {
@@ -345,6 +349,15 @@ public class ELGeneratorVisitor implements JSPELParserVisitor {
 	 * Value node
 	 */
 	public Object visit(ASTValue node, Object data) {
+		if(node.jjtGetNumChildren() >= 2) {
+			if(node.jjtGetChild(0) instanceof ASTValuePrefix && node.jjtGetChild(1) instanceof ASTValueSuffix) {
+				ASTValuePrefix prefix = (ASTValuePrefix) node.jjtGetChild(0);
+				ASTValueSuffix suffix = (ASTValueSuffix) node.jjtGetChild(1);
+				if(prefix.firstToken.image.equals("pageContext") && suffix.getPropertyNameToken().image.equals("request")) {
+					append("((HTTPServletRequest)");
+				}
+			}
+		}
 		return node.childrenAccept(this, data);	
 	}
 
@@ -388,8 +401,21 @@ public class ELGeneratorVisitor implements JSPELParserVisitor {
 		} else if(null != node.getPropertyNameToken()) {
 			Token suffix = node.getPropertyNameToken();
 			String ucaseName = suffix.image.substring(0, 1).toUpperCase() + suffix.image.substring(1, suffix.image.length()); 
+
+			// This is a special case.  Note that the type system, no matter how much type information
+			// we would have wouldn't give us the correct result.  We're looking for "pageContext.request" 
+			// here and will add a downcast to (HTTPServletRequest)
+			
 			append(node.firstToken);
 			append("get" + ucaseName + "()", suffix); //$NON-NLS-1$ //$NON-NLS-2$
+			
+			SimpleNode parent = (SimpleNode) node.jjtGetParent();
+			if(suffix.image.equals("request") && parent instanceof ASTValue && //$NON-NLS-1$
+					parent.jjtGetParent() instanceof ASTUnaryExpression && parent.firstToken.image.equals("pageContext")) { //$NON-NLS-1$
+				append(")");
+			} 
+
+
 		} else {
 			append(node.firstToken);
 		}

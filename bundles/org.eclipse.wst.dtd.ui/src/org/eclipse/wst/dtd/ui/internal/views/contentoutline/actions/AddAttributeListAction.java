@@ -17,13 +17,13 @@ package org.eclipse.wst.dtd.ui.internal.views.contentoutline.actions;
 import org.eclipse.wst.dtd.core.internal.DTDFile;
 import org.eclipse.wst.dtd.core.internal.DTDNode;
 import org.eclipse.wst.dtd.core.internal.Element;
-import org.eclipse.wst.sse.ui.StructuredTextEditor;
+import org.eclipse.wst.dtd.core.internal.document.DTDModelImpl;
 
 
 public class AddAttributeListAction extends BaseAction {
 
-	public AddAttributeListAction(StructuredTextEditor editor, String label) {
-		super(editor, label);
+	public AddAttributeListAction(DTDModelImpl model, String label) {
+		super(model, label);
 	}
 
 	public void run() {

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.eclipse.wst.web_core.feature"
-      label="org.eclipse.wst.web_core.feature"
-      version="1.0.0">
+      label="WDT Web Core Feature"
+      version="1.0.2.qualifier"
+      provider-name="Eclipse.org">
 
    <description>
       %description
@@ -16,8 +17,8 @@
       <import feature="org.eclipse.platform" version="3.1.1" match="equivalent"/>
       <import feature="org.eclipse.emf" version="2.1.1" match="equivalent"/>
       <import feature="org.eclipse.jem" version="1.1.0.1" match="equivalent"/>
-      <import feature="org.eclipse.wst.server_core.feature" version="1.0.0" match="equivalent"/>
-      <import feature="org.eclipse.wst.common_core.feature" version="1.0.0" match="equivalent"/>
+      <import feature="org.eclipse.wst.server_core.feature" version="1.0.2" match="equivalent"/>
+      <import feature="org.eclipse.wst.common_core.feature" version="1.0.2" match="equivalent"/>
    </requires>
 
    <plugin

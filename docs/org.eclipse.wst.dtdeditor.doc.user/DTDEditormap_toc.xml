@@ -12,7 +12,7 @@
  *******************************************************************************/ -->
  
 <toc label="DTD Editor">
-   <topic label="Working with DTDs" topic="topics/cworkdtds.html">
+   <topic label="Working with DTDs" href="topics/cworkdtds.html">
       <topic label="Creating DTDs" href="topics/tcretdtd.html">
          <topic label="Document type definitions (DTDs) - overview" href="topics/cdtdover.html"/>
            <topic label="Setting source highlighting styles" href="topics/tedtsrcst.html"/>

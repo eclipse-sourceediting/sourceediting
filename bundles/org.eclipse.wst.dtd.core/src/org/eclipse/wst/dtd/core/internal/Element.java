@@ -30,7 +30,7 @@ public class Element extends NamedTopLevelNode {
 
 	List attributes = new ArrayList();
 
-	protected CMNode contentModel;
+	protected CMNode fContentModel;
 
 	public Element(DTDFile dtdFile, IStructuredDocumentRegion flatNode) {
 		super(dtdFile, flatNode, DTDRegionTypes.ELEMENT_TAG);
@@ -130,9 +130,12 @@ public class Element extends NamedTopLevelNode {
 	}
 
 	public void replaceContentModel(Object requestor, CMNode node) {
+		replaceContentModel(requestor, node.getNodeText());
+	}
+
+	public void replaceContentModel(Object requestor, String nodeText) {
 		int offset = 0;
 		int length = 0;
-		String nodeText = node.getNodeText();
 		CMNode contentModel = getContentModel();
 		if (contentModel != null) {
 			offset = contentModel.getStartOffset();
@@ -147,7 +150,7 @@ public class Element extends NamedTopLevelNode {
 	public void resolveRegions() {
 		// System.out.println("element node stream = " +
 		// tokenStream.getString());
-		contentModel = null;
+		fContentModel = null;
 		removeChildNodes();
 		RegionIterator iter = iterator();
 
@@ -159,22 +162,22 @@ public class Element extends NamedTopLevelNode {
 		while (iter.hasNext()) {
 			ITextRegion currentRegion = iter.next();
 
-			if (contentModel == null) {
+			if (fContentModel == null) {
 				if (currentRegion.getType().equals(DTDRegionTypes.NAME)) {
-					contentModel = new CMBasicNode(getDTDFile(), getStructuredDTDDocumentRegion());
+					fContentModel = new CMBasicNode(getDTDFile(), getStructuredDTDDocumentRegion());
 				}
 				else if (currentRegion.getType().equals(DTDRegionTypes.CONTENT_PCDATA)) {
-					contentModel = new CMBasicNode(getDTDFile(), getStructuredDTDDocumentRegion());
+					fContentModel = new CMBasicNode(getDTDFile(), getStructuredDTDDocumentRegion());
 				}
 				else if (currentRegion.getType().equals(DTDRegionTypes.LEFT_PAREN)) {
-					contentModel = new CMGroupNode(getDTDFile(), getStructuredDTDDocumentRegion());
+					fContentModel = new CMGroupNode(getDTDFile(), getStructuredDTDDocumentRegion());
 				}
 			}
 
-			if (contentModel != null) {
+			if (fContentModel != null) {
 				if (!currentRegion.getType().equals(DTDRegionTypes.END_TAG)) {
 					// content model gets all regions except for the '>'
-					contentModel.addRegion(currentRegion);
+					fContentModel.addRegion(currentRegion);
 				}
 				else {
 					// if it is equal to the end tag, then don't add anymore
@@ -186,17 +189,17 @@ public class Element extends NamedTopLevelNode {
 			}
 
 		}
-		if (contentModel != null) {
-			appendChild(contentModel);
+		if (fContentModel != null) {
+			appendChild(fContentModel);
 			// this is the root element content so set it true
-			contentModel.setRootElementContent(true);
+			fContentModel.setRootElementContent(true);
 			// now tell the content model to resolve it's regions
-			contentModel.resolveRegions();
+			fContentModel.resolveRegions();
 
 		}
 	}
 
 	public void setContentModel(CMNode contentModel) {
-		this.contentModel = contentModel;
+		this.fContentModel = contentModel;
 	}
 }
