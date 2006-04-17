@@ -378,6 +378,7 @@ public class XSDCommonUIUtils
   public static List getChildElements(XSDModelGroup group)
   {
     List children = new ArrayList();
+    if (group == null) return children;
     for (Iterator i = group.getContents().iterator(); i.hasNext();)
     {
       XSDParticle next = (XSDParticle) i.next();
