@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.wst.xsd.ui.internal.common.util.XSDCommonUIUtils;
-import org.eclipse.xsd.XSDComplexTypeContent;
 import org.eclipse.xsd.XSDComplexTypeDefinition;
 import org.eclipse.xsd.XSDCompositor;
 import org.eclipse.xsd.XSDConcreteComponent;
@@ -240,7 +239,7 @@ private String nameToAdd;
   //PORT
   public XSDModelGroup getModelGroup(XSDComplexTypeDefinition cType)
   {
-    XSDParticle particle = cType.getComplexType();
+    XSDParticle particle = cType.getSyntheticParticle();
 
     if (particle == null)
     {
@@ -264,17 +263,17 @@ private String nameToAdd;
       return null;
     }
 
-    if (group.getContents().isEmpty() || group.eResource() != cType.eResource())
-    {
-      if (cType.getBaseType() != null)
-      {
-        XSDComplexTypeContent content = cType.getContent();
-        if (content instanceof XSDParticle)
-        {
-          group = (XSDModelGroup) ((XSDParticle) content).getContent();
-        }
-      }
-    }
+//    if (group.getContents().isEmpty() || group.eResource() != cType.eResource())
+//    {
+//      if (cType.getBaseType() != null)
+//      {
+//        XSDComplexTypeContent content = cType.getContent();
+//        if (content instanceof XSDParticle)
+//        {
+//          group = (XSDModelGroup) ((XSDParticle) content).getContent();
+//        }
+//      }
+//    }
 
     return group;
   }
