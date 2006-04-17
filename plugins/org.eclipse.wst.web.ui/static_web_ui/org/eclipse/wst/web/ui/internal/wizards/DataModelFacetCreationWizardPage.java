@@ -20,6 +20,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
@@ -30,6 +31,9 @@ import org.eclipse.wst.common.frameworks.internal.datamodel.ui.DataModelWizardPa
 import org.eclipse.wst.common.frameworks.internal.operations.IProjectCreationPropertiesNew;
 import org.eclipse.wst.common.frameworks.internal.ui.NewProjectGroup;
 import org.eclipse.wst.common.project.facet.core.runtime.IRuntime;
+import org.eclipse.wst.common.project.facet.ui.AddRemoveFacetsWizard;
+import org.eclipse.wst.common.project.facet.ui.PresetSelectionPanel;
+import org.eclipse.wst.common.project.facet.ui.internal.AddRemoveFacetsDataModel;
 import org.eclipse.wst.server.ui.ServerUIUtil;
 import org.eclipse.wst.web.internal.ResourceHandler;
 
@@ -40,6 +44,13 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
 	protected static GridData gdhfill() {
 		return new GridData(GridData.FILL_HORIZONTAL);
 	}
+    
+    protected static GridData hspan( final GridData gd,
+                                     final int span ) 
+    {
+        gd.horizontalSpan = span;
+        return gd;
+    }
 
 	protected Composite createTopLevelComposite(Composite parent) {
 		Composite top = new Composite(parent, SWT.NONE);
@@ -47,12 +58,19 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
 		top.setLayout(new GridLayout());
 		top.setLayoutData(new GridData(GridData.FILL_BOTH));
 		createProjectGroup(top);
-		Composite composite = new Composite(top, SWT.NONE);
-		composite.setLayoutData(gdhfill());
-		GridLayout layout = new GridLayout(3, false);
-		composite.setLayout(layout);
-		createServerTargetComposite(composite);
-		return top;
+		createServerTargetComposite(top);
+        
+        final AddRemoveFacetsDataModel model
+            = ( (AddRemoveFacetsWizard) getWizard() ).getModel();
+
+        final PresetSelectionPanel ppanel 
+            = new PresetSelectionPanel( top, SWT.NONE, model );
+        
+        ppanel.setLayoutData( gdhfill() );
+        
+        ( (AddRemoveFacetsWizard) getWizard() ).syncWithPresetsModel( ppanel.getPresetsCombo() );
+        
+        return top;
 	}
 
 	public static boolean launchNewRuntimeWizard(Shell shell, IDataModel model) {
@@ -88,11 +106,13 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
 	}
 
 	protected void createServerTargetComposite(Composite parent) {
-		Label label = new Label(parent, SWT.NONE);
-		label.setText(ResourceHandler.TargetRuntime);
-		serverTargetCombo = new Combo(parent, SWT.BORDER | SWT.READ_ONLY);
+        Group group = new Group(parent, SWT.NONE);
+        group.setText(ResourceHandler.TargetRuntime);
+        group.setLayoutData(gdhfill());
+        group.setLayout(new GridLayout(2, false));
+		serverTargetCombo = new Combo(group, SWT.BORDER | SWT.READ_ONLY);
 		serverTargetCombo.setLayoutData(gdhfill());
-		Button newServerTargetButton = new Button(parent, SWT.NONE);
+		Button newServerTargetButton = new Button(group, SWT.NONE);
 		newServerTargetButton.setText(ResourceHandler.NewDotDotDot);
 		newServerTargetButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
@@ -102,7 +122,7 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
 				}
 			}
 		});
-		Control[] deps = new Control[]{label, newServerTargetButton};
+		Control[] deps = new Control[]{newServerTargetButton};
 		synchHelper.synchCombo(serverTargetCombo, FACET_RUNTIME, deps);
 		if (serverTargetCombo.getSelectionIndex() == -1 && serverTargetCombo.getVisibleItemCount() != 0)
 			serverTargetCombo.select(0);
