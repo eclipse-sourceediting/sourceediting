@@ -19,6 +19,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.BaseSelectionAction;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.ShowPropertiesViewAction;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IActionProvider;
+import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IModelProxy;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IADTObjectListener;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IModel;
 import org.eclipse.wst.xsd.ui.internal.adt.outline.ITreeElement;
@@ -26,11 +27,12 @@ import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDAttributeDeclaration
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDAttributeGroupDefinitionAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDComplexTypeDefinitionAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDElementAction;
+import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDSchemaDirectiveAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDModelGroupDefinitionAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDSimpleTypeDefinitionAction;
 import org.eclipse.xsd.XSDSchema;
 
-public class CategoryAdapter extends XSDBaseAdapter implements IModel, IActionProvider, IADTObjectListener
+public class CategoryAdapter extends XSDBaseAdapter implements IModelProxy, IActionProvider, IADTObjectListener
 {
   protected String text;
   protected Image image;
@@ -134,6 +136,9 @@ public class CategoryAdapter extends XSDBaseAdapter implements IModel, IActionPr
         break;
       }
       case DIRECTIVES : {
+        actionIDs.add(AddXSDSchemaDirectiveAction.INCLUDE_ID);
+        actionIDs.add(AddXSDSchemaDirectiveAction.IMPORT_ID);
+        actionIDs.add(AddXSDSchemaDirectiveAction.REDEFINE_ID);
         break;
       }
     }
@@ -151,5 +156,10 @@ public class CategoryAdapter extends XSDBaseAdapter implements IModel, IActionPr
   public List getTypes()
   {
     return null;
+  }
+
+  public IModel getModel()
+  {
+    return (IModel)XSDAdapterFactory.getInstance().adapt(xsdSchema);
   }
 }

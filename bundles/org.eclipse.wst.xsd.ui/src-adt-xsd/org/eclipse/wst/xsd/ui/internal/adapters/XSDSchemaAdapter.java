@@ -33,8 +33,11 @@ import org.eclipse.xsd.XSDAttributeGroupDefinition;
 import org.eclipse.xsd.XSDComplexTypeDefinition;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDElementDeclaration;
+import org.eclipse.xsd.XSDImport;
+import org.eclipse.xsd.XSDInclude;
 import org.eclipse.xsd.XSDModelGroupDefinition;
 import org.eclipse.xsd.XSDPackage;
+import org.eclipse.xsd.XSDRedefine;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDSchemaDirective;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
@@ -171,8 +174,9 @@ public class XSDSchemaAdapter extends XSDBaseAdapter implements IActionProvider,
     {
       getChildren();
     }
-
-    if (msg.getFeature() == XSDPackage.eINSTANCE.getXSDSchema_ReferencingDirectives())
+    
+    Object newValue = msg.getNewValue();
+    if (newValue instanceof XSDInclude || newValue instanceof XSDImport || newValue instanceof XSDRedefine)
     {
       CategoryAdapter adapter = getCategory(CategoryAdapter.DIRECTIVES);
       Assert.isTrue(adapter != null);

@@ -13,6 +13,7 @@ package org.eclipse.wst.xsd.ui.internal.adt.design;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.ui.parts.ScrollingGraphicalViewer;
 import org.eclipse.jface.viewers.ISelection;
@@ -23,6 +24,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.RootContentEditPart;
+import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IModelProxy;
 import org.eclipse.wst.xsd.ui.internal.adt.editor.ADTSelectionManager;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IADTObject;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IField;
@@ -74,6 +76,12 @@ public class DesignViewGraphicalViewer extends ScrollingGraphicalViewer implemen
         {  
           ((RootContentEditPart) getContents()).setInput(selectedObject);
         }
+      }
+      else if (selectedObject instanceof IModelProxy)
+      {
+        IModelProxy adapter = (IModelProxy)selectedObject;
+        if (((RootContentEditPart) getContents()).getInput() != adapter.getModel())
+        ((RootContentEditPart) getContents()).setInput(adapter.getModel());
       }
       else if (selectedObject instanceof IModel)
       {
