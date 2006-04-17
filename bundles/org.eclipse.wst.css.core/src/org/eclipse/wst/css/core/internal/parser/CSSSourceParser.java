@@ -31,7 +31,7 @@ public class CSSSourceParser implements RegionParser {
 
 	private long fStartTime;
 	private long fStopTime;
-	private CSSTokenizer fTokenizer;
+	private ICSSTokenizer fTokenizer;
 
 	public void setParserMode(int mode) {
 		int initialState;
@@ -53,7 +53,7 @@ public class CSSSourceParser implements RegionParser {
 				return;
 		}
 		if (0 < initialState) {
-			CSSTokenizer tokenizer = getTokenizer();
+			ICSSTokenizer tokenizer = getTokenizer();
 			tokenizer.setInitialState(initialState);
 			tokenizer.setInitialBufferSize(bufsize);
 		}
@@ -190,12 +190,16 @@ public class CSSSourceParser implements RegionParser {
 	private IStructuredDocumentRegion createStructuredDocumentRegion(String type) {
 		return CSSStructuredDocumentRegionFactory.createRegion(type);
 	}
-
-	private boolean mustBeStart(String type, String docRegionType) {
+	/**
+	 * currently public but may be made default access protected in future.
+	 */
+	protected boolean mustBeStart(String type, String docRegionType) {
 		return ((type == CSSRegionContexts.CSS_DELIMITER || type == CSSRegionContexts.CSS_LBRACE || type == CSSRegionContexts.CSS_RBRACE || type == CSSRegionContexts.CSS_IMPORT || type == CSSRegionContexts.CSS_PAGE || type == CSSRegionContexts.CSS_MEDIA || type == CSSRegionContexts.CSS_FONT_FACE || type == CSSRegionContexts.CSS_CHARSET || type == CSSRegionContexts.CSS_ATKEYWORD || type == CSSRegionContexts.CSS_DECLARATION_PROPERTY || type == CSSRegionContexts.CSS_DECLARATION_DELIMITER) || (docRegionType == CSSRegionContexts.CSS_DECLARATION_PROPERTY && type == CSSRegionContexts.CSS_S) || (!CSSRegionUtil.isSelectorBegginingType(docRegionType) && (type == CSSRegionContexts.CSS_SELECTOR_ELEMENT_NAME || type == CSSRegionContexts.CSS_SELECTOR_UNIVERSAL || type == CSSRegionContexts.CSS_SELECTOR_PSEUDO || type == CSSRegionContexts.CSS_SELECTOR_CLASS || type == CSSRegionContexts.CSS_SELECTOR_ID || type == CSSRegionContexts.CSS_SELECTOR_ATTRIBUTE_START)));
 	}
-
-	private boolean mustBeEnd(String type) {
+	/**
+	 * currently public but may be made default access protected in future.
+	 */
+	protected boolean mustBeEnd(String type) {
 		return (type == CSSRegionContexts.CSS_DELIMITER || type == CSSRegionContexts.CSS_LBRACE || type == CSSRegionContexts.CSS_RBRACE || type == CSSRegionContexts.CSS_DECLARATION_DELIMITER);
 	}
 
@@ -223,8 +227,10 @@ public class CSSSourceParser implements RegionParser {
 
 		getTokenizer().reset(new char[0]);
 	}
-
-	private CSSTokenizer getTokenizer() {
+	/**
+	 * currently public but may be made default access protected in future.
+	 */
+	public ICSSTokenizer getTokenizer() {
 		if (fTokenizer == null) {
 			fTokenizer = new CSSTokenizer();
 		}

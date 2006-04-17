@@ -9,6 +9,11 @@
 			associatedContentTypeId="org.eclipse.jst.jsp.core.jspsource"
 			id="org.eclipse.jst.jsp.core.internal.modelhandler">
 		</modelHandler>
+		<modelHandler
+			class="org.eclipse.jst.jsp.core.internal.modelhandler.ModelHandlerForJSP"
+			associatedContentTypeId="org.eclipse.jst.jsp.core.jspfragmentsource"
+			id="org.eclipse.jst.jsp.core.internal.modelhandler">
+		</modelHandler>
 	</extension>
 
 	<extension point="org.eclipse.wst.xml.core.documentFactories">
@@ -314,4 +319,69 @@
           name="Default JSP 2.0 EL Translator"
           id="org.eclipse.jst.jsp.defaultJSP20"/>
     </extension>
+    
+  	<!--======================================================================================-->
+	<!-- minimal content-type css jsp support                                                 -->
+	<!--======================================================================================-->
+    <extension
+         point="org.eclipse.core.runtime.contentTypes">
+        <content-type
+			file-extensions="jsp"
+			priority="high"
+			name="%contentTypeCSSJSPName"
+			id="cssjspsource"
+			base-type="org.eclipse.jst.jsp.core.jspsource">
+			<describer
+				class="org.eclipse.jst.jsp.css.core.internal.contenttype.ContentDescriberForJSPedCSS" />
+		</content-type>
+        <content-type
+	        file-extensions="jspf"
+			priority="high"
+			name="%contentTypeCSSJSPFName"
+			id="cssjspfragmentsource"
+			base-type="org.eclipse.jst.jsp.core.cssjspsource">
+			<describer
+				class="org.eclipse.jst.jsp.css.core.internal.contenttype.ContentDescriberForJSPedCSS" />
+		</content-type>
+	</extension>
+
+	<extension point="org.eclipse.wst.sse.core.modelHandler">
+		<modelHandler
+			class="org.eclipse.jst.jsp.css.core.internal.modelhandler.ModelHandlerForJSPedCSS"
+			associatedContentTypeId="org.eclipse.jst.jsp.core.cssjspsource"
+			id="org.eclipse.jst.jsp.css.core.modelhandler">
+		</modelHandler>
+		<modelHandler
+			class="org.eclipse.jst.jsp.css.core.internal.modelhandler.ModelHandlerForJSPedCSS"
+			associatedContentTypeId="org.eclipse.jst.jsp.core.cssjspfragmentsource"
+			id="org.eclipse.jst.jsp.css.core.modelhandler">
+		</modelHandler>
+	</extension>
+	
+	<extension
+		point="org.eclipse.core.filebuffers.documentCreation"
+		id="org.eclipse.jst.jsp.css.core.internal.documentfactories"
+		name="%contentTypeCSSDocumentFactoryName">
+		<factory
+			contentTypeId="org.eclipse.jst.jsp.core.cssjspsource"
+			class="org.eclipse.wst.sse.core.internal.filebuffers.BasicStructuredDocumentFactory" />
+	</extension>
+	<extension
+		point="org.eclipse.core.filebuffers.documentSetup"
+		id="org.eclipse.jst.jsp.css.core.documentsetup"
+		name="%Structured_JSP_Document_Setup_participant.name">
+		<participant
+			contentTypeId="org.eclipse.jst.jsp.core.cssjspsource"
+			class="org.eclipse.jst.jsp.css.core.internal.contentmodel.JSPedCSSTaglibController" />
+	</extension>
+	<!--
+	<extension
+		point="org.eclipse.core.filebuffers.documentCreation"
+		id="org.eclipse.jst.jsp.css.core.internal.documentfactories.fragment"
+		name="%contentTypeCSSDocumentFactoryName">
+		<factory
+			contentTypeId="org.eclipse.jst.jsp.core.cssjspfragmentsource"
+			class="org.eclipse.wst.sse.core.internal.filebuffers.BasicStructuredDocumentFactory" />
+	</extension>	
+	-->
 </plugin>

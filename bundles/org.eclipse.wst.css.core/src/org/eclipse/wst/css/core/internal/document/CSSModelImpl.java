@@ -332,9 +332,9 @@ public class CSSModelImpl extends AbstractStructuredModel implements ICSSModel, 
 	}
 
 	/**
-	 * 
+	 * currently public but may be made default access protected in future.
 	 */
-	private CSSModelParser getParser() {
+	protected CSSModelParser getParser() {
 		if (fParser == null) {
 			if (getDocument() != null) {
 				fParser = new CSSModelParser(document);

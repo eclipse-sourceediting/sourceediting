@@ -10,14 +10,17 @@
  *******************************************************************************/
 package org.eclipse.wst.css.core.internal.document;
 
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSDocument;
 
 
 /**
  * 
  */
 class CSSModelNodeFeeder {
-
-	CSSDocumentImpl fDocument = null;
+	/**
+	 * currently ICSSDocument is used but may go back to CSSDocumentImpl in future.
+	 */
+	ICSSDocument fDocument = null;
 	CSSModelUpdateContext fUpdateContext = null;
 
 	/**
@@ -29,8 +32,9 @@ class CSSModelNodeFeeder {
 
 	/**
 	 * CSSModelNodeFeeder constructor comment.
+	 * currently ICSSDocument is used but may go back to CSSDocumentImpl in future.
 	 */
-	CSSModelNodeFeeder(CSSDocumentImpl document, CSSModelUpdateContext updateContext) {
+	CSSModelNodeFeeder(ICSSDocument document, CSSModelUpdateContext updateContext) {
 		super();
 		fDocument = document;
 		fUpdateContext = updateContext;

@@ -28,8 +28,10 @@ abstract class CSSPrimitiveContainer extends CSSPrimitiveValueImpl {
 	}
 
 	protected abstract void initPrimitives();
-
-	void setOwnerDocument(ICSSDocument ownerDocument) {
+	/**
+	 * currently public but may be made default access protected in future.
+	 */
+	public void setOwnerDocument(ICSSDocument ownerDocument) {
 		super.setOwnerDocument(ownerDocument);
 
 		initPrimitives();

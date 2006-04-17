@@ -73,4 +73,8 @@ public interface CSSRegionContexts {
 
 	// For null object : CSSTokenizer never set this value
 	public static final String CSS_UNDEFINED = "UNDEFINED"; //$NON-NLS-1$
+	/**
+ 	 * currently provided this field but may be removed in future.
+	 */
+	public static final String CSS_FOREIGN_ELEMENT = "FOREIGN_ELEMENT"; //$NON-NLS-1$
 }

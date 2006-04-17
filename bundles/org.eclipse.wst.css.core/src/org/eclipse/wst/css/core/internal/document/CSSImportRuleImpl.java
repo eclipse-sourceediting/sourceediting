@@ -30,21 +30,23 @@ import org.w3c.dom.stylesheets.MediaList;
 
 
 /**
- * 
+ * currently public but may be made default access protected in future.
  */
-class CSSImportRuleImpl extends CSSRuleImpl implements ICSSImportRule {
+public class CSSImportRuleImpl extends CSSRuleImpl implements ICSSImportRule {
 
 	private boolean fDirty = true;
 	private ICSSStyleSheet fStyleSheet;
 
 	/**
-	 * 
-	 */
-	CSSImportRuleImpl() {
+     * currently public but may be made default access protected in future.
+     */
+	public CSSImportRuleImpl() {
 		super();
 	}
-
-	CSSImportRuleImpl(CSSImportRuleImpl that) {
+	/**
+	 * currently public but may be made default access protected in future.
+	 */
+	public CSSImportRuleImpl(CSSImportRuleImpl that) {
 		super(that);
 	}
 

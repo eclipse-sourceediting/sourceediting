@@ -43,7 +43,8 @@ public class JSPFContentSettingsPropertyPage extends PropertyPage {
 	private String[] fContentTypes = {SELECT_NONE, "application/xhtml+xml", //$NON-NLS-1$
 				"application/xml", //$NON-NLS-1$
 				"text/html", //$NON-NLS-1$
-				"text/xml"}; //$NON-NLS-1$
+				"text/xml",  //$NON-NLS-1$
+				"text/css"}; //$NON-NLS-1$
 
 	private class ButtonListener extends SelectionAdapter {
 		public void widgetSelected(SelectionEvent e) {

@@ -17,6 +17,7 @@ import java.util.Iterator;
 
 import org.eclipse.wst.css.core.internal.parserz.CSSRegionContexts;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSCharsetRule;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSDocument;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSImportRule;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSMediaRule;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSModel;
@@ -43,11 +44,11 @@ import org.w3c.dom.css.CSSStyleDeclaration;
 
 
 /**
- * 
+ * currently public but may be made default access protected in future.
  */
-class CSSModelParser {
+public class CSSModelParser {
 
-	private CSSDocumentImpl fDocument = null;
+	private ICSSDocument fDocument = null;
 	private CSSModelCreationContext fCreationContext = null;
 	private CSSModelDeletionContext fDeletionContext = null;
 	private CSSModelUpdateContext fUpdateContext = null;
@@ -63,12 +64,30 @@ class CSSModelParser {
 	}
 
 	/**
-	 * 
+	 * currently provded this method but may be removed in future.
 	 */
-	CSSModelParser(CSSDocumentImpl doc) {
+	protected boolean isParseFloating(){
+		return fParseFloating;
+	}
+	/**
+	 * currently provded this method but may be removed in future.
+	 */
+	protected CSSModelCreationContext getCreationContext(){
+		return fCreationContext;
+	}
+	/**
+	 * currently provded this method but may be removed in future.
+	 */
+	protected boolean isUpdateContextActive(){
+		return fUpdateContext != null ? fUpdateContext.isActive() : false;
+	}
+	/**
+	 * currently public but may be made default access protected in future.
+	 */
+	public CSSModelParser(ICSSDocument doc) {
 		super();
 		fDocument = doc;
-		fCreationContext = new CSSModelCreationContext(doc);
+		fCreationContext = new CSSModelCreationContext((CSSNodeImpl)doc);
 		fDeletionContext = new CSSModelDeletionContext(doc);
 		fUpdateContext = new CSSModelUpdateContext();
 		fFeeder = new CSSModelNodeFeeder(doc, fUpdateContext);
@@ -447,9 +466,9 @@ class CSSModelParser {
 	}
 
 	/**
-	 * 
+	 * currently public but may be made default access protected in future.
 	 */
-	private CSSNodeImpl insertStructuredDocumentRegion(IStructuredDocumentRegion region) {
+	protected CSSNodeImpl insertStructuredDocumentRegion(IStructuredDocumentRegion region) {
 		if (fCreationContext == null || region == null) {
 			return null;
 		}
@@ -885,12 +904,14 @@ class CSSModelParser {
 	}
 
 	/**
+	 *	currently public but may be made default access protected in future.
+	 *
 	 * @param parent
 	 *            org.eclipse.wst.css.core.model.CSSNodeImpl
 	 * @param child
 	 *            org.eclipse.wst.css.core.model.CSSNodeImpl
 	 */
-	private void propagateRangePreInsert(CSSNodeImpl parent, CSSNodeImpl child) {
+	protected void propagateRangePreInsert(CSSNodeImpl parent, CSSNodeImpl child) {
 		if (!(child instanceof CSSStructuredDocumentRegionContainer) || !(parent instanceof CSSStructuredDocumentRegionContainer)) {
 			return;
 		}
@@ -930,7 +951,7 @@ class CSSModelParser {
 		// return;
 		// }
 
-		CSSStructuredDocumentRegionContainer node = fDeletionContext.findDeletionTarget(fDocument, flatNode);
+		CSSStructuredDocumentRegionContainer node = fDeletionContext.findDeletionTarget((CSSNodeImpl)fDocument, flatNode);
 		if (node == null || node == fDocument) {
 			return; // not attached with any treeNode
 		}
@@ -1033,7 +1054,7 @@ class CSSModelParser {
 		 * flatNode.getNext() != null);
 		 */
 		IStructuredDocument structuredDocument = fStructuredDocumentWalker.getStructuredDocument();
-		fDocument.setRangeStructuredDocumentRegion(structuredDocument.getFirstStructuredDocumentRegion(), structuredDocument.getLastStructuredDocumentRegion());
+		((CSSStructuredDocumentRegionContainer)fDocument).setRangeStructuredDocumentRegion(structuredDocument.getFirstStructuredDocumentRegion(), structuredDocument.getLastStructuredDocumentRegion());
 		/* } */
 
 		// remove in official release
@@ -1071,7 +1092,7 @@ class CSSModelParser {
 		int cursorPos = newStructuredDocumentRegion.getStartOffset();
 		CSSNodeImpl cursorNode = getNodeAt(cursorPos);
 		if (cursorNode == null) { // end of document
-			cursorNode = fDocument;
+			cursorNode = (CSSNodeImpl)fDocument;
 		}
 
 		// find edge of tree node
@@ -1082,7 +1103,7 @@ class CSSModelParser {
 		for (flatNode = newStructuredDocumentRegion; flatNode != null; flatNode = flatNode.getPrevious()) {
 			node = getNodeAt(flatNode.getStartOffset());
 			if (node == null) {
-				node = fDocument;
+				node = (CSSNodeImpl)fDocument;
 			}
 			if (node != cursorNode || node.getStartOffset() == flatNode.getStartOffset()) {
 				break;

@@ -73,7 +73,8 @@ public abstract class AbstractCSSSourceFormatter implements CSSSourceGenerator {
 			source.append(getIndent(node));
 			if (needIndent)
 				source.append(getIndentString());
-		} else {
+		}
+		else {
 			String type = toAppend.getType();
 			if (type == CSSRegionContexts.CSS_COMMENT) {
 				RegionIterator it = new RegionIterator(toAppend.getDocumentRegion(), toAppend.getTextRegion());
@@ -84,10 +85,12 @@ public abstract class AbstractCSSSourceFormatter implements CSSSourceGenerator {
 					source.append(getIndent(node));
 					if (needIndent)
 						source.append(getIndentString());
-				} else {
+				}
+				else {
 					appendSpaceBefore(node, toAppend.getText(), source);
 				}
-			} else if (type == CSSRegionContexts.CSS_DELIMITER || type == CSSRegionContexts.CSS_DECLARATION_DELIMITER) {
+			}
+			else if (type == CSSRegionContexts.CSS_DELIMITER || type == CSSRegionContexts.CSS_DECLARATION_DELIMITER) {
 				RegionIterator it = new RegionIterator(toAppend.getDocumentRegion(), toAppend.getTextRegion());
 				it.prev();
 				ITextRegion prev = it.prev();
@@ -99,7 +102,8 @@ public abstract class AbstractCSSSourceFormatter implements CSSSourceGenerator {
 					source.append(getIndent(node));
 					if (needIndent)
 						source.append(getIndentString());
-				} else if (preferences.getInt(CSSCorePreferenceNames.LINE_WIDTH) > 0 && (!preferences.getBoolean(CSSCorePreferenceNames.WRAPPING_PROHIBIT_WRAP_ON_ATTR) || node.getOwnerDocument().getNodeType() != ICSSNode.STYLEDECLARATION_NODE)) {
+				}
+				else if (preferences.getInt(CSSCorePreferenceNames.LINE_WIDTH) > 0 && (!preferences.getBoolean(CSSCorePreferenceNames.WRAPPING_PROHIBIT_WRAP_ON_ATTR) || node.getOwnerDocument().getNodeType() != ICSSNode.STYLEDECLARATION_NODE)) {
 					int length = getLastLineLength(node, source);
 					int append = 1;
 					if (length + append > preferences.getInt(CSSCorePreferenceNames.LINE_WIDTH)) {
@@ -109,10 +113,12 @@ public abstract class AbstractCSSSourceFormatter implements CSSSourceGenerator {
 							source.append(getIndentString());
 					}
 				}
-			} else if (type == CSSRegionContexts.CSS_RBRACE || type == CSSRegionContexts.CSS_LBRACE) {
+			}
+			else if (type == CSSRegionContexts.CSS_RBRACE || type == CSSRegionContexts.CSS_LBRACE) {
 				source.append(delim);
 				source.append(getIndent(node));
-			} else {
+			}
+			else {
 				source.append(delim);
 				source.append(getIndent(node));
 				if (needIndent)
@@ -145,17 +151,20 @@ public abstract class AbstractCSSSourceFormatter implements CSSSourceGenerator {
 				source.append(getIndent(node));
 				if (needIndent)
 					source.append(getIndentString());
-			} else {
+			}
+			else {
 				appendSpaceBefore(node, toAppend.getText(), source);
 			}
-		} else if (type == CSSRegionContexts.CSS_LBRACE && preferences.getBoolean(CSSCorePreferenceNames.WRAPPING_NEWLINE_ON_OPEN_BRACE)) {
+		}
+		else if (type == CSSRegionContexts.CSS_LBRACE && preferences.getBoolean(CSSCorePreferenceNames.WRAPPING_NEWLINE_ON_OPEN_BRACE)) {
 			String delim = getLineDelimiter(node);
 			source.append(delim);
 			source.append(getIndent(node));
 			// } else if (type == CSSRegionContexts.CSS_CURLY_BRACE_CLOSE) {
 			// } else if (type == CSSRegionContexts.CSS_INCLUDES || type ==
 			// CSSRegionContexts.CSS_DASHMATCH) {
-		} else if (type == CSSRegionContexts.CSS_DECLARATION_SEPARATOR && node instanceof ICSSStyleDeclItem) {
+		}
+		else if (type == CSSRegionContexts.CSS_DECLARATION_SEPARATOR && node instanceof ICSSStyleDeclItem) {
 			int n = preferences.getInt(CSSCorePreferenceNames.FORMAT_PROP_PRE_DELIM);
 			if (preferences.getInt(CSSCorePreferenceNames.LINE_WIDTH) > 0 && (!preferences.getBoolean(CSSCorePreferenceNames.WRAPPING_PROHIBIT_WRAP_ON_ATTR) || node.getOwnerDocument().getNodeType() != ICSSNode.STYLEDECLARATION_NODE)) {
 				int length = getLastLineLength(node, source);
@@ -171,7 +180,8 @@ public abstract class AbstractCSSSourceFormatter implements CSSSourceGenerator {
 			// no delimiter case
 			while (n-- > 0)
 				source.append(" ");//$NON-NLS-1$
-		} else if (type == CSSRegionContexts.CSS_DECLARATION_DELIMITER || type == CSSRegionContexts.CSS_DECLARATION_VALUE_OPERATOR || type == CSSRegionContexts.CSS_DECLARATION_VALUE_PARENTHESIS_CLOSE) {
+		}
+		else if (type == CSSRegionContexts.CSS_DECLARATION_DELIMITER || type == CSSRegionContexts.CSS_DECLARATION_VALUE_OPERATOR || type == CSSRegionContexts.CSS_DECLARATION_VALUE_PARENTHESIS_CLOSE) {
 			if (preferences.getInt(CSSCorePreferenceNames.LINE_WIDTH) > 0 && (!preferences.getBoolean(CSSCorePreferenceNames.WRAPPING_PROHIBIT_WRAP_ON_ATTR) || node.getOwnerDocument().getNodeType() != ICSSNode.STYLEDECLARATION_NODE)) {
 				int length = getLastLineLength(node, source);
 				int append = 1;
@@ -182,7 +192,11 @@ public abstract class AbstractCSSSourceFormatter implements CSSSourceGenerator {
 						source.append(getIndentString());
 				}
 			}
-		} else
+		}
+		else if (CSSRegionContexts.CSS_FOREIGN_ELEMENT == type) {
+			return;
+		}
+		else
 			appendSpaceBefore(node, toAppend.getText(), source);
 	}
 
@@ -200,7 +214,8 @@ public abstract class AbstractCSSSourceFormatter implements CSSSourceGenerator {
 			source.append(getLineDelimiter(node));
 			source.append(getIndent(node));
 			return;
-		} else if (/* ! mgr.isOnePropertyPerLine() && */preferences.getInt(CSSCorePreferenceNames.LINE_WIDTH) > 0 && (!preferences.getBoolean(CSSCorePreferenceNames.WRAPPING_PROHIBIT_WRAP_ON_ATTR) || node.getOwnerDocument().getNodeType() != ICSSNode.STYLEDECLARATION_NODE)) {
+		}
+		else if (/* ! mgr.isOnePropertyPerLine() && */preferences.getInt(CSSCorePreferenceNames.LINE_WIDTH) > 0 && (!preferences.getBoolean(CSSCorePreferenceNames.WRAPPING_PROHIBIT_WRAP_ON_ATTR) || node.getOwnerDocument().getNodeType() != ICSSNode.STYLEDECLARATION_NODE)) {
 			int n = getLastLineLength(node, source);
 			int append = (toAppend != null) ? TextUtilities.indexOf(DefaultLineTracker.DELIMITERS, toAppend, 0)[0] : 0;
 			if (toAppend != null)
@@ -310,7 +325,8 @@ public abstract class AbstractCSSSourceFormatter implements CSSSourceGenerator {
 		if (isCleanup()) {
 			if (stgy.getPropValueCase() != CSSCleanupStrategy.ASIS) {
 				if (type == CSSRegionContexts.CSS_COMMENT) {
-				} else {
+				}
+				else {
 					if (stgy.getPropValueCase() == CSSCleanupStrategy.UPPER)
 						text = text.toUpperCase();
 					else
@@ -344,12 +360,15 @@ public abstract class AbstractCSSSourceFormatter implements CSSSourceGenerator {
 				String quote = preferences.getString(CSSCorePreferenceNames.FORMAT_QUOTE);
 				quote = CSSUtil.detectQuote(uri, quote);
 				text = func + quote + uri + quote + ")";//$NON-NLS-1$
-			} else if (isCleanup() && !stgy.isQuoteValues()) {
+			}
+			else if (isCleanup() && !stgy.isQuoteValues()) {
 				text = func + CSSLinkConverter.removeFunc(text) + ")";//$NON-NLS-1$
-			} else {
+			}
+			else {
 				text = func + uri + ")";//$NON-NLS-1$
 			}
-		} else if (region.getType() == CSSRegionContexts.CSS_STRING && (!isCleanup() || stgy.isQuoteValues())) {
+		}
+		else if (region.getType() == CSSRegionContexts.CSS_STRING && (!isCleanup() || stgy.isQuoteValues())) {
 			String quote = preferences.getString(CSSCorePreferenceNames.FORMAT_QUOTE);
 			// begginning
 			if (!text.startsWith(quote)) {
@@ -470,7 +489,8 @@ public abstract class AbstractCSSSourceFormatter implements CSSSourceGenerator {
 						childSource = ((AbstractCSSSourceFormatter) formatter).formatProc(child);
 					else
 						childSource = ((AbstractCSSSourceFormatter) formatter).formatProc(child, overlappedRegion(region, curStart, curEnd));
-				} else
+				}
+				else
 					toFinish = true;
 			}
 			// append between children
@@ -573,7 +593,8 @@ public abstract class AbstractCSSSourceFormatter implements CSSSourceGenerator {
 				else
 					formatPost(node, overlappedRegion(region, curStart, curEnd), source);
 			}
-		} else {
+		}
+		else {
 			curEnd = getChildInsertPos(node);
 			if (overlaps(region, curStart, curEnd)) {
 				if (includes(region, curStart, curEnd))
@@ -771,7 +792,8 @@ public abstract class AbstractCSSSourceFormatter implements CSSSourceGenerator {
 			ITextRegion textRegion = it.prev();
 			IStructuredDocumentRegion documentRegion = it.getStructuredDocumentRegion();
 			ret[0] = new CompoundRegion(documentRegion, textRegion);
-		} else {
+		}
+		else {
 			ret[0] = null;
 		}
 		it.reset(model, reg.getOffset() + reg.getLength());
@@ -779,7 +801,8 @@ public abstract class AbstractCSSSourceFormatter implements CSSSourceGenerator {
 			ITextRegion textRegion = it.next();
 			IStructuredDocumentRegion documentRegion = it.getStructuredDocumentRegion();
 			ret[1] = new CompoundRegion(documentRegion, textRegion);
-		} else {
+		}
+		else {
 			ret[1] = null;
 		}
 		return ret;

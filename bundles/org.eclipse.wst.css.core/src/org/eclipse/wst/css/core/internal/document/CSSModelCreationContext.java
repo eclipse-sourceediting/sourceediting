@@ -17,9 +17,9 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentReg
 
 
 /**
- * 
+ * currently public but may be made default access protected in future.
  */
-class CSSModelCreationContext {
+public class CSSModelCreationContext {
 
 	private CSSNodeImpl fRootNode = null;
 	private CSSNodeImpl fTargetNode = null;
@@ -46,9 +46,9 @@ class CSSModelCreationContext {
 	}
 
 	/**
-	 * 
+	 * currently public but may be made default access protected in future.
 	 */
-	CSSNodeImpl getNextNode() {
+	public CSSNodeImpl getNextNode() {
 		return fNextNode;
 	}
 
@@ -74,9 +74,9 @@ class CSSModelCreationContext {
 	}
 
 	/**
-	 * 
+	 * currently public but may be made default access protected in future.
 	 */
-	CSSNodeImpl getTargetNode() {
+	public CSSNodeImpl getTargetNode() {
 		return fTargetNode;
 	}
 

@@ -15,21 +15,24 @@ package org.eclipse.wst.css.core.internal.document;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 
 /**
- * 
+ * currently public but may be made default access protected in future.
  */
-abstract class CSSStructuredDocumentRegionContainer extends CSSNodeImpl {
+public abstract class CSSStructuredDocumentRegionContainer extends CSSNodeImpl {
 
 	private IStructuredDocumentRegion firstStructuredDocumentRegion = null;
 	private IStructuredDocumentRegion lastStructuredDocumentRegion = null;
 
 	/**
 	 * CSSContainer constructor comment.
+	 * currently public but may be made default access protected in future.
 	 */
-	CSSStructuredDocumentRegionContainer() {
+	public CSSStructuredDocumentRegionContainer() {
 		super();
 	}
-
-	CSSStructuredDocumentRegionContainer(CSSStructuredDocumentRegionContainer that) {
+	/**
+	 * currently public but may be made default access protected in future.
+	 */
+	public CSSStructuredDocumentRegionContainer(CSSStructuredDocumentRegionContainer that) {
 		super(that);
 	}
 
@@ -143,7 +146,7 @@ abstract class CSSStructuredDocumentRegionContainer extends CSSNodeImpl {
 	/**
 	 * 
 	 */
-	boolean propagateRangeStructuredDocumentRegion() {
+	public boolean propagateRangeStructuredDocumentRegion() {
 		boolean bModified = false;
 
 		CSSStructuredDocumentRegionContainer parent = (CSSStructuredDocumentRegionContainer) getParentNode();
@@ -182,7 +185,7 @@ abstract class CSSStructuredDocumentRegionContainer extends CSSNodeImpl {
 		return node;
 	}
 
-	void setRangeStructuredDocumentRegion(IStructuredDocumentRegion firstNode, IStructuredDocumentRegion lastNode) {
+	public void setRangeStructuredDocumentRegion(IStructuredDocumentRegion firstNode, IStructuredDocumentRegion lastNode) {
 		if (firstNode != null)
 			setFirstStructuredDocumentRegion(firstNode);
 		if (lastNode != null)

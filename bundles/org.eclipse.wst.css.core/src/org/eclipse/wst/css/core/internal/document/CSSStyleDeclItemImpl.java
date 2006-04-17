@@ -12,6 +12,7 @@ package org.eclipse.wst.css.core.internal.document;
 
 
 
+import org.eclipse.wst.css.core.internal.contentmodel.PropCMProperty;
 import org.eclipse.wst.css.core.internal.encoding.CSSDocumentLoader;
 import org.eclipse.wst.css.core.internal.formatter.CSSSourceFormatterFactory;
 import org.eclipse.wst.css.core.internal.formatter.CSSSourceGenerator;
@@ -157,7 +158,8 @@ class CSSStyleDeclItemImpl extends CSSStructuredDocumentRegionContainer implemen
 	 * @return java.lang.String
 	 */
 	public String getPropertyName() {
-		return fPropertyName.trim().toLowerCase();
+		String name = fPropertyName.trim();
+		return PropCMProperty.getInstanceOf(name) != null ? fPropertyName.trim().toLowerCase() : name;
 	}
 
 	/**

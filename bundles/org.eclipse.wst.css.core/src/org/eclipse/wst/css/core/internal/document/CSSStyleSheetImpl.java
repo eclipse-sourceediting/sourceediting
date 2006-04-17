@@ -199,7 +199,8 @@ class CSSStyleSheetImpl extends CSSDocumentImpl implements ICSSStyleSheet {
 		IStructuredDocument structuredDocument = (IStructuredDocument) loader.createNewStructuredDocument();
 		structuredDocument.set(rule);
 
-		CSSModelParser modelParser = new CSSModelParser((CSSDocumentImpl) getOwnerDocument());
+		//CSSModelParser modelParser = new CSSModelParser((CSSDocumentImpl) getOwnerDocument());
+		CSSModelParser modelParser = new CSSModelParser(getOwnerDocument());
 		return modelParser.createCSSRule(structuredDocument.getRegionList());
 	}
 

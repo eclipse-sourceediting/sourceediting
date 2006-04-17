@@ -31,7 +31,7 @@ import org.w3c.dom.DOMException;
 /**
  * 
  */
-abstract class CSSNodeImpl extends AbstractNotifier implements ICSSNode, IndexedRegion {
+public abstract class CSSNodeImpl extends AbstractNotifier implements ICSSNode, IndexedRegion {
 
 	private CSSDocumentImpl fOwnerDocument = null;
 	private CSSNodeImpl fParentNode = null;
@@ -60,12 +60,16 @@ abstract class CSSNodeImpl extends AbstractNotifier implements ICSSNode, Indexed
 			}
 		}
 	}
-
-	protected CSSNodeImpl appendChild(CSSNodeImpl newChild) throws org.w3c.dom.DOMException {
+	/**
+	 * currently public but may be made default access protected in future.
+	 */
+	public CSSNodeImpl appendChild(CSSNodeImpl newChild) throws org.w3c.dom.DOMException {
 		return insertBefore(newChild, null);
 	}
-
-	void cloneChildNodes(ICSSNode newParent, boolean deep) {
+	/**
+	 * currently public but may be made default access protected in future.
+	 */
+	protected void cloneChildNodes(ICSSNode newParent, boolean deep) {
 		if (newParent == null || newParent == this)
 			return;
 
@@ -89,19 +93,25 @@ abstract class CSSNodeImpl extends AbstractNotifier implements ICSSNode, Indexed
 	}
 
 	/**
+	 *
+	 * currently public but may be made default access protected in future.
+	 *
 	 * @return java.lang.String
 	 */
-	String generateSource() {
+	protected String generateSource() {
 		CSSSourceGenerator formatter = CSSSourceFormatterFactory.getInstance().getSourceFormatter(this);
 		return formatter.format(this).toString();
 	}
 
 	/**
+	 *
+	 * currently public but may be made default access protected in future.
+	 *
 	 * @return java.lang.String
 	 * @param name
 	 *            java.lang.String
 	 */
-	String getAttribute(String name) {
+	protected String getAttribute(String name) {
 		CSSAttrImpl attr = getAttributeNode(name);
 		if (attr != null)
 			return attr.getValue();
@@ -237,8 +247,10 @@ abstract class CSSNodeImpl extends AbstractNotifier implements ICSSNode, Indexed
 	public boolean hasProperties() {
 		return false;
 	}
-
-	protected CSSNodeImpl insertBefore(CSSNodeImpl newChild, CSSNodeImpl refChild) throws org.w3c.dom.DOMException {
+	/**
+	 * currently public but may be made default access protected in future.
+	 */
+	public CSSNodeImpl insertBefore(CSSNodeImpl newChild, CSSNodeImpl refChild) throws org.w3c.dom.DOMException {
 		if (newChild == null)
 			return null;
 
@@ -374,12 +386,15 @@ abstract class CSSNodeImpl extends AbstractNotifier implements ICSSNode, Indexed
 	}
 
 	/**
+	 *
+	 * currently public but may be made default access protected in future.
+	 *
 	 * @param name
 	 *            java.lang.String
 	 * @param value
 	 *            java.lang.String
 	 */
-	void setAttribute(String name, String value) {
+	public void setAttribute(String name, String value) {
 		if (name == null)
 			return;
 
@@ -423,8 +438,10 @@ abstract class CSSNodeImpl extends AbstractNotifier implements ICSSNode, Indexed
 	private void setNextSibling(ICSSNode nextSibling) {
 		this.fNextSibling = (CSSNodeImpl) nextSibling;
 	}
-
-	void setOwnerDocument(ICSSDocument ownerDocument) {
+	/**
+	 * currently public but may be made default access protected in future.
+	 */
+	public void setOwnerDocument(ICSSDocument ownerDocument) {
 		this.fOwnerDocument = (CSSDocumentImpl) ownerDocument;
 	}
 
