@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.wst.xsd.ui.internal.common.util.XSDCommonUIUtils;
+import org.eclipse.xsd.XSDComplexTypeContent;
 import org.eclipse.xsd.XSDComplexTypeDefinition;
 import org.eclipse.xsd.XSDCompositor;
 import org.eclipse.xsd.XSDConcreteComponent;
@@ -241,6 +242,12 @@ private String nameToAdd;
   {
     XSDParticle particle = cType.getSyntheticParticle();
 
+    XSDComplexTypeContent xsdComplexTypeContent = cType.getContent();
+    if (xsdComplexTypeContent instanceof XSDParticle)
+    {
+      particle = (XSDParticle)xsdComplexTypeContent;
+    }
+    
     if (particle == null)
     {
       return null;
