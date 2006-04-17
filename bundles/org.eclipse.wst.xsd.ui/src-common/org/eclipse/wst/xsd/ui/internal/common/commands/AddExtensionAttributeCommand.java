@@ -12,6 +12,7 @@ package org.eclipse.wst.xsd.ui.internal.common.commands;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.wst.xml.core.internal.contentmodel.util.DOMNamespaceInfoManager;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.NamespaceInfo;
@@ -89,4 +90,17 @@ public class AddExtensionAttributeCommand extends AddExtensionCommand
     manager.addNamespaceInfo(schemaElement, infoList, false);
     return prefix;
   }
+  
+  protected String createUniquePrefix(XSDConcreteComponent component)
+  {
+    String prefix = "p";
+    Map prefMapper = component.getSchema().getQNamePrefixToNamespaceMap();
+    if ( prefMapper.get(prefix) != null){
+      int i = 1;
+      while ( prefMapper.get(prefix + i) != null)
+        i++;
+      prefix += i;
+    }
+    return prefix;
+  }  
 }

@@ -37,7 +37,6 @@ import org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo.DOMExt
 import org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo.ExtensionDetailsViewer;
 import org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo.ExtensionsSchemasRegistry;
 import org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo.SpecificationForExtensionsSchema;
-import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.w3c.dom.Element;
 
 public abstract class AbstractExtensionsSection extends AbstractSection
@@ -198,7 +197,7 @@ public abstract class AbstractExtensionsSection extends AbstractSection
           if (obj instanceof Element)
           {
             Element element = (Element) obj;
-            ExtensionsSchemasRegistry registry = XSDEditorPlugin.getDefault().getExtensionsSchemasRegistry();
+            ExtensionsSchemasRegistry registry = getExtensionsSchemasRegistry();
             // ApplicationSpecificSchemaProperties[] properties =
             // registry.getAllApplicationSpecificSchemaProperties();
             // ApplicationSpecificSchemaProperties[] properties =
@@ -348,12 +347,14 @@ public abstract class AbstractExtensionsSection extends AbstractSection
 
   protected abstract AddExtensionCommand getAddExtensionCommand(Object o);
   protected abstract Command getRemoveExtensionCommand(Object o);  
+  protected abstract ExtensionsSchemasRegistry getExtensionsSchemasRegistry();
+  
   
   public void widgetSelected(SelectionEvent event)
   {
     if (event.widget == addButton)
     {
-      ExtensionsSchemasRegistry registry = XSDEditorPlugin.getDefault().getExtensionsSchemasRegistry();
+      ExtensionsSchemasRegistry registry = getExtensionsSchemasRegistry();
       AddExtensionsComponentDialog dialog = new AddExtensionsComponentDialog(composite.getShell(), registry);
 
       List properties = registry.getAllExtensionsSchemasContribution();

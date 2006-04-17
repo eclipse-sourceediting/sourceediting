@@ -17,7 +17,9 @@ import org.eclipse.wst.xsd.ui.internal.common.commands.AddExtensionElementComman
 import org.eclipse.wst.xsd.ui.internal.common.commands.RemoveExtensionAttributerCommand;
 import org.eclipse.wst.xsd.ui.internal.common.commands.RemoveExtensionElementCommand;
 import org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo.DOMExtensionTreeLabelProvider;
+import org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo.ExtensionsSchemasRegistry;
 import org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo.XSDExtensionTreeContentProvider;
+import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.xsd.XSDAnnotation;
 import org.eclipse.xsd.XSDAttributeDeclaration;
 import org.eclipse.xsd.XSDConcreteComponent;
@@ -67,4 +69,9 @@ public class ExtensionsSection extends AbstractExtensionsSection
     }
     return command;
   }  
+  
+  protected ExtensionsSchemasRegistry getExtensionsSchemasRegistry()
+  {
+    return XSDEditorPlugin.getDefault().getExtensionsSchemasRegistry();
+  }
 }

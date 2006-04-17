@@ -11,6 +11,7 @@
 package org.eclipse.wst.xsd.ui.internal.common.commands;
 
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo.SpecificationForExtensionsSchema;
 import org.eclipse.wst.xsd.ui.internal.common.util.XSDCommonUIUtils;
@@ -94,4 +95,17 @@ public class AddExtensionElementCommand extends AddExtensionCommand
   {
     return newElement;
   }
+  
+  protected String createUniquePrefix(XSDConcreteComponent component)
+  {
+    String prefix = "p";
+    Map prefMapper = component.getSchema().getQNamePrefixToNamespaceMap();
+    if ( prefMapper.get(prefix) != null){
+      int i = 1;
+      while ( prefMapper.get(prefix + i) != null)
+        i++;
+      prefix += i;
+    }
+    return prefix;
+  }  
 }
