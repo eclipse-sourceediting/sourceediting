@@ -25,7 +25,7 @@
                   <topic label="XML and HTML encodings" href="topics/cxmlenc.html"/>
                </topic>
             </topic>
-	   <topic label="Setting the XML source suggestion strategy used by content assist" href="topics/tsugstrat.html"
+	   <topic label="Setting the XML source suggestion strategy used by content assist" href="topics/tsugstrat.html">
          </topic>
          </topic>
          <topic label="Editing in the Design view" href="topics/txedtdes.html">
