@@ -118,21 +118,6 @@ public class JSPCorePreferencesTest extends TestCase {
 			node.put(prefKey, originalString);
 	}
 
-	private void pluginSetPreferenceString(IEclipsePreferences node, String prefKey) {
-		String originalValue = node.get(prefKey, "bogus");
-		String expectedValue = Long.toString(System.currentTimeMillis()); // random
-		// string
-		node.put(prefKey, expectedValue);
-		String foundValue = node.get(prefKey, "");
-		assertEquals("Set preference value failed using plugin.getPreferenceStore. Key: " + prefKey + "  expected: " + expectedValue + " found: " + foundValue, expectedValue, foundValue);
-
-		// attempt to restore original preference value
-		if ("bogus".equals(originalValue))
-			node.remove(prefKey);
-		else
-			node.put(prefKey, originalValue);
-	}
-
 	/**
 	 * Tests line delimiter preferences by making sure document created
 	 * follows line delimiter preference.
