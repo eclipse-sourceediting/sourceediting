@@ -443,7 +443,8 @@ public abstract class AbstractExtensionsSection extends AbstractSection
 
   public void dispose()
   {
-    documentChangeNotifier.removeListener(internalNodeAdapter);
+    if (documentChangeNotifier != null)
+      documentChangeNotifier.removeListener(internalNodeAdapter);
   }
  
 
