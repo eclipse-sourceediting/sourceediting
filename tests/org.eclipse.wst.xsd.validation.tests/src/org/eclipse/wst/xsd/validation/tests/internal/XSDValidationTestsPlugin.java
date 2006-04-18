@@ -11,7 +11,7 @@
 package org.eclipse.wst.xsd.validation.tests.internal;
 import java.io.IOException;
 
-import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
@@ -54,7 +54,7 @@ public class XSDValidationTestsPlugin extends Plugin
   {
     try
     {
-      return Platform.resolve(pluginBundle.getEntry("/")).getFile();
+      return FileLocator.resolve(pluginBundle.getEntry("/")).getFile();
     }
     catch (IOException e)
     {

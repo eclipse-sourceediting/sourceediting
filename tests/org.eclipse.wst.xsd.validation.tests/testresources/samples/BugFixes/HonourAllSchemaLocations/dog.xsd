@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://www.example.org/ADog"
+	xmlns:tns="http://www.example.org/ADog"
+	xmlns:pref="http://www.example.org/Dog">
+	
+	<import namespace="http://www.example.org/Dog"
+		schemaLocation="Part1.xsd">
+	</import>
+	<import namespace="http://www.example.org/Dog"
+		schemaLocation="Part2.xsd">
+	</import>
+
+	<complexType name="DogType">
+		<sequence>
+
+			<element name="Tail" type="pref:Tail"></element>
+			<element name="Body" type="string"></element>
+		</sequence>
+	</complexType>
+
+	<element name="aDog" type="tns:DogType"></element>
+
+</schema>
