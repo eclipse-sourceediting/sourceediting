@@ -17,9 +17,14 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.part.IPageSite;
 import org.eclipse.ui.views.properties.IPropertySheetEntry;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
@@ -139,7 +144,9 @@ public class ConfigurablePropertySheetPage extends PropertySheetPage {
 	 *      org.eclipse.jface.viewers.ISelection)
 	 */
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-		_DEBUG_TIME = System.currentTimeMillis();
+		if (_DEBUG) {
+			_DEBUG_TIME = System.currentTimeMillis();
+		}
 		if (getControl() != null && getControl().isVisible() && !getControl().isFocusControl()) {
 			ISelection preferredSelection = getConfiguration().getInputSelection(part, selection);
 			/*
@@ -184,6 +191,24 @@ public class ConfigurablePropertySheetPage extends PropertySheetPage {
 			setPropertySourceProvider(fConfiguration.getPropertySourceProvider(this));
 			fConfiguration.addContributions(fMenuManager, fToolBarManager, fStatusLineManager);
 		}
+	}
 
+	public void setFocus() {
+		super.setFocus();
+
+		IWorkbenchWindow workbenchWindow = getSite().getWorkbenchWindow();
+		IWorkbenchPage activePage = workbenchWindow.getActivePage();
+		if (activePage != null) {
+			IEditorPart activeEditor = activePage.getActiveEditor();
+			if (activeEditor != null) {
+				IEditorSite editorSite = activeEditor.getEditorSite();
+				if (editorSite != null) {
+					ISelectionProvider selectionProvider = editorSite.getSelectionProvider();
+					if (selectionProvider != null) {
+						selectionChanged(activeEditor, selectionProvider.getSelection());
+					}
+				}
+			}
+		}
 	}
 }
