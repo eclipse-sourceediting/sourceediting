@@ -162,51 +162,164 @@
 	</extension>
 
    <extension
-         point="org.eclipse.wst.common.ui.properties.propertyContributor">
+         id="org.eclipse.wst.dtd.ui.propertyContributor"
+         point="org.eclipse.ui.views.properties.tabbed.propertyContributor">
       <propertyContributor
             contributorId="org.eclipse.wst.dtd.core.dtdsource.source"
-            sectionDescriptorProvider="org.eclipse.wst.dtd.ui.internal.properties.section.DTDSectionDescriptorProvider"
-            labelProvider="org.eclipse.wst.dtd.ui.internal.properties.section.DTDSectionLabelProvider">
+            labelProvider="org.eclipse.wst.dtd.ui.internal.properties.section.DTDSectionLabelProvider"
+            typeMapper="org.eclipse.wst.dtd.ui.internal.properties.section.DTDTypeMapper">
          <propertyCategory
-               category="general">
-         </propertyCategory>
+               category="dtd.ui.general"/>
          <propertyCategory
-               category="other">
-         </propertyCategory>
+               category="dtd.ui.other"/>
          <propertyCategory
-               category="attributes">
-         </propertyCategory>
+               category="dtd.ui.attributes"/>
          <propertyCategory
-               category="documentation">
-         </propertyCategory>
+               category="dtd.ui.documentation"/>
       </propertyContributor>
    </extension>
    
    <extension
-         point="org.eclipse.wst.common.ui.properties.propertyTabs">
+         point="org.eclipse.ui.views.properties.tabbed.propertyTabs">
       <propertyTabs
             contributorId="org.eclipse.wst.dtd.core.dtdsource.source">
          <propertyTab
                label="%_UI_LABEL_GENERAL"
-               category="general"
-               id="org.eclipse.wst.dtd.ui.internal.general">
-         </propertyTab>
+               category="dtd.ui.general"
+               id="org.eclipse.wst.dtd.ui.general"/>
          <propertyTab
-               label="%_UI_LABEL_OTHER"
-               category="other"
-               id="org.eclipse.wst.dtd.ui.internal.other">
-         </propertyTab>
+               afterTab="org.eclipse.wst.dtd.ui.general"
+               category="dtd.ui.attributes"
+               id="org.eclipse.wst.dtd.ui.attributes"
+               label="%_UI_LABEL_ATTRIBUTES"/>
          <propertyTab
-               label="%_UI_LABEL_ATTRIBUTES"
-               category="attributes"
-               id="org.eclipse.wst.dtd.ui.internal.attributes">
-         </propertyTab>
+               afterTab="org.eclipse.wst.dtd.ui.attributes"
+               category="dtd.ui.other"
+               id="org.eclipse.wst.dtd.ui.other"
+               label="%_UI_LABEL_OTHER"/>
          <propertyTab
-               label="%_UI_LABEL_DOCUMENTATION"
-               category="documentation"
-               id="org.eclipse.wst.dtd.ui.internal.documentation">
-         </propertyTab>
+               afterTab="org.eclipse.wst.dtd.ui.attributes"
+               category="dtd.ui.documentation"
+               id="org.eclipse.wst.dtd.ui.documentation"
+               label="%_UI_LABEL_DOCUMENTATION"/>
       </propertyTabs>
    </extension>   
 
+<extension point="org.eclipse.ui.views.properties.tabbed.propertySections">
+   <propertySections contributorId="org.eclipse.wst.dtd.core.dtdsource.source">
+	 <propertySection
+        class="org.eclipse.wst.dtd.ui.internal.properties.section.NameSection"
+        enablesFor="1"
+        id="org.eclipse.wst.dtd.ui.internal.properties.section.NameSection"
+        tab="org.eclipse.wst.dtd.ui.general">
+		    <input type="org.eclipse.wst.dtd.core.internal.Element"/>
+		    <input type="org.eclipse.wst.dtd.core.internal.Attribute"/>
+		    <input type="org.eclipse.wst.dtd.core.internal.AttributeList"/>
+		    <input type="org.eclipse.wst.dtd.core.internal.Notation"/>
+	 </propertySection>
+	 
+	 <propertySection tab="org.eclipse.wst.dtd.ui.general" 
+        enablesFor="1"
+        class="org.eclipse.wst.dtd.ui.internal.properties.section.AttributeDefaultSection"  
+	 	id="org.eclipse.wst.dtd.ui.internal.properties.section.AttributeDefaultSection">
+		    <input type="org.eclipse.wst.dtd.core.internal.Attribute"/>
+	 </propertySection>
+	 	
+	 <propertySection tab="org.eclipse.wst.dtd.ui.general" 
+        enablesFor="1"
+        class="org.eclipse.wst.dtd.ui.internal.properties.section.CommentSection"  
+	 	id="org.eclipse.wst.dtd.ui.internal.properties.section.CommentSection">
+		    <input type="org.eclipse.wst.dtd.core.internal.Comment"/>
+	 </propertySection>
+	 	
+	 <propertySection tab="org.eclipse.wst.dtd.ui.general" 
+        enablesFor="1"
+        class="org.eclipse.wst.dtd.ui.internal.properties.section.ContentModelGroupSection"  
+	 	id="org.eclipse.wst.dtd.ui.internal.properties.section.ContentModelGroupSection">
+	    	<input type="org.eclipse.wst.dtd.core.internal.CMGroupNode"/>
+	 </propertySection>
+	 	
+	 <propertySection
+        class="org.eclipse.wst.dtd.ui.internal.properties.section.ContentModelNameSection"
+        filter="org.eclipse.wst.dtd.ui.internal.properties.section.ContentModelNameFilter"
+        id="org.eclipse.wst.dtd.ui.internal.properties.section.ContentModelNameSection"
+        enablesFor="1"
+        tab="org.eclipse.wst.dtd.ui.general">
+		    <input type="org.eclipse.wst.dtd.core.internal.CMBasicNode"/>
+	 </propertySection>
+	 	
+	 <propertySection tab="org.eclipse.wst.dtd.ui.other" 
+        enablesFor="1"
+        class="org.eclipse.wst.dtd.ui.internal.properties.section.ContentModelTypeSection"  
+	 	id="org.eclipse.wst.dtd.ui.internal.properties.section.ContentModelTypeSection">
+		    <input type="org.eclipse.wst.dtd.core.internal.CMBasicNode"/>
+		    <input type="org.eclipse.wst.dtd.core.internal.CMGroupNode"/>
+	 </propertySection>
+	 	
+	 <propertySection tab="org.eclipse.wst.dtd.ui.documentation" 
+        enablesFor="1"
+        class="org.eclipse.wst.dtd.ui.internal.properties.section.DocumentSection"  
+	 	id="org.eclipse.wst.dtd.ui.internal.properties.section.DocumentSection">
+		    <input type="org.eclipse.wst.dtd.core.internal.Element"/>
+		    <input type="org.eclipse.wst.dtd.core.internal.Entity"/>
+		    <input type="org.eclipse.wst.dtd.core.internal.AttributeList"/>
+		    <input type="org.eclipse.wst.dtd.core.internal.Notation"/>
+	 </propertySection>
+	 	
+	 <propertySection tab="org.eclipse.wst.dtd.ui.general" 
+        enablesFor="1"
+        class="org.eclipse.wst.dtd.ui.internal.properties.section.EmptySection"  
+	 	id="org.eclipse.wst.dtd.ui.internal.properties.section.EmptySection">
+		    <input type="org.eclipse.wst.dtd.core.internal.ParameterEntityReference"/>
+		 	<input type="org.eclipse.wst.sse.core.internal.provisional.IndexedRegion"/>
+	 </propertySection>
+	 	
+	 <!--	
+	 <propertySection tab="org.eclipse.wst.dtd.ui.other" 
+        enablesFor="1"
+        class="org.eclipse.wst.dtd.ui.internal.properties.section.EntityTypeSection"  
+	 	id="org.eclipse.wst.dtd.ui.internal.properties.section.EntityTypeSection">
+		    <input type="org.eclipse.wst.dtd.core.internal.Entity"/>
+	 </propertySection>
+
+	 <propertySection tab="org.eclipse.wst.dtd.ui.attributes" 
+        enablesFor="1"
+        class="org.eclipse.wst.dtd.ui.internal.properties.section.EntityValueSection"  
+	 	id="org.eclipse.wst.dtd.ui.internal.properties.section.EntityValueSection">
+		    <input type="org.eclipse.wst.dtd.core.internal.Entity"/>
+	 </propertySection>
+	 -->
+	 	
+	 <propertySection tab="org.eclipse.wst.dtd.ui.general" 
+        enablesFor="1"
+        class="org.eclipse.wst.dtd.ui.internal.properties.section.NewEntitySection"  
+	 	id="org.eclipse.wst.dtd.ui.internal.properties.section.NewEntitySection">
+		    <input type="org.eclipse.wst.dtd.core.internal.DTDFile"/>
+		    <input type="org.eclipse.wst.dtd.core.internal.Entity"/>
+	 </propertySection>
+	 	
+	 <propertySection tab="org.eclipse.wst.dtd.ui.general" 
+        enablesFor="1"
+        class="org.eclipse.wst.dtd.ui.internal.properties.section.NotationSection"  
+	 	id="org.eclipse.wst.dtd.ui.internal.properties.section.NotationSection">
+		    <input type="org.eclipse.wst.dtd.core.internal.Notation"/>
+	 </propertySection>
+	 	
+	 <propertySection tab="org.eclipse.wst.dtd.ui.attributes" 
+        enablesFor="1"
+        class="org.eclipse.wst.dtd.ui.internal.properties.section.OccurrenceSection"  
+        filter="org.eclipse.wst.dtd.ui.internal.properties.section.OccurrenceFilter"
+	 	id="org.eclipse.wst.dtd.ui.internal.properties.section.OccurrenceSection">
+		    <input type="org.eclipse.wst.dtd.core.internal.CMBasicNode"/>
+		    <input type="org.eclipse.wst.dtd.core.internal.CMRepeatableNode"/>
+	 </propertySection>
+
+	 <propertySection tab="org.eclipse.wst.dtd.ui.attributes" 
+        class="org.eclipse.wst.dtd.ui.internal.properties.section.TypeSection"  
+        enablesFor="1"
+	 	id="org.eclipse.wst.dtd.ui.internal.properties.section.TypeSection">
+		    <input type="org.eclipse.wst.dtd.core.internal.Attribute"/>
+	 </propertySection>
+  </propertySections>
+</extension>
 </plugin>

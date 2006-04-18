@@ -13,7 +13,7 @@ package org.eclipse.wst.dtd.ui.internal.properties.section;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.wst.common.ui.properties.internal.provisional.TabbedPropertySheetWidgetFactory;
+import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 
 public class EmptySection extends AbstractSection {
 	public void doHandleEvent(Event event) {
