@@ -32,6 +32,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.wst.xml.core.internal.validation.core.ValidationMessage;
 import org.eclipse.wst.xml.core.internal.validation.core.ValidationReport;
+import org.eclipse.wst.xsd.core.internal.validation.XSDValidationConfiguration;
 import org.eclipse.wst.xsd.core.internal.validation.eclipse.XSDValidator;
 
 /**
@@ -69,7 +70,24 @@ public class BaseTestCase extends TestCase
    */
   public void runTest(String testfile, String loglocation, String idealloglocation)
   {
-    ValidationReport valreport = validator.validate(testfile, null);
+	runTest(testfile, loglocation, idealloglocation, new XSDValidationConfiguration());
+  }
+  /**
+   * Run a validator test. The test will run the validator, log the results and compare the results
+   * with the ideal results. The test will only pass if the two log files are the same.
+   * 
+   * @param testfile 
+   * 		The file to run the validator test on.
+   * @param loglocation 
+   * 		The location to create the log file.
+   * @param idealloglocation 
+   * 		The location of the ideal log file.
+   * @param configuration 
+   * 		The XSDValidationConfiguration for this validation test.
+   */
+  public void runTest(String testfile, String loglocation, String idealloglocation, XSDValidationConfiguration configuration)
+  {
+    ValidationReport valreport = validator.validate(testfile, null, configuration);
     try
     {
       createLog(loglocation, valreport);

@@ -17,6 +17,7 @@ import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
 import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalog;
 import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalogEntry;
 import org.eclipse.wst.xml.core.internal.catalog.provisional.INextCatalog;
+import org.eclipse.wst.xsd.core.internal.validation.XSDValidationConfiguration;
 
 
 
@@ -168,6 +169,15 @@ public class BugFixesTest extends BaseTestCase
     String loglocation = PLUGIN_ABSOLUTE_PATH + GENERATED_RESULTS_DIR + BUGFIXES_DIR + "HonourAllSchemaLocations/" + testname + ".xsd-log";
     String idealloglocation = PLUGIN_ABSOLUTE_PATH + IDEAL_RESULTS_DIR + BUGFIXES_DIR + "HonourAllSchemaLocations/" + testname + ".xsd-log";
     
-    runTest(testfile, loglocation, idealloglocation);
+    XSDValidationConfiguration configuration = new XSDValidationConfiguration();
+    try
+    {
+      configuration.setFeature(XSDValidationConfiguration.HONOUR_ALL_SCHEMA_LOCATIONS, true);
+    }
+    catch(Exception e)
+    {
+      fail("Unable to set the HONOUR_ALL_SCHEMA_LOCATIONS feature to true: " + e);
+    }
+    runTest(testfile, loglocation, idealloglocation, configuration);
   }
 }

@@ -11,6 +11,7 @@
 package org.eclipse.wst.xsd.validation.tests.internal;
 import junit.framework.Test;
 
+import org.eclipse.wst.xsd.core.internal.validation.XSDValidationConfigurationTest;
 import org.eclipse.wst.xsd.core.internal.validation.eclipse.ValidatorTest;
 import org.eclipse.wst.xsd.core.internal.validation.eclipse.XSDMessageInfoHelperTest;
 import org.eclipse.wst.xsd.core.internal.validation.eclipse.XSDValidatorTest;
@@ -40,5 +41,6 @@ public class AllXSDTests extends junit.framework.TestSuite
     addTest(XSDValidatorTest.suite());
     addTest(BugFixesTest.suite());
     addTest(PathsTest.suite());
+    addTestSuite(XSDValidationConfigurationTest.class);
   }
 }

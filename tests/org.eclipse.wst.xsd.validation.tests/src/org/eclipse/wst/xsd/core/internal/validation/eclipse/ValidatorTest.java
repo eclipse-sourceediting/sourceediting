@@ -19,6 +19,7 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import org.eclipse.wst.validation.internal.core.Message;
+import org.eclipse.wst.xml.core.internal.validation.core.NestedValidatorContext;
 import org.eclipse.wst.xml.core.internal.validation.core.ValidationMessage;
 import org.eclipse.wst.xml.core.internal.validation.core.ValidationReport;
 import org.eclipse.wst.xsd.validation.tests.internal.XSDValidationTestsPlugin;
@@ -92,13 +93,13 @@ public class ValidatorTest extends TestCase
 	  // Test that validating a valid file from a URI and an input stream produces the same result.
 	  String PLUGIN_ABSOLUTE_PATH = XSDValidationTestsPlugin.getInstallURL();
 	  String uri = "file:///" + PLUGIN_ABSOLUTE_PATH + "testresources/samples/Paths/Dash-InPath/DashInPathValid.xsd";
-	  ValidationReport report1 = validator.validate(uri, null, null);
+	  ValidationReport report1 = validator.validate(uri, null, new NestedValidatorContext());
 	  ValidationReport report2 = null;
 	  InputStream is = null;
 	  try
 	  {
 	    is = new URL(uri).openStream();
-	    report2 = validator.validate(uri, is, null);
+	    report2 = validator.validate(uri, is, new NestedValidatorContext());
 	  }
 	  catch(Exception e)
 	  {
@@ -123,13 +124,13 @@ public class ValidatorTest extends TestCase
 	  
       // Test that validating an invalid file from a URI and an input stream produces the same result.
 	  uri = "file:///" + PLUGIN_ABSOLUTE_PATH + "testresources/samples/Paths/Dash-InPath/DashInPathInvalid.xsd";
-	  report1 = validator.validate(uri, null, null);
+	  report1 = validator.validate(uri, null, new NestedValidatorContext());
 	  report2 = null;
 	  is = null;
 	  try
 	  {
 	    is = new URL(uri).openStream();
-	    report2 = validator.validate(uri, is, null);
+	    report2 = validator.validate(uri, is, new NestedValidatorContext());
 	  }
 	  catch(Exception e)
 	  {
