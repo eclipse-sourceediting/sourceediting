@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.example.org/NoChildren" xmlns:tns="http://www.example.org/NoChildren">
+
+    <element name="MyElement" type="tns:NewXSDComplexType"></element>
+
+    <complexType name="NewXSDComplexType">
+    	<sequence>
+    		<element name="NewElement1" type="string" maxOccurs="unbounded" minOccurs="0"></element>
+    	</sequence>
+    </complexType>
+</schema>

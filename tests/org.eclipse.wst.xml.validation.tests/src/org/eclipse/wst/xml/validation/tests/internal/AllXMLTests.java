@@ -51,5 +51,6 @@ public class AllXMLTests extends junit.framework.TestSuite
     addTestSuite(ErrorCustomizationManagerTest.class);
     addTestSuite(ErrorMessageCustomizerDelegateTest.class);
     addTestSuite(ErrorCustomizationRegistryTest.class);
+    addTestSuite(LineNumberAdjustmentsTest.class);
   }
 }
