@@ -12,8 +12,12 @@
 
 package org.eclipse.wst.sse.unittests;
 
+import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jst.jsp.core.tests.JSPCoreTestSuite;
 import org.eclipse.jst.jsp.tests.encoding.JSPEncodingTestSuite;
 import org.eclipse.jst.jsp.ui.tests.JSPUITestSuite;
@@ -33,10 +37,12 @@ import org.eclipse.wst.xml.validation.tests.internal.AllXMLTests;
 import org.eclipse.wst.xsd.validation.tests.internal.AllXSDTests;
 
 /*****************************************************************************
- * Copyright (c) 2004 IBM Corporation and others. All rights reserved. This
- * program and the accompanying materials are made available under the terms
- * of the Eclipse Public License v1.0 which accompanies this distribution, and
- * is available at http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2004,2006 IBM Corporation and others.
+ * 
+ * All rights reserved. This program and the accompanying materials are made
+ * available under the terms of the Eclipse Public License v1.0 which
+ * accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  * 
  * Contributors: IBM Corporation - initial API and implementation
  * 
@@ -46,7 +52,7 @@ public class MasterListTestSuite extends TestSuite {
 
 	public MasterListTestSuite() {
 		super("All Tests");
-		
+
 		System.setProperty("wtp.autotest.noninteractive", "true");
 
 		addTest(SSEModelTestSuite.suite());
@@ -56,7 +62,7 @@ public class MasterListTestSuite extends TestSuite {
 		addTest(JSPCoreTestSuite.suite());
 
 		addTest(AllXMLTests.suite());
-		
+
 		addTest(EncodingTestSuite.suite());
 		addTest(CSSEncodingTestSuite.suite());
 		addTest(HTMLEncodingTestSuite.suite());
@@ -68,16 +74,40 @@ public class MasterListTestSuite extends TestSuite {
 		addTest(XMLUITestSuite.suite());
 		addTest(DTDUITestSuite.suite());
 		addTest(JSPUITestSuite.suite());
-		
-		addTest(AllXSDTests.suite());
-		//addTest(RegressionBucket.suite());
-		//addTest(AllTestCases.suite());
 
+		addTest(AllXSDTests.suite());
+
+		// addTest(RegressionBucket.suite());
+		// addTest(AllTestCases.suite());
+
+		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor("org.eclipse.wst.sse.unittests.additionalSuites");
+		for (int i = 0; i < elements.length; i++) {
+			if (elements[i].getName().equals("suite")) {
+				TestSuite suite;
+				try {
+					suite = (TestSuite) elements[i].createExecutableExtension("class");
+					addTest(suite);
+				}
+				catch (CoreException e) {
+					Platform.getLog(Platform.getBundle("org.eclipse.wst.sse.unittests")).log(e.getStatus());
+				}
+			}
+			else if (elements[i].getName().equals("test")) {
+				Test test;
+				try {
+					test = (Test) elements[i].createExecutableExtension("class");
+					addTest(new TestSuite(test.getClass()));
+				}
+				catch (CoreException e) {
+					Platform.getLog(Platform.getBundle("org.eclipse.wst.sse.unittests")).log(e.getStatus());
+				}
+			}
+		}
 	}
 
 	public void testAll() {
 		// this method needs to exist, but doesn't really do anything
 		// other than to signal to create an instance of this class.
-		// The rest it automatic from the tests added in constructor. 
+		// The rest it automatic from the tests added in constructor.
 	}
 }

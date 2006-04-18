@@ -28,4 +28,7 @@
 				contentTypeId="org.eclipse.wst.javascript.core.javascriptsource" />
 		</editor>
 	</extension>
+
+	<extension-point id="additionalTests" name="%additionalTests"/>
+
 </plugin>
