@@ -95,7 +95,7 @@ public class FieldFigure extends Figure implements IFieldFigure
           return new Dimension(0, 0);
         }
         return super.getPreferredSize(wHint, hHint);
-      };
+      }
     };
     typeAnnotationLabel.setBorder(new MarginBorder(3, 5, 3, 5));
     typeAnnotationLabel.setLabelAlignment(PositionConstants.LEFT);
