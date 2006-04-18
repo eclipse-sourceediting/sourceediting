@@ -41,15 +41,27 @@ public class XSDValidator
     return validate(uri, null);
   }
   
+  public ValidationReport validate(String uri, InputStream inputStream)
+  {
+	return validate(uri, null, null);
+  }
+  
   /**
    * Validate the XSD file specified by the URI.
    * 
    * @param uri
-   *          The URI of the XSD file to validate.
-   * @param inputStream An input stream representing the XSD file to validate.
+   * 		The URI of the XSD file to validate.
+   * @param inputStream 
+   * 		An input stream representing the XSD file to validate.
+   * @param configuration
+   * 		A configuration for this validation run.
    */
-  public ValidationReport validate(String uri, InputStream inputStream)
+  public ValidationReport validate(String uri, InputStream inputStream, XSDValidationConfiguration configuration)
   {
+	if(configuration == null)
+	{
+	  configuration = new XSDValidationConfiguration();
+	}
 	ValidationInfo valinfo = new ValidationInfo(uri);
 	XSDErrorHandler errorHandler = new XSDErrorHandler(valinfo);
 	try
@@ -67,14 +79,17 @@ public class XSDValidator
 	  grammarPreparser.setFeature(Constants.XERCES_FEATURE_PREFIX + Constants.EXTERNAL_GENERAL_ENTITIES_FEATURE, true);
 	  grammarPreparser.setFeature(Constants.XERCES_FEATURE_PREFIX + Constants.EXTERNAL_PARAMETER_ENTITIES_FEATURE, true);
 	  grammarPreparser.setFeature(Constants.XERCES_FEATURE_PREFIX + Constants.WARN_ON_DUPLICATE_ATTDEF_FEATURE, true);
-	      
-	  try
+	     
+	  if(configuration.getFeature(XSDValidationConfiguration.HONOUR_ALL_SCHEMA_LOCATIONS))
 	  {
-	    grammarPreparser.setFeature(Constants.XERCES_FEATURE_PREFIX + "honour-all-schemaLocations", true);
-	  }
-      catch (Exception e)
-	  {
-	    // catch the exception and ignore
+	    try
+	    {
+	      grammarPreparser.setFeature(Constants.XERCES_FEATURE_PREFIX + "honour-all-schemaLocations", true);
+	    }
+        catch (Exception e)
+	    {
+	      // catch the exception and ignore
+	    }
 	  }
 	      
 	  grammarPreparser.setErrorHandler(errorHandler);

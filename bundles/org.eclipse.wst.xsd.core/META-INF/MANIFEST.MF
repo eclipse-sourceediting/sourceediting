@@ -8,7 +8,8 @@ Bundle-Vendor: %Bundle-Vendor.0
 Bundle-Localization: plugin
 Export-Package: org.eclipse.wst.xsd.contentmodel.internal;x-internal:=true,
  org.eclipse.wst.xsd.contentmodel.internal.util;x-internal:=true,
- org.eclipse.wst.xsd.core.internal;x-internal:=true,
+ org.eclipse.wst.xsd.core.internal;x-friends:="org.eclipse.wst.xsd.ui",
+ org.eclipse.wst.xsd.core.internal.preferences;x-friends:="org.eclipse.wst.xsd.ui",
  org.eclipse.wst.xsd.core.internal.validation,
  org.eclipse.wst.xsd.core.internal.validation.eclipse
 Require-Bundle: org.eclipse.core.runtime,
@@ -20,5 +21,5 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.resources,
  org.eclipse.wst.validation,
  org.apache.xerces
-Eclipse-LasyStart: true
+Eclipse-LazyStart: true
 

@@ -12,17 +12,52 @@
 package org.eclipse.wst.xsd.core.internal.validation.eclipse;
 
 import java.io.InputStream;
+import java.util.HashMap;
 
 import org.eclipse.wst.validation.internal.provisional.core.IMessage;
 import org.eclipse.wst.xml.core.internal.validation.core.AbstractNestedValidator;
 import org.eclipse.wst.xml.core.internal.validation.core.NestedValidatorContext;
 import org.eclipse.wst.xml.core.internal.validation.core.ValidationMessage;
 import org.eclipse.wst.xml.core.internal.validation.core.ValidationReport;
+import org.eclipse.wst.xsd.core.internal.XSDCorePlugin;
+import org.eclipse.wst.xsd.core.internal.preferences.XSDCorePreferenceNames;
+import org.eclipse.wst.xsd.core.internal.validation.XSDValidationConfiguration;
 import org.eclipse.wst.xsd.core.internal.validation.XSDValidationMessages;
 
 public class Validator extends AbstractNestedValidator
 {
-	 
+  protected HashMap xsdConfigurations = new HashMap();
+  
+  /* (non-Javadoc)
+   * @see org.eclipse.wst.xml.core.internal.validation.core.AbstractNestedValidator#setupValidation(org.eclipse.wst.xml.core.internal.validation.core.NestedValidatorContext)
+   */
+  protected void setupValidation(NestedValidatorContext context) 
+  {
+	XSDValidationConfiguration configuration = new XSDValidationConfiguration();
+	boolean honourAllSchemaLocations = XSDCorePlugin.getDefault().getPluginPreferences().getBoolean(XSDCorePreferenceNames.HONOUR_ALL_SCHEMA_LOCATIONS);
+	try
+	{
+	  configuration.setFeature(XSDValidationConfiguration.HONOUR_ALL_SCHEMA_LOCATIONS, honourAllSchemaLocations);
+	}
+	catch(Exception e)
+	{
+	  // Unable to set the honour all schema locations option. Do nothing.
+	}
+	xsdConfigurations.put(context, configuration);
+	
+	super.setupValidation(context);
+  }
+
+  /* (non-Javadoc)
+   * @see org.eclipse.wst.xml.core.internal.validation.core.AbstractNestedValidator#teardownValidation(org.eclipse.wst.xml.core.internal.validation.core.NestedValidatorContext)
+   */
+  protected void teardownValidation(NestedValidatorContext context) 
+  {
+	xsdConfigurations.remove(context);
+	
+	super.teardownValidation(context);
+  }
+
   /* (non-Javadoc)
    * @see org.eclipse.wst.xml.core.internal.validation.core.AbstractNestedValidator#getValidatorName()
    */
@@ -37,16 +72,12 @@ public class Validator extends AbstractNestedValidator
   public ValidationReport validate(String uri, InputStream inputstream, NestedValidatorContext context)
   {  
 	XSDValidator validator = XSDValidator.getInstance();
+	
+	XSDValidationConfiguration configuration = (XSDValidationConfiguration)xsdConfigurations.get(context);
 
 	ValidationReport valreport = null;
-	if (inputstream != null)
-	{
-	  valreport = validator.validate(uri, inputstream);
-	}
-	else
-	{
-	  valreport = validator.validate(uri);
-	}
+	
+	valreport = validator.validate(uri, inputstream, configuration);
 		        
 	return valreport;
   }

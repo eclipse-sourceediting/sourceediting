@@ -56,5 +56,11 @@
 			name="%_UI_XERCES_VALIDATOR_DELEGATE"
         	target="org.eclipse.wst.xsd.core.internal.validation.eclipse.XSDDelegatingValidator"/>
 	 </extension>
+	 
+	 <!-- initialize xml core preferences -->
+	<extension point="org.eclipse.core.runtime.preferences">
+		<initializer
+			class="org.eclipse.wst.xsd.core.internal.preferences.XSDCorePreferenceInitializer" />
+	</extension>
 
 </plugin>

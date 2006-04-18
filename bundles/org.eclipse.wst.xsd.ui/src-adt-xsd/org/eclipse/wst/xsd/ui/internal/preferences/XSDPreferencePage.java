@@ -28,6 +28,8 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.help.WorkbenchHelp;
+import org.eclipse.wst.xsd.core.internal.XSDCorePlugin;
+import org.eclipse.wst.xsd.core.internal.preferences.XSDCorePreferenceNames;
 import org.eclipse.wst.xsd.ui.internal.editor.Messages;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorContextIds;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
@@ -40,6 +42,7 @@ public class XSDPreferencePage extends PreferencePage implements IWorkbenchPrefe
   Text schemaNsPrefixField;
   Text defaultTargetNamespaceText;
   Button qualifyXSDLanguage;
+  private Button honourAllSchemaLocations = null;
 
   /**
    * Creates preference page controls on demand.
@@ -67,6 +70,8 @@ public class XSDPreferencePage extends PreferencePage implements IWorkbenchPrefe
     
     createLabel(group, Messages._UI_TEXT_XSD_DEFAULT_TARGET_NAMESPACE);
     defaultTargetNamespaceText = createTextField(group);
+    
+    createContentsForValidatingGroup(parent);
 
     initializeValues();
 
@@ -113,6 +118,24 @@ public class XSDPreferencePage extends PreferencePage implements IWorkbenchPrefe
     label.setLayoutData(data);
     
     return label;
+  }
+  
+  protected void createContentsForValidatingGroup(Composite parent) 
+  {
+	Group validatingGroup = createGroup(parent, 2);
+	validatingGroup.setText(Messages._UI_VALIDATING_FILES);
+
+	if (honourAllSchemaLocations == null) 
+	{
+		honourAllSchemaLocations = new Button(validatingGroup, SWT.CHECK | SWT.LEFT);
+		honourAllSchemaLocations.setText(Messages._UI_TEXT_HONOUR_ALL_SCHEMA_LOCATIONS);
+
+		//GridData
+		GridData data = new GridData(GridData.FILL);
+		data.verticalAlignment = GridData.CENTER;
+		data.horizontalAlignment = GridData.FILL;
+		honourAllSchemaLocations.setLayoutData(data);
+	}
   }
   
   /**
@@ -179,6 +202,7 @@ public class XSDPreferencePage extends PreferencePage implements IWorkbenchPrefe
     schemaNsPrefixField.setText(getPreferenceStore().getDefaultString(XSDEditorPlugin.CONST_XSD_DEFAULT_PREFIX_TEXT));
     qualifyXSDLanguage.setSelection(getPreferenceStore().getDefaultBoolean(XSDEditorPlugin.CONST_XSD_LANGUAGE_QUALIFY));
     defaultTargetNamespaceText.setText(getPreferenceStore().getString(XSDEditorPlugin.CONST_DEFAULT_TARGET_NAMESPACE));
+    honourAllSchemaLocations.setSelection(XSDCorePlugin.getDefault().getPluginPreferences().getDefaultBoolean(XSDCorePreferenceNames.HONOUR_ALL_SCHEMA_LOCATIONS));
   }
 
   /**
@@ -190,6 +214,7 @@ public class XSDPreferencePage extends PreferencePage implements IWorkbenchPrefe
     schemaNsPrefixField.setText(store.getString(XSDEditorPlugin.CONST_XSD_DEFAULT_PREFIX_TEXT));
     qualifyXSDLanguage.setSelection(store.getBoolean(XSDEditorPlugin.CONST_XSD_LANGUAGE_QUALIFY));
     defaultTargetNamespaceText.setText(store.getString(XSDEditorPlugin.CONST_DEFAULT_TARGET_NAMESPACE));
+    honourAllSchemaLocations.setSelection(XSDCorePlugin.getDefault().getPluginPreferences().getBoolean(XSDCorePreferenceNames.HONOUR_ALL_SCHEMA_LOCATIONS));
   }
 
   /**
@@ -204,6 +229,9 @@ public class XSDPreferencePage extends PreferencePage implements IWorkbenchPrefe
     store.setValue(XSDEditorPlugin.CONST_DEFAULT_TARGET_NAMESPACE, getXMLSchemaTargetNamespace());
 
     XSDEditorPlugin.getPlugin().savePluginPreferences();
+    
+    XSDCorePlugin.getDefault().getPluginPreferences().setValue(XSDCorePreferenceNames.HONOUR_ALL_SCHEMA_LOCATIONS, honourAllSchemaLocations.getSelection());
+    XSDCorePlugin.getDefault().savePluginPreferences();
   }
 
   public String getXMLSchemaPrefix()

@@ -95,6 +95,8 @@ public class Messages extends NLS
   public static String _UI_TEXT_XSD_DEFAULT_PREFIX;
   public static String _UI_QUALIFY_XSD;
   public static String _UI_TEXT_XSD_DEFAULT_TARGET_NAMESPACE;
+  public static String _UI_VALIDATING_FILES;
+  public static String _UI_TEXT_HONOUR_ALL_SCHEMA_LOCATIONS;
   
   public static String _ERROR_LABEL_INVALID_PREFIX;
   public static String _UI_ACTION_ADD_INCLUDE;
