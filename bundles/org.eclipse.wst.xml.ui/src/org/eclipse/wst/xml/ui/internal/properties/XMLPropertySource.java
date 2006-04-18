@@ -119,12 +119,14 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=130233
 			// guess this is used for many INodeNotifiers, not just XML.
 			// (and DTD's use IDOMNode? ... that doesn't sound quite right
-			// ... but, maybe a seperate issue).
+			// ... but, maybe a separate issue).
 			if (node instanceof Document) {
 				ownerDocument = (Document) node;
 			}
 		}
-		adapter = (DocumentTypeAdapter) ((INodeNotifier) ownerDocument).getAdapterFor(DocumentTypeAdapter.class);
+		if(ownerDocument != null) {
+			adapter = (DocumentTypeAdapter) ((INodeNotifier) ownerDocument).getAdapterFor(DocumentTypeAdapter.class);
+		}
 
 		return adapter;
 	}
