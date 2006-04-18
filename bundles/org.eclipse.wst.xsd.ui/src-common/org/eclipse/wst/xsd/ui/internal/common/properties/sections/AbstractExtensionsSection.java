@@ -349,13 +349,17 @@ public abstract class AbstractExtensionsSection extends AbstractSection
   protected abstract Command getRemoveExtensionCommand(Object o);  
   protected abstract ExtensionsSchemasRegistry getExtensionsSchemasRegistry();
   
-  
+  protected AddExtensionsComponentDialog createAddExtensionsComponentDialog()
+  {
+    return new AddExtensionsComponentDialog(composite.getShell(), getExtensionsSchemasRegistry());
+  }
+    
   public void widgetSelected(SelectionEvent event)
   {
     if (event.widget == addButton)
     {
       ExtensionsSchemasRegistry registry = getExtensionsSchemasRegistry();
-      AddExtensionsComponentDialog dialog = new AddExtensionsComponentDialog(composite.getShell(), registry);
+      AddExtensionsComponentDialog dialog = createAddExtensionsComponentDialog();
 
       List properties = registry.getAllExtensionsSchemasContribution();
 
