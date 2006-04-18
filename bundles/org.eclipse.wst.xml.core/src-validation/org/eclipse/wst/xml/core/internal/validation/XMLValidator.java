@@ -24,9 +24,15 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
+
 import org.apache.xerces.impl.XMLErrorReporter;
 import org.apache.xerces.parsers.StandardParserConfiguration;
+import org.apache.xerces.xni.Augmentations;
 import org.apache.xerces.xni.NamespaceContext;
+import org.apache.xerces.xni.QName;
+import org.apache.xerces.xni.XMLAttributes;
 import org.apache.xerces.xni.XMLLocator;
 import org.apache.xerces.xni.XMLResourceIdentifier;
 import org.apache.xerces.xni.XNIException;
@@ -57,6 +63,7 @@ public class XMLValidator
   //protected MyEntityResolver entityResolver = null;
   protected ErrorCustomizationManager errorCustomizationManager;
   protected Hashtable ingoredErrorKeyTable = new Hashtable();
+  protected Set adjustLocationErrorKeySet = new TreeSet();
 
   protected static final String IGNORE_ALWAYS = "IGNORE_ALWAYS"; //$NON-NLS-1$
   protected static final String IGNORE_IF_DTD_WITHOUT_ELEMENT_DECL = "IGNORE_IF_DTD_WITHOUT_ELEMENT_DECL"; //$NON-NLS-1$
@@ -79,6 +86,14 @@ public class XMLValidator
     ingoredErrorKeyTable.put(PREMATURE_EOF, IGNORE_ALWAYS);
     ingoredErrorKeyTable.put(ROOT_ELEMENT_TYPE_MUST_MATCH_DOCTYPEDECL, IGNORE_IF_DTD_WITHOUT_ELEMENT_DECL);
     ingoredErrorKeyTable.put(MSG_ELEMENT_NOT_DECLARED, IGNORE_IF_DTD_WITHOUT_ELEMENT_DECL);
+    
+    // Here we add some error keys that we need to adjust the location information for.
+    // The location information will be adjusted to place the message on the line of the starting
+    // element instead of on the line of the closing element.
+    adjustLocationErrorKeySet.add("MSG_CONTENT_INVALID");
+    adjustLocationErrorKeySet.add("MSG_CONTENT_INCOMPLETE");
+    adjustLocationErrorKeySet.add("cvc-complex-type.2.4.b");
+    adjustLocationErrorKeySet.add("cvc-complex-type.2.3");
   }
 
   /**
@@ -110,11 +125,34 @@ public class XMLValidator
       StandardParserConfiguration configuration = new MyStandardParserConfiguration(valinfo);
       reader = new org.apache.xerces.parsers.SAXParser(configuration)
       {
+    	private XMLLocator locator = null;
+    	
+        /* (non-Javadoc)
+         * @see org.apache.xerces.parsers.AbstractSAXParser#startDocument(org.apache.xerces.xni.XMLLocator, java.lang.String, org.apache.xerces.xni.NamespaceContext, org.apache.xerces.xni.Augmentations)
+         */
         public void startDocument(org.apache.xerces.xni.XMLLocator theLocator, java.lang.String encoding, NamespaceContext nscontext, org.apache.xerces.xni.Augmentations augs) 
         {
+          locator = theLocator;
           valinfo.setXMLLocator(theLocator);
           super.startDocument(theLocator, encoding, nscontext, augs); 
         }
+
+        /* (non-Javadoc)
+         * @see org.apache.xerces.parsers.AbstractSAXParser#startElement(org.apache.xerces.xni.QName, org.apache.xerces.xni.XMLAttributes, org.apache.xerces.xni.Augmentations)
+         */
+        public void startElement(QName arg0, XMLAttributes arg1, Augmentations arg2) throws XNIException 
+        {
+          valinfo.getStartElementLocations().push(new LocationCoordinate(locator.getLineNumber(), locator.getColumnNumber()));
+		  super.startElement(arg0, arg1, arg2);
+		}
+        
+		/* (non-Javadoc)
+		 * @see org.apache.xerces.parsers.AbstractSAXParser#endElement(org.apache.xerces.xni.QName, org.apache.xerces.xni.Augmentations)
+		 */
+		public void endElement(QName arg0, Augmentations arg1) throws XNIException {
+			super.endElement(arg0, arg1);
+			valinfo.getStartElementLocations().pop();
+		}
       };
 
       reader.setFeature("http://apache.org/xml/features/continue-after-fatal-error", false); //$NON-NLS-1$
@@ -444,13 +482,26 @@ public class XMLValidator
     {
       if(exception.getSystemId() != null)
       {       	
+    	int lineNumber = exception.getLineNumber();
+    	int columnNumber = exception.getColumnNumber();
+    	
+    	// For the following three errors the line number will be modified to use that of the start
+    	// tag instead of the end tag.
+    	String currentErrorKey = valinfo.currentErrorKey;
+    	if (currentErrorKey != null && adjustLocationErrorKeySet.contains(currentErrorKey))  
+    	{
+    	  LocationCoordinate adjustedCoordinates = (LocationCoordinate)valinfo.getStartElementLocations().peek();
+    	  lineNumber = adjustedCoordinates.getLineNumber();
+    	  columnNumber = adjustedCoordinates.getColumnNumner();
+    	}
+    	
         if(severity == WARNING)
         {
-          valinfo.addWarning(exception.getLocalizedMessage(), exception.getLineNumber(), exception.getColumnNumber(), exception.getSystemId());
+          valinfo.addWarning(exception.getLocalizedMessage(), lineNumber, columnNumber, exception.getSystemId());
         }
         else
         {
-          valinfo.addError(exception.getLocalizedMessage(), exception.getLineNumber(), exception.getColumnNumber(), exception.getSystemId(), valinfo.getCurrentErrorKey(), valinfo.getMessageArguments());
+          valinfo.addError(exception.getLocalizedMessage(), lineNumber, columnNumber, exception.getSystemId(), valinfo.getCurrentErrorKey(), valinfo.getMessageArguments());
         }
       }
     }
@@ -596,5 +647,30 @@ public class XMLValidator
 		    }
 		};
     }
+  }
+  
+  /** 
+   * A line and column number coordinate.
+   */
+  protected class LocationCoordinate
+  {	
+	private int lineNo = -1;
+    private int columnNo = -1;
+    
+    public LocationCoordinate(int lineNumber, int columnNumber)
+    {
+      this.lineNo = lineNumber;
+      this.columnNo = columnNumber;
+    }
+    	
+    public int getLineNumber()
+    { 
+      return this.lineNo;
+    }
+    	
+    public int getColumnNumner()
+    { 
+      return this.columnNo;
+    } 
   }
 }

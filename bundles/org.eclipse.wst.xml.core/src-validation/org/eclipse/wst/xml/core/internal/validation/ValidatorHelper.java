@@ -109,6 +109,11 @@ public class ValidatorHelper
    */
   private class InternalErrorHandler implements org.xml.sax.ErrorHandler
   {
+	public InternalErrorHandler()
+	{
+	  super();
+	}
+	
     public void error(SAXParseException exception) throws SAXException
     {
     }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,14 +11,14 @@
 
 package org.eclipse.wst.xml.core.internal.validation;
 
+import java.util.Stack;
+
 import org.apache.xerces.xni.XMLLocator;
 import org.eclipse.wst.xml.core.internal.validation.core.ValidationInfo;
 
 
 /**
  * A validation information object specific to XML validators.
- * 
- * @author Lawrence Mandel, IBM
  */
 public class XMLValidationInfo extends ValidationInfo implements XMLValidationReport
 {
@@ -29,6 +29,12 @@ public class XMLValidationInfo extends ValidationInfo implements XMLValidationRe
   protected String currentErrorKey;
   protected Object messageArguments[] = null;
   protected XMLLocator locator = null;
+  
+  /**
+   * A stack of start tag locations, used to move errors
+   * reported at the close tag to be reported at the start tag.
+   */
+  protected Stack startElementLocations = new Stack();
   
   /**
    * Constructor.
@@ -152,5 +158,16 @@ public Object[] getMessageArguments() {
 public void setMessageArguments(Object[] messageArguments) {
 	this.messageArguments = messageArguments;
 }
+
+  /**
+   * Get the start elements locations.
+   * 
+   * @return 
+   * 		A stack containing the start element locations.
+   */
+  protected Stack getStartElementLocations()
+  {
+    return startElementLocations;
+  }
 
 }
