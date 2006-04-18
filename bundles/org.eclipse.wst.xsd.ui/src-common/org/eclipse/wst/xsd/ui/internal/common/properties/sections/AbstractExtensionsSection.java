@@ -22,6 +22,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
@@ -319,22 +320,21 @@ public abstract class AbstractExtensionsSection extends AbstractSection
     setListenerEnabled(false);
     if (input != null)
     {
+      Tree tree = extensionTreeViewer.getTree();
       extensionDetailsViewer.setInput(null);
-      //extensionDetailsViewer.getTree().removeAll();
-      extensionTreeViewer.getTree().removeAll();
+      tree.removeAll();
       
       extensionTreeViewer.setInput(input);
 
-      if (extensionTreeViewer.getTree().getSelectionCount() == 0)
-      {
-        TreeItem treeItem = extensionTreeViewer.getTree().getItem(0);
+      if (tree.getSelectionCount() == 0 && tree.getItemCount() > 0)
+      {       
+        TreeItem treeItem = tree.getItem(0);
         if (treeItem != null)
         {  
           extensionDetailsViewer.setInput(treeItem.getData());
           extensionDetailsViewer.refresh();
         }  
       }
-
     }
     setListenerEnabled(true);
 
