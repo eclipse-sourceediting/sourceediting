@@ -70,7 +70,7 @@ public class XSDValidator
 	      
 	  try
 	  {
-	    grammarPreparser.setFeature(Constants.XERCES_FEATURE_PREFIX + "http://apache.org/xml/features/honour-all-schemaLocations", true);
+	    grammarPreparser.setFeature(Constants.XERCES_FEATURE_PREFIX + "honour-all-schemaLocations", true);
 	  }
       catch (Exception e)
 	  {
