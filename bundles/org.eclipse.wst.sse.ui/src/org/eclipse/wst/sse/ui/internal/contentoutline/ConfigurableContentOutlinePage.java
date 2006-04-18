@@ -17,7 +17,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IContributionManager;
@@ -26,7 +28,6 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.util.DelegatingDragAdapter;
 import org.eclipse.jface.util.DelegatingDropAdapter;
-import org.eclipse.jface.util.ListenerList;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.util.TransferDragSourceListener;
 import org.eclipse.jface.util.TransferDropTargetListener;
@@ -59,6 +60,7 @@ import org.eclipse.ui.part.IShowInTarget;
 import org.eclipse.ui.part.IShowInTargetList;
 import org.eclipse.ui.part.ShowInContext;
 import org.eclipse.ui.views.contentoutline.ContentOutlinePage;
+import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration;
 
 
@@ -113,7 +115,7 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 			IDoubleClickListener[] firingListeners = listeners;
 			for (int i = 0; i < firingListeners.length; ++i) {
 				final IDoubleClickListener l = firingListeners[i];
-				Platform.run(new SafeRunnable() {
+				SafeRunner.run(new SafeRunnable() {
 					public void run() {
 						l.doubleClick(event);
 					}
@@ -142,18 +144,15 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 	private class PostSelectionServiceListener implements ISelectionListener {
 		public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 			// from selection service
-			_DEBUG_TIME = System.currentTimeMillis();
-			if (getControl() != null && !getControl().isDisposed() && !getControl().isFocusControl() && getControl().isVisible() && !fSelectionProvider.isFiringSelection()) {
-				/*
-				 * Do not allow selection from other parts to affect selection
-				 * in the tree widget if it has focus. Selection events
-				 * "bouncing" off of other parts are all that we can receive
-				 * if we have focus (since we forward selection to the
-				 * service), and only the user should affect selection if we
-				 * have focus.
+			if (_DEBUG) {
+				_DEBUG_TIME = System.currentTimeMillis();
+			} /*
+				 * Bug 136310, unless this page is that part's
+				 * IContentOutlinePage, ignore the selection change
 				 */
+			if (part == null || part.getAdapter(IContentOutlinePage.class) == ConfigurableContentOutlinePage.this) {
 				ISelection validContentSelection = getConfiguration().getSelection(getTreeViewer(), selection);
-				// getTreeViewer().refresh(true);
+
 				boolean isLinked = getConfiguration().isLinkedWithEditor(getTreeViewer());
 				if (isLinked) {
 					getTreeViewer().setSelection(validContentSelection, true);
@@ -205,7 +204,7 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 			Object[] listeners = listenerList.getListeners();
 			for (int i = 0; i < listeners.length; ++i) {
 				final ISelectionChangedListener l = (ISelectionChangedListener) listeners[i];
-				Platform.run(new SafeRunnable() {
+				SafeRunner.run(new SafeRunnable() {
 					public void run() {
 						l.selectionChanged(event);
 					}
@@ -289,7 +288,7 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 	private static final String OUTLINE_CONTEXT_MENU_ID = "org.eclipse.wst.sse.ui.StructuredTextEditor.OutlineContext"; //$NON-NLS-1$
 
 	private static final String OUTLINE_CONTEXT_MENU_SUFFIX = ".source.OutlineContext"; //$NON-NLS-1$
-	private final boolean _DEBUG = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.ui/contentOutline")); //$NON-NLS-1$  //$NON-NLS-2$;
+	private static final boolean _DEBUG = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.ui/contentOutline")); //$NON-NLS-1$  //$NON-NLS-2$;
 
 	private long _DEBUG_TIME = 0;
 
@@ -519,7 +518,7 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 				}
 			}
 			// clear the DnD listeners and transfer types
-			if (fDragAdapter != null && !fDragAdapter.isEmpty() && !fDragSource.isDisposed() && fDragSource.getTransfer().length > 0) {
+			if (fDragAdapter != null && !fDragAdapter.isEmpty() && fDragSource != null && !fDragSource.isDisposed() && fDragSource.getTransfer().length > 0) {
 				if (fActiveDragListeners != null) {
 					for (int i = 0; i < fActiveDragListeners.length; i++) {
 						fDragAdapter.removeDragSourceListener(fActiveDragListeners[i]);
@@ -529,7 +528,7 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 				fDragSource.removeDragListener(fDragAdapter);
 				fDragSource.setTransfer(new Transfer[0]);
 			}
-			if (fDropAdapter != null && !fDropAdapter.isEmpty() && !fDropTarget.isDisposed() && fDropTarget.getTransfer().length > 0) {
+			if (fDropAdapter != null && !fDropAdapter.isEmpty() && fDropTarget != null && !fDropTarget.isDisposed() && fDropTarget.getTransfer().length > 0) {
 				if (fActiveDropListeners != null) {
 					for (int i = 0; i < fActiveDropListeners.length; i++) {
 						fDropAdapter.removeDropTargetListener(fActiveDropListeners[i]);
