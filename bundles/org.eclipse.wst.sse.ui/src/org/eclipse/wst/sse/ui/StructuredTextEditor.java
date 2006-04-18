@@ -806,7 +806,7 @@ public class StructuredTextEditor extends TextEditor {
 				}
 			}
 			return updated;
-		};
+		}
 	}
 
 	class TimeOutExpired extends TimerTask {

@@ -153,7 +153,7 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 				 * have focus.
 				 */
 				ISelection validContentSelection = getConfiguration().getSelection(getTreeViewer(), selection);
-//				getTreeViewer().refresh(true);
+				// getTreeViewer().refresh(true);
 				boolean isLinked = getConfiguration().isLinkedWithEditor(getTreeViewer());
 				if (isLinked) {
 					getTreeViewer().setSelection(validContentSelection, true);
@@ -239,13 +239,13 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 
 		public void removeSelectionChangedListener(ISelectionChangedListener listener) {
 			listeners.remove(listener);
-		};
+		}
 
 		public void setSelection(ISelection selection) {
 			if (!isFiringSelection) {
 				getTreeViewer().setSelection(selection);
 			}
-		};
+		}
 	}
 
 	private class ShowInTarget implements IShowInTarget {
