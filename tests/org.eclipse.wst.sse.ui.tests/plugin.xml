@@ -4,7 +4,6 @@
 
 	<extension point="org.eclipse.ui.editors">
 		<editor
-			default="true"
 			name="%editor.name.0"
 			extensions="project, classpath, websettings, serverPreference"
 			icon="$nl$/icons/sourceEditor.gif"
