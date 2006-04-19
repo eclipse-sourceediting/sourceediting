@@ -77,12 +77,12 @@ public class AddXSDModelGroupDefinitionCommand extends BaseCommand
     XSDFactory factory = XSDSchemaBuildingTools.getXSDFactory();
     XSDModelGroupDefinition def = factory.createXSDModelGroupDefinition();
     List list = parent.getSchema().getModelGroupDefinitions();
-    String newName = XSDCommonUIUtils.createUniqueElementName("ModelGroupDefinition", list);
+    String newName = XSDCommonUIUtils.createUniqueElementName("ModelGroupDefinition", list); //$NON-NLS-1$
     def.setName(newName);
 
     XSDModelGroup modelGroup = createModelGroup();
     def.setModelGroup(modelGroup);
-    Text textNode = parent.getSchema().getDocument().createTextNode("\n");
+    Text textNode = parent.getSchema().getDocument().createTextNode("\n"); //$NON-NLS-1$
     parent.getSchema().getElement().appendChild(textNode);
     parent.getSchema().getContents().add(def);
     formatChild(def.getElement());

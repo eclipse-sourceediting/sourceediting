@@ -18,8 +18,8 @@ import org.eclipse.xsd.XSDConcreteComponent;
 
 public class SetTypeAction extends XSDBaseAction
 {
-  public static final String SET_NEW_TYPE_ID = "SetTypeAction_AddType";
-  public static final String SELECT_EXISTING_TYPE_ID = "SetTypeAction_ExistingType";
+  public static final String SET_NEW_TYPE_ID = "SetTypeAction_AddType"; //$NON-NLS-1$
+  public static final String SELECT_EXISTING_TYPE_ID = "SetTypeAction_ExistingType"; //$NON-NLS-1$
 
   SetTypeCommand command;
 

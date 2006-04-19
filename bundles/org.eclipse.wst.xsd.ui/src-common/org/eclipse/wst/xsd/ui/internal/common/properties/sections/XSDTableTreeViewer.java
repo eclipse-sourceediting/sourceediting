@@ -25,7 +25,7 @@ import org.w3c.dom.Element;
 public class XSDTableTreeViewer extends XMLTableTreeViewer
 {
 
-  String filter = "";
+  String filter = ""; //$NON-NLS-1$
 
   class XSDActionMenuListener implements IMenuListener
   {

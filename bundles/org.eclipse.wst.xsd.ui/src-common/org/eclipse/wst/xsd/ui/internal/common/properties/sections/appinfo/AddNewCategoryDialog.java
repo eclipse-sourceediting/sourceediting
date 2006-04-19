@@ -39,14 +39,15 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.wst.common.ui.internal.dialogs.SelectSingleFileDialog;
+import org.eclipse.wst.xsd.ui.internal.common.util.Messages;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 
 public class AddNewCategoryDialog extends Dialog
 {
 
-  private static final String SCHEMA_LABEL = "Schema:";
-  private static final String NAME_LABEL = "Name:";
-  private String dialogTitle = "Add Category";
+  private static final String SCHEMA_LABEL = Messages._UI_LABEL_SCHEMA;
+  private static final String NAME_LABEL = Messages._UI_LABEL_NAME;
+  private String dialogTitle = Messages._UI_LABEL_ADD_CATEGORY;
   private MenuManager browseMenu;
   private Label name;
   private Text nameText;
@@ -145,7 +146,7 @@ public class AddNewCategoryDialog extends Dialog
     browseItem = new ToolItem(browseToolBar, SWT.NONE);
     // TODO: Should be able to get the image from the XML plugin. Don't need
     // to copy to XSDEditor icons folder like this.
-    browseItem.setImage(XSDEditorPlugin.getXSDImage("icons/appinfo_browse.gif"));
+    browseItem.setImage(XSDEditorPlugin.getXSDImage("icons/appinfo_browse.gif")); //$NON-NLS-1$
 
     browseMenu = new MenuManager();
 
@@ -197,18 +198,18 @@ public class AddNewCategoryDialog extends Dialog
             isCategoryNameValid = false;
 
             getButton(IDialogConstants.OK_ID).setEnabled(false);
-            errDisplayer.setText("The name is already being used.");
-            errDisplayer.setImage(XSDEditorPlugin.getXSDImage("icons/error_st_obj.gif"));
+            errDisplayer.setText(Messages._UI_ERROR_NAME_ALREADY_USED);
+            errDisplayer.setImage(XSDEditorPlugin.getXSDImage("icons/error_st_obj.gif")); //$NON-NLS-1$
             return;
           }
         }
         // name is empty string
-        if (categoryName.equals(""))
+        if (categoryName.equals("")) //$NON-NLS-1$
         {
           isCategoryNameValid = false;
 
           getButton(IDialogConstants.OK_ID).setEnabled(false);
-          errDisplayer.setText("");
+          errDisplayer.setText(""); //$NON-NLS-1$
           errDisplayer.setImage(null);
           return;
         }
@@ -217,13 +218,13 @@ public class AddNewCategoryDialog extends Dialog
          * Enable the Ok button if the location field AND the name field are not
          * empty
          */
-        if (!categoryName.equals(""))
+        if (!categoryName.equals("")) //$NON-NLS-1$
         {
           isCategoryNameValid = true;
-          errDisplayer.setText("");
+          errDisplayer.setText(""); //$NON-NLS-1$
           errDisplayer.setImage(null);
         }
-        if (!appInfoSchemaLocation.equals(""))
+        if (!appInfoSchemaLocation.equals("")) //$NON-NLS-1$
         {
           getButton(IDialogConstants.OK_ID).setEnabled(true);
         }
@@ -240,11 +241,11 @@ public class AddNewCategoryDialog extends Dialog
 
   protected class BrowseInWorkspaceAction extends Action
   {
-    private static final String XSD_FILE_EXTENSION = ".xsd";
+    private static final String XSD_FILE_EXTENSION = ".xsd"; //$NON-NLS-1$
 
     public BrowseInWorkspaceAction()
     {
-      super("Workspace");
+      super(Messages._UI_ACTION_BROWSE_WORKSPACE);
     }
 
     public void run()
@@ -252,8 +253,8 @@ public class AddNewCategoryDialog extends Dialog
       SelectSingleFileDialog dialog = new SelectSingleFileDialog(getShell(), null, true);
       dialog.addFilterExtensions(new String[] { XSD_FILE_EXTENSION });
       dialog.create();
-      dialog.setTitle("Select XSD file");
-      dialog.setMessage("Choose an XSD file containing schema for your extensible components");
+      dialog.setTitle(Messages._UI_LABEL_SELECT_XSD_FILE);
+      dialog.setMessage(Messages._UI_DESCRIPTION_CHOOSE_XSD_FILE);
 
       if (dialog.open() == Window.OK)
       {
@@ -268,18 +269,18 @@ public class AddNewCategoryDialog extends Dialog
           }
           appInfoSchemaLocation = uri.toString();
 
-          appInfoSchemaLocation = "file://" + Platform.getLocation().toString() + "/" + appInfoSchemaLocation;
+          appInfoSchemaLocation = "file://" + Platform.getLocation().toString() + "/" + appInfoSchemaLocation; //$NON-NLS-1$ //$NON-NLS-2$
           // TODO... be careful how we construct the location
           // UNIX related issues here
 
-          schemaDisplayer.setImage(XSDEditorPlugin.getXSDImage("icons/XSDFile.gif"));
+          schemaDisplayer.setImage(XSDEditorPlugin.getXSDImage("icons/XSDFile.gif")); //$NON-NLS-1$
           schemaDisplayer.setText(uri);
 
           // Enable the OK button if we should..
           if (isCategoryNameValid)
           {
             getButton(IDialogConstants.OK_ID).setEnabled(true);
-            errDisplayer.setText("");
+            errDisplayer.setText(""); //$NON-NLS-1$
             errDisplayer.setImage(null);
           }
         }
@@ -291,7 +292,7 @@ public class AddNewCategoryDialog extends Dialog
   {
     public BrowseCatalogAction()
     {
-      super("Catalog");
+      super(Messages._UI_ACTION_BROWSE_CATALOG);
     }
 
     public void run()
@@ -302,14 +303,14 @@ public class AddNewCategoryDialog extends Dialog
       {
         appInfoSchemaLocation = dialog.getCurrentSelectionLocation();
 
-        schemaDisplayer.setImage(XSDEditorPlugin.getXSDImage("icons/xmlcatalog_obj.gif"));
+        schemaDisplayer.setImage(XSDEditorPlugin.getXSDImage("icons/xmlcatalog_obj.gif")); //$NON-NLS-1$
         schemaDisplayer.setText(dialog.getCurrentSelectionNamespace());
 
         // Enable the OK button if we should..
-        if (isCategoryNameValid && !appInfoSchemaLocation.equals(""))
+        if (isCategoryNameValid && !appInfoSchemaLocation.equals("")) //$NON-NLS-1$
         {
           getButton(IDialogConstants.OK_ID).setEnabled(true);
-          errDisplayer.setText("");
+          errDisplayer.setText(""); //$NON-NLS-1$
           errDisplayer.setImage(null);
         }
       }

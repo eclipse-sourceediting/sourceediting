@@ -25,17 +25,18 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDComplexTypeDefinitionAdapter;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.BaseSelectionAction;
+import org.eclipse.wst.xsd.ui.internal.common.util.Messages;
 import org.eclipse.wst.xsd.ui.internal.editor.InternalXSDMultiPageEditor;
 import org.eclipse.xsd.XSDComplexTypeDefinition;
 
 public class OpenInNewEditor extends BaseSelectionAction
 {
-  public static final String ID = "OpenInNewEditor";
+  public static final String ID = "OpenInNewEditor"; //$NON-NLS-1$
 
   public OpenInNewEditor(IWorkbenchPart part)
   {
     super(part);
-    setText("Open In New Editor");
+    setText(Messages._UI_ACTION_OPEN_IN_NEW_EDITOR); //$NON-NLS-1$
     setId(ID);
   }
 
@@ -68,7 +69,7 @@ public class OpenInNewEditor extends BaseSelectionAction
             {
               // TODO: Should use this to open in default editor
               // IEditorPart editorPart = IDE.openEditor(page, schemaFile, true);
-              IEditorPart editorPart = page.openEditor(new FileEditorInput(schemaFile), "org.eclipse.wst.xsd.ui.internal.editor.InternalXSDMultiPageEditor", true);
+              IEditorPart editorPart = page.openEditor(new FileEditorInput(schemaFile), "org.eclipse.wst.xsd.ui.internal.editor.InternalXSDMultiPageEditor", true); //$NON-NLS-1$
 
               if (editorPart instanceof InternalXSDMultiPageEditor)
               {

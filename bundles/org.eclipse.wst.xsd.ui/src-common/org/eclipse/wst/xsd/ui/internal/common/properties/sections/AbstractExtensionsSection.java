@@ -48,6 +48,7 @@ import org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo.DOMExt
 import org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo.ExtensionDetailsViewer;
 import org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo.ExtensionsSchemasRegistry;
 import org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo.SpecificationForExtensionsSchema;
+import org.eclipse.wst.xsd.ui.internal.common.util.Messages;
 import org.w3c.dom.Element;
 
 public abstract class AbstractExtensionsSection extends AbstractSection
@@ -169,7 +170,7 @@ public abstract class AbstractExtensionsSection extends AbstractSection
     leftContent.setLayout(gridLayout);
 
     Section section = getWidgetFactory().createSection(leftContent, SWT.FLAT | Section.TITLE_BAR);
-    section.setText("Extensions");
+    section.setText(Messages._UI_LABEL_EXTENSIONS);
     section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
     Composite tableAndButtonComposite = getWidgetFactory().createComposite(leftContent, SWT.FLAT);
@@ -244,29 +245,29 @@ public abstract class AbstractExtensionsSection extends AbstractSection
     gridLayout.makeColumnsEqualWidth = true;
     buttonComposite.setLayout(gridLayout);
     
-    addButton = getWidgetFactory().createButton(buttonComposite, "Add...", SWT.FLAT);   
+    addButton = getWidgetFactory().createButton(buttonComposite, Messages._UI_ACTION_ADD_WITH_DOTS, SWT.FLAT);   
     addButton.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
     addButton.addSelectionListener(this);
-    addButton.setToolTipText("Add Extension Component");
+    addButton.setToolTipText(Messages._UI_ACTION_ADD_EXTENSION_COMPONENT);
     //addButton.setLayoutData(new ColumnLayoutData(ColumnLayoutData.FILL));
     addButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-    removeButton = getWidgetFactory().createButton(buttonComposite, "Remove", SWT.FLAT);
+    removeButton = getWidgetFactory().createButton(buttonComposite, Messages._UI_ACTION_DELETE, SWT.FLAT);
     removeButton.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
     removeButton.addSelectionListener(this);
-    removeButton.setToolTipText("Remove Extension Component");
+    removeButton.setToolTipText(Messages._UI_ACTION_DELETE_EXTENSION_COMPONENT);
     //removeButton.setLayoutData(new ColumnLayoutData(ColumnLayoutData.FILL));
     
-    Button up = getWidgetFactory().createButton(buttonComposite, "Up", SWT.FLAT);
+    Button up = getWidgetFactory().createButton(buttonComposite, Messages._UI_LABEL_UP, SWT.FLAT);
     //up.setLayoutData(new ColumnLayoutData(ColumnLayoutData.FILL));
     up.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
     
-    Button down = getWidgetFactory().createButton(buttonComposite, "Down", SWT.FLAT);
+    Button down = getWidgetFactory().createButton(buttonComposite, Messages._UI_LABEL_DOWN, SWT.FLAT);
     //down.setLayoutData(new ColumnLayoutData(ColumnLayoutData.FILL));    
     down.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
     Composite rightContent = getWidgetFactory().createComposite(sashForm, SWT.FLAT);
     Section section2 = getWidgetFactory().createSection(rightContent, SWT.FLAT | Section.TITLE_BAR);
-    section2.setText("Extension Details");
+    section2.setText(Messages._UI_LABEL_EXTENSION_DETAILS);
     section2.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
     //contentLabel = getWidgetFactory().createLabel(rightContent, "Content");
 

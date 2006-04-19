@@ -14,16 +14,17 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDBaseAdapter;
 import org.eclipse.wst.xsd.ui.internal.common.commands.AddXSDSimpleTypeDefinitionCommand;
+import org.eclipse.wst.xsd.ui.internal.common.util.Messages;
 import org.eclipse.xsd.XSDSchema;
 
 public class AddXSDSimpleTypeDefinitionAction extends XSDBaseAction
 {
-  public static final String ID = "org.eclipse.wst.xsd.ui.internal.editor.AddXSDSimpleTypeDefinitionAction";
+  public static final String ID = "org.eclipse.wst.xsd.ui.internal.editor.AddXSDSimpleTypeDefinitionAction"; //$NON-NLS-1$
 
   public AddXSDSimpleTypeDefinitionAction(IWorkbenchPart part)
   {
     super(part);
-    setText("Add Simple Type");
+    setText(Messages._UI_ACTION_ADD_SIMPLE_TYPE);
     setId(ID);
   }
 
@@ -38,7 +39,7 @@ public class AddXSDSimpleTypeDefinitionAction extends XSDBaseAction
 
     if (selection instanceof XSDSchema)
     {
-      AddXSDSimpleTypeDefinitionCommand command = new AddXSDSimpleTypeDefinitionCommand("Add Simple Type", (XSDSchema) selection);
+      AddXSDSimpleTypeDefinitionCommand command = new AddXSDSimpleTypeDefinitionCommand(Messages._UI_ACTION_ADD_SIMPLE_TYPE, (XSDSchema) selection);
       getCommandStack().execute(command);
     }
   }

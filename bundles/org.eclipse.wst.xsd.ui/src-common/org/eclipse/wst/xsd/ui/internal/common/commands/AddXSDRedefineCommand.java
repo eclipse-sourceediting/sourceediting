@@ -25,7 +25,7 @@ public class AddXSDRedefineCommand extends AddXSDSchemaDirectiveCommand
   public void execute()
   {
     XSDRedefine xsdRedefine = XSDFactory.eINSTANCE.createXSDRedefine();
-    xsdRedefine.setSchemaLocation("");
+    xsdRedefine.setSchemaLocation(""); //$NON-NLS-1$
     xsdSchema.getContents().add(findNextPositionToInsert(), xsdRedefine);
     addedXSDConcreteComponent = xsdRedefine;
     formatChild(xsdSchema.getElement());

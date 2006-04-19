@@ -29,8 +29,8 @@ import org.eclipse.xsd.XSDSchema;
 
 public class AddXSDElementAction extends XSDBaseAction
 {
-  public static String ID = "org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDElementAction";
-  public static String REF_ID = "org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDElementReferenceAction";
+  public static String ID = "org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDElementAction"; //$NON-NLS-1$
+  public static String REF_ID = "org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDElementReferenceAction"; //$NON-NLS-1$
   boolean isReference;
   
   public AddXSDElementAction(IWorkbenchPart part, String id, String label, boolean isReference)

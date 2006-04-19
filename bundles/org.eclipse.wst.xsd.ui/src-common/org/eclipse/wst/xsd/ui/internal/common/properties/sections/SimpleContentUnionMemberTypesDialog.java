@@ -71,7 +71,7 @@ public class SimpleContentUnionMemberTypesDialog extends Dialog implements Selec
         sb.append(memberTypesList.getItem(i));
         if (i < length - 1)
         {
-          sb.append(" ");
+          sb.append(" "); //$NON-NLS-1$
         }
       }
       result = sb.toString();
@@ -87,10 +87,10 @@ public class SimpleContentUnionMemberTypesDialog extends Dialog implements Selec
   public Control createDialogArea(Composite parent)
   {
     Composite client = (Composite)super.createDialogArea(parent);
-    getShell().setText("Union " + XSDConstants.MEMBERTYPES_ATTRIBUTE); 
+    getShell().setText("Union " + XSDConstants.MEMBERTYPES_ATTRIBUTE);  //$NON-NLS-1$
     
     Label instructions = new Label(client, SWT.LEFT | SWT.WRAP);
-    instructions.setText(XSDEditorPlugin.getXSDString("_UI_LABEL_SELECT_MEMBERTYPES"));
+    instructions.setText(XSDEditorPlugin.getXSDString("_UI_LABEL_SELECT_MEMBERTYPES")); //$NON-NLS-1$
     
     Composite columnsComposite = new Composite(client, SWT.NONE);
     GridLayout ccGL = new GridLayout();
@@ -118,7 +118,7 @@ public class SimpleContentUnionMemberTypesDialog extends Dialog implements Selec
     ViewUtility.createHorizontalFiller(columnsComposite, 1);
     
     Label memberListLabel = new Label(columnsComposite, SWT.LEFT);
-    memberListLabel.setText(XSDEditorPlugin.getXSDString("_UI_LABEL_MEMBERTYPES_VALUE"));
+    memberListLabel.setText(XSDEditorPlugin.getXSDString("_UI_LABEL_MEMBERTYPES_VALUE")); //$NON-NLS-1$
     
     Composite dataComposite = new Composite(client, SWT.NONE);
     GridLayout dcGL = new GridLayout();
@@ -159,10 +159,10 @@ public class SimpleContentUnionMemberTypesDialog extends Dialog implements Selec
     bcGL.numColumns = 1;
     buttonComposite.setLayout(bcGL);
     addButton = new Button(buttonComposite, SWT.PUSH);
-    addButton.setText(">");
+    addButton.setText(">"); //$NON-NLS-1$
     addButton.addSelectionListener(this);
     removeButton = new Button(buttonComposite, SWT.PUSH);
-    removeButton.setText("<");
+    removeButton.setText("<"); //$NON-NLS-1$
     removeButton.addSelectionListener(this);
     
     Composite listComposite = new Composite(dataComposite, SWT.NONE);
@@ -272,7 +272,7 @@ public class SimpleContentUnionMemberTypesDialog extends Dialog implements Selec
      {
       TableItem item = new TableItem(table, SWT.NONE);
       item.setText(items.get(i).toString());
-      item.setImage(XSDEditorPlugin.getXSDImage("icons/XSDSimpleType.gif"));
+      item.setImage(XSDEditorPlugin.getXSDImage("icons/XSDSimpleType.gif")); //$NON-NLS-1$
       item.setData(items.get(i));
     }
   }
@@ -283,15 +283,15 @@ public class SimpleContentUnionMemberTypesDialog extends Dialog implements Selec
     if (showAnonymous)
      {
       TableItem anonymousItem = new TableItem(table, SWT.NONE);
-      anonymousItem.setText("**anonymous**");
-      anonymousItem.setData("**anonymous**");
+      anonymousItem.setText("**anonymous**"); //$NON-NLS-1$
+      anonymousItem.setData("**anonymous**"); //$NON-NLS-1$
     }
     List items = getUserSimpleTypeNamesList();
     for (int i = 0; i < items.size(); i++)
      {
       TableItem item = new TableItem(table, SWT.NONE);
       item.setText(items.get(i).toString());
-      item.setImage(XSDEditorPlugin.getXSDImage("icons/XSDSimpleType.gif"));
+      item.setImage(XSDEditorPlugin.getXSDImage("icons/XSDSimpleType.gif")); //$NON-NLS-1$
       item.setData(items.get(i));
     }
   }

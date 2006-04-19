@@ -26,7 +26,7 @@ public class DOMExtensionDetailsContentProvider implements ExtensionDetailsConte
       for (int i = 0; i < attributes.getLength(); i++)
       {
         Attr attr = (Attr)attributes.item(i);    
-        if (!"xmlns".equals(attr.getName()) && !"xmlns".equals(attr.getPrefix()))
+        if (!"xmlns".equals(attr.getName()) && !"xmlns".equals(attr.getPrefix())) //$NON-NLS-1$ //$NON-NLS-2$
         {    
           resultMap.put(attr.getName(), new DOMExtensionItem(attr));
         }
@@ -56,7 +56,7 @@ public class DOMExtensionDetailsContentProvider implements ExtensionDetailsConte
               contentType == CMElementDeclaration.PCDATA) &&
               ed.getDataType() != null)              
           {
-            resultMap.put("text()", new DOMExtensionItem(element, ed));
+            resultMap.put("text()", new DOMExtensionItem(element, ed)); //$NON-NLS-1$
           }  
         }
       }      
@@ -82,7 +82,7 @@ public class DOMExtensionDetailsContentProvider implements ExtensionDetailsConte
     {
       return ((DOMExtensionItem)item).getName();
     }  
-    return "";
+    return ""; //$NON-NLS-1$
   }
 
   public String getValue(Object item)
@@ -91,7 +91,7 @@ public class DOMExtensionDetailsContentProvider implements ExtensionDetailsConte
     {
       return ((DOMExtensionItem)item).getValue();
     }  
-    return "";
+    return ""; //$NON-NLS-1$
   }
   
   public String[] getPossibleValues(Object item)

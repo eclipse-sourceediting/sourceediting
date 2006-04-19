@@ -94,7 +94,7 @@ private String nameToAdd;
     if (xsdSchema != null)
     {
       XSDElementDeclaration element = createGlobalXSDElementDeclaration();
-      Text textNode = xsdSchema.getDocument().createTextNode("\n");
+      Text textNode = xsdSchema.getDocument().createTextNode("\n"); //$NON-NLS-1$
       xsdSchema.getElement().appendChild(textNode);
       xsdSchema.getContents().add(element);
       addedXSDConcreteComponent = element;
@@ -159,14 +159,14 @@ private String nameToAdd;
   
   protected XSDParticle createXSDElementDeclaration()
   {
-    XSDSimpleTypeDefinition type = xsdModelGroup.getSchema().getSchemaForSchema().resolveSimpleTypeDefinition("string");
+    XSDSimpleTypeDefinition type = xsdModelGroup.getSchema().getSchemaForSchema().resolveSimpleTypeDefinition("string"); //$NON-NLS-1$
 
     XSDElementDeclaration element = XSDFactory.eINSTANCE.createXSDElementDeclaration();
 
     ArrayList usedAttributeNames = new ArrayList();
     usedAttributeNames.addAll(XSDCommonUIUtils.getChildElements(xsdModelGroup));
     element.setName(XSDCommonUIUtils.createUniqueElementName(
-    		nameToAdd == null ? "NewElement" : nameToAdd , xsdSchema.getElementDeclarations()));
+    		nameToAdd == null ? "NewElement" : nameToAdd , xsdSchema.getElementDeclarations())); //$NON-NLS-1$
     element.setTypeDefinition(type);
 
     XSDParticle particle = XSDFactory.eINSTANCE.createXSDParticle();
@@ -186,7 +186,7 @@ private String nameToAdd;
     else
     {
       referencedElement = createGlobalXSDElementDeclaration();
-      Text textNode = xsdSchema.getDocument().createTextNode("\n");
+      Text textNode = xsdSchema.getDocument().createTextNode("\n"); //$NON-NLS-1$
       xsdSchema.getElement().appendChild(textNode);
       xsdSchema.getContents().add(referencedElement);
     }
@@ -202,7 +202,7 @@ private String nameToAdd;
 
   protected XSDParticle createXSDElementDeclarationForComplexType()
   {
-    XSDSimpleTypeDefinition type = xsdModelGroup.getSchema().getSchemaForSchema().resolveSimpleTypeDefinition("string");
+    XSDSimpleTypeDefinition type = xsdModelGroup.getSchema().getSchemaForSchema().resolveSimpleTypeDefinition("string"); //$NON-NLS-1$
 
     XSDElementDeclaration element = XSDFactory.eINSTANCE.createXSDElementDeclaration();
 
@@ -210,7 +210,7 @@ private String nameToAdd;
     usedAttributeNames.addAll(XSDCommonUIUtils.getAllAttributes(xsdComplexTypeDefinition));
     usedAttributeNames.addAll(XSDCommonUIUtils.getInheritedAttributes(xsdComplexTypeDefinition));
     element.setName(XSDCommonUIUtils.createUniqueElementName(
-    		nameToAdd == null ? "NewElement" : nameToAdd , usedAttributeNames));
+    		nameToAdd == null ? "NewElement" : nameToAdd , usedAttributeNames)); //$NON-NLS-1$
     element.setTypeDefinition(type);
 
     XSDParticle particle = XSDFactory.eINSTANCE.createXSDParticle();
@@ -221,12 +221,12 @@ private String nameToAdd;
 
   protected XSDElementDeclaration createGlobalXSDElementDeclaration()
   {
-    XSDSimpleTypeDefinition type = xsdSchema.getSchemaForSchema().resolveSimpleTypeDefinition("string");
+    XSDSimpleTypeDefinition type = xsdSchema.getSchemaForSchema().resolveSimpleTypeDefinition("string"); //$NON-NLS-1$
     XSDFactory factory = XSDSchemaBuildingTools.getXSDFactory();
     XSDElementDeclaration element = factory.createXSDElementDeclaration();
 
     element.setName(XSDCommonUIUtils.createUniqueElementName(
-    		nameToAdd == null ? "NewElement" : nameToAdd , xsdSchema.getElementDeclarations()));
+    		nameToAdd == null ? "NewElement" : nameToAdd , xsdSchema.getElementDeclarations())); //$NON-NLS-1$
     element.setTypeDefinition(type);
 
     return element;

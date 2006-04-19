@@ -17,12 +17,13 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDAdapterFactory;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDBaseAdapter;
 import org.eclipse.wst.xsd.ui.internal.common.commands.AddXSDModelGroupDefinitionCommand;
+import org.eclipse.wst.xsd.ui.internal.common.util.Messages;
 import org.eclipse.xsd.XSDConcreteComponent;
 
 public class AddXSDModelGroupDefinitionAction extends XSDBaseAction
 {
-  public static final String MODELGROUPDEFINITION_ID = "AddXSDModelGroupDefinitionAction";
-  public static final String MODELGROUPDEFINITIONREF_ID = "AddXSDModelGroupDefinitionRefAction";
+  public static final String MODELGROUPDEFINITION_ID = "AddXSDModelGroupDefinitionAction"; //$NON-NLS-1$
+  public static final String MODELGROUPDEFINITIONREF_ID = "AddXSDModelGroupDefinitionRefAction"; //$NON-NLS-1$
   boolean isReference;
 
   public AddXSDModelGroupDefinitionAction(IWorkbenchPart part, boolean isReference)
@@ -31,12 +32,12 @@ public class AddXSDModelGroupDefinitionAction extends XSDBaseAction
     this.isReference = isReference;
     if (isReference)
     {
-      setText("Add Group Ref");
+      setText(Messages._UI_ACTION_ADD_GROUP_REF);
       setId(MODELGROUPDEFINITION_ID);
     }
     else
     {
-      setText("Add Group");
+      setText(Messages._UI_ACTION_ADD_GROUP);
       setId(MODELGROUPDEFINITIONREF_ID);
     }
   }

@@ -93,12 +93,12 @@ public class XSDExtensionTreeContentProvider extends DOMExtensionTreeContentProv
     if (prefix != null)
     {
       // this handle the xmlns:foo="blah" case
-      return "xmlns".equals(prefix);
+      return "xmlns".equals(prefix); //$NON-NLS-1$
     }
     else
     {
       // this handles the xmlns="blah" case
-      return "xmlns".equals(attribute.getNodeName());
+      return "xmlns".equals(attribute.getNodeName()); //$NON-NLS-1$
     }
   }
 }

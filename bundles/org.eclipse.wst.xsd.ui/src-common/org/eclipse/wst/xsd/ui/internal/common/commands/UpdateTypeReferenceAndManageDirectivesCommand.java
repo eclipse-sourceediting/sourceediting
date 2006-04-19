@@ -73,9 +73,9 @@ public class UpdateTypeReferenceAndManageDirectivesCommand extends UpdateCompone
           // TODO (cs) we need to compute a relative URI to make this nicer!
           //
           String fileURI = file.getLocationURI().toString();
-          if (fileURI.startsWith("file:/") && !fileURI.startsWith("file:///"))
+          if (fileURI.startsWith("file:/") && !fileURI.startsWith("file:///")) //$NON-NLS-1$ //$NON-NLS-2$
           {
-            fileURI = "file:///" + fileURI.substring(6);
+            fileURI = "file:///" + fileURI.substring(6); //$NON-NLS-1$
           }   
           directive.setSchemaLocation(fileURI);
           

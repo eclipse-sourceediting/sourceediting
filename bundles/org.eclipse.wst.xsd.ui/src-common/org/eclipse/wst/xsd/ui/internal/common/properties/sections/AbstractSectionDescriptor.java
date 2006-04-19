@@ -37,7 +37,7 @@ public class AbstractSectionDescriptor implements ISectionDescriptor
    */
   public String getId()
   {
-    return "";
+    return ""; //$NON-NLS-1$
   }
 
   /* (non-Javadoc)
@@ -97,7 +97,7 @@ public class AbstractSectionDescriptor implements ISectionDescriptor
    */
   public String getAfterSection()
   {
-    return "";
+    return ""; //$NON-NLS-1$
   }
 
   

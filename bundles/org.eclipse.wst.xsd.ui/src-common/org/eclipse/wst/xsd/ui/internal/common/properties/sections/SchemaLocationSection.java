@@ -93,7 +93,7 @@ public class SchemaLocationSection extends CommonDirectivesSection
       errorText = new StyledText(composite, SWT.FLAT);
       errorText.setEditable(false);
       errorText.setEnabled(false);
-      errorText.setText("");
+      errorText.setText(""); //$NON-NLS-1$
       
       data = new GridData();
       data.horizontalAlignment = GridData.FILL;
@@ -129,7 +129,7 @@ public class SchemaLocationSection extends CommonDirectivesSection
 	      String value = schemaLocationText.getText();
 	      if (result == Window.OK)
 	      {
-          errorText.setText("");
+          errorText.setText(""); //$NON-NLS-1$
 	        IFile selectedIFile = fileSelectWizard.getResultFile();
 	        String schemaFileString = value;
 	        if (selectedIFile != null) 
@@ -170,7 +170,7 @@ public class SchemaLocationSection extends CommonDirectivesSection
 					location = element.getAttribute("schemaLocation"); //$NON-NLS-1$
           if (location == null)
           {
-            location = "";
+            location = ""; //$NON-NLS-1$
           }
 					schemaLocationText.setText(location);
 				}

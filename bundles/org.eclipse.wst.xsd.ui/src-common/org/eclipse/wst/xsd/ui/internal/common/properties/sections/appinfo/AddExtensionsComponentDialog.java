@@ -47,6 +47,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.dialogs.SelectionDialog;
 import org.eclipse.wst.xsd.contentmodel.internal.XSDImpl;
+import org.eclipse.wst.xsd.ui.internal.common.util.Messages;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.xsd.XSDAttributeDeclaration;
 import org.eclipse.xsd.XSDElementDeclaration;
@@ -60,8 +61,8 @@ public class AddExtensionsComponentDialog extends SelectionDialog implements ISe
   // hence we need this field
   static ExtensionsSchemasRegistry registry;
   
-  protected static final Image DEFAULT_ELEMENT_ICON = XSDEditorPlugin.getXSDImage("icons/XSDElement.gif");
-  protected static final Image DEFAULT_ATTRIBUTE_ICON = XSDEditorPlugin.getXSDImage("icons/XSDAttribute.gif");
+  protected static final Image DEFAULT_ELEMENT_ICON = XSDEditorPlugin.getXSDImage("icons/XSDElement.gif"); //$NON-NLS-1$
+  protected static final Image DEFAULT_ATTRIBUTE_ICON = XSDEditorPlugin.getXSDImage("icons/XSDAttribute.gif"); //$NON-NLS-1$
 
   /** A temporary Document in which we create temporary DOM element for each element in the
    * Element view. (required by LabelProvider)  */ 
@@ -72,7 +73,7 @@ public class AddExtensionsComponentDialog extends SelectionDialog implements ISe
   public AddExtensionsComponentDialog(Shell parent, ExtensionsSchemasRegistry registry)
   {
     super(parent);
-    setTitle("Add Extension Components");
+    setTitle(Messages._UI_ACTION_ADD_EXTENSION_COMPONENTS);
     setShellStyle(SWT.APPLICATION_MODAL | SWT.RESIZE | SWT.CLOSE);
     
     this.registry = registry;
@@ -104,7 +105,7 @@ public class AddExtensionsComponentDialog extends SelectionDialog implements ISe
     categoryComposite.setLayout(gl);
 
     Label label = new Label(categoryComposite, SWT.LEFT);
-    label.setText("Extension Categories:");
+    label.setText(Messages._UI_LABEL_EXTENSION_CATEGORIES);
 
     new Label(categoryComposite, SWT.NONE);
 
@@ -129,17 +130,17 @@ public class AddExtensionsComponentDialog extends SelectionDialog implements ISe
     buttonComposite.setLayout(gl);
 
     addButton = new Button(buttonComposite, SWT.PUSH);
-    addButton.setText("Add...");
+    addButton.setText(Messages._UI_LABEL_ADD_WITH_DOTS);
     addButton.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
     addButton.addSelectionListener(this);
 
     removeButton = new Button(buttonComposite, SWT.PUSH);
-    removeButton.setText("Remove");
+    removeButton.setText(Messages._UI_LABEL_DELETE);
     removeButton.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
     removeButton.addSelectionListener(this);
     
     editButton = new Button(buttonComposite, SWT.PUSH);
-    editButton.setText("Edit");
+    editButton.setText(Messages._UI_LABEL_EDIT);
     editButton.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
     editButton.addSelectionListener(this);
     
@@ -148,7 +149,7 @@ public class AddExtensionsComponentDialog extends SelectionDialog implements ISe
       categoryTableViewer.setSelection(new StructuredSelection(initialSelection));
 
     Label elementLabel = new Label(categoryComposite, SWT.LEFT);
-    elementLabel.setText("Available components to Add:");
+    elementLabel.setText(Messages._UI_LABEL_AVAILABLE_COMPONENTS_TO_ADD);
 
     new Label(categoryComposite, SWT.NONE);
 
@@ -286,7 +287,7 @@ public class AddExtensionsComponentDialog extends SelectionDialog implements ISe
     else if (e.widget == editButton)
     {
         // use this dialog not for adding but for editing purpose.
-        AddNewCategoryDialog dialog = new AddNewCategoryDialog(getShell(), "Edit Category");
+        AddNewCategoryDialog dialog = new AddNewCategoryDialog(getShell(), Messages._UI_LABEL_EDIT_CATEGORY);
         if ( dialog.open() == Window.OK){
         	TableItem[] selections = categoryTableViewer.getTable().getSelection();        	
         	SpecificationForExtensionsSchema spec = (SpecificationForExtensionsSchema) selections[0].getData();
@@ -343,9 +344,9 @@ public class AddExtensionsComponentDialog extends SelectionDialog implements ISe
 	  
 	  if (xsdSchema == null){
 		  MessageBox errDialog = new MessageBox(getShell(), SWT.ICON_ERROR);
-		  errDialog.setText("Invalid Category");
-		  errDialog.setMessage("The xsd file of the selected category cannot be parsed. \n"
-				  +"Please validate the file.");
+		  errDialog.setText(Messages._UI_ERROR_INVALID_CATEGORY);
+		  errDialog.setMessage(Messages._UI_ERROR_FILE_CANNOT_BE_PARSED
+				  + "\n" + Messages._UI_ERROR_VALIDATE_THE_FILE);  //$NON-NLS-1$
 		  errDialog.open();
 		  return;
 	  }
@@ -455,7 +456,7 @@ public class AddExtensionsComponentDialog extends SelectionDialog implements ISe
      */
     public Image getImage(Object element)
     {
-      return XSDEditorPlugin.getXSDImage("icons/appinfo_category.gif");
+      return XSDEditorPlugin.getXSDImage("icons/appinfo_category.gif"); //$NON-NLS-1$
     }
 
     /*

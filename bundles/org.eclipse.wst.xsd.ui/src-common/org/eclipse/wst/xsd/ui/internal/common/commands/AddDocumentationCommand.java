@@ -102,7 +102,7 @@ public class AddDocumentationCommand extends BaseCommand
       {
         if (newValue.length() > 0)
         {
-          oldValue = "";
+          oldValue = ""; //$NON-NLS-1$
           Node childNode = documentationElement.getOwnerDocument().createTextNode(newValue);
           documentationElement.appendChild(childNode);
         }

@@ -103,7 +103,7 @@ public class XSDSchemaSection extends AbstractSection
     targetNamespaceText.addListener(SWT.Modify, this);
 
     // Advanced Button
-    editButton = getWidgetFactory().createButton(composite, XSDEditorPlugin.getXSDString("_UI_SECTION_ADVANCED_ATTRIBUTES") + "...", SWT.PUSH);
+    editButton = getWidgetFactory().createButton(composite, XSDEditorPlugin.getXSDString("_UI_SECTION_ADVANCED_ATTRIBUTES") + "...", SWT.PUSH); //$NON-NLS-1$ //$NON-NLS-2$
     data = new GridData(SWT.END, SWT.CENTER, true, false);
     data.horizontalSpan = 2;
     editButton.setLayoutData(data);
@@ -113,7 +113,7 @@ public class XSDSchemaSection extends AbstractSection
     errorText = new StyledText(composite, SWT.FLAT);
     errorText.setEditable(false);
     errorText.setEnabled(false);
-    errorText.setText("");
+    errorText.setText(""); //$NON-NLS-1$
     data = new GridData();
     data.horizontalAlignment = GridData.FILL;
     data.horizontalSpan = 2;
@@ -156,21 +156,21 @@ public class XSDSchemaSection extends AbstractSection
       {
         targetNamespaceText.setText(""); //$NON-NLS-1$
       }
-      errorText.setText("");
+      errorText.setText(""); //$NON-NLS-1$
     }
     setListenerEnabled(true);
   }
 
   public void doHandleEvent(Event event)
   {
-    errorText.setText("");
+    errorText.setText(""); //$NON-NLS-1$
     String prefixValue = prefixText.getText();
     String tnsValue = targetNamespaceText.getText();
     if (tnsValue.trim().length() == 0)
     {
       if (prefixValue.trim().length() > 0)
       {
-        errorText.setText(XSDEditorPlugin.getXSDString("_ERROR_TARGET_NAMESPACE_AND_PREFIX"));
+        errorText.setText(XSDEditorPlugin.getXSDString("_ERROR_TARGET_NAMESPACE_AND_PREFIX")); //$NON-NLS-1$
         int length = errorText.getText().length();
         red = new Color(null, 255, 0, 0);
         StyleRange style = new StyleRange(0, length, red, targetNamespaceText.getBackground());
@@ -413,7 +413,7 @@ public class XSDSchemaSection extends AbstractSection
   private boolean validateTargetNamespace(String ns)
   {
     // will allow blank namespace !!
-    if (ns.equals(""))
+    if (ns.equals("")) //$NON-NLS-1$
     {
       return true;
     }

@@ -17,17 +17,18 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDAdapterFactory;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDBaseAdapter;
 import org.eclipse.wst.xsd.ui.internal.common.commands.AddXSDAttributeGroupDefinitionCommand;
+import org.eclipse.wst.xsd.ui.internal.common.util.Messages;
 import org.eclipse.xsd.XSDComplexTypeDefinition;
 import org.eclipse.xsd.XSDSchema;
 
 public class AddXSDAttributeGroupDefinitionAction extends XSDBaseAction
 {
-  public static String ID = "AddXSDAttributeGroupDefinitionAction";
+  public static String ID = "AddXSDAttributeGroupDefinitionAction"; //$NON-NLS-1$
 
   public AddXSDAttributeGroupDefinitionAction(IWorkbenchPart part)
   {
     super(part);
-    setText("Add Attribute Group");
+    setText(Messages._UI_ACTION_ADD_ATTRIBUTE_GROUP);
     setId(ID);
   }
 
@@ -43,12 +44,12 @@ public class AddXSDAttributeGroupDefinitionAction extends XSDBaseAction
     AddXSDAttributeGroupDefinitionCommand command = null;
     if (selection instanceof XSDComplexTypeDefinition)
     {
-      command = new AddXSDAttributeGroupDefinitionCommand("Add Attribute Group Ref", (XSDComplexTypeDefinition) selection);
+      command = new AddXSDAttributeGroupDefinitionCommand(Messages._UI_ACTION_ADD_ATTRIBUTE_GROUP_REF, (XSDComplexTypeDefinition) selection);
       getCommandStack().execute(command);
     }
     else if (selection instanceof XSDSchema)
     {
-      command = new AddXSDAttributeGroupDefinitionCommand("Add Attribute Group Definition", (XSDSchema) selection);
+      command = new AddXSDAttributeGroupDefinitionCommand(Messages._UI_ACTION_ADD_ATTRIBUTE_GROUP_DEFINITION, (XSDSchema) selection);
       getCommandStack().execute(command);
     }
 

@@ -9,8 +9,8 @@ import org.w3c.dom.Element;
 
 public class DOMExtensionTreeLabelProvider extends LabelProvider
 {
-  protected static final Image DEFAULT_ELEMENT_ICON = XSDEditorPlugin.getXSDImage("icons/XSDElement.gif");
-  protected static final Image DEFAULT_ATTR_ICON = XSDEditorPlugin.getXSDImage("icons/XSDAttribute.gif");
+  protected static final Image DEFAULT_ELEMENT_ICON = XSDEditorPlugin.getXSDImage("icons/XSDElement.gif"); //$NON-NLS-1$
+  protected static final Image DEFAULT_ATTR_ICON = XSDEditorPlugin.getXSDImage("icons/XSDAttribute.gif"); //$NON-NLS-1$
     
   public DOMExtensionTreeLabelProvider()
   {    
@@ -46,6 +46,6 @@ public class DOMExtensionTreeLabelProvider extends LabelProvider
     if ( input instanceof Attr){
       return ((Attr) input).getLocalName();
     }
-    return "";
+    return ""; //$NON-NLS-1$
   }
 }

@@ -17,16 +17,17 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDAdapterFactory;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDBaseAdapter;
 import org.eclipse.wst.xsd.ui.internal.common.commands.AddXSDComplexTypeDefinitionCommand;
+import org.eclipse.wst.xsd.ui.internal.common.util.Messages;
 import org.eclipse.xsd.XSDSchema;
 
 public class AddXSDComplexTypeDefinitionAction extends XSDBaseAction
 {
-  public static final String ID = "org.eclipse.wst.xsd.ui.internal.editor.AddXSDComplexTypeDefinitionAction";
+  public static final String ID = "org.eclipse.wst.xsd.ui.internal.editor.AddXSDComplexTypeDefinitionAction"; //$NON-NLS-1$
 
   public AddXSDComplexTypeDefinitionAction(IWorkbenchPart part)
   {
     super(part);
-    setText("Add Complex Type");
+    setText(Messages._UI_ACTION_ADD_COMPLEX_TYPE);
     setId(ID);
   }
 
@@ -41,7 +42,7 @@ public class AddXSDComplexTypeDefinitionAction extends XSDBaseAction
 
     if (selection instanceof XSDSchema)
     {
-      AddXSDComplexTypeDefinitionCommand command = new AddXSDComplexTypeDefinitionCommand("Add Complex Type", (XSDSchema) selection);
+      AddXSDComplexTypeDefinitionCommand command = new AddXSDComplexTypeDefinitionCommand(Messages._UI_ACTION_ADD_COMPLEX_TYPE, (XSDSchema) selection);
       getCommandStack().execute(command);
       Adapter adapter = XSDAdapterFactory.getInstance().adapt(command.getAddedComponent());
       if (adapter != null)

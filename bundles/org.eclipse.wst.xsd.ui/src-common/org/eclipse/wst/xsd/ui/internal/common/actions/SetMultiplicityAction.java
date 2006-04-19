@@ -18,10 +18,10 @@ import org.eclipse.xsd.XSDConcreteComponent;
 
 public class SetMultiplicityAction extends XSDBaseAction
 {
-  public static String REQUIRED_ID = "org.eclipse.wst.xsd.ui.internal.common.actions.SetMultiplicity.REQUIRED_ID";
-  public static String ZERO_OR_ONE_ID = "org.eclipse.wst.xsd.ui.internal.common.actions.SetMultiplicity.ZERO_OR_ONE_ID";
-  public static String ZERO_OR_MORE_ID = "org.eclipse.wst.xsd.ui.internal.common.actions.SetMultiplicity.ZERO_OR_MORE_ID";
-  public static String ONE_OR_MORE_ID = "org.eclipse.wst.xsd.ui.internal.common.actions.SetMultiplicity.ONE_OR_MORE_ID";
+  public static String REQUIRED_ID = "org.eclipse.wst.xsd.ui.internal.common.actions.SetMultiplicity.REQUIRED_ID"; //$NON-NLS-1$
+  public static String ZERO_OR_ONE_ID = "org.eclipse.wst.xsd.ui.internal.common.actions.SetMultiplicity.ZERO_OR_ONE_ID"; //$NON-NLS-1$
+  public static String ZERO_OR_MORE_ID = "org.eclipse.wst.xsd.ui.internal.common.actions.SetMultiplicity.ZERO_OR_MORE_ID"; //$NON-NLS-1$
+  public static String ONE_OR_MORE_ID = "org.eclipse.wst.xsd.ui.internal.common.actions.SetMultiplicity.ONE_OR_MORE_ID"; //$NON-NLS-1$
   
   SetMultiplicityCommand command;
   

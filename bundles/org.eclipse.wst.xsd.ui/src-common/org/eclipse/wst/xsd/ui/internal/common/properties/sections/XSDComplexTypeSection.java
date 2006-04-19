@@ -39,7 +39,7 @@ public class XSDComplexTypeSection extends AbstractSection implements SelectionL
   protected Text baseTypeCombo;
   protected CCombo derivedByCombo;
   protected Button button;
-  private String derivedByChoicesComboValues[] = { "", XSDConstants.RESTRICTION_ELEMENT_TAG, XSDConstants.EXTENSION_ELEMENT_TAG };
+  private String derivedByChoicesComboValues[] = { "", XSDConstants.RESTRICTION_ELEMENT_TAG, XSDConstants.EXTENSION_ELEMENT_TAG }; //$NON-NLS-1$
 
   public XSDComplexTypeSection()
   {
@@ -112,8 +112,8 @@ public class XSDComplexTypeSection extends AbstractSection implements SelectionL
     data.horizontalAlignment = GridData.HORIZONTAL_ALIGN_BEGINNING;
     data.grabExcessHorizontalSpace = false;
 
-    button = getWidgetFactory().createButton(composite, "", SWT.PUSH);
-    button.setImage(XSDEditorPlugin.getXSDImage("icons/browsebutton.gif"));
+    button = getWidgetFactory().createButton(composite, "", SWT.PUSH); //$NON-NLS-1$
+    button.setImage(XSDEditorPlugin.getXSDImage("icons/browsebutton.gif")); //$NON-NLS-1$
     button.addSelectionListener(this);
     button.setLayoutData(data);
 
@@ -154,7 +154,7 @@ public class XSDComplexTypeSection extends AbstractSection implements SelectionL
 
     try
     {
-      nameText.setText("");
+      nameText.setText(""); //$NON-NLS-1$
       baseTypeCombo.setText(""); //$NON-NLS-1$
 
       if (input instanceof XSDComplexTypeDefinition)
@@ -162,9 +162,9 @@ public class XSDComplexTypeSection extends AbstractSection implements SelectionL
         XSDComplexTypeDefinition complexType = (XSDComplexTypeDefinition) input;
         String name = complexType.getName();
         if (name == null)
-          name = "";
+          name = ""; //$NON-NLS-1$
 
-        boolean isAnonymousType = name.equals("") ? true : false;
+        boolean isAnonymousType = name.equals("") ? true : false; //$NON-NLS-1$
         if (isAnonymousType)
         {
           nameText.setText("**anonymous**"); //$NON-NLS-1$
@@ -183,7 +183,7 @@ public class XSDComplexTypeSection extends AbstractSection implements SelectionL
           baseType = baseTypeDefinition.getName();
           if (baseType == null)
           {
-            baseType = "";
+            baseType = ""; //$NON-NLS-1$
           }
         }
         baseTypeCombo.setText(baseType);
@@ -326,7 +326,7 @@ public class XSDComplexTypeSection extends AbstractSection implements SelectionL
         String oldName = namedComponent.getName();
         if (!newValue.equals(oldName))
         {
-          command = new UpdateNameCommand("Rename", namedComponent, newValue);
+          command = new UpdateNameCommand(org.eclipse.wst.xsd.ui.internal.common.util.Messages._UI_ACTION_RENAME, namedComponent, newValue);
         }
 
         if (command != null && getCommandStack() != null)
@@ -350,7 +350,7 @@ public class XSDComplexTypeSection extends AbstractSection implements SelectionL
     // validate against NCName
     if (name.length() < 1 || !XMLChar.isValidNCName(name))
     {
-      setErrorMessage("Error Invalid Name");
+      setErrorMessage(org.eclipse.wst.xsd.ui.internal.common.util.Messages._UI_ERROR_INVALID_NAME);
       return false;
     }
 

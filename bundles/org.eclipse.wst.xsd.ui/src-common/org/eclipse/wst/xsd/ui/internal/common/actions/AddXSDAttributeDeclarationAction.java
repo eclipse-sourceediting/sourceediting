@@ -17,6 +17,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDAdapterFactory;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDBaseAdapter;
 import org.eclipse.wst.xsd.ui.internal.common.commands.AddXSDAttributeDeclarationCommand;
+import org.eclipse.wst.xsd.ui.internal.common.util.Messages;
 import org.eclipse.xsd.XSDAttributeGroupDefinition;
 import org.eclipse.xsd.XSDAttributeUse;
 import org.eclipse.xsd.XSDComplexTypeDefinition;
@@ -25,12 +26,12 @@ import org.eclipse.xsd.XSDSchema;
 
 public class AddXSDAttributeDeclarationAction extends XSDBaseAction
 {
-  public static String ID = "AddXSDAttributeAction";
+  public static String ID = "AddXSDAttributeAction"; //$NON-NLS-1$
 
   public AddXSDAttributeDeclarationAction(IWorkbenchPart part)
   {
     super(part);
-    setText("Add Attribute");
+    setText(Messages._UI_ACTION_ADD_ATTRIBUTE);
     setId(ID);
   }
 
@@ -45,7 +46,7 @@ public class AddXSDAttributeDeclarationAction extends XSDBaseAction
     AddXSDAttributeDeclarationCommand command = null;
     if (selection instanceof XSDComplexTypeDefinition)
     {
-      command = new AddXSDAttributeDeclarationCommand("Add Attribute", (XSDComplexTypeDefinition) selection);
+      command = new AddXSDAttributeDeclarationCommand(Messages._UI_ACTION_ADD_ATTRIBUTE, (XSDComplexTypeDefinition) selection);
       getCommandStack().execute(command);
     }
     else if (selection instanceof XSDAttributeUse)
@@ -64,18 +65,18 @@ public class AddXSDAttributeDeclarationAction extends XSDBaseAction
       }
       if (ct != null)
       {
-        command = new AddXSDAttributeDeclarationCommand("Add Attribute", ct);
+        command = new AddXSDAttributeDeclarationCommand(Messages._UI_ACTION_ADD_ATTRIBUTE, ct);
         getCommandStack().execute(command);
       }
     }
     else if (selection instanceof XSDAttributeGroupDefinition)
     {
-      command = new AddXSDAttributeDeclarationCommand("Add Attribute", (XSDAttributeGroupDefinition)selection);
+      command = new AddXSDAttributeDeclarationCommand(Messages._UI_ACTION_ADD_ATTRIBUTE, (XSDAttributeGroupDefinition)selection);
       getCommandStack().execute(command);
     }
     else if (selection instanceof XSDSchema)
     {
-      command = new AddXSDAttributeDeclarationCommand("Add Attribute", (XSDSchema)selection);
+      command = new AddXSDAttributeDeclarationCommand(Messages._UI_ACTION_ADD_ATTRIBUTE, (XSDSchema)selection);
       getCommandStack().execute(command);
     }
     

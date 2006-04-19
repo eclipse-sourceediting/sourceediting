@@ -50,14 +50,14 @@ public final class AddXSDComplexTypeDefinitionCommand extends BaseCommand
     XSDFactory factory = XSDSchemaBuildingTools.getXSDFactory();
     XSDComplexTypeDefinition complexType = factory.createXSDComplexTypeDefinition();
     addedXSDConcreteComponent = complexType;
-    String newName = getNewName(nameToAdd == null ? "NewXSDComplexType" : nameToAdd, parent.getSchema());
+    String newName = getNewName(nameToAdd == null ? "NewXSDComplexType" : nameToAdd, parent.getSchema()); //$NON-NLS-1$
     complexType.setName(newName);
     if (parent instanceof XSDSchema)
     {
       try
       {
         XSDSchema xsdSchema = (XSDSchema)parent;
-        Text textNode = xsdSchema.getDocument().createTextNode("\n");
+        Text textNode = xsdSchema.getDocument().createTextNode("\n"); //$NON-NLS-1$
         xsdSchema.getElement().appendChild(textNode);
         xsdSchema.getContents().add(complexType);
       }
@@ -86,7 +86,7 @@ public final class AddXSDComplexTypeDefinitionCommand extends BaseCommand
       XSDTypeDefinition typeDef = (XSDTypeDefinition) iter.next();
       String name = typeDef.getName();
       if (name == null)
-        name = "";
+        name = ""; //$NON-NLS-1$
       if (typeDef.getTargetNamespace() == schema.getTargetNamespace())
         listOfNames.add(name);
     }

@@ -35,6 +35,7 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 import org.eclipse.wst.xsd.ui.internal.actions.CreateElementAction;
 import org.eclipse.wst.xsd.ui.internal.actions.DOMAttribute;
 import org.eclipse.wst.xsd.ui.internal.common.commands.UpdateNameCommand;
+import org.eclipse.wst.xsd.ui.internal.common.util.Messages;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.internal.util.XSDDOMHelper;
 import org.eclipse.xsd.XSDNamedComponent;
@@ -78,7 +79,7 @@ public class XSDSimpleTypeSection extends AbstractSection
 
     data.horizontalAlignment = GridData.HORIZONTAL_ALIGN_BEGINNING;
     data.grabExcessHorizontalSpace = false;
-    CLabel nameLabel = factory.createCLabel(composite, "Name:");
+    CLabel nameLabel = factory.createCLabel(composite, Messages._UI_LABEL_NAME);
     nameLabel.setLayoutData(data);
 
     // ------------------------------------------------------------------
@@ -187,7 +188,7 @@ public class XSDSimpleTypeSection extends AbstractSection
       composite.setEnabled(true);
     }
 
-    nameText.setText("");
+    nameText.setText(""); //$NON-NLS-1$
     varietyCombo.setText(""); //$NON-NLS-1$
     typesText.setText(""); //$NON-NLS-1$
     typesLabel.setText(XSDEditorPlugin.getXSDString("_UI_LABEL_BASE_TYPE_WITH_COLON")); //$NON-NLS-1$
@@ -202,7 +203,7 @@ public class XSDSimpleTypeSection extends AbstractSection
       }
       else
       {
-        nameText.setText("**anonymous**");
+        nameText.setText("**anonymous**"); //$NON-NLS-1$
       }
       
       String variety = st.getVariety().getName();
@@ -214,7 +215,7 @@ public class XSDSimpleTypeSection extends AbstractSection
         if (intVariety == XSDVariety.ATOMIC)
         {
           baseTypeDefinition = st.getBaseTypeDefinition();
-          String name = "";
+          String name = ""; //$NON-NLS-1$
           if (baseTypeDefinition != null)
           {
             name = baseTypeDefinition.getName();
@@ -225,7 +226,7 @@ public class XSDSimpleTypeSection extends AbstractSection
         else if (intVariety == XSDVariety.LIST)
         {
           itemTypeDefinition = st.getItemTypeDefinition();
-          String name = "";
+          String name = ""; //$NON-NLS-1$
           if (itemTypeDefinition != null)
           {
             name = itemTypeDefinition.getName();
@@ -561,7 +562,7 @@ public class XSDSimpleTypeSection extends AbstractSection
         if (child instanceof Element)
         {
           Element elementChild = (Element) child;
-          if (!(elementChild.getLocalName().equals("pattern") || elementChild.getLocalName().equals("enumeration") || //$NON-NLS-1$
+          if (!(elementChild.getLocalName().equals("pattern") || elementChild.getLocalName().equals("enumeration") || //$NON-NLS-1$ //$NON-NLS-2$
               XSDDOMHelper.inputEquals(elementChild, XSDConstants.SIMPLETYPE_ELEMENT_TAG, false) || XSDDOMHelper.inputEquals(elementChild, XSDConstants.ANNOTATION_ELEMENT_TAG, false)
               || XSDDOMHelper.inputEquals(elementChild, XSDConstants.ATTRIBUTE_ELEMENT_TAG, false) || XSDDOMHelper.inputEquals(elementChild, XSDConstants.ATTRIBUTE_ELEMENT_TAG, true)
               || XSDDOMHelper.inputEquals(elementChild, XSDConstants.ATTRIBUTEGROUP_ELEMENT_TAG, false) || XSDDOMHelper.inputEquals(elementChild, XSDConstants.ATTRIBUTEGROUP_ELEMENT_TAG, true) || XSDDOMHelper.inputEquals(elementChild,
@@ -612,7 +613,7 @@ public class XSDSimpleTypeSection extends AbstractSection
         String oldName = namedComponent.getName();
         if (!newValue.equals(oldName))
         {
-          command = new UpdateNameCommand("Rename", namedComponent, newValue);
+          command = new UpdateNameCommand(Messages._UI_ACTION_RENAME, namedComponent, newValue);
         }
 
         if (command != null && getCommandStack() != null)
@@ -636,7 +637,7 @@ public class XSDSimpleTypeSection extends AbstractSection
     // validate against NCName
     if (name.length() < 1 || !XMLChar.isValidNCName(name))
     {
-      setErrorMessage("Invalid name");
+      setErrorMessage(Messages._UI_ERROR_INVALID_NAME);
       return false;
     }
 

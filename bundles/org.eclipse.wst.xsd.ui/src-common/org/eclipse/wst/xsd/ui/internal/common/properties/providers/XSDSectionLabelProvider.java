@@ -73,7 +73,7 @@ public class XSDSectionLabelProvider extends LabelProvider
   {
     if (object == null || object.equals(StructuredSelection.EMPTY))
     {
-      return "No items selected";
+      return org.eclipse.wst.xsd.ui.internal.common.util.Messages._UI_LABEL_NO_ITEMS_SELECTED;
     }
 
     String result = null;
@@ -124,13 +124,13 @@ public class XSDSectionLabelProvider extends LabelProvider
           XSDSchema xsdSchema = ((XSDConcreteComponent) selected).getSchema();
           if (xsdSchema != editorPart.getAdapter(XSDSchema.class))
           {
-            sb.append(" (" + Messages.UI_LABEL_READ_ONLY + ")"); //$NON-NLS-1$
+            sb.append(" (" + Messages.UI_LABEL_READ_ONLY + ")"); //$NON-NLS-1$ //$NON-NLS-2$
           }
           return sb.toString();
         }
         else
         {
-          return "(" + Messages.UI_LABEL_READ_ONLY + ")"; //$NON-NLS-1$
+          return "(" + Messages.UI_LABEL_READ_ONLY + ")"; //$NON-NLS-1$ //$NON-NLS-2$
         }
       }
 

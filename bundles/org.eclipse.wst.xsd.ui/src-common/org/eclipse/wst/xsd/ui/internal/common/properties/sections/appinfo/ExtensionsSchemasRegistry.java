@@ -25,12 +25,12 @@ import org.w3c.dom.Element;
 
 public class ExtensionsSchemasRegistry
 {
-  private static final String LOCATION_PREFIX = "platform:/plugin/";
-  public static final String DESCRIPTION = "description";
-  public static final String DISPLAYNAME = "displayName";
-  public static final String NAMESPACEURI = "namespaceURI";
-  public static final String XSDFILEURL = "xsdFileURL";
-  public static final String LABELPROVIDER = "labelProviderClass";
+  private static final String LOCATION_PREFIX = "platform:/plugin/"; //$NON-NLS-1$
+  public static final String DESCRIPTION = "description"; //$NON-NLS-1$
+  public static final String DISPLAYNAME = "displayName"; //$NON-NLS-1$
+  public static final String NAMESPACEURI = "namespaceURI"; //$NON-NLS-1$
+  public static final String XSDFILEURL = "xsdFileURL"; //$NON-NLS-1$
+  public static final String LABELPROVIDER = "labelProviderClass"; //$NON-NLS-1$
 
   protected String extensionId;
 
@@ -110,7 +110,7 @@ public class ExtensionsSchemasRegistry
           }
         }
         String plugin = asiPropertiesElement.getDeclaringExtension().getContributor().getName();
-        extensionsSchemaSpec.setLocation(LOCATION_PREFIX + plugin + "/" + xsdFileURL);
+        extensionsSchemaSpec.setLocation(LOCATION_PREFIX + plugin + "/" + xsdFileURL); //$NON-NLS-1$
 
         nsURIProperties.add(extensionsSchemaSpec);
       }
@@ -123,7 +123,7 @@ public class ExtensionsSchemasRegistry
   {
     String uri = element.getNamespaceURI();
     if (uri == null)
-      uri = "";
+      uri = ""; //$NON-NLS-1$
 
     // Didn't retrieve the config elements yet.
     if (propertyMap == null)

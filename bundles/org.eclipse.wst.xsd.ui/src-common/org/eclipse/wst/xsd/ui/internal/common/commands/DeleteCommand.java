@@ -43,7 +43,7 @@ public class DeleteCommand extends BaseCommand
       {
         if (element.getTypeDefinition() == target)
         {
-          XSDSimpleTypeDefinition type = target.getSchema().getSchemaForSchema().resolveSimpleTypeDefinition("string");
+          XSDSimpleTypeDefinition type = target.getSchema().getSchemaForSchema().resolveSimpleTypeDefinition("string"); //$NON-NLS-1$
           element.setTypeDefinition(type);
         }
         super.visitElementDeclaration(element);

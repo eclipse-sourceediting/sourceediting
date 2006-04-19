@@ -21,6 +21,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
+import org.eclipse.wst.xsd.ui.internal.common.util.Messages;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.xsd.XSDInclude;
 import org.eclipse.xsd.XSDRedefine;
@@ -37,20 +38,20 @@ public abstract class CommonDirectivesSection extends AbstractSection
   // TODO: common up code with XSDSelectIncludeFileWizard
   public void doHandleEvent(Event event)
   {
-    errorText.setText("");
+    errorText.setText(""); //$NON-NLS-1$
     if (event.type == SWT.Modify)
     {
       if (event.widget == schemaLocationText)
       {
-        String errorMessage = "";
+        String errorMessage = ""; //$NON-NLS-1$
         boolean isValidSchemaLocation = true;
         String xsdModelFile = schemaLocationText.getText();
-        String namespace = "";
+        String namespace = ""; //$NON-NLS-1$
         XSDSchema externalSchema = null;
         
         if (xsdModelFile.length() == 0)
         {
-          handleSchemaLocationChange(xsdModelFile, "", null);
+          handleSchemaLocationChange(xsdModelFile, "", null); //$NON-NLS-1$
           return;
         }
 
@@ -60,7 +61,7 @@ public abstract class CommonDirectivesSection extends AbstractSection
 
           URI newURI = URI.createURI(xsdModelFile);
           String xsdFile = URIHelper.getRelativeURI(newURI.toString(), currentIFile.getFullPath().toString());
-          final String normalizedXSDFile = URIHelper.normalize(xsdFile, currentIFile.getLocation().toString(), "");
+          final String normalizedXSDFile = URIHelper.normalize(xsdFile, currentIFile.getLocation().toString(), ""); //$NON-NLS-1$
           
           XSDParser parser = new XSDParser();
           parser.parse(normalizedXSDFile);
@@ -70,14 +71,14 @@ public abstract class CommonDirectivesSection extends AbstractSection
           if (externalSchema != null)
           {
             String extNamespace = externalSchema.getTargetNamespace();
-            if (extNamespace == null) extNamespace = "";
+            if (extNamespace == null) extNamespace = ""; //$NON-NLS-1$
             namespace = extNamespace;
             
             if (externalSchema.getDiagnostics() != null &&
                 externalSchema.getDiagnostics().size() > 0)
             {
               isValidSchemaLocation = false;
-              errorMessage = XSDEditorPlugin.getResourceString("_UI_INCORRECT_XML_SCHEMA", xsdModelFile);
+              errorMessage = XSDEditorPlugin.getResourceString("_UI_INCORRECT_XML_SCHEMA", xsdModelFile); //$NON-NLS-1$
             }  
             else
             {
@@ -89,7 +90,7 @@ public abstract class CommonDirectivesSection extends AbstractSection
                 {
                   if (currentNameSpace != null && !extNamespace.equals(currentNameSpace))
                   {
-                    errorMessage = XSDEditorPlugin.getResourceString("_UI_DIFFERENT_NAME_SPACE", xsdModelFile);
+                    errorMessage = XSDEditorPlugin.getResourceString("_UI_DIFFERENT_NAME_SPACE", xsdModelFile); //$NON-NLS-1$
                     isValidSchemaLocation = false;
                   }
                 }
@@ -101,7 +102,7 @@ public abstract class CommonDirectivesSection extends AbstractSection
                 {
                   if (currentNameSpace != null && extNamespace.equals(currentNameSpace))
                   {
-                    errorMessage = XSDEditorPlugin.getResourceString("_UI_SAME_NAME_SPACE", xsdModelFile);
+                    errorMessage = XSDEditorPlugin.getResourceString("_UI_SAME_NAME_SPACE", xsdModelFile); //$NON-NLS-1$
                     isValidSchemaLocation = false;
                   }
                 }
@@ -110,13 +111,13 @@ public abstract class CommonDirectivesSection extends AbstractSection
           }
           else
           {
-            errorMessage = "Invalid file";
+            errorMessage = Messages._UI_ERROR_INVALID_FILE;
             isValidSchemaLocation = false;
           }
         }
         catch(Exception e)
         {
-          errorMessage = "Invalid file";
+          errorMessage = Messages._UI_ERROR_INVALID_FILE;
           isValidSchemaLocation = false;
         }
         finally

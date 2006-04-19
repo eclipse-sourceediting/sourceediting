@@ -69,9 +69,9 @@ public class AddXSDAttributeDeclarationCommand extends BaseCommand
       attribute.setTypeDefinition(parent.getSchema().getSchemaForSchema().resolveSimpleTypeDefinition("string")); //$NON-NLS-1$
       if (parent instanceof XSDSchema)
       {
-        attribute.setName(XSDCommonUIUtils.createUniqueElementName("NewAttribute", parent.getSchema().getAttributeDeclarations()));
+        attribute.setName(XSDCommonUIUtils.createUniqueElementName("NewAttribute", parent.getSchema().getAttributeDeclarations())); //$NON-NLS-1$
         XSDSchema xsdSchema = (XSDSchema)parent;
-        Text textNode = xsdSchema.getDocument().createTextNode("\n");
+        Text textNode = xsdSchema.getDocument().createTextNode("\n"); //$NON-NLS-1$
         xsdSchema.getElement().appendChild(textNode);
         xsdSchema.getContents().add(attribute);
       }
@@ -84,7 +84,7 @@ public class AddXSDAttributeDeclarationCommand extends BaseCommand
           XSDAttributeUse use = (XSDAttributeUse)i.next();
           list.add(use.getAttributeDeclaration());
         }
-        attribute.setName(XSDCommonUIUtils.createUniqueElementName("NewAttribute", list));
+        attribute.setName(XSDCommonUIUtils.createUniqueElementName("NewAttribute", list)); //$NON-NLS-1$
         XSDAttributeUse attributeUse = XSDFactory.eINSTANCE.createXSDAttributeUse();
         attributeUse.setAttributeDeclaration(attribute);
         attributeUse.setContent(attribute);

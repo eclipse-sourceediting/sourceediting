@@ -45,6 +45,7 @@ import org.eclipse.wst.common.ui.internal.viewers.NavigableTableViewer;
 import org.eclipse.wst.xsd.ui.internal.common.commands.AddEnumerationsCommand;
 import org.eclipse.wst.xsd.ui.internal.common.commands.DeleteCommand;
 import org.eclipse.wst.xsd.ui.internal.common.commands.SetXSDFacetValueCommand;
+import org.eclipse.wst.xsd.ui.internal.common.util.Messages;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.internal.widgets.EnumerationsDialog;
 import org.eclipse.xsd.XSDEnumerationFacet;
@@ -89,7 +90,7 @@ public class EnumerationsSection extends AbstractSection
         }
       }
 
-      AddEnumerationsCommand command = new AddEnumerationsCommand("Add Enumeration", (XSDSimpleTypeDefinition) input);
+      AddEnumerationsCommand command = new AddEnumerationsCommand(Messages._UI_ACTION_ADD_ENUMERATION, (XSDSimpleTypeDefinition) input);
       command.setValue(newName.toString());
       getCommandStack().execute(command);
 
@@ -112,7 +113,7 @@ public class EnumerationsSection extends AbstractSection
         String text = dialog.getText();
         String delimiter = dialog.getDelimiter();
         StringTokenizer tokenizer = new StringTokenizer(text, delimiter);
-        CompoundCommand compoundCommand = new CompoundCommand("Add Enumerations");
+        CompoundCommand compoundCommand = new CompoundCommand(Messages._UI_ACTION_ADD_ENUMERATIONS);
         while (tokenizer.hasMoreTokens())
         {
           String token = tokenizer.nextToken();
@@ -120,7 +121,7 @@ public class EnumerationsSection extends AbstractSection
           {
             token = token.trim();
           }
-          AddEnumerationsCommand command = new AddEnumerationsCommand("Add Enumerations", (XSDSimpleTypeDefinition) input);
+          AddEnumerationsCommand command = new AddEnumerationsCommand(Messages._UI_ACTION_ADD_ENUMERATIONS, (XSDSimpleTypeDefinition) input);
           command.setValue(token);
           compoundCommand.add(command);
         }
@@ -134,7 +135,7 @@ public class EnumerationsSection extends AbstractSection
       if (selection != null)
       {
         Iterator i = selection.iterator();
-        CompoundCommand compoundCommand = new CompoundCommand("Delete Enumeration");
+        CompoundCommand compoundCommand = new CompoundCommand(Messages._UI_ACTION_DELETE_ENUMERATION);
         while (i.hasNext())
         {
           Object obj = i.next();
@@ -144,7 +145,7 @@ public class EnumerationsSection extends AbstractSection
             {
               XSDEnumerationFacet enumFacet = (XSDEnumerationFacet) obj;
 
-              DeleteCommand deleteCommand = new DeleteCommand("Delete Enumeration", enumFacet);
+              DeleteCommand deleteCommand = new DeleteCommand(Messages._UI_ACTION_DELETE_ENUMERATION, enumFacet);
               compoundCommand.add(deleteCommand);
             }
           }
@@ -184,7 +185,7 @@ public class EnumerationsSection extends AbstractSection
     table.addSelectionListener(this);
 
     addButton = getWidgetFactory().createButton(composite, XSDEditorPlugin.getXSDString("_UI_REGEX_WIZARD_ADD_BUTTON_LABEL"), SWT.PUSH); //$NON-NLS-1$
-    addManyButton = getWidgetFactory().createButton(composite, XSDEditorPlugin.getXSDString("_UI_REGEX_WIZARD_ADD_BUTTON_LABEL") + "...", SWT.PUSH); //$NON-NLS-1$
+    addManyButton = getWidgetFactory().createButton(composite, XSDEditorPlugin.getXSDString("_UI_REGEX_WIZARD_ADD_BUTTON_LABEL") + "...", SWT.PUSH); //$NON-NLS-1$ //$NON-NLS-2$
     deleteButton = getWidgetFactory().createButton(composite, XSDEditorPlugin.getXSDString("_UI_ACTION_DELETE_INCLUDE"), SWT.PUSH); //$NON-NLS-1$
 
     FormData data2 = new FormData();
@@ -329,7 +330,7 @@ public class EnumerationsSection extends AbstractSection
         TableItem item = (TableItem) element;
 
         XSDEnumerationFacet enumFacet = (XSDEnumerationFacet) item.getData();
-        SetXSDFacetValueCommand command = new SetXSDFacetValueCommand("Set Enumeration Value", enumFacet);
+        SetXSDFacetValueCommand command = new SetXSDFacetValueCommand(Messages._UI_ACTION_SET_ENUMERATION_VALUE, enumFacet);
         command.setValue((String) value);
         getCommandStack().execute(command);
         item.setData(enumFacet);
@@ -383,7 +384,7 @@ public class EnumerationsSection extends AbstractSection
 
     public Image getColumnImage(Object element, int columnIndex)
     {
-      return XSDEditorPlugin.getXSDImage("icons/XSDSimpleEnum.gif");
+      return XSDEditorPlugin.getXSDImage("icons/XSDSimpleEnum.gif"); //$NON-NLS-1$
     }
 
     public String getColumnText(Object element, int columnIndex)
@@ -393,10 +394,10 @@ public class EnumerationsSection extends AbstractSection
         XSDEnumerationFacet enumFacet = (XSDEnumerationFacet) element;
         String value = enumFacet.getLexicalValue();
         if (value == null)
-          value = "";
+          value = ""; //$NON-NLS-1$
         return value;
       }
-      return "";
+      return ""; //$NON-NLS-1$
     }
 
   }

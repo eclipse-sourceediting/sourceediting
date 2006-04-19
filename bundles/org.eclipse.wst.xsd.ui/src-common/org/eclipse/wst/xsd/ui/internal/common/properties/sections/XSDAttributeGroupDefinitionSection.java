@@ -83,7 +83,7 @@ public class XSDAttributeGroupDefinitionSection extends AbstractSection
         String attrValue = element.getAttribute(XSDConstants.REF_ATTRIBUTE);
         if (attrValue == null)
         {
-          attrValue = "";
+          attrValue = ""; //$NON-NLS-1$
         }
         refCombo.setText(attrValue);
       }

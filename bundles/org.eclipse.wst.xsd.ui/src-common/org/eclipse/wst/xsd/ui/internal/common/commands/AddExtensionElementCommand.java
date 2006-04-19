@@ -79,7 +79,7 @@ public class AddExtensionElementCommand extends AddExtensionCommand
       rootElement.setPrefix(prefix);
       newElement = rootElement;
       
-      Attr nsURIAttribute = doc.createAttribute("xmlns:"+prefix);
+      Attr nsURIAttribute = doc.createAttribute("xmlns:"+prefix); //$NON-NLS-1$
       nsURIAttribute.setValue(spec.getNamespaceURI());
       rootElement.setAttributeNode(nsURIAttribute);
       appInfo.appendChild(rootElement);
@@ -98,7 +98,7 @@ public class AddExtensionElementCommand extends AddExtensionCommand
   
   protected String createUniquePrefix(XSDConcreteComponent component)
   {
-    String prefix = "p";
+    String prefix = "p"; //$NON-NLS-1$
     Map prefMapper = component.getSchema().getQNamePrefixToNamespaceMap();
     if ( prefMapper.get(prefix) != null){
       int i = 1;

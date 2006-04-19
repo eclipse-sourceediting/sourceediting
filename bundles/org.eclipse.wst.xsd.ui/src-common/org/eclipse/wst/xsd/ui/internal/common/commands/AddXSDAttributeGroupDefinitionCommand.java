@@ -58,7 +58,7 @@ public class AddXSDAttributeGroupDefinitionCommand extends BaseCommand
       {
         attributeGroup.setName(null);
         XSDAttributeGroupDefinition attributeGroup2 = XSDFactory.eINSTANCE.createXSDAttributeGroupDefinition();
-        attributeGroup2.setName(XSDCommonUIUtils.createUniqueElementName("NewAttributeGroup", xsdComplexTypeDefinition.getSchema().getAttributeGroupDefinitions()));
+        attributeGroup2.setName(XSDCommonUIUtils.createUniqueElementName("NewAttributeGroup", xsdComplexTypeDefinition.getSchema().getAttributeGroupDefinitions())); //$NON-NLS-1$
         xsdComplexTypeDefinition.getSchema().getContents().add(attributeGroup2);
         attributeGroup.setResolvedAttributeGroupDefinition(attributeGroup2);
       }
@@ -71,8 +71,8 @@ public class AddXSDAttributeGroupDefinitionCommand extends BaseCommand
     }
     else
     {
-      attributeGroup.setName(XSDCommonUIUtils.createUniqueElementName("NewAttributeGroup", xsdSchema.getAttributeGroupDefinitions()));
-      Text textNode = xsdSchema.getDocument().createTextNode("\n");
+      attributeGroup.setName(XSDCommonUIUtils.createUniqueElementName("NewAttributeGroup", xsdSchema.getAttributeGroupDefinitions())); //$NON-NLS-1$
+      Text textNode = xsdSchema.getDocument().createTextNode("\n"); //$NON-NLS-1$
       xsdSchema.getElement().appendChild(textNode);
       xsdSchema.getContents().add(attributeGroup);
       addedXSDConcreteComponent = attributeGroup;

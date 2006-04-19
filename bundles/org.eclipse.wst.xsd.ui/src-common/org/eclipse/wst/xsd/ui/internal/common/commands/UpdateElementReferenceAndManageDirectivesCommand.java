@@ -13,6 +13,7 @@ package org.eclipse.wst.xsd.ui.internal.common.commands;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.wst.xsd.ui.internal.common.util.Messages;
 import org.eclipse.xsd.XSDComponent;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDElementDeclaration;
@@ -65,9 +66,9 @@ UpdateComponentReferenceAndManageDirectivesCommand{
 				// TODO (cs) we need to compute a relative URI to make this nicer!
 				//
 				String fileURI = file.getLocationURI().toString();
-				if (fileURI.startsWith("file:/") && !fileURI.startsWith("file:///"))
+				if (fileURI.startsWith("file:/") && !fileURI.startsWith("file:///")) //$NON-NLS-1$ //$NON-NLS-2$
 				{
-					fileURI = "file:///" + fileURI.substring(6);
+					fileURI = "file:///" + fileURI.substring(6); //$NON-NLS-1$
 				}   
 				directive.setSchemaLocation(fileURI);
 				
@@ -129,7 +130,7 @@ UpdateComponentReferenceAndManageDirectivesCommand{
 	    if (elementDef != null)
 	    {
 	      UpdateElementReferenceCommand command = new UpdateElementReferenceCommand(
-	    		  "Update Element Reference", (XSDElementDeclaration) concreteComponent,
+	    		  Messages._UI_ACTION_UPDATE_ELEMENT_REFERENCE, (XSDElementDeclaration) concreteComponent,
 	    		  (XSDElementDeclaration) elementDef);
 	      command.execute();
 	    }

@@ -14,6 +14,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDBaseAdapter;
 import org.eclipse.wst.xsd.ui.internal.common.commands.DeleteCommand;
+import org.eclipse.wst.xsd.ui.internal.common.util.Messages;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.xsd.XSDConcreteComponent;
 
@@ -24,9 +25,9 @@ public class DeleteXSDConcreteComponentAction extends XSDBaseAction
   public DeleteXSDConcreteComponentAction(IWorkbenchPart part)
   {
     super(part);
-    setText("Delete");
+    setText(Messages._UI_ACTION_DELETE);
     setId(DELETE_XSD_COMPONENT_ID);
-    setImageDescriptor(XSDEditorPlugin.getImageDescriptor("icons/delete_obj.gif") );
+    setImageDescriptor(XSDEditorPlugin.getImageDescriptor("icons/delete_obj.gif") ); //$NON-NLS-1$
   }
 
   public void run()

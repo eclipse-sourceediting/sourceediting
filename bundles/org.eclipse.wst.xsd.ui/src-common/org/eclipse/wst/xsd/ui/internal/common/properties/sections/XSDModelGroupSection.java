@@ -25,7 +25,7 @@ import org.eclipse.xsd.XSDModelGroup;
 public class XSDModelGroupSection extends MultiplicitySection
 {
   protected CCombo modelGroupCombo;
-  private String[] modelGroupComboValues = { "sequence", "choice", "all" }; //$NON-NLS-1$
+  private String[] modelGroupComboValues = { "sequence", "choice", "all" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
   public XSDModelGroupSection()
   {
@@ -35,8 +35,6 @@ public class XSDModelGroupSection extends MultiplicitySection
   public void createContents(Composite parent)
   {
     composite = getWidgetFactory().createFlatFormComposite(parent);
-
-    String typeLabel = Messages.UI_LABEL_TYPE; //$NON-NLS-1$
 
     GridLayout gridLayout = new GridLayout();
     gridLayout.numColumns = 2;
@@ -133,7 +131,7 @@ public class XSDModelGroupSection extends MultiplicitySection
     if (e.widget == modelGroupCombo)
     {
       XSDCompositor newValue = XSDCompositor.get(modelGroupCombo.getText());
-      UpdateContentModelCommand command = new UpdateContentModelCommand("Content Model Change", particle, newValue);
+      UpdateContentModelCommand command = new UpdateContentModelCommand(org.eclipse.wst.xsd.ui.internal.common.util.Messages._UI_ACTION_CHANGE_CONTENT_MODEL, particle, newValue);
       getCommandStack().execute(command);
     }
   }

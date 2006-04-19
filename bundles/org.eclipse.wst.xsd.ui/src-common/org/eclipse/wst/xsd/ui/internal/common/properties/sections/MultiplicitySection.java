@@ -17,6 +17,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.wst.xsd.ui.internal.common.commands.UpdateMaxOccursCommand;
 import org.eclipse.wst.xsd.ui.internal.common.commands.UpdateMinOccursCommand;
+import org.eclipse.wst.xsd.ui.internal.common.util.Messages;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDParticle;
 import org.eclipse.xsd.XSDParticleContent;
@@ -86,7 +87,7 @@ public class MultiplicitySection extends AbstractSection
       try
       {
         int newMax = 1;
-        if (newValue.equals("unbounded") || newValue.equals("*")) //$NON-NLS-1$
+        if (newValue.equals("unbounded") || newValue.equals("*")) //$NON-NLS-1$ //$NON-NLS-2$
         {
           newMax = XSDParticle.UNBOUNDED;
         }
@@ -98,14 +99,14 @@ public class MultiplicitySection extends AbstractSection
           }
         }
         setListenerEnabled(false);
-        UpdateMaxOccursCommand command = new UpdateMaxOccursCommand("Maximum Occurrence Change", particle, newMax);
+        UpdateMaxOccursCommand command = new UpdateMaxOccursCommand(Messages._UI_ACTION_CHANGE_MAXIMUM_OCCURRENCE, particle, newMax);
         getCommandStack().execute(command);
         setListenerEnabled(true);
 
       }
       catch (NumberFormatException e)
       {
-        setErrorMessage("Invalid value for maximum occurrence");
+        setErrorMessage(Messages._UI_ERROR_INVALID_VALUE_FOR_MAXIMUM_OCCURRENCE);
       }
     }
   }
@@ -130,7 +131,7 @@ public class MultiplicitySection extends AbstractSection
       try
       {
         int newMin = 1;
-        if (newValue.equals("unbounded") || newValue.equals("*")) //$NON-NLS-1$
+        if (newValue.equals("unbounded") || newValue.equals("*")) //$NON-NLS-1$ //$NON-NLS-2$
         {
           newMin = XSDParticle.UNBOUNDED;
           isRequired = true;
@@ -140,7 +141,7 @@ public class MultiplicitySection extends AbstractSection
           newMin = Integer.parseInt(newValue);
           isRequired = newMin > 0;
         }
-        UpdateMinOccursCommand command = new UpdateMinOccursCommand("Minimum Occurrence Change", particle, newMin);
+        UpdateMinOccursCommand command = new UpdateMinOccursCommand(Messages._UI_ACTION_CHANGE_MINIMUM_OCCURRENCE, particle, newMin);
         getCommandStack().execute(command);
       }
       catch (NumberFormatException e)

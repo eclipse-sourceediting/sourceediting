@@ -26,9 +26,9 @@ import org.eclipse.xsd.XSDModelGroup;
 
 public class AddXSDModelGroupAction extends XSDBaseAction
 {
-  public static String SEQUENCE_ID = "AddXSDSequenceModelGroupAction";
-  public static String CHOICE_ID = "AddXSDChoiceModelGroupAction";
-  public static String ALL_ID = "AddXSDAllModelGroupAction";
+  public static String SEQUENCE_ID = "AddXSDSequenceModelGroupAction"; //$NON-NLS-1$
+  public static String CHOICE_ID = "AddXSDChoiceModelGroupAction"; //$NON-NLS-1$
+  public static String ALL_ID = "AddXSDAllModelGroupAction"; //$NON-NLS-1$
   XSDCompositor xsdCompositor;
 
   public AddXSDModelGroupAction(IWorkbenchPart part, XSDCompositor compositor, String ID)

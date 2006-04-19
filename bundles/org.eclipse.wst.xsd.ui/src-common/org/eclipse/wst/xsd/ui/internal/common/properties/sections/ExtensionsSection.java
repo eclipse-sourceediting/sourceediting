@@ -19,6 +19,7 @@ import org.eclipse.wst.xsd.ui.internal.common.commands.RemoveExtensionElementCom
 import org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo.DOMExtensionTreeLabelProvider;
 import org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo.ExtensionsSchemasRegistry;
 import org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo.XSDExtensionTreeContentProvider;
+import org.eclipse.wst.xsd.ui.internal.common.util.Messages;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.xsd.XSDAnnotation;
 import org.eclipse.xsd.XSDAttributeDeclaration;
@@ -43,12 +44,12 @@ public class ExtensionsSection extends AbstractExtensionsSection
     if (o instanceof XSDElementDeclaration)
     {
       XSDElementDeclaration element = (XSDElementDeclaration) o;
-      addExtensionCommand = new AddExtensionElementCommand("Add AppInfo Element", (XSDConcreteComponent) input, element);
+      addExtensionCommand = new AddExtensionElementCommand(Messages._UI_ACTION_ADD_APPINFO_ELEMENT, (XSDConcreteComponent) input, element);
     }
     else if (o instanceof XSDAttributeDeclaration)
     {
       XSDAttributeDeclaration attribute = (XSDAttributeDeclaration) o;
-      addExtensionCommand = new AddExtensionAttributeCommand("Add AppInfo Attribute", (XSDConcreteComponent) input, attribute);
+      addExtensionCommand = new AddExtensionAttributeCommand(Messages._UI_ACTION_ADD_APPINFO_ATTRIBUTE, (XSDConcreteComponent) input, attribute);
     }
     return addExtensionCommand;
   }
@@ -60,12 +61,12 @@ public class ExtensionsSection extends AbstractExtensionsSection
     {
       XSDAnnotation xsdAnnotation = (XSDAnnotation) extensionTreeViewer.getInput();
       Node appInfoElement = ((Element) o).getParentNode();
-      command = new RemoveExtensionElementCommand("Remove AppInfo Element", xsdAnnotation, appInfoElement);
+      command = new RemoveExtensionElementCommand(Messages._UI_ACTION_DELETE_APPINFO_ELEMENT, xsdAnnotation, appInfoElement);
     }
     else if (o instanceof Attr)
     {
       Element hostElement = ((Attr) o).getOwnerElement();
-      command = new RemoveExtensionAttributerCommand("Remove AppInfo Attribute", hostElement, (Attr) o);
+      command = new RemoveExtensionAttributerCommand(Messages._UI_ACTION_DELETE_APPINFO_ATTRIBUTE, hostElement, (Attr) o);
     }
     return command;
   }  

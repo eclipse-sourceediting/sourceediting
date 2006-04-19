@@ -40,16 +40,16 @@ public final class AddXSDSimpleTypeDefinitionCommand extends BaseCommand
   public void execute()
   {
     XSDSimpleTypeDefinition typeDef = XSDFactory.eINSTANCE.createXSDSimpleTypeDefinition();
-    typeDef.setBaseTypeDefinition(parent.getSchema().getSchemaForSchema().resolveSimpleTypeDefinition(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001, "string"));
+    typeDef.setBaseTypeDefinition(parent.getSchema().getSchemaForSchema().resolveSimpleTypeDefinition(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001, "string")); //$NON-NLS-1$
 
     if (parent instanceof XSDSchema)
     {
-      typeDef.setName(XSDCommonUIUtils.createUniqueElementName(nameToAdd == null ? "XSDSimpleType" : nameToAdd, ((XSDSchema) parent).getTypeDefinitions()));
+      typeDef.setName(XSDCommonUIUtils.createUniqueElementName(nameToAdd == null ? "XSDSimpleType" : nameToAdd, ((XSDSchema) parent).getTypeDefinitions())); //$NON-NLS-1$
       createdSimpleType = typeDef;
       try
       {
         XSDSchema xsdSchema = (XSDSchema)parent;
-        Text textNode = xsdSchema.getDocument().createTextNode("\n");
+        Text textNode = xsdSchema.getDocument().createTextNode("\n"); //$NON-NLS-1$
         xsdSchema.getElement().appendChild(textNode);
         xsdSchema.getContents().add(typeDef);
       }

@@ -24,6 +24,7 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xsd.ui.internal.common.commands.AddDocumentationCommand;
+import org.eclipse.wst.xsd.ui.internal.common.util.Messages;
 import org.eclipse.wst.xsd.ui.internal.common.util.XSDCommonUIUtils;
 import org.eclipse.xsd.XSDAnnotation;
 import org.eclipse.xsd.XSDConcreteComponent;
@@ -75,7 +76,7 @@ public class AnnotationSection extends AbstractSection
     {
       if (event.widget == simpleText)
       {
-        AddDocumentationCommand command = new AddDocumentationCommand("Add Documentation", null, (XSDConcreteComponent) input, simpleText.getText(), "");
+        AddDocumentationCommand command = new AddDocumentationCommand(Messages._UI_ACTION_ADD_DOCUMENTATION, null, (XSDConcreteComponent) input, simpleText.getText(), ""); //$NON-NLS-1$
         getCommandStack().execute(command);
       }
     }
@@ -115,13 +116,13 @@ public class AnnotationSection extends AbstractSection
     }
     else
     {
-      simpleText.setText("");
+      simpleText.setText(""); //$NON-NLS-1$
     }
   }
 
   private String doSerialize(Element element) throws IOException
   {
-    String source = "";
+    String source = ""; //$NON-NLS-1$
 
     Node firstChild = element.getFirstChild();
     Node lastChild = element.getLastChild();

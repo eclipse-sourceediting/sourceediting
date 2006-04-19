@@ -28,6 +28,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.wst.xsd.ui.internal.common.commands.UpdateNameCommand;
+import org.eclipse.wst.xsd.ui.internal.common.util.Messages;
 import org.eclipse.wst.xsd.ui.internal.util.TypesHelper;
 import org.eclipse.xsd.XSDModelGroupDefinition;
 import org.eclipse.xsd.XSDNamedComponent;
@@ -84,7 +85,7 @@ public class XSDModelGroupDefinitionSection extends AbstractSection
       GridData data = new GridData();
       data.horizontalAlignment = GridData.HORIZONTAL_ALIGN_BEGINNING;
       data.grabExcessHorizontalSpace = false;
-      CLabel nameLabel = getWidgetFactory().createCLabel(composite, "Name:");
+      CLabel nameLabel = getWidgetFactory().createCLabel(composite, Messages._UI_LABEL_NAME);
       nameLabel.setLayoutData(data);
 
       // ------------------------------------------------------------------
@@ -124,7 +125,7 @@ public class XSDModelGroupDefinitionSection extends AbstractSection
         String attrValue = element.getAttribute(XSDConstants.REF_ATTRIBUTE);
         if (attrValue == null)
         {
-          attrValue = "";
+          attrValue = ""; //$NON-NLS-1$
         }
         componentNameCombo.setText(attrValue);
       }
@@ -132,7 +133,7 @@ public class XSDModelGroupDefinitionSection extends AbstractSection
     else
     {
       // refresh name
-      nameText.setText("");
+      nameText.setText(""); //$NON-NLS-1$
 
       String name = namedComponent.getName();
       if (name != null)
@@ -155,7 +156,7 @@ public class XSDModelGroupDefinitionSection extends AbstractSection
       TypesHelper helper = new TypesHelper(xsdSchema);
       List items = new ArrayList();
       items = helper.getModelGroups();
-      items.add(0, "");
+      items.add(0, ""); //$NON-NLS-1$
       componentNameCombo.setItems((String [])items.toArray(new String[0]));
     }
   }
@@ -210,7 +211,7 @@ public class XSDModelGroupDefinitionSection extends AbstractSection
         String oldName = namedComponent.getName();
         if (!newValue.equals(oldName))
         {
-          command = new UpdateNameCommand("Rename", namedComponent, newValue);
+          command = new UpdateNameCommand(Messages._UI_ACTION_RENAME, namedComponent, newValue);
         }
 
         if (command != null && getCommandStack() != null)
@@ -234,7 +235,7 @@ public class XSDModelGroupDefinitionSection extends AbstractSection
     // validate against NCName
     if (name.length() < 1 || !XMLChar.isValidNCName(name))
     {
-      setErrorMessage("Invalid name");
+      setErrorMessage(Messages._UI_ERROR_INVALID_NAME);
       return false;
     }
 

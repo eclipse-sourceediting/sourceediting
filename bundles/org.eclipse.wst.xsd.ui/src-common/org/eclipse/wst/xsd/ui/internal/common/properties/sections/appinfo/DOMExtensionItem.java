@@ -45,13 +45,13 @@ class DOMExtensionItem
     else if (cmNode instanceof CMAttributeDeclaration)
     {
       CMAttributeDeclaration ad = (CMAttributeDeclaration)cmNode;
-      return ad.getNodeName() + "*";
+      return ad.getNodeName() + "*"; //$NON-NLS-1$
     }  
     else if (cmNode instanceof CMDataType)
     {
-      return "text()";
+      return "text()"; //$NON-NLS-1$
     }      
-    return "";
+    return ""; //$NON-NLS-1$
   }
 
   public String getValue()
@@ -61,7 +61,7 @@ class DOMExtensionItem
       Attr attr = (Attr)node;
       return attr.getValue();
     }  
-    return "";
+    return ""; //$NON-NLS-1$
   }
   
   public String[] getPossibleValues()

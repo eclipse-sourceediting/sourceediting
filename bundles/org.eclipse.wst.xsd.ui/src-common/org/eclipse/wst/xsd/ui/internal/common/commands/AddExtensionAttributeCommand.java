@@ -44,11 +44,11 @@ public class AddExtensionAttributeCommand extends AddExtensionCommand
   {
     namespacePrefix = handleNamespacePrefices();
     
-    attributeQName = namespacePrefix + ":" + attribute.getName();
+    attributeQName = namespacePrefix + ":" + attribute.getName(); //$NON-NLS-1$
     String value = component.getElement().getAttribute(attributeQName);
     if ( value == null) {
       appInfoAttributeAdded = true;
-      component.getElement().setAttribute(attributeQName, "");
+      component.getElement().setAttribute(attributeQName, ""); //$NON-NLS-1$
     }
   }
 
@@ -84,7 +84,7 @@ public class AddExtensionAttributeCommand extends AddExtensionCommand
       prefix = createUniquePrefix(component);
     }
 
-    NamespaceInfo info = new NamespaceInfo(attribute.getTargetNamespace(), prefix, "");
+    NamespaceInfo info = new NamespaceInfo(attribute.getTargetNamespace(), prefix, ""); //$NON-NLS-1$
     List infoList = new ArrayList(1);
     infoList.add(info);
     manager.addNamespaceInfo(schemaElement, infoList, false);
@@ -93,7 +93,7 @@ public class AddExtensionAttributeCommand extends AddExtensionCommand
   
   protected String createUniquePrefix(XSDConcreteComponent component)
   {
-    String prefix = "p";
+    String prefix = "p"; //$NON-NLS-1$
     Map prefMapper = component.getSchema().getQNamePrefixToNamespaceMap();
     if ( prefMapper.get(prefix) != null){
       int i = 1;

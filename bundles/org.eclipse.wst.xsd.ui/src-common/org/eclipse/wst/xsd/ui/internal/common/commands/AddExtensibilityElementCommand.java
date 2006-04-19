@@ -50,13 +50,13 @@ public class AddExtensibilityElementCommand extends Command
     if (input != null)
     {
       Document doc = input.getOwnerDocument();
-      String name = elementToAdd.getAttribute("name");
+      String name = elementToAdd.getAttribute("name"); //$NON-NLS-1$
       try
       {
         Element rootElement = doc.createElementNS(extensionSchemaSpec.getNamespaceURI(), name);
         String prefix = input.getPrefix();
         rootElement.setPrefix(prefix);
-        String xmlns = (prefix == null || prefix.equals("")) ? "xmlns" : "xmlns:" + prefix;
+        String xmlns = (prefix == null || prefix.equals("")) ? "xmlns" : "xmlns:" + prefix; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         Attr nsURIAttribute = doc.createAttribute(xmlns);
         nsURIAttribute.setValue(extensionSchemaSpec.getNamespaceURI());
         rootElement.setAttributeNode(nsURIAttribute);

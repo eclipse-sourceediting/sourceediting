@@ -17,7 +17,7 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 
 public class ExtensionDetailsViewer extends Viewer
 {
-  private final static String ITEM_DATA = "ITEM_DATA";
+  private final static String ITEM_DATA = "ITEM_DATA"; //$NON-NLS-1$
   Composite control;  
   Composite composite;
   ExtensionDetailsContentProvider contentProvider;
@@ -93,7 +93,7 @@ public class ExtensionDetailsViewer extends Viewer
       Object item = items[i];
       String name = contentProvider.getName(item);
       String value = contentProvider.getValue(item);
-      Label label = widgetFactory.createLabel(composite, name + ":");
+      Label label = widgetFactory.createLabel(composite, name + ":"); //$NON-NLS-1$
       label.setLayoutData(new GridData());
       
       Control control = null;

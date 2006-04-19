@@ -52,6 +52,7 @@ import org.eclipse.wst.xsd.ui.internal.common.commands.ChangeToLocalSimpleTypeCo
 import org.eclipse.wst.xsd.ui.internal.common.commands.DeleteCommand;
 import org.eclipse.wst.xsd.ui.internal.common.commands.SetXSDFacetValueCommand;
 import org.eclipse.wst.xsd.ui.internal.common.commands.UpdateXSDPatternFacetCommand;
+import org.eclipse.wst.xsd.ui.internal.common.util.Messages;
 import org.eclipse.wst.xsd.ui.internal.common.util.XSDCommonUIUtils;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.internal.widgets.EnumerationsDialog;
@@ -159,7 +160,7 @@ public class SpecificConstraintsWidget implements SelectionListener, Listener
     buttonComposite.setLayoutData(data);
 
     
-    addButton = getWidgetFactory().createButton(buttonComposite, "Add", SWT.PUSH);
+    addButton = getWidgetFactory().createButton(buttonComposite, Messages._UI_ACTION_ADD, SWT.PUSH);
     data = new GridData();
     data.grabExcessHorizontalSpace = true;
     data.horizontalAlignment = GridData.FILL;
@@ -167,7 +168,7 @@ public class SpecificConstraintsWidget implements SelectionListener, Listener
     addButton.setLayoutData(data);
     addButton.addSelectionListener(this);
     
-    addUsingDialogButton = getWidgetFactory().createButton(buttonComposite, "Add...", SWT.PUSH);
+    addUsingDialogButton = getWidgetFactory().createButton(buttonComposite, Messages._UI_ACTION_ADD_WITH_DOTS, SWT.PUSH);
     data = new GridData();
     data.grabExcessHorizontalSpace = true;
     data.horizontalAlignment = GridData.FILL;
@@ -175,7 +176,7 @@ public class SpecificConstraintsWidget implements SelectionListener, Listener
     addUsingDialogButton.setLayoutData(data);
     addUsingDialogButton.addSelectionListener(this);
 
-    editButton = getWidgetFactory().createButton(buttonComposite, "Edit...", SWT.PUSH);
+    editButton = getWidgetFactory().createButton(buttonComposite, Messages._UI_ACTION_EDIT_WITH_DOTS, SWT.PUSH);
     data = new GridData();
     data.grabExcessHorizontalSpace = true;
     data.horizontalAlignment = GridData.FILL;
@@ -184,7 +185,7 @@ public class SpecificConstraintsWidget implements SelectionListener, Listener
     editButton.addSelectionListener(this);
     
     
-    deleteButton = getWidgetFactory().createButton(buttonComposite, "Delete", SWT.PUSH);
+    deleteButton = getWidgetFactory().createButton(buttonComposite, Messages._UI_ACTION_DELETE, SWT.PUSH);
 
     data = new GridData();
     data.grabExcessHorizontalSpace = true;
@@ -257,7 +258,7 @@ public class SpecificConstraintsWidget implements SelectionListener, Listener
             anonymousSimpleType = XSDFactory.eINSTANCE.createXSDSimpleTypeDefinition();
             anonymousSimpleType.setBaseTypeDefinition(input);
 
-            ChangeToLocalSimpleTypeCommand changeToAnonymousCommand = new ChangeToLocalSimpleTypeCommand("Change pattern", (XSDFeature) feature);
+            ChangeToLocalSimpleTypeCommand changeToAnonymousCommand = new ChangeToLocalSimpleTypeCommand(Messages._UI_ACTION_CHANGE_PATTERN, (XSDFeature) feature);
             changeToAnonymousCommand.setAnonymousSimpleType(anonymousSimpleType);
             compoundCommand.add(changeToAnonymousCommand);
             input = anonymousSimpleType;
@@ -269,7 +270,7 @@ public class SpecificConstraintsWidget implements SelectionListener, Listener
           targetSimpleType = input;
         }
 
-        AddEnumerationsCommand command = new AddEnumerationsCommand("Add Enumeration", targetSimpleType);
+        AddEnumerationsCommand command = new AddEnumerationsCommand(Messages._UI_ACTION_ADD_ENUMERATION, targetSimpleType);
         command.setValue(newName.toString());
         compoundCommand.add(command);
         commandStack.execute(compoundCommand);
@@ -310,7 +311,7 @@ public class SpecificConstraintsWidget implements SelectionListener, Listener
               anonymousSimpleType = XSDFactory.eINSTANCE.createXSDSimpleTypeDefinition();
               anonymousSimpleType.setBaseTypeDefinition(input);
 
-              ChangeToLocalSimpleTypeCommand changeToAnonymousCommand = new ChangeToLocalSimpleTypeCommand("Change pattern", (XSDFeature) feature);
+              ChangeToLocalSimpleTypeCommand changeToAnonymousCommand = new ChangeToLocalSimpleTypeCommand(Messages._UI_ACTION_CHANGE_PATTERN, (XSDFeature) feature);
               changeToAnonymousCommand.setAnonymousSimpleType(anonymousSimpleType);
               compoundCommand.add(changeToAnonymousCommand);
               input = anonymousSimpleType;
@@ -322,7 +323,7 @@ public class SpecificConstraintsWidget implements SelectionListener, Listener
             targetSimpleType = input;
           }
           
-          UpdateXSDPatternFacetCommand command = new UpdateXSDPatternFacetCommand("Add pattern", targetSimpleType, UpdateXSDPatternFacetCommand.ADD);
+          UpdateXSDPatternFacetCommand command = new UpdateXSDPatternFacetCommand(Messages._UI_ACTION_ADD_PATTERN, targetSimpleType, UpdateXSDPatternFacetCommand.ADD);
           command.setValue(newPattern);
           setInput(input);
           compoundCommand.add(command);
@@ -342,7 +343,7 @@ public class SpecificConstraintsWidget implements SelectionListener, Listener
           String text = dialog.getText();
           String delimiter = dialog.getDelimiter();
           StringTokenizer tokenizer = new StringTokenizer(text, delimiter);
-          CompoundCommand compoundCommand = new CompoundCommand("Add Enumerations");
+          CompoundCommand compoundCommand = new CompoundCommand(Messages._UI_ACTION_ADD_ENUMERATIONS);
           
           XSDSimpleTypeDefinition targetSimpleType = null;
           if (feature != null)
@@ -353,7 +354,7 @@ public class SpecificConstraintsWidget implements SelectionListener, Listener
               anonymousSimpleType = XSDFactory.eINSTANCE.createXSDSimpleTypeDefinition();
               anonymousSimpleType.setBaseTypeDefinition(input);
 
-              ChangeToLocalSimpleTypeCommand changeToAnonymousCommand = new ChangeToLocalSimpleTypeCommand("", (XSDFeature) feature);
+              ChangeToLocalSimpleTypeCommand changeToAnonymousCommand = new ChangeToLocalSimpleTypeCommand("", (XSDFeature) feature); //$NON-NLS-1$
               changeToAnonymousCommand.setAnonymousSimpleType(anonymousSimpleType);
               compoundCommand.add(changeToAnonymousCommand);
               input = anonymousSimpleType;
@@ -372,7 +373,7 @@ public class SpecificConstraintsWidget implements SelectionListener, Listener
             {
               token = token.trim();
             }
-            AddEnumerationsCommand command = new AddEnumerationsCommand("Add Enumerations", targetSimpleType);
+            AddEnumerationsCommand command = new AddEnumerationsCommand(Messages._UI_ACTION_ADD_ENUMERATIONS, targetSimpleType);
             command.setValue(token);
             compoundCommand.add(command);
           }
@@ -392,11 +393,11 @@ public class SpecificConstraintsWidget implements SelectionListener, Listener
         Iterator i = selection.iterator();
         if (selection.size() > 0)
         {
-          compoundCommand.setLabel("Delete Constraints");
+          compoundCommand.setLabel(Messages._UI_ACTION_DELETE_CONSTRAINTS);
         }
         else
         {
-          compoundCommand.setLabel("Delete Pattern");
+          compoundCommand.setLabel(Messages._UI_ACTION_DELETE_PATTERN);
         }
         while (i.hasNext())
         {
@@ -405,14 +406,14 @@ public class SpecificConstraintsWidget implements SelectionListener, Listener
           {
             if (obj instanceof XSDPatternFacet)
             {
-              UpdateXSDPatternFacetCommand command = new UpdateXSDPatternFacetCommand("", input, UpdateXSDPatternFacetCommand.DELETE);
+              UpdateXSDPatternFacetCommand command = new UpdateXSDPatternFacetCommand("", input, UpdateXSDPatternFacetCommand.DELETE); //$NON-NLS-1$
               command.setPatternToEdit((XSDPatternFacet)obj);
               compoundCommand.add(command);
             }
             else if (obj instanceof XSDEnumerationFacet)
             {
               XSDEnumerationFacet enumFacet = (XSDEnumerationFacet) obj;
-              DeleteCommand deleteCommand = new DeleteCommand("Delete Enumeration", enumFacet);
+              DeleteCommand deleteCommand = new DeleteCommand(Messages._UI_ACTION_DELETE_ENUMERATION, enumFacet);
               compoundCommand.add(deleteCommand);
             }
           }
@@ -508,7 +509,7 @@ public class SpecificConstraintsWidget implements SelectionListener, Listener
       else if (item.getData() instanceof XSDEnumerationFacet)
       {
         XSDEnumerationFacet enumFacet = (XSDEnumerationFacet) item.getData();
-        SetXSDFacetValueCommand command = new SetXSDFacetValueCommand("Set Enumeration Value", enumFacet);
+        SetXSDFacetValueCommand command = new SetXSDFacetValueCommand(Messages._UI_ACTION_SET_ENUMERATION_VALUE, enumFacet);
         command.setValue((String) value);
         commandStack.execute(command);
         item.setData(enumFacet);
@@ -541,7 +542,7 @@ public class SpecificConstraintsWidget implements SelectionListener, Listener
   
   class ConstraintsTableViewer extends NavigableTableViewer implements ICellModifier
   {
-    protected String[] columnProperties = { "Pattern" };
+    protected String[] columnProperties = { Messages._UI_LABEL_PATTERN };
 
     protected CellEditor[] cellEditors;
 
@@ -638,7 +639,7 @@ public class SpecificConstraintsWidget implements SelectionListener, Listener
       }
       else
       {
-        return XSDEditorPlugin.getXSDImage("icons/XSDSimpleEnum.gif");
+        return XSDEditorPlugin.getXSDImage("icons/XSDSimpleEnum.gif"); //$NON-NLS-1$
       }
     }
 
@@ -657,7 +658,7 @@ public class SpecificConstraintsWidget implements SelectionListener, Listener
         XSDEnumerationFacet enumFacet = (XSDEnumerationFacet) element;
         String value = enumFacet.getLexicalValue();
         if (value == null)
-          value = "";
+          value = ""; //$NON-NLS-1$
         return value;
       }
       return ""; //$NON-NLS-1$

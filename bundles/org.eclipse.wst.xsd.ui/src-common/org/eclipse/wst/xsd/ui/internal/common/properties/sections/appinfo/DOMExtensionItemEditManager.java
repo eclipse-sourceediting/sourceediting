@@ -46,7 +46,7 @@ public class DOMExtensionItemEditManager implements ExtensionItemEditManager
   public Control createCustomButtonControl(Composite composite, Object item)
   {
     Button button = new Button(composite, SWT.NONE);
-    button.setText("...");
+    button.setText("..."); //$NON-NLS-1$
     return button;
   }
 

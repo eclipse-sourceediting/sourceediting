@@ -95,7 +95,7 @@ public class XSDElementDeclarationSection extends MultiplicitySection
 
       data.horizontalAlignment = GridData.HORIZONTAL_ALIGN_BEGINNING;
       data.grabExcessHorizontalSpace = false;
-      CLabel nameLabel = factory.createCLabel(composite, "Name:");
+      CLabel nameLabel = factory.createCLabel(composite, org.eclipse.wst.xsd.ui.internal.common.util.Messages._UI_LABEL_NAME);
       nameLabel.setLayoutData(data);
 
       // ------------------------------------------------------------------
@@ -123,7 +123,7 @@ public class XSDElementDeclarationSection extends MultiplicitySection
     {
       data.horizontalAlignment = GridData.HORIZONTAL_ALIGN_BEGINNING;
       data.grabExcessHorizontalSpace = false;
-      CLabel refLabel = getWidgetFactory().createCLabel(composite, "Reference:");
+      CLabel refLabel = getWidgetFactory().createCLabel(composite, org.eclipse.wst.xsd.ui.internal.common.util.Messages._UI_LABEL_REFERENCE);
       refLabel.setLayoutData(data);
 
       // ------------------------------------------------------------------
@@ -168,8 +168,8 @@ public class XSDElementDeclarationSection extends MultiplicitySection
     data.horizontalAlignment = GridData.HORIZONTAL_ALIGN_BEGINNING;
     data.grabExcessHorizontalSpace = false;
 
-    typesBrowseButton = getWidgetFactory().createButton(composite, "", SWT.PUSH);
-    typesBrowseButton.setImage(XSDEditorPlugin.getXSDImage("icons/browsebutton.gif"));
+    typesBrowseButton = getWidgetFactory().createButton(composite, "", SWT.PUSH); //$NON-NLS-1$
+    typesBrowseButton.setImage(XSDEditorPlugin.getXSDImage("icons/browsebutton.gif")); //$NON-NLS-1$
     typesBrowseButton.addSelectionListener(this);
     typesBrowseButton.setLayoutData(data);
 
@@ -255,7 +255,7 @@ public class XSDElementDeclarationSection extends MultiplicitySection
       TypesHelper helper = new TypesHelper(xsdSchema);
       List items = new ArrayList();
       items = helper.getGlobalElements();
-      items.add(0, "");
+      items.add(0, ""); //$NON-NLS-1$
       componentNameCombo.setItems((String [])items.toArray(new String[0]));
     }
     setListenerEnabled(true);
@@ -284,7 +284,7 @@ public class XSDElementDeclarationSection extends MultiplicitySection
     XSDElementDeclaration xsdElementDeclaration = ((XSDElementDeclaration) input).getResolvedElementDeclaration();
 
     // refresh name
-    nameText.setText("");
+    nameText.setText(""); //$NON-NLS-1$
     typeCombo.setText(""); //$NON-NLS-1$
     typesBrowseButton.setEnabled(true);
     String name = xsdElementDeclaration.getName();
@@ -360,7 +360,7 @@ public class XSDElementDeclarationSection extends MultiplicitySection
       configuration.setDescriptionProvider(new XSDComponentDescriptionProvider() );
       configuration.setSearchListProvider(searchListProvider);      
       configuration.setNewComponentHandler(new NewTypeButtonHandler());
-      ComponentSearchListDialog dialog = new ScopedComponentSearchListDialog(shell, XSDEditorPlugin.getXSDString("_UI_LABEL_SET_TYPE"), configuration);
+      ComponentSearchListDialog dialog = new ScopedComponentSearchListDialog(shell, XSDEditorPlugin.getXSDString("_UI_LABEL_SET_TYPE"), configuration); //$NON-NLS-1$
       //dialog.setFilterLabel("Text:");
 
       if (input instanceof XSDAttributeDeclaration)
@@ -393,12 +393,12 @@ public class XSDElementDeclarationSection extends MultiplicitySection
       if (input instanceof XSDElementDeclaration)
       {
         XSDParticle particle = (XSDParticle) ((XSDElementDeclaration) input).eContainer();
-        UpdateMaxOccursCommand command = new UpdateMaxOccursCommand("Update Maximum Occurence", particle, maxOccurs);
+        UpdateMaxOccursCommand command = new UpdateMaxOccursCommand(org.eclipse.wst.xsd.ui.internal.common.util.Messages._UI_ACTION_UPDATE_MAXIMUM_OCCURRENCE, particle, maxOccurs);
         getCommandStack().execute(command);
         if (maxOccurs == -1)
-          maxCombo.setText("*");
+          maxCombo.setText("*"); //$NON-NLS-1$
         else
-          maxCombo.setText("");
+          maxCombo.setText(""); //$NON-NLS-1$
       }
     }
     else if (e.widget == requiredButton)
@@ -407,15 +407,15 @@ public class XSDElementDeclarationSection extends MultiplicitySection
       if (input instanceof XSDElementDeclaration)
       {
         XSDParticle particle = (XSDParticle) ((XSDElementDeclaration) input).eContainer();
-        UpdateMinOccursCommand command = new UpdateMinOccursCommand("Update Minimum Occurrence", particle, minOccurs);
+        UpdateMinOccursCommand command = new UpdateMinOccursCommand(org.eclipse.wst.xsd.ui.internal.common.util.Messages._UI_ACTION_UPDATE_MINIMUM_OCCURRENCE, particle, minOccurs);
         getCommandStack().execute(command);
       }
-      minCombo.setText("" + minOccurs);
+      minCombo.setText("" + minOccurs); //$NON-NLS-1$
     }
     else if (e.widget == componentNameCombo)
     {
       String newValue = componentNameCombo.getText();
-      String newName = newValue.substring(newValue.indexOf(":") + 1);
+      String newName = newValue.substring(newValue.indexOf(":") + 1); //$NON-NLS-1$
       if (isElementReference)
       {
         XSDElementDeclaration elementRef = (XSDElementDeclaration)input;
@@ -477,7 +477,7 @@ public class XSDElementDeclarationSection extends MultiplicitySection
         String oldName = namedComponent.getName();
         if (!newValue.equals(oldName))
         {
-          command = new UpdateNameCommand("Rename", namedComponent, newValue);
+          command = new UpdateNameCommand(org.eclipse.wst.xsd.ui.internal.common.util.Messages._UI_ACTION_RENAME, namedComponent, newValue);
         }
 
         if (command != null && getCommandStack() != null)
@@ -507,7 +507,7 @@ public class XSDElementDeclarationSection extends MultiplicitySection
     // validate against NCName
     if (name.length() < 1 || !XMLChar.isValidNCName(name))
     {
-      setErrorMessage("Invalid name");
+      setErrorMessage(org.eclipse.wst.xsd.ui.internal.common.util.Messages._UI_ERROR_INVALID_NAME);
       return false;
     }
 
@@ -533,7 +533,7 @@ public class XSDElementDeclarationSection extends MultiplicitySection
 
   protected void refreshRefCombo()
   {
-    componentNameCombo.setText("");
+    componentNameCombo.setText(""); //$NON-NLS-1$
     typesBrowseButton.setEnabled(false);
 
     XSDElementDeclaration namedComponent = (XSDElementDeclaration) input;
@@ -543,7 +543,7 @@ public class XSDElementDeclarationSection extends MultiplicitySection
       String attrValue = element.getAttribute(XSDConstants.REF_ATTRIBUTE);
       if (attrValue == null)
       {
-        attrValue = "";
+        attrValue = ""; //$NON-NLS-1$
       }
       componentNameCombo.setText(attrValue);
     }

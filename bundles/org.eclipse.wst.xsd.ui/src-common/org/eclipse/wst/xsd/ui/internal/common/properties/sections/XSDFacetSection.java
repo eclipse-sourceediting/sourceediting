@@ -36,6 +36,7 @@ import org.eclipse.wst.xsd.ui.internal.common.commands.ChangeToLocalSimpleTypeCo
 import org.eclipse.wst.xsd.ui.internal.common.commands.UpdateNumericBoundsFacetCommand;
 import org.eclipse.wst.xsd.ui.internal.common.commands.UpdateStringLengthFacetCommand;
 import org.eclipse.wst.xsd.ui.internal.common.commands.UpdateXSDWhiteSpaceFacetCommand;
+import org.eclipse.wst.xsd.ui.internal.common.util.Messages;
 import org.eclipse.wst.xsd.ui.internal.common.util.XSDCommonUIUtils;
 import org.eclipse.xsd.XSDAttributeDeclaration;
 import org.eclipse.xsd.XSDElementDeclaration;
@@ -67,7 +68,7 @@ public class XSDFacetSection extends AbstractSection
   Label maxLengthLabel;
   Text maxLengthText;
   Group simpleTypeModifierGroup;
-  String simpleTypeModifierGroupTitle = "";
+  String simpleTypeModifierGroupTitle = ""; //$NON-NLS-1$
   Button collapseWhitespaceButton;
   Button useEnumerationsButton, usePatternsButton;
   Button minimumInclusiveCheckbox;
@@ -105,7 +106,7 @@ public class XSDFacetSection extends AbstractSection
     fontData.setStyle(SWT.BOLD);
     titleFont = new Font(null, fontData);
     title.setFont(titleFont);
-    title.setText(titleString + (isReadOnly ? " - ReadOnly" : ""));
+    title.setText(titleString + (isReadOnly ? " - " + Messages._UI_LABEL_READONLY : "")); //$NON-NLS-1$ //$NON-NLS-2$
 
     Composite facetComposite = factory.createComposite(composite, SWT.FLAT);
 
@@ -149,33 +150,33 @@ public class XSDFacetSection extends AbstractSection
     if (hasMaxMinFacets)
     {
       minLengthLabel = factory.createLabel(simpleTypeModifierComposite, minLengthString);
-      minLengthText = factory.createText(simpleTypeModifierComposite, "");
+      minLengthText = factory.createText(simpleTypeModifierComposite, ""); //$NON-NLS-1$
       applyAllListeners(minLengthText);
 
       GridData minGridData = new GridData();
       minGridData.widthHint = 100;
       minLengthText.setLayoutData(minGridData);
-      minimumInclusiveCheckbox = factory.createButton(simpleTypeModifierComposite, "Inclusive", SWT.CHECK);
+      minimumInclusiveCheckbox = factory.createButton(simpleTypeModifierComposite, Messages._UI_LABEL_INCLUSIVE, SWT.CHECK);
       minimumInclusiveCheckbox.addSelectionListener(this);
 
       maxLengthLabel = factory.createLabel(simpleTypeModifierComposite, maxLengthString);
-      maxLengthText = factory.createText(simpleTypeModifierComposite, "");
+      maxLengthText = factory.createText(simpleTypeModifierComposite, ""); //$NON-NLS-1$
       applyAllListeners(maxLengthText);
 
       GridData maxGridData = new GridData();
       maxGridData.widthHint = 100;
       maxLengthText.setLayoutData(maxGridData);
 
-      maximumInclusiveCheckbox = factory.createButton(simpleTypeModifierComposite, "Inclusive", SWT.CHECK);
+      maximumInclusiveCheckbox = factory.createButton(simpleTypeModifierComposite, Messages._UI_LABEL_INCLUSIVE, SWT.CHECK);
       maximumInclusiveCheckbox.addSelectionListener(this);
 
       minimumInclusiveCheckbox.setVisible(isNumericBaseType);
       maximumInclusiveCheckbox.setVisible(isNumericBaseType);
     }
-    collapseWhitespaceButton = factory.createButton(simpleTypeModifierComposite, "Collapse whitespace", SWT.CHECK);
+    collapseWhitespaceButton = factory.createButton(simpleTypeModifierComposite, Messages._UI_LABEL_COLLAPSE_WHITESPACE, SWT.CHECK);
     collapseWhitespaceButton.addSelectionListener(this);
 
-    Group specificValueConstraintsGroup = factory.createGroup(facetComposite, "Specific constraint values");
+    Group specificValueConstraintsGroup = factory.createGroup(facetComposite, Messages._UI_LABEL_SPECIFIC_CONSTRAINT_VALUES);
     gridLayout = new GridLayout();
     gridLayout.marginTop = 0;
     gridLayout.marginBottom = 0;
@@ -199,7 +200,7 @@ public class XSDFacetSection extends AbstractSection
     data.verticalAlignment = GridData.BEGINNING;
     compositeForButtons.setLayoutData(data);
 
-    factory.createCLabel(compositeForButtons, "Restrict values by:");
+    factory.createCLabel(compositeForButtons, Messages._UI_LABEL_RESTRICT_VALUES_BY);
 //    useDefinedValuesButton = factory.createButton(compositeForButtons, "Only permit certain values", SWT.CHECK);
 //    useDefinedValuesButton.addSelectionListener(this);
 
@@ -210,9 +211,9 @@ public class XSDFacetSection extends AbstractSection
     gridLayout.marginBottom = 0;
     gridLayout.numColumns = 1;
     compositeForRadioButtons.setLayout(gridLayout);
-    useEnumerationsButton = factory.createButton(compositeForRadioButtons, "Enumerations", SWT.RADIO);
+    useEnumerationsButton = factory.createButton(compositeForRadioButtons, Messages._UI_LABEL_ENUMERATIONS, SWT.RADIO);
     useEnumerationsButton.addSelectionListener(this);
-    usePatternsButton = factory.createButton(compositeForRadioButtons, "Patterns", SWT.RADIO);
+    usePatternsButton = factory.createButton(compositeForRadioButtons, Messages._UI_LABEL_PATTERNS, SWT.RADIO);
     usePatternsButton.addSelectionListener(this);
     
     constraintsWidget = new SpecificConstraintsWidget(specificValueConstraintsGroup, factory, (input instanceof XSDFeature) ? (XSDFeature)input : null, xsdSimpleTypeDefinition, this);
@@ -251,7 +252,7 @@ public class XSDFacetSection extends AbstractSection
     }
     if (hasMaxMinFacets)
     {
-      title.setText(titleString + (isReadOnly ? " - ReadOnly" : ""));
+      title.setText(titleString + (isReadOnly ? " - " + Messages._UI_LABEL_READONLY : "")); //$NON-NLS-1$ //$NON-NLS-2$
     }
     relayout();
     constraintsWidget.setCommandStack(getCommandStack());
@@ -273,27 +274,27 @@ public class XSDFacetSection extends AbstractSection
       else
         targetST = xsdSimpleTypeDefinition.getBaseTypeDefinition();
       
-      minLengthString = "";
-      maxLengthString = "";
-      if (targetST.getValidFacets().contains("length"))
+      minLengthString = ""; //$NON-NLS-1$
+      maxLengthString = ""; //$NON-NLS-1$
+      if (targetST.getValidFacets().contains("length")) //$NON-NLS-1$
       {
-        minLengthString = "Minimum length:";
-        maxLengthString = "Maximum length:";
-        simpleTypeModifierGroupTitle = "Constraints on length of " + targetST.getName();
+        minLengthString = Messages._UI_LABEL_MINIMUM_LENGTH;
+        maxLengthString = Messages._UI_LABEL_MAXIMUM_LENGTH;
+        simpleTypeModifierGroupTitle = Messages._UI_LABEL_CONSTRAINTS_ON_LENGTH_OF + targetST.getName();
         isNumericBaseType = false;
         hasMaxMinFacets = true;
       }
-      else if (targetST.getValidFacets().contains("maxInclusive"))
+      else if (targetST.getValidFacets().contains("maxInclusive")) //$NON-NLS-1$
       {
-        simpleTypeModifierGroupTitle = "Constraints on value of " + targetST.getName();
-        minLengthString = "Minimum value:";
-        maxLengthString = "Maximum value:";
+        simpleTypeModifierGroupTitle = Messages._UI_LABEL_CONSTRAINTS_ON_VALUE_OF + targetST.getName();
+        minLengthString = Messages._UI_LABEL_MINIMUM_VALUE;
+        maxLengthString = Messages._UI_LABEL_MAXIMUM_VALUE;
         isNumericBaseType = true;
         hasMaxMinFacets = true;
       }
       else
       {
-        simpleTypeModifierGroupTitle = "Constraints on " + (basePrimitive != null ? basePrimitive.getName() : "anyType");
+        simpleTypeModifierGroupTitle = Messages._UI_LABEL_CONTRAINTS_ON + (basePrimitive != null ? basePrimitive.getName() : "anyType"); //$NON-NLS-1$
       }
     }
     }
@@ -331,12 +332,12 @@ public class XSDFacetSection extends AbstractSection
       }
       
       if (xsdSimpleTypeDefinition != null)
-        titleString = "Type: " + (anonymousTypeDefinition != null ? "(" + xsdElementDeclaration.getResolvedElementDeclaration().getName() + "Type)" : xsdSimpleTypeDefinition.getName())  + " , Base: " + xsdSimpleTypeDefinition.getPrimitiveTypeDefinition().getName();
+        titleString = Messages._UI_LABEL_TYPE + (anonymousTypeDefinition != null ? "(" + xsdElementDeclaration.getResolvedElementDeclaration().getName() + "Type)" : xsdSimpleTypeDefinition.getName())  + " , " + Messages._UI_LABEL_BASE + ": " + xsdSimpleTypeDefinition.getPrimitiveTypeDefinition().getName(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
     }
     else if (input instanceof XSDSimpleTypeDefinition)
     {
       xsdSimpleTypeDefinition = (XSDSimpleTypeDefinition) input;
-      titleString = "Type: " + xsdSimpleTypeDefinition.getName() + " , Base: " + xsdSimpleTypeDefinition.getPrimitiveTypeDefinition().getName();
+      titleString = Messages._UI_LABEL_TYPE + xsdSimpleTypeDefinition.getName() + " , " + Messages._UI_LABEL_BASE + ": " + xsdSimpleTypeDefinition.getPrimitiveTypeDefinition().getName(); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
 
@@ -611,9 +612,9 @@ public class XSDFacetSection extends AbstractSection
           }
           else
           {
-            if (xsdSchema.getSchemaForSchema().resolveSimpleTypeDefinition("double").equals(xsdSimpleTypeDefinition) ||
-                xsdSchema.getSchemaForSchema().resolveSimpleTypeDefinition("float").equals(xsdSimpleTypeDefinition) ||
-                xsdSchema.getSchemaForSchema().resolveSimpleTypeDefinition("decimal").equals(xsdSimpleTypeDefinition))
+            if (xsdSchema.getSchemaForSchema().resolveSimpleTypeDefinition("double").equals(xsdSimpleTypeDefinition) || //$NON-NLS-1$
+                xsdSchema.getSchemaForSchema().resolveSimpleTypeDefinition("float").equals(xsdSimpleTypeDefinition) || //$NON-NLS-1$
+                xsdSchema.getSchemaForSchema().resolveSimpleTypeDefinition("decimal").equals(xsdSimpleTypeDefinition)) //$NON-NLS-1$
             {
               BigDecimal bigDecimal = new BigDecimal(minValue);
               bigDecimal.toString();
@@ -685,9 +686,9 @@ public class XSDFacetSection extends AbstractSection
           }
           else
           {
-            if (xsdSchema.getSchemaForSchema().resolveSimpleTypeDefinition("double").equals(xsdSimpleTypeDefinition) ||
-                xsdSchema.getSchemaForSchema().resolveSimpleTypeDefinition("float").equals(xsdSimpleTypeDefinition) ||
-                xsdSchema.getSchemaForSchema().resolveSimpleTypeDefinition("decimal").equals(xsdSimpleTypeDefinition))
+            if (xsdSchema.getSchemaForSchema().resolveSimpleTypeDefinition("double").equals(xsdSimpleTypeDefinition) || //$NON-NLS-1$
+                xsdSchema.getSchemaForSchema().resolveSimpleTypeDefinition("float").equals(xsdSimpleTypeDefinition) || //$NON-NLS-1$
+                xsdSchema.getSchemaForSchema().resolveSimpleTypeDefinition("decimal").equals(xsdSimpleTypeDefinition)) //$NON-NLS-1$
             {
               BigDecimal bigDecimal = new BigDecimal(maxValue);
               bigDecimal.toString();
@@ -744,14 +745,14 @@ public class XSDFacetSection extends AbstractSection
           anonymousSimpleType = XSDFactory.eINSTANCE.createXSDSimpleTypeDefinition();
           anonymousSimpleType.setBaseTypeDefinition(xsdSimpleTypeDefinition);
        
-          changeToAnonymousCommand = new ChangeToLocalSimpleTypeCommand("Constrain length", (XSDFeature)input);
+          changeToAnonymousCommand = new ChangeToLocalSimpleTypeCommand(Messages._UI_ACTION_CONSTRAIN_LENGTH, (XSDFeature)input);
           changeToAnonymousCommand.setAnonymousSimpleType(anonymousSimpleType);
           compoundCommand.add(changeToAnonymousCommand);
         }
 
         if (!isNumericBaseType)
         {
-          UpdateStringLengthFacetCommand updateCommand = new UpdateStringLengthFacetCommand("", anonymousSimpleType);
+          UpdateStringLengthFacetCommand updateCommand = new UpdateStringLengthFacetCommand("", anonymousSimpleType); //$NON-NLS-1$
           if (doUpdateMax)
           {
             updateCommand.setMax(maxValue);
@@ -764,7 +765,7 @@ public class XSDFacetSection extends AbstractSection
         }
         else
         {
-          UpdateNumericBoundsFacetCommand updateCommand = new UpdateNumericBoundsFacetCommand("Update bounds", anonymousSimpleType, minimumInclusiveCheckbox.getSelection(), maximumInclusiveCheckbox.getSelection());
+          UpdateNumericBoundsFacetCommand updateCommand = new UpdateNumericBoundsFacetCommand(Messages._UI_ACTION_UPDATE_BOUNDS, anonymousSimpleType, minimumInclusiveCheckbox.getSelection(), maximumInclusiveCheckbox.getSelection());
           if (doUpdateMax)
           {
             updateCommand.setMax(maxValue);
@@ -782,7 +783,7 @@ public class XSDFacetSection extends AbstractSection
       {
         if (!isNumericBaseType)
         {
-          UpdateStringLengthFacetCommand updateCommand = new UpdateStringLengthFacetCommand("", xsdSimpleTypeDefinition);
+          UpdateStringLengthFacetCommand updateCommand = new UpdateStringLengthFacetCommand("", xsdSimpleTypeDefinition); //$NON-NLS-1$
           if (doUpdateMax)
           {
             updateCommand.setMax(maxValue);
@@ -795,7 +796,7 @@ public class XSDFacetSection extends AbstractSection
         }
         else
         {
-          UpdateNumericBoundsFacetCommand updateCommand = new UpdateNumericBoundsFacetCommand("Update bounds", xsdSimpleTypeDefinition, minimumInclusiveCheckbox.getSelection(), maximumInclusiveCheckbox.getSelection());
+          UpdateNumericBoundsFacetCommand updateCommand = new UpdateNumericBoundsFacetCommand(Messages._UI_ACTION_UPDATE_BOUNDS, xsdSimpleTypeDefinition, minimumInclusiveCheckbox.getSelection(), maximumInclusiveCheckbox.getSelection());
           if (doUpdateMax)
           {
             updateCommand.setMax(maxValue);
@@ -813,7 +814,7 @@ public class XSDFacetSection extends AbstractSection
     {
       if (!isNumericBaseType)
       {
-        UpdateStringLengthFacetCommand updateCommand = new UpdateStringLengthFacetCommand("", xsdSimpleTypeDefinition);
+        UpdateStringLengthFacetCommand updateCommand = new UpdateStringLengthFacetCommand("", xsdSimpleTypeDefinition); //$NON-NLS-1$
         if (doUpdateMax)
         {
           updateCommand.setMax(maxValue);
@@ -826,7 +827,7 @@ public class XSDFacetSection extends AbstractSection
       }
       else
       {
-        UpdateNumericBoundsFacetCommand updateCommand = new UpdateNumericBoundsFacetCommand("Update bounds", xsdSimpleTypeDefinition, minimumInclusiveCheckbox.getSelection(), maximumInclusiveCheckbox.getSelection());
+        UpdateNumericBoundsFacetCommand updateCommand = new UpdateNumericBoundsFacetCommand(Messages._UI_ACTION_UPDATE_BOUNDS, xsdSimpleTypeDefinition, minimumInclusiveCheckbox.getSelection(), maximumInclusiveCheckbox.getSelection());
         if (doUpdateMax)
         {
           updateCommand.setMax(maxValue);
@@ -858,12 +859,12 @@ public class XSDFacetSection extends AbstractSection
              anonymousSimpleType = XSDFactory.eINSTANCE.createXSDSimpleTypeDefinition();
              anonymousSimpleType.setBaseTypeDefinition(xsdSimpleTypeDefinition);
            
-             ChangeToLocalSimpleTypeCommand changeToAnonymousCommand = new ChangeToLocalSimpleTypeCommand("Constrain length", (XSDFeature)input);
+             ChangeToLocalSimpleTypeCommand changeToAnonymousCommand = new ChangeToLocalSimpleTypeCommand(Messages._UI_ACTION_CONSTRAIN_LENGTH, (XSDFeature)input);
              changeToAnonymousCommand.setAnonymousSimpleType(anonymousSimpleType);
              compoundCommand.add(changeToAnonymousCommand);
            }
   
-           UpdateXSDWhiteSpaceFacetCommand whiteSpaceCommand = new UpdateXSDWhiteSpaceFacetCommand("Collapse whitespace", anonymousSimpleType, collapseWhitespaceButton.getSelection());
+           UpdateXSDWhiteSpaceFacetCommand whiteSpaceCommand = new UpdateXSDWhiteSpaceFacetCommand(Messages._UI_ACTION_COLLAPSE_WHITESPACE, anonymousSimpleType, collapseWhitespaceButton.getSelection());
            compoundCommand.add(whiteSpaceCommand);
             
            getCommandStack().execute(compoundCommand);
@@ -872,7 +873,7 @@ public class XSDFacetSection extends AbstractSection
       }
       else
       {
-        UpdateXSDWhiteSpaceFacetCommand whiteSpaceCommand = new UpdateXSDWhiteSpaceFacetCommand("Collapse whitespace", xsdSimpleTypeDefinition, collapseWhitespaceButton.getSelection());
+        UpdateXSDWhiteSpaceFacetCommand whiteSpaceCommand = new UpdateXSDWhiteSpaceFacetCommand(Messages._UI_ACTION_COLLAPSE_WHITESPACE, xsdSimpleTypeDefinition, collapseWhitespaceButton.getSelection());
         getCommandStack().execute(whiteSpaceCommand);
       }
     }
@@ -881,7 +882,7 @@ public class XSDFacetSection extends AbstractSection
       String minValue = minLengthText.getText().trim();
       if (minValue.length() == 0) minValue = null;
 
-      UpdateNumericBoundsFacetCommand updateCommand = new UpdateNumericBoundsFacetCommand("Update bounds", xsdSimpleTypeDefinition, minimumInclusiveCheckbox.getSelection(), maximumInclusiveCheckbox.getSelection());
+      UpdateNumericBoundsFacetCommand updateCommand = new UpdateNumericBoundsFacetCommand(Messages._UI_ACTION_UPDATE_BOUNDS, xsdSimpleTypeDefinition, minimumInclusiveCheckbox.getSelection(), maximumInclusiveCheckbox.getSelection());
       updateCommand.setMin(minValue);
       
       if (minValue != null)
@@ -891,7 +892,7 @@ public class XSDFacetSection extends AbstractSection
     {
       String maxValue = maxLengthText.getText().trim();
       if (maxValue.length() == 0) maxValue = null;
-      UpdateNumericBoundsFacetCommand updateCommand = new UpdateNumericBoundsFacetCommand("Update bounds", xsdSimpleTypeDefinition, minimumInclusiveCheckbox.getSelection(), maximumInclusiveCheckbox.getSelection());
+      UpdateNumericBoundsFacetCommand updateCommand = new UpdateNumericBoundsFacetCommand(Messages._UI_ACTION_UPDATE_BOUNDS, xsdSimpleTypeDefinition, minimumInclusiveCheckbox.getSelection(), maximumInclusiveCheckbox.getSelection());
       updateCommand.setMax(maxValue);
       if (maxValue != null)
         getCommandStack().execute(updateCommand);

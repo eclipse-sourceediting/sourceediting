@@ -24,9 +24,9 @@ import org.eclipse.xsd.XSDSchema;
 
 public class AddXSDSchemaDirectiveAction extends XSDBaseAction
 {
-  public static String INCLUDE_ID = "org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDIncludeAction";
-  public static String IMPORT_ID = "org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDImportAction";
-  public static String REDEFINE_ID = "org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDRedefineAction";
+  public static String INCLUDE_ID = "org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDIncludeAction"; //$NON-NLS-1$
+  public static String IMPORT_ID = "org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDImportAction"; //$NON-NLS-1$
+  public static String REDEFINE_ID = "org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDRedefineAction"; //$NON-NLS-1$
   String label;
   
   public AddXSDSchemaDirectiveAction(IWorkbenchPart part, String ID, String label)
