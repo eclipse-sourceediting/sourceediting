@@ -5,7 +5,6 @@
 	<extension point="org.eclipse.ui.editors">
 		<editor
 			name="%_UI_EDITOR_NAME"
-			default="true"
 			icon="icons/XSDFile.gif"
             contributorClass="org.eclipse.wst.xsd.ui.internal.editor.XSDMultiPageEditorContributor"
             class="org.eclipse.wst.xsd.ui.internal.editor.InternalXSDMultiPageEditor"
