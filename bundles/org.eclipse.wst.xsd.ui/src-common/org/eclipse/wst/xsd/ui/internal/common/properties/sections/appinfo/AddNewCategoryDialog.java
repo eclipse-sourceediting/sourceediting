@@ -48,20 +48,20 @@ public class AddNewCategoryDialog extends Dialog
   private static final String SCHEMA_LABEL = Messages._UI_LABEL_SCHEMA;
   private static final String NAME_LABEL = Messages._UI_LABEL_NAME;
   private String dialogTitle = Messages._UI_LABEL_ADD_CATEGORY;
-  private MenuManager browseMenu;
-  private Label name;
-  private Text nameText;
-  private Label schema;
-  private CLabel schemaDisplayer;
-  private ToolBar browseToolBar;
-  private ToolItem browseItem;
+  
+  protected MenuManager browseMenu;
+  protected Label name;
+  protected Text nameText;
+  protected Label schema;
+  protected CLabel schemaDisplayer;
+  protected ToolBar browseToolBar;
+  protected ToolItem browseItem;
 
-  private List invalidNames;
-  private String appInfoSchemaLocation;
-  private String categoryName;
-  private CLabel errDisplayer;
-
-  private boolean isCategoryNameValid;
+  protected List invalidNames;
+  protected String appInfoSchemaLocation;
+  protected String categoryName;
+  protected CLabel errDisplayer;
+  protected boolean isCategoryNameValid;
 
   public AddNewCategoryDialog(Shell parentShell)
   {
@@ -111,6 +111,10 @@ public class AddNewCategoryDialog extends Dialog
     return result;
   }
 
+  protected Button getButton(int id) {
+    return super.getButton(id);
+  }
+  
   protected Control createDialogArea(Composite parent)
   {
     getShell().setText(dialogTitle);
