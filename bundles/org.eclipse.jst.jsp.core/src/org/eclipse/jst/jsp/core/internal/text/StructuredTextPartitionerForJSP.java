@@ -15,10 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentPartitioner;
-import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.JSP12TLDNames;
 import org.eclipse.jst.jsp.core.internal.encoding.JSPDocumentHeadContentDetector;
 import org.eclipse.jst.jsp.core.internal.parser.JSPSourceParser;
 import org.eclipse.jst.jsp.core.internal.provisional.JSP11Namespace;
@@ -26,9 +24,8 @@ import org.eclipse.jst.jsp.core.internal.provisional.JSP12Namespace;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.jst.jsp.core.text.IJSPPartitions;
 import org.eclipse.wst.html.core.internal.text.StructuredTextPartitionerForHTML;
-import org.eclipse.wst.sse.core.internal.ltk.parser.StructuredDocumentRegionHandler;
-import org.eclipse.wst.sse.core.internal.ltk.parser.StructuredDocumentRegionHandlerExtension;
-import org.eclipse.wst.sse.core.internal.ltk.parser.StructuredDocumentRegionParser;
+import org.eclipse.wst.sse.core.internal.ltk.parser.RegionParser;
+import org.eclipse.wst.sse.core.internal.ltk.parser.TagMarker;
 import org.eclipse.wst.sse.core.internal.parser.ForeignRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
@@ -37,130 +34,10 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.sse.core.internal.text.rules.StructuredTextPartitioner;
-import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.eclipse.wst.xml.core.internal.text.rules.StructuredTextPartitionerForXML;
 
 public class StructuredTextPartitionerForJSP extends StructuredTextPartitioner {
-
-	private class PrefixListener implements StructuredDocumentRegionHandler, StructuredDocumentRegionHandlerExtension {
-		// track the list of prefixes introduced by taglib directives
-		private List fCustomActionPrefixes = null;
-		private String fLastTrue = null;
-
-		public PrefixListener() {
-			super();
-			fCustomActionPrefixes = new ArrayList(1);
-			resetNodes();
-		}
-
-		private JSPSourceParser getTextSource() {
-			return (JSPSourceParser) fStructuredDocument.getParser();
-		}
-
-		public void nodeParsed(IStructuredDocumentRegion sdRegion) {
-			// Largely taken from the TLDCMDocumentManager
-			// could test > 1, but since we only care if there are 8 (<%@,
-			// taglib, uri, =, where, prefix, =, what) [or 4 for includes]
-			if (sdRegion.getNumberOfRegions() > 4 && sdRegion.getRegions().get(1).getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_NAME) {
-				ITextRegion nameRegion = sdRegion.getRegions().get(1);
-				try {
-					boolean tablibdetected = false;
-					boolean directiveTaglibdetected;
-					int startOffset = sdRegion.getStartOffset(nameRegion);
-					int textLength = nameRegion.getTextLength();
-
-					if (getTextSource() != null) {
-						tablibdetected = getTextSource().regionMatches(startOffset, textLength, JSP12TLDNames.TAGLIB);
-						directiveTaglibdetected = getTextSource().regionMatches(startOffset, textLength, JSP12Namespace.ElementName.DIRECTIVE_TAGLIB);
-					}
-					else {
-						// old fashioned way
-						String directiveName = getTextSource().getText(startOffset, textLength);
-						tablibdetected = directiveName.equals(JSP12TLDNames.TAGLIB);
-						directiveTaglibdetected = directiveName.equals(JSP12Namespace.ElementName.DIRECTIVE_TAGLIB);
-					}
-					if (tablibdetected || directiveTaglibdetected) {
-						processTaglib(sdRegion);
-					}
-				}
-				catch (StringIndexOutOfBoundsException sioobExc) {
-					// ISSUE: why is this "normal" here?
-					//do nothing
-				}
-			}
-		}
-
-
-		private void processTaglib(IStructuredDocumentRegion taglibStructuredDocumentRegion) {
-			ITextRegionList regions = taglibStructuredDocumentRegion.getRegions();
-			String prefixValue = null;
-			boolean prefixnameDetected = false;
-			try {
-				for (int i = 0; i < regions.size(); i++) {
-					ITextRegion region = regions.get(i);
-					int startOffset = taglibStructuredDocumentRegion.getStartOffset(region);
-					int textLength = region.getTextLength();
-					if (region.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME) {
-						prefixnameDetected = getTextSource().regionMatches(startOffset, textLength, JSP12TLDNames.PREFIX);
-						//String regionText =
-						// fTextSource.getText(startOffset, textLength);
-						//prefixname =
-						// regionText.equals(JSP12TLDNames.PREFIX);
-					}
-					else if (prefixnameDetected && region.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
-						prefixValue = getTextSource().getText(startOffset, textLength);
-					}
-				}
-			}
-			catch (StringIndexOutOfBoundsException sioobExc) {
-				// nothing to be done
-				prefixValue = null;
-			}
-			if (prefixValue != null) {
-				String prefixText = StringUtils.strip(prefixValue) + ":"; //$NON-NLS-1$
-				if (!fCustomActionPrefixes.contains(prefixText)) {
-					if(debugPrefixListener == true) {
-						System.out.println("StructuredTextPartitionerForJSP.PrefixListener learning prefix: " + prefixText); //$NON-NLS-1$
-					}
-					fCustomActionPrefixes.add(prefixText);
-				}
-			}
-		}
-
-		public void resetNodes() {
-			fLastTrue = null;
-			fCustomActionPrefixes.clear();
-			fCustomActionPrefixes.add(JSP11Namespace.JSP_TAG_PREFIX + ":"); //$NON-NLS-1$
-			if(debugPrefixListener == true) {
-				System.out.println("StructuredTextPartitionerForJSP.PrefixListener forgetting learned prefixes"); //$NON-NLS-1$
-			}
-		}
-
-
-		public void setStructuredDocument(IStructuredDocument newDocument) {
-			resetNodes();
-			((StructuredDocumentRegionParser) fStructuredDocument.getParser()).removeStructuredDocumentRegionHandler(this);
-			if(newDocument != null) {
-				((StructuredDocumentRegionParser) newDocument.getParser()).addStructuredDocumentRegionHandler(this);
-			}
-		}
-
-		public boolean startsWithCustomActionPrefix(String tagname) {
-			if (tagname.equals(fLastTrue))
-				return true;
-			for (int i = 0; i < fCustomActionPrefixes.size(); i++)
-				if (tagname.startsWith((String) fCustomActionPrefixes.get(i))) {
-					fLastTrue = tagname;
-					return true;
-				}
-			return false;
-		}
-	}
-
-	static final boolean debugPrefixListener = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.jst.jsp.core/partitioner/prefixlistener")); //$NON-NLS-1$ //$NON-NLS-2$
-
-
 	// for compatibility with v5.1.0, we'll reuse ST_JSP_DIRECTIVE for action
 	// tags
 	private final static boolean fEnableJSPActionPartitions = true;
@@ -180,15 +57,18 @@ public class StructuredTextPartitionerForJSP extends StructuredTextPartitioner {
 	}
 
 	private IStructuredTextPartitioner fEmbeddedPartitioner = null;
+	/*
+	 * Save last taglib prefix that was checked (see isAction()) for better
+	 * performance
+	 */
+	private String fLastCheckedPrefix = null;
 
-	
 	/**
 	 * Assume language=java by default ... client, such as
 	 * PageDirectiveAdapter, must set language of document partitioner,
 	 * if/when it changes.
 	 */
 	private String fLanguage = "java"; //$NON-NLS-1$
-	private PrefixListener fPrefixParseListener;
 
 	/**
 	 * Constructor for JSPDocumentPartioner.
@@ -199,9 +79,9 @@ public class StructuredTextPartitionerForJSP extends StructuredTextPartitioner {
 			fJSPActionTagNames = new ArrayList(); // uses .equals() for
 			// contains()
 			fJSPActionTagNames.add(JSP12Namespace.ElementName.DECLARATION);
-			//			fJSPActionTagNames.add(JSP12Namespace.ElementName.DIRECTIVE_INCLUDE);
-			//			fJSPActionTagNames.add(JSP12Namespace.ElementName.DIRECTIVE_PAGE);
-			//			fJSPActionTagNames.add(JSP12Namespace.ElementName.DIRECTIVE_TAGLIB);
+			// fJSPActionTagNames.add(JSP12Namespace.ElementName.DIRECTIVE_INCLUDE);
+			// fJSPActionTagNames.add(JSP12Namespace.ElementName.DIRECTIVE_PAGE);
+			// fJSPActionTagNames.add(JSP12Namespace.ElementName.DIRECTIVE_TAGLIB);
 			fJSPActionTagNames.add(JSP12Namespace.ElementName.EXPRESSION);
 			fJSPActionTagNames.add(JSP12Namespace.ElementName.FALLBACK);
 			fJSPActionTagNames.add(JSP12Namespace.ElementName.FORWARD);
@@ -210,7 +90,7 @@ public class StructuredTextPartitionerForJSP extends StructuredTextPartitioner {
 			fJSPActionTagNames.add(JSP12Namespace.ElementName.PARAM);
 			fJSPActionTagNames.add(JSP12Namespace.ElementName.PARAMS);
 			fJSPActionTagNames.add(JSP12Namespace.ElementName.PLUGIN);
-			//			fJSPActionTagNames.add(JSP12Namespace.ElementName.ROOT);
+			// fJSPActionTagNames.add(JSP12Namespace.ElementName.ROOT);
 			fJSPActionTagNames.add(JSP12Namespace.ElementName.SCRIPTLET);
 			fJSPActionTagNames.add(JSP12Namespace.ElementName.SETPROPERTY);
 			fJSPActionTagNames.add(JSP12Namespace.ElementName.TEXT);
@@ -224,14 +104,6 @@ public class StructuredTextPartitionerForJSP extends StructuredTextPartitioner {
 	public void connect(IDocument document) {
 		super.connect(document);
 		fSupportedTypes = null;
-
-		// be extra paranoid
-		if (fEnableJSPActionPartitions && fStructuredDocument.getParser() instanceof JSPSourceParser) {
-			StructuredDocumentRegionParser parser = (StructuredDocumentRegionParser) fStructuredDocument.getParser();
-			parser.removeStructuredDocumentRegionHandler(fPrefixParseListener);
-			fPrefixParseListener = new PrefixListener();
-			parser.addStructuredDocumentRegionHandler(fPrefixParseListener);
-		}
 	}
 
 	private IStructuredTextPartitioner createStructuredTextPartitioner(IStructuredDocument structuredDocument) {
@@ -275,15 +147,6 @@ public class StructuredTextPartitionerForJSP extends StructuredTextPartitioner {
 	 * @see org.eclipse.jface.text.IDocumentPartitioner#disconnect()
 	 */
 	public void disconnect() {
-		// we'll check for null document, just for bullet proofing (incase
-		// disconnnect is called without corresponding connect.
-		if (fStructuredDocument != null) {
-			StructuredDocumentRegionParser parser = (StructuredDocumentRegionParser) fStructuredDocument.getParser();
-			if (fPrefixParseListener != null)
-				parser.removeStructuredDocumentRegionHandler(fPrefixParseListener);
-			fPrefixParseListener = null;
-		}
-
 		if (fEmbeddedPartitioner != null) {
 			fEmbeddedPartitioner.disconnect();
 			// https://w3.opensource.ibm.com/bugzilla/show_bug.cgi?id=4909
@@ -369,11 +232,9 @@ public class StructuredTextPartitionerForJSP extends StructuredTextPartitioner {
 			result = IJSPPartitions.JSP_CONTENT_DELIMITER;
 		else if (region_type == DOMJSPRegionContexts.JSP_ROOT_TAG_NAME)
 			result = IJSPPartitions.JSP_DEFAULT;
-		else if (region_type == DOMJSPRegionContexts.JSP_EL_OPEN || region_type == DOMJSPRegionContexts.JSP_EL_CONTENT || region_type == DOMJSPRegionContexts.JSP_EL_CLOSE || region_type == DOMJSPRegionContexts.JSP_EL_DQUOTE
-					|| region_type == DOMJSPRegionContexts.JSP_EL_SQUOTE || region_type == DOMJSPRegionContexts.JSP_EL_QUOTED_CONTENT)
+		else if (region_type == DOMJSPRegionContexts.JSP_EL_OPEN || region_type == DOMJSPRegionContexts.JSP_EL_CONTENT || region_type == DOMJSPRegionContexts.JSP_EL_CLOSE || region_type == DOMJSPRegionContexts.JSP_EL_DQUOTE || region_type == DOMJSPRegionContexts.JSP_EL_SQUOTE || region_type == DOMJSPRegionContexts.JSP_EL_QUOTED_CONTENT)
 			result = IJSPPartitions.JSP_DEFAULT_EL;
-		else if (region_type == DOMJSPRegionContexts.JSP_VBL_OPEN || region_type == DOMJSPRegionContexts.JSP_VBL_CONTENT || region_type == DOMJSPRegionContexts.JSP_VBL_CLOSE || region_type == DOMJSPRegionContexts.JSP_VBL_DQUOTE
-					|| region_type == DOMJSPRegionContexts.JSP_VBL_SQUOTE || region_type == DOMJSPRegionContexts.JSP_VBL_QUOTED_CONTENT)
+		else if (region_type == DOMJSPRegionContexts.JSP_VBL_OPEN || region_type == DOMJSPRegionContexts.JSP_VBL_CONTENT || region_type == DOMJSPRegionContexts.JSP_VBL_CLOSE || region_type == DOMJSPRegionContexts.JSP_VBL_DQUOTE || region_type == DOMJSPRegionContexts.JSP_VBL_SQUOTE || region_type == DOMJSPRegionContexts.JSP_VBL_QUOTED_CONTENT)
 			result = IJSPPartitions.JSP_DEFAULT_EL2;
 		else if (region_type == DOMRegionContext.XML_CONTENT) {
 			// possibly between <jsp:scriptlet>, <jsp:expression>,
@@ -427,16 +288,25 @@ public class StructuredTextPartitionerForJSP extends StructuredTextPartitioner {
 	private boolean isAction(IStructuredDocumentRegion sdRegion, int offset) {
 		if (!sdRegion.getType().equals(DOMRegionContext.XML_TAG_NAME))
 			return false;
-		// shouldn't get a tag name region type unless a tag name region
-		// exists
-		// at [1]
+		/*
+		 * shouldn't get a tag name region type unless a tag name region
+		 * exists at [1]
+		 */
 		ITextRegion tagNameRegion = sdRegion.getRegions().get(1);
 		String tagName = sdRegion.getText(tagNameRegion);
-		// TODO: support custom JSP actions
-		// the jsp: prefix is already loaded in the prefix listener
-		//		if (fJSPActionTagNames.contains(tagName))
-		//			return true;
-		return fPrefixParseListener.startsWithCustomActionPrefix(tagName);
+
+		RegionParser parser = fStructuredDocument.getParser();
+		if (parser instanceof JSPSourceParser) {
+			if (tagName.equals(fLastCheckedPrefix))
+				return true;
+			List fCustomActionPrefixes = ((JSPSourceParser) parser).getNestablePrefixes();
+			for (int i = 0; i < fCustomActionPrefixes.size(); i++)
+				if (tagName.startsWith(((TagMarker) fCustomActionPrefixes.get(i)).getTagName())) {
+					fLastCheckedPrefix = tagName;
+					return true;
+				}
+		}
+		return false;
 	}
 
 	protected boolean isDocumentRegionBasedPartition(IStructuredDocumentRegion sdRegion, ITextRegion containedChildRegion, int offset) {
@@ -448,7 +318,8 @@ public class StructuredTextPartitionerForJSP extends StructuredTextPartitioner {
 			}
 			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=113346
 			if (fEnableJSPActionPartitions && isAction(sdRegion, offset) && !(containedChildRegion instanceof ITextRegionContainer)) {
-			//if (fEnableJSPActionPartitions && isAction(sdRegion, offset)) {
+				// if (fEnableJSPActionPartitions && isAction(sdRegion,
+				// offset)) {
 				setInternalPartition(offset, containedChildRegion.getLength(), IJSPPartitions.JSP_DIRECTIVE);
 				return true;
 			}
@@ -488,19 +359,19 @@ public class StructuredTextPartitionerForJSP extends StructuredTextPartitioner {
 		/**
 		 * manage connected state of embedded partitioner
 		 */
-		if(fEmbeddedPartitioner != null && fStructuredDocument != null) {
+		if (fEmbeddedPartitioner != null && fStructuredDocument != null) {
 			fEmbeddedPartitioner.disconnect();
 		}
-		
+
 		this.fEmbeddedPartitioner = embeddedPartitioner;
-		
-		if(fEmbeddedPartitioner != null && fStructuredDocument != null) {
+
+		if (fEmbeddedPartitioner != null && fStructuredDocument != null) {
 			fEmbeddedPartitioner.connect(fStructuredDocument);
 		}
 	}
 
 	protected void setInternalPartition(int offset, int length, String type) {
-		//TODO: need to carry this single instance idea further to be
+		// TODO: need to carry this single instance idea further to be
 		// complete,
 		// but hopefully this will be less garbage than before (especially for
 		// HTML, XML,

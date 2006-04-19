@@ -25,9 +25,6 @@ org.eclipse.jst.jsp.core/taglib/indexcreation=false
 #org.eclipse.jst.jsp.core.internal.contentmodel.TaglibIndex._debugResolution
 org.eclipse.jst.jsp.core/taglib/resolve=false
 
-#org.eclipse.jst.jsp.core.text.rules.StructuredTextPartitioner.debugPrefixListener
-org.eclipse.jst.jsp.core/partitioner/prefixlistener=false
-
 org.eclipse.jst.jsp.core/debug/jspjavamapping=false
 
 org.eclipse.jst.jsp.core/debug/jspvalidator=false
