@@ -14,12 +14,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IResourceChangeEvent;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.gef.EditPart;
@@ -27,7 +24,7 @@ import org.eclipse.gef.EditPartFactory;
 import org.eclipse.gef.RootEditPart;
 import org.eclipse.gef.ui.actions.ActionRegistry;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IPostSelectionProvider;
@@ -37,30 +34,19 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.INavigationLocation;
 import org.eclipse.ui.INavigationLocationProvider;
-import org.eclipse.ui.IPropertyListener;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.ui.views.properties.tabbed.ITabbedPropertySheetPageContributor;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
-import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
-import org.eclipse.wst.sse.ui.StructuredTextEditor;
-import org.eclipse.wst.xml.core.internal.document.NodeImpl;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xsd.ui.internal.adapters.CategoryAdapter;
@@ -78,9 +64,9 @@ import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDAttributeDeclaration
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDAttributeGroupDefinitionAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDComplexTypeDefinitionAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDElementAction;
-import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDSchemaDirectiveAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDModelGroupAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDModelGroupDefinitionAction;
+import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDSchemaDirectiveAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDSimpleTypeDefinitionAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.DeleteXSDConcreteComponentAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.OpenInNewEditor;
@@ -90,30 +76,30 @@ import org.eclipse.wst.xsd.ui.internal.common.properties.sections.IDocumentChang
 import org.eclipse.wst.xsd.ui.internal.design.editparts.XSDEditPartFactory;
 import org.eclipse.wst.xsd.ui.internal.navigation.DesignViewNavigationLocation;
 import org.eclipse.wst.xsd.ui.internal.navigation.MultiPageEditorTextSelectionNavigationLocation;
-import org.eclipse.wst.xsd.ui.internal.text.XSDModelReconcileAdapter;
+import org.eclipse.wst.xsd.ui.internal.text.XSDModelAdapter;
 import org.eclipse.wst.xsd.ui.internal.utils.OpenOnSelectionHelper;
 import org.eclipse.xsd.XSDComponent;
 import org.eclipse.xsd.XSDCompositor;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDNamedComponent;
-import org.eclipse.xsd.XSDPackage;
 import org.eclipse.xsd.XSDSchema;
-import org.eclipse.xsd.impl.XSDSchemaImpl;
+import org.eclipse.xsd.util.XSDConstants;
 import org.w3c.dom.Attr;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements ITabbedPropertySheetPageContributor, IPropertyListener, INavigationLocationProvider
+public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements ITabbedPropertySheetPageContributor, INavigationLocationProvider
 {
   ResourceSet resourceSet;
   Resource xsdResource;
   // IModel model;
   IStructuredModel structuredModel;
   XSDSchema xsdSchema;
+  XSDModelAdapter schemaNodeAdapter;
   private OutlineTreeSelectionChangeListener fOutlineListener;
   private SourceEditorSelectionListener fSourceEditorSelectionListener;
   private XSDSelectionManagerSelectionListener fXSDSelectionListener;
-  private StructuredTextEditor structuredTextEditor;
   private InternalDocumentChangedNotifier internalDocumentChangedNotifier = new InternalDocumentChangedNotifier();
   
   
@@ -142,67 +128,126 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
       }
     }
   }
-  public IModel buildModel(IFileEditorInput editorInput)
+  public IModel buildModel()
   {
     try
     {
-      EPackage.Registry reg = EPackage.Registry.INSTANCE;
-      XSDPackage xsdPackage = (XSDPackage) reg.getEPackage(XSDPackage.eNS_URI);
-      xsdSchema = xsdPackage.getXSDFactory().createXSDSchema();
-      resourceSet = XSDSchemaImpl.createResourceSet();
-      IFile resourceFile = editorInput.getFile();
-      structuredModel = StructuredModelManager.getModelManager().getModelForEdit(resourceFile);
-      // If the resource is in the workspace....
-      // otherwise the user is trying to open an external file
-      if (resourceFile != null)
+      Object obj = null;
+      
+      IEditorInput editorInput = getEditorInput();
+      
+      // If the input schema is from the WSDL Editor, then use that inline schema
+      if (editorInput instanceof XSDFileEditorInput)
       {
-        String pathName = resourceFile.getFullPath().toString();
-        xsdResource = resourceSet.getResource(URI.createPlatformResourceURI(pathName), true);
-        resourceSet.getResources().add(xsdResource);
-        Object obj = xsdResource.getContents().get(0);
-        if (obj instanceof XSDSchema)
-        {
-          xsdSchema = (XSDSchema) obj;
-          xsdSchema.setElement(((IDOMModel) structuredModel).getDocument().getDocumentElement());
-          model = (IModel) XSDAdapterFactory.getInstance().adapt(xsdSchema);
+        xsdSchema = ((XSDFileEditorInput) editorInput).getSchema();
+        model = (IModel) XSDAdapterFactory.getInstance().adapt(xsdSchema);
+        return model;
+      }
+      
+      Document document = null;
+      IDocument doc = structuredTextEditor.getDocumentProvider().getDocument(getEditorInput());
+      if (doc instanceof IStructuredDocument)
+      {
+        IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForEdit(doc);
+        if (model == null) {
+          model = StructuredModelManager.getModelManager().getModelForEdit((IStructuredDocument) doc);
         }
-        
-        // If the input schema is from the WSDL Editor, then use that inline schema
-        if (editorInput instanceof XSDFileEditorInput)
-        {
-          xsdSchema = ((XSDFileEditorInput) editorInput).getSchema();
-          model = (IModel) XSDAdapterFactory.getInstance().adapt(xsdSchema);
+        structuredModel = model;
+        document = ((IDOMModel)model).getDocument();
+      }
+      Assert.isNotNull(document);
+      
+      
+      boolean schemaNodeExists = document.getElementsByTagNameNS(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001, "schema").getLength() == 1;
+
+      if (document.getChildNodes().getLength() == 0 || !schemaNodeExists) {
+//        createDefaultSchemaNode(document);
+      }
+      
+      if (document instanceof INodeNotifier) {
+        INodeNotifier notifier = (INodeNotifier) document;
+        schemaNodeAdapter = (XSDModelAdapter) notifier.getAdapterFor(XSDModelAdapter.class);
+        if (schemaNodeAdapter == null) {
+          schemaNodeAdapter = new XSDModelAdapter();
+          notifier.addAdapter(schemaNodeAdapter);
+          obj = schemaNodeAdapter.createSchema(document.getDocumentElement());
         }
-        if (xsdSchema.getElement() != null)
-          
-          // TODO (cs) ... we need to look into performance issues when we add elements
-          // seems to be that formatting is causig lots of notification and things get terribly slow
-          // I'm specializing the method below to add an isModelStateChanging check that should
-          // help here ... but we need to investigate further
-          new XSDModelReconcileAdapter(xsdSchema.getElement().getOwnerDocument(), xsdSchema)
-          {
-            public void handleNotifyChange(INodeNotifier notifier, int eventType, Object feature, Object oldValue, Object newValue, int index)
-            {
-              if (notifier instanceof NodeImpl)
-              {
-                NodeImpl nodeImpl = (NodeImpl)notifier;
-                if (!nodeImpl.getModel().isModelStateChanging())
-                {             
-                  super.handleNotifyChange(notifier, eventType, feature, oldValue, newValue, index);
-                  internalDocumentChangedNotifier.notifyListeners(notifier, eventType, feature, oldValue, newValue, index);
-                }  
-              }
-            }
-          };
-        xsdResource.setModified(false);
+        if (obj == null)
+        {
+          obj = schemaNodeAdapter.createSchema(document.getDocumentElement());
+        }
+      }
+      
+      if (obj instanceof XSDSchema)
+      {
+        xsdSchema = (XSDSchema)obj;
+        model = (IModel) XSDAdapterFactory.getInstance().adapt(xsdSchema);        
       }
     }
-    catch (StackOverflowError e)
-    {
+    catch (Exception e) {
+      e.printStackTrace();
     }
-    catch (Exception ex)
-    {
-    }
+
+    
+//    try
+//    {
+//      EPackage.Registry reg = EPackage.Registry.INSTANCE;
+//      XSDPackage xsdPackage = (XSDPackage) reg.getEPackage(XSDPackage.eNS_URI);
+//      xsdSchema = xsdPackage.getXSDFactory().createXSDSchema();
+//      resourceSet = XSDSchemaImpl.createResourceSet();
+//      IFile resourceFile = editorInput.getFile();
+//      structuredModel = StructuredModelManager.getModelManager().getModelForEdit(resourceFile);
+//      // If the resource is in the workspace....
+//      // otherwise the user is trying to open an external file
+//      if (resourceFile != null)
+//      {
+//        String pathName = resourceFile.getFullPath().toString();
+//        xsdResource = resourceSet.getResource(URI.createPlatformResourceURI(pathName), true);
+//        resourceSet.getResources().add(xsdResource);
+//        Object obj = xsdResource.getContents().get(0);
+//        if (obj instanceof XSDSchema)
+//        {
+//          xsdSchema = (XSDSchema) obj;
+//          xsdSchema.setElement(((IDOMModel) structuredModel).getDocument().getDocumentElement());
+//          model = (IModel) XSDAdapterFactory.getInstance().adapt(xsdSchema);
+//        }
+//        
+//        // If the input schema is from the WSDL Editor, then use that inline schema
+//        if (editorInput instanceof XSDFileEditorInput)
+//        {
+//          xsdSchema = ((XSDFileEditorInput) editorInput).getSchema();
+//          model = (IModel) XSDAdapterFactory.getInstance().adapt(xsdSchema);
+//        }
+//        if (xsdSchema.getElement() != null)
+//          
+//          // TODO (cs) ... we need to look into performance issues when we add elements
+//          // seems to be that formatting is causig lots of notification and things get terribly slow
+//          // I'm specializing the method below to add an isModelStateChanging check that should
+//          // help here ... but we need to investigate further
+//          new XSDModelReconcileAdapter(xsdSchema.getElement().getOwnerDocument(), xsdSchema)
+//          {
+//            public void handleNotifyChange(INodeNotifier notifier, int eventType, Object feature, Object oldValue, Object newValue, int index)
+//            {
+//              if (notifier instanceof NodeImpl)
+//              {
+//                NodeImpl nodeImpl = (NodeImpl)notifier;
+//                if (!nodeImpl.getModel().isModelStateChanging())
+//                {             
+//                  super.handleNotifyChange(notifier, eventType, feature, oldValue, newValue, index);
+//                  internalDocumentChangedNotifier.notifyListeners(notifier, eventType, feature, oldValue, newValue, index);
+//                }  
+//              }
+//            }
+//          };
+//        xsdResource.setModified(false);
+//      }
+//    }
+//    catch (StackOverflowError e)
+//    {
+//    }
+//    catch (Exception ex)
+//    {
+//    }
     return model;
   }
 
@@ -227,7 +272,10 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
   protected void initializeGraphicalViewer()
   {
     RootContentEditPart root = new RootContentEditPart();
-    root.setModel(model);
+    if (!(getEditorInput() instanceof XSDFileEditorInput))
+    {
+      root.setModel(model);
+    }
     graphicalViewer.setContents(root);
   }
   
@@ -256,7 +304,7 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
     }
     else if (type == ISelectionProvider.class)
     {
-      return selectionManager;
+      return getSelectionManager();
     }  
     else if (type == XSDSchema.class)
     {
@@ -335,29 +383,6 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
     return xsdSchema;
   }
 
-  public StructuredTextEditor getTextEditor()
-  {
-    return structuredTextEditor;
-  }
-
-  protected void createSourcePage()
-  {
-    try
-    {
-      structuredTextEditor = new StructuredTextEditor();
-      int index = addPage(structuredTextEditor, getEditorInput());
-      setPageText(index, Messages._UI_LABEL_SOURCE);
-      structuredTextEditor.update();
-      structuredTextEditor.setEditorPart(this);
-      structuredTextEditor.addPropertyListener(this);
-      firePropertyChange(PROP_TITLE);
-    }
-    catch (PartInitException e)
-    {
-      ErrorDialog.openError(getSite().getShell(), "Error creating nested text editor", null, e.getStatus()); //$NON-NLS-1$
-    }
-  }
-
   /**
    * Method openOnGlobalReference. The comp argument is a resolved xsd schema
    * object from another file. This is created and called from another schema
@@ -394,12 +419,18 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
    */
   protected void createPages()
   {
-    model = buildModel((IFileEditorInput) getEditorInput());
-    selectionProvider = getSelectionManager();
-    getEditorSite().setSelectionProvider(selectionProvider);
-    createGraphPage();
-    createSourcePage();
+    super.createPages();
+    
+//    selectionProvider = getSelectionManager();
+//    getEditorSite().setSelectionProvider(selectionProvider);
+//    
+//    structuredTextEditor = new StructuredTextEditor();
+//    model = buildModel((IFileEditorInput) getEditorInput());
+//    createGraphPage();
+//    createSourcePage();
+
     openOnSelectionHelper = new OpenOnSelectionHelper(getTextEditor(), getXSDSchema());
+
     ISelectionProvider provider = getTextEditor().getSelectionProvider();
     fSourceEditorSelectionListener = new SourceEditorSelectionListener();
     if (provider instanceof IPostSelectionProvider)
@@ -519,32 +550,6 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
     
   }
 
-
-  /**
-   * Closes all project files on project close.
-   */
-  public void resourceChanged(final IResourceChangeEvent event)
-  {
-    if (event.getType() == IResourceChangeEvent.PRE_CLOSE)
-    {
-      Display.getDefault().asyncExec(new Runnable()
-      {
-        public void run()
-        {
-          IWorkbenchPage[] pages = getSite().getWorkbenchWindow().getPages();
-          for (int i = 0; i < pages.length; i++)
-          {
-            if (((FileEditorInput) structuredTextEditor.getEditorInput()).getFile().getProject().equals(event.getResource()))
-            {
-              IEditorPart editorPart = pages[i].findEditor(structuredTextEditor.getEditorInput());
-              pages[i].closeEditor(editorPart, true);
-            }
-          }
-        }
-      });
-    }
-  }
-
   /**
    * Returns <code>true</code> if the command stack is dirty
    * 
@@ -556,94 +561,7 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
     return structuredTextEditor.isDirty() || getCommandStack().isDirty();
   }
 
-  /*
-   * This method is just to make firePropertyChanged accessbible from some
-   * (anonomous) inner classes.
-   */
-  protected void _firePropertyChange(int property)
-  {
-    super.firePropertyChange(property);
-  }
 
-  /**
-   * Posts the update code "behind" the running operation.
-   */
-  protected void postOnDisplayQue(Runnable runnable)
-  {
-    IWorkbench workbench = PlatformUI.getWorkbench();
-    IWorkbenchWindow[] windows = workbench.getWorkbenchWindows();
-    if (windows != null && windows.length > 0)
-    {
-      Display display = windows[0].getShell().getDisplay();
-      display.asyncExec(runnable);
-    }
-    else
-      runnable.run();
-  }
-
-  /**
-   * Indicates that a property has changed.
-   * 
-   * @param source
-   *          the object whose property has changed
-   * @param propId
-   *          the id of the property which has changed; property ids are
-   *          generally defined as constants on the source class
-   */
-  public void propertyChanged(Object source, int propId)
-  {
-    switch (propId)
-    {
-      // had to implement input changed "listener" so that
-      // strucutedText could tell it containing editor that
-      // the input has change, when a 'resource moved' event is
-      // found.
-      case IEditorPart.PROP_INPUT :
-      case IEditorPart.PROP_DIRTY : {
-        if (source == structuredTextEditor)
-        {
-          if (structuredTextEditor.getEditorInput() != getEditorInput())
-          {
-            setInput(structuredTextEditor.getEditorInput());
-            // title should always change when input changes.
-            // create runnable for following post call
-            Runnable runnable = new Runnable()
-            {
-              public void run()
-              {
-                _firePropertyChange(IWorkbenchPart.PROP_TITLE);
-              }
-            };
-            // Update is just to post things on the display queue
-            // (thread). We have to do this to get the dirty
-            // property to get updated after other things on the
-            // queue are executed.
-            postOnDisplayQue(runnable);
-          }
-        }
-        break;
-      }
-      case IWorkbenchPart.PROP_TITLE : {
-        // update the input if the title is changed
-        if (source == structuredTextEditor)
-        {
-          if (structuredTextEditor.getEditorInput() != getEditorInput())
-          {
-            setInput(structuredTextEditor.getEditorInput());
-          }
-        }
-        break;
-      }
-      default : {
-        // propagate changes. Is this needed? Answer: Yes.
-        if (source == structuredTextEditor)
-        {
-          firePropertyChange(propId);
-        }
-        break;
-      }
-    }
-  }
   /**
    * Listener on SSE's outline page's selections that converts DOM selections
    * into xsd selections and notifies XSD selection manager
