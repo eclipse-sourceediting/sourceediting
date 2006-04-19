@@ -70,13 +70,13 @@ public class AddExtensionsComponentDialog extends SelectionDialog implements ISe
   
   Button addButton, removeButton, editButton;
 
-  public AddExtensionsComponentDialog(Shell parent, ExtensionsSchemasRegistry registry)
+  public AddExtensionsComponentDialog(Shell parent, ExtensionsSchemasRegistry schemaRegistry)
   {
     super(parent);
     setTitle(Messages._UI_ACTION_ADD_EXTENSION_COMPONENTS);
     setShellStyle(SWT.APPLICATION_MODAL | SWT.RESIZE | SWT.CLOSE);
     
-    this.registry = registry;
+    registry = schemaRegistry;
   }
 
   private List fInput;

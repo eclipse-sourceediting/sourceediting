@@ -36,7 +36,6 @@ import org.eclipse.xsd.XSDTypeDefinition;
 import org.eclipse.xsd.XSDVariety;
 import org.eclipse.xsd.util.XSDConstants;
 import org.w3c.dom.Attr;
-import org.w3c.dom.Node;
 
 /**
  * Detects hyperlinks for XSD files. Used by the XSD text editor to provide a
@@ -109,7 +108,7 @@ public class XSDHyperlinkDetector extends BaseHyperlinkDetector
   {
     XSDConcreteComponent component = null;
 
-    XSDConcreteComponent xsdComp = xsdSchema.getCorrespondingComponent((Node) node);
+    XSDConcreteComponent xsdComp = xsdSchema.getCorrespondingComponent(node);
     if (xsdComp instanceof XSDElementDeclaration)
     {
       XSDElementDeclaration elementDecl = (XSDElementDeclaration) xsdComp;

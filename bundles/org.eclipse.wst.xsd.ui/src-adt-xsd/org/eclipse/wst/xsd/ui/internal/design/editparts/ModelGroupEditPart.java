@@ -62,7 +62,6 @@ public class ModelGroupEditPart extends ConnectableEditPart
   
   protected void refreshVisuals()
   {
-    String iconName = "icons/newSequence.gif"; //$NON-NLS-1$
     GenericGroupFigure modelGroupFigure = (GenericGroupFigure)getFigure();
     switch (getXSDModelGroup().getCompositor().getValue())
     {

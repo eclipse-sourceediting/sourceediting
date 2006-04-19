@@ -517,7 +517,7 @@ public class XSDSimpleTypeSection extends AbstractSection
       Node child = children.item(i);
       if (child != null && child instanceof Element)
       {
-        if (XSDDOMHelper.inputEquals((Element) child, elementTag, isRef))
+        if (XSDDOMHelper.inputEquals(child, elementTag, isRef))
         {
           targetNode = (Element) child;
           break;
@@ -546,56 +546,57 @@ public class XSDSimpleTypeSection extends AbstractSection
     return stringName;
   }
 
-  private void updateSimpleTypeFacets()
-  {
-    XSDSimpleTypeDefinition st = (XSDSimpleTypeDefinition) input;
-    Element simpleTypeElement = st.getElement();
-    Element derivedByElement = baseTypeDefinition.getElement();
-    if (derivedByElement != null)
-    {
-      List nodesToRemove = new ArrayList();
-      NodeList childList = derivedByElement.getChildNodes();
-      int length = childList.getLength();
-      for (int i = 0; i < length; i++)
-      {
-        Node child = childList.item(i);
-        if (child instanceof Element)
-        {
-          Element elementChild = (Element) child;
-          if (!(elementChild.getLocalName().equals("pattern") || elementChild.getLocalName().equals("enumeration") || //$NON-NLS-1$ //$NON-NLS-2$
-              XSDDOMHelper.inputEquals(elementChild, XSDConstants.SIMPLETYPE_ELEMENT_TAG, false) || XSDDOMHelper.inputEquals(elementChild, XSDConstants.ANNOTATION_ELEMENT_TAG, false)
-              || XSDDOMHelper.inputEquals(elementChild, XSDConstants.ATTRIBUTE_ELEMENT_TAG, false) || XSDDOMHelper.inputEquals(elementChild, XSDConstants.ATTRIBUTE_ELEMENT_TAG, true)
-              || XSDDOMHelper.inputEquals(elementChild, XSDConstants.ATTRIBUTEGROUP_ELEMENT_TAG, false) || XSDDOMHelper.inputEquals(elementChild, XSDConstants.ATTRIBUTEGROUP_ELEMENT_TAG, true) || XSDDOMHelper.inputEquals(elementChild,
-              XSDConstants.ANYATTRIBUTE_ELEMENT_TAG, false)))
-          {
-            nodesToRemove.add(child);
-          }
-        }
-      }
-      Iterator iter = nodesToRemove.iterator();
-      while (iter.hasNext())
-      {
-        Element facetToRemove = (Element) iter.next();
-        String facetName = facetToRemove.getLocalName();
-        Iterator it = st.getValidFacets().iterator();
-        boolean doRemove = true;
-        while (it.hasNext())
-        {
-          String aValidFacet = (String) it.next();
-          if (aValidFacet.equals(facetName))
-          {
-            doRemove = false;
-            break;
-          }
-        }
-        if (doRemove)
-        {
-          XSDDOMHelper.removeNodeAndWhitespace(facetToRemove);
-        }
-      }
-    }
-  }
- // TODO: Common this up with element declaration
+//  private void updateSimpleTypeFacets()
+//  {
+//    XSDSimpleTypeDefinition st = (XSDSimpleTypeDefinition) input;
+//    Element simpleTypeElement = st.getElement();
+//    Element derivedByElement = baseTypeDefinition.getElement();
+//    if (derivedByElement != null)
+//    {
+//      List nodesToRemove = new ArrayList();
+//      NodeList childList = derivedByElement.getChildNodes();
+//      int length = childList.getLength();
+//      for (int i = 0; i < length; i++)
+//      {
+//        Node child = childList.item(i);
+//        if (child instanceof Element)
+//        {
+//          Element elementChild = (Element) child;
+//          if (!(elementChild.getLocalName().equals("pattern") || elementChild.getLocalName().equals("enumeration") || //$NON-NLS-1$ //$NON-NLS-2$
+//              XSDDOMHelper.inputEquals(elementChild, XSDConstants.SIMPLETYPE_ELEMENT_TAG, false) || XSDDOMHelper.inputEquals(elementChild, XSDConstants.ANNOTATION_ELEMENT_TAG, false)
+//              || XSDDOMHelper.inputEquals(elementChild, XSDConstants.ATTRIBUTE_ELEMENT_TAG, false) || XSDDOMHelper.inputEquals(elementChild, XSDConstants.ATTRIBUTE_ELEMENT_TAG, true)
+//              || XSDDOMHelper.inputEquals(elementChild, XSDConstants.ATTRIBUTEGROUP_ELEMENT_TAG, false) || XSDDOMHelper.inputEquals(elementChild, XSDConstants.ATTRIBUTEGROUP_ELEMENT_TAG, true) || XSDDOMHelper.inputEquals(elementChild,
+//              XSDConstants.ANYATTRIBUTE_ELEMENT_TAG, false)))
+//          {
+//            nodesToRemove.add(child);
+//          }
+//        }
+//      }
+//      Iterator iter = nodesToRemove.iterator();
+//      while (iter.hasNext())
+//      {
+//        Element facetToRemove = (Element) iter.next();
+//        String facetName = facetToRemove.getLocalName();
+//        Iterator it = st.getValidFacets().iterator();
+//        boolean doRemove = true;
+//        while (it.hasNext())
+//        {
+//          String aValidFacet = (String) it.next();
+//          if (aValidFacet.equals(facetName))
+//          {
+//            doRemove = false;
+//            break;
+//          }
+//        }
+//        if (doRemove)
+//        {
+//          XSDDOMHelper.removeNodeAndWhitespace(facetToRemove);
+//        }
+//      }
+//    }
+//  }
+
+  // TODO: Common this up with element declaration
   public void doHandleEvent(Event event) 
   {
     if (event.widget == nameText)

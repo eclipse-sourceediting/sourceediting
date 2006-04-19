@@ -94,7 +94,7 @@ public class SelectBuiltInTypesForFilteringDialog extends CheckedTreeSelectionDi
 			Object o = aContainer.get(i);
 			if ( o instanceof ComponentSpecification){
 				ComponentSpecification aType = (ComponentSpecification) o;
-				String typeName = (String) aType.getName();
+				String typeName = aType.getName();
 				// if typeName's name appears in 'listString'
 				if ( listString.indexOf(typeName + CUSTOM_LIST_SEPARATOR) != -1)
 					selectedTypes.add(o);

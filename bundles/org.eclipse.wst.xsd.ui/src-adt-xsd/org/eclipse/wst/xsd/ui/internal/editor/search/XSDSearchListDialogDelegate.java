@@ -13,10 +13,6 @@ package org.eclipse.wst.xsd.ui.internal.editor.search;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.common.core.search.pattern.QualifiedName;
 import org.eclipse.wst.common.ui.internal.search.dialogs.ComponentSearchListDialog;
 import org.eclipse.wst.common.ui.internal.search.dialogs.ComponentSearchListDialogConfiguration;
@@ -104,11 +100,11 @@ public class XSDSearchListDialogDelegate implements IComponentDialog
     return returnValue;
   }
 
-  private IEditorPart getActiveEditor()
-  {
-    IWorkbench workbench = PlatformUI.getWorkbench();
-    IWorkbenchWindow workbenchWindow = workbench.getActiveWorkbenchWindow();
-    IEditorPart editorPart = workbenchWindow.getActivePage().getActiveEditor();
-    return editorPart;
-  }
+//  private IEditorPart getActiveEditor()
+//  {
+//    IWorkbench workbench = PlatformUI.getWorkbench();
+//    IWorkbenchWindow workbenchWindow = workbench.getActiveWorkbenchWindow();
+//    IEditorPart editorPart = workbenchWindow.getActivePage().getActiveEditor();
+//    return editorPart;
+//  }
 }

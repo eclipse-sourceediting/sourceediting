@@ -25,7 +25,6 @@ public class AddExtensionAttributeCommand extends AddExtensionCommand
   private static DOMNamespaceInfoManager manager = new DOMNamespaceInfoManager();
   private XSDAttributeDeclaration attribute;
   private boolean appInfoAttributeAdded = false;
-  private boolean prefixAdded = false;
   private String attributeQName;
   private String namespacePrefix;
   
@@ -80,7 +79,6 @@ public class AddExtensionAttributeCommand extends AddExtensionCommand
     
     // Create unquie namespace prefix
     if ( prefix == null){
-      prefixAdded = true;
       prefix = createUniquePrefix(component);
     }
 

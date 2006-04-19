@@ -152,7 +152,7 @@ public class BaseFieldEditPart extends BaseTypeConnectingEditPart implements INa
 
   public DragTracker getDragTracker(Request request)
   {
-    return new GraphNodeDragTracker((EditPart)this);
+    return new GraphNodeDragTracker(this);
   }
   
   /*

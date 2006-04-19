@@ -129,7 +129,7 @@ public class OpenOnSelectionHelper
 		        {
 							try
 							{
-								IEditorPart editorPart = workbenchWindow.getActivePage().openEditor(new FileEditorInput(schemaFile), XSDEditorPlugin.getPlugin().PLUGIN_ID);
+								IEditorPart editorPart = workbenchWindow.getActivePage().openEditor(new FileEditorInput(schemaFile), XSDEditorPlugin.PLUGIN_ID);
 								if (editorPart instanceof InternalXSDMultiPageEditor)
 								{
 									((InternalXSDMultiPageEditor)editorPart).openOnGlobalReference(component);

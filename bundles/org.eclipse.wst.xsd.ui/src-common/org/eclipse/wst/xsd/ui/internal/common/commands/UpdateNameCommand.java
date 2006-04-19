@@ -16,7 +16,7 @@ import org.eclipse.xsd.XSDNamedComponent;
 
 public class UpdateNameCommand extends Command
 {
-  private String oldName;
+//  private String oldName;
   private String newName;
   private XSDNamedComponent component;
 
@@ -31,7 +31,7 @@ public class UpdateNameCommand extends Command
 
     this.component = component;
     this.newName = newName;
-    this.oldName = component.getName();
+//    this.oldName = component.getName();
   }
 
   /*

@@ -11,7 +11,6 @@
 package org.eclipse.wst.xsd.ui.internal.adt.properties;
 
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.views.properties.tabbed.ITabbedPropertySheetPageContributor;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
@@ -29,7 +28,7 @@ public class ADTTabbedPropertySheetPage extends TabbedPropertySheetPage
    */
   public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 
-      Object selected = ((StructuredSelection)selection).getFirstElement();
+//      Object selected = ((StructuredSelection)selection).getFirstElement();
 //      if (selected instanceof EditPart)
 //      {
 //        Object model = ((EditPart)selected).getModel();

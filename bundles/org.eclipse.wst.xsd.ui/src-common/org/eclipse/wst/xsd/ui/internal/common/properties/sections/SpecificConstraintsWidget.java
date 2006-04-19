@@ -224,7 +224,7 @@ public class SpecificConstraintsWidget implements SelectionListener, Listener
 
   public void widgetSelected(SelectionEvent e)
   {
-    XSDSimpleTypeDefinition st = (XSDSimpleTypeDefinition) input;
+    XSDSimpleTypeDefinition st = input;
     Element element = st.getElement();
 
     if (e.widget == addButton)
@@ -258,7 +258,7 @@ public class SpecificConstraintsWidget implements SelectionListener, Listener
             anonymousSimpleType = XSDFactory.eINSTANCE.createXSDSimpleTypeDefinition();
             anonymousSimpleType.setBaseTypeDefinition(input);
 
-            ChangeToLocalSimpleTypeCommand changeToAnonymousCommand = new ChangeToLocalSimpleTypeCommand(Messages._UI_ACTION_CHANGE_PATTERN, (XSDFeature) feature);
+            ChangeToLocalSimpleTypeCommand changeToAnonymousCommand = new ChangeToLocalSimpleTypeCommand(Messages._UI_ACTION_CHANGE_PATTERN, feature);
             changeToAnonymousCommand.setAnonymousSimpleType(anonymousSimpleType);
             compoundCommand.add(changeToAnonymousCommand);
             input = anonymousSimpleType;
@@ -311,7 +311,7 @@ public class SpecificConstraintsWidget implements SelectionListener, Listener
               anonymousSimpleType = XSDFactory.eINSTANCE.createXSDSimpleTypeDefinition();
               anonymousSimpleType.setBaseTypeDefinition(input);
 
-              ChangeToLocalSimpleTypeCommand changeToAnonymousCommand = new ChangeToLocalSimpleTypeCommand(Messages._UI_ACTION_CHANGE_PATTERN, (XSDFeature) feature);
+              ChangeToLocalSimpleTypeCommand changeToAnonymousCommand = new ChangeToLocalSimpleTypeCommand(Messages._UI_ACTION_CHANGE_PATTERN, feature);
               changeToAnonymousCommand.setAnonymousSimpleType(anonymousSimpleType);
               compoundCommand.add(changeToAnonymousCommand);
               input = anonymousSimpleType;
@@ -354,7 +354,7 @@ public class SpecificConstraintsWidget implements SelectionListener, Listener
               anonymousSimpleType = XSDFactory.eINSTANCE.createXSDSimpleTypeDefinition();
               anonymousSimpleType.setBaseTypeDefinition(input);
 
-              ChangeToLocalSimpleTypeCommand changeToAnonymousCommand = new ChangeToLocalSimpleTypeCommand("", (XSDFeature) feature); //$NON-NLS-1$
+              ChangeToLocalSimpleTypeCommand changeToAnonymousCommand = new ChangeToLocalSimpleTypeCommand("", feature); //$NON-NLS-1$
               changeToAnonymousCommand.setAnonymousSimpleType(anonymousSimpleType);
               compoundCommand.add(changeToAnonymousCommand);
               input = anonymousSimpleType;

@@ -34,7 +34,7 @@ public class BuiltInTypesTreeViewerProvider {
 	
 	ITreeContentProvider contentProvider;
 	
-	private static final String CONST_PARENT = "parent";
+//	private static final String CONST_PARENT = "parent";
 	
 	/**
 	 * Currently there are 3 subgroups: Numbers, Data and Time, Other
@@ -163,7 +163,7 @@ public class BuiltInTypesTreeViewerProvider {
 			else if (element instanceof ComponentSpecification ){
 				spec = (ComponentSpecification) element;
 			}
-			return (String) spec.getName();
+			return spec.getName();
 		}
 
 		public void addListener(ILabelProviderListener listener) {

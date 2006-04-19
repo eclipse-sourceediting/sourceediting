@@ -100,7 +100,7 @@ public class XSDElementReferenceEditManager implements ComponentReferenceEditMan
             command.execute();
             elementDec = (XSDElementDeclaration) command.getAddedComponent();
           }
-          if (elementDec != null && elementDec instanceof XSDElementDeclaration)
+          if (elementDec != null)
           {
             Command command = new UpdateElementReferenceCommand(Messages._UI_ACTION_UPDATE_ELEMENT_REFERENCE,
             		concreteComponent, elementDec);

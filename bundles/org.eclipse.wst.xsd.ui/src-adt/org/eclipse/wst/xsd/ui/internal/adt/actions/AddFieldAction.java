@@ -50,7 +50,7 @@ public class AddFieldAction extends BaseSelectionAction
       }
       if (type != null)
       {
-        Command command = ((IComplexType)type).getAddNewFieldCommand(""); //$NON-NLS-1$
+        Command command = type.getAddNewFieldCommand(""); //$NON-NLS-1$
         if (command != null)
         {  
           getCommandStack().execute(command);

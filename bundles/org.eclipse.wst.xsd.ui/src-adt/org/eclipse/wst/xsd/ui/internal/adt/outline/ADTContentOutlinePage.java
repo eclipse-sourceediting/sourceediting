@@ -14,7 +14,6 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -86,7 +85,7 @@ public class ADTContentOutlinePage extends ContentOutlinePage
     setSelectionManager(editor.getSelectionManager());
     
     // Create menu...for now reuse graph's.  Note edit part viewer = null
-    DesignViewContextMenuProvider menuProvider = new DesignViewContextMenuProvider(editor, null, (ISelectionProvider)editor.getSelectionManager());
+    DesignViewContextMenuProvider menuProvider = new DesignViewContextMenuProvider(editor, null, editor.getSelectionManager());
     menuManager.addMenuListener(menuProvider);
     getSite().registerContextMenu("org.eclipse.wst.xsd.ui.popup.outline", menuManager, editor.getSelectionManager()); //$NON-NLS-1$
 
@@ -151,7 +150,7 @@ public class ADTContentOutlinePage extends ContentOutlinePage
   // }
   public void setSelectionManager(MultiPageSelectionProvider newSelectionManager)
   {
-    TreeViewer treeViewer = getTreeViewer();
+//    TreeViewer treeViewer = getTreeViewer();
     // disconnect from old one
     if (selectionManager != null)
     {

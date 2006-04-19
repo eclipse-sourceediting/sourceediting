@@ -75,7 +75,7 @@ public class XSDTabbedPropertySheetPage extends TabbedPropertySheetPage implemen
         Object model = adapter.getTarget();
         if (model instanceof XSDConcreteComponent)
         {
-          selection = new StructuredSelection((XSDConcreteComponent)model);
+          selection = new StructuredSelection(model);
         }
         super.selectionChanged(part, selection);
         return;

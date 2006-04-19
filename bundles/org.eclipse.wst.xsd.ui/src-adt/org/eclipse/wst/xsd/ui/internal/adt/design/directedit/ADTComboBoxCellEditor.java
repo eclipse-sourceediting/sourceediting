@@ -27,13 +27,9 @@ import org.eclipse.swt.events.TraverseListener;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.wst.xsd.ui.internal.adt.edit.ComponentReferenceEditManager;
 import org.eclipse.wst.xsd.ui.internal.adt.edit.IComponentDialog;
 import org.eclipse.wst.xsd.ui.internal.adt.editor.Messages;
-import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 
 /*
  * This is a copy of ComboBoxCellEditor.
@@ -357,12 +353,12 @@ public class ADTComboBoxCellEditor extends CellEditor
   /*
    * TODO: rmah: This should be moved to WSDLEditorPlugin.java
    */
-  private IEditorPart getActiveEditor()
-  {
-    IWorkbench workbench = XSDEditorPlugin.getDefault().getWorkbench();
-    IWorkbenchWindow workbenchWindow = workbench.getActiveWorkbenchWindow();
-    IEditorPart editorPart = workbenchWindow.getActivePage().getActiveEditor();
-
-    return editorPart;
-  }
+//  private IEditorPart getActiveEditor()
+//  {
+//    IWorkbench workbench = XSDEditorPlugin.getDefault().getWorkbench();
+//    IWorkbenchWindow workbenchWindow = workbench.getActiveWorkbenchWindow();
+//    IEditorPart editorPart = workbenchWindow.getActivePage().getActiveEditor();
+//
+//    return editorPart;
+//  }
 }

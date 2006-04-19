@@ -36,6 +36,7 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.PageBook;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
@@ -169,7 +170,7 @@ public abstract class AbstractExtensionsSection extends AbstractSection
     gridLayout.numColumns = 1;
     leftContent.setLayout(gridLayout);
 
-    Section section = getWidgetFactory().createSection(leftContent, SWT.FLAT | Section.TITLE_BAR);
+    Section section = getWidgetFactory().createSection(leftContent, SWT.FLAT | ExpandableComposite.TITLE_BAR);
     section.setText(Messages._UI_LABEL_EXTENSIONS);
     section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
@@ -266,7 +267,7 @@ public abstract class AbstractExtensionsSection extends AbstractSection
     down.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
     Composite rightContent = getWidgetFactory().createComposite(sashForm, SWT.FLAT);
-    Section section2 = getWidgetFactory().createSection(rightContent, SWT.FLAT | Section.TITLE_BAR);
+    Section section2 = getWidgetFactory().createSection(rightContent, SWT.FLAT | ExpandableComposite.TITLE_BAR);
     section2.setText(Messages._UI_LABEL_EXTENSION_DETAILS);
     section2.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
     //contentLabel = getWidgetFactory().createLabel(rightContent, "Content");

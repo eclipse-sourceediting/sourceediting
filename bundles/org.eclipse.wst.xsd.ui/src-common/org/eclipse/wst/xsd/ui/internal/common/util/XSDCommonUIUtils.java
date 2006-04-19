@@ -46,7 +46,6 @@ import org.eclipse.xsd.XSDTypeDefinition;
 import org.eclipse.xsd.XSDWildcard;
 import org.eclipse.xsd.XSDXPathDefinition;
 import org.eclipse.xsd.util.XSDConstants;
-import org.eclipse.xsd.util.XSDUtil;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
@@ -349,7 +348,7 @@ public class XSDCommonUIUtils
       XSDTypeDefinition origType = baseType; // KC: although invalid, we need to
                                             // prevent cycles and to avoid an
                                             // infinite loop
-      while (baseType != null && !XSDUtil.isAnySimpleType(baseType) && !XSDUtil.isAnyType(baseType) && origType != baseType)
+      while (baseType != null && !XSDConstants.isAnySimpleType(baseType) && !XSDConstants.isAnyType(baseType) && origType != baseType)
       {
         type = baseType;
         baseType = type.getBaseType();

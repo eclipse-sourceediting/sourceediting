@@ -12,9 +12,7 @@ package org.eclipse.wst.xsd.ui.internal.common.commands;
 
 import java.util.List;
 
-import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
-import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xsd.ui.internal.common.util.XSDCommonUIUtils;
 import org.eclipse.xsd.XSDAnnotation;
@@ -41,7 +39,7 @@ public class AddDocumentationCommand extends BaseCommand
 
   public void execute()
   {
-    xsdAnnotation = XSDCommonUIUtils.getInputXSDAnnotation((XSDConcreteComponent) input, true);
+    xsdAnnotation = XSDCommonUIUtils.getInputXSDAnnotation(input, true);
     Element element = xsdAnnotation.getElement();
 
     List documentationList = xsdAnnotation.getUserInformation();
@@ -77,8 +75,8 @@ public class AddDocumentationCommand extends BaseCommand
           int start = 0;
           int end = 0;
 
-          IDOMModel model = domElement.getModel();
-          IDOMDocument doc = model.getDocument();
+//          IDOMModel model = domElement.getModel();
+//          IDOMDocument doc = model.getDocument();
           IDOMNode first = null;
           if (firstChild instanceof IDOMNode)
           {

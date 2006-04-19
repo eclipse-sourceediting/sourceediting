@@ -101,7 +101,7 @@ public class AttributeGroupDefinitionEditPart extends ConnectableEditPart
     }
     else if (child instanceof TargetConnectionSpacingFigureEditPart)
     {
-      TargetConnectionSpacingFigureEditPart elem = (TargetConnectionSpacingFigureEditPart) child;
+//      TargetConnectionSpacingFigureEditPart elem = (TargetConnectionSpacingFigureEditPart) child;
       connectionFigure.setTargetAnchor(new CenteredConnectionAnchor(((TargetConnectionSpacingFigureEditPart) child).getFigure(), CenteredConnectionAnchor.LEFT, 0, 0));
     }
 

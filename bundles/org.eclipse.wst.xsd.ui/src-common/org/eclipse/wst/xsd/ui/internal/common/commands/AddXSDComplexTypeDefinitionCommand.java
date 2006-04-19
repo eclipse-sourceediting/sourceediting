@@ -68,7 +68,7 @@ public final class AddXSDComplexTypeDefinitionCommand extends BaseCommand
     }
     else if (parent instanceof XSDElementDeclaration)
     {
-      ((XSDElementDeclaration) parent).setAnonymousTypeDefinition((XSDComplexTypeDefinition) complexType);
+      ((XSDElementDeclaration) parent).setAnonymousTypeDefinition(complexType);
       formatChild(parent.getElement());
     }
     createdComplexType = complexType;

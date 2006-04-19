@@ -14,6 +14,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -62,7 +63,7 @@ public class SimpleContentUnionMemberTypesDialog extends Dialog implements Selec
 
   protected void buttonPressed(int buttonId)
   {
-    if (buttonId == Dialog.OK)
+    if (buttonId == Window.OK)
     {
       StringBuffer sb = new StringBuffer();
       int length = memberTypesList.getItemCount();

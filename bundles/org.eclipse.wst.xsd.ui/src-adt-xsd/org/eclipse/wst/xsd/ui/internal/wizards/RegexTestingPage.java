@@ -92,7 +92,7 @@ public class RegexTestingPage extends WizardPage
     GC gc = new GC(separator);
     Point pointSize = gc.stringExtent(XSDEditorPlugin.getXSDString("_UI_REGEX_WIZARD_TESTING_PAGE_DESCRIPTION"));
     GridData gd = new GridData();
-    gd.widthHint = (int)(pointSize.x / 2 + gc.getAdvanceWidth('M')*11);
+    gd.widthHint = pointSize.x / 2 + gc.getAdvanceWidth('M')*11;
     gd.horizontalAlignment= GridData.FILL;
     separator.setLayoutData(gd);
     

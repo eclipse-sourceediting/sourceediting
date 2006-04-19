@@ -87,7 +87,7 @@ public class DeleteCommand extends BaseCommand
         }
         if (complexType != null)
         {
-          complexType.getAttributeContents().remove((XSDAttributeUse) parent);
+          complexType.getAttributeContents().remove(parent);
         }
 
         if (parent.getContainer() instanceof XSDAttributeGroupDefinition)

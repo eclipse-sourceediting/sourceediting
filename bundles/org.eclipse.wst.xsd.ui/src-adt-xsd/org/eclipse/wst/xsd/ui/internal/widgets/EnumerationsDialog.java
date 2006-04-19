@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.widgets;
 
-import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -44,7 +44,7 @@ public class EnumerationsDialog extends org.eclipse.jface.dialogs.Dialog
 
   protected void buttonPressed(int buttonId)
   {
-    if (buttonId == Dialog.OK)
+    if (buttonId == Window.OK)
     {
       text = textField.getText();
       delimiter = delimiterField.getText();

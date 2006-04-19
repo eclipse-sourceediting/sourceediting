@@ -24,7 +24,6 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
@@ -78,7 +77,7 @@ public abstract class AbstractSection extends AbstractPropertySection implements
         return new PaintListener() {
 
             public void paintControl(PaintEvent e) {
-                Rectangle bounds = composite.getClientArea();
+//                Rectangle bounds = composite.getClientArea();
                 GC gc = e.gc;
 
                 gc.setForeground(gc.getBackground());

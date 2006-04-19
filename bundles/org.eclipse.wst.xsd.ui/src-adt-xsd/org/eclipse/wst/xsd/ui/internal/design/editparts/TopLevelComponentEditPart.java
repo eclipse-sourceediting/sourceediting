@@ -124,8 +124,8 @@ public class TopLevelComponentEditPart extends BaseEditPart implements IFeedback
     {
       isReadOnly = adapter.isReadOnly();
       label.setForegroundColor(computeLabelColor());
-      label.setText((String) adapter.getText());
-      Image image = (Image) adapter.getImage();
+      label.setText(adapter.getText());
+      Image image = adapter.getImage();
       if (image != null)
         label.setIcon(image);
       // arrowLabel.setVisible(Boolean.TRUE.equals(adapter.getProperty(getModel(),
@@ -290,7 +290,7 @@ public class TopLevelComponentEditPart extends BaseEditPart implements IFeedback
   public void doEditName()
   {
     removeFeedback();
-    Object object = getModel();
+    //Object object = getModel();
     // if (object instanceof XSDNamedComponent)
     // {
     // ComponentNameDirectEditManager manager = new

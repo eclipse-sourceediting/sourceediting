@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.common.properties.providers;
 
-import org.eclipse.jface.util.Assert;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.graphics.Image;
@@ -56,11 +55,7 @@ public class XSDSectionLabelProvider extends LabelProvider
       if (selected instanceof XSDConcreteComponent)
       {
         XSDBaseAdapter adapter = (XSDBaseAdapter)XSDAdapterFactory.getInstance().adapt((XSDConcreteComponent)selected);
-        if (adapter instanceof ITreeElement)
-        {
-          return ((ITreeElement)adapter).getImage();
-        }
-        
+        return ((ITreeElement)adapter).getImage();
       }
     }
     return result;
@@ -142,12 +137,4 @@ public class XSDSectionLabelProvider extends LabelProvider
 
     return result;
   }
-
-  private Object getObject(Object objects, boolean multiple[])
-  {
-    Assert.isNotNull(objects);
-    Object object = null;
-    return object;
-  }
-
 }

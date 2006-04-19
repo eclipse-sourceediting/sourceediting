@@ -12,9 +12,9 @@ package org.eclipse.wst.xsd.ui.internal.refactor.rename;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.SubProgressMonitor;
@@ -36,7 +36,7 @@ import org.eclipse.xsd.XSDSchema;
  */
 public class ResourceRenameParticipant extends RenameParticipant {
 	
-	private IFile file = null;
+//	private IFile file = null;
 	private TextChangeManager changeManager;
 
 	
@@ -59,7 +59,7 @@ public class ResourceRenameParticipant extends RenameParticipant {
 				if(contentType != null){
 					if(XSD_CONTENT_TYPE_ID.equals(contentType.getId()) ||
 							WSDL_CONTENT_TYPE_ID.equals(contentType.getId())){
-						file = aFile;
+//						file = aFile;
 						return true;
 					}
 				}
@@ -77,12 +77,12 @@ public class ResourceRenameParticipant extends RenameParticipant {
 		return RefactoringMessages.getString("ResourceRenameParticipant.compositeChangeName");
 	}
 	
-	private IPath getNewFilePath() {
-		
-		IPath oldPath = file.getRawLocation();
-		IPath newPath = oldPath.removeLastSegments(1).append(getArguments().getNewName());
-		return newPath;
-	}
+//	private IPath getNewFilePath() {
+//		
+//		IPath oldPath = file.getRawLocation();
+//		IPath newPath = oldPath.removeLastSegments(1).append(getArguments().getNewName());
+//		return newPath;
+//	}
 
 	public RefactoringStatus checkConditions(IProgressMonitor pm,
 			CheckConditionsContext context) throws OperationCanceledException

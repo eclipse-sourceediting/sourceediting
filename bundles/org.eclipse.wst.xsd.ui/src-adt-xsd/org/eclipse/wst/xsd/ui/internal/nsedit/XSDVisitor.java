@@ -144,7 +144,7 @@ public class XSDVisitor
   {
     if (type.getContentType() != null)
     {
-      XSDComplexTypeContent complexContent = (XSDComplexTypeContent) type.getContentType();
+      XSDComplexTypeContent complexContent = type.getContentType();
       if (complexContent instanceof XSDSimpleTypeDefinition)
       {
         visitSimpleTypeDefinition((XSDSimpleTypeDefinition)complexContent);

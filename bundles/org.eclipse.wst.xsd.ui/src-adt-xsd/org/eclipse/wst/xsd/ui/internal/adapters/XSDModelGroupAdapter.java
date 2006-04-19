@@ -156,15 +156,15 @@ public class XSDModelGroupAdapter extends XSDParticleAdapter implements IActionP
        XSDParticleContent particle = ((XSDParticle)object).getContent();
        if (particle instanceof XSDElementDeclaration)
        {
-         list.add((XSDElementDeclaration)particle);
+         list.add(particle);
        }
        else if (particle instanceof XSDWildcard)
        {
-         list.add((XSDWildcard)particle);
+         list.add(particle);
        }
        else if (particle instanceof XSDModelGroup)
        {
-         list.add((XSDModelGroup)particle);
+         list.add(particle);
        }
     }
 

@@ -231,7 +231,7 @@ public class XSDChildUtility
       indent += 2;
       for (Iterator i = xsdComplexTypeDefinition.getAttributeUses().iterator(); i.hasNext(); )
       {        
-        visitXSDObject((XSDAttributeUse)i.next());
+        visitXSDObject(i.next());
       }
       visitXSDObject(xsdComplexTypeDefinition.getContent());
       indent -= 2;

@@ -70,41 +70,29 @@ public class XSDSchemaDirectiveAdapter extends XSDBaseAdapter
       for (Iterator i = redefine.getContents().iterator(); i.hasNext();)
       {
         XSDRedefineContent redefineContent = (XSDRedefineContent) i.next();
-        if (redefineContent instanceof XSDAttributeGroupDefinition)
+        if (redefineContent instanceof XSDAttributeGroupDefinition ||
+        	redefineContent instanceof XSDModelGroupDefinition)
         {
-          list.add((XSDAttributeGroupDefinition) redefine);
-        }
-        else if (redefineContent instanceof XSDModelGroupDefinition)
-        {
-          list.add((XSDModelGroupDefinition) redefineContent);
+          list.add(redefineContent);
         }
         else if (redefineContent instanceof XSDRedefinableComponent)
         {
           XSDRedefinableComponent comp = (XSDRedefinableComponent) redefineContent;
-          if (comp instanceof XSDAttributeGroupDefinition)
+          if (comp instanceof XSDAttributeGroupDefinition ||
+              comp instanceof XSDModelGroupDefinition ||
+              comp instanceof XSDComplexTypeDefinition ||
+              comp instanceof XSDSimpleTypeDefinition)
           {
-            list.add((XSDAttributeGroupDefinition) comp);
-          }
-          else if (comp instanceof XSDModelGroupDefinition)
-          {
-            list.add((XSDModelGroupDefinition) comp);
-          }
-          else if (comp instanceof XSDComplexTypeDefinition)
-          {
-            list.add((XSDComplexTypeDefinition) comp);
-          }
-          else if (comp instanceof XSDSimpleTypeDefinition)
-          {
-            list.add((XSDSimpleTypeDefinition) comp);
+            list.add(comp);
           }
         }
         else if (redefineContent instanceof XSDComplexTypeDefinition)
         {
-          list.add((XSDComplexTypeDefinition) redefineContent);
+          list.add(redefineContent);
         }
         else if (redefineContent instanceof XSDSimpleTypeDefinition)
         {
-          list.add((XSDSimpleTypeDefinition) redefineContent);
+          list.add(redefineContent);
         }
       }
 

@@ -69,8 +69,8 @@ public class MakeTypeGlobalChange extends Change {
 	}
 
 	public void performModify(final String value) {
-			DelayedRenameRunnable runnable = new DelayedRenameRunnable(
-					fTypeComponent, value);
+//			DelayedRenameRunnable runnable = new DelayedRenameRunnable(
+//					fTypeComponent, value);
 			// TODO: remove Display
 			//Display.getCurrent().asyncExec(runnable);
 	}

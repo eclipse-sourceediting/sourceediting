@@ -136,7 +136,7 @@ public class CreateElementAction extends Action
   
   public void endRecording()
   {
-    DocumentImpl doc = (DocumentImpl) getDocument();
+    DocumentImpl doc = getDocument();
     
     doc.getModel().endRecording(this);    
   }
@@ -161,7 +161,7 @@ public class CreateElementAction extends Action
     }
     else
     {
-      ((Element)parentNode).insertBefore(childNode,getRelativeNode());
+      parentNode.insertBefore(childNode,getRelativeNode());
     }
     
     if (isGlobal && getRelativeNode() == null)
@@ -228,7 +228,7 @@ public class CreateElementAction extends Action
             }
             else if (comp.getContainer().getContainer() instanceof XSDComplexTypeDefinition)
             {
-              if (XSDDOMHelper.inputEquals((Element)child, XSDConstants.ATTRIBUTE_ELEMENT_TAG, true))
+              if (XSDDOMHelper.inputEquals(child, XSDConstants.ATTRIBUTE_ELEMENT_TAG, true))
               {
                 selectionProvider.setSelection(new StructuredSelection(comp.getContainer()));
               }
@@ -255,9 +255,9 @@ public class CreateElementAction extends Action
         {
           if (sourceContext instanceof AbstractEditPartViewer)
           {
-            AbstractEditPartViewer viewer = (AbstractEditPartViewer)sourceContext;
+//            AbstractEditPartViewer viewer = (AbstractEditPartViewer)sourceContext;
           
-            Object obj = viewer.getSelectedEditParts().get(0);
+//            Object obj = viewer.getSelectedEditParts().get(0);
             
 //            if (obj instanceof GraphicalEditPart)
 //            {

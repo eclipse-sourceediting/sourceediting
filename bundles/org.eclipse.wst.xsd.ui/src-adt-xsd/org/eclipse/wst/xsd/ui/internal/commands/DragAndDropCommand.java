@@ -94,7 +94,7 @@ public class DragAndDropCommand extends BaseCommand
       for (Iterator i = editPartsList.iterator(); i.hasNext(); )
       {                                                       
         EditPart editPart = (EditPart)i.next();
-        concreteComponentList.add((XSDConcreteComponent) ((XSDBaseAdapter)editPart.getModel()).getTarget());
+        concreteComponentList.add(((XSDBaseAdapter)editPart.getModel()).getTarget());
       }
 
       Object itemToDrag = list.get(0);

@@ -14,11 +14,11 @@ package org.eclipse.wst.xsd.ui.internal.refactor.rename;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.core.runtime.Assert;
+//import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
-import org.eclipse.core.runtime.SubProgressMonitor;
+//import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.TextChange;
@@ -71,18 +71,18 @@ public class XMLComponentRenameParticipant extends RenameParticipant {
 		
 	}
 	
-	private RefactoringStatus createRenameChanges(final IProgressMonitor monitor) throws CoreException {
-		Assert.isNotNull(monitor);
-		final RefactoringStatus status= new RefactoringStatus();
-		try {
-			monitor.beginTask("RefactoringMessages.RenameComponentRefactoring_searching", 1); 
-			createRenameChanges(new SubProgressMonitor(monitor, 1));
-			//updateChangeManager(new SubProgressMonitor(monitor, 1), status);
-		} finally {
-			monitor.done();
-		}
-		return status;
-	}
+//	private RefactoringStatus createRenameChanges(final IProgressMonitor monitor) throws CoreException {
+//		Assert.isNotNull(monitor);
+//		final RefactoringStatus status= new RefactoringStatus();
+//		try {
+//			monitor.beginTask("RefactoringMessages.RenameComponentRefactoring_searching", 1); 
+//			createRenameChanges(new SubProgressMonitor(monitor, 1));
+//			//updateChangeManager(new SubProgressMonitor(monitor, 1), status);
+//		} finally {
+//			monitor.done();
+//		}
+//		return status;
+//	}
 
 	public Change createChange(IProgressMonitor pm) throws CoreException,
 			OperationCanceledException {

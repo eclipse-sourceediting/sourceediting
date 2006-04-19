@@ -323,7 +323,7 @@ public class XSDComplexTypeDefinitionAdapter extends XSDTypeDefinitionAdapter im
         XSDParticleContent particleContent = ((XSDParticle) xsdComplexTypeContent).getContent();
         if (particleContent instanceof XSDModelGroup)
         {
-          list.add((XSDModelGroup) particleContent);
+          list.add(particleContent);
         }
       }
     }
@@ -345,7 +345,7 @@ public class XSDComplexTypeDefinitionAdapter extends XSDTypeDefinitionAdapter im
               XSDParticleContent particleContent = ((XSDParticle) xsdComplexTypeContent).getContent();
               if (particleContent instanceof XSDModelGroup)
               {
-                list.add((XSDModelGroup) particleContent);
+                list.add(particleContent);
               }
             }
           }

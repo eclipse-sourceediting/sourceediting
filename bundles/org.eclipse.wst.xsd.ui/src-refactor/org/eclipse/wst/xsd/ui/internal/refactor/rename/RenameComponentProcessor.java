@@ -10,10 +10,10 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.refactor.rename;
 
-import com.ibm.icu.text.Collator;
+//import com.ibm.icu.text.Collator;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
+//import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -33,7 +33,7 @@ import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.CompositeChange;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.TextChange;
-import org.eclipse.ltk.core.refactoring.TextFileChange;
+//import org.eclipse.ltk.core.refactoring.TextFileChange;
 import org.eclipse.ltk.core.refactoring.participants.CheckConditionsContext;
 import org.eclipse.ltk.core.refactoring.participants.ParticipantManager;
 import org.eclipse.ltk.core.refactoring.participants.RefactoringParticipant;
@@ -450,13 +450,13 @@ public class RenameComponentProcessor extends RenameProcessor implements INameUp
 		try {
 			String changeName = RefactoringMessages.getString("RenameComponentProcessor.Component_Refactoring_updates");
 			TextChange[] changes = changeManager.getAllChanges();
-			Comparator c = new Comparator() {
-				public int compare(Object o1, Object o2) {
-					TextFileChange c1 = (TextFileChange) o1;
-					TextFileChange c2 = (TextFileChange) o2;
-					return Collator.getInstance().compare(c1.getFile().getFullPath(), c2.getFile().getFullPath());
-				}
-			};
+//			Comparator c = new Comparator() {
+//				public int compare(Object o1, Object o2) {
+//					TextFileChange c1 = (TextFileChange) o1;
+//					TextFileChange c2 = (TextFileChange) o2;
+//					return Collator.getInstance().compare(c1.getFile().getFullPath(), c2.getFile().getFullPath());
+//				}
+//			};
 			if (changes.length > 0) {
 				// Arrays.sort(changes, c);
 				CompositeChange compositeChange = new CompositeChange("!" + changeName, changes);

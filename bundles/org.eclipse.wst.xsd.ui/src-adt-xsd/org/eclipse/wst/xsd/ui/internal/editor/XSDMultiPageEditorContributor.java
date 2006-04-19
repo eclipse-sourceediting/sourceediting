@@ -112,7 +112,7 @@ public class XSDMultiPageEditorContributor extends MultiPageEditorActionBarContr
     IEditorPart activeNestedEditor = null;
     if (part instanceof MultiPageEditorPart)
     {
-      activeNestedEditor = ((MultiPageEditorPart) part);
+      activeNestedEditor = part;
     }
     setActivePage(activeNestedEditor);
     List list = XSDEditorPlugin.getPlugin().getXSDEditorConfiguration().getToolbarActions();

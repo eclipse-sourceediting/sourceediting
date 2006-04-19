@@ -119,7 +119,7 @@ public class MoveAction extends Action
           {
             if (particleContent == nextRefComponent)
             {
-              parentModelGroup.getContents().add(index, (XSDParticle) concreteComponent.getContainer());
+              parentModelGroup.getContents().add(index, concreteComponent.getContainer());
               break;
             }
           }
@@ -127,7 +127,7 @@ public class MoveAction extends Action
           {
             if (particleContent == previousRefComponent)
             {
-              parentModelGroup.getContents().add(index + 1, (XSDParticle) concreteComponent.getContainer());
+              parentModelGroup.getContents().add(index + 1, concreteComponent.getContainer());
               break;
             }
           }
@@ -135,7 +135,7 @@ public class MoveAction extends Action
         }
         if (particles.size() == 0)
         {
-          parentModelGroup.getContents().add((XSDParticle) concreteComponent.getContainer());
+          parentModelGroup.getContents().add(concreteComponent.getContainer());
         }
 
       }

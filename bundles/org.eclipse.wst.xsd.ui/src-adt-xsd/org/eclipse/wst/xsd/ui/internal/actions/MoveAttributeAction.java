@@ -142,7 +142,7 @@ public class MoveAttributeAction extends Action
             {
               if (attribute == nextRefComponent)
               {
-                parentModelGroup.getContents().add(index, (XSDAttributeUse) concreteComponent.getContainer());
+                parentModelGroup.getContents().add(index, concreteComponent.getContainer());
                 break;
               }
             }
@@ -150,7 +150,7 @@ public class MoveAttributeAction extends Action
             {
               if (attribute == previousRefComponent)
               {
-                parentModelGroup.getContents().add(index + 1, (XSDAttributeUse) concreteComponent.getContainer());
+                parentModelGroup.getContents().add(index + 1, concreteComponent.getContainer());
                 break;
               }
             }
@@ -159,7 +159,7 @@ public class MoveAttributeAction extends Action
         }
         if (attributeGroupContents.size() == 0)
         {
-          parentModelGroup.getContents().add((XSDAttributeUse) concreteComponent.getContainer());
+          parentModelGroup.getContents().add(concreteComponent.getContainer());
         }
 
       }
@@ -214,7 +214,7 @@ public class MoveAttributeAction extends Action
             {
               if (attribute == nextRefComponent)
               {
-                complexType.getAttributeContents().add(index, (XSDAttributeUse) concreteComponent.getContainer());
+                complexType.getAttributeContents().add(index, concreteComponent.getContainer());
                 break;
               }
             }
@@ -222,7 +222,7 @@ public class MoveAttributeAction extends Action
             {
               if (attribute == previousRefComponent)
               {
-                complexType.getAttributeContents().add(index + 1, (XSDAttributeUse) concreteComponent.getContainer());
+                complexType.getAttributeContents().add(index + 1, concreteComponent.getContainer());
                 break;
               }
             }
@@ -231,7 +231,7 @@ public class MoveAttributeAction extends Action
         }
         if (attributeGroupContents.size() == 0)
         {
-          complexType.getAttributeContents().add((XSDAttributeUse) concreteComponent.getContainer());
+          complexType.getAttributeContents().add(concreteComponent.getContainer());
         }
 
       }
