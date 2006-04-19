@@ -25,7 +25,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.RootContentEditPart;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IModelProxy;
-import org.eclipse.wst.xsd.ui.internal.adt.editor.ADTSelectionManager;
+import org.eclipse.wst.xsd.ui.internal.adt.editor.CommonSelectionManager;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IADTObject;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IField;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IModel;
@@ -36,7 +36,7 @@ public class DesignViewGraphicalViewer extends ScrollingGraphicalViewer implemen
 {
   protected ADTSelectionChangedListener internalSelectionProvider = new ADTSelectionChangedListener();
 
-  public DesignViewGraphicalViewer(IEditorPart editor, ADTSelectionManager manager)
+  public DesignViewGraphicalViewer(IEditorPart editor, CommonSelectionManager manager)
   {
     super();
     setContextMenu(new DesignViewContextMenuProvider(editor, this, this));
@@ -45,6 +45,7 @@ public class DesignViewGraphicalViewer extends ScrollingGraphicalViewer implemen
     // make the internalSelectionProvider listen to graph view selection changes
     addSelectionChangedListener(internalSelectionProvider);    
     internalSelectionProvider.addSelectionChangedListener(manager);
+    manager.addSelectionChangedListener(this);
   }
   
   // this method is called when something changes in the selection manager
@@ -200,6 +201,6 @@ public class DesignViewGraphicalViewer extends ScrollingGraphicalViewer implemen
   
   public IADTObject getInput()
   {
-    return (IADTObject)((RootContentEditPart)getRootEditPart().getContents()).getInput();    
+    return (IADTObject)((RootContentEditPart)getRootEditPart().getContents()).getInput();
   }
 }

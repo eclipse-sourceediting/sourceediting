@@ -21,10 +21,10 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.ui.part.MultiPageEditorPart;
 import org.eclipse.ui.part.MultiPageSelectionProvider;
 
-public class ADTSelectionManager extends MultiPageSelectionProvider implements ISelectionProvider, ISelectionChangedListener
+public class CommonSelectionManager extends MultiPageSelectionProvider implements ISelectionProvider, ISelectionChangedListener
 {
 
-  public ADTSelectionManager(MultiPageEditorPart multiPageEditor)
+  public CommonSelectionManager(MultiPageEditorPart multiPageEditor)
   {
     super(multiPageEditor);
   }
@@ -107,5 +107,5 @@ public class ADTSelectionManager extends MultiPageSelectionProvider implements I
         enableNotify = true;
       }
     }
-  }      
+  }
 }
