@@ -375,7 +375,7 @@
 	<extension point="org.eclipse.ui.popupMenus">
 		<objectContribution
 			objectClass="org.eclipse.core.resources.IMarker"
-			id="org.eclipse.wst.xml.validation.internal.core.nestederrorlist"
+			id="org.eclipse.wst.xml.ui.internal.validation.nestederrorlist"
 			nameFilter="*">
 			<filter
 				name="done"
