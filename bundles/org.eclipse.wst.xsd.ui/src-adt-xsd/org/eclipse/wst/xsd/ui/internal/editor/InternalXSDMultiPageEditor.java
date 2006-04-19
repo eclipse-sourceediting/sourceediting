@@ -551,18 +551,6 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
   }
 
   /**
-   * Returns <code>true</code> if the command stack is dirty
-   * 
-   * @see org.eclipse.ui.ISaveablePart#isDirty()
-   */
-  public boolean isDirty()
-  {
-    super.isDirty();
-    return structuredTextEditor.isDirty() || getCommandStack().isDirty();
-  }
-
-
-  /**
    * Listener on SSE's outline page's selections that converts DOM selections
    * into xsd selections and notifies XSD selection manager
    */

@@ -363,9 +363,10 @@ public abstract class CommonMultiPageEditor extends MultiPageEditorPart implemen
    */
   public boolean isDirty()
   {
-    super.isDirty();
-    // TODO: rmah: Or do we need to tell the CommandStack that a save has occurred?
-    return getCommandStack().isDirty();
+    if (getCommandStack().isDirty())
+      return true;
+    else
+      return super.isDirty();
   }
 
   public StructuredTextEditor getTextEditor()
