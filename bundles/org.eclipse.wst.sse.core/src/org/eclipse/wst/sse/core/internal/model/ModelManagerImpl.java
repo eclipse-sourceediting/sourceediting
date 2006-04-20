@@ -36,8 +36,11 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
@@ -48,6 +51,7 @@ import org.eclipse.wst.sse.core.internal.FileBufferModelManager;
 import org.eclipse.wst.sse.core.internal.Logger;
 import org.eclipse.wst.sse.core.internal.NullMemento;
 import org.eclipse.wst.sse.core.internal.SSECoreMessages;
+import org.eclipse.wst.sse.core.internal.SSECorePlugin;
 import org.eclipse.wst.sse.core.internal.document.DocumentReader;
 import org.eclipse.wst.sse.core.internal.document.IDocumentLoader;
 import org.eclipse.wst.sse.core.internal.encoding.CodedIO;
@@ -1395,10 +1399,32 @@ public class ModelManagerImpl implements IModelManager {
 	private void discardModel(Object id, SharedObject sharedObject) {
 		fManagedObjects.remove(id);
 		IStructuredDocument structuredDocument = sharedObject.theSharedModel.getStructuredDocument();
+
+		if (structuredDocument == null) {
+			Platform.getLog(SSECorePlugin.getDefault().getBundle()).log(new Status(IStatus.ERROR, SSECorePlugin.ID, IStatus.ERROR, "Attempted to discard a structured model but the underlying document has already been set to null: " + sharedObject.theSharedModel.getBaseLocation(), null));
+		}
+
+		/*
+		 * This call (and setting the StructuredDocument to null) were
+		 * previously done within the model itself, but for concurrency it
+		 * must be done here during a synchronized release.
+		 */
+		sharedObject.theSharedModel.getFactoryRegistry().release();
+
+		/*
+		 * For structured documents originating from file buffers, disconnect
+		 * us from the file buffer, now.
+		 */
 		FileBufferModelManager.getInstance().releaseModel(structuredDocument);
-		// setting the document to null is required since some subclasses
-		// of model might have "cleanup" of listners, etc., to remove,
-		// which were initialized during the intial setStructuredDocument
+
+		/*
+		 * Setting the document to null is required since some subclasses of
+		 * model might have "cleanup" of listeners, etc., to remove, which
+		 * were initialized during the initial setStructuredDocument.
+		 * 
+		 * The model itself in particular may have internal listeners used to
+		 * coordinate the document with its own "structure".
+		 */
 		sharedObject.theSharedModel.setStructuredDocument(null);
 	}
 
@@ -1411,7 +1437,7 @@ public class ModelManagerImpl implements IModelManager {
 		SharedObject sharedObject = null;
 
 		if (id.equals(UNMANAGED_MODEL) || id.equals(DUPLICATED_MODEL)) {
-			// do nothing related to model managment.
+			// do nothing related to model management.
 		}
 		else {
 

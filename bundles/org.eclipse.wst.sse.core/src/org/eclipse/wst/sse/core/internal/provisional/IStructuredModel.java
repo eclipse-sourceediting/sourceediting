@@ -32,13 +32,19 @@ import org.eclipse.wst.sse.core.internal.util.URIResolver;
 
 
 /**
- * IStructuredModel's are mainly interesting by their extensions and
- * implementers. The main purposed of this abstraction it to provide a common
- * way to manage models that have an associated structured documnet.
+ * IStructuredModels are mainly interesting by their extensions and
+ * implementers. The main purposed of this abstraction is to provide a common
+ * means to manage models that have an associated structured document.
  * 
- * @plannedfor 1.0
+ * @plannedfor 2.0
  * 
+ * <p>
  * ISSUE: this interface needs ton of cleanup!
+ * </p>
+ * 
+ * <p>
+ * This interface is not intended to be implemented by clients.
+ * </p>
  */
 public interface IStructuredModel extends IAdaptable {
 
@@ -101,12 +107,12 @@ public interface IStructuredModel extends IAdaptable {
 
 	/**
 	 * This API allows a client controlled way of notifying all ModelEvent
-	 * listners that the model has been changed. This method is a matched pair
-	 * to aboutToChangeModel, and must be called after aboutToChangeModel ...
-	 * or some listeners could be left waiting indefinitely for the changed
-	 * event. So, its suggested that changedModel always be in a finally
-	 * clause. Likewise, a client should never call changedModel without
-	 * calling aboutToChangeModel first.
+	 * listeners that the model has been changed. This method is a matched
+	 * pair to aboutToChangeModel, and must be called after aboutToChangeModel
+	 * ... or some listeners could be left waiting indefinitely for the
+	 * changed event. So, its suggested that changedModel always be in a
+	 * finally clause. Likewise, a client should never call changedModel
+	 * without calling aboutToChangeModel first.
 	 * 
 	 * In the case of embedded calls, the notification is just sent once.
 	 * 
@@ -165,36 +171,29 @@ public interface IStructuredModel extends IAdaptable {
 	String getId();
 
 	/**
-	 * 
+	 * @param offset
+	 *            a text offset within the structured document
+	 * @return an IndexedRegion containing this offset or null if one could
+	 *         not be found
 	 */
 	IndexedRegion getIndexedRegion(int offset);
 
-	/**
-	 * ContentTypeDescription provides an object that describes what the
-	 * content of the file is, e.g. HTML, XML, etc. Compare with
-	 * getExternalFileTypeDescription. Though they both return objects of type
-	 * ContentTypeDescription, the external file type is intended to denote
-	 * JSP, regardless of what the content of that JSP file is. Even for a JSP
-	 * file, the ContentTypeDescription will be set according to that file's
-	 * "internal" contents.
-	 * 
-	 * @return ContentTypeDescription
-	 */
 	IModelHandler getModelHandler();
 
 	IModelManager getModelManager();
 
 	/**
-	 * This function returns the reference count of underlying model.
-	 * 
 	 * @param id
 	 *            Object The id of the model TODO: try to refine the design
 	 *            not to use this function
+	 * 
+	 * @return the reference count of underlying model
 	 */
 	int getReferenceCount();
 
 	/**
-	 * This function returns the reference count of underlying model.
+	 * This function returns the edit-responsible reference count of
+	 * underlying model.
 	 * 
 	 * @param id
 	 *            Object The id of the model TODO: try to refine the design
@@ -203,7 +202,7 @@ public interface IStructuredModel extends IAdaptable {
 	int getReferenceCountForEdit();
 
 	/**
-	 * This function returns the reference count of underlying model.
+	 * This function returns the reader reference count of underlying model.
 	 * 
 	 * @param id
 	 *            Object The id of the model TODO: try to refine the design
@@ -215,6 +214,8 @@ public interface IStructuredModel extends IAdaptable {
 
 	/**
 	 * Get URI resolution helper
+	 * 
+	 * @deprecated
 	 */
 	URIResolver getResolver();
 
@@ -279,7 +280,7 @@ public interface IStructuredModel extends IAdaptable {
 	 * newInstance is similar to clone, except that the newInstance contains
 	 * no content. Its purpose is so clients can get a temporary, unmanaged,
 	 * model of the same "type" as the original. Note: the client may still
-	 * need to do some intialization of the model returned by newInstance,
+	 * need to do some initialization of the model returned by newInstance,
 	 * depending on desired use. For example, the only factories in the
 	 * newInstance are those that would be normally be created for a model of
 	 * the given contentType. Others are not copied automatically, and if
@@ -288,11 +289,11 @@ public interface IStructuredModel extends IAdaptable {
 	IStructuredModel newInstance() throws IOException;
 
 	/**
-	 * Performs a reinit procedure. For this model. Note for future: there may
-	 * be a day where the model returned from this method is a different
-	 * instance than the instance it was called on. This will occur when there
-	 * is full support for "save as" type functions, where the model could
-	 * theoretically change completely.
+	 * Performs a reinitialization procedure. For this model. Note for future:
+	 * there may be a day where the model returned from this method is a
+	 * different instance than the instance it was called on. This will occur
+	 * when there is full support for "save as" type functions, where the
+	 * model could theoretically change completely.
 	 */
 	IStructuredModel reinit() throws IOException;
 
@@ -313,7 +314,7 @@ public interface IStructuredModel extends IAdaptable {
 	/**
 	 * This function replenishes the model with the resource without saving
 	 * any possible changes. It is used when one editor may be closing, and
-	 * specifially says not to save the model, but another "display" of the
+	 * specifically says not to save the model, but another "display" of the
 	 * model still needs to hang on to some model, so needs a fresh copy.
 	 * 
 	 * Only valid for use with managed models.
@@ -325,7 +326,7 @@ public interface IStructuredModel extends IAdaptable {
 	void removeModelStateListener(IModelStateListener listener);
 
 	/**
-	 * A method that modififies the model's synchonization stamp to match the
+	 * A method that modifies the model's synchronization stamp to match the
 	 * resource. Turns out there's several ways of doing it, so this ensures a
 	 * common algorithm.
 	 */
@@ -368,11 +369,11 @@ public interface IStructuredModel extends IAdaptable {
 	void setReinitializeNeeded(boolean b);
 
 	/**
-	 * Holds any data that the reinit procedure might find useful in
+	 * Holds any data that the reinitialization procedure might find useful in
 	 * reinitializing the model. This is handy, since the reinitialization may
 	 * not take place at once, and some "old" data may be needed to properly
-	 * undo previous settings. Note: the parameter was intentially made to be
-	 * of type 'Object' so different models can use in different ways.
+	 * undo previous settings. Note: the parameter was intentionally made to
+	 * be of type 'Object' so different models can use in different ways.
 	 */
 	void setReinitializeStateData(Object object);
 

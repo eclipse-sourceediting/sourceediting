@@ -222,34 +222,6 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 	}
 
 
-	private void _commonRelease() {
-
-		// TODO_future: I suspect ALL this type of logic should be
-		// on manager side.
-
-		if (factoryRegistry != null) {
-			factoryRegistry.release();
-		}
-		// if document as not been changed, we'll still be listening for
-		// first change. This is not a critical clean up, since presumanly
-		// whole model and document are "going away", but can make
-		// other memory leaks harder to find if we stay attached.
-		// (Note: my first thought was to set fStructuredDocument to null
-		// also,
-		// but there's others in shutdown process that still need to
-		// get it, in order to disconnect from it.)
-		if (fStructuredDocument != null) {
-			fStructuredDocument.removeDocumentChangedListener(fDirtyStateWatcher);
-			fStructuredDocument.removeDocumentAboutToChangeListener(fDocumentToModelNotifier);
-			fStructuredDocument.removeDocumentChangedListener(fDocumentToModelNotifier);
-		}
-
-		// we set document to null, mostly so
-		// any initiatilation done there can be undone.
-		// (likely needs some restructured to not need?)
-		setStructuredDocument(null);
-	}
-
 	/**
 	 * This method is just for getting an instance of the model manager of the
 	 * right Impl type, to be used "internally" for making protected calls
@@ -268,12 +240,12 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 	 * This API allows clients to declare that they are about to make a
 	 * "large" change to the model. This change might be in terms of content
 	 * or it might be in terms of the model id or base location. Note that in
-	 * the case of embedded calls, notification to listners is sent only once.
-	 * Note that the client who is making these changes has the responsibility
-	 * to restore the models state once finished with the changes. See
-	 * getMemento and restoreState. The method isModelStateChanging can be
-	 * used by a client to determine if the model is already in a change
-	 * sequence.
+	 * the case of embedded calls, notification to listeners is sent only
+	 * once. Note that the client who is making these changes has the
+	 * responsibility to restore the models state once finished with the
+	 * changes. See getMemento and restoreState. The method
+	 * isModelStateChanging can be used by a client to determine if the model
+	 * is already in a change sequence.
 	 */
 	public void aboutToChangeModel() {
 
@@ -295,7 +267,6 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 	public void addModelLifecycleListener(IModelLifecycleListener listener) {
 
 		synchronized (fListenerLock) {
-
 			if (fLifecycleNotificationManager == null) {
 				fLifecycleNotificationManager = new LifecycleNotificationManager();
 			}
@@ -1051,10 +1022,14 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 			throw new IllegalStateException(MODEL_MANAGER_NULL); //$NON-NLS-1$
 		}
 		else {
-			// be sure to check the shared state before releasing. (Since
-			// isShared assumes a count
-			// of 1 means not shared ... and we want our '1' to be that
-			// one.)
+			/*
+			 * Be sure to check the shared state before releasing. (Since
+			 * isShared assumes a count of 1 means not shared ... and we want
+			 * our '1' to be that one.) The problem, of course, is that
+			 * between pre-cycle notification and post-release notification,
+			 * the model could once again have become shared, rendering the
+			 * release notification incorrect.
+			 */
 			boolean isShared = isShared();
 
 			if (!isShared) {
@@ -1062,10 +1037,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 			}
 
 			_getModelManager().releaseFromEdit(getId());
-			// if no one else is using us, free up
-			// our resources
 			if (!isShared) {
-				_commonRelease();
 				signalPostLifeCycleListenerRelease(this);
 			}
 		}
@@ -1082,10 +1054,14 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 			throw new IllegalStateException(MODEL_MANAGER_NULL); //$NON-NLS-1$
 		}
 		else {
-			// be sure to check the shared state before
-			// releasing. (Since isShared assumes a count
-			// of 1 means not shared ... and we want
-			// our '1' to be that one.)
+			/*
+			 * Be sure to check the shared state before releasing. (Since
+			 * isShared assumes a count of 1 means not shared ... and we want
+			 * our '1' to be that one.) The problem, of course, is that
+			 * between pre-cycle notification and post-release notification,
+			 * the model could once again have become shared, rendering the
+			 * release notification incorrect.
+			 */
 			boolean isShared = isShared();
 
 			if (!isShared) {
@@ -1093,11 +1069,8 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 			}
 
 			_getModelManager().releaseFromRead(getId());
-			// if no one else is using us, free up
-			// an resources
+
 			if (!isShared) {
-				// factoryRegistry.release();
-				_commonRelease();
 				signalPostLifeCycleListenerRelease(this);
 			}
 		}
@@ -1129,7 +1102,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 	public void removeModelLifecycleListener(IModelLifecycleListener listener) {
 
 		// if manager is null, then none have been added, so
-		// no need to remove it.
+		// no need to remove any
 		if (fLifecycleNotificationManager == null)
 			return;
 		synchronized (fListenerLock) {
@@ -1170,7 +1143,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 
 
 	/**
-	 * A method that modififies the model's synchonization stamp to match the
+	 * A method that modifies the model's synchronization stamp to match the
 	 * resource. Turns out there's several ways of doing it, so this ensures a
 	 * common algorithm.
 	 */
@@ -1200,7 +1173,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 	 * etc., since its really up to the client to determine what's "new" about
 	 * a moved model. Caution: 'this' and 'newModel' may be the same object.
 	 * This is the case for current working with FileModelProvider, but have
-	 * left the dual argument for future possiblities.
+	 * left the dual argument for future possibilities.
 	 */
 	public void resourceMoved(IStructuredModel newModel) {
 
@@ -1222,7 +1195,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 		}
 
 		finally {
-			// we put end notificatin in finally block, so even if
+			// we put end notification in finally block, so even if
 			// error occurs during save, listeners are still notified,
 			// since their code could depend on receiving, to clean up
 			// some state, or coordinate other resources.
@@ -1244,7 +1217,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 			_getModelManager().saveModel(stringId, encodingRule);
 		}
 		finally {
-			// we put end notificatin in finally block, so even if
+			// we put end notification in finally block, so even if
 			// error occurs during save, listeners are still notified,
 			// since their code could depend on receiving, to clean up
 			// some state, or coordinate other resources.
@@ -1267,7 +1240,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 		}
 
 		finally {
-			// we put end notificatin in finally block, so even if
+			// we put end notification in finally block, so even if
 			// error occurs during save, listeners are still notified,
 			// since their code could depend on receiving, to clean up
 			// some state, or coordinate other resources.
@@ -1289,7 +1262,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 			_getModelManager().saveModel(iFile, stringId, encodingRule);
 		}
 		finally {
-			// we put end notificatin in finally block, so even if
+			// we put end notificatioon in finally block, so even if
 			// error occurs during save, listeners are still notified,
 			// since their code could depend on receiving, to clean up
 			// some state, or coordinate other resources.
@@ -1312,7 +1285,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 		}
 
 		finally {
-			// we put end notificatin in finally block, so even if
+			// we put end notification in finally block, so even if
 			// error occurs during save, listeners are still notified,
 			// since their code could depend on receiving, to clean up
 			// some state, or coordinate other resources.
@@ -1343,7 +1316,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 
 		// no need to process (set or fire event), if same value
 		if (fDirtyState != dirtyState) {
-			// prechange notificaiton
+			// pre-change notification
 			int type = ModelLifecycleEvent.MODEL_DIRTY_STATE | ModelLifecycleEvent.PRE_EVENT;
 			ModelLifecycleEvent modelLifecycleEvent = new ModelLifecycleEvent(this, type);
 			signalLifecycleEvent(modelLifecycleEvent);
@@ -1395,7 +1368,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 		// hashtable.
 		if (newId == null)
 			throw new IllegalArgumentException(SSECoreMessages.A_model_s_id_can_not_be_nu_EXC_); //$NON-NLS-1$ = "A model's id can not be null"
-		// To gaurd againt throwing a spurious ResourceInUse exception,
+		// To guard against throwing a spurious ResourceInUse exception,
 		// which can occur when two pieces of code both want to change the id,
 		// so the second request is spurious, we'll ignore any requests that
 		// attempt to change the id to what it already is ... note, we use
@@ -1410,7 +1383,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 		//
 		if (newId.equals(fId))
 			return;
-		// we must gaurd against reassigning an id to one that we already
+		// we must guard against reassigning an id to one that we already
 		// are managing.
 		if (getModelManager() != null) {
 			IStructuredModel newModel = getModelManager().getExistingModelForEdit(newId);
@@ -1438,7 +1411,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 		finally {
 			// make sure this finally is only executed if 'about to Change
 			// model' has
-			// ben executed.
+			// been executed.
 			changedModel();
 		}
 	}
@@ -1494,8 +1467,8 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 	 * Holds any data that the reinit procedure might find useful in
 	 * reinitializing the model. This is handy, since the reinitialization may
 	 * not take place at once, and some "old" data may be needed to properly
-	 * undo previous settings. Note: the parameter was intentially made to be
-	 * of type 'Object' so different models can use in different ways.
+	 * undo previous settings. Note: the parameter was intentionally made to
+	 * be of type 'Object' so different models can use in different ways.
 	 */
 	public void setReinitializeStateData(Object object) {
 
@@ -1515,7 +1488,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 			fStructuredDocument.removeDocumentChangedListener(fDirtyStateWatcher);
 			fStructuredDocument.removeDocumentAboutToChangeListener(fDocumentToModelNotifier);
 			fStructuredDocument.removeDocumentChangedListener(fDocumentToModelNotifier);
-			// prechange notificaiton
+			// prechange notification
 			lifeCycleNotification = true;
 			ModelLifecycleEvent modelLifecycleEvent = new DocumentChanged(ModelLifecycleEvent.PRE_EVENT, this, fStructuredDocument, newStructuredDocument);
 			signalLifecycleEvent(modelLifecycleEvent);
@@ -1565,11 +1538,10 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 	}
 
 	/**
-	 * to be called only be "friendly" classes, such as ModelManger, and
+	 * To be called only by "friendly" classes, such as ModelManager, and
 	 * subclasses.
 	 */
 	void signalLifecycleEvent(ModelLifecycleEvent event) {
-
 		if (fLifecycleNotificationManager == null)
 			return;
 		fLifecycleNotificationManager.signalLifecycleEvent(event);
