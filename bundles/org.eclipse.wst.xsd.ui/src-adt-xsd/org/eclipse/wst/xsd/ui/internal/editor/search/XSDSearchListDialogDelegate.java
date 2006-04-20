@@ -14,7 +14,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wst.common.core.search.pattern.QualifiedName;
-import org.eclipse.wst.common.ui.internal.search.dialogs.ComponentSearchListDialog;
 import org.eclipse.wst.common.ui.internal.search.dialogs.ComponentSearchListDialogConfiguration;
 import org.eclipse.wst.common.ui.internal.search.dialogs.ComponentSpecification;
 import org.eclipse.wst.common.ui.internal.search.dialogs.ScopedComponentSearchListDialog;
@@ -58,7 +57,10 @@ public class XSDSearchListDialogDelegate implements IComponentDialog
   {
     Shell shell = XSDEditorPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getShell();
     int returnValue = Window.CANCEL;
-    ComponentSearchListDialog dialog = null;
+    ScopedComponentSearchListDialog dialog = null;
+    
+    // TODO (cs) lot's of code is common to both these blocks.  Can we re-org it a bit
+    // so it's easier to see the difference between how we config for an element vs type?
     if ( metaName == ELEMENT_META_NAME)
     {
     	XSDComponentDescriptionProvider descriptionProvider = new XSDComponentDescriptionProvider();
@@ -71,7 +73,7 @@ public class XSDSearchListDialogDelegate implements IComponentDialog
         configuration.setListLabelText(Messages._UI_LABEL_ELEMENTS_COLON);
         configuration.setNewComponentHandler(new NewElementButtonHandler());
         //TODO externalize string
-        dialog = new ScopedComponentSearchListDialog(shell, Messages._UI_LABEL_SET_ELEMENT_REFERENCE, configuration);
+        dialog = new ScopedComponentSearchListDialog(shell, Messages._UI_LABEL_SET_ELEMENT_REFERENCE, configuration);     
     }
     else if (metaName == TYPE_META_NAME)
     {
@@ -89,6 +91,7 @@ public class XSDSearchListDialogDelegate implements IComponentDialog
     
     if (dialog != null)
     {
+      dialog.setCurrentResource(currentFile);      
       dialog.setBlockOnOpen(true);
       dialog.create();
       returnValue = dialog.open();
