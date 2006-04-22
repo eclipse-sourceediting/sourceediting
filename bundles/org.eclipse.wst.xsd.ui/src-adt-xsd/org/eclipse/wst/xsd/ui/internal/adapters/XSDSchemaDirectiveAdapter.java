@@ -15,7 +15,9 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IActionProvider;
 import org.eclipse.wst.xsd.ui.internal.adt.outline.ITreeElement;
+import org.eclipse.wst.xsd.ui.internal.common.actions.DeleteXSDConcreteComponentAction;
 import org.eclipse.wst.xsd.ui.internal.editor.Messages;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.xsd.XSDAttributeGroupDefinition;
@@ -29,7 +31,7 @@ import org.eclipse.xsd.XSDRedefineContent;
 import org.eclipse.xsd.XSDSchemaDirective;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
 
-public class XSDSchemaDirectiveAdapter extends XSDBaseAdapter
+public class XSDSchemaDirectiveAdapter extends XSDBaseAdapter implements IActionProvider
 {
   public Image getImage()
   {
@@ -101,4 +103,13 @@ public class XSDSchemaDirectiveAdapter extends XSDBaseAdapter
     populateAdapterList(list, adapterList);
     return (ITreeElement[]) adapterList.toArray(new ITreeElement[0]);
   }
+  
+  public String[] getActions(Object object)
+  {
+    List list = new ArrayList();
+    list.add(DeleteXSDConcreteComponentAction.DELETE_XSD_COMPONENT_ID);
+    
+    return (String [])list.toArray(new String[0]);
+  }
+
 }
