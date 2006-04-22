@@ -97,6 +97,11 @@ public class DeleteCommand extends BaseCommand
           attrGroup.getContents().remove(parent);
         }
       }
+      else if (parent instanceof XSDSchema)
+      {
+        visitor.visitSchema(target.getSchema());
+        ((XSDSchema) parent).getContents().remove(target);
+      }
     }
     else if (target instanceof XSDAttributeGroupDefinition &&
              parent instanceof XSDComplexTypeDefinition)
