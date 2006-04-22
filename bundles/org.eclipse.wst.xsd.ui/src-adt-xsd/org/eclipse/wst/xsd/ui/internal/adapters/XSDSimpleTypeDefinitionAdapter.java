@@ -10,18 +10,19 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.adapters;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.wst.xsd.ui.internal.adt.facade.IType;
+import org.eclipse.wst.xsd.ui.internal.common.actions.DeleteXSDConcreteComponentAction;
 import org.eclipse.wst.xsd.ui.internal.editor.Messages;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.eclipse.xsd.XSDVariety;
 import org.eclipse.xsd.util.XSDConstants;
 
-public class XSDSimpleTypeDefinitionAdapter extends XSDTypeDefinitionAdapter implements IType
+public class XSDSimpleTypeDefinitionAdapter extends XSDTypeDefinitionAdapter
 {
   public Image getImage()
   {
@@ -29,32 +30,32 @@ public class XSDSimpleTypeDefinitionAdapter extends XSDTypeDefinitionAdapter imp
 
     if (xsdSimpleTypeDefinition.getContainer() == null)
     {
-      return XSDEditorPlugin.getXSDImage("icons/XSDSimpleType.gif"); //$NON-NLS-1$
+      return XSDEditorPlugin.getPlugin().getIcon("obj16/simpletype_obj.gif"); //$NON-NLS-1$
     }
 
     if (XSDVariety.LIST_LITERAL == xsdSimpleTypeDefinition.getVariety())
     {
-      return XSDEditorPlugin.getPlugin().getIconImage("obj16/smpl_list_obj"); //$NON-NLS-1$
+      return XSDEditorPlugin.getPlugin().getIcon("obj16/smpl_list_obj.gif"); //$NON-NLS-1$
     }
     else if (XSDVariety.UNION_LITERAL == xsdSimpleTypeDefinition.getVariety())
     {
-      return XSDEditorPlugin.getPlugin().getIconImage("obj16/smpl_union_obj"); //$NON-NLS-1$
+      return XSDEditorPlugin.getPlugin().getIcon("obj16/smpl_union_obj.gif"); //$NON-NLS-1$
     }
     else if (XSDVariety.ATOMIC_LITERAL == xsdSimpleTypeDefinition.getVariety())
     {
       if (xsdSimpleTypeDefinition.getPrimitiveTypeDefinition() != null)
       {
-        return XSDEditorPlugin.getPlugin().getIconImage("obj16/smpl_restrict_obj"); //$NON-NLS-1$
+        return XSDEditorPlugin.getPlugin().getIcon("obj16/smpl_restrict_obj.gif"); //$NON-NLS-1$
       }
-      return XSDEditorPlugin.getXSDImage("icons/XSDSimpleType.gif"); //$NON-NLS-1$
+      return XSDEditorPlugin.getPlugin().getIcon("obj16/simpletype_obj.gif"); //$NON-NLS-1$
     }
     else if (xsdSimpleTypeDefinition.isSetVariety())
     {
-      return XSDEditorPlugin.getXSDImage("icons/XSDSimpleType.gif"); //$NON-NLS-1$
+      return XSDEditorPlugin.getPlugin().getIcon("obj16/simpletype_obj.gif"); //$NON-NLS-1$
     }
     else
     {
-      return XSDEditorPlugin.getXSDImage("icons/XSDSimpleType.gif"); //$NON-NLS-1$
+      return XSDEditorPlugin.getPlugin().getIcon("obj16/simpletype_obj.gif"); //$NON-NLS-1$
     }
   }
   
@@ -160,5 +161,13 @@ public class XSDSimpleTypeDefinitionAdapter extends XSDTypeDefinitionAdapter imp
       return false;
     }
     return true;
+  }
+  
+  public String[] getActions(Object object)
+  {
+    List list = new ArrayList();
+    list.add(DeleteXSDConcreteComponentAction.DELETE_XSD_COMPONENT_ID);
+    
+    return (String [])list.toArray(new String[0]);
   }
 }
