@@ -15,7 +15,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.draw2d.IFigure;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDAdapterFactory;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDAttributeGroupDefinitionAdapter;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDBaseAdapter;
@@ -23,14 +22,11 @@ import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.BaseEditPart;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.CenteredConnectionAnchor;
 import org.eclipse.wst.xsd.ui.internal.design.editparts.model.TargetConnectionSpaceFiller;
 import org.eclipse.wst.xsd.ui.internal.design.figures.GenericGroupFigure;
-import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.xsd.XSDAttributeGroupContent;
 import org.eclipse.xsd.XSDAttributeGroupDefinition;
 
 public class AttributeGroupDefinitionEditPart extends ConnectableEditPart
 {
-  public static final Image ATTRIBUTE_GROUP_REF_ICON_IMAGE = XSDEditorPlugin.getImageDescriptor("attgrref_obj.gif", true).createImage(); //$NON-NLS-1$
-
   public AttributeGroupDefinitionEditPart()
   {
     super();
@@ -54,7 +50,7 @@ public class AttributeGroupDefinitionEditPart extends ConnectableEditPart
   protected IFigure createFigure()
   {
     GenericGroupFigure figure = new GenericGroupFigure();
-    figure.getIconFigure().image = ATTRIBUTE_GROUP_REF_ICON_IMAGE;
+    figure.getIconFigure().image = XSDAttributeGroupDefinitionAdapter.ATTRIBUTE_GROUP_REF_ICON_IMAGE;
     return figure;
   }
 

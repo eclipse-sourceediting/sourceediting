@@ -31,7 +31,9 @@ import org.eclipse.xsd.XSDWildcard;
 
 public class XSDAttributeGroupDefinitionAdapter extends XSDBaseAdapter implements IStructure, IActionProvider
 {
-
+  public static final Image ATTRIBUTE_GROUP_REF_ICON_IMAGE = XSDEditorPlugin.getPlugin().getIcon("obj16/XSDAttributeGroupRef.gif");
+  public static final Image ATTRIBUTE_GROUP_ICON_IMAGE = XSDEditorPlugin.getPlugin().getIcon("obj16/XSDAttributeGroup.gif");
+	  
   public XSDAttributeGroupDefinitionAdapter()
   {
     super();
@@ -47,11 +49,11 @@ public class XSDAttributeGroupDefinitionAdapter extends XSDBaseAdapter implement
     XSDAttributeGroupDefinition xsdAttributeGroupDefinition = (XSDAttributeGroupDefinition) target;
     if (xsdAttributeGroupDefinition.isAttributeGroupDefinitionReference())
     {
-      return XSDEditorPlugin.getXSDImage("icons/XSDAttributeGroupRef.gif"); //$NON-NLS-1$
+      return ATTRIBUTE_GROUP_REF_ICON_IMAGE;
     }
     else
     {
-      return XSDEditorPlugin.getXSDImage("icons/XSDAttributeGroup.gif"); //$NON-NLS-1$
+      return ATTRIBUTE_GROUP_ICON_IMAGE;
     }
   }
 

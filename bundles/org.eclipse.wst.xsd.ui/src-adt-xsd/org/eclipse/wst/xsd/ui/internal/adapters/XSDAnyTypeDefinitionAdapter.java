@@ -20,5 +20,10 @@ public class XSDAnyTypeDefinitionAdapter extends XSDTypeDefinitionAdapter
   public boolean isFocusAllowed()
   {
     return false;
+  }
+
+  public String[] getActions(Object object)
+  {
+	return null;
   } 
 }

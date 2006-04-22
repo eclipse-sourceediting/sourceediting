@@ -14,20 +14,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.draw2d.IFigure;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDAdapterFactory;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDModelGroupDefinitionAdapter;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.BaseEditPart;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.CenteredConnectionAnchor;
 import org.eclipse.wst.xsd.ui.internal.design.figures.GenericGroupFigure;
-import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.xsd.XSDModelGroup;
 import org.eclipse.xsd.XSDModelGroupDefinition;
 
 public class ModelGroupDefinitionReferenceEditPart extends ConnectableEditPart
 {
-  public static final Image image = XSDEditorPlugin.getImageDescriptor("grref_obj.gif", true).createImage(); //$NON-NLS-1$
-
   public ModelGroupDefinitionReferenceEditPart()
   {
     super();
@@ -36,7 +32,8 @@ public class ModelGroupDefinitionReferenceEditPart extends ConnectableEditPart
   protected IFigure createFigure()
   {
     GenericGroupFigure figure = new GenericGroupFigure();
-    figure.getIconFigure().image = image;
+    XSDModelGroupDefinitionAdapter adapter = (XSDModelGroupDefinitionAdapter)getModel();
+    figure.getIconFigure().image = adapter.getImage();
     return figure;
   }
 

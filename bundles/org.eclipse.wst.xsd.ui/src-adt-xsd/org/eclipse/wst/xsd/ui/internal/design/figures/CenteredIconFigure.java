@@ -69,7 +69,7 @@ public class CenteredIconFigure extends RoundedRectangle
     {                         
       Rectangle r = getBounds();
       Dimension imageSize = new Dimension(15, 15);
-      g.drawImage(image, r.x + (r.width - imageSize.width)/2 - 1, r.y + (r.height - imageSize.height)/2);
+      g.drawImage(image, r.x + (r.width - imageSize.width)/2, r.y + (r.height - imageSize.height)/2 - 1);
     }
   }
 

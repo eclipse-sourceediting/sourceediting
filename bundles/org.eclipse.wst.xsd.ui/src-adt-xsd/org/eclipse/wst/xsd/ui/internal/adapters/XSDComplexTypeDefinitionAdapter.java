@@ -28,7 +28,6 @@ import org.eclipse.wst.xsd.ui.internal.adt.actions.BaseSelectionAction;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.DeleteAction;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.SetInputToGraphView;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.ShowPropertiesViewAction;
-import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IActionProvider;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IADTObject;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IADTObjectListener;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IComplexType;
@@ -59,7 +58,7 @@ import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDTypeDefinition;
 import org.eclipse.xsd.util.XSDConstants;
 
-public class XSDComplexTypeDefinitionAdapter extends XSDTypeDefinitionAdapter implements IComplexType, IActionProvider, IADTObjectListener
+public class XSDComplexTypeDefinitionAdapter extends XSDTypeDefinitionAdapter implements IComplexType, IADTObjectListener
 {
   protected List fields = null;
   protected List otherThingsToListenTo = null;
@@ -359,7 +358,7 @@ public class XSDComplexTypeDefinitionAdapter extends XSDTypeDefinitionAdapter im
 
   public Image getImage()
   {
-    return XSDEditorPlugin.getXSDImage("icons/XSDComplexType.gif"); //$NON-NLS-1$
+    return XSDEditorPlugin.getPlugin().getIcon("obj16/XSDComplexType.gif"); //$NON-NLS-1$
   }
 
   public String getText()

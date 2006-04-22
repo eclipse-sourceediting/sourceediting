@@ -16,9 +16,9 @@ import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 
 public class ModelGroupFigure extends GenericGroupFigure implements IModelGroupFigure
 {
-  public static final Image SEQUENCE_ICON_IMAGE = XSDEditorPlugin.getImageDescriptor("seq_obj.gif", true).createImage(); //$NON-NLS-1$
-  public static final Image CHOICE_ICON_IMAGE = XSDEditorPlugin.getImageDescriptor("choice_obj.gif", true).createImage(); //$NON-NLS-1$
-  public static final Image ALL_ICON_IMAGE = XSDEditorPlugin.getImageDescriptor("all_obj.gif", true).createImage(); //$NON-NLS-1$
+  public static final Image SEQUENCE_ICON_IMAGE = XSDEditorPlugin.getPlugin().getIcon("obj16/sequence_obj.gif"); //$NON-NLS-1$
+  public static final Image CHOICE_ICON_IMAGE = XSDEditorPlugin.getPlugin().getIcon("obj16/choice_obj.gif"); //$NON-NLS-1$
+  public static final Image ALL_ICON_IMAGE = XSDEditorPlugin.getPlugin().getIcon("obj16/all_obj.gif"); //$NON-NLS-1$
   
   public ModelGroupFigure()
   {

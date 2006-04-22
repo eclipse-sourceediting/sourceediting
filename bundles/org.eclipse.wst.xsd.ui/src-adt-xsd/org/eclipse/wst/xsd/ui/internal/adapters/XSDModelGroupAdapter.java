@@ -25,8 +25,8 @@ import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDModelGroupAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDModelGroupDefinitionAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.DeleteXSDConcreteComponentAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.SetMultiplicityAction;
+import org.eclipse.wst.xsd.ui.internal.design.figures.ModelGroupFigure;
 import org.eclipse.wst.xsd.ui.internal.editor.Messages;
-import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.xsd.XSDCompositor;
 import org.eclipse.xsd.XSDElementDeclaration;
 import org.eclipse.xsd.XSDModelGroup;
@@ -39,11 +39,6 @@ import org.w3c.dom.Element;
 
 public class XSDModelGroupAdapter extends XSDParticleAdapter implements IActionProvider
 {
-  // TODO: common these up with ModelGroupFigure's
-  public static final Image SEQUENCE_ICON_IMAGE = XSDEditorPlugin.getImageDescriptor("seq_obj.gif", true).createImage(); //$NON-NLS-1$
-  public static final Image CHOICE_ICON_IMAGE = XSDEditorPlugin.getImageDescriptor("choice_obj.gif", true).createImage(); //$NON-NLS-1$
-  public static final Image ALL_ICON_IMAGE = XSDEditorPlugin.getImageDescriptor("all_obj.gif", true).createImage(); //$NON-NLS-1$
-
   XSDModelGroup getXSDModelGroup()
   {
     return (XSDModelGroup) target;
@@ -64,15 +59,15 @@ public class XSDModelGroupAdapter extends XSDParticleAdapter implements IActionP
     XSDModelGroup xsdModelGroup = getXSDModelGroup();
     if (XSDCompositor.CHOICE_LITERAL == xsdModelGroup.getCompositor())
     {
-      return CHOICE_ICON_IMAGE;
+      return ModelGroupFigure.CHOICE_ICON_IMAGE;
     }
     else if (XSDCompositor.ALL_LITERAL == xsdModelGroup.getCompositor())
     {
-      return ALL_ICON_IMAGE;
+      return ModelGroupFigure.ALL_ICON_IMAGE;
     }
     else
     {
-      return SEQUENCE_ICON_IMAGE;
+      return ModelGroupFigure.SEQUENCE_ICON_IMAGE;
     }
   }
 
@@ -165,6 +160,11 @@ public class XSDModelGroupAdapter extends XSDParticleAdapter implements IActionP
        else if (particle instanceof XSDModelGroup)
        {
          list.add(particle);
+       }
+       else if (particle instanceof XSDModelGroupDefinition)
+       { 
+    	 //list.add(((XSDModelGroupDefinition)particle).getResolvedModelGroupDefinition());
+    	 list.add(particle);
        }
     }
 
