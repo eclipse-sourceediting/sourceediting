@@ -143,6 +143,27 @@ public class XSDEditorPlugin extends AbstractUIPlugin
 		}
 	}
 
+	public Image getIcon(String name)
+	{
+	  try {
+		ImageRegistry imageRegistry = getImageRegistry();
+
+		if (imageRegistry.get(name) != null) {
+			return imageRegistry.get(name);
+		}
+		else {
+			URL installURL = getDefault().getBundle().getEntry("/"); //$NON-NLS-1$
+			String imageString = "icons/" + name; //$NON-NLS-1$
+
+			URL imageURL = new URL(installURL, imageString);
+			imageRegistry.put(name, ImageDescriptor.createFromURL(imageURL));
+			return imageRegistry.get(name);
+		}
+
+	  } catch (Exception e) {
+		return null;
+	  }
+	}
 	
 	public static XSDEditorPlugin getPlugin() {
 		return plugin;
