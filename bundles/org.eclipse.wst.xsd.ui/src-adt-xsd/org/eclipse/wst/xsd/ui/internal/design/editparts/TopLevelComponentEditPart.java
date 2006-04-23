@@ -35,10 +35,12 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDBaseAdapter;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDComplexTypeDefinitionAdapter;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDElementDeclarationAdapter;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDModelGroupDefinitionAdapter;
+import org.eclipse.wst.xsd.ui.internal.adapters.XSDSchemaDirectiveAdapter;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.BaseEditPart;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.RootContentEditPart;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IFeedbackHandler;
@@ -47,6 +49,9 @@ import org.eclipse.wst.xsd.ui.internal.adt.typeviz.design.figures.FieldFigure;
 import org.eclipse.wst.xsd.ui.internal.design.editpolicies.SelectionHandlesEditPolicyImpl;
 import org.eclipse.wst.xsd.ui.internal.design.layouts.FillLayout;
 import org.eclipse.wst.xsd.ui.internal.editor.Messages;
+import org.eclipse.wst.xsd.ui.internal.utils.OpenOnSelectionHelper;
+import org.eclipse.xsd.XSDSchemaDirective;
+import org.eclipse.xsd.impl.XSDImportImpl;
 
 public class TopLevelComponentEditPart extends BaseEditPart implements IFeedbackHandler
 {
@@ -253,6 +258,33 @@ public class TopLevelComponentEditPart extends BaseEditPart implements IFeedback
             performDrillDownAction();
           }
         }
+      }
+      else if (model instanceof XSDSchemaDirectiveAdapter)
+      {
+        if (request instanceof LocationRequest)
+        {
+          LocationRequest locationRequest = (LocationRequest) request;
+          Point p = locationRequest.getLocation();
+
+          if (hitTest(labelHolder, p))
+          {
+            XSDSchemaDirective dir = (XSDSchemaDirective)((XSDSchemaDirectiveAdapter)model).getTarget();
+            String schemaLocation = "";
+            // force load of imported schema
+            if (dir instanceof XSDImportImpl)
+            {
+              ((XSDImportImpl)dir).importSchema();
+            }
+            if (dir.getResolvedSchema() != null)
+            {
+              schemaLocation = URIHelper.removePlatformResourceProtocol(dir.getResolvedSchema().getSchemaLocation());
+              if (schemaLocation != null)
+              {
+                OpenOnSelectionHelper.openXSDEditor(schemaLocation);
+              }
+            }
+          }
+        }        
       }
     }
   }
