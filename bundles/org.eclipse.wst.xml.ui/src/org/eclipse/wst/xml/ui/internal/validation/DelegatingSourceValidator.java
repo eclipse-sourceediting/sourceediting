@@ -1,14 +1,3 @@
-/*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- * 
- * Contributors:
- *     IBM Corporation - initial API and implementation
- *******************************************************************************/
-
 package org.eclipse.wst.xml.ui.internal.validation;
 
 import java.io.ByteArrayInputStream;
@@ -64,7 +53,27 @@ public abstract class DelegatingSourceValidator implements IValidator {
 	protected static final String FIRST_NON_WHITESPACE_TEXT = "FIRST_NON_WHITESPACE_TEXT"; //$NON-NLS-1$
 	protected static final String TEXT_ENTITY_REFERENCE = "TEXT_ENTITY_REFERENCE"; //$NON-NLS-1$
 	protected static final String VALUE_OF_ATTRIBUTE_WITH_GIVEN_VALUE = "VALUE_OF_ATTRIBUTE_WITH_GIVEN_VALUE"; //$NON-NLS-1$
-
+	
+  /**
+   * This constant specifies the attribute name that specifies the side of the 'start tag'
+   * that the validator has used to report an error.  A validator may choose to report a message
+   * at the left (the start of the start tag)or at the right (the end of the start tag).
+   * When this attribute is not specified error ERROR_SIDE_LEFT is the default.
+   */
+	protected static final String ERROR_SIDE = "ERROR_SIDE"; //$NON-NLS-1$
+	
+  /**
+   * When the ERROR_SIDE attribute specifies the ERROR_SIDE_LEFT value it is assumed
+   * that the message specifies a location to the left of the start tag
+   */
+	protected static final String ERROR_SIDE_LEFT = "ERROR_SIDE_LEFT"; //$NON-NLS-1$	
+	
+  /**
+   * When the ERROR_SIDE attribute specifies the ERROR_SIDE_RIGHT value it is assumed
+   * that the message specifies a location to the right of the start tag
+   */	
+	protected static final String ERROR_SIDE_RIGHT = "ERROR_SIDE_RIGHT"; //$NON-NLS-1$	
+	
 	protected static final String COLUMN_NUMBER_ATTRIBUTE = "columnNumber"; //$NON-NLS-1$
 	protected static final String SQUIGGLE_SELECTION_STRATEGY_ATTRIBUTE = "squiggleSelectionStrategy"; //$NON-NLS-1$
 	protected static final String SQUIGGLE_NAME_OR_VALUE_ATTRIBUTE = "squiggleNameOrValue"; //$NON-NLS-1$
@@ -237,7 +246,7 @@ public abstract class DelegatingSourceValidator implements IValidator {
 					int start = document.getStructuredDocument().getLineOffset(message.getLineNumber() - 1) + column - 1;
 
 					// calculate the "better" start and end offset:
-					int[] result = computeStartEndLocation(start, message.getText(), selectionStrategy, nameOrValue, document);
+					int[] result = computeStartAndEndLocation(start, selectionStrategy, getErrorSide(message), nameOrValue, document);
 					if (result != null) {
 						message.setOffset(result[0]);
 						message.setLength(result[1] - result[0]);
@@ -286,9 +295,17 @@ public abstract class DelegatingSourceValidator implements IValidator {
 		return model instanceof IDOMModel ? (IDOMModel) model : null;
 	}
 
+  /**
+   * @deprecated use computeStartEndLocation(int startOffset, String errorMessage, String selectionStrategy, boolean leftError, String nameOrValue, IDOMDocument document) {
+   *
+   */
+  protected int[] computeStartEndLocation(int startOffset, String errorMessage, String selectionStrategy, String nameOrValue, IDOMDocument document) 
+  {
+    return computeStartAndEndLocation(startOffset, selectionStrategy, ERROR_SIDE_RIGHT, nameOrValue, document);
+  }  
+  
 	/**
 	 * Calculates the "better" offsets.
-	 * 
 	 * @param startOffset -
 	 *            the offset given by Xerces
 	 * @param errorMessage -
@@ -303,13 +320,14 @@ public abstract class DelegatingSourceValidator implements IValidator {
 	/*
 	 * The way the offsets is calculated is: - find the indexed region
 	 * (element) closest to the given offset - if we are between two elements,
-	 * the one on the left is the one we want - based on the selectionStrategy
-	 * choose the underlining strategy (eg START_TAG means underline the start
-	 * tag of that element) - use information from nameOrValue and the DOM to
+	 * choosing left or right element will depend on parameter 'errorSide' 
+	 * - based on the selectionStrategy choose the underlining strategy 
+	 *  (eg START_TAG means underline the start tag of that element) 
+	 * - use information from nameOrValue and the DOM to
 	 * get better offsets
 	 * 
 	 */
-	protected int[] computeStartEndLocation(int startOffset, String errorMessage, String selectionStrategy, String nameOrValue, IDOMDocument document) {
+	protected int[] computeStartAndEndLocation(int startOffset, String selectionStrategy, String errorSide, String nameOrValue, IDOMDocument document) {
 		try {
 			int startEndPositions[] = new int[2];
 
@@ -317,9 +335,15 @@ public abstract class DelegatingSourceValidator implements IValidator {
 			IndexedRegion prevRegion = document.getModel().getIndexedRegion(startOffset - 1);
 
 			if (prevRegion != region) {
-				// if between two regions, the one onthe left is the one we
-				// are interested in
-				region = prevRegion;
+				// if between two regions we use the 'errorSide' to understand which
+				// element is applicable.  if we know the error has been reported to the
+				// right of the tag, then we can assume we need to step back to the previous
+				// region to land at the 'correct location.  Otherwise assume we're
+				// exactly where we need to be.				
+				if (ERROR_SIDE_LEFT.equals(errorSide))
+				{
+				  region = prevRegion;
+				}  
 			}
 
 			// initialize start and end positions to be the start positions
@@ -425,6 +449,8 @@ public abstract class DelegatingSourceValidator implements IValidator {
 						for (int i = 0; i < nodes.getLength(); i++) {
 							Node currentNode = nodes.item(i);
 							if (currentNode.getNodeType() == Node.TEXT_NODE) {
+								// TODO (Trung) I don't think we should call getNodeValue(), trim(), length() repeatedly.
+								// This is inefficient, to improve use local variables to store values.
 								IDOMText textNode = (IDOMText) currentNode;
 								if (textNode.getNodeValue().trim().length() > 0) {
 									String value = textNode.getNodeValue();
@@ -479,10 +505,17 @@ public abstract class DelegatingSourceValidator implements IValidator {
 
 				}
 				else if (VALUE_OF_ATTRIBUTE_WITH_GIVEN_VALUE.equals(selectionStrategy)) {
+					// TODO (Trung) do we really need this strategy ?
+					// If we know the name of the name of the attribute, we can retrieve its value.
+					// Hence, we can incoperate this strategy with ATTRIBUTE_VALUE ?
 					if (node.getNodeType() == Node.ELEMENT_NODE) {
 						// here we will search through all attributes for the
 						// one with the
 						// with the value we want:
+						// TODO (Trung) I see a potential problem here.
+						// What happens when there is another attribute having the same value
+						// with this attribute's buggy value ?
+						// Need to solve when time permits.
 						NamedNodeMap attributes = node.getAttributes();
 						for (int i = 0; i < attributes.getLength(); i++) {
 							IDOMAttr attr = (IDOMAttr) attributes.item(i);
@@ -516,4 +549,11 @@ public abstract class DelegatingSourceValidator implements IValidator {
 	protected boolean isDelegateValidatorEnabled(IFile file) {
 		return true;
 	}
+	
+  protected String getErrorSide(IMessage message)
+  {
+    // note that if the ERROR_SIDE is unspecified we return the default value ERROR_SIDE_LEFT    
+    Object value = message.getAttribute(ERROR_SIDE);
+    return ERROR_SIDE_RIGHT.equals(value) ? ERROR_SIDE_RIGHT : ERROR_SIDE_LEFT;
+  }	
 }
