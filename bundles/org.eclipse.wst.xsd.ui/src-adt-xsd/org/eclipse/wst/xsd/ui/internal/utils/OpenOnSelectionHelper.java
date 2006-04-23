@@ -81,7 +81,7 @@ public class OpenOnSelectionHelper
 				{
 					try
 					{
-					  workbenchWindow.getActivePage().openEditor(new FileEditorInput(schemaFile), XSDEditorPlugin.PLUGIN_ID);
+					  workbenchWindow.getActivePage().openEditor(new FileEditorInput(schemaFile), XSDEditorPlugin.EDITOR_ID);
 					}
 					catch (PartInitException initEx)
 					{

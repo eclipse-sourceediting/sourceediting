@@ -29,6 +29,7 @@ import java.util.*;
 public class XSDEditorPlugin extends AbstractUIPlugin
 {
   public static final String PLUGIN_ID = "org.eclipse.wst.xsd.ui"; //$NON-NLS-1$
+  public static final String EDITOR_ID = "org.eclipse.wst.xsd.ui.internal.editor.InternalXSDMultiPageEditor";  //$NON-NLS-1$
   public static final String CONST_XSD_DEFAULT_PREFIX_TEXT = "org.eclipse.wst.xmlschema.xsdDefaultPrefixText"; //$NON-NLS-1$
   public static final String CONST_PREFERED_BUILT_IN_TYPES = "org.eclipse.wst.xmlschema.preferedBuiltInTypes";  //$NON-NLS-1$
   public static final String CUSTOM_LIST_SEPARATOR = "\n"; //$NON-NLS-1$
