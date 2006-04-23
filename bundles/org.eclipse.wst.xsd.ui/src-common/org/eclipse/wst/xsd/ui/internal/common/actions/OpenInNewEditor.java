@@ -24,10 +24,14 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDComplexTypeDefinitionAdapter;
+import org.eclipse.wst.xsd.ui.internal.adapters.XSDSchemaDirectiveAdapter;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.BaseSelectionAction;
 import org.eclipse.wst.xsd.ui.internal.common.util.Messages;
 import org.eclipse.wst.xsd.ui.internal.editor.InternalXSDMultiPageEditor;
+import org.eclipse.wst.xsd.ui.internal.utils.OpenOnSelectionHelper;
 import org.eclipse.xsd.XSDComplexTypeDefinition;
+import org.eclipse.xsd.XSDSchemaDirective;
+import org.eclipse.xsd.impl.XSDImportImpl;
 
 public class OpenInNewEditor extends BaseSelectionAction
 {
@@ -85,7 +89,24 @@ public class OpenInNewEditor extends BaseSelectionAction
           }
         }
       }
-
+    }
+    else if (selection instanceof XSDSchemaDirectiveAdapter)
+    {
+      XSDSchemaDirective dir = (XSDSchemaDirective)((XSDSchemaDirectiveAdapter)selection).getTarget();
+      String schemaLocation = "";
+      // force load of imported schema
+      if (dir instanceof XSDImportImpl)
+      {
+        ((XSDImportImpl)dir).importSchema();
+      }
+      if (dir.getResolvedSchema() != null)
+      {
+        schemaLocation = URIHelper.removePlatformResourceProtocol(dir.getResolvedSchema().getSchemaLocation());
+        if (schemaLocation != null)
+        {
+          OpenOnSelectionHelper.openXSDEditor(schemaLocation);
+        }
+      }
     }
   }
 }
