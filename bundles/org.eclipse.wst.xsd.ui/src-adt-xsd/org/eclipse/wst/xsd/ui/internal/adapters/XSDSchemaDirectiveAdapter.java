@@ -18,6 +18,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IActionProvider;
 import org.eclipse.wst.xsd.ui.internal.adt.outline.ITreeElement;
 import org.eclipse.wst.xsd.ui.internal.common.actions.DeleteXSDConcreteComponentAction;
+import org.eclipse.wst.xsd.ui.internal.common.actions.OpenInNewEditor;
 import org.eclipse.wst.xsd.ui.internal.editor.Messages;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.xsd.XSDAttributeGroupDefinition;
@@ -55,6 +56,14 @@ public class XSDSchemaDirectiveAdapter extends XSDBaseAdapter implements IAction
   {
     XSDSchemaDirective directive = (XSDSchemaDirective) target;
     String result = directive.getSchemaLocation();
+    String namespace = null;
+    if (directive.getResolvedSchema() != null)
+    {
+      namespace = directive.getResolvedSchema().getTargetNamespace();
+    }
+    if (result != null && namespace != null)
+      result += " (" + namespace + ")";
+    
     if (result == null)
       result = "(" + Messages._UI_LABEL_NO_LOCATION_SPECIFIED + ")"; //$NON-NLS-1$ //$NON-NLS-2$
     if (result.equals("")) //$NON-NLS-1$
@@ -107,6 +116,7 @@ public class XSDSchemaDirectiveAdapter extends XSDBaseAdapter implements IAction
   public String[] getActions(Object object)
   {
     List list = new ArrayList();
+    list.add(OpenInNewEditor.ID);
     list.add(DeleteXSDConcreteComponentAction.DELETE_XSD_COMPONENT_ID);
     
     return (String [])list.toArray(new String[0]);
