@@ -179,7 +179,7 @@ public class CategoryEditPart extends BaseEditPart
   protected List getModelChildren()
   {
     CategoryAdapter adapter = (CategoryAdapter) getModel();
-    List children = new ArrayList(Arrays.asList(adapter.getChildren()));
+    List children = new ArrayList(Arrays.asList(adapter.getAllChildren()));
     return children;
   }
 

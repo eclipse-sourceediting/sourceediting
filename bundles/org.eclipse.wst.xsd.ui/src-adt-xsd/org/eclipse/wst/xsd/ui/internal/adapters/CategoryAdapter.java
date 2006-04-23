@@ -38,7 +38,7 @@ public class CategoryAdapter extends XSDBaseAdapter implements IModelProxy, IAct
   protected Image image;
   protected Object parent;
   protected int groupType;
-  Collection children;
+  Collection children, allChildren;  // children from current schema, children from current schema and includes
   XSDSchema xsdSchema;
 
   public CategoryAdapter(String label, Image image, Collection children, XSDSchema xsdSchema, int groupType)
@@ -86,10 +86,20 @@ public class CategoryAdapter extends XSDBaseAdapter implements IModelProxy, IAct
   {
     return (ITreeElement[]) children.toArray(new ITreeElement[0]);
   }
+  
+  public ITreeElement[] getAllChildren()
+  {
+    return (ITreeElement[]) allChildren.toArray(new ITreeElement[0]);
+  }
 
   public void setChildren(Collection list)
   {
     children = list;
+  }
+
+  public void setAllChildren(Collection list)
+  {
+    allChildren = list;
   }
 
   public Object getParent(Object element)

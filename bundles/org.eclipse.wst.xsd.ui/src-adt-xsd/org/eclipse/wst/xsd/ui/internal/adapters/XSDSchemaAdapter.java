@@ -47,7 +47,7 @@ import org.eclipse.xsd.util.XSDConstants;
 public class XSDSchemaAdapter extends XSDBaseAdapter implements IActionProvider, IModel, IADTObjectListener
 {
   protected List types = null;
-  protected List children;
+  protected List children, allChildren;
 
   protected CategoryAdapter fDirectivesCategory;
   protected CategoryAdapter fElementsCategory;
@@ -70,18 +70,23 @@ public class XSDSchemaAdapter extends XSDBaseAdapter implements IActionProvider,
     types.addAll(getSimpleTypes(xsdSchema));
 
     fDirectivesCategory = new CategoryAdapter(Messages._UI_GRAPH_DIRECTIVES, XSDEditorPlugin.getDefault().getIconImage("obj16/directivesheader"), directivesList, xsdSchema, CategoryAdapter.DIRECTIVES); //$NON-NLS-1$
+    fDirectivesCategory.setAllChildren(directivesList);
     registerListener(fDirectivesCategory);
 
     fElementsCategory = new CategoryAdapter(Messages._UI_GRAPH_ELEMENTS, XSDEditorPlugin.getDefault().getIconImage("obj16/elementsheader"), elementsList, xsdSchema, CategoryAdapter.ELEMENTS);  //$NON-NLS-1$
+    fElementsCategory.setAllChildren(getGlobalElements(xsdSchema, true));
     registerListener(fElementsCategory);
 
     fAttributesCategory = new CategoryAdapter(Messages._UI_GRAPH_ATTRIBUTES, XSDEditorPlugin.getDefault().getIconImage("obj16/attributesheader"), attributesList, xsdSchema, CategoryAdapter.ATTRIBUTES);   //$NON-NLS-1$
+    fAttributesCategory.setAllChildren(attributesList);
     registerListener(fAttributesCategory);
 
     fTypesCategory = new CategoryAdapter(Messages._UI_GRAPH_TYPES, XSDEditorPlugin.getDefault().getIconImage("obj16/typesheader"), types, xsdSchema, CategoryAdapter.TYPES);  //$NON-NLS-1$
+    fTypesCategory.setAllChildren(getTypes(xsdSchema, true));
     registerListener(fTypesCategory);
 
     fGroupsCategory = new CategoryAdapter(Messages._UI_GRAPH_GROUPS, XSDEditorPlugin.getDefault().getIconImage("obj16/groupsheader"), groups, xsdSchema, CategoryAdapter.GROUPS); //$NON-NLS-1$
+    fGroupsCategory.setAllChildren(groups);
     registerListener(fGroupsCategory);
   }
 
@@ -103,6 +108,18 @@ public class XSDSchemaAdapter extends XSDBaseAdapter implements IActionProvider,
       populateAdapterList(concreteComponentList, types);
     }
     return types;
+  }
+  
+  protected boolean isSameNamespace(String ns1, String ns2)
+  {
+    if (ns1 == null) ns1 = "";
+    if (ns2 == null) ns2 = "";
+    
+    if (ns1.equals(ns2))
+    {
+      return true;
+    }
+    return false;
   }
 
   /*
@@ -128,10 +145,15 @@ public class XSDSchemaAdapter extends XSDBaseAdapter implements IActionProvider,
       types.addAll(getSimpleTypes(xsdSchema));
 
       fDirectivesCategory.setChildren(directivesList);
+      fDirectivesCategory.setAllChildren(directivesList);
       fElementsCategory.setChildren(elementsList);
+      fElementsCategory.setAllChildren(getGlobalElements(xsdSchema, true));
       fAttributesCategory.setChildren(attributesList);
+      fAttributesCategory.setAllChildren(getAttributeList(xsdSchema, true));
       fTypesCategory.setChildren(types);
+      fTypesCategory.setAllChildren(getTypes(xsdSchema, true));
       fGroupsCategory.setChildren(groups);
+      fGroupsCategory.setAllChildren(groups);
     }
     else
     {
@@ -182,6 +204,7 @@ public class XSDSchemaAdapter extends XSDBaseAdapter implements IActionProvider,
       Assert.isTrue(adapter != null);
       XSDSchema xsdSchema = adapter.getXSDSchema();
       adapter.setChildren(getDirectives(xsdSchema));
+      adapter.setAllChildren(getDirectives(xsdSchema));
       notifyListeners(new CategoryNotification(adapter), adapter.getText());
       return;
     }
@@ -191,6 +214,7 @@ public class XSDSchemaAdapter extends XSDBaseAdapter implements IActionProvider,
       Assert.isTrue(adapter != null);
       XSDSchema xsdSchema = adapter.getXSDSchema();
       adapter.setChildren(getGlobalElements(xsdSchema));
+      adapter.setAllChildren(getGlobalElements(xsdSchema, true));
       notifyListeners(new CategoryNotification(adapter), adapter.getText());
       return;
     }
@@ -201,6 +225,7 @@ public class XSDSchemaAdapter extends XSDBaseAdapter implements IActionProvider,
       Assert.isTrue(adapter != null);
       XSDSchema xsdSchema = adapter.getXSDSchema();
       adapter.setChildren(getAttributeList(xsdSchema));
+      adapter.setAllChildren(getAttributeList(xsdSchema, true));
       notifyListeners(new CategoryNotification(adapter), adapter.getText());
       return;
     }
@@ -213,6 +238,7 @@ public class XSDSchemaAdapter extends XSDBaseAdapter implements IActionProvider,
       types.addAll(getSimpleTypes(xsdSchema));
 
       adapter.setChildren(types);
+      adapter.setAllChildren(getTypes(xsdSchema, true));
       notifyListeners(new CategoryNotification(adapter), adapter.getText());
       return;
     }
@@ -222,6 +248,7 @@ public class XSDSchemaAdapter extends XSDBaseAdapter implements IActionProvider,
       Assert.isTrue(adapter != null);
       XSDSchema xsdSchema = adapter.getXSDSchema();
       adapter.setChildren(getGroups(xsdSchema));
+      adapter.setAllChildren(getGroups(xsdSchema));
       notifyListeners(new CategoryNotification(adapter), adapter.getText());
       return;
     }
@@ -278,15 +305,15 @@ public class XSDSchemaAdapter extends XSDBaseAdapter implements IActionProvider,
     populateAdapterList(list, adapterList);
     return adapterList;
   }
-
-  protected List getGlobalElements(XSDSchema schema)
+  
+  protected List getGlobalElements(XSDSchema schema, boolean showFromIncludes)
   {
     List elements = schema.getElementDeclarations();
     List list = new ArrayList();
     for (Iterator i = elements.iterator(); i.hasNext();)
     {
       XSDElementDeclaration elem = (XSDElementDeclaration) i.next();
-//      if (elem.getRootContainer() == schema)
+      if (isSameNamespace(elem.getTargetNamespace(),schema.getTargetNamespace()) && (elem.getRootContainer() == schema || showFromIncludes))
       {
         list.add(elem);
       }
@@ -296,11 +323,16 @@ public class XSDSchemaAdapter extends XSDBaseAdapter implements IActionProvider,
     return adapterList;
   }
 
+  protected List getGlobalElements(XSDSchema schema)
+  {
+    return getGlobalElements(schema, false);
+  }
+
   /**
    * @param schema
    * @return
    */
-  protected List getComplexTypes(XSDSchema schema)
+  protected List getComplexTypes(XSDSchema schema, boolean showFromIncludes)
   {
     List allTypes = schema.getTypeDefinitions();
     List list = new ArrayList();
@@ -310,7 +342,7 @@ public class XSDSchemaAdapter extends XSDBaseAdapter implements IActionProvider,
       if (td instanceof XSDComplexTypeDefinition)
       {
         XSDComplexTypeDefinition ct = (XSDComplexTypeDefinition) td;
-//        if (ct.getRootContainer() == schema)
+        if (isSameNamespace(ct.getTargetNamespace(),schema.getTargetNamespace()) && (ct.getRootContainer() == schema || showFromIncludes))
         {
           list.add(ct);
         }
@@ -321,13 +353,25 @@ public class XSDSchemaAdapter extends XSDBaseAdapter implements IActionProvider,
     return adapterList;
   }
 
-  protected List getAttributeGroupList(XSDSchema xsdSchema)
+  protected List getComplexTypes(XSDSchema schema)
+  {
+    return getComplexTypes(schema, false);
+  }
+  
+  protected List getTypes(XSDSchema schema, boolean showFromIncludes)
+  {
+    List list = getComplexTypes(schema, showFromIncludes);
+    list.addAll(getSimpleTypes(schema, showFromIncludes));
+    return list;
+  }
+  
+  protected List getAttributeGroupList(XSDSchema xsdSchema, boolean showFromIncludes)
   {
     List attributeGroupList = new ArrayList();
     for (Iterator i = xsdSchema.getAttributeGroupDefinitions().iterator(); i.hasNext();)
     {
       XSDAttributeGroupDefinition attrGroup = (XSDAttributeGroupDefinition) i.next();
-//      if (attrGroup.getRootContainer() == xsdSchema)
+      if (isSameNamespace(attrGroup.getTargetNamespace(), xsdSchema.getTargetNamespace()) && (attrGroup.getRootContainer() == xsdSchema || showFromIncludes))
       {
         attributeGroupList.add(attrGroup);
       }
@@ -336,8 +380,13 @@ public class XSDSchemaAdapter extends XSDBaseAdapter implements IActionProvider,
     populateAdapterList(attributeGroupList, adapterList);
     return adapterList;
   }
+  
+  protected List getAttributeGroupList(XSDSchema xsdSchema)
+  {
+    return getAttributeGroupList(xsdSchema, false);
+  }
 
-  protected List getAttributeList(XSDSchema xsdSchema)
+  protected List getAttributeList(XSDSchema xsdSchema, boolean showFromIncludes)
   {
     List attributesList = new ArrayList();
     for (Iterator iter = xsdSchema.getAttributeDeclarations().iterator(); iter.hasNext();)
@@ -352,7 +401,7 @@ public class XSDSchemaAdapter extends XSDBaseAdapter implements IActionProvider,
           {
             if (!(attr.getTargetNamespace().equals(XSDConstants.SCHEMA_INSTANCE_URI_2001)))
             {
-//              if (attr.getRootContainer() == xsdSchema)
+              if (isSameNamespace(attr.getTargetNamespace(), xsdSchema.getTargetNamespace()) && (attr.getRootContainer() == xsdSchema || showFromIncludes))
               {
                 attributesList.add(attr);
               }
@@ -360,7 +409,7 @@ public class XSDSchemaAdapter extends XSDBaseAdapter implements IActionProvider,
           }
           else
           {
-//            if (attr.getRootContainer() == xsdSchema)
+            if (isSameNamespace(attr.getTargetNamespace(), xsdSchema.getTargetNamespace()) && (attr.getRootContainer() == xsdSchema || showFromIncludes))
             {
               attributesList.add(attr);
             }
@@ -369,14 +418,19 @@ public class XSDSchemaAdapter extends XSDBaseAdapter implements IActionProvider,
       }
     }
     
-    attributesList.addAll(getAttributeGroupList(xsdSchema));
+    attributesList.addAll(getAttributeGroupList(xsdSchema, showFromIncludes));
     
     List adapterList = new ArrayList();
     populateAdapterList(attributesList, adapterList);
     return adapterList;
   }
+  
+  protected List getAttributeList(XSDSchema xsdSchema)
+  {
+    return getAttributeList(xsdSchema, false);
+  }
 
-  protected List getSimpleTypes(XSDSchema schema)
+  protected List getSimpleTypes(XSDSchema schema, boolean showFromIncludes)
   {
     List allTypes = schema.getTypeDefinitions();
     List list = new ArrayList();
@@ -386,7 +440,7 @@ public class XSDSchemaAdapter extends XSDBaseAdapter implements IActionProvider,
       if (td instanceof XSDSimpleTypeDefinition)
       {
         XSDSimpleTypeDefinition st = (XSDSimpleTypeDefinition) td;
-//        if (st.getRootContainer() == schema)
+        if (isSameNamespace(st.getTargetNamespace(),schema.getTargetNamespace()) && (st.getRootContainer() == schema || showFromIncludes))
         {
           list.add(st);
         }
@@ -396,6 +450,11 @@ public class XSDSchemaAdapter extends XSDBaseAdapter implements IActionProvider,
     populateAdapterList(list, adapterList);
     return adapterList;
   }
+  
+  protected List getSimpleTypes(XSDSchema schema)
+  {
+    return getSimpleTypes(schema, false);
+  }
 
   protected List getGroups(XSDSchema schema)
   {
@@ -404,7 +463,7 @@ public class XSDSchemaAdapter extends XSDBaseAdapter implements IActionProvider,
     for (Iterator i = groups.iterator(); i.hasNext();)
     {
       XSDModelGroupDefinition group = (XSDModelGroupDefinition) i.next();
-//      if (group.getRootContainer() == schema)
+      if (isSameNamespace(group.getTargetNamespace(),schema.getTargetNamespace()) && group.getRootContainer() == schema)
       {
         list.add(group);
       }
