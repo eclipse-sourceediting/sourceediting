@@ -910,4 +910,10 @@ public class XSDFacetSection extends AbstractSection
         constraintsWidget.setConstraintKind(SpecificConstraintsWidget.PATTERN);
     }
   }
+  
+  public boolean shouldUseExtraSpace()
+  {
+    return true;
+  }
+
 }
