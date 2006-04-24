@@ -214,7 +214,7 @@ public class XSDElementDeclarationSection extends MultiplicitySection
     minCombo.setLayoutData(data);
     minCombo.add("0"); //$NON-NLS-1$
     minCombo.add("1"); //$NON-NLS-1$
-    applyModifyListeners(minCombo);
+    applyAllListeners(minCombo);
     minCombo.addSelectionListener(this);
 
     // ------------------------------------------------------------------
@@ -239,7 +239,7 @@ public class XSDElementDeclarationSection extends MultiplicitySection
     maxCombo.add("0"); //$NON-NLS-1$
     maxCombo.add("1"); //$NON-NLS-1$
     maxCombo.add("unbounded"); //$NON-NLS-1$
-    applyModifyListeners(maxCombo);
+    applyAllListeners(maxCombo);
     maxCombo.addSelectionListener(this);
   }
 
@@ -277,9 +277,9 @@ public class XSDElementDeclarationSection extends MultiplicitySection
    */
   public void refresh()
   {
-    super.refresh();
-
     setListenerEnabled(false);
+
+    super.refresh();
 
     XSDElementDeclaration xsdElementDeclaration = ((XSDElementDeclaration) input).getResolvedElementDeclaration();
 

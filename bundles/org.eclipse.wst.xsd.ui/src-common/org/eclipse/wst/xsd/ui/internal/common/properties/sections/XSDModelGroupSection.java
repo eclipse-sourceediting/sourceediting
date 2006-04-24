@@ -73,7 +73,7 @@ public class XSDModelGroupSection extends MultiplicitySection
     minCombo.setLayoutData(data);
     minCombo.add("0"); //$NON-NLS-1$
     minCombo.add("1"); //$NON-NLS-1$
-    minCombo.addListener(SWT.Modify, this);
+    applyAllListeners(minCombo);
     minCombo.addSelectionListener(this);
 
     // ------------------------------------------------------------------
@@ -90,7 +90,7 @@ public class XSDModelGroupSection extends MultiplicitySection
     maxCombo.add("0"); //$NON-NLS-1$
     maxCombo.add("1"); //$NON-NLS-1$
     maxCombo.add("unbounded"); //$NON-NLS-1$
-    maxCombo.addListener(SWT.Modify, this);
+    applyAllListeners(maxCombo);
     maxCombo.addSelectionListener(this);
   }
 
@@ -134,5 +134,19 @@ public class XSDModelGroupSection extends MultiplicitySection
       UpdateContentModelCommand command = new UpdateContentModelCommand(org.eclipse.wst.xsd.ui.internal.common.util.Messages._UI_ACTION_CHANGE_CONTENT_MODEL, particle, newValue);
       getCommandStack().execute(command);
     }
+    super.doWidgetSelected(e);
+  }
+  
+  public void dispose()
+  {
+    if (minCombo != null && !minCombo.isDisposed())
+      minCombo.removeSelectionListener(this);
+    if (maxCombo != null && !maxCombo.isDisposed())
+      maxCombo.removeSelectionListener(this);
+    if (requiredButton != null && !requiredButton.isDisposed())
+      requiredButton.removeSelectionListener(this);
+    if (listButton != null && !listButton.isDisposed())
+      listButton.removeSelectionListener(this);
+    super.dispose();
   }
 }

@@ -209,4 +209,14 @@ public class MultiplicitySection extends AbstractSection
     }
     return null;
   }
+  
+  public void dispose()
+  {
+    if (minCombo != null && !minCombo.isDisposed())
+      removeListeners(minCombo);
+    if (maxCombo != null && !maxCombo.isDisposed())
+      removeListeners(maxCombo);
+    super.dispose();
+  }
+
 }
