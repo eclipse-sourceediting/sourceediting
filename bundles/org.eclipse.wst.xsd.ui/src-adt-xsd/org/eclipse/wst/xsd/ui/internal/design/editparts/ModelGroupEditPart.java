@@ -29,6 +29,7 @@ import org.eclipse.xsd.XSDElementDeclaration;
 import org.eclipse.xsd.XSDModelGroup;
 import org.eclipse.xsd.XSDModelGroupDefinition;
 import org.eclipse.xsd.XSDParticle;
+import org.eclipse.xsd.XSDWildcard;
 
 public class ModelGroupEditPart extends ConnectableEditPart
 {
@@ -128,6 +129,15 @@ public class ModelGroupEditPart extends ConnectableEditPart
 
   protected List getModelChildren()
   {
+//    XSDModelGroupAdapter modelGroupAdapter = (XSDModelGroupAdapter)getModel();
+//    ArrayList ch = new ArrayList();
+//    ITreeElement [] tree = modelGroupAdapter.getChildren();
+//    int length = tree.length;
+//    for (int i = 0; i < length; i++)
+//    {
+//      ch.add(tree[i]);
+//    }
+
     List list = new ArrayList();
     XSDModelGroup xsdModelGroup = getXSDModelGroup();
     for (Iterator i = xsdModelGroup.getContents().iterator(); i.hasNext();)
@@ -151,12 +161,19 @@ public class ModelGroupEditPart extends ConnectableEditPart
         Adapter adapter = XSDAdapterFactory.getInstance().adapt(modelGroup);
         list.add(adapter);
       }
+      else if (next.getTerm() instanceof XSDWildcard)
+      {
+        XSDWildcard wildCard = (XSDWildcard)next.getTerm();
+        Adapter adapter = XSDAdapterFactory.getInstance().adapt(wildCard);
+        list.add(new TargetConnectionSpaceFiller((XSDBaseAdapter)adapter));
+      }
     }
 
     if (list.size() == 0)
       list.add(new TargetConnectionSpaceFiller(null));
 
     return list;
+//    return ch;
   }
 
   public ReferenceConnection createConnectionFigure(BaseEditPart child)
