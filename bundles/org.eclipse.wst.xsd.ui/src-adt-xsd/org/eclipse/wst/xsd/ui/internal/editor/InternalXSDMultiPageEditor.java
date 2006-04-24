@@ -60,6 +60,7 @@ import org.eclipse.wst.xsd.ui.internal.adt.actions.ShowPropertiesViewAction;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.RootContentEditPart;
 import org.eclipse.wst.xsd.ui.internal.adt.editor.ADTMultiPageEditor;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IModel;
+import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDAnyElementAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDAttributeDeclarationAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDAttributeGroupDefinitionAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDComplexTypeDefinitionAction;
@@ -498,7 +499,10 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
     action = new DeleteXSDConcreteComponentAction(this);
     action.setSelectionProvider(getSelectionManager());
     registry.registerAction(action);
-
+    action = new AddXSDAnyElementAction(this);
+    action.setSelectionProvider(getSelectionManager());
+    registry.registerAction(action);
+    
     action = new AddXSDSchemaDirectiveAction(this, AddXSDSchemaDirectiveAction.INCLUDE_ID, Messages._UI_ACTION_ADD_INCLUDE);
     action.setSelectionProvider(getSelectionManager());
     registry.registerAction(action);

@@ -20,6 +20,7 @@ import org.eclipse.wst.xsd.ui.internal.adt.actions.BaseSelectionAction;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.ShowPropertiesViewAction;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IActionProvider;
 import org.eclipse.wst.xsd.ui.internal.adt.outline.ITreeElement;
+import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDAnyElementAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDElementAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDModelGroupAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDModelGroupDefinitionAction;
@@ -189,6 +190,7 @@ public class XSDModelGroupAdapter extends XSDParticleAdapter implements IActionP
      Collection actionIDs = new ArrayList();
      actionIDs.add(AddXSDElementAction.ID);
      actionIDs.add(AddXSDElementAction.REF_ID);
+     actionIDs.add(AddXSDAnyElementAction.ID);
      // Add Element Ref
      actionIDs.add(BaseSelectionAction.SEPARATOR_ID);
      actionIDs.add(AddXSDModelGroupAction.SEQUENCE_ID);
