@@ -202,6 +202,12 @@
 	    <input type="org.eclipse.xsd.XSDConcreteComponent">
 	    </input>
 	 </propertySection>
+	 <propertySection tab="property.tab.general" 
+	 	class="org.eclipse.wst.xsd.ui.internal.common.properties.sections.XSDAnyElementContentsSection" 
+	 	id="prop.section.general">
+	    <input type="org.eclipse.xsd.XSDWildcard">
+	    </input>
+	 </propertySection>
   </propertySections>
 </extension>
 
