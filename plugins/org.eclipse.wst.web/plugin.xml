@@ -70,6 +70,10 @@
         <delegate class="org.eclipse.wst.project.facet.SimpleWebFacetInstallDelegate"/>
         <config-factory class="org.eclipse.wst.project.facet.SimpleWebFacetInstallDataModelProvider"/>
       </action>
+      <action type="uninstall" id="wst.web.uninstall">
+        <delegate class="org.eclipse.wst.project.facet.SimpleWebFacetUninstallDelegate"/>
+        <config-factory class="org.eclipse.wst.project.facet.SimpleWebFacetInstallDataModelProvider"/>
+      </action>
       <constraint>
         <and>
           <conflicts group="modules"/>
@@ -81,7 +85,7 @@
         
     <template id="template.wst.web">
       <label>%SIMPLE_WEB_TEMPLATE</label>
-      <fixed facet="wst.web"/>
+     <!-- <fixed facet="wst.web"/> -->
     </template>
 
   </extension>	
