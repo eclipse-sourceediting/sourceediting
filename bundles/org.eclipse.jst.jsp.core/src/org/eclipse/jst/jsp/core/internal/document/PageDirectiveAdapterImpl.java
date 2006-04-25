@@ -367,8 +367,9 @@ public class PageDirectiveAdapterImpl implements PageDirectiveAdapter {
 		if (file != null) {
 			type = JSPFContentProperties.getProperty(JSPFContentProperties.JSPCONTENTTYPE, file, true);
 		}
-		else
-			type = "text/html"; //$NON-NLS-1$
+		// BUG136468
+		if (type == null)
+            type = "text/html"; //$NON-NLS-1$
 		return type;
 	}
 
@@ -394,7 +395,8 @@ public class PageDirectiveAdapterImpl implements PageDirectiveAdapter {
 		if (file != null) {
 			language = JSPFContentProperties.getProperty(JSPFContentProperties.JSPLANGUAGE, file, true);
 		}
-		else
+		// BUG136468
+		if (language == null)
 			language = "java"; //$NON-NLS-1$
 		return language;
 	}
@@ -578,7 +580,7 @@ public class PageDirectiveAdapterImpl implements PageDirectiveAdapter {
 		String location = model.getBaseLocation();
 		if (location != null) {
 			IPath path = new Path(location);
-			if (!path.toFile().exists() && path.segmentCount() > 1) {
+			if (path.segmentCount() > 1) {
 				return ResourcesPlugin.getWorkspace().getRoot().getFile(path);
 			}
 		}

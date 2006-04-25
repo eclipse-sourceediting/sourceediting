@@ -195,7 +195,7 @@ public class HTMLDocumentTypeAdapter extends DocumentTypeAdapterImpl implements 
 		String location = model.getBaseLocation();
 		if (location != null) {
 			IPath path = new Path(location);
-			if (!path.toFile().exists() && path.segmentCount() > 1) {
+			if (path.segmentCount() > 1) {
 				result = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
 			}
 		}
