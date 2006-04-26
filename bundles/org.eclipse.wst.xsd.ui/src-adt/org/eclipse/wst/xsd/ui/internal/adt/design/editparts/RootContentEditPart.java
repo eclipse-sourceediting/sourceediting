@@ -20,6 +20,7 @@ import org.eclipse.draw2d.Panel;
 import org.eclipse.draw2d.ToolbarLayout;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.FocusTypeColumn;
+import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IGraphElement;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.ReferencedTypeColumn;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IADTObject;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IComplexType;
@@ -100,9 +101,12 @@ public class RootContentEditPart extends AbstractGraphicalEditPart
       }
       else if (obj instanceof IType)
       {
-        if (((IType)obj).isFocusAllowed())
+        if (obj instanceof IGraphElement)
         {
-          focusObject = (IType)obj;
+          if (((IGraphElement)obj).isFocusAllowed())
+          {
+            focusObject = (IType)obj;
+          }
         }
       }
       if (focusObject != null)

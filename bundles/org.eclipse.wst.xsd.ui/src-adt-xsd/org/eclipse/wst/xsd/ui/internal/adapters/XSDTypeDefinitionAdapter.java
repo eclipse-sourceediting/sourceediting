@@ -13,12 +13,13 @@ package org.eclipse.wst.xsd.ui.internal.adapters;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IActionProvider;
+import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IGraphElement;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IType;
 import org.eclipse.xsd.XSDNamedComponent;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDTypeDefinition;
 
-public abstract class XSDTypeDefinitionAdapter extends XSDBaseAdapter implements IType, IActionProvider
+public abstract class XSDTypeDefinitionAdapter extends XSDBaseAdapter implements IType, IActionProvider, IGraphElement
 {
   public XSDTypeDefinition getXSDTypeDefinition()
   {

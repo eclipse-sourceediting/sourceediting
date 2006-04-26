@@ -49,8 +49,11 @@ public class ReferencedTypeColumn extends AbstractModelCollection
         {
           if (!result.contains(type))
           {
-            if (type.isFocusAllowed())
-              result.add(type);
+            if (type instanceof IGraphElement)
+            {
+              if (((IGraphElement)type).isFocusAllowed())
+                result.add(type);
+            }
           }  
         }  
       }        
@@ -61,8 +64,11 @@ public class ReferencedTypeColumn extends AbstractModelCollection
       IType type = field.getType();
       if (type != null) //  && type.isComplexType())
       {
-        if (type.isFocusAllowed())
-          result.add(type);        
+        if (type instanceof IGraphElement)
+        {
+          if (((IGraphElement)type).isFocusAllowed())
+            result.add(type);        
+        }
       }
     }  
     return result;
