@@ -20,7 +20,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.xsd.ui.internal.adt.design.DesignViewGraphicalViewer;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.RootContentEditPart;
 import org.eclipse.wst.xsd.ui.internal.adt.editor.Messages;
-import org.eclipse.wst.xsd.ui.internal.adt.facade.IComplexType;
+import org.eclipse.wst.xsd.ui.internal.adt.facade.IADTObject;
 
 public class SetInputToGraphView extends BaseSelectionAction
 {
@@ -48,10 +48,9 @@ public class SetInputToGraphView extends BaseSelectionAction
     Object selection = ((IStructuredSelection) getSelection()).getFirstElement();
     Object adapter = getWorkbenchPart().getAdapter(GraphicalViewer.class);
 
-    if (selection instanceof IComplexType)
+    if (selection instanceof IADTObject)
     {
-      IComplexType type = (IComplexType) selection;
-
+      IADTObject obj = (IADTObject) selection;
       if (adapter instanceof DesignViewGraphicalViewer)
       {
         DesignViewGraphicalViewer graphicalViewer = (DesignViewGraphicalViewer) adapter;
@@ -63,7 +62,7 @@ public class SetInputToGraphView extends BaseSelectionAction
           {          
             PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getNavigationHistory().markLocation(editorPart);
           }  
-          ((RootContentEditPart) editPart).setInput(type);
+          ((RootContentEditPart) editPart).setInput(obj);
           ((RootContentEditPart) editPart).refresh();          
           if (editorPart != null)
           {
