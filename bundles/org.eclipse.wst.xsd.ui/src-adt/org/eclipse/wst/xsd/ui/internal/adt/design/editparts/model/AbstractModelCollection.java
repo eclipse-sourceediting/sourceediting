@@ -56,5 +56,10 @@ public abstract class AbstractModelCollection implements IADTObject
   public void unregisterListener(IADTObjectListener listener)
   {
     model.unregisterListener(listener);
-  }   
+  }
+  
+  public boolean isReadOnly()
+  {
+    return false;
+  }
 }

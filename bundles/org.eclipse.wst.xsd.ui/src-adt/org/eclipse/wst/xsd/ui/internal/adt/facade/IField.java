@@ -24,7 +24,6 @@ public interface IField extends IADTObject
   int getMinOccurs();
   int getMaxOccurs();
   boolean isGlobal();
-  boolean isReadOnly();
   boolean isReference();
   
   Command getUpdateMinOccursCommand(int minOccurs);

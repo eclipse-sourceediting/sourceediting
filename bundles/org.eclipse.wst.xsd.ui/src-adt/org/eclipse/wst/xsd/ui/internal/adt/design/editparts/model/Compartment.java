@@ -65,4 +65,9 @@ public class Compartment implements IADTObject
     // really we want to listen to the owner
     owner.unregisterListener(listener);
   }
+
+  public boolean isReadOnly()
+  {
+    return false;
+  }
 }

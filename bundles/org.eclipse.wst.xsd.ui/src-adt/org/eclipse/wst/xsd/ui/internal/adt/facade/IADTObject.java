@@ -13,5 +13,6 @@ package org.eclipse.wst.xsd.ui.internal.adt.facade;
 public interface IADTObject
 {
     public void registerListener(IADTObjectListener listener);
-    public void unregisterListener(IADTObjectListener listener);  
+    public void unregisterListener(IADTObjectListener listener);
+    boolean isReadOnly();
 }

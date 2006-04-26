@@ -18,8 +18,6 @@ public interface IType extends IADTObject
   String getName();
   String getQualifier();
   boolean isComplexType();
-  boolean isReadOnly();
-  boolean isFocusAllowed();
   
   Command getUpdateNameCommand(String newName);
 }
