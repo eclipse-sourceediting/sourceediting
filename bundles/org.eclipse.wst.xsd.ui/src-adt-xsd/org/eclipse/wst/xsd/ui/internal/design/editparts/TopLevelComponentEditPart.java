@@ -12,7 +12,6 @@ package org.eclipse.wst.xsd.ui.internal.design.editparts;
 
 import java.util.Collections;
 import java.util.List;
-
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.IFigure;
@@ -23,7 +22,6 @@ import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
-import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.RequestConstants;
 import org.eclipse.gef.editpolicies.SelectionEditPolicy;
@@ -31,10 +29,7 @@ import org.eclipse.gef.requests.LocationRequest;
 import org.eclipse.gef.ui.actions.ActionRegistry;
 import org.eclipse.gef.ui.parts.AbstractEditPartViewer;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
@@ -51,6 +46,7 @@ import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IFeedbackHandl
 import org.eclipse.wst.xsd.ui.internal.adt.design.editpolicies.SimpleDirectEditPolicy;
 import org.eclipse.wst.xsd.ui.internal.adt.typeviz.design.figures.FieldFigure;
 import org.eclipse.wst.xsd.ui.internal.design.editpolicies.SelectionHandlesEditPolicyImpl;
+import org.eclipse.wst.xsd.ui.internal.design.figures.HyperLinkLabel;
 import org.eclipse.wst.xsd.ui.internal.design.layouts.FillLayout;
 import org.eclipse.wst.xsd.ui.internal.editor.Messages;
 import org.eclipse.wst.xsd.ui.internal.utils.OpenOnSelectionHelper;
@@ -66,7 +62,6 @@ public class TopLevelComponentEditPart extends BaseEditPart implements IFeedback
   protected SimpleDirectEditPolicy simpleDirectEditPolicy = new SimpleDirectEditPolicy();
   protected boolean isReadOnly;
   protected boolean isSelected;
-  protected Font font;
 
   protected IFigure createFigure()
   {
@@ -78,40 +73,11 @@ public class TopLevelComponentEditPart extends BaseEditPart implements IFeedback
     labelHolder.setLayoutManager(fillLayout);
     typeGroup.add(labelHolder);
 
-    label = new Label();
+    label = new HyperLinkLabel();
     label.setOpaque(true);
     label.setBorder(new MarginBorder(0, 2, 2, 1));
     label.setForegroundColor(ColorConstants.black);
     labelHolder.add(label);
-
-    try
-    {
-      // evil hack to provide underlines
-      Object model = getModel();
-
-      boolean isLinux = java.io.File.separator.equals("/"); //$NON-NLS-1$
-      if (model instanceof XSDComplexTypeDefinitionAdapter || model instanceof XSDElementDeclarationAdapter || model instanceof XSDModelGroupDefinitionAdapter)
-      {
-        if (!isLinux)
-        {
-          FontData oldData = ((GraphicalEditPart) getParent()).getFigure().getFont().getFontData()[0]; // GraphicsConstants.medium.getFontData()[0];
-          FontData fontData = new FontData(oldData.getName(), oldData.getHeight(), SWT.NONE);
-
-          // TODO... clean this awful code up... we seem to be leaking here too
-          // we can't call this directly since the methods are OS dependant
-          // fontData.data.lfUnderline = 1
-          // so instead we use reflection
-          Object data = fontData.getClass().getField("data").get(fontData); //$NON-NLS-1$
-          data.getClass().getField("lfUnderline").setByte(data, (byte) 1); //$NON-NLS-1$
-          font = new Font(Display.getCurrent(), fontData);
-          label.setFont(font);
-        }
-      }
-    }
-    catch (Exception e)
-    {
-
-    }
 
     return typeGroup;
   }
@@ -119,11 +85,6 @@ public class TopLevelComponentEditPart extends BaseEditPart implements IFeedback
   public void deactivate()
   {
     super.deactivate();
-    if (font != null)
-    {
-      font.dispose();
-      font = null;
-    }
   }
 
   public void refreshVisuals()
