@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.design.editparts;
 
+import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.wst.xsd.ui.internal.adt.design.IAnnotationProvider;
@@ -41,6 +42,10 @@ public class XSDBaseFieldEditPart extends BaseFieldEditPart
     figure.getNameLabel().setText(field.getName());
     figure.getTypeLabel().setText(field.getTypeName());
     figure.refreshVisuals(getModel());
+    if (field.isReadOnly())
+      figure.setForegroundColor(ColorConstants.darkGray);
+    else
+      figure.setForegroundColor(ColorConstants.black);
 
     String occurrenceDescription = ""; //$NON-NLS-1$
     if (field instanceof IAnnotationProvider)
