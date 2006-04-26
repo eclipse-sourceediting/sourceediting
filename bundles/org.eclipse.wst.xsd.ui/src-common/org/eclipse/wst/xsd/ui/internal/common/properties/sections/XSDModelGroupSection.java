@@ -143,10 +143,6 @@ public class XSDModelGroupSection extends MultiplicitySection
       minCombo.removeSelectionListener(this);
     if (maxCombo != null && !maxCombo.isDisposed())
       maxCombo.removeSelectionListener(this);
-    if (requiredButton != null && !requiredButton.isDisposed())
-      requiredButton.removeSelectionListener(this);
-    if (listButton != null && !listButton.isDisposed())
-      listButton.removeSelectionListener(this);
     super.dispose();
   }
 }

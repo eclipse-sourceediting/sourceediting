@@ -12,7 +12,6 @@ package org.eclipse.wst.xsd.ui.internal.common.properties.sections;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.apache.xerces.util.XMLChar;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.gef.commands.Command;
@@ -38,8 +37,6 @@ import org.eclipse.wst.common.ui.internal.search.dialogs.ComponentSearchListDial
 import org.eclipse.wst.common.ui.internal.search.dialogs.ComponentSearchListDialogConfiguration;
 import org.eclipse.wst.common.ui.internal.search.dialogs.ComponentSpecification;
 import org.eclipse.wst.common.ui.internal.search.dialogs.ScopedComponentSearchListDialog;
-import org.eclipse.wst.xsd.ui.internal.common.commands.UpdateMaxOccursCommand;
-import org.eclipse.wst.xsd.ui.internal.common.commands.UpdateMinOccursCommand;
 import org.eclipse.wst.xsd.ui.internal.common.commands.UpdateNameCommand;
 import org.eclipse.wst.xsd.ui.internal.common.commands.UpdateTypeReferenceCommand;
 import org.eclipse.wst.xsd.ui.internal.dialogs.NewTypeButtonHandler;
@@ -50,7 +47,6 @@ import org.eclipse.wst.xsd.ui.internal.editor.search.XSDTypesSearchListProvider;
 import org.eclipse.wst.xsd.ui.internal.util.TypesHelper;
 import org.eclipse.xsd.XSDAttributeDeclaration;
 import org.eclipse.xsd.XSDElementDeclaration;
-import org.eclipse.xsd.XSDParticle;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDTypeDefinition;
 import org.eclipse.xsd.util.XSDConstants;
@@ -172,33 +168,6 @@ public class XSDElementDeclarationSection extends MultiplicitySection
     typesBrowseButton.setImage(XSDEditorPlugin.getXSDImage("icons/browsebutton.gif")); //$NON-NLS-1$
     typesBrowseButton.addSelectionListener(this);
     typesBrowseButton.setLayoutData(data);
-
-    // ------------------------------------------------------------------
-    // min/max button modifiers
-    // ------------------------------------------------------------------
-
-    data = new GridData();
-    data.horizontalAlignment = GridData.HORIZONTAL_ALIGN_BEGINNING;
-    data.grabExcessHorizontalSpace = false;
-
-    getWidgetFactory().createCLabel(composite, ""); //$NON-NLS-1$
-
-    Composite modifierComposite = getWidgetFactory().createComposite(composite, SWT.FLAT);
-    GridLayout gridLayout2 = new GridLayout();
-    gridLayout2.marginLeft = 0;
-    gridLayout2.marginRight = 0;
-    gridLayout2.marginTop = 0;
-    gridLayout2.marginBottom = 0;
-    gridLayout2.numColumns = 2;
-    modifierComposite.setLayout(gridLayout2);
-    modifierComposite.setLayoutData(data);
-    requiredButton = getWidgetFactory().createButton(modifierComposite, "Required", SWT.CHECK | SWT.FLAT); //$NON-NLS-1$
-    requiredButton.addSelectionListener(this);
-
-    listButton = getWidgetFactory().createButton(modifierComposite, "Array", SWT.CHECK | SWT.FLAT); //$NON-NLS-1$
-    listButton.addSelectionListener(this);
-
-    getWidgetFactory().createCLabel(composite, ""); //$NON-NLS-1$
 
     // ------------------------------------------------------------------
     // min property
@@ -387,31 +356,6 @@ public class XSDElementDeclarationSection extends MultiplicitySection
         relayout();
       }
     }
-    else if (e.widget == listButton)
-    {
-      int maxOccurs = (listButton.getSelection() ? XSDParticle.UNBOUNDED : 1);
-      if (input instanceof XSDElementDeclaration)
-      {
-        XSDParticle particle = (XSDParticle) ((XSDElementDeclaration) input).eContainer();
-        UpdateMaxOccursCommand command = new UpdateMaxOccursCommand(org.eclipse.wst.xsd.ui.internal.common.util.Messages._UI_ACTION_UPDATE_MAXIMUM_OCCURRENCE, particle, maxOccurs);
-        getCommandStack().execute(command);
-        if (maxOccurs == -1)
-          maxCombo.setText("*"); //$NON-NLS-1$
-        else
-          maxCombo.setText(""); //$NON-NLS-1$
-      }
-    }
-    else if (e.widget == requiredButton)
-    {
-      int minOccurs = requiredButton.getSelection() ? 1 : 0;
-      if (input instanceof XSDElementDeclaration)
-      {
-        XSDParticle particle = (XSDParticle) ((XSDElementDeclaration) input).eContainer();
-        UpdateMinOccursCommand command = new UpdateMinOccursCommand(org.eclipse.wst.xsd.ui.internal.common.util.Messages._UI_ACTION_UPDATE_MINIMUM_OCCURRENCE, particle, minOccurs);
-        getCommandStack().execute(command);
-      }
-      minCombo.setText("" + minOccurs); //$NON-NLS-1$
-    }
     else if (e.widget == componentNameCombo)
     {
       String newValue = componentNameCombo.getText();
@@ -488,11 +432,6 @@ public class XSDElementDeclarationSection extends MultiplicitySection
         // doReferentialIntegrityCheck(namedComponent, newValue);
       }
     }
-    else if (event.widget == minCombo)
-    {
-      requiredButton.setSelection(isRequired);
-    }
-
   }
 
   protected boolean validateSection()
@@ -524,10 +463,6 @@ public class XSDElementDeclarationSection extends MultiplicitySection
       minCombo.removeSelectionListener(this);
     if (maxCombo != null && !maxCombo.isDisposed())
       maxCombo.removeSelectionListener(this);
-    if (requiredButton != null && !requiredButton.isDisposed())
-      requiredButton.removeSelectionListener(this);
-    if (listButton != null && !listButton.isDisposed())
-      listButton.removeSelectionListener(this);
     super.dispose();
   }
 

@@ -12,7 +12,6 @@ package org.eclipse.wst.xsd.ui.internal.common.properties.sections;
 
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.wst.xsd.ui.internal.common.commands.UpdateMaxOccursCommand;
@@ -28,10 +27,7 @@ import org.w3c.dom.Element;
 public class MultiplicitySection extends AbstractSection
 {
   protected CCombo minCombo, maxCombo;
-  protected Button listButton;
-  protected Button requiredButton;
-  protected boolean isRequired;
- 
+
   public MultiplicitySection()
   {
     super();
@@ -123,7 +119,6 @@ public class MultiplicitySection extends AbstractSection
     if (particle != null)
     {
       String newValue = minCombo.getText();
-      isRequired = false;
       if (newValue.length() == 0)
       {
         particle.unsetMinOccurs();
@@ -134,12 +129,10 @@ public class MultiplicitySection extends AbstractSection
         if (newValue.equals("unbounded") || newValue.equals("*")) //$NON-NLS-1$ //$NON-NLS-2$
         {
           newMin = XSDParticle.UNBOUNDED;
-          isRequired = true;
         }
         else
         {
           newMin = Integer.parseInt(newValue);
-          isRequired = newMin > 0;
         }
         UpdateMinOccursCommand command = new UpdateMinOccursCommand(Messages._UI_ACTION_CHANGE_MINIMUM_OCCURRENCE, particle, newMin);
         getCommandStack().execute(command);
