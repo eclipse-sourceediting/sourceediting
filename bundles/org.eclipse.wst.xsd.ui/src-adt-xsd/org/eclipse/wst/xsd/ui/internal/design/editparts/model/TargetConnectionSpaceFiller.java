@@ -41,5 +41,10 @@ public class TargetConnectionSpaceFiller implements IADTObject
   {
    
   }
+
+  public boolean isReadOnly()
+  {
+    return false;
+  }
   
 }
