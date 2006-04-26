@@ -28,19 +28,23 @@ import org.eclipse.gef.Request;
 import org.eclipse.gef.RequestConstants;
 import org.eclipse.gef.editpolicies.SelectionEditPolicy;
 import org.eclipse.gef.requests.LocationRequest;
+import org.eclipse.gef.ui.actions.ActionRegistry;
 import org.eclipse.gef.ui.parts.AbstractEditPartViewer;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDBaseAdapter;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDComplexTypeDefinitionAdapter;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDElementDeclarationAdapter;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDModelGroupDefinitionAdapter;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDSchemaDirectiveAdapter;
+import org.eclipse.wst.xsd.ui.internal.adt.actions.SetInputToGraphView;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.BaseEditPart;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.RootContentEditPart;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IFeedbackHandler;
@@ -302,18 +306,14 @@ public class TopLevelComponentEditPart extends BaseEditPart implements IFeedback
     {
       public void run()
       {
-        // ((XSDComponentViewer)getViewer()).setInput((XSDConcreteComponent)getModel());
-
         EditPart editPart = ((AbstractEditPartViewer) getViewer()).getRootEditPart().getContents();
         if (editPart instanceof RootContentEditPart)
         {
-          RootContentEditPart rootEditPart = (RootContentEditPart) editPart;
-          rootEditPart.setInput(getModel());
+          IEditorPart editorPart = getEditorPart();
+          ActionRegistry registry = (ActionRegistry) editorPart.getAdapter(ActionRegistry.class);
+          IAction action = registry.getAction(SetInputToGraphView.ID);
+          action.run();
         }
-        // else if (editPart instanceof BaseEditPart)
-        // {
-        // ((XSDComponentViewer)getViewer()).setInput((XSDConcreteComponent)getModel());
-        // }
       }
     };
     Display.getCurrent().asyncExec(runnable);
