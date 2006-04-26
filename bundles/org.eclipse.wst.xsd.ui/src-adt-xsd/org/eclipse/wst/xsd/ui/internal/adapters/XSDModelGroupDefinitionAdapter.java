@@ -19,6 +19,7 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.BaseSelectionAction;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IActionProvider;
+import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IGraphElement;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IModel;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IStructure;
 import org.eclipse.wst.xsd.ui.internal.adt.outline.ITreeElement;
@@ -30,7 +31,7 @@ import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.xsd.XSDModelGroup;
 import org.eclipse.xsd.XSDModelGroupDefinition;
 
-public class XSDModelGroupDefinitionAdapter extends XSDBaseAdapter implements IStructure, IActionProvider
+public class XSDModelGroupDefinitionAdapter extends XSDBaseAdapter implements IStructure, IActionProvider, IGraphElement
 {
   public static final Image MODEL_GROUP_ICON = XSDEditorPlugin.getPlugin().getIcon("obj16/XSDGroup.gif"); //$NON-NLS-1$
   public static final Image MODEL_GROUP_DISABLED_ICON = XSDEditorPlugin.getPlugin().getIcon("obj16/XSDGroupdis.gif"); //$NON-NLS-1$
@@ -154,5 +155,15 @@ public class XSDModelGroupDefinitionAdapter extends XSDBaseAdapter implements IS
   public String getName()
   {
     return getText();
+  }
+
+  public boolean isFocusAllowed()
+  {
+    XSDModelGroupDefinition xsdModelGroupDefinition = (XSDModelGroupDefinition) target;
+    if (xsdModelGroupDefinition.isModelGroupDefinitionReference())
+    { 
+      return false;
+    }
+    return true;
   }    
 }
