@@ -33,7 +33,9 @@ import org.eclipse.xsd.XSDModelGroupDefinition;
 public class XSDModelGroupDefinitionAdapter extends XSDBaseAdapter implements IStructure, IActionProvider
 {
   public static final Image MODEL_GROUP_ICON = XSDEditorPlugin.getPlugin().getIcon("obj16/XSDGroup.gif"); //$NON-NLS-1$
+  public static final Image MODEL_GROUP_DISABLED_ICON = XSDEditorPlugin.getPlugin().getIcon("obj16/XSDGroupdis.gif"); //$NON-NLS-1$
   public static final Image MODEL_GROUP_REF_ICON = XSDEditorPlugin.getPlugin().getIcon("obj16/XSDGroupRef.gif"); //$NON-NLS-1$
+  public static final Image MODEL_GROUP_REF_DISABLED_ICON = XSDEditorPlugin.getPlugin().getIcon("obj16/XSDGroupRefdis.gif"); //$NON-NLS-1$
 
   public XSDModelGroupDefinitionAdapter()
   {
@@ -51,10 +53,18 @@ public class XSDModelGroupDefinitionAdapter extends XSDBaseAdapter implements IS
 
     if (xsdModelGroupDefinition.isModelGroupDefinitionReference())
     {
+      if (isReadOnly())
+      {
+        return MODEL_GROUP_REF_DISABLED_ICON;
+      }
       return MODEL_GROUP_REF_ICON;
     }
     else
     {
+      if (isReadOnly())
+      {
+        return MODEL_GROUP_DISABLED_ICON;
+      }
       return MODEL_GROUP_ICON;
     }
   }

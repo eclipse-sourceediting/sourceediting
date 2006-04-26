@@ -47,14 +47,24 @@ public class XSDSimpleTypeEditPart extends BaseTypeConnectingEditPart
     ToolbarLayout toolbarLayout = new ToolbarLayout();
     toolbarLayout.setStretchMinorAxis(true);
     figure.setLayoutManager(toolbarLayout);
-    figure.getHeadingFigure().getLabel().setIcon(XSDEditorPlugin.getXSDImage("icons/XSDSimpleType.gif")); //$NON-NLS-1$
+//    figure.getHeadingFigure().getLabel().setIcon(XSDEditorPlugin.getXSDImage("icons/XSDSimpleType.gif")); //$NON-NLS-1$
     return figure;
   }
   
   protected void refreshVisuals()
   {
-    String name = ((XSDSimpleTypeDefinitionAdapter)getModel()).getDisplayName();
+    XSDSimpleTypeDefinitionAdapter adapter = (XSDSimpleTypeDefinitionAdapter)getModel();
+    String name = adapter.getDisplayName();
+    figure.headingFigure.setIsReadOnly(adapter.isReadOnly());
     figure.headingFigure.getLabel().setText(name);
+    if (adapter.isReadOnly())
+    {
+      figure.getHeadingFigure().getLabel().setIcon(XSDEditorPlugin.getPlugin().getIcon("obj16/simpletypedis_obj.gif")); //$NON-NLS-1$
+    }
+    else
+    {
+      figure.getHeadingFigure().getLabel().setIcon(XSDEditorPlugin.getPlugin().getIcon("obj16/simpletype_obj.gif")); //$NON-NLS-1$
+    }
   }
   
   public IStructureFigure getStructureFigure()

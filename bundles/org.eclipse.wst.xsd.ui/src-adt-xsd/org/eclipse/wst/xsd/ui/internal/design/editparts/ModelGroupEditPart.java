@@ -63,27 +63,31 @@ public class ModelGroupEditPart extends ConnectableEditPart
   
   protected void refreshVisuals()
   {
+    boolean isReadOnly = false;
     GenericGroupFigure modelGroupFigure = (GenericGroupFigure)getFigure();
+    
+    XSDModelGroupAdapter adapter = (XSDModelGroupAdapter) getModel();
+    isReadOnly = adapter.isReadOnly();
+    
     switch (getXSDModelGroup().getCompositor().getValue())
     {
       case XSDCompositor.ALL:
       {
-        modelGroupFigure.getIconFigure().image = ModelGroupFigure.ALL_ICON_IMAGE;
+        modelGroupFigure.getIconFigure().image = isReadOnly ? ModelGroupFigure.ALL_ICON_DISABLED_IMAGE :ModelGroupFigure.ALL_ICON_IMAGE;
         break;
       }
       case XSDCompositor.CHOICE:
       {
-        modelGroupFigure.getIconFigure().image = ModelGroupFigure.CHOICE_ICON_IMAGE;
+        modelGroupFigure.getIconFigure().image = isReadOnly ? ModelGroupFigure.CHOICE_ICON_DISABLED_IMAGE : ModelGroupFigure.CHOICE_ICON_IMAGE;
         break;
       }
       case XSDCompositor.SEQUENCE:
       {
-        modelGroupFigure.getIconFigure().image = ModelGroupFigure.SEQUENCE_ICON_IMAGE;
+        modelGroupFigure.getIconFigure().image = isReadOnly ? ModelGroupFigure.SEQUENCE_ICON_DISABLED_IMAGE : ModelGroupFigure.SEQUENCE_ICON_IMAGE;
         break;
       }
     }
-
-    XSDModelGroupAdapter adapter = (XSDModelGroupAdapter) getModel();
+    
 //    String occurenceDescription = adapter.getNameAnnotationToolTipString();
 //    modelGroupFigure.getIconFigure().setToolTip(occurenceDescription);
 

@@ -79,13 +79,21 @@ public class XSDElementDeclarationAdapter extends XSDParticleAdapter implements 
   public Image getImage()
   {
     XSDElementDeclaration xsdElementDeclaration = (XSDElementDeclaration) target;
-
+    
     if (!xsdElementDeclaration.isElementDeclarationReference())
     {
+      if (isReadOnly())
+      {
+        return XSDEditorPlugin.getPlugin().getIcon("obj16/XSDElementdis.gif");
+      }
       return XSDEditorPlugin.getXSDImage("icons/XSDElement.gif"); //$NON-NLS-1$
     }
     else
     {
+      if (isReadOnly())
+      {
+        return XSDEditorPlugin.getPlugin().getIcon("obj16/XSDElementRefdis.gif");
+      }        
       return XSDEditorPlugin.getXSDImage("icons/XSDElementRef.gif"); //$NON-NLS-1$
     }
   }

@@ -55,6 +55,7 @@ public class StructureFigure extends BoxFigure implements IStructureFigure
   public void refreshVisuals(Object model)
   {
     IStructure structure = (IStructure)model;
-    getNameLabel().setText(structure.getName());    
+    getNameLabel().setText(structure.getName());
+    getHeadingFigure().setIsReadOnly(structure.isReadOnly());
   }
 }

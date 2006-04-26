@@ -135,10 +135,18 @@ public abstract class XSDBaseAttributeAdapter extends XSDBaseAdapter implements 
     XSDAttributeDeclaration xsdAttributeDeclaration = getXSDAttributeDeclaration();  // don't want the resolved attribute
     if (xsdAttributeDeclaration.isAttributeDeclarationReference())
     {
+      if (isReadOnly())
+      {
+        return XSDEditorPlugin.getPlugin().getIcon("obj16/XSDAttributeRefdis.gif");
+      }
       return XSDEditorPlugin.getXSDImage("icons/XSDAttributeRef.gif"); //$NON-NLS-1$
     }
     else
     {
+      if (isReadOnly())
+      {
+        return XSDEditorPlugin.getPlugin().getIcon("obj16/XSDAttributedis.gif");
+      }
       return XSDEditorPlugin.getXSDImage("icons/XSDAttribute.gif"); //$NON-NLS-1$
     }
   }

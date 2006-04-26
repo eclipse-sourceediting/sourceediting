@@ -50,7 +50,8 @@ public class AttributeGroupDefinitionEditPart extends ConnectableEditPart
   protected IFigure createFigure()
   {
     GenericGroupFigure figure = new GenericGroupFigure();
-    figure.getIconFigure().image = XSDAttributeGroupDefinitionAdapter.ATTRIBUTE_GROUP_REF_ICON_IMAGE;
+    XSDAttributeGroupDefinitionAdapter adapter = (XSDAttributeGroupDefinitionAdapter) getModel();
+    figure.getIconFigure().image = adapter.getImage();
     return figure;
   }
 

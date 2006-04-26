@@ -32,7 +32,9 @@ import org.eclipse.xsd.XSDWildcard;
 public class XSDAttributeGroupDefinitionAdapter extends XSDBaseAdapter implements IStructure, IActionProvider
 {
   public static final Image ATTRIBUTE_GROUP_REF_ICON_IMAGE = XSDEditorPlugin.getPlugin().getIcon("obj16/XSDAttributeGroupRef.gif");
+  public static final Image ATTRIBUTE_GROUP_REF_DISABLED_ICON_IMAGE = XSDEditorPlugin.getPlugin().getIcon("obj16/XSDAttributeGroupRefdis.gif");
   public static final Image ATTRIBUTE_GROUP_ICON_IMAGE = XSDEditorPlugin.getPlugin().getIcon("obj16/XSDAttributeGroup.gif");
+  public static final Image ATTRIBUTE_GROUP_DISABLED_ICON_IMAGE = XSDEditorPlugin.getPlugin().getIcon("obj16/XSDAttributeGroupdis.gif");
 	  
   public XSDAttributeGroupDefinitionAdapter()
   {
@@ -49,11 +51,11 @@ public class XSDAttributeGroupDefinitionAdapter extends XSDBaseAdapter implement
     XSDAttributeGroupDefinition xsdAttributeGroupDefinition = (XSDAttributeGroupDefinition) target;
     if (xsdAttributeGroupDefinition.isAttributeGroupDefinitionReference())
     {
-      return ATTRIBUTE_GROUP_REF_ICON_IMAGE;
+      return isReadOnly() ? ATTRIBUTE_GROUP_REF_DISABLED_ICON_IMAGE : ATTRIBUTE_GROUP_REF_ICON_IMAGE;
     }
     else
     {
-      return ATTRIBUTE_GROUP_ICON_IMAGE;
+      return isReadOnly() ? ATTRIBUTE_GROUP_DISABLED_ICON_IMAGE : ATTRIBUTE_GROUP_ICON_IMAGE;
     }
   }
 

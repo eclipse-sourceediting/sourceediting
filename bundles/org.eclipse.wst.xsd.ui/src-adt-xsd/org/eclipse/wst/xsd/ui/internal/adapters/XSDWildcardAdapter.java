@@ -23,6 +23,9 @@ import org.w3c.dom.Element;
 
 public class XSDWildcardAdapter extends XSDParticleAdapter implements IField
 {
+//  public static final Image ANYELEMENT_ICON = XSDEditorPlugin.getPlugin().getIcon("obj16/XSDAny.gif"); //$NON-NLS-1$
+//  public static final Image ANYELEMENT_DISABLED_ICON = XSDEditorPlugin.getPlugin().getIcon("obj16/XSDAny.gif"); //$NON-NLS-1$
+  
   public XSDWildcardAdapter()
   {
 

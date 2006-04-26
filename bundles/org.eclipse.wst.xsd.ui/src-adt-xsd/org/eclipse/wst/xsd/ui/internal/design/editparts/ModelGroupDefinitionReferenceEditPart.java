@@ -24,6 +24,8 @@ import org.eclipse.xsd.XSDModelGroupDefinition;
 
 public class ModelGroupDefinitionReferenceEditPart extends ConnectableEditPart
 {
+  GenericGroupFigure figure;
+  
   public ModelGroupDefinitionReferenceEditPart()
   {
     super();
@@ -31,10 +33,15 @@ public class ModelGroupDefinitionReferenceEditPart extends ConnectableEditPart
 
   protected IFigure createFigure()
   {
-    GenericGroupFigure figure = new GenericGroupFigure();
+    figure = new GenericGroupFigure();
+    return figure;
+  }
+  
+  protected void refreshVisuals()
+  {
+    super.refreshVisuals();
     XSDModelGroupDefinitionAdapter adapter = (XSDModelGroupDefinitionAdapter)getModel();
     figure.getIconFigure().image = adapter.getImage();
-    return figure;
   }
 
   protected List getModelChildren()

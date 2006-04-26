@@ -358,6 +358,10 @@ public class XSDComplexTypeDefinitionAdapter extends XSDTypeDefinitionAdapter im
 
   public Image getImage()
   {
+    if (isReadOnly())
+    {
+      return XSDEditorPlugin.getPlugin().getIcon("obj16/XSDComplexTypedis.gif"); //$NON-NLS-1$
+    }
     return XSDEditorPlugin.getPlugin().getIcon("obj16/XSDComplexType.gif"); //$NON-NLS-1$
   }
 
