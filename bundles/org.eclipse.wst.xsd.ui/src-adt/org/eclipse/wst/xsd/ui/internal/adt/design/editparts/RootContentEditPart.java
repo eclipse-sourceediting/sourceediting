@@ -87,7 +87,11 @@ public class RootContentEditPart extends AbstractGraphicalEditPart
       IADTObject focusObject = null;
       if (obj instanceof IStructure)
       {
-        focusObject = (IStructure)obj;
+        if (obj instanceof IGraphElement)
+        {
+          if (((IGraphElement)obj).isFocusAllowed())
+            focusObject = (IStructure)obj;          
+        }
       }
       else if (obj instanceof IField)
       {

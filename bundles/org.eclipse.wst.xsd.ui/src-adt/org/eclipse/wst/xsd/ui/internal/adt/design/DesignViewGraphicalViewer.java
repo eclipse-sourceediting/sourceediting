@@ -24,6 +24,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.RootContentEditPart;
+import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IGraphElement;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IModelProxy;
 import org.eclipse.wst.xsd.ui.internal.adt.editor.CommonSelectionManager;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IADTObject;
@@ -66,7 +67,13 @@ public class DesignViewGraphicalViewer extends ScrollingGraphicalViewer implemen
         if (((getInput() instanceof IModel) && (event.getSource() instanceof ADTContentOutlinePage)) ||
             (!(getInput() instanceof IModel)))
         {
-          ((RootContentEditPart) getContents()).setInput(selectedObject);
+          if (selectedObject instanceof IGraphElement)
+          {
+            if (((IGraphElement)selectedObject).isFocusAllowed())
+            {
+              ((RootContentEditPart) getContents()).setInput(selectedObject);              
+            }
+          }
         }
       }
       else if (selectedObject instanceof IField)
