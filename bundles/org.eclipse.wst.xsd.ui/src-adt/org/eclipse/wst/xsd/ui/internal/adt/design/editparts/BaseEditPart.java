@@ -21,6 +21,10 @@ import org.eclipse.gef.editparts.ScalableRootEditPart;
 import org.eclipse.gef.editparts.ZoomListener;
 import org.eclipse.gef.editparts.ZoomManager;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IActionProvider;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IFeedbackHandler;
 import org.eclipse.wst.xsd.ui.internal.adt.design.figures.IFigureFactory;
@@ -158,4 +162,22 @@ public abstract class BaseEditPart extends AbstractGraphicalEditPart implements 
     refreshVisuals();
   }
 
+  public IEditorPart getEditorPart()
+  {
+    IEditorPart editorPart = null;
+    IWorkbench workbench = PlatformUI.getWorkbench();
+    if (workbench != null)
+    {
+      IWorkbenchWindow workbenchWindow = workbench.getActiveWorkbenchWindow();
+      if (workbenchWindow != null)
+      {
+        if (workbenchWindow.getActivePage() != null)
+        {
+          editorPart = workbenchWindow.getActivePage().getActiveEditor();
+        }
+      }
+    }
+//    Assert.isNotNull(editorPart);
+    return editorPart;
+  }
 }
