@@ -85,7 +85,7 @@
         
     <template id="template.wst.web">
       <label>%SIMPLE_WEB_TEMPLATE</label>
-     <!-- <fixed facet="wst.web"/> -->
+      <fixed facet="wst.web"/>
     </template>
 
   </extension>	
