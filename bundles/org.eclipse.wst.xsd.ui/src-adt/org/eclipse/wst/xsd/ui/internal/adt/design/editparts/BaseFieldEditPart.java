@@ -36,6 +36,7 @@ import org.eclipse.wst.xsd.ui.internal.adt.design.editpolicies.ADTSelectionFeedb
 import org.eclipse.wst.xsd.ui.internal.adt.design.editpolicies.IADTUpdateCommand;
 import org.eclipse.wst.xsd.ui.internal.adt.design.figures.IFieldFigure;
 import org.eclipse.wst.xsd.ui.internal.adt.editor.Messages;
+import org.eclipse.wst.xsd.ui.internal.adt.facade.IADTObject;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IField;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IType;
 import org.eclipse.wst.xsd.ui.internal.design.editpolicies.GraphNodeDragTracker;
@@ -189,6 +190,10 @@ public class BaseFieldEditPart extends BaseTypeConnectingEditPart implements INa
   
   public void performRequest(Request request)
   {  
+    if (((IADTObject)getModel()).isReadOnly())
+    {
+      return;
+    }
     if (request.getType() == RequestConstants.REQ_DIRECT_EDIT||
         request.getType() == RequestConstants.REQ_OPEN)
     {
