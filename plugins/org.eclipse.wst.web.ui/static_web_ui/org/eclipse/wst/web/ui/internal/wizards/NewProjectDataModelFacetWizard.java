@@ -151,6 +151,13 @@ public abstract class NewProjectDataModelFacetWizard extends AddRemoveFacetsWiza
 			IDataModel facetModel = (IDataModel) iterator.next();
 			facetVersions.add(facetModel.getProperty(IFacetDataModelProperties.FACET_VERSION));
 		}
+		
+		FacetActionMap mapAction = (FacetActionMap) model.getProperty(FACET_ACTION_MAP);
+        for (Iterator iterator = mapAction.values().iterator(); iterator.hasNext();) {
+            IFacetedProject.Action action = (IFacetedProject.Action) iterator.next();            
+            facetVersions.add(action.getProjectFacetVersion());
+        }
+
 		facetsSelectionPage.panel.setSelectedProjectFacets(facetVersions);
 	}
 
