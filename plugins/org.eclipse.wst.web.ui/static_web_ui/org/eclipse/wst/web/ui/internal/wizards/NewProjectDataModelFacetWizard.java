@@ -157,8 +157,8 @@ public abstract class NewProjectDataModelFacetWizard extends AddRemoveFacetsWiza
             IFacetedProject.Action action = (IFacetedProject.Action) iterator.next();            
             facetVersions.add(action.getProjectFacetVersion());
         }
-
-		facetsSelectionPage.panel.setSelectedProjectFacets(facetVersions);
+        
+		facetsSelectionPage.setInitialSelection(facetVersions);
 	}
 
 	
