@@ -80,7 +80,7 @@ public class JSPJavaHyperlinkDetector implements IHyperlinkDetector {
 						}
 					}
 
-					if (range != null && file != null && file.exists()) {
+					if (range != null && file != null) {
 						jspOffset = jspTranslation.getJspOffset(range.getOffset());
 						if (jspOffset >= 0) {
 							link = new WorkspaceFileHyperlink(region, file, new Region(jspOffset, range.getLength()));

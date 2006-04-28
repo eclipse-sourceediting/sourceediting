@@ -141,27 +141,18 @@ public class TaglibHyperlinkDetector implements IHyperlinkDetector {
 	}
 
 	/**
-	 * Returns an IFile from the given uri if possible, null if cannot find
-	 * file from uri.
+	 * Returns an IFile from the given uri.
 	 * 
 	 * @param fileString
-	 *            file system or workspace-relative path
-	 * @return returns IFile if fileString exists in the workspace
+	 *            workspace-relative path to an existing file in the workspace
+	 * @return returns existing IFile
 	 */
 	private IFile getFile(String fileString) {
-		IFile file = null;
-
-		if (fileString != null) {
-			IFile[] files = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocation(new Path(fileString));
-			for (int i = 0; i < files.length && file == null; i++)
-				if (files[i].exists())
-					file = files[i];
-		}
-		if (file == null) {
-			file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(fileString));
-		}
-
-		return file;
+		/*
+		 * Note at this point, fileString is already guaranteed to be pointing
+		 * to an existing file in the workspace, so we can just call getFile.
+		 */
+		return ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(fileString));
 	}
 
 	/**
@@ -183,7 +174,7 @@ public class TaglibHyperlinkDetector implements IHyperlinkDetector {
 
 			// try to locate the file in the workspace
 			IFile file = getFile(uriString);
-			if (file != null && file.exists()) {
+			if (file != null) {
 				// this is a WorkspaceFileHyperlink since file exists in
 				// workspace
 				link = new WorkspaceFileHyperlink(hyperlinkRegion, file);

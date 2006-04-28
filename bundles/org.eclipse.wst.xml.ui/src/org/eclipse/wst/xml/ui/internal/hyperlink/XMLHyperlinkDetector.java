@@ -74,7 +74,7 @@ public class XMLHyperlinkDetector implements IHyperlinkDetector {
 			if (systemFile != null) {
 				String systemPath = systemFile.getPath();
 				IFile file = getFile(systemPath);
-				if (file != null && file.exists()) {
+				if (file != null) {
 					// this is a WorkspaceFileHyperlink since file exists in
 					// workspace
 					link = new WorkspaceFileHyperlink(hyperlinkRegion, file);
@@ -481,7 +481,7 @@ public class XMLHyperlinkDetector implements IHyperlinkDetector {
 		else {
 			File file = getFileFromUriString(uriString);
 			if (file != null)
-				isValid = file.exists();
+				isValid = file.isFile();
 		}
 		return isValid;
 	}
