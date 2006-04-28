@@ -35,12 +35,35 @@ public class CSSFilesPreferencePage extends XMLFilesPreferencePage {
 	}
 
 	protected Control createContents(Composite parent) {
-		Control c = super.createContents(parent);
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(c, IHelpContextIds.CSS_PREFWEBX_FILES_HELPID);
-		return c;
+		Composite scrolledComposite = createScrolledComposite(parent);
+		createContentsForCreatingOrSavingGroup(scrolledComposite);
+		createContentsForCreatingGroup(scrolledComposite);
+
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(scrolledComposite, IHelpContextIds.CSS_PREFWEBX_FILES_HELPID);
+		
+		setSize(scrolledComposite);
+		loadPreferences();
+		return scrolledComposite;
 	}
 
 	protected IContentType getContentType() {
 		return Platform.getContentTypeManager().getContentType(ContentTypeIdForCSS.ContentTypeID_CSS);
+	}
+	
+	protected void initializeValues() {
+		initializeValuesForCreatingOrSavingGroup();
+		initializeValuesForCreatingGroup();
+	}
+	
+	protected void performDefaults() {
+		performDefaultsForCreatingOrSavingGroup();
+		performDefaultsForCreatingGroup();
+
+        updateApplyButton();
+	}
+	
+	protected void storeValues() {
+		storeValuesForCreatingOrSavingGroup();
+		storeValuesForCreatingGroup();
 	}
 }
