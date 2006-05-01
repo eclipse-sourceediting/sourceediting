@@ -37,5 +37,10 @@ public class XSDAttributeDeclarationAdapter extends XSDBaseAttributeAdapter impl
   {
     Adapter adapter = XSDAdapterFactory.getInstance().adapt(getXSDAttributeDeclaration().getSchema());
     return (IModel)adapter;
+  }
+
+  public boolean isFocusAllowed()
+  {
+    return isGlobal();
   }  
 }

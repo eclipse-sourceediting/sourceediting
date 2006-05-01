@@ -19,6 +19,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.BaseSelectionAction;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.DeleteAction;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.ShowPropertiesViewAction;
+import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IGraphElement;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IField;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IModel;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IType;
@@ -32,7 +33,7 @@ import org.eclipse.xsd.XSDTypeDefinition;
 
 // a base adapter for reuse by an AttributeUse and AttributeDeclaration
 //
-public abstract class XSDBaseAttributeAdapter extends XSDBaseAdapter implements IField
+public abstract class XSDBaseAttributeAdapter extends XSDBaseAdapter implements IField, IGraphElement
 {
   protected abstract XSDAttributeDeclaration getXSDAttributeDeclaration();
   protected abstract XSDAttributeDeclaration getResolvedXSDAttributeDeclaration();
@@ -199,5 +200,9 @@ public abstract class XSDBaseAttributeAdapter extends XSDBaseAdapter implements 
     return (IModel)adapter;
   }  
 
+  public boolean isFocusAllowed()
+  {
+    return false;
+  }
 }
 
