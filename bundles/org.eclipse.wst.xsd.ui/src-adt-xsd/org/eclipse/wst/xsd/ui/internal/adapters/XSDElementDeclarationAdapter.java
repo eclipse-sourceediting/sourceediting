@@ -21,6 +21,7 @@ import org.eclipse.wst.xsd.ui.internal.adt.actions.DeleteAction;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.ShowPropertiesViewAction;
 import org.eclipse.wst.xsd.ui.internal.adt.design.IAnnotationProvider;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IActionProvider;
+import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IGraphElement;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IField;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IModel;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IType;
@@ -40,7 +41,7 @@ import org.eclipse.xsd.XSDTypeDefinition;
 import org.eclipse.xsd.util.XSDConstants;
 import org.w3c.dom.Element;
 
-public class XSDElementDeclarationAdapter extends XSDParticleAdapter implements IField, IActionProvider, IAnnotationProvider
+public class XSDElementDeclarationAdapter extends XSDParticleAdapter implements IField, IActionProvider, IAnnotationProvider, IGraphElement
 {
   protected XSDElementDeclaration getXSDElementDeclaration()
   {
@@ -285,5 +286,10 @@ public class XSDElementDeclarationAdapter extends XSDParticleAdapter implements 
   {
     Adapter adapter = XSDAdapterFactory.getInstance().adapt(getXSDElementDeclaration().getSchema());
     return (IModel)adapter;
+  }
+
+  public boolean isFocusAllowed()
+  {
+    return isGlobal();
   }
 }
