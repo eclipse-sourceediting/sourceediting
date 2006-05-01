@@ -12,6 +12,7 @@ package org.eclipse.wst.xsd.ui.internal.design.editparts;
 
 import java.util.Collections;
 import java.util.List;
+
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.IFigure;
@@ -35,14 +36,12 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDBaseAdapter;
-import org.eclipse.wst.xsd.ui.internal.adapters.XSDComplexTypeDefinitionAdapter;
-import org.eclipse.wst.xsd.ui.internal.adapters.XSDElementDeclarationAdapter;
-import org.eclipse.wst.xsd.ui.internal.adapters.XSDModelGroupDefinitionAdapter;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDSchemaDirectiveAdapter;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.SetInputToGraphView;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.BaseEditPart;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.RootContentEditPart;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IFeedbackHandler;
+import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IGraphElement;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editpolicies.SimpleDirectEditPolicy;
 import org.eclipse.wst.xsd.ui.internal.adt.typeviz.design.figures.FieldFigure;
 import org.eclipse.wst.xsd.ui.internal.design.editpolicies.SelectionHandlesEditPolicyImpl;
@@ -211,16 +210,19 @@ public class TopLevelComponentEditPart extends BaseEditPart implements IFeedback
     {
 
       Object model = getModel();
-      if (model instanceof XSDComplexTypeDefinitionAdapter || model instanceof XSDElementDeclarationAdapter || model instanceof XSDModelGroupDefinitionAdapter)
+      if (model instanceof IGraphElement)
       {
-        if (request instanceof LocationRequest)
+        if (((IGraphElement)model).isFocusAllowed())
         {
-          LocationRequest locationRequest = (LocationRequest) request;
-          Point p = locationRequest.getLocation();
-
-          if (hitTest(labelHolder, p))
+          if (request instanceof LocationRequest)
           {
-            performDrillDownAction();
+            LocationRequest locationRequest = (LocationRequest) request;
+            Point p = locationRequest.getLocation();
+
+            if (hitTest(labelHolder, p))
+            {
+              performDrillDownAction();
+            }
           }
         }
       }
