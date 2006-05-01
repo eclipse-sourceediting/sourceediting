@@ -46,6 +46,7 @@ public class MoveAction extends Action
       XSDConcreteComponent concreteComponent = (XSDConcreteComponent) i.next();
       selectedNodes.add(concreteComponent.getElement());
     }
+    if (parentComponent == null) return;
     parentNode = parentComponent.getElement();
     nextRefChild = nextRefChildComponent != null ? nextRefChildComponent.getElement() : null;
     previousRefChild = previousRefChildComponent != null ? previousRefChildComponent.getElement() : null;
@@ -71,7 +72,7 @@ public class MoveAction extends Action
   {
     boolean result = true;
 
-    if (nextRefComponent instanceof XSDAttributeDeclaration || previousRefComponent instanceof XSDAttributeDeclaration)
+    if (nextRefComponent instanceof XSDAttributeDeclaration || previousRefComponent instanceof XSDAttributeDeclaration || parentModelGroup == null)
       return false;
 
     return result;
