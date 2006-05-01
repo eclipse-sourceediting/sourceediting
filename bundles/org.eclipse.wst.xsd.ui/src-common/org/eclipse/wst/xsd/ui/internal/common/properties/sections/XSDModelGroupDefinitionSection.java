@@ -96,7 +96,7 @@ public class XSDModelGroupDefinitionSection extends AbstractSection
       data.horizontalAlignment = GridData.FILL;
       nameText = getWidgetFactory().createText(composite, ""); //$NON-NLS-1$
       nameText.setLayoutData(data);
-      nameText.addListener(SWT.Modify, this);
+      applyAllListeners(nameText);
     }
   }
 
@@ -258,5 +258,12 @@ public class XSDModelGroupDefinitionSection extends AbstractSection
         }
       }
     }
+  }
+  
+  public void dispose()
+  {
+    if (nameText != null && !nameText.isDisposed())
+      removeListeners(nameText);
+    super.dispose();
   }
 }

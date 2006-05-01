@@ -12,7 +12,6 @@ package org.eclipse.wst.xsd.ui.internal.common.properties.sections;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.Color;
@@ -39,10 +38,9 @@ public abstract class CommonDirectivesSection extends AbstractSection
   public void doHandleEvent(Event event)
   {
     errorText.setText(""); //$NON-NLS-1$
-    if (event.type == SWT.Modify)
+
+    if (event.widget == schemaLocationText)
     {
-      if (event.widget == schemaLocationText)
-      {
         String errorMessage = ""; //$NON-NLS-1$
         boolean isValidSchemaLocation = true;
         String xsdModelFile = schemaLocationText.getText();
@@ -136,7 +134,6 @@ public abstract class CommonDirectivesSection extends AbstractSection
           }
         }
       }
-    }
   }
   
   protected void handleSchemaLocationChange(String schemaFileString, String namespace, XSDSchema externalSchema)
