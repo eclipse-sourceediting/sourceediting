@@ -208,6 +208,12 @@
 	    <input type="org.eclipse.xsd.XSDWildcard">
 	    </input>
 	 </propertySection>
+	 <propertySection tab="property.tab.general" 
+	 	class="org.eclipse.wst.xsd.ui.internal.common.properties.sections.XSDImportSection" 
+	 	id="prop.section.general">
+	    <input type="org.eclipse.xsd.XSDImport">
+	    </input>
+	 </propertySection>
   </propertySections>
 </extension>
 
