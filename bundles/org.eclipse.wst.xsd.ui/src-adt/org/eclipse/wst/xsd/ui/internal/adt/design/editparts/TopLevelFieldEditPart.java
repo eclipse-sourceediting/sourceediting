@@ -16,9 +16,6 @@ import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.RequestConstants;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
-import org.eclipse.gef.requests.LocationRequest;
-import org.eclipse.wst.xsd.ui.internal.adt.design.directedit.LabelCellEditorLocator;
-import org.eclipse.wst.xsd.ui.internal.adt.design.directedit.LabelEditManager;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editpolicies.ADTDirectEditPolicy;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editpolicies.ADTSelectionFeedbackEditPolicy;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IField;
@@ -87,19 +84,19 @@ public class TopLevelFieldEditPart extends BoxEditPart implements INamedEditPart
     if (request.getType() == RequestConstants.REQ_DIRECT_EDIT||
         request.getType() == RequestConstants.REQ_OPEN)
     {
-      if (request instanceof LocationRequest)
-      {
-        LocationRequest locationRequest = (LocationRequest)request;
-        Point p = locationRequest.getLocation();
-       
-        if (hitTest(getNameLabelFigure(), p))
-        {
-          LabelEditManager manager = new LabelEditManager(this, new LabelCellEditorLocator(this, p));
-          NameUpdateCommandWrapper wrapper = new NameUpdateCommandWrapper();
-          adtDirectEditPolicy.setUpdateCommand(wrapper);
-          manager.show();
-        }
-      }
+//      if (request instanceof LocationRequest)
+//      {
+//        LocationRequest locationRequest = (LocationRequest)request;
+//        Point p = locationRequest.getLocation();
+//       
+//        if (hitTest(getNameLabelFigure(), p))
+//        {
+//          LabelEditManager manager = new LabelEditManager(this, new LabelCellEditorLocator(this, p));
+//          NameUpdateCommandWrapper wrapper = new NameUpdateCommandWrapper();
+//          adtDirectEditPolicy.setUpdateCommand(wrapper);
+//          manager.show();
+//        }
+//      }
     }
   }
 }
