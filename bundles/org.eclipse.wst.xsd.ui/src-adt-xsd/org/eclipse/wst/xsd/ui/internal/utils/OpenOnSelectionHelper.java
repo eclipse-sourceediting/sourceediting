@@ -170,6 +170,18 @@ public class OpenOnSelectionHelper
     {
       objects = schema.getTypeDefinitions();
     }
+    else if (comp instanceof XSDAttributeGroupDefinition)
+    {
+      objects = schema.getAttributeGroupDefinitions();
+    }
+    else if (comp instanceof XSDIdentityConstraintDefinition)
+    {
+      objects = schema.getIdentityConstraintDefinitions();
+    }
+    else if (comp instanceof XSDModelGroupDefinition)
+    {
+      objects = schema.getModelGroupDefinitions();
+    }
 
     if (objects != null)
     {

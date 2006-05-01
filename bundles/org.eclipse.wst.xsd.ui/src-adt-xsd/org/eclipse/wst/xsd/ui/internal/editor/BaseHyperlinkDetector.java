@@ -245,10 +245,13 @@ public abstract class BaseHyperlinkDetector implements IHyperlinkDetector
             int regLength = valueRegion.getTextLength();
             String attValue = att.getValueRegionText();
   
-            // Do not include quotes in attribute value region.
+            // Do not include quotes in attribute value region and only
+            // underline the actual value, not the quotes.
+            
             if (StringUtils.isQuoted(attValue))
             {
               regLength = regLength - 2;
+              regOffset++;
             }
             hyperRegion = new Region(regOffset, regLength);
           }
