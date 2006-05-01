@@ -25,6 +25,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.wst.xsd.ui.internal.editor.Messages;
 
 public class NewComponentDialog extends Dialog implements ModifyListener
 {
@@ -104,7 +105,7 @@ public class NewComponentDialog extends Dialog implements ModifyListener
     composite.setLayoutData(gdFill);
 
     Label nameLabel = new Label(composite, SWT.NONE);
-    nameLabel.setText("Name:");//XSDEditorPlugin.getXSDString("_UI_LABEL_NAME"));
+    nameLabel.setText(Messages.UI_LABEL_NAME);
 
     nameField = new Text(composite, SWT.SINGLE | SWT.BORDER);
     GridData gd= new GridData();
