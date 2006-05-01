@@ -581,9 +581,13 @@ public class JSPTranslation implements IJSPTranslation {
 		IJavaElement[] result = EMTPY_RESULT_SET;
 		try {
 			ICompilationUnit cu = getCompilationUnit();
-			if (cu != null && cu.getBuffer().getLength() > 0 && javaPositionStart > 0 && javaPositionEnd >= javaPositionStart) {
+			if (cu != null) {
 				synchronized (cu) {
-					result = cu.codeSelect(javaPositionStart, javaPositionEnd - javaPositionStart);
+					int cuDocLength = cu.getBuffer().getLength();
+					int javaLength = javaPositionEnd - javaPositionStart;
+					if (cuDocLength > 0 && javaPositionStart >= 0 && javaLength >= 0 && javaPositionEnd < cuDocLength) {
+						result = cu.codeSelect(javaPositionStart, javaLength);
+					}
 				}
 			}
 
