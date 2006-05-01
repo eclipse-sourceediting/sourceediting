@@ -156,6 +156,9 @@ public class DocumentRegionProcessor extends DirtyRegionProcessor {
 		if (validatorStrategy != null) {
 			validatorStrategy.setDocument(doc);
 		}
+		if (fSpellcheckStrategy != null) {
+			fSpellcheckStrategy.setDocument(doc);
+		}
 	}
 
 	/**
@@ -166,12 +169,14 @@ public class DocumentRegionProcessor extends DirtyRegionProcessor {
 
 			cancel();
 
-
 			IReconcilingStrategy validatorStrategy = getValidatorStrategy();
 
 			if (validatorStrategy != null) {
 				if (validatorStrategy instanceof IReleasable)
 					((IReleasable) validatorStrategy).release();
+			}
+			if (fSpellcheckStrategy != null) {
+				fSpellcheckStrategy.setDocument(null);
 			}
 		}
 		super.uninstall();

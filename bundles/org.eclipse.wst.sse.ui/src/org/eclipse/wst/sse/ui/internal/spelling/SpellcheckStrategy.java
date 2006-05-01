@@ -27,6 +27,7 @@ import org.eclipse.jface.text.IDocumentExtension3;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jface.text.Position;
+import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.jface.text.reconciler.DirtyRegion;
 import org.eclipse.jface.text.reconciler.IReconcileResult;
@@ -34,6 +35,8 @@ import org.eclipse.jface.text.reconciler.IReconcileStep;
 import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.IAnnotationModelExtension;
 import org.eclipse.jface.text.source.ISourceViewer;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.eclipse.ui.texteditor.spelling.ISpellingProblemCollector;
@@ -58,6 +61,21 @@ import org.eclipse.wst.sse.ui.internal.reconcile.TemporaryAnnotation;
  * @since 1.5
  */
 public class SpellcheckStrategy extends StructuredTextReconcilingStrategy {
+
+	class SpellCheckPreferenceListener implements IPropertyChangeListener {
+		private boolean isInterestingProperty(Object property) {
+			return SpellingService.PREFERENCE_SPELLING_ENABLED.equals(property) || SpellingService.PREFERENCE_SPELLING_ENGINE.equals(property);
+		}
+
+		public void propertyChange(PropertyChangeEvent event) {
+			if (isInterestingProperty(event.getProperty())) {
+				if (event.getOldValue() == null || event.getNewValue() == null || !event.getNewValue().equals(event.getOldValue())) {
+					reconcile();
+				}
+			}
+		}
+	}
+
 	private class SpellingProblemCollector implements ISpellingProblemCollector {
 		List annotations = new ArrayList();
 
@@ -96,7 +114,9 @@ public class SpellcheckStrategy extends StructuredTextReconcilingStrategy {
 			if (_DEBUG_SPELLING) {
 				Logger.log(Logger.INFO_DEBUG, "Spell checking [" + subRegion.getOffset() + "-" + (subRegion.getOffset() + subRegion.getLength()) + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			}
-			service.check(getDocument(), new IRegion[]{subRegion}, fSpellingContext, fProblemCollector, getProgressMonitor());
+			if (getDocument() != null) {
+				service.check(getDocument(), new IRegion[]{subRegion}, fSpellingContext, fProblemCollector, getProgressMonitor());
+			}
 			IReconcileResult[] results = fProblemCollector.getResults();
 			fProblemCollector.clear();
 			return results;
@@ -108,13 +128,13 @@ public class SpellcheckStrategy extends StructuredTextReconcilingStrategy {
 	static final String ANNOTATION_TYPE = "org.eclipse.wst.sse.ui.temp.spelling"; //$NON-NLS-1$
 
 	private static final String EXTENDED_BUILDER_TYPE = "spellingsupport"; //$NON-NLS-1$
-
 	static final String KEY_CONTENT_TYPE = "org.eclipse.wst.sse.ui.temp.spelling"; //$NON-NLS-1$
+
 	private String fContentTypeId = null;
 
 	private String fDocumentPartitioning;
 
-	private SpellingProblemCollector fProblemCollector = new SpellingProblemCollector();
+	SpellingProblemCollector fProblemCollector = new SpellingProblemCollector();
 
 	/*
 	 * Keying our Temporary Annotations based on the partition doesn't help
@@ -128,8 +148,10 @@ public class SpellcheckStrategy extends StructuredTextReconcilingStrategy {
 	 * super(ISourceViewer)->super.init()->createReconcileSteps()
 	 */
 	ReconcileAnnotationKey fReconcileAnnotationKey;
+	private IPropertyChangeListener fSpellCheckPreferenceListener;
 
 	SpellingContext fSpellingContext;
+
 	/*
 	 * Value initialized through
 	 * 
@@ -153,6 +175,8 @@ public class SpellcheckStrategy extends StructuredTextReconcilingStrategy {
 			defs.addAll(Arrays.asList(StringUtils.unpack(definitions[i])));
 		}
 		fSupportedPartitionTypes = (String[]) defs.toArray(new String[defs.size()]);
+
+		fSpellCheckPreferenceListener = new SpellCheckPreferenceListener();
 	}
 
 	protected boolean containsStep(IReconcileStep step) {
@@ -242,6 +266,14 @@ public class SpellcheckStrategy extends StructuredTextReconcilingStrategy {
 		return supported;
 	}
 
+	void reconcile() {
+		IDocument document = getDocument();
+		if (document != null) {
+			IRegion documentRegion = new Region(0, document.getLength());
+			reconcile(documentRegion);
+		}
+	}
+
 	/**
 	 * @see org.eclipse.jface.text.reconciler.IReconcilingStrategy#reconcile(org.eclipse.jface.text.reconciler.DirtyRegion,
 	 *      org.eclipse.jface.text.IRegion)
@@ -255,36 +287,38 @@ public class SpellcheckStrategy extends StructuredTextReconcilingStrategy {
 		StructuredReconcileStep structuredStep = (StructuredReconcileStep) fSpellingStep;
 		IAnnotationModel annotationModel = getAnnotationModel();
 
-		try {
-			ITypedRegion[] partitions = TextUtilities.computePartitioning(getDocument(), getDocumentPartitioning(), dirtyRegion.getOffset(), dirtyRegion.getLength(), true);
-			for (int i = 0; i < partitions.length; i++) {
-				if (isSupportedPartitionType(partitions[i].getType())) {
-					annotationsToRemove = getSpellingAnnotationsToRemove(partitions[i]);
-					annotationsToAdd = structuredStep.reconcile(dirtyRegion, partitions[i]);
+		IDocument document = getDocument();
+		if (document != null) {
+			try {
+				ITypedRegion[] partitions = TextUtilities.computePartitioning(document, getDocumentPartitioning(), dirtyRegion.getOffset(), dirtyRegion.getLength(), true);
+				for (int i = 0; i < partitions.length; i++) {
+					if (isSupportedPartitionType(partitions[i].getType())) {
+						annotationsToRemove = getSpellingAnnotationsToRemove(partitions[i]);
+						annotationsToAdd = structuredStep.reconcile(dirtyRegion, partitions[i]);
 
-					if (annotationModel instanceof IAnnotationModelExtension) {
-						IAnnotationModelExtension modelExtension = (IAnnotationModelExtension) annotationModel;
-						Map annotationsToAddMap = new HashMap();
-						for (int j = 0; j < annotationsToAdd.length; j++) {
-							annotationsToAddMap.put(annotationsToAdd[j], ((TemporaryAnnotation) annotationsToAdd[j]).getPosition());
+						if (annotationModel instanceof IAnnotationModelExtension) {
+							IAnnotationModelExtension modelExtension = (IAnnotationModelExtension) annotationModel;
+							Map annotationsToAddMap = new HashMap();
+							for (int j = 0; j < annotationsToAdd.length; j++) {
+								annotationsToAddMap.put(annotationsToAdd[j], ((TemporaryAnnotation) annotationsToAdd[j]).getPosition());
+							}
+							modelExtension.replaceAnnotations(annotationsToRemove, annotationsToAddMap);
 						}
-						modelExtension.replaceAnnotations(annotationsToRemove, annotationsToAddMap);
-					}
 
-					else {
-						for (int j = 0; j < annotationsToAdd.length; j++) {
-							annotationModel.addAnnotation((TemporaryAnnotation) annotationsToAdd[j], ((TemporaryAnnotation) annotationsToAdd[j]).getPosition());
-						}
-						for (int j = 0; j < annotationsToRemove.length; j++) {
-							annotationModel.removeAnnotation(annotationsToRemove[j]);
+						else {
+							for (int j = 0; j < annotationsToAdd.length; j++) {
+								annotationModel.addAnnotation((TemporaryAnnotation) annotationsToAdd[j], ((TemporaryAnnotation) annotationsToAdd[j]).getPosition());
+							}
+							for (int j = 0; j < annotationsToRemove.length; j++) {
+								annotationModel.removeAnnotation(annotationsToRemove[j]);
+							}
 						}
 					}
 				}
 			}
+			catch (BadLocationException e) {
+			}
 		}
-		catch (BadLocationException e) {
-		}
-
 	}
 
 	/**
@@ -294,21 +328,34 @@ public class SpellcheckStrategy extends StructuredTextReconcilingStrategy {
 
 	public void reconcile(IRegion partition) {
 		DirtyRegion region = null;
-		try {
-			region = new DirtyRegion(partition.getOffset(), partition.getLength(), DirtyRegion.INSERT, getDocument().get(partition.getOffset(), partition.getLength()));
-			reconcile(region, region);
-		}
-		catch (BadLocationException e) {
-			Logger.logException(e);
+		IDocument document = getDocument();
+		if (document != null) {
+			try {
+				region = new DirtyRegion(partition.getOffset(), partition.getLength(), DirtyRegion.INSERT, document.get(partition.getOffset(), partition.getLength()));
+				reconcile(region, region);
+			}
+			catch (BadLocationException e) {
+				Logger.logException(e);
+			}
 		}
 	}
 
 	public void setDocument(IDocument document) {
-		super.setDocument(document);
-		if (fSpellingStep == null) {
-			createReconcileSteps();
+		if (getDocument() != null) {
+			EditorsUI.getPreferenceStore().removePropertyChangeListener(fSpellCheckPreferenceListener);
 		}
-		fSpellingStep.setInputModel(new DocumentAdapter(document));
+
+		super.setDocument(document);
+		if (document != null) {
+			if (fSpellingStep == null) {
+				createReconcileSteps();
+			}
+			fSpellingStep.setInputModel(new DocumentAdapter(document));
+		}
+
+		if (getDocument() != null) {
+			EditorsUI.getPreferenceStore().addPropertyChangeListener(fSpellCheckPreferenceListener);
+		}
 	}
 
 	public void setDocumentPartitioning(String partitioning) {
