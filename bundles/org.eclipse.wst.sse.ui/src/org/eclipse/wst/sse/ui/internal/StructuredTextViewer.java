@@ -270,7 +270,8 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 				setDefaultPrefixes(prefixes, t);
 
 			// add highlighter/linestyleprovider
-			if (configuration instanceof StructuredTextViewerConfiguration) {
+			// BUG139753 - only create Highlighter if we have a valid document
+			if (configuration instanceof StructuredTextViewerConfiguration && getDocument() instanceof IStructuredDocument) {
 				LineStyleProvider[] providers = ((StructuredTextViewerConfiguration) configuration).getLineStyleProviders(this, t);
 				if (providers != null) {
 					for (int j = 0; j < providers.length; ++j) {
@@ -508,6 +509,7 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 
 		if (fHighlighter != null) {
 			fHighlighter.uninstall();
+			fHighlighter = null;
 		}
 		super.handleDispose();
 
@@ -666,9 +668,7 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 			IStructuredDocument structuredDocument = (IStructuredDocument) document;
 
 			// notify highlighter
-			if (fHighlighter != null) {
-				fHighlighter.setDocument(structuredDocument);
-			}
+			updateHighlighter(structuredDocument);
 
 			// set document in the viewer-based undo manager
 			if (fUndoManager != null) {
@@ -709,6 +709,7 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 		Logger.trace("Source Editor", "StructuredTextViewer::unconfigure entry"); //$NON-NLS-1$ //$NON-NLS-2$
 		if (fHighlighter != null) {
 			fHighlighter.uninstall();
+			fHighlighter = null;
 		}
 		if (fCorrectionAssistant != null) {
 			fCorrectionAssistant.uninstall();
@@ -742,6 +743,37 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 			ITextSelection selection = new TextSelection(event.getOffset(), event.getLength());
 			setSelection(selection, true);
 		}
+	}
+	
+	private void updateHighlighter(IStructuredDocument document) {
+		// if highlighter has not been created yet, initialize and install it
+		if (fHighlighter == null && fConfiguration instanceof StructuredTextViewerConfiguration) {
+			String[] types = fConfiguration.getConfiguredContentTypes(this);
+			for (int i = 0; i < types.length; i++) {
+				String t = types[i];
+	
+				// add highlighter/linestyleprovider
+				LineStyleProvider[] providers = ((StructuredTextViewerConfiguration) fConfiguration).getLineStyleProviders(this, t);
+				if (providers != null) {
+					for (int j = 0; j < providers.length; ++j) {
+						// delay creation of highlighter till
+						// linestyleprovider needs to be added
+						// do not create highlighter if no valid document
+						if (fHighlighter == null)
+							fHighlighter = new Highlighter();
+						fHighlighter.addProvider(t, providers[j]);
+					}
+				}
+			}
+	
+			// initialize highlighter after linestyleproviders were added
+			if (fHighlighter != null) {
+				fHighlighter.setDocumentPartitioning(fConfiguration.getConfiguredDocumentPartitioning(this));
+				fHighlighter.install(this);
+			}
+		}
+		if (fHighlighter != null)
+			fHighlighter.setDocument(document);
 	}
 
 	/**
