@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:xml="http://www.w3.org/XML/1998/namespace">
+
+	<!--<xsd:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="http://www.w3.org/2001/03/xml.xsd"/>-->
+
+	<xsd:element name="multi-root">
+		<xsd:complexType>
+			<xsd:sequence maxOccurs="unbounded">
+				<xsd:element ref="root" minOccurs="0"/>
+				<xsd:element ref="뿌리성분" minOccurs="0"/>
+				<xsd:element ref="根元素" minOccurs="0"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="root" type="prose" />
+
+	<xsd:element name="뿌리성분" type="prose"/>
+
+	<xsd:element name="根元素" type="prose" />
+
+	<xsd:simpleType name="prose">
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="The quick brown fox jumps over the lazy dog"/>
+			<xsd:pattern value="这只快棕色狐狸跳过懒惰狗"/>
+			<xsd:pattern value="빠른 갈색 여우는 게으른 개에 강하한다"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+
+</xsd:schema>

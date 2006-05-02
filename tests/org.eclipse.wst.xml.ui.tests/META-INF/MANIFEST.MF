@@ -21,5 +21,6 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.views,
  org.eclipse.core.resources,
  org.eclipse.core.runtime,
- org.eclipse.wst.xml.core
+ org.eclipse.wst.xml.core,
+ org.eclipse.wst.validation
 Eclipse-LazyStart: true

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<multi-root xsi:noNamespaceSchemaLocation="international.xsd" xmlns="" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<root>The quick brown fox jumps over the lazy dog</root>
+	<뿌리성분>빠른 갈색 여우는 게으른 개에 강하한다</뿌리성분>
+	<根元素>这只快棕色狐狸跳过懒惰狗</根元素>
+	<root>这只快棕色狐狸跳过懒惰狗</root>
+	<뿌리성분>The quick brown fox jumps over the lazy dog</뿌리성분>
+	<뿌리성분>The quick brown fox jumps over the lazy dog</뿌리성분>
+	<根元素>빠른 갈색 여우는 게으른 개에 강하한다</根元素>
+</multi-root>
