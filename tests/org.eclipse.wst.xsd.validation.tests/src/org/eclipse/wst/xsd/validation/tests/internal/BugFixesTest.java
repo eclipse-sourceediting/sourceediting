@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -89,9 +89,7 @@ public class BugFixesTest extends BaseTestCase
 			    catalog.removeCatalogElement(catalogEntry);
 			}	
 		}	
-	}
-    
-   
+	} 
   }
   
   /**
@@ -179,5 +177,38 @@ public class BugFixesTest extends BaseTestCase
       fail("Unable to set the HONOUR_ALL_SCHEMA_LOCATIONS feature to true: " + e);
     }
     runTest(testfile, loglocation, idealloglocation, configuration);
+  }
+  
+  /**
+   * Test /BugFixes/XSDRegisteredWithCatalog/InvalidSchemaWithNamespaceInCatalog.xsd
+   */
+  public void testInvalidSchemaWithNamespaceInCatalog()
+  {
+    String testname = "InvalidSchemaWithNamespaceInCatalog";
+    String testfile = PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + BUGFIXES_DIR + "XSDRegisteredWithCatalog/" + testname + ".xsd";
+    String loglocation = PLUGIN_ABSOLUTE_PATH + GENERATED_RESULTS_DIR + BUGFIXES_DIR + "XSDRegisteredWithCatalog/" + testname + ".xsd-log";
+    String idealloglocation = PLUGIN_ABSOLUTE_PATH + IDEAL_RESULTS_DIR + BUGFIXES_DIR + "XSDRegisteredWithCatalog/" + testname + ".xsd-log";
+    
+    createSimpleProject("Project", new String[]{testfile});
+    
+    
+    ICatalog catalog = XMLCorePlugin.getDefault().getDefaultXMLCatalog();
+    INextCatalog[] nextCatalogs = catalog.getNextCatalogs();
+    for (int i = 0; i < nextCatalogs.length; i++)
+	{
+		INextCatalog nextCatalog = nextCatalogs[i];
+		if(XMLCorePlugin.USER_CATALOG_ID.equals(nextCatalog.getId())){
+			ICatalog userCatalog = nextCatalog.getReferencedCatalog();
+			if(userCatalog != null)
+			{
+				ICatalogEntry catalogEntry = (ICatalogEntry)userCatalog.createCatalogElement(ICatalogEntry.ENTRY_TYPE_PUBLIC);
+			    catalogEntry.setKey("http://www.eclipse.org/webtools/Catalogue");
+			    catalogEntry.setURI("platform:/resource/Project/InvalidSchemaInXMLCatalog.xsd");
+			    userCatalog.addCatalogElement(catalogEntry);
+			    runTest("platform:/resource/Project/InvalidSchemaWithNamespaceInCatalog.xsd", loglocation, idealloglocation);
+			    catalog.removeCatalogElement(catalogEntry);
+			}	
+		}	
+	}
   }
 }
