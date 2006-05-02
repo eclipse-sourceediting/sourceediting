@@ -289,7 +289,7 @@ public class ValidatorStrategy extends StructuredTextReconcilingStrategy {
 	/**
 	 * Gets IFile from current document
 	 * 
-	 * @return IFile
+	 * @return IFile the IFile, null if no such file exists
 	 */
 	private IFile getFile() {
 		IStructuredModel model = null;
@@ -302,8 +302,14 @@ public class ValidatorStrategy extends StructuredTextReconcilingStrategy {
 				// workspace root. Don't translate on-disk paths to
 				// in-workspace resources.
 				IPath basePath = new Path(baseLocation);
-				if (basePath.segmentCount() > 1 && !basePath.toFile().exists()) {
+				if (basePath.segmentCount() > 1) {
 					file = ResourcesPlugin.getWorkspace().getRoot().getFile(basePath);
+					/*
+					 * If the IFile doesn't  exist, make sure it's not
+					 * returned
+					 */
+					if (!file.exists())
+						file = null;
 				}
 			}
 		}

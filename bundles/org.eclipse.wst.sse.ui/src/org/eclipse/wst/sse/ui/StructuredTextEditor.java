@@ -98,8 +98,11 @@ import org.eclipse.ui.IEditorActionBarContributor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IPageLayout;
+import org.eclipse.ui.IPathEditorInput;
 import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -147,6 +150,7 @@ import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.ReadOnlyAwareDropTargetAdapter;
 import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
+import org.eclipse.wst.sse.ui.internal.StorageModelProvider;
 import org.eclipse.wst.sse.ui.internal.StructuredLineChangeHover;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.UnknownContentTypeDialog;
@@ -2617,9 +2621,9 @@ public class StructuredTextEditor extends TextEditor {
 			// largely untested
 			setDocumentProvider(StructuredModelDocumentProvider.getInstance());
 		}
-//		else if (input instanceof IStorageEditorInput && !(input instanceof IFileEditorInput)) {
-//			setDocumentProvider(StorageModelProvider.getInstance());
-//		}
+		else if (input instanceof IStorageEditorInput && !(input instanceof IFileEditorInput) && !(input instanceof IPathEditorInput)) {
+			setDocumentProvider(StorageModelProvider.getInstance());
+		}
 		else {
 			super.setDocumentProvider(input);
 		}
