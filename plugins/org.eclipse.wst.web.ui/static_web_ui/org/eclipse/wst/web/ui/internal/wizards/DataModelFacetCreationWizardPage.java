@@ -58,8 +58,12 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
 		top.setLayoutData(new GridData(GridData.FILL_BOTH));
 		createProjectGroup(top);
 		createServerTargetComposite(top);
-        
-        final AddRemoveFacetsDataModel model
+        createPresetPanel(top);
+        return top;
+	}
+
+	protected void createPresetPanel(Composite top) {
+		final AddRemoveFacetsDataModel model
             = ( (AddRemoveFacetsWizard) getWizard() ).getModel();
 
         final PresetSelectionPanel ppanel 
@@ -68,8 +72,6 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
         ppanel.setLayoutData( gdhfill() );
         
         ( (AddRemoveFacetsWizard) getWizard() ).syncWithPresetsModel( ppanel.getPresetsCombo() );
-        
-        return top;
 	}
 
 	public static boolean launchNewRuntimeWizard(Shell shell, IDataModel model) {
