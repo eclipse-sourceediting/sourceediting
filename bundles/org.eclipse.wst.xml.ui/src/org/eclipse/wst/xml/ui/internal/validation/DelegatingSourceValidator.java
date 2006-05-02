@@ -2,6 +2,7 @@ package org.eclipse.wst.xml.ui.internal.validation;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -192,7 +193,13 @@ public abstract class DelegatingSourceValidator implements IValidator {
 
 				// store the text in a byte array; make a full copy to ease
 				// any threading problems
-				byte[] byteArray = xmlModel.getStructuredDocument().get().getBytes();
+				byte[] byteArray;
+				try {
+					byteArray = xmlModel.getStructuredDocument().get().getBytes("UTF-8");
+				} catch (UnsupportedEncodingException e) {
+					// Not likely to happen
+					byteArray = xmlModel.getStructuredDocument().get().getBytes();
+				}
 
 				if (isDelegateValidatorEnabled(file)) {
 					IValidator validator = getDelegateValidator();

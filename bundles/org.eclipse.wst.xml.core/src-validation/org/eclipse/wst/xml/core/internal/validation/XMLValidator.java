@@ -216,7 +216,7 @@ public class XMLValidator
     StringBuffer fileString = new StringBuffer();
     try
     {
-      InputStreamReader inputReader = new InputStreamReader(inputStream);
+      InputStreamReader inputReader = new InputStreamReader(inputStream, "UTF-8");
       BufferedReader reader = new BufferedReader(inputReader);
       char[] chars = new char[1024];
       int numberRead = reader.read(chars);
