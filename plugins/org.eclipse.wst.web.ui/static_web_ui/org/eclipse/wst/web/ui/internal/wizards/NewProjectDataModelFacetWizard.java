@@ -11,6 +11,7 @@
 package org.eclipse.wst.web.ui.internal.wizards;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -51,6 +52,8 @@ import org.eclipse.wst.common.project.facet.core.IProjectFacetVersion;
 import org.eclipse.wst.common.project.facet.core.IFacetedProject.Action.Type;
 import org.eclipse.wst.common.project.facet.core.runtime.IRuntime;
 import org.eclipse.wst.common.project.facet.ui.AddRemoveFacetsWizard;
+import org.eclipse.wst.common.project.facet.ui.internal.AbstractDataModel;
+import org.eclipse.wst.common.project.facet.ui.internal.ChangeTargetedRuntimesDataModel;
 import org.eclipse.wst.web.internal.DelegateConfigurationElement;
 import org.eclipse.wst.web.ui.internal.Logger;
 import org.eclipse.wst.web.ui.internal.WSTWebUIPlugin;
@@ -122,21 +125,9 @@ public abstract class NewProjectDataModelFacetWizard extends AddRemoveFacetsWiza
 			}
 		});
 
-		// Disabling this as it interfers with the facet selection based on the
-		// runtime.
-
-		/*
-		 * Set facetVersions = new HashSet(); FacetDataModelMap map = (FacetDataModelMap)
-		 * model.getProperty(FACET_DM_MAP); for (Iterator iterator = map.values().iterator();
-		 * iterator.hasNext();) { IDataModel model = (IDataModel) iterator.next();
-		 * facetVersions.add(model.getProperty(IFacetDataModelProperties.FACET_VERSION)); }
-		 * this.facetsSelectionPage.setInitialSelection(facetVersions);
-		 */
-
-
 		IRuntime runtime = (IRuntime) model.getProperty(FACET_RUNTIME);
-		if (runtime != null)
-			setRuntime(runtime);
+        setRuntimeAndDefaultFacets( runtime );
+        
 		synchRuntimes();
 	}
 
@@ -178,26 +169,50 @@ public abstract class NewProjectDataModelFacetWizard extends AddRemoveFacetsWiza
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
 	}
 
-	protected void synchRuntimes() {
+	protected void synchRuntimes() 
+    {
+        final ChangeTargetedRuntimesDataModel rdm
+            = getModel().getTargetedRuntimesDataModel();
+        
+        final Boolean[] suppressBackEvents = { Boolean.FALSE };
+        
 		model.addListener(new IDataModelListener() {
 			public void propertyChanged(DataModelEvent event) {
 				if (IDataModel.VALUE_CHG == event.getFlag() || IDataModel.DEFAULT_CHG == event.getFlag()) {
 					if (FACET_RUNTIME.equals(event.getPropertyName())) {
-						IRuntime runtime = (IRuntime) event.getProperty();
-						if (runtime != getRuntime()) {
-							setRuntime(runtime);
-						}
+                        if( ! suppressBackEvents[ 0 ].booleanValue() ) {
+                            IRuntime runtime = (IRuntime) event.getProperty();
+                            setRuntimeAndDefaultFacets( runtime );
+                        }
 					}
 				}
 			}
 		});
 
-		addRuntimeListener(new Listener() {
-			public void handleEvent(final Event event) {
-				model.setProperty(FACET_RUNTIME, getRuntime());
-			}
-		});
+        rdm.addListener
+        ( 
+            ChangeTargetedRuntimesDataModel.EVENT_PRIMARY_RUNTIME_CHANGED, 
+            new AbstractDataModel.IDataModelListener()
+            {
+                public void handleEvent()
+                {
+                    suppressBackEvents[ 0 ] = Boolean.TRUE;
+                    model.setProperty(FACET_RUNTIME, rdm.getPrimaryRuntime());
+                    suppressBackEvents[ 0 ] = Boolean.FALSE;
+                }
+            }
+        );
 	}
+    
+    private void setRuntimeAndDefaultFacets( final IRuntime runtime )
+    {
+        if( runtime != null )
+        {
+            final Set runtimes = Collections.singleton( runtime );
+            getModel().getTargetedRuntimesDataModel().setTargetedRuntimes( runtimes );
+            this.facetsSelectionPage.setDefaultFacetsForRuntime( runtime );
+        }
+    }
 
 	public String getProjectName() {
 		return model.getStringProperty(IFacetProjectCreationDataModelProperties.FACET_PROJECT_NAME);

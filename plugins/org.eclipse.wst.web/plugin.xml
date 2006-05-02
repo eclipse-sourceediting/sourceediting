@@ -75,10 +75,7 @@
         <config-factory class="org.eclipse.wst.project.facet.SimpleWebFacetInstallDataModelProvider"/>
       </action>
       <constraint>
-        <and>
-          <conflicts group="modules"/>
-          <conflicts facet="jst.java"/>
-        </and>
+        <conflicts group="modules"/>
       </constraint>
       <group-member id="modules"/>
     </project-facet-version>
