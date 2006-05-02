@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <xsd:element name="root" type="RootType"></xsd:element>
+    <xsd:complexType name="RootType">
+    	<xsd:sequence>
+    		<xsd:element name="child1" type="xsd:string"></xsd:element>
+    		<xsd:element name="child2" type="xsd:string"></xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+</xsd:schema>

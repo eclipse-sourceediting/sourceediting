@@ -166,4 +166,19 @@ public class BugFixesTest extends BaseTestCase
 	  fail("Unable to set configuration WARN_NO_GRAMMAR.");
 	}
   }
+  
+  /**
+   * Test /bugfixes/NoNamespaceSchema/NoNamespaceSchema.xml.
+   */
+  public void testNoNamespaceSchema()
+  {
+  	String testname = "NoNamespaceSchema";
+    String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + BUGFIXES_DIR + "NoNamespaceSchema/" + testname + ".xml";
+	List keys = new ArrayList();
+	keys.add("cvc-complex-type.2.4.b");
+	int numErrors = 1;
+	int numWarnings = 0;
+
+	runTest(testfile, keys, numErrors, numWarnings);
+  }
 }
