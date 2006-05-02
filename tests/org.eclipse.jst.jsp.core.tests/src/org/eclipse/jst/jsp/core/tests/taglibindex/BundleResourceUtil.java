@@ -108,6 +108,19 @@ public class BundleResourceUtil {
 		return file[0];
 	}
 
+	/**
+	 * Creates a simple project.
+	 * 
+	 * @param name -
+	 *            the name of the project
+	 * @param location -
+	 *            the location of the project, or null if the default of
+	 *            "/name" within the workspace is to be used
+	 * @param natureIds -
+	 *            an array of natures IDs to set on the project, null if none
+	 *            should be set
+	 * @return
+	 */
 	public static IProject createSimpleProject(String name, IPath location, String[] natureIds) {
 		IProjectDescription description = ResourcesPlugin.getWorkspace().newProjectDescription(name);
 		if (location != null) {
