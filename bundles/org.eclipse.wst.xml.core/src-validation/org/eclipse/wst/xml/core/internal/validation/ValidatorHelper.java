@@ -248,11 +248,13 @@ public class ValidatorHelper
             location = getSchemaLocationForNamespace(schemaLoc, rootElementNamespace);
           }  
         }  
-        if (rootElementNamespace != null)
+        if (rootElementNamespace == null)
         {
-          location = URIResolverPlugin.createResolver().resolve(baseURI, rootElementNamespace, location);    
-          location = URIResolverPlugin.createResolver().resolvePhysicalLocation(baseURI, rootElementNamespace, location);                                          
-        }           
+          rootElementNamespace = "";
+        }
+        
+        location = URIResolverPlugin.createResolver().resolve(baseURI, rootElementNamespace, location);    
+        location = URIResolverPlugin.createResolver().resolvePhysicalLocation(baseURI, rootElementNamespace, location);                                                    
         
         if (location != null)
         {  
