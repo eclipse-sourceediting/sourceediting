@@ -21,4 +21,6 @@ public interface JSPedCSSRegionContexts extends CSSRegionContexts {
 	public static final String CSS_JSP_DECL = "CSS_JSP_DECL"; //$NON-NLS-1$
 	public static final String CSS_JSP_END = "CSS_JSP_END"; //$NON-NLS-1$
 	public static final String CSS_EL_END = "CSS_EL_END"; //$NON-NLS-1$
+	public static final String CSS_JSP_COMMENT_END = "CSS_JSP_COMMENT_END"; //$NON-NLS-1$
+	public static final String CSS_JSP_COMMENT = "CSS_JSP_COMMENT"; //$NON-NLS-1$
 }

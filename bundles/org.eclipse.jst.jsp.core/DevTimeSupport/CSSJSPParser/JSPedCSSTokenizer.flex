@@ -82,7 +82,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 		if (context != null) {
 			if (context == CSS_JSP_SCRIPTLET || context == CSS_JSP_EL){
 				nextTokenType = primGetNextToken();
-				while (nextTokenType != CSS_JSP_END && nextTokenType != CSS_EL_END) {
+				while (nextTokenType != CSS_JSP_END && nextTokenType != CSS_EL_END && nextTokenType != CSS_JSP_COMMENT) {
 //					text.append(yytext());
 					textLength += yylength();
 					length = textLength;
@@ -92,6 +92,24 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 					nextTokenType = primGetNextToken();
 					if (nextTokenType == null){
 						break;
+					}
+				}
+				if (context == CSS_JSP_SCRIPTLET){
+					while (nextTokenType != CSS_JSP_COMMENT_END) {
+//						text.append(yytext());
+						textLength += yylength();
+						length = textLength;
+						if (context.equals(CSS_JSP_SCRIPTLET) && yystate() == ST_JSP_COMMENT){
+							context = nextTokenType;
+						}
+
+						nextTokenType = primGetNextToken();
+						if (nextTokenType == null){
+							break;
+						}
+					}				
+					if (context == CSS_JSP_COMMENT){
+						context = CSS_COMMENT;
 					}
 				}
 				textLength += yylength();
@@ -287,6 +305,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 %state ST_JSP_DECLARATION
 %state ST_JSP_EXP
 %state ST_JSP_EL
+%state ST_JSP_COMMENT
 
 
 h = [0-9a-f]
@@ -322,7 +341,6 @@ elend = "}"
 %%
 
 
-\<\%--([^*])*--\%\> { return CSS_COMMENT; }
 
 <YYINITIAL> {
  {jspstart}          {yyJspBegin(ST_JSP_SCRIPTLET);  return CSS_JSP_SCRIPTLET;}
@@ -334,6 +352,7 @@ elend = "}"
  "="	{yybegin(ST_JSP_EXP); return CSS_JSP_EXP;}
  "!"	{yybegin(ST_JSP_DECLARATION); return CSS_JSP_DECL;}
  {jspend} {yyJspEnd();  return CSS_JSP_END;}
+ "--" { yybegin(ST_JSP_COMMENT); return CSS_JSP_COMMENT;}
 }
 
 /* override global "}" */
@@ -345,6 +364,10 @@ elend = "}"
  {jspend} {yyJspEnd();  return CSS_JSP_END;}
 }
 
+<ST_JSP_COMMENT> {
+ -+-{jspend} { yyJspEnd(); return CSS_JSP_COMMENT_END; }
+ "}"         { return UNDEFINED; }
+}
 
 
 /*
@@ -356,6 +379,7 @@ elend = "}"
 "-->" { return CSS_CDC; }
 "}" { yybegin(YYINITIAL); return CSS_RBRACE; }
 \/\*[^*]*\*+([^/*][^*]*\*+)*\/ { return CSS_COMMENT; }
+//\<\%--[^-}]*[}]*[^}]*-+-\%\> { return CSS_COMMENT; }
 
 
 //<YYINITIAL> {
