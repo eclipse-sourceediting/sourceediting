@@ -618,7 +618,7 @@
 			class="org.eclipse.wst.css.ui.StructuredTextViewerConfigurationCSS"
 			target="org.eclipse.jst.jsp.core.cssjspsource" />
 		<propertySheetConfiguration
-			class="org.eclipse.wst.css.ui.views.properties.CSSPropertySheetConfiguration"
+			class="org.eclipse.jst.jsp.css.ui.internal.views.properties.JSPedCSSPropertySheetConfiguration"
 			target="org.eclipse.jst.jsp.core.cssjspsource" />
 		<provisionalConfiguration
 			type="characterpairmatcher"

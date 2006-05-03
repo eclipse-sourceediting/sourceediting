@@ -100,4 +100,6 @@ public class JSPUIMessages extends NLS {
 	public static String JSPFContentSettingsPropertyPage_3;
 	public static String JSPFContentSettingsPropertyPage_4;
 	public static String ProjectJSPFContentSettingsPropertyPage_0;
+	public static String Title_InvalidValue;
+	public static String Message_InvalidValue;
 }
