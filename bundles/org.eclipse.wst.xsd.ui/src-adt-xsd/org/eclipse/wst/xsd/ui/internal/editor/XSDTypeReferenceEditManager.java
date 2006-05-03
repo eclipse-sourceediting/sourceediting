@@ -12,6 +12,7 @@ package org.eclipse.wst.xsd.ui.internal.editor;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.gef.commands.Command;
@@ -35,6 +36,8 @@ public class XSDTypeReferenceEditManager implements ComponentReferenceEditManage
 {  
   protected IFile currentFile;
   protected XSDSchema[] schemas;
+  
+  private static ComponentSpecification result[];
   
   public XSDTypeReferenceEditManager(IFile currentFile, XSDSchema[] schemas)
   {
@@ -79,6 +82,9 @@ public class XSDTypeReferenceEditManager implements ComponentReferenceEditManage
 
   public ComponentSpecification[] getQuickPicks()
   {
+    if (result != null)
+      return result;
+
     // TODO (cs) implement this properly - we should be providing a list of the 
     // most 'common' built in schema types here
     // I believe Trung will be working on a perference page to give us this list
@@ -94,7 +100,7 @@ public class XSDTypeReferenceEditManager implements ComponentReferenceEditManage
     list.add(new ComponentSpecification(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001, "int", null));     //$NON-NLS-1$
     list.add(new ComponentSpecification(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001, "string", null)); //$NON-NLS-1$
     list.add(new ComponentSpecification(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001, "time", null));        //$NON-NLS-1$
-    ComponentSpecification result[] = new ComponentSpecification[list.size()];
+    result = new ComponentSpecification[list.size()];
     list.toArray(result);
     return result;
   }

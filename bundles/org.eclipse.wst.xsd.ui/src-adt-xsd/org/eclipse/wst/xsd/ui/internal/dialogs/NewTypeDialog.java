@@ -11,7 +11,8 @@
 package org.eclipse.wst.xsd.ui.internal.dialogs;
 
 import java.net.URL;
-import org.eclipse.core.runtime.Platform;
+
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -33,6 +34,7 @@ public class NewTypeDialog extends NewComponentDialog implements IComponentDialo
   protected Object setObject;
   protected int typeKind;
   protected Object selection;
+  private boolean allowComplexType;
 
   public NewTypeDialog()
   {
@@ -69,6 +71,7 @@ public class NewTypeDialog extends NewComponentDialog implements IComponentDialo
   {
     final Button complexTypeButton = new Button(parent, SWT.RADIO);
     complexTypeButton.setText(Messages._UI_LABEL_COMPLEX_TYPE);
+    complexTypeButton.setEnabled(allowComplexType);
     
     final Button simpleTypeButton = new Button(parent, SWT.RADIO);
     simpleTypeButton.setText(Messages._UI_LABEL_SIMPLE_TYPE);
@@ -87,8 +90,17 @@ public class NewTypeDialog extends NewComponentDialog implements IComponentDialo
         }
       }
     };
-    complexTypeButton.setSelection(true);
-    typeKind = COMPLEX_TYPE;
+    if (allowComplexType)
+    {
+      complexTypeButton.setSelection(true);
+      typeKind = COMPLEX_TYPE;
+    }
+    else
+    {
+      simpleTypeButton.setSelection(true);
+      typeKind = SIMPLE_TYPE;
+    }
+
     simpleTypeButton.addSelectionListener(listener);
     complexTypeButton.addSelectionListener(listener);
     Label separator = new Label(parent, SWT.SEPARATOR | SWT.HORIZONTAL);
@@ -96,12 +108,13 @@ public class NewTypeDialog extends NewComponentDialog implements IComponentDialo
     separator.setLayoutData(gd);
   }
 
+  // TODO: Can we remove this?
   protected String getNormalizedLocation(String location)
   {
     try
     {
       URL url = new URL(location);
-      URL resolvedURL = Platform.resolve(url);
+      URL resolvedURL = FileLocator.resolve(url);
       location = resolvedURL.getPath();
     }
     catch (Exception e)
@@ -109,5 +122,10 @@ public class NewTypeDialog extends NewComponentDialog implements IComponentDialo
       e.printStackTrace();
     }
     return location;
+  }
+
+  public void allowComplexType(boolean value)
+  {
+    this.allowComplexType= value;
   }
 }

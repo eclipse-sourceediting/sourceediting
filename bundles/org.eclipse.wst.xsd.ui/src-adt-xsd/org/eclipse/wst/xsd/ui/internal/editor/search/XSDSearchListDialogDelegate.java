@@ -34,6 +34,7 @@ public class XSDSearchListDialogDelegate implements IComponentDialog
   protected IFile currentFile;
   protected XSDSchema[] schemas;
   protected QualifiedName metaName;
+  protected boolean showComplexTypes = true;
 
   public XSDSearchListDialogDelegate(QualifiedName metaName, IFile currentFile, XSDSchema[] schemas)
   {
@@ -51,6 +52,16 @@ public class XSDSearchListDialogDelegate implements IComponentDialog
   public void setInitialSelection(ComponentSpecification componentSpecification)
   {
     // TODO Auto-generated method stub   
+  }
+  
+  /** 
+   * Whether to show complex types in the Dialog's List, has no effect if the
+   * dialog populates list of elements instead of type
+   * @param value
+   */
+  public void showComplexTypes(boolean value)
+  {
+    showComplexTypes = value;
   }
   
   public int createAndOpen()
@@ -79,6 +90,8 @@ public class XSDSearchListDialogDelegate implements IComponentDialog
     {
       XSDComponentDescriptionProvider descriptionProvider = new XSDComponentDescriptionProvider();
       final XSDTypesSearchListProvider searchListProvider = new XSDTypesSearchListProvider(currentFile, schemas);
+      if (!showComplexTypes)
+        searchListProvider.showComplexTypes(false);
      
       ComponentSearchListDialogConfiguration configuration = new ComponentSearchListDialogConfiguration();
       configuration.setDescriptionProvider(descriptionProvider);

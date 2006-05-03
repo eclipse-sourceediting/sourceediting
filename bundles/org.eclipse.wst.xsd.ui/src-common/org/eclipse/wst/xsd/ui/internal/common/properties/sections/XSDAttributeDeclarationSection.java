@@ -12,17 +12,24 @@ package org.eclipse.wst.xsd.ui.internal.common.properties.sections;
 
 import org.apache.xerces.util.XMLChar;
 import org.eclipse.gef.commands.Command;
-import org.eclipse.swt.SWT;
+import org.eclipse.jface.window.Window;
+import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.CLabel;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.wst.common.ui.internal.search.dialogs.ComponentSpecification;
+import org.eclipse.wst.xsd.ui.internal.adt.edit.ComponentReferenceEditManager;
+import org.eclipse.wst.xsd.ui.internal.adt.edit.IComponentDialog;
 import org.eclipse.wst.xsd.ui.internal.common.commands.UpdateNameCommand;
+import org.eclipse.wst.xsd.ui.internal.dialogs.NewTypeDialog;
 import org.eclipse.wst.xsd.ui.internal.editor.Messages;
-import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
+import org.eclipse.wst.xsd.ui.internal.editor.XSDTypeReferenceEditManager;
+import org.eclipse.wst.xsd.ui.internal.editor.search.XSDSearchListDialogDelegate;
 import org.eclipse.xsd.XSDAttributeDeclaration;
 import org.eclipse.xsd.XSDTypeDefinition;
 import org.eclipse.xsd.util.XSDConstants;
@@ -30,8 +37,7 @@ import org.eclipse.xsd.util.XSDConstants;
 public class XSDAttributeDeclarationSection extends AbstractSection
 {
   protected Text nameText;
-  protected Text typeCombo;
-  protected Button button;
+  protected CCombo typeCombo;
   boolean isAttributeReference;
   
   public XSDAttributeDeclarationSection()
@@ -55,7 +61,7 @@ public class XSDAttributeDeclarationSection extends AbstractSection
     GridData data = new GridData();
     data.horizontalAlignment = GridData.HORIZONTAL_ALIGN_BEGINNING;
     data.grabExcessHorizontalSpace = false;
-    CLabel nameLabel = getWidgetFactory().createCLabel(composite, "Name:"); //$NON-NLS-1$
+    CLabel nameLabel = getWidgetFactory().createCLabel(composite, org.eclipse.wst.xsd.ui.internal.common.util.Messages._UI_LABEL_NAME);
     nameLabel.setLayoutData(data);
 
     // ------------------------------------------------------------------
@@ -87,23 +93,52 @@ public class XSDAttributeDeclarationSection extends AbstractSection
     data = new GridData();
     data.grabExcessHorizontalSpace = true;
     data.horizontalAlignment = GridData.FILL;
-
-    typeCombo = getWidgetFactory().createText(composite, ""); //$NON-NLS-1$
-    typeCombo.setEditable(false);
-    // baseTypeCombo.addListener(SWT.Modify, this);
+    typeCombo = getWidgetFactory().createCCombo(composite);
     typeCombo.setLayoutData(data);
+    typeCombo.addSelectionListener(this);
 
-    // ------------------------------------------------------------------
-    // BaseTypeButton
-    // ------------------------------------------------------------------
-    data = new GridData();
-    data.horizontalAlignment = GridData.HORIZONTAL_ALIGN_BEGINNING;
-    data.grabExcessHorizontalSpace = false;
+  }
 
-    button = getWidgetFactory().createButton(composite, "", SWT.PUSH); //$NON-NLS-1$
-    button.setImage(XSDEditorPlugin.getXSDImage("icons/browsebutton.gif")); //$NON-NLS-1$
-    button.addSelectionListener(this);
-    button.setLayoutData(data);
+  private void fillTypesCombo()
+  {
+    IEditorPart editor = getActiveEditor();
+    XSDTypeReferenceEditManager manager = (XSDTypeReferenceEditManager)editor.getAdapter(XSDTypeReferenceEditManager.class);    
+    ComponentSpecification[] items = manager.getQuickPicks();
+    
+    typeCombo.removeAll();
+    typeCombo.add(Messages._UI_ACTION_BROWSE);
+    typeCombo.add(Messages._UI_ACTION_NEW);
+    for (int i = 0; i < items.length; i++)
+    {
+      typeCombo.add(items[i].getName());
+    }
+
+    XSDAttributeDeclaration namedComponent = ((XSDAttributeDeclaration) input).getResolvedAttributeDeclaration();
+    XSDTypeDefinition namedComponentType = namedComponent.getType();
+    String currentTypeName = namedComponentType.getQName(xsdSchema); // no prefix
+    ComponentSpecification ret = getComponentSpecFromQuickPickForValue(currentTypeName, manager);
+    if (ret == null) //not in quickPick
+      typeCombo.add(currentTypeName);
+  }
+  
+  private ComponentSpecification getComponentSpecFromQuickPickForValue(String value, ComponentReferenceEditManager editManager)
+  {
+    if (editManager != null)
+    {  
+      ComponentSpecification[] quickPicks = editManager.getQuickPicks();
+      if (quickPicks != null)
+      {
+        for (int i=0; i < quickPicks.length; i++)
+        {
+          ComponentSpecification componentSpecification = quickPicks[i];
+          if (value.equals(componentSpecification.getName()))
+          {
+            return componentSpecification;
+          }                
+        }  
+      }
+    }
+    return null;
   }
 
   /*
@@ -147,6 +182,7 @@ public class XSDAttributeDeclarationSection extends AbstractSection
         }
         else
         {
+          fillTypesCombo();
           String typeName = ""; //$NON-NLS-1$
           if (typeDef != null)
           {
@@ -171,6 +207,47 @@ public class XSDAttributeDeclarationSection extends AbstractSection
   public boolean shouldUseExtraSpace()
   {
     return false;
+  }
+  
+  public void doWidgetSelected(SelectionEvent e)
+  {
+    super.doWidgetSelected(e);
+    if (e.widget == typeCombo)
+    {
+      IEditorPart editor = getActiveEditor();
+      if (editor == null) return;
+      ComponentReferenceEditManager manager = (ComponentReferenceEditManager)editor.getAdapter(XSDTypeReferenceEditManager.class);    
+
+      String selection = typeCombo.getText();
+      ComponentSpecification newValue;
+      IComponentDialog dialog= null;
+      if ( selection.equals(Messages._UI_ACTION_BROWSE))
+      {
+        dialog = manager.getBrowseDialog();
+        ((XSDSearchListDialogDelegate) dialog).showComplexTypes(false);
+      }
+      else if ( selection.equals(Messages._UI_ACTION_NEW))
+      {
+        dialog = manager.getNewDialog();
+        ((NewTypeDialog) dialog).allowComplexType(false);
+      }
+
+      if (dialog != null)
+      {
+        if (dialog.createAndOpen() == Window.OK)
+        {
+          newValue = dialog.getSelectedComponent();
+          manager.modifyComponentReference(input, newValue);
+        }
+      }
+      else //use the value from selected quickPick item
+      {
+        newValue = getComponentSpecFromQuickPickForValue(selection, manager);
+        if (newValue != null)
+          manager.modifyComponentReference(input, newValue);
+      }
+//      refresh();
+    }
   }
 
   protected void doHandleEvent(Event event)
