@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -27,13 +28,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
-import org.eclipse.core.filebuffers.ITextFileBuffer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.core.runtime.content.IContentDescription;
@@ -47,12 +46,14 @@ import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDElement
 import org.eclipse.jst.jsp.core.internal.parser.JSPSourceParser;
 import org.eclipse.jst.jsp.core.internal.provisional.JSP12Namespace;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
+import org.eclipse.jst.jsp.core.taglib.IJarRecord;
+import org.eclipse.jst.jsp.core.taglib.ITLDRecord;
 import org.eclipse.jst.jsp.core.taglib.ITaglibIndexListener;
 import org.eclipse.jst.jsp.core.taglib.ITaglibRecord;
 import org.eclipse.jst.jsp.core.taglib.ITaglibRecordEvent;
+import org.eclipse.jst.jsp.core.taglib.IURLRecord;
 import org.eclipse.jst.jsp.core.taglib.TaglibIndex;
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolverPlugin;
-import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
 import org.eclipse.wst.sse.core.internal.ltk.parser.BlockMarker;
 import org.eclipse.wst.sse.core.internal.ltk.parser.StructuredDocumentRegionHandler;
 import org.eclipse.wst.sse.core.internal.ltk.parser.StructuredDocumentRegionHandlerExtension;
@@ -247,19 +248,23 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 				// nothing to be done
 				includedFile = null;
 			}
+
 			if (includedFile != null) {
-				IPath root = TaglibIndex.getContextRoot(TaglibController.getFileBuffer(TLDCMDocumentManager.this).getLocation());
 				// strip any extraneous quotes and white space
 				includedFile = StringUtils.strip(includedFile).trim();
 				IPath filePath = null;
 				if (includedFile.startsWith("/")) { //$NON-NLS-1$
-					filePath = root.append(includedFile);
+					IPath contextRoot = TaglibIndex.getContextRoot(TaglibController.getFileBuffer(TLDCMDocumentManager.this).getLocation());
+					filePath = contextRoot.append(includedFile);
 				}
 				else {
-					filePath = new Path(URIHelper.normalize(includedFile, TaglibController.getFileBuffer(TLDCMDocumentManager.this).getLocation().toString(), root.toString()));
+					if (getIncludes().isEmpty())
+						filePath = TaglibController.getFileBuffer(TLDCMDocumentManager.this).getLocation().removeLastSegments(1).append(includedFile);
+					else
+						filePath = ((IPath) getIncludes().peek()).removeLastSegments(1).append(includedFile);
 				}
 				// check for "loops"
-				if (!getIncludes().contains(filePath) && filePath != null && !filePath.equals(TaglibController.getFileBuffer(TLDCMDocumentManager.this).getLocation())) {
+				if (filePath != null && !getIncludes().contains(filePath) && !filePath.equals(TaglibController.getFileBuffer(TLDCMDocumentManager.this).getLocation())) {
 					/*
 					 * Prevent slow performance when editing scriptlet part of
 					 * the JSP by only processing includes if they've been
@@ -267,6 +272,15 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 					 * created from the files it parses. Caching the URI and
 					 * prefix/tagdir allows us to just enable the CMDocument
 					 * when the previously parsed files.
+					 * 
+					 * REMAINING PROBLEM: fTLDCMReferencesMap does not map
+					 * from a fragment's path and also include all of the CM
+					 * references in fragments that *it* includes. The
+					 * fragments that it includes won't have its CM references
+					 * loaded, but then we'd need to record the URI and
+					 * location of the included fragment to resolve them
+					 * correctly, modifying enableTaglib() to also take a base
+					 * path and resolve the URI appropriately.
 					 */
 					if (hasAnyIncludeBeenModified(filePath)) {
 						getIncludes().push(filePath);
@@ -274,7 +288,11 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 							IncludeHelper includeHelper = new IncludeHelper(anchorStructuredDocumentRegion, getParser());
 							includeHelper.parse(filePath);
 							List references = includeHelper.taglibReferences;
-							fTLDCMReferencesMap.put(filePath.toString(), references);
+							fTLDCMReferencesMap.put(filePath, references);
+							/*
+							 * TODO: walk up the include hierarchy and add
+							 * these references to each of the parents.
+							 */
 						}
 						else
 							Logger.log(Logger.WARNING, "Warning: parser text was requested by " + getClass().getName() + " but none was available; taglib support disabled"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -282,9 +300,13 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 					}
 					else {
 						// Add from that saved list of uris/prefixes/documents
-						List references = (List) fTLDCMReferencesMap.get(filePath.toString());
+						List references = (List) fTLDCMReferencesMap.get(filePath);
 						for (int i = 0; references != null && i < references.size(); i++) {
 							TLDCMDocumentReference reference = (TLDCMDocumentReference) references.get(i);
+							/*
+							 * The uri might not be resolved properly if
+							 * relative to the JSP fragment.
+							 */
 							enableTaglibFromURI(reference.prefix, reference.uri, includeStructuredDocumentRegion);
 
 						}
@@ -644,7 +666,8 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 		}
 
 		/**
-		 * @param path - the fullpath for the resource to be parsed 
+		 * @param path -
+		 *            the fullpath for the resource to be parsed
 		 */
 		void parse(IPath path) {
 			JSPSourceParser p = new JSPSourceParser();
@@ -663,7 +686,23 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 		}
 
 		public void resetNodes() {
-			// no-op, should never be called
+		}
+	}
+
+	/**
+	 * An entry in the shared cache map
+	 */
+	static class TLDCacheEntry {
+		CMDocument document;
+		int referenceCount;
+	}
+
+	private static class TLDCMDocumentDescriptor {
+		Object cacheKey;
+		CMDocument document;
+
+		TLDCMDocumentDescriptor() {
+			super();
 		}
 	}
 
@@ -673,13 +712,16 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 	}
 
 	static final boolean _debug = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.jst.jsp.core/debug/tldcmdocument/manager")); //$NON-NLS-1$ //$NON-NLS-2$
-
+	static final boolean _debugCache = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.jst.jsp.core/debug/tldcmdocument/cache")); //$NON-NLS-1$ //$NON-NLS-2$
 	// will hold the prefixes banned by the specification; taglibs may not use
 	// them
 	protected static List bannedPrefixes = null;
 
+	private static Hashtable fCache = null;
 	static final String XMLNS = "xmlns:"; //$NON-NLS-1$ 
+
 	static final int XMLNS_LENGTH = XMLNS.length();
+
 	static {
 		bannedPrefixes = new ArrayList(7);
 		bannedPrefixes.add("jsp"); //$NON-NLS-1$
@@ -691,20 +733,67 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 		bannedPrefixes.add("sunw"); //$NON-NLS-1$
 	}
 
+	/**
+	 * Gets all of the known documents.
+	 * 
+	 * @return Returns a Hashtable of either TLDCacheEntrys or WeakReferences
+	 *         to TLD CMDocuments
+	 */
+	public static Hashtable getSharedDocumentCache() {
+		if (fCache == null) {
+			fCache = new Hashtable();
+		}
+		return fCache;
+	}
+
+
+	public static Object getUniqueIdentifier(ITaglibRecord reference) {
+		Object identifier = null;
+		switch (reference.getRecordType()) {
+			case (ITaglibRecord.TLD) : {
+				ITLDRecord record = (ITLDRecord) reference;
+				identifier = record.getPath();
+			}
+				break;
+			case (ITaglibRecord.JAR) : {
+				IJarRecord record = (IJarRecord) reference;
+				identifier = record.getLocation();
+			}
+				break;
+			case (ITaglibRecord.TAGDIR) : {
+				// TagDirRecord record = (TagDirRecord) reference;
+				// document =
+				// buildCMDocumentFromDirectory(record.getLocation().toFile());
+			}
+				break;
+			case (ITaglibRecord.URL) : {
+				IURLRecord record = (IURLRecord) reference;
+				identifier = record.getURL();
+			}
+				break;
+			default :
+				identifier = reference;
+				break;
+		}
+		return identifier;
+	}
 	private CMDocumentFactoryTLD fCMDocumentBuilder = null;
 
 	private DirectiveStructuredDocumentRegionHandler fDirectiveHandler = null;
+
+	/**
+	 * The locally-know list of CMDocuments
+	 */
 	private Hashtable fDocuments = null;
+
 	// timestamp cache to prevent excessive reparsing
 	// of included files
 	// IPath (filepath) > Long (modification stamp)
 	HashMap fInclude2TimestampMap = new HashMap();
+
 	private Stack fIncludes = null;
 
 	private JSPSourceParser fParser = null;
-
-	// trivial hand edit to remove unused variable private URIResolverProvider
-	// fResolverProvider = null;
 
 	private List fTaglibTrackers = null;
 
@@ -715,10 +804,40 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 	}
 
 	public void clearCache() {
-		if (_debug) {
-			System.out.println("TLDCMDocumentManager cleared its CMDocument cache"); //$NON-NLS-1$
+		if (_debugCache) {
+			System.out.println("TLDCMDocumentManager cleared its private CMDocument cache"); //$NON-NLS-1$
 		}
-		getDocuments().clear();
+		for (Iterator iter = getDocuments().keySet().iterator(); iter.hasNext();) {
+			Object key = iter.next();
+			synchronized (getSharedDocumentCache()) {
+				Object o = getSharedDocumentCache().get(key);
+				if (o instanceof TLDCacheEntry) {
+					TLDCacheEntry entry = (TLDCacheEntry) o;
+					entry.referenceCount--;
+					if (entry.referenceCount <= 0) {
+						getSharedDocumentCache().put(key, new WeakReference(entry.document));
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Derives an unique cache key for the give URI. The URI is "resolved"
+	 * and a unique value generated from the result. This ensures that two
+	 * different relative references from different files do not have overlapping
+	 * TLD records in the shared cache if they don't resolve to the same TLD.
+	 * 
+	 * @param uri
+	 * @return
+	 */
+	protected Object getCacheKey(String uri) {
+		ITaglibRecord record = TaglibIndex.resolve(getCurrentParserPath().toString(), uri, false);
+		if (record != null) {
+			return getUniqueIdentifier(record);
+		}
+		String location = URIResolverPlugin.createResolver().resolve(getCurrentBaseLocation().toString(), null, uri);
+		return location;
 	}
 
 	/**
@@ -744,11 +863,51 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 			 * @see section 7.3.6
 			 */
 		}
-		CMDocument doc = (CMDocument) getDocuments().get(reference);
+		Object cacheKey = getCacheKey(reference);
+		CMDocument doc = (CMDocument) getDocuments().get(cacheKey);
 		if (doc == null) {
-			doc = loadTaglib(reference);
-			if (doc != null)
-				getDocuments().put(reference, doc);
+			/*
+			 * If hasn't been moved into the local table, do so and increment
+			 * the count. A local URI reference can be different depending on
+			 * the file from which it was referenced. Use a computed key to
+			 * keep them straight.
+			 */
+			Object o = getSharedDocumentCache().get(cacheKey);
+			if (o != null) {
+				if (o instanceof TLDCacheEntry) {
+					TLDCacheEntry entry = (TLDCacheEntry) o;
+					if (_debugCache) {
+						System.out.println("TLDCMDocument cache hit on " + cacheKey);
+					}
+					doc = entry.document;
+					entry.referenceCount++;
+				}
+				else if (o instanceof WeakReference) {
+					doc = (CMDocument) ((WeakReference) o).get();
+					if (doc != null) {
+						TLDCacheEntry entry = new TLDCacheEntry();
+						entry.document = doc;
+						entry.referenceCount = 1;
+						getSharedDocumentCache().put(cacheKey, entry);
+					}
+				}
+			}
+			/* No document was found cached, create a new one and share it */
+			if (doc == null) {
+				if (_debugCache) {
+					System.out.println("TLDCMDocument cache miss on " + cacheKey);
+				}
+				TLDCMDocumentDescriptor descriptor = loadTaglib(reference);
+				if (descriptor != null) {
+					TLDCacheEntry entry = new TLDCacheEntry();
+					doc = entry.document = descriptor.document;
+					entry.referenceCount = 1;
+					getSharedDocumentCache().put(cacheKey, entry);
+				}
+			}
+			if (doc != null) {
+				getDocuments().put(cacheKey, doc);
+			}
 		}
 		return doc;
 	}
@@ -790,21 +949,40 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 	}
 
 	/**
+	 * Return the filesystem location in the current parser. This method is
+	 * called while recursing through included fragments, so it much check the
+	 * include stack. The filesystem location is needed for common URI
+	 * resolution in case the Taglib Index doesn't know the URI being loaded.
 	 * 
-	 * @return java.lang.String
+	 * @return
 	 */
 	IPath getCurrentBaseLocation() {
 		IPath baseLocation = null;
-		IPath path = TaglibController.getFileBuffer(this).getLocation();
-		if (path.toFile().exists())
-			baseLocation = path;
-		else
-			baseLocation = ResourcesPlugin.getWorkspace().getRoot().getFile(path).getLocation();
-
+		IPath path = getCurrentParserPath();
+		baseLocation = ResourcesPlugin.getWorkspace().getRoot().getFile(path).getLocation();
 		if (baseLocation == null) {
 			baseLocation = path;
 		}
 		return baseLocation;
+	}
+
+	/**
+	 * Return the path used in the current parser. This method is called while
+	 * recursing through included fragments, so it much check the include
+	 * stack.
+	 * 
+	 * @return
+	 */
+	IPath getCurrentParserPath() {
+		IPath path = null;
+		if (!getIncludes().isEmpty()) {
+			path = (IPath) getIncludes().peek();
+		}
+		else {
+			path = TaglibController.getFileBuffer(this).getLocation();
+		}
+
+		return path;
 	}
 
 	protected DirectiveStructuredDocumentRegionHandler getDirectiveStructuredDocumentRegionHandler() {
@@ -816,7 +994,7 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 	/**
 	 * Gets the documents.
 	 * 
-	 * @return Returns a Hashtable
+	 * @return Returns a java.util.Hashtable
 	 */
 	public Hashtable getDocuments() {
 		if (fDocuments == null)
@@ -890,10 +1068,10 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 	}
 
 	/**
-	 * @param filePath the path to check for modification
+	 * @param filePath
+	 *            the path to check for modification
 	 */
 	boolean hasAnyIncludeBeenModified(IPath filePath) {
-
 		boolean result = false;
 		// check the top level
 		if (hasBeenModified(filePath)) {
@@ -945,15 +1123,14 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 		return result;
 	}
 
-	public void indexChanged(ITaglibRecordEvent event) {
-	}
+	public void indexChanged(ITaglibRecordEvent event) {}
 
 	/**
 	 * Loads the tags from the specified URI. It must point to a URL of valid
 	 * tag files to work.
 	 */
 	protected CMDocument loadTagDir(String uri) {
-		ITaglibRecord reference = TaglibIndex.resolve(getCurrentBaseLocation().toString(), uri, false);
+		ITaglibRecord reference = TaglibIndex.resolve(getCurrentParserPath().toString(), uri, false);
 		if (reference != null) {
 			CMDocument document = getCMDocumentBuilder().createCMDocument(reference);
 			if (document != null) {
@@ -972,17 +1149,24 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 
 	/**
 	 * Loads the taglib from the specified URI. It must point to a valid
-	 * taglib descriptor or valid JAR file to work.
+	 * taglib descriptor to work.
 	 */
-	protected CMDocument loadTaglib(String uri) {
-		CMDocument document = null;
-		ITextFileBuffer fileBuffer = TaglibController.getFileBuffer(this);
-		if (fileBuffer != null) {
-			ITaglibRecord reference = TaglibIndex.resolve(fileBuffer.getLocation().toString(), uri, false);
-			if (reference != null) {
-				document = getCMDocumentBuilder().createCMDocument(reference);
+	protected TLDCMDocumentDescriptor loadTaglib(String uri) {
+		TLDCMDocumentDescriptor entry = null;
+		IPath currentPath = getCurrentParserPath();
+		if (currentPath != null) {
+			CMDocument document = null;
+			ITaglibRecord record = TaglibIndex.resolve(currentPath.toString(), uri, false);
+			if (record != null) {
+				document = getCMDocumentBuilder().createCMDocument(record);
+				if (document != null) {
+					entry = new TLDCMDocumentDescriptor();
+					entry.document = document;
+					entry.cacheKey = getUniqueIdentifier(record);
+				}
 			}
 			else {
+				/* Not a very-often used code path (we hope) */
 				IPath currentBaseLocation = getCurrentBaseLocation();
 				if (currentBaseLocation != null) {
 					String location = URIResolverPlugin.createResolver().resolve(currentBaseLocation.toString(), null, uri);
@@ -991,11 +1175,14 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 							System.out.println("Loading tags from " + uri + " at " + location); //$NON-NLS-2$//$NON-NLS-1$
 						}
 						document = getCMDocumentBuilder().createCMDocument(location);
+						entry = new TLDCMDocumentDescriptor();
+						entry.document = document;
+						entry.cacheKey = location;
 					}
 				}
 			}
 		}
-		return document;
+		return entry;
 	}
 
 	protected void resetTaglibTrackers() {

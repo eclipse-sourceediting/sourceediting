@@ -23,6 +23,7 @@ import org.eclipse.core.filebuffers.IFileBuffer;
 import org.eclipse.core.filebuffers.IFileBufferListener;
 import org.eclipse.core.filebuffers.ITextFileBuffer;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.TLDCMDocumentManager;
 import org.eclipse.jst.jsp.core.internal.parser.JSPSourceParser;
@@ -54,9 +55,26 @@ public class TaglibController implements IDocumentSetupParticipant {
 		TLDCMDocumentManager tldDocumentManager;
 
 		public void indexChanged(ITaglibRecordEvent event) {
+			int type = event.getType();
+			if (type == ITaglibRecordEvent.CHANGED || type == ITaglibRecordEvent.REMOVED) {
+				Object key = TLDCMDocumentManager.getUniqueIdentifier(event.getTaglibRecord());
+				if (tldDocumentManager.getDocuments().containsKey(key)) {
+					if (_debugCache) {
+						System.out.println("TLDCMDocumentManager cleared its private CMDocument cache"); //$NON-NLS-1$
+					}
+					tldDocumentManager.getDocuments().remove(key);
+					tldDocumentManager.getSourceParser().resetHandlers();
+
+					if (document instanceof BasicStructuredDocument) {
+						((BasicStructuredDocument) document).reparse(this);
+					}
+				}
+			}
 			tldDocumentManager.indexChanged(event);
 		}
 	}
+
+	static final boolean _debugCache = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.jst.jsp.core/debug/tldcmdocument/cache")); //$NON-NLS-1$ //$NON-NLS-2$
 
 	class FileBufferListener implements IFileBufferListener {
 
@@ -102,7 +120,6 @@ public class TaglibController implements IDocumentSetupParticipant {
 				if (document instanceof BasicStructuredDocument) {
 					((BasicStructuredDocument) document).reparse(this);
 				}
-				// info.tldDocumentManager.doRebuild();
 			}
 		}
 
@@ -127,6 +144,7 @@ public class TaglibController implements IDocumentSetupParticipant {
 					if (info != null && info.textFileBuffer.equals(buffer)) {
 						TaglibIndex.removeTaglibIndexListener(info);
 						fDocumentMap.remove(keys[i]);
+						info.tldDocumentManager.clearCache();
 						removed = true;
 					}
 				}
@@ -233,6 +251,14 @@ public class TaglibController implements IDocumentSetupParticipant {
 		}
 	}
 
+	private static synchronized boolean isShutdown() {
+		return fIsShutdown;
+	}
+
+	private static synchronized void setShutdown(boolean isShutdown) {
+		fIsShutdown = isShutdown;
+	}
+
 	public synchronized static void shutdown() {
 		setShutdown(true);
 		FileBuffers.getTextFileBufferManager().removeFileBufferListener(_instance.fBufferListener);
@@ -246,6 +272,7 @@ public class TaglibController implements IDocumentSetupParticipant {
 	}
 
 	IFileBufferListener fBufferListener;
+
 	Map fDocumentMap;
 
 	List fJSPdocuments;
@@ -258,6 +285,7 @@ public class TaglibController implements IDocumentSetupParticipant {
 		fJSPdocuments = new ArrayList(1);
 		fDocumentMap = new HashMap(1);
 	}
+
 
 	/*
 	 * (non-Javadoc)
@@ -272,16 +300,4 @@ public class TaglibController implements IDocumentSetupParticipant {
 			_instance.fJSPdocuments.add(document);
 		}
 	}
-
-	private static synchronized boolean isShutdown() {
-		return fIsShutdown;
-	}
-
-
-	private static synchronized void setShutdown(boolean isShutdown) {
-		fIsShutdown = isShutdown;
-	}
-
-
-
 }

@@ -9,6 +9,7 @@ org.eclipse.jst.jsp.core/taglib/resolve=false
 
 # org.eclipse.jst.jsp.core.contentmodel.tld.TLDCMDocumentManager._debug
 org.eclipse.jst.jsp.core/debug/tldcmdocument/manager=false
+org.eclipse.jst.jsp.core/debug/tldcmdocument/cache=false
 
 # org.eclipse.jst.jsp.core.contentmodel.tld.CMDocumentFactoryTLD._debug
 org.eclipse.jst.jsp.core/debug/tldcmdocument/factory=false

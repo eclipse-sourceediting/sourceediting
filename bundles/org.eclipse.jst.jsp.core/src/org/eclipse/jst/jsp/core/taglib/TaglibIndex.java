@@ -39,6 +39,7 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jst.jsp.core.internal.Logger;
+import org.eclipse.jst.jsp.core.internal.contentmodel.tld.TLDCMDocumentManager;
 import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.osgi.framework.Bundle;
 
@@ -128,6 +129,7 @@ public final class TaglibIndex {
 				}
 			}
 			catch (JavaModelException e) {
+				Logger.logException(e);
 			}
 			classpathStack.pop();
 
@@ -302,6 +304,12 @@ public final class TaglibIndex {
 		if (_debugEvents) {
 			Logger.log(Logger.INFO_DEBUG, "TaglibIndex fired event:" + event); //$NON-NLS-1$
 		}
+		/*
+		 * Flush any shared cache entries, the TaglibControllers should handle
+		 * updating their documents as needed.
+		 */
+		TLDCMDocumentManager.getSharedDocumentCache().remove(TLDCMDocumentManager.getUniqueIdentifier(event.getTaglibRecord()));
+
 		ITaglibIndexListener[] listeners = _instance.fTaglibIndexListeners;
 		if (listeners != null) {
 			for (int i = 0; i < listeners.length; i++) {
