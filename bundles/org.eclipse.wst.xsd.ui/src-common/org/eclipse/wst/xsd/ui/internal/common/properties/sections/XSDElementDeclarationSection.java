@@ -488,6 +488,10 @@ public class XSDElementDeclarationSection extends MultiplicitySection
       minCombo.removeSelectionListener(this);
     if (maxCombo != null && !maxCombo.isDisposed())
       maxCombo.removeSelectionListener(this);
+    if (typeCombo != null && !typeCombo.isDisposed())
+      typeCombo.removeSelectionListener(this);
+    if (nameText != null && !nameText.isDisposed())
+      removeListeners(nameText);
     super.dispose();
   }
 

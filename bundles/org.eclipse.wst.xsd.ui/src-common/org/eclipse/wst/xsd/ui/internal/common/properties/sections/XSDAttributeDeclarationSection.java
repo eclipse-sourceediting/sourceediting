@@ -317,5 +317,14 @@ public class XSDAttributeDeclarationSection extends AbstractSection
 
     return true;
   }
+  
+  public void dispose()
+  {
+    if (nameText != null && !nameText.isDisposed())
+      removeListeners(nameText);
+    if (typeCombo != null && !typeCombo.isDisposed())
+      typeCombo.removeSelectionListener(this);
+    super.dispose();
+  }
 
 }
