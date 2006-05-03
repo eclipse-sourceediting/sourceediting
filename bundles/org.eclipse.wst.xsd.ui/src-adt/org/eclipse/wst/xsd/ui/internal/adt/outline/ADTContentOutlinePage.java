@@ -26,7 +26,9 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.part.MultiPageSelectionProvider;
 import org.eclipse.ui.views.contentoutline.ContentOutlinePage;
 import org.eclipse.wst.xsd.ui.internal.adt.design.DesignViewContextMenuProvider;
+import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IModelProxy;
 import org.eclipse.wst.xsd.ui.internal.adt.editor.ADTMultiPageEditor;
+import org.eclipse.wst.xsd.ui.internal.adt.facade.IModel;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDSchema;
 
@@ -172,7 +174,23 @@ public class ADTContentOutlinePage extends ContentOutlinePage
     {
       if (event.getSelectionProvider() != ADTContentOutlinePage.this)  //getTreeViewer())
       {
-        getTreeViewer().setSelection(event.getSelection(), true);
+        StructuredSelection selection = (StructuredSelection)event.getSelection();
+        StructuredSelection currentSelection = (StructuredSelection) getTreeViewer().getSelection();
+        
+        // TODO: Hack to prevent losing a selection when the schema is selected in the
+        // source.  Fix is to prevent the source from firing off selection changes when
+        // the selection source is not the source view.
+        if (selection.getFirstElement() instanceof IModel)
+        {
+          if (!(currentSelection.getFirstElement() instanceof IModelProxy))
+          {
+            getTreeViewer().setSelection(event.getSelection(), true);            
+          }
+        }
+        else
+        {
+          getTreeViewer().setSelection(event.getSelection(), true);
+        }
       }
     }
   }
