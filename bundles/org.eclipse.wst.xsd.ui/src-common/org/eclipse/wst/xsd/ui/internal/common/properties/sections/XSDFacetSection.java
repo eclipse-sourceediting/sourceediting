@@ -15,6 +15,7 @@ import java.math.BigInteger;
 
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
@@ -101,11 +102,7 @@ public class XSDFacetSection extends AbstractSection
 
     title = factory.createCLabel(composite, ""); //$NON-NLS-1$
     FontData fontData = composite.getFont().getFontData()[0];
-    int height = fontData.getHeight();
-    fontData.setHeight(height + 2);
-    fontData.setStyle(SWT.BOLD);
-    titleFont = new Font(null, fontData);
-    title.setFont(titleFont);
+    title.setFont(JFaceResources.getFontRegistry().getBold(fontData.getName()));
     title.setText(titleString + (isReadOnly ? " - " + Messages._UI_LABEL_READONLY : "")); //$NON-NLS-1$ //$NON-NLS-2$
 
     Composite facetComposite = factory.createComposite(composite, SWT.FLAT);
@@ -332,7 +329,11 @@ public class XSDFacetSection extends AbstractSection
       }
       
       if (xsdSimpleTypeDefinition != null)
-        titleString = Messages._UI_LABEL_TYPE + (anonymousTypeDefinition != null ? "(" + xsdElementDeclaration.getResolvedElementDeclaration().getName() + "Type)" : xsdSimpleTypeDefinition.getName())  + " , " + Messages._UI_LABEL_BASE + ": " + xsdSimpleTypeDefinition.getPrimitiveTypeDefinition().getName(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+      {
+        XSDSimpleTypeDefinition basePrimitiveType = xsdSimpleTypeDefinition.getPrimitiveTypeDefinition();
+        String basePrimitiveTypeString = basePrimitiveType != null ? basePrimitiveType.getName() : "";
+        titleString = Messages._UI_LABEL_TYPE + (anonymousTypeDefinition != null ? "(" + xsdFeature.getResolvedFeature().getName() + "Type)" : xsdSimpleTypeDefinition.getName())  + " , " + Messages._UI_LABEL_BASE + ": " + basePrimitiveTypeString; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+      }
     }
     else if (input instanceof XSDSimpleTypeDefinition)
     {
