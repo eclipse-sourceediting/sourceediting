@@ -33,15 +33,15 @@ public class JSPJavaValidator extends JSPValidator {
 	 * @param reporter
 	 */
 	protected void validateFile(IFile f, IReporter reporter) {
-		
-		IDOMModel model = null;
+		IStructuredModel model = null;
 		try {
 			// get jsp model, get tranlsation
-			model = (IDOMModel) StructuredModelManager.getModelManager().getModelForRead(f);
-			if (model != null) {
-
-				setupAdapterFactory(model);
-				IDOMDocument xmlDoc = model.getDocument();
+			model = StructuredModelManager.getModelManager().getModelForRead(f);
+			if (model instanceof IDOMModel) {
+				IDOMModel domModel = (IDOMModel)model;
+				
+				setupAdapterFactory(domModel);
+				IDOMDocument xmlDoc = domModel.getDocument();
 				JSPTranslationAdapter translationAdapter = (JSPTranslationAdapter) xmlDoc.getAdapterFor(IJSPTranslation.class);
 				JSPTranslation translation = translationAdapter.getJSPTranslation();
 
@@ -52,7 +52,7 @@ public class JSPJavaValidator extends JSPValidator {
 				reporter.removeAllMessages(this, f);
 				// add new messages
 				for (int i = 0; i < problems.size() && !reporter.isCancelled(); i++) {
-					IMessage m = createMessageFromProblem((IProblem) problems.get(i), f, translation, model.getStructuredDocument());
+					IMessage m = createMessageFromProblem((IProblem) problems.get(i), f, translation, domModel.getStructuredDocument());
 					if (m != null)
 						reporter.addMessage(this, m);
 				}

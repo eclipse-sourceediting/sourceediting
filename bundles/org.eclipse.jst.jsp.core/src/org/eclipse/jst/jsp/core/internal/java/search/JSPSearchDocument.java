@@ -104,15 +104,16 @@ public class JSPSearchDocument {
 		if (!JSPSearchSupport.isJsp(jspFile))
 			return translation;
 
-		IDOMModel xmlModel = null;
+		IStructuredModel model = null;
 		try {
 			// get existing model for read, then get document from it
 			IModelManager modelManager = getModelManager();
 			if (modelManager != null) {
-				xmlModel = (IDOMModel) modelManager.getModelForRead(jspFile);
+				model = modelManager.getModelForRead(jspFile);
 			}
 			// handle unsupported
-			if (xmlModel != null) {
+			if (model instanceof IDOMModel) {
+				IDOMModel xmlModel = (IDOMModel)model;
 				setupAdapterFactory(xmlModel);
 				IDOMDocument doc = xmlModel.getDocument();
 				JSPTranslationAdapter adapter = (JSPTranslationAdapter) doc.getAdapterFor(IJSPTranslation.class);
@@ -131,8 +132,8 @@ public class JSPSearchDocument {
 			// Logger.logException(e);
 		}
 		finally {
-			if (xmlModel != null)
-				xmlModel.releaseFromRead();
+			if (model != null)
+				model.releaseFromRead();
 		}
 		return translation;
 	}
