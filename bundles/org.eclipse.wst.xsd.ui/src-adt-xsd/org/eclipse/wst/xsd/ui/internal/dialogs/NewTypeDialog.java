@@ -34,7 +34,7 @@ public class NewTypeDialog extends NewComponentDialog implements IComponentDialo
   protected Object setObject;
   protected int typeKind;
   protected Object selection;
-  private boolean allowComplexType;
+  private boolean allowComplexType = true;
 
   public NewTypeDialog()
   {
