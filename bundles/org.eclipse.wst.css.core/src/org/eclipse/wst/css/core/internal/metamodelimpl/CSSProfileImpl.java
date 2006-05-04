@@ -14,13 +14,15 @@ package org.eclipse.wst.css.core.internal.metamodelimpl;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.Locale;
-import java.util.MissingResourceException;
+import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
+import java.util.Vector;
 
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.wst.css.core.internal.Logger;
 import org.eclipse.wst.css.core.internal.metamodel.CSSMetaModel;
@@ -45,6 +47,16 @@ class CSSProfileImpl implements CSSProfile {
 		super();
 		fID = id;
 		fURL = url;
+	}
+
+	/**
+	 * Constructor for CSSMetaModelProfileInfoImpl.
+	 */
+	CSSProfileImpl(String id, URL url, String relativeURI) {
+		super();
+		fID = id;
+		fURL = url;
+		fRelativeURI = relativeURI;
 	}
 
 	/*
@@ -76,37 +88,129 @@ class CSSProfileImpl implements CSSProfile {
 	}
 
 	private ResourceBundle getResourceBundle() {
-		ClassLoader targetLoader = null;
+		ResourceBundle resourceBundle = null;
+
+		Bundle bundle = null;
 		String pluginID = getOwnerPluginID();
 		if (pluginID != null) {
-			Bundle bundle = Platform.getBundle(pluginID);
+			bundle = Platform.getBundle(pluginID);
 			if (bundle != null) {
-				targetLoader = bundle.getClass().getClassLoader();
+				// needed to work around FileLocator.openStream not looking for
+				// files with Java naming conventions (BUG103345)
+				IPath[] paths = getResourceBundlePaths();
+				if (paths != null) {
+					InputStream inStream = null;
+					int i = 0;
+					while (i < paths.length && inStream == null) {
+						IPath path = paths[i];
+						try {
+							inStream = FileLocator.openStream(bundle, path, true);
+							if (inStream != null)
+								resourceBundle = new PropertyResourceBundle(inStream);
+							else
+								++i;
+						}
+						catch (IOException e) {
+							// unable to open stream with current path so just
+							// try next path
+							++i;
+						}
+						finally {
+							if (inStream != null)
+								try {
+									inStream.close();
+								}
+								catch (IOException e) {
+									Logger.log(Logger.WARNING_DEBUG, e.getMessage(), e);
+								}
+						}
+					}
+				}
 			}
 		}
-		if (targetLoader == null) {
-			targetLoader = this.getClass().getClassLoader();
+		return resourceBundle;
+	}
+
+	/**
+	 * Returns an array of potential resource bundle paths or null if there
+	 * are none
+	 * 
+	 * @return IPath[] or null
+	 */
+	private IPath[] getResourceBundlePaths() {
+		IPath[] paths = new IPath[0];
+
+		if (fRelativeURI != null) {
+			// original path = location of profile.xml - profile.xml
+			IPath originalPath = Path.fromOSString(fRelativeURI).removeLastSegments(1);
+
+			String baseName = "cssprofile"; //$NON-NLS-1$ 
+			Vector names = calculateBundleNames(baseName, Locale.getDefault());
+
+			int a = 0;
+			paths = new IPath[names.size()];
+			for (int i = names.size(); i > 0; --i) {
+				String bundleName = (String) names.get(i - 1);
+				IPath path = originalPath.append(bundleName).addFileExtension("properties"); //$NON-NLS-1$
+				paths[a] = path;
+				++a;
+			}
+		}
+		return paths;
+	}
+
+	/**
+	 * Calculate the bundles along the search path from the base bundle to the
+	 * bundle specified by baseName and locale.<br />
+	 * 
+	 * @param baseName
+	 *            the base bundle name
+	 * @param locale
+	 *            the locale
+	 * @param names
+	 *            the vector used to return the names of the bundles along the
+	 *            search path.
+	 * 
+	 */
+	private Vector calculateBundleNames(String baseName, Locale locale) {
+	    // this method can be deleted after BUG103345 is fixed
+		final Vector result = new Vector(4); // default size 4
+		final String language = locale.getLanguage();
+		final int languageLength = language.length();
+		final String country = locale.getCountry();
+		final int countryLength = country.length();
+		final String variant = locale.getVariant();
+		final int variantLength = variant.length();
+
+		result.addElement(baseName); // at least add base name
+		if (languageLength + countryLength + variantLength == 0) {
+			// The locale is "", "", "".
+			return result;
+		}
+		final StringBuffer temp = new StringBuffer(baseName);
+		temp.append('_');
+		temp.append(language);
+		if (languageLength > 0) {
+			result.addElement(temp.toString());
 		}
 
-		String profileURLString = getProfileURL().toString();
-		int lastSlashPos = profileURLString.lastIndexOf('/');
-		if (1 < lastSlashPos) {
-			String profileURLBase = profileURLString.substring(0, lastSlashPos + 1);
-			try {
-				URL[] urls = new URL[]{new URL(profileURLBase)};
-				targetLoader = URLClassLoader.newInstance(urls, targetLoader);
-			}
-			catch (MalformedURLException e) {
-			}
+		if (countryLength + variantLength == 0) {
+			return result;
+		}
+		temp.append('_');
+		temp.append(country);
+		if (countryLength > 0) {
+			result.addElement(temp.toString());
 		}
 
-		try {
-			return ResourceBundle.getBundle("cssprofile", //$NON-NLS-1$
-						Locale.getDefault(), targetLoader);
+		if (variantLength == 0) {
+			return result;
 		}
-		catch (MissingResourceException e) {
-			return null;
-		}
+		temp.append('_');
+		temp.append(variant);
+		result.addElement(temp.toString());
+
+		return result;
 	}
 
 	/*
@@ -155,4 +259,5 @@ class CSSProfileImpl implements CSSProfile {
 	String fOwnerPluginID = null;
 	boolean fDefault = false;
 	boolean fLogging = false;
+	private String fRelativeURI = null;
 }

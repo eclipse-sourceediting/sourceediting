@@ -17,6 +17,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
@@ -59,15 +60,15 @@ public class RegistryReader {
 
 			if (strID != null || strURI != null) {
 				Bundle bundle = null;
-				String pluginId = element.getDeclaringExtension().getNamespace();
+				String pluginId = element.getContributor().getName();
 				bundle = Platform.getBundle(pluginId);
 				if (bundle != null) {
 					Path path = new Path(strURI);
-					URL url = Platform.find(bundle, path);
+					URL url = FileLocator.find(bundle, path, null);
 					if (url != null) {
 						try {
-							url = Platform.asLocalURL(url);
-							info = new CSSProfileImpl(strID, url);
+							url = FileLocator.toFileURL(url);
+							info = new CSSProfileImpl(strID, url, strURI);
 							info.setProfileName(strNAME);
 							info.setDefault((element.getAttribute(ATT_DEFAULT) != null));
 							info.setLogging((element.getAttribute(ATT_LOGGING) != null));
