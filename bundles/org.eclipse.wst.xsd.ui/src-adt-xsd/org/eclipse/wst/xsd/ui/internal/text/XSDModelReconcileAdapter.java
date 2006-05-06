@@ -13,11 +13,8 @@ package org.eclipse.wst.xsd.ui.internal.text;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
-import org.eclipse.wst.xsd.ui.internal.util.XSDDOMHelper;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDSchema;
-import org.eclipse.xsd.util.XSDConstants;
-import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -71,85 +68,19 @@ public class XSDModelReconcileAdapter extends DocumentAdapter
           if (newValue instanceof Element)
           {
             adapt((Element)newValue);
-//  Add     updateParentForDerivation(node, listener);
           }
           break;
         }
         case INodeNotifier.REMOVE:
-        {
-          Node node = (Node)notifier;
-          XSDConcreteComponent listener = schema.getCorrespondingComponent(node);
-         
-          if (listener instanceof XSDSchema)
-          {
-            // we want to reset the schema's external elements when the directive is deleted
-            if (feature instanceof Element)
-            {
-              Element elem = (Element)feature;
-              if (XSDDOMHelper.inputEquals(elem, XSDConstants.INCLUDE_ELEMENT_TAG, false) ||
-                  XSDDOMHelper.inputEquals(elem, XSDConstants.IMPORT_ELEMENT_TAG, false) ||
-                  XSDDOMHelper.inputEquals(elem, XSDConstants.REDEFINE_ELEMENT_TAG, false))
-              {
-                schema.reset();
-                schema.update();
-              }
-            }
-          }          
-        }
         case INodeNotifier.CHANGE:
-        {
-          Node node = (Node)notifier;
-          XSDConcreteComponent listener = schema.getCorrespondingComponent(node);
-          if (node.getNodeType() == Node.ELEMENT_NODE)
-          {
-            listener.elementAttributesChanged((Element)node);
-            listener.elementChanged((Element)node);
-          }
-          else if (node.getNodeType() == Node.DOCUMENT_NODE)
-          {
-            listener.elementAttributesChanged(((Document)node).getDocumentElement());
-            listener.elementChanged(((Document)node).getDocumentElement());
-          }
-          break;
-        }
         case INodeNotifier.STRUCTURE_CHANGED:
         case INodeNotifier.CONTENT_CHANGED:
         {
           Node node = (Node)notifier;
-          XSDConcreteComponent listener = schema.getCorrespondingComponent(node);
-          if (node.getNodeType() == Node.ELEMENT_NODE)
-          {
-            listener.elementContentsChanged((Element)node);
-            break;
-          }
-          else if (node.getNodeType() == Node.DOCUMENT_NODE)
-          {
-            Element docElement = ((Document)node).getDocumentElement();
-            // Need to add check if doc element is being edited in the source
-            if (docElement != null)
-            {
-              String prefix = docElement.getPrefix();
-              String xmlnsString = prefix == null? "xmlns" : "xmlns:" + prefix;
-              Attr attr = docElement.getAttributeNode(xmlnsString);
-              boolean doParse = false;
-              if (attr != null)
-              {
-                if (attr.getValue().equals(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001) && docElement.getLocalName().equals("schema"))
-                {
-                  // We have a viable schema so parse it
-                  doParse = true;
-                }
-              }
-              
-              if (doParse)
-              {
-                adapt(docElement);
-                schema.setElement(docElement);
-              }
-            }
-          }
+          XSDConcreteComponent concreteComponent = schema.getCorrespondingComponent(node);
+          concreteComponent.elementContentsChanged((Element)node);
           break;
-        }
+        }             
       }
     }
 
