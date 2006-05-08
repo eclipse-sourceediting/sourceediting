@@ -5,3 +5,4 @@ dtdcore.jar
 build.xml
 temp.folder
 @dot
+javaCompiler...args

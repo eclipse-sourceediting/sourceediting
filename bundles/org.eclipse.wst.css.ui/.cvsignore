@@ -5,3 +5,4 @@ dev.properties
 bin
 @dot
 src.zip
+javaCompiler...args
