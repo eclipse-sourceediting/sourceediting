@@ -62,6 +62,12 @@ public class DeleteCommand extends BaseCommand
 
           modelGroup.getContents().remove(parent);
         }
+        else if (parent.getContainer() instanceof XSDComplexTypeDefinition)
+        {
+          XSDComplexTypeDefinition complexType = (XSDComplexTypeDefinition) parent.getContainer();
+          if (complexType.getComplexType() != null)
+            complexType.getComplexType().setContent(null);
+        }
       }
       else if (parent instanceof XSDSchema)
       {
