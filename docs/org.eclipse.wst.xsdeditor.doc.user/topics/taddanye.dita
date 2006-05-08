@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Arbortext, Inc., 1988-2005, v.4002-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<task id="taddanye" xml:lang="en-us">
+<title>Adding an any element</title>
+<titlealts>
+<searchtitle>Adding an any element</searchtitle>
+</titlealts>
+<shortdesc>You can use the <codeph>any</codeph> element to provide something
+similar to a DTD's ANY content model, however, it must be done in conjunction
+with namespaces. This enables you to include any well-formed XML content,
+such as an HTML Web page that conforms to XHTML 1.0 syntax.</shortdesc>
+<prolog><metadata>
+<keywords><indexterm>XML schema editor<indexterm>adding<indexterm>an any element</indexterm></indexterm></indexterm>
+<indexterm>XML schema editor<indexterm>an any element<indexterm>adding</indexterm></indexterm></indexterm>
+<indexterm>XML schema files<indexterm>adding<indexterm>an any element</indexterm></indexterm></indexterm>
+<indexterm>XML schema files<indexterm>an any element<indexterm>adding</indexterm></indexterm></indexterm>
+</keywords>
+</metadata></prolog>
+<taskbody>
+<context><p>For example:</p><p><codeblock>&lt;element name = "MyWebPage">
+&lt;complexType>
+&lt;any namespace ="http://www.w3.org/1999/xhtml>
+ &lt; minOccurs="1" maxOccurs="unbounded" processContents="skip"/>
+&lt;/complexType>
+&lt;/element></codeblock></p><p>The preceding schema fragment allows a <varname>&lt;MyWebPage></varname> element
+to contain any well-formed XHTML data that appears in the specified namespace.</p><p>The
+following instructions were written for the Resource perspective, but they
+will also work in many other perspectives.</p><p>To add an <codeph>any</codeph> element,
+follow these steps:</p></context>
+<steps>
+<step><cmd>In the Outline view, right-click the content model that you want
+to work with and click <uicontrol>Add Any</uicontrol>. </cmd></step>
+<step><cmd>Select the new <codeph>any</codeph> element.</cmd></step>
+<step><cmd>In the Properties view of the schema editor, for a <b>namespace</b> value,
+you can select <b>##any</b> (this allows any well-formed XML from any namespace), <b>##local </b> (this
+allows any well-formed XML that is not declared to be in a namespace), <b>##other </b> (this
+allows any well-formed XML that is not from the target namespace of the type
+being defined) or <b>##targetNamespace </b> (which is shorthand for the target
+namespace of the type being defined). </cmd></step>
+<step><cmd>For a <uicontrol>processContents</uicontrol> value, you can select <b>skip</b> (the
+XML processor will not validate the content at all), <b>lax</b> (the XML processor
+will validate the content as much as it can), or <b>strict </b> (the XML processor
+will validate all the content).</cmd></step>
+<step><cmd>The <uicontrol>minOccurs</uicontrol> value is the number of times
+the <codeph>any</codeph> element must appear in an instance document. You
+can select <uicontrol>0</uicontrol> if you want the element to be optional;
+otherwise, select <uicontrol>1</uicontrol>. </cmd></step>
+<step><cmd>The <uicontrol>maxOccurs</uicontrol> value is the maximum number
+of times an <codeph>any</codeph> element can appear in an instance document.
+You can select <uicontrol>0</uicontrol>, <uicontrol>1</uicontrol>, or, to
+indicate there is no maximum number of occurrences, <uicontrol>unbounded</uicontrol>.</cmd>
+</step>
+<step><cmd>Click the <uicontrol>Documentation</uicontrol> tab if you want
+to provide any information about this element.</cmd><info>The <uicontrol>Documentation</uicontrol> page
+is used for human readable material, such as a description, and the <uicontrol>App
+Info</uicontrol> page can be used to provide information for applications.</info>
+</step>
+</steps>
+<postreq><p>(c) Copyright 2001, World Wide Web (Massachusetts Institute of
+Technology, Institut National de Recherche en Informatique et en Automatique,
+Keio University).</p></postreq>
+</taskbody>
+</task>
