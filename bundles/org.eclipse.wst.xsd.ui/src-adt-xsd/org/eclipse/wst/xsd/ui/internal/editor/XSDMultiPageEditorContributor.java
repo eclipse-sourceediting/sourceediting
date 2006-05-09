@@ -10,11 +10,13 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.editor;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.gef.editparts.ZoomManager;
 import org.eclipse.gef.ui.actions.ActionRegistry;
+import org.eclipse.gef.ui.actions.GEFActionConstants;
 import org.eclipse.gef.ui.actions.ZoomComboContributionItem;
 import org.eclipse.gef.ui.actions.ZoomInRetargetAction;
 import org.eclipse.gef.ui.actions.ZoomOutRetargetAction;
@@ -24,15 +26,18 @@ import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.IEditorActionBarContributor;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchActionConstants;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.actions.ActionFactory;
-import org.eclipse.ui.ide.IDEActionFactory;
+import org.eclipse.ui.actions.RetargetAction;
 import org.eclipse.ui.part.MultiPageEditorActionBarContributor;
 import org.eclipse.ui.part.MultiPageEditorPart;
 import org.eclipse.ui.texteditor.ITextEditor;
-import org.eclipse.ui.texteditor.ITextEditorActionConstants;
+import org.eclipse.wst.sse.ui.internal.ISourceViewerActionBarContributor;
 import org.eclipse.wst.xsd.ui.internal.actions.IXSDToolbarAction;
+import org.eclipse.wst.xsd.ui.internal.adt.actions.DeleteAction;
 
 /**
  * Manages the installation/deinstallation of global actions for multi-page
@@ -43,13 +48,24 @@ import org.eclipse.wst.xsd.ui.internal.actions.IXSDToolbarAction;
 public class XSDMultiPageEditorContributor extends MultiPageEditorActionBarContributor
 {
   private IEditorPart activeEditorPart;
-
+  private InternalXSDMultiPageEditor xsdEditor;
+  protected ITextEditor textEditor;
+  protected IEditorActionBarContributor sourceViewerActionContributor = null;
+  protected List fPartListeners= new ArrayList();
+  ZoomInRetargetAction zoomInRetargetAction;
+  ZoomOutRetargetAction zoomOutRetargetAction;
+  ZoomComboContributionItem zoomComboContributionItem;
   /**
    * Creates a multi-page contributor.
    */
   public XSDMultiPageEditorContributor()
   {
     super();
+    sourceViewerActionContributor = new SourcePageActionContributor();
+    zoomInRetargetAction = new ZoomInRetargetAction();
+    zoomOutRetargetAction = new ZoomOutRetargetAction();
+    fPartListeners.add(zoomInRetargetAction);
+    fPartListeners.add(zoomOutRetargetAction);
   }
 
   /**
@@ -75,35 +91,55 @@ public class XSDMultiPageEditorContributor extends MultiPageEditorActionBarContr
     activeEditorPart = part;
 
     IActionBars actionBars = getActionBars();
-
-    if (part != null)
+    boolean isSource = false;
+    
+    if (activeEditorPart != null && activeEditorPart instanceof ITextEditor)
     {
-      Object adapter = part.getAdapter(ActionRegistry.class);
-      if (adapter instanceof ActionRegistry)
+      isSource = true;
+      zoomInRetargetAction.setEnabled(false);
+      zoomOutRetargetAction.setEnabled(false);
+      activateSourcePage(activeEditorPart, true);
+    }
+    else
+    {
+      activateSourcePage(xsdEditor, false);
+      if (part instanceof InternalXSDMultiPageEditor)
       {
-        ActionRegistry registry = (ActionRegistry) adapter;
-        actionBars.setGlobalActionHandler(ActionFactory.UNDO.getId(), registry.getAction(ActionFactory.UNDO.getId()));
-        actionBars.setGlobalActionHandler(ActionFactory.REDO.getId(), registry.getAction(ActionFactory.REDO.getId()));
-        actionBars.updateActionBars();
+        xsdEditor = (InternalXSDMultiPageEditor) part;
+      }
+      if (xsdEditor != null)
+      {
+        Object adapter = xsdEditor.getAdapter(ActionRegistry.class);
+        if (adapter instanceof ActionRegistry)
+        {
+          ActionRegistry registry = (ActionRegistry) adapter;
+          actionBars.setGlobalActionHandler(ActionFactory.DELETE.getId(), registry.getAction(DeleteAction.ID));
+          actionBars.setGlobalActionHandler(GEFActionConstants.ZOOM_IN, registry.getAction(GEFActionConstants.ZOOM_IN));
+          actionBars.setGlobalActionHandler(GEFActionConstants.ZOOM_OUT, registry.getAction(GEFActionConstants.ZOOM_OUT));
+          zoomInRetargetAction.setEnabled(true);
+          zoomOutRetargetAction.setEnabled(true);
+        }
       }
     }
 
-    if (actionBars != null)
-    {
-
-      ITextEditor editor = (part instanceof ITextEditor) ? (ITextEditor) part : null;
-
-      actionBars.setGlobalActionHandler(ActionFactory.DELETE.getId(), getAction(editor, ITextEditorActionConstants.DELETE));
-      actionBars.setGlobalActionHandler(ActionFactory.UNDO.getId(), getAction(editor, ITextEditorActionConstants.UNDO));
-      actionBars.setGlobalActionHandler(ActionFactory.REDO.getId(), getAction(editor, ITextEditorActionConstants.REDO));
-      actionBars.setGlobalActionHandler(ActionFactory.CUT.getId(), getAction(editor, ITextEditorActionConstants.CUT));
-      actionBars.setGlobalActionHandler(ActionFactory.COPY.getId(), getAction(editor, ITextEditorActionConstants.COPY));
-      actionBars.setGlobalActionHandler(ActionFactory.PASTE.getId(), getAction(editor, ITextEditorActionConstants.PASTE));
-      actionBars.setGlobalActionHandler(ActionFactory.SELECT_ALL.getId(), getAction(editor, ITextEditorActionConstants.SELECT_ALL));
-      actionBars.setGlobalActionHandler(ActionFactory.FIND.getId(), getAction(editor, ITextEditorActionConstants.FIND));
-      actionBars.setGlobalActionHandler(IDEActionFactory.BOOKMARK.getId(), getAction(editor, IDEActionFactory.BOOKMARK.getId()));
-
+    if (actionBars != null) {
+      // update menu bar and tool bar
       actionBars.updateActionBars();
+    }
+    
+    if (zoomComboContributionItem != null)
+    {
+      zoomComboContributionItem.setVisible(!isSource);
+      zoomComboContributionItem.update();
+    }
+  }
+  
+  protected void activateSourcePage(IEditorPart activeEditor, boolean state)
+  {
+    if (sourceViewerActionContributor != null && sourceViewerActionContributor instanceof ISourceViewerActionBarContributor)
+    {
+      sourceViewerActionContributor.setActiveEditor(activeEditor);
+      ((ISourceViewerActionBarContributor) sourceViewerActionContributor).setViewerSpecificContributionsEnabled(state);
     }
   }
 
@@ -115,11 +151,26 @@ public class XSDMultiPageEditorContributor extends MultiPageEditorActionBarContr
       activeNestedEditor = part;
     }
     setActivePage(activeNestedEditor);
+    
+    if (part instanceof InternalXSDMultiPageEditor)
+    {
+      xsdEditor = (InternalXSDMultiPageEditor) part;
+
+      textEditor = xsdEditor.getTextEditor();
+      if (textEditor != null)
+      {      
+//        updateActions();  
+        getActionBars().updateActionBars();
+      }
+    }
+    
     List list = XSDEditorPlugin.getPlugin().getXSDEditorConfiguration().getToolbarActions();
     for (Iterator i = list.iterator(); i.hasNext(); )
     {
       ((IXSDToolbarAction)i.next()).setEditorPart(activeNestedEditor);
     }
+    
+    super.setActiveEditor(part);
   }
 
   public void contributeToMenu(IMenuManager manager)
@@ -134,8 +185,8 @@ public class XSDMultiPageEditorContributor extends MultiPageEditorActionBarContr
       menu.add((IXSDToolbarAction)i.next());
     }
 
-    menu.add((new ZoomInRetargetAction()));
-    menu.add((new ZoomOutRetargetAction()));
+    menu.add(zoomInRetargetAction);
+    menu.add(zoomOutRetargetAction);
 
     menu.updateAll(true);
   }
@@ -152,6 +203,36 @@ public class XSDMultiPageEditorContributor extends MultiPageEditorActionBarContr
 
     manager.add(new Separator());
     String[] zoomStrings = new String[] { ZoomManager.FIT_ALL, ZoomManager.FIT_HEIGHT, ZoomManager.FIT_WIDTH };
-    manager.add(new ZoomComboContributionItem(getPage(), zoomStrings));
+    zoomComboContributionItem = new ZoomComboContributionItem(getPage(), zoomStrings);
+    manager.add(zoomComboContributionItem);
   }
+  
+  
+  public void init(IActionBars bars, IWorkbenchPage page)
+  {
+    Iterator e = fPartListeners.iterator();
+    while (e.hasNext())
+    {
+      page.addPartListener((RetargetAction) e.next());
+    }
+    
+    initSourceViewerActionContributor(bars);
+    
+    super.init(bars, page);
+  }
+
+  
+  protected void initSourceViewerActionContributor(IActionBars actionBars) {
+    if (sourceViewerActionContributor != null)
+      sourceViewerActionContributor.init(actionBars, getPage());
+  }
+  
+  public void dispose()
+  {
+    fPartListeners = null;
+    if (sourceViewerActionContributor != null)
+      sourceViewerActionContributor.dispose();
+    super.dispose();
+  }
+
 }
