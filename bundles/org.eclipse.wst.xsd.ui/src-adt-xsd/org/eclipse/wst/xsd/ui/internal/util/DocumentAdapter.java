@@ -14,21 +14,26 @@ abstract class DocumentAdapter implements INodeAdapter
   {
     this.document = document;
     ((INodeNotifier) document).addAdapter(this);
-    adapt(document.getDocumentElement());
+    adaptChildElements(document);
   }
 
+  private void adaptChildElements(Node parentNode)
+  {
+    for (Node child = parentNode.getFirstChild(); child != null; child = child.getNextSibling())
+    {
+      if (child.getNodeType() == Node.ELEMENT_NODE)
+      {
+        adapt((Element) child);
+      }
+    }    
+  }
+  
   public void adapt(Element element)
   {
     if (((INodeNotifier) element).getExistingAdapter(this) == null)
     {
       ((INodeNotifier) element).addAdapter(this);
-      for (Node child = element.getFirstChild(); child != null; child = child.getNextSibling())
-      {
-        if (child.getNodeType() == Node.ELEMENT_NODE)
-        {
-          adapt((Element) child);
-        }
-      }
+      adaptChildElements(element);  
     }
   }
 

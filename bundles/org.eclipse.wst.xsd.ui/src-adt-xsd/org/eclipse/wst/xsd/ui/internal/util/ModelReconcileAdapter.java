@@ -34,7 +34,7 @@ public abstract class ModelReconcileAdapter extends DocumentAdapter
   protected void handleNodeChanged(Node node)
   {    
   }
-
+  
   public void handleNotifyChange(INodeNotifier notifier, int eventType, Object feature, Object oldValue, Object newValue, int index)
   {
     switch (eventType)
@@ -43,8 +43,9 @@ public abstract class ModelReconcileAdapter extends DocumentAdapter
       {
         if (newValue instanceof Element)
         {
-          adapt((Element)newValue);
-        }
+          Element element = (Element)newValue;
+          adapt(element);
+        }  
         break;
       }
       case INodeNotifier.REMOVE:
