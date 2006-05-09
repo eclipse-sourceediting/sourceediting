@@ -48,6 +48,11 @@ public class XSDEditorPlugin extends AbstractUIPlugin
 
   public static final String CONST_XSD_LANGUAGE_QUALIFY = "org.eclipse.wst.xmlschema.xsdQualify"; //$NON-NLS-1$
   public static final String CONST_DEFAULT_TARGET_NAMESPACE = "org.eclipse.wst.xmlschema.defaultTargetnamespaceText"; //$NON-NLS-1$
+  
+  public static String DEFAULT_PAGE = "org.eclipse.wst.xsd.ui.internal.defaultPage";
+  public static String DESIGN_PAGE = "org.eclipse.wst.xsd.ui.internal.designPage";
+  public static String SOURCE_PAGE = "org.eclipse.wst.xsd.ui.internal.sourcePage";
+
 	/**
 	 * The constructor.
 	 */
@@ -221,6 +226,7 @@ public class XSDEditorPlugin extends AbstractUIPlugin
     store.setDefault(CONST_SHOW_INHERITED_CONTENT, false);
     store.setDefault(CONST_XSD_DEFAULT_PREFIX_TEXT, "xsd"); //$NON-NLS-1$
     store.setDefault(CONST_XSD_LANGUAGE_QUALIFY, false);
+    store.setDefault(DEFAULT_PAGE, DESIGN_PAGE);
     store.setDefault(CONST_DEFAULT_TARGET_NAMESPACE, DEFAULT_TARGET_NAMESPACE);
     
     //Even the last item in the list must contain a trailing List separator
@@ -292,5 +298,25 @@ public class XSDEditorPlugin extends AbstractUIPlugin
   public static Shell getShell() {
     return getPlugin().getWorkbench().getActiveWorkbenchWindow().getShell();
   }
+  
+  public void setSourcePageAsDefault()
+  {
+    getPreferenceStore().setValue(DEFAULT_PAGE, SOURCE_PAGE);
+  }
 
+  public void setDesignPageAsDefault()
+  {
+    getPreferenceStore().setValue(DEFAULT_PAGE, DESIGN_PAGE);
+  }
+  
+  /**
+   * Method getDefaultPage.
+   * 
+   * @return String value of the string constant that is the default page
+   *         the editor should turn to when first opened. Changes to the
+   *         last visible page when the editor was closed
+   */
+  public String getDefaultPage() {
+    return getPreferenceStore().getString(DEFAULT_PAGE);
+  }
 }

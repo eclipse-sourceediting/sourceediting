@@ -27,10 +27,12 @@ import org.eclipse.wst.xsd.ui.internal.adt.facade.IModel;
 import org.eclipse.wst.xsd.ui.internal.adt.outline.ADTContentOutlinePage;
 import org.eclipse.wst.xsd.ui.internal.adt.outline.ADTContentOutlineProvider;
 import org.eclipse.wst.xsd.ui.internal.adt.outline.ADTLabelProvider;
+import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 
 public abstract class ADTMultiPageEditor extends CommonMultiPageEditor
 {
   protected IModel model;
+  private int currentPage = -1;
   
   /**
    * Creates a multi-page editor example.
@@ -77,10 +79,25 @@ public abstract class ADTMultiPageEditor extends CommonMultiPageEditor
     
     initializeGraphicalViewer();
     
-    setActivePage(0);
+    int pageIndexToShow = getDefaultPageTypeIndex();
+    setActivePage(pageIndexToShow);
   }
 
-  
+  protected int getDefaultPageTypeIndex() {
+    int pageIndex = SOURCE_PAGE_INDEX;
+    if (XSDEditorPlugin.getPlugin().getDefaultPage().equals(XSDEditorPlugin.DESIGN_PAGE)) {
+        pageIndex = DESIGN_PAGE_INDEX;
+    }
+
+    return pageIndex;
+  }
+
+  protected void pageChange(int newPageIndex)
+  {
+    currentPage = newPageIndex;
+    super.pageChange(newPageIndex);
+  }
+
   protected ScrollingGraphicalViewer getGraphicalViewer()
   {
     return new DesignViewGraphicalViewer(this, getSelectionManager());
@@ -130,5 +147,19 @@ public abstract class ADTMultiPageEditor extends CommonMultiPageEditor
   protected void initializeGraphicalViewer()
   {
     graphicalViewer.setContents(model);
+  }
+  
+  public void dispose()
+  {
+    if (currentPage == SOURCE_PAGE_INDEX)
+    {
+      XSDEditorPlugin.getPlugin().setSourcePageAsDefault();
+    }
+    else
+    {
+      XSDEditorPlugin.getPlugin().setDesignPageAsDefault();
+    }
+
+    super.dispose();
   }
 }
