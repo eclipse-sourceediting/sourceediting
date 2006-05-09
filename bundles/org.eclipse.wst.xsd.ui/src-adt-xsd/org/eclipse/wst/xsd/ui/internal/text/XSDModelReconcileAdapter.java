@@ -29,7 +29,6 @@ public class XSDModelReconcileAdapter extends ModelReconcileAdapter
   
   protected void handleNodeChanged(Node node)
   {
-    System.out.println("handeNodeChanged=" + node.getNodeName());
     XSDConcreteComponent concreteComponent = schema.getCorrespondingComponent(node);    
     concreteComponent.elementChanged((Element)node);    
   }  
