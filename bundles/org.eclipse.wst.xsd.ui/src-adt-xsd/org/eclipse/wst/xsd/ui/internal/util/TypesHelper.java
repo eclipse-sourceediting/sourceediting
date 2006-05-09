@@ -133,12 +133,8 @@ public class TypesHelper
         if (typeDefinition instanceof XSDSimpleTypeDefinition)
         {
           items.addAll(getPrefixedNames(typeDefinition.getTargetNamespace(), typeDefinition.getName()));
-          //items.add(typeDefinition.getQName(xsdSchema));
         }
       }
-      items.add(getPrefix(xsdSchema.getSchemaForSchemaNamespace(), true) + "anyType");
-      
-      //      items = addExternalImportedUserSimpleTypes(items);
       items = (Vector) sortList(items);
     }
     return items;
