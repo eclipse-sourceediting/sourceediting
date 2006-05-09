@@ -13,6 +13,7 @@ package org.eclipse.wst.xsd.ui.internal.text;
 import org.eclipse.wst.xsd.ui.internal.util.ModelReconcileAdapter;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDSchema;
+import org.eclipse.xsd.util.XSDConstants;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -29,7 +30,49 @@ public class XSDModelReconcileAdapter extends ModelReconcileAdapter
   
   protected void handleNodeChanged(Node node)
   {
-    XSDConcreteComponent concreteComponent = schema.getCorrespondingComponent(node);    
-    concreteComponent.elementChanged((Element)node);    
+    if (node instanceof Element)
+    {  
+      XSDConcreteComponent concreteComponent = schema.getCorrespondingComponent(node);    
+      concreteComponent.elementChanged((Element)node);
+    }
+    else if (node instanceof Document)
+    {
+      // The document changed so we may need to fix up the 
+      // definition's root element
+      Document document = (Document)node;    
+      Element schemaElement = document.getDocumentElement();
+      if (schemaElement != null && schemaElement != schema.getElement())
+      {   
+        // here we handle the case where a new 'schema' element was added
+        //(e.g. the file was totally blank and then we type in the root element)        
+        //
+        if (schemaElement.getLocalName().equals(XSDConstants.SCHEMA_ELEMENT_TAG))         
+        {  
+          //System.out.println("****** Setting new schema");
+          schema.setElement(schemaElement);
+        }
+      }      
+      else if (schemaElement != null)
+      {       
+        // handle the case where the definition element's content has changed
+        // TODO (cs) do we really need to handle this case?
+        schema.elementChanged(schemaElement);
+      }      
+      else if (schemaElement == null)
+      {
+        // if there's no root element clear out the schema
+        //
+        schema.getContents().clear();
+        // TODO (cs) I'm not sure why the above isn't enough
+        // to clear out all of the component lists
+        // for now I've just added a few more lines to do additional clearing
+        //
+        schema.getElementDeclarations().clear();
+        schema.getTypeDefinitions().clear();
+        schema.getAttributeDeclarations().clear();
+        schema.getModelGroupDefinitions().clear();
+        schema.getAttributeGroupDefinitions().clear();             
+      }      
+    } 
   }  
 }
