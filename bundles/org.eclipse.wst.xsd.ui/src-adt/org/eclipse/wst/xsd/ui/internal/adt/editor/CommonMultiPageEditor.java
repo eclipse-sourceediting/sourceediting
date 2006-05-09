@@ -271,6 +271,12 @@ public abstract class CommonMultiPageEditor extends MultiPageEditorPart implemen
     getCommandStack().removeCommandStackListener(this);
     ResourcesPlugin.getWorkspace().removeResourceChangeListener(this);
     actionRegistry.dispose();
+    
+    if (structuredTextEditor != null) {
+      structuredTextEditor.removePropertyListener(this);
+    }
+    structuredTextEditor = null;
+
     super.dispose();
   }
 
