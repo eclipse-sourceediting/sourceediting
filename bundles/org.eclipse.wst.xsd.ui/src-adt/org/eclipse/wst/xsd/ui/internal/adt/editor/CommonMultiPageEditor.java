@@ -50,6 +50,8 @@ import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.RootEditPart;
 
 public abstract class CommonMultiPageEditor extends MultiPageEditorPart implements IResourceChangeListener, CommandStackListener, ITabbedPropertySheetPageContributor, IPropertyListener
 {
+  public static int SOURCE_PAGE_INDEX = 1, DESIGN_PAGE_INDEX = 0;
+  
   protected IContentOutlinePage fOutlinePage;
   protected DefaultEditDomain editDomain;
   protected SelectionSynchronizer synchronizer;
@@ -395,7 +397,7 @@ public abstract class CommonMultiPageEditor extends MultiPageEditorPart implemen
     try
     {
       int index = addPage(structuredTextEditor, getEditorInput());
-      setPageText(index, "Source");
+      setPageText(index, Messages._UI_LABEL_SOURCE);
       structuredTextEditor.update();
       structuredTextEditor.setEditorPart(this);
       structuredTextEditor.addPropertyListener(this);

@@ -35,4 +35,5 @@ public class Messages extends NLS
   public static String _UI_ACTION_UPDATE_TYPE;
   public static String _UI_ACTION_UPDATE_ELEMENT_REFERENCE;
   public static String _UI_LABEL_DESIGN;
+  public static String _UI_LABEL_SOURCE;
 }
