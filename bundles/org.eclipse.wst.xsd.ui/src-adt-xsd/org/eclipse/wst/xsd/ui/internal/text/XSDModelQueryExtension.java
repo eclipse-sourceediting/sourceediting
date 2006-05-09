@@ -166,11 +166,10 @@ public class XSDModelQueryExtension extends ModelQueryExtension
     list.toArray(result);
     return result;
   } 
-  
-  protected XSDSchema lookupOrCreateSchemaForElement(Element element)
-  {            
+
+  protected XSDSchema lookupOrCreateSchema(Document document)
+  {    
     XSDSchema result = null;
-    Document document = element.getOwnerDocument();
     if (document instanceof INodeNotifier)
     {
       INodeNotifier notifier = (INodeNotifier)document;
@@ -179,16 +178,24 @@ public class XSDModelQueryExtension extends ModelQueryExtension
       {
         adapter = new XSDModelAdapter();       
         notifier.addAdapter(adapter);        
-        adapter.createSchema(document.getDocumentElement()); 
+        adapter.createSchema(document); 
       } 
       result = adapter.getSchema();
     }    
-    return result;
-  }   
+    return result;    
+  }
   
+  /**
+   * @deprecated
+   */
+  protected XSDSchema lookupOrCreateSchemaForElement(Element element)
+  {            
+    return lookupOrCreateSchema(element.getOwnerDocument());
+  }   
+   
   protected TypesHelper getTypesHelper(Element element)
   {
-    XSDSchema schema = lookupOrCreateSchemaForElement(element);
+    XSDSchema schema = lookupOrCreateSchema(element.getOwnerDocument());
     return new TypesHelper(schema);  
   }
 

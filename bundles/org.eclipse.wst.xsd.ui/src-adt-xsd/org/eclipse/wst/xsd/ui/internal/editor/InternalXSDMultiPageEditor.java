@@ -171,11 +171,11 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
         if (schemaNodeAdapter == null) {
           schemaNodeAdapter = new XSDModelAdapter();
           notifier.addAdapter(schemaNodeAdapter);
-          obj = schemaNodeAdapter.createSchema(document.getDocumentElement());
+          obj = schemaNodeAdapter.createSchema(document);
         }
         if (obj == null)
         {
-          obj = schemaNodeAdapter.createSchema(document.getDocumentElement());
+          obj = schemaNodeAdapter.createSchema(document);
         }
       }
       

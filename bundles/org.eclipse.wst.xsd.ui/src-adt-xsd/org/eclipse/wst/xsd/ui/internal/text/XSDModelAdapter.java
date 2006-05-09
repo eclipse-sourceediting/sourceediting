@@ -21,6 +21,7 @@ import org.eclipse.xsd.XSDFactory;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.impl.XSDSchemaImpl;
 import org.eclipse.xsd.util.XSDResourceImpl;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 public class XSDModelAdapter implements INodeAdapter
@@ -53,23 +54,19 @@ public class XSDModelAdapter implements INodeAdapter
   {
   }
 
-  public XSDSchema createSchema(Element element)
-  {     
+  public XSDSchema createSchema(Document document)
+  {    
     try
     {
-      IDOMNode domNode = (IDOMNode)element;
-      String baseLocation = domNode.getModel().getBaseLocation();
-           
+      // (cs) note that we always want to ensure that a 
+      // schema model object get's returned
       schema = XSDFactory.eINSTANCE.createXSDSchema();
-      
-      // Force the loading of the "meta" schema for schema instance instance.
-      //
-      String schemaForSchemaNamespace = element.getNamespaceURI();
-      XSDSchemaImpl.getSchemaForSchema(schemaForSchemaNamespace);      
-      
       resourceSet = XSDSchemaImpl.createResourceSet();
       resourceSet.getAdapterFactories().add(new XSDSchemaLocationResolverAdapterFactory());                
-      
+
+      IDOMNode domNode = (IDOMNode)document;
+      String baseLocation = domNode.getModel().getBaseLocation();           
+
       // TODO... gotta pester SSE folks to provide 'useful' baseLocations
       // 
       URI uri = null;
@@ -85,17 +82,34 @@ public class XSDModelAdapter implements INodeAdapter
       resource.setURI(uri);
       schema = XSDFactory.eINSTANCE.createXSDSchema(); 
       resource.getContents().add(schema);
-      resourceSet.getResources().add(resource);    
-      schema.setElement(element);
-      
+      resourceSet.getResources().add(resource);     
+
+      Element element = document.getDocumentElement();
+      if (element != null)
+      {  
+        // Force the loading of the "meta" schema for schema instance instance.
+        //
+        String schemaForSchemaNamespace = element.getNamespaceURI();
+        XSDSchemaImpl.getSchemaForSchema(schemaForSchemaNamespace);            
+        schema.setElement(element);
+      }    
+
       // attach an adapter to keep the XSD model and DOM in sync
       //
-      new XSDModelReconcileAdapter(element.getOwnerDocument(), schema);
+      new XSDModelReconcileAdapter(document, schema);       
     }
     catch (Exception ex)
     {
       ex.printStackTrace();
     }
-    return schema;
+    return schema;    
+  }
+  
+  /**
+   * @deprecated
+   */
+  public XSDSchema createSchema(Element element)
+  {     
+    return createSchema(element.getOwnerDocument());
   }
 }
