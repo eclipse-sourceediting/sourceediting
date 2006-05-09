@@ -12,12 +12,10 @@ package org.eclipse.wst.xsd.ui.internal.text;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.extension.ModelQueryExtension;
 import org.eclipse.wst.xsd.ui.internal.util.TypesHelper;
 import org.eclipse.xsd.XSDSchema;
-import org.eclipse.xsd.util.XSDConstants;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -36,11 +34,11 @@ public class XSDModelQueryExtension extends ModelQueryExtension
     Node parentNode = e.getParentNode();
     String parentName = parentNode != null ? parentNode.getLocalName() : "";
     
-    if (checkName(name, "type") && XSDConstants.isSchemaForSchemaNamespace(namespace))
+    if (checkName(name, "type"))
     {      
       if (checkName(currentElementName, "attribute"))
       {
-        list = getTypesHelper(e).getBuiltInTypeNamesList();
+        list = getTypesHelper(e).getBuiltInTypeNamesList2();
         list.addAll(getTypesHelper(e).getUserSimpleTypeNamesList());
       }
       else if (checkName(currentElementName, "element"))
