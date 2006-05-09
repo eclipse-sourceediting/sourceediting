@@ -207,7 +207,7 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 
 	private IncrementalHelper getHelper(IProject project) {
 		if (fHelper == null)
-			fHelper = new IncrementalHelper(getStructuredDocument(), project);
+			fHelper = new IncrementalHelper(getDocument(), project);
 		return fHelper;
 	}
 
@@ -266,24 +266,23 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 
 		IFile file = getFile();
 
-		if (file != null && file.exists()) {
-			try {
-				IProject project = file.getProject();
-				IncrementalHelper helper = getHelper(project);
-				IncrementalReporter reporter = getReporter();
+		try {
+			IncrementalHelper helper = getHelper(file != null ? file.getProject() : null);
+			IncrementalReporter reporter = getReporter();
 
+			if (file != null && file.exists()) {
 				helper.setURI(file.getFullPath().toString());
-
-				fValidator.validate(helper, reporter);
-
-				//results = createAnnotations(reporter.getMessages());
-				results = createAnnotations(reporter.getAnnotationInfo());
-				reporter.removeAllMessages(fValidator);
-
 			}
-			catch (Exception e) {
-				Logger.logException(e);
-			}
+
+			fValidator.validate(helper, reporter);
+
+			// results = createAnnotations(reporter.getMessages());
+			results = createAnnotations(reporter.getAnnotationInfo());
+			reporter.removeAllMessages(fValidator);
+
+		}
+		catch (Exception e) {
+			Logger.logException(e);
 		}
 		return results;
 	}
@@ -313,28 +312,32 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 	}
 	
 	protected IReconcileResult[] validate(DirtyRegion dirtyRegion, IRegion subRegion) {
- 		IReconcileResult[] results = EMPTY_RECONCILE_RESULT_SET;
- 
- 		IFile file = getFile();
- 		
- 		if(file != null && file.exists()) {
-			try {
-				IProject project = file.getProject();
-				IncrementalHelper helper = getHelper(project);
+		IReconcileResult[] results = EMPTY_RECONCILE_RESULT_SET;
+
+		IFile file = getFile();
+
+		try {
+			IncrementalHelper helper = getHelper(file != null ? file.getProject() : null);
+			/*
+			 * Setting the URI isn't necessary for all source validators, we
+			 * can still continue without it
+			 */
+			if (file != null && file.exists()) {
 				helper.setURI(file.getFullPath().toString());
-				
-				if(fValidator instanceof ISourceValidator) {
-					IncrementalReporter reporter = getReporter();
-					((ISourceValidator)fValidator).validate(dirtyRegion, helper, reporter);
-					//results = createAnnotations(reporter.getMessages());
-					results = createAnnotations(reporter.getAnnotationInfo());
-					reporter.removeAllMessages(fValidator);
-				}
-	
-			} catch (Exception e) {
-				Logger.logException(e);
-	 		}
- 		}
- 		return results;
- 	}
+			}
+
+			if (fValidator instanceof ISourceValidator) {
+				IncrementalReporter reporter = getReporter();
+				((ISourceValidator) fValidator).validate(dirtyRegion, helper, reporter);
+				// results = createAnnotations(reporter.getMessages());
+				results = createAnnotations(reporter.getAnnotationInfo());
+				reporter.removeAllMessages(fValidator);
+			}
+
+		}
+		catch (Exception e) {
+			Logger.logException(e);
+		}
+		return results;
+	}
 }
