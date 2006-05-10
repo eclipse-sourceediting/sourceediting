@@ -11,12 +11,10 @@
 
 package org.eclipse.wst.css.ui.views.contentoutline;
 
-import java.text.Collator;
-
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.wst.css.ui.internal.CSSUIMessages;
 import org.eclipse.wst.css.ui.internal.CSSUIPlugin;
@@ -36,7 +34,7 @@ class SortAction extends PropertyChangeUpdateAction {
 		setToolTipText(getText());
 		treeViewer = viewer;
 		if (isChecked()) {
-			treeViewer.setSorter(new ViewerSorter(Collator.getInstance()));
+			treeViewer.setComparator(new ViewerComparator());
 		}
 	}
 
@@ -45,9 +43,10 @@ class SortAction extends PropertyChangeUpdateAction {
 		treeViewer.getControl().setVisible(false);
 		Object[] expandedElements = treeViewer.getExpandedElements();
 		if (isChecked()) {
-			treeViewer.setSorter(new ViewerSorter(Collator.getInstance()));
-		} else {
-			treeViewer.setSorter(null);
+			treeViewer.setComparator(new ViewerComparator());
+		}
+		else {
+			treeViewer.setComparator(null);
 		}
 		treeViewer.setInput(treeViewer.getInput());
 		treeViewer.setExpandedElements(expandedElements);

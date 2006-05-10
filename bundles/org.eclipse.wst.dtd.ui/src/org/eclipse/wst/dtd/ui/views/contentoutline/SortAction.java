@@ -12,11 +12,9 @@
  *******************************************************************************/
 package org.eclipse.wst.dtd.ui.views.contentoutline;
 
-import java.text.Collator;
-
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.wst.dtd.ui.internal.DTDUIMessages;
 import org.eclipse.wst.dtd.ui.internal.editor.DTDEditorPluginImageHelper;
 import org.eclipse.wst.dtd.ui.internal.editor.DTDEditorPluginImages;
@@ -31,7 +29,7 @@ class SortAction extends PropertyChangeUpdateAction {
 		setToolTipText(getText());
 		treeViewer = viewer;
 		if (isChecked()) {
-			treeViewer.setSorter(new ViewerSorter(Collator.getInstance()));
+			treeViewer.setComparator(new ViewerComparator());
 		}
 	}
 
@@ -46,10 +44,10 @@ class SortAction extends PropertyChangeUpdateAction {
 		treeViewer.getControl().setRedraw(false);
 		Object[] expandedElements = treeViewer.getExpandedElements();
 		if (isChecked()) {
-			treeViewer.setSorter(new ViewerSorter(Collator.getInstance()));
+			treeViewer.setComparator(new ViewerComparator());
 		}
 		else {
-			treeViewer.setSorter(null);
+			treeViewer.setComparator(null);
 		}
 		treeViewer.setInput(treeViewer.getInput());
 		treeViewer.setExpandedElements(expandedElements);
