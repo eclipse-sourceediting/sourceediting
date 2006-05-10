@@ -59,7 +59,7 @@ Export-Package: org.eclipse.wst.xml.core.internal;x-friends:="com.ibm.etools.emf
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.resources,
  org.eclipse.wst.common.uriresolver,
- org.apache.xerces;visibility:=reexport,
+ org.apache.xerces,
  org.eclipse.wst.sse.core,
  org.eclipse.text,
  org.eclipse.jem.util;resolution:=optional,
