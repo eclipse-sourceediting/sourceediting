@@ -13,7 +13,6 @@ package org.eclipse.wst.xsd.ui.internal.editor;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
@@ -84,7 +83,6 @@ import org.eclipse.xsd.XSDCompositor;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDNamedComponent;
 import org.eclipse.xsd.XSDSchema;
-import org.eclipse.xsd.util.XSDConstants;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -132,9 +130,7 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
   public IModel buildModel()
   {
     try
-    {
-      Object obj = null;
-      
+    {      
       IEditorInput editorInput = getEditorInput();
       
       // If the input schema is from the WSDL Editor, then use that inline schema
@@ -158,32 +154,8 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
       }
       Assert.isNotNull(document);
       
-      
-      boolean schemaNodeExists = document.getElementsByTagNameNS(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001, "schema").getLength() == 1;
-
-      if (document.getChildNodes().getLength() == 0 || !schemaNodeExists) {
-//        createDefaultSchemaNode(document);
-      }
-      
-      if (document instanceof INodeNotifier) {
-        INodeNotifier notifier = (INodeNotifier) document;
-        schemaNodeAdapter = (XSDModelAdapter) notifier.getAdapterFor(XSDModelAdapter.class);
-        if (schemaNodeAdapter == null) {
-          schemaNodeAdapter = new XSDModelAdapter();
-          notifier.addAdapter(schemaNodeAdapter);
-          obj = schemaNodeAdapter.createSchema(document);
-        }
-        if (obj == null)
-        {
-          obj = schemaNodeAdapter.createSchema(document);
-        }
-      }
-      
-      if (obj instanceof XSDSchema)
-      {
-        xsdSchema = (XSDSchema)obj;
-        model = (IModel) XSDAdapterFactory.getInstance().adapt(xsdSchema);        
-      }
+      xsdSchema = XSDModelAdapter.lookupOrCreateSchema(document);
+      model = (IModel) XSDAdapterFactory.getInstance().adapt(xsdSchema);              
     }
     catch (Exception e) {
       e.printStackTrace();

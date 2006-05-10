@@ -12,7 +12,6 @@ package org.eclipse.wst.xsd.ui.internal.text;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.extension.ModelQueryExtension;
 import org.eclipse.wst.xsd.ui.internal.util.TypesHelper;
 import org.eclipse.xsd.XSDSchema;
@@ -167,20 +166,7 @@ public class XSDModelQueryExtension extends ModelQueryExtension
 
   protected XSDSchema lookupOrCreateSchema(Document document)
   {    
-    XSDSchema result = null;
-    if (document instanceof INodeNotifier)
-    {
-      INodeNotifier notifier = (INodeNotifier)document;
-      XSDModelAdapter adapter = (XSDModelAdapter)notifier.getAdapterFor(XSDModelAdapter.class);
-      if (adapter == null)
-      {
-        adapter = new XSDModelAdapter();       
-        notifier.addAdapter(adapter);        
-        adapter.createSchema(document); 
-      } 
-      result = adapter.getSchema();
-    }    
-    return result;    
+    return XSDModelAdapter.lookupOrCreateSchema(document);   
   }
   
   /**

@@ -112,4 +112,22 @@ public class XSDModelAdapter implements INodeAdapter
   {     
     return createSchema(element.getOwnerDocument());
   }
+  
+  public static XSDSchema lookupOrCreateSchema(Document document)
+  {    
+    XSDSchema result = null;
+    if (document instanceof INodeNotifier)
+    {
+      INodeNotifier notifier = (INodeNotifier)document;
+      XSDModelAdapter adapter = (XSDModelAdapter)notifier.getAdapterFor(XSDModelAdapter.class);
+      if (adapter == null)
+      {
+        adapter = new XSDModelAdapter();       
+        notifier.addAdapter(adapter);        
+        adapter.createSchema(document); 
+      } 
+      result = adapter.getSchema();
+    }    
+    return result;    
+  }  
 }
