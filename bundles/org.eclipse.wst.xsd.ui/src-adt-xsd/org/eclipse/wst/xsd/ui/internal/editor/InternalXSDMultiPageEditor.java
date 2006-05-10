@@ -331,6 +331,22 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
         return new XSDTypeReferenceEditManager(fileEditorInput.getFile(), schemas);
       }
     }
+    else if (type == XSDComplexTypeBaseTypeEditManager.class)
+    {
+      IEditorInput editorInput = getEditorInput();
+      if (editorInput instanceof IFileEditorInput)
+      {
+        IFileEditorInput fileEditorInput = (IFileEditorInput) editorInput;
+        // TODO (cs) currently we assume the schema editor will only ever edit a
+        // single schema
+        // but if we want to enable the schema editor to edit wsdl files we
+        // should pass in
+        // an array of schemas
+        // hmm.. perhaps just pass in a ResourceSet
+        XSDSchema[] schemas = {xsdSchema};
+        return new XSDComplexTypeBaseTypeEditManager(fileEditorInput.getFile(), schemas);
+      }
+    }
     else if (type == ITextEditor.class)
     {
       return getTextEditor();

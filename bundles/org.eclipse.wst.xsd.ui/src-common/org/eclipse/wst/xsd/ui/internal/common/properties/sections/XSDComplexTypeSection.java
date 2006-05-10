@@ -12,6 +12,7 @@ package org.eclipse.wst.xsd.ui.internal.common.properties.sections;
 
 import org.apache.xerces.util.XMLChar;
 import org.eclipse.gef.commands.Command;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.CLabel;
@@ -19,14 +20,17 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.wst.common.ui.internal.search.dialogs.ComponentSpecification;
+import org.eclipse.wst.xsd.ui.internal.adt.edit.ComponentReferenceEditManager;
+import org.eclipse.wst.xsd.ui.internal.adt.edit.IComponentDialog;
 import org.eclipse.wst.xsd.ui.internal.common.commands.UpdateNameCommand;
 import org.eclipse.wst.xsd.ui.internal.editor.Messages;
-import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
+import org.eclipse.wst.xsd.ui.internal.editor.XSDComplexTypeBaseTypeEditManager;
 import org.eclipse.xsd.XSDComplexTypeDefinition;
 import org.eclipse.xsd.XSDDerivationMethod;
 import org.eclipse.xsd.XSDNamedComponent;
@@ -36,9 +40,8 @@ import org.eclipse.xsd.util.XSDConstants;
 public class XSDComplexTypeSection extends AbstractSection implements SelectionListener
 {
   protected Text nameText;
-  protected Text baseTypeCombo;
+  protected CCombo baseTypeCombo;
   protected CCombo derivedByCombo;
-  protected Button button;
   private String derivedByChoicesComboValues[] = { "", XSDConstants.RESTRICTION_ELEMENT_TAG, XSDConstants.EXTENSION_ELEMENT_TAG }; //$NON-NLS-1$
 
   public XSDComplexTypeSection()
@@ -57,7 +60,7 @@ public class XSDComplexTypeSection extends AbstractSection implements SelectionL
     composite = getWidgetFactory().createFlatFormComposite(parent);
 
     GridLayout gridLayout = new GridLayout();
-    gridLayout.numColumns = 3;
+    gridLayout.numColumns = 2;
     composite.setLayout(gridLayout);
 
     // ------------------------------------------------------------------
@@ -66,7 +69,7 @@ public class XSDComplexTypeSection extends AbstractSection implements SelectionL
     GridData data = new GridData();
     data.horizontalAlignment = GridData.HORIZONTAL_ALIGN_BEGINNING;
     data.grabExcessHorizontalSpace = false;
-    CLabel nameLabel = getWidgetFactory().createCLabel(composite, "Name:"); //$NON-NLS-1$
+    CLabel nameLabel = getWidgetFactory().createCLabel(composite, Messages.UI_LABEL_NAME);
     nameLabel.setLayoutData(data);
 
     // ------------------------------------------------------------------
@@ -78,14 +81,6 @@ public class XSDComplexTypeSection extends AbstractSection implements SelectionL
     nameText = getWidgetFactory().createText(composite, ""); //$NON-NLS-1$
     nameText.setLayoutData(data);
     applyAllListeners(nameText);
-
-    // ------------------------------------------------------------------
-    // DummyLabel
-    // ------------------------------------------------------------------
-    data = new GridData();
-    data.horizontalAlignment = GridData.HORIZONTAL_ALIGN_BEGINNING;
-    data.grabExcessHorizontalSpace = false;
-    getWidgetFactory().createCLabel(composite, ""); //$NON-NLS-1$
 
     // ------------------------------------------------------------------
     // BaseTypeLabel
@@ -100,22 +95,10 @@ public class XSDComplexTypeSection extends AbstractSection implements SelectionL
     data.grabExcessHorizontalSpace = true;
     data.horizontalAlignment = GridData.FILL;
 
-    baseTypeCombo = getWidgetFactory().createText(composite, ""); //$NON-NLS-1$
+    baseTypeCombo = getWidgetFactory().createCCombo(composite);
     baseTypeCombo.setEditable(false);
-    // baseTypeCombo.addListener(SWT.Modify, this);
     baseTypeCombo.setLayoutData(data);
-
-    // ------------------------------------------------------------------
-    // BaseTypeButton
-    // ------------------------------------------------------------------
-    data = new GridData();
-    data.horizontalAlignment = GridData.HORIZONTAL_ALIGN_BEGINNING;
-    data.grabExcessHorizontalSpace = false;
-
-    button = getWidgetFactory().createButton(composite, "", SWT.PUSH); //$NON-NLS-1$
-    button.setImage(XSDEditorPlugin.getXSDImage("icons/browsebutton.gif")); //$NON-NLS-1$
-    button.addSelectionListener(this);
-    button.setLayoutData(data);
+    baseTypeCombo.addSelectionListener(this);
 
     // ------------------------------------------------------------------
     // DerivedByLabel
@@ -137,7 +120,7 @@ public class XSDComplexTypeSection extends AbstractSection implements SelectionL
     derivedByCombo = getWidgetFactory().createCCombo(composite, SWT.FLAT);
     derivedByCombo.setLayoutData(data);
     derivedByCombo.setItems(derivedByChoicesComboValues);
-    // derivedByCombo.addSelectionListener(this);
+    derivedByCombo.addSelectionListener(this);
 
   }
 
@@ -156,6 +139,7 @@ public class XSDComplexTypeSection extends AbstractSection implements SelectionL
     {
       nameText.setText(""); //$NON-NLS-1$
       baseTypeCombo.setText(""); //$NON-NLS-1$
+      fillTypesCombo();
 
       if (input instanceof XSDComplexTypeDefinition)
       {
@@ -212,80 +196,47 @@ public class XSDComplexTypeSection extends AbstractSection implements SelectionL
    */
   public void widgetSelected(SelectionEvent e)
   {
-//    XSDComplexTypeDefinition xsdComplexType = (XSDComplexTypeDefinition) input;
-//    Element ctElement = xsdComplexType.getElement();
-    if (e.widget == button)
+    if (e.widget == baseTypeCombo)
     {
-//      Shell shell = Display.getCurrent().getActiveShell();
-//      Element element = null;
-//      if (xsdComplexType.getContent() != null)
-//      {
-//        element = xsdComplexType.getContent().getElement();
-//      }
+      IEditorPart editor = getActiveEditor();
+      if (editor == null) return;
+      ComponentReferenceEditManager manager = (ComponentReferenceEditManager)editor.getAdapter(XSDComplexTypeBaseTypeEditManager.class);    
 
-      // SimpleContentBaseTypeOptionsDialog dialog = new
-      // SimpleContentBaseTypeOptionsDialog(shell, element, BASE_TYPE_ID,
-      // xsdComplexType.getSchema());
-      // dialog.setBlockOnOpen(true);
-      // dialog.create();
-      // int result = dialog.open();
-
-//      IFile currentIFile = ((IFileEditorInput) getActiveEditor().getEditorInput()).getFile();
-
-//      XSDSchema schema = xsdComplexType.getSchema();
-      
-      // issuec (cs) need to move the common.ui's selection dialog
-      /*
-      XSDComponentSelectionProvider provider = new XSDComponentSelectionProvider(currentIFile, schema);
-      XSDComponentSelectionDialog dialog = new XSDComponentSelectionDialog(shell, Messages.UI_LABEL_SET_TYPE, provider);
-      provider.setDialog(dialog);
-      dialog.setBlockOnOpen(true);
-      dialog.create();
-      int result = dialog.open();
-
-      if (result == Window.OK)
+      String selection = baseTypeCombo.getText();
+      ComponentSpecification newValue;
+      IComponentDialog dialog= null;
+      if ( selection.equals(Messages._UI_ACTION_BROWSE))
       {
-        XMLComponentSpecification spec = dialog.getSelection();
-        XSDSetTypeHelper helper = new XSDSetTypeHelper(currentIFile, schema);
-        helper.addImportIfNecessary(element, spec);
-
-        String typeString = helper.getPrefixedTypeName(spec);
-
-        String derivedBy = "";
-        int derivationMethod = xsdComplexType.getDerivationMethod().getValue();
-        if (derivationMethod == XSDDerivationMethod.EXTENSION)
-        {
-          derivedBy = XSDConstants.EXTENSION_ELEMENT_TAG;
-        }
-        else if (derivationMethod == XSDDerivationMethod.RESTRICTION)
-        {
-          derivedBy = XSDConstants.RESTRICTION_ELEMENT_TAG;
-        }
-
-        SetBaseTypeAction setBaseTypeAction = new SetBaseTypeAction("_UI_LABEL_SET_BASE_TYPE"); //$NON-NLS-1$
-        setBaseTypeAction.setXSDSchema(xsdSchema);
-        setBaseTypeAction.setComplexTypeElement(ctElement);
-        setBaseTypeAction.setType(typeString);
-        setBaseTypeAction.setDerivedBy(derivedBy);
-        setBaseTypeAction.performAction();
-
+        dialog = manager.getBrowseDialog();
       }
-      refresh();
-      // }
-      // else if (e.widget == derivedByCombo)
-      // {
-      // Element contentModelElement =
-      // getDomHelper().getContentModelFromParent(ctElement);
-      // String baseType = getDomHelper().getBaseType(contentModelElement);
-      // beginRecording(XSDEditorPlugin.getXSDString("_UI_DERIVEDBY_CHANGE"),
-      // ctElement); //$NON-NLS-1$
-      // if (contentModelElement != null)
-      // {
-      // getDomHelper().changeDerivedByType(contentModelElement,
-      // derivedByCombo.getText(), baseType);
-      // }
-      // endRecording(ctElement);       
-       */
+      else if ( selection.equals(Messages._UI_ACTION_NEW))
+      {
+        dialog = manager.getNewDialog();
+      }
+
+      if (dialog != null)
+      {
+        if (dialog.createAndOpen() == Window.OK)
+        {
+          newValue = dialog.getSelectedComponent();
+          manager.modifyComponentReference(input, newValue);
+        }
+      }
+    }
+    else if (e.widget == derivedByCombo)
+    {
+      XSDComplexTypeDefinition complexType = (XSDComplexTypeDefinition) input;
+      
+      // TODO: put this in an action
+      String value = derivedByCombo.getText();
+      if (value.equals(XSDConstants.EXTENSION_ELEMENT_TAG))
+      {
+        complexType.setDerivationMethod(XSDDerivationMethod.EXTENSION_LITERAL);
+      }
+      else if (value.equals(XSDConstants.RESTRICTION_ELEMENT_TAG))
+      {
+        complexType.setDerivationMethod(XSDDerivationMethod.RESTRICTION_LITERAL);
+      }
     }
   }
 
@@ -355,6 +306,21 @@ public class XSDComplexTypeSection extends AbstractSection implements SelectionL
     }
 
     return true;
+  }
+
+  private void fillTypesCombo()
+  {
+    baseTypeCombo.removeAll();
+    baseTypeCombo.add(Messages._UI_ACTION_BROWSE);
+    baseTypeCombo.add(Messages._UI_ACTION_NEW);
+    // Add the current Type of this attribute if needed
+    XSDComplexTypeDefinition complexType = (XSDComplexTypeDefinition) input;
+    XSDTypeDefinition baseType = complexType.getBaseType();
+    if (baseType != null && baseType.getQName() != null)
+    {
+      String currentTypeName = baseType.getQName(xsdSchema); //no prefix
+      baseTypeCombo.add(currentTypeName);
+    }
   }
 
 }

@@ -107,4 +107,5 @@ public class Messages extends NLS
   public static String _UI_DESCRIPTION_CHOOSE_XSD_FILE;
   public static String _UI_ACTION_BROWSE_CATALOG;
   public static String _UI_ACTION_ADD_ANY_ELEMENT;
+  public static String _UI_ACTION_SET_BASE_TYPE;
 }
