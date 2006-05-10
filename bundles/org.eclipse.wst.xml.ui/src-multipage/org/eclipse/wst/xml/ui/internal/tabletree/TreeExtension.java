@@ -219,8 +219,14 @@ public class TreeExtension implements PaintListener {
 				int height = computeTreeItemHeight();
 
 				if (itemBounds != null) {
-					int startY = itemBounds.y < treeBounds.y ? itemBounds.y : treeBounds.y + ((treeBounds.y - itemBounds.y) % height);
+					/*
+					 * Bounds will be for the first item, which will either be
+					 * visible at the top of the Tree, or scrolled off with
+					 * negative values
+					 */
+					int startY = itemBounds.y;
 
+					/* Only draw lines within the Tree boundaries */
 					for (int i = startY; i < treeBounds.height; i += height) {
 						if (i >= treeBounds.y) {
 							gc.drawLine(0, i, treeBounds.width, i);
@@ -243,30 +249,38 @@ public class TreeExtension implements PaintListener {
 	protected int computeTreeItemHeight() {
 		int result = -1;
 
-		// On GTK tree.getItemHeight() seems to lie to us. It reports that the
-		// tree item occupies a few pixles less
-		// vertical space than it should. This which foils our code that draw
-		// the 'row' lines since we assume that
-		// lines should be drawn at 'itemHeight' increments. In the case of
-		// LINUX we don't trust getItemHeight()
-		// to compute the increment... instead we compute the value based on
-		// distance between two TreeItems.
-		// if (B2BHacks.IS_UNIX) {
-		// TreeItem[] items = tree.getItems();
-		// Rectangle itemBounds = items[0].getBounds();
-		//
-		// if (items[0].getExpanded()) {
-		// TreeItem[] children = items[0].getItems();
-		// if (children.length > 0) {
-		// result = children[0].getBounds().y - itemBounds.y;
-		// }
-		// }
-		// else if (items.length > 1) {
-		// result = items[1].getBounds().y - itemBounds.y;
-		// }
-		// }
+		/*
+		 * On GTK tree.getItemHeight() seems to lie to us. It reports that the
+		 * tree item occupies a few pixles less vertical space than it should
+		 * (possibly because of the image height vs. the text height?). This
+		 * foils our code that draws the 'row' lines since we assume that
+		 * lines should be drawn at 'itemHeight' increments. Don't trust
+		 * getItemHeight() to compute the increment... instead compute the
+		 * value based on distance between two TreeItems, and then use the
+		 * larger value.
+		 * 
+		 * This strategy only works on trees where the items are of even
+		 * height, however bug
+		 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=117201 indicates that
+		 * this is no longer promised, at least on win32 and likely on other
+		 * platforms soon.
+		 */
+		if (fTree.getItemCount() > 0) {
+			TreeItem[] items = fTree.getItems();
+			Rectangle itemBounds = items[0].getBounds();
 
-		result = result != -1 ? result : fTree.getItemHeight();
+			if (items[0].getExpanded()) {
+				TreeItem[] children = items[0].getItems();
+				if (children.length > 0) {
+					result = children[0].getBounds().y - itemBounds.y;
+				}
+			}
+			else if (items.length > 1) {
+				result = items[1].getBounds().y - itemBounds.y;
+			}
+		}
+
+		result = Math.max(fTree.getItemHeight(), result);
 		return result;
 	}
 
