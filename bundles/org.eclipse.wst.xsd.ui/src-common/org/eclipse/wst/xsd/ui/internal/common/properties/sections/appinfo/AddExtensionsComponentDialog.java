@@ -371,8 +371,16 @@ public class AddExtensionsComponentDialog extends SelectionDialog implements ISe
       for (int i = 0; i < elements.size(); i++)
       {
         XSDElementDeclaration currentElement = (XSDElementDeclaration) elements.get(i);
-        if (currentElement.getTargetNamespace().equals(targetNamespace))
-          allItems.add(currentElement);
+        if (currentElement.getTargetNamespace() != null)
+        {
+          if (currentElement.getTargetNamespace().equals(targetNamespace))
+            allItems.add(currentElement);
+        }
+        else
+        {
+          if (targetNamespace == null)
+            allItems.add(currentElement);
+        }
       }
       // getAttributeDeclarations also returns a lot of elements from
       // import statement, we
@@ -380,8 +388,16 @@ public class AddExtensionsComponentDialog extends SelectionDialog implements ISe
       for (int i = 0; i < attributes.size(); i++)
       {
         XSDAttributeDeclaration currentAttribute = (XSDAttributeDeclaration) attributes.get(i);
-        if (currentAttribute.isGlobal() && currentAttribute.getTargetNamespace().equals(targetNamespace))
-          allItems.add(currentAttribute);
+        if (currentAttribute.getTargetNamespace() != null)
+        {
+          if (currentAttribute.isGlobal() && currentAttribute.getTargetNamespace().equals(targetNamespace))
+            allItems.add(currentAttribute);
+        }
+        else
+        {
+          if (targetNamespace == null)
+            allItems.add(currentAttribute);
+        }
       }
     }
     return allItems;
