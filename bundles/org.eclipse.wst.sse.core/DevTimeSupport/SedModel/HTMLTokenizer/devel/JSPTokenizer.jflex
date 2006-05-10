@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,7 +8,9 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
+
 /*nlsXXX*/
+
 package org.eclipse.jst.jsp.core.internal.parser.internal;
 
 import java.io.CharArrayReader;
@@ -25,7 +27,7 @@ import org.eclipse.wst.sse.core.internal.ltk.parser.TagMarker;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.sse.core.internal.util.Debug;
-import org.eclipse.wst.sse.core.internal.util.StringUtils;
+import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.xml.core.internal.parser.ContextRegionContainer;
 import org.eclipse.wst.xml.core.internal.parser.IntStack;
 
@@ -84,8 +86,6 @@ import org.eclipse.wst.xml.core.internal.parser.IntStack;
 	private int fELlevel = 0;
 
 	private JSPParserRegionFactory fRegionFactory = new JSPParserRegionFactory();
-
-	private static final String rcsver = "$Id: JSPTokenizer.jflex,v 1.4.2.1 2004/10/20 15:21:33 kitlo Exp $";//$NON-NLS-1$
 
 	/**
 	 * user method 
@@ -1831,6 +1831,88 @@ jspDirectiveStart        = {jspScriptletStart}@
 			return BLOCK_TEXT;
 		}
 		// required help for successive embedded regions
+		if(yystate() == ST_XML_TAG_NAME) {
+			fEmbeddedHint = XML_TAG_NAME;
+			fEmbeddedPostState = ST_XML_ATTRIBUTE_NAME;
+		}
+		else if((yystate() == ST_XML_ATTRIBUTE_NAME || yystate() == ST_XML_EQUALS)) {
+			fEmbeddedHint = XML_TAG_ATTRIBUTE_NAME;
+			fEmbeddedPostState = ST_XML_EQUALS;
+		}
+		else if(yystate() == ST_XML_ATTRIBUTE_VALUE) {
+			fEmbeddedHint = XML_TAG_ATTRIBUTE_VALUE;
+			fEmbeddedPostState = ST_XML_ATTRIBUTE_NAME;
+		}
+		return PROXY_CONTEXT;
+	}
+}
+{jspCommentStart} {
+	/* JSP comment begun (anywhere)
+	 * A consequence of the start anywhere possibility is that the
+	 *  incoming state must be checked to see if it's erroneous
+	 *  due to the order of precedence generated
+	 */
+	// begin sanity checks
+	if(yystate() == ST_JSP_CONTENT) {
+		// at the beginning?!
+		yypushback(3);
+		return JSP_CONTENT;
+	}
+	else if(yystate() == ST_BLOCK_TAG_SCAN) {
+		yypushback(4);
+		return doBlockTagScan();
+	}
+	else if(yystate() == ST_XML_COMMENT) {
+		yypushback(4);
+		return scanXMLCommentText();
+	}
+	else if(yystate() == ST_JSP_COMMENT) {
+		yypushback(4);
+		return scanJSPCommentText();
+	}
+	else if(yystate() == ST_BLOCK_TAG_INTERNAL_SCAN)  {
+		yybegin(ST_JSP_COMMENT);
+		assembleEmbeddedContainer(JSP_COMMENT_OPEN, JSP_COMMENT_CLOSE);
+		if(yystate() == ST_BLOCK_TAG_INTERNAL_SCAN)
+			yybegin(ST_BLOCK_TAG_SCAN);
+		return PROXY_CONTEXT;
+	}
+	// finished sanity checks
+	fStateStack.push(yystate());
+	if(fStateStack.peek()==YYINITIAL) {
+		// the simple case, just a regular scriptlet out in content
+		if(Debug.debugTokenizer)
+			dump("\nJSP comment start");//$NON-NLS-1$
+		yybegin(ST_JSP_COMMENT);
+		return JSP_COMMENT_OPEN;
+	}
+	else {
+		if (Debug.debugTokenizer) {
+			System.out.println("begin embedded region: " + fEmbeddedHint);//$NON-NLS-1$
+		}
+		if(Debug.debugTokenizer)
+			dump("JSP comment start");//$NON-NLS-1$
+		if(yystate() == ST_XML_ATTRIBUTE_VALUE_DQUOTED)
+			fEmbeddedPostState = ST_XML_ATTRIBUTE_VALUE_DQUOTED;
+		else if(yystate() == ST_XML_ATTRIBUTE_VALUE_SQUOTED)
+			fEmbeddedPostState = ST_XML_ATTRIBUTE_VALUE_SQUOTED;
+		else if(yystate() == ST_CDATA_TEXT) {
+			fEmbeddedPostState = ST_CDATA_TEXT;
+			fEmbeddedHint = XML_CDATA_TEXT;
+		}
+		yybegin(ST_JSP_COMMENT);
+		// the comment container itself will act as comment text
+		fEmbeddedHint = JSP_COMMENT_TEXT;
+		assembleEmbeddedContainer(JSP_COMMENT_OPEN, JSP_COMMENT_CLOSE);
+		if(yystate() == ST_BLOCK_TAG_INTERNAL_SCAN) {
+			yybegin(ST_BLOCK_TAG_SCAN);
+			return BLOCK_TEXT;
+		}
+		/*
+		 * required help for successive embedded regions; mark this one as a
+		 * comment so it will be otherwise ignored but preserved (which is why
+		 * we can't use white-space)
+		 */
 		if(yystate() == ST_XML_TAG_NAME) {
 			fEmbeddedHint = XML_TAG_NAME;
 			fEmbeddedPostState = ST_XML_ATTRIBUTE_NAME;
