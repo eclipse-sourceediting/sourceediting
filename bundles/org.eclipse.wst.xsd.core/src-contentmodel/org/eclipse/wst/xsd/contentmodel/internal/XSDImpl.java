@@ -463,6 +463,11 @@ public class XSDImpl
     // Walk the baseTypes from this typedef seeing if any
     // of them match the requested one
     XSDTypeDefinition baseType = typedef.getBaseType();
+    if (baseType == null)
+   	{
+      // typedef is a root type like xsd:anyType, so it has no base
+      return false;
+    }
     // As this convenience method if our parameters match
     if (baseType.hasNameAndTargetNamespace(localName, namespace))
     {
