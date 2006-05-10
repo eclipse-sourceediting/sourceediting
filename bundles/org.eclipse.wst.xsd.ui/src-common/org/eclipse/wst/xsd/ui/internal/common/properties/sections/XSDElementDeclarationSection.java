@@ -245,10 +245,14 @@ public class XSDElementDeclarationSection extends MultiplicitySection
     }
     // Add the current Type of this attribute if needed
     XSDElementDeclaration namedComponent = ((XSDElementDeclaration) input).getResolvedElementDeclaration();
-    String currentTypeName = namedComponent.getType().getQName(xsdSchema); //no prefix
-    ComponentSpecification ret = getComponentSpecFromQuickPickForValue(currentTypeName,manager);
-    if (ret == null) //not in quickPick
-      typeCombo.add(currentTypeName);
+    XSDTypeDefinition td = namedComponent.getType();
+    if (td != null)
+    {  
+      String currentTypeName = td.getQName(xsdSchema); //no prefix
+      ComponentSpecification ret = getComponentSpecFromQuickPickForValue(currentTypeName,manager);
+      if (ret == null) //not in quickPick
+        typeCombo.add(currentTypeName);
+    } 
   }
   
   private ComponentSpecification getComponentSpecFromQuickPickForValue(String value, ComponentReferenceEditManager editManager)
