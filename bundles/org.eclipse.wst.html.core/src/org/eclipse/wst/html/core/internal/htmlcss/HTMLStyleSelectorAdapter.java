@@ -12,7 +12,7 @@ package org.eclipse.wst.html.core.internal.htmlcss;
 
 
 
-import java.util.StringTokenizer;
+import com.ibm.icu.util.StringTokenizer;
 
 import org.eclipse.wst.css.core.internal.provisional.adapters.IStyleSelectorAdapter;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSSimpleSelector;

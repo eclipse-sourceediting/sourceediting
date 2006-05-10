@@ -12,7 +12,7 @@
 */
 package org.eclipse.wst.xml.core.internal.contentmodel.factory;
 
-import java.util.StringTokenizer;
+import com.ibm.icu.util.StringTokenizer;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionPoint;

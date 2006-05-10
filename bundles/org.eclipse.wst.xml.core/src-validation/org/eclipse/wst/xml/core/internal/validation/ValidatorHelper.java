@@ -15,7 +15,7 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.net.URL;
 import java.util.List;
-import java.util.StringTokenizer;
+import com.ibm.icu.util.StringTokenizer;
 import java.util.Vector;
 
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver;

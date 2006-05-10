@@ -13,7 +13,7 @@
 package org.eclipse.wst.sse.ui.internal.taginfo;
 
 import java.util.HashMap;
-import java.util.StringTokenizer;
+import com.ibm.icu.util.StringTokenizer;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.ITextHover;

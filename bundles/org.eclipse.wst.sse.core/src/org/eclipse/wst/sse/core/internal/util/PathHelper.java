@@ -15,7 +15,7 @@ package org.eclipse.wst.sse.core.internal.util;
 
 
 import java.io.File;
-import java.util.StringTokenizer;
+import com.ibm.icu.util.StringTokenizer;
 
 /**
  * Collection of helper methods to manage and convert links Originally part of

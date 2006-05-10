@@ -12,7 +12,7 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.ui.internal.validation;
 
-import java.util.StringTokenizer;
+import com.ibm.icu.util.StringTokenizer;
 
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;

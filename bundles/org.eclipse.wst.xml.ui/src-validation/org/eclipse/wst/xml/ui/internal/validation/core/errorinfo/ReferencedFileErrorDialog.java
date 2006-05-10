@@ -11,7 +11,7 @@
 package org.eclipse.wst.xml.ui.internal.validation.core.errorinfo;
 
 import java.util.List;
-import java.util.StringTokenizer;
+import com.ibm.icu.util.StringTokenizer;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ISelection;

@@ -15,7 +15,7 @@ package org.eclipse.wst.sse.core.internal.util;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.StringTokenizer;
+import com.ibm.icu.util.StringTokenizer;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;

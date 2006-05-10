@@ -14,7 +14,7 @@ package org.eclipse.wst.sse.ui.internal.preferences.ui;
 
 
 
-import java.util.StringTokenizer;
+import com.ibm.icu.util.StringTokenizer;
 
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.wst.sse.ui.internal.Logger;

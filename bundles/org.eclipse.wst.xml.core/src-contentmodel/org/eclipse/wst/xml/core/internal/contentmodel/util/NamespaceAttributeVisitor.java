@@ -12,7 +12,7 @@
 */
 package org.eclipse.wst.xml.core.internal.contentmodel.util;
 
-import java.util.StringTokenizer;
+import com.ibm.icu.util.StringTokenizer;
 
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;

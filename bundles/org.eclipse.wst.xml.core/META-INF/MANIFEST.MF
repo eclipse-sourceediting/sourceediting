@@ -71,5 +71,6 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.wst.common.emf;resolution:=optional,
  org.eclipse.emf.ecore.xmi;resolution:=optional,
  org.eclipse.wst.common.emfworkbench.integration;resolution:=optional,
- org.eclipse.wst.common.core
+ org.eclipse.wst.common.core,
+ com.ibm.icu
 Eclipse-LazyStart: true; exceptions="org.eclipse.wst.xml.core.internal.contenttype"

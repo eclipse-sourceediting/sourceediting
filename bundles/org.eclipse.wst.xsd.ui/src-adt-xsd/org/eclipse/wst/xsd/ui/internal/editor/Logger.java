@@ -12,7 +12,7 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.editor;
 
-import java.util.StringTokenizer;
+import com.ibm.icu.util.StringTokenizer;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;

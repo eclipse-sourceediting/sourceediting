@@ -15,7 +15,7 @@ package org.eclipse.wst.xml.core.internal.contentmodel.annotation;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
-import java.util.StringTokenizer;
+import com.ibm.icu.util.StringTokenizer;
 import java.util.Vector;
 
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;

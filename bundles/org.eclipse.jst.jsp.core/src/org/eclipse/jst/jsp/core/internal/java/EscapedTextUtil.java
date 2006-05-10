@@ -13,7 +13,7 @@ package org.eclipse.jst.jsp.core.internal.java;
 
 
 import java.util.Properties;
-import java.util.StringTokenizer;
+import com.ibm.icu.util.StringTokenizer;
 
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;

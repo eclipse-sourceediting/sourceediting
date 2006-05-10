@@ -12,7 +12,7 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.ui.internal.openon;
 
-import java.util.StringTokenizer;
+import com.ibm.icu.util.StringTokenizer;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;

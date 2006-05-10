@@ -45,5 +45,6 @@ Require-Bundle: org.eclipse.ui.ide,
  org.eclipse.core.runtime,
  org.eclipse.wst.common.uriresolver,
  org.eclipse.wst.validation,
- org.eclipse.wst.javascript.ui
+ org.eclipse.wst.javascript.ui,
+ com.ibm.icu
 Eclipse-LazyStart: true

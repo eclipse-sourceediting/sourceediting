@@ -11,7 +11,7 @@
 
 package org.eclipse.wst.dtd.core.internal.saxparser;
 
-import java.util.StringTokenizer;
+import com.ibm.icu.util.StringTokenizer;
 
 /**
  * This class provides static methods for some of the very used IString

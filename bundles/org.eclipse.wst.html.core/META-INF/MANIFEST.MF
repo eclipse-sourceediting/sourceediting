@@ -32,5 +32,6 @@ Require-Bundle: org.eclipse.wst.css.core,
  org.eclipse.wst.xml.core,
  org.eclipse.wst.common.uriresolver,
  org.eclipse.core.resources,
- org.eclipse.core.runtime
+ org.eclipse.core.runtime,
+ com.ibm.icu
 Eclipse-LazyStart: true; exceptions="org.eclipse.wst.html.core.internal.contenttype"

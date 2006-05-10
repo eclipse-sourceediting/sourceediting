@@ -13,7 +13,7 @@
 package org.eclipse.wst.sse.ui.internal.util;
 
 
-import java.util.StringTokenizer;
+import com.ibm.icu.util.StringTokenizer;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.JFaceResources;

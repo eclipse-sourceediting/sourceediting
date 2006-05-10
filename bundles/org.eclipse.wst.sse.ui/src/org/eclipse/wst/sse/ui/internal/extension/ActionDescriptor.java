@@ -14,7 +14,7 @@ package org.eclipse.wst.sse.ui.internal.extension;
 
 
 
-import java.util.StringTokenizer;
+import com.ibm.icu.util.StringTokenizer;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;

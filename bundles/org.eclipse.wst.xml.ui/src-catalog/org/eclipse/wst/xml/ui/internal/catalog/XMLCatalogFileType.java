@@ -15,7 +15,7 @@ package org.eclipse.wst.xml.ui.internal.catalog;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.StringTokenizer;
+import com.ibm.icu.util.StringTokenizer;
 
 import org.eclipse.swt.graphics.Image;
 
