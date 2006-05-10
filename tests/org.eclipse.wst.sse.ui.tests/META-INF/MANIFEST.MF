@@ -19,5 +19,6 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.editors,
  org.eclipse.jface.text,
  org.eclipse.core.runtime,
- org.eclipse.wst.common.modulecore
+ org.eclipse.wst.common.modulecore,
+ com.ibm.icu
 Eclipse-LazyStart: true

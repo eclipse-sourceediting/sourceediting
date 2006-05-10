@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.core.tests;
 
-import java.util.StringTokenizer;
+import com.ibm.icu.util.StringTokenizer;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;

@@ -17,5 +17,6 @@ Export-Package: org.eclipse.wst.sse.core.tests,
 Require-Bundle: org.eclipse.core.resources,
  org.junit,
  org.eclipse.wst.sse.core,
- org.eclipse.core.runtime
+ org.eclipse.core.runtime,
+ com.ibm.icu
 Eclipse-LazyStart: true
