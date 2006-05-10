@@ -101,7 +101,9 @@ public class NewXMLWizard extends NewModelWizard {
 
 	public static void showDialog(Shell shell, IFile file, IStructuredSelection structuredSelection) {
 		String[] errorInfo = new String[2];
-		CMDocument cmDocument = NewXMLGenerator.createCMDocument(file.getLocation().toOSString(), errorInfo);
+		// (cs) the URI argument to createCMDocument needs to be a fully qualified URI
+		//
+		CMDocument cmDocument = NewXMLGenerator.createCMDocument(URIHelper.getPlatformURI(file), errorInfo);
 		if (errorInfo[0] == null) {
 			NewXMLWizard wizard = new NewXMLWizard(file, cmDocument);
 			wizard.init(PlatformUI.getWorkbench(), structuredSelection);

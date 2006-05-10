@@ -78,7 +78,7 @@ public class NewXMLGenerator {
 		CMDocument cmDocument = null;
 
 		if (URIHelper.isReadableURI(uri, true)) {
-			uri = URIHelper.normalize(uri, null, null);
+		    // (cs) assume the uri has been provided in a normalized form
 			cmDocument = ContentModelManager.getInstance().createCMDocument(uri, null);
 
 			if (uri.endsWith(".dtd")) { //$NON-NLS-1$
