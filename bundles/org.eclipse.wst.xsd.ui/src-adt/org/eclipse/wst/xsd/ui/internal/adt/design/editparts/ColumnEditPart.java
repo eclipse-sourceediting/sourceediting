@@ -10,12 +10,14 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.adt.design.editparts;
 
+import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.ToolbarLayout;
+import org.eclipse.gef.EditPart;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.AbstractModelCollection;
+import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.ReferencedTypeColumn;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IComplexType;
 
 public class ColumnEditPart extends BaseEditPart
@@ -70,6 +72,39 @@ public class ColumnEditPart extends BaseEditPart
   public void setMinorAlignment(int minorAlignment)
   {
     this.minorAlignment = minorAlignment;
+  }
+  
+  protected void refreshChildren()
+  {
+    super.refreshChildren();
+    if (getModel() instanceof ReferencedTypeColumn)
+    {
+      if (getParent().getChildren().size() > 0) 
+      {        
+        EditPart editPart = (EditPart)getParent().getChildren().get(0);
+        refreshConnections(editPart);
+      }  
+    }      
+    else
+    {
+      refreshConnections(this);      
+    }  
+  }
+  
+  
+  public void refreshConnections(EditPart parent)
+  {
+    for (Iterator i = parent.getChildren().iterator(); i.hasNext(); )
+    {
+      EditPart editPart = (EditPart)i.next();      
+      //System.out.println("class " + editPart.getClass().getName());
+      if (editPart instanceof BaseTypeConnectingEditPart)
+      {
+        BaseTypeConnectingEditPart connectingEditPart = (BaseTypeConnectingEditPart)editPart;
+        connectingEditPart.refreshConnections();
+      }  
+      refreshConnections(editPart);
+    }
   }
 }
 

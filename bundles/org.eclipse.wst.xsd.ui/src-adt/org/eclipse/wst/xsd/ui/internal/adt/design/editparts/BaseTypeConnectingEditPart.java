@@ -16,7 +16,6 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.LayerConstants;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.requests.DirectEditRequest;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IFeedbackHandler;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editpolicies.IADTUpdateCommand;
 import org.eclipse.wst.xsd.ui.internal.adt.editor.Messages;
@@ -26,29 +25,13 @@ import org.eclipse.wst.xsd.ui.internal.adt.facade.IType;
  * This class provides some base function to enable drawing connections to a referenced type
  *
  */
-public abstract class BaseTypeConnectingEditPart extends BaseEditPart implements IFeedbackHandler
+public abstract class BaseTypeConnectingEditPart extends BaseEditPart implements IFeedbackHandler, IConnectionContainer
 {
   private TypeReferenceConnection connectionFigure;  
   
   public void activate()
   {
-    super.activate();
-    // TODO (cs) revisit this, perhaps has Randy for his advice
-    // it seems that the edit parts required for the target end of the connections
-    // are not always layed available when active is called.  So we need to delay
-    // the activateConnection() until a short time later.  For now the only way I can think
-    // of doing this is via an asyncExec.
-    //
-    Display.getCurrent().asyncExec(new Runnable()
-    {
-      public void run()
-      {
-        if (isActive())
-        {  
-          activateConnection();
-        }  
-      }
-    });   
+    super.activate();         
   }
   
   public void deactivate()
@@ -56,12 +39,19 @@ public abstract class BaseTypeConnectingEditPart extends BaseEditPart implements
     deactivateConnection();
     super.deactivate();
   }
+  
+  public void refreshConnections()
+  {
+    deactivateConnection();     
+    activateConnection();
+  }
 
   protected void activateConnection()
-  {
+  {    
     // If appropriate, create our connectionFigure and add it to the appropriate layer
     if (connectionFigure == null && shouldDrawConnection())
     {
+      //System.out.println("activateeConnection()-pre:" + getClass().getName());           
       connectionFigure = createConnectionFigure();
       if (connectionFigure != null)
       {  

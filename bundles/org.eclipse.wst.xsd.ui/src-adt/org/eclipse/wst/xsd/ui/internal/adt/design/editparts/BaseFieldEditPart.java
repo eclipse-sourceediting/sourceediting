@@ -62,19 +62,7 @@ public class BaseFieldEditPart extends BaseTypeConnectingEditPart implements INa
   {
     return (IFieldFigure)figure;
   }
-
-  public void activate()
-  {
-    super.activate();
-    //activateConnection();
-  }
   
-  public void deactivate()
-  {
-    deactivateConnection();
-    super.deactivate();
-  }
-
   protected boolean shouldDrawConnection()
   {
     boolean result = false;
@@ -161,17 +149,6 @@ public class BaseFieldEditPart extends BaseTypeConnectingEditPart implements INa
     installEditPolicy(EditPolicy.SELECTION_FEEDBACK_ROLE, new ADTSelectionFeedbackEditPolicy());
   }
  
-  public void refresh()
-  {
-    super.refresh();
-    
-    // todo... perhaps this is aggressive?
-    // really we only need to update the connection when the IType changes
-    
-    //deactivateConnection();
-    //activateConnection();      
-  }
-
   protected void refreshVisuals()
   {
     super.refreshVisuals();

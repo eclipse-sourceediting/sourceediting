@@ -11,9 +11,7 @@
 package org.eclipse.wst.xsd.ui.internal.adt.design.editparts;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Panel;
@@ -136,15 +134,17 @@ public class RootContentEditPart extends AbstractGraphicalEditPart
   public void refresh()
   {
     super.refresh();
-    // the connections are not refreshed
-    for(Iterator i = getChildren().iterator(); i.hasNext(); )
+    /*
+    // once we're done refreshing we can assume all of the child editparts
+    // now we iteratre thru the list again and tell the children to update
+    // their connections
+    for (Iterator i = getChildren().iterator(); i.hasNext(); )
     {
       Object obj = i.next();
-      if (obj instanceof AbstractGraphicalEditPart)
+      if (obj instanceof IConnectionContainer)
       {
-        ((AbstractGraphicalEditPart)obj).refresh();
+        ((IConnectionContainer)obj).refreshConnections();
       }
-    }
-
+    }*/
   }
 }

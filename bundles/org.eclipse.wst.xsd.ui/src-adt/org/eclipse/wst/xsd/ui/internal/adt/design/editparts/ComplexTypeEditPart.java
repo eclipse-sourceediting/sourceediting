@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.adt.design.editparts;
 
+import java.util.Iterator;
+import org.eclipse.gef.EditPart;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.FocusTypeColumn;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IComplexType;
@@ -27,6 +29,32 @@ public class ComplexTypeEditPart extends StructureEditPart
     return false;
   }
   
+  
+  private EditPart getTargetEditPart(IType type)
+  {
+    ColumnEditPart columnEditPart = null;
+    for (EditPart editPart = this; editPart != null; editPart = editPart.getParent())
+    {
+      if (editPart instanceof ColumnEditPart)
+      {
+        columnEditPart = (ColumnEditPart)editPart;
+        break;
+      }  
+    }     
+    if (columnEditPart != null)
+    {
+      for (Iterator i = columnEditPart.getChildren().iterator(); i.hasNext(); )
+      {
+        EditPart child = (EditPart)i.next();
+        if (child.getModel() == type)
+        {
+          return child;
+        }         
+      }  
+    }
+    return null;
+  }
+  
   public TypeReferenceConnection createConnectionFigure()
   {
     TypeReferenceConnection connectionFigure = null;
@@ -34,7 +62,7 @@ public class ComplexTypeEditPart extends StructureEditPart
     IType type = complexType.getSuperType();
     if (type != null && type.isComplexType())
     {      
-      AbstractGraphicalEditPart referenceTypePart = (AbstractGraphicalEditPart)getViewer().getEditPartRegistry().get(type);
+      AbstractGraphicalEditPart referenceTypePart = (AbstractGraphicalEditPart)getTargetEditPart(type);
       if (referenceTypePart != null)
       {
         connectionFigure = new TypeReferenceConnection();
