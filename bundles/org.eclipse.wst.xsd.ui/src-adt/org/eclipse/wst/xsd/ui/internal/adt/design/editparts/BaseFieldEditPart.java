@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.adt.design.editparts;
 
+import java.util.Iterator;
+import java.util.List;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
@@ -64,7 +66,7 @@ public class BaseFieldEditPart extends BaseTypeConnectingEditPart implements INa
   public void activate()
   {
     super.activate();
-    activateConnection();
+    //activateConnection();
   }
   
   public void deactivate()
@@ -90,14 +92,48 @@ public class BaseFieldEditPart extends BaseTypeConnectingEditPart implements INa
     return result;
   }
   
+  private EditPart getTargetEditPart(IType type)
+  {
+    ColumnEditPart columnEditPart = null;
+    for (EditPart editPart = this; editPart != null; editPart = editPart.getParent())
+    {
+      if (editPart instanceof ColumnEditPart)
+      {
+        columnEditPart = (ColumnEditPart)editPart;
+        break;
+      }  
+    }     
+    if (columnEditPart != null)
+    {
+      // get the next column
+      EditPart parent = columnEditPart.getParent();
+      List columns = parent.getChildren();
+      int index = columns.indexOf(columnEditPart);
+      if (columns.size() > index)
+      {  
+        EditPart nextColumn = (EditPart)columns.get(index + 1);
+        for (Iterator i = nextColumn.getChildren().iterator(); i.hasNext(); )
+        {
+          EditPart child = (EditPart)i.next();
+          if (child.getModel() == type)
+          {
+            return child;
+          }  
+        }  
+      }  
+    }
+    return null;
+  }
+  
   public TypeReferenceConnection createConnectionFigure()
   {
     connectionFigure = null;
     IField field = (IField)getModel();
     IType type = field.getType();
+    //System.out.println("createConnectionFigure : " + type);
     if (type != null) // && type.isComplexType())
     {      
-      AbstractGraphicalEditPart referenceTypePart = (AbstractGraphicalEditPart)getViewer().getEditPartRegistry().get(type);
+      AbstractGraphicalEditPart referenceTypePart = (AbstractGraphicalEditPart)getTargetEditPart(type);
       if (referenceTypePart != null)
       {
         connectionFigure = new TypeReferenceConnection();
@@ -132,8 +168,8 @@ public class BaseFieldEditPart extends BaseTypeConnectingEditPart implements INa
     // todo... perhaps this is aggressive?
     // really we only need to update the connection when the IType changes
     
-    deactivateConnection();
-    activateConnection();      
+    //deactivateConnection();
+    //activateConnection();      
   }
 
   protected void refreshVisuals()
