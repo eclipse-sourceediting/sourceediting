@@ -49,5 +49,6 @@
 	<topic label="Using the server tools">
   		<link toc="../org.eclipse.wst.server.ui.doc.user/wtp_main_toc.xml" />
 	</topic>
+	<topic label="Limitations and Known Issues" href="topics/limitations.html" />
 	<topic label="Legal" href="notices.html" />
 </toc>
