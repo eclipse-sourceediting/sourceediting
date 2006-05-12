@@ -263,10 +263,14 @@
 			<helper
 				class="org.eclipse.wst.html.internal.validation.HTMLValidationWorkbenchHelper">
 			</helper>
-			<run
-				enabled="true"
-				class="org.eclipse.wst.html.internal.validation.HTMLValidator">
-			</run>
+		
+		<run
+             async="true"
+             fullBuild="true"
+             incremental="true"
+             enabled="true"
+			 class="org.eclipse.wst.html.internal.validation.HTMLValidator">
+         </run>
 		</validator>
 	</extension>
 
