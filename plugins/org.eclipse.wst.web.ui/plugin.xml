@@ -33,7 +33,7 @@
 	</extension>
 	<extension point="org.eclipse.wst.server.ui.serverImages">
 		<image
-			id="com.ibm.wtp.web.static"
+			id="org.eclipse.wst.web.static"
 			typeIds="web.static"
 			icon="icons/full/obj16/web_application.gif"/>
 	</extension>
