@@ -654,6 +654,8 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
       }
     }
   }
+  
+ 
   /**
    * Listener on SSE's source editor's selections that converts DOM selections
    * into xsd selections and notifies XSD selection manager

@@ -13,12 +13,9 @@ package org.eclipse.wst.xsd.ui.internal.navigation;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import com.ibm.icu.util.StringTokenizer;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.gef.EditPart;
 import org.eclipse.gef.GraphicalViewer;
-import org.eclipse.gef.RootEditPart;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.INavigationLocation;
@@ -26,11 +23,12 @@ import org.eclipse.ui.NavigationLocation;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDAdapterFactory;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDVisitor;
 import org.eclipse.wst.xsd.ui.internal.adt.design.DesignViewGraphicalViewer;
-import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.RootContentEditPart;
+import org.eclipse.wst.xsd.ui.internal.adt.facade.IADTObject;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDElementDeclaration;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDTypeDefinition;
+import com.ibm.icu.util.StringTokenizer;
 
 /**
  * This class exists to support navigation in a context where there is no text 
@@ -74,21 +72,16 @@ public class DesignViewNavigationLocation extends NavigationLocation
     if (viewer instanceof DesignViewGraphicalViewer)
     {
       DesignViewGraphicalViewer graphicalViewer = (DesignViewGraphicalViewer) viewer;
-      RootEditPart rootEditPart = graphicalViewer.getRootEditPart();
-      EditPart editPart = rootEditPart.getContents();
-      if (editPart instanceof RootContentEditPart)
+      XSDConcreteComponent component = Path.computeComponent(schema, path);
+      if (component != null)
       {
-        XSDConcreteComponent component = Path.computeComponent(schema, path);
-        if (component != null)
+        Adapter adapter = XSDAdapterFactory.getInstance().adapt(component);
+        if (adapter instanceof IADTObject)
         {
-          Adapter adapter = XSDAdapterFactory.getInstance().adapt(component);
-          if (adapter != null)
-          {
-            ((RootContentEditPart) editPart).setInput(adapter);
-          }
+          graphicalViewer.setInput((IADTObject)adapter);
         }
       }
-    }
+    }   
   }
 
   public void restoreState(IMemento memento)

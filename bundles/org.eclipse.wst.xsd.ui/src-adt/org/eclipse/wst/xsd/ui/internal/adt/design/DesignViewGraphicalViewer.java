@@ -13,7 +13,6 @@ package org.eclipse.wst.xsd.ui.internal.adt.design;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.ui.parts.ScrollingGraphicalViewer;
 import org.eclipse.jface.viewers.ISelection;
@@ -36,6 +35,7 @@ import org.eclipse.wst.xsd.ui.internal.adt.outline.ADTContentOutlinePage;
 public class DesignViewGraphicalViewer extends ScrollingGraphicalViewer implements ISelectionChangedListener
 {
   protected ADTSelectionChangedListener internalSelectionProvider = new ADTSelectionChangedListener();
+  protected InputChangeManager inputChangeManager = new InputChangeManager();
 
   public DesignViewGraphicalViewer(IEditorPart editor, CommonSelectionManager manager)
   {
@@ -46,8 +46,9 @@ public class DesignViewGraphicalViewer extends ScrollingGraphicalViewer implemen
     // make the internalSelectionProvider listen to graph view selection changes
     addSelectionChangedListener(internalSelectionProvider);    
     internalSelectionProvider.addSelectionChangedListener(manager);
-    manager.addSelectionChangedListener(this);
+    manager.addSelectionChangedListener(this);  
   }
+  
   
   // this method is called when something changes in the selection manager
   // (e.g. a selection occured from another view)
@@ -55,11 +56,13 @@ public class DesignViewGraphicalViewer extends ScrollingGraphicalViewer implemen
   {
     Object selectedObject = ((StructuredSelection) event.getSelection()).getFirstElement();
     
-    // TODO (cs) It seems like there's way more selection going on than there should
-    // be!!  There's at least 2 selections getting fired when something is selected in the
-    // outline view.  Are we listening to too many things?
+    // TODO (cs) It seems like there's way more selection going on than there
+    // should
+    // be!! There's at least 2 selections getting fired when something is
+    // selected in the
+    // outline view. Are we listening to too many things?
     //
-    //if (event.getSource() instanceof ADTContentOutlinePage)
+    // if (event.getSource() instanceof ADTContentOutlinePage)
     if (event.getSource() != internalSelectionProvider)
     {
       if (selectedObject instanceof IStructure)
@@ -71,7 +74,7 @@ public class DesignViewGraphicalViewer extends ScrollingGraphicalViewer implemen
           {
             if (((IGraphElement)selectedObject).isFocusAllowed())
             {
-              ((RootContentEditPart) getContents()).setInput(selectedObject);              
+             setInput((IStructure)selectedObject);              
             }
           }
         }
@@ -82,19 +85,19 @@ public class DesignViewGraphicalViewer extends ScrollingGraphicalViewer implemen
         if ( (field.isGlobal() && (getInput() instanceof IModel) && (event.getSource() instanceof ADTContentOutlinePage)) ||
             ( (field.isGlobal() && !(getInput() instanceof IModel))))
         {  
-          ((RootContentEditPart) getContents()).setInput(selectedObject);
+          setInput(field);
         }
       }
       else if (selectedObject instanceof IModelProxy)
       {
         IModelProxy adapter = (IModelProxy)selectedObject;
-        if (((RootContentEditPart) getContents()).getInput() != adapter.getModel())
-        ((RootContentEditPart) getContents()).setInput(adapter.getModel());
+        if (getInput() != adapter.getModel())
+           setInput(adapter.getModel());
       }
       else if (selectedObject instanceof IModel)
       {
-        if (((RootContentEditPart) getContents()).getInput() != selectedObject)
-          ((RootContentEditPart) getContents()).setInput(selectedObject);
+        if (getInput() != selectedObject)
+          setInput((IModel)selectedObject);
       }
       
       EditPart editPart = getEditPart(getRootEditPart(), selectedObject);
@@ -203,11 +206,70 @@ public class DesignViewGraphicalViewer extends ScrollingGraphicalViewer implemen
   
   public void setInput(IADTObject object)
   {
-    ((RootContentEditPart)getRootEditPart().getContents()).setInput(object);
+    RootContentEditPart rootContentEditPart = (RootContentEditPart)getRootEditPart().getContents();
+    rootContentEditPart.setModel(object);
+    rootContentEditPart.refresh();
+    inputChangeManager.setSelection(new StructuredSelection(object));
   }
   
   public IADTObject getInput()
   {
-    return (IADTObject)((RootContentEditPart)getRootEditPart().getContents()).getInput();
+    RootContentEditPart rootContentEditPart = (RootContentEditPart)getRootEditPart().getContents();    
+    return (IADTObject)rootContentEditPart.getModel();
+  }
+  
+  public EditPart getInputEditPart()
+  {
+    return getRootEditPart().getContents();    
+  }
+  
+  public void addInputChangdListener(ISelectionChangedListener listener)
+  {
+    inputChangeManager.addSelectionChangedListener(listener);
+  }
+  
+  public void removeInputChangdListener(ISelectionChangedListener listener)
+  {
+    inputChangeManager.removeSelectionChangedListener(listener);    
+  }  
+  
+  
+  private class InputChangeManager implements ISelectionProvider
+  {
+    List listeners = new ArrayList();
+       
+    public void addSelectionChangedListener(ISelectionChangedListener listener)
+    {
+      if (!listeners.contains(listener))
+      {  
+        listeners.add(listener);
+      }        
+    }
+
+    public ISelection getSelection()
+    {   
+      // no one should be calling this method     
+      return null;
+    }
+
+    public void removeSelectionChangedListener(ISelectionChangedListener listener)
+    {
+      listeners.remove(listener);      
+    }
+
+    public void setSelection(ISelection selection)
+    { 
+      notifyListeners(selection);
+    }
+
+    void notifyListeners(ISelection selection)
+    {
+      List list = new ArrayList(listeners);
+      for (Iterator i = list.iterator(); i.hasNext(); )
+      {
+        ISelectionChangedListener listener = (ISelectionChangedListener)i.next();
+        listener.selectionChanged(new SelectionChangedEvent(this, selection));
+      }  
+    }       
   }
 }

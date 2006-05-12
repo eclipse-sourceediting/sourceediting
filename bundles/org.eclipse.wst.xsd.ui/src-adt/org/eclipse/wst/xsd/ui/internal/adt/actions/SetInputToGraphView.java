@@ -12,7 +12,6 @@ package org.eclipse.wst.xsd.ui.internal.adt.actions;
 
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.GraphicalViewer;
-import org.eclipse.gef.RootEditPart;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPart;
@@ -26,26 +25,37 @@ public class SetInputToGraphView extends BaseSelectionAction
 {
   public static String ID = "SetAsFocus"; //$NON-NLS-1$
   IEditorPart editorPart;
+  Object input;
 
   public SetInputToGraphView(IWorkbenchPart part)
   {
+    this(part, null);
+  }
+  
+  public SetInputToGraphView(IWorkbenchPart part, Object input)
+  {
     super(part);
+    this.input = input;
     setId(ID);
     setText(Messages._UI_ACTION_SET_AS_FOCUS);
     if (part instanceof IEditorPart)
     {
       editorPart = (IEditorPart)part;
-    }  
+    }      
   }
-
+  
   protected boolean calculateEnabled()
   {
     return true;
   }
 
   public void run()
-  {
-    Object selection = ((IStructuredSelection) getSelection()).getFirstElement();
+  {    
+    Object selection = input;   
+    if (selection == null)
+    {  
+      selection = ((IStructuredSelection) getSelection()).getFirstElement();
+    }  
     Object adapter = getWorkbenchPart().getAdapter(GraphicalViewer.class);
 
     if (selection instanceof IADTObject)
@@ -53,17 +63,16 @@ public class SetInputToGraphView extends BaseSelectionAction
       IADTObject obj = (IADTObject) selection;
       if (adapter instanceof DesignViewGraphicalViewer)
       {
-        DesignViewGraphicalViewer graphicalViewer = (DesignViewGraphicalViewer) adapter;
-        RootEditPart rootEditPart = graphicalViewer.getRootEditPart();
-        EditPart editPart = rootEditPart.getContents();
+        DesignViewGraphicalViewer graphicalViewer = (DesignViewGraphicalViewer) adapter;  
+        EditPart editPart = graphicalViewer.getInputEditPart();
         if (editPart instanceof RootContentEditPart)
         {
           if (editorPart != null)
           {          
             PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getNavigationHistory().markLocation(editorPart);
           }  
-          ((RootContentEditPart) editPart).setInput(obj);
-          ((RootContentEditPart) editPart).refresh();          
+          graphicalViewer.setInput(obj);
+          //((RootContentEditPart) editPart).refresh();          
           if (editorPart != null)
           {
             PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getNavigationHistory().markLocation(editorPart);

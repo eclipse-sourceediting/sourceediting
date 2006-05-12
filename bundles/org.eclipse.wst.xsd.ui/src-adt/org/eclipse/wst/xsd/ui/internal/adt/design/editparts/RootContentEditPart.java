@@ -119,13 +119,20 @@ public class RootContentEditPart extends AbstractGraphicalEditPart
     }
     return collections;
   }
+    
   
+  /**
+   * @deprecated Don't call this method.  Use DesignViewGraphicalViewer.setInput() instead.
+   */
   public void setInput(Object component)
   {
     setModel(component);
     refresh();
   }
   
+  /**
+   * @deprecated Don't call this method.  Use DesignViewGraphicalViewer.getInput() instead.
+   */
   public Object getInput()
   {
     return getModel();

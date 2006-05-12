@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.EventObject;
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
@@ -381,14 +380,22 @@ public abstract class CommonMultiPageEditor extends MultiPageEditorPart implemen
   {
     return structuredTextEditor;
   }
+ 
+  
+  protected Composite createGraphPageComposite()
+  {
+    Composite parent = new Composite(getContainer(), SWT.NONE);    
+    parent.setLayout(new FillLayout());
+    return parent;
+  }
   
   protected void createGraphPage()
   {
-    Composite parent = new Composite(getContainer(), SWT.NONE);
-    parent.setLayout(new FillLayout());
-
+    Composite parent = createGraphPageComposite();
+    
     graphicalViewer = getGraphicalViewer();
     graphicalViewer.createControl(parent);
+        
     getEditDomain().addViewer(graphicalViewer);
     
     configureGraphicalViewer();

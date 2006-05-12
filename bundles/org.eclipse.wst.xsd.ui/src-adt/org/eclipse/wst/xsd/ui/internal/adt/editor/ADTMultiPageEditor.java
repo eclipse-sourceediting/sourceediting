@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.adt.editor;
 
+import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartFactory;
@@ -18,6 +19,17 @@ import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.gef.editparts.ZoomManager;
 import org.eclipse.gef.ui.actions.ActionRegistry;
 import org.eclipse.gef.ui.parts.ScrollingGraphicalViewer;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StackLayout;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.BaseSelectionAction;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.SetInputToGraphView;
@@ -33,6 +45,7 @@ public abstract class ADTMultiPageEditor extends CommonMultiPageEditor
 {
   protected IModel model;
   private int currentPage = -1;
+  private Label tableOfContentsButton;
   
   /**
    * Creates a multi-page editor example.
@@ -42,6 +55,71 @@ public abstract class ADTMultiPageEditor extends CommonMultiPageEditor
     super();
   }
 
+  
+  private class InternalLayout extends StackLayout
+  {
+    public InternalLayout()
+    {
+      super();  
+    }
+    
+    protected void layout(Composite composite, boolean flushCache)
+    {
+      Control children[] = composite.getChildren();
+      Rectangle rect = composite.getClientArea();
+      rect.x += marginWidth;
+      rect.y += marginHeight;
+      rect.width -= 2 * marginWidth;
+      rect.height -= 2 * marginHeight;
+      
+      for (int i = 0; i < children.length; i++) 
+      { 
+        if (i == 1)
+        {  
+          children[i].setBounds(rect);
+        }
+        else if (i == 0)
+        {  
+          children[i].setBounds(rect.x + 10, rect.y + 10, 40, 40);
+        }  
+      }       
+    }               
+  }
+  
+  protected Composite createGraphPageComposite()
+  {    
+    Composite parent = new Composite(getContainer(), SWT.NONE);    
+    parent.setLayout(new InternalLayout());    
+    tableOfContentsButton = new Label(parent, 0);
+    
+    // TODO (cs) need to review how the initial 'input' gets specified
+    // on the designViewer somehow a schema gets set without going thru
+    // the designViewer's setInput.  Need to setVisible(false) to workaround this.
+    //
+    tableOfContentsButton.setVisible(false);
+    tableOfContentsButton.setBackground(ColorConstants.white);
+    tableOfContentsButton.setImage(XSDEditorPlugin.getPlugin().getIcon("obj16/index.gif"));
+    tableOfContentsButton.addMouseListener(new MouseAdapter()
+    {
+      public void mouseUp(MouseEvent e)
+      {
+        // TODO (cs) do we need to register this action?
+        //
+        System.out.println("MouseUp!!");
+        SetInputToGraphView action = new SetInputToGraphView(ADTMultiPageEditor.this, getModel());
+        action.run();
+      }          
+    });
+    return parent;
+  }
+  
+  protected void createGraphPage()
+  {
+    super.createGraphPage(); 
+    tableOfContentsButton.moveAbove(graphicalViewer.getControl());
+    graphicalViewer.getControl().moveBelow(tableOfContentsButton);        
+  }
+  
   public String getContributorId()
   {
     return "org.eclipse.wst.xsd.ui.internal.editor"; //$NON-NLS-1$
@@ -97,12 +175,27 @@ public abstract class ADTMultiPageEditor extends CommonMultiPageEditor
     currentPage = newPageIndex;
     super.pageChange(newPageIndex);
   }
+  
+  private boolean isTableOfContentsApplicable(Object graphViewInput)
+  {
+    return !(graphViewInput instanceof IModel);
+  }
 
   protected ScrollingGraphicalViewer getGraphicalViewer()
   {
-    return new DesignViewGraphicalViewer(this, getSelectionManager());
+    DesignViewGraphicalViewer viewer = new DesignViewGraphicalViewer(this, getSelectionManager());
+    viewer.addInputChangdListener(new ISelectionChangedListener()
+    {
+      public void selectionChanged(SelectionChangedEvent event)
+      {        
+        IStructuredSelection input = (IStructuredSelection)event.getSelection();
+        System.out.println("inputChanged:" + input);
+        tableOfContentsButton.setVisible(isTableOfContentsApplicable(input.getFirstElement()));         
+      }      
+    });
+    return viewer;
   }
-
+  
   abstract public IModel buildModel();  // (IFileEditorInput editorInput);
   
   protected void createActions()
