@@ -26,14 +26,13 @@ import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
 import org.eclipse.wst.common.frameworks.internal.DoNotUseMeThisWillBeDeletedPost15;
 import org.eclipse.wst.common.frameworks.internal.datamodel.ui.DataModelWizardPage;
 import org.eclipse.wst.common.frameworks.internal.ui.WTPCommonUIResourceHandler;
 import org.eclipse.wst.web.internal.ResourceHandler;
-import org.eclipse.wst.web.internal.WSTWebPlugin;
 import org.eclipse.wst.web.internal.operation.ISimpleWebModuleCreationDataModelProperties;
+import org.eclipse.wst.web.ui.internal.WSTWebUIPlugin;
 
 /**
  * This has been slated for removal post WTP 1.5. Do not use this class/interface
@@ -55,7 +54,7 @@ class SimpleWebModuleWizardBasePage extends DataModelWizardPage implements ISimp
 		super(dataModel, pageName);
 		setDescription(ResourceHandler.StaticWebProjectWizardBasePage_Page_Description); 
 		setTitle(ResourceHandler.StaticWebProjectWizardBasePage_Page_Title); 
-		ImageDescriptor desc = AbstractUIPlugin.imageDescriptorFromPlugin(WSTWebPlugin.PLUGIN_ID, "icons/full/wizban/newwprj_wiz.gif"); //$NON-NLS-1$
+		ImageDescriptor desc = WSTWebUIPlugin.getDefault().getImageDescriptor("newwprj_wiz"); //$NON-NLS-1$
 		setImageDescriptor(desc);
 		setPageComplete(false);
 	}

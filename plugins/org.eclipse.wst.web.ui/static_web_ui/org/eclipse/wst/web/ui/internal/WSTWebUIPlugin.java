@@ -57,9 +57,11 @@ public class WSTWebUIPlugin extends AbstractUIPlugin {
 	 */
 	public ImageDescriptor getImageDescriptor(String key) {
 		ImageDescriptor imageDescriptor = null;
-		URL gifImageURL = getImageURL(key, getBundle());
-		if (gifImageURL != null)
-			imageDescriptor = ImageDescriptor.createFromURL(gifImageURL);
+		URL imageURL = getImageURL(key, getBundle());
+		if (imageURL==null)
+			imageURL = getPNGImageURL(key, getBundle());
+		if (imageURL != null)
+			imageDescriptor = ImageDescriptor.createFromURL(imageURL);
 		return imageDescriptor;
 	}
 	/**
@@ -67,6 +69,26 @@ public class WSTWebUIPlugin extends AbstractUIPlugin {
 	 */
 	public static URL getImageURL(String key, Bundle bundle) {
 		String gif = "/" + key + ".gif"; //$NON-NLS-1$ //$NON-NLS-2$
+		IPath path = null;
+		for (int i = 0; i < ICON_DIRS.length; i++) {
+			path = new Path(ICON_DIRS[i]).append(gif);
+			if (bundle.getEntry(path.toString()) == null)
+				continue;
+			try {
+				return new URL(bundle.getEntry("/"), path.toString()); //$NON-NLS-1$
+			} catch (MalformedURLException exception) {
+				Logger.log(Logger.WARNING, "Load_Image_Error_", exception); //$NON-NLS-1$
+				continue;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * This gets a .png from the icons folder.
+	 */
+	public static URL getPNGImageURL(String key, Bundle bundle) {
+		String gif = "/" + key + ".png"; //$NON-NLS-1$ //$NON-NLS-2$
 		IPath path = null;
 		for (int i = 0; i < ICON_DIRS.length; i++) {
 			path = new Path(ICON_DIRS[i]).append(gif);
