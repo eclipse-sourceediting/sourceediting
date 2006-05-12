@@ -105,7 +105,6 @@ public abstract class ADTMultiPageEditor extends CommonMultiPageEditor
       {
         // TODO (cs) do we need to register this action?
         //
-        System.out.println("MouseUp!!");
         SetInputToGraphView action = new SetInputToGraphView(ADTMultiPageEditor.this, getModel());
         action.run();
       }          
@@ -189,7 +188,6 @@ public abstract class ADTMultiPageEditor extends CommonMultiPageEditor
       public void selectionChanged(SelectionChangedEvent event)
       {        
         IStructuredSelection input = (IStructuredSelection)event.getSelection();
-        System.out.println("inputChanged:" + input);
         tableOfContentsButton.setVisible(isTableOfContentsApplicable(input.getFirstElement()));         
       }      
     });
