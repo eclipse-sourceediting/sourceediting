@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.adt.design.directedit;
-                                                  
+
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.gef.GraphicalEditPart;
@@ -45,7 +45,8 @@ public class TopLevelNameDirectEditManager extends DirectEditManager
   private IAction copy, cut, paste, undo, redo, find, selectAll, delete;
   private Font scaledFont;
 
-  public TopLevelNameDirectEditManager(GraphicalEditPart source, CellEditorLocator locator,  XSDNamedComponent component) {
+  public TopLevelNameDirectEditManager(GraphicalEditPart source, CellEditorLocator locator, XSDNamedComponent component)
+  {
     super(source, null, locator);
     this.component = component;
   }
@@ -53,12 +54,15 @@ public class TopLevelNameDirectEditManager extends DirectEditManager
   /**
    * @see org.eclipse.gef.tools.DirectEditManager#bringDown()
    */
-  protected void bringDown() {
-    if (actionHandler != null) {
+  protected void bringDown()
+  {
+    if (actionHandler != null)
+    {
       actionHandler.dispose();
       actionHandler = null;
     }
-    if (actionBars != null) {
+    if (actionBars != null)
+    {
       restoreSavedActions(actionBars);
       actionBars.updateActionBars();
       actionBars = null;
@@ -69,7 +73,7 @@ public class TopLevelNameDirectEditManager extends DirectEditManager
     super.bringDown();
     if (disposeFont != null)
       disposeFont.dispose();
-    
+
     if (getEditPart() instanceof TopLevelComponentEditPart)
     {
       Runnable runnable = new Runnable()
@@ -88,53 +92,59 @@ public class TopLevelNameDirectEditManager extends DirectEditManager
       Display.getCurrent().asyncExec(runnable);
     }
   }
-  
-  public void showFeedback() {
+
+  public void showFeedback()
+  {
     super.showFeedback();
   }
 
-  protected CellEditor createCellEditorOn(Composite composite) {
+  protected CellEditor createCellEditorOn(Composite composite)
+  {
     return new TextCellEditor(composite, SWT.SINGLE | SWT.WRAP);
   }
 
-  protected void initCellEditor() {
-    Text text = (Text)getCellEditor().getControl();
+  protected void initCellEditor()
+  {
+    Text text = (Text) getCellEditor().getControl();
     Label label = ((INamedEditPart) getEditPart()).getNameLabelFigure();
-    
-    if (label != null) {
+
+    if (label != null)
+    {
       scaledFont = label.getFont();
-      
+
       Color color = label.getBackgroundColor();
       text.setBackground(color);
-      
+
       String initialLabelText = component.getName();
       getCellEditor().setValue(initialLabelText);
     }
-    else {
+    else
+    {
       scaledFont = label.getParent().getFont();
       text.setBackground(label.getParent().getBackgroundColor());
     }
-    
+
     FontData data = scaledFont.getFontData()[0];
     Dimension fontSize = new Dimension(0, data.getHeight());
     label.getParent().translateToAbsolute(fontSize);
     data.setHeight(fontSize.height);
     scaledFont = new Font(null, data);
-    
-    text.setFont(scaledFont);
-//    text.selectAll();
 
-    // Hook the cell editor's copy/paste actions to the actionBars so that they can
+    text.setFont(scaledFont);
+    // text.selectAll();
+
+    // Hook the cell editor's copy/paste actions to the actionBars so that they
+    // can
     // be invoked via keyboard shortcuts.
-    actionBars = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-        .getActiveEditor().getEditorSite().getActionBars();
+    actionBars = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor().getEditorSite().getActionBars();
     saveCurrentActions(actionBars);
     actionHandler = new CellEditorActionHandler(actionBars);
     actionHandler.addCellEditor(getCellEditor());
     actionBars.updateActionBars();
   }
 
-  private void restoreSavedActions(IActionBars actionBars){
+  private void restoreSavedActions(IActionBars actionBars)
+  {
     actionBars.setGlobalActionHandler(ActionFactory.COPY.getId(), copy);
     actionBars.setGlobalActionHandler(ActionFactory.PASTE.getId(), paste);
     actionBars.setGlobalActionHandler(ActionFactory.DELETE.getId(), delete);
@@ -145,7 +155,8 @@ public class TopLevelNameDirectEditManager extends DirectEditManager
     actionBars.setGlobalActionHandler(ActionFactory.REDO.getId(), redo);
   }
 
-  private void saveCurrentActions(IActionBars actionBars) {
+  private void saveCurrentActions(IActionBars actionBars)
+  {
     copy = actionBars.getGlobalActionHandler(ActionFactory.COPY.getId());
     paste = actionBars.getGlobalActionHandler(ActionFactory.PASTE.getId());
     delete = actionBars.getGlobalActionHandler(ActionFactory.DELETE.getId());
