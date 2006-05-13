@@ -10,8 +10,10 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.common.actions;
 
+import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.wst.xsd.ui.internal.adapters.XSDAdapterFactory;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDBaseAdapter;
 import org.eclipse.wst.xsd.ui.internal.common.commands.AddXSDSimpleTypeDefinitionCommand;
 import org.eclipse.wst.xsd.ui.internal.common.util.Messages;
@@ -41,6 +43,9 @@ public class AddXSDSimpleTypeDefinitionAction extends XSDBaseAction
     {
       AddXSDSimpleTypeDefinitionCommand command = new AddXSDSimpleTypeDefinitionCommand(Messages._UI_ACTION_ADD_SIMPLE_TYPE, (XSDSchema) selection);
       getCommandStack().execute(command);
+      
+      Adapter adapter = XSDAdapterFactory.getInstance().adapt(command.getAddedComponent());
+      selectAddedComponent(adapter);
     }
   }
 

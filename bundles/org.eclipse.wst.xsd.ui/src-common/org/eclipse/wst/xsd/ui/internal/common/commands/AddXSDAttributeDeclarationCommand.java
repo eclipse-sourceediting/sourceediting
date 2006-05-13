@@ -62,7 +62,6 @@ public class AddXSDAttributeDeclarationCommand extends BaseCommand
         xsdComplexTypeDefinition.getAttributeContents().add(attributeUse);
         formatChild(xsdComplexTypeDefinition.getElement());
       }
-      addedXSDConcreteComponent = attributeUse;
     }
     else
     {
@@ -92,8 +91,8 @@ public class AddXSDAttributeDeclarationCommand extends BaseCommand
         ((XSDAttributeGroupDefinition)parent).getResolvedAttributeGroupDefinition().getContents().add(attributeUse);
         formatChild(parent.getElement());
       }
-      addedXSDConcreteComponent = attribute;
     }
+    addedXSDConcreteComponent = attribute;
   }
 
   ArrayList names;

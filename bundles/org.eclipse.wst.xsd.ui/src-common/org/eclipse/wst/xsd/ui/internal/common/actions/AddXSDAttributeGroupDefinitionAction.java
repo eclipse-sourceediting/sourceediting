@@ -12,7 +12,6 @@ package org.eclipse.wst.xsd.ui.internal.common.actions;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDAdapterFactory;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDBaseAdapter;
@@ -56,8 +55,7 @@ public class AddXSDAttributeGroupDefinitionAction extends XSDBaseAction
     if (command != null)
     {
       Adapter adapter = XSDAdapterFactory.getInstance().adapt(command.getAddedComponent());
-      if (adapter != null)
-        provider.setSelection(new StructuredSelection(adapter));
+      selectAddedComponent(adapter);
     }
 
   }
