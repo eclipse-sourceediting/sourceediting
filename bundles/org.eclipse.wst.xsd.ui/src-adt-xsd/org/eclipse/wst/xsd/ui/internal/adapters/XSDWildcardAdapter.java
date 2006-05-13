@@ -30,11 +30,27 @@ public class XSDWildcardAdapter extends XSDParticleAdapter implements IField
   {
 
   }
-
+  
   public Image getImage()
   {
     XSDWildcard xsdWildcard = (XSDWildcard) target;
-    return XSDEditorPlugin.getXSDImage(xsdWildcard.eContainer() instanceof XSDParticle ? "icons/XSDAny.gif" : "icons/XSDAnyAttribute.gif"); //$NON-NLS-1$ //$NON-NLS-2$
+    
+    if (xsdWildcard.eContainer() instanceof XSDParticle)
+    {
+      if (isReadOnly())
+      {
+        return XSDEditorPlugin.getPlugin().getIcon("obj16/XSDAnydis.gif"); //$NON-NLS-1$
+      }
+      return XSDEditorPlugin.getXSDImage("icons/XSDAny.gif"); //$NON-NLS-1$
+    }
+    else
+    {
+      if (isReadOnly())
+      {
+        return XSDEditorPlugin.getPlugin().getIcon("obj16/XSDAnyAttributedis.gif"); //$NON-NLS-1$
+      }
+      return XSDEditorPlugin.getXSDImage("icons/XSDAnyAttribute.gif"); //$NON-NLS-1$
+    }
   }
 
   public String getText()
@@ -118,7 +134,12 @@ public class XSDWildcardAdapter extends XSDParticleAdapter implements IField
 
   public String getKind()
   {
-    return "element"; //$NON-NLS-1$
+    XSDWildcard xsdWildcard = (XSDWildcard) target;
+    if (xsdWildcard.eContainer() instanceof XSDParticle)
+    {
+      return "element"; //$NON-NLS-1$
+    }
+    return "attribute";
   }
 
   public IModel getModel()
@@ -128,7 +149,12 @@ public class XSDWildcardAdapter extends XSDParticleAdapter implements IField
 
   public String getName()
   {
-    return "anyElement"; //$NON-NLS-1$
+    XSDWildcard xsdWildcard = (XSDWildcard) target;
+    if (xsdWildcard.eContainer() instanceof XSDParticle)
+    {
+      return "any"; //$NON-NLS-1$
+    }
+    return "anyAttribute"; //$NON-NLS-1$
   }
   
   public IType getType()
@@ -138,7 +164,7 @@ public class XSDWildcardAdapter extends XSDParticleAdapter implements IField
 
   public String getTypeName()
   {
-    return "anyType"; //$NON-NLS-1$
+    return ""; //$NON-NLS-1$
   }
 
   public String getTypeNameQualifier()

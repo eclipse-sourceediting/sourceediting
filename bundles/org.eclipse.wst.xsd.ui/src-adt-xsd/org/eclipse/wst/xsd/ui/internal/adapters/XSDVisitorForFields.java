@@ -72,7 +72,12 @@ public class XSDVisitorForFields extends XSDVisitor
           }
         }
       }
-    }   
+    }
+    if (type.getAttributeWildcard() != null)
+    {
+      thingsWeNeedToListenTo.add(type.getAttributeWildcard());
+      concreteComponentList.add(type.getAttributeWildcard());
+    }
     super.visitComplexTypeDefinition(type);
   }
   

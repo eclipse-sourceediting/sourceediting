@@ -21,6 +21,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.wst.xsd.ui.internal.editor.Messages;
 import org.eclipse.xsd.XSDConcreteComponent;
+import org.eclipse.xsd.XSDParticle;
 import org.eclipse.xsd.XSDProcessContents;
 import org.eclipse.xsd.XSDWildcard;
 import org.eclipse.xsd.util.XSDConstants;
@@ -152,9 +153,19 @@ public class XSDAnyElementContentsSection extends MultiplicitySection
           XSDProcessContents pc = wildcard.getProcessContents();
           processContentsCombo.setText(pc.getName());
         }
+        
+        if (wildcard.eContainer() instanceof XSDParticle)
+        {
+          minCombo.setEnabled(!isReadOnly);
+          maxCombo.setEnabled(!isReadOnly);
+        }
+        else
+        {
+          minCombo.setEnabled(false);
+          maxCombo.setEnabled(false);
+        }
       }
     }
-
     refreshMinMax();
     setListenerEnabled(true);
   }
