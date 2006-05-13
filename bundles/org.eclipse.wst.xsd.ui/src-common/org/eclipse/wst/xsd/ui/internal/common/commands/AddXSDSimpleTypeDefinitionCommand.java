@@ -67,6 +67,8 @@ public final class AddXSDSimpleTypeDefinitionCommand extends BaseCommand
       ((XSDAttributeDeclaration) parent).setAnonymousTypeDefinition(typeDef);
     }
     formatChild(createdSimpleType.getElement());
+    
+    addedXSDConcreteComponent = createdSimpleType;
   }
 
   public XSDSimpleTypeDefinition getCreatedSimpleType()
