@@ -12,6 +12,7 @@ package org.eclipse.wst.xsd.ui.internal.adt.design.editparts;
 
 import java.util.Iterator;
 import java.util.List;
+
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
@@ -27,6 +28,7 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.gef.requests.DirectEditRequest;
 import org.eclipse.gef.requests.LocationRequest;
+import org.eclipse.wst.xsd.ui.internal.adapters.XSDBaseAdapter;
 import org.eclipse.wst.xsd.ui.internal.adt.design.directedit.ComboBoxCellEditorManager;
 import org.eclipse.wst.xsd.ui.internal.adt.design.directedit.ElementReferenceDirectEditManager;
 import org.eclipse.wst.xsd.ui.internal.adt.design.directedit.LabelCellEditorLocator;
@@ -42,6 +44,7 @@ import org.eclipse.wst.xsd.ui.internal.adt.facade.IADTObject;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IField;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IType;
 import org.eclipse.wst.xsd.ui.internal.design.editpolicies.GraphNodeDragTracker;
+import org.eclipse.xsd.XSDNamedComponent;
 
 public class BaseFieldEditPart extends BaseTypeConnectingEditPart implements INamedEditPart
 {
@@ -249,6 +252,30 @@ public class BaseFieldEditPart extends BaseTypeConnectingEditPart implements INa
     }
   }
   
+  public void doEditName(boolean addFromDesign)
+  {
+    if (!addFromDesign) return;
+    
+//    removeFeedback();
+
+//    Runnable runnable = new Runnable()
+//    {
+//      public void run()
+//      {
+        Object object = ((XSDBaseAdapter)getModel()).getTarget();
+        if (object instanceof XSDNamedComponent)
+        {
+          Point p = getNameLabelFigure().getLocation();
+          LabelEditManager manager = new LabelEditManager(BaseFieldEditPart.this, new LabelCellEditorLocator(BaseFieldEditPart.this, p));
+          NameUpdateCommandWrapper wrapper = new NameUpdateCommandWrapper();
+          adtDirectEditPolicy.setUpdateCommand(wrapper);
+          manager.show();
+        }
+//      }
+//    };
+//    Display.getCurrent().asyncExec(runnable);
+
+  }
   
   class NameUpdateCommandWrapper extends Command implements IADTUpdateCommand
   {
