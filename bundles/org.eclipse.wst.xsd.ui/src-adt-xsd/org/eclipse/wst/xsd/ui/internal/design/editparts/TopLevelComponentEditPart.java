@@ -25,7 +25,9 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.RequestConstants;
+import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editpolicies.SelectionEditPolicy;
+import org.eclipse.gef.requests.DirectEditRequest;
 import org.eclipse.gef.requests.LocationRequest;
 import org.eclipse.gef.ui.actions.ActionRegistry;
 import org.eclipse.gef.ui.parts.AbstractEditPartViewer;
@@ -38,26 +40,34 @@ import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDBaseAdapter;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDSchemaDirectiveAdapter;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.SetInputToGraphView;
+import org.eclipse.wst.xsd.ui.internal.adt.design.directedit.LabelCellEditorLocator;
+import org.eclipse.wst.xsd.ui.internal.adt.design.directedit.TopLevelNameDirectEditManager;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.BaseEditPart;
+import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.INamedEditPart;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.RootContentEditPart;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IFeedbackHandler;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IGraphElement;
+import org.eclipse.wst.xsd.ui.internal.adt.design.editpolicies.ADTDirectEditPolicy;
+import org.eclipse.wst.xsd.ui.internal.adt.design.editpolicies.IADTUpdateCommand;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editpolicies.SimpleDirectEditPolicy;
 import org.eclipse.wst.xsd.ui.internal.adt.typeviz.design.figures.FieldFigure;
+import org.eclipse.wst.xsd.ui.internal.common.commands.UpdateNameCommand;
 import org.eclipse.wst.xsd.ui.internal.design.editpolicies.SelectionHandlesEditPolicyImpl;
 import org.eclipse.wst.xsd.ui.internal.design.figures.HyperLinkLabel;
 import org.eclipse.wst.xsd.ui.internal.design.layouts.FillLayout;
 import org.eclipse.wst.xsd.ui.internal.editor.Messages;
 import org.eclipse.wst.xsd.ui.internal.utils.OpenOnSelectionHelper;
+import org.eclipse.xsd.XSDNamedComponent;
 import org.eclipse.xsd.XSDSchemaDirective;
 import org.eclipse.xsd.impl.XSDImportImpl;
 
-public class TopLevelComponentEditPart extends BaseEditPart implements IFeedbackHandler
+public class TopLevelComponentEditPart extends BaseEditPart implements IFeedbackHandler, INamedEditPart
 {
   protected Label label;
   // protected Label arrowLabel;
   protected Figure labelHolder = new Figure();
   protected SelectionHandlesEditPolicyImpl selectionHandlesEditPolicy;
+  protected ADTDirectEditPolicy adtDirectEditPolicy = new ADTDirectEditPolicy();
   protected SimpleDirectEditPolicy simpleDirectEditPolicy = new SimpleDirectEditPolicy();
   protected boolean isReadOnly;
   protected boolean isSelected;
@@ -156,7 +166,7 @@ public class TopLevelComponentEditPart extends BaseEditPart implements IFeedback
     };
     installEditPolicy(EditPolicy.SELECTION_FEEDBACK_ROLE, feedBackSelectionEditPolicy);
 
-    installEditPolicy(EditPolicy.DIRECT_EDIT_ROLE, simpleDirectEditPolicy);
+    installEditPolicy(EditPolicy.DIRECT_EDIT_ROLE, adtDirectEditPolicy);
   }
 
   public Color computeLabelColor()
@@ -281,18 +291,50 @@ public class TopLevelComponentEditPart extends BaseEditPart implements IFeedback
     };
     Display.getCurrent().asyncExec(runnable);
   }
-
-  public void doEditName()
+  
+  public void doEditName(boolean addFromDesign)
   {
-    removeFeedback();
-    //Object object = getModel();
-    // if (object instanceof XSDNamedComponent)
-    // {
-    // ComponentNameDirectEditManager manager = new
-    // ComponentNameDirectEditManager(this, label, (XSDNamedComponent)object);
-    // simpleDirectEditPolicy.setDelegate(manager);
-    // manager.show();
-    // }
+    if (!addFromDesign) return;
+    
+//    removeFeedback();
+
+    Object object = ((XSDBaseAdapter) getModel()).getTarget();
+    if (object instanceof XSDNamedComponent)
+    {
+      Point p = label.getLocation();
+      TopLevelNameDirectEditManager manager = new TopLevelNameDirectEditManager(TopLevelComponentEditPart.this, new LabelCellEditorLocator(TopLevelComponentEditPart.this, p), (XSDNamedComponent) object);
+      NameUpdateCommandWrapper wrapper = new NameUpdateCommandWrapper();
+      adtDirectEditPolicy.setUpdateCommand(wrapper);
+      manager.show();
+    }
+  }
+  
+  class NameUpdateCommandWrapper extends Command implements IADTUpdateCommand
+  {
+    Command command;
+    protected DirectEditRequest request;
+    
+    public NameUpdateCommandWrapper()
+    {
+      super(Messages._UI_ACTION_UPDATE_NAME);
+    }
+
+    public void setRequest(DirectEditRequest request)
+    {
+      this.request = request;
+    }
+    
+    public void execute()
+    {
+      XSDBaseAdapter adapter = (XSDBaseAdapter)getModel();
+      Object newValue = request.getCellEditor().getValue();
+      if (newValue instanceof String && ((String)newValue).length() > 0)
+      {
+        UpdateNameCommand command = new UpdateNameCommand(Messages._UI_ACTION_UPDATE_NAME, (XSDNamedComponent)adapter.getTarget(), (String)newValue);
+        if (command != null)
+          command.execute();
+      }
+     }
   }
 
   static boolean reselect = false;
@@ -300,5 +342,22 @@ public class TopLevelComponentEditPart extends BaseEditPart implements IFeedback
   public void setReselect(boolean state)
   {
     reselect = state;
+  }
+
+  public Label getNameLabelFigure()
+  {
+    return label;
+  }
+
+  public void performDirectEdit(Point cursorLocation)
+  {
+   
+  }
+  
+  public void setSelected(int value)
+  {
+    // if it is selected, we want to scroll to it
+    setScroll(true);
+    super.setSelected(value);
   }
 }
