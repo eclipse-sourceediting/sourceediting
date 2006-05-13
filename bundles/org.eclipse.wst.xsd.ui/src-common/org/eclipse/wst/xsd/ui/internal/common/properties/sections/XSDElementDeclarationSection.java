@@ -250,8 +250,10 @@ public class XSDElementDeclarationSection extends MultiplicitySection
     {  
       String currentTypeName = td.getQName(xsdSchema); //no prefix
       ComponentSpecification ret = getComponentSpecFromQuickPickForValue(currentTypeName,manager);
-      if (ret == null) //not in quickPick
+      if (ret == null && currentTypeName != null) //not in quickPick
+      {
         typeCombo.add(currentTypeName);
+      }
     } 
   }
   
@@ -265,7 +267,7 @@ public class XSDElementDeclarationSection extends MultiplicitySection
         for (int i=0; i < quickPicks.length; i++)
         {
           ComponentSpecification componentSpecification = quickPicks[i];
-          if (value.equals(componentSpecification.getName()))
+          if (value != null && value.equals(componentSpecification.getName()))
           {
             return componentSpecification;
           }                
