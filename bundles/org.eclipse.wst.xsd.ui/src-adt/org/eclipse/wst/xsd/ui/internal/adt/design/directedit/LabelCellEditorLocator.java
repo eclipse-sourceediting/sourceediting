@@ -34,11 +34,10 @@ public class LabelCellEditorLocator implements CellEditorLocator
   public void relocate(CellEditor celleditor)
   {
     Text text = (Text) celleditor.getControl();
-    
+
+    Label label = namedEditPart.getNameLabelFigure();
     if (text.getBounds().x <= 0)
     {
-      Label label = namedEditPart.getNameLabelFigure();
-      
       int widthToRemove = 0;
       // HACK 
       if (namedEditPart instanceof BaseFieldEditPart)
@@ -84,6 +83,16 @@ public class LabelCellEditorLocator implements CellEditorLocator
         offset++;
       }
       text.setSelection(offset, offset);
+    }
+    else
+    {
+      org.eclipse.swt.graphics.Point sel = text.getSelection();
+      org.eclipse.swt.graphics.Point pref = text.computeSize(-1, -1);
+      Rectangle rect = label.getTextBounds().getCopy();
+      label.translateToAbsolute(rect);
+      text.setBounds(rect.x-4, rect.y-1, pref.x+1, pref.y+1); 
+      text.setSelection(0);
+      text.setSelection(sel); 
     }
   }
 }
