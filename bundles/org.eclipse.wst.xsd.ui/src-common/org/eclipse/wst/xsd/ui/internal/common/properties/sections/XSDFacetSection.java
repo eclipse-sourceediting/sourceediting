@@ -348,7 +348,6 @@ public class XSDFacetSection extends AbstractSection
     init();
     setListenerEnabled(false);
     
-    collapseWhitespaceButton.setSelection(false);
     XSDWhiteSpaceFacet whitespaceFacet = xsdSimpleTypeDefinition.getWhiteSpaceFacet();
     if (whitespaceFacet != null)
     {
@@ -359,6 +358,10 @@ public class XSDFacetSection extends AbstractSection
           if (!XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001.equals(xsdSimpleTypeDefinition.getTargetNamespace()))
           {
             collapseWhitespaceButton.setSelection(true);
+          }
+          else
+          {
+            collapseWhitespaceButton.setSelection(false);
           }
         }
       }
