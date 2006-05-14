@@ -94,6 +94,7 @@ public class XSDBaseAction extends BaseSelectionAction
           {
             TopLevelComponentEditPart editPart = (TopLevelComponentEditPart)obj;
             editPart.setScroll(true);
+            editPart.addFeedback();
             editPart.doEditName(!(part instanceof ContentOutline));
           }
           else if (obj instanceof BaseFieldEditPart)

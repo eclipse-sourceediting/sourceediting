@@ -41,7 +41,6 @@ import org.eclipse.wst.xsd.ui.internal.adapters.XSDBaseAdapter;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDSchemaDirectiveAdapter;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.SetInputToGraphView;
 import org.eclipse.wst.xsd.ui.internal.adt.design.directedit.LabelCellEditorLocator;
-import org.eclipse.wst.xsd.ui.internal.adt.design.directedit.TopLevelNameDirectEditManager;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.BaseEditPart;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.INamedEditPart;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.RootContentEditPart;
@@ -53,6 +52,7 @@ import org.eclipse.wst.xsd.ui.internal.adt.design.editpolicies.SimpleDirectEditP
 import org.eclipse.wst.xsd.ui.internal.adt.typeviz.design.figures.FieldFigure;
 import org.eclipse.wst.xsd.ui.internal.common.commands.UpdateNameCommand;
 import org.eclipse.wst.xsd.ui.internal.design.editpolicies.SelectionHandlesEditPolicyImpl;
+import org.eclipse.wst.xsd.ui.internal.design.editpolicies.TopLevelNameDirectEditManager;
 import org.eclipse.wst.xsd.ui.internal.design.figures.HyperLinkLabel;
 import org.eclipse.wst.xsd.ui.internal.design.layouts.FillLayout;
 import org.eclipse.wst.xsd.ui.internal.editor.Messages;
@@ -357,7 +357,8 @@ public class TopLevelComponentEditPart extends BaseEditPart implements IFeedback
   public void setSelected(int value)
   {
     // if it is selected, we want to scroll to it
-    setScroll(true);
+    if (doScroll)
+      setScroll(true);
     super.setSelected(value);
   }
 }

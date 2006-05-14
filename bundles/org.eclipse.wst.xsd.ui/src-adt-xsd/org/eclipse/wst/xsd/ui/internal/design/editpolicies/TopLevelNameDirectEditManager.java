@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.xsd.ui.internal.adt.design.directedit;
+package org.eclipse.wst.xsd.ui.internal.design.editpolicies;
 
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.geometry.Dimension;
