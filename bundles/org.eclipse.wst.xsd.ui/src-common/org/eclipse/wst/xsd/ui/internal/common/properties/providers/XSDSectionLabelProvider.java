@@ -25,7 +25,9 @@ import org.eclipse.xsd.XSDAttributeDeclaration;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDElementDeclaration;
 import org.eclipse.xsd.XSDModelGroupDefinition;
+import org.eclipse.xsd.XSDNamedComponent;
 import org.eclipse.xsd.XSDSchema;
+import org.eclipse.xsd.util.XSDConstants;
 import org.w3c.dom.Element;
 
 public class XSDSectionLabelProvider extends LabelProvider
@@ -125,6 +127,17 @@ public class XSDSectionLabelProvider extends LabelProvider
         }
         else
         {
+          // If the element is null, then let's use the model object to find
+          // an appropriate name
+          if ((XSDConcreteComponent) selected instanceof XSDNamedComponent)
+          {
+            return ((XSDNamedComponent)selected).getName();
+          }
+          else if ((XSDConcreteComponent) selected instanceof XSDSchema)
+          {
+            return XSDConstants.SCHEMA_ELEMENT_TAG;
+          }
+          // last resort....
           return "(" + Messages.UI_LABEL_READ_ONLY + ")"; //$NON-NLS-1$ //$NON-NLS-2$
         }
       }
