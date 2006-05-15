@@ -22,8 +22,8 @@ import org.eclipse.wst.xsd.ui.internal.adt.design.figures.IFieldFigure;
 
 public class LabelCellEditorLocator implements CellEditorLocator
 {
-  private INamedEditPart namedEditPart;
-  private Point cursorLocation;
+  protected INamedEditPart namedEditPart;
+  protected Point cursorLocation;
 
   public LabelCellEditorLocator(INamedEditPart namedEditPart, Point cursorLocation)
   {
@@ -50,7 +50,7 @@ public class LabelCellEditorLocator implements CellEditorLocator
         //Label nameAnnotationLabel = ((FieldFigure) field.getFigure()).getNameAnnotationLabel();
         //widthToRemove = typeLabel.getBounds().width + typeAnnotationLabel.getBounds().width + nameAnnotationLabel.getBounds().width;
       }
-      
+     
       Rectangle boundingRect = label.getTextBounds();
 
       // Reduce the width by the amount we shifted along the x-axis
@@ -83,16 +83,6 @@ public class LabelCellEditorLocator implements CellEditorLocator
         offset++;
       }
       text.setSelection(offset, offset);
-    }
-    else
-    {
-      org.eclipse.swt.graphics.Point sel = text.getSelection();
-      org.eclipse.swt.graphics.Point pref = text.computeSize(-1, -1);
-      Rectangle rect = label.getTextBounds().getCopy();
-      label.translateToAbsolute(rect);
-      text.setBounds(rect.x, rect.y-1, rect.width, pref.y+1);
-      text.setSelection(0);
-      text.setSelection(sel); 
     }
   }
 }

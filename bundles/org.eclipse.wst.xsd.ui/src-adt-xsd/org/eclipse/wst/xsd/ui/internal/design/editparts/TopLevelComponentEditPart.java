@@ -40,7 +40,6 @@ import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDBaseAdapter;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDSchemaDirectiveAdapter;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.SetInputToGraphView;
-import org.eclipse.wst.xsd.ui.internal.adt.design.directedit.LabelCellEditorLocator;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.BaseEditPart;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.INamedEditPart;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.RootContentEditPart;
@@ -52,6 +51,7 @@ import org.eclipse.wst.xsd.ui.internal.adt.design.editpolicies.SimpleDirectEditP
 import org.eclipse.wst.xsd.ui.internal.adt.typeviz.design.figures.FieldFigure;
 import org.eclipse.wst.xsd.ui.internal.common.commands.UpdateNameCommand;
 import org.eclipse.wst.xsd.ui.internal.design.editpolicies.SelectionHandlesEditPolicyImpl;
+import org.eclipse.wst.xsd.ui.internal.design.editpolicies.TopLevelComponentLabelCellEditorLocator;
 import org.eclipse.wst.xsd.ui.internal.design.editpolicies.TopLevelNameDirectEditManager;
 import org.eclipse.wst.xsd.ui.internal.design.figures.HyperLinkLabel;
 import org.eclipse.wst.xsd.ui.internal.design.layouts.FillLayout;
@@ -302,7 +302,7 @@ public class TopLevelComponentEditPart extends BaseEditPart implements IFeedback
     if (object instanceof XSDNamedComponent)
     {
       Point p = label.getLocation();
-      TopLevelNameDirectEditManager manager = new TopLevelNameDirectEditManager(TopLevelComponentEditPart.this, new LabelCellEditorLocator(TopLevelComponentEditPart.this, p), (XSDNamedComponent) object);
+      TopLevelNameDirectEditManager manager = new TopLevelNameDirectEditManager(TopLevelComponentEditPart.this, new TopLevelComponentLabelCellEditorLocator(TopLevelComponentEditPart.this, p), (XSDNamedComponent) object);
       NameUpdateCommandWrapper wrapper = new NameUpdateCommandWrapper();
       adtDirectEditPolicy.setUpdateCommand(wrapper);
       manager.show();
