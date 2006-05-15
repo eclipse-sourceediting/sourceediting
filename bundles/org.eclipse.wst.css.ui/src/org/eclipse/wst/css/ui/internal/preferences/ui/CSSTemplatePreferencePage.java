@@ -10,6 +10,11 @@
  *******************************************************************************/
 package org.eclipse.wst.css.ui.internal.preferences.ui;
 
+import org.eclipse.jface.text.Document;
+import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.source.SourceViewer;
+import org.eclipse.jface.text.source.SourceViewerConfiguration;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.PlatformUI;
@@ -53,5 +58,18 @@ public class CSSTemplatePreferencePage extends TemplatePreferencePage {
 		Control c = super.createContents(ancestor);
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(c, IHelpContextIds.CSS_PREFWEBX_TEMPLATES_HELPID);
 		return c;
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.ui.texteditor.templates.TemplatePreferencePage#createViewer(org.eclipse.swt.widgets.Composite)
+	 */
+	protected SourceViewer createViewer(Composite parent) {
+		SourceViewer viewer= new SourceViewer(parent, null, null, false, SWT.LEFT_TO_RIGHT | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
+		SourceViewerConfiguration configuration= new SourceViewerConfiguration();
+		viewer.configure(configuration);
+		IDocument document= new Document();
+		viewer.setDocument(document);
+		return viewer;
 	}
 }

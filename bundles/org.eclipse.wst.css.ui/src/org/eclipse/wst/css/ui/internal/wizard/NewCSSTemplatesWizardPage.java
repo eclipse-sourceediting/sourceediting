@@ -293,7 +293,7 @@ public class NewCSSTemplatesWizardPage extends WizardPage {
 	 * @return a configured source viewer
 	 */
 	private SourceViewer createViewer(Composite parent) {
-		SourceViewer viewer = new SourceViewer(parent, null, null, false, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
+		SourceViewer viewer = new SourceViewer(parent, null, null, false, SWT.LEFT_TO_RIGHT | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
 		SourceViewerConfiguration configuration = new SourceViewerConfiguration();
 		viewer.configure(configuration);
 		IDocument document = new Document();
