@@ -13,7 +13,6 @@
 package org.eclipse.wst.sse.ui.internal.preferences.ui;
 
 import java.io.CharArrayReader;
-import com.ibm.icu.text.Collator;
 import java.util.Dictionary;
 import java.util.List;
 
@@ -61,6 +60,8 @@ import org.eclipse.wst.sse.core.internal.util.Debug;
 import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.sse.ui.internal.util.EditorUtility;
 import org.w3c.dom.Node;
+
+import com.ibm.icu.text.Collator;
 
 /**
  * This class is configurable by setting 3 properties: 1) an array of Strings
@@ -475,7 +476,8 @@ public class StyledTextColorPicker extends Composite {
 		fBackgroundLabel.setEnabled(false);
 		Composite sample = createComposite(parent, 1);
 		createLabel(sample, SSEUIMessages.Sample_text__UI_); //$NON-NLS-1$ = "&Sample text:"
-		fText = new StyledText(sample, SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER | SWT.READ_ONLY);
+		// BUG141089 - make sure text is left-aligned
+		fText = new StyledText(sample, SWT.LEFT_TO_RIGHT | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER | SWT.READ_ONLY);
 		GridData data = new GridData(GridData.FILL_BOTH);
 		fText.setLayoutData(data);
 		fText.setEditable(false);
