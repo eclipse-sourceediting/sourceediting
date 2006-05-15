@@ -23,5 +23,7 @@
       
 </extension>
 
-
+	<extension point="org.eclipse.help.index">
+      <index file="org.eclipse.wst.xsdeditor.doc.userindex.xml"/>
+</extension>
 </plugin>
