@@ -47,11 +47,19 @@ public class XSDTabbedPropertySheetPage extends TabbedPropertySheetPage implemen
           if (oldSelection instanceof XSDElementDeclarationAdapter)
           {
             XSDElementDeclaration elem = (XSDElementDeclaration)((XSDElementDeclarationAdapter)oldSelection).getTarget();
-            Adapter adap = XSDAdapterFactory.getInstance().adapt(elem.getContainer());
-            if (adap instanceof XSDParticleAdapter)
+            if (elem.getContainer() != null)
             {
-              XSDParticleAdapter particleAdapter = (XSDParticleAdapter)adap;
-              particleAdapter.unregisterListener(this);
+              Adapter adap = XSDAdapterFactory.getInstance().adapt(elem.getContainer());
+              if (adap instanceof XSDParticleAdapter)
+              {
+                XSDParticleAdapter particleAdapter = (XSDParticleAdapter)adap;
+                particleAdapter.unregisterListener(this);
+              }
+            }
+            if (elem.isElementDeclarationReference())
+            {
+              XSDElementDeclarationAdapter resolvedElementAdapter = (XSDElementDeclarationAdapter)XSDAdapterFactory.getInstance().adapt(elem.getResolvedElementDeclaration());
+              resolvedElementAdapter.unregisterListener(this);
             }
           }
         }
