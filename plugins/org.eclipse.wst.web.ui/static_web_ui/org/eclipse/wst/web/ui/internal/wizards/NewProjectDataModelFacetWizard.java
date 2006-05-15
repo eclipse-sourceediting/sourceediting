@@ -360,7 +360,7 @@ public abstract class NewProjectDataModelFacetWizard extends AddRemoveFacetsWiza
 	protected IDataModelOperation getFacetProjectNotificationOperation() {
 		return new DataModelPausibleOperationImpl(new AbstractDataModelOperation(this.model) {
 			public String getID() {
-				return "org.eclipse.wst.common.componentcore.internal.operation.FacetProjectCreationOperation"; //$NON-NLS-1$
+				return NewProjectDataModelFacetWizard.class.getName();
 			}
 
 			public IStatus execute(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
