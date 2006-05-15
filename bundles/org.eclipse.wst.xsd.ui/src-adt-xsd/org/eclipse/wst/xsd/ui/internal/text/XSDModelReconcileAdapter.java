@@ -71,7 +71,9 @@ public class XSDModelReconcileAdapter extends ModelReconcileAdapter
         schema.getTypeDefinitions().clear();
         schema.getAttributeDeclarations().clear();
         schema.getModelGroupDefinitions().clear();
-        schema.getAttributeGroupDefinitions().clear();             
+        schema.getAttributeGroupDefinitions().clear();     
+        
+        schema.setElement(null);
       }      
     } 
   }  

@@ -91,6 +91,7 @@ public class XSDModelAdapter implements INodeAdapter
       resource.getContents().add(schema);
       resourceSet.getResources().add(resource);     
 
+      schema.setDocument(document);
       Element element = document.getDocumentElement();
       if (element != null)
       {  
