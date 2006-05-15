@@ -127,31 +127,22 @@ public class DragAndDropCommand extends BaseCommand
           if (compartment != null)
           {
             List l = compartment.getChildren();
-            Rectangle rectangle = new Rectangle(0, 0, 0, 0), previousRectangle = new Rectangle(0,0,0,0);
-            int index = -1;
+            Rectangle rectangle = new Rectangle(0, 0, 0, 0);
+            int index = 0;
             BaseFieldEditPart childGraphNodeEditPart = null;
             for (Iterator i = l.iterator(); i.hasNext(); )
             {
               EditPart child = (EditPart)i.next();
               if (child instanceof BaseFieldEditPart)
               {
-                index ++;
                 previousChildRefEditPart = childGraphNodeEditPart;
                 childGraphNodeEditPart = (BaseFieldEditPart)child;
-                if (previousChildRefEditPart != null)
-                {
-                  previousRectangle = previousChildRefEditPart.getFigure().getBounds();
-                }
                 rectangle = childGraphNodeEditPart.getFigure().getBounds();
               
                 if (location.y < (rectangle.getCenter().y))
                 {
                   nextChildRefEditPart = childGraphNodeEditPart;
-                  TargetConnectionSpacingFigureEditPart tSpace = (TargetConnectionSpacingFigureEditPart)targetSpacesList.get(index-1);
-                  if (previousRectangle != null && location.y > (previousRectangle.getBottom().y))
-                  {
-                    tSpace = (TargetConnectionSpacingFigureEditPart)targetSpacesList.get(index);
-                  }
+                  TargetConnectionSpacingFigureEditPart tSpace = (TargetConnectionSpacingFigureEditPart)targetSpacesList.get(index);
                   if (tSpace.getParent() instanceof AttributeGroupDefinitionEditPart)
                   {
                     parentAttributeGroupEditPart = (AttributeGroupDefinitionEditPart)tSpace.getParent();
@@ -169,6 +160,7 @@ public class DragAndDropCommand extends BaseCommand
               {
               // This is the annotation edit part
               }
+              index ++;
             }  
           }
           calculatePreviousAndNextEditParts();
@@ -194,31 +186,22 @@ public class DragAndDropCommand extends BaseCommand
           if (compartment != null)
           {
             List l = compartment.getChildren();
-            Rectangle rectangle = new Rectangle(0, 0, 0, 0), previousRectangle = new Rectangle(0,0,0,0);
-            int index = -1;
+            Rectangle rectangle = new Rectangle(0, 0, 0, 0);
+            int index = 0;
             BaseFieldEditPart childGraphNodeEditPart = null;
             for (Iterator i = l.iterator(); i.hasNext(); )
             {
               EditPart child = (EditPart)i.next();
               if (child instanceof BaseFieldEditPart)
               {
-                index ++;
                 previousChildRefEditPart = childGraphNodeEditPart;
                 childGraphNodeEditPart = (BaseFieldEditPart)child;
-                if (previousChildRefEditPart != null)
-                {
-                  previousRectangle = previousChildRefEditPart.getFigure().getBounds();
-                }
                 rectangle = childGraphNodeEditPart.getFigure().getBounds();
               
                 if (location.y < (rectangle.getCenter().y))
                 {
                   nextChildRefEditPart = childGraphNodeEditPart;
-                  TargetConnectionSpacingFigureEditPart tSpace = (TargetConnectionSpacingFigureEditPart)targetSpacesList.get(index-1);
-                  if (previousRectangle != null && location.y > (previousRectangle.getBottom().y))
-                  {
-               	  tSpace = (TargetConnectionSpacingFigureEditPart)targetSpacesList.get(index);
-                  }
+                  TargetConnectionSpacingFigureEditPart tSpace = (TargetConnectionSpacingFigureEditPart)targetSpacesList.get(index);
                   parentEditPart = (ModelGroupEditPart)tSpace.getParent();
                   targetModelGroup = parentEditPart.getXSDModelGroup();
                   break;
@@ -228,6 +211,7 @@ public class DragAndDropCommand extends BaseCommand
               {
            	  // This is the annotation edit part
               }
+              index ++;
             }  
           }
           calculatePreviousAndNextEditParts();
