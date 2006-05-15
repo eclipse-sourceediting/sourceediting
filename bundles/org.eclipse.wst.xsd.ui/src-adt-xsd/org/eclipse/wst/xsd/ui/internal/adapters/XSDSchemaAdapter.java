@@ -18,6 +18,7 @@ import java.util.List;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.NotificationImpl;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.BaseSelectionAction;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.ShowPropertiesViewAction;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IActionProvider;
@@ -487,5 +488,10 @@ public class XSDSchemaAdapter extends XSDBaseAdapter implements IActionProvider,
   public void propertyChanged(Object object, String property)
   {
     notifyListeners(object, property);
+  }
+  
+  public Image getImage()
+  {
+    return XSDEditorPlugin.getXSDImage("icons/XSDFile.gif"); //$NON-NLS-1$
   }
 }
