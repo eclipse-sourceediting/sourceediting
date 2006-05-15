@@ -79,6 +79,13 @@ public class DesignViewGraphicalViewer extends ScrollingGraphicalViewer implemen
           }
         }
       }
+      else if (selectedObject instanceof IGraphElement)
+      {
+        if (((IGraphElement)selectedObject).isFocusAllowed())
+        {
+          setInput((IADTObject)selectedObject);              
+        }
+      }
       else if (selectedObject instanceof IField)
       {
         IField field = (IField)selectedObject;
