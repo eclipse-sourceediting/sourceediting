@@ -43,6 +43,42 @@
 	</extension>
 
 	<extension point="org.eclipse.ui.editorActions">
+		<editorContribution
+			id="org.eclipse.wst.dtd.core.dtdsource.source.editorActions"
+			targetID="org.eclipse.wst.dtd.core.dtdsource.source">
+			<action
+				id="StructureSelectEnclosing"
+				label="%StructureSelectEnclosing_label"
+				definitionId="org.eclipse.wst.sse.ui.structure.select.enclosing"
+				tooltip="%StructureSelectEnclosing_tooltip"
+				class="org.eclipse.wst.xml.ui.internal.selection.StructuredSelectEnclosingXMLActionDelegate"
+				actionID="StructureSelectEnclosing">
+			</action>
+			<action
+				id="StructureSelectNext"
+				label="%StructureSelectNext_label"
+				definitionId="org.eclipse.wst.sse.ui.structure.select.next"
+				tooltip="%StructureSelectNext_tooltip"
+				class="org.eclipse.wst.xml.ui.internal.selection.StructuredSelectNextXMLActionDelegate"
+				actionID="StructureSelectNext">
+			</action>
+			<action
+				id="StructureSelectPrevious"
+				label="%StructureSelectPrevious_label"
+				definitionId="org.eclipse.wst.sse.ui.structure.select.previous"
+				tooltip="%StructureSelectPrevious_tooltip"
+				class="org.eclipse.wst.xml.ui.internal.selection.StructuredSelectPreviousXMLActionDelegate"
+				actionID="StructureSelectPrevious">
+			</action>
+			<action
+				id="StructureSelectHistory"
+				label="%StructureSelectHistory_label"
+				definitionId="org.eclipse.wst.sse.ui.structure.select.last"
+				tooltip="%StructureSelectHistory_tooltip"
+				class="org.eclipse.wst.sse.ui.internal.selection.StructuredSelectHistoryActionDelegate"
+				actionID="StructureSelectHistory">
+			</action>
+		</editorContribution>
         <editorContribution
             targetID="org.eclipse.wst.dtd.core.dtdsource.source"
             id="org.eclipse.wst.dtd.core.dtdsource.ruler.actions">
