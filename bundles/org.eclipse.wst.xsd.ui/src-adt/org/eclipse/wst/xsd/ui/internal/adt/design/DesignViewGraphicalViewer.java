@@ -81,7 +81,7 @@ public class DesignViewGraphicalViewer extends ScrollingGraphicalViewer implemen
       }
       else if (selectedObject instanceof IGraphElement)
       {
-        if (((IGraphElement)selectedObject).isFocusAllowed())
+        if (((IGraphElement)selectedObject).isFocusAllowed() && (event.getSource() instanceof ADTContentOutlinePage))
         {
           setInput((IADTObject)selectedObject);              
         }
