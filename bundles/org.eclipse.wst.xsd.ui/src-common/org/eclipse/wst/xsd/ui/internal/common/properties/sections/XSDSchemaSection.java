@@ -75,7 +75,7 @@ public class XSDSchemaSection extends AbstractSection
     data.grabExcessHorizontalSpace = true;
     data.horizontalAlignment = GridData.FILL;
     prefixText.setLayoutData(data);
-    prefixText.addListener(SWT.Modify, this);
+    applyAllListeners(prefixText);
 
     // Create TargetNamespace Label
     CLabel targetNamespaceLabel = getWidgetFactory().createCLabel(composite, XSDEditorPlugin.getXSDString("_UI_LABEL_TARGET_NAME_SPACE")); //$NON-NLS-1$
@@ -90,7 +90,7 @@ public class XSDSchemaSection extends AbstractSection
     data.grabExcessHorizontalSpace = true;
     data.horizontalAlignment = GridData.FILL;
     targetNamespaceText.setLayoutData(data);
-    targetNamespaceText.addListener(SWT.Modify, this);
+    applyAllListeners(targetNamespaceText);
 
     // Advanced Button
     editButton = getWidgetFactory().createButton(composite, XSDEditorPlugin.getXSDString("_UI_SECTION_ADVANCED_ATTRIBUTES") + "...", SWT.PUSH); //$NON-NLS-1$ //$NON-NLS-2$
@@ -207,12 +207,17 @@ public class XSDSchemaSection extends AbstractSection
 
   public void dispose()
   {
-    super.dispose();
+    if (prefixText != null && !prefixText.isDisposed())
+      removeListeners(prefixText);
+    if (targetNamespaceText != null && !targetNamespaceText.isDisposed())
+      removeListeners(targetNamespaceText);
+    
     if (red != null)
     {
       red.dispose();
       red = null;
     }
+    super.dispose();
   }
 
   /**
