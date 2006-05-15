@@ -24,6 +24,7 @@ public class AddXSDImportCommand extends AddXSDSchemaDirectiveCommand
 
   public void execute()
   {
+    super.execute();
     XSDImport xsdImport = XSDFactory.eINSTANCE.createXSDImport();
     xsdSchema.getContents().add(findNextPositionToInsert(), xsdImport);
     addedXSDConcreteComponent = xsdImport;

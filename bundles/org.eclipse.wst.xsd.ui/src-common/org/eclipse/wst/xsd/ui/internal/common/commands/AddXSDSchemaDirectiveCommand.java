@@ -53,4 +53,8 @@ public abstract class AddXSDSchemaDirectiveCommand extends BaseCommand
     return index;
   }
 
+  public void execute()
+  {
+    ensureSchemaElement(xsdSchema);
+ }
 }

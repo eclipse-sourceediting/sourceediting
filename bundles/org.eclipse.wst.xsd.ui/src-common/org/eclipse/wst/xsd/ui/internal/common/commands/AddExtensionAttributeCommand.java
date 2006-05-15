@@ -27,9 +27,6 @@ public class AddExtensionAttributeCommand extends AddExtensionCommand
   private boolean appInfoAttributeAdded = false;
   private String attributeQName;
   private String namespacePrefix;
-  
-  XSDConcreteComponent component;
-
 
   public AddExtensionAttributeCommand(String label, XSDConcreteComponent component,
       XSDAttributeDeclaration attribute)

@@ -71,6 +71,7 @@ public class AddXSDAttributeGroupDefinitionCommand extends BaseCommand
     }
     else
     {
+      ensureSchemaElement(xsdSchema);
       attributeGroup.setName(XSDCommonUIUtils.createUniqueElementName("NewAttributeGroup", xsdSchema.getAttributeGroupDefinitions())); //$NON-NLS-1$
       Text textNode = xsdSchema.getDocument().createTextNode("\n"); //$NON-NLS-1$
       xsdSchema.getElement().appendChild(textNode);

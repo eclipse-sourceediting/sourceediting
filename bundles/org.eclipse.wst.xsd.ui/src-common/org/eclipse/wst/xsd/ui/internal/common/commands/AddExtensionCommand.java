@@ -10,12 +10,14 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.common.commands;
 
-import org.eclipse.gef.commands.Command;
 import org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo.SpecificationForExtensionsSchema;
+import org.eclipse.xsd.XSDConcreteComponent;
+import org.eclipse.xsd.XSDSchema;
 
-public class AddExtensionCommand extends Command
+public class AddExtensionCommand extends BaseCommand
 {
   protected SpecificationForExtensionsSchema extensionsSchemaSpec;
+  protected XSDConcreteComponent component;
 
   protected AddExtensionCommand(String label)
   {
@@ -31,4 +33,16 @@ public class AddExtensionCommand extends Command
   {
     return null;
   }
+
+  public void execute()
+  {
+    if (component instanceof XSDSchema)
+    {
+      ensureSchemaElement((XSDSchema)component);
+    }
+    
+    super.execute();
+  }
+  
+  
 }

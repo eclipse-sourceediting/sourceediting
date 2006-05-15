@@ -26,7 +26,11 @@ public class XSDExtensionTreeContentProvider extends DOMExtensionTreeContentProv
     {
       if (newInput instanceof XSDConcreteComponent)
       {        
-        Element element = ((XSDConcreteComponent)newInput).getElement();              
+        Element element = ((XSDConcreteComponent)newInput).getElement();
+        if (element == null)
+        {
+          return;
+        }
         adapter = XSDModelAdapter.lookupOrCreateModelAdapter(element.getOwnerDocument());
         if (adapter != null)
         {
@@ -74,6 +78,12 @@ public class XSDExtensionTreeContentProvider extends DOMExtensionTreeContentProv
           }
         }
       }
+      Element element = component.getElement();
+      if (element == null)
+      {
+        return elementsAndAttributes.toArray();
+      }
+      
       /** Construct attributes list */
       NamedNodeMap attributes = component.getElement().getAttributes();
       if (attributes != null)

@@ -39,6 +39,11 @@ public final class AddXSDSimpleTypeDefinitionCommand extends BaseCommand
   
   public void execute()
   {
+    if (parent instanceof XSDSchema)
+    {
+      ensureSchemaElement((XSDSchema)parent);
+    }
+
     XSDSimpleTypeDefinition typeDef = XSDFactory.eINSTANCE.createXSDSimpleTypeDefinition();
     typeDef.setBaseTypeDefinition(parent.getSchema().getSchemaForSchema().resolveSimpleTypeDefinition(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001, "string")); //$NON-NLS-1$
 

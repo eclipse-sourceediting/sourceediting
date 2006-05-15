@@ -221,6 +221,7 @@ private String nameToAdd;
 
   protected XSDElementDeclaration createGlobalXSDElementDeclaration()
   {
+    ensureSchemaElement(xsdSchema);
     XSDSimpleTypeDefinition type = xsdSchema.getSchemaForSchema().resolveSimpleTypeDefinition("string"); //$NON-NLS-1$
     XSDFactory factory = XSDSchemaBuildingTools.getXSDFactory();
     XSDElementDeclaration element = factory.createXSDElementDeclaration();

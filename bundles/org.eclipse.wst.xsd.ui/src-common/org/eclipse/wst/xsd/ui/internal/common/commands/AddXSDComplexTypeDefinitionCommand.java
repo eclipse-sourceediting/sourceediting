@@ -57,6 +57,7 @@ public final class AddXSDComplexTypeDefinitionCommand extends BaseCommand
       try
       {
         XSDSchema xsdSchema = (XSDSchema)parent;
+        ensureSchemaElement(xsdSchema);
         Text textNode = xsdSchema.getDocument().createTextNode("\n"); //$NON-NLS-1$
         xsdSchema.getElement().appendChild(textNode);
         xsdSchema.getContents().add(complexType);

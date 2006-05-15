@@ -17,6 +17,7 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xsd.ui.internal.common.util.XSDCommonUIUtils;
 import org.eclipse.xsd.XSDAnnotation;
 import org.eclipse.xsd.XSDConcreteComponent;
+import org.eclipse.xsd.XSDSchema;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
@@ -39,6 +40,11 @@ public class AddDocumentationCommand extends BaseCommand
 
   public void execute()
   {
+    if (input instanceof XSDSchema)
+    {
+      ensureSchemaElement((XSDSchema)input);
+    }
+    
     xsdAnnotation = XSDCommonUIUtils.getInputXSDAnnotation(input, true);
     Element element = xsdAnnotation.getElement();
 

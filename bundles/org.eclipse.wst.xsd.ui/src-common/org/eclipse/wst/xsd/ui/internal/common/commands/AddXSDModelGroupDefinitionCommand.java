@@ -19,6 +19,7 @@ import org.eclipse.xsd.XSDFactory;
 import org.eclipse.xsd.XSDModelGroup;
 import org.eclipse.xsd.XSDModelGroupDefinition;
 import org.eclipse.xsd.XSDParticle;
+import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.util.XSDSchemaBuildingTools;
 import org.w3c.dom.Text;
 
@@ -41,6 +42,11 @@ public class AddXSDModelGroupDefinitionCommand extends BaseCommand
    */
   public void execute()
   {
+    if (parent instanceof XSDSchema)
+    {
+      ensureSchemaElement((XSDSchema)parent);
+    }
+    
     if (!isReference)
     {
       XSDModelGroupDefinition def= createXSDModelGroupDefinition();

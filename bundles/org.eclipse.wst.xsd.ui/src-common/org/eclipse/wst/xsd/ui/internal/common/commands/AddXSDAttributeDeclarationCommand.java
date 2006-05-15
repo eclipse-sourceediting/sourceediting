@@ -65,17 +65,19 @@ public class AddXSDAttributeDeclarationCommand extends BaseCommand
     }
     else
     {
-      attribute.setTypeDefinition(parent.getSchema().getSchemaForSchema().resolveSimpleTypeDefinition("string")); //$NON-NLS-1$
       if (parent instanceof XSDSchema)
       {
-        attribute.setName(XSDCommonUIUtils.createUniqueElementName("NewAttribute", parent.getSchema().getAttributeDeclarations())); //$NON-NLS-1$
         XSDSchema xsdSchema = (XSDSchema)parent;
+        ensureSchemaElement(xsdSchema);
+        attribute.setTypeDefinition(parent.getSchema().getSchemaForSchema().resolveSimpleTypeDefinition("string")); //$NON-NLS-1$
+        attribute.setName(XSDCommonUIUtils.createUniqueElementName("NewAttribute", parent.getSchema().getAttributeDeclarations())); //$NON-NLS-1$
         Text textNode = xsdSchema.getDocument().createTextNode("\n"); //$NON-NLS-1$
         xsdSchema.getElement().appendChild(textNode);
         xsdSchema.getContents().add(attribute);
       }
       else if (parent instanceof XSDAttributeGroupDefinition)
       {
+        attribute.setTypeDefinition(parent.getSchema().getSchemaForSchema().resolveSimpleTypeDefinition("string")); //$NON-NLS-1$
         List list = new ArrayList();
         Iterator i = ((XSDAttributeGroupDefinition)parent).getResolvedAttributeGroupDefinition().getAttributeUses().iterator();
         while (i.hasNext())

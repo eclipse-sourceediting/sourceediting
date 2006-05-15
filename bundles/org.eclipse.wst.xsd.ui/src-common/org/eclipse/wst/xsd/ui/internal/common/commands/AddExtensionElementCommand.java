@@ -25,7 +25,6 @@ import org.w3c.dom.Element;
 
 public class AddExtensionElementCommand extends AddExtensionCommand
 {
-  XSDConcreteComponent input;
   XSDElementDeclaration element;
   Element appInfo;
   Element newElement;
@@ -33,20 +32,20 @@ public class AddExtensionElementCommand extends AddExtensionCommand
   public AddExtensionElementCommand(String label, XSDConcreteComponent input, XSDElementDeclaration element)
   {
     super(label);
-    this.input = input;
+    this.component = input;
     this.element = element;
   }
 
   public void execute()
   {
     super.execute();
-    addAnnotationSet(input.getSchema(), extensionsSchemaSpec);
+    addAnnotationSet(component.getSchema(), extensionsSchemaSpec);
   }
 
   public void undo()
   {
     super.undo();
-    XSDAnnotation xsdAnnotation = XSDCommonUIUtils.getInputXSDAnnotation(input, false);
+    XSDAnnotation xsdAnnotation = XSDCommonUIUtils.getInputXSDAnnotation(component, false);
     xsdAnnotation.getElement().removeChild(appInfo);
     List appInfos = xsdAnnotation.getApplicationInformation();
     appInfos.remove(appInfo);
@@ -61,7 +60,7 @@ public class AddExtensionElementCommand extends AddExtensionCommand
 
   public void addAnnotationSet(XSDSchema xsdSchema, SpecificationForExtensionsSchema spec)
   {
-    XSDAnnotation xsdAnnotation = XSDCommonUIUtils.getInputXSDAnnotation(input, true);
+    XSDAnnotation xsdAnnotation = XSDCommonUIUtils.getInputXSDAnnotation(component, true);
     addAnnotationSet(spec, xsdAnnotation);
   }
 
@@ -75,7 +74,7 @@ public class AddExtensionElementCommand extends AddExtensionCommand
 
       Element rootElement = doc.createElementNS(spec.getNamespaceURI(), element.getName());
       
-      String prefix = createUniquePrefix(input);
+      String prefix = createUniquePrefix(component);
       rootElement.setPrefix(prefix);
       newElement = rootElement;
       
