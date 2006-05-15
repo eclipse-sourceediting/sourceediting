@@ -10,6 +10,10 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.util;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -18,10 +22,34 @@ import org.w3c.dom.Node;
 public abstract class ModelReconcileAdapter extends DocumentAdapter
 {
   protected boolean handlingNotifyChanged = false;
+  protected List listeners = new ArrayList();
   
   public ModelReconcileAdapter(Document document)
   {
     super(document);
+  }
+  
+  public void addListener(INodeAdapter listener)
+  {
+    if (!listeners.contains(listener))
+    {
+      listeners.add(listener);
+    }  
+  }
+  
+  public void removeListener(INodeAdapter listener)
+  {
+    listeners.remove(listener);
+  }  
+  
+  protected void notifyListeners(INodeNotifier notifier, int eventType, Object changedFeature, Object oldValue, Object newValue, int pos)
+  {
+    List list = new ArrayList(listeners);
+    for (Iterator i = list.iterator(); i.hasNext(); )
+    {
+      INodeAdapter adapter = (INodeAdapter)i.next();
+      adapter.notifyChanged(notifier, eventType, changedFeature, oldValue, newValue, pos);
+    }  
   }
       
   public void notifyChanged(INodeNotifier notifier, int eventType, Object feature, Object oldValue, Object newValue, int index)
@@ -31,7 +59,8 @@ public abstract class ModelReconcileAdapter extends DocumentAdapter
       handlingNotifyChanged = true;
       try
       {
-        handleNotifyChange(notifier, eventType, feature, oldValue, newValue, index);       
+        handleNotifyChange(notifier, eventType, feature, oldValue, newValue, index);
+        notifyListeners(notifier, eventType, feature, oldValue, newValue, index);
       }
       catch (Exception e)
       {

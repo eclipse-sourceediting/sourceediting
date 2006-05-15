@@ -16,6 +16,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
+import org.eclipse.wst.xsd.ui.internal.util.ModelReconcileAdapter;
 import org.eclipse.wst.xsd.ui.internal.util.XSDSchemaLocationResolverAdapterFactory;
 import org.eclipse.xsd.XSDFactory;
 import org.eclipse.xsd.XSDSchema;
@@ -28,6 +29,7 @@ public class XSDModelAdapter implements INodeAdapter
 {
   protected ResourceSet resourceSet;
   protected XSDSchema schema;
+  private ModelReconcileAdapter modelReconcileAdapter;
 
   public XSDSchema getSchema()
   {
@@ -52,6 +54,11 @@ public class XSDModelAdapter implements INodeAdapter
 
   public void notifyChanged(INodeNotifier notifier, int eventType, Object changedFeature, Object oldValue, Object newValue, int pos)
   {
+  }
+  
+  public ModelReconcileAdapter getModelReconcileAdapter()
+  {
+    return modelReconcileAdapter;
   }
 
   public XSDSchema createSchema(Document document)
@@ -96,7 +103,7 @@ public class XSDModelAdapter implements INodeAdapter
 
       // attach an adapter to keep the XSD model and DOM in sync
       //
-      new XSDModelReconcileAdapter(document, schema);       
+      modelReconcileAdapter = new XSDModelReconcileAdapter(document, schema);       
     }
     catch (Exception ex)
     {
@@ -112,6 +119,25 @@ public class XSDModelAdapter implements INodeAdapter
   {     
     return createSchema(element.getOwnerDocument());
   }
+  
+  public static XSDModelAdapter lookupOrCreateModelAdapter(Document document)
+  {
+    XSDModelAdapter adapter = null;
+    if (document instanceof INodeNotifier)
+    {
+      INodeNotifier notifier = (INodeNotifier)document;
+      adapter = (XSDModelAdapter)notifier.getAdapterFor(XSDModelAdapter.class);
+      if (adapter == null)
+      {
+        adapter = new XSDModelAdapter();       
+        notifier.addAdapter(adapter);        
+      } 
+    }   
+    return adapter;
+  }
+  
+  //addDocumentChangeListener()
+  //removeDocumentChangeListener()
   
   public static XSDSchema lookupOrCreateSchema(Document document)
   {    

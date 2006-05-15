@@ -4,17 +4,21 @@ import java.util.ArrayList;
 import java.util.Collections;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
+import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-public class DOMExtensionTreeContentProvider implements ITreeContentProvider
+public class DOMExtensionTreeContentProvider implements ITreeContentProvider, INodeAdapter
 {
   protected String facet;
+  protected Viewer viewer;
+  
   public void inputChanged(Viewer viewer, Object oldInput, Object newInput)
   {
+    this.viewer = viewer;
   }
-  
-  
+    
   public Object[] getChildren(Object parentElement)
   {
     if (parentElement instanceof Element)
@@ -51,5 +55,19 @@ public class DOMExtensionTreeContentProvider implements ITreeContentProvider
 
   public void dispose()
   {
+  }
+  
+  public void notifyChanged(INodeNotifier notifier, int eventType, Object changedFeature, Object oldValue, Object newValue, int pos)
+  {
+    if (viewer != null)
+    {  
+      viewer.refresh();
+    }  
+  }
+  
+  public boolean isAdapterForType(Object type)
+  {
+    // this method is not used
+    return false;
   }
 }
