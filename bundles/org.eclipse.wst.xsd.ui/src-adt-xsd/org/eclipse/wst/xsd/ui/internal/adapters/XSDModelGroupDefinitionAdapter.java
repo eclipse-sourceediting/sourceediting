@@ -12,6 +12,7 @@ package org.eclipse.wst.xsd.ui.internal.adapters;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.Adapter;
@@ -20,6 +21,8 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.BaseSelectionAction;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IActionProvider;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IGraphElement;
+import org.eclipse.wst.xsd.ui.internal.adt.facade.IADTObject;
+import org.eclipse.wst.xsd.ui.internal.adt.facade.IADTObjectListener;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IModel;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IStructure;
 import org.eclipse.wst.xsd.ui.internal.adt.outline.ITreeElement;
@@ -31,13 +34,16 @@ import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.xsd.XSDModelGroup;
 import org.eclipse.xsd.XSDModelGroupDefinition;
 
-public class XSDModelGroupDefinitionAdapter extends XSDBaseAdapter implements IStructure, IActionProvider, IGraphElement
+public class XSDModelGroupDefinitionAdapter extends XSDBaseAdapter implements IStructure, IActionProvider, IGraphElement, IADTObjectListener
 {
   public static final Image MODEL_GROUP_ICON = XSDEditorPlugin.getPlugin().getIcon("obj16/XSDGroup.gif"); //$NON-NLS-1$
   public static final Image MODEL_GROUP_DISABLED_ICON = XSDEditorPlugin.getPlugin().getIcon("obj16/XSDGroupdis.gif"); //$NON-NLS-1$
   public static final Image MODEL_GROUP_REF_ICON = XSDEditorPlugin.getPlugin().getIcon("obj16/XSDGroupRef.gif"); //$NON-NLS-1$
   public static final Image MODEL_GROUP_REF_DISABLED_ICON = XSDEditorPlugin.getPlugin().getIcon("obj16/XSDGroupRefdis.gif"); //$NON-NLS-1$
 
+  protected List fields = null;
+  protected List otherThingsToListenTo = null;
+  
   public XSDModelGroupDefinitionAdapter()
   {
     super();
@@ -124,16 +130,35 @@ public class XSDModelGroupDefinitionAdapter extends XSDBaseAdapter implements IS
     return null;
   }
 
+  // TODO Common this up with XSDComplexType's.  See also getFields 
+  protected void clearFields()
+  {
+    if (otherThingsToListenTo != null)
+    {
+      for (Iterator i = otherThingsToListenTo.iterator(); i.hasNext();)
+      {
+        Adapter adapter = (Adapter) i.next();
+        if (adapter instanceof IADTObject)
+        {
+          IADTObject adtObject = (IADTObject) adapter;
+          adtObject.unregisterListener(this);
+        }
+      }
+    }
+    fields = null;
+    otherThingsToListenTo = null;
+  }
+
   public List getFields()
   {
     List fields = new ArrayList();
+    otherThingsToListenTo = new ArrayList();
     XSDVisitorForFields visitor = new XSDVisitorForFields();
     visitor.visitModelGroupDefinition(getXSDModelGroupDefinition());
     populateAdapterList(visitor.concreteComponentList, fields);
     
     // TODO (cs) common a base class for a structure thingee
     //
-    /*
     populateAdapterList(visitor.thingsWeNeedToListenTo, otherThingsToListenTo);
     for (Iterator i = otherThingsToListenTo.iterator(); i.hasNext();)
     {
@@ -143,7 +168,7 @@ public class XSDModelGroupDefinitionAdapter extends XSDBaseAdapter implements IS
         IADTObject adtObject = (IADTObject) adapter;
         adtObject.registerListener(this);
       }
-    }*/
+    }
     return fields;
   }
 
@@ -165,5 +190,11 @@ public class XSDModelGroupDefinitionAdapter extends XSDBaseAdapter implements IS
       return false;
     }
     return true;
-  }    
+  }
+
+  public void propertyChanged(Object object, String property)
+  {
+    clearFields();
+    notifyListeners(this, null);
+  }
 }
