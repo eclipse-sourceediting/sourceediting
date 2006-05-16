@@ -23,6 +23,7 @@ import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IGraphElement;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IModel;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IStructure;
 import org.eclipse.wst.xsd.ui.internal.adt.outline.ITreeElement;
+import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDAnyAttributeAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDAttributeDeclarationAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.DeleteXSDConcreteComponentAction;
 import org.eclipse.wst.xsd.ui.internal.editor.Messages;
@@ -86,6 +87,7 @@ public class XSDAttributeGroupDefinitionAdapter extends XSDBaseAdapter implement
   {
     List list = new ArrayList();
     list.add(AddXSDAttributeDeclarationAction.ID);
+    list.add(AddXSDAnyAttributeAction.ID);
     list.add(BaseSelectionAction.SEPARATOR_ID);
     list.add(DeleteXSDConcreteComponentAction.DELETE_XSD_COMPONENT_ID);
     return (String [])list.toArray(new String[0]);

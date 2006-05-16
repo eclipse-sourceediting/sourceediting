@@ -109,6 +109,7 @@ private String nameToAdd;
         xsdModelGroup.setCompositor(XSDCompositor.SEQUENCE_LITERAL);
         particle.setContent(xsdModelGroup);
       }
+      xsdSchema = xsdModelGroup.getSchema();
       if (!isReference)
       {
         xsdModelGroup.getContents().add(createXSDElementDeclaration());

@@ -10,18 +10,25 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.adapters;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import org.eclipse.gef.commands.Command;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.wst.xsd.ui.internal.adt.actions.BaseSelectionAction;
+import org.eclipse.wst.xsd.ui.internal.adt.actions.ShowPropertiesViewAction;
+import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IActionProvider;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IField;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IModel;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IType;
+import org.eclipse.wst.xsd.ui.internal.common.actions.DeleteXSDConcreteComponentAction;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.xsd.XSDParticle;
 import org.eclipse.xsd.XSDWildcard;
 import org.eclipse.xsd.util.XSDConstants;
 import org.w3c.dom.Element;
 
-public class XSDWildcardAdapter extends XSDParticleAdapter implements IField
+public class XSDWildcardAdapter extends XSDParticleAdapter implements IField, IActionProvider
 {
 //  public static final Image ANYELEMENT_ICON = XSDEditorPlugin.getPlugin().getIcon("obj16/XSDAny.gif"); //$NON-NLS-1$
 //  public static final Image ANYELEMENT_DISABLED_ICON = XSDEditorPlugin.getPlugin().getIcon("obj16/XSDAny.gif"); //$NON-NLS-1$
@@ -207,4 +214,14 @@ public class XSDWildcardAdapter extends XSDParticleAdapter implements IField
     // TODO Auto-generated method stub
     return false;
   }
+
+  public String[] getActions(Object object)
+  {
+    Collection actionIDs = new ArrayList();
+    actionIDs.add(DeleteXSDConcreteComponentAction.DELETE_XSD_COMPONENT_ID);
+    actionIDs.add(BaseSelectionAction.SEPARATOR_ID);
+    actionIDs.add(ShowPropertiesViewAction.ID);
+    return (String [])actionIDs.toArray(new String[0]);
+  }
+  
 }

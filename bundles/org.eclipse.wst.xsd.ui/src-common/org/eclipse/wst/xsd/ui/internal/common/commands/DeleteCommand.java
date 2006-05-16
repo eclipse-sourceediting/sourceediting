@@ -24,6 +24,7 @@ import org.eclipse.xsd.XSDModelGroupDefinition;
 import org.eclipse.xsd.XSDParticle;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
+import org.eclipse.xsd.XSDWildcard;
 
 public class DeleteCommand extends BaseCommand
 {
@@ -118,6 +119,25 @@ public class DeleteCommand extends BaseCommand
     {
       XSDEnumerationFacet enumerationFacet = (XSDEnumerationFacet)target;
       enumerationFacet.getSimpleTypeDefinition().getFacetContents().remove(enumerationFacet);
+    }
+    else if (target instanceof XSDWildcard)
+    {
+      if (parent instanceof XSDParticle)
+      {
+        if (parent.getContainer() instanceof XSDModelGroup)
+        {
+          XSDModelGroup modelGroup = (XSDModelGroup) ((XSDParticle) parent).getContainer();
+          modelGroup.getContents().remove(parent);
+        }
+      }
+      else if (parent instanceof XSDComplexTypeDefinition)
+      {
+        ((XSDComplexTypeDefinition)parent).setAttributeWildcardContent(null);
+      }
+      else if (parent instanceof XSDAttributeGroupDefinition)
+      {
+        ((XSDAttributeGroupDefinition)parent).setAttributeWildcardContent(null);
+      }
     }
     else
     {
