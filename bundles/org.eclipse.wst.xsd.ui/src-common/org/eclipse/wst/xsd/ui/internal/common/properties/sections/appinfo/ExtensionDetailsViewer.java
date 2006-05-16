@@ -1,7 +1,9 @@
 package org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo;
 
 import org.eclipse.draw2d.ColorConstants;
+import org.eclipse.gef.commands.Command;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
@@ -9,11 +11,16 @@ import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
+import org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo.custom.DialogNodeEditorConfiguration;
+import org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo.custom.ListNodeEditorConfiguration;
+import org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo.custom.NodeEditorConfiguration;
 
 public class ExtensionDetailsViewer extends Viewer
 {
@@ -23,7 +30,6 @@ public class ExtensionDetailsViewer extends Viewer
   ExtensionDetailsContentProvider contentProvider;
   TabbedPropertySheetWidgetFactory widgetFactory;  
   InternalFocusListener internalFocusListener;
-  ExtensionItemEditManager editManager;
   
   public ExtensionDetailsViewer(Composite parent, TabbedPropertySheetWidgetFactory widgetFactory)
   {
@@ -56,13 +62,66 @@ public class ExtensionDetailsViewer extends Viewer
     
   }
 
+  private void createTextOrComboControl(ExtensionItem item, Composite composite)
+  {
+    Control control = null;
+    String value = contentProvider.getValue(item);
+    NodeEditorConfiguration editorConfiguration = item.getPropertyEditorConfiguration();
+
+    if (editorConfiguration != null && hasStyle(editorConfiguration, NodeEditorConfiguration.STYLE_COMBO))
+    {          
+      ListNodeEditorConfiguration configuration = (ListNodeEditorConfiguration)editorConfiguration;
+      CCombo combo = widgetFactory.createCCombo(composite);
+      combo.setText(value);
+      Object[] values = configuration.getValues(item);
+      LabelProvider labelProvider = configuration.getLabelProvider();
+      for (int j = 0; j < values.length; j++)
+      {            
+        Object o = values[j];
+        String displayName = labelProvider != null ?
+            labelProvider.getText(o) :
+              o.toString();
+            combo.add(displayName);
+      }   
+      control = combo;
+    }
+    if (control == null)
+    {
+      Text text = widgetFactory.createText(composite,value);
+      control = text; 
+    } 
+    control.setData(ITEM_DATA, item);
+    control.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+    control.addFocusListener(internalFocusListener);      
+  }
+  
+  private void createButtonControl(ExtensionItem item, Composite composite)
+  {
+    NodeEditorConfiguration editorConfiguration = item.getPropertyEditorConfiguration();
+    if (editorConfiguration != null && hasStyle(editorConfiguration, NodeEditorConfiguration.STYLE_DIALOG))
+    {    
+      DialogNodeEditorConfiguration configuration = (DialogNodeEditorConfiguration)editorConfiguration;            
+      Button button = new Button(composite, SWT.NONE);
+      String text = configuration.getButonText();
+      if (text != null)
+      {  
+        button.setText(text); //$NON-NLS-1$
+      }  
+      button.setImage(configuration.getButtonImage());
+    }
+    else
+    {
+      Control placeHolder = new Label(composite, SWT.NONE);
+      placeHolder.setVisible(false);
+      placeHolder.setEnabled(false);
+      placeHolder.setLayoutData(new GridData()); 
+    }      
+  } 
+  
   public void setInput(Object input)
   { 
     // TODO (cs) add assertions
     //
-    if (editManager == null)
-      return;
-    
     if (contentProvider == null)
       return;
     
@@ -90,55 +149,22 @@ public class ExtensionDetailsViewer extends Viewer
 
     for (int i = 0; i < items.length; i++)
     {
-      Object item = items[i];
+      ExtensionItem item = (ExtensionItem)items[i];
       String name = contentProvider.getName(item);
-      String value = contentProvider.getValue(item);
       Label label = widgetFactory.createLabel(composite, name + ":"); //$NON-NLS-1$
       label.setLayoutData(new GridData());
-      
-      Control control = null;
-      String style = editManager.getTextControlStyle(item);
-
-      if (style == ExtensionItemEditManager.STYLE_COMBO)
-      {
-        CCombo combo = widgetFactory.createCCombo(composite);
-        combo.setText(value);
-        String[] values = contentProvider.getPossibleValues(item);       
-        for (int j = 0; j < values.length; j++)
-        {  
-          combo.add(values[j]);
-        }   
-        control = combo;        
-      }     
-      else if (style == ExtensionItemEditManager.STYLE_CUSTOM)
-      {
-        control = editManager.createCustomTextControl(composite, item);
-      }  
-      else // (style == ExtensionItemEditManager.STYLE_TEXT)
-      {  
-        Text text = widgetFactory.createText(composite,value);
-        control = text;
-      }      
-      control.setData(ITEM_DATA, item);
-      control.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));      
-      control.addFocusListener(internalFocusListener);      
-      
-      String buttongStyle = editManager.getButtonControlStyle(item);
-      if (buttongStyle == ExtensionItemEditManager.STYLE_CUSTOM)
-      {
-        editManager.createCustomButtonControl(composite, item);
-      }
-      else
-      {
-        Control placeHolder = new Label(composite, SWT.NONE);
-        placeHolder.setVisible(false);
-        placeHolder.setEnabled(false);
-        placeHolder.setLayoutData(new GridData()); 
-      }  
+      createTextOrComboControl(item, composite);
+      createButtonControl(item, composite);
     }  
     control.layout(true);    
   }
-
+    
+  private boolean hasStyle(NodeEditorConfiguration configuration, int style)
+  {
+    return (configuration.getStyle() & style) != 0;
+  }
+  
+  
   public void setSelection(ISelection selection, boolean reveal)
   {
     // TODO Auto-generated method stub
@@ -153,6 +179,37 @@ public class ExtensionDetailsViewer extends Viewer
     this.contentProvider = contentProvider;
   }
   
+  private void applyEdit(ExtensionItem item, Widget widget)
+  {
+    if (item != null)
+    {    
+      String value = null;
+      if (widget instanceof Text)
+      {
+        Text text = (Text)widget;
+        value = text.getText();    
+      }
+      else if (widget instanceof CCombo)
+      {
+        CCombo combo = (CCombo)widget;
+        int index = combo.getSelectionIndex();
+        if (index != -1)
+        {  
+          value = combo.getItem(index);
+        }  
+      }       
+      if (value != null)
+      {  
+        Command command = item.getUpdateValueCommand(value);
+        if (command != null)
+        {
+          // TODO (cs) add command stack handling stuff
+          command.execute();
+        }
+      }                    
+    }              
+  }
+  
   class InternalFocusListener implements FocusListener
   {
     public void focusGained(FocusEvent e)
@@ -161,23 +218,11 @@ public class ExtensionDetailsViewer extends Viewer
     
     public void focusLost(FocusEvent e)
     {
-      if (editManager != null)
-      {  
-        Object item = e.widget.getData(ITEM_DATA);
-        if (item != null)
-        {
-          editManager.handleEdit(item, e.widget);
-        }          
-      }
+      Object item = e.widget.getData(ITEM_DATA);
+      if (item instanceof ExtensionItem)
+      {
+        applyEdit((ExtensionItem)item, e.widget);
+      }      
     }
-  }
-
-  public ExtensionItemEditManager getEditManager()
-  {
-    return editManager;
-  }
-  public void setEditManager(ExtensionItemEditManager editManager)
-  {
-    this.editManager = editManager;
   }
 }

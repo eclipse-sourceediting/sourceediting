@@ -14,6 +14,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.plugin.*;
 import org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo.ExtensionsSchemasRegistry;
+import org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo.custom.NodeCustomizationRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.edit.ui.provider.ExtendedImageRegistry;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -40,7 +41,8 @@ public class XSDEditorPlugin extends AbstractUIPlugin
 	private static XSDEditorPlugin plugin;
 	//Resource bundle.
 	private ResourceBundle resourceBundle;
-  private ExtensionsSchemasRegistry registry;
+  private ExtensionsSchemasRegistry registry;  
+  private NodeCustomizationRegistry propertyEditorRegistry;
   private XSDEditorConfiguration xsdEditorConfiguration = null;
   
   public static final String CONST_USE_SIMPLE_EDIT_MODE = PLUGIN_ID + ".useSimpleEditMode"; //$NON-NLS-1$
@@ -251,6 +253,7 @@ public class XSDEditorPlugin extends AbstractUIPlugin
     return registry;
   }
 
+ 
   public XSDEditorConfiguration getXSDEditorConfiguration()
   {
     if (xsdEditorConfiguration == null)
@@ -318,5 +321,14 @@ public class XSDEditorPlugin extends AbstractUIPlugin
    */
   public String getDefaultPage() {
     return getPreferenceStore().getString(DEFAULT_PAGE);
+  }
+
+  public NodeCustomizationRegistry getPropertyEditorRegistry()
+  {
+    if (propertyEditorRegistry == null)
+    {  
+      propertyEditorRegistry = new NodeCustomizationRegistry("foo");
+    }
+    return propertyEditorRegistry;
   }
 }

@@ -223,6 +223,9 @@
   <extension-point id="ExtensionsSchemasDescription" name="%ExtensionsSchemasDescription"/>
 
   <extension-point id="XSDEditorExtensionConfiguration" name="%XSDEditorExtensionConfiguration"/>
+  
+  <extension-point id="extensibilityNodeCustomizations" name="%ExtensionNodeCustomizationsDescription"/>
+  
 
 	<extension
 		point="org.eclipse.wst.xml.core.catalogContributions">

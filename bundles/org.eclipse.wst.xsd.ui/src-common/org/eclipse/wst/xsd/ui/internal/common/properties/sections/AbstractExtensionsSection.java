@@ -44,7 +44,6 @@ import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.xsd.ui.internal.common.commands.AddExtensionCommand;
 import org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo.AddExtensionsComponentDialog;
 import org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo.DOMExtensionDetailsContentProvider;
-import org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo.DOMExtensionItemEditManager;
 import org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo.DOMExtensionItemMenuListener;
 import org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo.ExtensionDetailsViewer;
 import org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo.ExtensionsSchemasRegistry;
@@ -319,7 +318,6 @@ public abstract class AbstractExtensionsSection extends AbstractSection
   protected void createElementContentWidget(Composite parent)
   {
     extensionDetailsViewer = new ExtensionDetailsViewer(parent, getWidgetFactory());
-    extensionDetailsViewer.setEditManager(new DOMExtensionItemEditManager());
     extensionDetailsViewer.setContentProvider(new DOMExtensionDetailsContentProvider());    
     extensionDetailsViewer.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
   }

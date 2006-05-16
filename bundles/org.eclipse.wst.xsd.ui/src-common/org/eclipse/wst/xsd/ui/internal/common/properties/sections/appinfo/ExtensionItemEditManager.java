@@ -3,11 +3,14 @@ package org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Widget;
-
+ 
+/**
+ * @deprecated
+ */ 
 public interface ExtensionItemEditManager
-{
-  public final static String STYLE_NONE = "none";   //$NON-NLS-1$
-  public final static String STYLE_TEXT = "text"; //$NON-NLS-1$
+{  
+  public final static String STYLE_NONE = "none";   //$NON-NLS-1$  
+  public final static String STYLE_TEXT = "text"; //$NON-NLS-1$  
   public final static String STYLE_COMBO = "combo"; //$NON-NLS-1$
   public final static String STYLE_CUSTOM = "custom";     //$NON-NLS-1$
   
