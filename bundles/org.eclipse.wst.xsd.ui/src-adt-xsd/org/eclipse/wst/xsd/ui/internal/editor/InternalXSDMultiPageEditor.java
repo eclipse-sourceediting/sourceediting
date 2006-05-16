@@ -13,6 +13,7 @@ package org.eclipse.wst.xsd.ui.internal.editor;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
@@ -81,7 +82,6 @@ import org.eclipse.wst.xsd.ui.internal.utils.OpenOnSelectionHelper;
 import org.eclipse.xsd.XSDComponent;
 import org.eclipse.xsd.XSDCompositor;
 import org.eclipse.xsd.XSDConcreteComponent;
-import org.eclipse.xsd.XSDNamedComponent;
 import org.eclipse.xsd.XSDSchema;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
@@ -382,18 +382,20 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
    */
   public void openOnGlobalReference(XSDConcreteComponent comp)
   {
-    XSDNamedComponent namedComponent = openOnSelectionHelper.openOnGlobalReference(comp);
+    XSDConcreteComponent namedComponent = openOnSelectionHelper.openOnGlobalReference(comp);
     
-    if (namedComponent != null)
+    if (namedComponent == null)
     {
-      XSDBaseAdapter adapter = (XSDBaseAdapter) XSDAdapterFactory.getInstance().adapt(namedComponent);
-      getSelectionManager().setSelection(new StructuredSelection(adapter));
-      IAction action = getActionRegistry().getAction(SetInputToGraphView.ID);
-      if (action != null)
-      {
-        action.run();
-      }
+      namedComponent = getXSDSchema();
     }
+    XSDBaseAdapter adapter = (XSDBaseAdapter) XSDAdapterFactory.getInstance().adapt(namedComponent);
+    getSelectionManager().setSelection(new StructuredSelection(adapter));
+    IAction action = getActionRegistry().getAction(SetInputToGraphView.ID);
+    if (action != null)
+    {
+      action.run();
+    }
+
   }
   
   protected OpenOnSelectionHelper openOnSelectionHelper;
