@@ -124,7 +124,7 @@ public class DOMExtensionDetailsContentProvider implements ExtensionDetailsConte
       // TODO (cs) remove reference to XSDEditorPlugin... make generic
       // perhaps push down the xml.ui ?
       //
-      NodeCustomizationRegistry registry = XSDEditorPlugin.getDefault().getPropertyEditorRegistry();
+      NodeCustomizationRegistry registry = XSDEditorPlugin.getDefault().getNodeCustomizationRegistry();
       NodeEditorProvider provider= registry.getNodeEditorProvider(namespace);      
       if (provider != null)
       {

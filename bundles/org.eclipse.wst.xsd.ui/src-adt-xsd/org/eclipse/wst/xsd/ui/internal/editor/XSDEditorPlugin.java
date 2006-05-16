@@ -42,7 +42,7 @@ public class XSDEditorPlugin extends AbstractUIPlugin
 	//Resource bundle.
 	private ResourceBundle resourceBundle;
   private ExtensionsSchemasRegistry registry;  
-  private NodeCustomizationRegistry propertyEditorRegistry;
+  private NodeCustomizationRegistry nodeCustomizationRegistry;
   private XSDEditorConfiguration xsdEditorConfiguration = null;
   
   public static final String CONST_USE_SIMPLE_EDIT_MODE = PLUGIN_ID + ".useSimpleEditMode"; //$NON-NLS-1$
@@ -323,12 +323,12 @@ public class XSDEditorPlugin extends AbstractUIPlugin
     return getPreferenceStore().getString(DEFAULT_PAGE);
   }
 
-  public NodeCustomizationRegistry getPropertyEditorRegistry()
+  public NodeCustomizationRegistry getNodeCustomizationRegistry()
   {
-    if (propertyEditorRegistry == null)
+    if (nodeCustomizationRegistry == null)
     {  
-      propertyEditorRegistry = new NodeCustomizationRegistry("foo");
+      nodeCustomizationRegistry = new NodeCustomizationRegistry("foo");
     }
-    return propertyEditorRegistry;
+    return nodeCustomizationRegistry;
   }
 }
