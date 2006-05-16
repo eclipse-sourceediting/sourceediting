@@ -415,8 +415,9 @@
 		id="org.eclipse.jst.jsp.commonWizard.newJSP"
 		point="org.eclipse.ui.navigator.navigatorContent">
 		<commonWizard
-			type="new"
-			wizardId="org.eclipse.jst.jsp.ui.internal.wizard.NewJSPWizard">
+        menuGroupId="org.eclipse.wst.web.ui"
+        type="new"
+        wizardId="org.eclipse.jst.jsp.ui.internal.wizard.NewJSPWizard">
 			<enablement>
 				<or>
 					 

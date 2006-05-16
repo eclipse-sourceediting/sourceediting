@@ -317,8 +317,9 @@
 		id="org.eclipse.wst.html.commonWizard.newHTML"
 		point="org.eclipse.ui.navigator.navigatorContent">
 		<commonWizard
-			type="new"
-			wizardId="org.eclipse.wst.html.ui.internal.wizard.NewHTMLWizard">
+        menuGroupId="org.eclipse.wst.web.ui"
+        type="new"
+        wizardId="org.eclipse.wst.html.ui.internal.wizard.NewHTMLWizard">
 			<enablement>
 				<or>
 					<adapt type="org.eclipse.core.resources.IProject">
