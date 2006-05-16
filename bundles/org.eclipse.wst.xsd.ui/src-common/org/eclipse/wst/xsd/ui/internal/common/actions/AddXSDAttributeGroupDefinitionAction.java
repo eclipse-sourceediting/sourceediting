@@ -23,12 +23,27 @@ import org.eclipse.xsd.XSDSchema;
 public class AddXSDAttributeGroupDefinitionAction extends XSDBaseAction
 {
   public static String ID = "AddXSDAttributeGroupDefinitionAction"; //$NON-NLS-1$
+  public static String REF_ID = "AddXSDAttributeGroupDefinitionRefAction"; //$NON-NLS-1$
 
   public AddXSDAttributeGroupDefinitionAction(IWorkbenchPart part)
   {
     super(part);
     setText(Messages._UI_ACTION_ADD_ATTRIBUTE_GROUP);
     setId(ID);
+  }
+  
+  public AddXSDAttributeGroupDefinitionAction(IWorkbenchPart part, String id)
+  {
+    super(part);
+    if (id.equals(REF_ID))
+    {
+      setText(Messages._UI_ACTION_ADD_ATTRIBUTE_GROUP_REF);
+    }
+    else
+    {
+      setText(Messages._UI_ACTION_ADD_ATTRIBUTE_GROUP_DEFINITION);
+    }   
+    setId(id);
   }
 
   public void run()

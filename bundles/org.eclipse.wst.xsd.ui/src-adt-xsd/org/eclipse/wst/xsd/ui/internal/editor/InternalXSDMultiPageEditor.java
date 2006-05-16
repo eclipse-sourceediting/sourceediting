@@ -484,6 +484,9 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
     action = new AddXSDAttributeGroupDefinitionAction(this);
     action.setSelectionProvider(getSelectionManager());
     registry.registerAction(action);
+    action = new AddXSDAttributeGroupDefinitionAction(this, AddXSDAttributeGroupDefinitionAction.REF_ID);
+    action.setSelectionProvider(getSelectionManager());
+    registry.registerAction(action);    
     action = new DeleteXSDConcreteComponentAction(this);
     action.setSelectionProvider(getSelectionManager());
     registry.registerAction(action);
