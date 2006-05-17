@@ -17,19 +17,16 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.wst.xsd.ui.internal.common.commands.AddExtensionAttributeCommand;
 import org.eclipse.wst.xsd.ui.internal.common.commands.AddExtensionCommand;
 import org.eclipse.wst.xsd.ui.internal.common.commands.AddExtensionElementCommand;
-import org.eclipse.wst.xsd.ui.internal.common.commands.RemoveExtensionAttributerCommand;
-import org.eclipse.wst.xsd.ui.internal.common.commands.RemoveExtensionElementCommand;
+import org.eclipse.wst.xsd.ui.internal.common.commands.RemoveExtensionNodeCommand;
 import org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo.DOMExtensionTreeLabelProvider;
 import org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo.ExtensionsSchemasRegistry;
 import org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo.XSDExtensionTreeContentProvider;
 import org.eclipse.wst.xsd.ui.internal.common.util.Messages;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.internal.text.XSDModelAdapter;
-import org.eclipse.xsd.XSDAnnotation;
 import org.eclipse.xsd.XSDAttributeDeclaration;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDElementDeclaration;
-import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
@@ -96,16 +93,17 @@ public class ExtensionsSection extends AbstractExtensionsSection
   protected Command getRemoveExtensionCommand(Object o)
   {
     Command command = null;
-    if (o instanceof Element)
-    {
-      XSDAnnotation xsdAnnotation = (XSDAnnotation) extensionTreeViewer.getInput();
-      Node appInfoElement = ((Element) o).getParentNode();
-      command = new RemoveExtensionElementCommand(Messages._UI_ACTION_DELETE_APPINFO_ELEMENT, xsdAnnotation, appInfoElement);
+    try
+    {     
+      if (o instanceof Node)
+      {            
+        command = new RemoveExtensionNodeCommand(Messages._UI_ACTION_DELETE_APPINFO_ELEMENT, (Node)o);  
+        command.execute();
+      }
     }
-    else if (o instanceof Attr)
+    catch (Exception e)
     {
-      Element hostElement = ((Attr) o).getOwnerElement();
-      command = new RemoveExtensionAttributerCommand(Messages._UI_ACTION_DELETE_APPINFO_ATTRIBUTE, hostElement, (Attr) o);
+      e.printStackTrace();
     }
     return command;
   }  

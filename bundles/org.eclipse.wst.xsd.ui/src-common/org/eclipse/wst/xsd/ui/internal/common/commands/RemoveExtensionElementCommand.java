@@ -14,6 +14,9 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.xsd.XSDAnnotation;
 import org.w3c.dom.Node;
 
+/**
+ * @deprecated
+ */
 public class RemoveExtensionElementCommand extends Command
 {
   XSDAnnotation xsdAnnotation;

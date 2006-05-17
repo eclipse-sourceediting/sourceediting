@@ -14,6 +14,9 @@ import org.eclipse.gef.commands.Command;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 
+/**
+ * @deprecated
+ */
 public class RemoveExtensionAttributerCommand extends Command 
 {
 	Element hostElement;

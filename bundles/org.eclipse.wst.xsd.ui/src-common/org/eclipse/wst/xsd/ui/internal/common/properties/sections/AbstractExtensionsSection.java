@@ -258,14 +258,14 @@ public abstract class AbstractExtensionsSection extends AbstractSection
     removeButton.addSelectionListener(this);
     removeButton.setToolTipText(Messages._UI_ACTION_DELETE_EXTENSION_COMPONENT);
     //removeButton.setLayoutData(new ColumnLayoutData(ColumnLayoutData.FILL));
+
+    // TODO (cs) uncomment the up/down button when we have time to implement
+    //
+    //Button up = getWidgetFactory().createButton(buttonComposite, Messages._UI_LABEL_UP, SWT.FLAT);
+    //up.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
     
-    Button up = getWidgetFactory().createButton(buttonComposite, Messages._UI_LABEL_UP, SWT.FLAT);
-    //up.setLayoutData(new ColumnLayoutData(ColumnLayoutData.FILL));
-    up.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-    
-    Button down = getWidgetFactory().createButton(buttonComposite, Messages._UI_LABEL_DOWN, SWT.FLAT);
-    //down.setLayoutData(new ColumnLayoutData(ColumnLayoutData.FILL));    
-    down.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+    //Button down = getWidgetFactory().createButton(buttonComposite, Messages._UI_LABEL_DOWN, SWT.FLAT);
+    //down.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
     Composite rightContent = getWidgetFactory().createComposite(sashForm, SWT.FLAT);
     Section section2 = getWidgetFactory().createSection(rightContent, SWT.FLAT | ExpandableComposite.TITLE_BAR);
