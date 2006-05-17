@@ -10,11 +10,16 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.core.internal.validation.errorcustomization;
 
+import java.io.IOException;
+
 import junit.framework.TestCase;
 
+import org.eclipse.wst.xml.core.internal.validation.XMLValidationConfiguration;
+import org.eclipse.wst.xml.core.internal.validation.XMLValidator;
 import org.eclipse.wst.xml.core.internal.validation.core.ValidationInfo;
 import org.eclipse.wst.xml.core.internal.validation.core.ValidationMessage;
 import org.eclipse.wst.xml.core.internal.validation.errorcustomization.ErrorCustomizationManager.ErrorMessageInformation;
+import org.eclipse.wst.xml.validation.tests.internal.XMLValidatorTestsPlugin;
 
 /**
  * Test the ErrorCustomizationManager class.
@@ -122,5 +127,39 @@ public class ErrorCustomizationManagerTest extends TestCase
 	valinfo2.addError("message", 1, 1, namespace1);
 	manager2.considerReportedError(valinfo2, "key", null);
 	assertNotNull("2. The messageForConsideration is null when a validation message exists.", manager2.getMessageForConsideration());
+  }
+  
+  /**
+   * Test that an error customizer is only called for the
+   * correct element.
+   */
+  public void testErrorReportedOnCorrectElement()
+  {
+	  IErrorMessageCustomizer testCustomizer = new IErrorMessageCustomizer()
+	  {
+		  public String customizeMessage(ElementInformation elementInfo, String key, Object[] arguments)
+		  {
+			  if(elementInfo.getLocalname().equals("child1"))
+			  {
+				  fail("An error was reported for the child1 element.");
+			  }
+			  return null;
+		  }
+	  };
+	  ErrorCustomizationRegistry registry = ErrorCustomizationRegistry.getInstance();
+	  registry.addErrorMessageCustomizer("http://www.example.org/simplenested", testCustomizer);
+	  try
+	  {
+		  String PLUGIN_ABSOLUTE_PATH = XMLValidatorTestsPlugin.getPluginLocation().toString() + "/";
+		  String uri = "file:///" + PLUGIN_ABSOLUTE_PATH + "testresources/samples/bugfixes/CustomErrorReportedOnCorrectElement/simplenested.xml";
+		  
+		  XMLValidator validator = new XMLValidator();
+		  validator.validate(uri, null, new XMLValidationConfiguration());
+		  validator.validate(uri, null, new XMLValidationConfiguration());
+	  }
+	  catch(IOException e)
+	  {
+		  fail("An exception occurred while running the test:" + e);
+	  }
   }
 }

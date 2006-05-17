@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.example.org/simplenested" xmlns:tns="http://www.example.org/simplenested">
+
+    <element name="root">
+    	<complexType>
+    		<sequence>
+
+    			<element ref="tns:child1"></element>
+    			<element ref="tns:child2"></element>
+    		</sequence>
+    	</complexType>
+    </element>
+    <element name="child1" type="string"></element>
+    <element name="child2" type="string"></element>
+    
+</schema>
