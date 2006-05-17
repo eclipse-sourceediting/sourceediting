@@ -11,6 +11,9 @@
 package org.eclipse.wst.xsd.ui.internal.common.properties.sections;
 
 import org.eclipse.gef.commands.Command;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.wst.xsd.ui.internal.common.commands.AddExtensionAttributeCommand;
 import org.eclipse.wst.xsd.ui.internal.common.commands.AddExtensionCommand;
 import org.eclipse.wst.xsd.ui.internal.common.commands.AddExtensionElementCommand;
@@ -21,6 +24,7 @@ import org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo.Extens
 import org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo.XSDExtensionTreeContentProvider;
 import org.eclipse.wst.xsd.ui.internal.common.util.Messages;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
+import org.eclipse.wst.xsd.ui.internal.text.XSDModelAdapter;
 import org.eclipse.xsd.XSDAnnotation;
 import org.eclipse.xsd.XSDAttributeDeclaration;
 import org.eclipse.xsd.XSDConcreteComponent;
@@ -31,11 +35,46 @@ import org.w3c.dom.Node;
 
 public class ExtensionsSection extends AbstractExtensionsSection
 {
+  XSDModelAdapter adapter = null;
+  
   public ExtensionsSection()
   {
     super();
     setExtensionTreeLabelProvider(new DOMExtensionTreeLabelProvider());
     setExtensionTreeContentProvider(new XSDExtensionTreeContentProvider());
+  }
+  
+  public void setInput(IWorkbenchPart part, ISelection selection)
+  {
+    super.setInput(part, selection); 
+    if (adapter == null)
+    {
+      if (selection instanceof StructuredSelection)
+      {
+        Object obj = ((StructuredSelection) selection).getFirstElement();
+        if (obj instanceof XSDConcreteComponent)
+        {  
+          Element element = ((XSDConcreteComponent)obj).getElement();
+          if (element != null)
+          {
+            adapter = XSDModelAdapter.lookupOrCreateModelAdapter(element.getOwnerDocument());
+            if (adapter != null)
+            {
+              adapter.getModelReconcileAdapter().addListener(internalNodeAdapter);
+            }  
+          }
+        }
+      }
+    }
+  }
+  
+  public void dispose()
+  {
+    super.dispose();
+    if (adapter != null)
+    {
+      adapter.getModelReconcileAdapter().removeListener(internalNodeAdapter);
+    }  
   }
 
   protected AddExtensionCommand getAddExtensionCommand(Object o)

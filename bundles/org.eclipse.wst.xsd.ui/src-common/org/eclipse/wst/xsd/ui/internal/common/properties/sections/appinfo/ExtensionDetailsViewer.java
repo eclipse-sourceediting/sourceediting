@@ -9,6 +9,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -25,17 +27,19 @@ import org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo.custom
 public class ExtensionDetailsViewer extends Viewer
 {
   private final static String ITEM_DATA = "ITEM_DATA"; //$NON-NLS-1$
+  private final static String EDITOR_CONFIGURATION_DATA = "EDITOR_CONFIGURATION_DATA"; //$NON-NLS-1$
+  
   Composite control;  
   Composite composite;
   ExtensionDetailsContentProvider contentProvider;
   TabbedPropertySheetWidgetFactory widgetFactory;  
-  InternalFocusListener internalFocusListener;
+  InternalControlListener internalControlListener;
   
   public ExtensionDetailsViewer(Composite parent, TabbedPropertySheetWidgetFactory widgetFactory)
   {
     this.widgetFactory = widgetFactory;    
     control =  widgetFactory.createComposite(parent);
-    internalFocusListener = new InternalFocusListener();
+    internalControlListener = new InternalControlListener();
     control.setLayout(new GridLayout());    
   }
   public Control getControl()
@@ -58,8 +62,17 @@ public class ExtensionDetailsViewer extends Viewer
 
   public void refresh()
   {
-    // TODO Auto-generated method stub
-    
+    Control[] children = composite.getChildren(); 
+    for (int i = 0; i < children.length; i++)
+    {
+      Control control = children[i];
+      if (control instanceof Text)
+      {
+         ExtensionItem item = (ExtensionItem)control.getData(ITEM_DATA);
+         String value = contentProvider.getValue(item);        
+        ((Text)control).setText(value); 
+      }  
+    }
   }
 
   private void createTextOrComboControl(ExtensionItem item, Composite composite)
@@ -92,7 +105,7 @@ public class ExtensionDetailsViewer extends Viewer
     } 
     control.setData(ITEM_DATA, item);
     control.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-    control.addFocusListener(internalFocusListener);      
+    control.addFocusListener(internalControlListener);      
   }
   
   private void createButtonControl(ExtensionItem item, Composite composite)
@@ -102,6 +115,12 @@ public class ExtensionDetailsViewer extends Viewer
     {    
       DialogNodeEditorConfiguration configuration = (DialogNodeEditorConfiguration)editorConfiguration;            
       Button button = new Button(composite, SWT.NONE);
+      GridData gridData = new GridData();
+      gridData.heightHint = 17;
+      button.setLayoutData(gridData);
+      button.addSelectionListener(internalControlListener);
+      button.setData(ITEM_DATA, item);
+      button.setData(EDITOR_CONFIGURATION_DATA, configuration);
       String text = configuration.getButonText();
       if (text != null)
       {  
@@ -210,14 +229,36 @@ public class ExtensionDetailsViewer extends Viewer
     }              
   }
   
-  class InternalFocusListener implements FocusListener
+  class InternalControlListener implements FocusListener, SelectionListener
   {
+    public void widgetSelected(SelectionEvent e)
+    {
+      // for button controls we handle selection events
+      //        
+      Object item = e.widget.getData(EDITOR_CONFIGURATION_DATA);
+      if (item instanceof DialogNodeEditorConfiguration)
+      {
+        DialogNodeEditorConfiguration dialogNodeEditorConfiguration = (DialogNodeEditorConfiguration)item;        
+        dialogNodeEditorConfiguration.invokeDialog();               
+        //applyEdit((ExtensionItem)item, e.widget);
+      }             
+    }
+    
+    public void widgetDefaultSelected(SelectionEvent e)
+    {
+      // do nothing      
+    } 
+    
     public void focusGained(FocusEvent e)
     {
     }    
     
     public void focusLost(FocusEvent e)
     {
+      // apply edits for text and combo box controls
+      // via the focusLost event
+      // TODO (cs) handle explict ENTER key
+      //
       Object item = e.widget.getData(ITEM_DATA);
       if (item instanceof ExtensionItem)
       {

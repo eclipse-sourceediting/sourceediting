@@ -124,7 +124,7 @@ class DOMExtensionItem extends ExtensionItem
     }
     return null;
   }
-
+  
   public String getNamespace()
   {
     String namespace = null;
@@ -147,8 +147,36 @@ class DOMExtensionItem extends ExtensionItem
     return namespace;
   }
   
+  public Node getParentNode()
+  {
+    Node parentNode = null;
+    if (node != null)
+    {
+      if (node.getNodeType() == Node.ELEMENT_NODE)
+      {
+        parentNode = node.getParentNode();
+      }
+      else if (node.getNodeType() == Node.ATTRIBUTE_NODE)
+      {
+        Attr attr = (Attr) node;
+        parentNode = attr.getOwnerElement();
+      }
+    }  
+    else if (parent != null)
+    {  
+      parentNode = parent;
+    }
+    return parentNode;
+  }
+  
   public String getParentName()
   {
-    return "";
+    Node parentNode = getParentNode(); 
+    return parentNode != null ? parentNode.getLocalName() : "";
+  }
+
+  public Node getNode()
+  {
+    return node;
   }
 }

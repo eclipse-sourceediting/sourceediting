@@ -79,13 +79,15 @@ public abstract class AbstractExtensionsSection extends AbstractSection
 
     public boolean isAdapterForType(Object type)
     {
-      // we don't really need to implement this
+      // this method should never be called
+      // we don't use objects of this class as 'standard' adapters
       return true;
     }
 
     public void notifyChanged(INodeNotifier notifier, int eventType, Object changedFeature, Object oldValue, Object newValue, int pos)
     { 
-      extensionTreeViewer.refresh();      
+      extensionTreeViewer.refresh();
+      extensionDetailsViewer.refresh();
     }    
   }
 

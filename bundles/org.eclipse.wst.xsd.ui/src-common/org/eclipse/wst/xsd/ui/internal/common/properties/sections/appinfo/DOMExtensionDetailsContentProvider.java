@@ -124,7 +124,15 @@ public class DOMExtensionDetailsContentProvider implements ExtensionDetailsConte
       NodeEditorProvider provider= registry.getNodeEditorProvider(namespace);      
       if (provider != null)
       {
-        configuration = provider.getNodeEditorConfiguration(parentName, name);    
+        configuration = provider.getNodeEditorConfiguration(parentName, name);
+        if (configuration != null)
+        {  
+          configuration.setParentNode(item.getParentNode());
+          if (item.getNode() != null)
+          {
+            configuration.setNode(item.getNode());
+          }
+        }  
       }
     }
     String[] values = item.getPossibleValues();

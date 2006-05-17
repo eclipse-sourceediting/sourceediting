@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.wst.xsd.ui.internal.common.util.XSDCommonUIUtils;
-import org.eclipse.wst.xsd.ui.internal.text.XSDModelAdapter;
 import org.eclipse.xsd.XSDAnnotation;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.util.XSDConstants;
@@ -16,37 +14,13 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 public class XSDExtensionTreeContentProvider extends DOMExtensionTreeContentProvider
-{
-  XSDModelAdapter adapter = null;
-  public void inputChanged(Viewer viewer, Object oldInput, Object newInput)
-  {
-    //System.out.println("inputChanged(" + viewer + ", " + oldInput + ", " + newInput+")");
-    super.inputChanged(viewer, oldInput, newInput);
-    if (adapter == null)
-    {
-      if (newInput instanceof XSDConcreteComponent)
-      {        
-        Element element = ((XSDConcreteComponent)newInput).getElement();
-        if (element == null)
-        {
-          return;
-        }
-        adapter = XSDModelAdapter.lookupOrCreateModelAdapter(element.getOwnerDocument());
-        if (adapter != null)
-        {
-          adapter.getModelReconcileAdapter().addListener(this);
-        }  
-      }
-    }        
-  }
-  
+{  
   public Object[] getElements(Object inputElement)
   {
     if (inputElement instanceof XSDConcreteComponent)
     {
       XSDConcreteComponent component = (XSDConcreteComponent) inputElement;
       List elementsAndAttributes = new ArrayList();
-      /** Construct elements list */
       XSDAnnotation xsdAnnotation = XSDCommonUIUtils.getInputXSDAnnotation(component, false);
       if (xsdAnnotation != null)
       {
@@ -131,14 +105,5 @@ public class XSDExtensionTreeContentProvider extends DOMExtensionTreeContentProv
       // this handles the xmlns="blah" case
       return "xmlns".equals(attribute.getNodeName()); //$NON-NLS-1$
     }
-  }
-  
-  public void dispose()
-  {
-    super.dispose();
-    if (adapter != null)
-    {
-      adapter.getModelReconcileAdapter().removeListener(this);
-    }  
   }
 }
