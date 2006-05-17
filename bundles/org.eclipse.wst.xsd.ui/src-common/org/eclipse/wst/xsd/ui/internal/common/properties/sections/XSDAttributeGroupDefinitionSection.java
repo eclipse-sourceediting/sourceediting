@@ -35,7 +35,7 @@ import org.eclipse.xsd.XSDNamedComponent;
 import org.eclipse.xsd.util.XSDConstants;
 import org.w3c.dom.Element;
 
-public class XSDAttributeGroupDefinitionSection extends AbstractSection
+public class XSDAttributeGroupDefinitionSection extends RefactoringSection
 {
   protected Text nameText;
   protected CCombo refCombo;
@@ -51,7 +51,7 @@ public class XSDAttributeGroupDefinitionSection extends AbstractSection
     composite = getWidgetFactory().createFlatFormComposite(parent);
 
     GridLayout gridLayout = new GridLayout();
-    gridLayout.numColumns = 2;
+    gridLayout.numColumns = 3;
     composite.setLayout(gridLayout);
 
     if (isReference)
@@ -97,6 +97,11 @@ public class XSDAttributeGroupDefinitionSection extends AbstractSection
       nameText = getWidgetFactory().createText(composite, ""); //$NON-NLS-1$
       nameText.setLayoutData(data);
       applyAllListeners(nameText);
+
+      // ------------------------------------------------------------------
+      // Refactor/rename hyperlink 
+      // ------------------------------------------------------------------
+      createRenameHyperlink(composite);
     }
   }
 
@@ -241,7 +246,7 @@ public class XSDAttributeGroupDefinitionSection extends AbstractSection
     return true;
   }
 
-  public void widgetSelected(SelectionEvent e)
+  public void doWidgetSelected(SelectionEvent e)
   {
     if (e.widget == refCombo)
     {
@@ -257,6 +262,7 @@ public class XSDAttributeGroupDefinitionSection extends AbstractSection
         }
       }
     }
+    super.doWidgetSelected(e);
   }
 
 

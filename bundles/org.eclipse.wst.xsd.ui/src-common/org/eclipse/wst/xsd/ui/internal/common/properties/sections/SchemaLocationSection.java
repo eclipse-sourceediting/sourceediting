@@ -103,7 +103,7 @@ public class SchemaLocationSection extends CommonDirectivesSection
 
 		}
 		
-		public void widgetSelected(SelectionEvent event)
+		public void doWidgetSelected(SelectionEvent event)
     {
 			if (event.widget == wizardButton)
       {

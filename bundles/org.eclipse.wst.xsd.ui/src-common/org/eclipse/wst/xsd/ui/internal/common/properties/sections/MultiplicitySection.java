@@ -24,7 +24,7 @@ import org.eclipse.xsd.util.XSDConstants;
 import org.w3c.dom.Element;
 
 
-public class MultiplicitySection extends AbstractSection
+public class MultiplicitySection extends RefactoringSection
 {
   protected CCombo minCombo, maxCombo;
 
@@ -60,6 +60,7 @@ public class MultiplicitySection extends AbstractSection
     {
       updateMaxAttribute();
     }
+    super.doWidgetSelected(e);
   }
 
   protected void updateMaxAttribute()

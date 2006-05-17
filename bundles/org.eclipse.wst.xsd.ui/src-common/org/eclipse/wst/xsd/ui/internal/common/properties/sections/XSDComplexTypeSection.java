@@ -37,7 +37,7 @@ import org.eclipse.xsd.XSDNamedComponent;
 import org.eclipse.xsd.XSDTypeDefinition;
 import org.eclipse.xsd.util.XSDConstants;
 
-public class XSDComplexTypeSection extends AbstractSection implements SelectionListener
+public class XSDComplexTypeSection extends RefactoringSection implements SelectionListener
 {
   protected Text nameText;
   protected CCombo baseTypeCombo;
@@ -60,7 +60,7 @@ public class XSDComplexTypeSection extends AbstractSection implements SelectionL
     composite = getWidgetFactory().createFlatFormComposite(parent);
 
     GridLayout gridLayout = new GridLayout();
-    gridLayout.numColumns = 2;
+    gridLayout.numColumns = 3;
     composite.setLayout(gridLayout);
 
     // ------------------------------------------------------------------
@@ -83,6 +83,11 @@ public class XSDComplexTypeSection extends AbstractSection implements SelectionL
     applyAllListeners(nameText);
 
     // ------------------------------------------------------------------
+    // Refactor/rename hyperlink 
+    // ------------------------------------------------------------------
+    createRenameHyperlink(composite);
+    
+    // ------------------------------------------------------------------
     // BaseTypeLabel
     // ------------------------------------------------------------------
 
@@ -99,6 +104,11 @@ public class XSDComplexTypeSection extends AbstractSection implements SelectionL
     baseTypeCombo.setEditable(false);
     baseTypeCombo.setLayoutData(data);
     baseTypeCombo.addSelectionListener(this);
+
+    // ------------------------------------------------------------------
+    // Spacer label
+    // ------------------------------------------------------------------
+    getWidgetFactory().createCLabel(composite, "");
 
     // ------------------------------------------------------------------
     // DerivedByLabel
@@ -122,6 +132,10 @@ public class XSDComplexTypeSection extends AbstractSection implements SelectionL
     derivedByCombo.setItems(derivedByChoicesComboValues);
     derivedByCombo.addSelectionListener(this);
 
+    // ------------------------------------------------------------------
+    // Spacer label
+    // ------------------------------------------------------------------
+    getWidgetFactory().createCLabel(composite, "");
   }
 
   /*
@@ -194,7 +208,7 @@ public class XSDComplexTypeSection extends AbstractSection implements SelectionL
   /**
    * @see org.eclipse.swt.events.SelectionListener#widgetSelected(SelectionEvent)
    */
-  public void widgetSelected(SelectionEvent e)
+  public void doWidgetSelected(SelectionEvent e)
   {
     if (e.widget == baseTypeCombo)
     {
@@ -238,6 +252,7 @@ public class XSDComplexTypeSection extends AbstractSection implements SelectionL
         complexType.setDerivationMethod(XSDDerivationMethod.RESTRICTION_LITERAL);
       }
     }
+    super.doWidgetSelected(e);
   }
 
   /*

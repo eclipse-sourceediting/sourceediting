@@ -24,6 +24,7 @@ import org.eclipse.wst.xsd.ui.internal.search.IXSDSearchConstants;
 import org.eclipse.xsd.XSDComplexTypeDefinition;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDSchema;
+import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.eclipse.xsd.XSDTypeDefinition;
 
 public class XSDComplexTypeBaseTypeEditManager extends XSDTypeReferenceEditManager
@@ -35,7 +36,7 @@ public class XSDComplexTypeBaseTypeEditManager extends XSDTypeReferenceEditManag
 
   public ComponentSpecification[] getQuickPicks()
   {
-    return null;
+    return super.getQuickPicks();
   }
   
   public IComponentDialog getBrowseDialog()
@@ -44,6 +45,7 @@ public class XSDComplexTypeBaseTypeEditManager extends XSDTypeReferenceEditManag
     return dialogDelegate;
   }
 
+  // TODO common this up
   public void modifyComponentReference(Object referencingObject, ComponentSpecification component)
   {
     XSDConcreteComponent concreteComponent = null;
@@ -90,7 +92,32 @@ public class XSDComplexTypeBaseTypeEditManager extends XSDTypeReferenceEditManag
         Command command = new SetBaseTypeAndManagerDirectivesCommand(concreteComponent, component.getName(), component.getQualifier(), component.getFile());
         command.execute();
       }  
-    }  
+    }
+    else if (concreteComponent instanceof XSDSimpleTypeDefinition)
+    {
+      if (component.isNew())
+      {  
+        XSDTypeDefinition td = null;
+        if (component.getMetaName() == IXSDSearchConstants.SIMPLE_TYPE_META_NAME)
+        {  
+          AddXSDSimpleTypeDefinitionCommand command = new AddXSDSimpleTypeDefinitionCommand(Messages._UI_ACTION_ADD_SIMPLE_TYPE, concreteComponent.getSchema());
+          command.setNameToAdd(component.getName());
+          command.execute();
+          td = command.getCreatedSimpleType();
+        }
+        if (td != null)
+        {
+          Command command = new SetBaseTypeCommand(concreteComponent, td);
+          command.execute();
+        }  
+      }  
+      else
+      {  
+        Command command = new SetBaseTypeAndManagerDirectivesCommand(concreteComponent, component.getName(), component.getQualifier(), component.getFile());
+        command.execute();
+      }  
+    }
+
   }
 
 }

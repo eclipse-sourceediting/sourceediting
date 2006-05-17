@@ -21,6 +21,7 @@ import org.eclipse.xsd.XSDModelGroup;
 import org.eclipse.xsd.XSDParticle;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.eclipse.xsd.XSDTypeDefinition;
+import org.eclipse.xsd.XSDVariety;
 
 public class SetBaseTypeCommand extends BaseCommand
 {
@@ -65,6 +66,26 @@ public class SetBaseTypeCommand extends BaseCommand
       complexType.setBaseTypeDefinition(baseType);
       complexType.setDerivationMethod(XSDDerivationMethod.EXTENSION_LITERAL);      
       formatChild(complexType.getElement());
+    }
+    else if (concreteComponent instanceof XSDSimpleTypeDefinition)
+    {
+      XSDSimpleTypeDefinition simpleType = (XSDSimpleTypeDefinition) concreteComponent;
+      if (baseType instanceof XSDSimpleTypeDefinition)
+      {      
+        XSDVariety variety = simpleType.getVariety();
+        if (variety.getValue() == XSDVariety.ATOMIC)
+        {
+          simpleType.setBaseTypeDefinition((XSDSimpleTypeDefinition)baseType);
+        }
+        else if (variety.getValue() == XSDVariety.UNION)
+        {
+          simpleType.getMemberTypeDefinitions().add(baseType);
+        }
+        else if (variety.getValue() ==  XSDVariety.LIST)
+        {
+          simpleType.setItemTypeDefinition((XSDSimpleTypeDefinition)baseType);
+        }
+      }
     }
   }
 }

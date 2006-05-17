@@ -13,46 +13,56 @@ package org.eclipse.wst.xsd.ui.internal.common.properties.sections;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import com.ibm.icu.util.StringTokenizer;
 
 import org.apache.xerces.util.XMLChar;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
+import org.eclipse.wst.common.ui.internal.search.dialogs.ComponentSpecification;
 import org.eclipse.wst.xsd.ui.internal.actions.CreateElementAction;
 import org.eclipse.wst.xsd.ui.internal.actions.DOMAttribute;
+import org.eclipse.wst.xsd.ui.internal.adt.edit.ComponentReferenceEditManager;
+import org.eclipse.wst.xsd.ui.internal.adt.edit.IComponentDialog;
 import org.eclipse.wst.xsd.ui.internal.common.commands.UpdateNameCommand;
 import org.eclipse.wst.xsd.ui.internal.common.util.Messages;
+import org.eclipse.wst.xsd.ui.internal.dialogs.NewTypeDialog;
+import org.eclipse.wst.xsd.ui.internal.editor.XSDComplexTypeBaseTypeEditManager;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
+import org.eclipse.wst.xsd.ui.internal.editor.XSDTypeReferenceEditManager;
+import org.eclipse.wst.xsd.ui.internal.editor.search.XSDSearchListDialogDelegate;
 import org.eclipse.wst.xsd.ui.internal.util.XSDDOMHelper;
 import org.eclipse.xsd.XSDNamedComponent;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
+import org.eclipse.xsd.XSDTypeDefinition;
 import org.eclipse.xsd.XSDVariety;
 import org.eclipse.xsd.util.XSDConstants;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public class XSDSimpleTypeSection extends AbstractSection
+import com.ibm.icu.util.StringTokenizer;
+
+public class XSDSimpleTypeSection extends RefactoringSection
 {
   protected Text nameText;
   CCombo varietyCombo;
-  Text typesText;
+  CCombo typesCombo;
   CLabel typesLabel;
-  Button button;
+
   XSDSimpleTypeDefinition memberTypeDefinition, itemTypeDefinition, baseTypeDefinition;
 
   public XSDSimpleTypeSection()
@@ -93,9 +103,9 @@ public class XSDSimpleTypeSection extends AbstractSection
     applyAllListeners(nameText);
 
     // ------------------------------------------------------------------
-    // DummyLabel
+    // Refactor/rename hyperlink 
     // ------------------------------------------------------------------
-    getWidgetFactory().createCLabel(composite, ""); //$NON-NLS-1$
+    createRenameHyperlink(composite);
 
     // Variety Label
     CLabel label = getWidgetFactory().createCLabel(composite, XSDEditorPlugin.getXSDString("_UI_LABEL_VARIETY")); //$NON-NLS-1$
@@ -131,18 +141,19 @@ public class XSDSimpleTypeSection extends AbstractSection
     typesLabel = getWidgetFactory().createCLabel(composite, XSDEditorPlugin.getXSDString("_UI_LABEL_MEMBERTYPES")); //$NON-NLS-1$
 
     // ------------------------------------------------------------------
-    // Types Text
+    // Types Combo
     // ------------------------------------------------------------------
-    typesText = getWidgetFactory().createText(composite, ""); //$NON-NLS-1$
-    typesText.addListener(SWT.Modify, this);
+    typesCombo = getWidgetFactory().createCCombo(composite);
+    typesCombo.setEditable(false);
+    typesCombo.setLayoutData(data);
+    typesCombo.addSelectionListener(this);
+
+    
     data = new GridData();
     data.grabExcessHorizontalSpace = true;
     data.horizontalAlignment = GridData.FILL;
-    typesText.setLayoutData(data);
+    typesCombo.setLayoutData(data);
 
-    button = getWidgetFactory().createButton(composite, "", SWT.PUSH); //$NON-NLS-1$
-    button.setImage(XSDEditorPlugin.getXSDImage("icons/browsebutton.gif")); //$NON-NLS-1$
-    button.addSelectionListener(this);
   }
   
   public void setInput(IWorkbenchPart part, ISelection selection)
@@ -190,7 +201,8 @@ public class XSDSimpleTypeSection extends AbstractSection
 
     nameText.setText(""); //$NON-NLS-1$
     varietyCombo.setText(""); //$NON-NLS-1$
-    typesText.setText(""); //$NON-NLS-1$
+    typesCombo.setText(""); //$NON-NLS-1$
+    fillTypesCombo();
     typesLabel.setText(XSDEditorPlugin.getXSDString("_UI_LABEL_BASE_TYPE_WITH_COLON")); //$NON-NLS-1$
 
     if (input instanceof XSDSimpleTypeDefinition)
@@ -220,7 +232,7 @@ public class XSDSimpleTypeSection extends AbstractSection
           {
             name = baseTypeDefinition.getName();
           }
-          typesText.setText(name);
+          typesCombo.setText(name);
           typesLabel.setText(XSDEditorPlugin.getXSDString("_UI_LABEL_BASE_TYPE_WITH_COLON")); //$NON-NLS-1$
         }
         else if (intVariety == XSDVariety.LIST)
@@ -231,7 +243,7 @@ public class XSDSimpleTypeSection extends AbstractSection
           {
             name = itemTypeDefinition.getName();
           }
-          typesText.setText(name);
+          typesCombo.setText(name);
           typesLabel.setText(XSDEditorPlugin.getXSDString("_UI_LABEL_ITEM_TYPE")); //$NON-NLS-1$
         }
         else if (intVariety == XSDVariety.UNION)
@@ -252,7 +264,7 @@ public class XSDSimpleTypeSection extends AbstractSection
             }
           }
           String memberTypes = sb.toString();
-          typesText.setText(memberTypes);
+          typesCombo.setText(memberTypes);
           typesLabel.setText(XSDEditorPlugin.getXSDString("_UI_LABEL_MEMBERTYPES")); //$NON-NLS-1$
         }
       }
@@ -261,9 +273,44 @@ public class XSDSimpleTypeSection extends AbstractSection
 
   }
 
-  public void widgetSelected(SelectionEvent e)
+  public void doWidgetSelected(SelectionEvent e)
   {
-    if (e.widget == varietyCombo)
+    if (e.widget == typesCombo)
+    {
+      IEditorPart editor = getActiveEditor();
+      if (editor == null) return;
+      ComponentReferenceEditManager manager = (ComponentReferenceEditManager)editor.getAdapter(XSDComplexTypeBaseTypeEditManager.class);    
+
+      String selection = typesCombo.getText();
+      ComponentSpecification newValue;
+      IComponentDialog dialog= null;
+      if ( selection.equals(org.eclipse.wst.xsd.ui.internal.editor.Messages._UI_ACTION_BROWSE))
+      {
+        dialog = manager.getBrowseDialog();
+        ((XSDSearchListDialogDelegate) dialog).showComplexTypes(false);
+      }
+      else if ( selection.equals(org.eclipse.wst.xsd.ui.internal.editor.Messages._UI_ACTION_NEW))
+      {
+        dialog = manager.getNewDialog();
+        ((NewTypeDialog) dialog).allowComplexType(false);
+      }
+
+      if (dialog != null)
+      {
+        if (dialog.createAndOpen() == Window.OK)
+        {
+          newValue = dialog.getSelectedComponent();
+          manager.modifyComponentReference(input, newValue);
+        }
+      }
+      else //use the value from selected quickPick item
+      {
+        newValue = getComponentSpecFromQuickPickForValue(selection, manager);
+        if (newValue != null)
+          manager.modifyComponentReference(input, newValue);
+      }
+    }
+    else if (e.widget == varietyCombo)
     {
       if (input != null)
       {
@@ -294,8 +341,8 @@ public class XSDSimpleTypeSection extends AbstractSection
         }
       }
     }
-    else if (e.widget == button)
-    {
+//    else if (e.widget == button)
+//    {
 //      Shell shell = Display.getCurrent().getActiveShell();
 //      Element element = ((XSDConcreteComponent) input).getElement();
 //      Dialog dialog = null;
@@ -305,103 +352,103 @@ public class XSDSimpleTypeSection extends AbstractSection
 //      IFile currentIFile = ((IFileEditorInput) getActiveEditor().getEditorInput()).getFile();
       
       // issue (cs) need to move to common.ui's selection dialog
-      /*
+/*
       XSDComponentSelectionProvider provider = new XSDComponentSelectionProvider(currentIFile, xsdSchema);
       dialog = new XSDComponentSelectionDialog(shell, XSDEditorPlugin.getXSDString("_UI_LABEL_SET_TYPE"), provider);
       provider.setDialog((XSDComponentSelectionDialog) dialog);
-
-      if (input instanceof XSDSimpleTypeDefinition)
-      {
-        XSDSimpleTypeDefinition st = (XSDSimpleTypeDefinition) input;
-        Element simpleTypeElement = st.getElement();
-        if (st.getVariety() == XSDVariety.LIST_LITERAL)
-        {
-          Element listElement = (Element) itemTypeDefinition.getElement();
-          // dialog = new TypesDialog(shell, listElement,
-          // XSDConstants.ITEMTYPE_ATTRIBUTE, xsdSchema);
-          // dialog.showComplexTypes = false;
-          provider.showComplexTypes(false);
-
-          secondaryElement = listElement;
-          property = XSDConstants.ITEMTYPE_ATTRIBUTE;
-        }
-        else if (st.getVariety() == XSDVariety.ATOMIC_LITERAL)
-        {
-          Element derivedByElement = (Element) baseTypeDefinition.getElement();
-          if (derivedByElement != null)
-          {
-            // dialog = new TypesDialog(shell, derivedByElement,
-            // XSDConstants.BASE_ATTRIBUTE, xsdSchema);
-            // dialog.showComplexTypes = false;
-            provider.showComplexTypes(false);
-
-            secondaryElement = derivedByElement;
-            property = XSDConstants.BASE_ATTRIBUTE;
-          }
-          else
-          {
-            return;
-          }
-        }
-        else if (st.getVariety() == XSDVariety.UNION_LITERAL)
-        {
-          SimpleContentUnionMemberTypesDialog unionDialog = new SimpleContentUnionMemberTypesDialog(shell, st);
-          unionDialog.setBlockOnOpen(true);
-          unionDialog.create();
-
-          int result = unionDialog.open();
-          if (result == Window.OK)
-          {
-            String newValue = unionDialog.getResult();
-            // beginRecording(XSDEditorPlugin.getXSDString("_UI_LABEL_MEMBERTYPES_CHANGE"),
-            // element); //$NON-NLS-1$
-            Element unionElement = (Element) memberTypeDefinition.getElement();
-            unionElement.setAttribute(XSDConstants.MEMBERTYPES_ATTRIBUTE, newValue);
-
-            if (newValue.length() > 0)
-            {
-              unionElement.setAttribute(XSDConstants.MEMBERTYPES_ATTRIBUTE, newValue);
-            }
-            else
-            {
-              unionElement.removeAttribute(XSDConstants.MEMBERTYPES_ATTRIBUTE);
-            }
-            // endRecording(unionElement);
-            refresh();
-          }
-          return;
-        }
-        else
-        {
-          property = "type";
-        }
-      }
-      else
-      {
-        property = "type";
-      }
+*/
+//      if (input instanceof XSDSimpleTypeDefinition)
+//      {
+//        XSDSimpleTypeDefinition st = (XSDSimpleTypeDefinition) input;
+//        Element simpleTypeElement = st.getElement();
+//        if (st.getVariety() == XSDVariety.LIST_LITERAL)
+//        {
+//          Element listElement = (Element) itemTypeDefinition.getElement();
+//          // dialog = new TypesDialog(shell, listElement,
+//          // XSDConstants.ITEMTYPE_ATTRIBUTE, xsdSchema);
+//          // dialog.showComplexTypes = false;
+//          provider.showComplexTypes(false);
+//
+//          secondaryElement = listElement;
+//          property = XSDConstants.ITEMTYPE_ATTRIBUTE;
+//        }
+//        else if (st.getVariety() == XSDVariety.ATOMIC_LITERAL)
+//        {
+//          Element derivedByElement = (Element) baseTypeDefinition.getElement();
+//          if (derivedByElement != null)
+//          {
+//            // dialog = new TypesDialog(shell, derivedByElement,
+//            // XSDConstants.BASE_ATTRIBUTE, xsdSchema);
+//            // dialog.showComplexTypes = false;
+//            provider.showComplexTypes(false);
+//
+//            secondaryElement = derivedByElement;
+//            property = XSDConstants.BASE_ATTRIBUTE;
+//          }
+//          else
+//          {
+//            return;
+//          }
+//        }
+//        if (st.getVariety() == XSDVariety.UNION_LITERAL)
+//        {
+//          SimpleContentUnionMemberTypesDialog unionDialog = new SimpleContentUnionMemberTypesDialog(shell, st);
+//          unionDialog.setBlockOnOpen(true);
+//          unionDialog.create();
+//
+//          int result = unionDialog.open();
+//          if (result == Window.OK)
+//          {
+//            String newValue = unionDialog.getResult();
+//            // beginRecording(XSDEditorPlugin.getXSDString("_UI_LABEL_MEMBERTYPES_CHANGE"),
+//            // element); //$NON-NLS-1$
+//            Element unionElement = memberTypeDefinition.getElement();
+//            unionElement.setAttribute(XSDConstants.MEMBERTYPES_ATTRIBUTE, newValue);
+//
+//            if (newValue.length() > 0)
+//            {
+//              unionElement.setAttribute(XSDConstants.MEMBERTYPES_ATTRIBUTE, newValue);
+//            }
+//            else
+//            {
+//              unionElement.removeAttribute(XSDConstants.MEMBERTYPES_ATTRIBUTE);
+//            }
+//            // endRecording(unionElement);
+//            refresh();
+//          }
+//          return;
+//        }
+//        else
+//        {
+//          property = "type";
+//        }
+//      }
+//      else
+//      {
+//        property = "type";
+//      }
       // beginRecording(XSDEditorPlugin.getXSDString("_UI_TYPE_CHANGE"),
       // element); //$NON-NLS-1$
-      dialog.setBlockOnOpen(true);
-      dialog.create();
-      int result = dialog.open();
+//      dialog.setBlockOnOpen(true);
+//      dialog.create();
+//      int result = dialog.open();
+//
+//      if (result == Window.OK)
+//      {
+//        if (secondaryElement == null)
+//        {
+//          secondaryElement = element;
+//        }
+//        XSDSetTypeHelper helper = new XSDSetTypeHelper(currentIFile, xsdSchema);
+//        helper.setType(secondaryElement, property, ((XSDComponentSelectionDialog) dialog).getSelection());
 
-      if (result == Window.OK)
-      {
-        if (secondaryElement == null)
-        {
-          secondaryElement = element;
-        }
-        XSDSetTypeHelper helper = new XSDSetTypeHelper(currentIFile, xsdSchema);
-        helper.setType(secondaryElement, property, ((XSDComponentSelectionDialog) dialog).getSelection());
-
-        XSDSimpleTypeDefinition st = (XSDSimpleTypeDefinition) input;
-        st.setElement(element);
-        updateSimpleTypeFacets();*/
-      }
+//        XSDSimpleTypeDefinition st = (XSDSimpleTypeDefinition) input;
+//        st.setElement(element);
+//        updateSimpleTypeFacets();*/
+//      }
       // endRecording(element);
-    
-    refresh();
+//    }  
+//    refresh();
   }
 
   public boolean shouldUseExtraSpace()
@@ -644,5 +691,58 @@ public class XSDSimpleTypeSection extends AbstractSection
 
     return true;
   }
+  
+  
+  private void fillTypesCombo()
+  {
+    typesCombo.removeAll();
+    
+    IEditorPart editor = getActiveEditor();
+    ComponentReferenceEditManager manager = (ComponentReferenceEditManager)editor.getAdapter(XSDTypeReferenceEditManager.class);    
+    ComponentSpecification[] items = manager.getQuickPicks();
+    
+    typesCombo.add(org.eclipse.wst.xsd.ui.internal.adt.editor.Messages._UI_ACTION_BROWSE);
+    typesCombo.add(org.eclipse.wst.xsd.ui.internal.editor.Messages._UI_ACTION_NEW);
+    
+    for (int i = 0; i < items.length; i++)
+    {
+      typesCombo.add(items[i].getName());
+    }
+
+    // Add the current Type of this attribute if needed
+    XSDSimpleTypeDefinition simpleType = (XSDSimpleTypeDefinition) input;
+    XSDTypeDefinition baseType = simpleType.getBaseType();
+    if (baseType != null && baseType.getQName() != null)
+    {
+      String currentTypeName = baseType.getQName(xsdSchema); //no prefix
+      ComponentSpecification ret = getComponentSpecFromQuickPickForValue(currentTypeName,manager);
+      if (ret == null && currentTypeName != null) //not in quickPick
+      {
+        typesCombo.add(currentTypeName);
+      }
+    }
+  }
+
+  // TODO: common this up with XSDElementDeclarationSection
+  private ComponentSpecification getComponentSpecFromQuickPickForValue(String value, ComponentReferenceEditManager editManager)
+  {
+    if (editManager != null)
+    {  
+      ComponentSpecification[] quickPicks = editManager.getQuickPicks();
+      if (quickPicks != null)
+      {
+        for (int i=0; i < quickPicks.length; i++)
+        {
+          ComponentSpecification componentSpecification = quickPicks[i];
+          if (value != null && value.equals(componentSpecification.getName()))
+          {
+            return componentSpecification;
+          }                
+        }  
+      }
+    }
+    return null;
+  }
+
 
 }

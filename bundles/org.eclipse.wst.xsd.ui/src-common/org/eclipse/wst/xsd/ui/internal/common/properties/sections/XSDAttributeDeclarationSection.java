@@ -34,7 +34,7 @@ import org.eclipse.xsd.XSDAttributeDeclaration;
 import org.eclipse.xsd.XSDTypeDefinition;
 import org.eclipse.xsd.util.XSDConstants;
 
-public class XSDAttributeDeclarationSection extends AbstractSection
+public class XSDAttributeDeclarationSection extends RefactoringSection
 {
   protected Text nameText;
   protected CCombo typeCombo;
@@ -75,12 +75,9 @@ public class XSDAttributeDeclarationSection extends AbstractSection
     applyAllListeners(nameText);
 
     // ------------------------------------------------------------------
-    // DummyLabel
+    // Refactor/rename hyperlink
     // ------------------------------------------------------------------
-    data = new GridData();
-    data.horizontalAlignment = GridData.HORIZONTAL_ALIGN_BEGINNING;
-    data.grabExcessHorizontalSpace = false;
-    getWidgetFactory().createCLabel(composite, ""); //$NON-NLS-1$
+    createRenameHyperlink(composite);
 
     // ------------------------------------------------------------------
     // typeLabel
@@ -211,7 +208,6 @@ public class XSDAttributeDeclarationSection extends AbstractSection
   
   public void doWidgetSelected(SelectionEvent e)
   {
-    super.doWidgetSelected(e);
     if (e.widget == typeCombo)
     {
       IEditorPart editor = getActiveEditor();
@@ -248,6 +244,7 @@ public class XSDAttributeDeclarationSection extends AbstractSection
       }
 //      refresh();
     }
+    super.doWidgetSelected(e);
   }
 
   protected void doHandleEvent(Event event)

@@ -96,12 +96,9 @@ public class XSDElementDeclarationSection extends MultiplicitySection
       applyAllListeners(nameText);   
      
       // ------------------------------------------------------------------
-      // DummyLabel
+      // Refactor/rename hyperlink 
       // ------------------------------------------------------------------
-      data = new GridData();
-      data.horizontalAlignment = GridData.HORIZONTAL_ALIGN_BEGINNING;
-      data.grabExcessHorizontalSpace = false;
-      getWidgetFactory().createCLabel(composite, ""); //$NON-NLS-1$
+      createRenameHyperlink(composite);
 
     // ------------------------------------------------------------------
     // Ref Label
@@ -410,7 +407,6 @@ public class XSDElementDeclarationSection extends MultiplicitySection
     {
       updateMinAttribute();
     }
-
   }
 
   protected void relayout()

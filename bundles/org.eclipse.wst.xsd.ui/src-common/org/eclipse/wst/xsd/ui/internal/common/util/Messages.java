@@ -109,4 +109,5 @@ public class Messages extends NLS
   public static String _UI_ACTION_ADD_ANY_ELEMENT;
   public static String _UI_ACTION_ADD_ANY_ATTRIBUTE;
   public static String _UI_ACTION_SET_BASE_TYPE;
+  public static String _UI_TOOLTIP_RENAME_REFACTOR;
 }
