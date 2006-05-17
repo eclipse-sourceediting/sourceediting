@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--Arbortext, Inc., 1988-2005, v.4002-->
-<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
+ "task.dtd">
+<?Pub Inc?>
 <task id="taddcmod" xml:lang="en-us">
 <title>Adding content models</title>
 <titlealts>
@@ -35,13 +37,13 @@ but they will also work in many other perspectives.</p><p>To add a content
 model to an element, global element, complex type, or group, follow these
 steps:</p></context>
 <steps>
-<step><cmd>In the Graph view, select your complex type, or group:</cmd>
+<step><cmd>In the Design view, select your complex type, or group:</cmd>
 <choices>
 <choice>If you selected a complex type, you can right-click it and click <uicontrol>Add
 Sequence</uicontrol>, or <uicontrol>Add Choice</uicontrol> to add the type
 of content model you want to your complex type. If you wish to use the <uicontrol>all</uicontrol> content
-model, you can change the model by clicking the model in the Graph view, and
-in properties, select <uicontrol>all</uicontrol> as the <uicontrol>Kind</uicontrol>.
+model, you can change the model by clicking the model in the Design view,
+and in properties, select <uicontrol>all</uicontrol> as the <uicontrol>Kind</uicontrol>.
 Your content model is automatically added as a child of your complex type
 - expand in the Outline view to see it. <b>Note:</b> These options will not
 appear if you have set a base type for your complex type. You can either set
@@ -54,18 +56,21 @@ model by selecting these options from the <uicontrol>Kind</uicontrol> menu.</cho
 </choices>
 </step>
 <step><cmd>(Optional) Select the appropriate value in the <uicontrol>MinOccurs</uicontrol> field.</cmd>
-<info>This is the number of times the content model must appear. If you want
-the content model to be optional, select <uicontrol>0</uicontrol>. Otherwise,
-select <uicontrol>1</uicontrol>. </info></step>
+<info>This is the minimum number of times the content model must appear. If
+you want the content model to be optional, select <uicontrol>0</uicontrol>.
+Otherwise, select <uicontrol>1</uicontrol>. </info></step>
 <step><cmd>(Optional) Select the appropriate value in the <uicontrol>MaxOccurs</uicontrol> field.</cmd>
 <info>This is the maximum number of times a content model can appear. You
 can select <uicontrol>unbounded</uicontrol> to indicate there is no maximum
 number of occurrences.</info></step>
 <step><cmd>Click the <uicontrol>Documentation</uicontrol> tab if you want
 to provide any information about this content model.</cmd><info>The <uicontrol>Documentation</uicontrol> page
-is used for human readable material, such as a description, and the <uicontrol>App
-Info</uicontrol> page can be used to provide information for applications.</info>
+is used for human readable material, such as a description.<?Pub Caret?></info>
 </step>
+<step><cmd>Click the <uicontrol>Extensions</uicontrol> tab if you want to
+add application information elements to your annotations of schema components.</cmd>
+<info>The <uicontrol>Extensions</uicontrol> page allows you to specify the
+schema and add XML content to your annotations.</info></step>
 </steps>
 <postreq><p>You can add the following items to a content object model. </p><ul>
 <li>Another content model.</li>
@@ -82,3 +87,4 @@ to extend your content model by any elements belonging to a specified namespace.
 </ul></postreq>
 </taskbody>
 </task>
+<?Pub *0000005317?>

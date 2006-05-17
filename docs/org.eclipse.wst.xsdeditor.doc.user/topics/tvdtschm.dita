@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--Arbortext, Inc., 1988-2005, v.4002-->
-<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
+ "task.dtd">
 <task id="tvdtschm" xml:lang="en-us">
 <title>Validating XML schemas</title>
 <titlealts>
@@ -16,7 +17,7 @@ the Problems view.</shortdesc>
 <taskbody>
 <context><p>The following instructions were written for the Resource perspective,
 but they will also work in many other perspectives.</p><p>To validate an XML
-schema, follow these steps:</p></context>
+schema:</p></context>
 <steps>
 <step><cmd>Right-click your file in the Navigator view and click <uicontrol>Run
 Validation</uicontrol>.</cmd></step>
@@ -24,8 +25,8 @@ Validation</uicontrol>.</cmd></step>
 view to see what problems were logged. </cmd><info> <note>If you receive an
 error message indicating that the Problems view is full, you can increase
 the number of error messages allowed by selecting  <menucascade><uicontrol>Properties
-> Validation</uicontrol></menucascade> from the project's pop-up menu and
-specifying the maximum number of error messages allowed.</note></info></step>
+> Validation</uicontrol></menucascade> <?Pub Caret?>and specifying the maximum
+number of error messages allowed.</note></info></step>
 </steps>
 <result><p>The XML schema support in the XML schema editor is based on the
 W3C XML Schema Recommendation Specification. The XML Schema specifications
@@ -56,3 +57,4 @@ Schema Part 2: Datatypes</linktext>
 </link>
 </related-links>
 </task>
+<?Pub *0000003124?>

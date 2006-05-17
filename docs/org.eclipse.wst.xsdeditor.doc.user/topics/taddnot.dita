@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--Arbortext, Inc., 1988-2005, v.4002-->
-<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
+ "task.dtd">
+<?Pub Inc?>
 <task id="taddnot" xml:lang="en-us">
 <title>Adding notations</title>
 <titlealts>
@@ -38,9 +40,14 @@ Notation</uicontrol>.</cmd></step>
 </step>
 <step><cmd>Click the <uicontrol>Documentation</uicontrol> tab if you want
 to provide any information about this notation.</cmd><info>The <uicontrol>Documentation</uicontrol> page
-is used for human readable material, such as a description, and the <uicontrol>App
+is used for human readable material, such as a description. <uicontrol>App
 Info</uicontrol> page can be used to provide information for applications.</info>
 </step>
+<step><cmd>Click the <uicontrol>Extensions</uicontrol> tab if you want to
+add application information elements to your annotations of schema components.</cmd>
+<info>The <uicontrol>Extensions</uicontrol> page allows you to specify the
+schema and add XML content to your annotations.</info><?Pub Caret?></step>
 </steps>
 </taskbody>
 </task>
+<?Pub *0000002959?>

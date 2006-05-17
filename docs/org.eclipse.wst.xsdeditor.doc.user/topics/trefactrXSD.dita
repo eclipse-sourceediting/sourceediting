@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--Arbortext, Inc., 1988-2005, v.4002-->
-<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
+ "task.dtd">
 <task id="refactoring" xml:lang="en-us">
 <title>Refactoring in XML Schema Files</title>
 <titlealts>
@@ -29,8 +30,8 @@ the artifact, click <menucascade><uicontrol>Refactor</uicontrol><uicontrol>Renam
 for that artifact</info>
 <substeps>
 <substep><cmd>Type in the new name of the artifact.</cmd></substep>
-<substep><cmd><b><i>Optional:</i></b> Click Preview.</cmd><info>A window will
-open indicating all of the changes which will take place due to the refactoring.</info>
+<substep><cmd>(Optional) Click <b>Preview</b><?Pub Caret?>.</cmd><info>A window
+will open indicating all of the changes which will take place due to the refactoring.</info>
 </substep>
 <substep><cmd>Click <uicontrol>OK.</uicontrol></cmd></substep>
 </substeps>
@@ -91,3 +92,4 @@ in all dependant artifacts</result>
 <postreq></postreq>
 </taskbody>
 </task>
+<?Pub *0000003131?>

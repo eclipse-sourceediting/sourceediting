@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--Arbortext, Inc., 1988-2005, v.4002-->
-<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN"  "concept.dtd">
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN"
+ "concept.dtd">
 <?Pub Inc?>
 <concept id="workingwithxmlschemas" xml:lang="en-us">
 <title>Working with XML schemas</title>
-<shortdesc>This sections contains information on the following:</shortdesc>
-<conbody></conbody>
+<shortdesc>XML schemas are an XML language for describing and constraining
+the content of XML files.</shortdesc>
+<conbody>
+<p>This sections contains information on the following:</p><?Pub Caret1?>
+</conbody>
 <related-links>
 <link href="tcxmlsch.dita"><linktext>Creating XML schemas</linktext></link>
 <link href="timpschm.dita"><linktext>Importing XML schemas</linktext></link>
 <link href="tnavsrc.dita"><linktext>Navigating XML schemas</linktext></link>
-<link href="trefactrXSD.dita"><?Pub Caret?><linktext>Refactoring in XML schemas</linktext>
+<link href="trefactrXSD.dita"><linktext>Refactoring in XML schemas</linktext>
 </link>
 <link href="tedtpref.dita"><linktext>Editing XML schema file preferences</linktext>
 </link>
@@ -22,4 +26,4 @@
 <link href="rnmspc.dita"><linktext>XML namespaces</linktext></link>
 </related-links>
 </concept>
-<?Pub *0000001174?>
+<?Pub *0000001267?>

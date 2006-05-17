@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--Arbortext, Inc., 1988-2005, v.4002-->
-<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
+ "task.dtd">
 <task id="taddgrup" xml:lang="en-us">
 <title>Adding groups</title>
 <titlealts>
@@ -28,9 +29,11 @@ Group</uicontrol>.</cmd></step>
 </step>
 <step><cmd>Click the <uicontrol>Documentation</uicontrol> tab if you want
 to provide any information about this group element.</cmd><info>The <uicontrol>Documentation</uicontrol> page
-is used for human readable material, such as a description, and the <uicontrol>App
-Info</uicontrol> page can be used to provide information for applications.</info>
-</step>
+is used for human readable material, such as a description.</info></step>
+<step><cmd>Click the <uicontrol>Extensions</uicontrol> tab if you want to
+add application information elements to your annotations of schema components.</cmd>
+<info>The <uicontrol>Extensions</uicontrol><?Pub Caret?> page allows you to
+specify the schema and add XML content to your annotations.</info></step>
 <step><cmd>In the Outline view, expand the <uicontrol>Groups</uicontrol> folder
 and your new group.</cmd></step>
 <step><cmd>Your group automatically contains a content model. </cmd><info>A
@@ -40,3 +43,4 @@ refer to the related tasks.</info></step>
 </steps>
 </taskbody>
 </task>
+<?Pub *0000002502?>

@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--Arbortext, Inc., 1988-2005, v.4002-->
-<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
+ "task.dtd">
+<?Pub Inc?>
 <task id="taddimpt" xml:lang="en-us">
 <title>Adding import elements</title>
 <titlealts>
@@ -28,23 +30,24 @@ element, follow these steps:</p></context>
 <steps>
 <step><cmd>Open your XML schema in the XML schema editor.</cmd></step>
 <step><cmd>In the Outline view, select your schema.</cmd><info>The entire
-schema and its contents should be displayed in the Graph view.</info></step>
-<step><cmd>In the Graph view, right click in the <b>Directives</b> section
+schema and its contents should be displayed in the Design view.</info></step>
+<step><cmd>In the Design view, right click in the <b>Directives</b> section
 and click <uicontrol>Add Import</uicontrol>.</cmd></step>
-<step><cmd>In the Properties view, click the <b>General</b> tab and click
-the <uicontrol>Browse</uicontrol> <image href="../images/Browse.gif"><alt>This
-graphic is the Browse button</alt></image> button to the right of the <uicontrol>Schema
-location</uicontrol> field.</cmd></step>
-<step><cmd>If you want to import an XML schema located in the workbench, select
-the <uicontrol>Workbench projects</uicontrol> radio button and click <uicontrol>Next</uicontrol>. </cmd>
+<step><cmd>In the Properties view, click the <b>General</b> tab and click <uicontrol>Browse</uicontrol> <image
+href="../images/Browse.gif"><alt>This graphic is the Browse button</alt></image> to
+the right of the <uicontrol>Schema location</uicontrol> field.</cmd></step>
+<step><cmd>If you want to import an XML schema located in the workbench:</cmd>
 <substeps>
+<substep><cmd>Select <uicontrol>Workbench projects</uicontrol> and click <uicontrol>Next</uicontrol>. </cmd>
+</substep>
 <substep><cmd>Select the schema you want to import and click <uicontrol>Finish</uicontrol>.</cmd>
 </substep>
 </substeps>
 </step>
-<step><cmd>If you want to import an XML schema located on the Web, select
-the <uicontrol>HTTP</uicontrol> radio button and click <uicontrol>Next</uicontrol>.</cmd>
+<step><cmd>If you want to import an XML schema located on the Web:<?Pub Caret?></cmd>
 <substeps>
+<substep><cmd>Select <uicontrol>HTTP</uicontrol> and click <uicontrol>Next</uicontrol>.</cmd>
+</substep>
 <substep><cmd>Type the URL of the XML schema and click <uicontrol>Finish</uicontrol>.</cmd>
 <info><note>A local copy of the schema will not be stored in the workbench.
 Every time you validate your schema, the schema's contents will be checked
@@ -58,9 +61,11 @@ XML schema file and display it as read-only in the <uicontrol>Namespace</uicontr
 </step>
 <step><cmd>Click the <uicontrol>Documentation</uicontrol> tab if you want
 to provide any information about this import element.</cmd><info>The <uicontrol>Documentation</uicontrol> page
-is used for human readable material, such as a description, and the <uicontrol>App
-Info</uicontrol> page can be used to provide information for applications.</info>
-</step>
+is used for human readable material, such as a description.</info></step>
+<step><cmd>Click the <uicontrol>Extensions</uicontrol> tab if you want to
+add application information elements to your annotations of schema components.</cmd>
+<info>The <uicontrol>Extensions</uicontrol> page allows you to specify the
+schema and add XML content to your annotations.</info></step>
 </steps>
 <result><p>Once you have added an import element to your XML schema, when
 you define new elements, attributes, complex types, or simple types where
@@ -70,3 +75,4 @@ attribute, complex or simple type.</p></result>
 <postreq></postreq>
 </taskbody>
 </task>
+<?Pub *0000004340?>

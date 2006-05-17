@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--Arbortext, Inc., 1988-2005, v.4002-->
-<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
+ "task.dtd">
+<?Pub Inc?>
 <task id="taddglba" xml:lang="en-us">
 <title>Adding global attributes</title>
 <titlealts>
@@ -19,18 +21,18 @@ or more declarations using an attribute reference.</shortdesc>
 <taskbody>
 <context><p>The following instructions were written for the Resource perspective,
 but they will also work in many other perspectives.</p><p>To add a global
-attribute, follow these steps:</p></context>
+attribute:</p></context>
 <steps>
 <step><cmd>Open your XML schema in the XML schema editor.</cmd></step>
-<step><cmd>In the Graph view, right click in the <b>Attributes</b> section
+<step><cmd>In the Design view, right-click in the <b>Attributes</b> section
 and click <uicontrol>Add Attribute</uicontrol>.</cmd></step>
-<step><cmd>In the Properties view, type the attribute <uicontrol>Name</uicontrol>.</cmd>
+<step><cmd>In the Properties view, enter a name for the attribute in the <uicontrol>Name</uicontrol> field.</cmd>
 </step>
 <step><cmd>In the Properties view, you can select the attribute <uicontrol>Type</uicontrol> from
 the predefined list in the menu next to the <uicontrol>Type</uicontrol> field.</cmd>
-<info><p>Alternately, you can select <uicontrol>Browse</uicontrol> from the
-list for more options. </p><p>The Set Type dialog will appear, and lists all
-built-in and user-defined types currently available. You can change the <uicontrol>Scope</uicontrol> of
+<info><p>Alternatively<?Pub Caret?>, you can select <uicontrol>Browse</uicontrol> from
+the list for more options. </p><p>The Set Type dialog will appear, and lists
+all built-in and user-defined types currently available. You can change the <uicontrol>Scope</uicontrol> of
 the list by selecting one of the following options:<ul>
 <li><uicontrol>Workspace</uicontrol>. Lists all of the types available in
 your workspace. </li>
@@ -44,9 +46,12 @@ the selected working set.</li>
 </step>
 <step><cmd>Click the <uicontrol>Documentation</uicontrol> tab if you want
 to provide any information about this global attribute.</cmd><info>The <uicontrol>Documentation</uicontrol> page
-is used for human readable material, such as a description, and the <uicontrol>App
-Info</uicontrol> page can be used to provide information for applications.</info>
-</step>
+is used for human readable material, such as a description.</info></step>
+<step><cmd>Click the <uicontrol>Extensions</uicontrol> tab if you want to
+add application information elements to your annotations of schema components.</cmd>
+<info>The <uicontrol>Extensions</uicontrol> page allows you to specify the
+schema and add XML content to your annotations.</info></step>
 </steps>
 </taskbody>
 </task>
+<?Pub *0000003230?>

@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--Arbortext, Inc., 1988-2005, v.4002-->
-<!DOCTYPE reference  PUBLIC "-//OASIS//DTD DITA Reference//EN" "reference.dtd">
-<reference id="ricons" xml:lang="en-us">
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DITA Reference//EN"
+ "reference.dtd">
+<reference id="ricons" xml:lang="en-us"><?Pub Caret1?>
 <title>Icons used in the XML schema editor</title>
 <titlealts>
 <searchtitle>XML schema editor icons</searchtitle>
 </titlealts>
-<shortdesc>The following XML schema editor icons appear in the Outline, Graph,
+<shortdesc>The following XML schema editor icons appear in the Outline, Design,
 and Properties view.</shortdesc>
 <prolog><metadata>
 <keywords><indexterm>XML schema editor<indexterm>icons</indexterm></indexterm>
@@ -136,3 +137,4 @@ simple type icon </alt></image></entry>
 </table>
 </refbody>
 </reference>
+<?Pub *0000004581?>

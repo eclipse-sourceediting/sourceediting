@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--Arbortext, Inc., 1988-2005, v.4002-->
-<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
+ "task.dtd">
 <task id="timpschm" xml:lang="en-us">
 <title>Importing XML schemas</title>
 <titlealts>
@@ -17,7 +18,7 @@ of the XML schema.</shortdesc>
 <taskbody>
 <context><p>The following instructions were written for the Resource perspective,
 but they will also work in many other perspectives.</p><p>To import an XML
-schema into the workbench, follow these steps:</p></context>
+schema into the workbench<?Pub Caret?>:</p></context>
 <steps>
 <step><cmd>Click <menucascade><uicontrol>File > Import</uicontrol></menucascade>.</cmd>
 </step>
@@ -30,3 +31,4 @@ you are finished, click <uicontrol>Finish</uicontrol>.</info></step>
 it to open it in the XML schema editor.</p></result>
 </taskbody>
 </task>
+<?Pub *0000001448?>
