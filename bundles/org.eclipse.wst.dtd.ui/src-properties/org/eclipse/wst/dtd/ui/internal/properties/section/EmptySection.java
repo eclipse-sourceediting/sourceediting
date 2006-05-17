@@ -43,4 +43,8 @@ public class EmptySection extends AbstractSection {
 	public boolean shouldUseExtraSpace() {
 		return false;
 	}
+	
+	public int getMinimumHeight() {
+		return 0;
+	}
 }

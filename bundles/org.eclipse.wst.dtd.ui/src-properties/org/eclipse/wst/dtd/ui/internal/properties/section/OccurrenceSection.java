@@ -11,13 +11,17 @@
  *******************************************************************************/
 package org.eclipse.wst.dtd.ui.internal.properties.section;
 
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.FontMetrics;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.views.properties.tabbed.ITabbedPropertyConstants;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 import org.eclipse.wst.dtd.core.internal.CMRepeatableNode;
@@ -32,6 +36,7 @@ public class OccurrenceSection extends AbstractSection {
 
 	private CCombo occurrenceCombo;
 	private String[] occurrenceComboValues = {ONCE, ONE_OR_MORE, OPTIONAL, ZERO_OR_MORE};
+	private FontMetrics fFontMetrics;
 
 	/**
 	 * @see org.eclipse.wst.common.ui.properties.internal.provisional.ITabbedPropertySection#createControls(org.eclipse.swt.widgets.Composite,
@@ -41,21 +46,23 @@ public class OccurrenceSection extends AbstractSection {
 		super.createControls(parent, factory);
 		Composite composite = getWidgetFactory().createFlatFormComposite(parent);
 
-		occurrenceCombo = getWidgetFactory().createCCombo(composite, SWT.FLAT);
-		FormData data = new FormData();
-		data.left = new FormAttachment(0, 100);
-		data.right = new FormAttachment(100, 0);
+		// Create label first then attach other control to it
+		CLabel usageLabel = getWidgetFactory().createCLabel(composite, OCCURENCE);
+		initializeFontMetrics(usageLabel);
+		int labelWidth = getLabelWidth(usageLabel.getText());
+		FormData data = new FormData(labelWidth, SWT.DEFAULT);
+		data.left = new FormAttachment(0, 0);
 		data.top = new FormAttachment(0, 0);
+		usageLabel.setLayoutData(data);
+
+		occurrenceCombo = getWidgetFactory().createCCombo(composite, SWT.FLAT);
+		data = new FormData();
+		data.left = new FormAttachment(usageLabel, -ITabbedPropertyConstants.HSPACE);
+		data.right = new FormAttachment(100, 0);
+		data.top = new FormAttachment(usageLabel, 0, SWT.CENTER);
 		occurrenceCombo.setLayoutData(data);
 		occurrenceCombo.addSelectionListener(this);
 		occurrenceCombo.setItems(occurrenceComboValues);
-
-		CLabel usageLabel = getWidgetFactory().createCLabel(composite, OCCURENCE);
-		data = new FormData();
-		data.left = new FormAttachment(0, 0);
-		data.right = new FormAttachment(occurrenceCombo, -ITabbedPropertyConstants.HSPACE);
-		data.top = new FormAttachment(occurrenceCombo, 0, SWT.CENTER);
-		usageLabel.setLayoutData(data);
 	}
 
 	/*
@@ -98,4 +105,29 @@ public class OccurrenceSection extends AbstractSection {
 		}
 	}
 
+	/**
+	 * Initilize font metrics
+	 * 
+	 * @param control
+	 */
+	private void initializeFontMetrics(Control control) {
+		GC gc = new GC(control);
+		gc.setFont(control.getFont());
+		fFontMetrics = gc.getFontMetrics();
+		gc.dispose();
+	}
+
+	/**
+	 * Determine appropriate label width
+	 * 
+	 * @param labelText
+	 * @return
+	 */
+	private int getLabelWidth(String labelText) {
+		int labelWidth = 98;
+
+		int pixels = Dialog.convertWidthInCharsToPixels(fFontMetrics, labelText.length() + 5);
+		labelWidth = Math.max(pixels, labelWidth);
+		return labelWidth;
+	}
 }

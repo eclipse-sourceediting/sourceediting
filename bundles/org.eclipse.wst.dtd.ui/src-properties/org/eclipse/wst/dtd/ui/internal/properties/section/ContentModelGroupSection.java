@@ -11,13 +11,17 @@
  *******************************************************************************/
 package org.eclipse.wst.dtd.ui.internal.properties.section;
 
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.FontMetrics;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.views.properties.tabbed.ITabbedPropertyConstants;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 import org.eclipse.wst.dtd.core.internal.CMGroupNode;
@@ -30,6 +34,7 @@ public class ContentModelGroupSection extends AbstractSection {
 
 	private CCombo modelGroupCombo;
 	private String[] modelGroupComboValues = {SEQUENCE, CHOICE};
+	private FontMetrics fFontMetrics;
 
 	/**
 	 * @see org.eclipse.wst.common.ui.properties.internal.provisional.ITabbedPropertySection#createControls(org.eclipse.swt.widgets.Composite,
@@ -39,22 +44,23 @@ public class ContentModelGroupSection extends AbstractSection {
 		super.createControls(parent, factory);
 		Composite composite = getWidgetFactory().createFlatFormComposite(parent);
 
-		modelGroupCombo = getWidgetFactory().createCCombo(composite, SWT.FLAT);
-		FormData data = new FormData();
-		data.left = new FormAttachment(0, 100);
-		data.right = new FormAttachment(100, 0);
+		// Create label first then attach other control to it
+		CLabel cLabel = getWidgetFactory().createCLabel(composite, MODEL_GROUP);
+		initializeFontMetrics(cLabel);
+		int labelWidth = getLabelWidth(cLabel.getText());
+		FormData data = new FormData(labelWidth, SWT.DEFAULT);
+		data.left = new FormAttachment(0, 0);
 		data.top = new FormAttachment(0, 0);
+		cLabel.setLayoutData(data);
+
+		modelGroupCombo = getWidgetFactory().createCCombo(composite, SWT.FLAT);
+		data = new FormData();
+		data.left = new FormAttachment(cLabel, -ITabbedPropertyConstants.HSPACE);
+		data.right = new FormAttachment(100);
+		data.top = new FormAttachment(cLabel, 0, SWT.CENTER);
 		modelGroupCombo.setLayoutData(data);
 		modelGroupCombo.addSelectionListener(this);
 		modelGroupCombo.setItems(modelGroupComboValues);
-
-		CLabel cLabel = getWidgetFactory().createCLabel(composite, MODEL_GROUP);
-		data = new FormData();
-		data.left = new FormAttachment(0, 0);
-		data.right = new FormAttachment(modelGroupCombo, -ITabbedPropertyConstants.HSPACE);
-		data.top = new FormAttachment(modelGroupCombo, 0, SWT.CENTER);
-		cLabel.setLayoutData(data);
-
 	}
 
 	/*
@@ -87,6 +93,32 @@ public class ContentModelGroupSection extends AbstractSection {
 					node.setConnector(CMGroupNode.SEQUENCE);
 			}
 		}
+	}
+
+	/**
+	 * Initilize font metrics
+	 * 
+	 * @param control
+	 */
+	private void initializeFontMetrics(Control control) {
+		GC gc = new GC(control);
+		gc.setFont(control.getFont());
+		fFontMetrics = gc.getFontMetrics();
+		gc.dispose();
+	}
+
+	/**
+	 * Determine appropriate label width
+	 * 
+	 * @param labelText
+	 * @return
+	 */
+	private int getLabelWidth(String labelText) {
+		int labelWidth = 98;
+
+		int pixels = Dialog.convertWidthInCharsToPixels(fFontMetrics, labelText.length() + 5);
+		labelWidth = Math.max(pixels, labelWidth);
+		return labelWidth;
 	}
 
 }

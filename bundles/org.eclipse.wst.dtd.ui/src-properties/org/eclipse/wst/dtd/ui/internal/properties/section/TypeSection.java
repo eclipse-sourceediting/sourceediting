@@ -11,13 +11,17 @@
  *******************************************************************************/
 package org.eclipse.wst.dtd.ui.internal.properties.section;
 
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.FontMetrics;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.views.properties.tabbed.ITabbedPropertyConstants;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 import org.eclipse.wst.dtd.core.internal.Attribute;
@@ -28,6 +32,7 @@ public class TypeSection extends AbstractSection {
 
 	private CCombo typeCombo;
 	private String[] typeComboValues = {Attribute.CDATA, Attribute.ID, Attribute.IDREF, Attribute.IDREFS, Attribute.ENTITY, Attribute.ENTITIES, Attribute.NMTOKEN, Attribute.NMTOKENS, Attribute.ENUMERATED_NAME, Attribute.ENUMERATED_NOTATION};
+	private FontMetrics fFontMetrics;
 
 	/**
 	 * @see org.eclipse.wst.common.ui.properties.internal.provisional.ITabbedPropertySection#createControls(org.eclipse.swt.widgets.Composite,
@@ -36,28 +41,25 @@ public class TypeSection extends AbstractSection {
 	public void createControls(Composite parent, TabbedPropertySheetWidgetFactory factory) {
 		super.createControls(parent, factory);
 		Composite composite = getWidgetFactory().createFlatFormComposite(parent);
-		FormData data = new FormData();
+		FormData data;
+
+		// Create label first then attach other control to it
+		CLabel cLabel = getWidgetFactory().createCLabel(composite, TYPE);
+		initializeFontMetrics(cLabel);
+		int labelWidth = getLabelWidth(cLabel.getText());
+		data = new FormData(labelWidth, SWT.DEFAULT);
 		data.left = new FormAttachment(0, 0);
-		data.right = new FormAttachment(100, 0);
 		data.top = new FormAttachment(0, 0);
-		data.bottom = new FormAttachment(100, 0);
+		cLabel.setLayoutData(data);
 
 		typeCombo = getWidgetFactory().createCCombo(composite, SWT.FLAT);
 		data = new FormData();
-		data.left = new FormAttachment(0, 100);
+		data.left = new FormAttachment(cLabel, -ITabbedPropertyConstants.HSPACE);
 		data.right = new FormAttachment(100, 0);
-		data.top = new FormAttachment(0, 0);
+		data.top = new FormAttachment(cLabel, 0, SWT.CENTER);
 		typeCombo.setLayoutData(data);
 		typeCombo.addSelectionListener(this);
 		typeCombo.setItems(typeComboValues);
-
-		CLabel cLabel = getWidgetFactory().createCLabel(composite, TYPE);
-		data = new FormData();
-		data.left = new FormAttachment(0, 0);
-		data.right = new FormAttachment(typeCombo, -ITabbedPropertyConstants.HSPACE);
-		data.top = new FormAttachment(typeCombo, 0, SWT.CENTER);
-		cLabel.setLayoutData(data);
-
 	}
 
 	/*
@@ -90,4 +92,29 @@ public class TypeSection extends AbstractSection {
 		return false;
 	}
 
+	/**
+	 * Initilize font metrics
+	 * 
+	 * @param control
+	 */
+	private void initializeFontMetrics(Control control) {
+		GC gc = new GC(control);
+		gc.setFont(control.getFont());
+		fFontMetrics = gc.getFontMetrics();
+		gc.dispose();
+	}
+
+	/**
+	 * Determine appropriate label width
+	 * 
+	 * @param labelText
+	 * @return
+	 */
+	private int getLabelWidth(String labelText) {
+		int labelWidth = 98;
+
+		int pixels = Dialog.convertWidthInCharsToPixels(fFontMetrics, labelText.length() + 5);
+		labelWidth = Math.max(pixels, labelWidth);
+		return labelWidth;
+	}
 }

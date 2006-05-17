@@ -12,6 +12,7 @@
 package org.eclipse.wst.dtd.ui.internal.properties.section;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.Window;
@@ -20,10 +21,13 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.FontMetrics;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
@@ -60,6 +64,7 @@ public class NewEntitySection extends AbstractSection {
 	private CCombo typeCombo;
 	private String[] typeComboValues = {PARAMETER, GENERAL};
 	private PageBook pageBook;
+	private FontMetrics fFontMetrics;
 
 	/**
 	 * @see org.eclipse.wst.common.ui.properties.internal.provisional.ITabbedPropertySection#createControls(org.eclipse.swt.widgets.Composite,
@@ -95,49 +100,49 @@ public class NewEntitySection extends AbstractSection {
 		data.top = new FormAttachment(0, 0);
 		entityCommonComposite.setLayoutData(data);
 
+		// Create label first then attach other control to it
+		CLabel nameLabel = getWidgetFactory().createCLabel(entityCommonComposite, NAME); //$NON-NLS-1$
+		initializeFontMetrics(nameLabel);
+		int labelWidth = getLabelWidth(nameLabel.getText());
+		data = new FormData(labelWidth, SWT.DEFAULT);
+		data.left = new FormAttachment(0, 0);
+		data.top = new FormAttachment(0, 0);
+		nameLabel.setLayoutData(data);
+
 		nameText = getWidgetFactory().createText(entityCommonComposite, "", SWT.NONE); //$NON-NLS-1$    
 		data = new FormData();
-		data.left = new FormAttachment(0, 100);
-		data.right = new FormAttachment(100, -rightMarginSpace - ITabbedPropertyConstants.HSPACE);
-		data.top = new FormAttachment(0, 0);
+		data.left = new FormAttachment(nameLabel, -ITabbedPropertyConstants.HSPACE);
+		data.right = new FormAttachment(100, 0);
+		data.top = new FormAttachment(nameLabel, 0, SWT.CENTER);
 		nameText.setLayoutData(data);
 		nameText.addListener(SWT.Modify, this);
 
-		CLabel nameLabel = getWidgetFactory().createCLabel(entityCommonComposite, NAME); //$NON-NLS-1$
-		data = new FormData();
+		// Create label first then attach other control to it
+		CLabel cLabel = getWidgetFactory().createCLabel(entityCommonComposite, ENTITY_TYPE);
+		labelWidth = getLabelWidth(cLabel.getText());
+		data = new FormData(labelWidth, SWT.DEFAULT);
 		data.left = new FormAttachment(0, 0);
-		data.right = new FormAttachment(nameText, +ITabbedPropertyConstants.HSPACE);
-		data.top = new FormAttachment(nameText, 0, SWT.CENTER);
-		nameLabel.setLayoutData(data);
+		data.top = new FormAttachment(nameLabel, +ITabbedPropertyConstants.VSPACE);
+		cLabel.setLayoutData(data);
 
 		// Create Checkbox
 		checkBox = getWidgetFactory().createButton(entityCommonComposite, EXTERNAL_ENTITY, SWT.CHECK); //$NON-NLS-1$
+		data = new FormData();
+		data.right = new FormAttachment(100, 0);
+		data.top = new FormAttachment(cLabel, 0, SWT.CENTER);
+		checkBox.setLayoutData(data);
 		checkBox.addSelectionListener(this);
 
 		// Create CCombo
 		typeCombo = getWidgetFactory().createCCombo(entityCommonComposite, SWT.FLAT | SWT.READ_ONLY);
+		data = new FormData();
+		data.left = new FormAttachment(cLabel, -ITabbedPropertyConstants.HSPACE - 2);
+		data.right = new FormAttachment(checkBox, -ITabbedPropertyConstants.HSPACE);
+		data.top = new FormAttachment(cLabel, 0, SWT.CENTER);
+		typeCombo.setLayoutData(data);
 		typeCombo.addSelectionListener(this);
 		typeCombo.setItems(typeComboValues);
 		typeCombo.setText(PARAMETER);
-
-		FormData checkBoxFormData = new FormData();
-		checkBoxFormData.left = new FormAttachment(90, -rightMarginSpace + 2);
-		checkBoxFormData.right = new FormAttachment(100, 0);
-		checkBoxFormData.top = new FormAttachment(typeCombo, 0, SWT.CENTER);
-		checkBox.setLayoutData(checkBoxFormData);
-
-		FormData typeComboFormData = new FormData();
-		typeComboFormData.left = new FormAttachment(0, 100);
-		typeComboFormData.right = new FormAttachment(checkBox, 0);
-		typeComboFormData.top = new FormAttachment(nameText, +ITabbedPropertyConstants.VSPACE);
-		typeCombo.setLayoutData(typeComboFormData);
-
-		CLabel cLabel = getWidgetFactory().createCLabel(entityCommonComposite, ENTITY_TYPE);
-		data = new FormData();
-		data.left = new FormAttachment(0, 0);
-		data.right = new FormAttachment(typeCombo, -ITabbedPropertyConstants.HSPACE);
-		data.top = new FormAttachment(typeCombo, 0, SWT.CENTER);
-		cLabel.setLayoutData(data);
 
 		return entityCommonComposite;
 	}
@@ -149,25 +154,25 @@ public class NewEntitySection extends AbstractSection {
 		FormData data = new FormData();
 		data.left = new FormAttachment(0, 0);
 		data.right = new FormAttachment(100, 0);
-		data.top = new FormAttachment(entityCommonComposite, +ITabbedPropertyConstants.VSPACE);
-		// data.bottom = new FormAttachment(100,0);
+		data.top = new FormAttachment(entityCommonComposite, -ITabbedPropertyConstants.VSPACE);
 		internalEntityComposite.setLayoutData(data);
 
+		// Create label first then attach other control to it
+		CLabel entityValueLabel = getWidgetFactory().createCLabel(internalEntityComposite, VALUE); //$NON-NLS-1$
+		int labelWidth = getLabelWidth(entityValueLabel.getText());
+		data = new FormData(labelWidth, SWT.DEFAULT);
+		data.left = new FormAttachment(0, 0);
+		data.top = new FormAttachment(0, 0);
+		entityValueLabel.setLayoutData(data);
+
 		entityValueText = getWidgetFactory().createText(internalEntityComposite, "", SWT.NONE); //$NON-NLS-1$
+		data = new FormData();
+		data.left = new FormAttachment(entityValueLabel, -ITabbedPropertyConstants.HSPACE);
+		data.right = new FormAttachment(100, 0);
+		data.top = new FormAttachment(entityValueLabel, 0, SWT.CENTER);
+		entityValueText.setLayoutData(data);
 		entityValueText.setEditable(true);
 		entityValueText.addListener(SWT.Modify, this);
-		data = new FormData();
-		data.left = new FormAttachment(0, 100);
-		data.right = new FormAttachment(100, -rightMarginSpace - ITabbedPropertyConstants.HSPACE);
-		data.top = new FormAttachment(0, 0);
-		entityValueText.setLayoutData(data);
-
-		CLabel entityValueLabel = getWidgetFactory().createCLabel(internalEntityComposite, VALUE); //$NON-NLS-1$
-		data = new FormData();
-		data.left = new FormAttachment(0, 0);
-		data.right = new FormAttachment(entityValueText, 0);
-		data.top = new FormAttachment(entityValueText, 0, SWT.CENTER);
-		entityValueLabel.setLayoutData(data);
 
 		return internalEntityComposite;
 	}
@@ -179,57 +184,53 @@ public class NewEntitySection extends AbstractSection {
 		FormData data = new FormData();
 		data.left = new FormAttachment(0, 0);
 		data.right = new FormAttachment(100, 0);
-		data.top = new FormAttachment(entityCommonComposite, +ITabbedPropertyConstants.VSPACE);
-		// data.bottom = new FormAttachment(100,0);
+		data.top = new FormAttachment(entityCommonComposite, -ITabbedPropertyConstants.VSPACE);
 		externalEntityComposite.setLayoutData(data);
+
+		// Create label first then attach other control to it
+		CLabel publicIdLabel = getWidgetFactory().createCLabel(externalEntityComposite, PUBLIC_ID); //$NON-NLS-1$
+		int labelWidth = getLabelWidth(publicIdLabel.getText());
+		data = new FormData(labelWidth, SWT.DEFAULT);
+		data.left = new FormAttachment(0, 0);
+		data.top = new FormAttachment(0, 0);
+		publicIdLabel.setLayoutData(data);
 
 		publicIdText = getWidgetFactory().createText(externalEntityComposite, "", SWT.NONE); //$NON-NLS-1$
 		publicIdText.setEditable(true);
-		publicIdText.addListener(SWT.Modify, this);
 		data = new FormData();
-		data.left = new FormAttachment(0, 100);
-		data.right = new FormAttachment(100, -rightMarginSpace - ITabbedPropertyConstants.HSPACE);
-		// data.top = new FormAttachment(nameText,
-		// +ITabbedPropertyConstants.VSPACE);
-		data.top = new FormAttachment(0, 0);
+		data.left = new FormAttachment(publicIdLabel, -ITabbedPropertyConstants.HSPACE);
+		data.right = new FormAttachment(100, 0);
+		data.top = new FormAttachment(publicIdLabel, 0, SWT.CENTER);
 		publicIdText.setLayoutData(data);
+		publicIdText.addListener(SWT.Modify, this);
 
-		CLabel publicIdLabel = getWidgetFactory().createCLabel(externalEntityComposite, PUBLIC_ID); //$NON-NLS-1$
-		data = new FormData();
+		// Create label first then attach other control to it
+		// Create System ID Label
+		CLabel systemIdLabel = getWidgetFactory().createCLabel(externalEntityComposite, SYSTEM_ID); //$NON-NLS-1$
+		labelWidth = getLabelWidth(systemIdLabel.getText());
+		data = new FormData(labelWidth, SWT.DEFAULT);
 		data.left = new FormAttachment(0, 0);
-		data.right = new FormAttachment(publicIdText, 0);
-		data.top = new FormAttachment(publicIdText, 0, SWT.CENTER);
-		publicIdLabel.setLayoutData(data);
+		data.top = new FormAttachment(publicIdLabel, +ITabbedPropertyConstants.VSPACE);
+		systemIdLabel.setLayoutData(data);
 
 		// Create Wizard Button
 		wizardButton = getWidgetFactory().createButton(externalEntityComposite, "", SWT.NONE); //$NON-NLS-1$
 		wizardButton.setImage(AbstractUIPlugin.imageDescriptorFromPlugin(DTDUIPlugin.getDefault().getBundle().getSymbolicName(), "icons/browsebutton.gif").createImage()); //$NON-NLS-1$
+		data = new FormData();
+		data.right = new FormAttachment(100, 0);
+		data.top = new FormAttachment(systemIdLabel, 0, SWT.CENTER);
+		wizardButton.setLayoutData(data);
+		wizardButton.addSelectionListener(this);
 
 		// Create System ID Text
 		systemIdText = getWidgetFactory().createText(externalEntityComposite, "", SWT.NONE); //$NON-NLS-1$
 		// systemIdText.setEditable(false);
-
-		FormData buttonFormData = new FormData();
-		buttonFormData.left = new FormAttachment(100, -rightMarginSpace + 2);
-		buttonFormData.right = new FormAttachment(100, 0);
-		buttonFormData.top = new FormAttachment(systemIdText, 0, SWT.CENTER);
-		wizardButton.setLayoutData(buttonFormData);
-		wizardButton.addSelectionListener(this);
-
-		FormData systemIdData = new FormData();
-		systemIdData.left = new FormAttachment(0, 100);
-		systemIdData.right = new FormAttachment(wizardButton, 0);
-		systemIdData.top = new FormAttachment(publicIdText, +ITabbedPropertyConstants.VSPACE);
-		systemIdText.setLayoutData(systemIdData);
-		systemIdText.addListener(SWT.Modify, this);
-
-		// Create System ID Label
-		CLabel systemIdLabel = getWidgetFactory().createCLabel(externalEntityComposite, SYSTEM_ID); //$NON-NLS-1$
 		data = new FormData();
-		data.left = new FormAttachment(0, 0);
-		data.right = new FormAttachment(systemIdText, 0);
-		data.top = new FormAttachment(systemIdText, 0, SWT.CENTER);
-		systemIdLabel.setLayoutData(data);
+		data.left = new FormAttachment(systemIdLabel, -ITabbedPropertyConstants.HSPACE);
+		data.right = new FormAttachment(wizardButton, -ITabbedPropertyConstants.HSPACE);
+		data.top = new FormAttachment(systemIdLabel, 0, SWT.CENTER);
+		systemIdText.setLayoutData(data);
+		systemIdText.addListener(SWT.Modify, this);
 
 		return externalEntityComposite;
 	}
@@ -361,5 +362,31 @@ public class NewEntitySection extends AbstractSection {
 			}
 		}
 
+	}
+
+	/**
+	 * Initilize font metrics
+	 * 
+	 * @param control
+	 */
+	private void initializeFontMetrics(Control control) {
+		GC gc = new GC(control);
+		gc.setFont(control.getFont());
+		fFontMetrics = gc.getFontMetrics();
+		gc.dispose();
+	}
+
+	/**
+	 * Determine appropriate label width
+	 * 
+	 * @param labelText
+	 * @return
+	 */
+	private int getLabelWidth(String labelText) {
+		int labelWidth = 98;
+
+		int pixels = Dialog.convertWidthInCharsToPixels(fFontMetrics, labelText.length() + 5);
+		labelWidth = Math.max(pixels, labelWidth);
+		return labelWidth;
 	}
 }

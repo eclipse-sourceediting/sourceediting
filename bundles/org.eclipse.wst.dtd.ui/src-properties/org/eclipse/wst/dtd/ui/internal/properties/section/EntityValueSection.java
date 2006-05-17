@@ -11,11 +11,15 @@
  *******************************************************************************/
 package org.eclipse.wst.dtd.ui.internal.properties.section;
 
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
+import org.eclipse.swt.graphics.FontMetrics;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.views.properties.tabbed.ITabbedPropertyConstants;
@@ -35,6 +39,7 @@ public class EntityValueSection extends AbstractSection {
 	private CLabel valueLabel;
 	private CLabel publicIdLabel;
 	private CLabel systemIdLabel;
+	private FontMetrics fFontMetrics;
 
 	public void doHandleEvent(Event event) {
 		if (event.widget == valueText) {
@@ -72,53 +77,57 @@ public class EntityValueSection extends AbstractSection {
 		Composite composite = getWidgetFactory().createFlatFormComposite(parent);
 		FormData data;
 
+		// Create label first then attach other control to it
+		valueLabel = getWidgetFactory().createCLabel(composite, VALUE);
+		initializeFontMetrics(valueLabel);
+		int labelWidth = getLabelWidth(valueLabel.getText());
+		data = new FormData(labelWidth, SWT.DEFAULT);
+		data.left = new FormAttachment(0, 0);
+		data.top = new FormAttachment(0, 0);
+		valueLabel.setLayoutData(data);
+
 		// Entity Value
 		valueText = getWidgetFactory().createText(composite, ""); //$NON-NLS-1$
 		data = new FormData();
-		data.left = new FormAttachment(0, 100);
+		data.left = new FormAttachment(valueLabel, -ITabbedPropertyConstants.HSPACE);
 		data.right = new FormAttachment(100, 0);
-		data.top = new FormAttachment(0, 0);
+		data.top = new FormAttachment(valueLabel, 0, SWT.CENTER);
 		valueText.setLayoutData(data);
 		valueText.addListener(SWT.Modify, this);
 
-		valueLabel = getWidgetFactory().createCLabel(composite, VALUE);
-		data = new FormData();
+		// Create label first then attach other control to it
+		publicIdLabel = getWidgetFactory().createCLabel(composite, PUBLIC_ID);
+		labelWidth = getLabelWidth(publicIdLabel.getText());
+		data = new FormData(labelWidth, SWT.DEFAULT);
 		data.left = new FormAttachment(0, 0);
-		data.right = new FormAttachment(valueText, -ITabbedPropertyConstants.HSPACE);
-		data.top = new FormAttachment(valueText, 0, SWT.CENTER);
-		valueLabel.setLayoutData(data);
+		data.top = new FormAttachment(valueLabel, +ITabbedPropertyConstants.VSPACE);
+		publicIdLabel.setLayoutData(data);
 
 		// Public ID
 		publicIdText = getWidgetFactory().createText(composite, ""); //$NON-NLS-1$
 		data = new FormData();
-		data.left = new FormAttachment(0, 100);
+		data.left = new FormAttachment(publicIdLabel, -ITabbedPropertyConstants.HSPACE);
 		data.right = new FormAttachment(100, 0);
-		data.top = new FormAttachment(valueText, +ITabbedPropertyConstants.VSPACE);
+		data.top = new FormAttachment(publicIdLabel, 0, SWT.CENTER);
 		publicIdText.setLayoutData(data);
 		publicIdText.addListener(SWT.Modify, this);
 
-		publicIdLabel = getWidgetFactory().createCLabel(composite, PUBLIC_ID);
-		data = new FormData();
+		// Create label first then attach other control to it
+		systemIdLabel = getWidgetFactory().createCLabel(composite, SYSTEM_ID);
+		labelWidth = getLabelWidth(systemIdLabel.getText());
+		data = new FormData(labelWidth, SWT.DEFAULT);
 		data.left = new FormAttachment(0, 0);
-		data.right = new FormAttachment(publicIdText, -ITabbedPropertyConstants.HSPACE);
-		data.top = new FormAttachment(publicIdText, 0, SWT.CENTER);
-		publicIdLabel.setLayoutData(data);
+		data.top = new FormAttachment(publicIdLabel, +ITabbedPropertyConstants.VSPACE);
+		systemIdLabel.setLayoutData(data);
 
 		// System ID
 		systemIdText = getWidgetFactory().createText(composite, ""); //$NON-NLS-1$
 		data = new FormData();
-		data.left = new FormAttachment(0, 100);
+		data.left = new FormAttachment(systemIdLabel, -ITabbedPropertyConstants.HSPACE);
 		data.right = new FormAttachment(100, 0);
-		data.top = new FormAttachment(publicIdText, +ITabbedPropertyConstants.VSPACE);
+		data.top = new FormAttachment(systemIdLabel, 0, SWT.CENTER);
 		systemIdText.setLayoutData(data);
 		systemIdText.addListener(SWT.Modify, this);
-
-		systemIdLabel = getWidgetFactory().createCLabel(composite, SYSTEM_ID);
-		data = new FormData();
-		data.left = new FormAttachment(0, 0);
-		data.right = new FormAttachment(systemIdText, -ITabbedPropertyConstants.HSPACE);
-		data.top = new FormAttachment(systemIdText, 0, SWT.CENTER);
-		systemIdLabel.setLayoutData(data);
 	}
 
 	/*
@@ -169,5 +178,31 @@ public class EntityValueSection extends AbstractSection {
 
 	private boolean isExternalEntity() {
 		return EntityTypeSection.isExternalEntity;
+	}
+
+	/**
+	 * Initilize font metrics
+	 * 
+	 * @param control
+	 */
+	private void initializeFontMetrics(Control control) {
+		GC gc = new GC(control);
+		gc.setFont(control.getFont());
+		fFontMetrics = gc.getFontMetrics();
+		gc.dispose();
+	}
+
+	/**
+	 * Determine appropriate label width
+	 * 
+	 * @param labelText
+	 * @return
+	 */
+	private int getLabelWidth(String labelText) {
+		int labelWidth = 98;
+
+		int pixels = Dialog.convertWidthInCharsToPixels(fFontMetrics, labelText.length() + 5);
+		labelWidth = Math.max(pixels, labelWidth);
+		return labelWidth;
 	}
 }
