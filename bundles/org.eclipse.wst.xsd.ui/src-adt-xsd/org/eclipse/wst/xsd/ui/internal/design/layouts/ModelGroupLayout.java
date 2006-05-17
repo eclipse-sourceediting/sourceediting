@@ -24,7 +24,7 @@ import org.eclipse.wst.xsd.ui.internal.design.figures.SpacingFigure;
 public class ModelGroupLayout extends AbstractLayout
 {
   protected boolean isHorizontal;
-  protected int spacing = 7;
+  protected int spacing = 10;
   protected int border = 0;
 
   public ModelGroupLayout()

@@ -295,7 +295,7 @@ public class XSDModelGroupRouter extends AbstractRouter
 
     Ray start = new Ray(startPoint);
     Ray end = new Ray(endPoint);
-    Ray average = new Ray(startPoint.x + 2, startPoint.y); // start.getAveraged(end);
+    Ray average = new Ray(startPoint.x + 4, startPoint.y); // start.getAveraged(end);
 
     Ray direction = new Ray(start, end);
     Ray startNormal = getStartDirection(conn);

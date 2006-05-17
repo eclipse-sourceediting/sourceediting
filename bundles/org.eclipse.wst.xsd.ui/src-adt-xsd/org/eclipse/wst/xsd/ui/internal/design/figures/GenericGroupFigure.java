@@ -11,7 +11,10 @@
 package org.eclipse.wst.xsd.ui.internal.design.figures;
 
 import org.eclipse.draw2d.Figure;
+import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.geometry.Dimension;
+import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.xsd.ui.internal.design.layouts.ModelGroupLayout;
 
@@ -19,6 +22,9 @@ public class GenericGroupFigure extends Figure
 {
   protected CenteredIconFigure centeredIconFigure;
   protected Figure contentFigure;
+  protected String text;
+  protected boolean hasText = false;
+  protected Label textFigure;
   
   public GenericGroupFigure()
   {
@@ -32,6 +38,32 @@ public class GenericGroupFigure extends Figure
     contentFigure = new Figure();
     contentFigure.setLayoutManager(new ModelGroupLayout(false, 0));
     add(contentFigure);
+  }
+  
+  public void setText(String text)
+  {
+    this.text = text;
+    hasText = false;
+    if (text != null && text.length() > 0)
+    {
+      hasText = true;
+    }
+  }
+  
+  public boolean hasText()
+  {
+    return hasText;
+  }
+  
+  public String getText()
+  {
+    return text;
+  }
+  
+  public Point getTextCoordinates()
+  {
+    Rectangle rect = centeredIconFigure.getBounds();
+    return new Point(rect.x, rect.y + 14);
   }
   
   public void setIconFigure(Image image)

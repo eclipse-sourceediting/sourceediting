@@ -101,20 +101,24 @@ public class ModelGroupEditPart extends ConnectableEditPart
     if (minOccurs == -3 && maxOccurs == -3)
     {
       occurenceDescription = ""; //$NON-NLS-1$
+      modelGroupFigure.setText(null);
     }
     else if (minOccurs == 0 && (maxOccurs == -2 || maxOccurs == 1))
     {
       occurenceDescription = "[0..1]"; //$NON-NLS-1$
+      modelGroupFigure.setText("0..1");
     }
     else if ((minOccurs == 1 && maxOccurs == 1) ||
              (minOccurs == -2 && maxOccurs == 1) ||
              (minOccurs == 1 && maxOccurs == -2))
     {
       occurenceDescription = "[1..1]"; //$NON-NLS-1$
+      modelGroupFigure.setText("1..1");
     }
     else if (minOccurs == -2 && maxOccurs == -2)
     {
       occurenceDescription = ""; //$NON-NLS-1$
+      modelGroupFigure.setText(null);
     }
     else
     {
@@ -123,6 +127,7 @@ public class ModelGroupEditPart extends ConnectableEditPart
       
       String minSymbol = minOccurs == -2 ? "1" : "" + minOccurs; //$NON-NLS-1$ //$NON-NLS-2$
       occurenceDescription = "[" + minSymbol + ".." + maxSymbol + "]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      modelGroupFigure.setText(minSymbol + ".." + maxSymbol);
     }
 
     modelGroupFigure.getIconFigure().setToolTipText(occurenceDescription);

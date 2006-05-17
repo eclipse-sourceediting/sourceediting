@@ -11,6 +11,7 @@
 package org.eclipse.wst.xsd.ui.internal.adt.typeviz.design.figures;
 
 import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.draw2d.ColorConstants;
@@ -22,10 +23,12 @@ import org.eclipse.draw2d.ToolbarLayout;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPart;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.wst.xsd.ui.internal.adt.design.DesignViewerGraphicConstants;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.StructureEditPart;
 import org.eclipse.wst.xsd.ui.internal.adt.design.figures.ICompartmentFigure;
 import org.eclipse.wst.xsd.ui.internal.adt.design.figures.IStructureFigure;
 import org.eclipse.wst.xsd.ui.internal.adt.typeviz.design.layouts.RowLayout;
+import org.eclipse.wst.xsd.ui.internal.design.figures.GenericGroupFigure;
 
 public class CompartmentFigure extends Figure implements ICompartmentFigure
 {
@@ -41,7 +44,48 @@ public class CompartmentFigure extends Figure implements ICompartmentFigure
     rowFigure = new Figure();
     add(rowFigure);
 
-    annotationArea = new Figure();
+    annotationArea = new Figure() {
+      
+      public void paint(Graphics graphics)
+      {
+        super.paint(graphics);
+        try
+        {
+          graphics.pushState();  
+          graphics.setForegroundColor(ColorConstants.blue);
+          graphics.setFont(DesignViewerGraphicConstants.smallFont);
+          List children = getChildren();
+          for (Iterator i = children.iterator(); i.hasNext(); )
+          {
+            Figure object = (Figure)i.next();
+            traverse(object, graphics);          
+          }
+        }
+        finally
+        {
+          graphics.popState();
+        }
+      }
+      
+      private void traverse(Figure figure, Graphics graphics)
+      {
+        List children = figure.getChildren();
+        for (Iterator i = children.iterator(); i.hasNext(); )
+        {
+          Figure object = (Figure)i.next();
+          
+          if (object instanceof GenericGroupFigure)
+          {
+            GenericGroupFigure fig = (GenericGroupFigure) object;
+            if (fig.hasText())
+              graphics.drawText(fig.getText(), fig.getTextCoordinates());
+          }
+          traverse(object, graphics);
+        }
+        
+      }
+      
+    };
     ToolbarLayout annotationLayout = new ToolbarLayout(false);
     annotationLayout.setStretchMinorAxis(true);
     annotationArea.setLayoutManager(annotationLayout);
