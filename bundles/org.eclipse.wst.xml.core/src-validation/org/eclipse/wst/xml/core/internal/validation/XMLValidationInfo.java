@@ -15,6 +15,7 @@ import java.util.Stack;
 
 import org.apache.xerces.xni.XMLLocator;
 import org.eclipse.wst.xml.core.internal.validation.core.ValidationInfo;
+import org.eclipse.wst.xml.core.internal.validation.errorcustomization.ErrorCustomizationManager;
 
 
 /**
@@ -29,6 +30,7 @@ public class XMLValidationInfo extends ValidationInfo implements XMLValidationRe
   protected String currentErrorKey;
   protected Object messageArguments[] = null;
   protected XMLLocator locator = null;
+  protected ErrorCustomizationManager errorCustomizationManager = null;
   
   /**
    * A stack of start tag locations, used to move errors
@@ -168,6 +170,21 @@ public void setMessageArguments(Object[] messageArguments) {
   protected Stack getStartElementLocations()
   {
     return startElementLocations;
+  }
+  
+  /**
+   * Get the error customization manager for this validation run.
+   * 
+   * @return
+   * 	The error customization manager for this validation run.
+   */
+  protected ErrorCustomizationManager getErrorCustomizationManager()
+  {
+	  if(errorCustomizationManager == null)
+	  {
+		  errorCustomizationManager = new ErrorCustomizationManager();
+	  }
+	  return errorCustomizationManager;
   }
 
 }

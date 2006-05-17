@@ -42,7 +42,6 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver;
 import org.eclipse.wst.xml.core.internal.validation.core.LazyURLInputStream;
 import org.eclipse.wst.xml.core.internal.validation.core.logging.LoggerFactory;
-import org.eclipse.wst.xml.core.internal.validation.errorcustomization.ErrorCustomizationManager;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -60,8 +59,6 @@ import org.xml.sax.helpers.DefaultHandler;
 public class XMLValidator
 {
   protected URIResolver uriResolver = null;
-  //protected MyEntityResolver entityResolver = null;
-  protected ErrorCustomizationManager errorCustomizationManager;
   protected Hashtable ingoredErrorKeyTable = new Hashtable();
   protected Set adjustLocationErrorKeySet = new TreeSet();
 
@@ -163,20 +160,11 @@ public class XMLValidator
       reader.setContentHandler(new DefaultHandler()
       {
         public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-          
-          if (errorCustomizationManager == null)
-          {
-            errorCustomizationManager = new ErrorCustomizationManager();
-//            if (errorCustomizationManager.isDocumentNamespaceApplicable(uri))
-//            {
-//              errorCustomizationManager.setActive(true);
-//            }  
-          }
-          errorCustomizationManager.startElement(uri, localName);                    
+          valinfo.getErrorCustomizationManager().startElement(uri, localName);                    
         }
         
         public void endElement(String uri, String localName, String qName) throws SAXException {
-          errorCustomizationManager.endElement(uri, localName);
+          valinfo.getErrorCustomizationManager().endElement(uri, localName);
         }
       });      
       
@@ -642,7 +630,7 @@ public class XMLValidator
 		      if (reportError)
 		      {
 		        super.reportError(domain, key, arguments, severity);
-		        errorCustomizationManager.considerReportedError(valinfo, key, arguments);
+		        valinfo.getErrorCustomizationManager().considerReportedError(valinfo, key, arguments);
 		      }
 		    }
 		};
