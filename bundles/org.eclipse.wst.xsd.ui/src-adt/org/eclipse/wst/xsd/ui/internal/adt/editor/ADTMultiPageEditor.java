@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.adt.editor;
 
-import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartFactory;
@@ -18,23 +17,23 @@ import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.gef.editparts.ZoomManager;
 import org.eclipse.gef.ui.actions.ActionRegistry;
+import org.eclipse.gef.ui.parts.GraphicalViewerImpl;
 import org.eclipse.gef.ui.parts.ScrollingGraphicalViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
-import org.eclipse.swt.events.MouseAdapter;
-import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.BaseSelectionAction;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.SetInputToGraphView;
 import org.eclipse.wst.xsd.ui.internal.adt.design.DesignViewGraphicalViewer;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.ADTEditPartFactory;
+import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.BackToSchemaEditPart;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IModel;
 import org.eclipse.wst.xsd.ui.internal.adt.outline.ADTContentOutlinePage;
 import org.eclipse.wst.xsd.ui.internal.adt.outline.ADTContentOutlineProvider;
@@ -45,7 +44,7 @@ public abstract class ADTMultiPageEditor extends CommonMultiPageEditor
 {
   protected IModel model;
   private int currentPage = -1;
-  private Label tableOfContentsButton;
+  protected Button tableOfContentsButton;
   
   /**
    * Creates a multi-page editor example.
@@ -80,43 +79,35 @@ public abstract class ADTMultiPageEditor extends CommonMultiPageEditor
         }
         else if (i == 0)
         {  
-          children[i].setBounds(rect.x + 10, rect.y + 10, 40, 40);
+          children[i].setBounds(rect.x + 10, rect.y + 10, 25, 25);
         }  
       }       
     }               
   }
   
+  GraphicalViewerImpl toolbarViewer;
+  BackToSchemaEditPart backToSchemaEditPart;
   protected Composite createGraphPageComposite()
   {    
-    Composite parent = new Composite(getContainer(), SWT.NONE);    
-    parent.setLayout(new InternalLayout());    
-    tableOfContentsButton = new Label(parent, 0);
+    Composite parent = new Composite(getContainer(), SWT.FLAT);
+    parent.setLayout(new InternalLayout());
     
-    // TODO (cs) need to review how the initial 'input' gets specified
-    // on the designViewer somehow a schema gets set without going thru
-    // the designViewer's setInput.  Need to setVisible(false) to workaround this.
-    //
-    tableOfContentsButton.setVisible(false);
-    tableOfContentsButton.setBackground(ColorConstants.white);
-    tableOfContentsButton.setImage(XSDEditorPlugin.getPlugin().getIcon("obj16/index.gif"));
-    tableOfContentsButton.addMouseListener(new MouseAdapter()
-    {
-      public void mouseUp(MouseEvent e)
-      {
-        // TODO (cs) do we need to register this action?
-        //
-        SetInputToGraphView action = new SetInputToGraphView(ADTMultiPageEditor.this, getModel());
-        action.run();
-      }          
-    });
+    // the palletViewer extends from this...maybe use it instead?
+    toolbarViewer = new GraphicalViewerImpl();
+    toolbarViewer.createControl(parent);
+    toolbarViewer.getControl().setVisible(true);
+    backToSchemaEditPart = new BackToSchemaEditPart(this);
+    backToSchemaEditPart.setModel(getModel());
+    toolbarViewer.setContents(backToSchemaEditPart);
+    
     return parent;
   }
   
   protected void createGraphPage()
   {
     super.createGraphPage(); 
-    tableOfContentsButton.moveAbove(graphicalViewer.getControl());
-    graphicalViewer.getControl().moveBelow(tableOfContentsButton);        
+    toolbarViewer.getControl().moveAbove(graphicalViewer.getControl());
+    graphicalViewer.getControl().moveBelow(toolbarViewer.getControl());
   }
   
   public String getContributorId()
@@ -188,7 +179,8 @@ public abstract class ADTMultiPageEditor extends CommonMultiPageEditor
       public void selectionChanged(SelectionChangedEvent event)
       {        
         IStructuredSelection input = (IStructuredSelection)event.getSelection();
-        tableOfContentsButton.setVisible(isTableOfContentsApplicable(input.getFirstElement()));         
+        backToSchemaEditPart.setEnabled(isTableOfContentsApplicable(input.getFirstElement()));
+        backToSchemaEditPart.setModel(getModel());
       }      
     });
     return viewer;
