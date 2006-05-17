@@ -223,7 +223,7 @@ public abstract class NewProjectDataModelFacetWizard extends AddRemoveFacetsWiza
 	throws CoreException
 
 	{
-		monitor.beginTask("", 10);
+		monitor.beginTask("", 10); //$NON-NLS-1$
 		storeDefaultSettings();
 		try {
 			FacetProjectCreationOperation operation = new FacetProjectCreationOperation(model);

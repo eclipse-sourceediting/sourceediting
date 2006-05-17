@@ -46,8 +46,8 @@ class SimpleWebModuleWizardBasePage extends DataModelWizardPage implements ISimp
 	//	constants
 	private static final int SIZING_TEXT_FIELD_WIDTH = 305;
 	//	default values
-	private String defProjectNameLabel = WTPCommonUIResourceHandler.Name_; //$NON-NLS-1$
-	private String defBrowseButtonLabel = WTPCommonUIResourceHandler.Browse_;//$NON-NLS-1$
+	private String defProjectNameLabel = WTPCommonUIResourceHandler.Name_;
+	private String defBrowseButtonLabel = WTPCommonUIResourceHandler.Browse_;
 	private static final String defDirDialogLabel = "Directory"; //$NON-NLS-1$
 
 	public SimpleWebModuleWizardBasePage(IDataModel dataModel, String pageName) {
@@ -115,7 +115,7 @@ class SimpleWebModuleWizardBasePage extends DataModelWizardPage implements ISimp
 	private void createProjectLocationGroup(Composite parent) {
 		//		set up location path label
 		Label locationPathLabel = new Label(parent, SWT.NONE);
-		locationPathLabel.setText(WTPCommonUIResourceHandler.Project_location_);//$NON-NLS-1$
+		locationPathLabel.setText(WTPCommonUIResourceHandler.Project_location_);
 		GridData data = new GridData();
 		locationPathLabel.setLayoutData(data);
 		// set up location path entry field

@@ -58,7 +58,7 @@ public class StaticWebModuleCreationFacetOperation extends AbstractDataModelOper
 	}
 
 	protected IDataModel setupWebInstallAction() {
-		String versionStr = "1.0";
+		String versionStr = "1.0"; //$NON-NLS-1$
 		IDataModel webFacetInstallDataModel = DataModelFactory.createDataModel(new SimpleWebFacetInstallDataModelProvider());
 		webFacetInstallDataModel.setProperty(IFacetDataModelProperties.FACET_PROJECT_NAME, model.getStringProperty(IComponentCreationDataModelProperties.PROJECT_NAME));
 		webFacetInstallDataModel.setProperty(IFacetDataModelProperties.FACET_VERSION_STR, versionStr);

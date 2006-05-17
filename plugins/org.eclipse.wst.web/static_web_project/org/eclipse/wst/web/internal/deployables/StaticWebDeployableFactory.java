@@ -122,9 +122,9 @@ public class StaticWebDeployableFactory extends ProjectModuleFactoryDelegate {
 	 */
 	protected IPath[] getListenerPaths() {
 		return new IPath[] {
-			new Path(".project"), // nature
+			new Path(".project"), // nature //$NON-NLS-1$
 			new Path(StructureEdit.MODULE_META_FILE_NAME), // component
-			new Path(".settings/org.eclipse.wst.common.project.facet.core.xml") // facets
+			new Path(".settings/org.eclipse.wst.common.project.facet.core.xml") // facets //$NON-NLS-1$
 		};
 	}
 }
