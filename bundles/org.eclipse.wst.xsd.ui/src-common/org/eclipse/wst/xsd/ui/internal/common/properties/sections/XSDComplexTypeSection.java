@@ -183,6 +183,10 @@ public class XSDComplexTypeSection extends RefactoringSection implements Selecti
           {
             baseType = ""; //$NON-NLS-1$
           }
+          else if (baseType.equals("anyType"))
+          {
+            baseType = ""; //$NON-NLS-1$
+          }
         }
         baseTypeCombo.setText(baseType);
 
@@ -334,7 +338,8 @@ public class XSDComplexTypeSection extends RefactoringSection implements Selecti
     if (baseType != null && baseType.getQName() != null)
     {
       String currentTypeName = baseType.getQName(xsdSchema); //no prefix
-      baseTypeCombo.add(currentTypeName);
+      if (currentTypeName != null && !currentTypeName.equals("anyType"))
+        baseTypeCombo.add(currentTypeName);
     }
   }
 
