@@ -190,14 +190,6 @@ public class XSDSimpleTypeSection extends RefactoringSection
     super.refresh();
 
     setListenerEnabled(false);
-    if (isReadOnly)
-    {
-      composite.setEnabled(false);
-    }
-    else
-    {
-      composite.setEnabled(true);
-    }
 
     nameText.setText(""); //$NON-NLS-1$
     varietyCombo.setText(""); //$NON-NLS-1$
