@@ -227,7 +227,9 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
 
   public void dispose()
   {
-    structuredModel.releaseFromEdit();
+    if (structuredModel != null)
+      structuredModel.releaseFromEdit();
+    
     if (fOutlinePage != null)
     {
 //      if (fOutlinePage instanceof ConfigurableContentOutlinePage && fOutlineListener != null)
