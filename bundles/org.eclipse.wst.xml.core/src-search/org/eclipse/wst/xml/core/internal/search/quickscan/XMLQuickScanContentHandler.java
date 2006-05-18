@@ -13,6 +13,7 @@ package org.eclipse.wst.xml.core.internal.search.quickscan;
 
 import java.util.HashMap;
 import java.util.Map;
+
 import org.eclipse.wst.common.core.search.document.ComponentDeclarationEntry;
 import org.eclipse.wst.common.core.search.document.ComponentReferenceEntry;
 import org.eclipse.wst.common.core.search.document.FileReferenceEntry;
@@ -46,6 +47,7 @@ public class XMLQuickScanContentHandler extends DefaultHandler
 	private PatternMatcher matcher;
 	
 	public static final String XMLSCHEMA_NAMESPACE = "http://www.w3.org/2001/XMLSchema"; //$NON-NLS-1$
+  public static final String WSDL_NAMESPACE = "http://schemas.xmlsoap.org/wsdl/"; //$NON-NLS-1$
 
 	
 	public XMLQuickScanContentHandler(PatternMatcher matcher, SearchPattern pattern) {
@@ -86,22 +88,27 @@ public class XMLQuickScanContentHandler extends DefaultHandler
 		}
 		
 		// collect link info
-		if("import".equals(localName) && XMLSCHEMA_NAMESPACE.equals(uri)){ //$NON-NLS-1$
+    
+    // TODO This code should be refactored to delegate the responsibility to
+    // detect links between files to the search providers/contributors.
+    // The current code only handles the XSD and WSDL cases. 
+    
+		if("import".equals(localName) && namespaceMatches(uri)){ //$NON-NLS-1$
 			FileReferenceEntry documentEntry = new FileReferenceEntry();
 			documentEntry.setCategory(IXMLSearchConstants.REF);
 			documentEntry.setKey("import"); //$NON-NLS-1$
 			String namespace = attributes.getValue("namespace"); //$NON-NLS-1$
-			String location = attributes.getValue("schemaLocation"); //$NON-NLS-1$
+			String location = attributes.getValue(getLocationAttributeName(uri)); //$NON-NLS-1$
 			documentEntry.setPublicIdentifier(namespace);
 			documentEntry.setRelativeFilePath(location);            
 			document.putEntry(documentEntry);
 		}
 		if(("redefine".equals(localName)|| "include".equals(localName)) && //$NON-NLS-1$ //$NON-NLS-2$
-				XMLSCHEMA_NAMESPACE.equals(uri)){
+				namespaceMatches(uri)){
 			FileReferenceEntry documentEntry = new FileReferenceEntry();
 			documentEntry.setCategory(IXMLSearchConstants.REF);
 			documentEntry.setKey("include"); //$NON-NLS-1$
-			String location = attributes.getValue("schemaLocation"); //$NON-NLS-1$
+			String location = attributes.getValue(getLocationAttributeName(uri)); //$NON-NLS-1$
 			documentEntry.setPublicIdentifier(uri);
 			documentEntry.setRelativeFilePath(location);
 			document.putEntry(documentEntry);
@@ -143,6 +150,27 @@ public class XMLQuickScanContentHandler extends DefaultHandler
 		}
 		
 	}
+
+  private String getLocationAttributeName(String uri)
+  {
+    if (XMLSCHEMA_NAMESPACE.equals(uri))
+    {
+      return "schemaLocation";
+    }
+    
+    else if (WSDL_NAMESPACE.equals(uri))
+    {
+      return "location";
+    }
+    
+    return "";
+  }
+
+  private boolean namespaceMatches(String uri)
+  {
+    return XMLSCHEMA_NAMESPACE.equals(uri) ||
+          WSDL_NAMESPACE.equals(uri);
+  }
 	
 	public void endElement(String uri, String localName, String qName)
 			throws SAXException
