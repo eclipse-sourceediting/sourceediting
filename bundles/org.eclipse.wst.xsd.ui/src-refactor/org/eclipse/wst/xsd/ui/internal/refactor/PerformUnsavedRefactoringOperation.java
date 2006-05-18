@@ -19,11 +19,11 @@ import org.eclipse.ltk.core.refactoring.CompositeChange;
 import org.eclipse.ltk.core.refactoring.TextFileChange;
 import org.eclipse.ltk.core.refactoring.participants.ProcessorBasedRefactoring;
 
-public class PerformUnsavedRefatoringOperation implements IWorkspaceRunnable 
+public class PerformUnsavedRefactoringOperation implements IWorkspaceRunnable 
 { 
   private ProcessorBasedRefactoring refactoring;
   
-  public PerformUnsavedRefatoringOperation(ProcessorBasedRefactoring refactoring)
+  public PerformUnsavedRefactoringOperation(ProcessorBasedRefactoring refactoring)
   {
     this.refactoring = refactoring;
   }
