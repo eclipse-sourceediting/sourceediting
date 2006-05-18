@@ -11,6 +11,7 @@
 package org.eclipse.wst.xsd.ui.internal.adt.design.editparts;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.IFigure;
@@ -153,5 +154,15 @@ public class RootContentEditPart extends AbstractGraphicalEditPart
         ((IConnectionContainer)obj).refreshConnections();
       }
     }*/
+    
+    for(Iterator i = getChildren().iterator(); i.hasNext(); )
+    {
+      Object obj = i.next();
+      if (obj instanceof AbstractGraphicalEditPart)
+      {
+        ((AbstractGraphicalEditPart)obj).refresh();
+      }
+    }
+
   }
 }
