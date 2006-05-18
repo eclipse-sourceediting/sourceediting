@@ -260,9 +260,9 @@ public abstract class XMLSearchParticipant extends SearchParticipant {
 			String path = file.getLocation().toString();
 			SearchDocument document = documentSet.getSearchDocument(path, id); 
 			if (document != null)
-			{	
+			{              
 			Entry[] entries = document.getEntries(getSearchEntryCategory(pattern), null, 0);           
-			if(entries != null && entries.length > 0)
+			if ((entries != null && entries.length > 0) || (searchOptions != null && searchOptions.get("searchDirtyContent") != null))
             {
               //for (int j = 0; j < entries.length; j++)
               //{

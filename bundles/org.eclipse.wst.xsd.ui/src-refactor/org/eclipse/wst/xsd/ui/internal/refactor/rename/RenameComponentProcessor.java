@@ -64,7 +64,8 @@ import org.eclipse.wst.xsd.ui.internal.refactor.util.TextChangeCompatibility;
 
 public class RenameComponentProcessor extends RenameProcessor implements INameUpdating, IReferenceUpdating {
 	public static final String IDENTIFIER = "org.eclipse.wst.xml.refactor.renameComponentProcessor"; //$NON-NLS-1$
-
+    private boolean singleFileOnly = false;
+    
 	public static String quoteString(String value) {
 		value = value == null ? "" : value;
 
@@ -94,9 +95,14 @@ public class RenameComponentProcessor extends RenameProcessor implements INameUp
 	}
 
 	public RenameComponentProcessor(RefactoringComponent selectedComponent, String newName) {
-		this.newName = newName;
-		this.selectedComponent = selectedComponent;
+		this(selectedComponent, newName, false);
 	}
+    
+    public RenameComponentProcessor(RefactoringComponent selectedComponent, String newName, boolean singleFileOnly) {
+        this.newName = newName;
+        this.selectedComponent = selectedComponent;
+        this.singleFileOnly = singleFileOnly;
+    }    
 
 	private void addDeclarationUpdate(TextChangeManager manager) throws CoreException {
 		String fileStr = selectedComponent.getElement().getModel().getBaseLocation();
@@ -120,7 +126,12 @@ public class RenameComponentProcessor extends RenameProcessor implements INameUp
 		CollectingSearchRequestor requestor = new CollectingSearchRequestor();
 		SearchPattern pattern = new XMLComponentDeclarationPattern(file, elementQName, typeQName);
 		SearchEngine searchEngine = new SearchEngine();
-		searchEngine.search(pattern, requestor, scope, null, new NullProgressMonitor());
+        HashMap map = new HashMap();
+        if (singleFileOnly)
+        {
+          map.put("searchDirtyContent", Boolean.TRUE);
+        }  
+		searchEngine.search(pattern, requestor, scope, map, new NullProgressMonitor());
 		List results = requestor.getResults();
 		for (Iterator iter = results.iterator(); iter.hasNext();) {
 			SearchMatch match = (SearchMatch) iter.next();
@@ -147,10 +158,21 @@ public class RenameComponentProcessor extends RenameProcessor implements INameUp
 		QualifiedName typeQName = selectedComponent.getTypeQName();
 
 		SearchEngine searchEngine = new SearchEngine();
-
+        SearchScope scope = null;
+        HashMap map = new HashMap();
+        if (singleFileOnly)
+        {
+          map.put("searchDirtyContent", Boolean.TRUE);
+          scope = new SelectionSearchScope(new IResource[]{file});
+        }
+        else
+        {  
+          scope = new WorkspaceSearchScope();
+        } 
 		SortingSearchRequestor requestor = new SortingSearchRequestor();
 		SearchPattern pattern = new XMLComponentReferencePattern(file, elementQName, typeQName);
-		searchEngine.search(pattern, requestor, new WorkspaceSearchScope(), null, new NullProgressMonitor());
+        
+		searchEngine.search(pattern, requestor, scope, map, new NullProgressMonitor());
 		references = requestor.getResults();
 		// for (Iterator iter = references.iterator(); iter.hasNext();) {
 		// SearchMatch match = (SearchMatch) iter.next();
