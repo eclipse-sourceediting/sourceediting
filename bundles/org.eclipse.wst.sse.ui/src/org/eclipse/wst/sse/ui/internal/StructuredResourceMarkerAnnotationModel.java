@@ -15,7 +15,6 @@ package org.eclipse.wst.sse.ui.internal;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.jface.text.Position;
 import org.eclipse.ui.texteditor.MarkerAnnotation;
 import org.eclipse.ui.texteditor.MarkerUtilities;
@@ -59,7 +58,7 @@ public class StructuredResourceMarkerAnnotationModel extends ResourceMarkerAnnot
 		 * a special marker annotation for those markers. Otherwise, use
 		 * default.
 		 */
-		if (MarkerUtilities.isMarkerType(marker, IBreakpoint.BREAKPOINT_MARKER) || (MarkerUtilities.isMarkerType(marker, IMarker.PROBLEM))) {
+		if (MarkerUtilities.isMarkerType(marker, IMarker.PROBLEM)) {
 			return new StructuredMarkerAnnotation(marker);
 		}
 		return super.createMarkerAnnotation(marker);

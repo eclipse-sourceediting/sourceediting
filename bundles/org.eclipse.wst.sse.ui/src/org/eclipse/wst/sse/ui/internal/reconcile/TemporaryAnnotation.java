@@ -44,8 +44,6 @@ public class TemporaryAnnotation extends Annotation implements ITemporaryAnnotat
 	public final static String ANNOT_UNKNOWN = Annotation.TYPE_UNKNOWN;
 	public final static String ANNOT_WARNING = "org.eclipse.wst.sse.ui.temp.warning"; //$NON-NLS-1$
 
-	public final static String ANNOT_BREAKPOINT = "org.eclipse.wst.sse.ui.breakpoint"; //$NON-NLS-1$
-    
     // copied from CompilationUnitDocumentProvider.ProblemAnnotation
     //XXX: To be fully correct these constants should be non-static
 
