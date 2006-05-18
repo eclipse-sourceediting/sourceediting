@@ -11,6 +11,12 @@
 package org.eclipse.wst.xsd.ui.internal.common.commands;
 
 import org.eclipse.gef.commands.Command;
+import org.eclipse.ltk.core.refactoring.participants.RenameRefactoring;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
+import org.eclipse.wst.xsd.ui.internal.refactor.PerformUnsavedRefactoringOperation;
+import org.eclipse.wst.xsd.ui.internal.refactor.RefactoringComponent;
+import org.eclipse.wst.xsd.ui.internal.refactor.XMLRefactoringComponent;
+import org.eclipse.wst.xsd.ui.internal.refactor.rename.RenameComponentProcessor;
 import org.eclipse.xsd.XSDComplexTypeDefinition;
 import org.eclipse.xsd.XSDNamedComponent;
 
@@ -41,6 +47,26 @@ public class UpdateNameCommand extends Command
    */
   public void execute()
   {
-    component.setName(newName);
+    renameComponent(newName);
+  }
+  
+  /**
+   * Performs a rename refactoring to rename the component and all the
+   * references to it within the current schema.
+   * 
+   * @param newName the new component name.
+   */
+  private void renameComponent(String newName)
+  {
+    RefactoringComponent refactoringComponent = new XMLRefactoringComponent(
+        component,
+        (IDOMElement)component.getElement(), 
+        component.getName(),
+        component.getTargetNamespace());
+
+    RenameComponentProcessor processor = new RenameComponentProcessor(refactoringComponent, newName, true);    
+    RenameRefactoring refactoring = new RenameRefactoring(processor);
+    PerformUnsavedRefactoringOperation operation = new PerformUnsavedRefactoringOperation(refactoring);
+    operation.run(null); 
   }
 }
