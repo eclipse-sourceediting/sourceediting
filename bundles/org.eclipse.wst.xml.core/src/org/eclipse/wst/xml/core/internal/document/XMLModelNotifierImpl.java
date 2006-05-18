@@ -12,7 +12,9 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.core.internal.document;
 
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Vector;
 
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
@@ -38,6 +40,7 @@ public class XMLModelNotifierImpl implements XMLModelNotifier {
 		int pos;
 		String reason;
 		int type;
+		int index;
 
 		NotifyEvent(INodeNotifier notifier, int type, Object changedFeature, Object oldValue, Object newValue, int pos) {
 			this.notifier = notifier;
@@ -247,79 +250,93 @@ public class XMLModelNotifierImpl implements XMLModelNotifier {
 			return;
 		this.flushing = true; // force notification
 		int count = this.events.size();
-		for (int i = 0; i < count; i++) {
-			NotifyEvent event = (NotifyEvent) this.events.elementAt(i);
-			if (event == null)
-				continue; // error
-			if (event.discarded)
-				continue;
-			if (!doingNewModel && fOptimizeDeferred) {
-				// check redundant events (no need to check if doing NewModel,
-				// since
-				// shouldn't be redunancies)
-				if (event.type == INodeNotifier.ADD) {
-					for (int n = i + 1; n < count; n++) {
-						NotifyEvent next = (NotifyEvent) this.events.elementAt(n);
-						if (next == null)
-							continue; // error
-						if (next.type == INodeNotifier.REMOVE && next.oldValue == event.newValue) {
-							// Added then removed later, discard both
-							event.discarded = true;
-							next.discarded = true;
-							if (Debug.debugNotifyDeferred) {
-								event.reason = event.reason + ADDED_THEN_REMOVED + "(see " + n + ")"; //$NON-NLS-1$ //$NON-NLS-2$
-								next.reason = next.reason + ADDED_THEN_REMOVED + "(see " + i + ")"; //$NON-NLS-1$ //$NON-NLS-2$
-							}
-							break;
+		if (!doingNewModel && fOptimizeDeferred) {
+			Map values = new HashMap();
+			for (int i = 0; i < count; i++) {
+				NotifyEvent event = (NotifyEvent) this.events.elementAt(i);
+				if (event == null)
+					continue; // error
+				event.index = i;
+				if(event.type == INodeNotifier.REMOVE) {
+					addToMap(event.oldValue, event, values);
+				}
+				if(event.type == INodeNotifier.ADD) {
+					addToMap(event.newValue, event, values);
+				}
+			}
+			Iterator it = values.keySet().iterator();
+			while(it.hasNext()) {
+				Object value = it.next();
+				NotifyEvent[] es = (NotifyEvent[])values.get(value);
+				for (int i = 0; i < es.length - 1; i++) {
+					NotifyEvent event = es[i];
+					if(es[i].discarded) continue;
+					NotifyEvent next = es[i + 1];
+					if(es[i].type == INodeNotifier.ADD && next.type == INodeNotifier.REMOVE) {
+						// Added then removed later, discard both
+						event.discarded = true;
+						next.discarded = true;
+						if (Debug.debugNotifyDeferred) {
+							event.reason = event.reason + ADDED_THEN_REMOVED + "(see " + next.index + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+							next.reason = next.reason + ADDED_THEN_REMOVED + "(see " + event.index + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 						}
 					}
-					if (event.discarded)
-						continue;
-					if (fOptimizeDeferredAccordingToParentAdded) {
-						for (int p = 0; p < i; p++) {
-							NotifyEvent prev = (NotifyEvent) this.events.elementAt(p);
-							if (prev == null)
-								continue; // error
+				}
+			}
+			for (int i = 0; i < count; i++) {
+				NotifyEvent event = (NotifyEvent) this.events.elementAt(i);
+				if (event == null)
+					continue; // error
+				if(event.discarded) continue;
+				if (event.notifier != null && fOptimizeDeferredAccordingToParentAdded) {
+					if (event.type == INodeNotifier.ADD) {
+						NotifyEvent[] es = (NotifyEvent[])values.get(event.notifier);
+						if(es != null) for (int p = 0; p < es.length && es[p].index < event.index; p++) {
+							NotifyEvent prev = es[p];
 							if (prev.type == INodeNotifier.REMOVE && prev.oldValue == event.notifier) {
 								// parent is reparented, do not discard
 								if (Debug.debugNotifyDeferred) {
-									event.reason = event.reason + PARENT_IS_REPARENTED + "(see " + p + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+									event.reason = event.reason + PARENT_IS_REPARENTED + "(see " + prev.index + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 								}
 								break;
 							} else if (prev.type == INodeNotifier.ADD && prev.newValue == event.notifier) {
 								// parent has been added, discard this
 								event.discarded = true;
 								if (Debug.debugNotifyDeferred) {
-									event.reason = event.reason + PARENT_IS_ADDED + "(see " + p + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+									event.reason = event.reason + PARENT_IS_ADDED + "(see " + prev.index + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 								}
 								break;
 							}
-						}
-						if (event.discarded)
-							continue;
-					}
-				} else if (event.type == INodeNotifier.REMOVE) {
-					if (fOptimizeDeferredAccordingToParentRemoved) {
-						for (int n = i + 1; n < count; n++) {
-							NotifyEvent next = (NotifyEvent) this.events.elementAt(n);
-							if (next == null)
-								continue; // error
-							if (next.type == INodeNotifier.REMOVE) {
+						}							
+					}						
+				}
+				if(event.discarded) continue;
+				if (event.notifier != null && fOptimizeDeferredAccordingToParentRemoved) {
+					if (event.type == INodeNotifier.REMOVE) {
+						NotifyEvent[] es = (NotifyEvent[])values.get(event.notifier);
+						if(es != null) for (int n = 0; n < es.length; n++) {
+							NotifyEvent next = es[n];
+							if(next.index > event.index && next.type == INodeNotifier.REMOVE) {
 								if (next.oldValue == event.notifier) {
 									// parent will be removed, discard this
 									event.discarded = true;
 									if (Debug.debugNotifyDeferred) {
-										event.reason = event.reason + PARENT_IS_REMOVED_TOO + "(see " + n + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+										event.reason = event.reason + PARENT_IS_REMOVED_TOO + "(see " + next.index + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 									}
 									break;
 								}
 							}
 						}
-						if (event.discarded)
-							continue;
-					}
+					}						
 				}
+				if(event.discarded) continue;
 			}
+		}
+		for (int i = 0; i < count; i++) {
+			NotifyEvent event = (NotifyEvent) this.events.elementAt(i);
+			if (event == null)
+				continue; // error
+			if(event.discarded) continue;
 			notify(event.notifier, event.type, event.changedFeature, event.oldValue, event.newValue, event.pos);
 		}
 		if (Debug.debugNotifyDeferred) {
@@ -344,6 +361,20 @@ public class XMLModelNotifierImpl implements XMLModelNotifier {
 		}
 		this.flushing = false;
 		this.events = null;
+	}
+
+	void addToMap(Object o, NotifyEvent event, Map map) {
+		if(o == null) return;
+		Object x = map.get(o);
+		if(x == null) {
+			map.put(o, new NotifyEvent[]{event});
+		} else {
+			NotifyEvent[] es = (NotifyEvent[])x;
+			NotifyEvent[] es2 = new NotifyEvent[es.length + 1];
+			System.arraycopy(es, 0, es2, 0, es.length);
+			es2[es.length] = event;
+			map.put(o, es2);
+		}
 	}
 
 	/**
