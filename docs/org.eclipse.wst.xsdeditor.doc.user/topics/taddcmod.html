@@ -13,6 +13,10 @@
 <meta name="description" content="A content model is the representation of any data that can be contained inside an element, global element, complex type, or group. It is a formal description of the structure and permissible content of an element, global element, complex type, or group, which may be used to validate a document instance." />
 <meta content="XML schema editor, adding, content models, XML schema files, content models, XML schema files" name="DC.subject" />
 <meta content="XML schema editor, adding, content models, XML schema files, content models, XML schema files" name="keywords" />
+<meta scheme="URI" name="DC.Relation" content="../topics/taddanye.html" />
+<meta scheme="URI" name="DC.Relation" content="../topics/taddelm.html" />
+<meta scheme="URI" name="DC.Relation" content="../topics/taddelmr.html" />
+<meta scheme="URI" name="DC.Relation" content="../topics/taddgrpr.html" />
 <meta content="XHTML" name="DC.Format" />
 <meta content="taddcmod" name="DC.Identifier" />
 <meta content="en-us" name="DC.Language" />
@@ -56,13 +60,13 @@ steps:</p>
 </div>
 
 <ol>
-<li class="stepexpand"><span>In the Graph view, select your complex type, or group:</span>
+<li class="stepexpand"><span>In the Design view, select your complex type, or group:</span>
 <ul>
 <li>If you selected a complex type, you can right-click it and click <span class="uicontrol">Add
 Sequence</span>, or <span class="uicontrol">Add Choice</span> to add the type
 of content model you want to your complex type. If you wish to use the <span class="uicontrol">all</span> content
-model, you can change the model by clicking the model in the Graph view, and
-in properties, select <span class="uicontrol">all</span> as the <span class="uicontrol">Kind</span>.
+model, you can change the model by clicking the model in the Design view,
+and in properties, select <span class="uicontrol">all</span> as the <span class="uicontrol">Kind</span>.
 Your content model is automatically added as a child of your complex type
 - expand in the Outline view to see it. <strong>Note:</strong> These options will not
 appear if you have set a base type for your complex type. You can either set
@@ -79,9 +83,9 @@ model by selecting these options from the <span class="uicontrol">Kind</span> me
 </li>
 
 <li class="stepexpand"><span>(Optional) Select the appropriate value in the <span class="uicontrol">MinOccurs</span> field.</span>
- This is the number of times the content model must appear. If you want
-the content model to be optional, select <span class="uicontrol">0</span>. Otherwise,
-select <span class="uicontrol">1</span>. </li>
+ This is the minimum number of times the content model must appear. If
+you want the content model to be optional, select <span class="uicontrol">0</span>.
+Otherwise, select <span class="uicontrol">1</span>. </li>
 
 <li class="stepexpand"><span>(Optional) Select the appropriate value in the <span class="uicontrol">MaxOccurs</span> field.</span>
  This is the maximum number of times a content model can appear. You
@@ -90,9 +94,13 @@ number of occurrences.</li>
 
 <li class="stepexpand"><span>Click the <span class="uicontrol">Documentation</span> tab if you want
 to provide any information about this content model.</span> The <span class="uicontrol">Documentation</span> page
-is used for human readable material, such as a description, and the <span class="uicontrol">App
-Info</span> page can be used to provide information for applications.
+is used for human readable material, such as a description.
 </li>
+
+<li class="stepexpand"><span>Click the <span class="uicontrol">Extensions</span> tab if you want to
+add application information elements to your annotations of schema components.</span>
+ The <span class="uicontrol">Extensions</span> page allows you to specify the
+schema and add XML content to your annotations.</li>
 
 </ol>
 
@@ -119,6 +127,13 @@ to extend your content model by any elements belonging to a specified namespace.
 
 </div>
 
+<div><div class="reltasks"><strong>Related tasks</strong><br />
+<div><a href="../topics/taddanye.html" title="You can use the any element in a similar way as a DTD's ANY content model, however, it must be done in conjunction with namespaces. This enables you to include any well-formed XML content, such as an HTML Web page that conforms to XHTML 1.0 syntax.">Adding an any element</a></div>
+<div><a href="../topics/taddelm.html" title="Elements are fundamental building blocks in XML. Element declarations provide value constraints, provide a description that can be used for validation, establish constraining relationships between related elements and attributes, and control the substitution of elements.">Adding elements</a></div>
+<div><a href="../topics/taddelmr.html" title="An element reference provides a reference to a global element. A declaration that references a global element enables the referenced global element to appear in the instance document in the context of the referencing declaration.">Adding element references</a></div>
+<div><a href="../topics/taddgrpr.html" title="A group reference is a declaration that references a group. It enables the referenced group to appear in the instance document in the context of the referencing declaration.">Adding group references</a></div>
+</div>
+</div>
 
 </body>
 </html>

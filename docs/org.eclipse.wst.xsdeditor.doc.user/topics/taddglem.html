@@ -13,6 +13,8 @@
 <meta name="description" content="A global element is an element with a global scope. It is one that has been declared as part of the main schema rather than as part of a content model." />
 <meta content="XML schema editor, adding, global elements, XML schema files" name="DC.subject" />
 <meta content="XML schema editor, adding, global elements, XML schema files" name="keywords" />
+<meta scheme="URI" name="DC.Relation" content="../topics/taddcmod.html" />
+<meta scheme="URI" name="DC.Relation" content="../topics/taddelmr.html" />
 <meta content="XHTML" name="DC.Format" />
 <meta content="taddglem" name="DC.Identifier" />
 <meta content="en-us" name="DC.Language" />
@@ -34,29 +36,30 @@ model.</p>
 <div class="section"><p>The following instructions were written for the Resource perspective,
 but they will also work in many other perspectives.</p>
 <p>To add a global
-element, follow these steps:</p>
+element:</p>
 </div>
 
 <ol>
 <li class="stepexpand"><span>Open your XML schema in the XML schema editor.</span></li>
 
 <li class="stepexpand"><span>In the Outline view, select your schema.</span> The entire
-schema and its contents should be displayed in the Graph view.</li>
+schema and its contents are displayed in the Design view.</li>
 
-<li class="stepexpand"><span>In the Graph view, right click in the <strong>Elements</strong> section and
-click <span class="uicontrol">Add Element</span>.</span></li>
+<li class="stepexpand"><span>In the Design view, right-click in the <strong>Elements</strong> section
+and click <span class="uicontrol">Add Element</span>.</span></li>
 
 <li class="stepexpand"><span>In the Properties view, click the <span class="uicontrol">General</span> tab,
 and type a new name for the global element in the <span class="uicontrol">Name</span> field.</span>
 </li>
 
-<li class="stepexpand"><span>In the Properties view, you can select the attribute <span class="uicontrol">Type</span> from
+<li class="stepexpand"><span>In the Properties view, you can select the attribute type from
 the predefined list in the menu next to the <span class="uicontrol">Type</span> field.</span>
- <p>Alternately, you can select <span class="uicontrol">Browse</span> from the
-list for more options. </p>
-<div class="p">The Set Type dialog will appear, and lists all
-built-in and user-defined types currently available. You can change the <span class="uicontrol">Scope</span> of
-the list by selecting one of the following options:<ul>
+ <p>Alternatively, you can select <span class="uicontrol">Browse</span> from
+the list for more options. </p>
+<div class="p">The <span class="uicontrol">Set Type</span> dialog
+box appears, and lists all built-in and user-defined types currently available.
+You can change the <span class="uicontrol">Scope</span> of the list by selecting one
+of the following options:<ul>
 <li><span class="uicontrol">Workspace</span>. Lists all of the types available in
 your workspace. </li>
 
@@ -89,15 +92,15 @@ element may be replaced by an element derived from it.</li>
 <li><span class="uicontrol">final</span>. This field determines whether this global
 element may be derived from.</li>
 
-<li><span class="uicontrol">fixed/default</span>. Click the <span class="uicontrol">Browse</span> button
-and select the <span class="uicontrol">Fixed</span> or <span class="uicontrol">Default</span> radio
-button and specify an appropriate value. If you select <strong>Fixed</strong>, the global
-element has a fixed value, which cannot be changed. If you select <strong>Default</strong>,
+<li><span class="uicontrol">fixed/default</span>. Click <span class="uicontrol">Browse</span> and
+select <span class="uicontrol">Fixed</span> or <span class="uicontrol">Default</span> and
+specify an appropriate value. If you select <strong>Fixed</strong>, the global element
+has a fixed value, which cannot be changed. If you select <strong>Default</strong>,
 the element has a default value.</li>
 
 <li><span class="uicontrol">form</span>. Use this field to indicate if the appearance
-of this global element in an instance of the XML schema (that is, an XML file
-associated with the XML schema) must be qualified by a namespace.</li>
+of this global element in an instance of the XML schema (an XML file associated
+with the XML schema) must be qualified by a namespace.</li>
 
 <li><span class="uicontrol">nillable</span>. Select <strong>true</strong> if you do not
 want the global element to be able to have any child elements, only attributes. </li>
@@ -109,7 +112,7 @@ elements to be substituted for other elements.</li>
 
 </li>
 
-<li class="stepexpand"><span>Click the <span class="uicontrol">Attributes</span> tab</span> You
+<li class="stepexpand"><span>Click the <span class="uicontrol">Attributes</span> tab.</span> You
 can use this page to add attributes, attribute references, attributes group
 references, and <samp class="codeph">any</samp> attributes to your global element.
 </li>
@@ -117,13 +120,13 @@ references, and <samp class="codeph">any</samp> attributes to your global elemen
 <li class="stepexpand"><span>An attribute associates an attribute name with a specific type
 and value. To add an attribute, right-click in the Attributes page, and click <span class="uicontrol">Add
 Attribute</span>.</span> You can specify the following values for
-an attribute
+an attribute:
 <ul>
-<li><span class="uicontrol">fixed/default</span>. Click the <span class="uicontrol">Browse</span> button
-and select the <span class="uicontrol">Fixed</span> or <span class="uicontrol">Default</span> radio
-button and specify an appropriate value. If you select <strong>Fixed</strong>, the attribute
-has a fixed value, which cannot be changed. If you select <strong>Default</strong>,
-the attribute has a default value.</li>
+<li><span class="uicontrol">fixed/default</span>. Click <span class="uicontrol">Browse</span> and
+select <span class="uicontrol">Fixed</span> or <span class="uicontrol">Default</span> and
+specify an appropriate value. If you select <strong>Fixed</strong>, the attribute has
+a fixed value, which cannot be changed. If you select <strong>Default</strong>, the
+attribute has a default value.</li>
 
 <li><span class="uicontrol">form</span>. Use this field to indicate if the appearance
 of this attribute in an instance of the XML schema must be qualified by a
@@ -131,16 +134,15 @@ namespace.</li>
 
 <li><span class="uicontrol">name</span>. Enter the name of the attribute.</li>
 
-<li><span class="uicontrol">type</span>. Click the <span class="uicontrol">Browse</span> button
-and select the type of the attribute. </li>
+<li><span class="uicontrol">type</span>. Click <span class="uicontrol">Browse</span> and
+select the type of the attribute. </li>
 
 <li><span class="uicontrol">use</span>. This field indicates how an attribute
-can be used in an instance document. If you select <strong>optional</strong>, the attribute
-can appear once, but it does not have to. If you select <strong>required</strong>, the
-attribute must appear once. If you select <strong>prohibited</strong>, the attribute
-must not appear. <strong>Note</strong>: If you selected the <span class="uicontrol">Default</span> radio
-button, you must select <strong>optional</strong> in this field, otherwise the default
-value will not be valid.</li>
+can be used in an instance document. If you select optional, the attribute
+can appear once, but it does not have to. If you select required, the attribute
+must appear once. If you select prohibited, the attribute must not appear. <strong>Note</strong>:
+If you selected <span class="uicontrol">Default</span>, you must select <strong>optional</strong> in
+this field, otherwise the default value will not be valid.</li>
 
 </ul>
 
@@ -152,14 +154,8 @@ Attribute Ref</span>.</span> A declaration that references a global
 attribute enables the referenced attribute to appear in the instance document
 in the context of the referencing declaration. The menu option to add an attribute
 reference only appears if there are global attributes defined elsewhere in
-the document.
-<ol type="a">
-<li><span>Select the reference, then select the global attribute you want
-it to reference from the <span class="uicontrol">ref</span> list.</span></li>
-
-</ol>
-
-</li>
+the document. Select the reference, then select the global attribute you want
+it to reference from the <span class="uicontrol">ref</span> list.</li>
 
 <li class="stepexpand"><span>An attribute group reference provides a reference to an attribute
 group. To add an attribute group reference, right-click in the Attributes
@@ -167,13 +163,8 @@ page, and click <span class="uicontrol">Add Attribute Group Ref</span>.</span> A
 declaration that references an attribute group enables the referenced attribute
 group to appear in the instance document in the context of the referencing
 declaration. The menu option to add an attribute group reference only appears
-if there are attribute groups defined elsewhere in the document.
-<ol type="a">
-<li><span>Select the reference, then select the attribute group you want
-it to reference from the <span class="uicontrol">ref</span> list.</span></li>
-
-</ol>
-
+if there are attribute groups defined elsewhere in the document. Select the
+reference, then select the attribute group you want it to reference from the <span class="uicontrol">ref</span> list.
 </li>
 
 <li class="stepexpand"><span>An <samp class="codeph">any</samp> element enables element content according
@@ -182,17 +173,33 @@ enables attributes to appear in elements. To add an <samp class="codeph">any</sa
 right-click in the Attributes page and click <span class="uicontrol">Add Any Attribute</span>.</span>
  You can specify the following values for an <samp class="codeph">any</samp> attribute:
 <ul>
-<li>For a <strong>namespace</strong> value, you can select <strong>##any</strong> (this allows
-any well-formed XML from any namespace), <strong>##local </strong> (this allows any
-well-formed XML that is not declared to be in a namespace), <strong>##other </strong> (this
-allows any well-formed XML that is not from the target namespace of the type
-being defined) or <strong>##targetNamespace </strong> (which is shorthand for the target
-namespace of the type being defined). </li>
+<li>For a <span class="uicontrol">namespace</span> value, you can
+select:<ul>
+<li><strong>##any</strong>. This allows any well-formed XML from any namespace.</li>
 
-<li>For a <span class="uicontrol">processContents</span> value, you can select <strong>skip</strong> (the
-XML processor will not validate the attribute content at all), <strong>lax</strong> (the
-XML processor will validate the attribute content as much as it can), or <strong>strict</strong> (the
-XML processor will validate all the attribute content).</li>
+<li><strong>##local </strong>. This allows any well-formed XML that is not declared
+to be in a namespace.</li>
+
+<li><strong>##other</strong>. This allows any well-formed XML that is not from the target
+namespace of the type being defined.</li>
+
+<li><strong>##targetNamespace </strong>. This is shorthand for the target namespace
+of the type being defined.</li>
+
+</ul>
+</li>
+
+<li>For a <span class="uicontrol">processContents</span> value, you can select:<ul>
+<li><strong>skip</strong>. The XML processor will not validate the attribute content
+at all.</li>
+
+<li><strong>lax</strong>. The XML processor will validate the attribute content as much
+as it can.</li>
+
+<li><strong>strict</strong>. The XML processor will validate all the attribute content.</li>
+
+</ul>
+</li>
 
 </ul>
 
@@ -200,9 +207,12 @@ XML processor will validate all the attribute content).</li>
 
 <li class="stepexpand"><span>Click the <span class="uicontrol">Documentation</span> tab if you want
 to provide any information about this global element.</span> The <span class="uicontrol">Documentation</span> page
-is used for human readable material, such as a description, and the <span class="uicontrol">App
-Info</span> page can be used to provide information for applications.
-</li>
+is used for human readable material, such as a description.</li>
+
+<li class="stepexpand"><span>Click the <span class="uicontrol">Extensions</span> tab if you want to
+add application information elements to your annotations of schema components.</span>
+ The <span class="uicontrol">Extensions</span> page allows you to specify the
+schema and add XML content to your annotations.</li>
 
 </ol>
 
@@ -212,6 +222,11 @@ about working with content models, refer to the related tasks.</div>
 
 </div>
 
+<div><div class="reltasks"><strong>Related tasks</strong><br />
+<div><a href="../topics/taddcmod.html" title="A content model is the representation of any data that can be contained inside an element, global element, complex type, or group. It is a formal description of the structure and permissible content of an element, global element, complex type, or group, which may be used to validate a document instance.">Adding content models</a></div>
+<div><a href="../topics/taddelmr.html" title="An element reference provides a reference to a global element. A declaration that references a global element enables the referenced global element to appear in the instance document in the context of the referencing declaration.">Adding element references</a></div>
+</div>
+</div>
 
 </body>
 </html>

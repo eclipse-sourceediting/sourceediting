@@ -45,8 +45,8 @@ group to an XML schema, follow these steps:</p>
 and click  <span class="uicontrol">Add Attribute Group</span>.</span> It appears
 in the <span class="uicontrol">Attribute Groups</span> folder.</li>
 
-<li class="stepexpand"><span>Select your new group, and in the Graph view, right-click the attribute
-group and select <span class="menucascade"><span class="uicontrol">Refactor</span> &gt; <span class="uicontrol">Rename</span>
+<li class="stepexpand"><span>Select your new group, and in the Design view, right-click the
+attribute group and select <span class="menucascade"><span class="uicontrol">Refactor</span> &gt; <span class="uicontrol">Rename</span>
 </span>. In the <span class="uicontrol">New Name</span> field, type a name
 for the attribute group.</span></li>
 
@@ -54,11 +54,11 @@ for the attribute group.</span></li>
 view, click <span class="uicontrol">Add Attribute</span>.</span> The attribute
 appears below the attribute group in the Outline view.
 <ol type="a">
-<li class="substepexpand"><span>Select the attribute, and in the Graph view, click the current
+<li class="substepexpand"><span>Select the attribute, and in the Design view, click the current
 (default) name of the attribute, then type the new <span class="uicontrol">Name</span>.</span>
 </li>
 
-<li class="substepexpand"><span>In the Graph view, click the current (default) attribute type
+<li class="substepexpand"><span>In the Design view, click the current (default) attribute type
 and select a type from the menu. Alternately, you can select browse to invoke
 the Set Type menu for more options.</span> The Set Type dialog lists all
 built-in and user-defined types currently available. You can change the <span class="uicontrol">Scope</span> of
@@ -83,34 +83,22 @@ the selected working set.</li>
 </li>
 
 <li class="stepexpand"><span>An attribute reference provides a reference to a global attribute.
-To add an attribute reference, in the Graph view, right-click the complex
+To add an attribute reference, in the Design view, right-click the complex
 type containing the element, and click <span class="uicontrol">Add Attribute Ref</span>.</span>
  A declaration that references a global attribute enables the referenced
 attribute to appear in the instance document in the context of the referencing
-declaration.
-<ol type="a">
-<li><span>Select the reference, then select the attribute group you want
-it to reference in the Properties view, from the<span class="uicontrol">Ref</span> menu.</span>
-</li>
-
-</ol>
-
+declaration. Select the reference, then select the attribute group you want
+it to reference in the Properties view, from the<span class="uicontrol">Ref</span> menu.
 </li>
 
 <li class="stepexpand"><span>An attribute group reference provides a reference to an attribute
-group. To add an attribute group reference, in the Graph view, right-click
+group. To add an attribute group reference, in the Design view, right-click
 the complex type containing the element, and click <span class="uicontrol">Add Attribute
 Group Ref</span>.</span> A declaration that references a global attribute
 enables the referenced attribute to appear in the instance document in the
-context of the referencing declaration.
-<ol type="a">
-<li><span>Select the reference, then select the attribute group you want
-it to reference in the Properties view, from the<span class="uicontrol">Ref</span> menu.</span>
-</li>
-
-</ol>
-
-</li>
+context of the referencing declaration. Select the reference, then select
+the attribute group you want it to reference in the Properties view, from
+the<span class="uicontrol">Ref</span> menu.</li>
 
 <li class="stepexpand"><span>An <samp class="codeph">any</samp> element enables element content according
 to namespaces, and the corresponding <samp class="codeph">any</samp> attribute element
@@ -119,17 +107,33 @@ right-click your attribute group and click <span class="uicontrol">Add Any Attri
  The <samp class="codeph">any</samp> appears below the attribute group in the Outline
 view. You can specify the following values for an <samp class="codeph">any</samp> attribute:
 <ul>
-<li>For a <strong>namespace</strong> value, you can select <strong>##any</strong> (this allows
-any well-formed XML from any namespace), <strong>##local </strong> (this allows any
-well-formed XML that is not declared to be in a namespace), <strong>##other </strong> (this
-allows any well-formed XML that is not from the target namespace of the type
-being defined) or <strong>##targetNamespace </strong> (which is shorthand for the target
-namespace of the type being defined). </li>
+<li>For a <span class="uicontrol">namespace</span> value, you can
+select:<ul>
+<li><strong>##any</strong>. This allows any well-formed XML from any namespace.</li>
 
-<li>For a <span class="uicontrol">processContents</span> value, you can select <strong>skip</strong> (the
-XML processor will not validate the attribute content at all), <strong>lax</strong> (the
-XML processor will validate the attribute content as much as it can), or <strong>strict</strong> (the
-XML processor will validate all the attribute content).</li>
+<li><strong>##local </strong>. This allows any well-formed XML that is not declared
+to be in a namespace.</li>
+
+<li><strong>##other</strong>. This allows any well-formed XML that is not from the target
+namespace of the type being defined.</li>
+
+<li><strong>##targetNamespace </strong>. This is shorthand for the target namespace
+of the type being defined.</li>
+
+</ul>
+</li>
+
+<li>For a <span class="uicontrol">processContents</span> value, you can select:<ul>
+<li><strong>skip</strong>. The XML processor will not validate the attribute content
+at all.</li>
+
+<li><strong>lax</strong>. The XML processor will validate the attribute content as much
+as it can.</li>
+
+<li><strong>strict</strong>. The XML processor will validate all the attribute content.</li>
+
+</ul>
+</li>
 
 </ul>
 

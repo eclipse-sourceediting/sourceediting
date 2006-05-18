@@ -13,6 +13,7 @@
 <meta name="description" content="A complex type allows elements in its content and can carry attributes. Complex types can be used to help determine the appropriate content for any instance documents generated from or associated with your XML schema." />
 <meta content="XML schema editor, adding, complex types, XML schema files, complex types, XML schema files" name="DC.subject" />
 <meta content="XML schema editor, adding, complex types, XML schema files, complex types, XML schema files" name="keywords" />
+<meta scheme="URI" name="DC.Relation" content="../topics/taddcmod.html" />
 <meta content="XHTML" name="DC.Format" />
 <meta content="taddcmxt" name="DC.Identifier" />
 <meta content="en-us" name="DC.Language" />
@@ -42,74 +43,60 @@ an XML schema, follow these steps:</p>
 <ol>
 <li class="stepexpand"><span>Open your XML schema in the XML schema editor.</span></li>
 
-<li class="stepexpand"><span>Right-click the Types category in the Graph view, and click <span class="uicontrol">Add
+<li class="stepexpand"><span>Right-click the Types category in the Design view, and click <span class="uicontrol">Add
 Complex Type</span>.</span></li>
 
 <li class="stepexpand"><span>In the Properties view, type a new name for the complex type in
 the <span class="uicontrol">Name</span> field.</span></li>
 
-<li class="stepexpand"><span>Click the <span class="uicontrol">Browse</span> <img src="../images/Browse.gif" alt="Browse icon" /> button to select a base type for your complex
-type.</span> You can either set a base type for your complex type, or
-you can add a content model to it (which represents any data that can be contained
-inside an element), but you cannot do both. For more information about content
-models, refer to the related tasks.</li>
+<li class="stepexpand"><span>Click <span class="uicontrol">Browse</span> <img src="../images/Browse.gif" alt="Browse icon" /> to select a base type for your complex type.</span>
+ You can either set a base type for your complex type, or you can add
+a content model to it (which represents any data that can be contained inside
+an element), but you cannot do both. For more information about content models,
+refer to the related tasks.</li>
 
 <li class="stepexpand"><span>Select <span class="uicontrol">restriction</span> or <span class="uicontrol">extension</span> from
 the <span class="uicontrol">Inherited by</span> list.</span> This specifies whether
 your type is derived from its base type by restriction or extension.
 </li>
 
-<li class="stepexpand"><span>The Graph view will display the attributes within the complex type.</span>
- You can also use this view to add attributes to your complex type. An
-attribute associates an attribute name with a specific type and value.
-<ol type="a">
-<li><span>To add an attribute, in the graph view, right click your complex
-type and select <span class="uicontrol">Add Attribute</span>.</span></li>
-
-</ol>
-
+<li class="stepexpand"><span>The Design view will display the attributes within the complex
+type.</span> You can also use this view to add attributes to your complex
+type. An attribute associates an attribute name with a specific type and value.
 <ul>
-<li><span class="uicontrol">name</span>. In the Graph view, click the name of
-the attribute to make a change.</li>
+<li>To add an attribute, in the Design view, right click your complex
+type and select <span class="uicontrol">Add Attribute</span>.<ul>
+<li><span class="uicontrol">name</span>. In the Design view, click the name of the
+attribute to make a change.</li>
 
-<li><span class="uicontrol">type</span>. In the Graph view, click the type of
-the attribute to make a change. The drop-down menu provides commonly used
-types. For more options, simply select <span class="uicontrol">Browse</span> from
-the menu.</li>
+<li><span class="uicontrol">type</span>. In the Design view, click the type of the
+attribute to make a change. The drop-down menu provides commonly used types.
+For more options, simply select <span class="uicontrol">Browse</span> from the menu.</li>
+
+</ul>
+</li>
 
 </ul>
 
 </li>
 
 <li class="stepexpand"><span>An attribute reference provides a reference to a global attribute.
-To add an attribute reference, in the Graph view, right-click the complex
+To add an attribute reference, in the Design view, right-click the complex
 type containing the element, and click <span class="uicontrol">Add Attribute Ref</span>.</span>
  A declaration that references a global attribute enables the referenced
 attribute to appear in the instance document in the context of the referencing
-declaration. 
-<ol type="a">
-<li><span>Select the reference, then select the attribute group you want
-it to reference in the Properties view, from the<span class="uicontrol">Ref</span> menu.</span>
-</li>
-
-</ol>
-
+declaration. Select the reference, then select the attribute group you want
+it to reference in the Properties view, from the<span class="uicontrol"> Ref</span> menu.
 </li>
 
 <li class="stepexpand"><span>An attribute group reference provides a reference to an attribute
-group. To add an attribute group reference, in the Graph view, right-click
+group. To add an attribute group reference, in the Design view, right-click
 the complex type containing the element, and click <span class="uicontrol">Add Attribute
 Group Ref</span>.</span> A declaration that references an attribute
 group enables the referenced attribute group to appear in the instance document
-in the context of the referencing declaration.
-<ol type="a">
-<li><span>Select the reference, then select the attribute group you want
-it to reference in the Properties view, from the<span class="uicontrol">Ref</span> menu.</span>
-</li>
-
-</ol>
-
-</li>
+in the context of the referencing declaration. Select the reference, then
+select the attribute group you want it to reference in the Properties view,
+from the<span class="uicontrol"> Ref</span> menu.</li>
 
 <li class="stepexpand"><span>An <samp class="codeph">any</samp> element enables element content according
 to namespaces, and the corresponding <samp class="codeph">any</samp> attribute element
@@ -117,17 +104,33 @@ enables attributes to appear in elements. To add an <samp class="codeph">any</sa
 right-click in the complex type header, and click <span class="uicontrol">Add Any Attribute</span>.</span>
  You can specify the following values for an <samp class="codeph">any</samp> attribute:
 <ul>
-<li>For a <strong>namespace</strong> value, you can select <strong>##any</strong> (this allows
-any well-formed XML from any namespace), <strong>##local </strong> (this allows any
-well-formed XML that is not declared to be in a namespace, <strong>##other </strong> (this
-allows any well-formed XML that is not from the target namespace of the type
-being defined) or <strong>##targetNamespace </strong> (which is shorthand for the target
-namespace of the type being defined). </li>
+<li>For a <span class="uicontrol">namespace</span> value, you can
+select:<ul>
+<li><strong>##any</strong>. This allows any well-formed XML from any namespace.</li>
 
-<li>For a <span class="uicontrol">processContents</span> value, you can select <strong>skip</strong> (the
-XML processor will not validate the attribute content at all), <strong>lax</strong>(the
-XML processor will validate the attribute content as much as it can), or <strong>strict </strong> (the
-XML processor will validate all the attribute content).</li>
+<li><strong>##local </strong>. This allows any well-formed XML that is not declared
+to be in a namespace.</li>
+
+<li><strong>##other</strong>. This allows any well-formed XML that is not from the target
+namespace of the type being defined.</li>
+
+<li><strong>##targetNamespace </strong>. This is shorthand for the target namespace
+of the type being defined.</li>
+
+</ul>
+</li>
+
+<li>For a <span class="uicontrol">processContents</span> value, you can select:<ul>
+<li><strong>skip</strong>. The XML processor will not validate the attribute content
+at all.</li>
+
+<li><strong>lax</strong>. The XML processor will validate the attribute content as much
+as it can.</li>
+
+<li><strong>strict</strong>. The XML processor will validate all the attribute content.</li>
+
+</ul>
+</li>
 
 </ul>
 
@@ -135,14 +138,21 @@ XML processor will validate all the attribute content).</li>
 
 <li class="stepexpand"><span>Click the <span class="uicontrol">Documentation</span> tab if you want
 to provide any information about this complex type.</span> The <span class="uicontrol">Documentation</span> page
-is used for human readable material, such as a description, and the <span class="uicontrol">App
-Info</span> page can be used to provide information for applications.
-</li>
+is used for human readable material, such as a description.</li>
+
+<li class="stepexpand"><span>Click the <span class="uicontrol">Extensions</span> tab if you want to
+add application information elements to your annotations of schema components.</span>
+ The <span class="uicontrol">Extensions</span> page allows you to specify the
+schema and add XML content to your annotations.</li>
 
 </ol>
 
 </div>
 
+<div><div class="reltasks"><strong>Related tasks</strong><br />
+<div><a href="../topics/taddcmod.html" title="A content model is the representation of any data that can be contained inside an element, global element, complex type, or group. It is a formal description of the structure and permissible content of an element, global element, complex type, or group, which may be used to validate a document instance.">Adding content models</a></div>
+</div>
+</div>
 
 </body>
 </html>

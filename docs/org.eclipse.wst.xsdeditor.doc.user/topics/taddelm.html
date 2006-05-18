@@ -9,10 +9,14 @@
 <meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
 <meta content="task" name="DC.Type" />
 <meta name="DC.Title" content="Adding elements" />
-<meta name="abstract" content="Elements are fundamental building blocks in XML. Element declarations provide value constraints, and a description that can be used for validation, as well as establishing constraining relationships between related elements and attributes, and controlling substitution of elements." />
-<meta name="description" content="Elements are fundamental building blocks in XML. Element declarations provide value constraints, and a description that can be used for validation, as well as establishing constraining relationships between related elements and attributes, and controlling substitution of elements." />
+<meta name="abstract" content="Elements are fundamental building blocks in XML. Element declarations provide value constraints, provide a description that can be used for validation, establish constraining relationships between related elements and attributes, and control the substitution of elements." />
+<meta name="description" content="Elements are fundamental building blocks in XML. Element declarations provide value constraints, provide a description that can be used for validation, establish constraining relationships between related elements and attributes, and control the substitution of elements." />
 <meta content="XML schema editor, adding, elements, XML schema files" name="DC.subject" />
 <meta content="XML schema editor, adding, elements, XML schema files" name="keywords" />
+<meta scheme="URI" name="DC.Relation" content="../topics/taddcmod.html" />
+<meta scheme="URI" name="DC.Relation" content="../topics/taddelmr.html" />
+<meta scheme="URI" name="DC.Relation" content="../topics/taddanye.html" />
+<meta scheme="URI" name="DC.Relation" content="../topics/taddglba.html" />
 <meta content="XHTML" name="DC.Format" />
 <meta content="taddelm" name="DC.Identifier" />
 <meta content="en-us" name="DC.Language" />
@@ -28,26 +32,25 @@
 
 
 <div><p>Elements are fundamental building blocks in XML. Element declarations
-provide value constraints, and a description that can be used for validation,
-as well as establishing constraining relationships between related elements
-and attributes, and controlling substitution of elements.</p>
+provide value constraints, provide a description that can be used for validation,
+establish constraining relationships between related elements and attributes,
+and control the substitution of elements.</p>
 
 <div class="section"><p>The following instructions were written for the Resource perspective,
 but they will also work in many other perspectives.</p>
-<p>To add an element,
-follow these steps:</p>
+<p>To add an element:</p>
 </div>
 
 <ol>
-<li class="stepexpand"><span>To add an element, in the Graph view, right-click the content model
-you want to work with and click <span class="uicontrol">Add Element</span>.</span>
- The element appears attached to the content model in the Graph view.
+<li class="stepexpand"><span>To add an element, in the Design view, right-click the content
+model you want to work with and click <span class="uicontrol">Add Element</span>.</span>
+ The element appears attached to the content model in the Design view.
 <ol type="a">
-<li class="substepexpand"><span>Select the element, and in the Graph view, click the current
+<li class="substepexpand"><span>In the Design view, select the element, and click the current
 (default) name of the element, which puts you in direct editing mode, then
-type the new <span class="uicontrol">Name</span> and hit enter.</span></li>
+type the new <span class="uicontrol">Name</span> and press enter.</span></li>
 
-<li class="substepexpand"><span>In the Graph view, click the current (default) element type
+<li class="substepexpand"><span>In the Design view, click the current (default) element type
 and select a type from the menu. Alternately, you can select browse to invoke
 the Set Type dialog for more options.</span> The Set Type dialog lists
 all built-in and user-defined types currently available. You can change the <span class="uicontrol">Scope</span> of
@@ -72,21 +75,24 @@ the selected working set.</li>
 </li>
 
 <li class="stepexpand"><span>(Optional) In the Properties view, select the appropriate value
-in the <span class="uicontrol">MinOccurs</span> field.</span> This is the minimum
-number of times the element can appear in an instance document. If you want
-the element to be optional, select <span class="uicontrol">0</span>. Otherwise, select <span class="uicontrol">1</span>. 
+in the <span class="uicontrol">MinOccurs</span> field.</span> This is the number
+of times the element can appear in an instance document. If you want the element
+to be optional, select <span class="uicontrol">0</span>. Otherwise, select <span class="uicontrol">1</span>. 
 </li>
 
 <li class="stepexpand"><span>(Optional) Select the appropriate value in the <span class="uicontrol">MaxOccurs</span> field.</span>
  This is the maximum number of times the element can appear in an instance
-document. You can select <span class="uicontrol">unbounded</span> to indicate there
-is no maximum number of occurrences.</li>
+document. Select <span class="uicontrol">unbounded</span> to indicate there is no
+maximum number of occurrences.</li>
 
 <li class="stepexpand"><span>Click the <span class="uicontrol">Documentation</span> tab if you want
 to provide any information about this element.</span> The <span class="uicontrol">Documentation</span> page
-is used for human readable material, such as a description, and the <span class="uicontrol">App
-Info</span> page can be used to provide information for applications.
-</li>
+is used for human readable material, such as a description.</li>
+
+<li class="stepexpand"><span>Click the <span class="uicontrol">Extensions</span> tab if you want to
+add application information elements to your annotations of schema components.</span>
+ The <span class="uicontrol">Extensions</span> page allows you to specify the
+schema and add XML content to your annotations.</li>
 
 </ol>
 
@@ -96,6 +102,13 @@ about working with content models, refer to the related tasks.</div>
 
 </div>
 
+<div><div class="reltasks"><strong>Related tasks</strong><br />
+<div><a href="../topics/taddcmod.html" title="A content model is the representation of any data that can be contained inside an element, global element, complex type, or group. It is a formal description of the structure and permissible content of an element, global element, complex type, or group, which may be used to validate a document instance.">Adding content models</a></div>
+<div><a href="../topics/taddelmr.html" title="An element reference provides a reference to a global element. A declaration that references a global element enables the referenced global element to appear in the instance document in the context of the referencing declaration.">Adding element references</a></div>
+<div><a href="../topics/taddanye.html" title="You can use the any element in a similar way as a DTD's ANY content model, however, it must be done in conjunction with namespaces. This enables you to include any well-formed XML content, such as an HTML Web page that conforms to XHTML 1.0 syntax.">Adding an any element</a></div>
+<div><a href="../topics/taddglba.html" title="A global attribute is an attribute that can be recognized anywhere in a document. Once declared, a global attribute can be referenced in one or more declarations using an attribute reference.">Adding global attributes</a></div>
+</div>
+</div>
 
 </body>
 </html>

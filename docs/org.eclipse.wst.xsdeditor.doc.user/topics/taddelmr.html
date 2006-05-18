@@ -13,6 +13,10 @@
 <meta name="description" content="An element reference provides a reference to a global element. A declaration that references a global element enables the referenced global element to appear in the instance document in the context of the referencing declaration." />
 <meta content="XML schema editor, adding, element references, XML schema files, element references, XML schema files" name="DC.subject" />
 <meta content="XML schema editor, adding, element references, XML schema files, element references, XML schema files" name="keywords" />
+<meta scheme="URI" name="DC.Relation" content="../topics/taddglem.html" />
+<meta scheme="URI" name="DC.Relation" content="../topics/taddelm.html" />
+<meta scheme="URI" name="DC.Relation" content="../topics/taddanye.html" />
+<meta scheme="URI" name="DC.Relation" content="../topics/taddglba.html" />
 <meta content="XHTML" name="DC.Format" />
 <meta content="taddelmr" name="DC.Identifier" />
 <meta content="en-us" name="DC.Language" />
@@ -35,24 +39,24 @@ declaration.</p>
 <div class="section"><p>The following instructions were written for the Resource perspective,
 but they will also work in many other perspectives.</p>
 <p>To add an element
-reference, follow these steps:</p>
+reference:</p>
 </div>
 
 <ol>
-<li class="stepexpand"><span>In the Graph view, right-click the content model you want to work
+<li class="stepexpand"><span>In the Design view, right-click the content model you want to work
 with and click <span class="uicontrol">Add Element Ref</span>.</span> If
 no global element is defined in the document, a new global element is created
 for you, and the element reference will point to it.</li>
 
-<li class="stepexpand"><span>Select the element reference. You can specify the following values
-for an element reference:</span>
+<li class="stepexpand"><span>Select the element reference. To specify values for an element
+reference:</span>
 <ul>
-<li><span class="uicontrol">name</span>. Click the name of the element reference
-in the Graph view. Enter the name of the element reference.</li>
+<li>Click the name of the element reference in the Design view. Enter
+the name of the element reference.</li>
 
-<li><span class="uicontrol">type</span>. Click the element reference type in the
-Graph view. Select a type from the menu, or select <span class="uicontrol">Browse</span> for
-more options.</li>
+<li>Click the element reference type in the Design view.
+Select a type from the menu, or select <span class="uicontrol">Browse</span> for more
+options.</li>
 
 </ul>
 
@@ -70,14 +74,24 @@ is no maximum number of occurrences.</li>
 
 <li class="stepexpand"><span>Click the <span class="uicontrol">Documentation</span> tab if you want
 to provide any information about this element reference.</span> The <span class="uicontrol">Documentation</span> page
-is used for human readable material, such as a description, and the <span class="uicontrol">App
-Info</span> page can be used to provide information for applications.
-</li>
+is used for human readable material, such as a description.</li>
+
+<li class="stepexpand"><span>Click the <span class="uicontrol">Extensions</span> tab if you want to
+add application information elements to your annotations of schema components.</span>
+ The <span class="uicontrol">Extensions</span> page allows you to specify the
+schema and add XML content to your annotations.</li>
 
 </ol>
 
 </div>
 
+<div><div class="reltasks"><strong>Related tasks</strong><br />
+<div><a href="../topics/taddglem.html" title="A global element is an element with a global scope. It is one that has been declared as part of the main schema rather than as part of a content model.">Adding global elements</a></div>
+<div><a href="../topics/taddelm.html" title="Elements are fundamental building blocks in XML. Element declarations provide value constraints, provide a description that can be used for validation, establish constraining relationships between related elements and attributes, and control the substitution of elements.">Adding elements</a></div>
+<div><a href="../topics/taddanye.html" title="You can use the any element in a similar way as a DTD's ANY content model, however, it must be done in conjunction with namespaces. This enables you to include any well-formed XML content, such as an HTML Web page that conforms to XHTML 1.0 syntax.">Adding an any element</a></div>
+<div><a href="../topics/taddglba.html" title="A global attribute is an attribute that can be recognized anywhere in a document. Once declared, a global attribute can be referenced in one or more declarations using an attribute reference.">Adding global attributes</a></div>
+</div>
+</div>
 
 </body>
 </html>

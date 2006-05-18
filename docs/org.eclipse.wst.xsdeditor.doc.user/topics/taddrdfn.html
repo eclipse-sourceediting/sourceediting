@@ -13,6 +13,9 @@
 <meta name="description" content="You can use the redefine mechanism to redefine simple and complex types, groups, and attribute groups obtained from external schema files. When you redefine a component, you are modifying its contents." />
 <meta content="XML schema editor, adding, redefine elements, XML schema files, redefine elements, XML schema files" name="DC.subject" />
 <meta content="XML schema editor, adding, redefine elements, XML schema files, redefine elements, XML schema files" name="keywords" />
+<meta scheme="URI" name="DC.Relation" content="../topics/taddimpt.html" />
+<meta scheme="URI" name="DC.Relation" content="../topics/taddincl.html" />
+<meta scheme="URI" name="DC.Relation" content="../topics/rnmspc.html" />
 <meta content="XHTML" name="DC.Format" />
 <meta content="taddrdfn" name="DC.Identifier" />
 <meta content="en-us" name="DC.Language" />
@@ -38,41 +41,33 @@ also be redefined.</p>
 <p>The following instructions were written for the Resource
 perspective, but they will also work in many other perspectives.</p>
 <p>To
-add a redefine element , follow these steps:</p>
+add a redefine element:</p>
 </div>
 
 <ol>
 <li class="stepexpand"><span>Open your XML schema in the XML schema editor.</span></li>
 
 <li class="stepexpand"><span>In the Outline view, select your schema.</span> The entire
-schema and its contents should be displayed in the Graph view.</li>
+schema and its contents are displayed in the Design view.</li>
 
-<li class="stepexpand"><span>In the Graph view, right-click in the <strong>Directives</strong> section
+<li class="stepexpand"><span>In the Design view, right-click in the <strong>Directives</strong> section
 and click <span class="uicontrol">Add Redefine</span>.</span></li>
 
-<li class="stepexpand"><span>In the Properties view, click the <strong>General</strong> tab and click
-the <span class="uicontrol">Browse</span> <img src="../images/Browse.gif" alt="This&#10;graphic is the Browse button" /> button to the right of the <span class="uicontrol">Schema
-location</span> field.</span> The XML schema file you select must
-have the same namespace as the current schema.</li>
+<li class="stepexpand"><span>In the Properties view, click the <strong>General</strong> tab and click <span class="uicontrol">Browse</span> <img src="../images/Browse.gif" alt="This graphic is the Browse button" /> to
+the right of the <span class="uicontrol">Schema location</span> field.</span>
+ The XML schema file you select must have the same namespace as the current
+schema.</li>
 
-<li class="stepexpand"><span>If you want to select an XML schema located in the workbench, select
-the <span class="uicontrol">Workbench projects</span> radio button and click <span class="uicontrol">Next.</span></span>
-<ol type="a">
-<li><span> Select the schema you want to include and click <span class="uicontrol">Finish</span>.</span>
+<li class="stepexpand"><span>If you want to select an XML schema located in the workbench, select <span class="uicontrol">Workbench
+projects</span> and click <span class="uicontrol">Next.</span></span></li>
+
+<li class="stepexpand"><span>Select the schema you want to include and click <span class="uicontrol">Finish</span>.</span>
 </li>
 
-</ol>
+<li class="stepexpand"><span>If you want to select an XML schema located on the Web, select <span class="uicontrol">HTTP</span> and
+click <span class="uicontrol">Next</span>.</span></li>
 
-</li>
-
-<li class="stepexpand"><span>If you want to select an XML schema located on the Web, select
-the <span class="uicontrol">HTTP</span> radio button and click <span class="uicontrol">Next</span>.</span>
-<ol type="a">
-<li><span>Type the URL of the XML schema and click <span class="uicontrol">Finish</span>.
- </span></li>
-
-</ol>
-
+<li class="stepexpand"><span>Type the URL of the XML schema and click <span class="uicontrol">Finish</span>.</span>
   <div class="note"><span class="notetitle">Note:</span> A local copy of the schema will not be stored in the workbench.
 Every time you validate your schema, the schema's contents will be checked
 from the URL you specify.</div>
@@ -85,9 +80,12 @@ file.</span></li>
 
 <li class="stepexpand"><span>Click the <span class="uicontrol">Documentation</span> tab if you want
 to provide any information about this redefine element.</span> The <span class="uicontrol">Documentation</span> page
-is used for human readable material, such as a description, and the <span class="uicontrol">App
-Info</span> page can be used to provide information for applications.
-</li>
+is used for human readable material, such as a description.</li>
+
+<li class="stepexpand"><span>Click the <span class="uicontrol">Extensions</span> tab if you want to
+add application information elements to your annotations of schema components.</span>
+ The <span class="uicontrol">Extensions</span> page allows you to specify the
+schema and add XML content to your annotations.</li>
 
 </ol>
 
@@ -98,6 +96,14 @@ in the XML schema you selected in the redefine element. </p>
 
 </div>
 
+<div><div class="reltasks"><strong>Related tasks</strong><br />
+<div><a href="../topics/taddimpt.html" title="As schemas become larger, it is often desirable to divide their content among several schema documents for purposes such as ease of maintenance, reuse, and readability. You can use an import element to bring in definitions and declarations from an imported schema into the current schema.">Adding import elements</a></div>
+<div><a href="../topics/taddincl.html" title="As schemas become larger, it is often desirable to divide their content among several schema documents for purposes such as ease of maintenance, reuse, and readability. You can use the include element to bring in definitions and declarations from the included schema into the current schema. The included schema must be in the same target namespace as the including schema.">Adding include elements</a></div>
+</div>
+<div class="relref"><strong>Related reference</strong><br />
+<div><a href="../topics/rnmspc.html" title="An XML namespace is a collection of names, identified by a URI reference, which are used in XML documents as element types and attribute names.">XML namespaces</a></div>
+</div>
+</div>
 
 </body>
 </html>

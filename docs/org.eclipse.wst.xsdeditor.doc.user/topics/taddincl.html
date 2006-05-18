@@ -9,10 +9,13 @@
 <meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
 <meta content="task" name="DC.Type" />
 <meta name="DC.Title" content="Adding include elements" />
-<meta name="abstract" content="As schemas become larger, it is often desirable to divide their content among several schema documents for purposes such as ease of maintenance, reuse, and readability. You can use the include element to brings in definitions and declarations from the included schema into the current schema. The included schema must be in the same target namespace as the including schema." />
-<meta name="description" content="As schemas become larger, it is often desirable to divide their content among several schema documents for purposes such as ease of maintenance, reuse, and readability. You can use the include element to brings in definitions and declarations from the included schema into the current schema. The included schema must be in the same target namespace as the including schema." />
+<meta name="abstract" content="As schemas become larger, it is often desirable to divide their content among several schema documents for purposes such as ease of maintenance, reuse, and readability. You can use the include element to bring in definitions and declarations from the included schema into the current schema. The included schema must be in the same target namespace as the including schema." />
+<meta name="description" content="As schemas become larger, it is often desirable to divide their content among several schema documents for purposes such as ease of maintenance, reuse, and readability. You can use the include element to bring in definitions and declarations from the included schema into the current schema. The included schema must be in the same target namespace as the including schema." />
 <meta content="XML schema editor, adding, include elements, XML schema files, include elements, XML schema files" name="DC.subject" />
 <meta content="XML schema editor, adding, include elements, XML schema files, include elements, XML schema files" name="keywords" />
+<meta scheme="URI" name="DC.Relation" content="../topics/taddimpt.html" />
+<meta scheme="URI" name="DC.Relation" content="../topics/taddrdfn.html" />
+<meta scheme="URI" name="DC.Relation" content="../topics/rnmspc.html" />
 <meta content="XHTML" name="DC.Format" />
 <meta content="taddincl" name="DC.Identifier" />
 <meta content="en-us" name="DC.Language" />
@@ -30,9 +33,9 @@
 <div><p>As schemas become larger, it is often desirable to divide their
 content among several schema documents for purposes such as ease of maintenance,
 reuse, and readability. You can use the <samp class="codeph">include</samp> element to
-brings in definitions and declarations from the included schema into the current
-schema. The included schema must be in the same target namespace as the including
-schema. </p>
+bring in definitions and declarations from the included schema
+into the current schema. The included schema must be in the same target namespace
+as the including schema. </p>
 
 <div class="section"><p>The following instructions were written for the XML perspective,
 but they will also work in many other perspectives.</p>
@@ -44,34 +47,26 @@ element, follow these steps:</p>
 <li class="stepexpand"><span>Open your XML schema in the XML schema editor.</span></li>
 
 <li class="stepexpand"><span>In the Outline view, select your schema.</span> The entire
-schema and its contents should be displayed in the Graph view.</li>
+schema and its contents are displayed in the Design view.</li>
 
-<li class="stepexpand"><span>In the Graph view, right click in the <strong>Directives</strong> section
+<li class="stepexpand"><span>In the Design view, right-click in the <strong>Directives</strong> section
 and click <span class="uicontrol">Add Include</span>.</span></li>
 
-<li class="stepexpand"><span>In the Properties view, click the <strong>General</strong> tab and click
-the <span class="uicontrol">Browse</span> <img src="../images/Browse.gif" alt="This&#10;graphic is the Browse button" /> button to the right of the <span class="uicontrol">Schema
-location</span> field.</span> The XML schema file you select must
-have the same namespace as the current schema.</li>
-
-<li class="stepexpand"><span>If you want to select an XML schema located in the workbench, select
-the <span class="uicontrol">Workbench projects</span> radio button and click <span class="uicontrol">Next</span>. </span>
-<ol type="a">
-<li><span>Select the schema you want to include and click <span class="uicontrol">Finish</span>.</span>
+<li class="stepexpand"><span>In the Properties view, click the <strong>General</strong> tab and click <span class="uicontrol">Browse</span> <img src="../images/Browse.gif" alt="This graphic is the Browse button" /> to
+the right of the <span class="uicontrol">Schema location</span> field.</span> The
+XML schema file you select must have the same namespace as the current schema.
 </li>
 
-</ol>
+<li class="stepexpand"><span>If you want to select an XML schema located in the workbench, select <span class="uicontrol">Workbench
+projects</span> and click <span class="uicontrol">Next</span>. </span></li>
 
+<li class="stepexpand"><span>Select the schema you want to include and click <span class="uicontrol">Finish</span>.</span>
 </li>
 
-<li class="stepexpand"><span>If you want to select an XML schema located on the Web, select
-the <span class="uicontrol">HTTP</span> radio button and click <span class="uicontrol">Next</span>.</span>
-<ol type="a">
-<li><span>Type the URL of the XML schema and click <span class="uicontrol">Finish</span>. </span>
-</li>
+<li class="stepexpand"><span>If you want to select an XML schema located on the Web, select <span class="uicontrol">HTTP</span> and
+click <span class="uicontrol">Next</span>.</span></li>
 
-</ol>
-
+<li class="stepexpand"><span>Type the URL of the XML schema and click <span class="uicontrol">Finish</span>.</span>
  <div class="note"><span class="notetitle">Note:</span>  A local copy of the schema will not be stored in the workbench.
 Every time you validate your schema, the schema's contents will be checked
 from the URL you specify.</div>
@@ -84,9 +79,12 @@ file.</span></li>
 
 <li class="stepexpand"><span>Click the <span class="uicontrol">Documentation</span> tab if you want
 to provide any information about this include element.</span> The <span class="uicontrol">Documentation</span> page
-is used for human readable material, such as a description, and the <span class="uicontrol">App
-Info</span> page can be used to provide information for applications.
-</li>
+is used for human readable material, such as a description.</li>
+
+<li class="stepexpand"><span>Click the <span class="uicontrol">Extensions</span> tab if you want to
+add application information elements to your annotations of schema components.</span>
+ The <span class="uicontrol">Extensions</span> page allows you to specify the
+schema and add XML content to your annotations.</li>
 
 </ol>
 
@@ -113,6 +111,14 @@ en Informatique et en Automatique, Keio University).</p>
 
 </div>
 
+<div><div class="reltasks"><strong>Related tasks</strong><br />
+<div><a href="../topics/taddimpt.html" title="As schemas become larger, it is often desirable to divide their content among several schema documents for purposes such as ease of maintenance, reuse, and readability. You can use an import element to bring in definitions and declarations from an imported schema into the current schema.">Adding import elements</a></div>
+<div><a href="../topics/taddrdfn.html" title="You can use the redefine mechanism to redefine simple and complex types, groups, and attribute groups obtained from external schema files. When you redefine a component, you are modifying its contents.">Adding redefine elements</a></div>
+</div>
+<div class="relref"><strong>Related reference</strong><br />
+<div><a href="../topics/rnmspc.html" title="An XML namespace is a collection of names, identified by a URI reference, which are used in XML documents as element types and attribute names.">XML namespaces</a></div>
+</div>
+</div>
 
 </body>
 </html>

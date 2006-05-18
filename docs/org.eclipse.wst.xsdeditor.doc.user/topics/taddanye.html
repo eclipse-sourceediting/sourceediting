@@ -9,8 +9,8 @@
 <meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
 <meta content="task" name="DC.Type" />
 <meta name="DC.Title" content="Adding an any element" />
-<meta name="abstract" content="You can use the any element to provide something similar to a DTD's ANY content model, however, it must be done in conjunction with namespaces. This enables you to include any well-formed XML content, such as an HTML Web page that conforms to XHTML 1.0 syntax." />
-<meta name="description" content="You can use the any element to provide something similar to a DTD's ANY content model, however, it must be done in conjunction with namespaces. This enables you to include any well-formed XML content, such as an HTML Web page that conforms to XHTML 1.0 syntax." />
+<meta name="abstract" content="You can use the any element in a similar way as a DTD's ANY content model, however, it must be done in conjunction with namespaces. This enables you to include any well-formed XML content, such as an HTML Web page that conforms to XHTML 1.0 syntax." />
+<meta name="description" content="You can use the any element in a similar way as a DTD's ANY content model, however, it must be done in conjunction with namespaces. This enables you to include any well-formed XML content, such as an HTML Web page that conforms to XHTML 1.0 syntax." />
 <meta content="XML schema editor, adding, an any element, XML schema files" name="DC.subject" />
 <meta content="XML schema editor, adding, an any element, XML schema files" name="keywords" />
 <meta content="XHTML" name="DC.Format" />
@@ -27,10 +27,10 @@
 
 
 
-<div><p>You can use the <samp class="codeph">any</samp> element to provide something
-similar to a DTD's ANY content model, however, it must be done in conjunction
-with namespaces. This enables you to include any well-formed XML content,
-such as an HTML Web page that conforms to XHTML 1.0 syntax.</p>
+<div><p>You can use the <samp class="codeph">any</samp> element in a similar way as
+a DTD's ANY content model, however, it must be done in conjunction with namespaces.
+This enables you to include any well-formed XML content, such as an HTML Web
+page that conforms to XHTML 1.0 syntax.</p>
 
 <div class="section"><p>For example:</p>
 <div class="p"><pre>&lt;element name = "MyWebPage"&gt;
@@ -40,13 +40,12 @@ such as an HTML Web page that conforms to XHTML 1.0 syntax.</p>
 &lt;/complexType&gt;
 &lt;/element&gt;</pre>
 </div>
-<p>The preceding schema fragment allows a <var class="varname">&lt;MyWebPage&gt;</var> element
+<p>The preceding schema fragment allows a <samp class="codeph">&lt;MyWebPage&gt;</samp> element
 to contain any well-formed XHTML data that appears in the specified namespace.</p>
 <p>The
 following instructions were written for the Resource perspective, but they
 will also work in many other perspectives.</p>
-<p>To add an <samp class="codeph">any</samp> element,
-follow these steps:</p>
+<p>To add an <samp class="codeph">any</samp> element:</p>
 </div>
 
 <ol>
@@ -55,17 +54,36 @@ to work with and click <span class="uicontrol">Add Any</span>. </span></li>
 
 <li class="stepexpand"><span>Select the new <samp class="codeph">any</samp> element.</span></li>
 
-<li class="stepexpand"><span>In the Properties view of the schema editor, for a <strong>namespace</strong> value,
-you can select <strong>##any</strong> (this allows any well-formed XML from any namespace), <strong>##local </strong> (this
-allows any well-formed XML that is not declared to be in a namespace), <strong>##other </strong> (this
-allows any well-formed XML that is not from the target namespace of the type
-being defined) or <strong>##targetNamespace </strong> (which is shorthand for the target
-namespace of the type being defined). </span></li>
+<li class="stepexpand"><span>In the Properties view of the schema editor, for a <span class="uicontrol">namespace</span> value,
+you can select:</span>
+<ul>
+<li><strong>##any</strong>. This allows any well-formed XML from any namespace.</li>
 
-<li class="stepexpand"><span>For a <span class="uicontrol">processContents</span> value, you can select <strong>skip</strong> (the
-XML processor will not validate the content at all), <strong>lax</strong> (the XML processor
-will validate the content as much as it can), or <strong>strict </strong> (the XML processor
-will validate all the content).</span></li>
+<li><strong>##local </strong>. This allows any well-formed XML that is not declared
+to be in a namespace.</li>
+
+<li><strong>##other </strong>. This allows any well-formed XML that is not from
+the target namespace of the type being defined.</li>
+
+<li><strong>##targetNamespace</strong>. This is shorthand for the target namespace
+of the type being defined.</li>
+
+</ul>
+
+</li>
+
+<li class="stepexpand"><span>For a <span class="uicontrol">processContents</span> value, you can select:</span>
+<ul>
+<li><strong>skip</strong>. The XML processor will not validate the content at all.</li>
+
+<li><strong>lax</strong>. The XML processor will validate the content as much as
+it can.</li>
+
+<li><strong>strict</strong>. The XML processor will validate all the content.</li>
+
+</ul>
+
+</li>
 
 <li class="stepexpand"><span>The <span class="uicontrol">minOccurs</span> value is the number of times
 the <samp class="codeph">any</samp> element must appear in an instance document. You
@@ -80,9 +98,12 @@ indicate there is no maximum number of occurrences, <span class="uicontrol">unbo
 
 <li class="stepexpand"><span>Click the <span class="uicontrol">Documentation</span> tab if you want
 to provide any information about this element.</span> The <span class="uicontrol">Documentation</span> page
-is used for human readable material, such as a description, and the <span class="uicontrol">App
-Info</span> page can be used to provide information for applications.
-</li>
+is used for human readable material, such as a description.</li>
+
+<li class="stepexpand"><span>Click the <span class="uicontrol">Extensions</span> tab if you want to
+add application information elements to your annotations of schema components.</span>
+ The <span class="uicontrol">Extensions</span> page allows you to specify the
+schema and add XML content to your annotations.</li>
 
 </ol>
 
