@@ -978,6 +978,10 @@ span.ednoticestitle {
 	font-weight: bold;
 }
 
+span.uicontrol {
+	font-weight: bold;
+}
+
 span.term {
 	font-weight: bold;
 }
