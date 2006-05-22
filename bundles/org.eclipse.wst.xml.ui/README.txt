@@ -1,1 +1,0 @@
-The XML specific implementation of the sse editor.
