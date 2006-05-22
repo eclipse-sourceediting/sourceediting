@@ -25,9 +25,9 @@
          id="org.eclipse.wst.web_userdoc.feature"
          version="0.0.0"/>
 
-   <requires>
-      <import feature="org.eclipse.wst.web_core.feature" version="1.0.0" match="greaterOrEqual"/>
-   </requires>
+   <includes
+         id="org.eclipse.wst.web_core.feature"
+         version="0.0.0"/>
 
    <plugin
          id="org.eclipse.wst.html.ui.infopop"
