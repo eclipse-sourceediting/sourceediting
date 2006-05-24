@@ -34,7 +34,8 @@ public class XSDEditorPlugin extends AbstractUIPlugin
   public static final String CONST_XSD_DEFAULT_PREFIX_TEXT = "org.eclipse.wst.xmlschema.xsdDefaultPrefixText"; //$NON-NLS-1$
   public static final String CONST_PREFERED_BUILT_IN_TYPES = "org.eclipse.wst.xmlschema.preferedBuiltInTypes";  //$NON-NLS-1$
   public static final String CUSTOM_LIST_SEPARATOR = "\n"; //$NON-NLS-1$
-  public static final String EXTENSIONS_SCHEMAS_EXTENSIONID = "org.eclipse.wst.xsd.ui.ExtensionsSchemasDescription"; //$NON-NLS-1$
+  public static final String EXTENSIONS_SCHEMAS_EXTENSIONID = "org.eclipse.wst.xsd.ui.extensionCategories"; //$NON-NLS-1$
+  private static final String DEPRECATED_EXTENSIONS_SCHEMAS_EXTENSIONID = "org.eclipse.wst.xsd.ui.ExtensionsSchemasDescription"; //$NON-NLS-1$  
   public final static String DEFAULT_TARGET_NAMESPACE = "http://www.example.org"; //$NON-NLS-1$
   
 	//The shared instance.
@@ -249,6 +250,7 @@ public class XSDEditorPlugin extends AbstractUIPlugin
     if (registry == null)
     {
       registry = new ExtensionsSchemasRegistry(EXTENSIONS_SCHEMAS_EXTENSIONID);
+      registry.__internalSetDeprecatedExtensionId(DEPRECATED_EXTENSIONS_SCHEMAS_EXTENSIONID);
     }
     return registry;
   }
