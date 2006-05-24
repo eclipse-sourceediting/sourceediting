@@ -37,23 +37,40 @@ public class ExtensionsSchemasRegistry
   HashMap propertyMap;
   ArrayList nsURIProperties;
   private ICatalog systemCatalog;
-
+  private String deprecatedExtensionId;
+  
   public ExtensionsSchemasRegistry(String appinfo_extensionid)
   {
     extensionId = appinfo_extensionid;
   }
+  
+  public void __internalSetDeprecatedExtensionId(String deprecatedId)
+  {
+    deprecatedExtensionId = deprecatedId;
+  }
 
   public List getAllExtensionsSchemasContribution()
-  {
+  {  
     // If we read the registry, then let's not do it again.
     if (nsURIProperties != null)
     {
       return nsURIProperties;
     }
-    IConfigurationElement[] asiPropertiesList = Platform.getExtensionRegistry().getConfigurationElementsFor(extensionId);
-
+ 
     nsURIProperties = new ArrayList();
     propertyMap = new HashMap();
+
+    getAllExtensionsSchemasContribution(extensionId);
+    if (deprecatedExtensionId != null)
+    {
+      getAllExtensionsSchemasContribution(deprecatedExtensionId);     
+    }  
+    return nsURIProperties;
+  }
+  
+  private List getAllExtensionsSchemasContribution(String id)
+  {
+    IConfigurationElement[] asiPropertiesList = Platform.getExtensionRegistry().getConfigurationElementsFor(id);
 
     boolean hasASIProperties = (asiPropertiesList != null) && (asiPropertiesList.length > 0);
 
