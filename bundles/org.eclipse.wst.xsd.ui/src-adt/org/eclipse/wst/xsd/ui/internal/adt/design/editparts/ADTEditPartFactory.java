@@ -80,7 +80,7 @@ public class ADTEditPartFactory implements EditPartFactory
   {
     if (child == null)
     {
-      Thread.dumpStack();
+      // Thread.dumpStack();
     }
     Assert.isNotNull(child);
     child.setModel(model);
