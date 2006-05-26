@@ -105,6 +105,7 @@ public class XSDElementDeclarationSection extends MultiplicitySection
     // ------------------------------------------------------------------
     if (isElementReference)
     {
+      data = new GridData();
       data.horizontalAlignment = GridData.HORIZONTAL_ALIGN_BEGINNING;
       data.grabExcessHorizontalSpace = false;
       CLabel refLabel = getWidgetFactory().createCLabel(composite, org.eclipse.wst.xsd.ui.internal.common.util.Messages._UI_LABEL_REFERENCE);
