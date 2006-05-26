@@ -26,12 +26,23 @@ import org.eclipse.xsd.XSDSchema;
 public class AddXSDAttributeDeclarationAction extends XSDBaseAction
 {
   public static String ID = "AddXSDAttributeAction"; //$NON-NLS-1$
-
+  public static String REF_ID = "org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDAttributeReferenceAction"; //$NON-NLS-1$
+  boolean isReference = false;
+  
   public AddXSDAttributeDeclarationAction(IWorkbenchPart part)
   {
     super(part);
     setText(Messages._UI_ACTION_ADD_ATTRIBUTE);
     setId(ID);
+    isReference = false;
+  }
+  
+  public AddXSDAttributeDeclarationAction(IWorkbenchPart part, String id, String label, boolean isReference)
+  {
+    super(part);
+    setText(label);
+    setId(id);
+    this.isReference = isReference;
   }
 
   public void run()
@@ -46,6 +57,7 @@ public class AddXSDAttributeDeclarationAction extends XSDBaseAction
     if (selection instanceof XSDComplexTypeDefinition)
     {
       command = new AddXSDAttributeDeclarationCommand(Messages._UI_ACTION_ADD_ATTRIBUTE, (XSDComplexTypeDefinition) selection);
+      command.setReference(isReference);
       getCommandStack().execute(command);
     }
     else if (selection instanceof XSDAttributeUse)
@@ -65,12 +77,14 @@ public class AddXSDAttributeDeclarationAction extends XSDBaseAction
       if (ct != null)
       {
         command = new AddXSDAttributeDeclarationCommand(Messages._UI_ACTION_ADD_ATTRIBUTE, ct);
+        command.setReference(isReference);
         getCommandStack().execute(command);
       }
     }
     else if (selection instanceof XSDAttributeGroupDefinition)
     {
       command = new AddXSDAttributeDeclarationCommand(Messages._UI_ACTION_ADD_ATTRIBUTE, (XSDAttributeGroupDefinition)selection);
+      command.setReference(isReference);
       getCommandStack().execute(command);
     }
     else if (selection instanceof XSDSchema)
