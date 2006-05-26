@@ -223,8 +223,10 @@
   <!-- this extension point is deprecated, use extensionCategories -->
   <extension-point id="ExtensionsSchemasDescription" name="%ExtensionsSchemasDescription"/>  
   <extension-point id="extensionCategories" name="%ExtensionCategoriesDescription"/>
-  
+
+  <!-- this extension point is deprecated, use internalEditorConfiguration -->  
   <extension-point id="XSDEditorExtensionConfiguration" name="%XSDEditorExtensionConfiguration"/>
+  <extension-point id="internalEditorConfiguration" name="%InternalEditorConfiguration"/>
   
   <extension-point id="extensibilityNodeCustomizations" name="%ExtensionNodeCustomizationsDescription"/>
   

@@ -24,6 +24,7 @@ import org.eclipse.wst.xsd.ui.internal.design.figures.IExtendedFigureFactory;
 public class XSDEditorConfiguration
 {
   public static final String XSDEDITORCONFIGURATIONEXTENSIONID = "org.eclipse.wst.xsd.ui.XSDEditorExtensionConfiguration"; //$NON-NLS-1$
+  public static final String INTERNALEDITORCONFIGURATION_EXTENSIONID = "org.eclipse.wst.xsd.ui.internalEditorConfiguration"; //$NON-NLS-1$
   public static final String CLASSNAME = "class"; //$NON-NLS-1$
   public static final String ADAPTERFACTORY = "adapterFactory"; //$NON-NLS-1$
   public static final String TOOLBARACTION = "toolbarAction"; //$NON-NLS-1$
@@ -109,19 +110,24 @@ public class XSDEditorConfiguration
 
   public void readXSDConfigurationRegistry()
   {
-    IConfigurationElement[] xsdEditorExtensionList = Platform.getExtensionRegistry().getConfigurationElementsFor(XSDEDITORCONFIGURATIONEXTENSIONID);
-
-    boolean definedExtensionsExist = (xsdEditorExtensionList != null && xsdEditorExtensionList.length > 0);
-
     definedExtensionsList = new ArrayList();
-
+    updateList(INTERNALEDITORCONFIGURATION_EXTENSIONID);
+    updateList(XSDEDITORCONFIGURATIONEXTENSIONID);
+  }
+  
+  private void updateList(String ID)
+  {
+    IConfigurationElement[] xsdEditorExtensionList = Platform.getExtensionRegistry().getConfigurationElementsFor(ID);
+    boolean definedExtensionsExist = (xsdEditorExtensionList != null && xsdEditorExtensionList.length > 0);
+    
     if (definedExtensionsExist)
     {
+
       for (int i = 0; i < xsdEditorExtensionList.length; i++)
       {
         XSDEditorExtensionProperties properties = new XSDEditorExtensionProperties();
         definedExtensionsList.add(properties);
-
+  
         IConfigurationElement element = xsdEditorExtensionList[i];
         String adapterFactoryClass = element.getAttribute(ADAPTERFACTORY);
         if (adapterFactoryClass != null)
@@ -134,7 +140,7 @@ public class XSDEditorConfiguration
             properties.setAdapterFactory(adapterFactory);
           }
         }
-
+  
         String figureFactoryClass = element.getAttribute(FIGUREFACTORY);
         if (figureFactoryClass != null)
         {
@@ -146,7 +152,7 @@ public class XSDEditorConfiguration
             properties.setFigureFactoryList(figureFactory);
           }
         }
-
+  
         IConfigurationElement[] toolbarActions = element.getChildren(TOOLBARACTION);
         List actionList = new ArrayList();
         if (toolbarActions != null)
@@ -168,7 +174,7 @@ public class XSDEditorConfiguration
           }
         }
         properties.setActionList(actionList);
-
+  
         String editPartFactoryClass = element.getAttribute(EDITPARTFACTORY);
         if (editPartFactoryClass != null)
         {
@@ -180,7 +186,6 @@ public class XSDEditorConfiguration
             properties.setEditPartFactoryList(editPartFactory);
           }
         }
-
       }
     }
   }
