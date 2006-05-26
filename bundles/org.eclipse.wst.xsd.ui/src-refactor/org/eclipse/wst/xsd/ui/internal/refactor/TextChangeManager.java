@@ -13,7 +13,9 @@ package org.eclipse.wst.xsd.ui.internal.refactor;
 
 import java.util.HashMap;
 import java.util.Map;
+
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.ltk.core.refactoring.TextChange;
 import org.eclipse.ltk.core.refactoring.TextFileChange;
 
@@ -57,6 +59,7 @@ public class TextChangeManager {
 		if (result == null) {
 			result= new TextFileChange(file.toString(), file);
 			result.setKeepPreviewEdits(fKeepExecutedTextEdits);
+			result.initializeValidationData(new NullProgressMonitor());
 			fMap.put(file, result);
 		}
 		return result;
