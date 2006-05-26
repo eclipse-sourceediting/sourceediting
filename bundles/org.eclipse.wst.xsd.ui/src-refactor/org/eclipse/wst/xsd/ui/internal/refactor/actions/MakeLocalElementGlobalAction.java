@@ -13,6 +13,7 @@ package org.eclipse.wst.xsd.ui.internal.refactor.actions;
 
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.wst.xml.core.internal.document.DocumentImpl;
+import org.eclipse.wst.xsd.ui.internal.refactor.RefactoringMessages;
 import org.eclipse.wst.xsd.ui.internal.refactor.structure.MakeLocalElementGlobalCommand;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDElementDeclaration;
@@ -25,9 +26,7 @@ public class MakeLocalElementGlobalAction extends XSDSelectionDispatchAction {
 
 	public MakeLocalElementGlobalAction(ISelection selection, XSDSchema schema) {
 		super(selection, schema);
-        //TODO cs : fix up translation
-        setText("Make Global");
-		//setText(RefactoringMessages.getString("MakeLocalElementGlobalAction.text")); //$NON-NLS-1$
+		setText(RefactoringMessages.getString("MakeLocalElementGlobalAction.text")); //$NON-NLS-1$
 	}
 	
 	public boolean canRun() {

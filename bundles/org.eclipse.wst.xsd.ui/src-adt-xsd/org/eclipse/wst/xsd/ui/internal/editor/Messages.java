@@ -33,6 +33,7 @@ public class Messages extends NLS
   public static String UI_LABEL_SET_TYPE;
   public static String UI_LABEL_TYPE;
   public static String UI_LABEL_NAME;
+  public static String UI_LABEL_KIND;
   public static String UI_LABEL_MINOCCURS;
   public static String UI_LABEL_MAXOCCURS;
   public static String UI_NO_TYPE;
@@ -106,4 +107,3 @@ public class Messages extends NLS
   public static String _UI_ACTION_ADD_ATTRIBUTE_REF;
 
 }
-

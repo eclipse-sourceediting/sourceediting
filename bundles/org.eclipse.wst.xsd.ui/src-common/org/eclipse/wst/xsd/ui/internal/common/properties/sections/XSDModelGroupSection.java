@@ -46,7 +46,7 @@ public class XSDModelGroupSection extends MultiplicitySection
     GridData data = new GridData();
     data.horizontalAlignment = GridData.HORIZONTAL_ALIGN_BEGINNING;
     data.grabExcessHorizontalSpace = false;
-    CLabel nameLabel = getWidgetFactory().createCLabel(composite, "Kind:"); //$NON-NLS-1$
+    CLabel nameLabel = getWidgetFactory().createCLabel(composite, Messages.UI_LABEL_KIND);
     nameLabel.setLayoutData(data);
 
     // ------------------------------------------------------------------
