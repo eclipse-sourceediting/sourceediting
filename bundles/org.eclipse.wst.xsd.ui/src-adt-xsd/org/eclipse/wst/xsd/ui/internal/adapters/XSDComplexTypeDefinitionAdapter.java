@@ -251,6 +251,7 @@ public class XSDComplexTypeDefinitionAdapter extends XSDTypeDefinitionAdapter im
     list.add(AddXSDElementAction.ID);
     list.add(AddXSDElementAction.REF_ID);
     list.add(AddXSDAttributeDeclarationAction.ID);
+    list.add(AddXSDAttributeDeclarationAction.REF_ID);
     list.add(AddXSDAttributeGroupDefinitionAction.REF_ID);
     list.add(AddXSDAnyAttributeAction.ID);
     list.add(BaseSelectionAction.SEPARATOR_ID);

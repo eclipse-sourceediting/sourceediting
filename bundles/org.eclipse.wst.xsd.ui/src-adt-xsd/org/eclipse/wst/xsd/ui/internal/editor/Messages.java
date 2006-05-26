@@ -103,6 +103,7 @@ public class Messages extends NLS
   public static String _UI_ACTION_ADD_INCLUDE;
   public static String _UI_ACTION_ADD_IMPORT;
   public static String _UI_ACTION_ADD_REDEFINE;
+  public static String _UI_ACTION_ADD_ATTRIBUTE_REF;
 
 }
 
