@@ -112,10 +112,13 @@ public class XSDAttributeDeclarationSection extends RefactoringSection
 
     XSDAttributeDeclaration namedComponent = ((XSDAttributeDeclaration) input).getResolvedAttributeDeclaration();
     XSDTypeDefinition namedComponentType = namedComponent.getType();
-    String currentTypeName = namedComponentType.getQName(xsdSchema); // no prefix
-    ComponentSpecification ret = getComponentSpecFromQuickPickForValue(currentTypeName, manager);
-    if (ret == null) //not in quickPick
-      typeCombo.add(currentTypeName);
+    if (namedComponentType != null)
+    {
+      String currentTypeName = namedComponentType.getQName(xsdSchema); // no prefix
+      ComponentSpecification ret = getComponentSpecFromQuickPickForValue(currentTypeName, manager);
+      if (ret == null) //not in quickPick
+        typeCombo.add(currentTypeName);
+    }
   }
   
   private ComponentSpecification getComponentSpecFromQuickPickForValue(String value, ComponentReferenceEditManager editManager)
