@@ -13,13 +13,15 @@ package org.eclipse.wst.xsd.ui.internal.util;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import org.eclipse.wst.sse.core.internal.provisional.IModelStateListener;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-public abstract class ModelReconcileAdapter extends DocumentAdapter
+public abstract class ModelReconcileAdapter extends DocumentAdapter implements IModelStateListener
 {
   protected boolean handlingNotifyChanged = false;
   protected List listeners = new ArrayList();
@@ -97,5 +99,33 @@ public abstract class ModelReconcileAdapter extends DocumentAdapter
         break;
       }             
     }
+  }
+
+  public void modelAboutToBeChanged(IStructuredModel model)
+  {
+  }
+
+  public void modelAboutToBeReinitialized(IStructuredModel structuredModel)
+  {
+  }
+
+  public void modelChanged(IStructuredModel model)
+  {
+  }
+
+  public void modelDirtyStateChanged(IStructuredModel model, boolean isDirty)
+  {
+  }
+
+  public void modelReinitialized(IStructuredModel structuredModel)
+  {
+  }
+
+  public void modelResourceDeleted(IStructuredModel model)
+  {
+  }
+
+  public void modelResourceMoved(IStructuredModel oldModel, IStructuredModel newModel)
+  {
   }
 }
