@@ -2986,18 +2986,17 @@ public class StructuredTextEditor extends TextEditor {
 	}
 
 	void updateRangeIndication(ISelection selection) {
+		boolean rangeUpdated = false;
 		if (selection instanceof IStructuredSelection && !((IStructuredSelection) selection).isEmpty()) {
 			Object[] objects = ((IStructuredSelection) selection).toArray();
-			if (objects.length > 0) {
+			if (objects.length > 0 && objects[0] instanceof IndexedRegion) {
 				int start = ((IndexedRegion) objects[0]).getStartOffset();
 				int end = ((IndexedRegion) objects[objects.length - 1]).getEndOffset();
 				getSourceViewer().setRangeIndication(start, end - start, false);
-			}
-			else {
-				getSourceViewer().removeRangeIndication();
+				rangeUpdated = true;
 			}
 		}
-		else {
+		if(!rangeUpdated) {
 			if (selection instanceof ITextSelection) {
 				getSourceViewer().setRangeIndication(((ITextSelection) selection).getOffset(), ((ITextSelection) selection).getLength(), false);
 			}

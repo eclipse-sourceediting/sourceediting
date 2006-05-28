@@ -169,7 +169,7 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 		return model;
 	}
 
-	protected TemporaryAnnotation[] getAnnotationsToRemove(DirtyRegion dr, List validTotalScopeSteps) {
+	protected TemporaryAnnotation[] getAnnotationsToRemove(DirtyRegion dr, List stepsRun) {
 
 		List remove = new ArrayList();
 		IAnnotationModel annotationModel = getAnnotationModel();
@@ -201,11 +201,11 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 
 				// then if this strategy knows how to add/remove this
 				// partition type
-				if (canHandlePartition(key.getPartitionType()) && containsStep(key.getStep())) {
+				if (canHandlePartition(key.getPartitionType()) && stepsRun.contains(key.getStep())) {
 					if (key.getScope() == ReconcileAnnotationKey.PARTIAL && annotation.getPosition().overlapsWith(dr.getOffset(), dr.getLength())) {
 						remove.add(annotation);
 					}
-					else if (key.getScope() == ReconcileAnnotationKey.TOTAL && validTotalScopeSteps.contains(key.getStep())) {
+					else if (key.getScope() == ReconcileAnnotationKey.TOTAL) {
 						remove.add(annotation);
 					}
 				}

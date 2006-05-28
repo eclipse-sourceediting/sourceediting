@@ -140,14 +140,17 @@ public class DocumentRegionProcessor extends DirtyRegionProcessor {
 
 		DirtyRegion dirty = null;
 		for (int i = 0; i < partitions.length; i++) {
-			dirty = createDirtyRegion(partitions[i], DirtyRegion.INSERT);
 			// [source]validator (extension) for this partition
-			if (getValidatorStrategy() != null)
+			if (getValidatorStrategy() != null) {
+				dirty = createDirtyRegion(partitions[i], DirtyRegion.INSERT);
 				getValidatorStrategy().reconcile(partitions[i], dirty);
+			}
 		}
+		
 		// single spell-check for everything
-		if (getSpellcheckStrategy() != null)
+		if (getSpellcheckStrategy() != null) {
 			getSpellcheckStrategy().reconcile(dirtyRegion, dirtyRegion);
+		}
 	}
 
 	public void setDocument(IDocument doc) {
