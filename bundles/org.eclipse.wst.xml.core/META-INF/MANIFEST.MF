@@ -59,7 +59,6 @@ Export-Package: org.eclipse.wst.xml.core.internal;x-friends:="com.ibm.etools.emf
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.resources,
  org.eclipse.wst.common.uriresolver,
- org.apache.xerces,
  org.eclipse.wst.sse.core,
  org.eclipse.text,
  org.eclipse.jem.util;resolution:=optional,
@@ -69,5 +68,6 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecore.xmi;resolution:=optional,
  org.eclipse.wst.common.emfworkbench.integration;resolution:=optional,
  org.eclipse.wst.common.core,
- com.ibm.icu
+ com.ibm.icu,
+ org.apache.xerces
 Eclipse-LazyStart: true; exceptions="org.eclipse.wst.xml.core.internal.contenttype"

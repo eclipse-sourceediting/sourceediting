@@ -18,8 +18,7 @@ import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentType;
 import org.w3c.dom.Element;
-import org.w3c.dom.ranges.DocumentRange;
-import org.w3c.dom.traversal.DocumentTraversal;
+import org.w3c.dom.Node;
 
 /**
  * This interface enables creation of DOCTYPE declaration and some DOM Level 2
@@ -27,7 +26,7 @@ import org.w3c.dom.traversal.DocumentTraversal;
  * 
  * @plannedfor 1.0
  */
-public interface IDOMDocument extends IDOMNode, Document, DocumentRange, DocumentTraversal {
+public interface IDOMDocument extends Node, Document, IDOMNode {
 
 	/**
 	 * create comment element. tagName must be registered as comment element
@@ -93,6 +92,7 @@ public interface IDOMDocument extends IDOMNode, Document, DocumentRange, Documen
 	 * ISSUE: need to specify -- currently used to denote an HTML DOM document
 	 * is XHTML
 	 * 
+	 * @deprecated
 	 * 
 	 */
 	boolean isXMLType();

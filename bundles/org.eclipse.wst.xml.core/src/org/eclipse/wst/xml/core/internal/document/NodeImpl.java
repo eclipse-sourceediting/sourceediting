@@ -37,7 +37,7 @@ import org.w3c.dom.UserDataHandler;
 /**
  * NodeImpl class
  */
-public abstract class NodeImpl extends AbstractNotifier implements IDOMNode {
+public abstract class NodeImpl extends AbstractNotifier implements Node, IDOMNode {
 	// define one empty nodelist, for repeated use
 	private final static NodeList EMPTY_NODE_LIST = new NodeListImpl();
 

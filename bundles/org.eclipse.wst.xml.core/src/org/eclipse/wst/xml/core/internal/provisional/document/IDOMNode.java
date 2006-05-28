@@ -22,8 +22,6 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.xml.core.internal.document.InvalidCharacterException;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Node;
-import org.w3c.dom.TypeInfo;
-import org.w3c.dom.UserDataHandler;
 
 /**
  * This interface describes the extended functionality of our source-oriented
@@ -266,15 +264,6 @@ public interface IDOMNode extends IndexedRegion, INodeNotifier, Node {
 	 */
 	public void setTextContent(String textContent) throws DOMException;
 	
-	/**
-	 * NOT IMPLEMENTED, is defined here in preparation of DOM Level 3
-	 */
-	public Object setUserData(String key, Object data, UserDataHandler handler);
-	
-	/**
-	 * NOT IMPLEMENTED, is defined here in preparation of DOM Level 3
-	 */
-	public TypeInfo getSchemaTypeInfo();
 	
 	/**
 	 * NOT IMPLEMENTED, is defined here in preparation of DOM Level 3

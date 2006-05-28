@@ -49,7 +49,9 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Notation;
 import org.w3c.dom.ProcessingInstruction;
 import org.w3c.dom.Text;
+import org.w3c.dom.ranges.DocumentRange;
 import org.w3c.dom.ranges.Range;
+import org.w3c.dom.traversal.DocumentTraversal;
 import org.w3c.dom.traversal.NodeFilter;
 import org.w3c.dom.traversal.NodeIterator;
 import org.w3c.dom.traversal.TreeWalker;
@@ -58,7 +60,7 @@ import org.w3c.dom.traversal.TreeWalker;
 /**
  * DocumentImpl class
  */
-public class DocumentImpl extends NodeContainer implements IDOMDocument {
+public class DocumentImpl extends NodeContainer implements IDOMDocument, DocumentRange, DocumentTraversal {
 
 	/**
 	 * Internal-use only class. This class was added to better able to handle
@@ -468,16 +470,21 @@ public class DocumentImpl extends NodeContainer implements IDOMDocument {
 	/**
 	 * Return an instance of tree walk
 	 */
-	/* (non-Javadoc)
-	 * @see org.w3c.dom.traversal.DocumentTraversal#createTreeWalker(org.w3c.dom.Node, int, org.w3c.dom.traversal.NodeFilter, boolean)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.w3c.dom.traversal.DocumentTraversal#createTreeWalker(org.w3c.dom.Node,
+	 *      int, org.w3c.dom.traversal.NodeFilter, boolean)
 	 */
 	public TreeWalker createTreeWalker(Node root, int whatToShow, NodeFilter filter, boolean entityReferenceExpansion) {
 		if (root == null) {
 			String msg = "Program Error: root node can not be null for TreeWalker";
 			throw new DOMException(DOMException.NOT_SUPPORTED_ERR, msg);
 		}
-		//ISSUE: we just use Xerces implementation for now, but longer term, we should make a 
-		// thread/job safe version (as well as not rely on Xerces "impl" class. 
+		// ISSUE: we just use Xerces implementation for now, but longer term,
+		// we should make a
+		// thread/job safe version (as well as not rely on Xerces "impl"
+		// class.
 		return new TreeWalkerImpl(root, whatToShow, filter, entityReferenceExpansion);
 
 	}
