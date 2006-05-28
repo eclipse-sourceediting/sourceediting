@@ -55,12 +55,25 @@ class DOMExtensionItem extends ExtensionItem
   }
 
   public String getValue()
-  {
+  {      
     if (node instanceof Attr)
     {
       Attr attr = (Attr) node;
       return attr.getValue();
     }
+    else if (cmNode instanceof CMAttributeDeclaration)
+    {
+      // cs : we need this 'else if' case since work around a problem with 
+      // the ExtensionDetailsViewer since it doesn't recompute it's list of
+      // ExtensionItems when refresh() is called it simply recalcultes the
+      // values.
+      //      
+      String value = parent.getAttribute(cmNode.getNodeName());
+      if (value != null)
+      {
+        return value;
+      }  
+    }  
     return ""; //$NON-NLS-1$
   }
 
