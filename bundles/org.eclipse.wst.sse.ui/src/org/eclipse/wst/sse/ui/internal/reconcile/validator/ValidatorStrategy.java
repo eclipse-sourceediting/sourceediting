@@ -167,6 +167,7 @@ public class ValidatorStrategy extends StructuredTextReconcilingStrategy {
 
 		ValidatorMetaData vmd = null;
 		List annotationsToAdd = new ArrayList();
+		List totalScopeStepsRanOnThisDirtyRegion = new ArrayList(1);
 		/*
 		 * Loop through all of the relevant validator meta data to find
 		 * supporting validators for this partition type. Don't check
@@ -205,13 +206,14 @@ public class ValidatorStrategy extends StructuredTextReconcilingStrategy {
 						if (validatorScope == ReconcileAnnotationKey.TOTAL) {
 							// mark this validator as "run"
 							fTotalScopeValidatorsAlreadyRun.add(vmd);
+							totalScopeStepsRanOnThisDirtyRegion.add(validatorStep);
 						}
 					}
 				}
 			}
 		}
 
-		TemporaryAnnotation[] annotationsToRemove = getAnnotationsToRemove(dr);
+		TemporaryAnnotation[] annotationsToRemove = getAnnotationsToRemove(dr, totalScopeStepsRanOnThisDirtyRegion);
 		if (annotationsToRemove.length + annotationsToAdd.size() > 0)
 			smartProcess(annotationsToRemove, (IReconcileResult[]) annotationsToAdd.toArray(new IReconcileResult[annotationsToAdd.size()]));
 	}

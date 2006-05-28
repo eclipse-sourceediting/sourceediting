@@ -26,7 +26,7 @@ public abstract class StructuredTextReconcilingStrategy extends AbstractStructur
 		super(sourceViewer);
 	}
 
-	protected TemporaryAnnotation[] getAnnotationsToRemove(DirtyRegion dr) {
+	protected TemporaryAnnotation[] getAnnotationsToRemove(DirtyRegion dr, List validTotalScopeSteps) {
 		IDocument doc = getDocument();
 		IStructuredDocument sDoc = null;
 		
@@ -36,7 +36,7 @@ public abstract class StructuredTextReconcilingStrategy extends AbstractStructur
 		// if there's no structured document
 		// do regular IDocument remove in super
 		if(sDoc == null)
-			return super.getAnnotationsToRemove(dr);
+			return super.getAnnotationsToRemove(dr, validTotalScopeSteps);
 			
 		IStructuredDocumentRegion[] sdRegions = sDoc.getStructuredDocumentRegions(dr.getOffset(), dr.getLength());
 		List remove = new ArrayList();
@@ -53,7 +53,7 @@ public abstract class StructuredTextReconcilingStrategy extends AbstractStructur
 				Object obj = i.next();
 				
 				// check if it's a validator marker annotation
-				// if it is save it for comparision later (to "gray" icons)
+				// if it is save it for comparison later (to "gray" icons)
 				if(obj instanceof StructuredMarkerAnnotation) {
 					StructuredMarkerAnnotation sma = (StructuredMarkerAnnotation)obj;
 					if(sma.getAnnotationType() == TemporaryAnnotation.ANNOT_ERROR || sma.getAnnotationType() == TemporaryAnnotation.ANNOT_WARNING)
@@ -72,7 +72,7 @@ public abstract class StructuredTextReconcilingStrategy extends AbstractStructur
 					if (key.getScope() == ReconcileAnnotationKey.PARTIAL && overlaps(annotation.getPosition(), sdRegions)) {
 						remove.add(annotation);
 					}
-					else if (key.getScope() == ReconcileAnnotationKey.TOTAL) {
+					else if (key.getScope() == ReconcileAnnotationKey.TOTAL && validTotalScopeSteps.contains(key.getStep())) {
 						remove.add(annotation);
 					}
 				}

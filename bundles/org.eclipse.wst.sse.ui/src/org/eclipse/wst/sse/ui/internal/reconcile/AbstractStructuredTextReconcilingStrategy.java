@@ -13,9 +13,6 @@
 package org.eclipse.wst.sse.ui.internal.reconcile;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -70,7 +67,7 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 	// private IReconcileStep fFirstStep = null;
 	private IProgressMonitor fProgressMonitor = null;
 	private ISourceViewer fSourceViewer = null;
-	private Comparator fComparator;
+//	private Comparator fComparator;
 
 	// list of "validator" annotations
 	// for gray/un-gray capability
@@ -172,7 +169,7 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 		return model;
 	}
 
-	protected TemporaryAnnotation[] getAnnotationsToRemove(DirtyRegion dr) {
+	protected TemporaryAnnotation[] getAnnotationsToRemove(DirtyRegion dr, List validTotalScopeSteps) {
 
 		List remove = new ArrayList();
 		IAnnotationModel annotationModel = getAnnotationModel();
@@ -208,7 +205,7 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 					if (key.getScope() == ReconcileAnnotationKey.PARTIAL && annotation.getPosition().overlapsWith(dr.getOffset(), dr.getLength())) {
 						remove.add(annotation);
 					}
-					else if (key.getScope() == ReconcileAnnotationKey.TOTAL) {
+					else if (key.getScope() == ReconcileAnnotationKey.TOTAL && validTotalScopeSteps.contains(key.getStep())) {
 						remove.add(annotation);
 					}
 				}
@@ -422,61 +419,73 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 	 * @param annotationsToAdd
 	 */
 	protected void smartProcess(TemporaryAnnotation[] annotationsToRemove, IReconcileResult[] annotationsToAdd) {
-
-		// pa_TODO: investigate a better algorithm,
-		// also see if this is a bad performance hit.
-
-		Comparator comp = getTemporaryAnnotationComparator();
-		List sortedRemovals = Arrays.asList(annotationsToRemove);
-		Collections.sort(sortedRemovals, comp);
-
-		List sortedAdditions = Arrays.asList(annotationsToAdd);
-		Collections.sort(sortedAdditions, comp);
-
-		List filteredRemovals = new ArrayList(sortedRemovals);
-		List filteredAdditions = new ArrayList(sortedAdditions);
-
-		boolean ignore = false;
-		int lastFoundAdded = 0;
-		for (int i = 0; i < sortedRemovals.size(); i++) {
-			TemporaryAnnotation removal = (TemporaryAnnotation) sortedRemovals.get(i);
-			for (int j = lastFoundAdded; j < sortedAdditions.size(); j++) {
-				TemporaryAnnotation addition = (TemporaryAnnotation) sortedAdditions.get(j);
-				// quick position check here
-				if (removal.getPosition().equals(addition.getPosition())) {
-					lastFoundAdded = j;
-					// remove performs TemporaryAnnotation.equals()
-					// which checks text as well
-					filteredAdditions.remove(addition);
-					ignore = true;
-					if (DEBUG)
-						System.out.println(" ~ smart process ignoring: " + removal.getPosition().getOffset()); //$NON-NLS-1$
-					break;
-				}
-			}
-			if (ignore) {
-				filteredRemovals.remove(removal);
-			}
-			ignore = false;
-		}
+//		Comparator comp = getTemporaryAnnotationComparator();
+//		List sortedRemovals = Arrays.asList(annotationsToRemove);
+//		Collections.sort(sortedRemovals, comp);
+//
+//		List sortedAdditions = Arrays.asList(annotationsToAdd);
+//		Collections.sort(sortedAdditions, comp);
+//
+//		List filteredRemovals = new ArrayList(sortedRemovals);
+//		List filteredAdditions = new ArrayList(sortedAdditions);
+//
+//		boolean ignore = false;
+//		int lastFoundAdded = 0;
+//		for (int i = 0; i < sortedRemovals.size(); i++) {
+//			TemporaryAnnotation removal = (TemporaryAnnotation) sortedRemovals.get(i);
+//			for (int j = lastFoundAdded; j < sortedAdditions.size(); j++) {
+//				TemporaryAnnotation addition = (TemporaryAnnotation) sortedAdditions.get(j);
+//				// quick position check here
+//				if (removal.getPosition().equals(addition.getPosition())) {
+//					lastFoundAdded = j;
+//					// remove performs TemporaryAnnotation.equals()
+//					// which checks text as well
+//					filteredAdditions.remove(addition);
+//					ignore = true;
+//					if (DEBUG)
+//						System.out.println(" ~ smart process ignoring: " + removal.getPosition().getOffset()); //$NON-NLS-1$
+//					break;
+//				}
+//			}
+//			if (ignore) {
+//				filteredRemovals.remove(removal);
+//			}
+//			ignore = false;
+//		}
 		if (getAnnotationModel() instanceof IAnnotationModelExtension) {
-			TemporaryAnnotation[] filteredRemovalArray = (TemporaryAnnotation[]) filteredRemovals.toArray(new TemporaryAnnotation[filteredRemovals.size()]);
-			// apply "grey"-ness
-			for (int i = 0; i < filteredRemovalArray.length; i++) {
-				if (isCanceled()) {
-					if (DEBUG)
-						System.out.println("[trace reconciler] >** replacing WAS CANCELLED **"); //$NON-NLS-1$
-					return;
-				}
-				StructuredMarkerAnnotation sma = getCorrespondingMarkerAnnotation(filteredRemovalArray[i]);
-				if (sma != null) {
-					// gray out the marker annotation
-					sma.setGrayed(true);
-				}
-			}
+//			TemporaryAnnotation[] filteredRemovalArray = (TemporaryAnnotation[]) filteredRemovals.toArray(new TemporaryAnnotation[filteredRemovals.size()]);
+//			// apply "grey"-ness
+//			for (int i = 0; i < filteredRemovalArray.length; i++) {
+//				if (isCanceled()) {
+//					if (DEBUG)
+//						System.out.println("[trace reconciler] >** replacing WAS CANCELLED **"); //$NON-NLS-1$
+//					return;
+//				}
+//				StructuredMarkerAnnotation sma = getCorrespondingMarkerAnnotation(filteredRemovalArray[i]);
+//				if (sma != null) {
+//					// gray out the marker annotation
+//					sma.setGrayed(true);
+//				}
+//			}
+//			Map annotationsToAddMap = new HashMap();
+//			for (int i = 0; i < filteredAdditions.size(); i++) {
+//				TemporaryAnnotation temporaryAnnotation = (TemporaryAnnotation) filteredAdditions.get(i);
+//				annotationsToAddMap.put(temporaryAnnotation, temporaryAnnotation.getPosition());
+//			}
+//			if (isCanceled()) {
+//				if (DEBUG)
+//					System.out.println("[trace reconciler] >** PROCESS (replacing) WAS CANCELLED **"); //$NON-NLS-1$
+//				return;
+//			}
+//			/*
+//			 * Using the extension means we can't enforce the
+//			 * ELEMENT_ERROR_LIMIT limit.
+//			 */
+//			((IAnnotationModelExtension) getAnnotationModel()).replaceAnnotations(filteredRemovalArray, annotationsToAddMap);
+
 			Map annotationsToAddMap = new HashMap();
-			for (int i = 0; i < filteredAdditions.size(); i++) {
-				TemporaryAnnotation temporaryAnnotation = (TemporaryAnnotation) filteredAdditions.get(i);
+			for (int i = 0; i < annotationsToAdd.length; i++) {
+				TemporaryAnnotation temporaryAnnotation = (TemporaryAnnotation) annotationsToAdd[i];
 				annotationsToAddMap.put(temporaryAnnotation, temporaryAnnotation.getPosition());
 			}
 			if (isCanceled()) {
@@ -484,30 +493,31 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 					System.out.println("[trace reconciler] >** PROCESS (replacing) WAS CANCELLED **"); //$NON-NLS-1$
 				return;
 			}
-			/*
-			 * Using the extension means we can't enforce the
-			 * ELEMENT_ERROR_LIMIT limit.
-			 */
-			((IAnnotationModelExtension) getAnnotationModel()).replaceAnnotations(filteredRemovalArray, annotationsToAddMap);
+			((IAnnotationModelExtension) getAnnotationModel()).replaceAnnotations(annotationsToRemove, annotationsToAddMap);
 		}
 		else {
-			removeAnnotations((TemporaryAnnotation[]) filteredRemovals.toArray(new TemporaryAnnotation[filteredRemovals.size()]));
-			process((IReconcileResult[]) filteredAdditions.toArray(new IReconcileResult[filteredAdditions.size()]));
+//			removeAnnotations((TemporaryAnnotation[]) filteredRemovals.toArray(new TemporaryAnnotation[filteredRemovals.size()]));
+//			process((IReconcileResult[]) filteredAdditions.toArray(new IReconcileResult[filteredAdditions.size()]));
+			removeAnnotations(annotationsToRemove);
+			process(annotationsToAdd);
 		}
 	}
 
-	private Comparator getTemporaryAnnotationComparator() {
-		if (fComparator == null) {
-			fComparator = new Comparator() {
-				public int compare(Object arg0, Object arg1) {
-					TemporaryAnnotation ta1 = (TemporaryAnnotation) arg0;
-					TemporaryAnnotation ta2 = (TemporaryAnnotation) arg1;
-					return ta1.getPosition().getOffset() - ta2.getPosition().getOffset();
-				}
-			};
-		}
-		return fComparator;
-	}
+//	private Comparator getTemporaryAnnotationComparator() {
+//		if (fComparator == null) {
+//			fComparator = new Comparator() {
+//				public int compare(Object arg0, Object arg1) {
+//					TemporaryAnnotation ta1 = (TemporaryAnnotation) arg0;
+//					TemporaryAnnotation ta2 = (TemporaryAnnotation) arg1;
+//					int result = ta1.getPosition().getOffset() - ta2.getPosition().getOffset();
+//					if(result != 0)
+//						return result;
+//					return Collator.getInstance().compare(ta1.getText(), ta2.getText());
+//				}
+//			};
+//		}
+//		return fComparator;
+//	}
 
 	public HashSet getMarkerAnnotations() {
 		if (fMarkerAnnotations == null)
