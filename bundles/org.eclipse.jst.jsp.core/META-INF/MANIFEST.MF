@@ -38,18 +38,19 @@ Export-Package: org.eclipse.jst.jsp.core.internal;x-friends:="org.eclipse.jst.js
  org.eclipse.jst.jsp.css.core.internal.document;x-internal:=true,
  org.eclipse.jst.jsp.css.core.internal.modelhandler;x-internal:=true,
  org.eclipse.jst.jsp.css.core.internal.parserz;x-internal:=true
-Require-Bundle: org.eclipse.core.runtime,
+Require-Bundle: com.ibm.icu,
+ org.eclipse.core.runtime,
  org.eclipse.core.resources,
  org.eclipse.core.filebuffers,
- org.eclipse.wst.html.core,
- org.eclipse.wst.xml.core,
- org.eclipse.wst.sse.core,
- org.eclipse.jdt.core,
  org.eclipse.text,
+ org.eclipse.jdt.core,
  org.eclipse.wst.common.uriresolver,
+ org.eclipse.wst.sse.core,
+ org.eclipse.wst.xml.core,
+ org.eclipse.wst.css.core,
+ org.eclipse.wst.html.core,
  org.eclipse.wst.validation,
  org.eclipse.wst.sse.ui,
- org.eclipse.wst.css.core,
  org.eclipse.equinox.servlet.api,
- com.ibm.icu
+ org.apache.xerces
 Eclipse-LazyStart: true; exceptions="org.eclipse.jst.jsp.core.internal.contenttype"

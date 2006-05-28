@@ -27,11 +27,13 @@ Export-Package: org.eclipse.wst.html.core.internal;x-internal:=true,
  org.eclipse.wst.html.core.internal.text;x-internal:=true,
  org.eclipse.wst.html.core.internal.validate;x-internal:=true,
  org.eclipse.wst.html.core.text
-Require-Bundle: org.eclipse.wst.css.core,
- org.eclipse.wst.sse.core,
- org.eclipse.wst.xml.core,
- org.eclipse.wst.common.uriresolver,
+Require-Bundle: 
+ org.apache.xerces,
  org.eclipse.core.resources,
  org.eclipse.core.runtime,
- com.ibm.icu
+ com.ibm.icu,
+ org.eclipse.wst.common.uriresolver,
+ org.eclipse.wst.sse.core,
+ org.eclipse.wst.xml.core,
+ org.eclipse.wst.css.core
 Eclipse-LazyStart: true; exceptions="org.eclipse.wst.html.core.internal.contenttype"
