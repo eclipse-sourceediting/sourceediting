@@ -85,10 +85,27 @@ public abstract class AbstractExtensionsSection extends AbstractSection
     }
 
     public void notifyChanged(INodeNotifier notifier, int eventType, Object changedFeature, Object oldValue, Object newValue, int pos)
-    { 
-      extensionTreeViewer.refresh();
+    {     
+      boolean isRoot = false;
+      if (notifier instanceof Element)
+      {
+        if (isTreeViewerInputElement((Element)notifier))// TODO
+        {
+          isRoot = true;
+          extensionTreeViewer.refresh(extensionTreeViewer.getInput());
+        }  
+      }
+      if (!isRoot)
+      {  
+        extensionTreeViewer.refresh(notifier);
+      }  
       extensionDetailsViewer.refresh();
     }    
+  }
+  
+  protected boolean isTreeViewerInputElement(Element element)
+  {
+    return false;
   }
 
   public void createContents(Composite parent)
@@ -323,6 +340,7 @@ public abstract class AbstractExtensionsSection extends AbstractSection
     extensionDetailsViewer.setContentProvider(new DOMExtensionDetailsContentProvider());    
     extensionDetailsViewer.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
   }
+  
 
   /*
    * @see org.eclipse.wst.common.ui.properties.internal.provisional.view.ITabbedPropertySection#refresh()
@@ -337,7 +355,6 @@ public abstract class AbstractExtensionsSection extends AbstractSection
       tree.removeAll();
       
       extensionTreeViewer.setInput(input);
-
       if (tree.getSelectionCount() == 0 && tree.getItemCount() > 0)
       {       
         TreeItem treeItem = tree.getItem(0);     
@@ -346,7 +363,6 @@ public abstract class AbstractExtensionsSection extends AbstractSection
       removeButton.setEnabled(tree.getSelectionCount() > 0);      
     }
     setListenerEnabled(true);
-
   }
 
   public Composite getPage()
@@ -393,8 +409,7 @@ public abstract class AbstractExtensionsSection extends AbstractSection
             }
           }
         }  
-        extensionTreeViewer.refresh();
-        refresh();
+        //refresh();
         if (newSelection != null)
         {  
           extensionTreeViewer.setSelection(new StructuredSelection(newSelection));
@@ -413,24 +428,6 @@ public abstract class AbstractExtensionsSection extends AbstractSection
         if (getCommandStack() != null)
         {
           getCommandStack().execute(command);
-          extensionTreeViewer.setInput(input);
-          extensionTreeViewer.refresh();
-
-          if (extensionTreeViewer.getTree().getItemCount() > 0)
-          {/*
-                // TODO (cs) I think this code is intended to set a selection
-                // now that an object can been removed ... need to fix this                
-                Object object = extensionTreeViewer.get
-                if (object != null)
-                {
-                    extensionTreeViewer.setSelection(new StructuredSelection(object));
-                }
-           */
-          }
-          else
-          {
-            extensionDetailsViewer.setInput(null);
-          }
         }
       }
     }
@@ -467,15 +464,23 @@ public abstract class AbstractExtensionsSection extends AbstractSection
       ISelection selection = event.getSelection();
       if (selection instanceof StructuredSelection)
       {
-        Object obj = ((StructuredSelection) selection).getFirstElement();
-        if (obj instanceof Element)
+        StructuredSelection structuredSelection = (StructuredSelection)selection;
+        if (structuredSelection.size() > 0)
+        {  
+          Object obj = structuredSelection.getFirstElement();
+          if (obj instanceof Element)
+          {
+            selectedElement = (Element) obj;
+            extensionDetailsViewer.setInput(obj);
+            isDeleteEnabled = true;         
+          }
+        }  
+        else
         {
-          selectedElement = (Element) obj;
-          extensionDetailsViewer.setInput(obj);
-          isDeleteEnabled = true;
-          //extensionDetailsViewer.setASIElement(selectedElement);
-          //extensionDetailsViewer.setCommandStack(getCommandStack());          
-        }
+          // if nothing is selected then don't show any details
+          //
+          extensionDetailsViewer.setInput(null);
+        }  
       }
       removeButton.setEnabled(isDeleteEnabled);
     }

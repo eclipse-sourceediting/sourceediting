@@ -112,4 +112,17 @@ public class ExtensionsSection extends AbstractExtensionsSection
   {
     return XSDEditorPlugin.getDefault().getExtensionsSchemasRegistry();
   }
+  
+  protected boolean isTreeViewerInputElement(Element element)
+  {     
+    if (input instanceof XSDConcreteComponent)
+    {  
+      XSDConcreteComponent component = (XSDConcreteComponent)input;
+      Element componentElement = component.getElement();
+      Node parent = element.getParentNode();
+      Node grandParent = parent != null ? parent.getParentNode() : null;
+      return componentElement == element || componentElement == parent || componentElement == grandParent;
+    }
+    return false;
+  }  
 }
