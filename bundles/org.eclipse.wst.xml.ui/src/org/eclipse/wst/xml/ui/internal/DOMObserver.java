@@ -49,9 +49,16 @@ public class DOMObserver {
 	// also adapted
 	//
 	abstract class DocumentAdapter implements INodeAdapter {
-		public DocumentAdapter(Document document) {
+		public DocumentAdapter() {
+		}
+
+		public void connect(Document document) {
 			((INodeNotifier) document).addAdapter(this);
 			adapt(document.getDocumentElement());
+		}
+
+		public void dicconnect(Document document) {
+			((INodeNotifier) document).removeAdapter(this);
 		}
 
 		public void adapt(Element element) {
@@ -80,9 +87,6 @@ public class DOMObserver {
 	 * CMDocument load
 	 */
 	class MyDocumentAdapter extends DocumentAdapter {
-		MyDocumentAdapter(Document document) {
-			super(document);
-		}
 
 		public void notifyChanged(INodeNotifier notifier, int eventType, Object feature, Object oldValue, Object newValue, int index) {
 			switch (eventType) {
@@ -96,7 +100,7 @@ public class DOMObserver {
 					}
 					break;
 				}
-				// case INodeNotifier.REMOVE:
+					// case INodeNotifier.REMOVE:
 				case INodeNotifier.CHANGE :
 				case INodeNotifier.STRUCTURE_CHANGED :
 				case INodeNotifier.CONTENT_CHANGED : {
@@ -134,7 +138,7 @@ public class DOMObserver {
 		}
 
 		public IStatus run(IProgressMonitor monitor) {
-			monitor.beginTask("", IProgressMonitor.UNKNOWN);  //$NON-NLS-1$
+			monitor.beginTask("", IProgressMonitor.UNKNOWN); //$NON-NLS-1$
 			invokeCMDocumentLoad();
 			monitor.done();
 			return Status.OK_STATUS;
@@ -149,6 +153,11 @@ public class DOMObserver {
 		fDocument = (model instanceof IDOMModel) ? ((IDOMModel) model).getDocument() : null;
 
 		if (fDocument != null) {
+			// here we create and init an adapter that will listen to
+			// changes to the document and contained elements
+			MyDocumentAdapter adapter = new MyDocumentAdapter();
+			adapter.connect(fDocument);
+
 			ModelQuery modelQuery = ModelQueryUtil.getModelQuery(fDocument);
 			if (modelQuery != null && modelQuery.getCMDocumentManager() != null) {
 				CMDocumentManager cmDocumentManager = modelQuery.getCMDocumentManager();
