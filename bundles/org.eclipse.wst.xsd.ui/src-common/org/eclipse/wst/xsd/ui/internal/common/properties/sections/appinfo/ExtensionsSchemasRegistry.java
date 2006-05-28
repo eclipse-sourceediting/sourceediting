@@ -136,8 +136,11 @@ public class ExtensionsSchemasRegistry
     return nsURIProperties;
   }
 
+  /**
+   * @deprecated
+   */
   public ILabelProvider getLabelProvider(Element element)
-  {
+  {/*
     String uri = element.getNamespaceURI();
     if (uri == null)
       uri = ""; //$NON-NLS-1$
@@ -152,7 +155,7 @@ public class ExtensionsSchemasRegistry
     if (object instanceof ILabelProvider)
     {
       return (ILabelProvider) object;
-    }
+    }*/
     return null;
   }
 

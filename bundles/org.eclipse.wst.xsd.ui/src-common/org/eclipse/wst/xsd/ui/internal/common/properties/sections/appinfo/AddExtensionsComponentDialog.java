@@ -12,7 +12,6 @@ package org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.apache.xerces.dom.DocumentImpl;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.DoubleClickEvent;
@@ -57,10 +56,6 @@ import org.w3c.dom.Element;
 
 public class AddExtensionsComponentDialog extends SelectionDialog implements ISelectionChangedListener, SelectionListener
 {
-  // when this dialog is created it needs to know which registry it is going to use,the WSDL or the XSD,
-  // hence we need this field
-  static ExtensionsSchemasRegistry registry;
-  
   protected static final Image DEFAULT_ELEMENT_ICON = XSDEditorPlugin.getXSDImage("icons/XSDElement.gif"); //$NON-NLS-1$
   protected static final Image DEFAULT_ATTRIBUTE_ICON = XSDEditorPlugin.getXSDImage("icons/XSDAttribute.gif"); //$NON-NLS-1$
 
@@ -74,9 +69,7 @@ public class AddExtensionsComponentDialog extends SelectionDialog implements ISe
   {
     super(parent);
     setTitle(Messages._UI_ACTION_ADD_EXTENSION_COMPONENTS);
-    setShellStyle(SWT.APPLICATION_MODAL | SWT.RESIZE | SWT.CLOSE);
-    
-    registry = schemaRegistry;
+    setShellStyle(SWT.APPLICATION_MODAL | SWT.RESIZE | SWT.CLOSE);    
   }
 
   private List fInput;
@@ -529,8 +522,8 @@ public class AddExtensionsComponentDialog extends SelectionDialog implements ISe
     }
   }
 
-  static class ElementLabelProvider extends LabelProvider
-  {
+  class ElementLabelProvider extends LabelProvider
+  {    
     /*
      * (non-Javadoc)
      * 
@@ -545,7 +538,7 @@ public class AddExtensionsComponentDialog extends SelectionDialog implements ISe
     	  String namespace = ((XSDElementDeclaration) element).getSchema().getTargetNamespace();
     	  String name = ((XSDElementDeclaration) element).getName();
     	  Element tempElement = tempDoc.createElementNS(namespace, name);
-    	  ILabelProvider lp = registry.getLabelProvider(tempElement);
+          ILabelProvider lp = XSDEditorPlugin.getDefault().getNodeCustomizationRegistry().getLabelProvider(namespace);
     	  if (lp != null){
     		  Image img = lp.getImage(tempElement);
     		  
