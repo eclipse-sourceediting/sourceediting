@@ -63,7 +63,7 @@ public abstract class AbstractExtensionsSection extends AbstractSection
   protected INodeAdapter internalNodeAdapter = new InternalNodeAdapter();
 
   private Composite page, pageBook2;
-  private Button addButton, removeButton;
+  protected Button addButton, removeButton;
   private PageBook pageBook;
 
   /**
@@ -340,13 +340,10 @@ public abstract class AbstractExtensionsSection extends AbstractSection
 
       if (tree.getSelectionCount() == 0 && tree.getItemCount() > 0)
       {       
-        TreeItem treeItem = tree.getItem(0);
-        if (treeItem != null)
-        {  
-          extensionDetailsViewer.setInput(treeItem.getData());
-          extensionDetailsViewer.refresh();
-        }  
+        TreeItem treeItem = tree.getItem(0);     
+        extensionTreeViewer.setSelection(new StructuredSelection(treeItem.getData()));
       }
+      removeButton.setEnabled(tree.getSelectionCount() > 0);      
     }
     setListenerEnabled(true);
 
@@ -465,7 +462,8 @@ public abstract class AbstractExtensionsSection extends AbstractSection
   class ElementSelectionChangedListener implements ISelectionChangedListener
   {
     public void selectionChanged(SelectionChangedEvent event)
-    {
+    {   
+      boolean isDeleteEnabled = false;
       ISelection selection = event.getSelection();
       if (selection instanceof StructuredSelection)
       {
@@ -474,10 +472,12 @@ public abstract class AbstractExtensionsSection extends AbstractSection
         {
           selectedElement = (Element) obj;
           extensionDetailsViewer.setInput(obj);
+          isDeleteEnabled = true;
           //extensionDetailsViewer.setASIElement(selectedElement);
           //extensionDetailsViewer.setCommandStack(getCommandStack());          
         }
       }
+      removeButton.setEnabled(isDeleteEnabled);
     }
   }
 
