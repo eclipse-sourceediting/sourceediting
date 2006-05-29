@@ -21,11 +21,11 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchSite;
-
+import org.eclipse.wst.xsd.ui.internal.search.SearchMessages;
 
 public class ReferencesSearchGroup extends SearchGroup  {
 
-    private static final String MENU_TEXT= "References...";//SearchMessages.group_references; 
+    private static final String MENU_TEXT= SearchMessages.group_references; 
 
     private IWorkbenchSite fSite;
     private IEditorPart fEditor;
@@ -49,17 +49,17 @@ public class ReferencesSearchGroup extends SearchGroup  {
 //        fGroupId= ITextEditorActionConstants.GROUP_FIND;
 
         fFindReferencesAction= new FindReferencesAction(editor);
-        fFindReferencesAction.setText("Workspace");
+        fFindReferencesAction.setText(SearchMessages.Search_FindDeclarationAction_label);
         fFindReferencesAction.setActionDefinitionId("SEARCH_REFERENCES_IN_WORKSPACE");
         //fEditor.setAction("SearchReferencesInWorkspace", fFindReferencesAction); //$NON-NLS-1$
 
         fFindReferencesInProjectAction= new FindReferencesInProjectAction(fEditor);
-        fFindReferencesInProjectAction.setText("Project");        
+        fFindReferencesInProjectAction.setText(SearchMessages.Search_FindDeclarationsInProjectAction_label);        
         fFindReferencesInProjectAction.setActionDefinitionId("SEARCH_REFERENCES_IN_PROJECT");
         //fEditor.setAction("SearchReferencesInProject", fFindReferencesInProjectAction); //$NON-NLS-1$
     
         fFindReferencesInWorkingSetAction= new FindReferencesInWorkingSetAction(fEditor);
-        fFindReferencesInWorkingSetAction.setText("Working Set...");         
+        fFindReferencesInWorkingSetAction.setText(SearchMessages.Search_FindDeclarationsInWorkingSetAction_label);         
         fFindReferencesInWorkingSetAction.setActionDefinitionId(".SEARCH_REFERENCES_IN_WORKING_SET");
         //fEditor.setAction("SearchReferencesInWorkingSet", fFindReferencesInWorkingSetAction); //$NON-NLS-1$
     }
