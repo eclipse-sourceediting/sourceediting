@@ -50,6 +50,8 @@ public class XMLSearchPatternMatcher extends PatternMatcher{
 	
 			pattern.setElementName(domElement.getLocalName());
 			pattern.setElementNamespace(domElement.getNamespaceURI());
+            // TODO (cs) set the depth attribute on the pattern
+            //
 			String actualValue = domElement.getAttribute(pattern.getAttributeName());
 			 if(actualValue != null){
 					int n = actualValue.indexOf(":"); //$NON-NLS-1$
@@ -168,6 +170,7 @@ public class XMLSearchPatternMatcher extends PatternMatcher{
             if(searchPattern.getElementName().equals(decodedPattern.getElementName()) &&                    
 					searchPattern.getElementNamespace().equals(decodedPattern.getElementNamespace())){
                 if(searchPattern.getDepth() > 0 &&
+                   decodedPattern.getDepth() > 0 &&
                    searchPattern.getDepth() != decodedPattern.getDepth())
                 {
                   return false;  
