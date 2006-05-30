@@ -168,13 +168,13 @@ public class XMLSearchPatternMatcher extends PatternMatcher{
 		if(searchPattern != null && pattern instanceof XMLSearchPattern){
 			XMLSearchPattern decodedPattern = (XMLSearchPattern)pattern;
             if(searchPattern.getElementName().equals(decodedPattern.getElementName()) &&                    
-					searchPattern.getElementNamespace().equals(decodedPattern.getElementNamespace())){
-                //if(searchPattern.getDepth() > 0 &&
-                //   decodedPattern.getDepth() > 0 &&
-                //   searchPattern.getDepth() != decodedPattern.getDepth())
-                //{
-                //  return false;  
-                //}  
+					searchPattern.getElementNamespace().equals(decodedPattern.getElementNamespace())){                
+                if(searchPattern.getDepth() > 0 &&
+                   decodedPattern.getDepth() > 0 &&
+                   searchPattern.getDepth() != decodedPattern.getDepth())
+                {
+                  return false;  
+                }  
                 if(searchPattern.getSearchName() == null)
                 {  
                   return false;
