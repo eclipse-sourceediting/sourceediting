@@ -74,7 +74,7 @@ public abstract class UpdateComponentReferenceAndManageDirectivesCommand extends
         XSDSchema resolvedSchema = directive.getResolvedSchema();
         if (resolvedSchema == null)
         {
-          String platformLocation = "platform:/resource/" + file.getLocation();
+          String platformLocation = "platform:/resource" + file.getFullPath();
           Resource resource = concreteComponent.eResource().getResourceSet().createResource(URI.createURI(platformLocation));
           if (resource instanceof XSDResourceImpl)
           {
