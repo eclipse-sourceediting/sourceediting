@@ -53,7 +53,7 @@ public class XSDSearchContributor extends ComponentSearchContributor  {
 		declarations = new HashMap();
 		String ns = IXSDSearchConstants.XMLSCHEMA_NAMESPACE;
 
-		SearchPattern pattern = new XMLSearchPattern( ns, "element", "name");
+		SearchPattern pattern = new XMLSearchPattern( ns, "element", "name", 2);
 		declarations.put(IXSDSearchConstants.ELEMENT_META_NAME, pattern);
 
 		pattern = new XMLSearchPattern(ns, "complexType", "name");

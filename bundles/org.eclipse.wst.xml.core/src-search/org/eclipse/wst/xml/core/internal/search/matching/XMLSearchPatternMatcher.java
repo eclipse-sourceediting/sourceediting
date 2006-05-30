@@ -73,6 +73,7 @@ public class XMLSearchPatternMatcher extends PatternMatcher{
 		
 		pattern.setElementName(saxElement.getElementName());
 		pattern.setElementNamespace(saxElement.getElementNamespace());
+        pattern.setDepth(saxElement.getDepth());
 		String actualValue = saxElement.getAttributes().getValue(pattern.getAttributeName());
 		 if(actualValue != null){
 				int n = actualValue.indexOf(":"); //$NON-NLS-1$
@@ -164,9 +165,14 @@ public class XMLSearchPatternMatcher extends PatternMatcher{
 	protected boolean matchesPattern(SearchPattern pattern) {
 		if(searchPattern != null && pattern instanceof XMLSearchPattern){
 			XMLSearchPattern decodedPattern = (XMLSearchPattern)pattern;
-            if(searchPattern.getElementName().equals(decodedPattern.getElementName()) &&
+            if(searchPattern.getElementName().equals(decodedPattern.getElementName()) &&                    
 					searchPattern.getElementNamespace().equals(decodedPattern.getElementNamespace())){
-				if(searchPattern.getSearchName() == null)
+                if(searchPattern.getDepth() > 0 &&
+                   searchPattern.getDepth() != decodedPattern.getDepth())
+                {
+                  return false;  
+                }  
+                if(searchPattern.getSearchName() == null)
                 {  
                   return false;
                 }

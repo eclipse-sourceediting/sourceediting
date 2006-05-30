@@ -20,13 +20,19 @@ public class XMLSearchPattern extends SearchPattern{
 	private String attributeName = null;
 	private String searchName = null;
 	private String searchNamespace = null;
+    private int depth = -1;
 	
 	public XMLSearchPattern(String elementNamespace, String elementName, String attributeName) {
-		super();
-		this.attributeName = attributeName;
-		this.elementName = elementName;
-		this.elementNamespace = elementNamespace;
-	}
+       this(elementNamespace, elementName, attributeName, -1);
+    }
+    
+    public XMLSearchPattern(String elementNamespace, String elementName, String attributeName, int depth) {
+        super();
+        this.attributeName = attributeName;
+        this.elementName = elementName;
+        this.elementNamespace = elementNamespace;
+        this.depth = depth;
+    }    
 	
 	public XMLSearchPattern(){
 		
@@ -71,6 +77,16 @@ public class XMLSearchPattern extends SearchPattern{
 	public void setElementNamespace(String elementNamespace) {
 		this.elementNamespace = elementNamespace;
 	}
+
+  public int getDepth()
+  {
+    return depth;
+  }
+
+  public void setDepth(int depth)
+  {
+    this.depth = depth;
+  }
 	
 
 	

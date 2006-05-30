@@ -45,6 +45,7 @@ public class XMLQuickScanContentHandler extends DefaultHandler
 	private boolean hasMatch = false;
 	private  StringBuffer currentPath = new StringBuffer();
 	private PatternMatcher matcher;
+    private int depth = 0;
 	
 	public static final String XMLSCHEMA_NAMESPACE = "http://www.w3.org/2001/XMLSchema"; //$NON-NLS-1$
   public static final String WSDL_NAMESPACE = "http://schemas.xmlsoap.org/wsdl/"; //$NON-NLS-1$
@@ -70,7 +71,7 @@ public class XMLQuickScanContentHandler extends DefaultHandler
 	public void startElement(String uri, String localName, String qName,
 			Attributes attributes) throws SAXException
 	{
-	
+	    depth++;
 		currentPath.append("/" + localName); //$NON-NLS-1$
 
 		// Search for targetNamespace if we haven't encountered it yet.
@@ -123,6 +124,7 @@ public class XMLQuickScanContentHandler extends DefaultHandler
 		searchElement.setAttributes(attributes);
 		searchElement.setNamespaceMap(namespaceMap);
 		searchElement.setTargetNamespace(targetNamespace);
+        searchElement.setDepth(depth);
 	
 
 		if(matcher != null){
@@ -177,6 +179,7 @@ public class XMLQuickScanContentHandler extends DefaultHandler
 	{
 		int slashIndex = currentPath.lastIndexOf("/"); //$NON-NLS-1$
 		currentPath.delete(slashIndex, currentPath.length());
+        depth--;
 	}
 
 	/**
