@@ -43,7 +43,8 @@ public class JSPSourcePreferencePage extends PreferencePage implements IWorkbenc
 		data = new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL);
 		data.horizontalIndent = 5;
 		contentTypeArea.getControl().setLayoutData(data);
-
+		
+		setSize(composite);
 		return composite;
 	}
 
@@ -65,6 +66,10 @@ public class JSPSourcePreferencePage extends PreferencePage implements IWorkbenc
 
 	private void setSize(Composite composite) {
 		if (composite != null) {
+			// Note: The font is set here in anticipation that the class inheriting
+			//       this base class may add widgets to the dialog.   setSize
+			//       is assumed to be called just before we go live.
+			applyDialogFont(composite);
 			Point minSize = composite.computeSize(SWT.DEFAULT, SWT.DEFAULT);
 			composite.setSize(minSize);
 			// set scrollbar composite's min size so page is expandable but

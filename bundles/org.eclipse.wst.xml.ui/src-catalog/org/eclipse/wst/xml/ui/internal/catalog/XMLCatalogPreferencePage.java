@@ -118,6 +118,8 @@ public class XMLCatalogPreferencePage extends PreferencePage implements
         createCatalogDetailsView(composite);
         createAdvancedButton(composite);
         // catalogEntriesView.updatePage();
+        applyDialogFont(composite);
+        
         return composite;
     }
 

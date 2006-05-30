@@ -62,6 +62,8 @@ public class JSPFilesPreferencePage extends HTMLFilesPreferencePage {
 		fValidateFragments.setSelection(validateFragments);
 
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(c, IHelpContextIds.JSP_PREFWEBX_FILES_HELPID);
+		
+		setSize((Composite)c);
 		return c;
 	}
 

@@ -102,7 +102,6 @@ abstract class PropertyPreferencePage extends PropertyPage implements IWorkbench
 		}
 
 		fProjectSettingsLink = new Link(checkLinkComposite, SWT.NONE);
-		fProjectSettingsLink.setFont(composite.getFont());
 		fProjectSettingsLink.setLayoutData(new GridData(SWT.END, SWT.BEGINNING, true, false));
 
 		/*
@@ -162,6 +161,8 @@ abstract class PropertyPreferencePage extends PropertyPage implements IWorkbench
 			selectionAdapter.widgetSelected(null);
 			fEnableProjectSettings.addSelectionListener(selectionAdapter);
 		}
+		
+		applyDialogFont(composite);
 		return composite;
 	}
 

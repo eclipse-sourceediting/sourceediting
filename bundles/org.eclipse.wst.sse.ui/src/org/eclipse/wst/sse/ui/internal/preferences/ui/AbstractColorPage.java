@@ -67,6 +67,7 @@ public abstract class AbstractColorPage extends org.eclipse.jface.preference.Pre
 		sc1.setLayoutData(new GridData(GridData.FILL_BOTH));
 		Composite pageComponent = createComposite(sc1, 1);
 		sc1.setContent(pageComponent);
+		setSize(pageComponent);
 
 		Label descLabel = createDescriptionLabel(pageComponent, SSEUIMessages.AbstractColorPageDescription); //$NON-NLS-1$
 		Composite coloringComposite = createColoringComposite(pageComponent);
@@ -227,6 +228,10 @@ public abstract class AbstractColorPage extends org.eclipse.jface.preference.Pre
 	 */
 	protected void setSize(Composite composite) {
 		if (composite != null) {
+			// Note: The font is set here in anticipation that the class inheriting
+			//       this base class may add widgets to the dialog.   setSize
+			//       is assumed to be called just before we go live.
+			applyDialogFont(composite);
 			Point minSize = composite.computeSize(SWT.DEFAULT, SWT.DEFAULT);
 			composite.setSize(minSize);
 			// set scrollbar composite's min size so page is expandable but

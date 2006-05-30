@@ -75,6 +75,8 @@ public class XSDPreferencePage extends PreferencePage implements IWorkbenchPrefe
 
     initializeValues();
 
+    applyDialogFont(parent);
+
     return new Composite(parent, SWT.NULL);
   }
 
