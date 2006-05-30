@@ -19,6 +19,7 @@ import org.eclipse.wst.xsd.ui.internal.refactor.XMLRefactoringComponent;
 import org.eclipse.wst.xsd.ui.internal.refactor.rename.RenameComponentProcessor;
 import org.eclipse.xsd.XSDComplexTypeDefinition;
 import org.eclipse.xsd.XSDNamedComponent;
+import org.eclipse.xsd.XSDSchema;
 
 public class UpdateNameCommand extends Command
 {
@@ -58,15 +59,25 @@ public class UpdateNameCommand extends Command
    */
   private void renameComponent(String newName)
   {
-    RefactoringComponent refactoringComponent = new XMLRefactoringComponent(
-        component,
-        (IDOMElement)component.getElement(), 
-        component.getName(),
-        component.getTargetNamespace());
+    // this is a 'globally' defined component (e.g. global element)    
+    if (component.eContainer() instanceof XSDSchema)
+    {  
+      RefactoringComponent refactoringComponent = new XMLRefactoringComponent(
+          component,
+          (IDOMElement)component.getElement(), 
+          component.getName(),
+          component.getTargetNamespace());
 
-    RenameComponentProcessor processor = new RenameComponentProcessor(refactoringComponent, newName, true);    
-    RenameRefactoring refactoring = new RenameRefactoring(processor);
-    PerformUnsavedRefactoringOperation operation = new PerformUnsavedRefactoringOperation(refactoring);
-    operation.run(null); 
+      RenameComponentProcessor processor = new RenameComponentProcessor(refactoringComponent, newName, true);    
+      RenameRefactoring refactoring = new RenameRefactoring(processor);
+      PerformUnsavedRefactoringOperation operation = new PerformUnsavedRefactoringOperation(refactoring);
+      operation.run(null);
+    } 
+    else
+    {
+      // this is a 'locally' defined component (e.g. local element)
+      // no need to call refactoring since this component can't be referenced      
+      component.setName(newName);
+    }  
   }
 }
