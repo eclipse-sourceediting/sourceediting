@@ -420,24 +420,11 @@
         wizardId="org.eclipse.jst.jsp.ui.internal.wizard.NewJSPWizard">
 			<enablement>
 				<or>
-					 
-		           <adapt type="org.eclipse.core.resources.IProject">
-		           	  <or>
-			              <test
-			                    property="org.eclipse.wst.common.project.facet.core.projectFacet"
-			                    value="wst.web"/>
-			              <test
-			                    property="org.eclipse.wst.common.project.facet.core.projectFacet"
-			                    value="jst.web"/>
-			          </or>
-		           </adapt>
-
-					<instanceof
-						value="org.eclipse.core.resources.IFolder" />
-
-					<instanceof
-						value="org.eclipse.core.resources.IFile" /> 				
-
+					<adapt type="org.eclipse.core.resources.IResource">
+						<test
+							property="org.eclipse.wst.common.project.facet.core.projectFacet"
+							value="jst.web"/>
+					</adapt>
 				</or>
 			</enablement>
 		</commonWizard>

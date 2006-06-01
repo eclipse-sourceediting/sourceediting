@@ -58,5 +58,7 @@ Require-Bundle: org.eclipse.ui.ide,
  org.eclipse.ui.ide,
  org.eclipse.wst.javascript.ui,
  org.eclipse.ui.views,
+ org.eclipse.wst.common.project.facet.core,
+ org.eclipse.wst.common.modulecore,
  com.ibm.icu
 Eclipse-LazyStart: true

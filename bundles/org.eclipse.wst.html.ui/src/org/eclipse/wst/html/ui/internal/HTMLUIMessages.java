@@ -49,6 +49,7 @@ public class HTMLUIMessages extends NLS {
 	public static String _UI_WIZARD_NEW_HEADING;
 	public static String _UI_WIZARD_NEW_DESCRIPTION;
 	public static String _ERROR_FILENAME_MUST_END_HTML;
+	public static String _WARNING_FOLDER_MUST_BE_INSIDE_WEB_CONTENT;
 	public static String ResourceGroup_nameExists;
 	public static String NewHTMLTemplatesWizardPage_0;
 	public static String NewHTMLTemplatesWizardPage_1;

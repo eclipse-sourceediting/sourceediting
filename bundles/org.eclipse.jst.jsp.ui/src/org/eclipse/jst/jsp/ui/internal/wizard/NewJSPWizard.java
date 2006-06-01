@@ -13,153 +13,35 @@ package org.eclipse.jst.jsp.ui.internal.wizard;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStreamWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Preferences;
-import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jst.jsp.core.internal.JSPCorePlugin;
-import org.eclipse.jst.jsp.core.internal.preferences.JSPCorePreferenceNames;
-import org.eclipse.jst.jsp.core.internal.provisional.contenttype.ContentTypeIdForJSP;
 import org.eclipse.jst.jsp.ui.internal.JSPUIMessages;
 import org.eclipse.jst.jsp.ui.internal.Logger;
 import org.eclipse.jst.jsp.ui.internal.editor.JSPEditorPluginImageHelper;
 import org.eclipse.jst.jsp.ui.internal.editor.JSPEditorPluginImages;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.dialogs.WizardNewFileCreationPage;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.wst.sse.core.internal.encoding.CommonEncodingPreferenceNames;
 
 public class NewJSPWizard extends Wizard implements INewWizard {
-	private WizardNewFileCreationPage fNewFilePage;
+	private NewJSPFileWizardPage fNewFilePage;
 	private NewJSPTemplatesWizardPage fNewFileTemplatesPage;
 	private IStructuredSelection fSelection;
-	private IContentType fContentType;
-	private List fValidExtensions = null;
-
-	/**
-	 * Adds default extension to the filename
-	 * 
-	 * @param filename
-	 * @return
-	 */
-	String addDefaultExtension(String filename) {
-		StringBuffer newFileName = new StringBuffer(filename);
-
-		Preferences preference = JSPCorePlugin.getDefault().getPluginPreferences();
-		String ext = preference.getString(JSPCorePreferenceNames.DEFAULT_EXTENSION);
-
-		newFileName.append("."); //$NON-NLS-1$
-		newFileName.append(ext);
-
-		return newFileName.toString();
-	}
-
-	/**
-	 * Get content type associated with this new file wizard
-	 * 
-	 * @return IContentType
-	 */
-	IContentType getContentType() {
-		if (fContentType == null)
-			fContentType = Platform.getContentTypeManager().getContentType(ContentTypeIdForJSP.ContentTypeID_JSP);
-		return fContentType;
-	}
-
-	/**
-	 * Get list of valid extensions for JSP Content type
-	 * 
-	 * @return
-	 */
-	List getValidExtensions() {
-		if (fValidExtensions == null) {
-			IContentType type = getContentType();
-			fValidExtensions = new ArrayList(Arrays.asList(type.getFileSpecs(IContentType.FILE_EXTENSION_SPEC)));
-		}
-		return fValidExtensions;
-	}
-
-	/**
-	 * Verifies if fileName is valid name for content type. Takes base content
-	 * type into consideration.
-	 * 
-	 * @param fileName
-	 * @return true if extension is valid for this content type
-	 */
-	boolean extensionValidForContentType(String fileName) {
-		boolean valid = false;
-
-		IContentType type = getContentType();
-		// there is currently an extension
-		if (fileName.lastIndexOf('.') != -1) {
-			// check what content types are associated with current extension
-			IContentType[] types = Platform.getContentTypeManager().findContentTypesFor(fileName);
-			int i = 0;
-			while (i < types.length && !valid) {
-				valid = types[i].isKindOf(type);
-				++i;
-			}
-		}
-		else
-			valid = true; // no extension so valid
-		return valid;
-	}
 
 	public void addPages() {
-		fNewFilePage = new WizardNewFileCreationPage("JSPWizardNewFileCreationPage", new StructuredSelection(IDE.computeSelectedResources(fSelection))) { //$NON-NLS-1$
-			protected boolean validatePage() {
-				String fileName = getFileName();
-				IPath fullPath = getContainerFullPath();
-				if ((fullPath != null) && (fullPath.isEmpty() == false) && (fileName != null)) {
-					// check that filename does not contain invalid extension
-					if (!extensionValidForContentType(fileName)) {
-						setErrorMessage(NLS.bind(JSPUIMessages._ERROR_FILENAME_MUST_END_JSP, getValidExtensions().toString()));
-						return false;
-					}
-					// no file extension specified so check adding default
-					// extension doesn't equal a file that already exists
-					if (fileName.lastIndexOf('.') == -1) {
-						String newFileName = addDefaultExtension(fileName);
-						IPath resourcePath = fullPath.append(newFileName);
-
-						IWorkspace workspace = ResourcesPlugin.getWorkspace();
-						IStatus result = workspace.validatePath(resourcePath.toString(), IResource.FOLDER);
-						if (!result.isOK()) {
-							// path invalid
-							setErrorMessage(result.getMessage());
-							return false;
-						}
-
-						if ((workspace.getRoot().getFolder(resourcePath).exists() || workspace.getRoot().getFile(resourcePath).exists())) {
-							setErrorMessage(JSPUIMessages.ResourceGroup_nameExists);
-							return false;
-						}
-					}
-				}
-				setErrorMessage(null);
-				return super.validatePage();
-			}
-		};
+		fNewFilePage = new NewJSPFileWizardPage("JSPWizardNewFileCreationPage", new StructuredSelection(IDE.computeSelectedResources(fSelection))); //$NON-NLS-1$ 
 		fNewFilePage.setTitle(JSPUIMessages._UI_WIZARD_NEW_HEADING);
 		fNewFilePage.setDescription(JSPUIMessages._UI_WIZARD_NEW_DESCRIPTION);
-
 		addPage(fNewFilePage);
 
 		fNewFileTemplatesPage = new NewJSPTemplatesWizardPage();
@@ -199,7 +81,7 @@ public class NewJSPWizard extends Wizard implements INewWizard {
 		// no file extension specified so add default extension
 		String fileName = fNewFilePage.getFileName();
 		if (fileName.lastIndexOf('.') == -1) {
-			String newFileName = addDefaultExtension(fileName);
+			String newFileName = fNewFilePage.addDefaultExtension(fileName);
 			fNewFilePage.setFileName(newFileName);
 		}
 
