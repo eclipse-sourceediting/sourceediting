@@ -96,57 +96,53 @@
 			name="%WebContentSettings.name"
 			class="org.eclipse.wst.html.ui.internal.contentproperties.ui.ProjectWebContentSettingsPropertyPage"
 			id="org.eclipse.wst.html.ui.dynamicprojectpropertypage">
-			<filter
-				name="nature"
-				value="org.eclipse.wst.common.project.facet.core.nature">
-			</filter>
-		</page>
-		<!-- for static web project -->
-		<!--
-		<page
-			objectClass="org.eclipse.core.resources.IProject"
-			adaptable="true"
-			name="%WebContentSettings.name"
-			class="org.eclipse.wst.html.ui.internal.contentproperties.ui.ProjectContentSettingsPropertyPage"
-			id="org.eclipse.wst.html.ui.staticprojectpropertypage">
-			<filter
-				name="nature"
-				value="org.eclipse.wst.common.project.facet.core.nature">
-			</filter>
-		</page>
-		-->
-		<page
-			objectClass="org.eclipse.core.resources.IFile"
-			adaptable="true"
-			name="%WebContentSettings.name"
-			class="org.eclipse.wst.html.ui.internal.contentproperties.ui.WebContentSettingsPropertyPage"
-			id="org.eclipse.wst.html.ui.internal.contentproperties.ui.WebContentSettingsPropertyPage.html">
-			<filter
-				name="contentTypeId"
-				value="org.eclipse.wst.html.core.htmlsource">
-			</filter>
+         	<enabledWhen>
+               	<and>
+					<adapt type="org.eclipse.core.resources.IProject">
+						<or> 
+							<test 
+								forcePluginActivation="true"
+								property="org.eclipse.wst.common.project.facet.core.projectFacet"
+								value="jst.web" />
+							<test 
+								forcePluginActivation="true"
+								property="org.eclipse.wst.common.project.facet.core.projectFacet"
+								value="wst.web" />
+						</or>
+					</adapt>
+				</and> 
+			</enabledWhen>
 		</page>
 		<page
 			objectClass="org.eclipse.core.resources.IFile"
 			adaptable="true"
 			name="%WebContentSettings.name"
 			class="org.eclipse.wst.html.ui.internal.contentproperties.ui.WebContentSettingsPropertyPage"
-			id="org.eclipse.wst.html.ui.internal.contentproperties.ui.WebContentSettingsPropertyPage.jsp">
-			<filter
-				name="contentTypeId"
-				value="org.eclipse.jst.jsp.core.jspsource">
-			</filter>
-		</page>
-		<page
-			objectClass="org.eclipse.core.resources.IFile"
-			adaptable="true"
-			name="%WebContentSettings.name"
-			class="org.eclipse.wst.html.ui.internal.contentproperties.ui.WebContentSettingsPropertyPage"
-			id="org.eclipse.wst.html.ui.internal.contentproperties.ui.WebContentSettingsPropertyPage.jspf">
-			<filter
-				name="contentTypeId"
-				value="org.eclipse.jst.jsp.core.jspfragmentsource">
-			</filter>
+			id="org.eclipse.wst.html.ui.internal.contentproperties.ui.WebContentSettingsPropertyPage">
+         	<enabledWhen>
+               	<and>
+					<adapt type="org.eclipse.core.resources.IFile">
+						<or> 
+							<test 
+								forcePluginActivation="true"
+								property="org.eclipse.core.resources.contentTypeId"
+								value="org.eclipse.wst.html.core.htmlsource" />
+							<test 
+								forcePluginActivation="true"
+								property="org.eclipse.core.resources.contentTypeId"
+								value="org.eclipse.jst.jsp.core.jspsource" />
+							<test 
+								forcePluginActivation="true"
+								property="org.eclipse.core.resources.contentTypeId"
+								value="org.eclipse.jst.jsp.core.jspfragmentsource" />
+							<test 
+								forcePluginActivation="true"
+								property="org.eclipse.core.resources.contentTypeId"
+								value="org.eclipse.jst.jsp.core.cssjspfragmentsource" />
+						</or>
+					</adapt>
+				</and> 
+			</enabledWhen>
 		</page>
 	</extension>
 	<!-- Editor actionsets -->

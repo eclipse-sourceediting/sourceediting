@@ -581,34 +581,42 @@
 			name="%JSPFragmentContentSettings.name"
 			class="org.eclipse.jst.jsp.ui.internal.contentproperties.ui.ProjectJSPFContentSettingsPropertyPage"
 			id="org.eclipse.jst.jsp.ui.internal.contentproperties.ProjectJSPFContentSettingsPropertyPage">
-			<filter
-				name="nature"
-				value="org.eclipse.wst.common.project.facet.core.nature">
-			</filter>
+         	<enabledWhen>
+               	<and>
+					<adapt type="org.eclipse.core.resources.IProject">
+						<or> 
+							<test 
+								forcePluginActivation="true"
+								property="org.eclipse.wst.common.project.facet.core.projectFacet"
+								value="jst.web" />
+						</or>
+					</adapt>
+				</and> 
+			</enabledWhen>
 		</page>
 		<page
 			objectClass="org.eclipse.core.resources.IFile"
 			adaptable="true"
 			name="%JSPFragmentContentSettings.name"
 			class="org.eclipse.jst.jsp.ui.internal.contentproperties.ui.JSPFContentSettingsPropertyPage"
-			id="org.eclipse.jst.jsp.ui.internal.contentproperties.JSPFContentSettingsPropertyPage.jspf">
-			<filter
-				name="contentTypeId"
-				value="org.eclipse.jst.jsp.core.jspfragmentsource">
-			</filter>
+			id="org.eclipse.jst.jsp.ui.internal.contentproperties.JSPFContentSettingsPropertyPage">
+         	<enabledWhen>
+               	<and>
+					<adapt type="org.eclipse.core.resources.IFile">
+						<or> 
+							<test 
+								forcePluginActivation="true"
+								property="org.eclipse.core.resources.contentTypeId"
+								value="org.eclipse.jst.jsp.core.jspfragmentsource" />
+							<test 
+								forcePluginActivation="true"
+								property="org.eclipse.core.resources.contentTypeId"
+								value="org.eclipse.jst.jsp.core.cssjspfragmentsource" />
+						</or>
+					</adapt>
+				</and> 
+			</enabledWhen>
 		</page>
-		<page
-			objectClass="org.eclipse.core.resources.IFile"
-			adaptable="true"
-			name="%JSPFragmentContentSettings.name"
-			class="org.eclipse.jst.jsp.ui.internal.contentproperties.ui.JSPFContentSettingsPropertyPage"
-			id="org.eclipse.jst.jsp.css.ui.internal.contentproperties.JSPFContentSettingsPropertyPage.jspf">
-			<filter
-				name="contentTypeId"
-				value="org.eclipse.jst.jsp.core.cssjspfragmentsource">
-			</filter>
-		</page>
-
 	</extension>	
 	<!--  jsp-for-css editor configurations -->		
 	<extension point="org.eclipse.wst.sse.ui.editorConfiguration">
