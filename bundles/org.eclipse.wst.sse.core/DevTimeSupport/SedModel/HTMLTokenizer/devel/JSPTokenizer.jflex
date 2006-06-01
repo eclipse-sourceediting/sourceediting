@@ -1878,8 +1878,7 @@ jspDirectiveStart        = {jspScriptletStart}@
 		return PROXY_CONTEXT;
 	}
 	// finished sanity checks
-	fStateStack.push(yystate());
-	if(fStateStack.peek()==YYINITIAL) {
+	if(yystate()==YYINITIAL) {
 		// the simple case, just a regular scriptlet out in content
 		if(Debug.debugTokenizer)
 			dump("\nJSP comment start");//$NON-NLS-1$
