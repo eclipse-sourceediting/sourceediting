@@ -19,6 +19,7 @@ import org.eclipse.jst.jsp.core.tests.contenttypeidentifier.contentspecific.Test
 import org.eclipse.jst.jsp.core.tests.model.TestModelIncludes;
 import org.eclipse.jst.jsp.core.tests.model.TestModelRelease;
 import org.eclipse.jst.jsp.core.tests.model.TestModelWithNoFile;
+import org.eclipse.jst.jsp.core.tests.source.JSPTokenizerTest;
 import org.eclipse.jst.jsp.core.tests.taglibindex.TestIndex;
 
 
@@ -40,6 +41,7 @@ public class JSPCoreTestSuite extends TestSuite {
 		addTest(new TestSuite(TestModelRelease.class, "JSP Model Tests"));
 		addTest(new TestSuite(TestModelWithNoFile.class, "JSP Model Tests"));
 		addTest(new TestSuite(TestIndex.class, "TaglibIndex Tests"));
+		addTest(new TestSuite(JSPTokenizerTest.class, "Special Parsing Tests"));
 		addTest(new TestSuite(TestModelIncludes.class));
 		addTest(new TestSuite(JSPCorePreferencesTest.class));
 	}
