@@ -21,6 +21,7 @@ import org.eclipse.jst.jsp.core.tests.model.TestModelRelease;
 import org.eclipse.jst.jsp.core.tests.model.TestModelWithNoFile;
 import org.eclipse.jst.jsp.core.tests.source.JSPTokenizerTest;
 import org.eclipse.jst.jsp.core.tests.taglibindex.TestIndex;
+import org.eclipse.jst.jsp.css.core.tests.source.JSPedCSSSourceParserTest;
 
 
 
@@ -44,5 +45,8 @@ public class JSPCoreTestSuite extends TestSuite {
 		addTest(new TestSuite(JSPTokenizerTest.class, "Special Parsing Tests"));
 		addTest(new TestSuite(TestModelIncludes.class));
 		addTest(new TestSuite(JSPCorePreferencesTest.class));
+		addTest(new TestSuite(JSPedCSSSourceParserTest.class, "Special Parsing Tests for JSP-CSS content"));
+
+
 	}
 }
