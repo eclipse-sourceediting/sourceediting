@@ -1,0 +1,32 @@
+[0, 4] (
+
+)
+    ContextRegion--> S: 0-4, 
+[4, 10] (.hoge )
+    ContextRegion--> SELECTOR_CLASS: 0-5/6, 
+[10, 14] ({
+	)
+    ContextRegion--> LBRACE: 0-1/4, 
+[14, 28] (float : ${XXX})
+    ContextRegion--> DECLARATION_PROPERTY: 0-5/6, ContextRegion--> DECLARATION_SEPARATOR: 6-7/8, ContextRegion--> FOREIGN_ELEMENT: 8-14, 
+[28, 29] (;)
+    ContextRegion--> DECLARATION_DELIMITER: 0-1, 
+[29, 32] (
+	)
+    ContextRegion--> S: 0-3, 
+[32, 51] (border-${XXX}-color)
+    ContextRegion--> DECLARATION_PROPERTY: 0-7, ContextRegion--> FOREIGN_ELEMENT: 7-13, ContextRegion--> UNKNOWN: 13-19, 
+[51, 57] ( : red)
+    ContextRegion--> S: 0-1, ContextRegion--> DECLARATION_SEPARATOR: 1-2/3, ContextRegion--> DECLARATION_VALUE_IDENT: 3-6, 
+[57, 58] (;)
+    ContextRegion--> DECLARATION_DELIMITER: 0-1, 
+[58, 60] (
+)
+    ContextRegion--> S: 0-2, 
+[60, 61] (})
+    ContextRegion--> RBRACE: 0-1, 
+[61, 63] (
+)
+    ContextRegion--> S: 0-2, 
+
+-------

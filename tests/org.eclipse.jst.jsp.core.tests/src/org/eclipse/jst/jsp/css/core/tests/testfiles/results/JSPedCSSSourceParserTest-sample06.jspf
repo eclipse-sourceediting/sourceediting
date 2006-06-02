@@ -1,0 +1,23 @@
+[0, 4] (
+
+)
+    ContextRegion--> S: 0-4, 
+[4, 7] (H1 )
+    ContextRegion--> SELECTOR_ELEMENT_NAME: 0-2/3, 
+[7, 11] ({
+	)
+    ContextRegion--> LBRACE: 0-1/4, 
+[11, 42] (border-${XXX} : 0px, solid, red)
+    ContextRegion--> DECLARATION_PROPERTY: 0-7, ContextRegion--> FOREIGN_ELEMENT: 7-13/14, ContextRegion--> DECLARATION_SEPARATOR: 14-15/16, ContextRegion--> DECLARATION_VALUE_DIMENSION: 16-19, ContextRegion--> DECLARATION_VALUE_OPERATOR: 19-20/21, ContextRegion--> DECLARATION_VALUE_IDENT: 21-26, ContextRegion--> DECLARATION_VALUE_OPERATOR: 26-27/28, ContextRegion--> DECLARATION_VALUE_IDENT: 28-31, 
+[42, 43] (;)
+    ContextRegion--> DECLARATION_DELIMITER: 0-1, 
+[43, 45] (
+)
+    ContextRegion--> S: 0-2, 
+[45, 46] (})
+    ContextRegion--> RBRACE: 0-1, 
+[46, 48] (
+)
+    ContextRegion--> S: 0-2, 
+
+-------

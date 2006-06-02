@@ -1,0 +1,26 @@
+[0, 31] (
+<%-- 
+jsp 
+comment 
+--%>
+)
+    ContextRegion--> S: 0-2, ContextRegion--> COMMENT: 2-29/31, 
+[31, 34] (H1 )
+    ContextRegion--> SELECTOR_ELEMENT_NAME: 0-2/3, 
+[34, 38] ({
+	)
+    ContextRegion--> LBRACE: 0-1/4, 
+[38, 61] (background-color : blue)
+    ContextRegion--> DECLARATION_PROPERTY: 0-16/17, ContextRegion--> DECLARATION_SEPARATOR: 17-18/19, ContextRegion--> DECLARATION_VALUE_IDENT: 19-23, 
+[61, 62] (;)
+    ContextRegion--> DECLARATION_DELIMITER: 0-1, 
+[62, 64] (
+)
+    ContextRegion--> S: 0-2, 
+[64, 65] (})
+    ContextRegion--> RBRACE: 0-1, 
+[65, 67] (
+)
+    ContextRegion--> S: 0-2, 
+
+-------

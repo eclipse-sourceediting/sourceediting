@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 
-class NullInputStream extends InputStream {
+public class NullInputStream extends InputStream {
 
 	/*
 	 * (non-Javadoc)
