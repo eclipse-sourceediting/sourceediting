@@ -51,6 +51,5 @@ Require-Bundle: com.ibm.icu,
  org.eclipse.wst.html.core,
  org.eclipse.wst.validation,
  org.eclipse.wst.sse.ui,
- org.eclipse.equinox.servlet.api,
- org.apache.xerces
+ org.eclipse.equinox.servlet.api
 Eclipse-LazyStart: true; exceptions="org.eclipse.jst.jsp.core.internal.contenttype"

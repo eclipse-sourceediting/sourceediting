@@ -28,7 +28,6 @@ Export-Package: org.eclipse.wst.html.core.internal;x-internal:=true,
  org.eclipse.wst.html.core.internal.validate;x-internal:=true,
  org.eclipse.wst.html.core.text
 Require-Bundle: 
- org.apache.xerces,
  org.eclipse.core.resources,
  org.eclipse.core.runtime,
  com.ibm.icu,

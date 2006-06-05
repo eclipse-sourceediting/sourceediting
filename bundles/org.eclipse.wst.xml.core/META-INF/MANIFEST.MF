@@ -69,5 +69,5 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.wst.common.emfworkbench.integration;resolution:=optional,
  org.eclipse.wst.common.core,
  com.ibm.icu,
- org.apache.xerces
+ org.apache.xerces;visibility:=reexport
 Eclipse-LazyStart: true; exceptions="org.eclipse.wst.xml.core.internal.contenttype"
