@@ -208,13 +208,14 @@ public abstract class NewProjectDataModelFacetWizard extends AddRemoveFacetsWiza
     {
         final ChangeTargetedRuntimesDataModel rdm
             = getModel().getTargetedRuntimesDataModel();
-        
-        final Set runtimes
-            = runtime == null 
-              ? Collections.EMPTY_SET : Collections.singleton( runtime );
-        
-        rdm.setTargetedRuntimes( runtimes );
+
+        rdm.setTargetedRuntimes( Collections.EMPTY_SET );
         this.facetsSelectionPage.setDefaultFacetsForRuntime( runtime );
+        
+        if( runtime != null )
+        {
+            rdm.setTargetedRuntimes( Collections.singleton( runtime ) );
+        }
     }
 
 	public String getProjectName() {
