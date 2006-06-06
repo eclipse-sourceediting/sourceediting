@@ -129,8 +129,10 @@ public class ElementNodeFormatter extends DocumentNodeFormatter {
 			}
 
 			formatContraints.setInPreserveSpaceElement(currentlyInXmlSpacePreserve);
-			// format indentation after node
-			formatIndentationAfterNode(newNode, formatContraints);
+			// only indent if not at last node
+			if (newNode != null && newNode.getNextSibling() != null)
+				// format indentation after node
+				formatIndentationAfterNode(newNode, formatContraints);
 		}
 	}
 
@@ -170,7 +172,7 @@ public class ElementNodeFormatter extends DocumentNodeFormatter {
 			int attrLength = attributes.getLength();
 			int lastUndefinedRegionOffset = 0;
 			boolean sawXmlSpace = false;
-			
+
 			for (int i = 0; i < attrLength; i++) {
 				AttrImpl attr = (AttrImpl) attributes.item(i);
 				ITextRegion nameRegion = attr.getNameRegion();
@@ -185,9 +187,11 @@ public class ElementNodeFormatter extends DocumentNodeFormatter {
 				// check for xml:space attribute
 				if (flatNode.getText(nameRegion).compareTo(XML_SPACE) == 0) {
 					if (valueRegion == null) {
-						// [111674] If nothing has been written yet, treat as preserve, but only as hint
+						// [111674] If nothing has been written yet, treat as
+						// preserve, but only as hint
 						formatContraints.setInPreserveSpaceElement(true);
-						// Note we don't set 'sawXmlSpace', so that default or fixed DTD/XSD values may override.
+						// Note we don't set 'sawXmlSpace', so that default or
+						// fixed DTD/XSD values may override.
 					}
 					else {
 						ISourceGenerator generator = node.getModel().getGenerator();
@@ -327,27 +331,27 @@ public class ElementNodeFormatter extends DocumentNodeFormatter {
 				}
 			}
 
-			
+
 			replace(structuredDocument, offset, length, stringBuffer.toString());
 
-			// If we didn't see a xml:space attribute above, we'll look for one in the DTD.
+			// If we didn't see a xml:space attribute above, we'll look for
+			// one in the DTD.
 			// We do not check for a conflict between a DTD's 'fixed' value
-			// and the attribute value found in the instance document, we leave that to the validator.
-			if (! sawXmlSpace)
-			{
+			// and the attribute value found in the instance document, we
+			// leave that to the validator.
+			if (!sawXmlSpace) {
 				ModelQueryAdapter adapter = (ModelQueryAdapter) ((IDOMDocument) node.getOwnerDocument()).getAdapterFor(ModelQueryAdapter.class);
 				CMElementDeclaration elementDeclaration = (CMElementDeclaration) adapter.getModelQuery().getCMNode(node);
-				if (elementDeclaration != null)
-				{
+				if (elementDeclaration != null) {
 					CMNamedNodeMap cmAttributes = elementDeclaration.getAttributes();
 					// Check implied values from the DTD way.
 					CMAttributeDeclaration attributeDeclaration = (CMAttributeDeclaration) cmAttributes.getNamedItem(XML_SPACE);
-					if (attributeDeclaration != null)
-					{
+					if (attributeDeclaration != null) {
 						// CMAttributeDeclaration found, check it out.
 						String defaultValue = attributeDeclaration.getAttrType().getImpliedValue();
-						
-						// xml:space="preserve" means preserve space, everything else means back to default.
+
+						// xml:space="preserve" means preserve space,
+						// everything else means back to default.
 						if (defaultValue.compareTo(PRESERVE) == 0)
 							formatContraints.setInPreserveSpaceElement(true);
 						else

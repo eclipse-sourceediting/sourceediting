@@ -161,7 +161,8 @@ public class NodeFormatter implements IStructuredFormatter {
 
 	protected void formatIndentationAfterNode(IDOMNode node, IStructuredFormatContraints formatContraints) {
 		// [111674] If inside xml:space="preserve" element, we bail
-		if (formatContraints.getInPreserveSpaceElement()) return;
+		if (formatContraints.getInPreserveSpaceElement())
+			return;
 		if (node != null) {
 			IDOMNode nextSibling = (IDOMNode) node.getNextSibling();
 			IStructuredDocument doc = node.getModel().getStructuredDocument();
@@ -169,13 +170,15 @@ public class NodeFormatter implements IStructuredFormatter {
 			String lineDelimiter = doc.getLineDelimiter();
 			try {
 				lineDelimiter = doc.getLineDelimiter(line);
-				if (lineDelimiter == null)
-					lineDelimiter = ""; //$NON-NLS-1$
 			}
 			catch (BadLocationException e) {
 				// log for now, unless we find reason not to
 				Logger.log(Logger.INFO, e.getMessage());
 			}
+			// BUG115716: if cannot get line delimiter from current line, just
+			// use default line delimiter
+			if (lineDelimiter == null)
+				lineDelimiter = doc.getLineDelimiter();
 
 			if (node.getParentNode() != null) {
 				if (node.getParentNode().getNodeType() == Node.DOCUMENT_NODE)
@@ -232,8 +235,11 @@ public class NodeFormatter implements IStructuredFormatter {
 								insertAfterNode(lastChild, lineDelimiter + lineIndent);
 							}
 						else {
-							// append indentation
-							insertAfterNode(lastChild, lineDelimiter + lineIndent);
+							// as long as not at the end of the document
+							IStructuredDocumentRegion endRegion = node.getLastStructuredDocumentRegion();
+							if (endRegion != null && endRegion.getNext() != null)
+								// append indentation
+								insertAfterNode(lastChild, lineDelimiter + lineIndent);
 						}
 					}
 				}
@@ -243,7 +249,8 @@ public class NodeFormatter implements IStructuredFormatter {
 
 	protected void formatIndentationBeforeNode(IDOMNode node, IStructuredFormatContraints formatContraints) {
 		// [111674] If inside xml:space="preserve" element, we bail
-		if (formatContraints.getInPreserveSpaceElement()) return;
+		if (formatContraints.getInPreserveSpaceElement())
+			return;
 		if (node != null) {
 			IDOMNode previousSibling = (IDOMNode) node.getPreviousSibling();
 			IStructuredDocument doc = node.getModel().getStructuredDocument();
@@ -252,14 +259,16 @@ public class NodeFormatter implements IStructuredFormatter {
 			try {
 				if (line > 0) {
 					lineDelimiter = doc.getLineDelimiter(line - 1);
-					if (lineDelimiter == null)
-						lineDelimiter = ""; //$NON-NLS-1$
 				}
 			}
 			catch (BadLocationException e) {
 				// log for now, unless we find reason not to
 				Logger.log(Logger.INFO, e.getMessage());
 			}
+			// BUG115716: if cannot get line delimiter from current line, just
+			// use default line delimiter
+			if (lineDelimiter == null)
+				lineDelimiter = doc.getLineDelimiter();
 			String lineIndent = formatContraints.getCurrentIndent();
 
 			if (node.getParentNode() != null) {
@@ -328,7 +337,8 @@ public class NodeFormatter implements IStructuredFormatter {
 	 */
 	protected void formatTrailingText(IDOMNode node, IStructuredFormatContraints formatContraints) {
 		// [111674] If inside xml:space="preserve" element, we bail
-		if (formatContraints.getInPreserveSpaceElement()) return;
+		if (formatContraints.getInPreserveSpaceElement())
+			return;
 
 		String lineDelimiter = node.getModel().getStructuredDocument().getLineDelimiter();
 		String lineIndent = formatContraints.getCurrentIndent();
