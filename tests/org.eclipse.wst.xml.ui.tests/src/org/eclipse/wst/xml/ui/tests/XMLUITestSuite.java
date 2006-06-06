@@ -15,6 +15,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.eclipse.wst.xml.ui.internal.validation.TestDelegatingSourceValidatorForXML;
+import org.eclipse.wst.xml.ui.internal.validation.TestMarkupValidator;
 import org.eclipse.wst.xml.ui.tests.viewer.TestViewerConfigurationXML;
 
 
@@ -32,6 +33,6 @@ public class XMLUITestSuite extends TestSuite {
 		addTest(new TestSuite(TestOpenEditorXML.class));
 		addTest((new TestSuite(TestPropertySheetConfiguration.class)));
 		addTestSuite(TestDelegatingSourceValidatorForXML.class);
-
+		addTestSuite(TestMarkupValidator.class);
 	}
 }
