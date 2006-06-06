@@ -24,11 +24,11 @@ import org.eclipse.wst.sse.core.internal.cleanup.AbstractStructuredCleanupProces
 import org.eclipse.wst.sse.core.internal.cleanup.IStructuredCleanupPreferences;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
-import org.eclipse.wst.sse.core.internal.util.Debug;
 import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.xml.core.internal.cleanup.CleanupProcessorXML;
 
 public class CleanupTester extends TestCase {
+	private static final boolean PRINT_FAILED_FORMAT_TESTS = false;
 	protected IModelManager fModelManager = null;
 	protected CleanupProcessorXML fCleanupProcessor = null;
 	protected HTMLCleanupProcessorImpl fHTMLCleanupProcessor = null;
@@ -316,7 +316,7 @@ public class CleanupTester extends TestCase {
 
 	protected void compare(String testcaseName, String expected, String cleaned) {
 		if (cleaned.compareTo(expected) != 0) {
-			if (Debug.failedTests) {
+			if (PRINT_FAILED_FORMAT_TESTS) {
 				System.out.println();
 				System.out.println(testcaseName + " failed");
 				System.out.println("========== expected file ==========");

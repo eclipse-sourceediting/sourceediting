@@ -22,12 +22,12 @@ import org.eclipse.wst.sse.core.internal.format.AbstractStructuredFormatProcesso
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatPreferences;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
-import org.eclipse.wst.sse.core.internal.util.Debug;
 import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.xml.core.internal.provisional.format.FormatProcessorXML;
 import org.eclipse.wst.xml.core.internal.provisional.format.IStructuredFormatPreferencesXML;
 
 public class FormatTester extends TestCase {
+	private static final boolean PRINT_FAILED_FORMAT_TESTS = false;
 	protected IModelManager fModelManager = null;
 	protected FormatProcessorXML fFormatProcessor = null;
 	protected HTMLFormatProcessorImpl fHTMLFormatProcessor = null;
@@ -552,7 +552,7 @@ public class FormatTester extends TestCase {
 
 	protected void compare(String testcaseName, String expected, String formatted) {
 		if (formatted.compareTo(expected) != 0) {
-			if (Debug.failedTests) {
+			if (PRINT_FAILED_FORMAT_TESTS) {
 				System.out.println();
 				System.out.println(testcaseName + " failed");
 				System.out.println("========== expected file ==========");
