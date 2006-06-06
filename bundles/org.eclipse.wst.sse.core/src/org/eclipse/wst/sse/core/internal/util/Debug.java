@@ -61,7 +61,6 @@ public final class Debug {
 	public static final boolean displayToConsole = true;
 	public static final boolean displayWarnings = false;
 	//
-	public static final boolean failedTests = false;
 	public static final boolean headParsing = false;
 	public static final boolean jsDebugContextAssist = false;
 	//

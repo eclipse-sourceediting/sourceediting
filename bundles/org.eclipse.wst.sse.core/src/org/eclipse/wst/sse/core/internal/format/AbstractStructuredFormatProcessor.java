@@ -8,6 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
+ *     Jesper Steen Møller - initial IDocumentExtension4 support - #102822
  *     
  *******************************************************************************/
 package org.eclipse.wst.sse.core.internal.format;
@@ -17,15 +18,20 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.text.DocumentRewriteSession;
+import org.eclipse.jface.text.DocumentRewriteSessionType;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.wst.sse.core.StructuredModelManager;
+import org.eclipse.jface.text.IDocumentExtension4;
 import org.eclipse.wst.sse.core.internal.Logger;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.util.Assert;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Node;
@@ -42,14 +48,16 @@ public abstract class AbstractStructuredFormatProcessor implements IStructuredFo
 			if (inputStream != null) {
 				inputStream.close();
 			}
-		} catch (IOException e) {
+		}
+		catch (IOException e) {
 			Logger.logException(e); // hopeless
 		}
 		try {
 			if (outputStream != null) {
 				outputStream.close();
 			}
-		} catch (IOException e) {
+		}
+		catch (IOException e) {
 			Logger.logException(e); // hopeless
 		}
 	}
@@ -73,7 +81,8 @@ public abstract class AbstractStructuredFormatProcessor implements IStructuredFo
 
 			// return output
 			return structuredModel.getStructuredDocument().get();
-		} finally {
+		}
+		finally {
 			ensureClosed(null, inputStream);
 			// release from model manager
 			if (structuredModel != null)
@@ -85,7 +94,7 @@ public abstract class AbstractStructuredFormatProcessor implements IStructuredFo
 		if (input == null)
 			return input;
 
-		if (start >= 0 && length >= 0 && start + length <= input.length()) {
+		if ((start >= 0) && (length >= 0) && (start + length <= input.length())) {
 			IStructuredModel structuredModel = null;
 			InputStream inputStream = null;
 			try {
@@ -101,13 +110,15 @@ public abstract class AbstractStructuredFormatProcessor implements IStructuredFo
 
 				// return output
 				return structuredModel.getStructuredDocument().get();
-			} finally {
+			}
+			finally {
 				ensureClosed(null, inputStream);
 				// release from model manager
 				if (structuredModel != null)
 					structuredModel.releaseFromRead();
 			}
-		} else
+		}
+		else
 			return input;
 	}
 
@@ -116,7 +127,7 @@ public abstract class AbstractStructuredFormatProcessor implements IStructuredFo
 			return;
 
 		IStructuredModel structuredModel = null;
-		//OutputStream outputStream = null;
+		// OutputStream outputStream = null;
 		try {
 			// setup structuredModel
 			// Note: We are getting model for edit. Will save model if model
@@ -129,8 +140,9 @@ public abstract class AbstractStructuredFormatProcessor implements IStructuredFo
 			// save model if needed
 			if (!structuredModel.isSharedForEdit() && structuredModel.isSaveNeeded())
 				structuredModel.save();
-		} finally {
-			//ensureClosed(outputStream, null);
+		}
+		finally {
+			// ensureClosed(outputStream, null);
 			// release from model manager
 			if (structuredModel != null)
 				structuredModel.releaseFromEdit();
@@ -141,9 +153,9 @@ public abstract class AbstractStructuredFormatProcessor implements IStructuredFo
 		if (document == null)
 			return;
 
-		if (start >= 0 && length >= 0 && start + length <= document.getLength()) {
+		if ((start >= 0) && (length >= 0) && (start + length <= document.getLength())) {
 			IStructuredModel structuredModel = null;
-			//OutputStream outputStream = null;
+			// OutputStream outputStream = null;
 			try {
 				// setup structuredModel
 				// Note: We are getting model for edit. Will save model if
@@ -156,8 +168,9 @@ public abstract class AbstractStructuredFormatProcessor implements IStructuredFo
 				// save model if needed
 				if (!structuredModel.isSharedForEdit() && structuredModel.isSaveNeeded())
 					structuredModel.save();
-			} finally {
-				//ensureClosed(outputStream, null);
+			}
+			finally {
+				// ensureClosed(outputStream, null);
 				// release from model manager
 				if (structuredModel != null)
 					structuredModel.releaseFromEdit();
@@ -170,7 +183,7 @@ public abstract class AbstractStructuredFormatProcessor implements IStructuredFo
 			return;
 
 		IStructuredModel structuredModel = null;
-		//OutputStream outputStream = null;
+		// OutputStream outputStream = null;
 		try {
 			// setup structuredModel
 			// Note: We are getting model for edit. Will save model if model
@@ -183,8 +196,9 @@ public abstract class AbstractStructuredFormatProcessor implements IStructuredFo
 			// save model if needed
 			if (!structuredModel.isSharedForEdit() && structuredModel.isSaveNeeded())
 				structuredModel.save();
-		} finally {
-			//ensureClosed(outputStream, null);
+		}
+		finally {
+			// ensureClosed(outputStream, null);
 			// release from model manager
 			if (structuredModel != null) {
 				structuredModel.releaseFromEdit();
@@ -198,7 +212,7 @@ public abstract class AbstractStructuredFormatProcessor implements IStructuredFo
 			return;
 
 		IStructuredModel structuredModel = null;
-		//OutputStream outputStream = null;
+		// OutputStream outputStream = null;
 		try {
 			// setup structuredModel
 			// Note: We are getting model for edit. Will save model if model
@@ -211,8 +225,9 @@ public abstract class AbstractStructuredFormatProcessor implements IStructuredFo
 			// save model if needed
 			if (!structuredModel.isSharedForEdit() && structuredModel.isSaveNeeded())
 				structuredModel.save();
-		} finally {
-			//ensureClosed(outputStream, null);
+		}
+		finally {
+			// ensureClosed(outputStream, null);
 			// release from model manager
 			if (structuredModel != null)
 				structuredModel.releaseFromEdit();
@@ -225,7 +240,7 @@ public abstract class AbstractStructuredFormatProcessor implements IStructuredFo
 
 		IStructuredModel structuredModel = null;
 		InputStream inputStream = null;
-		//OutputStream outputStream = null;
+		// OutputStream outputStream = null;
 		try {
 			// setup structuredModel
 			// Note: We are getting model for edit. Will save model if model
@@ -239,8 +254,9 @@ public abstract class AbstractStructuredFormatProcessor implements IStructuredFo
 			// save model if needed
 			if (!structuredModel.isSharedForEdit() && structuredModel.isSaveNeeded())
 				structuredModel.save();
-		} finally {
-			//ensureClosed(outputStream, inputStream);
+		}
+		finally {
+			// ensureClosed(outputStream, inputStream);
 			// release from model manager
 			if (structuredModel != null)
 				structuredModel.releaseFromEdit();
@@ -253,7 +269,7 @@ public abstract class AbstractStructuredFormatProcessor implements IStructuredFo
 
 		IStructuredModel structuredModel = null;
 		InputStream inputStream = null;
-		//OutputStream outputStream = null;
+		// OutputStream outputStream = null;
 		try {
 			// setup structuredModel
 			// Note: We are getting model for edit. Will save model if model
@@ -267,8 +283,9 @@ public abstract class AbstractStructuredFormatProcessor implements IStructuredFo
 			// save model if needed
 			if (!structuredModel.isSharedForEdit() && structuredModel.isSaveNeeded())
 				structuredModel.save();
-		} finally {
-			//ensureClosed(outputStream, inputStream);
+		}
+		finally {
+			// ensureClosed(outputStream, inputStream);
 			// release from model manager
 			if (structuredModel != null)
 				structuredModel.releaseFromEdit();
@@ -284,73 +301,72 @@ public abstract class AbstractStructuredFormatProcessor implements IStructuredFo
 
 	public void formatModel(IStructuredModel structuredModel, int start, int length) {
 		if (structuredModel != null) {
+			IDocumentExtension4 docExt4 = null;
+			if (structuredModel.getStructuredDocument() instanceof IDocumentExtension4) {
+				docExt4 = (IDocumentExtension4) structuredModel.getStructuredDocument();
+			}
+			DocumentRewriteSession rewriteSession = null;
+
 			try {
 				// whenever formatting model, fire abouttochange/modelchanged
 				structuredModel.aboutToChangeModel();
-				if (start == 0 && length == structuredModel.getStructuredDocument().getLength())
+				rewriteSession = (docExt4 == null) ? null : docExt4.startRewriteSession(DocumentRewriteSessionType.UNRESTRICTED);
+
+				if ((start == 0) && (length == structuredModel.getStructuredDocument().getLength()))
 					setFormatWithSiblingIndent(structuredModel, false);
 				else
 					setFormatWithSiblingIndent(structuredModel, true);
-	
-				if (start >= 0 && length >= 0 && start + length <= structuredModel.getStructuredDocument().getLength()) {
-					Vector activeNodes = getActiveNodes(structuredModel, start, length);
+
+				if ((start >= 0) && (length >= 0) && (start + length <= structuredModel.getStructuredDocument().getLength())) {
+					List activeNodes = getAllActiveNodes(structuredModel, start, length);
 					if (activeNodes.size() > 0) {
-						Node firstNode = (Node) activeNodes.firstElement();
-						Node lastNode = (Node) activeNodes.lastElement();
-	
+						Node firstNode = (Node) activeNodes.get(0);
+						Node lastNode = (Node) activeNodes.get(activeNodes.size() - 1);
+
 						boolean done = false;
 						Node eachNode = firstNode;
 						Node nextNode = null;
-						// TODO: we should be able to call something like
-						// sequentialRewrite, but
-						// doesn't work for
-						// our case, since we do "gets" during reparsing, so makes
-						// sequential rewrite
-						// store actually
-						// less efficient than gap store. Someday we need our own
-						// gap store, that
-						// handles
-						// structured text more efficiently. I thought I'd leave
-						// this commented out
-						// code here
-						// as a reminder.
-						//					try {
-						//						structuredModel.getStructuredDocument().startSequentialRewrite(false);
 						while (!done) {
 							// update "done"
 							done = (eachNode == lastNode);
-	
-							// get next sibling before format because eachNode
-							// may
-							// be deleted,
-							// for example when it's an empty text node
+
+							/*
+							 * get next sibling before format because eachNode
+							 * may be deleted, for example when it's an empty
+							 * text node
+							 */
 							nextNode = eachNode.getNextSibling();
-	
+
 							// format each node
 							formatNode(eachNode);
-	
+
 							// update each node
-							if (nextNode != null && nextNode.getParentNode() == null)
+							if ((nextNode != null) && (nextNode.getParentNode() == null))
 								// nextNode is deleted during format
 								eachNode = eachNode.getNextSibling();
 							else
 								eachNode = nextNode;
-	
+
 							// This should not be needed, but just in case
 							// something went wrong with with eachNode.
 							// We don't want an infinite loop here.
 							if (eachNode == null)
 								done = true;
 						}
-						//					}
-						//					finally {
-						//						structuredModel.getStructuredDocument().stopSequentialRewrite();
-						//					}
+
 					}
 				}
-			} finally {
-				// always make sure to fire changedmodel when done
-				structuredModel.changedModel();
+			}
+			finally {
+				// we need two finally's, just in case first fails
+				try {
+					if ((docExt4 != null) && (rewriteSession != null))
+						docExt4.stopRewriteSession(rewriteSession);
+				}
+				finally {
+					// always make sure to fire changedmodel when done
+					structuredModel.changedModel();
+				}
 			}
 		}
 	}
@@ -380,8 +396,16 @@ public abstract class AbstractStructuredFormatProcessor implements IStructuredFo
 		}
 	}
 
+	/**
+	 * @deprecated Use getAllActiveNodes instead
+	 */
 	protected Vector getActiveNodes(IStructuredModel structuredModel, int startNodeOffset, int length) {
-		Vector activeNodes = new Vector();
+		List allActiveNodes = getAllActiveNodes(structuredModel, startNodeOffset, length);
+		return new Vector(allActiveNodes);
+	}
+
+	protected List getAllActiveNodes(IStructuredModel structuredModel, int startNodeOffset, int length) {
+		List activeNodes = new ArrayList();
 
 		if (structuredModel != null) {
 			Node startNode = (Node) structuredModel.getIndexedRegion(startNodeOffset);
@@ -421,11 +445,11 @@ public abstract class AbstractStructuredFormatProcessor implements IStructuredFo
 				}
 
 				while (startNode != endNode) {
-					activeNodes.addElement(startNode);
+					activeNodes.add(startNode);
 					startNode = startNode.getNextSibling();
 				}
 				if (startNode != null)
-					activeNodes.addElement(startNode);
+					activeNodes.add(startNode);
 			}
 		}
 
@@ -436,7 +460,7 @@ public abstract class AbstractStructuredFormatProcessor implements IStructuredFo
 
 	protected IStructuredFormatContraints getFormatContraints(IStructuredModel structuredModel) {
 		// 262135 - NPE during format of empty document
-		if (fFormatContraints == null && structuredModel != null) {
+		if ((fFormatContraints == null) && (structuredModel != null)) {
 			Node node = (Node) structuredModel.getIndexedRegion(0);
 
 			if (node != null) {
@@ -453,9 +477,9 @@ public abstract class AbstractStructuredFormatProcessor implements IStructuredFo
 	abstract protected IStructuredFormatter getFormatter(Node node);
 
 	protected boolean isSiblingOf(Node node, Node endNode) {
-		if (endNode == null) {
+		if (endNode == null)
 			return true;
-		} else {
+		else {
 			Node siblingNode = node;
 			while (siblingNode != null) {
 				if (siblingNode == endNode)

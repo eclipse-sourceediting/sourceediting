@@ -12,6 +12,9 @@ package org.eclipse.wst.css.core.internal.format;
 
 import java.util.List;
 
+import org.eclipse.jface.text.DocumentRewriteSession;
+import org.eclipse.jface.text.DocumentRewriteSessionType;
+import org.eclipse.jface.text.IDocumentExtension4;
 import org.eclipse.wst.css.core.internal.formatter.CSSFormatUtil;
 import org.eclipse.wst.css.core.internal.formatter.CSSSourceFormatter;
 import org.eclipse.wst.css.core.internal.formatter.CSSSourceFormatterFactory;
@@ -45,6 +48,14 @@ public class FormatProcessorCSS extends AbstractStructuredFormatProcessor {
 	public void formatModel(IStructuredModel structuredModel, int start, int length) {
 		CSSFormatUtil formatUtil = CSSFormatUtil.getInstance();
 		if (structuredModel instanceof ICSSModel) {
+			//BUG102822 take advantage of IDocumentExtension4
+			IDocumentExtension4 docExt4 = null;
+			if (structuredModel.getStructuredDocument() instanceof IDocumentExtension4) {
+				docExt4 = (IDocumentExtension4)structuredModel.getStructuredDocument();
+			}
+			DocumentRewriteSession rewriteSession = (docExt4 == null) ? null :
+				docExt4.startRewriteSession(DocumentRewriteSessionType.UNRESTRICTED);
+			
 			ICSSDocument doc = ((ICSSModel) structuredModel).getDocument();
 			CSSSourceFormatter formatter = CSSSourceFormatterFactory.getInstance().getSourceFormatter((INodeNotifier) doc);
 			StringBuffer buf = formatter.format(doc);
@@ -53,11 +64,24 @@ public class FormatProcessorCSS extends AbstractStructuredFormatProcessor {
 				int endOffset = ((IndexedRegion) doc).getEndOffset();
 				formatUtil.replaceSource(doc.getModel(), startOffset, endOffset - startOffset, buf.toString());
 			}
+			
+			//BUG102822 take advantage of IDocumentExtension4
+			if (docExt4 != null && rewriteSession != null)
+				docExt4.stopRewriteSession(rewriteSession);
 		}
 		else if (structuredModel instanceof IDOMModel) {
 			List cssnodes = formatUtil.collectCSSNodes(structuredModel, start, length);
 			if (cssnodes != null && !cssnodes.isEmpty()) {
 				ICSSModel model = null;
+				
+				//BUG102822 take advantage of IDocumentExtension4
+				IDocumentExtension4 docExt4 = null;
+				if (structuredModel.getStructuredDocument() instanceof IDocumentExtension4) {
+					docExt4 = (IDocumentExtension4)structuredModel.getStructuredDocument();
+				}
+				DocumentRewriteSession rewriteSession = (docExt4 == null) ? null :
+					docExt4.startRewriteSession(DocumentRewriteSessionType.UNRESTRICTED);
+				
 				for (int i = 0; i < cssnodes.size(); i++) {
 					ICSSNode node = (ICSSNode) cssnodes.get(i);
 					CSSSourceFormatter formatter = CSSSourceFormatterFactory.getInstance().getSourceFormatter((INodeNotifier) node);
@@ -71,6 +95,10 @@ public class FormatProcessorCSS extends AbstractStructuredFormatProcessor {
 						formatUtil.replaceSource(model, startOffset, endOffset - startOffset, buf.toString());
 					}
 				}
+				
+				//BUG102822 take advantage of IDocumentExtension4
+				if (docExt4 != null && rewriteSession != null)
+					docExt4.stopRewriteSession(rewriteSession);
 			}
 		}
 	}

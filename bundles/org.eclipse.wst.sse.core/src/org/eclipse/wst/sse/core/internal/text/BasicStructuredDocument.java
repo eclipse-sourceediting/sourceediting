@@ -8,6 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
+ *     Jesper Steen Møller - initial IDocumentExtension4 support - #102822
  *     
  *******************************************************************************/
 package org.eclipse.wst.sse.core.internal.text;
@@ -27,10 +28,14 @@ import org.eclipse.jface.text.BadPositionCategoryException;
 import org.eclipse.jface.text.DefaultLineTracker;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.DocumentPartitioningChangedEvent;
+import org.eclipse.jface.text.DocumentRewriteSession;
+import org.eclipse.jface.text.DocumentRewriteSessionEvent;
+import org.eclipse.jface.text.DocumentRewriteSessionType;
 import org.eclipse.jface.text.FindReplaceDocumentAdapter;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentExtension;
 import org.eclipse.jface.text.IDocumentExtension3;
+import org.eclipse.jface.text.IDocumentExtension4;
 import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.jface.text.IDocumentPartitionerExtension;
@@ -38,7 +43,9 @@ import org.eclipse.jface.text.IDocumentPartitionerExtension2;
 import org.eclipse.jface.text.IDocumentPartitioningListener;
 import org.eclipse.jface.text.IDocumentPartitioningListenerExtension;
 import org.eclipse.jface.text.IDocumentPartitioningListenerExtension2;
+import org.eclipse.jface.text.IDocumentRewriteSessionListener;
 import org.eclipse.jface.text.ILineTracker;
+import org.eclipse.jface.text.ILineTrackerExtension;
 import org.eclipse.jface.text.IPositionUpdater;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextStore;
@@ -74,7 +81,7 @@ import org.eclipse.wst.sse.core.internal.util.Utilities;
 /**
  * The standard implementation of structured document.
  */
-public class BasicStructuredDocument implements IStructuredDocument, IDocumentExtension, IDocumentExtension3, CharSequence, IRegionComparible {
+public class BasicStructuredDocument implements IStructuredDocument, IDocumentExtension, IDocumentExtension3, IDocumentExtension4, CharSequence, IRegionComparible {
 
 	/**
 	 * This ThreadLocal construct is used so each thread can maintain its only
@@ -282,6 +289,8 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	private Object[] fStructuredDocumentChangedListeners;
 	private Object[] fStructuredDocumentChangingListeners;
 
+	private List fDocumentRewriteSessionListeners;
+
 	private ILineTracker fTracker;
 	private IStructuredTextUndoManager fUndoManager;
 	private IStructuredDocumentRegion lastDocumentRegion;
@@ -301,6 +310,14 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	 */
 	private String preferedDelimiter;
 	private final String READ_ONLY_REGIONS_CATEGORY = "_READ_ONLY_REGIONS_CATEGORY_"; //$NON-NLS-1$
+	/**
+	 * Current rewrite session, or none if not presently rewriting.
+	 */
+	private DocumentRewriteSession fActiveRewriteSession;
+	/**
+	 * Last modification stamp, automatically updated on change.
+	 */
+	private long fModificationStamp;
 	/**
 	 * debug variable only
 	 * 
@@ -1292,11 +1309,11 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	}
 
 	/*
-	 * This method can be used when this class implements IDocumentExtension4.
+	 * (non-Javadoc)
 	 * 
 	 * @see org.eclipse.jface.text.IDocumentExtension4#getDefaultLineDelimiter()
 	 */
-	private String getDefaultLineDelimiter() {
+	public String getDefaultLineDelimiter() {
 		// specific preferred line delimiter
 		if (preferedDelimiter != null)
 			return preferedDelimiter;
@@ -1717,17 +1734,17 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	 * eg.
 	 * 
 	 * <pre>
-	 *             &lt;html&gt;[&lt;head&gt;&lt;/head&gt;]&lt;/html&gt; returns &lt;head&gt;,&lt;/head&gt;
+	 *                        &lt;html&gt;[&lt;head&gt;&lt;/head&gt;]&lt;/html&gt; returns &lt;head&gt;,&lt;/head&gt;
 	 * </pre>
 	 *    <pre>
-	 *             &lt;ht[ml&gt;&lt;head&gt;&lt;/he]ad&gt;&lt;/html&gt; returns &lt;html&gt;,&lt;head&gt;,&lt;/head&gt;
+	 *                        &lt;ht[ml&gt;&lt;head&gt;&lt;/he]ad&gt;&lt;/html&gt; returns &lt;html&gt;,&lt;head&gt;,&lt;/head&gt;
 	 * </pre>
 	 * 
 	 * <pre>
-	 *               &lt;html&gt;[&lt;head&gt;&lt;/head&gt;]&lt;/html&gt; returns &lt;head&gt;,&lt;/head&gt;
+	 *                          &lt;html&gt;[&lt;head&gt;&lt;/head&gt;]&lt;/html&gt; returns &lt;head&gt;,&lt;/head&gt;
 	 * </pre>
 	 *    <pre>
-	 *               &lt;ht[ml&gt;&lt;head&gt;&lt;/he]ad&gt;&lt;/html&gt; returns &lt;html&gt;,&lt;head&gt;,&lt;/head&gt;
+	 *                          &lt;ht[ml&gt;&lt;head&gt;&lt;/he]ad&gt;&lt;/html&gt; returns &lt;html&gt;,&lt;head&gt;,&lt;/head&gt;
 	 * </pre>
 	 * 
 	 * </p>
@@ -1917,6 +1934,11 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 			// and casting
 			// fireStructuredDocumentEvent must be called in order to end
 			// documentAboutToBeChanged state
+
+			// increment modification stamp if modifications were made
+			if (result != null && !(result instanceof NoChangeEvent))
+				fModificationStamp++;
+
 			if (result == null) {
 				// result should not be null, but if an exception was thrown,
 				// it will be
@@ -2479,11 +2501,11 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	}
 
 	/*
-	 * This method can be used when this class implements IDocumentExtension4.
+	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.jface.text.IDocumentExtension4#setInitialLineDelimiter(String)
+	 * @see org.eclipse.jface.text.IDocumentExtension4#setInitialLineDelimiter(java.lang.String)
 	 */
-	private void setInitialLineDelimiter(String delimiter) {
+	public void setInitialLineDelimiter(String delimiter) {
 		// make sure our preferred delimiter is
 		// one of the legal ones
 		if (Utilities.containsString(getLegalLineDelimiters(), delimiter)) {
@@ -2644,6 +2666,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 		if (fPositionManager != null) {
 			fPositionManager.updatePositions(new DocumentEvent(this, start, lengthToReplace, changes));
 		}
+		fModificationStamp++;
 		resumePostNotificationProcessing();
 	}
 
@@ -2681,5 +2704,187 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	public void setPreferredLineDelimiter(String probableLineDelimiter) {
 		setInitialLineDelimiter(probableLineDelimiter);
 
+	}
+
+
+	/**
+	 * Class which implements the rewritable session for the SSE.
+	 * 
+	 */
+	class StructuredDocumentRewriteSession extends DocumentRewriteSession {
+
+		/**
+		 * Creates a new session.
+		 * 
+		 * @param sessionType
+		 *            the type of this session
+		 */
+		protected StructuredDocumentRewriteSession(DocumentRewriteSessionType sessionType) {
+			super(sessionType);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.jface.text.IDocumentExtension4#startRewriteSession(org.eclipse.jface.text.DocumentRewriteSessionType)
+	 */
+	public DocumentRewriteSession startRewriteSession(DocumentRewriteSessionType sessionType) throws IllegalStateException {
+		// delegate to sub-class, so UI threading is handled correctly
+		return internalStartRewriteSession(sessionType);
+	}
+
+	/**
+	 * NOT-API. Final protected so clients may call this method if needed, but
+	 * cannot override.
+	 * 
+	 * @param sessionType
+	 * @return
+	 * @throws IllegalStateException
+	 */
+	final protected DocumentRewriteSession internalStartRewriteSession(DocumentRewriteSessionType sessionType) throws IllegalStateException {
+		if (getActiveRewriteSession() != null)
+			throw new IllegalStateException();
+
+		DocumentRewriteSession session = new StructuredDocumentRewriteSession(sessionType);
+		DocumentRewriteSessionEvent event = new DocumentRewriteSessionEvent(this, session, DocumentRewriteSessionEvent.SESSION_START);
+		fireDocumentRewriteSessionEvent(event);
+
+		ILineTracker tracker = getTracker();
+		if (tracker instanceof ILineTrackerExtension) {
+			ILineTrackerExtension extension = (ILineTrackerExtension) tracker;
+			extension.startRewriteSession(session);
+		}
+
+		if (DocumentRewriteSessionType.SEQUENTIAL == sessionType)
+			startSequentialRewrite(false);
+		else if (DocumentRewriteSessionType.STRICTLY_SEQUENTIAL == sessionType)
+			startSequentialRewrite(true);
+
+		fActiveRewriteSession = session;
+		return session;
+	}
+
+
+	public void stopRewriteSession(DocumentRewriteSession session) {
+		// delegate to sub-class, so UI threading is handled correctly
+		internalStopRewriteSession(session);
+	}
+
+	/**
+	 * NOT-API. Final protected so clients may call this method if needed, but
+	 * cannot override.
+	 * 
+	 * @param session
+	 */
+	final protected void internalStopRewriteSession(DocumentRewriteSession session) {
+		if (fActiveRewriteSession == session) {
+			DocumentRewriteSessionType sessionType = session.getSessionType();
+			if (DocumentRewriteSessionType.SEQUENTIAL == sessionType || DocumentRewriteSessionType.STRICTLY_SEQUENTIAL == sessionType)
+				stopSequentialRewrite();
+
+			ILineTracker tracker = getTracker();
+			if (tracker instanceof ILineTrackerExtension) {
+				ILineTrackerExtension extension = (ILineTrackerExtension) tracker;
+				extension.stopRewriteSession(session, get());
+			}
+
+			DocumentRewriteSessionEvent event = new DocumentRewriteSessionEvent(this, session, DocumentRewriteSessionEvent.SESSION_STOP);
+			fireDocumentRewriteSessionEvent(event);
+			fActiveRewriteSession = null;
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.jface.text.IDocumentExtension4#getActiveRewriteSession()
+	 */
+	public DocumentRewriteSession getActiveRewriteSession() {
+		return fActiveRewriteSession;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.jface.text.IDocumentExtension4#addDocumentRewriteSessionListener(org.eclipse.jface.text.IDocumentRewriteSessionListener)
+	 */
+	public void addDocumentRewriteSessionListener(IDocumentRewriteSessionListener listener) {
+		synchronized (listenerLock) {
+			Assert.isNotNull(listener);
+			if (fDocumentRewriteSessionListeners == null) {
+				fDocumentRewriteSessionListeners = new ArrayList(1);
+			}
+			if (!fDocumentRewriteSessionListeners.contains(listener))
+				fDocumentRewriteSessionListeners.add(listener);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.jface.text.IDocumentExtension4#removeDocumentRewriteSessionListener(org.eclipse.jface.text.IDocumentRewriteSessionListener)
+	 */
+	public void removeDocumentRewriteSessionListener(IDocumentRewriteSessionListener listener) {
+		synchronized (listenerLock) {
+
+			Assert.isNotNull(listener);
+			if (fDocumentRewriteSessionListeners != null)
+				fDocumentRewriteSessionListeners.remove(listener);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.jface.text.IDocumentExtension4#replace(int, int,
+	 *      java.lang.String, long)
+	 */
+	public void replace(int offset, int length, String text, long modificationStamp) throws BadLocationException {
+		replaceText(this, offset, length, text);
+		fModificationStamp = modificationStamp;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.jface.text.IDocumentExtension4#set(java.lang.String,
+	 *      long)
+	 */
+	public void set(String text, long modificationStamp) {
+		try {
+			replace(0, getLength(), text);
+		}
+		catch (BadLocationException exception) {
+			Logger.logException(exception);
+		}
+		fModificationStamp = modificationStamp;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.jface.text.IDocumentExtension4#getModificationStamp()
+	 */
+	public long getModificationStamp() {
+		return fModificationStamp;
+	}
+
+	/**
+	 * Fires an event, as specified, to the associated listeners.
+	 * 
+	 * @param event
+	 *            The event to fire, either a start or stop event.
+	 */
+	private void fireDocumentRewriteSessionEvent(DocumentRewriteSessionEvent event) {
+		if (fDocumentRewriteSessionListeners == null || fDocumentRewriteSessionListeners.size() == 0)
+			return;
+
+		List list = new ArrayList(fDocumentRewriteSessionListeners);
+		Iterator e = list.iterator();
+		while (e.hasNext()) {
+			IDocumentRewriteSessionListener l = (IDocumentRewriteSessionListener) e.next();
+			l.documentRewriteSessionChanged(event);
+		}
 	}
 }

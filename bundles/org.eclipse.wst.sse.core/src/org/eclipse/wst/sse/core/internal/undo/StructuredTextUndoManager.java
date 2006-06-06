@@ -8,6 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
+ *     Jesper Steen Møller - initial IDocumentExtension4 support - #102822
  *     
  *******************************************************************************/
 package org.eclipse.wst.sse.core.internal.undo;
@@ -18,7 +19,11 @@ import org.eclipse.emf.common.command.BasicCommandStack;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.command.CommandStack;
 import org.eclipse.emf.common.command.CommandStackListener;
+import org.eclipse.emf.common.command.CompoundCommand;
+import org.eclipse.jface.text.DocumentRewriteSession;
+import org.eclipse.jface.text.DocumentRewriteSessionType;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.IDocumentExtension4;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.SSECoreMessages;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
@@ -463,12 +468,21 @@ public class StructuredTextUndoManager implements IStructuredTextUndoManager {
 
 	public void redo(IDocumentSelectionMediator requester) {
 		IStructuredModel model = findStructuredModel(fDocument);
+
 		if (redoable()) {
+			IDocumentExtension4 docExt4 = null;
+			DocumentRewriteSession rewriteSession = null;
 			try {
 				if (model != null)
 					model.aboutToChangeModel();
 
 				Command redoCommand = getRedoCommand();
+				if (redoCommand instanceof CompoundCommand &&
+						model.getStructuredDocument() instanceof IDocumentExtension4) {
+					docExt4 = (IDocumentExtension4)model.getStructuredDocument();
+				}
+				rewriteSession = (docExt4 == null) ? null :
+					docExt4.startRewriteSession(DocumentRewriteSessionType.UNRESTRICTED);
 
 				// make sure to redo before setting document selection
 				fCommandStack.redo();
@@ -477,6 +491,8 @@ public class StructuredTextUndoManager implements IStructuredTextUndoManager {
 				setRedoDocumentSelection(requester, redoCommand);
 			}
 			finally {
+				if (docExt4 != null && rewriteSession != null)
+					docExt4.stopRewriteSession(rewriteSession);
 				if (model != null) {
 					model.changedModel();
 					model.releaseFromRead();
@@ -598,12 +614,21 @@ public class StructuredTextUndoManager implements IStructuredTextUndoManager {
 
 		if (undoable()) {
 			IStructuredModel model = findStructuredModel(fDocument);
+			IDocumentExtension4 docExt4 = null;
+			DocumentRewriteSession rewriteSession = null;
+
 			try {
 				if (model != null)
 					model.aboutToChangeModel();
 
 				Command undoCommand = getUndoCommand();
-
+				if (undoCommand instanceof CompoundCommand &&
+						model.getStructuredDocument() instanceof IDocumentExtension4) {
+					docExt4 = (IDocumentExtension4)model.getStructuredDocument();
+				}
+				rewriteSession = (docExt4 == null) ? null :
+					docExt4.startRewriteSession(DocumentRewriteSessionType.UNRESTRICTED);
+				
 				// make sure to undo before setting document selection
 				fCommandStack.undo();
 
@@ -611,6 +636,8 @@ public class StructuredTextUndoManager implements IStructuredTextUndoManager {
 				setUndoDocumentSelection(requester, undoCommand);
 			}
 			finally {
+				if (docExt4 != null && rewriteSession != null)
+					docExt4.stopRewriteSession(rewriteSession);
 				if (model != null) {
 					model.changedModel();
 					model.releaseFromRead();
