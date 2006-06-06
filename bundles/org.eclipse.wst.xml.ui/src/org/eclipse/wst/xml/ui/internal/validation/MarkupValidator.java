@@ -12,8 +12,6 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.ui.internal.validation;
 
-import com.ibm.icu.util.StringTokenizer;
-
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
@@ -332,7 +330,13 @@ public class MarkupValidator implements IValidator, ISourceValidator {
 			attrValueText = structuredDocumentRegion.getText(r);
 			// attribute value includes quotes in the string
 			// split up attribute value on quotes
-			StringTokenizer st = new StringTokenizer(attrValueText, "\"'", true); //$NON-NLS-1$
+			/*
+			 * WORKAROUND till
+			 * http://dev.icu-project.org/cgi-bin/icu-bugs/incoming?findid=5207
+			 * is fixed. (Also see BUG143628)
+			 */
+
+			java.util.StringTokenizer st = new java.util.StringTokenizer(attrValueText, "\"'", true); //$NON-NLS-1$
 			int size = st.countTokens();
 			// get the pieces of the attribute value
 			String one = "", two = ""; //$NON-NLS-1$ //$NON-NLS-2$
