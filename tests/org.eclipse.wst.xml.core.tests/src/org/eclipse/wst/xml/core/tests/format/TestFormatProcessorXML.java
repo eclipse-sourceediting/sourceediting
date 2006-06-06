@@ -61,18 +61,15 @@ public class TestFormatProcessorXML extends TestCase {
 
 		IStructuredModel model = null;
 		try {
-			IModelManager modelManager = StructuredModelManager
-					.getModelManager();
+			IModelManager modelManager = StructuredModelManager.getModelManager();
 			InputStream inStream = getClass().getResourceAsStream(filename);
 			if (inStream == null)
-				throw new FileNotFoundException("Can't file resource stream "
-						+ filename);
+				throw new FileNotFoundException("Can't file resource stream " + filename);
 			final String baseFile = getClass().getResource(filename).toString();
-			model = modelManager.getModelForEdit(baseFile, inStream, 
-			new URIResolver() {
+			model = modelManager.getModelForEdit(baseFile, inStream, new URIResolver() {
 
-				String fBase = baseFile ;
-				
+				String fBase = baseFile;
+
 				public String getFileBaseLocation() {
 					return fBase;
 				}
@@ -88,12 +85,12 @@ public class TestFormatProcessorXML extends TestCase {
 				public String getLocationByURI(String uri, String baseReference) {
 					int lastSlash = baseReference.lastIndexOf("/");
 					if (lastSlash > 0)
-						return baseReference.substring(0, lastSlash+1) + uri;
+						return baseReference.substring(0, lastSlash + 1) + uri;
 					return baseReference;
 				}
 
 				public String getLocationByURI(String uri, String baseReference, boolean resolveCrossProjectLinks) {
-					return getLocationByURI(uri, baseReference); 
+					return getLocationByURI(uri, baseReference);
 				}
 
 				public IProject getProject() {
@@ -105,7 +102,7 @@ public class TestFormatProcessorXML extends TestCase {
 				}
 
 				public InputStream getURIStream(String uri) {
-					return  getClass().getResourceAsStream(getLocationByURI(uri));
+					return getClass().getResourceAsStream(getLocationByURI(uri));
 				}
 
 				public void setFileBaseLocation(String newLocation) {
@@ -113,8 +110,10 @@ public class TestFormatProcessorXML extends TestCase {
 				}
 
 				public void setProject(IProject newProject) {
-				}});
-		} catch (IOException ex) {
+				}
+			});
+		}
+		catch (IOException ex) {
 			ex.printStackTrace();
 		}
 		return model;
@@ -129,44 +128,36 @@ public class TestFormatProcessorXML extends TestCase {
 		return true;
 	}
 
-	protected void formatAndAssertEquals(String beforePath, String afterPath)
-			throws UnsupportedEncodingException, IOException, CoreException {
+	protected void formatAndAssertEquals(String beforePath, String afterPath) throws UnsupportedEncodingException, IOException, CoreException {
 		IStructuredModel beforeModel = null, afterModel = null;
 		try {
 			beforeModel = getModelForEdit(beforePath);
-			assertNotNull("could not retrieve structured model for : "
-					+ beforePath, beforeModel);
+			assertNotNull("could not retrieve structured model for : " + beforePath, beforeModel);
 
 			afterModel = getModelForEdit(afterPath);
-			assertNotNull("could not retrieve structured model for : "
-					+ afterPath, afterModel);
+			assertNotNull("could not retrieve structured model for : " + afterPath, afterModel);
 
-			IStructuredFormatPreferences formatPreferences = formatProcessor
-					.getFormatPreferences();
+			IStructuredFormatPreferences formatPreferences = formatProcessor.getFormatPreferences();
 			formatPreferences.setLineWidth(MAX_LINE_WIDTH);
 			formatPreferences.setClearAllBlankLines(CLEAR_ALL_BLANK_LINES);
 			formatPreferences.setIndent(INDENT);
-			((IStructuredFormatPreferencesXML) formatPreferences)
-					.setSplitMultiAttrs(SPLIT_MULTI_ATTRS);
+			((IStructuredFormatPreferencesXML) formatPreferences).setSplitMultiAttrs(SPLIT_MULTI_ATTRS);
 
 			formatProcessor.formatModel(beforeModel);
 
 			ByteArrayOutputStream formattedBytes = new ByteArrayOutputStream();
 			beforeModel.save(formattedBytes); // "beforeModel" should now be
-												// after the formatter
+			// after the formatter
 
 			ByteArrayOutputStream afterBytes = new ByteArrayOutputStream();
 			afterModel.save(afterBytes);
 
-			assertEquals("Formatted document differs from the expected",
-					new String(afterBytes.toByteArray(), UTF_8), new String(
-							formattedBytes.toByteArray(), UTF_8));
+			assertEquals("Formatted document differs from the expected", new String(afterBytes.toByteArray(), UTF_8), new String(formattedBytes.toByteArray(), UTF_8));
 
 			// Do the same check in binary for kicks
-			assertTrue("Formatted document differs fromto the expected",
-					isByteArrayIdentical(formattedBytes.toByteArray(),
-							afterBytes.toByteArray()));
-		} finally {
+			assertTrue("Formatted document differs fromto the expected", isByteArrayIdentical(formattedBytes.toByteArray(), afterBytes.toByteArray()));
+		}
+		finally {
 			if (beforeModel != null)
 				beforeModel.releaseFromEdit();
 			if (afterModel != null)
@@ -174,22 +165,21 @@ public class TestFormatProcessorXML extends TestCase {
 		}
 	}
 
-	public void testSimpleXml() throws UnsupportedEncodingException,
-			IOException, CoreException {
-		formatAndAssertEquals("testfiles/xml/simple-standalone.xml",
-				"testfiles/xml/simple-standalone-fmt.xml");
+	public void testSimpleXml() throws UnsupportedEncodingException, IOException, CoreException {
+		formatAndAssertEquals("testfiles/xml/simple-standalone.xml", "testfiles/xml/simple-standalone-fmt.xml");
 	}
 
-	public void testPreserveFormat() throws UnsupportedEncodingException,
-		IOException, CoreException {
-		formatAndAssertEquals("testfiles/xml/xml-space-preserve-standalone.xml",
-		"testfiles/xml/xml-space-preserve-standalone-fmt.xml");
+	public void testPreserveFormat() throws UnsupportedEncodingException, IOException, CoreException {
+		formatAndAssertEquals("testfiles/xml/xml-space-preserve-standalone.xml", "testfiles/xml/xml-space-preserve-standalone-fmt.xml");
 	}
 
-	public void testPreserveFormatDTD() throws UnsupportedEncodingException,
-		IOException, CoreException {
-		formatAndAssertEquals("testfiles/xml/xml-space-preserve-dtd.xml",
-		"testfiles/xml/xml-space-preserve-dtd-fmt.xml");
+	public void testPreserveFormatDTD() throws UnsupportedEncodingException, IOException, CoreException {
+		formatAndAssertEquals("testfiles/xml/xml-space-preserve-dtd.xml", "testfiles/xml/xml-space-preserve-dtd-fmt.xml");
+	}
+
+	public void testOneLineFormat() throws UnsupportedEncodingException, IOException, CoreException {
+		// BUG115716
+		formatAndAssertEquals("testfiles/xml/oneline.xml", "testfiles/xml/oneline-fmt.xml");
 	}
 
 }
