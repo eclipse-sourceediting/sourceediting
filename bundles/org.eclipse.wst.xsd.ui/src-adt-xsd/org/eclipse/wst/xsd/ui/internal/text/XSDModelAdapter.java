@@ -130,31 +130,23 @@ public class XSDModelAdapter implements INodeAdapter
       adapter = (XSDModelAdapter)notifier.getAdapterFor(XSDModelAdapter.class);
       if (adapter == null)
       {
-        adapter = new XSDModelAdapter();       
+        adapter = new XSDModelAdapter();
         notifier.addAdapter(adapter);        
       } 
     }   
     return adapter;
   }
   
-  //addDocumentChangeListener()
-  //removeDocumentChangeListener()
   
   public static XSDSchema lookupOrCreateSchema(Document document)
   {    
-    XSDSchema result = null;
-    if (document instanceof INodeNotifier)
-    {
-      INodeNotifier notifier = (INodeNotifier)document;
-      XSDModelAdapter adapter = (XSDModelAdapter)notifier.getAdapterFor(XSDModelAdapter.class);
-      if (adapter == null)
-      {
-        adapter = new XSDModelAdapter();       
-        notifier.addAdapter(adapter);        
-        adapter.createSchema(document); 
-      } 
-      result = adapter.getSchema();
-    }    
+    XSDSchema result = null;    
+    XSDModelAdapter adapter = lookupOrCreateModelAdapter(document);      
+    if (adapter.getSchema() == null)
+    {  
+      adapter.createSchema(document); 
+    }   
+    result = adapter.getSchema();    
     return result;    
   }  
 }

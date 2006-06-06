@@ -43,7 +43,7 @@ public class XMLSearchDocument extends SearchDocument {
 			IFile file = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(new Path(getPath()));
 			if(file != null){
 				try {
-					model = (IDOMModel)StructuredModelManager.getModelManager().getModelForRead(file);
+					model = (IDOMModel)StructuredModelManager.getModelManager().getModelForEdit(file);
 				} catch (IOException e) {
 					e.printStackTrace();
 				} catch (CoreException e) {
@@ -95,4 +95,11 @@ public class XMLSearchDocument extends SearchDocument {
 		
 	}
 
+    public void dispose()
+    {     
+      if (model != null)
+      {  
+        model.releaseFromEdit();        
+      }  
+    }
 }

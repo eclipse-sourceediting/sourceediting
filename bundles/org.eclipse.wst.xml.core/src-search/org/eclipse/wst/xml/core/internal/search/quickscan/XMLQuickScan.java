@@ -18,7 +18,10 @@ import javax.xml.parsers.SAXParserFactory;
 import org.eclipse.wst.common.core.search.document.SearchDocument;
 import org.eclipse.wst.common.core.search.pattern.SearchPattern;
 import org.eclipse.wst.xml.core.internal.search.matching.PatternMatcher;
+import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 
 /**
@@ -62,6 +65,7 @@ public class XMLQuickScan
           SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
           reader = parser.getXMLReader();  
           reader.setFeature("http://xml.org/sax/features/namespaces", true); //$NON-NLS-1$
+          reader.setErrorHandler(new InternalErrorHandler());          
          }
          catch (Exception e)
          {           
@@ -70,6 +74,19 @@ public class XMLQuickScan
        return reader;
     }
     
+    static class InternalErrorHandler implements ErrorHandler
+    {
+      public void error(SAXParseException exception) throws SAXException
+      {          
+      }
+      
+      public void fatalError(SAXParseException exception) throws SAXException
+      {
+      }
+      public void warning(SAXParseException exception) throws SAXException
+      {        
+      }
+    }
     
 	private synchronized static void parseFile(String fullFilePath,
 			XMLQuickScanContentHandler handler)
