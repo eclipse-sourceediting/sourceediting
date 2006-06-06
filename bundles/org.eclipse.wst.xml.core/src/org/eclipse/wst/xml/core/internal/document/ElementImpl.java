@@ -8,6 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
+ *     Valentin Baciu - https://bugs.eclipse.org/bugs/show_bug.cgi?id=139552
  *     
  *******************************************************************************/
 package org.eclipse.wst.xml.core.internal.document;
@@ -1247,30 +1248,37 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 	}
 
 	/**
+	 * ISSUE: we should check for and throw NAMESPACE_ERR, according to spec. 
 	 */
-	public void setAttributeNS(String uri, String name, String value) throws DOMException {
-		if (name == null)
+	public void setAttributeNS(String uri, String qualifiedName, String value) throws DOMException {
+		if (qualifiedName == null)
 			return;
 
 		if (!isDataEditable()) {
 			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, new String());
 		}
 
-		Attr attr = getAttributeNodeNS(uri, name);
+		// see https://bugs.eclipse.org/bugs/show_bug.cgi?id=139552
+		// fix provided by Valentin Baciu
+		int index = qualifiedName.indexOf(':');
+		String localName = index != -1 ? qualifiedName.substring(index + 1) : qualifiedName;
+
+		Attr attr = getAttributeNodeNS(uri, localName);
 		if (attr != null) {
 			attr.setValue(value); // change value
-			return;
 		}
+		else {
 
-		// new attribute
-		Document doc = getOwnerDocument();
-		if (doc == null)
-			return;
-		attr = doc.createAttributeNS(uri, name);
-		if (attr == null)
-			return;
-		attr.setValue(value);
-		appendAttributeNode(attr);
+			// new attribute
+			Document doc = getOwnerDocument();
+			if (doc != null) {
+				attr = doc.createAttributeNS(uri, qualifiedName);
+				if (attr != null) {
+					attr.setValue(value);
+					appendAttributeNode(attr);
+				}
+			}
+		}
 	}
 
 	/**
