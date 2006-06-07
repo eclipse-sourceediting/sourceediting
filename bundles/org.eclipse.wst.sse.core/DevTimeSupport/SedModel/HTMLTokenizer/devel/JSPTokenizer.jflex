@@ -1562,7 +1562,11 @@ jspDirectiveStart        = {jspScriptletStart}@
 	String tagName = yytext().substring(1);
 	// pushback to just after the opening bracket
 	yypushback(yylength() - 1);
-	if(!isNestable(tagName)) {
+	/*
+	 * If this tag can not be nested or we're already searching for an
+	 * attribute name, equals, or value, return immediately.
+	 */
+	if (!isNestable(tagName) || (!fStateStack.empty() && (fStateStack.peek() == ST_XML_ATTRIBUTE_NAME || fStateStack.peek() == ST_XML_EQUALS || fStateStack.peek() == ST_XML_ATTRIBUTE_VALUE))) {
 		yybegin(ST_XML_TAG_NAME);
 		return XML_TAG_OPEN;
 	}
@@ -1582,7 +1586,11 @@ jspDirectiveStart        = {jspScriptletStart}@
 	String tagName = yytext().substring(1);
 	// pushback to just after the opening bracket
 	yypushback(yylength() - 1);
-	if(!isNestable(tagName)) {
+	/*
+	 * If this tag can not be nested or we're already searching for an
+	 * attribute name, equals, or value, return immediately.
+	 */
+	if (!isNestable(tagName) || (!fStateStack.empty() && (fStateStack.peek() == ST_XML_ATTRIBUTE_NAME || fStateStack.peek() == ST_XML_EQUALS || fStateStack.peek() == ST_XML_ATTRIBUTE_VALUE))) {
 		yybegin(ST_XML_TAG_NAME);
 		return XML_TAG_OPEN;
 	}
@@ -1634,7 +1642,7 @@ jspDirectiveStart        = {jspScriptletStart}@
 	yybegin(fStateStack.pop());
 	return JSP_CLOSE;
 }
-<ST_JSP_CONTENT> . {
+<ST_JSP_CONTENT> .|\n|\r {
 	if(Debug.debugTokenizer)
 		dump("JSP code content");//$NON-NLS-1$
 	return doScan("%>", false, false, false, JSP_CONTENT, ST_JSP_CONTENT, ST_JSP_CONTENT);
