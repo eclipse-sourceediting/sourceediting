@@ -41,7 +41,7 @@ public class CSSStyleRuleTest extends AbstractModelTest {
 		assertTrue(rule instanceof CSSStyleRule);
 
 		declaration = ((CSSStyleRule) rule).getStyle();
-		assertEquals(19, declaration.getLength());
+		assertEquals(20, declaration.getLength());
 
 		// 01
 		value = declaration.getPropertyCSSValue("NUMBER");
@@ -61,8 +61,12 @@ public class CSSStyleRuleTest extends AbstractModelTest {
 
 		// 05
 		value = declaration.getPropertyCSSValue("PX");
-		checkPrimitiveNumber(value, new PrimitiveNumber(CSSPrimitiveValue.CSS_PX, 123.456f));
+		checkPrimitiveNumber(value, new PrimitiveNumber(CSSPrimitiveValue.CSS_PX, +123.456f));
+		value = declaration.getPropertyCSSValue("PX2");
+		checkPrimitiveNumber(value, new PrimitiveNumber(CSSPrimitiveValue.CSS_PX, -123f));
 
+
+		
 		// 06
 		value = declaration.getPropertyCSSValue("CM");
 		checkPrimitiveNumber(value, new PrimitiveNumber(CSSPrimitiveValue.CSS_CM, 123.456f));
