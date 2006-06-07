@@ -17,8 +17,6 @@ import java.util.List;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartFactory;
 import org.eclipse.gef.RootEditPart;
@@ -91,8 +89,6 @@ import org.w3c.dom.Node;
 
 public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements ITabbedPropertySheetPageContributor, INavigationLocationProvider
 {
-  ResourceSet resourceSet;
-  Resource xsdResource;
   // IModel model;
   IStructuredModel structuredModel;
   XSDSchema xsdSchema;
@@ -228,7 +224,16 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
   public void dispose()
   {
     if (structuredModel != null)
+    {
       structuredModel.releaseFromEdit();
+      structuredModel = null;
+    }
+    
+    if (schemaNodeAdapter != null)
+    {
+      schemaNodeAdapter.clear();
+      schemaNodeAdapter = null;
+    }
     
     if (fOutlinePage != null)
     {

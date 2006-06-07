@@ -242,7 +242,8 @@ public abstract class ADTMultiPageEditor extends CommonMultiPageEditor
     {
       XSDEditorPlugin.getPlugin().setDesignPageAsDefault();
     }
-
+    toolbarViewer = null;
+    backToSchemaEditPart = null;
     super.dispose();
   }
 }

@@ -275,7 +275,13 @@ public abstract class CommonMultiPageEditor extends MultiPageEditorPart implemen
       structuredTextEditor.removePropertyListener(this);
     }
     structuredTextEditor = null;
-
+    editDomain = null;
+    fOutlinePage = null;
+    synchronizer = null;
+    actionRegistry = null;
+    selectionProvider = null;
+    graphicalViewer = null;
+    
     super.dispose();
   }
 
