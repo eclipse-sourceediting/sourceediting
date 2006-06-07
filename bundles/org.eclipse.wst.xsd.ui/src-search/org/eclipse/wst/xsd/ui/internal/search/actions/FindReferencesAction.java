@@ -24,8 +24,11 @@ import org.eclipse.wst.common.core.search.scope.WorkspaceSearchScope;
 import org.eclipse.wst.xsd.ui.internal.editor.ISelectionMapper;
 import org.eclipse.wst.xsd.ui.internal.search.IXSDSearchConstants;
 import org.eclipse.wst.xsd.ui.internal.search.XSDSearchQuery;
+import org.eclipse.xsd.XSDAttributeDeclaration;
+import org.eclipse.xsd.XSDAttributeGroupDefinition;
 import org.eclipse.xsd.XSDComplexTypeDefinition;
 import org.eclipse.xsd.XSDElementDeclaration;
+import org.eclipse.xsd.XSDModelGroupDefinition;
 import org.eclipse.xsd.XSDNamedComponent;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
 public class FindReferencesAction extends FindAction
@@ -82,6 +85,18 @@ public class FindReferencesAction extends FindAction
     else if (component instanceof XSDElementDeclaration)
     {
       metaName = IXSDSearchConstants.ELEMENT_META_NAME;
+    }
+    else if (component instanceof XSDModelGroupDefinition)
+    {
+      metaName = IXSDSearchConstants.GROUP_META_NAME;
+    }
+    else if (component instanceof XSDAttributeGroupDefinition)
+    {
+      metaName = IXSDSearchConstants.ATTRIBUTE_GROUP_META_NAME;
+    }
+    else if (component instanceof XSDAttributeDeclaration)
+    {
+      metaName = IXSDSearchConstants.ATTRIBUTE_META_NAME;
     }
     return metaName;
   }

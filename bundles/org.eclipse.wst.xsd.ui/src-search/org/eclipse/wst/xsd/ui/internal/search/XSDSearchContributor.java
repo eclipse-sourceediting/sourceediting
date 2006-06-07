@@ -46,6 +46,17 @@ public class XSDSearchContributor extends ComponentSearchContributor  {
 
 		references.put(IXSDSearchConstants.SIMPLE_TYPE_META_NAME, patterns);
 
+		patterns = new ArrayList();
+		patterns.add(new XMLSearchPattern( ns, XSDConstants.GROUP_ELEMENT_TAG, XSDConstants.REF_ATTRIBUTE));
+		references.put(IXSDSearchConstants.GROUP_META_NAME, patterns);
+
+		patterns = new ArrayList();
+		patterns.add(new XMLSearchPattern( ns, XSDConstants.ATTRIBUTEGROUP_ELEMENT_TAG, XSDConstants.REF_ATTRIBUTE));
+		references.put(IXSDSearchConstants.ATTRIBUTE_GROUP_META_NAME, patterns);
+
+		patterns = new ArrayList();
+		patterns.add(new XMLSearchPattern( ns, XSDConstants.ATTRIBUTE_ELEMENT_TAG, XSDConstants.REF_ATTRIBUTE));
+		references.put(IXSDSearchConstants.ATTRIBUTE_META_NAME, patterns);
 	}
 
 	protected void initializeDeclarations(){
@@ -53,22 +64,22 @@ public class XSDSearchContributor extends ComponentSearchContributor  {
 		declarations = new HashMap();
 		String ns = IXSDSearchConstants.XMLSCHEMA_NAMESPACE;
 
-		SearchPattern pattern = new XMLSearchPattern( ns, "element", "name", 2);
+		SearchPattern pattern = new XMLSearchPattern( ns, XSDConstants.ELEMENT_ELEMENT_TAG, XSDConstants.NAME_ATTRIBUTE, 2);
 		declarations.put(IXSDSearchConstants.ELEMENT_META_NAME, pattern);
 
-		pattern = new XMLSearchPattern(ns, "complexType", "name");
+		pattern = new XMLSearchPattern(ns, XSDConstants.COMPLEXTYPE_ELEMENT_TAG, XSDConstants.NAME_ATTRIBUTE);
 		declarations.put(IXSDSearchConstants.COMPLEX_TYPE_META_NAME, pattern);
 
-		pattern = new XMLSearchPattern(ns, "simpleType", "name");
+		pattern = new XMLSearchPattern(ns, XSDConstants.SIMPLETYPE_ELEMENT_TAG, XSDConstants.NAME_ATTRIBUTE);
 		declarations.put(IXSDSearchConstants.SIMPLE_TYPE_META_NAME, pattern);
 
-		pattern = new XMLSearchPattern(ns, "attribute", "name");
+		pattern = new XMLSearchPattern(ns, XSDConstants.ATTRIBUTE_ELEMENT_TAG, XSDConstants.NAME_ATTRIBUTE);
 		declarations.put(IXSDSearchConstants.ATTRIBUTE_META_NAME, pattern);
 
-		pattern = new XMLSearchPattern(ns, "attributeGroup", "name");
+		pattern = new XMLSearchPattern(ns, XSDConstants.ATTRIBUTEGROUP_ELEMENT_TAG, XSDConstants.NAME_ATTRIBUTE);
 		declarations.put(IXSDSearchConstants.ATTRIBUTE_GROUP_META_NAME, pattern);
 
-		pattern = new XMLSearchPattern(ns, "group", "name");
+		pattern = new XMLSearchPattern(ns, XSDConstants.GROUP_ELEMENT_TAG, XSDConstants.NAME_ATTRIBUTE);
 		declarations.put(IXSDSearchConstants.GROUP_META_NAME, pattern);
 
 	}
