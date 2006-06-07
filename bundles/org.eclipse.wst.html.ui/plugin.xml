@@ -278,18 +278,23 @@
 		<validator
 			scope="partial"
 			class="org.eclipse.wst.html.internal.validation.HTMLValidator"
-			id="org.eclipse.wst.html.htmlsourcevalidator">
+			id="org.eclipse.wst.html.ui.internal.validation.htmlsyntaxvalidator">
 			<contentTypeIdentifier
 				id="org.eclipse.wst.html.core.htmlsource">
-				<partitionType id="org.eclipse.wst.html.HTML_DEFAULT">
-				</partitionType>
+				<partitionType id="org.eclipse.wst.html.HTML_DEFAULT"/>
+				<partitionType id="org.eclipse.wst.xml.XML_DEFAULT"/>
+				<partitionType id="org.eclipse.wst.sse.ST_DEFAULT"/>
 			</contentTypeIdentifier>
+		</validator>
+		<validator
+			scope="partial"
+			class="org.eclipse.wst.xml.ui.internal.validation.MarkupValidator"
+			id="org.eclipse.wst.html.ui.internal.validation.markupvalidator">
 			<contentTypeIdentifier
-				id="org.eclipse.jst.jsp.core.jspsource">
-				<partitionType id="org.eclipse.wst.html.HTML_DEFAULT">
-				</partitionType>				
-				<partitionType id="org.eclipse.jst.jsp.JSP_DIRECTIVE">
-				</partitionType>
+				id="org.eclipse.wst.html.core.htmlsource">
+				<partitionType id="org.eclipse.wst.html.HTML_DEFAULT"/>
+				<partitionType id="org.eclipse.wst.xml.XML_DEFAULT"/>
+				<partitionType id="org.eclipse.wst.sse.ST_DEFAULT"/>
 			</contentTypeIdentifier>
 		</validator>
 	</extension>

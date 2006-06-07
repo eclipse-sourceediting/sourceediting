@@ -311,8 +311,8 @@
 			class="org.eclipse.wst.xml.ui.internal.validation.DelegatingSourceValidatorForXML"
 			id="org.eclipse.wst.xml.ui.internal.validation.DelegatingSourceValidatorForXML">
 			<contentTypeIdentifier id="org.eclipse.core.runtime.xml">
-				<partitionType id="org.eclipse.wst.xml.XML_DEFAULT">
-				</partitionType>
+				<partitionType id="org.eclipse.wst.xml.XML_DEFAULT"/>
+				<partitionType id="org.eclipse.wst.sse.ST_DEFAULT"/>
 			</contentTypeIdentifier>
 		</validator>
 	</extension>
@@ -321,12 +321,10 @@
 		<validator
 			scope="partial"
 			class="org.eclipse.wst.xml.ui.internal.validation.MarkupValidator"
-			id="org.eclipse.wst.xml.ui.internal.validation.sourcemarkupvalidator">
+			id="org.eclipse.wst.xml.ui.internal.validation.markupvalidator">
 			<contentTypeIdentifier id="org.eclipse.core.runtime.xml">
-				<partitionType id="org.eclipse.wst.sse.ST_DEFAULT">
-				</partitionType>
-				<partitionType id="org.eclipse.wst.xml.XML_DEFAULT">
-				</partitionType>
+				<partitionType id="org.eclipse.wst.sse.ST_DEFAULT"/>
+				<partitionType id="org.eclipse.wst.xml.XML_DEFAULT"/>
 			</contentTypeIdentifier>
 		</validator>
 	</extension>
