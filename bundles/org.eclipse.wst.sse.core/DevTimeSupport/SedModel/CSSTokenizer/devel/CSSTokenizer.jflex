@@ -9,23 +9,23 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*nlsXXX*/
-package org.eclipse.wst.sse.core.css.internal.parser;
+package org.eclipse.wst.css.core.internal.parser;
 
 import java.io.CharArrayReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.wst.sse.core.css.internal.parser.regions.CSSTextRegionFactory;
-import org.eclipse.wst.sse.core.css.parser.CSSRegionContexts;
-import org.eclipse.wst.sse.core.css.parser.CSSTextToken;
-import org.eclipse.wst.sse.core.text.ITextRegion;
+import org.eclipse.wst.css.core.internal.parser.regions.CSSTextRegionFactory;
+import org.eclipse.wst.css.core.internal.parserz.CSSRegionContexts;
+import org.eclipse.wst.css.core.internal.parserz.CSSTextToken;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 
 %%
 
 %public
 %class CSSTokenizer
-%implements CSSRegionContexts
+%implements CSSRegionContexts, ICSSTokenizer
 %function primGetNextToken
 %type String
 %char
@@ -215,7 +215,7 @@ import org.eclipse.wst.sse.core.text.ITextRegion;
 		 * the number of characters from the last newline up to the start of the 
 		 * matched text
 		 */
-		yycolumn = 0; 
+//		yycolumn = 0; 
 
 		/** 
 		 * yy_atBOL == true <=> the scanner is currently at the beginning of a line
@@ -261,12 +261,16 @@ h = [0-9a-f]
 nonascii = [\u0080-\uffff]
 unicode = \\{h}{1,6}[ \t\r\n\f]?
 escape = {unicode}|\\[ -~\u0080-\uffff]
-nmstart = [_a-zA-Z-]|{nonascii}|{escape}
+
+
+
+nmstart = [_a-zA-Z]|{nonascii}|{escape}
 nmchar = [_a-zA-Z0-9-]|{nonascii}|{escape}
 string1 = \"([\t !#$%&(-~]|\\{nl}|\'|{nonascii}|{escape})*\"
 string2 = \'([\t !#$%&(-~]|\\{nl}|\"|{nonascii}|{escape})*\'
 
-ident = {nmstart}{nmchar}*
+ident = -?{nmstart}{nmchar}*
+
 name = {nmchar}+
 num = [+-]?([0-9]+|[0-9]*"."[0-9]+)
 string = {string1}|{string2}
@@ -274,7 +278,8 @@ url = ([ !#$%&*-~]|{nonascii}|{escape})*
 s = [ \t\r\n\f]
 w = {s}*
 nl = \n|\r\n|\r|\f
-range = \?{1,6}|{h}(\?{0,5}|{h}(\?{0,4}|{h}(\?{0,3}|{h}(\?{0,2}|{h}(\??|{h})))))
+
+//range = \?{1,6}|{h}(\?{0,5}|{h}(\?{0,4}|{h}(\?{0,3}|{h}(\?{0,2}|{h}(\??|{h})))))
 
 hash = "#"{name}
 uri = ("url("{w}{string}{w}")"|"url("{w}{url}{w}")")
@@ -457,11 +462,22 @@ unicode_range = "U"\+[0-9a-fA-F?]{1,6}("-"[0-9a-fA-F?]{1,6})?
 
 <ST_DECLARATION_PRE_VALUE, ST_DECLARATION_VALUE> {
 	"!"{s}*"important" { yybegin(ST_DECLARATION_VALUE); return CSS_DECLARATION_VALUE_IMPORTANT; }
-	{ident} { yybegin(ST_DECLARATION_VALUE); return CSS_DECLARATION_VALUE_IDENT; }
+	
+	
 	")" { yybegin(ST_DECLARATION_VALUE); return CSS_DECLARATION_VALUE_PARENTHESIS_CLOSE; }
+	
+	// ordered following two rules deliberately, see 
+	//  https://bugs.eclipse.org/bugs/show_bug.cgi?id=129902
 	{num}{ident} { yybegin(ST_DECLARATION_VALUE); return CSS_DECLARATION_VALUE_DIMENSION; }
+	{ident} { yybegin(ST_DECLARATION_VALUE); return CSS_DECLARATION_VALUE_IDENT; }
+
+
 	{num}"%" { yybegin(ST_DECLARATION_VALUE); return CSS_DECLARATION_VALUE_PERCENTAGE; }
+		
 	{num} { yybegin(ST_DECLARATION_VALUE); return CSS_DECLARATION_VALUE_NUMBER; }
+	
+	
+	
 	{function} { yybegin(ST_DECLARATION_VALUE); return CSS_DECLARATION_VALUE_FUNCTION; }
 	{string} { yybegin(ST_DECLARATION_VALUE); return CSS_DECLARATION_VALUE_STRING; }
 	{uri} { yybegin(ST_DECLARATION_VALUE); return CSS_DECLARATION_VALUE_URI; }
