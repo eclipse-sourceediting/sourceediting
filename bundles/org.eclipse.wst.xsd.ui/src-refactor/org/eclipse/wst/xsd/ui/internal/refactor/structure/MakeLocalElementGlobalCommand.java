@@ -57,6 +57,21 @@ public final class MakeLocalElementGlobalCommand extends AbstractCommand
  			      XSDFactory.eINSTANCE.createXSDParticle();
  		    particle.setContent(elementRef);
  		    modelGroup.getContents().add(index, particle); 
+            // Copy over the max/minOccurs from the old local to the element ref
+            if (parent instanceof XSDParticle) {
+              XSDParticle parentParticle = (XSDParticle)parent;
+              
+              if (parentParticle.isSetMinOccurs()) {
+                particle.setMinOccurs(parentParticle.getMinOccurs());
+                parentParticle.unsetMinOccurs();
+              }
+              
+              if (parentParticle.isSetMaxOccurs()) {
+                particle.setMaxOccurs(parentParticle.getMaxOccurs());
+                parentParticle.unsetMaxOccurs();
+              }
+            }          
+            element.unsetForm();
  		   
  			modelGroup.getContents().remove(parent);
  		    modelGroup.updateElement(true);
