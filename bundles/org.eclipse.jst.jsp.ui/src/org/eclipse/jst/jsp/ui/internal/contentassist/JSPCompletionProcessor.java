@@ -24,14 +24,12 @@ import org.eclipse.jst.jsp.core.internal.java.IJSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapter;
 import org.eclipse.jst.jsp.ui.internal.JSPUIMessages;
-import org.eclipse.jst.jsp.ui.internal.Logger;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.ui.internal.IReleasable;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.osgi.framework.Bundle;
-import org.osgi.framework.BundleException;
 
 
 /**
@@ -256,14 +254,28 @@ public class JSPCompletionProcessor implements IContentAssistProcessor, IReleasa
 
 	/**
 	 * Initialize the Java Plugins that the JSP processor requires.
+	 * See https://bugs.eclipse.org/bugs/show_bug.cgi?id=143765
+	 * We should not call "start", because that will cause that 
+	 * state to be remembered, and re-started automatically during 
+	 * the next boot up sequence. 
+	 * 
+	 * ISSUE: we may be able to get rid of this all together, in future, 
+	 * since 99% we probably have already used some JDT class by the time 
+	 * we need JDT to be active ... but ... this is the safest fix for 
+	 * this point in 1.5 stream. Next release, let's just remove this, 
+	 * re-discover what ever bug this was fixing (if any) and if there is 
+	 * one, then we'll either put back in, as is, or come up with a 
+	 * more appropriate fix. 
+	 * 
 	 */
 	protected void initializeJavaPlugins() {
 		try {
 			Bundle bundle = Platform.getBundle(JDT_CORE_PLUGIN_ID);
-			bundle.start();
+			bundle.loadClass("dummyClassNameThatShouldNeverExist");
 		}
-		catch (BundleException exc) {
-			Logger.logException("Could not initialize the JDT Plugins", exc);//$NON-NLS-1$
+		catch (ClassNotFoundException e) {
+			// this is the expected result, we just want to 
+			// nudge the bundle to be sure its activated. 
 		}
 	}
 
