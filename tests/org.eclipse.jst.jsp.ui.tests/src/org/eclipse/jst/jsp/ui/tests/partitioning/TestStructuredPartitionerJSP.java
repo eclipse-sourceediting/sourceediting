@@ -91,7 +91,15 @@ public class TestStructuredPartitionerJSP extends TestCase {
 		int nPartitions = doComputePartitioningTest("testfiles/jsp/example06.jsp");
 		assertTrue("wrong number of partitions", nPartitions == expectedPartitions);
 		checkSeams();
-		verifyPartitionTypes(partitions, new String[]{IJSPPartitions.JSP_DIRECTIVE,});
+		verifyPartitionTypes(partitions, new String[]{IJSPPartitions.JSP_DIRECTIVE});
+	}
+
+	public void testBug131463() throws IOException, BadLocationException {
+		int expectedPartitions = 13;
+		int nPartitions = doComputePartitioningTest("testfiles/jsp/bug131463.jsp");
+		assertTrue("wrong number of partitions", nPartitions == expectedPartitions);
+		checkSeams();
+		verifyPartitionTypes(partitions, new String[]{IJSPPartitions.JSP_DIRECTIVE, IHTMLPartitions.HTML_DEFAULT, IXMLPartitions.XML_CDATA, IHTMLPartitions.HTML_DEFAULT, IJSPPartitions.JSP_DIRECTIVE, IHTMLPartitions.HTML_DEFAULT, IJSPPartitions.JSP_DIRECTIVE, IJSPPartitions.JSP_CONTENT_JAVA, IHTMLPartitions.HTML_DEFAULT, IJSPPartitions.JSP_CONTENT_JAVA, IHTMLPartitions.HTML_DEFAULT, IJSPPartitions.JSP_CONTENT_JAVA, IJSPPartitions.JSP_DIRECTIVE});
 	}
 
 	public void testPerfJSP() throws IOException, BadLocationException {
@@ -113,7 +121,8 @@ public class TestStructuredPartitionerJSP extends TestCase {
 	}
 
 	/**
-	 * Ensure that the current list of partitions are all adjacent to one another
+	 * Ensure that the current list of partitions are all adjacent to one
+	 * another
 	 */
 	protected void checkSeams() {
 		if (partitions == null)
@@ -126,8 +135,8 @@ public class TestStructuredPartitionerJSP extends TestCase {
 	}
 
 	/**
-	 * Compute the partitions for the given filename using the default partitioner
-	 * for that file type.
+	 * Compute the partitions for the given filename using the default
+	 * partitioner for that file type.
 	 * 
 	 * @param filename
 	 * @return int
@@ -177,8 +186,8 @@ public class TestStructuredPartitionerJSP extends TestCase {
 	}
 
 	/**
-	 * Compute the partitions for the given filename using the default partitioner
-	 * for that file type.
+	 * Compute the partitions for the given filename using the default
+	 * partitioner for that file type.
 	 * 
 	 * @param filename
 	 * @return int
@@ -186,13 +195,13 @@ public class TestStructuredPartitionerJSP extends TestCase {
 	 * @throws BadLocationException
 	 */
 	protected int doTimedComputePartitioningTest(String filename) throws IOException, BadLocationException {
-	
+
 		IModelManager modelManager = StructuredModelManager.getModelManager();
 		InputStream inStream = getClass().getResourceAsStream(filename);
 		if (inStream == null)
 			inStream = new StringBufferInputStream("");
 		IStructuredModel model = modelManager.getModelForEdit(filename, inStream, null);
-	
+
 		IStructuredDocument structuredDocument = model.getStructuredDocument();
 		if (DEBUG_PRINT_RESULT && useFormatter) {
 			double baseTen = Math.log(10);
@@ -203,11 +212,11 @@ public class TestStructuredPartitionerJSP extends TestCase {
 		partitions = structuredDocument.computePartitioning(0, structuredDocument.getLength());
 		long endTime = System.currentTimeMillis();
 		if (DEBUG_PRINT_RESULT) {
-			
+
 			String contents = null;
-	
+
 			System.out.println("\nfilename: " + filename);
-			System.out.println("Time to compute " + partitions.length + ": " + (endTime-startTime) + " (msecs)");
+			System.out.println("Time to compute " + partitions.length + ": " + (endTime - startTime) + " (msecs)");
 			for (int i = 0; i < partitions.length; i++) {
 				try {
 					contents = structuredDocument.get(partitions[i].getOffset(), partitions[i].getLength());
@@ -224,16 +233,16 @@ public class TestStructuredPartitionerJSP extends TestCase {
 		checkSeams();
 		model.releaseFromEdit();
 		inStream.close();
-	
+
 		if (partitions == null)
 			return -1;
 		return partitions.length;
 	}
 
 	/**
-	 * Retrieves the single partition at the given offset for the given file, using the
-	 * default partitioner for that file type.  This test allows for verifying the zero-length
-	 * partitioning behavior.
+	 * Retrieves the single partition at the given offset for the given file,
+	 * using the default partitioner for that file type. This test allows for
+	 * verifying the zero-length partitioning behavior.
 	 * 
 	 * @param filename
 	 * @param offset
@@ -270,6 +279,7 @@ public class TestStructuredPartitionerJSP extends TestCase {
 
 	/**
 	 * Verifies that the given partitions are of the given partition types
+	 * 
 	 * @param typedRegions
 	 * @param types
 	 */
@@ -280,6 +290,7 @@ public class TestStructuredPartitionerJSP extends TestCase {
 
 	/**
 	 * Verifies that the given partitions begin at the given offsets
+	 * 
 	 * @param typedRegions
 	 * @param types
 	 */
