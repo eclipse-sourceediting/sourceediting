@@ -236,6 +236,15 @@ public class StructuredTextPartitionerForJSP extends StructuredTextPartitioner {
 			result = IJSPPartitions.JSP_DEFAULT_EL;
 		else if (region_type == DOMJSPRegionContexts.JSP_VBL_OPEN || region_type == DOMJSPRegionContexts.JSP_VBL_CONTENT || region_type == DOMJSPRegionContexts.JSP_VBL_CLOSE || region_type == DOMJSPRegionContexts.JSP_VBL_DQUOTE || region_type == DOMJSPRegionContexts.JSP_VBL_SQUOTE || region_type == DOMJSPRegionContexts.JSP_VBL_QUOTED_CONTENT)
 			result = IJSPPartitions.JSP_DEFAULT_EL2;
+		else if (region_type == DOMRegionContext.XML_CDATA_TEXT) {
+			// BUG131463: possibly between <jsp:scriptlet>, <jsp:expression>,
+			// <jsp:declaration>
+			IStructuredDocumentRegion sdRegion = this.fStructuredDocument.getRegionAtCharacterOffset(offset);
+			if (isJspJavaActionName(getParentName(sdRegion)))
+				result = getPartitionTypeForDocumentLanguage();
+			else
+				result = getEmbeddedPartitioner().getPartitionType(region, offset);
+		}
 		else if (region_type == DOMRegionContext.XML_CONTENT) {
 			// possibly between <jsp:scriptlet>, <jsp:expression>,
 			// <jsp:declaration>
