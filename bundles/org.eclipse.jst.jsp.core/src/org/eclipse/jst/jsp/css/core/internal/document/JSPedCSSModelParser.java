@@ -78,7 +78,20 @@ class JSPedCSSModelParser extends CSSModelParser {
 	    for (int i=0;i<strs.length;i++) {
 	    	String hrefStr = "file=\"";
 	      if (strs[i].startsWith(hrefStr)){
-	    	  hrefValue = strs[i].substring(hrefStr.length(),strs[i].length() - 1);
+				int hrefStr_length = hrefStr.length();
+				// minus 1 to avoid quote?
+				int hrefValue_length = strs[i].length() - 1;
+				if (hrefValue_length > hrefStr_length) {
+					hrefValue = strs[i].substring(hrefStr_length, hrefValue_length);
+				}
+				else {
+					/*
+					 * ISSUE: this handles casese where, e.g. "file://" has so
+					 * subsequent 'value' ... but should it return null or empty
+					 * string?
+					 */
+					hrefValue = null;
+				}
 	    	  break;
 	      }
 	    }
