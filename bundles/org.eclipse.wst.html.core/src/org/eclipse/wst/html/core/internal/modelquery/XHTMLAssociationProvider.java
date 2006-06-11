@@ -26,11 +26,15 @@ import org.w3c.dom.Document;
  */
 class XHTMLAssociationProvider extends XMLAssociationProvider {
 
-	protected URIResolver idResolver = null;
+	/**
+	 * set USE_QUICK_CACHE to false to test effects of not caching at all.
+	 */
+	private static final boolean USE_QUICK_CACHE = true;
+	protected URIResolver idResolver;
 	private String fCachedGrammerURI;
 	private String fCachedPublicID;
 	private String fCachedSystemID;
-	private static final boolean USE_QUICK_CACHE = true;
+	private boolean cached;
 
 	public XHTMLAssociationProvider(CMDocumentCache cache, URIResolver idResolver) {
 		super(cache);
@@ -48,13 +52,13 @@ class XHTMLAssociationProvider extends XMLAssociationProvider {
 			return null;
 		String grammerURI = null;
 		if (USE_QUICK_CACHE) {
-			// In parsing a document, we get many identiical requests to this
-			// method, so instead of looking up (resolving) grammerURI each
-			// time,
-			// we'll just return previously cached one. Probably not worth
-			// have a
-			// more complex cache than that.
-			if (fCachedGrammerURI != null && fCachedPublicID.equals(publicId) && fCachedSystemID.equals(systemId)) {
+			/*
+			 * In parsing a document, we get many identical requests to this
+			 * method, so instead of looking up (resolving) grammerURI each
+			 * time, we'll just return previously cached one. Probably not
+			 * worth have a more complex cache than that.
+			 */
+			if (cached && sameAs(fCachedPublicID, publicId) && sameAs(fCachedSystemID, systemId)) {
 				grammerURI = fCachedGrammerURI;
 			}
 			else {
@@ -62,6 +66,7 @@ class XHTMLAssociationProvider extends XMLAssociationProvider {
 				fCachedGrammerURI = grammerURI;
 				fCachedPublicID = publicId;
 				fCachedSystemID = systemId;
+				cached = true;
 			}
 		}
 		else {
@@ -71,18 +76,26 @@ class XHTMLAssociationProvider extends XMLAssociationProvider {
 		if (grammerURI == null)
 			return null;
 
-		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=88896
-		// previously called the deprecated 2 argument form of getCMDocument,
-		// which eventually
-		// resulted in empty string for type, which I don't think the
-		// infrastructure was prepared
-		// for. So, I deleted deprecated methods, and switched to null.
-		// 'null' means to "create based on uri"
-		// and 'dtd' would work to mean load only those registered as dtd's
-		// CMDocument cmDocument = documentManager.getCMDocument(publicId,
-		// grammerURI);
-		// CMDocument cmDocument = documentManager.getCMDocument(publicId,
-		// grammerURI, "dtd");
+		/*
+		 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=88896
+		 * 
+		 * We once called the deprecated 2 argument form of getCMDocument.
+		 * 
+		 * CMDocument cmDocument = documentManager.getCMDocument(publicId,
+		 * grammerURI);
+		 * 
+		 * which eventually resulted in empty string for type, which I don't
+		 * think the infrastructure handles any longer. So, I deleted
+		 * deprecated methods, and switched to null for type argument.
+		 * 
+		 * 'null' means to "create based on uri".
+		 * 
+		 * FYI, 'dtd' would mean load only those registered as dtd's
+		 * 
+		 * CMDocument cmDocument = documentManager.getCMDocument(publicId,
+		 * grammerURI); CMDocument cmDocument =
+		 * documentManager.getCMDocument(publicId, grammerURI, "dtd");
+		 */
 		CMDocument cmDocument = documentManager.getCMDocument(publicId, grammerURI, null);
 		return cmDocument;
 	}
@@ -91,5 +104,16 @@ class XHTMLAssociationProvider extends XMLAssociationProvider {
 	 */
 	protected String resolveGrammarURI(Document document, String publicId, String systemId) {
 		return idResolver.resolve(null, publicId, systemId);
+	}
+
+	private boolean sameAs(String a, String b) {
+		boolean result = false;
+		if (a == null) {
+			result = b == null;
+		}
+		else {
+			result = a.equals(b);
+		}
+		return result;
 	}
 }
