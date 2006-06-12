@@ -145,7 +145,7 @@ public class NewComponentDialog extends Dialog implements ModifyListener
   	Iterator iterator = usedNames.iterator();
   	while (iterator.hasNext()) {
   		if (name.equalsIgnoreCase((String) iterator.next())) {
-  			return "_UI_LABEL_WARNING_DUPLICATE_NAME_EXISTS"; //$NON-NLS-1$
+  			return org.eclipse.wst.xsd.ui.internal.common.util.Messages._UI_ERROR_NAME_ALREADY_USED; //$NON-NLS-1$
   		}
   	}
   	
@@ -165,7 +165,7 @@ public class NewComponentDialog extends Dialog implements ModifyListener
       errorMessage = ""; //$NON-NLS-1$
     }  
     errorMessageLabel.setText(errorMessage != null ? errorMessage : ""); //$NON-NLS-1$
-//    okButton.setEnabled(errorMessage == null);
+    okButton.setEnabled(errorMessage == null);
   }
  
   protected void buttonPressed(int buttonId) 
@@ -180,6 +180,14 @@ public class NewComponentDialog extends Dialog implements ModifyListener
   public String getName()
   {
     return name;
+  }
+  
+  public void setUsedNames(List usedNames) {
+	  this.usedNames = usedNames;
+  }
+  
+  public void setDefaultName(String name) {
+	  this.name = name;
   }
 }
 

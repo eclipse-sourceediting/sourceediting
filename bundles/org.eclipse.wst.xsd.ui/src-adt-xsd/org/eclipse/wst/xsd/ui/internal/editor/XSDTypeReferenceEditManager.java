@@ -77,7 +77,12 @@ public class XSDTypeReferenceEditManager implements ComponentReferenceEditManage
 
   public IComponentDialog getNewDialog()
   {
-    return new NewTypeDialog();
+	  if (schemas.length > 0) {
+		  return new NewTypeDialog(schemas[0]);
+	  }
+	  else {
+		  return new NewTypeDialog();
+	  }
   }
 
   public ComponentSpecification[] getQuickPicks()

@@ -64,7 +64,12 @@ public class XSDElementReferenceEditManager implements ComponentReferenceEditMan
 
   public IComponentDialog getNewDialog()
   {
-    return new NewElementDialog();
+	  if (schemas.length > 0) {
+		  return new NewElementDialog(schemas[0]);
+	  }
+	  else {
+		  return new NewElementDialog();
+	  }
   }
 
   public ComponentSpecification[] getQuickPicks()

@@ -277,7 +277,7 @@ public class XSDCommonUIUtils
     }
 
     int i = 1;
-    String testName = prefix + i++;
+    String testName = prefix;
     while (usedNames.contains(testName))
     {
       testName = prefix + i++;

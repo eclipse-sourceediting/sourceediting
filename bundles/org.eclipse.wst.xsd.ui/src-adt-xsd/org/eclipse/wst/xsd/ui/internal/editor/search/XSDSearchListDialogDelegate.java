@@ -18,8 +18,6 @@ import org.eclipse.wst.common.ui.internal.search.dialogs.ComponentSearchListDial
 import org.eclipse.wst.common.ui.internal.search.dialogs.ComponentSpecification;
 import org.eclipse.wst.common.ui.internal.search.dialogs.ScopedComponentSearchListDialog;
 import org.eclipse.wst.xsd.ui.internal.adt.edit.IComponentDialog;
-import org.eclipse.wst.xsd.ui.internal.dialogs.NewElementButtonHandler;
-import org.eclipse.wst.xsd.ui.internal.dialogs.NewTypeButtonHandler;
 import org.eclipse.wst.xsd.ui.internal.editor.Messages;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.xsd.XSDSchema;
@@ -82,7 +80,7 @@ public class XSDSearchListDialogDelegate implements IComponentDialog
         configuration.setSearchListProvider(searchListProvider);
         configuration.setFilterLabelText(Messages._UI_LABEL_NAME_SEARCH_FILTER_TEXT);
         configuration.setListLabelText(Messages._UI_LABEL_ELEMENTS_COLON);
-        configuration.setNewComponentHandler(new NewElementButtonHandler());
+//        configuration.setNewComponentHandler(new NewElementButtonHandler());
         //TODO externalize string
         dialog = new ScopedComponentSearchListDialog(shell, Messages._UI_LABEL_SET_ELEMENT_REFERENCE, configuration);     
     }
@@ -96,7 +94,7 @@ public class XSDSearchListDialogDelegate implements IComponentDialog
       ComponentSearchListDialogConfiguration configuration = new ComponentSearchListDialogConfiguration();
       configuration.setDescriptionProvider(descriptionProvider);
       configuration.setSearchListProvider(searchListProvider);
-      configuration.setNewComponentHandler(new NewTypeButtonHandler());
+//      configuration.setNewComponentHandler(new NewTypeButtonHandler());
       configuration.setFilterLabelText(Messages._UI_LABEL_NAME_SEARCH_FILTER_TEXT);
       configuration.setListLabelText(Messages._UI_LABEL_TYPES_COLON);
       dialog = new ScopedComponentSearchListDialog(shell, Messages._UI_LABEL_SET_TYPE, configuration); //$NON-NLS-1$
