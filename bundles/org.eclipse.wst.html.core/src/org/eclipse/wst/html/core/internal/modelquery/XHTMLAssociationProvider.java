@@ -116,4 +116,13 @@ class XHTMLAssociationProvider extends XMLAssociationProvider {
 		}
 		return result;
 	}
+
+	/**
+	 * This added and/or made public specifically for experimentation. It
+	 * will change as this functionality becomes API. See
+	 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=119084
+	 */
+	public String getCachedGrammerURI() {
+		return fCachedGrammerURI;
+	}
 }

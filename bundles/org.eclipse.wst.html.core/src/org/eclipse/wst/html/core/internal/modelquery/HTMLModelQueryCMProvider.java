@@ -28,7 +28,13 @@ import org.w3c.dom.Node;
 
 /**
  * CMDocument provider for HTML and XHTML documents.
+ * 
+ * This added and/or made public specifically for experimentation. It will
+ * change as this functionality becomes API. See
+ * https://bugs.eclipse.org/bugs/show_bug.cgi?id=119084
  */
+
+
 public class HTMLModelQueryCMProvider implements ModelQueryCMProvider {
 
 
@@ -45,8 +51,8 @@ public class HTMLModelQueryCMProvider implements ModelQueryCMProvider {
 	}
 
 	/**
-	 * Returns the CMDocument that corresponds to the DOM Node.
-	 * or null if no CMDocument is appropriate for the DOM Node.
+	 * Returns the CMDocument that corresponds to the DOM Node. or null if no
+	 * CMDocument is appropriate for the DOM Node.
 	 */
 	public CMDocument getCorrespondingCMDocument(Node node) {
 		IDOMDocument owner = getOwnerXMLDocument(node);
@@ -62,7 +68,9 @@ public class HTMLModelQueryCMProvider implements ModelQueryCMProvider {
 			return staticHTML;
 
 		pid = entry.getPublicId();
-		CMDocument dtdcm = xhtmlassoc.getXHTMLCMDocument(pid, entry.getSystemId());
+		String sid = entry.getSystemId();
+
+		CMDocument dtdcm = xhtmlassoc.getXHTMLCMDocument(pid, sid);
 		if (dtdcm == null) {
 			if (pid != null && pid.equals(HTMLDocumentTypeRegistry.CHTML_PUBLIC_ID)) {
 				return staticCHTML;
@@ -70,12 +78,13 @@ public class HTMLModelQueryCMProvider implements ModelQueryCMProvider {
 			return staticHTML;
 		}
 
-		CMDocument buddycm = (CMDocument) buddyCache.get(pid);
+		String grammarURI = xhtmlassoc.getCachedGrammerURI();
+		CMDocument buddycm = (CMDocument) buddyCache.get(grammarURI);
 		if (buddycm != null)
 			return buddycm;
 
 		buddycm = new CMDocumentForBuddySystem(dtdcm, entry.isXMLType());
-		buddyCache.put(pid, buddycm);
+		buddyCache.put(grammarURI, buddycm);
 		return buddycm;
 	}
 

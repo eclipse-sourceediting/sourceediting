@@ -21,8 +21,13 @@ import org.w3c.dom.Document;
 
 /**
  * XMLModelQueryAssociationProvider
+ * 
+ * This added and/or made public specifically for experimentation. It will
+ * change as this functionality becomes API. See
+ * https://bugs.eclipse.org/bugs/show_bug.cgi?id=119084
+ * 
  */
-class XMLModelQueryAssociationProvider extends XMLAssociationProvider {
+public class XMLModelQueryAssociationProvider extends XMLAssociationProvider {
 
 	protected URIResolver idResolver;
 

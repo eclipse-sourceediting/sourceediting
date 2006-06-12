@@ -21,19 +21,27 @@ import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelqueryimpl.ModelQueryImpl;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.CMDocumentCache;
+import org.eclipse.wst.xml.core.internal.modelquery.XMLModelQueryAssociationProvider;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 import org.eclipse.wst.xml.core.internal.ssemodelquery.MovableModelQuery;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-
+/**
+ * This added and/or made public specifically for experimentation. It
+ * will change as this functionality becomes API. See
+ * https://bugs.eclipse.org/bugs/show_bug.cgi?id=119084
+ */
+ 
 public class HTMLModelQueryImpl extends ModelQueryImpl implements MovableModelQuery {
 
 	protected CMDocumentCache fCache = null;
+	protected XMLModelQueryAssociationProvider xmlAssocProv = null;
 
 	public HTMLModelQueryImpl(CMDocumentCache cache, URIResolver idResolver) {
 		super(new HTMLModelQueryAssociationProvider(cache, idResolver));
 		fCache = cache;
+		xmlAssocProv = new XMLModelQueryAssociationProvider(cache, idResolver);
 	}
 
 	public List getAvailableContent(Element element, CMElementDeclaration ed, int includeOptions) {
@@ -135,6 +143,14 @@ public class HTMLModelQueryImpl extends ModelQueryImpl implements MovableModelQu
 			p = p.getParentNode();
 		}
 		return null;
+	}
+
+	public CMElementDeclaration getCMElementDeclaration(Element element) {
+		CMElementDeclaration result = super.getCMElementDeclaration(element);
+		if (null != result)
+			return result;
+		
+		return xmlAssocProv.getCMElementDeclaration(element);
 	}
 
 }
