@@ -14,6 +14,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -212,27 +213,61 @@ public abstract class ComponentDeployable extends ProjectModule {
 	protected boolean isFileInSourceContainer(IFile file) {
 		return false;
 	}
-	protected IModuleResource getExistingModuleResource(List aList, IPath path) {
-    	IModuleResource result = null;
+	
+	/**
+	 * Check the current cache to see if we already have an existing module resource for
+	 * the given path.
+	 * @param aList
+	 * @param path
+	 * @return an existing moduleResource from the cached result
+	 */
+	 
+	protected IModuleResource getExistingModuleResource(List aList, IPath path) { 
     	// If the list is empty, return null
-    	if (aList==null || aList.isEmpty())
+    	if (aList==null || aList.isEmpty() || path == null)
     		return null;
     	// Otherwise recursively check to see if given resource matches current resource or if it is a child
-    	int i=0;
-    	do {
-	    	IModuleResource moduleResource = (IModuleResource) aList.get(i);
-	    		if (moduleResource.getModuleRelativePath().append(moduleResource.getName()).equals(path))
-	    			result = moduleResource;
-	    		// if it is a folder, check its children for the resource path
-	    		else if (moduleResource instanceof IModuleFolder) {
-	    			if (((IModuleFolder)moduleResource).members()!=null)
-	    				result = getExistingModuleResource(Arrays.asList(((IModuleFolder)moduleResource).members()),path);
-	    		}
-	    		i++;
-    	} while (result == null && i<aList.size() );
-    	return result;
+    	String[] pathSegments = path.segments(); 
+    	IModuleResource moduleResource = null;
+    	
+    	if(pathSegments.length == 0)
+    		return null;
+    	for (Iterator iter = aList.iterator(); iter.hasNext();) {
+    		moduleResource = (IModuleResource) iter.next();     	
+    		String[] moduleSegments = moduleResource.getModuleRelativePath().segments();
+    		// If the last segment in passed in path equals the module resource name 
+    		// and segment count is the same and the path segments start with the module path segments
+    		// then we have a match and we return the existing moduleResource
+    		if (pathSegments[pathSegments.length - 1].equals(moduleResource.getName()) && 
+		    		(moduleSegments.length + 1) == pathSegments.length && 
+		    		startsWith(moduleSegments, pathSegments))
+		    	return moduleResource; 
+    		
+    		// Otherwise, if it is a folder, check its children for the existing resource path
+    		// but only check if the beginning segments are a match
+	    	if(moduleResource instanceof IModuleFolder && 
+	    			startsWith(moduleSegments, pathSegments) && 
+	    			moduleResource.getName().equals(pathSegments[ moduleSegments.length-1 > 0 ? moduleSegments.length - 1 : 0]))	    	  
+    			if (((IModuleFolder)moduleResource).members()!=null)
+    				return getExistingModuleResource(Arrays.asList(((IModuleFolder)moduleResource).members()),path);		
+    	}
+    	return null;
     }
 	
+	/**
+	 * 
+	 * @param beginningSegments
+	 * @param testSegments
+	 * @return True if beginningSegments[i] == testSegments[i] for all 0<=i<beginningSegments[i] 
+	 */
+	private boolean startsWith(String[] beginningSegments, String[] testSegments) { 
+		for(int i=0; i < beginningSegments.length; i++) {
+			if(!beginningSegments[i].equals(testSegments[i]))
+				return false;
+		}
+		return true;
+	}
+
 	protected IModuleResource[] handleJavaPath(IPath path, IPath javaPath, IPath curPath, IContainer[] javaCont, IModuleResource[] mr, IContainer cc) throws CoreException {
 		//subclasses may override
 		return new IModuleResource[]{};
