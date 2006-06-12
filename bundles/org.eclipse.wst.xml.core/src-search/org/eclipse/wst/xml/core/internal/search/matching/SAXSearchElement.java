@@ -21,6 +21,7 @@ public class SAXSearchElement{
 	String elementNamespace;
 	Map namespaceMap = new HashMap(); // Map of string prefix keys and namespace
 	String targetNamespace = ""; //$NON-NLS-1$
+	String parentName;
     int depth = -1;
 	
 	public SAXSearchElement() {
@@ -64,6 +65,12 @@ public class SAXSearchElement{
   {
     this.depth = depth;
   }
+public String getParentName() {
+	return parentName;
+}
+public void setParentName(String parentName) {
+	this.parentName = parentName;
+}
 	
 	
 	

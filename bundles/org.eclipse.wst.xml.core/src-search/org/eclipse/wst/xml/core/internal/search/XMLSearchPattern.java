@@ -20,20 +20,30 @@ public class XMLSearchPattern extends SearchPattern{
 	private String attributeName = null;
 	private String searchName = null;
 	private String searchNamespace = null;
+	private String parentName = null;
     private int depth = -1;
+
+    public XMLSearchPattern(String elementNamespace, String parentElementName,String elementName, String attributeName) {
+    	this(elementNamespace, parentElementName, elementName, attributeName, -1);
+    }
 	
 	public XMLSearchPattern(String elementNamespace, String elementName, String attributeName) {
-       this(elementNamespace, elementName, attributeName, -1);
+       this(elementNamespace, null, elementName, attributeName, -1);
     }
     
     public XMLSearchPattern(String elementNamespace, String elementName, String attributeName, int depth) {
+    	this(elementNamespace, null, elementName, attributeName, depth);       
+    }
+           
+    private XMLSearchPattern(String elementNamespace, String parentElementName, String elementName, String attributeName, int depth) {
         super();
         this.attributeName = attributeName;
         this.elementName = elementName;
+        this.parentName = parentElementName;
         this.elementNamespace = elementNamespace;
         this.depth = depth;
-    }    
-	
+    }
+    
 	public XMLSearchPattern(){
 		
 	}
@@ -87,6 +97,14 @@ public class XMLSearchPattern extends SearchPattern{
   {
     this.depth = depth;
   }
+
+public String getParentName() {
+	return parentName;
+}
+
+public void setParentName(String parentName) {
+	this.parentName = parentName;
+}
 	
 
 	

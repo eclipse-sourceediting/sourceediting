@@ -13,6 +13,7 @@ package org.eclipse.wst.xml.core.internal.search.quickscan;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Stack;
 
 import org.eclipse.wst.common.core.search.document.ComponentDeclarationEntry;
 import org.eclipse.wst.common.core.search.document.ComponentReferenceEntry;
@@ -43,9 +44,8 @@ public class XMLQuickScanContentHandler extends DefaultHandler
 	private SAXSearchElement searchElement = new SAXSearchElement();
 
 	private boolean hasMatch = false;
-	private  StringBuffer currentPath = new StringBuffer();
+	private Stack currentPath = new Stack();
 	private PatternMatcher matcher;
-    private int depth = 0;
 	
 	public static final String XMLSCHEMA_NAMESPACE = "http://www.w3.org/2001/XMLSchema"; //$NON-NLS-1$
   public static final String WSDL_NAMESPACE = "http://schemas.xmlsoap.org/wsdl/"; //$NON-NLS-1$
@@ -70,10 +70,7 @@ public class XMLQuickScanContentHandler extends DefaultHandler
 
 	public void startElement(String uri, String localName, String qName,
 			Attributes attributes) throws SAXException
-	{
-	    depth++;
-		currentPath.append("/" + localName); //$NON-NLS-1$
-
+	{	
 		// Search for targetNamespace if we haven't encountered it yet.
 		if (targetNamespace.equals("")) //$NON-NLS-1$
 		{
@@ -124,7 +121,11 @@ public class XMLQuickScanContentHandler extends DefaultHandler
 		searchElement.setAttributes(attributes);
 		searchElement.setNamespaceMap(namespaceMap);
 		searchElement.setTargetNamespace(targetNamespace);
-        searchElement.setDepth(depth);
+		if (currentPath.size() > 0)
+		{
+		  String parentName = (String)currentPath.peek();
+		  searchElement.setParentName(parentName);
+		}			
 	
 
 		if(matcher != null){
@@ -150,7 +151,7 @@ public class XMLQuickScanContentHandler extends DefaultHandler
 				}
 			}
 		}
-		
+		currentPath.push(localName); //$NON-NLS-1$		
 	}
 
   private String getLocationAttributeName(String uri)
@@ -177,9 +178,7 @@ public class XMLQuickScanContentHandler extends DefaultHandler
 	public void endElement(String uri, String localName, String qName)
 			throws SAXException
 	{
-		int slashIndex = currentPath.lastIndexOf("/"); //$NON-NLS-1$
-		currentPath.delete(slashIndex, currentPath.length());
-        depth--;
+		currentPath.pop();
 	}
 
 	/**

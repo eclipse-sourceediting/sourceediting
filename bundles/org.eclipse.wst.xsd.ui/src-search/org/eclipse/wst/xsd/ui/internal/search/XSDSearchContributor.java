@@ -14,6 +14,7 @@ package org.eclipse.wst.xsd.ui.internal.search;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
 import org.eclipse.wst.common.core.search.pattern.SearchPattern;
 import org.eclipse.wst.xml.core.internal.search.ComponentSearchContributor;
 import org.eclipse.wst.xml.core.internal.search.XMLSearchPattern;
@@ -64,7 +65,7 @@ public class XSDSearchContributor extends ComponentSearchContributor  {
 		declarations = new HashMap();
 		String ns = IXSDSearchConstants.XMLSCHEMA_NAMESPACE;
 
-		SearchPattern pattern = new XMLSearchPattern( ns, XSDConstants.ELEMENT_ELEMENT_TAG, XSDConstants.NAME_ATTRIBUTE, 2);
+		SearchPattern pattern = new XMLSearchPattern( ns, XSDConstants.SCHEMA_ELEMENT_TAG, XSDConstants.ELEMENT_ELEMENT_TAG, XSDConstants.NAME_ATTRIBUTE);
 		declarations.put(IXSDSearchConstants.ELEMENT_META_NAME, pattern);
 
 		pattern = new XMLSearchPattern(ns, XSDConstants.COMPLEXTYPE_ELEMENT_TAG, XSDConstants.NAME_ATTRIBUTE);
