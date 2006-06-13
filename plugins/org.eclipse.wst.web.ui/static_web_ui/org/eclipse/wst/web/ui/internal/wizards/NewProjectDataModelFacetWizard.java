@@ -209,12 +209,13 @@ public abstract class NewProjectDataModelFacetWizard extends AddRemoveFacetsWiza
         final ChangeTargetedRuntimesDataModel rdm
             = getModel().getTargetedRuntimesDataModel();
 
-        rdm.setTargetedRuntimes( Collections.EMPTY_SET );
         this.facetsSelectionPage.setDefaultFacetsForRuntime( runtime );
         
         if( runtime != null )
         {
             rdm.setTargetedRuntimes( Collections.singleton( runtime ) );
+        } else {
+        	rdm.setTargetedRuntimes( Collections.EMPTY_SET );
         }
     }
 

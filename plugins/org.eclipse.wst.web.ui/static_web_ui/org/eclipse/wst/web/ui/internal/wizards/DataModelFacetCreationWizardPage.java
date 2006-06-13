@@ -10,6 +10,10 @@
  *******************************************************************************/
 package org.eclipse.wst.web.ui.internal.wizards;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -38,7 +42,8 @@ import org.eclipse.wst.web.internal.ResourceHandler;
 
 public class DataModelFacetCreationWizardPage extends DataModelWizardPage implements IFacetProjectCreationDataModelProperties {
 
-	private static final String LAST_RUNTIME_STORE = "LAST_RUNTIME"; //$NON-NLS-1$
+	private String MRU_RUNTIME_STORE = "MRU_RUNTIME_STORE"; //$NON-NLS-1$
+	private List mruRuntimes = null;
 
 	protected static GridData gdhfill() {
 		return new GridData(GridData.FILL_HORIZONTAL);
@@ -150,7 +155,21 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
 		if (settings != null) {
 			IRuntime runtime = (IRuntime) model.getProperty(IFacetProjectCreationDataModelProperties.FACET_RUNTIME);
 			String runtimeName = runtime == null ? "" : runtime.getName(); //$NON-NLS-1$
-			settings.put(LAST_RUNTIME_STORE, runtimeName);
+			if (mruRuntimes == null) {
+				mruRuntimes = new ArrayList();
+			}
+			if (mruRuntimes.contains(runtimeName)) {
+				mruRuntimes.remove(runtimeName);
+			}
+			mruRuntimes.add(0, runtimeName);
+			while (mruRuntimes.size() > 5) {
+				mruRuntimes.remove(5);
+			}
+			String[] mruRuntimeArray = new String[mruRuntimes.size()];
+			for (int i = 0; i < mruRuntimeArray.length; i++) {
+				mruRuntimeArray[i] = (String) mruRuntimes.get(i);
+			}
+			settings.put(MRU_RUNTIME_STORE, mruRuntimeArray);
 		}
 	}
 
@@ -159,13 +178,19 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
 		if (settings != null) {
 			if (!model.isPropertySet(IFacetProjectCreationDataModelProperties.FACET_RUNTIME)) {
 				boolean runtimeSet = false;
-				String lastRuntimeName = settings.get(LAST_RUNTIME_STORE);
+				String[] mruRuntimeArray = settings.getArray(MRU_RUNTIME_STORE);
 				DataModelPropertyDescriptor[] descriptors = model.getValidPropertyDescriptors(IFacetProjectCreationDataModelProperties.FACET_RUNTIME);
-				if (lastRuntimeName != null) {
-					for (int i = 0; i < descriptors.length && !runtimeSet; i++) {
-						if (lastRuntimeName.equals(descriptors[i].getPropertyDescription())) {
-							model.setProperty(IFacetProjectCreationDataModelProperties.FACET_RUNTIME, descriptors[i].getPropertyValue());
-							runtimeSet = true;
+				if (mruRuntimeArray != null) {
+					mruRuntimes = new ArrayList();
+					mruRuntimes.addAll(Arrays.asList(mruRuntimeArray));
+					if (mruRuntimeArray != null) {
+						for (int i = 0; i < mruRuntimeArray.length && !runtimeSet; i++) {
+							for (int j = 0; j < descriptors.length && !runtimeSet; j++) {
+								if (mruRuntimeArray[i].equals(descriptors[j].getPropertyDescription())) {
+									model.setProperty(IFacetProjectCreationDataModelProperties.FACET_RUNTIME, descriptors[j].getPropertyValue());
+									runtimeSet = true;
+								}
+							}
 						}
 					}
 				}
