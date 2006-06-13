@@ -24,7 +24,7 @@ public class XSDRefactorActionGroup extends RefactorActionGroup {
 
 	private static final String RENAME_ELEMENT = "org.eclipse.wst.xsd.ui.refactor.rename.element"; //$NON-NLS-1$
 
-	private static final String RENAME_TARGET_NAMESPCE = "org.eclipse.wst.xsd.ui.refactor.renameTargetNamespace"; //$NON-NLS-1$
+	//private static final String RENAME_TARGET_NAMESPCE = "org.eclipse.wst.xsd.ui.refactor.renameTargetNamespace"; //$NON-NLS-1$
 
 	private SelectionDispatchAction fMakeLocalElementGlobal;
 
@@ -38,10 +38,10 @@ public class XSDRefactorActionGroup extends RefactorActionGroup {
 		fRenameAction.setActionDefinitionId(RENAME_ELEMENT);
 		fEditorActions.add(fRenameAction);
 
-		fRenameTargetNamespace = new RenameTargetNamespaceAction(
-				selection, schema);
-		fRenameTargetNamespace.setActionDefinitionId(RENAME_TARGET_NAMESPCE);
-		fEditorActions.add(fRenameTargetNamespace);
+		//fRenameTargetNamespace = new RenameTargetNamespaceAction(
+		//		selection, schema);
+		//fRenameTargetNamespace.setActionDefinitionId(RENAME_TARGET_NAMESPCE);
+		//fEditorActions.add(fRenameTargetNamespace);
 
 		fMakeLocalElementGlobal = new MakeLocalElementGlobalAction(
 				selection, schema);
@@ -54,7 +54,7 @@ public class XSDRefactorActionGroup extends RefactorActionGroup {
 		fEditorActions.add(fMakeLocalTypeGlobal);
 
 		initAction(fRenameAction, selection);
-		initAction(fRenameTargetNamespace, selection);
+		//initAction(fRenameTargetNamespace, selection);
 		initAction(fMakeLocalElementGlobal, selection);
 		initAction(fMakeLocalTypeGlobal, selection);
 	}
