@@ -189,7 +189,8 @@ public class ModelGroupEditPart extends ConnectableEditPart
   {
     ReferenceConnection connectionFigure = new ReferenceConnection();
     GenericGroupFigure modelGroupFigure = (GenericGroupFigure)getFigure();
-    connectionFigure.setSourceAnchor(new CenteredConnectionAnchor(modelGroupFigure.getIconFigure(), CenteredConnectionAnchor.RIGHT, 0, 0));
+    // David: Changed offset from 0 to -1 just to line up the connections.  Absolutely safe!  
+    connectionFigure.setSourceAnchor(new CenteredConnectionAnchor(modelGroupFigure.getIconFigure(), CenteredConnectionAnchor.RIGHT, 0, -1));
 
     if (child instanceof ModelGroupEditPart)
     {
