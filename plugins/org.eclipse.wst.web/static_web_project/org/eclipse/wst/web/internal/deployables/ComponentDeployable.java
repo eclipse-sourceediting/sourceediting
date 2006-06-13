@@ -247,7 +247,7 @@ public abstract class ComponentDeployable extends ProjectModule {
     		// but only check if the beginning segments are a match
 	    	if(moduleResource instanceof IModuleFolder && 
 	    			startsWith(moduleSegments, pathSegments) && 
-	    			moduleResource.getName().equals(pathSegments[ moduleSegments.length-1 > 0 ? moduleSegments.length - 1 : 0]))	    	  
+	    			moduleResource.getName().equals(pathSegments[moduleSegments.length > 0 ? moduleSegments.length : 0]))	    	  
     			if (((IModuleFolder)moduleResource).members()!=null)
     				return getExistingModuleResource(Arrays.asList(((IModuleFolder)moduleResource).members()),path);		
     	}
