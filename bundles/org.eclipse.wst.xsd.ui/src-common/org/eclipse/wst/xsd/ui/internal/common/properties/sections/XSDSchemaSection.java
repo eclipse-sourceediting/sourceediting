@@ -10,6 +10,9 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.common.properties.sections;
 
+import java.util.Iterator;
+import java.util.List;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.StyleRange;
@@ -23,9 +26,13 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.wst.xml.core.internal.contentmodel.util.DOMNamespaceInfoManager;
+import org.eclipse.wst.xml.core.internal.contentmodel.util.NamespaceInfo;
+import org.eclipse.wst.xml.core.internal.document.DocumentImpl;
 import org.eclipse.wst.xsd.ui.internal.actions.XSDEditNamespacesAction;
 import org.eclipse.wst.xsd.ui.internal.common.commands.UpdateNamespaceInformationCommand;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
+import org.eclipse.wst.xsd.ui.internal.nsedit.TargetNamespaceChangeHandler;
 import org.eclipse.wst.xsd.ui.internal.util.TypesHelper;
 import org.eclipse.xsd.util.XSDConstants;
 import org.w3c.dom.Element;
@@ -156,6 +163,12 @@ public class XSDSchemaSection extends AbstractSection
     errorText.setText(""); //$NON-NLS-1$
     String prefixValue = prefixText.getText();
     String tnsValue = targetNamespaceText.getText();
+
+    Element element = xsdSchema.getElement();
+    TypesHelper helper = new TypesHelper(xsdSchema);
+    String currentPrefix = helper.getPrefix(element.getAttribute(XSDConstants.TARGETNAMESPACE_ATTRIBUTE), false);
+    String currentNamespace = xsdSchema.getTargetNamespace();
+    
     if (tnsValue.trim().length() == 0)
     {
       if (prefixValue.trim().length() > 0)
@@ -171,11 +184,66 @@ public class XSDSchemaSection extends AbstractSection
 
     if (event.widget == prefixText)
     {
+      // If the prefix is the same, just return.   This may happen if the
+      // widget loses focus.
+      if (prefixValue.equals(currentPrefix)) 
+        return;
       updateNamespaceInfo(prefixValue, tnsValue);
     }
     else if (event.widget == targetNamespaceText)
     {
-      updateNamespaceInfo(prefixValue, tnsValue);
+      // If the ns is the same, just return.   This may happen if the
+      // widget loses focus.
+      if (tnsValue.equals(currentNamespace)) 
+        return;
+
+      DOMNamespaceInfoManager namespaceInfoManager = new DOMNamespaceInfoManager();
+      List namespaceInfoList = namespaceInfoManager.getNamespaceInfoList(xsdSchema.getElement());
+
+      Element xsdSchemaElement = xsdSchema.getElement();
+      DocumentImpl doc = (DocumentImpl) xsdSchemaElement.getOwnerDocument();
+
+      try
+      {
+        doc.getModel().beginRecording(this, XSDEditorPlugin.getXSDString("_UI_NAMESPACE_CHANGE"));
+
+        // Now replace the namespace for the xmlns entry
+        for (Iterator i = namespaceInfoList.iterator(); i.hasNext();)
+        {
+          NamespaceInfo info = (NamespaceInfo) i.next();
+          if (info.uri.equals(currentNamespace))
+          {
+            info.uri = tnsValue;
+          }
+        }
+
+        xsdSchema.setIncrementalUpdate(false);
+        // set the new xmlns entries
+        namespaceInfoManager.removeNamespaceInfo(element);
+        namespaceInfoManager.addNamespaceInfo(element, namespaceInfoList, false);
+        xsdSchema.setIncrementalUpdate(true);
+
+        // set the targetNamespace attribute
+        xsdSchema.setTargetNamespace(tnsValue);
+        
+        TargetNamespaceChangeHandler targetNamespaceChangeHandler = new TargetNamespaceChangeHandler(xsdSchema, currentNamespace, tnsValue);
+        targetNamespaceChangeHandler.resolve();
+      }
+      catch (Exception e)
+      {
+
+      }
+      finally
+      {
+        try
+        {
+          xsdSchema.update();
+        }
+        finally
+        {
+          doc.getModel().endRecording(this);
+        }
+      }
     }
   }
 
@@ -227,5 +295,4 @@ public class XSDSchemaSection extends AbstractSection
   {
     return true;
   }
-
 }
