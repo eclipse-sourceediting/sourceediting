@@ -23,7 +23,6 @@ import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDFactory;
 import org.eclipse.xsd.XSDModelGroup;
 import org.eclipse.xsd.XSDSchema;
-import org.eclipse.xsd.XSDTypeDefinition;
 import org.eclipse.xsd.util.XSDConstants;
 import org.w3c.dom.Text;
 
@@ -54,7 +53,7 @@ public class AddXSDAttributeDeclarationCommand extends BaseCommand
     {
       if (!isReference)
       {
-        attribute.setName(getNewName("Attribute")); //$NON-NLS-1$
+        attribute.setName(getNewName("NewAttribute")); //$NON-NLS-1$
         attribute.setTypeDefinition(xsdComplexTypeDefinition.getSchema().getSchemaForSchema().resolveSimpleTypeDefinition("string")); //$NON-NLS-1$
       }
       else
@@ -114,65 +113,10 @@ public class AddXSDAttributeDeclarationCommand extends BaseCommand
 
   protected String getNewName(String description)
   {
-    String candidateName = "New" + description; //$NON-NLS-1$
-    XSDConcreteComponent parent = xsdComplexTypeDefinition;
-    names = new ArrayList();
-    int i = 1;
-    if (parent instanceof XSDComplexTypeDefinition)
-    {
-      XSDComplexTypeDefinition ct = (XSDComplexTypeDefinition) parent;
-      walkUpInheritance(ct);
-
-      boolean ready = false;
-      while (!ready)
-      {
-        ready = true;
-        for (Iterator iter = names.iterator(); iter.hasNext();)
-        {
-          String attrName = (String) iter.next();
-          if (candidateName.equals(attrName))
-          {
-            ready = false;
-            candidateName = "New" + description + String.valueOf(i); //$NON-NLS-1$
-            i++;
-          }
-        }
-      }
-    }
-    return candidateName;
-  }
-
-  private void walkUpInheritance(XSDComplexTypeDefinition ct)
-  {
-    updateNames(ct);
-    XSDTypeDefinition typeDef = ct.getBaseTypeDefinition();
-    if (ct != ct.getRootType())
-    {
-      if (typeDef instanceof XSDComplexTypeDefinition)
-      {
-        XSDComplexTypeDefinition ct2 = (XSDComplexTypeDefinition) typeDef;
-        walkUpInheritance(ct2);
-      }
-    }
-  }
-
-  private void updateNames(XSDComplexTypeDefinition ct)
-  {
-    Iterator iter = ct.getAttributeContents().iterator();
-    while (iter.hasNext())
-    {
-      Object obj = iter.next();
-      if (obj instanceof XSDAttributeUse)
-      {
-        XSDAttributeUse use = (XSDAttributeUse) obj;
-        XSDAttributeDeclaration attr = use.getAttributeDeclaration();
-        String attrName = attr.getName();
-        if (attrName != null)
-        {
-          names.add(attrName);
-        }
-      }
-    }
+    ArrayList usedAttributeNames = new ArrayList();
+    usedAttributeNames.addAll(XSDCommonUIUtils.getAllAttributes(xsdComplexTypeDefinition));
+    usedAttributeNames.addAll(XSDCommonUIUtils.getInheritedAttributes(xsdComplexTypeDefinition));
+    return XSDCommonUIUtils.createUniqueElementName(description, usedAttributeNames); //$NON-NLS-1$
   }
   
   public void setReference(boolean isReference)

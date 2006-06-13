@@ -418,7 +418,7 @@ public class XSDCommonUIUtils
     if (parent != null && parent instanceof XSDComplexTypeDefinition && ct.isSetDerivationMethod())
     {
       attrs.addAll(getAllAttributes((XSDComplexTypeDefinition) parent));
-      attrs.addAll(getInheritedAttributes((XSDComplexTypeDefinition) parent));
+      if (! ct.isCircular()) attrs.addAll(getInheritedAttributes((XSDComplexTypeDefinition) parent));
     }
 
     return attrs;
