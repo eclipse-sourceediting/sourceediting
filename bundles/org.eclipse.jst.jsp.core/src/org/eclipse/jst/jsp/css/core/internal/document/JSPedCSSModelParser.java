@@ -86,9 +86,10 @@ class JSPedCSSModelParser extends CSSModelParser {
 				}
 				else {
 					/*
-					 * ISSUE: this handles casese where, e.g. "file://" has so
-					 * subsequent 'value' ... but should it return null or empty
-					 * string?
+					 * ISSUE: this handles cases where, e.g. "file=" has no
+					 * subsequent 'value' ... and from code in insertStructuredDocumentRegion
+					 * I believe should return null, rather than empty string, but, this may 
+					 * need some fine tuning eventually.
 					 */
 					hrefValue = null;
 				}
