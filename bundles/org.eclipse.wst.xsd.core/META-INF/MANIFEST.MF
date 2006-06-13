@@ -12,14 +12,14 @@ Export-Package: org.eclipse.wst.xsd.contentmodel.internal;x-internal:=true,
  org.eclipse.wst.xsd.core.internal.preferences;x-friends:="org.eclipse.wst.xsd.ui",
  org.eclipse.wst.xsd.core.internal.validation,
  org.eclipse.wst.xsd.core.internal.validation.eclipse
-Require-Bundle: org.eclipse.core.runtime,
- org.eclipse.emf.ecore,
- org.eclipse.wst.common.uriresolver,
- org.eclipse.xsd,
- org.eclipse.wst.xml.core,
- org.eclipse.wst.sse.core,
- org.eclipse.core.resources,
- org.eclipse.wst.validation,
- org.apache.xerces
+Require-Bundle: org.eclipse.core.runtime;bundle-version="[3.2.0,3.3.0)",
+ org.eclipse.emf.ecore;bundle-version="[2.2.0,2.3.0)",
+ org.eclipse.wst.common.uriresolver;bundle-version="[1.1.0,1.2.0)",
+ org.eclipse.xsd;bundle-version="[2.2.0,2.3.0)",
+ org.eclipse.wst.xml.core;bundle-version="[1.1.0,1.2.0)",
+ org.eclipse.wst.sse.core;bundle-version="[1.1.0,1.2.0)",
+ org.eclipse.core.resources;bundle-version="[3.2.0,3.3.0)",
+ org.eclipse.wst.validation;bundle-version="[1.1.0,1.2.0)",
+ org.apache.xerces;bundle-version="[2.8.0,2.9.0)"
 Eclipse-LazyStart: true
 
