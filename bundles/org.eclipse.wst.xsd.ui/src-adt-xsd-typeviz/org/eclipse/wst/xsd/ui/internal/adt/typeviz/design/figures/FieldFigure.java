@@ -74,7 +74,8 @@ public class FieldFigure extends Figure implements IFieldFigure
     rowFigure.add(nameAnnotationLabel);
     
     toolTipLabel = new Label();
-    nameLabel.setToolTip(toolTipLabel);
+//  Don't show tooltip for now.  Annoying vertical line shows up.  Safe fix.
+//    nameLabel.setToolTip(toolTipLabel);
     typeLabel = new Label();
     
     // cs : we need to add some additional padding to the right
@@ -101,7 +102,8 @@ public class FieldFigure extends Figure implements IFieldFigure
     typeAnnotationLabel.setLabelAlignment(PositionConstants.LEFT);
     typeAnnotationLabel.setOpaque(true);
     rowFigure.add(typeAnnotationLabel);
-    typeAnnotationLabel.setToolTip(toolTipLabel);
+// Don't show tooltip for now.  Annoying vertical line shows up.  Safe fix.
+//    typeAnnotationLabel.setToolTip(toolTipLabel);
     
     rowLayout.setConstraint(nameLabel, "name");
     rowLayout.setConstraint(nameAnnotationLabel, "nameAnnotation");
