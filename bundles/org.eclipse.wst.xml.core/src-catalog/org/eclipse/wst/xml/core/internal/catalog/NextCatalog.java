@@ -8,6 +8,8 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
+ *     Raj Mandayam, IBM
+ *           136400 NextCatalog.getReferencedCatalog() takes a lot of time computing constant information
  *     
  *******************************************************************************/
 package org.eclipse.wst.xml.core.internal.catalog;
@@ -20,7 +22,8 @@ import org.eclipse.wst.xml.core.internal.catalog.provisional.INextCatalog;
 
 public class NextCatalog extends CatalogElement implements INextCatalog
 {
-  String location;
+  private String location;
+  private ICatalog referencedCatalog;
 
   public NextCatalog()
   {
@@ -34,12 +37,17 @@ public class NextCatalog extends CatalogElement implements INextCatalog
 
   public ICatalog getReferencedCatalog()
   {
-    return ((Catalog)ownerCatalog).getCatalogSet().lookupOrCreateCatalog(getId(), getAbsolutePath(location));  
+    if (referencedCatalog == null)
+    {
+      referencedCatalog = ((Catalog)ownerCatalog).getCatalogSet().lookupOrCreateCatalog(getId(), getAbsolutePath(location));
+    }
+    return referencedCatalog;
   }
 
   public void setCatalogLocation(String uri)
   {
     location = uri;
+    referencedCatalog = null;
   }
   
   public Object clone()
@@ -48,6 +56,4 @@ public class NextCatalog extends CatalogElement implements INextCatalog
 	nextCatalog.setCatalogLocation(location);
     return nextCatalog;
   }
-  
- 
 }
