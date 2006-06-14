@@ -18,6 +18,7 @@ import org.eclipse.ltk.core.refactoring.participants.RenameRefactoring;
 import org.eclipse.ltk.ui.refactoring.RefactoringWizard;
 import org.eclipse.ltk.ui.refactoring.RefactoringWizardOpenOperation;
 import org.eclipse.ui.actions.GlobalBuildAction;
+import org.eclipse.wst.common.ui.internal.dialogs.SaveDirtyFilesDialog;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.internal.refactor.RefactoringComponent;
@@ -110,7 +111,13 @@ public class RenameComponentAction extends XSDSelectionDispatchAction {
 			}
 
 		}
-		RefactoringComponent component = new XMLRefactoringComponent(
+        
+        boolean rc = SaveDirtyFilesDialog.saveDirtyFiles();
+        if (!rc)
+        {
+          return;
+        }  
+        RefactoringComponent component = new XMLRefactoringComponent(
 				selectedComponent,
 				(IDOMElement)selectedComponent.getElement(), 
 				selectedComponent.getName(),
@@ -130,7 +137,9 @@ public class RenameComponentAction extends XSDSelectionDispatchAction {
 					wizard);
 			op.run(XSDEditorPlugin.getShell(), wizard
 					.getDefaultPageTitle());
-			triggerBuild();
+			
+			// TODO (cs) I'm not sure why we need to do this.  See bug 145700
+			//triggerBuild();
 		} catch (InterruptedException e) {
 			// do nothing. User action got cancelled
 		}
@@ -143,6 +152,5 @@ public class RenameComponentAction extends XSDSelectionDispatchAction {
 					.getActiveWorkbenchWindow(),
 					IncrementalProjectBuilder.INCREMENTAL_BUILD).run();
 		}
-	}
-
+	}	
 }
