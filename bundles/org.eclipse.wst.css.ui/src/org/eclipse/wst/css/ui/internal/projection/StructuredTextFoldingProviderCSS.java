@@ -2,12 +2,14 @@ package org.eclipse.wst.css.ui.internal.projection;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.ITextInputListener;
 import org.eclipse.jface.text.source.projection.IProjectionListener;
 import org.eclipse.jface.text.source.projection.ProjectionViewer;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSDocument;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.model.FactoryRegistry;
+import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.ui.internal.projection.IStructuredTextFoldingProvider;
@@ -15,11 +17,12 @@ import org.eclipse.wst.sse.ui.internal.projection.IStructuredTextFoldingProvider
 /**
  * Updates the projection model of a structured model for CSS.
  */
-public class StructuredTextFoldingProviderCSS implements IStructuredTextFoldingProvider, IProjectionListener {
+public class StructuredTextFoldingProviderCSS implements IStructuredTextFoldingProvider, IProjectionListener, ITextInputListener {
 	private final static boolean debugProjectionPerf = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.css.ui/projectionperf")); //$NON-NLS-1$ //$NON-NLS-2$\
 
 	private IDocument fDocument;
 	private ProjectionViewer fViewer;
+	private boolean fProjectionNeedsToBeEnabled = false;
 
 	/**
 	 * Just add adapter to top stylesheet node. This adapter will track
@@ -28,35 +31,39 @@ public class StructuredTextFoldingProviderCSS implements IStructuredTextFoldingP
 	private void addAllAdapters() {
 		long start = System.currentTimeMillis();
 
-		IStructuredModel sModel = null;
-		try {
-			sModel = StructuredModelManager.getModelManager().getExistingModelForRead(fDocument);
-			if (sModel instanceof ICSSModel) {
-				ICSSModel cssModel = (ICSSModel) sModel;
-				ICSSDocument cssDoc = cssModel.getDocument();
-				if (cssDoc instanceof INodeNotifier) {
-					INodeNotifier notifier = (INodeNotifier) cssDoc;
-					ProjectionModelNodeAdapterCSS adapter = (ProjectionModelNodeAdapterCSS) notifier.getExistingAdapter(ProjectionModelNodeAdapterCSS.class);
-					if (adapter != null) {
-						adapter.updateAdapter(cssDoc);
-					}
-					else {
-						// just call getadapter so the adapter is created and
-						// automatically initialized
-						notifier.getAdapterFor(ProjectionModelNodeAdapterCSS.class);
+		if (fDocument != null) {
+			IStructuredModel sModel = null;
+			try {
+				sModel = StructuredModelManager.getModelManager().getExistingModelForRead(fDocument);
+				if (sModel instanceof ICSSModel) {
+					ICSSModel cssModel = (ICSSModel) sModel;
+					ICSSDocument cssDoc = cssModel.getDocument();
+					if (cssDoc instanceof INodeNotifier) {
+						INodeNotifier notifier = (INodeNotifier) cssDoc;
+						ProjectionModelNodeAdapterCSS adapter = (ProjectionModelNodeAdapterCSS) notifier.getExistingAdapter(ProjectionModelNodeAdapterCSS.class);
+						if (adapter != null) {
+							adapter.updateAdapter(cssDoc, fViewer);
+						}
+						else {
+							// just call getadapter so the adapter is created
+							// and
+							// automatically initialized
+							notifier.getAdapterFor(ProjectionModelNodeAdapterCSS.class);
+						}
 					}
 				}
 			}
-		}
-		finally {
-			if (sModel != null) {
-				sModel.releaseFromRead();
+			finally {
+				if (sModel != null) {
+					sModel.releaseFromRead();
+				}
 			}
 		}
 
-		long end = System.currentTimeMillis();
-		if (debugProjectionPerf)
+		if (debugProjectionPerf) {
+			long end = System.currentTimeMillis();
 			System.out.println("StructuredTextFoldingProviderCSS.addAllAdapters: " + (end - start)); //$NON-NLS-1$
+		}
 	}
 
 	/**
@@ -66,28 +73,31 @@ public class StructuredTextFoldingProviderCSS implements IStructuredTextFoldingP
 	 */
 	private ProjectionModelNodeAdapterFactoryCSS getAdapterFactory(boolean createIfNeeded) {
 		ProjectionModelNodeAdapterFactoryCSS factory = null;
-		IStructuredModel sModel = null;
-		try {
-			sModel = StructuredModelManager.getModelManager().getExistingModelForRead(fDocument);
-			if (sModel != null) {
-				FactoryRegistry factoryRegistry = sModel.getFactoryRegistry();
+		if (fDocument != null) {
+			IStructuredModel sModel = null;
+			try {
+				sModel = StructuredModelManager.getModelManager().getExistingModelForRead(fDocument);
+				if (sModel != null) {
+					FactoryRegistry factoryRegistry = sModel.getFactoryRegistry();
 
-				// getting the projectionmodelnodeadapter for the first time
-				// so do some initializing
-				if (!factoryRegistry.contains(ProjectionModelNodeAdapterCSS.class) && createIfNeeded) {
-					ProjectionModelNodeAdapterFactoryCSS newFactory = new ProjectionModelNodeAdapterFactoryCSS();
+					// getting the projectionmodelnodeadapter for the first
+					// time
+					// so do some initializing
+					if (!factoryRegistry.contains(ProjectionModelNodeAdapterCSS.class) && createIfNeeded) {
+						ProjectionModelNodeAdapterFactoryCSS newFactory = new ProjectionModelNodeAdapterFactoryCSS();
 
-					// add factory to factory registry
-					factoryRegistry.addFactory(newFactory);
+						// add factory to factory registry
+						factoryRegistry.addFactory(newFactory);
+					}
+
+					// try and get the factory
+					factory = (ProjectionModelNodeAdapterFactoryCSS) factoryRegistry.getFactoryFor(ProjectionModelNodeAdapterCSS.class);
 				}
-
-				// try and get the factory
-				factory = (ProjectionModelNodeAdapterFactoryCSS) factoryRegistry.getFactoryFor(ProjectionModelNodeAdapterCSS.class);
 			}
-		}
-		finally {
-			if (sModel != null)
-				sModel.releaseFromRead();
+			finally {
+				if (sModel != null)
+					sModel.releaseFromRead();
+			}
 		}
 		return factory;
 	}
@@ -100,32 +110,28 @@ public class StructuredTextFoldingProviderCSS implements IStructuredTextFoldingP
 		if (!isInstalled())
 			return;
 
-		// set projection viewer to null on old document's adapter factory
-		ProjectionModelNodeAdapterFactoryCSS factory = getAdapterFactory(false);
-		if (factory != null) {
-			factory.setProjectionViewer(null);
-		}
+		// clear out old info
+		projectionDisabled();
 
-		// clear out all annotations
-		if (fViewer.getProjectionAnnotationModel() != null)
-			fViewer.getProjectionAnnotationModel().removeAllAnnotations();
 		fDocument = fViewer.getDocument();
 
-		if (fDocument != null) {
-			// set projection viewer on new document's adapter factory
-			factory = getAdapterFactory(true);
+		// set projection viewer on new document's adapter factory
+		if (fViewer.getProjectionAnnotationModel() != null) {
+			ProjectionModelNodeAdapterFactoryCSS factory = getAdapterFactory(true);
 			if (factory != null) {
-				factory.setProjectionViewer(fViewer);
+				factory.addProjectionViewer(fViewer);
 			}
 
 			addAllAdapters();
 		}
+		fProjectionNeedsToBeEnabled = false;
 	}
 
 	/**
 	 * Associate a ProjectionViewer with this IStructuredTextFoldingProvider
 	 * 
-	 * @param viewer
+	 * @param viewer -
+	 *            assumes not null
 	 */
 	public void install(ProjectionViewer viewer) {
 		// uninstall before trying to install new viewer
@@ -134,6 +140,7 @@ public class StructuredTextFoldingProviderCSS implements IStructuredTextFoldingP
 		}
 		fViewer = viewer;
 		fViewer.addProjectionListener(this);
+		fViewer.addTextInputListener(this);
 	}
 
 	private boolean isInstalled() {
@@ -143,14 +150,75 @@ public class StructuredTextFoldingProviderCSS implements IStructuredTextFoldingP
 	public void projectionDisabled() {
 		ProjectionModelNodeAdapterFactoryCSS factory = getAdapterFactory(false);
 		if (factory != null) {
-			factory.setProjectionViewer(null);
+			factory.removeProjectionViewer(fViewer);
 		}
 
+		// clear out all annotations
+		if (fViewer.getProjectionAnnotationModel() != null)
+			fViewer.getProjectionAnnotationModel().removeAllAnnotations();
+
+		removeAllAdapters();
+
 		fDocument = null;
+		fProjectionNeedsToBeEnabled = false;
 	}
 
 	public void projectionEnabled() {
 		initialize();
+	}
+
+	/**
+	 * Removes adapter from top stylesheet node
+	 */
+	private void removeAllAdapters() {
+		long start = System.currentTimeMillis();
+
+		if (fDocument != null) {
+			IStructuredModel sModel = null;
+			try {
+				sModel = StructuredModelManager.getModelManager().getExistingModelForRead(fDocument);
+				if (sModel instanceof ICSSModel) {
+					ICSSModel cssModel = (ICSSModel) sModel;
+					ICSSDocument cssDoc = cssModel.getDocument();
+					if (cssDoc instanceof INodeNotifier) {
+						INodeNotifier notifier = (INodeNotifier) cssDoc;
+						INodeAdapter adapter = notifier.getExistingAdapter(ProjectionModelNodeAdapterCSS.class);
+						if (adapter != null) {
+							notifier.removeAdapter(adapter);
+						}
+					}
+				}
+			}
+			finally {
+				if (sModel != null) {
+					sModel.releaseFromRead();
+				}
+			}
+		}
+
+		if (debugProjectionPerf) {
+			long end = System.currentTimeMillis();
+			System.out.println("StructuredTextFoldingProviderCSS.addAllAdapters: " + (end - start)); //$NON-NLS-1$
+		}
+	}
+
+	public void inputDocumentAboutToBeChanged(IDocument oldInput, IDocument newInput) {
+		// if folding is enabled and new document is going to be a totally
+		// different document, disable projection
+		if (fDocument != null && fDocument != newInput) {
+			// disable projection and disconnect everything
+			projectionDisabled();
+			fProjectionNeedsToBeEnabled = true;
+		}
+	}
+
+	public void inputDocumentChanged(IDocument oldInput, IDocument newInput) {
+		// if projection was previously enabled before input document changed
+		// and new document is different than old document
+		if (fProjectionNeedsToBeEnabled && fDocument == null && newInput != null) {
+			projectionEnabled();
+			fProjectionNeedsToBeEnabled = false;
+		}
 	}
 
 	/**
@@ -161,6 +229,7 @@ public class StructuredTextFoldingProviderCSS implements IStructuredTextFoldingP
 			projectionDisabled();
 
 			fViewer.removeProjectionListener(this);
+			fViewer.removeTextInputListener(this);
 			fViewer = null;
 		}
 	}

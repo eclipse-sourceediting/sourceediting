@@ -384,6 +384,10 @@ public class SSEUIMessages extends NLS {
 	public static String Projection_ExpandAll_tooltip;
 	public static String Projection_ExpandAll_description;
 	public static String Projection_ExpandAll_image;
+	public static String Projection_CollapseAll_label;
+	public static String Projection_CollapseAll_tooltip;
+	public static String Projection_CollapseAll_description;
+	public static String Projection_CollapseAll_image;
 
 	// These strings are accessed using resource bundle and in properties
 	// file, need to use '.' instead of '_' in some keys

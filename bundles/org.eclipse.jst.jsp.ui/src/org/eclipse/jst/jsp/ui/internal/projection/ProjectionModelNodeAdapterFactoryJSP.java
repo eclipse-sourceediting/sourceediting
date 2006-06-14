@@ -34,7 +34,7 @@ public class ProjectionModelNodeAdapterFactoryJSP extends ProjectionModelNodeAda
 	 * "adapt-able" node
 	 */
 	protected INodeAdapter createAdapter(INodeNotifier target) {
-		if ((getProjectionViewer() != null) && (target instanceof Node) && ((Node) target).getNodeType() == Node.ELEMENT_NODE) {
+		if ((isActive()) && (target instanceof Node) && ((Node) target).getNodeType() == Node.ELEMENT_NODE) {
 			Node node = (Node) target;
 			if (isNodeProjectable(node)) {
 

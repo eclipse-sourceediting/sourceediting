@@ -1056,6 +1056,10 @@ public class StructuredTextEditor extends TextEditor {
 	private boolean shouldClose = false;
 	private long startPerfTime;
 	private boolean fisReleased;
+	/**
+	 * The action group for folding.
+	 */
+	private FoldingActionGroup fFoldingGroup;
 
 	/**
 	 * Creates a new Structured Text Editor.
@@ -1384,6 +1388,7 @@ public class StructuredTextEditor extends TextEditor {
 		computeAndSetDoubleClickAction();
 
 		fShowPropertiesAction = new ShowPropertiesAction();
+		fFoldingGroup = new FoldingActionGroup(this, getSourceViewer());
 	}
 
 	protected LineChangeHover createChangeHover() {
@@ -1563,7 +1568,7 @@ public class StructuredTextEditor extends TextEditor {
 		}
 		if (tools == null) {
 			tools = NullSourceEditingTextTools.getInstance();
-			((NullSourceEditingTextTools)tools).setTextEditor(this);
+			((NullSourceEditingTextTools) tools).setTextEditor(this);
 		}
 		Method method = null; //$NON-NLS-1$
 		try {
@@ -1681,6 +1686,11 @@ public class StructuredTextEditor extends TextEditor {
 		if (fProjectionSupport != null) {
 			fProjectionSupport.dispose();
 			fProjectionSupport = null;
+		}
+
+		if (fFoldingGroup != null) {
+			fFoldingGroup.dispose();
+			fFoldingGroup = null;
 		}
 
 		// subclass may not have mouse tracker created
@@ -2455,7 +2465,7 @@ public class StructuredTextEditor extends TextEditor {
 	private boolean isFoldingEnabled() {
 		IPreferenceStore store = getPreferenceStore();
 		// check both preference store and vm argument
-		return (store.getBoolean(IStructuredTextFoldingProvider.FOLDING_ENABLED) && (System.getProperty("org.eclipse.wst.sse.ui.foldingenabled") != null)); //$NON-NLS-1$
+		return (store.getBoolean(IStructuredTextFoldingProvider.FOLDING_ENABLED));
 	}
 
 	private void logUnexpectedDocumentKind(IEditorInput input) {
@@ -2572,6 +2582,16 @@ public class StructuredTextEditor extends TextEditor {
 	 */
 	protected void rulerContextMenuAboutToShow(IMenuManager menu) {
 		super.rulerContextMenuAboutToShow(menu);
+
+		IMenuManager foldingMenu = new MenuManager(SSEUIMessages.Folding, "projection"); //$NON-NLS-1$
+		menu.appendToGroup(ITextEditorActionConstants.GROUP_RULERS, foldingMenu);
+
+		IAction action = getAction("FoldingToggle"); //$NON-NLS-1$
+		foldingMenu.add(action);
+		action = getAction("FoldingExpandAll"); //$NON-NLS-1$
+		foldingMenu.add(action);
+		action = getAction("FoldingCollapseAll"); //$NON-NLS-1$
+		foldingMenu.add(action);
 
 		IStructuredModel internalModel = getInternalModel();
 		if (internalModel != null) {
@@ -2996,7 +3016,7 @@ public class StructuredTextEditor extends TextEditor {
 				rangeUpdated = true;
 			}
 		}
-		if(!rangeUpdated) {
+		if (!rangeUpdated) {
 			if (selection instanceof ITextSelection) {
 				getSourceViewer().setRangeIndication(((ITextSelection) selection).getOffset(), ((ITextSelection) selection).getLength(), false);
 			}

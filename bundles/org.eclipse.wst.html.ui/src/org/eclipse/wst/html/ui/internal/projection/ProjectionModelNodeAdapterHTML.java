@@ -16,16 +16,13 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.source.projection.ProjectionAnnotation;
-import org.eclipse.jface.text.source.projection.ProjectionAnnotationModel;
 import org.eclipse.jface.text.source.projection.ProjectionViewer;
+import org.eclipse.swt.graphics.FontMetrics;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Canvas;
-import org.eclipse.wst.html.ui.internal.Logger;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
@@ -36,6 +33,10 @@ import org.w3c.dom.Node;
  * adapter node's children
  */
 public class ProjectionModelNodeAdapterHTML implements INodeAdapter {
+	// copies of this class located in:
+	// org.eclipse.wst.html.ui.internal.projection
+	// org.eclipse.jst.jsp.ui.internal.projection
+	private final static boolean debugProjectionPerf = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.html.ui/projectionperf")); //$NON-NLS-1$ //$NON-NLS-2$
 
 	private class TagProjectionAnnotation extends ProjectionAnnotation {
 		private boolean fIsVisible = false; /* workaround for BUG85874 */
@@ -70,14 +71,15 @@ public class ProjectionModelNodeAdapterHTML implements INodeAdapter {
 			 * collapse.
 			 */
 			if (!isCollapsed()) {
-				// working with rectangle, so need the styledtext line height
-				int lineHeight = fAdapterFactory.getProjectionViewer().getTextWidget().getLineHeight();
-
-				// do not draw annotations that only span one line and mark
-				// them as not visible
-				if ((rectangle.height / lineHeight) <= 1) {
-					fIsVisible = false;
-					return;
+				// working with rectangle, so line height
+				FontMetrics metrics = gc.getFontMetrics();
+				if (metrics != null) {
+					// do not draw annotations that only span one line and
+					// mark them as not visible
+					if ((rectangle.height / metrics.getHeight()) <= 1) {
+						fIsVisible = false;
+						return;
+					}
 				}
 			}
 			fIsVisible = true;
@@ -100,7 +102,6 @@ public class ProjectionModelNodeAdapterHTML implements INodeAdapter {
 	// copies of this class located in:
 	// org.eclipse.wst.html.ui.internal.projection
 	// org.eclipse.jst.jsp.ui.internal.projection
-	private final static boolean debugProjectionPerf = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.html.ui/projectionperf")); //$NON-NLS-1$ //$NON-NLS-2$
 
 	ProjectionModelNodeAdapterFactoryHTML fAdapterFactory;
 	private Map fTagAnnotations = new HashMap();
@@ -119,42 +120,50 @@ public class ProjectionModelNodeAdapterHTML implements INodeAdapter {
 	private Position createProjectionPosition(Node node) {
 		Position pos = null;
 		if (fAdapterFactory.isNodeProjectable(node) && node instanceof IndexedRegion) {
-			IDocument document = fAdapterFactory.getProjectionViewer().getDocument();
-			if (document != null) {
-				IndexedRegion inode = (IndexedRegion) node;
-				int start = inode.getStartOffset();
-				int end = inode.getEndOffset();
-				if (start >= 0 && start < end) {
-					try {
-//						// region-based
-//						// extra line when collapsed, but no region increase when add newline
-//						pos = new Position(start, end - start);
-						
-//						// line-based
-//						// extra line when collapsed, but no region increase when add newline
-//						IRegion startLineRegion = document.getLineInformationOfOffset(start);
-//						IRegion endLineRegion = document.getLineInformationOfOffset(end);
-//						int startOffset = startLineRegion.getOffset();
-//						int endOffset = endLineRegion.getOffset() + endLineRegion.getLength();
-//						if (endOffset > startOffset) {
-//							pos = new Position(startOffset, endOffset - startOffset);
-//						}
-						
-						// line-based
-						// no extra line when collapsed, but region increase when add newline
-						int startLine = document.getLineOfOffset(start);
-						int endLine = document.getLineOfOffset(end);
-						if (endLine + 1 < document.getNumberOfLines()) {
-							int offset = document.getLineOffset(startLine);
-							int endOffset = document.getLineOffset(endLine + 1);
-							pos = new Position(offset, endOffset - offset);
-						}
-					} catch (BadLocationException x) {
-						Logger.log(Logger.WARNING_DEBUG, null, x);
-					}
-				}
+			// IDocument document =
+			// fAdapterFactory.getProjectionViewer().getDocument();
+			// if (document != null) {
+			IndexedRegion inode = (IndexedRegion) node;
+			int start = inode.getStartOffset();
+			int end = inode.getEndOffset();
+			if (start >= 0 && start < end) {
+				// region-based
+				// extra line when collapsed, but no region
+				// increase when add newline
+				pos = new Position(start, end - start);
+				// try {
+				// // line-based
+				// // extra line when collapsed, but no region
+				// // increase when add newline
+				// IRegion startLineRegion =
+				// document.getLineInformationOfOffset(start);
+				// IRegion endLineRegion =
+				// document.getLineInformationOfOffset(end);
+				// int startOffset = startLineRegion.getOffset();
+				// int endOffset = endLineRegion.getOffset() +
+				// endLineRegion.getLength();
+				// if (endOffset > startOffset) {
+				// pos = new Position(startOffset, endOffset -
+				// startOffset);
+				// }
+				//
+				// // line-based
+				// // no extra line when collapsed, but region increase
+				// // when add newline
+				// int startLine = document.getLineOfOffset(start);
+				// int endLine = document.getLineOfOffset(end);
+				// if (endLine + 1 < document.getNumberOfLines()) {
+				// int offset = document.getLineOffset(startLine);
+				// int endOffset = document.getLineOffset(endLine + 1);
+				// pos = new Position(offset, endOffset - offset);
+				// }
+				// }
+				// catch (BadLocationException x) {
+				// Logger.log(Logger.WARNING_DEBUG, null, x);
+				// }
 			}
 		}
+		// }
 		return pos;
 	}
 
@@ -188,7 +197,7 @@ public class ProjectionModelNodeAdapterHTML implements INodeAdapter {
 	public void notifyChanged(INodeNotifier notifier, int eventType, Object changedFeature, Object oldValue, Object newValue, int pos) {
 		// check if folding is even enabled, if not, just ignore notifyChanged
 		// events
-		if (fAdapterFactory.getProjectionViewer() == null) {
+		if (!fAdapterFactory.isActive()) {
 			return;
 		}
 
@@ -204,6 +213,18 @@ public class ProjectionModelNodeAdapterHTML implements INodeAdapter {
 	 * @param node
 	 */
 	void updateAdapter(Node node) {
+		updateAdapter(node, null);
+	}
+
+	/**
+	 * Update the projection annotation of all the nodes that are children of
+	 * node and adds all projection annotations to viewer (for newly added
+	 * viewers)
+	 * 
+	 * @param node
+	 * @param viewer
+	 */
+	void updateAdapter(Node node, ProjectionViewer viewer) {
 		long start = System.currentTimeMillis();
 
 		Map additions = new HashMap();
@@ -224,7 +245,8 @@ public class ProjectionModelNodeAdapterHTML implements INodeAdapter {
 						projectionAnnotations.put(newAnnotation, newPos);
 						// add to map containing annotations to add
 						additions.put(newAnnotation, newPos);
-					} else {
+					}
+					else {
 						// add to map containing all annotations for this
 						// adapter
 						projectionAnnotations.put(existing, newPos);
@@ -246,16 +268,22 @@ public class ProjectionModelNodeAdapterHTML implements INodeAdapter {
 			if (!projectionAnnotations.isEmpty()) {
 				modifyList = (ProjectionAnnotation[]) projectionAnnotations.keySet().toArray(new ProjectionAnnotation[0]);
 			}
-			ProjectionViewer viewer = fAdapterFactory.getProjectionViewer();
-			ProjectionAnnotationModel annotationModel = viewer.getProjectionAnnotationModel();
-			annotationModel.modifyAnnotations(oldList, additions, modifyList);
+
+			// specifically add all annotations to viewer
+			if (viewer != null && !projectionAnnotations.isEmpty()) {
+				fAdapterFactory.queueAnnotationModelChanges(node, null, projectionAnnotations, null, viewer);
+			}
+
+			// only update when there is something to update
+			if ((oldList != null && oldList.length > 0) || (!additions.isEmpty()) || (modifyList != null && modifyList.length > 0))
+				fAdapterFactory.queueAnnotationModelChanges(node, oldList, additions, modifyList);
 		}
 
 		// save new list of annotations
-		fTagAnnotations = additions;
+		fTagAnnotations = projectionAnnotations;
 
-		long end = System.currentTimeMillis();
 		if (debugProjectionPerf) {
+			long end = System.currentTimeMillis();
 			String nodeName = node != null ? node.getNodeName() : "null"; //$NON-NLS-1$
 			System.out.println("ProjectionModelNodeAdapterHTML.updateAdapter (" + nodeName + "):" + (end - start)); //$NON-NLS-1$ //$NON-NLS-2$
 		}

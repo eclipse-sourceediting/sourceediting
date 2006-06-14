@@ -57,8 +57,8 @@ import org.eclipse.wst.sse.ui.internal.util.PlatformStatusLineUtil;
 
 public class StructuredTextViewer extends ProjectionViewer implements IDocumentSelectionMediator {
 	/** Text operation codes */
-	private static final int BASE = ProjectionViewer.EXPAND_ALL; // see
-	// ProjectionViewer.EXPAND_ALL
+	private static final int BASE = ProjectionViewer.COLLAPSE_ALL; // see
+	// ProjectionViewer.COLLAPSE_ALL
 	private static final int CLEANUP_DOCUMENT = BASE + 1;
 	public static final int FORMAT_ACTIVE_ELEMENTS = BASE + 3;
 
@@ -739,19 +739,19 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 	 */
 	public void undoOperationSelectionChanged(UndoDocumentEvent event) {
 		if (event.getRequester() != null && event.getRequester().equals(this) && event.getDocument().equals(getDocument())) {
-			//BUG107687: Undo/redo do not scroll editor
+			// BUG107687: Undo/redo do not scroll editor
 			ITextSelection selection = new TextSelection(event.getOffset(), event.getLength());
 			setSelection(selection, true);
 		}
 	}
-	
+
 	private void updateHighlighter(IStructuredDocument document) {
 		// if highlighter has not been created yet, initialize and install it
 		if (fHighlighter == null && fConfiguration instanceof StructuredTextViewerConfiguration) {
 			String[] types = fConfiguration.getConfiguredContentTypes(this);
 			for (int i = 0; i < types.length; i++) {
 				String t = types[i];
-	
+
 				// add highlighter/linestyleprovider
 				LineStyleProvider[] providers = ((StructuredTextViewerConfiguration) fConfiguration).getLineStyleProviders(this, t);
 				if (providers != null) {
@@ -765,7 +765,7 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 					}
 				}
 			}
-	
+
 			// initialize highlighter after linestyleproviders were added
 			if (fHighlighter != null) {
 				fHighlighter.setDocumentPartitioning(fConfiguration.getConfiguredDocumentPartitioning(this));

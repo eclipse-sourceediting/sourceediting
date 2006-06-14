@@ -60,13 +60,6 @@ import org.eclipse.wst.sse.ui.internal.provisional.preferences.CommonEditorPrefe
  * @author pavery
  */
 public class StructuredTextEditorPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
-	// vm argument to show folding preference
-	private static boolean showFoldingPreference = false;
-	static {
-		String foldingOn = System.getProperty("org.eclipse.wst.sse.ui.foldingenabled");		//$NON-NLS-1$
-		showFoldingPreference = foldingOn != null;
-	}
-	
 	private ColorEditor fAppearanceColorEditor;
 	private List fAppearanceColorList;
 
@@ -87,7 +80,7 @@ public class StructuredTextEditorPreferencePage extends PreferencePage implement
 	private ArrayList fNumberFields = new ArrayList();
 	private OverlayPreferenceStore fOverlayStore;
 	/** Button controlling default setting of the selected reference provider. */
-//	 TODO: private field never read locally
+	// TODO: private field never read locally
 	Button fSetDefaultButton;
 	private IPreferenceTab[] fTabs = null;
 	private Map fTextFields = new HashMap();
@@ -153,21 +146,19 @@ public class StructuredTextEditorPreferencePage extends PreferencePage implement
 
 		label = SSEUIMessages.StructuredTextEditorPreferencePage_30; //$NON-NLS-1$
 		addCheckBox(appearanceComposite, label, CommonEditorPreferenceNames.EVALUATE_TEMPORARY_PROBLEMS, 0);
-		
+
 		PreferenceLinkArea contentTypeArea = new PreferenceLinkArea(appearanceComposite, SWT.NONE, "ValidationPreferencePage", SSEUIMessages.StructuredTextEditorPreferencePage_40, (IWorkbenchPreferenceContainer) getContainer(), null); //$NON-NLS-1$
 
 		GridData data = new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL);
 		data.horizontalIndent = 20;
 		contentTypeArea.getControl().setLayoutData(data);
-		
+
 		label = SSEUIMessages.StructuredTextEditorPreferencePage_39;
 		addCheckBox(appearanceComposite, label, EditorPreferenceNames.SHOW_UNKNOWN_CONTENT_TYPE_MSG, 0);
 
-		if (showFoldingPreference) {
-			label = "Enable folding (work in progress)"; 		//$NON-NLS-1$
-			addCheckBox(appearanceComposite, label, IStructuredTextFoldingProvider.FOLDING_ENABLED, 0);
-		}
-		
+		label = SSEUIMessages.StructuredTextEditorPreferencePage_3;
+		addCheckBox(appearanceComposite, label, IStructuredTextFoldingProvider.FOLDING_ENABLED, 0);
+
 		Label l = new Label(appearanceComposite, SWT.LEFT);
 		GridData gd = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		gd.horizontalSpan = 2;
@@ -247,7 +238,7 @@ public class StructuredTextEditorPreferencePage extends PreferencePage implement
 					e.result = buttonLabel;
 			}
 		});
-		
+
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(appearanceComposite, IHelpContextIds.PREFSTE_APPEARANCE_HELPID);
 		return appearanceComposite;
 	}
@@ -288,7 +279,7 @@ public class StructuredTextEditorPreferencePage extends PreferencePage implement
 	 */
 	public void createControl(Composite parent) {
 		super.createControl(parent);
-		//WorkbenchHelp.setHelp(getControl(),
+		// WorkbenchHelp.setHelp(getControl(),
 		// IJavaHelpContextIds.JAVA_EDITOR_PREFERENCE_PAGE);
 	}
 
@@ -297,13 +288,12 @@ public class StructuredTextEditorPreferencePage extends PreferencePage implement
 
 		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING, EditorPreferenceNames.MATCHING_BRACKETS_COLOR));
 		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, EditorPreferenceNames.MATCHING_BRACKETS));
-		
+
 		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, CommonEditorPreferenceNames.EVALUATE_TEMPORARY_PROBLEMS));
 		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, EditorPreferenceNames.SHOW_UNKNOWN_CONTENT_TYPE_MSG));
-		
-		if (showFoldingPreference)
-			overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, IStructuredTextFoldingProvider.FOLDING_ENABLED));
-		
+
+		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, IStructuredTextFoldingProvider.FOLDING_ENABLED));
+
 		OverlayPreferenceStore.OverlayKey[] keys = new OverlayPreferenceStore.OverlayKey[overlayKeys.size()];
 		overlayKeys.toArray(keys);
 		return keys;
@@ -403,7 +393,7 @@ public class StructuredTextEditorPreferencePage extends PreferencePage implement
 		super.performDefaults();
 
 		// there is currently no need for a viewer
-		//		fPreviewViewer.invalidateTextPresentation();
+		// fPreviewViewer.invalidateTextPresentation();
 	}
 
 	/*
@@ -419,9 +409,11 @@ public class StructuredTextEditorPreferencePage extends PreferencePage implement
 
 		// tab width is also a model-side preference so need to set it
 		// TODO need to handle tab width for formatter somehow
-//		int tabWidth = getPreferenceStore().getInt(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_TAB_WIDTH);
-//		ModelPlugin.getDefault().getPluginPreferences().setValue(CommonModelPreferenceNames.TAB_WIDTH, tabWidth);
-//		ModelPlugin.getDefault().savePluginPreferences();
+		// int tabWidth =
+		// getPreferenceStore().getInt(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_TAB_WIDTH);
+		// ModelPlugin.getDefault().getPluginPreferences().setValue(CommonModelPreferenceNames.TAB_WIDTH,
+		// tabWidth);
+		// ModelPlugin.getDefault().savePluginPreferences();
 
 		return true;
 	}
@@ -443,12 +435,14 @@ public class StructuredTextEditorPreferencePage extends PreferencePage implement
 		StatusInfo status = new StatusInfo();
 		if (number.length() == 0) {
 			status.setError(SSEUIMessages.StructuredTextEditorPreferencePage_37);
-		} else {
+		}
+		else {
 			try {
 				int value = Integer.parseInt(number);
 				if (value < 0)
 					status.setError(number + SSEUIMessages.StructuredTextEditorPreferencePage_38);
-			} catch (NumberFormatException e) {
+			}
+			catch (NumberFormatException e) {
 				status.setError(number + SSEUIMessages.StructuredTextEditorPreferencePage_38);
 			}
 		}
