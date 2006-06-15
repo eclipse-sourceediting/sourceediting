@@ -103,8 +103,8 @@ public class TaglibController implements IDocumentSetupParticipant {
 			if (buffer instanceof ITextFileBuffer) {
 				IDocument document = ((ITextFileBuffer) buffer).getDocument();
 				// ignore non-JSP documents
-				synchronized (fJSPdocuments) {
-					if (!fJSPdocuments.contains(document))
+				synchronized (_instance.fJSPdocuments) {
+					if (!_instance.fJSPdocuments.contains(document))
 						return;
 				}
 				Assert.isTrue(document instanceof IStructuredDocument, getClass().getName() + " SetupParticipant was called for non-IStructuredDocument"); //$NON-NLS-1$
@@ -113,10 +113,10 @@ public class TaglibController implements IDocumentSetupParticipant {
 				info.textFileBuffer = (ITextFileBuffer) buffer;
 				info.tldDocumentManager = new TLDCMDocumentManager();
 				info.tldDocumentManager.setSourceParser((JSPSourceParser) info.document.getParser());
-				synchronized (fDocumentMap) {
-					fDocumentMap.put(document, info);
-					TaglibIndex.addTaglibIndexListener(info);
+				synchronized (_instance.fDocumentMap) {
+					_instance.fDocumentMap.put(document, info);
 				}
+				TaglibIndex.addTaglibIndexListener(info);
 				if (document instanceof BasicStructuredDocument) {
 					((BasicStructuredDocument) document).reparse(this);
 				}
@@ -131,23 +131,25 @@ public class TaglibController implements IDocumentSetupParticipant {
 		public void bufferDisposed(IFileBuffer buffer) {
 			if (buffer instanceof ITextFileBuffer) {
 				IDocument document = ((ITextFileBuffer) buffer).getDocument();
-				synchronized (fJSPdocuments) {
-					if (!fJSPdocuments.remove(document))
+				synchronized (_instance.fJSPdocuments) {
+					if (!_instance.fJSPdocuments.remove(document))
 						return;
 				}
 			}
+			DocumentInfo info = null;
 			synchronized (fDocumentMap) {
 				Object[] keys = fDocumentMap.keySet().toArray();
-				boolean removed = false;
-				for (int i = 0; i < keys.length && !removed; i++) {
-					DocumentInfo info = (DocumentInfo) fDocumentMap.get(keys[i]);
+				for (int i = 0; i < keys.length; i++) {
+					info = (DocumentInfo) fDocumentMap.get(keys[i]);
 					if (info != null && info.textFileBuffer.equals(buffer)) {
-						TaglibIndex.removeTaglibIndexListener(info);
 						fDocumentMap.remove(keys[i]);
-						info.tldDocumentManager.clearCache();
-						removed = true;
+						break;
 					}
 				}
+			}
+			if (info != null) {
+				info.tldDocumentManager.clearCache();
+				TaglibIndex.removeTaglibIndexListener(info);
 			}
 		}
 
@@ -266,8 +268,10 @@ public class TaglibController implements IDocumentSetupParticipant {
 	}
 
 	public synchronized static void startup() {
-		_instance = new TaglibController();
-		FileBuffers.getTextFileBufferManager().addFileBufferListener(_instance.fBufferListener);
+		if (_instance == null) {
+			_instance = new TaglibController();
+			FileBuffers.getTextFileBufferManager().addFileBufferListener(_instance.fBufferListener);
+		}
 		setShutdown(false);
 	}
 
@@ -277,8 +281,10 @@ public class TaglibController implements IDocumentSetupParticipant {
 
 	List fJSPdocuments;
 
-	// This constructor is only to be called as part of the FileBuffer
-	// framework
+	/*
+	 * This constructor is only to be called as part of the FileBuffer
+	 * framework
+	 */
 	public TaglibController() {
 		super();
 		fBufferListener = new FileBufferListener();
@@ -288,6 +294,7 @@ public class TaglibController implements IDocumentSetupParticipant {
 
 
 	/*
+	 * This method is only to be called as part of the FileBuffer framework
 	 * (non-Javadoc)
 	 * 
 	 * @see org.eclipse.core.filebuffers.IDocumentSetupParticipant#setup(org.eclipse.jface.text.IDocument)
@@ -296,6 +303,7 @@ public class TaglibController implements IDocumentSetupParticipant {
 		// if we've already shutdown, just ignore
 		if (isShutdown())
 			return;
+		// reference the shared instance's documents directly
 		synchronized (_instance.fJSPdocuments) {
 			_instance.fJSPdocuments.add(document);
 		}
