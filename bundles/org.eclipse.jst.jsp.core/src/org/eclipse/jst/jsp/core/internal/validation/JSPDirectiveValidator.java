@@ -35,7 +35,8 @@ public class JSPDirectiveValidator extends JSPValidator implements ISourceValida
 
 	public JSPDirectiveValidator() {
 		fReservedPrefixes.put("jsp", ""); //$NON-NLS-1$ //$NON-NLS-2$
-		fReservedPrefixes.put("jspx", ""); //$NON-NLS-1$ //$NON-NLS-2$ 
+		fReservedPrefixes.put("jspx", ""); //$NON-NLS-1$ //$NON-NLS-2$
+		fReservedPrefixes.put("java", ""); //$NON-NLS-1$ //$NON-NLS-2$
 		fReservedPrefixes.put("javax", ""); //$NON-NLS-1$ //$NON-NLS-2$ 
 		fReservedPrefixes.put("servlet", ""); //$NON-NLS-1$ //$NON-NLS-2$ 
 		fReservedPrefixes.put("sun", ""); //$NON-NLS-1$ //$NON-NLS-2$ 
