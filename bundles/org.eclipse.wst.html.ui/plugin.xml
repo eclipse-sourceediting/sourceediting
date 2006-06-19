@@ -292,7 +292,6 @@
 			id="org.eclipse.wst.html.ui.internal.validation.markupvalidator">
 			<contentTypeIdentifier
 				id="org.eclipse.wst.html.core.htmlsource">
-				<partitionType id="org.eclipse.wst.html.HTML_DEFAULT"/>
 				<partitionType id="org.eclipse.wst.xml.XML_DEFAULT"/>
 				<partitionType id="org.eclipse.wst.sse.ST_DEFAULT"/>
 			</contentTypeIdentifier>
