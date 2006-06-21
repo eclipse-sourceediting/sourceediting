@@ -1,14 +1,14 @@
-/*******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
+/*****************************************************************************
+ * Copyright (c) 2004,2006 IBM Corporation and others.
+ * 
+ * All rights reserved. This program and the accompanying materials are made
+ * available under the terms of the Eclipse Public License v1.0 which
+ * accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
- * Contributors:
- *     IBM Corporation - initial API and implementation
- *     
- *******************************************************************************/
+ * Contributors: IBM Corporation - initial API and implementation
+ * 
+ ****************************************************************************/
 
 package org.eclipse.wst.sse.unittests;
 
@@ -35,18 +35,6 @@ import org.eclipse.wst.xml.tests.encoding.EncodingTestSuite;
 import org.eclipse.wst.xml.ui.tests.XMLUITestSuite;
 import org.eclipse.wst.xml.validation.tests.internal.AllXMLTests;
 import org.eclipse.wst.xsd.validation.tests.internal.AllXSDTests;
-
-/*****************************************************************************
- * Copyright (c) 2004,2006 IBM Corporation and others.
- * 
- * All rights reserved. This program and the accompanying materials are made
- * available under the terms of the Eclipse Public License v1.0 which
- * accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- * 
- * Contributors: IBM Corporation - initial API and implementation
- * 
- ****************************************************************************/
 
 public class MasterListTestSuite extends TestSuite {
 
