@@ -11,12 +11,17 @@ package org.eclipse.wst.web.internal.deployables;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jem.util.emf.workbench.ProjectUtilities;
 import org.eclipse.wst.common.componentcore.ComponentCore;
+import org.eclipse.wst.common.componentcore.internal.util.IModuleConstants;
 import org.eclipse.wst.common.componentcore.resources.IVirtualComponent;
+import org.eclipse.wst.common.project.facet.core.IFacetedProject;
+import org.eclipse.wst.common.project.facet.core.IProjectFacet;
+import org.eclipse.wst.common.project.facet.core.ProjectFacetsManager;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IModuleArtifact;
 import org.eclipse.wst.server.core.ServerUtil;
@@ -36,9 +41,13 @@ public class StaticWebDeployableObjectAdapterUtil {
 		if (resource == null)
 			return null;
 		
-		if (resource instanceof IProject)
-			return new WebResource(getModule((IProject)resource), new Path("")); //$NON-NLS-1$
-
+		if (resource instanceof IProject) {
+			IProject project = (IProject) resource;
+			if (hasInterestedComponents(project))
+				return new WebResource(getModule(project), new Path("")); //$NON-NLS-1$
+			return null;
+			
+		}
 		IProject project = ProjectUtilities.getProject(resource);
 		IVirtualComponent comp = ComponentCore.createComponent(project);
 		// determine path
@@ -81,6 +90,27 @@ public class StaticWebDeployableObjectAdapterUtil {
 	}
 
 	protected static IModule getModule(IProject project) {
-		return ServerUtil.getModule(project);
+		if (hasInterestedComponents(project))
+			return ServerUtil.getModule(project);
+		return null;
+	}
+	
+	protected static boolean hasInterestedComponents(IProject project) {
+		return isProjectOfType(project, IModuleConstants.WST_WEB_MODULE);
+	}
+	
+	protected static boolean isProjectOfType(IProject project, String typeID) {
+		IFacetedProject facetedProject = null;
+		try {
+			facetedProject = ProjectFacetsManager.create(project);
+		} catch (CoreException e) {
+			return false;
+		}
+
+		if (facetedProject != null && ProjectFacetsManager.isProjectFacetDefined(typeID)) {
+			IProjectFacet projectFacet = ProjectFacetsManager.getProjectFacet(typeID);
+			return projectFacet != null && facetedProject.hasProjectFacet(projectFacet);
+		}
+		return false;
 	}
 }
