@@ -122,7 +122,7 @@ public abstract class ComponentDeployable extends ProjectModule {
 				// Retrieve already existing module folder if applicable
 				ModuleFolder mf = (ModuleFolder) getExistingModuleResource(members,newPath);
 				if (mf == null) {
-					mf = new ModuleFolder(cc, cc.getName(), newPath);
+					mf = new ModuleFolder(cc, cc.getName(), path);
 					ModuleFolder parent = (ModuleFolder) getExistingModuleResource(members, path);
 					if (path.isEmpty())
 						members.add(mf);
@@ -246,7 +246,7 @@ public abstract class ComponentDeployable extends ProjectModule {
     		// Otherwise, if it is a folder, check its children for the existing resource path
     		// but only check if the beginning segments are a match
 	    	if(moduleResource instanceof IModuleFolder && 
-	    			startsWith(moduleSegments, pathSegments) && 
+	    			startsWith(moduleSegments, pathSegments) && pathSegments.length > moduleSegments.length &&
 	    			moduleResource.getName().equals(pathSegments[moduleSegments.length > 0 ? moduleSegments.length : 0]))	    	  
     			if (((IModuleFolder)moduleResource).members()!=null)
     				return getExistingModuleResource(Arrays.asList(((IModuleFolder)moduleResource).members()),path);		
