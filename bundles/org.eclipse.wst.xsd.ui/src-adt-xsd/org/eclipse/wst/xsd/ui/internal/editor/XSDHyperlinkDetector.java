@@ -252,7 +252,7 @@ public class XSDHyperlinkDetector extends BaseHyperlinkDetector
     {
       XSDSchema schema =  component.getSchema();
 
-      if (schema.equals(schema.getSchemaForSchema())) {
+      if (schema != null && schema.equals(schema.getSchemaForSchema())) {
         component = null;
       }
     }
