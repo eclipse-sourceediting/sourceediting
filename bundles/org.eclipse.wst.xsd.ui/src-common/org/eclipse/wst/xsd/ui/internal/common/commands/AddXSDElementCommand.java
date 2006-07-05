@@ -242,7 +242,7 @@ private String nameToAdd;
   //PORT
   public XSDModelGroup getModelGroup(XSDComplexTypeDefinition cType)
   {
-    XSDParticle particle = cType.getSyntheticParticle();
+    XSDParticle particle = null;
 
     XSDComplexTypeContent xsdComplexTypeContent = cType.getContent();
     if (xsdComplexTypeContent instanceof XSDParticle)

@@ -12,9 +12,10 @@ package org.eclipse.wst.xsd.ui.internal.adt.actions;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.gef.commands.Command;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.views.contentoutline.ContentOutline;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDAdapterFactory;
+import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.BaseFieldEditPart;
 import org.eclipse.wst.xsd.ui.internal.adt.editor.Messages;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IComplexType;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IField;
@@ -55,8 +56,7 @@ public class AddFieldAction extends BaseSelectionAction
         {  
           getCommandStack().execute(command);
           Adapter adapter = XSDAdapterFactory.getInstance().adapt(((BaseCommand)command).getAddedComponent());
-          if (adapter != null)
-            provider.setSelection(new StructuredSelection(adapter));
+          selectAddedComponent(adapter);
         }
         else
         {
@@ -64,5 +64,14 @@ public class AddFieldAction extends BaseSelectionAction
         }
       }
     }  
+  }
+  
+  protected void doEdit(Object obj, IWorkbenchPart part)
+  {
+    if (obj instanceof BaseFieldEditPart)
+    {
+      BaseFieldEditPart editPart = (BaseFieldEditPart)obj;
+      editPart.doEditName(!(part instanceof ContentOutline));
+    }
   }
 }

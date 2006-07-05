@@ -10,10 +10,17 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.adt.actions;
 
+import org.eclipse.emf.common.notify.Adapter;
+import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.gef.ui.actions.SelectionAction;
+import org.eclipse.gef.ui.parts.AbstractEditPartViewer;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.internal.Workbench;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IComplexType;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IField;
 
@@ -69,5 +76,48 @@ public abstract class BaseSelectionAction extends SelectionAction
     }
     return true;
   }
+  
+  protected void selectAddedComponent(final Adapter adapter)
+  {
+    Runnable runnable = new Runnable()
+    {
+      public void run()
+      {
+        if (adapter != null)
+        {
+          provider.setSelection(new StructuredSelection(adapter));
+          activateDirectEdit();
+        }
+      }
+    };
+    Display.getCurrent().asyncExec(runnable);
+  }
 
+  protected void activateDirectEdit()
+  {
+    if (getWorkbenchPart() instanceof IEditorPart)
+    {
+      try
+      {
+        IEditorPart owningEditor = (IEditorPart)getWorkbenchPart();
+        IWorkbenchPart part = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActivePart();
+        Object object = owningEditor.getAdapter(GraphicalViewer.class);
+        if (object instanceof AbstractEditPartViewer)
+        {
+          AbstractEditPartViewer viewer = (AbstractEditPartViewer)object;
+          Object obj = viewer.getSelectedEditParts().get(0);
+          doEdit(obj, part);
+        }
+      }
+      catch (Exception e)
+      {
+        
+      }
+    }        
+  }
+  
+  protected void doEdit(Object obj, IWorkbenchPart part)
+  {
+    
+  }
 }
