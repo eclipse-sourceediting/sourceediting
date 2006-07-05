@@ -66,8 +66,7 @@ public class DeleteCommand extends BaseCommand
         else if (parent.getContainer() instanceof XSDComplexTypeDefinition)
         {
           XSDComplexTypeDefinition complexType = (XSDComplexTypeDefinition) parent.getContainer();
-          if (complexType.getComplexType() != null)
-            complexType.getComplexType().setContent(null);
+          complexType.setContent(null);
         }
       }
       else if (parent instanceof XSDSchema)
