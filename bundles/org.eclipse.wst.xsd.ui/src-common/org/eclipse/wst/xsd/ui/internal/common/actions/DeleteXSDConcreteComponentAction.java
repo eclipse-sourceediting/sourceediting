@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.common.actions;
 
+import java.util.Iterator;
+
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDBaseAdapter;
@@ -32,18 +34,20 @@ public class DeleteXSDConcreteComponentAction extends XSDBaseAction
 
   public void run()
   {
-    Object selection = ((IStructuredSelection) getSelection()).getFirstElement();
-
-    if (selection instanceof XSDBaseAdapter)
+    for (Iterator i = ((IStructuredSelection) getSelection()).iterator(); i.hasNext();)
     {
-      selection = ((XSDBaseAdapter) selection).getTarget();
-    }
+      Object selection = i.next();
 
-    if (selection instanceof XSDConcreteComponent)
-    {
-      DeleteCommand command = new DeleteCommand(getText(), (XSDConcreteComponent) selection);
-      getCommandStack().execute(command);
-    }
+      if (selection instanceof XSDBaseAdapter)
+      {
+        selection = ((XSDBaseAdapter) selection).getTarget();
+      }
 
+      if (selection instanceof XSDConcreteComponent)
+      {
+        DeleteCommand command = new DeleteCommand(getText(), (XSDConcreteComponent) selection);
+        getCommandStack().execute(command);
+      }
+    }
   }
 }

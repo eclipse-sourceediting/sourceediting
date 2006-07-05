@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.adt.actions;
 
+import java.util.Iterator;
+
 import org.eclipse.gef.commands.Command;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -33,30 +35,34 @@ public class DeleteAction extends BaseSelectionAction
   
   public void run()
   {
-    Object selection = ((IStructuredSelection) getSelection()).getFirstElement();
-    Command command = null;
-    boolean doReselect = false;
-    IModel model = null;
-    if (selection instanceof IComplexType)
+    for (Iterator i = ((IStructuredSelection) getSelection()).iterator(); i.hasNext(); )
     {
-      command = ((IComplexType)selection).getDeleteCommand();
-      model = ((IComplexType)selection).getModel();
-      doReselect = true;
-    }
-    else if (selection instanceof IField)
-    {
-      model = ((IField)selection).getModel();
-      if ( ((IField)selection).isGlobal())
+      Object selection = i.next();
+      Command command = null;
+      boolean doReselect = false;
+      IModel model = null;
+      if (selection instanceof IComplexType)
       {
+        command = ((IComplexType)selection).getDeleteCommand();
+        model = ((IComplexType)selection).getModel();
         doReselect = true;
       }
-      command = ((IField)selection).getDeleteCommand();
-    }  
-    if (command != null)
-    {
-      command.execute();
-      if (model != null && doReselect)
-        provider.setSelection(new StructuredSelection(model));
-    }  
+      else if (selection instanceof IField)
+      {
+        model = ((IField)selection).getModel();
+        if ( ((IField)selection).isGlobal())
+        {
+          doReselect = true;
+        }
+        command = ((IField)selection).getDeleteCommand();
+      }  
+      if (command != null)
+      {
+        command.execute();
+        if (model != null && doReselect)
+          provider.setSelection(new StructuredSelection(model));
+      }  
+    }
+    
   }
 }
