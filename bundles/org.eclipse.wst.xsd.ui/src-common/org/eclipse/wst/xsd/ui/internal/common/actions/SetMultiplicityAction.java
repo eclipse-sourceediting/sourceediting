@@ -15,6 +15,9 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDBaseAdapter;
 import org.eclipse.wst.xsd.ui.internal.common.commands.SetMultiplicityCommand;
 import org.eclipse.xsd.XSDConcreteComponent;
+import org.eclipse.xsd.XSDElementDeclaration;
+import org.eclipse.xsd.XSDModelGroup;
+import org.eclipse.xsd.XSDModelGroupDefinition;
 
 public class SetMultiplicityAction extends XSDBaseAction
 {
@@ -42,8 +45,26 @@ public class SetMultiplicityAction extends XSDBaseAction
   {
     command.setMinOccurs(i);
   }
-
-  public void run()
+  
+  protected boolean calculateEnabled()
+  {
+    boolean state = super.calculateEnabled();
+    if (state)
+    {
+      XSDConcreteComponent xsdConcreteComponent = getXSDInput();
+      if (xsdConcreteComponent instanceof XSDElementDeclaration)
+      {
+        return !((XSDElementDeclaration)xsdConcreteComponent).isGlobal();
+      }
+      else if (xsdConcreteComponent instanceof XSDModelGroup)
+      {
+        return !(((XSDModelGroup)xsdConcreteComponent).eContainer() instanceof XSDModelGroupDefinition);
+      }
+    }
+    return state;
+  }
+  
+  private XSDConcreteComponent getXSDInput()
   {
     Object selection = ((IStructuredSelection) getSelection()).getFirstElement();
 
@@ -52,6 +73,12 @@ public class SetMultiplicityAction extends XSDBaseAction
     {
       xsdConcreteComponent = (XSDConcreteComponent)((XSDBaseAdapter) selection).getTarget();
     }
+    return xsdConcreteComponent;
+  }
+
+  public void run()
+  {
+    XSDConcreteComponent xsdConcreteComponent = getXSDInput();
     if (xsdConcreteComponent != null)
     {
       command.setXSDConcreteComponent(xsdConcreteComponent);

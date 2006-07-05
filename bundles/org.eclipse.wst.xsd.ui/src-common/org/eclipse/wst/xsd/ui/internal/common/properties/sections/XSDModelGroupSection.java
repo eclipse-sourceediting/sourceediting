@@ -21,6 +21,7 @@ import org.eclipse.wst.xsd.ui.internal.common.commands.UpdateContentModelCommand
 import org.eclipse.wst.xsd.ui.internal.editor.Messages;
 import org.eclipse.xsd.XSDCompositor;
 import org.eclipse.xsd.XSDModelGroup;
+import org.eclipse.xsd.XSDModelGroupDefinition;
 
 public class XSDModelGroupSection extends MultiplicitySection
 {
@@ -117,6 +118,9 @@ public class XSDModelGroupSection extends MultiplicitySection
         XSDModelGroup particle = (XSDModelGroup)input;
         String modelType = particle.getCompositor().getName();
         modelGroupCombo.setText(modelType);
+        
+        minCombo.setEnabled(!(particle.eContainer() instanceof XSDModelGroupDefinition));
+        maxCombo.setEnabled(!(particle.eContainer() instanceof XSDModelGroupDefinition));
       }
     }
     

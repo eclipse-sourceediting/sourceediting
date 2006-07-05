@@ -334,6 +334,9 @@ public class XSDElementDeclarationSection extends MultiplicitySection
             typeCombo.setText(Messages.UI_NO_TYPE); //$NON-NLS-1$
           }
         }
+
+        maxCombo.setEnabled(!xsdElementDeclaration.isGlobal());
+        minCombo.setEnabled(!xsdElementDeclaration.isGlobal());
       }
     }
 
