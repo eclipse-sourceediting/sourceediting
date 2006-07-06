@@ -20,6 +20,9 @@ import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartFactory;
 import org.eclipse.gef.RootEditPart;
+import org.eclipse.gef.commands.CommandStack;
+import org.eclipse.gef.commands.CommandStackEvent;
+import org.eclipse.gef.commands.CommandStackEventListener;
 import org.eclipse.gef.ui.actions.ActionRegistry;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.text.IDocument;
@@ -258,6 +261,34 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
       root.setModel(model);
     }
     graphicalViewer.setContents(root);
+    
+    // cs : We always use the SSE text editor's undo/redo stack to perform undo/redo actions.   
+    // We've designed most of the editor's commands use the GEF commandStack 
+    // so that they can be reused by other editors that don't utilize a text editor.    
+    // The commandStackEventListener below performs the task of listening to the GEF command stack
+    // and placing proper labels on the SSE undo/redo stack according to the executed command's label.   
+    //
+    // TODO (cs) we should see if there are appropriate times where we can flush the GEF command stack.
+    // Perhaps we should just set the undo limit to something small?
+    CommandStack commandStack = (CommandStack)getAdapter(CommandStack.class);
+    if (commandStack != null)
+    {
+      commandStack.addCommandStackEventListener(new CommandStackEventListener()
+      {
+    	public void stackChanged(CommandStackEvent event)
+    	{
+          if (event.isPostChangeEvent())
+          {
+        	structuredModel.endRecording(InternalXSDMultiPageEditor.this);
+          }	  
+          else if (event.isPreChangeEvent())
+          {
+        	structuredModel.beginRecording(InternalXSDMultiPageEditor.this, event.getCommand().getLabel());
+          } 	  	
+    	}
+      }
+      );	 	
+    }    
   }
   
   protected void configureGraphicalViewer()
