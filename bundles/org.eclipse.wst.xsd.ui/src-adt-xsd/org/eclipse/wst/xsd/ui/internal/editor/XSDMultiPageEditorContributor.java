@@ -28,13 +28,16 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorActionBarContributor;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.actions.RetargetAction;
 import org.eclipse.ui.part.MultiPageEditorActionBarContributor;
 import org.eclipse.ui.part.MultiPageEditorPart;
 import org.eclipse.ui.texteditor.ITextEditor;
+import org.eclipse.ui.texteditor.ITextEditorActionConstants;
 import org.eclipse.wst.sse.ui.internal.ISourceViewerActionBarContributor;
 import org.eclipse.wst.xsd.ui.internal.actions.IXSDToolbarAction;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.DeleteAction;
@@ -108,7 +111,19 @@ public class XSDMultiPageEditorContributor extends MultiPageEditorActionBarContr
         xsdEditor = (InternalXSDMultiPageEditor) part;
       }
       if (xsdEditor != null)
-      {
+      {    	  
+        // cs: here's we ensure the UNDO and REDO actions are available when 
+        // the design view is active
+        IWorkbenchPartSite site = xsdEditor.getSite();
+        if (site instanceof IEditorSite) 
+        {
+          ITextEditor textEditor = xsdEditor.getTextEditor();
+          IActionBars siteActionBars = ((IEditorSite) site).getActionBars();
+          siteActionBars.setGlobalActionHandler(ITextEditorActionConstants.UNDO, getAction(textEditor, ITextEditorActionConstants.UNDO));
+          siteActionBars.setGlobalActionHandler(ITextEditorActionConstants.REDO, getAction(textEditor, ITextEditorActionConstants.REDO));
+          siteActionBars.updateActionBars();    					
+        }
+			
         Object adapter = xsdEditor.getAdapter(ActionRegistry.class);
         if (adapter instanceof ActionRegistry)
         {
