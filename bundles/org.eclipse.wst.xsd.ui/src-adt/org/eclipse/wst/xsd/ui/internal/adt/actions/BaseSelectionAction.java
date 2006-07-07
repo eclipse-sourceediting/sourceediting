@@ -31,6 +31,7 @@ public abstract class BaseSelectionAction extends SelectionAction
   public static final String SUBMENU_END_ID = "SUBMENU_END_ID: "; //$NON-NLS-1$
 
   protected ISelectionProvider provider;
+  protected boolean doDirectEdit = true;
   
   public BaseSelectionAction(IWorkbenchPart part)
   {
@@ -86,7 +87,8 @@ public abstract class BaseSelectionAction extends SelectionAction
         if (adapter != null)
         {
           provider.setSelection(new StructuredSelection(adapter));
-          activateDirectEdit();
+          if (doDirectEdit)
+            activateDirectEdit();
         }
       }
     };

@@ -38,6 +38,7 @@ public class AddXSDElementAction extends XSDBaseAction
     setText(label);
     setId(id);
     this.isReference = isReference;
+    doDirectEdit = !isReference;
   }
 
   public void run()

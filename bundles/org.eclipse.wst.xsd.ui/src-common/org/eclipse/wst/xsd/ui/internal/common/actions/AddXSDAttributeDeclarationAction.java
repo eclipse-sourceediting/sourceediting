@@ -43,6 +43,7 @@ public class AddXSDAttributeDeclarationAction extends XSDBaseAction
     setText(label);
     setId(id);
     this.isReference = isReference;
+    doDirectEdit = !isReference;
   }
 
   public void run()
