@@ -48,6 +48,7 @@ import org.eclipse.wst.common.frameworks.internal.datamodel.DataModelPausibleOpe
 import org.eclipse.wst.common.frameworks.internal.datamodel.ui.DataModelWizardPage;
 import org.eclipse.wst.common.project.facet.core.IFacetedProject;
 import org.eclipse.wst.common.project.facet.core.IFacetedProjectTemplate;
+import org.eclipse.wst.common.project.facet.core.IPreset;
 import org.eclipse.wst.common.project.facet.core.IProjectFacetVersion;
 import org.eclipse.wst.common.project.facet.core.IFacetedProject.Action.Type;
 import org.eclipse.wst.common.project.facet.core.runtime.IRuntime;
@@ -115,25 +116,72 @@ public abstract class NewProjectDataModelFacetWizard extends AddRemoveFacetsWiza
 		}
 
 		super.addPages();
-		final Set fixed = this.template.getFixedProjectFacets();
 
-		this.facetsSelectionPage.setFixedProjectFacets(fixed);
+        final Set fixed = this.template.getFixedProjectFacets();
 
-		this.facetsSelectionPage.addSelectedFacetsChangedListener(new Listener() {
-			public void handleEvent(Event event) {
-				facetSelectionChangedEvent(event);
-			}
-		});
+        this.facetsSelectionPage.setFixedProjectFacets(fixed);
 
-		IRuntime runtime = (IRuntime) model.getProperty(FACET_RUNTIME);
-        setRuntimeAndDefaultFacets( runtime );
-        
-		synchRuntimes();
-	}
+        this.facetsSelectionPage.addSelectedFacetsChangedListener(new Listener() {
+            public void handleEvent(Event event) {
+                facetSelectionChangedEvent(event);
+            }
+        });
+    }
 
 	public void createPageControls(Composite container) {
 		super.createPageControls(container);
-		/*
+
+        final IPreset preset = this.template.getInitialPreset();
+        final IRuntime runtime = (IRuntime) model.getProperty( FACET_RUNTIME );
+
+        if( preset == null )
+        {
+            // If no preset is specified, select the runtime and it's default
+            // facets.
+            
+            setRuntimeAndDefaultFacets( runtime );
+        }
+        else
+        {
+            // If preset is specified, select the runtime only if supports all
+            // of the facets included in the preset.
+
+            this.facetsSelectionPage.panel.selectPreset( preset );
+            
+            boolean supports = false;
+            
+            if( runtime != null )
+            {
+                supports = true;
+                
+                for( Iterator itr = preset.getProjectFacets().iterator(); itr.hasNext(); )
+                {
+                    final IProjectFacetVersion fv = (IProjectFacetVersion) itr.next();
+                    
+                    if( ! runtime.supports( fv ) )
+                    {
+                        supports = false;
+                        break;
+                    }
+                }
+            }
+            
+            final ChangeTargetedRuntimesDataModel rdm
+                = getModel().getTargetedRuntimesDataModel();
+
+            if( supports )
+            {
+                rdm.setTargetedRuntimes( Collections.singleton( runtime ) );
+            }
+            else
+            {
+                model.setProperty( FACET_RUNTIME, null );
+            }
+        }
+        
+        synchRuntimes();
+        
+        /*
 		 * This does not interfere with the rutines selection
 		 */
 		Set facetVersions = new HashSet();
