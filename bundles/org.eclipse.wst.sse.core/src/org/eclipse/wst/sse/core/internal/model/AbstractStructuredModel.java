@@ -194,6 +194,9 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 	// private String fLineDelimiter;
 	// private Object fType;
 	private IModelHandler fModelHandler;
+	// issue: we should not "hold on" to model manager, can 
+	// easily get with StructuredModelManager.getModelManager();
+	// but will need to add more null checks.
 	private IModelManager fModelManager;
 	private int fModelStateChanging;
 	private Object[] fModelStateListeners;
@@ -684,9 +687,11 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 
 	/**
 	 * The id is the id that the model manager uses to identify this model
+	 * 
+	 * @ISSUE - no one should need to know ID, so this should be default access eventually. 
+	 * If clients believe they do need ID, be sure to let us know (open a bug). 
 	 */
 	public String getId() {
-
 
 		return fId;
 	}
@@ -1036,7 +1041,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 				signalPreLifeCycleEventRelease(this);
 			}
 
-			_getModelManager().releaseFromEdit(getId());
+			_getModelManager().releaseFromEdit(this);
 			if (!isShared) {
 				signalPostLifeCycleListenerRelease(this);
 			}
@@ -1068,7 +1073,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 				signalPreLifeCycleEventRelease(this);
 			}
 
-			_getModelManager().releaseFromRead(getId());
+			_getModelManager().releaseFromRead(this);
 
 			if (!isShared) {
 				signalPostLifeCycleListenerRelease(this);

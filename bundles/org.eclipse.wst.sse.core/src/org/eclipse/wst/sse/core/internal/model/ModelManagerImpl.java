@@ -140,7 +140,7 @@ public class ModelManagerImpl implements IModelManager {
 			referenceCountForEdit = 0;
 		}
 	}
-	
+
 	private Exception debugException = null;
 
 	/**
@@ -336,12 +336,13 @@ public class ModelManagerImpl implements IModelManager {
 
 			// if we don't know how to create a model
 			// for this type of file, return null
-			if(sharedObject != null) {
-				// note: clients must call release for each time they call get.
+			if (sharedObject != null) {
+				// note: clients must call release for each time they call
+				// get.
 				model = sharedObject.theSharedModel;
 			}
 		}
-		
+
 		return model;
 	}
 
@@ -364,10 +365,10 @@ public class ModelManagerImpl implements IModelManager {
 			throw new ResourceInUse();
 		}
 
-		// if we get to hear without above exceptions, then all is ok 
-		// to get model like normal, but set 'new' attribute (where the 
-		// 'new' attribute means this is a model without a corresponding 
-		// underlying resource. 
+		// if we get to hear without above exceptions, then all is ok
+		// to get model like normal, but set 'new' attribute (where the
+		// 'new' attribute means this is a model without a corresponding
+		// underlying resource.
 		aSharedModel = FileBufferModelManager.getInstance().getModel(iFile);
 		aSharedModel.setNewState(true);
 		sharedObject = addToCache(id, aSharedModel);
@@ -530,7 +531,8 @@ public class ModelManagerImpl implements IModelManager {
 					multiTextEdit.apply(document);
 			}
 			catch (BadLocationException exception) {
-				// just adding generic runtime here, until whole method deleted.
+				// just adding generic runtime here, until whole method
+				// deleted.
 				throw new RuntimeException(exception.getMessage());
 			}
 		}
@@ -1334,11 +1336,32 @@ public class ModelManagerImpl implements IModelManager {
 		return model;
 	}
 
+	synchronized void releaseFromEdit(IStructuredModel structuredModel) {
+		Object id = structuredModel.getId();
+		if (id.equals(UNMANAGED_MODEL) || id.equals(DUPLICATED_MODEL)) {
+			cleanupDiscardedModel(structuredModel);
+		}
+		else {
+			releaseFromEdit(id);
+		}
+
+	}
+	
+	synchronized void releaseFromRead(IStructuredModel structuredModel) {
+		Object id = structuredModel.getId();
+		if (id.equals(UNMANAGED_MODEL) || id.equals(DUPLICATED_MODEL)) {
+			cleanupDiscardedModel(structuredModel);
+		}
+		else {
+			releaseFromRead(id);
+		}
+
+	}
 	/**
 	 * default for use in same package, not subclasses
 	 * 
 	 */
-	synchronized void releaseFromEdit(Object id) {
+	synchronized private void releaseFromEdit(Object id) {
 		// ISSUE: many of these asserts should be changed to "logs"
 		// and continue to limp along?
 
@@ -1350,7 +1373,7 @@ public class ModelManagerImpl implements IModelManager {
 		// to be called on them, for now, but the model manager
 		// doesn't need to do anything.
 		if (id.equals(UNMANAGED_MODEL) || id.equals(DUPLICATED_MODEL)) {
-			// do nothing related to model managment.
+			throw new IllegalArgumentException("Ids of UNMANAGED_MODEL or DUPLICATED_MODEL are illegal here");
 		}
 		else {
 			sharedObject = (SharedObject) fManagedObjects.get(id);
@@ -1365,9 +1388,10 @@ public class ModelManagerImpl implements IModelManager {
 				// if edit goes to zero, but still open for read,
 				// then we should reload here, so we are in synch with
 				// contents on disk.
-				// ISSUE: should we check isDirty here? 
-				// ANSWER: here, for now now. model still has its own dirty flag for some reason. 
-				// we need to address * that * too. 
+				// ISSUE: should we check isDirty here?
+				// ANSWER: here, for now now. model still has its own dirty
+				// flag for some reason.
+				// we need to address * that * too.
 				if ((sharedObject.referenceCountForRead > 0) && (sharedObject.referenceCountForEdit == 0) && sharedObject.theSharedModel.isDirty()) {
 					signalPreLifeCycleListenerRevert(sharedObject.theSharedModel);
 					revertModel(id, sharedObject);
@@ -1377,18 +1401,20 @@ public class ModelManagerImpl implements IModelManager {
 			}
 		}
 	}
-	
+
 	// private for now, though public forms have been requested, in past.
 	private void revertModel(Object id, SharedObject sharedObject) {
 		IStructuredDocument structuredDocument = sharedObject.theSharedModel.getStructuredDocument();
 		FileBufferModelManager.getInstance().revert(structuredDocument);
 	}
+
 	private void signalPreLifeCycleListenerRevert(IStructuredModel structuredModel) {
 		int type = ModelLifecycleEvent.MODEL_REVERT | ModelLifecycleEvent.PRE_EVENT;
 		// what's wrong with this design that a cast is needed here!?
 		ModelLifecycleEvent event = new ModelLifecycleEvent(structuredModel, type);
 		((AbstractStructuredModel) structuredModel).signalLifecycleEvent(event);
 	}
+
 	private void signalPostLifeCycleListenerRevert(IStructuredModel structuredModel) {
 		int type = ModelLifecycleEvent.MODEL_REVERT | ModelLifecycleEvent.POST_EVENT;
 		// what's wrong with this design that a cast is needed here!?
@@ -1404,12 +1430,17 @@ public class ModelManagerImpl implements IModelManager {
 			Platform.getLog(SSECorePlugin.getDefault().getBundle()).log(new Status(IStatus.ERROR, SSECorePlugin.ID, IStatus.ERROR, "Attempted to discard a structured model but the underlying document has already been set to null: " + sharedObject.theSharedModel.getBaseLocation(), null));
 		}
 
+		cleanupDiscardedModel(sharedObject.theSharedModel);
+	}
+
+	private void cleanupDiscardedModel(IStructuredModel structuredModel) {
+		IStructuredDocument structuredDocument = structuredModel.getStructuredDocument();
 		/*
 		 * This call (and setting the StructuredDocument to null) were
 		 * previously done within the model itself, but for concurrency it
 		 * must be done here during a synchronized release.
 		 */
-		sharedObject.theSharedModel.getFactoryRegistry().release();
+		structuredModel.getFactoryRegistry().release();
 
 		/*
 		 * For structured documents originating from file buffers, disconnect
@@ -1425,19 +1456,19 @@ public class ModelManagerImpl implements IModelManager {
 		 * The model itself in particular may have internal listeners used to
 		 * coordinate the document with its own "structure".
 		 */
-		sharedObject.theSharedModel.setStructuredDocument(null);
+		structuredModel.setStructuredDocument(null);
 	}
 
 	/**
 	 * default for use in same package, not subclasses
 	 * 
 	 */
-	synchronized void releaseFromRead(Object id) {
+	synchronized private void releaseFromRead(Object id) {
 		Assert.isNotNull(id, "id parameter can not be null"); //$NON-NLS-1$
 		SharedObject sharedObject = null;
 
 		if (id.equals(UNMANAGED_MODEL) || id.equals(DUPLICATED_MODEL)) {
-			// do nothing related to model management.
+			throw new IllegalArgumentException("Ids of UNMANAGED_MODEL or DUPLICATED_MODEL are illegal here");
 		}
 		else {
 
@@ -1450,9 +1481,6 @@ public class ModelManagerImpl implements IModelManager {
 			if ((sharedObject.referenceCountForRead == 0) && (sharedObject.referenceCountForEdit == 0)) {
 				discardModel(id, sharedObject);
 			}
-			// ISSUE: if edit goes to zero, but still open for read,
-			// then we should reload here, so we are in synch with
-			// contents on disk.
 		}
 	}
 
