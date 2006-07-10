@@ -16,8 +16,11 @@ import java.net.URL;
 
 import junit.framework.TestCase;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jst.jsp.core.taglib.IJarRecord;
 import org.eclipse.jst.jsp.core.taglib.ITaglibRecord;
 import org.eclipse.jst.jsp.core.taglib.IURLRecord;
 import org.eclipse.jst.jsp.core.taglib.TaglibIndex;
@@ -181,4 +184,39 @@ public class TestIndex extends TestCase {
 		records = TaglibIndex.getAvailableTaglibRecords(new Path("/bug_118251-g/Web Content/WEB-INF/web.xml"));
 		assertEquals("wrong number of taglib records found after copying", 4, records.length);
 	}
+
+	public void test_148717_a() throws Exception {
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject("bug_148717");
+		if (!project.exists()) {
+			// Create new project
+			project = BundleResourceUtil.createSimpleProject("bug_148717", null, null);
+			assertTrue(project.exists());
+			BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/bug_148717", "/bug_148717");
+		}
+
+		IFile file = project.getFile("/WebContent/WEB-INF/lib/internal.jar");
+		assertTrue(file.exists());
+
+		String uri = "http://example.com/external-uri";
+		ITaglibRecord taglibRecord = TaglibIndex.resolve("/bug_148717/WebContent/", uri, false);
+		assertNotNull("record not found for " + uri, taglibRecord);
+		assertEquals(ITaglibRecord.JAR, taglibRecord.getRecordType());
+		assertEquals(uri, ((IJarRecord) taglibRecord).getURI());
+
+		ITaglibRecord taglibRecord2 = null;
+		ITaglibRecord[] records = TaglibIndex.getAvailableTaglibRecords(new Path("/bug_148717/WebContent/"));
+		for (int i = 0; i < records.length; i++) {
+			int type = records[i].getRecordType();
+			switch (type) {
+				case ITaglibRecord.JAR : {
+					taglibRecord2 = records[i];
+				}
+					break;
+			}
+		}
+		assertNotNull("record not returned for " + uri, taglibRecord2);
+		assertEquals(ITaglibRecord.JAR, taglibRecord2.getRecordType());
+		assertEquals(uri, ((IJarRecord) taglibRecord2).getURI());
+	}
+
 }
