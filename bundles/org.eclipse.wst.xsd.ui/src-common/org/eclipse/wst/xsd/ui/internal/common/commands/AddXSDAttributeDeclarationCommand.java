@@ -76,7 +76,7 @@ public class AddXSDAttributeDeclarationCommand extends BaseCommand
       {
         XSDSchema xsdSchema = (XSDSchema)parent;
         
-        createGlobalXSDAttributeDeclaration(xsdSchema);
+        attribute = createGlobalXSDAttributeDeclaration(xsdSchema);
       }
       else if (parent instanceof XSDAttributeGroupDefinition)
       {

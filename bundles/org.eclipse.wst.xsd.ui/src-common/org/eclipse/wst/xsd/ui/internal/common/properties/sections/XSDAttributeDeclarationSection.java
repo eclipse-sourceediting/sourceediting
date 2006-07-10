@@ -28,16 +28,18 @@ import org.eclipse.wst.xsd.ui.internal.adt.edit.IComponentDialog;
 import org.eclipse.wst.xsd.ui.internal.common.commands.UpdateNameCommand;
 import org.eclipse.wst.xsd.ui.internal.dialogs.NewTypeDialog;
 import org.eclipse.wst.xsd.ui.internal.editor.Messages;
+import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDTypeReferenceEditManager;
 import org.eclipse.wst.xsd.ui.internal.editor.search.XSDSearchListDialogDelegate;
 import org.eclipse.xsd.XSDAttributeDeclaration;
 import org.eclipse.xsd.XSDTypeDefinition;
 import org.eclipse.xsd.util.XSDConstants;
+import org.w3c.dom.Element;
 
 public class XSDAttributeDeclarationSection extends RefactoringSection
 {
   protected Text nameText;
-  protected CCombo typeCombo;
+  protected CCombo typeCombo, usageCombo;
   boolean isAttributeReference;
   
   public XSDAttributeDeclarationSection()
@@ -94,6 +96,35 @@ public class XSDAttributeDeclarationSection extends RefactoringSection
     typeCombo.setLayoutData(data);
     typeCombo.addSelectionListener(this);
 
+    // dummy
+    getWidgetFactory().createCLabel(composite, ""); //$NON-NLS-1$
+    
+    // ------------------------------------------------------------------
+    // UsageLabel
+    // ------------------------------------------------------------------
+    data = new GridData();
+    data.horizontalAlignment = GridData.HORIZONTAL_ALIGN_BEGINNING;
+    data.grabExcessHorizontalSpace = false;
+    CLabel useLabel = getWidgetFactory().createCLabel(composite, XSDEditorPlugin.getXSDString("_UI_USAGE"));
+    useLabel.setLayoutData(data);
+
+    // ------------------------------------------------------------------
+    // UsageCombo
+    // ------------------------------------------------------------------
+    data = new GridData();
+    data.grabExcessHorizontalSpace = true;
+    data.horizontalAlignment = GridData.FILL;
+    usageCombo = getWidgetFactory().createCCombo(composite);
+    usageCombo.setLayoutData(data);
+    usageCombo.addSelectionListener(this);
+    usageCombo.add("");
+    usageCombo.add("required"); //$NON-NLS-1$
+    usageCombo.add("optional"); //$NON-NLS-1$
+    usageCombo.add("prohibited"); //$NON-NLS-1$
+    usageCombo.addSelectionListener(this);
+    
+    // dummy
+    getWidgetFactory().createCLabel(composite, ""); //$NON-NLS-1$
   }
 
   private void fillTypesCombo()
@@ -198,6 +229,21 @@ public class XSDAttributeDeclarationSection extends RefactoringSection
             typeCombo.setText(Messages.UI_NO_TYPE); //$NON-NLS-1$
           }
         }
+
+        usageCombo.setText("");
+        usageCombo.setEnabled(!xsdAttribute.isGlobal());
+        
+        Element element = xsdAttribute.getElement();
+        boolean hasUseAttribute = false;
+        if (element != null)
+        {
+          hasUseAttribute = element.hasAttribute(XSDConstants.USE_ATTRIBUTE);
+          if (hasUseAttribute)
+          {
+            String usage = element.getAttribute(XSDConstants.USE_ATTRIBUTE);
+            usageCombo.setText(usage);
+          }
+        }
       }
     }
 
@@ -245,7 +291,19 @@ public class XSDAttributeDeclarationSection extends RefactoringSection
         if (newValue != null)
           manager.modifyComponentReference(input, newValue);
       }
-//      refresh();
+    } 
+    else if (e.widget == usageCombo)
+    {
+      XSDAttributeDeclaration xsdAttribute = ((XSDAttributeDeclaration) input).getResolvedAttributeDeclaration();
+      String newValue = usageCombo.getText();
+      Element element = xsdAttribute.getElement();
+      if (element != null)
+      {
+        if (newValue.length() == 0)
+          element.removeAttribute(XSDConstants.USE_ATTRIBUTE);
+        else
+          element.setAttribute(XSDConstants.USE_ATTRIBUTE, newValue);
+      }
     }
     super.doWidgetSelected(e);
   }
