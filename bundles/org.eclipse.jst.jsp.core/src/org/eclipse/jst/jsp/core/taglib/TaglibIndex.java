@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005,2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,6 +25,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceDelta;
+import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -566,7 +567,24 @@ public final class TaglibIndex {
 		IProject project = null;
 		ITaglibRecord resolved = null;
 
-		IFile baseResource = FileBuffers.getWorkspaceFileAtLocation(new Path(basePath));
+		Path baseIPath = new Path(basePath);
+		IResource baseResource = FileBuffers.getWorkspaceFileAtLocation(baseIPath);
+
+		if (baseResource == null) {
+			IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
+			// Try the base path as a folder first
+			if (baseResource == null && baseIPath.segmentCount() > 1) {
+				baseResource = workspaceRoot.getFolder(baseIPath);
+			}
+			// If not a folder, then try base path as a file
+			if (baseResource != null && !baseResource.exists() && baseIPath.segmentCount() > 1) {
+				baseResource = workspaceRoot.getFile(baseIPath);
+			}
+			if (baseResource == null && baseIPath.segmentCount() == 1) {
+				baseResource = workspaceRoot.getProject(baseIPath.segment(0));
+			}
+		}
+
 		if (baseResource == null) {
 			/*
 			 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=116529
@@ -574,7 +592,7 @@ public final class TaglibIndex {
 			 * This method produces a less accurate result, but doesn't
 			 * require that the file exist yet.
 			 */
-			IFile[] files = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocation(new Path(basePath));
+			IFile[] files = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocation(baseIPath);
 			if (files.length > 0)
 				baseResource = files[0];
 		}
