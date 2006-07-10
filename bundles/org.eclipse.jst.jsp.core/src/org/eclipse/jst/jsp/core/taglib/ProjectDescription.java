@@ -126,6 +126,8 @@ class ProjectDescription {
 
 	static class JarRecord implements IJarRecord {
 		boolean has11TLD;
+		boolean isMappedInWebXML;
+
 		TaglibInfo info;
 		IPath location;
 		List urlRecords;
@@ -154,6 +156,15 @@ class ProjectDescription {
 			if (info == null)
 				return null;
 			return info.shortName;
+		}
+
+		/**
+		 * @return Returns the uri.
+		 */
+		public String getURI() {
+			if (info == null)
+				return null;
+			return info.uri;
 		}
 
 		/**
@@ -437,12 +448,12 @@ class ProjectDescription {
 		fImplicitReferences = new Hashtable(0);
 	}
 
-	private Collection _getJSP11JarReferences(Collection allJARs) {
+	private Collection _getJSP11AndWebXMLJarReferences(Collection allJARs) {
 		List collection = new ArrayList(allJARs.size());
 		Iterator i = allJARs.iterator();
 		while (i.hasNext()) {
 			JarRecord record = (JarRecord) i.next();
-			if (record.has11TLD) {
+			if (record.has11TLD || record.isMappedInWebXML) {
 				collection.add(record);
 			}
 		}
@@ -674,7 +685,7 @@ class ProjectDescription {
 		List records = new ArrayList(fTLDReferences.size() + fTagDirReferences.size() + fJARReferences.size() + fWebXMLReferences.size());
 		records.addAll(fTLDReferences.values());
 		records.addAll(fTagDirReferences.values());
-		records.addAll(_getJSP11JarReferences(fJARReferences.values()));
+		records.addAll(_getJSP11AndWebXMLJarReferences(fJARReferences.values()));
 		records.addAll(fClasspathReferences.values());
 		records.addAll(implicitReferences);
 		return records;
@@ -701,40 +712,31 @@ class ProjectDescription {
 		IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
 
 		// existing workspace resources - this is the 93% case
-		IResource file = null;
+		IResource file = FileBuffers.getWorkspaceFileAtLocation(basePath);
 
-		if (file == null) {
-			IFile[] files = workspaceRoot.findFilesForLocation(basePath.makeAbsolute());
-			for (int i = 0; file == null && i < files.length; i++) {
-				IPath normalizedPath = null;
-				/*
-				 * existing workspace resources referenced by their file
-				 * system path files that do not exist (including
-				 * non-accessible files) do not pass
-				 */
-				if (files[i].exists()) {
-					normalizedPath = files[i].getFullPath();
-
-					if (normalizedPath.segmentCount() > 1 && normalizedPath.segment(0).equals(fProject.getFullPath().segment(0))) {
-						// @see IContainer#getFile for the required number of
-						// segments
-						file = workspaceRoot.getFile(normalizedPath);
-					}
-				}
-			}
-		}
-
-		if (file == null) {
-			file = FileBuffers.getWorkspaceFileAtLocation(basePath);
-		}
-
-		// Try it as a folder first
-		if (basePath.segmentCount() > 1) {
+		// Try the base path as a folder first
+		if (file == null && basePath.segmentCount() > 1) {
 			file = workspaceRoot.getFolder(basePath);
 		}
-		// If not a folder, then try as a file
-		if (file != null && !file.exists()) {
+		// If not a folder, then try base path as a file
+		if (file != null && !file.exists() && basePath.segmentCount() > 1) {
 			file = workspaceRoot.getFile(basePath);
+		}
+
+		if (file == null && basePath.segmentCount() == 1) {
+			file = workspaceRoot.getProject(basePath.segment(0));
+		}
+
+		if (file == null) {
+			/*
+			 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=116529
+			 * 
+			 * This method produces a less accurate result, but doesn't
+			 * require that the file exist yet.
+			 */
+			IFile[] files = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocation(basePath);
+			if (files.length > 0)
+				file = files[0];
 		}
 
 		while (file != null) {
@@ -1224,7 +1226,7 @@ class ProjectDescription {
 			String taglibUri = readTextofChild(taglibs.item(iTaglib), "taglib-uri").trim(); //$NON-NLS-1$
 			// specified location is relative to root of the webapp
 			String taglibLocation = readTextofChild(taglibs.item(iTaglib), "taglib-location").trim(); //$NON-NLS-1$
-			IPath path = null; 
+			IPath path = null;
 			if (taglibLocation.startsWith("/")) { //$NON-NLS-1$
 				path = new Path(getLocalRoot(webxml.getFullPath().toString()) + taglibLocation);
 			}
@@ -1263,6 +1265,7 @@ class ProjectDescription {
 						record = jarRecord;
 						// the stored URI should reflect the web.xml's value
 						jarRecord.info.uri = taglibUri;
+						jarRecord.isMappedInWebXML = true;
 						if (_debugIndexCreation)
 							Logger.log(Logger.INFO_DEBUG, "created web.xml record for " + taglibUri + "@" + jarRecord.getLocation()); //$NON-NLS-1$ //$NON-NLS-2$
 					}
