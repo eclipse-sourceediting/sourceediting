@@ -12,9 +12,8 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.ui.internal;
 
-import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
+import org.eclipse.jface.text.ITextViewerExtension5;
 import org.eclipse.swt.custom.ST;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.dnd.DND;
@@ -93,7 +92,8 @@ public class ExtendedEditorDropTargetAdapter extends DropTargetAdapter {
 							bs[j] = true;
 							c++;
 						}
-					} else {
+					}
+					else {
 						bs[j] = true;
 						c++;
 					}
@@ -109,7 +109,8 @@ public class ExtendedEditorDropTargetAdapter extends DropTargetAdapter {
 						rests[k++] = strs[j];
 				}
 				event.data = rests;
-			} else if (da.isSupportedData(event.data)) {
+			}
+			else if (da.isSupportedData(event.data)) {
 				if (da.run(event, targetEditor)) {
 					return true;
 				}
@@ -168,7 +169,8 @@ public class ExtendedEditorDropTargetAdapter extends DropTargetAdapter {
 
 			if (pt.y < margin) { // up
 				st.invokeAction(ST.LINE_UP);
-			} else if (pt.y > ca.height - margin) { // down
+			}
+			else if (pt.y > ca.height - margin) { // down
 				st.invokeAction(ST.LINE_DOWN);
 			}
 
@@ -230,6 +232,10 @@ public class ExtendedEditorDropTargetAdapter extends DropTargetAdapter {
 			// ISelectionProvider sp = textViewer.getSelectionProvider();
 			// ISelection sel = new TextSelection(offset, 0);
 			// sp.setSelection(sel);
+			// BUG145392 - need to account for folded regions
+			if (textViewer instanceof ITextViewerExtension5) {
+				offset = ((ITextViewerExtension5) textViewer).widgetOffset2ModelOffset(offset);
+			}
 			textViewer.setSelectedRange(offset, 0);
 		}
 
@@ -253,7 +259,8 @@ public class ExtendedEditorDropTargetAdapter extends DropTargetAdapter {
 		int offset = st.getCaretOffset();
 		try {
 			offset = st.getOffsetAtLocation(pt);
-		} catch (IllegalArgumentException e) {
+		}
+		catch (IllegalArgumentException e) {
 			// This is normal case if mouse cursor is on outside of valid
 			// text.
 			boolean found = false;
@@ -267,19 +274,31 @@ public class ExtendedEditorDropTargetAdapter extends DropTargetAdapter {
 					 * Now that a valid offset has been found, try to place at
 					 * the end of the line
 					 */
-					if (textViewer != null && textViewer.getDocument() != null) {
-						IRegion lineInfo = null;
-						try {
-							lineInfo = textViewer.getDocument().getLineInformationOfOffset(offset);
-						} catch (BadLocationException e1) {
-						}
-						if (lineInfo != null)
-							offset = lineInfo.getOffset() + lineInfo.getLength();
-					}
-
+					/*
+					 * partial line folding invalidates any "move to EOL"
+					 * action we might take
+					 */
+					// if (textViewer != null && textViewer.getDocument() !=
+					// null) {
+					// IRegion lineInfo = null;
+					// try {
+					// if (textViewer instanceof ITextViewerExtension5) {
+					// lineInfo =
+					// textViewer.getDocument().getLineInformationOfOffset(((ITextViewerExtension5)textViewer).widgetOffset2ModelOffset(offset));
+					// }
+					// else {
+					// lineInfo =
+					// textViewer.getDocument().getLineInformationOfOffset(offset);
+					// }
+					// } catch (BadLocationException e1) {
+					// }
+					// if (lineInfo != null)
+					// offset = lineInfo.getOffset() + lineInfo.getLength();
+					// }
 					found = true;
 					break;
-				} catch (IllegalArgumentException ex) {
+				}
+				catch (IllegalArgumentException ex) {
 				}
 			}
 
