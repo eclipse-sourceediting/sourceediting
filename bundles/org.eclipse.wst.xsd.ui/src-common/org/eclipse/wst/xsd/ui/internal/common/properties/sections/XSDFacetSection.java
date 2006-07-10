@@ -511,8 +511,8 @@ public class XSDFacetSection extends AbstractSection
       minimumInclusiveCheckbox.setEnabled(false);
       if (minFacet != null)
       {
-        if (minFacet.getElement().getNodeName().equals(XSDConstants.MINEXCLUSIVE_ELEMENT_TAG) ||
-            minFacet.getElement().getNodeName().equals(XSDConstants.MININCLUSIVE_ELEMENT_TAG))
+        if (minFacet.getElement().getLocalName().equals(XSDConstants.MINEXCLUSIVE_ELEMENT_TAG) ||
+            minFacet.getElement().getLocalName().equals(XSDConstants.MININCLUSIVE_ELEMENT_TAG))
         {
           minLengthText.setText(minFacet.getLexicalValue());
           minimumInclusiveCheckbox.setSelection(minFacet.isInclusive());
@@ -524,8 +524,8 @@ public class XSDFacetSection extends AbstractSection
       maximumInclusiveCheckbox.setEnabled(false);
       if (maxFacet != null)
       {
-        if (maxFacet.getElement().getNodeName().equals(XSDConstants.MAXEXCLUSIVE_ELEMENT_TAG) ||
-            maxFacet.getElement().getNodeName().equals(XSDConstants.MAXINCLUSIVE_ELEMENT_TAG))
+        if (maxFacet.getElement().getLocalName().equals(XSDConstants.MAXEXCLUSIVE_ELEMENT_TAG) ||
+            maxFacet.getElement().getLocalName().equals(XSDConstants.MAXINCLUSIVE_ELEMENT_TAG))
         {
           maxLengthText.setText(maxFacet.getLexicalValue());
           maximumInclusiveCheckbox.setSelection(maxFacet.isInclusive());
