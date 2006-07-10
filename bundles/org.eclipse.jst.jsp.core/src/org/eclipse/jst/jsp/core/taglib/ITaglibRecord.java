@@ -27,7 +27,10 @@ package org.eclipse.jst.jsp.core.taglib;
  * @since 1.0
  */
 public interface ITaglibRecord {
-	/** A record to a .jar file referenced "1.1 style". */
+	/**
+	 * A record to a .jar file referrable directly, 1.1 style, or mentioned in
+	 * a web.xml file.
+	 */
 	int JAR = 1 << 1;
 
 	/**

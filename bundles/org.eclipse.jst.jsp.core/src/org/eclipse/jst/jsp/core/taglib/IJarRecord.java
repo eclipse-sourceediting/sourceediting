@@ -33,4 +33,9 @@ public interface IJarRecord extends ITaglibRecord {
 	 * @return Returns the recommended/default prefix if one was given.
 	 */
 	public String getShortName();
+
+	/**
+	 * @return Returns the uri.
+	 */
+	String getURI();
 }
