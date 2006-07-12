@@ -42,9 +42,9 @@ import org.eclipse.wst.web.internal.ResourceHandler;
 
 public class DataModelFacetCreationWizardPage extends DataModelWizardPage implements IFacetProjectCreationDataModelProperties {
 
-	private String MRU_RUNTIME_STORE = "MRU_RUNTIME_STORE"; //$NON-NLS-1$
-	private List mruRuntimes = null;
-
+	private static String NULL_RUNTIME = "NULL_RUNTIME"; //$NON-NLS-1$
+	private static String MRU_RUNTIME_STORE = "MRU_RUNTIME_STORE"; //$NON-NLS-1$
+	
 	protected static GridData gdhfill() {
 		return new GridData(GridData.FILL_HORIZONTAL);
 	}
@@ -152,12 +152,23 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
 
 	public void storeDefaultSettings() {
 		IDialogSettings settings = getDialogSettings();
+		DataModelFacetCreationWizardPage.saveRuntimeSettings(settings, model);
+	}
+
+	public void restoreDefaultSettings() {
+		IDialogSettings settings = getDialogSettings();
+		DataModelFacetCreationWizardPage.restoreRuntimeSettings(settings, model);
+	}
+	
+	public static void saveRuntimeSettings(IDialogSettings settings, IDataModel model){
+		String[] mruRuntimeArray = settings.getArray(MRU_RUNTIME_STORE);
+		List mruRuntimes = new ArrayList();
+		mruRuntimes.addAll(Arrays.asList(mruRuntimeArray));
+		
 		if (settings != null) {
 			IRuntime runtime = (IRuntime) model.getProperty(IFacetProjectCreationDataModelProperties.FACET_RUNTIME);
-			String runtimeName = runtime == null ? "" : runtime.getName(); //$NON-NLS-1$
-			if (mruRuntimes == null) {
-				mruRuntimes = new ArrayList();
-			}
+			String runtimeName = runtime == null ? NULL_RUNTIME : runtime.getName();
+			
 			if (mruRuntimes.contains(runtimeName)) {
 				mruRuntimes.remove(runtimeName);
 			}
@@ -165,31 +176,34 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
 			while (mruRuntimes.size() > 5) {
 				mruRuntimes.remove(5);
 			}
-			String[] mruRuntimeArray = new String[mruRuntimes.size()];
+			mruRuntimeArray = new String[mruRuntimes.size()];
 			for (int i = 0; i < mruRuntimeArray.length; i++) {
 				mruRuntimeArray[i] = (String) mruRuntimes.get(i);
 			}
 			settings.put(MRU_RUNTIME_STORE, mruRuntimeArray);
 		}
 	}
-
-	public void restoreDefaultSettings() {
-		IDialogSettings settings = getDialogSettings();
+	
+	public static void restoreRuntimeSettings(IDialogSettings settings, IDataModel model){
 		if (settings != null) {
 			if (!model.isPropertySet(IFacetProjectCreationDataModelProperties.FACET_RUNTIME)) {
 				boolean runtimeSet = false;
 				String[] mruRuntimeArray = settings.getArray(MRU_RUNTIME_STORE);
 				DataModelPropertyDescriptor[] descriptors = model.getValidPropertyDescriptors(IFacetProjectCreationDataModelProperties.FACET_RUNTIME);
 				if (mruRuntimeArray != null) {
-					mruRuntimes = new ArrayList();
+					List mruRuntimes = new ArrayList();
 					mruRuntimes.addAll(Arrays.asList(mruRuntimeArray));
 					if (mruRuntimeArray != null) {
 						for (int i = 0; i < mruRuntimeArray.length && !runtimeSet; i++) {
-							for (int j = 0; j < descriptors.length && !runtimeSet; j++) {
+							for (int j = 0; j < descriptors.length-1 && !runtimeSet; j++) {
 								if (mruRuntimeArray[i].equals(descriptors[j].getPropertyDescription())) {
 									model.setProperty(IFacetProjectCreationDataModelProperties.FACET_RUNTIME, descriptors[j].getPropertyValue());
 									runtimeSet = true;
 								}
+							}
+							if(!runtimeSet && mruRuntimeArray[i].equals(NULL_RUNTIME)){
+								model.setProperty(IFacetProjectCreationDataModelProperties.FACET_RUNTIME, descriptors[descriptors.length -1].getPropertyValue());
+								runtimeSet = true;
 							}
 						}
 					}
@@ -200,6 +214,8 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
 			}
 		}
 	}
+	
+	
 	
 	/**
 	 * Find first newObject that is not in the oldObjects array (using "==").
