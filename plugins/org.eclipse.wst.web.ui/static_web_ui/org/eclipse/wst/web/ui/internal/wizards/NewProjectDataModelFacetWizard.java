@@ -181,23 +181,26 @@ public abstract class NewProjectDataModelFacetWizard extends AddRemoveFacetsWiza
         
         synchRuntimes();
         
-        /*
-		 * This does not interfere with the rutines selection
-		 */
+        facetsSelectionPage.setInitialSelection(getFacetsFromDataModel());
+       
+	}
+
+	protected Set getFacetsFromDataModel() {
 		Set facetVersions = new HashSet();
 		FacetDataModelMap map = (FacetDataModelMap) model.getProperty(FACET_DM_MAP);
 		for (Iterator iterator = map.values().iterator(); iterator.hasNext();) {
 			IDataModel facetModel = (IDataModel) iterator.next();
-			facetVersions.add(facetModel.getProperty(IFacetDataModelProperties.FACET_VERSION));
+			if(facetModel.getBooleanProperty(IFacetDataModelProperties.SHOULD_EXECUTE)){
+				facetVersions.add(facetModel.getProperty(IFacetDataModelProperties.FACET_VERSION));
+			}
 		}
 		
 		FacetActionMap mapAction = (FacetActionMap) model.getProperty(FACET_ACTION_MAP);
-        for (Iterator iterator = mapAction.values().iterator(); iterator.hasNext();) {
-            IFacetedProject.Action action = (IFacetedProject.Action) iterator.next();            
-            facetVersions.add(action.getProjectFacetVersion());
-        }
-        
-		facetsSelectionPage.setInitialSelection(facetVersions);
+		for (Iterator iterator = mapAction.values().iterator(); iterator.hasNext();) {
+		    IFacetedProject.Action action = (IFacetedProject.Action) iterator.next();            
+		    facetVersions.add(action.getProjectFacetVersion());
+		}
+		return facetVersions;
 	}
 
 	
@@ -252,7 +255,7 @@ public abstract class NewProjectDataModelFacetWizard extends AddRemoveFacetsWiza
         );
 	}
     
-    private void setRuntimeAndDefaultFacets( final IRuntime runtime )
+    protected void setRuntimeAndDefaultFacets( final IRuntime runtime )
     {
         final ChangeTargetedRuntimesDataModel rdm
             = getModel().getTargetedRuntimesDataModel();
