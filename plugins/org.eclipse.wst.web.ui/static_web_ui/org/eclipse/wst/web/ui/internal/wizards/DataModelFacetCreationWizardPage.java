@@ -163,7 +163,9 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
 	public static void saveRuntimeSettings(IDialogSettings settings, IDataModel model){
 		String[] mruRuntimeArray = settings.getArray(MRU_RUNTIME_STORE);
 		List mruRuntimes = new ArrayList();
-		mruRuntimes.addAll(Arrays.asList(mruRuntimeArray));
+		if(mruRuntimeArray != null){
+			mruRuntimes.addAll(Arrays.asList(mruRuntimeArray));
+		}
 		
 		if (settings != null) {
 			IRuntime runtime = (IRuntime) model.getProperty(IFacetProjectCreationDataModelProperties.FACET_RUNTIME);
