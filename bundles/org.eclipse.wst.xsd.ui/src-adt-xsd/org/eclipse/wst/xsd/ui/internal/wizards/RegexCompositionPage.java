@@ -25,7 +25,6 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
@@ -174,8 +173,6 @@ public class RegexCompositionPage extends WizardPage
     escapeCheckbox.setToolTipText(XSDEditorPlugin.getXSDString("_UI_TOOLTIP_REGEX_WIZARD_AUTO_ESCAPE_CHECKBOX")); 
     escapeCheckbox.addSelectionListener(new CheckboxListener());
     autoEscapeStatus = false;
-    
-    tokenComposite.pack();
 
 
     // Set up the composites pertaining to the selection of occurrence quantifiers
@@ -186,6 +183,8 @@ public class RegexCompositionPage extends WizardPage
     GridLayout selectionAreaLayout = new GridLayout();
     selectionAreaLayout.numColumns = 2;
     occurrenceSelectionArea.setLayout(selectionAreaLayout);
+
+    occurrenceSelectionArea.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
     // Listener used for all of the text fields
     TextListener textListener = new TextListener();
@@ -212,40 +211,30 @@ public class RegexCompositionPage extends WizardPage
 
     repeatRadio = addOccurenceRadioButton(RegexNode.REPEAT, occurrenceSelectionArea, radioSelectListener);
     WorkbenchHelp.setHelp(repeatRadio, XSDEditorContextIds.XSDR_COMPOSITION_REPEAT);
-
-    // Add text field for specifying number of repeats
-    Composite repeatWidgets = new Composite(occurrenceSelectionArea, SWT.NONE);
-    RowLayout repeatWidgetsLayout = new RowLayout();
-    repeatWidgetsLayout.marginTop = 0;
-    repeatWidgetsLayout.marginBottom = 0;
-    repeatWidgetsLayout.marginLeft = 0;
-    repeatWidgetsLayout.marginRight = 0;
-    repeatWidgets.setLayout(repeatWidgetsLayout);        
     
-    repeatValue = new Text(repeatWidgets, SWT.SINGLE | SWT.BORDER);
+    repeatValue = new Text(occurrenceSelectionArea, SWT.SINGLE | SWT.BORDER);
     repeatValue.addListener(SWT.Modify, textListener);
     WorkbenchHelp.setHelp(repeatValue, XSDEditorContextIds.XSDR_COMPOSITION_REPEAT_TEXT);
     repeatValue.setToolTipText(XSDEditorPlugin.getXSDString("_UI_TOOLTIP_REGEX_WIZARD_REPEAT"));
+    repeatValue.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
     setEnabledStatus(RegexNode.REPEAT, false);
-    
-    repeatWidgets.pack();
     
     rangeRadio = addOccurenceRadioButton(RegexNode.RANGE, occurrenceSelectionArea, radioSelectListener);
     WorkbenchHelp.setHelp(rangeRadio, XSDEditorContextIds.XSDR_COMPOSITION_RANGE);
 
     // Add text fields and labels for specifying the range    
     Composite rangeWidgets = new Composite(occurrenceSelectionArea, SWT.NONE);
-    RowLayout rangeWidgetsLayout = new RowLayout();
-    rangeWidgetsLayout.marginTop = 0;
-    rangeWidgetsLayout.marginBottom = 0;
-    rangeWidgetsLayout.marginLeft = 0;
-    rangeWidgetsLayout.marginRight = 0;
-    rangeWidgets.setLayout(rangeWidgetsLayout);
+    GridLayout gridLayout = new GridLayout(3, false);
+    gridLayout.marginHeight = 0;
+    gridLayout.marginWidth = 0;
+    rangeWidgets.setLayout(gridLayout);
+    rangeWidgets.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
     
     rangeMinValue = new Text(rangeWidgets, SWT.SINGLE | SWT.BORDER);
     rangeMinValue.addListener(SWT.Modify, textListener);
     WorkbenchHelp.setHelp(rangeMinValue, XSDEditorContextIds.XSDR_COMPOSITION_RANGE_MIN);
     rangeMinValue.setToolTipText(XSDEditorPlugin.getXSDString("_UI_TOOLTIP_REGEX_WIZARD_MIN"));
+    rangeMinValue.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
     
     rangeToLabel = new Label(rangeWidgets, SWT.NONE);
     rangeToLabel.setText(XSDEditorPlugin.getXSDString("_UI_REGEX_WIZARD_TO_LABEL"));
@@ -254,14 +243,12 @@ public class RegexCompositionPage extends WizardPage
     rangeMaxValue.addListener(SWT.Modify, textListener);
     rangeMaxValue.setToolTipText(XSDEditorPlugin.getXSDString("_UI_TOOLTIP_REGEX_WIZARD_MAX"));
     WorkbenchHelp.setHelp(rangeMaxValue, XSDEditorContextIds.XSDR_COMPOSITION_RANGE_MAX);
+    rangeMaxValue.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
     setEnabledStatus(RegexNode.RANGE, false);
-    rangeWidgets.pack();
     
     singleRadio.setSelection(true);
     
-    occurrenceSelectionArea.pack();
-
     // The add button
     add = new Button(composite, SWT.PUSH);
     add.addSelectionListener(new ButtonSelectListener());
@@ -951,5 +938,10 @@ public class RegexCompositionPage extends WizardPage
         return RegexNode.EMPTY;
       }
     } 
+  }
+  
+  public String getValue()
+  {
+    return value.getText();
   }
 }

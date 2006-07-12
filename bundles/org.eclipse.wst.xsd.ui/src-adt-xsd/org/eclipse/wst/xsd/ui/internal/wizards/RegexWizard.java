@@ -54,6 +54,11 @@ public class RegexWizard extends Wizard
   {
     return pattern;
   }
+  
+  public boolean canFinish()
+  {
+    return (compositionPage.getValue().length() > 0);
+  }
 
   public boolean performFinish()
   {
