@@ -34,8 +34,12 @@ public class StaticWebDeployableObjectAdapterUtil {
 
 	public static IModuleArtifact getModuleObject(Object obj) {
 		IResource resource = null;
-		if (obj instanceof IResource)
+		if (obj instanceof IResource) {
 			resource = (IResource) obj;
+			IProject project = ProjectUtilities.getProject(resource);
+			if (project != null && !hasInterestedComponents(project))
+				return null;
+		}
 		else if (obj instanceof IAdaptable)
 			resource = (IResource) ((IAdaptable) obj).getAdapter(IResource.class);
 		if (resource == null)
