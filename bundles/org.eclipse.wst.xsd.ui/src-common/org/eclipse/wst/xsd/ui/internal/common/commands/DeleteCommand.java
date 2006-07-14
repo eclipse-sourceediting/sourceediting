@@ -25,6 +25,7 @@ import org.eclipse.xsd.XSDParticle;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.eclipse.xsd.XSDWildcard;
+import org.eclipse.xsd.util.XSDConstants;
 
 public class DeleteCommand extends BaseCommand
 {
@@ -137,6 +138,10 @@ public class DeleteCommand extends BaseCommand
       {
         ((XSDAttributeGroupDefinition)parent).setAttributeWildcardContent(null);
       }
+    }
+    else if (target instanceof XSDComplexTypeDefinition && parent instanceof XSDElementDeclaration)
+    {
+      ((XSDElementDeclaration)parent).setTypeDefinition(target.resolveSimpleTypeDefinition(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001, "string"));
     }
     else
     {
