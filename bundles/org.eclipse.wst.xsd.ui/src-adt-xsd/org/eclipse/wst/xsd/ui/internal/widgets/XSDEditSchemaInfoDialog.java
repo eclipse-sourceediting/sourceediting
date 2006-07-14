@@ -13,17 +13,27 @@ package org.eclipse.wst.xsd.ui.internal.widgets;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wst.xml.ui.internal.dialogs.EditSchemaInfoDialog;
 import org.eclipse.wst.xml.ui.internal.nsedit.CommonEditNamespacesTargetFieldDialog;
+import org.eclipse.wst.xsd.ui.internal.editor.Messages;
+import org.eclipse.xsd.XSDForm;
 
-public class XSDEditSchemaInfoDialog extends EditSchemaInfoDialog {
+public class XSDEditSchemaInfoDialog extends EditSchemaInfoDialog implements SelectionListener {
 	String targetNamespace;
 	CommonEditNamespacesTargetFieldDialog editNamespacesControl;
+  Combo elementFormCombo, attributeFormCombo;
+  String elementFormQualified = "", attributeFormQualified = ""; //$NON-NLS-1$ //$NON-NLS-2$
+  
+  private String [] formQualification = { "", XSDForm.QUALIFIED_LITERAL.getLiteral(), XSDForm.UNQUALIFIED_LITERAL.getLiteral() };  //$NON-NLS-1$
 	
 	public XSDEditSchemaInfoDialog(Shell parentShell, IPath resourceLocation, String targetNamespace) {
 		super(parentShell, resourceLocation);
@@ -75,10 +85,78 @@ public class XSDEditSchemaInfoDialog extends EditSchemaInfoDialog {
 		}
 		editNamespacesControl.setNamespaceInfoList(namespaceInfoList);
 		editNamespacesControl.updateErrorMessage(namespaceInfoList);
+    
+    Label separator = new Label(dialogArea, SWT.SEPARATOR | SWT.HORIZONTAL);
+    GridData gd = new GridData(GridData.FILL_BOTH);
+    separator.setLayoutData(gd);
+    
+    Composite otherAttributesComposite = new Composite(dialogArea, SWT.NONE);
+    GridLayout layout = new GridLayout(2, false);
+    otherAttributesComposite.setLayout(layout);
+    GridData data = new GridData();
+    data.grabExcessHorizontalSpace = true;
+    data.horizontalAlignment = SWT.FILL;
+    otherAttributesComposite.setLayoutData(data);
+    
+    Label elementFormLabel = new Label(otherAttributesComposite, SWT.LEFT);
+    elementFormLabel.setText(Messages._UI_LABEL_ELEMENTFORMDEFAULT);
+    
+    elementFormCombo = new Combo(otherAttributesComposite, SWT.NONE);
+    elementFormCombo.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+    elementFormCombo.setItems(formQualification);
+    elementFormCombo.addSelectionListener(this);
+    
+    Label attributeFormLabel = new Label(otherAttributesComposite, SWT.LEFT);
+    attributeFormLabel.setText(Messages._UI_LABEL_ATTRIBUTEFORMDEFAULT);
+    
+    attributeFormCombo = new Combo(otherAttributesComposite, SWT.NONE);
+    attributeFormCombo.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+    attributeFormCombo.setItems(formQualification);
+    attributeFormCombo.addSelectionListener(this);
+
 		return dialogArea;
 	}	
 	
 	public String getTargetNamespace() {
 		return editNamespacesControl.getTargetNamespace();
 	}
+  
+  public void setIsElementQualified(String state)
+  {
+    elementFormCombo.setText(state);
+  }
+  
+  public void setIsAttributeQualified(String state)
+  {
+    attributeFormCombo.setText(state);
+  }
+  
+  public String getElementFormQualified()
+  {
+    return elementFormQualified;
+  }
+  
+  public String getAttributeFormQualified()
+  {
+    return attributeFormQualified;
+  }
+  
+  public void widgetDefaultSelected(SelectionEvent e)
+  {
+   
+  }
+  
+  public void widgetSelected(SelectionEvent e)
+  {
+    if (e.widget == attributeFormCombo)
+    {
+      attributeFormQualified = attributeFormCombo.getText();
+    }
+    else if (e.widget == elementFormCombo)
+    {
+      elementFormQualified = elementFormCombo.getText();
+    }
+
+  }
+
 }

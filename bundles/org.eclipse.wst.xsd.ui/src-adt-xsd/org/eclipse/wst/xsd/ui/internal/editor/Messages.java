@@ -106,4 +106,6 @@ public class Messages extends NLS
   public static String _UI_ACTION_ADD_REDEFINE;
   public static String _UI_ACTION_ADD_ATTRIBUTE_REF;
 
+  public static String _UI_LABEL_ELEMENTFORMDEFAULT;
+  public static String _UI_LABEL_ATTRIBUTEFORMDEFAULT;
 }
