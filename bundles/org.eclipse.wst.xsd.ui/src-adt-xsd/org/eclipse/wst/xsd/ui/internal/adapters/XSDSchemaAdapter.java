@@ -199,7 +199,8 @@ public class XSDSchemaAdapter extends XSDBaseAdapter implements IActionProvider,
     }
     
     Object newValue = msg.getNewValue();
-    if (newValue instanceof XSDInclude || newValue instanceof XSDImport || newValue instanceof XSDRedefine)
+    if (newValue instanceof XSDInclude || newValue instanceof XSDImport || newValue instanceof XSDRedefine ||
+        (msg.getFeature() == XSDPackage.eINSTANCE.getXSDSchema_Contents() && msg.getOldValue() instanceof XSDSchemaDirective)) // handle the case for delete directive
     {
       CategoryAdapter adapter = getCategory(CategoryAdapter.DIRECTIVES);
       Assert.isTrue(adapter != null);
