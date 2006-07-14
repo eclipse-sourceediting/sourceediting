@@ -22,10 +22,12 @@ import org.eclipse.draw2d.RectangleFigure;
 import org.eclipse.draw2d.ToolbarLayout;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.gef.EditPart;
+import org.eclipse.gef.EditPolicy;
 import org.eclipse.wst.xsd.ui.internal.adapters.CategoryAdapter;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDSchemaAdapter;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.BaseEditPart;
 import org.eclipse.wst.xsd.ui.internal.adt.typeviz.design.figures.HeadingFigure;
+import org.eclipse.wst.xsd.ui.internal.design.editpolicies.SelectionHandlesEditPolicyImpl;
 import org.eclipse.wst.xsd.ui.internal.design.layouts.FillLayout;
 import org.eclipse.wst.xsd.ui.internal.editor.Messages;
 import org.eclipse.xsd.XSDSchema;
@@ -131,6 +133,12 @@ public class XSDSchemaEditPart extends BaseEditPart
   protected void refreshVisuals()
   {
     super.refreshVisuals();
+    
+    LineBorder border = (LineBorder) outer.getBorder();
+    border.setWidth(isSelected ? 2 : 1);
+    headingFigure.setSelected(isSelected);
+    outer.repaint();
+    
     String targetNamespaceValue = ((XSDSchema) ((XSDSchemaAdapter) getModel()).getTarget()).getTargetNamespace();
     if (targetNamespaceValue == null || targetNamespaceValue.length() == 0)
     {
@@ -141,8 +149,7 @@ public class XSDSchemaEditPart extends BaseEditPart
 
   protected void createEditPolicies()
   {
-    // TODO Auto-generated method stub
-
+    installEditPolicy(EditPolicy.SELECTION_FEEDBACK_ROLE, new SelectionHandlesEditPolicyImpl());
   }
 
   protected class Holder
