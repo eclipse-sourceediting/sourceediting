@@ -69,7 +69,7 @@ public class OpenOnSelectionHelper
 		
 		final IFile schemaFile = ResourcesPlugin.getWorkspace().getRoot().getFile(schemaPath);
 	
-		Display.getDefault().syncExec(new Runnable()
+		Display.getDefault().asyncExec(new Runnable()
 		{
 			/**
 			 * @see java.lang.Runnable#run()
