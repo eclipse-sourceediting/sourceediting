@@ -10,12 +10,7 @@ public class KeyBoardNavigationEditPolicy extends GraphicalEditPolicy
   
   public static int OUT_TO_PARENT = PositionConstants.ALWAYS_LEFT;
   public static int IN_TO_FIRST_CHILD = PositionConstants.ALWAYS_RIGHT;
-    
-  public boolean isApplicable(EditPart editPart)
-  {
-    return false;
-  }
-  
+      
   public EditPart getRelativeEditPart(EditPart editPart, int direction)
   {
     return null;

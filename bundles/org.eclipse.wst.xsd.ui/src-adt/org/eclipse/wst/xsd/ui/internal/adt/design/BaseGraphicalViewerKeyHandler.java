@@ -59,20 +59,16 @@ public class BaseGraphicalViewerKeyHandler extends GraphicalViewerKeyHandler
     if (direction != -1)
     {
       GraphicalEditPart focusEditPart = getFocusEditPart();
-      //for (EditPart editPart = focusEditPart; editPart != null; editPart = editPart.getParent())
-      //{
-      //  KeyBoardNavigationEditPolicy policy = (KeyBoardNavigationEditPolicy)editPart.getEditPolicy(KeyBoardNavigationEditPolicy.KEY);
       KeyBoardNavigationEditPolicy policy = (KeyBoardNavigationEditPolicy)focusEditPart.getEditPolicy(KeyBoardNavigationEditPolicy.KEY);
-        if (policy != null && policy.isApplicable(focusEditPart))          
+      if (policy != null)          
+      {
+        EditPart target = policy.getRelativeEditPart(focusEditPart, direction);
+        if (target != null)
         {
-          EditPart target = policy.getRelativeEditPart(focusEditPart, direction);
-          if (target != null)
-          {
-            navigateTo(target, event);
-            return true;
-          }          
-        }         
-      //}
+          navigateTo(target, event);
+          return true;
+        }          
+      }         
     }
     switch (event.keyCode)
     {

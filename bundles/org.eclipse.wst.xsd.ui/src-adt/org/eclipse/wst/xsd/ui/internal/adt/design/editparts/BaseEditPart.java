@@ -185,12 +185,7 @@ public abstract class BaseEditPart extends AbstractGraphicalEditPart implements 
   protected void createEditPolicies()
   {
     installEditPolicy(KeyBoardNavigationEditPolicy.KEY, new KeyBoardNavigationEditPolicy()
-    {
-      public boolean isApplicable(EditPart editPart)
-      {
-        return true;
-      }
-      
+    {      
       public EditPart getRelativeEditPart(EditPart editPart, int direction)
       {
         return doGetRelativeEditPart(editPart, direction);  
