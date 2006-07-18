@@ -32,7 +32,7 @@ import org.eclipse.wst.xsd.ui.internal.adt.actions.SetInputToGraphView;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.Compartment;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editpolicies.ADTDirectEditPolicy;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editpolicies.ADTSelectionFeedbackEditPolicy;
-import org.eclipse.wst.xsd.ui.internal.adt.design.editpolicies.KeyBoardNavigationEditPolicy;
+import org.eclipse.wst.xsd.ui.internal.adt.design.editpolicies.KeyBoardAccessibilityEditPolicy;
 import org.eclipse.wst.xsd.ui.internal.adt.design.figures.IStructureFigure;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IStructure;
 import org.eclipse.wst.xsd.ui.internal.common.actions.OpenInNewEditor;
@@ -75,7 +75,7 @@ public class StructureEditPart extends BaseTypeConnectingEditPart implements INa
   public EditPart doGetRelativeEditPart(EditPart editPart, int direction)
   {
     EditPart result = null;               
-    if (direction == KeyBoardNavigationEditPolicy.IN_TO_FIRST_CHILD)
+    if (direction == KeyBoardAccessibilityEditPolicy.IN_TO_FIRST_CHILD)
     {          
       for (Iterator i = getChildren().iterator(); i.hasNext();)
       {            

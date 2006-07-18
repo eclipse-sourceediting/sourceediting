@@ -20,7 +20,7 @@ import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.gef.ui.parts.GraphicalViewerKeyHandler;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.wst.xsd.ui.internal.adt.design.editpolicies.KeyBoardNavigationEditPolicy;
+import org.eclipse.wst.xsd.ui.internal.adt.design.editpolicies.KeyBoardAccessibilityEditPolicy;
 
 /**
  * This key handler is designed to be re-used by both the WSDL and XSD editor
@@ -47,11 +47,11 @@ public class BaseGraphicalViewerKeyHandler extends GraphicalViewerKeyHandler
         break;
       }
       case SWT.ARROW_UP : {
-        direction = isAltDown ? KeyBoardNavigationEditPolicy.OUT_TO_PARENT : PositionConstants.NORTH;
+        direction = isAltDown ? KeyBoardAccessibilityEditPolicy.OUT_TO_PARENT : PositionConstants.NORTH;
         break;
       }
       case SWT.ARROW_DOWN : {
-        direction = isAltDown ? KeyBoardNavigationEditPolicy.IN_TO_FIRST_CHILD : PositionConstants.SOUTH;       
+        direction = isAltDown ? KeyBoardAccessibilityEditPolicy.IN_TO_FIRST_CHILD : PositionConstants.SOUTH;       
         break;
       }
     }
@@ -59,7 +59,7 @@ public class BaseGraphicalViewerKeyHandler extends GraphicalViewerKeyHandler
     if (direction != -1)
     {
       GraphicalEditPart focusEditPart = getFocusEditPart();
-      KeyBoardNavigationEditPolicy policy = (KeyBoardNavigationEditPolicy)focusEditPart.getEditPolicy(KeyBoardNavigationEditPolicy.KEY);
+      KeyBoardAccessibilityEditPolicy policy = (KeyBoardAccessibilityEditPolicy)focusEditPart.getEditPolicy(KeyBoardAccessibilityEditPolicy.KEY);
       if (policy != null)          
       {
         EditPart target = policy.getRelativeEditPart(focusEditPart, direction);
@@ -70,15 +70,30 @@ public class BaseGraphicalViewerKeyHandler extends GraphicalViewerKeyHandler
         }          
       }         
     }
+    
     switch (event.keyCode)
     {
       case SWT.PAGE_DOWN :
+      {  
         if (scrollPage(event, PositionConstants.SOUTH))
           return true;
-        break;
+      }  
       case SWT.PAGE_UP :
+      {  
         if (scrollPage(event, PositionConstants.NORTH))
           return true;
+      }  
+      case SWT.F2:
+      case 13:
+      {
+        GraphicalEditPart focusEditPart = getFocusEditPart();     
+        KeyBoardAccessibilityEditPolicy policy = (KeyBoardAccessibilityEditPolicy)focusEditPart.getEditPolicy(KeyBoardAccessibilityEditPolicy.KEY);
+        if (policy != null)
+        {
+          policy.performDirectEdit(focusEditPart);
+        }      
+        return true;
+      }          
     }
     return super.keyPressed(event);
   }

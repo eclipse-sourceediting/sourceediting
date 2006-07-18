@@ -27,7 +27,7 @@ import org.eclipse.gef.EditPolicy;
 import org.eclipse.wst.xsd.ui.internal.adapters.CategoryAdapter;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDSchemaAdapter;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.BaseEditPart;
-import org.eclipse.wst.xsd.ui.internal.adt.design.editpolicies.KeyBoardNavigationEditPolicy;
+import org.eclipse.wst.xsd.ui.internal.adt.design.editpolicies.KeyBoardAccessibilityEditPolicy;
 import org.eclipse.wst.xsd.ui.internal.adt.typeviz.design.figures.HeadingFigure;
 import org.eclipse.wst.xsd.ui.internal.design.editpolicies.SelectionHandlesEditPolicyImpl;
 import org.eclipse.wst.xsd.ui.internal.design.layouts.FillLayout;
@@ -209,7 +209,7 @@ public class XSDSchemaEditPart extends BaseEditPart
       } 
       else if (editPart == this)
       {       
-        if (direction == KeyBoardNavigationEditPolicy.IN_TO_FIRST_CHILD)
+        if (direction == KeyBoardAccessibilityEditPolicy.IN_TO_FIRST_CHILD)
         {
           result = ((CategoryRowEditPart)getChildren().get(0)).doGetRelativeEditPart(editPart, direction);        
         }          
@@ -283,14 +283,14 @@ public class XSDSchemaEditPart extends BaseEditPart
     {
       if (editPart instanceof CategoryEditPart)
       {
-        if (direction == KeyBoardNavigationEditPolicy.OUT_TO_PARENT)
+        if (direction == KeyBoardAccessibilityEditPolicy.OUT_TO_PARENT)
         {
           return getParent();
         }  
       }  
       else if (editPart instanceof XSDSchemaEditPart)
       {
-        if (direction == KeyBoardNavigationEditPolicy.IN_TO_FIRST_CHILD)
+        if (direction == KeyBoardAccessibilityEditPolicy.IN_TO_FIRST_CHILD)
         {
           return (EditPart)getChildren().get(0);
         }  

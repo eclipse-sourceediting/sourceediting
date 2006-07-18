@@ -27,7 +27,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IActionProvider;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IFeedbackHandler;
-import org.eclipse.wst.xsd.ui.internal.adt.design.editpolicies.KeyBoardNavigationEditPolicy;
+import org.eclipse.wst.xsd.ui.internal.adt.design.editpolicies.KeyBoardAccessibilityEditPolicy;
 import org.eclipse.wst.xsd.ui.internal.adt.design.figures.IFigureFactory;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IADTObject;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IADTObjectListener;
@@ -184,7 +184,7 @@ public abstract class BaseEditPart extends AbstractGraphicalEditPart implements 
   
   protected void createEditPolicies()
   {
-    installEditPolicy(KeyBoardNavigationEditPolicy.KEY, new KeyBoardNavigationEditPolicy()
+    installEditPolicy(KeyBoardAccessibilityEditPolicy.KEY, new KeyBoardAccessibilityEditPolicy()
     {      
       public EditPart getRelativeEditPart(EditPart editPart, int direction)
       {

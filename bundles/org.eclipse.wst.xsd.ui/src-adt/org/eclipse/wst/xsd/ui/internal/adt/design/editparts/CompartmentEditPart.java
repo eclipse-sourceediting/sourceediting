@@ -17,7 +17,7 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.Annotation;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.Compartment;
-import org.eclipse.wst.xsd.ui.internal.adt.design.editpolicies.KeyBoardNavigationEditPolicy;
+import org.eclipse.wst.xsd.ui.internal.adt.design.editpolicies.KeyBoardAccessibilityEditPolicy;
 import org.eclipse.wst.xsd.ui.internal.adt.design.figures.ICompartmentFigure;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IField;
 
@@ -49,7 +49,7 @@ public class CompartmentEditPart extends BaseEditPart // implements
     EditPart result = null;   
     if (getChildren().contains(editPart))
     {  
-      if (direction == KeyBoardNavigationEditPolicy.OUT_TO_PARENT)
+      if (direction == KeyBoardAccessibilityEditPolicy.OUT_TO_PARENT)
       {
         Compartment compartment = (Compartment)getModel();
         for (EditPart parent = editPart.getParent(); parent != null; parent = parent.getParent())
