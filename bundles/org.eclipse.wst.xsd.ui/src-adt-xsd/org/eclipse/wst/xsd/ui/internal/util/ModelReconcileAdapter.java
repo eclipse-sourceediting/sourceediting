@@ -78,8 +78,8 @@ public abstract class ModelReconcileAdapter extends DocumentAdapter implements I
   
   public void handleNotifyChange(INodeNotifier notifier, int eventType, Object feature, Object oldValue, Object newValue, int index)
   {
-    Node n = (Node)notifier;
-    System.out.println("nodeChanged(" + eventType + ")" + n.getNodeName());
+    //Node n = (Node)notifier;
+    //System.out.println("nodeChanged(" + eventType + ")" + n.getNodeName());
     switch (eventType)
     {
       case INodeNotifier.ADD:
