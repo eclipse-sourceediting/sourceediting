@@ -78,6 +78,11 @@ class RefreshStructureJob extends Job {
 					fRequests.set(i, node);
 					return;
 				}
+				/**
+				 * None of the above, have a separate refresh subtree, then.
+				 */
+				fRequests.add(node);
+
 			}
 		}
 		else {
@@ -107,7 +112,7 @@ class RefreshStructureJob extends Job {
 		// the following checks are important
 		// #document node will break the algorithm otherwise
 
-		// can't contain the parent if it's null
+		// can't contain the child if it's null
 		if (root == null) {
 			if (DEBUG)
 				System.out.println("returning false: root is null"); //$NON-NLS-1$
@@ -126,23 +131,17 @@ class RefreshStructureJob extends Job {
 			return true;
 		}
 
-		// depth first
-		Node current = root;
-		// loop siblings
-		while (current != null) {
-			if (DEBUG)
-				System.out.println("   -> iterating sibling (" + current.getNodeName() + ")"); //$NON-NLS-1$ //$NON-NLS-2$
+		// check parentage
+		Node current = possible;
+		// loop parents
+		while (current != null && current.getNodeType() != Node.DOCUMENT_NODE) {
 			// found it
-			if (possible.equals(current)) {
+			if (root.equals(current)) {
 				if (DEBUG)
-					System.out.println("   !!! found: " + possible.getNodeName() + " in subtree for: " + root.getNodeName()); //$NON-NLS-1$ //$NON-NLS-2$
+					System.out.println("   !!! found: " + possible.getNodeName() + " in subelement of: " + root.getNodeName()); //$NON-NLS-1$ //$NON-NLS-2$
 				return true;
 			}
-			// drop one level deeper if necessary
-			if (current.getFirstChild() != null) {
-				return contains(current.getFirstChild(), possible);
-			}
-			current = current.getNextSibling();
+			current = current.getParentNode();
 		}
 		// never found it
 		return false;
