@@ -76,7 +76,7 @@ public class XSDBaseFieldEditPart extends BaseFieldEditPart
   protected SelectionHandlesEditPolicyImpl selectionHandlesEditPolicy = new SelectionHandlesEditPolicyImpl();
   protected void createEditPolicies()
   {
-    installEditPolicy(EditPolicy.DIRECT_EDIT_ROLE, adtDirectEditPolicy);
+    super.createEditPolicies();
     installEditPolicy(EditPolicy.SELECTION_FEEDBACK_ROLE, selectionHandlesEditPolicy);
     installEditPolicy(EditPolicy.PRIMARY_DRAG_ROLE, new DragAndDropEditPolicy(getViewer(), selectionHandlesEditPolicy));
   }

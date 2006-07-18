@@ -78,6 +78,8 @@ public abstract class ModelReconcileAdapter extends DocumentAdapter implements I
   
   public void handleNotifyChange(INodeNotifier notifier, int eventType, Object feature, Object oldValue, Object newValue, int index)
   {
+    Node n = (Node)notifier;
+    System.out.println("nodeChanged(" + eventType + ")" + n.getNodeName());
     switch (eventType)
     {
       case INodeNotifier.ADD:
@@ -90,6 +92,9 @@ public abstract class ModelReconcileAdapter extends DocumentAdapter implements I
         break;
       }
       case INodeNotifier.REMOVE:
+      {
+        break;
+      }
       case INodeNotifier.CHANGE:
       case INodeNotifier.STRUCTURE_CHANGED:
       case INodeNotifier.CONTENT_CHANGED:

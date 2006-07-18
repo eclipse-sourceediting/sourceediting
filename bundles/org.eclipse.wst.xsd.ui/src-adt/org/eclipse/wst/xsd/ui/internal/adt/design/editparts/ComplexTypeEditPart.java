@@ -76,5 +76,5 @@ public class ComplexTypeEditPart extends StructureEditPart
       }
     }    
     return connectionFigure;
-  }
+  }  
 }

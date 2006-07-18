@@ -80,6 +80,7 @@ public class XSDSimpleTypeEditPart extends BaseTypeConnectingEditPart
   
   protected void createEditPolicies()
   {
+    super.createEditPolicies();
     installEditPolicy(EditPolicy.SELECTION_FEEDBACK_ROLE, new ADTSelectionFeedbackEditPolicy());
     installEditPolicy(EditPolicy.DIRECT_EDIT_ROLE, adtDirectEditPolicy);
   }

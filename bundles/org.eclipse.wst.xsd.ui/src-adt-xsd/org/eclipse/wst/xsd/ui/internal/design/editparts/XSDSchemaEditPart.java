@@ -11,13 +11,14 @@
 package org.eclipse.wst.xsd.ui.internal.design.editparts;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.LineBorder;
 import org.eclipse.draw2d.MarginBorder;
+import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.RectangleFigure;
 import org.eclipse.draw2d.ToolbarLayout;
 import org.eclipse.draw2d.geometry.Dimension;
@@ -26,6 +27,7 @@ import org.eclipse.gef.EditPolicy;
 import org.eclipse.wst.xsd.ui.internal.adapters.CategoryAdapter;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDSchemaAdapter;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.BaseEditPart;
+import org.eclipse.wst.xsd.ui.internal.adt.design.editpolicies.KeyBoardNavigationEditPolicy;
 import org.eclipse.wst.xsd.ui.internal.adt.typeviz.design.figures.HeadingFigure;
 import org.eclipse.wst.xsd.ui.internal.design.editpolicies.SelectionHandlesEditPolicyImpl;
 import org.eclipse.wst.xsd.ui.internal.design.layouts.FillLayout;
@@ -146,10 +148,101 @@ public class XSDSchemaEditPart extends BaseEditPart
     }
     headingFigure.getLabel().setText(Messages._UI_GRAPH_XSDSCHEMA + " : " + targetNamespaceValue);  //$NON-NLS-1$  
   }
+  
+  public EditPart doGetRelativeEditPart(EditPart editPart, int direction)
+  {
+      EditPart result = null;
+      if (editPart instanceof CategoryEditPart)
+      {
+        CategoryAdapter adapter = (CategoryAdapter)editPart.getModel();    
+        switch (adapter.getGroupType())
+        { 
+          case CategoryAdapter.DIRECTIVES:
+          {
+            if (direction == PositionConstants.SOUTH)
+            {
+              result = getCategoryEditPart(CategoryAdapter.ELEMENTS);
+            }  
+            break;
+          }
+          case CategoryAdapter.ELEMENTS:
+          {
+            if (direction == PositionConstants.SOUTH)
+            {
+              result = getCategoryEditPart(CategoryAdapter.ATTRIBUTES);
+            }           
+            else if (direction == PositionConstants.NORTH)
+            {
+              result = getCategoryEditPart(CategoryAdapter.DIRECTIVES);
+            } 
+            break;
+          }
+          case CategoryAdapter.TYPES:
+          {
+            if (direction == PositionConstants.SOUTH)
+            {
+              result = getCategoryEditPart(CategoryAdapter.GROUPS);
+            }           
+            else if (direction == PositionConstants.NORTH)
+            {
+              result = getCategoryEditPart(CategoryAdapter.DIRECTIVES);
+            } 
+            break;        
+          }
+          case CategoryAdapter.ATTRIBUTES:      
+          {
+            if (direction == PositionConstants.NORTH)
+            {
+              result = getCategoryEditPart(CategoryAdapter.ELEMENTS);
+            }    
+            break;
+          }   
+          case CategoryAdapter.GROUPS:      
+          {
+            if (direction == PositionConstants.NORTH)
+            {
+              result = getCategoryEditPart(CategoryAdapter.TYPES);
+            }    
+            break;
+          }
+        }        
+      } 
+      else if (editPart == this)
+      {       
+        if (direction == KeyBoardNavigationEditPolicy.IN_TO_FIRST_CHILD)
+        {
+          result = ((CategoryRowEditPart)getChildren().get(0)).doGetRelativeEditPart(editPart, direction);        
+        }          
+      }  
+      return result;               
+  }
+  
+  private EditPart getCategoryEditPart(int kind)
+  {
+    for (Iterator j = getChildren().iterator(); j.hasNext(); )      
+    {    
+      EditPart row = (EditPart)j.next();    
+      for (Iterator i = row.getChildren().iterator(); i.hasNext(); )
+      {
+        EditPart editPart = (EditPart)i.next();
+        if (editPart instanceof CategoryEditPart)
+        {
+          CategoryEditPart categoryEditPart = (CategoryEditPart)editPart;
+          CategoryAdapter adapter = (CategoryAdapter)categoryEditPart.getModel();
+          if (adapter.getGroupType() == kind)
+          {
+            return editPart;
+          }
+        }  
+      }
+    }
+    return null;
+  }  
 
   protected void createEditPolicies()
   {
-    installEditPolicy(EditPolicy.SELECTION_FEEDBACK_ROLE, new SelectionHandlesEditPolicyImpl());
+    super.createEditPolicies();
+    installEditPolicy(EditPolicy.SELECTION_FEEDBACK_ROLE, new SelectionHandlesEditPolicyImpl());    
   }
 
   protected class Holder
@@ -185,6 +278,25 @@ public class XSDSchemaEditPart extends BaseEditPart
 
       return containerFigure;
     }
+    
+    public EditPart doGetRelativeEditPart(EditPart editPart, int direction)
+    {
+      if (editPart instanceof CategoryEditPart)
+      {
+        if (direction == KeyBoardNavigationEditPolicy.OUT_TO_PARENT)
+        {
+          return getParent();
+        }  
+      }  
+      else if (editPart instanceof XSDSchemaEditPart)
+      {
+        if (direction == KeyBoardNavigationEditPolicy.IN_TO_FIRST_CHILD)
+        {
+          return (EditPart)getChildren().get(0);
+        }  
+      }  
+      return ((XSDSchemaEditPart)getParent()).doGetRelativeEditPart(editPart, direction);
+    }
 
     /*
      * (non-Javadoc)
@@ -204,9 +316,7 @@ public class XSDSchemaEditPart extends BaseEditPart
 
     protected void createEditPolicies()
     {
-      // TODO Auto-generated method stub
-
+      super.createEditPolicies();
     }
-
   }
 }

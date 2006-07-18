@@ -12,10 +12,10 @@ package org.eclipse.wst.xsd.ui.internal.adt.design.editparts;
 
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
+import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.EditPart;
@@ -65,6 +65,7 @@ public class BaseFieldEditPart extends BaseTypeConnectingEditPart implements INa
   {
     return (IFieldFigure)figure;
   }
+ 
   
   protected boolean shouldDrawConnection()
   {
@@ -116,40 +117,67 @@ public class BaseFieldEditPart extends BaseTypeConnectingEditPart implements INa
     return null;
   }
   
-  public TypeReferenceConnection createConnectionFigure()
+  private EditPart getTargetConnectionEditPart()
   {
-    connectionFigure = null;
+    EditPart result = null; 
     IField field = (IField)getModel();
     IType type = field.getType();
     //System.out.println("createConnectionFigure : " + type);
     if (type != null) // && type.isComplexType())
     {      
-      AbstractGraphicalEditPart referenceTypePart = (AbstractGraphicalEditPart)getTargetEditPart(type);
-      if (referenceTypePart != null)
+      result = getTargetEditPart(type);
+    }
+    return result;
+  }
+  
+  public TypeReferenceConnection createConnectionFigure()
+  {
+    connectionFigure = null;   
+    AbstractGraphicalEditPart referenceTypePart = (AbstractGraphicalEditPart)getTargetConnectionEditPart();
+    if (referenceTypePart != null)
+    {
+      connectionFigure = new TypeReferenceConnection();
+
+      if (getFigure().getParent() == referenceTypePart.getFigure())
       {
-        connectionFigure = new TypeReferenceConnection();
-
-        if (getFigure().getParent() == referenceTypePart.getFigure())
-        {
-          connectionFigure.setSourceAnchor(new CenteredConnectionAnchor(getFigure(), CenteredConnectionAnchor.LEFT, 1)); 
-        }
-        else
-        {
-          connectionFigure.setSourceAnchor(new CenteredConnectionAnchor(getFigure(), CenteredConnectionAnchor.RIGHT, 5));
-        }
-        int targetAnchorYOffset = 8;
-
-        connectionFigure.setTargetAnchor(new CenteredConnectionAnchor(referenceTypePart.getFigure(), CenteredConnectionAnchor.HEADER_LEFT, 0, targetAnchorYOffset)); 
-        connectionFigure.setHighlight(false);
+        connectionFigure.setSourceAnchor(new CenteredConnectionAnchor(getFigure(), CenteredConnectionAnchor.LEFT, 1)); 
       }
-    }    
+      else
+      {
+        connectionFigure.setSourceAnchor(new CenteredConnectionAnchor(getFigure(), CenteredConnectionAnchor.RIGHT, 5));
+      }
+      int targetAnchorYOffset = 8;
+
+      connectionFigure.setTargetAnchor(new CenteredConnectionAnchor(referenceTypePart.getFigure(), CenteredConnectionAnchor.HEADER_LEFT, 0, targetAnchorYOffset)); 
+      connectionFigure.setHighlight(false);
+    }
+
     return connectionFigure;
   }
 
   protected void createEditPolicies()
   {
+    super.createEditPolicies();
     installEditPolicy(EditPolicy.DIRECT_EDIT_ROLE, adtDirectEditPolicy);
     installEditPolicy(EditPolicy.SELECTION_FEEDBACK_ROLE, new ADTSelectionFeedbackEditPolicy());
+  }
+  
+  public EditPart doGetRelativeEditPart(EditPart editPart, int direction)
+  {
+    EditPart result = null;        
+    if (direction == PositionConstants.EAST)
+    {    
+      result = getTargetConnectionEditPart();
+    }
+    else
+    {
+      result = super.doGetRelativeEditPart(editPart, direction);
+      if (result == null)
+      {  
+        result = ((BaseEditPart)getParent()).doGetRelativeEditPart(editPart, direction);
+      }  
+    }  
+    return result;      
   }
  
   protected void refreshVisuals()

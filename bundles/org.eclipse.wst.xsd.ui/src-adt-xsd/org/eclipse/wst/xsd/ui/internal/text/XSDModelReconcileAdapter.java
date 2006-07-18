@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.text;
 
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.xsd.ui.internal.util.ModelReconcileAdapter;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDSchema;
@@ -76,5 +77,29 @@ public class XSDModelReconcileAdapter extends ModelReconcileAdapter
         schema.setElement(null);
       }      
     } 
+  }
+  
+  public void modelDirtyStateChanged(IStructuredModel model, boolean isDirty)
+  {
+    if (!isDirty)
+    {
+      // TODO need a way to tell the views to stop refreshing (temporarily)
+      //
+      /*
+      schema.reset();
+      
+      // For some reason type references don't get fixed up when an import is removed
+      // even if we call schema.reset() explictly.  To work around this  we iterate thru
+      // the type references and recompute them incase a schema did infact change
+      //
+      for (Iterator i = schema.getElementDeclarations().iterator(); i.hasNext(); )
+      {  
+        XSDElementDeclarationImpl ed = (XSDElementDeclarationImpl)i.next();
+        //ed.elementAttributesChanged(ed.getElement());
+        XSDTypeDefinition td = ed.getTypeDefinition();
+        td = ed.resolveTypeDefinition(td.getSchema().getTargetNamespace(), td.getName());        
+        ed.setTypeDefinition(td);
+      }*/  
+    }
   }  
 }

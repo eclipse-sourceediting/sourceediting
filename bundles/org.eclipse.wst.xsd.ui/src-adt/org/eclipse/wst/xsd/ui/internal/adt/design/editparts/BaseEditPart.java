@@ -12,9 +12,9 @@ package org.eclipse.wst.xsd.ui.internal.adt.design.editparts;
 
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartFactory;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.gef.editparts.ScalableRootEditPart;
@@ -27,6 +27,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IActionProvider;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IFeedbackHandler;
+import org.eclipse.wst.xsd.ui.internal.adt.design.editpolicies.KeyBoardNavigationEditPolicy;
 import org.eclipse.wst.xsd.ui.internal.adt.design.figures.IFigureFactory;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IADTObject;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IADTObjectListener;
@@ -180,4 +181,26 @@ public abstract class BaseEditPart extends AbstractGraphicalEditPart implements 
 //    Assert.isNotNull(editorPart);
     return editorPart;
   }
+  
+  protected void createEditPolicies()
+  {
+    installEditPolicy(KeyBoardNavigationEditPolicy.KEY, new KeyBoardNavigationEditPolicy()
+    {
+      public boolean isApplicable(EditPart editPart)
+      {
+        return true;
+      }
+      
+      public EditPart getRelativeEditPart(EditPart editPart, int direction)
+      {
+        return doGetRelativeEditPart(editPart, direction);  
+      }           
+    });        
+  }
+  
+  
+  public EditPart doGetRelativeEditPart(EditPart editPart, int direction)
+  {   
+    return null;      
+  }  
 }

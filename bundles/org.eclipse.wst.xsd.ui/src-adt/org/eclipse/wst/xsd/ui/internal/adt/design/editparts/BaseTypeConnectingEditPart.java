@@ -10,9 +10,14 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.adt.design.editparts;
 
+import java.util.Iterator;
+import org.eclipse.draw2d.ConnectionAnchor;
+import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.gef.EditPart;
 import org.eclipse.gef.LayerConstants;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.requests.DirectEditRequest;
@@ -132,5 +137,47 @@ public abstract class BaseTypeConnectingEditPart extends BaseEditPart implements
     Rectangle b = target.getBounds().getCopy();
     target.translateToAbsolute(b);  
     return b.contains(location);
+  }   
+  
+  public EditPart doGetRelativeEditPart(EditPart editPart, int direction)
+  {
+    EditPart result = null;        
+    if (direction == PositionConstants.WEST)
+    {    
+      result = getSourceConnectionEditPart();
+    }       
+    return result;            
+  }        
+  
+  
+  private EditPart getSourceConnectionEditPart()
+  {
+    // find the first connection that targets this editPart
+    // navigate backward along the connection (to the left) to find the sourc edit part
+    EditPart result = null;
+    for (Iterator i = getLayer(LayerConstants.CONNECTION_LAYER).getChildren().iterator(); i.hasNext(); )
+    {
+      Figure figure = (Figure)i.next();
+      if (figure instanceof TypeReferenceConnection)
+      {
+        TypeReferenceConnection typeReferenceConnection = (TypeReferenceConnection)figure;
+        ConnectionAnchor targetAnchor = typeReferenceConnection.getTargetAnchor();
+        if (targetAnchor.getOwner() == getFigure())
+        {  
+          ConnectionAnchor sourceAnchor = typeReferenceConnection.getSourceAnchor();
+          IFigure sourceFigure = sourceAnchor.getOwner();          
+          EditPart part = null;
+          while (part == null && sourceFigure != null) 
+          {
+            part = (EditPart)getViewer().getVisualPartMap().get(sourceFigure);
+            sourceFigure = sourceFigure.getParent();
+          }          
+          result = part;
+          break;
+        }  
+      }                
+    }    
+    return result;
   }
+      
 }

@@ -12,10 +12,12 @@ package org.eclipse.wst.xsd.ui.internal.adt.design.editparts;
 
 import java.util.List;
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.Annotation;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.Compartment;
+import org.eclipse.wst.xsd.ui.internal.adt.design.editpolicies.KeyBoardNavigationEditPolicy;
 import org.eclipse.wst.xsd.ui.internal.adt.design.figures.ICompartmentFigure;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IField;
 
@@ -35,13 +37,64 @@ public class CompartmentEditPart extends BaseEditPart // implements
   {
     return getCompartmentFigure().getContentPane();
   }
-
-  protected void createEditPolicies()
+  
+  public boolean hasContent()
   {
-    // installEditPolicy(EditPolicy.SELECTION_FEEDBACK_ROLE, new
-    // SelectionFeedbackEditPolicy(this));
+    // since the annotation always takes up 1 child, here's a convenience method to figure out if
+    return getChildren().size() > 1;
   }
 
+  public EditPart doGetRelativeEditPart(EditPart editPart, int direction)
+  {
+    EditPart result = null;   
+    if (getChildren().contains(editPart))
+    {  
+      if (direction == KeyBoardNavigationEditPolicy.OUT_TO_PARENT)
+      {
+        Compartment compartment = (Compartment)getModel();
+        for (EditPart parent = editPart.getParent(); parent != null; parent = parent.getParent())
+        {            
+          if (parent.getModel() == compartment.getOwner())
+          {
+            result = parent;
+            break;
+          }  
+        }  
+      }        
+      else if (direction == PositionConstants.SOUTH)
+      {    
+        int size = getChildren().size();
+        if (size > 1)
+        {                              
+          if (getChildren().get(size - 2) == editPart)
+          {  
+            CompartmentEditPart nextCompartment = (CompartmentEditPart)EditPartNavigationHandlerUtil.getNextSibling(CompartmentEditPart.this);
+            if (nextCompartment != null && nextCompartment.hasContent())
+            {            
+              result = EditPartNavigationHandlerUtil.getFirstChild(nextCompartment);
+            }  
+          }
+        }
+      }
+      else if (direction == PositionConstants.NORTH)
+      {
+        if (EditPartNavigationHandlerUtil.getFirstChild(CompartmentEditPart.this) == editPart)
+        {  
+          EditPart prevCompartment = EditPartNavigationHandlerUtil.getPrevSibling(CompartmentEditPart.this);
+          if (prevCompartment != null)
+          {
+            int size = prevCompartment.getChildren().size();
+            if (size > 1)
+            {  
+              result = (EditPart)prevCompartment.getChildren().get(size - 2);
+            }  
+          }              
+        }
+      }
+    }
+    return result;      
+  }
+ 
   protected void addChildVisual(EditPart childEditPart, int index)
   {
     Object model = childEditPart.getModel();
@@ -131,5 +184,5 @@ public class CompartmentEditPart extends BaseEditPart // implements
   {  
     super.addNotify();
     getCompartmentFigure().editPartAttached(this);   
-  }
+  }   
 }

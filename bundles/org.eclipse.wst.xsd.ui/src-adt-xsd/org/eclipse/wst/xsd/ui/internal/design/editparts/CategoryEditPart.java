@@ -13,11 +13,11 @@ package org.eclipse.wst.xsd.ui.internal.design.editparts;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.MarginBorder;
+import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.RectangleFigure;
 import org.eclipse.draw2d.ScrollPane;
 import org.eclipse.draw2d.ToolbarLayout;
@@ -30,6 +30,7 @@ import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.wst.xsd.ui.internal.adapters.CategoryAdapter;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.BaseEditPart;
+import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.EditPartNavigationHandlerUtil;
 import org.eclipse.wst.xsd.ui.internal.adt.typeviz.design.figures.HeadingFigure;
 import org.eclipse.wst.xsd.ui.internal.adt.typeviz.design.figures.RoundedLineBorder;
 import org.eclipse.wst.xsd.ui.internal.design.editpolicies.SelectionHandlesEditPolicyImpl;
@@ -169,9 +170,37 @@ public class CategoryEditPart extends BaseEditPart
     editPart.setParent(this);
     return editPart;
   }
+  
+  public EditPart doGetRelativeEditPart(EditPart editPart, int direction)
+  {
+    EditPart result = null; 
+    if (editPart instanceof TopLevelComponentEditPart)
+    {
+      if (direction == PositionConstants.SOUTH)
+      {
+        result = EditPartNavigationHandlerUtil.getNextSibling(editPart);
+      }
+      else if (direction == PositionConstants.NORTH)
+      {
+        result = EditPartNavigationHandlerUtil.getPrevSibling(editPart);
+      }      
+      if (result != null)
+      {
+        scrollTo((AbstractGraphicalEditPart)editPart);
+      }  
+    }     
+    else
+    {
+      result = ((BaseEditPart)getParent()).doGetRelativeEditPart(editPart, direction);
+    }  
+    return result;
+  }
 
   protected void createEditPolicies()
   {
+    super.createEditPolicies();
+    // cs : oddly arrowing up and down true items in the list is not handled nicely
+    // by the canned GEF GraphicalViewerKeyHandler so this navigation policy is need to fix that    
     selectionHandlesEditPolicy = new SelectionHandlesEditPolicyImpl();
     installEditPolicy(EditPolicy.SELECTION_FEEDBACK_ROLE, selectionHandlesEditPolicy);
   }

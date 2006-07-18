@@ -11,10 +11,12 @@
 package org.eclipse.wst.xsd.ui.internal.adt.design.editparts;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.RequestConstants;
@@ -30,6 +32,7 @@ import org.eclipse.wst.xsd.ui.internal.adt.actions.SetInputToGraphView;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.Compartment;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editpolicies.ADTDirectEditPolicy;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editpolicies.ADTSelectionFeedbackEditPolicy;
+import org.eclipse.wst.xsd.ui.internal.adt.design.editpolicies.KeyBoardNavigationEditPolicy;
 import org.eclipse.wst.xsd.ui.internal.adt.design.figures.IStructureFigure;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IStructure;
 import org.eclipse.wst.xsd.ui.internal.common.actions.OpenInNewEditor;
@@ -69,8 +72,31 @@ public class StructureEditPart extends BaseTypeConnectingEditPart implements INa
   }
   
   
-  protected void createEditPolicies()
+  public EditPart doGetRelativeEditPart(EditPart editPart, int direction)
   {
+    EditPart result = null;               
+    if (direction == KeyBoardNavigationEditPolicy.IN_TO_FIRST_CHILD)
+    {          
+      for (Iterator i = getChildren().iterator(); i.hasNext();)
+      {            
+        CompartmentEditPart compartment = (CompartmentEditPart)i.next();
+        if (compartment.hasContent())
+        {
+          result = (EditPart)compartment.getChildren().get(0);
+          break;
+        }  
+      }  
+    }    
+    else
+    {
+      return super.doGetRelativeEditPart(editPart, direction);
+    }  
+    return result;           
+  }
+  
+  protected void createEditPolicies()
+  {        
+    super.createEditPolicies();  
     installEditPolicy(EditPolicy.SELECTION_FEEDBACK_ROLE, new ADTSelectionFeedbackEditPolicy());
     installEditPolicy(EditPolicy.DIRECT_EDIT_ROLE, adtDirectEditPolicy);
   }

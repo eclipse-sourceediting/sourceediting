@@ -132,9 +132,15 @@ public class TopLevelComponentEditPart extends BaseEditPart implements IFeedback
   {
     return Collections.EMPTY_LIST;
   }
+  
+  public EditPart doGetRelativeEditPart(EditPart editPart, int direction)
+  {
+    return ((BaseEditPart)this.getParent()).doGetRelativeEditPart(editPart, direction);
+  }
 
   protected void createEditPolicies()
   {
+    super.createEditPolicies();
     // installEditPolicy(EditPolicy.SELECTION_FEEDBACK_ROLE, new
     // NonResizableEditPolicy());
     // selectionHandlesEditPolicy = new SelectionHandlesEditPolicyImpl();

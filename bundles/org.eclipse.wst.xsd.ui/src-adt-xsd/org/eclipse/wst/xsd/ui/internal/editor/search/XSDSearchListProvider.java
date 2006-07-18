@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -45,6 +46,22 @@ public abstract class XSDSearchListProvider implements IComponentSearchListProvi
   {
     this.schemas = schemas;
     this.currentFile = currentFile;
+    
+    try
+    {
+      IProject[] refs = currentFile.getProject().getReferencedProjects();
+      
+      System.out.println("dependencies:----");       
+      for (int i=0; i < refs.length; i++)
+      {
+        System.out.println("dep " + refs[i].getName());
+      }  
+    }
+    catch (Exception e)
+    {
+      e.printStackTrace();
+    } 
+    
   }
    
   

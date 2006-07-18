@@ -47,6 +47,8 @@ public class DesignViewGraphicalViewer extends ScrollingGraphicalViewer implemen
     addSelectionChangedListener(internalSelectionProvider);    
     internalSelectionProvider.addSelectionChangedListener(manager);
     manager.addSelectionChangedListener(this);  
+    
+    setKeyHandler(new BaseGraphicalViewerKeyHandler(this));    
   }
   
   
