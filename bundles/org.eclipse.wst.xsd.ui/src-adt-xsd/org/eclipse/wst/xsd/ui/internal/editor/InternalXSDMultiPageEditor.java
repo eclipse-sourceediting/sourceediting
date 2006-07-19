@@ -24,6 +24,7 @@ import org.eclipse.gef.commands.CommandStack;
 import org.eclipse.gef.commands.CommandStackEvent;
 import org.eclipse.gef.commands.CommandStackEventListener;
 import org.eclipse.gef.ui.actions.ActionRegistry;
+import org.eclipse.gef.ui.actions.PrintAction;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.viewers.DoubleClickEvent;
@@ -563,6 +564,9 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
     registry.registerAction(setExistingTypeAction);
 
     addMultiplicityMenu(registry);
+    
+    PrintAction printAction = new PrintAction(this);
+    registry.registerAction(printAction);
   }
   
   protected void addMultiplicityMenu(ActionRegistry registry)

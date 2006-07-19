@@ -131,6 +131,7 @@ public class XSDMultiPageEditorContributor extends MultiPageEditorActionBarContr
           actionBars.setGlobalActionHandler(ActionFactory.DELETE.getId(), registry.getAction(DeleteAction.ID));
           actionBars.setGlobalActionHandler(GEFActionConstants.ZOOM_IN, registry.getAction(GEFActionConstants.ZOOM_IN));
           actionBars.setGlobalActionHandler(GEFActionConstants.ZOOM_OUT, registry.getAction(GEFActionConstants.ZOOM_OUT));
+          actionBars.setGlobalActionHandler(ActionFactory.PRINT.getId(), registry.getAction(ActionFactory.PRINT.getId()));
           zoomInRetargetAction.setEnabled(true);
           zoomOutRetargetAction.setEnabled(true);
         }
