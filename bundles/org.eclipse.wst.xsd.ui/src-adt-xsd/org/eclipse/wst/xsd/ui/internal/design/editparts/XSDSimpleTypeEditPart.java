@@ -10,19 +10,27 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.design.editparts;
 
+import java.util.Iterator;
+
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.ToolbarLayout;
+import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
+import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDSimpleTypeDefinitionAdapter;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.BaseEditPart;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.BaseTypeConnectingEditPart;
+import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.CenteredConnectionAnchor;
+import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.ColumnEditPart;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.TypeReferenceConnection;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editpolicies.ADTDirectEditPolicy;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editpolicies.ADTSelectionFeedbackEditPolicy;
 import org.eclipse.wst.xsd.ui.internal.adt.design.figures.IStructureFigure;
+import org.eclipse.wst.xsd.ui.internal.adt.facade.IType;
+import org.eclipse.wst.xsd.ui.internal.adt.typeviz.design.figures.HeadingFigure;
 import org.eclipse.wst.xsd.ui.internal.adt.typeviz.design.figures.RoundedLineBorder;
 import org.eclipse.wst.xsd.ui.internal.adt.typeviz.design.figures.StructureFigure;
-import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
 
 public class XSDSimpleTypeEditPart extends BaseTypeConnectingEditPart
@@ -47,7 +55,6 @@ public class XSDSimpleTypeEditPart extends BaseTypeConnectingEditPart
     ToolbarLayout toolbarLayout = new ToolbarLayout();
     toolbarLayout.setStretchMinorAxis(true);
     figure.setLayoutManager(toolbarLayout);
-//    figure.getHeadingFigure().getLabel().setIcon(XSDEditorPlugin.getXSDImage("icons/XSDSimpleType.gif")); //$NON-NLS-1$
     return figure;
   }
   
@@ -55,16 +62,11 @@ public class XSDSimpleTypeEditPart extends BaseTypeConnectingEditPart
   {
     XSDSimpleTypeDefinitionAdapter adapter = (XSDSimpleTypeDefinitionAdapter)getModel();
     String name = adapter.getDisplayName();
-    figure.headingFigure.setIsReadOnly(adapter.isReadOnly());
-    figure.headingFigure.getLabel().setText(name);
-    if (adapter.isReadOnly())
-    {
-      figure.getHeadingFigure().getLabel().setIcon(XSDEditorPlugin.getPlugin().getIcon("obj16/simpletypedis_obj.gif")); //$NON-NLS-1$
-    }
-    else
-    {
-      figure.getHeadingFigure().getLabel().setIcon(XSDEditorPlugin.getPlugin().getIcon("obj16/simpletype_obj.gif")); //$NON-NLS-1$
-    }
+    HeadingFigure headingFigure = figure.getHeadingFigure();
+    headingFigure.setIsReadOnly(adapter.isReadOnly());
+    Label label = headingFigure.getLabel();
+    label.setText(name);
+    label.setIcon(adapter.getImage());    
   }
   
   public IStructureFigure getStructureFigure()
@@ -105,7 +107,51 @@ public class XSDSimpleTypeEditPart extends BaseTypeConnectingEditPart
 
   public TypeReferenceConnection createConnectionFigure()
   {
-    // TODO Auto-generated method stub
+    TypeReferenceConnection connectionFigure = null;
+    XSDSimpleTypeDefinitionAdapter adapter = (XSDSimpleTypeDefinitionAdapter)getModel();
+    IType superType = adapter.getSuperType();
+
+    if (superType != null)
+    {      
+      AbstractGraphicalEditPart referenceTypePart = (AbstractGraphicalEditPart)getTargetEditPart(superType);
+      
+      if (referenceTypePart != null)
+      {
+        connectionFigure = new TypeReferenceConnection();
+        // draw a line out from the top         
+        connectionFigure.setSourceAnchor(new CenteredConnectionAnchor(getFigure(), CenteredConnectionAnchor.TOP, 1));
+        
+        // TODO (cs) need to draw the target anchor to look like a UML inheritance relationship
+        // adding a label to the connection would help to
+        connectionFigure.setTargetAnchor(new CenteredConnectionAnchor(referenceTypePart.getFigure(), CenteredConnectionAnchor.BOTTOM, 0, 0)); 
+        connectionFigure.setHighlight(false);
+      }
+    }    
+    return connectionFigure;
+  }
+  
+  private EditPart getTargetEditPart(IType type)
+  {
+    ColumnEditPart columnEditPart = null;
+    for (EditPart editPart = this; editPart != null; editPart = editPart.getParent())
+    {
+      if (editPart instanceof ColumnEditPart)
+      {
+        columnEditPart = (ColumnEditPart)editPart;
+        break;
+      }  
+    }     
+    if (columnEditPart != null)
+    {
+      for (Iterator i = columnEditPart.getChildren().iterator(); i.hasNext(); )
+      {
+        EditPart child = (EditPart)i.next();
+        if (child.getModel() == type)
+        {
+          return child;
+        }         
+      }  
+    }
     return null;
   }
 }
