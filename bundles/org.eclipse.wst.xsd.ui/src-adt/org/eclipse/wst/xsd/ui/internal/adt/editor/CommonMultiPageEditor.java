@@ -435,15 +435,16 @@ public abstract class CommonMultiPageEditor extends MultiPageEditorPart implemen
     // Set the root edit part
     // ScalableFreeformRootEditPart root = new ScalableFreeformRootEditPart();
     RootEditPart root = new RootEditPart();
-
+    ZoomManager zoomManager = root.getZoomManager();
+    
     List zoomLevels = new ArrayList(3);
     zoomLevels.add(ZoomManager.FIT_ALL);
     zoomLevels.add(ZoomManager.FIT_WIDTH);
     zoomLevels.add(ZoomManager.FIT_HEIGHT);
-    root.getZoomManager().setZoomLevelContributions(zoomLevels);
+    zoomManager.setZoomLevelContributions(zoomLevels);
 
-    IAction zoomIn = new ZoomInAction(root.getZoomManager());
-    IAction zoomOut = new ZoomOutAction(root.getZoomManager());
+    IAction zoomIn = new ZoomInAction(zoomManager);
+    IAction zoomOut = new ZoomOutAction(zoomManager);
     getActionRegistry().registerAction(zoomIn);
     getActionRegistry().registerAction(zoomOut);
 
@@ -457,9 +458,7 @@ public abstract class CommonMultiPageEditor extends MultiPageEditorPart implemen
     // connectionLayer.setVisible(false);
 
     // Zoom
-    ZoomManager manager = (ZoomManager) graphicalViewer.getProperty(ZoomManager.class.toString());
-    if (manager != null)
-      manager.setZoom(1.0);
+    zoomManager.setZoom(1.0);
     // Scroll-wheel Zoom
     graphicalViewer.setProperty(MouseWheelHandler.KeyGenerator.getKey(SWT.CTRL), MouseWheelZoomHandler.SINGLETON);
     graphicalViewer.setRootEditPart(root);
