@@ -20,6 +20,7 @@ import org.eclipse.wst.xsd.ui.internal.adt.editor.Messages;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IComplexType;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IField;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IModel;
+import org.eclipse.wst.xsd.ui.internal.adt.facade.IStructure;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 
 public class DeleteAction extends BaseSelectionAction
@@ -56,6 +57,14 @@ public class DeleteAction extends BaseSelectionAction
         }
         command = ((IField)selection).getDeleteCommand();
       }  
+      else if (selection instanceof IStructure)
+      {
+        // Fallback for model groups and attribute groups.
+        IStructure structure = (IStructure)selection; 
+        model = structure.getModel();
+        command = structure.getDeleteCommand();
+      }  
+
       if (command != null)
       {
         command.execute();

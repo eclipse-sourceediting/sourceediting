@@ -29,6 +29,7 @@ import org.eclipse.wst.xsd.ui.internal.adt.outline.ITreeElement;
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDElementAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDModelGroupAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.DeleteXSDConcreteComponentAction;
+import org.eclipse.wst.xsd.ui.internal.common.commands.DeleteCommand;
 import org.eclipse.wst.xsd.ui.internal.editor.Messages;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.xsd.XSDModelGroup;
@@ -126,8 +127,7 @@ public class XSDModelGroupDefinitionAdapter extends XSDBaseAdapter implements IS
 
   public Command getDeleteCommand()
   {
-    // TODO Auto-generated method stub
-    return null;
+    return new DeleteCommand("", getXSDModelGroupDefinition()); //$NON-NLS-1$
   }
 
   // TODO Common this up with XSDComplexType's.  See also getFields 
