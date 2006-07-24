@@ -28,6 +28,7 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.gef.requests.DirectEditRequest;
 import org.eclipse.gef.requests.LocationRequest;
+import org.eclipse.swt.custom.CCombo;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDBaseAdapter;
 import org.eclipse.wst.xsd.ui.internal.adt.design.directedit.ComboBoxCellEditorManager;
 import org.eclipse.wst.xsd.ui.internal.adt.design.directedit.ElementReferenceDirectEditManager;
@@ -363,6 +364,12 @@ public class BaseFieldEditPart extends BaseTypeConnectingEditPart implements INa
 
     public boolean canExecute()
     {
+      IField field = (IField)getModel();
+      Object newValue = ((CCombo)request.getCellEditor().getControl()).getText();
+      if (newValue instanceof String)
+      {
+        return !newValue.equals(field.getTypeName());
+      }
       return true;
     }
   }
