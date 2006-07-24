@@ -154,7 +154,7 @@ public class XSDSchemaAdapter extends XSDBaseAdapter implements IActionProvider,
       fTypesCategory.setChildren(types);
       fTypesCategory.setAllChildren(getTypes(xsdSchema, true));
       fGroupsCategory.setChildren(groups);
-      fGroupsCategory.setAllChildren(groups);
+      fGroupsCategory.setAllChildren(getGroups(xsdSchema, true));
     }
     else
     {
@@ -250,7 +250,7 @@ public class XSDSchemaAdapter extends XSDBaseAdapter implements IActionProvider,
       Assert.isTrue(adapter != null);
       XSDSchema xsdSchema = adapter.getXSDSchema();
       adapter.setChildren(getGroups(xsdSchema));
-      adapter.setAllChildren(getGroups(xsdSchema));
+      adapter.setAllChildren(getGroups(xsdSchema, true));
       notifyListeners(new CategoryNotification(adapter), adapter.getText());
       return;
     }
@@ -458,14 +458,14 @@ public class XSDSchemaAdapter extends XSDBaseAdapter implements IActionProvider,
     return getSimpleTypes(schema, false);
   }
 
-  protected List getGroups(XSDSchema schema)
+  protected List getGroups(XSDSchema schema, boolean showFromIncludes)
   {
     List groups = schema.getModelGroupDefinitions();
     List list = new ArrayList();
     for (Iterator i = groups.iterator(); i.hasNext();)
     {
       XSDModelGroupDefinition group = (XSDModelGroupDefinition) i.next();
-      if (isSameNamespace(group.getTargetNamespace(),schema.getTargetNamespace()) && group.getRootContainer() == schema)
+      if (isSameNamespace(group.getTargetNamespace(),schema.getTargetNamespace()) && (group.getRootContainer() == schema || showFromIncludes))
       {
         list.add(group);
       }
@@ -475,6 +475,11 @@ public class XSDSchemaAdapter extends XSDBaseAdapter implements IActionProvider,
     return adapterList;
   }
   
+  protected List getGroups(XSDSchema schema)
+  {
+    return getGroups(schema, false);
+  }
+
   public String[] getActions(Object object)
   {
      Collection actionIDs = new ArrayList();
