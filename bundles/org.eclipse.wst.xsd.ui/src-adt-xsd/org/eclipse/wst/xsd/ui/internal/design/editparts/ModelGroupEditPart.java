@@ -189,8 +189,8 @@ public class ModelGroupEditPart extends ConnectableEditPart
   {
     ReferenceConnection connectionFigure = new ReferenceConnection();
     GenericGroupFigure modelGroupFigure = (GenericGroupFigure)getFigure();
-    // David: Changed offset from 0 to -1 just to line up the connections.  Absolutely safe!  
-    connectionFigure.setSourceAnchor(new CenteredConnectionAnchor(modelGroupFigure.getIconFigure(), CenteredConnectionAnchor.RIGHT, 0, -1));
+  
+    connectionFigure.setSourceAnchor(new CenteredConnectionAnchor(modelGroupFigure.getIconFigure(), CenteredConnectionAnchor.RIGHT, 0, 0));
 
     if (child instanceof ModelGroupEditPart)
     {
@@ -199,12 +199,12 @@ public class ModelGroupEditPart extends ConnectableEditPart
     else if (child instanceof TargetConnectionSpacingFigureEditPart)
     {
       TargetConnectionSpacingFigureEditPart elem = (TargetConnectionSpacingFigureEditPart) child;
-      connectionFigure.setTargetAnchor(new CenteredConnectionAnchor(elem.getFigure(), CenteredConnectionAnchor.LEFT, 0, 0));
+      connectionFigure.setTargetAnchor(new CenteredConnectionAnchor(elem.getFigure(), CenteredConnectionAnchor.LEFT, 0, 1));
     }
     else if (child instanceof ModelGroupDefinitionReferenceEditPart)
     {
       ModelGroupDefinitionReferenceEditPart elem = (ModelGroupDefinitionReferenceEditPart) child;
-      connectionFigure.setTargetAnchor(new CenteredConnectionAnchor(elem.getFigure(), CenteredConnectionAnchor.LEFT, 0, 0));
+      connectionFigure.setTargetAnchor(new CenteredConnectionAnchor(elem.getFigure(), CenteredConnectionAnchor.LEFT, 0, 1));
     }
     connectionFigure.setHighlight(false);
     return connectionFigure;

@@ -139,7 +139,6 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
       {
         xsdSchema = ((XSDFileEditorInput) editorInput).getSchema();
         model = (IModel) XSDAdapterFactory.getInstance().adapt(xsdSchema);
-        return model;
       }
       
       Document document = null;
@@ -154,6 +153,9 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
         document = ((IDOMModel)model).getDocument();
       }
       Assert.isNotNull(document);
+
+      if (model != null)
+        return model;
       
       xsdSchema = XSDModelAdapter.lookupOrCreateSchema(document);
       model = (IModel) XSDAdapterFactory.getInstance().adapt(xsdSchema);              
