@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.adt.design;
 
-import java.util.Arrays;
-import java.util.List;
 import org.eclipse.draw2d.FigureCanvas;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Point;
@@ -22,11 +20,7 @@ import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.gef.ui.parts.GraphicalViewerKeyHandler;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editpolicies.KeyBoardAccessibilityEditPolicy;
-import org.eclipse.wst.xsd.ui.internal.adt.editor.EditorMode;
-import org.eclipse.wst.xsd.ui.internal.adt.editor.EditorModeManager;
 
 /**
  * This key handler is designed to be re-used by both the WSDL and XSD editor
@@ -89,6 +83,7 @@ public class BaseGraphicalViewerKeyHandler extends GraphicalViewerKeyHandler
         if (scrollPage(event, PositionConstants.NORTH))
           return true;
       } 
+      /*
       case SWT.F5 :
       {
         IEditorPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
@@ -108,22 +103,13 @@ public class BaseGraphicalViewerKeyHandler extends GraphicalViewerKeyHandler
           {
             mode = (EditorMode)list.get(0);            
           }
-          manager.setCurrentMode(mode);
+          if (mode != manager.getCurrentMode())
+          {  
+            manager.setCurrentMode(mode);
+          }  
         }  
         return true;
-      }
-      /*
-      case SWT.F2:
-      case 13:
-      {
-        GraphicalEditPart focusEditPart = getFocusEditPart();     
-        KeyBoardAccessibilityEditPolicy policy = (KeyBoardAccessibilityEditPolicy)focusEditPart.getEditPolicy(KeyBoardAccessibilityEditPolicy.KEY);
-        if (policy != null)
-        {
-          policy.performDirectEdit(focusEditPart);
-        }      
-        return true;
-      } */         
+      }*/      
     }
     return super.keyPressed(event);
   }
