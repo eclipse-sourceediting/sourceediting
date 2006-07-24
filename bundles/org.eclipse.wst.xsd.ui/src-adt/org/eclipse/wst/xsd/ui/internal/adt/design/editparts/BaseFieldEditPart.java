@@ -258,27 +258,36 @@ public class BaseFieldEditPart extends BaseTypeConnectingEditPart implements INa
         }
         else if (hitTest(fieldFigure.getNameLabel(), p))
         {
-        	if ( model instanceof IField) 
-          {
-            IField field = (IField) model;
-            if (field.isReference())
-            {
-              ElementReferenceDirectEditManager manager = new ElementReferenceDirectEditManager((IField) model, this, fieldFigure.getNameLabel());
-              elementUpdateCommand.setDelegate(manager);
-              adtDirectEditPolicy.setUpdateCommand(elementUpdateCommand);
-              manager.show();
-            }
-            else
-            {
-              LabelEditManager manager = new LabelEditManager(this, new LabelCellEditorLocator(this, p));
-              NameUpdateCommandWrapper wrapper = new NameUpdateCommandWrapper();
-              adtDirectEditPolicy.setUpdateCommand(wrapper);
-              manager.show();
-            }
-        	}
+        	directEditNameField();
         }
       }
+      else {
+    	  directEditNameField();
+      }
     }
+  }
+  
+  private void directEditNameField() {
+	Object model = getModel();
+	IFieldFigure fieldFigure = getFieldFigure();
+  	if ( model instanceof IField) 
+    {
+      IField field = (IField) model;
+      if (field.isReference())
+      {
+        ElementReferenceDirectEditManager manager = new ElementReferenceDirectEditManager((IField) model, this, fieldFigure.getNameLabel());
+        elementUpdateCommand.setDelegate(manager);
+        adtDirectEditPolicy.setUpdateCommand(elementUpdateCommand);
+        manager.show();
+      }
+      else
+      {
+        LabelEditManager manager = new LabelEditManager(this, new LabelCellEditorLocator(this, null));
+        NameUpdateCommandWrapper wrapper = new NameUpdateCommandWrapper();
+        adtDirectEditPolicy.setUpdateCommand(wrapper);
+        manager.show();
+      }
+  	}
   }
   
   public void doEditName(boolean addFromDesign)

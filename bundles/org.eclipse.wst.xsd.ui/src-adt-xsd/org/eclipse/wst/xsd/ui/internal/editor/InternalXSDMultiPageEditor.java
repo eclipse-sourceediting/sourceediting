@@ -18,11 +18,13 @@ import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartFactory;
+import org.eclipse.gef.KeyStroke;
 import org.eclipse.gef.RootEditPart;
 import org.eclipse.gef.commands.CommandStack;
 import org.eclipse.gef.commands.CommandStackEvent;
 import org.eclipse.gef.commands.CommandStackEventListener;
 import org.eclipse.gef.ui.actions.ActionRegistry;
+import org.eclipse.gef.ui.actions.GEFActionConstants;
 import org.eclipse.gef.ui.actions.PrintAction;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.text.IDocument;
@@ -36,6 +38,7 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.swt.SWT;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.INavigationLocation;
@@ -55,6 +58,7 @@ import org.eclipse.wst.xsd.ui.internal.adapters.CategoryAdapter;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDAdapterFactory;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDBaseAdapter;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.AddFieldAction;
+import org.eclipse.wst.xsd.ui.internal.adt.actions.BaseDirectEditAction;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.BaseSelectionAction;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.DeleteAction;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.SetInputToGraphView;
@@ -304,6 +308,7 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
   protected void configureGraphicalViewer()
   {
     super.configureGraphicalViewer();
+    graphicalViewer.getKeyHandler().put(KeyStroke.getPressed(SWT.F2, 0), getActionRegistry().getAction(GEFActionConstants.DIRECT_EDIT));
     // get edit part factory from extension
     EditPartFactory editPartFactory = XSDEditorPlugin.getDefault().getXSDEditorConfiguration().getEditPartFactory();
     if (editPartFactory != null)
@@ -576,6 +581,10 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
     
     PrintAction printAction = new PrintAction(this);
     registry.registerAction(printAction);
+    
+    BaseDirectEditAction directEditAction = new BaseDirectEditAction(this);
+    directEditAction.setSelectionProvider(getSelectionManager());
+    registry.registerAction(directEditAction);
   }
   
   protected void addMultiplicityMenu(ActionRegistry registry)

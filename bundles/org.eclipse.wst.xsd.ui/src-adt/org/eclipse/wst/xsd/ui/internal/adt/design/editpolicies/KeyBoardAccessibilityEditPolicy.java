@@ -10,10 +10,6 @@ public class KeyBoardAccessibilityEditPolicy extends GraphicalEditPolicy
   
   public static int OUT_TO_PARENT = PositionConstants.ALWAYS_LEFT;
   public static int IN_TO_FIRST_CHILD = PositionConstants.ALWAYS_RIGHT;
-      
-  public void performDirectEdit(EditPart editPart)
-  {
-  }
   
   public EditPart getRelativeEditPart(EditPart editPart, int direction)
   {

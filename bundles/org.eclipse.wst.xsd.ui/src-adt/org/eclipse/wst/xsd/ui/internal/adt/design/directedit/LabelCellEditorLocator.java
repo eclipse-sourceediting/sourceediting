@@ -65,24 +65,26 @@ public class LabelCellEditorLocator implements CellEditorLocator
       text.setBounds(boundingRect.x, boundingRect.y, boundingRect.width, boundingRect.height);
 
       // Translate point
-      Point translatedPoint = new Point(cursorLocation.x - boundingRect.x, cursorLocation.y - boundingRect.y);
+      if (cursorLocation != null) {
+    	  Point translatedPoint = new Point(cursorLocation.x - boundingRect.x, cursorLocation.y - boundingRect.y);
 
-      // Calculate text offset corresponding to the translated point
-      text.setSelection(0, 0);
-      int xCaret = text.getCaretLocation().x;
-      int offset = text.getCaretPosition();
-      while (xCaret < translatedPoint.x)
-      {
-        text.setSelection(offset + 1, offset + 1);
-        xCaret = text.getCaretLocation().x;
-        int newOffset = text.getCaretPosition();
-        if (newOffset == offset)
-        {
-          break;
-        }
-        offset++;
+    	  // Calculate text offset corresponding to the translated point
+    	  text.setSelection(0, 0);
+    	  int xCaret = text.getCaretLocation().x;
+    	  int offset = text.getCaretPosition();
+    	  while (xCaret < translatedPoint.x)
+    	  {
+    		  text.setSelection(offset + 1, offset + 1);
+    		  xCaret = text.getCaretLocation().x;
+    		  int newOffset = text.getCaretPosition();
+    		  if (newOffset == offset)
+    		  {
+    			  break;
+    		  }
+    		  offset++;
+    	  }
+    	  text.setSelection(offset, offset);
       }
-      text.setSelection(offset, offset);
     }
   }
 }
