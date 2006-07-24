@@ -28,46 +28,6 @@ public class XSDSimpleTypeDefinitionAdapter extends XSDTypeDefinitionAdapter
 {
   public Image getImage()
   {
-    XSDSimpleTypeDefinition xsdSimpleTypeDefinition = (XSDSimpleTypeDefinition) target;
-
-    if (xsdSimpleTypeDefinition.getContainer() == null)
-    {
-      if (isReadOnly())
-      {
-        return XSDEditorPlugin.getPlugin().getIcon("obj16/simpletypedis_obj.gif"); //$NON-NLS-1$
-      }
-      return XSDEditorPlugin.getPlugin().getIcon("obj16/simpletype_obj.gif"); //$NON-NLS-1$
-    }
-
-    if (XSDVariety.LIST_LITERAL == xsdSimpleTypeDefinition.getVariety())
-    {
-      if (isReadOnly())
-      {
-        return XSDEditorPlugin.getPlugin().getIcon("obj16/smpl_listdis_obj.gif"); //$NON-NLS-1$
-      }
-      return XSDEditorPlugin.getPlugin().getIcon("obj16/smpl_list_obj.gif"); //$NON-NLS-1$
-    }
-    else if (XSDVariety.UNION_LITERAL == xsdSimpleTypeDefinition.getVariety())
-    {
-      if (isReadOnly())
-      {
-        return XSDEditorPlugin.getPlugin().getIcon("obj16/smpl_uniondis_obj.gif"); //$NON-NLS-1$
-      }
-      return XSDEditorPlugin.getPlugin().getIcon("obj16/smpl_union_obj.gif"); //$NON-NLS-1$
-    }
-    else if (XSDVariety.ATOMIC_LITERAL == xsdSimpleTypeDefinition.getVariety())
-    {
-      if (xsdSimpleTypeDefinition.getPrimitiveTypeDefinition() != null)
-      {
-        if (isReadOnly())
-        {
-          return XSDEditorPlugin.getPlugin().getIcon("obj16/smpl_restrictdis_obj.gif"); //$NON-NLS-1$
-        }
-        return XSDEditorPlugin.getPlugin().getIcon("obj16/smpl_restrict_obj.gif"); //$NON-NLS-1$
-      }
-      return XSDEditorPlugin.getPlugin().getIcon("obj16/simpletype_obj.gif"); //$NON-NLS-1$
-    }
-
     if (isReadOnly())
     {
       return XSDEditorPlugin.getPlugin().getIcon("obj16/simpletypedis_obj.gif"); //$NON-NLS-1$
