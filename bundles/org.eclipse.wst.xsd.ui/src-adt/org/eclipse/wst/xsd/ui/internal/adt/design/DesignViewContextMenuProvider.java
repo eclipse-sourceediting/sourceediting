@@ -27,6 +27,8 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.BaseSelectionAction;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IActionProvider;
+import org.eclipse.wst.xsd.ui.internal.adt.editor.ContextMenuParticipant;
+import org.eclipse.wst.xsd.ui.internal.adt.editor.EditorModeManager;
 
 
 public class DesignViewContextMenuProvider extends ContextMenuProvider
@@ -54,6 +56,10 @@ public class DesignViewContextMenuProvider extends ContextMenuProvider
   public void buildContextMenu(IMenuManager menu)
   {
     IMenuManager currentMenu = menu;
+    
+    EditorModeManager manager = (EditorModeManager)editor.getAdapter(EditorModeManager.class);
+    ContextMenuParticipant contextMenuParticipant = manager != null ? manager.getCurrentMode().getContextMenuParticipant() : null;
+    
     menu.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
     ActionRegistry registry = getEditorActionRegistry();
     ISelection selection = selectionProvider.getSelection();
@@ -76,28 +82,31 @@ public class DesignViewContextMenuProvider extends ContextMenuProvider
         for (int i = 0; i < actions.length; i++)
         {
           String id = actions[i];
-          if (id.startsWith(BaseSelectionAction.SUBMENU_START_ID))
+          if (contextMenuParticipant == null || contextMenuParticipant.isApplicable(selectedObject, id))
           {
-            String text = id.substring(BaseSelectionAction.SUBMENU_START_ID.length());
-            IMenuManager subMenu = new MenuManager(text);
-            currentMenu.add(subMenu);
-            currentMenu = subMenu;
-          }
-          else if (id.startsWith(BaseSelectionAction.SUBMENU_END_ID))
-          {
-            currentMenu = getParentMenu(menu, currentMenu);
-          }
-          else if (id.equals(BaseSelectionAction.SEPARATOR_ID))
-          {
-            currentMenu.add(new Separator());
-          }
-          else
-          {
-            IAction action = registry.getAction(id);
-            if (action != null)
-            { 
-              action.isEnabled();
-              currentMenu.add(action);
+            if (id.startsWith(BaseSelectionAction.SUBMENU_START_ID))
+            {
+              String text = id.substring(BaseSelectionAction.SUBMENU_START_ID.length());
+              IMenuManager subMenu = new MenuManager(text);
+              currentMenu.add(subMenu);
+              currentMenu = subMenu;
+            }
+            else if (id.startsWith(BaseSelectionAction.SUBMENU_END_ID))
+            {
+              currentMenu = getParentMenu(menu, currentMenu);
+            }
+            else if (id.equals(BaseSelectionAction.SEPARATOR_ID))
+            {
+              currentMenu.add(new Separator());
+            }
+            else
+            {
+              IAction action = registry.getAction(id);
+              if (action != null)
+              { 
+                action.isEnabled();
+                currentMenu.add(action);
+              }
             }
           }
         }

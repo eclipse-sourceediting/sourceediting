@@ -120,6 +120,7 @@ public abstract class ADTMultiPageEditor extends CommonMultiPageEditor
     if (fOutlinePage == null || fOutlinePage.getControl() == null || fOutlinePage.getControl().isDisposed())
     {
       ADTContentOutlinePage outlinePage = new ADTContentOutlinePage(this);
+      //outlinePage.getTreeViewer().removeF(filter);
       ADTContentOutlineProvider adtContentProvider = new ADTContentOutlineProvider();
       outlinePage.setContentProvider(adtContentProvider);
       ADTLabelProvider adtLabelProvider = new ADTLabelProvider();

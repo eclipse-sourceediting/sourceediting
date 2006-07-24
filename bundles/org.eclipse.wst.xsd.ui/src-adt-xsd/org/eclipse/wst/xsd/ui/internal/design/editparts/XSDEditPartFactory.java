@@ -42,8 +42,14 @@ public class XSDEditPartFactory extends ADTEditPartFactory implements IExtendedF
     if (delegate == null)
       delegate = new TypeVizFigureFactory();
   }
+  
+  public XSDEditPartFactory(IExtendedFigureFactory figureFactory)
+  {
+    delegate = figureFactory;
+  }
+  
 
-  public EditPart createEditPart(EditPart context, Object model)
+  public EditPart doCreateEditPart(EditPart context, Object model)
   {
     EditPart child = null;
     // Override edit part where desired
@@ -108,7 +114,7 @@ public class XSDEditPartFactory extends ADTEditPartFactory implements IExtendedF
     //
     if (child == null)
     {
-      child = super.createEditPart(context, model);
+      child = super.doCreateEditPart(context, model);
     }
 
     // if at this this point we have not created an edit part we simply
@@ -119,14 +125,7 @@ public class XSDEditPartFactory extends ADTEditPartFactory implements IExtendedF
       // TODO (cs) log an error message here, since we shouldn't really get here 
       child = new SpaceFillerForFieldEditPart();
     }  
-
-    child.setModel(model);
     return child;
-  }
-
-  protected void checkChild(EditPart child, Object model)
-  {
-    // do nothing since we have contribute our own editparts to the facade
   }
 
   public ICompartmentFigure createCompartmentFigure(Object model)

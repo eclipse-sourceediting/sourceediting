@@ -229,8 +229,8 @@
   <extension-point id="internalEditorConfiguration" name="%InternalEditorConfiguration"/>
   
   <extension-point id="extensibilityNodeCustomizations" name="%ExtensionNodeCustomizationsDescription"/>
+  <extension-point id="editorModes" name="%XMLSchemaEditorModes"/>
   
-
 	<extension
 		point="org.eclipse.wst.xml.core.catalogContributions">
 		<catalogContribution id="default">

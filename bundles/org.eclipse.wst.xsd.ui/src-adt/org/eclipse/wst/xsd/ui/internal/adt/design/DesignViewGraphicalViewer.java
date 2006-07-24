@@ -218,7 +218,7 @@ public class DesignViewGraphicalViewer extends ScrollingGraphicalViewer implemen
     RootContentEditPart rootContentEditPart = (RootContentEditPart)getRootEditPart().getContents();
     rootContentEditPart.setModel(object);
     rootContentEditPart.refresh();
-    inputChangeManager.setSelection(new StructuredSelection(object));
+    inputChangeManager.setSelection(new StructuredSelection(object));    
   }
   
   public IADTObject getInput()

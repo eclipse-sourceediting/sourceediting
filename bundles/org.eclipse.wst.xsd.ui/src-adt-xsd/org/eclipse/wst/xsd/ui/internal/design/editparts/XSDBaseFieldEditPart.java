@@ -52,19 +52,24 @@ public class XSDBaseFieldEditPart extends BaseFieldEditPart
     {
       occurrenceDescription = ((IAnnotationProvider)field).getNameAnnotationString();
     }
-    
+    refreshIcon();
     figure.getNameAnnotationLabel().setText(occurrenceDescription);
     
     figure.recomputeLayout();
 
+
+    if (getRoot() != null)
+      ((GraphicalEditPart)getRoot()).getFigure().invalidateTree();
+  }
+  
+  protected void refreshIcon()  
+  {
+    IFieldFigure figure = getFieldFigure();   
     // our model implements ITreeElement
     if (getModel() instanceof ITreeElement)
     {
       figure.getNameLabel().setIcon(((ITreeElement)getModel()).getImage());
-    }
-
-    if (getRoot() != null)
-      ((GraphicalEditPart)getRoot()).getFigure().invalidateTree();
+    }    
   }
 
   public void addNotify()

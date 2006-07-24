@@ -102,7 +102,7 @@ public class BaseFieldEditPart extends BaseTypeConnectingEditPart implements INa
       EditPart parent = columnEditPart.getParent();
       List columns = parent.getChildren();
       int index = columns.indexOf(columnEditPart);
-      if (columns.size() > index)
+      if (index + 1 < columns.size())
       {  
         EditPart nextColumn = (EditPart)columns.get(index + 1);
         for (Iterator i = nextColumn.getChildren().iterator(); i.hasNext(); )

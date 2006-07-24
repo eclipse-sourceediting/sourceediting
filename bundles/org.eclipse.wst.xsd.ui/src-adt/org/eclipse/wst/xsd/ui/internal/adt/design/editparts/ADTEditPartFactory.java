@@ -26,6 +26,13 @@ public class ADTEditPartFactory implements EditPartFactory
 {
   public EditPart createEditPart(EditPart context, Object model)
   {
+    EditPart child = doCreateEditPart(context, model);
+    checkChild(child, model);
+    return child;
+  }
+  
+  protected EditPart doCreateEditPart(EditPart context, Object model)
+  {
     EditPart child = null;
     if (model instanceof Compartment)
     {
@@ -64,10 +71,7 @@ public class ADTEditPartFactory implements EditPartFactory
     {
       child = new RootContentEditPart();
     }
-
-    checkChild(child, model);
-
-    return child;
+    return child;   
   }
 
   /**

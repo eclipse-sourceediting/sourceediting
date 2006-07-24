@@ -47,7 +47,7 @@ import org.eclipse.ui.views.properties.tabbed.ITabbedPropertySheetPageContributo
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.RootEditPart;
 
-public abstract class CommonMultiPageEditor extends MultiPageEditorPart implements IResourceChangeListener, CommandStackListener, ITabbedPropertySheetPageContributor, IPropertyListener
+public abstract class CommonMultiPageEditor extends MultiPageEditorPart implements IResourceChangeListener, CommandStackListener, ITabbedPropertySheetPageContributor, IPropertyListener, IEditorModeListener
 {
   public static int SOURCE_PAGE_INDEX = 1, DESIGN_PAGE_INDEX = 0;
   
@@ -58,6 +58,7 @@ public abstract class CommonMultiPageEditor extends MultiPageEditorPart implemen
   protected StructuredTextEditor structuredTextEditor;
   protected CommonSelectionManager selectionProvider;
   protected ScrollingGraphicalViewer graphicalViewer;
+  protected EditorModeManager editorModeManager;
   
   public CommonMultiPageEditor()
   {
@@ -338,6 +339,8 @@ public abstract class CommonMultiPageEditor extends MultiPageEditorPart implemen
       return getCommandStack();
     if (type == ActionRegistry.class)
       return getActionRegistry();
+    if (type == EditorModeManager.class)
+      return getEditorModeManager();
     
     return super.getAdapter(type);
   }
@@ -473,4 +476,17 @@ public abstract class CommonMultiPageEditor extends MultiPageEditorPart implemen
   protected abstract ScrollingGraphicalViewer getGraphicalViewer();
   protected abstract EditPartFactory getEditPartFactory();
   protected abstract void initializeGraphicalViewer();
+
+  private EditorModeManager getEditorModeManager()
+  {
+    if (editorModeManager == null)
+    {
+      editorModeManager = createEditorModeManager();
+      editorModeManager.addListener(this);
+      editorModeManager.init();
+    }  
+    return editorModeManager;
+  }
+  
+  protected abstract EditorModeManager createEditorModeManager();
 }

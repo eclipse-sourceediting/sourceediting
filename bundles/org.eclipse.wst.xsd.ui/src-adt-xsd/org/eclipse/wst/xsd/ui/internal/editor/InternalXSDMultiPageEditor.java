@@ -13,7 +13,6 @@ package org.eclipse.wst.xsd.ui.internal.editor;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
@@ -28,6 +27,7 @@ import org.eclipse.gef.ui.actions.PrintAction;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IPostSelectionProvider;
 import org.eclipse.jface.viewers.ISelection;
@@ -59,9 +59,15 @@ import org.eclipse.wst.xsd.ui.internal.adt.actions.BaseSelectionAction;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.DeleteAction;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.SetInputToGraphView;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.ShowPropertiesViewAction;
+import org.eclipse.wst.xsd.ui.internal.adt.design.DesignViewGraphicalViewer;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.RootContentEditPart;
 import org.eclipse.wst.xsd.ui.internal.adt.editor.ADTMultiPageEditor;
+import org.eclipse.wst.xsd.ui.internal.adt.editor.EditorMode;
+import org.eclipse.wst.xsd.ui.internal.adt.editor.EditorModeManager;
+import org.eclipse.wst.xsd.ui.internal.adt.facade.IADTObject;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IModel;
+import org.eclipse.wst.xsd.ui.internal.adt.outline.ADTContentOutlinePage;
+import org.eclipse.wst.xsd.ui.internal.adt.typeviz.TypeVizEditorMode;
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDAnyAttributeAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDAnyElementAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDAttributeDeclarationAction;
@@ -101,7 +107,8 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
   private SourceEditorSelectionListener fSourceEditorSelectionListener;
   private XSDSelectionManagerSelectionListener fXSDSelectionListener;
   private InternalDocumentChangedNotifier internalDocumentChangedNotifier = new InternalDocumentChangedNotifier();
-  
+  private static final String XSD_EDITOR_MODE_EXTENSION_ID = "org.eclipse.wst.xsd.ui.editorModes"; //$NON-NLS-N$ 
+
   
   class InternalDocumentChangedNotifier implements IDocumentChangedNotifier
   {
@@ -904,5 +911,43 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
     {
       return new MultiPageEditorTextSelectionNavigationLocation(getTextEditor(), true);
     }
+  }
+  
+  
+  public void editorModeChanged(EditorMode newEditorMode)
+  {
+    EditPartFactory editPartFactory = newEditorMode.getEditPartFactory();
+    if (editPartFactory != null)
+    {  
+      graphicalViewer.setEditPartFactory(editPartFactory);
+      if (graphicalViewer instanceof DesignViewGraphicalViewer)
+      {  
+        DesignViewGraphicalViewer viewer = (DesignViewGraphicalViewer)graphicalViewer;  
+        IADTObject input = viewer.getInput();
+        viewer.setInput(null);
+        //viewer.getRootEditPart().refresh();
+       // viewer.getRootEditPart().getContents().refresh();
+        viewer.setInput(input);
+      }
+    }  
+    IContentProvider provider = newEditorMode.getOutlineProvider();
+    if (provider != null)
+    {
+      ((ADTContentOutlinePage)getContentOutlinePage()).getTreeViewer().setContentProvider(provider);
+      ((ADTContentOutlinePage)getContentOutlinePage()).getTreeViewer().refresh();  
+    }  
+  }  
+  
+  protected EditorModeManager createEditorModeManager()
+  {
+    EditorModeManager manager = new EditorModeManager(XSD_EDITOR_MODE_EXTENSION_ID)
+    {
+      public void init()
+      {
+        addMode(new TypeVizEditorMode());
+        super.init();
+      }
+    };
+    return manager;
   }
 }  

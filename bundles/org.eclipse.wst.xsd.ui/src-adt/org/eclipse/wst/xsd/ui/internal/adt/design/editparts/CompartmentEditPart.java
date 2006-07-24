@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.adt.design.editparts;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.PositionConstants;
@@ -25,7 +27,7 @@ import org.eclipse.wst.xsd.ui.internal.adt.facade.IField;
 public class CompartmentEditPart extends BaseEditPart // implements
                                                       // IFeedbackHandler
 {
-  Annotation annotation = new Annotation();
+  protected Annotation annotation = new Annotation();
 
   protected IFigure createFigure()
   {
@@ -44,10 +46,30 @@ public class CompartmentEditPart extends BaseEditPart // implements
     return getChildren().size() > 1;
   }
 
+  List getChildrenSansAnnotation()
+  {
+    List children = new ArrayList();
+    children.addAll(getChildren());
+    for (Iterator i = children.iterator(); i.hasNext(); )
+    {
+      EditPart child = (EditPart)i.next();
+      if (child.getModel() == annotation)
+      {
+        i.remove();
+        break;
+      }  
+    }  
+    return children;
+  }
+  
   public EditPart doGetRelativeEditPart(EditPart editPart, int direction)
   {
     EditPart result = null;   
-    if (getChildren().contains(editPart))
+    
+    // we compute the children sans the annotation EditPart
+    // since the annotation EditPart confuses our up/down key handling
+    List children = getChildrenSansAnnotation();
+    if (children.contains(editPart))
     {  
       if (direction == KeyBoardAccessibilityEditPolicy.OUT_TO_PARENT)
       {
@@ -63,13 +85,13 @@ public class CompartmentEditPart extends BaseEditPart // implements
       }        
       else if (direction == PositionConstants.SOUTH)
       {    
-        int size = getChildren().size();
-        if (size > 1)
-        {                              
-          if (getChildren().get(size - 2) == editPart)
+        int size = children.size();
+        if (size > 0)
+        {                        
+          if (children.get(size - 1) == editPart)
           {  
             CompartmentEditPart nextCompartment = (CompartmentEditPart)EditPartNavigationHandlerUtil.getNextSibling(CompartmentEditPart.this);
-            if (nextCompartment != null && nextCompartment.hasContent())
+            if (nextCompartment != null && nextCompartment.getChildrenSansAnnotation().size() > 0)
             {            
               result = EditPartNavigationHandlerUtil.getFirstChild(nextCompartment);
             }  
@@ -81,12 +103,13 @@ public class CompartmentEditPart extends BaseEditPart // implements
         if (EditPartNavigationHandlerUtil.getFirstChild(CompartmentEditPart.this) == editPart)
         {  
           EditPart prevCompartment = EditPartNavigationHandlerUtil.getPrevSibling(CompartmentEditPart.this);
-          if (prevCompartment != null)
+          if (prevCompartment instanceof CompartmentEditPart)
           {
-            int size = prevCompartment.getChildren().size();
-            if (size > 1)
+            List prevCompListChildren = ((CompartmentEditPart)prevCompartment).getChildrenSansAnnotation();
+            int size = prevCompListChildren.size();
+            if (size > 0)
             {  
-              result = (EditPart)prevCompartment.getChildren().get(size - 2);
+              result = (EditPart)prevCompartment.getChildren().get(size - 1);
             }  
           }              
         }
