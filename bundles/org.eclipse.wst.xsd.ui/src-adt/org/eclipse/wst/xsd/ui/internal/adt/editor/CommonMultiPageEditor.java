@@ -504,6 +504,10 @@ public abstract class CommonMultiPageEditor extends MultiPageEditorPart implemen
   
   protected class ModeComboListener implements SelectionListener
   {
+    public ModeComboListener()
+    {
+    }
+    
     public void widgetDefaultSelected(SelectionEvent e)
     {
     }
