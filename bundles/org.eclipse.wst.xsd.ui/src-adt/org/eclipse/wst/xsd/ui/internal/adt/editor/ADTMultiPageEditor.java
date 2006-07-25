@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.adt.editor;
 
+import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartFactory;
@@ -24,14 +25,23 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
+import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.ui.forms.widgets.ImageHyperlink;
+import org.eclipse.ui.internal.IWorkbenchGraphicConstants;
+import org.eclipse.ui.internal.WorkbenchImages;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.BaseSelectionAction;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.SetInputToGraphView;
 import org.eclipse.wst.xsd.ui.internal.adt.design.DesignViewGraphicalViewer;
+import org.eclipse.wst.xsd.ui.internal.adt.design.FlatCCombo;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.ADTEditPartFactory;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.BackToSchemaEditPart;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IModel;
@@ -72,15 +82,19 @@ public abstract class ADTMultiPageEditor extends CommonMultiPageEditor
       rect.height -= 2 * marginHeight;
       
       for (int i = 0; i < children.length; i++) 
-      { 
-        if (i == 1)
+      {
+        if (i == 0)  // For the back to schema button 
         {  
-          children[i].setBounds(rect);
+          children[i].setBounds(rect.x + 10, rect.y + 10, 26, 26);
         }
-        else if (i == 0)
-        {  
-          children[i].setBounds(rect.x + 10, rect.y + 10, 25, 25);
-        }  
+        else if (i == 1 && modeCombo != null) // For the drop down toolbar
+        {
+          children[i].setBounds(rect.x + rect.width - 50 - maxLength, rect.y + 10, maxLength + 20, 26);
+        }
+        else // For the main graph viewer
+        {
+          children[i].setBounds(rect);          
+        }
       }       
     }               
   }
@@ -99,6 +113,87 @@ public abstract class ADTMultiPageEditor extends CommonMultiPageEditor
     backToSchemaEditPart = new BackToSchemaEditPart(this);
     backToSchemaEditPart.setModel(getModel());
     toolbarViewer.setContents(backToSchemaEditPart);
+
+    EditorModeManager manager = (EditorModeManager)getAdapter(EditorModeManager.class);
+    EditorMode [] modeList = manager.getModes();
+    
+    int modeListLength = modeList.length;
+    boolean showToolBar = modeListLength > 1;
+   
+    if (showToolBar)
+    {
+      toolbar = new Composite(parent, SWT.FLAT | SWT.DRAW_TRANSPARENT);
+      toolbar.setBackground(ColorConstants.white);
+      toolbar.addPaintListener(new PaintListener() {
+
+        public void paintControl(PaintEvent e)
+        {
+          Rectangle clientArea = toolbar.getClientArea(); 
+          e.gc.setForeground(ColorConstants.lightGray);
+          e.gc.drawRectangle(clientArea.x, clientArea.y, clientArea.width - 1, clientArea.height - 1);
+        }
+      });
+      
+      RowLayout rowLayout = new RowLayout();
+      rowLayout.marginHeight = 2;
+      rowLayout.marginTop = 2;
+      rowLayout.marginLeft = 2;
+      rowLayout.marginRight = 2;
+      rowLayout.marginBottom = 2;
+      rowLayout.marginWidth = 2;
+      rowLayout.spacing = 5;
+      rowLayout.wrap = false;
+      toolbar.setLayout(rowLayout);
+
+      Label label = new Label(toolbar, SWT.FLAT | SWT.HORIZONTAL);
+      label.setBackground(ColorConstants.white);
+      label.setText(Messages._UI_LABEL_VIEW);
+
+      modeCombo = new FlatCCombo(toolbar, SWT.FLAT);
+      modeCombo.setText(modeList[0].getDisplayName());
+      // populate combo with modes
+      for (int i = 0; i < modeListLength; i++ )
+      {
+        String modeName = modeList[i].getDisplayName(); 
+        modeCombo.add(modeName);
+
+        int approxWidthOfLetter = parent.getFont().getFontData()[0].getHeight();
+        int approxWidthOfStrings = approxWidthOfLetter * modeName.length() + approxWidthOfLetter * Messages._UI_LABEL_VIEW.length();
+        if (approxWidthOfStrings > maxLength)
+          maxLength = approxWidthOfStrings;
+      }
+      
+      modeComboListener = new ModeComboListener();
+      modeCombo.addSelectionListener(modeComboListener);
+
+      Control [] children = modeCombo.getChildren();
+      int length = children.length;
+      for (int i = 0; i < length; i++)
+      {
+        if (children[i] instanceof Button)
+        {
+          Button arrow = (Button)children[i];
+          final Rectangle bounds = arrow.getBounds();
+          arrow.setBackground(toolbar.getBackground());
+          arrow.addPaintListener(new PaintListener()
+          {
+            public void paintControl(PaintEvent e)
+            {
+              Image image = XSDEditorPlugin.getXSDImage("icons/TriangleToolBar.gif"); //$NON-NLS-1$  
+              Rectangle b = image.getBounds();
+              e.gc.fillRectangle(b.x, b.y, b.width + 1, b.height + 1);
+              e.gc.drawImage(image, bounds.x, bounds.y);
+            }
+          });
+          break;
+        }
+      }
+
+      ImageHyperlink hyperlink = new ImageHyperlink(toolbar, SWT.FLAT);
+      hyperlink.setBackground(ColorConstants.white);
+      hyperlink.setImage(WorkbenchImages.getImageRegistry().get(IWorkbenchGraphicConstants.IMG_ETOOL_HELP_CONTENTS));
+      hyperlink.setToolTipText(Messages._UI_HOVER_VIEW_MODE_DESCRIPTION);
+    }
     
     return parent;
   }
@@ -106,8 +201,8 @@ public abstract class ADTMultiPageEditor extends CommonMultiPageEditor
   protected void createGraphPage()
   {
     super.createGraphPage(); 
-    toolbarViewer.getControl().moveAbove(graphicalViewer.getControl());
-    graphicalViewer.getControl().moveBelow(toolbarViewer.getControl());
+//    toolbarViewer.getControl().moveAbove(graphicalViewer.getControl());
+//    graphicalViewer.getControl().moveBelow(toolbarViewer.getControl());
   }
   
   public String getContributorId()

@@ -26,6 +26,8 @@ import org.eclipse.gef.ui.parts.SelectionSynchronizer;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -45,6 +47,7 @@ import org.eclipse.ui.part.MultiPageEditorPart;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.ui.views.properties.tabbed.ITabbedPropertySheetPageContributor;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
+import org.eclipse.wst.xsd.ui.internal.adt.design.FlatCCombo;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.RootEditPart;
 
 public abstract class CommonMultiPageEditor extends MultiPageEditorPart implements IResourceChangeListener, CommandStackListener, ITabbedPropertySheetPageContributor, IPropertyListener, IEditorModeListener
@@ -59,6 +62,10 @@ public abstract class CommonMultiPageEditor extends MultiPageEditorPart implemen
   protected CommonSelectionManager selectionProvider;
   protected ScrollingGraphicalViewer graphicalViewer;
   protected EditorModeManager editorModeManager;
+  protected FlatCCombo modeCombo;
+  protected Composite toolbar;
+  protected ModeComboListener modeComboListener;
+  protected int maxLength = 0;
   
   public CommonMultiPageEditor()
   {
@@ -282,6 +289,11 @@ public abstract class CommonMultiPageEditor extends MultiPageEditorPart implemen
     actionRegistry = null;
     selectionProvider = null;
     graphicalViewer = null;
+    if (modeCombo != null && !modeCombo.isDisposed())
+    {
+      modeCombo.removeSelectionListener(modeComboListener);
+      modeComboListener = null;
+    }
     
     super.dispose();
   }
@@ -489,4 +501,22 @@ public abstract class CommonMultiPageEditor extends MultiPageEditorPart implemen
   }
   
   protected abstract EditorModeManager createEditorModeManager();
+  
+  protected class ModeComboListener implements SelectionListener
+  {
+    public void widgetDefaultSelected(SelectionEvent e)
+    {
+    }
+
+    public void widgetSelected(SelectionEvent e)
+    {
+      if (e.widget == modeCombo)
+      {
+        EditorModeManager manager = (EditorModeManager)getAdapter(EditorModeManager.class);
+        EditorMode [] modeList = manager.getModes();
+        if (modeList.length >= 1)
+          manager.setCurrentMode(modeList[modeCombo.getSelectionIndex()]);
+      }
+    }
+  }
 }

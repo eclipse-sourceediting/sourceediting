@@ -18,7 +18,7 @@ public class TypeVizEditorMode extends EditorMode
 
   public String getDisplayName()
   {
-    return "type oriented";
+    return "Advanced";
   }
 
   public EditPartFactory getEditPartFactory()
