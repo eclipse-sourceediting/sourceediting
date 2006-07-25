@@ -182,7 +182,7 @@ public abstract class ADTMultiPageEditor extends CommonMultiPageEditor
               Image image = XSDEditorPlugin.getXSDImage("icons/TriangleToolBar.gif"); //$NON-NLS-1$  
               Rectangle b = image.getBounds();
               e.gc.fillRectangle(b.x, b.y, b.width + 1, b.height + 1);
-              e.gc.drawImage(image, bounds.x, bounds.y);
+              e.gc.drawImage(image, bounds.x, bounds.y - 1);
             }
           });
           break;
