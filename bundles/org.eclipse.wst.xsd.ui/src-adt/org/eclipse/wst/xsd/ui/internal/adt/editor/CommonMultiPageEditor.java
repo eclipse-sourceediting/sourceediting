@@ -30,14 +30,12 @@ import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IEditorInput;
@@ -61,7 +59,6 @@ import org.eclipse.ui.views.properties.tabbed.ITabbedPropertySheetPageContributo
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.xsd.ui.internal.adt.design.FlatCCombo;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.RootEditPart;
-import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 
 public abstract class CommonMultiPageEditor extends MultiPageEditorPart implements IResourceChangeListener, CommandStackListener, ITabbedPropertySheetPageContributor, IPropertyListener, IEditorModeListener
 {
@@ -547,45 +544,31 @@ public abstract class CommonMultiPageEditor extends MultiPageEditorPart implemen
       label.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_CENTER));
 
       modeCombo = new FlatCCombo(toolbar, SWT.FLAT);
+      modeCombo.setEditable(false);
       modeCombo.setText(modeList[0].getDisplayName());
+
+      GC gc = new GC(modeCombo);
+      int textWidth = 0;
+      maxLength = 0;
       // populate combo with modes
       for (int i = 0; i < modeListLength; i++ )
       {
         String modeName = modeList[i].getDisplayName(); 
         modeCombo.add(modeName);
 
-        int approxWidthOfLetter = parent.getFont().getFontData()[0].getHeight();
-        int approxWidthOfStrings = approxWidthOfLetter * modeName.length() + approxWidthOfLetter * Messages._UI_LABEL_VIEW.length();
+        maxLength = Math.max (gc.stringExtent(modeName).x, maxLength);
+        int approxWidthOfStrings = Math.max (gc.stringExtent(modeName).x, textWidth);
         if (approxWidthOfStrings > maxLength)
           maxLength = approxWidthOfStrings;
       }
       
+      maxLength += gc.stringExtent(Messages._UI_LABEL_VIEW).x; 
+      gc.dispose();
+      
       modeComboListener = new ModeComboListener();
       modeCombo.addSelectionListener(modeComboListener);
       modeCombo.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_END));
-
-      Control [] children = modeCombo.getChildren();
-      int length = children.length;
-      for (int i = 0; i < length; i++)
-      {
-        if (children[i] instanceof Button)
-        {
-          Button arrow = (Button)children[i];
-          final Rectangle bounds = arrow.getBounds();
-          arrow.setBackground(toolbar.getBackground());
-          arrow.addPaintListener(new PaintListener()
-          {
-            public void paintControl(PaintEvent e)
-            {
-              Image image = XSDEditorPlugin.getXSDImage("icons/TriangleToolBar.gif"); //$NON-NLS-1$  
-              Rectangle b = image.getBounds();
-              e.gc.fillRectangle(b.x, b.y, b.width + 1, b.height + 1);
-              e.gc.drawImage(image, bounds.x, bounds.y - 1);
-            }
-          });
-          break;
-        }
-      }
+      modeCombo.setBackground(toolbar.getBackground());
 
       ImageHyperlink hyperlink = new ImageHyperlink(toolbar, SWT.FLAT);
       hyperlink.setBackground(ColorConstants.white);

@@ -10,11 +10,37 @@ package org.eclipse.wst.xsd.ui.internal.adt.design;
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-import org.eclipse.swt.*;
-import org.eclipse.swt.graphics.*;
-import org.eclipse.swt.events.*;
-import org.eclipse.swt.widgets.*;
-import org.eclipse.swt.accessibility.*;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.SWTException;
+import org.eclipse.swt.accessibility.ACC;
+import org.eclipse.swt.accessibility.AccessibleAdapter;
+import org.eclipse.swt.accessibility.AccessibleControlAdapter;
+import org.eclipse.swt.accessibility.AccessibleControlEvent;
+import org.eclipse.swt.accessibility.AccessibleEvent;
+import org.eclipse.swt.accessibility.AccessibleTextAdapter;
+import org.eclipse.swt.accessibility.AccessibleTextEvent;
+import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Layout;
+import org.eclipse.swt.widgets.List;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.TypedListener;
+import org.eclipse.swt.widgets.Widget;
+import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 
 /**
  * The CCombo class represents a selectable user interface object
@@ -37,7 +63,7 @@ public final class FlatCCombo extends Composite {
   List list;
   int visibleItemCount = 5;
   Shell popup;
-  Button arrow;
+  Label arrow;
   boolean hasFocus;
   Listener listener, filter;
   Color foreground, background;
@@ -80,7 +106,8 @@ public FlatCCombo (Composite parent, int style) {
   text = new Text (this, textStyle);
   int arrowStyle = SWT.ARROW | SWT.DOWN;
   if ((style & SWT.FLAT) != 0) arrowStyle |= SWT.FLAT;
-  arrow = new Button (this, arrowStyle);
+  arrow = new Label(this, SWT.FLAT);
+  arrow.setImage(XSDEditorPlugin.getXSDImage("icons/TriangleToolBar.gif")); //$NON-NLS-1$
 
   listener = new Listener () {
     public void handleEvent (Event event) {
@@ -124,7 +151,7 @@ public FlatCCombo (Composite parent, int style) {
   int [] textEvents = {SWT.KeyDown, SWT.KeyUp, SWT.MenuDetect, SWT.Modify, SWT.MouseDown, SWT.MouseUp, SWT.Traverse, SWT.FocusIn};
   for (int i=0; i<textEvents.length; i++) text.addListener (textEvents [i], listener);
   
-  int [] arrowEvents = {SWT.Selection, SWT.FocusIn};
+  int [] arrowEvents = {SWT.MouseDown, SWT.Selection, SWT.FocusIn};
   for (int i=0; i<arrowEvents.length; i++) arrow.addListener (arrowEvents [i], listener);
   
   createPopup(null, -1);
@@ -248,6 +275,10 @@ void arrowEvent (Event event) {
       dropDown (!isDropped ());
       break;
     }
+    case SWT.MouseDown: {
+      dropDown (!isDropped ());
+      break;
+    }
   }
 }
 /**
@@ -309,7 +340,8 @@ public Point computeSize (int wHint, int hHint, boolean changed) {
   }
   gc.dispose();
   Point textSize = text.computeSize (SWT.DEFAULT, SWT.DEFAULT, changed);
-  Point arrowSize = arrow.computeSize (SWT.DEFAULT, SWT.DEFAULT, changed);
+  // Point arrowSize = arrow.computeSize (SWT.DEFAULT, SWT.DEFAULT, changed);
+  Point arrowSize = new Point(16, 16);
   Point listSize = list.computeSize (SWT.DEFAULT, SWT.DEFAULT, changed);
   int borderWidth = getBorderWidth ();
   
@@ -838,9 +870,11 @@ void internalLayout (boolean changed) {
   Rectangle rect = getClientArea ();
   int width = rect.width;
   int height = rect.height;
-  Point arrowSize = arrow.computeSize (SWT.DEFAULT, height, changed);
-  text.setBounds (0, 0, width - arrowSize.x, height);
-  arrow.setBounds (width - arrowSize.x, 0, arrowSize.x, arrowSize.y);
+  // Point arrowSize = arrow.computeSize (SWT.DEFAULT, height, changed);
+  // text.setBounds (0, 0, width - arrowSize.x, height);
+  text.setBounds (0, 0, width - 16, height);
+  // arrow.setBounds (width - arrowSize.x, 0, arrowSize.x, arrowSize.y);
+  arrow.setBounds (width - 16, 0, 16, 16);
 }
 void listEvent (Event event) {
   switch (event.type) {
