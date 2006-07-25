@@ -29,7 +29,8 @@ import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.layout.RowLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -134,20 +135,13 @@ public abstract class ADTMultiPageEditor extends CommonMultiPageEditor
         }
       });
       
-      RowLayout rowLayout = new RowLayout();
-      rowLayout.marginHeight = 2;
-      rowLayout.marginTop = 2;
-      rowLayout.marginLeft = 2;
-      rowLayout.marginRight = 2;
-      rowLayout.marginBottom = 2;
-      rowLayout.marginWidth = 2;
-      rowLayout.spacing = 5;
-      rowLayout.wrap = false;
-      toolbar.setLayout(rowLayout);
+      GridLayout gridLayout = new GridLayout(3, false);
+      toolbar.setLayout(gridLayout);
 
       Label label = new Label(toolbar, SWT.FLAT | SWT.HORIZONTAL);
       label.setBackground(ColorConstants.white);
       label.setText(Messages._UI_LABEL_VIEW);
+      label.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_CENTER));
 
       modeCombo = new FlatCCombo(toolbar, SWT.FLAT);
       modeCombo.setText(modeList[0].getDisplayName());
@@ -165,6 +159,7 @@ public abstract class ADTMultiPageEditor extends CommonMultiPageEditor
       
       modeComboListener = new ModeComboListener();
       modeCombo.addSelectionListener(modeComboListener);
+      modeCombo.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_END));
 
       Control [] children = modeCombo.getChildren();
       int length = children.length;
@@ -193,6 +188,7 @@ public abstract class ADTMultiPageEditor extends CommonMultiPageEditor
       hyperlink.setBackground(ColorConstants.white);
       hyperlink.setImage(WorkbenchImages.getImageRegistry().get(IWorkbenchGraphicConstants.IMG_ETOOL_HELP_CONTENTS));
       hyperlink.setToolTipText(Messages._UI_HOVER_VIEW_MODE_DESCRIPTION);
+      hyperlink.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_CENTER));
     }
     
     return parent;
