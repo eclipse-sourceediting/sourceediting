@@ -869,6 +869,10 @@ public class StructuredTextEditor extends TextEditor {
 		StructuredSelectionProvider(ISelectionProvider parentProvider, StructuredTextEditor structuredTextEditor) {
 			fParentProvider = parentProvider;
 			weakEditor = new WeakReference(structuredTextEditor);
+			IDocument document = structuredTextEditor.getDocumentProvider().getDocument(structuredTextEditor.getEditorInput());
+			if (document != null) {
+				setDocument(document);
+			}
 			fParentProvider.addSelectionChangedListener(new ISelectionChangedListener() {
 				public void selectionChanged(SelectionChangedEvent event) {
 					handleSelectionChanged(event);
@@ -1088,6 +1092,10 @@ public class StructuredTextEditor extends TextEditor {
 				}
 			}
 			return updated;
+		}
+
+		public void setDocument(IDocument document) {
+			weakDocument = new WeakReference(document);
 		}
 	}
 
@@ -3038,6 +3046,10 @@ public class StructuredTextEditor extends TextEditor {
 		fShowInTargetIds = createShowInTargetIds();
 
 		updateSourceViewerConfiguration();
+		
+		if (fStructuredSelectionProvider != null) {
+			fStructuredSelectionProvider.setDocument(getInternalModel().getStructuredDocument());
+		}
 
 		createModelDependentFields();
 	}
