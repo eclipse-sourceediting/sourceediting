@@ -265,11 +265,11 @@ public class XSDFacetSection extends AbstractSection
     if (xsdSimpleTypeDefinition != null)
     {
       XSDSimpleTypeDefinition targetST = xsdSimpleTypeDefinition;
-      XSDSimpleTypeDefinition basePrimitive = xsdSimpleTypeDefinition.getPrimitiveTypeDefinition();
-      if (basePrimitive != null) 
-        targetST = basePrimitive;
-      else
-        targetST = xsdSimpleTypeDefinition.getBaseTypeDefinition();
+      
+      while (!XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001.equals(targetST.getTargetNamespace()) && targetST != null)
+      {
+        targetST = targetST.getBaseTypeDefinition();
+      }
       
       minLengthString = ""; //$NON-NLS-1$
       maxLengthString = ""; //$NON-NLS-1$
@@ -291,7 +291,7 @@ public class XSDFacetSection extends AbstractSection
       }
       else
       {
-        simpleTypeModifierGroupTitle = Messages._UI_LABEL_CONTRAINTS_ON + (basePrimitive != null ? basePrimitive.getName() : "anyType"); //$NON-NLS-1$
+        simpleTypeModifierGroupTitle = Messages._UI_LABEL_CONTRAINTS_ON + (targetST != null ? targetST.getName() : "anyType"); //$NON-NLS-1$
       }
     }
     }
@@ -330,15 +330,22 @@ public class XSDFacetSection extends AbstractSection
       
       if (xsdSimpleTypeDefinition != null)
       {
-        XSDSimpleTypeDefinition basePrimitiveType = xsdSimpleTypeDefinition.getPrimitiveTypeDefinition();
-        String basePrimitiveTypeString = basePrimitiveType != null ? basePrimitiveType.getName() : "";
-        titleString = Messages._UI_LABEL_TYPE + (anonymousTypeDefinition != null ? "(" + xsdFeature.getResolvedFeature().getName() + "Type)" : xsdSimpleTypeDefinition.getName())  + " , " + Messages._UI_LABEL_BASE + ": " + basePrimitiveTypeString; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+        if (!XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001.equals(xsdSimpleTypeDefinition.getTargetNamespace()))
+        {
+          XSDSimpleTypeDefinition basePrimitiveType = xsdSimpleTypeDefinition.getBaseTypeDefinition();
+          String basePrimitiveTypeString = basePrimitiveType != null ? basePrimitiveType.getName() : "";
+          titleString = Messages._UI_LABEL_TYPE + (anonymousTypeDefinition != null ? "(" + xsdFeature.getResolvedFeature().getName() + "Type)" : xsdSimpleTypeDefinition.getName())  + " , " + Messages._UI_LABEL_BASE + ": " + basePrimitiveTypeString; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+        }
+        else
+        {
+          titleString = Messages._UI_LABEL_TYPE + (anonymousTypeDefinition != null ? "(" + xsdFeature.getResolvedFeature().getName() + "Type)" : xsdSimpleTypeDefinition.getName());
+        }
       }
     }
     else if (input instanceof XSDSimpleTypeDefinition)
     {
       xsdSimpleTypeDefinition = (XSDSimpleTypeDefinition) input;
-      titleString = Messages._UI_LABEL_TYPE + xsdSimpleTypeDefinition.getName() + " , " + Messages._UI_LABEL_BASE + ": " + xsdSimpleTypeDefinition.getPrimitiveTypeDefinition().getName(); //$NON-NLS-1$ //$NON-NLS-2$
+      titleString = Messages._UI_LABEL_TYPE + (xsdSimpleTypeDefinition.getName() == null ? "(localType)" : xsdSimpleTypeDefinition.getName()) + " , " + Messages._UI_LABEL_BASE + ": " + xsdSimpleTypeDefinition.getBaseTypeDefinition().getName(); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
 
@@ -367,7 +374,7 @@ public class XSDFacetSection extends AbstractSection
       }
     }
 
-    if (hasMaxMinFacets)
+    if (hasMaxMinFacets && !minLengthLabel.isDisposed() && !maxLengthLabel.isDisposed())
     {
       minLengthLabel.setText(minLengthString);
       maxLengthLabel.setText(maxLengthString);
@@ -456,7 +463,7 @@ public class XSDFacetSection extends AbstractSection
       if (minLengthFacet != null)
       {
         int minLengthValue = minLengthFacet.getValue();
-        if (minLengthValue >= 0)
+        if (minLengthValue >= 0 && minLengthFacet.getRootContainer() == xsdSchema)
         {
           minLengthText.setText(Integer.toString(minLengthValue));
         }
@@ -468,7 +475,7 @@ public class XSDFacetSection extends AbstractSection
       if (maxLengthFacet != null)
       {
         int maxLength = maxLengthFacet.getValue();
-        if (maxLength >= 0)
+        if (maxLength >= 0 && maxLengthFacet.getRootContainer() == xsdSchema)
         {
           maxLengthText.setText(Integer.toString(maxLength));
         }
@@ -480,7 +487,7 @@ public class XSDFacetSection extends AbstractSection
       if (lengthFacet != null)
       {
         int length = lengthFacet.getValue();
-        if (length >= 0)
+        if (length >= 0 && lengthFacet.getRootContainer() == xsdSchema)
         {
           minLengthText.setText(Integer.toString(length));
           maxLengthText.setText(Integer.toString(length));
@@ -509,7 +516,7 @@ public class XSDFacetSection extends AbstractSection
 
       minimumInclusiveCheckbox.setSelection(false);
       minimumInclusiveCheckbox.setEnabled(false);
-      if (minFacet != null)
+      if (minFacet != null && minFacet.getRootContainer() == xsdSchema)
       {
         if (minFacet.getElement().getLocalName().equals(XSDConstants.MINEXCLUSIVE_ELEMENT_TAG) ||
             minFacet.getElement().getLocalName().equals(XSDConstants.MININCLUSIVE_ELEMENT_TAG))
@@ -522,7 +529,7 @@ public class XSDFacetSection extends AbstractSection
 
       maximumInclusiveCheckbox.setSelection(false);
       maximumInclusiveCheckbox.setEnabled(false);
-      if (maxFacet != null)
+      if (maxFacet != null && maxFacet.getRootContainer() == xsdSchema)
       {
         if (maxFacet.getElement().getLocalName().equals(XSDConstants.MAXEXCLUSIVE_ELEMENT_TAG) ||
             maxFacet.getElement().getLocalName().equals(XSDConstants.MAXINCLUSIVE_ELEMENT_TAG))

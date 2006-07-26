@@ -58,6 +58,7 @@ import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.internal.widgets.EnumerationsDialog;
 import org.eclipse.wst.xsd.ui.internal.wizards.RegexWizard;
 import org.eclipse.xsd.XSDEnumerationFacet;
+import org.eclipse.xsd.XSDFacet;
 import org.eclipse.xsd.XSDFactory;
 import org.eclipse.xsd.XSDFeature;
 import org.eclipse.xsd.XSDPatternFacet;
@@ -607,13 +608,36 @@ public class SpecificConstraintsWidget implements SelectionListener, Listener
       if (inputElement instanceof XSDSimpleTypeDefinition)
       {
         XSDSimpleTypeDefinition st = (XSDSimpleTypeDefinition) inputElement;
+        boolean isDefined = false;
+        Iterator iter;
         if (kind == PATTERN)
         {
-          return st.getPatternFacets().toArray();
+          iter = st.getPatternFacets().iterator();
         }
         else
         {
-          return st.getEnumerationFacets().toArray();
+          iter = st.getEnumerationFacets().iterator();
+        }
+
+        while (iter.hasNext())
+        {
+          XSDFacet facet = (XSDFacet) iter.next();
+          isDefined = (facet.getRootContainer() == facetSection.xsdSchema);
+        }
+
+        if (kind == PATTERN)
+        {
+          if (isDefined)
+          {
+            return st.getPatternFacets().toArray();
+          }
+        }
+        else
+        {
+          if (isDefined)
+          {
+            return st.getEnumerationFacets().toArray();
+          }
         }
       }
       return list.toArray();
