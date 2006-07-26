@@ -40,6 +40,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.ide.IGotoMarker;
+import org.eclipse.ui.part.MultiPageEditorActionBarContributor;
 import org.eclipse.ui.part.MultiPageEditorPart;
 import org.eclipse.ui.part.MultiPageEditorSite;
 import org.eclipse.ui.part.MultiPageSelectionProvider;
@@ -503,6 +504,14 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 			createAndAddDesignPage();
 			addSourcePage();
 			connectDesignPage();
+
+			// set the active editor in the action bar contributor first
+			// before setactivepage calls action bar contributor's
+			// setactivepage (bug141013 - remove when bug151488 is fixed)
+			IEditorActionBarContributor contributor = getEditorSite().getActionBarContributor();
+			if (contributor instanceof MultiPageEditorActionBarContributor) {
+				((MultiPageEditorActionBarContributor) contributor).setActiveEditor(this);
+			}
 
 			int activePageIndex = getPreferenceStore().getInt(IXMLPreferenceNames.LAST_ACTIVE_PAGE);
 			if (activePageIndex >= 0 && activePageIndex < getPageCount()) {
