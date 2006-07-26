@@ -39,7 +39,7 @@
 	</extension>
 	
 	
-	<!-- ====================================================== -->
+<!-- ====================================================== -->
 <!-- Extension point: org.eclipse.ui.projectNatureImages    -->
 <!-- Purpose: Attach icon overlays for J2EE project natures -->
 <!-- ====================================================== -->
@@ -56,6 +56,14 @@
     <wizard-pages action="wst.web.install">
       <page class="org.eclipse.wst.web.ui.internal.wizards.SimpleWebFacetInstallPage"/>
     </wizard-pages>
+  </extension>
+  
+  <extension
+    point="org.eclipse.ui.ide.markerResolution">
+	<markerResolutionGenerator
+      markerType="org.eclipse.wst.common.modulecore.ModuleCoreValidatorMarker"
+      class="org.eclipse.wst.web.ui.internal.ModuleCoreValidatorMarkerResolutions">
+    </markerResolutionGenerator>
   </extension>
 
 </plugin>
