@@ -23,13 +23,19 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.IDocumentExtension4;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
+import org.eclipse.wst.sse.core.StructuredModelManager;
+import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart;
+import org.w3c.dom.NodeList;
 
 /**
  * Test misc editor functions with an open xml editor.
@@ -113,5 +119,33 @@ public class TestOpenEditorXML extends TestCase {
 		catch (Exception e) {
 			assertTrue("Unable to set text in editor: " + e, false);
 		}
+	}
+
+	/**
+	 * Test structured document is reloaded on resource change
+	 * 
+	 */
+	public void testBug151069() {
+		IDocument doc = (IDocument) fEditor.getAdapter(IDocument.class);
+		doc.set("<html><body><h1>Title</h1></body></html>");
+		// set h1 to readonly
+		IModelManager modelManager = StructuredModelManager.getModelManager();
+		IDOMModel model = null;
+		try {
+			model = (IDOMModel) modelManager.getExistingModelForEdit(doc);
+			if (model != null) {
+				NodeList nl = model.getDocument().getElementsByTagName("h1");
+				IDOMElement h1 = (IDOMElement) nl.item(0);
+				h1.setEditable(false, true);
+			}
+		}
+		finally {
+			if (model != null)
+				model.releaseFromEdit();
+		}
+
+		String newContent = "new content";
+		((IDocumentExtension4) doc).set(newContent, fFile.getModificationStamp());
+		assertEquals("Set contents in document with read only regions failed", newContent, doc.get());
 	}
 }
