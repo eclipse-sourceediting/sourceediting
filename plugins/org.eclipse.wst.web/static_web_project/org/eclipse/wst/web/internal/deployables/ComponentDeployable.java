@@ -50,8 +50,12 @@ public abstract class ComponentDeployable extends ProjectModule {
 	protected List members = new ArrayList();
 	
 	public ComponentDeployable(IProject project) {
+		this(project,ComponentCore.createComponent(project));
+	}
+	
+	public ComponentDeployable(IProject project, IVirtualComponent aComponent) {
 		super(project);
-		this.component = ComponentCore.createComponent(project);
+		this.component = aComponent;
 	}
 	
 	/**
@@ -88,16 +92,21 @@ public abstract class ComponentDeployable extends ProjectModule {
 				IVirtualReference reference = components[i];
 				if (reference != null && reference.getDependencyType()==IVirtualReference.DEPENDENCY_TYPE_USES) {
 					IVirtualComponent virtualComp = reference.getReferencedComponent();
-					if (virtualComp != null && virtualComp.getProject()!=component.getProject()) {
-						Object module = ServerUtil.getModule(virtualComp.getProject());
-						if (module != null && !modules.contains(module))
-							modules.add(module);
-					}
+					IModule module = gatherModuleReference(component, virtualComp);
+					if (module != null && !modules.contains(module))
+						modules.add(module);
 				}
 			}
 		}
         return (IModule[]) modules.toArray(new IModule[modules.size()]);
 	}
+    
+    protected IModule gatherModuleReference(IVirtualComponent component, IVirtualComponent targetComponent ) {
+    	// Handle workspace project module components
+		if (targetComponent != null && targetComponent.getProject()!=component.getProject())
+			return ServerUtil.getModule(targetComponent.getProject());
+		return null;
+    }
     
     /**
 	 * Find the module resources for a given container and path. Inserts in the java containers
@@ -294,13 +303,17 @@ public abstract class ComponentDeployable extends ProjectModule {
 		return mr;
 	}
 	
+	protected boolean shouldIncludeUtilityComponent(IVirtualComponent virtualComp) {
+		return virtualComp != null && virtualComp.isBinary();
+	}
+	
 	protected List getUtilMembers(IVirtualComponent vc) {
 		List utilMembers = new ArrayList();
 		IVirtualReference[] components = vc.getReferences();
     	for (int i = 0; i < components.length; i++) {
 			IVirtualReference reference = components[i];
 			IVirtualComponent virtualComp = reference.getReferencedComponent();
-			if (virtualComp != null && virtualComp.isBinary()) {
+			if (shouldIncludeUtilityComponent(virtualComp)) {
 				IPath archivePath = ((VirtualArchiveComponent)virtualComp).getWorkspaceRelativePath();
 				ModuleFile mf = null;
 				if (archivePath != null) { //In Workspace

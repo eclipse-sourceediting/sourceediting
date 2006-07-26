@@ -38,7 +38,7 @@ public class StaticWebDeployableFactory extends ProjectModuleFactoryDelegate {
 	public static String getFactoryId() {
 		return ID;
 	}
-	protected IModule createModule(ModuleCoreNature nature) {
+	protected IModule[] createModules(ModuleCoreNature nature) {
 		IProject project = nature.getProject();
 		try {
 			IVirtualComponent comp = ComponentCore.createComponent(project);
@@ -82,18 +82,18 @@ public class StaticWebDeployableFactory extends ProjectModuleFactoryDelegate {
 
 	}
 
-	protected IModule createModule(IProject project) {
+	protected IModule[] createModules(IProject project) {
 		try {
 			ModuleCoreNature nature = (ModuleCoreNature) project.getNature(IModuleConstants.MODULE_NATURE_ID);
 			if (nature != null)
-				return createModule(nature);
+				return createModules(nature);
 		} catch (CoreException e) {
 			Logger.getLogger().write(e);
 		}
 		return null;
 	}
 
-	protected IModule createModuleDelegates(IVirtualComponent component) throws CoreException {
+	protected IModule[] createModuleDelegates(IVirtualComponent component) throws CoreException {
 		StaticWebDeployable moduleDelegate = null;
 		IModule module = null;
 		try {
@@ -110,7 +110,9 @@ public class StaticWebDeployableFactory extends ProjectModuleFactoryDelegate {
 					moduleDelegates.add(moduleDelegate);
 			}
 		}
-		return module;
+		if (module == null)
+			return null;
+		return new IModule[] {module};
 	}
 	
 	/**
