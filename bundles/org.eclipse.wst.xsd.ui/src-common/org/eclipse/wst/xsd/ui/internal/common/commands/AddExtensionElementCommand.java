@@ -12,14 +12,13 @@ package org.eclipse.wst.xsd.ui.internal.common.commands;
 
 import java.util.List;
 import java.util.Map;
-
+import org.eclipse.wst.xml.core.internal.contentmodel.util.NamespaceTable;
 import org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo.SpecificationForExtensionsSchema;
 import org.eclipse.wst.xsd.ui.internal.common.util.XSDCommonUIUtils;
 import org.eclipse.xsd.XSDAnnotation;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDElementDeclaration;
 import org.eclipse.xsd.XSDSchema;
-import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -71,17 +70,13 @@ public class AddExtensionElementCommand extends AddExtensionCommand
     if (appInfo != null)
     {
       Document doc = appInfo.getOwnerDocument();
-
-      Element rootElement = doc.createElementNS(spec.getNamespaceURI(), element.getName());
+      XSDSchema schema= xsdAnnotation.getSchema();
+      Element schemaElement = schema.getElement();
+      String prefix = addNamespaceDeclarationIfRequired(schemaElement, "p", spec.getNamespaceURI());
       
-      String prefix = createUniquePrefix(component);
-      rootElement.setPrefix(prefix);
-      newElement = rootElement;
-      
-      Attr nsURIAttribute = doc.createAttribute("xmlns:"+prefix); //$NON-NLS-1$
-      nsURIAttribute.setValue(spec.getNamespaceURI());
-      rootElement.setAttributeNode(nsURIAttribute);
-      appInfo.appendChild(rootElement);
+      Element newElement = doc.createElementNS(spec.getNamespaceURI(), element.getName());
+      newElement.setPrefix(prefix);   
+      appInfo.appendChild(newElement);
 
       xsdAnnotation.getElement().appendChild(appInfo);
       List appInfos = xsdAnnotation.getApplicationInformation();
@@ -95,6 +90,9 @@ public class AddExtensionElementCommand extends AddExtensionCommand
     return newElement;
   }
   
+  /**
+   * @deprecated
+   */
   protected String createUniquePrefix(XSDConcreteComponent component)
   {
     String prefix = "p"; //$NON-NLS-1$
@@ -107,4 +105,29 @@ public class AddExtensionElementCommand extends AddExtensionCommand
     }
     return prefix;
   }  
+  
+  // TODO... common this up with wsdl.ui
+  private String addNamespaceDeclarationIfRequired(Element schemaElement, String prefixHint, String namespace)
+  {
+    String prefix = null;      
+    NamespaceTable namespaceTable = new NamespaceTable(schemaElement.getOwnerDocument());
+    namespaceTable.addElement(schemaElement);
+    prefix = namespaceTable.getPrefixForURI(namespace);
+    if (prefix == null)
+    { 
+      String basePrefix = prefixHint;
+      prefix = basePrefix;
+      String xmlnsColon = "xmlns:"; //$NON-NLS-1$
+      String attributeName = xmlnsColon + prefix;
+      int count = 0;
+      while (schemaElement.getAttribute(attributeName) != null)
+      {
+        count++;
+        prefix = basePrefix + count;
+        attributeName = xmlnsColon + prefix;
+      }      
+      schemaElement.setAttribute(attributeName, namespace);  
+    }    
+    return prefix;
+  }
 }
