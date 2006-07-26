@@ -15,15 +15,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import com.ibm.icu.util.StringTokenizer;
 
-import org.eclipse.core.filebuffers.ITextFileBuffer;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
@@ -39,12 +32,11 @@ import org.eclipse.text.edits.MultiTextEdit;
 import org.eclipse.text.edits.ReplaceEdit;
 import org.eclipse.text.edits.TextEdit;
 import org.eclipse.text.edits.UndoEdit;
-import org.eclipse.wst.sse.core.StructuredModelManager;
-import org.eclipse.wst.sse.core.internal.FileBufferModelManager;
-import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
+
+import com.ibm.icu.util.StringTokenizer;
 
 
 /**
@@ -60,8 +52,6 @@ public class JSPTranslationExtension extends JSPTranslation {
 		String value= Platform.getDebugOption("org.eclipse.jst.jsp.core/debug/jsptranslation"); //$NON-NLS-1$
 		DEBUG= value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
 	}
-	
-	private static final String CT_ID_JSP_FRAGMENT = "org.eclipse.jst.jsp.core.jspfragmentsource"; //$NON-NLS-1$
 	
 	// just a convenience data structure
 	// to keep track of java position deltas
@@ -424,67 +414,11 @@ public class JSPTranslationExtension extends JSPTranslation {
 	}
 
 	public void reconcileCompilationUnit() {
-		
-		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=105109
-		// don't want errors for JSP fragments
-		// since it's likely we don't know their context
-		if(!isJspFragment())
-			super.reconcileCompilationUnit();
-	}
-	
-	private boolean isJspFragment() {
-		
-		boolean isFrag = false;
-		
-		// pa_TODO
-		// need a way to get underlying IResource or IFile
-		// from IDocument
-		
-		// then check content type to see if it's JSP fragment
-		ITextFileBuffer buf = FileBufferModelManager.getInstance().getBuffer(getJspDocument());
-		if(buf != null) {
-			isFrag = isJspFragment(buf);
-		}
-		else {
-			isFrag = isJspFragment(getJspDocument());
-		}
-		return isFrag;
-	}
-
-	private boolean isJspFragment(IDocument sDoc) {
-		boolean isFrag = false;
-		// buffer is null (no live models around)
-		IStructuredModel sModel = StructuredModelManager.getModelManager().getExistingModelForRead(sDoc);
-		try {
-			if(sModel != null) {
-				IPath p = new Path(sModel.getBaseLocation());
-				IFile f = ResourcesPlugin.getWorkspace().getRoot().getFile(p);
-				if(f != null && f.exists()) {
-					IContentType jspFragType = Platform.getContentTypeManager().getContentType(CT_ID_JSP_FRAGMENT);
-					if(jspFragType != null)
-						isFrag = jspFragType.isAssociatedWith(f.getName());
-				}
-			}
-		}
-		finally {
-			if(sModel != null)
-				sModel.releaseFromRead();
-		}
-		return isFrag;
-	}
-
-	private boolean isJspFragment(ITextFileBuffer buf) {
-		boolean isFrag = false;
-		IPath loc = buf.getLocation();
-		if(loc != null) {
-			IFile f = ResourcesPlugin.getWorkspace().getRoot().getFile(loc);
-			if(f != null && f.exists()) {
-				IContentType jspFragType = Platform.getContentTypeManager().getContentType(CT_ID_JSP_FRAGMENT);
-				if(jspFragType != null)
-					isFrag = jspFragType.isAssociatedWith(f.getName());
-			}
-		}
-		return isFrag;
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=87351
+		// the check to reconcile/validate fragments was removed
+		// from here and placed in a class that is called earlier 
+		// in stack trace
+		super.reconcileCompilationUnit();
 	}
 	
 	/**
