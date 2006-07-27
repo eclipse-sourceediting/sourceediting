@@ -10,9 +10,16 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.text;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.Map;
+
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.progress.IProgressService;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
@@ -92,16 +99,46 @@ public class XSDModelAdapter implements INodeAdapter
       resourceSet.getResources().add(resource);     
 
       schema.setDocument(document);
-      Element element = document.getDocumentElement();
+      final Element element = document.getDocumentElement();
       if (element != null)
       {  
         // Force the loading of the "meta" schema for schema instance instance.
         //
         String schemaForSchemaNamespace = element.getNamespaceURI();
         XSDSchemaImpl.getSchemaForSchema(schemaForSchemaNamespace);            
-        schema.setElement(element);
-      }    
+      }
+        
+      IRunnableWithProgress setElementOperation = new IRunnableWithProgress()
+      {
+        public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException
+        {
+          // Use the animated flavour as we don't know beforehand how many ticks we need.
+          // The task name will be displayed by the code in XSDResourceImpl.
+          
+          monitor.beginTask("", IProgressMonitor.UNKNOWN); //$NON-NLS-1$
+          Map loadOptions = resourceSet.getLoadOptions();
+          loadOptions.put(XSDResourceImpl.XSD_PROGRESS_MONITOR, monitor);
+          
+          schema.setElement(element);
+          
+          loadOptions.remove(XSDResourceImpl.XSD_PROGRESS_MONITOR);
+        }
+      };
 
+      IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
+      try
+      {
+        progressService.busyCursorWhile(setElementOperation);
+      }
+      catch (InvocationTargetException e)
+      {
+        e.printStackTrace();
+      }
+      catch (InterruptedException e)
+      {
+        e.printStackTrace();
+      }       
+        
       // attach an adapter to keep the XSD model and DOM in sync
       //
       modelReconcileAdapter = new XSDModelReconcileAdapter(document, schema);
@@ -139,15 +176,18 @@ public class XSDModelAdapter implements INodeAdapter
   }
   
   
-  public static XSDSchema lookupOrCreateSchema(Document document)
+  public static XSDSchema lookupOrCreateSchema(final Document document)
   {    
     XSDSchema result = null;    
     XSDModelAdapter adapter = lookupOrCreateModelAdapter(document);      
     if (adapter.getSchema() == null)
     {  
+      
       adapter.createSchema(document); 
     }   
     result = adapter.getSchema();    
     return result;    
   }  
 }
+
+
