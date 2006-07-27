@@ -168,6 +168,9 @@ public class ADTComboBoxCellEditor extends CellEditor
 
           applyEditorValueAndDeactivate();
         }
+        else{
+        	focusLost();
+        }
       }
     });
 

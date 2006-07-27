@@ -13,6 +13,7 @@ package org.eclipse.wst.xsd.ui.internal.search.actions;
 
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbenchPartSite;
 
 //org.eclipse.wst.xsd.ui.internal.search.actions.XSDSearchGroupActionDelegate
 public class XSDSearchReferencesGroupActionDelegate extends BaseGroupActionDelegate
@@ -22,12 +23,19 @@ public class XSDSearchReferencesGroupActionDelegate extends BaseGroupActionDeleg
       {
         if (fSelection == null) {
             return;
-        }  
-        if (workbenchPart instanceof IEditorPart)
-        {            
-          ReferencesSearchGroup referencesGroup = new ReferencesSearchGroup((IEditorPart)workbenchPart);
-          XSDSearchGroupSubMenu subMenu = new XSDSearchGroupSubMenu(referencesGroup);
-          subMenu.fill(menu, -1);
+        }
+        if (workbenchPart != null)
+        {
+		  IWorkbenchPartSite site = workbenchPart.getSite();
+			if (site == null)
+			  return;
+	
+		  IEditorPart editor = site.getPage().getActiveEditor();
+          if ( editor != null ){
+            ReferencesSearchGroup referencesGroup = new ReferencesSearchGroup(editor);
+            XSDSearchGroupSubMenu subMenu = new XSDSearchGroupSubMenu(referencesGroup);
+            subMenu.fill(menu, -1);
+          }
         }  
       }
       catch (Exception e)

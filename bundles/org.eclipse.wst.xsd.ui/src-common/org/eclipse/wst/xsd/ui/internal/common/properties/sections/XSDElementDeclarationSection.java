@@ -50,6 +50,7 @@ public class XSDElementDeclarationSection extends MultiplicitySection
   protected CCombo typeCombo;
   protected CCombo componentNameCombo;
   boolean isElementReference;
+  protected String typeName = ""; //$NON-NLS-1$
 
   private XSDTypeDefinition typeDefinition;
 
@@ -241,12 +242,12 @@ public class XSDElementDeclarationSection extends MultiplicitySection
     {
       typeCombo.add(items[i].getName());
     }
-    // Add the current Type of this attribute if needed
+    // Add the current Type of this element if needed
     XSDElementDeclaration namedComponent = ((XSDElementDeclaration) input).getResolvedElementDeclaration();
     XSDTypeDefinition td = namedComponent.getType();
     if (td != null)
     {  
-      String currentTypeName = td.getQName(xsdSchema); //no prefix
+      String currentTypeName = td.getQName(xsdSchema);
       ComponentSpecification ret = getComponentSpecFromQuickPickForValue(currentTypeName,manager);
       if (ret == null && currentTypeName != null) //not in quickPick
       {
@@ -308,8 +309,7 @@ public class XSDElementDeclarationSection extends MultiplicitySection
         boolean isAnonymous = xsdElementDeclaration.getAnonymousTypeDefinition() != null;
         //XSDTypeDefinition typeDef = XSDUtils.getResolvedType(xsdElementDeclaration);
         XSDTypeDefinition typeDef = xsdElementDeclaration.getResolvedElementDeclaration().getTypeDefinition();
-        
-        String typeName = ""; //$NON-NLS-1$
+         
         if (typeDef != null)
           typeName = typeDef.getQName(xsdSchema);
 
@@ -381,6 +381,10 @@ public class XSDElementDeclarationSection extends MultiplicitySection
           newValue = dialog.getSelectedComponent();
           manager.modifyComponentReference(input, newValue);
         }
+        else
+        {
+          typeCombo.setText(typeName );
+        }
       }
       else //use the value from selected quickPick item
       {
@@ -388,7 +392,6 @@ public class XSDElementDeclarationSection extends MultiplicitySection
         if (newValue != null)
           manager.modifyComponentReference(input, newValue);
       }
-//      refresh();
     }
     else if (e.widget == componentNameCombo)
     {
@@ -399,7 +402,6 @@ public class XSDElementDeclarationSection extends MultiplicitySection
         XSDElementDeclaration elementRef = (XSDElementDeclaration)input;
         elementRef.getElement().setAttribute(XSDConstants.REF_ATTRIBUTE, newValue);
         nameText.setText(newName);
-        //refresh();
       }
 
     }

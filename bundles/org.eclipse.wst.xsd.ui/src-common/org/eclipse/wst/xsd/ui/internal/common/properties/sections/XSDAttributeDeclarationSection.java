@@ -40,6 +40,7 @@ public class XSDAttributeDeclarationSection extends RefactoringSection
 {
   protected Text nameText;
   protected CCombo typeCombo, usageCombo;
+  protected String typeName = ""; //$NON-NLS-1$
   boolean isAttributeReference;
   
   public XSDAttributeDeclarationSection()
@@ -214,7 +215,6 @@ public class XSDAttributeDeclarationSection extends RefactoringSection
         else
         {
           fillTypesCombo();
-          String typeName = ""; //$NON-NLS-1$
           if (typeDef != null)
           {
             typeName = typeDef.getQName(xsdSchema);
@@ -283,6 +283,9 @@ public class XSDAttributeDeclarationSection extends RefactoringSection
         {
           newValue = dialog.getSelectedComponent();
           manager.modifyComponentReference(input, newValue);
+        }
+        else{
+        	typeCombo.setText(typeName);
         }
       }
       else //use the value from selected quickPick item
