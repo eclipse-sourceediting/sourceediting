@@ -13,12 +13,9 @@ package org.eclipse.wst.xsd.ui.internal.common.commands;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDBaseAdapter;
 import org.eclipse.wst.xsd.ui.internal.common.util.Messages;
 import org.eclipse.xsd.XSDComplexTypeDefinition;
-import org.eclipse.xsd.XSDCompositor;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDDerivationMethod;
 import org.eclipse.xsd.XSDFactory;
-import org.eclipse.xsd.XSDModelGroup;
-import org.eclipse.xsd.XSDParticle;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.eclipse.xsd.XSDTypeDefinition;
 import org.eclipse.xsd.XSDVariety;
@@ -49,17 +46,6 @@ public class SetBaseTypeCommand extends BaseCommand
         {
           XSDSimpleTypeDefinition simpleContent = XSDFactory.eINSTANCE.createXSDSimpleTypeDefinition();
           complexType.setContent(simpleContent);
-        }
-      }
-      else
-      {
-        if (!(complexType.getContent() instanceof XSDParticle))
-        {
-          XSDParticle particle = XSDFactory.eINSTANCE.createXSDParticle();
-          XSDModelGroup group = XSDFactory.eINSTANCE.createXSDModelGroup();
-          group.setCompositor(XSDCompositor.SEQUENCE_LITERAL);
-          particle.setContent(group);
-          complexType.setContent(particle);
         }
       }
       
