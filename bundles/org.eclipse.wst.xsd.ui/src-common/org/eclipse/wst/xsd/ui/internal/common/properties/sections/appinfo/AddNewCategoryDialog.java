@@ -58,10 +58,19 @@ public class AddNewCategoryDialog extends Dialog
   protected ToolItem browseItem;
 
   protected List invalidNames;
+  
+  // TODO (cs) rename this field to extensionSchemaLocation in WTP 2.0
   protected String appInfoSchemaLocation;
   protected String categoryName;
   protected CLabel errDisplayer;
   protected boolean isCategoryNameValid;
+  protected boolean fromCatalog;
+  
+  private boolean canOK =false; 
+  
+  /** Either the location if come from workspace or namespace if come from
+   * 	XML Catalog  */
+  protected String source;
 
   public AddNewCategoryDialog(Shell parentShell)
   {
@@ -95,6 +104,11 @@ public class AddNewCategoryDialog extends Dialog
     return appInfoSchemaLocation;
   }
   
+  public void setCategoryLocation(String s){
+	  appInfoSchemaLocation = s;
+  }
+  
+  /** @deprecated */
   public SpecificationForExtensionsSchema getExtensionsSchemaSpec(){
 	SpecificationForExtensionsSchema schemaSpec = new SpecificationForExtensionsSchema();
 	schemaSpec.setDisplayName(getNewCategoryName());
@@ -102,15 +116,36 @@ public class AddNewCategoryDialog extends Dialog
 	
 	return schemaSpec;
   }
+    
+  public void setCategoryName(String categoryName) {
+	this.categoryName = categoryName;
+  }
+
+  public boolean getFromCatalog() {
+	return fromCatalog;
+  }
   
-  // we initially disable the Ok button
+  public void setFromCatalog(boolean b){
+	fromCatalog = b;	
+  }
+
+  public String getSource()
+  {
+	return source;  
+  }
+  
+  public void setSource(String source) {
+	this.source = source;
+  }
+
   protected Control createButtonBar(Composite parent)
   {
     Control result = super.createButtonBar(parent);
-    getButton(IDialogConstants.OK_ID).setEnabled(false);
+    getButton(IDialogConstants.OK_ID).setEnabled(canOK);
     return result;
   }
 
+  // redudant method to improve speed (according to the compiler)
   protected Button getButton(int id) {
     return super.getButton(id);
   }
@@ -135,6 +170,8 @@ public class AddNewCategoryDialog extends Dialog
 
     nameText = new Text(mainComposite, SWT.BORDER | SWT.SINGLE);
     nameText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+    if (categoryName != null)
+    	nameText.setText(categoryName);
 
     Button hidden = new Button(mainComposite, SWT.NONE);
     hidden.setVisible(false);
@@ -145,6 +182,20 @@ public class AddNewCategoryDialog extends Dialog
 
     schemaDisplayer = new CLabel(mainComposite, SWT.BORDER | SWT.SINGLE);
     schemaDisplayer.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+    if (source != null)
+    {
+    	if (fromCatalog)
+    		schemaDisplayer.setImage(
+    				XSDEditorPlugin.getXSDImage("icons/xmlcatalog_obj.gif")); //$NON-NLS-1$
+    	else
+    		schemaDisplayer.setImage(
+    				XSDEditorPlugin.getXSDImage("icons/XSDFile.gif")); //$NON-NLS-1$
+    	schemaDisplayer.setText(source);
+    	
+    }
+    
+    if (categoryName != null && source != null)
+    	canOK = true;
 
     browseToolBar = new ToolBar(mainComposite, SWT.FLAT);
     browseItem = new ToolItem(browseToolBar, SWT.NONE);
@@ -272,6 +323,8 @@ public class AddNewCategoryDialog extends Dialog
             uri = uri.substring(1);
           }
           appInfoSchemaLocation = uri.toString();
+          source = uri;
+          fromCatalog = false;
 
           appInfoSchemaLocation = "file://" + Platform.getLocation().toString() + "/" + appInfoSchemaLocation; //$NON-NLS-1$ //$NON-NLS-2$
           // TODO... be careful how we construct the location
@@ -306,6 +359,8 @@ public class AddNewCategoryDialog extends Dialog
       if (dialog.open() == Window.OK)
       {
         appInfoSchemaLocation = dialog.getCurrentSelectionLocation();
+        source = dialog.getCurrentSelectionNamespace();
+        fromCatalog = true;
 
         schemaDisplayer.setImage(XSDEditorPlugin.getXSDImage("icons/xmlcatalog_obj.gif")); //$NON-NLS-1$
         schemaDisplayer.setText(dialog.getCurrentSelectionNamespace());

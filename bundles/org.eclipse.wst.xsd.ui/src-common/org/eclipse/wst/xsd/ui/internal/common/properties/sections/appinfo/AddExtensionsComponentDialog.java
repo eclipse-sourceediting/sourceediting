@@ -251,7 +251,12 @@ public class AddExtensionsComponentDialog extends SelectionDialog implements ISe
     	addNewCategoryDialog.setUnavailableCategoryNames(existingNames);
     	
     	if ( addNewCategoryDialog.open() == Window.OK ){    		
-    		SpecificationForExtensionsSchema schemaSpec = addNewCategoryDialog.getExtensionsSchemaSpec();
+    		SpecificationForExtensionsSchema schemaSpec = 
+    			new SpecificationForExtensionsSchema();
+    		schemaSpec.setDisplayName(addNewCategoryDialog.getNewCategoryName() );
+    		schemaSpec.setLocation(addNewCategoryDialog.getCategoryLocation() );
+    		schemaSpec.setSourceHint(addNewCategoryDialog.getSource());
+    		schemaSpec.setFromCatalog(addNewCategoryDialog.getFromCatalog() );
     		
     		fInput.add(schemaSpec);
     		existingNames.add(schemaSpec.getDisplayName());
@@ -267,13 +272,17 @@ public class AddExtensionsComponentDialog extends SelectionDialog implements ISe
     {
     	TableItem[] selections = categoryTableViewer.getTable().getSelection();
     	for (int i =0; i < selections.length; i++){
-    		fInput.remove(selections[i].getData() );
+    		SpecificationForExtensionsSchema spec = 
+    			(SpecificationForExtensionsSchema) selections[i].getData();
+    		
+			fInput.remove(spec );
+    		existingNames.remove(spec.getDisplayName());
     	}
     	categoryTableViewer.refresh(false);
 
     	elementTableViewer.setInput(null);
     	elementTableViewer.refresh();
-    	
+
         // TODO auto select either the prev category, the next category or the first category in the Table
     	getButton(IDialogConstants.OK_ID).setEnabled(false);
     }
@@ -281,14 +290,36 @@ public class AddExtensionsComponentDialog extends SelectionDialog implements ISe
     {
         // use this dialog not for adding but for editing purpose.
         AddNewCategoryDialog dialog = new AddNewCategoryDialog(getShell(), Messages._UI_LABEL_EDIT_CATEGORY);
-        if ( dialog.open() == Window.OK){
-        	TableItem[] selections = categoryTableViewer.getTable().getSelection();        	
-        	SpecificationForExtensionsSchema spec = (SpecificationForExtensionsSchema) selections[0].getData();
-        	
-			spec.setDisplayName(dialog.getNewCategoryName());
+        
+    	TableItem[] selections = categoryTableViewer.getTable().getSelection();
+    	if (selections.length == 0)
+    		return;
+    	
+    	SpecificationForExtensionsSchema spec = (SpecificationForExtensionsSchema) selections[0].getData();
+        
+    	String displayName = spec.getDisplayName();
+
+		dialog.setCategoryName(displayName );
+    	dialog.setFromCatalog(spec.isFromCatalog() );
+    	dialog.setSource(spec.getSourceHint() );
+    	dialog.setCategoryLocation(spec.getLocation() );
+
+    	existingNames.remove(displayName);
+    	dialog.setUnavailableCategoryNames(existingNames);
+        
+        if ( dialog.open() == Window.OK){        	
+			String newCategoryName = dialog.getNewCategoryName();
+
+			spec.setDisplayName(newCategoryName);
         	spec.setLocation(dialog.getCategoryLocation());
+
+        	existingNames.add(newCategoryName);
+        	
         	categoryTableViewer.update(spec, null);
         	refreshElementsViewer(spec);
+        }
+        else{
+        	existingNames.add(displayName);
         }
     }
   }

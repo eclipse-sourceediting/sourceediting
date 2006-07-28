@@ -20,6 +20,13 @@ public class SpecificationForExtensionsSchema
   private String location;
   private ILabelProvider labelProvider;
   private boolean isDefaultSchema = false;
+  
+  /**
+   * Either the workspace-relative path of the xsd file or the namespace
+   * of the xsd file (if it come from the Catalog) 
+   */
+  private String sourceHint;
+  private boolean fromCatalog;
 
   public SpecificationForExtensionsSchema()
   {
@@ -110,5 +117,21 @@ public class SpecificationForExtensionsSchema
 
   public void setDefautSchema(){
 	  isDefaultSchema = true;
+  }
+  
+  public void setSourceHint(String s){
+	  sourceHint = s;
+  }
+  
+  public String getSourceHint(){
+	  return sourceHint;
+  }
+
+  public boolean isFromCatalog() {
+	return fromCatalog;
+  }
+
+  public void setFromCatalog(boolean fromCatalog) {
+	this.fromCatalog = fromCatalog;
   }
 }
