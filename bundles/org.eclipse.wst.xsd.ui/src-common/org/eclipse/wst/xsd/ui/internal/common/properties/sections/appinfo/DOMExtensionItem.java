@@ -1,113 +1,140 @@
 package org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo;
-
 import org.eclipse.gef.commands.Command;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
-import org.eclipse.wst.xml.core.internal.contentmodel.CMDataType;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
+import org.eclipse.wst.xml.ui.internal.tabletree.TreeContentHelper;
 import org.eclipse.wst.xsd.ui.internal.common.commands.UpdateAttributeValueCommand;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-
 class DOMExtensionItem extends ExtensionItem
 {
-  Node node;
+  private final static int KIND_ELEMENT_ATTR = 1;
+  private final static int KIND_ELEMENT_TEXT = 2;
+  private final static int KIND_ELEMENT_CMATTRIBUTE = 3;
+  private final static int KIND_ATTR_TEXT = 4;
+  private static TreeContentHelper treeContentHelper = new TreeContentHelper();
+  int kind;
+  Attr attribute;
   Element parent;
   CMNode cmNode;
 
-  DOMExtensionItem(Node node)
+  private DOMExtensionItem(int kind, Element parent, Attr node, CMNode cmNode)
   {
-    this.node = node;
+    this.kind = kind;
+    this.parent = parent;
+    this.attribute = node;
+    this.cmNode = cmNode;
   }
 
-  DOMExtensionItem(Element parent, CMElementDeclaration ed)
+  static DOMExtensionItem createItemForElementText(Element parent, CMElementDeclaration ed)
   {
-    this.parent = parent;
-    this.cmNode = ed;
+    return new DOMExtensionItem(KIND_ELEMENT_TEXT, parent, null, ed);
   }
 
-  DOMExtensionItem(Element parent, CMAttributeDeclaration ad)
+  static DOMExtensionItem createItemForElementAttribute(Element parent, Attr attribute)
   {
-    this.parent = parent;
-    this.cmNode = ad;
+    return new DOMExtensionItem(KIND_ELEMENT_ATTR, parent, attribute, null);
+  }
+
+  static DOMExtensionItem createItemForElementAttribute(Element parent, CMAttributeDeclaration ad)
+  {
+    if (ad == null)
+    {
+      System.out.println("null!");
+    }
+    return new DOMExtensionItem(KIND_ELEMENT_CMATTRIBUTE, parent, null, ad);
+  }
+
+  static DOMExtensionItem createItemForAttributeText(Element parent, Attr attribute)
+  {
+    return new DOMExtensionItem(KIND_ATTR_TEXT, parent, attribute, null);
   }
 
   public String getName()
   {
-    if (node instanceof Attr)
+    String result = null;
+    switch (kind)
     {
-      Attr attr = (Attr) node;
-      return attr.getName();
+      case KIND_ATTR_TEXT : {
+        result = "value";
+        break;
+      }
+      case KIND_ELEMENT_ATTR : {
+        result = attribute.getName();
+        break;
+      }
+      case KIND_ELEMENT_CMATTRIBUTE : {
+        CMAttributeDeclaration ad = (CMAttributeDeclaration) cmNode;
+        result = ad.getNodeName();
+        break;
+      }
+      case KIND_ELEMENT_TEXT : {
+        result = "text value";
+        break;
+      }
     }
-    else if (cmNode instanceof CMAttributeDeclaration)
-    {
-      CMAttributeDeclaration ad = (CMAttributeDeclaration) cmNode;
-      return ad.getNodeName();// + "*"; //$NON-NLS-1$
-    }
-    else if (cmNode instanceof CMDataType)
-    {
-      return "text()"; //$NON-NLS-1$
-    }
-    return ""; //$NON-NLS-1$
+    return result != null ? result : "";
   }
 
   public String getValue()
-  {      
-    if (node instanceof Attr)
+  {
+    switch (kind)
     {
-      Attr attr = (Attr) node;
-      return attr.getValue();
+      case KIND_ATTR_TEXT :
+      case KIND_ELEMENT_ATTR : {
+        // note intentional fall-thru!!
+        return attribute.getNodeValue();
+      }
+      case KIND_ELEMENT_CMATTRIBUTE : {
+        // CS : one would think that we'd just need to return "" here
+        // but after editing a item of this kind and giving it value
+        // the list of item's doesn't get recomputed.. so we need to trick
+        // one of these items to behave like the KIND_ELEMENT_ATTR case
+        //
+        String value = parent.getAttribute(cmNode.getNodeName());
+        return (value != null) ? value : "";
+      }
+      case KIND_ELEMENT_TEXT : {
+        return treeContentHelper.getNodeValue(parent);
+      }
     }
-    else if (cmNode instanceof CMAttributeDeclaration)
-    {
-      // cs : we need this 'else if' case since work around a problem with 
-      // the ExtensionDetailsViewer since it doesn't recompute it's list of
-      // ExtensionItems when refresh() is called it simply recalcultes the
-      // values.
-      //      
-      String value = parent.getAttribute(cmNode.getNodeName());
-      if (value != null)
-      {
-        return value;
-      }  
-    }  
-    return ""; //$NON-NLS-1$
+    return "";
   }
 
   public String[] getPossibleValues()
   {
     String[] result = {};
-    if (node instanceof Attr)
+    switch (kind)
     {
-      Attr attr = (Attr) node;
-      ModelQuery modelQuery = ModelQueryUtil.getModelQuery(attr.getOwnerDocument());
-      if (modelQuery != null)
-      {
-        CMAttributeDeclaration ad = modelQuery.getCMAttributeDeclaration(attr);
-        if (ad != null)
-        {
-          result = modelQuery.getPossibleDataTypeValues(attr.getOwnerElement(), ad);
-        }
-      }
-    }
-    else if (parent != null)
-    {
-      if (cmNode == null || cmNode instanceof CMDataType)
-      {
-        // TODO
-        //        
-      }
-      else if (cmNode instanceof CMAttributeDeclaration)
-      {
-        CMAttributeDeclaration ad = (CMAttributeDeclaration) cmNode;
+      case KIND_ATTR_TEXT :
+      case KIND_ELEMENT_ATTR : {
+        // note intentional fall-thru!!
         ModelQuery modelQuery = ModelQueryUtil.getModelQuery(parent.getOwnerDocument());
         if (modelQuery != null)
         {
-          result = modelQuery.getPossibleDataTypeValues(parent, ad);
+          CMAttributeDeclaration ad = modelQuery.getCMAttributeDeclaration(attribute);
+          if (ad != null)
+          {
+            result = modelQuery.getPossibleDataTypeValues(parent, ad);
+          }
         }
+        break;
+      }
+      case KIND_ELEMENT_CMATTRIBUTE : {
+        ModelQuery modelQuery = ModelQueryUtil.getModelQuery(parent.getOwnerDocument());
+        if (modelQuery != null && cmNode != null)
+        {
+          result = modelQuery.getPossibleDataTypeValues(parent, cmNode);
+        }
+        break;
+      }
+      case KIND_ELEMENT_TEXT : {
+        // TODO
+        break;
       }
     }
     return result;
@@ -115,43 +142,31 @@ class DOMExtensionItem extends ExtensionItem
 
   public Command getUpdateValueCommand(String newValue)
   {
-    if (node instanceof Attr)
+    switch (kind)
     {
-      Attr attr = (Attr) node;
-      return new UpdateAttributeValueCommand(attr.getOwnerElement(), attr.getNodeName(), newValue);
-    }
-    else if (parent != null)
-    {
-      if (cmNode == null || cmNode instanceof CMDataType)
-      {
-        // in this case we need to update the parent's text
-        //        
+      case KIND_ATTR_TEXT :
+      case KIND_ELEMENT_ATTR : {
+        // note intentional fall-thru!!
+        return new UpdateAttributeValueCommand(parent, attribute.getNodeName(), newValue);
       }
-      else if (cmNode instanceof CMAttributeDeclaration)
-      {
-        // TODO (cs) add namespace prefix to attribute name if req'd
-        //
-        CMAttributeDeclaration ad = (CMAttributeDeclaration) cmNode;
+      case KIND_ELEMENT_CMATTRIBUTE : {
+        final CMAttributeDeclaration ad = (CMAttributeDeclaration) cmNode;
         return new UpdateAttributeValueCommand(parent, ad.getAttrName(), newValue);
+      }
+      case KIND_ELEMENT_TEXT : {
+        // TODO (cs) we need an update element text command
+        return null;
       }
     }
     return null;
   }
-  
+
   public String getNamespace()
   {
     String namespace = null;
-    if (node != null)
+    if (kind == KIND_ATTR_TEXT)
     {
-      if (node.getNodeType() == Node.ELEMENT_NODE)
-      {
-        namespace = node.getNamespaceURI();
-      }
-      else if (node.getNodeType() == Node.ATTRIBUTE_NODE)
-      {
-        Attr attr = (Attr) node;
-        namespace = attr.getOwnerElement().getNamespaceURI();
-      }
+      namespace = attribute.getNamespaceURI();
     }
     else if (parent != null)
     {
@@ -159,37 +174,29 @@ class DOMExtensionItem extends ExtensionItem
     }
     return namespace;
   }
-  
+
   public Node getParentNode()
   {
     Node parentNode = null;
-    if (node != null)
+    if (attribute != null)
     {
-      if (node.getNodeType() == Node.ELEMENT_NODE)
-      {
-        parentNode = node.getParentNode();
-      }
-      else if (node.getNodeType() == Node.ATTRIBUTE_NODE)
-      {
-        Attr attr = (Attr) node;
-        parentNode = attr.getOwnerElement();
-      }
-    }  
+      parentNode = attribute.getOwnerElement();
+    }
     else if (parent != null)
-    {  
+    {
       parentNode = parent;
     }
     return parentNode;
   }
-  
+
   public String getParentName()
   {
-    Node parentNode = getParentNode(); 
+    Node parentNode = getParentNode();
     return parentNode != null ? parentNode.getLocalName() : "";
   }
 
   public Node getNode()
   {
-    return node;
+    return attribute;
   }
 }

@@ -19,8 +19,9 @@ import org.w3c.dom.NamedNodeMap;
 
 public class DOMExtensionDetailsContentProvider implements ExtensionDetailsContentProvider
 {
-  private static Object[] EMPTY_ARRAY = {};
-  private static String[] EMPTY_STRING_ARRAY = {};
+  private static final Object[] EMPTY_ARRAY = {};
+  private static final String[] EMPTY_STRING_ARRAY = {};
+  private static final String XMLNS = "xmlns"; //$NON-NLS
 
   public Object[] getItems(Object input)
   {
@@ -32,9 +33,9 @@ public class DOMExtensionDetailsContentProvider implements ExtensionDetailsConte
       for (int i = 0; i < attributes.getLength(); i++)
       {
         Attr attr = (Attr) attributes.item(i);
-        if (!"xmlns".equals(attr.getName()) && !"xmlns".equals(attr.getPrefix())) //$NON-NLS-1$ //$NON-NLS-2$
+        if (!XMLNS.equals(attr.getName()) && !XMLNS.equals(attr.getPrefix())) //$NON-NLS-1$ //$NON-NLS-2$
         {
-          resultMap.put(attr.getName(), new DOMExtensionItem(attr));
+          resultMap.put(attr.getName(), DOMExtensionItem.createItemForElementAttribute(element, attr));
         }
       }
       ModelQuery modelQuery = ModelQueryUtil.getModelQuery(element.getOwnerDocument());
@@ -47,16 +48,16 @@ public class DOMExtensionDetailsContentProvider implements ExtensionDetailsConte
           for (Iterator i = list.iterator(); i.hasNext(); )
           {  
               CMAttributeDeclaration ad = (CMAttributeDeclaration)i.next();
-              if (resultMap.get(ad.getNodeName()) == null)
+              if (ad != null && resultMap.get(ad.getNodeName()) == null)
               {
-                resultMap.put(ad.getNodeName(), new DOMExtensionItem(element, ad));
+                resultMap.put(ad.getNodeName(), DOMExtensionItem.createItemForElementAttribute(element, ad));
               }            
           }
           //
           int contentType = ed.getContentType();
           if ((contentType == CMElementDeclaration.PCDATA || contentType == CMElementDeclaration.PCDATA) && ed.getDataType() != null)
           {
-            resultMap.put("text()", new DOMExtensionItem(element, ed)); //$NON-NLS-1$
+            resultMap.put("text()", DOMExtensionItem.createItemForElementText(element, ed));
           }
         }
       }
@@ -73,9 +74,8 @@ public class DOMExtensionDetailsContentProvider implements ExtensionDetailsConte
     }
     else if (input instanceof Attr)
     {
-      // TODO (cs) do we actually utilize this case?
       Attr attr = (Attr) input;
-      DOMExtensionItem item = new DOMExtensionItem(attr);
+      DOMExtensionItem item = DOMExtensionItem.createItemForAttributeText(attr.getOwnerElement(), attr);
       DOMExtensionItem[] items = {item};
       return items;
     }
