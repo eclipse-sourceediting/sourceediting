@@ -348,26 +348,38 @@ public class XSDImpl
    *          a type definition.
    * @return the enumerated values for the given type.
    */
+  private final static String TYPE_NAME_BOOLEAN = "boolean"; //$NON-NLS-1$
+  private final static String TYPE_VALUE_TRUE = "true"; //$NON-NLS-1$
+  private final static String TYPE_VALUE_FALSE= "false"; //$NON-NLS-1$  
+  
   public static String[] getEnumeratedValuesForType(XSDTypeDefinition type)
   {
     List result = new ArrayList();
     if (type instanceof XSDSimpleTypeDefinition)
-    {
-      List enumerationFacets = ((XSDSimpleTypeDefinition) type).getEnumerationFacets();
-      for (Iterator i = enumerationFacets.iterator(); i.hasNext();)
+    {         
+      if (TYPE_NAME_BOOLEAN.equals(type.getName()) && type.getSchema().getSchemaForSchema() == type.getSchema())
       {
-        XSDEnumerationFacet enumFacet = (XSDEnumerationFacet) i.next();
-        List values = enumFacet.getValue();
-        for (Iterator j = values.iterator(); j.hasNext();)
+        result.add(TYPE_VALUE_TRUE);
+        result.add(TYPE_VALUE_FALSE);
+      } 
+      else
+      {        
+        List enumerationFacets = ((XSDSimpleTypeDefinition) type).getEnumerationFacets();
+        for (Iterator i = enumerationFacets.iterator(); i.hasNext();)
         {
-          Object o = j.next();
-          if (o != null)
+          XSDEnumerationFacet enumFacet = (XSDEnumerationFacet) i.next();
+          List values = enumFacet.getValue();
+          for (Iterator j = values.iterator(); j.hasNext();)
           {
-            result.add(o.toString());
-          }  
+            Object o = j.next();
+            if (o != null)
+            {
+              result.add(o.toString());
+            }  
+          }
         }
       }
-    }
+    }  
     String[] array = new String[result.size()];
     result.toArray(array);
     return array;
