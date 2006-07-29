@@ -19,11 +19,11 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
 import java.net.ConnectException;
+import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
-
 import org.apache.xerces.impl.XMLErrorReporter;
 import org.apache.xerces.parsers.StandardParserConfiguration;
 import org.apache.xerces.xni.NamespaceContext;
@@ -36,11 +36,14 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver;
 import org.eclipse.wst.xml.core.internal.validation.core.LazyURLInputStream;
 import org.eclipse.wst.xml.core.internal.validation.core.logging.LoggerFactory;
+import org.eclipse.wst.xml.core.internal.validation.errorcustomization.ErrorCustomizationManager;
+import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.ext.DeclHandler;
+import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * This class performs validation using a xerces sax parser.  
@@ -52,6 +55,7 @@ public class XMLValidator
 {
   protected URIResolver uriResolver = null;
   //protected MyEntityResolver entityResolver = null;
+  protected ErrorCustomizationManager errorCustomizationManager;
   protected Hashtable ingoredErrorKeyTable = new Hashtable();
 
   protected static final String IGNORE_ALWAYS = "IGNORE_ALWAYS"; //$NON-NLS-1$
@@ -115,6 +119,25 @@ public class XMLValidator
       reader.setFeature("http://xml.org/sax/features/namespaces", valinfo.isNamespaceEncountered());               //$NON-NLS-1$
       reader.setFeature("http://xml.org/sax/features/validation", valinfo.isGrammarEncountered());  //$NON-NLS-1$
       reader.setFeature("http://apache.org/xml/features/validation/schema", valinfo.isGrammarEncountered()); //$NON-NLS-1$
+      reader.setContentHandler(new DefaultHandler()
+      {
+        public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+          
+          if (errorCustomizationManager == null)
+          {
+            errorCustomizationManager = new ErrorCustomizationManager();
+//            if (errorCustomizationManager.isDocumentNamespaceApplicable(uri))
+//            {
+//              errorCustomizationManager.setActive(true);
+//            }  
+          }
+          errorCustomizationManager.startElement(uri, localName);                    
+        }
+        
+        public void endElement(String uri, String localName, String qName) throws SAXException {
+          errorCustomizationManager.endElement(uri, localName);
+        }
+      });      
       
       // MH make sure validation works even when a customer entityResolver is note set (i.e. via setURIResolver())
       if (entityResolver != null)
@@ -342,6 +365,23 @@ public class XMLValidator
       {                     
         String physical = uriResolver.resolvePhysicalLocation(rid.getBaseSystemId(), id, location);
         is = new XMLInputSource(rid.getPublicId(), location, location);
+        
+        // This block checks that the file exists. If it doesn't we need to throw
+        // an exception so Xerces will report an error. note: This may not be
+        // necessary with all versions of Xerces but has specifically been 
+        // experienced with the version included in IBM's 1.4.2 JDK.
+        InputStream isTemp = null;
+        try
+        {
+          isTemp = new URL(physical).openStream();
+        }
+        finally
+        {
+          if(isTemp != null)
+          {
+            isTemp.close();
+          }
+        }
         is.setByteStream(new LazyURLInputStream(physical));      
       }
     }
@@ -526,6 +566,7 @@ public class XMLValidator
 		      if (reportError)
 		      {
 		        super.reportError(domain, key, arguments, severity);
+		        errorCustomizationManager.considerReportedError(valinfo, key, arguments);
 		      }
 		    }
 		};

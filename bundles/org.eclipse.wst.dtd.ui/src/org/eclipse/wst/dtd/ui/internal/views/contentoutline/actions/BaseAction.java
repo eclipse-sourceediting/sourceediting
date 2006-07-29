@@ -22,33 +22,29 @@ import org.eclipse.ui.IEditorActionBarContributor;
 import org.eclipse.ui.actions.SelectionListenerAction;
 import org.eclipse.wst.dtd.core.internal.DTDNode;
 import org.eclipse.wst.dtd.core.internal.document.DTDModelImpl;
-import org.eclipse.wst.sse.ui.StructuredTextEditor;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 
 
 abstract public class BaseAction extends SelectionListenerAction {
 
 	protected IEditorActionBarContributor contextContributor;
-	private StructuredTextEditor fTextEditor;
+	private IStructuredModel fModel;
 
-	public BaseAction(StructuredTextEditor editor, String text) {
-		this(editor, text, null);
+	public BaseAction(IStructuredModel model, String text) {
+		this(model, text, null);
 	}
 
-	public BaseAction(StructuredTextEditor editor, String text, ImageDescriptor imageDesc) {
+	public BaseAction(IStructuredModel model, String text, ImageDescriptor imageDesc) {
 		super(text);
-		fTextEditor = editor;
+		fModel = model;
 		setImageDescriptor(imageDesc);
 	}
 
-	public IEditorActionBarContributor getContextContributor() {
-		return contextContributor;
-	}
-
-	public DTDNode getFirstNodeSelected() {
+	protected DTDNode getFirstNodeSelected() {
 		return getFirstNodeSelected(getStructuredSelection());
 	}
 
-	public DTDNode getFirstNodeSelected(IStructuredSelection selection) {
+	protected DTDNode getFirstNodeSelected(IStructuredSelection selection) {
 		Iterator iter = selection.iterator();
 		// DTDNode referencePoint = null;
 		while (iter.hasNext()) {
@@ -60,15 +56,8 @@ abstract public class BaseAction extends SelectionListenerAction {
 		return null;
 	}
 
-	public DTDModelImpl getModel() {
-		return (DTDModelImpl) getTextEditor().getModel();
-	}
-
-	/**
-	 * @return Returns the textEditor.
-	 */
-	public StructuredTextEditor getTextEditor() {
-		return fTextEditor;
+	protected DTDModelImpl getModel() {
+		return (DTDModelImpl) fModel;
 	}
 
 	public void setContextContributor(IEditorActionBarContributor contributor) {

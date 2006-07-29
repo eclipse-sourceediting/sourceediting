@@ -16,13 +16,13 @@ package org.eclipse.wst.dtd.ui.internal.views.contentoutline.actions;
 
 import org.eclipse.wst.dtd.core.internal.DTDFile;
 import org.eclipse.wst.dtd.core.internal.DTDNode;
+import org.eclipse.wst.dtd.core.internal.document.DTDModelImpl;
 import org.eclipse.wst.dtd.core.internal.util.LabelValuePair;
-import org.eclipse.wst.sse.ui.StructuredTextEditor;
 
 
 public class AddParameterEntityReferenceAction extends BaseAction {
-	public AddParameterEntityReferenceAction(StructuredTextEditor editor, String label) {
-		super(editor, label);
+	public AddParameterEntityReferenceAction(DTDModelImpl model, String label) {
+		super(model, label);
 	}
 
 	public String getFirstExternalParameterEntity(DTDFile dtdFile) {

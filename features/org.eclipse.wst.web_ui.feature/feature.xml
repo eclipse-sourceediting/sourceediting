@@ -2,7 +2,8 @@
 <feature
       id="org.eclipse.wst.web_ui.feature"
       label="org.eclipse.wst.web_ui.feature"
-      version="1.0.0">
+      version="1.0.3.qualifier"
+      provider-name="Eclipse.org">
 
    <description>
       %description
@@ -12,12 +13,16 @@
       %license
    </license>
 
+   <url>
+      <update label="Web Tools Platform (WTP) Updates" url="http://download.eclipse.org/webtools/updates/"/>
+   </url>
+
    <includes
          id="org.eclipse.wst.web_userdoc.feature"
          version="0.0.0"/>
 
    <requires>
-      <import feature="org.eclipse.wst.web_core.feature" version="1.0.0"/>
+      <import feature="org.eclipse.wst.web_core.feature" version="1.0.2" match="equivalent" />
    </requires>
 
    <plugin
@@ -29,6 +34,13 @@
 
    <plugin
          id="org.eclipse.wst.javascript.ui.infopop"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.wst.web.ui.infopop"
          download-size="0"
          install-size="0"
          version="0.0.0"

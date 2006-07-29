@@ -18,13 +18,13 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.wst.dtd.core.internal.AttributeList;
 import org.eclipse.wst.dtd.core.internal.DTDNode;
 import org.eclipse.wst.dtd.core.internal.Element;
-import org.eclipse.wst.sse.ui.StructuredTextEditor;
+import org.eclipse.wst.dtd.core.internal.document.DTDModelImpl;
 
 
 public class AddAttributeAction extends BaseAction {
 
-	public AddAttributeAction(StructuredTextEditor editor, String label) {
-		super(editor, label);
+	public AddAttributeAction(DTDModelImpl model, String label) {
+		super(model, label);
 	}
 
 	public void run() {

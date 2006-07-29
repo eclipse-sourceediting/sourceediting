@@ -124,7 +124,7 @@ public class CSSSelectorListImpl implements ICSSSelectorList {
 	 */
 	public boolean match(Element element, String pseudoName) {
 		int nSelectors = getLength();
-		selectorListLoop : for (int iSelector = 0; iSelector < nSelectors; iSelector++) {
+		for (int iSelector = 0; iSelector < nSelectors; iSelector++) {
 			// Check each Selector Lists
 			ICSSSelector selector = getSelector(iSelector);
 			if (selector.match(element, pseudoName))

@@ -246,6 +246,10 @@ public class Highlighter implements IHighlighter {
 	private final boolean DEBUG = false;
 	private final StyleRange[] EMPTY_STYLE_RANGE = new StyleRange[0];
 	private static final String LINE_STYLE_PROVIDER_EXTENDED_ID = "linestyleprovider"; //$NON-NLS-1$
+	private static final int MAX_NUMBER_STYLES = 500;
+	private static final int LEFT_STYLES_SIZE = 200;
+	private static final int RIGHT_STYLES_SIZE = 200;
+	private static final int MIDDLE_STYLES_SIZE = 1;
 
 	private IPropertyChangeListener fForegroundScaleListener = new IPropertyChangeListener() {
 		public void propertyChange(PropertyChangeEvent event) {
@@ -281,6 +285,12 @@ public class Highlighter implements IHighlighter {
 
 	public Highlighter() {
 		super();
+		
+		// in the 'limitSize' method, we make this strong assumption, so, will check here, 
+		// so if tweaked in future, we'll get a quick reminder. 
+		if (LEFT_STYLES_SIZE + MIDDLE_STYLES_SIZE + RIGHT_STYLES_SIZE > MAX_NUMBER_STYLES) {
+			throw new IllegalStateException("Highligher constants are not defined correctly");
+		}
 	}
 
 	protected void addEmptyRange(int start, int length, Collection holdResults) {
@@ -626,13 +636,13 @@ public class Highlighter implements IHighlighter {
 					ITypedRegion[] partitions = TextUtilities.computePartitioning(getDocument(), fPartitioning, start, length, false);
 					eventStyles = prepareStyleRangesArray(partitions, start, length);
 
-					// If there is a subtext offset, the style ranges must be
-					// adjusted to the expected
-					// offsets
-					// just check if eventLineOffset is different than start
-					// then adjust, otherwise u can leave it alone
-					// unless there is special handling for
-					// itextviewerextension5?
+					/*
+					 * If there is a subtext offset, the style ranges must be
+					 * adjusted to the expected offsets just check if
+					 * eventLineOffset is different than start then adjust,
+					 * otherwise u can leave it alone unless there is special
+					 * handling for itextviewerextension5?
+					 */
 					if (start != eventLineOffset) {
 						int offset = 0;
 						// figure out visible region to use for adjustment
@@ -646,6 +656,8 @@ public class Highlighter implements IHighlighter {
 						adjust(eventStyles, -offset);
 					}
 
+					eventStyles = limitSize(eventStyles);
+					
 					// for debugging only
 					if (DEBUG) {
 						if (!valid(eventStyles, eventLineOffset, eventLineLength)) {
@@ -667,6 +679,50 @@ public class Highlighter implements IHighlighter {
 		}
 
 		return eventStyles;
+	}
+
+	/**
+	 * This method is to centralize the logic in limiting the overall number of style ranges
+	 * that make it to the styled text widget. 
+	 * 
+	 * Too many styles sent to StyledText results in apparent, but not real, 
+	 * hangs of Eclipse Display thread. See  
+	 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=108806
+	 * 
+	 * @param eventStyles
+	 * @return
+	 */
+	 private StyleRange[] limitSize(StyleRange[] eventStyles) {
+		
+		// quick return with same object if not modification needed
+		if (eventStyles.length < MAX_NUMBER_STYLES) {
+			return eventStyles;
+		}
+		else {
+			// we could just take the easy way out and truncate, but will 
+			// be much better appearing if both the start of the line and the 
+			// end of the line are displayed with styles. Since these are both
+			// the parts of the line a user is likely to look at. The middle of the 
+			// line will still be "plain". Presumably, the user would re-format the 
+			// file to avoid long lines, so unlikely to see the middle. 
+			StyleRange[] newRanges = new StyleRange[LEFT_STYLES_SIZE + RIGHT_STYLES_SIZE + MIDDLE_STYLES_SIZE]; 
+			System.arraycopy(eventStyles, 0, newRanges, 0, LEFT_STYLES_SIZE);
+			//
+			// do end, before we do middle
+			System.arraycopy(eventStyles, eventStyles.length-RIGHT_STYLES_SIZE, newRanges, LEFT_STYLES_SIZE + MIDDLE_STYLES_SIZE, RIGHT_STYLES_SIZE);
+			//
+			// technically, we should compute the exact middle as one big style range, 
+			// with default colors and styles, so if someone does actually type or work with 
+			// documnet as is, will still be correct. 
+			//
+			StyleRange allBlank = new StyleRange();
+			StyleRange lastKnown = newRanges[LEFT_STYLES_SIZE - 1];
+			allBlank.start = lastKnown.start + lastKnown.length;
+			StyleRange nextKnown = newRanges[LEFT_STYLES_SIZE + MIDDLE_STYLES_SIZE + 1];
+			allBlank.length = nextKnown.start - allBlank.start;
+			newRanges[LEFT_STYLES_SIZE] = allBlank;
+			return newRanges;
+		}
 	}
 
 	/**

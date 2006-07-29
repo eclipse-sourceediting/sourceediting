@@ -12,13 +12,11 @@
  *******************************************************************************/ -->
  
 <contexts>
-	<context id="csh_outer_container">
-		<description/>
-	</context>
-	<context id="xmlm3000">
-		<description>
-			The Design view of the XML editor represents your file simultaneously as a table and a tree, which helps make navigation and editing easier. Depending on the kind of file you are working with, content and attribute values can be edited directly in table cells, while pop-up menus on tree elements give alternatives that are valid for that location.
-		</description>
-		<topic href="../org.eclipse.wst.xmleditor.doc.user/topics/txedtdes.html" label="Editing in the Design view"/>
-	</context>
+<context id="csh_outer_container">
+<description/>
+</context>
+<context id="xmlm3000">
+<description>The Design view of the XML editor represents your file simultaneously as a table and a tree, which helps make navigation and editing easier. Depending on the kind of file you are working with, content and attribute values can be edited directly in table cells, while pop-up menus on tree elements give alternatives that are valid for that location.</description>
+<topic href="../org.eclipse.wst.xmleditor.doc.user/topics/txedtdes.html" label="Editing in the Design view"/>
+</context>
 </contexts>

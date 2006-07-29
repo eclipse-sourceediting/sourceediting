@@ -13,70 +13,115 @@
 
 package org.eclipse.wst.dtd.ui.views.contentoutline;
 
-/**
- * Menu helper for Content Outline page.  This should not be used elsewhere.
- */
-class DTDContextMenuHelper // extends FocusAdapter
-{
-/*
+import java.util.ArrayList;
+import java.util.List;
 
+import org.eclipse.jface.action.IMenuListener;
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.wst.dtd.core.internal.AttributeList;
+import org.eclipse.wst.dtd.core.internal.CMGroupNode;
+import org.eclipse.wst.dtd.core.internal.CMNode;
+import org.eclipse.wst.dtd.core.internal.DTDFile;
+import org.eclipse.wst.dtd.core.internal.DTDNode;
+import org.eclipse.wst.dtd.core.internal.Element;
+import org.eclipse.wst.dtd.core.internal.NodeList;
+import org.eclipse.wst.dtd.core.internal.document.DTDModelImpl;
+import org.eclipse.wst.dtd.core.internal.parser.DTDRegionTypes;
+import org.eclipse.wst.dtd.core.internal.util.LabelValuePair;
+import org.eclipse.wst.dtd.ui.internal.DTDUIMessages;
+import org.eclipse.wst.dtd.ui.internal.editor.DTDEditorPluginImageHelper;
+import org.eclipse.wst.dtd.ui.internal.editor.DTDEditorPluginImages;
+import org.eclipse.wst.dtd.ui.internal.views.contentoutline.actions.AddAttributeAction;
+import org.eclipse.wst.dtd.ui.internal.views.contentoutline.actions.AddAttributeListAction;
+import org.eclipse.wst.dtd.ui.internal.views.contentoutline.actions.AddCommentAction;
+import org.eclipse.wst.dtd.ui.internal.views.contentoutline.actions.AddElementAction;
+import org.eclipse.wst.dtd.ui.internal.views.contentoutline.actions.AddElementToContentModelAction;
+import org.eclipse.wst.dtd.ui.internal.views.contentoutline.actions.AddEntityAction;
+import org.eclipse.wst.dtd.ui.internal.views.contentoutline.actions.AddGroupToContentModelAction;
+import org.eclipse.wst.dtd.ui.internal.views.contentoutline.actions.AddNotationAction;
+import org.eclipse.wst.dtd.ui.internal.views.contentoutline.actions.AddParameterEntityReferenceAction;
+import org.eclipse.wst.dtd.ui.internal.views.contentoutline.actions.DeleteAction;
+import org.eclipse.wst.dtd.ui.internal.views.contentoutline.actions.ReplaceEmptyContentModelWithGroupAction;
+
+/**
+ * Menu helper for Content Outline page. This should not be used elsewhere.
+ */
+class DTDContextMenuHelper {
 	class DTDMenuListener implements IMenuListener {
 		public void menuAboutToShow(IMenuManager manager) {
-			updateActions();
-			Object node = null;
-			IContentOutlinePage outline = (IContentOutlinePage) DTDContextMenuHelper.this.fEditor.getAdapter(IContentOutlinePage.class);
-			ISelection selection = outline.getSelection();
-			if (selection instanceof IStructuredSelection) {
-				node = ((IStructuredSelection) selection).getFirstElement();
-			}
-			if (node == null && selection instanceof ITextSelection) {
-				node = fEditor.getModel().getIndexedRegion(((ITextSelection) selection).getOffset());
-			}
-			if (node != null) {
-				addActionItemsForSelection(node, manager);
+			// update the action selection now
+			addNotationAction.selectionChanged(fViewerSelection);
+			addEntityAction.selectionChanged(fViewerSelection);
+			addElementAction.selectionChanged(fViewerSelection);
+			addCommentAction.selectionChanged(fViewerSelection);
+			addParameterEntityReferenceAction.selectionChanged(fViewerSelection);
+			deleteAction.selectionChanged(fViewerSelection);
+			addAttributeAction.selectionChanged(fViewerSelection);
+			addAttributeListAction.selectionChanged(fViewerSelection);
+			addGroupToContentModelAction.selectionChanged(fViewerSelection);
+			addElementToContentModelAction.selectionChanged(fViewerSelection);
+			replaceEmptyContentModelWithGroupAction.selectionChanged(fViewerSelection);
+
+
+			if (!fViewerSelection.isEmpty()) {
+				addActionItemsForSelection(fViewerSelection.getFirstElement(), manager);
 			}
 		}
 	}
 
-	private AddAttributeAction addAttributeAction;
-	private AddAttributeListAction addAttributeListAction;
-	private AddCommentAction addCommentAction;
-	private AddElementAction addElementAction;
-	private AddElementToContentModelAction addElementToContentModelAction;
-	private AddEntityAction addEntityAction;
-	private AddGroupToContentModelAction addGroupToContentModelAction;
-	private AddNotationAction addNotationAction;
-	private AddParameterEntityReferenceAction addParameterEntityReferenceAction;
-	private DeleteAction deleteAction;
+	class ViewerSelectionChangeListener implements ISelectionChangedListener {
+		public void selectionChanged(SelectionChangedEvent event) {
+			_selectionChanged(event);
+		}
+	}
 
-	// default access, for inner class
-	IEditorPart fEditor;
+	AddAttributeAction addAttributeAction;
+
+	AddAttributeListAction addAttributeListAction;
+	AddCommentAction addCommentAction;
+	AddElementAction addElementAction;
+	AddElementToContentModelAction addElementToContentModelAction;
+	AddEntityAction addEntityAction;
+	AddGroupToContentModelAction addGroupToContentModelAction;
+	AddNotationAction addNotationAction;
+	AddParameterEntityReferenceAction addParameterEntityReferenceAction;
+	DeleteAction deleteAction;
+	private ISelectionChangedListener fInternalSelectionChangedListener = new ViewerSelectionChangeListener();
 
 	private IMenuListener fMenuListener;
-	private IAction redoAction;
+	private DTDModelImpl fModel;
+	private List fViewerList;
 
-	// protected CutAction cutAction;
-	// protected CopyAction copyAction;
-	// protected PasteAction pasteAction;
-	private IAction undoAction;
+	IStructuredSelection fViewerSelection = StructuredSelection.EMPTY;
 
-	// private List viewerList = new Vector();
+	ReplaceEmptyContentModelWithGroupAction replaceEmptyContentModelWithGroupAction;
 
-	public DTDContextMenuHelper(IEditorPart editor) {
-		this.fEditor = editor;
+	public DTDContextMenuHelper(DTDModelImpl model) {
+		fModel = model;
+		fViewerList = new ArrayList(1);
 		fMenuListener = new DTDMenuListener();
-		addNotationAction = new AddNotationAction(editor, DTDUIMessages._UI_ACTION_ADD_DTD_NOTATION); //$NON-NLS-1$
-		addEntityAction = new AddEntityAction(editor, DTDUIMessages._UI_ACTION_ADD_DTD_ENTITY); //$NON-NLS-1$
-		addElementAction = new AddElementAction(editor, DTDUIMessages._UI_ACTION_ADD_DTD_ELEMENT); //$NON-NLS-1$
-		addCommentAction = new AddCommentAction(editor, DTDUIMessages._UI_ACTION_ADD_DTD_COMMENT); //$NON-NLS-1$
 
-		addParameterEntityReferenceAction = new AddParameterEntityReferenceAction(editor, DTDUIMessages._UI_ACTION_ADD_PARAM_ENTITY_REF); //$NON-NLS-1$
+		addNotationAction = new AddNotationAction(model, DTDUIMessages._UI_ACTION_ADD_DTD_NOTATION); //$NON-NLS-1$
+		addEntityAction = new AddEntityAction(model, DTDUIMessages._UI_ACTION_ADD_DTD_ENTITY); //$NON-NLS-1$
+		addElementAction = new AddElementAction(model, DTDUIMessages._UI_ACTION_ADD_DTD_ELEMENT); //$NON-NLS-1$
+		addCommentAction = new AddCommentAction(model, DTDUIMessages._UI_ACTION_ADD_DTD_COMMENT); //$NON-NLS-1$
+
+		addParameterEntityReferenceAction = new AddParameterEntityReferenceAction(model, DTDUIMessages._UI_ACTION_ADD_PARAM_ENTITY_REF); //$NON-NLS-1$
 		deleteAction = new DeleteAction(DTDUIMessages._UI_ACTION_DTD_DELETE); //$NON-NLS-1$
-		addAttributeAction = new AddAttributeAction(editor, DTDUIMessages._UI_ACTION_ADD_ATTRIBUTE); //$NON-NLS-1$
-		addAttributeListAction = new AddAttributeListAction(editor, DTDUIMessages._UI_ACTION_ADD_ATTRIBUTELIST); //$NON-NLS-1$
+		addAttributeAction = new AddAttributeAction(model, DTDUIMessages._UI_ACTION_ADD_ATTRIBUTE); //$NON-NLS-1$
+		addAttributeListAction = new AddAttributeListAction(model, DTDUIMessages._UI_ACTION_ADD_ATTRIBUTELIST); //$NON-NLS-1$
 
-		addGroupToContentModelAction = new AddGroupToContentModelAction(editor, DTDUIMessages._UI_ACTION_GROUP_ADD_GROUP); //$NON-NLS-1$
-		addElementToContentModelAction = new AddElementToContentModelAction(editor, DTDUIMessages._UI_ACTION_ADD_ELEMENT); //$NON-NLS-1$
+		addGroupToContentModelAction = new AddGroupToContentModelAction(model, DTDUIMessages._UI_ACTION_GROUP_ADD_GROUP); //$NON-NLS-1$
+		addElementToContentModelAction = new AddElementToContentModelAction(model, DTDUIMessages._UI_ACTION_ADD_ELEMENT); //$NON-NLS-1$
+
+		replaceEmptyContentModelWithGroupAction = new ReplaceEmptyContentModelWithGroupAction(model, DTDUIMessages._UI_ACTION_GROUP_ADD_GROUP); //$NON-NLS-1$
 
 		addNotationAction.setImageDescriptor(DTDEditorPluginImageHelper.getInstance().getImageDescriptor(DTDEditorPluginImages.IMG_OBJ_ADD_NOTATION));
 		addEntityAction.setImageDescriptor(DTDEditorPluginImageHelper.getInstance().getImageDescriptor(DTDEditorPluginImages.IMG_OBJ_ADD_ENTITY));
@@ -103,18 +148,28 @@ class DTDContextMenuHelper // extends FocusAdapter
 		addElementToContentModelAction.setImageDescriptor(DTDEditorPluginImageHelper.getInstance().getImageDescriptor(DTDEditorPluginImages.IMG_ETOOL_ADD_ELEMENTTOCONMODEL));
 		addElementToContentModelAction.setHoverImageDescriptor(DTDEditorPluginImageHelper.getInstance().getImageDescriptor(DTDEditorPluginImages.IMG_CTOOL_ADD_ELEMENTTOCONMODEL));
 		addElementToContentModelAction.setDisabledImageDescriptor(DTDEditorPluginImageHelper.getInstance().getImageDescriptor(DTDEditorPluginImages.IMG_DTOOL_ADD_ELEMENTTOCONMODEL));
+
+		// use the same images as addGroupToContentModelAction
+		replaceEmptyContentModelWithGroupAction.setImageDescriptor(DTDEditorPluginImageHelper.getInstance().getImageDescriptor(DTDEditorPluginImages.IMG_ETOOL_ADD_GROUPTOCONMODEL));
+		replaceEmptyContentModelWithGroupAction.setHoverImageDescriptor(DTDEditorPluginImageHelper.getInstance().getImageDescriptor(DTDEditorPluginImages.IMG_CTOOL_ADD_GROUPTOCONMODEL));
+		replaceEmptyContentModelWithGroupAction.setDisabledImageDescriptor(DTDEditorPluginImageHelper.getInstance().getImageDescriptor(DTDEditorPluginImages.IMG_DTOOL_ADD_GROUPTOCONMODEL));
 	}
 
-	public void addActionItemsForSelection(Object selectedObject, IMenuManager menu) {
-		if (undoAction == null) {
-			undoAction = fEditor.getAction(ActionFactory.UNDO.getId());
-			redoAction = fEditor.getAction(ActionFactory.REDO.getId());
+	void _selectionChanged(SelectionChangedEvent event) {
+		/*
+		 * Save the selection so we only notify the actions when the menu is
+		 * shown
+		 */
+		ISelection selection = event.getSelection();
+		if (selection instanceof IStructuredSelection) {
+			fViewerSelection = (IStructuredSelection) selection;
 		}
+		else {
+			fViewerSelection = StructuredSelection.EMPTY;
+		}
+	}
 
-		menu.add(undoAction);
-		menu.add(redoAction);
-		menu.add(new Separator());
-
+	void addActionItemsForSelection(Object selectedObject, IMenuManager menu) {
 		if (selectedObject instanceof NodeList) {
 			// add appropriate menu to logical view
 			NodeList folder = (NodeList) selectedObject;
@@ -125,7 +180,7 @@ class DTDContextMenuHelper // extends FocusAdapter
 				menu.add(addEntityAction);
 			}
 			else if (folder.getListType().equals(DTDRegionTypes.ELEMENT_TAG)) {
-				LabelValuePair[] availableEntities = ((DTDModelImpl) fEditor.getModel()).createParmEntityContentItems(null);
+				LabelValuePair[] availableEntities = fModel.createParmEntityContentItems(null);
 				addParameterEntityReferenceAction.setEnabled(availableEntities.length > 0);
 
 				menu.add(addElementAction);
@@ -136,7 +191,7 @@ class DTDContextMenuHelper // extends FocusAdapter
 			}
 		}
 		if (selectedObject instanceof DTDFile || selectedObject == null) {
-			LabelValuePair[] availableEntities = ((DTDModelImpl) fEditor.getModel()).createParmEntityContentItems(null);
+			LabelValuePair[] availableEntities = fModel.createParmEntityContentItems(null);
 			addParameterEntityReferenceAction.setEnabled(availableEntities.length > 0);
 
 			menu.add(addElementAction);
@@ -151,9 +206,13 @@ class DTDContextMenuHelper // extends FocusAdapter
 		if (selectedObject instanceof Element) {
 			Element dtdElement = (Element) selectedObject;
 
-			if (dtdElement.getContentModel() == null) {
+			CMNode contentModel = dtdElement.getContentModel();
+			if (contentModel == null) {
 				menu.add(addGroupToContentModelAction);
 				menu.add(addElementToContentModelAction);
+			}
+			else if (contentModel != null && CMNode.EMPTY.equals(contentModel.getType())) {
+				menu.add(replaceEmptyContentModelWithGroupAction);
 			}
 			// if (!(((Element)selectedObject).getContentModel() instanceof
 			// CMGroupNode))
@@ -192,7 +251,7 @@ class DTDContextMenuHelper // extends FocusAdapter
 		}
 	}
 
-	public void addEditActions(IMenuManager menu) {
+	void addEditActions(IMenuManager menu) {
 		// menu.add(undoAction);
 		// menu.add(redoAction);
 		// menu.add(new Separator());
@@ -202,82 +261,24 @@ class DTDContextMenuHelper // extends FocusAdapter
 	}
 
 	public void createMenuListenersFor(Viewer viewer) {
-		viewer.addSelectionChangedListener(addNotationAction);
-		viewer.addSelectionChangedListener(addEntityAction);
-		viewer.addSelectionChangedListener(addElementAction);
-		viewer.addSelectionChangedListener(addCommentAction);
-		viewer.addSelectionChangedListener(addParameterEntityReferenceAction);
-		viewer.addSelectionChangedListener(deleteAction);
-		viewer.addSelectionChangedListener(addAttributeAction);
-		viewer.addSelectionChangedListener(addAttributeListAction);
-		viewer.addSelectionChangedListener(addGroupToContentModelAction);
-		viewer.addSelectionChangedListener(addElementToContentModelAction);
+		viewer.addSelectionChangedListener(fInternalSelectionChangedListener);
+		ISelection selection = viewer.getSelection();
+		if (selection instanceof IStructuredSelection) {
+			fViewerSelection = (IStructuredSelection) selection;
+		}
+		else {
+			fViewerSelection = StructuredSelection.EMPTY;
+		}
 
-		IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
-		addNotationAction.selectionChanged(selection);
-		addEntityAction.selectionChanged(selection);
-		addElementAction.selectionChanged(selection);
-		addParameterEntityReferenceAction.selectionChanged(selection);
-		deleteAction.selectionChanged(selection);
-		addAttributeAction.selectionChanged(selection);
-		addAttributeListAction.selectionChanged(selection);
-		addGroupToContentModelAction.selectionChanged(selection);
-		addElementToContentModelAction.selectionChanged(selection);
-
-		// viewer.addSelectionChangedListener(cutAction);
-		// viewer.addSelectionChangedListener(copyAction);
-		// viewer.addSelectionChangedListener(pasteAction);
-
-		// viewerList.add(viewer);
-		// viewer.getControl().addFocusListener(this);
-	}
-
-	public DeleteAction getDeleteAction() {
-		return deleteAction;
+		fViewerList.add(viewer);
 	}
 
 	public IMenuListener getMenuListener() {
 		return fMenuListener;
 	}
 
-	// public void focusGained(FocusEvent event)
-	// {
-	// updateSelection();
-	// }
-
 	public void removeMenuListenersFor(Viewer viewer) {
-		viewer.removeSelectionChangedListener(addNotationAction);
-		viewer.removeSelectionChangedListener(addEntityAction);
-		viewer.removeSelectionChangedListener(addElementAction);
-		viewer.removeSelectionChangedListener(addCommentAction);
-		viewer.removeSelectionChangedListener(addParameterEntityReferenceAction);
-		viewer.removeSelectionChangedListener(deleteAction);
-		viewer.removeSelectionChangedListener(addAttributeAction);
-		viewer.removeSelectionChangedListener(addAttributeListAction);
-		viewer.removeSelectionChangedListener(addGroupToContentModelAction);
-		viewer.removeSelectionChangedListener(addElementToContentModelAction);
+		viewer.removeSelectionChangedListener(fInternalSelectionChangedListener);
+		fViewerList.remove(viewer);
 	}
-
-	// Update all the actions for the viewer in focus
-	public void updateActions() {
-		// undoAction.update();
-		// redoAction.update();
-	}
-
-	public void updateEditActions(IActionBars actionBars) {
-		// if (actionBars != null)
-		// {
-		// actionBars.setGlobalActionHandler(IWorkbenchActionConstants.CUT,
-		// cutAction);
-		// actionBars.setGlobalActionHandler(IWorkbenchActionConstants.COPY,
-		// copyAction);
-		// actionBars.setGlobalActionHandler(IWorkbenchActionConstants.PASTE,
-		// pasteAction);
-		// actionBars.setGlobalActionHandler(IWorkbenchActionConstants.UNDO,
-		// undoAction);
-		// actionBars.setGlobalActionHandler(IWorkbenchActionConstants.REDO,
-		// redoAction);
-		// }
-	}
-*/
 }

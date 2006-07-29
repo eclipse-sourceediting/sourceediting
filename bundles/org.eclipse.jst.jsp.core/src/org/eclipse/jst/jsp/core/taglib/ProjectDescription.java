@@ -11,15 +11,19 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.core.taglib;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Stack;
 
 import org.eclipse.core.filebuffers.FileBuffers;
@@ -49,6 +53,8 @@ import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.JSP12TLDNa
 import org.eclipse.jst.jsp.core.internal.util.DocumentProvider;
 import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
 import org.eclipse.wst.sse.core.internal.util.JarUtilities;
+import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
+import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalog;
 import org.w3c.dom.Document;
 import org.w3c.dom.EntityReference;
 import org.w3c.dom.Node;
@@ -287,7 +293,7 @@ class ProjectDescription {
 		}
 
 		public String toString() {
-			return "TLDRecord: " + path + " <-> " + getURI(); //$NON-NLS-1$ //$NON-NLS-2$
+			return "TLDRecord: " + getURI() + " <-> " + path; //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 
@@ -446,15 +452,107 @@ class ProjectDescription {
 	void clear() {
 	}
 
+	private ITaglibRecord createCatalogRecord(String urlString) {
+		ITaglibRecord record = null;
+		if (urlString.toLowerCase(Locale.US).endsWith((".jar")) && urlString.startsWith("file:")) {
+			String fileLocation = null;
+			try {
+				URL url = new URL(urlString);
+				fileLocation = url.getFile();
+			}
+			catch (MalformedURLException e) {
+				// not worth reporting
+			}
+			if (fileLocation != null) {
+				JarRecord jarRecord = createJARRecord(fileLocation);
+				String[] entries = JarUtilities.getEntryNames(fileLocation);
+				for (int jEntry = 0; jEntry < entries.length; jEntry++) {
+					if (entries[jEntry].endsWith(".tld")) { //$NON-NLS-1$
+						if (entries[jEntry].equals(JarUtilities.JSP11_TAGLIB)) {
+							jarRecord.has11TLD = true;
+							InputStream contents = JarUtilities.getInputStream(fileLocation, entries[jEntry]);
+							if (contents != null) {
+								TaglibInfo info = extractInfo(fileLocation, contents);
+								jarRecord.info = info;
+							}
+							try {
+								contents.close();
+							}
+							catch (IOException e) {
+							}
+						}
+					}
+				}
+				if (jarRecord.has11TLD) {
+					if (_debugIndexCreation)
+						Logger.log(Logger.INFO_DEBUG, "created catalog record for " + urlString + "@" + jarRecord.getLocation()); //$NON-NLS-1$ //$NON-NLS-2$
+					record = jarRecord;
+				}
+
+			}
+		}
+		else {
+			URL url = null;
+			ByteArrayInputStream cachedContents = null;
+			InputStream tldStream = null;
+			try {
+				url = new URL(urlString);
+				URLConnection connection = url.openConnection();
+				connection.setDefaultUseCaches(false);
+				tldStream = connection.getInputStream();
+			}
+			catch (Exception e1) {
+				Logger.logException(e1);
+			}
+
+			int c;
+			ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+			// array dim restriction?
+			byte bytes[] = new byte[2048];
+			try {
+				while ((c = tldStream.read(bytes)) >= 0) {
+					buffer.write(bytes, 0, c);
+				}
+				cachedContents = new ByteArrayInputStream(buffer.toByteArray());
+			}
+			catch (IOException ioe) {
+				// no cleanup can be done
+			}
+			finally {
+				try {
+					tldStream.close();
+				}
+				catch (IOException e) {
+				}
+			}
+
+			URLRecord urlRecord = null;
+			TaglibInfo info = extractInfo(urlString, cachedContents);
+			if (info != null) {
+				urlRecord = new URLRecord();
+				urlRecord.info = info;
+				urlRecord.baseLocation = urlString;
+				urlRecord.url = url; //$NON-NLS-1$ //$NON-NLS-2$
+			}
+			try {
+				cachedContents.close();
+			}
+			catch (IOException e) {
+			}
+			record = urlRecord;
+		}
+		return record;
+	}
+
 	/**
 	 * @param resource
 	 * @return
 	 */
-	private ITaglibRecord createJARRecord(IResource jar) {
+	private JarRecord createJARRecord(IResource jar) {
 		return createJARRecord(jar.getLocation().toString());
 	}
 
-	private ITaglibRecord createJARRecord(String fileLocation) {
+	private JarRecord createJARRecord(String fileLocation) {
 		JarRecord record = new JarRecord();
 		record.location = new Path(fileLocation);
 		record.urlRecords = new ArrayList(0);
@@ -930,6 +1028,32 @@ class ProjectDescription {
 			record = (ITaglibRecord) fClasspathReferences.get(reference);
 		}
 
+		// Check the XML Catalog
+		if (record == null) {
+			ICatalog catalog = XMLCorePlugin.getDefault().getDefaultXMLCatalog();
+			if (catalog != null) {
+				String resolvedString = null;
+				try {
+					// Check as system reference first
+					resolvedString = catalog.resolveSystem(reference);
+					// Check as URI
+					if (resolvedString == null || resolvedString.trim().length() == 0) {
+						resolvedString = catalog.resolveURI(reference);
+					}
+					// Check as public ID
+					if (resolvedString == null || resolvedString.trim().length() == 0) {
+						resolvedString = catalog.resolvePublic(reference, basePath);
+					}
+				}
+				catch (Exception e) {
+					Logger.logException(e);
+				}
+				if (resolvedString != null && resolvedString.trim().length() > 0) {
+					record = createCatalogRecord(resolvedString);
+				}
+			}
+		}
+
 		// If no records were found and no local-root applies, check ALL of
 		// the web.xml files as a fallback
 		if (record == null && fProject.getFullPath().toString().equals(getLocalRoot(basePath))) {
@@ -945,7 +1069,7 @@ class ProjectDescription {
 
 	void updateClasspathLibrary(String libraryLocation, int deltaKind) {
 		String[] entries = JarUtilities.getEntryNames(libraryLocation);
-		JarRecord libraryRecord = (JarRecord) createJARRecord(libraryLocation);
+		JarRecord libraryRecord = createJARRecord(libraryLocation);
 		fClasspathJars.put(libraryLocation, libraryRecord);
 		for (int i = 0; i < entries.length; i++) {
 			if (entries[i].equals(JarUtilities.JSP11_TAGLIB)) {
@@ -988,7 +1112,7 @@ class ProjectDescription {
 			Logger.log(Logger.INFO_DEBUG, "creating records for JAR " + jar.getFullPath()); //$NON-NLS-1$
 		String jarLocationString = jar.getLocation().toString();
 		String[] entries = JarUtilities.getEntryNames(jar);
-		JarRecord jarRecord = (JarRecord) createJARRecord(jar);
+		JarRecord jarRecord = createJARRecord(jar);
 		fJARReferences.put(jar.getFullPath().toString(), jarRecord);
 		for (int i = 0; i < entries.length; i++) {
 			if (entries[i].endsWith(".tld")) { //$NON-NLS-1$
@@ -1068,6 +1192,7 @@ class ProjectDescription {
 			DocumentProvider provider = new DocumentProvider();
 			provider.setInputStream(webxmlContents);
 			provider.setValidating(false);
+			provider.setRootElementName("web-app"); //$NON-NLS-1$
 			provider.setBaseReference(webxml.getParent().getLocation().toString());
 			document = provider.getDocument();
 		}
@@ -1104,13 +1229,50 @@ class ProjectDescription {
 				path = new Path(URIHelper.normalize(taglibLocation, webxml.getFullPath().toString(), getLocalRoot(webxml.getLocation().toString())));
 			}
 			if (path.segmentCount() > 1) {
-				IFile tldResource = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
-				if (tldResource.isAccessible()) {
-					ITLDRecord record = createTLDRecord(tldResource);
+				IFile resource = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
+				if (resource.isAccessible()) {
+					ITaglibRecord record = null;
+					/*
+					 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=125960
+					 * 
+					 * Also support mappings to .jar files
+					 */
+					if (resource.getFileExtension().equalsIgnoreCase(("jar"))) {
+						JarRecord jarRecord = createJARRecord(resource);
+						String[] entries = JarUtilities.getEntryNames(resource);
+						for (int jEntry = 0; jEntry < entries.length; jEntry++) {
+							if (entries[jEntry].endsWith(".tld")) { //$NON-NLS-1$
+								if (entries[jEntry].equals(JarUtilities.JSP11_TAGLIB)) {
+									jarRecord.has11TLD = true;
+									InputStream contents = JarUtilities.getInputStream(resource, entries[jEntry]);
+									if (contents != null) {
+										TaglibInfo info = extractInfo(resource.getLocation().toString(), contents);
+										jarRecord.info = info;
+									}
+									try {
+										contents.close();
+									}
+									catch (IOException e) {
+									}
+								}
+							}
+						}
+						record = jarRecord;
+						// the stored URI should reflect the web.xml's value
+						jarRecord.info.uri = taglibUri;
+						if (_debugIndexCreation)
+							Logger.log(Logger.INFO_DEBUG, "created web.xml record for " + taglibUri + "@" + jarRecord.getLocation()); //$NON-NLS-1$ //$NON-NLS-2$
+					}
+					else {
+						TLDRecord tldRecord = createTLDRecord(resource);
+						record = tldRecord;
+						// the stored URI should reflect the web.xml's value
+						tldRecord.info.uri = taglibUri;
+						if (_debugIndexCreation)
+							Logger.log(Logger.INFO_DEBUG, "created web.xml record for " + taglibUri + "@" + tldRecord.getPath()); //$NON-NLS-1$ //$NON-NLS-2$
+					}
 					webxmlRecord.tldRecords.add(record);
 					getImplicitReferences(webxml.getFullPath().toString()).put(taglibUri, record);
-					if (_debugIndexCreation)
-						Logger.log(Logger.INFO_DEBUG, "created web.xml record for " + taglibUri + "@" + record.getPath()); //$NON-NLS-1$ //$NON-NLS-2$
 					TaglibIndex.fireTaglibRecordEvent(new TaglibRecordEvent(record, deltaKind));
 				}
 			}

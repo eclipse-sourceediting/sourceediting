@@ -305,7 +305,7 @@ public class DocumentRegionProcessor extends DirtyRegionProcessor implements IDo
 				dr = createDirtyRegion(event.getOffset(), 0, DirtyRegion.INSERT);
 			}
 			else {
-				if(event.getText().equals("")) { //$NON-NLS-1$
+				if("".equals(event.getText())) { //$NON-NLS-1$
 					// it's a delete
 					dr =createDirtyRegion(event.getOffset(), event.getLength(), DirtyRegion.REMOVE);
 				}
