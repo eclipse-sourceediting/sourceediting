@@ -7,6 +7,7 @@ import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
 import org.eclipse.wst.xml.ui.internal.tabletree.TreeContentHelper;
 import org.eclipse.wst.xsd.ui.internal.common.commands.UpdateAttributeValueCommand;
+import org.eclipse.wst.xsd.ui.internal.common.commands.UpdateTextValueCommand;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -16,7 +17,6 @@ class DOMExtensionItem extends ExtensionItem
   private final static int KIND_ELEMENT_TEXT = 2;
   private final static int KIND_ELEMENT_CMATTRIBUTE = 3;
   private final static int KIND_ATTR_TEXT = 4;
-  private static TreeContentHelper treeContentHelper = new TreeContentHelper();
   int kind;
   Attr attribute;
   Element parent;
@@ -29,10 +29,15 @@ class DOMExtensionItem extends ExtensionItem
     this.attribute = node;
     this.cmNode = cmNode;
   }
-
-  static DOMExtensionItem createItemForElementText(Element parent, CMElementDeclaration ed)
+  
+  public boolean isTextValue()
   {
-    return new DOMExtensionItem(KIND_ELEMENT_TEXT, parent, null, ed);
+    return kind == KIND_ELEMENT_TEXT || kind == KIND_ATTR_TEXT;
+  }
+
+  static DOMExtensionItem createItemForElementText(Element parent)
+  {
+    return new DOMExtensionItem(KIND_ELEMENT_TEXT, parent, null, null);
   }
 
   static DOMExtensionItem createItemForElementAttribute(Element parent, Attr attribute)
@@ -99,7 +104,7 @@ class DOMExtensionItem extends ExtensionItem
         return (value != null) ? value : "";
       }
       case KIND_ELEMENT_TEXT : {
-        return treeContentHelper.getNodeValue(parent);
+        return new TreeContentHelper().getNodeValue(parent);
       }
     }
     return "";
@@ -108,6 +113,7 @@ class DOMExtensionItem extends ExtensionItem
   public String[] getPossibleValues()
   {
     String[] result = {};
+     
     switch (kind)
     {
       case KIND_ATTR_TEXT :
@@ -115,8 +121,8 @@ class DOMExtensionItem extends ExtensionItem
         // note intentional fall-thru!!
         ModelQuery modelQuery = ModelQueryUtil.getModelQuery(parent.getOwnerDocument());
         if (modelQuery != null)
-        {
-          CMAttributeDeclaration ad = modelQuery.getCMAttributeDeclaration(attribute);
+        {            
+          CMAttributeDeclaration ad = modelQuery.getCMAttributeDeclaration(attribute);        
           if (ad != null)
           {
             result = modelQuery.getPossibleDataTypeValues(parent, ad);
@@ -133,7 +139,15 @@ class DOMExtensionItem extends ExtensionItem
         break;
       }
       case KIND_ELEMENT_TEXT : {
-        // TODO
+        ModelQuery modelQuery = ModelQueryUtil.getModelQuery(parent.getOwnerDocument());
+        if (modelQuery != null)
+        {
+          CMElementDeclaration ed = modelQuery.getCMElementDeclaration(parent);
+          if (ed != null)
+          { 
+            result = modelQuery.getPossibleDataTypeValues(parent, ed);             
+          }  
+        }
         break;
       }
     }
@@ -154,8 +168,7 @@ class DOMExtensionItem extends ExtensionItem
         return new UpdateAttributeValueCommand(parent, ad.getAttrName(), newValue);
       }
       case KIND_ELEMENT_TEXT : {
-        // TODO (cs) we need an update element text command
-        return null;
+        return new UpdateTextValueCommand(parent, newValue);
       }
     }
     return null;

@@ -1,6 +1,9 @@
 package org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo;
 
+import java.text.Collator;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -8,6 +11,7 @@ import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
+import org.eclipse.wst.xml.ui.internal.tabletree.TreeContentHelper;
 import org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo.custom.DefaultListNodeEditorConfiguration;
 import org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo.custom.NodeCustomizationRegistry;
 import org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo.custom.NodeEditorConfiguration;
@@ -22,13 +26,17 @@ public class DOMExtensionDetailsContentProvider implements ExtensionDetailsConte
   private static final Object[] EMPTY_ARRAY = {};
   private static final String[] EMPTY_STRING_ARRAY = {};
   private static final String XMLNS = "xmlns"; //$NON-NLS
+  private static final String TEXT_NODE_KEY = "text()"; //$NON-NLS
 
   public Object[] getItems(Object input)
   {
     HashMap resultMap = new HashMap();
     if (input instanceof Element)
     {
-      Element element = (Element) input;     
+      Element element = (Element) input;
+      
+      // here we compute items for the attributes that physically in the document 
+      //
       NamedNodeMap attributes = element.getAttributes();
       for (int i = 0; i < attributes.getLength(); i++)
       {
@@ -38,12 +46,23 @@ public class DOMExtensionDetailsContentProvider implements ExtensionDetailsConte
           resultMap.put(attr.getName(), DOMExtensionItem.createItemForElementAttribute(element, attr));
         }
       }
+     
+      // here we compute an item for the text node that is physically in the document 
+      //      
+      String textNodeValue = new TreeContentHelper().getNodeValue(element);
+      if (textNodeValue != null)
+      {  
+        resultMap.put(TEXT_NODE_KEY, DOMExtensionItem.createItemForElementText(element));
+      }  
+      
       ModelQuery modelQuery = ModelQueryUtil.getModelQuery(element.getOwnerDocument());
       if (modelQuery != null)
       {
         CMElementDeclaration ed = modelQuery.getCMElementDeclaration(element);
         if (ed != null)
         {
+          // here we compute items for the attributes that may be added to the document according to the grammar 
+          //           
           List list = modelQuery.getAvailableContent(element, ed, ModelQuery.INCLUDE_ATTRIBUTES);
           for (Iterator i = list.iterator(); i.hasNext(); )
           {  
@@ -53,12 +72,16 @@ public class DOMExtensionDetailsContentProvider implements ExtensionDetailsConte
                 resultMap.put(ad.getNodeName(), DOMExtensionItem.createItemForElementAttribute(element, ad));
               }            
           }
-          //
-          int contentType = ed.getContentType();
-          if ((contentType == CMElementDeclaration.PCDATA || contentType == CMElementDeclaration.PCDATA) && ed.getDataType() != null)
+          if (resultMap.get(TEXT_NODE_KEY) == null)
           {
-            resultMap.put("text()", DOMExtensionItem.createItemForElementText(element, ed));
-          }
+            // here we compute an item for the text node that may be added to the document according to the grammar 
+            //                  
+            int contentType = ed.getContentType();
+            if (contentType == CMElementDeclaration.PCDATA || contentType == CMElementDeclaration.MIXED)
+            {
+              resultMap.put(TEXT_NODE_KEY, DOMExtensionItem.createItemForElementText(element));
+            }
+          }  
         }
       }
       Collection collection = resultMap.values();
@@ -70,6 +93,36 @@ public class DOMExtensionDetailsContentProvider implements ExtensionDetailsConte
       }
       DOMExtensionItem[] items = new DOMExtensionItem[collection.size()];
       resultMap.values().toArray(items);
+      
+      // here we sort the list alphabetically
+      //
+      if (items.length > 0)
+      {  
+        Comparator comparator = new Comparator()
+        {
+          public int compare(Object arg0, Object arg1)
+          {         
+            DOMExtensionItem a = (DOMExtensionItem)arg0;
+            DOMExtensionItem b = (DOMExtensionItem)arg1;
+            
+            // begin special case to ensure 'text nodes' come last
+            if (a.isTextValue() && !b.isTextValue())
+            {
+              return 1;   
+            }
+            else if (b.isTextValue() && !a.isTextValue())
+            {
+              return -1;
+            }  
+            // end special case
+            else
+            {          
+              return Collator.getInstance().compare(a.getName(), b.getName());
+            }  
+          }
+        };
+        Arrays.sort(items, comparator);
+      }  
       return items;
     }
     else if (input instanceof Attr)

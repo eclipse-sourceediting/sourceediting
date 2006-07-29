@@ -50,6 +50,7 @@ import org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo.Extens
 import org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo.SpecificationForExtensionsSchema;
 import org.eclipse.wst.xsd.ui.internal.common.util.Messages;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 public abstract class AbstractExtensionsSection extends AbstractSection
 {
@@ -454,7 +455,7 @@ public abstract class AbstractExtensionsSection extends AbstractSection
   }
  
 
-  Element selectedElement;
+  Node selectedNode;
 
   class ElementSelectionChangedListener implements ISelectionChangedListener
   {
@@ -468,9 +469,9 @@ public abstract class AbstractExtensionsSection extends AbstractSection
         if (structuredSelection.size() > 0)
         {  
           Object obj = structuredSelection.getFirstElement();
-          if (obj instanceof Element)
+          if (obj instanceof Node)
           {
-            selectedElement = (Element) obj;
+            selectedNode = (Node) obj;
             extensionDetailsViewer.setInput(obj);
             isDeleteEnabled = true;         
           }
