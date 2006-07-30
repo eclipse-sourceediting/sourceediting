@@ -34,7 +34,6 @@ import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.osgi.util.NLS;
-import org.eclipse.wst.html.core.internal.Logger;
 import org.eclipse.wst.html.core.internal.validate.HTMLValidationAdapterFactory;
 import org.eclipse.wst.html.ui.internal.HTMLUIMessages;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -509,13 +508,10 @@ public class HTMLValidator implements IValidatorJob, ISourceValidator {
 	}
 
 	public IStatus validateInJob(IValidationContext helper, IReporter reporter) throws ValidationException {
+		// Exception catching was removed, see
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=123600
 		IStatus status = Status.OK_STATUS;
-		try {
-			validate(helper, reporter);
-		}
-		catch (Exception e) {
-			Logger.logException(e);
-		}
+		validate(helper, reporter);
 		return status;
 	}
 }
