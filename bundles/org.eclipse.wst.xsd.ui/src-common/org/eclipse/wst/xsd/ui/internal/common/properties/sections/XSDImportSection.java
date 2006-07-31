@@ -313,20 +313,32 @@ public class XSDImportSection extends SchemaLocationSection
       String newPrefix = prefixText.getText();
       if (oldPrefixValue.equals(newPrefix))
         return;
-
-      if (XMLChar.isValidNCName(newPrefix) && schemaLocationText.getText().trim().length() > 0)
+      Map map = xsdSchema.getQNamePrefixToNamespaceMap();
+      String key = prefixText.getText();      
+      if (key.length() == 0) key = null;
+      
+      if (validatePrefix(newPrefix) && schemaLocationText.getText().trim().length() > 0)
       {
-        Map map = xsdSchema.getQNamePrefixToNamespaceMap();
-
-        if (map.containsKey(newPrefix))
+        if (map.containsKey(key))
         {
           setErrorMessage(XSDEditorPlugin.getXSDString("_ERROR_LABEL_PREFIX_EXISTS"));
         }
         else
         {
           Element schemaElement = xsdSchema.getElement();
-          schemaElement.removeAttribute("xmlns:" + oldPrefixValue);
-          schemaElement.setAttribute("xmlns:" + newPrefix, namespaceText.getText());
+          
+          if (key != null) {
+            if (oldPrefixValue.length() == 0) 
+              schemaElement.removeAttribute("xmlns");
+            else 
+              schemaElement.removeAttribute("xmlns:"+oldPrefixValue);
+            
+            schemaElement.setAttribute("xmlns:" + newPrefix, namespaceText.getText());
+          } 
+          else {
+            schemaElement.removeAttribute("xmlns:"+oldPrefixValue);
+            schemaElement.setAttribute("xmlns", namespaceText.getText());
+          }
           xsdSchema.updateElement();
           setErrorMessage(null);
           oldPrefixValue = newPrefix;
@@ -343,5 +355,11 @@ public class XSDImportSection extends SchemaLocationSection
   {
     setErrorMessage(null);
     super.aboutToBeHidden();
+  }
+  
+  protected boolean validatePrefix(String prefix)
+  {
+    if (prefix.length() == 0) return true;
+    return XMLChar.isValidNCName(prefix);
   }
 }
