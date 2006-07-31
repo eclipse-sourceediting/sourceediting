@@ -2852,9 +2852,12 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	 *      long)
 	 */
 	public void set(String text, long modificationStamp) {
-		// bug 151069 - overwrite read only regions when setting entire document
-		 replaceText(null, 0, getLength(), text, true);
-
+		try {
+			replace(0, getLength(), text);
+		}
+		catch (BadLocationException exception) {
+			Logger.logException(exception);
+		}
 		fModificationStamp = modificationStamp;
 	}
 
