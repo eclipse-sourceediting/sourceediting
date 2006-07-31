@@ -3302,7 +3302,13 @@ public class StructuredTextEditor extends TextEditor {
 			Object[] objects = ((IStructuredSelection) selection).toArray();
 			if (objects.length > 0 && objects[0] instanceof IndexedRegion) {
 				int start = ((IndexedRegion) objects[0]).getStartOffset();
-				int end = ((IndexedRegion) objects[objects.length - 1]).getEndOffset();
+				int end = ((IndexedRegion) objects[0]).getEndOffset();
+				if (objects.length > 1) {
+					for (int i = 1; i < objects.length; i++) {
+						start = Math.min(start, ((IndexedRegion) objects[i]).getStartOffset());
+						end = Math.max(end, ((IndexedRegion) objects[i]).getEndOffset());
+					}
+				}
 				getSourceViewer().setRangeIndication(start, end - start, false);
 				rangeUpdated = true;
 			}
