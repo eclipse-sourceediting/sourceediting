@@ -36,14 +36,16 @@ public class CMImageUtil {
 		CMNode decl = null;
 		ModelQuery mq = null;
 		switch (node.getNodeType()) {
-		case Node.ATTRIBUTE_NODE: {
-			mq = ModelQueryUtil.getModelQuery(((Attr) node).getOwnerDocument());
-			decl = mq.getCMAttributeDeclaration((Attr) node);
-		}
-		case Node.ELEMENT_NODE: {
-			mq = ModelQueryUtil.getModelQuery(node.getOwnerDocument());
-			decl = mq.getCMElementDeclaration((Element) node);
-		}
+			case Node.ATTRIBUTE_NODE : {
+				mq = ModelQueryUtil.getModelQuery(((Attr) node).getOwnerDocument());
+				decl = mq.getCMAttributeDeclaration((Attr) node);
+			}
+				break;
+			case Node.ELEMENT_NODE : {
+				mq = ModelQueryUtil.getModelQuery(node.getOwnerDocument());
+				decl = mq.getCMElementDeclaration((Element) node);
+			}
+				break;
 		}
 		return decl;
 	}
