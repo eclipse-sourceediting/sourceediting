@@ -77,6 +77,7 @@ public class XSDFacetSection extends AbstractSection
   boolean isNumericBaseType;
   private XSDTypeDefinition typeDefinition;
   private XSDSimpleTypeDefinition xsdSimpleTypeDefinition;
+  private XSDSimpleTypeDefinition currentPrimitiveType, previousPrimitiveType;
   private XSDElementDeclaration xsdElementDeclaration;
   private XSDAttributeDeclaration xsdAttributeDeclaration;
   private XSDFeature xsdFeature;
@@ -302,6 +303,7 @@ public class XSDFacetSection extends AbstractSection
   
   private void updateInput()
   {
+    previousPrimitiveType = currentPrimitiveType;
     if (input instanceof XSDFeature)
     {
       xsdFeature = (XSDFeature) input;
@@ -334,10 +336,12 @@ public class XSDFacetSection extends AbstractSection
         {
           XSDSimpleTypeDefinition basePrimitiveType = xsdSimpleTypeDefinition.getBaseTypeDefinition();
           String basePrimitiveTypeString = basePrimitiveType != null ? basePrimitiveType.getName() : "";
+          currentPrimitiveType = basePrimitiveType;
           titleString = Messages._UI_LABEL_TYPE + (anonymousTypeDefinition != null ? "(" + xsdFeature.getResolvedFeature().getName() + "Type)" : xsdSimpleTypeDefinition.getName())  + " , " + Messages._UI_LABEL_BASE + ": " + basePrimitiveTypeString; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
         }
         else
         {
+          currentPrimitiveType = xsdSimpleTypeDefinition;
           titleString = Messages._UI_LABEL_TYPE + (anonymousTypeDefinition != null ? "(" + xsdFeature.getResolvedFeature().getName() + "Type)" : xsdSimpleTypeDefinition.getName());
         }
       }
@@ -345,6 +349,7 @@ public class XSDFacetSection extends AbstractSection
     else if (input instanceof XSDSimpleTypeDefinition)
     {
       xsdSimpleTypeDefinition = (XSDSimpleTypeDefinition) input;
+      currentPrimitiveType = xsdSimpleTypeDefinition;
       titleString = Messages._UI_LABEL_TYPE + (xsdSimpleTypeDefinition.getName() == null ? "(localType)" : xsdSimpleTypeDefinition.getName()) + " , " + Messages._UI_LABEL_BASE + ": " + xsdSimpleTypeDefinition.getBaseTypeDefinition().getName(); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
@@ -353,6 +358,12 @@ public class XSDFacetSection extends AbstractSection
   {
     super.refresh();
     init();
+    
+    if (currentPrimitiveType != previousPrimitiveType)
+    {
+      relayout();      
+    }
+    
     setListenerEnabled(false);
     
     XSDWhiteSpaceFacet whitespaceFacet = xsdSimpleTypeDefinition.getWhiteSpaceFacet();
@@ -511,9 +522,6 @@ public class XSDFacetSection extends AbstractSection
     maximumInclusiveCheckbox.removeSelectionListener(this);
     try
     {
-      minLengthText.setText(""); //$NON-NLS-1$
-      maxLengthText.setText(""); //$NON-NLS-1$
-
       minimumInclusiveCheckbox.setSelection(false);
       minimumInclusiveCheckbox.setEnabled(false);
       if (minFacet != null && minFacet.getRootContainer() == xsdSchema)
@@ -524,6 +532,10 @@ public class XSDFacetSection extends AbstractSection
           minLengthText.setText(minFacet.getLexicalValue());
           minimumInclusiveCheckbox.setSelection(minFacet.isInclusive());
           minimumInclusiveCheckbox.setEnabled(true);
+        }
+        else
+        {
+          minLengthText.setText(""); //$NON-NLS-1$
         }
       }
 
@@ -537,6 +549,10 @@ public class XSDFacetSection extends AbstractSection
           maxLengthText.setText(maxFacet.getLexicalValue());
           maximumInclusiveCheckbox.setSelection(maxFacet.isInclusive());
           maximumInclusiveCheckbox.setEnabled(true);
+        }
+        else
+        {
+          maxLengthText.setText(""); //$NON-NLS-1$
         }
       }
     }
@@ -552,6 +568,7 @@ public class XSDFacetSection extends AbstractSection
     super.doHandleEvent(event);
     Command command = null;
     boolean doUpdateMax = false, doUpdateMin = false;
+    boolean doSetInput = false;
     
     String minValue = minLengthText.getText().trim();
     String maxValue = maxLengthText.getText().trim();
@@ -759,6 +776,7 @@ public class XSDFacetSection extends AbstractSection
           changeToAnonymousCommand = new ChangeToLocalSimpleTypeCommand(Messages._UI_ACTION_CONSTRAIN_LENGTH, (XSDFeature)input);
           changeToAnonymousCommand.setAnonymousSimpleType(anonymousSimpleType);
           compoundCommand.add(changeToAnonymousCommand);
+          doSetInput = true;
         }
 
         if (!isNumericBaseType)
@@ -851,7 +869,8 @@ public class XSDFacetSection extends AbstractSection
       }
       
     }
-    setInput(getPart(), getSelection());
+    if (doSetInput)
+      setInput(getPart(), getSelection());
   }
   
   public void widgetSelected(SelectionEvent e)

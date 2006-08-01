@@ -15,6 +15,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.wst.xsd.ui.internal.adt.actions.BaseSelectionAction;
+import org.eclipse.wst.xsd.ui.internal.adt.actions.ShowPropertiesViewAction;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IActionProvider;
 import org.eclipse.wst.xsd.ui.internal.adt.outline.ITreeElement;
 import org.eclipse.wst.xsd.ui.internal.common.actions.DeleteXSDConcreteComponentAction;
@@ -118,6 +120,8 @@ public class XSDSchemaDirectiveAdapter extends XSDBaseAdapter implements IAction
     List list = new ArrayList();
     list.add(OpenInNewEditor.ID);
     list.add(DeleteXSDConcreteComponentAction.DELETE_XSD_COMPONENT_ID);
+    list.add(BaseSelectionAction.SEPARATOR_ID);
+    list.add(ShowPropertiesViewAction.ID);
     
     return (String [])list.toArray(new String[0]);
   }
