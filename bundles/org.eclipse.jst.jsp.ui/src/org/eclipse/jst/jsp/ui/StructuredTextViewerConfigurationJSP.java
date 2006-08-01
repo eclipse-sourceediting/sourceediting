@@ -13,10 +13,10 @@ package org.eclipse.jst.jsp.ui;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jdt.ui.PreferenceConstants;
 import org.eclipse.jdt.ui.text.IJavaPartitions;
 import org.eclipse.jdt.ui.text.JavaSourceViewerConfiguration;
-import org.eclipse.jdt.ui.text.JavaTextTools;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.ITextDoubleClickStrategy;
@@ -322,7 +322,6 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 	private JavaSourceViewerConfiguration getJavaSourceViewerConfiguration() {
 		if (fJavaSourceViewerConfiguration == null) {
 			IPreferenceStore store = PreferenceConstants.getPreferenceStore();
-			JavaTextTools javaTextTools = new JavaTextTools(store);
 			/*
 			 * NOTE: null text editor is being passed to
 			 * JavaSourceViewerConfiguration because
@@ -330,7 +329,7 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 			 * this is okay because editor is not needed in the cases we are
 			 * using javasourceviewerconfiguration.
 			 */
-			fJavaSourceViewerConfiguration = new JavaSourceViewerConfiguration(javaTextTools.getColorManager(), store, null, IJavaPartitions.JAVA_PARTITIONING);
+			fJavaSourceViewerConfiguration = new JavaSourceViewerConfiguration(JavaUI.getColorManager(), store, null, IJavaPartitions.JAVA_PARTITIONING);
 		}
 		return fJavaSourceViewerConfiguration;
 	}
