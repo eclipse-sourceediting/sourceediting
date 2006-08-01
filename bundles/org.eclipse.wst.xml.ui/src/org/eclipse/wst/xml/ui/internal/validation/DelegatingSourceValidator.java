@@ -1,6 +1,8 @@
 package org.eclipse.wst.xml.ui.internal.validation;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -193,19 +195,32 @@ public abstract class DelegatingSourceValidator implements IValidator {
 
 				// store the text in a byte array; make a full copy to ease
 				// any threading problems
+				ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 				byte[] byteArray;
 				try {
-					byteArray = xmlModel.getStructuredDocument().get().getBytes("UTF-8");
+					int docLength = xmlModel.getStructuredDocument().getLength();
+					for(int i = 0; i < docLength; i = i+1024 < docLength ? i+1024 : docLength) {
+						String docString = xmlModel.getStructuredDocument().get(i, 1024);
+						byteArray = docString.getBytes("UTF-8");
+						outputStream.write(byteArray);
+					}
+					//byteArray = xmlModel.getStructuredDocument().get().getBytes("UTF-8");
 				} catch (UnsupportedEncodingException e) {
 					// Not likely to happen
 					byteArray = xmlModel.getStructuredDocument().get().getBytes();
+				}
+				catch(BadLocationException e){
+					
+				}
+				catch(IOException e){
+					
 				}
 
 				if (isDelegateValidatorEnabled(file)) {
 					IValidator validator = getDelegateValidator();
 					if (validator != null) {
 						// Validate the file:
-						IValidationContext vHelper = new MyHelper(new ByteArrayInputStream(byteArray), file);
+						IValidationContext vHelper = new MyHelper(new ByteArrayInputStream(outputStream.toByteArray()), file);
 						MyReporter vReporter = new MyReporter();
 						if (validator instanceof IValidatorJob) {
 							((IValidatorJob) validator).validateInJob(vHelper, vReporter);
