@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.EventObject;
 import java.util.Iterator;
 import java.util.List;
+
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
@@ -50,6 +51,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.ide.IDE;
+import org.eclipse.ui.ide.IGotoMarker;
 import org.eclipse.ui.internal.IWorkbenchGraphicConstants;
 import org.eclipse.ui.internal.WorkbenchImages;
 import org.eclipse.ui.part.FileEditorInput;
@@ -318,8 +320,8 @@ public abstract class CommonMultiPageEditor extends MultiPageEditorPart implemen
    */
   public void gotoMarker(IMarker marker)
   {
-    setActivePage(0);
-    IDE.gotoMarker(getEditor(0), marker);
+    setActivePage(SOURCE_PAGE_INDEX);
+    IDE.gotoMarker(structuredTextEditor, marker);
   }
 
   /**
@@ -363,6 +365,14 @@ public abstract class CommonMultiPageEditor extends MultiPageEditorPart implemen
       return getActionRegistry();
     if (type == EditorModeManager.class)
       return getEditorModeManager();
+    if (type == IGotoMarker.class) {
+      return new IGotoMarker() {
+        public void gotoMarker(IMarker marker) {
+          CommonMultiPageEditor.this.gotoMarker(marker);
+        }
+      };
+    }
+
     
     return super.getAdapter(type);
   }
