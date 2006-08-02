@@ -86,8 +86,10 @@ public class XSDTabbedPropertySheetPage extends TabbedPropertySheetPage implemen
         oldSelection = adapter;
         Object model = adapter.getTarget();
 
-        if (xsdModelAdapter != null)
+        if (xsdModelAdapter != null && xsdModelAdapter.getModelReconcileAdapter() != null)
+        {
           xsdModelAdapter.getModelReconcileAdapter().removeListener(internalNodeAdapter);
+        }
         
         xsdModelAdapter = XSDModelAdapter.lookupOrCreateModelAdapter(((XSDConcreteComponent)adapter.getTarget()).getElement().getOwnerDocument());
         if (xsdModelAdapter != null)
@@ -115,7 +117,7 @@ public class XSDTabbedPropertySheetPage extends TabbedPropertySheetPage implemen
   
   public void dispose()
   {
-    if (xsdModelAdapter != null)
+    if (xsdModelAdapter != null && xsdModelAdapter.getModelReconcileAdapter() != null)
     {
       xsdModelAdapter.getModelReconcileAdapter().removeListener(internalNodeAdapter);
       xsdModelAdapter = null;
