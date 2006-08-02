@@ -147,9 +147,16 @@ public class XSDFacetSection extends AbstractSection
     simpleTypeModifierComposite.setLayoutData(data);
     if (hasMaxMinFacets)
     {
+      boolean isLinux = java.io.File.separator.equals("/");
       minLengthLabel = factory.createLabel(simpleTypeModifierComposite, minLengthString);
       minLengthText = factory.createText(simpleTypeModifierComposite, ""); //$NON-NLS-1$
-      applyAllListeners(minLengthText);
+      if (isLinux)
+      {
+      	minLengthText.addListener(SWT.Modify, customListener);
+      	minLengthText.addListener(SWT.KeyDown, customListener);
+      }
+      else
+        applyAllListeners(minLengthText);
 
       GridData minGridData = new GridData();
       minGridData.widthHint = 100;
@@ -159,7 +166,13 @@ public class XSDFacetSection extends AbstractSection
 
       maxLengthLabel = factory.createLabel(simpleTypeModifierComposite, maxLengthString);
       maxLengthText = factory.createText(simpleTypeModifierComposite, ""); //$NON-NLS-1$
-      applyAllListeners(maxLengthText);
+      if (isLinux)
+      {
+    	  maxLengthText.addListener(SWT.Modify, customListener);
+    	  maxLengthText.addListener(SWT.KeyDown, customListener);
+      }
+      else
+        applyAllListeners(maxLengthText);
 
       GridData maxGridData = new GridData();
       maxGridData.widthHint = 100;
