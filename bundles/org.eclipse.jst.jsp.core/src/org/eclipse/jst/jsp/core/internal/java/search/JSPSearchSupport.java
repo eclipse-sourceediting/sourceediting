@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.core.internal.java.search;
 
+import java.io.File;
 import java.util.zip.CRC32;
 
 import org.eclipse.core.resources.IFile;
@@ -498,7 +499,8 @@ public class JSPSearchSupport {
         if (this.fJspPluginLocation != null)
             return this.fJspPluginLocation;
 
-        IPath stateLocation = JSPCorePlugin.getDefault().getStateLocation();
+        // Append the folder name "jspsearch" to keep the state location area cleaner
+        IPath stateLocation = JSPCorePlugin.getDefault().getStateLocation().append("jspsearch");
 
         // pa_TODO workaround for
         // https://bugs.eclipse.org/bugs/show_bug.cgi?id=62267
@@ -506,6 +508,16 @@ public class JSPSearchSupport {
         String device = stateLocation.getDevice();
         if (device != null && device.charAt(0) == '/')
             stateLocation = stateLocation.setDevice(device.substring(1));
+
+        // ensure that it exists on disk
+        File folder = new File(stateLocation.toOSString());
+		if (!folder.isDirectory()) {
+			try {
+				folder.mkdir();
+			}
+			catch (SecurityException e) {
+			}
+		}
 
         return this.fJspPluginLocation = stateLocation;
     }
