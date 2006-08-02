@@ -92,7 +92,7 @@ public class XSDTabbedPropertySheetPage extends TabbedPropertySheetPage implemen
         }
         
         xsdModelAdapter = XSDModelAdapter.lookupOrCreateModelAdapter(((XSDConcreteComponent)adapter.getTarget()).getElement().getOwnerDocument());
-        if (xsdModelAdapter != null)
+        if (xsdModelAdapter != null && xsdModelAdapter.getModelReconcileAdapter() != null)
         {
           xsdModelAdapter.getModelReconcileAdapter().addListener(internalNodeAdapter);
         }
