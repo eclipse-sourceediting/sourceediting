@@ -16,17 +16,21 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.views.properties.tabbed.ITabbedPropertySheetPageContributor;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
+import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
+import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDAdapterFactory;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDBaseAdapter;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDElementDeclarationAdapter;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDParticleAdapter;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IADTObjectListener;
+import org.eclipse.wst.xsd.ui.internal.text.XSDModelAdapter;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDElementDeclaration;
 
 public class XSDTabbedPropertySheetPage extends TabbedPropertySheetPage implements IADTObjectListener
 {
   XSDBaseAdapter oldSelection;
+  XSDModelAdapter xsdModelAdapter;
   public XSDTabbedPropertySheetPage(ITabbedPropertySheetPageContributor tabbedPropertySheetPageContributor)
   {
     super(tabbedPropertySheetPageContributor);
@@ -81,6 +85,16 @@ public class XSDTabbedPropertySheetPage extends TabbedPropertySheetPage implemen
         adapter.registerListener(this);
         oldSelection = adapter;
         Object model = adapter.getTarget();
+
+        if (xsdModelAdapter != null)
+          xsdModelAdapter.getModelReconcileAdapter().removeListener(internalNodeAdapter);
+        
+        xsdModelAdapter = XSDModelAdapter.lookupOrCreateModelAdapter(((XSDConcreteComponent)adapter.getTarget()).getElement().getOwnerDocument());
+        if (xsdModelAdapter != null)
+        {
+          xsdModelAdapter.getModelReconcileAdapter().addListener(internalNodeAdapter);
+        }
+        
         if (model instanceof XSDConcreteComponent)
         {
           selection = new StructuredSelection(model);
@@ -98,5 +112,28 @@ public class XSDTabbedPropertySheetPage extends TabbedPropertySheetPage implemen
       refresh();
     }
   }
+  
+  public void dispose()
+  {
+    if (xsdModelAdapter != null)
+    {
+      xsdModelAdapter.getModelReconcileAdapter().removeListener(internalNodeAdapter);
+      xsdModelAdapter = null;
+    }
+    super.dispose();
+  }
 
+  protected INodeAdapter internalNodeAdapter = new InternalNodeAdapter();
+  class InternalNodeAdapter implements INodeAdapter
+  {
+    public boolean isAdapterForType(Object type)
+    {
+      return false;
+    }
+
+    public void notifyChanged(INodeNotifier notifier, int eventType, Object changedFeature, Object oldValue, Object newValue, int pos)
+    {
+      refresh();
+    }
+  }
 }

@@ -61,6 +61,8 @@ public class AnnotationSection extends AbstractSection
   public void refresh()
   {
     super.refresh();
+    
+    if (simpleText.isFocusControl()) return;
     setListenerEnabled(false);
     if (input instanceof XSDConcreteComponent)
     {
