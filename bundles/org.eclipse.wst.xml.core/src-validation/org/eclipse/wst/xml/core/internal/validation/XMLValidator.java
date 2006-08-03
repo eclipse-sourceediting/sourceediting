@@ -11,13 +11,13 @@
 
 package org.eclipse.wst.xml.core.internal.validation;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.StringReader;
 import java.net.ConnectException;
 import java.net.URL;
 import java.net.UnknownHostException;
@@ -198,6 +198,29 @@ public class XMLValidator
     return validate(uri, null, new XMLValidationConfiguration());  
   }
 
+  final String createStringForInputStream(InputStream inputStream)
+  {
+    // Here we are reading the file and storing to a stringbuffer.
+    StringBuffer fileString = new StringBuffer();
+    try
+    {
+      InputStreamReader inputReader = new InputStreamReader(inputStream, "UTF-8");
+      BufferedReader reader = new BufferedReader(inputReader);
+      char[] chars = new char[1024];
+      int numberRead = reader.read(chars);
+      while (numberRead != -1)
+      {
+        fileString.append(chars, 0, numberRead);
+        numberRead = reader.read(chars);
+      }
+    }
+    catch (Exception e)
+    {
+      //TODO: log error message
+      //e.printStackTrace();
+    }
+    return fileString.toString();
+  }
   /**
    * Validate the inputStream
    * 
@@ -224,52 +247,13 @@ public class XMLValidator
   public XMLValidationReport validate(String uri, InputStream inputStream, XMLValidationConfiguration configuration)
   {
     Reader reader1 = null; // Used for the preparse.
-    //Reader reader2 = null; // Used for validation parse.
-    ByteArrayInputStream baInputStream = null;    
+    Reader reader2 = null; // Used for validation parse.
+    
     if (inputStream != null)
     {  
-      ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-      byte[] byteArray = new byte[1024];
-      int bytesRead;
-      try
-      {
-        while((bytesRead = inputStream.read(byteArray)) != -1)
-        {
-          outputStream.write(byteArray, 0, bytesRead);
-          byteArray = new byte[1024];
-        }
-      }
-      catch(IOException e)
-      {
-        System.out.println(e);
-      }
-      finally
-      {
-        if(inputStream != null)
-        {
-      	  try
-      	  {
-      	    inputStream.close();
-      	    inputStream = null;
-      	  }
-      	  catch(IOException e)
-      	  {
-      	    // Do nothing.
-      	  }
-        }
-      }
-      baInputStream = new ByteArrayInputStream(outputStream.toByteArray());
-      try
-      {
-        outputStream.close();
-        outputStream = null;
-      }
-      catch(IOException e)
-      {
-        // Do nothing.
-      }
-      reader1 = new InputStreamReader(baInputStream);
-      //reader2 = new InputStreamReader(new ByteArrayInputStream(outputStream.toByteArray()));
+      String string = createStringForInputStream(inputStream);
+      reader1 = new StringReader(string);
+      reader2 = new StringReader(string);
     } 
         
     XMLValidationInfo valinfo = new XMLValidationInfo(uri);
@@ -278,19 +262,6 @@ public class XMLValidator
     try
     {  
         helper.computeValidationInformation(uri, reader1, uriResolver);
-        if(reader1 != null)
-        {
-          baInputStream.reset();
-          try
-          {
-          	reader1.close();
-          }
-          catch(IOException e)
-          {
-          	
-          }
-          reader1 = new InputStreamReader(baInputStream);
-        }
         valinfo.setDTDEncountered(helper.isDTDEncountered);
         valinfo.setElementDeclarationCount(helper.numDTDElements);
         valinfo.setNamespaceEncountered(helper.isNamespaceEncountered);
@@ -301,7 +272,7 @@ public class XMLValidator
         reader.setErrorHandler(errorhandler);
         
         InputSource inputSource = new InputSource(uri);
-        inputSource.setCharacterStream(reader1);
+        inputSource.setCharacterStream(reader2);
         reader.parse(inputSource);   
         if(configuration.getFeature(XMLValidationConfiguration.WARN_NO_GRAMMAR) && 
         		valinfo.isValid() && !helper.isGrammarEncountered)
@@ -322,31 +293,7 @@ public class XMLValidator
     {  
     	LoggerFactory.getLoggerInstance().logError(exception.getLocalizedMessage(), exception);
     }
-    finally
-    {
-      if(reader1 != null)
-      {
-        try
-        {
-          reader1.close();
-        }
-        catch(IOException e)
-        {
-          // Do nothing.
-        }
-      }
-      if(baInputStream != null)
-      {
-        try
-        {
-          baInputStream.close();
-        }
-        catch(IOException e)
-        {
-          // Do nothing.
-        }
-      }
-    }
+     
     
     return valinfo;
        
