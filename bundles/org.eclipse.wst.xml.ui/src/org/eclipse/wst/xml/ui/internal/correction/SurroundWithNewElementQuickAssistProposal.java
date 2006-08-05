@@ -19,7 +19,6 @@ import org.eclipse.text.edits.InsertEdit;
 import org.eclipse.text.edits.MalformedTreeException;
 import org.eclipse.text.edits.MultiTextEdit;
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatProcessor;
-import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.provisional.format.FormatProcessorXML;
@@ -44,7 +43,7 @@ public class SurroundWithNewElementQuickAssistProposal extends RenameInFileQuick
 
 			// surround the node if no selection
 			if (startTagOffset == endTagOffset) {
-				IDOMNode cursorNode = (IDOMNode) ContentAssistUtils.getNodeAt((StructuredTextViewer) viewer, offset);
+				IDOMNode cursorNode = (IDOMNode) ContentAssistUtils.getNodeAt(viewer, offset);
 				// use parent node if text node is empty
 				if (cursorNode.getNodeType() == Node.TEXT_NODE && cursorNode.getNodeValue().trim().length() == 0)
 					cursorNode = (IDOMNode) cursorNode.getParentNode();
@@ -62,7 +61,7 @@ public class SurroundWithNewElementQuickAssistProposal extends RenameInFileQuick
 			multiTextEdit.apply(viewer.getDocument());
 
 			// get new element node
-			IDOMNode newElementNode = (IDOMNode) ContentAssistUtils.getNodeAt((StructuredTextViewer) viewer, startTagOffset);
+			IDOMNode newElementNode = (IDOMNode) ContentAssistUtils.getNodeAt(viewer, startTagOffset);
 
 			// format new element
 			IStructuredFormatProcessor formatProcessor = new FormatProcessorXML();

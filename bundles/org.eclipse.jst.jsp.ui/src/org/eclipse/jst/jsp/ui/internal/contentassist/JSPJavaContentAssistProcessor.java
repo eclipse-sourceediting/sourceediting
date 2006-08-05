@@ -31,7 +31,6 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.sse.ui.internal.IReleasable;
-import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
@@ -63,7 +62,7 @@ public class JSPJavaContentAssistProcessor implements IContentAssistProcessor, I
 	 */
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer, int documentPosition) {
 
-		IndexedRegion treeNode = ContentAssistUtils.getNodeAt((StructuredTextViewer) viewer, documentPosition);
+		IndexedRegion treeNode = ContentAssistUtils.getNodeAt(viewer, documentPosition);
 
 		// get results from JSP completion processor	
 		fJspCompletionProcessor = getJspCompletionProcessor();
