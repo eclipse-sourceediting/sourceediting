@@ -46,6 +46,7 @@ public class StructuredTextPartitionerForJSP extends StructuredTextPartitioner {
 	private static final String HTML_MIME_TYPE = "text/html"; //$NON-NLS-1$
 	private static final String XHTML_MIME_TYPE = "text/xhtml"; //$NON-NLS-1$
 	private static final String XML_MIME_TYPE = "text/xml"; //$NON-NLS-1$
+	private static final String VND_WAP_WML = "text/vnd.wap.wml"; //$NON-NLS-1$
 
 	private final static String[] fConfiguredContentTypes = new String[]{IJSPPartitions.JSP_DEFAULT, IJSPPartitions.JSP_DEFAULT_EL, IJSPPartitions.JSP_DEFAULT_EL2, IJSPPartitions.JSP_DIRECTIVE, IJSPPartitions.JSP_CONTENT_DELIMITER, IJSPPartitions.JSP_CONTENT_JAVA, IJSPPartitions.JSP_CONTENT_JAVASCRIPT, IJSPPartitions.JSP_COMMENT};
 
@@ -123,7 +124,7 @@ public class StructuredTextPartitionerForJSP extends StructuredTextPartitioner {
 		}
 		// we currently only have two ... eventually should
 		// make or tie-in to existing registry.
-		if (contentType.equalsIgnoreCase(HTML_MIME_TYPE)) {
+		if (contentType.equalsIgnoreCase(HTML_MIME_TYPE) || contentType.equalsIgnoreCase(VND_WAP_WML)) {
 			result = new StructuredTextPartitionerForHTML();
 			result.connect(structuredDocument);
 		}
