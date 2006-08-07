@@ -153,7 +153,7 @@ public class TestStructuredPartitionerXML extends TestCase {
 	public void testXML1() throws IOException, BadLocationException {
 		int expectedPartitions = 6;
 		int nPartitions = doComputePartitioningTest("testfiles/xml/example01.xml");
-		assertTrue("wrong number of partitions", nPartitions == expectedPartitions);
+		assertEquals("wrong number of partitions", expectedPartitions, nPartitions);
 		checkSeams();
 		verifyPartitionTypes(partitions, new String[]{IXMLPartitions.XML_PI, IXMLPartitions.XML_DEFAULT, IXMLPartitions.XML_DECLARATION, IXMLPartitions.XML_DEFAULT, IXMLPartitions.XML_COMMENT, IXMLPartitions.XML_DEFAULT});
 	}
@@ -161,7 +161,7 @@ public class TestStructuredPartitionerXML extends TestCase {
 	public void testEmpty() throws IOException, BadLocationException {
 		int expectedPartitions = 1;
 		int nPartitions = doComputePartitioningTest("testfiles/xml/empty.xml");
-		assertTrue("wrong number of partitions", nPartitions == expectedPartitions);
+		assertEquals("wrong number of partitions", expectedPartitions, nPartitions);
 		checkSeams();
 		verifyPartitionTypes(partitions, new String[]{IXMLPartitions.XML_DEFAULT});
 	}
@@ -169,7 +169,7 @@ public class TestStructuredPartitionerXML extends TestCase {
 	public void testPerfXML() throws IOException, BadLocationException {
 		int expectedPartitions = 6;
 		int nPartitions = doTimedComputePartitioningTest("testfiles/xml/company300k.xml");
-		assertTrue("wrong number of partitions", nPartitions == expectedPartitions);
+		assertEquals("wrong number of partitions", expectedPartitions, nPartitions);
 		checkSeams();
 		verifyPartitionTypes(partitions, new String[]{IXMLPartitions.XML_PI, IXMLPartitions.XML_DEFAULT, IXMLPartitions.XML_DECLARATION, IXMLPartitions.XML_DEFAULT, IXMLPartitions.XML_COMMENT, IXMLPartitions.XML_DEFAULT});
 	}
@@ -182,7 +182,7 @@ public class TestStructuredPartitionerXML extends TestCase {
 			return;
 		int offset = 0;
 		for (int i = 0; i < partitions.length; i++) {
-			assertEquals("partitions are not contiguous!", partitions[i].getOffset(), offset);
+			assertEquals("partitions are not contiguous!", offset, partitions[i].getOffset());
 			offset = partitions[i].getOffset() + partitions[i].getLength();
 		}
 	}
