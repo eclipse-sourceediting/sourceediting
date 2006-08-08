@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.wst.xml_ui.feature.source"
       label="%featureName"
-      version="1.5.0.qualifier"
+      version="1.5.1.qualifier"
       provider-name="%providerName">
 
    <description>
@@ -18,7 +18,7 @@
    </license>
 
    <url>
-      <update label="Web Tools Platform (WTP) Updates" url="http://download.eclipse.org/webtools/updates/"/>
+      <update label="%updateSiteName" url="http://download.eclipse.org/webtools/updates/"/>
    </url>
 
    <includes
