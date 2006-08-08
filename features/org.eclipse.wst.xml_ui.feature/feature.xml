@@ -13,7 +13,7 @@
       %copyright
    </copyright>
 
-   <license url="license.html">
+   <license url="%licenseURL">
       %license
    </license>
 
@@ -58,6 +58,13 @@
 
    <plugin
          id="org.eclipse.wst.xml.ui.infopop"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.wst.dtd.ui"
          download-size="0"
          install-size="0"
          version="0.0.0"
