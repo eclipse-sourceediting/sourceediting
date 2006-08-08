@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.eclipse.wst.web_ui.feature.source"
-      label="Source for WST Web UI Feature"
-      version="1.5.0.qualifier"
+      label="%featureName"
+      version="1.5.1.qualifier"
       provider-name="%providerName">
 
    <description>
@@ -13,14 +13,13 @@
       %copyright
    </copyright>
 
-   <license url="license.html">
+   <license url="%licenseURL">
       %license
    </license>
 
    <url>
-      <update label="Web Tools Platform (WTP) Updates" url="http://download.eclipse.org/webtools/updates/"/>
+      <update label="%updateSiteName" url="http://download.eclipse.org/webtools/updates/"/>
    </url>
-
 
    <includes
          id="org.eclipse.wst.web_core.feature"
