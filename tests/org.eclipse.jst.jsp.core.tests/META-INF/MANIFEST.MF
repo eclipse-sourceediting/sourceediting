@@ -22,5 +22,7 @@ Require-Bundle: org.junit,
  org.eclipse.core.runtime,
  org.eclipse.jst.jsp.core,
  org.eclipse.wst.css.core,
- com.ibm.icu
+ com.ibm.icu,
+ org.eclipse.wst.validation,
+ org.eclipse.jdt.core
 Eclipse-LazyStart: true

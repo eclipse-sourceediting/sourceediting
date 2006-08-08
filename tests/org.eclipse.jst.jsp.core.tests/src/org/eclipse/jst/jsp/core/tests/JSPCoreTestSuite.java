@@ -22,6 +22,7 @@ import org.eclipse.jst.jsp.core.tests.model.TestModelWithNoFile;
 import org.eclipse.jst.jsp.core.tests.source.JSPTokenizerTest;
 import org.eclipse.jst.jsp.core.tests.taglibindex.TestIndex;
 import org.eclipse.jst.jsp.core.tests.translation.JSPJavaTranslatorCoreTest;
+import org.eclipse.jst.jsp.core.tests.validation.JSPJavaValidatorTest;
 import org.eclipse.jst.jsp.css.core.tests.source.JSPedCSSSourceParserTest;
 
 
@@ -48,7 +49,7 @@ public class JSPCoreTestSuite extends TestSuite {
 		addTest(new TestSuite(TestModelIncludes.class));
 		addTest(new TestSuite(JSPCorePreferencesTest.class));
 		addTest(new TestSuite(JSPedCSSSourceParserTest.class, "Special Parsing Tests for JSP-CSS content"));
-
+		addTest(new TestSuite(JSPJavaValidatorTest.class, "JSP Java Validator Tests"));
 
 	}
 }
