@@ -488,6 +488,9 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
     }
     fXSDSelectionListener = new XSDSelectionManagerSelectionListener();
     getSelectionManager().addSelectionChangedListener(fXSDSelectionListener);
+    
+    // Select the schema to show the properties
+    getSelectionManager().setSelection(new StructuredSelection(getModel()));
   }
 
   protected void createActions()
@@ -868,7 +871,7 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
             //            
             //TODO (cs) ... we need to prevent the source editor from messing up the navigation history
             //
-            if (getActivePage() == 1)
+            if (getActivePage() == SOURCE_PAGE_INDEX)
             {  
               StructuredSelection nodeSelection = new StructuredSelection(otherModelObjectList);
               getTextEditor().getSelectionProvider().setSelection(nodeSelection);
@@ -877,6 +880,34 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
         }
       }
     }
+    
+    public void doSetSelection()
+    {
+      ISelection iSelection = getSelectionManager().getSelection();
+      if (iSelection != null)
+      {
+        Object firstElement = ((StructuredSelection)iSelection).getFirstElement();
+        Object otherModelObject = getObjectForOtherModel(firstElement);
+        if (otherModelObject != null)
+        {
+          StructuredSelection nodeSelection = new StructuredSelection(otherModelObject);
+          getTextEditor().getSelectionProvider().setSelection(nodeSelection);
+        }
+      }
+    }
+  }
+  
+  // Bug 145590.  Workaround to update source position when flipping to the source page.
+  // Unfortunately, this will still add an entry to the navigation history, but this
+  // behaviour is an improvement than without this change
+  boolean doUpdateSourceLocation = false;
+  protected void pageChange(int newPageIndex)
+  {
+    super.pageChange(newPageIndex);
+    doUpdateSourceLocation = newPageIndex == SOURCE_PAGE_INDEX;
+    if (doUpdateSourceLocation && fXSDSelectionListener != null)
+      fXSDSelectionListener.doSetSelection();
+
   }
 
   public INavigationLocation createEmptyNavigationLocation()
@@ -893,7 +924,7 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
 
   public INavigationLocation createNavigationLocation()
   {
-    if (getActivePage() == 0)
+    if (getActivePage() == DESIGN_PAGE_INDEX)
     {
       try
       {

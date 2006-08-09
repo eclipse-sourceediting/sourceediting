@@ -81,6 +81,14 @@ public class DesignViewNavigationLocation extends NavigationLocation
           graphicalViewer.setInput((IADTObject)adapter);
         }
       }
+      else if (path.segments.isEmpty())
+      {
+        Adapter adapter = XSDAdapterFactory.getInstance().adapt(schema);
+        if (adapter instanceof IADTObject)
+        {
+          graphicalViewer.setInput((IADTObject)adapter);
+        }
+      }
     }   
   }
 
