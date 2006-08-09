@@ -89,7 +89,7 @@ public class NewXSDWizard extends Wizard implements INewWizard {
 		String newContents = "<?xml version=\"1.0\" encoding=\"" + charSet + "\"?>\n";
 
 		String defaultTargetURI = XSDEditorPlugin.getPlugin().getXMLSchemaTargetNamespace();
-		newContents += "<" + prefixForSchemaNamespace + "schema " + schemaNamespaceAttribute + "=\"http://www.w3.org/2001/XMLSchema\" targetNamespace=\"" + defaultTargetURI + schemaName + "\" xmlns:" + schemaPrefix + "=\"" + defaultTargetURI + schemaName + "\">\n</" + prefixForSchemaNamespace + "schema>";
+		newContents += "<" + prefixForSchemaNamespace + "schema " + schemaNamespaceAttribute + "=\"http://www.w3.org/2001/XMLSchema\" targetNamespace=\"" + defaultTargetURI + schemaName + "\" xmlns:" + schemaPrefix + "=\"" + defaultTargetURI + schemaName + "\" elementFormDefault=\"qualified\">\n</" + prefixForSchemaNamespace + "schema>";
 
 		try {
 			byte[] bytes = newContents.getBytes(charSet);
