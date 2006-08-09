@@ -16,8 +16,6 @@ import org.eclipse.draw2d.MouseListener;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.RequestConstants;
-import org.eclipse.jface.viewers.ISelectionProvider;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.part.MultiPageEditorPart;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.SetInputToGraphView;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IFeedbackHandler;
@@ -69,11 +67,6 @@ public class BackToSchemaEditPart extends BaseEditPart implements IFeedbackHandl
           removeFeedback();
           SetInputToGraphView action = new SetInputToGraphView(multipageEditor, getModel());
           action.run();
-          Object obj = multipageEditor.getAdapter(ISelectionProvider.class);
-          if (obj instanceof ISelectionProvider)
-          {
-            ((ISelectionProvider)obj).setSelection(new StructuredSelection(getModel()));
-          }
         }
       }
     };
