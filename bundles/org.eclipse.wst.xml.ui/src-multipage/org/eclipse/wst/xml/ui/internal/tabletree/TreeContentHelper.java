@@ -178,6 +178,34 @@ public class TreeContentHelper {
 		return list;
 	}
 
+    public String getElementTextValue(Element element) 
+    {
+      List list = _getElementTextContent(element);
+      return list != null ? getValueForTextContent(list) : null;
+    }
+    
+    public void setElementTextValue(Element element, String value)
+    {
+      setElementNodeValue(element, value);      
+    }
+    
+    private List _getElementTextContent(Element element) {
+        List result = null;
+
+        for (Node node = element.getFirstChild(); node != null; node = node.getNextSibling()) {
+          if (node.getNodeType() == Node.TEXT_NODE || node.getNodeType() == Node.ENTITY_REFERENCE_NODE) {
+            if (result == null) {
+              result = new Vector();
+            }
+            result.add(node);
+          } else {
+            result = null;
+            break;
+          }
+        }       
+        return result;
+    }
+
 	/**
 	 * If the element is has 'text only' content this method will return the
 	 * list of elements that compose the text only content
@@ -185,21 +213,12 @@ public class TreeContentHelper {
 	public List getElementTextContent(Element element) {
 		List result = null;
 		if (!element.hasAttributes()) {
-			for (Node node = element.getFirstChild(); node != null; node = node.getNextSibling()) {
-				if (node.getNodeType() == Node.TEXT_NODE || node.getNodeType() == Node.ENTITY_REFERENCE_NODE) {
-					if (result == null) {
-						result = new Vector();
-					}
-					result.add(node);
-				} else {
-					result = null;
-					break;
-				}
-			}
+			result = _getElementTextContent(element);
 		}
 		return result;
 	}
 
+    
 	/**
 	 *  
 	 */

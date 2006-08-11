@@ -25,6 +25,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentReg
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.sse.core.internal.util.Debug;
+import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 import org.eclipse.wst.sse.ui.internal.taginfo.AbstractHoverProcessor;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
@@ -66,7 +67,7 @@ public class XMLTagInfoHoverProcessor extends AbstractHoverProcessor {
 	protected String computeHoverHelp(ITextViewer textViewer, int documentPosition) {
 		String result = null;
 
-		IndexedRegion treeNode = ContentAssistUtils.getNodeAt(textViewer, documentPosition);
+		IndexedRegion treeNode = ContentAssistUtils.getNodeAt((StructuredTextViewer) textViewer, documentPosition);
 		if (treeNode == null)
 			return null;
 		Node node = (Node) treeNode;
