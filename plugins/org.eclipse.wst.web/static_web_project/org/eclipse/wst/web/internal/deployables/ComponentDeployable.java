@@ -26,6 +26,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.wst.common.componentcore.ArtifactEdit;
 import org.eclipse.wst.common.componentcore.ComponentCore;
 import org.eclipse.wst.common.componentcore.internal.resources.VirtualArchiveComponent;
 import org.eclipse.wst.common.componentcore.resources.IVirtualComponent;
@@ -62,7 +63,9 @@ public abstract class ComponentDeployable extends ProjectModule {
 	 * @see org.eclipse.jst.server.core.IJ2EEModule#isBinary()
 	 */
 	public boolean isBinary() {
-		return false;
+		if (component==null)
+			return false;
+		return component.isBinary();
 	}
 	
 	private void addMembersToModuleFolder(ModuleFolder mf, IModuleResource[] mr) {
@@ -103,8 +106,10 @@ public abstract class ComponentDeployable extends ProjectModule {
     
     protected IModule gatherModuleReference(IVirtualComponent component, IVirtualComponent targetComponent ) {
     	// Handle workspace project module components
-		if (targetComponent != null && targetComponent.getProject()!=component.getProject())
-			return ServerUtil.getModule(targetComponent.getProject());
+		if (targetComponent != null && targetComponent.getProject()!=component.getProject()) {
+			if (!targetComponent.isBinary())
+				return ServerUtil.getModule(targetComponent.getProject());
+		}
 		return null;
     }
     
@@ -293,9 +298,7 @@ public abstract class ComponentDeployable extends ProjectModule {
 				if (!members.contains(mr[j]))
 					members.add(mr[j]);
 			}
-			List utilMembers = getUtilMembers(vc);
-			if (!utilMembers.isEmpty())
-				members.addAll(utilMembers);
+			addUtilMembers(vc);
 		}
 		
 		IModuleResource[] mr = new IModuleResource[members.size()];
@@ -303,47 +306,56 @@ public abstract class ComponentDeployable extends ProjectModule {
 		return mr;
 	}
 	
-	protected boolean shouldIncludeUtilityComponent(IVirtualComponent virtualComp) {
-		return virtualComp != null && virtualComp.isBinary();
+	protected boolean shouldIncludeUtilityComponent(IVirtualComponent virtualComp, IVirtualReference[] references, ArtifactEdit edit) {
+		return virtualComp != null && virtualComp.isBinary() && virtualComp.getProject()==component.getProject();
 	}
 	
-	protected List getUtilMembers(IVirtualComponent vc) {
-		List utilMembers = new ArrayList();
-		IVirtualReference[] components = vc.getReferences();
-    	for (int i = 0; i < components.length; i++) {
-			IVirtualReference reference = components[i];
-			IVirtualComponent virtualComp = reference.getReferencedComponent();
-			if (shouldIncludeUtilityComponent(virtualComp)) {
-				IPath archivePath = ((VirtualArchiveComponent)virtualComp).getWorkspaceRelativePath();
-				ModuleFile mf = null;
-				if (archivePath != null) { //In Workspace
-					IFile utilFile = ResourcesPlugin.getWorkspace().getRoot().getFile(archivePath);
-					mf = new ModuleFile(utilFile, utilFile.getName(), reference.getRuntimePath().makeRelative());
-				}
-				else {
-					File extFile = ((VirtualArchiveComponent)virtualComp).getUnderlyingDiskFile();
-					mf = new ModuleFile(extFile, extFile.getName(), reference.getRuntimePath().makeRelative());
-				}
-				if (mf == null)
-					continue;
-				IModuleResource moduleParent = getExistingModuleResource(members, mf.getModuleRelativePath());
-				
-				if (moduleParent != null && moduleParent instanceof ModuleFolder)
-					addMembersToModuleFolder((ModuleFolder)moduleParent, new IModuleResource[]{mf});
-				else {
-					if (mf.getModuleRelativePath().isEmpty())
-						members.add(mf);
+	protected void addUtilMembers(IVirtualComponent vc) {
+		ArtifactEdit edit = null;
+		try {
+			edit = getComponentArtifactEditForRead();
+			IVirtualReference[] components = vc.getReferences();
+	    	for (int i = 0; i < components.length; i++) {
+				IVirtualReference reference = components[i];
+				IVirtualComponent virtualComp = reference.getReferencedComponent();
+				if (shouldIncludeUtilityComponent(virtualComp,components,edit)) {
+					IPath archivePath = ((VirtualArchiveComponent)virtualComp).getWorkspaceRelativePath();
+					ModuleFile mf = null;
+					if (archivePath != null) { //In Workspace
+						IFile utilFile = ResourcesPlugin.getWorkspace().getRoot().getFile(archivePath);
+						mf = new ModuleFile(utilFile, utilFile.getName(), reference.getRuntimePath().makeRelative());
+					}
 					else {
-						if (moduleParent == null)
-							moduleParent = ensureParentExists(mf.getModuleRelativePath(), (IContainer)vc.getRootFolder().getUnderlyingResource());
-						addMembersToModuleFolder((ModuleFolder)moduleParent, new IModuleResource[] {mf});
+						File extFile = ((VirtualArchiveComponent)virtualComp).getUnderlyingDiskFile();
+						mf = new ModuleFile(extFile, extFile.getName(), reference.getRuntimePath().makeRelative());
+					}
+					if (mf == null)
+						continue;
+					IModuleResource moduleParent = getExistingModuleResource(members, mf.getModuleRelativePath());
+					
+					if (moduleParent != null && moduleParent instanceof ModuleFolder)
+						addMembersToModuleFolder((ModuleFolder)moduleParent, new IModuleResource[]{mf});
+					else {
+						if (mf.getModuleRelativePath().isEmpty())
+							members.add(mf);
+						else {
+							if (moduleParent == null)
+								moduleParent = ensureParentExists(mf.getModuleRelativePath(), (IContainer)vc.getRootFolder().getUnderlyingResource());
+							addMembersToModuleFolder((ModuleFolder)moduleParent, new IModuleResource[] {mf});
+						}
 					}
 				}
-			}
-    	}
-    	return utilMembers;	
+	    	}
+		} finally {
+			if (edit!=null)
+				edit.dispose();
+		}
 	}
 	
+	protected ArtifactEdit getComponentArtifactEditForRead() {
+		return null;
+	}
+
 	protected static boolean isProjectOfType(IProject project, String typeID) {
 		IFacetedProject facetedProject = null;
 		try {
