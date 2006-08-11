@@ -104,11 +104,12 @@ class DOMExtensionItem extends ExtensionItem
         return (value != null) ? value : "";
       }
       case KIND_ELEMENT_TEXT : {
-        return new TreeContentHelper().getNodeValue(parent);
+        return new TreeContentHelper().getElementTextValue(parent);         
       }
     }
     return "";
   }
+  
 
   public String[] getPossibleValues()
   {

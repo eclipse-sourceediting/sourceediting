@@ -32,7 +32,6 @@ public class UpdateTextValueCommand  extends Command
   
   public void execute()
   {
-    TreeContentHelper helper = new TreeContentHelper();
-    helper.setNodeValue(element, value);
+    new TreeContentHelper().setElementTextValue(element, value);
   } 
 }
