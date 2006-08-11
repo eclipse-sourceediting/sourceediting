@@ -250,7 +250,7 @@ public abstract class AbstractExtensionsSection extends AbstractSection
             }
           }
         }
-      };
+      }
 
     });
     

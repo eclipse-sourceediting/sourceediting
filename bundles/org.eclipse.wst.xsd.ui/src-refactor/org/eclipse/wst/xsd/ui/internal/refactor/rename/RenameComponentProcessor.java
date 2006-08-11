@@ -142,7 +142,7 @@ public class RenameComponentProcessor extends RenameProcessor implements INameUp
 				newName = quoteString(newName);
 
 				ReplaceEdit replaceEdit = new ReplaceEdit(match.getOffset(), match.getLength(), newName);
-				String editName = RefactoringMessages.getString("RenameComponentProcessor.Component_Refactoring_update_declatation");;
+				String editName = RefactoringMessages.getString("RenameComponentProcessor.Component_Refactoring_update_declatation");
 				TextChangeCompatibility.addTextEdit(textChange, editName, replaceEdit);
 			}
 		}
