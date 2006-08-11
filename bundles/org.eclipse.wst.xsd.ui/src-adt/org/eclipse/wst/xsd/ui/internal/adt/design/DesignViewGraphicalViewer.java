@@ -223,7 +223,9 @@ public class DesignViewGraphicalViewer extends ScrollingGraphicalViewer implemen
       inputChangeManager.setSelection(new StructuredSelection(object));
     }
     // Select the editpart when it is set as input
-    select(getEditPart(rootContentEditPart, object));
+    EditPart editPart = getEditPart(rootContentEditPart, object);
+    if (editPart != null)
+      select(editPart);
   }
   
   public IADTObject getInput()
