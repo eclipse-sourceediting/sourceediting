@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -29,6 +29,7 @@ public class HTMLDocumentTypeEntry {
 	private boolean isDefaultWML;
 	private static String XHTML_NAME = "html"; //$NON-NLS-1$
 	private static String HTML_NAME = "HTML"; //$NON-NLS-1$
+	private boolean useInternalModel = false;
 
 	/**
 	 */
@@ -60,6 +61,11 @@ public class HTMLDocumentTypeEntry {
 		this.isDefaultWML = isDefaultWML;
 		this.isXHTMLType = isXHTMLType;
 		this.isWMLType = isWMLType;
+	}
+	
+	HTMLDocumentTypeEntry(String name, String publicId, String systemId, String namespaceURI, boolean isXHTMLType, boolean hasFrameset, String displayName, boolean isDefaultXHTML, boolean isDefaultWML, boolean isWMLType, boolean useInternalModel) {
+		this(name, publicId, systemId, namespaceURI, isXHTMLType, hasFrameset, displayName, isDefaultXHTML, isDefaultWML, isWMLType);
+		this.useInternalModel = useInternalModel;
 	}
 
 	/**
@@ -121,6 +127,10 @@ public class HTMLDocumentTypeEntry {
 
 	public final boolean isWMLType() {
 		return isWMLType;
+	}
+	
+	public final boolean useInternalModel() {
+		return useInternalModel;
 	}
 
 }
