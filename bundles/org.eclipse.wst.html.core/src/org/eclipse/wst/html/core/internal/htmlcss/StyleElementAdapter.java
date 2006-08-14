@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004-2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,7 +7,12 @@
  * 
  * Contributors:
  *     IBM Corporation - initial API and implementation
- *******************************************************************************/
+ *     
+ * 	    Masaki Saitoh (MSAITOH@jp.ibm.com)
+ *		See Bug 153000  Style Adapters should be lazier
+ *		https://bugs.eclipse.org/bugs/show_bug.cgi?id=153000
+ *
+ ********************************************************************************/
 package org.eclipse.wst.html.core.internal.htmlcss;
 
 
@@ -148,10 +153,29 @@ public class StyleElementAdapter extends AbstractStyleSheetAdapter implements IS
 		ICSSModel model = getExistingModel();
 		if (this.replaceModel) {
 			ICSSModel oldModel = model;
-			model = createModel();
+			model = createModel(false);
 
-			setModel(model); // need to set before contentChanged()
+			setModel(model, false); // need to set before contentChanged()
 			contentChanged();
+
+			// from super.createModel()
+			// get ModelProvideAdapter
+			IModelProvideAdapter modelProvideAdapter = (IModelProvideAdapter) ((INodeNotifier) getElement()).getAdapterFor(IModelProvideAdapter.class);
+			// notify adapter
+			if (modelProvideAdapter != null)
+				modelProvideAdapter.modelProvided(model);
+
+			// from createModel()
+			IStructuredDocument structuredDocument = model.getStructuredDocument();
+			if (structuredDocument == null)
+				return null;
+			structuredDocument.addDocumentChangedListener(this);
+
+			// from setModel()
+			if (oldModel != null)
+				oldModel.removeStyleListener(this);
+			if (model != null)
+				model.addStyleListener(this);
 
 			if (oldModel != null) {
 				// get ModelProvideAdapter
@@ -174,7 +198,7 @@ public class StyleElementAdapter extends AbstractStyleSheetAdapter implements IS
 			return false;
 		}
 		String type = element.getAttribute(HTML40Namespace.ATTR_NAME_TYPE);
-		if (type != null && type.length() > 0 &&!type.equalsIgnoreCase("text/css")) { //$NON-NLS-1$
+		if (type != null && type.length() > 0 && !type.equalsIgnoreCase("text/css")) { //$NON-NLS-1$
 			return false;
 		}
 		return true;
@@ -183,9 +207,18 @@ public class StyleElementAdapter extends AbstractStyleSheetAdapter implements IS
 	/**
 	 */
 	protected ICSSModel createModel() {
+		return createModel(true);
+	}
+
+	/**
+	 */
+	protected ICSSModel createModel(boolean addListener) {
 		if (!isValidAttribute()) {
 			return null;
 		}
+
+		if (!addListener)
+			return super.createModel(false);
 
 		ICSSModel model = super.createModel();
 		IStructuredDocument structuredDocument = model.getStructuredDocument();
@@ -399,10 +432,18 @@ public class StyleElementAdapter extends AbstractStyleSheetAdapter implements IS
 	/**
 	 */
 	protected void setModel(ICSSModel model) {
+		setModel(model, true);
+	}
+
+	/**
+	 */
+	protected void setModel(ICSSModel model, boolean setupListener) {
 		ICSSModel oldModel = getExistingModel();
 		if (model == oldModel)
 			return;
 		super.setModel(model);
+		if (!setupListener)
+			return;
 		if (oldModel != null)
 			oldModel.removeStyleListener(this);
 		if (model != null)
