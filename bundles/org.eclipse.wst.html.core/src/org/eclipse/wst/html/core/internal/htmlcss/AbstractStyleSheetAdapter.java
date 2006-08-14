@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004-2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,7 +7,12 @@
  * 
  * Contributors:
  *     IBM Corporation - initial API and implementation
- *******************************************************************************/
+ *     
+ * 		Masaki Saitoh (MSAITOH@jp.ibm.com)
+ *		See Bug 153000  Style Adapters should be lazier
+ *		https://bugs.eclipse.org/bugs/show_bug.cgi?id=153000
+ *
+ ********************************************************************************/
 package org.eclipse.wst.html.core.internal.htmlcss;
 
 import java.util.Collection;
@@ -54,8 +59,14 @@ public abstract class AbstractStyleSheetAdapter extends AbstractCSSModelAdapter 
 	/**
 	 */
 	protected ICSSModel createModel() {
+		return createModel(true);
+	}
+
+	/**
+	 */
+	protected ICSSModel createModel(boolean notify) {
 		ICSSModel newModel = super.createModel();
-		if (newModel != null) {
+		if (notify && newModel != null) {
 			// get ModelProvideAdapter
 			IModelProvideAdapter adapter = (IModelProvideAdapter) ((INodeNotifier) getElement()).getAdapterFor(IModelProvideAdapter.class);
 			// notify adapter
@@ -116,7 +127,12 @@ public abstract class AbstractStyleSheetAdapter extends AbstractCSSModelAdapter 
 			currentModel.releaseFromRead();
 	}
 
-
+	/**
+	 * @param srcModel com.ibm.sed.css.model.interfaces.ICSSModel
+	 * @param removed com.ibm.sed.css.model.interfaces.ICSSSelector[]
+	 * @param added com.ibm.sed.css.model.interfaces.ICSSSelector[]
+	 * @param media java.lang.String
+	 */
 	public void styleChanged(ICSSModel srcModel, ICSSSelector[] removed, ICSSSelector[] added, String media) {
 		Element element = getElement();
 		if (element == null)
@@ -177,7 +193,9 @@ public abstract class AbstractStyleSheetAdapter extends AbstractCSSModelAdapter 
 
 	}
 
-	
+	/**
+	 * @param srcModel com.ibm.sed.css.model.interfaces.ICSSModel
+	 */
 	public void styleUpdate(ICSSModel srcModel) {
 		IDOMNode node = (IDOMNode) getElement();
 		if (node == null)
