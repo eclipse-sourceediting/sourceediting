@@ -252,7 +252,6 @@ public class EditCatalogEntryDialog extends Dialog {
 
 
 			errorMessageLabel = new Label(group2, SWT.NONE);
-			Color color = new Color(errorMessageLabel.getDisplay(), 200, 0, 0);
 			errorMessageLabel.setForeground(color);
 			errorMessageLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
@@ -560,7 +559,6 @@ public class EditCatalogEntryDialog extends Dialog {
 			browseButton.addSelectionListener(new DropDownSelectionListener(catalogLocationField));
 
 			errorMessageLabel = new Label(group, SWT.NONE);
-			Color color = new Color(errorMessageLabel.getDisplay(), 200, 0, 0);
 			errorMessageLabel.setForeground(color);
 			errorMessageLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 			updateWidgets(null);
@@ -654,6 +652,8 @@ public class EditCatalogEntryDialog extends Dialog {
 	// protected TreeViewer treeViewer;
 
 	protected ToolBar toolBar;
+	
+	protected Color color;
 
 	public EditCatalogEntryDialog(Shell parentShell, ICatalog aCatalog) {
 		super(parentShell);
@@ -697,6 +697,7 @@ public class EditCatalogEntryDialog extends Dialog {
 
 	protected Control createDialogArea(Composite parent) {
 		Composite dialogAreaComposite = (Composite) super.createDialogArea(parent);
+		color = new Color(dialogAreaComposite.getDisplay(), 200, 0, 0);
 		GridLayout layout = new GridLayout();
 		layout.marginHeight = 0;
 		layout.marginWidth = 0;
@@ -707,6 +708,13 @@ public class EditCatalogEntryDialog extends Dialog {
 		dialogAreaComposite.setLayoutData(gd);
 		createMainComponent(dialogAreaComposite);
 		return this.dialogArea;
+	}
+
+	public boolean close() {
+		if (color != null) {
+			color.dispose();
+		}
+		return super.close();
 	}
 
 	protected Composite createMainComponent(Composite composite) {
