@@ -14,6 +14,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
@@ -90,12 +91,12 @@ public abstract class DelegatingSourceValidator implements IValidator {
 
 	// My Implementation of IHelper
 	class MyHelper implements IProjectValidationContext {
-		InputStream inputStream;
+		IDocument fDocument;
 
 		IFile file;
 
-		public MyHelper(InputStream inputStream, IFile file) {
-			this.inputStream = inputStream;
+		public MyHelper(IDocument document, IFile file) {
+			this.fDocument = document;
 			this.file = file;
 		}
 
@@ -104,17 +105,50 @@ public abstract class DelegatingSourceValidator implements IValidator {
 		}
 
 		public Object loadModel(String symbolicName, Object[] parms) {
+			return loadModel(symbolicName);
+		}
+
+		public Object loadModel(String symbolicName) {
 			if (symbolicName.equals("getFile")) { //$NON-NLS-1$
 				return file;
+			}
+			else if (symbolicName.equals("inputStream")) { //$NON-NLS-1$
+				return createInputStream();
+			}
+			else if (symbolicName.equals("text")) { //$NON-NLS-1$
+				return fDocument.get();
 			}
 			return null;
 		}
 
-		public Object loadModel(String symbolicName) {
-			if (symbolicName.equals("inputStream")) { //$NON-NLS-1$
-				return inputStream;
+		private InputStream createInputStream() {
+			// store the text in a byte array; make a full copy to ease
+			// any threading problems
+			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+			byte[] byteArray = null;
+			try {
+				int docLength = fDocument.getLength();
+				/*
+				 * note: this loop is incorrect for the last mod of 1024, but
+				 * the BasicStructuredDocument will "fix" it at runtime
+				 */
+				for(int i = 0; i < docLength; i = i+1024 < docLength ? i+1024 : docLength) {
+					String docString = fDocument.get(i, 1024);
+					byteArray = docString.getBytes("UTF-8");
+					outputStream.write(byteArray);
+				}
+				//byteArray = xmlModel.getStructuredDocument().get().getBytes("UTF-8");
+			} catch (UnsupportedEncodingException e) {
+				// Not likely to happen
+				byteArray = fDocument.get().getBytes();
 			}
-			return null;
+			catch(BadLocationException e){
+				
+			}
+			catch(IOException e){
+				
+			}
+			return new ByteArrayInputStream(byteArray);
 		}
 
 		public String[] getURIs() {
@@ -193,34 +227,11 @@ public abstract class DelegatingSourceValidator implements IValidator {
 			try {
 				IDOMDocument document = xmlModel.getDocument();
 
-				// store the text in a byte array; make a full copy to ease
-				// any threading problems
-				ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-				byte[] byteArray;
-				try {
-					int docLength = xmlModel.getStructuredDocument().getLength();
-					for(int i = 0; i < docLength; i = i+1024 < docLength ? i+1024 : docLength) {
-						String docString = xmlModel.getStructuredDocument().get(i, 1024);
-						byteArray = docString.getBytes("UTF-8");
-						outputStream.write(byteArray);
-					}
-					//byteArray = xmlModel.getStructuredDocument().get().getBytes("UTF-8");
-				} catch (UnsupportedEncodingException e) {
-					// Not likely to happen
-					byteArray = xmlModel.getStructuredDocument().get().getBytes();
-				}
-				catch(BadLocationException e){
-					
-				}
-				catch(IOException e){
-					
-				}
-
 				if (isDelegateValidatorEnabled(file)) {
 					IValidator validator = getDelegateValidator();
 					if (validator != null) {
 						// Validate the file:
-						IValidationContext vHelper = new MyHelper(new ByteArrayInputStream(outputStream.toByteArray()), file);
+						IValidationContext vHelper = new MyHelper(xmlModel.getStructuredDocument(), file);
 						MyReporter vReporter = new MyReporter();
 						if (validator instanceof IValidatorJob) {
 							((IValidatorJob) validator).validateInJob(vHelper, vReporter);
