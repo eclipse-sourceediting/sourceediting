@@ -12,8 +12,6 @@
 
 package org.eclipse.wst.xsd.ui.internal.editor;
 
-import java.util.List;
-
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
@@ -23,17 +21,8 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xsd.ui.internal.text.XSDModelAdapter;
-import org.eclipse.xsd.XSDAttributeDeclaration;
-import org.eclipse.xsd.XSDAttributeGroupDefinition;
 import org.eclipse.xsd.XSDConcreteComponent;
-import org.eclipse.xsd.XSDElementDeclaration;
-import org.eclipse.xsd.XSDIdentityConstraintDefinition;
-import org.eclipse.xsd.XSDModelGroupDefinition;
 import org.eclipse.xsd.XSDSchema;
-import org.eclipse.xsd.XSDSchemaDirective;
-import org.eclipse.xsd.XSDSimpleTypeDefinition;
-import org.eclipse.xsd.XSDTypeDefinition;
-import org.eclipse.xsd.XSDVariety;
 import org.eclipse.xsd.util.XSDConstants;
 import org.w3c.dom.Attr;
 
@@ -106,156 +95,18 @@ public class XSDHyperlinkDetector extends BaseHyperlinkDetector
    */
   private XSDConcreteComponent getTargetXSDComponent(XSDSchema xsdSchema, IDOMNode node)
   {
-    XSDConcreteComponent component = null;
+    XSDConcreteComponent xsdComponent = xsdSchema.getCorrespondingComponent(node);
 
-    XSDConcreteComponent xsdComp = xsdSchema.getCorrespondingComponent(node);
-    if (xsdComp instanceof XSDElementDeclaration)
-    {
-      XSDElementDeclaration elementDecl = (XSDElementDeclaration) xsdComp;
-      if (elementDecl.isElementDeclarationReference())
-      {
-        component = elementDecl.getResolvedElementDeclaration();
-      }
-      else
-      {
-        XSDConcreteComponent typeDef = null;
-        if (elementDecl.getAnonymousTypeDefinition() == null)
-        {
-          typeDef = elementDecl.getTypeDefinition();
-        }
-
-        XSDConcreteComponent subGroupAffiliation = elementDecl.getSubstitutionGroupAffiliation();
-
-        if (typeDef != null && subGroupAffiliation != null)
-        {
-          // we have 2 things we can navigate to, if the
-          // cursor is anywhere on the substitution
-          // attribute
-          // then jump to that, otherwise just go to the
-          // typeDef.
-          if (node instanceof Attr && ((Attr) node).getLocalName().equals(XSDConstants.SUBSTITUTIONGROUP_ATTRIBUTE))
-          {
-            component = subGroupAffiliation;
-          }
-          else
-          {
-            // try to reveal the type now. On success,
-            // then we return true.
-            // if we fail, set the substitution group
-            // as
-            // the object to reveal as a backup plan.
-            // ISSUE: how to set backup?
-            // if (revealObject(typeDef)) {
-            component = typeDef;
-            // }
-            // else {
-            // objectToReveal = subGroupAffiliation;
-            // }
-          }
-        }
-        else
-        {
-          // one or more of these is null. If the
-          // typeDef is
-          // non-null, use it. Otherwise
-          // try and use the substitution group
-          component = typeDef != null ? typeDef : subGroupAffiliation;
-        }
-      }
-    }
-    else if (xsdComp instanceof XSDModelGroupDefinition)
-    {
-      XSDModelGroupDefinition elementDecl = (XSDModelGroupDefinition) xsdComp;
-      if (elementDecl.isModelGroupDefinitionReference())
-      {
-        component = elementDecl.getResolvedModelGroupDefinition();
-      }
-    }
-    else if (xsdComp instanceof XSDAttributeDeclaration)
-    {
-      XSDAttributeDeclaration attrDecl = (XSDAttributeDeclaration) xsdComp;
-      if (attrDecl.isAttributeDeclarationReference())
-      {
-        component = attrDecl.getResolvedAttributeDeclaration();
-      }
-      else if (attrDecl.getAnonymousTypeDefinition() == null)
-      {
-        component = attrDecl.getTypeDefinition();
-      }
-    }
-    else if (xsdComp instanceof XSDAttributeGroupDefinition)
-    {
-      XSDAttributeGroupDefinition attrGroupDef = (XSDAttributeGroupDefinition) xsdComp;
-      if (attrGroupDef.isAttributeGroupDefinitionReference())
-      {
-        component = attrGroupDef.getResolvedAttributeGroupDefinition();
-      }
-    }
-    else if (xsdComp instanceof XSDIdentityConstraintDefinition)
-    {
-      XSDIdentityConstraintDefinition idConstraintDef = (XSDIdentityConstraintDefinition) xsdComp;
-      if (idConstraintDef.getReferencedKey() != null)
-      {
-        component = idConstraintDef.getReferencedKey();
-      }
-    }
-    else if (xsdComp instanceof XSDSimpleTypeDefinition)
-    {
-      XSDSimpleTypeDefinition typeDef = (XSDSimpleTypeDefinition) xsdComp;
-
-      // Simple types can be one of restriction, list or union.
-
-      XSDVariety variety = typeDef.getVariety();
-      int varietyType = variety.getValue();
-      
-      switch (varietyType)
-      {
-        case XSDVariety.ATOMIC : 
-          {
-            component = typeDef.getBaseTypeDefinition();
-          }
-          break;
-        case XSDVariety.LIST : 
-          {
-            component = typeDef.getItemTypeDefinition();
-          }
-          break;
-        case XSDVariety.UNION : 
-          {
-            List memberTypes = typeDef.getMemberTypeDefinitions();
-            if (memberTypes != null && memberTypes.size() > 0)
-            {
-              // ISSUE: What if there are more than one type?
-              // This could be a case for multiple hyperlinks at the same
-              // location.
-              component = (XSDConcreteComponent) memberTypes.get(0);
-            }
-          }
-          break;
-      }
-    }
-    else if (xsdComp instanceof XSDTypeDefinition)
-    {
-      XSDTypeDefinition typeDef = (XSDTypeDefinition) xsdComp;
-      component = typeDef.getBaseType();
-    }
-    else if (xsdComp instanceof XSDSchemaDirective)
-    {
-      XSDSchemaDirective directive = (XSDSchemaDirective) xsdComp;
-      component = directive.getResolvedSchema();
-    }
-
-    // Avoid types located in the schema for schema (the built in XSD types) 
-    // as we don't want to navigate to their definition.
+    String attributeName = null;
     
-    if (component != null)
+    if (node instanceof Attr)
     {
-      XSDSchema schema =  component.getSchema();
-
-      if (schema != null && schema.equals(schema.getSchemaForSchema())) {
-        component = null;
-      }
+      Attr attribute = (Attr)node;
+      attributeName = attribute != null ? attribute.getName(): null;
     }
+    
+    XSDHyperlinkTargetLocator xsdHyperlinkTargetLocator = new XSDHyperlinkTargetLocator();
+    XSDConcreteComponent component = xsdHyperlinkTargetLocator.locate(xsdComponent, attributeName); 
     
     return component;
   }

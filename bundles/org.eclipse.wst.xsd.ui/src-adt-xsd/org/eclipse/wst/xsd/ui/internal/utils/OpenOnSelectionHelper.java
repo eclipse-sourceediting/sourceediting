@@ -182,6 +182,10 @@ public class OpenOnSelectionHelper
     {
       objects = schema.getModelGroupDefinitions();
     }
+    else if (comp instanceof XSDAttributeDeclaration)
+    {
+      objects = schema.getAttributeDeclarations();
+    }
 
     if (objects != null)
     {
