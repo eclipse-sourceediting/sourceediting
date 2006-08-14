@@ -16,6 +16,7 @@ import com.ibm.icu.text.Collator;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
@@ -117,6 +118,14 @@ public class XMLCatalogTreeViewer extends TreeViewer {
 				result = nextCatalogImage;
 			}
 			return result;
+		}
+		
+		public void dispose() {
+			super.dispose();
+			for (Iterator it = imageTable.values().iterator(); it.hasNext();)
+			{
+				((Image)it.next()).dispose();
+			}
 		}
 	}
 
