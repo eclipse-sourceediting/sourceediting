@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -42,20 +42,23 @@ public class HTMLDocumentTypeRegistry {
 		// HTML 4.01
 		String name = "HTML";//$NON-NLS-1$
 		String publicId = "-//W3C//DTD HTML 4.01 Transitional//EN";//$NON-NLS-1$
+		String systemId = "http://www.w3.org/TR/html4/loose.dtd";//$NON-NLS-1$
 		String displayName = "HTML 4.01 Transitional"; //$NON-NLS-1$
-		this.defaultEntry = new HTMLDocumentTypeEntry(name, publicId, null, null, false, false, displayName, false, false, false);
+		this.defaultEntry = new HTMLDocumentTypeEntry(name, publicId, systemId, null, false, false, displayName, false, false, false, true);
 		this.entries.put(publicId, this.defaultEntry);
 		publicId = "-//W3C//DTD HTML 4.01//EN";//$NON-NLS-1$
+		systemId = "http://www.w3.org/TR/html4/strict.dtd";//$NON-NLS-1$
 		displayName = "HTML 4.01 Strict"; //$NON-NLS-1$
-		this.entries.put(publicId, new HTMLDocumentTypeEntry(name, publicId, null, null, false, false, displayName, false, false, false));
+		this.entries.put(publicId, new HTMLDocumentTypeEntry(name, publicId, systemId, null, false, false, displayName, false, false, false, true));
 		publicId = "-//W3C//DTD HTML 4.01 Frameset//EN";//$NON-NLS-1$
+		systemId = "http://www.w3.org/TR/html4/frameset.dtd";//$NON-NLS-1$
 		displayName = "HTML 4.01 Frameset"; //$NON-NLS-1$
-		this.entries.put(publicId, new HTMLDocumentTypeEntry(name, publicId, null, null, false, true, displayName, false, false, false));
+		this.entries.put(publicId, new HTMLDocumentTypeEntry(name, publicId, systemId, null, false, true, displayName, false, false, false, true));
 		// CHTML
 		name = "HTML";//$NON-NLS-1$
 		publicId = CHTML_PUBLIC_ID;
 		displayName = "Compact HTML 1.0 Draft"; //$NON-NLS-1$
-		this.defaultCHTMLEntry = new HTMLDocumentTypeEntry(name, publicId, null, null, false, false, displayName, false, false, false);
+		this.defaultCHTMLEntry = new HTMLDocumentTypeEntry(name, publicId, null, null, false, false, displayName, false, false, false, true);
 		this.entries.put(publicId, this.defaultCHTMLEntry);
 
 		HTMLDocumentTypeRegistryReader reader = new HTMLDocumentTypeRegistryReader();
