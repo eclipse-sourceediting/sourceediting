@@ -84,8 +84,6 @@ public final class TaglibIndex {
 			if (frameworkIsShuttingDown())
 				return;
 
-			Logger.log(Logger.INFO_DEBUG, "IJavaElementDelta: " + delta);
-
 			IJavaElement element = delta.getElement();
 			if (element.getElementType() == IJavaElement.JAVA_MODEL) {
 				IJavaElementDelta[] changed = delta.getAffectedChildren();
@@ -564,7 +562,7 @@ public final class TaglibIndex {
 		 * workspace)
 		 */
 		if (DIRTY.equalsIgnoreCase(getState())) {
-			Logger.log(Logger.ERROR_DEBUG, "workspace crash detected, not using saved taglib indexes");
+			Logger.log(Logger.ERROR, "A workspace crash was detected. The previous session did not exit normally. Not using saved taglib indexes"); //$NON-NLS-3$
 			removeIndexes(false);
 		}
 
