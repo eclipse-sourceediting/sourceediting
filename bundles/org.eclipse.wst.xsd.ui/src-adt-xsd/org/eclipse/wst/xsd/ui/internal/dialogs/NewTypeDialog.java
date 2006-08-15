@@ -42,6 +42,7 @@ public class NewTypeDialog extends NewComponentDialog implements IComponentDialo
   protected int typeKind;
   protected Object selection;
   private boolean allowComplexType = true;
+  protected boolean anonymousType = false;
 
   public NewTypeDialog()
   {
@@ -78,9 +79,14 @@ public class NewTypeDialog extends NewComponentDialog implements IComponentDialo
 
   public ComponentSpecification getSelectedComponent()
   {
-    ComponentSpecification componentSpecification =  new ComponentSpecification(null, getName(), null);    
+    ComponentSpecification componentSpecification;
+    if ( anonymousType )
+    	componentSpecification = new ComponentSpecification(null, null, null);
+    else
+    	componentSpecification =  new ComponentSpecification(null, getName(), null);    
     componentSpecification.setMetaName(typeKind == COMPLEX_TYPE ? IXSDSearchConstants.COMPLEX_TYPE_META_NAME : IXSDSearchConstants.SIMPLE_TYPE_META_NAME);
     componentSpecification.setNew(true);
+    //componentSpecification.
     return componentSpecification;
   }
 
@@ -97,7 +103,10 @@ public class NewTypeDialog extends NewComponentDialog implements IComponentDialo
     
     final Button simpleTypeButton = new Button(parent, SWT.RADIO);
     simpleTypeButton.setText(Messages._UI_LABEL_SIMPLE_TYPE);
-
+    
+    final Button anonymousTypeCheckBox = new Button(parent, SWT.CHECK);
+    anonymousTypeCheckBox.setText(Messages._UI_LABEL_CREATE_ANON_TYPE);
+    
     SelectionAdapter listener = new SelectionAdapter()
     {
       public void widgetSelected(SelectionEvent e)
@@ -109,6 +118,19 @@ public class NewTypeDialog extends NewComponentDialog implements IComponentDialo
         else if (e.widget == complexTypeButton)
         {
           typeKind = COMPLEX_TYPE;
+        }
+        else if (e.widget == anonymousTypeCheckBox)
+        {
+          if (anonymousTypeCheckBox.getSelection() == true)
+          {
+        	  nameField.setEnabled(false);
+        	  anonymousType = true;
+          }
+          else
+          {
+        	  nameField.setEnabled(true);
+        	  anonymousType = false;
+          }
         }
       }
     };
@@ -125,6 +147,7 @@ public class NewTypeDialog extends NewComponentDialog implements IComponentDialo
 
     simpleTypeButton.addSelectionListener(listener);
     complexTypeButton.addSelectionListener(listener);
+    anonymousTypeCheckBox.addSelectionListener(listener);
     Label separator = new Label(parent, SWT.SEPARATOR | SWT.HORIZONTAL);
     GridData gd = new GridData(GridData.FILL_BOTH);
     separator.setLayoutData(gd);

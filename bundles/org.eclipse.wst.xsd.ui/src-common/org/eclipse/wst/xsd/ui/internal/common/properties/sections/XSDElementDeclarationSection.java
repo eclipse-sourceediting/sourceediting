@@ -248,6 +248,8 @@ public class XSDElementDeclarationSection extends MultiplicitySection
     if (td != null)
     {  
       String currentTypeName = td.getQName(xsdSchema);
+      if (currentTypeName == null) // anonymous type
+    	currentTypeName = "**Anonymous**";
       ComponentSpecification ret = getComponentSpecFromQuickPickForValue(currentTypeName,manager);
       if (ret == null && currentTypeName != null) //not in quickPick
       {
@@ -318,13 +320,13 @@ public class XSDElementDeclarationSection extends MultiplicitySection
           typeName = ""; //$NON-NLS-1$
         }
 
+        fillTypesCombo();
         if (isAnonymous)
         {
-          typeCombo.setText("**anonymous**"); //$NON-NLS-1$
+        	typeCombo.setText("**Anonymous**");
         }
         else
         {
-          fillTypesCombo();
           if (typeDefinition != null)
           {
             typeCombo.setText(typeName);

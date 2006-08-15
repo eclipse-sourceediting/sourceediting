@@ -108,4 +108,5 @@ public class Messages extends NLS
 
   public static String _UI_LABEL_ELEMENTFORMDEFAULT;
   public static String _UI_LABEL_ATTRIBUTEFORMDEFAULT;
+  public static String _UI_LABEL_CREATE_ANON_TYPE;  
 }

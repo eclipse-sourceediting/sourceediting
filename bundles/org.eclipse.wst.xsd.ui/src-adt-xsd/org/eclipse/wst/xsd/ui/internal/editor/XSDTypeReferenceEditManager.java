@@ -27,10 +27,15 @@ import org.eclipse.wst.xsd.ui.internal.common.commands.UpdateTypeReferenceComman
 import org.eclipse.wst.xsd.ui.internal.dialogs.NewTypeDialog;
 import org.eclipse.wst.xsd.ui.internal.editor.search.XSDSearchListDialogDelegate;
 import org.eclipse.wst.xsd.ui.internal.search.IXSDSearchConstants;
+import org.eclipse.xsd.XSDComplexTypeDefinition;
 import org.eclipse.xsd.XSDConcreteComponent;
+import org.eclipse.xsd.XSDElementDeclaration;
+import org.eclipse.xsd.XSDFactory;
 import org.eclipse.xsd.XSDSchema;
+import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.eclipse.xsd.XSDTypeDefinition;
 import org.eclipse.xsd.util.XSDConstants;
+import org.eclipse.xsd.util.XSDSchemaBuildingTools;
 
 public class XSDTypeReferenceEditManager implements ComponentReferenceEditManager
 {  
@@ -132,7 +137,28 @@ public class XSDTypeReferenceEditManager implements ComponentReferenceEditManage
       if (component.isNew())
       {  
         XSDTypeDefinition td = null;
-        if (component.getMetaName() == IXSDSearchConstants.COMPLEX_TYPE_META_NAME)
+        if (component.getName() == null // This means we set to anonymous type
+        		&& concreteComponent instanceof XSDElementDeclaration)
+        {
+          XSDFactory factory = XSDSchemaBuildingTools.getXSDFactory();
+          XSDElementDeclaration elementDeclaration = (XSDElementDeclaration) concreteComponent;
+          // TODO (cs) we should use actions here so that UNDO/REDO can work nicely
+          // with the proper undo descriptions
+          if (component.getMetaName() == IXSDSearchConstants.COMPLEX_TYPE_META_NAME)
+          {
+            XSDComplexTypeDefinition complexType = factory.createXSDComplexTypeDefinition();            
+	  	    elementDeclaration.setAnonymousTypeDefinition(complexType);
+          }
+          else
+          {
+        	XSDSimpleTypeDefinition simpleType = factory.createXSDSimpleTypeDefinition();
+        	simpleType.setBaseTypeDefinition(
+        			elementDeclaration.getSchema().getSchemaForSchema().resolveSimpleTypeDefinition(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001, "string") ); //$NON-NLS-1$
+  	  	    elementDeclaration.setAnonymousTypeDefinition(simpleType);
+          }
+		  elementDeclaration.getElement().removeAttribute("type"); //TODO use external literal string
+        }
+        else if (component.getMetaName() == IXSDSearchConstants.COMPLEX_TYPE_META_NAME)
         {  
           AddXSDComplexTypeDefinitionCommand command = new AddXSDComplexTypeDefinitionCommand(Messages._UI_ACTION_ADD_COMPLEX_TYPE, concreteComponent.getSchema());
           command.setNameToAdd(component.getName());
