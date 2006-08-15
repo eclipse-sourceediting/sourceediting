@@ -49,7 +49,7 @@ public class JSPSearchRequestor extends BasicJSPSearchRequestor {
 		try {
 			lineNumber = jspDocument.getLineOfOffset(jspStart);
 		} catch (BadLocationException e) {
-			Logger.logException(e);
+			Logger.logException("offset: " + Integer.toString(jspStart), e); //$NON-NLS-1$
 		}
 		createSearchMarker(jspFile, jspStart, jspEnd, lineNumber);
 		
