@@ -16,6 +16,8 @@ import java.util.List;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartFactory;
 import org.eclipse.gef.KeyStroke;
@@ -836,6 +838,24 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
           node = ((XSDConcreteComponent) ((XSDBaseAdapter) object).getTarget()).getElement();
         }
       }
+      else if (object instanceof String)
+      {
+        // This case was added to make the F3/hyperlink navigation work when an
+        // inline schema from a WSDL document is opened in the schema editor.
+        // The string is expected to be a URI fragment used to identify an XSD
+        // component in the context of the enclosing WSDL resource.
+
+        String uriFragment = (String) object;
+        Resource resource = xsdSchema.eResource();
+        EObject modelObject = resource.getEObject(uriFragment);
+
+        if (modelObject != null && modelObject instanceof XSDComponent)
+        {
+          XSDComponent component = (XSDComponent) modelObject;
+          node = component.getElement();
+        }
+      }
+      
       // the text editor can only accept sed nodes!
       //
       if (!(node instanceof IDOMNode))
