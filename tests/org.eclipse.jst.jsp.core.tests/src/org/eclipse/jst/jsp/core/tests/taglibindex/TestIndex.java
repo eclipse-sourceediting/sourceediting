@@ -219,4 +219,26 @@ public class TestIndex extends TestCase {
 		assertEquals(uri, ((IJarRecord) taglibRecord2).getURI());
 	}
 
+	public void testCaching1() throws Exception {
+		// Create new project
+		IProject project = BundleResourceUtil.createSimpleProject("testcache1", null, null);
+		assertTrue(project.exists());
+		BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/testcache1", "/testcache1");
+		BundleResourceUtil.copyBundleEntryIntoWorkspace("/testfiles/bug_118251-sample/sample_tld.jar", "/testcache1/WebContent/WEB-INF/lib/sample_tld.jar");
+
+		ITaglibRecord[] records = TaglibIndex.getAvailableTaglibRecords(new Path("/testcache1"));
+
+		TaglibIndex.shutdown();
+		TaglibIndex.startup();
+		ITaglibRecord[] records2 = TaglibIndex.getAvailableTaglibRecords(new Path("/testcache1"));
+		assertEquals("total ITaglibRecord count doesn't match (1st restart)", records.length, records2.length);
+		TaglibIndex.shutdown();
+		TaglibIndex.startup();
+		records2 = TaglibIndex.getAvailableTaglibRecords(new Path("/testcache1"));
+		assertEquals("total ITaglibRecord count doesn't match (2nd restart)", records.length, records2.length);
+		TaglibIndex.shutdown();
+		TaglibIndex.startup();
+		records2 = TaglibIndex.getAvailableTaglibRecords(new Path("/testcache1"));
+		assertEquals("total ITaglibRecord count doesn't match (3rd restart)", records.length, records2.length);
+	}
 }
