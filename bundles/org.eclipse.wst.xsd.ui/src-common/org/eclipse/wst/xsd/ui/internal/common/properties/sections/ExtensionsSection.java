@@ -11,6 +11,7 @@
 package org.eclipse.wst.xsd.ui.internal.common.properties.sections;
 
 import org.eclipse.gef.commands.Command;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IWorkbenchPart;
@@ -124,5 +125,10 @@ public class ExtensionsSection extends AbstractExtensionsSection
       return componentElement == element || componentElement == parent || componentElement == grandParent;
     }
     return false;
-  }  
+  }
+  
+  protected IPreferenceStore getPrefStore()
+  {
+	return XSDEditorPlugin.getPlugin().getPreferenceStore();
+  }
 }

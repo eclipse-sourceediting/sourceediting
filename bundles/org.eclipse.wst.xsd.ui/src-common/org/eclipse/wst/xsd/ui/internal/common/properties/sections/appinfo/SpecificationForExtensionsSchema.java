@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo;
 
+import java.util.StringTokenizer;
+
 import org.eclipse.jface.viewers.ILabelProvider;
 
 public class SpecificationForExtensionsSchema
@@ -33,7 +35,21 @@ public class SpecificationForExtensionsSchema
     super();
   }
 
-  /**
+  public SpecificationForExtensionsSchema(String desc) {
+	StringTokenizer tokenizer = new StringTokenizer(desc, "\t");
+	
+	// we must be sure that each 'desc' contains info in correct format
+	// no error checking here
+	description = tokenizer.nextToken();
+	displayName = tokenizer.nextToken();
+	namespaceURI = tokenizer.nextToken();
+	location = tokenizer.nextToken();
+	isDefaultSchema = tokenizer.nextToken().equals("true");
+	sourceHint = tokenizer.nextToken();
+	fromCatalog = tokenizer.nextToken().equals("true");
+  }
+
+/**
    * @return Returns the description.
    */
   public String getDescription()

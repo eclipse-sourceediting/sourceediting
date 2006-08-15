@@ -14,6 +14,7 @@ import java.util.List;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -66,6 +67,8 @@ public abstract class AbstractExtensionsSection extends AbstractSection
   private Composite page, pageBook2;
   protected Button addButton, removeButton;
   private PageBook pageBook;
+  private Object prevInput;
+  private SpecificationForExtensionsSchema prevCategory;
 
   /**
    * 
@@ -351,6 +354,11 @@ public abstract class AbstractExtensionsSection extends AbstractSection
     setListenerEnabled(false);
     if (input != null)
     {
+      if ( prevInput == input)
+    	  return;
+      else
+    	  prevInput = input;
+      
       Tree tree = extensionTreeViewer.getTree();
       extensionDetailsViewer.setInput(null);
       tree.removeAll();
@@ -391,6 +399,10 @@ public abstract class AbstractExtensionsSection extends AbstractSection
 
       dialog.setInput(properties);
       dialog.setBlockOnOpen(true);
+      dialog.setPrefStore( getPrefStore() );
+      
+      if (prevCategory != null)
+    	  dialog.setInitialCategorySelection(prevCategory);
 
       if (dialog.open() == Window.OK)
       {
@@ -409,14 +421,15 @@ public abstract class AbstractExtensionsSection extends AbstractSection
               newSelection = addExtensionCommand.getNewObject();
             }
           }
-        }  
+        }
         //refresh();
         if (newSelection != null)
-        {  
+        {
           extensionTreeViewer.setSelection(new StructuredSelection(newSelection));
-        }  
+        }
       }
 
+      prevCategory = dialog.getSelectedCategory();
     }
     else if (event.widget == removeButton)
     {
@@ -436,6 +449,12 @@ public abstract class AbstractExtensionsSection extends AbstractSection
     {
 
     }
+  }
+
+  // TODO make this one an abstract method. XSDEditor and WSDLEditor should return
+  // diferent IpreferenceStore objects
+  protected IPreferenceStore getPrefStore() {
+	return null;
   }
 
   public void widgetDefaultSelected(SelectionEvent event)

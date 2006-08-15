@@ -251,6 +251,7 @@ public class XSDEditorPlugin extends AbstractUIPlugin
     {
       registry = new ExtensionsSchemasRegistry(EXTENSIONS_SCHEMAS_EXTENSIONID);
       registry.__internalSetDeprecatedExtensionId(DEPRECATED_EXTENSIONS_SCHEMAS_EXTENSIONID);
+      registry.setPrefStore(XSDEditorPlugin.getPlugin().getPreferenceStore() );
     }
     return registry;
   }

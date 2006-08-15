@@ -13,9 +13,11 @@ package org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
 import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalog;
@@ -25,13 +27,15 @@ import org.w3c.dom.Element;
 
 public class ExtensionsSchemasRegistry
 {
+  public static final String USER_ADDED_EXT_SCHEMAS = "USER-ADDED-EXT-SCHEMAS";  // TODO externalize
   private static final String LOCATION_PREFIX = "platform:/plugin/"; //$NON-NLS-1$
   public static final String DESCRIPTION = "description"; //$NON-NLS-1$
   public static final String DISPLAYNAME = "displayName"; //$NON-NLS-1$
   public static final String NAMESPACEURI = "namespaceURI"; //$NON-NLS-1$
   public static final String XSDFILEURL = "xsdFileURL"; //$NON-NLS-1$
   public static final String LABELPROVIDER = "labelProviderClass"; //$NON-NLS-1$
-
+  
+  protected IPreferenceStore prefStore;
   protected String extensionId;
 
   HashMap propertyMap;
@@ -47,6 +51,11 @@ public class ExtensionsSchemasRegistry
   public void __internalSetDeprecatedExtensionId(String deprecatedId)
   {
     deprecatedExtensionId = deprecatedId;
+  }
+  
+  public void setPrefStore(IPreferenceStore store)
+  {
+	  prefStore = store;
   }
 
   public List getAllExtensionsSchemasContribution()
@@ -65,6 +74,19 @@ public class ExtensionsSchemasRegistry
     {
       getAllExtensionsSchemasContribution(deprecatedExtensionId);     
     }  
+    
+    // get user-added schemas stored in preference
+    if (prefStore != null)
+    {
+      String value = prefStore.getString(USER_ADDED_EXT_SCHEMAS);
+      StringTokenizer tokenizer = new StringTokenizer(value, "\n");
+   
+      while ( tokenizer.hasMoreTokens() )
+      {
+        nsURIProperties.add( new SpecificationForExtensionsSchema( tokenizer.nextToken() ) );
+      }
+    }
+    
     return nsURIProperties;
   }
   
@@ -133,6 +155,7 @@ public class ExtensionsSchemasRegistry
       }
 
     }
+    
     return nsURIProperties;
   }
 

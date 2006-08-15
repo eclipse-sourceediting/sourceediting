@@ -74,7 +74,7 @@ public class AddExtensionElementCommand extends AddExtensionCommand
       Element schemaElement = schema.getElement();
       String prefix = addNamespaceDeclarationIfRequired(schemaElement, "p", spec.getNamespaceURI());
       
-      Element newElement = doc.createElementNS(spec.getNamespaceURI(), element.getName());
+      newElement = doc.createElementNS(spec.getNamespaceURI(), element.getName());
       newElement.setPrefix(prefix);   
       appInfo.appendChild(newElement);
 

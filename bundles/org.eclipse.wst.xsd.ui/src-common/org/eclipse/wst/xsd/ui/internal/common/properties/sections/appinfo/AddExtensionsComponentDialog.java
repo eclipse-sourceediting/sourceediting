@@ -11,9 +11,13 @@
 package org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.StringTokenizer;
+
 import org.apache.xerces.dom.DocumentImpl;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -78,10 +82,21 @@ public class AddExtensionsComponentDialog extends SelectionDialog implements ISe
   private ArrayList existingNames;
 
   private ViewerFilter elementTableViewerFilter;
-
+  private SpecificationForExtensionsSchema currentExtCategory;
+  private HashMap specToComponentsList = new HashMap();
+  private IPreferenceStore prefStore;
+  
   public void setInput(List input)
   {
     this.fInput = input;
+  }
+  
+  public SpecificationForExtensionsSchema getSelectedCategory(){
+	return currentExtCategory;
+  }
+  
+  public void setInitialCategorySelection(SpecificationForExtensionsSchema spec){
+	  currentExtCategory = spec;
   }
 
   protected Control createDialogArea(Composite container)
@@ -181,14 +196,43 @@ public class AddExtensionsComponentDialog extends SelectionDialog implements ISe
     if (categoryTableViewer.getTable().getItemCount() > 0)
     {
       categoryTableViewer.getTable().select(0);
-      categoryTableViewer.setSelection(new StructuredSelection(categoryTableViewer.getElementAt(0)));
+      
+      StructuredSelection structuredSelection;
+      if (currentExtCategory != null){
+    	  structuredSelection = new StructuredSelection(currentExtCategory);
+      }
+      else{
+    	  structuredSelection = 
+    		  new StructuredSelection(categoryTableViewer.getElementAt(0));
+      }
+      
+	  categoryTableViewer.setSelection(structuredSelection);
     }
     
     // Setup the list of category names that already exist
+    // and contructs the XSDSchema for each category
 	existingNames = new ArrayList();
-	TableItem[] categoryNames = categoryTableViewer.getTable().getItems();
-	for (int i = 0; i < categoryNames.length; i++ ){
-		existingNames.add(categoryNames[i].getText());
+	TableItem[] categories = categoryTableViewer.getTable().getItems();
+	for (int i = 0; i < categories.length; i++ ){
+		existingNames.add(categories[i].getText());
+
+		SpecificationForExtensionsSchema spec = 
+			(SpecificationForExtensionsSchema) categories[i].getData();
+		XSDSchema schema = getASISchemaModel(spec);
+
+		List components = buildInput(schema);
+		specToComponentsList.put(spec, components);
+
+		// mark category as gray/empty if applicable
+		Object[] remains = components.toArray();
+		if ( elementTableViewerFilter != null)
+			remains = elementTableViewerFilter.filter(elementTableViewer, 
+					elementTableViewer.getTable(), remains);
+		if ( remains.length == 0)
+		{
+		  categories[i].setForeground(
+			getShell().getDisplay().getSystemColor(SWT.COLOR_GRAY));
+		}
 	}
 	
 	getButton(IDialogConstants.OK_ID).setEnabled(false);
@@ -196,6 +240,11 @@ public class AddExtensionsComponentDialog extends SelectionDialog implements ISe
   
   public void addElementsTableFilter(ViewerFilter filter){
 	elementTableViewerFilter = filter;
+  }
+  
+  public void setPrefStore(IPreferenceStore prefStore)
+  {
+    this.prefStore = prefStore;
   }
 
   protected Point getInitialSize()
@@ -257,13 +306,16 @@ public class AddExtensionsComponentDialog extends SelectionDialog implements ISe
     		schemaSpec.setLocation(addNewCategoryDialog.getCategoryLocation() );
     		schemaSpec.setSourceHint(addNewCategoryDialog.getSource());
     		schemaSpec.setFromCatalog(addNewCategoryDialog.getFromCatalog() );
-    		
+
     		fInput.add(schemaSpec);
     		existingNames.add(schemaSpec.getDisplayName());
-    		
+
+    		storeSpecInPref(schemaSpec);
+    		//prefStore.setValue(ExtensionsSchemasRegistry.USER_ADDED_EXT_SCHEMAS, "");
+
     		// refresh without updating labels of existing TableItems    		
     		categoryTableViewer.refresh(false);
-    		
+
     		categoryTableViewer.setSelection(new StructuredSelection(schemaSpec));
     		getButton(IDialogConstants.OK_ID).setEnabled(false);
     	}
@@ -274,9 +326,12 @@ public class AddExtensionsComponentDialog extends SelectionDialog implements ISe
     	for (int i =0; i < selections.length; i++){
     		SpecificationForExtensionsSchema spec = 
     			(SpecificationForExtensionsSchema) selections[i].getData();
-    		
+
 			fInput.remove(spec );
     		existingNames.remove(spec.getDisplayName());
+    		specToComponentsList.remove(spec);
+    		
+    		removeFromPref(spec);
     	}
     	categoryTableViewer.refresh(false);
 
@@ -294,7 +349,7 @@ public class AddExtensionsComponentDialog extends SelectionDialog implements ISe
     	TableItem[] selections = categoryTableViewer.getTable().getSelection();
     	if (selections.length == 0)
     		return;
-    	
+
     	SpecificationForExtensionsSchema spec = (SpecificationForExtensionsSchema) selections[0].getData();
         
     	String displayName = spec.getDisplayName();
@@ -304,27 +359,28 @@ public class AddExtensionsComponentDialog extends SelectionDialog implements ISe
     	dialog.setSource(spec.getSourceHint() );
     	dialog.setCategoryLocation(spec.getLocation() );
 
-    	existingNames.remove(displayName);
+    	specToComponentsList.remove(spec);
     	dialog.setUnavailableCategoryNames(existingNames);
         
-        if ( dialog.open() == Window.OK){        	
-			String newCategoryName = dialog.getNewCategoryName();
+        if ( dialog.open() == Window.OK){
+        	existingNames.remove(displayName);
+			String newDisplayName = dialog.getNewCategoryName();
 
-			spec.setDisplayName(newCategoryName);
+			spec.setDisplayName(newDisplayName);
         	spec.setLocation(dialog.getCategoryLocation());
-
-        	existingNames.add(newCategoryName);
+        	spec.setSourceHint(dialog.getSource());
+        	spec.setFromCatalog(dialog.getFromCatalog());
         	
+        	existingNames.add(newDisplayName);
+        	editSpecInPref(displayName, spec);
+
         	categoryTableViewer.update(spec, null);
         	refreshElementsViewer(spec);
-        }
-        else{
-        	existingNames.add(displayName);
         }
     }
   }
 
-  /*
+/*
    * (non-Javadoc)
    * 
    * @see org.eclipse.swt.events.SelectionListener#widgetDefaultSelected(org.eclipse.swt.events.SelectionEvent)
@@ -345,7 +401,7 @@ public class AddExtensionsComponentDialog extends SelectionDialog implements ISe
         if (obj instanceof SpecificationForExtensionsSchema)
         {
           SpecificationForExtensionsSchema spec = (SpecificationForExtensionsSchema) obj;
-
+          currentExtCategory = spec;
           refreshElementsViewer(spec);
 
           if ( spec.isDefautSchema() ){
@@ -364,8 +420,14 @@ public class AddExtensionsComponentDialog extends SelectionDialog implements ISe
   }
   
   private void refreshElementsViewer(SpecificationForExtensionsSchema spec) {
-	  XSDSchema xsdSchema = getASISchemaModel(spec);
+	  List components = (List) specToComponentsList.get(spec);
+	  if ( components != null){
+		elementTableViewer.setInput(components);
+		return;
+	  }
 	  
+	  XSDSchema xsdSchema = getASISchemaModel(spec);
+
 	  if (xsdSchema == null){
 		  MessageBox errDialog = new MessageBox(getShell(), SWT.ICON_ERROR);
 		  errDialog.setText(Messages._UI_ERROR_INVALID_CATEGORY);
@@ -375,12 +437,20 @@ public class AddExtensionsComponentDialog extends SelectionDialog implements ISe
 		  return;
 	  }
 	  
+	  components = buildInput(xsdSchema);
+      specToComponentsList.put(spec, components);	  
+	  
 	  List allItems = buildInput(xsdSchema);
+	  if ( allItems == null )
+		  return;
 	  elementTableViewer.setInput(allItems);
   }
   
   private static List buildInput(XSDSchema xsdSchema)
   {
+	if ( xsdSchema ==null )
+		return null;
+
     List elements = xsdSchema.getElementDeclarations();
     List attributes = xsdSchema.getAttributeDeclarations();
     String targetNamespace = xsdSchema.getTargetNamespace();
@@ -388,6 +458,7 @@ public class AddExtensionsComponentDialog extends SelectionDialog implements ISe
     // For safety purpose: We don't append 'attributes' to 'elements'
     // ArrayStoreException(or similar one) may occur
     List allItems = new ArrayList(attributes.size() + elements.size());
+    
     {
       // getElementDeclarations returns a lot of elements from import
       // statement, we
@@ -430,7 +501,10 @@ public class AddExtensionsComponentDialog extends SelectionDialog implements ISe
   
   private static XSDSchema getASISchemaModel(SpecificationForExtensionsSchema extensionsSchemaSpec)
   {
-    XSDSchema xsdSchema = XSDImpl.buildXSDModel(extensionsSchemaSpec.getLocation());
+    String location = extensionsSchemaSpec.getLocation();
+    if ( location == null)
+    	return null;
+	XSDSchema xsdSchema = XSDImpl.buildXSDModel(location);
     
     // now that the .xsd file is read, we can retrieve the namespace of this xsd file
     // and set the namespace for 'properties'
@@ -441,7 +515,75 @@ public class AddExtensionsComponentDialog extends SelectionDialog implements ISe
     return xsdSchema;
   }
 
-  static class CategoryContentProvider implements IStructuredContentProvider
+  private void storeSpecInPref(SpecificationForExtensionsSchema schemaSpec) {
+	if (prefStore == null)
+		return;
+	
+	String currentValue = prefStore.getString(ExtensionsSchemasRegistry.USER_ADDED_EXT_SCHEMAS);
+	String specDesc = "  " + "\t" + schemaSpec.getDisplayName() + "\t"+
+		"\t" + schemaSpec.getNamespaceURI() + "\t" + schemaSpec.getLocation() + "\t" +
+		schemaSpec.isDefautSchema() + "\t" + schemaSpec.getSourceHint() + "\t" +
+		schemaSpec.isFromCatalog();
+	currentValue += specDesc + "\n";
+
+	prefStore.setValue(ExtensionsSchemasRegistry.USER_ADDED_EXT_SCHEMAS,
+			currentValue);
+  }
+
+  private void editSpecInPref(String displayName, SpecificationForExtensionsSchema newSpec) {
+	if (prefStore == null)
+	  return;
+	
+	String newValue = "";
+	String currentValue = prefStore.getString(ExtensionsSchemasRegistry.USER_ADDED_EXT_SCHEMAS);
+	StringTokenizer tokenizer = new StringTokenizer(currentValue, "\n");
+
+	while (tokenizer.hasMoreTokens())
+	{
+	  String oneSpecDesc = tokenizer.nextToken();
+	  // get the Display name
+	  StringTokenizer _tokenizer_2 = new StringTokenizer(oneSpecDesc, "\t");
+	  _tokenizer_2.nextToken();
+	  String dName = _tokenizer_2.nextToken();
+
+	  if ( dName.equals(displayName ) )
+	  {
+		oneSpecDesc = "  " + "\t" + newSpec.getDisplayName() + "\t"+
+			"\t" + newSpec.getNamespaceURI() + "\t" + newSpec.getLocation() + "\t" +
+			newSpec.isDefautSchema() + "\t" + newSpec.getSourceHint() + "\t" +
+			newSpec.isFromCatalog();		  
+	  }
+
+	  newValue += oneSpecDesc + "\n";
+	}
+	prefStore.setValue(ExtensionsSchemasRegistry.USER_ADDED_EXT_SCHEMAS, newValue);
+	
+  }
+
+  private void removeFromPref(SpecificationForExtensionsSchema spec) {
+	if (prefStore == null)
+	  return;	  
+	  
+	String newValue = "";
+	String currentValue = prefStore.getString(ExtensionsSchemasRegistry.USER_ADDED_EXT_SCHEMAS);
+	StringTokenizer tokenizer = new StringTokenizer(currentValue, "\n");
+
+	while (tokenizer.hasMoreTokens())
+	{
+	  String oneSpecDesc = tokenizer.nextToken();
+	  // get the Display name
+	  StringTokenizer _tokenizer_2 = new StringTokenizer(oneSpecDesc, "\t");
+	  _tokenizer_2.nextToken();
+	  String dName = _tokenizer_2.nextToken();
+
+	  if ( dName.equals(spec.getDisplayName() ) )
+		continue;
+	  newValue += oneSpecDesc + "\n";
+	}
+	prefStore.setValue(ExtensionsSchemasRegistry.USER_ADDED_EXT_SCHEMAS, newValue);
+  }
+
+static class CategoryContentProvider implements IStructuredContentProvider
   {
     /*
      * (non-Javadoc)

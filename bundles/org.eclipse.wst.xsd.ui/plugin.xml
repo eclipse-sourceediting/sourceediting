@@ -339,6 +339,8 @@
       <objectContribution 
          id="org.eclipse.wst.xsd.ui.refactoring.menu.objectContrib" 
          objectClass="org.eclipse.wst.xsd.ui.internal.adapters.XSDBaseAdapter">  
+         <!-- 
+         cs : declaration search isn't fully implemented yet, removing this menu action for now
          <action
             id="org.eclipse.wst.xsd.ui.search.declarations.action" 
             enablesFor="1"
@@ -347,6 +349,7 @@
             label="%search.declarations.label"
             class="org.eclipse.wst.xsd.ui.internal.search.actions.XSDSearchDeclarationsGroupActionDelegate"> 
          </action>          
+         -->
          <action
             id="org.eclipse.wst.xsd.ui.search.references.action" 
             enablesFor="1"
