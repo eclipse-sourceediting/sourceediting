@@ -40,7 +40,7 @@ public class DocumentReader extends Reader {
 	}
 
 	public void close() throws IOException {
-		// do nothing for a 'document'
+		fDocument = null;
 	}
 
 	/**
@@ -64,6 +64,9 @@ public class DocumentReader extends Reader {
 	}
 
 	public int read(char[] cbuf, int off, int len) throws IOException {
+		if(fDocument == null)
+			return -1;
+		
 		char[] readChars = null;
 		try {
 			if (position >= fDocument.getLength())
@@ -113,6 +116,9 @@ public class DocumentReader extends Reader {
 	 * @see java.io.Reader#skip(long)
 	 */
 	public long skip(long n) throws IOException {
+		if(fDocument == null)
+			return 0;
+
 		long skipped = n;
 		if (position + n > fDocument.getLength()) {
 			skipped = fDocument.getLength() - position;
