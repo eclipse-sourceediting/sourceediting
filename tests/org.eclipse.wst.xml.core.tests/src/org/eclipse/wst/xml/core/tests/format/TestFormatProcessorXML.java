@@ -28,6 +28,7 @@ import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.util.URIResolver;
 import org.eclipse.wst.xml.core.internal.provisional.format.FormatProcessorXML;
 import org.eclipse.wst.xml.core.internal.provisional.format.IStructuredFormatPreferencesXML;
+import org.eclipse.wst.xml.core.tests.util.StringCompareUtil;
 
 public class TestFormatProcessorXML extends TestCase {
 
@@ -40,6 +41,8 @@ public class TestFormatProcessorXML extends TestCase {
 	private static final int MAX_LINE_WIDTH = 72;
 
 	private static final String UTF_8 = "UTF-8";
+	
+	private StringCompareUtil fStringCompareUtil;
 
 	public TestFormatProcessorXML(String name) {
 		super(name);
@@ -49,6 +52,7 @@ public class TestFormatProcessorXML extends TestCase {
 
 	protected void setUp() throws Exception {
 		formatProcessor = new FormatProcessorXML();
+		fStringCompareUtil = new StringCompareUtil();
 	}
 
 	/**
@@ -119,15 +123,6 @@ public class TestFormatProcessorXML extends TestCase {
 		return model;
 	}
 
-	protected boolean isByteArrayIdentical(byte b1[], byte b2[]) {
-		if (b1.length != b2.length)
-			return false;
-		for (int i = 0; i < b1.length; ++i)
-			if (b1[i] != b2[i])
-				return false;
-		return true;
-	}
-
 	protected void formatAndAssertEquals(String beforePath, String afterPath) throws UnsupportedEncodingException, IOException, CoreException {
 		IStructuredModel beforeModel = null, afterModel = null;
 		try {
@@ -152,10 +147,9 @@ public class TestFormatProcessorXML extends TestCase {
 			ByteArrayOutputStream afterBytes = new ByteArrayOutputStream();
 			afterModel.save(afterBytes);
 
-			assertEquals("Formatted document differs from the expected", new String(afterBytes.toByteArray(), UTF_8), new String(formattedBytes.toByteArray(), UTF_8));
-
-			// Do the same check in binary for kicks
-			assertTrue("Formatted document differs fromto the expected", isByteArrayIdentical(formattedBytes.toByteArray(), afterBytes.toByteArray()));
+			String formattedContents = new String(afterBytes.toByteArray(), UTF_8);
+			String expectedContents = new String(formattedBytes.toByteArray(), UTF_8);
+			assertTrue("Formatted document differs from the expected", fStringCompareUtil.equalsIgnoreLineSeperator(formattedContents, expectedContents));
 		}
 		finally {
 			if (beforeModel != null)
