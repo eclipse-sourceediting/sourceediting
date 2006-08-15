@@ -427,7 +427,7 @@ public class HTMLValidator implements IValidatorJob, ISourceValidator {
 			IResource[] resourceArray = container.members(false);
 			for (int i = 0; i < resourceArray.length; i++) {
 				IResource resource = resourceArray[i];
-				if (resource == null)
+				if (resource == null || reporter.isCancelled())
 					continue;
 				if (resource instanceof IFile) {
 					validateFile(helper, reporter, (IFile) resource);
