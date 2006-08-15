@@ -11,12 +11,15 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.core.taglib;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
+import java.util.zip.CRC32;
 
 import org.eclipse.core.filebuffers.FileBuffers;
 import org.eclipse.core.resources.IFile;
@@ -39,6 +42,7 @@ import org.eclipse.jdt.core.IJavaElementDelta;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jst.jsp.core.internal.JSPCorePlugin;
 import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.TLDCMDocumentManager;
 import org.eclipse.wst.sse.core.utils.StringUtils;
@@ -49,10 +53,11 @@ import org.osgi.framework.Bundle;
  * ITaglibRegistry but lacking any ties to project natures. Each record
  * returned from the index represents a single tag library descriptor.
  * 
- * Indexing is not persisted between sessions, so new ADD events will be sent
- * to ITaglibIndexListeners during each workbench session. REMOVE events are
- * not fired on workbench shutdown. The record's contents should be examined
- * for any further information.
+ * Indexing is only persisted between sessions for entries on the Java Build
+ * Path. New ADD events will be sent to ITaglibIndexListeners during each
+ * workbench session for both cached and newly found records. REMOVE events
+ * are not fired on workbench shutdown. The record's contents should be
+ * examined for any further information.
  * 
  * @since 1.0
  */
@@ -79,16 +84,50 @@ public final class TaglibIndex {
 			if (frameworkIsShuttingDown())
 				return;
 
-			if (delta.getElement().getElementType() == IJavaElement.JAVA_MODEL) {
-				IJavaElementDelta[] changed = delta.getChangedChildren();
+			Logger.log(Logger.INFO_DEBUG, "IJavaElementDelta: " + delta);
+
+			IJavaElement element = delta.getElement();
+			if (element.getElementType() == IJavaElement.JAVA_MODEL) {
+				IJavaElementDelta[] changed = delta.getAffectedChildren();
 				for (int i = 0; i < changed.length; i++) {
 					elementChanged(changed[i]);
 				}
 			}
-			else if (delta.getElement().getElementType() == IJavaElement.JAVA_PROJECT) {
+			// Handle any changes at the project level
+			else if (element.getElementType() == IJavaElement.JAVA_PROJECT) {
 				if ((delta.getFlags() & IJavaElementDelta.F_CLASSPATH_CHANGED) != 0) {
-					IJavaElement proj = delta.getElement();
+					IJavaElement proj = element;
 					handleClasspathChange((IJavaProject) proj);
+				}
+				else {
+					IJavaElementDelta[] deltas = delta.getAffectedChildren();
+					for (int i = 0; i < deltas.length; i++) {
+						elementChanged(deltas[i]);
+					}
+				}
+			}
+			/*
+			 * Other modification to the classpath (such as within a classpath
+			 * container like "Web App Libraries") go to the description
+			 * itself
+			 */
+			else if ((delta.getFlags() & IJavaElementDelta.F_ADDED_TO_CLASSPATH) != 0 || (delta.getFlags() & IJavaElementDelta.F_REMOVED_FROM_CLASSPATH) != 0) {
+				IJavaProject affectedProject = element.getJavaProject();
+				if (affectedProject != null) {
+					/*
+					 * If the affected project has an index on-disk, it's
+					 * going to be invalid--we need to create/load the
+					 * description so it will be up to date [loading now and
+					 * updating is usually faster than regenerating the entire
+					 * index]. If there is no index on disk, do nothing more.
+					 */
+					File indexFile = new File(computeIndexLocation(affectedProject.getProject().getFullPath()));
+					if (indexFile.exists()) {
+						ProjectDescription affectedDescription = createDescription(affectedProject.getProject());
+						if (affectedDescription != null) {
+							affectedDescription.handleElementChanged(delta);
+						}
+					}
 				}
 			}
 		}
@@ -182,12 +221,12 @@ public final class TaglibIndex {
 								}
 								for (int i = 0; i < projects.length; i++) {
 									if (_debugIndexCreation) {
-										Logger.log(Logger.INFO_DEBUG, "TaglibIndex noticed " + projects[i].getName() + " is about to be deleted/closed"); //$NON-NLS-1$ //$NON-NLS-2$
+										Logger.log(Logger.INFO, "TaglibIndex noticed " + projects[i].getName() + " is about to be deleted/closed"); //$NON-NLS-1$ //$NON-NLS-2$
 									}
 									ProjectDescription description = (ProjectDescription) fProjectDescriptions.remove(projects[i]);
 									if (description != null) {
 										if (_debugIndexCreation) {
-											Logger.log(Logger.INFO_DEBUG, "removing index of " + description.fProject.getName()); //$NON-NLS-1$
+											Logger.log(Logger.INFO, "removing index of " + description.fProject.getName()); //$NON-NLS-1$
 										}
 										description.clear();
 									}
@@ -243,12 +282,12 @@ public final class TaglibIndex {
 										}
 										if (!projects[i].isAccessible() || (deltas[i] != null && deltas[i].getKind() == IResourceDelta.REMOVED)) {
 											if (_debugIndexCreation) {
-												Logger.log(Logger.INFO_DEBUG, "TaglibIndex noticed " + projects[i].getName() + " was removed or is no longer accessible"); //$NON-NLS-1$ //$NON-NLS-2$
+												Logger.log(Logger.INFO, "TaglibIndex noticed " + projects[i].getName() + " was removed or is no longer accessible"); //$NON-NLS-1$ //$NON-NLS-2$
 											}
 											ProjectDescription description = (ProjectDescription) fProjectDescriptions.remove(projects[i]);
 											if (description != null) {
 												if (_debugIndexCreation) {
-													Logger.log(Logger.INFO_DEBUG, "removing index of " + description.fProject.getName()); //$NON-NLS-1$
+													Logger.log(Logger.INFO, "removing index of " + description.fProject.getName()); //$NON-NLS-1$
 												}
 												description.clear();
 											}
@@ -282,6 +321,10 @@ public final class TaglibIndex {
 
 	static TaglibIndex _instance;
 
+	private static final CRC32 checksumCalculator = new CRC32();
+
+	private static final String CLEAN = "CLEAN";
+	private static final String DIRTY = "DIRTY";
 	static boolean ENABLED = false;
 	static ILock LOCK = null;
 
@@ -303,7 +346,7 @@ public final class TaglibIndex {
 
 	static void fireTaglibRecordEvent(ITaglibRecordEvent event) {
 		if (_debugEvents) {
-			Logger.log(Logger.INFO_DEBUG, "TaglibIndex fired event:" + event); //$NON-NLS-1$
+			Logger.log(Logger.INFO, "TaglibIndex fired event:" + event); //$NON-NLS-1$
 		}
 		/*
 		 * Flush any shared cache entries, the TaglibControllers should handle
@@ -362,6 +405,14 @@ public final class TaglibIndex {
 		}
 	}
 
+	private String getState() {
+		String state = JSPCorePlugin.getDefault().getPluginPreferences().getString(TaglibIndex.class.getName());
+		if (state == null || state.length() == 0) {
+			state = DIRTY;
+		}
+		return state;
+	}
+
 	/**
 	 * NOT API.
 	 * 
@@ -407,18 +458,18 @@ public final class TaglibIndex {
 		}
 		if (_debugResolution) {
 			if (result == null) {
-				Logger.log(Logger.INFO_DEBUG, "TaglibIndex could not resolve \"" + reference + "\" from " + basePath); //$NON-NLS-1$ //$NON-NLS-2$
+				Logger.log(Logger.INFO, "TaglibIndex could not resolve \"" + reference + "\" from " + basePath); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			else {
 				switch (result.getRecordType()) {
 					case (ITaglibRecord.TLD) : {
 						ITLDRecord record = (ITLDRecord) result;
-						Logger.log(Logger.INFO_DEBUG, "TaglibIndex resolved " + basePath + ":" + reference + " = " + record.getPath()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						Logger.log(Logger.INFO, "TaglibIndex resolved " + basePath + ":" + reference + " = " + record.getPath()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 					}
 						break;
 					case (ITaglibRecord.JAR) : {
 						IJarRecord record = (IJarRecord) result;
-						Logger.log(Logger.INFO_DEBUG, "TaglibIndex resolved " + basePath + ":" + reference + " = " + record.getLocation()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						Logger.log(Logger.INFO, "TaglibIndex resolved " + basePath + ":" + reference + " = " + record.getLocation()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 					}
 						break;
 					case (ITaglibRecord.TAGDIR) : {
@@ -426,13 +477,53 @@ public final class TaglibIndex {
 						break;
 					case (ITaglibRecord.URL) : {
 						IURLRecord record = (IURLRecord) result;
-						Logger.log(Logger.INFO_DEBUG, "TaglibIndex resolved " + basePath + ":" + reference + " = " + record.getURL()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						Logger.log(Logger.INFO, "TaglibIndex resolved " + basePath + ":" + reference + " = " + record.getURL()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 					}
 						break;
 				}
 			}
 		}
 		return result;
+	}
+
+	/**
+	 * Removes index files. Used for maintenance and keeping the index folder
+	 * a manageable size.
+	 * 
+	 * @param staleOnly -
+	 *            if <b>true</b>, removes only the indexes for projects not
+	 *            open in the workspace, if <b>false</b>, removes all of the
+	 *            indexes
+	 */
+	private void removeIndexes(boolean staleOnly) {
+		String osPath = getTaglibIndexStateLocation().toOSString();
+		File folder = new File(osPath);
+		if (!folder.isDirectory()) {
+			try {
+				folder.mkdir();
+			}
+			catch (SecurityException e) {
+			}
+		}
+
+		// remove any extraneous index files
+		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+		List indexNames = new ArrayList(projects.length);
+		if (staleOnly) {
+			for (int i = 0; i < projects.length; i++) {
+				if (projects[i].isAccessible()) {
+					indexNames.add(computeIndexName(projects[i].getFullPath()));
+				}
+			}
+		}
+
+		if (folder.isDirectory()) {
+			File[] files = folder.listFiles();
+			for (int i = 0; files != null && i < files.length; i++) {
+				if (!indexNames.contains(files[i].getName()))
+					files[i].delete();
+			}
+		}
 	}
 
 	/**
@@ -467,14 +558,46 @@ public final class TaglibIndex {
 
 	private TaglibIndex() {
 		super();
+
+		/*
+		 * Only consider a crash if a value exists and is DIRTY (not a new
+		 * workspace)
+		 */
+		if (DIRTY.equalsIgnoreCase(getState())) {
+			Logger.log(Logger.ERROR_DEBUG, "workspace crash detected, not using saved taglib indexes");
+			removeIndexes(false);
+		}
+
+		LOCK = Platform.getJobManager().newLock();
+		fProjectDescriptions = new Hashtable();
 		fResourceChangeListener = new ResourceChangeListener();
 		fClasspathChangeListener = new ClasspathChangeListener();
 		if (ENABLED) {
 			ResourcesPlugin.getWorkspace().addResourceChangeListener(fResourceChangeListener, IResourceChangeEvent.POST_CHANGE);
 			JavaCore.addElementChangedListener(fClasspathChangeListener);
 		}
-		LOCK = Platform.getJobManager().newLock();
-		fProjectDescriptions = new Hashtable();
+	}
+
+	/**
+	 * Based on org.eclipse.jdt.internal.core.search.indexing.IndexManager
+	 * 
+	 * @param containerPath
+	 * @return
+	 */
+	String computeIndexLocation(IPath containerPath) {
+		String fileName = computeIndexName(containerPath);
+		if (_debugIndexCreation)
+			Logger.log(Logger.INFO_DEBUG, "-> index name for " + containerPath + " is " + fileName); //$NON-NLS-1$ //$NON-NLS-2$
+		String indexLocation = getTaglibIndexStateLocation().append(fileName).toOSString();
+		return indexLocation;
+	}
+
+	String computeIndexName(IPath containerPath) {
+		checksumCalculator.reset();
+		checksumCalculator.update(containerPath.toOSString().getBytes());
+		// use ".dat" so we're not confused with JDT indexes
+		String fileName = Long.toString(checksumCalculator.getValue()) + ".dat"; //$NON-NLS-1$
+		return fileName;
 	}
 
 	/**
@@ -485,11 +608,11 @@ public final class TaglibIndex {
 		ProjectDescription description = null;
 		description = (ProjectDescription) fProjectDescriptions.get(project);
 		if (description == null) {
-			description = new ProjectDescription(project);
-			if (ENABLED) {
-				description.index();
-				description.indexClasspath();
+			// Once we've started indexing, we're dirty again
+			if (fProjectDescriptions.isEmpty()) {
+				setState(DIRTY);
 			}
+			description = new ProjectDescription(project, computeIndexLocation(project.getFullPath()));
 			fProjectDescriptions.put(project, description);
 		}
 		return description;
@@ -516,6 +639,10 @@ public final class TaglibIndex {
 		return description;
 	}
 
+	private IPath getTaglibIndexStateLocation() {
+		return JSPCorePlugin.getDefault().getStateLocation().append("taglibindex/");
+	}
+
 	private void internalAddTaglibIndexListener(ITaglibIndexListener listener) {
 		if (fTaglibIndexListeners == null) {
 			fTaglibIndexListeners = new ITaglibIndexListener[]{listener};
@@ -533,6 +660,22 @@ public final class TaglibIndex {
 			IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(path.segment(0));
 			ProjectDescription description = createDescription(project);
 			List availableRecords = description.getAvailableTaglibRecords(path);
+
+//			ICatalog catalog = XMLCorePlugin.getDefault().getDefaultXMLCatalog();
+//			while (catalog != null) {
+//				ICatalogEntry[] entries = catalog.getCatalogEntries();
+//				for (int i = 0; i < entries.length; i++) {
+//					// System.out.println(entries[i].getURI());
+//				}
+//				INextCatalog[] nextCatalogs = catalog.getNextCatalogs();
+//				for (int i = 0; i < nextCatalogs.length; i++) {
+//					ICatalogEntry[] entries2 = nextCatalogs[i].getReferencedCatalog().getCatalogEntries();
+//					for (int j = 0; j < entries2.length; j++) {
+//						// System.out.println(entries2[j].getURI());
+//					}
+//				}
+//			}
+
 			records = (ITaglibRecord[]) availableRecords.toArray(records);
 		}
 		return records;
@@ -601,6 +744,7 @@ public final class TaglibIndex {
 			ProjectDescription description = createDescription(project);
 			resolved = description.resolve(basePath, reference);
 		}
+
 		return resolved;
 	}
 
@@ -608,9 +752,31 @@ public final class TaglibIndex {
 		return _instance != null && ENABLED;
 	}
 
+	private void setState(String state) {
+		if (!state.equals(getState())) {
+			JSPCorePlugin.getDefault().getPluginPreferences().setValue(TaglibIndex.class.getName(), state);
+			JSPCorePlugin.getDefault().savePluginPreferences();
+		}
+	}
+
 	private void stop() {
 		ResourcesPlugin.getWorkspace().removeResourceChangeListener(fResourceChangeListener);
 		JavaCore.removeElementChangedListener(fClasspathChangeListener);
+
+		/*
+		 * Clearing the existing saved states helps prune dead data from the
+		 * index folder.
+		 */
+		removeIndexes(true);
+
+		Iterator i = fProjectDescriptions.values().iterator();
+		while (i.hasNext()) {
+			ProjectDescription description = (ProjectDescription) i.next();
+			description.saveReferences();
+		}
+
 		fProjectDescriptions.clear();
+
+		setState(CLEAN);
 	}
 }
