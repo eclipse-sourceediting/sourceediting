@@ -238,9 +238,9 @@ public class HTMLDocumentAdapter implements IStyleSheetListAdapter, StyleSheetLi
 
 		if (index < 0 || index >= validAdapters.size())
 			return null;
-		org.w3c.dom.stylesheets.StyleSheet sheet = ((IStyleSheetAdapter) validAdapters.get(index)).getSheet();
+		StyleSheet sheet = ((IStyleSheetAdapter) validAdapters.get(index)).getSheet();
 		if (sheet == null) {// for LINK element whose link is broken
-			ICSSModel model = ((AbstractStyleSheetAdapter) this.styleAdapters.elementAt(index)).createModel();
+			ICSSModel model = ((AbstractStyleSheetAdapter) validAdapters.get(index)).createModel();
 			sheet = ((model != null) ? (StyleSheet) model.getDocument() : null);
 		}
 		return sheet;
