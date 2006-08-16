@@ -13,10 +13,8 @@ package org.eclipse.wst.web.internal.deployables;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -68,14 +66,31 @@ public abstract class ComponentDeployable extends ProjectModule {
 		return component.isBinary();
 	}
 	
+	/**
+	 * Add the resources from mr to the existing resources in Module Folder mf
+	 * @param ModuleFolder mf
+	 * @param IModuleResource[] mr
+	 */
 	private void addMembersToModuleFolder(ModuleFolder mf, IModuleResource[] mr) {
-		if (mf == null) return;
-		Set membersJoin = new HashSet();
-		if (mf.members() != null)
-			membersJoin.addAll(Arrays.asList(mf.members()));
-		if (mr != null && mr.length > 0)
-			membersJoin.addAll(Arrays.asList(mr));
-		mf.setMembers((IModuleResource[]) membersJoin.toArray(new IModuleResource[membersJoin.size()]));
+		// If the folder is null or the resources to add are null or empty, bail and return
+		if (mf == null || mr == null || mr.length==0) 
+			return;
+		// Get the existing members in the module folder
+		IModuleResource[] mf_members = mf.members();
+		int mf_size = 0;
+		// Get the length of the existing members in the module folder
+		if (mf_members != null)
+			mf_size = mf_members.length;
+		// Create a new array to set on the module folder which will combine the existing and
+		// new module resources
+		IModuleResource[] res = new IModuleResource[mf_size + mr.length];
+		// Copy the existing members into the array if there are any
+		if (mf_members != null && mf_size > 0)
+			System.arraycopy(mf_members, 0, res, 0, mf_size);
+		// Copy the new members into the array
+		System.arraycopy(mr, 0, res, mf_size, mr.length);
+		// Set the new members array on the module folder
+		mf.setMembers(res);
 	}
 
 	 /**
@@ -295,8 +310,7 @@ public abstract class ComponentDeployable extends ProjectModule {
 			IModuleResource[] mr = getMembers(vFolder, Path.EMPTY);
 			int size = mr.length;
 			for (int j = 0; j < size; j++) {
-				if (!members.contains(mr[j]))
-					members.add(mr[j]);
+				members.add(mr[j]);
 			}
 			addUtilMembers(vc);
 		}
