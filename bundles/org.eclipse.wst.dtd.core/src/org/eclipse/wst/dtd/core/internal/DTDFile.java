@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -36,7 +36,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 
 public class DTDFile implements IndexedRegion {
-	 private NodeList attlistList = new NodeList(this, DTDRegionTypes.ATTLIST_TAG);
+	private NodeList attlistList = new NodeList(this, DTDRegionTypes.ATTLIST_TAG);
 	private NodeList commentList = new NodeList(this, DTDRegionTypes.COMMENT_START);
 
 	boolean creatingNewModel = false;
@@ -637,6 +637,11 @@ public class DTDFile implements IndexedRegion {
 		DTDNode affectedNode = getNode(flatNode);
 
 		if (!isSameTopLevelType(affectedNode)) {
+			// Bug 111100 - Fire off a node removal event
+			// to remove the node from the tree viewer
+			NodesEvent removedDTDNodes = new NodesEvent();
+			removedDTDNodes.add(affectedNode);
+			notifyNodesRemoved(removedDTDNodes);
 			nodesToRebuild.add(affectedNode);
 			rebuildNodes(nodesToRebuild);
 		}
@@ -650,7 +655,10 @@ public class DTDFile implements IndexedRegion {
 			for (int i = 0; i < size; i++) {
 				ITextRegion region = newRegions.get(i);
 				DTDNode deepestNode = affectedNode.getDeepestNode(flatNode.getStartOffset(region), flatNode.getEndOffset(region));
-				if (!addedDTDNodes.getNodes().contains(deepestNode)) {
+				// Bug 111100 - We do not need to fire a node added event
+				// for the affectedNode because that is already handled by
+				// the node changed event above
+				if (deepestNode != affectedNode && !addedDTDNodes.getNodes().contains(deepestNode)) {
 					addedDTDNodes.add(deepestNode);
 				}
 			}

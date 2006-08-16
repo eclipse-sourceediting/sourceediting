@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -278,9 +278,33 @@ class DTDTreeContentProvider implements ITreeContentProvider, IDTDFileListener {
 				oldSelectedNode = (DTDNode) firstObj;
 			}
 
-			// for now just refresh the whole view
 			AbstractTreeViewer abstractTreeViewer = (AbstractTreeViewer) fViewer;
-			abstractTreeViewer.refresh();
+			for (Iterator it = event.getNodes().iterator(); it.hasNext();) {
+				Object node = it.next();
+				Object parent = getParent(node);
+				// Bug 111100 - If it is a top level node (ie. parent is a
+				// DTDFile),
+				// insert the node directly to improve performance
+				if (parent instanceof DTDFile) {
+					Object[] objs = getChildren(parent);
+					for (int i = 0; i < objs.length; i++) {
+						if (objs[i] == node) {
+							abstractTreeViewer.insert(parent, node, i);
+							break;
+						}
+					}
+				}
+				// If the parent node is not a DTDFile, just refresh the
+				// parent for now
+				else if (parent != null) {
+					abstractTreeViewer.refresh(parent);
+				}
+				// You should never reach this block, if you do, just refresh
+				// the whole tree
+				else {
+					abstractTreeViewer.refresh();
+				}
+			}
 
 			Iterator iter = event.getNodes().iterator();
 			List newSelection = new ArrayList();
