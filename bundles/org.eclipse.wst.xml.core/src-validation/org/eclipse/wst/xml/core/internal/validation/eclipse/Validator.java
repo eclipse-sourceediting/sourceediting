@@ -17,7 +17,6 @@ import org.eclipse.wst.validation.internal.provisional.core.IMessage;
 import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
 import org.eclipse.wst.xml.core.internal.preferences.XMLCorePreferenceNames;
 import org.eclipse.wst.xml.core.internal.validation.XMLValidationConfiguration;
-import org.eclipse.wst.xml.core.internal.validation.XMLValidationMessages;
 import org.eclipse.wst.xml.core.internal.validation.XMLValidationReport;
 import org.eclipse.wst.xml.core.internal.validation.core.AbstractNestedValidator;
 import org.eclipse.wst.xml.core.internal.validation.core.NestedValidatorContext;
@@ -37,14 +36,6 @@ public class Validator extends AbstractNestedValidator
   {
 	super.setupValidation(context);
 	warnNoGrammar = XMLCorePlugin.getDefault().getPluginPreferences().getBoolean(XMLCorePreferenceNames.WARN_NO_GRAMMAR);
-  }
-
-/* (non-Javadoc)
-   * @see org.eclipse.wst.xml.core.internal.validation.core.AbstractNestedValidator#getValidatorName()
-   */
-  protected String getValidatorName() 
-  {
-	return XMLValidationMessages.Message_XML_validation_message_ui;
   }
 
   /* (non-Javadoc)
