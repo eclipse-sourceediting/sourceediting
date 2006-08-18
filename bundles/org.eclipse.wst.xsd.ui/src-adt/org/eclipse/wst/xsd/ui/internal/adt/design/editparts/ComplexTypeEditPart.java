@@ -60,7 +60,7 @@ public class ComplexTypeEditPart extends StructureEditPart
     TypeReferenceConnection connectionFigure = null;
     IComplexType complexType = (IComplexType)getModel();
     IType type = complexType.getSuperType();
-    if (type != null && type.isComplexType())
+    if (type != null)
     {      
       AbstractGraphicalEditPart referenceTypePart = (AbstractGraphicalEditPart)getTargetEditPart(type);
       if (referenceTypePart != null)
