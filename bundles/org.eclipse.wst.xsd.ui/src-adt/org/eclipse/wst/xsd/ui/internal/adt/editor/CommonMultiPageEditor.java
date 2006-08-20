@@ -32,6 +32,7 @@ import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
@@ -52,8 +53,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.ide.IGotoMarker;
-import org.eclipse.ui.internal.IWorkbenchGraphicConstants;
-import org.eclipse.ui.internal.WorkbenchImages;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.MultiPageEditorPart;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
@@ -61,6 +60,7 @@ import org.eclipse.ui.views.properties.tabbed.ITabbedPropertySheetPageContributo
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.xsd.ui.internal.adt.design.FlatCCombo;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.RootEditPart;
+import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 
 public abstract class CommonMultiPageEditor extends MultiPageEditorPart implements IResourceChangeListener, CommandStackListener, ITabbedPropertySheetPageContributor, IPropertyListener, IEditorModeListener
 {
@@ -582,7 +582,9 @@ public abstract class CommonMultiPageEditor extends MultiPageEditorPart implemen
 
       ImageHyperlink hyperlink = new ImageHyperlink(toolbar, SWT.FLAT);
       hyperlink.setBackground(ColorConstants.white);
-      hyperlink.setImage(WorkbenchImages.getImageRegistry().get(IWorkbenchGraphicConstants.IMG_ETOOL_HELP_CONTENTS));
+      Image image = XSDEditorPlugin.getDefault().getImage("icons/elcl16/showproperties_obj.gif");
+      hyperlink.setImage(image);
+//      hyperlink.setImage(WorkbenchImages.getImageRegistry().get(IWorkbenchGraphicConstants.IMG_ETOOL_HELP_CONTENTS));
       hyperlink.setToolTipText(Messages._UI_HOVER_VIEW_MODE_DESCRIPTION);
       hyperlink.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_CENTER));
     }
