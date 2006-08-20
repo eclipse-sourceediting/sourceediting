@@ -246,7 +246,7 @@ public class JSPValidator implements IValidatorJob {
 	 * 
 	 * @param sdr
 	 * @param attrName
-	 * @return the ITextRegion for the attribute value of the given attribute name
+	 * @return the ITextRegion for the attribute value of the given attribute name, case sensitive, null if no matching attribute is found
 	 */
 	protected ITextRegion getAttributeValueRegion(IStructuredDocumentRegion sdr, String attrName) {
 		ITextRegion valueRegion = null;
@@ -254,7 +254,6 @@ public class JSPValidator implements IValidatorJob {
 		for (int i = 0; i < subRegions.size(); i++) {
 			ITextRegion subRegion = subRegions.get(i);
 			if(subRegion.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME && sdr.getText(subRegion).equals(attrName)) {
-				
 				for(int j=i; j<subRegions.size(); j++) {
 					subRegion = subRegions.get(j);
 					if(subRegion.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {

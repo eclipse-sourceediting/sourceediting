@@ -299,7 +299,7 @@
 	<!--======================================================================================-->
 	<extension point="org.eclipse.wst.sse.ui.sourcevalidation">
 		<validator
-			scope="partial"
+			scope="total"
 			class="org.eclipse.jst.jsp.core.internal.validation.JSPDirectiveValidator"
 			id="org.eclipse.jst.jsp.tldsourcevalidator">
 			<contentTypeIdentifier
