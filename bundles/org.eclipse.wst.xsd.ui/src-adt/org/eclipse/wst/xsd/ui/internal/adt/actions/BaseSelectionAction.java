@@ -19,8 +19,9 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.internal.Workbench;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IComplexType;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IField;
 
@@ -102,7 +103,8 @@ public abstract class BaseSelectionAction extends SelectionAction
       try
       {
         IEditorPart owningEditor = (IEditorPart)getWorkbenchPart();
-        IWorkbenchPart part = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActivePart();
+        IWorkbench workbench = PlatformUI.getWorkbench();
+        IWorkbenchPart part = workbench.getActiveWorkbenchWindow().getActivePage().getActivePart();
         Object object = owningEditor.getAdapter(GraphicalViewer.class);
         if (object instanceof AbstractEditPartViewer)
         {

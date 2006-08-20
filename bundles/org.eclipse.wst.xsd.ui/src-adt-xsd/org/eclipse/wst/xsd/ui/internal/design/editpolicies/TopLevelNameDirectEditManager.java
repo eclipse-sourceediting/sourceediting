@@ -31,7 +31,7 @@ import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
-import org.eclipse.ui.internal.Workbench;
+import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.part.CellEditorActionHandler;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.INamedEditPart;
 import org.eclipse.wst.xsd.ui.internal.design.editparts.TopLevelComponentEditPart;
@@ -80,7 +80,8 @@ public class TopLevelNameDirectEditManager extends DirectEditManager
       {
         public void run()
         {
-          IEditorPart editor = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+          IWorkbench workbench = PlatformUI.getWorkbench();
+          IEditorPart editor = workbench.getActiveWorkbenchWindow().getActivePage().getActiveEditor();
           Object adapter = editor.getAdapter(ISelectionProvider.class);
           if (adapter instanceof ISelectionProvider)
           {
