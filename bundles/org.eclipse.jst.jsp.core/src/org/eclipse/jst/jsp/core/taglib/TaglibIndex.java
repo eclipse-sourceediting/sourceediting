@@ -405,9 +405,6 @@ public final class TaglibIndex {
 
 	private String getState() {
 		String state = JSPCorePlugin.getDefault().getPluginPreferences().getString(TaglibIndex.class.getName());
-		if (state == null || state.length() == 0) {
-			state = DIRTY;
-		}
 		return state;
 	}
 
@@ -585,7 +582,7 @@ public final class TaglibIndex {
 	String computeIndexLocation(IPath containerPath) {
 		String fileName = computeIndexName(containerPath);
 		if (_debugIndexCreation)
-			Logger.log(Logger.INFO_DEBUG, "-> index name for " + containerPath + " is " + fileName); //$NON-NLS-1$ //$NON-NLS-2$
+			Logger.log(Logger.INFO, "-> index name for " + containerPath + " is " + fileName); //$NON-NLS-1$ //$NON-NLS-2$
 		String indexLocation = getTaglibIndexStateLocation().append(fileName).toOSString();
 		return indexLocation;
 	}
