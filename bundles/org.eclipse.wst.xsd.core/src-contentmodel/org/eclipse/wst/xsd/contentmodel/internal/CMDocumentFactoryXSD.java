@@ -12,6 +12,8 @@ package org.eclipse.wst.xsd.contentmodel.internal;
 
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
 import org.eclipse.wst.xml.core.internal.contentmodel.factory.CMDocumentFactory;
+import org.eclipse.xsd.XSDPackage;
+import org.eclipse.xsd.impl.XSDPackageImpl;
 
 /**
  *  This builder handles building .dtd / .xsd grammar files
@@ -24,8 +26,8 @@ public class CMDocumentFactoryXSD implements CMDocumentFactory
   {  
     // here we call init on the XSD and DTD packages to avoid strange initialization bugs
     //
-    org.eclipse.xsd.impl.XSDPackageImpl.init();
-    org.eclipse.xsd.impl.XSDPackageImpl.eINSTANCE.getXSDFactory();  
+    XSDPackageImpl.init();
+    XSDPackage.eINSTANCE.getXSDFactory();  
   }
 
  
