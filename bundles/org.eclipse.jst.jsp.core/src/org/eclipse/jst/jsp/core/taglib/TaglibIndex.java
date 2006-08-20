@@ -405,9 +405,6 @@ public final class TaglibIndex {
 
 	private String getState() {
 		String state = JSPCorePlugin.getDefault().getPluginPreferences().getString(TaglibIndex.class.getName());
-		if (state == null || state.length() == 0) {
-			state = DIRTY;
-		}
 		return state;
 	}
 
