@@ -88,12 +88,15 @@ import org.eclipse.wst.sse.ui.internal.provisional.extensions.breakpoint.IExtend
 /**
  * @author nitin
  * 
- * A view to assist in testing out StructuredTextEditor's EditorInput
+ * A view to assist in testing out StructuredTextEditor's IEditorInput
  * handling.
  * 
  * Permanently in-progress.
  */
 public class ExtendedStorageEditorInputView extends ViewPart {
+	/**
+	 * Adds an IFileEditorInput to the list of inputs with which to test
+	 */
 	class AddFileInputAction extends Action {
 		public AddFileInputAction() {
 			super("Add FileEditorInput");
@@ -113,6 +116,9 @@ public class ExtendedStorageEditorInputView extends ViewPart {
 		}
 	}
 
+	/**
+	 * Adds an IStorageEditorInput to the list of inputs with which to test
+	 */
 	class AddStorageInputAction extends Action {
 		public AddStorageInputAction() {
 			super("Add StorageEditorInput");
@@ -123,12 +129,15 @@ public class ExtendedStorageEditorInputView extends ViewPart {
 			FileDialog dlg = new FileDialog(fInputList.getControl().getShell());
 			String fileName = dlg.open();
 			if (fileName != null) {
-				fInputs.add(new FileStorageEditorInput(new File(fileName)));
+				fInputs.add(new FileBasedStorageEditorInput(new File(fileName)));
 				fInputList.refresh(true);
 			}
 		}
 	}
 
+	/**
+	 * Handler for double-click 
+	 */
 	class DoubleClickListener implements IDoubleClickListener {
 		public void doubleClick(DoubleClickEvent event) {
 			new InputOpenAction().run();
@@ -159,10 +168,10 @@ public class ExtendedStorageEditorInputView extends ViewPart {
 			switch (columnIndex) {
 				case 0 :
 					try {
-						if (element instanceof FileStorageEditorInput) {
-							IPath fullpath = ((FileStorageEditorInput) element).getStorage().getFullPath();
-							text = fullpath != null ? fullpath.toString() : ((FileStorageEditorInput) element).getName();
-							if (((FileStorageEditorInput) element).isDirty()) {
+						if (element instanceof FileBasedStorageEditorInput) {
+							IPath fullpath = ((FileBasedStorageEditorInput) element).getStorage().getFullPath();
+							text = fullpath != null ? fullpath.toString() : ((FileBasedStorageEditorInput) element).getName();
+							if (((FileBasedStorageEditorInput) element).isDirty()) {
 								text = "*" + text;
 							}
 						}
@@ -176,8 +185,8 @@ public class ExtendedStorageEditorInputView extends ViewPart {
 
 					break;
 				case 1 :
-					if (element instanceof FileStorageEditorInput) {
-						text = "FileStorageEditorInput";
+					if (element instanceof FileBasedStorageEditorInput) {
+						text = "FileBasedStorageEditorInput";
 					}
 					else if (element instanceof IFileEditorInput) {
 						text = "FileEditorInput";
@@ -282,12 +291,12 @@ public class ExtendedStorageEditorInputView extends ViewPart {
 		}
 	}
 
-	class FileStorageEditorInput implements IExtendedStorageEditorInput {
+	class FileBasedStorageEditorInput implements IExtendedStorageEditorInput {
 		List fElementStateListeners = new Vector(0);
 		boolean fIsDirty = false;
 		FileBackedStorage fStorage = null;
 
-		FileStorageEditorInput(File file) {
+		FileBasedStorageEditorInput(File file) {
 			fStorage = new FileBackedStorage(file);
 		}
 
@@ -302,32 +311,32 @@ public class ExtendedStorageEditorInputView extends ViewPart {
 
 		void elementContentAboutToBeReplaced() {
 			for (int i = 0; i < fElementStateListeners.size(); i++) {
-				((IElementStateListener) fElementStateListeners.get(i)).elementContentAboutToBeReplaced(FileStorageEditorInput.this);
+				((IElementStateListener) fElementStateListeners.get(i)).elementContentAboutToBeReplaced(FileBasedStorageEditorInput.this);
 			}
 		}
 
 		void elementContentReplaced() {
 			for (int i = 0; i < fElementStateListeners.size(); i++) {
-				((IElementStateListener) fElementStateListeners.get(i)).elementContentReplaced(FileStorageEditorInput.this);
+				((IElementStateListener) fElementStateListeners.get(i)).elementContentReplaced(FileBasedStorageEditorInput.this);
 			}
 		}
 
 		void elementDeleted() {
 			for (int i = 0; i < fElementStateListeners.size(); i++) {
-				((IElementStateListener) fElementStateListeners.get(i)).elementDeleted(FileStorageEditorInput.this);
+				((IElementStateListener) fElementStateListeners.get(i)).elementDeleted(FileBasedStorageEditorInput.this);
 			}
 		}
 
 		void elementDirtyStateChanged(boolean dirty) {
 			setDirty(dirty);
 			for (int i = 0; i < fElementStateListeners.size(); i++) {
-				((IElementStateListener) fElementStateListeners.get(i)).elementDirtyStateChanged(FileStorageEditorInput.this, dirty);
+				((IElementStateListener) fElementStateListeners.get(i)).elementDirtyStateChanged(FileBasedStorageEditorInput.this, dirty);
 			}
 		}
 
 		void elementMoved(Object oldElement, Object newElement) {
 			for (int i = 0; i < fElementStateListeners.size(); i++) {
-				((IElementStateListener) fElementStateListeners.get(i)).elementMoved(FileStorageEditorInput.this, FileStorageEditorInput.this);
+				((IElementStateListener) fElementStateListeners.get(i)).elementMoved(FileBasedStorageEditorInput.this, FileBasedStorageEditorInput.this);
 			}
 		}
 
@@ -425,15 +434,15 @@ public class ExtendedStorageEditorInputView extends ViewPart {
 			super.run();
 			IEditorInput[] inputs = getSelectedInputs();
 			for (int i = 0; i < inputs.length; i++) {
-				if (inputs[i] instanceof FileStorageEditorInput) {
-					((FileStorageEditorInput) inputs[i]).elementDirtyStateChanged(!((FileStorageEditorInput) inputs[i]).isDirty());
+				if (inputs[i] instanceof FileBasedStorageEditorInput) {
+					((FileBasedStorageEditorInput) inputs[i]).elementDirtyStateChanged(!((FileBasedStorageEditorInput) inputs[i]).isDirty());
 				}
 			}
 			fInputList.refresh(true);
 		}
 
 		public void update() {
-			setEnabled(fSelectedElement != null && fSelectedElement instanceof FileStorageEditorInput);
+			setEnabled(fSelectedElement != null && fSelectedElement instanceof FileBasedStorageEditorInput);
 		}
 	}
 
@@ -446,8 +455,8 @@ public class ExtendedStorageEditorInputView extends ViewPart {
 			super.run();
 			IEditorInput[] inputs = getSelectedInputs();
 			for (int i = 0; i < inputs.length; i++) {
-				if (inputs[i] instanceof FileStorageEditorInput) {
-					((FileStorageEditorInput) inputs[i]).elementDeleted();
+				if (inputs[i] instanceof FileBasedStorageEditorInput) {
+					((FileBasedStorageEditorInput) inputs[i]).elementDeleted();
 				}
 			}
 			for (int i = 0; i < inputs.length; i++) {
@@ -457,7 +466,7 @@ public class ExtendedStorageEditorInputView extends ViewPart {
 		}
 
 		public void update() {
-			setEnabled(fSelectedElement != null && fSelectedElement instanceof FileStorageEditorInput);
+			setEnabled(fSelectedElement != null && fSelectedElement instanceof FileBasedStorageEditorInput);
 		}
 	}
 
@@ -470,14 +479,14 @@ public class ExtendedStorageEditorInputView extends ViewPart {
 			super.run();
 			IEditorInput[] inputs = getSelectedInputs();
 			for (int i = 0; i < inputs.length; i++) {
-				if (inputs[i] instanceof FileStorageEditorInput) {
-					((FileStorageEditorInput) inputs[i]).elementMoved(inputs[i], inputs[i]);
+				if (inputs[i] instanceof FileBasedStorageEditorInput) {
+					((FileBasedStorageEditorInput) inputs[i]).elementMoved(inputs[i], inputs[i]);
 				}
 			}
 		}
 
 		public void update() {
-			setEnabled(fSelectedElement != null && fSelectedElement instanceof FileStorageEditorInput);
+			setEnabled(fSelectedElement != null && fSelectedElement instanceof FileBasedStorageEditorInput);
 		}
 	}
 
@@ -509,13 +518,13 @@ public class ExtendedStorageEditorInputView extends ViewPart {
 			super.run();
 			IEditorInput[] inputs = getSelectedInputs();
 			for (int i = 0; i < inputs.length; i++) {
-				((FileStorageEditorInput) inputs[i]).elementContentAboutToBeReplaced();
-				((FileStorageEditorInput) inputs[i]).elementContentReplaced();
+				((FileBasedStorageEditorInput) inputs[i]).elementContentAboutToBeReplaced();
+				((FileBasedStorageEditorInput) inputs[i]).elementContentReplaced();
 			}
 		}
 
 		public void update() {
-			setEnabled(fSelectedElement != null && fSelectedElement instanceof FileStorageEditorInput);
+			setEnabled(fSelectedElement != null && fSelectedElement instanceof FileBasedStorageEditorInput);
 		}
 	}
 
@@ -655,7 +664,7 @@ public class ExtendedStorageEditorInputView extends ViewPart {
 		String paths[] = StringUtils.unpack(SSETestsPlugin.getDefault().getPluginPreferences().getString(getInputsPreferenceName()));
 		for (int i = 0; i < paths.length; i++) {
 			if (paths[i].startsWith("S!")) {
-				fInputs.add(new FileStorageEditorInput(new File(paths[i].substring(2))));
+				fInputs.add(new FileBasedStorageEditorInput(new File(paths[i].substring(2))));
 			}
 			else if (paths[i].startsWith("F!")) {
 				fInputs.add(new FileEditorInput(ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(paths[i].substring(2)))));
@@ -683,8 +692,8 @@ public class ExtendedStorageEditorInputView extends ViewPart {
 			try {
 				Object input = fInputs.get(i);
 				String path = null;
-				if (input instanceof FileStorageEditorInput) {
-					path = "S!" + ((FileStorageEditorInput) input).getFile().getCanonicalPath();
+				if (input instanceof FileBasedStorageEditorInput) {
+					path = "S!" + ((FileBasedStorageEditorInput) input).getFile().getCanonicalPath();
 				}
 				else if (input instanceof IFileEditorInput) {
 					path = "F!" + ((IFileEditorInput) input).getFile().getFullPath().toString();
