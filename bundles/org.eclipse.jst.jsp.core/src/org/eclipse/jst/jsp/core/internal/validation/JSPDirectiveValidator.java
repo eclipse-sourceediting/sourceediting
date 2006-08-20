@@ -84,11 +84,13 @@ public class JSPDirectiveValidator extends JSPValidator implements ISourceValida
 	}
 
 	public void connect(IDocument document) {
+		fDuplicatePrefixes.clear();
 		fDocument = document;
 	}
 
 	public void disconnect(IDocument document) {
 		fDuplicatePrefixes.clear();
+		fDocument = null;
 	}
 
 	/**
@@ -182,6 +184,7 @@ public class JSPDirectiveValidator extends JSPValidator implements ISourceValida
 	public void cleanup(IReporter reporter) {
 		super.cleanup(reporter);
 		fDuplicatePrefixes.clear();
+		fDocument = null;
 	}
 
 	private boolean isReservedPrefix(String name) {

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -279,7 +279,8 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 			// results = createAnnotations(reporter.getMessages());
 			results = createAnnotations(reporter.getAnnotationInfo());
 			reporter.removeAllMessages(fValidator);
-
+			
+			fValidator.cleanup(reporter);
 		}
 		catch (Exception e) {
 			Logger.logException(e);
@@ -307,6 +308,7 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 				// notify that document disconnecting
 				((ISourceValidator)fValidator).disconnect(document);
 			}
+			fValidator.cleanup(getReporter());
 		}
 		super.release();
 	}
@@ -329,11 +331,11 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 			if (fValidator instanceof ISourceValidator) {
 				IncrementalReporter reporter = getReporter();
 				((ISourceValidator) fValidator).validate(dirtyRegion, helper, reporter);
+				// call IValidator.cleanup() during release()
 				// results = createAnnotations(reporter.getMessages());
 				results = createAnnotations(reporter.getAnnotationInfo());
 				reporter.removeAllMessages(fValidator);
 			}
-
 		}
 		catch (Exception e) {
 			Logger.logException(e);

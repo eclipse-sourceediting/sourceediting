@@ -77,8 +77,10 @@ public class JSPJavaValidator extends JSPValidator {
 	 * @param sm
 	 */
 	private void setupAdapterFactory(IStructuredModel sm) {
-		JSPTranslationAdapterFactory factory = new JSPTranslationAdapterFactory();
-		sm.getFactoryRegistry().addFactory(factory);
+		if (sm.getFactoryRegistry().getFactoryFor(IJSPTranslation.class) == null) {
+			JSPTranslationAdapterFactory factory = new JSPTranslationAdapterFactory();
+			sm.getFactoryRegistry().addFactory(factory);
+		}
 	}
 	
 	/**
