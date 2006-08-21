@@ -20,6 +20,8 @@ import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.gef.ui.parts.GraphicalViewerKeyHandler;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editpolicies.KeyBoardAccessibilityEditPolicy;
 
 /**
@@ -36,6 +38,7 @@ public class BaseGraphicalViewerKeyHandler extends GraphicalViewerKeyHandler
   {
     int direction = -1;
     boolean isAltDown = (event.stateMask & SWT.ALT) != 0;
+    boolean isCtrlDown = (event.stateMask & SWT.CTRL) != 0;
     switch (event.keyCode)
     {
       case SWT.ARROW_LEFT : {
@@ -51,7 +54,7 @@ public class BaseGraphicalViewerKeyHandler extends GraphicalViewerKeyHandler
         break;
       }
       case SWT.ARROW_DOWN : {
-        direction = isAltDown ? KeyBoardAccessibilityEditPolicy.IN_TO_FIRST_CHILD : PositionConstants.SOUTH;       
+    	 direction = isAltDown ? KeyBoardAccessibilityEditPolicy.IN_TO_FIRST_CHILD : PositionConstants.SOUTH;       
         break;
       }
     }
@@ -60,13 +63,25 @@ public class BaseGraphicalViewerKeyHandler extends GraphicalViewerKeyHandler
     {
       GraphicalEditPart focusEditPart = getFocusEditPart();
       KeyBoardAccessibilityEditPolicy policy = (KeyBoardAccessibilityEditPolicy)focusEditPart.getEditPolicy(KeyBoardAccessibilityEditPolicy.KEY);
+      
       if (policy != null)          
       {
         EditPart target = policy.getRelativeEditPart(focusEditPart, direction);
         if (target != null)
         {
-          navigateTo(target, event);
-          return true;
+        	if(isCtrlDown) {
+
+        		IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+        			 Object keyboardDrag = editor.getAdapter(IKeyboardDrag.class);
+        			 if (keyboardDrag instanceof IKeyboardDrag) {
+        				 ((IKeyboardDrag) keyboardDrag).performKeyboardDrag(focusEditPart, direction);
+        				 return true;
+        		 }
+        	}
+        	else {
+                navigateTo(target, event);
+                return true;
+        	}
         }          
       }         
     }

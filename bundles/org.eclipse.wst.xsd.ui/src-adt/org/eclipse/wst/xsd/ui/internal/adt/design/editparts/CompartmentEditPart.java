@@ -97,6 +97,7 @@ public class CompartmentEditPart extends BaseEditPart // implements
             }  
           }
         }
+        if (result == null) result = EditPartNavigationHandlerUtil.getNextSibling(editPart);
       }
       else if (direction == PositionConstants.NORTH)
       {
@@ -113,6 +114,7 @@ public class CompartmentEditPart extends BaseEditPart // implements
             }  
           }              
         }
+        if (result == null) result = EditPartNavigationHandlerUtil.getPrevSibling(editPart);
       }
     }
     return result;      
