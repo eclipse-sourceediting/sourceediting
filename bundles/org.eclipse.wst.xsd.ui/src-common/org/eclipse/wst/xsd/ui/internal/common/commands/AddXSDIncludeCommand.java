@@ -24,11 +24,20 @@ public class AddXSDIncludeCommand extends AddXSDSchemaDirectiveCommand
 
   public void execute()
   {
-    super.execute();
-    XSDInclude xsdInclude = XSDFactory.eINSTANCE.createXSDInclude();
-    xsdInclude.setSchemaLocation(""); //$NON-NLS-1$
-    xsdSchema.getContents().add(findNextPositionToInsert(), xsdInclude);
-    addedXSDConcreteComponent = xsdInclude;
-    formatChild(xsdSchema.getElement());
+    try
+    {
+      super.execute();
+      // Add this after if we don't have a DOM Node yet
+      beginRecording(xsdSchema.getElement());
+      XSDInclude xsdInclude = XSDFactory.eINSTANCE.createXSDInclude();
+      xsdInclude.setSchemaLocation(""); //$NON-NLS-1$
+      xsdSchema.getContents().add(findNextPositionToInsert(), xsdInclude);
+      addedXSDConcreteComponent = xsdInclude;
+      formatChild(xsdSchema.getElement());
+    }
+    finally
+    {
+      endRecording();
+    }
   }
 }

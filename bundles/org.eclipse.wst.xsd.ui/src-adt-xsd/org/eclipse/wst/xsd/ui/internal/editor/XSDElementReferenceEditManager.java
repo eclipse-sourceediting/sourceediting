@@ -115,6 +115,7 @@ public class XSDElementReferenceEditManager implements ComponentReferenceEditMan
         else
         {
           Command command = new UpdateElementReferenceAndManageDirectivesCommand(concreteComponent, component.getName(), component.getQualifier(), component.getFile());
+          command.setLabel(Messages._UI_ACTION_UPDATE_ELEMENT_REFERENCE);
           command.execute();
         }  
       }

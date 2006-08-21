@@ -48,7 +48,7 @@ public class AddXSDAnyAttributeAction extends XSDBaseAction
     }
     else if (selection instanceof XSDAttributeGroupDefinition)
     {
-      command = new AddXSDAnyAttributeCommand(Messages._UI_ACTION_ADD_ATTRIBUTE, (XSDAttributeGroupDefinition)selection);
+      command = new AddXSDAnyAttributeCommand(Messages._UI_ACTION_ADD_ANY_ATTRIBUTE, (XSDAttributeGroupDefinition)selection);
       getCommandStack().execute(command);
     }
     

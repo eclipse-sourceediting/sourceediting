@@ -37,8 +37,16 @@ public class AddExtensionElementCommand extends AddExtensionCommand
 
   public void execute()
   {
-    super.execute();
-    addAnnotationSet(component.getSchema(), extensionsSchemaSpec);
+    try
+    {
+      beginRecording(component.getElement());
+      super.execute();
+      addAnnotationSet(component.getSchema(), extensionsSchemaSpec);
+    }
+    finally
+    {
+      endRecording();
+    }
   }
 
   public void undo()

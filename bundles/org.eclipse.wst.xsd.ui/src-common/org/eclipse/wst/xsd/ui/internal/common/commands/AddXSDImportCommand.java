@@ -24,10 +24,19 @@ public class AddXSDImportCommand extends AddXSDSchemaDirectiveCommand
 
   public void execute()
   {
-    super.execute();
-    XSDImport xsdImport = XSDFactory.eINSTANCE.createXSDImport();
-    xsdSchema.getContents().add(findNextPositionToInsert(), xsdImport);
-    addedXSDConcreteComponent = xsdImport;
-    formatChild(xsdSchema.getElement());
+    try
+    {
+      super.execute();
+      // Add this after if we don't have a DOM Node yet
+      beginRecording(xsdSchema.getElement());
+      XSDImport xsdImport = XSDFactory.eINSTANCE.createXSDImport();
+      xsdSchema.getContents().add(findNextPositionToInsert(), xsdImport);
+      addedXSDConcreteComponent = xsdImport;
+      formatChild(xsdSchema.getElement());
+    }
+    finally
+    {
+      endRecording();
+    }
   }
 }

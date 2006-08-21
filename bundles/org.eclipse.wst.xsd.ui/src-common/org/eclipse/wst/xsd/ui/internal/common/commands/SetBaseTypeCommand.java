@@ -36,42 +36,50 @@ public class SetBaseTypeCommand extends BaseCommand
 
   public void execute()
   {
-    if (concreteComponent instanceof XSDComplexTypeDefinition)
+    try
     {
-      XSDComplexTypeDefinition complexType = (XSDComplexTypeDefinition) concreteComponent;
-      
-      if (baseType instanceof XSDSimpleTypeDefinition)
+      beginRecording(concreteComponent.getElement());
+      if (concreteComponent instanceof XSDComplexTypeDefinition)
       {
-        if (!(complexType.getContent() instanceof XSDSimpleTypeDefinition))
+        XSDComplexTypeDefinition complexType = (XSDComplexTypeDefinition) concreteComponent;
+
+        if (baseType instanceof XSDSimpleTypeDefinition)
         {
-          XSDSimpleTypeDefinition simpleContent = XSDFactory.eINSTANCE.createXSDSimpleTypeDefinition();
-          complexType.setContent(simpleContent);
+          if (!(complexType.getContent() instanceof XSDSimpleTypeDefinition))
+          {
+            XSDSimpleTypeDefinition simpleContent = XSDFactory.eINSTANCE.createXSDSimpleTypeDefinition();
+            complexType.setContent(simpleContent);
+          }
+        }
+
+        complexType.setBaseTypeDefinition(baseType);
+        complexType.setDerivationMethod(XSDDerivationMethod.EXTENSION_LITERAL);
+        formatChild(complexType.getElement());
+      }
+      else if (concreteComponent instanceof XSDSimpleTypeDefinition)
+      {
+        XSDSimpleTypeDefinition simpleType = (XSDSimpleTypeDefinition) concreteComponent;
+        if (baseType instanceof XSDSimpleTypeDefinition)
+        {
+          XSDVariety variety = simpleType.getVariety();
+          if (variety.getValue() == XSDVariety.ATOMIC)
+          {
+            simpleType.setBaseTypeDefinition((XSDSimpleTypeDefinition) baseType);
+          }
+          else if (variety.getValue() == XSDVariety.UNION)
+          {
+            simpleType.getMemberTypeDefinitions().add(baseType);
+          }
+          else if (variety.getValue() == XSDVariety.LIST)
+          {
+            simpleType.setItemTypeDefinition((XSDSimpleTypeDefinition) baseType);
+          }
         }
       }
-      
-      complexType.setBaseTypeDefinition(baseType);
-      complexType.setDerivationMethod(XSDDerivationMethod.EXTENSION_LITERAL);      
-      formatChild(complexType.getElement());
     }
-    else if (concreteComponent instanceof XSDSimpleTypeDefinition)
+    finally
     {
-      XSDSimpleTypeDefinition simpleType = (XSDSimpleTypeDefinition) concreteComponent;
-      if (baseType instanceof XSDSimpleTypeDefinition)
-      {      
-        XSDVariety variety = simpleType.getVariety();
-        if (variety.getValue() == XSDVariety.ATOMIC)
-        {
-          simpleType.setBaseTypeDefinition((XSDSimpleTypeDefinition)baseType);
-        }
-        else if (variety.getValue() == XSDVariety.UNION)
-        {
-          simpleType.getMemberTypeDefinitions().add(baseType);
-        }
-        else if (variety.getValue() ==  XSDVariety.LIST)
-        {
-          simpleType.setItemTypeDefinition((XSDSimpleTypeDefinition)baseType);
-        }
-      }
+      endRecording();
     }
   }
 }

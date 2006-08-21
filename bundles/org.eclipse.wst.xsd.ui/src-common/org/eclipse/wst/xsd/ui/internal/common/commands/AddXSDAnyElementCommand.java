@@ -27,11 +27,19 @@ public class AddXSDAnyElementCommand extends BaseCommand
 
   public void execute()
   {
-    XSDWildcard wildCard = XSDFactory.eINSTANCE.createXSDWildcard();
-    XSDParticle particle = XSDFactory.eINSTANCE.createXSDParticle();
-    particle.setContent(wildCard);
-    parent.getContents().add(particle);
-    addedXSDConcreteComponent = wildCard;
-    formatChild(parent.getElement());
+    try
+    {
+      beginRecording(parent.getElement());
+      XSDWildcard wildCard = XSDFactory.eINSTANCE.createXSDWildcard();
+      XSDParticle particle = XSDFactory.eINSTANCE.createXSDParticle();
+      particle.setContent(wildCard);
+      parent.getContents().add(particle);
+      addedXSDConcreteComponent = wildCard;
+      formatChild(parent.getElement());
+    }
+    finally
+    {
+      endRecording();
+    }
   }
 }

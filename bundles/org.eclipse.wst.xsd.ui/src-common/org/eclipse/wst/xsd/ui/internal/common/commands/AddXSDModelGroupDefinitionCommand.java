@@ -46,35 +46,42 @@ public class AddXSDModelGroupDefinitionCommand extends BaseCommand
     {
       ensureSchemaElement((XSDSchema)parent);
     }
-    
-    if (!isReference)
+    try
     {
-      XSDModelGroupDefinition def= createXSDModelGroupDefinition();
-      addedXSDConcreteComponent = def;
-    }
-    else
-    {
-      XSDFactory factory = XSDSchemaBuildingTools.getXSDFactory();
-      XSDModelGroupDefinition def = factory.createXSDModelGroupDefinition();
-      XSDParticle particle = XSDFactory.eINSTANCE.createXSDParticle();
-      particle.setContent(def);
-      List list = parent.getSchema().getModelGroupDefinitions();
-      if (list.size() > 0)
+      beginRecording(parent.getElement());
+      if (!isReference)
       {
-        def.setResolvedModelGroupDefinition((XSDModelGroupDefinition) list.get(0));
+        XSDModelGroupDefinition def = createXSDModelGroupDefinition();
+        addedXSDConcreteComponent = def;
       }
       else
       {
-        XSDModelGroupDefinition newGroupDef = createXSDModelGroupDefinition();
-        def.setResolvedModelGroupDefinition(newGroupDef);
-      }
+        XSDFactory factory = XSDSchemaBuildingTools.getXSDFactory();
+        XSDModelGroupDefinition def = factory.createXSDModelGroupDefinition();
+        XSDParticle particle = XSDFactory.eINSTANCE.createXSDParticle();
+        particle.setContent(def);
+        List list = parent.getSchema().getModelGroupDefinitions();
+        if (list.size() > 0)
+        {
+          def.setResolvedModelGroupDefinition((XSDModelGroupDefinition) list.get(0));
+        }
+        else
+        {
+          XSDModelGroupDefinition newGroupDef = createXSDModelGroupDefinition();
+          def.setResolvedModelGroupDefinition(newGroupDef);
+        }
 
-      if (parent instanceof XSDModelGroup)
-      {
-        ((XSDModelGroup) parent).getContents().add(particle);
+        if (parent instanceof XSDModelGroup)
+        {
+          ((XSDModelGroup) parent).getContents().add(particle);
+        }
+        formatChild(def.getElement());
+        addedXSDConcreteComponent = def;
       }
-      formatChild(def.getElement());
-      addedXSDConcreteComponent = def;
+    }
+    finally
+    {
+      endRecording();
     }
   }
 

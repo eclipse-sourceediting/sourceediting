@@ -25,7 +25,15 @@ public class UpdateElementReferenceCommand extends BaseCommand
 
   public void execute()
   {
-    element.setResolvedElementDeclaration(ref);
+    try
+    {
+      beginRecording(element.getElement());
+      element.setResolvedElementDeclaration(ref);
+    }
+    finally
+    {
+      endRecording();
+    }
   }
   
 }

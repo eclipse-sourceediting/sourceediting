@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.common.commands;
 
-import org.eclipse.gef.commands.Command;
 import org.eclipse.xsd.XSDAttributeDeclaration;
 import org.eclipse.xsd.XSDAttributeUse;
 import org.eclipse.xsd.XSDConcreteComponent;
@@ -18,7 +17,7 @@ import org.eclipse.xsd.XSDElementDeclaration;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.eclipse.xsd.XSDTypeDefinition;
 
-public class UpdateTypeReferenceCommand extends Command
+public class UpdateTypeReferenceCommand extends BaseCommand
 {
   XSDConcreteComponent concreteComponent;
   XSDTypeDefinition newType;
@@ -31,19 +30,27 @@ public class UpdateTypeReferenceCommand extends Command
    
   public void execute()
   {
-    
-    if (concreteComponent instanceof XSDElementDeclaration)
+    try
     {
-      setElementType((XSDElementDeclaration)concreteComponent);
-    }  
-    else if (concreteComponent instanceof XSDAttributeUse)
+      beginRecording(concreteComponent.getElement());
+
+      if (concreteComponent instanceof XSDElementDeclaration)
+      {
+        setElementType((XSDElementDeclaration) concreteComponent);
+      }
+      else if (concreteComponent instanceof XSDAttributeUse)
+      {
+        setAttributeType((XSDAttributeUse) concreteComponent);
+      }
+      else if (concreteComponent instanceof XSDAttributeDeclaration)
+      {
+        setAttributeType((XSDAttributeDeclaration) concreteComponent);
+      }
+    }
+    finally
     {
-      setAttributeType((XSDAttributeUse)concreteComponent);      
-    }  
-    else if (concreteComponent instanceof XSDAttributeDeclaration)
-    {
-      setAttributeType((XSDAttributeDeclaration)concreteComponent);
-    }  
+      endRecording();
+    }
   }
  
   protected void setElementType(XSDElementDeclaration ed)

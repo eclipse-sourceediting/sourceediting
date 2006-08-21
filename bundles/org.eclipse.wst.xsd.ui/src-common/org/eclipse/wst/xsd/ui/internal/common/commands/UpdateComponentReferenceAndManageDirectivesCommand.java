@@ -12,7 +12,6 @@ package org.eclipse.wst.xsd.ui.internal.common.commands;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.gef.commands.Command;
 import org.eclipse.xsd.XSDComponent;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDFactory;
@@ -20,7 +19,7 @@ import org.eclipse.xsd.XSDImport;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDSchemaDirective;
 import org.eclipse.xsd.util.XSDResourceImpl;
-public abstract class UpdateComponentReferenceAndManageDirectivesCommand extends Command
+public abstract class UpdateComponentReferenceAndManageDirectivesCommand extends BaseCommand
 {
   protected XSDConcreteComponent concreteComponent;
   protected String componentName;

@@ -30,6 +30,14 @@ public class SetXSDFacetValueCommand extends BaseCommand
   
   public void execute()
   {
-    facet.setLexicalValue(value);
+    try
+    {
+      beginRecording(facet.getElement());
+      facet.setLexicalValue(value);
+    }
+    finally
+    {
+      endRecording();
+    }
   }
 }

@@ -47,16 +47,24 @@ public class SetMultiplicityCommand extends BaseCommand
    */
   public void execute()
   {
-    if (parent instanceof XSDParticleContent)
+    try
     {
-      XSDParticleContent xsdParticleContent = (XSDParticleContent)parent;
-      XSDParticle xsdParticle = (XSDParticle)xsdParticleContent.getContainer();
-      if (maxOccurs < 0)
+      beginRecording(parent.getElement());
+      if (parent instanceof XSDParticleContent)
       {
-        maxOccurs = XSDParticle.UNBOUNDED;
+        XSDParticleContent xsdParticleContent = (XSDParticleContent) parent;
+        XSDParticle xsdParticle = (XSDParticle) xsdParticleContent.getContainer();
+        if (maxOccurs < 0)
+        {
+          maxOccurs = XSDParticle.UNBOUNDED;
+        }
+        xsdParticle.setMaxOccurs(maxOccurs);
+        xsdParticle.setMinOccurs(minOccurs);
       }
-      xsdParticle.setMaxOccurs(maxOccurs);
-      xsdParticle.setMinOccurs(minOccurs);
+    }
+    finally
+    {
+      endRecording();
     }
   }
 }

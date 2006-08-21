@@ -38,20 +38,29 @@ public class AddExtensionAttributeCommand extends AddExtensionCommand
 
   public void execute()
   {
-    namespacePrefix = handleNamespacePrefices();
-    
-    attributeQName = namespacePrefix + ":" + attribute.getName(); //$NON-NLS-1$
-    String value = component.getElement().getAttribute(attributeQName);
-    if ( value == null) {
-      appInfoAttributeAdded = true;
-      component.getElement().setAttribute(attributeQName, ""); //$NON-NLS-1$
+    try
+    {
+      beginRecording(component.getElement());
+      super.execute();
+      namespacePrefix = handleNamespacePrefices();
+
+      attributeQName = namespacePrefix + ":" + attribute.getName(); //$NON-NLS-1$
+      String value = component.getElement().getAttribute(attributeQName);
+      if (value == null)
+      {
+        appInfoAttributeAdded = true;
+        component.getElement().setAttribute(attributeQName, ""); //$NON-NLS-1$
+      }
+    }
+    finally
+    {
+      endRecording();
     }
   }
 
   public void undo()
   {
     super.undo();
-    // TODO (allison) remove the namespace prefix when applicable as well
     if (appInfoAttributeAdded){
       component.getElement().removeAttribute(attributeQName);
     }

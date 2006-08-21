@@ -17,16 +17,21 @@ public class SetBaseTypeAndManagerDirectivesCommand extends UpdateTypeReferenceA
   {
     try
     {
-    XSDComponent td = computeComponent();
-    if (td != null && td instanceof XSDTypeDefinition)
-    {
-      SetBaseTypeCommand command = new SetBaseTypeCommand(concreteComponent, (XSDTypeDefinition) td);
-      command.execute();
-    }
+      beginRecording(concreteComponent.getElement());
+      XSDComponent td = computeComponent();
+      if (td != null && td instanceof XSDTypeDefinition)
+      {
+        SetBaseTypeCommand command = new SetBaseTypeCommand(concreteComponent, (XSDTypeDefinition) td);
+        command.execute();
+      }
     }
     catch (Exception e)
     {
-      e.printStackTrace();
+
+    }
+    finally
+    {
+      endRecording();
     }
   }
 }

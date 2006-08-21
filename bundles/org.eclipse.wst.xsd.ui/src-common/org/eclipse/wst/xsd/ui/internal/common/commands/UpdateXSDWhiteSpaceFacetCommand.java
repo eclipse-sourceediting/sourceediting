@@ -29,24 +29,32 @@ public class UpdateXSDWhiteSpaceFacetCommand extends BaseCommand
 
   public void execute()
   {
-    XSDWhiteSpaceFacet whitespaceFacet = xsdSimpleTypeDefinition.getWhiteSpaceFacet();
-    
-    if (doAddFacet)
+    try
     {
-      if (whitespaceFacet == null)
+      beginRecording(xsdSimpleTypeDefinition.getElement());
+      XSDWhiteSpaceFacet whitespaceFacet = xsdSimpleTypeDefinition.getWhiteSpaceFacet();
+
+      if (doAddFacet)
       {
-        whitespaceFacet = XSDFactory.eINSTANCE.createXSDWhiteSpaceFacet();
-        xsdSimpleTypeDefinition.getFacetContents().add(whitespaceFacet);
+        if (whitespaceFacet == null)
+        {
+          whitespaceFacet = XSDFactory.eINSTANCE.createXSDWhiteSpaceFacet();
+          xsdSimpleTypeDefinition.getFacetContents().add(whitespaceFacet);
+        }
+        whitespaceFacet.setLexicalValue(XSDWhiteSpace.COLLAPSE_LITERAL.getName());
       }
-      whitespaceFacet.setLexicalValue(XSDWhiteSpace.COLLAPSE_LITERAL.getName());
+      else
+      {
+        if (whitespaceFacet != null)
+        {
+          xsdSimpleTypeDefinition.getFacetContents().remove(whitespaceFacet);
+        }
+      }
+      formatChild(xsdSimpleTypeDefinition.getElement());
     }
-    else
+    finally
     {
-      if (whitespaceFacet != null)
-      {
-        xsdSimpleTypeDefinition.getFacetContents().remove(whitespaceFacet);
-      }
+      endRecording();
     }
-    formatChild(xsdSimpleTypeDefinition.getElement());    
   }
 }

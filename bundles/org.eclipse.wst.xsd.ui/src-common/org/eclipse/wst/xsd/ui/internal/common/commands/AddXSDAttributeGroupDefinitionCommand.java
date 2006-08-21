@@ -45,38 +45,48 @@ public class AddXSDAttributeGroupDefinitionCommand extends BaseCommand
   public void execute()
   {
     XSDAttributeGroupDefinition attributeGroup = XSDFactory.eINSTANCE.createXSDAttributeGroupDefinition();
-    if (xsdSchema == null)
+    try
     {
-      attributeGroup.setName(getNewName("AttributeGroup")); //$NON-NLS-1$
-
-      List list = xsdComplexTypeDefinition.getSchema().getAttributeGroupDefinitions();
-      if (list.size() > 0)
+      if (xsdSchema == null)
       {
-        attributeGroup.setResolvedAttributeGroupDefinition((XSDAttributeGroupDefinition) list.get(0));
+        beginRecording(xsdComplexTypeDefinition.getElement());
+        attributeGroup.setName(getNewName("AttributeGroup")); //$NON-NLS-1$
+
+        List list = xsdComplexTypeDefinition.getSchema().getAttributeGroupDefinitions();
+        if (list.size() > 0)
+        {
+          attributeGroup.setResolvedAttributeGroupDefinition((XSDAttributeGroupDefinition) list.get(0));
+        }
+        else
+        {
+          attributeGroup.setName(null);
+          XSDAttributeGroupDefinition attributeGroup2 = XSDFactory.eINSTANCE.createXSDAttributeGroupDefinition();
+          attributeGroup2.setName(XSDCommonUIUtils.createUniqueElementName("NewAttributeGroup", xsdComplexTypeDefinition.getSchema().getAttributeGroupDefinitions())); //$NON-NLS-1$
+          xsdComplexTypeDefinition.getSchema().getContents().add(attributeGroup2);
+          attributeGroup.setResolvedAttributeGroupDefinition(attributeGroup2);
+        }
+
+        if (xsdComplexTypeDefinition.getAttributeContents() != null)
+        {
+          xsdComplexTypeDefinition.getAttributeContents().add(attributeGroup);
+        }
+        addedXSDConcreteComponent = attributeGroup;
       }
       else
       {
-        attributeGroup.setName(null);
-        XSDAttributeGroupDefinition attributeGroup2 = XSDFactory.eINSTANCE.createXSDAttributeGroupDefinition();
-        attributeGroup2.setName(XSDCommonUIUtils.createUniqueElementName("NewAttributeGroup", xsdComplexTypeDefinition.getSchema().getAttributeGroupDefinitions())); //$NON-NLS-1$
-        xsdComplexTypeDefinition.getSchema().getContents().add(attributeGroup2);
-        attributeGroup.setResolvedAttributeGroupDefinition(attributeGroup2);
+        ensureSchemaElement(xsdSchema);
+        // put this after, since we don't have a DOM node yet
+        beginRecording(xsdSchema.getElement());
+        attributeGroup.setName(XSDCommonUIUtils.createUniqueElementName("NewAttributeGroup", xsdSchema.getAttributeGroupDefinitions())); //$NON-NLS-1$
+        Text textNode = xsdSchema.getDocument().createTextNode("\n"); //$NON-NLS-1$
+        xsdSchema.getElement().appendChild(textNode);
+        xsdSchema.getContents().add(attributeGroup);
+        addedXSDConcreteComponent = attributeGroup;
       }
-
-      if (xsdComplexTypeDefinition.getAttributeContents() != null)
-      {
-        xsdComplexTypeDefinition.getAttributeContents().add(attributeGroup);
-      }
-      addedXSDConcreteComponent = attributeGroup;
     }
-    else
+    finally
     {
-      ensureSchemaElement(xsdSchema);
-      attributeGroup.setName(XSDCommonUIUtils.createUniqueElementName("NewAttributeGroup", xsdSchema.getAttributeGroupDefinitions())); //$NON-NLS-1$
-      Text textNode = xsdSchema.getDocument().createTextNode("\n"); //$NON-NLS-1$
-      xsdSchema.getElement().appendChild(textNode);
-      xsdSchema.getContents().add(attributeGroup);
-      addedXSDConcreteComponent = attributeGroup;
+      endRecording();
     }
   }
 

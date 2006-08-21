@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.common.commands;
 
-import org.eclipse.gef.commands.Command;
 import org.eclipse.ltk.core.refactoring.participants.RenameRefactoring;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 import org.eclipse.wst.xsd.ui.internal.refactor.PerformUnsavedRefactoringOperation;
@@ -21,7 +20,7 @@ import org.eclipse.xsd.XSDComplexTypeDefinition;
 import org.eclipse.xsd.XSDNamedComponent;
 import org.eclipse.xsd.XSDSchema;
 
-public class UpdateNameCommand extends Command
+public class UpdateNameCommand extends BaseCommand
 {
 //  private String oldName;
   private String newName;
@@ -48,7 +47,15 @@ public class UpdateNameCommand extends Command
    */
   public void execute()
   {
-    renameComponent(newName);
+    try
+    {
+      beginRecording(component.getElement());
+      renameComponent(newName);
+    }
+    finally
+    {
+      endRecording();
+    }
   }
   
   /**

@@ -10,14 +10,13 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.common.commands;
 
-import org.eclipse.gef.commands.Command;
 import org.w3c.dom.Element;
 
 /*
  * This command is used from the extension view to edit extension elements
  * and attributes which are implemented as DOM objects (not part of the EMF model)
  */
-public class UpdateAttributeValueCommand  extends Command
+public class UpdateAttributeValueCommand  extends BaseCommand
 {
   Element element;
   String attributeName;
@@ -33,6 +32,14 @@ public class UpdateAttributeValueCommand  extends Command
   
   public void execute()
   {
-    element.setAttribute(attributeName, attributeValue);
+    try
+    {
+      beginRecording(element);
+      element.setAttribute(attributeName, attributeValue);
+    }
+    finally
+    {
+      endRecording();
+    }
   } 
 }

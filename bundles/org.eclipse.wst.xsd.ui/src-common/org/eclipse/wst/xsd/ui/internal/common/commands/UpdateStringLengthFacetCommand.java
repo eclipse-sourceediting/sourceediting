@@ -42,182 +42,189 @@ public class UpdateStringLengthFacetCommand extends BaseCommand
   
   public void execute()
   {
-    XSDLengthFacet lengthFacet = xsdSimpleType.getEffectiveLengthFacet();
-    XSDMinLengthFacet minLengthFacet = xsdSimpleType.getEffectiveMinLengthFacet();
-    XSDMaxLengthFacet maxLengthFacet = xsdSimpleType.getEffectiveMaxLengthFacet();
-    
-    String currentLength = null, currentMin = null, currentMax = null;
-    if (lengthFacet != null)
+    try
     {
-      currentLength = lengthFacet.getLexicalValue();
-    }
-    if (minLengthFacet != null)
-    {
-      currentMin = minLengthFacet.getLexicalValue();
-    }
-    if (maxLengthFacet != null)
-    {
-      currentMax = maxLengthFacet.getLexicalValue();
-    }
+      beginRecording(xsdSimpleType.getElement());
+      XSDLengthFacet lengthFacet = xsdSimpleType.getEffectiveLengthFacet();
+      XSDMinLengthFacet minLengthFacet = xsdSimpleType.getEffectiveMinLengthFacet();
+      XSDMaxLengthFacet maxLengthFacet = xsdSimpleType.getEffectiveMaxLengthFacet();
 
-    if (doUpdateMax && !doUpdateMin)
-    {
+      String currentLength = null, currentMin = null, currentMax = null;
+      if (lengthFacet != null)
+      {
+        currentLength = lengthFacet.getLexicalValue();
+      }
+      if (minLengthFacet != null)
+      {
+        currentMin = minLengthFacet.getLexicalValue();
+      }
       if (maxLengthFacet != null)
       {
-        if (max != null)
+        currentMax = maxLengthFacet.getLexicalValue();
+      }
+
+      if (doUpdateMax && !doUpdateMin)
+      {
+        if (maxLengthFacet != null)
         {
-          if (max.equals(currentMin))
+          if (max != null)
           {
-            lengthFacet = XSDFactory.eINSTANCE.createXSDLengthFacet();
-            lengthFacet.setLexicalValue(max);
-            xsdSimpleType.getFacetContents().add(lengthFacet);
+            if (max.equals(currentMin))
+            {
+              lengthFacet = XSDFactory.eINSTANCE.createXSDLengthFacet();
+              lengthFacet.setLexicalValue(max);
+              xsdSimpleType.getFacetContents().add(lengthFacet);
+              xsdSimpleType.getFacetContents().remove(maxLengthFacet);
+              xsdSimpleType.getFacetContents().remove(minLengthFacet);
+            }
+            else
+            {
+              if (lengthFacet != null)
+              {
+                xsdSimpleType.getFacetContents().remove(lengthFacet);
+              }
+              if (minLengthFacet == null && currentLength != null)
+              {
+                minLengthFacet = XSDFactory.eINSTANCE.createXSDMinLengthFacet();
+                minLengthFacet.setLexicalValue(currentLength);
+                xsdSimpleType.getFacetContents().add(minLengthFacet);
+              }
+              maxLengthFacet.setLexicalValue(max);
+            }
+          }
+          else
+          {
             xsdSimpleType.getFacetContents().remove(maxLengthFacet);
+          }
+        }
+        else
+        {
+          if (currentMin != null && currentMin.equals(max))
+          {
+            if (lengthFacet == null)
+            {
+              lengthFacet = XSDFactory.eINSTANCE.createXSDLengthFacet();
+              xsdSimpleType.getFacetContents().add(lengthFacet);
+            }
+            lengthFacet.setLexicalValue(max);
             xsdSimpleType.getFacetContents().remove(minLengthFacet);
+          }
+          else if (currentLength != null && !currentLength.equals(max))
+          {
+            xsdSimpleType.getFacetContents().remove(lengthFacet);
+
+            if (max != null)
+            {
+              maxLengthFacet = XSDFactory.eINSTANCE.createXSDMaxLengthFacet();
+              maxLengthFacet.setLexicalValue(max);
+              xsdSimpleType.getFacetContents().add(maxLengthFacet);
+            }
+
+            minLengthFacet = XSDFactory.eINSTANCE.createXSDMinLengthFacet();
+            minLengthFacet.setLexicalValue(currentLength);
+            xsdSimpleType.getFacetContents().add(minLengthFacet);
           }
           else
           {
             if (lengthFacet != null)
             {
               xsdSimpleType.getFacetContents().remove(lengthFacet);
-            }
-            if (minLengthFacet == null && currentLength != null)
-            {
+
               minLengthFacet = XSDFactory.eINSTANCE.createXSDMinLengthFacet();
               minLengthFacet.setLexicalValue(currentLength);
               xsdSimpleType.getFacetContents().add(minLengthFacet);
-            }
-            maxLengthFacet.setLexicalValue(max);
-          }
-        }
-        else
-        {
-          xsdSimpleType.getFacetContents().remove(maxLengthFacet);
-        }
-      }
-      else
-      {
-        if (currentMin != null && currentMin.equals(max))
-        {
-          if (lengthFacet == null)
-          {
-            lengthFacet = XSDFactory.eINSTANCE.createXSDLengthFacet();
-            xsdSimpleType.getFacetContents().add(lengthFacet);
-          }
-          lengthFacet.setLexicalValue(max);
-          xsdSimpleType.getFacetContents().remove(minLengthFacet);
-        }
-        else if (currentLength != null && !currentLength.equals(max))
-        {
-          xsdSimpleType.getFacetContents().remove(lengthFacet);
 
-          if (max != null)
-          {
+            }
             maxLengthFacet = XSDFactory.eINSTANCE.createXSDMaxLengthFacet();
             maxLengthFacet.setLexicalValue(max);
             xsdSimpleType.getFacetContents().add(maxLengthFacet);
           }
-          
-          minLengthFacet = XSDFactory.eINSTANCE.createXSDMinLengthFacet();
-          minLengthFacet.setLexicalValue(currentLength);
-          xsdSimpleType.getFacetContents().add(minLengthFacet);
-        }
-        else
-        {
-          if (lengthFacet != null)
-          {
-            xsdSimpleType.getFacetContents().remove(lengthFacet);
-            
-            minLengthFacet = XSDFactory.eINSTANCE.createXSDMinLengthFacet();
-            minLengthFacet.setLexicalValue(currentLength);
-            xsdSimpleType.getFacetContents().add(minLengthFacet);
-
-          }
-          maxLengthFacet = XSDFactory.eINSTANCE.createXSDMaxLengthFacet();
-          maxLengthFacet.setLexicalValue(max);
-          xsdSimpleType.getFacetContents().add(maxLengthFacet);
         }
       }
-    }
-    else if (!doUpdateMax && doUpdateMin)
-    {
-      if (minLengthFacet != null)
+      else if (!doUpdateMax && doUpdateMin)
       {
-        if (min != null)
+        if (minLengthFacet != null)
         {
-          if (min.equals(currentMax))
+          if (min != null)
           {
-            lengthFacet = XSDFactory.eINSTANCE.createXSDLengthFacet();
-            lengthFacet.setLexicalValue(min);
-            xsdSimpleType.getFacetContents().add(lengthFacet);
-            xsdSimpleType.getFacetContents().remove(maxLengthFacet);
-            xsdSimpleType.getFacetContents().remove(minLengthFacet);
+            if (min.equals(currentMax))
+            {
+              lengthFacet = XSDFactory.eINSTANCE.createXSDLengthFacet();
+              lengthFacet.setLexicalValue(min);
+              xsdSimpleType.getFacetContents().add(lengthFacet);
+              xsdSimpleType.getFacetContents().remove(maxLengthFacet);
+              xsdSimpleType.getFacetContents().remove(minLengthFacet);
+            }
+            else
+            {
+              if (lengthFacet != null)
+              {
+                xsdSimpleType.getFacetContents().remove(lengthFacet);
+              }
+              if (maxLengthFacet == null && currentLength != null)
+              {
+                maxLengthFacet = XSDFactory.eINSTANCE.createXSDMaxLengthFacet();
+                maxLengthFacet.setLexicalValue(currentLength);
+                xsdSimpleType.getFacetContents().add(maxLengthFacet);
+              }
+              minLengthFacet.setLexicalValue(min);
+            }
           }
           else
           {
-            if (lengthFacet != null)
-            {
-              xsdSimpleType.getFacetContents().remove(lengthFacet);
-            }
-            if (maxLengthFacet == null && currentLength != null)
-            {
-              maxLengthFacet = XSDFactory.eINSTANCE.createXSDMaxLengthFacet();
-              maxLengthFacet.setLexicalValue(currentLength);
-              xsdSimpleType.getFacetContents().add(maxLengthFacet);
-            }
-            minLengthFacet.setLexicalValue(min);
+            xsdSimpleType.getFacetContents().remove(minLengthFacet);
           }
         }
         else
         {
-          xsdSimpleType.getFacetContents().remove(minLengthFacet);
-        }
-      }
-      else
-      {
-        if (currentMax != null && currentMax.equals(min))
-        {
-          if (lengthFacet == null)
+          if (currentMax != null && currentMax.equals(min))
           {
-            lengthFacet = XSDFactory.eINSTANCE.createXSDLengthFacet();
-            xsdSimpleType.getFacetContents().add(lengthFacet);
+            if (lengthFacet == null)
+            {
+              lengthFacet = XSDFactory.eINSTANCE.createXSDLengthFacet();
+              xsdSimpleType.getFacetContents().add(lengthFacet);
+            }
+            lengthFacet.setLexicalValue(min);
+            xsdSimpleType.getFacetContents().remove(maxLengthFacet);
           }
-          lengthFacet.setLexicalValue(min);
-          xsdSimpleType.getFacetContents().remove(maxLengthFacet);
-        }
-        else if (currentLength != null && !currentLength.equals(min))
-        {
-          xsdSimpleType.getFacetContents().remove(lengthFacet);
-
-          if (min != null)
-          {
-            minLengthFacet = XSDFactory.eINSTANCE.createXSDMinLengthFacet();
-            minLengthFacet.setLexicalValue(min);
-            xsdSimpleType.getFacetContents().add(minLengthFacet);
-          }
-
-          maxLengthFacet = XSDFactory.eINSTANCE.createXSDMaxLengthFacet();
-          maxLengthFacet.setLexicalValue(currentLength);
-          xsdSimpleType.getFacetContents().add(maxLengthFacet);
-        }
-        else
-        {
-          minLengthFacet = XSDFactory.eINSTANCE.createXSDMinLengthFacet();
-          minLengthFacet.setLexicalValue(min);
-          xsdSimpleType.getFacetContents().add(minLengthFacet);
-
-          if (lengthFacet != null)
+          else if (currentLength != null && !currentLength.equals(min))
           {
             xsdSimpleType.getFacetContents().remove(lengthFacet);
+
+            if (min != null)
+            {
+              minLengthFacet = XSDFactory.eINSTANCE.createXSDMinLengthFacet();
+              minLengthFacet.setLexicalValue(min);
+              xsdSimpleType.getFacetContents().add(minLengthFacet);
+            }
 
             maxLengthFacet = XSDFactory.eINSTANCE.createXSDMaxLengthFacet();
             maxLengthFacet.setLexicalValue(currentLength);
             xsdSimpleType.getFacetContents().add(maxLengthFacet);
           }
+          else
+          {
+            minLengthFacet = XSDFactory.eINSTANCE.createXSDMinLengthFacet();
+            minLengthFacet.setLexicalValue(min);
+            xsdSimpleType.getFacetContents().add(minLengthFacet);
+
+            if (lengthFacet != null)
+            {
+              xsdSimpleType.getFacetContents().remove(lengthFacet);
+
+              maxLengthFacet = XSDFactory.eINSTANCE.createXSDMaxLengthFacet();
+              maxLengthFacet.setLexicalValue(currentLength);
+              xsdSimpleType.getFacetContents().add(maxLengthFacet);
+            }
+          }
         }
       }
+      formatChild(xsdSimpleType.getElement());
     }
-    formatChild(xsdSimpleType.getElement());
-
+    finally
+    {
+      endRecording();
+    }
   }
 
 }

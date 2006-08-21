@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.common.commands;
 
-import org.eclipse.gef.commands.Command;
 import org.eclipse.xsd.XSDAttributeUse;
 import org.eclipse.xsd.XSDAttributeUseCategory;
 import org.eclipse.xsd.XSDComponent;
@@ -18,7 +17,7 @@ import org.eclipse.xsd.XSDParticle;
 import org.eclipse.xsd.util.XSDConstants;
 import org.w3c.dom.Element;
 
-public class UpdateMinOccursCommand extends Command
+public class UpdateMinOccursCommand extends BaseCommand
 {
   private int oldMinOccurs;
   private int newMinOccurs;
@@ -35,23 +34,30 @@ public class UpdateMinOccursCommand extends Command
 
   public void execute()
   {
-
     Element element = component.getElement();
-    String currentMin = element.getAttribute(XSDConstants.MINOCCURS_ATTRIBUTE);
-    removeMinOccursAttribute = (currentMin == null) ? true : false;
+    try
+    {
+      beginRecording(element);
+      String currentMin = element.getAttribute(XSDConstants.MINOCCURS_ATTRIBUTE);
+      removeMinOccursAttribute = (currentMin == null) ? true : false;
 
-    if (component instanceof XSDParticle)
-    {
-      oldMinOccurs = ((XSDParticle) component).getMinOccurs();
-      ((XSDParticle) component).setMinOccurs(newMinOccurs);
+      if (component instanceof XSDParticle)
+      {
+        oldMinOccurs = ((XSDParticle) component).getMinOccurs();
+        ((XSDParticle) component).setMinOccurs(newMinOccurs);
+      }
+      else if (component instanceof XSDAttributeUse)
+      {
+        oldMinOccurs = (((XSDAttributeUse) component).getUse() == XSDAttributeUseCategory.REQUIRED_LITERAL ? 1 : 0);
+        if (newMinOccurs == 1)
+          ((XSDAttributeUse) component).setUse(XSDAttributeUseCategory.REQUIRED_LITERAL);
+        else
+          ((XSDAttributeUse) component).setUse(XSDAttributeUseCategory.OPTIONAL_LITERAL);
+      }
     }
-    else if (component instanceof XSDAttributeUse)
+    finally
     {
-      oldMinOccurs = (((XSDAttributeUse) component).getUse() == XSDAttributeUseCategory.REQUIRED_LITERAL ? 1 : 0);
-      if (newMinOccurs == 1)
-        ((XSDAttributeUse) component).setUse(XSDAttributeUseCategory.REQUIRED_LITERAL);
-      else
-        ((XSDAttributeUse) component).setUse(XSDAttributeUseCategory.OPTIONAL_LITERAL);
+      endRecording();
     }
   }
 

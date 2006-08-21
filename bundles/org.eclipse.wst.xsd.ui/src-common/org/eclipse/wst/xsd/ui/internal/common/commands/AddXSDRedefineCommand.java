@@ -25,11 +25,20 @@ public class AddXSDRedefineCommand extends AddXSDSchemaDirectiveCommand
   public void execute()
   {
     super.execute();
-    XSDRedefine xsdRedefine = XSDFactory.eINSTANCE.createXSDRedefine();
-    xsdRedefine.setSchemaLocation(""); //$NON-NLS-1$
-    xsdSchema.getContents().add(findNextPositionToInsert(), xsdRedefine);
-    addedXSDConcreteComponent = xsdRedefine;
-    formatChild(xsdSchema.getElement());
+    try
+    {
+      // Add this after if we don't have a DOM Node yet
+      beginRecording(xsdSchema.getElement());
+      XSDRedefine xsdRedefine = XSDFactory.eINSTANCE.createXSDRedefine();
+      xsdRedefine.setSchemaLocation(""); //$NON-NLS-1$
+      xsdSchema.getContents().add(findNextPositionToInsert(), xsdRedefine);
+      addedXSDConcreteComponent = xsdRedefine;
+      formatChild(xsdSchema.getElement());
+    }
+    finally
+    {
+      endRecording();
+    }
   }
   
 }

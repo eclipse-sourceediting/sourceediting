@@ -10,12 +10,11 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.common.commands;
 
-import org.eclipse.gef.commands.Command;
 import org.eclipse.xsd.XSDParticle;
 import org.eclipse.xsd.util.XSDConstants;
 import org.w3c.dom.Element;
 
-public class UpdateMaxOccursCommand extends Command
+public class UpdateMaxOccursCommand extends BaseCommand
 {
 	private int oldMaxOccurs;
 	private int newMaxOccurs;
@@ -32,11 +31,19 @@ public class UpdateMaxOccursCommand extends Command
 	
 	public void execute()
 	{
-    Element element = particle.getElement();
-    String currentMax = element.getAttribute(XSDConstants.MAXOCCURS_ATTRIBUTE);
-    removeMaxOccursAttribute = (currentMax == null)? true: false;
-		oldMaxOccurs = particle.getMaxOccurs();
-		particle.setMaxOccurs(newMaxOccurs);
+    try
+    {
+      Element element = particle.getElement();
+      beginRecording(element);
+      String currentMax = element.getAttribute(XSDConstants.MAXOCCURS_ATTRIBUTE);
+      removeMaxOccursAttribute = (currentMax == null)? true: false;
+		  oldMaxOccurs = particle.getMaxOccurs();
+		  particle.setMaxOccurs(newMaxOccurs);
+    }
+    finally
+    {
+      endRecording();
+    }
 	}
 	
 	public void redo()

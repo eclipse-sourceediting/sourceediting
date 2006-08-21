@@ -10,12 +10,11 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.common.commands;
 
-import org.eclipse.gef.commands.Command;
 import org.eclipse.xsd.util.XSDConstants;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Node;
 
-public class RemoveExtensionNodeCommand extends Command
+public class RemoveExtensionNodeCommand extends BaseCommand
 {
   Node node;
   
@@ -28,25 +27,33 @@ public class RemoveExtensionNodeCommand extends Command
   public void execute()
   {
     super.execute();
-    if (node.getNodeType() == Node.ATTRIBUTE_NODE)
+    try
     {
-      Attr attr = (Attr)node;
-      attr.getOwnerElement().removeAttributeNode(attr);
-    }
-    else if (node.getNodeType() == Node.ELEMENT_NODE)
-    {  
-      Node parent = node.getParentNode();
-      if (parent != null)
+      beginRecording(node);
+      if (node.getNodeType() == Node.ATTRIBUTE_NODE)
       {
-        parent.removeChild(node);
-        // if parent is an AppInfo node then we should remove the appinfo
-        //
-        if (XSDConstants.APPINFO_ELEMENT_TAG.equals(parent.getLocalName()))
+        Attr attr = (Attr) node;
+        attr.getOwnerElement().removeAttributeNode(attr);
+      }
+      else if (node.getNodeType() == Node.ELEMENT_NODE)
+      {
+        Node parent = node.getParentNode();
+        if (parent != null)
         {
-          Node grandpa = parent.getParentNode();
-          grandpa.removeChild(parent);
-        }  
-      }      
-    }   
+          parent.removeChild(node);
+          // if parent is an AppInfo node then we should remove the appinfo
+          //
+          if (XSDConstants.APPINFO_ELEMENT_TAG.equals(parent.getLocalName()))
+          {
+            Node grandpa = parent.getParentNode();
+            grandpa.removeChild(parent);
+          }
+        }
+      }
+    }
+    finally
+    {
+      endRecording();
+    }
   }
 }  

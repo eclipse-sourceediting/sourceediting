@@ -37,6 +37,7 @@ public class UpdateElementReferenceAndManageDirectivesCommand extends UpdateComp
   {
     try
     {
+      beginRecording(concreteComponent.getElement());
       XSDComponent elementDef = computeComponent();
       if (elementDef != null)
       {
@@ -47,7 +48,10 @@ public class UpdateElementReferenceAndManageDirectivesCommand extends UpdateComp
     }
     catch (Exception e)
     {
-      e.printStackTrace();
+    }
+    finally
+    {
+      endRecording();
     }
   }
 }

@@ -35,17 +35,25 @@ public class AddXSDModelGroupCommand extends BaseCommand
 
   public void execute()
   {
-    XSDConcreteComponent owner = getOwner();
-    if (owner != null)
+    try
     {
-      XSDParticle particle = XSDFactory.eINSTANCE.createXSDParticle(); 
-      newModelGroup = createModelGroup();
-      particle.setContent(newModelGroup);
+      beginRecording(parent.getElement());
+      XSDConcreteComponent owner = getOwner();
+      if (owner != null)
+      {
+        XSDParticle particle = XSDFactory.eINSTANCE.createXSDParticle();
+        newModelGroup = createModelGroup();
+        particle.setContent(newModelGroup);
 
-      XSDComplexTypeDefinition ctd = (XSDComplexTypeDefinition)owner;
-      ctd.setContent(particle);
+        XSDComplexTypeDefinition ctd = (XSDComplexTypeDefinition) owner;
+        ctd.setContent(particle);
+      }
+      formatChild(parent.getElement());
     }
-    formatChild(parent.getElement());
+    finally
+    {
+      endRecording();
+    }
   }
   
   public void undo()

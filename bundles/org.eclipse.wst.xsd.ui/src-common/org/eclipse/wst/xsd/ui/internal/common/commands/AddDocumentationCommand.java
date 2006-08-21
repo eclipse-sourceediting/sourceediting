@@ -45,31 +45,33 @@ public class AddDocumentationCommand extends BaseCommand
       ensureSchemaElement((XSDSchema)input);
     }
     
-    xsdAnnotation = XSDCommonUIUtils.getInputXSDAnnotation(input, true);
-    Element element = xsdAnnotation.getElement();
-
-    List documentationList = xsdAnnotation.getUserInformation();
-    documentationElement = null;
-    documentationExists = false;
-    if (documentationList.size() > 0)
-    {
-      documentationExists = true;
-      documentationElement = (Element) documentationList.get(0);
-    }
-
-    if (documentationElement == null)
-    {
-      documentationElement = xsdAnnotation.createUserInformation(null);
-      element.appendChild(documentationElement);
-      formatChild(documentationElement);
-      // Defect in model....I create it but the model object doesn't appear
-      // to be updated
-      xsdAnnotation.updateElement();
-      xsdAnnotation.setElement(element);
-    }
-
     try
     {
+      beginRecording(input.getElement());
+
+      xsdAnnotation = XSDCommonUIUtils.getInputXSDAnnotation(input, true);
+      Element element = xsdAnnotation.getElement();
+
+      List documentationList = xsdAnnotation.getUserInformation();
+      documentationElement = null;
+      documentationExists = false;
+      if (documentationList.size() > 0)
+      {
+        documentationExists = true;
+        documentationElement = (Element) documentationList.get(0);
+      }
+
+      if (documentationElement == null)
+      {
+        documentationElement = xsdAnnotation.createUserInformation(null);
+        element.appendChild(documentationElement);
+        formatChild(documentationElement);
+        // Defect in model....I create it but the model object doesn't appear
+        // to be updated
+        xsdAnnotation.updateElement();
+        xsdAnnotation.setElement(element);
+      }
+
       if (documentationElement.hasChildNodes())
       {
         if (documentationElement instanceof IDOMElement)
@@ -81,8 +83,8 @@ public class AddDocumentationCommand extends BaseCommand
           int start = 0;
           int end = 0;
 
-//          IDOMModel model = domElement.getModel();
-//          IDOMDocument doc = model.getDocument();
+          // IDOMModel model = domElement.getModel();
+          // IDOMDocument doc = model.getDocument();
           IDOMNode first = null;
           if (firstChild instanceof IDOMNode)
           {
@@ -111,10 +113,15 @@ public class AddDocumentationCommand extends BaseCommand
           documentationElement.appendChild(childNode);
         }
       }
+      formatChild(xsdAnnotation.getElement());
     }
     catch (Exception e)
     {
 
+    }
+    finally
+    {
+      endRecording();
     }
   }
 

@@ -45,25 +45,32 @@ public class SetTypeCommand extends BaseCommand
 
   public void execute()
   {
-    ComponentReferenceEditManager componentReferenceEditManager = getComponentReferenceEditManager();
-    continueApply = true; 
-    if (parent instanceof XSDElementDeclaration)
+    try
     {
-      if (action.equals(SetTypeAction.SET_NEW_TYPE_ID))
+      beginRecording(parent.getElement());
+      ComponentReferenceEditManager componentReferenceEditManager = getComponentReferenceEditManager();
+      continueApply = true;
+      if (parent instanceof XSDElementDeclaration)
       {
-        ComponentSpecification newValue = (ComponentSpecification)invokeDialog(componentReferenceEditManager.getNewDialog());
-        if (continueApply)
-          componentReferenceEditManager.modifyComponentReference(adapter, newValue);
+        if (action.equals(SetTypeAction.SET_NEW_TYPE_ID))
+        {
+          ComponentSpecification newValue = (ComponentSpecification) invokeDialog(componentReferenceEditManager.getNewDialog());
+          if (continueApply)
+            componentReferenceEditManager.modifyComponentReference(adapter, newValue);
+        }
+        else
+        {
+          ComponentSpecification newValue = (ComponentSpecification) invokeDialog(componentReferenceEditManager.getBrowseDialog());
+          if (continueApply)
+            componentReferenceEditManager.modifyComponentReference(adapter, newValue);
+        }
+        formatChild(parent.getElement());
       }
-      else
-      {
-        ComponentSpecification newValue = (ComponentSpecification)invokeDialog(componentReferenceEditManager.getBrowseDialog());
-        if (continueApply)
-          componentReferenceEditManager.modifyComponentReference(adapter, newValue);
-      }
-      formatChild(parent.getElement());
     }
-
+    finally
+    {
+      endRecording();
+    }
   }
 
   private Object invokeDialog(IComponentDialog dialog)

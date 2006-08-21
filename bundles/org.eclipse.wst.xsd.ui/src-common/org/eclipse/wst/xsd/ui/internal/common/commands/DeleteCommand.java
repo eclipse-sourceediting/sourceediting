@@ -54,102 +54,111 @@ public class DeleteCommand extends BaseCommand
 
     XSDConcreteComponent parent = target.getContainer();
 
-    if (target instanceof XSDModelGroup || target instanceof XSDElementDeclaration || target instanceof XSDModelGroupDefinition)
+    try
     {
-      if (parent instanceof XSDParticle)
-      {
-        if (parent.getContainer() instanceof XSDModelGroup)
-        {
-          XSDModelGroup modelGroup = (XSDModelGroup) ((XSDParticle) parent).getContainer();
+      beginRecording(parent.getElement());
 
-          modelGroup.getContents().remove(parent);
-        }
-        else if (parent.getContainer() instanceof XSDComplexTypeDefinition)
-        {
-          XSDComplexTypeDefinition complexType = (XSDComplexTypeDefinition) parent.getContainer();
-          complexType.setContent(null);
-        }
-      }
-      else if (parent instanceof XSDSchema)
+      if (target instanceof XSDModelGroup || target instanceof XSDElementDeclaration || target instanceof XSDModelGroupDefinition)
       {
-        visitor.visitSchema(target.getSchema());
-        ((XSDSchema) parent).getContents().remove(target);
-      }
-
-    }
-    else if (target instanceof XSDAttributeDeclaration)
-    {
-      if (parent instanceof XSDAttributeUse)
-      {
-        EObject obj = parent.eContainer();
-        XSDComplexTypeDefinition complexType = null;
-        while (obj != null)
+        if (parent instanceof XSDParticle)
         {
-          if (obj instanceof XSDComplexTypeDefinition)
+          if (parent.getContainer() instanceof XSDModelGroup)
           {
-            complexType = (XSDComplexTypeDefinition) obj;
-            break;
+            XSDModelGroup modelGroup = (XSDModelGroup) ((XSDParticle) parent).getContainer();
+
+            modelGroup.getContents().remove(parent);
           }
-          obj = obj.eContainer();
+          else if (parent.getContainer() instanceof XSDComplexTypeDefinition)
+          {
+            XSDComplexTypeDefinition complexType = (XSDComplexTypeDefinition) parent.getContainer();
+            complexType.setContent(null);
+          }
         }
-        if (complexType != null)
+        else if (parent instanceof XSDSchema)
         {
-          complexType.getAttributeContents().remove(parent);
+          visitor.visitSchema(target.getSchema());
+          ((XSDSchema) parent).getContents().remove(target);
         }
 
-        if (parent.getContainer() instanceof XSDAttributeGroupDefinition)
+      }
+      else if (target instanceof XSDAttributeDeclaration)
+      {
+        if (parent instanceof XSDAttributeUse)
         {
-          XSDAttributeGroupDefinition attrGroup = (XSDAttributeGroupDefinition) parent.getContainer();
+          EObject obj = parent.eContainer();
+          XSDComplexTypeDefinition complexType = null;
+          while (obj != null)
+          {
+            if (obj instanceof XSDComplexTypeDefinition)
+            {
+              complexType = (XSDComplexTypeDefinition) obj;
+              break;
+            }
+            obj = obj.eContainer();
+          }
+          if (complexType != null)
+          {
+            complexType.getAttributeContents().remove(parent);
+          }
 
-          attrGroup.getContents().remove(parent);
+          if (parent.getContainer() instanceof XSDAttributeGroupDefinition)
+          {
+            XSDAttributeGroupDefinition attrGroup = (XSDAttributeGroupDefinition) parent.getContainer();
+
+            attrGroup.getContents().remove(parent);
+          }
         }
-      }
-      else if (parent instanceof XSDSchema)
-      {
-        visitor.visitSchema(target.getSchema());
-        ((XSDSchema) parent).getContents().remove(target);
-      }
-    }
-    else if (target instanceof XSDAttributeGroupDefinition &&
-             parent instanceof XSDComplexTypeDefinition)
-    {
-      ((XSDComplexTypeDefinition)parent).getAttributeContents().remove(target);
-    }
-    else if (target instanceof XSDEnumerationFacet)
-    {
-      XSDEnumerationFacet enumerationFacet = (XSDEnumerationFacet)target;
-      enumerationFacet.getSimpleTypeDefinition().getFacetContents().remove(enumerationFacet);
-    }
-    else if (target instanceof XSDWildcard)
-    {
-      if (parent instanceof XSDParticle)
-      {
-        if (parent.getContainer() instanceof XSDModelGroup)
+        else if (parent instanceof XSDSchema)
         {
-          XSDModelGroup modelGroup = (XSDModelGroup) ((XSDParticle) parent).getContainer();
-          modelGroup.getContents().remove(parent);
+          visitor.visitSchema(target.getSchema());
+          ((XSDSchema) parent).getContents().remove(target);
         }
       }
-      else if (parent instanceof XSDComplexTypeDefinition)
+      else if (target instanceof XSDAttributeGroupDefinition && parent instanceof XSDComplexTypeDefinition)
       {
-        ((XSDComplexTypeDefinition)parent).setAttributeWildcardContent(null);
+        ((XSDComplexTypeDefinition) parent).getAttributeContents().remove(target);
       }
-      else if (parent instanceof XSDAttributeGroupDefinition)
+      else if (target instanceof XSDEnumerationFacet)
       {
-        ((XSDAttributeGroupDefinition)parent).setAttributeWildcardContent(null);
+        XSDEnumerationFacet enumerationFacet = (XSDEnumerationFacet) target;
+        enumerationFacet.getSimpleTypeDefinition().getFacetContents().remove(enumerationFacet);
       }
+      else if (target instanceof XSDWildcard)
+      {
+        if (parent instanceof XSDParticle)
+        {
+          if (parent.getContainer() instanceof XSDModelGroup)
+          {
+            XSDModelGroup modelGroup = (XSDModelGroup) ((XSDParticle) parent).getContainer();
+            modelGroup.getContents().remove(parent);
+          }
+        }
+        else if (parent instanceof XSDComplexTypeDefinition)
+        {
+          ((XSDComplexTypeDefinition) parent).setAttributeWildcardContent(null);
+        }
+        else if (parent instanceof XSDAttributeGroupDefinition)
+        {
+          ((XSDAttributeGroupDefinition) parent).setAttributeWildcardContent(null);
+        }
+      }
+      else if (target instanceof XSDComplexTypeDefinition && parent instanceof XSDElementDeclaration)
+      {
+        ((XSDElementDeclaration) parent).setTypeDefinition(target.resolveSimpleTypeDefinition(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001, "string"));
+      }
+      else
+      {
+        if (parent instanceof XSDSchema)
+        {
+          visitor.visitSchema(target.getSchema());
+          ((XSDSchema) parent).getContents().remove(target);
+        }
+      }
+
     }
-    else if (target instanceof XSDComplexTypeDefinition && parent instanceof XSDElementDeclaration)
+    finally
     {
-      ((XSDElementDeclaration)parent).setTypeDefinition(target.resolveSimpleTypeDefinition(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001, "string"));
-    }
-    else
-    {
-      if (parent instanceof XSDSchema)
-      {
-        visitor.visitSchema(target.getSchema());
-        ((XSDSchema) parent).getContents().remove(target);
-      }
+      endRecording();
     }
   }
 }

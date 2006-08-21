@@ -19,6 +19,7 @@ import org.eclipse.wst.xsd.ui.internal.common.commands.AddXSDComplexTypeDefiniti
 import org.eclipse.wst.xsd.ui.internal.common.commands.AddXSDSimpleTypeDefinitionCommand;
 import org.eclipse.wst.xsd.ui.internal.common.commands.SetBaseTypeAndManagerDirectivesCommand;
 import org.eclipse.wst.xsd.ui.internal.common.commands.SetBaseTypeCommand;
+import org.eclipse.wst.xsd.ui.internal.common.util.Messages;
 import org.eclipse.wst.xsd.ui.internal.editor.search.XSDSearchListDialogDelegate;
 import org.eclipse.wst.xsd.ui.internal.search.IXSDSearchConstants;
 import org.eclipse.xsd.XSDComplexTypeDefinition;
@@ -90,6 +91,7 @@ public class XSDComplexTypeBaseTypeEditManager extends XSDTypeReferenceEditManag
       else
       {  
         Command command = new SetBaseTypeAndManagerDirectivesCommand(concreteComponent, component.getName(), component.getQualifier(), component.getFile());
+        command.setLabel(Messages._UI_ACTION_SET_BASE_TYPE);
         command.execute();
       }  
     }

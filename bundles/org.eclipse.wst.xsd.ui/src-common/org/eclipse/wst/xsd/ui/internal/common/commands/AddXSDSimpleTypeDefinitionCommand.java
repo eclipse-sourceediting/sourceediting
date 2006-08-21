@@ -43,37 +43,45 @@ public final class AddXSDSimpleTypeDefinitionCommand extends BaseCommand
     {
       ensureSchemaElement((XSDSchema)parent);
     }
-
-    XSDSimpleTypeDefinition typeDef = XSDFactory.eINSTANCE.createXSDSimpleTypeDefinition();
-    typeDef.setBaseTypeDefinition(parent.getSchema().getSchemaForSchema().resolveSimpleTypeDefinition(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001, "string")); //$NON-NLS-1$
-
-    if (parent instanceof XSDSchema)
-    {
-      typeDef.setName(XSDCommonUIUtils.createUniqueElementName(nameToAdd == null ? "XSDSimpleType" : nameToAdd, ((XSDSchema) parent).getTypeDefinitions())); //$NON-NLS-1$
-      createdSimpleType = typeDef;
-      try
-      {
-        XSDSchema xsdSchema = (XSDSchema)parent;
-        Text textNode = xsdSchema.getDocument().createTextNode("\n"); //$NON-NLS-1$
-        xsdSchema.getElement().appendChild(textNode);
-        xsdSchema.getContents().add(typeDef);
-      }
-      catch (Exception e)
-      {
     
+    try
+    {
+      beginRecording(parent.getElement());
+      XSDSimpleTypeDefinition typeDef = XSDFactory.eINSTANCE.createXSDSimpleTypeDefinition();
+      typeDef.setBaseTypeDefinition(parent.getSchema().getSchemaForSchema().resolveSimpleTypeDefinition(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001, "string")); //$NON-NLS-1$
+
+      if (parent instanceof XSDSchema)
+      {
+        typeDef.setName(XSDCommonUIUtils.createUniqueElementName(nameToAdd == null ? "XSDSimpleType" : nameToAdd, ((XSDSchema) parent).getTypeDefinitions())); //$NON-NLS-1$
+        createdSimpleType = typeDef;
+        try
+        {
+          XSDSchema xsdSchema = (XSDSchema) parent;
+          Text textNode = xsdSchema.getDocument().createTextNode("\n"); //$NON-NLS-1$
+          xsdSchema.getElement().appendChild(textNode);
+          xsdSchema.getContents().add(typeDef);
+        }
+        catch (Exception e)
+        {
+
+        }
       }
+      else if (parent instanceof XSDElementDeclaration)
+      {
+        ((XSDElementDeclaration) parent).setAnonymousTypeDefinition(typeDef);
+      }
+      else if (parent instanceof XSDAttributeDeclaration)
+      {
+        ((XSDAttributeDeclaration) parent).setAnonymousTypeDefinition(typeDef);
+      }
+      formatChild(createdSimpleType.getElement());
+
+      addedXSDConcreteComponent = createdSimpleType;
     }
-    else if (parent instanceof XSDElementDeclaration)
+    finally
     {
-      ((XSDElementDeclaration) parent).setAnonymousTypeDefinition(typeDef);
+      endRecording();
     }
-    else if (parent instanceof XSDAttributeDeclaration)
-    {
-      ((XSDAttributeDeclaration) parent).setAnonymousTypeDefinition(typeDef);
-    }
-    formatChild(createdSimpleType.getElement());
-    
-    addedXSDConcreteComponent = createdSimpleType;
   }
 
   public XSDSimpleTypeDefinition getCreatedSimpleType()

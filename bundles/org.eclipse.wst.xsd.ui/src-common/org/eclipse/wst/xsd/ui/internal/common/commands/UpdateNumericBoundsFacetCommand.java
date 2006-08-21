@@ -56,102 +56,113 @@ public class UpdateNumericBoundsFacetCommand extends BaseCommand
   }
 
   public void execute()
-  {    
-    if (doUpdateMin)
+  {
+    try
     {
-      if (includeMin)
+      beginRecording(xsdSimpleType.getElement());
+
+      if (doUpdateMin)
       {
-        if (minInclusiveFacet == null && min != null)
+        if (includeMin)
         {
-          minInclusiveFacet = XSDFactory.eINSTANCE.createXSDMinInclusiveFacet();
-          minInclusiveFacet.setLexicalValue(min);
-          xsdSimpleType.getFacetContents().add(minInclusiveFacet);
-          
-          if (minExclusiveFacet != null)
+          if (minInclusiveFacet == null && min != null)
           {
-            xsdSimpleType.getFacetContents().remove(minExclusiveFacet);
+            minInclusiveFacet = XSDFactory.eINSTANCE.createXSDMinInclusiveFacet();
+            minInclusiveFacet.setLexicalValue(min);
+            xsdSimpleType.getFacetContents().add(minInclusiveFacet);
+
+            if (minExclusiveFacet != null)
+            {
+              xsdSimpleType.getFacetContents().remove(minExclusiveFacet);
+            }
           }
-        }
-        else if (minInclusiveFacet != null && min != null)
-        {
-          minInclusiveFacet.setLexicalValue(min);
-        }
-        else if (minInclusiveFacet != null && min == null)
-        {
-          xsdSimpleType.getFacetContents().remove(minInclusiveFacet);
-        }
-      }
-      else // !includeMin
-      {
-        if (minExclusiveFacet == null && min != null)
-        {
-          minExclusiveFacet = XSDFactory.eINSTANCE.createXSDMinExclusiveFacet();
-          minExclusiveFacet.setLexicalValue(min);
-          xsdSimpleType.getFacetContents().add(minExclusiveFacet);
-          
-          if (minInclusiveFacet != null)
+          else if (minInclusiveFacet != null && min != null)
+          {
+            minInclusiveFacet.setLexicalValue(min);
+          }
+          else if (minInclusiveFacet != null && min == null)
           {
             xsdSimpleType.getFacetContents().remove(minInclusiveFacet);
           }
         }
-        else if (minExclusiveFacet != null && min != null)
+        else
+        // !includeMin
         {
-          minExclusiveFacet.setLexicalValue(min);
-        }
-        else if (minExclusiveFacet != null && min == null)
-        {
-          xsdSimpleType.getFacetContents().remove(minExclusiveFacet);
-        }
-      }
-    }
-    else if (doUpdateMax)
-    {
-      if (includeMax)
-      {
-        if (maxInclusiveFacet == null && max != null)
-        {
-          maxInclusiveFacet = XSDFactory.eINSTANCE.createXSDMaxInclusiveFacet();
-          maxInclusiveFacet.setLexicalValue(max);
-          xsdSimpleType.getFacetContents().add(maxInclusiveFacet);
-          
-          if (maxExclusiveFacet != null)
+          if (minExclusiveFacet == null && min != null)
           {
-            xsdSimpleType.getFacetContents().remove(maxExclusiveFacet);
+            minExclusiveFacet = XSDFactory.eINSTANCE.createXSDMinExclusiveFacet();
+            minExclusiveFacet.setLexicalValue(min);
+            xsdSimpleType.getFacetContents().add(minExclusiveFacet);
+
+            if (minInclusiveFacet != null)
+            {
+              xsdSimpleType.getFacetContents().remove(minInclusiveFacet);
+            }
+          }
+          else if (minExclusiveFacet != null && min != null)
+          {
+            minExclusiveFacet.setLexicalValue(min);
+          }
+          else if (minExclusiveFacet != null && min == null)
+          {
+            xsdSimpleType.getFacetContents().remove(minExclusiveFacet);
           }
         }
-        else if (maxInclusiveFacet != null && max != null)
-        {
-          maxInclusiveFacet.setLexicalValue(max);
-        }
-        else if (maxInclusiveFacet != null && max == null)
-        {
-          xsdSimpleType.getFacetContents().remove(maxInclusiveFacet);
-        }
       }
-      else // !includeMax
+      else if (doUpdateMax)
       {
-        if (maxExclusiveFacet == null && max != null)
+        if (includeMax)
         {
-          maxExclusiveFacet = XSDFactory.eINSTANCE.createXSDMaxExclusiveFacet();
-          maxExclusiveFacet.setLexicalValue(max);
-          xsdSimpleType.getFacetContents().add(maxExclusiveFacet);
-          
-          if (maxInclusiveFacet != null)
+          if (maxInclusiveFacet == null && max != null)
+          {
+            maxInclusiveFacet = XSDFactory.eINSTANCE.createXSDMaxInclusiveFacet();
+            maxInclusiveFacet.setLexicalValue(max);
+            xsdSimpleType.getFacetContents().add(maxInclusiveFacet);
+
+            if (maxExclusiveFacet != null)
+            {
+              xsdSimpleType.getFacetContents().remove(maxExclusiveFacet);
+            }
+          }
+          else if (maxInclusiveFacet != null && max != null)
+          {
+            maxInclusiveFacet.setLexicalValue(max);
+          }
+          else if (maxInclusiveFacet != null && max == null)
           {
             xsdSimpleType.getFacetContents().remove(maxInclusiveFacet);
           }
         }
-        else if (maxExclusiveFacet != null && max != null)
+        else
+        // !includeMax
         {
-          maxExclusiveFacet.setLexicalValue(max);
-        }
-        else if (maxExclusiveFacet != null && max == null)
-        {
-          xsdSimpleType.getFacetContents().remove(maxExclusiveFacet);
+          if (maxExclusiveFacet == null && max != null)
+          {
+            maxExclusiveFacet = XSDFactory.eINSTANCE.createXSDMaxExclusiveFacet();
+            maxExclusiveFacet.setLexicalValue(max);
+            xsdSimpleType.getFacetContents().add(maxExclusiveFacet);
+
+            if (maxInclusiveFacet != null)
+            {
+              xsdSimpleType.getFacetContents().remove(maxInclusiveFacet);
+            }
+          }
+          else if (maxExclusiveFacet != null && max != null)
+          {
+            maxExclusiveFacet.setLexicalValue(max);
+          }
+          else if (maxExclusiveFacet != null && max == null)
+          {
+            xsdSimpleType.getFacetContents().remove(maxExclusiveFacet);
+          }
         }
       }
-    }
 
-    formatChild(xsdSimpleType.getElement());
+      formatChild(xsdSimpleType.getElement());
+    }
+    finally
+    {
+      endRecording();
+    }
   }  
 }

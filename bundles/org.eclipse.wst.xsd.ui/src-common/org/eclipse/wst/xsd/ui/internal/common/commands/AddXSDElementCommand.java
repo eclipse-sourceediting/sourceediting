@@ -35,7 +35,7 @@ public class AddXSDElementCommand extends BaseCommand
   XSDModelGroup xsdModelGroup;
   XSDSchema xsdSchema;
   boolean isReference;
-private String nameToAdd;
+  private String nameToAdd;
 
   public AddXSDElementCommand()
   {
@@ -91,71 +91,82 @@ private String nameToAdd;
    */
   public void execute()
   {
-    if (xsdSchema != null)
+    try
     {
-      XSDElementDeclaration element = createGlobalXSDElementDeclaration();
-      Text textNode = xsdSchema.getDocument().createTextNode("\n"); //$NON-NLS-1$
-      xsdSchema.getElement().appendChild(textNode);
-      xsdSchema.getContents().add(element);
-      addedXSDConcreteComponent = element;
-    }
-    else if (xsdModelGroupDefinition != null)
-    {
-      if (xsdModelGroup == null)
+      if (xsdSchema != null)
       {
-        XSDFactory factory = XSDSchemaBuildingTools.getXSDFactory();
-        XSDParticle particle = factory.createXSDParticle();
-        xsdModelGroup = factory.createXSDModelGroup();
-        xsdModelGroup.setCompositor(XSDCompositor.SEQUENCE_LITERAL);
-        particle.setContent(xsdModelGroup);
+        beginRecording(xsdSchema.getElement());
+        XSDElementDeclaration element = createGlobalXSDElementDeclaration();
+        Text textNode = xsdSchema.getDocument().createTextNode("\n"); //$NON-NLS-1$
+        xsdSchema.getElement().appendChild(textNode);
+        xsdSchema.getContents().add(element);
+        addedXSDConcreteComponent = element;
       }
-      xsdSchema = xsdModelGroup.getSchema();
-      if (!isReference)
+      else if (xsdModelGroupDefinition != null)
       {
-        xsdModelGroup.getContents().add(createXSDElementDeclaration());
+        beginRecording(xsdModelGroupDefinition.getElement());
+        if (xsdModelGroup == null)
+        {
+          XSDFactory factory = XSDSchemaBuildingTools.getXSDFactory();
+          XSDParticle particle = factory.createXSDParticle();
+          xsdModelGroup = factory.createXSDModelGroup();
+          xsdModelGroup.setCompositor(XSDCompositor.SEQUENCE_LITERAL);
+          particle.setContent(xsdModelGroup);
+          xsdModelGroupDefinition.setModelGroup(xsdModelGroup);
+        }
+        xsdSchema = xsdModelGroupDefinition.getSchema();
+        if (!isReference)
+        {
+          xsdModelGroup.getContents().add(createXSDElementDeclaration());
+        }
+        else
+        {
+          xsdModelGroup.getContents().add(createXSDElementReference());
+        }
+        formatChild(xsdModelGroupDefinition.getElement());
+      }
+      else if (xsdComplexTypeDefinition == null && xsdModelGroup != null)
+      {
+        xsdSchema = xsdModelGroup.getSchema();
+        beginRecording(xsdSchema.getElement());
+        if (!isReference)
+        {
+          xsdModelGroup.getContents().add(createXSDElementDeclaration());
+        }
+        else
+        {
+          xsdModelGroup.getContents().add(createXSDElementReference());
+        }
+        formatChild(xsdModelGroup.getElement());
       }
       else
       {
-        xsdModelGroup.getContents().add(createXSDElementReference());
+        xsdSchema = xsdComplexTypeDefinition.getSchema();
+        beginRecording(xsdSchema.getElement());
+        if (xsdModelGroup == null)
+        {
+          XSDFactory factory = XSDSchemaBuildingTools.getXSDFactory();
+          XSDParticle particle = factory.createXSDParticle();
+          xsdModelGroup = factory.createXSDModelGroup();
+          xsdModelGroup.setCompositor(XSDCompositor.SEQUENCE_LITERAL);
+          particle.setContent(xsdModelGroup);
+          xsdComplexTypeDefinition.setContent(particle);
+        }
+        if (!isReference)
+        {
+          xsdModelGroup.getContents().add(createXSDElementDeclarationForComplexType());
+        }
+        else
+        {
+          xsdModelGroup.getContents().add(createXSDElementReference());
+        }
+        formatChild(xsdComplexTypeDefinition.getElement());
       }
     }
-    else if (xsdComplexTypeDefinition == null && xsdModelGroup != null)
+    finally
     {
-      xsdSchema = xsdModelGroup.getSchema();
-      if (!isReference)
-      {
-        xsdModelGroup.getContents().add(createXSDElementDeclaration());
-      }
-      else
-      {
-        xsdModelGroup.getContents().add(createXSDElementReference());
-      }
-      formatChild(xsdModelGroup.getElement());
+      endRecording();
     }
-    else
-    {
-      if (xsdModelGroup == null)
-      {
-        XSDFactory factory = XSDSchemaBuildingTools.getXSDFactory();
-        XSDParticle particle = factory.createXSDParticle();
-        xsdModelGroup = factory.createXSDModelGroup();
-        xsdModelGroup.setCompositor(XSDCompositor.SEQUENCE_LITERAL);
-        particle.setContent(xsdModelGroup);
-        xsdComplexTypeDefinition.setContent(particle);
-      }
-      xsdSchema = xsdComplexTypeDefinition.getSchema();
-      
-      if (!isReference)
-      {
-        xsdModelGroup.getContents().add(createXSDElementDeclarationForComplexType());
-      }
-      else
-      {
-        xsdModelGroup.getContents().add(createXSDElementReference());
-      }
-      formatChild(xsdModelGroup.getElement());
-    }
-    
   }
   
   protected XSDParticle createXSDElementDeclaration()

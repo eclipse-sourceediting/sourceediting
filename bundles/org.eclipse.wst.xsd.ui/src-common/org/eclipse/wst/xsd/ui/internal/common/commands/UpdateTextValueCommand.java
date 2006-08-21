@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.common.commands;
 
-import org.eclipse.gef.commands.Command;
 import org.eclipse.wst.xml.ui.internal.tabletree.TreeContentHelper;
 import org.w3c.dom.Element;
 
@@ -18,7 +17,7 @@ import org.w3c.dom.Element;
  * This command is used from the extension view to edit extension elements
  * and which are implemented as DOM objects (not part of the EMF model)
  */
-public class UpdateTextValueCommand  extends Command
+public class UpdateTextValueCommand  extends BaseCommand
 {
   Element element;
   String value;
@@ -32,6 +31,14 @@ public class UpdateTextValueCommand  extends Command
   
   public void execute()
   {
-    new TreeContentHelper().setElementTextValue(element, value);
+    try
+    {
+      beginRecording(element);
+      new TreeContentHelper().setElementTextValue(element, value);
+    }
+    finally
+    {
+      endRecording();
+    }
   } 
 }

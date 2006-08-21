@@ -30,7 +30,6 @@ public class AddXSDAttributeDeclarationCommand extends BaseCommand
 {
   XSDComplexTypeDefinition xsdComplexTypeDefinition;
   XSDModelGroup xsdModelGroup;
-//  XSDSchema xsdSchema;
   XSDConcreteComponent parent;
   boolean isReference;
 
@@ -49,62 +48,70 @@ public class AddXSDAttributeDeclarationCommand extends BaseCommand
   public void execute()
   {
     XSDAttributeDeclaration attribute = XSDFactory.eINSTANCE.createXSDAttributeDeclaration();
-    if (parent == null)
+    try
     {
-      if (!isReference)
+      if (parent == null)
       {
-        attribute.setName(getNewName("NewAttribute")); //$NON-NLS-1$
-        attribute.setTypeDefinition(xsdComplexTypeDefinition.getSchema().getSchemaForSchema().resolveSimpleTypeDefinition("string")); //$NON-NLS-1$
-      }
-      else
-      {
-        attribute.setResolvedAttributeDeclaration(setGlobalAttributeReference(xsdComplexTypeDefinition.getSchema()));
-      }
-      XSDAttributeUse attributeUse = XSDFactory.eINSTANCE.createXSDAttributeUse();
-      attributeUse.setAttributeDeclaration(attribute);
-      attributeUse.setContent(attribute);
-
-      if (xsdComplexTypeDefinition.getAttributeContents() != null)
-      {
-        xsdComplexTypeDefinition.getAttributeContents().add(attributeUse);
-        formatChild(xsdComplexTypeDefinition.getElement());
-      }
-    }
-    else
-    {
-      if (parent instanceof XSDSchema)
-      {
-        XSDSchema xsdSchema = (XSDSchema)parent;
-        
-        attribute = createGlobalXSDAttributeDeclaration(xsdSchema);
-      }
-      else if (parent instanceof XSDAttributeGroupDefinition)
-      {
+        beginRecording(xsdComplexTypeDefinition.getElement());
         if (!isReference)
         {
-          attribute.setTypeDefinition(parent.getSchema().getSchemaForSchema().resolveSimpleTypeDefinition("string")); //$NON-NLS-1$
-        
-          List list = new ArrayList();
-          Iterator i = ((XSDAttributeGroupDefinition)parent).getResolvedAttributeGroupDefinition().getAttributeUses().iterator();
-          while (i.hasNext())
-          {
-            XSDAttributeUse use = (XSDAttributeUse)i.next();
-            list.add(use.getAttributeDeclaration());
-          }
-          attribute.setName(XSDCommonUIUtils.createUniqueElementName("NewAttribute", list)); //$NON-NLS-1$
+          attribute.setName(getNewName("NewAttribute")); //$NON-NLS-1$
+          attribute.setTypeDefinition(xsdComplexTypeDefinition.getSchema().getSchemaForSchema().resolveSimpleTypeDefinition("string")); //$NON-NLS-1$
         }
         else
         {
-          attribute.setResolvedAttributeDeclaration(setGlobalAttributeReference(parent.getSchema()));
+          attribute.setResolvedAttributeDeclaration(setGlobalAttributeReference(xsdComplexTypeDefinition.getSchema()));
         }
-          
         XSDAttributeUse attributeUse = XSDFactory.eINSTANCE.createXSDAttributeUse();
         attributeUse.setAttributeDeclaration(attribute);
         attributeUse.setContent(attribute);
- 
-        ((XSDAttributeGroupDefinition)parent).getResolvedAttributeGroupDefinition().getContents().add(attributeUse);
-        formatChild(parent.getElement());
+
+        if (xsdComplexTypeDefinition.getAttributeContents() != null)
+        {
+          xsdComplexTypeDefinition.getAttributeContents().add(attributeUse);
+          formatChild(xsdComplexTypeDefinition.getElement());
+        }
       }
+      else
+      {
+        beginRecording(parent.getElement());
+        if (parent instanceof XSDSchema)
+        {
+          XSDSchema xsdSchema = (XSDSchema) parent;
+          attribute = createGlobalXSDAttributeDeclaration(xsdSchema);
+        }
+        else if (parent instanceof XSDAttributeGroupDefinition)
+        {
+          if (!isReference)
+          {
+            attribute.setTypeDefinition(parent.getSchema().getSchemaForSchema().resolveSimpleTypeDefinition("string")); //$NON-NLS-1$
+
+            List list = new ArrayList();
+            Iterator i = ((XSDAttributeGroupDefinition) parent).getResolvedAttributeGroupDefinition().getAttributeUses().iterator();
+            while (i.hasNext())
+            {
+              XSDAttributeUse use = (XSDAttributeUse) i.next();
+              list.add(use.getAttributeDeclaration());
+            }
+            attribute.setName(XSDCommonUIUtils.createUniqueElementName("NewAttribute", list)); //$NON-NLS-1$
+          }
+          else
+          {
+            attribute.setResolvedAttributeDeclaration(setGlobalAttributeReference(parent.getSchema()));
+          }
+
+          XSDAttributeUse attributeUse = XSDFactory.eINSTANCE.createXSDAttributeUse();
+          attributeUse.setAttributeDeclaration(attribute);
+          attributeUse.setContent(attribute);
+
+          ((XSDAttributeGroupDefinition) parent).getResolvedAttributeGroupDefinition().getContents().add(attributeUse);
+          formatChild(parent.getElement());
+        }
+      }
+    }
+    finally
+    {
+      endRecording();
     }
     addedXSDConcreteComponent = attribute;
   }

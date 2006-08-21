@@ -33,10 +33,18 @@ public class AddEnumerationsCommand extends BaseCommand
 
   public void execute()
   {
-    XSDFactory factory = XSDSchemaBuildingTools.getXSDFactory();
-    XSDEnumerationFacet enumerationFacet = factory.createXSDEnumerationFacet();
-    enumerationFacet.setLexicalValue(value);
-    simpleType.getFacetContents().add(enumerationFacet);
-    formatChild(simpleType.getElement());
+    try
+    {
+      beginRecording(simpleType.getElement());
+      XSDFactory factory = XSDSchemaBuildingTools.getXSDFactory();
+      XSDEnumerationFacet enumerationFacet = factory.createXSDEnumerationFacet();
+      enumerationFacet.setLexicalValue(value);
+      simpleType.getFacetContents().add(enumerationFacet);
+      formatChild(simpleType.getElement());
+    }
+    finally
+    {
+      endRecording();
+    }
   }
 }

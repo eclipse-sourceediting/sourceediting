@@ -18,7 +18,6 @@ import java.util.Map;
 
 import org.apache.xerces.util.XMLChar;
 import org.eclipse.emf.ecore.EReference;
-import org.eclipse.wst.xml.core.internal.document.DocumentImpl;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.internal.nsedit.TargetNamespaceChangeHandler;
 import org.eclipse.wst.xsd.ui.internal.util.TypesHelper;
@@ -47,123 +46,131 @@ public class UpdateNamespaceInformationCommand extends BaseCommand
     ensureSchemaElement(xsdSchema);
     
     Element element = xsdSchema.getElement();
-    DocumentImpl doc = (DocumentImpl) element.getOwnerDocument();
-
-    String modelTargetNamespace = xsdSchema.getTargetNamespace();
-    String oldNamespace = xsdSchema.getTargetNamespace();
-
-    TypesHelper helper = new TypesHelper(xsdSchema);
-    String oldPrefix = helper.getPrefix(element.getAttribute(XSDConstants.TARGETNAMESPACE_ATTRIBUTE), false);
-
-    if (modelTargetNamespace == null)
+    try
     {
-      modelTargetNamespace = ""; //$NON-NLS-1$
-    }
+      //DocumentImpl doc = (DocumentImpl) element.getOwnerDocument();
 
-    String targetNamespace = newTargetNamespace.trim();
-    String prefix = newPrefix.trim();
+      String modelTargetNamespace = xsdSchema.getTargetNamespace();
+      String oldNamespace = xsdSchema.getTargetNamespace();
 
-    if (!validatePrefix(prefix) || !validateTargetNamespace(targetNamespace))
-    {
-      return;
-    }
+      TypesHelper helper = new TypesHelper(xsdSchema);
+      String oldPrefix = helper.getPrefix(element.getAttribute(XSDConstants.TARGETNAMESPACE_ATTRIBUTE), false);
 
-    if (prefix.length() > 0 && targetNamespace.length() == 0)
-    {
-      // can't have blank targetnamespace and yet specify a prefix
-      return;
-    }
-
-    doc.getModel().beginRecording(this, XSDEditorPlugin.getXSDString("_UI_TARGETNAMESPACE_CHANGE")); //$NON-NLS-1$
-    
-    String xsdForXSDPrefix = xsdSchema.getSchemaForSchemaQNamePrefix();
-    Map map = xsdSchema.getQNamePrefixToNamespaceMap();
-
-    // Check if prefix is blank
-    // if it is, then make sure we have a prefix
-    // for schema for schema
-    if (prefix.length() == 0)
-    {
-      // if prefix for schema for schema is blank
-      // then set it to value specified in preference
-      // and update ALL nodes with this prefix
-      if (xsdForXSDPrefix == null || (xsdForXSDPrefix != null && xsdForXSDPrefix.trim().length() == 0))
+      if (modelTargetNamespace == null)
       {
-        // get preference prefix
-        xsdForXSDPrefix = XSDEditorPlugin.getPlugin().getXMLSchemaPrefix();
-        // get a unique prefix by checking what's in the map
-
-        xsdForXSDPrefix = getUniqueSchemaForSchemaPrefix(xsdForXSDPrefix, map);
-        element.setAttribute("xmlns:" + xsdForXSDPrefix, XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001); //$NON-NLS-1$
-
-        updateAllNodes(element, xsdForXSDPrefix);
-
-        // remove the old xmlns attribute for the schema for schema
-        if (element.getAttribute("xmlns") != null && //$NON-NLS-1$
-            element.getAttribute("xmlns").equals(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001)) //$NON-NLS-1$
-        {
-          element.removeAttribute("xmlns"); //$NON-NLS-1$
-        }
+        modelTargetNamespace = ""; //$NON-NLS-1$
       }
-    }
 
-    if (targetNamespace.length() > 0 || (targetNamespace.length() == 0 && prefix.length() == 0))
-    {
-      // clean up the old prefix for this schema
-      if (oldPrefix != null && oldPrefix.length() > 0)
+      String targetNamespace = newTargetNamespace.trim();
+      String prefix = newPrefix.trim();
+
+      if (!validatePrefix(prefix) || !validateTargetNamespace(targetNamespace))
       {
-        element.removeAttribute("xmlns:" + oldPrefix); //$NON-NLS-1$
-        // element.setAttribute("xmlns:" + prefix, targetNamespace);
-        // java.util.Map prefixToNameSpaceMap =
-        // xsdSchema.getQNamePrefixToNamespaceMap();
-        // prefixToNameSpaceMap.remove(oldPrefix);
+        return;
       }
-      else
-      // if no prefix
+
+      if (prefix.length() > 0 && targetNamespace.length() == 0)
       {
-        if (element.getAttribute("xmlns") != null) //$NON-NLS-1$
+        // can't have blank targetnamespace and yet specify a prefix
+        return;
+      }
+
+      //doc.getModel().beginRecording(this, XSDEditorPlugin.getXSDString("_UI_TARGETNAMESPACE_CHANGE")); //$NON-NLS-1$
+      beginRecording(element);
+      
+      String xsdForXSDPrefix = xsdSchema.getSchemaForSchemaQNamePrefix();
+      Map map = xsdSchema.getQNamePrefixToNamespaceMap();
+
+      // Check if prefix is blank
+      // if it is, then make sure we have a prefix
+      // for schema for schema
+      if (prefix.length() == 0)
+      {
+        // if prefix for schema for schema is blank
+        // then set it to value specified in preference
+        // and update ALL nodes with this prefix
+        if (xsdForXSDPrefix == null || (xsdForXSDPrefix != null && xsdForXSDPrefix.trim().length() == 0))
         {
-          if (!element.getAttribute("xmlns").equals(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001)) //$NON-NLS-1$
+          // get preference prefix
+          xsdForXSDPrefix = XSDEditorPlugin.getPlugin().getXMLSchemaPrefix();
+          // get a unique prefix by checking what's in the map
+
+          xsdForXSDPrefix = getUniqueSchemaForSchemaPrefix(xsdForXSDPrefix, map);
+          element.setAttribute("xmlns:" + xsdForXSDPrefix, XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001); //$NON-NLS-1$
+
+          updateAllNodes(element, xsdForXSDPrefix);
+
+          // remove the old xmlns attribute for the schema for schema
+          if (element.getAttribute("xmlns") != null && //$NON-NLS-1$
+              element.getAttribute("xmlns").equals(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001)) //$NON-NLS-1$
           {
             element.removeAttribute("xmlns"); //$NON-NLS-1$
           }
         }
       }
-    }
 
-    if (targetNamespace.length() > 0)
-    {
-      if (!modelTargetNamespace.equals(targetNamespace))
+      if (targetNamespace.length() > 0 || (targetNamespace.length() == 0 && prefix.length() == 0))
       {
-        element.setAttribute(XSDConstants.TARGETNAMESPACE_ATTRIBUTE, targetNamespace);
+        // clean up the old prefix for this schema
+        if (oldPrefix != null && oldPrefix.length() > 0)
+        {
+          element.removeAttribute("xmlns:" + oldPrefix); //$NON-NLS-1$
+          // element.setAttribute("xmlns:" + prefix, targetNamespace);
+          // java.util.Map prefixToNameSpaceMap =
+          // xsdSchema.getQNamePrefixToNamespaceMap();
+          // prefixToNameSpaceMap.remove(oldPrefix);
+        }
+        else
+        // if no prefix
+        {
+          if (element.getAttribute("xmlns") != null) //$NON-NLS-1$
+          {
+            if (!element.getAttribute("xmlns").equals(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001)) //$NON-NLS-1$
+            {
+              element.removeAttribute("xmlns"); //$NON-NLS-1$
+            }
+          }
+        }
       }
-      // now set the new xmlns:prefix attribute
-      if (prefix.length() > 0)
+
+      if (targetNamespace.length() > 0)
       {
-        element.setAttribute("xmlns:" + prefix, targetNamespace); //$NON-NLS-1$
+        if (!modelTargetNamespace.equals(targetNamespace))
+        {
+          element.setAttribute(XSDConstants.TARGETNAMESPACE_ATTRIBUTE, targetNamespace);
+        }
+        // now set the new xmlns:prefix attribute
+        if (prefix.length() > 0)
+        {
+          element.setAttribute("xmlns:" + prefix, targetNamespace); //$NON-NLS-1$
+        }
+        else
+        {
+          element.setAttribute("xmlns", targetNamespace); //$NON-NLS-1$
+        }
+        // set the targetNamespace attribute
       }
       else
+      // else targetNamespace is blank
       {
-        element.setAttribute("xmlns", targetNamespace); //$NON-NLS-1$
+        if (prefix.length() == 0)
+        {
+          element.removeAttribute(XSDConstants.TARGETNAMESPACE_ATTRIBUTE);
+        }
       }
-      // set the targetNamespace attribute
+
+      // do our own referential integrity
+      TargetNamespaceChangeHandler targetNamespaceChangeHandler = new TargetNamespaceChangeHandler(xsdSchema, oldNamespace, targetNamespace);
+      targetNamespaceChangeHandler.resolve();
+
+      updateElement(xsdSchema);
+
+      //doc.getModel().endRecording(this);
     }
-    else
-    // else targetNamespace is blank
+    finally
     {
-      if (prefix.length() == 0)
-      {
-        element.removeAttribute(XSDConstants.TARGETNAMESPACE_ATTRIBUTE);
-      }
+      endRecording();
     }
-
-    // do our own referential integrity
-    TargetNamespaceChangeHandler targetNamespaceChangeHandler = new TargetNamespaceChangeHandler(xsdSchema, oldNamespace, targetNamespace);
-    targetNamespaceChangeHandler.resolve();
-
-    updateElement(xsdSchema);
-    
-    doc.getModel().endRecording(this);
   }
   
   

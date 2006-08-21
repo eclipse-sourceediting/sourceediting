@@ -10,13 +10,12 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.common.commands;
 
-import org.eclipse.gef.commands.Command;
 import org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo.SpecificationForExtensionsSchema;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-public class AddExtensibilityElementCommand extends Command
+public class AddExtensibilityElementCommand extends BaseCommand
 {
   Element input, elementToAdd;
   SpecificationForExtensionsSchema extensionSchemaSpec;
@@ -31,7 +30,15 @@ public class AddExtensibilityElementCommand extends Command
   public void execute()
   {
     super.execute();
-    addElement();
+    try
+    {
+      beginRecording(input);
+      addElement();
+    }
+    finally
+    {
+      endRecording();
+    }
   }
 
   public void undo()

@@ -10,11 +10,10 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.common.commands;
 
-import org.eclipse.gef.commands.Command;
 import org.eclipse.xsd.XSDCompositor;
 import org.eclipse.xsd.XSDModelGroup;
 
-public class UpdateContentModelCommand extends Command
+public class UpdateContentModelCommand extends BaseCommand
 {
   XSDModelGroup xsdModelGroup;
   XSDCompositor oldXSDCompositor, newXSDCompositor;
@@ -31,9 +30,16 @@ public class UpdateContentModelCommand extends Command
   
   public void execute()
   {
-    super.execute();
-    xsdModelGroup.setCompositor(newXSDCompositor);
-    
+    try
+    {
+      super.execute();
+      beginRecording(xsdModelGroup.getElement());
+      xsdModelGroup.setCompositor(newXSDCompositor);
+    }
+    finally
+    {
+      endRecording();
+    }
   }
     
   public void undo()

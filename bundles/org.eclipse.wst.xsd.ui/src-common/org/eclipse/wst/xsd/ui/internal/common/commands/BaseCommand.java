@@ -53,6 +53,24 @@ public class BaseCommand extends Command
   {
     return addedXSDConcreteComponent;
   }
+  
+  IDOMNode domNode;
+  protected void beginRecording(Object element) {
+    if (element instanceof IDOMNode)
+    {
+      domNode = (IDOMNode) element; 
+      domNode.getModel().beginRecording(this, getUndoDescription());
+    }
+  }
+  
+  protected void endRecording()
+  {
+    domNode.getModel().endRecording(this);
+  }
+  
+  protected String getUndoDescription() {
+    return getLabel();
+  }
 
   protected void formatChild(Element child)
   {

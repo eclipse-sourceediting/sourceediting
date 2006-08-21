@@ -175,12 +175,14 @@ public class XSDTypeReferenceEditManager implements ComponentReferenceEditManage
         if (td != null)
         {
           Command command = new UpdateTypeReferenceCommand(concreteComponent, td);
+          command.setLabel(Messages._UI_ACTION_SET_TYPE);
           command.execute();
         }  
       }  
       else
       {  
         Command command = new UpdateTypeReferenceAndManageDirectivesCommand(concreteComponent, component.getName(), component.getQualifier(), component.getFile());
+        command.setLabel(Messages._UI_ACTION_SET_TYPE);
         command.execute();
       }  
     }  

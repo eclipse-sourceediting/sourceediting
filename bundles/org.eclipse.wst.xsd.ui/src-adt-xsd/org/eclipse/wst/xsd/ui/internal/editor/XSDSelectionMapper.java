@@ -15,6 +15,7 @@ import java.util.Iterator;
 import java.util.List;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 
 public class XSDSelectionMapper implements ISelectionMapper
@@ -22,9 +23,9 @@ public class XSDSelectionMapper implements ISelectionMapper
   public ISelection mapSelection(ISelection selection)
   {
     List list = new ArrayList();
-    if (selection instanceof StructuredSelection)
+    if (selection instanceof IStructuredSelection)
     {  
-      StructuredSelection structuredSelection = (StructuredSelection)selection;
+      IStructuredSelection structuredSelection = (IStructuredSelection)selection;
       for (Iterator i = structuredSelection.iterator(); i.hasNext(); )
       {
         Object o = i.next();

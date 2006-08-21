@@ -12,6 +12,7 @@ package org.eclipse.wst.xsd.ui.internal.common.commands;
 
 import org.eclipse.xsd.XSDAttributeGroupDefinition;
 import org.eclipse.xsd.XSDComplexTypeDefinition;
+import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDFactory;
 import org.eclipse.xsd.XSDWildcard;
 
@@ -19,33 +20,45 @@ public class AddXSDAnyAttributeCommand extends BaseCommand
 {
   XSDComplexTypeDefinition xsdComplexTypeDefinition;
   XSDAttributeGroupDefinition xsdAttributeGroupDefinition;
+  XSDConcreteComponent input;
 
   public AddXSDAnyAttributeCommand(String label, XSDComplexTypeDefinition xsdComplexTypeDefinition)
   {
     super(label);
     this.xsdComplexTypeDefinition = xsdComplexTypeDefinition;
+    this.input = xsdComplexTypeDefinition; 
   }
   
   public AddXSDAnyAttributeCommand(String label, XSDAttributeGroupDefinition xsdAttributeGroupDefinition)
   {
     super(label);
     this.xsdAttributeGroupDefinition = xsdAttributeGroupDefinition;
+    this.input = xsdAttributeGroupDefinition;
   }
   
   public void execute()
   {
-    XSDWildcard anyAttribute = XSDFactory.eINSTANCE.createXSDWildcard();
-    if (xsdComplexTypeDefinition != null)
+    try
     {
+      beginRecording(input.getElement());
+
+      XSDWildcard anyAttribute = XSDFactory.eINSTANCE.createXSDWildcard();
+      if (xsdComplexTypeDefinition != null)
+      {
         xsdComplexTypeDefinition.setAttributeWildcardContent(anyAttribute);
         formatChild(xsdComplexTypeDefinition.getElement());
+      }
+      else if (xsdAttributeGroupDefinition != null)
+      {
+        xsdAttributeGroupDefinition.setAttributeWildcardContent(anyAttribute);
+        formatChild(xsdAttributeGroupDefinition.getElement());
+      }
+      addedXSDConcreteComponent = anyAttribute;
     }
-    else if (xsdAttributeGroupDefinition != null)
+    finally
     {
-      xsdAttributeGroupDefinition.setAttributeWildcardContent(anyAttribute);
-      formatChild(xsdAttributeGroupDefinition.getElement());
+      endRecording();
     }
-    addedXSDConcreteComponent = anyAttribute;
   }
 
 }

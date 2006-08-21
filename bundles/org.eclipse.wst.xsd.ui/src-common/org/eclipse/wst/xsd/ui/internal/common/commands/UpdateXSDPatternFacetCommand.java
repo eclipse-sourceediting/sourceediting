@@ -46,23 +46,31 @@ public class UpdateXSDPatternFacetCommand extends BaseCommand
 
   public void execute()
   {
-    if (actionType == ADD)
+    try
     {
-      XSDPatternFacet pattern = XSDFactory.eINSTANCE.createXSDPatternFacet();
-      pattern.setLexicalValue(value);
-      xsdSimpleTypeDefinition.getFacetContents().add(pattern);
+      beginRecording(xsdSimpleTypeDefinition.getElement());
+      if (actionType == ADD)
+      {
+        XSDPatternFacet pattern = XSDFactory.eINSTANCE.createXSDPatternFacet();
+        pattern.setLexicalValue(value);
+        xsdSimpleTypeDefinition.getFacetContents().add(pattern);
+      }
+      else if (actionType == DELETE)
+      {
+        Assert.isNotNull(patternToEdit);
+        if (xsdSimpleTypeDefinition.getFacetContents().contains(patternToEdit))
+          xsdSimpleTypeDefinition.getFacetContents().remove(patternToEdit);
+      }
+      else if (actionType == UPDATE)
+      {
+        Assert.isNotNull(patternToEdit);
+        patternToEdit.setLexicalValue(value);
+      }
+      formatChild(xsdSimpleTypeDefinition.getElement());
     }
-    else if (actionType == DELETE)
+    finally
     {
-      Assert.isNotNull(patternToEdit);
-      if (xsdSimpleTypeDefinition.getFacetContents().contains(patternToEdit))
-        xsdSimpleTypeDefinition.getFacetContents().remove(patternToEdit);
+      endRecording();
     }
-    else if (actionType == UPDATE)
-    {
-      Assert.isNotNull(patternToEdit);
-      patternToEdit.setLexicalValue(value);
-    }
-    formatChild(xsdSimpleTypeDefinition.getElement());
   }
 }

@@ -47,32 +47,40 @@ public final class AddXSDComplexTypeDefinitionCommand extends BaseCommand
    */
   public void execute()
   {
-    XSDFactory factory = XSDSchemaBuildingTools.getXSDFactory();
-    XSDComplexTypeDefinition complexType = factory.createXSDComplexTypeDefinition();
-    addedXSDConcreteComponent = complexType;
-    String newName = getNewName(nameToAdd == null ? "NewXSDComplexType" : nameToAdd, parent.getSchema()); //$NON-NLS-1$
-    complexType.setName(newName);
-    if (parent instanceof XSDSchema)
+    try
     {
-      try
+      beginRecording(parent.getElement());
+      XSDFactory factory = XSDSchemaBuildingTools.getXSDFactory();
+      XSDComplexTypeDefinition complexType = factory.createXSDComplexTypeDefinition();
+      addedXSDConcreteComponent = complexType;
+      String newName = getNewName(nameToAdd == null ? "NewXSDComplexType" : nameToAdd, parent.getSchema()); //$NON-NLS-1$
+      complexType.setName(newName);
+      if (parent instanceof XSDSchema)
       {
-        XSDSchema xsdSchema = (XSDSchema)parent;
-        ensureSchemaElement(xsdSchema);
-        Text textNode = xsdSchema.getDocument().createTextNode("\n"); //$NON-NLS-1$
-        xsdSchema.getElement().appendChild(textNode);
-        xsdSchema.getContents().add(complexType);
+        try
+        {
+          XSDSchema xsdSchema = (XSDSchema) parent;
+          ensureSchemaElement(xsdSchema);
+          Text textNode = xsdSchema.getDocument().createTextNode("\n"); //$NON-NLS-1$
+          xsdSchema.getElement().appendChild(textNode);
+          xsdSchema.getContents().add(complexType);
+        }
+        catch (Exception e)
+        {
+
+        }
       }
-      catch (Exception e)
+      else if (parent instanceof XSDElementDeclaration)
       {
-        e.printStackTrace();
-      } 
+        ((XSDElementDeclaration) parent).setAnonymousTypeDefinition(complexType);
+        formatChild(parent.getElement());
+      }
+      createdComplexType = complexType;
     }
-    else if (parent instanceof XSDElementDeclaration)
+    finally
     {
-      ((XSDElementDeclaration) parent).setAnonymousTypeDefinition(complexType);
-      formatChild(parent.getElement());
+      endRecording();
     }
-    createdComplexType = complexType;
   }
 
   protected String getNewName(String description, XSDSchema schema)
