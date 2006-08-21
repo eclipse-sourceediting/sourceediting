@@ -12,6 +12,7 @@ public abstract class EditorMode implements IAdaptable
   
   public abstract EditPartFactory getEditPartFactory();
   
+  // TODO (cs) this should return ITreeContentProvider
   public abstract IContentProvider getOutlineProvider();
   
   public ContextMenuParticipant getContextMenuParticipant()

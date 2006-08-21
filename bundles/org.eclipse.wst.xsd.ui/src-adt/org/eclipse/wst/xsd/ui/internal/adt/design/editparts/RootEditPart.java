@@ -16,16 +16,21 @@ import org.eclipse.draw2d.BendpointConnectionRouter;
 import org.eclipse.draw2d.ConnectionLayer;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.FigureCanvas;
+import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.Layer;
+import org.eclipse.draw2d.LayeredPane;
 import org.eclipse.draw2d.RectangleFigure;
+import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.LayerConstants;
 import org.eclipse.gef.editparts.ScalableRootEditPart;
 import org.eclipse.gef.ui.parts.ScrollingGraphicalViewer;
+import org.eclipse.wst.xsd.ui.internal.adt.design.DesignViewerGraphicConstants;
 
 public class RootEditPart extends ScalableRootEditPart implements org.eclipse.gef.RootEditPart
-{  
+{    
   public void activate()
   {
     super.activate();
@@ -50,6 +55,33 @@ public class RootEditPart extends ScalableRootEditPart implements org.eclipse.ge
     refresh();
   }
   
+  protected LayeredPane createPrintableLayers() 
+  {
+    LayeredPane pane = super.createPrintableLayers();    
+    Layer layer = new ScaledHandleLayer();
+    layer.setPreferredSize(new Dimension(5, 5));
+    pane.add(layer, DesignViewerGraphicConstants.SCALED_HANDLE_LAYER);    
+    return pane;
+  }  
+  
+  
+  class ScaledHandleLayer extends Layer
+  {
+    ScaledHandleLayer() 
+    {
+      setEnabled(true);
+    }
+    /**
+     * @see org.eclipse.draw2d.Figure#getPreferredSize(int, int)
+     */
+    public Dimension getPreferredSize(int wHint, int hHint) 
+    {
+      Rectangle rect = new Rectangle();
+      for (int i = 0; i < getChildren().size(); i++)
+        rect.union(((IFigure)getChildren().get(i)).getBounds());
+      return rect.getSize();
+    }
+  }  
   
   class IndexFigure extends RectangleFigure implements PropertyChangeListener
   {

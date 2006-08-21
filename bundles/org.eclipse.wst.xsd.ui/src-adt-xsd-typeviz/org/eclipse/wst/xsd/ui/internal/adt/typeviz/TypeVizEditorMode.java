@@ -10,6 +10,7 @@ import org.eclipse.wst.xsd.ui.internal.design.editparts.XSDEditPartFactory;
 public class TypeVizEditorMode extends EditorMode
 {
   private EditPartFactory editPartFactory;
+  public final static String ID = "org.eclipse.wst.xsd.ui.typeviz";
   
   public Object getAdapter(Class adapter)
   {
@@ -32,7 +33,7 @@ public class TypeVizEditorMode extends EditorMode
 
   public String getId()
   {
-    return "org.eclipse.wst.xsd.ui.typeviz";
+    return ID;
   }
 
   public IContentProvider getOutlineProvider()

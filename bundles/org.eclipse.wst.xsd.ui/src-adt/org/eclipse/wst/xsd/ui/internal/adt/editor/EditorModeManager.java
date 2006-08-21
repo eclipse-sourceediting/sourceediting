@@ -3,15 +3,17 @@ package org.eclipse.wst.xsd.ui.internal.adt.editor;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 
-public class EditorModeManager
+public class EditorModeManager implements IAdaptable
 {
   private List modeList = new ArrayList();
   private EditorMode currentMode = null;
   private List listeners = new ArrayList();
   private String extensionPointId;
+  private ProductCustomizationProvider productCustomizationProvider;
   
   public EditorModeManager(String extensionPointId)
   {
@@ -20,8 +22,13 @@ public class EditorModeManager
   
   public void init()
   { 
-    readRegistry(extensionPointId);
-    currentMode = (EditorMode)modeList.get(0);
+    readRegistry(extensionPointId);    
+    currentMode = getDefaultMode();
+  }
+  
+  protected EditorMode getDefaultMode()
+  {
+    return (EditorMode)modeList.get(0);    
   }
   
   protected void addMode(EditorMode mode)
@@ -29,11 +36,23 @@ public class EditorModeManager
     modeList.add(mode);
   }
   
+  public EditorMode getEditorMode(String editorModeId)
+  {
+    for (Iterator i = modeList.iterator(); i.hasNext(); )
+    {
+      EditorMode editorMode = (EditorMode)i.next();
+      if (editorModeId.equals(editorMode.getId()))
+      {
+        return editorMode;
+      }  
+    }  
+    return null;
+  }
+  
   public void setCurrentMode(EditorMode mode)
   {
     if (modeList.contains(mode))
     {
-      System.out.println("setCurrentMode:" + mode.getDisplayName());
       currentMode = mode;
       List clonedList = new ArrayList();
       clonedList.addAll(listeners);
@@ -71,11 +90,18 @@ public class EditorModeManager
   }  
   
   private void readRegistry(String id)
-  {
+  {    
     IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(id);  
     for (int i = 0; i < elements.length; i++)
     {
       IConfigurationElement element = elements[i];
+      String editorModeId = element.getAttribute("id"); //$NON-NLS-1$
+      if (editorModeId != null && 
+          productCustomizationProvider != null &&
+          !productCustomizationProvider.isEditorModeApplicable(editorModeId))
+      {
+        continue;
+      }  
       try
       {
         EditorMode mode = (EditorMode)element.createExecutableExtension("class");
@@ -86,4 +112,15 @@ public class EditorModeManager
       }
     }
   }  
+  
+  public Object getAdapter(Class adapter)
+  {
+    return null;
+  }
+
+
+  public void setProductCustomizationProvider(ProductCustomizationProvider productCustomizationProvider)
+  {
+    this.productCustomizationProvider = productCustomizationProvider;
+  }
 }

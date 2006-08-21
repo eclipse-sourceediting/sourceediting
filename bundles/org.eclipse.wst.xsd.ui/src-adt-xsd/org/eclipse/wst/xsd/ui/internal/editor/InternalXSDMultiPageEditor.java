@@ -70,6 +70,7 @@ import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.RootContentEditPart;
 import org.eclipse.wst.xsd.ui.internal.adt.editor.ADTMultiPageEditor;
 import org.eclipse.wst.xsd.ui.internal.adt.editor.EditorMode;
 import org.eclipse.wst.xsd.ui.internal.adt.editor.EditorModeManager;
+import org.eclipse.wst.xsd.ui.internal.adt.editor.ProductCustomizationProvider;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IADTObject;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IModel;
 import org.eclipse.wst.xsd.ui.internal.adt.outline.ADTContentOutlinePage;
@@ -89,7 +90,6 @@ import org.eclipse.wst.xsd.ui.internal.common.actions.OpenInNewEditor;
 import org.eclipse.wst.xsd.ui.internal.common.actions.SetMultiplicityAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.SetTypeAction;
 import org.eclipse.wst.xsd.ui.internal.common.properties.sections.IDocumentChangedNotifier;
-import org.eclipse.wst.xsd.ui.internal.design.editparts.XSDEditPartFactory;
 import org.eclipse.wst.xsd.ui.internal.navigation.DesignViewNavigationLocation;
 import org.eclipse.wst.xsd.ui.internal.navigation.MultiPageEditorTextSelectionNavigationLocation;
 import org.eclipse.wst.xsd.ui.internal.text.XSDModelAdapter;
@@ -312,16 +312,8 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
     super.configureGraphicalViewer();
     graphicalViewer.getKeyHandler().put(KeyStroke.getPressed(SWT.F2, 0), getActionRegistry().getAction(GEFActionConstants.DIRECT_EDIT));
     // get edit part factory from extension
-    EditPartFactory editPartFactory = XSDEditorPlugin.getDefault().getXSDEditorConfiguration().getEditPartFactory();
-    if (editPartFactory != null)
-    {
-      graphicalViewer.setEditPartFactory(editPartFactory);
-    }
-    else
-    {
-      // otherwise use default
-      graphicalViewer.setEditPartFactory(new XSDEditPartFactory());
-    }
+    EditPartFactory editPartFactory = getEditorModeManager().getCurrentMode().getEditPartFactory();
+    graphicalViewer.setEditPartFactory(editPartFactory);   
   }
 
   public Object getAdapter(Class type)
@@ -414,6 +406,10 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
     else if (type == IDocumentChangedNotifier.class)
     {
       return internalDocumentChangedNotifier;
+    }  
+    else if (type == ProductCustomizationProvider.class)
+    {
+      return XSDEditorPlugin.getPlugin().getProductCustomizationProvider();
     }  
     return super.getAdapter(type);
   }
@@ -976,6 +972,9 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
   
   public void editorModeChanged(EditorMode newEditorMode)
   {
+    //if (isInitializing)
+    //  return;
+    
     EditPartFactory editPartFactory = newEditorMode.getEditPartFactory();
     if (editPartFactory != null)
     {  
@@ -998,16 +997,38 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
     }  
   }  
   
+  private static final String DEFAULT_EDITOR_MODE_ID = "org.eclipse.wst.xsd.ui.defaultEditorModeId"; //$NON-NLS-1$
+  //private boolean isInitializing = false;
   protected EditorModeManager createEditorModeManager()
   {
+    final ProductCustomizationProvider productCustomizationProvider = (ProductCustomizationProvider)getAdapter(ProductCustomizationProvider.class);
     EditorModeManager manager = new EditorModeManager(XSD_EDITOR_MODE_EXTENSION_ID)
     {
       public void init()
       {
-        addMode(new TypeVizEditorMode());
-        super.init();
+        if (productCustomizationProvider == null || 
+            productCustomizationProvider.isEditorModeApplicable(TypeVizEditorMode.ID))
+        {  
+          addMode(new TypeVizEditorMode());
+        }  
+        super.init();                
+      }       
+      
+      protected EditorMode getDefaultMode()
+      {
+        String defaultModeId = XSDEditorPlugin.getPlugin().getPreferenceStore().getString(DEFAULT_EDITOR_MODE_ID);
+        if (defaultModeId != null)
+        {
+          EditorMode editorMode = getEditorMode(defaultModeId);
+          if (editorMode != null)
+          {
+            return editorMode;
+          }  
+        }               
+        return super.getDefaultMode();
       }
     };
+    manager.setProductCustomizationProvider(productCustomizationProvider);
     return manager;
   }
 }  

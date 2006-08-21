@@ -13,6 +13,7 @@ package org.eclipse.wst.xsd.ui.internal.editor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.plugin.*;
+import org.eclipse.wst.xsd.ui.internal.adt.editor.ProductCustomizationProvider;
 import org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo.ExtensionsSchemasRegistry;
 import org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo.custom.NodeCustomizationRegistry;
 import org.eclipse.core.runtime.Platform;
@@ -20,6 +21,7 @@ import org.eclipse.emf.edit.ui.provider.ExtendedImageRegistry;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
+import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 
 import java.net.MalformedURLException;
@@ -37,6 +39,7 @@ public class XSDEditorPlugin extends AbstractUIPlugin
   public static final String EXTENSIONS_SCHEMAS_EXTENSIONID = "org.eclipse.wst.xsd.ui.extensionCategories"; //$NON-NLS-1$
   private static final String DEPRECATED_EXTENSIONS_SCHEMAS_EXTENSIONID = "org.eclipse.wst.xsd.ui.ExtensionsSchemasDescription"; //$NON-NLS-1$  
   public final static String DEFAULT_TARGET_NAMESPACE = "http://www.example.org"; //$NON-NLS-1$
+  
   
 	//The shared instance.
 	private static XSDEditorPlugin plugin;
@@ -334,4 +337,33 @@ public class XSDEditorPlugin extends AbstractUIPlugin
     }
     return nodeCustomizationRegistry;
   }
+  
+  private static final String PRODUCT_CUSTOMIZATION_PROVIDER_PLUGIN_ID = "org.eclipse.wst.xsd.ui.productCustomizationProviderPluginId"; //$NON-NLS-1$
+  private static final String PRODUCT_CUSTOMIZATION_PROVIDER_CLASS_NAME = "org.eclipse.wst.xsd.ui.productCustomizationProviderClassName"; //$NON-NLS-1$
+  
+  private static ProductCustomizationProvider productCustomizationProvider;
+  private static boolean productCustomizationProviderInitialized = false;
+  
+  public ProductCustomizationProvider getProductCustomizationProvider()
+  {
+    if (!productCustomizationProviderInitialized)
+    {
+      productCustomizationProviderInitialized = true;
+      String pluginName = getPreferenceStore().getString(PRODUCT_CUSTOMIZATION_PROVIDER_PLUGIN_ID);
+      String className = getPreferenceStore().getString(PRODUCT_CUSTOMIZATION_PROVIDER_CLASS_NAME);
+      if (pluginName != null && className != null)
+      {
+        try
+        {
+          Bundle bundle = Platform.getBundle(pluginName);
+          Class clazz = bundle.loadClass(className);
+          productCustomizationProvider = (ProductCustomizationProvider)clazz.newInstance();
+        }          
+        catch (Exception e)
+        {          
+        }
+      }
+    }  
+    return productCustomizationProvider;
+  } 
 }

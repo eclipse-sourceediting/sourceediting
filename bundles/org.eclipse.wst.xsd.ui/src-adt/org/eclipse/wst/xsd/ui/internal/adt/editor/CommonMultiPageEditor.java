@@ -1,22 +1,28 @@
 package org.eclipse.wst.xsd.ui.internal.adt.editor;
 
+import java.text.Collator;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.EventObject;
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.draw2d.ColorConstants;
+import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gef.DefaultEditDomain;
 import org.eclipse.gef.EditPartFactory;
+import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.MouseWheelHandler;
 import org.eclipse.gef.MouseWheelZoomHandler;
 import org.eclipse.gef.commands.CommandStack;
 import org.eclipse.gef.commands.CommandStackListener;
+import org.eclipse.gef.editparts.LayerManager;
 import org.eclipse.gef.editparts.ZoomManager;
 import org.eclipse.gef.ui.actions.ActionRegistry;
 import org.eclipse.gef.ui.actions.UpdateAction;
@@ -27,6 +33,9 @@ import org.eclipse.gef.ui.parts.SelectionSynchronizer;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.BusyIndicator;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.events.SelectionEvent;
@@ -53,18 +62,21 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.ide.IGotoMarker;
+import org.eclipse.ui.internal.help.WorkbenchHelpSystem;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.MultiPageEditorPart;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.ui.views.properties.tabbed.ITabbedPropertySheetPageContributor;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
+import org.eclipse.wst.xml.ui.internal.editor.IHelpContextIds;
+import org.eclipse.wst.xsd.ui.internal.adt.design.DesignViewerGraphicConstants;
 import org.eclipse.wst.xsd.ui.internal.adt.design.FlatCCombo;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.RootEditPart;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 
 public abstract class CommonMultiPageEditor extends MultiPageEditorPart implements IResourceChangeListener, CommandStackListener, ITabbedPropertySheetPageContributor, IPropertyListener, IEditorModeListener
 {
-  public static int SOURCE_PAGE_INDEX = 1, DESIGN_PAGE_INDEX = 0;
+  public static int SOURCE_PAGE_INDEX = 1, DESIGN_PAGE_INDEX = 0;  
   
   protected IContentOutlinePage fOutlinePage;
   protected DefaultEditDomain editDomain;
@@ -75,6 +87,7 @@ public abstract class CommonMultiPageEditor extends MultiPageEditorPart implemen
   protected ScrollingGraphicalViewer graphicalViewer;
   protected EditorModeManager editorModeManager;
   protected FlatCCombo modeCombo;
+  private EditorModeAndCustomizedName[] editorModeAndCustomizedNames;
   protected Composite toolbar;
   protected ModeComboListener modeComboListener;
   protected int maxLength = 0;
@@ -82,8 +95,30 @@ public abstract class CommonMultiPageEditor extends MultiPageEditorPart implemen
   public CommonMultiPageEditor()
   {
     super();
-    editDomain = new DefaultEditDomain(this);
-
+    editDomain = new DefaultEditDomain(this)
+    {
+      public void mouseDown(MouseEvent mouseEvent, EditPartViewer viewer)
+      {
+        boolean eatTheEvent = false;      
+        LayerManager manager = (LayerManager)viewer.getEditPartRegistry().get(LayerManager.ID);     
+        IFigure layer = manager.getLayer(DesignViewerGraphicConstants.SCALED_HANDLE_LAYER);
+        if (layer != null)
+        {  
+          Point p = new Point(mouseEvent.x, mouseEvent.y);
+          layer.translateToRelative(p);
+          IFigure figure = layer.findFigureAt(p);     
+          if (figure != null && figure != layer)
+          {
+            // we eat this selection event!
+            eatTheEvent = true;
+          } 
+        }
+        if (!eatTheEvent)
+        {
+          super.mouseDown(mouseEvent, viewer);
+        }  
+      }      
+    };
   }
 
   /* (non-Javadoc)
@@ -509,7 +544,7 @@ public abstract class CommonMultiPageEditor extends MultiPageEditorPart implemen
   protected abstract EditPartFactory getEditPartFactory();
   protected abstract void initializeGraphicalViewer();
 
-  private EditorModeManager getEditorModeManager()
+  protected EditorModeManager getEditorModeManager()
   {
     if (editorModeManager == null)
     {
@@ -523,9 +558,30 @@ public abstract class CommonMultiPageEditor extends MultiPageEditorPart implemen
   protected abstract EditorModeManager createEditorModeManager();
   
   
+  private String getEditModeName(EditorMode editorMode, ProductCustomizationProvider productCustomizationProvider)
+  {
+    String result = editorMode.getDisplayName();
+    if (productCustomizationProvider != null)
+    {
+      String customizedName = productCustomizationProvider.getEditorModeDisplayName(editorMode.getId());
+      if (customizedName != null)
+      {
+        result = customizedName;
+      }  
+    } 
+    return result;
+  }
+  
+  class EditorModeAndCustomizedName
+  {
+    EditorMode mode;
+    String name;
+  }
+  
   protected void createViewModeToolbar(Composite parent)
   {
     EditorModeManager manager = (EditorModeManager)getAdapter(EditorModeManager.class);
+    ProductCustomizationProvider productCustomizationProvider = (ProductCustomizationProvider)getAdapter(ProductCustomizationProvider.class);
     EditorMode [] modeList = manager.getModes();
     
     int modeListLength = modeList.length;
@@ -555,19 +611,35 @@ public abstract class CommonMultiPageEditor extends MultiPageEditorPart implemen
 
       modeCombo = new FlatCCombo(toolbar, SWT.FLAT);
       modeCombo.setEditable(false);
-      modeCombo.setText(modeList[0].getDisplayName());
-
+      modeCombo.setText(getEditModeName(manager.getCurrentMode(), productCustomizationProvider)); 
       GC gc = new GC(modeCombo);
       int textWidth = 0;
       maxLength = 0;
+      
       // populate combo with modes
-      for (int i = 0; i < modeListLength; i++ )
+      editorModeAndCustomizedNames = new EditorModeAndCustomizedName[modeListLength];      
+      for (int i = 0; i < modeListLength; i++)
+      {  
+        EditorModeAndCustomizedName entry = new EditorModeAndCustomizedName();
+        editorModeAndCustomizedNames[i] = entry;
+        entry.name = getEditModeName(modeList[i], productCustomizationProvider);
+        entry.mode = modeList[i];
+      }        
+      Arrays.sort(editorModeAndCustomizedNames, new Comparator()
       {
-        String modeName = modeList[i].getDisplayName(); 
-        modeCombo.add(modeName);
-
-        maxLength = Math.max (gc.stringExtent(modeName).x, maxLength);
-        int approxWidthOfStrings = Math.max (gc.stringExtent(modeName).x, textWidth);
+        public int compare(Object arg0, Object arg1)
+        {
+          EditorModeAndCustomizedName a = (EditorModeAndCustomizedName)arg0;
+          EditorModeAndCustomizedName b = (EditorModeAndCustomizedName)arg1;        
+          return Collator.getInstance().compare(a.name, b.name);
+        }
+      });
+      for (int i = 0; i < editorModeAndCustomizedNames.length; i++ )
+      {
+        EditorModeAndCustomizedName entry = editorModeAndCustomizedNames[i];
+        modeCombo.add(entry.name);
+        maxLength = Math.max (gc.stringExtent(entry.name).x, maxLength);
+        int approxWidthOfStrings = Math.max (gc.stringExtent(entry.name).x, textWidth);
         if (approxWidthOfStrings > maxLength)
           maxLength = approxWidthOfStrings;
       }
@@ -588,6 +660,21 @@ public abstract class CommonMultiPageEditor extends MultiPageEditorPart implemen
 //    hyperlink.setImage(WorkbenchImages.getImageRegistry().get(IWorkbenchGraphicConstants.IMG_ETOOL_HELP_CONTENTS));
       hyperlink.setToolTipText(Messages._UI_HOVER_VIEW_MODE_DESCRIPTION);
       hyperlink.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_CENTER));
+      hyperlink.setData(WorkbenchHelpSystem.HELP_KEY, IHelpContextIds.CLEANUP_XML_HELPID);
+      hyperlink.addMouseListener(new MouseAdapter()
+      {
+        public void mouseDown(MouseEvent e)
+        {
+          // This may take a while, so use the busy indicator
+          BusyIndicator.showWhile(null, new Runnable() 
+          {
+            public void run() 
+            {
+              PlatformUI.getWorkbench().getHelpSystem().displayDynamicHelp();
+            }
+          });
+        }
+      });      
     }
   }
   
@@ -605,11 +692,14 @@ public abstract class CommonMultiPageEditor extends MultiPageEditorPart implemen
     public void widgetSelected(SelectionEvent e)
     {
       if (e.widget == modeCombo)
-      {
+      {        
         EditorModeManager manager = (EditorModeManager)getAdapter(EditorModeManager.class);
         EditorMode [] modeList = manager.getModes();
         if (modeList.length >= 1)
-          manager.setCurrentMode(modeList[modeCombo.getSelectionIndex()]);
+        {
+          EditorModeAndCustomizedName entry = editorModeAndCustomizedNames[modeCombo.getSelectionIndex()];
+          manager.setCurrentMode(entry.mode);
+        }  
       }
     }
   }

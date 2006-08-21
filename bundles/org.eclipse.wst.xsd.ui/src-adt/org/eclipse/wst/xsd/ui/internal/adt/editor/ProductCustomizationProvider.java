@@ -8,14 +8,10 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.xsd.ui.internal.adt.design;
+package org.eclipse.wst.xsd.ui.internal.adt.editor;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.widgets.Display;
-
-public interface DesignViewerGraphicConstants
+public abstract class ProductCustomizationProvider
 {
-  public static final String SCALED_HANDLE_LAYER = "Scaled Handle Layer"; //$NON-NLS-1$   
-  public final static Font  smallFont = new Font(Display.getCurrent(), "Tahoma", 6, SWT.NONE); //$NON-NLS-1$
+  public abstract boolean isEditorModeApplicable(String id);
+  public abstract String getEditorModeDisplayName(String id);
 }

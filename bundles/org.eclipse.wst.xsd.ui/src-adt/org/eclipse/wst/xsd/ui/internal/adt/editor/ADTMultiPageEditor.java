@@ -21,6 +21,7 @@ import org.eclipse.gef.ui.parts.GraphicalViewerImpl;
 import org.eclipse.gef.ui.parts.ScrollingGraphicalViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
@@ -36,7 +37,6 @@ import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.ADTEditPartFactory;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.BackToSchemaEditPart;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IModel;
 import org.eclipse.wst.xsd.ui.internal.adt.outline.ADTContentOutlinePage;
-import org.eclipse.wst.xsd.ui.internal.adt.outline.ADTContentOutlineProvider;
 import org.eclipse.wst.xsd.ui.internal.adt.outline.ADTLabelProvider;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 
@@ -127,8 +127,8 @@ public abstract class ADTMultiPageEditor extends CommonMultiPageEditor
     {
       ADTContentOutlinePage outlinePage = new ADTContentOutlinePage(this);
       //outlinePage.getTreeViewer().removeF(filter);
-      ADTContentOutlineProvider adtContentProvider = new ADTContentOutlineProvider();
-      outlinePage.setContentProvider(adtContentProvider);
+      ITreeContentProvider provider = (ITreeContentProvider)getEditorModeManager().getCurrentMode().getOutlineProvider();
+      outlinePage.setContentProvider(provider);
       ADTLabelProvider adtLabelProvider = new ADTLabelProvider();
       outlinePage.setLabelProvider(adtLabelProvider);
       outlinePage.setModel(getModel());
