@@ -100,18 +100,21 @@ public class LinkElementAdapter extends AbstractStyleSheetAdapter {
 		ICSSModel model = getExistingModel();
 		if (this.replaceModel) {
 			ICSSModel oldModel = model;
+			try {
+				model = retrieveModel();
+				setModel(model);
 
-			model = retrieveModel();
-			setModel(model);
-
-			// release old model
-			if (oldModel != null) {
-				// get ModelProvideAdapter
-				IModelProvideAdapter adapter = (IModelProvideAdapter) ((INodeNotifier) getElement()).getAdapterFor(IModelProvideAdapter.class);
-				adapter.modelRemoved(oldModel);
-
-				oldModel.releaseFromRead();
-
+				// release old model
+				if (oldModel != null) {
+					// get ModelProvideAdapter
+					IModelProvideAdapter adapter = (IModelProvideAdapter) ((INodeNotifier) getElement()).getAdapterFor(IModelProvideAdapter.class);
+					if (adapter != null)
+						adapter.modelRemoved(oldModel);
+				}
+			}
+			finally {
+				if (oldModel != null)
+					oldModel.releaseFromRead();
 			}
 			this.replaceModel = false;
 		}
