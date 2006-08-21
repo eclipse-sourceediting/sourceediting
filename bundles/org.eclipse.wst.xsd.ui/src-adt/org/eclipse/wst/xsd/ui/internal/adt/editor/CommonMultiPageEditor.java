@@ -655,9 +655,8 @@ public abstract class CommonMultiPageEditor extends MultiPageEditorPart implemen
       ImageHyperlink hyperlink = new ImageHyperlink(toolbar, SWT.FLAT);
       hyperlink.setBackground(ColorConstants.white);
       // https://bugs.eclipse.org/bugs/show_bug.cgi?id=154457
-      Image image = XSDEditorPlugin.getDefault().getImage("icons/dtool/help_contents.gif");
+      Image image = XSDEditorPlugin.getDefault().getIconImage("etool16/help_contents");
       hyperlink.setImage(image);
-//    hyperlink.setImage(WorkbenchImages.getImageRegistry().get(IWorkbenchGraphicConstants.IMG_ETOOL_HELP_CONTENTS));
       hyperlink.setToolTipText(Messages._UI_HOVER_VIEW_MODE_DESCRIPTION);
       hyperlink.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_CENTER));
       hyperlink.setData(WorkbenchHelpSystem.HELP_KEY, IHelpContextIds.CLEANUP_XML_HELPID);
