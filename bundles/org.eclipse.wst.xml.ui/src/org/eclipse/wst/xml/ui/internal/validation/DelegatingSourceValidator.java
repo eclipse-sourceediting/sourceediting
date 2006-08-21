@@ -125,7 +125,7 @@ public abstract class DelegatingSourceValidator implements IValidator {
 			// store the text in a byte array; make a full copy to ease
 			// any threading problems
 			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-			byte[] byteArray = null;
+			byte[] byteArray = new byte[0];
 			try {
 				int docLength = fDocument.getLength();
 				/*
