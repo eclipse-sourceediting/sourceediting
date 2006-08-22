@@ -111,8 +111,10 @@ public class XSDSectionLabelProvider extends LabelProvider
 
           if (isReference)
           {
-            sb.append(" ");//$NON-NLS-1$
-            sb.append(Messages.UI_PAGE_HEADING_REFERENCE);
+            sb.append(" ref");//$NON-NLS-1$
+            // This string is not easily translatable to other languages.
+            // For now, make it english-only since we use the element tag as the title anyway
+//            sb.append(Messages.UI_PAGE_HEADING_REFERENCE);
           }
 
           IWorkbench workbench = PlatformUI.getWorkbench();
