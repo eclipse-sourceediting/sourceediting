@@ -57,6 +57,10 @@
 			<property
 				name="plugin-path"
 				value="${eclipse-home}/plugins/${plugin-name}" />
+			<property
+				name="workspace"
+				value="${eclipse-home}/junitworkspace-${plugin-name}" />
+		    
 		</ant>
 	</target>
 

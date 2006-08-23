@@ -24,6 +24,10 @@
 			<property name="data-dir" value="${workspace}" />
 			<property name="plugin-name" value="${plugin-name}" />
 			<property name="classname" value="org.eclipse.jst.jsp.ui.tests.JSPUITestSuite" />
+			<property
+				name="workspace"
+				value="${eclipse-home}/junitworkspace-${plugin-name}" />
+
 		</ant>
 	</target>
 
