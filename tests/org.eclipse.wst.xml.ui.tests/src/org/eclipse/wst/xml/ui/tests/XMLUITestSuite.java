@@ -34,5 +34,6 @@ public class XMLUITestSuite extends TestSuite {
 		addTest((new TestSuite(TestPropertySheetConfiguration.class)));
 		addTestSuite(TestDelegatingSourceValidatorForXML.class);
 		addTestSuite(TestMarkupValidator.class);
+		addTestSuite(TestReconcilerXML.class);
 	}
 }
