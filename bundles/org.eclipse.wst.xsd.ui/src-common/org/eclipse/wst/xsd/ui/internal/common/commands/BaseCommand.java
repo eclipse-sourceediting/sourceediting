@@ -65,7 +65,8 @@ public class BaseCommand extends Command
   
   protected void endRecording()
   {
-    domNode.getModel().endRecording(this);
+    if (domNode != null)
+      domNode.getModel().endRecording(this);
   }
   
   protected String getUndoDescription() {
