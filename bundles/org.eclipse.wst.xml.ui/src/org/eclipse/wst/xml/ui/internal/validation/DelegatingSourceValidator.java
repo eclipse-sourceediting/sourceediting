@@ -1,8 +1,6 @@
 package org.eclipse.wst.xml.ui.internal.validation;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -14,7 +12,6 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.IDocument;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
@@ -91,12 +88,12 @@ public abstract class DelegatingSourceValidator implements IValidator {
 
 	// My Implementation of IHelper
 	class MyHelper implements IProjectValidationContext {
-		IDocument fDocument;
+		InputStream inputStream;
 
 		IFile file;
 
-		public MyHelper(IDocument document, IFile file) {
-			this.fDocument = document;
+		public MyHelper(InputStream inputStream, IFile file) {
+			this.inputStream = inputStream;
 			this.file = file;
 		}
 
@@ -105,50 +102,17 @@ public abstract class DelegatingSourceValidator implements IValidator {
 		}
 
 		public Object loadModel(String symbolicName, Object[] parms) {
-			return loadModel(symbolicName);
-		}
-
-		public Object loadModel(String symbolicName) {
 			if (symbolicName.equals("getFile")) { //$NON-NLS-1$
 				return file;
-			}
-			else if (symbolicName.equals("inputStream")) { //$NON-NLS-1$
-				return createInputStream();
-			}
-			else if (symbolicName.equals("text")) { //$NON-NLS-1$
-				return fDocument.get();
 			}
 			return null;
 		}
 
-		private InputStream createInputStream() {
-			// store the text in a byte array; make a full copy to ease
-			// any threading problems
-			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-			byte[] byteArray = new byte[0];
-			try {
-				int docLength = fDocument.getLength();
-				/*
-				 * note: this loop is incorrect for the last mod of 1024, but
-				 * the BasicStructuredDocument will "fix" it at runtime
-				 */
-				for(int i = 0; i < docLength; i = i+1024 < docLength ? i+1024 : docLength) {
-					String docString = fDocument.get(i, 1024);
-					byteArray = docString.getBytes("UTF-8");
-					outputStream.write(byteArray);
-				}
-				//byteArray = xmlModel.getStructuredDocument().get().getBytes("UTF-8");
-			} catch (UnsupportedEncodingException e) {
-				// Not likely to happen
-				byteArray = fDocument.get().getBytes();
+		public Object loadModel(String symbolicName) {
+			if (symbolicName.equals("inputStream")) { //$NON-NLS-1$
+				return inputStream;
 			}
-			catch(BadLocationException e){
-				
-			}
-			catch(IOException e){
-				
-			}
-			return new ByteArrayInputStream(byteArray);
+			return null;
 		}
 
 		public String[] getURIs() {
@@ -227,11 +191,21 @@ public abstract class DelegatingSourceValidator implements IValidator {
 			try {
 				IDOMDocument document = xmlModel.getDocument();
 
+				// store the text in a byte array; make a full copy to ease
+				// any threading problems
+				byte[] byteArray;
+				try {
+					byteArray = xmlModel.getStructuredDocument().get().getBytes("UTF-8");
+				} catch (UnsupportedEncodingException e) {
+					// Not likely to happen
+					byteArray = xmlModel.getStructuredDocument().get().getBytes();
+				}
+
 				if (isDelegateValidatorEnabled(file)) {
 					IValidator validator = getDelegateValidator();
 					if (validator != null) {
 						// Validate the file:
-						IValidationContext vHelper = new MyHelper(xmlModel.getStructuredDocument(), file);
+						IValidationContext vHelper = new MyHelper(new ByteArrayInputStream(byteArray), file);
 						MyReporter vReporter = new MyReporter();
 						if (validator instanceof IValidatorJob) {
 							((IValidatorJob) validator).validateInJob(vHelper, vReporter);
