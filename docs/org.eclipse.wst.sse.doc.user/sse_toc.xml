@@ -11,7 +11,9 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/ -->
 <toc label="Structured text editors" topics="topics/csrcedt004.html">
+   <topic label="Structured text editors" href="topics/csrcedt004.html">
       <topic label="Editing text coded in markup languages " href="topics/tsrcedt000.html">
+         <topic label="Source and batch validation" href="topics/cvalidate.html"/>
          <topic label="Setting preferences for structured text editors" href="topics/tsrcedt025.html">
             <topic label="Setting annotation preferences for markup languages" href="topics/tsrcedt001.html"/>
          </topic>
@@ -19,7 +21,10 @@
             <topic label="Content assist" href="topics/csrcedt006.html"/>
             <topic label="Making content assist work for JSP files" href="topics/tsrcedt023.html"/>
          </topic>
+         <topic label="Associating editors with file types" href="topics/tcontenttype.html"/>
+         <topic label="File Encoding" href="topics/cencoding.html"/>
          <topic label="Searching or finding text within a file" href="topics/tsrcedt007.html"/>
+         <topic label="Checking spelling" href="topics/tsrcedt010.html"/>
          <topic label="Adding and removing markup language templates - overview" href="topics/tsrcedt027.html">
             <topic label="Adding and removing HTML templates" href="topics/tsrcedt024.html"/>
             <topic label="Adding and removing JSP templates" href="topics/tsrcedt028.html"/>
@@ -33,4 +38,5 @@
             <topic label="Deleting or hiding snippet items or drawers" href="topics/tsrcedt016.html"/>
          </topic>
       </topic>
+   </topic>
 </toc>
