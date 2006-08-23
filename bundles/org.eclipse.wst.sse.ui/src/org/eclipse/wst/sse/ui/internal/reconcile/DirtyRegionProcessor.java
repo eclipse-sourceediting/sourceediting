@@ -211,18 +211,20 @@ public class DirtyRegionProcessor extends Job implements IReconciler, IReconcile
 	 * @param resource
 	 */
 	private synchronized void addRequest(DirtyRegion newDirtyRegion) {
+		// NOTE: This method is called a lot so make sure it's fast
 		List dirtyRegionQueue = getDirtyRegionQueue();
-		// if we already have a request which contains the new request,
-		// discare the new request
-		int size = dirtyRegionQueue.size();
-		for (int i = 0; i < size; i++) {
-			if (contains((DirtyRegion) dirtyRegionQueue.get(i), newDirtyRegion))
-				return;
-		}
-		// if new request is contains any existing requests,
-		// remove those
 		for (Iterator it = dirtyRegionQueue.iterator(); it.hasNext();) {
-			if (contains(newDirtyRegion, (DirtyRegion) it.next()))
+			// go through list of existing dirty regions and check if any
+			// dirty regions need to be discarded
+			DirtyRegion currentExisting = (DirtyRegion) it.next();
+			DirtyRegion outer = getOuterRegion(currentExisting, newDirtyRegion);
+			// if we already have a request which contains the new request,
+			// discard the new request
+			if (outer == currentExisting)
+				return;
+			// if new request contains any existing requests,
+			// remove those
+			if (outer == newDirtyRegion)
 				it.remove();
 		}
 		dirtyRegionQueue.add(newDirtyRegion);
@@ -273,14 +275,31 @@ public class DirtyRegionProcessor extends Job implements IReconciler, IReconcile
 	}
 
 	/**
+	 * Used to determine if one dirty region contains the other and if so,
+	 * which is the one that contains it.
+	 * 
+	 * @param root
+	 * @param possible
+	 * @return the outer dirty region if it contains the other dirty region,
+	 *         null otherwise
+	 */
+	protected DirtyRegion getOuterRegion(DirtyRegion root, DirtyRegion possible) {
+		DirtyRegion outer = null;
+		if (isContained(root, possible))
+			outer = root;
+		else if (isContained(possible, root))
+			outer = possible;
+		return outer;
+	}
+
+	/**
 	 * Used to determine of a "possible" dirty region can be discarded in
 	 * favor of using just the "root" dirty region.
 	 * 
 	 * @return if the root dirty region contains possible, return true,
 	 *         otherwise return false
 	 */
-	protected boolean contains(DirtyRegion root, DirtyRegion possible) {
-
+	private boolean isContained(DirtyRegion root, DirtyRegion possible) {
 		int rootStart = root.getOffset();
 		int rootEnd = rootStart + root.getLength();
 		int possStart = possible.getOffset();
