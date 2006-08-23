@@ -70,6 +70,7 @@ public class TestModelIncludes extends TestCase {
 
 			Element element = (Element) model.getIndexedRegion(75);
 			CMElementDeclaration ed = ModelQueryUtil.getModelQuery(model).getCMElementDeclaration(element);
+			assertNotNull("no (TLD) element declaration found for " + element.getNodeName(), ed);
 			assertTrue("not a wrapping content model element declaration: " + ed.getNodeName(), ed instanceof CMNodeWrapper);
 			assertTrue("not a taglib content model element declaration: " + ed.getNodeName(), ((CMNodeWrapper) ed).getOriginNode() instanceof TLDElementDeclaration);
 			String tagClassName = ((TLDElementDeclaration) ((CMNodeWrapper) ed).getOriginNode()).getTagclass();
