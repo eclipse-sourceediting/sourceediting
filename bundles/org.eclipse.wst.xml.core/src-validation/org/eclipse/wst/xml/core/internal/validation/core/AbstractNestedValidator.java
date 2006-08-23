@@ -25,7 +25,6 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.validation.internal.core.Message;
 import org.eclipse.wst.validation.internal.core.ValidationException;
 import org.eclipse.wst.validation.internal.provisional.core.IMessage;
@@ -232,7 +231,7 @@ public abstract class AbstractNestedValidator implements IValidatorJob
    */
   private void validate(IFile file, InputStream inputstream, IReporter reporter, NestedValidatorContext context)
   {  
-	Message message = new LocalizedMessage(IMessage.LOW_SEVERITY, NLS.bind(getValidatorName(), new String[]{file.getFullPath().toString()}));
+	Message message = new LocalizedMessage(IMessage.LOW_SEVERITY, file.getFullPath().toString());
     reporter.displaySubtask(this, message);
     
 	IPath path = file.getLocation();
