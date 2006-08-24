@@ -131,7 +131,8 @@ public class TestReconcilerXML extends TestCase {
 	public void testWellFormed() {
 		IDocument doc = (IDocument) fEditor.getAdapter(IDocument.class);
 		doc.set("<html><body><h1>Title</h1></body></html>");
-		IAnnotationModel annoModel = ((ITextEditor) fEditor).getDocumentProvider().getAnnotationModel(fEditor.getEditorInput());
+		ITextEditor textEditor = (ITextEditor) fEditor.getAdapter(ITextEditor.class);
+		IAnnotationModel annoModel = textEditor.getDocumentProvider().getAnnotationModel(fEditor.getEditorInput());
 		DefaultMarkerAnnotationAccess annotationAccess = new DefaultMarkerAnnotationAccess();
 
 		// verify well-formed xml
@@ -158,7 +159,8 @@ public class TestReconcilerXML extends TestCase {
 	public void testIllFormedNoCloseBracket() {
 		IDocument doc = (IDocument) fEditor.getAdapter(IDocument.class);
 		doc.set("<html><body><h1>Title</h1></body></html>");
-		IAnnotationModel annoModel = ((ITextEditor) fEditor).getDocumentProvider().getAnnotationModel(fEditor.getEditorInput());
+		ITextEditor textEditor = (ITextEditor) fEditor.getAdapter(ITextEditor.class);
+		IAnnotationModel annoModel = textEditor.getDocumentProvider().getAnnotationModel(fEditor.getEditorInput());
 		DefaultMarkerAnnotationAccess annotationAccess = new DefaultMarkerAnnotationAccess();
 
 		// verify ill-formed xml
@@ -191,7 +193,8 @@ public class TestReconcilerXML extends TestCase {
 	public void testIllFormedNoAttrValue() {
 		IDocument doc = (IDocument) fEditor.getAdapter(IDocument.class);
 		doc.set("<html><body><h1>Title</h1></body></html>");
-		IAnnotationModel annoModel = ((ITextEditor) fEditor).getDocumentProvider().getAnnotationModel(fEditor.getEditorInput());
+		ITextEditor textEditor = (ITextEditor) fEditor.getAdapter(ITextEditor.class);
+		IAnnotationModel annoModel = textEditor.getDocumentProvider().getAnnotationModel(fEditor.getEditorInput());
 		DefaultMarkerAnnotationAccess annotationAccess = new DefaultMarkerAnnotationAccess();
 
 		// verify ill-formed xml
