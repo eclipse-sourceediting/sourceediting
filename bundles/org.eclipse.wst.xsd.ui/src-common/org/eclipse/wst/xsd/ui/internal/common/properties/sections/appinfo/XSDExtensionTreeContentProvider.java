@@ -24,28 +24,33 @@ public class XSDExtensionTreeContentProvider extends DOMExtensionTreeContentProv
       XSDAnnotation xsdAnnotation = XSDCommonUIUtils.getInputXSDAnnotation(component, false);
       if (xsdAnnotation != null)
       {
-        List appInfoList = xsdAnnotation.getApplicationInformation();
-        Element appInfoElement = null;
-        if (appInfoList.size() > 0)
+        // Bug 137856 - Extension page of properties shouldn't display imported elements
+        // Added this if statement
+        if (xsdAnnotation.getSchema() == component.getSchema())
         {
-          appInfoElement = (Element) appInfoList.get(0);
-        }
-        if (appInfoElement != null)
-        {
-          for (Iterator it = appInfoList.iterator(); it.hasNext();)
+          List appInfoList = xsdAnnotation.getApplicationInformation();
+          Element appInfoElement = null;
+          if (appInfoList.size() > 0)
           {
-            Object obj = it.next();
-            if (obj instanceof Element)
+            appInfoElement = (Element) appInfoList.get(0);
+          }
+          if (appInfoElement != null)
+          {
+            for (Iterator it = appInfoList.iterator(); it.hasNext();)
             {
-              Element appInfo = (Element) obj;
-              NodeList nodeList = appInfo.getChildNodes();
-              int length = nodeList.getLength();
-              for (int i = 0; i < length; i++)
+              Object obj = it.next();
+              if (obj instanceof Element)
               {
-                Node node = nodeList.item(i);
-                if (node instanceof Element)
+                Element appInfo = (Element) obj;
+                NodeList nodeList = appInfo.getChildNodes();
+                int length = nodeList.getLength();
+                for (int i = 0; i < length; i++)
                 {
-                  elementsAndAttributes.add(node);
+                  Node node = nodeList.item(i);
+                  if (node instanceof Element)
+                  {
+                    elementsAndAttributes.add(node);
+                  }
                 }
               }
             }
