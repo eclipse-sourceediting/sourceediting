@@ -78,10 +78,14 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
         
         ( (AddRemoveFacetsWizard) getWizard() ).syncWithPresetsModel( ppanel.getPresetsCombo() );
 	}
-
+	
 	public static boolean launchNewRuntimeWizard(Shell shell, IDataModel model) {
+		return launchNewRuntimeWizard(shell, model, null);
+	}
+	
+	public static boolean launchNewRuntimeWizard(Shell shell, IDataModel model, String serverTypeID) {
 		DataModelPropertyDescriptor[] preAdditionDescriptors = model.getValidPropertyDescriptors(FACET_RUNTIME);
-		boolean isOK = ServerUIUtil.showNewRuntimeWizard(shell, "", ""); //$NON-NLS-1$  //$NON-NLS-2$
+		boolean isOK = ServerUIUtil.showNewRuntimeWizard(shell, serverTypeID, null);
 		if (isOK && model != null) {
 
 			DataModelPropertyDescriptor[] postAdditionDescriptors = model.getValidPropertyDescriptors(FACET_RUNTIME);
@@ -103,7 +107,15 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
 		}
 		return isOK;
 	}
-
+	
+	public boolean internalLaunchNewRuntimeWizard(Shell shell, IDataModel model) {
+		return launchNewRuntimeWizard(shell, model, getModuleTypeID());
+	}
+	
+	protected String getModuleTypeID() {
+		return null;
+	}
+	
 	protected Combo serverTargetCombo;
 	protected NewProjectGroup projectNameGroup;
 
@@ -122,7 +134,7 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
 		newServerTargetButton.setText(ResourceHandler.NewDotDotDot);
 		newServerTargetButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				if (!launchNewRuntimeWizard(getShell(), model)) {
+				if (!internalLaunchNewRuntimeWizard(getShell(), model)) {
 					//Bugzilla 135288
 					//setErrorMessage(ResourceHandler.InvalidServerTarget);
 				}

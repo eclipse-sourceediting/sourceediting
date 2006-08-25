@@ -1,5 +1,6 @@
 package org.eclipse.wst.web.ui.internal.wizards;
 
+import org.eclipse.wst.common.componentcore.internal.util.IModuleConstants;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
 import org.eclipse.wst.web.internal.ResourceHandler;
 import org.eclipse.wst.web.ui.internal.WSTWebUIPlugin;
@@ -12,6 +13,10 @@ public class SimpleWebProjectFirstPage extends DataModelFacetCreationWizardPage 
 		setTitle(ResourceHandler.StaticWebProjectWizardBasePage_Page_Title); 
 		setImageDescriptor(WSTWebUIPlugin.getDefault().getImageDescriptor("newwprj_wiz")); //$NON-NLS-1$
 		setInfopopID(IWstWebUIContextIds.NEW_STATIC_WEB_PROJECT_PAGE1);
+	}
+	
+	protected String getModuleTypeID() {
+		return IModuleConstants.WST_WEB_MODULE;
 	}
 
 }
