@@ -206,6 +206,12 @@ public class XSDSchemaSection extends AbstractSection
       try
       {
         doc.getModel().beginRecording(this, XSDEditorPlugin.getXSDString("_UI_NAMESPACE_CHANGE"));
+        
+        if (tnsValue.trim().length() == 0 ) //remove the targetNamespace attribute
+        {
+          xsdSchemaElement.removeAttribute(XSDConstants.TARGETNAMESPACE_ATTRIBUTE);
+          return;
+        }
 
         // Now replace the namespace for the xmlns entry
         for (Iterator i = namespaceInfoList.iterator(); i.hasNext();)
