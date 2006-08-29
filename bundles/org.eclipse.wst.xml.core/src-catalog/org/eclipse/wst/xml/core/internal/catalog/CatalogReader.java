@@ -20,6 +20,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
 import org.eclipse.wst.xml.core.internal.Logger;
 import org.eclipse.wst.xml.core.internal.XMLCoreMessages;
 import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalogElement;
@@ -92,7 +93,7 @@ public final class CatalogReader
 		    String key = attributes.getValue("", CompatabilityConstants.ATT_ID);   		     //$NON-NLS-1$
 	        catalogEntry.setKey(key);
 	        String entryUri = attributes.getValue("", CompatabilityConstants.ATT_URI);    //$NON-NLS-1$
-	        catalogEntry.setURI(entryUri);  
+	        catalogEntry.setURI(URIHelper.ensureURIProtocolFormat(entryUri));  
 	        String webURL = attributes.getValue("", CompatabilityConstants.ATT_WEB_URL); //$NON-NLS-1$
 			if (webURL != null)
 			{
@@ -154,7 +155,7 @@ public final class CatalogReader
       {
         CatalogEntry catalogEntry = (CatalogEntry) catalogElement;
         catalogEntry.setKey(key); 
-        catalogEntry.setURI(entryURI);     
+        catalogEntry.setURI(URIHelper.ensureURIProtocolFormat(entryURI));     
       }
       // process any other attributes
       for (int j = 0; j < attributes.getLength(); j++)
