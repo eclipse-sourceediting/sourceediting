@@ -242,18 +242,19 @@ class ProjectDescription {
 	 * A brief representation of the information in a TLD.
 	 */
 	static class TaglibInfo {
-		public TaglibInfo() {
-			super();
-		}
-
 		// extract only when asked?
 		String description;
+
 		float jspVersion;
 		String largeIcon;
 		String shortName;
 		String smallIcon;
 		String tlibVersion;
 		String uri;
+
+		public TaglibInfo() {
+			super();
+		}
 
 		public String toString() {
 			return "TaglibInfo|" + shortName + "|" + tlibVersion + "|" + smallIcon + "|" + largeIcon + "|" + jspVersion + "|" + uri + "|" + description;
@@ -433,13 +434,20 @@ class ProjectDescription {
 	private static final String WEB_INF = "WEB-INF"; //$NON-NLS-1$
 	private static final IPath WEB_INF_PATH = new Path(WEB_INF);
 	private static final String WEB_XML = "web.xml"; //$NON-NLS-1$
-	private static final String SAVE_FORMAT_VERSION = "1.0";
+	private static final String SAVE_FORMAT_VERSION = "1.0.1";
+	private static final String BUILDPATH_DIRTY = "BUILDPATH_DIRTY"; //$NON-NLS-1$
 
 	/*
 	 * Records active JARs on the classpath. Taglib descriptors should be
 	 * usable, but the jars by themselves are not.
 	 */
 	Hashtable fClasspathJars;
+
+	/**
+	 * Notes that the build path information is stale. Some operations can now
+	 * be skipped until a resolve/getAvailable call is made.
+	 */
+	boolean fBuildPathIsDirty = false;
 
 	Stack fClasspathProjects = null;
 
@@ -675,6 +683,13 @@ class ProjectDescription {
 		return record;
 	}
 
+	private void ensureUpTodate() {
+		if (fBuildPathIsDirty) {
+			indexClasspath();
+			fBuildPathIsDirty = false;
+		}
+	}
+
 	private TaglibInfo extractInfo(String basePath, InputStream tldContents) {
 		TaglibInfo info = new TaglibInfo();
 		if (tldContents != null) {
@@ -724,6 +739,8 @@ class ProjectDescription {
 	}
 
 	synchronized List getAvailableTaglibRecords(IPath path) {
+		ensureUpTodate();
+
 		Collection implicitReferences = getImplicitReferences(path.toString()).values();
 		List records = new ArrayList(fTLDReferences.size() + fTagDirReferences.size() + fJARReferences.size() + fWebXMLReferences.size());
 		records.addAll(fTLDReferences.values());
@@ -861,6 +878,10 @@ class ProjectDescription {
 	}
 
 	void handleElementChanged(IJavaElementDelta delta) {
+		if (fBuildPathIsDirty) {
+			return;
+		}
+
 		// Logger.log(Logger.INFO_DEBUG, "IJavaElementDelta: " + delta);
 		IJavaElement element = delta.getElement();
 		if (element.getElementType() == IJavaElement.PACKAGE_FRAGMENT_ROOT && ((IPackageFragmentRoot) element).isArchive()) {
@@ -927,6 +948,7 @@ class ProjectDescription {
 
 		IJavaProject javaProject = JavaCore.create(fProject);
 		indexClasspath(javaProject);
+
 		if (_debugIndexTime)
 			Logger.log(Logger.INFO, "indexed " + fProject.getName() + " classpath in " + (System.currentTimeMillis() - time0) + "ms"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
@@ -990,6 +1012,17 @@ class ProjectDescription {
 		}
 	}
 
+	/*
+	 * private void removeClasspathLibrary(String libraryLocation) { JarRecord
+	 * record = (JarRecord) fClasspathJars.remove(libraryLocation); if (record !=
+	 * null) { URLRecord[] records = (URLRecord[])
+	 * record.getURLRecords().toArray(new URLRecord[0]); for (int i = 0; i <
+	 * records.length; i++) {
+	 * fClasspathReferences.remove(records[i].getURI()); }
+	 * TaglibIndex.fireTaglibRecordEvent(new TaglibRecordEvent(record,
+	 * ITaglibRecordEvent.REMOVED)); } }
+	 */
+
 	/**
 	 * @param javaProject
 	 */
@@ -1008,17 +1041,6 @@ class ProjectDescription {
 			fClasspathProjects.pop();
 		}
 	}
-
-	/*
-	 * private void removeClasspathLibrary(String libraryLocation) { JarRecord
-	 * record = (JarRecord) fClasspathJars.remove(libraryLocation); if (record !=
-	 * null) { URLRecord[] records = (URLRecord[])
-	 * record.getURLRecords().toArray(new URLRecord[0]); for (int i = 0; i <
-	 * records.length; i++) {
-	 * fClasspathReferences.remove(records[i].getURI()); }
-	 * TaglibIndex.fireTaglibRecordEvent(new TaglibRecordEvent(record,
-	 * ITaglibRecordEvent.REMOVED)); } }
-	 */
 
 	private String readTextofChild(Node node, String childName) {
 		NodeList children = node.getChildNodes();
@@ -1086,6 +1108,8 @@ class ProjectDescription {
 	 * @return
 	 */
 	ITaglibRecord resolve(String basePath, String reference) {
+		ensureUpTodate();
+
 		ITaglibRecord record = null;
 		String path = null;
 
@@ -1172,8 +1196,10 @@ class ProjectDescription {
 	 */
 	private void restoreReferences() {
 		if (TaglibIndex.ENABLED) {
+			// resources first
 			index();
-
+			// now build path
+			
 			// ================ test reload time ========================
 			boolean restored = false;
 			File savedState = new File(fSaveStateFilename);
@@ -1196,8 +1222,8 @@ class ProjectDescription {
 								lineText = doc.get(line.getOffset(), line.getLength());
 								StringTokenizer toker = new StringTokenizer(lineText, "|");
 								if (toker.hasMoreTokens()) {
-									String referenceType = toker.nextToken();
-									if ("JAR".equalsIgnoreCase(referenceType)) {
+									String tokenType = toker.nextToken();
+									if ("JAR".equalsIgnoreCase(tokenType)) {
 										boolean has11TLD = Boolean.valueOf(toker.nextToken()).booleanValue();
 										// make the rest the libraryLocation
 										String libraryLocation = toker.nextToken();
@@ -1245,7 +1271,7 @@ class ProjectDescription {
 
 										fClasspathJars.put(libraryLocation, libraryRecord);
 									}
-									else if ("URL".equalsIgnoreCase(referenceType)) {
+									else if ("URL".equalsIgnoreCase(tokenType)) {
 										// make the rest the URL
 										String urlString = toker.nextToken();
 										while (toker.hasMoreTokens()) {
@@ -1301,6 +1327,10 @@ class ProjectDescription {
 										}
 										fClasspathReferences.put(urlRecord.getURI(), urlRecord);
 									}
+									// last since only occurs once
+									else if (BUILDPATH_DIRTY.equalsIgnoreCase(tokenType)) {
+										fBuildPathIsDirty = Boolean.valueOf(toker.nextToken()).booleanValue();
+									}
 								}
 							}
 							if (libraryRecord != null) {
@@ -1331,7 +1361,7 @@ class ProjectDescription {
 
 
 			if (!restored) {
-				indexClasspath();
+				setBuildPathIsDirty();
 			}
 		}
 	}
@@ -1341,20 +1371,23 @@ class ProjectDescription {
 	 * description is being cleared and not after every update.
 	 */
 	void saveReferences() {
+		// the build path information is out of date, remember that
 		time0 = System.currentTimeMillis();
 		Writer writer = null;
 
 		/**
 		 * <pre>
-		 *                                 1.0
-		 *                                 Save classpath information (! is field delimiter)
-		 *                                 Jars are saved as &quot;JAR:&quot;+ has11TLD + jar path 
-		 *                                 URLRecords as &quot;URL:&quot;+URL
+		 *                                        1.0
+		 *                                        Save classpath information (| is field delimiter)
+		 *                                        Jars are saved as &quot;JAR:&quot;+ has11TLD + jar path 
+		 *                                        URLRecords as &quot;URL:&quot;+URL
 		 * </pre>
 		 */
 		try {
 			writer = new OutputStreamWriter(new FileOutputStream(fSaveStateFilename), "utf8");
 			writer.write(SAVE_FORMAT_VERSION);
+			writer.write('\n');
+			writer.write(BUILDPATH_DIRTY + "|" + fBuildPathIsDirty);
 			writer.write('\n');
 
 			Enumeration jars = fClasspathJars.keys();
@@ -1389,6 +1422,10 @@ class ProjectDescription {
 
 		if (_debugIndexTime)
 			Logger.log(Logger.INFO, "time spent saving index for " + fProject.getName() + ": " + (System.currentTimeMillis() - time0));
+	}
+	
+	void setBuildPathIsDirty() {
+		fBuildPathIsDirty = true;
 	}
 
 	void updateClasspathLibrary(String libraryLocation, int deltaKind) {
