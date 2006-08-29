@@ -16,7 +16,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Enumeration;
+import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -29,6 +32,10 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jdt.core.IClasspathEntry;
+import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jst.jsp.core.tests.JSPCoreTestsPlugin;
 
 public class BundleResourceUtil {
@@ -138,5 +145,37 @@ public class BundleResourceUtil {
 			e.printStackTrace();
 		}
 		return project;
+	}
+	public static final String JAVA_NATURE_ID = "org.eclipse.jdt.core.javanature";
+	
+	/**
+	 * Add a library entry (like a jar) to the classpath of a project.
+	 * The jar must be in your poject. You can copy the jar into your workspace using
+	 * copyBundleEntryIntoWorkspace(String entryname, String fullPath)
+	 * 
+	 * @param proj assumed it has java nature
+	 * @param pathToJar project relative, no leading slash
+	 */
+	public static void addLibraryEntry(IProject proj, String pathToJar) {
+		
+		IPath projLocation = proj.getLocation();
+		IPath absJarPath = projLocation.append(pathToJar);
+		
+		IJavaProject jProj = JavaCore.create(proj);
+		
+		IClasspathEntry strutsJarEntry = JavaCore.newLibraryEntry(absJarPath, null, null);
+		try {
+			IClasspathEntry[] currentEntries = jProj.getRawClasspath();
+			
+			List l = new ArrayList();
+			l.addAll(Arrays.asList(currentEntries));
+			l.add(strutsJarEntry);
+			
+			IClasspathEntry[] newEntries = (IClasspathEntry[])l.toArray(new IClasspathEntry[l.size()]);
+			jProj.setRawClasspath(newEntries, new NullProgressMonitor());
+		}
+		catch (JavaModelException e) {
+			e.printStackTrace();
+		}	
 	}
 }
