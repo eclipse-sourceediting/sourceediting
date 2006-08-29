@@ -2017,11 +2017,15 @@ public class StructuredTextEditor extends TextEditor {
 			fStructuredModel.removeModelStateListener(getInternalModelStateListener());
 		}
 
-		IDocument doc = getDocumentProvider().getDocument(getEditorInput());
-		if (doc != null) {
-			doc.removeDocumentListener(getInternalDocumentListener());
-			if (doc instanceof IExecutionDelegatable) {
-				((IExecutionDelegatable) doc).setExecutionDelegate(null);
+		// BUG155335 - if there was no document provider, there was nothing added
+		// to document, so nothing to remove
+		if (getDocumentProvider() != null) {
+			IDocument doc = getDocumentProvider().getDocument(getEditorInput());
+			if (doc != null) {
+				doc.removeDocumentListener(getInternalDocumentListener());
+				if (doc instanceof IExecutionDelegatable) {
+					((IExecutionDelegatable) doc).setExecutionDelegate(null);
+				}
 			}
 		}
 
@@ -2121,72 +2125,64 @@ public class StructuredTextEditor extends TextEditor {
 	 * @see org.eclipse.ui.texteditor.AbstractTextEditor#doSetInput(org.eclipse.ui.IEditorInput)
 	 */
 	protected void doSetInput(IEditorInput input) throws CoreException {
-		try {
-			// TODO: if opened in more than one editor, this will cause
-			// problems.
-			IEditorInput oldInput = getEditorInput();
-			if (oldInput != null) {
-				IDocument olddoc = getDocumentProvider().getDocument(oldInput);
-				if (olddoc != null && olddoc instanceof IExecutionDelegatable) {
-					((IExecutionDelegatable) olddoc).setExecutionDelegate(null);
-				}
+		// TODO: if opened in more than one editor, this will cause
+		// problems.
+		IEditorInput oldInput = getEditorInput();
+		if (oldInput != null) {
+			IDocument olddoc = getDocumentProvider().getDocument(oldInput);
+			if (olddoc != null && olddoc instanceof IExecutionDelegatable) {
+				((IExecutionDelegatable) olddoc).setExecutionDelegate(null);
 			}
-
-			if (fStructuredModel != null && !(getDocumentProvider() instanceof IModelProvider)) {
-				fStructuredModel.releaseFromEdit();
-			}
-
-			super.doSetInput(input);
-
-			IDocument newDocument = getDocumentProvider().getDocument(input);
-			if (newDocument instanceof IExecutionDelegatable) {
-				((IExecutionDelegatable) newDocument).setExecutionDelegate(new EditorExecutionContext(this));
-			}
-
-			IStructuredModel model = null;
-			// if we have a Model provider, get the model from it
-			if (getDocumentProvider() instanceof IModelProvider) {
-				model = ((IModelProvider) getDocumentProvider()).getModel(getEditorInput());
-				if (!model.isShared()) {
-					EditorModelUtil.addFactoriesTo(model);
-				}
-			}
-			else {
-				if (newDocument instanceof IStructuredDocument) {
-					// corresponding releaseFromEdit occurs in
-					// dispose()
-					model = StructuredModelManager.getModelManager().getModelForEdit((IStructuredDocument) newDocument);
-					EditorModelUtil.addFactoriesTo(model);
-				}
-
-				else {
-					logUnexpectedDocumentKind(input);
-				}
-			}
-
-			if (fStructuredModel != null || model != null) {
-				setModel(model);
-			}
-
-			if (getInternalModel() != null) {
-				updateEditorControlsForContentType(getInternalModel().getContentTypeIdentifier());
-			}
-			else {
-				updateEditorControlsForContentType(null);
-			}
-
-			if (fProjectionModelUpdater != null)
-				fProjectionModelUpdater.initialize();
-
-			// start editor with smart insert mode
-			setInsertMode(SMART_INSERT);
 		}
-		catch (CoreException exception) {
-			// dispose editor
-			dispose();
 
-			throw new CoreException(exception.getStatus());
+		if (fStructuredModel != null && !(getDocumentProvider() instanceof IModelProvider)) {
+			fStructuredModel.releaseFromEdit();
 		}
+
+		super.doSetInput(input);
+
+		IDocument newDocument = getDocumentProvider().getDocument(input);
+		if (newDocument instanceof IExecutionDelegatable) {
+			((IExecutionDelegatable) newDocument).setExecutionDelegate(new EditorExecutionContext(this));
+		}
+
+		IStructuredModel model = null;
+		// if we have a Model provider, get the model from it
+		if (getDocumentProvider() instanceof IModelProvider) {
+			model = ((IModelProvider) getDocumentProvider()).getModel(getEditorInput());
+			if (!model.isShared()) {
+				EditorModelUtil.addFactoriesTo(model);
+			}
+		}
+		else {
+			if (newDocument instanceof IStructuredDocument) {
+				// corresponding releaseFromEdit occurs in
+				// dispose()
+				model = StructuredModelManager.getModelManager().getModelForEdit((IStructuredDocument) newDocument);
+				EditorModelUtil.addFactoriesTo(model);
+			}
+
+			else {
+				logUnexpectedDocumentKind(input);
+			}
+		}
+
+		if (fStructuredModel != null || model != null) {
+			setModel(model);
+		}
+
+		if (getInternalModel() != null) {
+			updateEditorControlsForContentType(getInternalModel().getContentTypeIdentifier());
+		}
+		else {
+			updateEditorControlsForContentType(null);
+		}
+
+		if (fProjectionModelUpdater != null)
+			fProjectionModelUpdater.initialize();
+
+		// start editor with smart insert mode
+		setInsertMode(SMART_INSERT);
 	}
 
 	/**
