@@ -310,11 +310,9 @@ public class AddExtensionsComponentDialog extends SelectionDialog implements ISe
     		fInput.add(schemaSpec);
     		existingNames.add(schemaSpec.getDisplayName());
 
-    		storeSpecInPref(schemaSpec);
-    		//prefStore.setValue(ExtensionsSchemasRegistry.USER_ADDED_EXT_SCHEMAS, "");
-
     		// refresh without updating labels of existing TableItems    		
     		categoryTableViewer.refresh(false);
+    		storeSpecInPref(schemaSpec);  // must store after calling refresh() (trung)
 
     		categoryTableViewer.setSelection(new StructuredSelection(schemaSpec));
     		getButton(IDialogConstants.OK_ID).setEnabled(false);

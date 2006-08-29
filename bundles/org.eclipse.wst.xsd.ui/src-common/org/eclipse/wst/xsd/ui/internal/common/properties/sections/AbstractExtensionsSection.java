@@ -102,8 +102,12 @@ public abstract class AbstractExtensionsSection extends AbstractSection
       if (!isRoot)
       {  
         extensionTreeViewer.refresh(notifier);
+        if ( newValue instanceof Element)
+        {
+          extensionTreeViewer.expandToLevel(notifier, 1);
+          extensionTreeViewer.setSelection(new StructuredSelection(newValue));
+        }
       }  
-      extensionDetailsViewer.refresh();
     }    
   }
   
