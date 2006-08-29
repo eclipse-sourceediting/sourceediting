@@ -143,13 +143,13 @@ public final class TaglibIndex {
 
 			classpathStack.push(project.getElementName());
 			try {
-				/* Handle changes to this project's build path */
+				/* Handle large changes to this project's build path */
 				IResource resource = project.getCorrespondingResource();
 				if (resource.getType() == IResource.PROJECT && !projectsIndexed.contains(resource)) {
 					ProjectDescription description = getDescription((IProject) resource);
 					if (description != null && !frameworkIsShuttingDown()) {
 						projectsIndexed.add(resource);
-						description.indexClasspath();
+						description.setBuildPathIsDirty();
 					}
 				}
 				/*
