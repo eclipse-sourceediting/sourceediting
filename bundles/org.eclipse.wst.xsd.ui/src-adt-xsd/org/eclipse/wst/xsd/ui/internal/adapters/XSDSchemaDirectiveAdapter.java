@@ -57,21 +57,30 @@ public class XSDSchemaDirectiveAdapter extends XSDBaseAdapter implements IAction
   public String getText()
   {
     XSDSchemaDirective directive = (XSDSchemaDirective) target;
-    String result = directive.getSchemaLocation();
-    String namespace = null;
-    if (directive.getResolvedSchema() != null)
-    {
-      namespace = directive.getResolvedSchema().getTargetNamespace();
-    }
-    if (result != null && namespace != null)
-      result += " (" + namespace + ")";
-    
-    if (result == null)
-      result = "(" + Messages._UI_LABEL_NO_LOCATION_SPECIFIED + ")"; //$NON-NLS-1$ //$NON-NLS-2$
-    if (result.equals("")) //$NON-NLS-1$
-      result = "(" + Messages._UI_LABEL_NO_LOCATION_SPECIFIED + ")"; //$NON-NLS-1$ //$NON-NLS-2$
-    return result;
+    String result = "";
 
+    String location = directive.getSchemaLocation();
+    if (location == null || location.equals("") )
+    {
+      result = "(" + Messages._UI_LABEL_NO_LOCATION_SPECIFIED + ")"; 
+    }
+    else
+    {
+      result = location;
+    }  
+
+    // only show the namespace when the directiave is an import
+    // (otherwise the namespace is obviously the same as the containing schema's)
+    if (directive instanceof XSDImport)
+    {
+      XSDImport importObj = (XSDImport) directive;
+      String namespace = importObj.getNamespace();
+      if (namespace != null)
+      {  
+        result += "  {" + namespace + "}";
+      }      
+    }
+    return result;
   }
 
   public ITreeElement[] getChildren()
