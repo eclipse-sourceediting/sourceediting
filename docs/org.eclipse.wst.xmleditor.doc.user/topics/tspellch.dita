@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Arbortext, Inc., 1988-2005, v.4002-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<?Pub Inc?>
+<task id="tspellch" xml:lang="en-us">
+<title>Spell checking XML files</title>
+<titlealts>
+<searchtitle>Spell checking your XML files</searchtitle>
+</titlealts>
+<shortdesc>You can use the spell checker to check for misspelled words in
+your XML file.</shortdesc>
+<prolog><metadata>
+<keywords><indexterm>XML editor<indexterm>spell checking files</indexterm></indexterm>
+<indexterm>XML files<indexterm>spell checking</indexterm></indexterm></keywords><?Pub Caret1?>
+</metadata></prolog>
+<taskbody>
+<context><p>The following instructions were written for the XML perspective,
+but they will also work in many other perspectives.</p><p>To use the XML editor
+spell checker, perform the following steps:</p></context>
+<steps>
+<step><cmd>Open the file that you want to spell check in the XML editor.</cmd>
+</step>
+<step><cmd>Switch to the <b>Source</b> view.</cmd></step>
+<step><cmd>Click <menucascade><uicontrol>Edit</uicontrol><uicontrol> Spell
+Check</uicontrol></menucascade> or click  <uicontrol>F7</uicontrol>.</cmd>
+</step>
+<step><cmd>The spell check dialog opens.</cmd><info>If you have no errors,
+the dialog will contain the message <systemoutput>Spell check completed</systemoutput> and
+nothing will be displayed in the <uicontrol>Misspelled word</uicontrol>field.
+Otherwise, the first misspelling will be displayed in the <uicontrol>Misspelled
+word</uicontrol> field.&nbsp;</info></step>
+<step><cmd>You have the following options for dealing with the misspelled
+word:  </cmd>
+<choices>
+<choice>Click <uicontrol>Ignore</uicontrol> to ignore the current instance
+of the word or click <uicontrol>Ignore All</uicontrol> to ignore all instances
+of the word in the current document.</choice>
+<choice>Type a new spelling in the <uicontrol>Change to</uicontrol> field,
+or select one of the suggested options. Click <uicontrol>Change</uicontrol> to
+change the current instance of the word in the current document or click&nbsp; <uicontrol>Change
+All</uicontrol> to change all instances of the word in the current document.</choice>
+<choice>Click <uicontrol>Add</uicontrol> to add the currently selected spelling
+to your user dictionary. This spelling will now be valid for all XML documents
+you spell check in the XML editor.</choice>
+<choice>Click  <uicontrol>Dictionary</uicontrol> to edit your user dictionary.
+All words you have added to your user dictionary using the <uicontrol>Add</uicontrol> button
+in the <b>Spell Check</b> dialog will be listed in the <uicontrol>Edit Dictionary</uicontrol> dialog.
+To remove a word from your user dictionary, select it and click <uicontrol>Delete</uicontrol>.
+To add one, type it and click  <uicontrol>Add</uicontrol>.</choice>
+</choices>
+</step>
+<step><cmd>Repeat the same process for all potential misspellings identified.</cmd>
+</step>
+<step><cmd>Click <uicontrol>Close</uicontrol> when the <systemoutput>Spell
+check completed</systemoutput> message is displayed in the dialog. This will
+return you to the active document, so that you can continue editing.</cmd>
+</step>
+</steps>
+<postreq>To define dictionary preferences, use the Spell Check page in the
+Preferences dialog (<menucascade><uicontrol>Windows</uicontrol><uicontrol>Preferences</uicontrol>
+<uicontrol>Spell Check</uicontrol></menucascade>).</postreq>
+</taskbody>
+</task>
+<?Pub *0000003456?>
