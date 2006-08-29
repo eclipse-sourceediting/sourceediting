@@ -24,12 +24,15 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IPersistableElement;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.IShowInTargetList;
@@ -43,6 +46,38 @@ public class TestStructuredTextEditor extends TestCase {
 	private static StructuredTextEditor fEditor;
 	private static IFile fFile;
 	private static boolean fIsSetup = false;
+	
+	private class FakeEditorInput implements IEditorInput {
+		public boolean exists() {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+		public ImageDescriptor getImageDescriptor() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public String getName() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public IPersistableElement getPersistable() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public String getToolTipText() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		
+		public Object getAdapter(Class adapter) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+	}
 
 	public TestStructuredTextEditor() {
 		super("TestStructredTextEditor");
@@ -176,5 +211,19 @@ public class TestStructuredTextEditor extends TestCase {
 	public void testUpdate() {
 		fEditor.update();
 		assertTrue("Unable to update editor", true);
+	}
+	
+	public void testFakeEditorInput() {
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=155335
+		IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		IWorkbenchPage page = workbenchWindow.getActivePage();
+		IEditorInput input = new FakeEditorInput();
+		try {
+			IEditorPart part = page.openEditor(input, "org.eclipse.wst.sse.ui.StructuredTextEditor", true);
+			if (part instanceof StructuredTextEditor)
+				assertTrue("Able to open Structured Text Editor on bad input", false);
+		}
+		catch (PartInitException e) {
+		}
 	}
 }
