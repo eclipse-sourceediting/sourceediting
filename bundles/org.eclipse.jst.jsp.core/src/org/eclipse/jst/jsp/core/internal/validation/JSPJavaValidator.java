@@ -37,24 +37,28 @@ public class JSPJavaValidator extends JSPValidator {
 		try {
 			// get jsp model, get tranlsation
 			model = StructuredModelManager.getModelManager().getModelForRead(f);
-			if (model instanceof IDOMModel) {
-				IDOMModel domModel = (IDOMModel)model;
-				
-				setupAdapterFactory(domModel);
-				IDOMDocument xmlDoc = domModel.getDocument();
-				JSPTranslationAdapter translationAdapter = (JSPTranslationAdapter) xmlDoc.getAdapterFor(IJSPTranslation.class);
-				JSPTranslation translation = translationAdapter.getJSPTranslation();
+			if (!reporter.isCancelled()) {
+				if (model instanceof IDOMModel) {
+					IDOMModel domModel = (IDOMModel) model;
 
-				translation.setProblemCollectingActive(true);
-				translation.reconcileCompilationUnit();
-				List problems = translation.getProblems();
-				// remove old messages
-				reporter.removeAllMessages(this, f);
-				// add new messages
-				for (int i = 0; i < problems.size() && !reporter.isCancelled(); i++) {
-					IMessage m = createMessageFromProblem((IProblem) problems.get(i), f, translation, domModel.getStructuredDocument());
-					if (m != null)
-						reporter.addMessage(this, m);
+					setupAdapterFactory(domModel);
+					IDOMDocument xmlDoc = domModel.getDocument();
+					JSPTranslationAdapter translationAdapter = (JSPTranslationAdapter) xmlDoc.getAdapterFor(IJSPTranslation.class);
+					JSPTranslation translation = translationAdapter.getJSPTranslation();
+
+					if (!reporter.isCancelled()) {
+						translation.setProblemCollectingActive(true);
+						translation.reconcileCompilationUnit();
+						List problems = translation.getProblems();
+						// remove old messages
+						reporter.removeAllMessages(this, f);
+						// add new messages
+						for (int i = 0; i < problems.size() && !reporter.isCancelled(); i++) {
+							IMessage m = createMessageFromProblem((IProblem) problems.get(i), f, translation, domModel.getStructuredDocument());
+							if (m != null)
+								reporter.addMessage(this, m);
+						}
+					}
 				}
 			}
 		}

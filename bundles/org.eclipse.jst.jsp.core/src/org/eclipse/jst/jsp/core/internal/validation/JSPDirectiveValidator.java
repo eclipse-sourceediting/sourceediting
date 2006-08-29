@@ -183,7 +183,9 @@ public class JSPDirectiveValidator extends JSPValidator {
 					region = region.getNext();
 				}
 
-				reportDuplicatePrefixes(f, reporter, structuredDocument);
+				if(!reporter.isCancelled()) {
+					reportDuplicatePrefixes(f, reporter, structuredDocument);
+				}
 			}
 		}
 		catch (IOException e) {
