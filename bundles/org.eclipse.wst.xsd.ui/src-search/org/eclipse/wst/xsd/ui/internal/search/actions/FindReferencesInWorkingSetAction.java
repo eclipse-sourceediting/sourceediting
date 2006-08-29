@@ -59,7 +59,7 @@ public class FindReferencesInWorkingSetAction extends FindReferencesAction{
 				scope.addAWorkingSetToScope(elements);
 			}
 
-			String scopeDescription = "Workspace";    
+			String scopeDescription = "Working Set";    
 			XSDSearchQuery searchQuery = 
 				new XSDSearchQuery(pattern, file, elementQName, metaName, XSDSearchQuery.LIMIT_TO_REFERENCES, scope, scopeDescription);    
 			NewSearchUI.activateSearchResultView();

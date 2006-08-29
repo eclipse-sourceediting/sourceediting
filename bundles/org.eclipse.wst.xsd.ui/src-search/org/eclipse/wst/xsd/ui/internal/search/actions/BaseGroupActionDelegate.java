@@ -26,6 +26,7 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 
+//TODO (trung) should be in common.ui this one ??
 public abstract class BaseGroupActionDelegate implements IObjectActionDelegate, IEditorActionDelegate, IMenuCreator
 {
     protected ISelection fSelection;

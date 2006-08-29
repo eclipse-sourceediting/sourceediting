@@ -36,7 +36,7 @@ public class FindReferencesInProjectAction extends FindReferencesAction
       QualifiedName elementQName = new QualifiedName(component.getTargetNamespace(), component.getName());
       IPath fullPath = file.getFullPath();
       ProjectSearchScope scope = new ProjectSearchScope(fullPath);
-      String scopeDescription = "Workspace";
+      String scopeDescription = "Project";
       XSDSearchQuery searchQuery = new XSDSearchQuery(pattern, file, elementQName, metaName, XSDSearchQuery.LIMIT_TO_REFERENCES, scope, scopeDescription);
       NewSearchUI.activateSearchResultView();
       NewSearchUI.runQueryInBackground(searchQuery);

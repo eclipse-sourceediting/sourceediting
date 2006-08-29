@@ -16,7 +16,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.ui.IEditorPart;
 public class FindAction extends Action implements ISelectionChangedListener
 {
-  IEditorPart editor;
+  protected IEditorPart editor;
 
   protected FindAction(IEditorPart editor)
   {

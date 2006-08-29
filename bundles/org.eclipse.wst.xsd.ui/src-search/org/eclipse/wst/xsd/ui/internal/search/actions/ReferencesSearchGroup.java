@@ -24,18 +24,17 @@ import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.wst.xsd.ui.internal.search.SearchMessages;
 
 public class ReferencesSearchGroup extends SearchGroup  {
+    protected static final String MENU_TEXT= SearchMessages.group_references; 
 
-    private static final String MENU_TEXT= SearchMessages.group_references; 
-
+    protected IEditorPart fEditor;
     private IWorkbenchSite fSite;
-    private IEditorPart fEditor;
     private IActionBars fActionBars;
     
 //    private String fGroupId;
     
-    private FindReferencesAction fFindReferencesAction;
-    private FindReferencesInProjectAction fFindReferencesInProjectAction;
-    private FindReferencesInWorkingSetAction fFindReferencesInWorkingSetAction;
+    protected FindAction fFindReferencesAction;
+    protected FindAction fFindReferencesInProjectAction;
+    protected FindAction fFindReferencesInWorkingSetAction;
 
 
     /**
@@ -46,9 +45,14 @@ public class ReferencesSearchGroup extends SearchGroup  {
         Assert.isNotNull(editor);
         fEditor= editor;
         fSite= fEditor.getSite();
-//        fGroupId= ITextEditorActionConstants.GROUP_FIND;
+        
+        initialize();
+    }
+    
+    protected void initialize() {
+//      fGroupId= ITextEditorActionConstants.GROUP_FIND;
 
-        fFindReferencesAction= new FindReferencesAction(editor);
+        fFindReferencesAction= new FindReferencesAction(fEditor);
         fFindReferencesAction.setText(SearchMessages.Search_FindDeclarationAction_label);
         fFindReferencesAction.setActionDefinitionId("SEARCH_REFERENCES_IN_WORKSPACE");
         //fEditor.setAction("SearchReferencesInWorkspace", fFindReferencesAction); //$NON-NLS-1$
@@ -61,7 +65,7 @@ public class ReferencesSearchGroup extends SearchGroup  {
         fFindReferencesInWorkingSetAction= new FindReferencesInWorkingSetAction(fEditor);
         fFindReferencesInWorkingSetAction.setText(SearchMessages.Search_FindDeclarationsInWorkingSetAction_label);         
         fFindReferencesInWorkingSetAction.setActionDefinitionId(".SEARCH_REFERENCES_IN_WORKING_SET");
-        //fEditor.setAction("SearchReferencesInWorkingSet", fFindReferencesInWorkingSetAction); //$NON-NLS-1$
+        //fEditor.setAction("SearchReferencesInWorkingSet", fFindReferencesInWorkingSetAction); //$NON-NLS-1$    	
     }
 
     /*

@@ -20,6 +20,7 @@ import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.ui.actions.CompoundContributionItem;
 
+// TODO should be in common.ui
 public class XSDSearchGroupSubMenu extends CompoundContributionItem
 {
   SearchGroup searchActionGroup;
@@ -59,7 +60,7 @@ public class XSDSearchGroupSubMenu extends CompoundContributionItem
     }
     else
     {
-      Action dummyAction = new Action("XSDSeachActionGroup_no_refactoring_available")
+      Action dummyAction = new Action("XSDSeachActionGroup_no_refactoring_available") //TODO wrong string here ??
       {
         // dummy inner class; no methods
       };
