@@ -49,6 +49,7 @@ import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.part.PageBook;
 import org.eclipse.wst.common.ui.internal.dialogs.SelectSingleFileDialog;
+import org.eclipse.wst.common.uriresolver.internal.URI;
 import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
 import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalog;
 import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalogElement;
@@ -588,7 +589,7 @@ public class EditCatalogEntryDialog extends Dialog {
 			if (!URIHelper.hasProtocol(uri)) {
 				uri = URIHelper.isAbsolute(uri) ? URIHelper.prependFileProtocol(uri) : URIHelper.prependPlatformResourceProtocol(uri);
 			}
-			getNextCatalog().setCatalogLocation(uri);
+			getNextCatalog().setCatalogLocation(URIHelper.ensureFileURIProtocolFormat(uri));
 		}
 
 		protected void updateWidgets(Widget widget) {
@@ -950,7 +951,7 @@ public class EditCatalogEntryDialog extends Dialog {
 			FileDialog dialog = new FileDialog(getShell(), SWT.SINGLE);
 			String file = dialog.open();
 			if (control instanceof Text && file != null) {
-				((Text) control).setText(file);
+				((Text) control).setText(URIHelper.ensureFileURIProtocolFormat(URI.createFileURI(file).toString()));
 			}
 		}
 	}
