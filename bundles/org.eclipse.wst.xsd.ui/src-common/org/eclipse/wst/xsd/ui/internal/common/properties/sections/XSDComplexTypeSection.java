@@ -28,6 +28,7 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.wst.common.ui.internal.search.dialogs.ComponentSpecification;
 import org.eclipse.wst.xsd.ui.internal.adt.edit.ComponentReferenceEditManager;
 import org.eclipse.wst.xsd.ui.internal.adt.edit.IComponentDialog;
+import org.eclipse.wst.xsd.ui.internal.common.commands.UpdateComplexTypeDerivationBy;
 import org.eclipse.wst.xsd.ui.internal.common.commands.UpdateNameCommand;
 import org.eclipse.wst.xsd.ui.internal.editor.Messages;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDComplexTypeBaseTypeEditManager;
@@ -244,16 +245,12 @@ public class XSDComplexTypeSection extends RefactoringSection implements Selecti
     else if (e.widget == derivedByCombo)
     {
       XSDComplexTypeDefinition complexType = (XSDComplexTypeDefinition) input;
-      
-      // TODO: put this in an action
       String value = derivedByCombo.getText();
-      if (value.equals(XSDConstants.EXTENSION_ELEMENT_TAG))
+      Command command = new UpdateComplexTypeDerivationBy(complexType, value);
+      
+      if (getCommandStack() != null)
       {
-        complexType.setDerivationMethod(XSDDerivationMethod.EXTENSION_LITERAL);
-      }
-      else if (value.equals(XSDConstants.RESTRICTION_ELEMENT_TAG))
-      {
-        complexType.setDerivationMethod(XSDDerivationMethod.RESTRICTION_LITERAL);
+        getCommandStack().execute(command);
       }
     }
     super.doWidgetSelected(e);
