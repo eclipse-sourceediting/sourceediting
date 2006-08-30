@@ -22,6 +22,9 @@ import org.osgi.framework.BundleContext;
  * The main plugin class to be used in the desktop.
  */
 public class WSTWebUIPlugin extends AbstractUIPlugin {
+    
+    public static final String PLUGIN_ID = "org.eclipse.wst.web.ui"; //$NON-NLS-1$
+    
 	// The shared instance.
 	private static WSTWebUIPlugin plugin;
 	public static final String[] ICON_DIRS = new String[]{"icons/full/obj16", //$NON-NLS-1$

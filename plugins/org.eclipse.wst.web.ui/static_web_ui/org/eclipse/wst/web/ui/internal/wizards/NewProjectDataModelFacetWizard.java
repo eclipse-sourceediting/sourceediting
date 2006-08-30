@@ -24,6 +24,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -288,7 +289,16 @@ public abstract class NewProjectDataModelFacetWizard extends AddRemoveFacetsWiza
 
 			final Set fixed = this.template.getFixedProjectFacets();
 			this.fproj.setFixedProjectFacets(fixed);
-		} finally {
+
+            try {
+                getFacetProjectNotificationOperation().execute(new NullProgressMonitor(), null);
+            } catch (ExecutionException e) {
+                String msg = e.getMessage();
+                if( msg == null ) msg = ""; //$NON-NLS-1$
+                final IStatus st = new Status( IStatus.ERROR, WSTWebUIPlugin.PLUGIN_ID, 0, msg, e );
+                throw new CoreException( st );
+            }
+        } finally {
 			monitor.done();
 		}
 	}
@@ -405,11 +415,6 @@ public abstract class NewProjectDataModelFacetWizard extends AddRemoveFacetsWiza
 
 		String projName = getProjectName();
 		BasicNewResourceWizard.selectAndReveal(ResourcesPlugin.getWorkspace().getRoot().getProject(projName), WSTWebUIPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow());
-		try {
-			getFacetProjectNotificationOperation().execute(new NullProgressMonitor(), null);
-		} catch (ExecutionException e) {
-			throw new InvocationTargetException(e);
-		}
 	}
 
 	protected IDataModelOperation getFacetProjectNotificationOperation() {
