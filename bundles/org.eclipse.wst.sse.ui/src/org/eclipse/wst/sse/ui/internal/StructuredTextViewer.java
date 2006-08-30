@@ -288,8 +288,8 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 		// initialize highlighter after linestyleproviders were added
 		if (fHighlighter != null) {
 			fHighlighter.setDocumentPartitioning(configuration.getConfiguredDocumentPartitioning(this));
-			fHighlighter.install(this);
 			fHighlighter.setDocument((IStructuredDocument) getDocument());
+			fHighlighter.install(this);
 		}
 
 		activatePlugins();
