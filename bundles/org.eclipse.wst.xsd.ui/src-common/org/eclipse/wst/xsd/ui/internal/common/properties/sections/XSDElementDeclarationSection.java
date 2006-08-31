@@ -324,6 +324,7 @@ public class XSDElementDeclarationSection extends MultiplicitySection
         if (isAnonymous)
         {
         	typeCombo.setText("**Anonymous**");
+          typeName = "**Anonymous**";
         }
         else
         {
