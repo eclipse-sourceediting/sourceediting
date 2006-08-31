@@ -28,6 +28,8 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorCSHelpIds;
 import org.eclipse.wst.xsd.ui.internal.refactor.IReferenceUpdating;
 import org.eclipse.wst.xsd.ui.internal.refactor.RefactoringMessages;
 
@@ -123,6 +125,7 @@ public class RenameInputWizardPage  extends UserInputWizardPage{
 				textModified(getText());
 			}
 		});
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(fTextField, XSDEditorCSHelpIds.RENAME_NEW_NAME);
 		fTextField.setText(fInitialValue);
 		return fTextField;
 	}
@@ -208,7 +211,8 @@ public class RenameInputWizardPage  extends UserInputWizardPage{
 		GridData gd= new GridData(GridData.FILL_HORIZONTAL);
 		gd.widthHint= convertWidthInCharsToPixels(25);
 		text.setLayoutData(gd);
-		
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(text, XSDEditorCSHelpIds.RENAME_NEW_NAME);
+    
 		addOptionalUpdateReferencesCheckbox(superComposite);
 		gd= new GridData(GridData.FILL_HORIZONTAL);
 		text.setLayoutData(gd);
@@ -235,6 +239,7 @@ public class RenameInputWizardPage  extends UserInputWizardPage{
 		String title= RefactoringMessages.getString("RenameInputWizardPage.update_references"); //$NON-NLS-1$
 		boolean defaultValue= true; 
 		fUpdateReferences= createCheckbox(result, title, defaultValue);
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(fUpdateReferences, XSDEditorCSHelpIds.RENAME_UPDATE_REFERENCES);
 		ref.setUpdateReferences(fUpdateReferences.getSelection());
 		fUpdateReferences.addSelectionListener(new SelectionAdapter(){
 			public void widgetSelected(SelectionEvent e) {

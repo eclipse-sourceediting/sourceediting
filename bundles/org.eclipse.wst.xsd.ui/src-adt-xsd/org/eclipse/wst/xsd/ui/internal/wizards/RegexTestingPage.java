@@ -26,8 +26,8 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.help.WorkbenchHelp;
-import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorContextIds;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorCSHelpIds;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.internal.util.ViewUtility;
 
@@ -59,7 +59,7 @@ public class RegexTestingPage extends WizardPage
   public void createControl(Composite parent)
   {
     Composite composite = ViewUtility.createComposite(parent, 1);
-    WorkbenchHelp.setHelp(composite, XSDEditorContextIds.XSDR_TEST_PAGE);
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(composite, XSDEditorCSHelpIds.REGEX_TEST_PAGE);
 
     matchLabel = new Label(composite, SWT.WRAP);
     matchLabel.setText(XSDEditorPlugin.getXSDString("_UI_REGEX_WIZARD_TESTING_PAGE_DESCRIPTION"));
@@ -82,7 +82,7 @@ public class RegexTestingPage extends WizardPage
 
     new Label(controls, SWT.LEFT).setText(XSDEditorPlugin.getXSDString("_UI_REGEX_WIZARD_SAMPLE_TEXT"));
     testString = new StyledText(controls, SWT.SINGLE | SWT.BORDER);
-    WorkbenchHelp.setHelp(testString, XSDEditorContextIds.XSDR_TEST_SAMPLE);
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(testString, XSDEditorCSHelpIds.REGEX_SAMPLE_TEXT);
     testString.addListener(SWT.Modify, new TestStringListener());
     testString.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
     

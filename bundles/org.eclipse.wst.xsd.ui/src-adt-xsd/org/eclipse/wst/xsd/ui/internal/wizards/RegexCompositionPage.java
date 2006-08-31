@@ -33,8 +33,8 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.help.WorkbenchHelp;
-import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorContextIds;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorCSHelpIds;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.internal.util.ViewUtility;
 import org.eclipse.xsd.XSDPatternFacet;
@@ -145,7 +145,7 @@ public class RegexCompositionPage extends WizardPage
 
     // The main composite
     Composite composite= new Composite(parent, SWT.NONE);
-    WorkbenchHelp.setHelp(composite, XSDEditorContextIds.XSDR_COMPOSITION_PAGE);
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(composite, XSDEditorCSHelpIds.REGEX_WIZARD_PAGE);
     composite.setLayout(new GridLayout());
 
 
@@ -160,7 +160,7 @@ public class RegexCompositionPage extends WizardPage
     new Label(tokenComposite, SWT.LEFT).setText(XSDEditorPlugin.getXSDString("_UI_REGEX_WIZARD_TOKEN_LABEL"));
     
     terms = new Combo(tokenComposite, SWT.DROP_DOWN);
-    WorkbenchHelp.setHelp(terms, XSDEditorContextIds.XSDR_COMPOSITION_TOKEN);
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(terms, XSDEditorCSHelpIds.REGEX_TOKEN_CONTENTS);
     for (int i = 0; i < RegexNode.getNumRegexTerms(); i++)
     {
       terms.add(RegexNode.getRegexTermText(i));
@@ -179,7 +179,7 @@ public class RegexCompositionPage extends WizardPage
 
     Group occurrenceSelectionArea = new Group(composite, SWT.NONE);
     occurrenceSelectionArea.setText(XSDEditorPlugin.getXSDString("_UI_REGEX_WIZARD_OCCURENCE_LABEL"));
-    WorkbenchHelp.setHelp(occurrenceSelectionArea, XSDEditorContextIds.XSDR_COMPOSITION_OCCURRENCE_GROUP);
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(occurrenceSelectionArea, XSDEditorCSHelpIds.REGEX_WIZARD_PAGE);
     GridLayout selectionAreaLayout = new GridLayout();
     selectionAreaLayout.numColumns = 2;
     occurrenceSelectionArea.setLayout(selectionAreaLayout);
@@ -194,33 +194,33 @@ public class RegexCompositionPage extends WizardPage
     RadioSelectListener radioSelectListener = new RadioSelectListener();
 
     singleRadio = addOccurenceRadioButton(RegexNode.SINGLE, occurrenceSelectionArea, radioSelectListener);
-    WorkbenchHelp.setHelp(singleRadio, XSDEditorContextIds.XSDR_COMPOSITION_JUST_ONCE);
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(singleRadio, XSDEditorCSHelpIds.REGEX_JUST_ONCE);
     ViewUtility.createHorizontalFiller(occurrenceSelectionArea, 1);
 
     starRadio = addOccurenceRadioButton(RegexNode.STAR, occurrenceSelectionArea, radioSelectListener);
-    WorkbenchHelp.setHelp(starRadio, XSDEditorContextIds.XSDR_COMPOSITION_ZERO_OR_MORE);
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(starRadio, XSDEditorCSHelpIds.REGEX_ZERO_OR_MORE);
     ViewUtility.createHorizontalFiller(occurrenceSelectionArea, 1);
 
     plusRadio = addOccurenceRadioButton(RegexNode.PLUS, occurrenceSelectionArea, radioSelectListener);
-    WorkbenchHelp.setHelp(plusRadio, XSDEditorContextIds.XSDR_COMPOSITION_ONE_OR_MORE);
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(plusRadio, XSDEditorCSHelpIds.REGEX_ONE_OR_MORE);
     ViewUtility.createHorizontalFiller(occurrenceSelectionArea, 1);
 
     optionalRadio = addOccurenceRadioButton(RegexNode.OPTIONAL, occurrenceSelectionArea, radioSelectListener);
-    WorkbenchHelp.setHelp(optionalRadio, XSDEditorContextIds.XSDR_COMPOSITION_OPTIONAL);
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(optionalRadio, XSDEditorCSHelpIds.REGEX_OPTIONAL);
     ViewUtility.createHorizontalFiller(occurrenceSelectionArea, 1);
 
     repeatRadio = addOccurenceRadioButton(RegexNode.REPEAT, occurrenceSelectionArea, radioSelectListener);
-    WorkbenchHelp.setHelp(repeatRadio, XSDEditorContextIds.XSDR_COMPOSITION_REPEAT);
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(repeatRadio, XSDEditorCSHelpIds.REGEX_REPEAT_RADIO);
     
     repeatValue = new Text(occurrenceSelectionArea, SWT.SINGLE | SWT.BORDER);
     repeatValue.addListener(SWT.Modify, textListener);
-    WorkbenchHelp.setHelp(repeatValue, XSDEditorContextIds.XSDR_COMPOSITION_REPEAT_TEXT);
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(repeatValue, XSDEditorCSHelpIds.REGEX_REPEAT_FIELD);
     repeatValue.setToolTipText(XSDEditorPlugin.getXSDString("_UI_TOOLTIP_REGEX_WIZARD_REPEAT"));
     repeatValue.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
     setEnabledStatus(RegexNode.REPEAT, false);
     
     rangeRadio = addOccurenceRadioButton(RegexNode.RANGE, occurrenceSelectionArea, radioSelectListener);
-    WorkbenchHelp.setHelp(rangeRadio, XSDEditorContextIds.XSDR_COMPOSITION_RANGE);
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(rangeRadio, XSDEditorCSHelpIds.REGEX_RANGE_RADIO);
 
     // Add text fields and labels for specifying the range    
     Composite rangeWidgets = new Composite(occurrenceSelectionArea, SWT.NONE);
@@ -232,7 +232,7 @@ public class RegexCompositionPage extends WizardPage
     
     rangeMinValue = new Text(rangeWidgets, SWT.SINGLE | SWT.BORDER);
     rangeMinValue.addListener(SWT.Modify, textListener);
-    WorkbenchHelp.setHelp(rangeMinValue, XSDEditorContextIds.XSDR_COMPOSITION_RANGE_MIN);
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(rangeMinValue, XSDEditorCSHelpIds.REGEX_RANGE_MINIMUM_FIELD);
     rangeMinValue.setToolTipText(XSDEditorPlugin.getXSDString("_UI_TOOLTIP_REGEX_WIZARD_MIN"));
     rangeMinValue.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
     
@@ -242,7 +242,7 @@ public class RegexCompositionPage extends WizardPage
     rangeMaxValue = new Text(rangeWidgets, SWT.SINGLE | SWT.BORDER);
     rangeMaxValue.addListener(SWT.Modify, textListener);
     rangeMaxValue.setToolTipText(XSDEditorPlugin.getXSDString("_UI_TOOLTIP_REGEX_WIZARD_MAX"));
-    WorkbenchHelp.setHelp(rangeMaxValue, XSDEditorContextIds.XSDR_COMPOSITION_RANGE_MAX);
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(rangeMaxValue, XSDEditorCSHelpIds.REGEX_RANGE_MAXIMUM_FIELD);
     rangeMaxValue.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
     setEnabledStatus(RegexNode.RANGE, false);
@@ -253,7 +253,7 @@ public class RegexCompositionPage extends WizardPage
     add = new Button(composite, SWT.PUSH);
     add.addSelectionListener(new ButtonSelectListener());
     add.setText(XSDEditorPlugin.getXSDString("_UI_REGEX_WIZARD_ADD_BUTTON_LABEL"));
-    WorkbenchHelp.setHelp(add, XSDEditorContextIds.XSDR_COMPOSITION_ADD);
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(add, XSDEditorCSHelpIds.REGEX_ADD_BUTTON);
     add.setToolTipText(XSDEditorPlugin.getXSDString("_UI_TOOLTIP_REGEX_WIZARD_ADD_BUTTON"));
 
     
@@ -269,7 +269,7 @@ public class RegexCompositionPage extends WizardPage
     value = new StyledText(composite, SWT.SINGLE | SWT.BORDER);
     value.addListener(SWT.Modify, textListener);
     value.addListener(SWT.Selection, textListener);
-    WorkbenchHelp.setHelp(value, XSDEditorContextIds.XSDR_COMPOSITION_CURRENT);
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(value, XSDEditorCSHelpIds.REGEX_CURRENT_VALUE);
     value.setToolTipText(XSDEditorPlugin.getXSDString("_UI_TOOLTIP_REGEX_WIZARD_CURRENT_REGEX"));
     value.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
