@@ -25,10 +25,12 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.common.ui.internal.search.dialogs.ComponentSpecification;
 import org.eclipse.wst.xsd.ui.internal.adt.edit.IComponentDialog;
 import org.eclipse.wst.xsd.ui.internal.common.util.XSDCommonUIUtils;
 import org.eclipse.wst.xsd.ui.internal.editor.Messages;
+import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorCSHelpIds;
 import org.eclipse.wst.xsd.ui.internal.search.IXSDSearchConstants;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDTypeDefinition;
@@ -104,9 +106,11 @@ public class NewTypeDialog extends NewComponentDialog implements IComponentDialo
     complexTypeButton = new Button(parent, SWT.RADIO);
     complexTypeButton.setText(Messages._UI_LABEL_COMPLEX_TYPE);
     complexTypeButton.setEnabled(allowComplexType);
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(complexTypeButton, XSDEditorCSHelpIds.NEWTYPE_COMPLEXTYPE);
     
     simpleTypeButton = new Button(parent, SWT.RADIO);
     simpleTypeButton.setText(Messages._UI_LABEL_SIMPLE_TYPE);
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(simpleTypeButton, XSDEditorCSHelpIds.NEWTYPE_SIMPLETYPE);
     
     if (allowAnonymousType )
     {

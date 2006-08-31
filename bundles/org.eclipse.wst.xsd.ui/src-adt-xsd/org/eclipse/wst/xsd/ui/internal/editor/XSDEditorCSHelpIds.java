@@ -39,6 +39,10 @@ public class XSDEditorCSHelpIds
   public static final String RENAME_NEW_NAME = PLUGIN_NAME + ".xsduw0300";
   public static final String RENAME_UPDATE_REFERENCES = PLUGIN_NAME + ".xsduw0310";
   
+  public static final String NEWTYPE_COMPLEXTYPE = PLUGIN_NAME + ".xsdud0010";
+  public static final String NEWTYPE_SIMPLETYPE = PLUGIN_NAME + ".xsdud0020";
+  public static final String NEWTYPE_NAME = PLUGIN_NAME + ".xsdud0030";
+  
   
   
 }

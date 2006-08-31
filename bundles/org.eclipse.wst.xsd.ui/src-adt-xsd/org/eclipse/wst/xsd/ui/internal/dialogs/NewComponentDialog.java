@@ -25,7 +25,9 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.xsd.ui.internal.editor.Messages;
+import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorCSHelpIds;
 
 public class NewComponentDialog extends Dialog implements ModifyListener
 {
@@ -115,6 +117,7 @@ public class NewComponentDialog extends Dialog implements ModifyListener
     nameField.setLayoutData(gd);
     nameField.setText(name);
     nameField.addModifyListener(this);
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(nameField, XSDEditorCSHelpIds.NEWTYPE_NAME);
 
     createExtendedContent(dialogArea);
 
