@@ -62,6 +62,8 @@ import org.w3c.dom.traversal.TreeWalker;
  */
 public class DocumentImpl extends NodeContainer implements IDOMDocument, DocumentRange, DocumentTraversal {
 
+	private static int maxDocTypeSearch = 500;
+	private static int noMaxSearch = -1;
 	/**
 	 * Internal-use only class. This class was added to better able to handle
 	 * repetetive request for getElementsByTagName. The cache is cleared when
@@ -490,7 +492,12 @@ public class DocumentImpl extends NodeContainer implements IDOMDocument, Documen
 	}
 
 	private DocumentType findDoctype(Node node) {
+		
+		int countSearch = 0;
 		for (Node child = node.getFirstChild(); child != null; child = child.getNextSibling()) {
+			if (countSearch++ > maxDocTypeSearch) {
+				break;
+			}
 			if (child.getNodeType() == DOCUMENT_TYPE_NODE && child instanceof DocumentType) {
 				return (DocumentType) child;
 			}
@@ -506,13 +513,24 @@ public class DocumentImpl extends NodeContainer implements IDOMDocument, Documen
 		return null;
 	}
 
-	private Element findDocumentElement(String docName, Node node, Node[] firstFound) {
+	private Element findDocumentElement(String docName, Node node, Node[] firstFound, int max) {
+		int countSearch = 0;
 		for (Node child = node.getFirstChild(); child != null; child = child.getNextSibling()) {
+			
+			/* 
+			 * maxDocTypeSearch limits added via bug 151929
+			 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=151929
+			 * but, in other contexts, 
+			 * if noMaxSearch is specified, then do not "break out" of long searches 
+			 * */
+			if (max != noMaxSearch && countSearch++ > max) {
+				break;
+			}
 			if (child.getNodeType() != ELEMENT_NODE)
 				continue;
 			ElementImpl element = (ElementImpl) child;
 			if (element.isCommentTag()) {
-				Element docElement = findDocumentElement(docName, element, firstFound);
+				Element docElement = findDocumentElement(docName, element, firstFound, max);
 				if (docElement != null) {
 					return docElement;
 				}
@@ -668,7 +686,7 @@ public class DocumentImpl extends NodeContainer implements IDOMDocument, Documen
 		}
 
 		Element first[] = new Element[1];
-		Element docElement = findDocumentElement(name, this, first);
+		Element docElement = findDocumentElement(name, this, first, noMaxSearch);
 		if (docElement == null) {
 			docElement = first[0];
 		}
@@ -685,24 +703,7 @@ public class DocumentImpl extends NodeContainer implements IDOMDocument, Documen
 		return adapter.getDocumentType();
 	}
 
-	/**
-	 */
-	// protected DocumentTypeAdapter getDocumentTypeAdapter() {
-	// // be sure to release since possibly changing
-	// if (this.documentTypeAdapter != null) {
-	// this.documentTypeAdapter.release();
-	// }
-	// this.documentTypeAdapter = (DocumentTypeAdapter)
-	// getAdapterFor(DocumentTypeAdapter.class);
-	// if (this.documentTypeAdapter == null) {
-	// // add default adapter
-	// this.documentTypeAdapter = new DocumentTypeAdapterImpl(this);
-	// addAdapter(this.documentTypeAdapter);
-	// }
-	// return this.documentTypeAdapter;
-	// }
-	/**
-	 */
+
 	public String getDocumentTypeId() {
 		DocumentType docType = getDocumentType();
 		if (docType == null)
