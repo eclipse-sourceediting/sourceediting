@@ -44,7 +44,8 @@ public class AddXSDComplexTypeDefinitionAction extends XSDBaseAction
       AddXSDComplexTypeDefinitionCommand command = new AddXSDComplexTypeDefinitionCommand(Messages._UI_ACTION_ADD_COMPLEX_TYPE, (XSDSchema) selection);
       getCommandStack().execute(command);
       
-      Adapter adapter = XSDAdapterFactory.getInstance().adapt(command.getAddedComponent());
+      addedComponent = command.getAddedComponent();
+      Adapter adapter = XSDAdapterFactory.getInstance().adapt(addedComponent);
       selectAddedComponent(adapter);
     }
   }

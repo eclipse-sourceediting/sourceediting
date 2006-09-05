@@ -53,7 +53,9 @@ public class AddXSDModelGroupDefinitionAction extends XSDBaseAction
     {
       AddXSDModelGroupDefinitionCommand command = new AddXSDModelGroupDefinitionCommand(getText(), xsdConcreteComponent, isReference);
       getCommandStack().execute(command);
-      Adapter adapter = XSDAdapterFactory.getInstance().adapt(command.getAddedComponent());
+
+      addedComponent = command.getAddedComponent();
+      Adapter adapter = XSDAdapterFactory.getInstance().adapt(addedComponent);
       selectAddedComponent(adapter);
     }
   }

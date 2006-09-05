@@ -23,6 +23,7 @@ import org.eclipse.xsd.XSDSchema;
 
 public class XSDBaseAction extends BaseSelectionAction
 {
+  XSDConcreteComponent addedComponent;
 
   public XSDBaseAction(IWorkbenchPart part)
   {
@@ -59,9 +60,12 @@ public class XSDBaseAction extends BaseSelectionAction
     if (obj instanceof TopLevelComponentEditPart)
     {
       TopLevelComponentEditPart editPart = (TopLevelComponentEditPart)obj;
-      editPart.setScroll(true);
-      editPart.addFeedback();
-      editPart.doEditName(!(part instanceof ContentOutline));
+      if (addedComponent == ((XSDBaseAdapter)editPart.getModel()).getTarget())
+      {
+        editPart.setScroll(true);
+        editPart.addFeedback();
+        editPart.doEditName(!(part instanceof ContentOutline));
+      }
     }
     else if (obj instanceof BaseFieldEditPart)
     {

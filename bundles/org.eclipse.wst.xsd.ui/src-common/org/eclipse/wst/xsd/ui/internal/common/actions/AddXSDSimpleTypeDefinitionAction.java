@@ -44,7 +44,8 @@ public class AddXSDSimpleTypeDefinitionAction extends XSDBaseAction
       AddXSDSimpleTypeDefinitionCommand command = new AddXSDSimpleTypeDefinitionCommand(Messages._UI_ACTION_ADD_SIMPLE_TYPE, (XSDSchema) selection);
       getCommandStack().execute(command);
       
-      Adapter adapter = XSDAdapterFactory.getInstance().adapt(command.getAddedComponent());
+      addedComponent = command.getAddedComponent();
+      Adapter adapter = XSDAdapterFactory.getInstance().adapt(addedComponent);
       selectAddedComponent(adapter);
     }
   }

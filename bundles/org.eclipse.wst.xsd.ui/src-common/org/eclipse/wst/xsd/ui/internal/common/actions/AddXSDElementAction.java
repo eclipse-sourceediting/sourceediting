@@ -117,7 +117,8 @@ public class AddXSDElementAction extends XSDBaseAction
     
     if (command != null)
     {
-      Adapter adapter = XSDAdapterFactory.getInstance().adapt(command.getAddedComponent());
+      addedComponent = command.getAddedComponent();
+      Adapter adapter = XSDAdapterFactory.getInstance().adapt(addedComponent);
       selectAddedComponent(adapter);
     }
   }

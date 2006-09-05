@@ -29,6 +29,7 @@ import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.gef.requests.DirectEditRequest;
 import org.eclipse.gef.requests.LocationRequest;
 import org.eclipse.swt.custom.CCombo;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDBaseAdapter;
 import org.eclipse.wst.xsd.ui.internal.adt.design.directedit.ComboBoxCellEditorManager;
 import org.eclipse.wst.xsd.ui.internal.adt.design.directedit.ElementReferenceDirectEditManager;
@@ -296,10 +297,10 @@ public class BaseFieldEditPart extends BaseTypeConnectingEditPart implements INa
     
 //    removeFeedback();
 
-//    Runnable runnable = new Runnable()
-//    {
-//      public void run()
-//      {
+    Runnable runnable = new Runnable()
+    {
+      public void run()
+      {
         Object object = ((XSDBaseAdapter)getModel()).getTarget();
         if (object instanceof XSDNamedComponent)
         {
@@ -309,9 +310,9 @@ public class BaseFieldEditPart extends BaseTypeConnectingEditPart implements INa
           adtDirectEditPolicy.setUpdateCommand(wrapper);
           manager.show();
         }
-//      }
-//    };
-//    Display.getCurrent().asyncExec(runnable);
+      }
+    };
+    Display.getCurrent().asyncExec(runnable);
 
   }
   
