@@ -30,6 +30,7 @@ import org.eclipse.xsd.XSDModelGroup;
 import org.eclipse.xsd.XSDModelGroupDefinition;
 import org.eclipse.xsd.XSDParticle;
 import org.eclipse.xsd.XSDWildcard;
+import org.eclipse.xsd.util.XSDConstants;
 
 public class ModelGroupEditPart extends ConnectableEditPart
 {
@@ -69,21 +70,26 @@ public class ModelGroupEditPart extends ConnectableEditPart
     XSDModelGroupAdapter adapter = (XSDModelGroupAdapter) getModel();
     isReadOnly = adapter.isReadOnly();
     
+    String nodeName = "";
+    
     switch (getXSDModelGroup().getCompositor().getValue())
     {
       case XSDCompositor.ALL:
       {
         modelGroupFigure.getIconFigure().image = isReadOnly ? ModelGroupFigure.ALL_ICON_DISABLED_IMAGE :ModelGroupFigure.ALL_ICON_IMAGE;
+        nodeName = XSDConstants.ALL_ELEMENT_TAG;
         break;
       }
       case XSDCompositor.CHOICE:
       {
         modelGroupFigure.getIconFigure().image = isReadOnly ? ModelGroupFigure.CHOICE_ICON_DISABLED_IMAGE : ModelGroupFigure.CHOICE_ICON_IMAGE;
+        nodeName = XSDConstants.CHOICE_ELEMENT_TAG;
         break;
       }
       case XSDCompositor.SEQUENCE:
       {
         modelGroupFigure.getIconFigure().image = isReadOnly ? ModelGroupFigure.SEQUENCE_ICON_DISABLED_IMAGE : ModelGroupFigure.SEQUENCE_ICON_IMAGE;
+        nodeName = XSDConstants.SEQUENCE_ELEMENT_TAG;
         break;
       }
     }
@@ -100,24 +106,24 @@ public class ModelGroupEditPart extends ConnectableEditPart
     
     if (minOccurs == -3 && maxOccurs == -3)
     {
-      occurenceDescription = ""; //$NON-NLS-1$
+      occurenceDescription = nodeName;
       modelGroupFigure.setText(null);
     }
     else if (minOccurs == 0 && (maxOccurs == -2 || maxOccurs == 1))
     {
-      occurenceDescription = "[0..1]"; //$NON-NLS-1$
+      occurenceDescription = nodeName + " [0..1]"; //$NON-NLS-1$
       modelGroupFigure.setText("0..1");
     }
     else if ((minOccurs == 1 && maxOccurs == 1) ||
              (minOccurs == -2 && maxOccurs == 1) ||
              (minOccurs == 1 && maxOccurs == -2))
     {
-      occurenceDescription = "[1..1]"; //$NON-NLS-1$
+      occurenceDescription = nodeName + " [1..1]"; //$NON-NLS-1$
       modelGroupFigure.setText("1..1");
     }
     else if (minOccurs == -2 && maxOccurs == -2)
     {
-      occurenceDescription = ""; //$NON-NLS-1$
+      occurenceDescription = nodeName;
       modelGroupFigure.setText(null);
     }
     else
@@ -126,7 +132,7 @@ public class ModelGroupEditPart extends ConnectableEditPart
       String maxSymbol = maxOccurs == -1 ? "*" : "" + maxOccurs; //$NON-NLS-1$ //$NON-NLS-2$
       
       String minSymbol = minOccurs == -2 ? "1" : "" + minOccurs; //$NON-NLS-1$ //$NON-NLS-2$
-      occurenceDescription = "[" + minSymbol + ".." + maxSymbol + "]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      occurenceDescription = nodeName + " [" + minSymbol + ".." + maxSymbol + "]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       modelGroupFigure.setText(minSymbol + ".." + maxSymbol);
     }
 
