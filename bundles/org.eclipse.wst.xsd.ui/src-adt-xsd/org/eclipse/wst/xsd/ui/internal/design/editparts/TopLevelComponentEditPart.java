@@ -222,7 +222,8 @@ public class TopLevelComponentEditPart extends BaseEditPart implements IFeedback
 
   public void performRequest(Request request)
   {
-    if (request.getType() == RequestConstants.REQ_DIRECT_EDIT || request.getType() == RequestConstants.REQ_OPEN)
+    // Do not open on or set focus on direct edit type 
+    if (request.getType() == RequestConstants.REQ_OPEN)
     {
 
       Object model = getModel();
