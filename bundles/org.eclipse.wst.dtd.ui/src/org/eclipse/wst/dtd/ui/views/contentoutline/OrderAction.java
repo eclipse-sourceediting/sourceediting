@@ -41,9 +41,8 @@ class OrderAction extends PropertyChangeUpdateAction {
 
 	public void update() {
 		super.update();
+		treeViewer.getControl().setRedraw(false);
 		setChecked(getPreferenceStore().getBoolean(getPreferenceKey()));
-		// treeViewer.getControl().setVisible(false);
-		// treeViewer.getControl().setRedraw(false);
 		Object[] expandedElements = treeViewer.getExpandedElements();
 		ISelection selection = treeViewer.getSelection();
 		contentProvider.setShowLogicalOrder(isChecked());
@@ -52,9 +51,7 @@ class OrderAction extends PropertyChangeUpdateAction {
 		treeViewer.refresh(treeViewer.getInput());
 
 		treeViewer.setExpandedElements(expandedElements);
+		treeViewer.getControl().setRedraw(true);
 		treeViewer.setSelection(selection);
-		// treeViewer.getControl().setVisible(true);
-		// treeViewer.getControl().setRedraw(true);
-
 	}
 }
