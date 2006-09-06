@@ -31,6 +31,21 @@ public class XSDModelReconcileAdapter extends ModelReconcileAdapter
   
   protected void handleNodeChanged(Node node)
   {
+    // Make sure that the node is in the XSD Schema namespace. We don't need to 
+    // reconcile the model for other nodes like text or nodes in other namespaces
+    // like the ones normally occurring in annotations.
+    
+    try
+    {
+      if (!shouldReconcileModelFor(node))
+      {
+        return;
+      }
+    }
+    catch (Exception e)
+    {
+    }
+
     if (node instanceof Element)
     {  
       XSDConcreteComponent concreteComponent = schema.getCorrespondingComponent(node);    
@@ -78,7 +93,45 @@ public class XSDModelReconcileAdapter extends ModelReconcileAdapter
       }      
     } 
   }
-  
+
+  /**
+   * Checks if a change to the given node should trigger a model update.
+   * 
+   * @param changedNode
+   *          the DOM node to test.
+   * @return true if the change to the given node should trigger a model update.
+   */
+  protected boolean shouldReconcileModelFor(Node changedNode)
+  {
+    // No need to reconcile if the node is in a different namespace as it is the
+    // case for nodes deeply nested in appinfo or documentation elements.
+
+    String nodeNamespace = changedNode.getNamespaceURI();
+    String schemaNamespace = schema.getSchemaForSchemaNamespace();
+
+    if (!schemaNamespace.equals(nodeNamespace))
+    {
+      return false;
+    }
+
+    // When a child node is added to an appinfo or documentation element
+    // No need to reconcile if the node is the first child of appinfo or documentation
+    // elements.
+
+    Node parentNode = changedNode.getParentNode();
+
+    if (parentNode != null)
+    {
+      String nodeName = changedNode.getLocalName();
+
+      if (XSDConstants.APPINFO_ELEMENT_TAG.equals(nodeName) || XSDConstants.DOCUMENTATION_ELEMENT_TAG.equals(nodeName))
+      {
+        return false;
+      }
+    }
+    return true;
+  }
+
   public void modelDirtyStateChanged(IStructuredModel model, boolean isDirty)
   {
     if (!isDirty)

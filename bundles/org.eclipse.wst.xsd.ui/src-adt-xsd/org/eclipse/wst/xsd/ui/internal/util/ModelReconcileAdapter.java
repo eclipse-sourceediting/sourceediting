@@ -20,6 +20,7 @@ import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.Text;
 
 public abstract class ModelReconcileAdapter extends DocumentAdapter implements IModelStateListener
 {
@@ -78,8 +79,7 @@ public abstract class ModelReconcileAdapter extends DocumentAdapter implements I
   
   public void handleNotifyChange(INodeNotifier notifier, int eventType, Object feature, Object oldValue, Object newValue, int index)
   {
-    //Node n = (Node)notifier;
-    //System.out.println("nodeChanged(" + eventType + ")" + n.getNodeName());
+    Node node = (Node)notifier;
     switch (eventType)
     {
       case INodeNotifier.ADD:
@@ -97,9 +97,20 @@ public abstract class ModelReconcileAdapter extends DocumentAdapter implements I
       }
       case INodeNotifier.CHANGE:
       case INodeNotifier.STRUCTURE_CHANGED:
+      { 
+        handleNodeChanged(node);
+        break;
+      }  
       case INodeNotifier.CONTENT_CHANGED:
       {
-        Node node = (Node)notifier;
+        // If the only thing changed was the content of a text node
+        // then we don't want to reconcile.
+        
+        if (feature instanceof Text)
+        {
+          break;
+        }
+        
         handleNodeChanged(node);
         break;
       }             
