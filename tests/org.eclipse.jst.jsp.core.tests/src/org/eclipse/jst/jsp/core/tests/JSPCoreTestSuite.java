@@ -16,6 +16,7 @@ import junit.framework.TestSuite;
 import org.eclipse.jst.jsp.core.tests.cleanupformat.FormatTester;
 import org.eclipse.jst.jsp.core.tests.contenttypeidentifier.contentspecific.TestContentTypeHandlers;
 import org.eclipse.jst.jsp.core.tests.contenttypeidentifier.contentspecific.TestModelHandlers;
+import org.eclipse.jst.jsp.core.tests.dom.TestImportedNodes;
 import org.eclipse.jst.jsp.core.tests.model.TestModelIncludes;
 import org.eclipse.jst.jsp.core.tests.model.TestModelRelease;
 import org.eclipse.jst.jsp.core.tests.model.TestModelWithNoFile;
@@ -50,6 +51,7 @@ public class JSPCoreTestSuite extends TestSuite {
 		addTest(new TestSuite(JSPCorePreferencesTest.class));
 		addTest(new TestSuite(JSPedCSSSourceParserTest.class, "Special Parsing Tests for JSP-CSS content"));
 		addTest(new TestSuite(JSPJavaValidatorTest.class, "JSP Java Validator Tests"));
+		addTest(new TestSuite(TestImportedNodes.class, "Imported Nodes Tests"));
 
 	}
 }
