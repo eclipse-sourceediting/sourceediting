@@ -19,7 +19,12 @@ import junit.framework.TestCase;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jdt.core.IClasspathEntry;
+import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.internal.core.ClasspathEntry;
 import org.eclipse.jst.jsp.core.taglib.IJarRecord;
 import org.eclipse.jst.jsp.core.taglib.ITaglibRecord;
 import org.eclipse.jst.jsp.core.taglib.IURLRecord;
@@ -257,7 +262,7 @@ public class TestIndex extends TestCase {
 
 		ITaglibRecord[] records = TaglibIndex.getAvailableTaglibRecords(new Path("/testcache2/WebContent"));
 		TaglibIndex.shutdown();
-		
+
 		TaglibIndex.startup();
 		ITaglibRecord[] records2 = TaglibIndex.getAvailableTaglibRecords(new Path("/testcache2/WebContent"));
 		assertEquals("total ITaglibRecord count doesn't match (1st restart)", records.length, records2.length);
@@ -279,5 +284,71 @@ public class TestIndex extends TestCase {
 		TaglibIndex.startup();
 		records2 = TaglibIndex.getAvailableTaglibRecords(new Path("/testcache2/WebContent"));
 		assertEquals("total ITaglibRecord count doesn't match changed value (4th restart, add jar to build path)", records.length + 2, records2.length);
+	}
+
+	public void testAvailableFromExportedBuildpaths() throws Exception {
+		// Create project 1
+		IProject project = BundleResourceUtil.createSimpleProject("testavailable1", null, null);
+		assertTrue(project.exists());
+		BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/testavailable1", "/testavailable1");
+
+		// Create project 2
+		IProject project2 = BundleResourceUtil.createSimpleProject("testavailable2", null, null);
+		assertTrue(project2.exists());
+		BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/testavailable2", "/testavailable2");
+		BundleResourceUtil.copyBundleEntryIntoWorkspace("/testfiles/bug_118251-sample/sample_tld.jar", "/testavailable2/WebContent/WEB-INF/lib/sample_tld.jar");
+
+		// make sure project 1 sees no taglibs
+		ITaglibRecord[] records = TaglibIndex.getAvailableTaglibRecords(new Path("/testavailable1/WebContent"));
+		assertEquals("ITaglibRecords were found", 0, records.length);
+		// make sure project 2 sees two taglibs
+		ITaglibRecord[] records2 = TaglibIndex.getAvailableTaglibRecords(new Path("/testavailable2/WebContent"));
+		assertEquals("total ITaglibRecord count doesn't match", 2, records2.length);
+
+		TaglibIndex.shutdown();
+		TaglibIndex.startup();
+
+
+		records = TaglibIndex.getAvailableTaglibRecords(new Path("/testavailable2/WebContent"));
+		assertEquals("total ITaglibRecord count doesn't match after restart", 2, records.length);
+
+		IJavaProject created = JavaCore.create(project2);
+		assertTrue("/availabletest2 not a Java project", created.exists());
+
+		// export the jar from project 2
+		IClasspathEntry[] entries = created.getRawClasspath();
+		boolean found = false;
+		for (int i = 0; i < entries.length; i++) {
+			IClasspathEntry entry = entries[i];
+			if (entry.getPath().equals(new Path("/testavailable2/WebContent/WEB-INF/lib/sample_tld.jar"))) {
+				found = true;
+				assertFalse("was exported", ((ClasspathEntry) entry).isExported);
+				((ClasspathEntry) entry).isExported = true;
+			}
+		}
+		assertTrue(found);
+		IClasspathEntry[] entries2 = new IClasspathEntry[entries.length];
+		System.arraycopy(entries, 1, entries2, 0, entries.length - 1);
+		entries2[entries.length - 1] = entries[0];
+		created.setRawClasspath(entries2, new NullProgressMonitor());
+
+		entries = created.getRawClasspath();
+		found = false;
+		for (int i = 0; i < entries.length; i++) {
+			IClasspathEntry entry = entries[i];
+			if (entry.getPath().equals(new Path("/testavailable2/WebContent/WEB-INF/lib/sample_tld.jar"))) {
+				found = true;
+				assertTrue("was not exported", ((ClasspathEntry) entry).isExported);
+			}
+		}
+		assertTrue(found);
+
+		// project 2 should still have just two taglibs
+		records = TaglibIndex.getAvailableTaglibRecords(new Path("/testavailable2/WebContent"));
+		assertEquals("total ITaglibRecord count doesn't match (after exporting jar)", 2, records.length);
+
+		// now one taglib should be visible from project 1
+		records = TaglibIndex.getAvailableTaglibRecords(new Path("/testavailable1/WebContent"));
+		assertEquals("total ITaglibRecord count doesn't match (after exporting jar)", 1, records.length);
 	}
 }
