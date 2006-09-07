@@ -1,6 +1,17 @@
 package org.eclipse.wst.project.facet;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.IllegalFormatException;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.jem.util.logger.proxy.Logger;
+import org.eclipse.wst.common.project.facet.core.runtime.IRuntime;
+import org.eclipse.wst.common.project.facet.core.runtime.IRuntimeComponent;
+import org.eclipse.wst.common.project.facet.core.runtime.RuntimeManager;
 
 public class ProductManager {
 
@@ -12,6 +23,11 @@ public class ProductManager {
 	private static final String ADD_TO_EAR_BY_DEFAULT = "false"; //$NON-NLS-1$
 	private static final String OUTPUT_FOLDER = "build/classes"; //$NON-NLS-1$
 	private static final String FINAL_PERSPECTIVE = "org.eclipse.jst.j2ee.J2EEPerspective"; //$NON-NLS-1$
+	private static final char RUNTIME_SEPARATOR = ':';
+	private static final String[] DEFAULT_RUNTIME_KEYS = 
+							new String[]{IProductConstants.DEFAULT_RUNTIME_1,
+										IProductConstants.DEFAULT_RUNTIME_2,
+										IProductConstants.DEFAULT_RUNTIME_3};
 	
 	/**
 	 * Return the value for the associated key from the Platform Product registry or return the
@@ -57,6 +73,58 @@ public class ProductManager {
 		String value = getProperty(IProductConstants.ADD_TO_EAR_BY_DEFAULT);
 		return Boolean.valueOf(value).booleanValue();
 	}
+
+	public static List/*<IRuntime>*/ getDefaultRuntimes() {
+		List theRuntimes = null;
+		Set runtimes = RuntimeManager.getRuntimes();
+		if (!runtimes.isEmpty()) {
+			IRuntime defaultRuntime = null;
+			//	First check if defaults are defined
+			for (int i = 0; i < DEFAULT_RUNTIME_KEYS.length; i++) {
+				defaultRuntime = getMatchingRuntime(DEFAULT_RUNTIME_KEYS[i], runtimes);
+				if (defaultRuntime != null) {
+					if (theRuntimes == null) {
+						theRuntimes = new ArrayList(3);
+					}
+					theRuntimes.add(defaultRuntime);
+				}
+			}
+		}
+		if (theRuntimes == null) {
+			theRuntimes = Collections.EMPTY_LIST;
+		}
+		return theRuntimes;
+	}
 	
-	
+	private static IRuntime getMatchingRuntime(String defaultProductRuntimeProperty, Set runtimes) {
+		String defaultProductRuntimeKey = getProperty(defaultProductRuntimeProperty);
+		if (defaultProductRuntimeKey == null || defaultProductRuntimeKey.length() == 0) {
+			return null;
+		}
+		//The defaultProductRuntimeKey needs to be in the following format
+		//<facet runtime id>:<facet version>.
+		int seperatorIndex = defaultProductRuntimeKey.indexOf(RUNTIME_SEPARATOR);
+		if (seperatorIndex < 0 && seperatorIndex < defaultProductRuntimeKey.length()) {
+			//Consider throwing an exception here.
+			Logger.getLogger().logError("Invalid default product runtime id.  It should follow the format <facet runtime id>:<facet version>.  Id processed: " + defaultProductRuntimeKey);
+			return null;
+		}
+		String defaultRuntimeID = defaultProductRuntimeKey.substring(0, seperatorIndex);
+		String defaultFacetVersion = defaultProductRuntimeKey.substring(seperatorIndex + 1);
+		for (Iterator runtimeIt = runtimes.iterator(); runtimeIt.hasNext();) {
+			IRuntime runtime = (IRuntime) runtimeIt.next();
+			List runtimeComps = runtime.getRuntimeComponents();
+			if (!runtimeComps.isEmpty()) {
+				for (Iterator compsIter = runtimeComps.iterator(); compsIter.hasNext();) {
+					IRuntimeComponent runtimeComp = (IRuntimeComponent) compsIter.next();
+					if (defaultRuntimeID.equals(runtimeComp.getRuntimeComponentType().getId()) &&
+						(defaultFacetVersion.equals(runtimeComp.getRuntimeComponentVersion().getVersionString()))) {
+							return runtime;
+					}
+				}
+			}
+		}
+		//No matches found.
+		return null;
+	}
 }

@@ -28,4 +28,11 @@ public interface IProductConstants {
 	public static final String FINAL_PERSPECTIVE_UTILITY = "finalPerspectiveUtility"; //$NON-NLS-1$
 	public static final String FINAL_PERSPECTIVE_STATICWEB = "finalPerspectiveStaticWeb"; //$NON-NLS-1$
 	
+	/**
+	 * Ability to default initial runtimes chosen in wizards
+	 */
+	public static final String DEFAULT_RUNTIME_1 = "defaultRuntime1"; //$NON-NLS-1$
+	public static final String DEFAULT_RUNTIME_2 = "defaultRuntime2"; //$NON-NLS-1$
+	public static final String DEFAULT_RUNTIME_3 = "defaultRuntime3"; //$NON-NLS-1$
+	
 }

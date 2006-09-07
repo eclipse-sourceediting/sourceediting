@@ -12,6 +12,7 @@ package org.eclipse.wst.web.ui.internal.wizards;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.jface.dialogs.IDialogSettings;
@@ -37,6 +38,7 @@ import org.eclipse.wst.common.project.facet.core.runtime.IRuntime;
 import org.eclipse.wst.common.project.facet.ui.AddRemoveFacetsWizard;
 import org.eclipse.wst.common.project.facet.ui.PresetSelectionPanel;
 import org.eclipse.wst.common.project.facet.ui.internal.AddRemoveFacetsDataModel;
+import org.eclipse.wst.project.facet.ProductManager;
 import org.eclipse.wst.server.ui.ServerUIUtil;
 import org.eclipse.wst.web.internal.ResourceHandler;
 
@@ -203,21 +205,25 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
 				boolean runtimeSet = false;
 				String[] mruRuntimeArray = settings.getArray(MRU_RUNTIME_STORE);
 				DataModelPropertyDescriptor[] descriptors = model.getValidPropertyDescriptors(IFacetProjectCreationDataModelProperties.FACET_RUNTIME);
-				if (mruRuntimeArray != null) {
-					List mruRuntimes = new ArrayList();
+				List mruRuntimes = new ArrayList();
+				if (mruRuntimeArray == null) {
+					List defRuntimes = ProductManager.getDefaultRuntimes();
+					for (Iterator iter = defRuntimes.iterator(); iter.hasNext();)
+						mruRuntimes.add(((IRuntime) iter.next()).getName());
+				} else {
 					mruRuntimes.addAll(Arrays.asList(mruRuntimeArray));
-					if (mruRuntimeArray != null) {
-						for (int i = 0; i < mruRuntimeArray.length && !runtimeSet; i++) {
-							for (int j = 0; j < descriptors.length-1 && !runtimeSet; j++) {
-								if (mruRuntimeArray[i].equals(descriptors[j].getPropertyDescription())) {
-									model.setProperty(IFacetProjectCreationDataModelProperties.FACET_RUNTIME, descriptors[j].getPropertyValue());
-									runtimeSet = true;
-								}
-							}
-							if(!runtimeSet && mruRuntimeArray[i].equals(NULL_RUNTIME)){
-								model.setProperty(IFacetProjectCreationDataModelProperties.FACET_RUNTIME, descriptors[descriptors.length -1].getPropertyValue());
+				}
+				if (!mruRuntimes.isEmpty()) {
+					for (int i = 0; i < mruRuntimes.size() && !runtimeSet; i++) {
+						for (int j = 0; j < descriptors.length-1 && !runtimeSet; j++) {
+							if (mruRuntimes.get(i).equals(descriptors[j].getPropertyDescription())) {
+								model.setProperty(IFacetProjectCreationDataModelProperties.FACET_RUNTIME, descriptors[j].getPropertyValue());
 								runtimeSet = true;
 							}
+						}
+						if(!runtimeSet && mruRuntimes.get(i).equals(NULL_RUNTIME)){
+							model.setProperty(IFacetProjectCreationDataModelProperties.FACET_RUNTIME, descriptors[descriptors.length -1].getPropertyValue());
+							runtimeSet = true;
 						}
 					}
 				}
@@ -228,8 +234,7 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
 		}
 	}
 	
-	
-	
+
 	/**
 	 * Find first newObject that is not in the oldObjects array (using "==").
 	 * 
