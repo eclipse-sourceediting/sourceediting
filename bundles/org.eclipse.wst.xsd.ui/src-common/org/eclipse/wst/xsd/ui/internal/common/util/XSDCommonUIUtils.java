@@ -411,6 +411,13 @@ public class XSDCommonUIUtils
     return attributes;
   }
 
+  public static List getAllAttributes(XSDModelGroupDefinition xsdModelGroupDefinition)
+  {
+    List attributes = getChildElements(xsdModelGroupDefinition);
+
+    return attributes;
+  }
+  
   public static List getInheritedAttributes(XSDComplexTypeDefinition ct)
   {
     List attrs = new ArrayList();
@@ -428,7 +435,12 @@ public class XSDCommonUIUtils
   {
     return getChildElements(getModelGroup(ct));
   }
-
+  
+  public static List getChildElements(XSDModelGroupDefinition xsdModelGroupDefinition)
+  {
+    return getChildElements(xsdModelGroupDefinition.getModelGroup());
+  }
+  
   public static XSDModelGroup getModelGroup(XSDComplexTypeDefinition cType)
   {
     XSDParticle particle = cType.getComplexType();

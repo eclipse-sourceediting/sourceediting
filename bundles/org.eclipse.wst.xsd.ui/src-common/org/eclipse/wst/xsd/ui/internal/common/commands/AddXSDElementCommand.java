@@ -117,7 +117,7 @@ public class AddXSDElementCommand extends BaseCommand
         xsdSchema = xsdModelGroupDefinition.getSchema();
         if (!isReference)
         {
-          xsdModelGroup.getContents().add(createXSDElementDeclaration());
+          xsdModelGroup.getContents().add(createXSDElementDeclarationForModelGroupDefinitions());
         }
         else
         {
@@ -125,7 +125,7 @@ public class AddXSDElementCommand extends BaseCommand
         }
         formatChild(xsdModelGroupDefinition.getElement());
       }
-      else if (xsdComplexTypeDefinition == null && xsdModelGroup != null)
+      else if (xsdModelGroup != null && (xsdComplexTypeDefinition == null || xsdModelGroupDefinition == null) )
       {
         xsdSchema = xsdModelGroup.getSchema();
         beginRecording(xsdSchema.getElement());
@@ -175,10 +175,26 @@ public class AddXSDElementCommand extends BaseCommand
 
     XSDElementDeclaration element = XSDFactory.eINSTANCE.createXSDElementDeclaration();
 
+    XSDConcreteComponent comp = xsdModelGroup.getContainer();
     ArrayList usedAttributeNames = new ArrayList();
-    usedAttributeNames.addAll(XSDCommonUIUtils.getChildElements(xsdModelGroup));
+    usedAttributeNames.addAll(XSDCommonUIUtils.getChildElements(xsdModelGroup));    
+    while (comp != null)
+    {
+      if (comp instanceof XSDModelGroupDefinition)
+      {
+        usedAttributeNames.addAll(XSDCommonUIUtils.getAllAttributes((XSDModelGroupDefinition)comp));
+        break;
+      }
+      else if (comp instanceof XSDComplexTypeDefinition)
+      {
+        usedAttributeNames.addAll(XSDCommonUIUtils.getAllAttributes((XSDComplexTypeDefinition)comp));
+        usedAttributeNames.addAll(XSDCommonUIUtils.getInheritedAttributes((XSDComplexTypeDefinition)comp));
+        break;
+      }
+      comp = comp.getContainer();
+    }
     element.setName(XSDCommonUIUtils.createUniqueElementName(
-    		nameToAdd == null ? "NewElement" : nameToAdd , xsdSchema.getElementDeclarations())); //$NON-NLS-1$
+    		nameToAdd == null ? "NewElement" : nameToAdd , usedAttributeNames)); //$NON-NLS-1$
     element.setTypeDefinition(type);
 
     XSDParticle particle = XSDFactory.eINSTANCE.createXSDParticle();
@@ -223,6 +239,24 @@ public class AddXSDElementCommand extends BaseCommand
     usedAttributeNames.addAll(XSDCommonUIUtils.getInheritedAttributes(xsdComplexTypeDefinition));
     element.setName(XSDCommonUIUtils.createUniqueElementName(
     		nameToAdd == null ? "NewElement" : nameToAdd , usedAttributeNames)); //$NON-NLS-1$
+    element.setTypeDefinition(type);
+
+    XSDParticle particle = XSDFactory.eINSTANCE.createXSDParticle();
+    particle.setContent(element);
+    addedXSDConcreteComponent = element;
+    return particle;
+  }
+  
+  protected XSDParticle createXSDElementDeclarationForModelGroupDefinitions()
+  {
+    XSDSimpleTypeDefinition type = xsdModelGroup.getSchema().getSchemaForSchema().resolveSimpleTypeDefinition("string"); //$NON-NLS-1$
+
+    XSDElementDeclaration element = XSDFactory.eINSTANCE.createXSDElementDeclaration();
+
+    ArrayList usedAttributeNames = new ArrayList();
+    usedAttributeNames.addAll(XSDCommonUIUtils.getAllAttributes(xsdModelGroupDefinition));
+    element.setName(XSDCommonUIUtils.createUniqueElementName(
+        nameToAdd == null ? "NewElement" : nameToAdd , usedAttributeNames)); //$NON-NLS-1$
     element.setTypeDefinition(type);
 
     XSDParticle particle = XSDFactory.eINSTANCE.createXSDParticle();
