@@ -19,6 +19,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.wst.xsd.ui.internal.common.commands.UpdateAttributeValueCommand;
 import org.eclipse.xsd.XSDComplexTypeDefinition;
+import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.util.XSDConstants;
 
 public class XSDComplexTypeAdvancedSection extends AbstractSection
@@ -168,6 +169,16 @@ public class XSDComplexTypeAdvancedSection extends AbstractSection
       if (input instanceof XSDComplexTypeDefinition)
       {
         XSDComplexTypeDefinition complexType = (XSDComplexTypeDefinition) input;
+        
+        if (complexType.getContainer() instanceof XSDSchema)
+        {
+          composite.setEnabled(!isReadOnly);
+        }
+        else
+        {
+          composite.setEnabled(false);
+        }
+        
         String blockAttValue = complexType.getElement().getAttribute(XSDConstants.BLOCK_ATTRIBUTE);
         if (blockAttValue != null)
         {
