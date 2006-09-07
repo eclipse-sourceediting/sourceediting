@@ -25,11 +25,14 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Stack;
+import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.core.filebuffers.FileBuffers;
 import org.eclipse.core.filebuffers.ITextFileBuffer;
@@ -69,6 +72,7 @@ import org.eclipse.wst.sse.core.internal.util.JarUtilities;
 import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
 import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalog;
 import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalogEntry;
+import org.eclipse.wst.xml.core.internal.catalog.provisional.INextCatalog;
 import org.w3c.dom.Document;
 import org.w3c.dom.EntityReference;
 import org.w3c.dom.Node;
@@ -147,6 +151,7 @@ class ProjectDescription {
 		TaglibInfo info;
 		IPath location;
 		List urlRecords;
+		boolean isExported = true;
 
 		public boolean equals(Object obj) {
 			if (!(obj instanceof JarRecord))
@@ -257,7 +262,7 @@ class ProjectDescription {
 		}
 
 		public String toString() {
-			return "TaglibInfo|" + shortName + "|" + tlibVersion + "|" + smallIcon + "|" + largeIcon + "|" + jspVersion + "|" + uri + "|" + description;
+			return "TaglibInfo|" + shortName + "|" + tlibVersion + "|" + smallIcon + "|" + largeIcon + "|" + jspVersion + "|" + uri + "|" + description; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
 		}
 	}
 
@@ -340,6 +345,7 @@ class ProjectDescription {
 		String baseLocation;
 		TaglibInfo info;
 		URL url;
+		boolean isExported = true;
 
 		public URLRecord() {
 			super();
@@ -434,7 +440,7 @@ class ProjectDescription {
 	private static final String WEB_INF = "WEB-INF"; //$NON-NLS-1$
 	private static final IPath WEB_INF_PATH = new Path(WEB_INF);
 	private static final String WEB_XML = "web.xml"; //$NON-NLS-1$
-	private static final String SAVE_FORMAT_VERSION = "1.0.1";
+	private static final String SAVE_FORMAT_VERSION = "Tag Library Index 1.0.1"; //$NON-NLS-1$
 	private static final String BUILDPATH_DIRTY = "BUILDPATH_DIRTY"; //$NON-NLS-1$
 
 	/*
@@ -449,7 +455,12 @@ class ProjectDescription {
 	 */
 	boolean fBuildPathIsDirty = false;
 
-	Stack fClasspathProjects = null;
+	/**
+	 * A set of the projects that are in this project's build path.
+	 * Lookups/enumerations will be redirected to the corresponding
+	 * ProjectDescription instances
+	 */
+	Set fClasspathProjects = null;
 
 	// holds references by URI to JARs
 	Hashtable fClasspathReferences;
@@ -485,6 +496,7 @@ class ProjectDescription {
 		fWebXMLReferences = new Hashtable(0);
 		fImplicitReferences = new Hashtable(0);
 		fClasspathReferences = new Hashtable(0);
+		fClasspathProjects = new HashSet();
 
 		restoreReferences();
 	}
@@ -499,6 +511,48 @@ class ProjectDescription {
 			}
 		}
 		return collection;
+	}
+
+	/**
+	 * Adds the list of known references from this project's build path to the
+	 * map, appending any processed projects into the list to avoid
+	 * build-path-cycles.
+	 * 
+	 * @see https://bugs.eclipse.org/bugs/show_bug.cgi?id=142408
+	 * 
+	 * @param references -
+	 *            the map of references to ITaglibRecords
+	 * @param projectsProcessed -
+	 *            the list of projects already considered
+	 * @param exportedOnly -
+	 *            Whether to only add references derived from exported build
+	 *            path containers. This method calls itself recursively with
+	 *            this parameter as false.
+	 */
+	void addBuildPathReferences(Map references, List projectsProcessed, boolean exportedOnly) {
+		ensureUpTodate();
+		
+		Enumeration keys = fClasspathReferences.keys();
+		while (keys.hasMoreElements()) {
+			Object key = keys.nextElement();
+			URLRecord urlRecord = (URLRecord) fClasspathReferences.get(key);
+			if (exportedOnly) {
+				if (urlRecord.isExported) {
+					references.put(key, urlRecord);
+				}
+			}
+			else {
+				references.put(key, urlRecord);
+			}
+		}
+		IProject[] buildpathProjects = (IProject[]) fClasspathProjects.toArray(new IProject[fClasspathProjects.size()]);
+		for (int i = 0; i < buildpathProjects.length; i++) {
+			if (!projectsProcessed.contains(buildpathProjects[i]) && buildpathProjects[i].isAccessible()) {
+				projectsProcessed.add(buildpathProjects[i]);
+				ProjectDescription description = TaglibIndex._instance.createDescription(buildpathProjects[i]);
+				description.addBuildPathReferences(references, projectsProcessed, true);
+			}
+		}
 	}
 
 	/**
@@ -741,20 +795,43 @@ class ProjectDescription {
 	synchronized List getAvailableTaglibRecords(IPath path) {
 		ensureUpTodate();
 
-		Collection implicitReferences = getImplicitReferences(path.toString()).values();
+		Collection implicitReferences = new HashSet(getImplicitReferences(path.toString()).values());
 		List records = new ArrayList(fTLDReferences.size() + fTagDirReferences.size() + fJARReferences.size() + fWebXMLReferences.size());
 		records.addAll(fTLDReferences.values());
 		records.addAll(fTagDirReferences.values());
 		records.addAll(_getJSP11AndWebXMLJarReferences(fJARReferences.values()));
-		records.addAll(fClasspathReferences.values());
 		records.addAll(implicitReferences);
 
-		ICatalog catalog = XMLCorePlugin.getDefault().getDefaultXMLCatalog();
-		if (catalog != null) {
-			ICatalogEntry[] entries = catalog.getCatalogEntries();
-			for (int i = 0; i < entries.length; i++) {
-				ITaglibRecord record = createCatalogRecord(entries[i].getURI());
+		Map buildPathReferences = new HashMap();
+		List projectsProcessed = new ArrayList(fClasspathProjects.size() + 1);
+		projectsProcessed.add(fProject);
+		addBuildPathReferences(buildPathReferences, projectsProcessed, false);
+		records.addAll(buildPathReferences.values());
+
+		ICatalog defaultCatalog = XMLCorePlugin.getDefault().getDefaultXMLCatalog();
+		if (defaultCatalog != null) {
+			// Process default catalog
+			ICatalogEntry[] entries = defaultCatalog.getCatalogEntries();
+			for (int entry = 0; entry < entries.length; entry++) {
+				ITaglibRecord record = createCatalogRecord(entries[entry].getURI());
 				records.add(record);
+			}
+
+			// Process declared OASIS nextCatalogs catalog
+			INextCatalog[] nextCatalogs = defaultCatalog.getNextCatalogs();
+			for (int nextCatalog = 0; nextCatalog < nextCatalogs.length; nextCatalog++) {
+				ICatalog catalog = nextCatalogs[nextCatalog].getReferencedCatalog();
+				ICatalogEntry[] entries2 = catalog.getCatalogEntries();
+				for (int entry = 0; entry < entries2.length; entry++) {
+					String uri = entries2[entry].getURI();
+					if (uri != null) {
+						uri = uri.toLowerCase(Locale.US);
+						if (uri.endsWith((".jar")) || uri.endsWith((".tld"))) {
+							ITaglibRecord record = createCatalogRecord(uri);
+							records.add(record);
+						}
+					}
+				}
 			}
 		}
 
@@ -913,7 +990,14 @@ class ProjectDescription {
 					libPath = element.getPath().toString();
 			}
 			if (libPath != null) {
-				updateClasspathLibrary(libPath, taglibRecordEventKind);
+				boolean fragmentisExported = true;
+				try {
+					fragmentisExported = ((IPackageFragmentRoot) element).getRawClasspathEntry().isExported();
+				}
+				catch (JavaModelException e) {
+					Logger.logException("Problem handling build path entry for " + element.getPath(), e); //$NON-NLS-1$
+				}
+				updateClasspathLibrary(libPath, taglibRecordEventKind, fragmentisExported);
 			}
 			if (_debugIndexTime)
 				Logger.log(Logger.INFO, "processed build path delta for " + fProject.getName() + "(" + element.getPath() + ") in " + (System.currentTimeMillis() - time0) + "ms"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -940,14 +1024,24 @@ class ProjectDescription {
 	}
 
 	void indexClasspath() {
-		time0 = System.currentTimeMillis();
-		fClasspathProjects = new Stack();
-
+		if (_debugIndexTime)
+			time0 = System.currentTimeMillis();
+		fClasspathProjects.clear();
 		fClasspathReferences.clear();
 		fClasspathJars.clear();
 
 		IJavaProject javaProject = JavaCore.create(fProject);
-		indexClasspath(javaProject);
+		/*
+		 * If the Java nature isn't present (or something else is wrong),
+		 * don't check the build path.
+		 */
+		if (javaProject.exists()) {
+			indexClasspath(javaProject);
+		}
+		// else {
+		// Logger.log(Logger.WARNING, "TaglibIndex was asked to index non-Java
+		// Project " + fProject.getName()); //$NON-NLS-1$
+		// }
 
 		if (_debugIndexTime)
 			Logger.log(Logger.INFO, "indexed " + fProject.getName() + " classpath in " + (System.currentTimeMillis() - time0) + "ms"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -974,7 +1068,7 @@ class ProjectDescription {
 					IPath libPath = entry.getPath();
 					if (!fClasspathJars.containsKey(libPath.toString())) {
 						if (libPath.toFile().exists()) {
-							updateClasspathLibrary(libPath.toString(), ITaglibRecordEvent.ADDED);
+							updateClasspathLibrary(libPath.toString(), ITaglibRecordEvent.ADDED, entry.isExported());
 						}
 						else {
 							/*
@@ -985,7 +1079,7 @@ class ProjectDescription {
 							 */
 							IFile libFile = ResourcesPlugin.getWorkspace().getRoot().getFile(libPath);
 							if (libFile != null && libFile.exists()) {
-								updateClasspathLibrary(libFile.getLocation().toString(), ITaglibRecordEvent.ADDED);
+								updateClasspathLibrary(libFile.getLocation().toString(), ITaglibRecordEvent.ADDED, entry.isExported());
 							}
 						}
 					}
@@ -994,14 +1088,12 @@ class ProjectDescription {
 				break;
 			case IClasspathEntry.CPE_PROJECT : {
 				/*
-				 * Ignore required projects of required projects that are not
-				 * exported
+				 * We're currently ignoring whether the project exports all of
+				 * its build path
 				 */
-				if (fClasspathProjects.size() < 2 || entry.isExported()) {
-					IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(entry.getPath().lastSegment());
-					if (project != null && !fClasspathProjects.contains(project.getName())) {
-						indexClasspath(JavaCore.create(project));
-					}
+				IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(entry.getPath().lastSegment());
+				if (project != null) {
+					fClasspathProjects.add(project);
 				}
 			}
 				break;
@@ -1027,8 +1119,11 @@ class ProjectDescription {
 	 * @param javaProject
 	 */
 	private void indexClasspath(IJavaProject javaProject) {
-		if (javaProject != null && javaProject.exists() && !fClasspathProjects.contains(javaProject.getElementName())) {
-			fClasspathProjects.push(javaProject.getElementName());
+		if (javaProject == null)
+			return;
+
+		IProject project = javaProject.getProject();
+		if (project.equals(fProject)) {
 			try {
 				IClasspathEntry[] entries = javaProject.getResolvedClasspath(true);
 				for (int i = 0; i < entries.length; i++) {
@@ -1038,7 +1133,6 @@ class ProjectDescription {
 			catch (JavaModelException e) {
 				Logger.logException("Error searching Java Build Path + (" + fProject.getName() + ") for tag libraries", e); //$NON-NLS-1$ //$NON-NLS-2$
 			}
-			fClasspathProjects.pop();
 		}
 	}
 
@@ -1149,6 +1243,13 @@ class ProjectDescription {
 		if (record == null) {
 			record = (ITaglibRecord) fClasspathReferences.get(reference);
 		}
+		if (record == null) {
+			Map buildPathReferences = new HashMap();
+			List projectsProcessed = new ArrayList(fClasspathProjects.size() + 1);
+			projectsProcessed.add(fProject);
+			addBuildPathReferences(buildPathReferences, projectsProcessed, false);
+			record = (ITaglibRecord) buildPathReferences.get(reference);
+		}
 
 		// Check the XML Catalog
 		if (record == null) {
@@ -1199,7 +1300,7 @@ class ProjectDescription {
 			// resources first
 			index();
 			// now build path
-			
+
 			// ================ test reload time ========================
 			boolean restored = false;
 			File savedState = new File(fSaveStateFilename);
@@ -1220,15 +1321,16 @@ class ProjectDescription {
 							for (int i = 1; i < lines; i++) {
 								line = doc.getLineInformation(i);
 								lineText = doc.get(line.getOffset(), line.getLength());
-								StringTokenizer toker = new StringTokenizer(lineText, "|");
+								StringTokenizer toker = new StringTokenizer(lineText, "|"); //$NON-NLS-1$
 								if (toker.hasMoreTokens()) {
 									String tokenType = toker.nextToken();
-									if ("JAR".equalsIgnoreCase(tokenType)) {
+									if ("JAR".equalsIgnoreCase(tokenType)) { //$NON-NLS-1$ //$NON-NLS-2$
 										boolean has11TLD = Boolean.valueOf(toker.nextToken()).booleanValue();
+										boolean exported = Boolean.valueOf(toker.nextToken()).booleanValue();
 										// make the rest the libraryLocation
 										String libraryLocation = toker.nextToken();
 										while (toker.hasMoreTokens()) {
-											libraryLocation = libraryLocation + "|" + toker.nextToken();
+											libraryLocation = libraryLocation + "|" + toker.nextToken(); //$NON-NLS-1$ //$NON-NLS-2$
 										}
 										libraryLocation = libraryLocation.trim();
 										if (libraryRecord != null) {
@@ -1237,6 +1339,7 @@ class ProjectDescription {
 										// Create a new JarRecord
 										libraryRecord = createJARRecord(libraryLocation);
 										libraryRecord.has11TLD = has11TLD;
+										libraryRecord.isExported = exported;
 
 										// Add a URLRecord for the 1.1 TLD
 										if (has11TLD) {
@@ -1245,19 +1348,22 @@ class ProjectDescription {
 												TaglibInfo info = extractInfo(libraryLocation, contents);
 
 												if (info != null && info.uri != null && info.uri.length() > 0) {
-													URLRecord record = new URLRecord();
-													record.info = info;
-													record.baseLocation = libraryLocation;
+													URLRecord urlRecord = new URLRecord();
+													urlRecord.info = info;
+													urlRecord.isExported = exported;
+													urlRecord.baseLocation = libraryLocation;
 													try {
-														record.url = new URL("jar:file:" + libraryLocation + "!/" + JarUtilities.JSP11_TAGLIB); //$NON-NLS-1$ //$NON-NLS-2$
-														libraryRecord.urlRecords.add(record);
-														fClasspathReferences.put(record.getURI(), record);
+														urlRecord.url = new URL("jar:file:" + libraryLocation + "!/" + JarUtilities.JSP11_TAGLIB); //$NON-NLS-1$ //$NON-NLS-2$
+														libraryRecord.urlRecords.add(urlRecord);
+														fClasspathReferences.put(urlRecord.getURI(), urlRecord);
 														if (_debugIndexCreation)
-															Logger.log(Logger.INFO, "created record for " + record.getURI() + "@" + record.getURL()); //$NON-NLS-1$ //$NON-NLS-2$
+															Logger.log(Logger.INFO, "created record for " + urlRecord.getURI() + "@" + urlRecord.getURL()); //$NON-NLS-1$ //$NON-NLS-2$
 													}
 													catch (MalformedURLException e) {
-														// don't record this
-														// URI
+														/*
+														 * don't record this
+														 * URI
+														 */
 														Logger.logException(e);
 													}
 												}
@@ -1271,16 +1377,18 @@ class ProjectDescription {
 
 										fClasspathJars.put(libraryLocation, libraryRecord);
 									}
-									else if ("URL".equalsIgnoreCase(tokenType)) {
+									else if ("URL".equalsIgnoreCase(tokenType)) { //$NON-NLS-1$
+										boolean exported = Boolean.valueOf(toker.nextToken()).booleanValue();
 										// make the rest the URL
 										String urlString = toker.nextToken();
 										while (toker.hasMoreTokens()) {
-											urlString = urlString + "|" + toker.nextToken();
+											urlString = urlString + "|" + toker.nextToken(); //$NON-NLS-1$ //$NON-NLS-2$
 										}
 										urlString = urlString.trim();
 										// Append a URLrecord
 										URLRecord urlRecord = new URLRecord();
 										urlRecord.url = new URL(urlString); //$NON-NLS-1$ //$NON-NLS-2$
+										urlRecord.isExported = exported;
 										urlRecord.baseLocation = libraryRecord.location.toString();
 										libraryRecord.urlRecords.add(urlRecord);
 
@@ -1332,20 +1440,20 @@ class ProjectDescription {
 										fBuildPathIsDirty = Boolean.valueOf(toker.nextToken()).booleanValue();
 									}
 								}
+								if (libraryRecord != null) {
+									TaglibIndex.fireTaglibRecordEvent(new TaglibRecordEvent(libraryRecord, ITaglibRecordEvent.ADDED));
+								}
 							}
-							if (libraryRecord != null) {
-								TaglibIndex.fireTaglibRecordEvent(new TaglibRecordEvent(libraryRecord, ITaglibRecordEvent.ADDED));
-							}
+							restored = true;
 						}
 					}
-					restored = true;
 					if (_debugIndexTime)
-						Logger.log(Logger.INFO, "time spent reloading " + fProject.getName() + " build path: " + (System.currentTimeMillis() - time0));
+						Logger.log(Logger.INFO, "time spent reloading " + fProject.getName() + " build path: " + (System.currentTimeMillis() - time0)); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 				catch (Exception e) {
 					restored = false;
 					if (_debugIndexTime)
-						Logger.log(Logger.INFO, "failure reloading " + fProject.getName() + " build path index", e);
+						Logger.log(Logger.INFO, "failure reloading " + fProject.getName() + " build path index", e); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 				finally {
 					try {
@@ -1377,34 +1485,38 @@ class ProjectDescription {
 
 		/**
 		 * <pre>
-		 *                                        1.0
-		 *                                        Save classpath information (| is field delimiter)
-		 *                                        Jars are saved as &quot;JAR:&quot;+ has11TLD + jar path 
-		 *                                        URLRecords as &quot;URL:&quot;+URL
+		 *           		 1.0
+		 *           		 Save classpath information (| is field delimiter)
+		 *           		 Jars are saved as &quot;JAR:&quot;+ has11TLD + jar path 
+		 *           		 URLRecords as &quot;URL:&quot;+URL
 		 * </pre>
 		 */
 		try {
-			writer = new OutputStreamWriter(new FileOutputStream(fSaveStateFilename), "utf8");
+			writer = new OutputStreamWriter(new FileOutputStream(fSaveStateFilename), "utf16"); //$NON-NLS-1$
 			writer.write(SAVE_FORMAT_VERSION);
-			writer.write('\n');
-			writer.write(BUILDPATH_DIRTY + "|" + fBuildPathIsDirty);
-			writer.write('\n');
+			writer.write('\n'); //$NON-NLS-1$
+			writer.write(BUILDPATH_DIRTY + "|" + fBuildPathIsDirty); //$NON-NLS-1$
+			writer.write('\n'); //$NON-NLS-1$
 
 			Enumeration jars = fClasspathJars.keys();
 			while (jars.hasMoreElements()) {
 				String jarPath = jars.nextElement().toString();
 				JarRecord jarRecord = (JarRecord) fClasspathJars.get(jarPath);
-				writer.write("JAR|");
+				writer.write("JAR|"); //$NON-NLS-1$
 				writer.write(Boolean.toString(jarRecord.has11TLD));
-				writer.write('|');
+				writer.write('|'); //$NON-NLS-1$
+				writer.write(Boolean.toString(jarRecord.isExported));
+				writer.write('|'); //$NON-NLS-1$
 				writer.write(jarPath);
-				writer.write('\n');
+				writer.write('\n'); //$NON-NLS-1$
 				Iterator i = jarRecord.urlRecords.iterator();
 				while (i.hasNext()) {
-					IURLRecord urlRecord = (IURLRecord) i.next();
-					writer.write("URL|");
+					URLRecord urlRecord = (URLRecord) i.next();
+					writer.write("URL|"); //$NON-NLS-1$
+					writer.write(String.valueOf(urlRecord.isExported));
+					writer.write("|"); //$NON-NLS-1$
 					writer.write(urlRecord.getURL().toExternalForm());
-					writer.write('\n');
+					writer.write('\n'); //$NON-NLS-1$
 				}
 			}
 		}
@@ -1421,14 +1533,14 @@ class ProjectDescription {
 		}
 
 		if (_debugIndexTime)
-			Logger.log(Logger.INFO, "time spent saving index for " + fProject.getName() + ": " + (System.currentTimeMillis() - time0));
+			Logger.log(Logger.INFO, "time spent saving index for " + fProject.getName() + ": " + (System.currentTimeMillis() - time0)); //$NON-NLS-1$
 	}
-	
+
 	void setBuildPathIsDirty() {
 		fBuildPathIsDirty = true;
 	}
 
-	void updateClasspathLibrary(String libraryLocation, int deltaKind) {
+	void updateClasspathLibrary(String libraryLocation, int deltaKind, boolean isExported) {
 		JarRecord libraryRecord = null;
 		if (deltaKind == ITaglibRecordEvent.REMOVED || deltaKind == ITaglibRecordEvent.CHANGED) {
 			libraryRecord = (JarRecord) fClasspathJars.remove(libraryLocation);
@@ -1443,6 +1555,7 @@ class ProjectDescription {
 			String[] entries = JarUtilities.getEntryNames(libraryLocation);
 
 			libraryRecord = createJARRecord(libraryLocation);
+			libraryRecord.isExported = isExported;
 			fClasspathJars.put(libraryLocation, libraryRecord);
 			for (int i = 0; i < entries.length; i++) {
 				if (entries[i].endsWith(".tld")) { //$NON-NLS-1$
@@ -1454,15 +1567,16 @@ class ProjectDescription {
 						TaglibInfo info = extractInfo(libraryLocation, contents);
 
 						if (info != null && info.uri != null && info.uri.length() > 0) {
-							URLRecord record = new URLRecord();
-							record.info = info;
-							record.baseLocation = libraryLocation;
+							URLRecord urlRecord = new URLRecord();
+							urlRecord.info = info;
+							urlRecord.baseLocation = libraryLocation;
 							try {
-								record.url = new URL("jar:file:" + libraryLocation + "!/" + entries[i]); //$NON-NLS-1$ //$NON-NLS-2$
-								libraryRecord.urlRecords.add(record);
-								fClasspathReferences.put(record.getURI(), record);
+								urlRecord.isExported = isExported;
+								urlRecord.url = new URL("jar:file:" + libraryLocation + "!/" + entries[i]); //$NON-NLS-1$ //$NON-NLS-2$
+								libraryRecord.urlRecords.add(urlRecord);
+								fClasspathReferences.put(urlRecord.getURI(), urlRecord);
 								if (_debugIndexCreation)
-									Logger.log(Logger.INFO, "created record for " + record.getURI() + "@" + record.getURL()); //$NON-NLS-1$ //$NON-NLS-2$
+									Logger.log(Logger.INFO, "created record for " + urlRecord.getURI() + "@" + urlRecord.getURL()); //$NON-NLS-1$ //$NON-NLS-2$
 							}
 							catch (MalformedURLException e) {
 								// don't record this URI
