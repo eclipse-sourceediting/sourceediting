@@ -26,6 +26,7 @@ import org.eclipse.wst.xsd.ui.internal.search.IXSDSearchConstants;
 import org.eclipse.xsd.XSDElementDeclaration;
 import org.eclipse.xsd.XSDImport;
 import org.eclipse.xsd.XSDInclude;
+import org.eclipse.xsd.XSDRedefine;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDSchemaContent;
 import org.eclipse.xsd.XSDSchemaDirective;
@@ -93,9 +94,9 @@ public abstract class XSDSearchListProvider implements IComponentSearchListProvi
             {
               visitSchema(extSchema, false);
             }
-            else if (extSchema instanceof XSDInclude || extSchema instanceof XSDImport)
+            else if (schemaDirective instanceof XSDInclude || schemaDirective instanceof XSDRedefine)
             {
-              visitSchema(extSchema, false);
+            	visitSchema(extSchema, false);
             }
           }
         }
