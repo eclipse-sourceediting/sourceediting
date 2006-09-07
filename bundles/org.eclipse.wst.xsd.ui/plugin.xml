@@ -115,6 +115,12 @@
 				id="property.tab.enumerations">
 			</propertyTab>
 			<propertyTab
+				label="%_UI_LABEL_ADVANCED"
+				category="Advanced"
+				afterTab="property.tab.general"
+				id="property.tab.advanced">
+			</propertyTab>			
+			<propertyTab
 				label="%_UI_LABEL_DOCUMENTATION"
 				category="Documentation"
 				afterTab="property.tab.general"
@@ -150,12 +156,18 @@
 	    <input type="org.eclipse.xsd.XSDComplexTypeDefinition">
 	    </input>
 	 </propertySection>
+	 <propertySection tab="property.tab.advanced" 
+        class="org.eclipse.wst.xsd.ui.internal.common.properties.sections.XSDComplexTypeAdvancedSection"  
+	 	id="prop.section.XSDComplexTypeAdvancedSection">
+	    <input type="org.eclipse.xsd.XSDComplexTypeDefinition">
+	    </input>
+	 </propertySection>		 
 	 <propertySection tab="property.tab.general" 
         class="org.eclipse.wst.xsd.ui.internal.common.properties.sections.XSDElementDeclarationSection"  
 	 	id="prop.section.XSDElementDeclarationSection">
 	    <input type="org.eclipse.xsd.XSDElementDeclaration">
 	    </input>
-	 </propertySection>
+	 </propertySection> 
 	 <propertySection tab="property.tab.general" 
         class="org.eclipse.wst.xsd.ui.internal.common.properties.sections.XSDAttributeDeclarationSection"
 	 	id="prop.section.XSDAttributeDeclarationSection">
