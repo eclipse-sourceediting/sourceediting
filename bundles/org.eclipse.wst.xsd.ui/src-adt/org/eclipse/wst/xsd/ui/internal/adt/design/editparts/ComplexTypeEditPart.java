@@ -71,7 +71,8 @@ public class ComplexTypeEditPart extends StructureEditPart
         
         // TODO (cs) need to draw the target anchor to look like a UML inheritance relationship
         // adding a label to the connection would help to
-        connectionFigure.setTargetAnchor(new CenteredConnectionAnchor(referenceTypePart.getFigure(), CenteredConnectionAnchor.BOTTOM, 0, 0)); 
+        connectionFigure.setTargetAnchor(new CenteredConnectionAnchor(referenceTypePart.getFigure(), CenteredConnectionAnchor.BOTTOM, 0, 0));
+        ((CenteredConnectionAnchor)connectionFigure.getSourceAnchor()).setOther((CenteredConnectionAnchor)connectionFigure.getTargetAnchor());
         connectionFigure.setHighlight(false);
       }
     }    

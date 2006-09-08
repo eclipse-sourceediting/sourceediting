@@ -29,6 +29,7 @@ public class CenteredConnectionAnchor extends AbstractConnectionAnchor
   private int location;
   private int inset;
   private int offset = 0;
+  private CenteredConnectionAnchor other;
 
   public CenteredConnectionAnchor(IFigure owner, int location, int inset)
   {
@@ -88,12 +89,27 @@ public class CenteredConnectionAnchor extends AbstractConnectionAnchor
     {
       getOwner().translateToAbsolute(p);
     }
+    
+    if (other != null)
+    {
+      // if within only one pixel of being vertical, we straighten up the line
+      Point p2 = other.getLocation(null);
+      if (Math.abs(p2.x - p.x) <= 1)
+      {
+        p.x = p2.x;
+      }  
+    }  
     return p;
   }
 
   public Point getReferencePoint()
   {
     return getLocation(null);
+  }
+
+  public void setOther(CenteredConnectionAnchor other)
+  {
+    this.other = other;
   }
 
 }
