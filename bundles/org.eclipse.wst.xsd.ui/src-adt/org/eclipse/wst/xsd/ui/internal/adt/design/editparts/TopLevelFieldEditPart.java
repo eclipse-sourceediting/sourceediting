@@ -45,7 +45,7 @@ public class TopLevelFieldEditPart extends BoxEditPart implements INamedEditPart
       {
         connectionFigure = new TypeReferenceConnection();   
         connectionFigure.setSourceAnchor(new CenteredConnectionAnchor(getFigure(), CenteredConnectionAnchor.RIGHT, 5));
-        int targetAnchorYOffset = 16;        
+        int targetAnchorYOffset = 12;        
         connectionFigure.setTargetAnchor(new CenteredConnectionAnchor(referenceTypePart.getFigure(), CenteredConnectionAnchor.HEADER_LEFT, 0, targetAnchorYOffset)); 
         connectionFigure.setHighlight(false);
       }
