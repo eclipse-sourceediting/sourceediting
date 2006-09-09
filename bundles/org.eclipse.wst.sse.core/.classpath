@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry path="src-encoding" kind="src"/>
-	<classpathentry excluding="*" path="DevTimeSupport" kind="src"/>
 	<classpathentry path="src" kind="src"/>
 	<classpathentry path="src-tasktags" kind="src"/>
 	<classpathentry path="src-contentproperties" kind="src"/>
