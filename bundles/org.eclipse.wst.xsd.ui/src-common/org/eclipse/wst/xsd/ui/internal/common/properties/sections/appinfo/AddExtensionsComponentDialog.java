@@ -312,10 +312,11 @@ public class AddExtensionsComponentDialog extends SelectionDialog implements ISe
 
     		// refresh without updating labels of existing TableItems    		
     		categoryTableViewer.refresh(false);
-    		storeSpecInPref(schemaSpec);  // must store after calling refresh() (trung)
 
     		categoryTableViewer.setSelection(new StructuredSelection(schemaSpec));
     		getButton(IDialogConstants.OK_ID).setEnabled(false);
+    		
+    		storeSpecInPref(schemaSpec);  // must store after selection changed is called ie. 2 lines above (trung)
     	}
     }
     else if (e.widget == removeButton)
@@ -368,12 +369,14 @@ public class AddExtensionsComponentDialog extends SelectionDialog implements ISe
         	spec.setLocation(dialog.getCategoryLocation());
         	spec.setSourceHint(dialog.getSource());
         	spec.setFromCatalog(dialog.getFromCatalog());
+        	spec.setNamespaceURI(null);
         	
         	existingNames.add(newDisplayName);
-        	editSpecInPref(displayName, spec);
 
         	categoryTableViewer.update(spec, null);
         	refreshElementsViewer(spec);
+        	
+        	editSpecInPref(displayName, spec);
         }
     }
   }
