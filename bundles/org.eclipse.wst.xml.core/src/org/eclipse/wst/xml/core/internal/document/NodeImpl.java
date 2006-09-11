@@ -997,7 +997,7 @@ public abstract class NodeImpl extends AbstractNotifier implements Node, IDOMNod
 	 * @param operation
 	 * @param destination
 	 */
-	public void notifyUserDataHandlers(short operation, Node destination) {
+	protected void notifyUserDataHandlers(short operation, Node destination) {
 		
 		if (operation!=UserDataHandler.NODE_ADOPTED 
 				& operation!=UserDataHandler.NODE_CLONED
