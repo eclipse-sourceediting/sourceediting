@@ -326,7 +326,7 @@ public class TestIndex extends TestCase {
 				((ClasspathEntry) entry).isExported = true;
 			}
 		}
-		assertTrue(found);
+		assertTrue("/testavailable2/WebContent/WEB-INF/lib/sample_tld.jar was not found in build path", found);
 		IClasspathEntry[] entries2 = new IClasspathEntry[entries.length];
 		System.arraycopy(entries, 1, entries2, 0, entries.length - 1);
 		entries2[entries.length - 1] = entries[0];
@@ -338,10 +338,10 @@ public class TestIndex extends TestCase {
 			IClasspathEntry entry = entries[i];
 			if (entry.getPath().equals(new Path("/testavailable2/WebContent/WEB-INF/lib/sample_tld.jar"))) {
 				found = true;
-				assertTrue("was not exported", ((ClasspathEntry) entry).isExported);
+				assertTrue("/testavailable2/WebContent/WEB-INF/lib/sample_tld.jar was not exported", ((ClasspathEntry) entry).isExported);
 			}
 		}
-		assertTrue(found);
+		assertTrue("/testavailable2/WebContent/WEB-INF/lib/sample_tld.jar was not found in build path", found);
 
 		// project 2 should still have just two taglibs
 		records = TaglibIndex.getAvailableTaglibRecords(new Path("/testavailable2/WebContent"));
