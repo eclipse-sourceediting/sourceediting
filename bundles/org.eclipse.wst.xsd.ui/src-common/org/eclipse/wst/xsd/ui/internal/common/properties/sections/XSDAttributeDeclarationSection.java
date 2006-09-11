@@ -22,12 +22,14 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.common.ui.internal.search.dialogs.ComponentSpecification;
 import org.eclipse.wst.xsd.ui.internal.adt.edit.ComponentReferenceEditManager;
 import org.eclipse.wst.xsd.ui.internal.adt.edit.IComponentDialog;
 import org.eclipse.wst.xsd.ui.internal.common.commands.UpdateNameCommand;
 import org.eclipse.wst.xsd.ui.internal.dialogs.NewTypeDialog;
 import org.eclipse.wst.xsd.ui.internal.editor.Messages;
+import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorCSHelpIds;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDTypeReferenceEditManager;
 import org.eclipse.wst.xsd.ui.internal.editor.search.XSDSearchListDialogDelegate;
@@ -76,6 +78,9 @@ public class XSDAttributeDeclarationSection extends RefactoringSection
     nameText = getWidgetFactory().createText(composite, ""); //$NON-NLS-1$
     nameText.setLayoutData(data);
     applyAllListeners(nameText);
+    
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(nameText,
+    		XSDEditorCSHelpIds.GENERAL_TAB__ATTRIBUTE__NAME);
 
     // ------------------------------------------------------------------
     // Refactor/rename hyperlink
@@ -96,6 +101,9 @@ public class XSDAttributeDeclarationSection extends RefactoringSection
     typeCombo = getWidgetFactory().createCCombo(composite);
     typeCombo.setLayoutData(data);
     typeCombo.addSelectionListener(this);
+    
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(typeCombo,
+    		XSDEditorCSHelpIds.GENERAL_TAB__ATTRIBUTE__TYPE);
 
     // dummy
     getWidgetFactory().createCLabel(composite, ""); //$NON-NLS-1$

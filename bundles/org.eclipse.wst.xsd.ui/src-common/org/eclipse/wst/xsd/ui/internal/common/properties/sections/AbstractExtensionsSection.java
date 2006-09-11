@@ -50,6 +50,7 @@ import org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo.Extens
 import org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo.ExtensionsSchemasRegistry;
 import org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo.SpecificationForExtensionsSchema;
 import org.eclipse.wst.xsd.ui.internal.common.util.Messages;
+import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorCSHelpIds;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
@@ -261,6 +262,9 @@ public abstract class AbstractExtensionsSection extends AbstractSection
 
     });
     
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(extensionTreeViewer.getControl(),
+    		XSDEditorCSHelpIds.EXTENSIONS_TAB__EXTENSIONS); 
+    
     Composite buttonComposite = getWidgetFactory().createComposite(tableAndButtonComposite, SWT.FLAT);
     //ColumnLayout columnLayout = new ColumnLayout();
     //buttonComposite.setLayout(columnLayout);
@@ -278,10 +282,18 @@ public abstract class AbstractExtensionsSection extends AbstractSection
     addButton.setToolTipText(Messages._UI_ACTION_ADD_EXTENSION_COMPONENT);
     //addButton.setLayoutData(new ColumnLayoutData(ColumnLayoutData.FILL));
     addButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+    
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(addButton,
+    		XSDEditorCSHelpIds.EXTENSIONS_TAB__ADD);     
+    
     removeButton = getWidgetFactory().createButton(buttonComposite, Messages._UI_ACTION_DELETE, SWT.FLAT);
     removeButton.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
     removeButton.addSelectionListener(this);
     removeButton.setToolTipText(Messages._UI_ACTION_DELETE_EXTENSION_COMPONENT);
+    
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(removeButton,
+    		XSDEditorCSHelpIds.EXTENSIONS_TAB__DELETE);   
+    
     //removeButton.setLayoutData(new ColumnLayoutData(ColumnLayoutData.FILL));
 
     // TODO (cs) uncomment the up/down button when we have time to implement
@@ -347,6 +359,9 @@ public abstract class AbstractExtensionsSection extends AbstractSection
     extensionDetailsViewer = new ExtensionDetailsViewer(parent, getWidgetFactory());
     extensionDetailsViewer.setContentProvider(new DOMExtensionDetailsContentProvider());    
     extensionDetailsViewer.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
+    
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(extensionDetailsViewer.getControl(),
+    		XSDEditorCSHelpIds.EXTENSIONS_TAB__EXTENSIONS_DETAILS);   
   }
   
 

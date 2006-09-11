@@ -19,6 +19,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorCSHelpIds;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.internal.util.ViewUtility;
 
@@ -78,6 +80,7 @@ public class EnumerationsDialog extends org.eclipse.jface.dialogs.Dialog
     GridData gd = (GridData) textField.getLayoutData();
     gd.horizontalSpan = 2;
     tabOrder[tabIndex++] = textField;
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(textField, XSDEditorCSHelpIds.ADD_ENUMERATIONS__NO_NAME);
 
     ViewUtility.createLabel(client, XSDEditorPlugin.getXSDString("_UI_LABEL_DELIMITER_CHAR"));
     delimiterField = ViewUtility.createComboBox(client, false);
@@ -86,6 +89,7 @@ public class EnumerationsDialog extends org.eclipse.jface.dialogs.Dialog
     gd.horizontalAlignment = GridData.BEGINNING;
     gd.widthHint = 30;
     tabOrder[tabIndex++] = delimiterField;
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(delimiterField, XSDEditorCSHelpIds.ADD_ENUMERATIONS__DELIMITER_CHARS);
 
     // add default delimiters
     delimiterField.add(":");
@@ -98,6 +102,7 @@ public class EnumerationsDialog extends org.eclipse.jface.dialogs.Dialog
     gd = (GridData) preserveWhitespace.getLayoutData();
     gd.horizontalSpan = 2;
     tabOrder[tabIndex++] = preserveWhitespace;
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(preserveWhitespace, XSDEditorCSHelpIds.ADD_ENUMERATIONS__PRESERVE_LEAD_AND_TRAIL_WHITESPACES);
     
     client.setTabList(tabOrder);
 

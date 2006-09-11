@@ -38,8 +38,10 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.common.ui.internal.dialogs.SelectSingleFileDialog;
 import org.eclipse.wst.xsd.ui.internal.common.util.Messages;
+import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorCSHelpIds;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 
 public class AddNewCategoryDialog extends Dialog
@@ -172,6 +174,8 @@ public class AddNewCategoryDialog extends Dialog
     nameText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
     if (categoryName != null)
     	nameText.setText(categoryName);
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(nameText,
+    		XSDEditorCSHelpIds.ADD_CATEGORY__NAME);     
 
     Button hidden = new Button(mainComposite, SWT.NONE);
     hidden.setVisible(false);
@@ -193,6 +197,8 @@ public class AddNewCategoryDialog extends Dialog
     	schemaDisplayer.setText(source);
     	
     }
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(schemaDisplayer,
+    		XSDEditorCSHelpIds.ADD_CATEGORY__SCHEMA); 
     
     if (categoryName != null && source != null)
     	canOK = true;

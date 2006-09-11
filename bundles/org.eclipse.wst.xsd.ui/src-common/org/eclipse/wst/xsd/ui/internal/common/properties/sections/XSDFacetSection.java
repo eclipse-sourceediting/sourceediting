@@ -32,6 +32,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 import org.eclipse.wst.xsd.ui.internal.common.commands.ChangeToLocalSimpleTypeCommand;
 import org.eclipse.wst.xsd.ui.internal.common.commands.UpdateNumericBoundsFacetCommand;
@@ -39,6 +40,7 @@ import org.eclipse.wst.xsd.ui.internal.common.commands.UpdateStringLengthFacetCo
 import org.eclipse.wst.xsd.ui.internal.common.commands.UpdateXSDWhiteSpaceFacetCommand;
 import org.eclipse.wst.xsd.ui.internal.common.util.Messages;
 import org.eclipse.wst.xsd.ui.internal.common.util.XSDCommonUIUtils;
+import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorCSHelpIds;
 import org.eclipse.xsd.XSDAttributeDeclaration;
 import org.eclipse.xsd.XSDElementDeclaration;
 import org.eclipse.xsd.XSDFactory;
@@ -157,6 +159,9 @@ public class XSDFacetSection extends AbstractSection
       }
       else
         applyAllListeners(minLengthText);
+      
+      PlatformUI.getWorkbench().getHelpSystem().setHelp(minLengthText,
+      		XSDEditorCSHelpIds.CONSTRAINTS_TAB__MINIMUM_LENGTH);
 
       GridData minGridData = new GridData();
       minGridData.widthHint = 100;
@@ -173,6 +178,9 @@ public class XSDFacetSection extends AbstractSection
       }
       else
         applyAllListeners(maxLengthText);
+      
+      PlatformUI.getWorkbench().getHelpSystem().setHelp(maxLengthText,
+        		XSDEditorCSHelpIds.CONSTRAINTS_TAB__MAXIMUM_LENGTH);
 
       GridData maxGridData = new GridData();
       maxGridData.widthHint = 100;
@@ -186,6 +194,9 @@ public class XSDFacetSection extends AbstractSection
     }
     collapseWhitespaceButton = factory.createButton(simpleTypeModifierComposite, Messages._UI_LABEL_COLLAPSE_WHITESPACE, SWT.CHECK);
     collapseWhitespaceButton.addSelectionListener(this);
+    
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(collapseWhitespaceButton,
+      		XSDEditorCSHelpIds.CONSTRAINTS_TAB__COLLAPSE_WHITESPACE);
 
     Group specificValueConstraintsGroup = factory.createGroup(facetComposite, Messages._UI_LABEL_SPECIFIC_CONSTRAINT_VALUES);
     gridLayout = new GridLayout();
@@ -224,8 +235,12 @@ public class XSDFacetSection extends AbstractSection
     compositeForRadioButtons.setLayout(gridLayout);
     useEnumerationsButton = factory.createButton(compositeForRadioButtons, Messages._UI_LABEL_ENUMERATIONS, SWT.RADIO);
     useEnumerationsButton.addSelectionListener(this);
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(useEnumerationsButton,
+      		XSDEditorCSHelpIds.CONSTRAINTS_TAB__ENUMERATIONS);
     usePatternsButton = factory.createButton(compositeForRadioButtons, Messages._UI_LABEL_PATTERNS, SWT.RADIO);
     usePatternsButton.addSelectionListener(this);
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(usePatternsButton,
+      		XSDEditorCSHelpIds.CONSTRAINTS_TAB__PATTERNS);    
     
     constraintsWidget = new SpecificConstraintsWidget(specificValueConstraintsGroup, factory, (input instanceof XSDFeature) ? (XSDFeature)input : null, xsdSimpleTypeDefinition, this);
     data = new GridData();
@@ -234,6 +249,8 @@ public class XSDFacetSection extends AbstractSection
     data.horizontalAlignment = GridData.FILL;
     data.verticalAlignment = GridData.FILL;
     constraintsWidget.getControl().setLayoutData(data);
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(constraintsWidget.getControl(),
+      		XSDEditorCSHelpIds.CONSTRAINTS_TAB__NO_LABEL);
   }
   
   public void doSetInput()

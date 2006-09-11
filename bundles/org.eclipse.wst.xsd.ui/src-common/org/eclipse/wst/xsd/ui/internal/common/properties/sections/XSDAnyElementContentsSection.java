@@ -19,7 +19,9 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.xsd.ui.internal.editor.Messages;
+import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorCSHelpIds;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDParticle;
 import org.eclipse.xsd.XSDProcessContents;
@@ -71,6 +73,9 @@ public class XSDAnyElementContentsSection extends MultiplicitySection
     namespaceCombo.setLayoutData(data);
     namespaceCombo.setItems(namespaceComboValues);
     namespaceCombo.addSelectionListener(this);
+    
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(namespaceCombo,
+    		XSDEditorCSHelpIds.GENERAL_TAB__ANYELEMENT__NAMESPACE);
 
     CLabel processContentsLabel = getWidgetFactory().createCLabel(composite, XSDConstants.PROCESSCONTENTS_ATTRIBUTE);
     data = new GridData();
@@ -90,6 +95,9 @@ public class XSDAnyElementContentsSection extends MultiplicitySection
       processContentsCombo.add(((XSDProcessContents) list.next()).getName());
     }
     processContentsCombo.addSelectionListener(this);
+    
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(processContentsCombo,
+    		XSDEditorCSHelpIds.GENERAL_TAB__ANYELEMENT__PROCESSCONTENTS);
 
     // ------------------------------------------------------------------
     // min property
@@ -107,6 +115,9 @@ public class XSDAnyElementContentsSection extends MultiplicitySection
     minCombo.add("1"); //$NON-NLS-1$
     applyAllListeners(minCombo);
     minCombo.addSelectionListener(this);
+    
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(minCombo,
+    		XSDEditorCSHelpIds.GENERAL_TAB__ANYELEMENT__MIN_OCCURENCE);
 
     // ------------------------------------------------------------------
     // max property
@@ -124,7 +135,9 @@ public class XSDAnyElementContentsSection extends MultiplicitySection
     maxCombo.add("unbounded"); //$NON-NLS-1$
     applyAllListeners(maxCombo);
     maxCombo.addSelectionListener(this);
-
+    
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(maxCombo,
+    		XSDEditorCSHelpIds.GENERAL_TAB__ANYELEMENT__MAX_OCCURENCE);
   }
 
   /*

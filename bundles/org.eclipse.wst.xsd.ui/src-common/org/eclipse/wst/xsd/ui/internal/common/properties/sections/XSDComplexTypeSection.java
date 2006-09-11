@@ -25,6 +25,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.common.ui.internal.search.dialogs.ComponentSpecification;
 import org.eclipse.wst.xsd.ui.internal.adt.edit.ComponentReferenceEditManager;
 import org.eclipse.wst.xsd.ui.internal.adt.edit.IComponentDialog;
@@ -32,6 +33,7 @@ import org.eclipse.wst.xsd.ui.internal.common.commands.UpdateComplexTypeDerivati
 import org.eclipse.wst.xsd.ui.internal.common.commands.UpdateNameCommand;
 import org.eclipse.wst.xsd.ui.internal.editor.Messages;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDComplexTypeBaseTypeEditManager;
+import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorCSHelpIds;
 import org.eclipse.xsd.XSDComplexTypeDefinition;
 import org.eclipse.xsd.XSDDerivationMethod;
 import org.eclipse.xsd.XSDNamedComponent;
@@ -82,6 +84,8 @@ public class XSDComplexTypeSection extends RefactoringSection implements Selecti
     nameText = getWidgetFactory().createText(composite, ""); //$NON-NLS-1$
     nameText.setLayoutData(data);
     applyAllListeners(nameText);
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(nameText,
+    		XSDEditorCSHelpIds.GENERAL_TAB__COMPLEX_TYPE__NAME);
 
     // ------------------------------------------------------------------
     // Refactor/rename hyperlink 
@@ -105,6 +109,9 @@ public class XSDComplexTypeSection extends RefactoringSection implements Selecti
     baseTypeCombo.setEditable(false);
     baseTypeCombo.setLayoutData(data);
     baseTypeCombo.addSelectionListener(this);
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(baseTypeCombo,
+    		XSDEditorCSHelpIds.GENERAL_TAB__COMPLEX_TYPE__INHERIT_FROM);
+
 
     // ------------------------------------------------------------------
     // Spacer label
@@ -132,6 +139,9 @@ public class XSDComplexTypeSection extends RefactoringSection implements Selecti
     derivedByCombo.setLayoutData(data);
     derivedByCombo.setItems(derivedByChoicesComboValues);
     derivedByCombo.addSelectionListener(this);
+    
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(derivedByCombo,
+    		XSDEditorCSHelpIds.GENERAL_TAB__COMPLEX_TYPE__INHERIT_BY);
 
     // ------------------------------------------------------------------
     // Spacer label

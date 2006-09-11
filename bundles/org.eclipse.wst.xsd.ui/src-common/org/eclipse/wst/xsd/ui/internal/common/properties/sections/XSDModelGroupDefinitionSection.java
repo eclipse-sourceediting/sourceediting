@@ -27,8 +27,10 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.xsd.ui.internal.common.commands.UpdateNameCommand;
 import org.eclipse.wst.xsd.ui.internal.common.util.Messages;
+import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorCSHelpIds;
 import org.eclipse.wst.xsd.ui.internal.util.TypesHelper;
 import org.eclipse.xsd.XSDModelGroupDefinition;
 import org.eclipse.xsd.XSDNamedComponent;
@@ -76,6 +78,10 @@ public class XSDModelGroupDefinitionSection extends RefactoringSection
       componentNameCombo = getWidgetFactory().createCCombo(composite, SWT.FLAT);
       componentNameCombo.addSelectionListener(this);
       componentNameCombo.setLayoutData(data);
+      
+      PlatformUI.getWorkbench().getHelpSystem().setHelp(componentNameCombo,
+      		XSDEditorCSHelpIds.GENERAL_TAB__MODELGROUP_REFS__REF);
+
     }
     else
     {
@@ -97,6 +103,9 @@ public class XSDModelGroupDefinitionSection extends RefactoringSection
       nameText = getWidgetFactory().createText(composite, ""); //$NON-NLS-1$
       nameText.setLayoutData(data);
       applyAllListeners(nameText);
+      
+      PlatformUI.getWorkbench().getHelpSystem().setHelp(nameText,
+      		XSDEditorCSHelpIds.GENERAL_TAB__MODELGROUP_DEFINITION__NAME);
 
       // ------------------------------------------------------------------
       // Refactor/rename hyperlink 

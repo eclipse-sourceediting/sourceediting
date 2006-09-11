@@ -19,6 +19,7 @@ import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
@@ -26,6 +27,7 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xsd.ui.internal.common.commands.AddDocumentationCommand;
 import org.eclipse.wst.xsd.ui.internal.common.util.Messages;
 import org.eclipse.wst.xsd.ui.internal.common.util.XSDCommonUIUtils;
+import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorCSHelpIds;
 import org.eclipse.xsd.XSDAnnotation;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.w3c.dom.Element;
@@ -41,6 +43,10 @@ public class AnnotationSection extends AbstractSection
 
     simpleText = getWidgetFactory().createText(composite, "", SWT.V_SCROLL | SWT.H_SCROLL); //$NON-NLS-1$
     simpleText.addListener(SWT.Modify, this);
+    
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(simpleText,
+    		XSDEditorCSHelpIds.DOCUMENTATION_TAB__NO_LABEL); 
+    
 
     FormData data = new FormData();
     data.left = new FormAttachment(0, 1);

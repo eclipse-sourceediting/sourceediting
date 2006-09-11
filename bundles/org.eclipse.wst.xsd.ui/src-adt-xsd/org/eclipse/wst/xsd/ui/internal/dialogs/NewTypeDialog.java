@@ -112,12 +112,6 @@ public class NewTypeDialog extends NewComponentDialog implements IComponentDialo
     simpleTypeButton.setText(Messages._UI_LABEL_SIMPLE_TYPE);
     PlatformUI.getWorkbench().getHelpSystem().setHelp(simpleTypeButton, XSDEditorCSHelpIds.NEWTYPE_SIMPLETYPE);
     
-    if (allowAnonymousType )
-    {
-      anonymousTypeCheckBox = new Button(parent, SWT.CHECK);
-      anonymousTypeCheckBox.setText(Messages._UI_LABEL_CREATE_ANON_TYPE);
-    }
-    
     SelectionAdapter listener = new SelectionAdapter()
     {
       public void widgetSelected(SelectionEvent e)
@@ -159,12 +153,18 @@ public class NewTypeDialog extends NewComponentDialog implements IComponentDialo
     simpleTypeButton.addSelectionListener(listener);
     complexTypeButton.addSelectionListener(listener);
     
-    if (anonymousTypeCheckBox != null)
-      anonymousTypeCheckBox.addSelectionListener(listener);
-    
     Label separator = new Label(parent, SWT.SEPARATOR | SWT.HORIZONTAL);
     GridData gd = new GridData(GridData.FILL_BOTH);
     separator.setLayoutData(gd);
+
+    if (allowAnonymousType )
+    {
+      anonymousTypeCheckBox = new Button(parent, SWT.CHECK);
+      anonymousTypeCheckBox.setText(Messages._UI_LABEL_CREATE_ANON_TYPE);
+    }    
+
+    if (anonymousTypeCheckBox != null)
+      anonymousTypeCheckBox.addSelectionListener(listener);    
   }
 
   // TODO: Can we remove this?

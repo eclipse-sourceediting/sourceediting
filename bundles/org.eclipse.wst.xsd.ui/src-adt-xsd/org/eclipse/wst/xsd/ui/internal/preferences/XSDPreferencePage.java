@@ -27,10 +27,12 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.wst.xsd.core.internal.XSDCorePlugin;
 import org.eclipse.wst.xsd.core.internal.preferences.XSDCorePreferenceNames;
 import org.eclipse.wst.xsd.ui.internal.editor.Messages;
+import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorCSHelpIds;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorContextIds;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.internal.util.ViewUtility;
@@ -56,6 +58,8 @@ public class XSDPreferencePage extends PreferencePage implements IWorkbenchPrefe
     group.setText(Messages._UI_TEXT_XSD_NAMESPACE_PREFIX);
 
     qualifyXSDLanguage = ViewUtility.createCheckBox(group, Messages._UI_QUALIFY_XSD);
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(qualifyXSDLanguage,
+    		XSDEditorCSHelpIds.XMLSCHEMAFILES_PREFERENCES__QUALIFY_XMLSCHEMA_LANGUAGE_CONSTRUCTS); 
     ViewUtility.createLabel(group, " ");
 
     createLabel(group, Messages._UI_TEXT_XSD_DEFAULT_PREFIX);
@@ -67,9 +71,14 @@ public class XSDPreferencePage extends PreferencePage implements IWorkbenchPrefe
         setValid(true);
       }      
     });
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(schemaNsPrefixField,
+    		XSDEditorCSHelpIds.XMLSCHEMAFILES_PREFERENCES__XML_SCHEMA_LANGUAGE_CONSTRUCTS_PREFIX); 
     
     createLabel(group, Messages._UI_TEXT_XSD_DEFAULT_TARGET_NAMESPACE);
     defaultTargetNamespaceText = createTextField(group);
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(defaultTargetNamespaceText,
+    		XSDEditorCSHelpIds.XMLSCHEMAFILES_PREFERENCES__DEFAULT_TARGETNAMESPACE); 
+    
     
     createContentsForValidatingGroup(parent);
 
@@ -137,6 +146,10 @@ public class XSDPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		data.verticalAlignment = GridData.CENTER;
 		data.horizontalAlignment = GridData.FILL;
 		honourAllSchemaLocations.setLayoutData(data);
+		
+	    PlatformUI.getWorkbench().getHelpSystem().setHelp(honourAllSchemaLocations,
+	    		XSDEditorCSHelpIds.XMLSCHEMAFILES_PREFERENCES__HONOUR_ALL_SCHEMA_LOCATIONS); 
+
 	}
   }
   

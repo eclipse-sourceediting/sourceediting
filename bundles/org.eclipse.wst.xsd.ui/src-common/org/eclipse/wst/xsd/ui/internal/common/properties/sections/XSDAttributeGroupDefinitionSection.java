@@ -27,8 +27,10 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.xsd.ui.internal.common.commands.UpdateNameCommand;
 import org.eclipse.wst.xsd.ui.internal.common.util.Messages;
+import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorCSHelpIds;
 import org.eclipse.wst.xsd.ui.internal.util.TypesHelper;
 import org.eclipse.xsd.XSDAttributeGroupDefinition;
 import org.eclipse.xsd.XSDNamedComponent;
@@ -76,6 +78,9 @@ public class XSDAttributeGroupDefinitionSection extends RefactoringSection
       refCombo = getWidgetFactory().createCCombo(composite, SWT.FLAT);
       refCombo.addSelectionListener(this);
       refCombo.setLayoutData(data);
+      
+      PlatformUI.getWorkbench().getHelpSystem().setHelp(refCombo,
+      		XSDEditorCSHelpIds.GENERAL_TAB__ATTRIBUTEGROUP_REFS__REF);
     }
     else
     {
@@ -97,6 +102,9 @@ public class XSDAttributeGroupDefinitionSection extends RefactoringSection
       nameText = getWidgetFactory().createText(composite, ""); //$NON-NLS-1$
       nameText.setLayoutData(data);
       applyAllListeners(nameText);
+      
+      PlatformUI.getWorkbench().getHelpSystem().setHelp(nameText,
+      		XSDEditorCSHelpIds.GENERAL_TAB__ATTRIBUTEGROUP__NAME);
 
       // ------------------------------------------------------------------
       // Refactor/rename hyperlink 

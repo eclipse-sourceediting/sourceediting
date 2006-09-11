@@ -29,6 +29,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 import org.eclipse.wst.common.ui.internal.search.dialogs.ComponentSpecification;
 import org.eclipse.wst.xsd.ui.internal.adt.edit.ComponentReferenceEditManager;
@@ -36,6 +37,7 @@ import org.eclipse.wst.xsd.ui.internal.adt.edit.IComponentDialog;
 import org.eclipse.wst.xsd.ui.internal.common.commands.UpdateNameCommand;
 import org.eclipse.wst.xsd.ui.internal.dialogs.NewTypeDialog;
 import org.eclipse.wst.xsd.ui.internal.editor.Messages;
+import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorCSHelpIds;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDTypeReferenceEditManager;
 import org.eclipse.wst.xsd.ui.internal.editor.search.XSDSearchListDialogDelegate;
 import org.eclipse.wst.xsd.ui.internal.util.TypesHelper;
@@ -95,6 +97,8 @@ public class XSDElementDeclarationSection extends MultiplicitySection
       nameText = getWidgetFactory().createText(composite, ""); //$NON-NLS-1$
       nameText.setLayoutData(data);
       applyAllListeners(nameText);   
+      PlatformUI.getWorkbench().getHelpSystem().setHelp(nameText,
+        		XSDEditorCSHelpIds.GENERAL_TAB__ELEMENT__NAME);
      
       // ------------------------------------------------------------------
       // Refactor/rename hyperlink 
@@ -123,10 +127,9 @@ public class XSDElementDeclarationSection extends MultiplicitySection
       componentNameCombo = getWidgetFactory().createCCombo(composite, SWT.FLAT);
       componentNameCombo.addSelectionListener(this);
       componentNameCombo.setLayoutData(data);
-
-      data = new GridData();
-      data.horizontalAlignment = GridData.HORIZONTAL_ALIGN_BEGINNING;
-      data.grabExcessHorizontalSpace = false;
+      
+      PlatformUI.getWorkbench().getHelpSystem().setHelp(componentNameCombo,
+      		XSDEditorCSHelpIds.GENERAL_TAB__ELEMENT__REFERENCE);
 
       getWidgetFactory().createCLabel(composite, ""); //$NON-NLS-1$
     }
@@ -147,6 +150,8 @@ public class XSDElementDeclarationSection extends MultiplicitySection
     typeCombo.setEditable(false);
     typeCombo.setLayoutData(data);
     typeCombo.addSelectionListener(this);
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(typeCombo,
+    		XSDEditorCSHelpIds.GENERAL_TAB__ELEMENT__TYPE);
     
     // ------------------------------------------------------------------
     // DummyLabel
@@ -172,6 +177,8 @@ public class XSDElementDeclarationSection extends MultiplicitySection
     minCombo.add("1"); //$NON-NLS-1$
     applyAllListeners(minCombo);
     minCombo.addSelectionListener(this);
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(minCombo,
+    		XSDEditorCSHelpIds.GENERAL_TAB__ELEMENT__MIN_OCCURENCE);    
 
     // ------------------------------------------------------------------
     // DummyLabel
@@ -197,6 +204,8 @@ public class XSDElementDeclarationSection extends MultiplicitySection
     maxCombo.add("unbounded"); //$NON-NLS-1$
     applyAllListeners(maxCombo);
     maxCombo.addSelectionListener(this);
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(maxCombo,
+    		XSDEditorCSHelpIds.GENERAL_TAB__ELEMENT__MAX_OCCURENCE);    
   }
 
   public void setInput(IWorkbenchPart part, ISelection selection)

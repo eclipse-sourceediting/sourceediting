@@ -48,9 +48,11 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.SelectionDialog;
 import org.eclipse.wst.xsd.contentmodel.internal.XSDImpl;
 import org.eclipse.wst.xsd.ui.internal.common.util.Messages;
+import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorCSHelpIds;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.xsd.XSDAttributeDeclaration;
 import org.eclipse.xsd.XSDElementDeclaration;
@@ -122,6 +124,7 @@ public class AddExtensionsComponentDialog extends SelectionDialog implements ISe
     categoryTableViewer.setLabelProvider(new CategoryLabelProvider());
     categoryTableViewer.setInput(fInput);
     categoryTableViewer.addSelectionChangedListener(this);
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(categoryTableViewer.getControl(), XSDEditorCSHelpIds.ADD_EXTENSIONS_COMPONENTS__EXTENSION_CATEGORIES);
 
     GridData gd = new GridData(GridData.FILL_BOTH);
     Table table = categoryTableViewer.getTable();
@@ -141,16 +144,24 @@ public class AddExtensionsComponentDialog extends SelectionDialog implements ISe
     addButton.setText(Messages._UI_LABEL_ADD_WITH_DOTS);
     addButton.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
     addButton.addSelectionListener(this);
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(addButton,
+    		XSDEditorCSHelpIds.ADD_EXTENSIONS_COMPONENTS__ADD);    
 
     removeButton = new Button(buttonComposite, SWT.PUSH);
     removeButton.setText(Messages._UI_LABEL_DELETE);
     removeButton.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
     removeButton.addSelectionListener(this);
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(removeButton,
+    		XSDEditorCSHelpIds.ADD_EXTENSIONS_COMPONENTS__DELETE);    
+
     
     editButton = new Button(buttonComposite, SWT.PUSH);
     editButton.setText(Messages._UI_LABEL_EDIT);
     editButton.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
     editButton.addSelectionListener(this);
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(editButton,
+    		XSDEditorCSHelpIds.ADD_EXTENSIONS_COMPONENTS__EDIT);    
+    
     
     List initialSelection = getInitialElementSelections();
     if (initialSelection != null)
@@ -186,6 +197,7 @@ public class AddExtensionsComponentDialog extends SelectionDialog implements ISe
 	          getButton(IDialogConstants.OK_ID).setEnabled(true);			
 	    }        	  
       });
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(elementTableViewer.getControl(), XSDEditorCSHelpIds.ADD_EXTENSIONS_COMPONENTS__AVAILABLE_COMPONENTS_TO_ADD);
     
     return parent;
   }

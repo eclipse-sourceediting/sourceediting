@@ -20,8 +20,10 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.common.ui.internal.viewers.ResourceFilter;
 import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
+import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorCSHelpIds;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.internal.util.TypesHelper;
 import org.eclipse.wst.xsd.ui.internal.wizards.XSDSelectIncludeFileWizard;
@@ -137,6 +139,15 @@ public class XSDImportSection extends SchemaLocationSection
     data.horizontalSpan = 3;
     data.grabExcessHorizontalSpace = true;
     errorText.setLayoutData(data);
+
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(schemaLocationText,
+    		XSDEditorCSHelpIds.GENERAL_TAB__IMPORT__SCHEMALOCATION);
+
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(namespaceText,
+    		XSDEditorCSHelpIds.GENERAL_TAB__IMPORT__NAMESPACE);
+    
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(prefixText,
+    		XSDEditorCSHelpIds.GENERAL_TAB__IMPORT__PREFIX);
 
   }
 

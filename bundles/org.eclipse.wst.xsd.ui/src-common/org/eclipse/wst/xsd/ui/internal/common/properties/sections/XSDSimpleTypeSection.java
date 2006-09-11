@@ -31,6 +31,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 import org.eclipse.wst.common.ui.internal.search.dialogs.ComponentSpecification;
 import org.eclipse.wst.xsd.ui.internal.actions.CreateElementAction;
@@ -41,6 +42,7 @@ import org.eclipse.wst.xsd.ui.internal.common.commands.UpdateNameCommand;
 import org.eclipse.wst.xsd.ui.internal.common.util.Messages;
 import org.eclipse.wst.xsd.ui.internal.dialogs.NewTypeDialog;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDComplexTypeBaseTypeEditManager;
+import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorCSHelpIds;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDTypeReferenceEditManager;
 import org.eclipse.wst.xsd.ui.internal.editor.search.XSDSearchListDialogDelegate;
@@ -101,6 +103,9 @@ public class XSDSimpleTypeSection extends RefactoringSection
     nameText = getWidgetFactory().createText(composite, ""); //$NON-NLS-1$
     nameText.setLayoutData(data);
     applyAllListeners(nameText);
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(nameText,
+    		XSDEditorCSHelpIds.GENERAL_TAB__SIMPLE_TYPE__NAME);
+    
 
     // ------------------------------------------------------------------
     // Refactor/rename hyperlink 
@@ -129,6 +134,10 @@ public class XSDSimpleTypeSection extends RefactoringSection
     }
     varietyCombo.addSelectionListener(this);
     varietyCombo.setLayoutData(data);
+    
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(varietyCombo,
+    		XSDEditorCSHelpIds.GENERAL_TAB__SIMPLE_TYPE__VARIETY);
+
 
     // ------------------------------------------------------------------
     // DummyLabel
@@ -153,6 +162,9 @@ public class XSDSimpleTypeSection extends RefactoringSection
     data.grabExcessHorizontalSpace = true;
     data.horizontalAlignment = GridData.FILL;
     typesCombo.setLayoutData(data);
+    
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(typesCombo,
+    		XSDEditorCSHelpIds.GENERAL_TAB__SIMPLE_TYPE__BASE_TYPE);
 
   }
   

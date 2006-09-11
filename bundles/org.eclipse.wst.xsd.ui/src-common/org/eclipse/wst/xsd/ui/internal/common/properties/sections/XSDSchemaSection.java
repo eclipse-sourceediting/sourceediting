@@ -26,11 +26,13 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.DOMNamespaceInfoManager;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.NamespaceInfo;
 import org.eclipse.wst.xml.core.internal.document.DocumentImpl;
 import org.eclipse.wst.xsd.ui.internal.actions.XSDEditNamespacesAction;
 import org.eclipse.wst.xsd.ui.internal.common.commands.UpdateNamespaceInformationCommand;
+import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorCSHelpIds;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.internal.nsedit.TargetNamespaceChangeHandler;
 import org.eclipse.wst.xsd.ui.internal.util.TypesHelper;
@@ -83,6 +85,8 @@ public class XSDSchemaSection extends AbstractSection
     data.horizontalAlignment = GridData.FILL;
     prefixText.setLayoutData(data);
     applyAllListeners(prefixText);
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(prefixText,
+      		XSDEditorCSHelpIds.GENERAL_TAB__SCHEMA__PREFIX);
 
     // Create TargetNamespace Label
     CLabel targetNamespaceLabel = getWidgetFactory().createCLabel(composite, XSDEditorPlugin.getXSDString("_UI_LABEL_TARGET_NAME_SPACE")); //$NON-NLS-1$
@@ -98,6 +102,8 @@ public class XSDSchemaSection extends AbstractSection
     data.horizontalAlignment = GridData.FILL;
     targetNamespaceText.setLayoutData(data);
     applyAllListeners(targetNamespaceText);
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(targetNamespaceText,
+      		XSDEditorCSHelpIds.GENERAL_TAB__SCHEMA__TARGETNAMESPACE);
 
     // Advanced Button
     editButton = getWidgetFactory().createButton(composite, XSDEditorPlugin.getXSDString("_UI_SECTION_ADVANCED_ATTRIBUTES") + "...", SWT.PUSH); //$NON-NLS-1$ //$NON-NLS-2$
@@ -105,6 +111,8 @@ public class XSDSchemaSection extends AbstractSection
     data.horizontalSpan = 2;
     editButton.setLayoutData(data);
     editButton.addSelectionListener(this);
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(editButton,
+      		XSDEditorCSHelpIds.GENERAL_TAB__SCHEMA__ADVANCED);
 
     // error text
     errorText = new StyledText(composite, SWT.FLAT);

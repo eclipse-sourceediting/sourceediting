@@ -26,8 +26,10 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.common.ui.internal.viewers.ResourceFilter;
 import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
+import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorCSHelpIds;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.internal.wizards.XSDSelectIncludeFileWizard;
 import org.eclipse.xsd.XSDInclude;
@@ -79,6 +81,9 @@ public class SchemaLocationSection extends CommonDirectivesSection
       data.grabExcessHorizontalSpace = true;
       data.horizontalAlignment = GridData.FILL;
       schemaLocationText.setLayoutData(data);
+      
+      PlatformUI.getWorkbench().getHelpSystem().setHelp(schemaLocationText,
+      		XSDEditorCSHelpIds.GENERAL_TAB__INCLUDE_REDEFINE__SCHEMALOCATION);
       
 			// Create Wizard Button
 			wizardButton = getWidgetFactory().createButton(composite, "", SWT.NONE); //$NON-NLS-1$

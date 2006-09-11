@@ -17,8 +17,10 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.xsd.ui.internal.common.commands.UpdateContentModelCommand;
 import org.eclipse.wst.xsd.ui.internal.editor.Messages;
+import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorCSHelpIds;
 import org.eclipse.xsd.XSDCompositor;
 import org.eclipse.xsd.XSDModelGroup;
 import org.eclipse.xsd.XSDModelGroupDefinition;
@@ -60,6 +62,9 @@ public class XSDModelGroupSection extends MultiplicitySection
     modelGroupCombo.setLayoutData(data);
     modelGroupCombo.addSelectionListener(this);
     modelGroupCombo.setItems(modelGroupComboValues);
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(modelGroupCombo,
+    		XSDEditorCSHelpIds.GENERAL_TAB__MODELGROUP__KIND);
+
 
     // ------------------------------------------------------------------
     // min property
@@ -76,6 +81,9 @@ public class XSDModelGroupSection extends MultiplicitySection
     minCombo.add("1"); //$NON-NLS-1$
     applyAllListeners(minCombo);
     minCombo.addSelectionListener(this);
+    
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(minCombo,
+    		XSDEditorCSHelpIds.GENERAL_TAB__MODELGROUP__MIN_OCCURENCE);
 
     // ------------------------------------------------------------------
     // max property
@@ -93,6 +101,9 @@ public class XSDModelGroupSection extends MultiplicitySection
     maxCombo.add("unbounded"); //$NON-NLS-1$
     applyAllListeners(maxCombo);
     maxCombo.addSelectionListener(this);
+    
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(maxCombo,
+    		XSDEditorCSHelpIds.GENERAL_TAB__MODELGROUP__MAX_OCCURENCE);
   }
 
   
