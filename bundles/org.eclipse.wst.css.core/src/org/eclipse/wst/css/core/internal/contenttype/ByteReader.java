@@ -24,7 +24,7 @@ import org.eclipse.wst.sse.core.internal.encoding.CodedIO;
  * buffers are not controllable, and it sometimes pulls too much out of input
  * stream (even when it wasn't needed for our purposes).
  * 
- * The use of this class is highly specialized and by not means meant to be
+ * The use of this class is highly specialized and by no means meant to be
  * general purpose. Its use is restricted to those cases where the input
  * stream can be regarded as ascii just long enough to determine what the real
  * encoding should be.
