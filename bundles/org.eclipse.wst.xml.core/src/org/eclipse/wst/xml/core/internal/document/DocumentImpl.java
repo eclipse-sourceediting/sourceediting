@@ -7,7 +7,11 @@
  * 
  * Contributors:
  *     IBM Corporation - initial API and implementation
+ *     
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
+ *     
+ *     Balazs Banfai: Bug 154737 getUserData/setUserData support for Node
+ *     https://bugs.eclipse.org/bugs/show_bug.cgi?id=154737
  *     
  *******************************************************************************/
 package org.eclipse.wst.xml.core.internal.document;
@@ -49,6 +53,7 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Notation;
 import org.w3c.dom.ProcessingInstruction;
 import org.w3c.dom.Text;
+import org.w3c.dom.UserDataHandler;
 import org.w3c.dom.ranges.DocumentRange;
 import org.w3c.dom.ranges.Range;
 import org.w3c.dom.traversal.DocumentTraversal;
@@ -207,6 +212,8 @@ public class DocumentImpl extends NodeContainer implements IDOMDocument, Documen
 	 * exceptions if key's are duplicate? Update: Hashcodes have been dropped.
 	 * Given that the key is only unique within a document an adopted node
 	 * needs to be given a new key, but what does it mean for the application?
+	 * 
+	 * TODO: Needs to notify UserDataHandlers for the node if any
 	 * 
 	 * @param source
 	 *            The node to move into this document.
@@ -926,6 +933,9 @@ public class DocumentImpl extends NodeContainer implements IDOMDocument, Documen
 		NodeImpl imported = (NodeImpl) node.cloneNode(deep);
 		if (imported == null)
 			return null;
+		//successful import, notify UserDataHandlers if any
+		NodeImpl nodeToNotify=(NodeImpl) node;
+		nodeToNotify.notifyUserDataHandlers(UserDataHandler.NODE_IMPORTED, null);
 		imported.setOwnerDocument(this, deep);
 		return imported;
 	}
