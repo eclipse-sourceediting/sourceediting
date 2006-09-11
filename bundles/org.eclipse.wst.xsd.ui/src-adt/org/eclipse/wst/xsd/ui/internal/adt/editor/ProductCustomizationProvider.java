@@ -14,4 +14,14 @@ public abstract class ProductCustomizationProvider
 {
   public abstract boolean isEditorModeApplicable(String id);
   public abstract String getEditorModeDisplayName(String id);
+ 
+  public String getProductString(String id)
+  {
+    return "";
+  }
+  
+  public String getProductString(String id, Object[] args)
+  {
+    return "";
+  }
 }
