@@ -439,6 +439,7 @@ class ProjectDescription {
 
 	private static final String WEB_INF = "WEB-INF"; //$NON-NLS-1$
 	private static final IPath WEB_INF_PATH = new Path(WEB_INF);
+	private static final String BUILDPATH_PROJECT = "BUILDPATH_PROJECT"; //$NON-NLS-1$
 	private static final String WEB_XML = "web.xml"; //$NON-NLS-1$
 	private static final String SAVE_FORMAT_VERSION = "Tag Library Index 1.0.1"; //$NON-NLS-1$
 	private static final String BUILDPATH_DIRTY = "BUILDPATH_DIRTY"; //$NON-NLS-1$
@@ -531,7 +532,7 @@ class ProjectDescription {
 	 */
 	void addBuildPathReferences(Map references, List projectsProcessed, boolean exportedOnly) {
 		ensureUpTodate();
-		
+
 		Enumeration keys = fClasspathReferences.keys();
 		while (keys.hasMoreElements()) {
 			Object key = keys.nextElement();
@@ -1318,6 +1319,8 @@ class ProjectDescription {
 						String lineText = doc.get(line.getOffset(), line.getLength());
 						JarRecord libraryRecord = null;
 						if (SAVE_FORMAT_VERSION.equals(lineText)) {
+							IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
+
 							for (int i = 1; i < lines; i++) {
 								line = doc.getLineInformation(i);
 								lineText = doc.get(line.getOffset(), line.getLength());
@@ -1435,6 +1438,16 @@ class ProjectDescription {
 										}
 										fClasspathReferences.put(urlRecord.getURI(), urlRecord);
 									}
+									else if (BUILDPATH_PROJECT.equalsIgnoreCase(tokenType)) {
+										String projectName = toker.nextToken();
+										if (Path.ROOT.isValidSegment(projectName)) {
+											IProject project = workspaceRoot.getProject(projectName);
+											/* do not check if "open" here */
+											if (project != null) {
+												fClasspathProjects.add(project);
+											}
+										}
+									}
 									// last since only occurs once
 									else if (BUILDPATH_DIRTY.equalsIgnoreCase(tokenType)) {
 										fBuildPathIsDirty = Boolean.valueOf(toker.nextToken()).booleanValue();
@@ -1485,10 +1498,10 @@ class ProjectDescription {
 
 		/**
 		 * <pre>
-		 *           		 1.0
-		 *           		 Save classpath information (| is field delimiter)
-		 *           		 Jars are saved as &quot;JAR:&quot;+ has11TLD + jar path 
-		 *           		 URLRecords as &quot;URL:&quot;+URL
+		 *             		 1.0.1
+		 *             		 Save classpath information (| is field delimiter)
+		 *             		 Jars are saved as &quot;JAR:&quot;+ has11TLD + jar path 
+		 *             		 URLRecords as &quot;URL:&quot;+URL
 		 * </pre>
 		 */
 		try {
@@ -1497,6 +1510,14 @@ class ProjectDescription {
 			writer.write('\n'); //$NON-NLS-1$
 			writer.write(BUILDPATH_DIRTY + "|" + fBuildPathIsDirty); //$NON-NLS-1$
 			writer.write('\n'); //$NON-NLS-1$
+
+			IProject[] projects = (IProject[]) fClasspathProjects.toArray(new IProject[0]);
+			for (int i = 0; i < projects.length; i++) {
+				writer.write(BUILDPATH_PROJECT);
+				writer.write("|"); //$NON-NLS-1$
+				writer.write(projects[i].getName());
+				writer.write('\n'); //$NON-NLS-1$
+			}
 
 			Enumeration jars = fClasspathJars.keys();
 			while (jars.hasMoreElements()) {
