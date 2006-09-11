@@ -356,10 +356,10 @@ public class TestIndex extends TestCase {
 
 		// project 2 should still have just two taglibs
 		records = TaglibIndex.getAvailableTaglibRecords(new Path("/testavailable2/WebContent"));
-		assertEquals("total ITaglibRecord count doesn't match (after exporting jar)", 2, records.length);
+		assertEquals("total ITaglibRecord count doesn't match (after exporting jar and restarting)", 2, records.length);
 
 		// and one taglib should still be visible from project 1
 		records = TaglibIndex.getAvailableTaglibRecords(new Path("/testavailable1/WebContent"));
-		assertEquals("total ITaglibRecord count doesn't match (after exporting jar)", 1, records.length);
+		assertEquals("total ITaglibRecord count doesn't match (after exporting jar and restarting)", 1, records.length);
 	}
 }
