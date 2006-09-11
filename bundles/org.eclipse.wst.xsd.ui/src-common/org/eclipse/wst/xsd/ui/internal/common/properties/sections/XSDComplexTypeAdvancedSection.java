@@ -207,6 +207,10 @@ public class XSDComplexTypeAdvancedSection extends AbstractSection
           else
             abstractCombo.setText(FALSE);
         }
+        else
+        {
+          abstractCombo.setText(EMPTY);
+        }
       }
     }
     catch (Exception e)
