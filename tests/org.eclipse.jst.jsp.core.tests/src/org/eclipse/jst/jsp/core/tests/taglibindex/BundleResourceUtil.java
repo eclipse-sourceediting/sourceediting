@@ -97,7 +97,7 @@ public class BundleResourceUtil {
 		IWorkspaceRunnable runnable = new IWorkspaceRunnable() {
 			public void run(IProgressMonitor monitor) throws CoreException {
 				_copyBundleEntriesIntoWorkspace(rootEntry, fullTargetPath);
-				ResourcesPlugin.getWorkspace().checkpoint(ResourcesPlugin.getWorkspace().isAutoBuilding());
+				ResourcesPlugin.getWorkspace().checkpoint(true);
 			}
 		};
 		ResourcesPlugin.getWorkspace().run(runnable, new NullProgressMonitor());
@@ -108,7 +108,7 @@ public class BundleResourceUtil {
 		IWorkspaceRunnable runnable = new IWorkspaceRunnable() {
 			public void run(IProgressMonitor monitor) throws CoreException {
 				file[0] = _copyBundleEntryIntoWorkspace(entryname, fullPath);
-				ResourcesPlugin.getWorkspace().checkpoint(ResourcesPlugin.getWorkspace().isAutoBuilding());
+				ResourcesPlugin.getWorkspace().checkpoint(true);
 			}
 		};
 		ResourcesPlugin.getWorkspace().run(runnable, new NullProgressMonitor());
