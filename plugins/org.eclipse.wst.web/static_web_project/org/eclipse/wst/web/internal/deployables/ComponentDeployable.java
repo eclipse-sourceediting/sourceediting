@@ -105,7 +105,7 @@ public abstract class ComponentDeployable extends ProjectModule {
     public IModule[] getModules() {
 		List modules = new ArrayList();
 		if (component != null) {
-	    	IVirtualReference[] components = component.getReferences();
+	    	IVirtualReference[] components = getReferences(component);
 	    	for (int i = 0; i < components.length; i++) {
 				IVirtualReference reference = components[i];
 				if (reference != null && reference.getDependencyType()==IVirtualReference.DEPENDENCY_TYPE_USES) {
@@ -118,6 +118,10 @@ public abstract class ComponentDeployable extends ProjectModule {
 		}
         return (IModule[]) modules.toArray(new IModule[modules.size()]);
 	}
+    
+    protected IVirtualReference[] getReferences(IVirtualComponent aComponent) {
+    	return aComponent.getReferences();
+    }
     
     protected IModule gatherModuleReference(IVirtualComponent component, IVirtualComponent targetComponent ) {
     	// Handle workspace project module components
