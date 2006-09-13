@@ -7,8 +7,10 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -37,7 +39,7 @@ public class TaglibClassLoader extends ClassLoader {
 	private List usedJars = new ArrayList();
 	private List usedDirs = new ArrayList();
 
-	private List failedClasses = new ArrayList(); // CL: added to optimize
+	private Map failedClasses = new HashMap(); // CL: added to optimize
 													// failed loading
 
 	// private List loadedClassFilenames = new ArrayList();
@@ -58,7 +60,7 @@ public class TaglibClassLoader extends ClassLoader {
 		// don't add the same entry twice, or search times will get even worse
 		if (!jarsList.contains(filename)) {
 			jarsList.add(filename);
-			failedClasses = new ArrayList();
+			failedClasses = new HashMap();
 			if (DEBUG)
 				System.out.println(" + [" + filename + "] added to classpath"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
@@ -72,7 +74,7 @@ public class TaglibClassLoader extends ClassLoader {
 	 */
 	public void removeJar(String filename) {
 		jarsList.remove(filename);
-		failedClasses = new ArrayList();
+		failedClasses = new HashMap();
 		if (DEBUG)
 			System.out.println("removed: [" + filename + "] from classpath"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
@@ -80,7 +82,7 @@ public class TaglibClassLoader extends ClassLoader {
 	public void addDirectory(String dirPath) {
 		if (!dirsList.contains(dirPath)) {
 			dirsList.add(dirPath);
-			failedClasses = new ArrayList();
+			failedClasses = new HashMap();
 			if (DEBUG)
 				System.out.println("added: [" + dirPath + "] to classpath"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
@@ -94,7 +96,7 @@ public class TaglibClassLoader extends ClassLoader {
 	 */
 	public void removeDirectory(String dirPath) {
 		dirsList.remove(dirPath);
-		failedClasses = new ArrayList();
+		failedClasses = new HashMap();
 		if (DEBUG)
 			System.out.println("removed: [" + dirPath + "] from classpath"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
@@ -118,6 +120,10 @@ public class TaglibClassLoader extends ClassLoader {
 	 */
 	public List getDirectoriesInUse() {
 		return usedDirs;
+	}
+	
+	Map getFailures() {
+		return failedClasses;
 	}
 
 	/**
@@ -145,7 +151,7 @@ public class TaglibClassLoader extends ClassLoader {
 				System.out.println(">> TaglibClassLoader " + this + " returning existing class: " + className); //$NON-NLS-1$ //$NON-NLS-2$
 			return oldClass;
 		}
-		if (failedClasses.contains(className)) {
+		if (failedClasses.containsKey(className)) {
 			if (DEBUG)
 				System.out.println(">> TaglibClassLoader " + this + " known missing class: " + className); //$NON-NLS-1$ //$NON-NLS-2$
 			throw new ClassNotFoundException();
@@ -186,8 +192,12 @@ public class TaglibClassLoader extends ClassLoader {
 			if (stream != null) {
 				// found a class from a directory
 				ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+				byte[] buffer = new byte[2048];
 				while (stream.available() > 0) {
-					byteStream.write(stream.read());
+					int amountRead = stream.read(buffer);
+					if(amountRead > 0) {
+						byteStream.write(buffer, 0, amountRead);
+					}
 				}
 
 				byte[] byteArray = byteStream.toByteArray();
@@ -198,6 +208,7 @@ public class TaglibClassLoader extends ClassLoader {
 					resolveClass(newClass);
 				}
 				catch (Throwable t) {
+					Logger.logException("Error loading TEI class " + className, t);
 
 					// j9 can give ClassCircularityError
 					// parent should already have the class then
@@ -286,6 +297,7 @@ public class TaglibClassLoader extends ClassLoader {
 						resolveClass(newClass);
 					}
 					catch (Throwable t) {
+						Logger.logException("Error loading TEI class " + className, t);
 						// j9 can give ClassCircularityError
 						// parent should already have the class then
 
@@ -299,6 +311,7 @@ public class TaglibClassLoader extends ClassLoader {
 						catch (ClassNotFoundException cnf) {
 							if (DEBUG)
 								cnf.printStackTrace();
+							failedClasses.put(className, cnf);
 						}
 					}
 					stream.close();
@@ -307,7 +320,7 @@ public class TaglibClassLoader extends ClassLoader {
 			}
 		}
 		catch (Throwable t) {
-			failedClasses.add(className);
+			failedClasses.put(className, t);
 			return null;
 		}
 		finally {
@@ -331,7 +344,7 @@ public class TaglibClassLoader extends ClassLoader {
 			return newClass;
 		}
 
-		failedClasses.add(className);
+//		failedClasses.add(className);
 		throw new ClassNotFoundException();
 	}
 

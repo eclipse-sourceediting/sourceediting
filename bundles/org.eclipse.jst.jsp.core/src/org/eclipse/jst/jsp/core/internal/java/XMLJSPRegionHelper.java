@@ -87,17 +87,24 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 
 	/*
 	 * parse an entire file
+	 * 
+	 * @param filename
+	 * @return
 	 */
-	public void parse(String filename) {
+	public boolean parse(String filename) {
 		// from outer class
 		List blockMarkers = this.fTranslator.getBlockMarkers();
-		reset(getContents(filename));
+		String contents = getContents(filename);
+		if(contents == null)
+			return false;
+		reset(contents);
 		// this adds the current markers from the outer class list
 		// to this parser so parsing works correctly
 		for (int i = 0; i < blockMarkers.size(); i++) {
 			addBlockMarker((BlockMarker) blockMarkers.get(i));
 		}
 		forceParse();
+		return true;
 	}
 
 
@@ -167,7 +174,10 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 		}
 	}
 
+
 	private void handleScopingIfNecessary(IStructuredDocumentRegion sdRegion) {
+		if(true)
+			return;
 
 		// fix to make sure custom tag block have their own scope
 		// we add '{' for custom tag open and '}' for custom tag close
@@ -441,8 +451,11 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 		return nameStr.trim();
 	}
 
-	/*
+	/**
 	 * get the contents of a file as a String
+	 * 
+	 * @param fileName
+	 * @return the contents, null if the file could not be found
 	 */
 	protected String getContents(String fileName) {
 		StringBuffer s = new StringBuffer();
@@ -461,6 +474,10 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
     				count++;
     				s.append((char) c);
     			}
+            }
+            else {
+            	// error condition, file could not be found
+            	return null;
             }
 		}
 		catch (Exception e) {
