@@ -26,6 +26,7 @@ import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapter;
 import org.eclipse.jst.jsp.ui.internal.Logger;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.sse.core.internal.util.URIResolver;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 
@@ -47,8 +48,11 @@ public class JSPJavaHyperlinkDetector implements IHyperlinkDetector {
 				try {
 					sModel = StructuredModelManager.getModelManager().getExistingModelForRead(document);
 					if (sModel != null) {
-						String uriString = sModel.getResolver().getFileBaseLocation();
-						file = getFile(uriString);
+						URIResolver resolver = sModel.getResolver();
+						if(resolver != null) {
+							String uriString = resolver.getFileBaseLocation();
+							file = getFile(uriString);
+						}
 					}
 				}
 				finally {

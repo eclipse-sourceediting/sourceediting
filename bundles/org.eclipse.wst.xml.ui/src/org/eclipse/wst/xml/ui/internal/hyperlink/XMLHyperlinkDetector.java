@@ -223,9 +223,11 @@ public class XMLHyperlinkDetector implements IHyperlinkDetector {
 		IStructuredModel sModel = null;
 		try {
 			sModel = StructuredModelManager.getModelManager().getExistingModelForRead(document);
-			inode = sModel.getIndexedRegion(offset);
-			if (inode == null)
-				inode = sModel.getIndexedRegion(offset - 1);
+			if(sModel != null) {
+				inode = sModel.getIndexedRegion(offset);
+				if (inode == null)
+					inode = sModel.getIndexedRegion(offset - 1);
+			}
 		}
 		finally {
 			if (sModel != null)

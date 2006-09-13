@@ -298,17 +298,8 @@ public class HTMLValidator implements IValidatorJob, ISourceValidator {
 		
 		IndexedRegion largestRegion = null;
 		if(fDocument instanceof IStructuredDocument) {
-			IStructuredModel sModel = StructuredModelManager.getModelManager().getExistingModelForRead(fDocument);
-			try {
-				if(sModel != null) {
-					IStructuredDocumentRegion[] regions = ((IStructuredDocument)fDocument).getStructuredDocumentRegions(dirtyRegion.getOffset(), dirtyRegion.getLength());
-				    largestRegion = getLargest(regions);
-				}
-			}
-			finally {
-				if(sModel != null)
-					sModel.releaseFromRead();
-			}
+			IStructuredDocumentRegion[] regions = ((IStructuredDocument) fDocument).getStructuredDocumentRegions(dirtyRegion.getOffset(), dirtyRegion.getLength());
+			largestRegion = getLargest(regions);
 		}
 		return largestRegion;
 	}
@@ -361,7 +352,7 @@ public class HTMLValidator implements IValidatorJob, ISourceValidator {
 	 * @see org.eclipse.wst.sse.ui.internal.reconcile.validator.ISourceValidator
 	 */
 	public void disconnect(IDocument document) {
-		// don't need to do anything
+		fDocument = null;
 	}
 
 	/**

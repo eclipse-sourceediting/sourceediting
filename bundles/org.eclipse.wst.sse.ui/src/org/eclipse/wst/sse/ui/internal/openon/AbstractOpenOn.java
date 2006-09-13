@@ -32,6 +32,7 @@ import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.sse.core.internal.util.URIResolver;
 import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.sse.ui.internal.util.PlatformStatusLineUtil;
@@ -96,18 +97,21 @@ abstract public class AbstractOpenOn implements IOpenOn {
 				IFile modelFile = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(model.getBaseLocation()));
 				if (modelFile != null) {
 					// find the referenced file's location on disk
-					String filesystemLocation = model.getResolver().getLocationByURI(fileString);
-					if (filesystemLocation != null) {
-						IFile[] workspaceFiles = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocation(new Path(filesystemLocation));
-						// favor a workspace file in the same project
-						for (int i = 0; i < workspaceFiles.length && file == null; i++) {
-							if (workspaceFiles[i].getProject().equals(modelFile.getProject())) {
-								file = workspaceFiles[i];
+					URIResolver resolver = model.getResolver();
+					if (resolver != null) {
+						String filesystemLocation = resolver.getLocationByURI(fileString);
+						if (filesystemLocation != null) {
+							IFile[] workspaceFiles = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocation(new Path(filesystemLocation));
+							// favor a workspace file in the same project
+							for (int i = 0; i < workspaceFiles.length && file == null; i++) {
+								if (workspaceFiles[i].getProject().equals(modelFile.getProject())) {
+									file = workspaceFiles[i];
+								}
 							}
-						}
-						// if none were in the same project, just pick one
-						if (file == null && workspaceFiles.length > 0) {
-							file = workspaceFiles[0];
+							// if none were in the same project, just pick one
+							if (file == null && workspaceFiles.length > 0) {
+								file = workspaceFiles[0];
+							}
 						}
 					}
 				}
