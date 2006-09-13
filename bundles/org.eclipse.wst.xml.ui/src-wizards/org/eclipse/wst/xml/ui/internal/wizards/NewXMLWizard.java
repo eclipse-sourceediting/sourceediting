@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.ui.internal.wizards;
 
-import com.ibm.icu.text.Collator;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
@@ -63,6 +62,8 @@ import org.eclipse.wst.xml.ui.internal.dialogs.NamespaceInfoErrorHelper;
 import org.eclipse.wst.xml.ui.internal.dialogs.SelectFileOrXMLCatalogIdPanel;
 import org.eclipse.wst.xml.ui.internal.nsedit.CommonEditNamespacesDialog;
 
+import com.ibm.icu.text.Collator;
+
 public class NewXMLWizard extends NewModelWizard {
 	protected static final int CREATE_FROM_DTD = 0;
 	protected static final int CREATE_FROM_XSD = 1;
@@ -82,6 +83,7 @@ public class NewXMLWizard extends NewModelWizard {
 	protected String cmDocumentErrorMessage;
 
 	protected NewXMLGenerator generator;
+	private NewXMLTemplatesWizardPage fNewXMLTemplatesWizardPage;
 
 
 	public NewXMLWizard() {
@@ -169,6 +171,10 @@ public class NewXMLWizard extends NewModelWizard {
 		selectRootElementPage.setTitle(XMLWizardsMessages._UI_WIZARD_SELECT_ROOT_HEADING);
 		selectRootElementPage.setDescription(XMLWizardsMessages._UI_WIZARD_SELECT_ROOT_EXPL);
 		addPage(selectRootElementPage);
+
+		// from "scratch"
+		fNewXMLTemplatesWizardPage = new NewXMLTemplatesWizardPage();
+		addPage(fNewXMLTemplatesWizardPage);
 	}
 
 
@@ -215,7 +221,7 @@ public class NewXMLWizard extends NewModelWizard {
 		}
 		else if (currentPage == newFilePage) {
 			if (getCreateMode() == CREATE_FROM_SCRATCH) {
-				nextPage = null;
+				nextPage = fNewXMLTemplatesWizardPage;
 			}
 			else if (generator.getGrammarURI() == null) {
 				nextPage = selectGrammarFilePage;
@@ -236,7 +242,7 @@ public class NewXMLWizard extends NewModelWizard {
 
 		IWizardPage currentPage = getContainer().getCurrentPage();
 
-		if ((startPage != null && startPage.getSelectedRadioButtonIndex() == CREATE_FROM_SCRATCH && currentPage == newFilePage) || (currentPage == selectRootElementPage)) {
+		if ((startPage != null && startPage.getSelectedRadioButtonIndex() == CREATE_FROM_SCRATCH && currentPage == fNewXMLTemplatesWizardPage) || (currentPage == selectRootElementPage)) {
 			result = currentPage.isPageComplete();
 		}
 		return result;

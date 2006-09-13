@@ -1,4 +1,15 @@
-package org.eclipse.wst.css.ui.internal.wizard;
+/*******************************************************************************
+ * Copyright (c) 2006 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *     
+ *******************************************************************************/
+package org.eclipse.wst.xml.ui.internal.wizards;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.preference.PreferenceDialog;
@@ -44,24 +55,23 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PreferencesUtil;
-import org.eclipse.wst.css.core.internal.provisional.contenttype.ContentTypeIdForCSS;
-import org.eclipse.wst.css.ui.StructuredTextViewerConfigurationCSS;
-import org.eclipse.wst.css.ui.internal.CSSUIMessages;
-import org.eclipse.wst.css.ui.internal.CSSUIPlugin;
-import org.eclipse.wst.css.ui.internal.Logger;
-import org.eclipse.wst.css.ui.internal.editor.IHelpContextIds;
-import org.eclipse.wst.css.ui.internal.preferences.CSSUIPreferenceNames;
-import org.eclipse.wst.css.ui.internal.templates.TemplateContextTypeIdsCSS;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
+import org.eclipse.wst.xml.core.internal.provisional.contenttype.ContentTypeIdForXML;
+import org.eclipse.wst.xml.ui.StructuredTextViewerConfigurationXML;
+import org.eclipse.wst.xml.ui.internal.Logger;
+import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
+import org.eclipse.wst.xml.ui.internal.editor.IHelpContextIds;
+import org.eclipse.wst.xml.ui.internal.preferences.XMLUIPreferenceNames;
+import org.eclipse.wst.xml.ui.internal.templates.TemplateContextTypeIdsXML;
 
 /**
  * Templates page in new file wizard. Allows users to select a new file
  * template to be applied in new file.
  * 
  */
-public class NewCSSTemplatesWizardPage extends WizardPage {
+public class NewXMLTemplatesWizardPage extends WizardPage {
 
 	/**
 	 * Content provider for templates
@@ -81,7 +91,7 @@ public class NewCSSTemplatesWizardPage extends WizardPage {
 		 * @see IStructuredContentProvider#getElements(Object)
 		 */
 		public Object[] getElements(Object input) {
-			return fStore.getTemplates(TemplateContextTypeIdsCSS.NEW);
+			return fStore.getTemplates(TemplateContextTypeIdsXML.NEW);
 		}
 
 		/*
@@ -134,9 +144,9 @@ public class NewCSSTemplatesWizardPage extends WizardPage {
 	/** Checkbox for using templates. */
 	private Button fUseTemplateButton;
 
-	public NewCSSTemplatesWizardPage() {
-		super("NewCSSTemplatesWizardPage", CSSUIMessages.NewCSSTemplatesWizardPage_0, null); //$NON-NLS-1$
-		setDescription(CSSUIMessages.NewCSSTemplatesWizardPage_1);
+	public NewXMLTemplatesWizardPage() {
+		super("NewXMLTemplatesWizardPage", XMLWizardsMessages.NewXMLTemplatesWizardPage_0, null); //$NON-NLS-1$
+		setDescription(XMLWizardsMessages.NewXMLTemplatesWizardPage_1);
 	}
 
 	/**
@@ -196,9 +206,9 @@ public class NewCSSTemplatesWizardPage extends WizardPage {
 		layout.numColumns = 2;
 		parent.setLayout(layout);
 
-		// create checkbox for user to use CSS Template
+		// create checkbox for user to use DTD Template
 		fUseTemplateButton = new Button(parent, SWT.CHECK);
-		fUseTemplateButton.setText(CSSUIMessages.NewCSSTemplatesWizardPage_4);
+		fUseTemplateButton.setText(XMLWizardsMessages.NewXMLTemplatesWizardPage_4);
 		GridData data = new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1);
 		fUseTemplateButton.setLayoutData(data);
 		fUseTemplateButton.addSelectionListener(new SelectionAdapter() {
@@ -219,7 +229,7 @@ public class NewCSSTemplatesWizardPage extends WizardPage {
 
 		// Create linked text to just to templates preference page
 		Link link = new Link(innerParent, SWT.NONE);
-		link.setText(CSSUIMessages.NewCSSTemplatesWizardPage_6);
+		link.setText(XMLWizardsMessages.NewXMLTemplatesWizardPage_6);
 		data = new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1);
 		link.setLayoutData(data);
 		link.addSelectionListener(new SelectionAdapter() {
@@ -242,10 +252,10 @@ public class NewCSSTemplatesWizardPage extends WizardPage {
 		table.setLayout(tableLayout);
 
 		TableColumn column1 = new TableColumn(table, SWT.NONE);
-		column1.setText(CSSUIMessages.NewCSSTemplatesWizardPage_2);
+		column1.setText(XMLWizardsMessages.NewXMLTemplatesWizardPage_2);
 
 		TableColumn column2 = new TableColumn(table, SWT.NONE);
-		column2.setText(CSSUIMessages.NewCSSTemplatesWizardPage_3);
+		column2.setText(XMLWizardsMessages.NewXMLTemplatesWizardPage_3);
 
 		fTableViewer = new TableViewer(table);
 		fTableViewer.setLabelProvider(new TemplateLabelProvider());
@@ -278,13 +288,13 @@ public class NewCSSTemplatesWizardPage extends WizardPage {
 		// create viewer that displays currently selected template's contents
 		fPatternViewer = doCreateViewer(parent);
 
-		fTemplateStore = CSSUIPlugin.getDefault().getTemplateStore();
+		fTemplateStore = XMLUIPlugin.getDefault().getTemplateStore();
 		fTableViewer.setInput(fTemplateStore);
 
 		configureTableResizing(innerParent, table, column1, column2);
 		loadLastSavedPreferences();
 
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, IHelpContextIds.CSS_NEWWIZARD_TEMPLATE_HELPID);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, IHelpContextIds.XML_NEWWIZARD_TEMPLATE_HELPID);
 		Dialog.applyDialogFont(parent);
 		setControl(parent);
 	}
@@ -300,8 +310,8 @@ public class NewCSSTemplatesWizardPage extends WizardPage {
 	 */
 	private SourceViewer createViewer(Composite parent) {
 		SourceViewer viewer = null;
-		String contentTypeID = ContentTypeIdForCSS.ContentTypeID_CSS;
-		SourceViewerConfiguration configuration = new StructuredTextViewerConfigurationCSS();
+		String contentTypeID = ContentTypeIdForXML.ContentTypeID_XML;
+		SourceViewerConfiguration configuration = new StructuredTextViewerConfigurationXML();
 		IDocument document = null;
 		if (configuration != null) {
 			viewer = new StructuredTextViewer(parent, null, null, false, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
@@ -322,7 +332,7 @@ public class NewCSSTemplatesWizardPage extends WizardPage {
 
 	private SourceViewer doCreateViewer(Composite parent) {
 		Label label = new Label(parent, SWT.NONE);
-		label.setText(CSSUIMessages.NewCSSTemplatesWizardPage_5);
+		label.setText(XMLWizardsMessages.NewXMLTemplatesWizardPage_5);
 		GridData data = new GridData();
 		data.horizontalSpan = 2;
 		label.setLayoutData(data);
@@ -370,7 +380,7 @@ public class NewCSSTemplatesWizardPage extends WizardPage {
 	 * @return
 	 */
 	private String getPreferencePageId() {
-		return "org.eclipse.wst.css.ui.preferences.templates"; //$NON-NLS-1$
+		return "org.eclipse.wst.sse.ui.preferences.xml.templates"; //$NON-NLS-1$
 	}
 
 	/**
@@ -398,7 +408,7 @@ public class NewCSSTemplatesWizardPage extends WizardPage {
 
 		Template template = getSelectedTemplate();
 		if (template != null) {
-			TemplateContextType contextType = CSSUIPlugin.getDefault().getTemplateContextRegistry().getContextType(TemplateContextTypeIdsCSS.NEW);
+			TemplateContextType contextType = XMLUIPlugin.getDefault().getTemplateContextRegistry().getContextType(TemplateContextTypeIdsXML.NEW);
 			IDocument document = new Document();
 			TemplateContext context = new DocumentTemplateContext(contextType, document, 0, 0);
 			try {
@@ -406,7 +416,7 @@ public class NewCSSTemplatesWizardPage extends WizardPage {
 				templateString = buffer.getString();
 			}
 			catch (Exception e) {
-				Logger.log(Logger.WARNING_DEBUG, "Could not create template for new css", e); //$NON-NLS-1$
+				Logger.log(Logger.WARNING_DEBUG, "Could not create template for new dtd", e); //$NON-NLS-1$
 			}
 		}
 
@@ -421,10 +431,10 @@ public class NewCSSTemplatesWizardPage extends WizardPage {
 	}
 
 	/**
-	 * Load the last template name used in New CSS File wizard.
+	 * Load the last template name used in New DTD File wizard.
 	 */
 	private void loadLastSavedPreferences() {
-		String templateName = CSSUIPlugin.getDefault().getPreferenceStore().getString(CSSUIPreferenceNames.NEW_FILE_TEMPLATE_NAME);
+		String templateName = XMLUIPlugin.getDefault().getPreferenceStore().getString(XMLUIPreferenceNames.NEW_FILE_TEMPLATE_NAME);
 		if (templateName == null || templateName.length() == 0) {
 			fLastSelectedTemplateName = ""; //$NON-NLS-1$
 			fUseTemplateButton.setSelection(false);
@@ -437,7 +447,7 @@ public class NewCSSTemplatesWizardPage extends WizardPage {
 	}
 
 	/**
-	 * Save template name used for next call to New CSS File wizard.
+	 * Save template name used for next call to New DTD File wizard.
 	 */
 	void saveLastSavedPreferences() {
 		String templateName = ""; //$NON-NLS-1$
@@ -447,8 +457,8 @@ public class NewCSSTemplatesWizardPage extends WizardPage {
 			templateName = template.getName();
 		}
 
-		CSSUIPlugin.getDefault().getPreferenceStore().setValue(CSSUIPreferenceNames.NEW_FILE_TEMPLATE_NAME, templateName);
-		CSSUIPlugin.getDefault().savePluginPreferences();
+		XMLUIPlugin.getDefault().getPreferenceStore().setValue(XMLUIPreferenceNames.NEW_FILE_TEMPLATE_NAME, templateName);
+		XMLUIPlugin.getDefault().savePluginPreferences();
 	}
 
 	/**
@@ -463,7 +473,7 @@ public class NewCSSTemplatesWizardPage extends WizardPage {
 
 		if (templateName != null && templateName.length() > 0) {
 			// pick the last used template
-			template = fTemplateStore.findTemplate(templateName, TemplateContextTypeIdsCSS.NEW);
+			template = fTemplateStore.findTemplate(templateName, TemplateContextTypeIdsXML.NEW);
 		}
 
 		// no record of last used template so just pick first element

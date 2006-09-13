@@ -42,4 +42,7 @@ public interface IHelpContextIds {
 
 	// XML Cleanup dialog
 	public static final String CLEANUP_XML_HELPID = PREFIX + "xmlm1200"; //$NON-NLS-1$
+
+	// XML New File Wizard - Template Page
+	public static final String XML_NEWWIZARD_TEMPLATE_HELPID = PREFIX + "xmlw0010"; //$NON-NLS-1$
 }

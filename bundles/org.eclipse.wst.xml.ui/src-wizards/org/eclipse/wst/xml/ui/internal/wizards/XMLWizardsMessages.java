@@ -72,6 +72,14 @@ public class XMLWizardsMessages extends NLS {
 	public static String ExampleProjectCreationWizard_overwritequery_message;
 	public static String ExampleProjectCreationWizardPage_error_alreadyexists;
 	
+	public static String NewXMLTemplatesWizardPage_0;
+	public static String NewXMLTemplatesWizardPage_1;
+	public static String NewXMLTemplatesWizardPage_2;
+	public static String NewXMLTemplatesWizardPage_3;
+	public static String NewXMLTemplatesWizardPage_4;
+	public static String NewXMLTemplatesWizardPage_5;
+	public static String NewXMLTemplatesWizardPage_6;
+
 	static {
 		// load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, XMLWizardsMessages.class);

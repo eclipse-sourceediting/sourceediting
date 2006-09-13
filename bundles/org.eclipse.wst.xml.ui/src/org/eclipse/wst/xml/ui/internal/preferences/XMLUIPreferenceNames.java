@@ -82,4 +82,14 @@ public class XMLUIPreferenceNames {
     private static String getSuggestionStrategeyKey() {
         return "suggestionStrategy";//$NON-NLS-1$
     }    
+
+	/**
+	 * The key to store the last template name used in new DTD file wizard.
+	 * Template name is stored instead of template id because user-created
+	 * templates do not have template ids.
+	 * <p>
+	 * Value is of type <code>String</code>.
+	 * </p>
+	 */
+	public static final String NEW_FILE_TEMPLATE_NAME = "newFileTemplateName"; //$NON-NLS-1$
 }
