@@ -150,7 +150,7 @@ public class TestCatalogRetrivalAndModelCreation extends TestCase {
 		CMDocument contentModel = contentModelManager.createCMDocument(EXPECTED_URI, null);
 		assertNotNull("expected to create content model for " + EXPECTED_URI, contentModel);
 		int actualCount = contentModel.getElements().getLength(); 
-		assertTrue("expected to create content model with '" + count + "' element declarations for " + EXPECTED_URI + " but found " + actualCount, contentModel.getElements().getLength() == count);		
+		assertEquals("count of element declarations found for content model create from " + EXPECTED_URI, contentModel.getElements().getLength(), actualCount);		
 	}	
 
 	private void doURITest(String EXPECTED_URI) throws MalformedURLException, IOException {
