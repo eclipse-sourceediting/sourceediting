@@ -37,11 +37,7 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 public class JSPTranslationAdapter implements INodeAdapter, IDocumentListener {
 
 	// for debugging
-	private static final boolean DEBUG;
-	static {
-		String value = Platform.getDebugOption("org.eclipse.jst.jsp.core/debug/jsptranslation"); //$NON-NLS-1$
-		DEBUG = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
-	}
+	private static final boolean DEBUG = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.jst.jsp.core/debug/jsptranslation")); //$NON-NLS-1$  //$NON-NLS-2$
 
 	private IDocument fJspDocument = null;
 	private IDocument fJavaDocument = null;
@@ -131,7 +127,6 @@ public class JSPTranslationAdapter implements INodeAdapter, IDocumentListener {
 				translator.translate();
 				StringBuffer javaContents = translator.getTranslation();
 				fJavaDocument = new Document(javaContents.toString());
-
 			}
 			else {
 				// empty document case
