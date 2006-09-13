@@ -41,6 +41,7 @@ import org.eclipse.wst.dtd.ui.StructuredTextViewerConfigurationDTD;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
+import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.w3c.dom.Attr;
@@ -224,6 +225,53 @@ public class ViewerTestDTD extends ViewPart {
 				public void run() {
 					super.run();
 					fSourceViewer.resetVisibleRegion();
+				}
+			});
+			mgr.add(new Action() {
+				public String getText() {
+					return getToolTipText();
+				}
+
+				public String getToolTipText() {
+					return "Change Visibility in Editor";
+				}
+
+				public void run() {
+					super.run();
+					StructuredTextViewer sourceViewer = null;
+					IEditorPart part = getViewSite().getWorkbenchWindow().getActivePage().getActiveEditor();
+					if (part != null && part instanceof StructuredTextEditor) {
+						sourceViewer = ((StructuredTextEditor) part).getTextViewer();
+					}
+					if (sourceViewer != null) {
+						NumberInputDialog dlg = new NumberInputDialog(sourceViewer.getControl().getShell());
+						int proceed = dlg.open();
+						if (proceed == Window.CANCEL)
+							return;
+						sourceViewer.resetVisibleRegion();
+						sourceViewer.setVisibleRegion(dlg.startValue, dlg.lengthValue);
+					}
+				}
+			});
+			mgr.add(new Action() {
+				public String getText() {
+					return getToolTipText();
+				}
+
+				public String getToolTipText() {
+					return "Show All in Editor";
+				}
+
+				public void run() {
+					super.run();
+					StructuredTextViewer sourceViewer = null;
+					IEditorPart part = getViewSite().getWorkbenchWindow().getActivePage().getActiveEditor();
+					if (part != null && part instanceof StructuredTextEditor) {
+						sourceViewer = ((StructuredTextEditor) part).getTextViewer();
+					}
+					if (sourceViewer != null) {
+						sourceViewer.resetVisibleRegion();
+					}
 				}
 			});
 			mgr.add(new Separator());

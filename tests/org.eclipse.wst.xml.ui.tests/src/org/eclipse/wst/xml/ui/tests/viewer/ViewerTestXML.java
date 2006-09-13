@@ -39,6 +39,7 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
+import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.xml.core.internal.provisional.contenttype.ContentTypeIdForXML;
@@ -75,12 +76,14 @@ public class ViewerTestXML extends ViewPart {
 			}
 		}
 	}
+
 	protected class NumberInputDialog extends Dialog {
 		public Text length;
 
 		int lengthValue;
 		public Text start;
 		int startValue;
+
 		public NumberInputDialog(Shell shell) {
 			super(shell);
 		}
@@ -146,12 +149,14 @@ public class ViewerTestXML extends ViewPart {
 		protected void okPressed() {
 			try {
 				startValue = Integer.decode(start.getText()).intValue();
-			} catch (NumberFormatException e2) {
+			}
+			catch (NumberFormatException e2) {
 				startValue = 0;
 			}
 			try {
 				lengthValue = Integer.decode(length.getText()).intValue();
-			} catch (NumberFormatException e2) {
+			}
+			catch (NumberFormatException e2) {
 				lengthValue = 0;
 			}
 			super.okPressed();
@@ -220,6 +225,54 @@ public class ViewerTestXML extends ViewPart {
 				public void run() {
 					super.run();
 					fSourceViewer.resetVisibleRegion();
+				}
+			});
+			mgr.add(new Separator());
+			mgr.add(new Action() {
+				public String getText() {
+					return getToolTipText();
+				}
+
+				public String getToolTipText() {
+					return "Change Visibility in Editor";
+				}
+
+				public void run() {
+					super.run();
+					StructuredTextViewer sourceViewer = null;
+					IEditorPart part = getViewSite().getWorkbenchWindow().getActivePage().getActiveEditor();
+					if (part != null && part instanceof StructuredTextEditor) {
+						sourceViewer = ((StructuredTextEditor) part).getTextViewer();
+					}
+					if (sourceViewer != null) {
+						NumberInputDialog dlg = new NumberInputDialog(sourceViewer.getControl().getShell());
+						int proceed = dlg.open();
+						if (proceed == Window.CANCEL)
+							return;
+						sourceViewer.resetVisibleRegion();
+						sourceViewer.setVisibleRegion(dlg.startValue, dlg.lengthValue);
+					}
+				}
+			});
+			mgr.add(new Action() {
+				public String getText() {
+					return getToolTipText();
+				}
+
+				public String getToolTipText() {
+					return "Show All in Editor";
+				}
+
+				public void run() {
+					super.run();
+					StructuredTextViewer sourceViewer = null;
+					IEditorPart part = getViewSite().getWorkbenchWindow().getActivePage().getActiveEditor();
+					if (part != null && part instanceof StructuredTextEditor) {
+						sourceViewer = ((StructuredTextEditor) part).getTextViewer();
+					}
+					if (sourceViewer != null) {
+						sourceViewer.resetVisibleRegion();
+					}
 				}
 			});
 			mgr.add(new Separator());
@@ -337,26 +390,26 @@ public class ViewerTestXML extends ViewPart {
 			setupViewerForEditor(editor);
 			if (fHighlightRangeListener == null)
 				fHighlightRangeListener = new NodeRangeSelectionListener();
-	
+
 			fContentOutlinePage = ((IContentOutlinePage) editor.getAdapter(IContentOutlinePage.class));
 			if (fContentOutlinePage != null) {
 				fContentOutlinePage.addSelectionChangedListener(fHighlightRangeListener);
-	
+
 				if (!fContentOutlinePage.getSelection().isEmpty() && fContentOutlinePage.getSelection() instanceof IStructuredSelection) {
 					fSourceViewer.resetVisibleRegion();
-	
+
 					Object[] nodes = ((IStructuredSelection) fContentOutlinePage.getSelection()).toArray();
 					IndexedRegion startNode = (IndexedRegion) nodes[0];
 					IndexedRegion endNode = (IndexedRegion) nodes[nodes.length - 1];
-	
+
 					if (startNode instanceof Attr)
 						startNode = (IndexedRegion) ((Attr) startNode).getOwnerElement();
 					if (endNode instanceof Attr)
 						endNode = (IndexedRegion) ((Attr) endNode).getOwnerElement();
-	
+
 					int start = startNode.getStartOffset();
 					int end = endNode.getEndOffset();
-	
+
 					fSourceViewer.setVisibleRegion(start, end - start);
 					fSourceViewer.setSelectedRange(start, 0);
 				}
