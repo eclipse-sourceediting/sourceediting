@@ -39,4 +39,29 @@
 			</action>
 		</editorContribution>
 	</extension>
+	<extension
+       id="xml.ui.tests1"
+       name="%Bundle-Name.0"
+       point="org.eclipse.ui.editors">
+		<editor
+        class="org.eclipse.wst.xml.ui.tests.TestSourceValidationFramework$TestStructuredTextEditor"
+        contributorClass="org.eclipse.wst.xml.ui.internal.actions.ActionContributorXML"
+        default="false"
+        filenames="*.xml99"
+        icon="icons/sourceEditor.gif"
+        id="org.eclipse.wst.xml.ui.tests.TestSourceValidationFramework$TestStructuredTextEditor"
+        name="%contentTypeTestXML99.editor"
+        symbolicFontName="org.eclipse.wst.sse.ui.textfont">
+		</editor>
+	</extension>
+    <extension
+         point="org.eclipse.core.runtime.contentTypes">
+        <content-type
+			file-extensions="xml99"
+			priority="low"
+			name="%contentTypeTestXML99.ct"
+			id="xml99source"
+			base-type="org.eclipse.core.runtime.xml">
+		</content-type>
+	</extension>
 </plugin>
