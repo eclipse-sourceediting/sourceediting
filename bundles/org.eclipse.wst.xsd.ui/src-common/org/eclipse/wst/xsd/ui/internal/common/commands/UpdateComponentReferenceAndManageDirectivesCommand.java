@@ -115,14 +115,14 @@ public abstract class UpdateComponentReferenceAndManageDirectivesCommand extends
     {
       URI baseURI = URI.createURI(baseLocation);
       URI fileURI = URI.createPlatformResourceURI(file.getFullPath().toString());
-      URI relative = fileURI.deresolve(baseURI);     
+      URI relative = fileURI.deresolve(baseURI, false, true, true);      
       return relative.toString();
     }
     else
     {
       URI baseURI = URI.createURI(baseLocation);          
       URI fileURI = URI.createFileURI(file.getLocation().toOSString());
-      URI relative = fileURI.deresolve(baseURI);     
+      URI relative = fileURI.deresolve(baseURI, false, true, true);     
       return relative.toString();    
     } 
   }
