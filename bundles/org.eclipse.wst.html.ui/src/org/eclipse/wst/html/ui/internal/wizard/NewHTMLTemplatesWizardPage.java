@@ -5,6 +5,7 @@ import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
 import org.eclipse.jface.text.templates.DocumentTemplateContext;
@@ -44,6 +45,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PreferencesUtil;
+import org.eclipse.wst.html.core.internal.provisional.contenttype.ContentTypeIdForHTML;
 import org.eclipse.wst.html.ui.StructuredTextViewerConfigurationHTML;
 import org.eclipse.wst.html.ui.internal.HTMLUIMessages;
 import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
@@ -53,7 +55,9 @@ import org.eclipse.wst.html.ui.internal.preferences.HTMLUIPreferenceNames;
 import org.eclipse.wst.html.ui.internal.templates.TemplateContextTypeIdsHTML;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
+import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
 
 /**
  * Templates page in new file wizard. Allows users to select a new file
@@ -299,22 +303,23 @@ public class NewHTMLTemplatesWizardPage extends WizardPage {
 	 */
 	private SourceViewer createViewer(Composite parent) {
 		SourceViewer viewer = null;
-		String contentTypeID = "org.eclipse.wst.html.core.htmlsource";
-		SourceViewerConfiguration configuration = new StructuredTextViewerConfigurationHTML();
-		IDocument document = null;
-		if (configuration != null) {
-			viewer = new StructuredTextViewer(parent, null, null, false, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
-			((StructuredTextViewer) viewer).getTextWidget().setFont(JFaceResources.getTextFont());
-			IStructuredModel scratchModel = StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(contentTypeID);
-			document = scratchModel.getStructuredDocument();
-		}
-		else {
-			viewer = new SourceViewer(parent, null, null, false, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
-			configuration = new SourceViewerConfiguration();
-			document = new Document();
-		}
+		String contentTypeID = ContentTypeIdForHTML.ContentTypeID_HTML;
+		SourceViewerConfiguration sourceViewerConfiguration = new StructuredTextViewerConfiguration() {
+			StructuredTextViewerConfiguration baseConfiguration = new StructuredTextViewerConfigurationHTML();
 
-		viewer.configure(configuration);
+			public String[] getConfiguredContentTypes(ISourceViewer sourceViewer) {
+				return baseConfiguration.getConfiguredContentTypes(sourceViewer);
+			}
+
+			public LineStyleProvider[] getLineStyleProviders(ISourceViewer sourceViewer, String partitionType) {
+				return baseConfiguration.getLineStyleProviders(sourceViewer, partitionType);
+			}
+		};
+		viewer = new StructuredTextViewer(parent, null, null, false, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
+		((StructuredTextViewer) viewer).getTextWidget().setFont(JFaceResources.getTextFont());
+		IStructuredModel scratchModel = StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(contentTypeID);
+		IDocument document = scratchModel.getStructuredDocument();
+		viewer.configure(sourceViewerConfiguration);
 		viewer.setDocument(document);
 		return viewer;
 	}
