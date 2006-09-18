@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -2003,9 +2003,12 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 
 		return getLength();
 	}
-
+	
 	public void makeReadOnly(int startOffset, int length) {
+		makeReadOnly(startOffset, length, false, false);
+	}
 
+	public void makeReadOnly(int startOffset, int length, boolean canInsertBefore, boolean canInsertAfter) {	
 		// doesn't make sense to have a readonly region of 0 length,
 		// so we'll ignore those requests
 		if (length <= 0)
@@ -2022,7 +2025,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 		// we can blindly add category, since no harm done if already
 		// exists.
 		addPositionCategory(READ_ONLY_REGIONS_CATEGORY);
-		Position newPosition = new Position(startOffset, length);
+		Position newPosition = new ReadOnlyPosition(startOffset, length, canInsertBefore);
 		try {
 			addPosition(READ_ONLY_REGIONS_CATEGORY, newPosition);
 			// FIXME: need to change API to pass in requester, so this event
