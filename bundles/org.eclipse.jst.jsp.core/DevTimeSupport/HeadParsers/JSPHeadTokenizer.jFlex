@@ -72,7 +72,7 @@ import org.eclipse.wst.xml.core.internal.contenttype.XMLHeadTokenizerConstants;
                 zzEndRead = 0;
 
                 /* number of newlines encountered up to the start of the matched text */
-                yyline = 0;
+                //yyline = 0;
 
                 /* the number of characters up to the start of the matched text */
                 yychar = 0;
@@ -81,7 +81,7 @@ import org.eclipse.wst.xml.core.internal.contenttype.XMLHeadTokenizerConstants;
                  * the number of characters from the last newline up to the start
                  * of the matched text
                  */
-                yycolumn = 0;
+                //yycolumn = 0;
 
                 /**
                  * yy_atBOL == true <=> the scanner is currently at the beginning
@@ -178,13 +178,13 @@ LineTerminator = \r|\n
 
 <YYINITIAL>
 {
-	 	// force to start at beginning of line (^) and at beginning of file (yychar == 0)
-		^ {UTF16BE}   		{if (yychar == 0 ) {hasMore = false; return EncodingParserConstants.UTF16BE;}}
-		^ {UTF16LE}   		{if (yychar == 0 ) {hasMore = false; return EncodingParserConstants.UTF16LE;}}
-		^ {UTF83ByteBOM}   	{if (yychar == 0 ) {hasMore = false; return EncodingParserConstants.UTF83ByteBOM;}}
-		
-		// force to be started on first line, but we do allow preceeding spaces
-		^ {S}* "<\?xml" {S}+ {if (yychar == 0 ) {yybegin(ST_XMLDecl); return XMLHeadTokenizerConstants.XMLDeclStart;}}
+         // force to start at beginning of line (^) and at beginning of file (yychar == 0)
+        ^ {UTF16BE}           {if (yychar == 0 ) {hasMore = false; return EncodingParserConstants.UTF16BE;}}
+        ^ {UTF16LE}           {if (yychar == 0 ) {hasMore = false; return EncodingParserConstants.UTF16LE;}}
+        ^ {UTF83ByteBOM}       {if (yychar == 0 ) {hasMore = false; return EncodingParserConstants.UTF83ByteBOM;}}
+        
+        // force to be started on first line, but we do allow preceeding spaces
+        ^ {S}* "<\?xml" {S}+ {if (yychar == 0 ) {yybegin(ST_XMLDecl); return XMLHeadTokenizerConstants.XMLDeclStart;}}
 
         "<%" {S}* "@" {S}* "page" {S}+   {yybegin(ST_PAGE_DIRECTIVE); return JSPHeadTokenizerConstants.PageDirectiveStart;}
         "<jsp:directive.page" {S}+           {yybegin(ST_PAGE_DIRECTIVE); return JSPHeadTokenizerConstants.PageDirectiveStart;}
