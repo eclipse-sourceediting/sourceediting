@@ -33,6 +33,8 @@ import org.eclipse.wst.xml.core.internal.contenttype.XMLHeadTokenizerConstants;
         // state stack for easier state handling
         private IntStack fStateStack = new IntStack();
         private String valueText = null;
+        private boolean isXHTML;
+        private boolean isWML;
 
 
         public JSPHeadTokenizer() {
@@ -99,6 +101,8 @@ import org.eclipse.wst.xml.core.internal.contenttype.XMLHeadTokenizerConstants;
                 fStateStack.clear();
 
                 hasMore = true;
+                isXHTML=false;
+                isWML=false;
 
 
         }
@@ -131,7 +135,13 @@ import org.eclipse.wst.xml.core.internal.contenttype.XMLHeadTokenizerConstants;
         private HeadParserToken createToken(String context, int start, String text) {
                 return new HeadParserToken(context, start, text);
         }
-
+        
+        public boolean isXHTML() {
+            return isXHTML;
+        }
+        public boolean isWML() {
+            return isWML;
+        }        
 
 %}
 
@@ -185,6 +195,14 @@ LineTerminator = \r|\n
         
         // force to be started on first line, but we do allow preceeding spaces
         ^ {S}* "<\?xml" {S}+ {if (yychar == 0 ) {yybegin(ST_XMLDecl); return XMLHeadTokenizerConstants.XMLDeclStart;}}
+
+
+        // following are some simply rules to identify JSP content as "XHTML"
+        // see http://www.rfc-editor.org/rfc/rfc3236.txt
+        "<!DOCTYPE" {S}* "html" {S}* "PUBLIC" .* "//DTD XHTML"                {isXHTML = true;}
+        "<html" {S}* "xmlns" {S}* "=" {S}* "http://www.w3.org/1999/xhtml"     {isXHTML = true;}
+         // another case that's part of the "HTML family" is WML 1.0 (WML 2.0 is part of XHTML)
+         "<!DOCTYPE" {S}* "wml" {S}* "PUBLIC" .* "//DTD WML"                   {isWML = true;}
 
         "<%" {S}* "@" {S}* "page" {S}+   {yybegin(ST_PAGE_DIRECTIVE); return JSPHeadTokenizerConstants.PageDirectiveStart;}
         "<jsp:directive.page" {S}+           {yybegin(ST_PAGE_DIRECTIVE); return JSPHeadTokenizerConstants.PageDirectiveStart;}
