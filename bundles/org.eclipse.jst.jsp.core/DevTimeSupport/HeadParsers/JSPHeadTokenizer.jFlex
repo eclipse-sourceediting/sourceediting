@@ -200,7 +200,7 @@ LineTerminator = \r|\n
         // following are some simply rules to identify JSP content as "XHTML"
         // see http://www.rfc-editor.org/rfc/rfc3236.txt
         "<!DOCTYPE" {S}* "html" {S}* "PUBLIC" .* "//DTD XHTML"                {isXHTML = true;}
-        "<html" {S}* "xmlns" {S}* "=" {S}* "http://www.w3.org/1999/xhtml"     {isXHTML = true;}
+        "<html" {S}* "xmlns" {S}* "=" {S}* (\" | \') "http://www.w3.org/1999/xhtml"     {isXHTML = true;}
          // another case that's part of the "HTML family" is WML 1.0 (WML 2.0 is part of XHTML)
          "<!DOCTYPE" {S}* "wml" {S}* "PUBLIC" .* "//DTD WML"                   {isWML = true;}
 
