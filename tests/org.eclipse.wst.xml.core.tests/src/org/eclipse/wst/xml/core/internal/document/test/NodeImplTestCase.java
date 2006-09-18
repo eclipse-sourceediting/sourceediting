@@ -12,8 +12,6 @@
 
 
 package org.eclipse.wst.xml.core.internal.document.test;
-
-
 import junit.framework.TestCase;
 
 import org.eclipse.wst.xml.core.internal.document.DOMModelImpl;
@@ -141,8 +139,7 @@ public class NodeImplTestCase extends TestCase {
 				assertEquals(UserDataHandler.NODE_CLONED, operation);
 				assertEquals(VALUE, data);
 				assertEquals(KEY, key);
-				assertEquals(src, attribute);
-				//assertEquals(dst, destinationNode); this cannot 
+				assertEquals(src, attribute); 
 				
 				System.out.println("Operation: "+operation+" Key:"+ key 
 						+ " Object:"+data+" SourceNode:"+src.getLocalName()+" DestinationNode:"+dst.getLocalName());
@@ -157,27 +154,23 @@ public class NodeImplTestCase extends TestCase {
 	 * Test for notifying the UserDataHandler when importing
 	 */
 	public void testNotifyUserDataHandler2() {
-		
-		DOMModelImpl model = new DOMModelImpl();
-		// newDocument never read
-    	//Document newDocument = 
-    		model.getDocument();
     	elementToImport = document.createElement("ElementToImport");
     	elementToImport.setUserData(KEY, VALUE, new UserDataHandler(){
 
 			public void handle(short operation, String key, Object data, Node src, Node dst) {
-				assertEquals(UserDataHandler.NODE_IMPORTED, operation);
+
+				//see if NODE.IMPORTED notification occurs with the right
+				//parameters
+				if (operation==UserDataHandler.NODE_IMPORTED) {	
 				assertEquals(VALUE, data);
 				assertEquals(KEY, key);
 				assertEquals(src, elementToImport);
 				assertEquals(dst, null);  
-				
 				System.out.println("Operation: "+operation+" Key:"+ key 
 						+ " Object:"+data+" SourceNode:"+src.getLocalName()+" DestinationNode:"+dst);
-				
+				}
 			}
 		});
 		document.importNode(elementToImport, true);
 	}
-
 }
