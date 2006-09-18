@@ -13,6 +13,7 @@ package org.eclipse.wst.xml.core.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.wst.xml.core.internal.document.test.NodeImplTestCase;
 import org.eclipse.wst.xml.core.tests.contentmodel.TestCatalogRetrivalAndModelCreation;
 import org.eclipse.wst.xml.core.tests.document.GetDocumentRegionsTest;
 import org.eclipse.wst.xml.core.tests.document.TestStructuredDocument;
@@ -49,6 +50,7 @@ public class SSEModelXMLTestSuite extends TestSuite {
 		addTest(new TestSuite(TestCatalogRetrivalAndModelCreation.class));
 		
 		addTest(new TestSuite(GetDocumentRegionsTest.class));
+		addTest(new TestSuite(NodeImplTestCase.class));
 
 		addTest(new TestSuite(TestFormatProcessorXML.class));
 	}
