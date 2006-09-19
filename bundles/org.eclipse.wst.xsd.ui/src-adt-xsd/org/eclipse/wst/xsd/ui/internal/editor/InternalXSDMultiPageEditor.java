@@ -13,7 +13,6 @@ package org.eclipse.wst.xsd.ui.internal.editor;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
@@ -38,6 +37,7 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IFileEditorInput;
@@ -962,8 +962,16 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
     IContentProvider provider = newEditorMode.getOutlineProvider();
     if (provider != null)
     {
-      ((ADTContentOutlinePage)getContentOutlinePage()).getTreeViewer().setContentProvider(provider);
-      ((ADTContentOutlinePage)getContentOutlinePage()).getTreeViewer().refresh();  
+      ADTContentOutlinePage outline = (ADTContentOutlinePage)getContentOutlinePage();
+      if (outline != null)
+      {
+        TreeViewer treeViewer = outline.getTreeViewer();
+        if (treeViewer != null)
+        {      
+          outline.getTreeViewer().setContentProvider(provider);
+          outline.getTreeViewer().refresh();
+        }
+      }  
     }  
   }  
   
