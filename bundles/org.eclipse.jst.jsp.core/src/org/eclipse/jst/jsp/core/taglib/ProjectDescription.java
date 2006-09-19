@@ -569,8 +569,26 @@ class ProjectDescription {
 		fClasspathReferences = new Hashtable(0);
 	}
 
-	private ITaglibRecord createCatalogRecord(String urlString) {
+	/**
+	 * @param catalogEntry
+	 *            a XML catalog entry pointing to a .jar or .tld file
+	 * @return an ITaglibRecord describing a TLD contributed to the
+	 *         XMLCatalog, if one was found at the given location
+	 */
+	private ITaglibRecord createCatalogRecord(ICatalogEntry catalogEntry) {
+		return createCatalogRecord(catalogEntry.getKey(), catalogEntry.getURI());
+	}
+
+	/**
+	 * @param uri -
+	 *            the key value that will become the returned record's "URI"
+	 * @param urlString -
+	 *            the string indicating where the TLD really is
+	 * @return an ITaglibRecord describing a TLD contributed to the XMLCatalog
+	 */
+	private ITaglibRecord createCatalogRecord(String uri, String urlString) {
 		ITaglibRecord record = null;
+		// handle "file:" URLs that point to a .jar file on disk (1.1 mode)
 		if (urlString.toLowerCase(Locale.US).endsWith((".jar")) && urlString.startsWith("file:")) { //$NON-NLS-1$ //$NON-NLS-2$
 			String fileLocation = null;
 			try {
@@ -590,6 +608,12 @@ class ProjectDescription {
 							InputStream contents = JarUtilities.getInputStream(fileLocation, entries[jEntry]);
 							if (contents != null) {
 								TaglibInfo info = extractInfo(fileLocation, contents);
+								/*
+								 * the record's reported URI should match the
+								 * catalog entry's "key" so replace the
+								 * detected value
+								 */
+								info.uri = uri;
 								jarRecord.info = info;
 							}
 							try {
@@ -608,6 +632,7 @@ class ProjectDescription {
 
 			}
 		}
+		// The rest are URLs into a plug-in...somewhere
 		else {
 			URL url = null;
 			ByteArrayInputStream cachedContents = null;
@@ -619,7 +644,7 @@ class ProjectDescription {
 				tldStream = connection.getInputStream();
 			}
 			catch (Exception e1) {
-				Logger.logException(e1);
+				Logger.logException("Exception reading TLD contributed to the XML Catalog", e1);
 			}
 
 			int c;
@@ -646,6 +671,11 @@ class ProjectDescription {
 			URLRecord urlRecord = null;
 			TaglibInfo info = extractInfo(urlString, cachedContents);
 			if (info != null) {
+				/*
+				 * the record's reported URI should match the catalog entry's
+				 * "key" so replace the detected value
+				 */
+				info.uri = uri;
 				urlRecord = new URLRecord();
 				urlRecord.info = info;
 				urlRecord.baseLocation = urlString;
@@ -814,7 +844,7 @@ class ProjectDescription {
 			// Process default catalog
 			ICatalogEntry[] entries = defaultCatalog.getCatalogEntries();
 			for (int entry = 0; entry < entries.length; entry++) {
-				ITaglibRecord record = createCatalogRecord(entries[entry].getURI());
+				ITaglibRecord record = createCatalogRecord(entries[entry]);
 				records.add(record);
 			}
 
@@ -828,7 +858,7 @@ class ProjectDescription {
 					if (uri != null) {
 						uri = uri.toLowerCase(Locale.US);
 						if (uri.endsWith((".jar")) || uri.endsWith((".tld"))) {
-							ITaglibRecord record = createCatalogRecord(uri);
+							ITaglibRecord record = createCatalogRecord(entries2[entry]);
 							records.add(record);
 						}
 					}
@@ -1273,7 +1303,7 @@ class ProjectDescription {
 					Logger.logException(e);
 				}
 				if (resolvedString != null && resolvedString.trim().length() > 0) {
-					record = createCatalogRecord(resolvedString);
+					record = createCatalogRecord(reference, resolvedString);
 				}
 			}
 		}
@@ -1498,10 +1528,10 @@ class ProjectDescription {
 
 		/**
 		 * <pre>
-		 *             		 1.0.1
-		 *             		 Save classpath information (| is field delimiter)
-		 *             		 Jars are saved as &quot;JAR:&quot;+ has11TLD + jar path 
-		 *             		 URLRecords as &quot;URL:&quot;+URL
+		 *                  		 1.0.1
+		 *                  		 Save classpath information (| is field delimiter)
+		 *                  		 Jars are saved as &quot;JAR:&quot;+ has11TLD + jar path 
+		 *                  		 URLRecords as &quot;URL:&quot;+URL
 		 * </pre>
 		 */
 		try {
