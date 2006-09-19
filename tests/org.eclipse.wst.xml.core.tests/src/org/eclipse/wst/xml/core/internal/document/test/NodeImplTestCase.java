@@ -14,8 +14,9 @@
 package org.eclipse.wst.xml.core.internal.document.test;
 import junit.framework.TestCase;
 
+import org.eclipse.wst.xml.core.internal.document.AttrImpl;
 import org.eclipse.wst.xml.core.internal.document.DOMModelImpl;
-import org.w3c.dom.Attr;
+import org.eclipse.wst.xml.core.internal.document.NodeImpl;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -23,10 +24,15 @@ import org.w3c.dom.UserDataHandler;
 
 
 public class NodeImplTestCase extends TestCase {
+	/**
+	 * Casts to implementation classes because the interface methods being
+	 * there isn't the interesting part, just whether our behavior with those
+	 * methods is correct.
+	 */	
 
-	Node element;
-	Attr attribute;
-	Node destinationNode;
+	NodeImpl element;
+	AttrImpl attribute;
+	NodeImpl destinationNode;
 	Document document;
 	
 	Element elementToImport;
@@ -45,8 +51,8 @@ public class NodeImplTestCase extends TestCase {
         
     	DOMModelImpl model = new DOMModelImpl();
     	document = model.getDocument();
-    	element = document.createElement("testelement");
-    	attribute = document.createAttribute("attribute");
+    	element = (NodeImpl)document.createElement("testelement");
+    	attribute = (AttrImpl)document.createAttribute("attribute");
     } 
 	
     /*
@@ -125,7 +131,7 @@ public class NodeImplTestCase extends TestCase {
 	public void testNotifyUserDataHandler0() {
 		
 		attribute.setUserData(KEY, VALUE, null);
-		destinationNode=attribute.cloneNode(true);
+		destinationNode=(NodeImpl)attribute.cloneNode(true);
 	}
 	
 	/*
@@ -147,7 +153,7 @@ public class NodeImplTestCase extends TestCase {
 			}
 		});
 		//event occurs before the destinationNode returns....
-		destinationNode=attribute.cloneNode(true);
+		destinationNode=(AttrImpl)attribute.cloneNode(true);
 	}
 	
 	/*
@@ -155,7 +161,7 @@ public class NodeImplTestCase extends TestCase {
 	 */
 	public void testNotifyUserDataHandler2() {
     	elementToImport = document.createElement("ElementToImport");
-    	elementToImport.setUserData(KEY, VALUE, new UserDataHandler(){
+    	((NodeImpl)elementToImport).setUserData(KEY, VALUE, new UserDataHandler(){
 
 			public void handle(short operation, String key, Object data, Node src, Node dst) {
 
