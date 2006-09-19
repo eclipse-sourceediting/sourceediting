@@ -287,7 +287,12 @@ public class AttrImpl extends NodeImpl implements IDOMAttr {
 	 * @return boolean
 	 */
 	public boolean getSpecified() {
-		return true;
+		// if there is no underlying document region, 
+		// then this attributes value has not really be specified
+		// yet in the document, and any returned values, such as 
+		// an empty string or a default value are being supplied
+		// as per spec, not per what's in the users document.
+		return this.valueRegion != null;
 	}
 
 	/**
