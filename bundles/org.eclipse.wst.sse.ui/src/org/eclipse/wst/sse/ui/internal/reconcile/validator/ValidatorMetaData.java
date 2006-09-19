@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -34,7 +34,7 @@ import org.osgi.framework.Bundle;
  * Object that holds information relevant to the creation of a validator for
  * the reconciling framework.
  * 
- * @author pavery
+ * @author pavery,nitind
  */
 public class ValidatorMetaData {
 	private String fClass = null;
@@ -42,7 +42,7 @@ public class ValidatorMetaData {
 	private String fId = null;
     private String fScope;
 
-	// a hash map of content type Ids (String) that points to lists of
+	// a hash map of explicitly declared content type Ids (String) that points to lists of
 	// partition types (List of Strings)
 	// contentTypeId -> List(paritionType, paritionType, partitionType, ...)
 	// contentTypeId2 -> List(partitionType, partitionType, ...)
@@ -96,6 +96,11 @@ public class ValidatorMetaData {
 		partitionList.add(partitionType);
 	}
 
+	/**
+	 * @param contentType
+	 * @return whether this validator explicitly declared that it could handle
+	 *         this content type or any of its parent content types
+	 */
 	public boolean canHandleContentType(String contentType) {
         // need to iterate hierarchy
         String[] contentHierarchy = calculateParentContentTypeIds(contentType);
@@ -106,6 +111,22 @@ public class ValidatorMetaData {
         return false;
 	}
 
+	/**
+	 * @param contentType
+	 * @return whether this validator explicitly declared that it could handle
+	 *         this content type
+	 */
+	public boolean mustHandleContentType(String contentType) {
+        return fMatrix.containsKey(contentType);
+	}
+
+	/**
+	 * @param contentTypeIds
+	 * @param partitionType
+	 * @return whether this validator declared that it could handle this
+	 *         content type, or one of its parent content types, and partition
+	 *         type
+	 */
 	public boolean canHandlePartitionType(String contentTypeIds[], String paritionType) {
         for(int i=0; i<contentTypeIds.length; i++) {
     		if (fMatrix.containsKey(contentTypeIds[i])) {

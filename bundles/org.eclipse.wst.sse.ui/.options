@@ -8,12 +8,12 @@ org.eclipse.wst.sse.ui/actioncontributor/debugstatusfields=false
 #org.eclipse.wst.sse.ui.extension.TransferBuilder.debugTime
 org.eclipse.wst.sse.ui/transferbuilder/time=false
 
-org.eclipse.wst.sse.ui/extendedconfigurationbuilder=true
+org.eclipse.wst.sse.ui/extendedconfigurationbuilder=false
 #org.eclipse.wst.sse.ui.extension.ExtendedConfigurationBuilder.debugTime
 org.eclipse.wst.sse.ui/extendedconfigurationbuilder/time=false
 
 
-org.eclipse.wst.sse.ui/extendededitoractionbuilder=true
+org.eclipse.wst.sse.ui/extendededitoractionbuilder=false
 
 #org.eclipse.wst.sse.ui.extension.ExtendedEditorActionBuilder.debugReadTime
 org.eclipse.wst.sse.ui/extendededitoractionbuilder/readtime=false
@@ -62,3 +62,5 @@ org.eclipse.wst.sse.ui/gotoNextAnnotation=false
 org.eclipse.wst.sse.ui/preferences-properties=false
 
 org.eclipse.wst.sse.ui/debug/reconcilerSpelling=false
+
+org.eclipse.wst.sse.ui/debug/reconcilerValidators=false
