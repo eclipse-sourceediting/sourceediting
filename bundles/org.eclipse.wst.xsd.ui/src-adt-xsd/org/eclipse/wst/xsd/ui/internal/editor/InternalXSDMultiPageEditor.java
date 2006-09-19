@@ -1009,4 +1009,10 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
     manager.setProductCustomizationProvider(productCustomizationProvider);
     return manager;
   }
+  
+  protected void storeCurrentModePreference(String id)
+  {
+    XSDEditorPlugin.getPlugin().getPreferenceStore().setValue(DEFAULT_EDITOR_MODE_ID, id);
+  }
+
 }  
