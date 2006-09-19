@@ -116,7 +116,7 @@ public class HTMLAttributeValidator extends PrimeValidator {
 				// No attr declaration was found. That is, the attr name is
 				// undefined.
 				// but not regard it as undefined name if it includes JSP
-				if (hasJSPRegion(((IDOMNode) a).getNameRegion())) {
+				if (!hasJSPRegion(((IDOMNode) a).getNameRegion())) {
 					rgnType = REGION_NAME;
 					state = ErrorState.UNDEFINED_NAME_ERROR;
 				}
@@ -179,7 +179,7 @@ public class HTMLAttributeValidator extends PrimeValidator {
 								// actualValue is invalid.
 								// but not regard it as undefined value if it
 								// includes JSP.
-								if (hasJSPRegion(((IDOMNode) a).getValueRegion())) {
+								if (!hasJSPRegion(((IDOMNode) a).getValueRegion())) {
 									rgnType = REGION_VALUE;
 									state = ErrorState.UNDEFINED_VALUE_ERROR;
 								}
