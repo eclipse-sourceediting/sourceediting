@@ -572,8 +572,8 @@ class ProjectDescription {
 	/**
 	 * @param catalogEntry
 	 *            a XML catalog entry pointing to a .jar or .tld file
-	 * @return an ITaglibRecord describing a TLD contributed to the
-	 *         XMLCatalog, if one was found at the given location
+	 * @return a ITaglibRecord describing a TLD contributed to the XMLCatalog
+	 *         if one was found at the given location, null otherwise
 	 */
 	private ITaglibRecord createCatalogRecord(ICatalogEntry catalogEntry) {
 		return createCatalogRecord(catalogEntry.getKey(), catalogEntry.getURI());
@@ -584,7 +584,8 @@ class ProjectDescription {
 	 *            the key value that will become the returned record's "URI"
 	 * @param urlString -
 	 *            the string indicating where the TLD really is
-	 * @return an ITaglibRecord describing a TLD contributed to the XMLCatalog
+	 * @return a ITaglibRecord describing a TLD contributed to the XMLCatalog
+	 *         if one was found at the given location, null otherwise
 	 */
 	private ITaglibRecord createCatalogRecord(String uri, String urlString) {
 		ITaglibRecord record = null;
@@ -646,47 +647,49 @@ class ProjectDescription {
 			catch (Exception e1) {
 				Logger.logException("Exception reading TLD contributed to the XML Catalog", e1);
 			}
-
-			int c;
-			ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-			// array dim restriction?
-			byte bytes[] = new byte[2048];
-			try {
-				while ((c = tldStream.read(bytes)) >= 0) {
-					buffer.write(bytes, 0, c);
-				}
-				cachedContents = new ByteArrayInputStream(buffer.toByteArray());
-			}
-			catch (IOException ioe) {
-				// no cleanup can be done
-			}
-			finally {
+			
+			if(tldStream != null) {	
+				int c;
+				ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+				// array dim restriction?
+				byte bytes[] = new byte[2048];
 				try {
-					tldStream.close();
+					while ((c = tldStream.read(bytes)) >= 0) {
+						buffer.write(bytes, 0, c);
+					}
+					cachedContents = new ByteArrayInputStream(buffer.toByteArray());
+				}
+				catch (IOException ioe) {
+					// no cleanup can be done
+				}
+				finally {
+					try {
+						tldStream.close();
+					}
+					catch (IOException e) {
+					}
+				}
+	
+				URLRecord urlRecord = null;
+				TaglibInfo info = extractInfo(urlString, cachedContents);
+				if (info != null) {
+					/*
+					 * the record's reported URI should match the catalog entry's
+					 * "key" so replace the detected value
+					 */
+					info.uri = uri;
+					urlRecord = new URLRecord();
+					urlRecord.info = info;
+					urlRecord.baseLocation = urlString;
+					urlRecord.url = url; //$NON-NLS-1$ //$NON-NLS-2$
+				}
+				try {
+					cachedContents.close();
 				}
 				catch (IOException e) {
 				}
+				record = urlRecord;
 			}
-
-			URLRecord urlRecord = null;
-			TaglibInfo info = extractInfo(urlString, cachedContents);
-			if (info != null) {
-				/*
-				 * the record's reported URI should match the catalog entry's
-				 * "key" so replace the detected value
-				 */
-				info.uri = uri;
-				urlRecord = new URLRecord();
-				urlRecord.info = info;
-				urlRecord.baseLocation = urlString;
-				urlRecord.url = url; //$NON-NLS-1$ //$NON-NLS-2$
-			}
-			try {
-				cachedContents.close();
-			}
-			catch (IOException e) {
-			}
-			record = urlRecord;
 		}
 		return record;
 	}
@@ -859,7 +862,9 @@ class ProjectDescription {
 						uri = uri.toLowerCase(Locale.US);
 						if (uri.endsWith((".jar")) || uri.endsWith((".tld"))) {
 							ITaglibRecord record = createCatalogRecord(entries2[entry]);
-							records.add(record);
+							if(record != null) {
+								records.add(record);
+							}
 						}
 					}
 				}
