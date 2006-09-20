@@ -12,6 +12,7 @@ package org.eclipse.wst.xsd.ui.internal.common.commands;
 
 import org.eclipse.wst.xml.ui.internal.tabletree.TreeContentHelper;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 /*
  * This command is used from the extension view to edit extension elements
@@ -33,8 +34,24 @@ public class UpdateTextValueCommand  extends BaseCommand
   {
     try
     {
-      beginRecording(element);
-      new TreeContentHelper().setElementTextValue(element, value);
+      beginRecording(element);      
+      Node textNode = null;
+      TreeContentHelper helper = new TreeContentHelper();
+      for (Node node = element.getFirstChild(); node != null; node = node.getNextSibling()) 
+      {
+        if (node.getNodeType() == Node.TEXT_NODE &&
+            !helper.isIgnorableText(node)) 
+        {
+          textNode = node;
+          break;
+        }         
+      }       
+      if (textNode == null)
+      {
+        textNode = element.getOwnerDocument().createTextNode("");
+        element.appendChild(textNode);
+      }  
+      helper.setNodeValue(textNode, value);        
     }
     finally
     {
