@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005,2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -572,8 +572,8 @@ class ProjectDescription {
 	/**
 	 * @param catalogEntry
 	 *            a XML catalog entry pointing to a .jar or .tld file
-	 * @return an ITaglibRecord describing a TLD contributed to the
-	 *         XMLCatalog, if one was found at the given location
+	 * @return a ITaglibRecord describing a TLD contributed to the XMLCatalog
+	 *         if one was found at the given location, null otherwise
 	 */
 	private ITaglibRecord createCatalogRecord(ICatalogEntry catalogEntry) {
 		return createCatalogRecord(catalogEntry.getKey(), catalogEntry.getURI());
@@ -584,7 +584,8 @@ class ProjectDescription {
 	 *            the key value that will become the returned record's "URI"
 	 * @param urlString -
 	 *            the string indicating where the TLD really is
-	 * @return an ITaglibRecord describing a TLD contributed to the XMLCatalog
+	 * @return a ITaglibRecord describing a TLD contributed to the XMLCatalog
+	 *         if one was found at the given location, null otherwise
 	 */
 	private ITaglibRecord createCatalogRecord(String uri, String urlString) {
 		ITaglibRecord record = null;
@@ -646,7 +647,8 @@ class ProjectDescription {
 			catch (Exception e1) {
 				Logger.logException("Exception reading TLD contributed to the XML Catalog", e1);
 			}
-
+			
+			if(tldStream != null) {	
 			int c;
 			ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 			// array dim restriction?
@@ -687,6 +689,7 @@ class ProjectDescription {
 			catch (IOException e) {
 			}
 			record = urlRecord;
+			}
 		}
 		return record;
 	}
@@ -859,7 +862,9 @@ class ProjectDescription {
 						uri = uri.toLowerCase(Locale.US);
 						if (uri.endsWith((".jar")) || uri.endsWith((".tld"))) {
 							ITaglibRecord record = createCatalogRecord(entries2[entry]);
-							records.add(record);
+							if(record != null) {
+								records.add(record);
+							}
 						}
 					}
 				}
