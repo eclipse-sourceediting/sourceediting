@@ -47,6 +47,7 @@ import org.eclipse.wst.common.frameworks.datamodel.IDataModelListener;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModelOperation;
 import org.eclipse.wst.common.frameworks.internal.datamodel.DataModelPausibleOperationImpl;
 import org.eclipse.wst.common.frameworks.internal.datamodel.ui.DataModelWizardPage;
+import org.eclipse.wst.common.project.facet.core.IActionDefinition;
 import org.eclipse.wst.common.project.facet.core.IFacetedProject;
 import org.eclipse.wst.common.project.facet.core.IFacetedProjectTemplate;
 import org.eclipse.wst.common.project.facet.core.IPreset;
@@ -472,7 +473,9 @@ public abstract class NewProjectDataModelFacetWizard extends AddRemoveFacetsWiza
 		FacetDataModelMap map = (FacetDataModelMap) model.getProperty(FACET_DM_MAP);
 		IDataModel configDM = (IDataModel) map.get(fv.getProjectFacet().getId());
 		if (configDM == null) {
-			final Object config = fv.createActionConfig(type, pjname);
+            final IActionDefinition actdef 
+                = fv.getActionDefinition( Collections.EMPTY_SET, type );
+            final Object config = actdef.createConfigObject( fv, pjname );
 			if (config == null || !(config instanceof IDataModel))
 				return null;
 			configDM = (IDataModel) config;
