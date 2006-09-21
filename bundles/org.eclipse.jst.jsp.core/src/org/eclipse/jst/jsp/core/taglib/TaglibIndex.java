@@ -96,8 +96,24 @@ public final class TaglibIndex {
 				else {
 					IJavaElementDelta[] deltas = delta.getAffectedChildren();
 					if (deltas.length == 0) {
-						IJavaElement proj = element;
-						handleClasspathChange((IJavaProject) proj, forceUpdate);
+						if (delta.getKind() == IJavaElementDelta.REMOVED || (delta.getFlags() & IJavaElementDelta.F_CLOSED) != 0) {
+							/*
+							 * If the project is being deleted or closed, just
+							 * remove the description
+							 */
+							IJavaElement proj = element;
+							ProjectDescription description = (ProjectDescription) fProjectDescriptions.remove(((IJavaProject) proj).getProject());
+							if (description != null) {
+								if (_debugIndexCreation) {
+									Logger.log(Logger.INFO, "removing index of " + description.fProject.getName()); //$NON-NLS-1$
+								}
+								description.clear();
+							}
+						}
+						else {
+							IJavaElement proj = element;
+							handleClasspathChange((IJavaProject) proj, forceUpdate);
+						}
 					}
 					else {
 						for (int i = 0; i < deltas.length; i++) {
