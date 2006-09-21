@@ -53,6 +53,7 @@ public class EmbeddedXML implements EmbeddedTypeHandler {
 	public List getSupportedMimeTypes() {
 		if (supportedMimeTypes == null) {
 			supportedMimeTypes = new ArrayList();
+			supportedMimeTypes.add("application/xml"); //$NON-NLS-1$
 			supportedMimeTypes.add("text/xml"); //$NON-NLS-1$
 		}
 		return supportedMimeTypes;

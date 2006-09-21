@@ -33,14 +33,9 @@ public final class ContentDescriberForXML implements ITextContentDescriber {
 	 * If in restrictedMode, our "custom" contentType is seen as valid only in
 	 * cases that the platform's standard one does not cover.
 	 */
-	private boolean restrictedMode = true;
-	private XMLResourceEncodingDetector fResourceEncodingDetector;
-
+	private final static boolean restrictedMode = true;
 	private IResourceCharsetDetector getDetector() {
-		if (fResourceEncodingDetector == null) {
-			fResourceEncodingDetector = new XMLResourceEncodingDetector();
-		}
-		return fResourceEncodingDetector;
+			return new XMLResourceEncodingDetector();
 	}
 
 	/*
@@ -224,7 +219,7 @@ public final class ContentDescriberForXML implements ITextContentDescriber {
 				else {
 					// we may need to add what we found, but only need to add
 					// if different from the default
-					Object defaultCharset = getDetector().getSpecDefaultEncoding();
+					Object defaultCharset = detector.getSpecDefaultEncoding();
 					if (defaultCharset != null) {
 						if (!defaultCharset.equals(javaCharset)) {
 							description.setProperty(IContentDescription.CHARSET, javaCharset);
