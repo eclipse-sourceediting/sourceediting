@@ -38,7 +38,7 @@ import org.eclipse.wst.sse.ui.internal.spelling.SpellcheckStrategy;
  */
 public class DocumentRegionProcessor extends DirtyRegionProcessor {
 
-	private static final boolean DEBUG_VALIDATORS = true;// Boolean.TRUE.toString().equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.ui/debug/reconcilerValidators"));
+	private static final boolean DEBUG_VALIDATORS = Boolean.TRUE.toString().equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.ui/debug/reconcilerValidators"));
 	// //$NON-NLS-1$
 
 	/**
