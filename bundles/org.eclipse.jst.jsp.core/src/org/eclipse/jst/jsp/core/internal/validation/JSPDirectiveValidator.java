@@ -162,9 +162,12 @@ public class JSPDirectiveValidator extends JSPValidator {
 	 * batch validation call
 	 */
 	protected void validateFile(IFile f, IReporter reporter) {
-		// when validating an entire file
-		// need to clear dupes or else you're comparing between files
+		/*
+		 * when validating an entire file (or multiple files), need to clear
+		 * dupes or else you're comparing between files
+		 */
 		fTaglibPrefixesInUse.clear();
+		fTextRegionToDocumentRegionMap.clear();
 		reporter.removeAllMessages(this);
 
 		// for batch validation
@@ -183,7 +186,7 @@ public class JSPDirectiveValidator extends JSPValidator {
 					region = region.getNext();
 				}
 
-				if(!reporter.isCancelled()) {
+				if (!reporter.isCancelled()) {
 					reportDuplicatePrefixes(f, reporter, structuredDocument);
 				}
 			}
