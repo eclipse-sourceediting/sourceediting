@@ -29,8 +29,10 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.utils.StringUtils;
+import org.eclipse.wst.validation.internal.core.ValidationException;
 import org.eclipse.wst.validation.internal.provisional.core.IMessage;
 import org.eclipse.wst.validation.internal.provisional.core.IReporter;
+import org.eclipse.wst.validation.internal.provisional.core.IValidationContext;
 
 /**
  * Checks for: - duplicate taglib prefix values and reserved taglib prefix
@@ -157,6 +159,11 @@ public class JSPDirectiveValidator extends JSPValidator {
 			}
 		}
 	}
+	
+	public void validate(IValidationContext helper, IReporter reporter) throws ValidationException {
+		reporter.removeAllMessages(this);
+		super.validate(helper, reporter);
+	}
 
 	/**
 	 * batch validation call
@@ -168,7 +175,6 @@ public class JSPDirectiveValidator extends JSPValidator {
 		 */
 		fTaglibPrefixesInUse.clear();
 		fTextRegionToDocumentRegionMap.clear();
-		reporter.removeAllMessages(this);
 
 		// for batch validation
 		IStructuredModel sModel = null;
