@@ -4,9 +4,20 @@ import java.io.IOException;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IWorkspaceRunnable;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.compiler.IProblem;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jst.jsp.core.internal.JSPCorePlugin;
 import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.java.IJSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslation;
@@ -19,12 +30,67 @@ import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.validation.internal.core.ValidationException;
+import org.eclipse.wst.validation.internal.operations.IWorkbenchContext;
 import org.eclipse.wst.validation.internal.provisional.core.IMessage;
 import org.eclipse.wst.validation.internal.provisional.core.IReporter;
+import org.eclipse.wst.validation.internal.provisional.core.IValidationContext;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 
 public class JSPJavaValidator extends JSPValidator {
+	public ISchedulingRule getSchedulingRule(IValidationContext helper) {
+		if (helper instanceof IWorkbenchContext) {
+			/*
+			 * Wrap validation inside of a JavaModelOperation to collapse
+			 * event notification. For this reason, we use a single build rule
+			 * when running batch validation.
+			 */
+			return ResourcesPlugin.getWorkspace().getRuleFactory().buildRule();
+		}
+		/*
+		 * For other kinds of validation, use no specific rule
+		 */
+		return null;
+	}
+
+	public void validate(final IValidationContext helper, final IReporter reporter) throws ValidationException {
+		/*
+		 * Use the current Job's rule for the JavaModelOperation
+		 */
+		Job currentJob = Platform.getJobManager().currentJob();
+		ISchedulingRule rule = null;
+		if (currentJob != null) {
+			rule = currentJob.getRule();
+		}
+
+		IWorkspaceRunnable validationRunnable = new IWorkspaceRunnable() {
+			public void run(IProgressMonitor monitor) throws CoreException {
+				doValidate(helper, reporter);
+			}
+		};
+		try {
+			JavaCore.run(validationRunnable, rule, new NullProgressMonitor());
+		}
+		catch (CoreException e) {
+			// we're only allowed to throw a ValidationException here
+			if (e.getCause() instanceof ValidationException) {
+				throw (ValidationException) e.getCause();
+			}
+			throw new ValidationException(new LocalizedMessage(IMessage.ERROR_AND_WARNING, e.getMessage()), e);
+		}
+	}
+
+	void doValidate(IValidationContext helper, IReporter reporter) throws CoreException {
+		try {
+			super.validate(helper, reporter);
+		}
+		catch (ValidationException e) {
+			// we're only allowed to throw a CoreException within the runnable
+			String pluginId = JSPCorePlugin.getDefault().getBundle().getSymbolicName();
+			throw new CoreException(new Status(IStatus.ERROR, pluginId, 0, pluginId, e));
+		}
+	}
 	
 	/**
 	 * Validate one file. It's assumed that the file has JSP content type.
