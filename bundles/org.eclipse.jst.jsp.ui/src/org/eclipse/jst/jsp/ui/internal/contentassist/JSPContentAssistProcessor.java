@@ -591,7 +591,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor {
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer, int documentPosition) {
 		fTemplateContexts.clear();
 
-		IStructuredDocumentRegion sdRegion = ContentAssistUtils.getStructuredDocumentRegion(viewer, documentPosition);
+		IStructuredDocumentRegion sdRegion = ContentAssistUtils.getStructuredDocumentRegion((StructuredTextViewer) viewer, documentPosition);
 		fViewer = viewer;
 		ICompletionProposal[] jspResults = EMPTY_PROPOSAL_SET;
 		ICompletionProposal[] embeddedResults = EMPTY_PROPOSAL_SET;
@@ -1129,7 +1129,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor {
 	protected ContentAssistRequest computeCompletionProposals(int documentPosition, String matchString, ITextRegion completionRegion, IDOMNode treeNode, IDOMNode xmlnode) {
 
 		ContentAssistRequest request = super.computeCompletionProposals(documentPosition, matchString, completionRegion, treeNode, xmlnode);
-		IStructuredDocumentRegion sdRegion = ContentAssistUtils.getStructuredDocumentRegion(fTextViewer, documentPosition);
+		IStructuredDocumentRegion sdRegion = ContentAssistUtils.getStructuredDocumentRegion((StructuredTextViewer) fTextViewer, documentPosition);
 
 		Document doc = null;
 		if (xmlnode != null) {

@@ -131,6 +131,16 @@ public abstract class AbstractNestedValidator implements IValidatorJob
   }
   
   /**
+   * Get the name of this validator. The name will be reported to the
+   * validation framework.
+   * Subclasses must implement this method.
+   * 
+   * @return
+   * 		The name of this validator.
+   */
+  protected abstract String getValidatorName();
+
+  /**
    * Perform set up before validation runs. Subclasses may implement this
    * method to perform validation specific set up.
    * 

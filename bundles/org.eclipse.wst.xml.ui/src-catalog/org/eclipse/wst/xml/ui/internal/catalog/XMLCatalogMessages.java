@@ -51,6 +51,7 @@ public class XMLCatalogMessages extends NLS {
 	public static String UI_WARNING_NO_ELEMENT;
 	public static String UI_WARNING_NO_ELEMENT_DTD_LONG;
 	public static String UI_WARNING_NO_ELEMENT_XSD_LONG;
+	public static String UI_WARNING_MUST_BE_FULLY_QUALIFIED_URI;
 
 
 	//NewModelWizard

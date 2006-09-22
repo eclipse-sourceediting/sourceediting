@@ -171,7 +171,7 @@ public class HTMLContentAssistProcessor extends AbstractContentAssistProcessor i
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer textViewer, int documentPosition) {
 		fTemplateContexts.clear();
 
-		IndexedRegion treeNode = ContentAssistUtils.getNodeAt(textViewer, documentPosition);
+		IndexedRegion treeNode = ContentAssistUtils.getNodeAt((StructuredTextViewer) textViewer, documentPosition);
 		IDOMNode node = (IDOMNode) treeNode;
 		setErrorMessage(null);
 
@@ -243,7 +243,7 @@ public class HTMLContentAssistProcessor extends AbstractContentAssistProcessor i
 
 			// check inline CSS proposals
 			// need to find attr region from sd region
-			IStructuredDocumentRegion sdRegion = ContentAssistUtils.getStructuredDocumentRegion(textViewer, documentPosition);
+			IStructuredDocumentRegion sdRegion = ContentAssistUtils.getStructuredDocumentRegion((StructuredTextViewer) textViewer, documentPosition);
 			Iterator regions = sdRegion.getRegions().iterator();
 			ITextRegion styleNameRegion = null;
 			ITextRegion styleValueRegion = null;

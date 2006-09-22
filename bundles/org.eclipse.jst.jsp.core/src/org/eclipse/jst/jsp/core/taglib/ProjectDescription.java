@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005,2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -439,6 +439,7 @@ class ProjectDescription {
 
 	private static final String WEB_INF = "WEB-INF"; //$NON-NLS-1$
 	private static final IPath WEB_INF_PATH = new Path(WEB_INF);
+	private static final String BUILDPATH_PROJECT = "BUILDPATH_PROJECT"; //$NON-NLS-1$
 	private static final String WEB_XML = "web.xml"; //$NON-NLS-1$
 	private static final String SAVE_FORMAT_VERSION = "Tag Library Index 1.0.1"; //$NON-NLS-1$
 	private static final String BUILDPATH_DIRTY = "BUILDPATH_DIRTY"; //$NON-NLS-1$
@@ -531,7 +532,7 @@ class ProjectDescription {
 	 */
 	void addBuildPathReferences(Map references, List projectsProcessed, boolean exportedOnly) {
 		ensureUpTodate();
-		
+
 		Enumeration keys = fClasspathReferences.keys();
 		while (keys.hasMoreElements()) {
 			Object key = keys.nextElement();
@@ -568,8 +569,27 @@ class ProjectDescription {
 		fClasspathReferences = new Hashtable(0);
 	}
 
-	private ITaglibRecord createCatalogRecord(String urlString) {
+	/**
+	 * @param catalogEntry
+	 *            a XML catalog entry pointing to a .jar or .tld file
+	 * @return a ITaglibRecord describing a TLD contributed to the XMLCatalog
+	 *         if one was found at the given location, null otherwise
+	 */
+	private ITaglibRecord createCatalogRecord(ICatalogEntry catalogEntry) {
+		return createCatalogRecord(catalogEntry.getKey(), catalogEntry.getURI());
+	}
+
+	/**
+	 * @param uri -
+	 *            the key value that will become the returned record's "URI"
+	 * @param urlString -
+	 *            the string indicating where the TLD really is
+	 * @return a ITaglibRecord describing a TLD contributed to the XMLCatalog
+	 *         if one was found at the given location, null otherwise
+	 */
+	private ITaglibRecord createCatalogRecord(String uri, String urlString) {
 		ITaglibRecord record = null;
+		// handle "file:" URLs that point to a .jar file on disk (1.1 mode)
 		if (urlString.toLowerCase(Locale.US).endsWith((".jar")) && urlString.startsWith("file:")) { //$NON-NLS-1$ //$NON-NLS-2$
 			String fileLocation = null;
 			try {
@@ -589,6 +609,12 @@ class ProjectDescription {
 							InputStream contents = JarUtilities.getInputStream(fileLocation, entries[jEntry]);
 							if (contents != null) {
 								TaglibInfo info = extractInfo(fileLocation, contents);
+								/*
+								 * the record's reported URI should match the
+								 * catalog entry's "key" so replace the
+								 * detected value
+								 */
+								info.uri = uri;
 								jarRecord.info = info;
 							}
 							try {
@@ -607,6 +633,7 @@ class ProjectDescription {
 
 			}
 		}
+		// The rest are URLs into a plug-in...somewhere
 		else {
 			URL url = null;
 			ByteArrayInputStream cachedContents = null;
@@ -618,9 +645,10 @@ class ProjectDescription {
 				tldStream = connection.getInputStream();
 			}
 			catch (Exception e1) {
-				Logger.logException(e1);
+				Logger.logException("Exception reading TLD contributed to the XML Catalog", e1);
 			}
-
+			
+			if(tldStream != null) {	
 			int c;
 			ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 			// array dim restriction?
@@ -645,6 +673,11 @@ class ProjectDescription {
 			URLRecord urlRecord = null;
 			TaglibInfo info = extractInfo(urlString, cachedContents);
 			if (info != null) {
+				/*
+				 * the record's reported URI should match the catalog entry's
+				 * "key" so replace the detected value
+				 */
+				info.uri = uri;
 				urlRecord = new URLRecord();
 				urlRecord.info = info;
 				urlRecord.baseLocation = urlString;
@@ -656,6 +689,7 @@ class ProjectDescription {
 			catch (IOException e) {
 			}
 			record = urlRecord;
+			}
 		}
 		return record;
 	}
@@ -813,7 +847,7 @@ class ProjectDescription {
 			// Process default catalog
 			ICatalogEntry[] entries = defaultCatalog.getCatalogEntries();
 			for (int entry = 0; entry < entries.length; entry++) {
-				ITaglibRecord record = createCatalogRecord(entries[entry].getURI());
+				ITaglibRecord record = createCatalogRecord(entries[entry]);
 				records.add(record);
 			}
 
@@ -827,8 +861,10 @@ class ProjectDescription {
 					if (uri != null) {
 						uri = uri.toLowerCase(Locale.US);
 						if (uri.endsWith((".jar")) || uri.endsWith((".tld"))) {
-							ITaglibRecord record = createCatalogRecord(uri);
-							records.add(record);
+							ITaglibRecord record = createCatalogRecord(entries2[entry]);
+							if(record != null) {
+								records.add(record);
+							}
 						}
 					}
 				}
@@ -1272,7 +1308,7 @@ class ProjectDescription {
 					Logger.logException(e);
 				}
 				if (resolvedString != null && resolvedString.trim().length() > 0) {
-					record = createCatalogRecord(resolvedString);
+					record = createCatalogRecord(reference, resolvedString);
 				}
 			}
 		}
@@ -1318,6 +1354,8 @@ class ProjectDescription {
 						String lineText = doc.get(line.getOffset(), line.getLength());
 						JarRecord libraryRecord = null;
 						if (SAVE_FORMAT_VERSION.equals(lineText)) {
+							IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
+
 							for (int i = 1; i < lines; i++) {
 								line = doc.getLineInformation(i);
 								lineText = doc.get(line.getOffset(), line.getLength());
@@ -1435,6 +1473,16 @@ class ProjectDescription {
 										}
 										fClasspathReferences.put(urlRecord.getURI(), urlRecord);
 									}
+									else if (BUILDPATH_PROJECT.equalsIgnoreCase(tokenType)) {
+										String projectName = toker.nextToken();
+										if (Path.ROOT.isValidSegment(projectName)) {
+											IProject project = workspaceRoot.getProject(projectName);
+											/* do not check if "open" here */
+											if (project != null) {
+												fClasspathProjects.add(project);
+											}
+										}
+									}
 									// last since only occurs once
 									else if (BUILDPATH_DIRTY.equalsIgnoreCase(tokenType)) {
 										fBuildPathIsDirty = Boolean.valueOf(toker.nextToken()).booleanValue();
@@ -1485,10 +1533,10 @@ class ProjectDescription {
 
 		/**
 		 * <pre>
-		 *           		 1.0
-		 *           		 Save classpath information (| is field delimiter)
-		 *           		 Jars are saved as &quot;JAR:&quot;+ has11TLD + jar path 
-		 *           		 URLRecords as &quot;URL:&quot;+URL
+		 *                  		 1.0.1
+		 *                  		 Save classpath information (| is field delimiter)
+		 *                  		 Jars are saved as &quot;JAR:&quot;+ has11TLD + jar path 
+		 *                  		 URLRecords as &quot;URL:&quot;+URL
 		 * </pre>
 		 */
 		try {
@@ -1497,6 +1545,14 @@ class ProjectDescription {
 			writer.write('\n'); //$NON-NLS-1$
 			writer.write(BUILDPATH_DIRTY + "|" + fBuildPathIsDirty); //$NON-NLS-1$
 			writer.write('\n'); //$NON-NLS-1$
+
+			IProject[] projects = (IProject[]) fClasspathProjects.toArray(new IProject[0]);
+			for (int i = 0; i < projects.length; i++) {
+				writer.write(BUILDPATH_PROJECT);
+				writer.write("|"); //$NON-NLS-1$
+				writer.write(projects[i].getName());
+				writer.write('\n'); //$NON-NLS-1$
+			}
 
 			Enumeration jars = fClasspathJars.keys();
 			while (jars.hasMoreElements()) {

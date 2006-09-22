@@ -60,7 +60,7 @@ public class RenameInFileQuickAssistProposal implements ICompletionProposal, ICo
 		LinkedPositionGroup group = new LinkedPositionGroup();
 		try {
 			if (viewer instanceof StructuredTextViewer) {
-				IDOMNode node = (IDOMNode) ContentAssistUtils.getNodeAt(viewer, offset);
+				IDOMNode node = (IDOMNode) ContentAssistUtils.getNodeAt((StructuredTextViewer) viewer, offset);
 				IStructuredDocumentRegion startStructuredDocumentRegion = node.getStartStructuredDocumentRegion();
 				ITextRegion region = (startStructuredDocumentRegion == null) ? null : startStructuredDocumentRegion.getRegionAtCharacterOffset(offset);
 				if (region != null) {

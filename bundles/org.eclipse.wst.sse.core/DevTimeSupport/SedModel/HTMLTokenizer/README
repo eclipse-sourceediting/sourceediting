@@ -1,7 +1,9 @@
 devel     - the active development environment (sans JDK)
             - latest version of HTMLTokenizer specification and generated code
+            - slightly updated JAR file to avoid any possible as-shipped
+              compilation errors
             - modified skeleton to prevent VM exits on unmatched input
-            - "flex" scripts to run JFlex with modified skeleton
+            - "flex" scripts to run JFlex with modified skeleton and updated JAR
             - active RCS archive
 resources - backup/pristine resources
             - Unmodified JFlex 1.2.2 download

@@ -7,11 +7,7 @@
  * 
  * Contributors:
  *     IBM Corporation - initial API and implementation
- *     
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
- *     
- *     Balazs Banfai: Bug 154737 getUserData/setUserData support for Node
- *     https://bugs.eclipse.org/bugs/show_bug.cgi?id=154737
  *     
  *******************************************************************************/
 package org.eclipse.wst.xml.core.internal.document;
@@ -27,7 +23,6 @@ import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.w3c.dom.Comment;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Node;
-import org.w3c.dom.UserDataHandler;
 
 
 /**
@@ -67,7 +62,6 @@ public class CommentImpl extends CharacterDataImpl implements Comment {
 	 */
 	public Node cloneNode(boolean deep) {
 		CommentImpl cloned = new CommentImpl(this);
-		notifyUserDataHandlers(UserDataHandler.NODE_CLONED, cloned);
 		return cloned;
 	}
 

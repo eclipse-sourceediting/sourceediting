@@ -28,6 +28,7 @@ public class DTDValidationMessages extends NLS {
 	public static String Missing_required_files_2;
 	public static String Missing_required_files_3;
 	public static String Missing_required_files_4;
+	public static String MESSAGE_DTD_VALIDATION_MESSAGE_UI_;
 
 	static {
 		// load message values from bundle file

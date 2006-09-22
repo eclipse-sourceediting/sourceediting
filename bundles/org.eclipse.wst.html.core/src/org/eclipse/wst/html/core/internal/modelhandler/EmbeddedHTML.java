@@ -82,7 +82,6 @@ public class EmbeddedHTML implements EmbeddedTypeHandler {
 			supportedMimeTypes.add("text/html"); //$NON-NLS-1$
 			supportedMimeTypes.add("text/xhtml"); //$NON-NLS-1$
 			supportedMimeTypes.add("application/xhtml+xml"); //$NON-NLS-1$
-			supportedMimeTypes.add("application/xml"); //$NON-NLS-1$
 			supportedMimeTypes.add("text/vnd.wap.wml"); //$NON-NLS-1$
 		}
 		return supportedMimeTypes;

@@ -40,6 +40,7 @@ class SortAction extends PropertyChangeUpdateAction {
 	 */
 	public void update() {
 		super.update();
+		// treeViewer.getControl().setVisible(false);
 		treeViewer.getControl().setRedraw(false);
 		Object[] expandedElements = treeViewer.getExpandedElements();
 		if (isChecked()) {
@@ -50,6 +51,7 @@ class SortAction extends PropertyChangeUpdateAction {
 		}
 		treeViewer.setInput(treeViewer.getInput());
 		treeViewer.setExpandedElements(expandedElements);
+		// treeViewer.getControl().setVisible(true);
 		treeViewer.getControl().setRedraw(true);
 	}
 }

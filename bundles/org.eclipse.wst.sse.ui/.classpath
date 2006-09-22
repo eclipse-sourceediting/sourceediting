@@ -1,30 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-    <classpathentry
-        kind="src"
-        path="src/" />
-    <classpathentry
-        kind="src"
-        path="src-extensions/" />
-    <classpathentry
-        kind="src"
-        path="src-encoding" />
-    <classpathentry
-        kind="src"
-        path="src-tasktags" />
-    <classpathentry
-        kind="con"
-        path="org.eclipse.jdt.launching.JRE_CONTAINER" />
-    <classpathentry
-        path="org.eclipse.pde.core.requiredPlugins"
-        kind="con">
-        <accessrules>
-            <accessrule
-                kind="accessible"
-                pattern="org/eclipse/wst/**" />
-        </accessrules>
-    </classpathentry>
-    <classpathentry
-        kind="output"
-        path="bin" />
+	<classpathentry kind="src" path="src/"/>
+	<classpathentry kind="src" path="src-extensions/"/>
+	<classpathentry kind="src" path="src-encoding"/>
+	<classpathentry kind="src" path="src-tasktags"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry kind="output" path="bin"/>
 </classpath>

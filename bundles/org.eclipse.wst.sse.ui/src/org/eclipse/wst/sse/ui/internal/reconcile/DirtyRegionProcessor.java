@@ -275,6 +275,14 @@ public class DirtyRegionProcessor extends Job implements IReconciler, IReconcile
 	}
 
 	/**
+	 * @deprecated use getOuterRegion() instead
+	 */
+	protected boolean contains(DirtyRegion root, DirtyRegion possible) {
+		// remove method post wtp 1.5.1
+		return isContained(root, possible);
+	}
+
+	/**
 	 * Used to determine if one dirty region contains the other and if so,
 	 * which is the one that contains it.
 	 * 
