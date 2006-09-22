@@ -100,14 +100,6 @@ public class EditCatalogEntryDialog extends Dialog {
 						errorMessage = XMLCatalogMessages.UI_WARNING_URI_NOT_FOUND_COLON + fileName;
 					}
 				}
-				
-				// Make sure the key is a fully qualified URI
-				if (keyField.getText().length() > 0) {
-					URI uri = URI.createURI(keyField.getText());
-					if (errorMessage == null && (uri.scheme() == null || uri.host() == null || !uri.hasAbsolutePath())) {
-						errorMessage = XMLCatalogMessages.UI_WARNING_MUST_BE_FULLY_QUALIFIED_URI;
-					}
-				}
 				else {
 					// this an error that is not actaully
 					// reported ... OK is just disabled
