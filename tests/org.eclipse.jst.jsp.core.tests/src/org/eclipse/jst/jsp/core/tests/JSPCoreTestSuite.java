@@ -34,7 +34,7 @@ public class JSPCoreTestSuite extends TestSuite {
 	}
 
 	public JSPCoreTestSuite() {
-		super("SSEModelTestSuiteForJSP");
+		super("SSE JSP Core Test Suite");
 
 		addTest(TestCeanupFormat.suite());
 		addTest(ModelCloneSuite.suite());
