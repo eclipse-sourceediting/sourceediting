@@ -23,6 +23,9 @@ import org.eclipse.jst.jsp.core.internal.JSPCoreMessages;
 import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.provisional.JSP11Namespace;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
+import org.eclipse.jst.jsp.core.taglib.ITaglibRecord;
+import org.eclipse.jst.jsp.core.taglib.TaglibIndex;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
@@ -96,8 +99,28 @@ public class JSPDirectiveValidator extends JSPValidator {
 		String directiveName = getDirectiveName(documentRegion);
 		// we only care about taglib directive
 		if (directiveName.equals("taglib")) { //$NON-NLS-1$
+			ITextRegion valueRegion = null;
+			if (file != null) {
+				valueRegion = getAttributeValueRegion(documentRegion, JSP11Namespace.ATTR_NAME_URI);
+				String uri = documentRegion.getText(valueRegion);
+				uri = StringUtils.stripQuotes(uri);
+				ITaglibRecord tld = TaglibIndex.resolve(file.getFullPath().toString(), uri, false);
+				if (tld == null) {
+					String msgText = NLS.bind(JSPCoreMessages.JSPDirectiveValidator_1, uri);
+					int sev = IMessage.HIGH_SEVERITY;
+					LocalizedMessage message = new LocalizedMessage(sev, msgText, file);
+					int start = documentRegion.getStartOffset(valueRegion);
+					int length = valueRegion.getTextLength();
+					int lineNo = sDoc.getLineOfOffset(start);
+					message.setLineNo(lineNo);
+					message.setOffset(start);
+					message.setLength(length);
 
-			ITextRegion valueRegion = getAttributeValueRegion(documentRegion, JSP11Namespace.ATTR_NAME_PREFIX);
+					reporter.addMessage(this, message);
+				}
+			}
+			
+			valueRegion = getAttributeValueRegion(documentRegion, JSP11Namespace.ATTR_NAME_PREFIX);
 			if (valueRegion == null)
 				return;
 
@@ -112,7 +135,7 @@ public class JSPDirectiveValidator extends JSPValidator {
 				int sev = IMessage.HIGH_SEVERITY;
 				LocalizedMessage message = (file == null ? new LocalizedMessage(sev, msgText) : new LocalizedMessage(sev, msgText, file));
 				int start = documentRegion.getStartOffset(valueRegion);
-				int length = documentRegion.getTextLength();
+				int length = valueRegion.getTextLength();
 				int lineNo = sDoc.getLineOfOffset(start);
 				message.setLineNo(lineNo);
 				message.setOffset(start);
