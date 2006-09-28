@@ -18,7 +18,6 @@ import org.eclipse.wst.dtd.ui.internal.style.LineStyleProviderForDTD;
 import org.eclipse.wst.sse.core.text.IStructuredPartitions;
 import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
 import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
-import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProviderForNoOp;
 
 
 /**
@@ -40,11 +39,7 @@ public class StructuredTextViewerConfigurationDTD extends StructuredTextViewerCo
 	/*
 	 * One instance per configuration
 	 */
-	private LineStyleProvider fLineStyleProviderForDTD;
-	/*
-	 * One instance per configuration
-	 */
-	private LineStyleProvider fLineStyleProviderForNoop;
+	private LineStyleProvider[] fLineStyleProviders;
 
 	/**
 	 * Create new instance of StructuredTextViewerConfigurationDTD
@@ -62,29 +57,14 @@ public class StructuredTextViewerConfigurationDTD extends StructuredTextViewerCo
 	}
 
 	public LineStyleProvider[] getLineStyleProviders(ISourceViewer sourceViewer, String partitionType) {
-		LineStyleProvider[] providers = null;
-
-		if (partitionType == IDTDPartitions.DTD_DEFAULT || partitionType == IStructuredPartitions.DEFAULT_PARTITION) {
-			providers = new LineStyleProvider[]{getLineStyleProviderForCSS()};
+		if (fLineStyleProviders == null) {
+			fLineStyleProviders = new LineStyleProvider[]{createLineStyleProviderForDTD()};
 		}
-		else if (partitionType == IStructuredPartitions.UNKNOWN_PARTITION) {
-			providers = new LineStyleProvider[]{getLineStyleProviderForNoop()};
-		}
-
-		return providers;
+		return fLineStyleProviders;
 	}
 
-	private LineStyleProvider getLineStyleProviderForCSS() {
-		if (fLineStyleProviderForDTD == null) {
-			fLineStyleProviderForDTD = new LineStyleProviderForDTD();
-		}
-		return fLineStyleProviderForDTD;
+	private LineStyleProvider createLineStyleProviderForDTD() {
+		return new LineStyleProviderForDTD();
 	}
 
-	private LineStyleProvider getLineStyleProviderForNoop() {
-		if (fLineStyleProviderForNoop == null) {
-			fLineStyleProviderForNoop = new LineStyleProviderForNoOp();
-		}
-		return fLineStyleProviderForNoop;
-	}
 }
