@@ -52,6 +52,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
@@ -484,9 +485,11 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 
 			TabItem partitionTab = new TabItem(tabfolder, SWT.BORDER);
 			partitionTab.setText(SSEUIMessages.OffsetStatusLineContributionItem_2); //$NON-NLS-1$
-			Composite partitions = new Composite(tabfolder, SWT.NONE);
+			SashForm partitions = new SashForm(tabfolder, SWT.NONE);
+			partitions.setOrientation(SWT.VERTICAL);
 			partitionTab.setControl(partitions);
 			createPartitionTabContents(partitions);
+			partitions.setWeights(new int[]{2, 1});
 
 			TabItem annotationsTab = new TabItem(tabfolder, SWT.BORDER);
 			annotationsTab.setText("Annotations"); //$NON-NLS-1$
@@ -502,6 +505,7 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 				regions.setOrientation(SWT.HORIZONTAL);
 				regionTab.setControl(regions);
 				createRegionTabContents(regions);
+				regions.setWeights(new int[]{3, 2});
 			}
 
 			TabItem editorSelectionTab = new TabItem(tabfolder, SWT.BORDER);
@@ -529,13 +533,10 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 		}
 
 		/**
-		 * @param area
+		 * @param sash
 		 */
-		private void createPartitionTabContents(Composite area) {
-			area.setLayout(new GridLayout());
-			area.setLayoutData(new GridData());
-
-			Composite partioningComposite = new Composite(area, SWT.NONE);
+		private void createPartitionTabContents(SashForm sash) {
+			Composite partioningComposite = new Composite(sash, SWT.NONE);
 			partioningComposite.setLayout(new GridLayout(2, false));
 			partioningComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
@@ -654,6 +655,27 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 				fPartitionTable.setInput(new ITypedRegion[0]);
 			}
 			partitioningCombo.setFocus();
+
+
+			final StyledText text = new StyledText(sash, SWT.MULTI | SWT.READ_ONLY);
+			fPartitionTable.addSelectionChangedListener(new ISelectionChangedListener() {
+				public void selectionChanged(SelectionChangedEvent event) {
+					if (event.getSelection() instanceof IStructuredSelection) {
+						IRegion partition = (IRegion)((IStructuredSelection) event.getSelection()).getFirstElement();
+						IDocument document = fTextEditor.getDocumentProvider().getDocument(fTextEditor.getEditorInput());
+						String source;
+						try {
+							source = document.get(partition.getOffset(), partition.getLength());
+							text.setEnabled(true);
+							text.setText(source);
+						}
+						catch (BadLocationException e) {
+							e.printStackTrace();
+						}
+					}
+				}
+			});
+			text.setEnabled(false);
 		}
 
 		/**
@@ -788,7 +810,6 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 					}
 				}
 			});
-			sashForm.setWeights(new int[]{3, 2});
 			return sashForm;
 		}
 
