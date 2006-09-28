@@ -96,7 +96,7 @@ public class DTDTemplatePreferencePage extends TemplatePreferencePage {
 			}
 		};
 		viewer = new StructuredTextViewer(parent, null, null, false, SWT.LEFT_TO_RIGHT | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
-		((StructuredTextViewer) viewer).getTextWidget().setFont(JFaceResources.getTextFont());
+		((StructuredTextViewer) viewer).getTextWidget().setFont(JFaceResources.getFont("org.eclipse.wst.sse.ui.textfont")); //$NON-NLS-1$
 		IStructuredModel scratchModel = StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(contentTypeID);
 		IDocument document = scratchModel.getStructuredDocument();
 		viewer.configure(sourceViewerConfiguration);

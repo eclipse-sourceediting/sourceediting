@@ -313,8 +313,6 @@ public class NewDTDTemplatesWizardPage extends WizardPage {
 	 * @return a configured source viewer
 	 */
 	private SourceViewer createViewer(Composite parent) {
-		SourceViewer viewer = null;
-		String contentTypeID = ContentTypeIdForDTD.ContentTypeID_DTD;
 		SourceViewerConfiguration sourceViewerConfiguration = new StructuredTextViewerConfiguration() {
 			StructuredTextViewerConfiguration baseConfiguration = new StructuredTextViewerConfigurationDTD();
 
@@ -326,9 +324,9 @@ public class NewDTDTemplatesWizardPage extends WizardPage {
 				return baseConfiguration.getLineStyleProviders(sourceViewer, partitionType);
 			}
 		};
-		viewer = new StructuredTextViewer(parent, null, null, false, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
-		((StructuredTextViewer) viewer).getTextWidget().setFont(JFaceResources.getTextFont());
-		IStructuredModel scratchModel = StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(contentTypeID);
+		SourceViewer viewer = new StructuredTextViewer(parent, null, null, false, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
+		((StructuredTextViewer) viewer).getTextWidget().setFont(JFaceResources.getFont("org.eclipse.wst.sse.ui.textfont")); //$NON-NLS-1$
+		IStructuredModel scratchModel = StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(ContentTypeIdForDTD.ContentTypeID_DTD);
 		IDocument document = scratchModel.getStructuredDocument();
 		viewer.configure(sourceViewerConfiguration);
 		viewer.setDocument(document);

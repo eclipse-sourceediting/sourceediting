@@ -302,8 +302,6 @@ public class NewHTMLTemplatesWizardPage extends WizardPage {
 	 * @return a configured source viewer
 	 */
 	private SourceViewer createViewer(Composite parent) {
-		SourceViewer viewer = null;
-		String contentTypeID = ContentTypeIdForHTML.ContentTypeID_HTML;
 		SourceViewerConfiguration sourceViewerConfiguration = new StructuredTextViewerConfiguration() {
 			StructuredTextViewerConfiguration baseConfiguration = new StructuredTextViewerConfigurationHTML();
 
@@ -315,9 +313,9 @@ public class NewHTMLTemplatesWizardPage extends WizardPage {
 				return baseConfiguration.getLineStyleProviders(sourceViewer, partitionType);
 			}
 		};
-		viewer = new StructuredTextViewer(parent, null, null, false, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
-		((StructuredTextViewer) viewer).getTextWidget().setFont(JFaceResources.getTextFont());
-		IStructuredModel scratchModel = StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(contentTypeID);
+		SourceViewer viewer = new StructuredTextViewer(parent, null, null, false, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
+		((StructuredTextViewer) viewer).getTextWidget().setFont(JFaceResources.getFont("org.eclipse.wst.sse.ui.textfont")); //$NON-NLS-1$
+		IStructuredModel scratchModel = StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(ContentTypeIdForHTML.ContentTypeID_HTML);
 		IDocument document = scratchModel.getStructuredDocument();
 		viewer.configure(sourceViewerConfiguration);
 		viewer.setDocument(document);
