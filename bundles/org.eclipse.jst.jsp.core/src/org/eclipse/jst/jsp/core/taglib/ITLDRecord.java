@@ -34,6 +34,7 @@ public interface ITLDRecord extends ITaglibRecord {
 	String getShortName();
 
 	/**
+	 * @deprecated - use the descriptor's URI value
 	 * @return Returns the uri.
 	 */
 	String getURI();

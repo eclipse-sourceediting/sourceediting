@@ -37,6 +37,7 @@ public interface IURLRecord extends ITaglibRecord {
 	String getShortName();
 
 	/**
+	 * @deprecated - use the descriptor's URI value
 	 * @return Returns the uri specified within this TLD's contents.
 	 */
 	String getURI();

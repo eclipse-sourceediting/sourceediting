@@ -33,6 +33,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipException;
+import java.util.zip.ZipFile;
 
 import org.eclipse.core.filebuffers.FileBuffers;
 import org.eclipse.core.filebuffers.ITextFileBuffer;
@@ -156,7 +159,11 @@ class ProjectDescription {
 		public boolean equals(Object obj) {
 			if (!(obj instanceof JarRecord))
 				return false;
-			return ((JarRecord) obj).location.equals(location) && ((JarRecord) obj).has11TLD == has11TLD;
+			return ((JarRecord) obj).location.equals(location) && ((JarRecord) obj).has11TLD == has11TLD && ((JarRecord) obj).info.equals(info);
+		}
+
+		public ITaglibDescriptor getDescriptor() {
+			return info != null ? info : new TaglibInfo();
 		}
 
 		/**
@@ -203,6 +210,7 @@ class ProjectDescription {
 	static class TagDirRecord implements ITagDirRecord {
 		IPath location;
 		String shortName;
+		TaglibInfo info;
 		// a List holding Strings of .tag and .tagx filenames relative to the
 		// tagdir's location
 		List tags = new ArrayList(0);
@@ -210,7 +218,11 @@ class ProjectDescription {
 		public boolean equals(Object obj) {
 			if (!(obj instanceof TagDirRecord))
 				return false;
-			return ((TagDirRecord) obj).location.equals(location);
+			return ((TagDirRecord) obj).location.equals(location) && ((TagDirRecord) obj).info.equals(info);
+		}
+
+		public ITaglibDescriptor getDescriptor() {
+			return info != null ? info : new TaglibInfo();
 		}
 
 		/**
@@ -246,16 +258,16 @@ class ProjectDescription {
 	/**
 	 * A brief representation of the information in a TLD.
 	 */
-	static class TaglibInfo {
+	static class TaglibInfo implements ITaglibDescriptor {
 		// extract only when asked?
-		String description;
-
-		float jspVersion;
-		String largeIcon;
-		String shortName;
-		String smallIcon;
-		String tlibVersion;
-		String uri;
+		String description = "";
+		String jspVersion = "";
+		String largeIcon = "";
+		String displayName = "";
+		String shortName = "";
+		String smallIcon = "";
+		String tlibVersion = "";
+		String uri = "";
 
 		public TaglibInfo() {
 			super();
@@ -263,6 +275,44 @@ class ProjectDescription {
 
 		public String toString() {
 			return "TaglibInfo|" + shortName + "|" + tlibVersion + "|" + smallIcon + "|" + largeIcon + "|" + jspVersion + "|" + uri + "|" + description; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
+		}
+
+		public String getDescription() {
+			return description;
+		}
+
+		public String getJSPVersion() {
+			return jspVersion;
+		}
+
+		public String getLargeIcon() {
+			return largeIcon;
+		}
+
+		public String getShortName() {
+			return shortName;
+		}
+
+		public String getSmallIcon() {
+			return smallIcon;
+		}
+
+		public String getTlibVersion() {
+			return tlibVersion;
+		}
+
+		public String getURI() {
+			return uri;
+		}
+
+		public boolean equals(Object obj) {
+			if (!(obj instanceof TaglibInfo))
+				return false;
+			return ((TaglibInfo) obj).jspVersion == jspVersion && ((TaglibInfo) obj).description.equals(description) && ((TaglibInfo) obj).largeIcon.equals(largeIcon) && ((TaglibInfo) obj).shortName.equals(shortName) && ((TaglibInfo) obj).smallIcon.equals(smallIcon) && ((TaglibInfo) obj).tlibVersion.equals(tlibVersion) && ((TaglibInfo) obj).uri.equals(uri);
+		}
+
+		public String getDisplayName() {
+			return displayName;
 		}
 	}
 
@@ -310,7 +360,11 @@ class ProjectDescription {
 		public boolean equals(Object obj) {
 			if (!(obj instanceof TLDRecord))
 				return false;
-			return ((TLDRecord) obj).path.equals(path) && ((TLDRecord) obj).getURI().equals(getURI());
+			return ((TLDRecord) obj).path.equals(path) && ((TLDRecord) obj).getURI().equals(getURI()) && ((TLDRecord) obj).info.equals(info);
+		}
+
+		public ITaglibDescriptor getDescriptor() {
+			return info != null ? info : new TaglibInfo();
 		}
 
 		public IPath getPath() {
@@ -354,7 +408,11 @@ class ProjectDescription {
 		public boolean equals(Object obj) {
 			if (!(obj instanceof URLRecord))
 				return false;
-			return ((URLRecord) obj).baseLocation.equals(baseLocation) && ((URLRecord) obj).url.equals(url);
+			return ((URLRecord) obj).baseLocation.equals(baseLocation) && ((URLRecord) obj).url.equals(url) && ((URLRecord) obj).info.equals(info);
+		}
+
+		public ITaglibDescriptor getDescriptor() {
+			return info != null ? info : new TaglibInfo();
 		}
 
 		public String getBaseLocation() {
@@ -403,7 +461,7 @@ class ProjectDescription {
 		public boolean equals(Object obj) {
 			if (!(obj instanceof WebXMLRecord))
 				return false;
-			return ((WebXMLRecord) obj).path.equals(path);
+			return ((WebXMLRecord) obj).path.equals(path) && ((WebXMLRecord) obj).info.equals(info);
 		}
 
 		/**
@@ -466,8 +524,10 @@ class ProjectDescription {
 	// holds references by URI to JARs
 	Hashtable fClasspathReferences;
 
-	// this table is special in that it holds tables of references according
-	// to local roots
+	/*
+	 * this table is special in that it holds tables of references according
+	 * to local roots
+	 */
 	Hashtable fImplicitReferences;
 
 	Hashtable fJARReferences;
@@ -484,6 +544,11 @@ class ProjectDescription {
 
 	private long time0;
 	private String fSaveStateFilename;
+
+	/**
+	 * A cached copy of all of the records createable from the XMLCatalog.
+	 */
+	private Collection fCatalogRecords;
 
 	ProjectDescription(IProject project, String saveStateFile) {
 		super();
@@ -569,6 +634,18 @@ class ProjectDescription {
 		fClasspathReferences = new Hashtable(0);
 	}
 
+	private void closeJarFile(ZipFile file) {
+		if (file == null)
+			return;
+		try {
+			file.close();
+		}
+		catch (IOException ioe) {
+			// no cleanup can be done
+			Logger.logException("TaglibIndex: Could not close zip file " + file.getName(), ioe); //$NON-NLS-1$
+		}
+	}
+
 	/**
 	 * @param catalogEntry
 	 *            a XML catalog entry pointing to a .jar or .tld file
@@ -647,8 +724,8 @@ class ProjectDescription {
 			catch (Exception e1) {
 				Logger.logException("Exception reading TLD contributed to the XML Catalog", e1);
 			}
-			
-			if(tldStream != null) {	
+
+			if (tldStream != null) {
 				int c;
 				ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 				// array dim restriction?
@@ -669,13 +746,13 @@ class ProjectDescription {
 					catch (IOException e) {
 					}
 				}
-	
+
 				URLRecord urlRecord = null;
 				TaglibInfo info = extractInfo(urlString, cachedContents);
 				if (info != null) {
 					/*
-					 * the record's reported URI should match the catalog entry's
-					 * "key" so replace the detected value
+					 * the record's reported URI should match the catalog
+					 * entry's "key" so replace the detected value
 					 */
 					info.uri = uri;
 					urlRecord = new URLRecord();
@@ -802,13 +879,11 @@ class ProjectDescription {
 					else if (child.getNodeName().equals(JSP12TLDNames.DESCRIPTION) || child.getNodeName().equals(JSP11TLDNames.INFO)) {
 						info.description = getTextContents(child);
 					}
+					else if (child.getNodeName().equals(JSP12TLDNames.DISPLAY_NAME)) {
+						info.displayName = getTextContents(child);
+					}
 					else if (child.getNodeName().equals(JSP12TLDNames.JSP_VERSION) || child.getNodeName().equals(JSP11TLDNames.JSPVERSION)) {
-						try {
-							info.jspVersion = Float.parseFloat(getTextContents(child));
-						}
-						catch (NumberFormatException e) {
-							info.jspVersion = 1;
-						}
+						info.jspVersion = getTextContents(child);
 					}
 					else if (child.getNodeName().equals(JSP12TLDNames.TLIB_VERSION) || child.getNodeName().equals(JSP11TLDNames.TLIBVERSION)) {
 						info.tlibVersion = getTextContents(child);
@@ -830,7 +905,7 @@ class ProjectDescription {
 		ensureUpTodate();
 
 		Collection implicitReferences = new HashSet(getImplicitReferences(path.toString()).values());
-		List records = new ArrayList(fTLDReferences.size() + fTagDirReferences.size() + fJARReferences.size() + fWebXMLReferences.size());
+		Collection records = new HashSet(fTLDReferences.size() + fTagDirReferences.size() + fJARReferences.size() + fWebXMLReferences.size());
 		records.addAll(fTLDReferences.values());
 		records.addAll(fTagDirReferences.values());
 		records.addAll(_getJSP11AndWebXMLJarReferences(fJARReferences.values()));
@@ -842,36 +917,94 @@ class ProjectDescription {
 		addBuildPathReferences(buildPathReferences, projectsProcessed, false);
 		records.addAll(buildPathReferences.values());
 
-		ICatalog defaultCatalog = XMLCorePlugin.getDefault().getDefaultXMLCatalog();
-		if (defaultCatalog != null) {
-			// Process default catalog
-			ICatalogEntry[] entries = defaultCatalog.getCatalogEntries();
-			for (int entry = 0; entry < entries.length; entry++) {
-				ITaglibRecord record = createCatalogRecord(entries[entry]);
-				records.add(record);
-			}
+		records.addAll(getCatalogRecords());
 
-			// Process declared OASIS nextCatalogs catalog
-			INextCatalog[] nextCatalogs = defaultCatalog.getNextCatalogs();
-			for (int nextCatalog = 0; nextCatalog < nextCatalogs.length; nextCatalog++) {
-				ICatalog catalog = nextCatalogs[nextCatalog].getReferencedCatalog();
-				ICatalogEntry[] entries2 = catalog.getCatalogEntries();
-				for (int entry = 0; entry < entries2.length; entry++) {
-					String uri = entries2[entry].getURI();
-					if (uri != null) {
-						uri = uri.toLowerCase(Locale.US);
-						if (uri.endsWith((".jar")) || uri.endsWith((".tld"))) {
-							ITaglibRecord record = createCatalogRecord(entries2[entry]);
-							if(record != null) {
-								records.add(record);
+		return new ArrayList(records);
+	}
+
+	private Collection getCatalogRecords() {
+		if (fCatalogRecords == null) {
+			List records = new ArrayList();
+			ICatalog defaultCatalog = XMLCorePlugin.getDefault().getDefaultXMLCatalog();
+			if (defaultCatalog != null) {
+				// Process default catalog
+				ICatalogEntry[] entries = defaultCatalog.getCatalogEntries();
+				for (int entry = 0; entry < entries.length; entry++) {
+					ITaglibRecord record = createCatalogRecord(entries[entry]);
+					records.add(record);
+				}
+
+				// Process declared OASIS nextCatalogs catalog
+				INextCatalog[] nextCatalogs = defaultCatalog.getNextCatalogs();
+				for (int nextCatalog = 0; nextCatalog < nextCatalogs.length; nextCatalog++) {
+					ICatalog catalog = nextCatalogs[nextCatalog].getReferencedCatalog();
+					ICatalogEntry[] entries2 = catalog.getCatalogEntries();
+					for (int entry = 0; entry < entries2.length; entry++) {
+						String uri = entries2[entry].getURI();
+						if (uri != null) {
+							uri = uri.toLowerCase(Locale.US);
+							if (uri.endsWith((".jar")) || uri.endsWith((".tld"))) {
+								ITaglibRecord record = createCatalogRecord(entries2[entry]);
+								if (record != null) {
+									records.add(record);
+								}
 							}
+						}
+					}
+				}
+			}
+			fCatalogRecords = records;
+		}
+		return fCatalogRecords;
+	}
+
+	/**
+	 * Provides a stream to a local copy of the input or null if not possible
+	 */
+	private InputStream getCachedInputStream(ZipFile zipFile, ZipEntry zipEntry) {
+		InputStream cache = null;
+		if (zipFile != null) {
+			if (zipEntry != null) {
+				InputStream entryInputStream = null;
+				try {
+					entryInputStream = zipFile.getInputStream(zipEntry);
+				}
+				catch (IOException ioExc) {
+					Logger.logException("Taglib Index: " + zipFile.getName(), ioExc); //$NON-NLS-1$
+				}
+
+				if (entryInputStream != null) {
+					int c;
+					ByteArrayOutputStream buffer = null;
+					if (zipEntry.getSize() > 0) {
+						buffer = new ByteArrayOutputStream((int) zipEntry.getSize());
+					}
+					else {
+						buffer = new ByteArrayOutputStream();
+					}
+					// array dim restriction?
+					byte bytes[] = new byte[2048];
+					try {
+						while ((c = entryInputStream.read(bytes)) >= 0) {
+							buffer.write(bytes, 0, c);
+						}
+						cache = new ByteArrayInputStream(buffer.toByteArray());
+					}
+					catch (IOException ioe) {
+						// no cleanup can be done
+					}
+					finally {
+						try {
+							entryInputStream.close();
+						}
+						catch (IOException e) {
 						}
 					}
 				}
 			}
 		}
 
-		return records;
+		return cache;
 	}
 
 	/**
@@ -1353,7 +1486,7 @@ class ProjectDescription {
 						IRegion line = doc.getLineInformation(0);
 						String lineText = doc.get(line.getOffset(), line.getLength());
 						JarRecord libraryRecord = null;
-						if (SAVE_FORMAT_VERSION.equals(lineText)) {
+						if (SAVE_FORMAT_VERSION.equals(lineText.trim())) {
 							IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
 
 							for (int i = 1; i < lines; i++) {
@@ -1415,7 +1548,9 @@ class ProjectDescription {
 
 										fClasspathJars.put(libraryLocation, libraryRecord);
 									}
-									else if ("URL".equalsIgnoreCase(tokenType)) { //$NON-NLS-1$
+									else if ("URL".equalsIgnoreCase(tokenType) && libraryRecord != null) { //$NON-NLS-1$
+										// relies on a previously declared JAR
+										// record
 										boolean exported = Boolean.valueOf(toker.nextToken()).booleanValue();
 										// make the rest the URL
 										String urlString = toker.nextToken();
@@ -1494,6 +1629,10 @@ class ProjectDescription {
 							}
 							restored = true;
 						}
+						else {
+							if (_debugIndexTime)
+								Logger.log(Logger.INFO, " version mismatch loading " + fProject.getName() + " build path: " + lineText); //$NON-NLS-1$ //$NON-NLS-2$
+						}
 					}
 					if (_debugIndexTime)
 						Logger.log(Logger.INFO, "time spent reloading " + fProject.getName() + " build path: " + (System.currentTimeMillis() - time0)); //$NON-NLS-1$ //$NON-NLS-2$
@@ -1533,10 +1672,10 @@ class ProjectDescription {
 
 		/**
 		 * <pre>
-		 *                  		 1.0.1
-		 *                  		 Save classpath information (| is field delimiter)
-		 *                  		 Jars are saved as &quot;JAR:&quot;+ has11TLD + jar path 
-		 *                  		 URLRecords as &quot;URL:&quot;+URL
+		 *                    		 1.0.1
+		 *                    		 Save classpath information (| is field delimiter)
+		 *                    		 Jars are saved as &quot;JAR:&quot;+ has11TLD + jar path 
+		 *                    		 URLRecords as &quot;URL:&quot;+URL
 		 * </pre>
 		 */
 		try {
@@ -1594,6 +1733,8 @@ class ProjectDescription {
 
 	void setBuildPathIsDirty() {
 		fBuildPathIsDirty = true;
+		if (_debugIndexTime)
+			Logger.log(Logger.INFO, "marking build path information for " + fProject.getName() + " as dirty"); //$NON-NLS-1$
 	}
 
 	void updateClasspathLibrary(String libraryLocation, int deltaKind, boolean isExported) {
@@ -1608,44 +1749,60 @@ class ProjectDescription {
 			}
 		}
 		if (deltaKind == ITaglibRecordEvent.ADDED || deltaKind == ITaglibRecordEvent.CHANGED) {
-			String[] entries = JarUtilities.getEntryNames(libraryLocation);
-
 			libraryRecord = createJARRecord(libraryLocation);
 			libraryRecord.isExported = isExported;
 			fClasspathJars.put(libraryLocation, libraryRecord);
-			for (int i = 0; i < entries.length; i++) {
-				if (entries[i].endsWith(".tld")) { //$NON-NLS-1$
-					if (entries[i].equals(JarUtilities.JSP11_TAGLIB)) {
-						libraryRecord.has11TLD = true;
-					}
-					InputStream contents = JarUtilities.getInputStream(libraryLocation, entries[i]);
-					if (contents != null) {
-						TaglibInfo info = extractInfo(libraryLocation, contents);
 
-						if (info != null && info.uri != null && info.uri.length() > 0) {
-							URLRecord urlRecord = new URLRecord();
-							urlRecord.info = info;
-							urlRecord.baseLocation = libraryLocation;
-							try {
-								urlRecord.isExported = isExported;
-								urlRecord.url = new URL("jar:file:" + libraryLocation + "!/" + entries[i]); //$NON-NLS-1$ //$NON-NLS-2$
-								libraryRecord.urlRecords.add(urlRecord);
-								fClasspathReferences.put(urlRecord.getURI(), urlRecord);
-								if (_debugIndexCreation)
-									Logger.log(Logger.INFO, "created record for " + urlRecord.getURI() + "@" + urlRecord.getURL()); //$NON-NLS-1$ //$NON-NLS-2$
+			ZipFile jarfile = null;
+			try {
+				jarfile = new ZipFile(libraryLocation);
+				Enumeration entries = jarfile.entries();
+				while (entries.hasMoreElements()) {
+					ZipEntry z = (ZipEntry) entries.nextElement();
+					if (!z.isDirectory()) {
+						if (z.getName().toLowerCase(Locale.US).endsWith(".tld")) { //$NON-NLS-1$
+							if (z.getName().equals(JarUtilities.JSP11_TAGLIB)) {
+								libraryRecord.has11TLD = true;
 							}
-							catch (MalformedURLException e) {
-								// don't record this URI
-								Logger.logException(e);
+							InputStream contents = getCachedInputStream(jarfile, z);
+							if (contents != null) {
+								TaglibInfo info = extractInfo(libraryLocation, contents);
+
+								if (info != null && info.uri != null && info.uri.length() > 0) {
+									URLRecord urlRecord = new URLRecord();
+									urlRecord.info = info;
+									urlRecord.baseLocation = libraryLocation;
+									try {
+										urlRecord.isExported = isExported;
+										urlRecord.url = new URL("jar:file:" + libraryLocation + "!/" + z.getName()); //$NON-NLS-1$ //$NON-NLS-2$
+										libraryRecord.urlRecords.add(urlRecord);
+										fClasspathReferences.put(urlRecord.getURI(), urlRecord);
+										if (_debugIndexCreation)
+											Logger.log(Logger.INFO, "created record for " + urlRecord.getURI() + "@" + urlRecord.getURL()); //$NON-NLS-1$ //$NON-NLS-2$
+									}
+									catch (MalformedURLException e) {
+										// don't record this URI
+										Logger.logException(e);
+									}
+								}
+								try {
+									contents.close();
+								}
+								catch (IOException e) {
+								}
 							}
-						}
-						try {
-							contents.close();
-						}
-						catch (IOException e) {
 						}
 					}
 				}
+			}
+			catch (ZipException zExc) {
+				Logger.log(Logger.WARNING, "Taglib Index ZipException: " + libraryLocation + " " + zExc.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
+			}
+			catch (IOException ioExc) {
+				Logger.log(Logger.WARNING, "Taglib Index IOException: " + libraryLocation + " " + ioExc.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
+			}
+			finally {
+				closeJarFile(jarfile);
 			}
 		}
 		if (libraryRecord != null) {
@@ -1795,11 +1952,11 @@ class ProjectDescription {
 									if (contents != null) {
 										TaglibInfo info = extractInfo(resource.getFullPath().toString(), contents);
 										jarRecord.info = info;
-									}
-									try {
-										contents.close();
-									}
-									catch (IOException e) {
+										try {
+											contents.close();
+										}
+										catch (IOException e) {
+										}
 									}
 								}
 							}

@@ -72,4 +72,6 @@ public interface ITaglibRecord {
 	 * @see #URL
 	 */
 	int getRecordType();
+	
+	ITaglibDescriptor getDescriptor();
 }

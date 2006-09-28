@@ -134,6 +134,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor {
 		fNameToProcessorMap.put(JSP11Namespace.ElementName.SETPROPERTY, jspPropertyCAP);
 		fNameToProcessorMap.put(JSP11Namespace.ElementName.GETPROPERTY, jspPropertyCAP);
 		fNameToProcessorMap.put(JSP11Namespace.ElementName.USEBEAN, new JSPUseBeanContentAssistProcessor());
+		fNameToProcessorMap.put(JSP11Namespace.ElementName.DIRECTIVE_TAGLIB, new JSPTaglibDirectiveContentAssistProcessor());
 	}
 
 	/**
