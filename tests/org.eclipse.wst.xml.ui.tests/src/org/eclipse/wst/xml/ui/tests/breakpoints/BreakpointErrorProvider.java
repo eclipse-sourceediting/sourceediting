@@ -37,7 +37,7 @@ public class BreakpointErrorProvider implements IBreakpointProvider {
 		XMLUITestsPlugin.getDefault().getPreferenceStore().setDefault("break-error", false);
 		boolean enable = XMLUITestsPlugin.getDefault().getPreferenceStore().getBoolean("break-error");
 		if (enable)
-			return new Status(IStatus.INFO, XMLUITestsPlugin.getDefault().getBundle().getSymbolicName(), IStatus.ERROR, getClass().getName() + ": Test Error", null);
+			return new Status(IStatus.ERROR, XMLUITestsPlugin.getDefault().getBundle().getSymbolicName(), IStatus.ERROR, "Test Error!", null);
 		return new Status(IStatus.OK, XMLUITestsPlugin.getDefault().getBundle().getSymbolicName(), IStatus.OK, "", null);
 	}
 
