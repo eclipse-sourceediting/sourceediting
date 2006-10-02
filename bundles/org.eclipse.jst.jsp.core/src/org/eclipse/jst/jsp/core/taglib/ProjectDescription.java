@@ -905,7 +905,7 @@ class ProjectDescription {
 		ensureUpTodate();
 
 		Collection implicitReferences = new HashSet(getImplicitReferences(path.toString()).values());
-		Collection records = new HashSet(fTLDReferences.size() + fTagDirReferences.size() + fJARReferences.size() + fWebXMLReferences.size());
+		Collection records = new ArrayList(fTLDReferences.size() + fTagDirReferences.size() + fJARReferences.size() + fWebXMLReferences.size());
 		records.addAll(fTLDReferences.values());
 		records.addAll(fTagDirReferences.values());
 		records.addAll(_getJSP11AndWebXMLJarReferences(fJARReferences.values()));
