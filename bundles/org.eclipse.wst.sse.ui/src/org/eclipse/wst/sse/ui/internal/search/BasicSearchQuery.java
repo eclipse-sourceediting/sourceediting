@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,12 +19,14 @@ import java.util.List;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.search.ui.ISearchQuery;
@@ -146,7 +148,10 @@ public class BasicSearchQuery implements ISearchQuery {
 							((IMarker) removals.get(i)).delete();
 					}
 				};
-				ResourcesPlugin.getWorkspace().run(runnable, null);
+				// BUG158846 - deadlock if lock up entire workspace, so only lock
+				// up the file we are searching on
+				ISchedulingRule markerRule = ResourcesPlugin.getWorkspace().getRuleFactory().markerRule(fFile);
+				ResourcesPlugin.getWorkspace().run(runnable, markerRule, IWorkspace.AVOID_UPDATE, null); 
 			}
 		} catch (CoreException e) {
 			Logger.logException(e);
