@@ -1,16 +1,34 @@
+/*******************************************************************************
+ * Copyright (c) 2005,2006 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *     
+ *******************************************************************************/
 package org.eclipse.jst.jsp.core.internal.validation;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jst.jsp.core.internal.JSPCoreMessages;
 import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.provisional.JSP11Namespace;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
+import org.eclipse.jst.jsp.core.taglib.ITaglibRecord;
+import org.eclipse.jst.jsp.core.taglib.TaglibIndex;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
@@ -21,6 +39,7 @@ import org.eclipse.wst.sse.ui.internal.reconcile.validator.ISourceValidator;
 import org.eclipse.wst.validation.internal.provisional.core.IMessage;
 import org.eclipse.wst.validation.internal.provisional.core.IReporter;
 import org.eclipse.wst.validation.internal.provisional.core.IValidationContext;
+import org.eclipse.wst.validation.internal.provisional.core.IValidator;
 
 /**
  * Checks for: - duplicate taglib prefix values - reserved taglib prefix
@@ -28,12 +47,17 @@ import org.eclipse.wst.validation.internal.provisional.core.IValidationContext;
  * 
  */
 public class JSPDirectiveValidator extends JSPValidator implements ISourceValidator {
+	private static final boolean DEBUG = Boolean.valueOf(Platform.getDebugOption("org.eclipse.jst.jsp.core/debug/jspvalidator")).booleanValue(); //$NON-NLS-1$
 
 	private HashMap fReservedPrefixes = new HashMap();
 	private HashMap fDuplicatePrefixes = new HashMap();
 	private IDocument fDocument;
 
-	public JSPDirectiveValidator() {
+	private IValidator fMessageOriginator;
+	private IFile fFile;
+	private boolean fEnableSourceValidation = true;
+
+	public JSPDirectiveValidator(){
 		fReservedPrefixes.put("jsp", ""); //$NON-NLS-1$ //$NON-NLS-2$
 		fReservedPrefixes.put("jspx", ""); //$NON-NLS-1$ //$NON-NLS-2$
 		fReservedPrefixes.put("java", ""); //$NON-NLS-1$ //$NON-NLS-2$
@@ -41,34 +65,33 @@ public class JSPDirectiveValidator extends JSPValidator implements ISourceValida
 		fReservedPrefixes.put("servlet", ""); //$NON-NLS-1$ //$NON-NLS-2$ 
 		fReservedPrefixes.put("sun", ""); //$NON-NLS-1$ //$NON-NLS-2$ 
 		fReservedPrefixes.put("sunw", ""); //$NON-NLS-1$ //$NON-NLS-2$ 
+		
+		this.fMessageOriginator = this;
 	}
 
+
+	public JSPDirectiveValidator(IValidator validator){
+		fReservedPrefixes.put("jsp", ""); //$NON-NLS-1$ //$NON-NLS-2$
+		fReservedPrefixes.put("jspx", ""); //$NON-NLS-1$ //$NON-NLS-2$
+		fReservedPrefixes.put("java", ""); //$NON-NLS-1$ //$NON-NLS-2$
+		fReservedPrefixes.put("javax", ""); //$NON-NLS-1$ //$NON-NLS-2$ 
+		fReservedPrefixes.put("servlet", ""); //$NON-NLS-1$ //$NON-NLS-2$ 
+		fReservedPrefixes.put("sun", ""); //$NON-NLS-1$ //$NON-NLS-2$ 
+		fReservedPrefixes.put("sunw", ""); //$NON-NLS-1$ //$NON-NLS-2$ 
+		this.fMessageOriginator = validator;
+	}
 	/**
 	 * batch validation call
 	 */
 	protected void validateFile(IFile f, IReporter reporter) {
-
-		// when validating an entire file
-		// need to clear dupes or else you're comparing between files
-		fDuplicatePrefixes.clear();
-
 		// for batch validation
 		IStructuredModel sModel = null;
 		try {
 			sModel = StructuredModelManager.getModelManager().getModelForRead(f);
 			if (sModel != null) {
-				IStructuredDocument sDoc = sModel.getStructuredDocument();
-				// need to set this for partial validate call to work
-				fDocument = sDoc;
-				// iterate all document regions
-				IStructuredDocumentRegion region = sDoc.getFirstStructuredDocumentRegion();
-				while (region != null && !reporter.isCancelled()) {
-					// only checking directives
-					if (region.getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_NAME) {
-						validateDirective(reporter, f, sDoc, region);
-					}
-					region = region.getNext();
-				}
+				/* remove old messages (compatibility requirement) */
+				reporter.removeAllMessages(fMessageOriginator, f);
+				performValidation(f, reporter, sModel.getStructuredDocument());
 			}
 		}
 		catch (IOException e) {
@@ -83,51 +106,134 @@ public class JSPDirectiveValidator extends JSPValidator implements ISourceValida
 		}
 	}
 
+
+	protected void performValidation(IFile f, IReporter reporter, IStructuredDocument sDoc) {
+		/*
+		 * when validating an entire file need to clear dupes or else you're
+		 * comparing between files
+		 */
+		fDuplicatePrefixes.clear();
+
+		// need to set this for partial validate call to work
+		fDocument = sDoc;
+		// iterate all document regions
+		IStructuredDocumentRegion region = sDoc
+				.getFirstStructuredDocumentRegion();
+		while (region != null && !reporter.isCancelled()) {
+			// only checking directives
+			if (region.getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_NAME) {
+				validateDirective(reporter, f, sDoc, region);
+			}
+			region = region.getNext();
+		}
+		fDuplicatePrefixes.clear();
+		fDocument = null;
+	}
+
 	public void connect(IDocument document) {
 		fDuplicatePrefixes.clear();
 		fDocument = document;
+
+		IStructuredModel model = null;
+		IFile file = null;
+		try {
+			model = StructuredModelManager.getModelManager().getExistingModelForRead(fDocument);
+			if (model != null) {
+				String baseLocation = model.getBaseLocation();
+				// The baseLocation may be a path on disk or relative to the
+				// workspace root. Don't translate on-disk paths to
+				// in-workspace resources.
+				IPath basePath = new Path(baseLocation);
+				if (basePath.segmentCount() > 1) {
+					file = ResourcesPlugin.getWorkspace().getRoot().getFile(basePath);
+					/*
+					 * If the IFile doesn't  exist, make sure it's not
+					 * returned
+					 */
+					if (!file.exists())
+						file = null;
+				}
+			}
+		}
+		finally {
+			if (model != null) {
+				model.releaseFromRead();
+			}
+		}
+		fFile = file;
+		fEnableSourceValidation = (fFile != null && fDocument instanceof IStructuredDocument && JSPBatchValidator.isBatchValidatorPreferenceEnabled(fFile));
+		if(DEBUG) {
+			Logger.log(Logger.INFO, getClass().getName() + " enablement for source validation: " + fEnableSourceValidation); //$NON-NLS-1$
+		}
 	}
 
 	public void disconnect(IDocument document) {
 		fDuplicatePrefixes.clear();
 		fDocument = null;
+		fFile = null;
 	}
-
+	
 	/**
 	 * for as you type validation (partial document)
 	 */
 	public void validate(IRegion dirtyRegion, IValidationContext helper, IReporter reporter) {
-		validate(dirtyRegion, helper, reporter, null);
+		if(fEnableSourceValidation) {
+			if(DEBUG) {
+				Logger.log(Logger.INFO, getClass().getName() + " revalidating " + dirtyRegion); //$NON-NLS-1$
+			}
+			validate(dirtyRegion, helper, reporter, fFile);
+		}
 	}
 
 	private void validate(IRegion dirtyRegion, IValidationContext helper, IReporter reporter, IFile file) {
-
 		// check for restricted and duplicate prefixes
-		if (fDocument instanceof IStructuredDocument) {
-			IStructuredDocument sDoc = (IStructuredDocument) fDocument;
-			IStructuredDocumentRegion[] regions = sDoc.getStructuredDocumentRegions(dirtyRegion.getOffset(), dirtyRegion.getLength());
-			for (int i = 0; i < regions.length; i++) {
-				// only checking directives
-				if (regions[i].getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_NAME) {
-					validateDirective(reporter, file, sDoc, regions[i]);
-				}
+		IStructuredDocument sDoc = (IStructuredDocument) fDocument;
+		IStructuredDocumentRegion[] regions = sDoc.getStructuredDocumentRegions(dirtyRegion.getOffset(), dirtyRegion.getLength());
+		for (int i = 0; i < regions.length; i++) {
+			// only checking directives
+			if (regions[i].getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_NAME) {
+				validateDirective(reporter, file, sDoc, regions[i]);
 			}
 		}
 	}
 
 	private void validateDirective(IReporter reporter, IFile file, IStructuredDocument sDoc, IStructuredDocumentRegion sdRegion) {
-
 		// we only care about taglib directive
 		if (getDirectiveName(sdRegion).equals("taglib")) { //$NON-NLS-1$
+			ITextRegion valueRegion = null;
+			IFile baseFile = file;
+			if (baseFile == null) {
+				baseFile = fFile;
+			}
+			if (baseFile != null) {
+				valueRegion = getAttributeValueRegion(sdRegion, JSP11Namespace.ATTR_NAME_URI);
+				String uri = sdRegion.getText(valueRegion);
+				uri = StringUtils.stripQuotes(uri);
+				ITaglibRecord tld = TaglibIndex.resolve(baseFile.getFullPath().toString(), uri, false);
+				if (tld == null) {
+					// no new strings allowed in 1.5.x
+					String msgText = FileNotFoundException.class.getName();
+					int sev = IMessage.HIGH_SEVERITY;
+					LocalizedMessage message = new LocalizedMessage(sev, msgText, baseFile);
+					int start = sdRegion.getStartOffset(valueRegion);
+					int length = valueRegion.getTextLength();
+					int lineNo = sDoc.getLineOfOffset(start);
+					message.setLineNo(lineNo);
+					message.setOffset(start);
+					message.setLength(length);
 
-			ITextRegion valueRegion = getAttributeValueRegion(sdRegion, JSP11Namespace.ATTR_NAME_PREFIX);
+					reporter.addMessage(fMessageOriginator, message);
+				}
+			}
+
+			valueRegion = getAttributeValueRegion(sdRegion, JSP11Namespace.ATTR_NAME_PREFIX);
 			if (valueRegion == null)
 				return;
 
 			String taglibPrefix = sdRegion.getText(valueRegion);
 			int start = sdRegion.getStartOffset(valueRegion);
 			// length before stripquotes
-			int length = taglibPrefix.length();
+			int length = valueRegion.getTextLength();
 			taglibPrefix = StringUtils.stripQuotes(taglibPrefix);
 
 			int sev = IMessage.HIGH_SEVERITY;
@@ -153,7 +259,7 @@ public class JSPDirectiveValidator extends JSPValidator implements ISourceValida
 				message.setOffset(start);
 				message.setLength(length);
 
-				reporter.addMessage(this, message);
+				reporter.addMessage(fMessageOriginator, message);
 			}
 		}
 	}
@@ -184,7 +290,6 @@ public class JSPDirectiveValidator extends JSPValidator implements ISourceValida
 	public void cleanup(IReporter reporter) {
 		super.cleanup(reporter);
 		fDuplicatePrefixes.clear();
-		fDocument = null;
 	}
 
 	private boolean isReservedPrefix(String name) {
