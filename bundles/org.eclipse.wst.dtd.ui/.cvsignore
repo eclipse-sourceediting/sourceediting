@@ -1,8 +1,0 @@
-bin
-runtime
-dtdui.jar
-*.zip
-build.xml
-temp.folder
-@dot
-javaCompiler...args
