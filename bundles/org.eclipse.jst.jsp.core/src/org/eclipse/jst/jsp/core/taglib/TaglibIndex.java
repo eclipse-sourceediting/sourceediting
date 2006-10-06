@@ -111,13 +111,9 @@ public final class TaglibIndex {
 							}
 						}
 						/*
-						 * If project is not being deleted and not being
-						 * closed, process the project
+						 * (else) Without the classpath changing, there's
+						 * nothing else to do
 						 */
-						else {
-							IJavaElement proj = element;
-							handleClasspathChange((IJavaProject) proj, forceUpdate);
-						}
 					}
 					else {
 						for (int i = 0; i < deltas.length; i++) {
