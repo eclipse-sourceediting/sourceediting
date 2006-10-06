@@ -110,11 +110,11 @@ public final class TaglibIndex {
 								description.clear();
 							}
 						}
-						else {
-							IJavaElement proj = element;
-							handleClasspathChange((IJavaProject) proj, forceUpdate);
-						}
 					}
+					/*
+					 * (else) Without the classpath changing, there's
+					 * nothing else to do
+					 */
 					else {
 						for (int i = 0; i < deltas.length; i++) {
 							elementChanged(deltas[i], false);
