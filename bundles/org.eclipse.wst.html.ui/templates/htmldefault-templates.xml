@@ -17,9 +17,13 @@
 
 <template name="%Templates.htmlframeset.name" description="%Templates.htmlframeset.desc" id="org.eclipse.wst.html.ui.templates.htmlframeset" context="html_new" enabled="true">%Templates.htmlframeset.content</template>
 
+<template name="%Templates.htmlstrict.name" description="%Templates.htmlstrict.desc" id="org.eclipse.wst.html.ui.templates.htmlstrict" context="html_new" enabled="true">%Templates.htmlstrict.content</template>
+
 <template name="%Templates.xhtml.name" description="%Templates.xhtml.desc" id="org.eclipse.wst.html.ui.templates.xhtml" context="html_new" enabled="true">%Templates.xhtml.content</template>
 
 <template name="%Templates.xhtmlframeset.name" description="%Templates.xhtmlframeset.desc" id="org.eclipse.wst.html.ui.templates.xhtmlframeset" context="html_new" enabled="true">%Templates.xhtmlframeset.content</template>
+
+<template name="%Templates.xhtmlstrict.name" description="%Templates.xhtmlstrict.desc" id="org.eclipse.wst.html.ui.templates.xhtmlstrict" context="html_new" enabled="true">%Templates.xhtmlstrict.content</template>
 
 <template name="%Templates.script.name" description="%Templates.script.desc" id="org.eclipse.wst.html.ui.templates.script" context="html_tag" enabled="true">%Templates.script.content</template>
 
