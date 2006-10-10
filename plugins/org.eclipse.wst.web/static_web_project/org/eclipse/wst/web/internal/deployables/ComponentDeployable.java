@@ -337,15 +337,18 @@ public abstract class ComponentDeployable extends ProjectModule {
 				IVirtualReference reference = components[i];
 				IVirtualComponent virtualComp = reference.getReferencedComponent();
 				if (shouldIncludeUtilityComponent(virtualComp,components,edit)) {
-					IPath archivePath = ((VirtualArchiveComponent)virtualComp).getWorkspaceRelativePath();
 					ModuleFile mf = null;
+					String archiveName = reference.getArchiveName();
+					IPath archivePath = ((VirtualArchiveComponent)virtualComp).getWorkspaceRelativePath();
 					if (archivePath != null) { //In Workspace
 						IFile utilFile = ResourcesPlugin.getWorkspace().getRoot().getFile(archivePath);
-						mf = new ModuleFile(utilFile, utilFile.getName(), reference.getRuntimePath().makeRelative());
+						String name = null != archiveName ? archiveName : utilFile.getName();
+						mf = new ModuleFile(utilFile, name, reference.getRuntimePath().makeRelative());
 					}
 					else {
 						File extFile = ((VirtualArchiveComponent)virtualComp).getUnderlyingDiskFile();
-						mf = new ModuleFile(extFile, extFile.getName(), reference.getRuntimePath().makeRelative());
+						String name = null != archiveName ? archiveName : extFile.getName();
+						mf = new ModuleFile(extFile, name, reference.getRuntimePath().makeRelative());
 					}
 					if (mf == null)
 						continue;
