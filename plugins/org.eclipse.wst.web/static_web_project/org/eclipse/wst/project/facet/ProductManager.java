@@ -19,8 +19,13 @@ public class ProductManager {
 	 */
 	private static final String APPLICATION_CONTENT_FOLDER = "EarContent"; //$NON-NLS-1$
 	private static final String WEB_CONTENT_FOLDER = "WebContent"; //$NON-NLS-1$
+	private static final String EJB_CONTENT_FOLDER = "ejbModule"; //$NON-NLS-1$
+	private static final String APP_CLIENT_CONTENT_FOLDER = "appClientModule"; //$NON-NLS-1$
+	private static final String JCA_CONTENT_FOLDER = "connectorModule"; //$NON-NLS-1$
+	private static final String DEFAULT_SOURCE_FOLDER = "src"; //$NON-NLS-1$
 	private static final String ADD_TO_EAR_BY_DEFAULT = "false"; //$NON-NLS-1$
 	private static final String OUTPUT_FOLDER = "build/classes"; //$NON-NLS-1$
+	private static final String USE_SINGLE_ROOT_STRUCTURE = "false"; //$NON-NLS-1$
 	private static final String FINAL_PERSPECTIVE = "org.eclipse.jst.j2ee.J2EEPerspective"; //$NON-NLS-1$
 	private static final char RUNTIME_SEPARATOR = ':';
 	private static final String[] DEFAULT_RUNTIME_KEYS = 
@@ -46,8 +51,18 @@ public class ProductManager {
 				return APPLICATION_CONTENT_FOLDER;
 			else if (key.equals(IProductConstants.WEB_CONTENT_FOLDER))
 				return WEB_CONTENT_FOLDER;
+			else if (key.equals(IProductConstants.EJB_CONTENT_FOLDER))
+				return EJB_CONTENT_FOLDER;
+			else if (key.equals(IProductConstants.APP_CLIENT_CONTENT_FOLDER))
+				return APP_CLIENT_CONTENT_FOLDER;
+			else if (key.equals(IProductConstants.JCA_CONTENT_FOLDER))
+				return JCA_CONTENT_FOLDER;
+			else if (key.equals(IProductConstants.DEFAULT_SOURCE_FOLDER))
+				return DEFAULT_SOURCE_FOLDER;
 			else if (key.equals(IProductConstants.ADD_TO_EAR_BY_DEFAULT))
 				return ADD_TO_EAR_BY_DEFAULT;
+			else if (key.equals(IProductConstants.USE_SINGLE_ROOT_STRUCTURE))
+				return USE_SINGLE_ROOT_STRUCTURE;
 			else if (key.equals(IProductConstants.OUTPUT_FOLDER))
 				return OUTPUT_FOLDER;
 			else if (key.equals(IProductConstants.FINAL_PERSPECTIVE_APPCLIENT))
@@ -70,6 +85,11 @@ public class ProductManager {
 	
 	public static boolean shouldAddToEARByDefault() {
 		String value = getProperty(IProductConstants.ADD_TO_EAR_BY_DEFAULT);
+		return Boolean.valueOf(value).booleanValue();
+	}
+	
+	public static boolean shouldUseSingleRootStructure() {
+		String value = getProperty(IProductConstants.USE_SINGLE_ROOT_STRUCTURE);
 		return Boolean.valueOf(value).booleanValue();
 	}
 

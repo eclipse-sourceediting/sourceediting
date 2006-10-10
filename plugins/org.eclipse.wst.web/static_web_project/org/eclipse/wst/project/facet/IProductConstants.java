@@ -14,8 +14,13 @@ public interface IProductConstants {
     
     public static final String APPLICATION_CONTENT_FOLDER = "earContent"; //$NON-NLS-1$
 	public static final String WEB_CONTENT_FOLDER = "webContent"; //$NON-NLS-1$
+	public static final String EJB_CONTENT_FOLDER = "ejbContent"; //$NON-NLS-1$
+	public static final String APP_CLIENT_CONTENT_FOLDER = "appClientContent"; //$NON-NLS-1$
+	public static final String JCA_CONTENT_FOLDER = "jcaContent"; //$NON-NLS-1$
+	public static final String DEFAULT_SOURCE_FOLDER = "defaultSource"; //$NON-NLS-1$
 	public static final String ADD_TO_EAR_BY_DEFAULT = "addToEarByDefault"; //$NON-NLS-1$
 	public static final String OUTPUT_FOLDER = "outputFolder"; //$NON-NLS-1$
+	public static final String USE_SINGLE_ROOT_STRUCTURE = "useSingleRootStructure"; //$NON-NLS-1$
 	
 	/**
      * Alters the final perspective used by the following new project wizards
