@@ -18,6 +18,7 @@ import java.util.List;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.IBreakpointManager;
@@ -107,13 +108,22 @@ public class ToggleBreakpointAction extends BreakpointRulerAction {
 
 		if (errors.size() > 0) {
 			Shell shell = editor.getSite().getShell();
-			MultiStatus allStatus = new MultiStatus(SSEUIPlugin.ID, IStatus.INFO, (IStatus[]) errors.toArray(new IStatus[0]), SSEUIMessages.ManageBreakpoints_error_adding_message1, null); //$NON-NLS-1$
+			IStatus status = null;
+			if (errors.size() > 1) {
+				status = new MultiStatus(SSEUIPlugin.ID, IStatus.ERROR, (IStatus[]) errors.toArray(new IStatus[0]), SSEUIMessages.ManageBreakpoints_error_adding_message1, null); //$NON-NLS-1$
+			}
+			else {
+				status = (IStatus) errors.get(0);
+			}
+			if (status.getSeverity() > IStatus.OK) {
+				Platform.getLog(SSEUIPlugin.getDefault().getBundle()).log(status);
+			}
 			/*
 			 * Show for conditions more severe than INFO or when no
 			 * breakpoints were created
 			 */
-			if (allStatus.getSeverity() > IStatus.INFO || getBreakpoints(getMarkers()).length < 1) {
-				ErrorDialog.openError(shell, SSEUIMessages.ManageBreakpoints_error_adding_title1, SSEUIMessages.ManageBreakpoints_error_adding_message1, allStatus); //$NON-NLS-1$ //$NON-NLS-2$
+			if (status.getSeverity() > IStatus.INFO || getBreakpoints(getMarkers()).length < 1) {
+				ErrorDialog.openError(shell, SSEUIMessages.ManageBreakpoints_error_adding_title1, null, status); //$NON-NLS-1$ //$NON-NLS-2$
 				return false;
 			}
 		}
