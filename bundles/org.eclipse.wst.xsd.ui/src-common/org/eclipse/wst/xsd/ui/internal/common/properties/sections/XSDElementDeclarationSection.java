@@ -347,8 +347,8 @@ public class XSDElementDeclarationSection extends MultiplicitySection
           }
         }
 
-        maxCombo.setEnabled(!xsdElementDeclaration.isGlobal());
-        minCombo.setEnabled(!xsdElementDeclaration.isGlobal());
+        maxCombo.setEnabled(!xsdElementDeclaration.isGlobal() || isElementReference);
+        minCombo.setEnabled(!xsdElementDeclaration.isGlobal() || isElementReference);
       }
     }
 
