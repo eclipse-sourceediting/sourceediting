@@ -14,10 +14,13 @@ package org.eclipse.jst.jsp.core.taglib;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.Reader;
 import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -35,8 +38,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.filebuffers.FileBuffers;
-import org.eclipse.core.filebuffers.ITextFileBuffer;
-import org.eclipse.core.filebuffers.ITextFileBufferManager;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -50,7 +51,6 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jdt.core.IClasspathContainer;
@@ -706,6 +706,7 @@ class ProjectDescription {
 		JarRecord record = new JarRecord();
 		record.location = new Path(fileLocation);
 		record.urlRecords = new ArrayList(0);
+		record.info = new TaglibInfo();
 		return record;
 	}
 
@@ -1341,19 +1342,28 @@ class ProjectDescription {
 			boolean restored = false;
 			File savedState = new File(fSaveStateFilename);
 			if (savedState.exists()) {
-				ITextFileBufferManager textFileBufferManager = FileBuffers.getTextFileBufferManager();
-				Path savedStatePath = new Path(fSaveStateFilename);
-				try {
+				Reader reader = null;
+				try {				
 					time0 = System.currentTimeMillis();
-					textFileBufferManager.connect(savedStatePath, new NullProgressMonitor());
-					ITextFileBuffer buffer = textFileBufferManager.getTextFileBuffer(savedStatePath);
-					IDocument doc = buffer.getDocument();
+					reader = new InputStreamReader(new FileInputStream(savedState), "utf16");
+					// use a string buffer temporarily to reduce string creation
+					StringBuffer buffer = new StringBuffer();
+					char array[] = new char[2048];
+					int charsRead = 0;
+					while ((charsRead = reader.read(array)) != -1) {
+						if (charsRead > 0) {
+							buffer.append(array, 0, charsRead);
+						}
+					}
+					
+					IDocument doc = new org.eclipse.jface.text.Document();
+					doc.set(buffer.toString());
 					int lines = doc.getNumberOfLines();
 					if (lines > 0) {
 						IRegion line = doc.getLineInformation(0);
 						String lineText = doc.get(line.getOffset(), line.getLength());
 						JarRecord libraryRecord = null;
-						if (SAVE_FORMAT_VERSION.equals(lineText)) {
+						if (SAVE_FORMAT_VERSION.equals(lineText.trim())) {
 							IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
 
 							for (int i = 1; i < lines; i++) {
@@ -1399,8 +1409,8 @@ class ProjectDescription {
 													}
 													catch (MalformedURLException e) {
 														/*
-														 * don't record this
-														 * URI
+														 * don't create a
+														 * record for this URL
 														 */
 														Logger.logException(e);
 													}
@@ -1494,9 +1504,20 @@ class ProjectDescription {
 							}
 							restored = true;
 						}
+						else {
+							Logger.log(Logger.INFO, "Tag Library Index: different cache format found, was \"" + lineText + "\", supports \"" + SAVE_FORMAT_VERSION + "\", reindexing"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						}
 					}
-					if (_debugIndexTime)
-						Logger.log(Logger.INFO, "time spent reloading " + fProject.getName() + " build path: " + (System.currentTimeMillis() - time0)); //$NON-NLS-1$ //$NON-NLS-2$
+					else if (_debugIndexTime) {
+						if (restored) {
+							Logger.log(Logger.WARNING, "no lines in (no cache file?) " + fSaveStateFilename); //$NON-NLS-1$ //$NON-NLS-2$
+						}
+					}
+					if (_debugIndexTime) {
+						if (restored) {
+							Logger.log(Logger.INFO, "time spent reloading " + fProject.getName() + " build path: " + (System.currentTimeMillis() - time0)); //$NON-NLS-1$ //$NON-NLS-2$
+						}
+					}
 				}
 				catch (Exception e) {
 					restored = false;
@@ -1504,11 +1525,12 @@ class ProjectDescription {
 						Logger.log(Logger.INFO, "failure reloading " + fProject.getName() + " build path index", e); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 				finally {
-					try {
-						textFileBufferManager.disconnect(savedStatePath, new NullProgressMonitor());
-					}
-					catch (CoreException e) {
-						Logger.logException(e);
+					if (reader != null) {
+						try {
+							reader.close();
+						}
+						catch (IOException e) {
+						}
 					}
 				}
 			}
@@ -1594,6 +1616,8 @@ class ProjectDescription {
 
 	void setBuildPathIsDirty() {
 		fBuildPathIsDirty = true;
+		if (_debugIndexCreation)
+			Logger.log(Logger.INFO, "marked build path dirty for " + fProject.getName() + ": " + (System.currentTimeMillis() - time0)); //$NON-NLS-1$
 	}
 
 	void updateClasspathLibrary(String libraryLocation, int deltaKind, boolean isExported) {
@@ -1791,16 +1815,16 @@ class ProjectDescription {
 							if (entries[jEntry].endsWith(".tld")) { //$NON-NLS-1$
 								if (entries[jEntry].equals(JarUtilities.JSP11_TAGLIB)) {
 									jarRecord.has11TLD = true;
-									InputStream contents = JarUtilities.getInputStream(resource, entries[jEntry]);
-									if (contents != null) {
-										TaglibInfo info = extractInfo(resource.getFullPath().toString(), contents);
-										jarRecord.info = info;
-									}
-									try {
-										contents.close();
-									}
-									catch (IOException e) {
-									}
+								}
+								InputStream contents = JarUtilities.getInputStream(resource, entries[jEntry]);
+								if (contents != null) {
+									TaglibInfo info = extractInfo(resource.getFullPath().toString(), contents);
+									jarRecord.info = info;
+								}
+								try {
+									contents.close();
+								}
+								catch (IOException e) {
 								}
 							}
 						}

@@ -593,7 +593,7 @@ public final class TaglibIndex {
 		 * workspace)
 		 */
 		if (DIRTY.equalsIgnoreCase(getState())) {
-			Logger.log(Logger.ERROR, "A workspace crash was detected. The previous session did not exit normally. Not using saved taglib indexes"); //$NON-NLS-3$
+			Logger.log(Logger.WARNING, "A workspace crash was detected. The previous session did not exit normally. Not using saved tag library indexes"); //$NON-NLS-3$
 			removeIndexes(false);
 		}
 
