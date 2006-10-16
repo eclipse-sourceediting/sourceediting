@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2002, 2005 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -43,7 +43,7 @@ import org.eclipse.wst.xml.core.internal.catalog.provisional.INextCatalog;
 public class XMLCatalogTreeViewer extends TreeViewer {
 	protected static Image xmlCatalogImage = ImageFactory.INSTANCE.getImage("icons/obj16/xmlcatalog_obj.gif"); //$NON-NLS-1$
 	protected static Image errorImage = ImageFactory.INSTANCE.getImage("icons/ovr16/error-overlay.gif"); //$NON-NLS-1$
-	protected static Image entryImage = ImageFactory.INSTANCE.getImage("icons/obj16/entry_obj.gif"); //$NON-NLS-1$
+	protected static Image entryImage = ImageFactory.INSTANCE.getImage("icons/obj16/entry_obj.png"); //$NON-NLS-1$
 	protected static Image nextCatalogImage = ImageFactory.INSTANCE.getImage("icons/obj16/nextCatalog_obj.gif"); //$NON-NLS-1$
 
 	protected static String ERROR_STATE_KEY = "errorstatekey"; //$NON-NLS-1$

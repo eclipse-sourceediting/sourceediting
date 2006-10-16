@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -60,6 +60,8 @@ import org.eclipse.wst.xml.core.internal.preferences.XMLCorePreferenceNames;
 import org.eclipse.wst.xml.ui.internal.Logger;
 import org.eclipse.wst.xml.ui.internal.dialogs.NamespaceInfoErrorHelper;
 import org.eclipse.wst.xml.ui.internal.dialogs.SelectFileOrXMLCatalogIdPanel;
+import org.eclipse.wst.xml.ui.internal.editor.XMLEditorPluginImageHelper;
+import org.eclipse.wst.xml.ui.internal.editor.XMLEditorPluginImages;
 import org.eclipse.wst.xml.ui.internal.nsedit.CommonEditNamespacesDialog;
 
 import com.ibm.icu.text.Collator;
@@ -88,7 +90,8 @@ public class NewXMLWizard extends NewModelWizard {
 
 	public NewXMLWizard() {
 		setWindowTitle(XMLWizardsMessages._UI_WIZARD_CREATE_XML_HEADING);
-		setDefaultPageImageDescriptor(ImageDescriptor.createFromFile(XMLWizard.class, "icons/generatexml_wiz.gif")); //$NON-NLS-1$
+		ImageDescriptor descriptor = XMLEditorPluginImageHelper.getInstance().getImageDescriptor(XMLEditorPluginImages.IMG_WIZBAN_GENERATEXML);
+		setDefaultPageImageDescriptor(descriptor);
 		generator = new NewXMLGenerator();
 	}
 

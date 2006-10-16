@@ -285,7 +285,7 @@
 		id="XMLExampleProjectCreationWizardExtension">
 		<wizard
 			id="org.eclipse.wst.xml.ui.XMLExampleProjectCreationWizard"
-			banner="icons/newSampleProject_wizbanner.gif">
+			banner="icons/newSampleProject_wizbanner.png">
 			<projectsetup
 				pagetitle="%XMLExampleProjectCreationWizard.pagetitle"
 				name="%XMLExampleProjectCreationWizard.projectname"

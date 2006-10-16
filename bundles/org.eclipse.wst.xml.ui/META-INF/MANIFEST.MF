@@ -39,7 +39,6 @@ Export-Package: org.eclipse.wst.xml.ui,
  org.eclipse.wst.xml.ui.internal.validation;x-friends:="org.eclipse.wst.xsd.ui,org.eclipse.wst.dtd.ui",
  org.eclipse.wst.xml.ui.internal.validation.core.errorinfo;x-friends:="org.eclipse.wst.xsd.ui,org.eclipse.wst.dtd.ui",
  org.eclipse.wst.xml.ui.internal.wizards;x-friends:="org.eclipse.wst.xsd.ui,org.eclipse.wst.dtd.ui",
- org.eclipse.wst.xml.ui.internal.wizards.icons;x-friends:="org.eclipse.wst.xsd.ui,org.eclipse.wst.dtd.ui",
  org.eclipse.wst.xml.ui.views.contentoutline,
  org.eclipse.wst.xml.ui.views.properties
 Require-Bundle: org.eclipse.ui.ide;bundle-version="[3.2.0,4.0.0)",

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -52,4 +52,6 @@ public class XMLEditorPluginImages {
 	public static final String IMG_OVR_ERROR = "icons/full/ovr16/error_ovr.gif"; //$NON-NLS-1$
 	public static final String IMG_OVR_STALE_ERROR = "icons/full/ovr16/stale_error_ovr.gif"; //$NON-NLS-1$
 	public static final String IMG_OVR_WARN = "icons/full/ovr16/warn_ovr.gif"; //$NON-NLS-1$
+	
+	public static final String IMG_WIZBAN_GENERATEXML = "icons/full/wizban/generatexml_wiz.png";			//$NON-NLS-1$
 }
