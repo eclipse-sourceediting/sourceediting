@@ -51,7 +51,7 @@ public class JavaStratumBreakpointProvider implements IBreakpointProvider, IExec
 			IResource res = getResourceFromInput(input);
 			if (res != null) {
 				String path = null; //res.getName();// res.getFullPath().removeFirstSegments(2).toString();
-				IBreakpoint point = JDIDebugModel.createStratumBreakpoint(res, "JSP", res.getName(), path, getClassPattern(res), editorLineNumber, pos, pos, 0, true, null); //$NON-NLS-1$
+				IBreakpoint point = JDIDebugModel.createStratumBreakpoint(res, "JSP", res.getName(), path, getClassPattern(), editorLineNumber, pos, pos, 0, true, null); //$NON-NLS-1$
 				if (point == null) {
 					status = new Status(IStatus.ERROR, JSPUIPlugin.ID, IStatus.ERROR, "unsupported input type", null); //$NON-NLS-1$
 				}
@@ -69,7 +69,7 @@ public class JavaStratumBreakpointProvider implements IBreakpointProvider, IExec
 				Map attributes = new HashMap();
 				attributes.put(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY, id);
 				String path = null;
-				IBreakpoint point = JDIDebugModel.createStratumBreakpoint(res, "JSP", input.getName(), path, getClassPattern(res), editorLineNumber, pos, pos, 0, true, attributes); //$NON-NLS-1$
+				IBreakpoint point = JDIDebugModel.createStratumBreakpoint(res, "JSP", input.getName(), path, getClassPattern(), editorLineNumber, pos, pos, 0, true, attributes); //$NON-NLS-1$
 				if (point == null) {
 					status = new Status(IStatus.ERROR, JSPUIPlugin.ID, IStatus.ERROR, "unsupported input type", null); //$NON-NLS-1$
 				}
@@ -81,20 +81,10 @@ public class JavaStratumBreakpointProvider implements IBreakpointProvider, IExec
 		return status;
 	}
 
-	private String getClassPattern(IResource resource) {
-		if (resource != null) {
-			String shortName = resource.getName();
-			String extension = resource.getFileExtension();
-			if (extension != null && extension.length() > shortName.length() - 1) {
-				shortName = shortName.substring(0, shortName.length() - extension.length() - 1);
-			}
-			/*
-			 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=154475
-			 */
-			return fClassPattern + ",_" + shortName;
-		}
+	private String getClassPattern() {
 		return fClassPattern;
 	}
+
 
 	public IResource getResource(IEditorInput input) {
 		return getResourceFromInput(input);

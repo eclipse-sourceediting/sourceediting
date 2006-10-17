@@ -96,8 +96,24 @@ public final class TaglibIndex {
 				else {
 					IJavaElementDelta[] deltas = delta.getAffectedChildren();
 					if (deltas.length == 0) {
-						IJavaElement proj = element;
-						handleClasspathChange((IJavaProject) proj, forceUpdate);
+						/*
+						 * If project is being deleted or closed, remove the
+						 * stored description
+						 */
+						if (delta.getKind() == IJavaElementDelta.REMOVED || (delta.getFlags() & IJavaElementDelta.F_CLOSED) != 0) {
+							IResource project = ((IJavaProject) element).getResource();
+							ProjectDescription description = (ProjectDescription) fProjectDescriptions.remove(project);
+							if (description != null) {
+								if (_debugIndexCreation) {
+									Logger.log(Logger.INFO, "removing index of " + description.fProject.getName()); //$NON-NLS-1$
+								}
+								description.clear();
+							}
+						}
+						/*
+						 * (else) Without the classpath changing, there's
+						 * nothing else to do
+						 */
 					}
 					else {
 						for (int i = 0; i < deltas.length; i++) {
@@ -577,7 +593,7 @@ public final class TaglibIndex {
 		 * workspace)
 		 */
 		if (DIRTY.equalsIgnoreCase(getState())) {
-			Logger.log(Logger.ERROR, "A workspace crash was detected. The previous session did not exit normally. Not using saved taglib indexes"); //$NON-NLS-3$
+			Logger.log(Logger.WARNING, "A workspace crash was detected. The previous session did not exit normally. Not using saved tag library indexes"); //$NON-NLS-3$
 			removeIndexes(false);
 		}
 

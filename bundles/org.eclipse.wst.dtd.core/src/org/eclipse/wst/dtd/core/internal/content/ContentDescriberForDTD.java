@@ -29,8 +29,6 @@ import org.eclipse.wst.xml.core.internal.contenttype.XMLResourceEncodingDetector
 
 public final class ContentDescriberForDTD implements ITextContentDescriber {
 	final private static QualifiedName[] SUPPORTED_OPTIONS = {IContentDescription.CHARSET, IContentDescription.BYTE_ORDER_MARK, IContentDescriptionExtended.DETECTED_CHARSET, IContentDescriptionExtended.UNSUPPORTED_CHARSET, IContentDescriptionExtended.APPROPRIATE_DEFAULT};
-	private IResourceCharsetDetector resourceCharsetDetector;
-
 	public int describe(InputStream contents, IContentDescription description) throws IOException {
 		int result = IContentDescriber.INDETERMINATE;
 
@@ -97,10 +95,7 @@ public final class ContentDescriberForDTD implements ITextContentDescriber {
 
 	// same rules as for XML
 	private IResourceCharsetDetector getDetector() {
-		if (resourceCharsetDetector == null) {
-			resourceCharsetDetector = new XMLResourceEncodingDetector();
-		}
-		return resourceCharsetDetector;
+			return new XMLResourceEncodingDetector();
 	}
 
 	/**

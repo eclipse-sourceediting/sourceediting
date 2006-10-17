@@ -16,6 +16,7 @@ import java.util.List;
 
 import org.eclipse.jst.jsp.core.internal.document.PageDirectiveAdapter;
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver;
+import org.eclipse.wst.html.core.internal.provisional.contenttype.ContentTypeFamilyForHTML;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
@@ -31,8 +32,10 @@ import org.w3c.dom.Node;
 
 public class JSPModelQueryImpl extends ModelQueryImpl {
 
+	// ISSUE: jspModel doesn't seem used?
 	protected IStructuredModel jspModel = null;
 	private HashMap embeddedModelQueries = new HashMap();
+
 	public JSPModelQueryImpl(IStructuredModel model, URIResolver resolver) {
 		super(new JSPModelQueryAssociationProvider());
 		jspModel = model;
@@ -88,37 +91,51 @@ public class JSPModelQueryImpl extends ModelQueryImpl {
 			return super.getAvailableContent(element, ed, includeOptions);
 	}
 
+	// ISSUE: shouldn't this be private?
 	protected ModelQuery getEmbeddedModelQuery(Node node) {
-	    ModelQuery emq = null;
-		   
-			if (node instanceof INodeNotifier) {
-				Node ownerNode = node.getOwnerDocument();
-				if (ownerNode == null) {
-					// then must be the document itself
-					ownerNode = node;
+		ModelQuery embeddedModelQuery = null;
+
+		if (node instanceof INodeNotifier) { 
+			Node ownerNode = node.getOwnerDocument();
+			if (ownerNode == null) {
+				// then must be the document itself
+				ownerNode = node; 
+			}
+			PageDirectiveAdapter pageDirectiveAdapter = (PageDirectiveAdapter) ((INodeNotifier) ownerNode).getAdapterFor(PageDirectiveAdapter.class);
+			if (pageDirectiveAdapter != null) {
+
+				String effectiveContentType = null;
+				ModelQuery potentialModelQueryObject = null;
+
+				String familyId = pageDirectiveAdapter.getEmbeddedType().getFamilyId();
+				if (ContentTypeFamilyForHTML.HTML_FAMILY.equals(familyId)) {
+					effectiveContentType = "text/html";
 				}
-				PageDirectiveAdapter typeadapter = (PageDirectiveAdapter) ((INodeNotifier) ownerNode).getAdapterFor(PageDirectiveAdapter.class);
-				if (typeadapter != null) {
-				    
-				    String contentType = typeadapter.getContentType();
-				    Object o = embeddedModelQueries.get(contentType);
-				    if(o == null) {
-						ModelQueryAdapter embeddedAdapter = (ModelQueryAdapter) typeadapter.adapt((INodeNotifier) node, ModelQueryAdapter.class);
-						if (embeddedAdapter != null) {
-						    // we will cache one model query per content type
-						    emq = embeddedAdapter.getModelQuery();
-						    embeddedModelQueries.put(contentType, emq);
-						}
-				    }
-					else {
-					    emq = (ModelQuery)o;
+				else {
+					effectiveContentType = pageDirectiveAdapter.getContentType();
+				}
+				
+				potentialModelQueryObject = (ModelQuery) embeddedModelQueries.get(effectiveContentType);
+				
+				if (potentialModelQueryObject == null) {
+					ModelQueryAdapter embeddedAdapter = (ModelQueryAdapter) pageDirectiveAdapter.adapt((INodeNotifier) node, ModelQueryAdapter.class);
+					if (embeddedAdapter != null) {
+						// we will cache one model query per content type
+						embeddedModelQuery = embeddedAdapter.getModelQuery();
+						embeddedModelQueries.put(effectiveContentType, embeddedModelQuery);
 					}
 				}
+				else {
+					embeddedModelQuery = potentialModelQueryObject;
+				}
 			}
-			return emq;
+		}
+		return embeddedModelQuery;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery#getCMAttributeDeclaration(org.w3c.dom.Attr)
 	 */
 	public CMAttributeDeclaration getCMAttributeDeclaration(Attr attr) {
@@ -130,5 +147,16 @@ public class JSPModelQueryImpl extends ModelQueryImpl {
 			}
 		}
 		return result;
+	}
+	
+	/**
+	 * NOT API -- this is provided, and is public, only to make some JUnit testing 
+	 * more straightforward. It will be changed in future, and from release to release.
+	 * 
+	 * @param node
+	 * @return
+	 */
+	public ModelQuery internalTestOnly_getEmbeddedModelQuery(Node node) {
+		return getEmbeddedModelQuery(node);
 	}
 }

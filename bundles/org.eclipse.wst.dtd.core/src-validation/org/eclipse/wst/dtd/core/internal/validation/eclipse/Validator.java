@@ -12,6 +12,7 @@ package org.eclipse.wst.dtd.core.internal.validation.eclipse;
 
 import java.io.InputStream;
 
+import org.eclipse.wst.dtd.core.internal.validation.DTDValidationMessages;
 import org.eclipse.wst.xml.core.internal.validation.core.AbstractNestedValidator;
 import org.eclipse.wst.xml.core.internal.validation.core.NestedValidatorContext;
 import org.eclipse.wst.xml.core.internal.validation.core.ValidationReport;
@@ -21,6 +22,14 @@ import org.eclipse.wst.xml.core.internal.validation.core.ValidationReport;
  */
 public class Validator extends AbstractNestedValidator 
 {
+
+  /* (non-Javadoc)
+   * @see org.eclipse.wst.xml.core.internal.validation.core.AbstractNestedValidator#getValidatorName()
+   */
+  protected String getValidatorName() 
+  {
+	return DTDValidationMessages.MESSAGE_DTD_VALIDATION_MESSAGE_UI_;
+  }
 
   /* (non-Javadoc)
    * @see org.eclipse.wst.xml.core.internal.validation.core.AbstractNestedValidator#validate(java.lang.String, java.io.InputStream, org.eclipse.wst.xml.core.internal.validation.core.NestedValidatorContext)

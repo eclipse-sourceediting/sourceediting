@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--Arbortext, Inc., 1988-2005, v.4002-->
-<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
-<?Pub Inc?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
+ "task.dtd">
 <task id="txprefs" xml:lang="en-us">
 <title>Defining XML editor preferences</title>
 <titlealts>
@@ -48,8 +48,7 @@ in the <uicontrol>Prompt when these characters are inserted</uicontrol> field. <
 suggestions that are grammatically valid will be shown first (with bold icons)
 in the content assist list. Other suggestions that are applicable to the element
 scope, but not grammatically valid, will be shown below them with a de-emphasized
-icon. The default value for this field is <b>Lax</b>.</cmd><?Pub Caret1?>
-</step>
+icon. The default value for this field is <b>Strict</b>.</cmd></step>
 <step><cmd>The <uicontrol>Use inferred grammar in absence of DTD/Schema</uicontrol> check
 box is selected by default. </cmd><info>If this box is selected, when you
 have an XML file that is not associated with a DTD or XML schema, you will
@@ -60,4 +59,3 @@ save your changes.</cmd></step>
 </steps>
 </taskbody>
 </task>
-<?Pub *0000003624?>

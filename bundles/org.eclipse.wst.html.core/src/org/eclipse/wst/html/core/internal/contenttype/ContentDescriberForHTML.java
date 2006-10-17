@@ -22,11 +22,25 @@ import org.eclipse.wst.sse.core.internal.encoding.EncodingMemento;
 import org.eclipse.wst.sse.core.internal.encoding.IContentDescriptionExtended;
 import org.eclipse.wst.sse.core.internal.encoding.IResourceCharsetDetector;
 
+/**
+ * 
+ * ContentDescriberForHTML
+ * 
+ * A few design principles to remember with content describers:
+ * <ul> 
+ * <li>Remember not to store values/data in the descriptions array of properties, 
+ * especially not large objects! and even no value that is already the default value, 
+ * since those description properties are cached per session, so can add up in memory. 
+ * <li>Remember that a ContentDescriber instance becomes a "root object" in the 
+ * ContentDescriberManager (that is, always in memory, never GC'd), so it should 
+ * not have any instance or state data since it would always become stale and 
+ * "hold on" to objects unneccessarily. 
+ * </ul>
+ */
 
 public final class ContentDescriberForHTML implements ITextContentDescriber {
 
 	final private static QualifiedName[] SUPPORTED_OPTIONS = {IContentDescription.CHARSET, IContentDescription.BYTE_ORDER_MARK, IContentDescriptionExtended.DETECTED_CHARSET, IContentDescriptionExtended.UNSUPPORTED_CHARSET, IContentDescriptionExtended.APPROPRIATE_DEFAULT};
-	private IResourceCharsetDetector resourceCharsetDetector;
 
 	public int describe(InputStream contents, IContentDescription description) throws IOException {
 		int result = IContentDescriber.INDETERMINATE;
@@ -103,10 +117,9 @@ public final class ContentDescriberForHTML implements ITextContentDescriber {
 	}
 
 	private IResourceCharsetDetector getDetector() {
-		if (resourceCharsetDetector == null) {
-			resourceCharsetDetector = new HTMLResourceEncodingDetector();
-		}
-		return resourceCharsetDetector;
+
+		return new HTMLResourceEncodingDetector();
+
 	}
 
 	/**
@@ -115,11 +128,7 @@ public final class ContentDescriberForHTML implements ITextContentDescriber {
 	 * @throws IOException
 	 */
 	private void handleCalculations(IContentDescription description, IResourceCharsetDetector detector) throws IOException {
-		// note: if we're asked for one, we set them all. I need to be sure if
-		// called
-		// mulitiple times (one for each, say) that we don't waste time
-		// processing same
-		// content again.
+
 		EncodingMemento encodingMemento = ((HTMLResourceEncodingDetector) detector).getEncodingMemento();
 		// TODO: I need to verify to see if this BOM work is always done
 		// by text type.
@@ -134,12 +143,13 @@ public final class ContentDescriberForHTML implements ITextContentDescriber {
 
 
 		if (!encodingMemento.isValid()) {
-			// note: after setting here, its the mere presence of
-			// IContentDescriptionExtended.UNSUPPORTED_CHARSET
-			// in the resource's description that can be used to determine if
-			// invalid
-			// in those cases, the "detected" property contains an
-			// "appropriate default" to use.
+			/*
+			 * note: after setting here, its the mere presence of
+			 * IContentDescriptionExtended.UNSUPPORTED_CHARSET in the
+			 * resource's description that can be used to determine if invalid
+			 * in those cases, the "detected" property contains an
+			 * "appropriate default" to use.
+			 */
 			description.setProperty(IContentDescriptionExtended.UNSUPPORTED_CHARSET, encodingMemento.getInvalidEncoding());
 			description.setProperty(IContentDescriptionExtended.APPROPRIATE_DEFAULT, encodingMemento.getAppropriateDefault());
 		}
@@ -158,7 +168,7 @@ public final class ContentDescriberForHTML implements ITextContentDescriber {
 			else {
 				// we may need to add what we found, but only need to add
 				// if different from default.the
-				Object defaultCharset = getDetector().getSpecDefaultEncoding();
+				Object defaultCharset = detector.getSpecDefaultEncoding();
 				if (defaultCharset != null) {
 					if (!defaultCharset.equals(javaCharset)) {
 						description.setProperty(IContentDescription.CHARSET, javaCharset);
@@ -172,10 +182,6 @@ public final class ContentDescriberForHTML implements ITextContentDescriber {
 			}
 		}
 
-		// avoid adding anything if not absolutly needed, since always
-		// "cached" per session
-		// description.setProperty(IContentDescriptionExtended.ENCODING_MEMENTO,
-		// encodingMemento);
 	}
 
 	private void handleDetectedSpecialCase(IContentDescription description, Object detectedCharset, Object javaCharset) {

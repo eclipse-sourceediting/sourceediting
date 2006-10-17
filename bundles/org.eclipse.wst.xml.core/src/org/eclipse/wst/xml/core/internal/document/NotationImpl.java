@@ -7,11 +7,7 @@
  * 
  * Contributors:
  *     IBM Corporation - initial API and implementation
- *     
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
- *     
- *     Balazs Banfai: Bug 154737 getUserData/setUserData support for Node
- *     https://bugs.eclipse.org/bugs/show_bug.cgi?id=154737
  *     
  *******************************************************************************/
 package org.eclipse.wst.xml.core.internal.document;
@@ -21,7 +17,6 @@ package org.eclipse.wst.xml.core.internal.document;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Node;
 import org.w3c.dom.Notation;
-import org.w3c.dom.UserDataHandler;
 
 /**
  * NotationImpl class
@@ -64,7 +59,6 @@ public class NotationImpl extends NodeImpl implements Notation {
 	 */
 	public Node cloneNode(boolean deep) {
 		NotationImpl cloned = new NotationImpl(this);
-		notifyUserDataHandlers(UserDataHandler.NODE_CLONED, cloned);
 		return cloned;
 	}
 

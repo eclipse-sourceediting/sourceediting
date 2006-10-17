@@ -96,17 +96,7 @@ public class Utilities {
 	}
 
 	/**
-	 * <p>
 	 * Ensures that an InputStream has mark/reset support.
-	 * </p>
-	 * <p>
-	 * It's vital that a BufferedInputStream <b>not</b> be wrapped in another
-	 * BufferedInputStream as each can preemptively consume <i>n</i> bytes
-	 * (e.g. 2048) from the parent stream before any requests are made. The
-	 * cascading effect is that the second/inner BufferedInputStream can never
-	 * rewind itself to the first <i>n</i> bytes since they were already
-	 * consumed by its parent.
-	 * </p>
 	 */
 	public static InputStream getMarkSupportedStream(InputStream original) {
 		if (original == null)

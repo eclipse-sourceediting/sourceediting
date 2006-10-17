@@ -50,7 +50,7 @@ public class JSPELContentAssistProcessor extends JSPJavaContentAssistProcessor {
 			fErrorMessage = UNKNOWN_CONTEXT;
 		}
 
-		IStructuredDocumentRegion flat = ContentAssistUtils.getStructuredDocumentRegion(viewer, documentPosition);
+		IStructuredDocumentRegion flat = ContentAssistUtils.getStructuredDocumentRegion((StructuredTextViewer) viewer, documentPosition);
 		
 		if (flat != null) {
 			ITextRegion cursorRegion = flat.getRegionAtCharacterOffset(documentPosition);

@@ -25,9 +25,6 @@ import org.eclipse.wst.xml.core.internal.parser.XML10Names;
  * the DOM call. And, natually, want to give the user feedback in a more 
  * timely fashion.
  * 
- * ISSUE: is "endns:" really valid xml name? I think not, but this method
- * (currently) says it is.
- * 
  * @plannedfor 1.0
  */
 public final class NameValidator {

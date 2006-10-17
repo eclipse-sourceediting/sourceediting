@@ -7,20 +7,12 @@
  * 
  * Contributors:
  *     IBM Corporation - initial API and implementation
- *     
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
- *     
- *     Balazs Banfai: Bug 154737 getUserData/setUserData support for Node
- *     https://bugs.eclipse.org/bugs/show_bug.cgi?id=154737
  *     
  *******************************************************************************/
 package org.eclipse.wst.xml.core.internal.document;
 
 
-
-import java.io.Serializable;
-import java.util.Enumeration;
-import java.util.Hashtable;
 
 import org.eclipse.wst.sse.core.internal.model.FactoryRegistry;
 import org.eclipse.wst.sse.core.internal.provisional.AbstractNotifier;
@@ -41,6 +33,7 @@ import org.w3c.dom.Text;
 import org.w3c.dom.TypeInfo;
 import org.w3c.dom.UserDataHandler;
 
+
 /**
  * NodeImpl class
  */
@@ -55,8 +48,6 @@ public abstract class NodeImpl extends AbstractNotifier implements Node, IDOMNod
 	private DocumentImpl ownerDocument = null;
 	private NodeImpl parentNode = null;
 	private NodeImpl previousSibling = null;
-	
-	private Hashtable userDataTable=null;
 
 	/**
 	 * NodeImpl constructor
@@ -863,6 +854,13 @@ public abstract class NodeImpl extends AbstractNotifier implements Node, IDOMNod
 	/**
 	 * NOT IMPLEMENTED, is defined here in preparation of DOM Level 3
 	 */
+	public Object getUserData(String key) {
+		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implemented in this version."); //$NON-NLS-1$
+	}
+
+	/**
+	 * NOT IMPLEMENTED, is defined here in preparation of DOM Level 3
+	 */
 	public boolean isDefaultNamespace(String namespaceURI) {
 		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implemented in this version."); //$NON-NLS-1$
 	}
@@ -905,6 +903,13 @@ public abstract class NodeImpl extends AbstractNotifier implements Node, IDOMNod
 	/**
 	 * NOT IMPLEMENTED, is defined here in preparation of DOM Level 3
 	 */
+	public Object setUserData(String key, Object data, UserDataHandler handler) {
+		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implemented in this version."); //$NON-NLS-1$
+	}
+
+	/**
+	 * NOT IMPLEMENTED, is defined here in preparation of DOM Level 3
+	 */
 	public TypeInfo getSchemaTypeInfo() {
 		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implemented in this version."); //$NON-NLS-1$
 	}
@@ -915,149 +920,6 @@ public abstract class NodeImpl extends AbstractNotifier implements Node, IDOMNod
 	public boolean isId() {
 		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implemented in this version."); //$NON-NLS-1$
 	}
-	
-	/**
-	 * Retrieves the object for a node associated to a key.
-	 * 
-	 * @param key The key associated with the object.
-	 * @return object The object for this node, associated with the key passed
-	 * or null if there was none set.
-	 *
-	 * @since DOM Level 3
-	 */
-	public Object getUserData(String key) {
-		
-		if (key==null) return null;
-		
-		if (userDataTable!=null) {
-			UserDataAndHandler userDataAndHandler = (UserDataAndHandler) userDataTable.get(key);
-			if (userDataAndHandler!=null) {
-				return userDataAndHandler.getData();
-			} 
-		}
-		return null;	
-	}
-	
-	/**
-	 * Sets the user data and handler for a key
-	 * 
-	 * @param key The key associated with the object.
-	 * @param object The object for this node, associated with the key passed.
-	 * Null passed removes the existing association to the key.
-	 * @param handler UserDataHandler for the userdata associated with this key
-	 * @return Object The previous userdata object if set, null if it was none.  
-	 * 
-	 * @since DOM Level 3
-	 */
-	public Object setUserData(String key, Object data, UserDataHandler handler) {
 
-		UserDataAndHandler previousDataAndHandler=null;
-		
-		//return immediately for null keys
-		if (key ==null) return null;
-		
-		//remove association for the key if data is null
-		if (data==null) {
-			if (userDataTable==null) return null;
-			
-			//see if there is a previous value set
-			previousDataAndHandler = (UserDataAndHandler) userDataTable.get(key);
-			if (previousDataAndHandler!=null) {
-				userDataTable.remove(key);
-				return previousDataAndHandler.getData();
-			}
-			//there is no previous value found
-			return null;
-		}
-		
-		//if data passed is not null
-		//the first data in the hashtable
-		if (userDataTable==null) {
-			userDataTable=new Hashtable();
-			UserDataAndHandler userDataAndHandler=new UserDataAndHandler(data,handler);
-			userDataTable.put(key,userDataAndHandler);
-			return null;
-			//there is already data in the hashtable
-		} else {
-			UserDataAndHandler userDataAndHandler=new UserDataAndHandler(data,handler);
-			previousDataAndHandler=(UserDataAndHandler) userDataTable.put(key,userDataAndHandler);
-			
-			//if we replace a value
-			if (previousDataAndHandler!=null)
-				return previousDataAndHandler.getData();
-			else {
-				return null;
-			}
-		}
-	}
-	
-	/**
-	 * Notifies the UserDataHandlers of the node.
-	 * 
-	 * @param operation
-	 * @param destination
-	 */
-	public void notifyUserDataHandlers(short operation, Node destination) {
-		
-		if (operation!=UserDataHandler.NODE_ADOPTED 
-				& operation!=UserDataHandler.NODE_CLONED
-				& operation!=UserDataHandler.NODE_DELETED
-				& operation!=UserDataHandler.NODE_IMPORTED
-				& operation!=UserDataHandler.NODE_RENAMED)
-			return; 
-			
-		if (userDataTable!=null) {
-			Enumeration keys=userDataTable.keys();
-			while (keys.hasMoreElements()) {
-				String key=(String) keys.nextElement(); //should always be a string
-				UserDataAndHandler dataAndHandler = (UserDataAndHandler) userDataTable.get(key);
-				if (dataAndHandler!=null) {
-					UserDataHandler dataHandler=dataAndHandler.getHandler();
-					if (dataHandler!=null) {
-						dataHandler.handle(operation, key, dataAndHandler.getData(), this, destination);
-					}
-				}
-			}
-		}
-	}
-	
-	/**
-	 * 
-	 * Class for user data and UserDataHandler
-	 */
-	protected class UserDataAndHandler implements Serializable {
 
-		/**
-		 * Generated Serial ID
-		 */
-		private static final long serialVersionUID = 4860521237315444840L;
-		/**
-		 * Generated serialization version
-		 */
-		
-		private Object data;
-		private UserDataHandler handler;
-		
-		public UserDataAndHandler(Object data, UserDataHandler handler)
-		{
-			this.data=data;
-			this.handler=handler;
-		}
-
-		public Object getData() {
-			return data;
-		}
-
-		public void setData(Object data) {
-			this.data = data;
-		}
-
-		public UserDataHandler getHandler() {
-			return handler;
-		}
-
-		public void setHandler(UserDataHandler handler) {
-			this.handler = handler;
-		}
-	}
 }

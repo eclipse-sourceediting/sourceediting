@@ -23,6 +23,7 @@ import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
+import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.ui.internal.contentassist.XMLContentAssistUtilities;
@@ -45,7 +46,7 @@ public class CSSContentAssistProcessor implements IContentAssistProcessor {
 	 */
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer, int documentPosition) {
 
-		IndexedRegion indexedNode = ContentAssistUtils.getNodeAt(viewer, documentPosition + fDocumentOffset);
+		IndexedRegion indexedNode = ContentAssistUtils.getNodeAt((StructuredTextViewer) viewer, documentPosition + fDocumentOffset);
 		IDOMNode xNode = null;
 		IDOMNode parent = null;
 		CSSProposalArranger arranger = null;
@@ -59,7 +60,7 @@ public class CSSContentAssistProcessor implements IContentAssistProcessor {
 		}
 		// need to get in here if there in the no 0 region <style>|</style>
 		// case
-		if ((xNode != null) && xNode.getNodeName().equalsIgnoreCase(HTML40Namespace.ElementName.STYLE)) {
+		if (xNode != null && xNode.getNodeName().equalsIgnoreCase(HTML40Namespace.ElementName.STYLE)) {
 			// now we know the cursor is in a <style> tag w/out region
 			IStructuredModel cssModel = getCSSModel(xNode);
 			if (cssModel != null) {
@@ -72,7 +73,7 @@ public class CSSContentAssistProcessor implements IContentAssistProcessor {
 				}
 				arranger = new CSSProposalArranger(pos, (ICSSNode) keyIndexedNode, offset, (char) 0);
 			}
-		} else if ((parent != null) && parent.getNodeName().equalsIgnoreCase(HTML40Namespace.ElementName.STYLE)) {
+		} else if (parent != null && parent.getNodeName().equalsIgnoreCase(HTML40Namespace.ElementName.STYLE)) {
 			// now we know the cursor is in a <style> tag with a region
 			// use the parent because that will be the <style> tag
 			IStructuredModel cssModel = getCSSModel(parent);
@@ -116,7 +117,7 @@ public class CSSContentAssistProcessor implements IContentAssistProcessor {
 					}
 				}
 			}
-		} else if ((indexedNode == null) && isViewerEmpty(viewer)) {
+		} else if (indexedNode == null && isViewerEmpty(viewer)) {
 			isEmptyDocument = true;
 			// the top of empty CSS Document
 			IStructuredModel cssModel = null;
@@ -156,7 +157,7 @@ public class CSSContentAssistProcessor implements IContentAssistProcessor {
 			}
 
 			// add end tag if parent is not closed
-			ICompletionProposal endTag = XMLContentAssistUtilities.computeXMLEndTagProposal(viewer, documentPosition, indexedNode, HTML40Namespace.ElementName.STYLE, SharedXMLEditorPluginImageHelper.IMG_OBJ_TAG_GENERIC); 
+			ICompletionProposal endTag = XMLContentAssistUtilities.computeXMLEndTagProposal(viewer, documentPosition, indexedNode, HTML40Namespace.ElementName.STYLE, SharedXMLEditorPluginImageHelper.IMG_OBJ_TAG_GENERIC); //$NON-NLS-1$
 
 			// add the additional proposals
 			int additionalLength = newfileproposals.length + anyproposals.length;
@@ -198,7 +199,7 @@ public class CSSContentAssistProcessor implements IContentAssistProcessor {
 	private boolean isViewerEmpty(ITextViewer textViewer) {
 		boolean isEmpty = false;
 		String text = textViewer.getTextWidget().getText();
-		if ((text == null) || ((text != null) && text.trim().equals(""))) //$NON-NLS-1$
+		if (text == null || (text != null && text.trim().equals(""))) //$NON-NLS-1$
 			isEmpty = true;
 		return isEmpty;
 	}
@@ -231,7 +232,7 @@ public class CSSContentAssistProcessor implements IContentAssistProcessor {
 		if (element == null)
 			return null;
 		INodeAdapter adapter = StyleAdapterFactory.getInstance().adapt(element);
-		if ((adapter == null) || !(adapter instanceof ICSSModelAdapter))
+		if (adapter == null || !(adapter instanceof ICSSModelAdapter))
 			return null;
 		ICSSModelAdapter modelAdapter = (ICSSModelAdapter) adapter;
 		return modelAdapter.getModel();
