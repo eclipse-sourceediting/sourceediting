@@ -11,7 +11,6 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.core.internal.validation;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
 
@@ -27,8 +26,6 @@ import org.eclipse.jst.jsp.core.internal.JSPCoreMessages;
 import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.provisional.JSP11Namespace;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
-import org.eclipse.jst.jsp.core.taglib.ITaglibRecord;
-import org.eclipse.jst.jsp.core.taglib.TaglibIndex;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
@@ -200,33 +197,7 @@ public class JSPDirectiveValidator extends JSPValidator implements ISourceValida
 	private void validateDirective(IReporter reporter, IFile file, IStructuredDocument sDoc, IStructuredDocumentRegion sdRegion) {
 		// we only care about taglib directive
 		if (getDirectiveName(sdRegion).equals("taglib")) { //$NON-NLS-1$
-			ITextRegion valueRegion = null;
-			IFile baseFile = file;
-			if (baseFile == null) {
-				baseFile = fFile;
-			}
-			if (baseFile != null) {
-				valueRegion = getAttributeValueRegion(sdRegion, JSP11Namespace.ATTR_NAME_URI);
-				String uri = sdRegion.getText(valueRegion);
-				uri = StringUtils.stripQuotes(uri);
-				ITaglibRecord tld = TaglibIndex.resolve(baseFile.getFullPath().toString(), uri, false);
-				if (tld == null) {
-					// no new strings allowed in 1.5.x
-					String msgText = FileNotFoundException.class.getName();
-					int sev = IMessage.HIGH_SEVERITY;
-					LocalizedMessage message = new LocalizedMessage(sev, msgText, baseFile);
-					int start = sdRegion.getStartOffset(valueRegion);
-					int length = valueRegion.getTextLength();
-					int lineNo = sDoc.getLineOfOffset(start);
-					message.setLineNo(lineNo);
-					message.setOffset(start);
-					message.setLength(length);
-
-					reporter.addMessage(fMessageOriginator, message);
-				}
-			}
-
-			valueRegion = getAttributeValueRegion(sdRegion, JSP11Namespace.ATTR_NAME_PREFIX);
+			ITextRegion valueRegion = getAttributeValueRegion(sdRegion, JSP11Namespace.ATTR_NAME_PREFIX);
 			if (valueRegion == null)
 				return;
 
