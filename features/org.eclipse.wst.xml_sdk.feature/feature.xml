@@ -25,8 +25,8 @@
          id="org.eclipse.wst.xml_ui.feature.source"
          version="0.0.0"/>
 
-   <requires>
-      <import feature="org.eclipse.wst.xml_ui.feature" version="0.0.0"/>
-   </requires>
+   <includes
+         id="org.eclipse.wst.xml_ui.feature"
+         version="0.0.0"/>
 
 </feature>
