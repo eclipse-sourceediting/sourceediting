@@ -217,7 +217,7 @@ public abstract class ComponentDeployable extends ProjectModule {
 				addMembersToModuleFolder(mf, mr);
 			} else {
 				IFile f = (IFile) res[j].getUnderlyingResource();
-				if (!isFileInSourceContainer(f)) {
+				if (shouldAddComponentFile(f)) {
 					ModuleFile mf = new ModuleFile(f, f.getName(), path, f.getModificationStamp() + f.getLocalTimeStamp());
 					list.add(mf);
 				}
@@ -243,8 +243,16 @@ public abstract class ComponentDeployable extends ProjectModule {
 		}
 		return parent;
 	}
-	protected boolean isFileInSourceContainer(IFile file) {
-		return false;
+	
+	/**
+	 * This method is meant to be overridden by subclasses.  Return whether or not to add this file
+	 * to the members list.
+	 * 
+	 * @param file
+	 * @return boolean should add file?
+	 */
+	protected boolean shouldAddComponentFile(IFile file) {
+		return true;
 	}
 	
 	/**
