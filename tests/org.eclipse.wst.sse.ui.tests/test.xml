@@ -87,10 +87,10 @@
 		<ant
 			target="collect"
 			antfile="${library-file}"
-			dir="${eclipse-home}">
+			dir="${workspace}">
 			<property
 				name="includes"
-				value="${workspace}/.metadata/.log" />
+				value=".metadata/.log" />
 			<property
 				name="output-file"
 				value="${buildDirectory}/${buildLabel}/testResults/consolelogs/${plugin-name}.log" />
