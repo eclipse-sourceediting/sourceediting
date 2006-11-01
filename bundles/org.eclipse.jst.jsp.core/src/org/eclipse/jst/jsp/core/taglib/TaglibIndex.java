@@ -101,13 +101,14 @@ public final class TaglibIndex {
 							 * If the project is being deleted or closed, just
 							 * remove the description
 							 */
-							IJavaElement proj = element;
-							ProjectDescription description = (ProjectDescription) fProjectDescriptions.remove(((IJavaProject) proj).getProject());
+							IJavaProject proj = (IJavaProject)element;
+							ProjectDescription description = (ProjectDescription) fProjectDescriptions.remove(proj.getProject());
 							if (description != null) {
 								if (_debugIndexCreation) {
 									Logger.log(Logger.INFO, "removing index of " + description.fProject.getName()); //$NON-NLS-1$
 								}
-								description.clear();
+								// removing the index file ensures that we don't get stale data if the project is reopened
+								removeIndex(proj.getProject());
 							}
 						}
 					}
@@ -501,6 +502,16 @@ public final class TaglibIndex {
 			}
 		}
 		return result;
+	}
+
+	/**
+	 * Removes index file for the given project.
+	 */
+	private void removeIndex(IProject project) {
+		File indexFile = new File(computeIndexLocation(project.getFullPath()));
+		if (indexFile.exists()) {
+			indexFile.delete();
+		}
 	}
 
 	/**
