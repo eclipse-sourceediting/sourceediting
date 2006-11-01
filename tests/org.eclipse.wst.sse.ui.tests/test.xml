@@ -59,7 +59,8 @@
 				value="${eclipse-home}/plugins/${plugin-name}" />
 		</ant>
 
-	    <copy file="${workspace}.metadata/.log" tofile="${buildDirectory}/${buildLabel}/testResults/consolelogs/${plugin-name}.log" />
+	  <!--  <copy file="${workspace}.metadata/.log" tofile="${buildDirectory}/${buildLabel}/testResults/consolelogs/${plugin-name}.log" /> -->
+	    
 	</target>
 
 	<!-- This target holds code to cleanup the testing environment after -->
