@@ -84,17 +84,6 @@
 				name="output-file"
 				value="${plugin-name}.xml" />
 		</ant>
-		<ant
-			target="collect"
-			antfile="${library-file}"
-			dir="${workspace}">
-			<property
-				name="includes"
-				value=".metadata/.log" />
-			<property
-				name="output-file"
-				value="${buildDirectory}/${buildLabel}/testResults/consolelogs/${plugin-name}.log" />
-		</ant>
 	</target>
 
 </project>
