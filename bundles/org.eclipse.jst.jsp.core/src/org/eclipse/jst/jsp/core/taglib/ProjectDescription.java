@@ -11,13 +11,17 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.core.taglib;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.Reader;
 import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -38,8 +42,6 @@ import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
 import org.eclipse.core.filebuffers.FileBuffers;
-import org.eclipse.core.filebuffers.ITextFileBuffer;
-import org.eclipse.core.filebuffers.ITextFileBufferManager;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -53,7 +55,6 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jdt.core.IClasspathContainer;
@@ -499,7 +500,7 @@ class ProjectDescription {
 	private static final IPath WEB_INF_PATH = new Path(WEB_INF);
 	private static final String BUILDPATH_PROJECT = "BUILDPATH_PROJECT"; //$NON-NLS-1$
 	private static final String WEB_XML = "web.xml"; //$NON-NLS-1$
-	private static final String SAVE_FORMAT_VERSION = "Tag Library Index 1.0.1"; //$NON-NLS-1$
+	private static final String SAVE_FORMAT_VERSION = "Tag Library Index 1.0.2"; //$NON-NLS-1$
 	private static final String BUILDPATH_DIRTY = "BUILDPATH_DIRTY"; //$NON-NLS-1$
 
 	/*
@@ -781,6 +782,7 @@ class ProjectDescription {
 
 	private JarRecord createJARRecord(String fileLocation) {
 		JarRecord record = new JarRecord();
+		record.info = new TaglibInfo();
 		record.location = new Path(fileLocation);
 		record.urlRecords = new ArrayList(0);
 		return record;
@@ -1474,13 +1476,23 @@ class ProjectDescription {
 			boolean restored = false;
 			File savedState = new File(fSaveStateFilename);
 			if (savedState.exists()) {
-				ITextFileBufferManager textFileBufferManager = FileBuffers.getTextFileBufferManager();
-				Path savedStatePath = new Path(fSaveStateFilename);
+				Reader reader = null;
 				try {
 					time0 = System.currentTimeMillis();
-					textFileBufferManager.connect(savedStatePath, new NullProgressMonitor());
-					ITextFileBuffer buffer = textFileBufferManager.getTextFileBuffer(savedStatePath);
-					IDocument doc = buffer.getDocument();
+					reader = new InputStreamReader(new BufferedInputStream(new FileInputStream(savedState)), "UTF-16");
+					// use a string buffer temporarily to reduce string
+					// creation
+					StringBuffer buffer = new StringBuffer();
+					char array[] = new char[2048];
+					int charsRead = 0;
+					while ((charsRead = reader.read(array)) != -1) {
+						if (charsRead > 0) {
+							buffer.append(array, 0, charsRead);
+						}
+					}
+
+					IDocument doc = new org.eclipse.jface.text.Document();
+					doc.set(buffer.toString());
 					int lines = doc.getNumberOfLines();
 					if (lines > 0) {
 						IRegion line = doc.getLineInformation(0);
@@ -1489,7 +1501,7 @@ class ProjectDescription {
 						if (SAVE_FORMAT_VERSION.equals(lineText.trim())) {
 							IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
 
-							for (int i = 1; i < lines; i++) {
+							for (int i = 1; i < lines && !fBuildPathIsDirty; i++) {
 								line = doc.getLineInformation(i);
 								lineText = doc.get(line.getOffset(), line.getLength());
 								StringTokenizer toker = new StringTokenizer(lineText, "|"); //$NON-NLS-1$
@@ -1630,8 +1642,7 @@ class ProjectDescription {
 							restored = true;
 						}
 						else {
-							if (_debugIndexTime)
-								Logger.log(Logger.INFO, " version mismatch loading " + fProject.getName() + " build path: " + lineText); //$NON-NLS-1$ //$NON-NLS-2$
+							Logger.log(Logger.INFO, "Tag Library Index: different cache format found, was \"" + lineText + "\", supports \"" + SAVE_FORMAT_VERSION + "\", reindexing build path"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 						}
 					}
 					if (_debugIndexTime)
@@ -1643,11 +1654,12 @@ class ProjectDescription {
 						Logger.log(Logger.INFO, "failure reloading " + fProject.getName() + " build path index", e); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 				finally {
-					try {
-						textFileBufferManager.disconnect(savedStatePath, new NullProgressMonitor());
-					}
-					catch (CoreException e) {
-						Logger.logException(e);
+					if (reader != null) {
+						try {
+							reader.close();
+						}
+						catch (IOException e) {
+						}
 					}
 				}
 			}
@@ -1672,14 +1684,14 @@ class ProjectDescription {
 
 		/**
 		 * <pre>
-		 *                    		 1.0.1
-		 *                    		 Save classpath information (| is field delimiter)
-		 *                    		 Jars are saved as &quot;JAR:&quot;+ has11TLD + jar path 
-		 *                    		 URLRecords as &quot;URL:&quot;+URL
+		 *                     		 1.0.1
+		 *                     		 Save classpath information (| is field delimiter)
+		 *                     		 Jars are saved as &quot;JAR:&quot;+ has11TLD + jar path 
+		 *                     		 URLRecords as &quot;URL:&quot;+URL
 		 * </pre>
 		 */
 		try {
-			writer = new OutputStreamWriter(new FileOutputStream(fSaveStateFilename), "utf16"); //$NON-NLS-1$
+			writer = new OutputStreamWriter(new FileOutputStream(fSaveStateFilename), "UTF-16"); //$NON-NLS-1$
 			writer.write(SAVE_FORMAT_VERSION);
 			writer.write('\n'); //$NON-NLS-1$
 			writer.write(BUILDPATH_DIRTY + "|" + fBuildPathIsDirty); //$NON-NLS-1$
@@ -1976,9 +1988,11 @@ class ProjectDescription {
 						if (_debugIndexCreation)
 							Logger.log(Logger.INFO, "created web.xml record for " + taglibUri + "@" + tldRecord.getPath()); //$NON-NLS-1$ //$NON-NLS-2$
 					}
-					webxmlRecord.tldRecords.add(record);
-					getImplicitReferences(webxml.getFullPath().toString()).put(taglibUri, record);
-					TaglibIndex.fireTaglibRecordEvent(new TaglibRecordEvent(record, deltaKind));
+					if (record != null) {
+						webxmlRecord.tldRecords.add(record);
+						getImplicitReferences(webxml.getFullPath().toString()).put(taglibUri, record);
+						TaglibIndex.fireTaglibRecordEvent(new TaglibRecordEvent(record, deltaKind));
+					}
 				}
 			}
 		}
