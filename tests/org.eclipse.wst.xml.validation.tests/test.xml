@@ -1,96 +1,98 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 
 <project
-	name="testsuite"
-	default="run"
-	basedir=".">
+    name="testsuite"
+    default="run"
+    basedir=".">
+    <!-- The following properties should be passed into this script -->
+    <!-- ${eclipse-home}   -->
+    <!-- ${buildDirectory}  -->
+    <!-- ${buildLabel}        -->
 
-	<!-- Configurable Properties -->
+    <echo message="basedir ${basedir}" />
+    <echo message="eclipse place ${eclipse-home}" />
 
-	<!-- sets the properties eclipse-home, and library-file -->
-	<property
-		name="plugin-name"
-		value="org.eclipse.wst.xml.validation.tests" />
+    <!-- sets the properties plugin-name, and library-file -->
+    <property
+        name="plugin-name"
+        value="org.eclipse.wst.sse.ui.tests" />
+    <property
+        name="library-file"
+        value="${eclipse-home}/plugins/org.eclipse.test_3.1.0/library.xml" />
+    <property
+        name="workspace"
+        value="${eclipse-home}/junitworkspaces/${plugin-name}" />
+    <!-- This target holds all initialization code that needs to be done for -->
+    <!-- all tests that are to be run. Initialization for individual tests -->
+    <!-- should be done within the body of the suite target. -->
+    <target name="init">
+        <tstamp />
+        <delete>
+            <fileset
+                dir="${eclipse-home}"
+                includes="${plugin-name}.*xml" />
+        </delete>
+        <!-- make directory, in case path doesn't exist yet -->
+        <mkdir dir="${workspace}" />
+        <!--  but delete to make sure fresh contents-->
+        <delete
+            dir="${workspace}"
+            quiet="true" />
 
-	<!-- End Configurable Properties -->
+    </target>
 
-	<!-- The property ${eclipse-home} should be passed into this script -->
-	<!-- Set a meaningful default value for when it is not. -->
-	<property
-		name="eclipse-home"
-		value="${basedir}\..\.." />
-	<property
-		name="bvtworkspace"
-		value="${basedir}" />
-	<property
-		name="library-file"
-		value="${eclipse-home}/plugins/org.eclipse.test_3.1.0/library.xml" />
-	<property
-		name="workspace-folder"
-		value="${bvtworkspace}/${plugin-name}" />
+    <!-- This target defines the tests that need to be run. -->
+    <target name="suite">
 
-	<!-- This target holds all initialization code that needs to be done for -->
-	<!-- all tests that are to be run. Initialization for individual tests -->
-	<!-- should be done within the body of the suite target. -->
-	<target name="init">
-		<tstamp />
-		<delete>
-			<fileset
-				dir="${eclipse-home}"
-				includes="org.eclipse.wst.xml.validation.tests.*.xml" />
-		</delete>
-	</target>
+        <ant
+            target="ui-test"
+            antfile="${library-file}"
+            dir="${eclipse-home}">
+            <property
+                name="data-dir"
+                value="${workspace}" />
+            <property
+                name="plugin-name"
+                value="${plugin-name}" />
+            <property
+                name="classname"
+                value="org.eclipse.wst.sse.ui.tests.SSEUITestSuite" />
+            <property
+                name="plugin-path"
+                value="${eclipse-home}/plugins/${plugin-name}" />
+        </ant>
 
-	<!-- This target defines the tests that need to be run. -->
-	<target name="suite">
+        <copy
+            failonerror="false"
+            file="${workspace}/.metadata/.log"
+            tofile="${buildDirectory}/${buildLabel}/testResults/consolelogs/${plugin-name}.log" />
 
-		<!-- Start with clean data workspace -->
-		<delete
-			dir="${workspace-folder}"
-			quiet="true" />
+    </target>
 
-		<ant
-			target="core-test"
-			antfile="${library-file}"
-			dir="${eclipse-home}">
-			<property
-				name="data-dir"
-				value="${workspace-folder}" />
-			<property
-				name="plugin-name"
-				value="${plugin-name}" />
-			<property
-				name="classname"
-				value="org.eclipse.wst.xml.validation.tests.internal.AllXMLTests" />
-		</ant>
+    <!-- This target holds code to cleanup the testing environment after -->
+    <!-- after all of the tests have been run. You can use this target to -->
+    <!-- delete temporary files that have been created. -->
+    <target name="cleanup">
+        <!-- usually no need to delete workspace until next run, and leaving it allows inspection -->
+        <!--<delete dir="${workspace}" quiet="true"/>-->
+    </target>
 
-	</target>
-
-	<!-- This target holds code to cleanup the testing environment after -->
-	<!-- after all of the tests have been run. You can use this target to -->
-	<!-- delete temporary files that have been created. -->
-	<target name="cleanup">
-		<delete
-			dir="${workspace-folder}"
-			quiet="true" />
-	</target>
-
-	<!-- This target runs the test suite. Any actions that need to happen -->
-	<!-- after all the tests have been run should go here. -->
-	<target
-		name="run"
-		depends="init,suite,cleanup">
-		<ant
-			target="collect"
-			antfile="${library-file}"
-			dir="${eclipse-home}">
-			<property
-				name="includes"
-				value="org.eclipse.wst.xml.validation.tests*.xml" />
-			<property
-				name="output-file"
-				value="${plugin-name}.xml" />
-		</ant>
-	</target>
+    <!-- This target runs the test suite. Any actions that need to happen -->
+    <!-- after all the tests have been run should go here. -->
+    <target
+        name="run"
+        depends="init,suite,cleanup">
+        <ant
+            target="collect"
+            antfile="${library-file}"
+            dir="${eclipse-home}">
+            <property
+                name="includes"
+                value="${plugin-name}.*xml" />
+            <property
+                name="output-file"
+                value="${plugin-name}.xml" />
+        </ant>
+    </target>
 
 </project>
