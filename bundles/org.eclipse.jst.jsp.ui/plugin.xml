@@ -60,6 +60,62 @@
 			target="org.eclipse.jst.jsp.core.jspsource" />
 	</extension>
 
+	<!--======================================================================================-->
+	<!-- source validation for JSP															  -->
+	<!--======================================================================================-->
+	<extension point="org.eclipse.wst.sse.ui.sourcevalidation">
+		<validator
+			scope="total"
+			class="org.eclipse.jst.jsp.core.internal.validation.JSPJavaValidator"
+			id="org.eclipse.jst.jsp.jspsourcevalidator">
+			<contentTypeIdentifier
+				id="org.eclipse.jst.jsp.core.jspsource">
+				<partitionType id="org.eclipse.jst.jsp.DEFAULT_JSP">
+				</partitionType>
+				<partitionType id="org.eclipse.jst.jsp.SCRIPT.JAVA">
+				</partitionType>
+				<partitionType id="org.eclipse.jst.jsp.SCRIPT.DELIMITER">
+				</partitionType>
+				<partitionType id="org.eclipse.jst.jsp.JSP_DIRECTIVE">
+				</partitionType>
+			</contentTypeIdentifier>
+		</validator>
+	</extension>
+	<!--======================================================================================-->
+	<!-- source (as you type) validation for JSP EL					   						  -->
+	<!--======================================================================================-->
+	<extension point="org.eclipse.wst.sse.ui.sourcevalidation">
+		<validator
+			scope="total"
+			class="org.eclipse.jst.jsp.core.internal.validation.JSPELValidator"
+			id="org.eclipse.jst.jsp.jspelsourcevalidator">
+			<contentTypeIdentifier
+				id="org.eclipse.jst.jsp.core.jspsource">
+				<partitionType id="org.eclipse.jst.jsp.SCRIPT.JSP_EL">
+				</partitionType>
+			</contentTypeIdentifier>
+		</validator>
+	</extension>
+	<!--======================================================================================-->
+	<!-- source (as you type) validation for JSP directive			   						  -->
+	<!--======================================================================================-->
+	<extension point="org.eclipse.wst.sse.ui.sourcevalidation">
+		<validator
+			scope="total"
+			class="org.eclipse.jst.jsp.core.internal.validation.JSPDirectiveValidator"
+			id="org.eclipse.jst.jsp.tldsourcevalidator">
+			<contentTypeIdentifier
+				id="org.eclipse.jst.jsp.core.jspsource">
+				<partitionType id="org.eclipse.jst.jsp.DEFAULT_JSP">
+				</partitionType>
+				<partitionType id="org.eclipse.jst.jsp.JSP_DIRECTIVE">
+				</partitionType>
+			</contentTypeIdentifier>
+		</validator>
+	</extension>
+	<!--======================================================================================-->
+	<!-- custom XML source (as you type) validation					   						  -->
+	<!--======================================================================================-->
 	<extension point="org.eclipse.wst.sse.ui.sourcevalidation">
 		<validator
 			scope="partial"
@@ -72,6 +128,11 @@
 				<partitionType id="org.eclipse.wst.sse.ST_DEFAULT"/>
 			</contentTypeIdentifier>
 		</validator>
+	</extension>
+	<!--======================================================================================-->
+	<!-- HTML (as you type) validation					   						  			  -->
+	<!--======================================================================================-->
+	<extension point="org.eclipse.wst.sse.ui.sourcevalidation">
 		<validator
 			scope="partial"
 			class="org.eclipse.wst.html.internal.validation.HTMLValidator"
@@ -86,6 +147,9 @@
 		</validator>
 	</extension>
 
+	<!--======================================================================================-->
+	<!-- JSP UI Adapter factories					   						  				  -->
+	<!--======================================================================================-->
 	<extension
 		point="org.eclipse.wst.sse.ui.adapterFactoryDescription">
 		<adapterFactoryDescription

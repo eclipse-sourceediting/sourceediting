@@ -137,49 +137,10 @@
 	</extension>
 
 	<!--======================================================================================-->
-	<!-- JSP EL batch validator				                                                  -->
-	<!--======================================================================================-->
-	<extension
-		id="JSPELValidator"
-		name="%EL_Syntax_Validator.name"
-		point="org.eclipse.wst.validation.validator">
-		<validator>
-			<projectNature id="org.eclipse.jdt.core.javanature" />
-			<filter
-				objectClass="org.eclipse.core.resources.IFile"
-				nameFilter="*.jsp">
-			</filter>
-			<filter
-				objectClass="org.eclipse.core.resources.IFile"
-				nameFilter="*.jspf">
-			</filter>
-			<filter
-				objectClass="org.eclipse.core.resources.IFile"
-				nameFilter="*.jsf">
-			</filter>
-			<filter
-				objectClass="org.eclipse.core.resources.IFile"
-				nameFilter="*.jsv">
-			</filter>
-			<filter
-				objectClass="org.eclipse.core.resources.IFile"
-				nameFilter="*.jtpl">
-			</filter>
-			<helper
-				class="org.eclipse.wst.validation.internal.operations.WorkbenchContext">
-			</helper>
-			<run
-				enabled="true"
-				class="org.eclipse.jst.jsp.core.internal.validation.JSPELValidator">
-			</run>
-		</validator>
-	</extension>
-
-	<!--======================================================================================-->
 	<!-- JSP batch validation                                       						  -->
 	<!--======================================================================================-->
 	<extension
-		id="JSPJavaValidator"
+		id="JSPBatchValidator"
 		name="%JSP_Syntax_Validator.name"
 		point="org.eclipse.wst.validation.validator">
 		<validator>
@@ -205,107 +166,17 @@
 				objectClass="org.eclipse.core.resources.IFile"
 				nameFilter="*.jtpl">
 			</filter>
-			<helper
-				class="org.eclipse.wst.validation.internal.operations.WorkbenchContext">
-			</helper>
-			<run
-				enabled="true"
-				class="org.eclipse.jst.jsp.core.internal.validation.JSPJavaValidator">
-			</run>
-		</validator>
-	</extension>
-	
-	<!--======================================================================================-->
-	<!-- JSP directive batch validation                                						  -->
-	<!--======================================================================================-->
-	<extension
-		id="JSPDirectiveValidator"
-		name="%JSP_Directive_Validator.name"
-		point="org.eclipse.wst.validation.validator">
-		<validator>
-			<projectNature id="org.eclipse.jdt.core.javanature" />
 
-			<filter
-				objectClass="org.eclipse.core.resources.IFile"
-				nameFilter="*.jsp">
-			</filter>
-			<filter
-				objectClass="org.eclipse.core.resources.IFile"
-				nameFilter="*.jspf">
-			</filter>
-			<filter
-				objectClass="org.eclipse.core.resources.IFile"
-				nameFilter="*.jsf">
-			</filter>
-			<filter
-				objectClass="org.eclipse.core.resources.IFile"
-				nameFilter="*.jsv">
-			</filter>
-			<filter
-				objectClass="org.eclipse.core.resources.IFile"
-				nameFilter="*.jtpl">
-			</filter>
+			<enablement/>
+
 			<helper
 				class="org.eclipse.wst.validation.internal.operations.WorkbenchContext">
 			</helper>
+
 			<run
 				enabled="true"
-				class="org.eclipse.jst.jsp.core.internal.validation.JSPDirectiveValidator">
+				class="org.eclipse.jst.jsp.core.internal.validation.JSPBatchValidator">
 			</run>
-		</validator>
-	</extension>
-	
-	<!--======================================================================================-->
-	<!-- source (as you type) validation for JSP Java				   						  -->
-	<!--======================================================================================-->
-	<extension point="org.eclipse.wst.sse.ui.sourcevalidation">
-		<validator
-			scope="total"
-			class="org.eclipse.jst.jsp.core.internal.validation.JSPJavaValidator"
-			id="org.eclipse.jst.jsp.jspsourcevalidator">
-			<contentTypeIdentifier
-				id="org.eclipse.jst.jsp.core.jspsource">
-				<partitionType id="org.eclipse.jst.jsp.DEFAULT_JSP">
-				</partitionType>
-				<partitionType id="org.eclipse.jst.jsp.SCRIPT.JAVA">
-				</partitionType>
-				<partitionType id="org.eclipse.jst.jsp.SCRIPT.DELIMITER">
-				</partitionType>
-				<partitionType id="org.eclipse.jst.jsp.JSP_DIRECTIVE">
-				</partitionType>
-			</contentTypeIdentifier>
-		</validator>
-	</extension>
-	<!--======================================================================================-->
-	<!-- source validation for JSP EL				   										  -->
-	<!--======================================================================================-->
-	<extension point="org.eclipse.wst.sse.ui.sourcevalidation">
-		<validator
-			scope="total"
-			class="org.eclipse.jst.jsp.core.internal.validation.JSPELValidator"
-			id="org.eclipse.jst.jsp.jspelsourcevalidator">
-			<contentTypeIdentifier
-				id="org.eclipse.jst.jsp.core.jspsource">
-				<partitionType id="org.eclipse.jst.jsp.SCRIPT.JSP_EL">
-				</partitionType>
-			</contentTypeIdentifier>
-		</validator>
-	</extension>
-	<!--======================================================================================-->
-	<!-- source (as you type) validation for JSP directive			   						  -->
-	<!--======================================================================================-->
-	<extension point="org.eclipse.wst.sse.ui.sourcevalidation">
-		<validator
-			scope="total"
-			class="org.eclipse.jst.jsp.core.internal.validation.JSPDirectiveValidator"
-			id="org.eclipse.jst.jsp.tldsourcevalidator">
-			<contentTypeIdentifier
-				id="org.eclipse.jst.jsp.core.jspsource">
-				<partitionType id="org.eclipse.jst.jsp.DEFAULT_JSP">
-				</partitionType>
-				<partitionType id="org.eclipse.jst.jsp.JSP_DIRECTIVE">
-				</partitionType>
-			</contentTypeIdentifier>
 		</validator>
 	</extension>
 	

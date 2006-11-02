@@ -12,13 +12,13 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.core.internal.validation;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jst.jsp.core.internal.JSPCoreMessages;
 import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.provisional.JSP11Namespace;
@@ -36,36 +36,50 @@ import org.eclipse.wst.validation.internal.core.ValidationException;
 import org.eclipse.wst.validation.internal.provisional.core.IMessage;
 import org.eclipse.wst.validation.internal.provisional.core.IReporter;
 import org.eclipse.wst.validation.internal.provisional.core.IValidationContext;
+import org.eclipse.wst.validation.internal.provisional.core.IValidator;
+
+import com.ibm.icu.text.Collator;
 
 /**
  * Checks for: - duplicate taglib prefix values and reserved taglib prefix
  * values in the same file
- * 
  */
 public class JSPDirectiveValidator extends JSPValidator {
+	private static Collator collator = Collator.getInstance(Locale.US);
+
+	private static final boolean DEBUG = Boolean.valueOf(Platform.getDebugOption("org.eclipse.jst.jsp.core/debug/jspvalidator")).booleanValue(); //$NON-NLS-1$
+	private IValidator fMessageOriginator;
+	private HashMap fPrefixValueRegionToDocumentRegionMap = new HashMap();
 
 	private HashMap fReservedPrefixes = new HashMap();
+	private int fSeverityIncludeMissingFile = IMessage.NORMAL_SEVERITY;
+	private int fSeverityTaglibDuplicatePrefixWithDifferentURIs = IMessage.HIGH_SEVERITY;
+	private int fSeverityTaglibDuplicatePrefixWithSameURIs = IMessage.NORMAL_SEVERITY;
+	private int fSeverityTaglibMissingPrefix = IMessage.HIGH_SEVERITY;
+	private int fSeverityTaglibMissingURI = IMessage.HIGH_SEVERITY;
+	private int fSeverityTaglibUnresolvableURI = IMessage.HIGH_SEVERITY;
+
 	private HashMap fTaglibPrefixesInUse = new HashMap();
-	private HashMap fTextRegionToDocumentRegionMap = new HashMap();
+	private final int NO_SEVERITY = -1;
 
 	public JSPDirectiveValidator() {
-		fReservedPrefixes.put("jsp", ""); //$NON-NLS-1$ //$NON-NLS-2$
-		fReservedPrefixes.put("jspx", ""); //$NON-NLS-1$ //$NON-NLS-2$
-		fReservedPrefixes.put("java", ""); //$NON-NLS-1$ //$NON-NLS-2$
-		fReservedPrefixes.put("javax", ""); //$NON-NLS-1$ //$NON-NLS-2$ 
-		fReservedPrefixes.put("servlet", ""); //$NON-NLS-1$ //$NON-NLS-2$ 
-		fReservedPrefixes.put("sun", ""); //$NON-NLS-1$ //$NON-NLS-2$ 
-		fReservedPrefixes.put("sunw", ""); //$NON-NLS-1$ //$NON-NLS-2$ 
+		initReservedPrefixes();
+		fMessageOriginator = this;
+	}
+
+	public JSPDirectiveValidator(IValidator validator) {
+		initReservedPrefixes();
+		this.fMessageOriginator = validator;
 	}
 
 	public void cleanup(IReporter reporter) {
 		super.cleanup(reporter);
 		fTaglibPrefixesInUse.clear();
-		fTextRegionToDocumentRegionMap.clear();
+		fPrefixValueRegionToDocumentRegionMap.clear();
 	}
 
-	private void collectPrefix(IStructuredDocumentRegion documentRegion, ITextRegion valueRegion, String taglibPrefix) {
-		fTextRegionToDocumentRegionMap.put(valueRegion, documentRegion);
+	private void collectTaglibPrefix(IStructuredDocumentRegion documentRegion, ITextRegion valueRegion, String taglibPrefix) {
+		fPrefixValueRegionToDocumentRegionMap.put(valueRegion, documentRegion);
 
 		Object o = fTaglibPrefixesInUse.get(taglibPrefix);
 		if (o == null) {
@@ -91,81 +105,242 @@ public class JSPDirectiveValidator extends JSPValidator {
 		}
 	}
 
-	private boolean isReservedPrefix(String name) {
+	private void initReservedPrefixes() {
+		fReservedPrefixes.put("jsp", ""); //$NON-NLS-1$ //$NON-NLS-2$
+		fReservedPrefixes.put("jspx", ""); //$NON-NLS-1$ //$NON-NLS-2$
+		fReservedPrefixes.put("java", ""); //$NON-NLS-1$ //$NON-NLS-2$
+		fReservedPrefixes.put("javax", ""); //$NON-NLS-1$ //$NON-NLS-2$ 
+		fReservedPrefixes.put("servlet", ""); //$NON-NLS-1$ //$NON-NLS-2$ 
+		fReservedPrefixes.put("sun", ""); //$NON-NLS-1$ //$NON-NLS-2$ 
+		fReservedPrefixes.put("sunw", ""); //$NON-NLS-1$ //$NON-NLS-2$ 
+	}
+
+	private boolean isReservedTaglibPrefix(String name) {
 		return fReservedPrefixes.get(name) != null;
+	}
+
+	protected void performValidation(IFile f, IReporter reporter, IStructuredDocument sDoc) {
+		/*
+		 * when validating an entire file need to clear dupes or else you're
+		 * comparing between files
+		 */
+		fPrefixValueRegionToDocumentRegionMap.clear();
+		fTaglibPrefixesInUse.clear();
+
+		// iterate all document regions
+		IStructuredDocumentRegion region = sDoc.getFirstStructuredDocumentRegion();
+		while (region != null && !reporter.isCancelled()) {
+			// only checking directives
+			if (region.getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_NAME) {
+				processDirective(reporter, f, sDoc, region);
+			}
+			region = region.getNext();
+		}
+
+		if (!reporter.isCancelled()) {
+			reportTaglibDuplicatePrefixes(f, reporter, sDoc);
+		}
+
+		fPrefixValueRegionToDocumentRegionMap.clear();
+		fTaglibPrefixesInUse.clear();
 	}
 
 	private void processDirective(IReporter reporter, IFile file, IStructuredDocument sDoc, IStructuredDocumentRegion documentRegion) {
 		String directiveName = getDirectiveName(documentRegion);
 		// we only care about taglib directive
 		if (directiveName.equals("taglib")) { //$NON-NLS-1$
-			ITextRegion valueRegion = null;
-			if (file != null) {
-				valueRegion = getAttributeValueRegion(documentRegion, JSP11Namespace.ATTR_NAME_URI);
-				String uri = documentRegion.getText(valueRegion);
-				uri = StringUtils.stripQuotes(uri);
-				ITaglibRecord tld = TaglibIndex.resolve(file.getFullPath().toString(), uri, false);
-				if (tld == null) {
-					String msgText = NLS.bind(JSPCoreMessages.JSPDirectiveValidator_1, uri);
-					int sev = IMessage.HIGH_SEVERITY;
-					LocalizedMessage message = new LocalizedMessage(sev, msgText, file);
-					int start = documentRegion.getStartOffset(valueRegion);
-					int length = valueRegion.getTextLength();
-					int lineNo = sDoc.getLineOfOffset(start);
-					message.setLineNo(lineNo);
-					message.setOffset(start);
-					message.setLength(length);
+			processTaglibDirective(reporter, file, sDoc, documentRegion);
+		}
+		else if (directiveName.equals("include")) { //$NON-NLS-1$
+			processIncludeDirective(reporter, file, sDoc, documentRegion);
+		}
+		// else if (directiveName.equals("page")) { //$NON-NLS-1$
+		// }
+	}
 
-					reporter.addMessage(this, message);
-				}
-			}
-			
-			valueRegion = getAttributeValueRegion(documentRegion, JSP11Namespace.ATTR_NAME_PREFIX);
-			if (valueRegion == null)
-				return;
+	private void processIncludeDirective(IReporter reporter, IFile file, IStructuredDocument sDoc, IStructuredDocumentRegion documentRegion) {
+		ITextRegion fileValueRegion = getAttributeValueRegion(documentRegion, JSP11Namespace.ATTR_NAME_FILE);
+		if (fileValueRegion != null) {
+			// file specified
+			String fileValue = documentRegion.getText(fileValueRegion);
+			fileValue = StringUtils.stripQuotes(fileValue);
 
-			String taglibPrefix = documentRegion.getText(valueRegion);
-			taglibPrefix = StringUtils.stripQuotes(taglibPrefix);
-
-			collectPrefix(documentRegion, valueRegion, taglibPrefix);
-
-			// check for the use of reserved prefixes
-			if (isReservedPrefix(taglibPrefix)) {
-				String msgText = JSPCoreMessages.JSPDirectiveValidator_0 + taglibPrefix + "'"; //$NON-NLS-2$ //$NON-NLS-1$
-				int sev = IMessage.HIGH_SEVERITY;
-				LocalizedMessage message = (file == null ? new LocalizedMessage(sev, msgText) : new LocalizedMessage(sev, msgText, file));
-				int start = documentRegion.getStartOffset(valueRegion);
-				int length = valueRegion.getTextLength();
+			if (fileValue.length() == 0 && fSeverityIncludeMissingFile != NO_SEVERITY) {
+				// prefix is specified but empty
+				String msgText = NLS.bind(JSPCoreMessages.JSPDirectiveValidator_3, JSP11Namespace.ATTR_NAME_FILE);
+				LocalizedMessage message = new LocalizedMessage(fSeverityIncludeMissingFile, msgText, file);
+				int start = documentRegion.getStartOffset(fileValueRegion);
+				int length = fileValueRegion.getTextLength();
 				int lineNo = sDoc.getLineOfOffset(start);
 				message.setLineNo(lineNo);
 				message.setOffset(start);
 				message.setLength(length);
 
-				reporter.addMessage(this, message);
+				reporter.addMessage(fMessageOriginator, message);
 			}
+		}
+		else if (fSeverityIncludeMissingFile != NO_SEVERITY) {
+			// file is not specified at all
+			String msgText = NLS.bind(JSPCoreMessages.JSPDirectiveValidator_3, JSP11Namespace.ATTR_NAME_FILE);
+			LocalizedMessage message = new LocalizedMessage(fSeverityIncludeMissingFile, msgText, file);
+			int start = documentRegion.getStartOffset();
+			int length = documentRegion.getTextLength();
+			int lineNo = sDoc.getLineOfOffset(start);
+			message.setLineNo(lineNo);
+			message.setOffset(start);
+			message.setLength(length);
+
+			reporter.addMessage(fMessageOriginator, message);
 		}
 	}
 
-	private void reportDuplicatePrefixes(IFile file, IReporter reporter, IStructuredDocument document) {
+	private void processTaglibDirective(IReporter reporter, IFile file, IStructuredDocument sDoc, IStructuredDocumentRegion documentRegion) {
+		ITextRegion prefixValueRegion = null;
+		ITextRegion uriValueRegion = getAttributeValueRegion(documentRegion, JSP11Namespace.ATTR_NAME_URI);
+		if (uriValueRegion != null) {
+			// URI is specified
+			String uri = documentRegion.getText(uriValueRegion);
+
+			if (file != null) {
+				uri = StringUtils.stripQuotes(uri);
+				if (uri.length() > 0) {
+					ITaglibRecord tld = TaglibIndex.resolve(file.getFullPath().toString(), uri, false);
+					if (tld == null && fSeverityTaglibUnresolvableURI != NO_SEVERITY) {
+						// URI specified but does not resolve
+						String msgText = NLS.bind(JSPCoreMessages.JSPDirectiveValidator_1, uri);
+						int sev = IMessage.HIGH_SEVERITY;
+						LocalizedMessage message = new LocalizedMessage(sev, msgText, file);
+						int start = documentRegion.getStartOffset(uriValueRegion);
+						int length = uriValueRegion.getTextLength();
+						int lineNo = sDoc.getLineOfOffset(start);
+						message.setLineNo(lineNo);
+						message.setOffset(start);
+						message.setLength(length);
+
+						reporter.addMessage(fMessageOriginator, message);
+					}
+				}
+				else if (fSeverityTaglibMissingURI != NO_SEVERITY) {
+					// URI specified but empty string
+					String msgText = NLS.bind(JSPCoreMessages.JSPDirectiveValidator_3, JSP11Namespace.ATTR_NAME_URI);
+					int sev = IMessage.HIGH_SEVERITY;
+					LocalizedMessage message = new LocalizedMessage(sev, msgText, file);
+					int start = documentRegion.getStartOffset(uriValueRegion);
+					int length = uriValueRegion.getTextLength();
+					int lineNo = sDoc.getLineOfOffset(start);
+					message.setLineNo(lineNo);
+					message.setOffset(start);
+					message.setLength(length);
+
+					reporter.addMessage(fMessageOriginator, message);
+				}
+			}
+		}
+		else if (fSeverityTaglibMissingURI != NO_SEVERITY) {
+			// URI not specified or empty string
+			String msgText = NLS.bind(JSPCoreMessages.JSPDirectiveValidator_3, JSP11Namespace.ATTR_NAME_URI);
+			int sev = IMessage.HIGH_SEVERITY;
+			LocalizedMessage message = new LocalizedMessage(sev, msgText, file);
+			int start = documentRegion.getStartOffset();
+			int length = documentRegion.getTextLength();
+			int lineNo = sDoc.getLineOfOffset(start);
+			message.setLineNo(lineNo);
+			message.setOffset(start);
+			message.setLength(length);
+
+			reporter.addMessage(fMessageOriginator, message);
+		}
+
+		prefixValueRegion = getAttributeValueRegion(documentRegion, JSP11Namespace.ATTR_NAME_PREFIX);
+		if (prefixValueRegion != null) {
+			// prefix specified
+			String taglibPrefix = documentRegion.getText(prefixValueRegion);
+			taglibPrefix = StringUtils.stripQuotes(taglibPrefix);
+
+			collectTaglibPrefix(documentRegion, prefixValueRegion, taglibPrefix);
+
+			if (isReservedTaglibPrefix(taglibPrefix)) {
+				// prefix is a reserved prefix
+				String msgText = NLS.bind(JSPCoreMessages.JSPDirectiveValidator_0, taglibPrefix);
+				int sev = IMessage.HIGH_SEVERITY;
+				LocalizedMessage message = (file == null ? new LocalizedMessage(sev, msgText) : new LocalizedMessage(sev, msgText, file));
+				int start = documentRegion.getStartOffset(prefixValueRegion);
+				int length = prefixValueRegion.getTextLength();
+				int lineNo = sDoc.getLineOfOffset(start);
+				message.setLineNo(lineNo);
+				message.setOffset(start);
+				message.setLength(length);
+
+				reporter.addMessage(fMessageOriginator, message);
+			}
+			if (taglibPrefix.length() == 0 && fSeverityTaglibMissingPrefix != NO_SEVERITY) {
+				// prefix is specified but empty
+				String msgText = NLS.bind(JSPCoreMessages.JSPDirectiveValidator_3, JSP11Namespace.ATTR_NAME_PREFIX);
+				LocalizedMessage message = new LocalizedMessage(fSeverityTaglibMissingPrefix, msgText, file);
+				int start = documentRegion.getStartOffset(prefixValueRegion);
+				int length = prefixValueRegion.getTextLength();
+				int lineNo = sDoc.getLineOfOffset(start);
+				message.setLineNo(lineNo);
+				message.setOffset(start);
+				message.setLength(length);
+
+				reporter.addMessage(fMessageOriginator, message);
+			}
+		}
+		else if (fSeverityTaglibMissingPrefix != NO_SEVERITY) {
+			// prefix is not specified
+			String msgText = NLS.bind(JSPCoreMessages.JSPDirectiveValidator_3, JSP11Namespace.ATTR_NAME_PREFIX);
+			LocalizedMessage message = new LocalizedMessage(fSeverityTaglibMissingPrefix, msgText, file);
+			int start = documentRegion.getStartOffset();
+			int length = documentRegion.getTextLength();
+			int lineNo = sDoc.getLineOfOffset(start);
+			message.setLineNo(lineNo);
+			message.setOffset(start);
+			message.setLength(length);
+
+			reporter.addMessage(fMessageOriginator, message);
+		}
+	}
+
+	private void reportTaglibDuplicatePrefixes(IFile file, IReporter reporter, IStructuredDocument document) {
+		if (fSeverityTaglibDuplicatePrefixWithDifferentURIs == NO_SEVERITY && fSeverityTaglibDuplicatePrefixWithSameURIs == NO_SEVERITY)
+			return;
+
 		String[] prefixes = (String[]) fTaglibPrefixesInUse.keySet().toArray(new String[0]);
 		for (int prefixNumber = 0; prefixNumber < prefixes.length; prefixNumber++) {
+			int severity = fSeverityTaglibDuplicatePrefixWithSameURIs;
+
 			Object o = fTaglibPrefixesInUse.get(prefixes[prefixNumber]);
 			/*
 			 * Only care if it's a List (because there was more than one
-			 * directive with that prefix)
+			 * directive with that prefix) and if we're supposed to report
+			 * duplicates
 			 */
 			if (o instanceof List) {
 				List valueRegions = (List) o;
+				String uri = null;
+				for (int regionNumber = 0; regionNumber < valueRegions.size(); regionNumber++) {
+					IStructuredDocumentRegion documentRegion = (IStructuredDocumentRegion) fPrefixValueRegionToDocumentRegionMap.get(valueRegions.get(regionNumber));
+					ITextRegion uriValueRegion = getAttributeValueRegion(documentRegion, JSP11Namespace.ATTR_NAME_URI);
+					String uri2 = StringUtils.stripQuotes(documentRegion.getText(uriValueRegion));
+					if (uri == null) {
+						uri = uri2;
+					}
+					else {
+						if (collator.compare(uri, uri2) != 0) {
+							severity = fSeverityTaglibDuplicatePrefixWithDifferentURIs;
+						}
+					}
+				}
 
-				int sev = IMessage.HIGH_SEVERITY;
-				String msgText = JSPCoreMessages.JSPDirectiveValidator_2 + prefixes[prefixNumber] + "'"; //$NON-NLS-2$ //$NON-NLS-1$
+				String msgText = NLS.bind(JSPCoreMessages.JSPDirectiveValidator_2, prefixes[prefixNumber]); //$NON-NLS-2$ //$NON-NLS-1$
 
 				// Report an error in all directives using this prefix
 				for (int regionNumber = 0; regionNumber < valueRegions.size(); regionNumber++) {
+
 					ITextRegion valueRegion = (ITextRegion) valueRegions.get(regionNumber);
-					IStructuredDocumentRegion documentRegion = (IStructuredDocumentRegion) fTextRegionToDocumentRegionMap.get(valueRegion);
-					LocalizedMessage message = (file == null ? new LocalizedMessage(sev, msgText) : new LocalizedMessage(sev, msgText, file));
-					message = (file == null ? new LocalizedMessage(sev, msgText) : new LocalizedMessage(sev, msgText, file));
+					IStructuredDocumentRegion documentRegion = (IStructuredDocumentRegion) fPrefixValueRegionToDocumentRegionMap.get(valueRegion);
+					LocalizedMessage message = (file == null ? new LocalizedMessage(severity, msgText) : new LocalizedMessage(severity, msgText, file));
 
 					// if there's a message, there was an error found
 					if (message != null) {
@@ -176,13 +351,13 @@ public class JSPDirectiveValidator extends JSPValidator {
 						message.setOffset(start);
 						message.setLength(length);
 
-						reporter.addMessage(this, message);
+						reporter.addMessage(fMessageOriginator, message);
 					}
 				}
 			}
 		}
 	}
-	
+
 	public void validate(IValidationContext helper, IReporter reporter) throws ValidationException {
 		reporter.removeAllMessages(this);
 		super.validate(helper, reporter);
@@ -192,38 +367,18 @@ public class JSPDirectiveValidator extends JSPValidator {
 	 * batch validation call
 	 */
 	protected void validateFile(IFile f, IReporter reporter) {
-		/*
-		 * when validating an entire file (or multiple files), need to clear
-		 * dupes or else you're comparing between files
-		 */
-		fTaglibPrefixesInUse.clear();
-		fTextRegionToDocumentRegionMap.clear();
+		if (DEBUG) {
+			Logger.log(Logger.INFO, getClass().getName() + " validating: " + f); //$NON-NLS-1$
+		}
 
-		// for batch validation
 		IStructuredModel sModel = null;
 		try {
 			sModel = StructuredModelManager.getModelManager().getModelForRead(f);
-			if (sModel != null) {
-				IStructuredDocument structuredDocument = sModel.getStructuredDocument();
-				// iterate all document regions
-				IStructuredDocumentRegion region = structuredDocument.getFirstStructuredDocumentRegion();
-				while (region != null && !reporter.isCancelled()) {
-					// only checking directives
-					if (region.getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_NAME) {
-						processDirective(reporter, f, structuredDocument, region);
-					}
-					region = region.getNext();
-				}
-
-				if (!reporter.isCancelled()) {
-					reportDuplicatePrefixes(f, reporter, structuredDocument);
-				}
+			if (sModel != null && !reporter.isCancelled()) {
+				performValidation(f, reporter, sModel.getStructuredDocument());
 			}
 		}
-		catch (IOException e) {
-			Logger.logException(e);
-		}
-		catch (CoreException e) {
+		catch (Exception e) {
 			Logger.logException(e);
 		}
 		finally {

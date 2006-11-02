@@ -23,7 +23,7 @@ public class JSPCoreMessages extends NLS {
 	public static String JSPDirectiveValidator_0;
 	public static String JSPDirectiveValidator_1;
 	public static String JSPDirectiveValidator_2;
-	public static String MESSAGE_JSP_VALIDATING_MESSAGE_UI_;
+	public static String JSPDirectiveValidator_3;
 	public static String JSPIndexManager_0;
 	public static String JSPIndexManager_2;
 	public static String JSP_Search;
@@ -32,6 +32,12 @@ public class JSPCoreMessages extends NLS {
 	public static String JSPDocumentLoader_1;
 	public static String JSPFContentPropertiesManager_Updating;
 	public static String JSPFContentPropertiesManager_Problems_Updating;
+	public static String JSPBatchValidator_0;
+	
+	/**
+	 * @deprecated
+	 */
+	public static String MESSAGE_JSP_VALIDATING_MESSAGE_UI_;
 	
 	private JSPCoreMessages() {
 	}

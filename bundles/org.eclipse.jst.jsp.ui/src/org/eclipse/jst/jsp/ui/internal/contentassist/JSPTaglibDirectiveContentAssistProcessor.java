@@ -232,7 +232,7 @@ public class JSPTaglibDirectiveContentAssistProcessor extends JSPDummyContentAss
 				Object prefixes[] = prefixMap.keySet().toArray();
 				for (int j = 0; j < prefixes.length; j++) {
 					String prefix = (String) prefixes[j];
-					ITaglibDescriptor descriptor = (ITaglibDescriptor) prefixMap.get(uri);
+					ITaglibDescriptor descriptor = (ITaglibDescriptor) prefixMap.get(prefix);
 					CustomCompletionProposal proposal = new CustomCompletionProposal(prefix, start, length, prefix.length(), null, prefix, null, descriptor.getDescription(), IRelevanceConstants.R_NONE);
 					contentAssistRequest.addProposal(proposal);
 				}
