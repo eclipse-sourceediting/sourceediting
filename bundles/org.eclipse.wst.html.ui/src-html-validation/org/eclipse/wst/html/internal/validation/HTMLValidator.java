@@ -12,6 +12,8 @@ package org.eclipse.wst.html.internal.validation;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.core.filebuffers.ITextFileBuffer;
 import org.eclipse.core.resources.IContainer;
@@ -20,7 +22,8 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
@@ -33,9 +36,8 @@ import org.eclipse.core.runtime.content.IContentTypeManager;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
-import org.eclipse.osgi.util.NLS;
+import org.eclipse.wst.html.core.internal.document.HTMLDocumentTypeConstants;
 import org.eclipse.wst.html.core.internal.validate.HTMLValidationAdapterFactory;
-import org.eclipse.wst.html.ui.internal.HTMLUIMessages;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.FileBufferModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
@@ -47,6 +49,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.util.URIResolver;
 import org.eclipse.wst.sse.core.internal.validate.ValidationAdapter;
+import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.sse.ui.internal.reconcile.validator.ISourceValidator;
 import org.eclipse.wst.validation.internal.core.Message;
 import org.eclipse.wst.validation.internal.core.ValidationException;
@@ -61,7 +64,7 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.w3c.dom.Text;
 
-public class HTMLValidator implements IValidatorJob, ISourceValidator {
+public class HTMLValidator implements IValidatorJob, ISourceValidator, IExecutableExtension {
 	private static final String ORG_ECLIPSE_JST_JSP_CORE_JSPSOURCE = "org.eclipse.jst.jsp.core.jspsource"; //$NON-NLS-1$
 	private static final String ORG_ECLIPSE_WST_HTML_CORE_HTMLSOURCE = "org.eclipse.wst.html.core.htmlsource"; //$NON-NLS-1$
 
@@ -78,9 +81,16 @@ public class HTMLValidator implements IValidatorJob, ISourceValidator {
 	}
 
 	private IDocument fDocument;
+	private IContentTypeManager fContentTypeManager;
+	private IContentType[] fOtherSupportedContentTypes = null;
+	private String[] fAdditionalContentTypesIDs = null;
+	private IContentType fHTMLContentType;
+	private IContentType fJSPContentType;
 
 	public HTMLValidator() {
 		super();
+		fContentTypeManager = Platform.getContentTypeManager();
+		fHTMLContentType = fContentTypeManager.getContentType(ORG_ECLIPSE_WST_HTML_CORE_HTMLSOURCE);
 	}
 
 	/**
@@ -88,6 +98,33 @@ public class HTMLValidator implements IValidatorJob, ISourceValidator {
 	public void cleanup(IReporter reporter) {
 		// nothing to do
 	}
+
+	/**
+	 * Gets list of content types this validator is interested in
+	 * 
+	 * @return All HTML-related content types
+	 */
+	private IContentType[] getOtherSupportedContentTypes() {
+		if (fOtherSupportedContentTypes == null) {
+			List contentTypes = new ArrayList(3);
+			fJSPContentType = Platform.getContentTypeManager().getContentType(ORG_ECLIPSE_JST_JSP_CORE_JSPSOURCE);
+			// might be absent depending on the installation
+			if (fJSPContentType != null) {
+				contentTypes.add(fJSPContentType);
+			}
+			if (fAdditionalContentTypesIDs != null) {
+				for (int i = 0; i < fAdditionalContentTypesIDs.length; i++) {
+					IContentType type = Platform.getContentTypeManager().getContentType(fAdditionalContentTypesIDs[i]);
+					if (type != null) {
+						contentTypes.add(type);
+					}
+				}
+			}
+			fOtherSupportedContentTypes = (IContentType[]) contentTypes.toArray(new IContentType[contentTypes.size()]);
+		}
+		return fOtherSupportedContentTypes;
+	}
+
 
 	/**
 	 */
@@ -142,30 +179,21 @@ public class HTMLValidator implements IValidatorJob, ISourceValidator {
 		boolean result = false;
 		if (file != null) {
 			try {
-				IContentTypeManager contentTypeManager = Platform.getContentTypeManager();
-
 				IContentDescription contentDescription = file.getContentDescription();
-				IContentType htmlContentType = contentTypeManager.getContentType(ORG_ECLIPSE_WST_HTML_CORE_HTMLSOURCE);
 				if (contentDescription != null) {
 					IContentType fileContentType = contentDescription.getContentType();
-
-					if (htmlContentType != null) {
-						if (fileContentType.isKindOf(htmlContentType)) {
-							result = true;
-						}
-						else {
-							// ISSUE: here's a little "backwards" dependancy.
-							// there should be a "JSPEMBEDDEDHTML validator"
-							// contributed by JSP plugin.
-							IContentType jspContentType = contentTypeManager.getContentType(ORG_ECLIPSE_JST_JSP_CORE_JSPSOURCE);
-							if (jspContentType != null) {
-								result = fileContentType.isKindOf(jspContentType);
-							}
+					if (fileContentType.isKindOf(fHTMLContentType)) {
+						result = true;
+					}
+					else {
+						IContentType[] otherTypes = getOtherSupportedContentTypes();
+						for (int i = 0; i < otherTypes.length; i++) {
+							result = result || fileContentType.isKindOf(otherTypes[i]);
 						}
 					}
 				}
-				else if (htmlContentType != null) {
-					result = htmlContentType.isAssociatedWith(file.getName());
+				else if (fHTMLContentType != null) {
+					result = fHTMLContentType.isAssociatedWith(file.getName());
 				}
 			}
 			catch (CoreException e) {
@@ -183,7 +211,7 @@ public class HTMLValidator implements IValidatorJob, ISourceValidator {
 		DocumentTypeAdapter adapter = (DocumentTypeAdapter) document.getAdapterFor(DocumentTypeAdapter.class);
 		if (adapter == null)
 			return false;
-		return adapter.hasFeature("HTML");//$NON-NLS-1$
+		return adapter.hasFeature(HTMLDocumentTypeConstants.HTML);
 	}
 
 	/**
@@ -274,15 +302,7 @@ public class HTMLValidator implements IValidatorJob, ISourceValidator {
 					rep.clear();
 					adapter.setReporter(rep);
 
-					String fileName = ""; //$NON-NLS-1$
-					IPath filePath = file.getFullPath();
-					if (filePath != null) {
-						fileName = filePath.toString();
-					}
-					String args[] = new String[]{fileName};
-
-					Message mess = new LocalizedMessage(IMessage.LOW_SEVERITY, NLS.bind(HTMLUIMessages.MESSAGE_HTML_VALIDATION_MESSAGE_UI_, args));
-					mess.setParams(args);
+					Message mess = new LocalizedMessage(IMessage.LOW_SEVERITY, file.getFullPath().toString().substring(1));
 					reporter.displaySubtask(this, mess);
 				}
 				adapter.validate(ir);
@@ -391,22 +411,6 @@ public class HTMLValidator implements IValidatorJob, ISourceValidator {
 		HTMLValidationReporter rep = getReporter(reporter, file, model);
 		rep.clear();
 		adapter.setReporter(rep);
-		if (reporter != null) {
-			String fileName = ""; //$NON-NLS-1$
-			IPath filePath = file.getFullPath();
-			if (filePath != null) {
-				fileName = filePath.toString();
-			}
-			String args[] = new String[]{fileName};
-
-			// Message mess = new Message("HTMLValidation", //$NON-NLS-1$
-			// SeverityEnum.LOW_SEVERITY,
-			// "MESSAGE_HTML_VALIDATION_MESSAGE_UI_", //$NON-NLS-1$
-			// args);
-			Message mess = new LocalizedMessage(IMessage.LOW_SEVERITY, NLS.bind(HTMLUIMessages.MESSAGE_HTML_VALIDATION_MESSAGE_UI_, args));
-			mess.setParams(args);
-			reporter.displaySubtask(this, mess);
-		}
 		adapter.validate(document);
 		return rep.getResult();
 	}
@@ -421,6 +425,8 @@ public class HTMLValidator implements IValidatorJob, ISourceValidator {
 				if (resource == null || reporter.isCancelled())
 					continue;
 				if (resource instanceof IFile) {
+					Message message = new LocalizedMessage(IMessage.LOW_SEVERITY, resource.getFullPath().toString().substring(1));
+					reporter.displaySubtask(this, message);
 					validateFile(helper, reporter, (IFile) resource);
 				}
 				else if (resource instanceof IContainer) {
@@ -440,6 +446,12 @@ public class HTMLValidator implements IValidatorJob, ISourceValidator {
 			String delta = deltaArray[i];
 			if (delta == null)
 				continue;
+
+			if (reporter != null) {
+				Message message = new LocalizedMessage(IMessage.LOW_SEVERITY, "" + (i+1) + "/" + deltaArray.length + " - " + delta.substring(1));
+				reporter.displaySubtask(this, message);
+			}
+
 			IResource resource = getResource(delta);
 			if (resource == null || !(resource instanceof IFile))
 				continue;
@@ -477,7 +489,7 @@ public class HTMLValidator implements IValidatorJob, ISourceValidator {
 			IWorkbenchContext wbHelper = (IWorkbenchContext) helper;
 			project = wbHelper.getProject();
 		}
-		else {
+		else if(fileDelta.length > 0){
 			// won't work for project validation (b/c nothing in file delta)
 			project = getResource(fileDelta[0]).getProject();
 		}
@@ -504,5 +516,18 @@ public class HTMLValidator implements IValidatorJob, ISourceValidator {
 		IStatus status = Status.OK_STATUS;
 		validate(helper, reporter);
 		return status;
+	}
+	
+	/**
+	 * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
+	 *      java.lang.String, java.lang.Object)
+	 */
+	public void setInitializationData(IConfigurationElement config, String propertyName, Object data) throws CoreException {
+		fAdditionalContentTypesIDs = new String[0];
+		if (data != null) {
+			if (data instanceof String && data.toString().length() > 0) {
+				fAdditionalContentTypesIDs = StringUtils.unpack(data.toString());
+			}
+		}
 	}
 }
