@@ -31,9 +31,6 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.QualifiedName;
-import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
@@ -85,7 +82,7 @@ public abstract class StructuredFileTaskScanner implements IFileTaskScanner {
 		attributes.put(IMarker.CHAR_START, new Integer(startOffset));
 		attributes.put(IMarker.CHAR_END, new Integer(startOffset + length));
 		attributes.put(IMarker.MESSAGE, text);
-		attributes.put(IMarker.USER_EDITABLE, Boolean.TRUE);
+		attributes.put(IMarker.USER_EDITABLE, Boolean.FALSE);
 		attributes.put("org.eclipse.ui.part.IShowInTarget", new String[]{""}); //$NON-NLS-1$ //$NON-NLS-2$
 
 		switch (priority) {
@@ -107,42 +104,11 @@ public abstract class StructuredFileTaskScanner implements IFileTaskScanner {
 
 	private String detectCharset(IFile file) {
 		if (file.getType() == IResource.FILE && file.isAccessible()) {
-			IContentDescription d = null;
 			try {
-				// optimized description lookup, might not succeed
-				d = file.getContentDescription();
-				if (d != null)
-					return d.getCharset();
-			}
-			catch (CoreException e) {
-				/*
-				 * should not be possible given the accessible and file type
-				 * check above
-				 */
-			}
-			InputStream contents = null;
-			try {
-				contents = file.getContents();
-				IContentDescription description = Platform.getContentTypeManager().getDescriptionFor(contents, file.getName(), new QualifiedName[]{IContentDescription.CHARSET});
-				if (description != null) {
-					return description.getCharset();
-				}
-			}
-			catch (IOException e) {
-				// will try to cleanup in finally
+				return file.getCharset(true);
 			}
 			catch (CoreException e) {
 				Logger.logException(e);
-			}
-			finally {
-				if (contents != null) {
-					try {
-						contents.close();
-					}
-					catch (Exception e) {
-						// not sure how to recover at this point
-					}
-				}
 			}
 		}
 		return ResourcesPlugin.getEncoding();

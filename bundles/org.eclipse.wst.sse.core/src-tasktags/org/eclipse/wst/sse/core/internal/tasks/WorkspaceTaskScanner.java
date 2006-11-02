@@ -196,24 +196,17 @@ class WorkspaceTaskScanner {
 			String name = resource.getName();
 			if (resource.isAccessible() && !resource.isDerived() && !resource.isPhantom() && !resource.isTeamPrivateMember() && name.length() != 0 && name.charAt(0) != '.') {
 				if ((resource.getType() & IResource.FOLDER) > 0 || (resource.getType() & IResource.PROJECT) > 0) {
-					SubProgressMonitor childMonitor = new SubProgressMonitor(scanMonitor, 1, SubProgressMonitor.PREPEND_MAIN_LABEL_TO_SUBTASK);
 					IResource[] children = ((IContainer) resource).members();
-					childMonitor.beginTask("", children.length); //$NON-NLS-1$
+					scanMonitor.beginTask("", children.length); //$NON-NLS-1$
 					for (int i = 0; i < children.length; i++) {
-						internalScan(project, children[i], childMonitor);
+						internalScan(project, children[i], new SubProgressMonitor(scanMonitor, 1, SubProgressMonitor.PREPEND_MAIN_LABEL_TO_SUBTASK));
 					}
-					childMonitor.done();
+					scanMonitor.done();
 				}
 				else if ((resource.getType() & IResource.FILE) > 0) {
 					scanFile(project, fCurrentTaskTags, (IFile) resource, scanMonitor);
-					scanMonitor.worked(1);
 				}
 			}
-			else {
-				scanMonitor.worked(1);
-
-			}
-			scanMonitor.done();
 		}
 		catch (CoreException e) {
 			Logger.logException(e);
@@ -229,32 +222,23 @@ class WorkspaceTaskScanner {
 			if (!resource.isDerived() && !resource.isPhantom() && !resource.isTeamPrivateMember() && name.length() != 0 && name.charAt(0) != '.') {
 				if ((resource.getType() & IResource.FOLDER) > 0 || (resource.getType() & IResource.PROJECT) > 0) {
 					IResourceDelta[] children = delta.getAffectedChildren();
+					monitor.beginTask("", children.length);
 					if (name.length() != 0 && name.charAt(0) != '.' && children.length > 0) {
-						SubProgressMonitor childMonitor = new SubProgressMonitor(monitor, 1, SubProgressMonitor.PREPEND_MAIN_LABEL_TO_SUBTASK);
-						childMonitor.beginTask("", children.length); //$NON-NLS-1$
 						for (int i = children.length - 1; i >= 0; i--) {
-							internalScan(children[i], new SubProgressMonitor(childMonitor, 1, SubProgressMonitor.PREPEND_MAIN_LABEL_TO_SUBTASK));
+							internalScan(children[i], new SubProgressMonitor(monitor, 1, SubProgressMonitor.PREPEND_MAIN_LABEL_TO_SUBTASK));
 						}
-						childMonitor.done();
 					}
-					else {
-						monitor.worked(1);
-					}
+					monitor.done();
 				}
 				else if ((resource.getType() & IResource.FILE) > 0) {
 					if ((delta.getKind() & IResourceDelta.ADDED) > 0 || ((delta.getKind() & IResourceDelta.CHANGED) > 0 && (delta.getFlags() & IResourceDelta.CONTENT) > 0)) {
 						IFile file = (IFile) resource;
 						scanFile(file.getProject(), fCurrentTaskTags, file, monitor);
 					}
-					monitor.worked(1);
 				}
-			}
-			else {
-				monitor.worked(1);
 			}
 		}
 		catch (Exception e) {
-			monitor.done();
 			Logger.logException(e);
 		}
 	}
@@ -287,7 +271,7 @@ class WorkspaceTaskScanner {
 						}
 					}
 				};
-				if(file.isAccessible()) {
+				if (file.isAccessible()) {
 					finalFile.getWorkspace().run(r, file, IWorkspace.AVOID_UPDATE, monitor);
 				}
 			}
@@ -313,16 +297,12 @@ class WorkspaceTaskScanner {
 		if (Logger.DEBUG_TASKSOVERALLPERF) {
 			time0 = System.currentTimeMillis();
 		}
-		try {
-			scanMonitor.beginTask("", project.members().length); //$NON-NLS-1$
-			if (init(project)) {
-				internalScan(project, project, scanMonitor);
-				shutdownDelegates(project);
-			}
-			scanMonitor.done();
+		if (init(project)) {
+			internalScan(project, project, scanMonitor);
+			shutdownDelegates(project);
 		}
-		catch (CoreException e) {
-			Logger.logException(e);
+		else {
+			scanMonitor.done();
 		}
 		if (Logger.DEBUG_TASKSOVERALLPERF) {
 			System.out.println("" + (System.currentTimeMillis() - time0) + "ms for " + project.getFullPath()); //$NON-NLS-1$ //$NON-NLS-2$
@@ -336,12 +316,10 @@ class WorkspaceTaskScanner {
 		if (Logger.DEBUG_TASKSOVERALLPERF) {
 			time0 = System.currentTimeMillis();
 		}
-		monitor.beginTask("", 1); //$NON-NLS-1$
 		if (init(delta.getResource())) {
 			internalScan(delta, monitor);
 			shutdownDelegates(delta.getResource().getProject());
 		}
-		monitor.done();
 		if (Logger.DEBUG_TASKSOVERALLPERF) {
 			System.out.println("" + (System.currentTimeMillis() - time0) + "ms for " + delta.getFullPath()); //$NON-NLS-1$ //$NON-NLS-2$
 		}
@@ -351,9 +329,14 @@ class WorkspaceTaskScanner {
 		if (monitor.isCanceled())
 			return;
 
-		SubProgressMonitor scannerMonitor = new SubProgressMonitor(monitor, 1, SubProgressMonitor.PREPEND_MAIN_LABEL_TO_SUBTASK);
+		// 3 "stages"
+		monitor.beginTask("", 3);
+		monitor.subTask(file.getFullPath().toString());
+
 		List markerAttributes = null;
 		IContentType[] types = detectContentTypes(file);
+		monitor.worked(1);
+
 		IFileTaskScanner[] fileScanners = null;
 		if (types != null) {
 			if (fCurrentIgnoreContentTypes.length == 0) {
@@ -374,16 +357,17 @@ class WorkspaceTaskScanner {
 				fileScanners = registry.getFileTaskScanners((IContentType[]) validTypes.toArray(new IContentType[validTypes.size()]));
 			}
 			if (fileScanners.length > 0) {
+				IProgressMonitor scannerMonitor = new SubProgressMonitor(monitor, 1, SubProgressMonitor.SUPPRESS_SUBTASK_LABEL);
+				scannerMonitor.beginTask("", fileScanners.length); //$NON-NLS-1$
 				for (int j = 0; fileScanners != null && j < fileScanners.length; j++) {
-					if (scannerMonitor.isCanceled())
+					if (monitor.isCanceled())
 						continue;
-					scannerMonitor.beginTask(file.getFullPath().toString(), fileScanners.length); //$NON-NLS-1$
 					try {
 						if (!fActiveScanners.contains(fileScanners[j]) && !monitor.isCanceled()) {
 							fileScanners[j].startup(file.getProject());
 							fActiveScanners.add(fileScanners[j]);
 						}
-						Map[] taskMarkerAttributes = fileScanners[j].scan(file, taskTags, scannerMonitor);
+						Map[] taskMarkerAttributes = fileScanners[j].scan(file, taskTags, new SubProgressMonitor(scannerMonitor, 1, SubProgressMonitor.PREPEND_MAIN_LABEL_TO_SUBTASK));
 						/*
 						 * TODO: pool the marker results so there's only one
 						 * operation creating them
@@ -394,7 +378,6 @@ class WorkspaceTaskScanner {
 							}
 							markerAttributes.add(taskMarkerAttributes[i]);
 						}
-						scannerMonitor.worked(1);
 					}
 					catch (Exception e) {
 						Logger.logException(file.getFullPath().toString(), e);
@@ -402,21 +385,27 @@ class WorkspaceTaskScanner {
 				}
 				scannerMonitor.done();
 			}
-			else {
-				monitor.worked(1);
-			}
 		}
+		else {
+			monitor.worked(1);
+		}
+
 		if (monitor.isCanceled())
 			return;
 		// only update markers if we ran a scanner on this file
 		if (fileScanners != null && fileScanners.length > 0) {
+			IProgressMonitor markerUpdateMonitor = new SubProgressMonitor(monitor, 1, SubProgressMonitor.PREPEND_MAIN_LABEL_TO_SUBTASK);
 			if (markerAttributes != null) {
-				replaceTaskMarkers(file, (Map[]) markerAttributes.toArray(new Map[markerAttributes.size()]), monitor);
+				replaceTaskMarkers(file, (Map[]) markerAttributes.toArray(new Map[markerAttributes.size()]), markerUpdateMonitor);
 			}
 			else {
-				replaceTaskMarkers(file, null, monitor);
+				replaceTaskMarkers(file, null, markerUpdateMonitor);
 			}
 		}
+		else {
+			monitor.worked(1);
+		}
+		monitor.done();
 	}
 
 	private void shutdownDelegates(IProject project) {

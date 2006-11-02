@@ -139,7 +139,7 @@ class TaskScanningJob extends Job {
 		int ticks = currentQueue.size();
 		String taskName = null;
 		if (Logger.DEBUG_TASKSJOB) {
-			taskName = "Scanning (" + ticks + " work items)"; //$NON-NLS-1$ //$NON-NLS-2$
+			taskName = SSECoreMessages.TaskScanningJob_0 + " (" + ticks + " work items)"; //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		else {
 			taskName = SSECoreMessages.TaskScanningJob_0;
@@ -152,7 +152,7 @@ class TaskScanningJob extends Job {
 			if (frameworkIsShuttingDown())
 				return Status.CANCEL_STATUS;
 			try {
-				scanMonitor = new SubProgressMonitor(monitor, 1);
+				scanMonitor = new SubProgressMonitor(monitor, 1, SubProgressMonitor.PREPEND_MAIN_LABEL_TO_SUBTASK);
 				if (o instanceof IResourceDelta) {
 					WorkspaceTaskScanner.getInstance().scan((IResourceDelta) o, scanMonitor);
 				}
