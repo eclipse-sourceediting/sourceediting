@@ -653,8 +653,6 @@
 	<extension point="org.eclipse.ui.propertyPages">
 		<!-- for j2ee web project -->
 		<page
-			objectClass="org.eclipse.core.resources.IProject"
-			adaptable="true"
 			name="%JSPFragmentContentSettings.name"
 			class="org.eclipse.jst.jsp.ui.internal.contentproperties.ui.ProjectJSPFContentSettingsPropertyPage"
 			id="org.eclipse.jst.jsp.ui.internal.contentproperties.ProjectJSPFContentSettingsPropertyPage">
@@ -672,8 +670,6 @@
 			</enabledWhen>
 		</page>
 		<page
-			objectClass="org.eclipse.core.resources.IFile"
-			adaptable="true"
 			name="%JSPFragmentContentSettings.name"
 			class="org.eclipse.jst.jsp.ui.internal.contentproperties.ui.JSPFContentSettingsPropertyPage"
 			id="org.eclipse.jst.jsp.ui.internal.contentproperties.JSPFContentSettingsPropertyPage">

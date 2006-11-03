@@ -91,8 +91,6 @@
 	<extension point="org.eclipse.ui.propertyPages">
 		<!-- for j2ee web project -->
 		<page
-			objectClass="org.eclipse.core.resources.IProject"
-			adaptable="true"
 			name="%WebContentSettings.name"
 			class="org.eclipse.wst.html.ui.internal.contentproperties.ui.ProjectWebContentSettingsPropertyPage"
 			id="org.eclipse.wst.html.ui.dynamicprojectpropertypage">
@@ -114,8 +112,6 @@
 			</enabledWhen>
 		</page>
 		<page
-			objectClass="org.eclipse.core.resources.IFile"
-			adaptable="true"
 			name="%WebContentSettings.name"
 			class="org.eclipse.wst.html.ui.internal.contentproperties.ui.WebContentSettingsPropertyPage"
 			id="org.eclipse.wst.html.ui.internal.contentproperties.ui.WebContentSettingsPropertyPage">

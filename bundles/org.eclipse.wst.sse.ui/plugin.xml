@@ -94,9 +94,14 @@
 		<page
 			id="org.eclipse.wst.sse.ui.project.properties.tasktags"
 			name="%Task_Tags_Preferences.name"
-			objectClass="org.eclipse.core.resources.IProject"
-			adaptable="true"
-			class="org.eclipse.wst.sse.ui.internal.preferences.ui.TaskTagPreferencePage" />
+			class="org.eclipse.wst.sse.ui.internal.preferences.ui.TaskTagPreferencePage">
+         	<enabledWhen>
+               	<and>
+					<adapt type="org.eclipse.core.resources.IProject">
+					</adapt>
+				</and> 
+			</enabledWhen>
+		</page>
 	</extension>
 
 	<!--
