@@ -1,22 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <project
-	name="testsuite"
-	default="run"
-	basedir=".">
+    name="testsuite"
+    default="run"
+    basedir=".">
+    
     <!-- The following properties should be passed into this script -->
     <!-- ${eclipse-home}   -->
     <!-- ${buildDirectory}  -->
     <!-- ${buildLabel}        -->
 
-    <echo message="basedir ${basedir}" />
-    <echo message="eclipse place ${eclipse-home}" />
-
-    <!-- sets the properties plugin-name, and library-file -->
+    <!-- should be little need to change what's above  -->
+    
 	<property
 		name="plugin-name"
 		value="org.eclipse.wst.xsd.validation.tests" />
 
+    <property
+        name="classname"
+        value="org.eclipse.wst.xsd.validation.tests.internal.AllXSDTests" />
+    <property
+        name="testType"
+        value="core-test" />
+
+    <!-- should be little need to change what's below -->
 	<property
 		name="library-file"
 		value="${eclipse-home}/plugins/org.eclipse.test_3.1.0/library.xml" />
