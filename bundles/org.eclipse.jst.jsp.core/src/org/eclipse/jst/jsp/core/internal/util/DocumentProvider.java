@@ -11,7 +11,7 @@
 package org.eclipse.jst.jsp.core.internal.util;
 
 
-
+import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
-import com.ibm.icu.util.StringTokenizer;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -40,6 +39,8 @@ import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
+
+import com.ibm.icu.util.StringTokenizer;
 
 /**
  * An XML Creator/Reader/Writer that 1) Ignores any DocumentType Nodes found
@@ -235,7 +236,7 @@ public class DocumentProvider {
 			return JarUtilities.getInputStream(getJarFileName(), getFileName());
 		}
 		else {
-			return new FileInputStream(getFileName());
+			return new BufferedInputStream(new FileInputStream(getFileName()));
 		}
 	}
 
