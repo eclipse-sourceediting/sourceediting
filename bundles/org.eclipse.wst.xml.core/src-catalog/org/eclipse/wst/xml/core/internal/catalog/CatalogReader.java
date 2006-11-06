@@ -20,6 +20,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.eclipse.wst.common.uriresolver.internal.URI;
 import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
 import org.eclipse.wst.xml.core.internal.Logger;
 import org.eclipse.wst.xml.core.internal.XMLCoreMessages;
@@ -155,7 +156,10 @@ public final class CatalogReader
       {
         CatalogEntry catalogEntry = (CatalogEntry) catalogElement;
         catalogEntry.setKey(key); 
-        catalogEntry.setURI(URIHelper.ensureURIProtocolFormat(entryURI));     
+        URI baseURI = URI.createURI(catalog.getLocation());
+        URI locationURI = URI.createURI(URIHelper.ensureURIProtocolFormat(entryURI));
+        URI resolved = locationURI.resolve(baseURI);        
+        catalogEntry.setURI(resolved.toString());     
       }
       // process any other attributes
       for (int j = 0; j < attributes.getLength(); j++)
