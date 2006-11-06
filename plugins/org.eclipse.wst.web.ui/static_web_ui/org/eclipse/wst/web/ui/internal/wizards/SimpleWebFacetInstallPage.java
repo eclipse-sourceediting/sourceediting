@@ -1,5 +1,6 @@
 package org.eclipse.wst.web.ui.internal.wizards;
 
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -48,6 +49,7 @@ public class SimpleWebFacetInstallPage extends DataModelFacetInstallPage impleme
 		configFolder.setLayoutData(gdhfill());
 		configFolder.setData("label", configFolderLabel); //$NON-NLS-1$
 		synchHelper.synchText(configFolder, CONTENT_DIR, null);
+	    Dialog.applyDialogFont(parent);
 		
 		return composite;
 	}
