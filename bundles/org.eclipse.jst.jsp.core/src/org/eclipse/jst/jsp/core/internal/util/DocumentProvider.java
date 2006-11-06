@@ -12,6 +12,7 @@ package org.eclipse.jst.jsp.core.internal.util;
 
 
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -235,7 +236,7 @@ public class DocumentProvider {
 			return JarUtilities.getInputStream(getJarFileName(), getFileName());
 		}
 		else {
-			return new FileInputStream(getFileName());
+			return new BufferedInputStream(new FileInputStream(getFileName()));
 		}
 	}
 
