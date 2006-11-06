@@ -1,10 +1,12 @@
 /*****************************************************************************
- * Copyright (c) 2004 IBM Corporation and others. All rights reserved. This
+ * Copyright (c) 2004, 2006 IBM Corporation and others. All rights reserved. This
  * program and the accompanying materials are made available under the terms
  * of the Eclipse Public License v1.0 which accompanies this distribution, and
  * is available at http://www.eclipse.org/legal/epl-v10.html
  * 
- * Contributors: IBM Corporation - initial API and implementation
+ * Contributors: 
+ *  IBM Corporation - initial API and implementation
+ *  David Schneider, david.schneider@unisys.com - [142500] WTP properties pages fonts don't follow Eclipse preferences
  ****************************************************************************/
 package org.eclipse.wst.css.ui.internal.contentproperties.ui;
 
@@ -16,6 +18,7 @@ import java.util.List;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -74,6 +77,7 @@ public final class CSSWebContentSettingsPropertyPage extends PropertyPage {
 		initializeValues();
 
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(propertyPage, IHelpContextIds.CSS_CONTENT_SETTINGS_HELPID);
+		Dialog.applyDialogFont(parent);
 		return propertyPage;
 	}
 

@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     IBM Corporation - initial API and implementation
+ *	   David Schneider, david.schneider@unisys.com - [142500] WTP properties pages fonts don't follow Eclipse preferences
  *******************************************************************************/
 package org.eclipse.wst.xml.ui.internal.wizards;
 
@@ -18,6 +19,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Preferences;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.util.Assert;
@@ -356,6 +358,7 @@ public class NewXMLWizard extends NewModelWizard {
 				}
 			};
 			panel.setListener(listener);
+		    Dialog.applyDialogFont(parent);
 		}
 
 		public void setVisible(boolean visible) {

@@ -7,12 +7,14 @@
  *
  * Contributors:
  *     IBM Corporation - initial API and implementation
+ *	   David Schneider, david.schneider@unisys.com - [142500] WTP properties pages fonts don't follow Eclipse preferences
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.common.properties.sections;
 
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.StyleRange;
@@ -124,7 +126,7 @@ public class XSDSchemaSection extends AbstractSection
     data.horizontalSpan = 2;
     data.grabExcessHorizontalSpace = true;
     errorText.setLayoutData(data);
-
+    Dialog.applyDialogFont(parent);
   }
 
   /*

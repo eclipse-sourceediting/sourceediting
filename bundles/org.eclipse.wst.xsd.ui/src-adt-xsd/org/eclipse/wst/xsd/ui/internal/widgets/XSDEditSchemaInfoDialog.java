@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     IBM Corporation - initial API and implementation
+ *	   David Schneider, david.schneider@unisys.com - [142500] WTP properties pages fonts don't follow Eclipse preferences
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.widgets;
 
@@ -74,7 +75,6 @@ public class XSDEditSchemaInfoDialog extends EditSchemaInfoDialog implements Sel
         layout.horizontalSpacing = convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_SPACING);
         composite.setLayout(layout);
         composite.setLayoutData(new GridData(GridData.FILL_BOTH));
-        applyDialogFont(composite);
         return composite;
     }	
 	
@@ -127,7 +127,7 @@ public class XSDEditSchemaInfoDialog extends EditSchemaInfoDialog implements Sel
     attributeFormCombo.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
     attributeFormCombo.setItems(formQualification);
     attributeFormCombo.addSelectionListener(this);
-
+    applyDialogFont(parent);
 		return dialogArea;
 	}	
 	

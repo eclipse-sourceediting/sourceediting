@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,7 +7,7 @@
  * 
  * Contributors:
  *     IBM Corporation - initial API and implementation
- *     
+ *	   David Schneider, david.schneider@unisys.com - [142500] WTP properties pages fonts don't follow Eclipse preferences
  *******************************************************************************/
 package org.eclipse.wst.sse.ui.internal.preferences.ui;
 
@@ -116,6 +116,7 @@ class MainTab implements IPreferenceTab {
 					taskTag = new TaskTag(taskTag.getTag(), priorityCombo.getSelectionIndex());
 				}
 			});
+		    Dialog.applyDialogFont(parent);
 			return composite;
 		}
 

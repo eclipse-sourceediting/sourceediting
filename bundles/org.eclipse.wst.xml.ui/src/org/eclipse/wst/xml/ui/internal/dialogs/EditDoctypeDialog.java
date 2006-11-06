@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
- *     
+ *	   David Schneider, david.schneider@unisys.com - [142500] WTP properties pages fonts don't follow Eclipse preferences
  *******************************************************************************/
 package org.eclipse.wst.xml.ui.internal.dialogs;
 
@@ -165,6 +165,7 @@ public class EditDoctypeDialog extends Dialog {
 		Color color = new Color(errorMessageLabel.getDisplay(), 200, 0, 0);
 		errorMessageLabel.setForeground(color);
 
+	    Dialog.applyDialogFont(parent);
 		return dialogControl;
 	}
 
