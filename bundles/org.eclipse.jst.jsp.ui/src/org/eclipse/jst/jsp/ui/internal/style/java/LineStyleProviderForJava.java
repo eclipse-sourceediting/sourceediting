@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -31,7 +31,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.wst.html.ui.internal.style.IStyleConstantsHTML;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.ui.internal.preferences.ui.ColorHelper;
@@ -79,12 +78,10 @@ public class LineStyleProviderForJava implements LineStyleProvider{
 	 */
 	private void addRange(Collection presentation, int offset, int length, TextAttribute attr) {
 		// support for user defined backgroud for JSP scriptlet regions
-		String styleString = JSPUIPlugin.getDefault().getPreferenceStore().getString(IStyleConstantsJSP.JSP_CONTENT);
-		String[] prefs = ColorHelper.unpackStylePreferences(styleString);
-		Color bgColor = (prefs != null && prefs.length == 3 && prefs[1].startsWith("#") && Display.getCurrent() != null) //$NON-NLS-1$
-							? new Color(Display.getCurrent(), ColorHelper.toRGB(prefs[1]))
-							: attr.getBackground();
-							
+		TextAttribute ta = (TextAttribute)getTextAttributes().get(IStyleConstantsJSP.JSP_CONTENT);
+		Color bgColor = ta.getBackground();
+		if (bgColor == null)
+			bgColor = attr.getBackground();
 		presentation.add(new StyleRange(offset, length, attr.getForeground(), bgColor, attr.getStyle()));
 	}
 
@@ -213,6 +210,7 @@ public class LineStyleProviderForJava implements LineStyleProvider{
 		addTextAttribute(IStyleConstantsHTML.SCRIPT_AREA_BORDER);
 		addTextAttribute(IStyleConstantsXML.TAG_ATTRIBUTE_NAME);
 		addTextAttribute(IStyleConstantsXML.TAG_ATTRIBUTE_VALUE);
+		addTextAttribute(IStyleConstantsJSP.JSP_CONTENT);
 		
 		addJavaTextAttribute(IStyleConstantsJSPJava.JAVA_KEYWORD);
 		addJavaTextAttribute(IStyleConstantsJSPJava.JAVA_STRING);
@@ -237,6 +235,8 @@ public class LineStyleProviderForJava implements LineStyleProvider{
 			}
 			else if (IStyleConstantsXML.TAG_ATTRIBUTE_VALUE.equals(prefKey)) {
 				styleKey = IStyleConstantsXML.TAG_ATTRIBUTE_VALUE;
+			} else if (IStyleConstantsJSP.JSP_CONTENT.equals(prefKey)) {
+				styleKey = IStyleConstantsJSP.JSP_CONTENT;
 			} else if (PreferenceConstants.EDITOR_JAVA_KEYWORD_COLOR.equals(prefKey) || (PreferenceConstants.EDITOR_JAVA_KEYWORD_BOLD.equals(prefKey))|| (PreferenceConstants.EDITOR_JAVA_KEYWORD_ITALIC.equals(prefKey))) {
 				javaStyleKey = IStyleConstantsJSPJava.JAVA_KEYWORD;
 			} else if (PreferenceConstants.EDITOR_STRING_COLOR.equals(prefKey) || (PreferenceConstants.EDITOR_STRING_BOLD.equals(prefKey))|| (PreferenceConstants.EDITOR_STRING_ITALIC.equals(prefKey))) {
