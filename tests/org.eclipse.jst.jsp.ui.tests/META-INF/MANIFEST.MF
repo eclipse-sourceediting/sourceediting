@@ -23,6 +23,7 @@ Export-Package: org.eclipse.jst.jsp.ui.tests,
  org.eclipse.jst.jsp.ui.tests.search,
  org.eclipse.jst.jsp.ui.tests.threaded,
  org.eclipse.jst.jsp.ui.tests.util,
+ org.eclipse.jst.jsp.ui.tests.validation,
  org.eclipse.jst.jsp.ui.tests.viewer
 Require-Bundle: org.eclipse.jface.text,
  org.eclipse.ui,
@@ -42,5 +43,7 @@ Require-Bundle: org.eclipse.jface.text,
  org.eclipse.ui.views,
  org.eclipse.core.runtime,
  org.eclipse.wst.xml.ui,
- com.ibm.icu
+ com.ibm.icu,
+ org.eclipse.wst.html.ui,
+ org.eclipse.wst.validation
 Eclipse-LazyStart: true

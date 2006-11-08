@@ -25,6 +25,7 @@ import org.eclipse.jst.jsp.ui.tests.other.UnitTests;
 import org.eclipse.jst.jsp.ui.tests.pagedirective.TestPageDirective;
 import org.eclipse.jst.jsp.ui.tests.partitioning.TestStructuredPartitionerJSP;
 import org.eclipse.jst.jsp.ui.tests.registry.AdapterFactoryRegistryTest;
+import org.eclipse.jst.jsp.ui.tests.validation.JSPHTMLValidatorTest;
 import org.eclipse.jst.jsp.ui.tests.viewer.TestViewerConfigurationJSP;
 
 
@@ -60,6 +61,7 @@ public class JSPUITestSuite extends TestSuite {
 		addTest(new TestSuite(TestModelEmbeddedContentType.class, "TestModelEmbeddedContentType"));
 
 		addTest(new TestSuite(TestContentDescription.class, "Content Description Tests"));
+		addTest(new TestSuite(JSPHTMLValidatorTest.class, "JSPHTMLValidatorTest"));
 		// pa_TODO fix this test
 		//addTest(new TestSuite(JSPSearchTests.class));
 	}
