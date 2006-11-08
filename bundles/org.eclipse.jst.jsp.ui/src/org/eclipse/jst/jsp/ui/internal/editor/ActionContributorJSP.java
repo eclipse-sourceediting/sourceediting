@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -50,11 +50,11 @@ public class ActionContributorJSP extends ActionContributorHTML {
 		super();
 
 		ResourceBundle bundle = JSPUIMessages.getResourceBundle();
-		this.renameElementAction = new RetargetTextEditorAction(bundle, IActionConstantsJSP.ACTION_NAME_RENAME_ELEMENT + StructuredTextEditorActionConstants.DOT);
+		this.renameElementAction = new RetargetTextEditorAction(bundle, IActionConstantsJSP.ACTION_NAME_RENAME_ELEMENT + StructuredTextEditorActionConstants.UNDERSCORE);
 		this.renameElementAction.setActionDefinitionId(IActionDefinitionIdsJSP.RENAME_ELEMENT);
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(this.renameElementAction, IHelpContextIds.JSP_REFACTORRENAME_HELPID);
 
-		this.moveElementAction = new RetargetTextEditorAction(bundle, IActionConstantsJSP.ACTION_NAME_MOVE_ELEMENT + StructuredTextEditorActionConstants.DOT);
+		this.moveElementAction = new RetargetTextEditorAction(bundle, IActionConstantsJSP.ACTION_NAME_MOVE_ELEMENT + StructuredTextEditorActionConstants.UNDERSCORE);
 		this.moveElementAction.setActionDefinitionId(IActionDefinitionIdsJSP.MOVE_ELEMENT);
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(this.moveElementAction, IHelpContextIds.JSP_REFACTORMOVE_HELPID);
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -90,16 +90,16 @@ public class ActionContributor extends TextEditorActionContributor implements IS
 		fCommandsSeparator = new Separator();
 
 		// edit commands
-		fStructureSelectEnclosingAction = new RetargetTextEditorAction(resourceBundle, StructuredTextEditorActionConstants.ACTION_NAME_STRUCTURE_SELECT_ENCLOSING + StructuredTextEditorActionConstants.DOT);
+		fStructureSelectEnclosingAction = new RetargetTextEditorAction(resourceBundle, StructuredTextEditorActionConstants.ACTION_NAME_STRUCTURE_SELECT_ENCLOSING + StructuredTextEditorActionConstants.UNDERSCORE);
 		fStructureSelectEnclosingAction.setActionDefinitionId(ActionDefinitionIds.STRUCTURE_SELECT_ENCLOSING);
 
-		fStructureSelectNextAction = new RetargetTextEditorAction(resourceBundle, StructuredTextEditorActionConstants.ACTION_NAME_STRUCTURE_SELECT_NEXT + StructuredTextEditorActionConstants.DOT);
+		fStructureSelectNextAction = new RetargetTextEditorAction(resourceBundle, StructuredTextEditorActionConstants.ACTION_NAME_STRUCTURE_SELECT_NEXT + StructuredTextEditorActionConstants.UNDERSCORE);
 		fStructureSelectNextAction.setActionDefinitionId(ActionDefinitionIds.STRUCTURE_SELECT_NEXT);
 
-		fStructureSelectPreviousAction = new RetargetTextEditorAction(resourceBundle, StructuredTextEditorActionConstants.ACTION_NAME_STRUCTURE_SELECT_PREVIOUS + StructuredTextEditorActionConstants.DOT);
+		fStructureSelectPreviousAction = new RetargetTextEditorAction(resourceBundle, StructuredTextEditorActionConstants.ACTION_NAME_STRUCTURE_SELECT_PREVIOUS + StructuredTextEditorActionConstants.UNDERSCORE);
 		fStructureSelectPreviousAction.setActionDefinitionId(ActionDefinitionIds.STRUCTURE_SELECT_PREVIOUS);
 
-		fStructureSelectHistoryAction = new RetargetTextEditorAction(resourceBundle, StructuredTextEditorActionConstants.ACTION_NAME_STRUCTURE_SELECT_HISTORY + StructuredTextEditorActionConstants.DOT);
+		fStructureSelectHistoryAction = new RetargetTextEditorAction(resourceBundle, StructuredTextEditorActionConstants.ACTION_NAME_STRUCTURE_SELECT_HISTORY + StructuredTextEditorActionConstants.UNDERSCORE);
 		fStructureSelectHistoryAction.setActionDefinitionId(ActionDefinitionIds.STRUCTURE_SELECT_HISTORY);
 
 		fExpandSelectionToMenu = new MenuManager(SSEUIMessages.ExpandSelectionToMenu_label); //$NON-NLS-1$
@@ -109,19 +109,19 @@ public class ActionContributor extends TextEditorActionContributor implements IS
 		fExpandSelectionToMenu.add(fStructureSelectHistoryAction);
 
 		// source commands
-		fShiftRight = new RetargetTextEditorAction(resourceBundle, ITextEditorActionConstants.SHIFT_RIGHT + StructuredTextEditorActionConstants.DOT);
+		fShiftRight = new RetargetTextEditorAction(resourceBundle, ITextEditorActionConstants.SHIFT_RIGHT + StructuredTextEditorActionConstants.UNDERSCORE);
 		fShiftRight.setActionDefinitionId(ITextEditorActionDefinitionIds.SHIFT_RIGHT);
 
-		fShiftLeft = new RetargetTextEditorAction(resourceBundle, ITextEditorActionConstants.SHIFT_LEFT + StructuredTextEditorActionConstants.DOT);
+		fShiftLeft = new RetargetTextEditorAction(resourceBundle, ITextEditorActionConstants.SHIFT_LEFT + StructuredTextEditorActionConstants.UNDERSCORE);
 		fShiftLeft.setActionDefinitionId(ITextEditorActionDefinitionIds.SHIFT_LEFT);
 
-		fToggleComment = new RetargetTextEditorAction(resourceBundle, StructuredTextEditorActionConstants.ACTION_NAME_TOGGLE_COMMENT + StructuredTextEditorActionConstants.DOT);
+		fToggleComment = new RetargetTextEditorAction(resourceBundle, StructuredTextEditorActionConstants.ACTION_NAME_TOGGLE_COMMENT + StructuredTextEditorActionConstants.UNDERSCORE);
 		fToggleComment.setActionDefinitionId(ActionDefinitionIds.TOGGLE_COMMENT);
 
-		fAddBlockComment = new RetargetTextEditorAction(resourceBundle, StructuredTextEditorActionConstants.ACTION_NAME_ADD_BLOCK_COMMENT + StructuredTextEditorActionConstants.DOT);
+		fAddBlockComment = new RetargetTextEditorAction(resourceBundle, StructuredTextEditorActionConstants.ACTION_NAME_ADD_BLOCK_COMMENT + StructuredTextEditorActionConstants.UNDERSCORE);
 		fAddBlockComment.setActionDefinitionId(ActionDefinitionIds.ADD_BLOCK_COMMENT);
 
-		fRemoveBlockComment = new RetargetTextEditorAction(resourceBundle, StructuredTextEditorActionConstants.ACTION_NAME_REMOVE_BLOCK_COMMENT + StructuredTextEditorActionConstants.DOT);
+		fRemoveBlockComment = new RetargetTextEditorAction(resourceBundle, StructuredTextEditorActionConstants.ACTION_NAME_REMOVE_BLOCK_COMMENT + StructuredTextEditorActionConstants.UNDERSCORE);
 		fRemoveBlockComment.setActionDefinitionId(ActionDefinitionIds.REMOVE_BLOCK_COMMENT);
 
 		// goto prev/next error
