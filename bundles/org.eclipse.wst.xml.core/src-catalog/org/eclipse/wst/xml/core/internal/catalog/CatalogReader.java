@@ -63,16 +63,22 @@ public final class CatalogReader
     public CatalogContentHandler(Catalog xmlCatalog)
     {
       this.catalog = xmlCatalog;
-      baseURIStack.push(xmlCatalog.getBase());
+      String base = xmlCatalog.getBase();
+      if(base == null || base == "") {  //$NON-NLS-1$
+    	  base = xmlCatalog.getLocation();
+      }
+      baseURIStack.push(base);
     }
 
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException
     {
       // set base
-      String base = attributes.getValue("", OASISCatalogConstants.ATTR_BASE); //$NON-NLS-1$
+      String base = attributes.getValue(OASISCatalogConstants.ATTR_BASE); //$NON-NLS-1$
       if (base != null && !base.equals("")) //$NON-NLS-1$
       {
-          baseURIStack.push(base);    
+          baseURIStack.push(base);
+      } else {
+    	  baseURIStack.push(baseURIStack.peek());
       }
 
 	  // processing for backward compatability start
@@ -94,6 +100,12 @@ public final class CatalogReader
 		    String key = attributes.getValue("", CompatabilityConstants.ATT_ID);   		     //$NON-NLS-1$
 	        catalogEntry.setKey(key);
 	        String entryUri = attributes.getValue("", CompatabilityConstants.ATT_URI);    //$NON-NLS-1$
+	        
+	        // For relative URIs, try to resolve them using the corresponding base URI.
+	        if(URI.createURI(entryUri).isRelative()) {
+	        	entryUri = URI.resolveRelativeURI(entryUri, baseURIStack.peek().toString());
+	        }
+
 	        catalogEntry.setURI(URIHelper.ensureURIProtocolFormat(entryUri));  
 	        String webURL = attributes.getValue("", CompatabilityConstants.ATT_WEB_URL); //$NON-NLS-1$
 			if (webURL != null)
@@ -156,10 +168,14 @@ public final class CatalogReader
       {
         CatalogEntry catalogEntry = (CatalogEntry) catalogElement;
         catalogEntry.setKey(key); 
-        URI baseURI = URI.createURI(catalog.getLocation());
-        URI locationURI = URI.createURI(URIHelper.ensureURIProtocolFormat(entryURI));
-        URI resolved = locationURI.resolve(baseURI);        
-        catalogEntry.setURI(resolved.toString());     
+
+        //      For relative URIs, try to resolve them using the corresponding base URI.
+        if(URI.createURI(entryURI).isRelative()) {
+        	entryURI = URI.resolveRelativeURI(entryURI, baseURIStack.peek().toString());
+        } 
+
+        catalogEntry.setURI(URIHelper.ensureURIProtocolFormat(entryURI));     
+
       }
       // process any other attributes
       for (int j = 0; j < attributes.getLength(); j++)
