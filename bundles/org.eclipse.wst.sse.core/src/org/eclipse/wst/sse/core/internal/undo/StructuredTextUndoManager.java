@@ -316,7 +316,6 @@ public class StructuredTextUndoManager implements IStructuredTextUndoManager {
 				compoundCommand.setLabel(fCompoundCommandLabel);
 				compoundCommand.setDescription(fCompoundCommandDescription);
 				compoundCommand.append(textCommand);
-				fCommandStack.execute(compoundCommand);
 
 				fCompoundCommand = compoundCommand;
 			}
@@ -389,6 +388,13 @@ public class StructuredTextUndoManager implements IStructuredTextUndoManager {
 			if (fRecordingCount > 0)
 				fRecordingCount--;
 			if (fRecordingCount == 0) {
+				
+				// Finally execute the commands accumulated in the compound command.
+				
+				if (fCompoundCommand != null) {
+					fCommandStack.execute(fCompoundCommand);
+				}
+				
 				fRecording = false;
 
 				// reset compound command only when fRecordingCount ==
