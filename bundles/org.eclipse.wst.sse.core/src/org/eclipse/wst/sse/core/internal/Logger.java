@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -45,6 +45,10 @@ public class Logger {
 	 * model management
 	 */
 	public static final boolean DEBUG_FILEBUFFERMODELMANAGEMENT = DEBUG && "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.core/filebuffers/modelmanagement")); //$NON-NLS-1$ //$NON-NLS-2$
+	/**
+	 * true if platform and plugin are in debug mode and debugging formatting
+	 */
+	public static final boolean DEBUG_FORMAT = DEBUG && "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.core/format")); //$NON-NLS-1$ //$NON-NLS-2$
 	/**
 	 * true if platform and plugin are in debug mode and debugging text buffer
 	 * lifecycle

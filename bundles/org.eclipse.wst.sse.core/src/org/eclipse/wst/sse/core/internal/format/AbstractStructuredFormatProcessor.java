@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -161,13 +161,15 @@ public abstract class AbstractStructuredFormatProcessor implements IStructuredFo
 				// Note: We are getting model for edit. Will save model if
 				// model changed.
 				structuredModel = StructuredModelManager.getModelManager().getExistingModelForEdit(document);
-
-				// format
-				formatModel(structuredModel, start, length);
-
-				// save model if needed
-				if (!structuredModel.isSharedForEdit() && structuredModel.isSaveNeeded())
-					structuredModel.save();
+				
+				if (structuredModel != null) {
+					// format
+					formatModel(structuredModel, start, length);
+	
+					// save model if needed
+					if (!structuredModel.isSharedForEdit() && structuredModel.isSaveNeeded())
+						structuredModel.save();
+				}
 			}
 			finally {
 				// ensureClosed(outputStream, null);
@@ -301,6 +303,9 @@ public abstract class AbstractStructuredFormatProcessor implements IStructuredFo
 
 	public void formatModel(IStructuredModel structuredModel, int start, int length) {
 		if (structuredModel != null) {
+			// for debugging purposes
+			long startTime = System.currentTimeMillis();
+
 			IDocumentExtension4 docExt4 = null;
 			if (structuredModel.getStructuredDocument() instanceof IDocumentExtension4) {
 				docExt4 = (IDocumentExtension4) structuredModel.getStructuredDocument();
@@ -367,6 +372,11 @@ public abstract class AbstractStructuredFormatProcessor implements IStructuredFo
 					// always make sure to fire changedmodel when done
 					structuredModel.changedModel();
 				}
+			}
+			
+			if (Logger.DEBUG_FORMAT) {
+				long endTime = System.currentTimeMillis();
+				System.out.println("formatModel time: " + (endTime - startTime)); //$NON-NLS-1$
 			}
 		}
 	}
