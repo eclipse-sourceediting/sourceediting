@@ -319,7 +319,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 
 		if (fLockObject != null && fLockObject != documentLock) {
 			fLockObject.release();
-			if (Logger.DEBUG) {
+			if (Logger.DEBUG_MODELSTATE) {
 				Logger.log(Logger.INFO, "Model lock released early" + fLockObject + " apparently document switched?"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 
@@ -327,7 +327,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 		fLockObject = documentLock;
 		if (fLockObject != null) {
 			fLockObject.acquire();
-			if (Logger.DEBUG) {
+			if (Logger.DEBUG_MODELSTATE) {
 				Logger.log(Logger.INFO, "Model lock acquired: " + fLockObject); //$NON-NLS-1$
 			}
 		}
@@ -478,7 +478,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 	protected final void endLock() {
 		if (fLockObject != null) {
 			fLockObject.release();
-			if (Logger.DEBUG) {
+			if (Logger.DEBUG_MODELSTATE) {
 				Logger.log(Logger.INFO, "Model lock released: " + fLockObject); //$NON-NLS-1$
 			}
 
@@ -1008,7 +1008,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 			}
 		}
 		else {
-			if (Logger.DEBUG) {
+			if (Logger.DEBUG_MODELSTATE) {
 				Logger.log(Logger.INFO, "indeed!!!"); //$NON-NLS-1$
 			}
 		}

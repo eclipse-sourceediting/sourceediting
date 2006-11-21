@@ -55,6 +55,7 @@ public class DocumentRegionProcessor extends DirtyRegionProcessor {
 
 	private final String SSE_UI_ID = "org.eclipse.wst.sse.ui"; //$NON-NLS-1$
 
+
 	protected void beginProcessing() {
 		super.beginProcessing();
 		ValidatorStrategy validatorStrategy = getValidatorStrategy();
@@ -166,7 +167,7 @@ public class DocumentRegionProcessor extends DirtyRegionProcessor {
 	 * @param dirtyRegion
 	 */
 	protected void process(DirtyRegion dirtyRegion) {
-		if (!isInstalled())
+		if (!isInstalled() || isInRewriteSession())
 			return;
 
 		super.process(dirtyRegion);
