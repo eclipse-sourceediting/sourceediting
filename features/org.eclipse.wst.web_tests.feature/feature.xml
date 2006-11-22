@@ -21,11 +21,6 @@
       <update label="%updateSiteName" url="http://download.eclipse.org/webtools/updates/"/>
    </url>
 
-   <requires>
-      <import feature="org.eclipse.test"/>
-      <import feature="org.eclipse.wst.xml_tests.feature"/>
-   </requires>
-
    <plugin
          id="org.eclipse.wst.css.core.tests"
          download-size="0"
