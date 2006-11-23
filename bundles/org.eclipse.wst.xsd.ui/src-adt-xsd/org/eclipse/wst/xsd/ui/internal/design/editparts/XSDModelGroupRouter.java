@@ -18,7 +18,6 @@ import java.util.Map;
 import org.eclipse.draw2d.AbstractRouter;
 import org.eclipse.draw2d.Connection;
 import org.eclipse.draw2d.ConnectionAnchor;
-import org.eclipse.draw2d.ConnectionRouter;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.Ray;
@@ -48,7 +47,7 @@ public class XSDModelGroupRouter extends AbstractRouter
 
 
   /**
-   * @see ConnectionRouter#invalidate(Connection)
+   * @see org.eclipse.draw2d.ConnectionRouter#invalidate(Connection)
    */
   public void invalidate(Connection connection) {
     removeReservedLines(connection);
@@ -243,7 +242,7 @@ public class XSDModelGroupRouter extends AbstractRouter
   }
 
   /**
-   * @see ConnectionRouter#remove(Connection)
+   * @see org.eclipse.draw2d.ConnectionRouter#remove(Connection)
    */
   public void remove(Connection connection) {
     removeReservedLines(connection);
@@ -282,7 +281,7 @@ public class XSDModelGroupRouter extends AbstractRouter
   }
 
   /**
-   * @see ConnectionRouter#route(Connection)
+   * @see org.eclipse.draw2d.ConnectionRouter#route(Connection)
    */
   public void route(Connection conn) {
     if ((conn.getSourceAnchor() == null) || (conn.getTargetAnchor() == null)) 
