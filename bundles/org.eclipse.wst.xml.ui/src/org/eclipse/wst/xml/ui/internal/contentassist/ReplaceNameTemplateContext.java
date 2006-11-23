@@ -90,7 +90,7 @@ public class ReplaceNameTemplateContext extends DocumentTemplateContext {
 	public TemplateBuffer evaluate(Template template) throws BadLocationException, TemplateException {
 		TemplateBuffer buffer = super.evaluate(template);
 		if (buffer != null) {
-			if (fInsertOffset > -1 && fInsertOffset > getStart()) {
+			if ((fInsertOffset > -1) && (fInsertOffset > getStart())) {
 				String prefix = getDocument().get(getStart(), fInsertOffset - getStart());
 				if (!template.getName().startsWith(prefix)) {
 					// generate a new buffer that actually contains the

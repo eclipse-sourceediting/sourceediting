@@ -28,7 +28,7 @@ import org.w3c.dom.Node;
 
 public class XMLDragAndDropManager implements DragAndDropManager {
 	private TreeViewer fViewer;
-	
+
 	public static void addDragAndDropSupport(TreeViewer viewer) {
 		int dndOperations = DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK;
 		Transfer[] transfers = new Transfer[]{ObjectTransfer.getInstance()};
@@ -39,7 +39,7 @@ public class XMLDragAndDropManager implements DragAndDropManager {
 	public XMLDragAndDropManager() {
 		super();
 	}
-	
+
 	public XMLDragAndDropManager(TreeViewer viewer) {
 		fViewer = viewer;
 	}

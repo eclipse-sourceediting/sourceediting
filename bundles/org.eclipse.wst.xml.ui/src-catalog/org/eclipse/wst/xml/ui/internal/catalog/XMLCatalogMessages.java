@@ -18,10 +18,10 @@ import org.eclipse.osgi.util.NLS;
  */
 public class XMLCatalogMessages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.wst.xml.ui.internal.catalog.XMLCatalogResources";//$NON-NLS-1$
-	
+
 	public static String UI_WIZARD_SCHEMA_AND_NAME_SPACE_INFO;
 	public static String UI_LABEL_NAME_SPACE_PREFIX;
-    public static String UI_LABEL_NAME_SPACE_URI;
+	public static String UI_LABEL_NAME_SPACE_URI;
 	public static String UI_LABEL_XSD_LOCATION;
 	public static String UI_LABEL_DOCTYPE_INFORMATION;
 	public static String UI_LABEL_SYSTEM_ID;
@@ -59,13 +59,13 @@ public class XMLCatalogMessages extends NLS {
 	public static String UI_WARNING_SHOULD_BE_FULLY_QUALIFIED_URI;
 
 
-	//NewModelWizard
+	// NewModelWizard
 	public static String UI_INVALID_GRAMMAR_ERROR;
 	public static String UI_BUTTON_BROWSE;
 
-	//XMLCatalogIdMappingPage
+	// XMLCatalogIdMappingPage
 	public static String UI_LABEL_MAP_TO;
-	public static String UI_LABEL_MAP_FROM ;
+	public static String UI_LABEL_MAP_FROM;
 	public static String UI_BUTTON_NEW;
 	public static String UI_BUTTON_EDIT;
 	public static String UI_BUTTON_DELETE;
@@ -82,18 +82,18 @@ public class XMLCatalogMessages extends NLS {
 	public static String UI_LABEL_SELECT_PROJECT;
 	public static String UI_LABEL_SPECIFY_PROJECT_DESCRIPTION;
 	public static String UI_WARNING_NO_PROJECTS_CREATED;
-	public static String UI_WARNING_PROJECT_NOT_SPECIFIED ;
-	public static String UI_WARNING_PROJECT_DOES_NOT_EXIST ;
-	public static String UI_LABEL_PROJECT_TO_USE ;
+	public static String UI_WARNING_PROJECT_NOT_SPECIFIED;
+	public static String UI_WARNING_PROJECT_DOES_NOT_EXIST;
+	public static String UI_LABEL_PROJECT_TO_USE;
 	public static String UI_LABEL_CATALOG_SAVE_ERROR;
 	public static String UI_LABEL_CATALOG_COULD_NOT_BE_SAVED;
 	public static String UI_LABEL_ADVANCED;
-	public static String UI_LABEL_ADVANCED_XML_CATALOG_PREFS;   
+	public static String UI_LABEL_ADVANCED_XML_CATALOG_PREFS;
 	public static String UI_LABEL_SPECIFY_PERSISTENCE_FILE;
 	public static String UI_LABEL_SAVE_CATALOG_DIALOG_TITLE;
-	public static String UI_LABEL_SAVE_CATALOG_DIALOG_DESC;   
+	public static String UI_LABEL_SAVE_CATALOG_DIALOG_DESC;
 	public static String UI_LABEL_BROWSE_CATALOG_FILE_TITLE;
-	public static String UI_LABEL_BROWSE_CATALOG_FILE_DESC;   
+	public static String UI_LABEL_BROWSE_CATALOG_FILE_DESC;
 	public static String UI_LABEL_DETAILS;
 	public static String UI_LABEL_USER_SPECIFIED_ENTRIES;
 	public static String UI_LABEL_PLUGIN_SPECIFIED_ENTRIES;
@@ -102,7 +102,7 @@ public class XMLCatalogMessages extends NLS {
 	// AdvancedOptionsDialog
 	public static String UI_BUTTON_IMPORT;
 	public static String UI_BUTTON_EXPORT;
-	                                   
+
 	public static String UI_LABEL_IMPORT_DIALOG_TITLE;
 	public static String UI_LABEL_IMPORT_DIALOG_HEADING;
 	public static String UI_LABEL_IMPORT_DIALOG_MESSAGE;
@@ -120,15 +120,14 @@ public class XMLCatalogMessages extends NLS {
 	public static String UI_BUTTON_MENU_BROWSE_FILE_SYSTEM;
 	public static String UI_LABEL_SELECT_FILE_FILTER_CONTROL;
 	public static String UI_TEXT_SELECT_FILE_FILTER_CONTROL;
-	
-	
+
 
 
 	static {
 		// load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, XMLCatalogMessages.class);
 	}
-	
+
 	private XMLCatalogMessages() {
 		// cannot create new instance
 	}

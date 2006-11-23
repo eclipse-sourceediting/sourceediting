@@ -38,232 +38,198 @@ import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalogEvent;
 import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalogListener;
 import org.eclipse.wst.xml.core.internal.catalog.provisional.INextCatalog;
 
-public class XMLCatalogPreferencePage extends PreferencePage implements
-        IWorkbenchPreferencePage, ICatalogListener
-{
+public class XMLCatalogPreferencePage extends PreferencePage implements IWorkbenchPreferencePage, ICatalogListener {
 
-    protected XMLCatalogEntriesView catalogEntriesView;
+	protected XMLCatalogEntriesView catalogEntriesView;
 
-    protected ICatalog workingUserCatalog;
+	protected ICatalog workingUserCatalog;
 
-    protected ICatalog systemCatalog;
+	protected ICatalog systemCatalog;
 
-    protected ICatalog userCatalog;
+	protected ICatalog userCatalog;
 
-    protected ICatalog defaultCatalog;
+	protected ICatalog defaultCatalog;
 
-    protected Button advancedButton;
+	protected Button advancedButton;
 
-    public XMLCatalogPreferencePage()
-    {
-        defaultCatalog = XMLCorePlugin.getDefault().getDefaultXMLCatalog();
-        INextCatalog[] nextCatalogs = defaultCatalog.getNextCatalogs();
-        for (int i = 0; i < nextCatalogs.length; i++)
-        {
-            INextCatalog catalog = nextCatalogs[i];
-            ICatalog referencedCatalog = catalog.getReferencedCatalog();
-            if (referencedCatalog != null)
-            {
-                if (XMLCorePlugin.SYSTEM_CATALOG_ID
-                        .equals(referencedCatalog.getId()))
-                {
-                    systemCatalog = referencedCatalog;
-                } else if (XMLCorePlugin.USER_CATALOG_ID
-                        .equals(referencedCatalog.getId()))
-                {
-                    userCatalog = referencedCatalog;
-                }
-            }
-        }
-    }
+	public XMLCatalogPreferencePage() {
+		defaultCatalog = XMLCorePlugin.getDefault().getDefaultXMLCatalog();
+		INextCatalog[] nextCatalogs = defaultCatalog.getNextCatalogs();
+		for (int i = 0; i < nextCatalogs.length; i++) {
+			INextCatalog catalog = nextCatalogs[i];
+			ICatalog referencedCatalog = catalog.getReferencedCatalog();
+			if (referencedCatalog != null) {
+				if (XMLCorePlugin.SYSTEM_CATALOG_ID.equals(referencedCatalog.getId())) {
+					systemCatalog = referencedCatalog;
+				}
+				else if (XMLCorePlugin.USER_CATALOG_ID.equals(referencedCatalog.getId())) {
+					userCatalog = referencedCatalog;
+				}
+			}
+		}
+	}
 
-    public void dispose()
-    {
-        super.dispose();
-        workingUserCatalog.removeListener(this);
-    }
+	public void dispose() {
+		super.dispose();
+		workingUserCatalog.removeListener(this);
+	}
 
-    /**
-     * Refresh the view in responce to an event sent by the Catalog
-     */
-    public void catalogChanged(ICatalogEvent event)
-    {
-        catalogEntriesView.updatePage();
-    }
+	/**
+	 * Refresh the view in responce to an event sent by the Catalog
+	 */
+	public void catalogChanged(ICatalogEvent event) {
+		catalogEntriesView.updatePage();
+	}
 
-    /**
-     * Creates preference page controls on demand.
-     * 
-     * @param parent
-     *            the parent for the preference page
-     */
-    protected Control createContents(Composite parent)
-    {
-        // we create a working copy of the 'User Settings' for the Catalog
-        // that we can modify
-        CatalogSet tempCatalogSet = new CatalogSet(); 
-        workingUserCatalog = tempCatalogSet.lookupOrCreateCatalog("working", ""); //$NON-NLS-1$ //$NON-NLS-2$
-        
-        // TODO: add entries from the nested catalogs as well
-        workingUserCatalog.addEntriesFromCatalog(userCatalog);
-        workingUserCatalog.addListener(this);
-        noDefaultAndApplyButton();
-        Composite composite = new Composite(parent, SWT.NULL);
-        // WorkbenchHelp.setHelp(composite, new
-        // ControlContextComputer(composite,
-        // XMLBuilderContextIds.XMLP_CATALOG_PAGE));
-        composite.setLayout(new GridLayout());
-        composite.setLayoutData(new GridData(GridData.FILL_BOTH));
-        createCatalogEntriesView(composite);
-        createCatalogDetailsView(composite);
-        createAdvancedButton(composite);
-        // catalogEntriesView.updatePage();
-        applyDialogFont(composite);
-        
-        return composite;
-    }
+	/**
+	 * Creates preference page controls on demand.
+	 * 
+	 * @param parent
+	 *            the parent for the preference page
+	 */
+	protected Control createContents(Composite parent) {
+		// we create a working copy of the 'User Settings' for the Catalog
+		// that we can modify
+		CatalogSet tempCatalogSet = new CatalogSet();
+		workingUserCatalog = tempCatalogSet.lookupOrCreateCatalog("working", ""); //$NON-NLS-1$ //$NON-NLS-2$
 
-    protected void createAdvancedButton(Composite composite)
-    {
-        Composite panel = new Composite(composite, SWT.NONE);
-        GridLayout gridLayout = new GridLayout();
-        gridLayout.numColumns = 3;
-        panel.setLayout(gridLayout);
-        panel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        // TODO... is there a better way to expand the page width?
-        // This invisible label is created to force the width of the page to be
-        // wide enough to show
-        // the rather long uri and key fields of a catalog entry.
-        Label widthFudger = new Label(panel, SWT.NONE);
-        String widthFudgerString = ""; //$NON-NLS-1$
-        for (int i = 0; i < 55; i++)
-        {
-            widthFudgerString += "x"; //$NON-NLS-1$
-        }
-        widthFudger.setText(widthFudgerString);
-        widthFudger.setVisible(false);
-        Composite placeHolder = new Composite(panel, SWT.NONE);
-        placeHolder.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        advancedButton = new Button(panel, SWT.NONE);
-        advancedButton.setText(XMLCatalogMessages.UI_LABEL_ADVANCED);
-        SelectionListener selectionListener = new SelectionAdapter()
-        {
-            public void widgetSelected(SelectionEvent e)
-            {
-                AdvancedOptionsDialog dialog = new AdvancedOptionsDialog(
-                        getShell(), workingUserCatalog);
-                dialog.create();
-                dialog
-                        .getShell()
-                        .setText(
-                                XMLCatalogMessages.UI_LABEL_ADVANCED_XML_CATALOG_PREFS);
-                dialog.setBlockOnOpen(true);
-                dialog.open();
-            }
-        };
-        advancedButton.addSelectionListener(selectionListener);
-    }
+		// TODO: add entries from the nested catalogs as well
+		workingUserCatalog.addEntriesFromCatalog(userCatalog);
+		workingUserCatalog.addListener(this);
+		noDefaultAndApplyButton();
+		Composite composite = new Composite(parent, SWT.NULL);
+		// WorkbenchHelp.setHelp(composite, new
+		// ControlContextComputer(composite,
+		// XMLBuilderContextIds.XMLP_CATALOG_PAGE));
+		composite.setLayout(new GridLayout());
+		composite.setLayoutData(new GridData(GridData.FILL_BOTH));
+		createCatalogEntriesView(composite);
+		createCatalogDetailsView(composite);
+		createAdvancedButton(composite);
+		// catalogEntriesView.updatePage();
+		applyDialogFont(composite);
 
-    public boolean isSameFileName(String a, String b)
-    {
-        boolean result = false;
-        if (a == null && b == null)
-        {
-            result = true;
-        } else if (a != null && b != null)
-        {
-            result = a.equals(b);
-        }
-        return result;
-    }
+		return composite;
+	}
 
-    protected void createCatalogEntriesView(Composite parent)
-    {
-        Group group = new Group(parent, SWT.NONE);
-        group.setLayout(new GridLayout());
-        group.setLayoutData(new GridData(GridData.FILL_BOTH));
-        group.setText(XMLCatalogMessages.UI_LABEL_USER_ENTRIES);
-        group.setToolTipText(XMLCatalogMessages.UI_LABEL_USER_ENTRIES_TOOL_TIP);
-        // WorkbenchHelp.setHelp(userEntriesGroup, new
-        // ControlContextComputer(userEntriesGroup,
-        // XMLBuilderContextIds.XMLP_CATALOG_USER_GROUP));
-        catalogEntriesView = new XMLCatalogEntriesView(group,
-                workingUserCatalog, systemCatalog);
-        catalogEntriesView.setLayoutData(new GridData(GridData.FILL_BOTH));
-    }
+	protected void createAdvancedButton(Composite composite) {
+		Composite panel = new Composite(composite, SWT.NONE);
+		GridLayout gridLayout = new GridLayout();
+		gridLayout.numColumns = 3;
+		panel.setLayout(gridLayout);
+		panel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		// TODO... is there a better way to expand the page width?
+		// This invisible label is created to force the width of the page to
+		// be
+		// wide enough to show
+		// the rather long uri and key fields of a catalog entry.
+		Label widthFudger = new Label(panel, SWT.NONE);
+		String widthFudgerString = ""; //$NON-NLS-1$
+		for (int i = 0; i < 55; i++) {
+			widthFudgerString += "x"; //$NON-NLS-1$
+		}
+		widthFudger.setText(widthFudgerString);
+		widthFudger.setVisible(false);
+		Composite placeHolder = new Composite(panel, SWT.NONE);
+		placeHolder.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		advancedButton = new Button(panel, SWT.NONE);
+		advancedButton.setText(XMLCatalogMessages.UI_LABEL_ADVANCED);
+		SelectionListener selectionListener = new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				AdvancedOptionsDialog dialog = new AdvancedOptionsDialog(getShell(), workingUserCatalog);
+				dialog.create();
+				dialog.getShell().setText(XMLCatalogMessages.UI_LABEL_ADVANCED_XML_CATALOG_PREFS);
+				dialog.setBlockOnOpen(true);
+				dialog.open();
+			}
+		};
+		advancedButton.addSelectionListener(selectionListener);
+	}
 
-    protected void createCatalogDetailsView(Composite parent)
-    {
-        Group detailsGroup = new Group(parent, SWT.NONE);
-        detailsGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        detailsGroup.setLayout(new GridLayout());
-        detailsGroup.setText(XMLCatalogMessages.UI_LABEL_DETAILS);
-        final XMLCatalogEntryDetailsView detailsView = new XMLCatalogEntryDetailsView(
-                detailsGroup);
-        ISelectionChangedListener listener = new ISelectionChangedListener()
-        {
-            public void selectionChanged(SelectionChangedEvent event)
-            {
-                ISelection selection = event.getSelection();
-                Object selectedObject = (selection instanceof IStructuredSelection) ? ((IStructuredSelection) selection)
-                        .getFirstElement()
-                        : null;
-                if (selectedObject instanceof ICatalogEntry)
-                {
-                    ICatalogEntry entry = (ICatalogEntry) selectedObject;
-                    detailsView.setCatalogElement(entry);
-                }
-                else if (selectedObject instanceof INextCatalog)
-                {
-                	INextCatalog entry = (INextCatalog) selectedObject;
-                    detailsView.setCatalogElement(entry);
-                }
-                else {
-                	detailsView.setCatalogElement((ICatalogEntry) null); 
-                }
-                
-            }
-        };
-        catalogEntriesView.getViewer().addSelectionChangedListener(listener);
-    }
+	public boolean isSameFileName(String a, String b) {
+		boolean result = false;
+		if ((a == null) && (b == null)) {
+			result = true;
+		}
+		else if ((a != null) && (b != null)) {
+			result = a.equals(b);
+		}
+		return result;
+	}
 
-    /**
-     * Do anything necessary because the OK button has been pressed.
-     * 
-     * @return whether it is okay to close the preference page
-     */
-    public boolean performOk()
-    {
-        return storeValues();
-    }
+	protected void createCatalogEntriesView(Composite parent) {
+		Group group = new Group(parent, SWT.NONE);
+		group.setLayout(new GridLayout());
+		group.setLayoutData(new GridData(GridData.FILL_BOTH));
+		group.setText(XMLCatalogMessages.UI_LABEL_USER_ENTRIES);
+		group.setToolTipText(XMLCatalogMessages.UI_LABEL_USER_ENTRIES_TOOL_TIP);
+		// WorkbenchHelp.setHelp(userEntriesGroup, new
+		// ControlContextComputer(userEntriesGroup,
+		// XMLBuilderContextIds.XMLP_CATALOG_USER_GROUP));
+		catalogEntriesView = new XMLCatalogEntriesView(group, workingUserCatalog, systemCatalog);
+		catalogEntriesView.setLayoutData(new GridData(GridData.FILL_BOTH));
+	}
 
-    /**
-     * @see IWorkbenchPreferencePage
-     */
-    public void init(IWorkbench workbench)
-    {
-    }
+	protected void createCatalogDetailsView(Composite parent) {
+		Group detailsGroup = new Group(parent, SWT.NONE);
+		detailsGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		detailsGroup.setLayout(new GridLayout());
+		detailsGroup.setText(XMLCatalogMessages.UI_LABEL_DETAILS);
+		final XMLCatalogEntryDetailsView detailsView = new XMLCatalogEntryDetailsView(detailsGroup);
+		ISelectionChangedListener listener = new ISelectionChangedListener() {
+			public void selectionChanged(SelectionChangedEvent event) {
+				ISelection selection = event.getSelection();
+				Object selectedObject = (selection instanceof IStructuredSelection) ? ((IStructuredSelection) selection).getFirstElement() : null;
+				if (selectedObject instanceof ICatalogEntry) {
+					ICatalogEntry entry = (ICatalogEntry) selectedObject;
+					detailsView.setCatalogElement(entry);
+				}
+				else if (selectedObject instanceof INextCatalog) {
+					INextCatalog entry = (INextCatalog) selectedObject;
+					detailsView.setCatalogElement(entry);
+				}
+				else {
+					detailsView.setCatalogElement((ICatalogEntry) null);
+				}
 
-    /**
-     * Stores the values of the controls back to the preference store.
-     */
-    private boolean storeValues()
-    {
-       //dw  Object fileObject = null;
-        try
-        {
-            // update the userCatalog so that its the same as the working
-            // catalog
-            userCatalog.clear();
-            // TODO add entries from the nested catalogs?
-            userCatalog.addEntriesFromCatalog(workingUserCatalog);
-            // now save the userCatalog
-            userCatalog.save();
-        } catch (Exception e)
-        {
-        }
-        return true;
-    }
-    
-	
+			}
+		};
+		catalogEntriesView.getViewer().addSelectionChangedListener(listener);
+	}
+
+	/**
+	 * Do anything necessary because the OK button has been pressed.
+	 * 
+	 * @return whether it is okay to close the preference page
+	 */
+	public boolean performOk() {
+		return storeValues();
+	}
+
+	/**
+	 * @see IWorkbenchPreferencePage
+	 */
+	public void init(IWorkbench workbench) {
+	}
+
+	/**
+	 * Stores the values of the controls back to the preference store.
+	 */
+	private boolean storeValues() {
+		// dw Object fileObject = null;
+		try {
+			// update the userCatalog so that its the same as the working
+			// catalog
+			userCatalog.clear();
+			// TODO add entries from the nested catalogs?
+			userCatalog.addEntriesFromCatalog(workingUserCatalog);
+			// now save the userCatalog
+			userCatalog.save();
+		}
+		catch (Exception e) {
+		}
+		return true;
+	}
+
+
 }

@@ -51,8 +51,9 @@ public class CMImageUtil {
 	}
 
 	public static Image getImage(CMNode cmnode) {
-		if (cmnode == null)
+		if (cmnode == null) {
 			return null;
+		}
 		Image image = null;
 		ImageDescriptor descriptor = getImageDescriptor(cmnode);
 		if (descriptor != null) {
@@ -62,14 +63,14 @@ public class CMImageUtil {
 	}
 
 	public static ImageDescriptor getImageDescriptor(CMNode cmnode) {
-		if (cmnode == null)
+		if (cmnode == null) {
 			return null;
+		}
 		// cache CM-specified images with the XML UI plugin
 		String imageURLString = (String) cmnode.getProperty("small-icon"); //$NON-NLS-1$
 		ImageDescriptor descriptor = null;
-		if (imageURLString != null && imageURLString.length() > 0) {
-			descriptor = XMLUIPlugin.getInstance().getImageRegistry()
-					.getDescriptor(imageURLString);
+		if ((imageURLString != null) && (imageURLString.length() > 0)) {
+			descriptor = XMLUIPlugin.getInstance().getImageRegistry().getDescriptor(imageURLString);
 			if (descriptor == null) {
 				try {
 					URL imageURL = new URL(imageURLString);
@@ -77,11 +78,12 @@ public class CMImageUtil {
 					connection.setUseCaches(false);
 					ImageData data = new ImageData(connection.getInputStream());
 					descriptor = ImageDescriptor.createFromImageData(data);
-					XMLUIPlugin.getInstance().getImageRegistry().put(
-							imageURLString, descriptor);
-				} catch (MalformedURLException e) {
+					XMLUIPlugin.getInstance().getImageRegistry().put(imageURLString, descriptor);
+				}
+				catch (MalformedURLException e) {
 					descriptor = null;
-				} catch (IOException e) {
+				}
+				catch (IOException e) {
 					descriptor = null;
 				}
 			}

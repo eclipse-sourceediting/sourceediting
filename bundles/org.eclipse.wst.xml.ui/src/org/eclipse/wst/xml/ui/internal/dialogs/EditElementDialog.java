@@ -79,7 +79,7 @@ public class EditElementDialog extends Dialog implements ModifyListener {
 		composite.setLayoutData(new GridData(GridData.FILL_BOTH));
 
 		Label elementNameLabel = new Label(composite, SWT.NONE);
-		elementNameLabel.setText(XMLUIMessages._UI_LABEL_ELEMENT_NAME); //$NON-NLS-1$
+		elementNameLabel.setText(XMLUIMessages._UI_LABEL_ELEMENT_NAME);
 
 		elementNameField = new Text(composite, SWT.SINGLE | SWT.BORDER);
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
@@ -90,7 +90,7 @@ public class EditElementDialog extends Dialog implements ModifyListener {
 
 		// error message
 		errorMessageLabel = new Label(composite, SWT.NONE);
-		errorMessageLabel.setText(XMLUIMessages.error_message_goes_here); //$NON-NLS-1$
+		errorMessageLabel.setText(XMLUIMessages.error_message_goes_here);
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.horizontalSpan = 2;
 		errorMessageLabel.setLayoutData(gd);
@@ -110,7 +110,7 @@ public class EditElementDialog extends Dialog implements ModifyListener {
 
 	protected String getModelValue(String string) {
 		String result = null;
-		if (string != null && string.trim().length() > 0) {
+		if ((string != null) && (string.trim().length() > 0)) {
 			result = string;
 		}
 		return result;
@@ -123,14 +123,15 @@ public class EditElementDialog extends Dialog implements ModifyListener {
 	protected void updateErrorMessage() {
 		String errorMessage = null;
 		String name = elementNameField.getText();
-		//		String name = elementNameField.getText().trim();
+		// String name = elementNameField.getText().trim();
 		if (name.length() > 0) {
 			// TODO use checkName from model level
-			//errorMessage = ValidateHelper.checkXMLName(name);
+			// errorMessage = ValidateHelper.checkXMLName(name);
 			if (!NameValidator.isValid(name)) {
 				errorMessage = XMLUIMessages._UI_INVALID_NAME;
 			}
-		} else {
+		}
+		else {
 			errorMessage = ""; //$NON-NLS-1$
 		}
 
@@ -138,6 +139,3 @@ public class EditElementDialog extends Dialog implements ModifyListener {
 		okButton.setEnabled(errorMessage == null);
 	}
 }
-
-
-

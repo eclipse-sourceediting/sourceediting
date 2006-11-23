@@ -91,8 +91,9 @@ public class ProjectionModelNodeAdapterXML implements INodeAdapter {
 		public void markCollapsed() {
 			/* workaround for BUG85874 */
 			// do not mark collapsed if annotation is not visible
-			if (fIsVisible)
+			if (fIsVisible) {
 				super.markCollapsed();
+			}
 		}
 	}
 
@@ -112,14 +113,14 @@ public class ProjectionModelNodeAdapterXML implements INodeAdapter {
 	 */
 	private Position createProjectionPosition(Node node) {
 		Position pos = null;
-		if (isNodeProjectable(node) && node instanceof IndexedRegion) {
+		if (isNodeProjectable(node) && (node instanceof IndexedRegion)) {
 			// IDocument document =
 			// fAdapterFactory.getProjectionViewer().getDocument();
 			// if (document != null) {
 			IndexedRegion inode = (IndexedRegion) node;
 			int start = inode.getStartOffset();
 			int end = inode.getEndOffset();
-			if (start >= 0 && start < end) {
+			if ((start >= 0) && (start < end)) {
 				// region-based
 				// extra line when collapsed, but no region increase when add
 				// newline
@@ -171,7 +172,7 @@ public class ProjectionModelNodeAdapterXML implements INodeAdapter {
 
 		if ((node != null) && (!fTagAnnotations.isEmpty())) {
 			Iterator it = fTagAnnotations.keySet().iterator();
-			while (it.hasNext() && anno == null) {
+			while (it.hasNext() && (anno == null)) {
 				TagProjectionAnnotation a = (TagProjectionAnnotation) it.next();
 				Node n = a.getNode();
 				if (node.equals(n)) {
@@ -275,13 +276,14 @@ public class ProjectionModelNodeAdapterXML implements INodeAdapter {
 			}
 
 			// specifically add all annotations to viewer
-			if (viewer != null && !projectionAnnotations.isEmpty()) {
+			if ((viewer != null) && !projectionAnnotations.isEmpty()) {
 				fAdapterFactory.queueAnnotationModelChanges(node, null, projectionAnnotations, null, viewer);
 			}
 
 			// only update when there is something to update
-			if ((oldList != null && oldList.length > 0) || (!additions.isEmpty()) || (modifyList != null && modifyList.length > 0))
+			if (((oldList != null) && (oldList.length > 0)) || (!additions.isEmpty()) || ((modifyList != null) && (modifyList.length > 0))) {
 				fAdapterFactory.queueAnnotationModelChanges(node, oldList, additions, modifyList);
+			}
 		}
 
 		// save new list of annotations

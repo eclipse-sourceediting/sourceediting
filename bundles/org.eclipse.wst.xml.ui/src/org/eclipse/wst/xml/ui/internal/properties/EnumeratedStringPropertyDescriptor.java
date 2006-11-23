@@ -52,15 +52,17 @@ public class EnumeratedStringPropertyDescriptor extends PropertyDescriptor {
 		// Check to see if we already have a Cell Editor with a valid Control
 		// under the given parent.
 		// If any of that's not true, create and return a new Cell Editor
-		if (fEditor == null || fEditor.getControl() == null || fEditor.getControl().isDisposed() || parent != fParent)
+		if ((fEditor == null) || (fEditor.getControl() == null) || fEditor.getControl().isDisposed() || (parent != fParent)) {
 			fEditor = new StringComboBoxCellEditor(parent, fValues);
+		}
 		fParent = parent;
 		return fEditor;
 	}
 
 	public void updateValues(String newValues[]) {
-		if (Arrays.equals(fValues, newValues))
+		if (Arrays.equals(fValues, newValues)) {
 			return;
+		}
 		fValues = newValues;
 		if (fEditor != null) {
 			fEditor.setItems(newValues);

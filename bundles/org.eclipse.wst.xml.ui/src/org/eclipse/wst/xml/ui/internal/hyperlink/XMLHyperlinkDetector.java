@@ -93,7 +93,7 @@ public class XMLHyperlinkDetector implements IHyperlinkDetector {
 		// for now, only capable of creating 1 hyperlink
 		List hyperlinks = new ArrayList(0);
 
-		if (region != null && textViewer != null) {
+		if ((region != null) && (textViewer != null)) {
 			IDocument document = textViewer.getDocument();
 			Node currentNode = getCurrentNode(document, region.getOffset());
 			if (currentNode != null) {
@@ -110,9 +110,10 @@ public class XMLHyperlinkDetector implements IHyperlinkDetector {
 						// resolve attribute value
 						uriString = getURIString(currentAttr, document);
 						// verify validity of uri string
-						if (uriString == null || !isValidURI(uriString))
+						if ((uriString == null) || !isValidURI(uriString)) {
 							// reset current attribute
 							currentAttr = null;
+						}
 					}
 					if (currentAttr == null) {
 						// try to find a linkable attribute within element
@@ -124,7 +125,7 @@ public class XMLHyperlinkDetector implements IHyperlinkDetector {
 					currentNode = currentAttr;
 				}
 				// try to create hyperlink from information gathered
-				if (uriString != null && currentNode != null && isValidURI(uriString)) {
+				if ((uriString != null) && (currentNode != null) && isValidURI(uriString)) {
 					IRegion hyperlinkRegion = getHyperlinkRegion(currentNode);
 					IHyperlink hyperlink = createHyperlink(uriString, hyperlinkRegion, document, currentNode);
 					if (hyperlink != null) {
@@ -133,8 +134,9 @@ public class XMLHyperlinkDetector implements IHyperlinkDetector {
 				}
 			}
 		}
-		if (hyperlinks.size() == 0)
+		if (hyperlinks.size() == 0) {
 			return null;
+		}
 		return (IHyperlink[]) hyperlinks.toArray(new IHyperlink[0]);
 	}
 
@@ -154,10 +156,12 @@ public class XMLHyperlinkDetector implements IHyperlinkDetector {
 					baseLoc = location.toString();
 				}
 				else {
-					if (location.segmentCount() > 1)
+					if (location.segmentCount() > 1) {
 						baseLoc = ResourcesPlugin.getWorkspace().getRoot().getFile(location).getLocation().toString();
-					else
+					}
+					else {
 						baseLoc = ResourcesPlugin.getWorkspace().getRoot().getLocation().append(location).toString();
+					}
 				}
 			}
 		}
@@ -223,15 +227,17 @@ public class XMLHyperlinkDetector implements IHyperlinkDetector {
 		IStructuredModel sModel = null;
 		try {
 			sModel = StructuredModelManager.getModelManager().getExistingModelForRead(document);
-			if(sModel != null) {
+			if (sModel != null) {
 				inode = sModel.getIndexedRegion(offset);
-				if (inode == null)
+				if (inode == null) {
 					inode = sModel.getIndexedRegion(offset - 1);
+				}
 			}
 		}
 		finally {
-			if (sModel != null)
+			if (sModel != null) {
 				sModel.releaseFromRead();
+			}
 		}
 
 		if (inode instanceof Node) {
@@ -253,9 +259,11 @@ public class XMLHyperlinkDetector implements IHyperlinkDetector {
 
 		if (fileString != null) {
 			IFile[] files = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocation(new Path(fileString));
-			for (int i = 0; i < files.length && file == null; i++)
-				if (files[i].exists())
+			for (int i = 0; (i < files.length) && (file == null); i++) {
+				if (files[i].exists()) {
 					file = files[i];
+				}
+			}
 		}
 
 		return file;
@@ -355,8 +363,9 @@ public class XMLHyperlinkDetector implements IHyperlinkDetector {
 				String publicId = st.hasMoreTokens() ? st.nextToken() : null;
 				String systemId = st.hasMoreTokens() ? st.nextToken() : null;
 				// found location hint
-				if (namespaceURI.equalsIgnoreCase(publicId))
+				if (namespaceURI.equalsIgnoreCase(publicId)) {
 					return systemId;
+				}
 			}
 		}
 		return null;
@@ -388,9 +397,9 @@ public class XMLHyperlinkDetector implements IHyperlinkDetector {
 			String attrName = attrNode.getName();
 			String attrValue = attrNode.getValue();
 			attrValue = StringUtils.strip(attrValue);
-			if (attrValue != null && attrValue.length() > 0) {
+			if ((attrValue != null) && (attrValue.length() > 0)) {
 				baseLoc = getBaseLocation(document);
-				
+
 				// handle schemaLocation attribute
 				String prefix = DOMNamespaceHelper.getPrefix(attrName);
 				String unprefixedName = DOMNamespaceHelper.getUnprefixedName(attrName);
@@ -429,8 +438,9 @@ public class XMLHyperlinkDetector implements IHyperlinkDetector {
 		boolean isHttp = false;
 		if (uriString != null) {
 			String tempString = uriString.toLowerCase();
-			if (tempString.startsWith(HTTP_PROTOCOL))
+			if (tempString.startsWith(HTTP_PROTOCOL)) {
 				isHttp = true;
+			}
 		}
 		return isHttp;
 	}
@@ -452,12 +462,14 @@ public class XMLHyperlinkDetector implements IHyperlinkDetector {
 		String prefix = DOMNamespaceHelper.getPrefix(attrName);
 		String unprefixedName = DOMNamespaceHelper.getUnprefixedName(attrName);
 		// determine if attribute is namespace declaration
-		if ((XMLNS.equals(prefix)) || (XMLNS.equals(unprefixedName)))
+		if ((XMLNS.equals(prefix)) || (XMLNS.equals(unprefixedName))) {
 			return true;
+		}
 
 		// determine if attribute contains schema location
-		if ((XSI_NAMESPACE_URI.equals(DOMNamespaceHelper.getNamespaceURI(attr))) && ((SCHEMA_LOCATION.equals(unprefixedName)) || (NO_NAMESPACE_SCHEMA_LOCATION.equals(unprefixedName))))
+		if ((XSI_NAMESPACE_URI.equals(DOMNamespaceHelper.getNamespaceURI(attr))) && ((SCHEMA_LOCATION.equals(unprefixedName)) || (NO_NAMESPACE_SCHEMA_LOCATION.equals(unprefixedName)))) {
 			return true;
+		}
 
 		// determine if attribute value is of type URI
 		if (cmElement != null) {
@@ -478,12 +490,14 @@ public class XMLHyperlinkDetector implements IHyperlinkDetector {
 	private boolean isValidURI(String uriString) {
 		boolean isValid = false;
 
-		if (isHttp(uriString))
+		if (isHttp(uriString)) {
 			isValid = true;
+		}
 		else {
 			File file = getFileFromUriString(uriString);
-			if (file != null)
+			if (file != null) {
 				isValid = file.isFile();
+			}
 		}
 		return isValid;
 	}
@@ -498,8 +512,9 @@ public class XMLHyperlinkDetector implements IHyperlinkDetector {
 	 */
 	private String resolveURI(String baseLocation, String publicId, String systemId) {
 		// dont resolve if there's nothing to resolve
-		if ((baseLocation == null) && (publicId == null) && (systemId == null))
+		if ((baseLocation == null) && (publicId == null) && (systemId == null)) {
 			return null;
+		}
 		return URIResolverPlugin.createResolver().resolve(baseLocation, publicId, systemId);
 	}
 }

@@ -36,8 +36,9 @@ public class CatalogFileTypeRegistryReader {
 	static final String TAG_NAME = "fileType"; //$NON-NLS-1$
 
 	private static CatalogFileTypeRegistryReader getInstance() {
-		if (_instance == null)
+		if (_instance == null) {
 			_instance = new CatalogFileTypeRegistryReader();
+		}
 		return _instance;
 	}
 

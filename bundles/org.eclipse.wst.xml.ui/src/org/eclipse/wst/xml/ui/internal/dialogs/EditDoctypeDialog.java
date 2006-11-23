@@ -104,7 +104,7 @@ public class EditDoctypeDialog extends Dialog {
 		// row 1
 		//
 		Label rootElementNameLabel = new Label(composite, SWT.NONE);
-		rootElementNameLabel.setText(XMLUIMessages._UI_LABEL_ROOT_ELEMENT_NAME_COLON); //$NON-NLS-1$
+		rootElementNameLabel.setText(XMLUIMessages._UI_LABEL_ROOT_ELEMENT_NAME_COLON);
 
 		rootElementNameField = new Text(composite, SWT.SINGLE | SWT.BORDER);
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(rootElementNameField, XMLCommonUIContextIds.XCUI_DOCTYPE_ROOT);
@@ -120,7 +120,7 @@ public class EditDoctypeDialog extends Dialog {
 		// row 2
 		//
 		Label publicIdLabel = new Label(composite, SWT.NONE);
-		publicIdLabel.setText(XMLUIMessages._UI_LABEL_PUBLIC_ID_COLON); //$NON-NLS-1$
+		publicIdLabel.setText(XMLUIMessages._UI_LABEL_PUBLIC_ID_COLON);
 
 		publicIdField = new Text(composite, SWT.SINGLE | SWT.BORDER);
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(publicIdField, XMLCommonUIContextIds.XCUI_DOCTYPE_PUBLIC);
@@ -140,12 +140,12 @@ public class EditDoctypeDialog extends Dialog {
 		};
 
 		publicIdBrowseButton = new Button(composite, SWT.NONE);
-		publicIdBrowseButton.setText(XMLUIMessages._UI_LABEL_BROWSE); //$NON-NLS-1$
+		publicIdBrowseButton.setText(XMLUIMessages._UI_LABEL_BROWSE);
 		publicIdBrowseButton.addSelectionListener(selectionListener);
 
 		// row 3
 		Label systemIdLabel = new Label(composite, SWT.NONE);
-		systemIdLabel.setText(XMLUIMessages._UI_LABEL_SYSTEM_ID_COLON); //$NON-NLS-1$
+		systemIdLabel.setText(XMLUIMessages._UI_LABEL_SYSTEM_ID_COLON);
 
 		systemIdField = new Text(composite, SWT.SINGLE | SWT.BORDER);
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(systemIdField, XMLCommonUIContextIds.XCUI_DOCTYPE_SYSTEM);
@@ -155,7 +155,7 @@ public class EditDoctypeDialog extends Dialog {
 
 
 		systemIdBrowseButton = new Button(composite, SWT.NONE);
-		systemIdBrowseButton.setText(XMLUIMessages._UI_LABEL_BROWSE); //$NON-NLS-1$
+		systemIdBrowseButton.setText(XMLUIMessages._UI_LABEL_BROWSE);
 		systemIdBrowseButton.addSelectionListener(selectionListener);
 
 		// error message
@@ -165,7 +165,7 @@ public class EditDoctypeDialog extends Dialog {
 		Color color = new Color(errorMessageLabel.getDisplay(), 200, 0, 0);
 		errorMessageLabel.setForeground(color);
 
-	    Dialog.applyDialogFont(parent);
+		Dialog.applyDialogFont(parent);
 		return dialogControl;
 	}
 
@@ -188,7 +188,7 @@ public class EditDoctypeDialog extends Dialog {
 
 	protected String getModelValue(String string) {
 		String result = null;
-		if (string != null && string.trim().length() > 0) {
+		if ((string != null) && (string.trim().length() > 0)) {
 			result = string;
 		}
 		return result;
@@ -222,10 +222,10 @@ public class EditDoctypeDialog extends Dialog {
 		if (errorChecking) {
 			String errorMessage = null;
 			if (getModelValue(systemIdField.getText()) == null) {
-				errorMessage = XMLUIMessages._UI_WARNING_SYSTEM_ID_MUST_BE_SPECIFIED; //$NON-NLS-1$
+				errorMessage = XMLUIMessages._UI_WARNING_SYSTEM_ID_MUST_BE_SPECIFIED;
 			}
 			else if (getModelValue(rootElementNameField.getText()) == null) {
-				errorMessage = XMLUIMessages._UI_WARNING_ROOT_ELEMENT_MUST_BE_SPECIFIED; //$NON-NLS-1$
+				errorMessage = XMLUIMessages._UI_WARNING_ROOT_ELEMENT_MUST_BE_SPECIFIED;
 			}
 
 			errorMessageLabel.setText(errorMessage != null ? errorMessage : ""); //$NON-NLS-1$

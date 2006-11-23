@@ -70,7 +70,7 @@ public class AttributeContextInformationPresenter implements IContextInformation
 			IStructuredDocumentRegion startRegion = fModelUtil.getXMLNode(fDocumentPosition).getStartStructuredDocumentRegion();
 			int start = startRegion.getStartOffset();
 			int end = startRegion.getEndOffset();
-			result = documentPosition < end && documentPosition > start + 1;
+			result = (documentPosition < end) && (documentPosition > start + 1);
 		}
 		return result;
 	}
@@ -82,8 +82,9 @@ public class AttributeContextInformationPresenter implements IContextInformation
 	public boolean updatePresentation(int documentPosition, TextPresentation presentation) {
 		presentation.clear();
 
-		if (!(fInfo instanceof AttributeContextInformation))
+		if (!(fInfo instanceof AttributeContextInformation)) {
 			return false;
+		}
 
 		// iterate existing attributes from current node
 		IDOMNode xmlNode = fModelUtil.getXMLNode(documentPosition);
@@ -112,8 +113,9 @@ public class AttributeContextInformationPresenter implements IContextInformation
 		StyleRange sr = null;
 		for (int i = 0; i < sorted.length; i++) {
 			sr = sorted[i];
-			if (sr != null)
+			if (sr != null) {
 				presentation.addStyleRange(sr);
+			}
 		}
 		return true;
 	}

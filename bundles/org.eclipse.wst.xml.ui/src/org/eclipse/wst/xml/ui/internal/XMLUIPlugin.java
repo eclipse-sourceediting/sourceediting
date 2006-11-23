@@ -69,13 +69,12 @@ public class XMLUIPlugin extends AbstractUIPlugin {
 	 */
 	public TemplateStore getTemplateStore() {
 		if (fTemplateStore == null) {
-			fTemplateStore = new ContributionTemplateStore(
-					getTemplateContextRegistry(), getPreferenceStore(),
-					XMLUIPreferenceNames.TEMPLATES_KEY);
+			fTemplateStore = new ContributionTemplateStore(getTemplateContextRegistry(), getPreferenceStore(), XMLUIPreferenceNames.TEMPLATES_KEY);
 
 			try {
 				fTemplateStore.load();
-			} catch (IOException e) {
+			}
+			catch (IOException e) {
 				Logger.logException(e);
 			}
 		}
@@ -101,16 +100,18 @@ public class XMLUIPlugin extends AbstractUIPlugin {
 
 		return fContextTypeRegistry;
 	}
+
 	/**
-	   * Get an image from the registry. 
-	   * 
-	   * *This method is used by the referencingfile dialog and should be 
-	   *  removed when the dialog is moved to anothercomponent.
-	   * 
-	   * @param imageName The name of the image.
-	   * @return The image registered for the given name.
-	   */
-	public Image getImage(String imageName){
-	    return getWorkbench().getSharedImages().getImage(imageName);
+	 * Get an image from the registry.
+	 * 
+	 * *This method is used by the referencingfile dialog and should be
+	 * removed when the dialog is moved to anothercomponent.
+	 * 
+	 * @param imageName
+	 *            The name of the image.
+	 * @return The image registered for the given name.
+	 */
+	public Image getImage(String imageName) {
+		return getWorkbench().getSharedImages().getImage(imageName);
 	}
 }

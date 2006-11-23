@@ -108,7 +108,8 @@ public class NewXMLWizard extends NewModelWizard {
 
 	public static void showDialog(Shell shell, IFile file, IStructuredSelection structuredSelection) {
 		String[] errorInfo = new String[2];
-		// (cs) the URI argument to createCMDocument needs to be a fully qualified URI
+		// (cs) the URI argument to createCMDocument needs to be a fully
+		// qualified URI
 		//
 		CMDocument cmDocument = NewXMLGenerator.createCMDocument(URIHelper.getPlatformURI(file), errorInfo);
 		if (errorInfo[0] == null) {
@@ -163,7 +164,7 @@ public class NewXMLWizard extends NewModelWizard {
 		newFilePage.defaultName = (grammarURI != null) ? URIHelper.removeFileExtension(URIHelper.getLastSegment(grammarURI)) : "NewFile"; //$NON-NLS-1$
 		Preferences preference = XMLCorePlugin.getDefault().getPluginPreferences();
 		String ext = preference.getString(XMLCorePreferenceNames.DEFAULT_EXTENSION);
-		newFilePage.defaultFileExtension = "."+ext; //$NON-NLS-1$
+		newFilePage.defaultFileExtension = "." + ext; //$NON-NLS-1$
 		newFilePage.filterExtensions = filePageFilterExtensions;
 		addPage(newFilePage);
 
@@ -247,7 +248,7 @@ public class NewXMLWizard extends NewModelWizard {
 
 		IWizardPage currentPage = getContainer().getCurrentPage();
 
-		if ((startPage != null && startPage.getSelectedRadioButtonIndex() == CREATE_FROM_SCRATCH && currentPage == fNewXMLTemplatesWizardPage) || (currentPage == selectRootElementPage)) {
+		if (((startPage != null) && (startPage.getSelectedRadioButtonIndex() == CREATE_FROM_SCRATCH) && (currentPage == fNewXMLTemplatesWizardPage)) || (currentPage == selectRootElementPage)) {
 			result = currentPage.isPageComplete();
 		}
 		return result;
@@ -314,8 +315,9 @@ public class NewXMLWizard extends NewModelWizard {
 		try {
 			if (dw != null) {
 				IWorkbenchPage page = dw.getActivePage();
-				if (page != null)
+				if (page != null) {
 					page.openEditor(new FileEditorInput(file), editorId, true);
+				}
 			}
 		}
 		catch (PartInitException e) {
@@ -358,7 +360,7 @@ public class NewXMLWizard extends NewModelWizard {
 				}
 			};
 			panel.setListener(listener);
-		    Dialog.applyDialogFont(parent);
+			Dialog.applyDialogFont(parent);
 		}
 
 		public void setVisible(boolean visible) {
@@ -393,7 +395,7 @@ public class NewXMLWizard extends NewModelWizard {
 		}
 
 		public boolean isPageComplete() {
-			return getURI() != null && getErrorMessage() == null;
+			return (getURI() != null) && (getErrorMessage() == null);
 		}
 
 		public String getXMLCatalogId() {
@@ -557,7 +559,7 @@ public class NewXMLWizard extends NewModelWizard {
 						cmDocumentErrorMessage = errorInfo[1];
 					}
 
-					if (generator.getCMDocument() != null && cmDocumentErrorMessage == null) {
+					if ((generator.getCMDocument() != null) && (cmDocumentErrorMessage == null)) {
 						CMNamedNodeMap nameNodeMap = generator.getCMDocument().getElements();
 						Vector nameNodeVector = new Vector();
 
@@ -583,7 +585,7 @@ public class NewXMLWizard extends NewModelWizard {
 							String elementName = (String) nameNodeArray[i];
 
 							combo.add(elementName);
-							if (defaultRootName != null && defaultRootName.equals(elementName)) {
+							if ((defaultRootName != null) && defaultRootName.equals(elementName)) {
 								defaultRootIndex = i;
 							}
 						}
@@ -604,7 +606,7 @@ public class NewXMLWizard extends NewModelWizard {
 						// Provide default namespace prefix if none
 						for (int i = 0; i < generator.namespaceInfoList.size(); i++) {
 							NamespaceInfo nsinfo = (NamespaceInfo) generator.namespaceInfoList.get(i);
-							if ((nsinfo.prefix == null || nsinfo.prefix.trim().length() == 0) && (nsinfo.uri != null && nsinfo.uri.trim().length() != 0)) {
+							if (((nsinfo.prefix == null) || (nsinfo.prefix.trim().length() == 0)) && ((nsinfo.uri != null) && (nsinfo.uri.trim().length() != 0))) {
 								nsinfo.prefix = getDefaultPrefix(generator.namespaceInfoList);
 							}
 						}
@@ -631,14 +633,16 @@ public class NewXMLWizard extends NewModelWizard {
 
 		private String getDefaultPrefix(List nsInfoList) {
 			String defaultPrefix = "p"; //$NON-NLS-1$
-			if (nsInfoList == null)
+			if (nsInfoList == null) {
 				return defaultPrefix;
+			}
 
 			Vector v = new Vector();
 			for (int i = 0; i < nsInfoList.size(); i++) {
 				NamespaceInfo nsinfo = (NamespaceInfo) nsInfoList.get(i);
-				if (nsinfo.prefix != null)
+				if (nsinfo.prefix != null) {
 					v.addElement(nsinfo.prefix);
+				}
 			}
 
 			if (v.contains(defaultPrefix)) {
@@ -652,7 +656,7 @@ public class NewXMLWizard extends NewModelWizard {
 		}
 
 		public boolean isPageComplete() {
-			boolean complete = (generator.getRootElementName() != null && generator.getRootElementName().length() > 0) && getErrorMessage() == null;
+			boolean complete = ((generator.getRootElementName() != null) && (generator.getRootElementName().length() > 0)) && (getErrorMessage() == null);
 
 			if (complete) {
 				/*
@@ -661,14 +665,18 @@ public class NewXMLWizard extends NewModelWizard {
 				 * DOMContentBuilder.BUILD_ALL_CONTENT;
 				 */
 				int buildPolicy = 0;
-				if (radioButton[0].getSelection())
+				if (radioButton[0].getSelection()) {
 					buildPolicy = buildPolicy | DOMContentBuilder.BUILD_OPTIONAL_ATTRIBUTES;
-				if (radioButton[1].getSelection())
+				}
+				if (radioButton[1].getSelection()) {
 					buildPolicy = buildPolicy | DOMContentBuilder.BUILD_OPTIONAL_ELEMENTS;
-				if (radioButton[2].getSelection())
+				}
+				if (radioButton[2].getSelection()) {
 					buildPolicy = buildPolicy | DOMContentBuilder.BUILD_FIRST_CHOICE | DOMContentBuilder.BUILD_FIRST_SUBSTITUTION;
-				if (radioButton[3].getSelection())
+				}
+				if (radioButton[3].getSelection()) {
 					buildPolicy = buildPolicy | DOMContentBuilder.BUILD_TEXT_NODES;
+				}
 
 				generator.setBuildPolicy(buildPolicy);
 			}
@@ -682,7 +690,7 @@ public class NewXMLWizard extends NewModelWizard {
 			if (cmDocumentErrorMessage != null) {
 				errorMessage = cmDocumentErrorMessage;
 			}
-			else if (generator.getRootElementName() == null || generator.getRootElementName().length() == 0) {
+			else if ((generator.getRootElementName() == null) || (generator.getRootElementName().length() == 0)) {
 				errorMessage = XMLWizardsMessages._ERROR_ROOT_ELEMENT_MUST_BE_SPECIFIED;
 			}
 
@@ -737,7 +745,7 @@ public class NewXMLWizard extends NewModelWizard {
 			Composite co = new Composite(this, SWT.NONE);
 			co.setLayout(new GridLayout());
 
-			if (newFilePage != null && newFilePage.getContainerFullPath() != null) {
+			if ((newFilePage != null) && (newFilePage.getContainerFullPath() != null)) {
 				// todo... this is a nasty mess. I need to revist this code.
 				//
 				String resourceURI = "platform:/resource" + newFilePage.getContainerFullPath().toString() + "/dummy"; //$NON-NLS-1$ //$NON-NLS-2$

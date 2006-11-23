@@ -48,11 +48,11 @@ public class CommonNamespaceInfoTable extends TableViewer {
 			int columnCode = getColumnCode(columnIndex);
 			if (columnCode == COLUMN_LOCATION_HINT) {
 				NamespaceInfo info = (NamespaceInfo) object;
-				if (info.locationHint == null || info.locationHint.trim().equals("")) { //$NON-NLS-1$
+				if ((info.locationHint == null) || info.locationHint.trim().equals("")) { //$NON-NLS-1$
 					// Comment this out until we solve the alignment/(space
 					// for image being allocated
 					// to prefix column) ......
-					//          result =
+					// result =
 					// XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_WARNING_OBJ);
 				}
 			}
@@ -74,7 +74,7 @@ public class CommonNamespaceInfoTable extends TableViewer {
 					break;
 				}
 				case COLUMN_CHECKBOX : {
-					result = ""; //info.locationHint; //$NON-NLS-1$
+					result = ""; // info.locationHint; //$NON-NLS-1$
 					break;
 				}
 				case COLUMN_LOCATION_HINT : {
@@ -86,11 +86,11 @@ public class CommonNamespaceInfoTable extends TableViewer {
 			if (result.equals("")) { //$NON-NLS-1$
 				switch (columnCode) {
 					case COLUMN_PREFIX : {
-						result = XMLUIMessages._UI_NO_PREFIX; //$NON-NLS-1$
+						result = XMLUIMessages._UI_NO_PREFIX;
 						break;
 					}
 					case COLUMN_NAMESPACE_URI : {
-						result = XMLUIMessages._UI_NO_NAMESPACE_NAME; //$NON-NLS-1$
+						result = XMLUIMessages._UI_NO_NAMESPACE_NAME;
 						break;
 					}
 				}
@@ -116,16 +116,18 @@ public class CommonNamespaceInfoTable extends TableViewer {
 				if (obj != null) {
 					NamespaceInfo info = (NamespaceInfo) obj;
 					TableColumn col = getTable().getColumn(0);
-					if (e.x < col.getWidth()) // if the point falls within the
+					if (e.x < col.getWidth()) // if the point falls within
+												// the
 					// Select column then perform
 					// check/uncheck
 					{
 						String currentState = (String) info.getProperty("checked"); //$NON-NLS-1$
 						System.out.println("currentState" + currentState); //$NON-NLS-1$
-						if (currentState == null || currentState.equals("false")) //$NON-NLS-1$
+						if ((currentState == null) || currentState.equals("false")) //$NON-NLS-1$
 						{
 							info.setProperty("checked", "true"); //$NON-NLS-1$ //$NON-NLS-2$
-						} else {
+						}
+						else {
 							info.setProperty("checked", "false"); //$NON-NLS-1$ //$NON-NLS-2$
 						}
 						refresh();
@@ -141,12 +143,12 @@ public class CommonNamespaceInfoTable extends TableViewer {
 	protected static final int COLUMN_PREFIX = 3;
 
 	protected static final String LABEL_CHECKBOX = ""; //$NON-NLS-1$
-	protected static final String LABEL_LOCATION_HINT = XMLUIMessages._UI_LABEL_LOCATION_HINT; //$NON-NLS-1$
-	protected static final String LABEL_NAMESPACE_URI = XMLUIMessages._UI_LABEL_NAMESPACE_NAME; //$NON-NLS-1$
-	protected static final String LABEL_PREFIX = XMLUIMessages._UI_LABEL_PREFIX; //$NON-NLS-1$
+	protected static final String LABEL_LOCATION_HINT = XMLUIMessages._UI_LABEL_LOCATION_HINT;
+	protected static final String LABEL_NAMESPACE_URI = XMLUIMessages._UI_LABEL_NAMESPACE_NAME;
+	protected static final String LABEL_PREFIX = XMLUIMessages._UI_LABEL_PREFIX;
 	protected List checkedList = new ArrayList();
 
-	//protected List namespaceInfoList = new ArrayList();
+	// protected List namespaceInfoList = new ArrayList();
 	protected int[] columnIndexMap;
 	protected boolean showCheckBoxes = true;
 	private boolean showLocationText = false;
@@ -158,9 +160,9 @@ public class CommonNamespaceInfoTable extends TableViewer {
 		this(parent, SWT.FULL_SELECTION | SWT.MULTI | SWT.BORDER, visibleRows, false);
 	}
 
-	//protected CellEditor getCellEditor(int column)
+	// protected CellEditor getCellEditor(int column)
 	// {
-	//  return (column == COLUMN_CHECKBOX) ? checkBoxCellEditor :
+	// return (column == COLUMN_CHECKBOX) ? checkBoxCellEditor :
 	// textCellEditor;
 	// }
 
@@ -197,13 +199,15 @@ public class CommonNamespaceInfoTable extends TableViewer {
 			if ((columnPropertiesArray[i]).equals(LABEL_LOCATION_HINT)) {
 				if (showLocationText) {
 					column.setText(columnPropertiesArray[i]);
-				} else {
+				}
+				else {
 					// Comment this out until we solve the alignment/(space
 					// for image being allocated
 					// to prefix column) ......
-					//          	column.setImage(XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_TXTEXT));
+					// column.setImage(XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_TXTEXT));
 				}
-			} else {
+			}
+			else {
 				column.setText(columnPropertiesArray[i]);
 			}
 			column.setAlignment(SWT.LEFT);
@@ -212,13 +216,13 @@ public class CommonNamespaceInfoTable extends TableViewer {
 		table.setLayout(layout);
 
 		this.visibleRows = visibleRows;
-		//for (int i = 0; i < visibleRows; i++)
+		// for (int i = 0; i < visibleRows; i++)
 		// {
-		//  TableItem item = new TableItem(table, SWT.NONE);
-		//  item.setText("#######");
-		//}
-		//checkBoxCellEditor = new NamespaceInfoCheckboxCellEditor(table);
-		//textCellEditor = new TextCellEditor(table);
+		// TableItem item = new TableItem(table, SWT.NONE);
+		// item.setText("#######");
+		// }
+		// checkBoxCellEditor = new NamespaceInfoCheckboxCellEditor(table);
+		// textCellEditor = new TextCellEditor(table);
 
 		/*
 		 * CellEditor[] cellEditors = new
@@ -226,14 +230,14 @@ public class CommonNamespaceInfoTable extends TableViewer {
 		 * columnPropertiesArray.length; i++) { cellEditors[i] =
 		 * getCellEditor(i); } setCellEditors(cellEditors);
 		 */
-		//if (showCheckBoxes)
-		//{
-		//  getTable().addMouseListener(new TableItemChecker());
-		//}
+		// if (showCheckBoxes)
+		// {
+		// getTable().addMouseListener(new TableItemChecker());
+		// }
 	}
 
-	//protected CellEditor checkBoxCellEditor;
-	//protected CellEditor textCellEditor;
+	// protected CellEditor checkBoxCellEditor;
+	// protected CellEditor textCellEditor;
 
 	protected int[] createColumnIndexMap() {
 		int[] result = new int[showCheckBoxes ? 4 : 3];
@@ -283,13 +287,14 @@ public class CommonNamespaceInfoTable extends TableViewer {
 				// displayed
 				if (showLocationText) {
 					result = 10;
-				} else {
+				}
+				else {
 					result = 20;
 				}
 				break;
 			}
 			case COLUMN_CHECKBOX : {
-				result = 1; //info.locationHint;
+				result = 1; // info.locationHint;
 				break;
 			}
 			case COLUMN_LOCATION_HINT : {
@@ -297,7 +302,8 @@ public class CommonNamespaceInfoTable extends TableViewer {
 				// displayed
 				if (showLocationText) {
 					result = 10;
-				} else {
+				}
+				else {
 					result = 2;
 				}
 				break;

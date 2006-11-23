@@ -59,6 +59,7 @@ public class XMLTemplatePreferencePage extends TemplatePreferencePage {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.ui.texteditor.templates.TemplatePreferencePage#createViewer(org.eclipse.swt.widgets.Composite)
 	 */
 	protected SourceViewer createViewer(Composite parent) {
@@ -83,6 +84,7 @@ public class XMLTemplatePreferencePage extends TemplatePreferencePage {
 		viewer.setDocument(document);
 		return viewer;
 	}
+
 	/*
 	 * (non-Javadoc)
 	 * 

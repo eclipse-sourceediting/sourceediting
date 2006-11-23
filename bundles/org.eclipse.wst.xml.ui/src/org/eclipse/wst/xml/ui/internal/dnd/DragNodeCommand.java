@@ -33,7 +33,7 @@ import org.w3c.dom.Node;
 public class DragNodeCommand extends DefaultDragAndDropCommand {
 	private List fSelections;
 	private TreeViewer fTreeViewer;
-	
+
 	public DragNodeCommand(Object target, float location, int operations, int operation, Collection sources, TreeViewer treeViewer) {
 		super(target, location, operations, operation, sources);
 		fTreeViewer = treeViewer;
@@ -46,13 +46,14 @@ public class DragNodeCommand extends DefaultDragAndDropCommand {
 			String undoDesc = new String();
 			if (getOperation() == DND.DROP_MOVE) {
 				undoDesc = XMLUIMessages.DragNodeCommand_0;
-			} else if (getOperation() == DND.DROP_COPY) {
+			}
+			else if (getOperation() == DND.DROP_COPY) {
 				undoDesc = XMLUIMessages.DragNodeCommand_1;
 			}
-			
+
 			structuredModel.beginRecording(this, undoDesc);
 			if (batchUpdate) {
-				//  structuredModel.aboutToChangeModel();
+				// structuredModel.aboutToChangeModel();
 			}
 		}
 	}
@@ -66,18 +67,18 @@ public class DragNodeCommand extends DefaultDragAndDropCommand {
 		if (source.getNodeType() == Node.ATTRIBUTE_NODE) {
 			Attr sourceAttribute = (Attr) source;
 			Element sourceAttributeOwnerElement = sourceAttribute.getOwnerElement();
-			if (parentNode.getNodeType() == Node.ELEMENT_NODE && sourceAttributeOwnerElement != parentNode) {
+			if ((parentNode.getNodeType() == Node.ELEMENT_NODE) && (sourceAttributeOwnerElement != parentNode)) {
 				result = true;
 				if (!testOnly) {
 					try {
-						if(getOperation() == DND.DROP_MOVE) {
+						if (getOperation() == DND.DROP_MOVE) {
 							Element targetElement = (Element) parentNode;
 							sourceAttributeOwnerElement.removeAttributeNode(sourceAttribute);
 							targetElement.getAttributes().setNamedItem(sourceAttribute);
 							fSelections.add(sourceAttribute);
 						}
 						else if (getOperation() == DND.DROP_COPY) {
-							Attr cloneAttribute = (Attr) sourceAttribute.cloneNode(false);						
+							Attr cloneAttribute = (Attr) sourceAttribute.cloneNode(false);
 							Element targetElement = (Element) parentNode;
 							targetElement.getAttributes().setNamedItem(cloneAttribute);
 							fSelections.add(cloneAttribute);
@@ -89,19 +90,20 @@ public class DragNodeCommand extends DefaultDragAndDropCommand {
 			}
 		}
 		else {
-			if ((parentNode.getNodeType() == Node.ELEMENT_NODE || parentNode.getNodeType() == Node.DOCUMENT_NODE) && 
-				!(refChild instanceof Attr)) {
+			if (((parentNode.getNodeType() == Node.ELEMENT_NODE) || (parentNode.getNodeType() == Node.DOCUMENT_NODE)) && !(refChild instanceof Attr)) {
 				result = true;
 
 				if (!testOnly) {
 					if (isAncestor(source, parentNode)) {
-						//System.out.println("can not perform this drag drop operation.... todo... pop up dialog");
+						// System.out.println("can not perform this drag drop
+						// operation.... todo... pop up dialog");
 					}
 					else {
-						// defect 221055 this test is required or else the node will
+						// defect 221055 this test is required or else the
+						// node will
 						// be removed from the tree and the insert will fail
 						if (source != refChild) {
-							if(getOperation() == DND.DROP_MOVE) {
+							if (getOperation() == DND.DROP_MOVE) {
 								source.getParentNode().removeChild(source);
 								parentNode.insertBefore(source, refChild);
 								fSelections.add(source);
@@ -118,20 +120,20 @@ public class DragNodeCommand extends DefaultDragAndDropCommand {
 		}
 		return result;
 	}
-	
+
 	private void endModelChange(Node node, boolean batchUpdate) {
 		IStructuredModel structuredModel = getStructuredModel(node);
 		if (structuredModel != null) {
 			structuredModel.endRecording(this);
 			if (batchUpdate) {
-				//  structuredModel.changedModel();
+				// structuredModel.changedModel();
 			}
 		}
 	}
 
 	public void execute() {
 		executeHelper(false);
-		
+
 		// Make our selection if the treeViewer != null
 		if (fTreeViewer != null) {
 			StructuredSelection structuredSelection = new StructuredSelection(fSelections);
@@ -158,9 +160,10 @@ public class DragNodeCommand extends DefaultDragAndDropCommand {
 			for (Iterator i = sourcesList.iterator(); i.hasNext();) {
 				Object source = i.next();
 				if (source instanceof Node) {
-					if (!(refChild == null && targetNode instanceof Attr)) {
+					if (!((refChild == null) && (targetNode instanceof Attr))) {
 						result = doModify((Node) source, parentNode, refChild, testOnly);
-					} else {
+					}
+					else {
 						result = false;
 					}
 					if (!result) {
@@ -171,7 +174,8 @@ public class DragNodeCommand extends DefaultDragAndDropCommand {
 			if (!testOnly) {
 				endModelChange(targetNode, performBatchUpdate);
 			}
-		} else {
+		}
+		else {
 			result = false;
 		}
 		return result;
@@ -182,7 +186,8 @@ public class DragNodeCommand extends DefaultDragAndDropCommand {
 		int result = DND.FEEDBACK_SELECT;
 		if (location > 0.75) {
 			result = DND.FEEDBACK_INSERT_AFTER;
-		} else if (location < 0.25) {
+		}
+		else if (location < 0.25) {
 			result = DND.FEEDBACK_INSERT_BEFORE;
 		}
 		return result;
@@ -194,7 +199,8 @@ public class DragNodeCommand extends DefaultDragAndDropCommand {
 		int feedback = getFeedback();
 		if (feedback == DND.FEEDBACK_SELECT) {
 			result = node;
-		} else {
+		}
+		else {
 			result = getParentOrOwner(node);
 		}
 		return result;
@@ -213,13 +219,14 @@ public class DragNodeCommand extends DefaultDragAndDropCommand {
 
 		if (feedback == DND.FEEDBACK_INSERT_BEFORE) {
 			result = node;
-		} else if (feedback == DND.FEEDBACK_INSERT_AFTER) {
+		}
+		else if (feedback == DND.FEEDBACK_INSERT_AFTER) {
 			result = node.getNextSibling();
 		}
 		return result;
 	}
 
-	private IStructuredModel getStructuredModel (Node node) {
+	private IStructuredModel getStructuredModel(Node node) {
 		IStructuredModel result = null;
 		if (node instanceof IDOMNode) {
 			result = ((IDOMNode) node).getModel();

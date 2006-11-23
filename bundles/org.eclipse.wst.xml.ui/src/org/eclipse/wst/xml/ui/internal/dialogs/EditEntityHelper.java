@@ -31,14 +31,14 @@ public class EditEntityHelper {
 		String[] extensions = {"dtd", "txt"}; //$NON-NLS-1$ //$NON-NLS-2$
 		SelectXMLCatalogIdDialog dialog = new SelectXMLCatalogIdDialog(parentShell, extensions);
 		dialog.create();
-		dialog.getShell().setText(XMLUIMessages._UI_LABEL_SELECT_XML_CATALOG_ENTRY); //$NON-NLS-1$
+		dialog.getShell().setText(XMLUIMessages._UI_LABEL_SELECT_XML_CATALOG_ENTRY);
 		dialog.setBlockOnOpen(true);
 		dialog.open();
 		if (dialog.getReturnCode() == Window.OK) {
 			String id = dialog.getId();
 			if (id != null) {
 				publicIdField.setText(id);
-				if (systemIdField != null && dialog.getSystemId() != null) {
+				if ((systemIdField != null) && (dialog.getSystemId() != null)) {
 					systemIdField.setText(dialog.getSystemId());
 				}
 			}
@@ -49,7 +49,7 @@ public class EditEntityHelper {
 		String[] extensions = {"dtd"}; //$NON-NLS-1$
 		SelectFileOrXMLCatalogIdDialog dialog = new SelectFileOrXMLCatalogIdDialog(parentShell, extensions, ICatalogEntry.ENTRY_TYPE_SYSTEM);
 		dialog.create();
-		dialog.getShell().setText(XMLUIMessages._UI_LABEL_SPECIFY_SYSTEM_ID); //$NON-NLS-1$
+		dialog.getShell().setText(XMLUIMessages._UI_LABEL_SPECIFY_SYSTEM_ID);
 		dialog.setBlockOnOpen(true);
 		dialog.open();
 		if (dialog.getReturnCode() == Window.OK) {
@@ -57,11 +57,13 @@ public class EditEntityHelper {
 			IFile file = dialog.getFile();
 			if (id != null) {
 				systemIdField.setText(id);
-			} else if (file != null) {
+			}
+			else if (file != null) {
 				String uri = null;
 				if (resourceLocation != null) {
 					uri = URIHelper.getRelativeURI(file.getLocation(), resourceLocation);
-				} else {
+				}
+				else {
 					uri = file.getLocation().toOSString();
 				}
 				systemIdField.setText(uri);

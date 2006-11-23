@@ -16,28 +16,25 @@ import java.net.URL;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
 
-public class XMLWizard
-{
-  protected static XMLWizard instance = new XMLWizard();
+public class XMLWizard {
+	protected static XMLWizard instance = new XMLWizard();
 
-  public synchronized static XMLWizard getInstance() {
-    return instance;
-  }
-  
-  public XMLWizard()
-  {
-    instance = this;
+	public synchronized static XMLWizard getInstance() {
+		return instance;
+	}
 
-  }
-  
-  public ImageDescriptor getImageDescriptor(String name)
-  {
-    try {
-      URL url= new URL(Platform.getBundle("org.eclipse.wst.xml.ui").getEntry("/"), name); //$NON-NLS-1$ //$NON-NLS-2$
-      return ImageDescriptor.createFromURL(url);
-    }
-    catch (MalformedURLException e) {
-      return ImageDescriptor.getMissingImageDescriptor();
-    }
-  } 
+	public XMLWizard() {
+		instance = this;
+
+	}
+
+	public ImageDescriptor getImageDescriptor(String name) {
+		try {
+			URL url = new URL(Platform.getBundle("org.eclipse.wst.xml.ui").getEntry("/"), name); //$NON-NLS-1$ //$NON-NLS-2$
+			return ImageDescriptor.createFromURL(url);
+		}
+		catch (MalformedURLException e) {
+			return ImageDescriptor.getMissingImageDescriptor();
+		}
+	}
 }

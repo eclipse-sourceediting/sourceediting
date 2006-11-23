@@ -47,8 +47,8 @@ public class EditSchemaInfoDialog extends Dialog implements UpdateListener {
 	protected Control createDialogArea(Composite parent) {
 		Composite dialogArea = (Composite) super.createDialogArea(parent);
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(dialogArea, XMLCommonUIContextIds.XCUI_SCHEMA_INFO_DIALOG);
-		
-		CommonEditNamespacesDialog editNamespacesControl = new CommonEditNamespacesDialog(dialogArea, resourceLocation, XMLUIMessages._UI_NAMESPACE_DECLARATIONS, false, true); //$NON-NLS-1$
+
+		CommonEditNamespacesDialog editNamespacesControl = new CommonEditNamespacesDialog(dialogArea, resourceLocation, XMLUIMessages._UI_NAMESPACE_DECLARATIONS, false, true);
 		editNamespacesControl.setNamespaceInfoList(namespaceInfoList);
 
 		editNamespacesControl.updateErrorMessage(namespaceInfoList);

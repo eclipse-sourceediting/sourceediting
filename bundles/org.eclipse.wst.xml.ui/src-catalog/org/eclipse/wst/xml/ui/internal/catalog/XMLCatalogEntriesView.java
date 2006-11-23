@@ -36,271 +36,249 @@ import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 
 
 
-public class XMLCatalogEntriesView extends Composite
-{
-  protected Button newButton;
-  protected Button editButton;
-  protected Button deleteButton;
-  protected XMLCatalogTreeViewer tableViewer;
-  protected ICatalog workingUserCatalog;
-  protected ICatalog systemCatalog;
-  //protected boolean isPageEnabled = true;
+public class XMLCatalogEntriesView extends Composite {
+	protected Button newButton;
+	protected Button editButton;
+	protected Button deleteButton;
+	protected XMLCatalogTreeViewer tableViewer;
+	protected ICatalog workingUserCatalog;
+	protected ICatalog systemCatalog;
 
-  public XMLCatalogEntriesView(Composite parent, ICatalog workingUserCatalog, ICatalog systemCatalog)
-  {
-    super(parent, SWT.NONE);
-    this.workingUserCatalog = workingUserCatalog;
-    this.systemCatalog = systemCatalog;
+	// protected boolean isPageEnabled = true;
 
-    GridLayout gridLayout = new GridLayout();
-    this.setLayout(gridLayout);
+	public XMLCatalogEntriesView(Composite parent, ICatalog workingUserCatalog, ICatalog systemCatalog) {
+		super(parent, SWT.NONE);
+		this.workingUserCatalog = workingUserCatalog;
+		this.systemCatalog = systemCatalog;
 
-    tableViewer = createTableViewer(this);
-    tableViewer.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
-    tableViewer.setInput("dummy"); //$NON-NLS-1$
-    tableViewer.expandToLevel(2);
-    tableViewer.reveal(XMLCatalogTreeViewer.USER_SPECIFIED_ENTRIES_OBJECT);
+		GridLayout gridLayout = new GridLayout();
+		this.setLayout(gridLayout);
 
-    ISelectionChangedListener listener = new ISelectionChangedListener()
-    {
-      public void selectionChanged(SelectionChangedEvent event)
-      {
-        updateWidgetEnabledState();
-      }
-    };
-    tableViewer.addSelectionChangedListener(listener);
+		tableViewer = createTableViewer(this);
+		tableViewer.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
+		tableViewer.setInput("dummy"); //$NON-NLS-1$
+		tableViewer.expandToLevel(2);
+		tableViewer.reveal(XMLCatalogTreeViewer.USER_SPECIFIED_ENTRIES_OBJECT);
 
-    createButtons(this);
-  }
+		ISelectionChangedListener listener = new ISelectionChangedListener() {
+			public void selectionChanged(SelectionChangedEvent event) {
+				updateWidgetEnabledState();
+			}
+		};
+		tableViewer.addSelectionChangedListener(listener);
 
-  public static String removeLeadingSlash(String uri)
-  {
-    // remove leading slash from the value to avoid the whole leading slash ambiguity problem
-    //       
-    if (uri != null)
-    {
-      while (uri.startsWith("/") || uri.startsWith("\\")) //$NON-NLS-1$ //$NON-NLS-2$
-      {
-        uri = uri.substring(1);
-      }
-    }
-    return uri;
-  }
+		createButtons(this);
+	}
 
-  protected XMLCatalogTreeViewer createTableViewer(Composite parent)
-  {
-    String headings[] = new String[2];
-    headings[0] = XMLCatalogMessages.UI_LABEL_KEY;
-    headings[1] = XMLCatalogMessages.UI_LABEL_URI;
+	public static String removeLeadingSlash(String uri) {
+		// remove leading slash from the value to avoid the whole leading
+		// slash ambiguity problem
+		//       
+		if (uri != null) {
+			while (uri.startsWith("/") || uri.startsWith("\\")) //$NON-NLS-1$ //$NON-NLS-2$
+			{
+				uri = uri.substring(1);
+			}
+		}
+		return uri;
+	}
 
-    XMLCatalogTreeViewer theTableViewer = new XMLCatalogTreeViewer(parent, workingUserCatalog, systemCatalog);
-    return theTableViewer;
-  }
+	protected XMLCatalogTreeViewer createTableViewer(Composite parent) {
+		String headings[] = new String[2];
+		headings[0] = XMLCatalogMessages.UI_LABEL_KEY;
+		headings[1] = XMLCatalogMessages.UI_LABEL_URI;
 
-  protected void createButtons(Composite parent)
-  {
-    Composite composite = new Composite(parent, SWT.NONE);
-    composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-    GridLayout gridLayout = new GridLayout();
-    gridLayout.numColumns = 7;
-    gridLayout.makeColumnsEqualWidth = true;
-    composite.setLayout(gridLayout);
+		XMLCatalogTreeViewer theTableViewer = new XMLCatalogTreeViewer(parent, workingUserCatalog, systemCatalog);
+		return theTableViewer;
+	}
 
-    GridData gd = new GridData();
-    gd.horizontalAlignment = GridData.FILL;
-    gd.grabExcessHorizontalSpace = true;
-    gd.horizontalSpan = 4;
+	protected void createButtons(Composite parent) {
+		Composite composite = new Composite(parent, SWT.NONE);
+		composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		GridLayout gridLayout = new GridLayout();
+		gridLayout.numColumns = 7;
+		gridLayout.makeColumnsEqualWidth = true;
+		composite.setLayout(gridLayout);
 
-    Button hiddenButton = new Button(composite, SWT.NONE);
-    hiddenButton.setLayoutData(gd);
-    hiddenButton.setVisible(false);
-    hiddenButton.setEnabled(false);
+		GridData gd = new GridData();
+		gd.horizontalAlignment = GridData.FILL;
+		gd.grabExcessHorizontalSpace = true;
+		gd.horizontalSpan = 4;
 
-    SelectionListener selectionListener = new SelectionAdapter()
-    {
-      public void widgetSelected(SelectionEvent e)
-      {
-        if (e.widget == newButton)
-        {
-          performNew();
-        }
-        else if (e.widget == editButton)
-        {
-          performEdit();
-        }
-        else if (e.widget == deleteButton)
-        {
-          performDelete();
-        }
-      }
-    };
+		Button hiddenButton = new Button(composite, SWT.NONE);
+		hiddenButton.setLayoutData(gd);
+		hiddenButton.setVisible(false);
+		hiddenButton.setEnabled(false);
 
-    // add the "New..." button
-    //
-    gd = new GridData();
-    gd.horizontalAlignment = GridData.FILL;
-    gd.grabExcessHorizontalSpace = true;
+		SelectionListener selectionListener = new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				if (e.widget == newButton) {
+					performNew();
+				}
+				else if (e.widget == editButton) {
+					performEdit();
+				}
+				else if (e.widget == deleteButton) {
+					performDelete();
+				}
+			}
+		};
 
-    newButton = new Button(composite, SWT.NONE);
-    newButton.setText(XMLCatalogMessages.UI_BUTTON_NEW);
-    //WorkbenchHelp.setHelp(newButton, XMLBuilderContextIds.XMLP_MAPPING_NEW);
-    newButton.setLayoutData(gd);
-    newButton.addSelectionListener(selectionListener);
+		// add the "New..." button
+		//
+		gd = new GridData();
+		gd.horizontalAlignment = GridData.FILL;
+		gd.grabExcessHorizontalSpace = true;
 
-    // add the "Edit..." button
-    //
-    gd = new GridData();
-    gd.horizontalAlignment = GridData.FILL;
-    gd.grabExcessHorizontalSpace = true;
-    editButton = new Button(composite, SWT.NONE);
-    editButton.setText(XMLCatalogMessages.UI_BUTTON_EDIT);
-    //WorkbenchHelp.setHelp(editButton, XMLBuilderContextIds.XMLP_MAPPING_EDIT);
-    editButton.setLayoutData(gd);
-    editButton.addSelectionListener(selectionListener);
+		newButton = new Button(composite, SWT.NONE);
+		newButton.setText(XMLCatalogMessages.UI_BUTTON_NEW);
+		// WorkbenchHelp.setHelp(newButton,
+		// XMLBuilderContextIds.XMLP_MAPPING_NEW);
+		newButton.setLayoutData(gd);
+		newButton.addSelectionListener(selectionListener);
 
-    // add the "Delete" button
-    //
-    gd = new GridData();
-    gd.horizontalAlignment = GridData.FILL;
-    gd.grabExcessHorizontalSpace = true;
-    deleteButton = new Button(composite, SWT.NONE);
-    deleteButton.setText(XMLCatalogMessages.UI_BUTTON_DELETE);
-    //WorkbenchHelp.setHelp(deleteButton, XMLBuilderContextIds.XMLP_MAPPING_DELETE);
-    deleteButton.setLayoutData(gd);
-    deleteButton.addSelectionListener(selectionListener);
+		// add the "Edit..." button
+		//
+		gd = new GridData();
+		gd.horizontalAlignment = GridData.FILL;
+		gd.grabExcessHorizontalSpace = true;
+		editButton = new Button(composite, SWT.NONE);
+		editButton.setText(XMLCatalogMessages.UI_BUTTON_EDIT);
+		// WorkbenchHelp.setHelp(editButton,
+		// XMLBuilderContextIds.XMLP_MAPPING_EDIT);
+		editButton.setLayoutData(gd);
+		editButton.addSelectionListener(selectionListener);
 
-    // a cruddy hack so that the PreferenceDialog doesn't close every time we press 'enter'
-    //
-    getShell().setDefaultButton(hiddenButton);
-    updateWidgetEnabledState();
-  }
+		// add the "Delete" button
+		//
+		gd = new GridData();
+		gd.horizontalAlignment = GridData.FILL;
+		gd.grabExcessHorizontalSpace = true;
+		deleteButton = new Button(composite, SWT.NONE);
+		deleteButton.setText(XMLCatalogMessages.UI_BUTTON_DELETE);
+		// WorkbenchHelp.setHelp(deleteButton,
+		// XMLBuilderContextIds.XMLP_MAPPING_DELETE);
+		deleteButton.setLayoutData(gd);
+		deleteButton.addSelectionListener(selectionListener);
 
-  public void refresh()
-  {
-    tableViewer.refresh();//XMLCatalogTreeViewer.USER_SPECIFIED_ENTRIES_OBJECT);
-  }
+		// a cruddy hack so that the PreferenceDialog doesn't close every time
+		// we press 'enter'
+		//
+		getShell().setDefaultButton(hiddenButton);
+		updateWidgetEnabledState();
+	}
 
-  protected EditCatalogEntryDialog invokeDialog(String title, ICatalogElement entry)
-  {
-    Shell shell = XMLUIPlugin.getInstance().getWorkbench().getActiveWorkbenchWindow().getShell();
-	EditCatalogEntryDialog dialog = new EditCatalogEntryDialog(shell, entry);
-    dialog.create();
-    dialog.getShell().setText(title);
-    dialog.setBlockOnOpen(true);
-    dialog.open();
-    return dialog;
-  }
-  
-  protected EditCatalogEntryDialog invokeDialog(String title, ICatalog catalog)
-  {
-    Shell shell = XMLUIPlugin.getInstance().getWorkbench().getActiveWorkbenchWindow().getShell();
-	EditCatalogEntryDialog dialog = new EditCatalogEntryDialog(shell, catalog);
-    dialog.create();
-    dialog.getShell().setText(title);
-    dialog.setBlockOnOpen(true);
-    dialog.open();
-    return dialog;
-  }
-  
+	public void refresh() {
+		tableViewer.refresh();// XMLCatalogTreeViewer.USER_SPECIFIED_ENTRIES_OBJECT);
+	}
 
-  protected void performNew()
-  {
+	protected EditCatalogEntryDialog invokeDialog(String title, ICatalogElement entry) {
+		Shell shell = XMLUIPlugin.getInstance().getWorkbench().getActiveWorkbenchWindow().getShell();
+		EditCatalogEntryDialog dialog = new EditCatalogEntryDialog(shell, entry);
+		dialog.create();
+		dialog.getShell().setText(title);
+		dialog.setBlockOnOpen(true);
+		dialog.open();
+		return dialog;
+	}
 
-	//ICatalogEntry newEntry = (ICatalogEntry)workingUserCatalog.createCatalogElement(ICatalogElement.TYPE_ENTRY);
-    EditCatalogEntryDialog dialog = invokeDialog(XMLCatalogMessages.UI_LABEL_NEW_DIALOG_TITLE, workingUserCatalog);
-    ICatalogElement element = dialog.getCatalogElement();
-	if (dialog.getReturnCode() == Window.OK)
-    {
-      workingUserCatalog.addCatalogElement(element);
-      tableViewer.setSelection(new StructuredSelection(element), true);
-	  tableViewer.refresh();
-    }
-  }
+	protected EditCatalogEntryDialog invokeDialog(String title, ICatalog catalog) {
+		Shell shell = XMLUIPlugin.getInstance().getWorkbench().getActiveWorkbenchWindow().getShell();
+		EditCatalogEntryDialog dialog = new EditCatalogEntryDialog(shell, catalog);
+		dialog.create();
+		dialog.getShell().setText(title);
+		dialog.setBlockOnOpen(true);
+		dialog.open();
+		return dialog;
+	}
 
-  protected void performEdit()
-  {
-    ISelection selection = tableViewer.getSelection();
-    Object selectedObject = (selection instanceof IStructuredSelection) ? ((IStructuredSelection) selection).getFirstElement() : null;
 
-    if (selectedObject instanceof ICatalogElement)
-    {
-		ICatalogElement oldEntry = (ICatalogElement) selectedObject;
-		ICatalogElement newEntry = (ICatalogElement)((CatalogElement)oldEntry).clone();
+	protected void performNew() {
 
-      EditCatalogEntryDialog dialog = invokeDialog(XMLCatalogMessages.UI_LABEL_EDIT_DIALOG_TITLE, newEntry);
-      if (dialog.getReturnCode() == Window.OK)
-      {
-        // delete the old value if the 'mapFrom' has changed
-        //
-        workingUserCatalog.removeCatalogElement(oldEntry);
+		// ICatalogEntry newEntry =
+		// (ICatalogEntry)workingUserCatalog.createCatalogElement(ICatalogElement.TYPE_ENTRY);
+		EditCatalogEntryDialog dialog = invokeDialog(XMLCatalogMessages.UI_LABEL_NEW_DIALOG_TITLE, workingUserCatalog);
+		ICatalogElement element = dialog.getCatalogElement();
+		if (dialog.getReturnCode() == Window.OK) {
+			workingUserCatalog.addCatalogElement(element);
+			tableViewer.setSelection(new StructuredSelection(element), true);
+			tableViewer.refresh();
+		}
+	}
 
-        // update the new mapping
-        //
-        workingUserCatalog.addCatalogElement(newEntry);
-        tableViewer.setSelection(new StructuredSelection(newEntry));
-      }
-    }
-  }
+	protected void performEdit() {
+		ISelection selection = tableViewer.getSelection();
+		Object selectedObject = (selection instanceof IStructuredSelection) ? ((IStructuredSelection) selection).getFirstElement() : null;
 
-  protected void performDelete()
-  {
-    ISelection selection = tableViewer.getSelection();
-    Object selectedObject = (selection instanceof IStructuredSelection) ? ((IStructuredSelection) selection).getFirstElement() : null;
+		if (selectedObject instanceof ICatalogElement) {
+			ICatalogElement oldEntry = (ICatalogElement) selectedObject;
+			ICatalogElement newEntry = (ICatalogElement) ((CatalogElement) oldEntry).clone();
 
-    if (selectedObject instanceof ICatalogElement)
-    {
-	  ICatalogElement catalogElement = (ICatalogElement) selectedObject;
-      workingUserCatalog.removeCatalogElement(catalogElement);
-    }
-  }
+			EditCatalogEntryDialog dialog = invokeDialog(XMLCatalogMessages.UI_LABEL_EDIT_DIALOG_TITLE, newEntry);
+			if (dialog.getReturnCode() == Window.OK) {
+				// delete the old value if the 'mapFrom' has changed
+				//
+				workingUserCatalog.removeCatalogElement(oldEntry);
 
-  protected void updateWidgetEnabledState()
-  {
-	  boolean isEditable = false;
-	  ISelection selection = tableViewer.getSelection();
-	  Object selectedObject = (selection instanceof IStructuredSelection) ? ((IStructuredSelection) selection).getFirstElement() : null;
-	  
-	  if (selectedObject instanceof ICatalogElement)
-	  {
-		  ICatalogElement[] elements = ((Catalog)workingUserCatalog).getCatalogElements();
-		  //dw List entriesList = new ArrayList(elements.length);
-		  for (int i = 0; i < elements.length; i++)
-		  {
-			  ICatalogElement element = elements[i];
-			  isEditable = selectedObject.equals(element);
-			  if(isEditable) break;  
-		  }
-	  }
-	  
-	  //if (isPageEnabled)
-	  {
-		  editButton.setEnabled(isEditable);
-		  deleteButton.setEnabled(isEditable);
-	  }
-  }
+				// update the new mapping
+				//
+				workingUserCatalog.addCatalogElement(newEntry);
+				tableViewer.setSelection(new StructuredSelection(newEntry));
+			}
+		}
+	}
 
-/*
-  public void setPageEnabled(boolean enabled)
-  {
-    isPageEnabled = enabled;
+	protected void performDelete() {
+		ISelection selection = tableViewer.getSelection();
+		Object selectedObject = (selection instanceof IStructuredSelection) ? ((IStructuredSelection) selection).getFirstElement() : null;
 
-    tableViewer.getControl().setEnabled(isPageEnabled);
+		if (selectedObject instanceof ICatalogElement) {
+			ICatalogElement catalogElement = (ICatalogElement) selectedObject;
+			workingUserCatalog.removeCatalogElement(catalogElement);
+		}
+	}
 
-    newButton.setEnabled(isPageEnabled);
-    editButton.setEnabled(isPageEnabled);
-    deleteButton.setEnabled(isPageEnabled);
-  }
-*/
-  public void updatePage()
-  {
-    refresh();
-    updateWidgetEnabledState();
-  }
+	protected void updateWidgetEnabledState() {
+		boolean isEditable = false;
+		ISelection selection = tableViewer.getSelection();
+		Object selectedObject = (selection instanceof IStructuredSelection) ? ((IStructuredSelection) selection).getFirstElement() : null;
 
-  public Viewer getViewer()
-  {
-    return tableViewer;
-  }
-  
+		if (selectedObject instanceof ICatalogElement) {
+			ICatalogElement[] elements = ((Catalog) workingUserCatalog).getCatalogElements();
+			// dw List entriesList = new ArrayList(elements.length);
+			for (int i = 0; i < elements.length; i++) {
+				ICatalogElement element = elements[i];
+				isEditable = selectedObject.equals(element);
+				if (isEditable) {
+					break;
+				}
+			}
+		}
+
+		// if (isPageEnabled)
+		{
+			editButton.setEnabled(isEditable);
+			deleteButton.setEnabled(isEditable);
+		}
+	}
+
+	/*
+	 * public void setPageEnabled(boolean enabled) { isPageEnabled = enabled;
+	 * 
+	 * tableViewer.getControl().setEnabled(isPageEnabled);
+	 * 
+	 * newButton.setEnabled(isPageEnabled);
+	 * editButton.setEnabled(isPageEnabled);
+	 * deleteButton.setEnabled(isPageEnabled); }
+	 */
+	public void updatePage() {
+		refresh();
+		updateWidgetEnabledState();
+	}
+
+	public Viewer getViewer() {
+		return tableViewer;
+	}
+
 
 }

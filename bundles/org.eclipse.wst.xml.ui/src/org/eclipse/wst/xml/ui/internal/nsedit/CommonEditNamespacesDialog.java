@@ -92,7 +92,8 @@ public class CommonEditNamespacesDialog {
 		// Create the 'common'/middle Composite
 		if (useGroup) {
 			commonComposite = new Group(parent, SWT.NONE);
-		} else {
+		}
+		else {
 			commonComposite = new Composite(parent, SWT.NONE);
 		}
 		commonComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -121,9 +122,11 @@ public class CommonEditNamespacesDialog {
 			public void widgetSelected(SelectionEvent e) {
 				if (e.widget == newButton) {
 					performNew();
-				} else if (e.widget == editButton) {
+				}
+				else if (e.widget == editButton) {
 					performEdit();
-				} else if (e.widget == deleteButton) {
+				}
+				else if (e.widget == deleteButton) {
 					performDelete();
 				}
 			}
@@ -133,46 +136,47 @@ public class CommonEditNamespacesDialog {
 		Composite buttonComposite = new Composite(composite, SWT.NONE);
 		buttonComposite.setLayoutData(createHorizontalFill());
 		GridLayout buttonGridLayout = new GridLayout();
-		//buttonGridLayout.numColumns = 3;
-		//buttonGridLayout.makeColumnsEqualWidth = true;
+		// buttonGridLayout.numColumns = 3;
+		// buttonGridLayout.makeColumnsEqualWidth = true;
 		buttonComposite.setLayout(buttonGridLayout);
 
 		// add the New button
 		//
 		newButton = new Button(buttonComposite, SWT.NONE);
-		//newButton.setText(" " +
+		// newButton.setText(" " +
 		// XMLCommonUIPlugin.getInstance().getString("_UI_BUTTON_NEW") + " ");
-		newButton.setText("   " + XMLUIMessages.CommonEditNamespacesDialog_0 + "   "); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		newButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL)); //ViewUtility.createHorizontalFill());
+		newButton.setText("   " + XMLUIMessages.CommonEditNamespacesDialog_0 + "   "); //$NON-NLS-1$ //$NON-NLS-2$ 
+		newButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL)); // ViewUtility.createHorizontalFill());
 		newButton.addSelectionListener(selectionListener);
 
 		// add the Edit button
 		//
-		//gd = new GridData();
-		//gd.horizontalAlignment = gd.FILL;
-		//gd.grabExcessHorizontalSpace = true;
+		// gd = new GridData();
+		// gd.horizontalAlignment = gd.FILL;
+		// gd.grabExcessHorizontalSpace = true;
 
 		editButton = new Button(buttonComposite, SWT.NONE);
-		editButton.setText(XMLUIMessages._UI_BUTTON_EDIT); //$NON-NLS-1$
-		editButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL)); //ViewUtility.createHorizontalFill());
+		editButton.setText(XMLUIMessages._UI_BUTTON_EDIT);
+		editButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL)); // ViewUtility.createHorizontalFill());
 		editButton.addSelectionListener(selectionListener);
 
 		// add the Delete button
 		//
-		//gd = new GridData();
-		//gd.horizontalAlignment = gd.FILL;
-		//gd.grabExcessHorizontalSpace = true;
+		// gd = new GridData();
+		// gd.horizontalAlignment = gd.FILL;
+		// gd.grabExcessHorizontalSpace = true;
 
 		deleteButton = new Button(buttonComposite, SWT.NONE);
-		deleteButton.setText(XMLUIMessages._UI_BUTTON_DELETE); //$NON-NLS-1$
-		deleteButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL)); //ViewUtility.createHorizontalFill());
+		deleteButton.setText(XMLUIMessages._UI_BUTTON_DELETE);
+		deleteButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL)); // ViewUtility.createHorizontalFill());
 		deleteButton.addSelectionListener(selectionListener);
 	}
 
 	private void createControlArea() {
 		if (useGroup) {
 			((Group) commonComposite).setText(tableLabel);
-		} else {
+		}
+		else {
 			Label label = new Label(commonComposite, SWT.NONE);
 			label.setText(tableLabel);
 			label.setLayoutData(createGridData(false, 3));
@@ -211,7 +215,7 @@ public class CommonEditNamespacesDialog {
 		NamespaceInfo result = null;
 		for (Iterator i = namespaceInfoList.iterator(); i.hasNext();) {
 			NamespaceInfo info = (NamespaceInfo) i.next();
-			if (info.uri != null && info.uri.equals(namespace)) {
+			if ((info.uri != null) && info.uri.equals(namespace)) {
 				result = info;
 				break;
 			}
@@ -263,10 +267,10 @@ public class CommonEditNamespacesDialog {
 		 * tableViewer.refresh(); } };
 		 * Display.getCurrent().asyncExec(delayedUpdate);
 		 */
-		//if (updateListener != null)
-		//{
-		//  updateListener.updateOccured(this, namespaceInfoList);
-		//}
+		// if (updateListener != null)
+		// {
+		// updateListener.updateOccured(this, namespaceInfoList);
+		// }
 	}
 
 	public void performDelete() {
@@ -282,7 +286,7 @@ public class CommonEditNamespacesDialog {
 	public void performEdit() {
 		Object selection = getSelection(tableViewer.getSelection());
 		if (selection != null) {
-			invokeDialog(XMLUIMessages._UI_LABEL_NEW_NAMESPACE_INFORMATION, (NamespaceInfo) selection); //$NON-NLS-1$
+			invokeDialog(XMLUIMessages._UI_LABEL_NEW_NAMESPACE_INFORMATION, (NamespaceInfo) selection);
 			updateErrorMessage(namespaceInfoList);
 			performDelayedUpdate();
 		}
@@ -290,7 +294,7 @@ public class CommonEditNamespacesDialog {
 
 	public void performNew() {
 		Shell shell = XMLUIPlugin.getInstance().getWorkbench().getActiveWorkbenchWindow().getShell();
-		CommonAddNamespacesDialog dialog = new CommonAddNamespacesDialog(shell, XMLUIMessages._UI_ADD_NAMESPACE_DECLARATIONS, resourceLocation, namespaceInfoList); //$NON-NLS-1$
+		CommonAddNamespacesDialog dialog = new CommonAddNamespacesDialog(shell, XMLUIMessages._UI_ADD_NAMESPACE_DECLARATIONS, resourceLocation, namespaceInfoList);
 		dialog.createAndOpen();
 		if (dialog.getReturnCode() == Window.OK) {
 			namespaceInfoList.addAll(dialog.getNamespaceInfoList());
@@ -308,7 +312,7 @@ public class CommonEditNamespacesDialog {
 		Object selection = getSelection(tableViewer.getSelection());
 		NamespaceInfo info = (NamespaceInfo) selection;
 		editButton.setEnabled(info != null);
-		deleteButton.setEnabled(info != null && info.getProperty("unremovable") == null); //$NON-NLS-1$
+		deleteButton.setEnabled((info != null) && (info.getProperty("unremovable") == null)); //$NON-NLS-1$
 	}
 
 	public void updateErrorMessage(List namespaceInfoList) {

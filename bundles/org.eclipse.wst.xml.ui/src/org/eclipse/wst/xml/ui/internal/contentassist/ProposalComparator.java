@@ -25,7 +25,7 @@ public class ProposalComparator implements Comparator {
 
 	public int compare(Object o1, Object o2) {
 		int relevance = 0;
-		if (o1 instanceof IRelevanceCompletionProposal && o2 instanceof IRelevanceCompletionProposal) {
+		if ((o1 instanceof IRelevanceCompletionProposal) && (o2 instanceof IRelevanceCompletionProposal)) {
 			// sort based on relevance
 			IRelevanceCompletionProposal cp1 = (IRelevanceCompletionProposal) o1;
 			IRelevanceCompletionProposal cp2 = (IRelevanceCompletionProposal) o2;
@@ -33,13 +33,14 @@ public class ProposalComparator implements Comparator {
 			relevance = cp2.getRelevance() - cp1.getRelevance();
 
 			// if same relevance, secondary sort (lexigraphically)
-			if (relevance == 0 && o1 instanceof ICompletionProposal && o2 instanceof ICompletionProposal) {
+			if ((relevance == 0) && (o1 instanceof ICompletionProposal) && (o2 instanceof ICompletionProposal)) {
 				String displayString1 = ((ICompletionProposal) o1).getDisplayString();
 				String displayString2 = ((ICompletionProposal) o2).getDisplayString();
-				if (displayString1 != null && displayString2 != null)
-					//relevance = displayString1.compareTo(displayString2);
+				if ((displayString1 != null) && (displayString2 != null)) {
+					// relevance = displayString1.compareTo(displayString2);
 					// // this didn't mix caps w/ lowercase
 					relevance = com.ibm.icu.text.Collator.getInstance().compare(displayString1, displayString2);
+				}
 			}
 		}
 		// otherwise if it's not ISEDRelevanceCompletionProposal, don't sort

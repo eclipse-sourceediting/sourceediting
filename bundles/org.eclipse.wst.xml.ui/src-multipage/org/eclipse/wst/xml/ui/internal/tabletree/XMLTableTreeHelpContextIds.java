@@ -20,7 +20,7 @@ import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
  * This interface contains constants only; it is not intended to be
  * implemented or extended.
  * </p>
- *  
+ * 
  */
 public interface XMLTableTreeHelpContextIds {
 	// org.eclipse.wst.xml.ui.

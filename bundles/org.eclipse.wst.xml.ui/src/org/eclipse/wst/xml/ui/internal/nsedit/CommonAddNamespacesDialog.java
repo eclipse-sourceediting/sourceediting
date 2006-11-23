@@ -72,9 +72,9 @@ public class CommonAddNamespacesDialog extends Dialog {
 
 	protected void addCatalogMapToList(ICatalog catalog, List list) {
 		ICatalogEntry[] entries = catalog.getCatalogEntries();
-		for ( int i = 0; i < entries.length; i++) {
+		for (int i = 0; i < entries.length; i++) {
 			ICatalogEntry entry = entries[i];
-			if (entry.getEntryType() == ICatalogEntry.ENTRY_TYPE_PUBLIC && entry.getURI().endsWith(".xsd")) { //$NON-NLS-1$
+			if ((entry.getEntryType() == ICatalogEntry.ENTRY_TYPE_PUBLIC) && entry.getURI().endsWith(".xsd")) { //$NON-NLS-1$
 				if (!isAlreadyDeclared(entry.getKey())) {
 					NamespaceInfo namespaceInfo = new NamespaceInfo(entry.getKey(), "xx", null); //$NON-NLS-1$
 					list.add(namespaceInfo);
@@ -137,27 +137,22 @@ public class CommonAddNamespacesDialog extends Dialog {
 		addBuiltInNamespaces(list);
 		ICatalog defaultCatalog = XMLCorePlugin.getDefault().getDefaultXMLCatalog();
 		INextCatalog[] nextCatalogs = defaultCatalog.getNextCatalogs();
-        for (int i = 0; i < nextCatalogs.length; i++)
-        {
-            INextCatalog catalog = nextCatalogs[i];
-            ICatalog referencedCatalog = catalog.getReferencedCatalog();
-            if (referencedCatalog != null)
-            {
-                if (XMLCorePlugin.USER_CATALOG_ID
-                        .equals(referencedCatalog.getId()))
-                {
-                	ICatalog userCatalog = referencedCatalog;
-                	addCatalogMapToList(userCatalog, list);
+		for (int i = 0; i < nextCatalogs.length; i++) {
+			INextCatalog catalog = nextCatalogs[i];
+			ICatalog referencedCatalog = catalog.getReferencedCatalog();
+			if (referencedCatalog != null) {
+				if (XMLCorePlugin.USER_CATALOG_ID.equals(referencedCatalog.getId())) {
+					ICatalog userCatalog = referencedCatalog;
+					addCatalogMapToList(userCatalog, list);
 
-                } else if (XMLCorePlugin.SYSTEM_CATALOG_ID
-                        .equals(referencedCatalog.getId()))
-                {
-                	ICatalog systemCatalog = referencedCatalog;
-            		addCatalogMapToList(systemCatalog, list);
-                }
-            }
-        }
-	
+				}
+				else if (XMLCorePlugin.SYSTEM_CATALOG_ID.equals(referencedCatalog.getId())) {
+					ICatalog systemCatalog = referencedCatalog;
+					addCatalogMapToList(systemCatalog, list);
+				}
+			}
+		}
+
 		computeAddablePrefixes(list, existingNamespaces);
 
 		addNamespacesControl.setNamespaceInfoList(list);
@@ -180,7 +175,7 @@ public class CommonAddNamespacesDialog extends Dialog {
 				lastIndex = uri.lastIndexOf('/');
 			}
 			prefix = uri.substring(lastIndex + 1);
-			if (prefix.length() > 20 || prefix.indexOf(':') != -1) {
+			if ((prefix.length() > 20) || (prefix.indexOf(':') != -1)) {
 				prefix = null;
 			}
 		}

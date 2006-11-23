@@ -106,7 +106,7 @@ public class TreeExtension implements PaintListener {
 		for (Iterator i = list.iterator(); i.hasNext();) {
 			TreeItem item = (TreeItem) i.next();
 			Rectangle r = item.getBounds();
-			if (r != null && px >= r.x && py >= r.y && py <= r.y + r.height) {
+			if ((r != null) && (px >= r.x) && (py >= r.y) && (py <= r.y + r.height)) {
 				result = item;
 			}
 		}
@@ -120,7 +120,7 @@ public class TreeExtension implements PaintListener {
 		protected Cursor cursor = null;
 
 		public void mouseMove(MouseEvent e) {
-			if (e.x > columnPosition - columnHitWidth && e.x < columnPosition + columnHitWidth) {
+			if ((e.x > columnPosition - columnHitWidth) && (e.x < columnPosition + columnHitWidth)) {
 				if (cursor == null) {
 					cursor = new Cursor(fTree.getDisplay(), SWT.CURSOR_SIZEWE);
 					fTree.setCursor(cursor);
@@ -150,7 +150,7 @@ public class TreeExtension implements PaintListener {
 			columnDragged = -1;
 			editManager.deactivateCellEditor();
 
-			if (e.x > columnPosition - columnHitWidth && e.x < columnPosition + columnHitWidth) {
+			if ((e.x > columnPosition - columnHitWidth) && (e.x < columnPosition + columnHitWidth)) {
 				columnDragged = 0;
 			}
 
@@ -379,7 +379,7 @@ public class TreeExtension implements PaintListener {
 						// No edit if more than one row is selected.
 						if (items.length == 1) {
 							Rectangle bounds = items[0].getBounds();
-							if (bounds != null && e.y >= bounds.y && e.y <= bounds.y + bounds.height) {
+							if ((bounds != null) && (e.y >= bounds.y) && (e.y <= bounds.y + bounds.height)) {
 								int columnToEdit = 1;
 								activateCellEditor(items[0], columnToEdit);
 							}
@@ -413,11 +413,13 @@ public class TreeExtension implements PaintListener {
 			tree.addMouseListener(theMouseAdapter);
 			tree.addKeyListener(keyListener);
 			ScrollBar hBar = tree.getHorizontalBar();
-			if (hBar != null)
+			if (hBar != null) {
 				hBar.addSelectionListener(selectionListener);
+			}
 			ScrollBar vBar = tree.getVerticalBar();
-			if (vBar != null)
+			if (vBar != null) {
 				vBar.addSelectionListener(selectionListener);
+			}
 		}
 
 		public boolean isCellEditorActive() {
@@ -425,7 +427,7 @@ public class TreeExtension implements PaintListener {
 		}
 
 		public void applyCellEditorValue() {
-			if (cellEditorState != null && cellModifier != null) {
+			if ((cellEditorState != null) && (cellModifier != null)) {
 				TreeItem treeItem = cellEditorState.fTreeItem;
 
 				// The area below the cell editor needs to be explicity

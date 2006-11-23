@@ -107,8 +107,9 @@ public class RemoveUnknownElementQuickFixProposal implements ICompletionProposal
 	 * @see org.eclipse.jface.text.contentassist.ICompletionProposal#getDisplayString()
 	 */
 	public String getDisplayString() {
-		if (fDisplayString == null)
-			fDisplayString = XMLUIMessages.QuickFixProcessorXML_11; //$NON-NLS-1$
+		if (fDisplayString == null) {
+			fDisplayString = XMLUIMessages.QuickFixProcessorXML_11;
+		}
 
 		return fDisplayString;
 	}

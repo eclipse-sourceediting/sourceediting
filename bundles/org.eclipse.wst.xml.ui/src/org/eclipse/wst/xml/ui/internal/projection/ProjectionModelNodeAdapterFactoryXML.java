@@ -37,7 +37,7 @@ public class ProjectionModelNodeAdapterFactoryXML extends AbstractAdapterFactory
 		ProjectionModelNodeAdapterXML adapter = null;
 
 		// create adapter for every element tag
-		if ((isActive()) && (target instanceof Node) && ((Node) target).getNodeType() == Node.ELEMENT_NODE) {
+		if ((isActive()) && (target instanceof Node) && (((Node) target).getNodeType() == Node.ELEMENT_NODE)) {
 			adapter = new ProjectionModelNodeAdapterXML(this);
 			adapter.updateAdapter((Node) target);
 		}
@@ -51,7 +51,7 @@ public class ProjectionModelNodeAdapterFactoryXML extends AbstractAdapterFactory
 	 * @return
 	 */
 	boolean isActive() {
-		return (fProjectionViewers != null && !fProjectionViewers.isEmpty());
+		return ((fProjectionViewers != null) && !fProjectionViewers.isEmpty());
 	}
 
 	/**

@@ -42,7 +42,7 @@ public class JFaceNodeAdapter implements IJFaceNodeAdapter {
 
 	private static boolean getDebugValue() {
 		String value = Platform.getDebugOption("org.eclipse.wst.sse.ui/debug/outline"); //$NON-NLS-1$
-		boolean result = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
+		boolean result = (value != null) && value.equalsIgnoreCase("true"); //$NON-NLS-1$
 		return result;
 	}
 
@@ -119,8 +119,9 @@ public class JFaceNodeAdapter implements IJFaceNodeAdapter {
 		ArrayList v = new ArrayList();
 		for (Node child = node.getFirstChild(); child != null; child = child.getNextSibling()) {
 			Node n = child;
-			if (n.getNodeType() != Node.TEXT_NODE)
+			if (n.getNodeType() != Node.TEXT_NODE) {
 				v.add(n);
+			}
 		}
 		return v.toArray();
 	}
@@ -138,14 +139,15 @@ public class JFaceNodeAdapter implements IJFaceNodeAdapter {
 	 */
 	public Image getLabelImage(Object node) {
 		Image image = CMImageUtil.getImage(CMImageUtil.getDeclaration((Node) node));
-		if (image == null && JFaceResources.getImageRegistry() != null) {
+		if ((image == null) && (JFaceResources.getImageRegistry() != null)) {
 			ImageRegistry imageRegistry = JFaceResources.getImageRegistry();
 			String nodeName = getNodeName(node);
 			image = imageRegistry.get(nodeName);
 			if (image == null) {
 				image = createImage(node);
-				if (image != null)
+				if (image != null) {
 					imageRegistry.put(nodeName, image);
+				}
 			}
 		}
 		return image;
@@ -176,8 +178,9 @@ public class JFaceNodeAdapter implements IJFaceNodeAdapter {
 	}
 
 	private synchronized RefreshStructureJob getRefreshJob() {
-		if (fRefreshJob == null)
+		if (fRefreshJob == null) {
 			fRefreshJob = new RefreshStructureJob();
+		}
 		return fRefreshJob;
 	}
 
@@ -188,8 +191,9 @@ public class JFaceNodeAdapter implements IJFaceNodeAdapter {
 		// nodeList(item) for O(n) vs. O(n*n)
 		Node node = (Node) object;
 		for (Node child = node.getFirstChild(); child != null; child = child.getNextSibling()) {
-			if (child.getNodeType() != Node.TEXT_NODE)
+			if (child.getNodeType() != Node.TEXT_NODE) {
 				return true;
+			}
 		}
 		return false;
 	}
@@ -228,7 +232,7 @@ public class JFaceNodeAdapter implements IJFaceNodeAdapter {
 				// StructuredViewer) && (eventType ==
 				// INodeNotifier.STRUCTURE_CHANGED || (eventType ==
 				// INodeNotifier.CHANGE && changedFeature == null))) {
-				if ((listener instanceof StructuredViewer) && (eventType == INodeNotifier.STRUCTURE_CHANGED || eventType == INodeNotifier.CONTENT_CHANGED || (eventType == INodeNotifier.CHANGE))) {
+				if ((listener instanceof StructuredViewer) && ((eventType == INodeNotifier.STRUCTURE_CHANGED) || (eventType == INodeNotifier.CONTENT_CHANGED) || (eventType == INodeNotifier.CHANGE))) {
 					if (DEBUG) {
 						System.out.println("JFaceNodeAdapter notified on event type > " + eventType); //$NON-NLS-1$
 					}

@@ -35,16 +35,18 @@ import org.eclipse.wst.xml.ui.internal.Logger;
  * AutoEditStrategy to handle characters inserted when Tab key is pressed
  */
 public class AutoEditStrategyForTabs implements IAutoEditStrategy {
-	private final String TAB_CHARACTER = "\t";	//$NON-NLS-1$
-	
+	private final String TAB_CHARACTER = "\t"; //$NON-NLS-1$
+
 	public void customizeDocumentCommand(IDocument document, DocumentCommand command) {
 		// if not in smart insert mode just ignore
-		if (!isSmartInsertMode())
+		if (!isSmartInsertMode()) {
 			return;
-		
+		}
+
 		// spaces for tab character
-		if (command.length == 0 && command.text != null && command.text.length() > 0 && command.text.indexOf(TAB_CHARACTER) != -1)
+		if ((command.length == 0) && (command.text != null) && (command.text.length() > 0) && (command.text.indexOf(TAB_CHARACTER) != -1)) {
 			smartInsertForTab(command, document);
+		}
 	}
 
 	/**
@@ -65,7 +67,8 @@ public class AutoEditStrategyForTabs implements IAutoEditStrategy {
 			try {
 				IRegion lineInfo = document.getLineInformationOfOffset(command.offset);
 				lineOffset = command.offset - lineInfo.getOffset();
-			} catch (BadLocationException e) {
+			}
+			catch (BadLocationException e) {
 				Logger.log(Logger.WARNING_DEBUG, e.getMessage(), e);
 			}
 
@@ -81,7 +84,8 @@ public class AutoEditStrategyForTabs implements IAutoEditStrategy {
 				if (lineTracker != null) {
 					try {
 						lineTracker.replace(index, 1, indent);
-					} catch (BadLocationException e) {
+					}
+					catch (BadLocationException e) {
 						// if something goes wrong with replacing text, just
 						// reset to current string
 						lineTracker.set(newText.toString());
@@ -105,26 +109,31 @@ public class AutoEditStrategyForTabs implements IAutoEditStrategy {
 		if (lineTracker != null) {
 			try {
 				IRegion lineInfo = lineTracker.getLineInformationOfOffset(index);
-				if (lineInfo.getOffset() == 0 && lineOffset > -1)
+				if ((lineInfo.getOffset() == 0) && (lineOffset > -1)) {
 					offsetInLine = lineOffset + index;
-				else
+				}
+				else {
 					offsetInLine = index - lineInfo.getOffset();
-			} catch (BadLocationException e) {
+				}
+			}
+			catch (BadLocationException e) {
 				Logger.log(Logger.WARNING_DEBUG, e.getMessage(), e);
 			}
-		} else {
+		}
+		else {
 			if (lineOffset > -1) {
 				offsetInLine = lineOffset + index;
 			}
 		}
-		if (offsetInLine > -1 && indentationWidth > 0) {
+		if ((offsetInLine > -1) && (indentationWidth > 0)) {
 			int remainder = offsetInLine % indentationWidth;
 			indentSize = indentationWidth - remainder;
 		}
 
 		StringBuffer indent = new StringBuffer();
-		for (int i = 0; i < indentSize; i++)
+		for (int i = 0; i < indentSize; i++) {
 			indent.append(' ');
+		}
 		return indent.toString();
 	}
 
@@ -134,13 +143,13 @@ public class AutoEditStrategyForTabs implements IAutoEditStrategy {
 	private ILineTracker getLineTracker(IDocument document, String originalText) {
 		ConfigurableLineTracker lineTracker = null;
 		int[] delims = TextUtilities.indexOf(document.getLegalLineDelimiters(), originalText, 0);
-		if (delims[0] != -1 || delims[1] != -1) {
+		if ((delims[0] != -1) || (delims[1] != -1)) {
 			lineTracker = new ConfigurableLineTracker(document.getLegalLineDelimiters());
 			lineTracker.set(originalText);
 		}
 		return lineTracker;
 	}
-	
+
 	/**
 	 * Return true if active editor is in smart insert mode, false otherwise
 	 * 
@@ -148,7 +157,7 @@ public class AutoEditStrategyForTabs implements IAutoEditStrategy {
 	 */
 	private boolean isSmartInsertMode() {
 		boolean isSmartInsertMode = false;
-		
+
 		ITextEditor textEditor = null;
 		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		if (window != null) {
@@ -156,20 +165,23 @@ public class AutoEditStrategyForTabs implements IAutoEditStrategy {
 			if (page != null) {
 				IEditorPart editor = page.getActiveEditor();
 				if (editor != null) {
-					if (editor instanceof ITextEditor)
-						textEditor = (ITextEditor)editor;
-					else
-						textEditor = (ITextEditor)editor.getAdapter(ITextEditor.class);
+					if (editor instanceof ITextEditor) {
+						textEditor = (ITextEditor) editor;
+					}
+					else {
+						textEditor = (ITextEditor) editor.getAdapter(ITextEditor.class);
+					}
 				}
 			}
 		}
-		
+
 		// check if smart insert mode
-		if (textEditor instanceof ITextEditorExtension3 && ((ITextEditorExtension3) textEditor).getInsertMode() == ITextEditorExtension3.SMART_INSERT)
+		if ((textEditor instanceof ITextEditorExtension3) && (((ITextEditorExtension3) textEditor).getInsertMode() == ITextEditorExtension3.SMART_INSERT)) {
 			isSmartInsertMode = true;
+		}
 		return isSmartInsertMode;
 	}
-	
+
 	/**
 	 * Returns indentation width if using spaces for indentation, -1 otherwise
 	 * 
@@ -179,8 +191,9 @@ public class AutoEditStrategyForTabs implements IAutoEditStrategy {
 		int width = -1;
 
 		Preferences preferences = XMLCorePlugin.getDefault().getPluginPreferences();
-		if (XMLCorePreferenceNames.SPACE.equals(preferences.getString(XMLCorePreferenceNames.INDENTATION_CHAR)))
+		if (XMLCorePreferenceNames.SPACE.equals(preferences.getString(XMLCorePreferenceNames.INDENTATION_CHAR))) {
 			width = preferences.getInt(XMLCorePreferenceNames.INDENTATION_SIZE);
+		}
 
 		return width;
 	}

@@ -57,8 +57,9 @@ abstract public class AbstractCommentActionXMLDelegate implements IEditorActionD
 			if (document != null) {
 				// get current text selection
 				ITextSelection textSelection = getCurrentSelection();
-				if (textSelection.isEmpty())
+				if (textSelection.isEmpty()) {
 					return;
+				}
 
 				processAction(document, textSelection);
 			}
@@ -78,8 +79,9 @@ abstract public class AbstractCommentActionXMLDelegate implements IEditorActionD
 			ISelectionProvider provider = ((ITextEditor) fEditor).getSelectionProvider();
 			if (provider != null) {
 				ISelection selection = provider.getSelection();
-				if (selection instanceof ITextSelection)
+				if (selection instanceof ITextSelection) {
 					return (ITextSelection) selection;
+				}
 			}
 		}
 		return TextSelection.emptySelection();

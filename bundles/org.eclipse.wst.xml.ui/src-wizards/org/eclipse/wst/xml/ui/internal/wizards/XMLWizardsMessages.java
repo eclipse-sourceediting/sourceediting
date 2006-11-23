@@ -71,7 +71,7 @@ public class XMLWizardsMessages extends NLS {
 	public static String ExampleProjectCreationWizard_overwritequery_title;
 	public static String ExampleProjectCreationWizard_overwritequery_message;
 	public static String ExampleProjectCreationWizardPage_error_alreadyexists;
-	
+
 	public static String NewXMLTemplatesWizardPage_0;
 	public static String NewXMLTemplatesWizardPage_1;
 	public static String NewXMLTemplatesWizardPage_2;

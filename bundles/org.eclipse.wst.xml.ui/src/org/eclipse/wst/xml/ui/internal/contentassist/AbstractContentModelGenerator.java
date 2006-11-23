@@ -32,8 +32,9 @@ public abstract class AbstractContentModelGenerator {
 
 	protected void generateAttributes(CMElementDeclaration elementDecl, StringBuffer buffer) {
 		CMNamedNodeMap attributes = elementDecl.getAttributes();
-		if (attributes == null)
+		if (attributes == null) {
 			return;
+		}
 		for (int i = 0; i < attributes.getLength(); i++) {
 			generateAttribute((CMAttributeDeclaration) attributes.item(i), buffer);
 		}
@@ -51,8 +52,9 @@ public abstract class AbstractContentModelGenerator {
 	protected abstract void generateStartTag(String tagName, Node parentNode, CMElementDeclaration elementDecl, StringBuffer buffer);
 
 	public void generateTag(Node parent, CMElementDeclaration elementDecl, StringBuffer buffer) {
-		if (elementDecl == null || buffer == null)
+		if ((elementDecl == null) || (buffer == null)) {
 			return;
+		}
 
 		String tagName = getRequiredName(parent, elementDecl);
 
@@ -75,11 +77,13 @@ public abstract class AbstractContentModelGenerator {
 
 	protected boolean requiresAttributes(CMElementDeclaration ed) {
 		CMNamedNodeMap attributes = ed.getAttributes();
-		if (attributes == null)
+		if (attributes == null) {
 			return false;
+		}
 		for (int i = 0; i < attributes.getLength(); i++) {
-			if (((CMAttributeDeclaration) attributes.item(i)).getUsage() == CMAttributeDeclaration.REQUIRED)
+			if (((CMAttributeDeclaration) attributes.item(i)).getUsage() == CMAttributeDeclaration.REQUIRED) {
 				return true;
+			}
 		}
 		return false;
 	}

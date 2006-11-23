@@ -186,10 +186,12 @@ public class XMLSourcePreferencePage extends AbstractPreferencePage implements M
 		fAutoPropose.setSelection(getPreferenceStore().getBoolean(XMLUIPreferenceNames.AUTO_PROPOSE));
 		fAutoProposeText.setText(getPreferenceStore().getString(XMLUIPreferenceNames.AUTO_PROPOSE_CODE));
 		String suggestionStrategy = getPreferenceStore().getString(XMLUIPreferenceNames.SUGGESTION_STRATEGY);
-		if (suggestionStrategy.length() > 0)
+		if (suggestionStrategy.length() > 0) {
 			setCurrentSuggestionStrategy(suggestionStrategy);
-		else
+		}
+		else {
 			setCurrentSuggestionStrategy(XMLUIPreferenceNames.SUGGESTION_STRATEGY_VALUE_LAX);
+		}
 	}
 
 	protected void initializeValuesForFormattingGroup() {
@@ -230,10 +232,12 @@ public class XMLSourcePreferencePage extends AbstractPreferencePage implements M
 		fAutoPropose.setSelection(getPreferenceStore().getDefaultBoolean(XMLUIPreferenceNames.AUTO_PROPOSE));
 		fAutoProposeText.setText(getPreferenceStore().getDefaultString(XMLUIPreferenceNames.AUTO_PROPOSE_CODE));
 		String suggestionStrategy = getPreferenceStore().getDefaultString(XMLUIPreferenceNames.SUGGESTION_STRATEGY);
-		if (suggestionStrategy.length() > 0)
+		if (suggestionStrategy.length() > 0) {
 			setCurrentSuggestionStrategy(suggestionStrategy);
-		else
+		}
+		else {
 			setCurrentSuggestionStrategy(XMLUIPreferenceNames.SUGGESTION_STRATEGY_VALUE_LAX);
+		}
 	}
 
 	protected void performDefaultsForFormattingGroup() {
@@ -321,8 +325,9 @@ public class XMLSourcePreferencePage extends AbstractPreferencePage implements M
 			try {
 				widthText = fLineWidthText.getText();
 				int formattingLineWidth = Integer.parseInt(widthText);
-				if ((formattingLineWidth < WIDTH_VALIDATION_LOWER_LIMIT) || (formattingLineWidth > WIDTH_VALIDATION_UPPER_LIMIT))
+				if ((formattingLineWidth < WIDTH_VALIDATION_LOWER_LIMIT) || (formattingLineWidth > WIDTH_VALIDATION_UPPER_LIMIT)) {
 					throw new NumberFormatException();
+				}
 			}
 			catch (NumberFormatException nfexc) {
 				setInvalidInputMessage(widthText);
@@ -335,8 +340,9 @@ public class XMLSourcePreferencePage extends AbstractPreferencePage implements M
 		if (fIndentationSize != null) {
 			try {
 				indentSize = fIndentationSize.getSelection();
-				if ((indentSize < MIN_INDENTATION_SIZE) || (indentSize > MAX_INDENTATION_SIZE))
+				if ((indentSize < MIN_INDENTATION_SIZE) || (indentSize > MAX_INDENTATION_SIZE)) {
 					throw new NumberFormatException();
+				}
 			}
 			catch (NumberFormatException nfexc) {
 				setInvalidInputMessage(Integer.toString(indentSize));

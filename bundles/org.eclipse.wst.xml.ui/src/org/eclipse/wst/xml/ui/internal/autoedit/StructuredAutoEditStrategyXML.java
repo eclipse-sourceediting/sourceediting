@@ -41,8 +41,9 @@ public class StructuredAutoEditStrategyXML implements IAutoEditStrategy {
 	 */
 	public void customizeDocumentCommand(IDocument document, DocumentCommand command) {
 		Object textEditor = getActiveTextEditor();
-		if (!(textEditor instanceof ITextEditorExtension3 && ((ITextEditorExtension3) textEditor).getInsertMode() == ITextEditorExtension3.SMART_INSERT))
+		if (!((textEditor instanceof ITextEditorExtension3) && (((ITextEditorExtension3) textEditor).getInsertMode() == ITextEditorExtension3.SMART_INSERT))) {
 			return;
+		}
 
 		IStructuredModel model = null;
 		try {
@@ -55,22 +56,23 @@ public class StructuredAutoEditStrategyXML implements IAutoEditStrategy {
 			}
 		}
 		finally {
-			if (model != null)
+			if (model != null) {
 				model.releaseFromRead();
+			}
 		}
 	}
 
 	private boolean isCommentNode(IDOMNode node) {
-		return (node != null && node instanceof IDOMElement && ((IDOMElement) node).isCommentTag());
+		return ((node != null) && (node instanceof IDOMElement) && ((IDOMElement) node).isCommentTag());
 	}
 
 	private boolean isDocumentNode(IDOMNode node) {
-		return (node != null && node.getNodeType() == Node.DOCUMENT_NODE);
+		return ((node != null) && (node.getNodeType() == Node.DOCUMENT_NODE));
 	}
 
 	private void smartInsertForComment(DocumentCommand command, IDocument document, IStructuredModel model) {
 		try {
-			if (command.text.equals("-") && document.getLength() >= 3 && document.get(command.offset - 3, 3).equals("<!-")) { //$NON-NLS-1$ //$NON-NLS-2$
+			if (command.text.equals("-") && (document.getLength() >= 3) && document.get(command.offset - 3, 3).equals("<!-")) { //$NON-NLS-1$ //$NON-NLS-2$
 				command.text += "  -->"; //$NON-NLS-1$
 				command.shiftsCaret = false;
 				command.caretOffset = command.offset + 2;
@@ -85,11 +87,11 @@ public class StructuredAutoEditStrategyXML implements IAutoEditStrategy {
 
 	private void smartInsertForEndTag(DocumentCommand command, IDocument document, IStructuredModel model) {
 		try {
-			if (command.text.equals("/") && document.getLength() >= 1 && document.get(command.offset - 1, 1).equals("<")) { //$NON-NLS-1$ //$NON-NLS-2$
+			if (command.text.equals("/") && (document.getLength() >= 1) && document.get(command.offset - 1, 1).equals("<")) { //$NON-NLS-1$ //$NON-NLS-2$
 				IDOMNode parentNode = (IDOMNode) ((IDOMNode) model.getIndexedRegion(command.offset - 1)).getParentNode();
 				if (isCommentNode(parentNode)) {
 					// loop and find non comment node parent
-					while (parentNode != null && isCommentNode(parentNode)) {
+					while ((parentNode != null) && isCommentNode(parentNode)) {
 						parentNode = (IDOMNode) parentNode.getParentNode();
 					}
 				}
@@ -129,11 +131,13 @@ public class StructuredAutoEditStrategyXML implements IAutoEditStrategy {
 			if (page != null) {
 				IEditorPart editor = page.getActiveEditor();
 				if (editor != null) {
-					if (editor instanceof ITextEditor)
+					if (editor instanceof ITextEditor) {
 						return editor;
+					}
 					ITextEditor textEditor = (ITextEditor) editor.getAdapter(ITextEditor.class);
-					if (textEditor != null)
+					if (textEditor != null) {
 						return textEditor;
+					}
 					return editor;
 				}
 			}

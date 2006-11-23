@@ -83,7 +83,7 @@ public class XMLTreeExtension extends TreeExtension {
 			string = (String) modifier.getValue(object, VALUE_PROPERTY);
 			color = f1;
 		}
-		if (string.length() == 0 && object instanceof Element) {
+		if ((string.length() == 0) && (object instanceof Element)) {
 			string = getElementValueHelper((Element) object);
 			color = f2;
 		}
@@ -96,7 +96,7 @@ public class XMLTreeExtension extends TreeExtension {
 	protected void paintItem(GC gc, TreeItem item, Rectangle bounds) {
 		super.paintItem(gc, item, bounds);
 		Object[] data = computeTreeExtensionData(item.getData());
-		if (data != null && data.length == 2) {
+		if ((data != null) && (data.length == 2)) {
 			gc.setClipping(columnPosition, bounds.y + 1, controlWidth, bounds.height);
 			gc.setForeground((Color) data[1]);
 			gc.drawString((String) data[0], columnPosition + 5, bounds.y + 1);
@@ -118,9 +118,9 @@ public class XMLTreeExtension extends TreeExtension {
 		String result = null;
 
 		ModelQuery mq = ModelQueryUtil.getModelQuery(element.getOwnerDocument());
-		if (result == null && mq != null) {
+		if ((result == null) && (mq != null)) {
 			CMElementDeclaration ed = mq.getCMElementDeclaration(element);
-			if (ed != null && !Boolean.TRUE.equals(ed.getProperty("isInferred"))) { //$NON-NLS-1$
+			if ((ed != null) && !Boolean.TRUE.equals(ed.getProperty("isInferred"))) { //$NON-NLS-1$
 				result = decriptionBuilder.buildDescription(ed);
 			}
 		}
@@ -135,7 +135,7 @@ public class XMLTreeExtension extends TreeExtension {
 			boolean result = false;
 			if (element instanceof Node) {
 				Node node = (Node) element;
-				result = property == VALUE_PROPERTY && treeContentHelper.isEditable(node);
+				result = (property == VALUE_PROPERTY) && treeContentHelper.isEditable(node);
 			}
 			return result;
 		}
@@ -153,7 +153,7 @@ public class XMLTreeExtension extends TreeExtension {
 			Item item = (Item) element;
 			String oldValue = treeContentHelper.getNodeValue((Node) item.getData());
 			String newValue = value.toString();
-			if (newValue != null && !newValue.equals(oldValue)) {
+			if ((newValue != null) && !newValue.equals(oldValue)) {
 				treeContentHelper.setNodeValue((Node) item.getData(), value.toString());
 			}
 			// enableNodeSelectionListener(true);

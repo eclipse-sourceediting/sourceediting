@@ -65,7 +65,7 @@ public class WorkbenchDefaultEncodingSettings extends Composite {
 		defaultEncodingComposite.setLayoutData(data);
 
 		fUseDefaultButton = new Button(defaultEncodingComposite, SWT.CHECK);
-		fUseDefaultButton.setText(XMLUIMessages.WorkbenchDefaultEncodingSettings_0); //$NON-NLS-1$
+		fUseDefaultButton.setText(XMLUIMessages.WorkbenchDefaultEncodingSettings_0);
 
 		fUseDefaultButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
@@ -91,8 +91,9 @@ public class WorkbenchDefaultEncodingSettings extends Composite {
 	 * @return a <code>String</code> value
 	 */
 	public String getIANATag() {
-		if (!isDefault())
+		if (!isDefault()) {
 			return fEncodingSettings.getIANATag();
+		}
 		return WORKBENCH_DEFAULT;
 	}
 
@@ -106,7 +107,8 @@ public class WorkbenchDefaultEncodingSettings extends Composite {
 			String workbenchValue = getWorkbenchEncoding();
 			workbenchValue = CommonCharsetNames.getIanaPreferredCharsetName(workbenchValue);
 			fEncodingSettings.setIANATag(workbenchValue);
-		} else if (fNonDefaultIANA != null) {
+		}
+		else if (fNonDefaultIANA != null) {
 			fEncodingSettings.setIANATag(fNonDefaultIANA);
 		}
 		getEncodingCombo().setEnabled(!fUseDefaultButton.getSelection());
@@ -124,14 +126,16 @@ public class WorkbenchDefaultEncodingSettings extends Composite {
 	 * 
 	 */
 	public void setIANATag(String ianaTag) {
-		if (ianaTag == null || ianaTag.equals(WORKBENCH_DEFAULT)) {
+		if ((ianaTag == null) || ianaTag.equals(WORKBENCH_DEFAULT)) {
 			fUseDefaultButton.setSelection(true);
 			handleUseDefaultButtonSelected();
-		} else {
+		}
+		else {
 			fUseDefaultButton.setSelection(false);
 			handleUseDefaultButtonSelected();
-			if (!isDefault())
+			if (!isDefault()) {
 				fEncodingSettings.setIANATag(ianaTag);
+			}
 		}
 	}
 }

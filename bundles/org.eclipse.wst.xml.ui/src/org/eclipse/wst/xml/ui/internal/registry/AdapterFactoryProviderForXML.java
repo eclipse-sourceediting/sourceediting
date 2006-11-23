@@ -30,7 +30,7 @@ import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeAdapterFactory;
 import org.eclipse.wst.xml.ui.internal.preferences.XMLUIPreferenceNames;
 
 /**
- *  
+ * 
  */
 public class AdapterFactoryProviderForXML implements AdapterFactoryProvider {
 
@@ -75,7 +75,9 @@ public class AdapterFactoryProviderForXML implements AdapterFactoryProvider {
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.wst.sse.ui.internal.provisional.registry.AdapterFactoryProvider#isFor(org.eclipse.wst.sse.core.internal.ltk.modelhandler.IDocumentTypeHandler)
 	 */
 	public boolean isFor(IDocumentTypeHandler contentTypeDescription) {

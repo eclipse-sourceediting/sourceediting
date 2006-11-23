@@ -44,7 +44,7 @@ public interface XMLRelevanceConstants extends IRelevanceConstants {
 	// CMVC 246618
 	int R_REQUIRED = 10;
 	int R_TAG_INSERTION = 500;
-    int R_STRICTLY_VALID_TAG_INSERTION = 600;
+	int R_STRICTLY_VALID_TAG_INSERTION = 600;
 	int R_TAG_NAME = 1200;
 	int R_XML_ATTRIBUTE_NAME = 900;
 	int R_XML_ATTRIBUTE_VALUE = 800;

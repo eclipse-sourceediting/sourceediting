@@ -44,15 +44,15 @@ public class CommonAddNamespacesControl extends Composite implements SelectionLi
 		Text prefixField;
 		Text uriField;
 
-		//protected NamespaceInfo info;
+		// protected NamespaceInfo info;
 
 		public EditNamespaceControl(Composite parent) {
-			super(parent, SWT.NONE); //BORDER);
+			super(parent, SWT.NONE); // BORDER);
 			setLayout(new GridLayout());
 			setLayoutData(new GridData(GridData.FILL_BOTH));
 
 			Label label = new Label(this, SWT.NONE);
-			label.setText(XMLUIMessages._UI_ENTER_REQ_PREFIX_AND_NAMESPACE); //$NON-NLS-1$
+			label.setText(XMLUIMessages._UI_ENTER_REQ_PREFIX_AND_NAMESPACE);
 
 			Composite composite = new Composite(this, SWT.NONE);
 			GridLayout layout = new GridLayout();
@@ -68,39 +68,39 @@ public class CommonAddNamespacesControl extends Composite implements SelectionLi
 			// row 1
 			//
 			Label prefixLabel = new Label(composite, SWT.NONE);
-			prefixLabel.setText(XMLUIMessages._UI_LABEL_PREFIX_COLON); //$NON-NLS-1$
+			prefixLabel.setText(XMLUIMessages._UI_LABEL_PREFIX_COLON);
 
 			prefixField = new Text(composite, SWT.SINGLE | SWT.BORDER);
 			prefixField.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-			//prefixField.setText(getDisplayValue(info.prefix));
-			//prefixField.addModifyListener(modifyListener);
-			//prefixField.setEnabled(info.getProperty("prefix-readOnly") ==
+			// prefixField.setText(getDisplayValue(info.prefix));
+			// prefixField.addModifyListener(modifyListener);
+			// prefixField.setEnabled(info.getProperty("prefix-readOnly") ==
 			// null);
 			new Label(composite, SWT.NONE);
 
 			// row 2
 			//
 			Label uriLabel = new Label(composite, SWT.NONE);
-			uriLabel.setText(XMLUIMessages._UI_LABEL_NAMESPACE_NAME_COLON); //$NON-NLS-1$
+			uriLabel.setText(XMLUIMessages._UI_LABEL_NAMESPACE_NAME_COLON);
 
 			uriField = new Text(composite, SWT.SINGLE | SWT.BORDER);
 			uriField.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-			//uriField.setText(getDisplayValue(info.uri));
-			//uriField.addModifyListener(modifyListener);
-			//uriField.setEnabled(info.getProperty("uri-readOnly") == null);
+			// uriField.setText(getDisplayValue(info.uri));
+			// uriField.addModifyListener(modifyListener);
+			// uriField.setEnabled(info.getProperty("uri-readOnly") == null);
 
 			new Label(composite, SWT.NONE);
 
 			// row 3
 			//
 			Label locationHintLabel = new Label(composite, SWT.NONE);
-			locationHintLabel.setText(XMLUIMessages._UI_LABEL_LOCATION_HINT_COLON); //$NON-NLS-1$
+			locationHintLabel.setText(XMLUIMessages._UI_LABEL_LOCATION_HINT_COLON);
 
 			locationHintField = new Text(composite, SWT.SINGLE | SWT.BORDER);
 			locationHintField.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-			//locationHintField.setText(getDisplayValue(info.locationHint));
-			//locationHintField.addModifyListener(modifyListener);
-			//locationHintField.setEnabled(info.getProperty("locationHint-readOnly")
+			// locationHintField.setText(getDisplayValue(info.locationHint));
+			// locationHintField.addModifyListener(modifyListener);
+			// locationHintField.setEnabled(info.getProperty("locationHint-readOnly")
 			// == null);
 
 			SelectionListener selectionListener = new SelectionAdapter() {
@@ -110,7 +110,7 @@ public class CommonAddNamespacesControl extends Composite implements SelectionLi
 			};
 
 			browseButton = new Button(composite, SWT.NONE);
-			browseButton.setText(XMLUIMessages._UI_LABEL_BROWSE); //$NON-NLS-1$
+			browseButton.setText(XMLUIMessages._UI_LABEL_BROWSE);
 			browseButton.addSelectionListener(selectionListener);
 			browseButton.setEnabled(locationHintField.getEnabled());
 		}
@@ -119,49 +119,52 @@ public class CommonAddNamespacesControl extends Composite implements SelectionLi
 			String[] extensions = {".xsd"}; //$NON-NLS-1$
 			SelectFileOrXMLCatalogIdDialog dialog = new SelectFileOrXMLCatalogIdDialog(getShell(), extensions);
 			dialog.create();
-			dialog.getShell().setText(XMLUIMessages._UI_LABEL_SELECT_FILE); //$NON-NLS-1$
+			dialog.getShell().setText(XMLUIMessages._UI_LABEL_SELECT_FILE);
 			dialog.setBlockOnOpen(true);
 			dialog.open();
 
 			if (dialog.getReturnCode() == Window.OK) {
-				//String grammarURI = null;
+				// String grammarURI = null;
 				IFile file = dialog.getFile();
 				String id = dialog.getId();
 				if (file != null) {
 					String uri = null;
 					if (resourceLocation != null) {
 						uri = URIHelper.getRelativeURI(file.getLocation(), resourceLocation);
-						//grammarURI = file.getLocation().toOSString();
-					} else {
+						// grammarURI = file.getLocation().toOSString();
+					}
+					else {
 						uri = file.getLocation().toOSString();
-						//grammarURI = uri;
+						// grammarURI = uri;
 					}
 					locationHintField.setText(uri);
-				} else if (id != null) {
+				}
+				else if (id != null) {
 					locationHintField.setText(id);
-					//URIResolver resolver = 
-						URIResolverPlugin.createResolver();
-					//grammarURI = resolver.resolve(null, id, id);
+					// URIResolver resolver =
+					URIResolverPlugin.createResolver();
+					// grammarURI = resolver.resolve(null, id, id);
 				}
 
 				try {
-					//TODO CMDocument document =
+					// TODO CMDocument document =
 					// CMDocumentBuilderRegistry.getInstance().buildCMDocument(grammarURI);
-					//				 List namespaceInfoList =
+					// List namespaceInfoList =
 					// (List)document.getProperty("http://org.eclipse.wst/cm/properties/namespaceInfo");
-					//				 NamespaceInfo info =
+					// NamespaceInfo info =
 					// (NamespaceInfo)namespaceInfoList.get(0);
-					//				 if (uriField.getText().trim().length() == 0 && info.uri
+					// if (uriField.getText().trim().length() == 0 && info.uri
 					// != null)
-					//				 {
-					//					 uriField.setText(info.uri);
-					//				 }
-					//				 if (prefixField.getText().trim().length() == 0 &&
+					// {
+					// uriField.setText(info.uri);
+					// }
+					// if (prefixField.getText().trim().length() == 0 &&
 					// info.prefix != null)
-					//				 {
-					//					 prefixField.setText(info.prefix);
-					//				 }
-				} catch (Exception e) {
+					// {
+					// prefixField.setText(info.prefix);
+					// }
+				}
+				catch (Exception e) {
 				}
 			}
 		}
@@ -196,27 +199,27 @@ public class CommonAddNamespacesControl extends Composite implements SelectionLi
 		setLayout(new GridLayout());
 
 		radio1 = new Button(this, SWT.RADIO);
-		radio1.setText(XMLUIMessages._UI_SELECT_REGISTERED_NAMESPACES); //$NON-NLS-1$
+		radio1.setText(XMLUIMessages._UI_SELECT_REGISTERED_NAMESPACES);
 		radio1.addSelectionListener(this);
 
 		radio2 = new Button(this, SWT.RADIO);
-		radio2.setText(XMLUIMessages._UI_SPECIFY_NEW_NAMESPACE); //$NON-NLS-1$
+		radio2.setText(XMLUIMessages._UI_SPECIFY_NEW_NAMESPACE);
 		radio2.addSelectionListener(this);
 
 		Label separator = new Label(this, SWT.SEPARATOR | SWT.HORIZONTAL);
 		separator.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		//Group namespaceInfoGroup = new Group(this, SWT.NONE);
-		//namespaceInfoGroup.setText("Namespace Declarations");
+		// Group namespaceInfoGroup = new Group(this, SWT.NONE);
+		// namespaceInfoGroup.setText("Namespace Declarations");
 		// //XMLCommonUIPlugin.getInstance().getString("_UI_LABEL_XML_SCHEMA_INFORMATION"));
-		//namespaceInfoGroup.setLayout(new GridLayout(2, false));
-		//namespaceInfoGroup.setLayoutData(new GridData(GridData.FILL_BOTH));
+		// namespaceInfoGroup.setLayout(new GridLayout(2, false));
+		// namespaceInfoGroup.setLayoutData(new GridData(GridData.FILL_BOTH));
 		pageBook = new PageBook(this, SWT.NONE);
 		pageBook.setLayoutData(new GridData(GridData.FILL_BOTH));
 
 		tableSection = new Composite(pageBook, SWT.NONE);
 		tableSection.setLayout(new GridLayout());
 		Label label = new Label(tableSection, SWT.NONE);
-		label.setText(XMLUIMessages._UI_SELECT_NAMESPACE_TO_ADD); //$NON-NLS-1$
+		label.setText(XMLUIMessages._UI_SELECT_NAMESPACE_TO_ADD);
 
 		tableViewer = new CommonNamespaceInfoTable(tableSection, SWT.CHECK, 6);
 		editNamespaceControl = new EditNamespaceControl(pageBook);
@@ -237,7 +240,8 @@ public class CommonAddNamespacesControl extends Composite implements SelectionLi
 					list.add(item.getData());
 				}
 			}
-		} else {
+		}
+		else {
 			NamespaceInfo info = new NamespaceInfo();
 			info.prefix = editNamespaceControl.prefixField.getText();
 			info.uri = editNamespaceControl.uriField.getText();
@@ -258,7 +262,8 @@ public class CommonAddNamespacesControl extends Composite implements SelectionLi
 	public void widgetSelected(SelectionEvent e) {
 		if (e.widget == radio1) {
 			pageBook.showPage(tableSection);
-		} else if (e.widget == radio2) {
+		}
+		else if (e.widget == radio2) {
 			pageBook.showPage(editNamespaceControl);
 		}
 	}

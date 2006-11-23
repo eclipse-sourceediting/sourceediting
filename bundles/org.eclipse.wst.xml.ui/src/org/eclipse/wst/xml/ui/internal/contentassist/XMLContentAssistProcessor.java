@@ -37,27 +37,27 @@ public class XMLContentAssistProcessor extends AbstractContentAssistProcessor im
 	public XMLContentAssistProcessor() {
 		super();
 	}
-	
+
 	protected void addAttributeNameProposals(ContentAssistRequest contentAssistRequest) {
 		addTemplates(contentAssistRequest, TemplateContextTypeIdsXML.ATTRIBUTE);
 		super.addAttributeNameProposals(contentAssistRequest);
 	}
-	
+
 	protected void addAttributeValueProposals(ContentAssistRequest contentAssistRequest) {
 		addTemplates(contentAssistRequest, TemplateContextTypeIdsXML.ATTRIBUTE_VALUE);
 		super.addAttributeValueProposals(contentAssistRequest);
 	}
-	
+
 	protected void addEmptyDocumentProposals(ContentAssistRequest contentAssistRequest) {
 		addTemplates(contentAssistRequest, TemplateContextTypeIdsXML.NEW);
 		super.addEmptyDocumentProposals(contentAssistRequest);
 	}
-	
+
 	protected void addTagInsertionProposals(ContentAssistRequest contentAssistRequest, int childPosition) {
 		addTemplates(contentAssistRequest, TemplateContextTypeIdsXML.TAG);
 		super.addTagInsertionProposals(contentAssistRequest, childPosition);
 	}
-	
+
 	/**
 	 * Adds templates to the list of proposals
 	 * 
@@ -67,7 +67,7 @@ public class XMLContentAssistProcessor extends AbstractContentAssistProcessor im
 	private void addTemplates(ContentAssistRequest contentAssistRequest, String context) {
 		addTemplates(contentAssistRequest, context, contentAssistRequest.getReplacementBeginPosition());
 	}
-	
+
 	/**
 	 * Adds templates to the list of proposals
 	 * 
@@ -76,9 +76,10 @@ public class XMLContentAssistProcessor extends AbstractContentAssistProcessor im
 	 * @param startOffset
 	 */
 	private void addTemplates(ContentAssistRequest contentAssistRequest, String context, int startOffset) {
-		if (contentAssistRequest == null)
+		if (contentAssistRequest == null) {
 			return;
-		
+		}
+
 		// if already adding template proposals for a certain context type, do
 		// not add again
 		if (!fTemplateContexts.contains(context)) {
@@ -89,24 +90,30 @@ public class XMLContentAssistProcessor extends AbstractContentAssistProcessor im
 				getTemplateCompletionProcessor().setContextType(context);
 				ICompletionProposal[] proposals = getTemplateCompletionProcessor().computeCompletionProposals(fTextViewer, startOffset);
 				for (int i = 0; i < proposals.length; ++i) {
-					if (useProposalList)
+					if (useProposalList) {
 						contentAssistRequest.addProposal(proposals[i]);
-					else
+					}
+					else {
 						contentAssistRequest.addMacro(proposals[i]);
+					}
 				}
 			}
 		}
 	}
-	
+
 	protected ContentAssistRequest computeCompletionProposals(int documentPosition, String matchString, ITextRegion completionRegion, IDOMNode treeNode, IDOMNode xmlnode) {
 		ContentAssistRequest request = super.computeCompletionProposals(documentPosition, matchString, completionRegion, treeNode, xmlnode);
-		// bug115927 use original document position for all/any region templates
+		// bug115927 use original document position for all/any region
+		// templates
 		addTemplates(request, TemplateContextTypeIdsXML.ALL, documentPosition);
 		return request;
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.xml.ui.contentassist.AbstractContentAssistProcessor#computeCompletionProposals(org.eclipse.jface.text.ITextViewer, int)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.wst.xml.ui.contentassist.AbstractContentAssistProcessor#computeCompletionProposals(org.eclipse.jface.text.ITextViewer,
+	 *      int)
 	 */
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer textViewer, int documentPosition) {
 		fTemplateContexts.clear();
@@ -114,8 +121,9 @@ public class XMLContentAssistProcessor extends AbstractContentAssistProcessor im
 	}
 
 	protected IPreferenceStore getPreferenceStore() {
-		if (fPreferenceStore == null)
+		if (fPreferenceStore == null) {
 			fPreferenceStore = XMLUIPlugin.getDefault().getPreferenceStore();
+		}
 		return fPreferenceStore;
 	}
 
@@ -134,7 +142,7 @@ public class XMLContentAssistProcessor extends AbstractContentAssistProcessor im
 	public void propertyChange(PropertyChangeEvent event) {
 		String property = event.getProperty();
 
-		if (property.compareTo(XMLUIPreferenceNames.AUTO_PROPOSE) == 0 || property.compareTo(XMLUIPreferenceNames.AUTO_PROPOSE_CODE) == 0) {
+		if ((property.compareTo(XMLUIPreferenceNames.AUTO_PROPOSE) == 0) || (property.compareTo(XMLUIPreferenceNames.AUTO_PROPOSE_CODE) == 0)) {
 			reinit();
 		}
 	}
@@ -145,7 +153,8 @@ public class XMLContentAssistProcessor extends AbstractContentAssistProcessor im
 		if (doAuto) {
 			key = XMLUIPreferenceNames.AUTO_PROPOSE_CODE;
 			completionProposalAutoActivationCharacters = getPreferenceStore().getString(key).toCharArray();
-		} else {
+		}
+		else {
 			completionProposalAutoActivationCharacters = null;
 		}
 	}

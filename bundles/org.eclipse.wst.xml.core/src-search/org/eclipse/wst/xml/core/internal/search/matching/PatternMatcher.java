@@ -14,7 +14,6 @@ package org.eclipse.wst.xml.core.internal.search.matching;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.wst.common.core.search.SearchMatch;
-import org.eclipse.wst.common.core.search.SearchParticipant;
 import org.eclipse.wst.common.core.search.SearchRequestor;
 import org.eclipse.wst.common.core.search.pattern.SearchPattern;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
@@ -29,10 +28,10 @@ import org.w3c.dom.Element;
  * <p>
  * Subclasses of the PatternMatches should be set as adapters for the patterns that they match.
  * </p>
- * An implementation of {@link SearchParticipant#selectDocumentLocations()} will call 
+ * An implementation of {@link org.eclipse.wst.common.core.search.SearchParticipant#selectDocumentLocations()} will call 
  * { @link PatternMatcher#matches() } on the adapter on pattern matcher.
  * 
- * An implementation of {@link SearchParticipant#locateMatches()} will call 
+ * An implementation of {@link org.eclipse.wst.common.core.search.SearchParticipant#locateMatches()} will call 
  * { @link PatternMatcher#locateMatches() } on the adapter on pattern matcher.
  *
  */

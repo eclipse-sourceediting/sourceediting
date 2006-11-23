@@ -19,39 +19,33 @@ import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.ContentBuilder;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.NamespaceInfo;
 
-public class NamespaceInfoContentBuilder extends ContentBuilder
-  {      
-    protected int count = 1;   
-    public List list = new Vector();
-    protected Hashtable table = new Hashtable();   
+public class NamespaceInfoContentBuilder extends ContentBuilder {
+	protected int count = 1;
+	public List list = new Vector();
+	protected Hashtable table = new Hashtable();
 
-    public NamespaceInfoContentBuilder()
-    {
-      super();
-    }
-   
-    public void visitCMElementDeclaration(CMElementDeclaration ed)
-    {                      
-      if (ed.getProperty("http://org.eclipse.wst/cm/properties/definitionInfo") != null) //$NON-NLS-1$
-      {
-        super.visitCMElementDeclaration(ed);
-      }
-    }
+	public NamespaceInfoContentBuilder() {
+		super();
+	}
 
-    protected void createAnyElementNode(CMAnyElement anyElement)
-    {
-      String uri = anyElement.getNamespaceURI();
-      if (uri != null && !uri.startsWith("##")) //$NON-NLS-1$
-      {
-        if (table.get(uri) == null)
-        {
-          NamespaceInfo info = new NamespaceInfo();
-          info.uri = uri;     
-          info.prefix = "p" + count++; //$NON-NLS-1$
-          table.put(uri, info); 
-          list.add(info);
-        }
-      }
-    }
-  }                         
+	public void visitCMElementDeclaration(CMElementDeclaration ed) {
+		if (ed.getProperty("http://org.eclipse.wst/cm/properties/definitionInfo") != null) //$NON-NLS-1$
+		{
+			super.visitCMElementDeclaration(ed);
+		}
+	}
 
+	protected void createAnyElementNode(CMAnyElement anyElement) {
+		String uri = anyElement.getNamespaceURI();
+		if ((uri != null) && !uri.startsWith("##")) //$NON-NLS-1$
+		{
+			if (table.get(uri) == null) {
+				NamespaceInfo info = new NamespaceInfo();
+				info.uri = uri;
+				info.prefix = "p" + count++; //$NON-NLS-1$
+				table.put(uri, info);
+				list.add(info);
+			}
+		}
+	}
+}

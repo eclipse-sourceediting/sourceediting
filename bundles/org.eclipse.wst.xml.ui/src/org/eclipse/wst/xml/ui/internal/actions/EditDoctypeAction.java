@@ -92,7 +92,7 @@ public class EditDoctypeAction extends Action {
 				break;
 			}
 		}
-		return rootElement != null ? rootElement.getNodeName() : XMLUIMessages._UI_LABEL_ROOT_ELEMENT_VALUE; //$NON-NLS-1$
+		return rootElement != null ? rootElement.getNodeName() : XMLUIMessages._UI_LABEL_ROOT_ELEMENT_VALUE;
 	}
 
 	public String getUndoDescription() {
@@ -106,21 +106,22 @@ public class EditDoctypeAction extends Action {
 		int nodeListLength = nodeList.getLength();
 		for (int i = 0; i < nodeListLength; i++) {
 			Node childNode = nodeList.item(i);
-			if (childNode.getNodeType() == Node.PROCESSING_INSTRUCTION_NODE || childNode.getNodeType() == Node.COMMENT_NODE) {
+			if ((childNode.getNodeType() == Node.PROCESSING_INSTRUCTION_NODE) || (childNode.getNodeType() == Node.COMMENT_NODE)) {
 				// continue on to the nextNode
-			} else {
+			}
+			else {
 				refChild = childNode;
 				break;
 			}
 		}
 
 		document.insertBefore(doctype, refChild);
-		//manager.reformat(doctype, false);
+		// manager.reformat(doctype, false);
 	}
 
 	public void run() {
 		model.beginRecording(this, getUndoDescription());
-		//Shell shell =
+		// Shell shell =
 		// XMLCommonUIPlugin.getInstance().getWorkbench().getActiveWorkbenchWindow().getShell();
 		Shell shell = getDisplay().getActiveShell();
 		EditDoctypeDialog dialog = showEditDoctypeDialog(shell);
@@ -128,7 +129,8 @@ public class EditDoctypeAction extends Action {
 		if (dialog.getReturnCode() == Window.OK) {
 			if (doctype != null) {
 				updateDoctype(dialog, doctype);
-			} else if (document != null) {
+			}
+			else if (document != null) {
 				DocumentType doctype = createDoctype(dialog, document);
 				if (doctype != null) {
 					insertDoctype(doctype, document);
@@ -144,19 +146,20 @@ public class EditDoctypeAction extends Action {
 		if (doctype != null) {
 			dialog = new EditDoctypeDialog(shell, doctype);
 			if (title == null) {
-				title = XMLUIMessages._UI_LABEL_EDIT_DOCTYPE; //$NON-NLS-1$
+				title = XMLUIMessages._UI_LABEL_EDIT_DOCTYPE;
 			}
-		} else if (document != null) {
+		}
+		else if (document != null) {
 			String rootElementName = getRootElementName(document);
 			dialog = new EditDoctypeDialog(shell, rootElementName, "", rootElementName + ".dtd"); //$NON-NLS-1$ //$NON-NLS-2$
 			if (title == null) {
-				title = XMLUIMessages._UI_MENU_ADD_DTD_INFORMATION_TITLE; //$NON-NLS-1$
+				title = XMLUIMessages._UI_MENU_ADD_DTD_INFORMATION_TITLE;
 			}
 		}
 
-		dialog.setComputeSystemId(doctype == null || doctype.getSystemId() == null || doctype.getSystemId().trim().length() == 0);
+		dialog.setComputeSystemId((doctype == null) || (doctype.getSystemId() == null) || (doctype.getSystemId().trim().length() == 0));
 
-		dialog.setErrorChecking(false);//!model.getType().equals(IStructuredModel.HTML));
+		dialog.setErrorChecking(false);// !model.getType().equals(IStructuredModel.HTML));
 		dialog.create();
 		dialog.getShell().setText(title);
 		dialog.setBlockOnOpen(true);
@@ -173,14 +176,15 @@ public class EditDoctypeAction extends Action {
 			if (doctypeImpl.getName().equals(dialog.getName())) {
 				doctypeImpl.setPublicId(dialog.getPublicId());
 				doctypeImpl.setSystemId(dialog.getSystemId());
-			} else {
+			}
+			else {
 				// we need to create a new one and remove the old
 				//                  
 				Document document = doctype.getOwnerDocument();
 				DocumentType newDoctype = createDoctype(dialog, document);
 				document.insertBefore(newDoctype, doctype);
 				document.removeChild(doctype);
-				//manager.reformat(newDoctype, false);
+				// manager.reformat(newDoctype, false);
 			}
 		}
 	}

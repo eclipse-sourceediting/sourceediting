@@ -39,12 +39,13 @@ public class MarkupTagInfoProvider {
 
 	/**
 	 * Returns basic tag information for display given a CMNode
-	 *  
+	 * 
 	 * @return String
 	 */
 	public String getInfo(CMNode node) {
-		if (node == null)
+		if (node == null) {
 			return null;
+		}
 		StringBuffer sb = new StringBuffer();
 		// we assume that if there is tagInfo present, only display tagInfo
 		printTagInfo(sb, node);
@@ -75,7 +76,7 @@ public class MarkupTagInfoProvider {
 			sb.append(PARAGRAPH_END);
 		}
 		String[] enumeratedValue = dataType.getEnumeratedValues();
-		if (enumeratedValue != null && enumeratedValue.length > 0) {
+		if ((enumeratedValue != null) && (enumeratedValue.length > 0)) {
 			sb.append(PARAGRAPH_START + BOLD_START + XMLUIMessages.Enumerated_Values____5 + SPACE + BOLD_END);
 			sb.append(LIST_BEGIN);
 			for (int i = 0; i < enumeratedValue.length; i++) {
@@ -104,7 +105,8 @@ public class MarkupTagInfoProvider {
 					if (dataType != null) {
 						printDataTypeInfo(sb, dataType);
 					}
-				} else {
+				}
+				else {
 					CMDescriptionBuilder builder = new CMDescriptionBuilder();
 					String description = builder.buildDescription(node);
 					if ((description != null) && (description.length() > 0)) {
@@ -112,7 +114,8 @@ public class MarkupTagInfoProvider {
 						sb.append(description + PARAGRAPH_END);
 					}
 				}
-			} else if (node.getNodeType() == CMNode.ATTRIBUTE_DECLARATION) {
+			}
+			else if (node.getNodeType() == CMNode.ATTRIBUTE_DECLARATION) {
 				CMAttributeDeclaration ad = (CMAttributeDeclaration) node;
 				sb.append(PARAGRAPH_START + BOLD_START + XMLUIMessages.Attribute____3 + SPACE + BOLD_END);
 				sb.append(node.getNodeName());
@@ -122,7 +125,8 @@ public class MarkupTagInfoProvider {
 				if (dataType != null) {
 					printDataTypeInfo(sb, dataType);
 				}
-			} else if (node.getNodeType() == CMNode.DATA_TYPE) {
+			}
+			else if (node.getNodeType() == CMNode.DATA_TYPE) {
 				sb.append(PARAGRAPH_START + BOLD_START + XMLUIMessages.Data_Type____4 + SPACE + BOLD_END);
 				sb.append(node.getNodeName());
 				sb.append(PARAGRAPH_END);

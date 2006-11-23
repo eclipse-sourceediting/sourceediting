@@ -49,10 +49,12 @@ public class DelegatingSourceValidatorForXML extends DelegatingSourceValidator {
 		try {
 			ProjectConfiguration configuration = ConfigurationManager.getManager().getProjectConfiguration(file.getProject());
 			ValidatorMetaData vmd = ValidationRegistryReader.getReader().getValidatorMetaData(VALIDATOR_CLASS);
-			if (configuration.isBuildEnabled(vmd) || configuration.isManualEnabled(vmd))
+			if (configuration.isBuildEnabled(vmd) || configuration.isManualEnabled(vmd)) {
 				enabled = true;
-			else
+			}
+			else {
 				enabled = false;
+			}
 		}
 		catch (InvocationTargetException e) {
 			Logger.log(Logger.WARNING_DEBUG, e.getMessage(), e);

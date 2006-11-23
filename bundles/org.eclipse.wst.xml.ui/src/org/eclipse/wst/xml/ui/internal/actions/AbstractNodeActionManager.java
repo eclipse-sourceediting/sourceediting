@@ -71,7 +71,7 @@ public abstract class AbstractNodeActionManager extends BaseNodeActionManager {
 			String text = getLabel(parent, cmnode);
 			setText(text);
 			description = text;
-			undoDescription = XMLUIMessages._UI_MENU_ADD + " " + text; //$NON-NLS-1$ //$NON-NLS-2$
+			undoDescription = XMLUIMessages._UI_MENU_ADD + " " + text; //$NON-NLS-1$ 
 			ImageDescriptor descriptor = CMImageUtil.getImageDescriptor(cmnode);
 			if (descriptor == null) {
 				descriptor = imageDescriptorCache.getImageDescriptor(cmnode);
@@ -87,23 +87,23 @@ public abstract class AbstractNodeActionManager extends BaseNodeActionManager {
 
 			switch (nodeType) {
 				case Node.COMMENT_NODE : {
-					description = XMLUIMessages._UI_MENU_COMMENT; //$NON-NLS-1$
-					undoDescription = XMLUIMessages._UI_MENU_ADD_COMMENT; //$NON-NLS-1$
+					description = XMLUIMessages._UI_MENU_COMMENT;
+					undoDescription = XMLUIMessages._UI_MENU_ADD_COMMENT;
 					break;
 				}
 				case Node.PROCESSING_INSTRUCTION_NODE : {
-					description = XMLUIMessages._UI_MENU_PROCESSING_INSTRUCTION; //$NON-NLS-1$
-					undoDescription = XMLUIMessages._UI_MENU_ADD_PROCESSING_INSTRUCTION; //$NON-NLS-1$
+					description = XMLUIMessages._UI_MENU_PROCESSING_INSTRUCTION;
+					undoDescription = XMLUIMessages._UI_MENU_ADD_PROCESSING_INSTRUCTION;
 					break;
 				}
 				case Node.CDATA_SECTION_NODE : {
-					description = XMLUIMessages._UI_MENU_CDATA_SECTION; //$NON-NLS-1$
-					undoDescription = XMLUIMessages._UI_MENU_ADD_CDATA_SECTION; //$NON-NLS-1$
+					description = XMLUIMessages._UI_MENU_CDATA_SECTION;
+					undoDescription = XMLUIMessages._UI_MENU_ADD_CDATA_SECTION;
 					break;
 				}
 				case Node.TEXT_NODE : {
-					description = XMLUIMessages._UI_MENU_PCDATA; //$NON-NLS-1$
-					undoDescription = XMLUIMessages._UI_MENU_ADD_PCDATA; //$NON-NLS-1$
+					description = XMLUIMessages._UI_MENU_PCDATA;
+					undoDescription = XMLUIMessages._UI_MENU_ADD_PCDATA;
 					break;
 				}
 			}
@@ -125,11 +125,11 @@ public abstract class AbstractNodeActionManager extends BaseNodeActionManager {
 			boolean format = true;
 			switch (nodeType) {
 				case Node.COMMENT_NODE : {
-					newChildNode = document.createComment(XMLUIMessages._UI_COMMENT_VALUE); //$NON-NLS-1$
+					newChildNode = document.createComment(XMLUIMessages._UI_COMMENT_VALUE);
 					break;
 				}
 				case Node.PROCESSING_INSTRUCTION_NODE : {
-					newChildNode = document.createProcessingInstruction(XMLUIMessages._UI_PI_TARGET_VALUE, XMLUIMessages._UI_PI_DATA_VALUE); //$NON-NLS-1$ //$NON-NLS-2$
+					newChildNode = document.createProcessingInstruction(XMLUIMessages._UI_PI_TARGET_VALUE, XMLUIMessages._UI_PI_DATA_VALUE);
 					break;
 				}
 				case Node.CDATA_SECTION_NODE : {
@@ -160,7 +160,8 @@ public abstract class AbstractNodeActionManager extends BaseNodeActionManager {
 			beginNodeAction(this);
 			if (cmnode != null) {
 				addNodeForCMNode();
-			} else {
+			}
+			else {
 				addNodeForNodeType();
 			}
 			endNodeAction(this);
@@ -175,18 +176,18 @@ public abstract class AbstractNodeActionManager extends BaseNodeActionManager {
 		protected List list;
 
 		public DeleteAction(List list) {
-			setText(XMLUIMessages._UI_MENU_REMOVE); //$NON-NLS-1$
+			setText(XMLUIMessages._UI_MENU_REMOVE);
 			this.list = list;
 		}
 
 		public DeleteAction(Node node) {
-			setText(XMLUIMessages._UI_MENU_REMOVE); //$NON-NLS-1$
+			setText(XMLUIMessages._UI_MENU_REMOVE);
 			list = new Vector();
 			list.add(node);
 		}
 
 		public String getUndoDescription() {
-			return XMLUIMessages.DELETE; //$NON-NLS-1$
+			return XMLUIMessages.DELETE;
 		}
 
 		public void run() {
@@ -197,11 +198,12 @@ public abstract class AbstractNodeActionManager extends BaseNodeActionManager {
 				if (node.getNodeType() == Node.ATTRIBUTE_NODE) {
 					Attr attr = (Attr) node;
 					attr.getOwnerElement().removeAttributeNode(attr);
-				} else {
+				}
+				else {
 					Node parent = node.getParentNode();
 					if (parent != null) {
 						Node previousSibling = node.getPreviousSibling();
-						if (previousSibling != null && isWhitespaceTextNode(previousSibling)) {
+						if ((previousSibling != null) && isWhitespaceTextNode(previousSibling)) {
 							parent.removeChild(previousSibling);
 						}
 						parent.removeChild(node);
@@ -230,11 +232,14 @@ public abstract class AbstractNodeActionManager extends BaseNodeActionManager {
 				switch (cmnode.getNodeType()) {
 					case CMNode.ATTRIBUTE_DECLARATION : {
 						result = CMImageUtil.getImageDescriptor(cmnode);
-						if (result == null)
-							if (((CMAttributeDeclaration) cmnode).getUsage() == CMAttributeDeclaration.REQUIRED)
+						if (result == null) {
+							if (((CMAttributeDeclaration) cmnode).getUsage() == CMAttributeDeclaration.REQUIRED) {
 								result = attributeReqImage;
-							else
+							}
+							else {
 								result = attributeImage;
+							}
+						}
 						break;
 					}
 					case CMNode.DATA_TYPE : {
@@ -243,8 +248,9 @@ public abstract class AbstractNodeActionManager extends BaseNodeActionManager {
 					}
 					case CMNode.ELEMENT_DECLARATION : {
 						result = CMImageUtil.getImageDescriptor(cmnode);
-						if (result == null)
+						if (result == null) {
 							result = elementImage;
+						}
 						break;
 					}
 					case CMNode.GROUP : {
@@ -252,7 +258,8 @@ public abstract class AbstractNodeActionManager extends BaseNodeActionManager {
 						break;
 					}
 				}
-			} else if (object instanceof Integer) {
+			}
+			else if (object instanceof Integer) {
 				Integer integer = (Integer) object;
 				switch (integer.intValue()) {
 					case Node.COMMENT_NODE : {
@@ -294,19 +301,19 @@ public abstract class AbstractNodeActionManager extends BaseNodeActionManager {
 			this.parent = parent;
 			switch (nodeType) {
 				case Node.COMMENT_NODE : {
-					description = XMLUIMessages._UI_MENU_COMMENT; //$NON-NLS-1$
+					description = XMLUIMessages._UI_MENU_COMMENT;
 					break;
 				}
 				case Node.PROCESSING_INSTRUCTION_NODE : {
-					description = XMLUIMessages._UI_MENU_PROCESSING_INSTRUCTION; //$NON-NLS-1$
+					description = XMLUIMessages._UI_MENU_PROCESSING_INSTRUCTION;
 					break;
 				}
 				case Node.CDATA_SECTION_NODE : {
-					description = XMLUIMessages._UI_MENU_CDATA_SECTION; //$NON-NLS-1$
+					description = XMLUIMessages._UI_MENU_CDATA_SECTION;
 					break;
 				}
 				case Node.TEXT_NODE : {
-					description = XMLUIMessages._UI_MENU_PCDATA; //$NON-NLS-1$
+					description = XMLUIMessages._UI_MENU_PCDATA;
 					break;
 				}
 			}
@@ -324,7 +331,7 @@ public abstract class AbstractNodeActionManager extends BaseNodeActionManager {
 		}
 
 		public String getUndoDescription() {
-			return XMLUIMessages._UI_MENU_ADD + " " + description; //$NON-NLS-1$ //$NON-NLS-2$
+			return XMLUIMessages._UI_MENU_ADD + " " + description; //$NON-NLS-1$ 
 		}
 
 		public void run() {
@@ -335,11 +342,11 @@ public abstract class AbstractNodeActionManager extends BaseNodeActionManager {
 			boolean format = true;
 			switch (nodeType) {
 				case Node.COMMENT_NODE : {
-					newChildNode = document.createComment(XMLUIMessages._UI_COMMENT_VALUE); //$NON-NLS-1$
+					newChildNode = document.createComment(XMLUIMessages._UI_COMMENT_VALUE);
 					break;
 				}
 				case Node.PROCESSING_INSTRUCTION_NODE : {
-					newChildNode = document.createProcessingInstruction(XMLUIMessages._UI_PI_TARGET_VALUE, XMLUIMessages._UI_PI_DATA_VALUE); //$NON-NLS-1$ //$NON-NLS-2$
+					newChildNode = document.createProcessingInstruction(XMLUIMessages._UI_PI_TARGET_VALUE, XMLUIMessages._UI_PI_DATA_VALUE);
 					break;
 				}
 				case Node.CDATA_SECTION_NODE : {
@@ -386,7 +393,7 @@ public abstract class AbstractNodeActionManager extends BaseNodeActionManager {
 		}
 
 		public String getUndoDescription() {
-			String result = XMLUIMessages._UI_LABEL_UNDO_REPLACE_DESCRIPTION; //$NON-NLS-1$
+			String result = XMLUIMessages._UI_LABEL_UNDO_REPLACE_DESCRIPTION;
 			result += " " + getLabel(parent, cmnode); //$NON-NLS-1$
 			return result;
 		}
@@ -394,7 +401,7 @@ public abstract class AbstractNodeActionManager extends BaseNodeActionManager {
 		public void run() {
 			beginNodeAction(this);
 
-			if (parent != null && cmnode != null) {
+			if ((parent != null) && (cmnode != null)) {
 				remove(parent, startIndex, endIndex);
 				insert(parent, cmnode, startIndex);
 			}
@@ -419,8 +426,9 @@ public abstract class AbstractNodeActionManager extends BaseNodeActionManager {
 	protected Action createAddAttributeAction(Element parent, CMAttributeDeclaration ad) {
 		Action action = null;
 		if (ad == null) {
-			action = new EditAttributeAction(this, parent, null, XMLUIMessages._UI_MENU_NEW_ATTRIBUTE, XMLUIMessages._UI_MENU_NEW_ATTRIBUTE_TITLE); //$NON-NLS-1$ //$NON-NLS-2$
-		} else {
+			action = new EditAttributeAction(this, parent, null, XMLUIMessages._UI_MENU_NEW_ATTRIBUTE, XMLUIMessages._UI_MENU_NEW_ATTRIBUTE_TITLE);
+		}
+		else {
 			action = new AddNodeAction(ad, parent, -1);
 		}
 		return action;
@@ -438,15 +446,16 @@ public abstract class AbstractNodeActionManager extends BaseNodeActionManager {
 
 
 	protected Action createAddDoctypeAction(Document document, int index) {
-		return new EditDoctypeAction(fModel, document, fModel.getBaseLocation(), XMLUIMessages._UI_MENU_ADD_DTD_INFORMATION); //$NON-NLS-1$
+		return new EditDoctypeAction(fModel, document, fModel.getBaseLocation(), XMLUIMessages._UI_MENU_ADD_DTD_INFORMATION);
 	}
 
 
 	protected Action createAddElementAction(Node parent, CMElementDeclaration ed, int index) {
 		Action action = null;
 		if (ed == null) {
-			action = new EditElementAction(this, parent, index, XMLUIMessages._UI_MENU_NEW_ELEMENT, XMLUIMessages._UI_MENU_NEW_ELEMENT_TITLE); //$NON-NLS-1$ //$NON-NLS-2$
-		} else {
+			action = new EditElementAction(this, parent, index, XMLUIMessages._UI_MENU_NEW_ELEMENT, XMLUIMessages._UI_MENU_NEW_ELEMENT_TITLE);
+		}
+		else {
 			action = new AddNodeAction(ed, parent, index);
 		}
 		return action;
@@ -457,7 +466,8 @@ public abstract class AbstractNodeActionManager extends BaseNodeActionManager {
 		Action action = null;
 		if (dataType == null) {
 			action = new AddNodeAction(Node.TEXT_NODE, parent, index);
-		} else {
+		}
+		else {
 			action = new AddNodeAction(dataType, parent, index);
 		}
 		return action;
@@ -466,14 +476,14 @@ public abstract class AbstractNodeActionManager extends BaseNodeActionManager {
 
 	protected Action createAddProcessingInstructionAction(Node parent, int index) {
 		Node refChild = getRefChildNodeAtIndex(parent, index);
-		Action action = new EditProcessingInstructionAction(this, parent, refChild, XMLUIMessages._UI_MENU_ADD_PROCESSING_INSTRUCTION, XMLUIMessages.ADD_PROCESSING_INSTRUCTION); //$NON-NLS-1$ //$NON-NLS-2$
+		Action action = new EditProcessingInstructionAction(this, parent, refChild, XMLUIMessages._UI_MENU_ADD_PROCESSING_INSTRUCTION, XMLUIMessages.ADD_PROCESSING_INSTRUCTION);
 		action.setImageDescriptor(imageDescriptorCache.getImageDescriptor(new Integer(Node.PROCESSING_INSTRUCTION_NODE)));
 		return action;
 	}
 
 
 	protected Action createAddSchemaInfoAction(Element element) {
-		return new EditSchemaInfoAction(this, element.getOwnerDocument(), fModel.getBaseLocation(), XMLUIMessages._UI_MENU_ADD_SCHEMA_INFORMATION); //$NON-NLS-1$
+		return new EditSchemaInfoAction(this, element.getOwnerDocument(), fModel.getBaseLocation(), XMLUIMessages._UI_MENU_ADD_SCHEMA_INFORMATION);
 	}
 
 
@@ -491,29 +501,29 @@ public abstract class AbstractNodeActionManager extends BaseNodeActionManager {
 
 
 	protected Action createEditAttributeAction(Attr attr, CMAttributeDeclaration ad) {
-		return new EditAttributeAction(this, attr.getOwnerElement(), attr, XMLUIMessages._UI_MENU_EDIT_ATTRIBUTE, XMLUIMessages._UI_MENU_EDIT_ATTRIBUTE_TITLE); //$NON-NLS-1$ //$NON-NLS-2$
+		return new EditAttributeAction(this, attr.getOwnerElement(), attr, XMLUIMessages._UI_MENU_EDIT_ATTRIBUTE, XMLUIMessages._UI_MENU_EDIT_ATTRIBUTE_TITLE);
 	}
 
 
 	protected Action createEditDoctypeAction(DocumentType doctype) {
-		return new EditDoctypeAction(fModel, doctype, fModel.getBaseLocation(), XMLUIMessages._UI_MENU_EDIT_DOCTYPE); //$NON-NLS-1$
+		return new EditDoctypeAction(fModel, doctype, fModel.getBaseLocation(), XMLUIMessages._UI_MENU_EDIT_DOCTYPE);
 	}
 
 
 	protected Action createEditProcessingInstructionAction(ProcessingInstruction pi) {
-		return new EditProcessingInstructionAction(this, pi, XMLUIMessages._UI_MENU_EDIT_PROCESSING_INSTRUCTION, XMLUIMessages._UI_MENU_EDIT_PROCESSING_INSTRUCTION_TITLE); //$NON-NLS-1$ //$NON-NLS-2$
+		return new EditProcessingInstructionAction(this, pi, XMLUIMessages._UI_MENU_EDIT_PROCESSING_INSTRUCTION, XMLUIMessages._UI_MENU_EDIT_PROCESSING_INSTRUCTION_TITLE);
 	}
 
 
 	protected Action createEditSchemaInfoAction(Element element) {
-		return new EditSchemaInfoAction(this, element.getOwnerDocument(), fModel.getBaseLocation(), XMLUIMessages._UI_MENU_EDIT_NAMESPACES); //$NON-NLS-1$
+		return new EditSchemaInfoAction(this, element.getOwnerDocument(), fModel.getBaseLocation(), XMLUIMessages._UI_MENU_EDIT_NAMESPACES);
 	}
 
 
 	protected Action createRenameAction(Node node) {
 		Action result = null;
 		if (node instanceof Element) {
-			result = new EditElementAction(this, (Element) node, XMLUIMessages._UI_MENU_RENAME, XMLUIMessages._UI_MENU_RENAME_TITLE); //$NON-NLS-1$ //$NON-NLS-2$
+			result = new EditElementAction(this, (Element) node, XMLUIMessages._UI_MENU_RENAME, XMLUIMessages._UI_MENU_RENAME_TITLE);
 		}
 		return result;
 	}
@@ -540,13 +550,14 @@ public abstract class AbstractNodeActionManager extends BaseNodeActionManager {
 			}
 
 			contributeActions(menuManager, selectionList);
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	/**
-	 *  
+	 * 
 	 */
 	public String getLabel(Node parent, CMNode cmnode) {
 		String result = "?" + cmnode + "?"; //$NON-NLS-1$ //$NON-NLS-2$
@@ -556,7 +567,8 @@ public abstract class AbstractNodeActionManager extends BaseNodeActionManager {
 				if (cmnode.getNodeType() == CMNode.GROUP) {
 					CMDescriptionBuilder descriptionBuilder = new CMDescriptionBuilder();
 					result = descriptionBuilder.buildDescription(cmnode);
-				} else {
+				}
+				else {
 					result = DOMNamespaceHelper.computeName(cmnode, parent, null);
 				}
 			}
@@ -612,7 +624,8 @@ public abstract class AbstractNodeActionManager extends BaseNodeActionManager {
 			if (newNode.getNodeType() == Node.ATTRIBUTE_NODE) {
 				Element parentElement = (Element) parent;
 				parentElement.setAttributeNode((Attr) newNode);
-			} else {
+			}
+			else {
 				parent.insertBefore(newNode, refChild);
 			}
 		}

@@ -43,7 +43,7 @@ public class DOMPropertyDescriptorFactory {
 			CMAttributeDeclaration ad = mq.getCMAttributeDeclaration(attr);
 			if (ad != null) {
 				String[] valuesArray = mq.getPossibleDataTypeValues(attr.getOwnerElement(), ad);
-				if (valuesArray != null && valuesArray.length > 0) {
+				if ((valuesArray != null) && (valuesArray.length > 0)) {
 					result = new EnumeratedStringPropertyDescriptor(attributeName, attributeName, valuesArray);
 				}
 			}

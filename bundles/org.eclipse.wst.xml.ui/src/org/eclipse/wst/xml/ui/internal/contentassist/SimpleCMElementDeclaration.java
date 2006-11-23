@@ -129,7 +129,7 @@ public class SimpleCMElementDeclaration implements org.eclipse.wst.xml.core.inte
 	 * @return int
 	 * 
 	 * Returns one of :
-	 *  
+	 * 
 	 */
 	public int getNodeType() {
 		return 0;
@@ -141,7 +141,7 @@ public class SimpleCMElementDeclaration implements org.eclipse.wst.xml.core.inte
 	 * @return java.lang.Object
 	 * 
 	 * Returns the object property desciped by the propertyName
-	 *  
+	 * 
 	 */
 	public Object getProperty(String propertyName) {
 		return null;
@@ -162,7 +162,7 @@ public class SimpleCMElementDeclaration implements org.eclipse.wst.xml.core.inte
 	 * @return boolean
 	 * 
 	 * Returns true if the CMNode supports a specified property
-	 *  
+	 * 
 	 */
 	public boolean supports(String propertyName) {
 		return false;

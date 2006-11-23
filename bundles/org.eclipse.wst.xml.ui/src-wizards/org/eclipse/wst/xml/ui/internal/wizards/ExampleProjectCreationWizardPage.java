@@ -81,12 +81,14 @@ public class ExampleProjectCreationWizardPage extends WizardNewProjectCreationPa
 	 * @see org.eclipse.ui.dialogs.WizardNewProjectCreationPage#validatePage()
 	 */
 	protected boolean validatePage() {
-		if (!super.validatePage())
+		if (!super.validatePage()) {
 			return false;
+		}
 
 		String projectName = getProjectName();
-		if (projectName == null)
+		if (projectName == null) {
 			return false;
+		}
 
 		IWizard wizard = getWizard();
 		if (wizard instanceof ExampleProjectCreationWizard) {

@@ -43,7 +43,7 @@ public class XMLEditorMessages extends NLS {
 		// load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, XMLEditorMessages.class);
 	}
-	
+
 	private XMLEditorMessages() {
 		// cannot create new instance
 	}

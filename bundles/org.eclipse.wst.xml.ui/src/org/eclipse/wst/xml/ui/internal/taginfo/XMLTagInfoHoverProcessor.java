@@ -16,7 +16,6 @@ package org.eclipse.wst.xml.ui.internal.taginfo;
 
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IRegion;
-import org.eclipse.jface.text.ITextHover;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.Region;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
@@ -67,12 +66,14 @@ public class XMLTagInfoHoverProcessor extends AbstractHoverProcessor {
 		String result = null;
 
 		IndexedRegion treeNode = ContentAssistUtils.getNodeAt(textViewer, documentPosition);
-		if (treeNode == null)
+		if (treeNode == null) {
 			return null;
+		}
 		Node node = (Node) treeNode;
 
-		while (node != null && node.getNodeType() == Node.TEXT_NODE && node.getParentNode() != null)
+		while ((node != null) && (node.getNodeType() == Node.TEXT_NODE) && (node.getParentNode() != null)) {
 			node = node.getParentNode();
+		}
 		IDOMNode parentNode = (IDOMNode) node;
 
 		IStructuredDocumentRegion flatNode = ((IStructuredDocument) textViewer.getDocument()).getRegionAtCharacterOffset(documentPosition);
@@ -93,15 +94,19 @@ public class XMLTagInfoHoverProcessor extends AbstractHoverProcessor {
 	 */
 	protected String computeRegionHelp(IndexedRegion treeNode, IDOMNode parentNode, IStructuredDocumentRegion flatNode, ITextRegion region) {
 		String result = null;
-		if (region == null)
+		if (region == null) {
 			return null;
+		}
 		String regionType = region.getType();
-		if (regionType == DOMRegionContext.XML_TAG_NAME)
+		if (regionType == DOMRegionContext.XML_TAG_NAME) {
 			result = computeTagNameHelp((IDOMNode) treeNode, parentNode, flatNode, region);
-		else if (regionType == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME)
+		}
+		else if (regionType == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME) {
 			result = computeTagAttNameHelp((IDOMNode) treeNode, parentNode, flatNode, region);
-		else if (regionType == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE)
+		}
+		else if (regionType == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
 			result = computeTagAttValueHelp((IDOMNode) treeNode, parentNode, flatNode, region);
+		}
 		return result;
 	}
 
@@ -156,8 +161,9 @@ public class XMLTagInfoHoverProcessor extends AbstractHoverProcessor {
 		}
 
 		addlInfo = getInfoProvider().getInfo(cmnode);
-		if (addlInfo == null && parentOrOwner != null)
+		if ((addlInfo == null) && (parentOrOwner != null)) {
 			addlInfo = getInfoProvider().getInfo(parentOrOwner);
+		}
 		return addlInfo;
 	}
 
@@ -171,13 +177,15 @@ public class XMLTagInfoHoverProcessor extends AbstractHoverProcessor {
 		IStructuredDocumentRegion open = node.getFirstStructuredDocumentRegion();
 		ITextRegionList openRegions = open.getRegions();
 		int i = openRegions.indexOf(region);
-		if (i < 0)
+		if (i < 0) {
 			return null;
+		}
 		ITextRegion nameRegion = null;
 		while (i >= 0) {
 			nameRegion = openRegions.get(i--);
-			if (nameRegion.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME)
+			if (nameRegion.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME) {
 				break;
+			}
 		}
 		return nameRegion;
 	}
@@ -212,8 +220,9 @@ public class XMLTagInfoHoverProcessor extends AbstractHoverProcessor {
 		CMElementDeclaration result = null;
 		if (node.getNodeType() == Node.ELEMENT_NODE) {
 			ModelQuery modelQuery = ModelQueryUtil.getModelQuery(node.getOwnerDocument());
-			if (modelQuery != null)
+			if (modelQuery != null) {
 				result = modelQuery.getCMElementDeclaration((Element) node);
+			}
 		}
 		return result;
 	}
@@ -225,8 +234,9 @@ public class XMLTagInfoHoverProcessor extends AbstractHoverProcessor {
 	 *      org.eclipse.jface.text.IRegion)
 	 */
 	public String getHoverInfo(ITextViewer viewer, IRegion hoverRegion) {
-		if ((hoverRegion == null) || (viewer == null) || (viewer.getDocument() == null))
+		if ((hoverRegion == null) || (viewer == null) || (viewer.getDocument() == null)) {
 			return null;
+		}
 
 		String displayText = null;
 		int documentOffset = hoverRegion.getOffset();
@@ -245,11 +255,12 @@ public class XMLTagInfoHoverProcessor extends AbstractHoverProcessor {
 	 *         attribute name, or attribute value and if offset is not over
 	 *         invalid whitespace. otherwise, returns <code>null</code>
 	 * 
-	 * @see ITextHover#getHoverRegion(ITextViewer, int)
+	 * @see org.eclipse.jface.text.ITextHover#getHoverRegion(ITextViewer, int)
 	 */
 	public IRegion getHoverRegion(ITextViewer textViewer, int offset) {
-		if ((textViewer == null) || (textViewer.getDocument() == null))
+		if ((textViewer == null) || (textViewer.getDocument() == null)) {
 			return null;
+		}
 
 		IStructuredDocumentRegion flatNode = ((IStructuredDocument) textViewer.getDocument()).getRegionAtCharacterOffset(offset);
 		ITextRegion region = null;
@@ -287,8 +298,9 @@ public class XMLTagInfoHoverProcessor extends AbstractHoverProcessor {
 	 *             first place if true, use getHoverRegion(ITextViewer, int)
 	 */
 	public IRegion getHoverRegion(ITextViewer textViewer, int offset, boolean enabled) {
-		if ((!enabled) || (textViewer == null) || (textViewer.getDocument() == null))
+		if ((!enabled) || (textViewer == null) || (textViewer.getDocument() == null)) {
 			return null;
+		}
 
 		IStructuredDocumentRegion flatNode = ((IStructuredDocument) textViewer.getDocument()).getRegionAtCharacterOffset(offset);
 		ITextRegion region = null;

@@ -38,8 +38,9 @@ public class JFaceNodeLabelProvider extends LabelProvider {
 	protected IJFaceNodeAdapter getAdapter(Object adaptable) {
 		if (adaptable instanceof INodeNotifier) {
 			INodeAdapter adapter = ((INodeNotifier) adaptable).getAdapterFor(IJFaceNodeAdapter.class);
-			if (adapter instanceof IJFaceNodeAdapter)
+			if (adapter instanceof IJFaceNodeAdapter) {
 				return (IJFaceNodeAdapter) adapter;
+			}
 		}
 		return null;
 	}

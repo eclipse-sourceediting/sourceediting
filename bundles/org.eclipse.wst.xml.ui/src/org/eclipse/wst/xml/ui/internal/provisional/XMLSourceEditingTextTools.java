@@ -42,26 +42,30 @@ public class XMLSourceEditingTextTools implements IDOMSourceEditingTextTools, IN
 		}
 
 		public int getEndTagEndOffset() {
-			if (node.getEndStructuredDocumentRegion() != null)
+			if (node.getEndStructuredDocumentRegion() != null) {
 				return node.getEndStructuredDocumentRegion().getEndOffset();
+			}
 			return -1;
 		}
 
 		public int getEndTagStartOffset() {
-			if (node.getEndStructuredDocumentRegion() != null)
+			if (node.getEndStructuredDocumentRegion() != null) {
 				return node.getEndStructuredDocumentRegion().getStartOffset();
+			}
 			return -1;
 		}
 
 		public int getStartTagEndOffset() {
-			if (node.getStartStructuredDocumentRegion() != null)
+			if (node.getStartStructuredDocumentRegion() != null) {
 				return node.getStartStructuredDocumentRegion().getEndOffset();
+			}
 			return -1;
 		}
 
 		public int getStartTagStartOffset() {
-			if (node.getStartStructuredDocumentRegion() != null)
+			if (node.getStartStructuredDocumentRegion() != null) {
 				return node.getStartStructuredDocumentRegion().getStartOffset();
+			}
 			return -1;
 		}
 	}
@@ -70,7 +74,7 @@ public class XMLSourceEditingTextTools implements IDOMSourceEditingTextTools, IN
 
 	public int getCaretOffset() {
 		StructuredTextViewer stv = fTextEditor.getTextViewer();
-		if (stv != null && stv.getTextWidget() != null && !stv.getTextWidget().isDisposed()) {
+		if ((stv != null) && (stv.getTextWidget() != null) && !stv.getTextWidget().isDisposed()) {
 			return stv.widgetOffset2ModelOffset(stv.getTextWidget().getCaretOffset());
 		}
 		return 0;
@@ -109,7 +113,7 @@ public class XMLSourceEditingTextTools implements IDOMSourceEditingTextTools, IN
 
 	public Node getNode(int offset) throws BadLocationException {
 		Node node = null;
-		if (0 <= offset && offset <= getDocument().getLength()) {
+		if ((0 <= offset) && (offset <= getDocument().getLength())) {
 			node = (Node) fTextEditor.getModel().getIndexedRegion(offset);
 		}
 		else {
@@ -124,8 +128,9 @@ public class XMLSourceEditingTextTools implements IDOMSourceEditingTextTools, IN
 	 * @see org.eclipse.wst.sse.ui.extensions.SourceEditingTextTools#getNodeLocation(org.w3c.dom.Node)
 	 */
 	public NodeLocation getNodeLocation(Node node) {
-		if (node.getNodeType() == Node.ELEMENT_NODE && node instanceof IDOMNode)
+		if ((node.getNodeType() == Node.ELEMENT_NODE) && (node instanceof IDOMNode)) {
 			return new NodeLocationImpl((IDOMNode) node);
+		}
 		return null;
 	}
 
@@ -145,8 +150,9 @@ public class XMLSourceEditingTextTools implements IDOMSourceEditingTextTools, IN
 	// return (vsm != null) ? vsm.getSelectedNodes() : null;
 	// }
 	public int getStartOffset(Node node) {
-		if (node == null || !(node instanceof IDOMText))
+		if ((node == null) || !(node instanceof IDOMText)) {
 			return -1;
+		}
 
 		IStructuredDocumentRegion fnode = ((IDOMText) node).getFirstStructuredDocumentRegion();
 		return fnode.getStartOffset();

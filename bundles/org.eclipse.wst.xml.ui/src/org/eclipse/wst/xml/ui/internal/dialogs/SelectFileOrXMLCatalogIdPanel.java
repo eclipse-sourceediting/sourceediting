@@ -46,8 +46,8 @@ public class SelectFileOrXMLCatalogIdPanel extends Composite implements Selectio
 
 		public MySelectSingleFileView(Composite parent) {
 			super(null, true);
-			//String[] ext = {".dtd"};
-			//addFilterExtensions(ext);
+			// String[] ext = {".dtd"};
+			// addFilterExtensions(ext);
 			control = createControl(parent);
 			control.setLayoutData(new GridData(GridData.FILL_BOTH));
 			MySelectSingleFileView.this.setListener(this);
@@ -85,13 +85,13 @@ public class SelectFileOrXMLCatalogIdPanel extends Composite implements Selectio
 
 		radioButton = new Button[2];
 		radioButton[0] = new Button(this, SWT.RADIO);
-		radioButton[0].setText(XMLUIMessages._UI_RADIO_BUTTON_SELECT_FROM_WORKSPACE); //$NON-NLS-1$
+		radioButton[0].setText(XMLUIMessages._UI_RADIO_BUTTON_SELECT_FROM_WORKSPACE);
 		radioButton[0].setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		radioButton[0].setSelection(true);
 		radioButton[0].addSelectionListener(this);
 
 		radioButton[1] = new Button(this, SWT.RADIO);
-		radioButton[1].setText(XMLUIMessages._UI_RADIO_BUTTON_SELECT_FROM_CATALOG); //$NON-NLS-1$
+		radioButton[1].setText(XMLUIMessages._UI_RADIO_BUTTON_SELECT_FROM_CATALOG);
 		radioButton[1].setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		radioButton[1].addSelectionListener(this);
 
@@ -107,9 +107,9 @@ public class SelectFileOrXMLCatalogIdPanel extends Composite implements Selectio
 				updateCompletionStateChange();
 			}
 		});
-	    Dialog.applyDialogFont(parent);
+		Dialog.applyDialogFont(parent);
 		pageBook.showPage(selectSingleFileView.getControl());
-		
+
 	}
 
 	public IFile getFile() {
@@ -175,7 +175,8 @@ public class SelectFileOrXMLCatalogIdPanel extends Composite implements Selectio
 	public void widgetSelected(SelectionEvent e) {
 		if (e.widget == radioButton[0]) {
 			pageBook.showPage(selectSingleFileView.getControl());
-		} else {
+		}
+		else {
 			pageBook.showPage(selectXMLCatalogIdPanel);
 		}
 		updateCompletionStateChange();

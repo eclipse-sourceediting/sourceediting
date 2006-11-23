@@ -96,10 +96,11 @@ public class ExampleProjectCreationWizard extends Wizard implements INewWizard, 
 	public void addPages() {
 		super.addPages();
 
-		if (exampleConfigElement == null)
+		if (exampleConfigElement == null) {
 			return;
+		}
 		IConfigurationElement[] children = exampleConfigElement.getChildren("projectsetup"); //$NON-NLS-1$
-		if (children == null || children.length == 0) {
+		if ((children == null) || (children.length == 0)) {
 			Logger.log(Logger.ERROR, "descriptor must contain one ore more projectsetup tags"); //$NON-NLS-1$
 			return;
 		}
@@ -111,8 +112,8 @@ public class ExampleProjectCreationWizard extends Wizard implements INewWizard, 
 			addPage(pages[i]);
 		}
 	}
-	
-    public void init(IWorkbench workbench, IStructuredSelection currentSelection) {
+
+	public void init(IWorkbench workbench, IStructuredSelection currentSelection) {
 		if (exampleConfigElement != null) {
 			String banner = exampleConfigElement.getAttribute("banner"); //$NON-NLS-1$
 			if (banner != null) {
@@ -121,7 +122,7 @@ public class ExampleProjectCreationWizard extends Wizard implements INewWizard, 
 				setDefaultPageImageDescriptor(desc);
 			}
 		}
-    }
+	}
 
 	protected IConfigurationElement[] getExtendedConfigurationElements() {
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
@@ -150,7 +151,7 @@ public class ExampleProjectCreationWizard extends Wizard implements INewWizard, 
 			Logger.logException(target);
 		}
 	}
-	
+
 	private void openResource(final IResource resource) {
 		if (resource.getType() != IResource.FILE) {
 			return;
@@ -212,12 +213,12 @@ public class ExampleProjectCreationWizard extends Wizard implements INewWizard, 
 		if (title != null) {
 			setWindowTitle(title);
 		}
-		String wizardId = getWizardExtensionId(); //$NON-NLS-1$
+		String wizardId = getWizardExtensionId();
 		IConfigurationElement[] exampleWizardCEs = getExtendedConfigurationElements();
 		for (int i = 0; i < exampleWizardCEs.length; i++) {
 			IConfigurationElement element = exampleWizardCEs[i];
 			String extWizardId = element.getAttribute("id"); //$NON-NLS-1$
-			if (wizardId != null && extWizardId != null && wizardId.equals(extWizardId)) {
+			if ((wizardId != null) && (extWizardId != null) && wizardId.equals(extWizardId)) {
 				exampleConfigElement = element;
 			}
 		}

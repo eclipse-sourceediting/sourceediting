@@ -66,29 +66,33 @@ public class RenameInFileQuickAssistProposal implements ICompletionProposal, ICo
 				if (region != null) {
 					group.addPosition(new LinkedPosition(document, startStructuredDocumentRegion.getStartOffset() + region.getStart(), region.getTextLength(), 0));
 
-					if (region.getType() == DOMRegionContext.XML_TAG_NAME && node.getEndStructuredDocumentRegion() != null) {
+					if ((region.getType() == DOMRegionContext.XML_TAG_NAME) && (node.getEndStructuredDocumentRegion() != null)) {
 						region = node.getEndStructuredDocumentRegion().getRegions().get(1);
-						if (region != null)
+						if (region != null) {
 							group.addPosition(new LinkedPosition(document, node.getEndStructuredDocumentRegion().getStartOffset() + region.getStart(), region.getTextLength(), 1));
+						}
 					}
-				} else {
+				}
+				else {
 					IStructuredDocumentRegion endStructuredDocumentRegion = node.getEndStructuredDocumentRegion();
 					region = (endStructuredDocumentRegion == null) ? null : endStructuredDocumentRegion.getRegionAtCharacterOffset(offset);
 					if (region != null) {
-						if (region.getType() == DOMRegionContext.XML_TAG_NAME && node.getStartStructuredDocumentRegion() != null) {
+						if ((region.getType() == DOMRegionContext.XML_TAG_NAME) && (node.getStartStructuredDocumentRegion() != null)) {
 							ITextRegion startTagNameRegion = node.getStartStructuredDocumentRegion().getRegions().get(1);
 							if (region != null) {
 								group.addPosition(new LinkedPosition(document, node.getStartStructuredDocumentRegion().getStartOffset() + startTagNameRegion.getStart(), startTagNameRegion.getTextLength(), 0));
 								group.addPosition(new LinkedPosition(document, endStructuredDocumentRegion.getStartOffset() + region.getStart(), region.getTextLength(), 1));
 							}
-						} else
+						}
+						else {
 							group.addPosition(new LinkedPosition(document, endStructuredDocumentRegion.getStartOffset() + region.getStart(), region.getTextLength(), 0));
+						}
 					}
 				}
 
 				// TODO CompletionProposalPopup#insertProposal() calls
 				// IRewriteTarget.beginCompoundChange()
-				//      which disables redraw in ITextViewer. Workaround for now.
+				// which disables redraw in ITextViewer. Workaround for now.
 				((StructuredTextViewer) viewer).setRedraw(true);
 			}
 
@@ -101,7 +105,8 @@ public class RenameInFileQuickAssistProposal implements ICompletionProposal, ICo
 			ui.enter();
 
 			fSelectedRegion = ui.getSelectedRegion();
-		} catch (BadLocationException e) {
+		}
+		catch (BadLocationException e) {
 			// log for now, unless find reason not to
 			Logger.log(Logger.INFO, e.getMessage());
 		}
@@ -113,7 +118,7 @@ public class RenameInFileQuickAssistProposal implements ICompletionProposal, ICo
 	 * @see org.eclipse.jface.text.contentassist.ICompletionProposal#getAdditionalProposalInfo()
 	 */
 	public String getAdditionalProposalInfo() {
-		return XMLUIMessages.RenameInFileQuickAssistProposal_0; //$NON-NLS-1$
+		return XMLUIMessages.RenameInFileQuickAssistProposal_0;
 	}
 
 	/*
@@ -131,7 +136,7 @@ public class RenameInFileQuickAssistProposal implements ICompletionProposal, ICo
 	 * @see org.eclipse.jface.text.contentassist.ICompletionProposal#getDisplayString()
 	 */
 	public String getDisplayString() {
-		return XMLUIMessages.RenameInFileQuickAssistProposal_1; //$NON-NLS-1$
+		return XMLUIMessages.RenameInFileQuickAssistProposal_1;
 	}
 
 	/*

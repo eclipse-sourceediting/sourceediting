@@ -86,7 +86,7 @@ public class EditAttributeDialog extends Dialog implements ModifyListener {
 		composite.setLayoutData(new GridData(GridData.FILL_BOTH));
 
 		Label attributeNameLabel = new Label(composite, SWT.NONE);
-		attributeNameLabel.setText(XMLUIMessages._UI_LABEL_NAME_COLON); //$NON-NLS-1$
+		attributeNameLabel.setText(XMLUIMessages._UI_LABEL_NAME_COLON);
 
 		attributeNameField = new Text(composite, SWT.SINGLE | SWT.BORDER);
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
@@ -96,7 +96,7 @@ public class EditAttributeDialog extends Dialog implements ModifyListener {
 		attributeNameField.addModifyListener(this);
 
 		Label attributeValueLabel = new Label(composite, SWT.NONE);
-		attributeValueLabel.setText(XMLUIMessages._UI_LABEL_VALUE_COLON); //$NON-NLS-1$
+		attributeValueLabel.setText(XMLUIMessages._UI_LABEL_VALUE_COLON);
 
 		String value = attribute != null ? attribute.getValue() : ""; //$NON-NLS-1$
 		int style = SWT.SINGLE | SWT.BORDER;
@@ -112,7 +112,7 @@ public class EditAttributeDialog extends Dialog implements ModifyListener {
 
 		// error message
 		errorMessageLabel = new Label(composite, SWT.WRAP);
-		errorMessageLabel.setText(XMLUIMessages.error_message_goes_here); //$NON-NLS-1$
+		errorMessageLabel.setText(XMLUIMessages.error_message_goes_here);
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.widthHint = 200;
 		gd.heightHint = Math.max(30, errorMessageLabel.computeSize(0, 0, false).y * 2);
@@ -138,7 +138,7 @@ public class EditAttributeDialog extends Dialog implements ModifyListener {
 
 	protected String getModelValue(String string) {
 		String result = null;
-		if (string != null && string.trim().length() > 0) {
+		if ((string != null) && (string.trim().length() > 0)) {
 			result = string;
 		}
 		return result;
@@ -153,13 +153,15 @@ public class EditAttributeDialog extends Dialog implements ModifyListener {
 		String name = attributeNameField.getText().trim();
 		if (name.length() > 0) {
 			Attr matchingAttribute = ownerElement.getAttributeNode(name);
-			if (matchingAttribute != null && matchingAttribute != attribute) {
-				errorMessage = XMLUIMessages._ERROR_XML_ATTRIBUTE_ALREADY_EXISTS; //$NON-NLS-1$
-			} else {
-				// TODO get checkName from Model
-				//errorMessage = ValidateHelper.checkXMLName(name);
+			if ((matchingAttribute != null) && (matchingAttribute != attribute)) {
+				errorMessage = XMLUIMessages._ERROR_XML_ATTRIBUTE_ALREADY_EXISTS;
 			}
-		} else {
+			else {
+				// TODO get checkName from Model
+				// errorMessage = ValidateHelper.checkXMLName(name);
+			}
+		}
+		else {
 			errorMessage = ""; //$NON-NLS-1$
 		}
 

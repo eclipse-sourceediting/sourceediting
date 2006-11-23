@@ -112,7 +112,7 @@ public class ExampleProjectCreationOperation implements IRunnableWithProgress {
 		}
 
 		String open = desc.getAttribute("open"); //$NON-NLS-1$
-		if (open != null && open.length() > 0) {
+		if ((open != null) && (open.length() > 0)) {
 			IResource fileToOpen = proj.findMember(new Path(open));
 			if (fileToOpen != null) {
 				elementToOpen = fileToOpen;
@@ -125,7 +125,7 @@ public class ExampleProjectCreationOperation implements IRunnableWithProgress {
 		try {
 			IPath destPath;
 			String name = curr.getAttribute("dest"); //$NON-NLS-1$
-			if (name == null || name.length() == 0) {
+			if ((name == null) || (name.length() == 0)) {
 				destPath = project.getFullPath();
 			}
 			else {
@@ -153,8 +153,9 @@ public class ExampleProjectCreationOperation implements IRunnableWithProgress {
 	private String getContributingPlugin(IConfigurationElement configurationElement) {
 		Object parent = configurationElement;
 		while (parent != null) {
-			if (parent instanceof IExtension)
+			if (parent instanceof IExtension) {
 				return ((IExtension) parent).getNamespace();
+			}
 			parent = ((IConfigurationElement) parent).getParent();
 		}
 		return null;

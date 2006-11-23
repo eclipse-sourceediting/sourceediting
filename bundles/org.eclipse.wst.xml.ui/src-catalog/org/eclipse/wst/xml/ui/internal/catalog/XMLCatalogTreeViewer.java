@@ -80,11 +80,12 @@ public class XMLCatalogTreeViewer extends TreeViewer {
 			}
 			else if (object instanceof INextCatalog) {
 				INextCatalog nextCatalog = (INextCatalog) object;
-				//result = nextCatalog.getCatalogLocation();
+				// result = nextCatalog.getCatalogLocation();
 				result = URIHelper.URIToLocation(nextCatalog.getCatalogLocation());
 				if (nextCatalog.getCatalogLocation().startsWith("file:")) {
 					result += " (" + XMLCatalogMessages.UI_LABEL_FILE_SYSTEM_RESOURCE + ")";
-				} else if (nextCatalog.getCatalogLocation().startsWith("platform:")) {
+				}
+				else if (nextCatalog.getCatalogLocation().startsWith("platform:")) {
 					result += " (" + XMLCatalogMessages.UI_LABEL_PLATFORM_RESOURCE + ")";
 				}
 			}
@@ -125,12 +126,11 @@ public class XMLCatalogTreeViewer extends TreeViewer {
 			}
 			return result;
 		}
-		
+
 		public void dispose() {
 			super.dispose();
-			for (Iterator it = imageTable.values().iterator(); it.hasNext();)
-			{
-				((Image)it.next()).dispose();
+			for (Iterator it = imageTable.values().iterator(); it.hasNext();) {
+				((Image) it.next()).dispose();
 			}
 		}
 	}
@@ -146,7 +146,7 @@ public class XMLCatalogTreeViewer extends TreeViewer {
 		}
 
 		public boolean isRoot(Object object) {
-			return object instanceof String || object instanceof INextCatalog;
+			return (object instanceof String) || (object instanceof INextCatalog);
 		}
 
 		public Object[] getElements(Object element) {
@@ -176,7 +176,7 @@ public class XMLCatalogTreeViewer extends TreeViewer {
 				Comparator comparator = new Comparator() {
 					public int compare(Object o1, Object o2) {
 						int result = 0;
-						if (o1 instanceof ICatalogEntry && o2 instanceof ICatalogEntry) {
+						if ((o1 instanceof ICatalogEntry) && (o2 instanceof ICatalogEntry)) {
 							ICatalogEntry entry1 = (ICatalogEntry) o1;
 							ICatalogEntry entry2 = (ICatalogEntry) o2;
 							result = Collator.getInstance().compare(entry1.getKey(), entry2.getKey());
@@ -192,7 +192,7 @@ public class XMLCatalogTreeViewer extends TreeViewer {
 			List nextCatalogsList = Arrays.asList(nextCatalogs);
 			result.addAll(nextCatalogsList);
 
-			return  result.toArray(new ICatalogElement[result.size()]);
+			return result.toArray(new ICatalogElement[result.size()]);
 		}
 
 		public Object getParent(Object element) {
@@ -249,8 +249,7 @@ public class XMLCatalogTreeViewer extends TreeViewer {
 					}
 				}
 			}
-			else if ( element.equals(XMLCatalogTreeViewer.PLUGIN_SPECIFIED_ENTRIES_OBJECT ) ||
-					element.equals(XMLCatalogTreeViewer.USER_SPECIFIED_ENTRIES_OBJECT) ) {
+			else if (element.equals(XMLCatalogTreeViewer.PLUGIN_SPECIFIED_ENTRIES_OBJECT) || element.equals(XMLCatalogTreeViewer.USER_SPECIFIED_ENTRIES_OBJECT)) {
 				return true;
 			}
 			return result;

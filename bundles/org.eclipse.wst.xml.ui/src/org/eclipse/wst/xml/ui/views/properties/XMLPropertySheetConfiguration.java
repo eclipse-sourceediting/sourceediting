@@ -57,7 +57,7 @@ public class XMLPropertySheetConfiguration extends PropertySheetConfiguration {
 		}
 
 		public void cacheUpdated(CMDocumentCache cache, final String uri, int oldStatus, int newStatus, CMDocument cmDocument) {
-			if (newStatus == CMDocumentCache.STATUS_LOADED || newStatus == CMDocumentCache.STATUS_ERROR) {
+			if ((newStatus == CMDocumentCache.STATUS_LOADED) || (newStatus == CMDocumentCache.STATUS_ERROR)) {
 				refreshPages();
 			}
 		}
@@ -97,7 +97,7 @@ public class XMLPropertySheetConfiguration extends PropertySheetConfiguration {
 
 			for (int i = 0; i < pages.length; i++) {
 				PropertySheetPage page = (PropertySheetPage) pages[i];
-				if (page.getControl() != null && !page.getControl().isDisposed()) {
+				if ((page.getControl() != null) && !page.getControl().isDisposed()) {
 					page.refresh();
 				}
 			}
@@ -123,7 +123,7 @@ public class XMLPropertySheetConfiguration extends PropertySheetConfiguration {
 		private INodeNotifier fSource = null;
 
 		public IPropertySource getPropertySource(Object object) {
-			if (fSource != null && object.equals(fSource)) {
+			if ((fSource != null) && object.equals(fSource)) {
 				return fPropertySource;
 			}
 
@@ -191,7 +191,7 @@ public class XMLPropertySheetConfiguration extends PropertySheetConfiguration {
 						selectedObjects[i] = ownerElement;
 					}
 					// replace Text Node with its parent
-					else if ((node.getNodeType() == Node.TEXT_NODE || (node.getNodeType() == Node.CDATA_SECTION_NODE)) && parentNode != null) {
+					else if (((node.getNodeType() == Node.TEXT_NODE) || (node.getNodeType() == Node.CDATA_SECTION_NODE)) && (parentNode != null)) {
 						selectedObjects[i] = parentNode;
 					}
 				}

@@ -37,8 +37,8 @@ public class ContentAssistRequest {
 	protected int replacementBeginPosition;
 	protected int replacementLength;
 
-	//	private Boolean separate = null; // (pa) not used
-	//	private Boolean sort = null; // (pa) not used
+	// private Boolean separate = null; // (pa) not used
+	// private Boolean sort = null; // (pa) not used
 	/**
 	 * XMLContentAssistRequest constructor comment.
 	 */
@@ -63,7 +63,7 @@ public class ContentAssistRequest {
 
 	public ICompletionProposal[] getCompletionProposals() {
 		ICompletionProposal results[] = null;
-		if (getProposals().size() > 0 || getMacros().size() > 0) {
+		if ((getProposals().size() > 0) || (getMacros().size() > 0)) {
 			List allProposals = new ArrayList();
 			if (!shouldSeparate()) {
 				allProposals.addAll(getProposals());
@@ -71,7 +71,8 @@ public class ContentAssistRequest {
 				// proposal list
 				allProposals.addAll(getMacros());
 				allProposals = sortProposals(allProposals);
-			} else {
+			}
+			else {
 				allProposals.addAll(sortProposals(getProposals()));
 				allProposals.addAll(sortProposals(getMacros()));
 			}
@@ -149,20 +150,23 @@ public class ContentAssistRequest {
 	}
 
 	public int getStartOffset() {
-		if (getDocumentRegion() != null && getRegion() != null)
+		if ((getDocumentRegion() != null) && (getRegion() != null)) {
 			return ((ITextRegionCollection) getDocumentRegion()).getStartOffset(getRegion());
+		}
 		return -1;
 	}
 
 	public String getText() {
-		if (getDocumentRegion() != null && getRegion() != null)
+		if ((getDocumentRegion() != null) && (getRegion() != null)) {
 			return ((ITextRegionCollection) getDocumentRegion()).getText(getRegion());
+		}
 		return ""; //$NON-NLS-1$
 	}
 
 	public int getTextEndOffset() {
-		if (getDocumentRegion() != null && getRegion() != null)
+		if ((getDocumentRegion() != null) && (getRegion() != null)) {
 			return ((ITextRegionCollection) getDocumentRegion()).getTextEndOffset(getRegion());
+		}
 		return -1;
 	}
 

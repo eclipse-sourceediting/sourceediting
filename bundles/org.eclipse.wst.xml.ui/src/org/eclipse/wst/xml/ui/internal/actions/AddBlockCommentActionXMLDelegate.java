@@ -43,20 +43,23 @@ public class AddBlockCommentActionXMLDelegate extends AbstractCommentActionXMLDe
 				IndexedRegion selectionStartIndexedRegion = model.getIndexedRegion(textSelection.getOffset());
 				IndexedRegion selectionEndIndexedRegion = model.getIndexedRegion(textSelection.getOffset() + textSelection.getLength());
 
-				if (selectionStartIndexedRegion == null)
+				if (selectionStartIndexedRegion == null) {
 					return;
-				if (selectionEndIndexedRegion == null && textSelection.getLength() > 0) {
+				}
+				if ((selectionEndIndexedRegion == null) && (textSelection.getLength() > 0)) {
 					selectionEndIndexedRegion = model.getIndexedRegion(textSelection.getOffset() + textSelection.getLength() - 1);
 				}
-				if (selectionEndIndexedRegion == null)
+				if (selectionEndIndexedRegion == null) {
 					return;
+				}
 
 				int openCommentOffset = selectionStartIndexedRegion.getStartOffset();
 				int closeCommentOffset = selectionEndIndexedRegion.getEndOffset() + OPEN_COMMENT.length();
 
 
-				if (textSelection.getLength() == 0 && selectionStartIndexedRegion instanceof CommentImpl)
+				if ((textSelection.getLength() == 0) && (selectionStartIndexedRegion instanceof CommentImpl)) {
 					return;
+				}
 
 				model.beginRecording(this, XMLUIMessages.AddBlockComment_tooltip);
 				model.aboutToChangeModel();

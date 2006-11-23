@@ -64,8 +64,9 @@ public class EditProcessingInstructionAction extends NodeAction {
 		EditProcessingInstructionDialog dialog = null;
 		if (pi != null) {
 			dialog = new EditProcessingInstructionDialog(shell, pi);
-		} else {
-			dialog = new EditProcessingInstructionDialog(shell, XMLUIMessages._UI_PI_TARGET_VALUE, XMLUIMessages._UI_PI_DATA_VALUE); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+		else {
+			dialog = new EditProcessingInstructionDialog(shell, XMLUIMessages._UI_PI_TARGET_VALUE, XMLUIMessages._UI_PI_DATA_VALUE);
 		}
 
 		dialog.create();

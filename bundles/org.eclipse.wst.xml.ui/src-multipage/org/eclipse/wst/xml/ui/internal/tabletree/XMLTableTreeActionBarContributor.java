@@ -37,7 +37,7 @@ import org.eclipse.wst.xml.ui.internal.util.SharedXMLEditorPluginImageHelper;
 import org.w3c.dom.Document;
 
 /**
- *  
+ * 
  */
 public class XMLTableTreeActionBarContributor implements IDesignViewerActionBarContributor {
 
@@ -52,7 +52,7 @@ public class XMLTableTreeActionBarContributor implements IDesignViewerActionBarC
 
 	protected ToggleEditModeAction toggleAction;
 	protected ReloadGrammarAction reloadGrammarAction;
-	//	protected ValidateXMLAction validateXMLAction;
+	// protected ValidateXMLAction validateXMLAction;
 	protected ViewerExpandCollapseAction expandAction;
 	protected ViewerExpandCollapseAction collapseAction;
 	protected ViewerExpandCollapseAction xmlMenuExpandAction;
@@ -70,7 +70,8 @@ public class XMLTableTreeActionBarContributor implements IDesignViewerActionBarC
 			doRemove(manager, TOGGLE_EDIT_MODE_ID);
 			doRemove(manager, EXPAND_ALL_ID);
 			doRemove(manager, COLLAPSE_ALL_ID);
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 		}
 	}
 
@@ -79,7 +80,8 @@ public class XMLTableTreeActionBarContributor implements IDesignViewerActionBarC
 			if (manager.find(id) != null) {
 				manager.remove(id);
 			}
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 		}
 	}
 
@@ -95,7 +97,8 @@ public class XMLTableTreeActionBarContributor implements IDesignViewerActionBarC
 		if (xmlMenu == null) {
 			xmlMenu = new MenuManager(XMLEditorMessages.XMLTableTreeActionBarContributor_0, "org.eclipse.core.runtime.xml.design.xmlmenu"); //$NON-NLS-1$
 			bars.getMenuManager().insertBefore(IWorkbenchActionConstants.M_WINDOW, xmlMenu);
-		} else {
+		}
+		else {
 			removeContributions(xmlMenu);
 		}
 
@@ -108,11 +111,11 @@ public class XMLTableTreeActionBarContributor implements IDesignViewerActionBarC
 		// have a DAD validator contribution (in the case of the DAD editor).
 		// This hack will be removed when defect 212448 is fixed.
 		//
-		//		if (tbm.find("validate.dad.validateDAD") == null) {
-		//			validateXMLAction = new ValidateXMLAction();
-		//			tbm.add(validateXMLAction);
-		//			xmlMenu.add(validateXMLAction);
-		//		}
+		// if (tbm.find("validate.dad.validateDAD") == null) {
+		// validateXMLAction = new ValidateXMLAction();
+		// tbm.add(validateXMLAction);
+		// xmlMenu.add(validateXMLAction);
+		// }
 
 		// ToggleEditModeAction
 		//           
@@ -134,13 +137,13 @@ public class XMLTableTreeActionBarContributor implements IDesignViewerActionBarC
 		//
 		xmlMenuExpandAction = new ViewerExpandCollapseAction(true);
 		xmlMenuExpandAction.setId(EXPAND_ALL_ID);
-		xmlMenuExpandAction.setText(XMLEditorMessages.XMLTableTreeActionBarContributor_1); //$NON-NLS-1$
+		xmlMenuExpandAction.setText(XMLEditorMessages.XMLTableTreeActionBarContributor_1);
 		xmlMenu.add(xmlMenuExpandAction);
 
 		xmlMenuCollapseAction = new ViewerExpandCollapseAction(false);
 		xmlMenuCollapseAction.setId(COLLAPSE_ALL_ID);
 		xmlMenuCollapseAction.setId(EXPAND_ALL_ID);
-		xmlMenuCollapseAction.setText(XMLEditorMessages.XMLTableTreeActionBarContributor_2); //$NON-NLS-1$
+		xmlMenuCollapseAction.setText(XMLEditorMessages.XMLTableTreeActionBarContributor_2);
 		xmlMenu.add(xmlMenuCollapseAction);
 	}
 
@@ -229,7 +232,7 @@ public class XMLTableTreeActionBarContributor implements IDesignViewerActionBarC
 	}
 
 	/**
-	 *  
+	 * 
 	 */
 	public class ToggleEditModeAction extends Action {
 		protected ImageDescriptor onImage = SharedXMLEditorPluginImageHelper.getImageDescriptor(SharedXMLEditorPluginImageHelper.IMG_ETOOL_CONSTRAINON);
@@ -257,12 +260,13 @@ public class XMLTableTreeActionBarContributor implements IDesignViewerActionBarC
 
 		public void setAppearanceForEditMode(int editMode) {
 			if (editMode == ModelQuery.EDIT_MODE_CONSTRAINED_STRICT) {
-				setToolTipText(XMLEditorMessages.XMLTableTreeActionBarContributor_3); //$NON-NLS-1$
-				setText(XMLEditorMessages.XMLTableTreeActionBarContributor_4); //$NON-NLS-1$
+				setToolTipText(XMLEditorMessages.XMLTableTreeActionBarContributor_3);
+				setText(XMLEditorMessages.XMLTableTreeActionBarContributor_4);
 				setImageDescriptor(onImage);
-			} else {
-				setToolTipText(XMLEditorMessages.XMLTableTreeActionBarContributor_5); //$NON-NLS-1$
-				setText(XMLEditorMessages.XMLTableTreeActionBarContributor_6); //$NON-NLS-1$
+			}
+			else {
+				setToolTipText(XMLEditorMessages.XMLTableTreeActionBarContributor_5);
+				setText(XMLEditorMessages.XMLTableTreeActionBarContributor_6);
 				setImageDescriptor(offImage);
 			}
 		}
@@ -271,7 +275,8 @@ public class XMLTableTreeActionBarContributor implements IDesignViewerActionBarC
 			int result = -1;
 			if (editMode == ModelQuery.EDIT_MODE_CONSTRAINED_STRICT) {
 				result = ModelQuery.EDIT_MODE_UNCONSTRAINED;
-			} else {
+			}
+			else {
 				result = ModelQuery.EDIT_MODE_CONSTRAINED_STRICT;
 			}
 			return result;
@@ -279,7 +284,7 @@ public class XMLTableTreeActionBarContributor implements IDesignViewerActionBarC
 	}
 
 	/**
-	 *  
+	 * 
 	 */
 	public class ReloadGrammarAction extends Action {
 		protected IStructuredModel model;
@@ -287,8 +292,8 @@ public class XMLTableTreeActionBarContributor implements IDesignViewerActionBarC
 		public ReloadGrammarAction() {
 			setDisabledImageDescriptor(SharedXMLEditorPluginImageHelper.getImageDescriptor(SharedXMLEditorPluginImageHelper.IMG_DTOOL_RLDGRMR));
 			setImageDescriptor(SharedXMLEditorPluginImageHelper.getImageDescriptor(SharedXMLEditorPluginImageHelper.IMG_ETOOL_RLDGRMR));
-			setToolTipText(XMLEditorMessages.XMLTableTreeActionBarContributor_7); //$NON-NLS-1$
-			setText(XMLEditorMessages.XMLTableTreeActionBarContributor_8); //$NON-NLS-1$
+			setToolTipText(XMLEditorMessages.XMLTableTreeActionBarContributor_7);
+			setText(XMLEditorMessages.XMLTableTreeActionBarContributor_8);
 		}
 
 		public void setModel(IStructuredModel newModel) {
@@ -299,11 +304,11 @@ public class XMLTableTreeActionBarContributor implements IDesignViewerActionBarC
 			if (model != null) {
 				ModelQuery modelQuery = ModelQueryUtil.getModelQuery(model);
 				Document document = ((IDOMModel) model).getDocument();
-				if (modelQuery != null && modelQuery.getCMDocumentManager() != null) {
+				if ((modelQuery != null) && (modelQuery.getCMDocumentManager() != null)) {
 					modelQuery.getCMDocumentManager().getCMDocumentCache().clear();
 					// TODO... need to figure out how to access the
 					// DOMObserver via ModelQuery
-					//  ...why?
+					// ...why?
 					CMDocumentLoader loader = new InferredGrammarBuildingCMDocumentLoader(document, modelQuery);
 					loader.loadCMDocuments();
 				}

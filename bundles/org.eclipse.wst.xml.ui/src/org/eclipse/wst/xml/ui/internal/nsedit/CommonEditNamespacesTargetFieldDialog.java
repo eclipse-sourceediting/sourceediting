@@ -41,7 +41,7 @@ public class CommonEditNamespacesTargetFieldDialog extends CommonEditNamespacesD
 	protected Text targetNamespaceField;
 
 	public CommonEditNamespacesTargetFieldDialog(Composite parent, IPath resourceLocation1) {
-		super(parent, resourceLocation1, XMLUIMessages._UI_NAMESPACE_DECLARATIONS); //$NON-NLS-1$
+		super(parent, resourceLocation1, XMLUIMessages._UI_NAMESPACE_DECLARATIONS);
 
 		Composite targetComp = getTopComposite();
 		targetComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -49,7 +49,7 @@ public class CommonEditNamespacesTargetFieldDialog extends CommonEditNamespacesD
 		GridData gd = new GridData(GridData.FILL_BOTH);
 		Label targetNamespaceLabel = new Label(targetComp, SWT.NONE);
 		targetNamespaceLabel.setLayoutData(gd);
-		targetNamespaceLabel.setText(XMLUIMessages._UI_TARGET_NAMESPACE); //$NON-NLS-1$
+		targetNamespaceLabel.setText(XMLUIMessages._UI_TARGET_NAMESPACE);
 
 		targetNamespaceField = new Text(targetComp, SWT.BORDER);
 		targetNamespaceField.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -71,7 +71,7 @@ public class CommonEditNamespacesTargetFieldDialog extends CommonEditNamespacesD
 				editTargetNamespace = true;
 			}
 
-			invokeDialog(XMLUIMessages._UI_LABEL_NEW_NAMESPACE_INFORMATION, nsInfo); //$NON-NLS-1$
+			invokeDialog(XMLUIMessages._UI_LABEL_NEW_NAMESPACE_INFORMATION, nsInfo);
 			updateErrorMessage(namespaceInfoList);
 			performDelayedUpdate();
 

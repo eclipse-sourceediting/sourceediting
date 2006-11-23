@@ -80,11 +80,13 @@ public class InsertRequiredAttrsQuickAssistProposal implements ICompletionPropos
 				CMAttributeDeclaration attrDecl = (CMAttributeDeclaration) fRequiredAttrs.get(i);
 				String requiredAttributeName = attrDecl.getAttrName();
 				String defaultValue = attrDecl.getDefaultValue();
-				if (defaultValue == null)
+				if (defaultValue == null) {
 					defaultValue = ""; //$NON-NLS-1$
+				}
 				String nameAndDefaultValue = " "; //$NON-NLS-1$
-				if (i == 0 && lastRegion.getLength() > lastRegion.getTextLength())
+				if ((i == 0) && (lastRegion.getLength() > lastRegion.getTextLength())) {
 					nameAndDefaultValue = ""; //$NON-NLS-1$
+				}
 				nameAndDefaultValue += requiredAttributeName + "=\"" + defaultValue + "\""; //$NON-NLS-1$//$NON-NLS-2$
 				multiTextEdit.addChild(new InsertEdit(index, nameAndDefaultValue));
 				// BUG3381: MultiTextEdit applies all child TextEdit's basing
@@ -109,7 +111,7 @@ public class InsertRequiredAttrsQuickAssistProposal implements ICompletionPropos
 	 * @see org.eclipse.jface.text.contentassist.ICompletionProposal#getAdditionalProposalInfo()
 	 */
 	public String getAdditionalProposalInfo() {
-		return XMLUIMessages.InsertRequiredAttrsQuickAssistProposal_0; //$NON-NLS-1$
+		return XMLUIMessages.InsertRequiredAttrsQuickAssistProposal_0;
 	}
 
 	/*
@@ -127,7 +129,7 @@ public class InsertRequiredAttrsQuickAssistProposal implements ICompletionPropos
 	 * @see org.eclipse.jface.text.contentassist.ICompletionProposal#getDisplayString()
 	 */
 	public String getDisplayString() {
-		return XMLUIMessages.InsertRequiredAttrsQuickAssistProposal_1; //$NON-NLS-1$
+		return XMLUIMessages.InsertRequiredAttrsQuickAssistProposal_1;
 	}
 
 	/*

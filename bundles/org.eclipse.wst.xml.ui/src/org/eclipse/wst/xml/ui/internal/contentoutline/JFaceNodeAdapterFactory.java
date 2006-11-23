@@ -53,7 +53,7 @@ public class JFaceNodeAdapterFactory extends AbstractAdapterFactory implements I
 		}
 
 		public void cacheUpdated(CMDocumentCache cache, final String uri, int oldStatus, int newStatus, CMDocument cmDocument) {
-			if (newStatus == CMDocumentCache.STATUS_LOADED || newStatus == CMDocumentCache.STATUS_ERROR) {
+			if ((newStatus == CMDocumentCache.STATUS_LOADED) || (newStatus == CMDocumentCache.STATUS_ERROR)) {
 				refreshViewers();
 			}
 		}
@@ -72,7 +72,7 @@ public class JFaceNodeAdapterFactory extends AbstractAdapterFactory implements I
 					Job refresh = new UIJob(XMLUIMessages.refreshoutline_0) {
 						public IStatus runInUIThread(IProgressMonitor monitor) {
 							Control refreshControl = viewer.getControl();
-							if (refreshControl != null && !refreshControl.isDisposed()) {
+							if ((refreshControl != null) && !refreshControl.isDisposed()) {
 								viewer.refresh(true);
 							}
 							return Status.OK_STATUS;
@@ -87,7 +87,7 @@ public class JFaceNodeAdapterFactory extends AbstractAdapterFactory implements I
 					Job refresh = new UIJob(XMLUIMessages.refreshoutline_0) {
 						public IStatus runInUIThread(IProgressMonitor monitor) {
 							Control refreshControl = viewer.getControl();
-							if (refreshControl != null && !refreshControl.isDisposed()) {
+							if ((refreshControl != null) && !refreshControl.isDisposed()) {
 								viewer.refresh();
 							}
 							return Status.OK_STATUS;
@@ -151,7 +151,7 @@ public class JFaceNodeAdapterFactory extends AbstractAdapterFactory implements I
 		ModelQueryAdapter mqadapter = (ModelQueryAdapter) node.getAdapterFor(ModelQueryAdapter.class);
 		if (mqadapter != null) {
 			ModelQuery mquery = mqadapter.getModelQuery();
-			if (mquery != null && mquery.getCMDocumentManager() != null) {
+			if ((mquery != null) && (mquery.getCMDocumentManager() != null)) {
 				cmDocumentManager = mquery.getCMDocumentManager();
 				fCMDocumentManagerListener = new CMDocumentManagerListenerImpl();
 				cmDocumentManager.addListener(fCMDocumentManagerListener);
@@ -161,7 +161,7 @@ public class JFaceNodeAdapterFactory extends AbstractAdapterFactory implements I
 
 	public void release() {
 		// deregister from CMDocumentManager events
-		if (cmDocumentManager != null && fCMDocumentManagerListener != null) {
+		if ((cmDocumentManager != null) && (fCMDocumentManagerListener != null)) {
 			cmDocumentManager.removeListener(fCMDocumentManagerListener);
 		}
 		fListeners.clear();

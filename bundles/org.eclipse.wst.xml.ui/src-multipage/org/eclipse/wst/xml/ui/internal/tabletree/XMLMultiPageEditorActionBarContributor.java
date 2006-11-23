@@ -26,36 +26,39 @@ public class XMLMultiPageEditorActionBarContributor extends SourceEditorActionBa
 	protected void initDesignViewerActionBarContributor(IActionBars actionBars) {
 		super.initDesignViewerActionBarContributor(actionBars);
 
-		if (designViewerActionBarContributor != null)
-			if (designViewerActionBarContributor instanceof IDesignViewerActionBarContributor)
+		if (designViewerActionBarContributor != null) {
+			if (designViewerActionBarContributor instanceof IDesignViewerActionBarContributor) {
 				((IDesignViewerActionBarContributor) designViewerActionBarContributor).initViewerSpecificContributions(actionBars);
+			}
+		}
 	}
 
 	protected void activateDesignPage(IEditorPart activeEditor) {
-		if (sourceViewerActionContributor != null && sourceViewerActionContributor instanceof ISourceViewerActionBarContributor) {
+		if ((sourceViewerActionContributor != null) && (sourceViewerActionContributor instanceof ISourceViewerActionBarContributor)) {
 			// if design page is not really an IEditorPart, activeEditor ==
 			// null, so pass in multiPageEditor instead (d282414)
 			if (activeEditor == null) {
 				sourceViewerActionContributor.setActiveEditor(multiPageEditor);
-			} else {
+			}
+			else {
 				sourceViewerActionContributor.setActiveEditor(activeEditor);
 			}
 			((ISourceViewerActionBarContributor) sourceViewerActionContributor).setViewerSpecificContributionsEnabled(false);
 		}
 
-		if (designViewerActionBarContributor != null && designViewerActionBarContributor instanceof IDesignViewerActionBarContributor) {
+		if ((designViewerActionBarContributor != null) && (designViewerActionBarContributor instanceof IDesignViewerActionBarContributor)) {
 			designViewerActionBarContributor.setActiveEditor(multiPageEditor);
 			((IDesignViewerActionBarContributor) designViewerActionBarContributor).setViewerSpecificContributionsEnabled(true);
 		}
 	}
 
 	protected void activateSourcePage(IEditorPart activeEditor) {
-		if (designViewerActionBarContributor != null && designViewerActionBarContributor instanceof IDesignViewerActionBarContributor) {
+		if ((designViewerActionBarContributor != null) && (designViewerActionBarContributor instanceof IDesignViewerActionBarContributor)) {
 			designViewerActionBarContributor.setActiveEditor(multiPageEditor);
 			((IDesignViewerActionBarContributor) designViewerActionBarContributor).setViewerSpecificContributionsEnabled(false);
 		}
 
-		if (sourceViewerActionContributor != null && sourceViewerActionContributor instanceof ISourceViewerActionBarContributor) {
+		if ((sourceViewerActionContributor != null) && (sourceViewerActionContributor instanceof ISourceViewerActionBarContributor)) {
 			sourceViewerActionContributor.setActiveEditor(activeEditor);
 			((ISourceViewerActionBarContributor) sourceViewerActionContributor).setViewerSpecificContributionsEnabled(true);
 		}

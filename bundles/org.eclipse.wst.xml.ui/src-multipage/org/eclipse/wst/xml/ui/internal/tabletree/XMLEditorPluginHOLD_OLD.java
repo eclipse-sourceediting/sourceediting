@@ -15,8 +15,8 @@ import org.eclipse.wst.sse.ui.internal.provisional.registry.AdapterFactoryRegist
 import org.eclipse.wst.sse.ui.internal.provisional.registry.AdapterFactoryRegistryImpl;
 
 /**
- * @deprecated This plugin has combined with the org.eclipse.wst.xml.ui plugin.
- *             Use XMLUIPlugin instead.
+ * @deprecated This plugin has combined with the org.eclipse.wst.xml.ui
+ *             plugin. Use XMLUIPlugin instead.
  */
 public class XMLEditorPluginHOLD_OLD extends AbstractUIPlugin {
 

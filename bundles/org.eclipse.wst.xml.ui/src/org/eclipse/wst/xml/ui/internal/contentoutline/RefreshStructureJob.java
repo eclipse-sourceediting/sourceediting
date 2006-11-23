@@ -45,7 +45,7 @@ class RefreshStructureJob extends Job {
 	private static final long UPDATE_DELAY = 250;
 	static {
 		String value = Platform.getDebugOption("org.eclipse.wst.sse.ui/debug/refreshStructure"); //$NON-NLS-1$
-		DEBUG = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
+		DEBUG = (value != null) && value.equalsIgnoreCase("true"); //$NON-NLS-1$
 	}
 	/** List of refresh requests (Nodes) */
 	private final List fRequests;
@@ -53,7 +53,7 @@ class RefreshStructureJob extends Job {
 	List fViewers = new ArrayList(3);
 
 	public RefreshStructureJob() {
-		super(XMLUIMessages.refreshoutline_0); //$NON-NLS-1$
+		super(XMLUIMessages.refreshoutline_0);
 		setPriority(Job.LONG);
 		setSystem(true);
 		fRequests = new ArrayList(2);
@@ -62,8 +62,8 @@ class RefreshStructureJob extends Job {
 	private synchronized void addRequest(Node newNodeRequest) {
 		/*
 		 * note: the caller must NOT pass in null node request (which, since
-		 * private method, we do not need to gaurd against here, as long 
-		 * as we gaurd against it in calling method.
+		 * private method, we do not need to gaurd against here, as long as we
+		 * gaurd against it in calling method.
 		 */
 		int size = fRequests.size();
 		for (int i = 0; i < size; i++) {
@@ -73,14 +73,16 @@ class RefreshStructureJob extends Job {
 			 * already have a request which equals the new request, discard
 			 * the new request
 			 */
-			if (existingNodeRequest.equals(newNodeRequest))
+			if (existingNodeRequest.equals(newNodeRequest)) {
 				return;
+			}
 			/*
 			 * If we already have a request which contains the new request,
 			 * discard the new request
 			 */
-			if (contains(existingNodeRequest, newNodeRequest))
+			if (contains(existingNodeRequest, newNodeRequest)) {
 				return;
+			}
 			/*
 			 * If new request contains any existing requests, replace it with
 			 * new request. ISSUE: technically, we should replace ALL
@@ -131,31 +133,35 @@ class RefreshStructureJob extends Job {
 
 		// can't contain the child if it's null
 		if (root == null) {
-			if (DEBUG)
+			if (DEBUG) {
 				System.out.println("returning false: root is null"); //$NON-NLS-1$
+			}
 			return false;
 		}
 		// nothing can be parent of Document node
 		if (possible instanceof Document) {
-			if (DEBUG)
+			if (DEBUG) {
 				System.out.println("returning false: possible is Document node"); //$NON-NLS-1$
+			}
 			return false;
 		}
 		// document contains everything
 		if (root instanceof Document) {
-			if (DEBUG)
+			if (DEBUG) {
 				System.out.println("returning true: root is Document node"); //$NON-NLS-1$
+			}
 			return true;
 		}
 
 		// check parentage
 		Node current = possible;
 		// loop parents
-		while (current != null && current.getNodeType() != Node.DOCUMENT_NODE) {
+		while ((current != null) && (current.getNodeType() != Node.DOCUMENT_NODE)) {
 			// found it
 			if (root.equals(current)) {
-				if (DEBUG)
+				if (DEBUG) {
 					System.out.println("   !!! found: " + possible.getNodeName() + " in subelement of: " + root.getNodeName()); //$NON-NLS-1$ //$NON-NLS-2$
+				}
 				return true;
 			}
 			current = current.getParentNode();
@@ -173,8 +179,9 @@ class RefreshStructureJob extends Job {
 		final Display display = PlatformUI.getWorkbench().getDisplay();
 		display.asyncExec(new Runnable() {
 			public void run() {
-				if (DEBUG)
+				if (DEBUG) {
 					System.out.println("refresh on: [" + node.getNodeName() + "]"); //$NON-NLS-1$ //$NON-NLS-2$
+				}
 
 				for (int i = 0; i < viewers.length; i++) {
 					if (!viewers[i].getControl().isDisposed()) {
@@ -186,8 +193,9 @@ class RefreshStructureJob extends Job {
 						}
 					}
 					else {
-						if (DEBUG)
+						if (DEBUG) {
 							System.out.println("   !!! skipped refreshing disposed viewer: " + viewers[i]); //$NON-NLS-1$
+						}
 					}
 				}
 			}
@@ -217,8 +225,9 @@ class RefreshStructureJob extends Job {
 	 * @param node
 	 */
 	public void refresh(StructuredViewer viewer, Node node) {
-		if (node == null)
+		if (node == null) {
 			return;
+		}
 
 		addViewer(viewer);
 		addRequest(node);
@@ -234,8 +243,9 @@ class RefreshStructureJob extends Job {
 			StructuredViewer[] viewers = (StructuredViewer[]) requests[1];
 
 			for (int i = 0; i < nodes.length; i++) {
-				if (monitor.isCanceled())
+				if (monitor.isCanceled()) {
 					throw new OperationCanceledException();
+				}
 				doRefresh(nodes[i], viewers);
 			}
 		}

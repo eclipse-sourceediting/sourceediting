@@ -63,14 +63,16 @@ class XMLTemplateCompletionProcessor extends TemplateCompletionProcessor {
 		ITextSelection selection = (ITextSelection) viewer.getSelectionProvider().getSelection();
 
 		// adjust offset to end of normalized selection
-		if (selection.getOffset() == offset)
+		if (selection.getOffset() == offset) {
 			offset = selection.getOffset() + selection.getLength();
+		}
 
 		String prefix = extractPrefix(viewer, offset);
 		Region region = new Region(offset - prefix.length(), prefix.length());
 		TemplateContext context = createContext(viewer, region, offset);
-		if (context == null)
+		if (context == null) {
 			return new ICompletionProposal[0];
+		}
 
 		// name of the selection variables {line, word}_selection
 		context.setVariable("selection", selection.getText()); //$NON-NLS-1$
@@ -86,8 +88,9 @@ class XMLTemplateCompletionProcessor extends TemplateCompletionProcessor {
 			catch (TemplateException e) {
 				continue;
 			}
-			if (template.matches(prefix, context.getContextType().getId()))
+			if (template.matches(prefix, context.getContextType().getId())) {
 				matches.add(createProposal(template, context, (IRegion) region, getRelevance(template, prefix)));
+			}
 		}
 
 		Collections.sort(matches, fgProposalComparator);
@@ -132,8 +135,9 @@ class XMLTemplateCompletionProcessor extends TemplateCompletionProcessor {
 		TemplateContextType type = null;
 
 		ContextTypeRegistry registry = getTemplateContextRegistry();
-		if (registry != null)
+		if (registry != null) {
 			type = registry.getContextType(fContextTypeId);
+		}
 
 		return type;
 	}
@@ -151,8 +155,9 @@ class XMLTemplateCompletionProcessor extends TemplateCompletionProcessor {
 		Template templates[] = null;
 
 		TemplateStore store = getTemplateStore();
-		if (store != null)
+		if (store != null) {
 			templates = store.getTemplates(contextTypeId);
+		}
 
 		return templates;
 	}

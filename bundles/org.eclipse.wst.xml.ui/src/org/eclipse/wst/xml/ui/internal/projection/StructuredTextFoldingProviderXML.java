@@ -46,7 +46,7 @@ public class StructuredTextFoldingProviderXML implements IStructuredTextFoldingP
 	private void addAdapterToNodeAndChildren(Node node, int childLevel) {
 		// stop adding initial adapters MAX_CHILDREN levels deep for
 		// performance sake
-		if (node instanceof INodeNotifier && childLevel < MAX_CHILDREN) {
+		if ((node instanceof INodeNotifier) && (childLevel < MAX_CHILDREN)) {
 			INodeNotifier notifier = (INodeNotifier) node;
 
 			// try and get the adapter for the current node and update the
@@ -62,7 +62,7 @@ public class StructuredTextFoldingProviderXML implements IStructuredTextFoldingP
 			}
 			int siblingLevel = 0;
 			Node nextChild = node.getFirstChild();
-			while (nextChild != null && siblingLevel < MAX_SIBLINGS) {
+			while ((nextChild != null) && (siblingLevel < MAX_SIBLINGS)) {
 				Node childNode = nextChild;
 				nextChild = childNode.getNextSibling();
 
@@ -88,7 +88,7 @@ public class StructuredTextFoldingProviderXML implements IStructuredTextFoldingP
 					if (startNode instanceof Node) {
 						int siblingLevel = 0;
 						Node nextSibling = (Node) startNode;
-						while (nextSibling != null && siblingLevel < MAX_SIBLINGS) {
+						while ((nextSibling != null) && (siblingLevel < MAX_SIBLINGS)) {
 							Node currentNode = nextSibling;
 							nextSibling = currentNode.getNextSibling();
 
@@ -149,8 +149,9 @@ public class StructuredTextFoldingProviderXML implements IStructuredTextFoldingP
 				}
 			}
 			finally {
-				if (sModel != null)
+				if (sModel != null) {
 					sModel.releaseFromRead();
+				}
 			}
 		}
 
@@ -166,8 +167,9 @@ public class StructuredTextFoldingProviderXML implements IStructuredTextFoldingP
 	 * is enabled. (otherwise, only install would have been called)
 	 */
 	public void initialize() {
-		if (!isInstalled())
+		if (!isInstalled()) {
 			return;
+		}
 
 		// clear out old info
 		projectionDisabled();
@@ -213,8 +215,9 @@ public class StructuredTextFoldingProviderXML implements IStructuredTextFoldingP
 		}
 
 		// clear out all annotations
-		if (fViewer.getProjectionAnnotationModel() != null)
+		if (fViewer.getProjectionAnnotationModel() != null) {
 			fViewer.getProjectionAnnotationModel().removeAllAnnotations();
+		}
 
 		removeAllAdapters();
 
@@ -293,7 +296,7 @@ public class StructuredTextFoldingProviderXML implements IStructuredTextFoldingP
 	public void inputDocumentAboutToBeChanged(IDocument oldInput, IDocument newInput) {
 		// if folding is enabled and new document is going to be a totally
 		// different document, disable projection
-		if (fDocument != null && fDocument != newInput) {
+		if ((fDocument != null) && (fDocument != newInput)) {
 			// disable projection and disconnect everything
 			projectionDisabled();
 			fProjectionNeedsToBeEnabled = true;
@@ -303,7 +306,7 @@ public class StructuredTextFoldingProviderXML implements IStructuredTextFoldingP
 	public void inputDocumentChanged(IDocument oldInput, IDocument newInput) {
 		// if projection was previously enabled before input document changed
 		// and new document is different than old document
-		if (fProjectionNeedsToBeEnabled && fDocument == null && newInput != null) {
+		if (fProjectionNeedsToBeEnabled && (fDocument == null) && (newInput != null)) {
 			projectionEnabled();
 			fProjectionNeedsToBeEnabled = false;
 		}

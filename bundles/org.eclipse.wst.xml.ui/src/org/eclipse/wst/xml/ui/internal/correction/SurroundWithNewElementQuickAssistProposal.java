@@ -45,8 +45,9 @@ public class SurroundWithNewElementQuickAssistProposal extends RenameInFileQuick
 			if (startTagOffset == endTagOffset) {
 				IDOMNode cursorNode = (IDOMNode) ContentAssistUtils.getNodeAt(viewer, offset);
 				// use parent node if text node is empty
-				if (cursorNode.getNodeType() == Node.TEXT_NODE && cursorNode.getNodeValue().trim().length() == 0)
+				if ((cursorNode.getNodeType() == Node.TEXT_NODE) && (cursorNode.getNodeValue().trim().length() == 0)) {
 					cursorNode = (IDOMNode) cursorNode.getParentNode();
+				}
 
 				startTagOffset = cursorNode.getStartOffset();
 				endTagOffset = cursorNode.getEndOffset();
@@ -69,10 +70,12 @@ public class SurroundWithNewElementQuickAssistProposal extends RenameInFileQuick
 
 			// rename new element
 			super.apply(viewer, trigger, stateMask, newElementNode.getStartOffset() + 1);
-		} catch (MalformedTreeException e) {
+		}
+		catch (MalformedTreeException e) {
 			// log for now, unless find reason not to
 			Logger.log(Logger.INFO, e.getMessage());
-		} catch (BadLocationException e) {
+		}
+		catch (BadLocationException e) {
 			// log for now, unless find reason not to
 			Logger.log(Logger.INFO, e.getMessage());
 		}
@@ -84,7 +87,7 @@ public class SurroundWithNewElementQuickAssistProposal extends RenameInFileQuick
 	 * @see org.eclipse.jface.text.contentassist.ICompletionProposal#getAdditionalProposalInfo()
 	 */
 	public String getAdditionalProposalInfo() {
-		return XMLUIMessages.SurroundWithNewElementQuickAssistProposal_0; //$NON-NLS-1$
+		return XMLUIMessages.SurroundWithNewElementQuickAssistProposal_0;
 	}
 
 	/*
@@ -93,7 +96,7 @@ public class SurroundWithNewElementQuickAssistProposal extends RenameInFileQuick
 	 * @see org.eclipse.jface.text.contentassist.ICompletionProposal#getDisplayString()
 	 */
 	public String getDisplayString() {
-		return XMLUIMessages.SurroundWithNewElementQuickAssistProposal_1; //$NON-NLS-1$
+		return XMLUIMessages.SurroundWithNewElementQuickAssistProposal_1;
 	}
 
 	/*

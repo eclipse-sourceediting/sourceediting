@@ -47,8 +47,9 @@ public class ToggleCommentActionXMLDelegate extends AbstractCommentActionXMLDele
 			int selectionEndOffset = textSelection.getOffset() + textSelection.getLength();
 
 			// adjust selection end line
-			if (selectionEndLine > selectionStartLine && selectionEndLineOffset == selectionEndOffset)
+			if ((selectionEndLine > selectionStartLine) && (selectionEndLineOffset == selectionEndOffset)) {
 				selectionEndLine--;
+			}
 
 		}
 		catch (BadLocationException e) {
@@ -64,8 +65,9 @@ public class ToggleCommentActionXMLDelegate extends AbstractCommentActionXMLDele
 
 			// extra check if commenting from beginning of line
 			int selectionStartLineOffset = document.getLineOffset(selectionStartLine);
-			if (textSelection.getLength() > 0 && selectionStartLineOffset == textSelection.getOffset() && !isCommentLine(document, selectionStartLine))
+			if ((textSelection.getLength() > 0) && (selectionStartLineOffset == textSelection.getOffset()) && !isCommentLine(document, selectionStartLine)) {
 				updateStartOffset = true;
+			}
 		}
 		catch (BadLocationException e) {
 			Logger.log(Logger.WARNING_DEBUG, e.getMessage(), e);
@@ -121,7 +123,7 @@ public class ToggleCommentActionXMLDelegate extends AbstractCommentActionXMLDele
 		try {
 			IRegion region = document.getLineInformation(line);
 			String string = document.get(region.getOffset(), region.getLength()).trim();
-			isComment = string.length() >= OPEN_COMMENT.length() + CLOSE_COMMENT.length() && string.startsWith(OPEN_COMMENT) && string.endsWith(CLOSE_COMMENT);
+			isComment = (string.length() >= OPEN_COMMENT.length() + CLOSE_COMMENT.length()) && string.startsWith(OPEN_COMMENT) && string.endsWith(CLOSE_COMMENT);
 		}
 		catch (BadLocationException e) {
 			Logger.log(Logger.WARNING_DEBUG, e.getMessage(), e);
@@ -155,10 +157,12 @@ public class ToggleCommentActionXMLDelegate extends AbstractCommentActionXMLDele
 			// update the selection if text selection changed
 			if (selectionPosition != null) {
 				ITextSelection selection = null;
-				if (updateStartOffset)
+				if (updateStartOffset) {
 					selection = new TextSelection(document, selectionPosition.getOffset() - OPEN_COMMENT.length(), selectionPosition.getLength() + OPEN_COMMENT.length());
-				else
+				}
+				else {
 					selection = new TextSelection(document, selectionPosition.getOffset(), selectionPosition.getLength());
+				}
 				ISelectionProvider provider = ((ITextEditor) fEditor).getSelectionProvider();
 				if (provider != null) {
 					provider.setSelection(selection);

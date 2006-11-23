@@ -90,11 +90,11 @@ public class NamespaceInfoTable extends Composite {
 			if (result.equals("")) { //$NON-NLS-1$
 				switch (column) {
 					case 0 : {
-						result = XMLUIMessages._UI_NO_NAMESPACE_NAME; //$NON-NLS-1$
+						result = XMLUIMessages._UI_NO_NAMESPACE_NAME;
 						break;
 					}
 					case 1 : {
-						result = XMLUIMessages._UI_NO_PREFIX; //$NON-NLS-1$
+						result = XMLUIMessages._UI_NO_PREFIX;
 						break;
 					}
 				}
@@ -102,15 +102,17 @@ public class NamespaceInfoTable extends Composite {
 			return result;
 		}
 
-		 String getDefaultPrefix() {
+		String getDefaultPrefix() {
 			String defaultPrefix = "p"; //$NON-NLS-1$
-			if (namespaceInfoList == null)
+			if (namespaceInfoList == null) {
 				return defaultPrefix;
+			}
 			Vector v = new Vector();
 			for (int i = 0; i < namespaceInfoList.size(); i++) {
 				NamespaceInfo nsinfo = (NamespaceInfo) namespaceInfoList.get(i);
-				if (nsinfo.prefix != null)
+				if (nsinfo.prefix != null) {
 					v.addElement(nsinfo.prefix);
+				}
 			}
 			if (v.contains(defaultPrefix)) {
 				String s = defaultPrefix;
@@ -118,8 +120,10 @@ public class NamespaceInfoTable extends Composite {
 					s = defaultPrefix + Integer.toString(j);
 				}
 				return s;
-			} else
+			}
+			else {
 				return defaultPrefix;
+			}
 		}
 
 		public Object[] getElements(Object inputElement) {
@@ -145,9 +149,9 @@ public class NamespaceInfoTable extends Composite {
 		}
 	}
 
-	protected static final String LOCATION_HINT = XMLUIMessages._UI_LABEL_LOCATION_HINT; //$NON-NLS-1$
-	protected static final String NAMESPACE_URI = XMLUIMessages._UI_LABEL_NAMESPACE_NAME; //$NON-NLS-1$
-	protected static final String PREFIX = XMLUIMessages._UI_LABEL_PREFIX; //$NON-NLS-1$
+	protected static final String LOCATION_HINT = XMLUIMessages._UI_LABEL_LOCATION_HINT;
+	protected static final String NAMESPACE_URI = XMLUIMessages._UI_LABEL_NAMESPACE_NAME;
+	protected static final String PREFIX = XMLUIMessages._UI_LABEL_PREFIX;
 	protected Button deleteButton;
 	protected boolean dummyRowsRemoved = false;
 	protected Button editButton;
@@ -176,7 +180,7 @@ public class NamespaceInfoTable extends Composite {
 		setLayout(createGridLayout());
 		setLayoutData(new GridData(GridData.FILL_BOTH));
 		Group namespaceInfoGroup = new Group(this, SWT.NONE);
-		namespaceInfoGroup.setText(XMLUIMessages._UI_LABEL_XML_SCHEMA_INFORMATION); //$NON-NLS-1$
+		namespaceInfoGroup.setText(XMLUIMessages._UI_LABEL_XML_SCHEMA_INFORMATION);
 		namespaceInfoGroup.setLayout(new GridLayout());
 		GridData gd = new GridData(GridData.FILL_BOTH);
 		if (widthHint != -1) {
@@ -186,7 +190,7 @@ public class NamespaceInfoTable extends Composite {
 			gd.heightHint = heightHint;
 		}
 		namespaceInfoGroup.setLayoutData(gd);
-		//WorkbenchHelp.setHelp(namespaceInfoGroup, new
+		// WorkbenchHelp.setHelp(namespaceInfoGroup, new
 		// ControlContextComputer(namespaceInfoGroup,
 		// XMLBuilderContextIds.XMLC_NAMESPACE_GROUP));
 		String[] titleArray = {NAMESPACE_URI, PREFIX, LOCATION_HINT};
@@ -249,9 +253,11 @@ public class NamespaceInfoTable extends Composite {
 			public void widgetSelected(SelectionEvent e) {
 				if (e.widget == newButton) {
 					performNew();
-				} else if (e.widget == editButton) {
+				}
+				else if (e.widget == editButton) {
 					performEdit();
-				} else if (e.widget == deleteButton) {
+				}
+				else if (e.widget == deleteButton) {
 					performDelete();
 				}
 			}
@@ -266,19 +272,19 @@ public class NamespaceInfoTable extends Composite {
 		// add the New button
 		//
 		newButton = new Button(buttonComposite, SWT.NONE);
-		newButton.setText(XMLUIMessages._UI_BUTTON_NEW); //$NON-NLS-1$
+		newButton.setText(XMLUIMessages._UI_BUTTON_NEW);
 		newButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		newButton.addSelectionListener(selectionListener);
 		// add the Edit button
 		//
 		editButton = new Button(buttonComposite, SWT.NONE);
-		editButton.setText(XMLUIMessages._UI_BUTTON_EDIT); //$NON-NLS-1$
+		editButton.setText(XMLUIMessages._UI_BUTTON_EDIT);
 		editButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		editButton.addSelectionListener(selectionListener);
 		// add the Delete button
 		//
 		deleteButton = new Button(buttonComposite, SWT.NONE);
-		deleteButton.setText(XMLUIMessages._UI_BUTTON_DELETE); //$NON-NLS-1$
+		deleteButton.setText(XMLUIMessages._UI_BUTTON_DELETE);
 		deleteButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		deleteButton.addSelectionListener(selectionListener);
 	}
@@ -295,7 +301,7 @@ public class NamespaceInfoTable extends Composite {
 	}
 
 	protected NamespaceInfo getTargetNamespaceInfo() {
-		return (namespaceInfoList != null && namespaceInfoList.size() > 0) ? (NamespaceInfo) namespaceInfoList.get(0) : null;
+		return ((namespaceInfoList != null) && (namespaceInfoList.size() > 0)) ? (NamespaceInfo) namespaceInfoList.get(0) : null;
 	}
 
 	protected EditNamespaceInfoDialog invokeDialog(String title, NamespaceInfo info) {
@@ -334,14 +340,14 @@ public class NamespaceInfoTable extends Composite {
 		ISelection selection = tableViewer.getSelection();
 		Object selectedObject = (selection instanceof IStructuredSelection) ? ((IStructuredSelection) selection).getFirstElement() : null;
 		if (selectedObject instanceof NamespaceInfo) {
-			invokeDialog(XMLUIMessages._UI_LABEL_NEW_NAMESPACE_INFORMATION, (NamespaceInfo) selectedObject); //$NON-NLS-1$
+			invokeDialog(XMLUIMessages._UI_LABEL_NEW_NAMESPACE_INFORMATION, (NamespaceInfo) selectedObject);
 			performDelayedUpdate();
 		}
 	}
 
 	public void performNew() {
 		NamespaceInfo info = new NamespaceInfo();
-		EditNamespaceInfoDialog dialog = invokeDialog(XMLUIMessages._UI_LABEL_NEW_NAMESPACE_INFORMATION, info); //$NON-NLS-1$
+		EditNamespaceInfoDialog dialog = invokeDialog(XMLUIMessages._UI_LABEL_NEW_NAMESPACE_INFORMATION, info);
 		if (dialog.getReturnCode() == Window.OK) {
 			namespaceInfoList.add(info);
 			performDelayedUpdate();
@@ -370,11 +376,11 @@ public class NamespaceInfoTable extends Composite {
 		Object selectedObject = (selection instanceof IStructuredSelection) ? ((IStructuredSelection) selection).getFirstElement() : null;
 		NamespaceInfo info = (NamespaceInfo) selectedObject;
 		editButton.setEnabled(info != null);
-		deleteButton.setEnabled(info != null && info.getProperty("unremovable") == null); //$NON-NLS-1$
+		deleteButton.setEnabled((info != null) && (info.getProperty("unremovable") == null)); //$NON-NLS-1$
 	}
 
 	public void updateHelper(List namespaceInfoList) {
-		if (visibleRows != -1 && !dummyRowsRemoved) {
+		if ((visibleRows != -1) && !dummyRowsRemoved) {
 			dummyRowsRemoved = true;
 			tableViewer.getTable().removeAll();
 		}
@@ -384,7 +390,8 @@ public class NamespaceInfoTable extends Composite {
 			if (namespaceInfoList.size() > 0) {
 				tableViewer.setSelection(new StructuredSelection(namespaceInfoList.get(0)));
 			}
-		} else {
+		}
+		else {
 			tableViewer.setSelection(selection);
 		}
 	}

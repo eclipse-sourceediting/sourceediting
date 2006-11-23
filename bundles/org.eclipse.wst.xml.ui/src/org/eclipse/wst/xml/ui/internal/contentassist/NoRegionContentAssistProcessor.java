@@ -101,8 +101,9 @@ public class NoRegionContentAssistProcessor implements IContentAssistProcessor, 
 		ICompletionProposal[] results = EMPTY_PROPOSAL_SET;
 
 		p = guessContentAssistProcessor(viewer, documentOffset);
-		if (p != null)
+		if (p != null) {
 			results = p.computeCompletionProposals(viewer, documentOffset);
+		}
 
 		return (results != null) ? results : EMPTY_PROPOSAL_SET;
 	}
@@ -207,7 +208,7 @@ public class NoRegionContentAssistProcessor implements IContentAssistProcessor, 
 			}
 		}
 		// working w/ viewer & document partition
-		if (p == null && viewer.getDocument().getLength() > 0) {
+		if ((p == null) && (viewer.getDocument().getLength() > 0)) {
 			String prevPartitionType = getPartitionType((StructuredTextViewer) viewer, documentOffset - 1);
 			// System.out.println("previous partition type is > " +
 			// prevPartitionType);
@@ -238,7 +239,7 @@ public class NoRegionContentAssistProcessor implements IContentAssistProcessor, 
 	}
 
 	protected void releaseMap(HashMap map) {
-		if (map != null && !map.isEmpty()) {
+		if ((map != null) && !map.isEmpty()) {
 			Iterator it = map.keySet().iterator();
 			Object key = null;
 			while (it.hasNext()) {

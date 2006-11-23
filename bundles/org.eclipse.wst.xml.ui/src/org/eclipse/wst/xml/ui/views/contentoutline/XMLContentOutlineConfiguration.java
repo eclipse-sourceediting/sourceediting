@@ -105,7 +105,7 @@ public class XMLContentOutlineConfiguration extends ContentOutlineConfiguration 
 			StringBuffer text = new StringBuffer(super.getText(o));
 			if (o instanceof Node) {
 				Node node = (Node) o;
-				if (node.getNodeType() == Node.ELEMENT_NODE && fShowAttributes) {
+				if ((node.getNodeType() == Node.ELEMENT_NODE) && fShowAttributes) {
 					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=88444
 					if (node.hasAttributes()) {
 						Element element = (Element) node;
@@ -127,7 +127,7 @@ public class XMLContentOutlineConfiguration extends ContentOutlineConfiguration 
 						// ID
 						if (elementDecl != null) {
 							int i = 0;
-							while (i < attributes.getLength() && idTypedAttribute == null) {
+							while ((i < attributes.getLength()) && (idTypedAttribute == null)) {
 								Node attr = attributes.item(i);
 								String attrName = attr.getNodeName();
 								CMAttributeDeclaration attrDecl = (CMAttributeDeclaration) elementDecl.getAttributes().getNamedItem(attrName);
@@ -135,7 +135,7 @@ public class XMLContentOutlineConfiguration extends ContentOutlineConfiguration 
 									if ((attrDecl.getAttrType() != null) && (CMDataType.ID.equals(attrDecl.getAttrType().getDataTypeName()))) {
 										idTypedAttribute = attr;
 									}
-									else if (attrDecl.getUsage() == CMAttributeDeclaration.REQUIRED && requiredAttribute == null) {
+									else if ((attrDecl.getUsage() == CMAttributeDeclaration.REQUIRED) && (requiredAttribute == null)) {
 										// as a backup, keep tabs on
 										// any required
 										// attributes
@@ -173,10 +173,10 @@ public class XMLContentOutlineConfiguration extends ContentOutlineConfiguration 
 
 						// display the attribute and value (without quotes)
 						String attributeName = shownAttribute.getNodeName();
-						if (attributeName != null && attributeName.length() > 0) {
+						if ((attributeName != null) && (attributeName.length() > 0)) {
 							text.append(" " + attributeName); //$NON-NLS-1$
 							String attributeValue = shownAttribute.getNodeValue();
-							if (attributeValue != null && attributeValue.length() > 0) {
+							if ((attributeValue != null) && (attributeValue.length() > 0)) {
 								text.append("=" + StringUtils.strip(attributeValue)); //$NON-NLS-1$
 							}
 						}
@@ -316,11 +316,12 @@ public class XMLContentOutlineConfiguration extends ContentOutlineConfiguration 
 			Node node = (Node) object;
 
 			// replace attribute node in selection with its parent
-			if (node.getNodeType() == Node.ATTRIBUTE_NODE)
+			if (node.getNodeType() == Node.ATTRIBUTE_NODE) {
 				node = ((Attr) node).getOwnerElement();
-			// replace TextNode in selection with its parent
-			else if (node.getNodeType() == Node.TEXT_NODE)
+			}
+			else if (node.getNodeType() == Node.TEXT_NODE) {
 				node = node.getParentNode();
+			}
 			return node;
 		}
 		return object;

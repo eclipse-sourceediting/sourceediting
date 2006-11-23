@@ -33,7 +33,6 @@ import org.eclipse.wst.xml.ui.internal.util.XMLCommonUIContextIds;
 
 
 
-
 public class SelectXMLCatalogIdDialog extends Dialog {
 	protected String[] extensions;
 	protected Button okButton;
@@ -64,7 +63,7 @@ public class SelectXMLCatalogIdDialog extends Dialog {
 
 	protected String computeDefaultSystemId(ICatalogEntry mappingInfo) {
 		String result = mappingInfo.getAttributeValue(ICatalogEntry.ATTR_WEB_URL);
-		if (result == null && mappingInfo.getURI() != null) {
+		if ((result == null) && (mappingInfo.getURI() != null)) {
 			int index = mappingInfo.getURI().lastIndexOf("/"); //$NON-NLS-1$
 			String lastSegment = index != -1 ? mappingInfo.getURI().substring(index + 1) : mappingInfo.getURI();
 			result = lastSegment;

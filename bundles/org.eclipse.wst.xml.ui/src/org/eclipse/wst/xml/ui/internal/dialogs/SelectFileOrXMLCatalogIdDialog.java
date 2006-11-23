@@ -82,6 +82,6 @@ public class SelectFileOrXMLCatalogIdDialog extends Dialog {
 	}
 
 	protected void updateButtonState() {
-		okButton.setEnabled(panel.getFile() != null || panel.getXMLCatalogId() != null);
+		okButton.setEnabled((panel.getFile() != null) || (panel.getXMLCatalogId() != null));
 	}
 }

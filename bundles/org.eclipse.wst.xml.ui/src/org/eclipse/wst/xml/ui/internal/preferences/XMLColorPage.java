@@ -70,7 +70,23 @@ public class XMLColorPage extends AbstractColorPage {
 	}
 
 	public String getSampleText() {
-		return XMLUIMessages.Sample_XML_doc; //$NON-NLS-1$ = "<?xml version=\"1.0\"?>\n<?customProcessingInstruction\n\tXML processor specific\n\tcontent ?>\n<!DOCTYPE colors\n\tPUBLIC \"//IBM/XML/COLORS/\" \"colors.dtd\">\n<colors>\n\t<!-- begin color definitions -->\n\t<color name=\"plaintext\" foreground=\"#000000\"\n\t\tbackground=\"#D4D0C8\"/>\n\t<color name=\"bold\" foreground=\"#000000\"\n\t\tbackground=\"#B3ACA0\">\n\t<![CDATA[<123456789>]]>\n\tNormal text content.\n\t<color name=\"inverse\" foreground=\"#F0F0F0\"\n\t\tbackground=\"#D4D0C8\"/>\n\n</colors>\n";
+		return XMLUIMessages.Sample_XML_doc; // = "<?xml
+												// version=\"1.0\"?>\n<?customProcessingInstruction\n\tXML
+												// processor
+												// specific\n\tcontent
+												// ?>\n<!DOCTYPE
+												// colors\n\tPUBLIC
+												// \"//IBM/XML/COLORS/\"
+												// \"colors.dtd\">\n<colors>\n\t<!--
+												// begin color definitions
+												// -->\n\t<color
+												// name=\"plaintext\"
+												// foreground=\"#000000\"\n\t\tbackground=\"#D4D0C8\"/>\n\t<color
+												// name=\"bold\"
+												// foreground=\"#000000\"\n\t\tbackground=\"#B3ACA0\">\n\t<![CDATA[<123456789>]]>\n\tNormal
+												// text content.\n\t<color
+												// name=\"inverse\"
+												// foreground=\"#F0F0F0\"\n\t\tbackground=\"#D4D0C8\"/>\n\n</colors>\n";
 	}
 
 	protected void initCommonContextStyleMap(Dictionary contextStyleMap) {
@@ -98,22 +114,37 @@ public class XMLColorPage extends AbstractColorPage {
 	protected void initCommonDescriptions(Dictionary descriptions) {
 
 		// create descriptions for hilighting types
-		descriptions.put(IStyleConstantsXML.COMMENT_BORDER, XMLUIMessages.Comment_Delimiters_UI_); //$NON-NLS-1$ = "Comment Delimiters"
-		descriptions.put(IStyleConstantsXML.COMMENT_TEXT, XMLUIMessages.Comment_Content_UI_); //$NON-NLS-1$ = "Comment Content"
-		descriptions.put(IStyleConstantsXML.TAG_BORDER, XMLUIMessages.Tag_Delimiters_UI_); //$NON-NLS-1$ = "Tag Delimiters"
-		descriptions.put(IStyleConstantsXML.TAG_NAME, XMLUIMessages.Tag_Names_UI_); //$NON-NLS-1$ = "Tag Names"
-		descriptions.put(IStyleConstantsXML.TAG_ATTRIBUTE_NAME, XMLUIMessages.Attribute_Names_UI_); //$NON-NLS-1$ = "Attribute Names"
-		descriptions.put(IStyleConstantsXML.TAG_ATTRIBUTE_VALUE, XMLUIMessages.Attribute_Values_UI_); //$NON-NLS-1$ = "Attribute Values"
-		descriptions.put(IStyleConstantsXML.DECL_BORDER, XMLUIMessages.Declaration_Delimiters_UI_); //$NON-NLS-1$ = "Declaration Delimiters"
-		descriptions.put(IStyleConstantsXML.XML_CONTENT, XMLUIMessages.Content_UI_); //$NON-NLS-1$ = "Content"
+		descriptions.put(IStyleConstantsXML.COMMENT_BORDER, XMLUIMessages.Comment_Delimiters_UI_); // =
+																									// "Comment
+																									// Delimiters"
+		descriptions.put(IStyleConstantsXML.COMMENT_TEXT, XMLUIMessages.Comment_Content_UI_); // =
+																								// "Comment
+																								// Content"
+		descriptions.put(IStyleConstantsXML.TAG_BORDER, XMLUIMessages.Tag_Delimiters_UI_); // =
+																							// "Tag
+																							// Delimiters"
+		descriptions.put(IStyleConstantsXML.TAG_NAME, XMLUIMessages.Tag_Names_UI_); // =
+																					// "Tag
+																					// Names"
+		descriptions.put(IStyleConstantsXML.TAG_ATTRIBUTE_NAME, XMLUIMessages.Attribute_Names_UI_); // =
+																									// "Attribute
+																									// Names"
+		descriptions.put(IStyleConstantsXML.TAG_ATTRIBUTE_VALUE, XMLUIMessages.Attribute_Values_UI_); // =
+																										// "Attribute
+																										// Values"
+		descriptions.put(IStyleConstantsXML.DECL_BORDER, XMLUIMessages.Declaration_Delimiters_UI_); // =
+																									// "Declaration
+																									// Delimiters"
+		descriptions.put(IStyleConstantsXML.XML_CONTENT, XMLUIMessages.Content_UI_); // =
+																						// "Content"
 	}
 
 	protected void initCommonStyleList(ArrayList list) {
 
-		//list.add(IStyleConstantsXML.CDATA_BORDER);
-		//list.add(IStyleConstantsXML.CDATA_TEXT);
-		//list.add(IStyleConstantsXML.PI_BORDER);
-		//list.add(IStyleConstantsXML.PI_CONTENT);
+		// list.add(IStyleConstantsXML.CDATA_BORDER);
+		// list.add(IStyleConstantsXML.CDATA_TEXT);
+		// list.add(IStyleConstantsXML.PI_BORDER);
+		// list.add(IStyleConstantsXML.PI_CONTENT);
 
 		list.add(IStyleConstantsXML.TAG_BORDER);
 		list.add(IStyleConstantsXML.TAG_NAME);
@@ -143,10 +174,20 @@ public class XMLColorPage extends AbstractColorPage {
 
 		initCommonDescriptions(descriptions);
 		initDocTypeDescriptions(descriptions);
-		descriptions.put(IStyleConstantsXML.CDATA_BORDER, XMLUIMessages.CDATA_Delimiters_UI_); //$NON-NLS-1$ = "CDATA Delimiters"
-		descriptions.put(IStyleConstantsXML.CDATA_TEXT, XMLUIMessages.CDATA_Content_UI_); //$NON-NLS-1$ = "CDATA Content"
-		descriptions.put(IStyleConstantsXML.PI_BORDER, XMLUIMessages.Processing_Instruction_Del_UI_); //$NON-NLS-1$ = "Processing Instruction Delimiters"
-		descriptions.put(IStyleConstantsXML.PI_CONTENT, XMLUIMessages.Processing_Instruction_Con_UI__UI_); //$NON-NLS-1$ = "Processing Instruction Content"
+		descriptions.put(IStyleConstantsXML.CDATA_BORDER, XMLUIMessages.CDATA_Delimiters_UI_); // =
+																								// "CDATA
+																								// Delimiters"
+		descriptions.put(IStyleConstantsXML.CDATA_TEXT, XMLUIMessages.CDATA_Content_UI_); // =
+																							// "CDATA
+																							// Content"
+		descriptions.put(IStyleConstantsXML.PI_BORDER, XMLUIMessages.Processing_Instruction_Del_UI_); // =
+																										// "Processing
+																										// Instruction
+																										// Delimiters"
+		descriptions.put(IStyleConstantsXML.PI_CONTENT, XMLUIMessages.Processing_Instruction_Con_UI__UI_); // =
+																											// "Processing
+																											// Instruction
+																											// Content"
 	}
 
 	protected void initDocTypeContextStyleMap(Dictionary contextStyleMap) {
@@ -165,10 +206,21 @@ public class XMLColorPage extends AbstractColorPage {
 	protected void initDocTypeDescriptions(Dictionary descriptions) {
 
 		// create descriptions for hilighting types for DOCTYPE related items
-		descriptions.put(IStyleConstantsXML.DOCTYPE_NAME, XMLUIMessages.DOCTYPE_Name_UI_); //$NON-NLS-1$ = "DOCTYPE Name"
-		descriptions.put(IStyleConstantsXML.DOCTYPE_EXTERNAL_ID, XMLUIMessages.DOCTYPE_SYSTEM_PUBLIC_Keyw_UI_); //$NON-NLS-1$ = "DOCTYPE SYSTEM/PUBLIC Keyword"
-		descriptions.put(IStyleConstantsXML.DOCTYPE_EXTERNAL_ID_PUBREF, XMLUIMessages.DOCTYPE_Public_Reference_UI_); //$NON-NLS-1$ = "DOCTYPE Public Reference"
-		descriptions.put(IStyleConstantsXML.DOCTYPE_EXTERNAL_ID_SYSREF, XMLUIMessages.DOCTYPE_System_Reference_UI_); //$NON-NLS-1$ = "DOCTYPE System Reference"
+		descriptions.put(IStyleConstantsXML.DOCTYPE_NAME, XMLUIMessages.DOCTYPE_Name_UI_); // =
+																							// "DOCTYPE
+																							// Name"
+		descriptions.put(IStyleConstantsXML.DOCTYPE_EXTERNAL_ID, XMLUIMessages.DOCTYPE_SYSTEM_PUBLIC_Keyw_UI_); // =
+																												// "DOCTYPE
+																												// SYSTEM/PUBLIC
+																												// Keyword"
+		descriptions.put(IStyleConstantsXML.DOCTYPE_EXTERNAL_ID_PUBREF, XMLUIMessages.DOCTYPE_Public_Reference_UI_); // =
+																														// "DOCTYPE
+																														// Public
+																														// Reference"
+		descriptions.put(IStyleConstantsXML.DOCTYPE_EXTERNAL_ID_SYSREF, XMLUIMessages.DOCTYPE_System_Reference_UI_); // =
+																														// "DOCTYPE
+																														// System
+																														// Reference"
 	}
 
 	protected void initDocTypeStyleList(ArrayList list) {
@@ -214,7 +266,10 @@ public class XMLColorPage extends AbstractColorPage {
 		picker.setDescriptions(descriptions);
 		picker.setStyleList(styleList);
 	}
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.wst.sse.ui.preferences.ui.AbstractColorPage#savePreferences()
 	 */
 	protected void savePreferences() {

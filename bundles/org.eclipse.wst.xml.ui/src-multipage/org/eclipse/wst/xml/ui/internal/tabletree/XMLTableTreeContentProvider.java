@@ -64,7 +64,7 @@ public class XMLTableTreeContentProvider implements ITreeContentProvider, ITable
 	}
 
 	public void cacheUpdated(CMDocumentCache cache, final String uri, int oldStatus, int newStatus, CMDocument cmDocument) {
-		if (newStatus == CMDocumentCache.STATUS_LOADED || newStatus == CMDocumentCache.STATUS_ERROR) {
+		if ((newStatus == CMDocumentCache.STATUS_LOADED) || (newStatus == CMDocumentCache.STATUS_ERROR)) {
 			doDelayedRefreshForViewers();
 		}
 	}
@@ -73,10 +73,10 @@ public class XMLTableTreeContentProvider implements ITreeContentProvider, ITable
 	}
 
 	private void doDelayedRefreshForViewers() {
-		if (fViewer != null && !fViewer.getControl().isDisposed()) {
+		if ((fViewer != null) && !fViewer.getControl().isDisposed()) {
 			fViewer.getControl().getDisplay().asyncExec(new Runnable() {
 				public void run() {
-					if (fViewer != null && !fViewer.getControl().isDisposed()) {
+					if ((fViewer != null) && !fViewer.getControl().isDisposed()) {
 						fViewer.refresh(true);
 					}
 				}
@@ -85,8 +85,9 @@ public class XMLTableTreeContentProvider implements ITreeContentProvider, ITable
 	}
 
 	public Object[] getChildren(Object element) {
-		if (element instanceof INodeNotifier)
+		if (element instanceof INodeNotifier) {
 			((INodeNotifier) element).getAdapterFor(IJFaceNodeAdapter.class);
+		}
 		return treeContentHelper.getChildren(element);
 	}
 
@@ -102,7 +103,7 @@ public class XMLTableTreeContentProvider implements ITreeContentProvider, ITable
 		if (column == 0) {
 			result = getText(object);
 		}
-		else if (column == 1 && object instanceof Node) {
+		else if ((column == 1) && (object instanceof Node)) {
 			result = treeContentHelper.getNodeValue((Node) object);
 		}
 		return result != null ? result : ""; //$NON-NLS-1$
@@ -113,8 +114,9 @@ public class XMLTableTreeContentProvider implements ITreeContentProvider, ITable
 	}
 
 	public Image getImage(Object object) {
-		if (object instanceof INodeNotifier)
+		if (object instanceof INodeNotifier) {
 			((INodeNotifier) object).getAdapterFor(IJFaceNodeAdapter.class);
+		}
 
 		Image image = null;
 		if (object instanceof Node) {
@@ -167,8 +169,9 @@ public class XMLTableTreeContentProvider implements ITreeContentProvider, ITable
 	}
 
 	public Object getParent(Object o) {
-		if (o instanceof INodeNotifier)
+		if (o instanceof INodeNotifier) {
 			((INodeNotifier) o).getAdapterFor(IJFaceNodeAdapter.class);
+		}
 
 		Object result = null;
 		if (o instanceof Node) {
@@ -196,8 +199,9 @@ public class XMLTableTreeContentProvider implements ITreeContentProvider, ITable
 	}
 
 	public String getText(Object object) {
-		if (object instanceof INodeNotifier)
+		if (object instanceof INodeNotifier) {
 			((INodeNotifier) object).getAdapterFor(IJFaceNodeAdapter.class);
+		}
 
 		String result = null;
 		if (object instanceof Node) {
@@ -241,7 +245,7 @@ public class XMLTableTreeContentProvider implements ITreeContentProvider, ITable
 			}
 		}
 
-		if (oldInput != null && oldInput instanceof IDOMNode) {
+		if ((oldInput != null) && (oldInput instanceof IDOMNode)) {
 			IJFaceNodeAdapterFactory factory = (IJFaceNodeAdapterFactory) ((IDOMNode) oldInput).getModel().getFactoryRegistry().getFactoryFor(IJFaceNodeAdapter.class);
 			if (factory != null) {
 				factory.removeListener(viewer);
@@ -255,7 +259,7 @@ public class XMLTableTreeContentProvider implements ITreeContentProvider, ITable
 			fViewer = (StructuredViewer) viewer;
 		}
 
-		if (newInput != null && newInput instanceof IDOMNode) {
+		if ((newInput != null) && (newInput instanceof IDOMNode)) {
 			IJFaceNodeAdapterFactory factory = (IJFaceNodeAdapterFactory) ((IDOMNode) newInput).getModel().getFactoryRegistry().getFactoryFor(IJFaceNodeAdapter.class);
 			if (factory != null) {
 				factory.addListener(viewer);
@@ -288,7 +292,7 @@ public class XMLTableTreeContentProvider implements ITreeContentProvider, ITable
 		try {
 			if (node.getNodeType() == Node.TEXT_NODE) {
 				String data = ((Text) node).getData();
-				result = (data == null || data.trim().length() == 0);
+				result = ((data == null) || (data.trim().length() == 0));
 			}
 		}
 		catch (Exception e) {

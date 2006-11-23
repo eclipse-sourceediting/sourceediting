@@ -41,8 +41,9 @@ public class XMLContentModelGenerator extends AbstractContentModelGenerator {
 	}
 
 	public void generateAttribute(CMAttributeDeclaration attrDecl, StringBuffer buffer) {
-		if (attrDecl == null || buffer == null)
+		if ((attrDecl == null) || (buffer == null)) {
 			return;
+		}
 		int usage = attrDecl.getUsage();
 		if (usage == CMAttributeDeclaration.REQUIRED) {
 			buffer.append(" "); //$NON-NLS-1$
@@ -54,16 +55,19 @@ public class XMLContentModelGenerator extends AbstractContentModelGenerator {
 	}
 
 	protected void generateEndTag(String tagName, Node parentNode, CMElementDeclaration elementDecl, StringBuffer buffer) {
-		if (elementDecl == null)
+		if (elementDecl == null) {
 			return;
-		if (elementDecl.getContentType() != CMElementDeclaration.EMPTY)
+		}
+		if (elementDecl.getContentType() != CMElementDeclaration.EMPTY) {
 			buffer.append("</" + tagName + ">");//$NON-NLS-2$//$NON-NLS-1$
+		}
 		return;
 	}
 
 	public void generateRequiredAttribute(Node ownerNode, CMAttributeDeclaration attrDecl, StringBuffer buffer) {
-		if (attrDecl == null || buffer == null)
+		if ((attrDecl == null) || (buffer == null)) {
 			return;
+		}
 
 		// attribute name
 		String attributeName = getRequiredName(ownerNode, attrDecl);
@@ -73,12 +77,12 @@ public class XMLContentModelGenerator extends AbstractContentModelGenerator {
 		// attribute value
 		if (attrType != null) {
 			// insert any value that is implied
-			if (attrType.getImpliedValueKind() != CMDataType.IMPLIED_VALUE_NONE && attrType.getImpliedValue() != null) {
+			if ((attrType.getImpliedValueKind() != CMDataType.IMPLIED_VALUE_NONE) && (attrType.getImpliedValue() != null)) {
 				buffer.append(attrType.getImpliedValue());
 			}
 			// otherwise, if an enumerated list of values exists, use the
 			// first value
-			else if (attrType.getEnumeratedValues() != null && attrType.getEnumeratedValues().length > 0) {
+			else if ((attrType.getEnumeratedValues() != null) && (attrType.getEnumeratedValues().length > 0)) {
 				buffer.append(attrType.getEnumeratedValues()[0]);
 			}
 		}
@@ -87,8 +91,9 @@ public class XMLContentModelGenerator extends AbstractContentModelGenerator {
 	}
 
 	protected void generateStartTag(String tagName, Node parentNode, CMElementDeclaration elementDecl, StringBuffer buffer) {
-		if (elementDecl == null || buffer == null)
+		if ((elementDecl == null) || (buffer == null)) {
 			return;
+		}
 		buffer.append("<" + tagName);//$NON-NLS-1$
 		generateAttributes(elementDecl, buffer);
 		buffer.append(getStartTagClose(parentNode, elementDecl));
@@ -96,8 +101,9 @@ public class XMLContentModelGenerator extends AbstractContentModelGenerator {
 	}
 
 	public int getMinimalStartTagLength(Node node, CMElementDeclaration elementDecl) {
-		if (elementDecl == null)
+		if (elementDecl == null) {
 			return 0;
+		}
 		if (requiresAttributes(elementDecl)) {
 			return getRequiredName(node, elementDecl).length() + 2; // < +
 			// name +
@@ -115,7 +121,7 @@ public class XMLContentModelGenerator extends AbstractContentModelGenerator {
 	protected String getOtherClose(Node notATagNode) {
 		if (notATagNode instanceof IDOMNode) {
 			IStructuredDocumentRegion node = ((IDOMNode) notATagNode).getStartStructuredDocumentRegion();
-			if (node != null && node.getNumberOfRegions() > 1 && node.getRegions().get(0).getType().equals(DOMJSPRegionContextsPrivateCopy.JSP_DIRECTIVE_OPEN)) {
+			if ((node != null) && (node.getNumberOfRegions() > 1) && node.getRegions().get(0).getType().equals(DOMJSPRegionContextsPrivateCopy.JSP_DIRECTIVE_OPEN)) {
 				return "%>"; //$NON-NLS-1$
 			}
 		}
@@ -124,12 +130,15 @@ public class XMLContentModelGenerator extends AbstractContentModelGenerator {
 
 	public String getStartTagClose(Node parentNode, CMElementDeclaration elementDecl) {
 		String other = getOtherClose(parentNode);
-		if (other != null)
+		if (other != null) {
 			return other;
-		if (elementDecl == null)
+		}
+		if (elementDecl == null) {
 			return ">";//$NON-NLS-1$
-		if (elementDecl.getContentType() == CMElementDeclaration.EMPTY)
+		}
+		if (elementDecl.getContentType() == CMElementDeclaration.EMPTY) {
 			return "/>"; //$NON-NLS-1$
+		}
 		return ">"; //$NON-NLS-1$
 	}
 }

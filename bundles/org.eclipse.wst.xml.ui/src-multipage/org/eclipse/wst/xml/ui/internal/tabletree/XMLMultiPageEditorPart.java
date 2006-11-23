@@ -136,8 +136,9 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 		 * editor.
 		 */
 		void handleActivation() {
-			if (fIsHandlingActivation || getTextEditor() == null)
+			if (fIsHandlingActivation || (getTextEditor() == null)) {
 				return;
+			}
 
 			if (fActivePart == XMLMultiPageEditorPart.this) {
 				fIsHandlingActivation = true;
@@ -215,7 +216,7 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 		}
 
 		public void selectionChanged(SelectionChangedEvent event) {
-			if (fDesignViewer != null && ((getActivePage() != fDesignPageIndex) || !XMLMultiPageEditorPart.this.equals(getSite().getPage().getActivePart()))) {
+			if ((fDesignViewer != null) && ((getActivePage() != fDesignPageIndex) || !XMLMultiPageEditorPart.this.equals(getSite().getPage().getActivePart()))) {
 				if (forcePostSelection) {
 					selection = event.getSelection();
 					schedule(200);
@@ -289,8 +290,9 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 		}
 
 		public void inputDocumentChanged(IDocument oldInput, IDocument newInput) {
-			if (fDesignViewer != null && newInput != null)
+			if ((fDesignViewer != null) && (newInput != null)) {
 				fDesignViewer.setDocument(newInput);
+			}
 		}
 	}
 
@@ -442,7 +444,7 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 					start = ((ITextSelection) selection).getOffset();
 					length = ((ITextSelection) selection).getLength();
 				}
-				if (start > -1 && length > -1) {
+				if ((start > -1) && (length > -1)) {
 					getTextEditor().selectAndReveal(start, length);
 				}
 			}
@@ -514,7 +516,7 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 			}
 
 			int activePageIndex = getPreferenceStore().getInt(IXMLPreferenceNames.LAST_ACTIVE_PAGE);
-			if (activePageIndex >= 0 && activePageIndex < getPageCount()) {
+			if ((activePageIndex >= 0) && (activePageIndex < getPageCount())) {
 				setActivePage(activePageIndex);
 			}
 			else {
@@ -597,7 +599,7 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 			fActivationListener = null;
 		}
 
-		if (fTextEditor != null && fPropertyListener != null) {
+		if ((fTextEditor != null) && (fPropertyListener != null)) {
 			fTextEditor.removePropertyListener(fPropertyListener);
 		}
 
@@ -661,8 +663,9 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 
 	private IDocument getDocument() {
 		IDocument document = null;
-		if (fTextEditor != null)
+		if (fTextEditor != null) {
 			document = fTextEditor.getDocumentProvider().getDocument(fTextEditor.getEditorInput());
+		}
 		return document;
 	}
 
@@ -724,7 +727,7 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 	 * @see org.eclipse.ui.ISaveablePart#isSaveAsAllowed()
 	 */
 	public boolean isSaveAsAllowed() {
-		return fTextEditor != null && fTextEditor.isSaveAsAllowed();
+		return (fTextEditor != null) && fTextEditor.isSaveAsAllowed();
 	}
 
 	/*
@@ -734,8 +737,9 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 	 */
 	public boolean isSaveOnCloseNeeded() {
 		// overriding super class since it does a lowly isDirty!
-		if (fTextEditor != null)
+		if (fTextEditor != null) {
 			return fTextEditor.isSaveOnCloseNeeded();
+		}
 		return isDirty();
 	}
 
@@ -775,8 +779,9 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 		// with the input just yet. We'll rely on later notification from the
 		// TextViewer to set us straight
 		super.setInput(input);
-		if (fDesignViewer != null)
+		if (fDesignViewer != null) {
 			fDesignViewer.setDocument(getDocument());
+		}
 		setPartName(input.getName());
 	}
 }

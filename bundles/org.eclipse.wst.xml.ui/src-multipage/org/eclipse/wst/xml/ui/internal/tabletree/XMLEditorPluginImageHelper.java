@@ -31,7 +31,7 @@ public class XMLEditorPluginImageHelper {
 	private final String PLUGINID = XMLUIPlugin.ID;
 	private static XMLEditorPluginImageHelper instance = null;
 
-	//	 save a descriptor for each image
+	// save a descriptor for each image
 	private HashMap fImageDescRegistry = null;
 
 	/**
@@ -40,8 +40,9 @@ public class XMLEditorPluginImageHelper {
 	 * @return Returns a XMLEditorPluginImageHelper
 	 */
 	public synchronized static XMLEditorPluginImageHelper getInstance() {
-		if (instance == null)
+		if (instance == null) {
 			instance = new XMLEditorPluginImageHelper();
+		}
 		return instance;
 	}
 
@@ -80,9 +81,10 @@ public class XMLEditorPluginImageHelper {
 		ImageDescriptor imageDescriptor = null;
 		Object o = getImageDescriptorRegistry().get(resource);
 		if (o == null) {
-			//create a descriptor
+			// create a descriptor
 			imageDescriptor = createImageDescriptor(resource);
-		} else {
+		}
+		else {
 			imageDescriptor = (ImageDescriptor) o;
 		}
 		return imageDescriptor;
@@ -94,8 +96,9 @@ public class XMLEditorPluginImageHelper {
 	 * @return HashMap - image descriptor registry for this plugin
 	 */
 	private HashMap getImageDescriptorRegistry() {
-		if (fImageDescRegistry == null)
+		if (fImageDescRegistry == null) {
 			fImageDescRegistry = new HashMap();
+		}
 		return fImageDescRegistry;
 	}
 
@@ -123,8 +126,9 @@ public class XMLEditorPluginImageHelper {
 			image = desc.createImage();
 			// dont add the missing image descriptor image to the image
 			// registry
-			if (!desc.equals(ImageDescriptor.getMissingImageDescriptor()))
+			if (!desc.equals(ImageDescriptor.getMissingImageDescriptor())) {
 				getImageRegistry().put(resource, image);
+			}
 		}
 		return image;
 	}
@@ -143,7 +147,8 @@ public class XMLEditorPluginImageHelper {
 		ImageDescriptor imageDescriptor = AbstractUIPlugin.imageDescriptorFromPlugin(PLUGINID, imageFilePath);
 		if (imageDescriptor != null) {
 			getImageDescriptorRegistry().put(imageFilePath, imageDescriptor);
-		} else {
+		}
+		else {
 			imageDescriptor = ImageDescriptor.getMissingImageDescriptor();
 		}
 

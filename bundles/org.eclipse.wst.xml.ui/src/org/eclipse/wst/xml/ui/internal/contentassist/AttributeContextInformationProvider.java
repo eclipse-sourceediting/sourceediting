@@ -57,13 +57,15 @@ class AttributeContextInformationProvider {
 
 	/**
 	 * @param sdRegion
-	 
+	 * 
 	 */
 	private boolean canProposeInfo(IStructuredDocumentRegion sdRegion) {
-		if (sdRegion != null && isEndTag(sdRegion))
+		if ((sdRegion != null) && isEndTag(sdRegion)) {
 			return false;
-		else
+		}
+		else {
 			return true;
+		}
 	}
 
 	public IContextInformation[] getAttributeInformation(int offset) {
@@ -74,8 +76,9 @@ class AttributeContextInformationProvider {
 		IContextInformation[] results = EMPTY_CONTEXT_INFO;
 
 		IStructuredDocumentRegion sdRegion = fModelUtil.getDocument().getRegionAtCharacterOffset(offset);
-		if (!canProposeInfo(sdRegion))
+		if (!canProposeInfo(sdRegion)) {
 			return EMPTY_CONTEXT_INFO;
+		}
 
 		IDOMNode node = fModelUtil.getXMLNode(offset);
 		if (node != null) {
@@ -83,10 +86,10 @@ class AttributeContextInformationProvider {
 				case Node.ELEMENT_NODE :
 					results = getInfoForElement(node);
 					break;
-			// future...
-			//			case Node.TEXT_NODE :
-			//				results = getInfoForText(node);
-			//				break;
+				// future...
+				// case Node.TEXT_NODE :
+				// results = getInfoForText(node);
+				// break;
 			}
 		}
 		return results;
@@ -95,21 +98,22 @@ class AttributeContextInformationProvider {
 	/**
 	 * Returns a comparator that compares CMAttributeDeclaration names.
 	 * 
-	  the comparator
+	 * the comparator
 	 */
 	private Comparator getCMAttributeComparator() {
-		if (fComparator == null)
+		if (fComparator == null) {
 			fComparator = new Comparator() {
 				public int compare(Object o1, Object o2) {
 					return ((CMAttributeDeclaration) o1).getAttrName().compareTo(((CMAttributeDeclaration) o2).getAttrName());
 				}
 			};
+		}
 		return fComparator;
 	}
 
 	/**
 	 * @param node
-	 
+	 * 
 	 */
 	private IContextInformation[] getInfoForElement(IDOMNode node) {
 		IContextInformation[] results = EMPTY_CONTEXT_INFO;
@@ -140,26 +144,28 @@ class AttributeContextInformationProvider {
 				}
 				if (i < attributes.getLength() - 1) {
 					attrInfo.append(" "); //$NON-NLS-1$
-					if (i != 0 && i % numPerLine == 0)
+					if ((i != 0) && (i % numPerLine == 0)) {
 						attrInfo.append("\n "); //$NON-NLS-1$
+					}
 				}
 				attrPosMap.put(name, new Position(pos, length));
 			}
-			if (!attrInfo.toString().trim().equals("")) //$NON-NLS-1$
+			if (!attrInfo.toString().trim().equals("")) {
 				return new IContextInformation[]{new AttributeContextInformation(attrContextString, attrInfo.toString(), attrPosMap)};
+			}
 		}
 		return results;
 	}
 
 	/**
 	 * @param node
-	 
+	 * 
 	 */
-	 IContextInformation[] getInfoForText(IDOMNode node) {
+	IContextInformation[] getInfoForText(IDOMNode node) {
 		Node parent = node.getParentNode();
 		String contextString = node.getNodeName();
 		StringBuffer info = new StringBuffer(" "); //$NON-NLS-1$
-		if (parent != null && parent.getNodeType() == Node.ELEMENT_NODE) {
+		if ((parent != null) && (parent.getNodeType() == Node.ELEMENT_NODE)) {
 			CMElementDeclaration decl = fModelUtil.getModelQuery().getCMElementDeclaration((Element) parent);
 			CMContent content = decl.getContent();
 			if (content instanceof CMGroup) {
@@ -171,35 +177,39 @@ class AttributeContextInformationProvider {
 					contextString = cmNode.getNodeName();
 					if (contextString != null) {
 						info.append("<" + cmNode.getNodeName() + ">"); //$NON-NLS-1$ //$NON-NLS-2$
-						if (i < children.getLength() - 1)
+						if (i < children.getLength() - 1) {
 							info.append(" "); //$NON-NLS-1$
+						}
 					}
 				}
 			}
 		}
-		if (!info.toString().trim().equals("")) //$NON-NLS-1$
+		if (!info.toString().trim().equals("")) {
 			return new IContextInformation[]{new ContextInformation(contextString, info.toString())};
-		else
+		}
+		else {
 			return EMPTY_CONTEXT_INFO;
+		}
 	}
 
 	/**
 	 * Returns sorted array of CMAttributeDeclarations.
 	 * 
 	 * @param attributes
-	 
+	 * 
 	 */
 	private CMAttributeDeclaration[] getSortedAttributes(CMNamedNodeMap attributes) {
 		List sorted = new ArrayList();
-		for (int i = 0; i < attributes.getLength(); i++)
+		for (int i = 0; i < attributes.getLength(); i++) {
 			sorted.add(attributes.item(i));
+		}
 		Collections.sort(sorted, getCMAttributeComparator());
 		return (CMAttributeDeclaration[]) sorted.toArray(new CMAttributeDeclaration[sorted.size()]);
 	}
 
 	/**
 	 * @param sdRegion
-	 
+	 * 
 	 */
 	private boolean isEndTag(IStructuredDocumentRegion sdRegion) {
 		ITextRegionList regions = sdRegion.getRegions();

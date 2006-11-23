@@ -87,7 +87,8 @@ public class EditSchemaInfoAction extends NodeAction {
 		Element result = null;
 		if (node.getNodeType() == Node.ELEMENT_NODE) {
 			result = (Element) node;
-		} else if (node.getNodeType() == Node.DOCUMENT_NODE) {
+		}
+		else if (node.getNodeType() == Node.DOCUMENT_NODE) {
 			result = getRootElement((Document) node);
 		}
 		return result;
@@ -136,8 +137,8 @@ public class EditSchemaInfoAction extends NodeAction {
 
 			dialog.setNamespaceInfoList(namespaceInfoList);
 			dialog.create();
-			//dialog.getShell().setSize(500, 300);
-			dialog.getShell().setText(XMLUIMessages._UI_MENU_EDIT_SCHEMA_INFORMATION_TITLE); //$NON-NLS-1$
+			// dialog.getShell().setSize(500, 300);
+			dialog.getShell().setText(XMLUIMessages._UI_MENU_EDIT_SCHEMA_INFORMATION_TITLE);
 			dialog.setBlockOnOpen(true);
 			dialog.open();
 
@@ -153,7 +154,8 @@ public class EditSchemaInfoAction extends NodeAction {
 						manager.getModel().aboutToChangeModel();
 						ReplacePrefixAction replacePrefixAction = new ReplacePrefixAction(manager, element, prefixMapping);
 						replacePrefixAction.run();
-					} finally {
+					}
+					finally {
 						manager.getModel().changedModel();
 					}
 				}

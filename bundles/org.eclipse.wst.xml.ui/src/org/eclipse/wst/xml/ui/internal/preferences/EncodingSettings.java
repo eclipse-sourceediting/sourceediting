@@ -43,14 +43,15 @@ public class EncodingSettings extends Composite {
 	private class ComboListener implements ModifyListener {
 		public void modifyText(ModifyEvent e) {
 			int i = encodingCombo.getSelectionIndex();
-			if (i >= 0 && i < ianaVector.size())
+			if ((i >= 0) && (i < ianaVector.size())) {
 				ianaText.setText((String) (ianaVector.elementAt(encodingCombo.getSelectionIndex())));
+			}
 		}
 	}
 
-	private static String ENCODING_LABEL = XMLUIMessages.EncodingSettings_1; //$NON-NLS-1$
+	private static String ENCODING_LABEL = XMLUIMessages.EncodingSettings_1;
 
-	private static String IANA_LABEL = XMLUIMessages.EncodingSettings_0; //$NON-NLS-1$
+	private static String IANA_LABEL = XMLUIMessages.EncodingSettings_0;
 
 	private ModifyListener comboListener = new ComboListener();
 	protected Combo encodingCombo;
@@ -126,7 +127,7 @@ public class EncodingSettings extends Composite {
 			return;
 		}
 
-		if (0 <= index && index < ianaVector.size()) {
+		if ((0 <= index) && (index < ianaVector.size())) {
 			encodingCombo.add(description, index);
 			ianaVector.add(index, ianaTag);
 		}
@@ -187,18 +188,20 @@ public class EncodingSettings extends Composite {
 
 				if (enc != null) {
 					encodingCombo.add(enc);
-				} else {
+				}
+				else {
 					Logger.log(Logger.WARNING, "CommonCharsetNames.getDisplayString(" + iana + ") returned null"); //$NON-NLS-1$ //$NON-NLS-2$
 					encodingCombo.add(iana);
 				}
 				ianaVector.add(iana);
 			}
-		} catch (Exception e) {
-			//e.printStackTrace();
-			//MessageDialog.openError(getShell(), "Resource exception",
+		}
+		catch (Exception e) {
+			// e.printStackTrace();
+			// MessageDialog.openError(getShell(), "Resource exception",
 			// "Unable to obtain encoding strings. Check resource file");
-			//XMLEncodingPlugin.getPlugin().getMsgLogger().write(e.toString());
-			//XMLEncodingPlugin.getPlugin().getMsgLogger().writeCurrentThread();
+			// XMLEncodingPlugin.getPlugin().getMsgLogger().write(e.toString());
+			// XMLEncodingPlugin.getPlugin().getMsgLogger().writeCurrentThread();
 			Logger.log(Logger.ERROR, "Exception", e); //$NON-NLS-1$
 		}
 	}
@@ -299,7 +302,7 @@ public class EncodingSettings extends Composite {
 	 * @param index
 	 */
 	public void removeEntry(int index) {
-		if (0 <= index && index < ianaVector.size()) {
+		if ((0 <= index) && (index < ianaVector.size())) {
 			encodingCombo.remove(index);
 			ianaVector.remove(index);
 		}

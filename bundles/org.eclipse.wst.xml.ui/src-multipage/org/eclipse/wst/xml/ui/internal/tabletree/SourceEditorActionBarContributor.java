@@ -51,26 +51,31 @@ public class SourceEditorActionBarContributor extends MultiPageEditorActionBarCo
 	}
 
 	protected void initDesignViewerActionBarContributor(IActionBars actionBars) {
-		if (designViewerActionBarContributor != null)
+		if (designViewerActionBarContributor != null) {
 			designViewerActionBarContributor.init(actionBars, getPage());
+		}
 	}
 
 	protected void initSourceViewerActionContributor(IActionBars actionBars) {
-		if (sourceViewerActionContributor != null)
+		if (sourceViewerActionContributor != null) {
 			sourceViewerActionContributor.init(actionBars, getPage());
+		}
 	}
 
 	public void dispose() {
 		super.dispose();
 
-		if (designViewerActionBarContributor != null)
+		if (designViewerActionBarContributor != null) {
 			designViewerActionBarContributor.dispose();
+		}
 
-		if (sourceViewerActionContributor != null)
+		if (sourceViewerActionContributor != null) {
 			sourceViewerActionContributor.dispose();
+		}
 
-		if (extendedContributor != null)
+		if (extendedContributor != null) {
 			extendedContributor.dispose();
+		}
 	}
 
 	/**
@@ -81,8 +86,9 @@ public class SourceEditorActionBarContributor extends MultiPageEditorActionBarCo
 
 		addToMenu(menu);
 
-		if (extendedContributor != null)
+		if (extendedContributor != null) {
 			extendedContributor.contributeToMenu(menu);
+		}
 	}
 
 	protected void addToMenu(IMenuManager menu) {
@@ -95,8 +101,9 @@ public class SourceEditorActionBarContributor extends MultiPageEditorActionBarCo
 
 		addToPopupMenu(menu);
 
-		if (extendedContributor != null)
+		if (extendedContributor != null) {
 			extendedContributor.contributeToPopupMenu(menu);
+		}
 	}
 
 	protected void addToPopupMenu(IMenuManager menu) {
@@ -110,8 +117,9 @@ public class SourceEditorActionBarContributor extends MultiPageEditorActionBarCo
 
 		addToToolBar(toolBarManager);
 
-		if (extendedContributor != null)
+		if (extendedContributor != null) {
 			extendedContributor.contributeToToolBar(toolBarManager);
+		}
 	}
 
 	protected void addToToolBar(IToolBarManager toolBarManager) {
@@ -125,8 +133,9 @@ public class SourceEditorActionBarContributor extends MultiPageEditorActionBarCo
 
 		addToStatusLine(manager);
 
-		if (extendedContributor != null)
+		if (extendedContributor != null) {
 			extendedContributor.contributeToStatusLine(manager);
+		}
 	}
 
 	protected void addToStatusLine(IStatusLineManager manager) {
@@ -136,8 +145,9 @@ public class SourceEditorActionBarContributor extends MultiPageEditorActionBarCo
 	 * @see IExtendedContributor#updateToolbarActions()
 	 */
 	public void updateToolbarActions() {
-		if (extendedContributor != null)
+		if (extendedContributor != null) {
 			extendedContributor.updateToolbarActions();
+		}
 	}
 
 	public void setActiveEditor(IEditorPart targetEditor) {
@@ -147,15 +157,17 @@ public class SourceEditorActionBarContributor extends MultiPageEditorActionBarCo
 		// activeEditor)
 		// multiPageEditor is needed in setActivePage(IEditorPart
 		// activeEditor)
-		if (targetEditor instanceof XMLMultiPageEditorPart)
+		if (targetEditor instanceof XMLMultiPageEditorPart) {
 			multiPageEditor = (XMLMultiPageEditorPart) targetEditor;
+		}
 
 		super.setActiveEditor(targetEditor);
 
 		updateToolbarActions();
 
-		if (extendedContributor != null)
+		if (extendedContributor != null) {
 			extendedContributor.setActiveEditor(targetEditor);
+		}
 	}
 
 	public void setActivePage(IEditorPart activeEditor) {
@@ -164,10 +176,12 @@ public class SourceEditorActionBarContributor extends MultiPageEditorActionBarCo
 		// other editors, the following
 		// check is added.
 		if (multiPageEditor != null) {
-			if (activeEditor != null && activeEditor instanceof StructuredTextEditor)
+			if ((activeEditor != null) && (activeEditor instanceof StructuredTextEditor)) {
 				activateSourcePage(activeEditor);
-			else
+			}
+			else {
 				activateDesignPage(activeEditor);
+			}
 		}
 
 		updateToolbarActions();
@@ -180,16 +194,17 @@ public class SourceEditorActionBarContributor extends MultiPageEditorActionBarCo
 	}
 
 	protected void activateDesignPage(IEditorPart activeEditor) {
-		if (designViewerActionBarContributor != null && designViewerActionBarContributor instanceof IDesignViewerActionBarContributor) {
+		if ((designViewerActionBarContributor != null) && (designViewerActionBarContributor instanceof IDesignViewerActionBarContributor)) {
 			designViewerActionBarContributor.setActiveEditor(multiPageEditor);
 		}
 
-		if (sourceViewerActionContributor != null && sourceViewerActionContributor instanceof ISourceViewerActionBarContributor) {
+		if ((sourceViewerActionContributor != null) && (sourceViewerActionContributor instanceof ISourceViewerActionBarContributor)) {
 			// if design page is not really an IEditorPart, activeEditor ==
 			// null, so pass in multiPageEditor instead (d282414)
 			if (activeEditor == null) {
 				sourceViewerActionContributor.setActiveEditor(multiPageEditor);
-			} else {
+			}
+			else {
 				sourceViewerActionContributor.setActiveEditor(activeEditor);
 			}
 			((ISourceViewerActionBarContributor) sourceViewerActionContributor).setViewerSpecificContributionsEnabled(false);
@@ -197,11 +212,11 @@ public class SourceEditorActionBarContributor extends MultiPageEditorActionBarCo
 	}
 
 	protected void activateSourcePage(IEditorPart activeEditor) {
-		if (designViewerActionBarContributor != null && designViewerActionBarContributor instanceof IDesignViewerActionBarContributor) {
+		if ((designViewerActionBarContributor != null) && (designViewerActionBarContributor instanceof IDesignViewerActionBarContributor)) {
 			designViewerActionBarContributor.setActiveEditor(multiPageEditor);
 		}
 
-		if (sourceViewerActionContributor != null && sourceViewerActionContributor instanceof ISourceViewerActionBarContributor) {
+		if ((sourceViewerActionContributor != null) && (sourceViewerActionContributor instanceof ISourceViewerActionBarContributor)) {
 			sourceViewerActionContributor.setActiveEditor(activeEditor);
 			((ISourceViewerActionBarContributor) sourceViewerActionContributor).setViewerSpecificContributionsEnabled(true);
 		}

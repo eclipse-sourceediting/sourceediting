@@ -126,8 +126,9 @@ public class CleanupDialogXML extends Dialog implements SelectionListener {
 			fRadioButtonConvertEOLWindows.setEnabled(enable);
 			fRadioButtonConvertEOLUnix.setEnabled(enable);
 			fRadioButtonConvertEOLMac.setEnabled(enable);
-			if (!fRadioButtonConvertEOLWindows.getSelection() && !fRadioButtonConvertEOLUnix.getSelection() && !fRadioButtonConvertEOLMac.getSelection())
+			if (!fRadioButtonConvertEOLWindows.getSelection() && !fRadioButtonConvertEOLUnix.getSelection() && !fRadioButtonConvertEOLMac.getSelection()) {
 				fRadioButtonConvertEOLWindows.setSelection(true);
+			}
 		}
 	}
 
@@ -144,12 +145,15 @@ public class CleanupDialogXML extends Dialog implements SelectionListener {
 		fCheckBoxFormatSource.setSelection(getModelPreferences().getBoolean(XMLCorePreferenceNames.FORMAT_SOURCE));
 		fCheckBoxConvertEOLCodes.setSelection(getModelPreferences().getBoolean(XMLCorePreferenceNames.CONVERT_EOL_CODES));
 		String EOLCode = getModelPreferences().getString(XMLCorePreferenceNames.CLEANUP_EOL_CODE);
-		if (EOLCode.compareTo(CommonEncodingPreferenceNames.LF) == 0)
+		if (EOLCode.compareTo(CommonEncodingPreferenceNames.LF) == 0) {
 			fRadioButtonConvertEOLUnix.setSelection(true);
-		else if (EOLCode.compareTo(CommonEncodingPreferenceNames.CR) == 0)
+		}
+		else if (EOLCode.compareTo(CommonEncodingPreferenceNames.CR) == 0) {
 			fRadioButtonConvertEOLMac.setSelection(true);
-		else
+		}
+		else {
 			fRadioButtonConvertEOLWindows.setSelection(true);
+		}
 		enableEOLCodeRadios(fCheckBoxConvertEOLCodes.getSelection());
 	}
 
@@ -174,9 +178,11 @@ public class CleanupDialogXML extends Dialog implements SelectionListener {
 		getModelPreferences().setValue(XMLCorePreferenceNames.CONVERT_EOL_CODES, fCheckBoxConvertEOLCodes.getSelection());
 		if (fRadioButtonConvertEOLUnix.getSelection()) {
 			getModelPreferences().setValue(XMLCorePreferenceNames.CLEANUP_EOL_CODE, CommonEncodingPreferenceNames.LF);
-		} else if (fRadioButtonConvertEOLMac.getSelection()) {
+		}
+		else if (fRadioButtonConvertEOLMac.getSelection()) {
 			getModelPreferences().setValue(XMLCorePreferenceNames.CLEANUP_EOL_CODE, CommonEncodingPreferenceNames.CR);
-		} else {
+		}
+		else {
 			getModelPreferences().setValue(XMLCorePreferenceNames.CLEANUP_EOL_CODE, CommonEncodingPreferenceNames.CRLF);
 		}
 		// explicitly save plugin preferences so values are stored
@@ -190,8 +196,9 @@ public class CleanupDialogXML extends Dialog implements SelectionListener {
 
 	public void widgetSelected(SelectionEvent e) {
 
-		getButton(OK).setEnabled((fRadioButtonTagNameCaseLower != null && (fRadioButtonTagNameCaseLower.getSelection() || fRadioButtonTagNameCaseUpper.getSelection())) || (fRadioButtonAttrNameCaseLower != null && (fRadioButtonAttrNameCaseLower.getSelection() || fRadioButtonAttrNameCaseUpper.getSelection())) || fCheckBoxInsertMissingTags.getSelection() || fCheckBoxQuoteAttrValues.getSelection() || fCheckBoxFormatSource.getSelection() || fCheckBoxConvertEOLCodes.getSelection() || (fRadioButtonConvertEOLUnix != null && (fRadioButtonConvertEOLUnix.getSelection() || fRadioButtonConvertEOLMac.getSelection() || fRadioButtonConvertEOLWindows.getSelection())));
-		if (e.widget == fCheckBoxConvertEOLCodes)
+		getButton(OK).setEnabled(((fRadioButtonTagNameCaseLower != null) && (fRadioButtonTagNameCaseLower.getSelection() || fRadioButtonTagNameCaseUpper.getSelection())) || ((fRadioButtonAttrNameCaseLower != null) && (fRadioButtonAttrNameCaseLower.getSelection() || fRadioButtonAttrNameCaseUpper.getSelection())) || fCheckBoxInsertMissingTags.getSelection() || fCheckBoxQuoteAttrValues.getSelection() || fCheckBoxFormatSource.getSelection() || fCheckBoxConvertEOLCodes.getSelection() || ((fRadioButtonConvertEOLUnix != null) && (fRadioButtonConvertEOLUnix.getSelection() || fRadioButtonConvertEOLMac.getSelection() || fRadioButtonConvertEOLWindows.getSelection())));
+		if (e.widget == fCheckBoxConvertEOLCodes) {
 			enableEOLCodeRadios(fCheckBoxConvertEOLCodes.getSelection());
+		}
 	}
 }

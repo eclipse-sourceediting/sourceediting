@@ -26,14 +26,15 @@ public class ViewerExpandCollapseAction extends Action {
 
 			setImageDescriptor(e_imageDescriptor);
 			setDisabledImageDescriptor(d_imageDescriptor);
-			setToolTipText(XMLUIMessages._UI_INFO_EXPAND_ALL); //$NON-NLS-1$
-		} else {
+			setToolTipText(XMLUIMessages._UI_INFO_EXPAND_ALL);
+		}
+		else {
 			ImageDescriptor e_imageDescriptor = XMLEditorPluginImageHelper.getInstance().getImageDescriptor(XMLEditorPluginImages.IMG_ETOOL_COLLAPSEALL);
 			ImageDescriptor d_imageDescriptor = XMLEditorPluginImageHelper.getInstance().getImageDescriptor(XMLEditorPluginImages.IMG_DTOOL_COLLAPSEALL);
 
 			setImageDescriptor(e_imageDescriptor);
 			setDisabledImageDescriptor(d_imageDescriptor);
-			setToolTipText(XMLUIMessages._UI_INFO_COLLAPSE_ALL); //$NON-NLS-1$
+			setToolTipText(XMLUIMessages._UI_INFO_COLLAPSE_ALL);
 		}
 	}
 
@@ -50,7 +51,8 @@ public class ViewerExpandCollapseAction extends Action {
 
 			if (isExpandAction) {
 				viewer.expandAll();
-			} else {
+			}
+			else {
 				viewer.collapseAll();
 			}
 
@@ -60,4 +62,3 @@ public class ViewerExpandCollapseAction extends Action {
 		}
 	}
 }
-

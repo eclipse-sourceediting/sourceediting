@@ -27,15 +27,17 @@ public class CorrectionProcessorXML extends StructuredCorrectionProcessor {
 	}
 
 	protected IQuickAssistProcessor getQuickAssistProcessor() {
-		if (fQuickAssistProcessor == null)
+		if (fQuickAssistProcessor == null) {
 			fQuickAssistProcessor = new QuickAssistProcessorXML();
+		}
 
 		return fQuickAssistProcessor;
 	}
 
 	protected IQuickFixProcessor getQuickFixProcessor() {
-		if (fQuickFixProcessor == null)
+		if (fQuickFixProcessor == null) {
 			fQuickFixProcessor = new QuickFixProcessorXML();
+		}
 
 		return fQuickFixProcessor;
 	}

@@ -94,8 +94,9 @@ public abstract class BaseNodeActionManager {
 							break;
 						}
 					}
-				} else if (action.getKind() == ModelQueryAction.REPLACE) {
-					if (action.getParent() != null && action.getCMNode() != null) {
+				}
+				else if (action.getKind() == ModelQueryAction.REPLACE) {
+					if ((action.getParent() != null) && (action.getCMNode() != null)) {
 						actionList.add(createReplaceAction(action.getParent(), action.getCMNode(), action.getStartIndex(), action.getEndIndex()));
 					}
 				}
@@ -159,8 +160,8 @@ public abstract class BaseNodeActionManager {
 			//
 			Element element = (Element) node;
 
-			IMenuManager addAttributeMenu = new MyMenuManager(XMLUIMessages._UI_MENU_ADD_ATTRIBUTE); //$NON-NLS-1$
-			IMenuManager addChildMenu = new MyMenuManager(XMLUIMessages._UI_MENU_ADD_CHILD); //$NON-NLS-1$
+			IMenuManager addAttributeMenu = new MyMenuManager(XMLUIMessages._UI_MENU_ADD_ATTRIBUTE);
+			IMenuManager addChildMenu = new MyMenuManager(XMLUIMessages._UI_MENU_ADD_CHILD);
 			menu.add(addAttributeMenu);
 			menu.add(addChildMenu);
 
@@ -195,7 +196,7 @@ public abstract class BaseNodeActionManager {
 
 
 	protected void contributeAddDocumentChildActions(IMenuManager menu, Document document, int ic, int vc) {
-		IMenuManager addChildMenu = new MyMenuManager(XMLUIMessages._UI_MENU_ADD_CHILD); //$NON-NLS-1$
+		IMenuManager addChildMenu = new MyMenuManager(XMLUIMessages._UI_MENU_ADD_CHILD);
 		menu.add(addChildMenu);
 
 		// add PI and COMMENT
@@ -207,8 +208,8 @@ public abstract class BaseNodeActionManager {
 
 
 	protected void contributeAddSiblingActions(IMenuManager menu, Node node, int ic, int vc) {
-		IMenuManager addBeforeMenu = new MyMenuManager(XMLUIMessages._UI_MENU_ADD_BEFORE); //$NON-NLS-1$
-		IMenuManager addAfterMenu = new MyMenuManager(XMLUIMessages._UI_MENU_ADD_AFTER); //$NON-NLS-1$
+		IMenuManager addBeforeMenu = new MyMenuManager(XMLUIMessages._UI_MENU_ADD_BEFORE);
+		IMenuManager addAfterMenu = new MyMenuManager(XMLUIMessages._UI_MENU_ADD_AFTER);
 		menu.add(addBeforeMenu);
 		menu.add(addAfterMenu);
 
@@ -241,7 +242,8 @@ public abstract class BaseNodeActionManager {
 				// add NEW ELEMENT before and after
 				contributeUnconstrainedAddElementAction(addBeforeMenu, parentElement, parentED, index);
 				contributeUnconstrainedAddElementAction(addAfterMenu, parentElement, parentED, index + 1);
-			} else if (parentNode.getNodeType() == Node.DOCUMENT_NODE) {
+			}
+			else if (parentNode.getNodeType() == Node.DOCUMENT_NODE) {
 				Document document = (Document) parentNode;
 				CMDocument cmDocument = modelQuery.getCorrespondingCMDocument(parentNode);
 				if (cmDocument != null) {
@@ -284,7 +286,8 @@ public abstract class BaseNodeActionManager {
 
 		if (node.getNodeType() == Node.PROCESSING_INSTRUCTION_NODE) {
 			contributeAction(menu, createEditProcessingInstructionAction((ProcessingInstruction) node));
-		} else if (node.getNodeType() == Node.ATTRIBUTE_NODE) {
+		}
+		else if (node.getNodeType() == Node.ATTRIBUTE_NODE) {
 			contributeAction(menu, createEditAttributeAction((Attr) node, null));
 		}
 	}
@@ -302,7 +305,7 @@ public abstract class BaseNodeActionManager {
 			contributeAction(menu, createEditDoctypeAction((DocumentType) node));
 		}
 
-		if (doctype == null && getRootElement(document) != null) {
+		if ((doctype == null) && (getRootElement(document) != null)) {
 			contributeAction(menu, createEditSchemaInfoAction(getRootElement(document)));
 		}
 	}
@@ -316,7 +319,7 @@ public abstract class BaseNodeActionManager {
 
 
 	protected void contributePIAndCommentActions(IMenuManager menu, Element parentElement, CMElementDeclaration parentEd, int index) {
-		if (parentEd == null || isCommentAllowed(parentEd)) {
+		if ((parentEd == null) || isCommentAllowed(parentEd)) {
 			contributeAction(menu, createAddCommentAction(parentElement, index));
 			contributeAction(menu, createAddProcessingInstructionAction(parentElement, index));
 		}
@@ -326,13 +329,13 @@ public abstract class BaseNodeActionManager {
 	protected void contributeReplaceActions(IMenuManager menu, List selectedNodeList, int ic, int vc) {
 		// 'Replace With...' actions
 		//                                                                                                                   
-		IMenuManager replaceWithMenu = new MyMenuManager(XMLUIMessages._UI_MENU_REPLACE_WITH); //$NON-NLS-1$
+		IMenuManager replaceWithMenu = new MyMenuManager(XMLUIMessages._UI_MENU_REPLACE_WITH);
 		menu.add(replaceWithMenu);
 
-		if (modelQuery.getEditMode() == ModelQuery.EDIT_MODE_CONSTRAINED_STRICT && selectedNodeList.size() > 0) {
+		if ((modelQuery.getEditMode() == ModelQuery.EDIT_MODE_CONSTRAINED_STRICT) && (selectedNodeList.size() > 0)) {
 			Node node = (Node) selectedNodeList.get(0);
 			Node parentNode = node.getParentNode();
-			if (parentNode != null && parentNode.getNodeType() == Node.ELEMENT_NODE) {
+			if ((parentNode != null) && (parentNode.getNodeType() == Node.ELEMENT_NODE)) {
 				Element parentElement = (Element) parentNode;
 				CMElementDeclaration parentED = modelQuery.getCMElementDeclaration(parentElement);
 				if (parentED != null) {
@@ -345,7 +348,7 @@ public abstract class BaseNodeActionManager {
 	}
 
 	protected void contributeTextNodeActions(IMenuManager menu, Element parentElement, CMElementDeclaration parentEd, int index) {
-		if (parentEd == null || isTextAllowed(parentEd)) {
+		if ((parentEd == null) || isTextAllowed(parentEd)) {
 			CMDataType dataType = parentEd != null ? parentEd.getDataType() : null;
 			contributeAction(menu, createAddPCDataAction(parentElement, dataType, index));
 			contributeAction(menu, createAddCDataSectionAction(parentElement, index));
@@ -366,15 +369,16 @@ public abstract class BaseNodeActionManager {
 					if (nodeType == Node.DOCUMENT_TYPE_NODE) {
 						doctypeIndex = i;
 						break;
-					} else if (nodeType == Node.PROCESSING_INSTRUCTION_NODE) {
+					}
+					else if (nodeType == Node.PROCESSING_INSTRUCTION_NODE) {
 						ProcessingInstruction pi = (ProcessingInstruction) node;
-						if (pi.getTarget().equalsIgnoreCase("xml") && xmlDeclarationIndex == -1) { //$NON-NLS-1$
+						if (pi.getTarget().equalsIgnoreCase("xml") && (xmlDeclarationIndex == -1)) { //$NON-NLS-1$
 							xmlDeclarationIndex = i;
 						}
 					}
 				}
 
-				if ((xmlDeclarationIndex == -1 || index > xmlDeclarationIndex) && (doctypeIndex == -1 || index > doctypeIndex)) {
+				if (((xmlDeclarationIndex == -1) || (index > xmlDeclarationIndex)) && ((doctypeIndex == -1) || (index > doctypeIndex))) {
 					contributeAction(menu, createAddElementAction(document, null, index));
 				}
 			}
@@ -384,7 +388,7 @@ public abstract class BaseNodeActionManager {
 
 	protected void contributeUnconstrainedAddElementAction(IMenuManager menu, Element parentElement, CMElementDeclaration parentEd, int index) {
 		if (isUnconstrainedActionAllowed()) {
-			if (parentEd == null || parentEd.getProperty("isInferred") == Boolean.TRUE || (modelQuery.getEditMode() != ModelQuery.EDIT_MODE_CONSTRAINED_STRICT && isElementAllowed(parentEd))) { //$NON-NLS-1$
+			if ((parentEd == null) || (parentEd.getProperty("isInferred") == Boolean.TRUE) || ((modelQuery.getEditMode() != ModelQuery.EDIT_MODE_CONSTRAINED_STRICT) && isElementAllowed(parentEd))) { //$NON-NLS-1$
 				contributeAction(menu, createAddElementAction(parentElement, null, index));
 			}
 		}
@@ -393,7 +397,7 @@ public abstract class BaseNodeActionManager {
 
 	protected void contributeUnconstrainedAttributeActions(IMenuManager menu, Element parentElement, CMElementDeclaration parentEd) {
 		if (isUnconstrainedActionAllowed()) {
-			if (parentEd == null || parentEd.getProperty("isInferred") == Boolean.TRUE || modelQuery.getEditMode() != ModelQuery.EDIT_MODE_CONSTRAINED_STRICT) { //$NON-NLS-1$
+			if ((parentEd == null) || (parentEd.getProperty("isInferred") == Boolean.TRUE) || (modelQuery.getEditMode() != ModelQuery.EDIT_MODE_CONSTRAINED_STRICT)) { //$NON-NLS-1$
 				contributeAction(menu, createAddAttributeAction(parentElement, null));
 			}
 		}
@@ -446,7 +450,7 @@ public abstract class BaseNodeActionManager {
 
 	public Node getRefChildNodeAtIndex(Node parent, int index) {
 		NodeList nodeList = parent.getChildNodes();
-		Node refChild = (index >= 0 && index < nodeList.getLength()) ? nodeList.item(index) : null;
+		Node refChild = ((index >= 0) && (index < nodeList.getLength())) ? nodeList.item(index) : null;
 		return refChild;
 	}
 
@@ -476,7 +480,8 @@ public abstract class BaseNodeActionManager {
 					if (includeTextNodes) {
 						result.add(object);
 					}
-				} else {
+				}
+				else {
 					result.add(node);
 				}
 			}
@@ -487,19 +492,19 @@ public abstract class BaseNodeActionManager {
 
 	protected boolean isCommentAllowed(CMElementDeclaration parentEd) {
 		int contentType = parentEd.getContentType();
-		return contentType == CMElementDeclaration.ELEMENT || contentType == CMElementDeclaration.MIXED || contentType == CMElementDeclaration.PCDATA || contentType == CMElementDeclaration.ANY;
+		return (contentType == CMElementDeclaration.ELEMENT) || (contentType == CMElementDeclaration.MIXED) || (contentType == CMElementDeclaration.PCDATA) || (contentType == CMElementDeclaration.ANY);
 	}
 
 
 	protected boolean isElementAllowed(CMElementDeclaration parentEd) {
 		int contentType = parentEd.getContentType();
-		return contentType == CMElementDeclaration.ELEMENT || contentType == CMElementDeclaration.MIXED || contentType == CMElementDeclaration.ANY;
+		return (contentType == CMElementDeclaration.ELEMENT) || (contentType == CMElementDeclaration.MIXED) || (contentType == CMElementDeclaration.ANY);
 	}
 
 
 	protected boolean isTextAllowed(CMElementDeclaration parentEd) {
 		int contentType = parentEd.getContentType();
-		return contentType == CMElementDeclaration.MIXED || contentType == CMElementDeclaration.PCDATA || contentType == CMElementDeclaration.ANY;
+		return (contentType == CMElementDeclaration.MIXED) || (contentType == CMElementDeclaration.PCDATA) || (contentType == CMElementDeclaration.ANY);
 	}
 
 

@@ -21,25 +21,26 @@ public class XMLSchemaValidationChecker {
 		String xsdFileName = ifile.getLocation().toString();
 		return isValid(xsdFileName);
 	}
+
 	/**
-	 * Should this be implemented as a Validator and simply called as such with
-	 * a reporter that only checks the results for severity = error?  Or should
-	 * the Xerces requirement be broken using a plug-in extension?
+	 * Should this be implemented as a Validator and simply called as such
+	 * with a reporter that only checks the results for severity = error? Or
+	 * should the Xerces requirement be broken using a plug-in extension?
 	 */
 
 	public boolean isValid(String xsdFileName) {
-//		DOMASBuilderImpl builder = new DOMASBuilderImpl();
-//		DOMErrorHandler errorHandler = new DOMErrorHandler();
-//		builder.setErrorHandler(errorHandler);
+		// DOMASBuilderImpl builder = new DOMASBuilderImpl();
+		// DOMErrorHandler errorHandler = new DOMErrorHandler();
+		// builder.setErrorHandler(errorHandler);
 		try {
-			//String uri = 
-				URIHelper.getURIForFilePath(xsdFileName);
-//			ASModel model = builder.parseASURI(uri);
-//			if (errorHandler.hasError())
-//				return false;
+			// String uri =
+			URIHelper.getURIForFilePath(xsdFileName);
+			// ASModel model = builder.parseASURI(uri);
+			// if (errorHandler.hasError())
+			// return false;
 		}
 		catch (Exception e) // invalid schema
-			{
+		{
 			return false;
 		}
 
@@ -57,9 +58,11 @@ public class XMLSchemaValidationChecker {
 		public void error(SAXParseException err) {
 			hasError = true;
 		}
+
 		public void fatalError(SAXParseException exception) throws SAXException {
 			hasError = true;
 		}
+
 		public void warning(SAXParseException exception) throws SAXException {
 			// not an error
 		}

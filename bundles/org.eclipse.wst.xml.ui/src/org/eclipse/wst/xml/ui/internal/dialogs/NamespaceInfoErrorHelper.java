@@ -40,13 +40,15 @@ public class NamespaceInfoErrorHelper {
 			String urikey = nsInfo.uri != null ? nsInfo.uri : ""; //$NON-NLS-1$
 			NamespaceInfo nsInfo2 = null;
 			if ((nsInfo2 = (NamespaceInfo) uriTable.get(urikey)) != null) {
-				if (nsInfo.uri != null && nsInfo.uri.equals(nsInfo2.uri)) {
-					result = XMLUIMessages._UI_WARNING_MORE_THAN_ONE_NS_WITH_NAME + "'" + nsInfo.uri + "'"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				} else {
-					result = XMLUIMessages._UI_WARNING_MORE_THAN_ONE_NS_WITHOUT_NAME; //$NON-NLS-1$
+				if ((nsInfo.uri != null) && nsInfo.uri.equals(nsInfo2.uri)) {
+					result = XMLUIMessages._UI_WARNING_MORE_THAN_ONE_NS_WITH_NAME + "'" + nsInfo.uri + "'"; //$NON-NLS-1$ //$NON-NLS-2$ 
+				}
+				else {
+					result = XMLUIMessages._UI_WARNING_MORE_THAN_ONE_NS_WITHOUT_NAME;
 				}
 				break;
-			} else {
+			}
+			else {
 				uriTable.put(urikey, nsInfo);
 			}
 
@@ -54,30 +56,33 @@ public class NamespaceInfoErrorHelper {
 				String key = nsInfo.prefix != null ? nsInfo.prefix : ""; //$NON-NLS-1$
 				if (prefixTable.get(key) != null) {
 					if (nsInfo.prefix != null) {
-						result = XMLUIMessages._UI_WARNING_MORE_THAN_ONE_NS_WITH_PREFIX + "'" + nsInfo.prefix + "'"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-						break;
-					} else {
-						result = XMLUIMessages._UI_WARNING_MORE_THAN_ONE_NS_WITHOUT_PREFIX; //$NON-NLS-1$
+						result = XMLUIMessages._UI_WARNING_MORE_THAN_ONE_NS_WITH_PREFIX + "'" + nsInfo.prefix + "'"; //$NON-NLS-1$ //$NON-NLS-2$ 
 						break;
 					}
-				} else {
+					else {
+						result = XMLUIMessages._UI_WARNING_MORE_THAN_ONE_NS_WITHOUT_PREFIX;
+						break;
+					}
+				}
+				else {
 					prefixTable.put(key, nsInfo);
 				}
 
-				if (nsInfo.locationHint != null && idResolver != null) {
+				if ((nsInfo.locationHint != null) && (idResolver != null)) {
 					String grammarURI = idResolver.resolve(null, nsInfo.locationHint, nsInfo.locationHint);
 					if (!URIHelper.isReadableURI(grammarURI, false)) {
-						result = XMLUIMessages._UI_WARNING_SCHEMA_CAN_NOT_BE_LOCATED + " '" + nsInfo.locationHint + "'"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						result = XMLUIMessages._UI_WARNING_SCHEMA_CAN_NOT_BE_LOCATED + " '" + nsInfo.locationHint + "'"; //$NON-NLS-1$ //$NON-NLS-2$ 
 						break;
 					}
 				}
-				if (idResolver != null && nsInfo.locationHint == null && !nsInfo.uri.equals(DOMNamespaceInfoManager.XSI_URI)) {
-					result = XMLUIMessages._UI_WARNING_LOCATION_HINT_NOT_SPECIFIED + " '" + nsInfo.uri + "'"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				if ((idResolver != null) && (nsInfo.locationHint == null) && !nsInfo.uri.equals(DOMNamespaceInfoManager.XSI_URI)) {
+					result = XMLUIMessages._UI_WARNING_LOCATION_HINT_NOT_SPECIFIED + " '" + nsInfo.uri + "'"; //$NON-NLS-1$ //$NON-NLS-2$ 
 					break;
 				}
-			} else {
+			}
+			else {
 				if (nsInfo.prefix != null) {
-					result = XMLUIMessages._UI_WARNING_NAMESPACE_NAME_NOT_SPECIFIED + " '" + nsInfo.prefix + "'"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					result = XMLUIMessages._UI_WARNING_NAMESPACE_NAME_NOT_SPECIFIED + " '" + nsInfo.prefix + "'"; //$NON-NLS-1$ //$NON-NLS-2$ 
 					break;
 				}
 			}
@@ -87,8 +92,8 @@ public class NamespaceInfoErrorHelper {
 			for (Iterator iterator = namespaceInfoList.iterator(); iterator.hasNext();) {
 				NamespaceInfo nsInfo = (NamespaceInfo) iterator.next();
 				nsInfo.normalize();
-				if (nsInfo.uri != null && nsInfo.isPrefixRequired && nsInfo.prefix == null) {
-					result = XMLUIMessages._UI_WARNING_PREFIX_NOT_SPECIFIED + " '" + nsInfo.uri + "'"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				if ((nsInfo.uri != null) && nsInfo.isPrefixRequired && (nsInfo.prefix == null)) {
+					result = XMLUIMessages._UI_WARNING_PREFIX_NOT_SPECIFIED + " '" + nsInfo.uri + "'"; //$NON-NLS-1$ //$NON-NLS-2$ 
 					break;
 				}
 			}

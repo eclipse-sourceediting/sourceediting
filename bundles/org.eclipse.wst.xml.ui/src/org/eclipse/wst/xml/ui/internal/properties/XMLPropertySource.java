@@ -48,7 +48,7 @@ import org.w3c.dom.Node;
  * properties of DOM nodes.
  */
 public class XMLPropertySource implements IPropertySource, IPropertySourceExtension, IPropertySource2 {
-	protected final static String CATEGORY_ATTRIBUTES = XMLUIMessages.XMLPropertySourceAdapter_0; //$NON-NLS-1$
+	protected final static String CATEGORY_ATTRIBUTES = XMLUIMessages.XMLPropertySourceAdapter_0;
 
 	private static final boolean fSetExpertFilter = false;
 
@@ -124,7 +124,7 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 				ownerDocument = (Document) node;
 			}
 		}
-		if(ownerDocument != null) {
+		if (ownerDocument != null) {
 			adapter = (DocumentTypeAdapter) ((INodeNotifier) ownerDocument).getAdapterFor(DocumentTypeAdapter.class);
 		}
 
@@ -135,14 +135,16 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 		String attributeName = attrDecl.getAttrName();
 		List values = new ArrayList(1);
 		String impliedValue = helper.getImpliedValue();
-		if (impliedValue != null)
+		if (impliedValue != null) {
 			values.add(impliedValue);
-		boolean checkIfCurrentValueIsIncluded = (fNode.getAttributes() != null && fNode.getAttributes().getNamedItem(attributeName) != null && fNode.getAttributes().getNamedItem(attributeName).getNodeValue() != null);
+		}
+		boolean checkIfCurrentValueIsIncluded = ((fNode.getAttributes() != null) && (fNode.getAttributes().getNamedItem(attributeName) != null) && (fNode.getAttributes().getNamedItem(attributeName).getNodeValue() != null));
 		if (checkIfCurrentValueIsIncluded) {
 			String currentValue = null;
 			currentValue = fNode.getAttributes().getNamedItem(attributeName).getNodeValue();
-			if (!currentValue.equals(impliedValue))
+			if (!currentValue.equals(impliedValue)) {
 				values.add(currentValue);
+			}
 		}
 		String[] validStrings = new String[values.size()];
 		validStrings = (String[]) values.toArray(validStrings);
@@ -153,14 +155,15 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 		String attributeName = attrDecl.getAttrName();
 		List values = new ArrayList(1);
 		boolean currentValueKnown = false;
-		boolean checkIfCurrentValueIsKnown = (fNode.getAttributes() != null && fNode.getAttributes().getNamedItem(attributeName) != null && fNode.getAttributes().getNamedItem(attributeName).getNodeValue() != null);
+		boolean checkIfCurrentValueIsKnown = ((fNode.getAttributes() != null) && (fNode.getAttributes().getNamedItem(attributeName) != null) && (fNode.getAttributes().getNamedItem(attributeName).getNodeValue() != null));
 		String currentValue = null;
-		if (checkIfCurrentValueIsKnown)
+		if (checkIfCurrentValueIsKnown) {
 			currentValue = fNode.getAttributes().getNamedItem(attributeName).getNodeValue();
+		}
 
-		if (valuesHelper.getImpliedValueKind() == CMDataType.IMPLIED_VALUE_FIXED && valuesHelper.getImpliedValue() != null) {
+		if ((valuesHelper.getImpliedValueKind() == CMDataType.IMPLIED_VALUE_FIXED) && (valuesHelper.getImpliedValue() != null)) {
 			// FIXED value
-			currentValueKnown = currentValue != null && valuesHelper.getImpliedValue().equals(currentValue);
+			currentValueKnown = (currentValue != null) && valuesHelper.getImpliedValue().equals(currentValue);
 			values.add(valuesHelper.getImpliedValue());
 		}
 		else {
@@ -168,7 +171,7 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 			String[] valueStrings = null;
 			// valueStrings = valuesHelper.getEnumeratedValues();
 			ModelQuery modelQuery = ModelQueryUtil.getModelQuery(fNode.getOwnerDocument());
-			if (modelQuery != null && fNode.getNodeType() == Node.ELEMENT_NODE) {
+			if ((modelQuery != null) && (fNode.getNodeType() == Node.ELEMENT_NODE)) {
 				valueStrings = modelQuery.getPossibleDataTypeValues((Element) fNode, attrDecl);
 			}
 			else {
@@ -176,19 +179,22 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 			}
 			if (valueStrings != null) {
 				for (int i = 0; i < valueStrings.length; i++) {
-					if (checkIfCurrentValueIsKnown && valueStrings[i].equals(currentValue))
+					if (checkIfCurrentValueIsKnown && valueStrings[i].equals(currentValue)) {
 						currentValueKnown = true;
+					}
 					values.add(valueStrings[i]);
 				}
 			}
 		}
-		if (valuesHelper.getImpliedValueKind() != CMDataType.IMPLIED_VALUE_NONE && valuesHelper.getImpliedValue() != null) {
-			if (!values.contains(valuesHelper.getImpliedValue()))
+		if ((valuesHelper.getImpliedValueKind() != CMDataType.IMPLIED_VALUE_NONE) && (valuesHelper.getImpliedValue() != null)) {
+			if (!values.contains(valuesHelper.getImpliedValue())) {
 				values.add(valuesHelper.getImpliedValue());
+			}
 		}
 
-		if (checkIfCurrentValueIsKnown && !currentValueKnown && currentValue != null && currentValue.length() > 0)
+		if (checkIfCurrentValueIsKnown && !currentValueKnown && (currentValue != null) && (currentValue.length() > 0)) {
 			values.add(currentValue);
+		}
 		String[] validStrings = new String[values.size()];
 		validStrings = (String[]) values.toArray(validStrings);
 		return validStrings;
@@ -204,8 +210,9 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 		TextPropertyDescriptor descriptor = new TextPropertyDescriptor(attributeName, attributeName);
 		descriptor.setCategory(getCategory(null));
 		descriptor.setDescription(attributeName);
-		if (hideOnFilter && fSetExpertFilter)
+		if (hideOnFilter && fSetExpertFilter) {
 			descriptor.setFilterFlags(new String[]{IPropertySheetEntry.FILTER_ID_EXPERT});
+		}
 		return descriptor;
 	}
 
@@ -222,8 +229,9 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 		EnumeratedStringPropertyDescriptor descriptor = new EnumeratedStringPropertyDescriptor(attrDecl.getAttrName(), attrDecl.getAttrName(), _getValidStrings(attrDecl, valuesHelper));
 		descriptor.setCategory(getCategory(attrDecl));
 		descriptor.setDescription(attrDecl.getAttrName());
-		if (attrDecl.getUsage() != CMAttributeDeclaration.REQUIRED && fSetExpertFilter)
+		if ((attrDecl.getUsage() != CMAttributeDeclaration.REQUIRED) && fSetExpertFilter) {
 			descriptor.setFilterFlags(new String[]{IPropertySheetEntry.FILTER_ID_EXPERT});
+		}
 		return descriptor;
 	}
 
@@ -249,10 +257,10 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 
 		if (attrType != null) {
 			// handle declarations that provide FIXED/ENUMERATED values
-			if (attrType.getEnumeratedValues() != null && attrType.getEnumeratedValues().length > 0) {
+			if ((attrType.getEnumeratedValues() != null) && (attrType.getEnumeratedValues().length > 0)) {
 				descriptor = createEnumeratedPropertyDescriptor(attrDecl, attrType);
 			}
-			else if ((attrDecl.getUsage() == CMAttributeDeclaration.FIXED || attrType.getImpliedValueKind() == CMDataType.IMPLIED_VALUE_FIXED) && attrType.getImpliedValue() != null) {
+			else if (((attrDecl.getUsage() == CMAttributeDeclaration.FIXED) || (attrType.getImpliedValueKind() == CMDataType.IMPLIED_VALUE_FIXED)) && (attrType.getImpliedValue() != null)) {
 				descriptor = createFixedPropertyDescriptor(attrDecl, attrType);
 			}
 			else {
@@ -294,8 +302,9 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 				// CMAttributeDeclaration to derive a descriptor
 				if (attrMap != null) {
 					String attrName = attr.getName();
-					if (fCaseSensitive)
+					if (fCaseSensitive) {
 						attrDecl = (CMAttributeDeclaration) attrMap.getNamedItem(attrName);
+					}
 					else {
 						attrDecl = null;
 						for (int j = 0; j < attrMap.getLength(); j++) {
@@ -310,16 +319,19 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 				// descriptor ID
 				if (attrDecl != null) {
 					descriptor = createPropertyDescriptor(attrDecl);
-					if (descriptor != null)
+					if (descriptor != null) {
 						names.add(attrDecl.getNodeName());
+					}
 				}
 				else {
 					descriptor = createDefaultPropertyDescriptor(attr.getName());
-					if (descriptor != null)
+					if (descriptor != null) {
 						names.add(attr.getName());
+					}
 				}
-				if (descriptor != null)
+				if (descriptor != null) {
 					descriptorList.add(descriptor);
+				}
 			}
 		}
 
@@ -337,8 +349,9 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 		}
 
 		IPropertyDescriptor[] descriptors = new IPropertyDescriptor[descriptorList.size()];
-		for (int i = 0; i < descriptors.length; i++)
+		for (int i = 0; i < descriptors.length; i++) {
 			descriptors[i] = (IPropertyDescriptor) descriptorList.get(i);
+		}
 		return descriptors;
 	}
 
@@ -346,8 +359,9 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 		TextPropertyDescriptor descriptor = new TextPropertyDescriptor(attrDecl.getAttrName(), attrDecl.getAttrName());
 		descriptor.setCategory(getCategory(attrDecl));
 		descriptor.setDescription(attrDecl.getAttrName());
-		if (attrDecl.getUsage() != CMAttributeDeclaration.REQUIRED && fSetExpertFilter)
+		if ((attrDecl.getUsage() != CMAttributeDeclaration.REQUIRED) && fSetExpertFilter) {
 			descriptor.setFilterFlags(new String[]{IPropertySheetEntry.FILTER_ID_EXPERT});
+		}
 		return descriptor;
 	}
 
@@ -356,7 +370,7 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 			if (attrDecl.supports("category")) { //$NON-NLS-1$
 				return (String) attrDecl.getProperty("category"); //$NON-NLS-1$
 			}
-			if (fShouldDeriveCategories && attrDecl.getAttrType() != null && attrDecl.getAttrType().getNodeName() != null && attrDecl.getAttrType().getNodeName().length() > 0) {
+			if (fShouldDeriveCategories && (attrDecl.getAttrType() != null) && (attrDecl.getAttrType().getNodeName() != null) && (attrDecl.getAttrType().getNodeName().length() > 0)) {
 				return attrDecl.getAttrType().getDataTypeName();
 			}
 		}
@@ -364,8 +378,9 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 	}
 
 	private CMElementDeclaration getDeclaration() {
-		if (fNode == null || fNode.getNodeType() != Node.ELEMENT_NODE)
+		if ((fNode == null) || (fNode.getNodeType() != Node.ELEMENT_NODE)) {
 			return null;
+		}
 		ModelQuery modelQuery = ModelQueryUtil.getModelQuery(fNode.getOwnerDocument());
 		if (modelQuery != null) {
 			return modelQuery.getCMElementDeclaration((Element) fNode);
@@ -393,7 +408,7 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 	 * @return all valid descriptors.
 	 */
 	public final IPropertyDescriptor[] getPropertyDescriptors() {
-		if (fDescriptors == null || fDescriptors.length == 0) {
+		if ((fDescriptors == null) || (fDescriptors.length == 0)) {
 			fDescriptors = createPropertyDescriptors();
 		}
 		else {
@@ -413,30 +428,36 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 		if (attrMap != null) {
 			Node attribute = attrMap.getNamedItem(name);
 			if (attribute != null) {
-				if (attribute instanceof IDOMNode)
+				if (attribute instanceof IDOMNode) {
 					returnedValue = ((IDOMNode) attribute).getValueSource();
-				else
+				}
+				else {
 					returnedValue = attribute.getNodeValue();
+				}
 			}
 		}
-		if (returnedValue == null)
+		if (returnedValue == null) {
 			returnedValue = ""; //$NON-NLS-1$
+		}
 		return returnedValue;
 	}
 
 	private String[] getValidValues(CMAttributeDeclaration attrDecl) {
-		if (attrDecl == null)
+		if (attrDecl == null) {
 			return new String[0];
+		}
 
 		String[] validValues = null;
 		CMDataType attrType = attrDecl.getAttrType();
 		if (attrType != null) {
 			validValues = _getValidStrings(attrDecl, attrType);
-			if (fSortEnumeratedValues)
+			if (fSortEnumeratedValues) {
 				Arrays.sort(validValues);
+			}
 		}
-		if (validValues == null)
+		if (validValues == null) {
 			validValues = new String[0];
+		}
 		return validValues;
 	}
 
@@ -459,7 +480,7 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 			if (attrDecl != null) {
 				if (attrDecl.getAttrType() != null) {
 					CMDataType helper = attrDecl.getAttrType();
-					if (helper.getImpliedValueKind() != CMDataType.IMPLIED_VALUE_NONE && helper.getImpliedValue() != null) {
+					if ((helper.getImpliedValueKind() != CMDataType.IMPLIED_VALUE_NONE) && (helper.getImpliedValue() != null)) {
 						resettable = true;
 					}
 				}
@@ -479,8 +500,9 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 		String property = propertyObject.toString();
 
 		NamedNodeMap attrMap = fNode.getAttributes();
-		if (attrMap != null)
+		if (attrMap != null) {
 			return attrMap.getNamedItem(property) != null;
+		}
 		return false;
 	}
 
@@ -526,11 +548,12 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 			if (attrDecl != null) {
 				if (attrDecl.getAttrType() != null) {
 					CMDataType helper = attrDecl.getAttrType();
-					if (helper.getImpliedValueKind() != CMDataType.IMPLIED_VALUE_NONE && helper.getImpliedValue() != null)
+					if ((helper.getImpliedValueKind() != CMDataType.IMPLIED_VALUE_NONE) && (helper.getImpliedValue() != null)) {
 						defValue = helper.getImpliedValue();
+					}
 				}
 			}
-			if (defValue != null && defValue.length() > 0) {
+			if ((defValue != null) && (defValue.length() > 0)) {
 				((Attr) attrMap.getNamedItem(property)).setValue(defValue);
 			}
 			else {
@@ -551,13 +574,15 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 		// refresh
 		// on the PropertySheet page and the setInput again asks the editor to
 		// close; besides, why apply the same value twice?
-		if (!fValuesBeingSet.isEmpty() && fValuesBeingSet.peek() == nameObject)
+		if (!fValuesBeingSet.isEmpty() && (fValuesBeingSet.peek() == nameObject)) {
 			return;
+		}
 		fValuesBeingSet.push(nameObject);
 		String name = nameObject.toString();
 		String valueString = null;
-		if (value != null)
+		if (value != null) {
 			valueString = value.toString();
+		}
 		NamedNodeMap attrMap = fNode.getAttributes();
 		try {
 			if (attrMap != null) {
@@ -568,21 +593,25 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 					// triggers a viewer update, forcing the
 					// active cell editor to save its value and causing the
 					// loop to continue
-					if (attr.getValue() == null || !attr.getValue().equals(valueString)) {
-						if (attr instanceof IDOMNode)
+					if ((attr.getValue() == null) || !attr.getValue().equals(valueString)) {
+						if (attr instanceof IDOMNode) {
 							((IDOMNode) attr).setValueSource(valueString);
-						else
+						}
+						else {
 							attr.setValue(valueString);
+						}
 					}
 				}
 				else {
 					// NEW(?) value
 					if (value != null) { // never create an empty attribute
 						Attr newAttr = fNode.getOwnerDocument().createAttribute(name);
-						if (newAttr instanceof IDOMNode)
+						if (newAttr instanceof IDOMNode) {
 							((IDOMNode) newAttr).setValueSource(valueString);
-						else
+						}
+						else {
 							newAttr.setValue(valueString);
+						}
 						attrMap.setNamedItem(newAttr);
 					}
 				}
@@ -595,16 +624,18 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 		}
 		catch (DOMException e) {
 			Display d = getDisplay();
-			if (d != null)
+			if (d != null) {
 				d.beep();
+			}
 		}
 		fValuesBeingSet.pop();
 	}
 
 	protected void updatePropertyDescriptors() {
-		if (fDescriptors == null || fDescriptors.length == 0)
+		if ((fDescriptors == null) || (fDescriptors.length == 0)) {
 			// Nothing to update
 			return;
+		}
 
 		// List of all names encountered in the tag and defined by the element
 		List declaredNames = new ArrayList();
@@ -641,7 +672,7 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 							((EnumeratedStringPropertyDescriptor) fDescriptors[j]).updateValues(validValues);
 						}
 						// Replace with better descriptor
-						else if (validValues != null && validValues.length > 0) {
+						else if ((validValues != null) && (validValues.length > 0)) {
 							fDescriptors[j] = createPropertyDescriptor(attrDecl);
 						}
 					}
@@ -692,8 +723,9 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 				}
 				else {
 					boolean exists = false;
-					for (int j = 0; j < descriptorNames.size(); j++)
+					for (int j = 0; j < descriptorNames.size(); j++) {
 						exists = (descriptorNames.get(j).toString().equalsIgnoreCase(attrName)) || exists;
+					}
 					if (!exists) {
 						descriptorNames.add(attrName);
 						IPropertyDescriptor descriptor = createPropertyDescriptor(attrDecl);
@@ -719,8 +751,9 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 				}
 				else {
 					boolean exists = false;
-					for (int j = 0; j < descriptorNames.size(); j++)
+					for (int j = 0; j < descriptorNames.size(); j++) {
 						exists = (descriptorNames.get(j).toString().equalsIgnoreCase(attrName)) || exists;
+					}
 					if (!exists) {
 						descriptorNames.add(attrName);
 						descriptors.add(createDefaultPropertyDescriptor(attrName));
@@ -731,8 +764,9 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 
 		// Update fDescriptors
 		IPropertyDescriptor[] newDescriptors = new IPropertyDescriptor[descriptors.size()];
-		for (int i = 0; i < newDescriptors.length; i++)
+		for (int i = 0; i < newDescriptors.length; i++) {
 			newDescriptors[i] = (IPropertyDescriptor) descriptors.get(i);
+		}
 		fDescriptors = newDescriptors;
 	}
 }

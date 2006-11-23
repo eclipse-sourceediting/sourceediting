@@ -53,7 +53,7 @@ public class XMLCatalogTableViewer extends TableViewer {
 			Comparator comparator = new Comparator() {
 				public int compare(Object o1, Object o2) {
 					int result = 0;
-					if (o1 instanceof ICatalogEntry && o2 instanceof ICatalogEntry) {
+					if ((o1 instanceof ICatalogEntry) && (o2 instanceof ICatalogEntry)) {
 						ICatalogEntry mappingInfo1 = (ICatalogEntry) o1;
 						ICatalogEntry mappingInfo2 = (ICatalogEntry) o2;
 						result = Collator.getInstance().compare(mappingInfo1.getKey(), mappingInfo2.getKey());
@@ -84,18 +84,21 @@ public class XMLCatalogTableViewer extends TableViewer {
 					String uri = catalogEntry.getURI();
 					if (uri.endsWith("dtd")) { //$NON-NLS-1$
 						base = dtdFileImage;
-					} else if (uri.endsWith("xsd")) { //$NON-NLS-1$
+					}
+					else if (uri.endsWith("xsd")) { //$NON-NLS-1$
 						base = xsdFileImage;
-					} else {
+					}
+					else {
 						base = unknownFileImage;
 					}
 
 					if (base != null) {
 						if (URIHelper.isReadableURI(uri, false)) {
 							result = base;
-						} else {
-							//TODO... SSE port
-							result = base;//imageFactory.createCompositeImage(base,
+						}
+						else {
+							// TODO... SSE port
+							result = base;// imageFactory.createCompositeImage(base,
 							// errorImage,
 							// ImageFactory.BOTTOM_LEFT);
 						}
@@ -151,7 +154,7 @@ public class XMLCatalogTableViewer extends TableViewer {
 	protected static Image unknownFileImage = XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_TXTEXT);
 	protected static Image xsdFileImage = XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_XSDFILE);
 
-	//protected ImageFactory imageFactory = new ImageFactory();
+	// protected ImageFactory imageFactory = new ImageFactory();
 
 	public XMLCatalogTableViewer(Composite parent, String[] columnProperties) {
 		super(parent, SWT.FULL_SELECTION);

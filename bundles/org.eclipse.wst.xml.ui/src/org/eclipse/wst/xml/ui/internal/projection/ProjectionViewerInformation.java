@@ -55,9 +55,10 @@ class ProjectionViewerInformation {
 			// annotation model will be updated after all documentChanged
 			// listeners have been notified
 			IDocument document = event.getDocument();
-			if (document instanceof IDocumentExtension && fInfo.getDocument() == document) {
-				if (fInfo.hasChangesQueued())
+			if ((document instanceof IDocumentExtension) && (fInfo.getDocument() == document)) {
+				if (fInfo.hasChangesQueued()) {
 					((IDocumentExtension) document).registerPostNotificationReplace(this, new PostDocumentChangedListener(fInfo));
+				}
 			}
 		}
 	}

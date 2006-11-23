@@ -35,7 +35,8 @@ public class XMLNodeActionManager extends AbstractNodeActionManager {
 			// format selected node
 			IStructuredFormatProcessor formatProcessor = new FormatProcessorXML();
 			formatProcessor.formatNode(newElement);
-		} finally {
+		}
+		finally {
 			// tell the model that we are done with the big model change
 			fModel.changedModel();
 		}

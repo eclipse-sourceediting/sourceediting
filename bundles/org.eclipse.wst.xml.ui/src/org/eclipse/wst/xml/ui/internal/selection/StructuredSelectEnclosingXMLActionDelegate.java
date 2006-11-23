@@ -25,7 +25,7 @@ public class StructuredSelectEnclosingXMLActionDelegate extends StructuredSelect
 
 	protected IndexedRegion getCursorIndexedRegion(IDocument document, ITextSelection textSelection) {
 		IndexedRegion indexedRegion = null;
-		
+
 		indexedRegion = getIndexedRegion(document, textSelection.getOffset());
 
 		return indexedRegion;
@@ -37,16 +37,17 @@ public class StructuredSelectEnclosingXMLActionDelegate extends StructuredSelect
 			Node cursorNode = (Node) indexedRegion;
 
 			// use parent node for empty text node
-			if (cursorNode.getNodeType() == Node.TEXT_NODE && cursorNode.getNodeValue().trim().length() == 0) {
+			if ((cursorNode.getNodeType() == Node.TEXT_NODE) && (cursorNode.getNodeValue().trim().length() == 0)) {
 				cursorNode = cursorNode.getParentNode();
 
-				if (cursorNode instanceof IndexedRegion)
+				if (cursorNode instanceof IndexedRegion) {
 					indexedRegion = (IndexedRegion) cursorNode;
+				}
 			}
 
 			Region cursorNodeRegion = new Region(indexedRegion.getStartOffset(), indexedRegion.getEndOffset() - indexedRegion.getStartOffset());
 
-			if (cursorNodeRegion.getOffset() >= textSelection.getOffset() && cursorNodeRegion.getOffset() <= textSelection.getOffset() + textSelection.getLength() && cursorNodeRegion.getOffset() + cursorNodeRegion.getLength() >= textSelection.getOffset() && cursorNodeRegion.getOffset() + cursorNodeRegion.getLength() <= textSelection.getOffset() + textSelection.getLength()) {
+			if ((cursorNodeRegion.getOffset() >= textSelection.getOffset()) && (cursorNodeRegion.getOffset() <= textSelection.getOffset() + textSelection.getLength()) && (cursorNodeRegion.getOffset() + cursorNodeRegion.getLength() >= textSelection.getOffset()) && (cursorNodeRegion.getOffset() + cursorNodeRegion.getLength() <= textSelection.getOffset() + textSelection.getLength())) {
 				Node newNode = cursorNode.getParentNode();
 
 				if (newNode instanceof IndexedRegion) {
@@ -54,8 +55,9 @@ public class StructuredSelectEnclosingXMLActionDelegate extends StructuredSelect
 					newRegion = new Region(newIndexedRegion.getStartOffset(), newIndexedRegion.getEndOffset() - newIndexedRegion.getStartOffset());
 				}
 			}
-			else
+			else {
 				newRegion = cursorNodeRegion;
+			}
 		}
 		return newRegion;
 	}

@@ -41,7 +41,7 @@ import org.w3c.dom.Text;
  * For example : - white space text nodes are ommited from the 'UI' tree -
  * adjacent Text and EntityReference nodes are combined into a single 'UI'
  * node - Elements with 'text only' children are diplayed without children
- *  
+ * 
  */
 public class TreeContentHelper {
 
@@ -52,14 +52,14 @@ public class TreeContentHelper {
 	protected int style = HIDE_WHITE_SPACE_TEXT_NODES | COMBINE_ADJACENT_TEXT_AND_ENTITY_REFERENCES | HIDE_ELEMENT_CHILD_TEXT_NODES;
 
 	/**
-	 *  
+	 * 
 	 */
 	public boolean hasStyleFlag(int flag) {
 		return (style & flag) != 0;
 	}
 
 	/**
-	 *  
+	 * 
 	 */
 	public Object[] getChildren(Object element) {
 		Object[] result = null;
@@ -91,7 +91,7 @@ public class TreeContentHelper {
 				}
 
 				if (includeNode && hasStyleFlag(COMBINE_ADJACENT_TEXT_AND_ENTITY_REFERENCES)) {
-					if (isTextOrEntityReferenceNode(childNode) && prevIncludedNode != null && isTextOrEntityReferenceNode(prevIncludedNode)) {
+					if (isTextOrEntityReferenceNode(childNode) && (prevIncludedNode != null) && isTextOrEntityReferenceNode(prevIncludedNode)) {
 						// we only show the first of a list of adjacent text
 						// or entity reference node in the tree
 						// so we filter out this subsequent one
@@ -100,7 +100,7 @@ public class TreeContentHelper {
 				}
 
 				if (hasStyleFlag(HIDE_ELEMENT_CHILD_TEXT_NODES)) {
-					if (childNodeType != Node.TEXT_NODE && childNodeType != Node.ENTITY_REFERENCE_NODE) {
+					if ((childNodeType != Node.TEXT_NODE) && (childNodeType != Node.ENTITY_REFERENCE_NODE)) {
 						textContentOnly = false;
 					}
 				}
@@ -113,7 +113,8 @@ public class TreeContentHelper {
 
 			if (hasStyleFlag(HIDE_ELEMENT_CHILD_TEXT_NODES) && textContentOnly) {
 				result = new Object[0];
-			} else {
+			}
+			else {
 				result = list.toArray();
 			}
 		}
@@ -121,26 +122,26 @@ public class TreeContentHelper {
 	}
 
 	/**
-	 *  
+	 * 
 	 */
 	protected boolean isTextOrEntityReferenceNode(Node node) {
-		return node.getNodeType() == Node.TEXT_NODE || node.getNodeType() == Node.ENTITY_REFERENCE_NODE;
+		return (node.getNodeType() == Node.TEXT_NODE) || (node.getNodeType() == Node.ENTITY_REFERENCE_NODE);
 	}
 
 	/**
-	 *  
+	 * 
 	 */
 	public boolean isIgnorableText(Node node) {
 		boolean result = false;
 		if (node.getNodeType() == Node.TEXT_NODE) {
 			String data = ((Text) node).getData();
-			result = (data == null || data.trim().length() == 0);
+			result = ((data == null) || (data.trim().length() == 0));
 		}
 		return result;
 	}
 
 	/**
-	 *  
+	 * 
 	 */
 	public boolean isCombinedTextNode(Node node) {
 		boolean result = false;
@@ -151,14 +152,15 @@ public class TreeContentHelper {
 					result = true;
 				}
 			}
-		} else if (node.getNodeType() == Node.ENTITY_REFERENCE_NODE) {
+		}
+		else if (node.getNodeType() == Node.ENTITY_REFERENCE_NODE) {
 			result = true;
 		}
 		return result;
 	}
 
 	/**
-	 *  
+	 * 
 	 */
 	public List getCombinedTextNodeList(Node theNode) {
 		List list = new Vector();
@@ -168,43 +170,44 @@ public class TreeContentHelper {
 			if (nodeType == Node.ENTITY_REFERENCE_NODE) {
 				prevIsEntity = true;
 				list.add(node);
-			} else if (nodeType == Node.TEXT_NODE && (prevIsEntity || node == theNode)) {
+			}
+			else if ((nodeType == Node.TEXT_NODE) && (prevIsEntity || (node == theNode))) {
 				prevIsEntity = false;
 				list.add(node);
-			} else {
+			}
+			else {
 				break;
 			}
 		}
 		return list;
 	}
 
-    public String getElementTextValue(Element element) 
-    {
-      List list = _getElementTextContent(element);
-      return list != null ? getValueForTextContent(list) : null;
-    }
-    
-    public void setElementTextValue(Element element, String value)
-    {
-      setElementNodeValue(element, value);      
-    }
-    
-    private List _getElementTextContent(Element element) {
-        List result = null;
+	public String getElementTextValue(Element element) {
+		List list = _getElementTextContent(element);
+		return list != null ? getValueForTextContent(list) : null;
+	}
 
-        for (Node node = element.getFirstChild(); node != null; node = node.getNextSibling()) {
-          if (node.getNodeType() == Node.TEXT_NODE || node.getNodeType() == Node.ENTITY_REFERENCE_NODE) {
-            if (result == null) {
-              result = new Vector();
-            }
-            result.add(node);
-          } else {
-            result = null;
-            break;
-          }
-        }       
-        return result;
-    }
+	public void setElementTextValue(Element element, String value) {
+		setElementNodeValue(element, value);
+	}
+
+	private List _getElementTextContent(Element element) {
+		List result = null;
+
+		for (Node node = element.getFirstChild(); node != null; node = node.getNextSibling()) {
+			if ((node.getNodeType() == Node.TEXT_NODE) || (node.getNodeType() == Node.ENTITY_REFERENCE_NODE)) {
+				if (result == null) {
+					result = new Vector();
+				}
+				result.add(node);
+			}
+			else {
+				result = null;
+				break;
+			}
+		}
+		return result;
+	}
 
 	/**
 	 * If the element is has 'text only' content this method will return the
@@ -218,9 +221,9 @@ public class TreeContentHelper {
 		return result;
 	}
 
-    
+
 	/**
-	 *  
+	 * 
 	 */
 	public String getNodeValue(Node node) {
 		String result = null;
@@ -231,7 +234,7 @@ public class TreeContentHelper {
 				break;
 			}
 			case Node.CDATA_SECTION_NODE :
-			// drop thru
+				// drop thru
 			case Node.COMMENT_NODE : {
 				result = ((CharacterData) node).getData();
 				break;
@@ -245,7 +248,7 @@ public class TreeContentHelper {
 				break;
 			}
 			case Node.ENTITY_REFERENCE_NODE :
-			// drop thru
+				// drop thru
 			case Node.TEXT_NODE : {
 				result = getTextNodeValue(node);
 				break;
@@ -259,7 +262,7 @@ public class TreeContentHelper {
 	}
 
 	/**
-	 *  
+	 * 
 	 */
 	public void setNodeValue(Node node, String value) {
 		int nodeType = node.getNodeType();
@@ -270,7 +273,7 @@ public class TreeContentHelper {
 					break;
 				}
 				case Node.CDATA_SECTION_NODE :
-				// drop thru
+					// drop thru
 				case Node.COMMENT_NODE : {
 					((CharacterData) node).setData(value);
 					break;
@@ -280,7 +283,7 @@ public class TreeContentHelper {
 					break;
 				}
 				case Node.ENTITY_REFERENCE_NODE :
-				// drop thru
+					// drop thru
 				case Node.TEXT_NODE : {
 					setTextNodeValue(node, value);
 					break;
@@ -290,10 +293,12 @@ public class TreeContentHelper {
 					break;
 				}
 			}
-		} catch (DOMException e) {
+		}
+		catch (DOMException e) {
 			Display d = getDisplay();
-			if (d != null)
+			if (d != null) {
 				d.beep();
+			}
 		}
 	}
 
@@ -304,14 +309,14 @@ public class TreeContentHelper {
 
 
 	/**
-	 *  
+	 * 
 	 */
 	protected String getDocumentTypeValue(DocumentType documentType) {
 		return DOMWriter.getDocumentTypeData(documentType);
 	}
 
 	/**
-	 *  
+	 * 
 	 */
 	protected String getElementNodeValue(Element element) {
 		String result = null;
@@ -323,13 +328,14 @@ public class TreeContentHelper {
 	}
 
 	/**
-	 *  
+	 * 
 	 */
 	protected void setElementNodeValue(Element element, String value) {
 		List list = getElementTextContent(element);
 		if (list != null) {
 			setValueForTextContent(list, value);
-		} else {
+		}
+		else {
 			Document document = element.getOwnerDocument();
 			Text text = document.createTextNode(value);
 			element.appendChild(text);
@@ -337,14 +343,15 @@ public class TreeContentHelper {
 	}
 
 	/**
-	 *  
+	 * 
 	 */
 	protected String getTextNodeValue(Node node) {
 		String result = null;
 		List list = null;
 		if (isCombinedTextNode(node)) {
 			list = getCombinedTextNodeList(node);
-		} else {
+		}
+		else {
 			list = new Vector();
 			list.add(node);
 		}
@@ -353,13 +360,14 @@ public class TreeContentHelper {
 	}
 
 	/**
-	 *  
+	 * 
 	 */
 	protected void setTextNodeValue(Node node, String value) {
 		List list = null;
 		if (isCombinedTextNode(node)) {
 			list = getCombinedTextNodeList(node);
-		} else {
+		}
+		else {
 			list = new Vector();
 			list.add(node);
 		}
@@ -379,7 +387,7 @@ public class TreeContentHelper {
 	}
 
 	/**
-	 *  
+	 * 
 	 */
 	protected String getValueForTextContent(List list) {
 		String result = null;
@@ -391,7 +399,8 @@ public class TreeContentHelper {
 			int end = last.getEndOffset();
 			try {
 				result = model.getStructuredDocument().get(start, end - start);
-			} catch (Exception e) {
+			}
+			catch (Exception e) {
 			}
 		}
 
@@ -405,10 +414,10 @@ public class TreeContentHelper {
 	}
 
 	/**
-	 *  
+	 * 
 	 */
 	protected void setValueForTextContent(List list, String value) {
-		//String oldValue = getValueForTextContent();
+		// String oldValue = getValueForTextContent();
 		// we worry about preserving trimmed text
 		if (list.size() > 0) {
 			IDOMNode first = (IDOMNode) list.get(0);
@@ -420,28 +429,28 @@ public class TreeContentHelper {
 	}
 
 	/**
-	 *  
+	 * 
 	 */
 	public boolean isEditable(Node node) {
 		int nodeType = node.getNodeType();
 		boolean result = false;
 		switch (nodeType) {
 			case Node.ATTRIBUTE_NODE :
-			// drop thru
+				// drop thru
 			case Node.CDATA_SECTION_NODE :
-			// drop thru
+				// drop thru
 			case Node.COMMENT_NODE :
-			// drop thru
+				// drop thru
 			case Node.ENTITY_REFERENCE_NODE :
-			// drop thru
+				// drop thru
 			case Node.TEXT_NODE :
-			// drop thru
+				// drop thru
 			case Node.PROCESSING_INSTRUCTION_NODE : {
 				result = true;
 				break;
 			}
 			case Node.ELEMENT_NODE : {
-				result = getElementTextContent((Element) node) != null || node.getChildNodes().getLength() == 0;
+				result = (getElementTextContent((Element) node) != null) || (node.getChildNodes().getLength() == 0);
 				break;
 			}
 		}

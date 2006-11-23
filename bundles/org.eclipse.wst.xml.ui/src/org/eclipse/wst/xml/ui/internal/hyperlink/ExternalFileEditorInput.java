@@ -21,7 +21,7 @@ class ExternalFileEditorInput implements IEditorInput, ILocationProvider {
 	// org.eclipse.wst.xml.ui.internal.hyperlink
 	// org.eclipse.wst.html.ui.internal.hyperlink
 	// org.eclipse.jst.jsp.ui.internal.hyperlink
-	
+
 	/**
 	 * The workbench adapter which simply provides the label.
 	 */
@@ -103,10 +103,12 @@ class ExternalFileEditorInput implements IEditorInput, ILocationProvider {
 	 * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
 	 */
 	public Object getAdapter(Class adapter) {
-		if (ILocationProvider.class.equals(adapter))
+		if (ILocationProvider.class.equals(adapter)) {
 			return this;
-		if (IWorkbenchAdapter.class.equals(adapter))
+		}
+		if (IWorkbenchAdapter.class.equals(adapter)) {
 			return fWorkbenchAdapter;
+		}
 		return Platform.getAdapterManager().getAdapter(this, adapter);
 	}
 
@@ -120,31 +122,32 @@ class ExternalFileEditorInput implements IEditorInput, ILocationProvider {
 		}
 		return null;
 	}
-	
-    /*
-     * @see org.eclipse.ui.IPathEditorInput#getPath()
-     * @since 3.1
-     */
-    public IPath getPath() {
-        return Path.fromOSString(fFile.getAbsolutePath());
-    }
+
+	/*
+	 * @see org.eclipse.ui.IPathEditorInput#getPath()
+	 * @since 3.1
+	 */
+	public IPath getPath() {
+		return Path.fromOSString(fFile.getAbsolutePath());
+	}
 
 	/*
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	public boolean equals(Object o) {
-		if (o == this)
+		if (o == this) {
 			return true;
+		}
 
 		if (o instanceof ExternalFileEditorInput) {
 			ExternalFileEditorInput input = (ExternalFileEditorInput) o;
 			return fFile.equals(input.fFile);
 		}
-		
-        if (o instanceof IPathEditorInput) {
-            IPathEditorInput input= (IPathEditorInput)o;
-            return getPath().equals(input.getPath());
-        }
+
+		if (o instanceof IPathEditorInput) {
+			IPathEditorInput input = (IPathEditorInput) o;
+			return getPath().equals(input.getPath());
+		}
 
 		return false;
 	}

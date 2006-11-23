@@ -15,14 +15,15 @@ package org.eclipse.wst.xml.ui.internal.tabletree;
 /**
  * Defines the definitions ids for the XML editor actions.
  * 
- * @deprecated Use org.eclipse.wst.sse.ui.edit.util.ActionDefinitionIds instead
+ * @deprecated Use org.eclipse.wst.sse.ui.edit.util.ActionDefinitionIds
+ *             instead
  */
 public interface XMLEditorActionDefinitionIds {
 	public final static String CLEANUP_DOCUMENT = "org.eclipse.wst.sse.ui.edit.ui.cleanup.document";//$NON-NLS-1$
 	public final static String FORMAT_DOCUMENT = "org.eclipse.wst.sse.ui.edit.ui.format.document";//$NON-NLS-1$
 	public final static String FORMAT_ACTIVE_ELEMENTS = "org.eclipse.wst.sse.ui.edit.ui.format.active.elements";//$NON-NLS-1$
 	public final static String OPEN_FILE = "org.eclipse.wst.sse.ui.edit.ui.open.file.from.source";//$NON-NLS-1$
-	//	public final static String INFORMATION =
+	// public final static String INFORMATION =
 	// "org.eclipse.wst.sse.ui.edit.ui.show.tooltip.information";//$NON-NLS-1$
 	public final static String INFORMATION = "org.eclipse.jdt.ui.edit.text.java.show.javadoc";//$NON-NLS-1$
 	public final static String ADD_BREAKPOINTS = "org.eclipse.wst.sse.ui.edit.ui.add.breakpoints";//$NON-NLS-1$

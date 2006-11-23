@@ -42,7 +42,7 @@ public class SourcePageActionContributor extends ActionContributorXML {
 	 * 
 	 * @param bars
 	 *            the action bars
-	 *  
+	 * 
 	 */
 	public void init(IActionBars bars) {
 		fBars = bars;

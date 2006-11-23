@@ -169,10 +169,12 @@ public class XMLFilesPreferencePage extends AbstractPreferencePage {
 	protected void initializeValuesForCreatingOrSavingGroup() {
 		String endOfLineCode = getModelPreferences().getString(CommonEncodingPreferenceNames.END_OF_LINE_CODE);
 
-		if (endOfLineCode.length() > 0)
+		if (endOfLineCode.length() > 0) {
 			setCurrentEOLCode(endOfLineCode);
-		else
+		}
+		else {
 			setCurrentEOLCode(CommonEncodingPreferenceNames.NO_TRANSLATION);
+		}
 	}
 
 	protected void initializeValuesForValidatingGroup() {
@@ -205,10 +207,12 @@ public class XMLFilesPreferencePage extends AbstractPreferencePage {
 	protected void performDefaultsForCreatingOrSavingGroup() {
 		String endOfLineCode = getModelPreferences().getDefaultString(CommonEncodingPreferenceNames.END_OF_LINE_CODE);
 
-		if (endOfLineCode.length() > 0)
+		if (endOfLineCode.length() > 0) {
 			setCurrentEOLCode(endOfLineCode);
-		else
+		}
+		else {
 			setCurrentEOLCode(CommonEncodingPreferenceNames.NO_TRANSLATION);
+		}
 	}
 
 	protected void performDefaultsForValidatingGroup() {

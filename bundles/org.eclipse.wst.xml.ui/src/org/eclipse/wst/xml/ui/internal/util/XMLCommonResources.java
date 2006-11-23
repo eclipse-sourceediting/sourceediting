@@ -32,8 +32,9 @@ public class XMLCommonResources {
 	protected static XMLCommonResources instance;
 
 	public synchronized static XMLCommonResources getInstance() {
-		if (instance == null)
+		if (instance == null) {
 			instance = new XMLCommonResources(XMLUIPlugin.getDefault());
+		}
 		return instance;
 	}
 
@@ -46,15 +47,16 @@ public class XMLCommonResources {
 		this.editorPlugin = editorPlugin;
 		try {
 			resourceBundle = ResourceBundle.getBundle("org.eclipse.wst.xml.ui.internal.XMLUIPluginResources"); //$NON-NLS-1$
-		} catch (MissingResourceException exception) {
-			//TODO... log an error message
-			//B2BUtilPlugin.getPlugin().getMsgLogger().write(B2BUtilPlugin.getGUIString("_WARN_PLUGIN_PROPERTIES_MISSING")
+		}
+		catch (MissingResourceException exception) {
+			// TODO... log an error message
+			// B2BUtilPlugin.getPlugin().getMsgLogger().write(B2BUtilPlugin.getGUIString("_WARN_PLUGIN_PROPERTIES_MISSING")
 			// + descriptor.getLabel());
 			resourceBundle = null;
 		}
 	}
 
-	 ImageDescriptor _getImageDescriptor(String iconName) {
+	ImageDescriptor _getImageDescriptor(String iconName) {
 		return AbstractUIPlugin.imageDescriptorFromPlugin(XMLUIPlugin.ID, iconName);
 	}
 

@@ -65,23 +65,23 @@ public class ActionContributorXML extends ActionContributor {
 		ResourceBundle resourceBundle = XMLUIMessages.getResourceBundle();
 
 		// edit commands
-		fShowTooltipAction = new RetargetTextEditorAction(resourceBundle, "");	//$NON-NLS-1$
+		fShowTooltipAction = new RetargetTextEditorAction(resourceBundle, ""); //$NON-NLS-1$
 		fShowTooltipAction.setActionDefinitionId(ActionDefinitionIds.INFORMATION);
 
-		fContentAssist = new RetargetTextEditorAction(resourceBundle, "");	//$NON-NLS-1$
+		fContentAssist = new RetargetTextEditorAction(resourceBundle, ""); //$NON-NLS-1$
 		fContentAssist.setActionDefinitionId(ITextEditorActionDefinitionIds.CONTENT_ASSIST_PROPOSALS);
 
-		fQuickFix = new RetargetTextEditorAction(resourceBundle, "");	//$NON-NLS-1$
+		fQuickFix = new RetargetTextEditorAction(resourceBundle, ""); //$NON-NLS-1$
 		fQuickFix.setActionDefinitionId(ActionDefinitionIds.QUICK_FIX);
 
 		// source commands
-		fCleanupDocument = new RetargetTextEditorAction(resourceBundle, "");	//$NON-NLS-1$
+		fCleanupDocument = new RetargetTextEditorAction(resourceBundle, ""); //$NON-NLS-1$
 		fCleanupDocument.setActionDefinitionId(ActionDefinitionIds.CLEANUP_DOCUMENT);
 
-		fFormatDocument = new RetargetTextEditorAction(resourceBundle, "");	//$NON-NLS-1$
+		fFormatDocument = new RetargetTextEditorAction(resourceBundle, ""); //$NON-NLS-1$
 		fFormatDocument.setActionDefinitionId(ActionDefinitionIds.FORMAT_DOCUMENT);
 
-		fFormatActiveElements = new RetargetTextEditorAction(resourceBundle, "");	//$NON-NLS-1$
+		fFormatActiveElements = new RetargetTextEditorAction(resourceBundle, ""); //$NON-NLS-1$
 		fFormatActiveElements.setActionDefinitionId(ActionDefinitionIds.FORMAT_ACTIVE_ELEMENTS);
 
 		fFormatMenu = new MenuManager(XMLUIMessages.FormatMenu_label);
@@ -89,10 +89,10 @@ public class ActionContributorXML extends ActionContributor {
 		fFormatMenu.add(fFormatActiveElements);
 
 		// navigate commands
-		fOpenFileAction = new RetargetTextEditorAction(resourceBundle, "");	//$NON-NLS-1$
+		fOpenFileAction = new RetargetTextEditorAction(resourceBundle, ""); //$NON-NLS-1$
 		fOpenFileAction.setActionDefinitionId(ActionDefinitionIds.OPEN_FILE);
 
-		fFindOccurrences = new RetargetTextEditorAction(resourceBundle, "");	//$NON-NLS-1$
+		fFindOccurrences = new RetargetTextEditorAction(resourceBundle, ""); //$NON-NLS-1$
 		fFindOccurrences.setActionDefinitionId(ActionDefinitionIds.FIND_OCCURRENCES);
 	}
 
@@ -150,8 +150,9 @@ public class ActionContributorXML extends ActionContributor {
 	 * @see org.eclipse.ui.IEditorActionBarContributor#setActiveEditor(IEditorPart)
 	 */
 	public void setActiveEditor(IEditorPart activeEditor) {
-		if (getActiveEditorPart() == activeEditor)
+		if (getActiveEditorPart() == activeEditor) {
 			return;
+		}
 		super.setActiveEditor(activeEditor);
 
 		IActionBars actionBars = getActionBars();
@@ -172,9 +173,9 @@ public class ActionContributorXML extends ActionContributor {
 		fCleanupDocument.setAction(getAction(textEditor, StructuredTextEditorActionConstants.ACTION_NAME_CLEANUP_DOCUMENT));
 		fFormatDocument.setAction(getAction(textEditor, StructuredTextEditorActionConstants.ACTION_NAME_FORMAT_DOCUMENT));
 		fFormatActiveElements.setAction(getAction(textEditor, StructuredTextEditorActionConstants.ACTION_NAME_FORMAT_ACTIVE_ELEMENTS));
-		fCleanupDocument.setEnabled(textEditor != null && textEditor.isEditable());
-		fFormatDocument.setEnabled(textEditor != null && textEditor.isEditable());
-		fFormatActiveElements.setEnabled(textEditor != null && textEditor.isEditable());
+		fCleanupDocument.setEnabled((textEditor != null) && textEditor.isEditable());
+		fFormatDocument.setEnabled((textEditor != null) && textEditor.isEditable());
+		fFormatActiveElements.setEnabled((textEditor != null) && textEditor.isEditable());
 
 		fOpenFileAction.setAction(getAction(textEditor, StructuredTextEditorActionConstants.ACTION_NAME_OPEN_FILE));
 
@@ -194,8 +195,8 @@ public class ActionContributorXML extends ActionContributor {
 		fQuickFix.setEnabled(enabled);
 		// cleanup and format document actions do not rely on source viewer
 		// being enabled
-		//		fCleanupDocument.setEnabled(enabled);
-		//		fFormatDocument.setEnabled(enabled);
+		// fCleanupDocument.setEnabled(enabled);
+		// fFormatDocument.setEnabled(enabled);
 
 		fFormatActiveElements.setEnabled(enabled);
 		fOpenFileAction.setEnabled(enabled);

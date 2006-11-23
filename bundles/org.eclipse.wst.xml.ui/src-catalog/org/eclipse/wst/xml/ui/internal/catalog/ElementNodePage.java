@@ -18,21 +18,21 @@ import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalogElement;
 
 
 public abstract class ElementNodePage {
-	
+
 	Control fControl;
-	
+
 	public ElementNodePage() {
 		super();
-		
+
 	}
-	
+
 	public abstract Control createControl(Composite parent);
-	
-	public Control getControl(){
+
+	public Control getControl() {
 		return fControl;
 	}
-	
+
 	public abstract void saveData();
-	
+
 	public abstract ICatalogElement getData();
 }

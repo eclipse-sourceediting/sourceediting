@@ -110,13 +110,13 @@ public class XMLTableTreeViewer extends TreeViewer implements IDesignViewer {
 		treeExtension.resetCachedData();
 		super.refresh(o);
 	}
-	
+
 	public void refresh(boolean updateLabels) {
 		treeExtension.resetCachedData();
 		super.refresh(updateLabels);
 		getControl().redraw();
 	}
-	
+
 	public void refresh(Object element, boolean updateLabels) {
 		treeExtension.resetCachedData();
 		super.refresh(element, updateLabels);
@@ -131,7 +131,7 @@ public class XMLTableTreeViewer extends TreeViewer implements IDesignViewer {
 		try {
 			model = StructuredModelManager.getModelManager().getExistingModelForRead(document);
 
-			if (model != null && model instanceof IDOMModel) {
+			if ((model != null) && (model instanceof IDOMModel)) {
 				Document domDoc = null;
 				domDoc = ((IDOMModel) model).getDocument();
 				setInput(domDoc);

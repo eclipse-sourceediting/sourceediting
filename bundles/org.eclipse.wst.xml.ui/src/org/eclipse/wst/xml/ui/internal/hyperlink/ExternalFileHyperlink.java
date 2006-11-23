@@ -20,7 +20,7 @@ class ExternalFileHyperlink implements IHyperlink {
 	// org.eclipse.wst.xml.ui.internal.hyperlink
 	// org.eclipse.wst.html.ui.internal.hyperlink
 	// org.eclipse.jst.jsp.ui.internal.hyperlink
-	
+
 	private IRegion fHyperlinkRegion;
 	private File fHyperlinkFile;
 
@@ -28,7 +28,7 @@ class ExternalFileHyperlink implements IHyperlink {
 		fHyperlinkFile = file;
 		fHyperlinkRegion = region;
 	}
-	
+
 	public IRegion getHyperlinkRegion() {
 		return fHyperlinkRegion;
 	}

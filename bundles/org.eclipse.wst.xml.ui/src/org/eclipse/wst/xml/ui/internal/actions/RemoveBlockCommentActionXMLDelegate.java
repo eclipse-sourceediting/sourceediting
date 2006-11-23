@@ -35,8 +35,9 @@ public class RemoveBlockCommentActionXMLDelegate extends AbstractCommentActionXM
 				IndexedRegion selectionStartIndexedRegion = model.getIndexedRegion(textSelection.getOffset());
 				IndexedRegion selectionEndIndexedRegion = model.getIndexedRegion(textSelection.getOffset() + textSelection.getLength());
 
-				if (selectionStartIndexedRegion == null || selectionEndIndexedRegion == null)
+				if ((selectionStartIndexedRegion == null) || (selectionEndIndexedRegion == null)) {
 					return;
+				}
 
 				int openCommentOffset = selectionStartIndexedRegion.getStartOffset();
 				int closeCommentOffset = selectionEndIndexedRegion.getEndOffset() - OPEN_COMMENT.length() - CLOSE_COMMENT.length();

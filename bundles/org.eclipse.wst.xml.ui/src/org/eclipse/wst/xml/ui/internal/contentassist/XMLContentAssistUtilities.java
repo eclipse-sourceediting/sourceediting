@@ -38,11 +38,12 @@ import org.w3c.dom.Node;
  * @author pavery
  */
 public class XMLContentAssistUtilities extends ContentAssistUtils {
-	
-    /**
-     * ISSUE: this is a bit of hidden JSP knowledge that was implemented this
-     * way for expedency. Should be evolved in future to depend on "nestedContext".
-     */
+
+	/**
+	 * ISSUE: this is a bit of hidden JSP knowledge that was implemented this
+	 * way for expedency. Should be evolved in future to depend on
+	 * "nestedContext".
+	 */
 	private class DOMJSPRegionContextsPrivateCopy {
 		private static final String JSP_CLOSE = "JSP_CLOSE"; //$NON-NLS-1$
 		private static final String JSP_DECLARATION_OPEN = "JSP_DECLARATION_OPEN"; //$NON-NLS-1$
@@ -74,7 +75,7 @@ public class XMLContentAssistUtilities extends ContentAssistUtils {
 	 * @param parentTagName
 	 *            the tag on which you are checkin for an ending tag
 	 * @param imagePath
-	 *            content assist image relative path 
+	 *            content assist image relative path
 	 * @return ICompletionProposal
 	 */
 	public static ICompletionProposal computeJSPEndTagProposal(ITextViewer viewer, int documentPosition, IndexedRegion indexedNode, String parentTagName, String imagePath) {
@@ -88,11 +89,13 @@ public class XMLContentAssistUtilities extends ContentAssistUtils {
 		if (indexedNode instanceof IDOMNode) {
 			xnode = ((IDOMNode) indexedNode);
 			// it's ended already...
-			if (xnode.getEndStructuredDocumentRegion() != null)
+			if (xnode.getEndStructuredDocumentRegion() != null) {
 				return null;
+			}
 			IDOMNode openNode = null;
-			if (!xnode.getNodeName().equalsIgnoreCase(parentTagName))
+			if (!xnode.getNodeName().equalsIgnoreCase(parentTagName)) {
 				openNode = (IDOMNode) xnode.getParentNode();
+			}
 			if (openNode != null) {
 				if (openNode instanceof IDOMElement) {
 					isJSPTag = ((IDOMElement) openNode).isJSPTag();
@@ -108,19 +111,19 @@ public class XMLContentAssistUtilities extends ContentAssistUtils {
 			// create appropriate close tag text
 			String proposedText = "</" + tagName; //$NON-NLS-1$
 			String viewerText = viewer.getTextWidget().getText();
-			if (viewerText.length() >= documentPosition && viewerText.length() >= 2 && documentPosition >= 2) {
+			if ((viewerText.length() >= documentPosition) && (viewerText.length() >= 2) && (documentPosition >= 2)) {
 				String last2chars = viewerText.substring(documentPosition - 2, documentPosition);
-				if (last2chars.endsWith("</")) //$NON-NLS-1$
+				if (last2chars.endsWith("</")) {
 					proposedText = tagName;
-				else if (last2chars.endsWith("<")) //$NON-NLS-1$
+				}
+				else if (last2chars.endsWith("<")) {
 					proposedText = "/" + tagName; //$NON-NLS-1$
+				}
 			}
 
 			// create proposal
 			p = new CustomCompletionProposal(proposedText + ">", //$NON-NLS-1$
-						documentPosition, 0, proposedText.length() + 1, XMLEditorPluginImageHelper.getInstance().getImage(imagePath), //$NON-NLS-1$
-						NLS.bind(XMLUIMessages.End_with_, (new Object[]{proposedText})),
-						null, null, XMLRelevanceConstants.R_END_TAG);
+						documentPosition, 0, proposedText.length() + 1, XMLEditorPluginImageHelper.getInstance().getImage(imagePath), NLS.bind(XMLUIMessages.End_with_, (new Object[]{proposedText})), null, null, XMLRelevanceConstants.R_END_TAG);
 		}
 		else if (!hasEndTag && isJSPTag) {
 
@@ -130,23 +133,23 @@ public class XMLContentAssistUtilities extends ContentAssistUtils {
 
 			// TODO (pa) make it smarter to add "%>" or just ">" if % is
 			// already there...
-			if (viewerText.length() >= documentPosition && viewerText.length() >= 2) {
+			if ((viewerText.length() >= documentPosition) && (viewerText.length() >= 2)) {
 				String last2chars = viewerText.substring(documentPosition - 2, documentPosition);
 				String lastchar = viewerText.substring(documentPosition - 1, documentPosition);
 				if (lastchar.equals("%")) //$NON-NLS-1$
 				{
-					if (last2chars.endsWith("<%")) //$NON-NLS-1$
+					if (last2chars.endsWith("<%")) {
 						proposedText = "%"; //$NON-NLS-1$
-					else
+					}
+					else {
 						proposedText = ""; //$NON-NLS-1$
+					}
 				}
 			}
 
 			// create proposal
 			p = new CustomCompletionProposal(proposedText + ">", //$NON-NLS-1$
-						documentPosition, 0, proposedText.length() + 1, XMLEditorPluginImageHelper.getInstance().getImage(imagePath), //$NON-NLS-1$
-						NLS.bind(XMLUIMessages.End_with_, (new Object[]{proposedText})),
-						null, null, XMLRelevanceConstants.R_END_TAG);
+						documentPosition, 0, proposedText.length() + 1, XMLEditorPluginImageHelper.getInstance().getImage(imagePath), NLS.bind(XMLUIMessages.End_with_, (new Object[]{proposedText})), null, null, XMLRelevanceConstants.R_END_TAG);
 		}
 
 		return p;
@@ -181,11 +184,13 @@ public class XMLContentAssistUtilities extends ContentAssistUtils {
 		if (indexedNode instanceof IDOMNode) {
 			xnode = ((IDOMNode) indexedNode);
 			// it's ended already...
-			if (xnode.getEndStructuredDocumentRegion() != null)
+			if (xnode.getEndStructuredDocumentRegion() != null) {
 				return null;
+			}
 			IDOMNode styleNode = null;
-			if (!xnode.getNodeName().equalsIgnoreCase(parentTagName))
+			if (!xnode.getNodeName().equalsIgnoreCase(parentTagName)) {
 				styleNode = (IDOMNode) xnode.getParentNode();
+			}
 			if (styleNode != null) {
 				tagName = styleNode.getNodeName();
 				hasEndTag = (styleNode.getEndStructuredDocumentRegion() != null);
@@ -198,19 +203,19 @@ public class XMLContentAssistUtilities extends ContentAssistUtils {
 			// create appropriate close tag text
 			String proposedText = "</" + tagName; //$NON-NLS-1$
 			String viewerText = viewer.getTextWidget().getText();
-			if (viewerText.length() >= documentPosition && viewerText.length() >= 2 && documentPosition >= 2) {
+			if ((viewerText.length() >= documentPosition) && (viewerText.length() >= 2) && (documentPosition >= 2)) {
 				String last2chars = viewerText.substring(documentPosition - 2, documentPosition);
-				if (last2chars.endsWith("</")) //$NON-NLS-1$
+				if (last2chars.endsWith("</")) {
 					proposedText = tagName;
-				else if (last2chars.endsWith("<")) //$NON-NLS-1$
+				}
+				else if (last2chars.endsWith("<")) {
 					proposedText = "/" + tagName; //$NON-NLS-1$
+				}
 			}
 
 			// create proposal
 			p = new CustomCompletionProposal(proposedText + ">", //$NON-NLS-1$
-						documentPosition, 0, proposedText.length() + 1, XMLEditorPluginImageHelper.getInstance().getImage(imagePath), //$NON-NLS-1$
-						NLS.bind(XMLUIMessages.End_with_, (new Object[]{proposedText})),
-						null, null, XMLRelevanceConstants.R_END_TAG);
+						documentPosition, 0, proposedText.length() + 1, XMLEditorPluginImageHelper.getInstance().getImage(imagePath), NLS.bind(XMLUIMessages.End_with_, (new Object[]{proposedText})), null, null, XMLRelevanceConstants.R_END_TAG);
 		}
 		return p;
 	}
@@ -232,12 +237,15 @@ public class XMLContentAssistUtilities extends ContentAssistUtils {
 		// ----------------------------------------------------------------------
 
 		for (child = doc.getFirstChild(); child != null; child = child.getNextSibling()) {
-			if (child.getNodeType() != Node.ELEMENT_NODE)
+			if (child.getNodeType() != Node.ELEMENT_NODE) {
 				continue;
-			if (child.getNodeName().equalsIgnoreCase(META))
+			}
+			if (child.getNodeName().equalsIgnoreCase(META)) {
 				metas.add(child);
-			else if (child.getNodeName().equalsIgnoreCase(HTML))
+			}
+			else if (child.getNodeName().equalsIgnoreCase(HTML)) {
 				html = child;
+			}
 		}
 		// NodeList children = doc.getChildNodes();
 		// for(int i = 0; i < children.getLength(); i++) {
@@ -252,11 +260,13 @@ public class XMLContentAssistUtilities extends ContentAssistUtils {
 
 		// check for META tags under HEAD
 		if (html != null) {
-			for (child = html.getFirstChild(); child != null && head == null; child = child.getNextSibling()) {
-				if (child.getNodeType() != Node.ELEMENT_NODE)
+			for (child = html.getFirstChild(); (child != null) && (head == null); child = child.getNextSibling()) {
+				if (child.getNodeType() != Node.ELEMENT_NODE) {
 					continue;
-				if (child.getNodeName().equalsIgnoreCase(HEAD))
+				}
+				if (child.getNodeName().equalsIgnoreCase(HEAD)) {
 					head = child;
+				}
 			}
 			// children = html.getChildNodes();
 			// for(int i = 0; i < children.getLength() && head == null; i++) {
@@ -270,10 +280,12 @@ public class XMLContentAssistUtilities extends ContentAssistUtils {
 
 		if (head != null) {
 			for (head.getFirstChild(); child != null; child = child.getNextSibling()) {
-				if (child.getNodeType() != Node.ELEMENT_NODE)
+				if (child.getNodeType() != Node.ELEMENT_NODE) {
 					continue;
-				if (child.getNodeName().equalsIgnoreCase(META))
+				}
+				if (child.getNodeName().equalsIgnoreCase(META)) {
 					metas.add(child);
+				}
 			}
 			// children = head.getChildNodes();
 			// for(int i = 0 ; i < children.getLength(); i++) {
@@ -307,8 +319,9 @@ public class XMLContentAssistUtilities extends ContentAssistUtils {
 					contentScriptType = attributes.item(j).getNodeValue();
 				}
 			}
-			if (httpEquiv && contentScriptType != null)
+			if (httpEquiv && (contentScriptType != null)) {
 				return contentScriptType;
+			}
 		}
 		return null;
 	}
@@ -325,8 +338,9 @@ public class XMLContentAssistUtilities extends ContentAssistUtils {
 
 		boolean specified = false;
 		// try to find a scripting adapter for 'type'
-		if ((scriptNode == null) || (scriptNode.getAttributes() == null))
+		if ((scriptNode == null) || (scriptNode.getAttributes() == null)) {
 			return null;
+		}
 
 		attr = scriptNode.getAttributes().getNamedItem("type");//$NON-NLS-1$
 		if (attr != null) {
@@ -345,15 +359,17 @@ public class XMLContentAssistUtilities extends ContentAssistUtils {
 		// check if one is specified by a META tag at the root level or inside
 		// of HEAD
 		String type = null;
-		if (!specified)
+		if (!specified) {
 			type = getMetaScriptType(scriptNode.getOwnerDocument());
+		}
 		if (type != null) {
 			specified = true;
 			return lookupScriptType(type);
 		}
 		// return default
-		if (!specified)
+		if (!specified) {
 			return ScriptLanguageKeys.JAVASCRIPT;
+		}
 		return null;
 	}
 
@@ -365,8 +381,9 @@ public class XMLContentAssistUtilities extends ContentAssistUtils {
 	 * "nestedContext".
 	 */
 	public static boolean isJSPCloseDelimiter(IStructuredDocumentRegion fn) {
-		if (fn == null)
+		if (fn == null) {
 			return false;
+		}
 		return isJSPCloseDelimiter(fn.getType());
 	}
 
@@ -376,8 +393,9 @@ public class XMLContentAssistUtilities extends ContentAssistUtils {
 	 * "nestedContext".
 	 */
 	public static boolean isJSPCloseDelimiter(String type) {
-		if (type == null)
+		if (type == null) {
 			return false;
+		}
 		return (type.equals(DOMJSPRegionContextsPrivateCopy.JSP_CLOSE) || type.equals(DOMRegionContext.XML_TAG_CLOSE));
 	}
 
@@ -403,8 +421,9 @@ public class XMLContentAssistUtilities extends ContentAssistUtils {
 	 * "nestedContext".
 	 */
 	public static boolean isJSPDelimiter(String type) {
-		if (type == null)
+		if (type == null) {
 			return false;
+		}
 		return (isJSPOpenDelimiter(type) || isJSPCloseDelimiter(type));
 	}
 
@@ -414,19 +433,21 @@ public class XMLContentAssistUtilities extends ContentAssistUtils {
 	 * Should be evolved in future to depend on "nestedContext".
 	 */
 	public static boolean isJSPOpenDelimiter(IStructuredDocumentRegion fn) {
-		if (fn == null)
+		if (fn == null) {
 			return false;
+		}
 		return isJSPOpenDelimiter(fn.getType());
 	}
 
-    /**
+	/**
 	 * ISSUE: this is a bit of hidden JSP knowledge that was implemented this
 	 * way for expedency. Should be evolved in future to depend on
 	 * "nestedContext".
 	 */
 	public static boolean isJSPOpenDelimiter(String type) {
-		if (type == null)
+		if (type == null) {
 			return false;
+		}
 		return (type.equals(DOMJSPRegionContextsPrivateCopy.JSP_SCRIPTLET_OPEN) || type.equals(DOMJSPRegionContextsPrivateCopy.JSP_DECLARATION_OPEN) || type.equals(DOMJSPRegionContextsPrivateCopy.JSP_EXPRESSION_OPEN));
 	}
 
@@ -440,7 +461,7 @@ public class XMLContentAssistUtilities extends ContentAssistUtils {
 	 */
 	public static boolean isXMLJSPDelimiter(IStructuredDocumentRegion fn) {
 		boolean isDelimiter = false;
-		if (fn != null && fn instanceof ITextRegionContainer) {
+		if ((fn != null) && (fn instanceof ITextRegionContainer)) {
 			Object[] regions = ((ITextRegionContainer) fn).getRegions().toArray();
 			ITextRegion temp = null;
 			String regionText = ""; //$NON-NLS-1$
@@ -448,8 +469,9 @@ public class XMLContentAssistUtilities extends ContentAssistUtils {
 				temp = (ITextRegion) regions[i];
 				if (temp.getType() == DOMRegionContext.XML_TAG_NAME) {
 					regionText = fn.getText(temp);
-					if (regionText.equalsIgnoreCase("jsp:scriptlet") || regionText.equalsIgnoreCase("jsp:expression") || regionText.equalsIgnoreCase("jsp:declaration")) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					if (regionText.equalsIgnoreCase("jsp:scriptlet") || regionText.equalsIgnoreCase("jsp:expression") || regionText.equalsIgnoreCase("jsp:declaration")) {
 						isDelimiter = true;
+					}
 				}
 			}
 		}
@@ -465,12 +487,14 @@ public class XMLContentAssistUtilities extends ContentAssistUtils {
 	 */
 	public static String lookupScriptLanguage(String language) {
 		for (int i = 0; i < ScriptLanguageKeys.JAVASCRIPT_LANGUAGE_KEYS.length; i++) {
-			if (ScriptLanguageKeys.JAVASCRIPT_LANGUAGE_KEYS[i].equalsIgnoreCase(language))
+			if (ScriptLanguageKeys.JAVASCRIPT_LANGUAGE_KEYS[i].equalsIgnoreCase(language)) {
 				return ScriptLanguageKeys.JAVASCRIPT;
+			}
 		}
 		for (int i = 0; i < ScriptLanguageKeys.JAVA_LANGUAGE_KEYS.length; i++) {
-			if (ScriptLanguageKeys.JAVA_LANGUAGE_KEYS[i].equalsIgnoreCase(language))
+			if (ScriptLanguageKeys.JAVA_LANGUAGE_KEYS[i].equalsIgnoreCase(language)) {
 				return ScriptLanguageKeys.JAVA;
+			}
 		}
 		return language;
 	}
@@ -482,9 +506,11 @@ public class XMLContentAssistUtilities extends ContentAssistUtils {
 	 * @param type
 	 */
 	public static String lookupScriptType(String type) {
-		for (int i = 0; i < ScriptLanguageKeys.JAVASCRIPT_MIME_TYPE_KEYS.length; i++)
-			if (ScriptLanguageKeys.JAVASCRIPT_MIME_TYPE_KEYS[i].equalsIgnoreCase(type))
+		for (int i = 0; i < ScriptLanguageKeys.JAVASCRIPT_MIME_TYPE_KEYS.length; i++) {
+			if (ScriptLanguageKeys.JAVASCRIPT_MIME_TYPE_KEYS[i].equalsIgnoreCase(type)) {
 				return ScriptLanguageKeys.JAVASCRIPT;
+			}
+		}
 		return type;
 	}
 }

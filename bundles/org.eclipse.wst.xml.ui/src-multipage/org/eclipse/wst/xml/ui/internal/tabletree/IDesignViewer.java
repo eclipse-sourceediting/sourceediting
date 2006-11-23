@@ -18,6 +18,6 @@ public interface IDesignViewer {
 	String getTitle();
 
 	void setDocument(IDocument document);
-	
+
 	ISelectionProvider getSelectionProvider();
 }

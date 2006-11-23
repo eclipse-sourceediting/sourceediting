@@ -270,8 +270,9 @@ public class NewXMLTemplatesWizardPage extends WizardPage {
 					Template left = (Template) object1;
 					Template right = (Template) object2;
 					int result = left.getName().compareToIgnoreCase(right.getName());
-					if (result != 0)
+					if (result != 0) {
 						return result;
+					}
 					return left.getDescription().compareToIgnoreCase(right.getDescription());
 				}
 				return super.compare(viewer, object1, object2);
@@ -361,10 +362,12 @@ public class NewXMLTemplatesWizardPage extends WizardPage {
 		if (!enabled) {
 			// save last selected template
 			Template template = getSelectedTemplate();
-			if (template != null)
+			if (template != null) {
 				fLastSelectedTemplateName = template.getName();
-			else
+			}
+			else {
 				fLastSelectedTemplateName = ""; //$NON-NLS-1$
+			}
 
 			fTableViewer.setSelection(null);
 		}
@@ -437,7 +440,7 @@ public class NewXMLTemplatesWizardPage extends WizardPage {
 	 */
 	private void loadLastSavedPreferences() {
 		String templateName = XMLUIPlugin.getDefault().getPreferenceStore().getString(XMLUIPreferenceNames.NEW_FILE_TEMPLATE_NAME);
-		if (templateName == null || templateName.length() == 0) {
+		if ((templateName == null) || (templateName.length() == 0)) {
 			fLastSelectedTemplateName = ""; //$NON-NLS-1$
 			fUseTemplateButton.setSelection(false);
 		}
@@ -473,7 +476,7 @@ public class NewXMLTemplatesWizardPage extends WizardPage {
 	private void setSelectedTemplate(String templateName) {
 		Object template = null;
 
-		if (templateName != null && templateName.length() > 0) {
+		if ((templateName != null) && (templateName.length() > 0)) {
 			// pick the last used template
 			template = fTemplateStore.findTemplate(templateName, TemplateContextTypeIdsXML.NEW);
 		}

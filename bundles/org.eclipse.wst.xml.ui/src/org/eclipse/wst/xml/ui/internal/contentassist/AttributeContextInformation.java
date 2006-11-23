@@ -81,8 +81,9 @@ public class AttributeContextInformation implements IContextInformation {
 	 * @see org.eclipse.jface.text.contentassist.IContextInformation#getContextDisplayString()
 	 */
 	public String getContextDisplayString() {
-		if (fContextDisplayString != null)
+		if (fContextDisplayString != null) {
 			return fContextDisplayString;
+		}
 		return fInformationDisplayString;
 	}
 

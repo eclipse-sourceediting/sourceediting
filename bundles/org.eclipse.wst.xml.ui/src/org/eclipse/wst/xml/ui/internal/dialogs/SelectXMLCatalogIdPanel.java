@@ -49,7 +49,7 @@ public class SelectXMLCatalogIdPanel extends Composite {
 		this.setLayoutData(gd);
 
 		Label label = new Label(this, SWT.NONE);
-		label.setText(XMLUIMessages._UI_LABEL_XML_CATALOG_COLON); //$NON-NLS-1$
+		label.setText(XMLUIMessages._UI_LABEL_XML_CATALOG_COLON);
 
 		tableViewer = createTableViewer(this);
 		tableViewer.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -58,17 +58,18 @@ public class SelectXMLCatalogIdPanel extends Composite {
 
 	protected XMLCatalogTableViewer createTableViewer(Composite parent) {
 		String headings[] = new String[2];
-		headings[0] = XMLUIMessages._UI_LABEL_KEY; //$NON-NLS-1$
-		headings[1] = XMLUIMessages._UI_LABEL_URI; //$NON-NLS-1$
+		headings[0] = XMLUIMessages._UI_LABEL_KEY;
+		headings[1] = XMLUIMessages._UI_LABEL_URI;
 
 		XMLCatalogTableViewer theTableViewer = new XMLCatalogTableViewer(parent, headings) {
 
 			protected void addXMLCatalogEntries(List list, ICatalogEntry[] entries) {
-				for (int i=0; i < entries.length; i++) {
+				for (int i = 0; i < entries.length; i++) {
 					ICatalogEntry entry = entries[i];
 					if (catalogEntryType == 0) {
 						list.add(entry);
-					} else if (catalogEntryType == entry.getEntryType()) {
+					}
+					else if (catalogEntryType == entry.getEntryType()) {
 						list.add(entry);
 					}
 				}
@@ -77,7 +78,7 @@ public class SelectXMLCatalogIdPanel extends Composite {
 			public Collection getXMLCatalogEntries() {
 				List result = null;
 
-				if (fXmlCatalog == null || doTableSizeHack) {
+				if ((fXmlCatalog == null) || doTableSizeHack) {
 					// this lets us create a table with an initial height of
 					// 10 rows
 					// otherwise we get stuck with 0 row heigh table... that's
@@ -87,30 +88,26 @@ public class SelectXMLCatalogIdPanel extends Composite {
 					for (int i = 0; i < 6; i++) {
 						result.add(""); //$NON-NLS-1$
 					}
-				} else {
+				}
+				else {
 					result = new Vector();
-					 INextCatalog[] nextCatalogs = fXmlCatalog.getNextCatalogs();
-				        for (int i = 0; i < nextCatalogs.length; i++)
-				        {
-				            INextCatalog catalog = nextCatalogs[i];
-				            ICatalog referencedCatalog = catalog.getReferencedCatalog();
-				            if (referencedCatalog != null)
-				            {
-				                if (XMLCorePlugin.SYSTEM_CATALOG_ID
-				                        .equals(referencedCatalog.getId()))
-				                {
-				                    ICatalog systemCatalog = referencedCatalog;
-				                    addXMLCatalogEntries(result, systemCatalog.getCatalogEntries());
-				                    
-				                } else if (XMLCorePlugin.USER_CATALOG_ID
-				                        .equals(referencedCatalog.getId()))
-				                {
-				                	ICatalog userCatalog = referencedCatalog;
-				                    addXMLCatalogEntries(result, userCatalog.getCatalogEntries());
-				   				 
-				                }
-				            }
-				        }
+					INextCatalog[] nextCatalogs = fXmlCatalog.getNextCatalogs();
+					for (int i = 0; i < nextCatalogs.length; i++) {
+						INextCatalog catalog = nextCatalogs[i];
+						ICatalog referencedCatalog = catalog.getReferencedCatalog();
+						if (referencedCatalog != null) {
+							if (XMLCorePlugin.SYSTEM_CATALOG_ID.equals(referencedCatalog.getId())) {
+								ICatalog systemCatalog = referencedCatalog;
+								addXMLCatalogEntries(result, systemCatalog.getCatalogEntries());
+
+							}
+							else if (XMLCorePlugin.USER_CATALOG_ID.equals(referencedCatalog.getId())) {
+								ICatalog userCatalog = referencedCatalog;
+								addXMLCatalogEntries(result, userCatalog.getCatalogEntries());
+
+							}
+						}
+					}
 				}
 				return result;
 			}

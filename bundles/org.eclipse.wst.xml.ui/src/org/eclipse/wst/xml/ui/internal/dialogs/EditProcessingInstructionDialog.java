@@ -49,7 +49,7 @@ public class EditProcessingInstructionDialog extends Dialog {
 		data = getModelValue(dataField.getText());
 		super.buttonPressed(buttonId);
 	}
- 
+
 	protected void createButtonsForButtonBar(Composite parent) {
 		createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
 		createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
@@ -71,14 +71,14 @@ public class EditProcessingInstructionDialog extends Dialog {
 		gd.widthHint = 250;
 
 		Label targetLabel = new Label(composite, SWT.NONE);
-		targetLabel.setText(XMLUIMessages._UI_LABEL_TARGET_COLON); //$NON-NLS-1$
+		targetLabel.setText(XMLUIMessages._UI_LABEL_TARGET_COLON);
 
 		targetField = new Text(composite, SWT.SINGLE | SWT.BORDER);
 		targetField.setLayoutData(gd);
 		targetField.setText(getDisplayValue(target));
 
 		Label dataLabel = new Label(composite, SWT.NONE);
-		dataLabel.setText(XMLUIMessages._UI_LABEL_DATA_COLON); //$NON-NLS-1$
+		dataLabel.setText(XMLUIMessages._UI_LABEL_DATA_COLON);
 
 		dataField = new Text(composite, SWT.SINGLE | SWT.BORDER);
 		dataField.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -89,7 +89,7 @@ public class EditProcessingInstructionDialog extends Dialog {
 
 	protected Label createMessageArea(Composite composite) {
 		Label label = new Label(composite, SWT.NONE);
-		//label.setText(message);
+		// label.setText(message);
 		return label;
 	}
 
@@ -103,7 +103,7 @@ public class EditProcessingInstructionDialog extends Dialog {
 
 	protected String getModelValue(String string) {
 		String result = null;
-		if (string != null && string.trim().length() > 0) {
+		if ((string != null) && (string.trim().length() > 0)) {
 			result = string;
 		}
 		return result;
@@ -114,6 +114,3 @@ public class EditProcessingInstructionDialog extends Dialog {
 		return target;
 	}
 }
-
-
-

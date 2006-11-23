@@ -78,12 +78,14 @@ public class CleanupActionXMLDelegate implements IEditorActionDelegate, IActionD
 							IStructuredModel model = null;
 							try {
 								model = StructuredModelManager.getModelManager().getExistingModelForEdit(editor.getDocumentProvider().getDocument(editor.getEditorInput()));
-								if (model != null)
+								if (model != null) {
 									cleanupProcessor.cleanupModel(model);
+								}
 							}
 							finally {
-								if (model != null)
+								if (model != null) {
 									model.releaseFromEdit();
+								}
 							}
 						}
 					}
@@ -96,7 +98,7 @@ public class CleanupActionXMLDelegate implements IEditorActionDelegate, IActionD
 					if (model != null) {
 						// begin recording
 						ITextSelection selection = (ITextSelection) editor.getSelectionProvider().getSelection();
-						model.beginRecording(this, SSEUIMessages.Cleanup_Document_UI_, SSEUIMessages.Cleanup_Document_UI_, selection.getOffset(), selection.getLength()); //$NON-NLS-1$ //$NON-NLS-2$
+						model.beginRecording(this, SSEUIMessages.Cleanup_Document_UI_, SSEUIMessages.Cleanup_Document_UI_, selection.getOffset(), selection.getLength());
 
 						// tell the model that we are about to make a big
 						// model change
@@ -128,8 +130,9 @@ public class CleanupActionXMLDelegate implements IEditorActionDelegate, IActionD
 	}
 
 	IStructuredCleanupProcessor getCleanupProcessor() {
-		if (fCleanupProcessor == null)
+		if (fCleanupProcessor == null) {
 			fCleanupProcessor = new CleanupProcessorXML();
+		}
 
 		return fCleanupProcessor;
 	}

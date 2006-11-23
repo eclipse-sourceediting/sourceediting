@@ -135,16 +135,19 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 	public ITextDoubleClickStrategy getDoubleClickStrategy(ISourceViewer sourceViewer, String contentType) {
 
 		ITextDoubleClickStrategy doubleClickStrategy = null;
-		if (contentType.compareTo(IXMLPartitions.XML_DEFAULT) == 0)
+		if (contentType.compareTo(IXMLPartitions.XML_DEFAULT) == 0) {
 			doubleClickStrategy = new XMLDoubleClickStrategy();
-		else
+		}
+		else {
 			doubleClickStrategy = super.getDoubleClickStrategy(sourceViewer, contentType);
+		}
 		return doubleClickStrategy;
 	}
 
 	public IHyperlinkDetector[] getHyperlinkDetectors(ISourceViewer sourceViewer) {
-		if (sourceViewer == null || !fPreferenceStore.getBoolean(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_HYPERLINKS_ENABLED))
+		if ((sourceViewer == null) || !fPreferenceStore.getBoolean(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_HYPERLINKS_ENABLED)) {
 			return null;
+		}
 
 		List allDetectors = new ArrayList(0);
 		allDetectors.add(new XMLHyperlinkDetector());
@@ -173,18 +176,22 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 			boolean appendTab = false;
 
 			if (useSpaces) {
-				for (int j = 0; j + i < indentationWidth; j++)
+				for (int j = 0; j + i < indentationWidth; j++) {
 					prefix.append(' ');
+				}
 
-				if (i != 0)
+				if (i != 0) {
 					appendTab = true;
+				}
 			}
 			else {
-				for (int j = 0; j < i; j++)
+				for (int j = 0; j < i; j++) {
 					prefix.append(' ');
+				}
 
-				if (i != indentationWidth)
+				if (i != indentationWidth) {
 					appendTab = true;
+				}
 			}
 
 			if (appendTab) {
@@ -213,7 +220,7 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 	public LineStyleProvider[] getLineStyleProviders(ISourceViewer sourceViewer, String partitionType) {
 		LineStyleProvider[] providers = null;
 
-		if (partitionType == IXMLPartitions.XML_DEFAULT || partitionType == IXMLPartitions.XML_CDATA || partitionType == IXMLPartitions.XML_COMMENT || partitionType == IXMLPartitions.XML_DECLARATION || partitionType == IXMLPartitions.XML_PI) {
+		if ((partitionType == IXMLPartitions.XML_DEFAULT) || (partitionType == IXMLPartitions.XML_CDATA) || (partitionType == IXMLPartitions.XML_COMMENT) || (partitionType == IXMLPartitions.XML_DECLARATION) || (partitionType == IXMLPartitions.XML_PI)) {
 			providers = new LineStyleProvider[]{getLineStyleProviderForXML()};
 		}
 
@@ -221,8 +228,9 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 	}
 
 	private LineStyleProvider getLineStyleProviderForXML() {
-		if (fLineStyleProviderForXML == null)
+		if (fLineStyleProviderForXML == null) {
 			fLineStyleProviderForXML = new LineStyleProviderForXML();
+		}
 		return fLineStyleProviderForXML;
 	}
 
@@ -236,21 +244,24 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 			TextHoverManager manager = SSEUIPlugin.getDefault().getTextHoverManager();
 			TextHoverManager.TextHoverDescriptor[] hoverDescs = manager.getTextHovers();
 			int i = 0;
-			while (i < hoverDescs.length && textHover == null) {
-				if (hoverDescs[i].isEnabled() && EditorUtility.computeStateMask(hoverDescs[i].getModifierString()) == stateMask) {
+			while ((i < hoverDescs.length) && (textHover == null)) {
+				if (hoverDescs[i].isEnabled() && (EditorUtility.computeStateMask(hoverDescs[i].getModifierString()) == stateMask)) {
 					String hoverType = hoverDescs[i].getId();
-					if (TextHoverManager.COMBINATION_HOVER.equalsIgnoreCase(hoverType))
+					if (TextHoverManager.COMBINATION_HOVER.equalsIgnoreCase(hoverType)) {
 						textHover = manager.createBestMatchHover(new XMLTagInfoHoverProcessor());
-					else if (TextHoverManager.DOCUMENTATION_HOVER.equalsIgnoreCase(hoverType))
+					}
+					else if (TextHoverManager.DOCUMENTATION_HOVER.equalsIgnoreCase(hoverType)) {
 						textHover = new XMLTagInfoHoverProcessor();
+					}
 				}
 				i++;
 			}
 		}
 
 		// no appropriate text hovers found, try super
-		if (textHover == null)
+		if (textHover == null) {
 			textHover = super.getTextHover(sourceViewer, contentType, stateMask);
+		}
 
 		return textHover;
 	}

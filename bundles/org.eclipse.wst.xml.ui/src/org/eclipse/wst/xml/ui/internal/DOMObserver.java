@@ -159,7 +159,7 @@ public class DOMObserver {
 			adapter.connect(fDocument);
 
 			ModelQuery modelQuery = ModelQueryUtil.getModelQuery(fDocument);
-			if (modelQuery != null && modelQuery.getCMDocumentManager() != null) {
+			if ((modelQuery != null) && (modelQuery.getCMDocumentManager() != null)) {
 				CMDocumentManager cmDocumentManager = modelQuery.getCMDocumentManager();
 				cmDocumentManager.setPropertyEnabled(CMDocumentManager.PROPERTY_AUTO_LOAD, false);
 			}
@@ -177,7 +177,7 @@ public class DOMObserver {
 
 	public void invokeCMDocumentLoad() {
 		ModelQuery modelQuery = ModelQueryUtil.getModelQuery(fDocument);
-		if (modelQuery != null && modelQuery.getCMDocumentManager() != null) {
+		if ((modelQuery != null) && (modelQuery.getCMDocumentManager() != null)) {
 			CMDocumentLoader loader = isGrammarInferenceEnabled ? new InferredGrammarBuildingCMDocumentLoader(fDocument, modelQuery) : new CMDocumentLoader(fDocument, modelQuery);
 			loader.loadCMDocuments();
 		}

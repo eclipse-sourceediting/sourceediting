@@ -61,12 +61,12 @@ class WorkspaceFileHyperlink implements IHyperlink {
 	}
 
 	public void open() {
-		if (fFile != null && fFile.exists()) {
+		if ((fFile != null) && fFile.exists()) {
 			try {
 				IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 				IEditorPart editor = IDE.openEditor(page, fFile, true);
 				// highlight range in editor if possible
-				if (fHighlightRange != null && editor instanceof ITextEditor) {
+				if ((fHighlightRange != null) && (editor instanceof ITextEditor)) {
 					((ITextEditor) editor).setHighlightRange(fHighlightRange.getOffset(), fHighlightRange.getLength(), true);
 				}
 			}

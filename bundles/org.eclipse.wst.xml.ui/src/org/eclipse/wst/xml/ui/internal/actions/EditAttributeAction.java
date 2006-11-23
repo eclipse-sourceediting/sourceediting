@@ -77,4 +77,3 @@ public class EditAttributeAction extends NodeAction {
 		manager.endNodeAction(this);
 	}
 }
-

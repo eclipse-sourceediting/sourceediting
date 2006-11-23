@@ -40,10 +40,10 @@ public class MenuBuilder {
 				IAction action = (IAction) o;
 				result = action.getText();
 			}
-			//else if (o instanceof MenuData)
-			//{
-			//  result = "z" + ((MenuData)o).name;
-			//}
+			// else if (o instanceof MenuData)
+			// {
+			// result = "z" + ((MenuData)o).name;
+			// }
 			return result;
 		}
 	};
@@ -84,7 +84,8 @@ public class MenuBuilder {
 			for (int i = 0; i < array.length; i++) {
 				menu.add((Action) array[i]);
 			}
-		} else {
+		}
+		else {
 			createAlphebeticalGrouping(menu, actionList);
 		}
 	}

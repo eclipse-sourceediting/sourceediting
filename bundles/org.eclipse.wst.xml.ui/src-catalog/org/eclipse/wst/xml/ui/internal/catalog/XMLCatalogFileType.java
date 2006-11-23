@@ -20,37 +20,31 @@ import com.ibm.icu.util.StringTokenizer;
 import org.eclipse.swt.graphics.Image;
 
 
-public class XMLCatalogFileType 
-{
-  public String description;
-  public List extensions = new ArrayList();
-  public String iconFileName;
-  public Image icon; 
-    
-  public void addExtensions(String contributedExtensions)
-  {
-	List list = parseExtensions(contributedExtensions);
-	for (Iterator i = list.iterator(); i.hasNext(); )
-	{
-	  String extension = (String)i.next();
-	  if (!extensions.contains(extension))
-	  {
-		extensions.add(extension);
-	  }
+public class XMLCatalogFileType {
+	public String description;
+	public List extensions = new ArrayList();
+	public String iconFileName;
+	public Image icon;
+
+	public void addExtensions(String contributedExtensions) {
+		List list = parseExtensions(contributedExtensions);
+		for (Iterator i = list.iterator(); i.hasNext();) {
+			String extension = (String) i.next();
+			if (!extensions.contains(extension)) {
+				extensions.add(extension);
+			}
+		}
 	}
-  }  
-  
-  protected List parseExtensions(String string)
-  {
-	List list = new ArrayList();
-	for (StringTokenizer st = new StringTokenizer(string, ", "); st.hasMoreTokens(); ) //$NON-NLS-1$
-	{
-	  String token = st.nextToken();
-	  if (token != null)
-	  {          	
-		list.add(token); 
-	  }        	  	 
-	}  
-	return list;
-  } 
+
+	protected List parseExtensions(String string) {
+		List list = new ArrayList();
+		for (StringTokenizer st = new StringTokenizer(string, ", "); st.hasMoreTokens();) //$NON-NLS-1$
+		{
+			String token = st.nextToken();
+			if (token != null) {
+				list.add(token);
+			}
+		}
+		return list;
+	}
 }

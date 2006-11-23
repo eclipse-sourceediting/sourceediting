@@ -42,7 +42,7 @@ public class XMLTableTreePropertyDescriptorFactory extends DOMPropertyDescriptor
 		if (mq != null) {
 			valuesArray = mq.getPossibleDataTypeValues(element, cmNode);
 		}
-		if (valuesArray != null && valuesArray.length > 0) {
+		if ((valuesArray != null) && (valuesArray.length > 0)) {
 			result = new EnumeratedStringPropertyDescriptor(name, name, valuesArray);
 		}
 		else {
@@ -55,7 +55,7 @@ public class XMLTableTreePropertyDescriptorFactory extends DOMPropertyDescriptor
 	public IPropertyDescriptor createTextPropertyDescriptor(Text text) {
 		IPropertyDescriptor result = null;
 		Node parentNode = text.getParentNode();
-		if (parentNode != null && parentNode.getNodeType() == Node.ELEMENT_NODE) {
+		if ((parentNode != null) && (parentNode.getNodeType() == Node.ELEMENT_NODE)) {
 			Element parentElement = (Element) parentNode;
 			ModelQuery mq = ModelQueryUtil.getModelQuery(text.getOwnerDocument());
 			CMElementDeclaration ed = null;

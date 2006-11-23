@@ -24,69 +24,58 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 /**
- *
+ * 
  */
-public class XMLQuickScan
-{
-  public static String getTargetNamespaceURIForSchema(String uri)
-  {
-    String result = null;
-    try
-    {
-      URL url = new URL(uri);
-      InputStream inputStream = url.openStream();
-      result = XMLQuickScan.getTargetNamespaceURIForSchema(inputStream);
-    }
-    catch (Exception e)
-    {
-    }
-    return result;
-  }
+public class XMLQuickScan {
+	public static String getTargetNamespaceURIForSchema(String uri) {
+		String result = null;
+		try {
+			URL url = new URL(uri);
+			InputStream inputStream = url.openStream();
+			result = XMLQuickScan.getTargetNamespaceURIForSchema(inputStream);
+		}
+		catch (Exception e) {
+		}
+		return result;
+	}
 
-  public static String getTargetNamespaceURIForSchema(InputStream input)
-  {
-    TargetNamespaceURIContentHandler handler = new TargetNamespaceURIContentHandler();
-    ClassLoader prevClassLoader = Thread.currentThread().getContextClassLoader();
-    try
-    {
-      Thread.currentThread().setContextClassLoader(XMLQuickScan.class.getClassLoader());
-      SAXParserFactory factory = SAXParserFactory.newInstance();
-      factory.setNamespaceAware(true);
-	  SAXParser parser = factory.newSAXParser();
-	  parser.parse(new InputSource(input), handler);
-    }
-    catch (Exception e)
-    {
-    }
-    finally
-    {
-      Thread.currentThread().setContextClassLoader(prevClassLoader);
-    }
-    return handler.targetNamespaceURI;
-  }
+	public static String getTargetNamespaceURIForSchema(InputStream input) {
+		TargetNamespaceURIContentHandler handler = new TargetNamespaceURIContentHandler();
+		ClassLoader prevClassLoader = Thread.currentThread().getContextClassLoader();
+		try {
+			Thread.currentThread().setContextClassLoader(XMLQuickScan.class.getClassLoader());
+			SAXParserFactory factory = SAXParserFactory.newInstance();
+			factory.setNamespaceAware(true);
+			SAXParser parser = factory.newSAXParser();
+			parser.parse(new InputSource(input), handler);
+		}
+		catch (Exception e) {
+		}
+		finally {
+			Thread.currentThread().setContextClassLoader(prevClassLoader);
+		}
+		return handler.targetNamespaceURI;
+	}
 
-  protected static class TargetNamespaceURIContentHandler extends DefaultHandler
-  {
-    public String targetNamespaceURI;
+	protected static class TargetNamespaceURIContentHandler extends DefaultHandler {
+		public String targetNamespaceURI;
 
-    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException
-    {
-      if (localName.equals("schema")) //$NON-NLS-1$
-      {
-        int nAttributes = attributes.getLength();
-        for (int i = 0; i < nAttributes; i++)
-        {
-          if (attributes.getLocalName(i).equals("targetNamespace")) //$NON-NLS-1$
-          {
-            targetNamespaceURI = attributes.getValue(i);
-            break;
-          }
-        }
-      }
-      // todo there's a nice way to do this I'm sure    
-      // here I intentially cause an exception... 
-      String x = null;
-      x.length();
-    }
-  }
+		public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+			if (localName.equals("schema")) //$NON-NLS-1$
+			{
+				int nAttributes = attributes.getLength();
+				for (int i = 0; i < nAttributes; i++) {
+					if (attributes.getLocalName(i).equals("targetNamespace")) //$NON-NLS-1$
+					{
+						targetNamespaceURI = attributes.getValue(i);
+						break;
+					}
+				}
+			}
+			// todo there's a nice way to do this I'm sure
+			// here I intentially cause an exception...
+			String x = null;
+			x.length();
+		}
+	}
 }

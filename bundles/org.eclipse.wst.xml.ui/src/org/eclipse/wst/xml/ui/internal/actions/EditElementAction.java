@@ -90,11 +90,12 @@ public class EditElementAction extends NodeAction {
 					setStructuredDocumentRegionElementName(model, elementImpl.getStartStructuredDocumentRegion(), oldName, newName);
 					setStructuredDocumentRegionElementName(model, elementImpl.getEndStructuredDocumentRegion(), oldName, newName);
 				}
-			} else {
+			}
+			else {
 				Element newElement = document.createElement(dialog.getElementName());
 				NodeList nodeList = parent.getChildNodes();
 				int nodeListLength = nodeList.getLength();
-				Node refChild = insertionIndex < nodeListLength && insertionIndex >= 0 ? nodeList.item(insertionIndex) : null;
+				Node refChild = (insertionIndex < nodeListLength) && (insertionIndex >= 0) ? nodeList.item(insertionIndex) : null;
 				parent.insertBefore(newElement, refChild);
 				manager.reformat(newElement, false);
 				manager.setViewerSelection(newElement);
@@ -114,4 +115,3 @@ public class EditElementAction extends NodeAction {
 		}
 	}
 }
-

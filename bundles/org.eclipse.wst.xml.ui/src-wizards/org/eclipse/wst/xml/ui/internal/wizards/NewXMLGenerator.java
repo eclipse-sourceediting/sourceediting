@@ -78,7 +78,7 @@ public class NewXMLGenerator {
 		CMDocument cmDocument = null;
 
 		if (URIHelper.isReadableURI(uri, true)) {
-		    // (cs) assume the uri has been provided in a normalized form
+			// (cs) assume the uri has been provided in a normalized form
 			cmDocument = ContentModelManager.getInstance().createCMDocument(uri, null);
 
 			if (uri.endsWith(".dtd")) { //$NON-NLS-1$
@@ -178,25 +178,28 @@ public class NewXMLGenerator {
 
 		Document xmlDocument = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
 		DOMContentBuilderImpl contentBuilder = new DOMContentBuilderImpl(xmlDocument);
-        
-        // this 'uglyTempHack' flag is required in order to supress the creation a default encoding 
-        // we'll handle this later in the domWriter.print() method used below
-        //
-        contentBuilder.supressCreationOfDoctypeAndXMLDeclaration = true;
+
+		// this 'uglyTempHack' flag is required in order to supress the
+		// creation a default encoding
+		// we'll handle this later in the domWriter.print() method used below
+		//
+		contentBuilder.supressCreationOfDoctypeAndXMLDeclaration = true;
 		contentBuilder.setBuildPolicy(buildPolicy);
 		contentBuilder.setExternalCMDocumentSupport(new MyExternalCMDocumentSupport(namespaceInfoList, xmlFileName));
 		contentBuilder.createDefaultRootContent(cmDocument, cmElementDeclaration, namespaceInfoList);
 
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream, charset);
-            
+
 		DOMWriter domWriter = new DOMWriter(outputStreamWriter);
-        
-        // TODO... instead of relying on file extensions, we need to keep track of the grammar type
-        // better yet we should reate an SSE document so that we can format it nicely before saving
-        // then we won't need the DOMWriter at all
-        //
-		domWriter.print(xmlDocument, charset, cmDocument.getNodeName(), getNonWhitespaceString(getPublicId()), getNonWhitespaceString(getSystemId())); 
+
+		// TODO... instead of relying on file extensions, we need to keep
+		// track of the grammar type
+		// better yet we should reate an SSE document so that we can format it
+		// nicely before saving
+		// then we won't need the DOMWriter at all
+		//
+		domWriter.print(xmlDocument, charset, cmDocument.getNodeName(), getNonWhitespaceString(getPublicId()), getNonWhitespaceString(getSystemId()));
 		outputStream.flush();
 		outputStream.close();
 
@@ -206,7 +209,7 @@ public class NewXMLGenerator {
 
 	public void createNamespaceInfoList() {
 		List result = new Vector();
-	    if (cmDocument != null) {
+		if (cmDocument != null) {
 			result = (List) cmDocument.getProperty("http://org.eclipse.wst/cm/properties/namespaceInfo"); //$NON-NLS-1$
 			if (result != null) {
 				int size = result.size();
@@ -258,7 +261,7 @@ public class NewXMLGenerator {
 	public String[] getNamespaceInfoErrors() {
 		String[] errorList = null;
 
-		if (namespaceInfoList != null && isMissingNamespaceLocation()) {
+		if ((namespaceInfoList != null) && isMissingNamespaceLocation()) {
 			String title = XMLWizardsMessages._UI_LABEL_NO_LOCATION_HINT;
 			String message = XMLWizardsMessages._UI_WARNING_MSG_NO_LOCATION_HINT_1 + " " + XMLWizardsMessages._UI_WARNING_MSG_NO_LOCATION_HINT_2 + "\n\n" + XMLWizardsMessages._UI_WARNING_MSG_NO_LOCATION_HINT_3; //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -347,7 +350,7 @@ public class NewXMLGenerator {
 
 		public CMDocument getCMDocument(Element element, String namespaceURI) {
 			CMDocument result = null;
-			if (namespaceURI != null && namespaceURI.trim().length() > 0) {
+			if ((namespaceURI != null) && (namespaceURI.trim().length() > 0)) {
 				String locationHint = null;
 				for (Iterator i = namespaceInfoList1.iterator(); i.hasNext();) {
 					NamespaceInfo info = (NamespaceInfo) i.next();

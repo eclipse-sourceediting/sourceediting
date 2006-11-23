@@ -54,16 +54,17 @@ public class QuickAssistProcessorXML implements IQuickAssistProcessor {
 	 */
 	protected void getInsertRequiredAttrs(ArrayList proposals, StructuredTextViewer viewer, int offset) {
 		IDOMNode node = (IDOMNode) ContentAssistUtils.getNodeAt(viewer, offset);
-		if (node != null && node.getNodeType() == Node.ELEMENT_NODE) {
+		if ((node != null) && (node.getNodeType() == Node.ELEMENT_NODE)) {
 			IStructuredDocumentRegion startStructuredDocumentRegion = node.getStartStructuredDocumentRegion();
-			if (startStructuredDocumentRegion != null && startStructuredDocumentRegion.containsOffset(offset)) {
+			if ((startStructuredDocumentRegion != null) && startStructuredDocumentRegion.containsOffset(offset)) {
 				IDOMNode cursorNode = (IDOMNode) ContentAssistUtils.getNodeAt(viewer, offset);
 				List requiredAttrs = getRequiredAttrs(cursorNode);
 				if (requiredAttrs.size() > 0) {
 					NamedNodeMap currentAttrs = node.getAttributes();
 					List insertAttrs = new ArrayList();
-					if (currentAttrs.getLength() == 0)
+					if (currentAttrs.getLength() == 0) {
 						insertAttrs.addAll(requiredAttrs);
+					}
 					else {
 						for (int i = 0; i < requiredAttrs.size(); i++) {
 							String requiredAttrName = ((CMAttributeDeclaration) requiredAttrs.get(i)).getAttrName();
@@ -75,12 +76,14 @@ public class QuickAssistProcessorXML implements IQuickAssistProcessor {
 									break;
 								}
 							}
-							if (!found)
+							if (!found) {
 								insertAttrs.add(requiredAttrs.get(i));
+							}
 						}
 					}
-					if (insertAttrs.size() > 0)
+					if (insertAttrs.size() > 0) {
 						proposals.add(new InsertRequiredAttrsQuickAssistProposal(insertAttrs));
+					}
 				}
 			}
 		}
@@ -98,22 +101,25 @@ public class QuickAssistProcessorXML implements IQuickAssistProcessor {
 
 		ITextRegion region = null;
 		int regionTextEndOffset = 0;
-		if (startStructuredDocumentRegion != null && startStructuredDocumentRegion.containsOffset(offset)) {
+		if ((startStructuredDocumentRegion != null) && startStructuredDocumentRegion.containsOffset(offset)) {
 			region = startStructuredDocumentRegion.getRegionAtCharacterOffset(offset);
 			regionTextEndOffset = startStructuredDocumentRegion.getTextEndOffset(region);
-		} else if (endStructuredDocumentRegion != null && endStructuredDocumentRegion.containsOffset(offset)) {
+		}
+		else if ((endStructuredDocumentRegion != null) && endStructuredDocumentRegion.containsOffset(offset)) {
 			region = endStructuredDocumentRegion.getRegionAtCharacterOffset(offset);
 			regionTextEndOffset = endStructuredDocumentRegion.getTextEndOffset(region);
 		}
 
-		if (region != null && (region.getType() == DOMRegionContext.XML_TAG_NAME || region.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME) && offset <= regionTextEndOffset)
+		if ((region != null) && ((region.getType() == DOMRegionContext.XML_TAG_NAME) || (region.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME)) && (offset <= regionTextEndOffset)) {
 			proposals.add(new RenameInFileQuickAssistProposal());
+		}
 	}
 
 	protected ModelQuery getModelQuery(Node node) {
 		if (node.getNodeType() == Node.DOCUMENT_NODE) {
 			return ModelQueryUtil.getModelQuery((Document) node);
-		} else {
+		}
+		else {
 			return ModelQueryUtil.getModelQuery(node.getOwnerDocument());
 		}
 	}
@@ -163,7 +169,8 @@ public class QuickAssistProcessorXML implements IQuickAssistProcessor {
 	 */
 	protected void getSurroundWithNewElementQuickAssistProposal(ArrayList proposals, StructuredTextViewer viewer, int offset) {
 		IDOMNode node = (IDOMNode) ContentAssistUtils.getNodeAt(viewer, offset);
-		if (node != null)
+		if (node != null) {
 			proposals.add(new SurroundWithNewElementQuickAssistProposal());
+		}
 	}
 }
