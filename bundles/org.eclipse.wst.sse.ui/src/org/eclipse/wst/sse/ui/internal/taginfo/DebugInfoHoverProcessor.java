@@ -17,7 +17,6 @@ package org.eclipse.wst.sse.ui.internal.taginfo;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IRegion;
-import org.eclipse.jface.text.ITextHover;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.ITypedRegion;
 
@@ -74,7 +73,7 @@ public class DebugInfoHoverProcessor extends AbstractHoverProcessor {
 	 * @return IRegion region to hover over if offset is not over invalid
 	 *         whitespace. otherwise, returns <code>null</code>
 	 * 
-	 * @see ITextHover#getHoverRegion(ITextViewer, int)
+	 * @see org.eclipse.jface.text.ITextHover#getHoverRegion(ITextViewer, int)
 	 */
 	public IRegion getHoverRegion(ITextViewer textViewer, int offset) {
 		ITypedRegion region = null;
