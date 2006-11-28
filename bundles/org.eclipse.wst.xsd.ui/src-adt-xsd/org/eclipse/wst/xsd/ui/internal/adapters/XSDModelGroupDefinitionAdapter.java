@@ -19,6 +19,7 @@ import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.BaseSelectionAction;
+import org.eclipse.wst.xsd.ui.internal.adt.actions.ShowPropertiesViewAction;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IActionProvider;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IGraphElement;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IADTObject;
@@ -29,13 +30,14 @@ import org.eclipse.wst.xsd.ui.internal.adt.outline.ITreeElement;
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDElementAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDModelGroupAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.DeleteXSDConcreteComponentAction;
+import org.eclipse.wst.xsd.ui.internal.common.actions.SetMultiplicityAction;
 import org.eclipse.wst.xsd.ui.internal.common.commands.DeleteCommand;
 import org.eclipse.wst.xsd.ui.internal.editor.Messages;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.xsd.XSDModelGroup;
 import org.eclipse.xsd.XSDModelGroupDefinition;
 
-public class XSDModelGroupDefinitionAdapter extends XSDBaseAdapter implements IStructure, IActionProvider, IGraphElement, IADTObjectListener
+public class XSDModelGroupDefinitionAdapter extends XSDParticleAdapter implements IStructure, IActionProvider, IGraphElement, IADTObjectListener
 {
   public static final Image MODEL_GROUP_ICON = XSDEditorPlugin.getPlugin().getIcon("obj16/XSDGroup.gif"); //$NON-NLS-1$
   public static final Image MODEL_GROUP_DISABLED_ICON = XSDEditorPlugin.getPlugin().getIcon("obj16/XSDGroupdis.gif"); //$NON-NLS-1$
@@ -116,6 +118,21 @@ public class XSDModelGroupDefinitionAdapter extends XSDBaseAdapter implements IS
     }
     
     list.add(DeleteXSDConcreteComponentAction.DELETE_XSD_COMPONENT_ID);
+    
+    if (getXSDModelGroupDefinition().isModelGroupDefinitionReference())
+    {
+      list.add(BaseSelectionAction.SEPARATOR_ID);
+      list.add(BaseSelectionAction.SUBMENU_START_ID + Messages._UI_ACTION_SET_MULTIPLICITY);
+      list.add(SetMultiplicityAction.REQUIRED_ID);
+      list.add(SetMultiplicityAction.ZERO_OR_ONE_ID);
+      list.add(SetMultiplicityAction.ZERO_OR_MORE_ID);
+      list.add(SetMultiplicityAction.ONE_OR_MORE_ID);    
+      list.add(BaseSelectionAction.SUBMENU_END_ID); 
+    }
+    
+    list.add(BaseSelectionAction.SEPARATOR_ID);
+    list.add(ShowPropertiesViewAction.ID);
+
     return (String [])list.toArray(new String[0]);
   }
 
@@ -197,4 +214,15 @@ public class XSDModelGroupDefinitionAdapter extends XSDBaseAdapter implements IS
     clearFields();
     notifyListeners(this, null);
   }
+  
+  public int getMaxOccurs()
+  {
+    return getMaxOccurs(getXSDModelGroupDefinition());
+  }
+
+  public int getMinOccurs()
+  {
+    return getMinOccurs(getXSDModelGroupDefinition());
+  }
+
 }
