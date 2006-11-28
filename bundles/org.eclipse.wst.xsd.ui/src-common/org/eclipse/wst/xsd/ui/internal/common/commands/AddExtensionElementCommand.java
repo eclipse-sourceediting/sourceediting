@@ -42,6 +42,7 @@ public class AddExtensionElementCommand extends AddExtensionCommand
       beginRecording(component.getElement());
       super.execute();
       addAnnotationSet(component.getSchema(), extensionsSchemaSpec);
+      formatChild(component.getElement());
     }
     finally
     {
