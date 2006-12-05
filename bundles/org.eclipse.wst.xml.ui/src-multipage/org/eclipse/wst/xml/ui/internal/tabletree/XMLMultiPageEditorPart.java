@@ -619,6 +619,13 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 	 */
 	public void doSave(IProgressMonitor monitor) {
 		fTextEditor.doSave(monitor);
+		/*
+		 * Update the design viewer since the editor input would have changed
+		 * to the new file.
+		 */
+		if (fDesignViewer != null) {
+			fDesignViewer.setDocument(getDocument());
+		}
 	}
 
 	/*
