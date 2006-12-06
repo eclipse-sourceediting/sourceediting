@@ -133,20 +133,36 @@
 			category="org.eclipse.wst.sse.ui.internal.provisional.preferences"
 			class="org.eclipse.wst.dtd.ui.internal.preferences.DTDFilesPreferencePage"
 			id="org.eclipse.wst.sse.ui.preferences.dtd">
+         	<keywordReference id="org.eclipse.wst.dtd.ui.files"/>
 		</page>
 		<page
 			name="%DTD_Templates.name"
 			category="org.eclipse.wst.sse.ui.preferences.dtd"
 			class="org.eclipse.wst.dtd.ui.internal.preferences.DTDTemplatePreferencePage"
 			id="org.eclipse.wst.sse.ui.preferences.dtd.templates">
+         	<keywordReference id="org.eclipse.wst.dtd.ui.templates"/>
 		</page>
 		<page
 			name="%_UI_LABEL_DTD_STYLES"
 			category="org.eclipse.wst.sse.ui.preferences.dtd"
 			class="org.eclipse.wst.dtd.ui.internal.preferences.DTDColorPage"
 			id="org.eclipse.wst.sse.ui.preferences.dtd.styles">
+         	<keywordReference id="org.eclipse.wst.dtd.ui.styles"/>
 		</page>
 	</extension>
+	
+	<!-- Keywords for preference and properties pages -->
+	<extension point="org.eclipse.ui.keywords">
+		<keyword
+			label="%preferenceKeywords.files"
+			id="org.eclipse.wst.dtd.ui.files"/>
+		<keyword
+			label="%preferenceKeywords.templates"
+			id="org.eclipse.wst.dtd.ui.templates"/>
+		<keyword
+			label="%preferenceKeywords.styles"
+			id="org.eclipse.wst.dtd.ui.styles"/>
+    </extension>
 
 	<!-- New DTD wizard -->
 	<extension point="org.eclipse.ui.newWizards">

@@ -57,6 +57,17 @@
 			</part>
 		</actionSetPartAssociation>
 	</extension>
+	
+	<!-- Keywords for preference and properties pages -->
+	<extension point="org.eclipse.ui.keywords">
+		<keyword
+			label="%preferenceKeywords.todo"
+			id="org.eclipse.wst.sse.ui.todo"/>
+		<keyword
+			label="%preferenceKeywords.sseeditor"
+			id="org.eclipse.wst.sse.ui.sseeditor"/>
+    </extension>
+    
 	<extension point="org.eclipse.ui.preferencePages">
 		<!-- ROOT PREFERENCE PAGE FOR WEB AND XML FILES -->
 		<!--  Comment out for now since this preference page is not used
@@ -77,6 +88,7 @@
 			category="org.eclipse.wst.sse.ui.internal.provisional.preferences"
 			class="org.eclipse.wst.sse.ui.internal.preferences.ui.TaskTagPreferencePage"
 			id="org.eclipse.wst.sse.ui.preferences.tasktags">
+			<keywordReference id="org.eclipse.wst.sse.ui.todo"/>
 		</page>
 
 		<!-- Source Editor Preference page under Workbench->Editors -->
@@ -85,6 +97,7 @@
 			category="org.eclipse.ui.preferencePages.Editors"
 			class="org.eclipse.wst.sse.ui.internal.preferences.ui.StructuredTextEditorPreferencePage"
 			id="org.eclipse.wst.sse.ui.preferences.editor">
+			<keywordReference id="org.eclipse.wst.sse.ui.sseeditor"/>
 		</page>
 	</extension>
 	<!-- ================================================================================================ -->
@@ -101,6 +114,7 @@
 					</adapt>
 				</and> 
 			</enabledWhen>
+			<keywordReference id="org.eclipse.wst.sse.ui.todo"/>
 		</page>
 	</extension>
 

@@ -60,24 +60,28 @@
 			category="org.eclipse.wst.sse.ui.internal.provisional.preferences"
 			class="org.eclipse.wst.css.ui.internal.preferences.ui.CSSFilesPreferencePage"
 			id="org.eclipse.wst.sse.ui.preferences.css">
+			<keywordReference id="org.eclipse.wst.css.ui.files"/>
 		</page>
 		<page
 			name="%CSS_Source.name"
 			category="org.eclipse.wst.sse.ui.preferences.css"
 			class="org.eclipse.wst.css.ui.internal.preferences.ui.CSSSourcePreferencePage"
 			id="org.eclipse.wst.sse.ui.preferences.css.source">
+			<keywordReference id="org.eclipse.wst.css.ui.source"/>
 		</page>
 		<page
 			name="%CSS_Templates.name"
 			category="org.eclipse.wst.sse.ui.preferences.css"
 			class="org.eclipse.wst.css.ui.internal.preferences.ui.CSSTemplatePreferencePage"
 			id="org.eclipse.wst.css.ui.preferences.templates">
+			<keywordReference id="org.eclipse.wst.css.ui.templates"/>
 		</page>
 		<page
 			name="%CSS_Styles.name"
 			category="org.eclipse.wst.sse.ui.preferences.css"
 			class="org.eclipse.wst.css.ui.internal.preferences.ui.CSSColorPage"
 			id="org.eclipse.wst.sse.ui.preferences.css.styles">
+         	<keywordReference id="org.eclipse.wst.css.ui.styles"/>
 		</page>
 	</extension>
 
@@ -99,8 +103,28 @@
 					</adapt>
 				</and> 
 			</enabledWhen>
+         	<keywordReference id="org.eclipse.wst.css.ui.webcontent"/>
 		</page>
 	</extension>
+
+	<!-- Keywords for preference and properties pages -->
+	<extension point="org.eclipse.ui.keywords">
+		<keyword
+			label="%preferenceKeywords.files"
+			id="org.eclipse.wst.css.ui.files"/>
+		<keyword
+			label="%preferenceKeywords.source"
+			id="org.eclipse.wst.css.ui.source"/>
+		<keyword
+			label="%preferenceKeywords.templates"
+			id="org.eclipse.wst.css.ui.templates"/>
+		<keyword
+			label="%preferenceKeywords.styles"
+			id="org.eclipse.wst.css.ui.styles"/>
+		<keyword
+			label="%preferenceKeywords.webcontent"
+			id="org.eclipse.wst.css.ui.webcontent"/>
+    </extension>
 
 	<!-- Editor actionsets -->
 	<extension point="org.eclipse.ui.actionSetPartAssociations">
