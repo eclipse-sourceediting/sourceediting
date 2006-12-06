@@ -619,13 +619,6 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 	 */
 	public void doSave(IProgressMonitor monitor) {
 		fTextEditor.doSave(monitor);
-		/*
-		 * Update the design viewer since the editor input would have changed
-		 * to the new file.
-		 */
-		if (fDesignViewer != null) {
-			fDesignViewer.setDocument(getDocument());
-		}
 	}
 
 	/*
@@ -635,6 +628,13 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 	 */
 	public void doSaveAs() {
 		fTextEditor.doSaveAs();
+		/*
+		 * Update the design viewer since the editor input would have changed
+		 * to the new file.
+		 */
+		if (fDesignViewer != null) {
+			fDesignViewer.setDocument(getDocument());
+		}
 	}
 
 	/*
@@ -782,9 +782,12 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 	 * @see org.eclipse.ui.part.EditorPart#setInput(org.eclipse.ui.IEditorInput)
 	 */
 	protected void setInput(IEditorInput input) {
-		// If driven from the Source page, it's "model" may not be up to date
-		// with the input just yet. We'll rely on later notification from the
-		// TextViewer to set us straight
+		/*
+		 * If driven from the Source page, it's "model" may not be up to date
+		 * with (or even exist for) the input just yet. Later notification
+		 * from the TextViewer could set us straight, although it's not
+		 * guaranteed to happen after the model has been created.
+		 */
 		super.setInput(input);
 		if (fDesignViewer != null) {
 			fDesignViewer.setDocument(getDocument());
