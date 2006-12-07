@@ -644,25 +644,33 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 	 */
 	public Object getAdapter(Class key) {
 		Object result = null;
-		if (key == IDesignViewer.class) {
-			result = fDesignViewer;
 
-		}
-		else if (key.equals(IGotoMarker.class)) {
-			result = new IGotoMarker() {
-				public void gotoMarker(IMarker marker) {
-					XMLMultiPageEditorPart.this.gotoMarker(marker);
+		// we extend superclass, not override it, so allow it first
+		// chance to satisfy request.
+		result = super.getAdapter(key);
+
+		if (result == null) {
+			if (key == IDesignViewer.class) {
+				result = fDesignViewer;
+
+			}
+			else if (key.equals(IGotoMarker.class)) {
+				result = new IGotoMarker() {
+					public void gotoMarker(IMarker marker) {
+						XMLMultiPageEditorPart.this.gotoMarker(marker);
+					}
+				};
+			}
+			else {
+				/*
+				 * DMW: I'm bullet-proofing this because its been reported (on
+				 * very early versions) a null pointer sometimes happens here
+				 * on startup, when an editor has been left open when
+				 * workbench shutdown.
+				 */
+				if (fTextEditor != null) {
+					result = fTextEditor.getAdapter(key);
 				}
-			};
-		}
-		else {
-			// DMW: I'm bullet-proofing this because
-			// its been reported (on IBM WSAD 4.03 version) a null pointer
-			// sometimes
-			// happens here on startup, when an editor has been left
-			// open when workbench shutdown.
-			if (fTextEditor != null) {
-				result = fTextEditor.getAdapter(key);
 			}
 		}
 		return result;
