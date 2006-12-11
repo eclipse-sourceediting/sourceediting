@@ -35,9 +35,9 @@ import org.eclipse.wst.common.frameworks.internal.datamodel.ui.DataModelWizardPa
 import org.eclipse.wst.common.frameworks.internal.operations.IProjectCreationPropertiesNew;
 import org.eclipse.wst.common.frameworks.internal.ui.NewProjectGroup;
 import org.eclipse.wst.common.project.facet.core.runtime.IRuntime;
-import org.eclipse.wst.common.project.facet.ui.AddRemoveFacetsWizard;
+import org.eclipse.wst.common.project.facet.ui.ModifyFacetedProjectWizard;
 import org.eclipse.wst.common.project.facet.ui.PresetSelectionPanel;
-import org.eclipse.wst.common.project.facet.ui.internal.AddRemoveFacetsDataModel;
+import org.eclipse.wst.common.project.facet.ui.internal.ModifyFacetedProjectDataModel;
 import org.eclipse.wst.project.facet.ProductManager;
 import org.eclipse.wst.server.ui.ServerUIUtil;
 import org.eclipse.wst.web.internal.ResourceHandler;
@@ -70,15 +70,15 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
 	}
 
 	protected void createPresetPanel(Composite top) {
-		final AddRemoveFacetsDataModel model
-            = ( (AddRemoveFacetsWizard) getWizard() ).getModel();
+		final ModifyFacetedProjectDataModel model
+            = ( (ModifyFacetedProjectWizard) getWizard() ).getModel();
 
         final PresetSelectionPanel ppanel 
             = new PresetSelectionPanel( top, SWT.NONE, model );
         
         ppanel.setLayoutData( gdhfill() );
         
-        ( (AddRemoveFacetsWizard) getWizard() ).syncWithPresetsModel( ppanel.getPresetsCombo() );
+        ( (ModifyFacetedProjectWizard) getWizard() ).syncWithPresetsModel( ppanel.getPresetsCombo() );
 	}
 	
 	public static boolean launchNewRuntimeWizard(Shell shell, IDataModel model) {

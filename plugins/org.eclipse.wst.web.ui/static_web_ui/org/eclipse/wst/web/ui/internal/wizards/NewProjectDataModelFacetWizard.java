@@ -53,14 +53,14 @@ import org.eclipse.wst.common.project.facet.core.IPreset;
 import org.eclipse.wst.common.project.facet.core.IProjectFacetVersion;
 import org.eclipse.wst.common.project.facet.core.IFacetedProject.Action.Type;
 import org.eclipse.wst.common.project.facet.core.runtime.IRuntime;
-import org.eclipse.wst.common.project.facet.ui.AddRemoveFacetsWizard;
+import org.eclipse.wst.common.project.facet.ui.ModifyFacetedProjectWizard;
 import org.eclipse.wst.common.project.facet.ui.internal.AbstractDataModel;
 import org.eclipse.wst.common.project.facet.ui.internal.ChangeTargetedRuntimesDataModel;
 import org.eclipse.wst.web.internal.DelegateConfigurationElement;
 import org.eclipse.wst.web.ui.internal.Logger;
 import org.eclipse.wst.web.ui.internal.WSTWebUIPlugin;
 
-public abstract class NewProjectDataModelFacetWizard extends AddRemoveFacetsWizard implements INewWizard, IFacetProjectCreationDataModelProperties {
+public abstract class NewProjectDataModelFacetWizard extends ModifyFacetedProjectWizard implements INewWizard, IFacetProjectCreationDataModelProperties {
 
 	protected IDataModel model = null;
 	private final IFacetedProjectTemplate template;
