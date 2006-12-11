@@ -33,7 +33,7 @@ public abstract class CommonDirectivesSection extends AbstractSection
   Button wizardButton;
   StyledText errorText;
   Color red;
-  protected boolean isValidSchemaLocation;
+  protected boolean isValidSchemaLocation = false;
 
   // TODO: common up code with XSDSelectIncludeFileWizard
   public void doHandleEvent(Event event)

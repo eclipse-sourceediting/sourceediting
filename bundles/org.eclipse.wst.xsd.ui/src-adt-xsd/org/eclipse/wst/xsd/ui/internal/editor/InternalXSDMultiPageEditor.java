@@ -365,6 +365,16 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
         return new XSDComplexTypeBaseTypeEditManager(fileEditorInput.getFile(), schemas);
       }
     }
+    else if (type == XSDSubstitutionGroupEditManager.class)
+    {
+      IEditorInput editorInput = getEditorInput();
+      if (editorInput instanceof IFileEditorInput)
+      {
+        IFileEditorInput fileEditorInput = (IFileEditorInput) editorInput;
+        XSDSchema[] schemas = {xsdSchema};
+        return new XSDSubstitutionGroupEditManager(fileEditorInput.getFile(), schemas);
+      }
+    }
     else if (type == ITextEditor.class)
     {
       return getTextEditor();
