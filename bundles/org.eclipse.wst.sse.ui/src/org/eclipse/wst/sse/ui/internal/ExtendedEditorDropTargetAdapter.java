@@ -22,11 +22,8 @@ import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.dnd.TransferData;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.widgets.Caret;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.wst.sse.ui.internal.TransferBuilder.TransferProxyForDelayLoading;
 
@@ -34,8 +31,6 @@ import org.eclipse.wst.sse.ui.internal.TransferBuilder.TransferProxyForDelayLoad
  * ExtendedEditorDropTargetAdapter
  */
 public class ExtendedEditorDropTargetAdapter extends DropTargetAdapter {
-
-	private Point caret = null;
 	private String[] editorIds;
 	private int orgOffset = 0;
 	private IEditorPart targetEditor = null;
@@ -123,7 +118,6 @@ public class ExtendedEditorDropTargetAdapter extends DropTargetAdapter {
 	/**
 	 */
 	public void dragEnter(DropTargetEvent event) {
-		caret = null;
 		TransferData data = null;
 		Transfer[] ts = getTransfers();
 		for (int i = 0; i < ts.length; i++) {
@@ -154,6 +148,7 @@ public class ExtendedEditorDropTargetAdapter extends DropTargetAdapter {
 	}
 
 	/**
+	 * Scroll the visible area as needed
 	 */
 	public void dragOver(DropTargetEvent event) {
 		event.operations &= ~DND.DROP_MOVE;
@@ -174,43 +169,27 @@ public class ExtendedEditorDropTargetAdapter extends DropTargetAdapter {
 				st.invokeAction(ST.LINE_DOWN);
 			}
 
-			// draw insertion point
-			int offset = getDropOffset(st, pt);
-			if (offset != st.getCaretOffset()) {
-				st.setCaretOffset(offset);
-				st.setSelection(offset);
+			int offsetUnder = getDropOffset(event);
+			if (offsetUnder > 0 && offsetUnder < st.getCharCount()) {
+				int currentLine = st.getLineAtOffset(offsetUnder);
+				Rectangle rect = st.getTextBounds(offsetUnder, offsetUnder);
+				if (pt.x < rect.width && st.getHorizontalPixel() > 0) {
+					st.invokeAction(ST.COLUMN_PREVIOUS); // left
+					if (offsetUnder != st.getCaretOffset()) {
+						st.setCaretOffset(offsetUnder);
+						st.setSelection(offsetUnder);
+					}
+					st.redraw();
+				}
+				else if (pt.x > st.getClientArea().x && offsetUnder + 2 < st.getCharCount() && currentLine == st.getLineAtOffset(offsetUnder + 2)) { // right
+					st.invokeAction(ST.COLUMN_NEXT); // right
+					if (offsetUnder != st.getCaretOffset()) {
+						st.setCaretOffset(offsetUnder);
+						st.setSelection(offsetUnder);
+					}
+					st.redraw();
+				}
 			}
-
-			Point newCaret = st.getLocationAtOffset(offset);
-			if (newCaret.equals(caret))
-				return;
-
-			Caret ct = st.getCaret();
-			Point size = ct.getSize();
-
-			GC gc = new GC(st);
-			gc.setLineWidth(size.x);
-
-			// erase old caret
-			if (caret != null) {
-				Color originalForeground = gc.getForeground();
-				gc.setForeground(st.getBackground());
-				gc.drawRectangle(caret.x, caret.y, size.x, size.y);
-				gc.setForeground(originalForeground);
-			}
-
-			st.redraw();
-			st.update();
-
-			// draw new caret
-			caret = newCaret;
-			if (ct.getImage() != null)
-				gc.drawImage(ct.getImage(), caret.x, caret.y);
-			else {
-				gc.drawLine(caret.x, caret.y, caret.x, caret.y + size.y);
-			}
-
-			gc.dispose();
 		}
 	}
 
