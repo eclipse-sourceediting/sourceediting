@@ -57,15 +57,23 @@ public class ColorHelper {
 	public static String packStylePreferences(String[] stylePrefs) {
 		StringBuffer styleString = new StringBuffer();
 
-		if (stylePrefs.length == 3) {
-			for (int i = 0; i < 3; ++i) {
-				String s = stylePrefs[i];
-				styleString.append(s);
-
-				// add in the separator (except on last iteration)
-				if (i != 2) {
-					styleString.append(" " + STYLE_SEPARATOR + " "); //$NON-NLS-1$ //$NON-NLS-2$
+		for (int i = 0; i < stylePrefs.length; ++i) {
+			String s = stylePrefs[i];
+			if (i < 2) {
+				if (s != null) {
+					styleString.append(s);
 				}
+				else {
+					styleString.append(Boolean.FALSE.toString());
+				}
+			}
+			else {
+				styleString.append(Boolean.valueOf(s));
+			}
+
+			// add in the separator (except on last iteration)
+			if (i < stylePrefs.length - 1) {
+				styleString.append(" " + STYLE_SEPARATOR + " "); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 
@@ -123,22 +131,47 @@ public class ColorHelper {
 	 *            should be in the form of Foreground RGB String | Background
 	 *            RGB String | Bold true/false
 	 * @return String[] where String[0] = Foreground RGB String, String[1] =
-	 *         Background RGB String, String[2] = Bold true/false OR null if
-	 *         ran into problems extracting
+	 *         Background RGB String, String[2] = Bold true/false, 3 = Italic
+	 *         true/false, 4 = Strikethrough true/false, 5 = Underline
+	 *         true/false; indexes 2-4 may be null if we ran into problems
+	 *         extracting
 	 */
 	public static String[] unpackStylePreferences(String preference) {
-		String[] stylePrefs = null;
+		String[] stylePrefs = new String[6];
 		if (preference != null) {
 			StringTokenizer st = new StringTokenizer(preference, STYLE_SEPARATOR);
-			if (st.countTokens() == 3) {
-				String foreground = st.nextToken().trim();
-				String background = st.nextToken().trim();
-				String bold = st.nextToken().trim();
+			String foreground = st.nextToken().trim();
+			String background = st.nextToken().trim();
+			stylePrefs[0] = foreground;
+			stylePrefs[1] = background;
 
-				stylePrefs = new String[3];
-				stylePrefs[0] = foreground;
-				stylePrefs[1] = background;
-				stylePrefs[2] = bold;
+			if (st.hasMoreTokens()) {
+				String bold = st.nextToken().trim();
+				stylePrefs[2] = Boolean.valueOf(bold).toString();
+			}
+			else {
+				stylePrefs[2] = Boolean.FALSE.toString();
+			}
+			if (st.hasMoreTokens()) {
+				String italic = st.nextToken().trim();
+				stylePrefs[3] = Boolean.valueOf(italic).toString();
+			}
+			else {
+				stylePrefs[3] = Boolean.FALSE.toString();
+			}
+			if (st.hasMoreTokens()) {
+				String strikethrough = st.nextToken().trim();
+				stylePrefs[4] = Boolean.valueOf(strikethrough).toString();
+			}
+			else {
+				stylePrefs[4] = Boolean.FALSE.toString();
+			}
+			if (st.hasMoreTokens()) {
+				String underline = st.nextToken().trim();
+				stylePrefs[5] = Boolean.valueOf(underline).toString();
+			}
+			else {
+				stylePrefs[5] = Boolean.FALSE.toString();
 			}
 		}
 

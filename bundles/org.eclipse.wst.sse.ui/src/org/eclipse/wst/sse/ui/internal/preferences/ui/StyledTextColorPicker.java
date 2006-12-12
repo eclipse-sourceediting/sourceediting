@@ -16,9 +16,12 @@ import java.io.CharArrayReader;
 import java.util.Dictionary;
 import java.util.List;
 
+import org.eclipse.jface.preference.ColorSelector;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.TextAttribute;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.accessibility.ACC;
 import org.eclipse.swt.accessibility.AccessibleAdapter;
@@ -38,11 +41,6 @@ import org.eclipse.swt.events.TraverseEvent;
 import org.eclipse.swt.events.TraverseListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.ImageData;
-import org.eclipse.swt.graphics.PaletteData;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -104,7 +102,7 @@ public class StyledTextColorPicker extends Composite {
 		 */
 		public void getValue(AccessibleControlEvent e) {
 			if (e.childID == ACC.CHILDID_SELF) {
-				e.result = getColorButtonValue(fBackground);
+				e.result = fBackground.getColorValue().toString();
 			}
 		}
 	};
@@ -118,39 +116,7 @@ public class StyledTextColorPicker extends Composite {
 			String namedStyle = getStyleName(fStyleCombo.getItem(fStyleCombo.getSelectionIndex()));
 			if (namedStyle == null)
 				return;
-			if (e.widget == fForeground) {
-				// get current (newly old) style
-				String prefString = getPreferenceStore().getString(getPreferenceKey(namedStyle));
-				String[] stylePrefs = ColorHelper.unpackStylePreferences(prefString);
-				if (stylePrefs != null) {
-					String oldValue = stylePrefs[0];
-					// open color dialog to get new color
-					String newValue = changeColor(oldValue);
-
-					if (!newValue.equals(oldValue)) {
-						stylePrefs[0] = newValue;
-						String newPrefString = ColorHelper.packStylePreferences(stylePrefs);
-						getPreferenceStore().setValue(getPreferenceKey(namedStyle), newPrefString);
-						refresh();
-					}
-				}
-			} else if (e.widget == fBackground) {
-				// get current (newly old) style
-				String prefString = getPreferenceStore().getString(getPreferenceKey(namedStyle));
-				String[] stylePrefs = ColorHelper.unpackStylePreferences(prefString);
-				if (stylePrefs != null) {
-					String oldValue = stylePrefs[1];
-					// open color dialog to get new color
-					String newValue = changeColor(oldValue);
-
-					if (!newValue.equals(oldValue)) {
-						stylePrefs[1] = newValue;
-						String newPrefString = ColorHelper.packStylePreferences(stylePrefs);
-						getPreferenceStore().setValue(getPreferenceKey(namedStyle), newPrefString);
-						refresh();
-					}
-				}
-			} else if (e.widget == fBold) {
+			if (e.widget == fBold) {
 				// get current (newly old) style
 				String prefString = getPreferenceStore().getString(getPreferenceKey(namedStyle));
 				String[] stylePrefs = ColorHelper.unpackStylePreferences(prefString);
@@ -197,7 +163,7 @@ public class StyledTextColorPicker extends Composite {
 			activate(getStyleName(description));
 		}
 	};
-	protected Button fBackground;
+	protected ColorSelector fBackground;
 	protected Label fBackgroundLabel;
 	protected Button fBold;
 	protected Button fClearStyle;
@@ -210,7 +176,7 @@ public class StyledTextColorPicker extends Composite {
 	// Dictionary mapping the ITextRegion types above to display strings, for
 	// use in the combo box
 	protected Dictionary fDescriptions = null;
-	protected Button fForeground;
+	protected ColorSelector fForeground;
 	protected Label fForegroundLabel;
 //	private String fGeneratorKey;
 	protected String fInput = ""; //$NON-NLS-1$
@@ -224,7 +190,7 @@ public class StyledTextColorPicker extends Composite {
 		 */
 		public void getValue(AccessibleControlEvent e) {
 			if (e.childID == ACC.CHILDID_SELF) {
-				e.result = getColorButtonValue(fForeground);
+				e.result = fForeground.getColorValue().toString();
 			}
 		}
 	};
@@ -285,22 +251,14 @@ public class StyledTextColorPicker extends Composite {
 		if (color == null) {
 			color = fDefaultForeground;
 		}
-		if (fForeground.getSize().x > 0 && fForeground.getSize().y > 0 && (fForeground.getImage() == null || fForeground.getImage().getImageData() == null || fForeground.getImage().getImageData().getRGBs() == null || fForeground.getImage().getImageData().getRGBs().length < 1 || !fForeground.getImage().getImageData().getRGBs()[0].equals(color.getRGB()))) {
-			if (fForeground.getImage() != null)
-				fForeground.getImage().dispose();
-			Image foreground = new Image(getDisplay(), new ImageData(fForeground.getSize().x, fForeground.getSize().y, 1, new PaletteData(new RGB[]{color.getRGB()})));
-			fForeground.setImage(foreground);
-		}
+		fForeground.setColorValue(color.getRGB());
+
 		color = attribute.getBackground();
 		if (color == null) {
 			color = fDefaultBackground;
 		}
-		if (fBackground.getSize().x > 0 && fBackground.getSize().y > 0 && (fBackground.getImage() == null || fBackground.getImage().getImageData() == null || fBackground.getImage().getImageData().getRGBs() == null || fBackground.getImage().getImageData().getRGBs().length < 1 || !fBackground.getImage().getImageData().getRGBs()[0].equals(color.getRGB()))) {
-			if (fBackground.getImage() != null)
-				fBackground.getImage().dispose();
-			Image background = new Image(getDisplay(), new ImageData(fBackground.getSize().x, fBackground.getSize().y, 1, new PaletteData(new RGB[]{color.getRGB()})));
-			fBackground.setImage(background);
-		}
+		fBackground.setColorValue(color.getRGB());
+
 		fBold.setSelection((attribute.getStyle() & SWT.BOLD) != 0);
 		if (showItalic)
 			fItalic.setSelection((attribute.getStyle() & SWT.ITALIC) != 0);
@@ -353,21 +311,6 @@ public class StyledTextColorPicker extends Composite {
 	}
 
 	protected void close() {
-	}
-
-	/**
-	 * Determines size of color button copied from
-	 * org.eclipse.jdt.internal.ui.preferences.ColorEditor 1 modification -
-	 * added 4 to final height
-	 */
-	private Point computeImageSize(Control window) {
-		GC gc = new GC(window);
-		Font f = JFaceResources.getFontRegistry().get(JFaceResources.DEFAULT_FONT);
-		gc.setFont(f);
-		int height = gc.getFontMetrics().getHeight();
-		gc.dispose();
-		Point p = new Point(height * 3 - 6, height + 4);
-		return p;
 	}
 
 	/**
@@ -435,9 +378,10 @@ public class StyledTextColorPicker extends Composite {
 		// row 2 - foreground label, button, background label, button, bold,
 		// italics?
 		fForegroundLabel = createLabel(styleRow2, SSEUIMessages.Foreground_UI_); //$NON-NLS-1$ = "Foreground"
-		fForeground = createPushButton(styleRow2, ""); //$NON-NLS-1$
-		setAccessible(fForeground, fForegroundLabel.getText());
-		fForeground.getAccessible().addAccessibleControlListener(foregroundAccListener); // defect
+		fForeground = new ColorSelector(styleRow2);
+		fForeground.getButton().setLayoutData(new GridData());
+		setAccessible(fForeground.getButton(), fForegroundLabel.getText());
+		fForeground.getButton().getAccessible().addAccessibleControlListener(foregroundAccListener); // defect
 		// 200764
 		// -
 		// ACC:display
@@ -445,13 +389,12 @@ public class StyledTextColorPicker extends Composite {
 		// for
 		// color
 		// buttons
-		Point buttonSize = computeImageSize(parent);
-		((GridData) fForeground.getLayoutData()).widthHint = buttonSize.x;
-		((GridData) fForeground.getLayoutData()).heightHint = buttonSize.y;
+		((GridData) fForeground.getButton().getLayoutData()).minimumWidth = 20;
 		fBackgroundLabel = createLabel(styleRow2, SSEUIMessages.Background_UI_); //$NON-NLS-1$ = "Background"
-		fBackground = createPushButton(styleRow2, ""); //$NON-NLS-1$
-		setAccessible(fBackground, fBackgroundLabel.getText());
-		fBackground.getAccessible().addAccessibleControlListener(backgroundAccListener); // defect
+		fBackground = new ColorSelector(styleRow2);
+		fBackground.getButton().setLayoutData(new GridData());
+		setAccessible(fBackground.getButton(), fBackgroundLabel.getText());
+		fBackground.getButton().getAccessible().addAccessibleControlListener(backgroundAccListener); // defect
 		// 200764
 		// -
 		// ACC:display
@@ -459,8 +402,7 @@ public class StyledTextColorPicker extends Composite {
 		// for
 		// color
 		// buttons
-		((GridData) fBackground.getLayoutData()).widthHint = buttonSize.x;
-		((GridData) fBackground.getLayoutData()).heightHint = buttonSize.y;
+		((GridData) fBackground.getButton().getLayoutData()).minimumWidth = 20;
 		createLabel(styleRow2, ""); //$NON-NLS-1$
 		fBold = createCheckBox(styleRow2, SSEUIMessages.Bold_UI_);
 		if (showItalic)
@@ -491,8 +433,51 @@ public class StyledTextColorPicker extends Composite {
 		// traversal for
 		// fText widget
 		setAccessible(fText, SSEUIMessages.Sample_text__UI_); //$NON-NLS-1$ = "&Sample text:"
-		fForeground.addSelectionListener(buttonListener);
-		fBackground.addSelectionListener(buttonListener);
+		fForeground.addListener(new IPropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent event) {
+				if (event.getProperty().equals(ColorSelector.PROP_COLORCHANGE)) {
+					// get current (newly old) style
+					String namedStyle = getStyleName(fStyleCombo.getItem(fStyleCombo.getSelectionIndex()));
+					String prefString = getPreferenceStore().getString(getPreferenceKey(namedStyle));
+					String[] stylePrefs = ColorHelper.unpackStylePreferences(prefString);
+					if (stylePrefs != null) {
+						String oldValue = stylePrefs[0];
+						// open color dialog to get new color
+						String newValue = changeColor(oldValue);
+	
+						if (!newValue.equals(oldValue)) {
+							stylePrefs[0] = newValue;
+							String newPrefString = ColorHelper.packStylePreferences(stylePrefs);
+							getPreferenceStore().setValue(getPreferenceKey(namedStyle), newPrefString);
+							refresh();
+						}
+					}
+				}
+			}
+		});
+		fBackground.addListener(new IPropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent event) {
+				if (event.getProperty().equals(ColorSelector.PROP_COLORCHANGE)) {
+					// get current (newly old) style
+					String namedStyle = getStyleName(fStyleCombo.getItem(fStyleCombo.getSelectionIndex()));
+					String prefString = getPreferenceStore().getString(getPreferenceKey(namedStyle));
+					String[] stylePrefs = ColorHelper.unpackStylePreferences(prefString);
+					if (stylePrefs != null) {
+						String oldValue = stylePrefs[1];
+						// open color dialog to get new color
+						String newValue = changeColor(oldValue);
+	
+						if (!newValue.equals(oldValue)) {
+							stylePrefs[1] = newValue;
+							String newPrefString = ColorHelper.packStylePreferences(stylePrefs);
+							getPreferenceStore().setValue(getPreferenceKey(namedStyle), newPrefString);
+							refresh();
+						}
+					}
+				}
+			}
+		});
+
 		fClearStyle.addSelectionListener(buttonListener);
 		fBold.addSelectionListener(buttonListener);
 		if (showItalic)
@@ -553,12 +538,12 @@ public class StyledTextColorPicker extends Composite {
 	/**
 	 * @return String - color Button b's current RBG value
 	 */
-	private String getColorButtonValue(Button b) {
-		if ((b == null) || (b.getImage() == null) || (b.getImage().getImageData() == null) || (b.getImage().getImageData().getRGBs() == null) || (b.getImage().getImageData().getRGBs()[0] == null))
-			return null;
-		String val = b.getImage().getImageData().getRGBs()[0].toString();
-		return val;
-	}
+//	private String getColorButtonValue(Button b) {
+//		if ((b == null) || (b.getImage() == null) || (b.getImage().getImageData() == null) || (b.getImage().getImageData().getRGBs() == null) || (b.getImage().getImageData().getRGBs()[0] == null))
+//			return null;
+//		String val = b.getImage().getImageData().getRGBs()[0].toString();
+//		return val;
+//	}
 
 	/**
 	 * @deprecated use getPreferenceStore instead left for legacy clients,
@@ -769,10 +754,10 @@ public class StyledTextColorPicker extends Composite {
 	}
 
 	public void releasePickerResources() {
-		if (fForeground != null && !fForeground.isDisposed() && fForeground.getImage() != null)
-			fForeground.getImage().dispose();
-		if (fBackground != null && !fBackground.isDisposed() && fBackground.getImage() != null)
-			fBackground.getImage().dispose();
+//		if (fForeground != null && !fForeground.isDisposed() && fForeground.getImage() != null)
+//			fForeground.getImage().dispose();
+//		if (fBackground != null && !fBackground.isDisposed() && fBackground.getImage() != null)
+//			fBackground.getImage().dispose();
 	}
 
 	private void selectColorAtOffset(int offset) {

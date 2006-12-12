@@ -88,7 +88,25 @@ public abstract class AbstractLineStyleProvider {
 				RGB foreground = ColorHelper.toRGB(stylePrefs[0]);
 				RGB background = ColorHelper.toRGB(stylePrefs[1]);
 				boolean bold = Boolean.valueOf(stylePrefs[2]).booleanValue();
-				getTextAttributes().put(colorKey, createTextAttribute(foreground, background, bold));
+				boolean italic = Boolean.valueOf(stylePrefs[3]).booleanValue();
+				boolean strikethrough = Boolean.valueOf(stylePrefs[4]).booleanValue();
+				boolean underline = Boolean.valueOf(stylePrefs[5]).booleanValue();
+				int style = SWT.NORMAL;
+				if (bold) {
+					style = style | SWT.BOLD;
+				}
+				if (italic) {
+					style = style | SWT.ITALIC;
+				}
+				if (strikethrough) {
+					style = style | TextAttribute.STRIKETHROUGH;
+				}
+				if (underline) {
+					style = style | TextAttribute.UNDERLINE;
+				}
+
+				TextAttribute createTextAttribute = createTextAttribute(foreground, background, style);
+				getTextAttributes().put(colorKey, createTextAttribute);
 			}
 		}
 	}
@@ -112,12 +130,22 @@ public abstract class AbstractLineStyleProvider {
 		if (end > maxOffset)
 			end = maxOffset;
 		StyleRange result = new StyleRange(start, end - start, attr.getForeground(), attr.getBackground(), attr.getStyle());
+		if((attr.getStyle() & TextAttribute.STRIKETHROUGH) != 0) {
+			result.strikeout = true;
+		}
+		if((attr.getStyle() & TextAttribute.UNDERLINE) != 0) {
+			result.underline = true;
+		}
 		return result;
 
 	}
 
 	protected TextAttribute createTextAttribute(RGB foreground, RGB background, boolean bold) {
 		return new TextAttribute((foreground != null) ? EditorUtility.getColor(foreground) : null, (background != null) ? EditorUtility.getColor(background) : null, bold ? SWT.BOLD : SWT.NORMAL);
+	}
+
+	protected TextAttribute createTextAttribute(RGB foreground, RGB background, int style) {
+		return new TextAttribute((foreground != null) ? EditorUtility.getColor(foreground) : null, (background != null) ? EditorUtility.getColor(background) : null, style);
 	}
 
 	abstract protected TextAttribute getAttributeFor(ITextRegion region);
