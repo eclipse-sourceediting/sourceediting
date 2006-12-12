@@ -29,7 +29,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.sse.core.internal.encoding.CommonEncodingPreferenceNames;
 import org.eclipse.wst.sse.ui.internal.preferences.ui.AbstractPreferencePage;
@@ -44,7 +43,7 @@ public class XMLFilesPreferencePage extends AbstractPreferencePage {
 
 	protected Combo fEndOfLineCode = null;
 	private Vector fEOLCodes = null;
-	private Text fDefaultSuffix = null;
+	private Combo fDefaultSuffix = null;
 	private List fValidExtensions = null;
 	private Button fWarnNoGrammar = null;
 
@@ -67,8 +66,11 @@ public class XMLFilesPreferencePage extends AbstractPreferencePage {
 
 		// Default extension for New file Wizard
 		createLabel(creatingGroup, XMLUIMessages.XMLFilesPreferencePage_ExtensionLabel);
-		fDefaultSuffix = createTextField(creatingGroup);
-		fDefaultSuffix.addModifyListener(this);
+		fDefaultSuffix = createDropDownBox(creatingGroup);
+		String[] validExtensions = (String[]) getValidExtensions().toArray(new String[0]);
+		Arrays.sort(validExtensions);
+		fDefaultSuffix.setItems(validExtensions);
+		fDefaultSuffix.addSelectionListener(this);
 
 		Label label = createLabel(creatingGroup, XMLUIMessages.Encoding_desc);
 		((GridData) label.getLayoutData()).horizontalSpan = 2;

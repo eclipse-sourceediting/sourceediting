@@ -22,10 +22,10 @@ import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.dtd.core.internal.DTDCorePlugin;
 import org.eclipse.wst.dtd.core.internal.preferences.DTDCorePreferenceNames;
@@ -37,7 +37,7 @@ import org.eclipse.wst.sse.ui.internal.preferences.ui.AbstractPreferencePage;
 
 
 public class DTDFilesPreferencePage extends AbstractPreferencePage {
-	private Text fDefaultSuffix = null;
+	private Combo fDefaultSuffix = null;
 	private List fValidExtensions = null;
 
 	protected Control createContents(Composite parent) {
@@ -49,8 +49,11 @@ public class DTDFilesPreferencePage extends AbstractPreferencePage {
 
 		// Default extension for New file Wizard
 		createLabel(creatingGroup, DTDUIMessages.DTDFilesPreferencePage_ExtensionLabel);
-		fDefaultSuffix = createTextField(creatingGroup);
-		fDefaultSuffix.addModifyListener(this);
+		fDefaultSuffix = createDropDownBox(creatingGroup);
+		String[] validExtensions = (String[]) getValidExtensions().toArray(new String[0]);
+		Arrays.sort(validExtensions);
+		fDefaultSuffix.setItems(validExtensions);
+		fDefaultSuffix.addSelectionListener(this);
 
 		setSize(composite);
 		loadPreferences();
