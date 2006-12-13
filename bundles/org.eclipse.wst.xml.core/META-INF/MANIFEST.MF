@@ -56,7 +56,8 @@ Export-Package: org.eclipse.wst.xml.core.internal;x-friends:="com.ibm.etools.emf
  org.eclipse.wst.xml.core.internal.validation.eclipse;x-friends:="com.ibm.etools.emf.event,org.eclipse.wst.dtd.core,org.eclipse.wst.dtd.ui,org.eclipse.wst.xml.ui,org.eclipse.wst.xsd.core,org.eclipse.wst.xsd.ui",
  org.eclipse.wst.xml.core.internal.validation.errorcustomization;x-friends:="com.ibm.etools.emf.event,org.eclipse.wst.dtd.core,org.eclipse.wst.dtd.ui,org.eclipse.wst.xml.ui,org.eclipse.wst.xsd.core,org.eclipse.wst.xsd.ui",
  org.eclipse.wst.xml.core.text
-Require-Bundle: org.eclipse.core.runtime;bundle-version="[3.2.0,4.0.0)",
+Require-Bundle: org.apache.xerces;visibility:=reexport;bundle-version="[2.8.0,2.9.0)",
+ org.eclipse.core.runtime;bundle-version="[3.2.0,4.0.0)",
  org.eclipse.core.resources;bundle-version="[3.2.0,4.0.0)",
  org.eclipse.wst.common.uriresolver;bundle-version="[1.1.0,1.2.0)",
  org.eclipse.wst.sse.core;bundle-version="[1.1.0,1.2.0)",
@@ -68,6 +69,5 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="[3.2.0,4.0.0)",
  org.eclipse.emf.ecore.xmi;resolution:=optional;bundle-version="[2.2.0,2.4.0)",
  org.eclipse.wst.common.emfworkbench.integration;resolution:=optional;bundle-version="[1.1.0,1.2.0)",
  org.eclipse.wst.common.core;bundle-version="[1.1.0,1.2.0)",
- com.ibm.icu;bundle-version="[3.4.4,4.0.0)",
- org.apache.xerces;visibility:=reexport;bundle-version="[2.8.0,2.9.0)"
+ com.ibm.icu;bundle-version="[3.4.4,4.0.0)"
 Eclipse-LazyStart: true; exceptions="org.eclipse.wst.xml.core.internal.contenttype"
