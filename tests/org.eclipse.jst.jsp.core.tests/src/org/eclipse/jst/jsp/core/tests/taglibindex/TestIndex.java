@@ -228,11 +228,13 @@ public class TestIndex extends TestCase {
 	 * test caching from session-to-session
 	 */
 	public void testCaching1() throws Exception {
+		TaglibIndex.shutdown();
 		// Create new project
 		IProject project = BundleResourceUtil.createSimpleProject("testcache1", null, null);
 		assertTrue(project.exists());
 		BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/testcache1", "/testcache1");
 		BundleResourceUtil.copyBundleEntryIntoWorkspace("/testfiles/bug_118251-sample/sample_tld.jar", "/testcache1/WebContent/WEB-INF/lib/sample_tld.jar");
+		TaglibIndex.startup();
 
 		ITaglibRecord[] records = TaglibIndex.getAvailableTaglibRecords(new Path("/testcache1/WebContent"));
 		assertEquals("total ITaglibRecord count doesn't match", 5, records.length);
@@ -287,6 +289,8 @@ public class TestIndex extends TestCase {
 	}
 
 	public void testAvailableFromExportedBuildpaths() throws Exception {
+		TaglibIndex.shutdown();
+
 		// Create project 1
 		IProject project = BundleResourceUtil.createSimpleProject("testavailable1", null, null);
 		assertTrue(project.exists());
@@ -298,19 +302,26 @@ public class TestIndex extends TestCase {
 		BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/testavailable2", "/testavailable2");
 		BundleResourceUtil.copyBundleEntryIntoWorkspace("/testfiles/bug_118251-sample/sample_tld.jar", "/testavailable2/WebContent/WEB-INF/lib/sample_tld.jar");
 
+		TaglibIndex.startup();
+
 		// make sure project 1 sees no taglibs
 		ITaglibRecord[] records = TaglibIndex.getAvailableTaglibRecords(new Path("/testavailable1/WebContent"));
 		assertEquals("ITaglibRecords were found", 0, records.length);
 		// make sure project 2 sees two taglibs
 		ITaglibRecord[] records2 = TaglibIndex.getAvailableTaglibRecords(new Path("/testavailable2/WebContent"));
+		if(records2.length != 2) {
+			for (int i = 0; i < records2.length; i++) {
+				System.err.println(records2[i]);
+			}
+		}
 		assertEquals("total ITaglibRecord count doesn't match", 2, records2.length);
 
 		TaglibIndex.shutdown();
 		TaglibIndex.startup();
 
 
-		records = TaglibIndex.getAvailableTaglibRecords(new Path("/testavailable2/WebContent"));
-		assertEquals("total ITaglibRecord count doesn't match after restart", 2, records.length);
+		records2 = TaglibIndex.getAvailableTaglibRecords(new Path("/testavailable2/WebContent"));
+		assertEquals("total ITaglibRecord count doesn't match after restart", 2, records2.length);
 
 		IJavaProject created = JavaCore.create(project2);
 		assertTrue("/availabletest2 not a Java project", created.exists());
