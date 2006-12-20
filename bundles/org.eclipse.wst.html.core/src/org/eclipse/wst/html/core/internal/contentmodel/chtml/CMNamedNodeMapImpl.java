@@ -13,15 +13,16 @@ package org.eclipse.wst.html.core.internal.contentmodel.chtml;
 
 
 import java.util.Iterator;
+import java.util.Locale;
 
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
 
 /**
- * An implementation of the CMNamedNodeMap interface.
- * This class is intented to be used as a container of attribute declarations.
- * If someone wants to use this class for other purpose, he must pay attention
- * to the fact that this class is tolerant of the key name case.  That is, this
- * class does not distinguish "name", "NAME", and "Name" as a key name.
+ * An implementation of the CMNamedNodeMap interface. This class is intented
+ * to be used as a container of attribute declarations. If someone wants to
+ * use this class for other purpose, he must pay attention to the fact that
+ * this class is tolerant of the key name case. That is, this class does not
+ * distinguish "name", "NAME", and "Name" as a key name.
  */
 class CMNamedNodeMapImpl implements org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap {
 
@@ -36,6 +37,7 @@ class CMNamedNodeMapImpl implements org.eclipse.wst.xml.core.internal.contentmod
 
 	/**
 	 * getLength method
+	 * 
 	 * @return int
 	 */
 	public int getLength() {
@@ -44,8 +46,10 @@ class CMNamedNodeMapImpl implements org.eclipse.wst.xml.core.internal.contentmod
 
 	/**
 	 * getNamedItem method
+	 * 
 	 * @return CMNode <code>null</code> for unknown keys.
-	 * @param name java.lang.String
+	 * @param name
+	 *            java.lang.String
 	 */
 	public CMNode getNamedItem(String name) {
 		String cookedName = makeCanonicalForm(name);
@@ -56,8 +60,10 @@ class CMNamedNodeMapImpl implements org.eclipse.wst.xml.core.internal.contentmod
 
 	/**
 	 * item method
+	 * 
 	 * @return CMNode
-	 * @param index int
+	 * @param index
+	 *            int
 	 */
 	public CMNode item(int index) {
 		Iterator iter = iterator();
@@ -78,15 +84,24 @@ class CMNamedNodeMapImpl implements org.eclipse.wst.xml.core.internal.contentmod
 
 	/**
 	 * @return java.lang.String
-	 * @param rawForm java.lang.String
+	 * @param rawForm
+	 *            java.lang.String
 	 */
-	private String makeCanonicalForm(String rawForm) {
-		return rawForm.toUpperCase();
+	private String makeCanonicalForm(String raw) {
+		// see https://bugs.eclipse.org/bugs/show_bug.cgi?id=100152
+		// we are able to "cheat" here a little and use US Locale
+		// to get a good cononical form, since we are using this only
+		// for HTML and JSP standard tags.
+		// Long term, for similar needs with XML 1.1 (for example)
+		// we should use a class such as com.ibm.icu.text.Normalizer
+		return raw.toUpperCase(Locale.US);
 	}
 
 	/**
-	 * @param key java.lang.String
-	 * @param item java.lang.String
+	 * @param key
+	 *            java.lang.String
+	 * @param item
+	 *            java.lang.String
 	 */
 	void putNamedItem(String name, CMNode item) {
 		String cookedName = makeCanonicalForm(name);
