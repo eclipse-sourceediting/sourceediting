@@ -14,6 +14,7 @@ package org.eclipse.wst.html.core.internal.contentmodel;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Locale;
 
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
@@ -90,7 +91,13 @@ abstract class DeclCollection implements CMNamedNodeMap {
 		}
 
 		private String makeCanonicalForm(String raw) {
-			return raw.toUpperCase();
+			// see https://bugs.eclipse.org/bugs/show_bug.cgi?id=100152
+			// we are able to "cheat" here a little and use US Locale 
+			// to get a good cononical form, since we are using this only 
+			// for HTML and JSP standard tags. 
+			// Long term, for similar needs with XML 1.1 (for example)
+			// we should use a class such as com.ibm.icu.text.Normalizer
+			return raw.toUpperCase(Locale.US);
 		}
 	}
 
