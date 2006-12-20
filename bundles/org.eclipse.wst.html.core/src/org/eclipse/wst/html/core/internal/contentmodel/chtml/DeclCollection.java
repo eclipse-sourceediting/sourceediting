@@ -14,6 +14,7 @@ package org.eclipse.wst.html.core.internal.contentmodel.chtml;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Locale;
 
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
@@ -90,7 +91,13 @@ abstract class DeclCollection implements CMNamedNodeMap {
 		}
 
 		private String makeCanonicalForm(String raw) {
-			return raw.toUpperCase();
+			// see https://bugs.eclipse.org/bugs/show_bug.cgi?id=100152
+			// we are able to "cheat" here a little and use US Locale
+			// to get a good cononical form, since we are using this only
+			// for HTML and JSP standard tags.
+			// Long term, for similar needs with XML 1.1 (for example)
+			// we should use a class such as com.ibm.icu.text.Normalizer
+			return raw.toUpperCase(Locale.US);
 		}
 	}
 
@@ -137,7 +144,8 @@ abstract class DeclCollection implements CMNamedNodeMap {
 
 	/**
 	 * @return org.eclipse.wst.xml.core.internal.contentmodel.CMNode
-	 * @param id int
+	 * @param id
+	 *            int
 	 */
 	protected abstract CMNode create(String name);
 
@@ -166,8 +174,10 @@ abstract class DeclCollection implements CMNamedNodeMap {
 
 	/**
 	 * Map name to id.
+	 * 
 	 * @return int
-	 * @param name java.lang.String
+	 * @param name
+	 *            java.lang.String
 	 */
 	protected int getID(String name) {
 		return fMap.getKey(name);
@@ -175,6 +185,7 @@ abstract class DeclCollection implements CMNamedNodeMap {
 
 	/**
 	 * getLength method
+	 * 
 	 * @return int
 	 */
 	public int getLength() {
@@ -183,7 +194,8 @@ abstract class DeclCollection implements CMNamedNodeMap {
 
 	/**
 	 * @return java.lang.String
-	 * @param id int
+	 * @param id
+	 *            int
 	 */
 	protected String getName(int id) {
 		return (String) fMap.getValue(id);
@@ -191,8 +203,10 @@ abstract class DeclCollection implements CMNamedNodeMap {
 
 	/**
 	 * getNamedItem method
+	 * 
 	 * @return CMNode
-	 * @param name java.lang.String
+	 * @param name
+	 *            java.lang.String
 	 */
 	public CMNode getNamedItem(String name) {
 		int id = getID(name);
@@ -203,7 +217,8 @@ abstract class DeclCollection implements CMNamedNodeMap {
 
 	/**
 	 * @return boolean
-	 * @param id int
+	 * @param id
+	 *            int
 	 */
 	private boolean isValidID(int id) {
 		return id >= 0 && id < fDecls.length;
@@ -211,8 +226,10 @@ abstract class DeclCollection implements CMNamedNodeMap {
 
 	/**
 	 * item method
+	 * 
 	 * @return CMNode
-	 * @param index int
+	 * @param index
+	 *            int
 	 */
 	public CMNode item(int index) {
 		if (!isValidID(index))
