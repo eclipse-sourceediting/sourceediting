@@ -14,10 +14,10 @@ package org.eclipse.wst.sse.ui.internal.preferences.ui;
 
 
 
-import com.ibm.icu.util.StringTokenizer;
-
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.wst.sse.ui.internal.Logger;
+
+import com.ibm.icu.util.StringTokenizer;
 
 
 public class ColorHelper {
@@ -26,6 +26,7 @@ public class ColorHelper {
 	public final static String FOREGROUND = "foreground";//$NON-NLS-1$
 	public final static String NAME = "name";//$NON-NLS-1$
 	private final static String STYLE_SEPARATOR = "|"; //$NON-NLS-1$ 
+	private final static String NULL = "null"; //$NON-NLS-1$
 
 	/**
 	 * Return an RGB String given the int r, g, b values
@@ -64,7 +65,7 @@ public class ColorHelper {
 					styleString.append(s);
 				}
 				else {
-					styleString.append(Boolean.FALSE.toString());
+					styleString.append(NULL);
 				}
 			}
 			else {
@@ -140,10 +141,20 @@ public class ColorHelper {
 		String[] stylePrefs = new String[6];
 		if (preference != null) {
 			StringTokenizer st = new StringTokenizer(preference, STYLE_SEPARATOR);
-			String foreground = st.nextToken().trim();
-			String background = st.nextToken().trim();
-			stylePrefs[0] = foreground;
-			stylePrefs[1] = background;
+			if (st.hasMoreTokens()) {
+				String foreground = st.nextToken().trim();
+				stylePrefs[0] = foreground;
+			}
+			else {
+				stylePrefs[0] = NULL;
+			}
+			if (st.hasMoreTokens()) {
+				String background = st.nextToken().trim();
+				stylePrefs[1] = background;
+			}
+			else {
+				stylePrefs[1] = NULL;
+			}
 
 			if (st.hasMoreTokens()) {
 				String bold = st.nextToken().trim();

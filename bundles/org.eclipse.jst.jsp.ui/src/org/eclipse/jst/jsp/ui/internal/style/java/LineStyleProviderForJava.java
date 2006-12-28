@@ -82,7 +82,14 @@ public class LineStyleProviderForJava implements LineStyleProvider{
 		Color bgColor = ta.getBackground();
 		if (bgColor == null)
 			bgColor = attr.getBackground();
-		presentation.add(new StyleRange(offset, length, attr.getForeground(), bgColor, attr.getStyle()));
+		StyleRange result = new StyleRange(offset, length, attr.getForeground(), bgColor, attr.getStyle());
+		if((attr.getStyle() & TextAttribute.STRIKETHROUGH) != 0) {
+			result.strikeout = true;
+		}
+		if((attr.getStyle() & TextAttribute.UNDERLINE) != 0) {
+			result.underline = true;
+		}
+		presentation.add(result);
 	}
 
 	/**
@@ -99,7 +106,25 @@ public class LineStyleProviderForJava implements LineStyleProvider{
 				RGB foreground = ColorHelper.toRGB(stylePrefs[0]);
 				RGB background = ColorHelper.toRGB(stylePrefs[1]);
 				boolean bold = Boolean.valueOf(stylePrefs[2]).booleanValue();
-				getTextAttributes().put(colorKey, createTextAttribute(foreground, background, bold));
+				boolean italic = Boolean.valueOf(stylePrefs[3]).booleanValue();
+				boolean strikethrough = Boolean.valueOf(stylePrefs[4]).booleanValue();
+				boolean underline = Boolean.valueOf(stylePrefs[5]).booleanValue();
+				int style = SWT.NORMAL;
+				if (bold) {
+					style = style | SWT.BOLD;
+				}
+				if (italic) {
+					style = style | SWT.ITALIC;
+				}
+				if (strikethrough) {
+					style = style | TextAttribute.STRIKETHROUGH;
+				}
+				if (underline) {
+					style = style | TextAttribute.UNDERLINE;
+				}
+
+				TextAttribute createTextAttribute = createTextAttribute(foreground, background, style);
+				getTextAttributes().put(colorKey, createTextAttribute);
 			}
 		}
 	}
@@ -119,25 +144,89 @@ public class LineStyleProviderForJava implements LineStyleProvider{
 				RGB foreground = PreferenceConverter.getColor(store, PreferenceConstants.EDITOR_JAVA_KEYWORD_COLOR);
 				boolean bold = store.getBoolean(PreferenceConstants.EDITOR_JAVA_KEYWORD_BOLD);
 				boolean italics = store.getBoolean(PreferenceConstants.EDITOR_JAVA_KEYWORD_ITALIC);
-				ta = createTextAttribute(foreground, null, bold, italics);
+				boolean strikethrough = store.getBoolean(PreferenceConstants.EDITOR_JAVA_KEYWORD_STRIKETHROUGH);
+				boolean underline = store.getBoolean(PreferenceConstants.EDITOR_JAVA_KEYWORD_UNDERLINE);
+				int style = SWT.NORMAL;
+				if (bold) {
+					style = style | SWT.BOLD;
+				}
+				if (italics) {
+					style = style | SWT.ITALIC;
+				}
+				if (strikethrough) {
+					style = style | TextAttribute.STRIKETHROUGH;
+				}
+				if (underline) {
+					style = style | TextAttribute.UNDERLINE;
+				}
+
+				ta = createTextAttribute(foreground, null, style);
 			} else if (colorKey == IStyleConstantsJSPJava.JAVA_STRING) {
 				// string
 				RGB foreground = PreferenceConverter.getColor(store, PreferenceConstants.EDITOR_STRING_COLOR);
 				boolean bold = store.getBoolean(PreferenceConstants.EDITOR_STRING_BOLD);
 				boolean italics = store.getBoolean(PreferenceConstants.EDITOR_STRING_ITALIC);
-				ta = createTextAttribute(foreground, null, bold, italics);
+				boolean strikethrough = store.getBoolean(PreferenceConstants.EDITOR_STRING_STRIKETHROUGH);
+				boolean underline = store.getBoolean(PreferenceConstants.EDITOR_STRING_UNDERLINE);
+				int style = SWT.NORMAL;
+				if (bold) {
+					style = style | SWT.BOLD;
+				}
+				if (italics) {
+					style = style | SWT.ITALIC;
+				}
+				if (strikethrough) {
+					style = style | TextAttribute.STRIKETHROUGH;
+				}
+				if (underline) {
+					style = style | TextAttribute.UNDERLINE;
+				}
+
+				ta = createTextAttribute(foreground, null, style);
 			} else if (colorKey == IStyleConstantsJSPJava.JAVA_SINGLE_LINE_COMMENT) {
 				// single line comment
 				RGB foreground = PreferenceConverter.getColor(store, PreferenceConstants.EDITOR_SINGLE_LINE_COMMENT_COLOR);
 				boolean bold = store.getBoolean(PreferenceConstants.EDITOR_SINGLE_LINE_COMMENT_BOLD);
 				boolean italics = store.getBoolean(PreferenceConstants.EDITOR_SINGLE_LINE_COMMENT_ITALIC);
-				ta = createTextAttribute(foreground, null, bold, italics);
+				boolean strikethrough = store.getBoolean(PreferenceConstants.EDITOR_SINGLE_LINE_COMMENT_STRIKETHROUGH);
+				boolean underline = store.getBoolean(PreferenceConstants.EDITOR_SINGLE_LINE_COMMENT_UNDERLINE);
+				int style = SWT.NORMAL;
+				if (bold) {
+					style = style | SWT.BOLD;
+				}
+				if (italics) {
+					style = style | SWT.ITALIC;
+				}
+				if (strikethrough) {
+					style = style | TextAttribute.STRIKETHROUGH;
+				}
+				if (underline) {
+					style = style | TextAttribute.UNDERLINE;
+				}
+
+				ta = createTextAttribute(foreground, null, style);
 			} else if (colorKey == IStyleConstantsJSPJava.JAVA_DEFAULT) {
 				// default
 				RGB foreground = PreferenceConverter.getColor(store, PreferenceConstants.EDITOR_JAVA_DEFAULT_COLOR);
 				boolean bold = store.getBoolean(PreferenceConstants.EDITOR_JAVA_DEFAULT_BOLD);
 				boolean italics = store.getBoolean(PreferenceConstants.EDITOR_JAVA_DEFAULT_ITALIC);
-				ta = createTextAttribute(foreground, null, bold, italics);
+				boolean strikethrough = store.getBoolean(PreferenceConstants.EDITOR_JAVA_DEFAULT_STRIKETHROUGH);
+				boolean underline = store.getBoolean(PreferenceConstants.EDITOR_JAVA_DEFAULT_UNDERLINE);
+				int style = SWT.NORMAL;
+				if (bold) {
+					style = style | SWT.BOLD;
+				}
+				if (italics) {
+					style = style | SWT.ITALIC;
+				}
+				if (strikethrough) {
+					style = style | TextAttribute.STRIKETHROUGH;
+				}
+				if (underline) {
+					style = style | TextAttribute.UNDERLINE;
+				}
+
+				ta = createTextAttribute(foreground, null, style);
 			}
 			if (ta != null) {
 				getTextAttributes().put(colorKey, ta);
@@ -145,16 +234,8 @@ public class LineStyleProviderForJava implements LineStyleProvider{
 			}
 		}
 	}
-
-	private TextAttribute createTextAttribute(RGB foreground, RGB background, boolean bold) {
-		return new TextAttribute((foreground != null) ? EditorUtility.getColor(foreground) : null, (background != null) ? EditorUtility.getColor(background) : null, bold ? SWT.BOLD : SWT.NORMAL);
-	}
 	
-	private TextAttribute createTextAttribute(RGB foreground, RGB background, boolean bold, boolean italics) {
-		int style = bold ? SWT.BOLD : SWT.NORMAL;
-		if (italics)
-			style |= SWT.ITALIC;
-		
+	private TextAttribute createTextAttribute(RGB foreground, RGB background, int style) {
 		return new TextAttribute((foreground != null) ? EditorUtility.getColor(foreground) : null, (background != null) ? EditorUtility.getColor(background) : null, style);
 	}
 	
@@ -281,7 +362,6 @@ public class LineStyleProviderForJava implements LineStyleProvider{
 			fScanner.setRange(document, lastStart, remainingLength);
 
 			while (true) {
-
 				IToken token = fScanner.nextToken();
 
 				if (token.isEOF()) {

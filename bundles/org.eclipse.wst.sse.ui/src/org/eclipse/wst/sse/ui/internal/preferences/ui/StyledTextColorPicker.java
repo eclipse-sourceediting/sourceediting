@@ -45,7 +45,6 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.ColorDialog;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -118,7 +117,7 @@ public class StyledTextColorPicker extends Composite {
 				return;
 			if (e.widget == fBold) {
 				// get current (newly old) style
-				String prefString = getPreferenceStore().getString(getPreferenceKey(namedStyle));
+				String prefString = getPreferenceStore().getString(namedStyle);
 				String[] stylePrefs = ColorHelper.unpackStylePreferences(prefString);
 				if (stylePrefs != null) {
 					String oldValue = stylePrefs[2];
@@ -126,13 +125,13 @@ public class StyledTextColorPicker extends Composite {
 					if (!newValue.equals(oldValue)) {
 						stylePrefs[2] = newValue;
 						String newPrefString = ColorHelper.packStylePreferences(stylePrefs);
-						getPreferenceStore().setValue(getPreferenceKey(namedStyle), newPrefString);
+						getPreferenceStore().setValue(namedStyle, newPrefString);
 						refresh();
 					}
 				}
 			} else if (showItalic && e.widget == fItalic) {
 				// get current (newly old) style
-				String prefString = getPreferenceStore().getString(getPreferenceKey(namedStyle));
+				String prefString = getPreferenceStore().getString(namedStyle);
 				String[] stylePrefs = ColorHelper.unpackStylePreferences(prefString);
 				if (stylePrefs != null) {
 					String oldValue = stylePrefs[3];
@@ -140,12 +139,12 @@ public class StyledTextColorPicker extends Composite {
 					if (!newValue.equals(oldValue)) {
 						stylePrefs[3] = newValue;
 						String newPrefString = ColorHelper.packStylePreferences(stylePrefs);
-						getPreferenceStore().setValue(getPreferenceKey(namedStyle), newPrefString);
+						getPreferenceStore().setValue(namedStyle, newPrefString);
 						refresh();
 					}
 				}
 			} else if (e.widget == fClearStyle) {
-				getPreferenceStore().setToDefault(getPreferenceKey(namedStyle));
+				getPreferenceStore().setToDefault(namedStyle);
 				refresh();
 			}
 		}
@@ -287,29 +286,6 @@ public class StyledTextColorPicker extends Composite {
 		}
 	}
 
-	private RGB changeColor(RGB startValue) {
-		ColorDialog colorDlg = new ColorDialog(getShell());
-		if (startValue != null)
-			colorDlg.setRGB(startValue);
-		if(colorDlg.getText() == null || colorDlg.getText().length() == 0)
-			colorDlg.setText(SSEUIMessages.StyledTextColorPicker_0);
-		colorDlg.open();
-		RGB newRGB = colorDlg.getRGB();
-		if (newRGB != null)
-			return newRGB;
-		return startValue;
-	}
-
-	private String changeColor(String rgb) {
-		String changedColor = "null"; //$NON-NLS-1$
-
-		RGB newColor = changeColor(ColorHelper.toRGB(rgb));
-		// null check to see if using default value
-		if (newColor != null)
-			changedColor = ColorHelper.toRGBString(newColor);
-		return changedColor;
-	}
-
 	protected void close() {
 	}
 
@@ -438,17 +414,20 @@ public class StyledTextColorPicker extends Composite {
 				if (event.getProperty().equals(ColorSelector.PROP_COLORCHANGE)) {
 					// get current (newly old) style
 					String namedStyle = getStyleName(fStyleCombo.getItem(fStyleCombo.getSelectionIndex()));
-					String prefString = getPreferenceStore().getString(getPreferenceKey(namedStyle));
+					String prefString = getPreferenceStore().getString(namedStyle);
 					String[] stylePrefs = ColorHelper.unpackStylePreferences(prefString);
 					if (stylePrefs != null) {
 						String oldValue = stylePrefs[0];
-						// open color dialog to get new color
-						String newValue = changeColor(oldValue);
+						String newValue = "null";   //$NON-NLS-1$
+						Object newValueObject = event.getNewValue();
+						if (newValueObject instanceof RGB) {
+							newValue = ColorHelper.toRGBString((RGB)newValueObject);
+						}
 	
 						if (!newValue.equals(oldValue)) {
 							stylePrefs[0] = newValue;
 							String newPrefString = ColorHelper.packStylePreferences(stylePrefs);
-							getPreferenceStore().setValue(getPreferenceKey(namedStyle), newPrefString);
+							getPreferenceStore().setValue(namedStyle, newPrefString);
 							refresh();
 						}
 					}
@@ -460,17 +439,21 @@ public class StyledTextColorPicker extends Composite {
 				if (event.getProperty().equals(ColorSelector.PROP_COLORCHANGE)) {
 					// get current (newly old) style
 					String namedStyle = getStyleName(fStyleCombo.getItem(fStyleCombo.getSelectionIndex()));
-					String prefString = getPreferenceStore().getString(getPreferenceKey(namedStyle));
+					String prefString = getPreferenceStore().getString(namedStyle);
 					String[] stylePrefs = ColorHelper.unpackStylePreferences(prefString);
 					if (stylePrefs != null) {
 						String oldValue = stylePrefs[1];
-						// open color dialog to get new color
-						String newValue = changeColor(oldValue);
-	
+
+						String newValue = "null";   //$NON-NLS-1$
+						Object newValueObject = event.getNewValue();
+						if (newValueObject instanceof RGB) {
+							newValue = ColorHelper.toRGBString((RGB)newValueObject);
+						}
+						
 						if (!newValue.equals(oldValue)) {
 							stylePrefs[1] = newValue;
 							String newPrefString = ColorHelper.packStylePreferences(stylePrefs);
-							getPreferenceStore().setValue(getPreferenceKey(namedStyle), newPrefString);
+							getPreferenceStore().setValue(namedStyle, newPrefString);
 							refresh();
 						}
 					}
@@ -511,7 +494,7 @@ public class StyledTextColorPicker extends Composite {
 		TextAttribute ta = new TextAttribute(getDefaultForeground(), getDefaultBackground(), SWT.NORMAL);
 
 		if (namedStyle != null && getPreferenceStore() != null) {
-			String prefString = getPreferenceStore().getString(getPreferenceKey(namedStyle));
+			String prefString = getPreferenceStore().getString(namedStyle);
 			String[] stylePrefs = ColorHelper.unpackStylePreferences(prefString);
 			if (stylePrefs != null) {
 				RGB foreground = ColorHelper.toRGB(stylePrefs[0]);
@@ -621,17 +604,6 @@ public class StyledTextColorPicker extends Composite {
 
 	public RegionParser getParser() {
 		return fParser;
-	}
-
-	/**
-	 * @deprecated just key key (no need for generator)
-	 */
-	private String getPreferenceKey(String key) {
-		String newKey = key;
-//		if (fGeneratorKey != null) {
-//			newKey = PreferenceKeyGenerator.generateKey(key, fGeneratorKey);
-//		}
-		return newKey;
 	}
 
 	private IPreferenceStore getPreferenceStore() {
