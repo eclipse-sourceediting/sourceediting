@@ -3,7 +3,13 @@
 <!-- Set customBuildCallbacks=<path/to/this/file> in your build.properties.-->
 <!-- ===================================================================== -->
 <project name="Build specific targets and properties" default="noDefault">
-
+    <!-- 
+    	Note to be cross-platform, "environment variables" are only appropriate for 
+        some variables, e.g. ones we set, since properties are case sensitive, even if 
+        the environment variables on your operating system are not, e.g. it will 
+        be ${env.Path} not ${env.PATH} on Windows -->
+    <property environment="env" />
+    
 	<!-- ===================================================================== -->
 	<!-- Default target                                                        -->
 	<!-- ===================================================================== -->
@@ -21,7 +27,11 @@
 	    <!-- copy our known, pre-built, usually third party pre-reqs into this feature -->
 	    <echo message="Current basedir during callback: ${basedir}" />
 	    <echo message="Current destination.temp.folder during callback: ${destination.temp.folder}" />
-	    
+        <copy
+            todir="${destination.temp.folder}"
+            overwrite="false">
+            <fileset dir="${env.BUILD_HOME}/prebuilt/eclipse/plugins/org.apache.xerces*"></fileset>
+        </copy>
 	</target>
 	
 	<!-- ===================================================================== -->
