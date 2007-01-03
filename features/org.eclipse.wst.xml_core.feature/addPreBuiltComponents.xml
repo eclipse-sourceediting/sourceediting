@@ -1,8 +1,10 @@
 <!-- ===================================================================== -->
-<!-- Custom targets called from a project's generated build.xml            -->
-<!-- Set customBuildCallbacks=<path/to/this/file> in your build.properties.-->
+<!-- Callbacks to use when building this feature                		   -->
+<!--                                                                       -->
+<!-- build.properties must have a line that says                           -->
+<!--   customBuildCallbacks=addPreBuiltComponents.xml                      -->
 <!-- ===================================================================== -->
-<project name="Build specific targets and properties" default="noDefault">
+<project name="addPreBuiltComponents" default="noDefault">
     <!-- 
     	Note to be cross-platform, "environment variables" are only appropriate for 
         some variables, e.g. ones we set, since properties are case sensitive, even if 
@@ -10,12 +12,6 @@
         be ${env.Path} not ${env.PATH} on Windows -->
     <property environment="env" />
     
-	<!-- ===================================================================== -->
-	<!-- Default target                                                        -->
-	<!-- ===================================================================== -->
-	<target name="noDefault">
-		<echo message="This file must be called with explicit targets" />
-	</target>
 	
 	<!-- ===================================================================== -->
 	<!-- Steps to do before the target gather.bin.parts                        -->
@@ -43,4 +39,14 @@
 	<target name="post.gather.bin.parts">
 	</target>
 
+    
+    
+	<!-- ===================================================================== -->
+	<!-- No Default target                                                        -->
+	<!-- ===================================================================== -->
+	<target name="noDefault">
+		<echo message="This file must be called with explicit targets" />
+	</target>
+
+    
 </project>
