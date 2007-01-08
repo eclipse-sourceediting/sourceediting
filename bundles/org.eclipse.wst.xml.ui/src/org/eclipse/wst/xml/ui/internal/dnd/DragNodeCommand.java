@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,8 +25,10 @@ import org.eclipse.swt.dnd.DND;
 import org.eclipse.wst.common.ui.internal.dnd.DefaultDragAndDropCommand;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
+import org.eclipse.wst.xml.ui.internal.Logger;
 import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 import org.w3c.dom.Attr;
+import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
@@ -76,7 +78,7 @@ public class DragNodeCommand extends DefaultDragAndDropCommand {
 							sourceAttributeOwnerElement.removeAttributeNode(sourceAttribute);
 							targetElement.getAttributes().setNamedItem(sourceAttribute);
 							fSelections.add(sourceAttribute);
-						}
+							}
 						else if (getOperation() == DND.DROP_COPY) {
 							Attr cloneAttribute = (Attr) sourceAttribute.cloneNode(false);
 							Element targetElement = (Element) parentNode;
@@ -85,6 +87,7 @@ public class DragNodeCommand extends DefaultDragAndDropCommand {
 						}
 					}
 					catch (Exception e) {
+						Logger.log(Logger.WARNING_DEBUG, e.getMessage(), e);
 					}
 				}
 			}
@@ -94,26 +97,38 @@ public class DragNodeCommand extends DefaultDragAndDropCommand {
 				result = true;
 
 				if (!testOnly) {
-					if (isAncestor(source, parentNode)) {
-						// System.out.println("can not perform this drag drop
-						// operation.... todo... pop up dialog");
-					}
-					else {
-						// defect 221055 this test is required or else the
-						// node will
-						// be removed from the tree and the insert will fail
-						if (source != refChild) {
-							if (getOperation() == DND.DROP_MOVE) {
-								source.getParentNode().removeChild(source);
-								parentNode.insertBefore(source, refChild);
-								fSelections.add(source);
-							}
-							else if (getOperation() == DND.DROP_COPY) {
-								Node nodeClone = source.cloneNode(true);
-								parentNode.insertBefore(nodeClone, refChild);
-								fSelections.add(nodeClone);
+					try {
+						if (isAncestor(source, parentNode)) {
+							// System.out.println("can not perform this drag drop
+							// operation.... todo... pop up dialog");
+						}
+						else {
+							// defect 221055 this test is required or else the
+							// node will
+							// be removed from the tree and the insert will fail
+							if (source != refChild) {
+								if (getOperation() == DND.DROP_MOVE) {
+									Node oldParent = source.getParentNode();
+									Node oldSibling = source.getNextSibling();
+									oldParent.removeChild(source);
+									try {
+										parentNode.insertBefore(source, refChild);
+									} catch (DOMException e) {
+										// bug151692 - if unable to move node to new location, reinsert back to old location
+										oldParent.insertBefore(source, oldSibling);
+									}
+									fSelections.add(source);
+								}
+								else if (getOperation() == DND.DROP_COPY) {
+									Node nodeClone = source.cloneNode(true);
+									parentNode.insertBefore(nodeClone, refChild);
+									fSelections.add(nodeClone);
+								}
 							}
 						}
+					}
+					catch (Exception e) {
+						Logger.log(Logger.WARNING_DEBUG, e.getMessage(), e);
 					}
 				}
 			}
