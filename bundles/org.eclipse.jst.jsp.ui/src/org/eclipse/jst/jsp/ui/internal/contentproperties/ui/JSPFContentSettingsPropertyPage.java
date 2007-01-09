@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006 IBM Corporation and others.
+ * Copyright (c) 2006, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,6 +13,7 @@ package org.eclipse.jst.jsp.ui.internal.contentproperties.ui;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jst.jsp.core.internal.contentproperties.JSPFContentProperties;
 import org.eclipse.jst.jsp.ui.internal.JSPUIMessages;
@@ -149,8 +150,14 @@ public class JSPFContentSettingsPropertyPage extends PropertyPage {
 	 */
 	private IResource getResource() {
 		IResource resource = null;
-		if (getElement() instanceof IResource) {
-			resource = (IResource) getElement();
+		IAdaptable adaptable = getElement();
+		if (adaptable instanceof IResource) {
+			resource = (IResource) adaptable;
+		} else if (adaptable != null) {
+			Object o = adaptable.getAdapter(IResource.class);
+			if (o instanceof IResource) {
+				resource = (IResource)o;
+			}
 		}
 		return resource;
 	}
