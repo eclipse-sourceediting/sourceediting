@@ -15,6 +15,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDAdapterFactory;
@@ -119,11 +120,18 @@ public class XSDSectionLabelProvider extends LabelProvider
 
           IWorkbench workbench = PlatformUI.getWorkbench();
           IWorkbenchWindow workbenchWindow = workbench.getActiveWorkbenchWindow();
-          IEditorPart editorPart = workbenchWindow.getActivePage().getActiveEditor();
-          XSDSchema xsdSchema = ((XSDConcreteComponent) selected).getSchema();
-          if (xsdSchema != editorPart.getAdapter(XSDSchema.class))
+          if (workbenchWindow != null)
           {
-            sb.append(" (" + Messages.UI_LABEL_READ_ONLY + ")"); //$NON-NLS-1$ //$NON-NLS-2$
+            IWorkbenchPage page = workbenchWindow.getActivePage();
+            if (page != null)
+            {
+              IEditorPart editorPart = page.getActiveEditor();
+              XSDSchema xsdSchema = ((XSDConcreteComponent) selected).getSchema();
+              if (editorPart != null && xsdSchema != editorPart.getAdapter(XSDSchema.class))
+              {
+                sb.append(" (" + Messages.UI_LABEL_READ_ONLY + ")"); //$NON-NLS-1$ //$NON-NLS-2$
+              }
+            }
           }
           return sb.toString();
         }
