@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006 Eclipse Foundation
+ * Copyright (c) 2006, 2007 Eclipse Foundation
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -174,6 +174,11 @@ public class TestFormatProcessorXML extends TestCase {
 	public void testOneLineFormat() throws UnsupportedEncodingException, IOException, CoreException {
 		// BUG115716
 		formatAndAssertEquals("testfiles/xml/oneline.xml", "testfiles/xml/oneline-fmt.xml");
+	}
+	
+	public void testOneLineTextNodeFormat() throws UnsupportedEncodingException, IOException, CoreException {
+		// BUG166441
+		formatAndAssertEquals("testfiles/xml/onelineTextNode.xml", "testfiles/xml/onelineTextNode-fmt.xml");
 	}
 
 }
