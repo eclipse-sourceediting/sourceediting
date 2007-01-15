@@ -74,7 +74,9 @@ public class AddExtensionElementCommand extends AddExtensionCommand
 
   private void addAnnotationSet(SpecificationForExtensionsSchema spec, XSDAnnotation xsdAnnotation)
   {
-    appInfo = xsdAnnotation.createApplicationInformation(spec.getNamespaceURI());
+    // appInfo = xsdAnnotation.createApplicationInformation(spec.getNamespaceURI());
+    // Don't pass in namespace to create the source attribute on the appInfo
+    appInfo = xsdAnnotation.createApplicationInformation(null);
 
     if (appInfo != null)
     {

@@ -11,6 +11,7 @@
 package org.eclipse.wst.xsd.ui.internal.common.properties.sections;
 
 import java.util.List;
+
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.jface.action.MenuManager;
@@ -25,6 +26,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.MouseTrackAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -36,10 +38,12 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.Section;
-import org.eclipse.ui.part.PageBook;
+import org.eclipse.ui.views.properties.PropertySheet;
+import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.xsd.ui.internal.common.commands.AddExtensionCommand;
@@ -65,9 +69,8 @@ public abstract class AbstractExtensionsSection extends AbstractSection
   protected IDocumentChangedNotifier documentChangeNotifier;
   protected INodeAdapter internalNodeAdapter = new InternalNodeAdapter();
 
-  private Composite page, pageBook2;
+  private Composite page;
   protected Button addButton, removeButton;
-  private PageBook pageBook;
   private Object prevInput;
   private SpecificationForExtensionsSchema prevCategory;
 
@@ -154,36 +157,62 @@ public abstract class AbstractExtensionsSection extends AbstractSection
     gridData.verticalAlignment = GridData.FILL;
     gridData.horizontalAlignment = GridData.FILL;
     page.setLayoutData(gridData);
+    
+    SashForm sashForm = new SashForm(page, SWT.HORIZONTAL);
+    // Try to limit the initial width of the section
+    
+    int w = SWT.DEFAULT;
+    try
+    {
+      IWorkbenchPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart();
 
-    pageBook = new PageBook(page, SWT.FLAT);
+      // Find the width of the Tabbed Property Sheet's composite excluding the tab
+      if (part instanceof PropertySheet)
+      {
+        PropertySheet sheet = (PropertySheet)part;
+        if (sheet.getCurrentPage() instanceof TabbedPropertySheetPage)
+        {
+          TabbedPropertySheetPage tabbedPage = (TabbedPropertySheetPage)sheet.getCurrentPage();
+          Composite targetComposite = null;
+          if (tabbedPage.getControl() instanceof Composite)
+          {
+            Composite c = (Composite)tabbedPage.getControl();
+            int length = c.getChildren().length;
+            for (int i = 0; i < length; i++)
+            {
+              Control ctrl = c.getChildren()[i];
+              int length2  = (((Composite)ctrl).getChildren()).length;
+              for (int j = 0; j < length2; j++ )
+              {
+                if ((((Composite)ctrl).getChildren())[j] instanceof ScrolledComposite)
+                {
+                  targetComposite = (Composite)(((Composite)ctrl).getChildren())[j];
+                  break;
+                }
+              }
+            }
+          }
+          if (targetComposite != null)
+          {
+            w = targetComposite.getSize().x - 25;
+          }
+          // The above can be accomplished by the following code
+          // but because TabbedPropertyComposite is in an internal package, I will get a discouraged
+          // access warning.
+          // w = ((TabbedPropertyComposite)(tabbedPage.getControl())).getTabComposite().getSize().x;
+        }
+      }
+    }
+    catch(Exception e)
+    {
+      w = SWT.DEFAULT;
+    }
     gridData = new GridData();
     gridData.grabExcessHorizontalSpace = true;
     gridData.grabExcessVerticalSpace = true;
     gridData.verticalAlignment = GridData.FILL;
     gridData.horizontalAlignment = GridData.FILL;
-    pageBook.setLayoutData(gridData);
-
-    pageBook2 = getWidgetFactory().createComposite(pageBook, SWT.FLAT);
-
-    gridLayout = new GridLayout();
-    gridLayout.marginHeight = 2;
-    gridLayout.marginWidth = 2;
-    gridLayout.numColumns = 1;
-    pageBook2.setLayout(gridLayout);
-
-    gridData = new GridData();
-    gridData.grabExcessHorizontalSpace = true;
-    gridData.grabExcessVerticalSpace = true;
-    gridData.verticalAlignment = GridData.FILL;
-    gridData.horizontalAlignment = GridData.FILL;
-    pageBook2.setLayoutData(gridData);
-
-    SashForm sashForm = new SashForm(pageBook2, SWT.HORIZONTAL);
-    gridData = new GridData();
-    gridData.grabExcessHorizontalSpace = true;
-    gridData.grabExcessVerticalSpace = true;
-    gridData.verticalAlignment = GridData.FILL;
-    gridData.horizontalAlignment = GridData.FILL;
+    gridData.widthHint = w;
     sashForm.setLayoutData(gridData);
     sashForm.setForeground(ColorConstants.white);
     sashForm.setBackground(ColorConstants.white);
@@ -350,8 +379,6 @@ public abstract class AbstractExtensionsSection extends AbstractSection
 
     int[] weights = { 50, 50 };
     sashForm.setWeights(weights);
-
-    pageBook.showPage(pageBook2);
   }
 
   protected void createElementContentWidget(Composite parent)

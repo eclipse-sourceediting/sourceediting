@@ -6,7 +6,10 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo.custom.NodeCustomizationRegistry;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.w3c.dom.Attr;
+import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.Text;
 
 public class DOMExtensionTreeLabelProvider extends LabelProvider
 {
@@ -46,7 +49,26 @@ public class DOMExtensionTreeLabelProvider extends LabelProvider
     if (input instanceof Element)
     {
       Element domElement = (Element) input;
-      return domElement.getLocalName();
+      String textVal = "";
+
+      if (domElement.hasChildNodes())
+      {
+        Node node = domElement.getChildNodes().item(0);
+        if (node instanceof Text)
+        {
+          Text textNode = (Text) node;
+          try
+          {
+            if (!textNode.getNodeValue().contains("\n"))
+              textVal = " [" + textNode.getNodeValue() + "]";
+          }
+          catch (DOMException e)
+          {
+            textVal = "";
+          }
+        }
+      }
+      return domElement.getLocalName() + textVal;
     }
     if ( input instanceof Attr){
       return ((Attr) input).getLocalName();
