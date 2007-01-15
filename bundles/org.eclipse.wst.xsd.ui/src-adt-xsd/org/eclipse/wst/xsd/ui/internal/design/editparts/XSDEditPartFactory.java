@@ -13,6 +13,7 @@ package org.eclipse.wst.xsd.ui.internal.design.editparts;
 import org.eclipse.gef.EditPart;
 import org.eclipse.wst.xsd.ui.internal.adapters.CategoryAdapter;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDAttributeGroupDefinitionAdapter;
+import org.eclipse.wst.xsd.ui.internal.adapters.XSDBaseAdapter;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDModelGroupAdapter;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDModelGroupDefinitionAdapter;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDSchemaAdapter;
@@ -26,11 +27,13 @@ import org.eclipse.wst.xsd.ui.internal.adt.design.figures.IFieldFigure;
 import org.eclipse.wst.xsd.ui.internal.adt.design.figures.IStructureFigure;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IField;
 import org.eclipse.wst.xsd.ui.internal.adt.typeviz.design.figures.TypeVizFigureFactory;
+import org.eclipse.wst.xsd.ui.internal.common.util.XSDCommonUIUtils;
 import org.eclipse.wst.xsd.ui.internal.design.editparts.model.SpaceFiller;
 import org.eclipse.wst.xsd.ui.internal.design.editparts.model.TargetConnectionSpaceFiller;
 import org.eclipse.wst.xsd.ui.internal.design.figures.IExtendedFigureFactory;
 import org.eclipse.wst.xsd.ui.internal.design.figures.IModelGroupFigure;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
+import org.eclipse.xsd.XSDConcreteComponent;
 
 public class XSDEditPartFactory extends ADTEditPartFactory implements IExtendedFigureFactory
 {
@@ -135,7 +138,13 @@ public class XSDEditPartFactory extends ADTEditPartFactory implements IExtendedF
   
   public IStructureFigure createStructureFigure(Object model)
   {
-    return delegate.createStructureFigure(model);
+    IStructureFigure figure = delegate.createStructureFigure(model);
+    if (model instanceof XSDBaseAdapter)
+    {
+      XSDConcreteComponent comp = (XSDConcreteComponent) ((XSDBaseAdapter)model).getTarget();
+      figure.getNameLabel().setIcon(XSDCommonUIUtils.getUpdatedImage( comp, ((XSDBaseAdapter)model).getImage()));
+    }
+    return figure;
   }  
 
   public IFieldFigure createFieldFigure(Object model)
