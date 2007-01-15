@@ -16,15 +16,18 @@ import java.util.List;
 
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.emf.common.notify.Adapter;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDAdapterFactory;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDBaseAdapter;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDModelGroupAdapter;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.BaseEditPart;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.CenteredConnectionAnchor;
+import org.eclipse.wst.xsd.ui.internal.common.util.XSDCommonUIUtils;
 import org.eclipse.wst.xsd.ui.internal.design.editparts.model.TargetConnectionSpaceFiller;
 import org.eclipse.wst.xsd.ui.internal.design.figures.GenericGroupFigure;
 import org.eclipse.wst.xsd.ui.internal.design.figures.ModelGroupFigure;
 import org.eclipse.xsd.XSDCompositor;
+import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDElementDeclaration;
 import org.eclipse.xsd.XSDModelGroup;
 import org.eclipse.xsd.XSDModelGroupDefinition;
@@ -71,24 +74,27 @@ public class ModelGroupEditPart extends ConnectableEditPart
     isReadOnly = adapter.isReadOnly();
     
     String nodeName = "";
-    
+    Image image;
     switch (getXSDModelGroup().getCompositor().getValue())
     {
       case XSDCompositor.ALL:
       {
-        modelGroupFigure.getIconFigure().image = isReadOnly ? ModelGroupFigure.ALL_ICON_DISABLED_IMAGE :ModelGroupFigure.ALL_ICON_IMAGE;
+        image = isReadOnly ? ModelGroupFigure.ALL_ICON_DISABLED_IMAGE :ModelGroupFigure.ALL_ICON_IMAGE;
+        modelGroupFigure.getIconFigure().image = XSDCommonUIUtils.getUpdatedImage((XSDConcreteComponent)adapter.getTarget(), image);
         nodeName = XSDConstants.ALL_ELEMENT_TAG;
         break;
       }
       case XSDCompositor.CHOICE:
       {
-        modelGroupFigure.getIconFigure().image = isReadOnly ? ModelGroupFigure.CHOICE_ICON_DISABLED_IMAGE : ModelGroupFigure.CHOICE_ICON_IMAGE;
+        image = isReadOnly ? ModelGroupFigure.CHOICE_ICON_DISABLED_IMAGE : ModelGroupFigure.CHOICE_ICON_IMAGE;
+        modelGroupFigure.getIconFigure().image = XSDCommonUIUtils.getUpdatedImage((XSDConcreteComponent)adapter.getTarget(), image); 
         nodeName = XSDConstants.CHOICE_ELEMENT_TAG;
         break;
       }
       case XSDCompositor.SEQUENCE:
       {
-        modelGroupFigure.getIconFigure().image = isReadOnly ? ModelGroupFigure.SEQUENCE_ICON_DISABLED_IMAGE : ModelGroupFigure.SEQUENCE_ICON_IMAGE;
+        image = isReadOnly ? ModelGroupFigure.SEQUENCE_ICON_DISABLED_IMAGE : ModelGroupFigure.SEQUENCE_ICON_IMAGE;
+        modelGroupFigure.getIconFigure().image = XSDCommonUIUtils.getUpdatedImage((XSDConcreteComponent)adapter.getTarget(), image); 
         nodeName = XSDConstants.SEQUENCE_ELEMENT_TAG;
         break;
       }

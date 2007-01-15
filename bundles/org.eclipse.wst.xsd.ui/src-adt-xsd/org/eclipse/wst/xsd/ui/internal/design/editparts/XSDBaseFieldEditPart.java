@@ -13,13 +13,16 @@ package org.eclipse.wst.xsd.ui.internal.design.editparts;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.GraphicalEditPart;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.wst.xsd.ui.internal.adapters.XSDBaseAdapter;
 import org.eclipse.wst.xsd.ui.internal.adt.design.IAnnotationProvider;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.BaseFieldEditPart;
 import org.eclipse.wst.xsd.ui.internal.adt.design.figures.IFieldFigure;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IField;
-import org.eclipse.wst.xsd.ui.internal.adt.outline.ITreeElement;
+import org.eclipse.wst.xsd.ui.internal.common.util.XSDCommonUIUtils;
 import org.eclipse.wst.xsd.ui.internal.design.editpolicies.DragAndDropEditPolicy;
 import org.eclipse.wst.xsd.ui.internal.design.editpolicies.SelectionHandlesEditPolicyImpl;
+import org.eclipse.xsd.XSDConcreteComponent;
 
 public class XSDBaseFieldEditPart extends BaseFieldEditPart
 {
@@ -66,9 +69,16 @@ public class XSDBaseFieldEditPart extends BaseFieldEditPart
   {
     IFieldFigure figure = getFieldFigure();   
     // our model implements ITreeElement
-    if (getModel() instanceof ITreeElement)
+    if (getModel() instanceof XSDBaseAdapter)
     {
-      figure.getNameLabel().setIcon(((ITreeElement)getModel()).getImage());
+      Image image = ((XSDBaseAdapter)getModel()).getImage();
+      figure.getNameLabel().setIcon(image);
+      
+      if (image != null)
+      {
+        XSDConcreteComponent comp = (XSDConcreteComponent) ((XSDBaseAdapter)getModel()).getTarget();
+        figure.getNameLabel().setIcon(XSDCommonUIUtils.getUpdatedImage(comp, image));
+      }
     }    
   }
 
