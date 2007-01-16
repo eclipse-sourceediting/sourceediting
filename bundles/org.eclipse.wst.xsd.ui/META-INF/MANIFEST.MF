@@ -81,3 +81,4 @@ Require-Bundle: org.eclipse.ui.views.properties.tabbed;bundle-version="[3.2.0,4.
  org.eclipse.search;bundle-version="[3.2.0,4.0.0)",
  com.ibm.icu;bundle-version="[3.4.4,3.5.0)"
 Eclipse-LazyStart: true
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
