@@ -54,40 +54,35 @@ public class XSDExtensionTreeContentProvider extends DOMExtensionTreeContentProv
                 }
               }
             }
-          }
-        }
-      }
-      Element element = component.getElement();
-      if (element == null)
-      {
-        return elementsAndAttributes.toArray();
-      }
-      
-      /** Construct attributes list */
-      NamedNodeMap attributes = component.getElement().getAttributes();
-      if (attributes != null)
-      {
-        // String defaultNamespace =
-        // (String)component.getSchema().getQNamePrefixToNamespaceMap().get("");
-        int length = attributes.getLength();
-        for (int i = 0; i < length; i++)
-        {
-          Node oneAttribute = attributes.item(i);
-          if (!isXmlnsAttribute(oneAttribute))
-          {
-            String namespace = oneAttribute.getNamespaceURI();
-            boolean isExtension = true;
-            if (namespace == null && oneAttribute.getPrefix() == null)
+            
+            /** Construct attributes list */
+            NamedNodeMap attributes = appInfoElement.getAttributes();
+            if (attributes != null)
             {
-              isExtension = false;
-            }
-            else if (!XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001.equals(namespace))
-            {
-              isExtension = true;
-            }
-            if (isExtension)
-            {
-              elementsAndAttributes.add(oneAttribute);
+              // String defaultNamespace =
+              // (String)component.getSchema().getQNamePrefixToNamespaceMap().get("");
+              int length = attributes.getLength();
+              for (int i = 0; i < length; i++)
+              {
+                Node oneAttribute = attributes.item(i);
+                if (!isXmlnsAttribute(oneAttribute))
+                {
+                  String namespace = oneAttribute.getNamespaceURI();
+                  boolean isExtension = true;
+                  if (namespace == null && oneAttribute.getPrefix() == null)
+                  {
+                    isExtension = false;
+                  }
+                  else if (!XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001.equals(namespace))
+                  {
+                    isExtension = true;
+                  }
+                  if (isExtension)
+                  {
+                    elementsAndAttributes.add(oneAttribute);
+                  }
+                }
+              }
             }
           }
         }
