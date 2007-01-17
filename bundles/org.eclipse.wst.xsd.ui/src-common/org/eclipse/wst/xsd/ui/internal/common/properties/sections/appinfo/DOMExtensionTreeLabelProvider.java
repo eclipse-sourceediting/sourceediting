@@ -3,6 +3,7 @@ package org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo.custom.NodeCustomizationRegistry;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.w3c.dom.Attr;
@@ -59,8 +60,9 @@ public class DOMExtensionTreeLabelProvider extends LabelProvider
           Text textNode = (Text) node;
           try
           {
-            if (!textNode.getNodeValue().contains("\n"))
-              textVal = " [" + textNode.getNodeValue() + "]";
+            String value = textNode.getNodeValue();
+            if (StringUtils.occurrencesOf(value, '\n') == 0)
+              textVal = " [" + value + "]";
           }
           catch (DOMException e)
           {
