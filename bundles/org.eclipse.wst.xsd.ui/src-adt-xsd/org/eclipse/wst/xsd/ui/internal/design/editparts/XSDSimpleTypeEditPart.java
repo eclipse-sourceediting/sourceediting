@@ -67,7 +67,7 @@ public class XSDSimpleTypeEditPart extends BaseTypeConnectingEditPart
     headingFigure.setIsReadOnly(adapter.isReadOnly());
     Label label = headingFigure.getLabel();
     label.setText(name);
-    label.setIcon(XSDCommonUIUtils.getUpdatedImage(adapter.getXSDTypeDefinition(), adapter.getImage()));    
+    label.setIcon(XSDCommonUIUtils.getUpdatedImage(adapter.getXSDTypeDefinition(), adapter.getImage(), adapter.isReadOnly()));    
   }
   
   public IStructureFigure getStructureFigure()

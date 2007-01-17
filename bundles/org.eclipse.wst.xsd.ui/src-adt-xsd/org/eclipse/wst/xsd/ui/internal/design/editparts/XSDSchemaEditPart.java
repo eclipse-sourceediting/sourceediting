@@ -148,7 +148,7 @@ public class XSDSchemaEditPart extends BaseEditPart
     headingFigure.getLabel().setIcon(image);
     if (image != null)
     {
-      headingFigure.getLabel().setIcon(XSDCommonUIUtils.getUpdatedImage((XSDConcreteComponent) schemaAdapter.getTarget(), image));
+      headingFigure.getLabel().setIcon(XSDCommonUIUtils.getUpdatedImage((XSDConcreteComponent) schemaAdapter.getTarget(), image, false));
     }
     outer.repaint();
     

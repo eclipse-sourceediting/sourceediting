@@ -109,7 +109,7 @@ public class TopLevelComponentEditPart extends BaseEditPart implements IFeedback
       Image image = adapter.getImage();
       if (image != null)
       {
-        label.setIcon(XSDCommonUIUtils.getUpdatedImage((XSDConcreteComponent) adapter.getTarget(), image));
+        label.setIcon(XSDCommonUIUtils.getUpdatedImage((XSDConcreteComponent) adapter.getTarget(), image, isReadOnly));
       }
       // arrowLabel.setVisible(Boolean.TRUE.equals(adapter.getProperty(getModel(),
       // "drillDown")));

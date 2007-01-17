@@ -72,12 +72,13 @@ public class XSDBaseFieldEditPart extends BaseFieldEditPart
     if (getModel() instanceof XSDBaseAdapter)
     {
       Image image = ((XSDBaseAdapter)getModel()).getImage();
+      boolean isReadOnly = ((XSDBaseAdapter)getModel()).isReadOnly();
       figure.getNameLabel().setIcon(image);
       
       if (image != null)
       {
         XSDConcreteComponent comp = (XSDConcreteComponent) ((XSDBaseAdapter)getModel()).getTarget();
-        figure.getNameLabel().setIcon(XSDCommonUIUtils.getUpdatedImage(comp, image));
+        figure.getNameLabel().setIcon(XSDCommonUIUtils.getUpdatedImage(comp, image, isReadOnly));
       }
     }    
   }
