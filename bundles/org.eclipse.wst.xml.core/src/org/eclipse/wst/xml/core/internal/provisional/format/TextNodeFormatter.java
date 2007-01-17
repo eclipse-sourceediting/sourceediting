@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -36,13 +36,15 @@ public class TextNodeFormatter extends NodeFormatter {
 			String lineDelimiter = doc.getLineDelimiter();
 			try {
 				lineDelimiter = doc.getLineDelimiter(line);
-				if (lineDelimiter == null)
-					lineDelimiter = ""; //$NON-NLS-1$
 			}
 			catch (BadLocationException e) {
 				// log for now, unless we find reason not to
 				Logger.log(Logger.INFO, e.getMessage());
 			}
+			// BUG166441: if cannot get line delimiter from current line, just
+			// use default line delimiter
+			if (lineDelimiter == null)
+				lineDelimiter = doc.getLineDelimiter();
 			int lineWidth = getFormatPreferences().getLineWidth();
 			IDOMNode parentNode = (IDOMNode) node.getParentNode();
 			String nodeIndentation = formatContraints.getCurrentIndent();
