@@ -80,21 +80,21 @@ public class ModelGroupEditPart extends ConnectableEditPart
       case XSDCompositor.ALL:
       {
         image = isReadOnly ? ModelGroupFigure.ALL_ICON_DISABLED_IMAGE :ModelGroupFigure.ALL_ICON_IMAGE;
-        modelGroupFigure.getIconFigure().image = XSDCommonUIUtils.getUpdatedImage((XSDConcreteComponent)adapter.getTarget(), image);
+        modelGroupFigure.getIconFigure().image = XSDCommonUIUtils.getUpdatedImage((XSDConcreteComponent)adapter.getTarget(), image, isReadOnly);
         nodeName = XSDConstants.ALL_ELEMENT_TAG;
         break;
       }
       case XSDCompositor.CHOICE:
       {
         image = isReadOnly ? ModelGroupFigure.CHOICE_ICON_DISABLED_IMAGE : ModelGroupFigure.CHOICE_ICON_IMAGE;
-        modelGroupFigure.getIconFigure().image = XSDCommonUIUtils.getUpdatedImage((XSDConcreteComponent)adapter.getTarget(), image); 
+        modelGroupFigure.getIconFigure().image = XSDCommonUIUtils.getUpdatedImage((XSDConcreteComponent)adapter.getTarget(), image, isReadOnly); 
         nodeName = XSDConstants.CHOICE_ELEMENT_TAG;
         break;
       }
       case XSDCompositor.SEQUENCE:
       {
         image = isReadOnly ? ModelGroupFigure.SEQUENCE_ICON_DISABLED_IMAGE : ModelGroupFigure.SEQUENCE_ICON_IMAGE;
-        modelGroupFigure.getIconFigure().image = XSDCommonUIUtils.getUpdatedImage((XSDConcreteComponent)adapter.getTarget(), image); 
+        modelGroupFigure.getIconFigure().image = XSDCommonUIUtils.getUpdatedImage((XSDConcreteComponent)adapter.getTarget(), image, isReadOnly); 
         nodeName = XSDConstants.SEQUENCE_ELEMENT_TAG;
         break;
       }

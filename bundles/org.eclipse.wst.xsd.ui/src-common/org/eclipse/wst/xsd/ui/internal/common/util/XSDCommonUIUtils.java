@@ -58,14 +58,15 @@ public class XSDCommonUIUtils
     super();
   }
   
-  public static Image getUpdatedImage(XSDConcreteComponent input, Image baseImage)
+  public static Image getUpdatedImage(XSDConcreteComponent input, Image baseImage, boolean isReadOnly)
   {
     XSDAnnotation xsdAnnotation = getInputXSDAnnotation(input, false);
+    
     if (xsdAnnotation != null)
     {
       if (xsdAnnotation.getApplicationInformation().size() > 0)
       {
-        ImageOverlayDescriptor ovr = new ImageOverlayDescriptor(baseImage);
+        ImageOverlayDescriptor ovr = new ImageOverlayDescriptor(baseImage, isReadOnly);
         Image newImage = ovr.getImage();
         return newImage;
       }

@@ -142,7 +142,8 @@ public class XSDEditPartFactory extends ADTEditPartFactory implements IExtendedF
     if (model instanceof XSDBaseAdapter)
     {
       XSDConcreteComponent comp = (XSDConcreteComponent) ((XSDBaseAdapter)model).getTarget();
-      figure.getNameLabel().setIcon(XSDCommonUIUtils.getUpdatedImage( comp, ((XSDBaseAdapter)model).getImage()));
+      boolean isReadOnly = ((XSDBaseAdapter)model).isReadOnly();
+      figure.getNameLabel().setIcon(XSDCommonUIUtils.getUpdatedImage( comp, ((XSDBaseAdapter)model).getImage(), isReadOnly));
     }
     return figure;
   }  

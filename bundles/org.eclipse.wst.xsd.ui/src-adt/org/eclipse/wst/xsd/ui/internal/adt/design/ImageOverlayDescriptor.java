@@ -19,15 +19,18 @@ import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 public class ImageOverlayDescriptor extends CompositeImageDescriptor
 {
   protected Image baseImage;
-  protected Image extensionOverlay;
+  protected Image extensionOverlay, disabledExtensionOverlay;
   protected Point imageSize;
+  protected boolean isReadOnly;
   
-  public ImageOverlayDescriptor(Image baseImage)
+  public ImageOverlayDescriptor(Image baseImage, boolean isReadOnly)
   {
     super();
     this.baseImage = baseImage;
+    this.isReadOnly = isReadOnly;
     imageSize = new Point(baseImage.getBounds().width, baseImage.getBounds().height);
-    extensionOverlay = XSDEditorPlugin.getPlugin().getIcon("ovr16/textoverlay.gif");  //$NON-NLS-1$ 
+    extensionOverlay = XSDEditorPlugin.getPlugin().getIcon("ovr16/extnsn_ovr.gif");  //$NON-NLS-1$ 
+    disabledExtensionOverlay = XSDEditorPlugin.getPlugin().getIcon("ovr16/extnsndis_ovr.gif");  //$NON-NLS-1$
   }
 
   public Image getImage()
@@ -37,8 +40,16 @@ public class ImageOverlayDescriptor extends CompositeImageDescriptor
   
   protected void drawCompositeImage(int width, int height)
   {
-    drawImage(baseImage.getImageData(), 0, 0);  
-    ImageData extensionImageData = extensionOverlay.getImageData();
+    drawImage(baseImage.getImageData(), 0, 0);
+    ImageData extensionImageData;
+    if (isReadOnly)
+    {
+      extensionImageData = disabledExtensionOverlay.getImageData();
+    }
+    else
+    {
+      extensionImageData = extensionOverlay.getImageData();
+    }
     drawImage (extensionImageData, imageSize.x - extensionImageData.width, 0);  // Top Right corner
   }
 
