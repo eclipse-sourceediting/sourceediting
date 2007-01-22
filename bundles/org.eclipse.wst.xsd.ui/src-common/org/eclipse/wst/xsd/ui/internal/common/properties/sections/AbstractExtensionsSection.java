@@ -194,7 +194,7 @@ public abstract class AbstractExtensionsSection extends AbstractSection
           }
           if (targetComposite != null)
           {
-            w = targetComposite.getSize().x - 25;
+            w = targetComposite.getSize().x - 20;  // ensure scrollbars don't show
           }
           // The above can be accomplished by the following code
           // but because TabbedPropertyComposite is in an internal package, I will get a discouraged
@@ -377,7 +377,7 @@ public abstract class AbstractExtensionsSection extends AbstractSection
 
     createElementContentWidget(testComp);
 
-    int[] weights = { 50, 50 };
+    int[] weights = { 40, 60 };
     sashForm.setWeights(weights);
   }
 

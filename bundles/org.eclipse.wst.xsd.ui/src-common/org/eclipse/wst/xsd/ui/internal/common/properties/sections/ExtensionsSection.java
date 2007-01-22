@@ -18,6 +18,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.wst.xsd.ui.internal.common.commands.AddExtensionAttributeCommand;
 import org.eclipse.wst.xsd.ui.internal.common.commands.AddExtensionCommand;
 import org.eclipse.wst.xsd.ui.internal.common.commands.AddExtensionElementCommand;
+import org.eclipse.wst.xsd.ui.internal.common.commands.ExtensibleAddExtensionCommand;
 import org.eclipse.wst.xsd.ui.internal.common.commands.RemoveExtensionNodeCommand;
 import org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo.DOMExtensionTreeLabelProvider;
 import org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo.ExtensionsSchemasRegistry;
@@ -25,6 +26,7 @@ import org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo.XSDExt
 import org.eclipse.wst.xsd.ui.internal.common.util.Messages;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.internal.text.XSDModelAdapter;
+import org.eclipse.wst.xsd.ui.internal.util.ModelReconcileAdapter;
 import org.eclipse.xsd.XSDAttributeDeclaration;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDElementDeclaration;
@@ -58,12 +60,17 @@ public class ExtensionsSection extends AbstractExtensionsSection
             adapter = XSDModelAdapter.lookupOrCreateModelAdapter(element.getOwnerDocument());
             if (adapter != null)
             {
-              adapter.getModelReconcileAdapter().addListener(internalNodeAdapter);
+              ModelReconcileAdapter modelReconcileAdapter = adapter.getModelReconcileAdapter();
+              if (modelReconcileAdapter != null)
+              {
+                modelReconcileAdapter.addListener(internalNodeAdapter);
+              }
             }  
           }
         }
       }
     }
+    extensionTreeViewer.expandToLevel(2);
   }
   
   public void dispose()
@@ -81,7 +88,16 @@ public class ExtensionsSection extends AbstractExtensionsSection
     if (o instanceof XSDElementDeclaration)
     {
       XSDElementDeclaration element = (XSDElementDeclaration) o;
-      addExtensionCommand = new AddExtensionElementCommand(Messages._UI_ACTION_ADD_APPINFO_ELEMENT, (XSDConcreteComponent) input, element);
+      ExtensibleAddExtensionCommand extensibleAddExtensionCommand = getExtensionsSchemasRegistry().getAddExtensionHandler(element.getTargetNamespace());
+      if (extensibleAddExtensionCommand != null)
+      {
+        extensibleAddExtensionCommand.setInputs((XSDConcreteComponent) input, element);
+        addExtensionCommand = extensibleAddExtensionCommand;
+      }
+      else
+      {
+        addExtensionCommand = new AddExtensionElementCommand(Messages._UI_ACTION_ADD_APPINFO_ELEMENT, (XSDConcreteComponent) input, element);
+      }
     }
     else if (o instanceof XSDAttributeDeclaration)
     {
@@ -129,6 +145,6 @@ public class ExtensionsSection extends AbstractExtensionsSection
   
   protected IPreferenceStore getPrefStore()
   {
-	return XSDEditorPlugin.getPlugin().getPreferenceStore();
+    return XSDEditorPlugin.getPlugin().getPreferenceStore();
   }
 }

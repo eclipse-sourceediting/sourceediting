@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.common.commands;
 
+import org.eclipse.wst.xsd.ui.internal.util.XSDDOMHelper;
 import org.eclipse.xsd.util.XSDConstants;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Node;
@@ -40,13 +41,14 @@ public class RemoveExtensionNodeCommand extends BaseCommand
         Node parent = node.getParentNode();
         if (parent != null)
         {
-          parent.removeChild(node);
-          // if parent is an AppInfo node then we should remove the appinfo
-          //
-          if (XSDConstants.APPINFO_ELEMENT_TAG.equals(parent.getLocalName()))
+          XSDDOMHelper.removeNodeAndWhitespace(node);
+          
+          if (XSDDOMHelper.hasOnlyWhitespace(parent))
           {
-            Node grandpa = parent.getParentNode();
-            grandpa.removeChild(parent);
+            if (XSDConstants.APPINFO_ELEMENT_TAG.equals(parent.getLocalName()))
+            {
+              XSDDOMHelper.removeNodeAndWhitespace(parent);
+            }
           }
         }
       }
