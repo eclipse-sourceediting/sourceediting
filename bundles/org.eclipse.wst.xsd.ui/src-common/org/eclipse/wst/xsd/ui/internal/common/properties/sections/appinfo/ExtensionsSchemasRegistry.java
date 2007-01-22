@@ -167,7 +167,6 @@ public class ExtensionsSchemasRegistry
           }
           catch (Exception e)
           {
-            e.printStackTrace();
           }
         }
         
