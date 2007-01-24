@@ -2317,8 +2317,8 @@ public class XSDImpl
 
     public String getNamespaceURI()
     {
-      String uri = xsdWildcard.getElement().getAttribute("namespace");
-      return (uri != null || uri.length() == 0) ? uri : "##any";
+      String uri = xsdWildcard.getElement().getAttribute(XSDConstants.NAMESPACE_ATTRIBUTE);
+      return (uri != null && uri.length() > 0) ? uri : "##any";
     }
 
     /**
