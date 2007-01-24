@@ -14,6 +14,7 @@ import java.util.StringTokenizer;
 
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.wst.xsd.ui.internal.common.commands.ExtensibleAddExtensionCommand;
+import org.eclipse.wst.xsd.ui.internal.common.commands.ExtensibleRemoveExtensionNodeCommand;
 
 public class SpecificationForExtensionsSchema
 {
@@ -23,7 +24,8 @@ public class SpecificationForExtensionsSchema
   private String location;
   private ILabelProvider labelProvider;
   private boolean isDefaultSchema = false;
-  private ExtensibleAddExtensionCommand addActionCommand;
+  private ExtensibleAddExtensionCommand addCommand;
+  private ExtensibleRemoveExtensionNodeCommand removeCommand;
   
   /**
    * Either the workspace-relative path of the xsd file or the namespace
@@ -131,12 +133,22 @@ public class SpecificationForExtensionsSchema
 
   public ExtensibleAddExtensionCommand getExtensibleAddExtensionCommand()
   {
-    return addActionCommand;
+    return addCommand;
   }
 
-  public void setExtensibleAddExtensionCommand(ExtensibleAddExtensionCommand addActionCommand)
+  public void setExtensibleAddExtensionCommand(ExtensibleAddExtensionCommand addCommand)
   {
-    this.addActionCommand = addActionCommand;
+    this.addCommand = addCommand;
+  }
+
+  public ExtensibleRemoveExtensionNodeCommand getExtensibleRemoveExtensionNodeCommand()
+  {
+    return removeCommand;
+  }
+
+  public void setExtensibleRemoveExtensionNodeCommand(ExtensibleRemoveExtensionNodeCommand removeCommand)
+  {
+    this.removeCommand = removeCommand;
   }
 
   public boolean isDefautSchema(){

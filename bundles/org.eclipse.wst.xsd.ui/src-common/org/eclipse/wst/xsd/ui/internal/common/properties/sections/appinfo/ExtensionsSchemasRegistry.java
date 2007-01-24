@@ -11,7 +11,7 @@
 package org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -24,6 +24,7 @@ import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalog;
 import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalogEntry;
 import org.eclipse.wst.xml.core.internal.catalog.provisional.INextCatalog;
 import org.eclipse.wst.xsd.ui.internal.common.commands.ExtensibleAddExtensionCommand;
+import org.eclipse.wst.xsd.ui.internal.common.commands.ExtensibleRemoveExtensionNodeCommand;
 import org.w3c.dom.Element;
 
 public class ExtensionsSchemasRegistry
@@ -36,12 +37,13 @@ public class ExtensionsSchemasRegistry
   public static final String XSDFILEURL = "xsdFileURL"; //$NON-NLS-1$
   public static final String LABELPROVIDER = "labelProviderClass"; //$NON-NLS-1$
   public static final String ADD_COMMAND_CLASS = "addCommandClass"; //$NON-NLS-1$
+  public static final String DELETE_COMMAND_CLASS = "deleteCommandClass"; //$NON-NLS-1$
+  public static final String CATEGORY_PROVIDER_CLASS = "class"; //$NON-NLS-1$
   
   protected IPreferenceStore prefStore;
   protected String extensionId;
 
-  HashMap propertyMap, commandMap;
-  ArrayList nsURIProperties;
+  protected ArrayList nsURIProperties, categoryProviderList;
   private ICatalog systemCatalog;
   private String deprecatedExtensionId;
   
@@ -69,8 +71,7 @@ public class ExtensionsSchemasRegistry
     }
  
     nsURIProperties = new ArrayList();
-    propertyMap = new HashMap();
-    commandMap = new HashMap();
+    categoryProviderList = new ArrayList();
 
     getAllExtensionsSchemasContribution(extensionId);
     if (deprecatedExtensionId != null)
@@ -104,75 +105,116 @@ public class ExtensionsSchemasRegistry
       for (int i = 0; i < asiPropertiesList.length; i++)
       {
         IConfigurationElement asiPropertiesElement = asiPropertiesList[i];
-        String description = asiPropertiesElement.getAttribute(DESCRIPTION);
-        String displayName = asiPropertiesElement.getAttribute(DISPLAYNAME);
-        String namespaceURI = asiPropertiesElement.getAttribute(NAMESPACEURI);
-        String xsdFileURL = asiPropertiesElement.getAttribute(XSDFILEURL);
-        String labelProviderClass = asiPropertiesElement.getAttribute(LABELPROVIDER);
-        String actionHandlerClass = asiPropertiesElement.getAttribute(ADD_COMMAND_CLASS);
+        String elementName = asiPropertiesElement.getName();
 
-        if (displayName == null)
+        if ("category".equals(elementName))
         {
-          // If there is no display name, force the user
-          // to manually create a name. Therefore, we ignore entry without
-          // a display name.
-          continue;
-        }
-
-        if (xsdFileURL == null)
-        {
-          xsdFileURL = locateFileUsingCatalog(namespaceURI);
-        }
-
-        SpecificationForExtensionsSchema extensionsSchemaSpec = createEntry();
-        extensionsSchemaSpec.setDescription(description);
-        extensionsSchemaSpec.setDisplayName(displayName);
-        extensionsSchemaSpec.setNamespaceURI(namespaceURI);
-        extensionsSchemaSpec.setDefautSchema();
-
-        String pluginId = asiPropertiesElement.getDeclaringExtension().getContributor().getName();
-
-        if (labelProviderClass != null)
-        {
-          ILabelProvider labelProvider = null;
-          try
+          String description = asiPropertiesElement.getAttribute(DESCRIPTION);
+          String displayName = asiPropertiesElement.getAttribute(DISPLAYNAME);
+          String namespaceURI = asiPropertiesElement.getAttribute(NAMESPACEURI);
+          String xsdFileURL = asiPropertiesElement.getAttribute(XSDFILEURL);
+          String labelProviderClass = asiPropertiesElement.getAttribute(LABELPROVIDER);
+          String addCommandClass = asiPropertiesElement.getAttribute(ADD_COMMAND_CLASS);
+          String deleteCommandClass = asiPropertiesElement.getAttribute(DELETE_COMMAND_CLASS);
+          
+          if (displayName == null)
           {
-            Class theClass = Platform.getBundle(pluginId).loadClass(labelProviderClass);
-            if (theClass != null)
+            // If there is no display name, force the user
+            // to manually create a name. Therefore, we ignore entry without
+            // a display name.
+            continue;
+          }
+
+          if (xsdFileURL == null)
+          {
+            xsdFileURL = locateFileUsingCatalog(namespaceURI);
+          }
+
+          SpecificationForExtensionsSchema extensionsSchemaSpec = createEntry();
+          extensionsSchemaSpec.setDescription(description);
+          extensionsSchemaSpec.setDisplayName(displayName);
+          extensionsSchemaSpec.setNamespaceURI(namespaceURI);
+          extensionsSchemaSpec.setDefautSchema();
+
+          String pluginId = asiPropertiesElement.getDeclaringExtension().getContributor().getName();
+
+          if (labelProviderClass != null)
+          {
+            ILabelProvider labelProvider = null;
+            try
             {
-              labelProvider = (ILabelProvider) theClass.newInstance();
-              if (labelProvider != null)
+              Class theClass = Platform.getBundle(pluginId).loadClass(labelProviderClass);
+              if (theClass != null)
               {
-                propertyMap.put(namespaceURI, labelProvider);
-                extensionsSchemaSpec.setLabelProvider(labelProvider);
+                labelProvider = (ILabelProvider) theClass.newInstance();
+                if (labelProvider != null)
+                {
+                  extensionsSchemaSpec.setLabelProvider(labelProvider);
+                }
               }
             }
-          }
-          catch (Exception e)
-          {
-
-          }
-        }
-        
-        if (actionHandlerClass != null)
-        {
-          try
-          {
-            ExtensibleAddExtensionCommand actionHandler = (ExtensibleAddExtensionCommand)asiPropertiesElement.createExecutableExtension(ADD_COMMAND_CLASS);
-            if (actionHandler != null)
+            catch (Exception e)
             {
-              commandMap.put(namespaceURI, actionHandler);
-              extensionsSchemaSpec.setExtensibleAddExtensionCommand(actionHandler);
+
             }
           }
-          catch (Exception e)
+          
+          if (addCommandClass != null)
           {
+            try
+            {
+              ExtensibleAddExtensionCommand addCommand = (ExtensibleAddExtensionCommand)asiPropertiesElement.createExecutableExtension(ADD_COMMAND_CLASS);
+              if (addCommand != null)
+              {
+                extensionsSchemaSpec.setExtensibleAddExtensionCommand(addCommand);
+              }
+            }
+            catch (Exception e)
+            {
+            }
           }
+
+          if (deleteCommandClass != null)
+          {
+            try
+            {
+              ExtensibleRemoveExtensionNodeCommand deleteCommand = (ExtensibleRemoveExtensionNodeCommand)asiPropertiesElement.createExecutableExtension(DELETE_COMMAND_CLASS);
+              if (deleteCommand != null)
+              {
+                extensionsSchemaSpec.setExtensibleRemoveExtensionNodeCommand(deleteCommand);
+              }
+            }
+            catch (Exception e)
+            {
+            }
+          }
+
+          extensionsSchemaSpec.setLocation(LOCATION_PREFIX + pluginId + "/" + xsdFileURL); //$NON-NLS-1$
+
+          nsURIProperties.add(extensionsSchemaSpec);
+
+        }
+        else if ("categoryProvider".equals(elementName))
+        {
+          String categoryProviderClass = asiPropertiesElement.getAttribute(CATEGORY_PROVIDER_CLASS);
+          
+          if (categoryProviderClass != null)
+          {
+            try
+            {
+              CategoryProvider categoryProvider = (CategoryProvider)asiPropertiesElement.createExecutableExtension(CATEGORY_PROVIDER_CLASS);
+              if (categoryProvider != null)
+              {
+                categoryProviderList.add(categoryProvider);
+              }
+            }
+            catch (Exception e)
+            {
+            }
+          }
+          
         }
         
-        extensionsSchemaSpec.setLocation(LOCATION_PREFIX + pluginId + "/" + xsdFileURL); //$NON-NLS-1$
-
-        nsURIProperties.add(extensionsSchemaSpec);
       }
 
     }
@@ -180,42 +222,91 @@ public class ExtensionsSchemasRegistry
     return nsURIProperties;
   }
   
-  public ExtensibleAddExtensionCommand getAddExtensionHandler(String namespace)
+  public ExtensibleAddExtensionCommand getAddExtensionCommand(String namespace)
   {
     // Didn't retrieve the config elements yet.
-    if (commandMap == null)
+    if (nsURIProperties == null)
     {
       getAllExtensionsSchemasContribution();
     }
-
-    Object object = commandMap.get(namespace);
-    if (object instanceof ExtensibleAddExtensionCommand)
+    
+    for (Iterator i = nsURIProperties.iterator(); i.hasNext(); )
     {
-      return (ExtensibleAddExtensionCommand) object;
+      SpecificationForExtensionsSchema spec = (SpecificationForExtensionsSchema)i.next();
+      String nsURI = spec.getNamespaceURI();
+      if (nsURI != null && nsURI.equals(namespace))
+      {
+        return spec.getExtensibleAddExtensionCommand();
+      }
     }
+
+    for (Iterator i = categoryProviderList.iterator(); i.hasNext(); )
+    {
+      CategoryProvider categoryProvider = (CategoryProvider)i.next();
+      for (Iterator j = categoryProvider.getCategories().iterator(); j.hasNext(); )
+      {
+        SpecificationForExtensionsSchema spec = (SpecificationForExtensionsSchema) j.next();
+        String namespaceURI = spec.getNamespaceURI();
+        if (namespaceURI != null && namespaceURI.equals(namespace))
+        {
+          return spec.getExtensibleAddExtensionCommand();
+        }
+      }
+    }
+
     return null;
+  }
+
+  public ExtensibleRemoveExtensionNodeCommand getRemoveExtensionNodeCommand(String namespace)
+  {
+    // Didn't retrieve the config elements yet.
+    if (nsURIProperties == null)
+    {
+      getAllExtensionsSchemasContribution();
+    }
+    
+    for (Iterator i = nsURIProperties.iterator(); i.hasNext(); )
+    {
+      SpecificationForExtensionsSchema spec = (SpecificationForExtensionsSchema)i.next();
+      String nsURI = spec.getNamespaceURI();
+      if (nsURI != null && nsURI.equals(namespace))
+      {
+        return spec.getExtensibleRemoveExtensionNodeCommand();
+      }
+    }
+    
+    for (Iterator i = categoryProviderList.iterator(); i.hasNext(); )
+    {
+      CategoryProvider categoryProvider = (CategoryProvider)i.next();
+      for (Iterator j = categoryProvider.getCategories().iterator(); j.hasNext(); )
+      {
+        SpecificationForExtensionsSchema spec = (SpecificationForExtensionsSchema) j.next();
+        String namespaceURI = spec.getNamespaceURI();
+        if (namespaceURI != null && namespaceURI.equals(namespace))
+        {
+          return spec.getExtensibleRemoveExtensionNodeCommand();
+        }
+      }
+    }
+    
+    return null;
+  }
+  
+  public List getCategoryProviders()
+  {
+    if (nsURIProperties == null)
+    {
+      getAllExtensionsSchemasContribution();
+    }
+    
+    return categoryProviderList;
   }
 
   /**
    * @deprecated
    */
   public ILabelProvider getLabelProvider(Element element)
-  {/*
-    String uri = element.getNamespaceURI();
-    if (uri == null)
-      uri = ""; //$NON-NLS-1$
-
-    // Didn't retrieve the config elements yet.
-    if (propertyMap == null)
-    {
-      getAllExtensionsSchemasContribution();
-    }
-
-    Object object = propertyMap.get(uri);
-    if (object instanceof ILabelProvider)
-    {
-      return (ILabelProvider) object;
-    }*/
+  {
     return null;
   }
 

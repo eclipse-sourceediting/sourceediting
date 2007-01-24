@@ -10,18 +10,28 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.common.properties.sections;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import org.eclipse.gef.commands.Command;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.wst.xsd.ui.internal.common.commands.AddExtensionAttributeCommand;
 import org.eclipse.wst.xsd.ui.internal.common.commands.AddExtensionCommand;
 import org.eclipse.wst.xsd.ui.internal.common.commands.AddExtensionElementCommand;
 import org.eclipse.wst.xsd.ui.internal.common.commands.ExtensibleAddExtensionCommand;
+import org.eclipse.wst.xsd.ui.internal.common.commands.ExtensibleRemoveExtensionNodeCommand;
 import org.eclipse.wst.xsd.ui.internal.common.commands.RemoveExtensionNodeCommand;
+import org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo.AddExtensionsComponentDialog;
+import org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo.CategoryProvider;
 import org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo.DOMExtensionTreeLabelProvider;
 import org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo.ExtensionsSchemasRegistry;
+import org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo.SpecificationForExtensionsSchema;
 import org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo.XSDExtensionTreeContentProvider;
 import org.eclipse.wst.xsd.ui.internal.common.util.Messages;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
@@ -42,6 +52,17 @@ public class ExtensionsSection extends AbstractExtensionsSection
     super();
     setExtensionTreeLabelProvider(new DOMExtensionTreeLabelProvider());
     setExtensionTreeContentProvider(new XSDExtensionTreeContentProvider());
+  }
+  
+  protected AddExtensionsComponentDialog createAddExtensionsComponentDialog()
+  {
+    return new AddExtensionsComponentDialog(composite.getShell(), getExtensionsSchemasRegistry())
+    {
+      protected IStructuredContentProvider getCategoryContentProvider()
+      {
+        return new XSDCategoryContentProvider();
+      }
+    };
   }
   
   public void setInput(IWorkbenchPart part, ISelection selection)
@@ -88,7 +109,7 @@ public class ExtensionsSection extends AbstractExtensionsSection
     if (o instanceof XSDElementDeclaration)
     {
       XSDElementDeclaration element = (XSDElementDeclaration) o;
-      ExtensibleAddExtensionCommand extensibleAddExtensionCommand = getExtensionsSchemasRegistry().getAddExtensionHandler(element.getTargetNamespace());
+      ExtensibleAddExtensionCommand extensibleAddExtensionCommand = getExtensionsSchemasRegistry().getAddExtensionCommand(element.getTargetNamespace());
       if (extensibleAddExtensionCommand != null)
       {
         extensibleAddExtensionCommand.setInputs((XSDConcreteComponent) input, element);
@@ -111,16 +132,26 @@ public class ExtensionsSection extends AbstractExtensionsSection
   {
     Command command = null;
     try
-    {     
+    {
       if (o instanceof Node)
-      {            
-        command = new RemoveExtensionNodeCommand(Messages._UI_ACTION_DELETE_APPINFO_ELEMENT, (Node)o);  
-        command.execute();
+      {
+        Node node = (Node)o;
+        ExtensibleRemoveExtensionNodeCommand removeCommand = getExtensionsSchemasRegistry().getRemoveExtensionNodeCommand(node.getNamespaceURI());
+        if (removeCommand != null)
+        {
+          removeCommand.setInput((XSDConcreteComponent)input);
+          removeCommand.setNode(node);
+          return removeCommand;
+        }
+        else
+        {
+          command = new RemoveExtensionNodeCommand(Messages._UI_ACTION_DELETE_APPINFO_ELEMENT, node);  
+          // command.execute();
+        }
       }
     }
     catch (Exception e)
     {
-      e.printStackTrace();
     }
     return command;
   }  
@@ -147,4 +178,65 @@ public class ExtensionsSection extends AbstractExtensionsSection
   {
     return XSDEditorPlugin.getPlugin().getPreferenceStore();
   }
+  
+  static class XSDCategoryContentProvider implements IStructuredContentProvider
+  {
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
+     */
+    public Object[] getElements(Object inputElement)
+    {    
+      SpecificationForExtensionsSchema[] extensionsSchemaSpecs = null;
+      try
+      {
+        List inputList = (List) inputElement;
+        
+        List total = new ArrayList();
+        total.addAll(inputList);
+        
+        List dynamicCategories = XSDEditorPlugin.getPlugin().getExtensionsSchemasRegistry().getCategoryProviders();
+        for (Iterator iter = dynamicCategories.iterator(); iter.hasNext(); )
+        {
+          CategoryProvider categoryProvider = (CategoryProvider)iter.next();
+          for (Iterator it = categoryProvider.getCategories().iterator(); it.hasNext(); )
+          {
+            SpecificationForExtensionsSchema sp = (SpecificationForExtensionsSchema)it.next();
+            total.add(sp);
+          }
+        }
+
+        extensionsSchemaSpecs = (SpecificationForExtensionsSchema[]) total.toArray(new SpecificationForExtensionsSchema[0]);
+      }
+      catch (Exception e)
+      {
+      }
+      return extensionsSchemaSpecs;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.jface.viewers.IContentProvider#dispose()
+     */
+    public void dispose()
+    {
+      // Do nothing
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer,
+     *      java.lang.Object, java.lang.Object)
+     */
+    public void inputChanged(Viewer viewer, Object oldInput, Object newInput)
+    {
+      // Do nothing
+
+    }
+  }
+
 }
