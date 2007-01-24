@@ -1,11 +1,12 @@
 /**********************************************************************
- * Copyright (c) 2005 IBM Corporation and others. All rights reserved.   This
+ * Copyright (c) 2005, 2007 IBM Corporation and others. All rights reserved.   This
  * program and the accompanying materials are made available under the terms of
  * the Eclipse Public License v1.0 which accompanies this distribution, and is
  * available at http://www.eclipse.org/legal/epl-v10.html
  * 
  * Contributors: 
  * IBM - Initial API and implementation
+ * Benjamin Muskalla, b.muskalla@gmx.net - [158660] character entities should have their own syntax highlighting preference 
  **********************************************************************/
 package org.eclipse.wst.xml.ui.internal;
 
@@ -40,6 +41,7 @@ public class XMLUIMessages extends NLS {
 	public static String DOCTYPE_SYSTEM_PUBLIC_Keyw_UI_;
 	public static String DOCTYPE_Public_Reference_UI_;
 	public static String DOCTYPE_System_Reference_UI_;
+	public static String Entity_Reference_UI_;
 	public static String DELETE;
 	public static String ADD_PROCESSING_INSTRUCTION;
 	public static String _UI_MENU_ADD_AFTER;

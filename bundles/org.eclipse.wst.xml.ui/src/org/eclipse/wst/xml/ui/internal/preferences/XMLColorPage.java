@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
+ *     Benjamin Muskalla, b.muskalla@gmx.net - [158660] character entities should have their own syntax highlighting preference 
  *     
  *******************************************************************************/
 package org.eclipse.wst.xml.ui.internal.preferences;
@@ -71,22 +72,22 @@ public class XMLColorPage extends AbstractColorPage {
 
 	public String getSampleText() {
 		return XMLUIMessages.Sample_XML_doc; // = "<?xml
-												// version=\"1.0\"?>\n<?customProcessingInstruction\n\tXML
-												// processor
-												// specific\n\tcontent
-												// ?>\n<!DOCTYPE
-												// colors\n\tPUBLIC
-												// \"//IBM/XML/COLORS/\"
-												// \"colors.dtd\">\n<colors>\n\t<!--
-												// begin color definitions
-												// -->\n\t<color
-												// name=\"plaintext\"
-												// foreground=\"#000000\"\n\t\tbackground=\"#D4D0C8\"/>\n\t<color
-												// name=\"bold\"
-												// foreground=\"#000000\"\n\t\tbackground=\"#B3ACA0\">\n\t<![CDATA[<123456789>]]>\n\tNormal
-												// text content.\n\t<color
-												// name=\"inverse\"
-												// foreground=\"#F0F0F0\"\n\t\tbackground=\"#D4D0C8\"/>\n\n</colors>\n";
+		// version=\"1.0\"?>\n<?customProcessingInstruction\n\tXML
+		// processor
+		// specific\n\tcontent
+		// ?>\n<!DOCTYPE
+		// colors\n\tPUBLIC
+		// \"//IBM/XML/COLORS/\"
+		// \"colors.dtd\">\n<colors>\n\t<!--
+		// begin color definitions
+		// -->\n\t<color
+		// name=\"plaintext\"
+		// foreground=\"#000000\"\n\t\tbackground=\"#D4D0C8\"/>\n\t<color
+		// name=\"bold\"
+		// foreground=\"#000000\"\n\t\tbackground=\"#B3ACA0\">\n\t<![CDATA[<123456789>]]>\n\tNormal
+		// text content.\n\t<color
+		// name=\"inverse\"
+		// foreground=\"#F0F0F0\"\n\t\tbackground=\"#D4D0C8\"/>\n\n</colors>\n";
 	}
 
 	protected void initCommonContextStyleMap(Dictionary contextStyleMap) {
@@ -108,6 +109,10 @@ public class XMLColorPage extends AbstractColorPage {
 		contextStyleMap.put(DOMRegionContext.XML_ELEMENT_DECLARATION, IStyleConstantsXML.DECL_BORDER);
 		contextStyleMap.put(DOMRegionContext.XML_ELEMENT_DECL_CLOSE, IStyleConstantsXML.DECL_BORDER);
 
+		contextStyleMap.put(DOMRegionContext.XML_CHAR_REFERENCE, IStyleConstantsXML.ENTITY_REFERENCE);
+		contextStyleMap.put(DOMRegionContext.XML_ENTITY_REFERENCE, IStyleConstantsXML.ENTITY_REFERENCE);
+		contextStyleMap.put(DOMRegionContext.XML_PE_REFERENCE, IStyleConstantsXML.ENTITY_REFERENCE);
+
 		contextStyleMap.put(DOMRegionContext.XML_CONTENT, IStyleConstantsXML.XML_CONTENT);
 	}
 
@@ -115,28 +120,29 @@ public class XMLColorPage extends AbstractColorPage {
 
 		// create descriptions for hilighting types
 		descriptions.put(IStyleConstantsXML.COMMENT_BORDER, XMLUIMessages.Comment_Delimiters_UI_); // =
-																									// "Comment
-																									// Delimiters"
+		// "Comment
+		// Delimiters"
 		descriptions.put(IStyleConstantsXML.COMMENT_TEXT, XMLUIMessages.Comment_Content_UI_); // =
-																								// "Comment
-																								// Content"
+		// "Comment
+		// Content"
 		descriptions.put(IStyleConstantsXML.TAG_BORDER, XMLUIMessages.Tag_Delimiters_UI_); // =
-																							// "Tag
-																							// Delimiters"
+		// "Tag
+		// Delimiters"
 		descriptions.put(IStyleConstantsXML.TAG_NAME, XMLUIMessages.Tag_Names_UI_); // =
-																					// "Tag
-																					// Names"
+		// "Tag
+		// Names"
 		descriptions.put(IStyleConstantsXML.TAG_ATTRIBUTE_NAME, XMLUIMessages.Attribute_Names_UI_); // =
-																									// "Attribute
-																									// Names"
+		// "Attribute
+		// Names"
 		descriptions.put(IStyleConstantsXML.TAG_ATTRIBUTE_VALUE, XMLUIMessages.Attribute_Values_UI_); // =
-																										// "Attribute
-																										// Values"
+		// "Attribute
+		// Values"
 		descriptions.put(IStyleConstantsXML.DECL_BORDER, XMLUIMessages.Declaration_Delimiters_UI_); // =
-																									// "Declaration
-																									// Delimiters"
+		// "Declaration
+		// Delimiters"
 		descriptions.put(IStyleConstantsXML.XML_CONTENT, XMLUIMessages.Content_UI_); // =
-																						// "Content"
+		// "Content"
+		descriptions.put(IStyleConstantsXML.ENTITY_REFERENCE, XMLUIMessages.Entity_Reference_UI_); //$NON-NLS-1$ = "Entity References"
 	}
 
 	protected void initCommonStyleList(ArrayList list) {
@@ -154,6 +160,7 @@ public class XMLColorPage extends AbstractColorPage {
 		list.add(IStyleConstantsXML.COMMENT_TEXT);
 		list.add(IStyleConstantsXML.DECL_BORDER);
 		list.add(IStyleConstantsXML.XML_CONTENT);
+		list.add(IStyleConstantsXML.ENTITY_REFERENCE);
 	}
 
 	protected void initContextStyleMap(Dictionary contextStyleMap) {
@@ -175,19 +182,19 @@ public class XMLColorPage extends AbstractColorPage {
 		initCommonDescriptions(descriptions);
 		initDocTypeDescriptions(descriptions);
 		descriptions.put(IStyleConstantsXML.CDATA_BORDER, XMLUIMessages.CDATA_Delimiters_UI_); // =
-																								// "CDATA
-																								// Delimiters"
+		// "CDATA
+		// Delimiters"
 		descriptions.put(IStyleConstantsXML.CDATA_TEXT, XMLUIMessages.CDATA_Content_UI_); // =
-																							// "CDATA
-																							// Content"
+		// "CDATA
+		// Content"
 		descriptions.put(IStyleConstantsXML.PI_BORDER, XMLUIMessages.Processing_Instruction_Del_UI_); // =
-																										// "Processing
-																										// Instruction
-																										// Delimiters"
+		// "Processing
+		// Instruction
+		// Delimiters"
 		descriptions.put(IStyleConstantsXML.PI_CONTENT, XMLUIMessages.Processing_Instruction_Con_UI__UI_); // =
-																											// "Processing
-																											// Instruction
-																											// Content"
+		// "Processing
+		// Instruction
+		// Content"
 	}
 
 	protected void initDocTypeContextStyleMap(Dictionary contextStyleMap) {
@@ -207,20 +214,20 @@ public class XMLColorPage extends AbstractColorPage {
 
 		// create descriptions for hilighting types for DOCTYPE related items
 		descriptions.put(IStyleConstantsXML.DOCTYPE_NAME, XMLUIMessages.DOCTYPE_Name_UI_); // =
-																							// "DOCTYPE
-																							// Name"
+		// "DOCTYPE
+		// Name"
 		descriptions.put(IStyleConstantsXML.DOCTYPE_EXTERNAL_ID, XMLUIMessages.DOCTYPE_SYSTEM_PUBLIC_Keyw_UI_); // =
-																												// "DOCTYPE
-																												// SYSTEM/PUBLIC
-																												// Keyword"
+		// "DOCTYPE
+		// SYSTEM/PUBLIC
+		// Keyword"
 		descriptions.put(IStyleConstantsXML.DOCTYPE_EXTERNAL_ID_PUBREF, XMLUIMessages.DOCTYPE_Public_Reference_UI_); // =
-																														// "DOCTYPE
-																														// Public
-																														// Reference"
+		// "DOCTYPE
+		// Public
+		// Reference"
 		descriptions.put(IStyleConstantsXML.DOCTYPE_EXTERNAL_ID_SYSREF, XMLUIMessages.DOCTYPE_System_Reference_UI_); // =
-																														// "DOCTYPE
-																														// System
-																														// Reference"
+		// "DOCTYPE
+		// System
+		// Reference"
 	}
 
 	protected void initDocTypeStyleList(ArrayList list) {

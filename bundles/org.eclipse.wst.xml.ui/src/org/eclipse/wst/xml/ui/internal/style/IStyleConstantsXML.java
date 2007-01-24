@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
+ *     Benjamin Muskalla, b.muskalla@gmx.net - [158660] character entities should have their own syntax highlighting preference      
  *     
  *******************************************************************************/
 package org.eclipse.wst.xml.ui.internal.style;
@@ -38,4 +39,5 @@ public interface IStyleConstantsXML {
 	public static final String TAG_BORDER = "tagBorder";//$NON-NLS-1$
 	public static final String TAG_NAME = "tagName";//$NON-NLS-1$
 	public static final String XML_CONTENT = "xmlContent";//$NON-NLS-1$
+	public static final String ENTITY_REFERENCE = "entityReference";//$NON-NLS-1$
 }

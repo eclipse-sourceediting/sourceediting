@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
+ *     Benjamin Muskalla, b.muskalla@gmx.net - [158660] character entities should have their own syntax highlighting preference     
  *     
  *******************************************************************************/
 package org.eclipse.wst.xml.ui.internal.style;
@@ -72,6 +73,9 @@ public class LineStyleProviderForXML extends AbstractLineStyleProvider implement
 		else if (type == DOMRegionContext.XML_DOCTYPE_NAME) {
 			return (TextAttribute) getTextAttributes().get(IStyleConstantsXML.DOCTYPE_NAME);
 		}
+		else if ((type == DOMRegionContext.XML_CHAR_REFERENCE) || (type == DOMRegionContext.XML_ENTITY_REFERENCE) || (type == DOMRegionContext.XML_PE_REFERENCE)) {
+			return (TextAttribute) getTextAttributes().get(IStyleConstantsXML.ENTITY_REFERENCE);
+		}
 		else if (type == DOMRegionContext.XML_PI_CONTENT) {
 			return (TextAttribute) getTextAttributes().get(IStyleConstantsXML.PI_CONTENT);
 		}
@@ -97,12 +101,6 @@ public class LineStyleProviderForXML extends AbstractLineStyleProvider implement
 			// white space is normall not on its own ... but when it is, we'll
 			// treat as content
 			return (TextAttribute) getTextAttributes().get(IStyleConstantsXML.XML_CONTENT);
-		}
-		else if ((type == DOMRegionContext.XML_CHAR_REFERENCE) || (type == DOMRegionContext.XML_ENTITY_REFERENCE) || (type == DOMRegionContext.XML_PE_REFERENCE)) {
-			// we may want to character and entity references to have it own
-			// color in future,
-			// but for now, we'll make attribute value
-			return (TextAttribute) getTextAttributes().get(IStyleConstantsXML.TAG_ATTRIBUTE_VALUE);
 		}
 		else {
 			// default, return null to signal "not handled"
@@ -141,6 +139,9 @@ public class LineStyleProviderForXML extends AbstractLineStyleProvider implement
 			}
 			else if (IStyleConstantsXML.COMMENT_TEXT.equals(prefKey)) {
 				styleKey = IStyleConstantsXML.COMMENT_TEXT;
+			}
+			else if (IStyleConstantsXML.ENTITY_REFERENCE.equals(prefKey)) {
+				styleKey = IStyleConstantsXML.ENTITY_REFERENCE;
 			}
 			else if (IStyleConstantsXML.CDATA_BORDER.equals(prefKey)) {
 				styleKey = IStyleConstantsXML.CDATA_BORDER;
@@ -203,5 +204,6 @@ public class LineStyleProviderForXML extends AbstractLineStyleProvider implement
 		addTextAttribute(IStyleConstantsXML.PI_CONTENT);
 		addTextAttribute(IStyleConstantsXML.PI_BORDER);
 		addTextAttribute(IStyleConstantsXML.XML_CONTENT);
+		addTextAttribute(IStyleConstantsXML.ENTITY_REFERENCE);
 	}
 }
