@@ -10,11 +10,16 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.common.commands;
 
+import java.util.List;
+
 import org.eclipse.wst.xml.core.internal.contentmodel.util.NamespaceTable;
+import org.eclipse.wst.xsd.ui.internal.common.util.XSDCommonUIUtils;
+import org.eclipse.xsd.XSDAnnotation;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDElementDeclaration;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.util.XSDConstants;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 public class ExtensibleAddExtensionCommand extends AddExtensionCommand
@@ -53,6 +58,16 @@ public class ExtensibleAddExtensionCommand extends AddExtensionCommand
     this.component = input;
     this.element = element;
   }
+  
+  public XSDAnnotation getXSDAnnotation()
+  {
+    if (component != null)
+    {
+      XSDAnnotation xsdAnnotation = XSDCommonUIUtils.getInputXSDAnnotation(component, false);
+      return xsdAnnotation;
+    }
+    return null;
+  }
 
   public void execute()
   {
@@ -60,8 +75,9 @@ public class ExtensibleAddExtensionCommand extends AddExtensionCommand
     {
       beginRecording(component.getElement());
       super.execute();
-      
-      addCustomizedActions();
+      doPreprocessing();
+      addExtensionNode();
+      doCustomizedActions();
       
       formatChild(component.getElement());
     }
@@ -71,7 +87,50 @@ public class ExtensibleAddExtensionCommand extends AddExtensionCommand
     }
   }
   
-  public void addCustomizedActions()
+  protected void doPreprocessing()
+  {
+    
+  }
+  
+  protected void addExtensionNode()
+  {
+    XSDAnnotation xsdAnnotation = XSDCommonUIUtils.getInputXSDAnnotation(component, true);
+    XSDSchema schema= xsdAnnotation.getSchema();
+    Element schemaElement = schema.getElement();
+
+    if (xsdAnnotation.getApplicationInformation().size() == 0)
+    {
+      appInfo = xsdAnnotation.createApplicationInformation(null);
+      xsdAnnotation.getElement().appendChild(appInfo);
+      List appInfos = xsdAnnotation.getApplicationInformation();
+      appInfos.add(appInfo);
+    }
+    else
+    {
+      // use the first appInfo
+      appInfo = (Element)xsdAnnotation.getApplicationInformation().get(0);
+    }
+
+    if (appInfo != null)
+    {
+      Document doc = appInfo.getOwnerDocument();
+      String prefix = addToNamespaceTable(schemaElement);
+      newElement = doc.createElementNS(extensionsSchemaSpec.getNamespaceURI(), element.getName());
+      newElement.setPrefix(prefix);   
+      appInfo.appendChild(newElement);
+
+      xsdAnnotation.updateElement();
+    }
+  }
+  
+  protected String addToNamespaceTable(Element schemaElement)
+  {
+    String prefix = addNamespaceDeclarationIfRequired(schemaElement, "p", extensionsSchemaSpec.getNamespaceURI());
+    return prefix;
+  }
+
+  
+  protected void doCustomizedActions()
   {
    
   }
@@ -79,11 +138,6 @@ public class ExtensibleAddExtensionCommand extends AddExtensionCommand
   public void undo()
   {
     super.undo();
-//    XSDAnnotation xsdAnnotation = XSDCommonUIUtils.getInputXSDAnnotation(component, false);
-//    xsdAnnotation.getElement().removeChild(appInfo);
-//    List appInfos = xsdAnnotation.getApplicationInformation();
-//    appInfos.remove(appInfo);
-//    xsdAnnotation.updateElement();
   }
 
   public Object getNewObject()
@@ -126,11 +180,13 @@ public class ExtensibleAddExtensionCommand extends AddExtensionCommand
     {
       if (prefix != null)
       {
-        schemaElement.setAttribute(prefix + ":" + attributeName, attributeValue);  
+        if (schemaElement.getAttributeNode(prefix + ":" + attributeName) == null)
+          schemaElement.setAttribute(prefix + ":" + attributeName, attributeValue);  
       }
       else
       {
-        schemaElement.setAttribute(attributeName, attributeValue);
+        if (schemaElement.getAttributeNode(attributeName) == null)
+          schemaElement.setAttribute(attributeName, attributeValue);
       }
     }
     catch (Exception e)

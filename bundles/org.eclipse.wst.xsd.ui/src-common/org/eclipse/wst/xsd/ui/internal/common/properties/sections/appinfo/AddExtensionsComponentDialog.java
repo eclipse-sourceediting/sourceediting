@@ -100,6 +100,11 @@ public class AddExtensionsComponentDialog extends SelectionDialog implements ISe
   public void setInitialCategorySelection(SpecificationForExtensionsSchema spec){
 	  currentExtCategory = spec;
   }
+  
+  protected IStructuredContentProvider getCategoryContentProvider()
+  {
+    return new CategoryContentProvider();
+  }
 
   protected Control createDialogArea(Composite container)
   {
@@ -120,7 +125,7 @@ public class AddExtensionsComponentDialog extends SelectionDialog implements ISe
     new Label(categoryComposite, SWT.NONE);
 
     categoryTableViewer = new TableViewer(categoryComposite, getTableStyle());
-    categoryTableViewer.setContentProvider(new CategoryContentProvider());
+    categoryTableViewer.setContentProvider(getCategoryContentProvider());
     categoryTableViewer.setLabelProvider(new CategoryLabelProvider());
     categoryTableViewer.setInput(fInput);
     categoryTableViewer.addSelectionChangedListener(this);
@@ -625,7 +630,6 @@ static class CategoryContentProvider implements IStructuredContentProvider
       }
       catch (Exception e)
       {
-        e.printStackTrace();
       }
       return extensionsSchemaSpecs;
     }
