@@ -13,13 +13,13 @@ package org.eclipse.wst.xsd.ui.internal.common.properties.sections;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.gef.commands.Command;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.wst.xsd.ui.internal.common.commands.AddExtensionAttributeCommand;
 import org.eclipse.wst.xsd.ui.internal.common.commands.AddExtensionCommand;
@@ -30,9 +30,11 @@ import org.eclipse.wst.xsd.ui.internal.common.commands.RemoveExtensionNodeComman
 import org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo.AddExtensionsComponentDialog;
 import org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo.CategoryProvider;
 import org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo.DOMExtensionTreeLabelProvider;
+import org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo.ExtensionItemFilter;
 import org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo.ExtensionsSchemasRegistry;
 import org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo.SpecificationForExtensionsSchema;
 import org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo.XSDExtensionTreeContentProvider;
+import org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo.custom.NodeFilter;
 import org.eclipse.wst.xsd.ui.internal.common.util.Messages;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.internal.text.XSDModelAdapter;
@@ -56,15 +58,17 @@ public class ExtensionsSection extends AbstractExtensionsSection
   
   protected AddExtensionsComponentDialog createAddExtensionsComponentDialog()
   {
-    return new AddExtensionsComponentDialog(composite.getShell(), getExtensionsSchemasRegistry())
+    AddExtensionsComponentDialog dialog =  new AddExtensionsComponentDialog(composite.getShell(), getExtensionsSchemasRegistry())
     {
       protected IStructuredContentProvider getCategoryContentProvider()
       {
         return new XSDCategoryContentProvider();
       }
     };
+    dialog.addElementsTableFilter(new AddExtensionsComponentDialogFilter(input, dialog));    
+    return dialog;   
   }
-  
+   
   public void setInput(IWorkbenchPart part, ISelection selection)
   {
     super.setInput(part, selection); 
@@ -99,8 +103,12 @@ public class ExtensionsSection extends AbstractExtensionsSection
     super.dispose();
     if (adapter != null)
     {
-      adapter.getModelReconcileAdapter().removeListener(internalNodeAdapter);
-    }  
+      ModelReconcileAdapter modelReconciler = adapter.getModelReconcileAdapter();
+      if (modelReconciler != null)
+      {
+        modelReconciler.removeListener(internalNodeAdapter);
+      }
+    } 
   }
 
   protected AddExtensionCommand getAddExtensionCommand(Object o)
@@ -236,7 +244,44 @@ public class ExtensionsSection extends AbstractExtensionsSection
     {
       // Do nothing
 
-    }
+    }           
   }
+  
+  /**
+   * This filter is to be used by the dialog invoked when addButton is pressed
+   */
+  private class AddExtensionsComponentDialogFilter extends ViewerFilter
+  {
+    private Object input;
+    private AddExtensionsComponentDialog dialog;
+
+    public AddExtensionsComponentDialogFilter(Object input, AddExtensionsComponentDialog dialog)
+    {
+      this.input = input;
+      this.dialog = dialog;
+    }
+
+    public boolean select(Viewer viewer, Object parentElement, Object element)
+    {      
+      if (input instanceof XSDConcreteComponent &&
+          element instanceof XSDConcreteComponent)
+      {              
+        SpecificationForExtensionsSchema spec = dialog.getSelectedCategory();
+        // here we obtain the node filter that was registered for the applicable namespace
+        // notied
+        NodeFilter filter = XSDEditorPlugin.getPlugin().getNodeCustomizationRegistry().getNodeFilter(spec.getNamespaceURI());
+        if (filter instanceof ExtensionItemFilter)
+        {
+          ExtensionItemFilter extensionItemFilter = (ExtensionItemFilter)filter;
+          return extensionItemFilter.isApplicableContext((XSDConcreteComponent)input, (XSDConcreteComponent)element);               
+        }
+        else
+        {
+          // TODO cs: even if it's just a plain old NodeFilter we should still be able to use it! 
+        }
+      }
+      return true;
+    }
+  }  
 
 }
