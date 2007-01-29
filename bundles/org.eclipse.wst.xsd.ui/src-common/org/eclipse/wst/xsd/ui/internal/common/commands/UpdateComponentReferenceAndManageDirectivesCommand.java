@@ -41,8 +41,6 @@ public abstract class UpdateComponentReferenceAndManageDirectivesCommand extends
     XSDSchemaDirective directive = null;
     // TODO (cs) handle case where namespace==null
     //
-    if (componentNamespace != null)
-    {
       // lets see if the element is already visible to our schema
       result = getDefinedComponent(schema, componentName, componentNamespace);
       if (result == null)
@@ -51,10 +49,26 @@ public abstract class UpdateComponentReferenceAndManageDirectivesCommand extends
         //
         // apparently the element is not yet visible, we need to add
         // includes/imports to get to it
-        if (componentNamespace.equals(schema.getTargetNamespace()))
+        if (componentNamespace != null && componentNamespace.equals(schema.getTargetNamespace()))
         {
           // we need to add an include
+          // if the component's namespace is not null and matches the schema's target namespace
           directive = XSDFactory.eINSTANCE.createXSDInclude();
+        }
+        else if (componentNamespace == null)
+        {
+          // we need to add an include
+          // if the component's namespace is null, then we can just add it
+          // only if the current namespace is not null
+          directive = XSDFactory.eINSTANCE.createXSDInclude();
+          
+          if (schema.getSchemaForSchemaQNamePrefix() == null)
+          {
+            String targetNS = schema.getTargetNamespace();
+            if (targetNS == null) targetNS = "";
+            UpdateNamespaceInformationCommand command = new UpdateNamespaceInformationCommand("", schema, "", targetNS);
+            command.execute();
+          }
         }
         else
         {
@@ -104,7 +118,7 @@ public abstract class UpdateComponentReferenceAndManageDirectivesCommand extends
           // the file with bogus directives
         }
       }
-    }
+
     return result;
   }
   
