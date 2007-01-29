@@ -15,9 +15,13 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
+import org.eclipse.jface.text.templates.ContextTypeRegistry;
+import org.eclipse.jface.text.templates.Template;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.texteditor.templates.TemplatePreferencePage;
 import org.eclipse.wst.html.core.internal.provisional.contenttype.ContentTypeIdForHTML;
@@ -35,7 +39,16 @@ import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
  * Preference page for HTML templates
  */
 public class HTMLTemplatePreferencePage extends TemplatePreferencePage {
-	
+		class HTMLEditTemplateDialog extends EditTemplateDialog {
+		public HTMLEditTemplateDialog(Shell parent, Template template, boolean edit, boolean isNameModifiable, ContextTypeRegistry registry) {
+			super(parent, template, edit, isNameModifiable, registry);
+		}
+
+		protected SourceViewer createViewer(Composite parent) {
+			return doCreateViewer(parent);
+		}
+	}
+
 	public HTMLTemplatePreferencePage() {
 		HTMLUIPlugin htmlEditorPlugin = HTMLUIPlugin.getDefault();
 		
@@ -73,6 +86,10 @@ public class HTMLTemplatePreferencePage extends TemplatePreferencePage {
 	 * @see org.eclipse.ui.texteditor.templates.TemplatePreferencePage#createViewer(org.eclipse.swt.widgets.Composite)
 	 */
 	protected SourceViewer createViewer(Composite parent) {
+		return doCreateViewer(parent);
+	}
+
+	SourceViewer doCreateViewer(Composite parent) {
 		SourceViewer viewer = null;
 		String contentTypeID = ContentTypeIdForHTML.ContentTypeID_HTML;
 		SourceViewerConfiguration sourceViewerConfiguration = new StructuredTextViewerConfiguration() {
@@ -93,5 +110,27 @@ public class HTMLTemplatePreferencePage extends TemplatePreferencePage {
 		viewer.configure(sourceViewerConfiguration);
 		viewer.setDocument(document);
 		return viewer;
+	}
+
+	/**
+	 * Creates the edit dialog. Subclasses may override this method to provide
+	 * a custom dialog.
+	 * 
+	 * @param template
+	 *            the template being edited
+	 * @param edit
+	 *            whether the dialog should be editable
+	 * @param isNameModifiable
+	 *            whether the template name may be modified
+	 * @return the created or modified template, or <code>null</code> if the
+	 *         edition failed
+	 * @since 3.1
+	 */
+	protected Template editTemplate(Template template, boolean edit, boolean isNameModifiable) {
+		EditTemplateDialog dialog = new HTMLEditTemplateDialog(getShell(), template, edit, isNameModifiable, getContextTypeRegistry());
+		if (dialog.open() == Window.OK) {
+			return dialog.getTemplate();
+		}
+		return null;
 	}
 }

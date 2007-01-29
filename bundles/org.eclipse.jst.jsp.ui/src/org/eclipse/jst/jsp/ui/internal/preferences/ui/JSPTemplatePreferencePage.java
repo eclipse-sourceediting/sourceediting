@@ -15,6 +15,9 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
+import org.eclipse.jface.text.templates.ContextTypeRegistry;
+import org.eclipse.jface.text.templates.Template;
+import org.eclipse.jface.window.Window;
 import org.eclipse.jst.jsp.core.internal.provisional.contenttype.ContentTypeIdForJSP;
 import org.eclipse.jst.jsp.ui.StructuredTextViewerConfigurationJSP;
 import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
@@ -22,6 +25,7 @@ import org.eclipse.jst.jsp.ui.internal.editor.IHelpContextIds;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.texteditor.templates.TemplatePreferencePage;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -35,6 +39,15 @@ import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
  * Preference page for JSP templates
  */
 public class JSPTemplatePreferencePage extends TemplatePreferencePage {
+	class JSPEditTemplateDialog extends EditTemplateDialog {
+		public JSPEditTemplateDialog(Shell parent, Template template, boolean edit, boolean isNameModifiable, ContextTypeRegistry registry) {
+			super(parent, template, edit, isNameModifiable, registry);
+		}
+
+		protected SourceViewer createViewer(Composite parent) {
+			return doCreateViewer(parent);
+		}
+	}
 
 	public JSPTemplatePreferencePage() {
 		JSPUIPlugin jspEditorPlugin = JSPUIPlugin.getDefault();
@@ -82,6 +95,10 @@ public class JSPTemplatePreferencePage extends TemplatePreferencePage {
 	 * @see org.eclipse.ui.texteditor.templates.TemplatePreferencePage#createViewer(org.eclipse.swt.widgets.Composite)
 	 */
 	protected SourceViewer createViewer(Composite parent) {
+		return doCreateViewer(parent);
+	}
+
+	SourceViewer doCreateViewer(Composite parent) {
 		SourceViewer viewer = null;
 		String contentTypeID = ContentTypeIdForJSP.ContentTypeID_JSP;
 		SourceViewerConfiguration sourceViewerConfiguration = new StructuredTextViewerConfiguration() {
@@ -102,5 +119,27 @@ public class JSPTemplatePreferencePage extends TemplatePreferencePage {
 		viewer.configure(sourceViewerConfiguration);
 		viewer.setDocument(document);
 		return viewer;
+	}
+
+	/**
+	 * Creates the edit dialog. Subclasses may override this method to provide
+	 * a custom dialog.
+	 * 
+	 * @param template
+	 *            the template being edited
+	 * @param edit
+	 *            whether the dialog should be editable
+	 * @param isNameModifiable
+	 *            whether the template name may be modified
+	 * @return the created or modified template, or <code>null</code> if the
+	 *         edition failed
+	 * @since 3.1
+	 */
+	protected Template editTemplate(Template template, boolean edit, boolean isNameModifiable) {
+		EditTemplateDialog dialog = new JSPEditTemplateDialog(getShell(), template, edit, isNameModifiable, getContextTypeRegistry());
+		if (dialog.open() == Window.OK) {
+			return dialog.getTemplate();
+		}
+		return null;
 	}
 }
