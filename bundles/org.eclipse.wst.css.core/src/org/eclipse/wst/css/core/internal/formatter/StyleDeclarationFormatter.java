@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -69,13 +69,24 @@ public class StyleDeclarationFormatter extends DefaultCSSSourceFormatter {
 			for (int i = 0; i < regions.length; i++) {
 				appendSpaceBefore(node, regions[i], source);
 				source.append(decoratedRegion(regions[i], 0, stgy)); // must
-				// be
-				// comments
+				// be comments
 			}
 		} else if (prev != null && child != null) { // generate source :
-			// between two
-			// declarations
-			source.append(";");//$NON-NLS-1$
+			// between two declarations
+			// BUG93037-properties view adds extra ; when add new property
+			boolean semicolonFound = false;
+			IStructuredDocument structuredDocument = node.getOwnerDocument().getModel().getStructuredDocument();
+			int prevStart = (prev != null) ? ((IndexedRegion) prev).getStartOffset() : 0;
+			int prevEnd = (prev != null) ? ((IndexedRegion) prev).getEndOffset() : 0;
+			CompoundRegion[] regions = getRegionsWithoutWhiteSpaces(structuredDocument, new FormatRegion(prevStart, prevEnd - prevStart), stgy);
+			int i = regions.length-1;
+			while (i >= 0 && !semicolonFound) {
+				if (regions[i].getType() == CSSRegionContexts.CSS_DECLARATION_DELIMITER)
+					semicolonFound = true;
+				--i;
+			}
+			if (!semicolonFound)
+				source.append(";");//$NON-NLS-1$
 		} else if (prev == null) { // generate source : before the first
 			// declaration
 			org.eclipse.wst.css.core.internal.util.RegionIterator it = null;

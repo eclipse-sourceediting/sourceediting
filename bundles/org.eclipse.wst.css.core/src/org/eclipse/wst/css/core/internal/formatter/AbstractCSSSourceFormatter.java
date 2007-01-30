@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -320,7 +320,7 @@ public abstract class AbstractCSSSourceFormatter implements CSSSourceGenerator {
 
 		String text = region.getText();
 		String type = region.getType();
-		if (type == CSSRegionContexts.CSS_STRING || type == CSSRegionContexts.CSS_URI)
+		if (type == CSSRegionContexts.CSS_STRING || type == CSSRegionContexts.CSS_URI || type == CSSRegionContexts.CSS_DECLARATION_VALUE_URI)
 			return decoratedRegion(region, 2, stgy);
 		if (isCleanup()) {
 			if (stgy.getPropValueCase() != CSSCleanupStrategy.ASIS) {
@@ -346,7 +346,8 @@ public abstract class AbstractCSSSourceFormatter implements CSSSourceGenerator {
 
 		Preferences preferences = CSSCorePlugin.getDefault().getPluginPreferences();
 		String text = region.getText();
-		if (region.getType() == CSSRegionContexts.CSS_URI) {
+		String regionType = region.getType();
+		if (regionType == CSSRegionContexts.CSS_URI || regionType == CSSRegionContexts.CSS_DECLARATION_VALUE_URI) {
 			String uri = CSSLinkConverter.stripFunc(text);
 
 			boolean prefIsUpper = preferences.getInt(CSSCorePreferenceNames.CASE_IDENTIFIER) == CSSCorePreferenceNames.UPPER;
