@@ -8,6 +8,8 @@ Bundle-Activator: org.eclipse.wst.css.core.tests.CSSCoreTestsPlugin
 Bundle-Vendor: %Bundle-Vendor.0
 Bundle-Localization: plugin
 Export-Package: org.eclipse.wst.css.core.tests,
+ org.eclipse.wst.css.core.tests.format,
+ org.eclipse.wst.css.core.tests.format.testfiles,
  org.eclipse.wst.css.core.tests.model,
  org.eclipse.wst.css.core.tests.source,
  org.eclipse.wst.css.core.tests.testfiles,

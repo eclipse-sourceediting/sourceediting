@@ -1,5 +1,5 @@
 /*****************************************************************************
- * Copyright (c) 2004 IBM Corporation and others. All rights reserved. This
+ * Copyright (c) 2004, 2007 IBM Corporation and others. All rights reserved. This
  * program and the accompanying materials are made available under the terms
  * of the Eclipse Public License v1.0 which accompanies this distribution, and
  * is available at http://www.eclipse.org/legal/epl-v10.html
@@ -11,7 +11,8 @@ package org.eclipse.wst.css.core.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.eclipse.wst.css.core.tests.model.BUG73990SelectorFormatTest;
+import org.eclipse.wst.css.core.tests.format.TestCleanupProcessorCSS;
+import org.eclipse.wst.css.core.tests.format.TestFormatProcessorCSS;
 import org.eclipse.wst.css.core.tests.model.CSSCharsetRuleTest;
 import org.eclipse.wst.css.core.tests.model.CSSFontFaceRuleTest;
 import org.eclipse.wst.css.core.tests.model.CSSImportRuleTest;
@@ -51,6 +52,7 @@ public class CSSAllTests extends TestSuite {
 		suite.addTestSuite(CSSMediaRuleTest.class);
 		suite.addTestSuite(CSSPageRuleTest.class);
 		suite.addTestSuite(CSSFontFaceRuleTest.class);
-		suite.addTestSuite(BUG73990SelectorFormatTest.class);
+		suite.addTestSuite(TestFormatProcessorCSS.class);
+		suite.addTestSuite(TestCleanupProcessorCSS.class);
 	}
 }
