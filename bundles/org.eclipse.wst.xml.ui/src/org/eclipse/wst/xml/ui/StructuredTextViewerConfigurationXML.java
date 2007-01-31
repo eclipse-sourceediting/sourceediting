@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.ITextDoubleClickStrategy;
@@ -26,6 +27,7 @@ import org.eclipse.jface.text.formatter.MultiPassContentFormatter;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.jface.text.information.IInformationProvider;
 import org.eclipse.jface.text.source.ISourceViewer;
+import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.eclipse.wst.sse.core.text.IStructuredPartitions;
 import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
@@ -43,11 +45,13 @@ import org.eclipse.wst.xml.ui.internal.autoedit.AutoEditStrategyForTabs;
 import org.eclipse.wst.xml.ui.internal.autoedit.StructuredAutoEditStrategyXML;
 import org.eclipse.wst.xml.ui.internal.contentassist.NoRegionContentAssistProcessor;
 import org.eclipse.wst.xml.ui.internal.contentassist.XMLContentAssistProcessor;
+import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeLabelProvider;
 import org.eclipse.wst.xml.ui.internal.doubleclick.XMLDoubleClickStrategy;
 import org.eclipse.wst.xml.ui.internal.hyperlink.XMLHyperlinkDetector;
 import org.eclipse.wst.xml.ui.internal.style.LineStyleProviderForXML;
 import org.eclipse.wst.xml.ui.internal.taginfo.XMLInformationProvider;
 import org.eclipse.wst.xml.ui.internal.taginfo.XMLTagInfoHoverProcessor;
+import org.w3c.dom.Node;
 
 /**
  * Configuration for a source viewer which shows XML content.
@@ -69,6 +73,7 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 	 * One instance per configuration
 	 */
 	private LineStyleProvider fLineStyleProviderForXML;
+	private ILabelProvider fStatusLineLabelProvider;
 
 	/**
 	 * Create new instance of StructuredTextViewerConfigurationXML
@@ -232,6 +237,31 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 			fLineStyleProviderForXML = new LineStyleProviderForXML();
 		}
 		return fLineStyleProviderForXML;
+	}
+	
+	public ILabelProvider getStatusLineLabelProvider(ISourceViewer sourceViewer) {
+		if (fStatusLineLabelProvider == null) {
+			fStatusLineLabelProvider = new JFaceNodeLabelProvider() {
+				public String getText(Object element) {
+					if (element == null)
+						return null;
+
+					StringBuffer s = new StringBuffer();
+					Node node = (Node) element;
+					while (node != null) {
+						if (node.getNodeType() != Node.DOCUMENT_NODE) {
+							s.insert(0, super.getText(node));
+						}
+						node = node.getParentNode();
+						if (node != null && node.getNodeType() != Node.DOCUMENT_NODE)
+							s.insert(0, IPath.SEPARATOR);
+					}
+					return s.toString();
+				}
+
+			};
+		}
+		return fStatusLineLabelProvider;
 	}
 
 	public ITextHover getTextHover(ISourceViewer sourceViewer, String contentType, int stateMask) {

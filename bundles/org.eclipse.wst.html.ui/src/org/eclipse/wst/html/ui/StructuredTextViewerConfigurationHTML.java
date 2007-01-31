@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.ITextDoubleClickStrategy;
@@ -24,6 +25,7 @@ import org.eclipse.jface.text.formatter.MultiPassContentFormatter;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.jface.text.information.IInformationProvider;
 import org.eclipse.jface.text.source.ISourceViewer;
+import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.eclipse.wst.css.core.text.ICSSPartitions;
 import org.eclipse.wst.css.ui.internal.contentassist.CSSContentAssistProcessor;
@@ -55,6 +57,8 @@ import org.eclipse.wst.sse.ui.internal.util.EditorUtility;
 import org.eclipse.wst.xml.core.internal.text.rules.StructuredTextPartitionerForXML;
 import org.eclipse.wst.xml.core.text.IXMLPartitions;
 import org.eclipse.wst.xml.ui.StructuredTextViewerConfigurationXML;
+import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeLabelProvider;
+import org.w3c.dom.Node;
 
 /**
  * Configuration for a source viewer which shows HTML content.
@@ -88,6 +92,7 @@ public class StructuredTextViewerConfigurationHTML extends StructuredTextViewerC
 	 * One instance per configuration
 	 */
 	private StructuredTextViewerConfiguration fXMLSourceViewerConfiguration;
+	private ILabelProvider fStatusLineLabelProvider;
 
 	/**
 	 * Create new instance of StructuredTextViewerConfigurationHTML
@@ -278,6 +283,32 @@ public class StructuredTextViewerConfigurationHTML extends StructuredTextViewerC
 			fLineStyleProviderForJavascript = new LineStyleProviderForJavaScript();
 		}
 		return fLineStyleProviderForJavascript;
+	}
+
+	public ILabelProvider getStatusLineLabelProvider(ISourceViewer sourceViewer) {
+		if (fStatusLineLabelProvider == null) {
+			fStatusLineLabelProvider = new JFaceNodeLabelProvider() {
+				public String getText(Object element) {
+
+					if (element == null)
+						return null;
+
+					StringBuffer s = new StringBuffer();
+					Node node = (Node) element;
+					if (node.getNodeType() != Node.DOCUMENT_NODE) {
+						while (node != null && node.getNodeType() != Node.DOCUMENT_NODE) {
+							s.insert(0, super.getText(node));
+							node = node.getParentNode();
+							if (node != null)
+								s.insert(0, IPath.SEPARATOR);
+						}
+					}
+					return s.toString();
+				}
+
+			};
+		}
+		return fStatusLineLabelProvider;
 	}
 
 	public ITextHover getTextHover(ISourceViewer sourceViewer, String contentType, int stateMask) {

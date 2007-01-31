@@ -68,7 +68,7 @@ public class JFaceNodeAdapter implements IJFaceNodeAdapter {
 			}
 			case Node.TEXT_NODE : { // actually, TEXT should never be seen in
 				// the tree
-				image = createXMLImageDescriptor(XMLEditorPluginImages.IMG_OBJ_ELEMENT);
+				image = createXMLImageDescriptor(XMLEditorPluginImages.IMG_OBJ_TXTEXT);
 				break;
 			}
 			case Node.CDATA_SECTION_NODE : {

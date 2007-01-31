@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,6 +25,7 @@ import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IContributionManager;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.util.DelegatingDragAdapter;
 import org.eclipse.jface.util.DelegatingDropAdapter;
@@ -34,9 +35,11 @@ import org.eclipse.jface.util.TransferDropTargetListener;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.IPostSelectionProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -47,6 +50,7 @@ import org.eclipse.swt.dnd.DragSource;
 import org.eclipse.swt.dnd.DropTarget;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IEditorPart;
@@ -92,7 +96,7 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 	 * Provides double-click registration so it can be done before the Control
 	 * is created.
 	 */
-	private class DoubleClickProvider implements IDoubleClickListener {
+	class DoubleClickProvider implements IDoubleClickListener {
 		private IDoubleClickListener[] listeners = null;
 
 		void addDoubleClickListener(IDoubleClickListener newListener) {
@@ -141,7 +145,7 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 	 * Listens to post selection from the selection service, applying it to
 	 * the tree viewer.
 	 */
-	private class PostSelectionServiceListener implements ISelectionListener {
+	class PostSelectionServiceListener implements ISelectionListener {
 		public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 			// from selection service
 			if (_DEBUG) {
@@ -173,6 +177,7 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 			public void selectionChanged(SelectionChangedEvent event) {
 				if (!isFiringSelection()) {
 					fireSelectionChanged(event, postListeners);
+					updateStatusLine(getSite().getActionBars().getStatusLineManager(), event.getSelection());
 				}
 			}
 		}
@@ -359,9 +364,9 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 		}
 
 		fDragAdapter = new DelegatingDragAdapter();
-		fDragSource = new DragSource(getControl(), DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK);
+		fDragSource = new DragSource(getControl(), DND.DROP_COPY | DND.DROP_MOVE);
 		fDropAdapter = new DelegatingDropAdapter();
-		fDropTarget = new DropTarget(getControl(), DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK);
+		fDropTarget = new DropTarget(getControl(), DND.DROP_COPY | DND.DROP_MOVE);
 
 		setConfiguration(getConfiguration());
 
@@ -395,6 +400,14 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 			fContextMenuManager.removeMenuListener(fGroupAdder);
 			fContextMenuManager.removeAll();
 			fContextMenuManager.dispose();
+		}
+
+		fDropTarget.dispose();
+		fDragSource.dispose();
+
+		IStatusLineManager statusLineManager = getSite().getActionBars().getStatusLineManager();
+		if (statusLineManager != null) {
+			statusLineManager.setMessage(null);
 		}
 		setConfiguration(NULL_CONFIGURATION);
 		super.dispose();
@@ -444,7 +457,7 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 		return fSelectionProvider.getSelection();
 	}
 
-	private ISelectionListener getSelectionServiceListener() {
+	ISelectionListener getSelectionServiceListener() {
 		if (fSelectionListener == null) {
 			fSelectionListener = new PostSelectionServiceListener();
 		}
@@ -704,4 +717,20 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 		}
 	}
 
+	void updateStatusLine(IStatusLineManager mgr, ISelection selection) {
+		String text = null;
+		Image image = null;
+		ILabelProvider statusLineLabelProvider = getConfiguration().getStatusLineLabelProvider(getTreeViewer());
+		if (statusLineLabelProvider != null && selection instanceof IStructuredSelection && !selection.isEmpty()) {
+			Object firstElement = ((IStructuredSelection) selection).getFirstElement();
+			text = statusLineLabelProvider.getText(firstElement);
+			image = statusLineLabelProvider.getImage(firstElement);
+		}
+		if (image == null) {
+			mgr.setMessage(text);
+		}
+		else {
+			mgr.setMessage(image, text);
+		}
+	}
 }

@@ -29,6 +29,7 @@ import org.eclipse.jface.text.presentation.IPresentationReconciler;
 import org.eclipse.jface.text.reconciler.IReconciler;
 import org.eclipse.jface.text.source.IAnnotationHover;
 import org.eclipse.jface.text.source.ISourceViewer;
+import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.editors.text.EditorsUI;
@@ -426,6 +427,15 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 			fReconciler = reconciler;
 		}
 		return fReconciler;
+	}
+
+	/**
+	 * @since 2.0
+	 * @param treeViewer
+	 * @return a label provider providing the status line contents
+	 */
+	public ILabelProvider getStatusLineLabelProvider(ISourceViewer sourceViewer) {
+		return null;
 	}
 
 	public ITextHover getTextHover(ISourceViewer sourceViewer, String contentType, int stateMask) {

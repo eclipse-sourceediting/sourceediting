@@ -28,6 +28,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.ListenerList;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
@@ -37,6 +38,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -74,6 +76,7 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.IPostSelectionProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -89,6 +92,7 @@ import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseMoveListener;
 import org.eclipse.swt.events.MouseTrackAdapter;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -122,6 +126,7 @@ import org.eclipse.ui.texteditor.IStatusField;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.ITextEditorActionConstants;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
+import org.eclipse.ui.texteditor.ITextEditorDropTargetListener;
 import org.eclipse.ui.texteditor.IUpdate;
 import org.eclipse.ui.texteditor.IWorkbenchActionDefinitionIds;
 import org.eclipse.ui.texteditor.SourceViewerDecorationSupport;
@@ -1347,6 +1352,8 @@ public class StructuredTextEditor extends TextEditor {
 	 */
 	private FoldingActionGroup fFoldingGroup;
 
+	private ILabelProvider fStatusLineLabelProvider;
+
 	/**
 	 * Creates a new Structured Text Editor.
 	 */
@@ -2505,6 +2512,11 @@ public class StructuredTextEditor extends TextEditor {
 			ISelectionProvider parentProvider = super.getSelectionProvider();
 			if (parentProvider != null) {
 				fStructuredSelectionProvider = new StructuredSelectionProvider(parentProvider, this);
+				fStructuredSelectionProvider.addPostSelectionChangedListener(new ISelectionChangedListener() {
+					public void selectionChanged(SelectionChangedEvent event) {
+						updateStatusLine(event.getSelection());
+					}
+				});
 			}
 		}
 		if (fStructuredSelectionProvider == null) {
@@ -2600,6 +2612,31 @@ public class StructuredTextEditor extends TextEditor {
 	public void initializeDocumentProvider(IDocumentProvider documentProvider) {
 		if (documentProvider != null) {
 			setDocumentProvider(documentProvider);
+		}
+	}
+
+	/**
+	 * Copied from AbstractTextEditor
+	 * 
+	 * Initializes the drag and drop support for the given viewer based on
+	 * provided editor adapter for drop target listeners.
+	 *
+	 * @param viewer the viewer
+	 * @since 3.0
+	 */
+	protected void initializeDragAndDrop(ISourceViewer viewer) {
+		ITextEditorDropTargetListener listener= (ITextEditorDropTargetListener) getAdapter(ITextEditorDropTargetListener.class);
+
+		if (listener == null) {
+			Object object= Platform.getAdapterManager().loadAdapter(this, "org.eclipse.ui.texteditor.ITextEditorDropTargetListener"); //$NON-NLS-1$
+			if (object instanceof ITextEditorDropTargetListener)
+				listener= (ITextEditorDropTargetListener)object;
+		}
+
+		if (listener != null) {
+			DropTarget dropTarget= new DropTarget(viewer.getTextWidget(), DND.DROP_COPY | DND.DROP_MOVE);
+			dropTarget.setTransfer(listener.getTransfers());
+			dropTarget.addDropListener(listener);
 		}
 	}
 
@@ -3040,9 +3077,18 @@ public class StructuredTextEditor extends TextEditor {
 		disposeModelDependentFields();
 
 		fShowInTargetIds = createShowInTargetIds();
+		
+		if (getSourceViewerConfiguration() instanceof StructuredTextViewerConfiguration && fStatusLineLabelProvider != null) {
+			fStatusLineLabelProvider.dispose();
+		}
 
 		updateSourceViewerConfiguration();
-		
+
+		if (getSourceViewerConfiguration() instanceof StructuredTextViewerConfiguration) {
+			fStatusLineLabelProvider = ((StructuredTextViewerConfiguration) getSourceViewerConfiguration()).getStatusLineLabelProvider(getSourceViewer());
+			updateStatusLine(null);
+		}
+
 		if (fStructuredSelectionProvider != null) {
 			fStructuredSelectionProvider.setDocument(getInternalModel().getStructuredDocument());
 		}
@@ -3430,6 +3476,27 @@ public class StructuredTextEditor extends TextEditor {
 				else
 					text = "[ " + offset1 + " ]"; //$NON-NLS-1$ //$NON-NLS-2$
 				field.setText(text == null ? fErrorLabel : text);
+			}
+		}
+	}
+
+	void updateStatusLine(ISelection selection) {
+		IStatusLineManager statusLineManager = getEditorSite().getActionBars().getStatusLineManager();
+		if (fStatusLineLabelProvider != null && statusLineManager != null) {
+			String text = null;
+			Image image = null;
+			if (selection instanceof IStructuredSelection && !selection.isEmpty()) {
+				Object firstElement = ((IStructuredSelection) selection).getFirstElement();
+				if (firstElement != null) {
+					text = fStatusLineLabelProvider.getText(firstElement);
+					image = fStatusLineLabelProvider.getImage((firstElement));
+				}
+			}
+			if (image == null) {
+				statusLineManager.setMessage(text);
+			}
+			else {
+				statusLineManager.setMessage(image, text);
 			}
 		}
 	}

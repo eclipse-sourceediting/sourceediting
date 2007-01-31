@@ -9,13 +9,16 @@
 package org.eclipse.wst.xml.ui.internal.tabletree;
 
 import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextInputListener;
 import org.eclipse.jface.text.ITextSelection;
+import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.IPostSelectionProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -23,6 +26,7 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
@@ -45,13 +49,17 @@ import org.eclipse.ui.part.MultiPageEditorPart;
 import org.eclipse.ui.part.MultiPageEditorSite;
 import org.eclipse.ui.part.MultiPageSelectionProvider;
 import org.eclipse.ui.progress.UIJob;
+import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
+import org.eclipse.wst.sse.ui.internal.contentoutline.IJFaceNodeAdapter;
 import org.eclipse.wst.xml.core.internal.provisional.IXMLPreferenceNames;
 import org.eclipse.wst.xml.core.internal.provisional.contenttype.ContentTypeIdForXML;
 import org.eclipse.wst.xml.ui.internal.Logger;
 import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
+import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeLabelProvider;
+import org.w3c.dom.Node;
 
 public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 
@@ -296,6 +304,32 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 		}
 	}
 
+	class StatusLineLabelProvider extends JFaceNodeLabelProvider {
+		public StatusLineLabelProvider() {
+		}
+
+		public String getText(Object element) {
+			if (element == null)
+				return null;
+
+			StringBuffer s = new StringBuffer();
+			Node node = (Node) element;
+			if (node.getNodeType() != Node.DOCUMENT_NODE) {
+				while (node != null && node instanceof INodeNotifier) {
+					INodeNotifier notifier = (INodeNotifier) node;
+					if (node.getNodeType() != Node.DOCUMENT_NODE) {
+						IJFaceNodeAdapter adapter = (IJFaceNodeAdapter) notifier.getAdapterFor(IJFaceNodeAdapter.class);
+						s.insert(0, adapter.getLabelText(node));
+					}
+					node = node.getParentNode();
+					if (node != null && node.getNodeType() != Node.DOCUMENT_NODE)
+						s.insert(0, IPath.SEPARATOR);
+				}
+			}
+			return s.toString();
+		}
+	}
+
 	/** The design page index. */
 	private int fDesignPageIndex;
 
@@ -314,11 +348,14 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 
 	private TextEditorPostSelectionAdapter fTextEditorSelectionListener;
 
+	private ILabelProvider fStatusLineLabelProvider;
+
 	/**
 	 * StructuredTextMultiPageEditorPart constructor comment.
 	 */
 	public XMLMultiPageEditorPart() {
 		super();
+		fStatusLineLabelProvider = new StatusLineLabelProvider();
 	}
 
 	/*
@@ -391,6 +428,8 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 					if (getActivePage() != fSourcePageIndex) {
 						getTextEditor().getSelectionProvider().setSelection(event.getSelection());
 					}
+					if (fDesignViewer.equals(event.getSource()))
+						updateStatusLine(event.getSelection());
 				}
 			});
 		}
@@ -801,5 +840,26 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 			fDesignViewer.setDocument(getDocument());
 		}
 		setPartName(input.getName());
+	}
+
+	void updateStatusLine(ISelection selection) {
+		IStatusLineManager statusLineManager = getEditorSite().getActionBars().getStatusLineManager();
+		if (fStatusLineLabelProvider != null && statusLineManager != null) {
+			String text = null;
+			Image image = null;
+			if (selection instanceof IStructuredSelection && !selection.isEmpty()) {
+				Object firstElement = ((IStructuredSelection) selection).getFirstElement();
+				if (firstElement != null) {
+					text = fStatusLineLabelProvider.getText(firstElement);
+					image = fStatusLineLabelProvider.getImage((firstElement));
+				}
+			}
+			if (image == null) {
+				statusLineManager.setMessage(text);
+			}
+			else {
+				statusLineManager.setMessage(image, text);
+			}
+		}
 	}
 }
