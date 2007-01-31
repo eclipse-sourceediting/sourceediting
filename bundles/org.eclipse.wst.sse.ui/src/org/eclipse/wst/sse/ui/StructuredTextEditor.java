@@ -28,7 +28,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.ListenerList;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
@@ -126,7 +125,6 @@ import org.eclipse.ui.texteditor.IStatusField;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.ITextEditorActionConstants;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
-import org.eclipse.ui.texteditor.ITextEditorDropTargetListener;
 import org.eclipse.ui.texteditor.IUpdate;
 import org.eclipse.ui.texteditor.IWorkbenchActionDefinitionIds;
 import org.eclipse.ui.texteditor.SourceViewerDecorationSupport;
@@ -2612,31 +2610,6 @@ public class StructuredTextEditor extends TextEditor {
 	public void initializeDocumentProvider(IDocumentProvider documentProvider) {
 		if (documentProvider != null) {
 			setDocumentProvider(documentProvider);
-		}
-	}
-
-	/**
-	 * Copied from AbstractTextEditor
-	 * 
-	 * Initializes the drag and drop support for the given viewer based on
-	 * provided editor adapter for drop target listeners.
-	 *
-	 * @param viewer the viewer
-	 * @since 3.0
-	 */
-	protected void initializeDragAndDrop(ISourceViewer viewer) {
-		ITextEditorDropTargetListener listener= (ITextEditorDropTargetListener) getAdapter(ITextEditorDropTargetListener.class);
-
-		if (listener == null) {
-			Object object= Platform.getAdapterManager().loadAdapter(this, "org.eclipse.ui.texteditor.ITextEditorDropTargetListener"); //$NON-NLS-1$
-			if (object instanceof ITextEditorDropTargetListener)
-				listener= (ITextEditorDropTargetListener)object;
-		}
-
-		if (listener != null) {
-			DropTarget dropTarget= new DropTarget(viewer.getTextWidget(), DND.DROP_COPY | DND.DROP_MOVE);
-			dropTarget.setTransfer(listener.getTransfers());
-			dropTarget.addDropListener(listener);
 		}
 	}
 
