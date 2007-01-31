@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -32,6 +32,8 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.editors.text.FileDocumentProvider;
 import org.eclipse.ui.editors.text.StorageDocumentProvider;
+import org.eclipse.ui.texteditor.DocumentProviderRegistry;
+import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.IElementStateListener;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.encoding.CodedReaderCreator;
@@ -569,7 +571,14 @@ public class StorageModelProvider extends StorageDocumentProvider implements IMo
 	 *      java.lang.Object, org.eclipse.jface.text.IDocument, boolean)
 	 */
 	protected void doSaveDocument(IProgressMonitor monitor, Object element, IDocument document, boolean overwrite) throws CoreException {
-		new FileDocumentProvider().saveDocument(monitor, element, document, overwrite);
+		IDocumentProvider provider = null;
+		// BUG119211 - try to use registered document provider if possible
+		if (element instanceof IEditorInput) {
+			provider = DocumentProviderRegistry.getDefault().getDocumentProvider((IEditorInput) element);
+		}
+		if (provider == null)
+			provider = new FileDocumentProvider();
+		provider.saveDocument(monitor, element, document, overwrite);
 	}
 
 	public IStructuredModel getModel(IEditorInput element) {
