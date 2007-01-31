@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,10 +12,13 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.ui.views.contentoutline;
 
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.util.LocalSelectionTransfer;
+import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.util.TransferDragSourceListener;
 import org.eclipse.jface.util.TransferDropTargetListener;
 import org.eclipse.jface.viewers.IContentProvider;
@@ -24,12 +27,15 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DragSourceEvent;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.Transfer;
-import org.eclipse.wst.common.ui.internal.dnd.ObjectTransfer;
-import org.eclipse.wst.common.ui.internal.dnd.ViewerDragAdapter;
-import org.eclipse.wst.common.ui.internal.dnd.ViewerDropAdapter;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.sse.ui.internal.IReleasable;
@@ -48,7 +54,7 @@ import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeContentProvider;
 import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeLabelProvider;
 import org.eclipse.wst.xml.ui.internal.contentoutline.XMLNodeActionManager;
-import org.eclipse.wst.xml.ui.internal.dnd.XMLDragAndDropManager;
+import org.eclipse.wst.xml.ui.internal.dnd.DragNodeCommand;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -187,6 +193,35 @@ public class XMLContentOutlineConfiguration extends ContentOutlineConfiguration 
 		}
 	}
 
+	private class StatusLineLabelProvider extends JFaceNodeLabelProvider {
+		TreeViewer treeViewer = null;
+
+		public StatusLineLabelProvider(TreeViewer viewer) {
+			treeViewer = viewer;
+		}
+
+		public String getText(Object element) {
+			if (element == null)
+				return null;
+
+			StringBuffer s = new StringBuffer();
+			Node node = (Node) element;
+			while (node != null) {
+				if (node == element) {
+					s.append(getLabelProvider(treeViewer).getText(node));
+				}
+				else if (node.getNodeType() != Node.DOCUMENT_NODE) {
+					s.insert(0, super.getText(node));
+				}
+				node = node.getParentNode();
+				if (node != null && node.getNodeType() != Node.DOCUMENT_NODE) {
+					s.insert(0, IPath.SEPARATOR);
+				}
+			}
+			return s.toString();
+		}
+	}
+
 	/**
 	 * Toggle action for whether or not to display element's first attribute
 	 */
@@ -230,7 +265,9 @@ public class XMLContentOutlineConfiguration extends ContentOutlineConfiguration 
 
 	boolean fShowAttributes = false;
 
+	private JFaceNodeLabelProvider fSimpleLabelProvider;
 	private TransferDragSourceListener[] fTransferDragSourceListeners;
+
 	private TransferDropTargetListener[] fTransferDropTargetListeners;
 
 	/*
@@ -382,30 +419,35 @@ public class XMLContentOutlineConfiguration extends ContentOutlineConfiguration 
 		return filteredSelection;
 	}
 
+	public ILabelProvider getStatusLineLabelProvider(TreeViewer treeViewer) {
+		if (fSimpleLabelProvider == null) {
+			fSimpleLabelProvider = new StatusLineLabelProvider(treeViewer);
+		}
+		return fSimpleLabelProvider;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration#getTransferDragSourceListeners(org.eclipse.jface.viewers.TreeViewer)
 	 */
-	public TransferDragSourceListener[] getTransferDragSourceListeners(TreeViewer treeViewer) {
+	public TransferDragSourceListener[] getTransferDragSourceListeners(final TreeViewer treeViewer) {
 		if (fTransferDragSourceListeners == null) {
-			// emulate the XMLDragAndDropManager
-			final ViewerDragAdapter dragAdapter = new ViewerDragAdapter(treeViewer);
 			fTransferDragSourceListeners = new TransferDragSourceListener[]{new TransferDragSourceListener() {
+
 				public void dragFinished(DragSourceEvent event) {
-					dragAdapter.dragFinished(event);
+					LocalSelectionTransfer.getTransfer().setSelection(null);
 				}
 
 				public void dragSetData(DragSourceEvent event) {
-					dragAdapter.dragSetData(event);
 				}
 
 				public void dragStart(DragSourceEvent event) {
-					dragAdapter.dragStart(event);
+					LocalSelectionTransfer.getTransfer().setSelection(treeViewer.getSelection());
 				}
 
 				public Transfer getTransfer() {
-					return ObjectTransfer.getInstance();
+					return LocalSelectionTransfer.getTransfer();
 				}
 			}};
 		}
@@ -418,37 +460,80 @@ public class XMLContentOutlineConfiguration extends ContentOutlineConfiguration 
 	 * 
 	 * @see org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration#getTransferDropTargetListeners(org.eclipse.jface.viewers.TreeViewer)
 	 */
-	public TransferDropTargetListener[] getTransferDropTargetListeners(TreeViewer treeViewer) {
+	public TransferDropTargetListener[] getTransferDropTargetListeners(final TreeViewer treeViewer) {
 		if (fTransferDropTargetListeners == null) {
-			// emulate the XMLDragAnDropManager
-			final ViewerDropAdapter dropAdapter = new ViewerDropAdapter(treeViewer, new XMLDragAndDropManager());
 			fTransferDropTargetListeners = new TransferDropTargetListener[]{new TransferDropTargetListener() {
 				public void dragEnter(DropTargetEvent event) {
-					dropAdapter.dragEnter(event);
 				}
 
 				public void dragLeave(DropTargetEvent event) {
-					dropAdapter.dragLeave(event);
 				}
 
 				public void dragOperationChanged(DropTargetEvent event) {
-					dropAdapter.dragOperationChanged(event);
 				}
 
 				public void dragOver(DropTargetEvent event) {
-					dropAdapter.dragOver(event);
+					event.feedback = DND.FEEDBACK_SELECT;
+					float feedbackFloat = getHeightInItem(event);
+					if (feedbackFloat > 0.75) {
+						event.feedback = DND.FEEDBACK_INSERT_AFTER;
+					}
+					else if (feedbackFloat < 0.25) {
+						event.feedback = DND.FEEDBACK_INSERT_BEFORE;
+					}
+					event.feedback |= DND.FEEDBACK_EXPAND | DND.FEEDBACK_SCROLL;
 				}
 
 				public void drop(DropTargetEvent event) {
-					dropAdapter.drop(event);
+					if (event.operations != DND.DROP_NONE && LocalSelectionTransfer.getTransfer().getSelection() != null && !LocalSelectionTransfer.getTransfer().getSelection().isEmpty()) {
+						IStructuredSelection selection = (IStructuredSelection) LocalSelectionTransfer.getTransfer().getSelection();
+						if (selection != null && !selection.isEmpty() && event.item != null && event.item.getData() != null) {
+							/*
+							 * the command uses these numbers instead of the
+							 * feedback constants (even though it converts in
+							 * the other direction as well)
+							 */
+							float feedbackFloat = getHeightInItem(event);
+
+							final DragNodeCommand command = new DragNodeCommand(event.item.getData(), feedbackFloat, event.operations, event.detail, selection.toList(), treeViewer);
+							if (command != null && command.canExecute()) {
+								SafeRunnable.run(new SafeRunnable() {
+									public void run() throws Exception {
+										command.execute();
+									}
+								});
+							}
+						}
+					}
 				}
 
 				public void dropAccept(DropTargetEvent event) {
-					dropAdapter.dropAccept(event);
+				}
+
+				private float getHeightInItem(DropTargetEvent event) {
+					if (event.item == null)
+						return .5f;
+					if (event.item instanceof TreeItem) {
+						TreeItem treeItem = (TreeItem) event.item;
+						Control control = treeItem.getParent();
+						Point point = control.toControl(new Point(event.x, event.y));
+						Rectangle bounds = treeItem.getBounds();
+						return (float) (point.y - bounds.y) / (float) bounds.height;
+					}
+					else if (event.item instanceof TableItem) {
+						TableItem tableItem = (TableItem) event.item;
+						Control control = tableItem.getParent();
+						Point point = control.toControl(new Point(event.x, event.y));
+						Rectangle bounds = tableItem.getBounds(0);
+						return (float) (point.y - bounds.y) / (float) bounds.height;
+					}
+					else {
+						return 0.0F;
+					}
 				}
 
 				public Transfer getTransfer() {
-					return ObjectTransfer.getInstance();
+					return LocalSelectionTransfer.getTransfer();
 				}
 
 				public boolean isEnabled(DropTargetEvent event) {
