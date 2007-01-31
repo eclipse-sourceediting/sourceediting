@@ -143,9 +143,9 @@
          	<keywordReference id="org.eclipse.wst.dtd.ui.templates"/>
 		</page>
 		<page
-			name="%_UI_LABEL_DTD_STYLES"
+			name="%DTD_Syntax_Coloring"
 			category="org.eclipse.wst.sse.ui.preferences.dtd"
-			class="org.eclipse.wst.dtd.ui.internal.preferences.DTDColorPage"
+			class="org.eclipse.wst.dtd.ui.internal.preferences.DTDSyntaxColoringPage"
 			id="org.eclipse.wst.sse.ui.preferences.dtd.styles">
          	<keywordReference id="org.eclipse.wst.dtd.ui.styles"/>
 		</page>

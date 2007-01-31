@@ -77,9 +77,9 @@
 			<keywordReference id="org.eclipse.wst.css.ui.templates"/>
 		</page>
 		<page
-			name="%CSS_Styles.name"
+			name="%CSS_Syntax_Coloring"
 			category="org.eclipse.wst.sse.ui.preferences.css"
-			class="org.eclipse.wst.css.ui.internal.preferences.ui.CSSColorPage"
+			class="org.eclipse.wst.css.ui.internal.preferences.ui.CSSSyntaxColoringPage"
 			id="org.eclipse.wst.sse.ui.preferences.css.styles">
          	<keywordReference id="org.eclipse.wst.css.ui.styles"/>
 		</page>

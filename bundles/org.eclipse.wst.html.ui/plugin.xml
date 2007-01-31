@@ -84,9 +84,9 @@
 			<keywordReference id="org.eclipse.wst.html.ui.templates"/>
 		</page>
 		<page
-			name="%HTML_Styles.name"
+			name="%HTML_Syntax_Coloring"
 			category="org.eclipse.wst.html.ui.preferences"
-			class="org.eclipse.wst.html.ui.internal.preferences.ui.HTMLColorPage"
+			class="org.eclipse.wst.html.ui.internal.preferences.ui.HTMLSyntaxColoringPage"
 			id="org.eclipse.wst.html.ui.preferences.styles">
 			<keywordReference id="org.eclipse.wst.html.ui.styles"/>
 		</page>

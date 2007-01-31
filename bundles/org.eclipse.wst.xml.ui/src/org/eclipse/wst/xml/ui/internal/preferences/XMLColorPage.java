@@ -37,6 +37,9 @@ import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.eclipse.wst.xml.ui.internal.editor.IHelpContextIds;
 import org.eclipse.wst.xml.ui.internal.style.IStyleConstantsXML;
 
+/**
+ * @deprecated
+ */
 public class XMLColorPage extends AbstractColorPage {
 
 	protected Control createContents(Composite parent) {

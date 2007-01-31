@@ -191,9 +191,9 @@
 			<keywordReference id="org.eclipse.wst.jsp.ui.templates"/>
 		</page>
 		<page
-			name="%JSP_Styles.name"
+			name="%JSP_Syntax_Coloring"
 			category="org.eclipse.wst.sse.ui.preferences.jsp"
-			class="org.eclipse.jst.jsp.ui.internal.preferences.ui.JSPColorPage"
+			class="org.eclipse.jst.jsp.ui.internal.preferences.ui.JSPSyntaxColoringPage"
 			id="org.eclipse.wst.sse.ui.preferences.jsp.styles">
 			<keywordReference id="org.eclipse.wst.jsp.ui.styles"/>
 		</page>

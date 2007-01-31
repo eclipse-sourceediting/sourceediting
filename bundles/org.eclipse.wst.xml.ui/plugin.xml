@@ -105,9 +105,9 @@
          	<keywordReference id="org.eclipse.wst.xml.ui.templates"/>
 		</page>
 		<page
-			name="%XML_Styles.name"
+			name="%XML_Syntax_Coloring"
 			category="org.eclipse.wst.sse.ui.preferences.xml"
-			class="org.eclipse.wst.xml.ui.internal.preferences.XMLColorPage"
+			class="org.eclipse.wst.xml.ui.internal.preferences.XMLSyntaxColoringPage"
 			id="org.eclipse.wst.sse.ui.preferences.xml.colors">
          	<keywordReference id="org.eclipse.wst.xml.ui.styles"/>
 		</page>
