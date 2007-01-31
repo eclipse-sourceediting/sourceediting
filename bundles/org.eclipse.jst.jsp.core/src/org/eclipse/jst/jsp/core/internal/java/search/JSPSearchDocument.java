@@ -15,10 +15,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.search.SearchParticipant;
 import org.eclipse.jface.text.Position;
@@ -109,6 +111,7 @@ public class JSPSearchDocument {
 			// get existing model for read, then get document from it
 			IModelManager modelManager = getModelManager();
 			if (modelManager != null) {
+				jspFile.refreshLocal(IResource.DEPTH_ZERO, new NullProgressMonitor());
 				model = modelManager.getModelForRead(jspFile);
 			}
 			// handle unsupported
