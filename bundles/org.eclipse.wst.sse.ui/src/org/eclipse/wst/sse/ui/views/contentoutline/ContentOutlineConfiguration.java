@@ -216,6 +216,15 @@ public abstract class ContentOutlineConfiguration {
 	}
 
 	/**
+	 * @since 2.0
+	 * @param treeViewer
+	 * @return a label provider providing the status line contents
+	 */
+	public ILabelProvider getStatusLineLabelProvider(TreeViewer treeViewer) {
+		return null;
+	}
+
+	/**
 	 * Returns contribution items for the local toolbar in the outline.
 	 * 
 	 * @param viewer
