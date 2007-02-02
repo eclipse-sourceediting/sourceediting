@@ -81,7 +81,7 @@ public class XMLCatalogTreeViewer extends TreeViewer {
 			else if (object instanceof INextCatalog) {
 				INextCatalog nextCatalog = (INextCatalog) object;
 				// result = nextCatalog.getCatalogLocation();
-				result = URIHelper.URIToLocation(nextCatalog.getCatalogLocation());
+				result = URIUtils.convertURIToLocation(nextCatalog.getCatalogLocation());
 				if (nextCatalog.getCatalogLocation().startsWith("file:")) {
 					result += " (" + XMLCatalogMessages.UI_LABEL_FILE_SYSTEM_RESOURCE + ")";
 				}

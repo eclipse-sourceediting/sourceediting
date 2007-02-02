@@ -175,7 +175,7 @@ public class EditCatalogEntryDialog extends Dialog {
 			gd.grabExcessHorizontalSpace = true;
 			resourceLocationField.setLayoutData(gd);
 
-			resourceLocationField.setText(getDisplayValue(URIHelper.URIToLocation(getEntry().getURI())));
+			resourceLocationField.setText(getDisplayValue(URIUtils.convertURIToLocation(getEntry().getURI())));
 
 			// WorkbenchHelp.setHelp(resourceLocationField,
 			// XMLBuilderContextIds.XMLP_ENTRY_URI);
@@ -320,7 +320,7 @@ public class EditCatalogEntryDialog extends Dialog {
 		}
 
 		public void saveData() {
-			getEntry().setURI(URIHelper.LocationToURI(resourceLocationField.getText()));
+			getEntry().setURI(URIUtils.convertLocationToURI(resourceLocationField.getText()));
 			getEntry().setKey(keyField.getText());
 			getEntry().setEntryType(getKeyType());
 			getEntry().setAttributeValue(ICatalogEntry.ATTR_WEB_URL, checkboxButton.getSelection() ? webAddressField.getText() : null);
@@ -564,7 +564,7 @@ public class EditCatalogEntryDialog extends Dialog {
 
 			catalogLocationField = new Text(group, SWT.SINGLE | SWT.BORDER);
 			catalogLocationField.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-			catalogLocationField.setText(URIHelper.URIToLocation(getDisplayValue(getNextCatalog().getCatalogLocation())));
+			catalogLocationField.setText(URIUtils.convertURIToLocation(getDisplayValue(getNextCatalog().getCatalogLocation())));
 			// WorkbenchHelp.setHelp(resourceLocationField,
 			// XMLBuilderContextIds.XMLP_ENTRY_URI);
 			catalogLocationField.addModifyListener(modifyListener);
@@ -598,7 +598,7 @@ public class EditCatalogEntryDialog extends Dialog {
 		}
 
 		public void saveData() {
-			getNextCatalog().setCatalogLocation(URIHelper.LocationToURI(catalogLocationField.getText()));
+			getNextCatalog().setCatalogLocation(URIUtils.convertLocationToURI(catalogLocationField.getText()));
 		}
 
 		protected void updateWidgets(Widget widget) {

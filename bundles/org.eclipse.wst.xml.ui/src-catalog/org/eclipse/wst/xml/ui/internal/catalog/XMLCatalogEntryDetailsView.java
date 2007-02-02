@@ -52,12 +52,12 @@ public class XMLCatalogEntryDetailsView {
 
 		String line0;
 		if (value.startsWith("jar:file:")) {
-			String jarFile = URIHelper.URIToLocation(URIHelper.ensureURIProtocolFormat(value.substring("jar:".length(), value.indexOf('!'))));
-			String internalFile = URIHelper.URIToLocation(URIHelper.ensureURIProtocolFormat("file://" + value.substring(value.indexOf('!') + 1)));
+			String jarFile = URIUtils.convertURIToLocation(URIHelper.ensureURIProtocolFormat(value.substring("jar:".length(), value.indexOf('!'))));
+			String internalFile = URIUtils.convertURIToLocation(URIHelper.ensureURIProtocolFormat("file://" + value.substring(value.indexOf('!') + 1)));
 			line0 = XMLCatalogMessages.UI_LABEL_DETAILS_URI_LOCATION + "\t" + internalFile + " " + XMLCatalogMessages.UI_LABEL_DETAILS_IN_JAR_FILE + " " + jarFile;
 		}
 		else {
-			value = URIHelper.URIToLocation(value);
+			value = URIUtils.convertURIToLocation(value);
 			line0 = XMLCatalogMessages.UI_LABEL_DETAILS_URI_LOCATION + "\t" + value; //$NON-NLS-1$
 
 		}
@@ -76,7 +76,7 @@ public class XMLCatalogEntryDetailsView {
 		String value = getDisplayValue(nextCatalog != null ? nextCatalog.getCatalogLocation() : ""); //$NON-NLS-1$
 		String line1 = XMLCatalogMessages.UI_LABEL_DETAILS_URI_COLON + "\t\t" + value; //$NON-NLS-1$
 
-		String line0 = XMLCatalogMessages.UI_LABEL_DETAILS_URI_LOCATION + "\t" + URIHelper.URIToLocation(value);
+		String line0 = XMLCatalogMessages.UI_LABEL_DETAILS_URI_LOCATION + "\t" + URIUtils.convertURIToLocation(value);
 
 		String entireString = "\n" + line0 + "\n" + line1; //$NON-NLS-1$
 		detailsText.setText(entireString);
