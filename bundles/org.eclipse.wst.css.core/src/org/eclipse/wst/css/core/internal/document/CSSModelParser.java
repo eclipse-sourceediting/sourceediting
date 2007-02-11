@@ -85,7 +85,7 @@ public class CSSModelParser {
 	 * currently public but may be made default access protected in future.
 	 */
 	public CSSModelParser(ICSSDocument doc) {
-		super();
+		this();
 		fDocument = doc;
 		fCreationContext = new CSSModelCreationContext((CSSNodeImpl)doc);
 		fDeletionContext = new CSSModelDeletionContext(doc);

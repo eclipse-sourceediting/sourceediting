@@ -44,7 +44,7 @@ class CSSProfileImpl implements CSSProfile {
 	 * Constructor for CSSMetaModelProfileInfoImpl.
 	 */
 	public CSSProfileImpl(String id, URL url) {
-		super();
+		this();
 		fID = id;
 		fURL = url;
 	}

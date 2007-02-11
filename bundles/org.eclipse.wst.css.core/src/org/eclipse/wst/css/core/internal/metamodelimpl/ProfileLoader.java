@@ -35,7 +35,7 @@ class ProfileLoader {
 	}
 
 	ProfileLoader(ResourceBundle resourceBundle, boolean logging) {
-		super();
+		this();
 		fResourceBundle = resourceBundle;
 		fLogging = logging;
 	}

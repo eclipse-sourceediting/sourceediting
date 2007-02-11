@@ -40,7 +40,7 @@ public class HTMLDocumentTypeEntry {
 	/**
 	 */
 	public HTMLDocumentTypeEntry(String name, String publicId, String systemId, String namespaceURI, boolean isXHTMLType, boolean hasFrameset, String displayName, boolean isDefaultXHTML, boolean isDefaultWML, boolean isWMLType) {
-		super();
+		this();
 
 		if (name != null && name.length() > 0) {
 			this.name = name;
