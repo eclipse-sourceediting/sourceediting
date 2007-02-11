@@ -33,7 +33,6 @@ import org.eclipse.gef.ui.parts.SelectionSynchronizer;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.PaintEvent;
@@ -62,13 +61,11 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.ide.IGotoMarker;
-import org.eclipse.ui.internal.help.WorkbenchHelpSystem;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.MultiPageEditorPart;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.ui.views.properties.tabbed.ITabbedPropertySheetPageContributor;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
-import org.eclipse.wst.xml.ui.internal.editor.IHelpContextIds;
 import org.eclipse.wst.xsd.ui.internal.adt.design.DesignViewerGraphicConstants;
 import org.eclipse.wst.xsd.ui.internal.adt.design.FlatCCombo;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.RootEditPart;
@@ -581,7 +578,7 @@ public abstract class CommonMultiPageEditor extends MultiPageEditorPart implemen
   protected void createViewModeToolbar(Composite parent)
   {
     EditorModeManager manager = (EditorModeManager)getAdapter(EditorModeManager.class);
-    ProductCustomizationProvider productCustomizationProvider = (ProductCustomizationProvider)getAdapter(ProductCustomizationProvider.class);
+    final ProductCustomizationProvider productCustomizationProvider = (ProductCustomizationProvider)getAdapter(ProductCustomizationProvider.class);
     EditorMode [] modeList = manager.getModes();
     
     int modeListLength = modeList.length;
@@ -659,19 +656,14 @@ public abstract class CommonMultiPageEditor extends MultiPageEditorPart implemen
       hyperlink.setImage(image);
       hyperlink.setToolTipText(Messages._UI_HOVER_VIEW_MODE_DESCRIPTION);
       hyperlink.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_CENTER));
-      hyperlink.setData(WorkbenchHelpSystem.HELP_KEY, IHelpContextIds.CLEANUP_XML_HELPID);
       hyperlink.addMouseListener(new MouseAdapter()
       {
         public void mouseDown(MouseEvent e)
         {
-          // This may take a while, so use the busy indicator
-          BusyIndicator.showWhile(null, new Runnable() 
+          if (productCustomizationProvider != null)
           {
-            public void run() 
-            {
-              PlatformUI.getWorkbench().getHelpSystem().displayDynamicHelp();
-            }
-          });
+            productCustomizationProvider.handleAction("showEditorModeHelp");
+          }
         }
       });      
     }
@@ -697,9 +689,23 @@ public abstract class CommonMultiPageEditor extends MultiPageEditorPart implemen
         if (modeList.length >= 1)
         {
           EditorModeAndCustomizedName entry = editorModeAndCustomizedNames[modeCombo.getSelectionIndex()];
-          manager.setCurrentMode(entry.mode);
+          if (manager.getCurrentMode() != entry.mode)
+          {  
+            manager.setCurrentMode(entry.mode);
+            storeCurrentModePreference(entry.mode.getId());
+            ProductCustomizationProvider productCustomizationProvider = (ProductCustomizationProvider) getAdapter(ProductCustomizationProvider.class);
+            if (productCustomizationProvider != null)
+            {
+              productCustomizationProvider.handleAction("editorModeChanged");
+            }
+          }
         }  
       }
     }
+  }
+  
+  protected void storeCurrentModePreference(String id)
+  {
+    // Don't do anything as default.  Allow extenders to implement.
   }
 }

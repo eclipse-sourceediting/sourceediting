@@ -80,7 +80,13 @@ public class XMLCatalogTreeViewer extends TreeViewer {
 			}
 			else if (object instanceof INextCatalog) {
 				INextCatalog nextCatalog = (INextCatalog) object;
-				result = nextCatalog.getCatalogLocation();
+				//result = nextCatalog.getCatalogLocation();
+				result = URIUtils.convertURIToLocation(nextCatalog.getCatalogLocation());
+				if (nextCatalog.getCatalogLocation().startsWith("file:")) {
+					result += " (" + XMLCatalogMessages.UI_LABEL_FILE_SYSTEM_RESOURCE + ")";
+				} else if (nextCatalog.getCatalogLocation().startsWith("platform:")) {
+					result += " (" + XMLCatalogMessages.UI_LABEL_PLATFORM_RESOURCE + ")";
+				}
 			}
 			return result != null ? result : object.toString();
 		}

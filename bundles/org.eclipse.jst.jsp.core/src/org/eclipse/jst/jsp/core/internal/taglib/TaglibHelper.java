@@ -171,7 +171,7 @@ public class TaglibHelper {
 				if (var.getVariableClass() != null) {
 					varClass = var.getVariableClass();
 				}
-				results.add(new TaglibVariable(varClass, varName));
+				results.add(new TaglibVariable(varClass, varName, var.getScope()));
 			}
 		}
 	}
@@ -196,7 +196,7 @@ public class TaglibHelper {
 		if (teiClassname == null || teiClassname.length() == 0)
 			return;
 
-		ClassLoader loader = getClassloader();
+		TaglibClassLoader loader = getClassloader();
 
 		Class teiClass = null;
 		try {
@@ -216,7 +216,7 @@ public class TaglibHelper {
 							VariableInfo[] vInfos = tei.getVariableInfo(td);
 							if (vInfos != null) {
 								for (int i = 0; i < vInfos.length; i++) {
-									results.add(new TaglibVariable(vInfos[i].getClassName(), vInfos[i].getVarName()));
+									results.add(new TaglibVariable(vInfos[i].getClassName(), vInfos[i].getVarName(), vInfos[i].getScope()));
 								}
 							}
 						}
@@ -344,7 +344,7 @@ public class TaglibHelper {
 		return tagDataTable;
 	}
 
-	private ClassLoader getClassloader() {
+	private TaglibClassLoader getClassloader() {
 
 		if (fLoader == null) {
 			fLoader = new TaglibClassLoader(this.getClass().getClassLoader());

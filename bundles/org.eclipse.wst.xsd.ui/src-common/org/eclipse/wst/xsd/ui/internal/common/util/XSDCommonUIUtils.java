@@ -16,10 +16,12 @@ import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatProcessor;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.provisional.format.FormatProcessorXML;
+import org.eclipse.wst.xsd.ui.internal.adt.design.ImageOverlayDescriptor;
 import org.eclipse.xsd.XSDAnnotation;
 import org.eclipse.xsd.XSDAttributeDeclaration;
 import org.eclipse.xsd.XSDAttributeGroupDefinition;
@@ -54,6 +56,22 @@ public class XSDCommonUIUtils
   public XSDCommonUIUtils()
   {
     super();
+  }
+  
+  public static Image getUpdatedImage(XSDConcreteComponent input, Image baseImage, boolean isReadOnly)
+  {
+    XSDAnnotation xsdAnnotation = getInputXSDAnnotation(input, false);
+    
+    if (xsdAnnotation != null)
+    {
+      if (xsdAnnotation.getApplicationInformation().size() > 0)
+      {
+        ImageOverlayDescriptor ovr = new ImageOverlayDescriptor(baseImage, isReadOnly);
+        Image newImage = ovr.getImage();
+        return newImage;
+      }
+    }
+    return baseImage;
   }
 
   public static XSDAnnotation getInputXSDAnnotation(XSDConcreteComponent input, boolean createIfNotExist)

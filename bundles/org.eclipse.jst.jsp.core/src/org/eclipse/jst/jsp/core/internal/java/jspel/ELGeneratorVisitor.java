@@ -8,10 +8,6 @@
  * Contributors:
  *     BEA Systems - initial implementation
  *     
- *     Bug 154474 EL: 'and', 'or', ... operator
- *     https://bugs.eclipse.org/bugs/show_bug.cgi?id=154474
- *     Bernhard Huemer <bernhard.huemer@gmail.com>
- *     
  *******************************************************************************/
 package org.eclipse.jst.jsp.core.internal.java.jspel;
 
@@ -94,9 +90,6 @@ public class ELGeneratorVisitor implements JSPELParserVisitor {
 		fOperatorMap.put("le", "<="); //$NON-NLS-1$ //$NON-NLS-2$
 		fOperatorMap.put("mod", "%"); //$NON-NLS-1$ //$NON-NLS-2$
 		fOperatorMap.put("eq", "=="); //$NON-NLS-1$ //$NON-NLS-2$
-		fOperatorMap.put("and", "&&"); //$NON-NLS-1$ //$NON-NLS-2$
-		fOperatorMap.put("or", "||"); //$NON-NLS-1$ //$NON-NLS-2$
-		fOperatorMap.put("not", "!"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 	
 	/**

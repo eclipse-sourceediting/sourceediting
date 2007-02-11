@@ -7,11 +7,7 @@
  * 
  * Contributors:
  *     IBM Corporation - initial API and implementation
- *     
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
- *     
- *     Balazs Banfai: Bug 154737 getUserData/setUserData support for Node
- *     https://bugs.eclipse.org/bugs/show_bug.cgi?id=154737
  *     
  *******************************************************************************/
 package org.eclipse.wst.xml.core.internal.document;
@@ -27,7 +23,6 @@ import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Node;
 import org.w3c.dom.ProcessingInstruction;
-import org.w3c.dom.UserDataHandler;
 
 
 /**
@@ -69,7 +64,6 @@ public class ProcessingInstructionImpl extends NodeImpl implements ProcessingIns
 	 */
 	public Node cloneNode(boolean deep) {
 		ProcessingInstructionImpl cloned = new ProcessingInstructionImpl(this);
-		notifyUserDataHandlers(UserDataHandler.NODE_CLONED, cloned);
 		return cloned;
 	}
 

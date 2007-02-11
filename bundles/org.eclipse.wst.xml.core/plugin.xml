@@ -159,11 +159,6 @@
             key="rendererFactory"
             className="org.eclipse.wst.xml.core.internal.emf2xml.EMF2DOMSSERendererFactory">
        </uiContextSensitiveClass>
-       <uiContextSensitiveClass
-          key="ValidateEditContext"
-          className="org.eclipse.wst.common.internal.emfworkbench.validateedit.ValidateEditHeadlessContext"
-          context="Headless">
-      </uiContextSensitiveClass>
   </extension>
   <!-- ====================================================== -->
 	<!-- Register the XML validator with the validation 		-->

@@ -43,7 +43,7 @@ public class XMLTableTreeContentProvider implements ITreeContentProvider, ITable
 
 	StructuredViewer fViewer = null;
 
-	private TreeContentHelper treeContentHelper = new TreeContentHelper();
+	protected TreeContentHelper treeContentHelper = new TreeContentHelper();
 
 	public XMLTableTreeContentProvider() {
 		super();

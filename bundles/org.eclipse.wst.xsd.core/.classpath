@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry path="src-contentmodel" kind="src"/>
-	<classpathentry path="src-validation" kind="src"/>
-	<classpathentry path="src" kind="src"/>
-	<classpathentry path="org.eclipse.jdt.launching.JRE_CONTAINER" kind="con"/>
-	<classpathentry path="org.eclipse.pde.core.requiredPlugins" kind="con">
-		<accessrules>
-			<accessrule kind="accessible" pattern="org/eclipse/wst/**"/>
-		</accessrules>
-	</classpathentry>
-	<classpathentry path="bin" kind="output"/>
+	<classpathentry kind="src" path="src-contentmodel/"/>
+	<classpathentry kind="src" path="src-validation/"/>
+	<classpathentry kind="src" path="src/"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry kind="output" path="bin"/>
 </classpath>

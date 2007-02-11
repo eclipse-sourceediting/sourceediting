@@ -351,7 +351,8 @@ public class XSDEditorPlugin extends AbstractUIPlugin
       productCustomizationProviderInitialized = true;
       String pluginName = getPreferenceStore().getString(PRODUCT_CUSTOMIZATION_PROVIDER_PLUGIN_ID);
       String className = getPreferenceStore().getString(PRODUCT_CUSTOMIZATION_PROVIDER_CLASS_NAME);
-      if (pluginName != null && className != null)
+      if (pluginName != null && pluginName.length() > 0 &&
+          className != null && className.length() > 0)
       {
         try
         {

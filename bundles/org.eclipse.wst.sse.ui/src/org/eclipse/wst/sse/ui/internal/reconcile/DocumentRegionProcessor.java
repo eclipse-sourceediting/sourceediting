@@ -1,7 +1,20 @@
+/*******************************************************************************
+ * Copyright (c) 2006 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *     
+ *******************************************************************************/
 package org.eclipse.wst.sse.ui.internal.reconcile;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.content.IContentDescription;
@@ -12,6 +25,7 @@ import org.eclipse.jface.text.reconciler.DirtyRegion;
 import org.eclipse.jface.text.reconciler.IReconcilingStrategy;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.wst.sse.ui.internal.IReleasable;
+import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.reconcile.validator.ValidatorBuilder;
 import org.eclipse.wst.sse.ui.internal.reconcile.validator.ValidatorMetaData;
 import org.eclipse.wst.sse.ui.internal.reconcile.validator.ValidatorStrategy;
@@ -23,6 +37,9 @@ import org.eclipse.wst.sse.ui.internal.spelling.SpellcheckStrategy;
  * validator strategies - DirtyRegion processing logic.
  */
 public class DocumentRegionProcessor extends DirtyRegionProcessor {
+
+	private static final boolean DEBUG_VALIDATORS = Boolean.TRUE.toString().equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.ui/debug/reconcilerValidators"));
+	// //$NON-NLS-1$
 
 	/**
 	 * A strategy to use the defined default Spelling service.
@@ -37,6 +54,7 @@ public class DocumentRegionProcessor extends DirtyRegionProcessor {
 	private ValidatorStrategy fValidatorStrategy;
 
 	private final String SSE_UI_ID = "org.eclipse.wst.sse.ui"; //$NON-NLS-1$
+
 
 	protected void beginProcessing() {
 		super.beginProcessing();
@@ -115,9 +133,28 @@ public class DocumentRegionProcessor extends DirtyRegionProcessor {
 					validatorStrategy = new ValidatorStrategy(viewer, contentTypeId);
 					ValidatorBuilder vBuilder = new ValidatorBuilder();
 					ValidatorMetaData[] vmds = vBuilder.getValidatorMetaData(SSE_UI_ID);
+					List enabledValidators = new ArrayList(1);
+					/* if any "must" handle this content type, just add them */
+					boolean foundSpecificContentTypeValidators = false;
 					for (int i = 0; i < vmds.length; i++) {
-						if (vmds[i].canHandleContentType(contentTypeId))
-							validatorStrategy.addValidatorMetaData(vmds[i]);
+						if (vmds[i].mustHandleContentType(contentTypeId)) {
+							if (DEBUG_VALIDATORS)
+								Logger.log(Logger.INFO, contentTypeId + " using specific validator " + vmds[i].getValidatorId()); //$NON-NLS-1$
+							foundSpecificContentTypeValidators = true;
+							enabledValidators.add(vmds[i]);
+						}
+					}
+					if (!foundSpecificContentTypeValidators) {
+						for (int i = 0; i < vmds.length; i++) {
+							if (vmds[i].canHandleContentType(contentTypeId)) {
+								if (DEBUG_VALIDATORS)
+									Logger.log(Logger.INFO, contentTypeId + " using inherited(?) validator " + vmds[i].getValidatorId()); //$NON-NLS-1$
+								enabledValidators.add(vmds[i]);
+							}
+						}
+					}
+					for (int i = 0; i < enabledValidators.size(); i++) {
+						validatorStrategy.addValidatorMetaData((ValidatorMetaData) enabledValidators.get(i));
 					}
 				}
 			}
@@ -130,7 +167,7 @@ public class DocumentRegionProcessor extends DirtyRegionProcessor {
 	 * @param dirtyRegion
 	 */
 	protected void process(DirtyRegion dirtyRegion) {
-		if (!isInstalled())
+		if (!isInstalled() || isInRewriteSession())
 			return;
 
 		super.process(dirtyRegion);
@@ -146,7 +183,7 @@ public class DocumentRegionProcessor extends DirtyRegionProcessor {
 				getValidatorStrategy().reconcile(partitions[i], dirty);
 			}
 		}
-		
+
 		// single spell-check for everything
 		if (getSpellcheckStrategy() != null) {
 			getSpellcheckStrategy().reconcile(dirtyRegion, dirtyRegion);

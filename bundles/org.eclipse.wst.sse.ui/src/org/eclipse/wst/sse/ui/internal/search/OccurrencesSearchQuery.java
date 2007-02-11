@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,12 +15,14 @@ package org.eclipse.wst.sse.ui.internal.search;
 import java.text.MessageFormat;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.search.ui.ISearchResult;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
@@ -140,7 +142,10 @@ public class OccurrencesSearchQuery extends BasicSearchQuery {
 		IStatus status = Status.OK_STATUS;
 		FindRegions findRegions = new FindRegions(this.fDocument, this.fRegionText, this.fRegionType);
 		try {
-			ResourcesPlugin.getWorkspace().run(findRegions, null);
+			// BUG158846 - deadlock if lock up entire workspace, so only lock
+			// up the file we are searching on
+			ISchedulingRule markerRule = ResourcesPlugin.getWorkspace().getRuleFactory().markerRule(getFile());
+			ResourcesPlugin.getWorkspace().run(findRegions, markerRule, IWorkspace.AVOID_UPDATE, null);
 		} catch (CoreException e) {
 			status = new Status(IStatus.ERROR, SSEUIPlugin.ID, IStatus.OK, "", null); //$NON-NLS-1$
 		}

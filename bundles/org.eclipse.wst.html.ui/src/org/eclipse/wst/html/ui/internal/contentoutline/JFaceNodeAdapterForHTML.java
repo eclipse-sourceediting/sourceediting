@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,7 +12,6 @@ package org.eclipse.wst.html.ui.internal.contentoutline;
 
 
 
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.html.ui.internal.editor.HTMLEditorPluginImageHelper;
 import org.eclipse.wst.html.ui.internal.editor.HTMLEditorPluginImages;
@@ -26,10 +25,7 @@ import org.w3c.dom.Node;
 public class JFaceNodeAdapterForHTML extends JFaceNodeAdapter {
 
 	private Image createHTMLImage(String imageResourceName) {
-		ImageDescriptor imageDescriptor = HTMLEditorPluginImageHelper.getInstance().getImageDescriptor(imageResourceName);
-		if (imageDescriptor != null)
-			return imageDescriptor.createImage();
-		return null;
+		return HTMLEditorPluginImageHelper.getInstance().getImage(imageResourceName);
 	}
 
 	/**

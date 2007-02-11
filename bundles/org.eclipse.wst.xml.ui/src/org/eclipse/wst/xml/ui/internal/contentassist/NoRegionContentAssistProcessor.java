@@ -191,7 +191,7 @@ public class NoRegionContentAssistProcessor implements IContentAssistProcessor, 
 		// look @ previous doc partition type
 		// look @ page language
 		IContentAssistProcessor p = null;
-		IStructuredDocumentRegion sdRegion = ContentAssistUtils.getStructuredDocumentRegion(viewer, documentOffset);
+		IStructuredDocumentRegion sdRegion = ContentAssistUtils.getStructuredDocumentRegion((StructuredTextViewer) viewer, documentOffset);
 		if (sdRegion != null) {
 			String currentRegionType = sdRegion.getType();
 			// System.out.println("current region type is >> " +

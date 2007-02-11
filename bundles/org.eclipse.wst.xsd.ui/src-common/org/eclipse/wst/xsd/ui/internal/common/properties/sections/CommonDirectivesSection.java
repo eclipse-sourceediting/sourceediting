@@ -33,6 +33,7 @@ public abstract class CommonDirectivesSection extends AbstractSection
   Button wizardButton;
   StyledText errorText;
   Color red;
+  protected boolean isValidSchemaLocation = true;
 
   // TODO: common up code with XSDSelectIncludeFileWizard
   public void doHandleEvent(Event event)
@@ -42,7 +43,7 @@ public abstract class CommonDirectivesSection extends AbstractSection
     if (event.widget == schemaLocationText)
     {
         String errorMessage = ""; //$NON-NLS-1$
-        boolean isValidSchemaLocation = true;
+        isValidSchemaLocation = true;
         String xsdModelFile = schemaLocationText.getText();
         String namespace = ""; //$NON-NLS-1$
         XSDSchema externalSchema = null;

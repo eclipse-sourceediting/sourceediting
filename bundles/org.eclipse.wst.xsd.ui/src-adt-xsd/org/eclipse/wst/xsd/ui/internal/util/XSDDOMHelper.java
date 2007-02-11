@@ -325,7 +325,32 @@ public class XSDDOMHelper
 //    parent.replaceChild(newNode, sourceNode);
   }
 
- 
+  public static boolean hasOnlyWhitespace(Node node)
+  {
+    NodeList list = node.getChildNodes();
+    int length = list.getLength();
+    boolean hasOnlyWhitespace = true;
+    for (int i = 0; i < length; i++)
+    {
+      Node child = list.item(i);
+      if (child.getNodeType() != Node.TEXT_NODE)
+      {
+        hasOnlyWhitespace = false;
+        break;
+      }
+      else
+      {
+        String value = child.getNodeValue();
+        String trimmedValue = value.trim();
+        if (trimmedValue.length() != 0)
+        {
+          hasOnlyWhitespace = false;
+        }
+      }
+    }  
+    
+    return hasOnlyWhitespace;
+  }
 
   public static void removeNodeAndWhitespace(Node node)
   {

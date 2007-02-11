@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.StringTokenizer;
-
 import org.apache.xerces.dom.DocumentImpl;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -100,6 +99,11 @@ public class AddExtensionsComponentDialog extends SelectionDialog implements ISe
   public void setInitialCategorySelection(SpecificationForExtensionsSchema spec){
 	  currentExtCategory = spec;
   }
+  
+  protected IStructuredContentProvider getCategoryContentProvider()
+  {
+    return new CategoryContentProvider();
+  }
 
   protected Control createDialogArea(Composite container)
   {
@@ -120,7 +124,7 @@ public class AddExtensionsComponentDialog extends SelectionDialog implements ISe
     new Label(categoryComposite, SWT.NONE);
 
     categoryTableViewer = new TableViewer(categoryComposite, getTableStyle());
-    categoryTableViewer.setContentProvider(new CategoryContentProvider());
+    categoryTableViewer.setContentProvider(getCategoryContentProvider());
     categoryTableViewer.setLabelProvider(new CategoryLabelProvider());
     categoryTableViewer.setInput(fInput);
     categoryTableViewer.addSelectionChangedListener(this);
@@ -231,6 +235,11 @@ public class AddExtensionsComponentDialog extends SelectionDialog implements ISe
 		SpecificationForExtensionsSchema spec = 
 			(SpecificationForExtensionsSchema) categories[i].getData();
 		XSDSchema schema = getASISchemaModel(spec);
+		
+		if (schema == null)
+		{
+			continue;
+		}
 
 		List components = buildInput(schema);
 		specToComponentsList.put(spec, components);
@@ -444,9 +453,16 @@ public class AddExtensionsComponentDialog extends SelectionDialog implements ISe
 	  if (xsdSchema == null){
 		  MessageBox errDialog = new MessageBox(getShell(), SWT.ICON_ERROR);
 		  errDialog.setText(Messages._UI_ERROR_INVALID_CATEGORY);
-		  errDialog.setMessage(Messages._UI_ERROR_FILE_CANNOT_BE_PARSED
-				  + "\n" + Messages._UI_ERROR_VALIDATE_THE_FILE);  //$NON-NLS-1$
+		  // TODO (trung) I was forced to use a String in Messages to make the error clearer
+		  // When we are back to development phase, use another string: "Extension Category: "
+		  // not "Extension Categories:" + " " like we are using here
+		  errDialog.setMessage(Messages._UI_LABEL_EXTENSION_CATEGORIES + " " + spec.getDisplayName() //$NON-NLS-1$
+				  + "\n"   //$NON-NLS-1$
+				  + Messages._UI_ERROR_FILE_CANNOT_BE_PARSED
+				  + "\n" + Messages._UI_ERROR_VALIDATE_THE_FILE);   //$NON-NLS-1$
 		  errDialog.open();
+		  
+		  elementTableViewer.setInput(new ArrayList(0));
 		  return;
 	  }
 	  
@@ -534,7 +550,7 @@ public class AddExtensionsComponentDialog extends SelectionDialog implements ISe
 	
 	String currentValue = prefStore.getString(ExtensionsSchemasRegistry.USER_ADDED_EXT_SCHEMAS);
 	String specDesc = "  " + "\t" + schemaSpec.getDisplayName() + "\t"+
-		"\t" + schemaSpec.getNamespaceURI() + "\t" + schemaSpec.getLocation() + "\t" +
+		schemaSpec.getNamespaceURI() + "\t" + schemaSpec.getLocation() + "\t" +
 		schemaSpec.isDefautSchema() + "\t" + schemaSpec.getSourceHint() + "\t" +
 		schemaSpec.isFromCatalog();
 	currentValue += specDesc + "\n";
@@ -562,7 +578,7 @@ public class AddExtensionsComponentDialog extends SelectionDialog implements ISe
 	  if ( dName.equals(displayName ) )
 	  {
 		oneSpecDesc = "  " + "\t" + newSpec.getDisplayName() + "\t"+
-			"\t" + newSpec.getNamespaceURI() + "\t" + newSpec.getLocation() + "\t" +
+			newSpec.getNamespaceURI() + "\t" + newSpec.getLocation() + "\t" +
 			newSpec.isDefautSchema() + "\t" + newSpec.getSourceHint() + "\t" +
 			newSpec.isFromCatalog();		  
 	  }
@@ -613,7 +629,6 @@ static class CategoryContentProvider implements IStructuredContentProvider
       }
       catch (Exception e)
       {
-        e.printStackTrace();
       }
       return extensionsSchemaSpecs;
     }

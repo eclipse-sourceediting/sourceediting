@@ -30,7 +30,7 @@ public class TopLevelFieldEditPart extends BoxEditPart implements INamedEditPart
   {
     IField field = (IField)getModel();
     IType type = field.getType();
-    return (type != null && type.isComplexType());
+    return (type != null);
   }
   
   public TypeReferenceConnection createConnectionFigure()
@@ -38,7 +38,7 @@ public class TopLevelFieldEditPart extends BoxEditPart implements INamedEditPart
     TypeReferenceConnection connectionFigure = null;
     IField field = (IField)getModel();
     IType type = field.getType();
-    if (type != null && type.isComplexType())
+    if (type != null)
     {      
       AbstractGraphicalEditPart referenceTypePart = (AbstractGraphicalEditPart)getViewer().getEditPartRegistry().get(type);
       if (referenceTypePart != null)
