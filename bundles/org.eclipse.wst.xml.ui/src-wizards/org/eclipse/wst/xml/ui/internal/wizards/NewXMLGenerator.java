@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -114,19 +114,29 @@ public class NewXMLGenerator {
 		return cmDocument;
 	}
 
-
+	/**
+	 * @deprecated use createTemplateXMLDocument(IFile, String) instead
+	 */
 	public void createEmptyXMLDocument(IFile newFile) throws Exception {
-		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		String charSet = getUserPreferredCharset();
-
-		PrintWriter writer = new PrintWriter(new OutputStreamWriter(outputStream, charSet));
-		writer.println("<?xml version=\"1.0\" encoding=\"" + charSet + "\"?>"); //$NON-NLS-1$ //$NON-NLS-2$
-		writer.flush();
-		outputStream.close();
-
-		ByteArrayInputStream inputStream = new ByteArrayInputStream(outputStream.toByteArray());
-		newFile.setContents(inputStream, true, true, null);
-		inputStream.close();
+		String contents = "<?xml version=\"1.0\" encoding=\"" + charSet + "\"?>"; //$NON-NLS-1$ //$NON-NLS-2$
+		createTemplateXMLDocument(newFile, contents);
+	}
+	
+	void createTemplateXMLDocument(IFile newFile, String contents) throws Exception {
+		if (contents != null) {
+			String charSet = getUserPreferredCharset();
+			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+	
+			PrintWriter writer = new PrintWriter(new OutputStreamWriter(outputStream, charSet));
+			writer.println(contents);
+			writer.flush();
+			outputStream.close();
+	
+			ByteArrayInputStream inputStream = new ByteArrayInputStream(outputStream.toByteArray());
+			newFile.setContents(inputStream, true, true, null);
+			inputStream.close();
+		}
 	}
 
 	private String getUserPreferredCharset() {

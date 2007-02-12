@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2005 IBM Corporation and others. All rights reserved.   This
+ * Copyright (c) 2005, 2007 IBM Corporation and others. All rights reserved.   This
  * program and the accompanying materials are made available under the terms of
  * the Eclipse Public License v1.0 which accompanies this distribution, and is
  * available at http://www.eclipse.org/legal/epl-v10.html
@@ -22,6 +22,7 @@ public class XMLWizardsMessages extends NLS {
 	public static String _UI_DIALOG_NEW_TITLE;
 	public static String _UI_DIALOG_TITLE_INVALID_GRAMMAR;
 	public static String _UI_DIALOG_MESSAGE_INVALID_GRAMMAR;
+	public static String _UI_WIZARD_CREATE_NEW_TITLE;
 	public static String _UI_RADIO_XML_FROM_DTD;
 	public static String _UI_RADIO_XML_FROM_SCHEMA;
 	public static String _UI_RADIO_XML_FROM_SCRATCH;

@@ -14,6 +14,7 @@ package org.eclipse.wst.xml.ui.internal.preferences;
 
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.text.templates.Template;
 import org.eclipse.wst.sse.ui.internal.preferences.ui.ColorHelper;
 import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.eclipse.wst.xml.ui.internal.style.IStyleConstantsXML;
@@ -109,6 +110,17 @@ public class XMLUIPreferenceInitializer extends AbstractPreferenceInitializer {
 
 		styleValue = ColorHelper.getColorString(42, 0, 255) + NOBACKGROUNDBOLD;
 		store.setDefault(IStyleConstantsXML.ENTITY_REFERENCE, styleValue);
+		
+		// set default new xml file template to use in new file wizard
+		/*
+		 * Need to find template name that goes with default template id (name
+		 * may change for differnt language)
+		 */
+		String templateName = ""; //$NON-NLS-1$
+		Template template = XMLUIPlugin.getDefault().getTemplateStore().findTemplateById("org.eclipse.wst.xml.ui.internal.templates.xmldeclaration"); //$NON-NLS-1$
+		if (template != null)
+			templateName = template.getName();
+		store.setDefault(XMLUIPreferenceNames.NEW_FILE_TEMPLATE_NAME, templateName);
 	}
 
 }

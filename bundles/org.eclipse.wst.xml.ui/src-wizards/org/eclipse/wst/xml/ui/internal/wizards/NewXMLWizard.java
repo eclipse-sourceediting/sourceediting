@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -80,7 +80,11 @@ public class NewXMLWizard extends NewModelWizard {
 	protected static final String[] browseDTDFilterExtensions = {".dtd"}; //$NON-NLS-1$
 
 	protected NewFilePage newFilePage;
+	/**
+	 * @deprecated clients should not be allowed to change start page
+	 */
 	protected StartPage startPage;
+	private StartPage fCreateXMLFromWizardPage;
 	protected SelectGrammarFilePage selectGrammarFilePage;
 	protected SelectRootElementPage selectRootElementPage;
 
@@ -91,7 +95,7 @@ public class NewXMLWizard extends NewModelWizard {
 
 
 	public NewXMLWizard() {
-		setWindowTitle(XMLWizardsMessages._UI_WIZARD_CREATE_XML_HEADING);
+		setWindowTitle(XMLWizardsMessages._UI_WIZARD_CREATE_NEW_TITLE);
 		ImageDescriptor descriptor = XMLEditorPluginImageHelper.getInstance().getImageDescriptor(XMLEditorPluginImages.IMG_WIZBAN_GENERATEXML);
 		setDefaultPageImageDescriptor(descriptor);
 		generator = new NewXMLGenerator();
@@ -127,13 +131,23 @@ public class NewXMLWizard extends NewModelWizard {
 		}
 	}
 
-
 	public void addPages() {
 		String grammarURI = generator.getGrammarURI();
+		
+		// new file page
+		newFilePage = new NewFilePage(fSelection);
+		newFilePage.setTitle(XMLWizardsMessages._UI_WIZARD_CREATE_XML_FILE_HEADING);
+		newFilePage.setDescription(XMLWizardsMessages._UI_WIZARD_CREATE_XML_FILE_EXPL);
+		newFilePage.defaultName = (grammarURI != null) ? URIHelper.removeFileExtension(URIHelper.getLastSegment(grammarURI)) : "NewFile"; //$NON-NLS-1$
+		Preferences preference = XMLCorePlugin.getDefault().getPluginPreferences();
+		String ext = preference.getString(XMLCorePreferenceNames.DEFAULT_EXTENSION);
+		newFilePage.defaultFileExtension = "." + ext; //$NON-NLS-1$
+		newFilePage.filterExtensions = filePageFilterExtensions;
+		addPage(newFilePage);
 
 		if (grammarURI == null) {
-			// start page
-			startPage = new StartPage("StartPage", createFromRadioButtonLabel) //$NON-NLS-1$
+			// create xml from page
+			fCreateXMLFromWizardPage = new StartPage("StartPage", createFromRadioButtonLabel) //$NON-NLS-1$
 			{
 				public void createControl(Composite parent) {
 					super.createControl(parent);
@@ -145,28 +159,17 @@ public class NewXMLWizard extends NewModelWizard {
 					getRadioButtonAtIndex(getCreateMode()).setFocus();
 
 					// Set the help context for each button
-					PlatformUI.getWorkbench().getHelpSystem().setHelp(startPage.getRadioButtonAtIndex(0), IXMLWizardHelpContextIds.XML_NEWWIZARD_CREATEXML1_HELPID);
-					PlatformUI.getWorkbench().getHelpSystem().setHelp(startPage.getRadioButtonAtIndex(1), IXMLWizardHelpContextIds.XML_NEWWIZARD_CREATEXML2_HELPID);
-					PlatformUI.getWorkbench().getHelpSystem().setHelp(startPage.getRadioButtonAtIndex(2), IXMLWizardHelpContextIds.XML_NEWWIZARD_CREATEXML3_HELPID);
+					PlatformUI.getWorkbench().getHelpSystem().setHelp(fCreateXMLFromWizardPage.getRadioButtonAtIndex(0), IXMLWizardHelpContextIds.XML_NEWWIZARD_CREATEXML1_HELPID);
+					PlatformUI.getWorkbench().getHelpSystem().setHelp(fCreateXMLFromWizardPage.getRadioButtonAtIndex(1), IXMLWizardHelpContextIds.XML_NEWWIZARD_CREATEXML2_HELPID);
+					PlatformUI.getWorkbench().getHelpSystem().setHelp(fCreateXMLFromWizardPage.getRadioButtonAtIndex(2), IXMLWizardHelpContextIds.XML_NEWWIZARD_CREATEXML3_HELPID);
 				}
 			};
 
 
-			startPage.setTitle(XMLWizardsMessages._UI_WIZARD_CREATE_XML_HEADING);
-			startPage.setDescription(XMLWizardsMessages._UI_WIZARD_CREATE_XML_EXPL);
-			addPage(startPage);
+			fCreateXMLFromWizardPage.setTitle(XMLWizardsMessages._UI_WIZARD_CREATE_XML_HEADING);
+			fCreateXMLFromWizardPage.setDescription(XMLWizardsMessages._UI_WIZARD_CREATE_XML_EXPL);
+			addPage(fCreateXMLFromWizardPage);
 		}
-
-		// new file page
-		newFilePage = new NewFilePage(fSelection);
-		newFilePage.setTitle(XMLWizardsMessages._UI_WIZARD_CREATE_XML_FILE_HEADING);
-		newFilePage.setDescription(XMLWizardsMessages._UI_WIZARD_CREATE_XML_FILE_EXPL);
-		newFilePage.defaultName = (grammarURI != null) ? URIHelper.removeFileExtension(URIHelper.getLastSegment(grammarURI)) : "NewFile"; //$NON-NLS-1$
-		Preferences preference = XMLCorePlugin.getDefault().getPluginPreferences();
-		String ext = preference.getString(XMLCorePreferenceNames.DEFAULT_EXTENSION);
-		newFilePage.defaultFileExtension = "." + ext; //$NON-NLS-1$
-		newFilePage.filterExtensions = filePageFilterExtensions;
-		addPage(newFilePage);
 
 		// selectGrammarFilePage
 		selectGrammarFilePage = new SelectGrammarFilePage();
@@ -210,8 +213,8 @@ public class NewXMLWizard extends NewModelWizard {
 				result = CREATE_FROM_XSD;
 			}
 		}
-		else if (startPage != null) {
-			int selectedIndex = startPage.getSelectedRadioButtonIndex();
+		else if (fCreateXMLFromWizardPage != null) {
+			int selectedIndex = fCreateXMLFromWizardPage.getSelectedRadioButtonIndex();
 			if (selectedIndex != -1) {
 				result = selectedIndex;
 			}
@@ -226,6 +229,12 @@ public class NewXMLWizard extends NewModelWizard {
 			nextPage = newFilePage;
 		}
 		else if (currentPage == newFilePage) {
+			if (generator.getGrammarURI() == null)
+				nextPage = fCreateXMLFromWizardPage;
+			else
+				nextPage = selectRootElementPage;
+		}
+		else if (currentPage == fCreateXMLFromWizardPage) {
 			if (getCreateMode() == CREATE_FROM_SCRATCH) {
 				nextPage = fNewXMLTemplatesWizardPage;
 			}
@@ -247,8 +256,8 @@ public class NewXMLWizard extends NewModelWizard {
 		boolean result = false;
 
 		IWizardPage currentPage = getContainer().getCurrentPage();
-
-		if (((startPage != null) && (startPage.getSelectedRadioButtonIndex() == CREATE_FROM_SCRATCH) && (currentPage == fNewXMLTemplatesWizardPage)) || (currentPage == selectRootElementPage)) {
+		// can finish on: new file page, create from & template page if creating from scratch, select root element page
+		if ((currentPage == newFilePage && generator.getGrammarURI() == null) || (fCreateXMLFromWizardPage != null && fCreateXMLFromWizardPage.getSelectedRadioButtonIndex() == CREATE_FROM_SCRATCH) || (currentPage == selectRootElementPage)) {
 			result = currentPage.isPageComplete();
 		}
 		return result;
@@ -256,8 +265,10 @@ public class NewXMLWizard extends NewModelWizard {
 
 
 	public boolean performFinish() {
-		boolean result = true;
-		super.performFinish();
+		boolean result = super.performFinish();
+		// save user options for next use
+		fNewXMLTemplatesWizardPage.saveLastSavedPreferences();
+		
 		String fileName = null;
 		try {
 
@@ -282,7 +293,9 @@ public class NewXMLWizard extends NewModelWizard {
 					generator.createXMLDocument(newFile, xmlFileName);
 				}
 				else {
-					generator.createEmptyXMLDocument(newFile);
+					// put template contents into file
+					String templateString = fNewXMLTemplatesWizardPage.getTemplateString();
+					generator.createTemplateXMLDocument(newFile, templateString);
 				}
 
 				newFile.refreshLocal(1, null);

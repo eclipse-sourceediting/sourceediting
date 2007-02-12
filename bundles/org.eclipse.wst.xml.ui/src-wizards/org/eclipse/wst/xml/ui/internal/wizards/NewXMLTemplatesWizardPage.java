@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006 IBM Corporation and others.
+ * Copyright (c) 2006, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -209,7 +209,7 @@ public class NewXMLTemplatesWizardPage extends WizardPage {
 		layout.numColumns = 2;
 		parent.setLayout(layout);
 
-		// create checkbox for user to use DTD Template
+		// create checkbox for user to use XML Template
 		fUseTemplateButton = new Button(parent, SWT.CHECK);
 		fUseTemplateButton.setText(XMLWizardsMessages.NewXMLTemplatesWizardPage_4);
 		GridData data = new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1);
@@ -421,7 +421,7 @@ public class NewXMLTemplatesWizardPage extends WizardPage {
 				templateString = buffer.getString();
 			}
 			catch (Exception e) {
-				Logger.log(Logger.WARNING_DEBUG, "Could not create template for new dtd", e); //$NON-NLS-1$
+				Logger.log(Logger.WARNING_DEBUG, "Could not create template for new xml", e); //$NON-NLS-1$
 			}
 		}
 
@@ -436,7 +436,7 @@ public class NewXMLTemplatesWizardPage extends WizardPage {
 	}
 
 	/**
-	 * Load the last template name used in New DTD File wizard.
+	 * Load the last template name used in New XML File wizard.
 	 */
 	private void loadLastSavedPreferences() {
 		String templateName = XMLUIPlugin.getDefault().getPreferenceStore().getString(XMLUIPreferenceNames.NEW_FILE_TEMPLATE_NAME);
@@ -452,7 +452,7 @@ public class NewXMLTemplatesWizardPage extends WizardPage {
 	}
 
 	/**
-	 * Save template name used for next call to New DTD File wizard.
+	 * Save template name used for next call to New XML File wizard.
 	 */
 	void saveLastSavedPreferences() {
 		String templateName = ""; //$NON-NLS-1$
