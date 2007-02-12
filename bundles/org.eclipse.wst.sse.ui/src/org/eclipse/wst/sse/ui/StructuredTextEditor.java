@@ -663,14 +663,6 @@ public class StructuredTextEditor extends TextEditor {
 				/** Length of the selection */
 				private int fLength;
 
-
-				/**
-				 * Creates an empty text selection.
-				 */
-				private InternalTextSelection() {
-					this(null, -1, -1);
-				}
-
 				/**
 				 * Creates a text selection for the given range. This
 				 * selection object describes generically a text range and is
@@ -2612,6 +2604,15 @@ public class StructuredTextEditor extends TextEditor {
 			setDocumentProvider(documentProvider);
 		}
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.ui.texteditor.AbstractTextEditor#initializeDragAndDrop(org.eclipse.jface.text.source.ISourceViewer)
+	 */
+	protected void initializeDragAndDrop(ISourceViewer viewer) {
+		IPreferenceStore store= getPreferenceStore();
+		if (store != null && store.getBoolean(PREFERENCE_TEXT_DRAG_AND_DROP_ENABLED))
+			initializeDrop(viewer);
+	}
 
 	protected void initializeDrop(ITextViewer textViewer) {
 		int operations = DND.DROP_COPY | DND.DROP_MOVE;
@@ -2703,7 +2704,10 @@ public class StructuredTextEditor extends TextEditor {
 		getSourceViewerDecorationSupport(sourceViewer);
 		fMouseTracker = new MouseTracker();
 		fMouseTracker.start(sourceViewer.getTextWidget());
-		initializeDrop(sourceViewer);
+	}
+	
+	protected void installTextDragAndDrop(ISourceViewer viewer) {
+		// do nothing
 	}
 
 	/*
@@ -3026,6 +3030,10 @@ public class StructuredTextEditor extends TextEditor {
 		// many are created
 		fBusyTimer = new Timer(true);
 		fBusyTimer.schedule(new TimeOutExpired(), BUSY_STATE_DELAY);
+	}
+	
+	protected void uninstallTextDragAndDrop(ISourceViewer viewer) {
+		// do nothing
 	}
 
 	/**
