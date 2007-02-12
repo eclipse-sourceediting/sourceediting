@@ -7,7 +7,10 @@ Bundle-ClassPath: validatexmltests.jar
 Bundle-Activator: org.eclipse.wst.xml.validation.tests.internal.XMLValidatorTestsPlugin
 Bundle-Vendor: %Bundle-Vendor.0
 Bundle-Localization: plugin
-Export-Package: org.eclipse.wst.xml.validation.tests.internal;x-internal:=true
+Export-Package: org.eclipse.wst.xml.core.internal.validation;x-internal:=true,
+ org.eclipse.wst.xml.core.internal.validation.eclipse;x-internal:=true,
+ org.eclipse.wst.xml.core.internal.validation.errorcustomization;x-internal:=true,
+ org.eclipse.wst.xml.validation.tests.internal;x-internal:=true
 Require-Bundle: org.junit,
  org.eclipse.core.runtime,
  org.eclipse.wst.xml.core,

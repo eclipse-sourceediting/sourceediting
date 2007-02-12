@@ -7,7 +7,8 @@ Bundle-ClassPath: ssemodelxmltests.jar
 Bundle-Activator: org.eclipse.wst.xml.core.tests.SSEModelXMLTestsPlugin
 Bundle-Vendor: %Bundle-Vendor.0
 Bundle-Localization: plugin
-Export-Package: org.eclipse.wst.xml.core.tests,
+Export-Package: org.eclipse.wst.xml.core.internal.document.test;x-internal:=true,
+ org.eclipse.wst.xml.core.tests,
  org.eclipse.wst.xml.core.tests.contentmodel,
  org.eclipse.wst.xml.core.tests.document,
  org.eclipse.wst.xml.core.tests.dom,

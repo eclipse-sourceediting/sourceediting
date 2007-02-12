@@ -7,7 +7,8 @@ Bundle-ClassPath: xmluitests.jar
 Bundle-Activator: org.eclipse.wst.xml.ui.tests.XMLUITestsPlugin
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
-Export-Package: org.eclipse.wst.xml.ui.tests,
+Export-Package: org.eclipse.wst.xml.ui.internal.validation;x-internal:=true,
+ org.eclipse.wst.xml.ui.tests,
  org.eclipse.wst.xml.ui.tests.breakpoints,
  org.eclipse.wst.xml.ui.tests.viewer
 Require-Bundle: org.eclipse.ui,
