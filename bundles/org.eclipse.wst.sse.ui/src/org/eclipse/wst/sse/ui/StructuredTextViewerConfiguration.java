@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,6 +13,7 @@
 package org.eclipse.wst.sse.ui;
 
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.jface.text.DefaultInformationControl;
 import org.eclipse.jface.text.IInformationControl;
 import org.eclipse.jface.text.IInformationControlCreator;
@@ -31,6 +32,8 @@ import org.eclipse.jface.text.source.IAnnotationHover;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
@@ -41,6 +44,7 @@ import org.eclipse.wst.sse.ui.internal.StructuredTextAnnotationHover;
 import org.eclipse.wst.sse.ui.internal.contentassist.StructuredContentAssistant;
 import org.eclipse.wst.sse.ui.internal.derived.HTMLTextPresenter;
 import org.eclipse.wst.sse.ui.internal.hyperlink.HighlighterHyperlinkPresenter;
+import org.eclipse.wst.sse.ui.internal.preferences.EditorPreferenceNames;
 import org.eclipse.wst.sse.ui.internal.provisional.preferences.CommonEditorPreferenceNames;
 import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
 import org.eclipse.wst.sse.ui.internal.reconcile.StructuredRegionProcessor;
@@ -48,6 +52,7 @@ import org.eclipse.wst.sse.ui.internal.taginfo.AnnotationHoverProcessor;
 import org.eclipse.wst.sse.ui.internal.taginfo.BestMatchHover;
 import org.eclipse.wst.sse.ui.internal.taginfo.ProblemAnnotationHoverProcessor;
 import org.eclipse.wst.sse.ui.internal.taginfo.TextHoverManager;
+import org.eclipse.wst.sse.ui.internal.util.EditorUtility;
 
 
 /**
@@ -118,6 +123,17 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 		 * release it when done with it (during viewer.unconfigure)
 		 */
 		return new StructuredTextAnnotationHover();
+	}
+
+	/**
+	 * Get color for the preference key. Assumes fPreferenceStore is not null.
+	 * 
+	 * @param key
+	 * @return Color for preference key or null if none found
+	 */
+	private Color getColor(String key) {
+		RGB rgb = PreferenceConverter.getColor(fPreferenceStore, key);
+		return EditorUtility.getColor(rgb);
 	}
 
 	/**
@@ -194,10 +210,29 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 			// content assistant configurations
 			fContentAssistant.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
 			fContentAssistant.enableAutoActivation(true);
-			fContentAssistant.setAutoActivationDelay(500);
 			fContentAssistant.setProposalPopupOrientation(IContentAssistant.PROPOSAL_OVERLAY);
 			fContentAssistant.setContextInformationPopupOrientation(IContentAssistant.CONTEXT_INFO_ABOVE);
 			fContentAssistant.setInformationControlCreator(getInformationControlCreator(sourceViewer));
+
+			// set content assist preferences
+			if (fPreferenceStore != null) {
+				int delay = fPreferenceStore.getInt(EditorPreferenceNames.CODEASSIST_AUTOACTIVATION_DELAY);
+				fContentAssistant.setAutoActivationDelay(delay);
+
+				Color color = getColor(EditorPreferenceNames.CODEASSIST_PROPOSALS_BACKGROUND);
+				fContentAssistant.setProposalSelectorBackground(color);
+
+				color = getColor(EditorPreferenceNames.CODEASSIST_PROPOSALS_FOREGROUND);
+				fContentAssistant.setProposalSelectorForeground(color);
+
+				color = getColor(EditorPreferenceNames.CODEASSIST_PARAMETERS_BACKGROUND);
+				fContentAssistant.setContextInformationPopupBackground(color);
+				fContentAssistant.setContextSelectorBackground(color);
+
+				color = getColor(EditorPreferenceNames.CODEASSIST_PARAMETERS_FOREGROUND);
+				fContentAssistant.setContextInformationPopupForeground(color);
+				fContentAssistant.setContextSelectorForeground(color);
+			}
 
 			// add content assist processors for each partition type
 			String[] types = getConfiguredContentTypes(sourceViewer);

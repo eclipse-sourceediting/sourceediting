@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -63,7 +63,7 @@ public class StructuredTextEditorPreferencePage extends PreferencePage implement
 	private ColorEditor fAppearanceColorEditor;
 	private List fAppearanceColorList;
 
-	private final String[][] fAppearanceColorListModel = new String[][]{{SSEUIMessages.StructuredTextEditorPreferencePage_2, EditorPreferenceNames.MATCHING_BRACKETS_COLOR}}; //$NON-NLS-1$
+	private final String[][] fAppearanceColorListModel = new String[][]{{SSEUIMessages.StructuredTextEditorPreferencePage_2, EditorPreferenceNames.MATCHING_BRACKETS_COLOR}, {SSEUIMessages.StructuredTextEditorPreferencePage_41, EditorPreferenceNames.CODEASSIST_PROPOSALS_BACKGROUND}, {SSEUIMessages.StructuredTextEditorPreferencePage_42, EditorPreferenceNames.CODEASSIST_PROPOSALS_FOREGROUND}, {SSEUIMessages.StructuredTextEditorPreferencePage_43, EditorPreferenceNames.CODEASSIST_PARAMETERS_BACKGROUND}, {SSEUIMessages.StructuredTextEditorPreferencePage_44, EditorPreferenceNames.CODEASSIST_PARAMETERS_FOREGROUND}}; //$NON-NLS-1$
 	private Map fCheckBoxes = new HashMap();
 	private SelectionListener fCheckBoxListener = new SelectionListener() {
 		public void widgetDefaultSelected(SelectionEvent e) {
@@ -183,7 +183,7 @@ public class StructuredTextEditorPreferencePage extends PreferencePage implement
 
 		fAppearanceColorList = new List(editorComposite, SWT.SINGLE | SWT.V_SCROLL | SWT.BORDER);
 		gd = new GridData(GridData.VERTICAL_ALIGN_BEGINNING | GridData.FILL_HORIZONTAL);
-		gd.heightHint = convertHeightInCharsToPixels(5);
+		gd.heightHint = convertHeightInCharsToPixels(7);
 		fAppearanceColorList.setLayoutData(gd);
 
 		Composite stylesComposite = new Composite(editorComposite, SWT.NONE);
@@ -293,6 +293,11 @@ public class StructuredTextEditorPreferencePage extends PreferencePage implement
 		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, EditorPreferenceNames.SHOW_UNKNOWN_CONTENT_TYPE_MSG));
 
 		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, IStructuredTextFoldingProvider.FOLDING_ENABLED));
+		
+		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING, EditorPreferenceNames.CODEASSIST_PROPOSALS_BACKGROUND));
+		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING, EditorPreferenceNames.CODEASSIST_PROPOSALS_FOREGROUND));
+		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING, EditorPreferenceNames.CODEASSIST_PARAMETERS_BACKGROUND));
+		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING, EditorPreferenceNames.CODEASSIST_PARAMETERS_FOREGROUND));
 
 		OverlayPreferenceStore.OverlayKey[] keys = new OverlayPreferenceStore.OverlayKey[overlayKeys.size()];
 		overlayKeys.toArray(keys);

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -41,6 +41,7 @@ import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DefaultInformationControl;
 import org.eclipse.jface.text.DocumentEvent;
@@ -60,6 +61,7 @@ import org.eclipse.jface.text.ITextViewerExtension4;
 import org.eclipse.jface.text.ITextViewerExtension5;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.text.TextUtilities;
+import org.eclipse.jface.text.contentassist.ContentAssistant;
 import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.information.IInformationProvider;
 import org.eclipse.jface.text.information.IInformationProviderExtension2;
@@ -91,8 +93,10 @@ import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseMoveListener;
 import org.eclipse.swt.events.MouseTrackAdapter;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -183,6 +187,7 @@ import org.eclipse.wst.sse.ui.internal.provisional.extensions.breakpoint.NullSou
 import org.eclipse.wst.sse.ui.internal.selection.SelectionHistory;
 import org.eclipse.wst.sse.ui.internal.text.DocumentRegionEdgeMatcher;
 import org.eclipse.wst.sse.ui.internal.util.Assert;
+import org.eclipse.wst.sse.ui.internal.util.EditorUtility;
 import org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration;
 import org.eclipse.wst.sse.ui.views.properties.PropertySheetConfiguration;
 
@@ -2565,6 +2570,77 @@ public class StructuredTextEditor extends TextEditor {
 			}
 			return;
 		}
+		
+		// update content assist preferences
+		if (EditorPreferenceNames.CODEASSIST_PROPOSALS_BACKGROUND.equals(property)) {
+			ISourceViewer sourceViewer = getSourceViewer();
+			if (sourceViewer != null) {
+				SourceViewerConfiguration configuration = getSourceViewerConfiguration();
+				if (configuration != null) {
+					IContentAssistant contentAssistant = configuration.getContentAssistant(sourceViewer);
+					if (contentAssistant instanceof ContentAssistant) {
+						ContentAssistant assistant = (ContentAssistant)contentAssistant;
+						RGB rgb = PreferenceConverter.getColor(getPreferenceStore(), EditorPreferenceNames.CODEASSIST_PROPOSALS_BACKGROUND);
+						Color color = EditorUtility.getColor(rgb);
+						assistant.setProposalSelectorBackground(color);
+					}
+				}
+			}
+		}
+		
+		// update content assist preferences
+		if (EditorPreferenceNames.CODEASSIST_PROPOSALS_FOREGROUND.equals(property)) {
+			ISourceViewer sourceViewer = getSourceViewer();
+			if (sourceViewer != null) {
+				SourceViewerConfiguration configuration = getSourceViewerConfiguration();
+				if (configuration != null) {
+					IContentAssistant contentAssistant = configuration.getContentAssistant(sourceViewer);
+					if (contentAssistant instanceof ContentAssistant) {
+						ContentAssistant assistant = (ContentAssistant)contentAssistant;
+						RGB rgb = PreferenceConverter.getColor(getPreferenceStore(), EditorPreferenceNames.CODEASSIST_PROPOSALS_FOREGROUND);
+						Color color = EditorUtility.getColor(rgb);
+						assistant.setProposalSelectorForeground(color);
+					}
+				}
+			}
+		}
+		
+		// update content assist preferences
+		if (EditorPreferenceNames.CODEASSIST_PARAMETERS_BACKGROUND.equals(property)) {
+			ISourceViewer sourceViewer = getSourceViewer();
+			if (sourceViewer != null) {
+				SourceViewerConfiguration configuration = getSourceViewerConfiguration();
+				if (configuration != null) {
+					IContentAssistant contentAssistant = configuration.getContentAssistant(sourceViewer);
+					if (contentAssistant instanceof ContentAssistant) {
+						ContentAssistant assistant = (ContentAssistant)contentAssistant;
+						RGB rgb = PreferenceConverter.getColor(getPreferenceStore(), EditorPreferenceNames.CODEASSIST_PARAMETERS_BACKGROUND);
+						Color color = EditorUtility.getColor(rgb);
+						assistant.setContextInformationPopupBackground(color);
+						assistant.setContextSelectorBackground(color);
+					}
+				}
+			}
+		}
+		
+		// update content assist preferences
+		if (EditorPreferenceNames.CODEASSIST_PARAMETERS_FOREGROUND.equals(property)) {
+			ISourceViewer sourceViewer = getSourceViewer();
+			if (sourceViewer != null) {
+				SourceViewerConfiguration configuration = getSourceViewerConfiguration();
+				if (configuration != null) {
+					IContentAssistant contentAssistant = configuration.getContentAssistant(sourceViewer);
+					if (contentAssistant instanceof ContentAssistant) {
+						ContentAssistant assistant = (ContentAssistant)contentAssistant;
+						RGB rgb = PreferenceConverter.getColor(getPreferenceStore(), EditorPreferenceNames.CODEASSIST_PARAMETERS_FOREGROUND);
+						Color color = EditorUtility.getColor(rgb);
+						assistant.setContextInformationPopupForeground(color);
+						assistant.setContextSelectorForeground(color);
+					}
+				}
+			}
+		}
+		
 		super.handlePreferenceStoreChanged(event);
 	}
 
