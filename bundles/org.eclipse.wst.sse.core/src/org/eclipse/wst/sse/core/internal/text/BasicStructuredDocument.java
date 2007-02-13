@@ -40,6 +40,7 @@ import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.jface.text.IDocumentPartitionerExtension;
 import org.eclipse.jface.text.IDocumentPartitionerExtension2;
+import org.eclipse.jface.text.IDocumentPartitionerExtension3;
 import org.eclipse.jface.text.IDocumentPartitioningListener;
 import org.eclipse.jface.text.IDocumentPartitioningListenerExtension;
 import org.eclipse.jface.text.IDocumentPartitioningListenerExtension2;
@@ -457,7 +458,8 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 						((IDocumentListener) holdListeners[i]).documentChanged(NULL_DOCUMENT_EVENT);
 					}
 					else {
-						fDocumentEvent.fModificationStamp = getModificationStamp();
+						// disabled for pre-2.0M5 specific assembly
+//						fDocumentEvent.fModificationStamp = getModificationStamp();
 						((IDocumentListener) holdListeners[i]).documentChanged(fDocumentEvent);
 					}
 				}
@@ -2748,7 +2750,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	 */
 	final protected DocumentRewriteSession internalStartRewriteSession(DocumentRewriteSessionType sessionType) throws IllegalStateException {
 		if (getActiveRewriteSession() != null)
-			throw new IllegalStateException();
+			throw new IllegalStateException("already in a rewrite session");
 
 		DocumentRewriteSession session = new StructuredDocumentRewriteSession(sessionType);
 		DocumentRewriteSessionEvent event = new DocumentRewriteSessionEvent(this, session, DocumentRewriteSessionEvent.SESSION_START);
@@ -2760,6 +2762,8 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 			extension.startRewriteSession(session);
 		}
 
+		startRewriteSessionOnPartitioners(session);
+
 		if (DocumentRewriteSessionType.SEQUENTIAL == sessionType)
 			startSequentialRewrite(false);
 		else if (DocumentRewriteSessionType.STRICTLY_SEQUENTIAL == sessionType)
@@ -2767,6 +2771,25 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 
 		fActiveRewriteSession = session;
 		return session;
+	}
+
+	/**
+	 * Starts the given rewrite session.
+	 *
+	 * @param session the rewrite session
+	 * @since 2.0
+	 */
+	final void startRewriteSessionOnPartitioners(DocumentRewriteSession session) {
+		if (fDocumentPartitioners != null) {
+			Iterator e= fDocumentPartitioners.values().iterator();
+			while (e.hasNext()) {
+				Object partitioner= e.next();
+				if (partitioner instanceof IDocumentPartitionerExtension3) {
+					IDocumentPartitionerExtension3 extension= (IDocumentPartitionerExtension3) partitioner;
+					extension.startRewriteSession(session);
+				}
+			}
+		}
 	}
 
 
@@ -2787,6 +2810,8 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 			if (DocumentRewriteSessionType.SEQUENTIAL == sessionType || DocumentRewriteSessionType.STRICTLY_SEQUENTIAL == sessionType)
 				stopSequentialRewrite();
 
+			stopRewriteSessionOnPartitioners(session);
+
 			ILineTracker tracker = getTracker();
 			if (tracker instanceof ILineTrackerExtension) {
 				ILineTrackerExtension extension = (ILineTrackerExtension) tracker;
@@ -2796,6 +2821,30 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 			DocumentRewriteSessionEvent event = new DocumentRewriteSessionEvent(this, session, DocumentRewriteSessionEvent.SESSION_STOP);
 			fireDocumentRewriteSessionEvent(event);
 			fActiveRewriteSession = null;
+		}
+	}
+
+	/**
+	 * Stops the given rewrite session.
+	 *
+	 * @param session the rewrite session
+	 * @since 2.0
+	 */
+	final void stopRewriteSessionOnPartitioners(DocumentRewriteSession session) {
+		if (fDocumentPartitioners != null) {
+			DocumentPartitioningChangedEvent event= new DocumentPartitioningChangedEvent(this);
+			Iterator e= fDocumentPartitioners.keySet().iterator();
+			while (e.hasNext()) {
+				String partitioning= (String) e.next();
+				IDocumentPartitioner partitioner= (IDocumentPartitioner) fDocumentPartitioners.get(partitioning);
+				if (partitioner instanceof IDocumentPartitionerExtension3) {
+					IDocumentPartitionerExtension3 extension= (IDocumentPartitionerExtension3) partitioner;
+					extension.stopRewriteSession(session);
+					event.setPartitionChange(partitioning, 0, getLength());
+				}
+			}
+			if (!event.isEmpty())
+				fireDocumentPartitioningChanged(event);
 		}
 	}
 

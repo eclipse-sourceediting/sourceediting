@@ -2685,8 +2685,9 @@ public class StructuredTextEditor extends TextEditor {
 	 * @see org.eclipse.ui.texteditor.AbstractTextEditor#initializeDragAndDrop(org.eclipse.jface.text.source.ISourceViewer)
 	 */
 	protected void initializeDragAndDrop(ISourceViewer viewer) {
-		IPreferenceStore store= getPreferenceStore();
-		if (store != null && store.getBoolean(PREFERENCE_TEXT_DRAG_AND_DROP_ENABLED))
+		// disabled for pre-2.0M5 specific assembly
+//		IPreferenceStore store= getPreferenceStore();
+//		if (store != null && store.getBoolean(PREFERENCE_TEXT_DRAG_AND_DROP_ENABLED))
 			initializeDrop(viewer);
 	}
 
