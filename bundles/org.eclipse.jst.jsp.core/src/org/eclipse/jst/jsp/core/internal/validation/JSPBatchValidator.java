@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006 IBM Corporation and others.
+ * Copyright (c) 2006, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,7 +17,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -98,49 +97,6 @@ public final class JSPBatchValidator implements IValidatorJob, IExecutableExtens
 				}
 			}
 			return true;
-		}
-	}
-
-	class LocalizedMessage extends Message {
-
-		private String _message = null;
-
-		public LocalizedMessage(int severity, String messageText) {
-			this(severity, messageText, null);
-		}
-
-		public LocalizedMessage(int severity, String messageText, IResource targetObject) {
-			this(severity, messageText, (Object) targetObject);
-		}
-
-		public LocalizedMessage(int severity, String messageText, Object targetObject) {
-			super(null, severity, null);
-			setLocalizedMessage(messageText);
-			setTargetObject(targetObject);
-		}
-
-		private String getLocalizedText() {
-			return _message;
-		}
-
-		public String getText() {
-			return getLocalizedText();
-		}
-
-		public String getText(ClassLoader cl) {
-			return getLocalizedText();
-		}
-
-		public String getText(Locale l) {
-			return getLocalizedText();
-		}
-
-		public String getText(Locale l, ClassLoader cl) {
-			return getLocalizedText();
-		}
-
-		public void setLocalizedMessage(String message) {
-			_message = message;
 		}
 	}
 

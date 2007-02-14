@@ -258,26 +258,6 @@
 				objectClass="org.eclipse.core.resources.IFile"
 				nameFilter="*.wml">
 			</filter>
-			<filter
-				objectClass="org.eclipse.core.resources.IFile"
-				nameFilter="*.jsp">
-			</filter>
-			<filter
-				objectClass="org.eclipse.core.resources.IFile"
-				nameFilter="*.jspf">
-			</filter>
-			<filter
-				objectClass="org.eclipse.core.resources.IFile"
-				nameFilter="*.jsf">
-			</filter>
-			<filter
-				objectClass="org.eclipse.core.resources.IFile"
-				nameFilter="*.jsv">
-			</filter>
-			<filter
-				objectClass="org.eclipse.core.resources.IFile"
-				nameFilter="*.jtpl">
-			</filter>
 			
 			<projectNature id=""/>
 			<enablement></enablement>

@@ -180,6 +180,49 @@
 		</validator>
 	</extension>
 	
+	<extension
+		id="JSPContentValidator"
+		name="%JSP_Content_Validator.name"
+		point="org.eclipse.wst.validation.validator">
+		<validator>
+			<projectNature id="org.eclipse.jdt.core.javanature" />
+			<filter
+				objectClass="org.eclipse.core.resources.IFile"
+				nameFilter="*.jsp">
+			</filter>
+			<filter
+				objectClass="org.eclipse.core.resources.IFile"
+				nameFilter="*.jspf">
+			</filter>
+			<filter
+				objectClass="org.eclipse.core.resources.IFile"
+				nameFilter="*.jsf">
+			</filter>
+			<filter
+				objectClass="org.eclipse.core.resources.IFile"
+				nameFilter="*.jsv">
+			</filter>
+			<filter
+				objectClass="org.eclipse.core.resources.IFile"
+				nameFilter="*.jtpl">
+			</filter>
+
+			<enablement />
+			
+			<helper
+				class="org.eclipse.wst.validation.internal.operations.WorkbenchContext">
+			</helper>
+		
+		<run
+             async="true"
+             fullBuild="true"
+             incremental="true"
+             enabled="true"
+			 class="org.eclipse.jst.jsp.core.internal.validation.JSPContentValidator">
+         </run>
+		</validator>
+	</extension>
+	
     <extension
        point="org.eclipse.jst.jsp.core.elTranslator">
        <elTranslator
