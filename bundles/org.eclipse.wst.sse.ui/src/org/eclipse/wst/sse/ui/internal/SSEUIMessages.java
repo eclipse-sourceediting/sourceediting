@@ -315,6 +315,7 @@ public class SSEUIMessages extends NLS {
 	public static String OffsetStatusLineContributionItem_17;
 	public static String OffsetStatusLineContributionItem_18;
 	public static String OffsetStatusLineContributionItem_19;
+	public static String OffsetStatusLineContributionItem_20;
 
 	/*
 	 * *****Below are possibly unused strings that may be removed *****

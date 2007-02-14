@@ -257,7 +257,7 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 	public String toString() {
 		StringBuffer debugString = new StringBuffer("ValidatorStep: "); //$NON-NLS-1$
 		if (fValidator != null)
-			debugString.append(fValidator.getClass().toString());
+			debugString.append(fValidator.toString());
 		return debugString.toString();
 	}
 	
