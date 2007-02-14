@@ -38,6 +38,7 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.wst.html.core.internal.document.HTMLDocumentTypeConstants;
 import org.eclipse.wst.html.core.internal.validate.HTMLValidationAdapterFactory;
+import org.eclipse.wst.html.ui.internal.Logger;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.FileBufferModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
@@ -131,7 +132,12 @@ public class HTMLValidator implements IValidatorJob, ISourceValidator, IExecutab
 
 		IStructuredModel model = null;
 		IModelManager manager = StructuredModelManager.getModelManager();
-
+		try {
+			file.refreshLocal(IResource.DEPTH_ZERO, new NullProgressMonitor());
+		}
+		catch (CoreException e) {
+			Logger.logException(e);
+		}
 		try {
 			try {
 				model = manager.getModelForRead(file);
@@ -147,7 +153,8 @@ public class HTMLValidator implements IValidatorJob, ISourceValidator, IExecutab
 		}
 		catch (IOException ex) {
 		}
-		catch (CoreException ex) {
+		catch (CoreException e) {
+			Logger.logException(e);
 		}
 
 		if (model == null)
