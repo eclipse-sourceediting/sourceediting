@@ -50,7 +50,7 @@ public final class ModuleCoreValidatorMarkerResolutions
     {
         private final IMarker theMarker;
         private final String MARKERTYPE = "org.eclipse.wst.common.modulecore.ModuleCoreValidatorMarker";
-        private final IMarker[] NO_MARKERS= new IMarker[0];
+//        private final IMarker[] NO_MARKERS= new IMarker[0];
         
         public ModuleCoreMigrationResolution( IMarker marker )
         {
