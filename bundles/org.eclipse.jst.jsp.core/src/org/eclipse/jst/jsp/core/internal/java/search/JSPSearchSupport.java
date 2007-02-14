@@ -469,7 +469,7 @@ public class JSPSearchSupport {
     //how can we make sure participant indexLocations are updated at startup?
     public final IPath computeIndexLocation(IPath containerPath) {
 
-        String indexLocation = null;
+        IPath indexLocation = null;
         // we don't want to inadvertently use a JDT Index
         // we want to be sure to use the Index from the JSP location
         //Object obj = indexLocations.get(containerPath);
@@ -483,14 +483,14 @@ public class JSPSearchSupport {
             String fileName = Long.toString(this.fChecksumCalculator.getValue()) + ".index"; //$NON-NLS-1$
             // this is the only difference from
             // IndexManager#computeIndexLocation(...)
-            indexLocation = getModelJspPluginWorkingLocation().append(fileName).toOSString();
+            indexLocation = getModelJspPluginWorkingLocation().append(fileName);
 
             // pa_TODO need to add to java path too, so JDT search support knows
             // there should be a non internal way to do this.
             // https://bugs.eclipse.org/bugs/show_bug.cgi?id=77564
             JavaModelManager.getJavaModelManager().getIndexManager().indexLocations.put(containerPath, indexLocation);
         //}
-        return new Path(indexLocation);
+        return indexLocation;
     }
 
     // copied from JDT IndexManager
