@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006 IBM Corporation and others.
+ * Copyright (c) 2006, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,8 +14,8 @@ import junit.framework.TestCase;
 
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jst.jsp.core.internal.validation.JSPContentValidator;
 import org.eclipse.jst.jsp.ui.tests.util.ProjectUtil;
-import org.eclipse.wst.html.internal.validation.HTMLValidator;
 import org.eclipse.wst.validation.internal.provisional.core.IReporter;
 
 /**
@@ -51,7 +51,7 @@ public class JSPHTMLValidatorTest extends TestCase {
 	 * @throws Exception
 	 */
 	public void testJSPinAttributes() throws Exception {
-		HTMLValidator validator = new HTMLValidator();
+		JSPContentValidator validator = new JSPContentValidator();
 		IReporter reporter = new ReporterForTest();
 		ValidationContextForTest helper = new ValidationContextForTest();
 		String filePath = "/" + PROJECT_NAME + "/WebContent/usejspinattribute.jsp";
@@ -67,7 +67,7 @@ public class JSPHTMLValidatorTest extends TestCase {
 	 * @throws Exception
 	 */
 	public void testJSPinAttributesHTML() throws Exception {
-		HTMLValidator validator = new HTMLValidator();
+		JSPContentValidator validator = new JSPContentValidator();
 		IReporter reporter = new ReporterForTest();
 		ValidationContextForTest helper = new ValidationContextForTest();
 		String filePath = "/" + PROJECT_NAME + "/WebContent/usejspinattribute.html";
@@ -83,7 +83,7 @@ public class JSPHTMLValidatorTest extends TestCase {
 	 * @throws Exception
 	 */
 	public void testBadAttributeName() throws Exception {
-		HTMLValidator validator = new HTMLValidator();
+		JSPContentValidator validator = new JSPContentValidator();
 		IReporter reporter = new ReporterForTest();
 		ValidationContextForTest helper = new ValidationContextForTest();
 		String filePath = "/" + PROJECT_NAME + "/WebContent/badattributenames.jsp";
