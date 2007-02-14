@@ -883,10 +883,12 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 				}
 
 				public Image getColumnImage(Object element, int columnIndex) {
-					INodeAdapter adapterFor = ((INodeNotifier) element).getAdapterFor(IJFaceNodeAdapter.class);
-					if (columnIndex == 2 && adapterFor != null && adapterFor instanceof IJFaceNodeAdapter) {
-						IJFaceNodeAdapter adapter = (IJFaceNodeAdapter) adapterFor;
-						return adapter.getLabelImage((element));
+					if (element instanceof INodeNotifier) {
+						INodeAdapter adapterFor = ((INodeNotifier) element).getAdapterFor(IJFaceNodeAdapter.class);
+						if (columnIndex == 2 && adapterFor != null && adapterFor instanceof IJFaceNodeAdapter) {
+							IJFaceNodeAdapter adapter = (IJFaceNodeAdapter) adapterFor;
+							return adapter.getLabelImage((element));
+						}
 					}
 					return null;
 				}
