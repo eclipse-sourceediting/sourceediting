@@ -1022,7 +1022,7 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 				public void selectionChanged(SelectionChangedEvent event) {
 					int selectionIndex = structuredSelectionTable.getTable().getSelectionIndex();
 					if (selectionIndex != -1) {
-						infoTree.setInput(input.get(selectionIndex));
+						infoTree.setInput(structuredSelectionTable.getElementAt(selectionIndex));
 					}
 					else {
 						infoTree.setInput(event.getSelectionProvider().getSelection());
