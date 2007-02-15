@@ -41,8 +41,7 @@ public class CMVisitorTest implements IPlatformRunnable {
 
 		ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
 		try {
-			CMDocumentCache cache = new CMDocumentCache();
-			XMLAssociationProvider provider = new XMLAssociationProvider(cache) {
+			XMLAssociationProvider provider = new XMLAssociationProvider(CMDocumentCache.getInstance()) {
 			};
 
 			ModelQuery mq = new ModelQueryImpl(provider);
