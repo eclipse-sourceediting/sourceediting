@@ -71,7 +71,6 @@ public class ModelQueryAdapterFactoryForJSP extends AbstractAdapterFactory imple
 				// continue only if the location is known
 				if (baseLocation != null) {
 					stateNotifier.addModelStateListener(this);
-					CMDocumentCache cmDocumentCache = new CMDocumentCache();
 					File file = new Path(model.getBaseLocation()).toFile();
 					if (file.exists()) {
 						baseLocation = file.getAbsolutePath();
@@ -91,7 +90,7 @@ public class ModelQueryAdapterFactoryForJSP extends AbstractAdapterFactory imple
 
 					ModelQuery modelQuery = new JSPModelQueryImpl(model, resolver);
 					modelQuery.setEditMode(ModelQuery.EDIT_MODE_UNCONSTRAINED);
-					modelQueryAdapterImpl = new JSPModelQueryAdapterImpl(cmDocumentCache, modelQuery, resolver);
+					modelQueryAdapterImpl = new JSPModelQueryAdapterImpl(CMDocumentCache.getInstance(), modelQuery, resolver);
 				}
 			}
 		}

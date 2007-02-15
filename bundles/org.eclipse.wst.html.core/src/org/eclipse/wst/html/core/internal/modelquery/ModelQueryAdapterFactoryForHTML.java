@@ -186,16 +186,15 @@ public class ModelQueryAdapterFactoryForHTML extends AbstractAdapterFactory {
 				if (Debug.displayInfo)
 					System.out.println("----------------ModelQueryAdapterFactoryForHTML... baseLocation : " + baseLocation); //$NON-NLS-1$
 
-				CMDocumentCache cmDocumentCache = new CMDocumentCache();
 				URIResolver idResolver = null;
 
 				org.eclipse.wst.sse.core.internal.util.URIResolver resolver = model.getResolver();
 				if (baseLocation != null || resolver != null) {
 					idResolver = new XMLCatalogIdResolver(baseLocation, resolver);
 				}
-				ModelQuery modelQuery = new HTMLModelQueryImpl(cmDocumentCache, idResolver);
+				ModelQuery modelQuery = new HTMLModelQueryImpl(CMDocumentCache.getInstance(), idResolver);
 				modelQuery.setEditMode(ModelQuery.EDIT_MODE_UNCONSTRAINED);
-				modelQueryAdapter = new ModelQueryAdapterImpl(cmDocumentCache, modelQuery, idResolver);
+				modelQueryAdapter = new ModelQueryAdapterImpl(CMDocumentCache.getInstance(), modelQuery, idResolver);
 			}
 		}
 		return modelQueryAdapter;
