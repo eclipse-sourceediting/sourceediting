@@ -48,7 +48,7 @@ abstract class CSSProposalGenerator {
 	}
 
 	CSSProposalGenerator(CSSContentAssistContext context) {
-		super();
+		this();
 		fContext = context;
 	}
 

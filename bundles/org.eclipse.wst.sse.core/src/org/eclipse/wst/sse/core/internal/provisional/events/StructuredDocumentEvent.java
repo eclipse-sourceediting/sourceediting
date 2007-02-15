@@ -43,7 +43,7 @@ public abstract class StructuredDocumentEvent extends DocumentEvent {
 	 *            the document being changed
 	 */
 	private StructuredDocumentEvent(IStructuredDocument document) {
-		super();
+		this();
 		if (document == null)
 			throw new IllegalArgumentException("null source"); //$NON-NLS-1$
 		fDocument = document;

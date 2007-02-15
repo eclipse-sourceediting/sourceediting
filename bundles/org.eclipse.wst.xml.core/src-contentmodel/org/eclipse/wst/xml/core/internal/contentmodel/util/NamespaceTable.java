@@ -30,7 +30,8 @@ public class NamespaceTable extends NamespaceAttributeVisitor
   public Hashtable hashtable = new Hashtable();
 
   public NamespaceTable(Document document)
-  {                     
+  {         
+	  this();
     //DOMExtension domExtension = DOMExtensionProviderRegistry.getInstance().getDOMExtension(document);
     //if (domExtension != null)
     //{                          
@@ -39,7 +40,8 @@ public class NamespaceTable extends NamespaceAttributeVisitor
   }   
 
   private NamespaceTable()
-  {        
+  {       
+	  super();
   }  
 
   public boolean isNamespaceEncountered()

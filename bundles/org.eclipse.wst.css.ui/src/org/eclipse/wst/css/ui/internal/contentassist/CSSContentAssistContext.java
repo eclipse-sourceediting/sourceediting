@@ -48,7 +48,7 @@ class CSSContentAssistContext {
 	 *  
 	 */
 	CSSContentAssistContext(int documentPosition, ICSSNode node, int documentOffset, char quote) {
-		super();
+		this();
 		fCursorPos = documentPosition;
 		fDocumentOffset = documentOffset;
 		fQuote = quote;

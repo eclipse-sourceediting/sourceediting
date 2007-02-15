@@ -41,7 +41,7 @@ public class CommentElementFactory {
 	}
 
 	public CommentElementFactory(Document document, boolean isJSPTag, CommentElementHandler handler) {
-		super();
+		this();
 		fDocument = document;
 		fJSPTag = isJSPTag;
 		fHandler = handler;

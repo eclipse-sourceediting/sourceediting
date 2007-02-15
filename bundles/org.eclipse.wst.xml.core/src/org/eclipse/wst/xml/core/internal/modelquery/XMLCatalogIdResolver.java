@@ -35,6 +35,7 @@ public class XMLCatalogIdResolver implements org.eclipse.wst.common.uriresolver.
 	}
 
 	private XMLCatalogIdResolver(String resourceLocation) {
+		this();
 		this.resourceLocation = resourceLocation;
 	}
 

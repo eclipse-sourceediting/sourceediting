@@ -43,7 +43,7 @@ class CSSProposalArranger {
 	 * CSSProposalArranger constructor comment.
 	 */
 	CSSProposalArranger(int documentPosition, ICSSNode node, int documentOffset, char quote) {
-		super();
+		this();
 		fContext = new CSSContentAssistContext(documentPosition, node, documentOffset, quote);
 	}
 
