@@ -66,6 +66,7 @@ import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.information.IInformationProvider;
 import org.eclipse.jface.text.information.IInformationProviderExtension2;
 import org.eclipse.jface.text.information.InformationPresenter;
+import org.eclipse.jface.text.source.DefaultCharacterPairMatcher;
 import org.eclipse.jface.text.source.ICharacterPairMatcher;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.IVerticalRuler;
@@ -1691,22 +1692,7 @@ public class StructuredTextEditor extends TextEditor {
 			matcher = (ICharacterPairMatcher) builder.getConfiguration(DocumentRegionEdgeMatcher.ID, ids[i]);
 		}
 		if (matcher == null) {
-			matcher = new ICharacterPairMatcher() {
-
-				public void clear() {
-				}
-
-				public void dispose() {
-				}
-
-				public int getAnchor() {
-					return ICharacterPairMatcher.LEFT;
-				}
-
-				public IRegion match(IDocument iDocument, int i) {
-					return null;
-				}
-			};
+			matcher = new DefaultCharacterPairMatcher(new char[]{'(', ')', '{', '}', '[', ']', '<', '>'});
 		}
 		return matcher;
 	}
@@ -2685,9 +2671,8 @@ public class StructuredTextEditor extends TextEditor {
 	 * @see org.eclipse.ui.texteditor.AbstractTextEditor#initializeDragAndDrop(org.eclipse.jface.text.source.ISourceViewer)
 	 */
 	protected void initializeDragAndDrop(ISourceViewer viewer) {
-		// disabled for pre-2.0M5 specific assembly
-//		IPreferenceStore store= getPreferenceStore();
-//		if (store != null && store.getBoolean(PREFERENCE_TEXT_DRAG_AND_DROP_ENABLED))
+		IPreferenceStore store= getPreferenceStore();
+		if (store != null && store.getBoolean(PREFERENCE_TEXT_DRAG_AND_DROP_ENABLED))
 			initializeDrop(viewer);
 	}
 
