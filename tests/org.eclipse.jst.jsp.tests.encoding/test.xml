@@ -20,7 +20,7 @@
         value="org.eclipse.jst.jsp.tests.encoding.JSPEncodingTestSuite" />
     <property
         name="testType"
-        value="core-test" />
+        value="ui-test" />
 
     <!-- should be little need to change what's below -->
 
