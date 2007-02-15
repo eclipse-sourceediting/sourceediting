@@ -42,6 +42,10 @@
 			type="linestyleprovider"
 			class="org.eclipse.wst.dtd.ui.internal.style.LineStyleProviderForDTDSubSet"
 			target="org.eclipse.wst.xml.dtd.internal_subset" />
+		<provisionalDefinition
+			type="spellingregions"
+			value="org.eclipse.wst.dtd.core.internal.util.parser.DTDRegionTypes.COMMENT_CONTENT"
+			target="org.eclipse.wst.dtd.core.dtdsource" />
 	</extension>
 
 	<extension point="org.eclipse.ui.editorActions">
