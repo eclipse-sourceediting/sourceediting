@@ -458,8 +458,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 						((IDocumentListener) holdListeners[i]).documentChanged(NULL_DOCUMENT_EVENT);
 					}
 					else {
-						// disabled for pre-2.0M5 specific assembly
-//						fDocumentEvent.fModificationStamp = getModificationStamp();
+						fDocumentEvent.fModificationStamp = getModificationStamp();
 						((IDocumentListener) holdListeners[i]).documentChanged(fDocumentEvent);
 					}
 				}
