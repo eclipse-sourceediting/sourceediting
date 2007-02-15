@@ -450,7 +450,7 @@ class ProjectDescription {
 		}
 
 		public String toString() {
-			return "URLRecord: " + baseLocation + " <-> " + getURI(); //$NON-NLS-1$ //$NON-NLS-2$
+			return "URLRecord: (exported=ha"+isExported+") " + baseLocation + " <-> " + getURI(); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 
@@ -1163,7 +1163,16 @@ class ProjectDescription {
 			if (libPath != null) {
 				boolean fragmentisExported = true;
 				try {
-					fragmentisExported = ((IPackageFragmentRoot) element).getRawClasspathEntry().isExported();
+					IClasspathEntry rawClasspathEntry = ((IPackageFragmentRoot) element).getRawClasspathEntry();
+					/*
+					 * null may also be returned for deletions depending on
+					 * resource/build path notification order. If it's null,
+					 * it's been deleted and whether it's exported won't
+					 * really matter
+					 */
+					if(rawClasspathEntry != null) {
+						fragmentisExported = rawClasspathEntry.isExported();
+					}
 				}
 				catch (JavaModelException e) {
 					Logger.logException("Problem handling build path entry for " + element.getPath(), e); //$NON-NLS-1$
@@ -1975,6 +1984,9 @@ class ProjectDescription {
 						}
 						record = jarRecord;
 						// the stored URI should reflect the web.xml's value
+						if(jarRecord.info == null) {
+							jarRecord.info = new TaglibInfo();
+						}
 						jarRecord.info.uri = taglibUri;
 						jarRecord.isMappedInWebXML = true;
 						if (_debugIndexCreation)
