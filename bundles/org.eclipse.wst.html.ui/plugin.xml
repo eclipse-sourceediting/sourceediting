@@ -46,6 +46,10 @@
 			type="preferencepages"
 			value="org.eclipse.wst.html.ui.preferences, org.eclipse.wst.html.ui.preferences.source, org.eclipse.wst.html.ui.preferences.templates, org.eclipse.wst.html.ui.preferences.styles"
 			target="org.eclipse.wst.html.core.htmlsource" />
+		<provisionalDefinition
+			type="spellingregions"
+			value="XML_COMMENT_TEXT, XML_CONTENT"
+			target="org.eclipse.wst.html.core.htmlsource" />
 	</extension>
 	<extension
 		point="org.eclipse.core.filebuffers.annotationModelCreation">

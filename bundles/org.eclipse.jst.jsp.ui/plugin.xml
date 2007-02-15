@@ -58,6 +58,10 @@
 			type="showintarget"
 			value="org.eclipse.jdt.ui.PackageExplorer"
 			target="org.eclipse.jst.jsp.core.jspsource" />
+		<provisionalDefinition
+			type="spellingregions"
+			value="XML_COMMENT_TEXT, JSP_COMMENT_TEXT, XML_CONTENT, JSP_CONTENT"
+			target="org.eclipse.jst.jsp.core.jspsource" />
 	</extension>
 
 	<!--======================================================================================-->

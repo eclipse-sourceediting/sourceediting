@@ -41,6 +41,7 @@ import org.eclipse.jface.text.reconciler.DirtyRegion;
 import org.eclipse.jface.text.reconciler.IReconciler;
 import org.eclipse.jface.text.reconciler.IReconcilerExtension;
 import org.eclipse.jface.text.reconciler.IReconcilingStrategy;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 
@@ -618,6 +619,9 @@ public class DirtyRegionProcessor extends Job implements IReconciler, IReconcile
 
 	protected IStatus run(IProgressMonitor monitor) {
 		IStatus status = Status.OK_STATUS;
+		if(!PlatformUI.isWorkbenchRunning())
+			return status;
+		
 		try {
 			beginProcessing();
 

@@ -44,6 +44,10 @@ import org.eclipse.ui.texteditor.spelling.SpellingContext;
 import org.eclipse.ui.texteditor.spelling.SpellingEngineDescriptor;
 import org.eclipse.ui.texteditor.spelling.SpellingProblem;
 import org.eclipse.ui.texteditor.spelling.SpellingService;
+import org.eclipse.wst.sse.core.internal.parser.ForeignRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.sse.ui.internal.ExtendedConfigurationBuilder;
 import org.eclipse.wst.sse.ui.internal.Logger;
@@ -80,6 +84,9 @@ public class SpellcheckStrategy extends StructuredTextReconcilingStrategy {
 		List annotations = new ArrayList();
 
 		public void accept(SpellingProblem problem) {
+			if (!isInterestingProblem(problem))
+				return;
+
 			TemporaryAnnotation annotation = new TemporaryAnnotation(new Position(problem.getOffset(), problem.getLength()), TemporaryAnnotation.ANNOT_WARNING, problem.getMessage(), fReconcileAnnotationKey);
 			/*
 			 * TODO: create and use an IQuickFixProcessor that uses
@@ -91,6 +98,36 @@ public class SpellcheckStrategy extends StructuredTextReconcilingStrategy {
 			if (_DEBUG_SPELLING) {
 				Logger.log(Logger.INFO_DEBUG, problem.getMessage());
 			}
+		}
+
+		/**
+		 * Judge whether a spelling problem is "interesting". Accept any
+		 * regions that are explictly allowed, and since valid prose areas are
+		 * rarely in a complicated document region, accept any document region
+		 * with more than one text region and reject any document regions
+		 * containing foreign text regions.
+		 * 
+		 * @param problem
+		 *            a SpellingProblem
+		 * @return whether the collector should accept the given
+		 *         SpellingProblem
+		 */
+		private boolean isInterestingProblem(SpellingProblem problem) {
+			if (getDocument() instanceof IStructuredDocument) {
+				IStructuredDocumentRegion documentRegion = ((IStructuredDocument) getDocument()).getRegionAtCharacterOffset(problem.getOffset());
+				if (documentRegion != null) {
+					ITextRegion textRegion = documentRegion.getRegionAtCharacterOffset(problem.getOffset());
+					if (textRegion != null && isSupportedContext(textRegion.getType())) {
+						return true;
+					}
+					if (documentRegion.getFirstRegion() instanceof ForeignRegion)
+						return false;
+					if (documentRegion.getRegions().size() == 1)
+						return true;
+					return false;
+				}
+			}
+			return true;
 		}
 
 		public void beginCollecting() {
@@ -115,7 +152,7 @@ public class SpellcheckStrategy extends StructuredTextReconcilingStrategy {
 				Logger.log(Logger.INFO_DEBUG, "Spell checking [" + subRegion.getOffset() + "-" + (subRegion.getOffset() + subRegion.getLength()) + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			}
 			if (getDocument() != null) {
-				service.check(getDocument(), new IRegion[]{subRegion}, fSpellingContext, fProblemCollector, getProgressMonitor());
+				service.check(getDocument(), new IRegion[]{dirtyRegion}, fSpellingContext, fProblemCollector, getProgressMonitor());
 			}
 			IReconcileResult[] results = fProblemCollector.getResults();
 			fProblemCollector.clear();
@@ -127,7 +164,8 @@ public class SpellcheckStrategy extends StructuredTextReconcilingStrategy {
 
 	static final String ANNOTATION_TYPE = "org.eclipse.wst.sse.ui.temp.spelling"; //$NON-NLS-1$
 
-	private static final String EXTENDED_BUILDER_TYPE = "spellingsupport"; //$NON-NLS-1$
+	private static final String EXTENDED_BUILDER_TYPE_PARTITIONS = "spellingpartitions"; //$NON-NLS-1$
+	private static final String EXTENDED_BUILDER_TYPE_CONTEXTS = "spellingregions"; //$NON-NLS-1$
 	static final String KEY_CONTENT_TYPE = "org.eclipse.wst.sse.ui.temp.spelling"; //$NON-NLS-1$
 
 	private String fContentTypeId = null;
@@ -160,6 +198,7 @@ public class SpellcheckStrategy extends StructuredTextReconcilingStrategy {
 	IReconcileStep fSpellingStep;
 
 	String[] fSupportedPartitionTypes;
+	String[] fSupportedTextRegionContexts;
 
 	public SpellcheckStrategy(ISourceViewer viewer, String contentTypeId) {
 		super(viewer);
@@ -169,12 +208,19 @@ public class SpellcheckStrategy extends StructuredTextReconcilingStrategy {
 		fSpellingContext.setContentType(Platform.getContentTypeManager().getContentType(fContentTypeId));
 		fReconcileAnnotationKey = new ReconcileAnnotationKey(fSpellingStep, KEY_CONTENT_TYPE, ReconcileAnnotationKey.PARTIAL);
 
-		String[] definitions = ExtendedConfigurationBuilder.getInstance().getDefinitions(EXTENDED_BUILDER_TYPE, fContentTypeId);
+		String[] definitions = ExtendedConfigurationBuilder.getInstance().getDefinitions(EXTENDED_BUILDER_TYPE_PARTITIONS, fContentTypeId);
 		List defs = new ArrayList();
 		for (int i = 0; i < definitions.length; i++) {
 			defs.addAll(Arrays.asList(StringUtils.unpack(definitions[i])));
 		}
 		fSupportedPartitionTypes = (String[]) defs.toArray(new String[defs.size()]);
+
+		String[] textRegionContexts = ExtendedConfigurationBuilder.getInstance().getDefinitions(EXTENDED_BUILDER_TYPE_CONTEXTS, fContentTypeId);
+		List contexts = new ArrayList();
+		for (int i = 0; i < textRegionContexts.length; i++) {
+			contexts.addAll(Arrays.asList(StringUtils.unpack(textRegionContexts[i])));
+		}
+		fSupportedTextRegionContexts = (String[]) contexts.toArray(new String[contexts.size()]);
 
 		fSpellCheckPreferenceListener = new SpellCheckPreferenceListener();
 	}
@@ -264,6 +310,19 @@ public class SpellcheckStrategy extends StructuredTextReconcilingStrategy {
 			}
 		}
 		return supported;
+	}
+
+	private boolean isSupportedContext(String type) {
+		boolean isSupported = false;
+		if (fSupportedTextRegionContexts != null) {
+			for (int i = 0; i < fSupportedTextRegionContexts.length; i++) {
+				if (type.equals(fSupportedTextRegionContexts[i])) {
+					isSupported = true;
+					break;
+				}
+			}
+		}
+		return isSupported;
 	}
 
 	void reconcile() {
