@@ -62,7 +62,7 @@ Require-Bundle: org.apache.xerces;visibility:=reexport;bundle-version="[2.8.0,2.
  org.eclipse.wst.common.uriresolver;bundle-version="[1.1.0,1.2.0)",
  org.eclipse.wst.sse.core;bundle-version="[1.1.0,1.2.0)",
  org.eclipse.text;bundle-version="[3.2.0,4.0.0)",
- org.eclipse.jem.util;resolution:=optional;bundle-version="[1.2.0,1.3.0)",
+ org.eclipse.jem.util;resolution:=optional;bundle-version="[2.0.0,3.0.0)",
  org.eclipse.wst.validation;bundle-version="[1.1.0,1.2.0)",
  org.eclipse.emf.ecore.edit;resolution:=optional;bundle-version="[2.2.0,2.4.0)",
  org.eclipse.wst.common.emf;resolution:=optional;bundle-version="[1.1.0,1.2.0)",
