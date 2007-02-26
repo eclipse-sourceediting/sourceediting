@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,6 +20,7 @@ import org.eclipse.gef.ui.actions.GEFActionConstants;
 import org.eclipse.gef.ui.actions.ZoomComboContributionItem;
 import org.eclipse.gef.ui.actions.ZoomInRetargetAction;
 import org.eclipse.gef.ui.actions.ZoomOutRetargetAction;
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
@@ -40,6 +41,7 @@ import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.ITextEditorActionConstants;
 import org.eclipse.wst.sse.ui.internal.ISourceViewerActionBarContributor;
 import org.eclipse.wst.xsd.ui.internal.actions.IXSDToolbarAction;
+import org.eclipse.wst.xsd.ui.internal.adt.actions.CaptureScreenAction;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.DeleteAction;
 
 /**
@@ -57,6 +59,7 @@ public class XSDMultiPageEditorContributor extends MultiPageEditorActionBarContr
   protected List fPartListeners= new ArrayList();
   ZoomInRetargetAction zoomInRetargetAction;
   ZoomOutRetargetAction zoomOutRetargetAction;
+  Action captureScreenAction;
   ZoomComboContributionItem zoomComboContributionItem;
   /**
    * Creates a multi-page contributor.
@@ -67,6 +70,7 @@ public class XSDMultiPageEditorContributor extends MultiPageEditorActionBarContr
     sourceViewerActionContributor = new SourcePageActionContributor();
     zoomInRetargetAction = new ZoomInRetargetAction();
     zoomOutRetargetAction = new ZoomOutRetargetAction();
+    captureScreenAction = new CaptureScreenAction();
     fPartListeners.add(zoomInRetargetAction);
     fPartListeners.add(zoomOutRetargetAction);
   }
@@ -203,6 +207,7 @@ public class XSDMultiPageEditorContributor extends MultiPageEditorActionBarContr
 
     menu.add(zoomInRetargetAction);
     menu.add(zoomOutRetargetAction);
+    menu.add(captureScreenAction);
 
     menu.updateAll(true);
   }
@@ -221,6 +226,7 @@ public class XSDMultiPageEditorContributor extends MultiPageEditorActionBarContr
     String[] zoomStrings = new String[] { ZoomManager.FIT_ALL, ZoomManager.FIT_HEIGHT, ZoomManager.FIT_WIDTH };
     zoomComboContributionItem = new ZoomComboContributionItem(getPage(), zoomStrings);
     manager.add(zoomComboContributionItem);
+    manager.add(captureScreenAction);
   }
   
   

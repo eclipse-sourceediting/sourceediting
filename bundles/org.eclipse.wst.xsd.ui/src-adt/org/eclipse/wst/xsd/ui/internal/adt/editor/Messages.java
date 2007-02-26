@@ -38,4 +38,13 @@ public class Messages extends NLS
   public static String _UI_LABEL_SOURCE;
   public static String _UI_LABEL_VIEW;
   public static String _UI_HOVER_VIEW_MODE_DESCRIPTION;
+  public static String _UI_ACTION_CAPTURE_SCREEN_OVERWRITE_CONFIRMATION_QUESTION;
+  public static String _UI_ACTION_CAPTURE_SCREEN_OVERWRITE_CONFIRMATION_1;
+  public static String _UI_ACTION_CAPTURE_SCREEN_OVERWRITE_CONFIRMATION_2;
+  public static String _UI_ACTION_CAPTURE_SCREEN_ERROR_TITLE;
+  public static String _UI_ACTION_CAPTURE_SCREEN_ERROR_DESCRIPTION;
+  public static String _UI_ACTION_CAPTURE_SCREEN_FORMAT_NOT_SUPPORTED;
+  public static String _UI_CAPTURE_SCREEN_ACTION_TEXT;
+  public static String _UI_CAPTURE_SCREEN_ACTION_TOOLTIPTEXT;
+  public static String _UI_ACTION_CAPTURE_SCREEN_DEFAULT_FILE_NAME;
 }
