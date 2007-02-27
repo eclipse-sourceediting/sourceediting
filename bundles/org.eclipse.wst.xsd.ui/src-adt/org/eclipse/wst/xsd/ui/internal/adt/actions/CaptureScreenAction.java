@@ -146,11 +146,13 @@ public class CaptureScreenAction extends Action
 
       filePath = fileDialog.open();
 
-      last_screen_capture_path = fileDialog.getFilterPath();
-      String fileName = fileDialog.getFileName();
-      last_screen_capture_file_name = fileName.substring(0, fileName.indexOf('.'));
-      last_screen_capture_file_extension = fileName.substring(fileName.indexOf('.'));
-
+      if (filePath != null)
+      {
+	      last_screen_capture_path = fileDialog.getFilterPath();
+	      String fileName = fileDialog.getFileName();
+	      last_screen_capture_file_name = fileName.substring(0, fileName.indexOf('.'));
+	      last_screen_capture_file_extension = fileName.substring(fileName.indexOf('.'));
+      }
       return filePath;
     }
 
