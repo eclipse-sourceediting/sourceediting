@@ -17,8 +17,8 @@ import org.eclipse.wst.xsd.ui.internal.adt.facade.IADTObjectListener;
 
 public abstract class AbstractModelCollection implements IADTObject
 {
-  IADTObject model;
-  String kind;
+  protected IADTObject model;
+  protected String kind;
   
   public AbstractModelCollection(IADTObject model, String kind)
   {
