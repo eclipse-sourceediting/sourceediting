@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,6 +15,7 @@ import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IActionProvide
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IModel;
 import org.eclipse.xsd.XSDAttributeDeclaration;
 import org.eclipse.xsd.XSDAttributeUse;
+import org.eclipse.xsd.XSDTypeDefinition;
 
 public class XSDAttributeUseAdapter extends XSDBaseAttributeAdapter implements IActionProvider
 {
@@ -76,4 +77,15 @@ public class XSDAttributeUseAdapter extends XSDBaseAttributeAdapter implements I
     Adapter adapter = XSDAdapterFactory.getInstance().adapt(getXSDAttributeDeclaration().getSchema());
     return (IModel)adapter;
   }
+  
+  public String getTypeNameQualifier()
+  {
+    XSDTypeDefinition type = getResolvedXSDAttributeDeclaration().getTypeDefinition();
+    if (type != null)
+    {
+      return type.getTargetNamespace();
+    }
+    return "";
+  }
+
 }
