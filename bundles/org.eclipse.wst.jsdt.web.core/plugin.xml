@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+
+
+	<extension point="org.eclipse.wst.sse.core.modelHandler">
+		<modelHandler
+			class="org.eclipse.wst.jsdt.web.core.internal.modelhandler.ModelHandlerForJSP"
+			associatedContentTypeId="org.eclipse.wst.html.core.htmlsource"
+			id="org.eclipse.wst.jsdt.web.core.internal.modelhandler">
+		</modelHandler>
+		
+
+	
+		<modelHandler
+			class="org.eclipse.wst.jsdt.web.core.internal.modelhandler.ModelHandlerForJSP"
+			associatedContentTypeId="org.eclipse.wst.javascript.core.javascriptsource"
+			id="org.eclipse.wst.jsdt.web.core.internal.modelhandler">
+		</modelHandler>
+	</extension>
+	
+	<extension point="org.eclipse.wst.sse.core.embeddedTypeHandler">
+		<embeddedTypeHandler
+			class="org.eclipse.wst.html.core.internal.modelhandler.EmbeddedScript">
+		</embeddedTypeHandler>
+	</extension>
+	
+	<extension point="org.eclipse.wst.xml.core.documentFactories">
+		<factory
+			type="tld"
+			class="org.eclipse.wst.jsdt.web.core.internal.contentmodel.tld.CMDocumentFactoryTLD">
+		</factory>
+	</extension>
+
+	<extension point="org.eclipse.wst.sse.core.taskscanner">
+		<scanner
+			id="org.eclipse.wst.jsdt.web.core.internal.tasks.JSPFileTaskScanner"
+			class="org.eclipse.wst.jsdt.web.core.internal.tasks.JSPFileTaskScanner"
+			contentTypeIds="org.eclipse.wst.html.core.htmlsource" />
+	</extension>
+
+	<extension
+		point="org.eclipse.core.filebuffers.documentCreation"
+		id="org.eclipse.wst.jsdt.web.core.documentfactories"
+		name="%Structured_JSP_Document_Factory_Extension.name">
+		<factory
+			contentTypeId="org.eclipse.wst.html.core.htmlsource"
+			class="org.eclipse.wst.sse.core.internal.filebuffers.BasicStructuredDocumentFactory" />
+	</extension>
+
+	<extension point="org.eclipse.team.core.fileTypes">
+		<fileTypes
+			type="text"
+			extension="html">
+		</fileTypes>
+		<fileTypes
+			type="text"
+			extension="htm">
+		</fileTypes>
+		<fileTypes
+			type="text"
+			extension="xhtml">
+		</fileTypes>
+		<fileTypes
+			type="text"
+			extension="htpl">
+		</fileTypes>
+		<fileTypes
+			type="text"
+			extension="wml">
+		</fileTypes>
+		<fileTypes
+			type="text"
+			extension="shtml">
+		</fileTypes>
+		<fileTypes
+			type="text"
+			extension="shtm">
+		</fileTypes>
+		<fileTypes
+			type="text"
+			extension="js">
+		</fileTypes>
+	</extension>
+	<extension point="org.eclipse.wst.sse.core.formatProcessors">
+		<processor
+			class="org.eclipse.wst.html.core.internal.format.HTMLFormatProcessorImpl"
+			contentTypeId="org.eclipse.wst.html.core.htmlsource">
+		</processor>
+	</extension>
+
+	<extension point="org.eclipse.core.runtime.contentTypes">
+		<!-- create content type for JSP files -->
+		<content-type
+			file-extensions="html,htm,xhtml,htpl,wml,shtml,shtm"
+			priority="high"
+			name="%JSP_Content_Type_Extension_Element.name"
+			id="jspsource"
+			base-type="org.eclipse.core.runtime.text"
+			default-charset="ISO-8859-1">
+			<describer
+				class="org.eclipse.wst.jsdt.web.core.internal.contenttype.ContentDescriberForJSP" />
+		</content-type>
+		<!-- create content type for JSP fragment files -->
+		<content-type
+			file-extensions="js"
+			priority="high"
+			name="%JSP_Fragment_Content_Type_Extension_Element.name"
+			id="jspfragmentsource"
+			base-type="org.eclipse.wst.javascript.core.javascriptsource"
+			default-charset="ISO-8859-1">
+			<describer
+				class="org.eclipse.wst.jsdt.web.core.internal.contenttype.ContentDescriberForJSP" />
+		</content-type>
+		
+	</extension>
+
+	<!-- initialize jsp core preferences -->
+	<extension point="org.eclipse.core.runtime.preferences">
+		<initializer
+			class="org.eclipse.wst.jsdt.web.core.internal.preferences.JSPCorePreferenceInitializer" />
+	</extension>
+
+	<!--======================================================================================-->
+	<!-- JSP batch validation                                       						  -->
+	<!--======================================================================================-->
+	<extension
+		id="JSPBatchValidator"
+		name="%JSP_Syntax_Validator.name"
+		point="org.eclipse.wst.validation.validator">
+		<validator>
+			<projectNature id="org.eclipse.jsdt.core.jsNature" />
+
+			<filter
+				objectClass="org.eclipse.core.resources.IFile"
+				nameFilter="*.html">
+			</filter>
+			<filter
+				objectClass="org.eclipse.core.resources.IFile"
+				nameFilter="*.htm">
+			</filter>
+			<filter
+				objectClass="org.eclipse.core.resources.IFile"
+				nameFilter="*.js">
+			</filter>
+
+
+			<enablement/>
+
+			<helper
+				class="org.eclipse.wst.validation.internal.operations.WorkbenchContext">
+			</helper>
+
+			<run
+				enabled="true"
+				class="org.eclipse.wst.jsdt.web.core.internal.validation.JSPBatchValidator">
+			</run>
+		</validator>
+	</extension>
+	
+  
+    
+  	<!--======================================================================================-->
+	<!-- minimal content-type css jsp support                                                 -->
+	<!-- ====================================================================================== -->
+    <extension
+         point="org.eclipse.core.runtime.contentTypes">
+        <content-type
+			file-extensions="html"
+			priority="high"
+			name="%contentTypeCSSJSPName"
+			id="cssjspsource"
+			base-type="org.eclipse.wst.html.core.htmlsource">
+			<describer
+				class="org.eclipse.wst.jsdt.web.css.core.internal.contenttype.ContentDescriberForJSPedCSS" />
+		</content-type>
+        <content-type
+	        file-extensions="htm"
+			priority="high"
+			name="%contentTypeCSSJSPFName"
+			id="cssjspfragmentsource"
+			base-type="org.eclipse.wst.jsdt.web.core.cssjspsource">
+			<describer
+				class="org.eclipse.wst.jsdt.web.css.core.internal.contenttype.ContentDescriberForJSPedCSS" />
+		</content-type>
+	</extension>
+
+	<extension point="org.eclipse.wst.sse.core.modelHandler">
+		<modelHandler
+			class="org.eclipse.wst.jsdt.web.css.core.internal.modelhandler.ModelHandlerForJSPedCSS"
+			associatedContentTypeId="org.eclipse.wst.jsdt.web.core.cssjspsource"
+			id="org.eclipse.wst.jsdt.web.css.core.modelhandler">
+		</modelHandler>
+		<modelHandler
+			class="org.eclipse.wst.jsdt.web.css.core.internal.modelhandler.ModelHandlerForJSPedCSS"
+			associatedContentTypeId="org.eclipse.wst.jsdt.web.core.cssjspfragmentsource"
+			id="org.eclipse.wst.jsdt.web.css.core.modelhandler">
+		</modelHandler>
+	</extension>
+	
+	<extension
+		point="org.eclipse.core.filebuffers.documentCreation"
+		id="org.eclipse.wst.jsdt.web.css.core.internal.documentfactories"
+		name="%contentTypeCSSDocumentFactoryName">
+		<factory
+			contentTypeId="org.eclipse.wst.jsdt.web.core.cssjspsource"
+			class="org.eclipse.wst.sse.core.internal.filebuffers.BasicStructuredDocumentFactory" />
+	</extension>
+	<extension
+		point="org.eclipse.core.filebuffers.documentSetup"
+		id="org.eclipse.wst.jsdt.web.css.core.documentsetup"
+		name="%Structured_JSP_Document_Setup_participant.name">
+		<participant
+			contentTypeId="org.eclipse.wst.jsdt.web.core.cssjspsource"
+			class="org.eclipse.wst.jsdt.web.css.core.internal.contentmodel.JSPedCSSTaglibController" />
+	</extension>
+	<!--
+	<extension
+		point="org.eclipse.core.filebuffers.documentCreation"
+		id="org.eclipse.wst.jsdt.web.css.core.internal.documentfactories.fragment"
+		name="%contentTypeCSSDocumentFactoryName">
+		<factory
+			contentTypeId="org.eclipse.wst.jsdt.web.core.cssjspfragmentsource"
+			class="org.eclipse.wst.sse.core.internal.filebuffers.BasicStructuredDocumentFactory" />
+	</extension>	
+	-->
+</plugin>
