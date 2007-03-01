@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.SWTGraphics;
+import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.gef.LayerConstants;
@@ -38,27 +39,30 @@ import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 public class CaptureScreenAction extends Action
 {
 
-  private static String last_screen_capture_path = System.getProperty("user.home");
-  private static String last_screen_capture_file_name = Messages._UI_ACTION_CAPTURE_SCREEN_DEFAULT_FILE_NAME;
-  private static String last_screen_capture_file_extension = ".jpeg";
+  private static String LAST_SCREEN_CAPTURE_PATH = System.getProperty("user.home"); //$NON-NLS-1$
+  private static String LAST_SCREEN_CAPTURE_FILE_NAME = Messages._UI_ACTION_CAPTURE_SCREEN_DEFAULT_FILE_NAME;
+  private static String LAST_SCREEN_CAPTURE_FILE_EXTENSION = ".jpg"; //$NON-NLS-1$
 
   public CaptureScreenAction()
   {
     setText(Messages._UI_CAPTURE_SCREEN_ACTION_TEXT);
     setToolTipText(Messages._UI_CAPTURE_SCREEN_ACTION_TOOLTIPTEXT);
-    setImageDescriptor(XSDEditorPlugin.getImageDescriptor("icons/etool16/capturescreen.gif"));
+    setImageDescriptor(XSDEditorPlugin.getImageDescriptor("icons/etool16/capturescreen.gif")); //$NON-NLS-1$
+    setDisabledImageDescriptor(XSDEditorPlugin.getImageDescriptor("icons/dtool16/capturescreen.gif")); //$NON-NLS-1$
   }
 
   public void run()
   {
     ImageExporter imageExporter = new ImageExporter();
     imageExporter.save(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor(), (GraphicalViewer) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor().getAdapter(GraphicalViewer.class));
-
   }
 
   public class ImageExporter
   {
-    public boolean save(IEditorPart editorPart, GraphicalViewer viewer, String saveFilePath, int format)
+    private static final String FILE_FORMATS = "*.jpg;*.jpeg;*.bmp;*.tif";
+	private static final String FILE_SEPARATOR = "file.separator";
+
+	public boolean save(IEditorPart editorPart, GraphicalViewer viewer, String saveFilePath, int format)
     {
       Assert.isNotNull(editorPart, "null editorPart passed to ImageExporter.save"); //$NON-NLS-1$
       Assert.isNotNull(viewer, "null viewer passed to ImageExporter.save"); //$NON-NLS-1$
@@ -85,24 +89,22 @@ public class CaptureScreenAction extends Action
       Assert.isNotNull(editorPart, "null editorPart passed to ImageExporter.save"); //$NON-NLS-1$
       Assert.isNotNull(viewer, "null viewer passed to ImageExporter.save"); //$NON-NLS-1$
 
-      String saveFilePath = getSaveFilePath(editorPart, viewer, -1);
+      String saveFilePath = getSaveFilePath(editorPart, viewer);
       if (saveFilePath == null)
         return false;
 
       File file = new File(saveFilePath);
       if (file.exists() && file.isFile())
       {
-        if (!MessageDialog.openQuestion(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages._UI_ACTION_CAPTURE_SCREEN_OVERWRITE_CONFIRMATION_QUESTION, Messages._UI_ACTION_CAPTURE_SCREEN_OVERWRITE_CONFIRMATION_1 + " "
-            + saveFilePath + " " + Messages._UI_ACTION_CAPTURE_SCREEN_OVERWRITE_CONFIRMATION_2))
+        if (!MessageDialog.openQuestion(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages._UI_ACTION_CAPTURE_SCREEN_OVERWRITE_CONFIRMATION_QUESTION, Messages._UI_ACTION_CAPTURE_SCREEN_OVERWRITE_CONFIRMATION_1 + " " //$NON-NLS-1$
+            + saveFilePath + " " + Messages._UI_ACTION_CAPTURE_SCREEN_OVERWRITE_CONFIRMATION_2)) //$NON-NLS-1$
         {
           return false;
         }
       }
 
       int format = SWT.IMAGE_JPEG;
-      if (saveFilePath.endsWith(".jpeg")) //$NON-NLS-1$
-        format = SWT.IMAGE_JPEG;
-      else if (saveFilePath.endsWith(".bmp")) //$NON-NLS-1$
+      if (saveFilePath.endsWith(".bmp")) //$NON-NLS-1$
         format = SWT.IMAGE_BMP;
       else if (saveFilePath.endsWith(".ico")) //$NON-NLS-1$
         format = SWT.IMAGE_ICO;
@@ -117,41 +119,34 @@ public class CaptureScreenAction extends Action
 
     }
 
-    private String getSaveFilePath(IEditorPart editorPart, GraphicalViewer viewer, int format)
+    private String getSaveFilePath(IEditorPart editorPart, GraphicalViewer viewer)
     {
       String filePath;
 
       FileDialog fileDialog = new FileDialog(editorPart.getEditorSite().getShell(), SWT.SAVE);
 
-      String[] filterExtensions = new String[] { "*.jpeg", "*.bmp", "*.tif" /*
-                                                                             * ,"*.ico",
-                                                                             * "*.png",
-                                                                             * "*.gif"
-                                                                             */}; //$NON-NLS-1$  //$NON-NLS-1$  //$NON-NLS-1$
-      if (format == SWT.IMAGE_BMP)
-        filterExtensions = new String[] { "*.bmp" }; //$NON-NLS-1$
-      else if (format == SWT.IMAGE_JPEG)
-        filterExtensions = new String[] { "*.jpeg" }; //$NON-NLS-1$
-      else if (format == SWT.IMAGE_ICO)
-        filterExtensions = new String[] { "*.ico" }; //$NON-NLS-1$
-      else if (format == SWT.IMAGE_PNG)
-        filterExtensions = new String[] { "*.png" }; //$NON-NLS-1$
-      else if (format == SWT.IMAGE_GIF)
-        filterExtensions = new String[] { "*.gif" }; //$NON-NLS-1$
-      else if (format == SWT.IMAGE_TIFF)
-        filterExtensions = new String[] { "*.tiff" }; //$NON-NLS-1$
+      String[] filterExtensions = new String[] {FILE_FORMATS}; //$NON-NLS-1$
 
       fileDialog.setFileName(obtainNextFileName());
       fileDialog.setFilterExtensions(filterExtensions);
-
+      fileDialog.setFilterNames(new String[] {FILE_FORMATS});
+      fileDialog.setText(Messages._UI_ACTION_CAPTURE_SCREEN_FILE_SAVE_DIALOG_TITLE);
+      
       filePath = fileDialog.open();
 
       if (filePath != null)
       {
-	      last_screen_capture_path = fileDialog.getFilterPath();
+	      LAST_SCREEN_CAPTURE_PATH = fileDialog.getFilterPath();
 	      String fileName = fileDialog.getFileName();
-	      last_screen_capture_file_name = fileName.substring(0, fileName.indexOf('.'));
-	      last_screen_capture_file_extension = fileName.substring(fileName.indexOf('.'));
+	      if (fileName.indexOf('.') > 0) {
+		      LAST_SCREEN_CAPTURE_FILE_NAME = fileName.substring(0, fileName.indexOf('.'));
+		      LAST_SCREEN_CAPTURE_FILE_EXTENSION = fileName.substring(fileName.indexOf('.'));
+	      }
+	      else
+	      {
+		      LAST_SCREEN_CAPTURE_FILE_NAME = fileName;
+		      LAST_SCREEN_CAPTURE_FILE_EXTENSION = "";
+	      }
       }
       return filePath;
     }
@@ -170,7 +165,7 @@ public class CaptureScreenAction extends Action
        */
       ScalableRootEditPart rootEditPart = (ScalableRootEditPart) viewer.getEditPartRegistry().get(LayerManager.ID);
       IFigure rootFigure = ((LayerManager) rootEditPart).getLayer(LayerConstants.PRINTABLE_LAYERS);// rootEditPart.getFigure();
-      Rectangle rootFigureBounds = rootFigure.getBounds();
+      Rectangle rootFigureBounds = new Rectangle(new Point(0,0),rootFigure.getPreferredSize());
 
       /*
        * 2. Now we want to get the GC associated with the control on which all
@@ -215,20 +210,20 @@ public class CaptureScreenAction extends Action
     String obtainNextFileName()
     {
 
-      int aux = last_screen_capture_file_name.length() - 1;
-      while (Character.isDigit(last_screen_capture_file_name.charAt(aux)))
+      int aux = LAST_SCREEN_CAPTURE_FILE_NAME.length() - 1;
+      while (Character.isDigit(LAST_SCREEN_CAPTURE_FILE_NAME.charAt(aux)))
       {
         aux--;
       }
 
-      String nonNumeratedfileName = last_screen_capture_file_name.substring(0, aux + 1);
-      String filePath = last_screen_capture_path + System.getProperty("file.separator") + nonNumeratedfileName + last_screen_capture_file_extension;
+      String nonNumeratedfileName = LAST_SCREEN_CAPTURE_FILE_NAME.substring(0, aux + 1);
+      String filePath = LAST_SCREEN_CAPTURE_PATH + System.getProperty(FILE_SEPARATOR) + nonNumeratedfileName + LAST_SCREEN_CAPTURE_FILE_EXTENSION; //$NON-NLS-1$
 
       int counter = 1;
       File file = new File(filePath);
       while (file.exists())
       {
-        filePath = last_screen_capture_path + System.getProperty("file.separator") + nonNumeratedfileName + counter++ + last_screen_capture_file_extension;
+        filePath = LAST_SCREEN_CAPTURE_PATH + System.getProperty(FILE_SEPARATOR) + nonNumeratedfileName + counter++ + LAST_SCREEN_CAPTURE_FILE_EXTENSION; //$NON-NLS-1$
         file = new File(filePath);
       }
 
