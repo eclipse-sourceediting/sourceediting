@@ -41,7 +41,7 @@ import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jsdt.core.JavaCore;
+import org.eclipse.wst.jsdt.core.JavaCore;
 import org.eclipse.wst.jsdt.web.core.internal.JSPCoreMessages;
 import org.eclipse.wst.jsdt.web.core.internal.Logger;
 import org.eclipse.wst.jsdt.web.core.internal.contentproperties.JSPFContentProperties;

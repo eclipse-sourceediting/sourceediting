@@ -1,7 +1,7 @@
 package org.eclipse.wst.jsdt.web.ui.internal.hyperlink;
 
-import org.eclipse.jsdt.core.IJavaElement;
-import org.eclipse.jsdt.ui.JavaUI;
+import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.ui.JavaUI;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.wst.jsdt.web.ui.internal.Logger;

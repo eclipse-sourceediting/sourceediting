@@ -15,7 +15,7 @@ import java.util.Iterator;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.jsdt.core.ICompilationUnit;
+import org.eclipse.wst.jsdt.core.ICompilationUnit;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;

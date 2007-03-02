@@ -8,7 +8,7 @@ public interface JsDataTypes extends HTML40Namespace {
 	 * remove when when we refactor (need to add this content type to many
 	 * project types in wst)
 	 */
-	public static final String natureHandlerID = "org.eclipse.jsdt.core.jsNature";
+
 
 	public static final String[] TAKEOVER_PARTITION_TYPES = { "none" };
 

@@ -57,7 +57,7 @@ Require-Bundle: org.eclipse.ui.ide;bundle-version="[3.2.0,4.0.0)",
  org.eclipse.wst.common.project.facet.core;bundle-version="[1.1.0,1.2.0)",
  org.eclipse.wst.common.modulecore;bundle-version="[1.1.0,1.2.0)",
  com.ibm.icu;bundle-version="[3.4.4,4.0.0)",
- org.eclipse.jsdt.core,
- org.eclipse.jsdt.ui,
- org.eclipse.wst.jsdt.debug
+ org.eclipse.wst.jsdt.debug,
+ org.eclipse.wst.jsdt.core,
+ org.eclipse.wst.jsdt.ui
 Eclipse-LazyStart: true

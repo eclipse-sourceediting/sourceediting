@@ -25,9 +25,9 @@ import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentListener;
-import org.eclipse.jsdt.core.IJavaProject;
-import org.eclipse.jsdt.core.JavaCore;
-import org.eclipse.jsdt.internal.core.JavaProject;
+import org.eclipse.wst.jsdt.core.IJavaProject;
+import org.eclipse.wst.jsdt.core.JavaCore;
+import org.eclipse.wst.jsdt.internal.core.JavaProject;
 import org.eclipse.wst.jsdt.web.core.internal.Logger;
 import org.eclipse.wst.jsdt.web.core.internal.nature.JSDTWebNature;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
@@ -210,14 +210,14 @@ public class JSPTranslationAdapter implements INodeAdapter, IDocumentListener {
 	 * 
 	 * @return the java project where
 	 */
-
-	public IPath getWorkingDirectory() {
-		if (getJavaProject() instanceof IProject) {
-			return ((IProject) getJavaProject())
-					.getWorkingLocation(JsDataTypes.natureHandlerID);
-		}
-		return null;
-	}
+//
+//	public IPath getWorkingDirectory() {
+//		if (getJavaProject() instanceof IProject) {
+//			return ((IProject) getJavaProject())
+//					.getWorkingLocation(JsDataTypes.natureHandlerID);
+//		}
+//		return null;
+//	}
 
 	public IFolder getSrcLocation() {
 

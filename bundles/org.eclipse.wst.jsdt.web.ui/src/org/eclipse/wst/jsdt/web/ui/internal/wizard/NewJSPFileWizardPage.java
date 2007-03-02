@@ -24,7 +24,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.content.IContentType;
-import org.eclipse.jsdt.core.JavaCore;
+import org.eclipse.wst.jsdt.core.JavaCore;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.wst.jsdt.web.core.internal.JSPCorePlugin;
 import org.eclipse.wst.jsdt.web.core.internal.preferences.JSPCorePreferenceNames;

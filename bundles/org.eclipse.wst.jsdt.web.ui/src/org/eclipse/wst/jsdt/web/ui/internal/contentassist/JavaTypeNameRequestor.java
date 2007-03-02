@@ -3,11 +3,11 @@ package org.eclipse.wst.jsdt.web.ui.internal.contentassist;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.jsdt.core.CompletionProposal;
-import org.eclipse.jsdt.core.Flags;
-import org.eclipse.jsdt.core.Signature;
-import org.eclipse.jsdt.core.search.TypeNameRequestor;
-import org.eclipse.jsdt.ui.text.java.CompletionProposalLabelProvider;
+import org.eclipse.wst.jsdt.core.CompletionProposal;
+import org.eclipse.wst.jsdt.core.Flags;
+import org.eclipse.wst.jsdt.core.Signature;
+import org.eclipse.wst.jsdt.core.search.TypeNameRequestor;
+import org.eclipse.wst.jsdt.ui.text.java.CompletionProposalLabelProvider;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.wst.jsdt.web.ui.internal.editor.JSPEditorPluginImageHelper;
 import org.eclipse.wst.sse.ui.internal.contentassist.IRelevanceConstants;

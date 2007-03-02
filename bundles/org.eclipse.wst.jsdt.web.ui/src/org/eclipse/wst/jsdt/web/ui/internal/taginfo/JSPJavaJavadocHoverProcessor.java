@@ -12,11 +12,11 @@ package org.eclipse.wst.jsdt.web.ui.internal.taginfo;
 
 import java.io.Reader;
 
-import org.eclipse.jsdt.core.IJavaElement;
-import org.eclipse.jsdt.core.IMember;
-import org.eclipse.jsdt.core.JavaModelException;
-import org.eclipse.jsdt.ui.JavaElementLabels;
-import org.eclipse.jsdt.ui.JavadocContentAccess;
+import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.IMember;
+import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.ui.JavaElementLabels;
+import org.eclipse.wst.jsdt.ui.JavadocContentAccess;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.wst.jsdt.web.core.internal.java.IJSPTranslation;

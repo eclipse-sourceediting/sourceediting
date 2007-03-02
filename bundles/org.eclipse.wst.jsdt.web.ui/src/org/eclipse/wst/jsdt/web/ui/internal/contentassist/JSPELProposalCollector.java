@@ -1,8 +1,8 @@
 package org.eclipse.wst.jsdt.web.ui.internal.contentassist;
 
-import org.eclipse.jsdt.core.CompletionProposal;
-import org.eclipse.jsdt.core.ICompilationUnit;
-import org.eclipse.jsdt.ui.text.java.IJavaCompletionProposal;
+import org.eclipse.wst.jsdt.core.CompletionProposal;
+import org.eclipse.wst.jsdt.core.ICompilationUnit;
+import org.eclipse.wst.jsdt.ui.text.java.IJavaCompletionProposal;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslation;
 import org.eclipse.swt.graphics.Image;

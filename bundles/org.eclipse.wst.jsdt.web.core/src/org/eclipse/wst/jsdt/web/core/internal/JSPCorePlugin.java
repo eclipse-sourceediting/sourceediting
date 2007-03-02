@@ -11,7 +11,7 @@
 package org.eclipse.wst.jsdt.web.core.internal;
 
 import org.eclipse.core.runtime.Plugin;
-import org.eclipse.jsdt.core.JavaCore;
+import org.eclipse.wst.jsdt.core.JavaCore;
 
 import org.eclipse.wst.jsdt.web.core.internal.contentproperties.JSPFContentPropertiesManager;
 import org.eclipse.wst.jsdt.web.core.internal.java.search.JSPIndexManager;

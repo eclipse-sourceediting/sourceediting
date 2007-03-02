@@ -12,8 +12,8 @@ package org.eclipse.wst.jsdt.web.ui.internal.java.refactoring;
 
 import java.text.MessageFormat;
 
-import org.eclipse.jsdt.core.IType;
-import org.eclipse.jsdt.core.search.SearchMatch;
+import org.eclipse.wst.jsdt.core.IType;
+import org.eclipse.wst.jsdt.core.search.SearchMatch;
 import org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslation;
 import org.eclipse.wst.jsdt.web.core.internal.java.search.JavaSearchDocumentDelegate;
 import org.eclipse.wst.jsdt.web.ui.internal.JSPUIMessages;

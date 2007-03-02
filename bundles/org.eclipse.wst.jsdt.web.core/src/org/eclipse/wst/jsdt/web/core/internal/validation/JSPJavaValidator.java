@@ -17,7 +17,7 @@ import java.util.List;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.jsdt.core.compiler.IProblem;
+import org.eclipse.wst.jsdt.core.compiler.IProblem;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.wst.jsdt.web.core.internal.Logger;
 import org.eclipse.wst.jsdt.web.core.internal.java.IJSPTranslation;

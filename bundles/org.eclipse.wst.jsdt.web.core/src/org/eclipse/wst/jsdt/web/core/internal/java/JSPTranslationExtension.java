@@ -17,7 +17,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.jsdt.core.IJavaProject;
+import org.eclipse.wst.jsdt.core.IJavaProject;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;

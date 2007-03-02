@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.jsdt.web.core.internal.java.search;
 
-import org.eclipse.jsdt.core.search.SearchDocument;
+import org.eclipse.wst.jsdt.core.search.SearchDocument;
 import org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslator;
 
 /**

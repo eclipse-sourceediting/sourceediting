@@ -12,8 +12,8 @@ package org.eclipse.wst.jsdt.web.core.internal.java;
 
 import java.util.List;
 
-import org.eclipse.jsdt.core.ICompilationUnit;
-import org.eclipse.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.ICompilationUnit;
+import org.eclipse.wst.jsdt.core.IJavaElement;
 
 /**
  * An object that holds a translated JSP String along with position mapping from

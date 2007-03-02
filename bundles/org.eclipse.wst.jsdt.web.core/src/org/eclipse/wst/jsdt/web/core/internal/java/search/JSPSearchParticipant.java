@@ -18,12 +18,12 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.jsdt.core.search.IJavaSearchScope;
-import org.eclipse.jsdt.core.search.SearchDocument;
-import org.eclipse.jsdt.core.search.SearchEngine;
-import org.eclipse.jsdt.core.search.SearchParticipant;
-import org.eclipse.jsdt.core.search.SearchPattern;
-import org.eclipse.jsdt.core.search.SearchRequestor;
+import org.eclipse.wst.jsdt.core.search.IJavaSearchScope;
+import org.eclipse.wst.jsdt.core.search.SearchDocument;
+import org.eclipse.wst.jsdt.core.search.SearchEngine;
+import org.eclipse.wst.jsdt.core.search.SearchParticipant;
+import org.eclipse.wst.jsdt.core.search.SearchPattern;
+import org.eclipse.wst.jsdt.core.search.SearchRequestor;
 
 /**
  * Integration of JSP w/ java search.

@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.jsdt.web.ui.internal.java.search.ui;
 
-import org.eclipse.jsdt.ui.search.IMatchPresentation;
+import org.eclipse.wst.jsdt.ui.search.IMatchPresentation;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.search.ui.text.Match;
 import org.eclipse.ui.PartInitException;

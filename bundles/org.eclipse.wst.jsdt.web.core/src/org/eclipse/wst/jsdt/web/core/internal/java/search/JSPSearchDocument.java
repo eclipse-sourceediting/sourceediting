@@ -20,7 +20,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jsdt.core.search.SearchParticipant;
+import org.eclipse.wst.jsdt.core.search.SearchParticipant;
 import org.eclipse.jface.text.Position;
 import org.eclipse.wst.jsdt.web.core.internal.Logger;
 import org.eclipse.wst.jsdt.web.core.internal.java.IJSPTranslation;

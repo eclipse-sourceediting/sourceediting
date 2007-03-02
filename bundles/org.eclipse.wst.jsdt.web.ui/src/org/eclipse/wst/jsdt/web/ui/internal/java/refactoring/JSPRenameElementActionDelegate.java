@@ -13,11 +13,11 @@
 package org.eclipse.wst.jsdt.web.ui.internal.java.refactoring;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.jsdt.core.IJavaElement;
-import org.eclipse.jsdt.core.IMethod;
-import org.eclipse.jsdt.core.IPackageFragment;
-import org.eclipse.jsdt.core.IType;
-import org.eclipse.jsdt.ui.refactoring.RenameSupport;
+import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.IMethod;
+import org.eclipse.wst.jsdt.core.IPackageFragment;
+import org.eclipse.wst.jsdt.core.IType;
+import org.eclipse.wst.jsdt.ui.refactoring.RenameSupport;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.wst.jsdt.web.ui.internal.JSPUIMessages;

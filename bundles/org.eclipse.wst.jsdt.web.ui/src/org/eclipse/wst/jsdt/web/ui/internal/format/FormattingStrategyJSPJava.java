@@ -13,10 +13,10 @@ package org.eclipse.wst.jsdt.web.ui.internal.format;
 import java.util.LinkedList;
 import java.util.Map;
 
-import org.eclipse.jsdt.core.ICompilationUnit;
-import org.eclipse.jsdt.core.JavaModelException;
-import org.eclipse.jsdt.core.ToolFactory;
-import org.eclipse.jsdt.core.formatter.CodeFormatter;
+import org.eclipse.wst.jsdt.core.ICompilationUnit;
+import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.ToolFactory;
+import org.eclipse.wst.jsdt.core.formatter.CodeFormatter;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.TextUtilities;

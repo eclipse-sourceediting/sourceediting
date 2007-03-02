@@ -19,15 +19,15 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.text.Position;
-import org.eclipse.jsdt.core.IBuffer;
-import org.eclipse.jsdt.core.ICompilationUnit;
-import org.eclipse.jsdt.core.IJavaElement;
-import org.eclipse.jsdt.core.IJavaProject;
-import org.eclipse.jsdt.core.IPackageDeclaration;
-import org.eclipse.jsdt.core.IPackageFragment;
-import org.eclipse.jsdt.core.IPackageFragmentRoot;
-import org.eclipse.jsdt.core.JavaModelException;
-import org.eclipse.jsdt.core.WorkingCopyOwner;
+import org.eclipse.wst.jsdt.core.IBuffer;
+import org.eclipse.wst.jsdt.core.ICompilationUnit;
+import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.IJavaProject;
+import org.eclipse.wst.jsdt.core.IPackageDeclaration;
+import org.eclipse.wst.jsdt.core.IPackageFragment;
+import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
+import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.WorkingCopyOwner;
 import org.eclipse.wst.jsdt.web.core.internal.Logger;
 
 /**

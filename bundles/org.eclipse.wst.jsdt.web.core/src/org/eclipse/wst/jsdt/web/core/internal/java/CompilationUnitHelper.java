@@ -1,6 +1,6 @@
 package org.eclipse.wst.jsdt.web.core.internal.java;
 
-import org.eclipse.jsdt.core.WorkingCopyOwner;
+import org.eclipse.wst.jsdt.core.WorkingCopyOwner;
 
 /**
  * To ensure there is only one instance of ProblemRequestor and WorkingCopyOwner

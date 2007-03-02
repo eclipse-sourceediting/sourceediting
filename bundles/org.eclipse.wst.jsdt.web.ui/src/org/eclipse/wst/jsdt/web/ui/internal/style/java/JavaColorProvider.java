@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.jsdt.web.ui.internal.style.java;
 
-import org.eclipse.jsdt.ui.PreferenceConstants;
+import org.eclipse.wst.jsdt.ui.PreferenceConstants;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.swt.SWT;

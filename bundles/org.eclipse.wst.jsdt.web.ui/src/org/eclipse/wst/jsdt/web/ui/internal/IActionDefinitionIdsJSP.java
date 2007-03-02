@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.jsdt.web.ui.internal;
 
-import org.eclipse.jsdt.ui.actions.IJavaEditorActionDefinitionIds;
+import org.eclipse.wst.jsdt.ui.actions.IJavaEditorActionDefinitionIds;
 
 /**
  * @author pavery

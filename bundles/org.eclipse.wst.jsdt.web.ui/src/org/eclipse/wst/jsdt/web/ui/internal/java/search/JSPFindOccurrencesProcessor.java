@@ -13,7 +13,7 @@
 package org.eclipse.wst.jsdt.web.ui.internal.java.search;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.IJavaElement;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.wst.jsdt.web.core.internal.java.IJSPTranslation;

@@ -129,7 +129,7 @@
 		name="%JSP_Syntax_Validator.name"
 		point="org.eclipse.wst.validation.validator">
 		<validator>
-			<projectNature id="org.eclipse.jsdt.core.jsNature" />
+			<projectNature id="org.eclipse.wst.jsdt.core.jsNature" />
 
 			<filter
 				objectClass="org.eclipse.core.resources.IFile"

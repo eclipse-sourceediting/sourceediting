@@ -16,8 +16,8 @@ import java.util.List;
 
 import org.eclipse.core.resources.IResourceProxy;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.jsdt.core.IJavaElement;
-import org.eclipse.jsdt.core.search.IJavaSearchScope;
+import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.search.IJavaSearchScope;
 
 /**
  * Used to constrain JSP/java search to certain paths and elements.

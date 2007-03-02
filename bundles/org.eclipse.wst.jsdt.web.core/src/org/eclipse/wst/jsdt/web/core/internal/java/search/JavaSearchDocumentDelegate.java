@@ -11,7 +11,7 @@
 package org.eclipse.wst.jsdt.web.core.internal.java.search;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.jsdt.internal.core.search.JavaSearchDocument;
+import org.eclipse.wst.jsdt.internal.core.search.JavaSearchDocument;
 import org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslationExtension;
 
 /**

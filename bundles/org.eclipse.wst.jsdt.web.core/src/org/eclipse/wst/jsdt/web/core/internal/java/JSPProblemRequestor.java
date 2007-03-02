@@ -7,8 +7,8 @@ package org.eclipse.wst.jsdt.web.core.internal.java;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.jsdt.core.IProblemRequestor;
-import org.eclipse.jsdt.core.compiler.IProblem;
+import org.eclipse.wst.jsdt.core.IProblemRequestor;
+import org.eclipse.wst.jsdt.core.compiler.IProblem;
 
 class JSPProblemRequestor implements IProblemRequestor {
 

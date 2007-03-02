@@ -12,7 +12,7 @@ package org.eclipse.wst.jsdt.web.ui.internal.editor;
 
 import java.util.ResourceBundle;
 
-import org.eclipse.jsdt.ui.actions.RefactorActionGroup;
+import org.eclipse.wst.jsdt.ui.actions.RefactorActionGroup;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.wst.jsdt.web.ui.internal.IActionConstantsJSP;

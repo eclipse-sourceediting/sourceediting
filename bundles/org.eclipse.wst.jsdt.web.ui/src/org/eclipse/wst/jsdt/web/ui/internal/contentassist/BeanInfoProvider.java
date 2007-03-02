@@ -20,13 +20,13 @@ import com.ibm.icu.util.StringTokenizer;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.QualifiedName;
-import org.eclipse.jsdt.core.Flags;
-import org.eclipse.jsdt.core.IJavaProject;
-import org.eclipse.jsdt.core.IMethod;
-import org.eclipse.jsdt.core.IType;
-import org.eclipse.jsdt.core.ITypeHierarchy;
-import org.eclipse.jsdt.core.JavaCore;
-import org.eclipse.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.Flags;
+import org.eclipse.wst.jsdt.core.IJavaProject;
+import org.eclipse.wst.jsdt.core.IMethod;
+import org.eclipse.wst.jsdt.core.IType;
+import org.eclipse.wst.jsdt.core.ITypeHierarchy;
+import org.eclipse.wst.jsdt.core.JavaCore;
+import org.eclipse.wst.jsdt.core.JavaModelException;
 import org.eclipse.wst.jsdt.web.ui.internal.Logger;
 
 /**

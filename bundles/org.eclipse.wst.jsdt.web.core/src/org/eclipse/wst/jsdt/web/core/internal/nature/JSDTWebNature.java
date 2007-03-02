@@ -1,9 +1,9 @@
 package org.eclipse.wst.jsdt.web.core.internal.nature;
 
 
-import org.eclipse.jsdt.ui.JavaUI;
-import org.eclipse.jsdt.ui.PreferenceConstants;
-import org.eclipse.jsdt.ui.wizards.JavaCapabilityConfigurationPage;
+import org.eclipse.wst.jsdt.ui.JavaUI;
+import org.eclipse.wst.jsdt.ui.PreferenceConstants;
+import org.eclipse.wst.jsdt.ui.wizards.JavaCapabilityConfigurationPage;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.IPreferenceStore;
 
@@ -42,18 +42,18 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.eclipse.jsdt.core.IClasspathEntry;
-import org.eclipse.jsdt.core.IJavaProject;
-import org.eclipse.jsdt.core.JavaCore;
-import org.eclipse.jsdt.core.JavaModelException;
-import org.eclipse.jsdt.internal.core.JavaProject;
-import org.eclipse.jsdt.internal.corext.util.Messages;
-import org.eclipse.jsdt.internal.ui.util.CoreUtility;
-import org.eclipse.jsdt.internal.ui.util.ExceptionHandler;
-import org.eclipse.jsdt.internal.ui.wizards.ClassPathDetector;
-import org.eclipse.jsdt.internal.ui.wizards.JavaProjectWizardFirstPage;
-import org.eclipse.jsdt.internal.ui.wizards.JavaProjectWizardSecondPage;
-import org.eclipse.jsdt.internal.ui.wizards.NewWizardMessages;
+import org.eclipse.wst.jsdt.core.IClasspathEntry;
+import org.eclipse.wst.jsdt.core.IJavaProject;
+import org.eclipse.wst.jsdt.core.JavaCore;
+import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.internal.core.JavaProject;
+import org.eclipse.wst.jsdt.internal.corext.util.Messages;
+import org.eclipse.wst.jsdt.internal.ui.util.CoreUtility;
+import org.eclipse.wst.jsdt.internal.ui.util.ExceptionHandler;
+import org.eclipse.wst.jsdt.internal.ui.wizards.ClassPathDetector;
+import org.eclipse.wst.jsdt.internal.ui.wizards.JavaProjectWizardFirstPage;
+import org.eclipse.wst.jsdt.internal.ui.wizards.JavaProjectWizardSecondPage;
+import org.eclipse.wst.jsdt.internal.ui.wizards.NewWizardMessages;
 
 
 

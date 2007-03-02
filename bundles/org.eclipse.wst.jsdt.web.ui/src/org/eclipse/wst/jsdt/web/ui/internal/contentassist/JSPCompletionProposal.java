@@ -1,6 +1,6 @@
 package org.eclipse.wst.jsdt.web.ui.internal.contentassist;
 
-import org.eclipse.jsdt.ui.text.java.IJavaCompletionProposal;
+import org.eclipse.wst.jsdt.ui.text.java.IJavaCompletionProposal;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContextInformation;
