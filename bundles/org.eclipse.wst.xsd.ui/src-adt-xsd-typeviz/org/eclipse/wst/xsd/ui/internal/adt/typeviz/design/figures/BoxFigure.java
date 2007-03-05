@@ -31,6 +31,7 @@ public class BoxFigure extends Figure
   public BoxFigure()
   {
     super();
+    setBackgroundColor(ColorConstants.white);
     headingFigure = new HeadingFigure();   
     add(headingFigure);
 
@@ -38,6 +39,7 @@ public class BoxFigure extends Figure
     {
       public void paint(Graphics graphics)
       {
+        graphics.fillRectangle(getBounds());
         super.paint(graphics);
         boolean isFirst = false;
         for (Iterator i = getChildren().iterator(); i.hasNext();)
