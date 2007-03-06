@@ -6,13 +6,15 @@ import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
+import org.eclipse.wst.jsdt.internal.ui.text.java.JavaCompletionProposal;
 
 /**
  * Implements IJavaCompletionProposal for use with JSPProposalCollector.
  * 
  * @plannedfor 1.0
  */
-public class JSPCompletionProposal extends CustomCompletionProposal implements
+//public class JSPCompletionProposal extends CustomCompletionProposal implements
+public class JSDTCompletionProposal extends JavaCompletionProposal implements
 		IJavaCompletionProposal {
 
 	/*
@@ -24,16 +26,23 @@ public class JSPCompletionProposal extends CustomCompletionProposal implements
 	 */
 	ICompletionProposal fJavaCompletionProposal = null;
 
-	public JSPCompletionProposal(String replacementString,
+	public JSDTCompletionProposal(String replacementString,
 			int replacementOffset, int replacementLength, int cursorPosition,
 			Image image, String displayString,
 			IContextInformation contextInformation,
 			String additionalProposalInfo, int relevance,
 			boolean updateReplacementLengthOnValidate) {
-		super(replacementString, replacementOffset, replacementLength,
-				cursorPosition, image, displayString, contextInformation,
-				additionalProposalInfo, relevance,
-				updateReplacementLengthOnValidate);
+        
+        super(replacementString,replacementOffset,replacementLength,image,displayString,relevance);
+        super.setCursorPosition(cursorPosition);
+        super.setContextInformation(contextInformation);
+       
+      
+        
+//		super(replacementString, replacementOffset, replacementLength,
+//				cursorPosition, image, displayString, contextInformation,
+//				additionalProposalInfo, relevance,
+//				updateReplacementLengthOnValidate);
 	}
 
 	/**

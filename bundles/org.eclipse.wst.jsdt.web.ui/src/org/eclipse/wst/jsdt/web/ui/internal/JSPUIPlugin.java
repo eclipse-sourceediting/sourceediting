@@ -14,6 +14,9 @@ import java.io.IOException;
 
 import org.eclipse.jface.text.templates.ContextTypeRegistry;
 import org.eclipse.jface.text.templates.persistence.TemplateStore;
+import org.eclipse.wst.jsdt.internal.corext.template.java.CodeTemplateContextType;
+import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.ui.text.JavaSourceViewerConfiguration;
 import org.eclipse.wst.jsdt.web.ui.internal.preferences.JSPUIPreferenceNames;
 import org.eclipse.wst.jsdt.web.ui.internal.templates.TemplateContextTypeIdsJSP;
 import org.eclipse.ui.editors.text.templates.ContributionContextTypeRegistry;
@@ -65,10 +68,12 @@ public class JSPUIPlugin extends AbstractUIPlugin {
 	 */
 	public TemplateStore getTemplateStore() {
 		if (fTemplateStore == null) {
-			fTemplateStore = new ContributionTemplateStore(
-					getTemplateContextRegistry(), getPreferenceStore(),
-					JSPUIPreferenceNames.TEMPLATES_KEY);
-
+//			fTemplateStore = new ContributionTemplateStore(
+//					getTemplateContextRegistry(), getPreferenceStore(),
+//					JSPUIPreferenceNames.TEMPLATES_KEY);
+			JavaPlugin jp = JavaPlugin.getDefault();
+			fTemplateStore = jp.getTemplateStore();
+			
 			try {
 				fTemplateStore.load();
 			} catch (IOException e) {
@@ -85,14 +90,14 @@ public class JSPUIPlugin extends AbstractUIPlugin {
 	 */
 	public ContextTypeRegistry getTemplateContextRegistry() {
 		if (fContextTypeRegistry == null) {
-			ContributionContextTypeRegistry registry = new ContributionContextTypeRegistry();
-			registry.addContextType(TemplateContextTypeIdsJSP.ALL);
-			registry.addContextType(TemplateContextTypeIdsJSP.NEW);
-			registry.addContextType(TemplateContextTypeIdsJSP.TAG);
-			registry.addContextType(TemplateContextTypeIdsJSP.ATTRIBUTE);
-			registry.addContextType(TemplateContextTypeIdsJSP.ATTRIBUTE_VALUE);
-
-			fContextTypeRegistry = registry;
+//			ContributionContextTypeRegistry registry = new ContributionContextTypeRegistry();
+//			registry.addContextType(TemplateContextTypeIdsJSP.ALL);
+//			registry.addContextType(TemplateContextTypeIdsJSP.NEW);
+//			registry.addContextType(TemplateContextTypeIdsJSP.TAG);
+//			registry.addContextType(TemplateContextTypeIdsJSP.ATTRIBUTE);
+//			registry.addContextType(TemplateContextTypeIdsJSP.ATTRIBUTE_VALUE);
+			
+			fContextTypeRegistry = JavaPlugin.getDefault().getCodeTemplateContextRegistry();
 		}
 
 		return fContextTypeRegistry;

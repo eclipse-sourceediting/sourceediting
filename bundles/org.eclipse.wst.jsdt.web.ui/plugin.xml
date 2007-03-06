@@ -88,6 +88,7 @@
 	<!--======================================================================================-->
 	<!-- HTML (as you type) validation					   						  			  -->
 	<!--======================================================================================-->
+	<!--
 	<extension point="org.eclipse.wst.sse.ui.sourcevalidation">
 		<validator
 			scope="partial"
@@ -102,7 +103,7 @@
 			</contentTypeIdentifier>
 		</validator>
 	</extension>
-
+	-->
 	<!--======================================================================================-->
 	<!-- JSP UI Adapter factories					   						  				  -->
 	<!--======================================================================================-->
@@ -187,7 +188,7 @@
 				</provider>
 			-->
 			<provider
-				contentTypes="org.eclipse.wst.jsdt.web.core.jspsource"
+				contentTypes="org.eclipse.wst.html.core.htmlsource"
 				class="org.eclipse.wst.jsdt.web.ui.internal.breakpointproviders.JavaStratumBreakpointProvider:*html,js,htm*"
 				id="org.eclipse.wst.jsdt.web.ui.internal.breakpointproviders.JavaStratumBreakpointProvider" />
 		</breakpointContribution>
@@ -202,7 +203,7 @@
 			label="%JSP_Extension_Element.label"
 			smallicon="icons/snippets/tag-jsp.gif"
 			id="org.eclipse.wst.jsdt.web.ui.category0"
-			contenttypes="org.eclipse.wst.jsdt.web.core.jspsource">
+			contenttypes="org.eclipse.wst.html.core.htmlsource">
 			<item
 				label="%jsp_hidden_comment"
 				smallicon="icons/snippets/tag-generic.gif"
@@ -356,6 +357,7 @@
 	</extension>
 
 	<!-- New JSP wizard -->
+	<!--
 	<extension point="org.eclipse.ui.newWizards">
 		<wizard
 			id="org.eclipse.wst.jsdt.web.ui.internal.wizard.NewJSPWizard"
@@ -367,8 +369,9 @@
 			<selection class="org.eclipse.core.resources.IResource" />
 		</wizard>
 	</extension>
-
+	-->
 	<!-- Add new JSP wizard to J2EE Project Navigator -->
+	<!--
 	<extension
 		id="org.eclipse.wst.jsdt.web.commonWizard.newJSP"
 		point="org.eclipse.ui.navigator.navigatorContent">
@@ -387,7 +390,7 @@
 			</enablement>
 		</commonWizard>
 	</extension>
-
+	-->
 	<extension point="org.eclipse.ui.popupMenus">
 		<viewerContribution
 			targetID="org.eclipse.wst.jsdt.web.core.jspsource.source.RulerContext"

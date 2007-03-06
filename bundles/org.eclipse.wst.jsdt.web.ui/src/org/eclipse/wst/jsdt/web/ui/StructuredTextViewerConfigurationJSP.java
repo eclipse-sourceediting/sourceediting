@@ -33,9 +33,8 @@ import org.eclipse.wst.jsdt.web.core.internal.text.StructuredTextPartitionerForJ
 import org.eclipse.wst.jsdt.web.core.text.IJSPPartitions;
 import org.eclipse.wst.jsdt.web.ui.internal.autoedit.AutoEditStrategyForTabs;
 import org.eclipse.wst.jsdt.web.ui.internal.autoedit.StructuredAutoEditStrategyJSP;
-import org.eclipse.wst.jsdt.web.ui.internal.contentassist.JSPContentAssistProcessor;
-import org.eclipse.wst.jsdt.web.ui.internal.contentassist.JSPJavaContentAssistProcessor;
-import org.eclipse.wst.jsdt.web.ui.internal.contentassist.NoRegionContentAssistProcessorForJSP;
+import org.eclipse.wst.jsdt.web.ui.internal.contentassist.JSDTContentAssistant;
+
 import org.eclipse.wst.jsdt.web.ui.internal.format.FormattingStrategyJSPJava;
 import org.eclipse.wst.jsdt.web.ui.internal.hyperlink.JSPJavaHyperlinkDetector;
 import org.eclipse.wst.jsdt.web.ui.internal.hyperlink.XMLHyperlinkDetector;
@@ -217,7 +216,9 @@ public class StructuredTextViewerConfigurationJSP extends
 																   IContentAssistProcessor[] processors = null;
 
 			if ( partitionType == IJSPPartitions.JSP_CONTENT_JAVA ){
-				processors = new IContentAssistProcessor[] { new JSPJavaContentAssistProcessor() };
+				//processors = new IContentAssistProcessor[] { new JSPJavaContentAssistProcessor() };
+				//processors = new IContentAssistProcessor[] {  new JSPContentAssistProcessor()};
+				processors = new IContentAssistProcessor[] { new JSDTContentAssistant() };
 			}
 			
 //		if ((partitionType == IXMLPartitions.XML_CDATA)
