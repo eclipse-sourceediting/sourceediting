@@ -105,6 +105,7 @@ public class XSDMultiPageEditorContributor extends MultiPageEditorActionBarContr
       isSource = true;
       zoomInRetargetAction.setEnabled(false);
       zoomOutRetargetAction.setEnabled(false);
+      captureScreenAction.setEnabled(false);
       activateSourcePage(activeEditorPart, true);
     }
     else
@@ -138,6 +139,7 @@ public class XSDMultiPageEditorContributor extends MultiPageEditorActionBarContr
           actionBars.setGlobalActionHandler(ActionFactory.PRINT.getId(), registry.getAction(ActionFactory.PRINT.getId()));
           zoomInRetargetAction.setEnabled(true);
           zoomOutRetargetAction.setEnabled(true);
+          captureScreenAction.setEnabled(true);
         }
       }
     }
@@ -207,6 +209,7 @@ public class XSDMultiPageEditorContributor extends MultiPageEditorActionBarContr
 
     menu.add(zoomInRetargetAction);
     menu.add(zoomOutRetargetAction);
+    menu.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
     menu.add(captureScreenAction);
 
     menu.updateAll(true);

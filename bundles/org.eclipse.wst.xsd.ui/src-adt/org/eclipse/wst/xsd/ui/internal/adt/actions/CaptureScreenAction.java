@@ -49,6 +49,7 @@ public class CaptureScreenAction extends Action
     setToolTipText(Messages._UI_CAPTURE_SCREEN_ACTION_TOOLTIPTEXT);
     setImageDescriptor(XSDEditorPlugin.getImageDescriptor("icons/etool16/capturescreen.gif")); //$NON-NLS-1$
     setDisabledImageDescriptor(XSDEditorPlugin.getImageDescriptor("icons/dtool16/capturescreen.gif")); //$NON-NLS-1$
+    setAccelerator(SWT.CTRL | SWT.SHIFT | 'X'); //$NON-NLS-1$
   }
 
   public void run()
