@@ -13,6 +13,7 @@ package org.eclipse.wst.xsd.ui.internal.editor;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
@@ -43,6 +44,8 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.INavigationLocation;
 import org.eclipse.ui.INavigationLocationProvider;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.ui.views.properties.tabbed.ITabbedPropertySheetPageContributor;
@@ -52,6 +55,7 @@ import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xsd.ui.internal.adapters.CategoryAdapter;
@@ -843,9 +847,23 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
 
     public void selectionChanged(SelectionChangedEvent event)
     {
+		// do not fire selection in source editor if the current active page is the InternalXSDMultiPageEditor (source)
+		// We only want to make source selections if the active page is either the outline or properties (a modify
+		// has been done via the outline or properties and not the source view).  We don't want to be selecting
+		// and unselecting things in the source when editing in the source!!
+    	boolean makeSelection = true;
+		if (PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage() != null) {
+			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+			if (page.getActivePart() instanceof InternalXSDMultiPageEditor) {
+				if (getActiveEditor() instanceof StructuredTextEditor) {
+					makeSelection = false;
+				}
+			}
+		}
+    	
       // do not fire selection in source editor if selection event came
       // from source editor
-      if (event.getSource() != getTextEditor().getSelectionProvider())
+      if (event.getSource() != getTextEditor().getSelectionProvider() && makeSelection)
       {
         ISelection selection = event.getSelection();
         if (selection instanceof IStructuredSelection)
