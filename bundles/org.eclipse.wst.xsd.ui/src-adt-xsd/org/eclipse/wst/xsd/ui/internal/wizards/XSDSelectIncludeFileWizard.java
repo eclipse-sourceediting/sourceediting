@@ -59,7 +59,7 @@ public class XSDSelectIncludeFileWizard extends Wizard implements INewWizard
   {
     super();
     setWindowTitle(title);
-    setDefaultPageImageDescriptor(ImageDescriptor.createFromFile(XSDEditorPlugin.class, "icons/NewXSD.gif"));
+    setDefaultPageImageDescriptor(ImageDescriptor.createFromFile(XSDEditorPlugin.class, "icons/NewXSD.png"));
 
     setNeedsProgressMonitor(true);
 

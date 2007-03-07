@@ -34,7 +34,7 @@ public class RegexWizard extends Wizard
   {
     super();
     setWindowTitle(XSDEditorPlugin.getXSDString("_UI_REGEX_WIZARD_TITLE"));
-    setDefaultPageImageDescriptor(ImageDescriptor.createFromFile(XSDEditorPlugin.class, "icons/regx_wiz.gif"));
+    setDefaultPageImageDescriptor(ImageDescriptor.createFromFile(XSDEditorPlugin.class, "icons/regx_wiz.png"));
 
     XSDFactoryImpl factory = new XSDFactoryImpl();
     modifiedPattern = factory.createXSDPatternFacet();

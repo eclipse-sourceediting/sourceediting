@@ -48,7 +48,7 @@ public class NewXSDWizard extends Wizard implements INewWizard {
 		this.selection = aSelection;
 		this.workbench = aWorkbench;
 
-		this.setDefaultPageImageDescriptor(ImageDescriptor.createFromFile(XSDEditorPlugin.class, "icons/NewXSD.gif"));
+		this.setDefaultPageImageDescriptor(ImageDescriptor.createFromFile(XSDEditorPlugin.class, "icons/NewXSD.png"));
 		this.setWindowTitle(XSDEditorPlugin.getXSDString("_UI_WIZARD_CREATE_XSD_MODEL_TITLE"));
 	}
 
