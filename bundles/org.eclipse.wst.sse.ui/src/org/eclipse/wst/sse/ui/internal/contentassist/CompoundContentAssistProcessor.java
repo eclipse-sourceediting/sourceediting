@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,12 +23,15 @@ import java.util.Set;
 
 import org.eclipse.jface.contentassist.IContentAssistSubjectControl;
 import org.eclipse.jface.contentassist.ISubjectControlContentAssistProcessor;
+import org.eclipse.jface.contentassist.ISubjectControlContextInformationPresenter;
 import org.eclipse.jface.contentassist.ISubjectControlContextInformationValidator;
 import org.eclipse.jface.text.Assert;
 import org.eclipse.jface.text.ITextViewer;
+import org.eclipse.jface.text.TextPresentation;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContextInformation;
+import org.eclipse.jface.text.contentassist.IContextInformationPresenter;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.sse.ui.internal.IReleasable;
@@ -96,6 +99,10 @@ class CompoundContentAssistProcessor implements IContentAssistProcessor, ISubjec
 		IContentAssistProcessor getProcessor() {
 			return fProcessor;
 		}
+
+		IContextInformation getContextInformation() {
+			return fInfo;
+		}
 	}
 
 	private static class CompoundContentAssistValidator implements IContextInformationValidator {
@@ -113,12 +120,13 @@ class CompoundContentAssistProcessor implements IContentAssistProcessor, ISubjec
 		public void install(IContextInformation info, ITextViewer viewer, int documentPosition) {
 			// install either the validator in the info, or all validators
 			fValidator = getValidator(info);
+			IContextInformation realInfo = getContextInformation(info);
 			if (fValidator != null)
-				fValidator.install(info, viewer, documentPosition);
+				fValidator.install(realInfo, viewer, documentPosition);
 			else {
 				for (Iterator it = fValidators.iterator(); it.hasNext();) {
 					IContextInformationValidator v = (IContextInformationValidator) it.next();
-					v.install(info, viewer, documentPosition);
+					v.install(realInfo, viewer, documentPosition);
 				}
 			}
 		}
@@ -130,6 +138,16 @@ class CompoundContentAssistProcessor implements IContentAssistProcessor, ISubjec
 			}
 
 			return null;
+		}
+
+		IContextInformation getContextInformation(IContextInformation info) {
+			IContextInformation realInfo = null;
+			if (info instanceof WrappedContextInformation) {
+				WrappedContextInformation wrap = (WrappedContextInformation) info;
+				realInfo = wrap.getContextInformation();
+			}
+
+			return realInfo;
 		}
 
 		/*
@@ -151,8 +169,24 @@ class CompoundContentAssistProcessor implements IContentAssistProcessor, ISubjec
 
 	}
 
-	private static class CompoundContentAssistValidatorEx extends CompoundContentAssistValidator implements ISubjectControlContextInformationValidator {
+	private static class CompoundContentAssistValidatorPresenter extends CompoundContentAssistValidator implements IContextInformationPresenter {
+		public boolean updatePresentation(int offset, TextPresentation presentation) {
+			// use either the validator in the info, or all validators
+			boolean presentationUpdated = false;
+			if (fValidator instanceof IContextInformationPresenter)
+				presentationUpdated = ((IContextInformationPresenter) fValidator).updatePresentation(offset, presentation);
+			else {
+				for (Iterator it = fValidators.iterator(); it.hasNext();) {
+					IContextInformationValidator v = (IContextInformationValidator) it.next();
+					if (v instanceof IContextInformationPresenter)
+						presentationUpdated |= ((IContextInformationPresenter) v).updatePresentation(offset, presentation);
+				}
+			}
+			return presentationUpdated;
+		}
+	}
 
+	private static class CompoundContentAssistValidatorEx extends CompoundContentAssistValidator implements ISubjectControlContextInformationValidator {
 		/*
 		 * @see ISubjectControlContextInformationValidator#install(IContextInformation,
 		 *      IContentAssistSubjectControl, int)
@@ -160,12 +194,35 @@ class CompoundContentAssistProcessor implements IContentAssistProcessor, ISubjec
 		public void install(IContextInformation info, IContentAssistSubjectControl contentAssistSubjectControl, int documentPosition) {
 			// install either the validator in the info, or all validators
 			fValidator = getValidator(info);
+			IContextInformation realInfo = getContextInformation(info);
 			if (fValidator instanceof ISubjectControlContextInformationValidator)
-				((ISubjectControlContextInformationValidator) fValidator).install(info, contentAssistSubjectControl, documentPosition);
+				((ISubjectControlContextInformationValidator) fValidator).install(realInfo, contentAssistSubjectControl, documentPosition);
 			else {
 				for (Iterator it = fValidators.iterator(); it.hasNext();) {
 					if (it.next() instanceof ISubjectControlContextInformationValidator)
-						((ISubjectControlContextInformationValidator) it.next()).install(info, contentAssistSubjectControl, documentPosition);
+						((ISubjectControlContextInformationValidator) it.next()).install(realInfo, contentAssistSubjectControl, documentPosition);
+				}
+			}
+		}
+
+	}
+
+	private static class CompoundContentAssistValidatorPresenterEx extends CompoundContentAssistValidatorPresenter implements ISubjectControlContextInformationPresenter, ISubjectControlContextInformationValidator {
+		/*
+		 * @see ISubjectControlContextInformationPresenter#install(IContextInformation,
+		 *      IContentAssistSubjectControl, int)
+		 */
+		public void install(IContextInformation info, IContentAssistSubjectControl contentAssistSubjectControl, int documentPosition) {
+			// install either the validator in the info, or all validators
+			fValidator = getValidator(info);
+			IContextInformation realInfo = getContextInformation(info);
+
+			if (fValidator instanceof ISubjectControlContextInformationValidator)
+				((ISubjectControlContextInformationValidator) fValidator).install(realInfo, contentAssistSubjectControl, documentPosition);
+			else {
+				for (Iterator it = fValidators.iterator(); it.hasNext();) {
+					if (it.next() instanceof ISubjectControlContextInformationValidator)
+						((ISubjectControlContextInformationValidator) it.next()).install(realInfo, contentAssistSubjectControl, documentPosition);
 				}
 			}
 		}
@@ -332,21 +389,30 @@ class CompoundContentAssistProcessor implements IContentAssistProcessor, ISubjec
 	 */
 	public IContextInformationValidator getContextInformationValidator() {
 		boolean hasValidator = false;
+		boolean hasPresenter = false;
 		boolean hasExtension = false;
-		for (Iterator it = fProcessors.iterator(); it.hasNext();) {
-			IContentAssistProcessor p = (IContentAssistProcessor) it.next();
+
+		Iterator itp = fProcessors.iterator();
+		while (itp.hasNext() && (!hasPresenter || !hasExtension)) {
+			IContentAssistProcessor p = (IContentAssistProcessor) itp.next();
 			IContextInformationValidator v = p.getContextInformationValidator();
-			if (v instanceof ISubjectControlContextInformationValidator) {
-				hasExtension = true;
-				break;
-			}
-			else if (v != null) {
+			if (v != null) {
 				hasValidator = true;
+				if (v instanceof IContextInformationPresenter) {
+					hasPresenter = true;
+				}
+				if (v instanceof ISubjectControlContextInformationPresenter || v instanceof ISubjectControlContextInformationValidator) {
+					hasExtension = true;
+				}
 			}
 		}
 
 		CompoundContentAssistValidator validator = null;
-		if (hasExtension)
+		if (hasPresenter && hasExtension)
+			validator = new CompoundContentAssistValidatorPresenterEx();
+		else if (hasPresenter)
+			validator = new CompoundContentAssistValidatorPresenter();
+		else if (hasExtension)
 			validator = new CompoundContentAssistValidatorEx();
 		else if (hasValidator)
 			validator = new CompoundContentAssistValidator();
