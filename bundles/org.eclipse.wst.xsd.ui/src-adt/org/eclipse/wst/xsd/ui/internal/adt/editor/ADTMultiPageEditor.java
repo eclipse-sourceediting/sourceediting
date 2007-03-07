@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.adt.editor;
 
+import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartFactory;
@@ -17,7 +18,6 @@ import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.gef.editparts.ZoomManager;
 import org.eclipse.gef.ui.actions.ActionRegistry;
-import org.eclipse.gef.ui.parts.GraphicalViewerImpl;
 import org.eclipse.gef.ui.parts.ScrollingGraphicalViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -32,9 +32,9 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.BaseSelectionAction;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.SetInputToGraphView;
+import org.eclipse.wst.xsd.ui.internal.adt.design.ADTFloatingToolbar;
 import org.eclipse.wst.xsd.ui.internal.adt.design.DesignViewGraphicalViewer;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.ADTEditPartFactory;
-import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.BackToSchemaEditPart;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IModel;
 import org.eclipse.wst.xsd.ui.internal.adt.outline.ADTContentOutlinePage;
 import org.eclipse.wst.xsd.ui.internal.adt.outline.ADTLabelProvider;
@@ -45,6 +45,7 @@ public abstract class ADTMultiPageEditor extends CommonMultiPageEditor
   protected IModel model;
   private int currentPage = -1;
   protected Button tableOfContentsButton;
+  protected ADTFloatingToolbar floatingToolbar;
   
   /**
    * Creates a multi-page editor example.
@@ -74,8 +75,9 @@ public abstract class ADTMultiPageEditor extends CommonMultiPageEditor
       for (int i = 0; i < children.length; i++) 
       {
         if (i == 0)  // For the back to schema button 
-        {  
-          children[i].setBounds(rect.x + 10, rect.y + 10, 26, 26);
+        { 
+          org.eclipse.draw2d.geometry.Rectangle r = ((GraphicalEditPart)floatingToolbar.getContents()).getFigure().getBounds();
+          children[i].setBounds(rect.x + 10, rect.y + 10, r.width, Math.max(24, r.height));
         }
         else if (i == 1 && modeCombo != null) // For the drop down toolbar
         {
@@ -89,20 +91,16 @@ public abstract class ADTMultiPageEditor extends CommonMultiPageEditor
     }               
   }
   
-  GraphicalViewerImpl toolbarViewer;
-  BackToSchemaEditPart backToSchemaEditPart;
   protected Composite createGraphPageComposite()
   {    
     Composite parent = new Composite(getContainer(), SWT.FLAT);
-    parent.setLayout(new InternalLayout());
+    parent.setBackground(ColorConstants.white);
     
-    // the palletViewer extends from this...maybe use it instead?
-    toolbarViewer = new GraphicalViewerImpl();
-    toolbarViewer.createControl(parent);
-    toolbarViewer.getControl().setVisible(true);
-    backToSchemaEditPart = new BackToSchemaEditPart(this);
-    backToSchemaEditPart.setModel(getModel());
-    toolbarViewer.setContents(backToSchemaEditPart);
+    parent.setLayout(new InternalLayout());
+
+    floatingToolbar = new ADTFloatingToolbar(getModel());
+    floatingToolbar.createControl(parent);
+    floatingToolbar.getControl().setVisible(true);
     
     createViewModeToolbar(parent);
     
@@ -153,6 +151,7 @@ public abstract class ADTMultiPageEditor extends CommonMultiPageEditor
     model = buildModel();  // (IFileEditorInput)getEditorInput());
     
     initializeGraphicalViewer();
+    floatingToolbar.setModel(model);
     
     int pageIndexToShow = getDefaultPageTypeIndex();
     setActivePage(pageIndexToShow);
@@ -186,8 +185,7 @@ public abstract class ADTMultiPageEditor extends CommonMultiPageEditor
       public void selectionChanged(SelectionChangedEvent event)
       {        
         IStructuredSelection input = (IStructuredSelection)event.getSelection();
-        backToSchemaEditPart.setEnabled(isTableOfContentsApplicable(input.getFirstElement()));
-        backToSchemaEditPart.setModel(getModel());
+        floatingToolbar.refresh(isTableOfContentsApplicable(input.getFirstElement()));
       }      
     });
     return viewer;
@@ -249,8 +247,7 @@ public abstract class ADTMultiPageEditor extends CommonMultiPageEditor
     {
       XSDEditorPlugin.getPlugin().setDesignPageAsDefault();
     }
-    toolbarViewer = null;
-    backToSchemaEditPart = null;
+    floatingToolbar = null;
     super.dispose();
   }
 }

@@ -308,7 +308,7 @@ public class XSDSchemaAdapter extends XSDBaseAdapter implements IActionProvider,
     return adapterList;
   }
   
-  protected List getGlobalElements(XSDSchema schema, boolean showFromIncludes)
+  public List getGlobalElements(XSDSchema schema, boolean showFromIncludes)
   {
     List elements = schema.getElementDeclarations();
     List list = new ArrayList();
@@ -325,7 +325,7 @@ public class XSDSchemaAdapter extends XSDBaseAdapter implements IActionProvider,
     return adapterList;
   }
 
-  protected List getGlobalElements(XSDSchema schema)
+  public List getGlobalElements(XSDSchema schema)
   {
     return getGlobalElements(schema, false);
   }
@@ -334,7 +334,7 @@ public class XSDSchemaAdapter extends XSDBaseAdapter implements IActionProvider,
    * @param schema
    * @return
    */
-  protected List getComplexTypes(XSDSchema schema, boolean showFromIncludes)
+  public List getComplexTypes(XSDSchema schema, boolean showFromIncludes)
   {
     List allTypes = schema.getTypeDefinitions();
     List list = new ArrayList();
@@ -355,19 +355,19 @@ public class XSDSchemaAdapter extends XSDBaseAdapter implements IActionProvider,
     return adapterList;
   }
 
-  protected List getComplexTypes(XSDSchema schema)
+  public List getComplexTypes(XSDSchema schema)
   {
     return getComplexTypes(schema, false);
   }
   
-  protected List getTypes(XSDSchema schema, boolean showFromIncludes)
+  public List getTypes(XSDSchema schema, boolean showFromIncludes)
   {
     List list = getComplexTypes(schema, showFromIncludes);
     list.addAll(getSimpleTypes(schema, showFromIncludes));
     return list;
   }
   
-  protected List getAttributeGroupList(XSDSchema xsdSchema, boolean showFromIncludes)
+  public List getAttributeGroupList(XSDSchema xsdSchema, boolean showFromIncludes)
   {
     List attributeGroupList = new ArrayList();
     for (Iterator i = xsdSchema.getAttributeGroupDefinitions().iterator(); i.hasNext();)
@@ -383,12 +383,12 @@ public class XSDSchemaAdapter extends XSDBaseAdapter implements IActionProvider,
     return adapterList;
   }
   
-  protected List getAttributeGroupList(XSDSchema xsdSchema)
+  public List getAttributeGroupList(XSDSchema xsdSchema)
   {
     return getAttributeGroupList(xsdSchema, false);
   }
 
-  protected List getAttributeList(XSDSchema xsdSchema, boolean showFromIncludes)
+  public List getAttributeList(XSDSchema xsdSchema, boolean showFromIncludes)
   {
     List attributesList = new ArrayList();
     for (Iterator iter = xsdSchema.getAttributeDeclarations().iterator(); iter.hasNext();)
@@ -427,12 +427,12 @@ public class XSDSchemaAdapter extends XSDBaseAdapter implements IActionProvider,
     return adapterList;
   }
   
-  protected List getAttributeList(XSDSchema xsdSchema)
+  public List getAttributeList(XSDSchema xsdSchema)
   {
     return getAttributeList(xsdSchema, false);
   }
 
-  protected List getSimpleTypes(XSDSchema schema, boolean showFromIncludes)
+  public List getSimpleTypes(XSDSchema schema, boolean showFromIncludes)
   {
     List allTypes = schema.getTypeDefinitions();
     List list = new ArrayList();
@@ -453,12 +453,12 @@ public class XSDSchemaAdapter extends XSDBaseAdapter implements IActionProvider,
     return adapterList;
   }
   
-  protected List getSimpleTypes(XSDSchema schema)
+  public List getSimpleTypes(XSDSchema schema)
   {
     return getSimpleTypes(schema, false);
   }
 
-  protected List getGroups(XSDSchema schema, boolean showFromIncludes)
+  public List getGroups(XSDSchema schema, boolean showFromIncludes)
   {
     List groups = schema.getModelGroupDefinitions();
     List list = new ArrayList();
@@ -475,7 +475,7 @@ public class XSDSchemaAdapter extends XSDBaseAdapter implements IActionProvider,
     return adapterList;
   }
   
-  protected List getGroups(XSDSchema schema)
+  public List getGroups(XSDSchema schema)
   {
     return getGroups(schema, false);
   }

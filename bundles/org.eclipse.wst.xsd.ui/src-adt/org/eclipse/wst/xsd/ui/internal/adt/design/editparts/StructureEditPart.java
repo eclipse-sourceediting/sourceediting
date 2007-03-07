@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -43,6 +43,8 @@ public class StructureEditPart extends BaseTypeConnectingEditPart implements INa
 {  
   protected List compartmentList = null;
   protected ADTDirectEditPolicy adtDirectEditPolicy = new ADTDirectEditPolicy();
+  protected TypeReferenceConnection connectionFigure;
+  protected TypeReferenceConnection connectionFeedbackFigure;
 
   /**
    * TODO cs... I'm sure this has something to do with the way we wanted to rework compartment creation
@@ -155,16 +157,13 @@ public class StructureEditPart extends BaseTypeConnectingEditPart implements INa
 
   public void performRequest(Request request)
   {  
-    if (request.getType() == RequestConstants.REQ_DIRECT_EDIT ||
-        request.getType() == RequestConstants.REQ_OPEN)
+    if (request.getType() == RequestConstants.REQ_DIRECT_EDIT)
     {
-      
-      Object model = getModel();
       if (request instanceof LocationRequest)
       {
-        LocationRequest locationRequest = (LocationRequest)request;
-        Point p = locationRequest.getLocation();
-// uncomment for direct edit of name (add else)
+     // uncomment for direct edit of name (add else)
+//        LocationRequest locationRequest = (LocationRequest)request;
+//        Point p = locationRequest.getLocation();
 //        if (hitTest(getNameLabelFigure(), p))
 //        {
 //          LabelEditManager manager = new LabelEditManager(this, new LabelCellEditorLocator(this, p));
@@ -172,7 +171,15 @@ public class StructureEditPart extends BaseTypeConnectingEditPart implements INa
 //          adtDirectEditPolicy.setUpdateCommand(wrapper);
 //          manager.show();
 //        }
-       
+      }
+    }
+    else if (request.getType() == RequestConstants.REQ_OPEN)
+    {
+      Object model = getModel();
+      if (request instanceof LocationRequest)
+      {
+        LocationRequest locationRequest = (LocationRequest)request;
+        Point p = locationRequest.getLocation();
          
         if (getStructureFigure().hitTestHeader(p))
         {          

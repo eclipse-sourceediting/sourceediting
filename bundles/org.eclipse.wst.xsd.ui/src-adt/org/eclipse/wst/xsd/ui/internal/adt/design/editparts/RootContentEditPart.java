@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,6 +15,7 @@ import java.util.Iterator;
 import java.util.List;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.MarginBorder;
 import org.eclipse.draw2d.Panel;
 import org.eclipse.draw2d.ToolbarLayout;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
@@ -27,7 +28,6 @@ import org.eclipse.wst.xsd.ui.internal.adt.facade.IField;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IModel;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IStructure;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IType;
-import org.eclipse.wst.xsd.ui.internal.design.layouts.ContainerLayout;
 
 public class RootContentEditPart extends AbstractGraphicalEditPart
 {
@@ -37,19 +37,21 @@ public class RootContentEditPart extends AbstractGraphicalEditPart
   protected IFigure createFigure()
   {    
     Panel panel = new Panel();    
-    // why do we need to use a container layout? can we just set a
-    // margin border and get the same effect?
-    ContainerLayout clayout = new ContainerLayout();
-    clayout.setBorder(60);
-    panel.setLayoutManager(clayout);
+    panel.setBorder(new MarginBorder(60));
+   
+    ToolbarLayout panelLayout = new ToolbarLayout(false);
+    panelLayout.setStretchMinorAxis(true);
+    panel.setLayoutManager(panelLayout);
     
     contentPane = new Figure();
     panel.add(contentPane);
-        
-    ToolbarLayout layout = new ToolbarLayout(true);
-    layout.setStretchMinorAxis(false);
-    layout.setSpacing(100);
-    contentPane.setLayoutManager(layout);
+    
+    ToolbarLayout tb = new ToolbarLayout(false);
+    tb.setMinorAlignment(ToolbarLayout.ALIGN_CENTER);
+    tb.setStretchMinorAxis(true);
+    tb.setSpacing(40);
+    contentPane.setLayoutManager(tb);
+    
     return panel;
   }
   
@@ -116,6 +118,11 @@ public class RootContentEditPart extends AbstractGraphicalEditPart
       {
         collections.add(new FocusTypeColumn(focusObject));
         collections.add(new ReferencedTypeColumn(focusObject));
+        
+        ToolbarLayout layout = new ToolbarLayout(true);
+        layout.setStretchMinorAxis(false);
+        layout.setSpacing(100);
+        contentPane.setLayoutManager(layout);
       }
     }
     return collections;

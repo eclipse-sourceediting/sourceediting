@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,11 +14,23 @@ import java.util.Iterator;
 
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
+import org.eclipse.draw2d.ManhattanConnectionRouter;
 import org.eclipse.draw2d.ToolbarLayout;
+import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
+import org.eclipse.gef.Request;
+import org.eclipse.gef.RequestConstants;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
+import org.eclipse.gef.requests.LocationRequest;
+import org.eclipse.gef.ui.actions.ActionRegistry;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDSimpleTypeDefinitionAdapter;
+import org.eclipse.wst.xsd.ui.internal.adt.actions.SetInputToGraphView;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.BaseEditPart;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.BaseTypeConnectingEditPart;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.CenteredConnectionAnchor;
@@ -31,7 +43,9 @@ import org.eclipse.wst.xsd.ui.internal.adt.facade.IType;
 import org.eclipse.wst.xsd.ui.internal.adt.typeviz.design.figures.HeadingFigure;
 import org.eclipse.wst.xsd.ui.internal.adt.typeviz.design.figures.RoundedLineBorder;
 import org.eclipse.wst.xsd.ui.internal.adt.typeviz.design.figures.StructureFigure;
+import org.eclipse.wst.xsd.ui.internal.common.actions.OpenInNewEditor;
 import org.eclipse.wst.xsd.ui.internal.common.util.XSDCommonUIUtils;
+import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
 
 public class XSDSimpleTypeEditPart extends BaseTypeConnectingEditPart
@@ -118,14 +132,17 @@ public class XSDSimpleTypeEditPart extends BaseTypeConnectingEditPart
       
       if (referenceTypePart != null)
       {
-        connectionFigure = new TypeReferenceConnection();
+        connectionFigure = new TypeReferenceConnection(true);
         // draw a line out from the top         
         connectionFigure.setSourceAnchor(new CenteredConnectionAnchor(getFigure(), CenteredConnectionAnchor.TOP, 1));
         
         // TODO (cs) need to draw the target anchor to look like a UML inheritance relationship
         // adding a label to the connection would help to
-        connectionFigure.setTargetAnchor(new CenteredConnectionAnchor(referenceTypePart.getFigure(), CenteredConnectionAnchor.BOTTOM, 0, 0)); 
+        connectionFigure.setTargetAnchor(new CenteredConnectionAnchor(referenceTypePart.getFigure(), CenteredConnectionAnchor.BOTTOM, 0, 0));
+        connectionFigure.setConnectionRouter(new ManhattanConnectionRouter());
+        ((CenteredConnectionAnchor)connectionFigure.getSourceAnchor()).setOther((CenteredConnectionAnchor)connectionFigure.getTargetAnchor());
         connectionFigure.setHighlight(false);
+
       }
     }    
     return connectionFigure;
@@ -154,5 +171,62 @@ public class XSDSimpleTypeEditPart extends BaseTypeConnectingEditPart
       }  
     }
     return null;
+  }
+
+  public void performRequest(Request request)
+  {  
+    if (request.getType() == RequestConstants.REQ_OPEN)
+    {
+      Object model = getModel();
+      if (request instanceof LocationRequest)
+      {
+        LocationRequest locationRequest = (LocationRequest)request;
+        Point p = locationRequest.getLocation();
+         
+        if (getStructureFigure().hitTestHeader(p))
+        {          
+          // TODO: !!! This should be moved to the adt-xsd package
+          // 
+          if (model instanceof XSDSimpleTypeDefinitionAdapter)     
+          {
+            XSDSimpleTypeDefinitionAdapter adapter = (XSDSimpleTypeDefinitionAdapter)model;
+            XSDSimpleTypeDefinition st = (XSDSimpleTypeDefinition)adapter.getTarget();
+            IWorkbench workbench = PlatformUI.getWorkbench();
+            IWorkbenchWindow workbenchWindow = workbench.getActiveWorkbenchWindow();
+            IEditorPart editorPart = workbenchWindow.getActivePage().getActiveEditor();
+            Object schema = editorPart.getAdapter(XSDSchema.class);
+            ActionRegistry registry = getEditorActionRegistry(editorPart);
+            if (registry != null)
+            {
+              if (schema == st.getSchema())
+              {
+                IAction action = registry.getAction(SetInputToGraphView.ID);
+                action.run();
+              }
+              else
+              {
+                IAction action = registry.getAction(OpenInNewEditor.ID);
+                action.run();
+              }
+            }
+          }          
+        }
+      }
+    }
+  }
+  
+  protected ActionRegistry getEditorActionRegistry(IEditorPart editor)
+  {
+    return (ActionRegistry) editor.getAdapter(ActionRegistry.class);
+  }
+
+  protected boolean shouldDrawConnection()
+  {
+    if (getModel() instanceof IType)
+    {
+      if (((IType)getModel()).getSuperType() != null)
+        return true;
+    } 
+    return false;
   }
 }

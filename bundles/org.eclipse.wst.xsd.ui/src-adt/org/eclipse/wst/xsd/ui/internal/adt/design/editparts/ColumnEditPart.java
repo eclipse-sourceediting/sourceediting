@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,11 +24,22 @@ public class ColumnEditPart extends BaseEditPart
 {         
   protected int spacing = 20;  
   protected int minorAlignment = -1;
+  protected boolean isHorizontal = false;
+  
+  public ColumnEditPart()
+  {    
+  }
+
+  public ColumnEditPart(boolean isHorizontal)
+  {
+    this.isHorizontal = isHorizontal;
+  }
   
   protected IFigure createFigure()
   {
     Figure figure = new Figure();
-    ToolbarLayout layout = new ToolbarLayout(false);
+    ToolbarLayout layout = new ToolbarLayout(isHorizontal);
+   
     if (minorAlignment != -1)
     {  
       layout.setMinorAlignment(minorAlignment);
@@ -97,7 +108,6 @@ public class ColumnEditPart extends BaseEditPart
     for (Iterator i = parent.getChildren().iterator(); i.hasNext(); )
     {
       EditPart editPart = (EditPart)i.next();      
-      //System.out.println("class " + editPart.getClass().getName());
       if (editPart instanceof BaseTypeConnectingEditPart)
       {
         BaseTypeConnectingEditPart connectingEditPart = (BaseTypeConnectingEditPart)editPart;

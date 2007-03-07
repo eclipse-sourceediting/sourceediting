@@ -13,6 +13,7 @@ package org.eclipse.wst.xsd.ui.internal.design.editparts;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
@@ -28,6 +29,7 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
+import org.eclipse.swt.SWT;
 import org.eclipse.wst.xsd.ui.internal.adapters.CategoryAdapter;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.BaseEditPart;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.EditPartNavigationHandlerUtil;
@@ -35,12 +37,10 @@ import org.eclipse.wst.xsd.ui.internal.adt.typeviz.design.figures.HeadingFigure;
 import org.eclipse.wst.xsd.ui.internal.adt.typeviz.design.figures.RoundedLineBorder;
 import org.eclipse.wst.xsd.ui.internal.design.editpolicies.SelectionHandlesEditPolicyImpl;
 import org.eclipse.wst.xsd.ui.internal.design.layouts.ContainerLayout;
-import org.eclipse.wst.xsd.ui.internal.design.layouts.FillLayout;
 
 public class CategoryEditPart extends BaseEditPart
 {
   protected SelectionHandlesEditPolicyImpl selectionHandlesEditPolicy;
-  // CategoryFigure figure;
   Figure outerPane;
   HeadingFigure headingFigure;
   protected ScrollPane scrollpane;
@@ -52,7 +52,6 @@ public class CategoryEditPart extends BaseEditPart
 
   protected IFigure createFigure()
   {
-    // figure = new CategoryFigure(getType());
     outerPane = new Figure();
     outerPane.setBorder(new RoundedLineBorder(1, 6));
 
@@ -61,7 +60,7 @@ public class CategoryEditPart extends BaseEditPart
     headingFigure.getLabel().setText(((CategoryAdapter) getModel()).getText());
     headingFigure.getLabel().setIcon(((CategoryAdapter) getModel()).getImage());
 
-    int minHeight = 250;
+    int minHeight = SWT.DEFAULT;
     switch (getType())
     {
     case CategoryAdapter.DIRECTIVES:
@@ -78,7 +77,8 @@ public class CategoryEditPart extends BaseEditPart
     }
 
     final int theMinHeight = minHeight;
-    FillLayout outerLayout = new FillLayout()
+     
+    ToolbarLayout outerLayout = new ToolbarLayout(false)
     {
       protected Dimension calculatePreferredSize(IFigure parent, int width, int height)
       {
@@ -87,6 +87,7 @@ public class CategoryEditPart extends BaseEditPart
         return d;
       }
     };
+    outerLayout.setStretchMinorAxis(true);
     outerPane.setLayoutManager(outerLayout);
 
     RectangleFigure line = new RectangleFigure()
@@ -123,7 +124,14 @@ public class CategoryEditPart extends BaseEditPart
       protected Dimension calculatePreferredSize(IFigure parent, int width, int height)
       {
         Dimension d = super.calculatePreferredSize(parent, width, height);
-        d.height = Math.min(d.height, theMinHeight - 25); // getViewer().getControl().getBounds().height);
+        if (theMinHeight > 0)
+          d.height = Math.min(d.height, theMinHeight);
+        else
+        {
+          double factor = getZoomManager().getZoom();
+          int scaledHeight = (int)Math.round((getViewer().getControl().getBounds().height - 400) / factor); // adjust for other categories and spaces
+          d.height = Math.max(250, scaledHeight);
+        }
         d.width = Math.min(d.width, 300);
         return d;
       }

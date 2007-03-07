@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,8 @@
 package org.eclipse.wst.xsd.ui.internal.adt.design.editparts;
 
 import java.util.Iterator;
+
+import org.eclipse.draw2d.ManhattanConnectionRouter;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.FocusTypeColumn;
@@ -57,7 +59,7 @@ public class ComplexTypeEditPart extends StructureEditPart
   
   public TypeReferenceConnection createConnectionFigure()
   {
-    TypeReferenceConnection connectionFigure = null;
+    connectionFigure = null;
     IComplexType complexType = (IComplexType)getModel();
     IType type = complexType.getSuperType();
     if (type != null)
@@ -65,13 +67,14 @@ public class ComplexTypeEditPart extends StructureEditPart
       AbstractGraphicalEditPart referenceTypePart = (AbstractGraphicalEditPart)getTargetEditPart(type);
       if (referenceTypePart != null)
       {
-        connectionFigure = new TypeReferenceConnection();
+        connectionFigure = new TypeReferenceConnection(true);
         // draw a line out from the top         
         connectionFigure.setSourceAnchor(new CenteredConnectionAnchor(getFigure(), CenteredConnectionAnchor.TOP, 1));
         
         // TODO (cs) need to draw the target anchor to look like a UML inheritance relationship
         // adding a label to the connection would help to
         connectionFigure.setTargetAnchor(new CenteredConnectionAnchor(referenceTypePart.getFigure(), CenteredConnectionAnchor.BOTTOM, 0, 0));
+        connectionFigure.setConnectionRouter(new ManhattanConnectionRouter());
         ((CenteredConnectionAnchor)connectionFigure.getSourceAnchor()).setOther((CenteredConnectionAnchor)connectionFigure.getTargetAnchor());
         connectionFigure.setHighlight(false);
       }

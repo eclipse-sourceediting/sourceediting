@@ -105,8 +105,6 @@ public abstract class BaseEditPart extends AbstractGraphicalEditPart implements 
   public void refresh() {
     super.refresh();
 
-    // Tell our children to refresh (note, this is NOT the function of 
-    // refreshChildren(), strangely enough)
     for(Iterator i = getChildren().iterator(); i.hasNext(); )
     {
       Object obj = i.next();

@@ -13,6 +13,7 @@ package org.eclipse.wst.xsd.ui.internal.design.editparts;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
@@ -52,7 +53,6 @@ public class XSDSchemaEditPart extends BaseEditPart
   protected IFigure createFigure()
   {
     outer = new Figure();
-    // outer.setBorder(new RoundedLineBorder(1, 6));
     outer.setBorder(new LineBorder(1));
 
     FillLayout fillLayout = new FillLayout(4);
@@ -61,25 +61,11 @@ public class XSDSchemaEditPart extends BaseEditPart
     headingFigure = new HeadingFigure();
     outer.add(headingFigure);
 
-    final int theMinHeight = 200;
-    FillLayout outerLayout = new FillLayout()
-    {
-      protected Dimension calculatePreferredSize(IFigure parent, int width, int height)
-      {
-        Dimension d = super.calculatePreferredSize(parent, width, height);
-        d.union(new Dimension(250, theMinHeight));
-        return d;
-      }
-    };
-    outerLayout.setHorizontal(false);
-    outer.setLayoutManager(outerLayout);
-
     RectangleFigure line = new RectangleFigure()
     {
       public Dimension getPreferredSize(int wHint, int hHint)
       {
         Dimension d = super.getPreferredSize(wHint, hHint);
-        d.width += 20;
         d.height = 1;
         return d;
       }
@@ -91,12 +77,11 @@ public class XSDSchemaEditPart extends BaseEditPart
     outer.add(line);
 
     contentFigure = new Figure();
-    contentFigure.setBorder(new MarginBorder(4, 4, 4, 4));
+    contentFigure.setBorder(new MarginBorder(4));
     fillLayout = new FillLayout(4);
     contentFigure.setLayoutManager(fillLayout);
 
     outer.add(contentFigure);
-
     return outer;
   }
 
@@ -157,7 +142,7 @@ public class XSDSchemaEditPart extends BaseEditPart
     {
       targetNamespaceValue = Messages._UI_GRAPH_XSDSCHEMA_NO_NAMESPACE;
     }
-    headingFigure.getLabel().setText(Messages._UI_GRAPH_XSDSCHEMA + " : " + targetNamespaceValue);  //$NON-NLS-1$  
+    headingFigure.getLabel().setText(Messages._UI_GRAPH_XSDSCHEMA + " : " + targetNamespaceValue);  //$NON-NLS-1$
   }
   
   public EditPart doGetRelativeEditPart(EditPart editPart, int direction)
@@ -286,7 +271,7 @@ public class XSDSchemaEditPart extends BaseEditPart
       FillLayout fillLayout = new FillLayout(4);
       fillLayout.setHorizontal(true);
       containerFigure.setLayoutManager(fillLayout);
-
+      
       return containerFigure;
     }
     

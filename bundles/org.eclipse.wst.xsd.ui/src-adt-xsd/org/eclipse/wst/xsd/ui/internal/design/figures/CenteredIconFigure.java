@@ -36,6 +36,12 @@ public class CenteredIconFigure extends RoundedRectangle
     setCornerDimensions(new Dimension(5,5));
   }
   
+  public CenteredIconFigure(Image img)
+  {
+    this();
+    this.image = img;
+  }
+  
   public void refresh()
   {
     repaint();
@@ -64,7 +70,7 @@ public class CenteredIconFigure extends RoundedRectangle
 
   protected void fillShape(Graphics g)
   {    
-    super.fillShape(g);    
+    super.fillShape(g);
     if (image != null)
     {                         
       Rectangle r = getBounds();
@@ -94,5 +100,5 @@ public class CenteredIconFigure extends RoundedRectangle
     {
       setToolTip(null);
     }
-  }  
+  }
 }

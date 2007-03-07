@@ -10,10 +10,12 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.adt.outline;
 
+import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -21,10 +23,12 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.part.MultiPageSelectionProvider;
 import org.eclipse.ui.views.contentoutline.ContentOutlinePage;
+import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeLabelProvider;
 import org.eclipse.wst.xsd.ui.internal.adt.design.DesignViewContextMenuProvider;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IModelProxy;
 import org.eclipse.wst.xsd.ui.internal.adt.editor.ADTMultiPageEditor;
@@ -172,6 +176,7 @@ public class ADTContentOutlinePage extends ContentOutlinePage
   {
     public void selectionChanged(SelectionChangedEvent event)
     {
+      updateStatusLine(getSite().getActionBars().getStatusLineManager(), event.getSelection());
       if (event.getSelectionProvider() != ADTContentOutlinePage.this)  //getTreeViewer())
       {
         StructuredSelection selection = (StructuredSelection)event.getSelection();
@@ -184,7 +189,7 @@ public class ADTContentOutlinePage extends ContentOutlinePage
         {
           if (!(currentSelection.getFirstElement() instanceof IModelProxy))
           {
-            getTreeViewer().setSelection(event.getSelection(), true);            
+            getTreeViewer().setSelection(event.getSelection(), true);
           }
         }
         else
@@ -214,4 +219,53 @@ public class ADTContentOutlinePage extends ContentOutlinePage
 //      }
 //    }
 //  }
+  
+  
+  void updateStatusLine(IStatusLineManager mgr, ISelection selection)
+  {
+    String text = null;
+    Image image = null;
+    ILabelProvider statusLineLabelProvider = new StatusLineLabelProvider(getTreeViewer());
+    if (statusLineLabelProvider != null && selection instanceof IStructuredSelection && !selection.isEmpty())
+    {
+      Object firstElement = ((IStructuredSelection) selection).getFirstElement();
+      text = statusLineLabelProvider.getText(firstElement);
+      image = statusLineLabelProvider.getImage(firstElement);
+    }
+    if (image == null)
+    {
+      mgr.setMessage(text);
+    }
+    else
+    {
+      mgr.setMessage(image, text);
+    }
+  }
+  
+  private class StatusLineLabelProvider extends JFaceNodeLabelProvider
+  {
+    TreeViewer treeViewer = null;
+
+    public StatusLineLabelProvider(TreeViewer viewer)
+    {
+      treeViewer = viewer;
+    }
+
+    public String getText(Object element)
+    {
+      if (element == null)
+        return null;
+
+      StringBuffer s = new StringBuffer();
+      s.append(labelProvider.getText(element));
+      return s.toString();
+    }
+
+    public Image getImage(Object element)
+    {
+      return labelProvider.getImage(element);
+    }
+  }
+
+
 }

@@ -22,6 +22,7 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.provisional.format.FormatProcessorXML;
 import org.eclipse.wst.xsd.ui.internal.adt.design.ImageOverlayDescriptor;
+import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.xsd.XSDAnnotation;
 import org.eclipse.xsd.XSDAttributeDeclaration;
 import org.eclipse.xsd.XSDAttributeGroupDefinition;
@@ -66,8 +67,13 @@ public class XSDCommonUIUtils
     {
       if (xsdAnnotation.getApplicationInformation().size() > 0)
       {
-        ImageOverlayDescriptor ovr = new ImageOverlayDescriptor(baseImage, isReadOnly);
-        Image newImage = ovr.getImage();
+        Image newImage = XSDEditorPlugin.getDefault().getImageRegistry().get(input.getClass().getName() + isReadOnly);
+        if (newImage == null)
+        {
+          ImageOverlayDescriptor ovr = new ImageOverlayDescriptor(baseImage, isReadOnly);
+          newImage = ovr.getImage();
+          XSDEditorPlugin.getDefault().getImageRegistry().put(input.getClass().getName() + isReadOnly, newImage);
+        }
         return newImage;
       }
     }

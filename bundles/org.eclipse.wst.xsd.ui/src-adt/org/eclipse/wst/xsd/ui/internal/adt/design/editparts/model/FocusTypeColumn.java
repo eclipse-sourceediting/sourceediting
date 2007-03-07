@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,10 +19,18 @@ import org.eclipse.wst.xsd.ui.internal.adt.facade.IStructure;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IType;
 
 public class FocusTypeColumn extends AbstractModelCollection
-{  
+{
+  protected boolean isFocusObject = false;
+  
   public FocusTypeColumn(IADTObject model)
   {
+    super(model, "FocusTypeColumn"); //$NON-NLS-1$  
+  }
+
+  public FocusTypeColumn(IADTObject model, boolean isFocusObject)
+  {
     super(model, "FocusTypeColumn"); //$NON-NLS-1$
+    this.isFocusObject = isFocusObject;
   }
 
   public List getChildren()
@@ -43,5 +51,10 @@ public class FocusTypeColumn extends AbstractModelCollection
       result.add(model);
     }       
     return result;       
+  }
+  
+  public boolean isFocusObject()
+  {
+    return isFocusObject;
   }
 }
