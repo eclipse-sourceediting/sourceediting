@@ -449,7 +449,7 @@ public class JSPTranslator {
 			Logger.log(Logger.INFO_DEBUG, debugString.toString());
 		}
 
-		if (true) {
+		if (DEBUG) {
 			IProject project = getFile().getProject();
 			String shortenedClassname = StringUtils.replace(
 					getFile().getName(), ".", "_");
@@ -510,9 +510,7 @@ public class JSPTranslator {
 	}
 
 	public void translateJSNode(IStructuredDocumentRegion container) {
-		System.out
-				.println("JSPTranslator.translateJSNode Entered w/ScriptOffset:"
-						+ scriptOffset);
+		
 		ITextRegionCollection containerRegion = container;
 		Iterator regions = containerRegion.getRegions().iterator();
 		ITextRegion region = null;
@@ -549,6 +547,7 @@ public class JSPTranslator {
 				int regionLength = regionText.length();
 				Position inScript = new Position(scriptOffset, regionLength);
 				Position inHtml = new Position(scriptStart, scriptTextEnd);
+				if(DEBUG){
 				System.out
 						.println("START-----------------JS Translator Script loop---------------");
 				System.out.println("Translated to:\n" + regionText + "\n");
@@ -559,15 +558,15 @@ public class JSPTranslator {
 				System.out
 						.println("END-----------------JS Translator Script loop---------------");
 				//				
-
+				}
 				fJsContentRanges.put(inScript, inHtml);
 				fScriptText.append(regionText);
 
 				scriptOffset = fScriptText.length();
 
-				System.out
-						.println("JSPTranslator.translateJSNode Left w/ScriptOffset:"
-								+ scriptOffset);
+//				System.out
+//						.println("JSPTranslator.translateJSNode Left w/ScriptOffset:"
+//								+ scriptOffset);
 			}
 		}
 	}
@@ -577,9 +576,9 @@ public class JSPTranslator {
 	}
 
 	public void translateInlineJSNode(IStructuredDocumentRegion container) {
-		System.out
-				.println("JSPTranslator.translateInlineJSNode Entered w/ScriptOffset:"
-						+ scriptOffset);
+//		System.out
+//				.println("JSPTranslator.translateInlineJSNode Entered w/ScriptOffset:"
+//						+ scriptOffset);
 
 		NodeHelper nh = new NodeHelper(container);
 		// System.out.println("inline js node looking at:\n" + nh);
@@ -657,30 +656,30 @@ public class JSPTranslator {
 						fJsContentRanges.put(inScript, inHtml);
 						fScriptText.append(emulatedFunction);
 						scriptOffset = fScriptText.length();
-
-						System.out
-								.println("START-----------------JS Translator Script loop---------------");
-						System.out.println("Translated to:\n"
-								+ emulatedFunction + "\n");
-						System.out.println("HTML Position:["
-								+ inHtml.getOffset() + "," + inHtml.getLength()
-								+ "]");
-						System.out.println("Script Position:["
-								+ inScript.getOffset() + ","
-								+ inScript.getLength() + "]");
-						System.out.println("Added (js) Text length:"
-								+ emulatedFunction.length());
-						System.out
-								.println("END-----------------JS Translator Script loop---------------");
-
+						if(DEBUG){
+							System.out
+									.println("START-----------------JS Translator Script loop---------------");
+							System.out.println("Translated to:\n"
+									+ emulatedFunction + "\n");
+							System.out.println("HTML Position:["
+									+ inHtml.getOffset() + "," + inHtml.getLength()
+									+ "]");
+							System.out.println("Script Position:["
+									+ inScript.getOffset() + ","
+									+ inScript.getLength() + "]");
+							System.out.println("Added (js) Text length:"
+									+ emulatedFunction.length());
+							System.out
+									.println("END-----------------JS Translator Script loop---------------");
+							}
 					}
 				}
 			}
 
 		}
-		System.out
-				.println("JSPTranslator.translateInlineJSNode Left w/ScriptOffset:"
-						+ scriptOffset);
+//		System.out
+//				.println("JSPTranslator.translateInlineJSNode Left w/ScriptOffset:"
+//						+ scriptOffset);
 
 	}
 

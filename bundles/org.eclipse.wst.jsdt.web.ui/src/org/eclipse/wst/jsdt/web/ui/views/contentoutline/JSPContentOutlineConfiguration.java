@@ -48,23 +48,23 @@ public class JSPContentOutlineConfiguration extends
 
 	
 	
-	private StandardJavaElementContentProvider fJavaElementProvider;
-	private JavaElementLabelProvider fJavaElementLabelProvider;
+//	private StandardJavaElementContentProvider fJavaElementProvider;
+//	private JavaElementLabelProvider fJavaElementLabelProvider;
+//	
+//	private StandardJavaElementContentProvider getElementProvider(){
+//		if(fJavaElementProvider==null){
+//			fJavaElementProvider = new StandardJavaElementContentProvider();
+//		}
+//		return fJavaElementProvider;
+//	}
 	
-	private StandardJavaElementContentProvider getElementProvider(){
-		if(fJavaElementProvider==null){
-			fJavaElementProvider = new StandardJavaElementContentProvider();
-		}
-		return fJavaElementProvider;
-	}
-	
-	private StandardJavaElementContentProvider getLabelElementProvider(){
-		if(fJavaElementLabelProvider==null){
-			fJavaElementLabelProvider = new JavaElementLabelProvider();
-			
-		}
-		return fJavaElementProvider;
-	}
+//	private StandardJavaElementContentProvider getLabelElementProvider(){
+//		if(fJavaElementLabelProvider==null){
+//			fJavaElementLabelProvider = new JavaElementLabelProvider();
+//			
+//		}
+//		return fJavaElementProvider;
+//	}
 	
 	protected XMLNodeActionManager createNodeActionManager(TreeViewer treeViewer) {
 		// TODO Auto-generated method stub
@@ -93,16 +93,19 @@ public class JSPContentOutlineConfiguration extends
 		// TODO Auto-generated method stub
 		
 		//System.out.println("Umiplement method getContentProvider" );
-		//return super.getContentProvider(viewer);
-		return getElementProvider();
+		return super.getContentProvider(viewer);
+        
+		//return new JSDTElementContentProvider(super.getContentProvider(viewer));
+        
 	}
 
 	@Override
 	public ILabelProvider getLabelProvider(TreeViewer viewer) {
 		// TODO Auto-generated method stub
 //		System.out.println("Umiplement method getLabelProvider" );
-//		return super.getLabelProvider(viewer);
-		return (ILabelProvider)getLabelElementProvider();
+        //return new JFaceNodeAdapterForJSDT();
+		//return super.getLabelProvider(viewer);
+		return new JSDTLabelElementProvider(super.getLabelProvider(viewer));
 	}
 
 	@Override

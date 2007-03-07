@@ -12,6 +12,7 @@ package org.eclipse.wst.jsdt.web.ui.internal.registry;
 
 import org.eclipse.wst.jsdt.web.core.internal.java.IJSPTranslation;
 import org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslationAdapterFactory;
+import org.eclipse.wst.jsdt.web.ui.views.contentoutline.JFaceNodeAdapterFactoryForJSDT;
 //import org.eclipse.wst.jsdt.web.core.internal.modelhandler.ModelHandlerForJSP;
 import org.eclipse.wst.html.core.internal.modelhandler.ModelHandlerForHTML;
 import org.eclipse.wst.html.ui.internal.contentoutline.JFaceNodeAdapterFactoryForHTML;
@@ -49,7 +50,7 @@ public class AdapterFactoryProviderForJSP implements AdapterFactoryProvider {
 		factory = factoryRegistry.getFactoryFor(IJFaceNodeAdapter.class);
 		
 		if (factory == null) {
-			factory = new JFaceNodeAdapterFactoryForHTML(
+			factory = new JFaceNodeAdapterFactoryForJSDT(
 					IJFaceNodeAdapter.class, true);
 			factoryRegistry.addFactory(factory);
 		}

@@ -51,6 +51,7 @@ public class JSPQueryParticipant implements IQueryParticipant {
 		// indexIfNeeded();
 
 		// do search based on the particular Java query
+       
 		if (querySpecification instanceof ElementQuerySpecification) {
 			// element search (eg. from global find references in Java file)
 			ElementQuerySpecification elementQuery = (ElementQuerySpecification) querySpecification;
