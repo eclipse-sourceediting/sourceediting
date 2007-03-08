@@ -13,20 +13,28 @@ package org.eclipse.wst.jsdt.web.ui.views.contentoutline;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Hashtable;
 import java.util.Vector;
 
+
+import org.eclipse.wst.jsdt.internal.core.SourceRefElement;
 import org.eclipse.wst.jsdt.internal.ui.*;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TreeViewer;
 
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.html.ui.internal.contentoutline.JFaceNodeAdapterForHTML;
 import org.eclipse.wst.html.ui.internal.editor.HTMLEditorPluginImageHelper;
 import org.eclipse.wst.html.ui.internal.editor.HTMLEditorPluginImages;
+import org.eclipse.wst.jsdt.core.ICompilationUnit;
 import org.eclipse.wst.jsdt.core.IJavaElement;
 import org.eclipse.wst.jsdt.core.ISourceRange;
+import org.eclipse.wst.jsdt.core.JavaModelException;
 import org.eclipse.wst.jsdt.ui.JavaElementLabelProvider;
 import org.eclipse.wst.jsdt.ui.StandardJavaElementContentProvider;
 import org.eclipse.wst.jsdt.web.core.internal.Logger;
@@ -38,6 +46,7 @@ import org.eclipse.wst.sse.core.internal.exceptions.UnsupportedCharsetExceptionW
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.eclipse.wst.xml.core.internal.document.ElementImpl;
 import org.eclipse.wst.xml.core.internal.document.NodeImpl;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
@@ -63,44 +72,26 @@ public class JFaceNodeAdapterForJSDT extends JFaceNodeAdapterForHTML {
      */
   
     
-    private IJavaElement _cachedJavaElement=null;
-    private Node         _cachedNode=null;
-     
+    private IJavaElement[] _cachedJavaElements=null;
+    private Node           _cachedNode=null;
+   
     public Object[] getChildren(Object object) {
+//       
+//        
+//        if(JSDTJfaceNode.hasJsPart(object)){
+//            
+//            return super.getChildren(((JSDTJfaceNode)object).getJsPart());
+//        }
+//        
         Node node = (Node) object;
-        
-        if(isJSDTElementParent(node) && node.getChildNodes()!=null){
-            NodeList list = node.getChildNodes();
-            Vector elements = new Vector();
-            
-            for(int i = 0;i<list.getLength();i++){
-                IJavaElement elm = getJavaElement(list.item(i));
-                Object elms[] = getJavaElementProvider().getChildren(elm.getParent());
-                for(int j = 0;j<elms.length;j++){
-                    int type = ((IJavaElement)elms[j]).getElementType();
-                    if(type !=IJavaElement.PACKAGE_DECLARATION){
-                        IJavaElement javaElement = getJavaElement(elms[j]);
-                        elements.add(javaElement);
-                    }
-                }
-                
-            }
-            return elements.toArray();
-           
-        }else if(isJSDTElement(object)){
-           
-            IJavaElement element = getJavaElement(object);
-            Object[] elms = getJavaElementProvider().getChildren(element);
-            /* need to convert to a combo type of java elemnt and dom element */
-            for(int i = 0;i<elms.length;i++){
-                elms[i] = getJavaElement(elms[i]);
-            }
-            
-            return elms;
-            
-        }
+        // && !(node.getFirstChild() instanceof JSDTJfaceNode )
+        if(isJSElementParent(node)){
+            return getJSElementsFromNode(node.getFirstChild());
+        } 
+  
         System.out.println("method JFaceNodeAdapterForJSDT.getChildren" );
         return super.getChildren(object);
+    
     }
 
     /* (non-Javadoc)
@@ -109,13 +100,12 @@ public class JFaceNodeAdapterForJSDT extends JFaceNodeAdapterForHTML {
     @Override
     public Object[] getElements(Object object) {
        
-        Node node = (Node) object;
-        
-        if(isJSDTElementParent(node) || isJSDTElement(object)){
-            IJavaElement jElement = getJavaElement(object);
-            return getJavaElementProvider().getElements(jElement);
-           
-        }
+//         Node node = (Node) object;
+//        
+//        if(isJSElementParent(node)){
+//            return getJavaChildren(node);
+//           
+//        }
 //        else if(){
 //            NodeList list = node.getChildNodes();
 //            Object o[] = new Object[list.getLength()];
@@ -124,8 +114,8 @@ public class JFaceNodeAdapterForJSDT extends JFaceNodeAdapterForHTML {
 //                return o;
 //            }
 //        }
-        System.out.println("Umiplement method JFaceNodeAdapterForJSDT.getElements" );
-        return super.getElements(node);
+        System.out.println("method JFaceNodeAdapterForJSDT.getElements" );
+        return super.getElements(object);
     }
 
     /* (non-Javadoc)
@@ -133,14 +123,11 @@ public class JFaceNodeAdapterForJSDT extends JFaceNodeAdapterForHTML {
      */
     @Override
     public String getLabelText(Object object) {
-        Node node = (Node) object;
         
-        if(isJSDTElement(object)){
-            IJavaElement jElement = getJavaElement(object);
-            return getJavaElementLabelProvider().getText(jElement);
-           
+        if(JSDTJfaceNode.hasJsPart(object)){
+            return getJavaElementLabelProvider().getText(((JSDTJfaceNode)object).getJsPart());
         }
-        System.out.println("Umiplement method JFaceNodeAdapterForJSDT.getLabelText" );
+        Node node = (Node) object;
         return super.getLabelText(node);
     }
 
@@ -152,13 +139,15 @@ public class JFaceNodeAdapterForJSDT extends JFaceNodeAdapterForHTML {
     public Object getParent(Object object) {
        
         System.out.println("Umiplement method JFaceNodeAdapterForJSDT.getParent" );
-        Node node = (Node) object;
-        if(isJSDTElement(object)){
-            IJavaElement jElement = getJavaElement(object);
-            getJavaElementProvider().getParent(jElement);
-           
-        }
-        return super.getParent(object);
+        
+//        if(object instanceof IJavaElement){
+//            // Need to return the HTML 'parent' (not the java elements compilation unit
+//            
+//            
+//        }
+//   
+        Object parent = super.getParent(object);
+        return parent;
     }
 
     /* (non-Javadoc)
@@ -167,19 +156,16 @@ public class JFaceNodeAdapterForJSDT extends JFaceNodeAdapterForHTML {
     @Override
     public boolean hasChildren(Object object) {
        
-        System.out.println("Umiplement method JFaceNodeAdapterForJSDT.hasChildren" );
+         System.out.println("Umiplement method JFaceNodeAdapterForJSDT.hasChildren" );
         Node node = (Node) object;
+      
         
-        if(isJSDTElementParent(node)){
+        if(isJSElementParent(node) && !(node.getFirstChild() instanceof JSDTJfaceNode )){
+            Object[] nodes = getJSElementsFromNode(node.getFirstChild());
            
-                NodeList list = node.getChildNodes();
-                return list.getLength()>0;
-           
-        }else if(isJSDTElement(node)){
-            IJavaElement jElement = getJavaElement(node);
-            return getJavaElementProvider().hasChildren(jElement);
-           
-        }
+            return (nodes!=null && nodes.length>0);
+        } 
+  
         return super.hasChildren(object);
     }
 
@@ -216,99 +202,105 @@ public class JFaceNodeAdapterForJSDT extends JFaceNodeAdapterForHTML {
     
 	protected Image createImage(Object object) {
 		Image image = null;
-
-		Node node = (Node) object;
-        
-        if(isJSDTElement(object)){
-            IJavaElement jElement = getJavaElement(node);
+		if(JSDTJfaceNode.hasJsPart(object)){
+            IJavaElement jElement = ((JSDTJfaceNode)object).getJsPart();
             return getJavaElementLabelProvider().getImage(jElement);
-           
         }
-//		if (node.getNodeType() == Node.ELEMENT_NODE) {
-//			if (node.getNodeName().equalsIgnoreCase("table")) //$NON-NLS-1$
-//				image = createHTMLImage(HTMLEditorPluginImages.IMG_OBJ_TABLE);
-//			else if (node.getNodeName().equalsIgnoreCase("a")) //$NON-NLS-1$
-//				image = createHTMLImage(HTMLEditorPluginImages.IMG_OBJ_TAG_ANCHOR);
-//			else if (node.getNodeName().equalsIgnoreCase("body")) //$NON-NLS-1$
-//				image = createHTMLImage(HTMLEditorPluginImages.IMG_OBJ_TAG_BODY);
-//			else if (node.getNodeName().equalsIgnoreCase("button")) //$NON-NLS-1$
-//				image = createHTMLImage(HTMLEditorPluginImages.IMG_OBJ_TAG_BUTTON);
-//			else if (node.getNodeName().equalsIgnoreCase("font")) //$NON-NLS-1$
-//				image = createHTMLImage(HTMLEditorPluginImages.IMG_OBJ_TAG_FONT);
-//			else if (node.getNodeName().equalsIgnoreCase("form")) //$NON-NLS-1$
-//				image = createHTMLImage(HTMLEditorPluginImages.IMG_OBJ_TAG_FORM);
-//			else if (node.getNodeName().equalsIgnoreCase("html")) //$NON-NLS-1$
-//				image = createHTMLImage(HTMLEditorPluginImages.IMG_OBJ_TAG_HTML);
-//			else if (node.getNodeName().equalsIgnoreCase("img")) //$NON-NLS-1$
-//				image = createHTMLImage(HTMLEditorPluginImages.IMG_OBJ_TAG_IMAGE);
-//			else if (node.getNodeName().equalsIgnoreCase("map")) //$NON-NLS-1$
-//				image = createHTMLImage(HTMLEditorPluginImages.IMG_OBJ_TAG_IMAGE_MAP);
-//			else if (node.getNodeName().equalsIgnoreCase("title")) //$NON-NLS-1$
-//				image = createHTMLImage(HTMLEditorPluginImages.IMG_OBJ_TAG_TITLE);
-//			else
-//				image = createHTMLImage(HTMLEditorPluginImages.IMG_OBJ_TAG);
-//		}
+        
+        Node node = (Node) object;
+        
 		if (image == null) {
 			image = super.createImage(node);
 		}
 		return image;
 	}
     
-    private boolean isJSDTElementParent(Node node){
-        
-            return (node.hasChildNodes() && isJSDTElement(node.getFirstChild()));
-       
+    private boolean isJSElementParent(Node node){
+      return (node.hasChildNodes() && isJSElement(node.getFirstChild()));
     }
     
-    private boolean isJSDTElement(Object object){
-        if(object instanceof IJavaElement) return true;
+    
+    
+    private boolean isJSElement(Object object){
+        if(JSDTJfaceNode.hasJsPart(object)) return true;
         Node node = (Node)object;
         Node parent = node.getParentNode();
-        if(parent!=null && parent.getNodeName().equalsIgnoreCase("script")){
+        if(parent!=null && parent.getNodeName().equalsIgnoreCase("script") && node.getNodeType()==Node.TEXT_NODE){
             // Probably in a JS region, so lets translate to make sure
-            return getJavaElement(node)!=null;
+            return true;
         }
         return false;
     }
     
-    private class mappedSourceRange{
-        IJavaElement element;
-        Position htmlPosition;
-        Position jsPosition;
-        
-        mappedSourceRange(IJavaElement element, Position htmlPosition, Position jsPosition){
-            this.element=element;
-            this.htmlPosition=htmlPosition;
-            this.jsPosition=jsPosition;
-        }
-    }
-    
-    
-    
-    private IJavaElement getJavaElement(Object object){
-        
-        if(object instanceof IJavaElement) return (IJavaElement)object;
-        
-        Node node = (Node)object;
-        if(node==_cachedNode) return _cachedJavaElement;
+//    private IJavaElement[] getJavaChildren(Node node){
+//        if(isJSElementParent(node) && (node.getChildNodes())!=null){
+//            NodeList list = node.getChildNodes();
+//            Vector vElements = new Vector();
+//            
+//            for(int i = 0;i<list.getLength();i++){
+//                IJavaElement[] elements = getJavaElementsFromNode(list.item(i));
+//                for(int j = 0;j<elements.length;j++){
+//                    int type = elements[j].getElementType();
+//                    if(type !=IJavaElement.PACKAGE_DECLARATION){
+//                        
+//                    }
+//                        vElements .add(elements[j]);
+//                    }
+//                }
+//            }
+//            return (IJavaElement[])vElements .toArray(new IJavaElement[]{});
+//    }
+//    
+//    public Node getJavaElementParent(IJavaElement element){
+//        /* kinda complicated, need to get the translation from last accecced node (assuming it hasn't changed)
+//         * 
+//         * */
+//        IStructuredModel model = null;
+//        IModelManager modelManager = StructuredModelManager.getModelManager();
+//        JSPTranslation translation = null;
+//        IStructuredDocument doc;
+//        try {
+//            if (modelManager != null && (_lastAccesed instanceof NodeImpl)) {
+//                doc = ((NodeImpl)_lastAccesed).getStructuredDocument();
+//                model = modelManager.getExistingModelForRead(doc);
+//            }else{
+//                return null;
+//            }
+//            IDOMModel domModel = (IDOMModel) model;
+//            IDOMDocument xmlDoc = domModel.getDocument();
+//            JSPTranslationAdapter translationAdapter = (JSPTranslationAdapter) xmlDoc.getAdapterFor(IJSPTranslation.class);
+//            translation = translationAdapter.getJSPTranslation();
+//        } catch (Exception e) {
+//            Logger.logException(e);
+//        } finally {
+//            if (model != null) {
+//                model.releaseFromRead();
+//            }
+//        }
+//        
+//        ISourceRange range = translation.getJSSourceRangeOf(element);
+//        
+//        int htmlOffset = translation.getJspOffset(range.getOffset());
+//        
+//        Node node = null;
+//        
+//        if(range!=null){
+//            node = ((NodeImpl)_lastAccesed).getModel().getIndexedRegion(htmlOffset));
+//        }
+//
+//        return node;
+//    }
+   
+    private JSDTJfaceNode[] getJSElementsFromNode(Node node){
         IStructuredModel model = null;
-        
-        
-            // get existing model for read, then get document from it
         IModelManager modelManager = StructuredModelManager.getModelManager();
-       
         JSPTranslation translation = null;
-        
         try {
-        
-            if (modelManager != null && (node instanceof NodeImpl)) {
+            if (modelManager != null ) {
                 IStructuredDocument doc = ((NodeImpl)node).getStructuredDocument();
-               model = modelManager.getExistingModelForRead(doc);
+                model = modelManager.getExistingModelForRead(doc);
             }
-           
             IDOMModel domModel = (IDOMModel) model;
-            // setupAdapterFactory(domModel);
-    
             IDOMDocument xmlDoc = domModel.getDocument();
             JSPTranslationAdapter translationAdapter = (JSPTranslationAdapter) xmlDoc.getAdapterFor(IJSPTranslation.class);
             translation = translationAdapter.getJSPTranslation();
@@ -320,23 +312,53 @@ public class JFaceNodeAdapterForJSDT extends JFaceNodeAdapterForHTML {
             }
         }
         
-       IJavaElement element = null;
-        
-        if(node.getNodeType()==Node.TEXT_NODE  && (node instanceof NodeImpl) && translation!=null){
-            int startOffset = ((NodeImpl)node).getStartOffset();
-            int endOffset = ((NodeImpl)node).getEndOffset();
-            element = translation.getJavaElementAtOffset(startOffset);   
+       IJavaElement[] result=null;
+       int startOffset = 0;
+       int endOffset = 0;
+      int type = node.getNodeType();
+       if(node.getNodeType()==Node.TEXT_NODE  && (node instanceof NodeImpl) && translation!=null){
+            startOffset = ((NodeImpl)node).getStartOffset();
+            endOffset = ((NodeImpl)node).getEndOffset();
+           
+            result = translation.getElementsFromJspRange(startOffset,endOffset);   
            
         }
+       if(result==null) return null;
+       
+       JSDTJfaceNode nodes[] = new JSDTJfaceNode[result.length];
+            
+       Node parentJsNode =node.getParentNode();
+       
+       //int offset = startOffset;
+       
+       /* build the node list before an append */
+       for(int i = 0;i<result.length;i++){
+          nodes[i] = new JSDTJfaceNode(parentJsNode,null);
+          int htmllength=0;
+          int htmloffset=0;
+          try {
+             htmllength = translation.getJspOffset(((SourceRefElement)(result[i])).getSourceRange().getLength());
+             htmloffset = translation.getJspOffset(((SourceRefElement)(result[i])).getSourceRange().getOffset());
+             
+          } catch (JavaModelException e) {
+            e.printStackTrace();
+          }
+           //int adjustedLength = (i==result.length-1)?(-offset):htmlLength;
+          nodes[i].setJsPart(result[i], new Position(htmloffset,htmllength));
+          
+      }
+
+       return  nodes;
+     }
+    public ISelection getSelection(TreeViewer viewer, ISelection selection) {
+        if(selection instanceof StructuredSelection){
+            StructuredSelection ss = (StructuredSelection)selection;
+            Object firstElement = ss.getFirstElement();
+            if(isJSElement(firstElement)) return new StructuredSelection(firstElement);
+            if(isJSElementParent((Node)firstElement)) return new StructuredSelection(getJSElementsFromNode(((Node)firstElement).getFirstChild()));
+        }
         
-        // int offset = elementRange.getOffset();
-         //int length = elementRange.getLength();
-         return element;
-         
+        return null;
     }
-    
-    private boolean isInParentRegion(Node parentRegion, IJavaElement element){
-        
-        return false;
-    }
+   
 }

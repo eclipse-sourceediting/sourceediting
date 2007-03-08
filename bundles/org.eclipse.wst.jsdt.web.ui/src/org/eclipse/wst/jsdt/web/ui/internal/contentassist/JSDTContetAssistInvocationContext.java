@@ -47,18 +47,27 @@ public class JSDTContetAssistInvocationContext extends JavaContentAssistInvocati
         
             IDOMModel xmlModel = null;
         
-            xmlModel = (IDOMModel) StructuredModelManager.getModelManager()
-                    .getExistingModelForRead(viewer.getDocument());
-            
-            IDOMDocument xmlDoc = xmlModel.getDocument();
-            
-            if (fTranslationAdapter == null) {
-                fTranslationAdapter = (JSPTranslationAdapter) xmlDoc
-                        .getAdapterFor(IJSPTranslation.class);
-            }
-            if (fTranslationAdapter != null) {
+            try {
+                xmlModel = (IDOMModel) StructuredModelManager.getModelManager()
+                        .getExistingModelForRead(viewer.getDocument());
                 
-                fTranslation =  fTranslationAdapter.getJSPTranslation();
+                IDOMDocument xmlDoc = xmlModel.getDocument();
+                
+                if (fTranslationAdapter == null) {
+                    fTranslationAdapter = (JSPTranslationAdapter) xmlDoc
+                            .getAdapterFor(IJSPTranslation.class);
+                }
+                if (fTranslationAdapter != null) {
+                    
+                    fTranslation =  fTranslationAdapter.getJSPTranslation();
+                }
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }finally{
+                if (xmlModel != null) {
+                    xmlModel.releaseFromRead();
+                }
             }
             return fTranslation;
     }

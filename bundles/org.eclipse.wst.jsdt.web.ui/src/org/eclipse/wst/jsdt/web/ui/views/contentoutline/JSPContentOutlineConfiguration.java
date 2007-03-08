@@ -18,12 +18,16 @@ import org.eclipse.jface.util.TransferDropTargetListener;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.wst.jsdt.ui.JavaElementContentProvider;
 import org.eclipse.wst.jsdt.ui.JavaElementLabelProvider;
 import org.eclipse.wst.jsdt.ui.StandardJavaElementContentProvider;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.wst.jsdt.web.ui.internal.JSPUIPlugin;
+import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
+import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
+import org.eclipse.wst.sse.ui.internal.contentoutline.IJFaceNodeAdapter;
 import org.eclipse.wst.xml.ui.internal.contentoutline.XMLNodeActionManager;
 import org.eclipse.wst.html.ui.views.contentoutline.HTMLContentOutlineConfiguration;
 
@@ -104,8 +108,8 @@ public class JSPContentOutlineConfiguration extends
 		// TODO Auto-generated method stub
 //		System.out.println("Umiplement method getLabelProvider" );
         //return new JFaceNodeAdapterForJSDT();
-		//return super.getLabelProvider(viewer);
-		return new JSDTLabelElementProvider(super.getLabelProvider(viewer));
+		return super.getLabelProvider(viewer);
+		//return new JSDTLabelElementProvider(super.getLabelProvider(viewer));
 	}
 
 	@Override
@@ -119,6 +123,17 @@ public class JSPContentOutlineConfiguration extends
 	public ISelection getSelection(TreeViewer viewer, ISelection selection) {
 		// TODO Auto-generated method stub
 		System.out.println("Umiplement method getSelection" );
+        
+        if(selection instanceof StructuredSelection){
+            StructuredSelection ss = (StructuredSelection)selection;
+            Object firstNode = ss.getFirstElement();
+            INodeAdapter adapter = ((INodeNotifier) firstNode).getAdapterFor(IJFaceNodeAdapter.class);
+            ISelection jsSelection;
+            if(adapter instanceof JFaceNodeAdapterForJSDT){
+                jsSelection = ((JFaceNodeAdapterForJSDT)adapter).getSelection(viewer,selection);
+                if(jsSelection!=null) return jsSelection;
+             }
+        }
 		return super.getSelection(viewer, selection);
 	}
 
