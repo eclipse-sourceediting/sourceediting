@@ -66,6 +66,8 @@ public class JSPTranslationAdapter implements INodeAdapter, IDocumentListener {
 	 */
 	protected void initializeJavaPlugins() {
 		JavaCore.getPlugin();
+        getJavaProject();
+        
 	}
 
 	public boolean isAdapterForType(Object type) {
@@ -89,6 +91,7 @@ public class JSPTranslationAdapter implements INodeAdapter, IDocumentListener {
 		if (doc != null) {
 			doc.addDocumentListener(this);
 			fJspDocument = doc;
+           
 		}
 	}
 

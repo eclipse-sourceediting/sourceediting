@@ -17,34 +17,44 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 
 public class JSDTContetAssistInvocationContext extends JavaContentAssistInvocationContext{
     
-    JSPTranslationAdapter fTranslationAdapter;
-    JSPTranslation fTranslation;
-    ITextViewer viewer;
-    int offset;
     
-    public JSDTContetAssistInvocationContext(ITextViewer viewer, int offset, JSDTProposalCollector theCollector){
+    
+    ITextViewer viewer;
+    
+    
+    private JSDTContetAssistInvocationContext(ITextViewer viewer, int offset, JSDTProposalCollector theCollector){
         
         super(viewer,offset,null);
         this.viewer=viewer;
-        this.offset=getJSPTranslation().getJavaOffset(offset);
+        //this.offset=getJSPTranslation().getJavaOffset(offset);
         //CompletionProposalCollector theCollector = getProposalCollector();
         super.setCollector(theCollector);
    
     }
     
-    public IDocument getDocument() {
-      return ((JSPTranslationExtension)fTranslation).getJavaDocument();
-      
+    public static JSDTContetAssistInvocationContext getInstance(ITextViewer viewer, int offset, JSDTProposalCollector theCollector){
+        JSPTranslation tran = getJSPTranslation(viewer);
+        int jsOffset = tran.getJavaOffset(offset);
+        return new JSDTContetAssistInvocationContext(viewer,offset,theCollector);
     }
+  public IDocument getDocument() {
+      return viewer.getDocument();
+  
+  }
+    
+//    public IDocument getDocument() {
+//      return ((JSPTranslationExtension)getJSPTranslation(viewer)).getJavaDocument();
+//      
+//    }
     
 //    protected CompletionProposalCollector getProposalCollector() {
 //       
 //        return ((CompletionProposalCollector) (  new JSPProposalCollector( getJSPTranslation())       ));
 //    }
     
-    private JSPTranslation getJSPTranslation(){
-            if(fTranslation != null ) return fTranslation;   
-        
+    private static JSPTranslation getJSPTranslation(ITextViewer viewer){
+            JSPTranslation fTranslation = null;;
+            
             IDOMModel xmlModel = null;
         
             try {
@@ -53,10 +63,10 @@ public class JSDTContetAssistInvocationContext extends JavaContentAssistInvocati
                 
                 IDOMDocument xmlDoc = xmlModel.getDocument();
                 
-                if (fTranslationAdapter == null) {
-                    fTranslationAdapter = (JSPTranslationAdapter) xmlDoc
+                
+                    JSPTranslationAdapter   fTranslationAdapter = (JSPTranslationAdapter) xmlDoc
                             .getAdapterFor(IJSPTranslation.class);
-                }
+               
                 if (fTranslationAdapter != null) {
                     
                     fTranslation =  fTranslationAdapter.getJSPTranslation();
@@ -72,7 +82,7 @@ public class JSDTContetAssistInvocationContext extends JavaContentAssistInvocati
             return fTranslation;
     }
     
-    public ICompilationUnit getCompilationUnit() {
-        return getJSPTranslation().getCompilationUnit();
-    }
+//    public ICompilationUnit getCompilationUnit() {
+//        return getJSPTranslation(viewer).getCompilationUnit();
+//    }
 }

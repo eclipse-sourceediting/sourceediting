@@ -47,7 +47,7 @@ public class JSDTTemplateAssistProcessor {
     }
     
     private JavaContentAssistInvocationContext getInvocationContext(ITextViewer viewer, int offset){
-        return new JSDTContetAssistInvocationContext(viewer,offset,getProposalCollector());
+        return JSDTContetAssistInvocationContext.getInstance(viewer,offset,getProposalCollector());
     }
     
     protected JSDTProposalCollector getProposalCollector() {
@@ -58,29 +58,6 @@ public class JSDTTemplateAssistProcessor {
     public void setProposalCollector(JSDTProposalCollector translation){
         this.fProposalCollector = translation;
     }
-    
 
-//    private JSPTranslation getJSPTranslation(ITextViewer viewer){
-//        IDOMModel xmlModel = null;
-//        
-//            xmlModel = (IDOMModel) StructuredModelManager.getModelManager()
-//                    .getExistingModelForRead(viewer.getDocument());
-//            
-//            IDOMDocument xmlDoc = xmlModel.getDocument();
-//            
-//            if (fTranslationAdapter == null) {
-//                fTranslationAdapter = (JSPTranslationAdapter) xmlDoc
-//                        .getAdapterFor(IJSPTranslation.class);
-//            }
-//            if (fTranslationAdapter != null) {
-//                
-//                return  fTranslationAdapter.getJSPTranslation();
-//            }
-//            return null;
-//    }
-    
-//    protected JSPProposalCollector getProposalCollector(ICompilationUnit cu, JSPTranslation translation) {
-//        return new JSPProposalCollector(cu, translation);
-//    }
     
 }

@@ -18,8 +18,7 @@ public class JSDTLabelElementProvider extends JavaElementLabelProvider {
      */
     @Override
     public Image getImage(Object element) {
-        // TODO Auto-generated method stub
-        System.out.println("Umiplement method JSDTLabelElementProvider.getImage" );
+      
         if(element instanceof IJavaElement) return super.getImage(element);
         return fParentLabelProvider.getImage(element);
     }
@@ -31,8 +30,10 @@ public class JSDTLabelElementProvider extends JavaElementLabelProvider {
     public String getText(Object element) {
         // TODO Auto-generated method stub
         System.out.println("Umiplement method JSDTLabelElementProvider.getText" );
+      
         if(element instanceof IJavaElement) return super.getText(element);
         return fParentLabelProvider.getText(element);
+       
     }
 
    

@@ -366,12 +366,14 @@ public class JSPTranslation implements IJSPTranslation {
 				if (fCompilationUnit == null) {
 					fCompilationUnit = createCompilationUnit();
 				}
+                reconcileCompilationUnit();
 			} catch (JavaModelException jme) {
 				if (DEBUG) {
 					Logger.logException(
 							"error creating JSP working copy... ", jme); //$NON-NLS-1$
 				}
 			}
+            
 		}
 		return fCompilationUnit;
 	}
@@ -384,14 +386,14 @@ public class JSPTranslation implements IJSPTranslation {
        ICompilationUnit cu = getCompilationUnit();
         synchronized(cu){
             try {
-                    elements = cu.getElementAt(jsOffset);
+               elements = cu.getElementAt(jsOffset);
             } catch (JavaModelException e) {
                 // TODO Auto-generated catch block
                if(DEBUG){
                   Logger.logException(
                             "error retrieving java elemtnt from compilation unit... ", e); //$NON-NLS-1$
                }
-            }
+           }
         }
        return elements;
                
@@ -434,15 +436,15 @@ public class JSPTranslation implements IJSPTranslation {
 	
     private ISourceRange getJSSourceRangeOf(IJavaElement element){
         // returns the offset in html of given element
-        ICompilationUnit cu = getCompilationUnit();
+       
         ISourceRange range = null;
         if(element instanceof SourceRefElement){
            try {
             range = ((SourceRefElement)element).getSourceRange();
-        } catch (JavaModelException e) {
+           } catch (JavaModelException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-        }
+           }
         }
         return range;
     }
@@ -644,7 +646,10 @@ public class JSPTranslation implements IJSPTranslation {
 	 * @see org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslation_Interface#reconcileCompilationUnit()
 	 */
 	public void reconcileCompilationUnit() {
-		ICompilationUnit cu = getCompilationUnit();
+		ICompilationUnit cu = fCompilationUnit;
+        
+        if(fCompilationUnit==null) return;
+        
 		if (cu != null) {
 			try {
 				synchronized (cu) {
@@ -724,12 +729,15 @@ public class JSPTranslation implements IJSPTranslation {
 //
 //		return result;
 //	}
-    public IJavaElement[] getElementsFromJspRange(int jspStart, int jspEnd) {
+    public IJavaElement[] getElementsFromJspRange(int jspStart, int jspEnd){
+        return getElementsFromJspRange(jspStart,jspEnd,false);
+    }
+    public IJavaElement[] getElementsFromJspRange(int jspStart, int jspEnd,boolean precise) {
          
         int javaPositionStart = getJavaOffset(jspStart);
         int javaPositionEnd = getJavaOffset(jspEnd);
        
-        int javaLength = javaPositionEnd - javaPositionStart;
+    
 
         IJavaElement[] EMTPY_RESULT_SET = new IJavaElement[0];
         IJavaElement[] result = EMTPY_RESULT_SET;
@@ -744,12 +752,16 @@ public class JSPTranslation implements IJSPTranslation {
                 e.printStackTrace();
             }
         }
+        
         Vector validChildren = new Vector();
         
-        for(int i = 0;i< allChildren.length;i++){
-            if(allChildren[i] instanceof IJavaElement){
+        for(int i = 0;i< allChildren.length;i++ ){
+            if(allChildren[i] instanceof IJavaElement && allChildren[i].getElementType()!= IJavaElement.PACKAGE_DECLARATION){
                 ISourceRange range = getJSSourceRangeOf((IJavaElement)allChildren[i]);
-                if(javaPositionStart<=range.getOffset()  && range.getLength() < (javaLength-range.getOffset())){
+                if(precise && javaPositionStart<=range.getOffset()  &&  range.getLength()+range.getOffset() <= (javaPositionEnd)){
+                //if(precise && range.getOffset()>=javaPo  &&  range.getLength()+range.getOffset() <= (javaPositionEnd)){
+                    validChildren.add(allChildren[i]);
+                }else if(!precise && range.getOffset()<=javaPositionStart && ((range.getOffset() + range.getLength())>= javaPositionEnd)){
                     validChildren.add(allChildren[i]);
                 }
             }

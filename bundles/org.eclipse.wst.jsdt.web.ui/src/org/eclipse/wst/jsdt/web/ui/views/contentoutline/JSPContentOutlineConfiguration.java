@@ -30,6 +30,7 @@ import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.sse.ui.internal.contentoutline.IJFaceNodeAdapter;
 import org.eclipse.wst.xml.ui.internal.contentoutline.XMLNodeActionManager;
 import org.eclipse.wst.html.ui.views.contentoutline.HTMLContentOutlineConfiguration;
+import org.w3c.dom.Node;
 
 /**
  * Configuration for outline view page which shows JSP content.
@@ -53,14 +54,15 @@ public class JSPContentOutlineConfiguration extends
 	
 	
 //	private StandardJavaElementContentProvider fJavaElementProvider;
-//	private JavaElementLabelProvider fJavaElementLabelProvider;
-//	
-//	private StandardJavaElementContentProvider getElementProvider(){
-//		if(fJavaElementProvider==null){
-//			fJavaElementProvider = new StandardJavaElementContentProvider();
-//		}
-//		return fJavaElementProvider;
-//	}
+	private JSDTElementContentProvider fJavaElementProvider;
+	
+	private JSDTElementContentProvider getJsContentProvider(TreeViewer viewer){
+		if(fJavaElementProvider==null){
+            fJavaElementProvider = new JSDTElementContentProvider(super.getContentProvider(viewer));
+			
+		}
+		return fJavaElementProvider;
+	}
 	
 //	private StandardJavaElementContentProvider getLabelElementProvider(){
 //		if(fJavaElementLabelProvider==null){
@@ -97,19 +99,20 @@ public class JSPContentOutlineConfiguration extends
 		// TODO Auto-generated method stub
 		
 		//System.out.println("Umiplement method getContentProvider" );
-		return super.getContentProvider(viewer);
+		return getJsContentProvider(viewer);
+        //return super.getContentProvider(viewer);
         
-		//return new JSDTElementContentProvider(super.getContentProvider(viewer));
+		
         
 	}
 
 	@Override
 	public ILabelProvider getLabelProvider(TreeViewer viewer) {
-		// TODO Auto-generated method stub
-//		System.out.println("Umiplement method getLabelProvider" );
+
         //return new JFaceNodeAdapterForJSDT();
-		return super.getLabelProvider(viewer);
 		//return new JSDTLabelElementProvider(super.getLabelProvider(viewer));
+		return new JSDTLabelElementProvider(super.getLabelProvider(viewer));
+       // return super.getLabelProvider(viewer);
 	}
 
 	@Override
@@ -121,19 +124,11 @@ public class JSPContentOutlineConfiguration extends
 
 	@Override
 	public ISelection getSelection(TreeViewer viewer, ISelection selection) {
-		// TODO Auto-generated method stub
-		System.out.println("Umiplement method getSelection" );
-        
-        if(selection instanceof StructuredSelection){
-            StructuredSelection ss = (StructuredSelection)selection;
-            Object firstNode = ss.getFirstElement();
-            INodeAdapter adapter = ((INodeNotifier) firstNode).getAdapterFor(IJFaceNodeAdapter.class);
-            ISelection jsSelection;
-            if(adapter instanceof JFaceNodeAdapterForJSDT){
-                jsSelection = ((JFaceNodeAdapterForJSDT)adapter).getSelection(viewer,selection);
-                if(jsSelection!=null) return jsSelection;
-             }
-        }
+     
+                
+       ISelection jSelection = getJsContentProvider(viewer).getSelection(viewer, selection);      
+       if(jSelection!=null) return jSelection;   
+       
 		return super.getSelection(viewer, selection);
 	}
 

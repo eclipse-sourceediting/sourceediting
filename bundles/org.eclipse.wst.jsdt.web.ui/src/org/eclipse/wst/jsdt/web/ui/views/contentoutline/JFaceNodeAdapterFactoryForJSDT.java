@@ -12,6 +12,7 @@ package org.eclipse.wst.jsdt.web.ui.views.contentoutline;
 
 
 
+import org.eclipse.wst.html.ui.internal.contentoutline.JFaceNodeAdapterForHTML;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapterFactory;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
@@ -37,7 +38,8 @@ public class JFaceNodeAdapterFactoryForJSDT extends JFaceNodeAdapterFactory {
 	protected INodeAdapter createAdapter(INodeNotifier node) {
 		if (singletonAdapter == null) {
 			// create the JFaceNodeAdapter
-			singletonAdapter = new JFaceNodeAdapterForJSDT(this);
+			//singletonAdapter = new JFaceNodeAdapterForJSDT(this);
+            singletonAdapter = new JFaceNodeAdapterForHTML(this);
 			initAdapter(singletonAdapter, node);
 		}
 		return singletonAdapter;
