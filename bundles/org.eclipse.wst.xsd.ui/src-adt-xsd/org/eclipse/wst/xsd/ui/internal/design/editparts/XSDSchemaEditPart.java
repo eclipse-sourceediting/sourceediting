@@ -213,7 +213,7 @@ public class XSDSchemaEditPart extends BaseEditPart
       return result;               
   }
   
-  private EditPart getCategoryEditPart(int kind)
+  protected EditPart getCategoryEditPart(int kind)
   {
     for (Iterator j = getChildren().iterator(); j.hasNext(); )      
     {    

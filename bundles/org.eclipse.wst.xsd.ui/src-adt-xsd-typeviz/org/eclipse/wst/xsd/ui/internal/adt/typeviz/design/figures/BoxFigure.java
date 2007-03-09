@@ -24,7 +24,7 @@ public class BoxFigure extends Figure
 {
   protected ColumnData columnData = new ColumnData();  
   public HeadingFigure headingFigure;
-  Figure contentPane;
+  protected Figure contentPane;
   
   public boolean isSelected = false;
 

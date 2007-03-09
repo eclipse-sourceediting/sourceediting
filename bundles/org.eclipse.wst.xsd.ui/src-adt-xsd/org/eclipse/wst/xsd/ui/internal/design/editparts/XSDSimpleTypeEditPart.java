@@ -50,7 +50,7 @@ import org.eclipse.xsd.XSDSimpleTypeDefinition;
 
 public class XSDSimpleTypeEditPart extends BaseTypeConnectingEditPart
 {
-  StructureFigure figure;
+  protected StructureFigure figure;
   protected ADTDirectEditPolicy adtDirectEditPolicy = new ADTDirectEditPolicy();
   
   public XSDSimpleTypeEditPart()
@@ -148,7 +148,7 @@ public class XSDSimpleTypeEditPart extends BaseTypeConnectingEditPart
     return connectionFigure;
   }
   
-  private EditPart getTargetEditPart(IType type)
+  protected EditPart getTargetEditPart(IType type)
   {
     ColumnEditPart columnEditPart = null;
     for (EditPart editPart = this; editPart != null; editPart = editPart.getParent())
