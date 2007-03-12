@@ -73,6 +73,7 @@ import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDSchemaContent;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.eclipse.xsd.XSDTypeDefinition;
+import org.eclipse.xsd.XSDVariety;
 import org.eclipse.xsd.XSDWildcard;
 import org.eclipse.xsd.impl.XSDSchemaImpl;
 import org.eclipse.xsd.util.XSDConstants;
@@ -363,26 +364,72 @@ public class XSDImpl
         result.add(TYPE_VALUE_FALSE);
       } 
       else
-      {        
-        List enumerationFacets = ((XSDSimpleTypeDefinition) type).getEnumerationFacets();
-        for (Iterator i = enumerationFacets.iterator(); i.hasNext();)
+      {
+        // Simple types can be one of: atomic, list or union.
+        int varietyType = ((XSDSimpleTypeDefinition) type).getVariety().getValue();
+
+        switch (varietyType)
         {
-          XSDEnumerationFacet enumFacet = (XSDEnumerationFacet) i.next();
-          List values = enumFacet.getValue();
-          for (Iterator j = values.iterator(); j.hasNext();)
-          {
-            Object o = j.next();
-            if (o != null)
+          case XSDVariety.ATOMIC:
             {
-              result.add(o.toString());
-            }  
-          }
+              XSDTypeDefinition baseType = type.getBaseType();
+              if (baseType != null && !(type.getSchema().getSchemaForSchema() == baseType.getSchema()))
+              {
+                getEnumeratedValuesForSimpleType(baseType, result);
+              }
+              else
+              {
+                getEnumeratedValuesForSimpleType(type, result);
+              }
+            }
+            break;
+          case XSDVariety.LIST:
+            {
+              XSDSimpleTypeDefinition itemTypeDefinition = ((XSDSimpleTypeDefinition) type).getItemTypeDefinition();
+              getEnumeratedValuesForSimpleType(itemTypeDefinition, result);
+            }
+            break;
+          case XSDVariety.UNION:
+            {
+              List memberTypes = ((XSDSimpleTypeDefinition) type).getMemberTypeDefinitions();
+              if (memberTypes != null && memberTypes.size() > 0)
+              {
+                Iterator i = memberTypes.iterator();
+                while (i.hasNext())
+                {
+                  XSDSimpleTypeDefinition simpleType = (XSDSimpleTypeDefinition) i.next();
+                  getEnumeratedValuesForSimpleType(simpleType, result);
+                }
+              }
+            }
+            break;
         }
       }
     }  
     String[] array = new String[result.size()];
     result.toArray(array);
     return array;
+  }
+
+  private static void getEnumeratedValuesForSimpleType(XSDTypeDefinition type, List result)
+  {
+    List enumerationFacets = ((XSDSimpleTypeDefinition) type).getEnumerationFacets();
+    for (Iterator i = enumerationFacets.iterator(); i.hasNext();)
+    {
+      XSDEnumerationFacet enumFacet = (XSDEnumerationFacet) i.next();
+      List values = enumFacet.getValue();
+      for (Iterator j = values.iterator(); j.hasNext();)
+      {
+        Object o = j.next();
+        if (o != null)
+        {
+          if (!result.contains(o))
+          {
+            result.add(o.toString());
+          }
+        }
+      }
+    }
   }
 
   /**
