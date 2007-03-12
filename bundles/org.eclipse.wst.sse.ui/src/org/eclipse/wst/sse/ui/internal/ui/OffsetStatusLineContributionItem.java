@@ -101,6 +101,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.sse.core.internal.util.Utilities;
+import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.sse.ui.internal.contentoutline.IJFaceNodeAdapter;
 import org.eclipse.wst.sse.ui.internal.reconcile.ReconcileAnnotationKey;
@@ -906,7 +907,7 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 							}
 								break;
 							case 2 : {
-								text = element.toString();
+								text = StringUtils.firstLineOf(element.toString());
 							}
 								break;
 							default :
