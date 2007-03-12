@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,10 +18,13 @@ import java.util.List;
 import java.util.Locale;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jst.jsp.core.internal.JSPCoreMessages;
 import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.provisional.JSP11Namespace;
+import org.eclipse.jst.jsp.core.internal.provisional.JSP20Namespace;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.jst.jsp.core.taglib.ITaglibRecord;
 import org.eclipse.jst.jsp.core.taglib.TaglibIndex;
@@ -52,9 +55,10 @@ public class JSPDirectiveValidator extends JSPValidator {
 	private HashMap fPrefixValueRegionToDocumentRegionMap = new HashMap();
 
 	private HashMap fReservedPrefixes = new HashMap();
-	private int fSeverityIncludeMissingFile = IMessage.NORMAL_SEVERITY;
-	private int fSeverityTaglibDuplicatePrefixWithDifferentURIs = IMessage.HIGH_SEVERITY;
-	private int fSeverityTaglibDuplicatePrefixWithSameURIs = IMessage.NORMAL_SEVERITY;
+	private int fSeverityIncludeFileMissing = IMessage.NORMAL_SEVERITY;
+	private int fSeverityIncludeFileNotSpecified = IMessage.NORMAL_SEVERITY;
+	private int fSeverityTaglibDuplicatePrefixWithDifferentURIs = IMessage.NORMAL_SEVERITY;
+	private int fSeverityTaglibDuplicatePrefixWithSameURIs = IMessage.LOW_SEVERITY;
 	private int fSeverityTaglibMissingPrefix = IMessage.HIGH_SEVERITY;
 	private int fSeverityTaglibMissingURI = IMessage.HIGH_SEVERITY;
 	private int fSeverityTaglibUnresolvableURI = IMessage.HIGH_SEVERITY;
@@ -165,10 +169,10 @@ public class JSPDirectiveValidator extends JSPValidator {
 			String fileValue = documentRegion.getText(fileValueRegion);
 			fileValue = StringUtils.stripQuotes(fileValue);
 
-			if (fileValue.length() == 0 && fSeverityIncludeMissingFile != NO_SEVERITY) {
-				// prefix is specified but empty
+			if (fileValue.length() == 0 && fSeverityIncludeFileNotSpecified != NO_SEVERITY) {
+				// file value is specified but empty
 				String msgText = NLS.bind(JSPCoreMessages.JSPDirectiveValidator_3, JSP11Namespace.ATTR_NAME_FILE);
-				LocalizedMessage message = new LocalizedMessage(fSeverityIncludeMissingFile, msgText, file);
+				LocalizedMessage message = new LocalizedMessage(fSeverityIncludeFileNotSpecified, msgText, file);
 				int start = documentRegion.getStartOffset(fileValueRegion);
 				int length = fileValueRegion.getTextLength();
 				int lineNo = sDoc.getLineOfOffset(start);
@@ -178,11 +182,34 @@ public class JSPDirectiveValidator extends JSPValidator {
 
 				reporter.addMessage(fMessageOriginator, message);
 			}
+			else if(fSeverityIncludeFileMissing != NO_SEVERITY){
+				IPath testPath = null;
+				if (fileValue.startsWith("/")) {
+					testPath = TaglibIndex.getContextRoot(file.getFullPath()).append(new Path(fileValue));
+				}
+				else {
+					testPath = file.getFullPath().removeLastSegments(1).append(new Path(fileValue));
+				}
+				IFile testFile = file.getWorkspace().getRoot().getFile(testPath);
+				if (!testFile.isAccessible()) {
+					// File not found
+					String msgText = NLS.bind(JSPCoreMessages.JSPDirectiveValidator_4, new String[]{fileValue, testPath.toString()});
+					LocalizedMessage message = new LocalizedMessage(fSeverityIncludeFileMissing, msgText, file);
+					int start = documentRegion.getStartOffset(fileValueRegion);
+					int length = fileValueRegion.getTextLength();
+					int lineNo = sDoc.getLineOfOffset(start);
+					message.setLineNo(lineNo);
+					message.setOffset(start);
+					message.setLength(length);
+
+					reporter.addMessage(fMessageOriginator, message);
+				}
+			}
 		}
-		else if (fSeverityIncludeMissingFile != NO_SEVERITY) {
+		else if (fSeverityIncludeFileNotSpecified != NO_SEVERITY) {
 			// file is not specified at all
 			String msgText = NLS.bind(JSPCoreMessages.JSPDirectiveValidator_3, JSP11Namespace.ATTR_NAME_FILE);
-			LocalizedMessage message = new LocalizedMessage(fSeverityIncludeMissingFile, msgText, file);
+			LocalizedMessage message = new LocalizedMessage(fSeverityIncludeFileNotSpecified, msgText, file);
 			int start = documentRegion.getStartOffset();
 			int length = documentRegion.getTextLength();
 			int lineNo = sDoc.getLineOfOffset(start);
@@ -197,6 +224,7 @@ public class JSPDirectiveValidator extends JSPValidator {
 	private void processTaglibDirective(IReporter reporter, IFile file, IStructuredDocument sDoc, IStructuredDocumentRegion documentRegion) {
 		ITextRegion prefixValueRegion = null;
 		ITextRegion uriValueRegion = getAttributeValueRegion(documentRegion, JSP11Namespace.ATTR_NAME_URI);
+		ITextRegion tagdirValueRegion = getAttributeValueRegion(documentRegion, JSP20Namespace.ATTR_NAME_TAGDIR);
 		if (uriValueRegion != null) {
 			// URI is specified
 			String uri = documentRegion.getText(uriValueRegion);
@@ -208,8 +236,7 @@ public class JSPDirectiveValidator extends JSPValidator {
 					if (tld == null && fSeverityTaglibUnresolvableURI != NO_SEVERITY) {
 						// URI specified but does not resolve
 						String msgText = NLS.bind(JSPCoreMessages.JSPDirectiveValidator_1, uri);
-						int sev = IMessage.HIGH_SEVERITY;
-						LocalizedMessage message = new LocalizedMessage(sev, msgText, file);
+						LocalizedMessage message = new LocalizedMessage(fSeverityTaglibUnresolvableURI, msgText, file);
 						int start = documentRegion.getStartOffset(uriValueRegion);
 						int length = uriValueRegion.getTextLength();
 						int lineNo = sDoc.getLineOfOffset(start);
@@ -223,8 +250,28 @@ public class JSPDirectiveValidator extends JSPValidator {
 				else if (fSeverityTaglibMissingURI != NO_SEVERITY) {
 					// URI specified but empty string
 					String msgText = NLS.bind(JSPCoreMessages.JSPDirectiveValidator_3, JSP11Namespace.ATTR_NAME_URI);
-					int sev = IMessage.HIGH_SEVERITY;
-					LocalizedMessage message = new LocalizedMessage(sev, msgText, file);
+					LocalizedMessage message = new LocalizedMessage(fSeverityTaglibMissingURI, msgText, file);
+					int start = documentRegion.getStartOffset(uriValueRegion);
+					int length = uriValueRegion.getTextLength();
+					int lineNo = sDoc.getLineOfOffset(start);
+					message.setLineNo(lineNo);
+					message.setOffset(start);
+					message.setLength(length);
+
+					reporter.addMessage(fMessageOriginator, message);
+				}
+			}
+		}
+		else if (tagdirValueRegion != null) {
+			// URI is specified
+			String tagdir = documentRegion.getText(tagdirValueRegion);
+
+			if (file != null) {
+				tagdir = StringUtils.stripQuotes(tagdir);
+				if (tagdir.length() <= 0 && fSeverityTaglibMissingURI != NO_SEVERITY) {
+					// tagdir specified but empty string
+					String msgText = NLS.bind(JSPCoreMessages.JSPDirectiveValidator_3, JSP20Namespace.ATTR_NAME_TAGDIR);
+					LocalizedMessage message = new LocalizedMessage(fSeverityTaglibMissingURI, msgText, file);
 					int start = documentRegion.getStartOffset(uriValueRegion);
 					int length = uriValueRegion.getTextLength();
 					int lineNo = sDoc.getLineOfOffset(start);
@@ -239,8 +286,7 @@ public class JSPDirectiveValidator extends JSPValidator {
 		else if (fSeverityTaglibMissingURI != NO_SEVERITY) {
 			// URI not specified or empty string
 			String msgText = NLS.bind(JSPCoreMessages.JSPDirectiveValidator_3, JSP11Namespace.ATTR_NAME_URI);
-			int sev = IMessage.HIGH_SEVERITY;
-			LocalizedMessage message = new LocalizedMessage(sev, msgText, file);
+			LocalizedMessage message = new LocalizedMessage(fSeverityTaglibMissingURI, msgText, file);
 			int start = documentRegion.getStartOffset();
 			int length = documentRegion.getTextLength();
 			int lineNo = sDoc.getLineOfOffset(start);
