@@ -207,10 +207,7 @@ public class XMLContentOutlineConfiguration extends ContentOutlineConfiguration 
 			StringBuffer s = new StringBuffer();
 			Node node = (Node) element;
 			while (node != null) {
-				if (node == element) {
-					s.append(getLabelProvider(treeViewer).getText(node));
-				}
-				else if (node.getNodeType() != Node.DOCUMENT_NODE) {
+				if (node.getNodeType() != Node.DOCUMENT_NODE) {
 					s.insert(0, super.getText(node));
 				}
 				node = node.getParentNode();
