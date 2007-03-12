@@ -87,8 +87,10 @@ public class XMLPropertySheetConfiguration extends PropertySheetConfiguration {
 		}
 
 		void addPropertySheetPage(IPropertySheetPage page) {
-			propertySheetPages.add(page);
-			schedule(UPDATE_DELAY);
+			if (page != null) {
+				propertySheetPages.add(page);
+				schedule(UPDATE_DELAY);
+			}
 		}
 
 		public IStatus runInUIThread(IProgressMonitor monitor) {
@@ -97,7 +99,7 @@ public class XMLPropertySheetConfiguration extends PropertySheetConfiguration {
 
 			for (int i = 0; i < pages.length; i++) {
 				PropertySheetPage page = (PropertySheetPage) pages[i];
-				if ((page.getControl() != null) && !page.getControl().isDisposed()) {
+				if ((page != null) && (page.getControl() != null) && !page.getControl().isDisposed()) {
 					page.refresh();
 				}
 			}
