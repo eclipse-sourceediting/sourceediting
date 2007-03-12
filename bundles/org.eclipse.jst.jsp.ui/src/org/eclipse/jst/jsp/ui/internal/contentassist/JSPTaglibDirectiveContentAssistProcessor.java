@@ -33,6 +33,8 @@ import org.eclipse.jst.jsp.core.taglib.ITaglibRecord;
 import org.eclipse.jst.jsp.core.taglib.IURLRecord;
 import org.eclipse.jst.jsp.core.taglib.TaglibIndex;
 import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
+import org.eclipse.jst.jsp.ui.internal.Logger;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
@@ -46,6 +48,8 @@ import org.eclipse.wst.sse.ui.internal.contentassist.IRelevanceConstants;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest;
+import org.eclipse.wst.xml.ui.internal.editor.XMLEditorPluginImageHelper;
+import org.eclipse.wst.xml.ui.internal.editor.XMLEditorPluginImages;
 import org.w3c.dom.Node;
 
 /**
@@ -199,12 +203,21 @@ public class JSPTaglibDirectiveContentAssistProcessor extends JSPDummyContentAss
 								JSPUIPlugin.getInstance().getImageRegistry().put(url, imageDescriptor);
 							}
 							catch (MalformedURLException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
+								Logger.logException(e);
 							}
 						}
 						String additionalInfo = descriptor.getDescription() + "<br/>" + descriptor.getTlibVersion();
-						CustomCompletionProposal proposal = new CustomCompletionProposal("\"" + uri + "\"", start, length, uri.length() + 2, JSPUIPlugin.getInstance().getImageRegistry().get(url), uri, null, additionalInfo, IRelevanceConstants.R_NONE);
+						Image image = null;
+						try {
+							image = JSPUIPlugin.getInstance().getImageRegistry().get(url);
+						}
+						catch (Exception e) {
+							Logger.logException(e);
+						}
+						if(image == null) {
+							image = XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_ATTRIBUTE);
+						}
+						CustomCompletionProposal proposal = new CustomCompletionProposal("\"" + uri + "\"", start, length, uri.length() + 2, image, uri, null, additionalInfo, IRelevanceConstants.R_NONE);
 						contentAssistRequest.addProposal(proposal);
 					}
 				}
@@ -233,7 +246,8 @@ public class JSPTaglibDirectiveContentAssistProcessor extends JSPDummyContentAss
 				for (int j = 0; j < prefixes.length; j++) {
 					String prefix = (String) prefixes[j];
 					ITaglibDescriptor descriptor = (ITaglibDescriptor) prefixMap.get(prefix);
-					CustomCompletionProposal proposal = new CustomCompletionProposal(prefix, start, length, prefix.length(), null, prefix, null, descriptor.getDescription(), IRelevanceConstants.R_NONE);
+					Image image = XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_ATTRIBUTE);
+					CustomCompletionProposal proposal = new CustomCompletionProposal("\"" + prefix + "\"", start, length, prefix.length() + 2, image, prefix, null, descriptor.getDescription(), IRelevanceConstants.R_NONE);
 					contentAssistRequest.addProposal(proposal);
 				}
 			}
