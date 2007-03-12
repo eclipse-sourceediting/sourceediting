@@ -23,4 +23,6 @@ public interface JSP20Namespace extends JSP12Namespace {
 		String DIRECTIVE_ATTRIBUTE = "jsp:directive.attribute"; //$NON-NLS-1$
 		String DIRECTIVE_VARIABLE = "jsp:directive.variable"; //$NON-NLS-1$
 	}
+
+	String ATTR_NAME_TAGDIR = "tagdir"; //$NON-NLS-1$
 }
