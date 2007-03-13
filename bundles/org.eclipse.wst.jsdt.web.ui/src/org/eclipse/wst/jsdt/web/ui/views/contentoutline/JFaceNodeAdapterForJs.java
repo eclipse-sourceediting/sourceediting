@@ -1,163 +1,142 @@
 package org.eclipse.wst.jsdt.web.ui.views.contentoutline;
 
+
 import java.util.Enumeration;
 import java.util.Hashtable;
+import org.eclipse.wst.jsdt.internal.ui.compare.JavaNode;
 
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.wst.html.ui.internal.contentoutline.JFaceNodeAdapterForHTML;
 import org.eclipse.wst.jsdt.core.IJavaElement;
 import org.eclipse.wst.jsdt.core.JavaModelException;
 import org.eclipse.wst.jsdt.internal.core.NamedMember;
+import org.eclipse.wst.jsdt.internal.core.SourceMethod;
 import org.eclipse.wst.jsdt.internal.core.SourceRefElement;
+import org.eclipse.wst.jsdt.internal.core.SourceType;
+import org.eclipse.wst.jsdt.ui.JavaElementLabelProvider;
 import org.eclipse.wst.jsdt.ui.StandardJavaElementContentProvider;
 import org.eclipse.wst.jsdt.web.core.internal.Logger;
 import org.eclipse.wst.jsdt.web.core.internal.java.IJSPTranslation;
 import org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslation;
 import org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslationAdapter;
+import org.eclipse.wst.jsdt.web.ui.views.contentoutline.JSDTElementContentProvider.pLocationMap;
 import org.eclipse.wst.sse.core.StructuredModelManager;
+import org.eclipse.wst.sse.core.internal.model.FactoryRegistry;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.xml.core.internal.document.NodeImpl;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
-import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
+import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeAdapterFactory;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public class JSDTElementContentProvider extends StandardJavaElementContentProvider {
-
-    /* (non-Javadoc)
-     * @see org.eclipse.wst.jsdt.ui.StandardJavaElementContentProvider#exists(java.lang.Object)
-     */
-    ITreeContentProvider fParentContentProvider=null;
+public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML implements IContentProvider{
     
-    private Object[] NO_PARENT = new Object[0];
-    private Hashtable parents;
-    
-    public  JSDTElementContentProvider(IContentProvider parentContentProvider){
-        if(parentContentProvider instanceof ITreeContentProvider) fParentContentProvider =  (ITreeContentProvider)parentContentProvider;
-        parents = new Hashtable();
+    public JFaceNodeAdapterForJs(JFaceNodeAdapterFactory adapterFactory) {
+        super(adapterFactory);   
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.wst.jsdt.ui.StandardJavaElementContentProvider#getChildren(java.lang.Object)
-     */
-    @Override
+    private StandardJavaElementContentProvider fJavaElementProvider;
+    private JavaElementLabelProvider           fJavaElementLabelProvider;
+    private Hashtable                           parents = new Hashtable();
+    
     public Object[] getChildren(Object object) {
-        if(object instanceof IJavaElement) return super.getChildren(object);
-        System.out.println("Get Children.\n Node Name: " + ((Node)object).getNodeName() + 
-                "\nType:\n" + ((Node)object).getNodeType() + 
-                "# of Children:" + (((Node)object).hasChildNodes()?((Node)object).getChildNodes().getLength():0) + 
-                "\nContents:\n"+((Node)object).getNodeValue() +
-                "\n--------------------------------");  
+        if(object instanceof IJavaElement) return getJavaElementProvider().getChildren(object);
             Node node = (Node) object;
-            // && !(node.getFirstChild() instanceof JSDTJfaceNode )
             if (isJSElementParent(node)) {
                 Object[] results = getJSElementsFromNode(node.getFirstChild());
                 return results;
             }
-            return fParentContentProvider.getChildren(object);
-            
+            return super.getChildren(object);
     }
   
-
-    /* (non-Javadoc)
-     * @see org.eclipse.wst.jsdt.ui.StandardJavaElementContentProvider#getElements(java.lang.Object)
-     */
-    @Override
     public Object[] getElements(Object object) {
-        if(object instanceof IJavaElement) return super.getElements(object);
-        if(parents.contains(object)){
-           NodeList list= (((pLocationMap)parents.get(object)).parent).getChildNodes();
-           Object obj[] = new Object[list.getLength()];
-           for(int i = 0;i<list.getLength();i++){
-               obj[i] = list.item(i);
-           }
-           return obj;
-        }
-         return fParentContentProvider.getElements(object);
+        if(object instanceof IJavaElement) return getJavaElementProvider().getElements(object);
+//        if(parents.contains(object)){
+//           NodeList list= ((Node)parents.get(object)).getChildNodes();
+//           Object obj[] = new Object[list.getLength()];
+//           for(int i = 0;i<list.getLength();i++){
+//               obj[i] = list.item(i);
+//           }
+//           return obj;
+//        }
+         return super.getElements(object);
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.wst.jsdt.ui.StandardJavaElementContentProvider#getParent(java.lang.Object)
-     */
-    @Override
+    
+    
+    public String getLabelText(Object node) {
+        if(node instanceof JsJfaceNode) return getJavaElementLabelProvider().getText(((JsJfaceNode)node).getJsElement());
+        if(node instanceof IJavaElement) return getJavaElementLabelProvider().getText((IJavaElement)node);
+        return super.getLabelText(node);
+    }
+
+    
+    
+    public Image getLabelImage(Object node) {
+        if(node instanceof JsJfaceNode) return getJavaElementLabelProvider().getImage(((JsJfaceNode)node).getJsElement());
+        if(node instanceof IJavaElement) return getJavaElementLabelProvider().getImage((IJavaElement)node);
+        return super.getLabelImage(node);
+    }
+
     public Object getParent(Object element) {
         
-        if(parents.contains(element)){
-            return  ((pLocationMap)parents.get(element)).parent;
-        }
-        if(element instanceof IJavaElement) return super.getParent(element);
-        return fParentContentProvider.getParent(element);
+//        if(parents.contains(element)){
+//            return  ((Node)parents.get(element));
+//        }
+        if(element instanceof IJavaElement) return getJavaElementProvider().getParent(element);
+        return super.getParent(element);
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.wst.jsdt.ui.StandardJavaElementContentProvider#hasChildren(java.lang.Object)
-     */
-    @Override
     public boolean hasChildren(Object object) {
-        if(object instanceof IJavaElement) return super.hasChildren(object);
+        if(object instanceof IJavaElement) return getJavaElementProvider().hasChildren(object);
        
         Node node = (Node) object;
         
         if ( isJSElementParent(node) ) {
-            /* cheaper to check parent array */
-            Enumeration parentEnum = parents.elements();
-            
-            while(parentEnum.hasMoreElements()){
-                pLocationMap value = (pLocationMap)parentEnum.nextElement();
-                
-                /* found a child */
-                if(value.parent==node) return true;
-                
-            }
+           // if(parents.contains(node)) return true;
             
             Object[] nodes = getJSElementsFromNode(node.getFirstChild());
             
             return (nodes != null && nodes.length > 0);
         }
         
-        return fParentContentProvider.hasChildren(object);
+        return super.hasChildren(object);
     }
     
     private boolean isJSElementParent(Node node) {
-        return (node.hasChildNodes() && node.getNodeName().equalsIgnoreCase("script"));
+        return parents.contains(node) || (node.hasChildNodes() && node.getNodeName().equalsIgnoreCase("script"));
     }
     
     private boolean isJSElement(Object object) {
+        
         if(object instanceof IJavaElement) return true;
-        if (JSDTJfaceNode.hasJsPart(object))
-            return true;
+       
         Node node = (Node) object;
         Node parent = node.getParentNode();
         if (parent != null && parent.getNodeName().equalsIgnoreCase("script") && node.getNodeType() == Node.TEXT_NODE) {
-            
             return true;
         }
         return false;
     }
     
-    class pLocationMap{
-        Node parent;
-        Position htmlLocation;
-        pLocationMap(Node parent, Position position){
-            this.parent=parent;
-            this.htmlLocation=position;
-        }
-    }
-    
-    private IJavaElement[] getJSElementsFromNode(Node node) {
+    private Object[] getJSElementsFromNode(Node node) {
         IStructuredModel model = null;
         IModelManager modelManager = StructuredModelManager.getModelManager();
         JSPTranslation translation = null;
        
         IJavaElement[] result = null;
+        IDocument viewerDoc = null;
+        
         try {
             if (modelManager != null) {
                 IStructuredDocument doc = ((NodeImpl) node).getStructuredDocument();
@@ -166,6 +145,8 @@ public class JSDTElementContentProvider extends StandardJavaElementContentProvid
             }
             IDOMModel domModel = (IDOMModel) model;
             IDOMDocument xmlDoc = domModel.getDocument();
+            viewerDoc = xmlDoc.getStructuredDocument();
+            
             JSPTranslationAdapter translationAdapter = (JSPTranslationAdapter) xmlDoc.getAdapterFor(IJSPTranslation.class);
             translation = translationAdapter.getJSPTranslation();
             
@@ -190,27 +171,11 @@ public class JSDTElementContentProvider extends StandardJavaElementContentProvid
                         model.releaseFromRead();
                     }
             }
-        
-            //nodes = new JSDTJfaceNode[result.length];
-           // JSDTJfaceNode parentJsNode = new JSDTJfaceNode(node.getParentNode(),false);
+            
+            
+            Object[] newResults=new Object[result.length];
            
-            
-//            //model.aboutToChangeModel();
-//            JSDTJfaceNode parentJsNode;
-//            
-//            if(!(parentnode instanceof JSDTJfaceNode)){
-//                parentJsNode = new JSDTJfaceNode(parentnode,false);
-//            }else{
-//                parentJsNode = (JSDTJfaceNode)parentnode;
-//               
-//            }
-//            parentJsNode.removeChildNodes();
-            
-            // int offset = startOffset;
-            
-          /* build the node list and append to parent */
             for (int i = 0; i < result.length; i++) {
-               // nodes[i] = new JSDTJfaceNode(parentJsNode, true);
                 int htmllength = 0;
                 int htmloffset = 0;
                 Position position=null;
@@ -221,22 +186,26 @@ public class JSDTElementContentProvider extends StandardJavaElementContentProvid
                 } catch (JavaModelException e) {
                     e.printStackTrace();
                 }
-                // int adjustedLength =
-                // (i==result.length-1)?(-offset):htmlLength;
-               // nodes[i].setJsPart(result[i], new Position(htmloffset, htmllength));
-                //nodes[i].addAdapter(this);
-               // parentJsNode.appendChild(nodes[i]);
-                result[i] = JsJfaceNode.getInstance((NamedMember)result[i], position);
-                parents.put(result[i], new  pLocationMap(node,position));
+              
+                
+                newResults[i] = getJsNode(node.getParentNode(), (IJavaElement)result[i], position, model.getFactoryRegistry());
+                //newResults[i] = new JavaNode(parent,result[i].getElementType(),result[i].getElementName(),htmloffset,htmllength);
+                //parents.put(result[i], node);
+                parents.put(newResults[i], node);
                 
             }
-            return result;
+            return newResults;
     }
     
-    /* (non-Javadoc)
-     * @see org.eclipse.wst.jsdt.ui.StandardJavaElementContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
-     */
-    @Override
+    private Object getJsNode(Node parent, IJavaElement root, Position position, FactoryRegistry registry){
+        //JavaNode node = new JavaNode(parent,root.getElementType(),root.getElementName(),position.getOffset(), position.getLength());
+        //if(true) return node;
+        if(true) return new JsElement(root);
+        JsJfaceNode instance = new JsJfaceNode(parent, root, position);
+        ((JsJfaceNode)instance).setAdapterRegistry(registry);
+        ((JsJfaceNode)instance).addAdapter(this);
+        return instance;
+    }
     public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 //        // TODO Auto-generated method stub
 //        System.out.println("Umiplement method inputChanged" );
@@ -248,7 +217,7 @@ public class JSDTElementContentProvider extends StandardJavaElementContentProvid
 //        }
        
         if(oldInput!=null && parents.contains(oldInput)) parents.remove(oldInput);
-        fParentContentProvider.inputChanged(viewer, oldInput, newInput);
+       // super.inputChanged(viewer, oldInput, newInput);
         
     }
     
@@ -266,5 +235,25 @@ public class JSDTElementContentProvider extends StandardJavaElementContentProvid
         
         return null;
     }
+    private StandardJavaElementContentProvider getJavaElementProvider() {
+        if (fJavaElementProvider == null) {
+            fJavaElementProvider = new StandardJavaElementContentProvider(true);
+        }
+        return fJavaElementProvider;
+        
+    }
     
+    private JavaElementLabelProvider getJavaElementLabelProvider() {
+        if (fJavaElementLabelProvider == null) {
+            fJavaElementLabelProvider = new JavaElementLabelProvider();
+        }
+        return fJavaElementLabelProvider;
+        
+    }
+
+
+    public void dispose() {
+       if(parents!=null) parents.clear();
+        
+    }
 }

@@ -39,7 +39,7 @@ public class JFaceNodeAdapterFactoryForJSDT extends JFaceNodeAdapterFactory {
 		if (singletonAdapter == null) {
 			// create the JFaceNodeAdapter
 			//singletonAdapter = new JFaceNodeAdapterForJSDT(this);
-            singletonAdapter = new JFaceNodeAdapterForHTML(this);
+            singletonAdapter = new JFaceNodeAdapterForJs(this);
 			initAdapter(singletonAdapter, node);
 		}
 		return singletonAdapter;

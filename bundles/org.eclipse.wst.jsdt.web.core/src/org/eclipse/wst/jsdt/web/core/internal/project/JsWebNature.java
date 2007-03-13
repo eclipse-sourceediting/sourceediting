@@ -1,4 +1,4 @@
-package org.eclipse.wst.jsdt.web.core.internal.nature;
+package org.eclipse.wst.jsdt.web.core.internal.project;
 
 
 import org.eclipse.wst.jsdt.ui.JavaUI;
@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Vector;
 
 
 import org.eclipse.core.filesystem.EFS;
@@ -54,11 +55,14 @@ import org.eclipse.wst.jsdt.internal.ui.wizards.ClassPathDetector;
 import org.eclipse.wst.jsdt.internal.ui.wizards.JavaProjectWizardFirstPage;
 import org.eclipse.wst.jsdt.internal.ui.wizards.JavaProjectWizardSecondPage;
 import org.eclipse.wst.jsdt.internal.ui.wizards.NewWizardMessages;
+import org.eclipse.wst.jsdt.internal.ui.wizards.buildpaths.CPListElement;
 
 
 
-public class JSDTWebNature implements IProjectNature{
-
+public class JsWebNature implements IProjectNature{
+	private String fBuildPath;
+	private IJavaProject fCurrJProject;
+	private Vector fClassPathList = new Vector();
 	private static final String FILENAME_PROJECT= ".project"; //$NON-NLS-1$
 	private static final String FILENAME_CLASSPATH= ".classpath"; //$NON-NLS-1$
 
@@ -79,9 +83,9 @@ public class JSDTWebNature implements IProjectNature{
 	
 	private static boolean DEBUG = true;
 	
-	private JavaCapabilityConfigurationPage fJavaCapabilityConfiguration;
+	private JsBuildPathBlocks fJavaCapabilityConfiguration;
 	
-	public JSDTWebNature(IProject project, IProgressMonitor monitor){
+	public JsWebNature(IProject project, IProgressMonitor monitor){
 		this.monitor=monitor;
 		this.fCurrProject = project;
 	}
@@ -93,14 +97,14 @@ public class JSDTWebNature implements IProjectNature{
 		
 	}
 
-	private JavaCapabilityConfigurationPage getJavaCapabilityConfig(){
+	private JsBuildPathBlocks getJavaCapabilityConfig(){
 		if(fJavaCapabilityConfiguration==null){
-			fJavaCapabilityConfiguration = new JavaCapabilityConfigurationPage();
+			fJavaCapabilityConfiguration = new JsBuildPathBlocks();
 		}
 		return fJavaCapabilityConfiguration;
 	}
 	
-	public JSDTWebNature(IProject project){
+	public JsWebNature(IProject project){
 		this(project,new NullProgressMonitor());
 	}
 	
@@ -197,7 +201,8 @@ public class JSDTWebNature implements IProjectNature{
 			if( srcPath==null ){
 				IPreferenceStore store= PreferenceConstants.getPreferenceStore();
 				srcPath = new Path(store.getString(PreferenceConstants.SRCBIN_SRCNAME));
-				
+				//IFolder folder= fCurrProject.getFolder(srcPath);
+				//CoreUtility.createFolder(folder, true, true, new SubProgressMonitor(monitor, 1));
 				if (srcPath.segmentCount() > 0) {
 					IFolder folder= fCurrProject.getFolder(srcPath);
 					CoreUtility.createFolder(folder, true, true, new SubProgressMonitor(monitor, 1));
@@ -225,8 +230,8 @@ public class JSDTWebNature implements IProjectNature{
 			if( getOutputPath()==null  ){
 				IPreferenceStore store= PreferenceConstants.getPreferenceStore();
 				IPath binPath= new Path(store.getString(PreferenceConstants.SRCBIN_BINNAME));
-				
-				if (binPath.segmentCount() > 0 && !binPath.equals(srcPath)) {
+				//
+				if ( binPath.segmentCount() > 0 &&  !binPath.equals(srcPath)) {
 					IFolder folder= fCurrProject.getFolder(binPath);
 					CoreUtility.createFolder(folder, true, true, new SubProgressMonitor(monitor, 1));
 				} else {
@@ -246,8 +251,13 @@ public class JSDTWebNature implements IProjectNature{
 			if (monitor.isCanceled()) {
 				throw new OperationCanceledException();
 			}
+			
+			//fJavaProject = proj.getJavaProject();
+			
+			//getJavaCapabilityConfig().createProject(, fCurrProjectLocation, monitor);
 			fJavaProject = JavaCore.create(fCurrProject);
-			getJavaCapabilityConfig().init(fJavaProject, outputLocation, entries, false);
+			getJavaCapabilityConfig().init(fJavaProject, outputLocation, entries);
+			getJavaCapabilityConfig().addJavaNature(fJavaProject.getProject(), monitor);
 			getJavaCapabilityConfig().configureJavaProject(new SubProgressMonitor(monitor, 3)); // create the Java project to allow the use of the new source folder page
 			fCurrProject.refreshLocal(IResource.DEPTH_INFINITE, monitor);
 			
@@ -404,5 +414,76 @@ public class JSDTWebNature implements IProjectNature{
 			IStatus status= new Status(IStatus.ERROR, JavaUI.ID_PLUGIN, IStatus.ERROR, NewWizardMessages.JavaProjectWizardSecondPage_problem_restore_classpath, e); 
 			throw new CoreException(status);
 		}
+	}
+	public void init(IJavaProject jproject, IPath outputLocation, IClasspathEntry[] classpathEntries) {
+		fCurrJProject= jproject;
+		boolean projectExists= false;
+		List newClassPath= null;
+		IProject project= fCurrJProject.getProject();
+		projectExists= (project.exists() && project.getFile(".classpath").exists()); //$NON-NLS-1$
+		if  (projectExists) {
+			if (outputLocation == null) {
+				outputLocation=  fCurrJProject.readOutputLocation();
+			}
+			if (classpathEntries == null) {
+				classpathEntries=  fCurrJProject.readRawClasspath();
+			}
+		}
+		if (outputLocation == null) {
+			outputLocation= getDefaultOutputLocation(jproject);
+		}			
+
+		if (classpathEntries != null) {
+			newClassPath= getExistingEntries(classpathEntries);
+		}
+		if (newClassPath == null) {
+			newClassPath= getDefaultClassPath(jproject);
+		}
+		
+		List exportedEntries = new ArrayList();
+		for (int i= 0; i < newClassPath.size(); i++) {
+			CPListElement curr= (CPListElement) newClassPath.get(i);
+			if (curr.isExported() || curr.getEntryKind() == IClasspathEntry.CPE_SOURCE) {
+				exportedEntries.add(curr);
+			}
+		}
+		fClassPathList.clear();
+		fClassPathList.addAll(newClassPath);
+		fBuildPath = outputLocation.makeRelative().toString();
+		
+	}
+	public static IPath getDefaultOutputLocation(IJavaProject jproj) {
+		IPreferenceStore store= PreferenceConstants.getPreferenceStore();
+		if (store.getBoolean(PreferenceConstants.SRCBIN_FOLDERS_IN_NEWPROJ)) {
+			String outputLocationName= store.getString(PreferenceConstants.SRCBIN_BINNAME);
+			return jproj.getProject().getFullPath().append(outputLocationName);
+		} else {
+			return jproj.getProject().getFullPath();
+		}
+	}	
+	private ArrayList getExistingEntries(IClasspathEntry[] classpathEntries) {
+		ArrayList newClassPath= new ArrayList();
+		for (int i= 0; i < classpathEntries.length; i++) {
+			IClasspathEntry curr= classpathEntries[i];
+			newClassPath.add(CPListElement.createFromExisting(curr, fCurrJProject));
+		}
+		return newClassPath;
+	}
+	private List getDefaultClassPath(IJavaProject jproj) {
+		List list= new ArrayList();
+		IResource srcFolder;
+		IPreferenceStore store= PreferenceConstants.getPreferenceStore();
+		String sourceFolderName= store.getString(PreferenceConstants.SRCBIN_SRCNAME);
+		if (store.getBoolean(PreferenceConstants.SRCBIN_FOLDERS_IN_NEWPROJ) && sourceFolderName.length() > 0) {
+			srcFolder= jproj.getProject().getFolder(sourceFolderName);
+		} else {
+			srcFolder= jproj.getProject();
+		}
+
+		list.add(new CPListElement(jproj, IClasspathEntry.CPE_SOURCE, srcFolder.getFullPath(), srcFolder));
+
+		IClasspathEntry[] jreEntries= PreferenceConstants.getDefaultJRELibrary();
+		list.addAll(getExistingEntries(jreEntries));
+		return list;
 	}
 }

@@ -11,6 +11,7 @@
 package org.eclipse.wst.jsdt.web.core.internal.java;
 
 import java.util.Enumeration;
+import java.util.Set;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -25,11 +26,13 @@ import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentListener;
+import org.eclipse.wst.common.project.facet.core.runtime.RuntimeManager;
 import org.eclipse.wst.jsdt.core.IJavaProject;
 import org.eclipse.wst.jsdt.core.JavaCore;
 import org.eclipse.wst.jsdt.internal.core.JavaProject;
 import org.eclipse.wst.jsdt.web.core.internal.Logger;
-import org.eclipse.wst.jsdt.web.core.internal.nature.JSDTWebNature;
+import org.eclipse.wst.jsdt.web.core.internal.project.JsWebNature;
+//import org.eclipse.wst.jsdt.web.core.internal.nature.JSDTWebNature;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
@@ -237,7 +240,7 @@ public class JSPTranslationAdapter implements INodeAdapter, IDocumentListener {
 	}
 
 	public IJavaProject getJavaProject() {
-
+		
 		IJavaProject javaProject = null;
 		try {
 			String baseLocation = getXMLModel().getBaseLocation();
@@ -251,7 +254,7 @@ public class JSPTranslationAdapter implements INodeAdapter, IDocumentListener {
 				project = root.getProject(filePath.segment(0));
 			}
 
-			JSDTWebNature jsdtNature = new JSDTWebNature(project);
+			JsWebNature jsdtNature = new JsWebNature(project);
 			
 			if(jsdtNature.isValidJSDTProject()){
 				return jsdtNature.getJavaProject();

@@ -49,9 +49,12 @@ public class AdapterFactoryProviderForJSP implements AdapterFactoryProvider {
 		INodeAdapterFactory factory = null;
 		factory = factoryRegistry.getFactoryFor(IJFaceNodeAdapter.class);
 		
-		if (factory == null) {
-			factory = new JFaceNodeAdapterFactoryForJSDT(
+		if (!(factory instanceof JFaceNodeAdapterFactoryForJSDT)) {
+            factoryRegistry.removeFactoriesFor(IJFaceNodeAdapter.class);
+            
+            factory = new JFaceNodeAdapterFactoryForJSDT(
 					IJFaceNodeAdapter.class, true);
+            
 			factoryRegistry.addFactory(factory);
 		}
 

@@ -53,7 +53,7 @@ public class JSPContentOutlineConfiguration extends
 
 	
 	
-//	private StandardJavaElementContentProvider fJavaElementProvider;
+
 	private JSDTElementContentProvider fJavaElementProvider;
 	
 	private JSDTElementContentProvider getJsContentProvider(TreeViewer viewer){
@@ -99,8 +99,8 @@ public class JSPContentOutlineConfiguration extends
 		// TODO Auto-generated method stub
 		
 		//System.out.println("Umiplement method getContentProvider" );
-		return getJsContentProvider(viewer);
-        //return super.getContentProvider(viewer);
+		//return getJsContentProvider(viewer);
+        return super.getContentProvider(viewer);
         
 		
         
@@ -111,8 +111,8 @@ public class JSPContentOutlineConfiguration extends
 
         //return new JFaceNodeAdapterForJSDT();
 		//return new JSDTLabelElementProvider(super.getLabelProvider(viewer));
-		return new JSDTLabelElementProvider(super.getLabelProvider(viewer));
-       // return super.getLabelProvider(viewer);
+		//return new JSDTLabelElementProvider(super.getLabelProvider(viewer));
+       return super.getLabelProvider(viewer);
 	}
 
 	@Override
@@ -126,8 +126,8 @@ public class JSPContentOutlineConfiguration extends
 	public ISelection getSelection(TreeViewer viewer, ISelection selection) {
      
                 
-       ISelection jSelection = getJsContentProvider(viewer).getSelection(viewer, selection);      
-       if(jSelection!=null) return jSelection;   
+//       ISelection jSelection = getJsContentProvider(viewer).getSelection(viewer, selection);      
+//       if(jSelection!=null) return jSelection;   
        
 		return super.getSelection(viewer, selection);
 	}

@@ -12,6 +12,7 @@ package org.eclipse.wst.jsdt.web.ui;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IAutoEditStrategy;
@@ -42,6 +43,7 @@ import org.eclipse.wst.jsdt.web.ui.internal.style.java.LineStyleProviderForJava;
 import org.eclipse.wst.jsdt.web.ui.internal.taginfo.JSPJavaJavadocHoverProcessor;
 import org.eclipse.wst.jsdt.web.ui.internal.taginfo.JSPJavaJavadocInformationProvider;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
+import org.eclipse.wst.common.project.facet.core.runtime.RuntimeManager;
 import org.eclipse.wst.css.core.text.ICSSPartitions;
 import org.eclipse.wst.html.core.internal.format.HTMLFormatProcessorImpl;
 import org.eclipse.wst.html.core.text.IHTMLPartitions;
@@ -214,7 +216,10 @@ public class StructuredTextViewerConfigurationJSP extends
 	@Override
 	protected IContentAssistProcessor[] getContentAssistProcessors(ISourceViewer sourceViewer, String partitionType) {
 																   IContentAssistProcessor[] processors = null;
-
+																   
+	     
+	     
+																   
 			if ( partitionType == IJSPPartitions.JSP_CONTENT_JAVA ){
 				//processors = new IContentAssistProcessor[] { new JSPJavaContentAssistProcessor() };
 				//processors = new IContentAssistProcessor[] {  new JSPContentAssistProcessor()};

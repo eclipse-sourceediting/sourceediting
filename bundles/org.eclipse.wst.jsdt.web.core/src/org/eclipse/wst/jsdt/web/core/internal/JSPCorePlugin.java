@@ -22,6 +22,7 @@ import org.osgi.framework.BundleContext;
  * The main plugin class to be used in the desktop.
  */
 public class JSPCorePlugin extends Plugin {
+	public static final String PLUGIN_ID = "org.eclipse.wst.jsdt.web";
 	// The shared instance.
 	private static JSPCorePlugin plugin;
 

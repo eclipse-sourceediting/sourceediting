@@ -151,7 +151,7 @@ public class JSPTranslationExtension extends JSPTranslation {
 			}
 		}
 
-		if (DEBUG) {
+		if (true) {
 			System.out
 					.println("================================================"); //$NON-NLS-1$
 			System.out.println("deltas:"); //$NON-NLS-1$
