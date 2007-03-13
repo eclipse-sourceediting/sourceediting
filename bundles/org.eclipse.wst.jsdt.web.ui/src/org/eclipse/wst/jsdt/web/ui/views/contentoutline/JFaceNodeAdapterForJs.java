@@ -26,12 +26,13 @@ import org.eclipse.wst.jsdt.web.core.internal.Logger;
 import org.eclipse.wst.jsdt.web.core.internal.java.IJSPTranslation;
 import org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslation;
 import org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslationAdapter;
-import org.eclipse.wst.jsdt.web.ui.views.contentoutline.JSDTElementContentProvider.pLocationMap;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.model.FactoryRegistry;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
+import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.eclipse.wst.sse.ui.internal.contentoutline.IJFaceNodeAdapter;
 import org.eclipse.wst.xml.core.internal.document.NodeImpl;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
@@ -39,7 +40,7 @@ import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeAdapterFactory;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML implements IContentProvider{
+public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
     
     public JFaceNodeAdapterForJs(JFaceNodeAdapterFactory adapterFactory) {
         super(adapterFactory);   
@@ -47,7 +48,7 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML implements IC
 
     private StandardJavaElementContentProvider fJavaElementProvider;
     private JavaElementLabelProvider           fJavaElementLabelProvider;
-    private Hashtable                           parents = new Hashtable();
+    //private Hashtable                           parents = new Hashtable();
     
     public Object[] getChildren(Object object) {
         if(object instanceof IJavaElement) return getJavaElementProvider().getChildren(object);
@@ -114,7 +115,7 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML implements IC
     }
     
     private boolean isJSElementParent(Node node) {
-        return parents.contains(node) || (node.hasChildNodes() && node.getNodeName().equalsIgnoreCase("script"));
+        return (node.hasChildNodes() && node.getNodeName().equalsIgnoreCase("script"));
     }
     
     private boolean isJSElement(Object object) {
@@ -191,7 +192,8 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML implements IC
                 newResults[i] = getJsNode(node.getParentNode(), (IJavaElement)result[i], position, model.getFactoryRegistry());
                 //newResults[i] = new JavaNode(parent,result[i].getElementType(),result[i].getElementName(),htmloffset,htmllength);
                 //parents.put(result[i], node);
-                parents.put(newResults[i], node);
+                //parents.put(newResults[i], node);
+                
                 
             }
             return newResults;
@@ -200,10 +202,16 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML implements IC
     private Object getJsNode(Node parent, IJavaElement root, Position position, FactoryRegistry registry){
         //JavaNode node = new JavaNode(parent,root.getElementType(),root.getElementName(),position.getOffset(), position.getLength());
         //if(true) return node;
-        if(true) return new JsElement(root);
+        //if(true) return new JsElement(root);
         JsJfaceNode instance = new JsJfaceNode(parent, root, position);
+        
         ((JsJfaceNode)instance).setAdapterRegistry(registry);
-        ((JsJfaceNode)instance).addAdapter(this);
+        
+        INodeAdapter adapter = ((JsJfaceNode)instance).getAdapterFor(IJFaceNodeAdapter.class);
+        if(!(adapter instanceof JFaceNodeAdapterForJs)){
+        	((JsJfaceNode)instance).removeAdapter(adapter);
+        	((JsJfaceNode)instance).addAdapter(this);
+        }	
         return instance;
     }
     public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
@@ -216,7 +224,7 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML implements IC
 //            }
 //        }
        
-        if(oldInput!=null && parents.contains(oldInput)) parents.remove(oldInput);
+       // if(oldInput!=null && parents.contains(oldInput)) parents.remove(oldInput);
        // super.inputChanged(viewer, oldInput, newInput);
         
     }
@@ -251,9 +259,4 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML implements IC
         
     }
 
-
-    public void dispose() {
-       if(parents!=null) parents.clear();
-        
-    }
 }

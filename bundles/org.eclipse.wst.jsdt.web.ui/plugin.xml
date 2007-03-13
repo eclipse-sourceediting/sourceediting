@@ -21,24 +21,26 @@
 		<sourceViewerConfiguration
 			class="org.eclipse.wst.jsdt.web.ui.StructuredTextViewerConfigurationJSP"
 			target="org.eclipse.wst.html.core.htmlsource" />
-		<contentOutlineConfiguration
-			class="org.eclipse.wst.jsdt.web.ui.views.contentoutline.JSPContentOutlineConfiguration"
-			target="org.eclipse.wst.html.core.htmlsource" />
-		<propertySheetConfiguration
-			class="org.eclipse.wst.xml.ui.views.properties.XMLPropertySheetConfiguration"
-			target="org.eclipse.wst.html.core.htmlsource" />
-		<provisionalConfiguration
-			type="sourceeditingtexttools"
-			class="org.eclipse.wst.jsdt.web.ui.internal.editor.JSPSourceEditingTextTools"
-			target="org.eclipse.wst.html.core.htmlsource" />
 		<provisionalConfiguration
 			type="characterpairmatcher"
-			class="org.eclipse.wst.jsdt.web.ui.internal.text.JSPDocumentRegionEdgeMatcher"
+			class="org.eclipse.wst.jsdt.web.ui.internal.text.JsDocumentRegionEdgeMatcher"
 			target="org.eclipse.wst.html.core.htmlsource" />
+	    <!-- May be usefull if we attempt to remove the JS translation-->
+		<!--
+		<provisionalConfiguration
+			type="sourceeditingtexttools"
+			class="org.eclipse.wst.jsdt.web.ui.internal.editor.JsSourceEditingTextTools"
+			target="org.eclipse.wst.html.core.htmlsource" />
+		-->
+		<!-- Current behavior is to fold at <script> tag.  This is OK for now.
+		     Eventually we can add this back to allow function folding -->
+		<!-- 
 		<provisionalConfiguration
 			type="structuredtextfoldingprovider"
 			class="org.eclipse.wst.jsdt.web.ui.internal.projection.StructuredTextFoldingProviderJSP"
 			target="org.eclipse.wst.html.core.htmlsource" />
+		-->
+		<!--
 		<provisionalDefinition
 			type="preferencepages"
 			value="org.eclipse.wst.sse.ui.preferences.jsp, org.eclipse.wst.sse.ui.preferences.jsp.source, org.eclipse.wst.sse.ui.preferences.jsp.templates, org.eclipse.wst.sse.ui.preferences.jsp.styles"
@@ -47,86 +49,42 @@
 			type="showintarget"
 			value="org.eclipse.wst.jsdt.ui.PackageExplorer"
 			target="org.eclipse.wst.html.core.htmlsource" />
+		-->
 	</extension>
 
-	<!--======================================================================================-->
+	<!-- ====================================================================================== -->
 	<!-- source validation for JSP															  -->
 	<!--======================================================================================-->
 	<extension point="org.eclipse.wst.sse.ui.sourcevalidation">
 		<validator
 			scope="total"
-			class="org.eclipse.wst.jsdt.web.core.internal.validation.JSPJavaValidator"
+			class="org.eclipse.wst.jsdt.web.core.internal.validation.JsValidator"
 			id="org.eclipse.wst.jsdt.web.jspsourcevalidator">
-			<contentTypeIdentifier
-				id="org.eclipse.wst.html.core.htmlsource">
-				
-				<partitionType id="org.eclipse.wst.html.SCRIPT">
-				</partitionType>
-				
-
+			<contentTypeIdentifier id="org.eclipse.wst.html.core.htmlsource">
+				<partitionType id="org.eclipse.wst.html.SCRIPT" />
+				<partitionType id="org.eclipse.wst.html.SCRIPT.EVENT" />
 			</contentTypeIdentifier>
 		</validator>
 	</extension>
 	
-	
-	<!--======================================================================================-->
-	<!-- custom XML source (as you type) validation					   						  -->
-	<!--======================================================================================-->
-	<extension point="org.eclipse.wst.sse.ui.sourcevalidation">
-		<validator
-			scope="partial"
-			class="org.eclipse.wst.xml.ui.internal.validation.MarkupValidator"
-			id="org.eclipse.wst.jsdt.web.ui.internal.validation.markupvalidator">
-			<contentTypeIdentifier
-				id="org.eclipse.wst.html.core.htmlsource">
-				
-				<partitionType id="org.eclipse.wst.xml.XML_DEFAULT"/>
-				<partitionType id="org.eclipse.wst.sse.ST_DEFAULT"/>
-			</contentTypeIdentifier>
-		</validator>
-	</extension>
-	<!--======================================================================================-->
-	<!-- HTML (as you type) validation					   						  			  -->
-	<!--======================================================================================-->
-	<!--
-	<extension point="org.eclipse.wst.sse.ui.sourcevalidation">
-		<validator
-			scope="partial"
-			class="org.eclipse.wst.html.internal.validation.HTMLValidator"
-			id="org.eclipse.wst.jsdt.web.ui.internal.validation.htmlsyntaxvalidator">
-			<contentTypeIdentifier
-				id="org.eclipse.wst.html.core.htmlsource">
-				
-				<partitionType id="org.eclipse.wst.html.HTML_DEFAULT"/>
-				<partitionType id="org.eclipse.wst.xml.XML_DEFAULT"/>
-				<partitionType id="org.eclipse.wst.sse.ST_DEFAULT"/>
-			</contentTypeIdentifier>
-		</validator>
-	</extension>
-	-->
 	<!--======================================================================================-->
 	<!-- JSP UI Adapter factories					   						  				  -->
 	<!--======================================================================================-->
 	<extension
 		point="org.eclipse.wst.sse.ui.adapterFactoryDescription">
 		<adapterFactoryDescription
-			class="org.eclipse.wst.jsdt.web.ui.internal.registry.AdapterFactoryProviderForJSP">
+			class="org.eclipse.wst.jsdt.web.ui.internal.registry.AdapterFactoryProviderForJSDT">
 			<contentType id="org.eclipse.wst.html.core.htmlsource" />
 		</adapterFactoryDescription>
 	</extension>
-
-	<extension
-		point="org.eclipse.core.filebuffers.annotationModelCreation">
-		<factory
-			contentTypeId="org.eclipse.wst.html.core.htmlsource"
-			class="org.eclipse.wst.sse.ui.internal.StructuredResourceMarkerAnnotationModelFactory" />
-	</extension>
-
+<!--======================================================================================-->
+<!-- JSP PREFERENCE PAGES                                                                 -->
+<!--======================================================================================-->
+	<!-- Use the JSDTs prefrence pages -->
+	<!--
 	<extension point="org.eclipse.ui.preferencePages">
 
-		<!--======================================================================================-->
-		<!-- JSP PREFERENCE PAGES                                                                 -->
-		<!--======================================================================================-->
+		
 		<page
 			name="%JSP_Files.name"
 			category="org.eclipse.wst.sse.ui.internal.provisional.preferences"
@@ -155,8 +113,9 @@
 			<keywordReference id="org.eclipse.wst.jsp.ui.styles"/>
 		</page>
 	</extension>
-	
+	-->
 	<!-- Keywords for preference and properties pages -->
+	<!--
 	<extension point="org.eclipse.ui.keywords">
 		<keyword
 			label="%preferenceKeywords.files"
@@ -171,32 +130,28 @@
 			label="%preferenceKeywords.fragments"
 			id="org.eclipse.wst.jsp.ui.fragments"/>
     </extension>
-
+	-->
 	
 
 
 	<!--======================================================================================-->
 	<!-- for breakpoint                                                                       -->
 	<!--======================================================================================-->
+	<!-- removed for now -->
+	<!--
 	<extension point="org.eclipse.wst.sse.ui.breakpoint">
 		<breakpointContribution id="org.eclipse.wst.jsdt.web.ui.providers">
-			<!-- 
-				<provider
-				extensions="jsp, jspf, jsf"
-				class="org.eclipse.wst.jsdt.web.ui.internal.breakpointproviders.JavaStratumBreakpointProvider"
-				id="org.eclipse.wst.jsdt.web.ui.internal.breakpointproviders.JavaStratumBreakpointProvider">
-				</provider>
-			-->
 			<provider
 				contentTypes="org.eclipse.wst.html.core.htmlsource"
 				class="org.eclipse.wst.jsdt.web.ui.internal.breakpointproviders.JavaStratumBreakpointProvider:*html,js,htm*"
 				id="org.eclipse.wst.jsdt.web.ui.internal.breakpointproviders.JavaStratumBreakpointProvider" />
 		</breakpointContribution>
 	</extension>
-
+	-->
 	<!--======================================================================================-->
 	<!-- Snippet View contributions                                                           -->
 	<!--======================================================================================-->
+	<!--
 	<extension
 		point="org.eclipse.wst.common.snippets.SnippetContributions">
 		<category
@@ -256,8 +211,10 @@
 			</item>
 		</category>
 	</extension>
-
+	-->
+	
 	<!-- Editor actionsets -->
+	<!--
 	<extension point="org.eclipse.ui.actionSetPartAssociations">
 		<actionSetPartAssociation
 			targetID="org.eclipse.ui.edit.text.actionSet.annotationNavigation">
@@ -268,23 +225,26 @@
 			<part id="org.eclipse.wst.jsdt.web.core.jspsource.source" />
 		</actionSetPartAssociation>
 	</extension>
-
+	-->
 
 	
 	
 	
 	<!-- Keybindings for jsp source editor -->
-	<extension point="org.eclipse.ui.bindings">
+	
+	<extension point="org.eclipse.ui.bindings"> -->
 	    <!--  win32:  M1=CTRL, M2=SHIFT, M3=ALT -->
 		<!-- rename refactor -->
+		
 		<key
 			sequence="M2+M3+R"
 			contextId="org.eclipse.wst.jsdt.web.ui.structured.text.editor.jsp.scope"
 			commandId="org.eclipse.wst.jsdt.web.ui.refactor.rename"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
 		</key>
-
+		
 		<!-- move refactor -->
+		
 		<key
 			sequence="M2+M3+V"
 			contextId="org.eclipse.wst.jsdt.web.ui.structured.text.editor.jsp.scope"
@@ -292,10 +252,12 @@
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
 		</key>
 	</extension>
-
+	
+	
 	<!--======================================================================================-->
 	<!-- Templates                                                                            -->
 	<!--======================================================================================-->
+	<!--
 	<extension point="org.eclipse.ui.editors.templates">
 		<contextType
 			name="%All_JSP_context_type_Extension_Element.name"
@@ -327,7 +289,7 @@
 			translations="$nl$/templates/jspdefault-templates.properties" />
 
 	</extension>
-
+	-->
 	<!--======================================================================================-->
 	<!-- queryParticipant to participate in java seraches                                     -->
 	<!--======================================================================================-->
@@ -340,14 +302,17 @@
 
 	</extension>
 	<!-- initialize xml ui preferences -->
+	<!--
 	<extension point="org.eclipse.core.runtime.preferences">
 		<initializer
 			class="org.eclipse.wst.jsdt.web.ui.internal.preferences.JSPUIPreferenceInitializer" />
 	</extension>
-
+	-->
+	
 	<!--======================================================================================-->
 	<!-- Document provider for ExternalFileEditorInput                                        -->
 	<!--======================================================================================-->
+	<!--
 	<extension point="org.eclipse.ui.editors.documentProviders">
 		<provider
 			inputTypes="org.eclipse.wst.jsdt.web.ui.internal.hyperlink.ExternalFileEditorInput"
@@ -355,7 +320,7 @@
 			id="org.eclipse.wst.jsdt.web.ui.internal.ExternalFileDocumentProvider" />
 
 	</extension>
-
+	-->
 	<!-- New JSP wizard -->
 	<!--
 	<extension point="org.eclipse.ui.newWizards">
@@ -521,8 +486,9 @@
         </editorContribution>
 	</extension>
 	<!-- JSP Fragment Property Page -->
+	<!--
 	<extension point="org.eclipse.ui.propertyPages">
-		<!-- for j2ee web project -->
+		
 		<page
 			name="%JSPFragmentContentSettings.name"
 			class="org.eclipse.wst.jsdt.web.ui.internal.contentproperties.ui.ProjectJSPFContentSettingsPropertyPage"
@@ -563,8 +529,10 @@
 			</enabledWhen>
 			<keywordReference id="org.eclipse.wst.jsp.ui.fragments"/>
 		</page>
-	</extension>	
+	</extension>
+	-->	
 	<!--  jsp-for-css editor configurations -->		
+	<!--
 	<extension point="org.eclipse.wst.sse.ui.editorConfiguration">
 		<contentOutlineConfiguration
 			class="org.eclipse.wst.css.ui.views.contentoutline.CSSContentOutlineConfiguration"
@@ -595,5 +563,5 @@
 			<contentType id="org.eclipse.wst.jsdt.web.core.cssjspsource" />
 		</adapterFactoryDescription>
 	</extension>
-
+	-->
 </plugin>

@@ -254,14 +254,17 @@ public class JSPTranslationAdapter implements INodeAdapter, IDocumentListener {
 				project = root.getProject(filePath.segment(0));
 			}
 
-			JsWebNature jsdtNature = new JsWebNature(project);
+			if(project!=null)
+				javaProject = JavaCore.create(project);
 			
-			if(jsdtNature.isValidJSDTProject()){
-				return jsdtNature.getJavaProject();
-			}else{
-				jsdtNature.configure();
-				return jsdtNature.getJavaProject();
-			}
+//			JsWebNature jsdtNature = new JsWebNature(project);
+//			
+//			if(jsdtNature.isValidJSDTProject()){
+//				return jsdtNature.getJavaProject();
+//			}else{
+//				jsdtNature.configure();
+//				return jsdtNature.getJavaProject();
+//			}
 			
 			// IFile[] files =
 			// ResourcesPlugin.getWorkspace().getRoot().findFilesForLocation(new

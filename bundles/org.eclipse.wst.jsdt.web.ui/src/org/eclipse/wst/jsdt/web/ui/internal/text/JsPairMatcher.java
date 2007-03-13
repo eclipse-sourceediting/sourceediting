@@ -26,7 +26,7 @@ import org.eclipse.jface.text.source.ICharacterPairMatcher;
  * 
  * No modifications were made.
  */
-class JavaPairMatcher implements ICharacterPairMatcher {
+class JsPairMatcher implements ICharacterPairMatcher {
 
 	protected char[] fPairs;
 	protected IDocument fDocument;
@@ -36,9 +36,9 @@ class JavaPairMatcher implements ICharacterPairMatcher {
 	protected int fEndPos;
 	protected int fAnchor;
 
-	protected JavaCodeReader fReader = new JavaCodeReader();
+	protected JsCodeReader fReader = new JsCodeReader();
 
-	public JavaPairMatcher(char[] pairs) {
+	public JsPairMatcher(char[] pairs) {
 		fPairs = pairs;
 	}
 
@@ -174,7 +174,7 @@ class JavaPairMatcher implements ICharacterPairMatcher {
 
 		int stack = 1;
 		int c = fReader.read();
-		while (c != JavaCodeReader.EOF) {
+		while (c != JsCodeReader.EOF) {
 			if (c == openingPeer && c != closingPeer) {
 				stack++;
 			} else if (c == closingPeer) {
@@ -198,7 +198,7 @@ class JavaPairMatcher implements ICharacterPairMatcher {
 
 		int stack = 1;
 		int c = fReader.read();
-		while (c != JavaCodeReader.EOF) {
+		while (c != JsCodeReader.EOF) {
 			if (c == closingPeer && c != openingPeer) {
 				stack++;
 			} else if (c == openingPeer) {

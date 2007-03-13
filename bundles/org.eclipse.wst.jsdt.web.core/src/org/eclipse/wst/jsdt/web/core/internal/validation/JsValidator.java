@@ -39,18 +39,15 @@ import org.eclipse.wst.validation.internal.provisional.core.IValidator;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 
-public class JSPJavaValidator extends JSPValidator {
-	private static final boolean DEBUG = Boolean
-			.valueOf(
-					Platform
-							.getDebugOption("org.eclipse.wst.jsdt.web.core/debug/jspvalidator")).booleanValue(); //$NON-NLS-1$
+public class JsValidator extends JSPValidator {
+	private static final boolean DEBUG = Boolean.valueOf(Platform.getDebugOption("org.eclipse.wst.jsdt.web.core/debug/jspvalidator")).booleanValue(); //$NON-NLS-1$
 	private IValidator fMessageOriginator;
 
-	public JSPJavaValidator() {
+	public JsValidator() {
 		this.fMessageOriginator = this;
 	}
 
-	public JSPJavaValidator(IValidator validator) {
+	public JsValidator(IValidator validator) {
 		this.fMessageOriginator = validator;
 	}
 
@@ -67,8 +64,7 @@ public class JSPJavaValidator extends JSPValidator {
 			return;
 		}
 
-		IDocument jspDoc = ((JSPTranslationExtension) translation)
-				.getJspDocument();
+		IDocument jspDoc = ((JSPTranslationExtension) translation).getJspDocument();
 		if (!(jspDoc instanceof IStructuredDocument)) {
 			return;
 		}

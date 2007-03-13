@@ -65,8 +65,7 @@ import org.eclipse.wst.validation.internal.provisional.core.IValidatorJob;
  * Performs JSP validation tasks for batch validation. The individual validator
  * classes will still be used for source validation.
  */
-public final class JSPBatchValidator implements IValidatorJob,
-		IExecutableExtension {
+public final class JSPBatchValidator implements IValidatorJob,IExecutableExtension {
 	class JSPFileVisitor implements IResourceProxyVisitor {
 
 		private List fFiles = new ArrayList();
@@ -222,7 +221,7 @@ public final class JSPBatchValidator implements IValidatorJob,
 
 	private IContentType fJSPFContentType = null;
 
-	private JSPJavaValidator fJSPJavaValidator = new JSPJavaValidator(this);
+	private JsValidator fJSPJavaValidator = new JsValidator(this);
 
 	public void cleanup(IReporter reporter) {
 		

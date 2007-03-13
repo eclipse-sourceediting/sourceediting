@@ -35,16 +35,17 @@ public class JsJfaceNode extends ElementImpl implements IndexedRegion, INodeNoti
     private IJavaElement fEnclosedObject;
     private Node parent;
    
-//    private JsAdaptableNode adaptableDomNode = new JsAdaptableNode();
-//    
-//        private class JsAdaptableNode extends AbstractNotifier{
-//            public FactoryRegistry getFactoryRegistry() {
-//                 return adapterRegistry;
-//            }
-//        }
-//   
+    private JsAdaptableNode adaptableDomNode = new JsAdaptableNode();
+    
+        private class JsAdaptableNode extends AbstractNotifier{
+            public FactoryRegistry getFactoryRegistry() {
+                 return adapterRegistry;
+            }
+        }
+   
    public JsJfaceNode(Node parent, IJavaElement enclosedObject, Position structureDocLocation) {
-       super((ElementImpl)parent);
+	   super();
+	   //super((ElementImpl)parent);
        // super(parentObject, parentObject.getElementName());
        fDocPosition = structureDocLocation;
        fEnclosedObject = enclosedObject;
@@ -60,6 +61,7 @@ public class JsJfaceNode extends ElementImpl implements IndexedRegion, INodeNoti
    
    public Node getParentNode(){
        return this.parent;
+       
    }
    
    public IJavaElement getJsElement(){
@@ -89,37 +91,37 @@ public class JsJfaceNode extends ElementImpl implements IndexedRegion, INodeNoti
 //   }
 //   
 
-//    public void addAdapter(INodeAdapter adapter) {
-//        adaptableDomNode.addAdapter(adapter);
-//        
-//    }
-//
-//
-//    public INodeAdapter getAdapterFor(Object type) {
-//        return adaptableDomNode.getAdapterFor(type);
-//    }
-//
-//
-//    public Collection getAdapters() {
-//        return adaptableDomNode.getAdapters();
-//    }
-//
-//
-//    public INodeAdapter getExistingAdapter(Object type) {
-//        // TODO Auto-generated method stub
-//       return adaptableDomNode.getExistingAdapter(type);
-//    }
-//
-//
-//    public void notify(int eventType, Object changedFeature, Object oldValue, Object newValue, int pos) {
-//        adaptableDomNode.notify(eventType, changedFeature, oldValue, newValue, pos);
-//        
-//    }
-//
-//
-//    public void removeAdapter(INodeAdapter adapter) {
-//        adaptableDomNode.removeAdapter(adapter);
-//    }
+    public void addAdapter(INodeAdapter adapter) {
+        adaptableDomNode.addAdapter(adapter);
+        
+    }
+
+
+    public INodeAdapter getAdapterFor(Object type) {
+        return adaptableDomNode.getAdapterFor(type);
+    }
+
+
+    public Collection getAdapters() {
+        return adaptableDomNode.getAdapters();
+    }
+
+
+    public INodeAdapter getExistingAdapter(Object type) {
+        // TODO Auto-generated method stub
+       return adaptableDomNode.getExistingAdapter(type);
+    }
+
+
+    public void notify(int eventType, Object changedFeature, Object oldValue, Object newValue, int pos) {
+        adaptableDomNode.notify(eventType, changedFeature, oldValue, newValue, pos);
+        
+    }
+
+
+    public void removeAdapter(INodeAdapter adapter) {
+        adaptableDomNode.removeAdapter(adapter);
+    }
 
     public boolean contains(int testPosition) {
         // TODO Auto-generated method stub

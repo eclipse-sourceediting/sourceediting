@@ -31,7 +31,7 @@ import org.eclipse.wst.jsdt.web.ui.internal.derived.SingleCharReader;
  * 
  * No modifications were made.
  */
-class JavaCodeReader extends SingleCharReader {
+class JsCodeReader extends SingleCharReader {
 
 	/** The EOF character */
 	public static final int EOF = -1;
@@ -47,7 +47,7 @@ class JavaCodeReader extends SingleCharReader {
 	private int fCachedLineNumber = -1;
 	private int fCachedLineOffset = -1;
 
-	public JavaCodeReader() {
+	public JsCodeReader() {
 	}
 
 	/**

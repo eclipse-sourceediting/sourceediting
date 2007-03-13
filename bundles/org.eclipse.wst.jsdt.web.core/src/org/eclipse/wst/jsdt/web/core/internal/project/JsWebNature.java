@@ -19,6 +19,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
@@ -26,6 +27,7 @@ import java.util.Vector;
 import org.eclipse.core.filesystem.EFS;
 import org.eclipse.core.filesystem.IFileStore;
 import org.eclipse.core.filesystem.URIUtil;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
@@ -49,6 +51,7 @@ import org.eclipse.wst.jsdt.core.JavaCore;
 import org.eclipse.wst.jsdt.core.JavaModelException;
 import org.eclipse.wst.jsdt.internal.core.JavaProject;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
+import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
 import org.eclipse.wst.jsdt.internal.ui.util.CoreUtility;
 import org.eclipse.wst.jsdt.internal.ui.util.ExceptionHandler;
 import org.eclipse.wst.jsdt.internal.ui.wizards.ClassPathDetector;
@@ -65,7 +68,9 @@ public class JsWebNature implements IProjectNature{
 	private Vector fClassPathList = new Vector();
 	private static final String FILENAME_PROJECT= ".project"; //$NON-NLS-1$
 	private static final String FILENAME_CLASSPATH= ".classpath"; //$NON-NLS-1$
-
+	private String fUserSettingsTimeStamp;
+	private long fFileTimeStamp;
+	
 	private URI fCurrProjectLocation; // null if location is platform location
 	private IProject fCurrProject;
 	
@@ -97,12 +102,12 @@ public class JsWebNature implements IProjectNature{
 		
 	}
 
-	private JsBuildPathBlocks getJavaCapabilityConfig(){
-		if(fJavaCapabilityConfiguration==null){
-			fJavaCapabilityConfiguration = new JsBuildPathBlocks();
-		}
-		return fJavaCapabilityConfiguration;
-	}
+//	private JsBuildPathBlocks getJavaCapabilityConfig(){
+//		if(fJavaCapabilityConfiguration==null){
+//			fJavaCapabilityConfiguration = new JsBuildPathBlocks();
+//		}
+//		return fJavaCapabilityConfiguration;
+//	}
 	
 	public JsWebNature(IProject project){
 		this(project,new NullProgressMonitor());
@@ -135,7 +140,7 @@ public class JsWebNature implements IProjectNature{
 				}
 			} catch (Exception e) {
 				
-				if(DEBUG) System.out.println("Error checking sourcepath:" + e);
+				//if(DEBUG) System.out.println("Error checking sourcepath:" + e);
 			}
 			
 			
@@ -171,7 +176,7 @@ public class JsWebNature implements IProjectNature{
 
 			rememberExistingFiles(realLocation);
             
-			getJavaCapabilityConfig().createProject(fCurrProject, fCurrProjectLocation, new SubProgressMonitor(monitor, 2));
+			createProject(fCurrProject, fCurrProjectLocation, new SubProgressMonitor(monitor, 2));
 				
 			IClasspathEntry[] entries= null;
 			IPath outputLocation= null;
@@ -256,9 +261,9 @@ public class JsWebNature implements IProjectNature{
 			
 			//getJavaCapabilityConfig().createProject(, fCurrProjectLocation, monitor);
 			fJavaProject = JavaCore.create(fCurrProject);
-			getJavaCapabilityConfig().init(fJavaProject, outputLocation, entries);
-			getJavaCapabilityConfig().addJavaNature(fJavaProject.getProject(), monitor);
-			getJavaCapabilityConfig().configureJavaProject(new SubProgressMonitor(monitor, 3)); // create the Java project to allow the use of the new source folder page
+			init(fJavaProject, outputLocation, entries);
+			addJavaNature(fJavaProject.getProject(), monitor);
+			configureJavaProject(new SubProgressMonitor(monitor, 3)); // create the Java project to allow the use of the new source folder page
 			fCurrProject.refreshLocal(IResource.DEPTH_INFINITE, monitor);
 			
 		}catch(Exception e){
@@ -486,4 +491,195 @@ public class JsWebNature implements IProjectNature{
 		list.addAll(getExistingEntries(jreEntries));
 		return list;
 	}
+	
+	public static void createProject(IProject project, URI locationURI, IProgressMonitor monitor) throws CoreException {
+		if (monitor == null) {
+			monitor= new NullProgressMonitor();
+		}				
+		monitor.beginTask(NewWizardMessages.BuildPathsBlock_operationdesc_project, 10); 
+
+		// create the project
+		try {
+			if (!project.exists()) {
+				IProjectDescription desc= project.getWorkspace().newProjectDescription(project.getName());
+				if (locationURI != null && ResourcesPlugin.getWorkspace().getRoot().getLocationURI().equals(locationURI)) {
+					locationURI= null;
+				}
+				desc.setLocationURI(locationURI);
+				project.create(desc, monitor);
+				monitor= null;
+			}
+			if (!project.isOpen()) {
+				project.open(monitor);
+				monitor= null;
+			}
+		} finally {
+			if (monitor != null) {
+				monitor.done();
+			}
+		}
+	}
+	public static void addJavaNature(IProject project, IProgressMonitor monitor) throws CoreException {
+		if (monitor != null && monitor.isCanceled()) {
+			throw new OperationCanceledException();
+		}
+		if (!project.hasNature(JavaCore.NATURE_ID)) {
+			IProjectDescription description = project.getDescription();
+			String[] prevNatures= description.getNatureIds();
+			String[] newNatures= new String[prevNatures.length + 1];
+			System.arraycopy(prevNatures, 0, newNatures, 0, prevNatures.length);
+			newNatures[prevNatures.length]= JavaCore.NATURE_ID;
+			description.setNatureIds(newNatures);
+			project.setDescription(description, monitor);
+		} else {
+			if (monitor != null) {
+				monitor.worked(1);
+			}
+		}
+	}
+	
+	public void configureJavaProject(IProgressMonitor monitor) throws CoreException, OperationCanceledException {
+		
+		flush(fClassPathList, getOutputLocation(), getJavaProject(), monitor);
+		
+		
+	}
+	public IPath getOutputLocation() {
+		return new Path(fBuildPath).makeAbsolute();
+	}
+	public static void flush(List classPathEntries, IPath outputLocation, IJavaProject javaProject, IProgressMonitor monitor) throws CoreException, OperationCanceledException {		
+		if (monitor == null) {
+			monitor= new NullProgressMonitor();
+		}
+		monitor.setTaskName(NewWizardMessages.BuildPathsBlock_operationdesc_java); 
+		monitor.beginTask("", classPathEntries.size() * 4 + 4); //$NON-NLS-1$
+		try {
+			
+			IProject project= javaProject.getProject();
+			IPath projPath= project.getFullPath();
+			
+			IPath oldOutputLocation;
+			try {
+				oldOutputLocation= javaProject.getOutputLocation();		
+			} catch (CoreException e) {
+				oldOutputLocation= projPath.append(PreferenceConstants.getPreferenceStore().getString(PreferenceConstants.SRCBIN_BINNAME));
+			}
+			
+			if (oldOutputLocation.equals(projPath) && !outputLocation.equals(projPath)) {
+				if (JsBuildPathBlocks.hasClassfiles(project)) {
+					if (JsBuildPathBlocks.getRemoveOldBinariesQuery(JavaPlugin.getActiveWorkbenchShell()).doQuery(projPath)) {
+						JsBuildPathBlocks.removeOldClassfiles(project);
+					}
+				}
+			}
+			
+			monitor.worked(1);
+			
+			IWorkspaceRoot fWorkspaceRoot= JavaPlugin.getWorkspace().getRoot();
+			
+			//create and set the output path first
+			if (!fWorkspaceRoot.exists(outputLocation)) {
+				IFolder folder= fWorkspaceRoot.getFolder(outputLocation);
+				CoreUtility.createFolder(folder, true, true, new SubProgressMonitor(monitor, 1));
+				folder.setDerived(true);		
+			} else {
+				monitor.worked(1);
+			}
+			if (monitor.isCanceled()) {
+				throw new OperationCanceledException();
+			}
+			
+			int nEntries= classPathEntries.size();
+			IClasspathEntry[] classpath= new IClasspathEntry[nEntries];
+			int i= 0;
+			
+			for (Iterator iter= classPathEntries.iterator(); iter.hasNext();) {
+				CPListElement entry= (CPListElement)iter.next();
+				classpath[i]= entry.getClasspathEntry();
+				i++;
+				
+				IResource res= entry.getResource();
+				//1 tick
+				if (res instanceof IFolder && entry.getLinkTarget() == null && !res.exists()) {
+					CoreUtility.createFolder((IFolder)res, true, true, new SubProgressMonitor(monitor, 1));
+				} else {
+					monitor.worked(1);
+				}
+				
+				//3 ticks
+				if (entry.getEntryKind() == IClasspathEntry.CPE_SOURCE) {
+					IPath folderOutput= (IPath) entry.getAttribute(CPListElement.OUTPUT);
+					if (folderOutput != null && folderOutput.segmentCount() > 1) {
+						IFolder folder= fWorkspaceRoot.getFolder(folderOutput);
+						CoreUtility.createFolder(folder, true, true, new SubProgressMonitor(monitor, 1));
+					} else {
+						monitor.worked(1);
+					}
+					
+					IPath path= entry.getPath();
+					if (projPath.equals(path)) {
+						monitor.worked(2);
+						continue;	
+					}
+					
+					if (projPath.isPrefixOf(path)) {
+						path= path.removeFirstSegments(projPath.segmentCount());
+					}
+					IFolder folder= project.getFolder(path);
+					IPath orginalPath= entry.getOrginalPath();
+					if (orginalPath == null) {
+						if (!folder.exists()) {
+							//New source folder needs to be created
+							if (entry.getLinkTarget() == null) {
+								CoreUtility.createFolder(folder, true, true, new SubProgressMonitor(monitor, 2));
+							} else {
+								folder.createLink(entry.getLinkTarget(), IResource.ALLOW_MISSING_LOCAL, new SubProgressMonitor(monitor, 2));
+							}
+						}
+					} else {
+						if (projPath.isPrefixOf(orginalPath)) {
+							orginalPath= orginalPath.removeFirstSegments(projPath.segmentCount());
+						}
+						IFolder orginalFolder= project.getFolder(orginalPath);
+						if (entry.getLinkTarget() == null) {
+							if (!folder.exists()) {
+								//Source folder was edited, move to new location
+								IPath parentPath= entry.getPath().removeLastSegments(1);
+								if (projPath.isPrefixOf(parentPath)) {
+									parentPath= parentPath.removeFirstSegments(projPath.segmentCount());
+								}
+								if (parentPath.segmentCount() > 0) {
+									IFolder parentFolder= project.getFolder(parentPath);
+									if (!parentFolder.exists()) {
+										CoreUtility.createFolder(parentFolder, true, true, new SubProgressMonitor(monitor, 1));
+									} else {
+										monitor.worked(1);
+									}
+								} else {
+									monitor.worked(1);
+								}
+								orginalFolder.move(entry.getPath(), true, true, new SubProgressMonitor(monitor, 1));
+							}
+						} else {
+							if (!folder.exists() || !entry.getLinkTarget().equals(entry.getOrginalLinkTarget())) {
+								orginalFolder.delete(true, new SubProgressMonitor(monitor, 1));
+								folder.createLink(entry.getLinkTarget(), IResource.ALLOW_MISSING_LOCAL, new SubProgressMonitor(monitor, 1));
+							}
+						}
+					}
+				} else {
+					monitor.worked(3);
+				}
+				if (monitor.isCanceled()) {
+					throw new OperationCanceledException();
+				}
+			}
+
+			javaProject.setRawClasspath(classpath, outputLocation, new SubProgressMonitor(monitor, 2));
+		} finally {
+			monitor.done();
+		}
+	}
+
+
 }

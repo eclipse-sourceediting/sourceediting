@@ -14,20 +14,20 @@ import org.eclipse.wst.jsdt.web.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.wst.sse.ui.internal.text.DocumentRegionEdgeMatcher;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
-public class JSPDocumentRegionEdgeMatcher extends DocumentRegionEdgeMatcher {
+public class JsDocumentRegionEdgeMatcher extends DocumentRegionEdgeMatcher {
 
-	protected final static char[] BRACKETS = { '{', '}', '(', ')', '[', ']' };
+	protected final static char[] BRACKETS = { '{', '}', '(', ')', '[', ']'};
 
 	/**
 	 * @param validContexts
 	 * @param nextMatcher
 	 */
-	public JSPDocumentRegionEdgeMatcher() {
+	public JsDocumentRegionEdgeMatcher() {
 		super(new String[] { DOMRegionContext.XML_TAG_NAME,
 				DOMRegionContext.XML_COMMENT_TEXT,
 				
 				DOMRegionContext.XML_CDATA_TEXT, DOMRegionContext.XML_PI_OPEN,
 				DOMRegionContext.XML_PI_CONTENT },
-				new JavaPairMatcher(BRACKETS));
+				new JsPairMatcher(BRACKETS));
 	}
 }
