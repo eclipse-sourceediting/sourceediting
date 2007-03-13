@@ -8,8 +8,7 @@
 		id="jsNature"
 		name="%javaScriptNatureName">
 		<runtime>
-			<run class="org.eclipse.wst.jsdt.internal.core.JavaProject">
-			</run>
+			<run class="org.eclipse.wst.jsdt.internal.core.JavaProject"/>
 		</runtime>
 	</extension>
    
@@ -17,38 +16,51 @@
      
    <extension point="org.eclipse.wst.common.project.facet.core.facets">
    
-   	<project-facet id="wst.jsdt.web">
-		<label>JavaScript Development Toolkit</label>
-	    <description>Adds advanced JavaScript editing support.</description>
-	    <default-version version="1.0"/>
-	</project-facet>
+   		<project-facet id="wst.jsdt.web">
+			<label>JavaScript Toolkit</label>
+	  	 	<description>Adds advanced JavaScript editing support.</description>
+	  	  	<default-version version="1.0"/>
+		</project-facet>
 	
-	<project-facet-version facet="wst.jsdt.web" version="1.0">
+		<project-facet-version facet="wst.jsdt.web" version="1.0">
 	      <constraint>
         	<requires facet="wst.web" version="[1.0"/>
 	      </constraint>
-	</project-facet-version>
+		</project-facet-version>
 	
-	<action facet="wst.jsdt.web" type="install" id="wst.jsdt.web.install" version="1.0">
-	   <delegate class="org.eclipse.wst.jsdt.web.core.internal.project.JsNatureInstaller"/>
-	</action>
+		<action facet="wst.jsdt.web" type="install" id="wst.jsdt.web.install" version="1.0">
+	   		<delegate class="org.eclipse.wst.jsdt.web.core.internal.project.JsNatureInstaller"/>
+		</action>
 	
-	<action facet="wst.jsdt.web" type="uninstall" id="wst.jsdt.web.uninstall" version="1.0">
-		<delegate class="org.eclipse.wst.jsdt.web.core.internal.project.JsNatureUninstaller"/>
-	</action>
+		<action facet="wst.jsdt.web" type="uninstall" id="wst.jsdt.web.uninstall" version="1.0">
+			<delegate class="org.eclipse.wst.jsdt.web.core.internal.project.JsNatureUninstaller"/>
+		</action>
 
-    <template id="template.wst.web">
-      <label>Web Template</label>
-      <fixed facet="wst.web"/>
-      <default facet="wst.jsdt.web"/>
-    </template>
+    	<template id="template.wst.web">
+     	 	<label>Web Template</label>
+     	 	<fixed facet="wst.web"/>
+      		<fixed facet="wst.jsdt.web"/>
+    	</template>
+    	<template id="template.jst.web">
+      		<label>Dynamic Web Project</label>
+      		<fixed facet="jst.java"/>
+      		<fixed facet="jst.web"/>
+      		<fixed facet="wst.jsdt.web"/>
+    	</template>
+    	<template id="template.jst.connector">
+      		<label>J2C Project</label>
+      		<fixed facet="jst.java"/>
+      		<fixed facet="jst.connector"/>
+      		<fixed facet="wst.jsdt.web"/>
+    	</template>
 	
 	<preset id="preset.wst.jsdt.web">
-		<label>JavaScript Development Tools</label>
+		<label>JavaScript Tools</label>
 		<description>JavaScript Development Toolkit for advanced JS Development</description>
 		<fixed facet="wst.web"  />
-		<default facet="wst.jsdt.web"/>
+		<fixed facet="wst.jsdt.web"/>
 	</preset>
+	
 	</extension>
 	<!--
 	<extension point="org.eclipse.wst.common.project.facet.core.defaultFacets">

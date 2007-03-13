@@ -308,10 +308,10 @@ public class JSPTranslation implements IJSPTranslation {
 	 * 
 	 * @see org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslation_Interface#isUseBean(int)
 	 */
-	public boolean isUseBean(int javaOffset) {
-		System.out.println("REMOVE JSPTranslation.isUseBean(int javaOffset)");
-		return false;
-	}
+//	public boolean isUseBean(int javaOffset) {
+//		System.out.println("REMOVE JSPTranslation.isUseBean(int javaOffset)");
+//		return false;
+//	}
 
 	/*
 	 * (non-Javadoc)
@@ -429,7 +429,7 @@ public class JSPTranslation implements IJSPTranslation {
 
 		if (getJspName() == null || getMangledName() == null) {
 			// names not set yet
-			initJspAndServletNames();
+			
 		}
 		return displayString.replaceAll(getMangledName(), getJspName());
 	}
@@ -453,18 +453,7 @@ public class JSPTranslation implements IJSPTranslation {
 		ICompilationUnit cu = getCompilationUnit();
 		if (cu != null) {
 			String cuName = null;
-			synchronized (cu) {
-				// set some names for fixing up mangled name in proposals
-				// set mangled (servlet) name
-				cuName = cu.getPath().lastSegment();
-			}
-			if (cuName != null) {
-				setMangledName(cuName.substring(0, cuName.lastIndexOf('.')));
-				// set name of jsp file
-				String unmangled = JSP2ServletNameUtil.unmangle(cuName);
-				setJspName(unmangled.substring(unmangled.lastIndexOf('/') + 1,
-						unmangled.lastIndexOf('.')));
-			}
+
 		}
 	}
 
@@ -573,7 +562,16 @@ public class JSPTranslation implements IJSPTranslation {
 			}
 
 		}
-		
+		if(getJspName()==null || getMangledName()==null){
+		String cuName = cu.getPath().lastSegment();
+    		if (cuName != null) {
+    			setMangledName(cuName.substring(0, cuName.lastIndexOf('.')));
+    			// set name of jsp file
+    			String unmangled = JSP2ServletNameUtil.unmangle(cuName);
+    			setJspName(unmangled.substring(unmangled.lastIndexOf('/') + 1,
+    					unmangled.lastIndexOf('.')));
+    		}
+		}
 		return cu;
 	}
 
