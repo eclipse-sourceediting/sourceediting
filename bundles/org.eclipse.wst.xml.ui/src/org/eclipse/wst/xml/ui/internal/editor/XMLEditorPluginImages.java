@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -42,8 +42,8 @@ public class XMLEditorPluginImages {
 	public static final String IMG_OBJ_NOTATION = "icons/full/obj16/notation.gif"; //$NON-NLS-1$
 	public static final String IMG_OBJ_PROCESSINGINSTRUCTION = "icons/full/obj16/proinst_obj.gif"; //$NON-NLS-1$
 	public static final String IMG_OBJ_TAG_GENERIC = "icons/full/obj16/tag-generic.gif"; //$NON-NLS-1$
-	public static final String IMG_OBJ_TAG_GENERIC_DEEMPHASIZED = "icons/full/obj16/tag-generic-deemphasized.gif"; //$NON-NLS-1$    
-	public static final String IMG_OBJ_TAG_GENERIC_EMPHASIZED = "icons/full/obj16/tag-generic-emphasized.gif"; //$NON-NLS-1$        
+	public static final String IMG_OBJ_TAG_GENERIC_DEEMPHASIZED = "icons/full/obj16/tag_generic_deemphasized_obj.gif"; //$NON-NLS-1$    
+	public static final String IMG_OBJ_TAG_GENERIC_EMPHASIZED = "icons/full/obj16/tag_generic_emphasized_obj.gif"; //$NON-NLS-1$        
 	public static final String IMG_OBJ_TAG_MACRO = "icons/full/obj16/tag-macro.gif"; //$NON-NLS-1$
 	public static final String IMG_OBJ_TXTEXT = "icons/full/obj16/text.gif"; //$NON-NLS-1$
 	public static final String IMG_OBJ_WARNING_OBJ = "icons/full/obj16/warning_obj.gif"; //$NON-NLS-1$
