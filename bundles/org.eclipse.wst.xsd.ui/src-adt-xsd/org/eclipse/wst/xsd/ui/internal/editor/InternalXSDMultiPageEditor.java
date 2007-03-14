@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,6 +21,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartFactory;
+import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.KeyStroke;
 import org.eclipse.gef.RootEditPart;
 import org.eclipse.gef.ui.actions.ActionRegistry;
@@ -28,6 +29,8 @@ import org.eclipse.gef.ui.actions.GEFActionConstants;
 import org.eclipse.gef.ui.actions.PrintAction;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -40,6 +43,8 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.INavigationLocation;
@@ -116,7 +121,7 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
   private XSDSelectionManagerSelectionListener fXSDSelectionListener;
   private InternalDocumentChangedNotifier internalDocumentChangedNotifier = new InternalDocumentChangedNotifier();
   private static final String XSD_EDITOR_MODE_EXTENSION_ID = "org.eclipse.wst.xsd.ui.editorModes"; //$NON-NLS-N$ 
-
+  private XSDPreferenceStoreListener xsdPreferenceStoreListener;
   
   class InternalDocumentChangedNotifier implements IDocumentChangedNotifier
   {
@@ -268,6 +273,8 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
       }
     }
     getSelectionManager().removeSelectionChangedListener(fXSDSelectionListener);
+    XSDEditorPlugin.getDefault().getPreferenceStore().removePropertyChangeListener(xsdPreferenceStoreListener);
+    xsdPreferenceStoreListener = null;
     super.dispose();
   }
 
@@ -473,6 +480,22 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
     
     // Select the schema to show the properties
     getSelectionManager().setSelection(new StructuredSelection(getModel()));
+    
+    xsdPreferenceStoreListener = new XSDPreferenceStoreListener();
+    XSDEditorPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(xsdPreferenceStoreListener);
+  }
+
+  protected class XSDPreferenceStoreListener implements IPropertyChangeListener
+  {
+    public void propertyChange(PropertyChangeEvent evt)
+    {
+      String property = evt.getProperty();
+      if (XSDEditorPlugin.CONST_SHOW_EXTERNALS.equals(property))
+      {
+        ((GraphicalEditPart) graphicalViewer.getContents()).getFigure().invalidateTree();
+        graphicalViewer.getContents().refresh();
+      }
+    }
   }
 
   protected void createActions()
@@ -985,6 +1008,17 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
         //viewer.getRootEditPart().refresh();
        // viewer.getRootEditPart().getContents().refresh();
         viewer.setInput(input);
+        
+        floatingToolbar.setEditPartFactory(editPartFactory);
+        floatingToolbar.setModel(getModel());
+        floatingToolbar.refresh(!(input instanceof IModel));
+        
+        Control control = graphicalViewer.getControl();
+        if (control instanceof Composite)
+        {
+          Composite parent = ((Composite)control).getParent();
+          parent.layout();
+        }
       }
     }  
     IContentProvider provider = newEditorMode.getOutlineProvider();

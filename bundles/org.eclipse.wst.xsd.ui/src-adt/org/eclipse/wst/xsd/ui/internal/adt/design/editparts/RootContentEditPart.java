@@ -19,9 +19,8 @@ import org.eclipse.draw2d.MarginBorder;
 import org.eclipse.draw2d.Panel;
 import org.eclipse.draw2d.ToolbarLayout;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
-import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.FocusTypeColumn;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IGraphElement;
-import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.ReferencedTypeColumn;
+import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.RootHolder;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IADTObject;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IComplexType;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IField;
@@ -116,13 +115,9 @@ public class RootContentEditPart extends AbstractGraphicalEditPart
       }
       if (focusObject != null)
       {
-        collections.add(new FocusTypeColumn(focusObject));
-        collections.add(new ReferencedTypeColumn(focusObject));
-        
-        ToolbarLayout layout = new ToolbarLayout(true);
-        layout.setStretchMinorAxis(false);
-        layout.setSpacing(100);
-        contentPane.setLayoutManager(layout);
+        RootHolder holder = new RootHolder(focusObject);
+        collections.add(holder);
+        return collections;
       }
     }
     return collections;

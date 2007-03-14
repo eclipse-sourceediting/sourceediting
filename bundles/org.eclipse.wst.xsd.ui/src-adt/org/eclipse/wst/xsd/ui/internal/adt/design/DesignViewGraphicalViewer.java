@@ -22,6 +22,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.IHolderEditPart;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.RootContentEditPart;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IGraphElement;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IModelProxy;
@@ -199,7 +200,7 @@ public class DesignViewGraphicalViewer extends ScrollingGraphicalViewer implemen
     for (Iterator i = parent.getChildren().iterator(); i.hasNext(); )
     {
       EditPart editPart = (EditPart)i.next();
-      if (editPart.getModel() == object)
+      if (editPart.getModel() == object && !(editPart instanceof IHolderEditPart))
       {  
         result = editPart;
         break;
@@ -224,10 +225,9 @@ public class DesignViewGraphicalViewer extends ScrollingGraphicalViewer implemen
   
   public void setInput(IADTObject object)
   {
-    // Force refresh of all edit parts
-    RootContentEditPart rootContentEditPart = new RootContentEditPart();
+    RootContentEditPart rootContentEditPart = (RootContentEditPart)getRootEditPart().getContents();
     rootContentEditPart.setModel(object);
-    setContents(rootContentEditPart);
+    rootContentEditPart.refresh();
 
     if (object != null)
     {  

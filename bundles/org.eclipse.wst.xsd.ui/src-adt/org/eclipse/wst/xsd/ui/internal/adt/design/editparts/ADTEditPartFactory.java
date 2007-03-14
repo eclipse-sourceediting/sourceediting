@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,9 +14,11 @@ import org.eclipse.draw2d.ToolbarLayout;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartFactory;
 import org.eclipse.jface.util.Assert;
+import org.eclipse.wst.xsd.ui.internal.adt.design.ADTFloatingToolbar.ADTFloatingToolbarModel;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.AbstractModelCollection;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.Compartment;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.FocusTypeColumn;
+import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.RootHolder;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IComplexType;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IField;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IModel;
@@ -37,7 +39,15 @@ public class ADTEditPartFactory implements EditPartFactory
     if (model instanceof Compartment)
     {
       child = new CompartmentEditPart();
-    }      
+    }
+    else if (model instanceof RootHolder)
+    {
+      child = new RootHolderEditPart();
+    }
+    else if (model instanceof ADTFloatingToolbarModel)
+    {
+      child = new ADTFloatingToolbarEditPart(((ADTFloatingToolbarModel)model).getModel());
+    }
     else if (model instanceof AbstractModelCollection)
     {
       child = new ColumnEditPart();

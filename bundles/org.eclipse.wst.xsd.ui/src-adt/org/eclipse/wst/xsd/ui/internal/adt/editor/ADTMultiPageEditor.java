@@ -101,6 +101,8 @@ public abstract class ADTMultiPageEditor extends CommonMultiPageEditor
     floatingToolbar = new ADTFloatingToolbar(getModel());
     floatingToolbar.createControl(parent);
     floatingToolbar.getControl().setVisible(true);
+    EditPartFactory editPartFactory = getEditorModeManager().getCurrentMode().getEditPartFactory();
+    floatingToolbar.setEditPartFactory(editPartFactory);
     
     createViewModeToolbar(parent);
     

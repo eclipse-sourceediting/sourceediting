@@ -54,6 +54,7 @@ public class XSDEditorPlugin extends AbstractUIPlugin
 
   public static final String CONST_XSD_LANGUAGE_QUALIFY = "org.eclipse.wst.xmlschema.xsdQualify"; //$NON-NLS-1$
   public static final String CONST_DEFAULT_TARGET_NAMESPACE = "org.eclipse.wst.xmlschema.defaultTargetnamespaceText"; //$NON-NLS-1$
+  public static final String CONST_SHOW_EXTERNALS = PLUGIN_ID + ".showExternals"; //$NON-NLS-1$
   
   public static String DEFAULT_PAGE = "org.eclipse.wst.xsd.ui.internal.defaultPage";
   public static String DESIGN_PAGE = "org.eclipse.wst.xsd.ui.internal.designPage";
@@ -234,6 +235,7 @@ public class XSDEditorPlugin extends AbstractUIPlugin
     store.setDefault(CONST_XSD_LANGUAGE_QUALIFY, false);
     store.setDefault(DEFAULT_PAGE, DESIGN_PAGE);
     store.setDefault(CONST_DEFAULT_TARGET_NAMESPACE, DEFAULT_TARGET_NAMESPACE);
+    store.setDefault(CONST_SHOW_EXTERNALS, false);
     
     //Even the last item in the list must contain a trailing List separator
     store.setDefault(CONST_PREFERED_BUILT_IN_TYPES,     		
@@ -277,14 +279,15 @@ public class XSDEditorPlugin extends AbstractUIPlugin
     return getPreferenceStore().getString(CONST_XSD_DEFAULT_PREFIX_TEXT);
   }
 
+  public boolean getShowExternals()
+  {
+    return getPreferenceStore().getBoolean(CONST_SHOW_EXTERNALS);
+  }
   
-  
-  
-  
-  
-  
-  
-  
+  public void setShowExternals(boolean doShow)
+  {
+    getPreferenceStore().setValue(CONST_SHOW_EXTERNALS, doShow);
+  }
 
   /**
    * Get the xml schema default target namespace
