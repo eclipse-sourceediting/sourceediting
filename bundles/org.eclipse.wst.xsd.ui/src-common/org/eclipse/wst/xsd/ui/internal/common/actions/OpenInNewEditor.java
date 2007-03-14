@@ -23,14 +23,14 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
-import org.eclipse.wst.xsd.ui.internal.adapters.XSDComplexTypeDefinitionAdapter;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDSchemaDirectiveAdapter;
+import org.eclipse.wst.xsd.ui.internal.adapters.XSDTypeDefinitionAdapter;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.BaseSelectionAction;
 import org.eclipse.wst.xsd.ui.internal.common.util.Messages;
 import org.eclipse.wst.xsd.ui.internal.editor.InternalXSDMultiPageEditor;
 import org.eclipse.wst.xsd.ui.internal.utils.OpenOnSelectionHelper;
-import org.eclipse.xsd.XSDComplexTypeDefinition;
 import org.eclipse.xsd.XSDSchemaDirective;
+import org.eclipse.xsd.XSDTypeDefinition;
 import org.eclipse.xsd.impl.XSDImportImpl;
 
 public class OpenInNewEditor extends BaseSelectionAction
@@ -53,10 +53,10 @@ public class OpenInNewEditor extends BaseSelectionAction
   {
     Object selection = ((IStructuredSelection) getSelection()).getFirstElement();
 
-    if (selection instanceof XSDComplexTypeDefinitionAdapter)
+    if (selection instanceof XSDTypeDefinitionAdapter)
     {
-      XSDComplexTypeDefinitionAdapter xsdAdapter = (XSDComplexTypeDefinitionAdapter) selection;
-      XSDComplexTypeDefinition fComponent = (XSDComplexTypeDefinition) xsdAdapter.getTarget();
+      XSDTypeDefinitionAdapter xsdAdapter = (XSDTypeDefinitionAdapter) selection;
+      XSDTypeDefinition fComponent = (XSDTypeDefinition) xsdAdapter.getTarget();
 
       if (fComponent.getSchema() != null)
       {
