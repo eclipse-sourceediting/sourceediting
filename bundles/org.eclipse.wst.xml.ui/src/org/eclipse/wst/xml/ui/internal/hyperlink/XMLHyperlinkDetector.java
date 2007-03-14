@@ -1,10 +1,19 @@
+/*******************************************************************************
+ * Copyright (c) 2006, 2007 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.wst.xml.ui.internal.hyperlink;
 
 import java.io.File;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-import com.ibm.icu.util.StringTokenizer;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -14,8 +23,8 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.Region;
+import org.eclipse.jface.text.hyperlink.AbstractHyperlinkDetector;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
-import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.jface.text.hyperlink.URLHyperlink;
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolverPlugin;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -37,18 +46,15 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
+import com.ibm.icu.util.StringTokenizer;
+
 /**
  * Detects hyperlinks in XML tags. Includes detection in DOCTYPE and attribute
  * values. Resolves references to schemas, dtds, etc using the Common URI
  * Resolver.
  * 
  */
-public class XMLHyperlinkDetector implements IHyperlinkDetector {
-	// copies of this class exist in:
-	// org.eclipse.wst.xml.ui.internal.hyperlink
-	// org.eclipse.wst.html.ui.internal.hyperlink
-	// org.eclipse.jst.jsp.ui.internal.hyperlink
-
+public class XMLHyperlinkDetector extends AbstractHyperlinkDetector {
 	private final String HTTP_PROTOCOL = "http://";//$NON-NLS-1$
 	private final String NO_NAMESPACE_SCHEMA_LOCATION = "noNamespaceSchemaLocation"; //$NON-NLS-1$
 	private final String SCHEMA_LOCATION = "schemaLocation"; //$NON-NLS-1$

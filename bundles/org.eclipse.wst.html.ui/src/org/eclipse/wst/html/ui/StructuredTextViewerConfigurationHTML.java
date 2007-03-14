@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,7 @@ package org.eclipse.wst.html.ui;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 import org.eclipse.core.runtime.IPath;
@@ -22,24 +23,22 @@ import org.eclipse.jface.text.ITextHover;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.formatter.IContentFormatter;
 import org.eclipse.jface.text.formatter.MultiPassContentFormatter;
-import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.jface.text.information.IInformationProvider;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.eclipse.wst.css.core.text.ICSSPartitions;
 import org.eclipse.wst.css.ui.internal.contentassist.CSSContentAssistProcessor;
 import org.eclipse.wst.css.ui.internal.style.LineStyleProviderForEmbeddedCSS;
 import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
 import org.eclipse.wst.html.core.internal.format.HTMLFormatProcessorImpl;
 import org.eclipse.wst.html.core.internal.preferences.HTMLCorePreferenceNames;
+import org.eclipse.wst.html.core.internal.provisional.contenttype.ContentTypeIdForHTML;
 import org.eclipse.wst.html.core.internal.text.StructuredTextPartitionerForHTML;
 import org.eclipse.wst.html.core.text.IHTMLPartitions;
 import org.eclipse.wst.html.ui.internal.autoedit.AutoEditStrategyForTabs;
 import org.eclipse.wst.html.ui.internal.autoedit.StructuredAutoEditStrategyHTML;
 import org.eclipse.wst.html.ui.internal.contentassist.HTMLContentAssistProcessor;
 import org.eclipse.wst.html.ui.internal.contentassist.NoRegionContentAssistProcessorForHTML;
-import org.eclipse.wst.html.ui.internal.hyperlink.XMLHyperlinkDetector;
 import org.eclipse.wst.html.ui.internal.style.LineStyleProviderForHTML;
 import org.eclipse.wst.html.ui.internal.taginfo.HTMLInformationProvider;
 import org.eclipse.wst.html.ui.internal.taginfo.HTMLTagInfoHoverProcessor;
@@ -54,6 +53,7 @@ import org.eclipse.wst.sse.ui.internal.format.StructuredFormattingStrategy;
 import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
 import org.eclipse.wst.sse.ui.internal.taginfo.TextHoverManager;
 import org.eclipse.wst.sse.ui.internal.util.EditorUtility;
+import org.eclipse.wst.xml.core.internal.provisional.contenttype.ContentTypeIdForXML;
 import org.eclipse.wst.xml.core.internal.text.rules.StructuredTextPartitionerForXML;
 import org.eclipse.wst.xml.core.text.IXMLPartitions;
 import org.eclipse.wst.xml.ui.StructuredTextViewerConfigurationXML;
@@ -173,23 +173,6 @@ public class StructuredTextViewerConfigurationHTML extends StructuredTextViewerC
 		}
 		else
 			return super.getDoubleClickStrategy(sourceViewer, contentType);
-	}
-
-	public IHyperlinkDetector[] getHyperlinkDetectors(ISourceViewer sourceViewer) {
-		if (sourceViewer == null || !fPreferenceStore.getBoolean(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_HYPERLINKS_ENABLED))
-			return null;
-
-		List allDetectors = new ArrayList(0);
-		allDetectors.add(new XMLHyperlinkDetector());
-
-		IHyperlinkDetector[] superDetectors = super.getHyperlinkDetectors(sourceViewer);
-		for (int m = 0; m < superDetectors.length; m++) {
-			IHyperlinkDetector detector = superDetectors[m];
-			if (!allDetectors.contains(detector)) {
-				allDetectors.add(detector);
-			}
-		}
-		return (IHyperlinkDetector[]) allDetectors.toArray(new IHyperlinkDetector[0]);
 	}
 
 	public String[] getIndentPrefixes(ISourceViewer sourceViewer, String contentType) {
@@ -355,5 +338,15 @@ public class StructuredTextViewerConfigurationHTML extends StructuredTextViewerC
 			fXMLSourceViewerConfiguration = new StructuredTextViewerConfigurationXML();
 		}
 		return fXMLSourceViewerConfiguration;
+	}
+
+	protected Map getHyperlinkDetectorTargets(ISourceViewer sourceViewer) {
+		Map targets = super.getHyperlinkDetectorTargets(sourceViewer);
+		targets.put(ContentTypeIdForHTML.ContentTypeID_HTML, null);
+
+		// also add xml since there could be xml content in html
+		// (just hope the hyperlink detectors will do additional checking)
+		targets.put(ContentTypeIdForXML.ContentTypeID_XML, null);
+		return targets;
 	}
 }

@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2006, 2007 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.jst.jsp.ui.internal.hyperlink;
 
 import java.util.ArrayList;
@@ -18,8 +28,8 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.Region;
+import org.eclipse.jface.text.hyperlink.AbstractHyperlinkDetector;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
-import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.jst.jsp.core.internal.java.IJSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapter;
@@ -33,7 +43,7 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 /**
  * Detects hyperlinks in JSP Java content
  */
-public class JSPJavaHyperlinkDetector implements IHyperlinkDetector {
+public class JSPJavaHyperlinkDetector extends AbstractHyperlinkDetector {
 
 	private IHyperlink createHyperlink(IJavaElement element, IRegion region, IDocument document) {
 		IHyperlink link = null;
@@ -49,7 +59,7 @@ public class JSPJavaHyperlinkDetector implements IHyperlinkDetector {
 					sModel = StructuredModelManager.getModelManager().getExistingModelForRead(document);
 					if (sModel != null) {
 						URIResolver resolver = sModel.getResolver();
-						if(resolver != null) {
+						if (resolver != null) {
 							String uriString = resolver.getFileBaseLocation();
 							file = getFile(uriString);
 						}
@@ -168,6 +178,7 @@ public class JSPJavaHyperlinkDetector implements IHyperlinkDetector {
 
 		return file;
 	}
+
 	/**
 	 * Get JSP translation object
 	 * 

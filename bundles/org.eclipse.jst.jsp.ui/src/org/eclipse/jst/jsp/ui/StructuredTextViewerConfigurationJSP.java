@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,11 +7,13 @@
  * 
  * Contributors:
  *     IBM Corporation - initial API and implementation
+ *     Matthias Fuessel, mat.fuessel@gmx.net - [177387] use base hyperlinking extension points     
  *******************************************************************************/
 package org.eclipse.jst.jsp.ui;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jdt.ui.JavaUI;
@@ -26,11 +28,11 @@ import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.formatter.IContentFormatter;
 import org.eclipse.jface.text.formatter.MultiPassContentFormatter;
-import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.jface.text.information.IInformationPresenter;
 import org.eclipse.jface.text.information.IInformationProvider;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.jst.jsp.core.internal.provisional.contenttype.ContentTypeIdForJSP;
 import org.eclipse.jst.jsp.core.internal.text.StructuredTextPartitionerForJSP;
 import org.eclipse.jst.jsp.core.text.IJSPPartitions;
 import org.eclipse.jst.jsp.ui.internal.autoedit.AutoEditStrategyForTabs;
@@ -40,9 +42,6 @@ import org.eclipse.jst.jsp.ui.internal.contentassist.JSPELContentAssistProcessor
 import org.eclipse.jst.jsp.ui.internal.contentassist.JSPJavaContentAssistProcessor;
 import org.eclipse.jst.jsp.ui.internal.contentassist.NoRegionContentAssistProcessorForJSP;
 import org.eclipse.jst.jsp.ui.internal.format.FormattingStrategyJSPJava;
-import org.eclipse.jst.jsp.ui.internal.hyperlink.JSPJavaHyperlinkDetector;
-import org.eclipse.jst.jsp.ui.internal.hyperlink.TaglibHyperlinkDetector;
-import org.eclipse.jst.jsp.ui.internal.hyperlink.XMLHyperlinkDetector;
 import org.eclipse.jst.jsp.ui.internal.style.LineStyleProviderForJSP;
 import org.eclipse.jst.jsp.ui.internal.style.java.LineStyleProviderForJava;
 import org.eclipse.jst.jsp.ui.internal.style.jspel.LineStyleProviderForJSPEL;
@@ -50,9 +49,9 @@ import org.eclipse.jst.jsp.ui.internal.taginfo.JSPInformationProvider;
 import org.eclipse.jst.jsp.ui.internal.taginfo.JSPJavaJavadocHoverProcessor;
 import org.eclipse.jst.jsp.ui.internal.taginfo.JSPJavaJavadocInformationProvider;
 import org.eclipse.jst.jsp.ui.internal.taginfo.JSPTagInfoHoverProcessor;
-import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.eclipse.wst.css.core.text.ICSSPartitions;
 import org.eclipse.wst.html.core.internal.format.HTMLFormatProcessorImpl;
+import org.eclipse.wst.html.core.internal.provisional.contenttype.ContentTypeIdForHTML;
 import org.eclipse.wst.html.core.text.IHTMLPartitions;
 import org.eclipse.wst.html.ui.StructuredTextViewerConfigurationHTML;
 import org.eclipse.wst.sse.core.text.IStructuredPartitions;
@@ -62,6 +61,7 @@ import org.eclipse.wst.sse.ui.internal.format.StructuredFormattingStrategy;
 import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
 import org.eclipse.wst.sse.ui.internal.taginfo.TextHoverManager;
 import org.eclipse.wst.sse.ui.internal.util.EditorUtility;
+import org.eclipse.wst.xml.core.internal.provisional.contenttype.ContentTypeIdForXML;
 import org.eclipse.wst.xml.core.text.IXMLPartitions;
 import org.eclipse.wst.xml.ui.StructuredTextViewerConfigurationXML;
 import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeLabelProvider;
@@ -264,27 +264,6 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 		return fHTMLSourceViewerConfiguration;
 	}
 
-	public IHyperlinkDetector[] getHyperlinkDetectors(ISourceViewer sourceViewer) {
-		if (fPreferenceStore == null)
-			return null;
-		if (sourceViewer == null || !fPreferenceStore.getBoolean(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_HYPERLINKS_ENABLED))
-			return null;
-
-		List allDetectors = new ArrayList(0);
-		allDetectors.add(new JSPJavaHyperlinkDetector());
-		allDetectors.add(new TaglibHyperlinkDetector());
-		allDetectors.add(new XMLHyperlinkDetector());
-
-		IHyperlinkDetector[] superDetectors = super.getHyperlinkDetectors(sourceViewer);
-		for (int m = 0; m < superDetectors.length; m++) {
-			IHyperlinkDetector detector = superDetectors[m];
-			if (!allDetectors.contains(detector)) {
-				allDetectors.add(detector);
-			}
-		}
-		return (IHyperlinkDetector[]) allDetectors.toArray(new IHyperlinkDetector[0]);
-	}
-
 	public String[] getIndentPrefixes(ISourceViewer sourceViewer, String contentType) {
 		String[] indentations = null;
 
@@ -468,5 +447,16 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 			fXMLSourceViewerConfiguration = new StructuredTextViewerConfigurationXML();
 		}
 		return fXMLSourceViewerConfiguration;
+	}
+
+	protected Map getHyperlinkDetectorTargets(ISourceViewer sourceViewer) {
+		Map targets = super.getHyperlinkDetectorTargets(sourceViewer);
+		targets.put(ContentTypeIdForJSP.ContentTypeID_JSP, null);
+
+		// also add html & xml since there could be html/xml content in jsp
+		// (just hope the hyperlink detectors will do additional checking)
+		targets.put(ContentTypeIdForHTML.ContentTypeID_HTML, null);
+		targets.put(ContentTypeIdForXML.ContentTypeID_XML, null);
+		return targets;
 	}
 }

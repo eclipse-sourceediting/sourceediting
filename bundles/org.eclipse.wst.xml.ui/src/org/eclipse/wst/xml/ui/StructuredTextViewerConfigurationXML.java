@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,6 +14,7 @@ package org.eclipse.wst.xml.ui;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 import org.eclipse.core.runtime.IPath;
@@ -24,11 +25,9 @@ import org.eclipse.jface.text.ITextHover;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.formatter.IContentFormatter;
 import org.eclipse.jface.text.formatter.MultiPassContentFormatter;
-import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.jface.text.information.IInformationProvider;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.eclipse.wst.sse.core.text.IStructuredPartitions;
 import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
@@ -38,6 +37,7 @@ import org.eclipse.wst.sse.ui.internal.taginfo.TextHoverManager;
 import org.eclipse.wst.sse.ui.internal.util.EditorUtility;
 import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
 import org.eclipse.wst.xml.core.internal.preferences.XMLCorePreferenceNames;
+import org.eclipse.wst.xml.core.internal.provisional.contenttype.ContentTypeIdForXML;
 import org.eclipse.wst.xml.core.internal.provisional.format.FormatProcessorXML;
 import org.eclipse.wst.xml.core.internal.text.rules.StructuredTextPartitionerForXML;
 import org.eclipse.wst.xml.core.text.IXMLPartitions;
@@ -47,7 +47,6 @@ import org.eclipse.wst.xml.ui.internal.contentassist.NoRegionContentAssistProces
 import org.eclipse.wst.xml.ui.internal.contentassist.XMLContentAssistProcessor;
 import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeLabelProvider;
 import org.eclipse.wst.xml.ui.internal.doubleclick.XMLDoubleClickStrategy;
-import org.eclipse.wst.xml.ui.internal.hyperlink.XMLHyperlinkDetector;
 import org.eclipse.wst.xml.ui.internal.style.LineStyleProviderForXML;
 import org.eclipse.wst.xml.ui.internal.taginfo.XMLInformationProvider;
 import org.eclipse.wst.xml.ui.internal.taginfo.XMLTagInfoHoverProcessor;
@@ -149,24 +148,6 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 		return doubleClickStrategy;
 	}
 
-	public IHyperlinkDetector[] getHyperlinkDetectors(ISourceViewer sourceViewer) {
-		if ((sourceViewer == null) || !fPreferenceStore.getBoolean(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_HYPERLINKS_ENABLED)) {
-			return null;
-		}
-
-		List allDetectors = new ArrayList(0);
-		allDetectors.add(new XMLHyperlinkDetector());
-
-		IHyperlinkDetector[] superDetectors = super.getHyperlinkDetectors(sourceViewer);
-		for (int m = 0; m < superDetectors.length; m++) {
-			IHyperlinkDetector detector = superDetectors[m];
-			if (!allDetectors.contains(detector)) {
-				allDetectors.add(detector);
-			}
-		}
-		return (IHyperlinkDetector[]) allDetectors.toArray(new IHyperlinkDetector[0]);
-	}
-
 	public String[] getIndentPrefixes(ISourceViewer sourceViewer, String contentType) {
 		Vector vector = new Vector();
 
@@ -238,7 +219,7 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 		}
 		return fLineStyleProviderForXML;
 	}
-	
+
 	public ILabelProvider getStatusLineLabelProvider(ISourceViewer sourceViewer) {
 		if (fStatusLineLabelProvider == null) {
 			fStatusLineLabelProvider = new JFaceNodeLabelProvider() {
@@ -294,5 +275,11 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 		}
 
 		return textHover;
+	}
+
+	protected Map getHyperlinkDetectorTargets(ISourceViewer sourceViewer) {
+		Map targets = super.getHyperlinkDetectorTargets(sourceViewer);
+		targets.put(ContentTypeIdForXML.ContentTypeID_XML, null);
+		return targets;
 	}
 }

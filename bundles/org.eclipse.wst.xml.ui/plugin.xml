@@ -512,4 +512,20 @@
                id="org.eclipse.ui.texteditor.SelectRulerAction"/>
         </editorContribution>
 	</extension>
+	<extension
+		point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectorTargets">
+		<target
+			id="org.eclipse.core.runtime.xml"
+			name="%XML_Source_target_name">
+		</target>
+	</extension>
+	<extension
+		point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectors">
+		<hyperlinkDetector
+			class="org.eclipse.wst.xml.ui.internal.hyperlink.XMLHyperlinkDetector"
+			id="org.eclipse.wst.xml.ui.internal.hyperlink.XMLHyperlinkDetector"
+			name="%XML_hyperlink"
+			targetId="org.eclipse.core.runtime.xml">
+		</hyperlinkDetector>
+   </extension>
 </plugin>

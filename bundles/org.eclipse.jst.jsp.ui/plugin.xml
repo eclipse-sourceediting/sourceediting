@@ -747,4 +747,26 @@
 			<contentType id="org.eclipse.jst.jsp.core.cssjspsource" />
 		</adapterFactoryDescription>
 	</extension>
+	<extension
+		point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectorTargets">
+		<target
+			id="org.eclipse.jst.jsp.core.jspsource"
+			name="%JSP_Source_target_name">
+		</target>
+	</extension>
+	<extension
+		point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectors">
+		<hyperlinkDetector
+			class="org.eclipse.jst.jsp.ui.internal.hyperlink.JSPJavaHyperlinkDetector"
+			id="org.eclipse.jst.jsp.ui.internal.hyperlink.JSPJavaHyperlinkDetector"
+			name="%JSPJava_hyperlink"
+			targetId="org.eclipse.jst.jsp.core.jspsource">
+		</hyperlinkDetector>
+		<hyperlinkDetector
+			class="org.eclipse.jst.jsp.ui.internal.hyperlink.TaglibHyperlinkDetector"
+			id="org.eclipse.jst.jsp.ui.internal.hyperlink.TaglibHyperlinkDetector"
+			name="%Taglib_hyperlink"
+			targetId="org.eclipse.jst.jsp.core.jspsource">
+		</hyperlinkDetector>
+   </extension>
 </plugin>
