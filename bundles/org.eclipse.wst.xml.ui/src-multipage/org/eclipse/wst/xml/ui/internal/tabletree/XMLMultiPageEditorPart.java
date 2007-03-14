@@ -1,5 +1,5 @@
 /*****************************************************************************
- * Copyright (c) 2004 IBM Corporation and others. All rights reserved. This
+ * Copyright (c) 2004, 2007 IBM Corporation and others. All rights reserved. This
  * program and the accompanying materials are made available under the terms
  * of the Eclipse Public License v1.0 which accompanies this distribution, and
  * is available at http://www.eclipse.org/legal/epl-v10.html
@@ -372,9 +372,6 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 	private void addSourcePage() throws PartInitException {
 		fSourcePageIndex = addPage(fTextEditor, getEditorInput());
 		setPageText(fSourcePageIndex, XMLEditorMessages.XMLMultiPageEditorPart_0);
-		// the update's critical, to get viewer selection manager and
-		// highlighting to work
-		fTextEditor.update();
 
 		firePropertyChange(PROP_TITLE);
 
