@@ -29,6 +29,8 @@ public class XSDComplexTypeAdvancedSection extends AbstractSection
   private static final String TRUE = "true"; //$NON-NLS-1$
   protected CCombo blockCombo;
   protected CCombo finalCombo;
+  protected CCombo mixedCombo;
+  protected CCombo abstractCombo;
 
   private String finalValues[] = { EMPTY, XSDConstants.RESTRICTION_ELEMENT_TAG, //$NON-NLS-1$
       XSDConstants.EXTENSION_ELEMENT_TAG, "#" + XSDConstants.ALL_ELEMENT_TAG }; //$NON-NLS-1$
@@ -36,11 +38,9 @@ public class XSDComplexTypeAdvancedSection extends AbstractSection
   private String blockValues[] = { EMPTY, XSDConstants.RESTRICTION_ELEMENT_TAG, //$NON-NLS-1$
       XSDConstants.EXTENSION_ELEMENT_TAG, "#" + XSDConstants.ALL_ELEMENT_TAG }; //$NON-NLS-1$
 
-  private String abstractValues[] = { EMPTY, TRUE, FALSE }; // TODO use some
+  private String booleanValues[] = { EMPTY, TRUE, FALSE }; // TODO use some
                                                             // external string
                                                             // here instead
-  private CCombo abstractCombo;
-
   protected void createContents(Composite parent)
   {
     composite = getWidgetFactory().createFlatFormComposite(parent);
@@ -50,9 +50,33 @@ public class XSDComplexTypeAdvancedSection extends AbstractSection
     composite.setLayout(gridLayout);
 
     // ------------------------------------------------------------------
-    // BlockLabel
+    // AbstractLabel
     // ------------------------------------------------------------------
     GridData data = new GridData();
+    data.horizontalAlignment = GridData.HORIZONTAL_ALIGN_BEGINNING;
+    data.grabExcessHorizontalSpace = false;
+
+    // TODO Should be a translatable string here
+    CLabel abstractLabel = getWidgetFactory().createCLabel(composite, XSDConstants.ABSTRACT_ATTRIBUTE + ":");
+    abstractLabel.setLayoutData(data);
+
+    // ------------------------------------------------------------------
+    // AbstractCombo
+    // ------------------------------------------------------------------
+    data = new GridData();
+    data.grabExcessHorizontalSpace = true;
+    data.horizontalAlignment = GridData.FILL;
+    abstractCombo = getWidgetFactory().createCCombo(composite);
+    abstractCombo.setLayoutData(data);
+    abstractCombo.setEditable(false);
+
+    abstractCombo.setItems(booleanValues);
+    abstractCombo.addSelectionListener(this);
+
+    // ------------------------------------------------------------------
+    // BlockLabel
+    // ------------------------------------------------------------------
+    data = new GridData();
     data.horizontalAlignment = GridData.HORIZONTAL_ALIGN_BEGINNING;
     data.grabExcessHorizontalSpace = false;
 
@@ -96,37 +120,38 @@ public class XSDComplexTypeAdvancedSection extends AbstractSection
 
     finalCombo.setItems(finalValues);
     finalCombo.addSelectionListener(this);
-
+    
     // ------------------------------------------------------------------
-    // AbstractLabel
+    // Mixed Label
     // ------------------------------------------------------------------
     data = new GridData();
     data.horizontalAlignment = GridData.HORIZONTAL_ALIGN_BEGINNING;
     data.grabExcessHorizontalSpace = false;
 
     // TODO Should be a translatable string here
-    CLabel abstractLabel = getWidgetFactory().createCLabel(composite, XSDConstants.ABSTRACT_ATTRIBUTE + ":");
-    abstractLabel.setLayoutData(data);
+    CLabel mixedLabel = getWidgetFactory().createCLabel(composite, XSDConstants.MIXED_ATTRIBUTE + ":");
+    mixedLabel.setLayoutData(data);
 
     // ------------------------------------------------------------------
-    // FinalCombo
+    // Mixed Combo
     // ------------------------------------------------------------------
     data = new GridData();
     data.grabExcessHorizontalSpace = true;
     data.horizontalAlignment = GridData.FILL;
-    abstractCombo = getWidgetFactory().createCCombo(composite);
-    abstractCombo.setLayoutData(data);
-    abstractCombo.setEditable(false);
+    mixedCombo = getWidgetFactory().createCCombo(composite);
+    mixedCombo.setLayoutData(data);
+    mixedCombo.setEditable(false);
 
-    abstractCombo.setItems(abstractValues);
-    abstractCombo.addSelectionListener(this);
+    mixedCombo.setItems(booleanValues);
+    mixedCombo.addSelectionListener(this);
+
   }
 
   public void doWidgetSelected(SelectionEvent e)
   {
+    XSDComplexTypeDefinition complexType = (XSDComplexTypeDefinition) input;
     if (e.widget == blockCombo)
     {
-      XSDComplexTypeDefinition complexType = (XSDComplexTypeDefinition) input;
       String value = blockCombo.getText();
 
       UpdateAttributeValueCommand command = new UpdateAttributeValueCommand(complexType.getElement(), XSDConstants.BLOCK_ATTRIBUTE, value);
@@ -135,7 +160,6 @@ public class XSDComplexTypeAdvancedSection extends AbstractSection
     }
     else if (e.widget == finalCombo)
     {
-      XSDComplexTypeDefinition complexType = (XSDComplexTypeDefinition) input;
       String value = finalCombo.getText();
 
       UpdateAttributeValueCommand command = new UpdateAttributeValueCommand(complexType.getElement(), XSDConstants.FINAL_ATTRIBUTE, value);
@@ -144,7 +168,6 @@ public class XSDComplexTypeAdvancedSection extends AbstractSection
     }
     else if (e.widget == abstractCombo)
     {
-      XSDComplexTypeDefinition complexType = (XSDComplexTypeDefinition) input;
       String value = abstractCombo.getText();
 
       if (value.equals(EMPTY))
@@ -155,6 +178,20 @@ public class XSDComplexTypeAdvancedSection extends AbstractSection
           complexType.setAbstract(true);
         else if (value.equals(FALSE))
           complexType.setAbstract(false);
+      }
+    }
+    else if (e.widget == mixedCombo)
+    {
+      String value = mixedCombo.getText();
+
+      if (value.equals(EMPTY))
+        complexType.getElement().removeAttribute(XSDConstants.MIXED_ATTRIBUTE);
+      else
+      {
+        if (value.equals(TRUE))
+          complexType.setMixed(true);
+        else if (value.equals(FALSE))
+          complexType.setMixed(false);
       }
     }
   }
@@ -170,13 +207,14 @@ public class XSDComplexTypeAdvancedSection extends AbstractSection
       {
         XSDComplexTypeDefinition complexType = (XSDComplexTypeDefinition) input;
         
+        boolean enabled = true; 
         if (complexType.getContainer() instanceof XSDSchema)
         {
-          composite.setEnabled(!isReadOnly);
+          enabled = !isReadOnly;
         }
         else
         {
-          composite.setEnabled(false);
+          enabled = false;
         }
         
         String blockAttValue = complexType.getElement().getAttribute(XSDConstants.BLOCK_ATTRIBUTE);
@@ -188,6 +226,7 @@ public class XSDComplexTypeAdvancedSection extends AbstractSection
         {
           blockCombo.setText(EMPTY);
         }
+        blockCombo.setEnabled(enabled);
 
         String finalAttValue = complexType.getElement().getAttribute(XSDConstants.FINAL_ATTRIBUTE);
         if (finalAttValue != null)
@@ -198,6 +237,7 @@ public class XSDComplexTypeAdvancedSection extends AbstractSection
         {
           finalCombo.setText(EMPTY);
         }
+        finalCombo.setEnabled(enabled);
 
         if (complexType.getElement().hasAttribute(XSDConstants.ABSTRACT_ATTRIBUTE))
         {
@@ -211,6 +251,21 @@ public class XSDComplexTypeAdvancedSection extends AbstractSection
         {
           abstractCombo.setText(EMPTY);
         }
+        abstractCombo.setEnabled(enabled);
+        
+        if (complexType.getElement().hasAttribute(XSDConstants.MIXED_ATTRIBUTE))
+        {
+          boolean mixedValue = complexType.isMixed();
+          if (mixedValue)
+            mixedCombo.setText(TRUE);
+          else
+            mixedCombo.setText(FALSE);
+        }
+        else
+        {
+          mixedCombo.setText(EMPTY);
+        }
+
       }
     }
     catch (Exception e)
