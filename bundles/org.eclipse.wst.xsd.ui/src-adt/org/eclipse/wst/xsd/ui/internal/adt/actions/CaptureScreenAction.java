@@ -97,8 +97,7 @@ public class CaptureScreenAction extends Action
       File file = new File(saveFilePath);
       if (file.exists() && file.isFile())
       {
-        if (!MessageDialog.openQuestion(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages._UI_ACTION_CAPTURE_SCREEN_OVERWRITE_CONFIRMATION_QUESTION, Messages._UI_ACTION_CAPTURE_SCREEN_OVERWRITE_CONFIRMATION_1 + " " //$NON-NLS-1$
-            + saveFilePath + " " + Messages._UI_ACTION_CAPTURE_SCREEN_OVERWRITE_CONFIRMATION_2)) //$NON-NLS-1$
+        if (!MessageDialog.openQuestion(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages._UI_ACTION_CAPTURE_SCREEN_OVERWRITE_CONFIRMATION_QUESTION, Messages._UI_ACTION_CAPTURE_SCREEN_OVERWRITE_CONFIRMATION.replace("{0}", saveFilePath))) //$NON-NLS-1$
         {
           return false;
         }
