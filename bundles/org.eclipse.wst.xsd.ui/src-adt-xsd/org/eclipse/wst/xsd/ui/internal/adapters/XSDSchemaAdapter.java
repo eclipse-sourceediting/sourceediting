@@ -292,7 +292,7 @@ public class XSDSchemaAdapter extends XSDBaseAdapter implements IActionProvider,
     return adapter;
   }
 
-  protected List getDirectives(XSDSchema schema)
+  public List getDirectives(XSDSchema schema)
   {
     List list = new ArrayList();
     for (Iterator i = schema.getContents().iterator(); i.hasNext();)
