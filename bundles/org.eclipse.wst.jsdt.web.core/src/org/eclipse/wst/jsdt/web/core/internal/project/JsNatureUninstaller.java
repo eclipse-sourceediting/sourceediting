@@ -35,16 +35,15 @@ public class JsNatureUninstaller implements IDelegate{
 		monitor.beginTask("Uninstalling JavaScript Development Tools...", 100 );
 		
 		//by using natures we can leverage the precondition support
-		monitor.subTask( "Removing nature..." );
+		monitor.subTask( "Removing JavaScript Development Toolking Nature..." );
 		SubProgressMonitor sub = new SubProgressMonitor( monitor, 25 );
 		
-		if(!JavaProject.hasJavaNature(project)) return;
+		if(!JsWebNature.hasJsNature(project)) return;
 		
 		try{
 			
-			IProjectNature jsNature = new JavaProject();
+			IProjectNature jsNature = new JsWebNature(project,monitor);
 			monitor.worked(20);
-			jsNature.setProject(project);
 			monitor.worked(50);
 			jsNature.deconfigure();
 			monitor.worked(20);

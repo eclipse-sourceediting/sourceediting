@@ -24,7 +24,15 @@
 	
 		<project-facet-version facet="wst.jsdt.web" version="1.0">
 	      <constraint>
-        	<requires facet="wst.web" version="[1.0"/>
+	      	<and>
+        	<or>
+        		<requires facet="wst.web" version="[1.0"/>
+	      	</or>
+	      	<or>
+	      		<requires facet="jst.web" version="[1.0"/>
+	      	</or>
+	      	
+	      	</and>
 	      </constraint>
 		</project-facet-version>
 	
@@ -41,12 +49,14 @@
      	 	<fixed facet="wst.web"/>
       		<fixed facet="wst.jsdt.web"/>
     	</template>
+
     	<template id="template.jst.web">
       		<label>Dynamic Web Project</label>
       		<fixed facet="jst.java"/>
       		<fixed facet="jst.web"/>
       		<fixed facet="wst.jsdt.web"/>
     	</template>
+
     	<template id="template.jst.connector">
       		<label>J2C Project</label>
       		<fixed facet="jst.java"/>
