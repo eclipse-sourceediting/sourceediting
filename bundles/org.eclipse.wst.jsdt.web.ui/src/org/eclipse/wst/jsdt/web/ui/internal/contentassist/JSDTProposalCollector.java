@@ -29,16 +29,21 @@ public class JSDTProposalCollector extends CompletionProposalCollector {
 	private JSPTranslation fTranslation;
 	private Comparator fComparator;
     private IJavaCompletionProposal[] fJavaProposals;
-
+    private List fGeneratedFunctionNames;
+    
 	public JSDTProposalCollector( JSPTranslation translation) {
 	  super(translation.getCompilationUnit());
-        
-
-		if (translation == null) {
+	  if (translation == null) {
 			throw new IllegalArgumentException("JSPTranslation cannot be null"); //$NON-NLS-1$
-		}
-
+	  }
 		fTranslation = translation;
+	}
+	
+	public List getGeneratedFunctionNames(){
+		if(fGeneratedFunctionNames==null){
+			fGeneratedFunctionNames = fTranslation.getGeneratedFunctionNames();
+		}
+		return fGeneratedFunctionNames;
 	}
     
 	/**
@@ -53,6 +58,7 @@ public class JSDTProposalCollector extends CompletionProposalCollector {
 		// because their offsets haven't been translated
 		for (int i = 0; i < javaProposals.length; i++) {
 			if (javaProposals[i] instanceof JSDTCompletionProposal) {
+				
 				results.add(javaProposals[i]);
 			}
 		}
@@ -94,7 +100,10 @@ public class JSDTProposalCollector extends CompletionProposalCollector {
 
 			// default behavior
 //			if (jspProposal == null) {
-				jspProposal = createJspProposal(proposal);
+			for(int i = 0;i<getGeneratedFunctionNames().size();i++){
+				if((new String(proposal.getName())).equalsIgnoreCase((String)getGeneratedFunctionNames().get(i))) return jspProposal;
+			}
+			jspProposal = createJspProposal(proposal);
 			//}
 		}
 		return jspProposal;
@@ -170,9 +179,14 @@ public class JSDTProposalCollector extends CompletionProposalCollector {
 		Image image = javaProposal.getImage();
 		String displayString = javaProposal.getDisplayString();
 		displayString = getTranslation().fixupMangledName(displayString);
+		for(int i = 0;i<getGeneratedFunctionNames().size();i++){
+			displayString.replace((String)getGeneratedFunctionNames().get(i), "");
+		}
+		
+		
 		IContextInformation contextInformation = javaProposal
 				.getContextInformation();
-		// String additionalInfo = javaProposal.getAdditionalProposalInfo();
+		//String additionalInfo = javaProposal.getAdditionalProposalInfo();
 		int relevance = javaProposal.getRelevance();
 
 		boolean updateLengthOnValidate = true;

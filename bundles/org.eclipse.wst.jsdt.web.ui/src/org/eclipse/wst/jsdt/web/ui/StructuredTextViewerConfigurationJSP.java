@@ -20,6 +20,8 @@ import org.eclipse.jface.text.ITextDoubleClickStrategy;
 import org.eclipse.jface.text.ITextHover;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContentAssistant;
+import org.eclipse.jface.text.formatter.ContentFormatter;
+import org.eclipse.jface.text.formatter.ContextBasedFormattingStrategy;
 import org.eclipse.jface.text.formatter.IContentFormatter;
 import org.eclipse.jface.text.formatter.MultiPassContentFormatter;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
@@ -68,29 +70,28 @@ import org.eclipse.wst.xml.ui.StructuredTextViewerConfigurationXML;
  * @see org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration
  * @since 1.0
  */
-public class StructuredTextViewerConfigurationJSP extends
-		StructuredTextViewerConfiguration {
+public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerConfiguration {
 	/*
 	 * One instance per configuration because not sourceviewer-specific and it's
 	 * a String array
 	 */
-	private String[] fConfiguredContentTypes;
+	private String[]						  fConfiguredContentTypes;
 	/*
 	 * One instance per configuration
 	 */
-	private LineStyleProvider fLineStyleProviderForJava;
+	private LineStyleProvider				 fLineStyleProviderForJava;
 	/*
 	 * One instance per configuration
 	 */
-	private LineStyleProvider fLineStyleProviderForJSP;
+	private LineStyleProvider				 fLineStyleProviderForJSP;
 	/*
 	 * One instance per configuration
 	 */
 
 	private StructuredTextViewerConfiguration fHTMLSourceViewerConfiguration;
-	private JavaSourceViewerConfiguration fJavaSourceViewerConfiguration;
+	private JavaSourceViewerConfiguration	 fJavaSourceViewerConfiguration;
 	private StructuredTextViewerConfiguration fXMLSourceViewerConfiguration;
-
+	
 	/**
 	 * Create new instance of StructuredTextViewerConfigurationJSP
 	 */
@@ -98,7 +99,7 @@ public class StructuredTextViewerConfigurationJSP extends
 		// Must have empty constructor to createExecutableExtension
 		super();
 	}
-
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -106,17 +107,14 @@ public class StructuredTextViewerConfigurationJSP extends
 	 *      java.lang.String)
 	 */
 	@Override
-	public IAutoEditStrategy[] getAutoEditStrategies(
-			ISourceViewer sourceViewer, String contentType) {
+	public IAutoEditStrategy[] getAutoEditStrategies(ISourceViewer sourceViewer, String contentType) {
 		IAutoEditStrategy[] strategies = null;
 		
-		if (contentType==IJSPPartitions.JSP_CONTENT_JAVA) {
+		if (contentType == IJSPPartitions.JSP_CONTENT_JAVA) {
 			// jsp java autoedit strategies
 			List allStrategies = new ArrayList(0);
-
-			IAutoEditStrategy[] javaStrategies = getJavaSourceViewerConfiguration()
-					.getAutoEditStrategies(sourceViewer,
-							IJavaPartitions.JAVA_PARTITIONING);
+			
+			IAutoEditStrategy[] javaStrategies = getJavaSourceViewerConfiguration().getAutoEditStrategies(sourceViewer, IJavaPartitions.JAVA_PARTITIONING);
 			for (int i = 0; i < javaStrategies.length; i++) {
 				allStrategies.add(javaStrategies[i]);
 			}
@@ -124,70 +122,71 @@ public class StructuredTextViewerConfigurationJSP extends
 			// results from earlier steps.
 			// add auto edit strategy that handles when tab key is pressed
 			allStrategies.add(new AutoEditStrategyForTabs());
-
-			strategies = (IAutoEditStrategy[]) allStrategies
-					.toArray(new IAutoEditStrategy[allStrategies.size()]);
+			
+			strategies = (IAutoEditStrategy[]) allStrategies.toArray(new IAutoEditStrategy[allStrategies.size()]);
 		}
 		return strategies;
-//		if (contentType == IXMLPartitions.XML_DEFAULT) {
-//			// xml autoedit strategies
-//			strategies = getXMLSourceViewerConfiguration()
-//					.getAutoEditStrategies(sourceViewer, contentType);
-//		} else if (contentType == IJSPPartitions.JSP_CONTENT_JAVA) {
-//			// jsp java autoedit strategies
-//			List allStrategies = new ArrayList(0);
-//
-//			IAutoEditStrategy[] javaStrategies = getJavaSourceViewerConfiguration()
-//					.getAutoEditStrategies(sourceViewer,
-//							IJavaPartitions.JAVA_PARTITIONING);
-//			for (int i = 0; i < javaStrategies.length; i++) {
-//				allStrategies.add(javaStrategies[i]);
-//			}
-//			// be sure this is added last, after others, so it can modify
-//			// results from earlier steps.
-//			// add auto edit strategy that handles when tab key is pressed
-//			allStrategies.add(new AutoEditStrategyForTabs());
-//
-//			strategies = (IAutoEditStrategy[]) allStrategies
-//					.toArray(new IAutoEditStrategy[allStrategies.size()]);
-//		} else if (contentType == IHTMLPartitions.HTML_DEFAULT
-//				|| contentType == IHTMLPartitions.HTML_DECLARATION) {
-//			// html and jsp autoedit strategies
-//			List allStrategies = new ArrayList(0);
-//
-//			// add the jsp autoedit strategy first then add all html's
-//			allStrategies.add(new StructuredAutoEditStrategyJSP());
-//
-//			IAutoEditStrategy[] htmlStrategies = getHTMLSourceViewerConfiguration()
-//					.getAutoEditStrategies(sourceViewer, contentType);
-//			for (int i = 0; i < htmlStrategies.length; i++) {
-//				allStrategies.add(htmlStrategies[i]);
-//			}
-//
-//			strategies = (IAutoEditStrategy[]) allStrategies
-//					.toArray(new IAutoEditStrategy[allStrategies.size()]);
-//		} else {
-//			// default autoedit strategies
-//			List allStrategies = new ArrayList(0);
-//
-//			IAutoEditStrategy[] superStrategies = super.getAutoEditStrategies(
-//					sourceViewer, contentType);
-//			for (int i = 0; i < superStrategies.length; i++) {
-//				allStrategies.add(superStrategies[i]);
-//			}
-//
-//			// be sure this is added last, after others, so it can modify
-//			// results from earlier steps.
-//			// add auto edit strategy that handles when tab key is pressed
-//			allStrategies.add(new AutoEditStrategyForTabs());
-//
-//			strategies = (IAutoEditStrategy[]) allStrategies
-//					.toArray(new IAutoEditStrategy[allStrategies.size()]);
-//		}
-//
-//		return strategies;
+		// if (contentType == IXMLPartitions.XML_DEFAULT) {
+		// // xml autoedit strategies
+		// strategies = getXMLSourceViewerConfiguration()
+		// .getAutoEditStrategies(sourceViewer, contentType);
+		// } else if (contentType == IJSPPartitions.JSP_CONTENT_JAVA) {
+		// // jsp java autoedit strategies
+		// List allStrategies = new ArrayList(0);
+		//
+		// IAutoEditStrategy[] javaStrategies =
+		// getJavaSourceViewerConfiguration()
+		// .getAutoEditStrategies(sourceViewer,
+		// IJavaPartitions.JAVA_PARTITIONING);
+		// for (int i = 0; i < javaStrategies.length; i++) {
+		// allStrategies.add(javaStrategies[i]);
+		// }
+		// // be sure this is added last, after others, so it can modify
+		// // results from earlier steps.
+		// // add auto edit strategy that handles when tab key is pressed
+		// allStrategies.add(new AutoEditStrategyForTabs());
+		//
+		// strategies = (IAutoEditStrategy[]) allStrategies
+		// .toArray(new IAutoEditStrategy[allStrategies.size()]);
+		// } else if (contentType == IHTMLPartitions.HTML_DEFAULT
+		// || contentType == IHTMLPartitions.HTML_DECLARATION) {
+		// // html and jsp autoedit strategies
+		// List allStrategies = new ArrayList(0);
+		//
+		// // add the jsp autoedit strategy first then add all html's
+		// allStrategies.add(new StructuredAutoEditStrategyJSP());
+		//
+		// IAutoEditStrategy[] htmlStrategies =
+		// getHTMLSourceViewerConfiguration()
+		// .getAutoEditStrategies(sourceViewer, contentType);
+		// for (int i = 0; i < htmlStrategies.length; i++) {
+		// allStrategies.add(htmlStrategies[i]);
+		// }
+		//
+		// strategies = (IAutoEditStrategy[]) allStrategies
+		// .toArray(new IAutoEditStrategy[allStrategies.size()]);
+		// } else {
+		// // default autoedit strategies
+		// List allStrategies = new ArrayList(0);
+		//
+		// IAutoEditStrategy[] superStrategies = super.getAutoEditStrategies(
+		// sourceViewer, contentType);
+		// for (int i = 0; i < superStrategies.length; i++) {
+		// allStrategies.add(superStrategies[i]);
+		// }
+		//
+		// // be sure this is added last, after others, so it can modify
+		// // results from earlier steps.
+		// // add auto edit strategy that handles when tab key is pressed
+		// allStrategies.add(new AutoEditStrategyForTabs());
+		//
+		// strategies = (IAutoEditStrategy[]) allStrategies
+		// .toArray(new IAutoEditStrategy[allStrategies.size()]);
+		// }
+		//
+		// return strategies;
 	}
-
+	
 	@Override
 	public String[] getConfiguredContentTypes(ISourceViewer sourceViewer) {
 		if (fConfiguredContentTypes == null) {
@@ -196,181 +195,182 @@ public class StructuredTextViewerConfigurationJSP extends
 			 * content types will add default, unknown, and all xml configured
 			 * content types
 			 */
-//			String[] htmlTypes = getHTMLSourceViewerConfiguration()
-//					.getConfiguredContentTypes(sourceViewer);
-//			String[] jspTypes = StructuredTextPartitionerForJSP
-//					.getConfiguredContentTypes();
-//			fConfiguredContentTypes = new String[htmlTypes.length
-//					+ jspTypes.length];
-//
-//			int index = 0;
-//			System.arraycopy(htmlTypes, 0, fConfiguredContentTypes, index,
-//					htmlTypes.length);
-//			System.arraycopy(jspTypes, 0, fConfiguredContentTypes,
-//					index += htmlTypes.length, jspTypes.length);
+			// String[] htmlTypes = getHTMLSourceViewerConfiguration()
+			// .getConfiguredContentTypes(sourceViewer);
+			// String[] jspTypes = StructuredTextPartitionerForJSP
+			// .getConfiguredContentTypes();
+			// fConfiguredContentTypes = new String[htmlTypes.length
+			// + jspTypes.length];
+			//
+			// int index = 0;
+			// System.arraycopy(htmlTypes, 0, fConfiguredContentTypes, index,
+			// htmlTypes.length);
+			// System.arraycopy(jspTypes, 0, fConfiguredContentTypes,
+			// index += htmlTypes.length, jspTypes.length);
 		}
-		return new String[] {IJSPPartitions.JSP_CONTENT_JAVA};
-		//return fConfiguredContentTypes;
+		return new String[] { IJSPPartitions.JSP_CONTENT_JAVA };
+		// return fConfiguredContentTypes;
 	}
-
+	
 	@Override
 	protected IContentAssistProcessor[] getContentAssistProcessors(ISourceViewer sourceViewer, String partitionType) {
-																   IContentAssistProcessor[] processors = null;
-																   
-	     
-	     
-																   
-			if ( partitionType == IJSPPartitions.JSP_CONTENT_JAVA ){
-				//processors = new IContentAssistProcessor[] { new JSPJavaContentAssistProcessor() };
-				//processors = new IContentAssistProcessor[] {  new JSPContentAssistProcessor()};
-				processors = new IContentAssistProcessor[] { new JSDTContentAssistant() };
-			}
-			
-//		if ((partitionType == IXMLPartitions.XML_CDATA)
-//				|| (partitionType == IJSPPartitions.JSP_CONTENT_JAVA)) {
-//		
-//			
-//			processors = new IContentAssistProcessor[] { new JSPJavaContentAssistProcessor() };
-//
-//		} else if (partitionType == ICSSPartitions.STYLE) {
-//			// HTML CSS
-//			IContentAssistant htmlContentAssistant = getHTMLSourceViewerConfiguration()
-//					.getContentAssistant(sourceViewer);
-//			IContentAssistProcessor processor = htmlContentAssistant
-//					.getContentAssistProcessor(ICSSPartitions.STYLE);
-//			processors = new IContentAssistProcessor[] { processor };
-//		} else if ((partitionType == IXMLPartitions.XML_DEFAULT)
-//				|| (partitionType == IHTMLPartitions.HTML_DEFAULT)
-//				|| (partitionType == IHTMLPartitions.HTML_COMMENT)) {
-//			// jsp
-//			processors = new IContentAssistProcessor[] { new JSPContentAssistProcessor() };
-//		}
-//
-//		else if (partitionType == IStructuredPartitions.UNKNOWN_PARTITION) {
-//			// unknown
-//			processors = new IContentAssistProcessor[] { new NoRegionContentAssistProcessorForJSP() };
-//		}
-//
+		IContentAssistProcessor[] processors = null;
+		
+		if (partitionType == IJSPPartitions.JSP_CONTENT_JAVA) {
+			// processors = new IContentAssistProcessor[] { new
+			// JSPJavaContentAssistProcessor() };
+			// processors = new IContentAssistProcessor[] { new
+			// JSPContentAssistProcessor()};
+			processors = new IContentAssistProcessor[] { new JSDTContentAssistant() };
+		}
+		
+		// if ((partitionType == IXMLPartitions.XML_CDATA)
+		// || (partitionType == IJSPPartitions.JSP_CONTENT_JAVA)) {
+		//		
+		//			
+		// processors = new IContentAssistProcessor[] { new
+		// JSPJavaContentAssistProcessor() };
+		//
+		// } else if (partitionType == ICSSPartitions.STYLE) {
+		// // HTML CSS
+		// IContentAssistant htmlContentAssistant =
+		// getHTMLSourceViewerConfiguration()
+		// .getContentAssistant(sourceViewer);
+		// IContentAssistProcessor processor = htmlContentAssistant
+		// .getContentAssistProcessor(ICSSPartitions.STYLE);
+		// processors = new IContentAssistProcessor[] { processor };
+		// } else if ((partitionType == IXMLPartitions.XML_DEFAULT)
+		// || (partitionType == IHTMLPartitions.HTML_DEFAULT)
+		// || (partitionType == IHTMLPartitions.HTML_COMMENT)) {
+		// // jsp
+		// processors = new IContentAssistProcessor[] { new
+		// JSPContentAssistProcessor() };
+		// }
+		//
+		// else if (partitionType == IStructuredPartitions.UNKNOWN_PARTITION) {
+		// // unknown
+		// processors = new IContentAssistProcessor[] { new
+		// NoRegionContentAssistProcessorForJSP() };
+		// }
+		//
 		return processors;
 	}
-
+	
 	@Override
 	public IContentFormatter getContentFormatter(ISourceViewer sourceViewer) {
-		MultiPassContentFormatter formatter = new MultiPassContentFormatter(
-				getConfiguredDocumentPartitioning(sourceViewer),
-				IXMLPartitions.XML_DEFAULT);
-//
-//		formatter.setMasterStrategy(new StructuredFormattingStrategy(
-//				new HTMLFormatProcessorImpl()));
-		formatter.setSlaveStrategy(new FormattingStrategyJSPJava(),
-				IJSPPartitions.JSP_CONTENT_JAVA);
-
+		ContentFormatter formatter = new ContentFormatter();
+		
+		//
+		// formatter.setMasterStrategy(new StructuredFormattingStrategy(
+		// new HTMLFormatProcessorImpl()));
+		formatter.setFormattingStrategy(new FormattingStrategyJSPJava(), IJSPPartitions.JSP_CONTENT_JAVA);
+		
 		return formatter;
 	}
 
+	
 	@Override
-	public ITextDoubleClickStrategy getDoubleClickStrategy(
-			ISourceViewer sourceViewer, String contentType) {
+	public ITextDoubleClickStrategy getDoubleClickStrategy(ISourceViewer sourceViewer, String contentType) {
 		ITextDoubleClickStrategy strategy = null;
-
-		if (contentType ==IJSPPartitions.JSP_CONTENT_JAVA) {
+		
+		if (contentType == IJSPPartitions.JSP_CONTENT_JAVA) {
 			// JSP Java or JSP JavaScript
-			strategy = getJavaSourceViewerConfiguration()
-					.getDoubleClickStrategy(sourceViewer, contentType);
-		}	
+			strategy = getJavaSourceViewerConfiguration().getDoubleClickStrategy(sourceViewer, contentType);
+		}
 		// html or javascript
-//		if (contentType == IHTMLPartitions.HTML_DEFAULT) {
-//			strategy = getHTMLSourceViewerConfiguration()
-//					.getDoubleClickStrategy(sourceViewer, contentType);
-//		} else if (contentType == IJSPPartitions.JSP_CONTENT_JAVA) {
-//			// JSP Java or JSP JavaScript
-//			strategy = getJavaSourceViewerConfiguration()
-//					.getDoubleClickStrategy(sourceViewer, contentType);
-//		} else {
-//			strategy = super.getDoubleClickStrategy(sourceViewer, contentType);
-//		}
-
+		// if (contentType == IHTMLPartitions.HTML_DEFAULT) {
+		// strategy = getHTMLSourceViewerConfiguration()
+		// .getDoubleClickStrategy(sourceViewer, contentType);
+		// } else if (contentType == IJSPPartitions.JSP_CONTENT_JAVA) {
+		// // JSP Java or JSP JavaScript
+		// strategy = getJavaSourceViewerConfiguration()
+		// .getDoubleClickStrategy(sourceViewer, contentType);
+		// } else {
+		// strategy = super.getDoubleClickStrategy(sourceViewer, contentType);
+		// }
+		
 		return strategy;
 	}
-
-//	private StructuredTextViewerConfiguration getHTMLSourceViewerConfiguration() {
-//		if (fHTMLSourceViewerConfiguration == null) {
-//			fHTMLSourceViewerConfiguration = new StructuredTextViewerConfigurationHTML();
-//		}
-//		return fHTMLSourceViewerConfiguration;
-//	}
-
+	
+	// private StructuredTextViewerConfiguration
+	// getHTMLSourceViewerConfiguration() {
+	// if (fHTMLSourceViewerConfiguration == null) {
+	// fHTMLSourceViewerConfiguration = new
+	// StructuredTextViewerConfigurationHTML();
+	// }
+	// return fHTMLSourceViewerConfiguration;
+	// }
+	
 	@Override
 	public IHyperlinkDetector[] getHyperlinkDetectors(ISourceViewer sourceViewer) {
-	
+		
 		if (fPreferenceStore == null) {
 			return null;
 		}
-		if (sourceViewer == null
-				|| !fPreferenceStore
-						.getBoolean(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_HYPERLINKS_ENABLED)) {
+		if (sourceViewer == null || !fPreferenceStore.getBoolean(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_HYPERLINKS_ENABLED)) {
 			return null;
 		}
-
+		
 		List allDetectors = new ArrayList(0);
 		allDetectors.add(new JSPJavaHyperlinkDetector());
 		// allDetectors.add(new TaglibHyperlinkDetector());
-//				allDetectors.add(new XMLHyperlinkDetector());
-//
-//		IHyperlinkDetector[] superDetectors = super
-//				.getHyperlinkDetectors(sourceViewer);
-//		for (int m = 0; m < superDetectors.length; m++) {
-//			IHyperlinkDetector detector = superDetectors[m];
-//			if (!allDetectors.contains(detector)) {
-//				allDetectors.add(detector);
-//			}
-//		}
-		return (IHyperlinkDetector[]) allDetectors
-				.toArray(new IHyperlinkDetector[0]);
+		// allDetectors.add(new XMLHyperlinkDetector());
+		//
+		// IHyperlinkDetector[] superDetectors = super
+		// .getHyperlinkDetectors(sourceViewer);
+		// for (int m = 0; m < superDetectors.length; m++) {
+		// IHyperlinkDetector detector = superDetectors[m];
+		// if (!allDetectors.contains(detector)) {
+		// allDetectors.add(detector);
+		// }
+		// }
+		return (IHyperlinkDetector[]) allDetectors.toArray(new IHyperlinkDetector[0]);
 	}
-
+	
 	@Override
 	public String[] getIndentPrefixes(ISourceViewer sourceViewer, String contentType) {
 		String[] indentations = null;
-
-//		if (contentType == IXMLPartitions.XML_DEFAULT) {
-//			indentations = getXMLSourceViewerConfiguration().getIndentPrefixes(
-//					sourceViewer, contentType);
-//		} else {
-//			indentations = getHTMLSourceViewerConfiguration()
-//					.getIndentPrefixes(sourceViewer, contentType);
-//		}
-
+		
+		// if (contentType == IXMLPartitions.XML_DEFAULT) {
+		// indentations = getXMLSourceViewerConfiguration().getIndentPrefixes(
+		// sourceViewer, contentType);
+		// } else {
+		// indentations = getHTMLSourceViewerConfiguration()
+		// .getIndentPrefixes(sourceViewer, contentType);
+		// }
+		
 		return indentations;
 	}
-
+	
 	@Override
 	protected IInformationProvider getInformationProvider(ISourceViewer sourceViewer, String partitionType) {
 		IInformationProvider provider = null;
-//		if (partitionType == IHTMLPartitions.HTML_DEFAULT) {
-//			// HTML
-//			IInformationPresenter htmlPresenter = getHTMLSourceViewerConfiguration()
-//					.getInformationPresenter(sourceViewer);
-//			provider = htmlPresenter
-//					.getInformationProvider(IHTMLPartitions.HTML_DEFAULT);
-//		}
-//
-//		else if (partitionType == IXMLPartitions.XML_DEFAULT) {
-//			// XML
-//			IInformationPresenter xmlPresenter = getXMLSourceViewerConfiguration()
-//					.getInformationPresenter(sourceViewer);
-//			provider = xmlPresenter
-//					.getInformationProvider(IXMLPartitions.XML_DEFAULT);
-//		}
-//
-//		else 
-		if (partitionType==IJSPPartitions.JSP_CONTENT_JAVA){
+		// if (partitionType == IHTMLPartitions.HTML_DEFAULT) {
+		// // HTML
+		// IInformationPresenter htmlPresenter =
+		// getHTMLSourceViewerConfiguration()
+		// .getInformationPresenter(sourceViewer);
+		// provider = htmlPresenter
+		// .getInformationProvider(IHTMLPartitions.HTML_DEFAULT);
+		// }
+		//
+		// else if (partitionType == IXMLPartitions.XML_DEFAULT) {
+		// // XML
+		// IInformationPresenter xmlPresenter =
+		// getXMLSourceViewerConfiguration()
+		// .getInformationPresenter(sourceViewer);
+		// provider = xmlPresenter
+		// .getInformationProvider(IXMLPartitions.XML_DEFAULT);
+		// }
+		//
+		// else
+		if (partitionType == IJSPPartitions.JSP_CONTENT_JAVA) {
 			// JSP java
 			provider = new JSPJavaJavadocInformationProvider();
 		}
 		return provider;
 	}
-
+	
 	private JavaSourceViewerConfiguration getJavaSourceViewerConfiguration() {
 		if (fJavaSourceViewerConfiguration == null) {
 			IPreferenceStore store = PreferenceConstants.getPreferenceStore();
@@ -381,103 +381,92 @@ public class StructuredTextViewerConfigurationJSP extends
 			 * this is okay because editor is not needed in the cases we are
 			 * using javasourceviewerconfiguration.
 			 */
-			fJavaSourceViewerConfiguration = new JavaSourceViewerConfiguration(
-					JavaUI.getColorManager(), store, null,
-					IJavaPartitions.JAVA_PARTITIONING);
+			fJavaSourceViewerConfiguration = new JavaSourceViewerConfiguration(JavaUI.getColorManager(), store, null, IJavaPartitions.JAVA_PARTITIONING);
 		}
 		return fJavaSourceViewerConfiguration;
 	}
-
+	
 	@Override
 	public LineStyleProvider[] getLineStyleProviders(ISourceViewer sourceViewer, String partitionType) {
 		
 		LineStyleProvider[] providers = null;
-
-//		if (partitionType == IHTMLPartitions.HTML_DEFAULT
-//				|| partitionType == IHTMLPartitions.HTML_COMMENT
-//				|| partitionType == IHTMLPartitions.HTML_DECLARATION) {
-//			providers = getHTMLSourceViewerConfiguration()
-//					.getLineStyleProviders(sourceViewer,
-//							IHTMLPartitions.HTML_DEFAULT);
-//		}
-//
-//		else if (partitionType == ICSSPartitions.STYLE) {
-//			providers = getHTMLSourceViewerConfiguration()
-//					.getLineStyleProviders(sourceViewer, ICSSPartitions.STYLE);
-//		} else if (partitionType == IXMLPartitions.XML_DEFAULT
-//				|| partitionType == IXMLPartitions.XML_CDATA
-//				|| partitionType == IXMLPartitions.XML_COMMENT
-//				|| partitionType == IXMLPartitions.XML_DECLARATION
-//				|| partitionType == IXMLPartitions.XML_PI) {
-//			providers = getXMLSourceViewerConfiguration()
-//					.getLineStyleProviders(sourceViewer,
-//							IXMLPartitions.XML_DEFAULT);
-//		} else 
+		
+		// if (partitionType == IHTMLPartitions.HTML_DEFAULT
+		// || partitionType == IHTMLPartitions.HTML_COMMENT
+		// || partitionType == IHTMLPartitions.HTML_DECLARATION) {
+		// providers = getHTMLSourceViewerConfiguration()
+		// .getLineStyleProviders(sourceViewer,
+		// IHTMLPartitions.HTML_DEFAULT);
+		// }
+		//
+		// else if (partitionType == ICSSPartitions.STYLE) {
+		// providers = getHTMLSourceViewerConfiguration()
+		// .getLineStyleProviders(sourceViewer, ICSSPartitions.STYLE);
+		// } else if (partitionType == IXMLPartitions.XML_DEFAULT
+		// || partitionType == IXMLPartitions.XML_CDATA
+		// || partitionType == IXMLPartitions.XML_COMMENT
+		// || partitionType == IXMLPartitions.XML_DECLARATION
+		// || partitionType == IXMLPartitions.XML_PI) {
+		// providers = getXMLSourceViewerConfiguration()
+		// .getLineStyleProviders(sourceViewer,
+		// IXMLPartitions.XML_DEFAULT);
+		// } else
 		if (partitionType == IJSPPartitions.JSP_CONTENT_JAVA) {
 			providers = new LineStyleProvider[] { getLineStyleProviderForJava() };
 		}
-
+		
 		return providers;
 	}
-
+	
 	private LineStyleProvider getLineStyleProviderForJava() {
 		if (fLineStyleProviderForJava == null) {
 			fLineStyleProviderForJava = new LineStyleProviderForJava();
 		}
 		return fLineStyleProviderForJava;
 	}
-
+	
 	@Override
-	public ITextHover getTextHover(ISourceViewer sourceViewer,
-			String contentType, int stateMask) {
+	public ITextHover getTextHover(ISourceViewer sourceViewer, String contentType, int stateMask) {
 		ITextHover hover = null;
-
-//		if (contentType == IHTMLPartitions.HTML_DEFAULT) {
-//			// html and javascript regions
-//			hover = getHTMLSourceViewerConfiguration().getTextHover(
-//					sourceViewer, contentType, stateMask);
-//		} else if (contentType == IXMLPartitions.XML_DEFAULT) {
-//			// xml regions
-//			hover = getXMLSourceViewerConfiguration().getTextHover(
-//					sourceViewer, contentType, stateMask);
-//		} else 
-		if (contentType==IJSPPartitions.JSP_CONTENT_JAVA) {
-			TextHoverManager manager = SSEUIPlugin.getDefault()
-					.getTextHoverManager();
-			TextHoverManager.TextHoverDescriptor[] hoverDescs = manager
-					.getTextHovers();
+		
+		// if (contentType == IHTMLPartitions.HTML_DEFAULT) {
+		// // html and javascript regions
+		// hover = getHTMLSourceViewerConfiguration().getTextHover(
+		// sourceViewer, contentType, stateMask);
+		// } else if (contentType == IXMLPartitions.XML_DEFAULT) {
+		// // xml regions
+		// hover = getXMLSourceViewerConfiguration().getTextHover(
+		// sourceViewer, contentType, stateMask);
+		// } else
+		if (contentType == IJSPPartitions.JSP_CONTENT_JAVA) {
+			TextHoverManager manager = SSEUIPlugin.getDefault().getTextHoverManager();
+			TextHoverManager.TextHoverDescriptor[] hoverDescs = manager.getTextHovers();
 			int i = 0;
 			while (i < hoverDescs.length && hover == null) {
-				if (hoverDescs[i].isEnabled()
-						&& EditorUtility.computeStateMask(hoverDescs[i]
-								.getModifierString()) == stateMask) {
+				if (hoverDescs[i].isEnabled() && EditorUtility.computeStateMask(hoverDescs[i].getModifierString()) == stateMask) {
 					String hoverType = hoverDescs[i].getId();
-					if (TextHoverManager.COMBINATION_HOVER
-							.equalsIgnoreCase(hoverType)) {
-
-						hover = manager
-								.createBestMatchHover(new JSPJavaJavadocHoverProcessor());
-
-					} else if (TextHoverManager.DOCUMENTATION_HOVER
-							.equalsIgnoreCase(hoverType)) {
-
+					if (TextHoverManager.COMBINATION_HOVER.equalsIgnoreCase(hoverType)) {
+						
+						hover = manager.createBestMatchHover(new JSPJavaJavadocHoverProcessor());
+						
+					} else if (TextHoverManager.DOCUMENTATION_HOVER.equalsIgnoreCase(hoverType)) {
+						
 						hover = new JSPJavaJavadocHoverProcessor();
-
+						
 					}
 				}
 				i++;
 			}
 		}
-
+		
 		// no appropriate text hovers found, try super
 		if (hover == null) {
 			hover = super.getTextHover(sourceViewer, contentType, stateMask);
 		}
 		return hover;
-
+		
 	}
-
-
+	
 	private StructuredTextViewerConfiguration getXMLSourceViewerConfiguration() {
 		if (fXMLSourceViewerConfiguration == null) {
 			fXMLSourceViewerConfiguration = new StructuredTextViewerConfigurationXML();

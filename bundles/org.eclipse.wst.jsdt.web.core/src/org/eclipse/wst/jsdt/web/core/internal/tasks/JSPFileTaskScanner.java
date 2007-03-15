@@ -17,10 +17,7 @@ import org.eclipse.wst.xml.core.internal.tasks.XMLFileTaskScanner;
 
 public class JSPFileTaskScanner extends XMLFileTaskScanner {
 	@Override
-	protected boolean isCommentRegion(IStructuredDocumentRegion region,
-			ITextRegion textRegion) {
-		return super.isCommentRegion(region, textRegion)
-				|| textRegion.getType().equals(
-						DOMJSPRegionContexts.JSP_COMMENT_TEXT);
+	protected boolean isCommentRegion(IStructuredDocumentRegion region,ITextRegion textRegion) {
+		return super.isCommentRegion(region, textRegion);
 	}
 }

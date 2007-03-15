@@ -19,7 +19,9 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Stack;
+import java.util.Vector;
 
 import org.eclipse.core.filebuffers.FileBuffers;
 import org.eclipse.core.filebuffers.ITextFileBuffer;
@@ -75,12 +77,14 @@ public class JSPTranslator {
 	HashMap fJava2JspRanges = new HashMap();
 
 	StringBuffer fScriptText = new StringBuffer();
+	
+	List fGeneratedFunctionNames = new Vector();
 
 	/* the big string buffers curser position */
-	private int fCursorPosition = -1;
+	//private int fCursorPosition = -1;
 
 	/* Buffer where the cursor is */
-	private StringBuffer fCursorOwner = null; // the buffer where the cursor
+	//private StringBuffer fCursorOwner = null; // the buffer where the cursor
 	// is
 
 	private int scriptOffset = 0;
@@ -90,8 +94,7 @@ public class JSPTranslator {
 	private static final boolean DEBUG_SAVE_OUTPUT = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.jsdt.web.core/debug/jsptranslationstodisk")); //$NON-NLS-1$  //$NON-NLS-2$
 
 	static {
-		String value = Platform
-				.getDebugOption("org.eclipse.wst.jsdt.web.core/debug/jspjavamapping"); //$NON-NLS-1$
+		String value = Platform.getDebugOption("org.eclipse.wst.jsdt.web.core/debug/jspjavamapping"); //$NON-NLS-1$
 		DEBUG = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
 	}
 
@@ -101,7 +104,7 @@ public class JSPTranslator {
 	private HashMap fImportRanges = new HashMap();
 
 	/** user defined imports */
-	private StringBuffer fUserImports = new StringBuffer();
+	//private StringBuffer fUserImports = new StringBuffer();
 
 	private StringBuffer fResult; // the final traslated java document
 	// string buffer
@@ -111,7 +114,7 @@ public class JSPTranslator {
 	private IStructuredDocumentRegion fCurrentNode;
 
 	/** used to avoid infinite looping include files */
-	private Stack fIncludes = null;
+	//private Stack fIncludes = null;
 
 	private IProgressMonitor fProgressMonitor = null;
 
@@ -158,10 +161,6 @@ public class JSPTranslator {
 		if (className.length() > 0) {
 			setClassname(className);
 		}
-	}
-
-	/* Cursors source position */
-	final public void setSourceCursor(int i) {
 	}
 
 	/**
@@ -265,23 +264,21 @@ public class JSPTranslator {
 
 		// reinit fields
 
-		fCursorPosition = -1;
+		//fCursorPosition = -1;
 
-		fUserImports = new StringBuffer();
+		//fUserImports = new StringBuffer();
 		fScriptText = new StringBuffer();
 
 		fResult = null;
 
 		fCurrentNode = null;
 
-		if (fIncludes != null) {
-			fIncludes.clear();
-		}
 		fJava2JspRanges.clear();
 		fImportRanges.clear();
 		fJsContentRanges.clear();
 
 		fJspTextBuffer = new StringBuffer();
+		fGeneratedFunctionNames.clear();
 
 	}
 
@@ -329,24 +326,24 @@ public class JSPTranslator {
 
 		// user imports
 		updateRanges(fImportRanges, javaOffset);
-		append(fUserImports);
-		javaOffset += fUserImports.length();
+		//append(fUserImports);
+		//javaOffset += fUserImports.length();
 
 		fJava2JspRanges.putAll(fJsContentRanges);
-		fJava2JspRanges.putAll(fImportRanges);
+		//fJava2JspRanges.putAll(fImportRanges);
 
 	}
 
-	final public StringBuffer getCursorOwner() {
-		return fCursorOwner;
-	}
+//	final public StringBuffer getCursorOwner() {
+//		return fCursorOwner;
+//	}
 
 	protected void append(StringBuffer buf) {
 		/*
 		 * if (getCursorOwner() == buf) { fCursorPosition = fResult.length() +
 		 * getRelativeOffset(); }
 		 */
-		fCursorPosition = fResult.length();
+		//fCursorPosition = fResult.length();
 
 		fResult.append(buf.toString());
 	}
@@ -407,7 +404,10 @@ public class JSPTranslator {
 		// Return nothing for now
 		return new HashMap();
 	}
-
+	
+	public List getFakeFunctionNames(){
+		return fGeneratedFunctionNames;
+	}
 	/**
 	 * Only valid after a configure(...), translate(...) or
 	 * translateFromFile(...) call
@@ -583,7 +583,8 @@ public class JSPTranslator {
 		NodeHelper nh = new NodeHelper(container);
 		// System.out.println("inline js node looking at:\n" + nh);
 		/* start a function header.. will amend later */
-		String header = "function " + "_" + nh.getElementAsFlatString();
+		String functionConstant = "function "; 
+		String header = "_" + nh.getElementAsFlatString();
 		String footer = "}";
 
 		/* Start looping through the region. May have mutlipel even attribs */
@@ -623,8 +624,11 @@ public class JSPTranslator {
 						String rawText = container.getText().substring(
 								r.getStart(), r.getTextEnd());
 
-						String newFunctionHeader = header + "_" + scriptOffset
+						String newFunctionHeader = functionConstant + header + "_" + scriptOffset
 								+ tagAttrname + "(){";
+						/* add functiont to invalid function name list */
+						fGeneratedFunctionNames.add(new String(header + "_" + scriptOffset + tagAttrname));
+						
 						String rawFunction = nh.stripEndQuotes(rawText);
 
 						/*
@@ -810,10 +814,6 @@ public class JSPTranslator {
 		return resultText;
 	}
 
-	private URIResolver getResolver() {
-		return (fStructuredModel != null) ? fStructuredModel.getResolver()
-				: null;
-	}
 
 	/**
 	 * @param r
@@ -858,9 +858,9 @@ public class JSPTranslator {
 		return (lengthBefore - lengthAfter + cdata_tags_length);
 	}
 
-	final public int getCursorPosition() {
-		return fCursorPosition;
-	}
+//	final public int getCursorPosition() {
+//		return fCursorPosition;
+//	}
 
 
 

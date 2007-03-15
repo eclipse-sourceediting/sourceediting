@@ -11,6 +11,7 @@
 package org.eclipse.wst.jsdt.web.core.internal.java;
 
 import org.eclipse.wst.jsdt.core.ICompilationUnit;
+import org.eclipse.wst.jsdt.core.IJavaProject;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.text.edits.CopySourceEdit;
 import org.eclipse.text.edits.CopyTargetEdit;
@@ -122,6 +123,10 @@ public class JSPTranslationUtil {
 		return fTranslation;
 	}
 
+	public IJavaProject getJavaProject(){
+		return getTranslation().getJavaProject();
+	}
+	
 	public ICompilationUnit getCompilationUnit() {
 		return getTranslation().getCompilationUnit();
 	}

@@ -92,8 +92,9 @@ public class JSDTContentAssistantProcessor extends AbstractContentAssistProcesso
                 
                 if (DEBUG) {
                     System.out.println("Cursor Location in Java Offset:" + fJavaPosition);
+                    System.out.println(debug(translation));
                 }
-                System.out.println(debug(translation));
+               
                 
                 try {
                     

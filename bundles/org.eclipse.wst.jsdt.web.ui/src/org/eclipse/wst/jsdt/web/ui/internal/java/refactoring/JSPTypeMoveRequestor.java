@@ -44,7 +44,7 @@ public class JSPTypeMoveRequestor extends BasicRefactorSearchRequestor {
 		// if it's an import or jsp:useBean, we need to add the package name as
 		// well
 		if (trans.isImport(javaMatch.getOffset())
-				|| trans.isUseBean(javaMatch.getOffset())
+			
 				|| isFullyQualified(matchText)) {
 			if (!getNewName().equals("")) {
 				// getNewName() is the pkg name

@@ -11,9 +11,12 @@
 package org.eclipse.wst.jsdt.web.ui.internal.taginfo;
 
 import java.io.Reader;
+import java.util.List;
+import java.util.Vector;
 
 import org.eclipse.wst.jsdt.core.IJavaElement;
 import org.eclipse.wst.jsdt.core.IMember;
+import org.eclipse.wst.jsdt.core.IMethod;
 import org.eclipse.wst.jsdt.core.JavaModelException;
 import org.eclipse.wst.jsdt.ui.JavaElementLabels;
 import org.eclipse.wst.jsdt.ui.JavadocContentAccess;
@@ -118,11 +121,31 @@ public class JSPJavaJavadocHoverProcessor extends AbstractHoverProcessor {
 				if (adapter != null) {
 					JSPTranslation translation = adapter.getJSPTranslation();
 
-					IJavaElement[] result = translation
-							.getElementsFromJspRange(hoverRegion.getOffset(),
-									hoverRegion.getOffset()
-											+ hoverRegion.getLength());
-					return translation.fixupMangledName(getHoverInfo(result));
+					IJavaElement[] result = translation	.getElementsFromJspRange(hoverRegion.getOffset(),hoverRegion.getOffset()+ hoverRegion.getLength());
+					
+					Vector filteredResults = new Vector();
+					List badFunctions = translation.getGeneratedFunctionNames();
+					boolean bad = false;
+					for(int i = 0;i<result.length;i++){
+						bad=false;
+						if(result[i] instanceof IMethod){
+							for(int j=0;j<badFunctions.size() && ! bad;j++){
+								if(((IMethod)result[i]).getElementName().equalsIgnoreCase((String)badFunctions.get(j))){
+									bad=true;
+									continue;
+								}
+							}
+						 if(!bad)filteredResults.add(result[i]);
+						}
+					}
+					if(filteredResults.size()<1) return new String();
+					
+					String filteredResult = translation.fixupMangledName(getHoverInfo((IJavaElement[])filteredResults.toArray(new IJavaElement[]{})));
+					for(int i = 0;i<badFunctions.size();i++){
+						filteredResult.replace((String)badFunctions.get(i), "");
+					}
+					return filteredResult;
+					//return getHoverInfo(result);
 				}
 			}
 		} finally {

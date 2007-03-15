@@ -64,9 +64,7 @@ public class JSPTranslation implements IJSPTranslation {
 
 	// for debugging
 	private static final boolean DEBUG;
-	static {
-		String value = Platform
-				.getDebugOption("org.eclipse.wst.jsdt.web.core/debug/jsptranslation"); //$NON-NLS-1$
+	static {String value = Platform.getDebugOption("org.eclipse.wst.jsdt.web.core/debug/jsptranslation"); //$NON-NLS-1$
 		DEBUG = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
 	}
 
@@ -76,13 +74,7 @@ public class JSPTranslation implements IJSPTranslation {
 	private HashMap fJava2JspMap = null;
 	private HashMap fJsp2JavaMap = null;
 	private HashMap fJava2JspImportsMap = null;
-	/*
-	 * private HashMap fJava2JspUseBeanMap = null; private HashMap
-	 * fJava2JspIndirectMap = null;
-	 */
-
-	// don't want to hold onto model (via translator)
-	// all relevant info is extracted in the constructor.
+	private List fGeneratedFunctionNames = null;
 	private JSPTranslator fTranslator = null;
 	private String fJavaText = ""; //$NON-NLS-1$
 	private String fJspText = ""; //$NON-NLS-1$
@@ -100,8 +92,6 @@ public class JSPTranslation implements IJSPTranslation {
 		fLock = new byte[0];
 		fJavaProject = javaProj;
 		fTranslator = translator;
-
-		// can be null if it's an empty document (w/ NullJSPTranslation)
 		if (translator != null) {
 			fJavaText = translator.getTranslation().toString();
 			fJspText = translator.getJspText();
@@ -109,10 +99,10 @@ public class JSPTranslation implements IJSPTranslation {
 			fJava2JspMap = translator.getJava2JspRanges();
 			fJsp2JavaMap = translator.getJsp2JavaRanges();
 			fJava2JspImportsMap = translator.getJava2JspImportRanges();
-			// fJava2JspUseBeanMap = translator.getJava2JspUseBeanRanges();
+			fGeneratedFunctionNames = translator.getFakeFunctionNames();
+		
 			// fJava2JspIndirectMap = translator.getJava2JspIndirectRanges();
 		}
-
 	}
 
 	/*
@@ -135,12 +125,10 @@ public class JSPTranslation implements IJSPTranslation {
 	 * @see org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslation_Interface#getJavaText()
 	 */
 	public String getJavaText() {
-		System.out.println("JSPTranslation.getJavaText():\n" + fJavaText
-				+ "-----------");
-		return (fTranslator != null) ? fTranslator.getTranslation().toString()
-				: ""; //$NON-NLS-1$ 
+	
+		//return (fTranslator != null) ? fTranslator.getTranslation().toString(): ""; //$NON-NLS-1$ 
 
-		// return fJavaText;
+		return fJavaText;
 	}
 
 	/*
@@ -149,10 +137,10 @@ public class JSPTranslation implements IJSPTranslation {
 	 * @see org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslation_Interface#getJspText()
 	 */
 	public String getJspText() {
-		return (fTranslator != null) ? fTranslator.getJspText() : ""; //$NON-NLS-1$
+		//return (fTranslator != null) ? fTranslator.getJspText() : ""; //$NON-NLS-1$
 		// System.out.println("JSPTranslation.getJspText():\n" + fJspText +
 		// "-----------");
-		// return fJspText;
+		 return fJspText;
 	}
 
 	/*
@@ -416,6 +404,9 @@ public class JSPTranslation implements IJSPTranslation {
 		fJspName = jspName;
 	}
 
+	public List getGeneratedFunctionNames(){
+		return fGeneratedFunctionNames;
+	}
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -427,10 +418,6 @@ public class JSPTranslation implements IJSPTranslation {
 			return null;
 		}
 
-		if (getJspName() == null || getMangledName() == null) {
-			// names not set yet
-			
-		}
 		return displayString.replaceAll(getMangledName(), getJspName());
 	}
 	
@@ -448,14 +435,7 @@ public class JSPTranslation implements IJSPTranslation {
         }
         return range;
     }
-    
-	private void initJspAndServletNames() {
-		ICompilationUnit cu = getCompilationUnit();
-		if (cu != null) {
-			String cuName = null;
 
-		}
-	}
 
 	/**
 	 * Originally from ReconcileStepForJava. Creates an ICompilationUnit from
@@ -479,8 +459,7 @@ public class JSPTranslation implements IJSPTranslation {
 
 		case IJavaElement.PACKAGE_FRAGMENT_ROOT:
 			IPackageFragmentRoot packageFragmentRoot = (IPackageFragmentRoot) je;
-			packageFragment = packageFragmentRoot
-					.getPackageFragment(IPackageFragmentRoot.DEFAULT_PACKAGEROOT_PATH);
+			packageFragment = packageFragmentRoot.getPackageFragment(IPackageFragmentRoot.DEFAULT_PACKAGEROOT_PATH);
 			break;
 
 		case IJavaElement.JAVA_PROJECT:
@@ -498,8 +477,7 @@ public class JSPTranslation implements IJSPTranslation {
 			// packageFragmentRoot=JavaModelUtil.getPackageFragmentRoot(jProject);
 			// IPackageFragmentRoot[] packageFragmentRoots =
 			// jProject.getPackageFragmentRoots();
-			packageFragmentRoot = jProject.getPackageFragmentRoot(jProject
-					.getUnderlyingResource());
+			packageFragmentRoot = jProject.getPackageFragmentRoot(jProject.getUnderlyingResource());
 			if (packageFragmentRoot instanceof ICompilationUnit) {
 				return (ICompilationUnit) packageFragmentRoot;
 			}
@@ -615,16 +593,6 @@ public class JSPTranslation implements IJSPTranslation {
 		return problems != null ? problems : new ArrayList();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslation_Interface#getELProblems()
-	 */
-	public List getELProblems() {
-		System.out.println("Remove JSPTranslation.getELProblems()");
-		return null;
-		// return fELProblems != null ? fELProblems : new ArrayList();
-	}
 
 	/*
 	 * (non-Javadoc)
@@ -694,43 +662,41 @@ public class JSPTranslation implements IJSPTranslation {
 	 * @see org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslation_Interface#getElementsFromJspRange(int,
 	 *      int)
 	 */
-//	public IJavaElement[] getElementsFromJspRange(int jspStart, int jspEnd) {
-//     
-//		int javaPositionStart = getJavaOffset(jspStart);
-//		int javaPositionEnd = getJavaOffset(jspEnd);
-//
-//		IJavaElement[] EMTPY_RESULT_SET = new IJavaElement[0];
-//		IJavaElement[] result = EMTPY_RESULT_SET;
-//		try {
-//			ICompilationUnit cu = getCompilationUnit();
-//            // cu.makeConsistent(getProgressMonitor());
-//             //cu.reconcile(ICompilationUnit.NO_AST, true, getWorkingCopyOwner(), getProgressMonitor());
-//			if (cu != null) {
-//				synchronized (cu) {
-//					int cuDocLength = cu.getBuffer().getLength();
-//					int javaLength = javaPositionEnd - javaPositionStart;
-//					if (cuDocLength > 0 && javaPositionStart >= 0
-//							&& javaLength >= 0 && javaPositionEnd <= cuDocLength) {
-//					      
-//						result = cu.codeSelect(javaPositionStart, javaLength,getWorkingCopyOwner());
-//                        
-//					}
-//				}
-//			}
-//
-//			if (result == null || result.length == 0) {
-//				return EMTPY_RESULT_SET;
-//			}
-//		} catch (JavaModelException x) {
-//			Logger.logException(x);
-//		}
-//
-//		return result;
-//	}
-    public IJavaElement[] getElementsFromJspRange(int jspStart, int jspEnd){
-        return getElementsFromJspRange(jspStart,jspEnd,false);
-    }
-    public IJavaElement[] getElementsFromJspRange(int jspStart, int jspEnd,boolean precise) {
+	public IJavaElement[] getElementsFromJspRange(int jspStart, int jspEnd) {
+     
+		int javaPositionStart = getJavaOffset(jspStart);
+		int javaPositionEnd = getJavaOffset(jspEnd);
+
+		IJavaElement[] EMTPY_RESULT_SET = new IJavaElement[0];
+		IJavaElement[] result = EMTPY_RESULT_SET;
+		try {
+			ICompilationUnit cu = getCompilationUnit();
+            // cu.makeConsistent(getProgressMonitor());
+             //cu.reconcile(ICompilationUnit.NO_AST, true, getWorkingCopyOwner(), getProgressMonitor());
+			if (cu != null) {
+				synchronized (cu) {
+					int cuDocLength = cu.getBuffer().getLength();
+					int javaLength = javaPositionEnd - javaPositionStart;
+					if (cuDocLength > 0 && javaPositionStart >= 0
+							&& javaLength >= 0 && javaPositionEnd <= cuDocLength) {
+					      
+						result = cu.codeSelect(javaPositionStart, javaLength,getWorkingCopyOwner());
+                        
+					}
+				}
+			}
+
+			if (result == null || result.length == 0) {
+				return EMTPY_RESULT_SET;
+			}
+		} catch (JavaModelException x) {
+			Logger.logException(x);
+		}
+
+		return result;
+	}
+
+    public IJavaElement[] getAllElementsFromJspRange(int jspStart, int jspEnd) {
          
         int javaPositionStart = getJavaOffset(jspStart);
         int javaPositionEnd = getJavaOffset(jspEnd);
@@ -746,8 +712,6 @@ public class JSPTranslation implements IJSPTranslation {
             try {
                 allChildren = cu.getChildren();
             } catch (JavaModelException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
             }
         }
         
@@ -756,11 +720,11 @@ public class JSPTranslation implements IJSPTranslation {
         for(int i = 0;i< allChildren.length;i++ ){
             if(allChildren[i] instanceof IJavaElement && allChildren[i].getElementType()!= IJavaElement.PACKAGE_DECLARATION){
                 ISourceRange range = getJSSourceRangeOf((IJavaElement)allChildren[i]);
-                if(precise && javaPositionStart<=range.getOffset()  &&  range.getLength()+range.getOffset() <= (javaPositionEnd)){
+                if(javaPositionStart<=range.getOffset()  &&  range.getLength()+range.getOffset() <= (javaPositionEnd)){
                 //if(precise && range.getOffset()>=javaPo  &&  range.getLength()+range.getOffset() <= (javaPositionEnd)){
                     validChildren.add(allChildren[i]);
-                }else if(!precise && range.getOffset()<=javaPositionStart && ((range.getOffset() + range.getLength())>= javaPositionEnd)){
-                    validChildren.add(allChildren[i]);
+                //}else if(!precise && range.getOffset()<=javaPositionStart && ((range.getOffset() + range.getLength())>= javaPositionEnd)){
+                 //   validChildren.add(allChildren[i]);
                 }
             }
         }

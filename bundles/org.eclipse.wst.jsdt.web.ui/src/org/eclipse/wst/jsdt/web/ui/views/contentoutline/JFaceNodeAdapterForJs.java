@@ -46,10 +46,6 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
         super(adapterFactory);   
     }
 
-    private StandardJavaElementContentProvider fJavaElementProvider;
-    private JavaElementLabelProvider           fJavaElementLabelProvider;
-    //private Hashtable                           parents = new Hashtable();
-    
     public Object[] getChildren(Object object) {
         if(object instanceof IJavaElement) return getJavaElementProvider().getChildren(object);
             Node node = (Node) object;
@@ -62,15 +58,7 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
   
     public Object[] getElements(Object object) {
         if(object instanceof IJavaElement) return getJavaElementProvider().getElements(object);
-//        if(parents.contains(object)){
-//           NodeList list= ((Node)parents.get(object)).getChildNodes();
-//           Object obj[] = new Object[list.getLength()];
-//           for(int i = 0;i<list.getLength();i++){
-//               obj[i] = list.item(i);
-//           }
-//           return obj;
-//        }
-         return super.getElements(object);
+        return super.getElements(object);
     }
 
     
@@ -90,10 +78,7 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
     }
 
     public Object getParent(Object element) {
-        
-//        if(parents.contains(element)){
-//            return  ((Node)parents.get(element));
-//        }
+  
         if(element instanceof IJavaElement) return getJavaElementProvider().getParent(element);
         return super.getParent(element);
     }
@@ -102,15 +87,10 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
         if(object instanceof IJavaElement) return getJavaElementProvider().hasChildren(object);
        
         Node node = (Node) object;
-        
         if ( isJSElementParent(node) ) {
-           // if(parents.contains(node)) return true;
-            
             Object[] nodes = getJSElementsFromNode(node.getFirstChild());
-            
-            return (nodes != null && nodes.length > 0);
+             return (nodes != null && nodes.length > 0);
         }
-        
         return super.hasChildren(object);
     }
     
@@ -159,7 +139,7 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
                 startOffset = ((NodeImpl) node).getStartOffset();
                 endOffset = ((NodeImpl) node).getEndOffset();
                 
-                result = translation.getElementsFromJspRange(startOffset, endOffset,true);
+                result = translation.getAllElementsFromJspRange(startOffset, endOffset);
                 
             }
             if (result == null)
@@ -172,8 +152,6 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
                         model.releaseFromRead();
                     }
             }
-            
-            
             Object[] newResults=new Object[result.length];
            
             for (int i = 0; i < result.length; i++) {
@@ -190,21 +168,12 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
               
                 
                 newResults[i] = getJsNode(node.getParentNode(), (IJavaElement)result[i], position, model.getFactoryRegistry());
-                //newResults[i] = new JavaNode(parent,result[i].getElementType(),result[i].getElementName(),htmloffset,htmllength);
-                //parents.put(result[i], node);
-                //parents.put(newResults[i], node);
-                
-                
-            }
+             }
             return newResults;
     }
     
     private Object getJsNode(Node parent, IJavaElement root, Position position, FactoryRegistry registry){
-        //JavaNode node = new JavaNode(parent,root.getElementType(),root.getElementName(),position.getOffset(), position.getLength());
-        //if(true) return node;
-        //if(true) return new JsElement(root);
         JsJfaceNode instance = new JsJfaceNode(parent, root, position);
-        
         ((JsJfaceNode)instance).setAdapterRegistry(registry);
         
         INodeAdapter adapter = ((JsJfaceNode)instance).getAdapterFor(IJFaceNodeAdapter.class);
@@ -214,48 +183,16 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
         }	
         return instance;
     }
-    public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-//        // TODO Auto-generated method stub
-//        System.out.println("Umiplement method inputChanged" );
-//        //super.inputChanged(viewer, oldInput, newInput);
-//        if(oldInput instanceof JSDTJfaceNode){
-//            if(newInput instanceof JSDTJfaceNode){
-//                super.inputChanged(viewer, oldInput, newInput);
-//            }
-//        }
-       
-       // if(oldInput!=null && parents.contains(oldInput)) parents.remove(oldInput);
-       // super.inputChanged(viewer, oldInput, newInput);
-        
-    }
-    
-    public ISelection getSelection(TreeViewer viewer, ISelection selection) {
-        
-        if (selection instanceof StructuredSelection) {
-            StructuredSelection ss = (StructuredSelection) selection;
-            if(ss==null) return null;
-            Object firstElement = ss.getFirstElement();
-            if (isJSElement(firstElement))
-                return new StructuredSelection(firstElement);
-            if (isJSElementParent((Node) firstElement))
-                return new StructuredSelection(getJSElementsFromNode(((Node) firstElement).getFirstChild()));
-        }
-        
-        return null;
-    }
+
     private StandardJavaElementContentProvider getJavaElementProvider() {
-        if (fJavaElementProvider == null) {
-            fJavaElementProvider = new StandardJavaElementContentProvider(true);
-        }
-        return fJavaElementProvider;
+
+        return new StandardJavaElementContentProvider(true);
         
     }
     
     private JavaElementLabelProvider getJavaElementLabelProvider() {
-        if (fJavaElementLabelProvider == null) {
-            fJavaElementLabelProvider = new JavaElementLabelProvider();
-        }
-        return fJavaElementLabelProvider;
+ 
+        return new JavaElementLabelProvider();
         
     }
 

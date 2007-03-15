@@ -83,7 +83,7 @@
     </extension>
 	-->
 	
-	
+	<!--
 	<extension point="org.eclipse.wst.sse.core.modelHandler">
 		<modelHandler
 			class="org.eclipse.wst.jsdt.web.core.internal.modelhandler.ModelHandlerForJSP"
@@ -99,7 +99,9 @@
 			id="org.eclipse.wst.jsdt.web.core.internal.modelhandler">
 		</modelHandler>
 	</extension>
+	-->
 	
+	<!--
 	<extension point="org.eclipse.wst.sse.core.embeddedTypeHandler">
 		<embeddedTypeHandler
 			class="org.eclipse.wst.html.core.internal.modelhandler.EmbeddedScript">
@@ -112,14 +114,14 @@
 			class="org.eclipse.wst.jsdt.web.core.internal.contentmodel.tld.CMDocumentFactoryTLD">
 		</factory>
 	</extension>
-
+	-->
 	<extension point="org.eclipse.wst.sse.core.taskscanner">
 		<scanner
 			id="org.eclipse.wst.jsdt.web.core.internal.tasks.JSPFileTaskScanner"
 			class="org.eclipse.wst.jsdt.web.core.internal.tasks.JSPFileTaskScanner"
 			contentTypeIds="org.eclipse.wst.html.core.htmlsource" />
 	</extension>
-
+	<!--
 	<extension
 		point="org.eclipse.core.filebuffers.documentCreation"
 		id="org.eclipse.wst.jsdt.web.core.documentfactories"
@@ -128,7 +130,8 @@
 			contentTypeId="org.eclipse.wst.html.core.htmlsource"
 			class="org.eclipse.wst.sse.core.internal.filebuffers.BasicStructuredDocumentFactory" />
 	</extension>
-
+	-->
+	<!--
 	<extension point="org.eclipse.team.core.fileTypes">
 		<fileTypes
 			type="text"
@@ -163,15 +166,18 @@
 			extension="js">
 		</fileTypes>
 	</extension>
+	-->
 	<extension point="org.eclipse.wst.sse.core.formatProcessors">
 		<processor
 			class="org.eclipse.wst.html.core.internal.format.HTMLFormatProcessorImpl"
 			contentTypeId="org.eclipse.wst.html.core.htmlsource">
 		</processor>
 	</extension>
-
+	<!--
 	<extension point="org.eclipse.core.runtime.contentTypes">
+	-->	
 		<!-- create content type for JSP files -->
+		<!--
 		<content-type
 			file-extensions="html,htm,xhtml,htpl,wml,shtml,shtm"
 			priority="high"
@@ -182,7 +188,9 @@
 			<describer
 				class="org.eclipse.wst.jsdt.web.core.internal.contenttype.ContentDescriberForJSP" />
 		</content-type>
+		-->
 		<!-- create content type for JSP fragment files -->
+		<!--
 		<content-type
 			file-extensions="js"
 			priority="high"
@@ -193,9 +201,10 @@
 			<describer
 				class="org.eclipse.wst.jsdt.web.core.internal.contenttype.ContentDescriberForJSP" />
 		</content-type>
-		
+		-->
+	<!--	
 	</extension>
-
+	-->
 	<!-- initialize jsp core preferences -->
 	<extension point="org.eclipse.core.runtime.preferences">
 		<initializer
@@ -244,6 +253,7 @@
   	<!--======================================================================================-->
 	<!-- minimal content-type css jsp support                                                 -->
 	<!-- ====================================================================================== -->
+    <!--
     <extension
          point="org.eclipse.core.runtime.contentTypes">
         <content-type
@@ -265,7 +275,8 @@
 				class="org.eclipse.wst.jsdt.web.css.core.internal.contenttype.ContentDescriberForJSPedCSS" />
 		</content-type>
 	</extension>
-
+	-->
+	<!--
 	<extension point="org.eclipse.wst.sse.core.modelHandler">
 		<modelHandler
 			class="org.eclipse.wst.jsdt.web.css.core.internal.modelhandler.ModelHandlerForJSPedCSS"
@@ -295,6 +306,7 @@
 			contentTypeId="org.eclipse.wst.jsdt.web.core.cssjspsource"
 			class="org.eclipse.wst.jsdt.web.css.core.internal.contentmodel.JSPedCSSTaglibController" />
 	</extension>
+	-->
 	<!--
 	<extension
 		point="org.eclipse.core.filebuffers.documentCreation"
