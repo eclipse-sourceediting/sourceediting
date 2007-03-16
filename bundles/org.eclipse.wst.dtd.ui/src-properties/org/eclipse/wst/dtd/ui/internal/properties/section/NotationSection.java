@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006 IBM Corporation and others.
+ * Copyright (c) 2006, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,15 +11,12 @@
  *******************************************************************************/
 package org.eclipse.wst.dtd.ui.internal.properties.section;
 
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
-import org.eclipse.swt.graphics.FontMetrics;
-import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.views.properties.tabbed.ITabbedPropertyConstants;
@@ -36,7 +33,6 @@ public class NotationSection extends AbstractSection {
 
 	private CLabel publicIdLabel;
 	private CLabel systemIdLabel;
-	private FontMetrics fFontMetrics;
 
 	public void doHandleEvent(Event event) {
 		if (event.widget == publicIdText) {
@@ -64,13 +60,14 @@ public class NotationSection extends AbstractSection {
 	public void createControls(Composite parent, TabbedPropertySheetWidgetFactory factory) {
 		super.createControls(parent, factory);
 		Composite composite = getWidgetFactory().createFlatFormComposite(parent);
-		FormData data;
 
 		// Create label first then attach other control to it
 		publicIdLabel = getWidgetFactory().createCLabel(composite, PUBLIC_ID);
-		initializeFontMetrics(publicIdLabel);
-		int labelWidth = getLabelWidth(publicIdLabel.getText());
-		data = new FormData(labelWidth, SWT.DEFAULT);
+
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=141106
+		Point p = publicIdLabel.computeSize(SWT.DEFAULT, SWT.DEFAULT, false);
+		int labelWidth = Math.max(p.x, 98);
+		FormData data = new FormData(labelWidth, SWT.DEFAULT);
 		data.left = new FormAttachment(0, 0);
 		data.top = new FormAttachment(0, 0);
 		publicIdLabel.setLayoutData(data);
@@ -86,7 +83,10 @@ public class NotationSection extends AbstractSection {
 
 		// Create label first then attach other control to it
 		systemIdLabel = getWidgetFactory().createCLabel(composite, SYSTEM_ID);
-		labelWidth = getLabelWidth(systemIdLabel.getText());
+
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=141106
+		p = systemIdLabel.computeSize(SWT.DEFAULT, SWT.DEFAULT, false);
+		labelWidth = Math.max(p.x, 98);
 		data = new FormData(labelWidth, SWT.DEFAULT);
 		data.left = new FormAttachment(0, 0);
 		data.top = new FormAttachment(publicIdLabel, +ITabbedPropertyConstants.VSPACE);
@@ -127,31 +127,5 @@ public class NotationSection extends AbstractSection {
 	 */
 	public boolean shouldUseExtraSpace() {
 		return false;
-	}
-
-	/**
-	 * Initilize font metrics
-	 * 
-	 * @param control
-	 */
-	private void initializeFontMetrics(Control control) {
-		GC gc = new GC(control);
-		gc.setFont(control.getFont());
-		fFontMetrics = gc.getFontMetrics();
-		gc.dispose();
-	}
-
-	/**
-	 * Determine appropriate label width
-	 * 
-	 * @param labelText
-	 * @return
-	 */
-	private int getLabelWidth(String labelText) {
-		int labelWidth = 98;
-
-		int pixels = Dialog.convertWidthInCharsToPixels(fFontMetrics, labelText.length() + 5);
-		labelWidth = Math.max(pixels, labelWidth);
-		return labelWidth;
 	}
 }
