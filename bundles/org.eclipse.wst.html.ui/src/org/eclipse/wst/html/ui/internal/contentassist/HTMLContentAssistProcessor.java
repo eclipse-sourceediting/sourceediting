@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -65,6 +65,7 @@ public class HTMLContentAssistProcessor extends AbstractContentAssistProcessor i
 	protected IPreferenceStore fPreferenceStore = null;
 	protected boolean isXHTML = false;
 	private HTMLTemplateCompletionProcessor fTemplateProcessor = null;
+	private JavaScriptContentAssistProcessor fJSContentAssistProcessor = null;
 	private List fTemplateContexts = new ArrayList();
 
 	public HTMLContentAssistProcessor() {
@@ -196,8 +197,7 @@ public class HTMLContentAssistProcessor extends AbstractContentAssistProcessor i
 						region = (ITextRegion) it.next();
 						if (fn.getText(region).equalsIgnoreCase("script")) { //$NON-NLS-1$
 							// return JS content assist...
-							JavaScriptContentAssistProcessor jsProcessor = new JavaScriptContentAssistProcessor();
-							return jsProcessor.computeCompletionProposals(textViewer, documentPosition);
+							return getJSContentAssistProcessor().computeCompletionProposals(textViewer, documentPosition);
 						}
 					}
 				}
@@ -393,6 +393,13 @@ public class HTMLContentAssistProcessor extends AbstractContentAssistProcessor i
 			return " />"; //$NON-NLS-1$
 		return ">"; //$NON-NLS-1$
 	}
+	
+	private JavaScriptContentAssistProcessor getJSContentAssistProcessor() {
+		if (fJSContentAssistProcessor == null) {
+			fJSContentAssistProcessor = new JavaScriptContentAssistProcessor();
+		}
+		return fJSContentAssistProcessor;
+	}
 
 	private HTMLTemplateCompletionProcessor getTemplateCompletionProcessor() {
 		if (fTemplateProcessor == null) {
@@ -458,6 +465,9 @@ public class HTMLContentAssistProcessor extends AbstractContentAssistProcessor i
 	public void release() {
 		if (factoryForCSS != null) {
 			factoryForCSS.release();
+		}
+		if (fJSContentAssistProcessor != null) {
+			fJSContentAssistProcessor.release();
 		}
 		getPreferenceStore().removePropertyChangeListener(this);
 		super.release();
