@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -52,7 +52,6 @@ public class ActionContributorXML extends ActionContributor {
 	protected RetargetTextEditorAction fFindOccurrences = null;
 	protected RetargetTextEditorAction fFormatActiveElements = null;
 	protected RetargetTextEditorAction fFormatDocument = null;
-	protected MenuManager fFormatMenu = null;
 	protected RetargetTextEditorAction fOpenFileAction = null; // open file
 	protected RetargetTextEditorAction fQuickFix = null;
 
@@ -83,10 +82,6 @@ public class ActionContributorXML extends ActionContributor {
 
 		fFormatActiveElements = new RetargetTextEditorAction(resourceBundle, ""); //$NON-NLS-1$
 		fFormatActiveElements.setActionDefinitionId(ActionDefinitionIds.FORMAT_ACTIVE_ELEMENTS);
-
-		fFormatMenu = new MenuManager(XMLUIMessages.FormatMenu_label);
-		fFormatMenu.add(fFormatDocument);
-		fFormatMenu.add(fFormatActiveElements);
 
 		// navigate commands
 		fOpenFileAction = new RetargetTextEditorAction(resourceBundle, ""); //$NON-NLS-1$
@@ -124,7 +119,8 @@ public class ActionContributorXML extends ActionContributor {
 			sourceMenu.add(fShiftRight);
 			sourceMenu.add(fShiftLeft);
 			sourceMenu.add(fCleanupDocument);
-			sourceMenu.add(fFormatMenu);
+			sourceMenu.add(fFormatDocument);
+			sourceMenu.add(fFormatActiveElements);
 			sourceMenu.add(fCommandsSeparator);
 			sourceMenu.add(fFindOccurrences);
 		}

@@ -420,15 +420,28 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 				break;
 			case FORMAT_DOCUMENT :
 				try {
+					/*
+					 * This command will actually format selection if text is
+					 * selected, otherwise format entire document
+					 */
 					// begin recording
 					beginRecording(FORMAT_DOCUMENT_TEXT, FORMAT_DOCUMENT_TEXT, cursorPosition, selectionLength);
-
-					// format
-					IRegion region = getModelCoverage();
+					boolean formatDocument = false;
+					IRegion region = null;
+					Point s = getSelectedRange();
+					if (s.y > 0) {
+						// only format currently selected text
+						region = new Region(s.x, s.y);
+					}
+					else {
+						// no selection, so format entire document
+						region = getModelCoverage();
+						formatDocument = true;
+					}
 					if (fContentFormatter instanceof IContentFormatterExtension) {
 						IContentFormatterExtension extension = (IContentFormatterExtension) fContentFormatter;
 						IFormattingContext context = new FormattingContext();
-						context.setProperty(FormattingContextProperties.CONTEXT_DOCUMENT, Boolean.TRUE);
+						context.setProperty(FormattingContextProperties.CONTEXT_DOCUMENT, Boolean.valueOf(formatDocument));
 						context.setProperty(FormattingContextProperties.CONTEXT_REGION, region);
 						extension.format(getDocument(), context);
 					}
@@ -446,13 +459,28 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 				break;
 			case FORMAT_ACTIVE_ELEMENTS :
 				try {
+					/*
+					 * This command will format the node at cursor position
+					 * (and all its children)
+					 */
 					// begin recording
 					beginRecording(FORMAT_ACTIVE_ELEMENTS_TEXT, FORMAT_ACTIVE_ELEMENTS_TEXT, cursorPosition, selectionLength);
-
-					// format
+					IRegion region = null;
 					Point s = getSelectedRange();
-					IRegion region = new Region(s.x, s.y);
-					fContentFormatter.format(getDocument(), region);
+					if (s.y > -1) {
+						// only format node at cursor position
+						region = new Region(s.x, s.y);
+					}
+					if (fContentFormatter instanceof IContentFormatterExtension) {
+						IContentFormatterExtension extension = (IContentFormatterExtension) fContentFormatter;
+						IFormattingContext context = new FormattingContext();
+						context.setProperty(FormattingContextProperties.CONTEXT_DOCUMENT, Boolean.FALSE);
+						context.setProperty(FormattingContextProperties.CONTEXT_REGION, region);
+						extension.format(getDocument(), context);
+					}
+					else {
+						fContentFormatter.format(getDocument(), region);
+					}
 				}
 				finally {
 					// end recording

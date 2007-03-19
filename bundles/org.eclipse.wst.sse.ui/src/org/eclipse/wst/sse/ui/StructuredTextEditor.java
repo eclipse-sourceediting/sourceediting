@@ -1269,14 +1269,6 @@ public class StructuredTextEditor extends TextEditor {
 	 * Not API. May be removed in the future.
 	 */
 	public static final String GROUP_NAME_ADDITIONS = "additions"; //$NON-NLS-1$
-	/**
-	 * Not API. May be removed in the future.
-	 */
-	public static final String GROUP_NAME_FORMAT = "Format"; //$NON-NLS-1$
-	/**
-	 * Not API. May be removed in the future.
-	 */
-	public static final String GROUP_NAME_FORMAT_EXT = "Format.ext"; //$NON-NLS-1$
 
 	private static final String REDO_ACTION_DESC = SSEUIMessages.Redo___0___UI_; //$NON-NLS-1$ = "Redo: {0}."
 	private static final String REDO_ACTION_DESC_DEFAULT = SSEUIMessages.Redo_Text_Change__UI_; //$NON-NLS-1$ = "Redo Text Change."
@@ -1402,14 +1394,9 @@ public class StructuredTextEditor extends TextEditor {
 		boolean enableFormatMenu = (formatAll != null && formatAll.isEnabled()) || (formatSelection != null && formatSelection.isEnabled()) || (cleanupAll != null && cleanupAll.isEnabled());
 
 		if (getSourceViewer().isEditable() && enableFormatMenu) {
-			String label = SSEUIMessages.FormatMenu_label; //$NON-NLS-1$ = "Format"
-			MenuManager subMenu = new MenuManager(label, GROUP_NAME_FORMAT);
-			subMenu.add(new GroupMarker(GROUP_NAME_FORMAT_EXT));
-			addAction(subMenu, StructuredTextEditorActionConstants.ACTION_NAME_FORMAT_DOCUMENT);
-			addAction(subMenu, StructuredTextEditorActionConstants.ACTION_NAME_FORMAT_ACTIVE_ELEMENTS);
-			subMenu.add(new GroupMarker(GROUP_NAME_ADDITIONS));
+			addAction(menu, ITextEditorActionConstants.GROUP_EDIT, StructuredTextEditorActionConstants.ACTION_NAME_FORMAT_DOCUMENT);
+			addAction(menu, ITextEditorActionConstants.GROUP_EDIT, StructuredTextEditorActionConstants.ACTION_NAME_FORMAT_ACTIVE_ELEMENTS);
 			addAction(menu, ITextEditorActionConstants.GROUP_EDIT, StructuredTextEditorActionConstants.ACTION_NAME_CLEANUP_DOCUMENT);
-			menu.appendToGroup(ITextEditorActionConstants.GROUP_EDIT, subMenu);
 		}
 
 		// Some Design editors (DTD) rely on this view for their own uses

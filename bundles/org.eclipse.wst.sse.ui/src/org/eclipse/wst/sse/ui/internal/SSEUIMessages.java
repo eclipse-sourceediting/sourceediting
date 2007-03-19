@@ -55,7 +55,6 @@ public class SSEUIMessages extends NLS {
 	public static String Redo_Text_Change__UI_;
 	public static String _Redo__0___Ctrl_Y_UI_;
 	public static String Redo___0___UI_;
-	public static String FormatMenu_label;
 	public static String Format_Document_UI_;
 	public static String Format_Active_Elements_UI_;
 	public static String Text_Cut_UI_;

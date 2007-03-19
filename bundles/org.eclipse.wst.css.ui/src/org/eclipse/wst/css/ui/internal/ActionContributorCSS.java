@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -41,7 +41,6 @@ public class ActionContributorCSS extends ActionContributor {
 
 	protected RetargetTextEditorAction fContentAssist = null;
 	protected RetargetTextEditorAction fCleanupDocument = null;
-	protected MenuManager fFormatMenu = null;
 	protected RetargetTextEditorAction fFormatDocument = null;
 	protected RetargetTextEditorAction fFormatActiveElements = null;
 
@@ -63,10 +62,6 @@ public class ActionContributorCSS extends ActionContributor {
 
 		fFormatActiveElements = new RetargetTextEditorAction(resourceBundle, ""); //$NON-NLS-1$
 		fFormatActiveElements.setActionDefinitionId(ActionDefinitionIds.FORMAT_ACTIVE_ELEMENTS);
-
-		fFormatMenu = new MenuManager(CSSUIMessages.FormatMenu_label);
-		fFormatMenu.add(fFormatDocument);
-		fFormatMenu.add(fFormatActiveElements);
 	}
 
 	protected String[] getExtensionIDs() {
@@ -96,7 +91,8 @@ public class ActionContributorCSS extends ActionContributor {
 			sourceMenu.add(fShiftRight);
 			sourceMenu.add(fShiftLeft);
 			sourceMenu.add(fCleanupDocument);
-			sourceMenu.add(fFormatMenu);
+			sourceMenu.add(fFormatDocument);
+			sourceMenu.add(fFormatActiveElements);
 			sourceMenu.add(fCommandsSeparator);
 		}
 	}

@@ -238,7 +238,6 @@ public class XMLUIMessages extends NLS {
 	public static String Attribute____3;
 	public static String Data_Type____4;
 	public static String Enumerated_Values____5;
-	public static String FormatMenu_label;
 	public static String SourceMenu_label;
 	public static String Comment_label; // Resource bundle
 	public static String Comment_tooltip; // Resource bundle
@@ -259,21 +258,6 @@ public class XMLUIMessages extends NLS {
 	public static String CleanupDocument_tooltip; // Resource bundle
 	public static String CleanupDocument_description; // Resource bundle
 	public static String FindOccurrences_label; // Resource bundle
-	public static String ShowTooltipDesc_label; // Resource bundle
-	public static String ShowTooltipDesc_tooltip; // Resource bundle
-	public static String ShowTooltipDesc_description; // Resource bundle
-	public static String ContentAssistProposals_label; // Resource bundle
-	public static String ContentAssistProposals_tooltip; // Resource bundle
-	public static String ContentAssistProposals_description; // Resourcebundle
-	public static String QuickFix_label; // Resource bundle
-	public static String QuickFix_tooltip; // Resource bundle
-	public static String QuickFix_description; // Resource bundle
-	public static String FormatDocument_label; // Resource bundle
-	public static String FormatDocument_tooltip; // Resource bundle
-	public static String FormatDocument_description; // Resource bundle
-	public static String FormatActiveElements_label; // Resource bundle
-	public static String FormatActiveElements_tooltip; // Resource bundle
-	public static String FormatActiveElements_description; // Resource bundle
 	public static String OpenFileFromSource_label; // Resource bundle
 	public static String OpenFileFromSource_tooltip; // Resource bundle
 	public static String OpenFileFromSource_description; // Resource bundle
