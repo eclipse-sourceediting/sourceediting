@@ -408,6 +408,12 @@ public final class JSPBatchValidator implements IValidatorJob, IExecutableExtens
 	 * @param reporter
 	 */
 	void validateFile(IFile f, IReporter reporter) {
+		try {
+			f.refreshLocal(IResource.DEPTH_ZERO, new NullProgressMonitor());
+		}
+		catch (CoreException e) {
+			Logger.logException(e);
+		}
 		IStructuredModel model = null;
 		try {
 			// get JSP model on behalf of all JSP validators
