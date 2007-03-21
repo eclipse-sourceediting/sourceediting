@@ -33,7 +33,7 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 /**
  * Provides javadoc hover help documentation for java code inside JSPs
  */
-public class JSPJavaJavadocHoverProcessor extends AbstractHoverProcessor {
+public class JSDTHoverProcessor extends AbstractHoverProcessor {
 	/*
 	 * Bulk of the work was copied from
 	 * org.eclipse.wst.jsdt.internal.ui.text.java.hover.JavadocHover
@@ -110,9 +110,7 @@ public class JSPJavaJavadocHoverProcessor extends AbstractHoverProcessor {
 	public String getHoverInfo(ITextViewer textViewer, IRegion hoverRegion) {
 		// get JSP translation object for this viewer's document
 
-		IDOMModel xmlModel = (IDOMModel) StructuredModelManager
-				.getModelManager().getExistingModelForRead(
-						textViewer.getDocument());
+		IDOMModel xmlModel = (IDOMModel) StructuredModelManager.getModelManager().getExistingModelForRead(textViewer.getDocument());
 		try {
 			if (xmlModel != null) {
 				IDOMDocument xmlDoc = xmlModel.getDocument();

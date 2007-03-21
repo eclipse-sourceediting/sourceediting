@@ -22,13 +22,13 @@ import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
  * Provides javadoc context information for java code inside JSPs (Shows tooltip
  * description)
  */
-public class JSPJavaJavadocInformationProvider implements IInformationProvider,
+public class JSDTInformationProvider implements IInformationProvider,
 		IInformationProviderExtension {
 	private ITextHover fTextHover = null;
 
-	public JSPJavaJavadocInformationProvider() {
+	public JSDTInformationProvider() {
 		fTextHover = SSEUIPlugin.getDefault().getTextHoverManager()
-				.createBestMatchHover(new JSPJavaJavadocHoverProcessor());
+				.createBestMatchHover(new JSDTHoverProcessor());
 	}
 
 	public IRegion getSubject(ITextViewer textViewer, int offset) {

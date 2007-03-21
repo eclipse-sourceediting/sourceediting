@@ -41,9 +41,9 @@ import org.eclipse.wst.jsdt.web.ui.internal.contentassist.JSDTContentAssistant;
 import org.eclipse.wst.jsdt.web.ui.internal.format.FormattingStrategyJSPJava;
 import org.eclipse.wst.jsdt.web.ui.internal.hyperlink.JSPJavaHyperlinkDetector;
 import org.eclipse.wst.jsdt.web.ui.internal.hyperlink.XMLHyperlinkDetector;
-import org.eclipse.wst.jsdt.web.ui.internal.style.java.LineStyleProviderForJava;
-import org.eclipse.wst.jsdt.web.ui.internal.taginfo.JSPJavaJavadocHoverProcessor;
-import org.eclipse.wst.jsdt.web.ui.internal.taginfo.JSPJavaJavadocInformationProvider;
+import org.eclipse.wst.jsdt.web.ui.internal.style.java.LineStyleProviderForJSDT;
+import org.eclipse.wst.jsdt.web.ui.internal.taginfo.JSDTHoverProcessor;
+import org.eclipse.wst.jsdt.web.ui.internal.taginfo.JSDTInformationProvider;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.eclipse.wst.common.project.facet.core.runtime.RuntimeManager;
 import org.eclipse.wst.css.core.text.ICSSPartitions;
@@ -366,7 +366,7 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 		// else
 		if (partitionType == IJSPPartitions.JSP_CONTENT_JAVA) {
 			// JSP java
-			provider = new JSPJavaJavadocInformationProvider();
+			provider = new JSDTInformationProvider();
 		}
 		return provider;
 	}
@@ -420,7 +420,7 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 	
 	private LineStyleProvider getLineStyleProviderForJava() {
 		if (fLineStyleProviderForJava == null) {
-			fLineStyleProviderForJava = new LineStyleProviderForJava();
+			fLineStyleProviderForJava = new LineStyleProviderForJSDT();
 		}
 		return fLineStyleProviderForJava;
 	}
@@ -447,11 +447,11 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 					String hoverType = hoverDescs[i].getId();
 					if (TextHoverManager.COMBINATION_HOVER.equalsIgnoreCase(hoverType)) {
 						
-						hover = manager.createBestMatchHover(new JSPJavaJavadocHoverProcessor());
+						hover = manager.createBestMatchHover(new JSDTHoverProcessor());
 						
 					} else if (TextHoverManager.DOCUMENTATION_HOVER.equalsIgnoreCase(hoverType)) {
 						
-						hover = new JSPJavaJavadocHoverProcessor();
+						hover = new JSDTHoverProcessor();
 						
 					}
 				}

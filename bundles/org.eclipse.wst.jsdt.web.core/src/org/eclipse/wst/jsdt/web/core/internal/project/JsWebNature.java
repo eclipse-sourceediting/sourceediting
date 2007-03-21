@@ -26,6 +26,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.wst.jsdt.core.IClasspathEntry;
+import org.eclipse.wst.jsdt.core.IJavaProject;
 import org.eclipse.wst.jsdt.core.JavaCore;
 import org.eclipse.wst.jsdt.internal.core.JavaProject;
 import org.eclipse.wst.jsdt.internal.core.util.Util;
@@ -62,9 +63,7 @@ public class JsWebNature implements IProjectNature{
 	
 	public void configure() throws CoreException {
 		if(hasProjectClassPathFile()){
-			JavaProject proj = new JavaProject();
-			proj.setProject(fCurrProject);
-			IClasspathEntry[] entries= proj.readRawClasspath();
+			IClasspathEntry[] entries= getRawClassPath();
             if(entries!=null && entries.length>0)
             	classPathEntries.addAll(Arrays.asList(entries));
 		}
@@ -79,7 +78,7 @@ public class JsWebNature implements IProjectNature{
 
 	public void deconfigure() throws CoreException {
 		IClasspathEntry[] defaultJRELibrary= PreferenceConstants.getDefaultJRELibrary();
-		IClasspathEntry[] entries = getJavaProject().getRawClasspath();
+		IClasspathEntry[] entries = getRawClassPath();
 		Vector goodEntries = new Vector();
 		 for(int i = 0;i<entries.length;i++){
         	if(entries[i] != defaultJRELibrary[0]){
@@ -94,9 +93,9 @@ public class JsWebNature implements IProjectNature{
 	}
 
 	public JavaProject getJavaProject(){
+
 		if(fJavaProject==null){
-			fJavaProject = new JavaProject();
-			JavaCore.create(fCurrProject);
+			fJavaProject = (JavaProject)JavaCore.create(fCurrProject);
 			fJavaProject.setProject(fCurrProject);
 		}
 		return fJavaProject;
@@ -122,14 +121,19 @@ public class JsWebNature implements IProjectNature{
 		return outputLocation;
 	}
 	
+	private IClasspathEntry[] getRawClassPath(){
+		JavaProject proj = new JavaProject();
+		proj.setProject(fCurrProject);
+		return proj.readRawClasspath();
+	}
+	
 	private boolean hasAValidSourcePath(){
 		IPath outputLocation= null;
 		
 		if (hasProjectClassPathFile()){
 			try {
-				JavaProject proj = new JavaProject();
-				proj.setProject(fCurrProject);
-				IClasspathEntry[] entries= proj.readRawClasspath();
+				
+				IClasspathEntry[] entries= getRawClassPath();
                 for(int i = 0;i<entries.length;i++){
                 	if(entries[i].getEntryKind()==IClasspathEntry.CPE_SOURCE){
 						return true;
@@ -217,7 +221,7 @@ public class JsWebNature implements IProjectNature{
 	private void initJREEntry(){
 		IClasspathEntry[] defaultJRELibrary= PreferenceConstants.getDefaultJRELibrary();
 		try {
-				IClasspathEntry[] entries = getJavaProject().getRawClasspath();
+				IClasspathEntry[] entries = getRawClassPath();
                 for(int i = 0;i<entries.length;i++){
                 	if(entries[i] == defaultJRELibrary[0]){
 						return;

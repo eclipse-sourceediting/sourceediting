@@ -2,74 +2,48 @@
 <?eclipse version="3.0"?>
 <plugin>
 	
-	<!-- Js Nature -->
-	<extension 
-		point="org.eclipse.core.resources.natures" 
-		id="jsNature"
-		name="%javaScriptNatureName">
-		<runtime>
-			<run class="org.eclipse.wst.jsdt.internal.core.JavaProject"/>
-		</runtime>
-	</extension>
-   
-   <!-- JS Facet for faceted web projects (sse -->
-     
-   <extension point="org.eclipse.wst.common.project.facet.core.facets">
-   
-   		<project-facet id="wst.jsdt.web">
-			<label>JavaScript Toolkit</label>
-	  	 	<description>Adds advanced JavaScript editing support.</description>
-	  	  	<default-version version="1.0"/>
-		</project-facet>
+ <!-- JS Facet for faceted web projects (sse -->
+      <!-- advanced js facet -->
+   	<extension point="org.eclipse.wst.common.project.facet.core.facets">
+  	  <project-facet id="wst.jsdt.script">
+  	  	<label>JavaScript Development Toolkit</label>
+	  	<description>Adds advanced JavaScript editing support.</description>
+	  	<category>script.category</category>
+	  </project-facet>
 	
-		<project-facet-version facet="wst.jsdt.web" version="1.0">
-	      <constraint>
+	  <project-facet-version facet="wst.jsdt.script" version="2.0">
+	  	<constraint>
 	      	<and>
-        	<or>
-        		<requires facet="wst.web" version="[1.0"/>
-	      	</or>
-	      	<or>
-	      		<requires facet="jst.web" version="[1.0"/>
-	      	</or>
-	      	
+        		<or>
+        			<requires facet="wst.web" version="[1.0"/>
+	      			<requires facet="jst.web" version="[1.0"/>
+	      		</or>
+	      	<conflicts group="script.javascript"/>
 	      	</and>
 	      </constraint>
-		</project-facet-version>
-	
-		<action facet="wst.jsdt.web" type="install" id="wst.jsdt.web.install" version="1.0">
+	      <group-member id="script.javascript"/> 
+  	  </project-facet-version>
+ 	</extension>
+   
+   <!-- end advanced js facet -->
+   <extension point="org.eclipse.wst.common.project.facet.core.facets">
+   
+		<event-handler facet="wst.web" type="POST_INSTALL" version="[1.0">
 	   		<delegate class="org.eclipse.wst.jsdt.web.core.internal.project.JsNatureInstaller"/>
-		</action>
+		</event-handler>
 	
-		<action facet="wst.jsdt.web" type="uninstall" id="wst.jsdt.web.uninstall" version="1.0">
+		<event-handler facet="wst.web" type="POST_UNINSTALL" version="[1.0">
 			<delegate class="org.eclipse.wst.jsdt.web.core.internal.project.JsNatureUninstaller"/>
-		</action>
+		</event-handler>
 
-    	<template id="template.wst.web">
-     	 	<label>Web Template</label>
-     	 	<fixed facet="wst.web"/>
-      		<fixed facet="wst.jsdt.web"/>
-    	</template>
-
-    	<template id="template.jst.web">
-      		<label>Dynamic Web Project</label>
-      		<fixed facet="jst.java"/>
-      		<fixed facet="jst.web"/>
-      		<fixed facet="wst.jsdt.web"/>
-    	</template>
-
-    	<template id="template.jst.connector">
-      		<label>J2C Project</label>
-      		<fixed facet="jst.java"/>
-      		<fixed facet="jst.connector"/>
-      		<fixed facet="wst.jsdt.web"/>
-    	</template>
+		<event-handler facet="jst.web" type="POST_INSTALL"  version="[1.0">
+	   		<delegate class="org.eclipse.wst.jsdt.web.core.internal.project.JsNatureInstaller"/>
+		</event-handler>
 	
-	<preset id="preset.wst.jsdt.web">
-		<label>JavaScript Tools</label>
-		<description>JavaScript Development Toolkit for advanced JS Development</description>
-		<fixed facet="wst.web"  />
-		<fixed facet="wst.jsdt.web"/>
-	</preset>
+		<event-handler facet="jst.web" type="POST_UNINSTALL" version="[1.0">
+			<delegate class="org.eclipse.wst.jsdt.web.core.internal.project.JsNatureUninstaller"/>
+		</event-handler>
+
 	
 	</extension>
 	<!--

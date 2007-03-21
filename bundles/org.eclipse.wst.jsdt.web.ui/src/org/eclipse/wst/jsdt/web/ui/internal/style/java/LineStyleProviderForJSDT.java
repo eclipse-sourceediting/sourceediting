@@ -41,7 +41,7 @@ import org.eclipse.wst.xml.ui.internal.style.IStyleConstantsXML;
 
 // Note: many of the methods in this class were based on (or copied from) those
 // found in the example Java Editor
-public class LineStyleProviderForJava implements LineStyleProvider {
+public class LineStyleProviderForJSDT implements LineStyleProvider {
 	private class PropertyChangeListener implements IPropertyChangeListener {
 		/*
 		 * (non-Javadoc)
@@ -63,7 +63,7 @@ public class LineStyleProviderForJava implements LineStyleProvider {
 	/** Contains all text attributes pretaining to this line style provider */
 	private HashMap fTextAttributes = null;
 
-	public LineStyleProviderForJava() {
+	public LineStyleProviderForJSDT() {
 		super();
 		fScanner = new JavaCodeScanner();
 	}
