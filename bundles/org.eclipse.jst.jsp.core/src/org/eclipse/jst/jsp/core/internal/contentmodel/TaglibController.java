@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -27,8 +27,8 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.TLDCMDocumentManager;
 import org.eclipse.jst.jsp.core.internal.parser.JSPSourceParser;
+import org.eclipse.jst.jsp.core.taglib.ITaglibIndexDelta;
 import org.eclipse.jst.jsp.core.taglib.ITaglibIndexListener;
-import org.eclipse.jst.jsp.core.taglib.ITaglibRecordEvent;
 import org.eclipse.jst.jsp.core.taglib.TaglibIndex;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.text.BasicStructuredDocument;
@@ -54,23 +54,26 @@ public class TaglibController implements IDocumentSetupParticipant {
 		ITextFileBuffer textFileBuffer;
 		TLDCMDocumentManager tldDocumentManager;
 
-		public void indexChanged(ITaglibRecordEvent event) {
-			int type = event.getType();
-			if (type == ITaglibRecordEvent.CHANGED || type == ITaglibRecordEvent.REMOVED) {
-				Object key = TLDCMDocumentManager.getUniqueIdentifier(event.getTaglibRecord());
-				if (tldDocumentManager.getDocuments().containsKey(key)) {
-					if (_debugCache) {
-						System.out.println("TLDCMDocumentManager cleared its private CMDocument cache"); //$NON-NLS-1$
-					}
-					tldDocumentManager.getDocuments().remove(key);
-					tldDocumentManager.getSourceParser().resetHandlers();
+		public void indexChanged(ITaglibIndexDelta delta) {
+			int type = delta.getKind();
+			if (type == ITaglibIndexDelta.CHANGED || type == ITaglibIndexDelta.REMOVED) {
+				ITaglibIndexDelta[] deltas = delta.getAffectedChildren();
+				for (int i = 0; i < deltas.length; i++) {
+					Object key = TLDCMDocumentManager.getUniqueIdentifier(deltas[i].getTaglibRecord());
+					if (tldDocumentManager.getDocuments().containsKey(key)) {
+						if (_debugCache) {
+							System.out.println("TLDCMDocumentManager cleared its private CMDocument cache"); //$NON-NLS-1$
+						}
+						tldDocumentManager.getDocuments().remove(key);
+						tldDocumentManager.getSourceParser().resetHandlers();
 
-					if (document instanceof BasicStructuredDocument) {
-						((BasicStructuredDocument) document).reparse(this);
+						if (document instanceof BasicStructuredDocument) {
+							((BasicStructuredDocument) document).reparse(this);
+						}
 					}
 				}
 			}
-			tldDocumentManager.indexChanged(event);
+			tldDocumentManager.indexChanged(delta);
 		}
 	}
 

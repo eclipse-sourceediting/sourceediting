@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005,2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -90,6 +90,8 @@ class ProjectDescription {
 		public boolean visit(IResourceDelta delta) throws CoreException {
 			IResource resource = delta.getResource();
 			if (resource.getType() == IResource.FILE) {
+				if (delta.getKind() == IResourceDelta.CHANGED && (delta.getFlags() == IResourceDelta.ENCODING || delta.getFlags() == IResourceDelta.MARKERS))
+					return true;
 				if (resource.getName().endsWith(".tld")) { //$NON-NLS-1$
 					if (delta.getKind() == IResourceDelta.REMOVED) {
 						removeTLD(resource);
@@ -131,16 +133,16 @@ class ProjectDescription {
 		public boolean visit(IResourceProxy proxy) throws CoreException {
 			if (proxy.getType() == IResource.FILE) {
 				if (proxy.getName().endsWith(".tld")) { //$NON-NLS-1$
-					updateTLD(proxy.requestResource(), ITaglibRecordEvent.ADDED);
+					updateTLD(proxy.requestResource(), ITaglibIndexDelta.ADDED);
 				}
 				else if (proxy.getName().endsWith(".jar")) { //$NON-NLS-1$
-					updateJAR(proxy.requestResource(), ITaglibRecordEvent.ADDED);
+					updateJAR(proxy.requestResource(), ITaglibIndexDelta.ADDED);
 				}
 				else if (proxy.getName().endsWith(".tag") || proxy.getName().endsWith(".tagx")) { //$NON-NLS-1$ //$NON-NLS-2$
-					updateTagDir(proxy.requestResource(), ITaglibRecordEvent.ADDED);
+					updateTagDir(proxy.requestResource(), ITaglibIndexDelta.ADDED);
 				}
 				else if (proxy.getName().equals(WEB_XML) && proxy.requestResource().getParent().getName().equals(WEB_INF)) {
-					updateWebXML(proxy.requestResource(), ITaglibRecordEvent.ADDED);
+					updateWebXML(proxy.requestResource(), ITaglibIndexDelta.ADDED);
 				}
 			}
 			String name = proxy.getName();
@@ -150,12 +152,12 @@ class ProjectDescription {
 
 	static class JarRecord implements IJarRecord {
 		boolean has11TLD;
-		boolean isMappedInWebXML;
-
 		TaglibInfo info;
+
+		boolean isExported = true;
+		boolean isMappedInWebXML;
 		IPath location;
 		List urlRecords;
-		boolean isExported = true;
 
 		public boolean equals(Object obj) {
 			if (!(obj instanceof JarRecord))
@@ -196,22 +198,28 @@ class ProjectDescription {
 			return info.uri;
 		}
 
-		/**
-		 * 
-		 */
 		public List getURLRecords() {
 			return urlRecords;
 		}
 
 		public String toString() {
-			return "JarRecord: " + location + " <-> " + urlRecords; //$NON-NLS-1$ //$NON-NLS-2$
+			StringBuffer s = new StringBuffer("JarRecord: ");//$NON-NLS-1$ 
+			s.append(location);
+			if (urlRecords.size() > 0) {
+				s.append('\n');//$NON-NLS-1$ 
+				for (int i = 0; i < urlRecords.size(); i++) {
+					s.append(urlRecords.get(i));
+					s.append('\n');//$NON-NLS-1$ 
+				}
+			}
+			return s.toString();
 		}
 	}
 
 	static class TagDirRecord implements ITagDirRecord {
+		TaglibInfo info;
 		IPath location;
 		String shortName;
-		TaglibInfo info;
 		// a List holding Strings of .tag and .tagx filenames relative to the
 		// tagdir's location
 		List tags = new ArrayList(0);
@@ -262,9 +270,9 @@ class ProjectDescription {
 	static class TaglibInfo implements ITaglibDescriptor {
 		// extract only when asked?
 		String description = "";
+		String displayName = "";
 		String jspVersion = "";
 		String largeIcon = "";
-		String displayName = "";
 		String shortName = "";
 		String smallIcon = "";
 		String tlibVersion = "";
@@ -274,12 +282,18 @@ class ProjectDescription {
 			super();
 		}
 
-		public String toString() {
-			return "TaglibInfo|" + shortName + "|" + tlibVersion + "|" + smallIcon + "|" + largeIcon + "|" + jspVersion + "|" + uri + "|" + description; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
+		public boolean equals(Object obj) {
+			if (!(obj instanceof TaglibInfo))
+				return false;
+			return ((TaglibInfo) obj).jspVersion == jspVersion && ((TaglibInfo) obj).description.equals(description) && ((TaglibInfo) obj).largeIcon.equals(largeIcon) && ((TaglibInfo) obj).shortName.equals(shortName) && ((TaglibInfo) obj).smallIcon.equals(smallIcon) && ((TaglibInfo) obj).tlibVersion.equals(tlibVersion) && ((TaglibInfo) obj).uri.equals(uri);
 		}
 
 		public String getDescription() {
 			return description;
+		}
+
+		public String getDisplayName() {
+			return displayName;
 		}
 
 		public String getJSPVersion() {
@@ -306,51 +320,8 @@ class ProjectDescription {
 			return uri;
 		}
 
-		public boolean equals(Object obj) {
-			if (!(obj instanceof TaglibInfo))
-				return false;
-			return ((TaglibInfo) obj).jspVersion == jspVersion && ((TaglibInfo) obj).description.equals(description) && ((TaglibInfo) obj).largeIcon.equals(largeIcon) && ((TaglibInfo) obj).shortName.equals(shortName) && ((TaglibInfo) obj).smallIcon.equals(smallIcon) && ((TaglibInfo) obj).tlibVersion.equals(tlibVersion) && ((TaglibInfo) obj).uri.equals(uri);
-		}
-
-		public String getDisplayName() {
-			return displayName;
-		}
-	}
-
-	class TaglibRecordEvent implements ITaglibRecordEvent {
-		ITaglibRecord fTaglibRecord = null;
-		int fType = -1;
-
-		TaglibRecordEvent(ITaglibRecord record, int type) {
-			fTaglibRecord = record;
-			fType = type;
-		}
-
-		public ITaglibRecord getTaglibRecord() {
-			return fTaglibRecord;
-		}
-
-		public int getType() {
-			return fType;
-		}
-
 		public String toString() {
-			String string = fTaglibRecord.toString();
-			switch (fType) {
-				case ITaglibRecordEvent.ADDED :
-					string = " ADDED (" + string + ")"; //$NON-NLS-1$ //$NON-NLS-2$
-					break;
-				case ITaglibRecordEvent.CHANGED :
-					string = " CHANGED (" + string + ")"; //$NON-NLS-1$ //$NON-NLS-2$
-					break;
-				case ITaglibRecordEvent.REMOVED :
-					string = " REMOVED (" + string + ")"; //$NON-NLS-1$ //$NON-NLS-2$
-					break;
-				default :
-					string = " other:" + fType + " (" + string + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-					break;
-			}
-			return string;
+			return "TaglibInfo|" + shortName + "|" + tlibVersion + "|" + smallIcon + "|" + largeIcon + "|" + jspVersion + "|" + uri + "|" + description; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
 		}
 	}
 
@@ -399,8 +370,8 @@ class ProjectDescription {
 	static class URLRecord implements IURLRecord {
 		String baseLocation;
 		TaglibInfo info;
-		URL url;
 		boolean isExported = true;
+		URL url;
 
 		public URLRecord() {
 			super();
@@ -412,12 +383,12 @@ class ProjectDescription {
 			return ((URLRecord) obj).baseLocation.equals(baseLocation) && ((URLRecord) obj).url.equals(url) && ((URLRecord) obj).info.equals(info);
 		}
 
-		public ITaglibDescriptor getDescriptor() {
-			return info != null ? info : new TaglibInfo();
-		}
-
 		public String getBaseLocation() {
 			return baseLocation;
+		}
+
+		public ITaglibDescriptor getDescriptor() {
+			return info != null ? info : new TaglibInfo();
 		}
 
 		public int getRecordType() {
@@ -450,7 +421,7 @@ class ProjectDescription {
 		}
 
 		public String toString() {
-			return "URLRecord: (exported=ha"+isExported+") " + baseLocation + " <-> " + getURI(); //$NON-NLS-1$ //$NON-NLS-2$
+			return "URLRecord: (exported=" + isExported + ") " + baseLocation + " <-> " + getURI(); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 
@@ -489,31 +460,45 @@ class ProjectDescription {
 		}
 
 		public String toString() {
-			return "WebXMLRecord: " + path + " " + tldRecords; //$NON-NLS-1$ //$NON-NLS-2$
+			StringBuffer s = new StringBuffer("WebXMLRecord: ");//$NON-NLS-1$ 
+			s.append(path);
+			if (tldRecords.size() > 0) {
+				s.append('\n');//$NON-NLS-1$ 
+				for (int i = 0; i < tldRecords.size(); i++) {
+					s.append(tldRecords.get(i));
+					s.append('\n');//$NON-NLS-1$ 
+				}
+			}
+			return s.toString();
 		}
 	}
 
 	static boolean _debugIndexCreation = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.jst.jsp.core/taglib/indexcreation")); //$NON-NLS-1$ //$NON-NLS-2$
 	static boolean _debugIndexTime = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.jst.jsp.core/taglib/indextime")); //$NON-NLS-1$ //$NON-NLS-2$
 
+	private static final String BUILDPATH_DIRTY = "BUILDPATH_DIRTY"; //$NON-NLS-1$
+	private static final String BUILDPATH_PROJECT = "BUILDPATH_PROJECT"; //$NON-NLS-1$
+	private static final String SAVE_FORMAT_VERSION = "Tag Library Index 1.0.2"; //$NON-NLS-1$
 	private static final String WEB_INF = "WEB-INF"; //$NON-NLS-1$
 	private static final IPath WEB_INF_PATH = new Path(WEB_INF);
-	private static final String BUILDPATH_PROJECT = "BUILDPATH_PROJECT"; //$NON-NLS-1$
 	private static final String WEB_XML = "web.xml"; //$NON-NLS-1$
-	private static final String SAVE_FORMAT_VERSION = "Tag Library Index 1.0.2"; //$NON-NLS-1$
-	private static final String BUILDPATH_DIRTY = "BUILDPATH_DIRTY"; //$NON-NLS-1$
-
-	/*
-	 * Records active JARs on the classpath. Taglib descriptors should be
-	 * usable, but the jars by themselves are not.
-	 */
-	Hashtable fClasspathJars;
 
 	/**
 	 * Notes that the build path information is stale. Some operations can now
 	 * be skipped until a resolve/getAvailable call is made.
 	 */
 	boolean fBuildPathIsDirty = false;
+
+	/**
+	 * A cached copy of all of the records createable from the XMLCatalog.
+	 */
+	private Collection fCatalogRecords;
+
+	/*
+	 * Records active JARs on the classpath. Taglib descriptors should be
+	 * usable, but the jars by themselves are not.
+	 */
+	Hashtable fClasspathJars;
 
 	/**
 	 * A set of the projects that are in this project's build path.
@@ -535,21 +520,16 @@ class ProjectDescription {
 
 	IProject fProject;
 
+	private String fSaveStateFilename;
+
 	Hashtable fTagDirReferences;
 
 	Hashtable fTLDReferences;
 
 	IResourceDeltaVisitor fVisitor;
-
 	Hashtable fWebXMLReferences;
 
 	private long time0;
-	private String fSaveStateFilename;
-
-	/**
-	 * A cached copy of all of the records createable from the XMLCatalog.
-	 */
-	private Collection fCatalogRecords;
 
 	ProjectDescription(IProject project, String saveStateFile) {
 		super();
@@ -924,42 +904,6 @@ class ProjectDescription {
 		return new ArrayList(records);
 	}
 
-	private Collection getCatalogRecords() {
-		if (fCatalogRecords == null) {
-			List records = new ArrayList();
-			ICatalog defaultCatalog = XMLCorePlugin.getDefault().getDefaultXMLCatalog();
-			if (defaultCatalog != null) {
-				// Process default catalog
-				ICatalogEntry[] entries = defaultCatalog.getCatalogEntries();
-				for (int entry = 0; entry < entries.length; entry++) {
-					ITaglibRecord record = createCatalogRecord(entries[entry]);
-					records.add(record);
-				}
-
-				// Process declared OASIS nextCatalogs catalog
-				INextCatalog[] nextCatalogs = defaultCatalog.getNextCatalogs();
-				for (int nextCatalog = 0; nextCatalog < nextCatalogs.length; nextCatalog++) {
-					ICatalog catalog = nextCatalogs[nextCatalog].getReferencedCatalog();
-					ICatalogEntry[] entries2 = catalog.getCatalogEntries();
-					for (int entry = 0; entry < entries2.length; entry++) {
-						String uri = entries2[entry].getURI();
-						if (uri != null) {
-							uri = uri.toLowerCase(Locale.US);
-							if (uri.endsWith((".jar")) || uri.endsWith((".tld"))) {
-								ITaglibRecord record = createCatalogRecord(entries2[entry]);
-								if (record != null) {
-									records.add(record);
-								}
-							}
-						}
-					}
-				}
-			}
-			fCatalogRecords = records;
-		}
-		return fCatalogRecords;
-	}
-
 	/**
 	 * Provides a stream to a local copy of the input or null if not possible
 	 */
@@ -1007,6 +951,42 @@ class ProjectDescription {
 		}
 
 		return cache;
+	}
+
+	private Collection getCatalogRecords() {
+		if (fCatalogRecords == null) {
+			List records = new ArrayList();
+			ICatalog defaultCatalog = XMLCorePlugin.getDefault().getDefaultXMLCatalog();
+			if (defaultCatalog != null) {
+				// Process default catalog
+				ICatalogEntry[] entries = defaultCatalog.getCatalogEntries();
+				for (int entry = 0; entry < entries.length; entry++) {
+					ITaglibRecord record = createCatalogRecord(entries[entry]);
+					records.add(record);
+				}
+
+				// Process declared OASIS nextCatalogs catalog
+				INextCatalog[] nextCatalogs = defaultCatalog.getNextCatalogs();
+				for (int nextCatalog = 0; nextCatalog < nextCatalogs.length; nextCatalog++) {
+					ICatalog catalog = nextCatalogs[nextCatalog].getReferencedCatalog();
+					ICatalogEntry[] entries2 = catalog.getCatalogEntries();
+					for (int entry = 0; entry < entries2.length; entry++) {
+						String uri = entries2[entry].getURI();
+						if (uri != null) {
+							uri = uri.toLowerCase(Locale.US);
+							if (uri.endsWith((".jar")) || uri.endsWith((".tld"))) {
+								ITaglibRecord record = createCatalogRecord(entries2[entry]);
+								if (record != null) {
+									records.add(record);
+								}
+							}
+						}
+					}
+				}
+			}
+			fCatalogRecords = records;
+		}
+		return fCatalogRecords;
 	}
 
 	/**
@@ -1137,7 +1117,7 @@ class ProjectDescription {
 			String libPath = null;
 			int taglibRecordEventKind = -1;
 			if ((delta.getFlags() & IJavaElementDelta.F_ADDED_TO_CLASSPATH) > 0) {
-				taglibRecordEventKind = ITaglibRecordEvent.ADDED;
+				taglibRecordEventKind = ITaglibIndexDelta.ADDED;
 				IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(element.getPath());
 				if (file.exists())
 					libPath = file.getLocation().toString();
@@ -1145,7 +1125,7 @@ class ProjectDescription {
 					libPath = element.getPath().toString();
 			}
 			else if ((delta.getFlags() & IJavaElementDelta.F_REMOVED_FROM_CLASSPATH) > 0) {
-				taglibRecordEventKind = ITaglibRecordEvent.REMOVED;
+				taglibRecordEventKind = ITaglibIndexDelta.REMOVED;
 				IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(element.getPath());
 				if (file.getLocation() != null)
 					libPath = file.getLocation().toString();
@@ -1153,7 +1133,7 @@ class ProjectDescription {
 					libPath = element.getPath().toString();
 			}
 			else if ((delta.getFlags() & IJavaElementDelta.F_ARCHIVE_CONTENT_CHANGED) > 0) {
-				taglibRecordEventKind = ITaglibRecordEvent.CHANGED;
+				taglibRecordEventKind = ITaglibIndexDelta.CHANGED;
 				IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(element.getPath());
 				if (file.exists())
 					libPath = file.getLocation().toString();
@@ -1170,7 +1150,7 @@ class ProjectDescription {
 					 * it's been deleted and whether it's exported won't
 					 * really matter
 					 */
-					if(rawClasspathEntry != null) {
+					if (rawClasspathEntry != null) {
 						fragmentisExported = rawClasspathEntry.isExported();
 					}
 				}
@@ -1248,7 +1228,7 @@ class ProjectDescription {
 					IPath libPath = entry.getPath();
 					if (!fClasspathJars.containsKey(libPath.toString())) {
 						if (libPath.toFile().exists()) {
-							updateClasspathLibrary(libPath.toString(), ITaglibRecordEvent.ADDED, entry.isExported());
+							updateClasspathLibrary(libPath.toString(), ITaglibIndexDelta.ADDED, entry.isExported());
 						}
 						else {
 							/*
@@ -1259,7 +1239,7 @@ class ProjectDescription {
 							 */
 							IFile libFile = ResourcesPlugin.getWorkspace().getRoot().getFile(libPath);
 							if (libFile != null && libFile.exists()) {
-								updateClasspathLibrary(libFile.getLocation().toString(), ITaglibRecordEvent.ADDED, entry.isExported());
+								updateClasspathLibrary(libFile.getLocation().toString(), ITaglibIndexDelta.ADDED, entry.isExported());
 							}
 						}
 					}
@@ -1292,7 +1272,7 @@ class ProjectDescription {
 	 * records.length; i++) {
 	 * fClasspathReferences.remove(records[i].getURI()); }
 	 * TaglibIndex.fireTaglibRecordEvent(new TaglibRecordEvent(record,
-	 * ITaglibRecordEvent.REMOVED)); } }
+	 * ITaglibIndexDelta.REMOVED)); } }
 	 */
 
 	/**
@@ -1334,11 +1314,11 @@ class ProjectDescription {
 		if (record != null) {
 			URLRecord[] records = (URLRecord[]) record.getURLRecords().toArray(new URLRecord[0]);
 			for (int i = 0; i < records.length; i++) {
-				TaglibIndex.fireTaglibRecordEvent(new TaglibRecordEvent(records[i], ITaglibRecordEvent.REMOVED));
+				TaglibIndex.getInstance().addDelta(new TaglibIndexDelta(fProject, records[i], ITaglibIndexDelta.REMOVED));
 				getImplicitReferences(jar.getFullPath().toString()).remove(records[i].getURI());
 			}
 			if (record.has11TLD) {
-				TaglibIndex.fireTaglibRecordEvent(new TaglibRecordEvent(record, ITaglibRecordEvent.REMOVED));
+				TaglibIndex.getInstance().addDelta(new TaglibIndexDelta(fProject, record, ITaglibIndexDelta.REMOVED));
 			}
 		}
 	}
@@ -1352,26 +1332,26 @@ class ProjectDescription {
 	void removeTLD(IResource tld) {
 		if (_debugIndexCreation)
 			Logger.log(Logger.INFO, "removing record for " + tld.getFullPath()); //$NON-NLS-1$
-		TLDRecord record = (TLDRecord) fTLDReferences.remove(tld.getFullPath());
+		TLDRecord record = (TLDRecord) fTLDReferences.remove(tld.getFullPath().toString());
 		if (record != null) {
 			if (record.getURI() != null) {
 				getImplicitReferences(tld.getFullPath().toString()).remove(record.getURI());
 			}
-			TaglibIndex.fireTaglibRecordEvent(new TaglibRecordEvent(record, ITaglibRecordEvent.REMOVED));
+			TaglibIndex.getInstance().addDelta(new TaglibIndexDelta(fProject, record, ITaglibIndexDelta.REMOVED));
 		}
 	}
 
 	void removeWebXML(IResource webxml) {
 		if (_debugIndexCreation)
 			Logger.log(Logger.INFO, "removing records for " + webxml.getFullPath()); //$NON-NLS-1$
-		WebXMLRecord record = (WebXMLRecord) fWebXMLReferences.remove(webxml.getLocation().toString());
+		WebXMLRecord record = (WebXMLRecord) fWebXMLReferences.remove(webxml.getFullPath().toString());
 		if (record != null) {
 			TLDRecord[] records = (TLDRecord[]) record.getTLDRecords().toArray(new TLDRecord[0]);
 			for (int i = 0; i < records.length; i++) {
 				if (_debugIndexCreation)
 					Logger.log(Logger.INFO, "removed record for " + records[i].getURI() + "@" + records[i].path); //$NON-NLS-1$ //$NON-NLS-2$
 				getImplicitReferences(webxml.getFullPath().toString()).remove(records[i].getURI());
-				TaglibIndex.fireTaglibRecordEvent(new TaglibRecordEvent(records[i], ITaglibRecordEvent.REMOVED));
+				TaglibIndex.getInstance().addDelta(new TaglibIndexDelta(fProject, records[i], ITaglibIndexDelta.REMOVED));
 			}
 		}
 	}
@@ -1476,6 +1456,7 @@ class ProjectDescription {
 	 * Restores any saved reference tables
 	 */
 	private void restoreReferences() {
+		final boolean notifyOnRestoration = true;
 		if (TaglibIndex.ENABLED) {
 			// resources first
 			index();
@@ -1525,8 +1506,8 @@ class ProjectDescription {
 											libraryLocation = libraryLocation + "|" + toker.nextToken(); //$NON-NLS-1$ //$NON-NLS-2$
 										}
 										libraryLocation = libraryLocation.trim();
-										if (libraryRecord != null) {
-											TaglibIndex.fireTaglibRecordEvent(new TaglibRecordEvent(libraryRecord, ITaglibRecordEvent.ADDED));
+										if (libraryRecord != null && notifyOnRestoration) {
+											TaglibIndex.getInstance().addDelta(new TaglibIndexDelta(fProject, libraryRecord, ITaglibIndexDelta.ADDED));
 										}
 										// Create a new JarRecord
 										libraryRecord = createJARRecord(libraryLocation);
@@ -1644,8 +1625,8 @@ class ProjectDescription {
 										fBuildPathIsDirty = Boolean.valueOf(toker.nextToken()).booleanValue();
 									}
 								}
-								if (libraryRecord != null) {
-									TaglibIndex.fireTaglibRecordEvent(new TaglibRecordEvent(libraryRecord, ITaglibRecordEvent.ADDED));
+								if (libraryRecord != null && notifyOnRestoration) {
+									TaglibIndex.getInstance().addDelta(new TaglibIndexDelta(fProject, libraryRecord, ITaglibIndexDelta.ADDED));
 								}
 							}
 							restored = true;
@@ -1760,16 +1741,19 @@ class ProjectDescription {
 
 	void updateClasspathLibrary(String libraryLocation, int deltaKind, boolean isExported) {
 		JarRecord libraryRecord = null;
-		if (deltaKind == ITaglibRecordEvent.REMOVED || deltaKind == ITaglibRecordEvent.CHANGED) {
+		if (deltaKind == ITaglibIndexDelta.REMOVED || deltaKind == ITaglibIndexDelta.CHANGED) {
 			libraryRecord = (JarRecord) fClasspathJars.remove(libraryLocation);
 			if (libraryRecord != null) {
 				IURLRecord[] urlRecords = (IURLRecord[]) libraryRecord.urlRecords.toArray(new IURLRecord[0]);
 				for (int i = 0; i < urlRecords.length; i++) {
-					fClasspathReferences.remove(urlRecords[i].getURI());
+					ITaglibRecord record = (ITaglibRecord) fClasspathReferences.remove(urlRecords[i].getURI());
+					if (record != null) {
+						TaglibIndex.getInstance().addDelta(new TaglibIndexDelta(fProject, record, ITaglibIndexDelta.REMOVED));
+					}
 				}
 			}
 		}
-		if (deltaKind == ITaglibRecordEvent.ADDED || deltaKind == ITaglibRecordEvent.CHANGED) {
+		if (deltaKind == ITaglibIndexDelta.ADDED || deltaKind == ITaglibIndexDelta.CHANGED) {
 			libraryRecord = createJARRecord(libraryLocation);
 			libraryRecord.isExported = isExported;
 			fClasspathJars.put(libraryLocation, libraryRecord);
@@ -1797,6 +1781,7 @@ class ProjectDescription {
 										urlRecord.isExported = isExported;
 										urlRecord.url = new URL("jar:file:" + libraryLocation + "!/" + z.getName()); //$NON-NLS-1$ //$NON-NLS-2$
 										libraryRecord.urlRecords.add(urlRecord);
+										TaglibIndex.getInstance().addDelta(new TaglibIndexDelta(fProject, urlRecord, deltaKind));
 										fClasspathReferences.put(urlRecord.getURI(), urlRecord);
 										if (_debugIndexCreation)
 											Logger.log(Logger.INFO, "created record for " + urlRecord.getURI() + "@" + urlRecord.getURL()); //$NON-NLS-1$ //$NON-NLS-2$
@@ -1827,7 +1812,7 @@ class ProjectDescription {
 			}
 		}
 		if (libraryRecord != null) {
-			TaglibIndex.fireTaglibRecordEvent(new TaglibRecordEvent(libraryRecord, deltaKind));
+			TaglibIndex.getInstance().addDelta(new TaglibIndexDelta(fProject, libraryRecord, deltaKind));
 		}
 	}
 
@@ -1855,8 +1840,15 @@ class ProjectDescription {
 						try {
 							record.url = new URL("jar:file:" + jarLocationString + "!/" + entries[i]); //$NON-NLS-1$ //$NON-NLS-2$
 							jarRecord.urlRecords.add(record);
+
+							int taglibDeltaKind = ITaglibIndexDelta.ADDED;
+							Hashtable table = getImplicitReferences(jar.getFullPath().toString());
+							if (table != null && table.get(record.getURI()) != null) {
+								taglibDeltaKind = ITaglibIndexDelta.CHANGED;
+							}
+
 							getImplicitReferences(jar.getFullPath().toString()).put(record.getURI(), record);
-							TaglibIndex.fireTaglibRecordEvent(new TaglibRecordEvent(record, ITaglibRecordEvent.ADDED));
+							TaglibIndex.getInstance().addDelta(new TaglibIndexDelta(fProject, record, taglibDeltaKind));
 							if (_debugIndexCreation)
 								Logger.log(Logger.INFO, "created record for " + record.getURI() + "@" + record.getURL()); //$NON-NLS-1$ //$NON-NLS-2$
 						}
@@ -1877,7 +1869,7 @@ class ProjectDescription {
 			}
 		}
 		if (jarRecord.has11TLD) {
-			TaglibIndex.fireTaglibRecordEvent(new TaglibRecordEvent(jarRecord, deltaKind));
+			TaglibIndex.getInstance().addDelta(new TaglibIndexDelta(fProject, jarRecord, deltaKind));
 		}
 	}
 
@@ -1904,7 +1896,7 @@ class ProjectDescription {
 		if (record.getURI() != null) {
 			getImplicitReferences(tld.getFullPath().toString()).put(record.getURI(), record);
 		}
-		TaglibIndex.fireTaglibRecordEvent(new TaglibRecordEvent(record, deltaKind));
+		TaglibIndex.getInstance().addDelta(new TaglibIndexDelta(fProject, record, deltaKind));
 	}
 
 	void updateWebXML(IResource webxml, int deltaKind) {
@@ -1984,7 +1976,7 @@ class ProjectDescription {
 						}
 						record = jarRecord;
 						// the stored URI should reflect the web.xml's value
-						if(jarRecord.info == null) {
+						if (jarRecord.info == null) {
 							jarRecord.info = new TaglibInfo();
 						}
 						jarRecord.info.uri = taglibUri;
@@ -2003,7 +1995,7 @@ class ProjectDescription {
 					if (record != null) {
 						webxmlRecord.tldRecords.add(record);
 						getImplicitReferences(webxml.getFullPath().toString()).put(taglibUri, record);
-						TaglibIndex.fireTaglibRecordEvent(new TaglibRecordEvent(record, deltaKind));
+						TaglibIndex.getInstance().addDelta(new TaglibIndexDelta(fProject, record, deltaKind));
 					}
 				}
 			}

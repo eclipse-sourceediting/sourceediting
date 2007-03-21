@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,20 +11,22 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.core.taglib;
 
-
 /**
  * A listener for changes in the index's records.
- * 
  * <p>
  * This interface is not intended to be implemented by clients.
  * </p>
+ * 
+ * @since 1.2
  */
 public interface ITaglibIndexListener {
 
 	/**
-	 * Notifies this listener that an ITaglibRecordEvent has occurred
+	 * Notifies this listener that a change in the TaglibIndex, described by
+	 * an ITaglibIndexDelta, has occurred
 	 * 
-	 * @param event
+	 * @param delta
+	 *            the delta of changes
 	 */
-	void indexChanged(ITaglibRecordEvent event);
+	void indexChanged(ITaglibIndexDelta delta);
 }

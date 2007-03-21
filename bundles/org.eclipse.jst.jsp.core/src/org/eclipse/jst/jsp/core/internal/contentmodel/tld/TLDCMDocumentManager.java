@@ -50,7 +50,7 @@ import org.eclipse.jst.jsp.core.taglib.IJarRecord;
 import org.eclipse.jst.jsp.core.taglib.ITLDRecord;
 import org.eclipse.jst.jsp.core.taglib.ITaglibIndexListener;
 import org.eclipse.jst.jsp.core.taglib.ITaglibRecord;
-import org.eclipse.jst.jsp.core.taglib.ITaglibRecordEvent;
+import org.eclipse.jst.jsp.core.taglib.ITaglibIndexDelta;
 import org.eclipse.jst.jsp.core.taglib.IURLRecord;
 import org.eclipse.jst.jsp.core.taglib.TaglibIndex;
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolverPlugin;
@@ -748,6 +748,8 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 
 
 	public static Object getUniqueIdentifier(ITaglibRecord reference) {
+		if (reference == null)
+			return null;
 		Object identifier = null;
 		switch (reference.getRecordType()) {
 			case (ITaglibRecord.TLD) : {
@@ -1123,7 +1125,7 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 		return result;
 	}
 
-	public void indexChanged(ITaglibRecordEvent event) {}
+	public void indexChanged(ITaglibIndexDelta event) {}
 
 	/**
 	 * Loads the tags from the specified URI. It must point to a URL of valid

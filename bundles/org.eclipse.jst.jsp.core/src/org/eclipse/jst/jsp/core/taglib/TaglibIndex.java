@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005,2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -68,8 +68,12 @@ public final class TaglibIndex {
 				return;
 			try {
 				LOCK.acquire();
+				if (_debugEvents) {
+					Logger.log(Logger.INFO, "TaglibIndex responding to:" + event); //$NON-NLS-1$
+				}
 				projectsIndexed.clear();
 				elementChanged(event.getDelta(), true);
+				fireCurrentDelta(event);
 			}
 			finally {
 				LOCK.release();
@@ -101,20 +105,22 @@ public final class TaglibIndex {
 							 * If the project is being deleted or closed, just
 							 * remove the description
 							 */
-							IJavaProject proj = (IJavaProject)element;
+							IJavaProject proj = (IJavaProject) element;
 							ProjectDescription description = (ProjectDescription) fProjectDescriptions.remove(proj.getProject());
 							if (description != null) {
 								if (_debugIndexCreation) {
 									Logger.log(Logger.INFO, "removing index of " + description.fProject.getName()); //$NON-NLS-1$
 								}
-								// removing the index file ensures that we don't get stale data if the project is reopened
+								// removing the index file ensures that we
+								// don't get stale data if the project is
+								// reopened
 								removeIndex(proj.getProject());
 							}
 						}
 					}
 					/*
-					 * (else) Without the classpath changing, there's
-					 * nothing else to do
+					 * (else) Without the classpath changing, there's nothing
+					 * else to do
 					 */
 					else {
 						for (int i = 0; i < deltas.length; i++) {
@@ -187,6 +193,9 @@ public final class TaglibIndex {
 				return;
 			try {
 				LOCK.acquire();
+				if (_debugEvents) {
+					Logger.log(Logger.INFO, "TaglibIndex responding to:" + event + "\n" + event.getDelta()); //$NON-NLS-2$ //$NON-NLS-1$
+				}
 				switch (event.getType()) {
 					case IResourceChangeEvent.PRE_CLOSE :
 					case IResourceChangeEvent.PRE_DELETE : {
@@ -278,6 +287,8 @@ public final class TaglibIndex {
 									}
 								}
 								for (int i = 0; i < projects.length; i++) {
+									if (deltas[i].getKind() == IResourceDelta.CHANGED && (deltas[i].getFlags() == IResourceDelta.ENCODING || deltas[i].getFlags() == IResourceDelta.MARKERS))
+										continue;
 									try {
 										if (deltas[i] != null && deltas[i].getKind() != IResourceDelta.REMOVED && projects[i].isAccessible()) {
 											ProjectDescription description = getDescription(projects[i]);
@@ -309,6 +320,8 @@ public final class TaglibIndex {
 						}
 					}
 				}
+
+				fireCurrentDelta(event);
 			}
 			finally {
 				LOCK.release();
@@ -343,30 +356,36 @@ public final class TaglibIndex {
 	public static void addTaglibIndexListener(ITaglibIndexListener listener) {
 		try {
 			LOCK.acquire();
-			if (_instance != null)
-				_instance.internalAddTaglibIndexListener(listener);
+			if (getInstance() != null)
+				getInstance().internalAddTaglibIndexListener(listener);
 		}
 		finally {
 			LOCK.release();
 		}
 	}
 
-	static void fireTaglibRecordEvent(ITaglibRecordEvent event) {
+	static void fireTaglibDelta(ITaglibIndexDelta delta) {
 		if (_debugEvents) {
-			Logger.log(Logger.INFO, "TaglibIndex fired event:" + event); //$NON-NLS-1$
+			Logger.log(Logger.INFO, "TaglibIndex fired delta:" + delta + " [" + delta.getAffectedChildren().length + "]\n" + ((TaglibIndexDelta) delta).trigger); //$NON-NLS-1$
 		}
 		/*
 		 * Flush any shared cache entries, the TaglibControllers should handle
 		 * updating their documents as needed.
 		 */
-		TLDCMDocumentManager.getSharedDocumentCache().remove(TLDCMDocumentManager.getUniqueIdentifier(event.getTaglibRecord()));
+		ITaglibIndexDelta[] deltas = delta.getAffectedChildren();
+		for (int i = 0; i < deltas.length; i++) {
+			ITaglibRecord taglibRecord = deltas[i].getTaglibRecord();
+			if (taglibRecord != null) {
+				TLDCMDocumentManager.getSharedDocumentCache().remove(TLDCMDocumentManager.getUniqueIdentifier(taglibRecord));
+			}
+		}
 
 		if (_instance != null) {
 			ITaglibIndexListener[] listeners = _instance.fTaglibIndexListeners;
 			if (listeners != null) {
-				for (int i = 0; i < listeners.length; i++) {
+				for (int j = 0; j < listeners.length; j++) {
 					try {
-						listeners[i].indexChanged(event);
+						listeners[j].indexChanged(delta);
 					}
 					catch (Exception e) {
 						Logger.log(Logger.WARNING, e.getMessage());
@@ -375,6 +394,7 @@ public final class TaglibIndex {
 			}
 		}
 	}
+
 
 	/**
 	 * Finds all of the visible ITaglibRecords for the given path in the
@@ -392,14 +412,17 @@ public final class TaglibIndex {
 		try {
 			LOCK.acquire();
 			ITaglibRecord[] records = null;
-			if (_instance != null)
-				records = _instance.internalGetAvailableTaglibRecords(fullPath);
-			else
+			if (getInstance() != null) {
+				records = getInstance().internalGetAvailableTaglibRecords(fullPath);
+			}
+			else {
 				records = new ITaglibRecord[0];
+			}
 			return records;
 		}
 		finally {
 			LOCK.release();
+			getInstance().fireCurrentDelta("enumerate: " + fullPath); //$NON-NLS-1$
 		}
 	}
 
@@ -412,21 +435,24 @@ public final class TaglibIndex {
 	 * @param path -
 	 *            a path under the web-app root
 	 * @return the IPath considered to be the web-app's root for the given
-	 *         path
+	 *         path or null if one could not be determined
 	 */
 	public static IPath getContextRoot(IPath path) {
 		try {
 			LOCK.acquire();
-			return _instance.internalGetContextRoot(path);
+			if(getInstance() != null)
+			return getInstance().internalGetContextRoot(path);
 		}
 		finally {
 			LOCK.release();
 		}
+		return null;
 	}
 
-	private String getState() {
-		String state = JSPCorePlugin.getDefault().getPluginPreferences().getString(TaglibIndex.class.getName());
-		return state;
+	public static TaglibIndex getInstance() {
+		if (_instance == null)
+			startup();
+		return _instance;
 	}
 
 	/**
@@ -438,8 +464,8 @@ public final class TaglibIndex {
 	public static void removeTaglibIndexListener(ITaglibIndexListener listener) {
 		try {
 			LOCK.acquire();
-			if (_instance != null)
-				_instance.internalRemoveTaglibIndexListener(listener);
+			if (getInstance() != null)
+				getInstance().internalRemoveTaglibIndexListener(listener);
 		}
 		finally {
 			LOCK.release();
@@ -468,12 +494,14 @@ public final class TaglibIndex {
 		ITaglibRecord result = null;
 		try {
 			LOCK.acquire();
-			if (_instance != null)
-				result = _instance.internalResolve(basePath, reference, crossProjects);
+			if (getInstance() != null) {
+				result = getInstance().internalResolve(basePath, reference, crossProjects);
+			}
 		}
 		finally {
 			LOCK.release();
 		}
+		getInstance().fireCurrentDelta("resolve: " + reference); //$NON-NLS-1$
 		if (_debugResolution) {
 			if (result == null) {
 				Logger.log(Logger.INFO, "TaglibIndex could not resolve \"" + reference + "\" from " + basePath); //$NON-NLS-1$ //$NON-NLS-2$
@@ -505,56 +533,6 @@ public final class TaglibIndex {
 	}
 
 	/**
-	 * Removes index file for the given project.
-	 */
-	private void removeIndex(IProject project) {
-		File indexFile = new File(computeIndexLocation(project.getFullPath()));
-		if (indexFile.exists()) {
-			indexFile.delete();
-		}
-	}
-
-	/**
-	 * Removes index files. Used for maintenance and keeping the index folder
-	 * a manageable size.
-	 * 
-	 * @param staleOnly -
-	 *            if <b>true</b>, removes only the indexes for projects not
-	 *            open in the workspace, if <b>false</b>, removes all of the
-	 *            indexes
-	 */
-	private void removeIndexes(boolean staleOnly) {
-		String osPath = getTaglibIndexStateLocation().toOSString();
-		File folder = new File(osPath);
-		if (!folder.isDirectory()) {
-			try {
-				folder.mkdir();
-			}
-			catch (SecurityException e) {
-			}
-		}
-
-		// remove any extraneous index files
-		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
-		List indexNames = new ArrayList(projects.length);
-		if (staleOnly) {
-			for (int i = 0; i < projects.length; i++) {
-				if (projects[i].isAccessible()) {
-					indexNames.add(computeIndexName(projects[i].getFullPath()));
-				}
-			}
-		}
-
-		if (folder.isDirectory()) {
-			File[] files = folder.listFiles();
-			for (int i = 0; files != null && i < files.length; i++) {
-				if (!indexNames.contains(files[i].getName()))
-					files[i].delete();
-			}
-		}
-	}
-
-	/**
 	 * Instructs the index to stop listening for resource and classpath
 	 * changes, and to forget all information about the workspace.
 	 */
@@ -576,25 +554,31 @@ public final class TaglibIndex {
 	 * changes.
 	 */
 	public static synchronized void startup() {
-		try {
-			LOCK.acquire();
-			ENABLED = !"false".equalsIgnoreCase(System.getProperty(TaglibIndex.class.getName())); //$NON-NLS-1$
-			_instance = new TaglibIndex();
-		}
-		finally {
-			LOCK.release();
+		boolean shuttingDown = !Platform.isRunning() || Platform.getBundle(OSGI_FRAMEWORK_ID).getState() == Bundle.STOPPING;
+		if (!shuttingDown) {
+			try {
+				LOCK.acquire();
+				ENABLED = !"false".equalsIgnoreCase(System.getProperty(TaglibIndex.class.getName())); //$NON-NLS-1$
+				_instance = new TaglibIndex();
+			}
+			finally {
+				LOCK.release();
+			}
 		}
 	}
 
 	private ClasspathChangeListener fClasspathChangeListener = null;
+
+	private TaglibIndexDelta fCurrentTopLevelDelta = null;
 
 	Map fProjectDescriptions;
 
 	private ResourceChangeListener fResourceChangeListener;
 
 	private ITaglibIndexListener[] fTaglibIndexListeners = null;
+
 	/** symbolic name for OSGI framework */
-	private final String OSGI_FRAMEWORK_ID = "org.eclipse.osgi"; //$NON-NLS-1$
+	private final static String OSGI_FRAMEWORK_ID = "org.eclipse.osgi"; //$NON-NLS-1$
 
 	private TaglibIndex() {
 		super();
@@ -615,6 +599,15 @@ public final class TaglibIndex {
 			ResourcesPlugin.getWorkspace().addResourceChangeListener(fResourceChangeListener, IResourceChangeEvent.POST_CHANGE);
 			JavaCore.addElementChangedListener(fClasspathChangeListener);
 		}
+	}
+
+	/**
+	 * Adds the given delta as a child to an overall delta
+	 * 
+	 * @param delta
+	 */
+	void addDelta(ITaglibIndexDelta delta) {
+		ensureDelta(delta.getProject()).addChildDelta(delta);
 	}
 
 	/**
@@ -658,6 +651,29 @@ public final class TaglibIndex {
 	}
 
 	/**
+	 * Ensures that a delta exists for holding index change information
+	 */
+	private TaglibIndexDelta ensureDelta(IProject project) {
+		/*
+		 * The first delta to be added will determine which project the
+		 * top-level delta will contain.
+		 */
+		if (fCurrentTopLevelDelta == null) {
+			fCurrentTopLevelDelta = new TaglibIndexDelta(project, null, ITaglibIndexDelta.CHANGED);
+		}
+		return fCurrentTopLevelDelta;
+	}
+
+	void fireCurrentDelta(Object trigger) {
+		if (fCurrentTopLevelDelta != null) {
+			fCurrentTopLevelDelta.trigger = trigger;
+			ITaglibIndexDelta delta = fCurrentTopLevelDelta;
+			fCurrentTopLevelDelta = null;
+			fireTaglibDelta(delta);
+		}
+	}
+
+	/**
 	 * A check to see if the OSGI framework is shutting down.
 	 * 
 	 * @return true if the System Bundle is stopped (ie. the framework is
@@ -678,6 +694,11 @@ public final class TaglibIndex {
 		return description;
 	}
 
+	private String getState() {
+		String state = JSPCorePlugin.getDefault().getPluginPreferences().getString(TaglibIndex.class.getName());
+		return state;
+	}
+
 	private IPath getTaglibIndexStateLocation() {
 		return JSPCorePlugin.getDefault().getStateLocation().append("taglibindex/");
 	}
@@ -688,7 +709,9 @@ public final class TaglibIndex {
 		}
 		else {
 			List listeners = new ArrayList(Arrays.asList(fTaglibIndexListeners));
-			listeners.add(listener);
+			if (!listeners.contains(listener)) {
+				listeners.add(listener);
+			}
 			fTaglibIndexListeners = (ITaglibIndexListener[]) listeners.toArray(new ITaglibIndexListener[0]);
 		}
 	}
@@ -726,7 +749,7 @@ public final class TaglibIndex {
 		IFile baseResource = FileBuffers.getWorkspaceFileAtLocation(path);
 		if (baseResource != null) {
 			IProject project = baseResource.getProject();
-			ProjectDescription description = _instance.createDescription(project);
+			ProjectDescription description = getInstance().createDescription(project);
 			IPath rootPath = description.getLocalRoot(baseResource.getFullPath());
 			return rootPath;
 		}
@@ -791,6 +814,56 @@ public final class TaglibIndex {
 
 	boolean isIndexAvailable() {
 		return _instance != null && ENABLED;
+	}
+
+	/**
+	 * Removes index file for the given project.
+	 */
+	private void removeIndex(IProject project) {
+		File indexFile = new File(computeIndexLocation(project.getFullPath()));
+		if (indexFile.exists()) {
+			indexFile.delete();
+		}
+	}
+
+	/**
+	 * Removes index files. Used for maintenance and keeping the index folder
+	 * a manageable size.
+	 * 
+	 * @param staleOnly -
+	 *            if <b>true</b>, removes only the indexes for projects not
+	 *            open in the workspace, if <b>false</b>, removes all of the
+	 *            indexes
+	 */
+	private void removeIndexes(boolean staleOnly) {
+		String osPath = getTaglibIndexStateLocation().toOSString();
+		File folder = new File(osPath);
+		if (!folder.isDirectory()) {
+			try {
+				folder.mkdir();
+			}
+			catch (SecurityException e) {
+			}
+		}
+
+		// remove any extraneous index files
+		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+		List indexNames = new ArrayList(projects.length);
+		if (staleOnly) {
+			for (int i = 0; i < projects.length; i++) {
+				if (projects[i].isAccessible()) {
+					indexNames.add(computeIndexName(projects[i].getFullPath()));
+				}
+			}
+		}
+
+		if (folder.isDirectory()) {
+			File[] files = folder.listFiles();
+			for (int i = 0; files != null && i < files.length; i++) {
+				if (!indexNames.contains(files[i].getName()))
+					files[i].delete();
+			}
+		}
 	}
 
 	private void setState(String state) {
