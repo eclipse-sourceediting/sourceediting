@@ -39,6 +39,7 @@ import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.ServerUtil;
 import org.eclipse.wst.server.core.internal.ModuleFile;
 import org.eclipse.wst.server.core.internal.ModuleFolder;
+import org.eclipse.wst.server.core.model.IModuleFile;
 import org.eclipse.wst.server.core.model.IModuleFolder;
 import org.eclipse.wst.server.core.model.IModuleResource;
 import org.eclipse.wst.server.core.util.ProjectModule;
@@ -177,13 +178,13 @@ public abstract class ComponentDeployable extends ProjectModule {
 				// Handle the default package case
 				if (path.equals(javaPath)) {
 					ModuleFolder mFolder = (ModuleFolder) getExistingModuleResource(members,javaPath);
-					ModuleFile mFile = new ModuleFile(f, f.getName(), javaPath, f.getModificationStamp() + f.getLocalTimeStamp());
+					IModuleFile mFile = createModuleFile(f, javaPath);
 					if (mFolder != null)
 						addMembersToModuleFolder(mFolder,new IModuleResource[]{mFile});
 					else
 						list.add(mFile);
 				} else {
-					ModuleFile mf = new ModuleFile(f, f.getName(), path, f.getModificationStamp() + f.getLocalTimeStamp());
+					IModuleFile mf = createModuleFile(f, path);
 					list.add(mf);
 				}
 			}
@@ -191,6 +192,10 @@ public abstract class ComponentDeployable extends ProjectModule {
 		IModuleResource[] mr = new IModuleResource[list.size()];
 		list.toArray(mr);
 		return mr;
+	}
+	
+	protected IModuleFile createModuleFile(final IFile file, final IPath path) {
+		return new ModuleFile(file, file.getName(), path, file.getModificationStamp() + file.getLocalTimeStamp());
 	}
 	
 	protected IModuleResource[] getMembers(IVirtualContainer cont, IPath path) throws CoreException {
@@ -217,8 +222,9 @@ public abstract class ComponentDeployable extends ProjectModule {
 				addMembersToModuleFolder(mf, mr);
 			} else {
 				IFile f = (IFile) res[j].getUnderlyingResource();
+				IModuleFile mf = null;
 				if (shouldAddComponentFile(f)) {
-					ModuleFile mf = new ModuleFile(f, f.getName(), path, f.getModificationStamp() + f.getLocalTimeStamp());
+					mf = createModuleFile(f, path);
 					list.add(mf);
 				}
 			}
@@ -332,7 +338,7 @@ public abstract class ComponentDeployable extends ProjectModule {
 		return mr;
 	}
 	
-	protected boolean shouldIncludeUtilityComponent(IVirtualComponent virtualComp, IVirtualReference[] references, ArtifactEdit edit) {
+	protected boolean shouldIncludeUtilityComponent(IVirtualComponent virtualComp, IVirtualReference[] components, ArtifactEdit edit) {
 		return virtualComp != null && virtualComp.isBinary() && virtualComp.getProject()==component.getProject();
 	}
 	
@@ -342,42 +348,47 @@ public abstract class ComponentDeployable extends ProjectModule {
 			edit = getComponentArtifactEditForRead();
 			IVirtualReference[] components = vc.getReferences();
 	    	for (int i = 0; i < components.length; i++) {
-				IVirtualReference reference = components[i];
+	    		IVirtualReference reference = components[i];
 				IVirtualComponent virtualComp = reference.getReferencedComponent();
 				if (shouldIncludeUtilityComponent(virtualComp,components,edit)) {
-					ModuleFile mf = null;
-					String archiveName = reference.getArchiveName();
-					IPath archivePath = ((VirtualArchiveComponent)virtualComp).getWorkspaceRelativePath();
-					if (archivePath != null) { //In Workspace
-						IFile utilFile = ResourcesPlugin.getWorkspace().getRoot().getFile(archivePath);
-						String name = null != archiveName ? archiveName : utilFile.getName();
-						mf = new ModuleFile(utilFile, name, reference.getRuntimePath().makeRelative());
-					}
-					else {
-						File extFile = ((VirtualArchiveComponent)virtualComp).getUnderlyingDiskFile();
-						String name = null != archiveName ? archiveName : extFile.getName();
-						mf = new ModuleFile(extFile, name, reference.getRuntimePath().makeRelative());
-					}
-					if (mf == null)
-						continue;
-					IModuleResource moduleParent = getExistingModuleResource(members, mf.getModuleRelativePath());
-					
-					if (moduleParent != null && moduleParent instanceof ModuleFolder)
-						addMembersToModuleFolder((ModuleFolder)moduleParent, new IModuleResource[]{mf});
-					else {
-						if (mf.getModuleRelativePath().isEmpty())
-							members.add(mf);
-						else {
-							if (moduleParent == null)
-								moduleParent = ensureParentExists(mf.getModuleRelativePath(), (IContainer)vc.getRootFolder().getUnderlyingResource());
-							addMembersToModuleFolder((ModuleFolder)moduleParent, new IModuleResource[] {mf});
-						}
-					}
+					addUtilMember(vc, reference, reference.getRuntimePath());
 				}
 	    	}
 		} finally {
 			if (edit!=null)
 				edit.dispose();
+		}
+	}
+	
+	protected void addUtilMember(IVirtualComponent parent, IVirtualReference reference, IPath runtimePath) {
+		IModuleFile mf = null;
+		final String archiveName = reference.getArchiveName();
+		final IVirtualComponent virtualComp = reference.getReferencedComponent();
+		final IPath archivePath = ((VirtualArchiveComponent)virtualComp).getWorkspaceRelativePath();
+		if (archivePath != null) { //In Workspace
+			IFile utilFile = ResourcesPlugin.getWorkspace().getRoot().getFile(archivePath);
+			String name = null != archiveName ? archiveName : utilFile.getName();
+			mf = new ModuleFile(utilFile, name, runtimePath.makeRelative());
+		} else {
+			File extFile = ((VirtualArchiveComponent)virtualComp).getUnderlyingDiskFile();
+			String name = null != archiveName ? archiveName : extFile.getName();
+			mf = new ModuleFile(extFile, name, runtimePath.makeRelative());
+		}
+		if (mf == null) {
+			return;
+		}
+		IModuleResource moduleParent = getExistingModuleResource(members, mf.getModuleRelativePath());
+		if (moduleParent != null && moduleParent instanceof ModuleFolder) {
+			addMembersToModuleFolder((ModuleFolder)moduleParent, new IModuleResource[]{mf});
+		} else {
+			if (mf.getModuleRelativePath().isEmpty()) {
+				members.add(mf);
+			} else {
+				if (moduleParent == null) {
+					moduleParent = ensureParentExists(mf.getModuleRelativePath(), (IContainer)parent.getRootFolder().getUnderlyingResource());
+				}
+				addMembersToModuleFolder((ModuleFolder)moduleParent, new IModuleResource[] {mf});
+			}
 		}
 	}
 	
