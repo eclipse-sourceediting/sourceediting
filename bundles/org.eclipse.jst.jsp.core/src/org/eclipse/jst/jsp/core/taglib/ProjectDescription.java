@@ -596,7 +596,7 @@ class ProjectDescription {
 		for (int i = 0; i < buildpathProjects.length; i++) {
 			if (!projectsProcessed.contains(buildpathProjects[i]) && buildpathProjects[i].isAccessible()) {
 				projectsProcessed.add(buildpathProjects[i]);
-				ProjectDescription description = TaglibIndex._instance.createDescription(buildpathProjects[i]);
+				ProjectDescription description = TaglibIndex.getInstance().createDescription(buildpathProjects[i]);
 				description.addBuildPathReferences(references, projectsProcessed, true);
 			}
 		}
