@@ -20,18 +20,10 @@ public class MalformedOutputExceptionWithDetail extends MalformedInputExceptionW
 	 */
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * Disallow default constructor. If attemptedEncoding and charPostion can
-	 * not be provided, use sun.io.MalformedException.
-	 */
-	private MalformedOutputExceptionWithDetail() {
-		// default constructor is disallowed, since if
-		// extra info can not be provided, the regular
-		// Malformed exception should be thrown
-	}
 
 	/**
-	 * Constructor for MalformedOutputExceptionWithDetail.
+	 * Constructor for MalformedOutputExceptionWithDetail. If attemptedEncoding and charPostion can
+	 * not be provided, use sun.io.MalformedException.
 	 * 
 	 * @param attemptedJavaEncoding
 	 * @param attemptedIANAEncoding

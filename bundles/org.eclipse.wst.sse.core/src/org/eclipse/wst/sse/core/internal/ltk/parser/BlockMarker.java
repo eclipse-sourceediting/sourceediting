@@ -31,14 +31,6 @@ public class BlockMarker extends TagMarker {
 	// etc.)
 	protected String fContext;
 
-	/**
-	 * It's not appropriate to make "empty" BlockMarker, so we'll mark as
-	 * private.
-	 */
-	private BlockMarker() {
-		super();
-	}
-
 	public BlockMarker(String tagName, ITextRegion marker, String context) {
 		this(tagName, marker, context, true);
 	}
