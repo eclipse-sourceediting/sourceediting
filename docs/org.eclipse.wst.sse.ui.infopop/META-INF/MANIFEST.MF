@@ -5,3 +5,4 @@ Bundle-SymbolicName: org.eclipse.wst.sse.ui.infopop; singleton:=true
 Bundle-Version: 1.0.101.qualifier
 Bundle-Vendor: %Bundle-Vendor.0
 Bundle-Localization: plugin
+Bundle-RequiredExecutionEnvironment: J2SE-1.4
