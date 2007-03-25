@@ -13,6 +13,8 @@ package org.eclipse.wst.dtd.ui.internal.preferences;
 
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.contentassist.ContentAssistant;
+import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
@@ -46,7 +48,26 @@ public class DTDTemplatePreferencePage extends TemplatePreferencePage {
 		}
 
 		protected SourceViewer createViewer(Composite parent) {
-			return doCreateViewer(parent);
+			SourceViewerConfiguration sourceViewerConfiguration = new StructuredTextViewerConfiguration() {
+				StructuredTextViewerConfiguration baseConfiguration = new StructuredTextViewerConfigurationDTD();
+
+				public String[] getConfiguredContentTypes(ISourceViewer sourceViewer) {
+					return baseConfiguration.getConfiguredContentTypes(sourceViewer);
+				}
+
+				public LineStyleProvider[] getLineStyleProviders(ISourceViewer sourceViewer, String partitionType) {
+					return baseConfiguration.getLineStyleProviders(sourceViewer, partitionType);
+				}
+
+				public IContentAssistant getContentAssistant(ISourceViewer sourceViewer) {
+					ContentAssistant assistant = new ContentAssistant();
+					assistant.enableAutoActivation(true);
+					assistant.enableAutoInsert(true);
+					assistant.setContentAssistProcessor(getTemplateProcessor(), IDocument.DEFAULT_CONTENT_TYPE);
+					return assistant;
+				}
+			};
+			return doCreateViewer(parent, sourceViewerConfiguration);
 		}
 	}
 
@@ -96,12 +117,6 @@ public class DTDTemplatePreferencePage extends TemplatePreferencePage {
 	 * @see org.eclipse.ui.texteditor.templates.TemplatePreferencePage#createViewer(org.eclipse.swt.widgets.Composite)
 	 */
 	protected SourceViewer createViewer(Composite parent) {
-		return doCreateViewer(parent);
-	}
-
-	SourceViewer doCreateViewer(Composite parent) {
-		SourceViewer viewer = null;
-		String contentTypeID = ContentTypeIdForDTD.ContentTypeID_DTD;
 		SourceViewerConfiguration sourceViewerConfiguration = new StructuredTextViewerConfiguration() {
 			StructuredTextViewerConfiguration baseConfiguration = new StructuredTextViewerConfigurationDTD();
 
@@ -113,11 +128,17 @@ public class DTDTemplatePreferencePage extends TemplatePreferencePage {
 				return baseConfiguration.getLineStyleProviders(sourceViewer, partitionType);
 			}
 		};
+		return doCreateViewer(parent, sourceViewerConfiguration);
+	}
+
+	SourceViewer doCreateViewer(Composite parent, SourceViewerConfiguration viewerConfiguration) {
+		SourceViewer viewer = null;
+		String contentTypeID = ContentTypeIdForDTD.ContentTypeID_DTD;
 		viewer = new StructuredTextViewer(parent, null, null, false, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
 		((StructuredTextViewer) viewer).getTextWidget().setFont(JFaceResources.getFont("org.eclipse.wst.sse.ui.textfont")); //$NON-NLS-1$
 		IStructuredModel scratchModel = StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(contentTypeID);
 		IDocument document = scratchModel.getStructuredDocument();
-		viewer.configure(sourceViewerConfiguration);
+		viewer.configure(viewerConfiguration);
 		viewer.setDocument(document);
 		return viewer;
 	}

@@ -189,8 +189,8 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 	 * Note: The same instance of IContentAssistant is returned regardless of
 	 * the source viewer passed in.
 	 * <p>
-	 * Clients cannot override this method. Instead, clients wanting to add
-	 * their own processors should override
+	 * Clients should generally not override this method. Instead, clients
+	 * wanting to add their own processors should override
 	 * <code>getContentAssistProcessors(ISourceViewer, String)</code>
 	 * </p>
 	 * 
@@ -199,7 +199,7 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 	 * @return a content assistant
 	 * @see #getContentAssistProcessors(ISourceViewer, String)
 	 */
-	final public IContentAssistant getContentAssistant(ISourceViewer sourceViewer) {
+	public IContentAssistant getContentAssistant(ISourceViewer sourceViewer) {
 		/*
 		 * Note: This method was made final so that StructuredContentAssist is
 		 * always used and content assist extension point always works.
