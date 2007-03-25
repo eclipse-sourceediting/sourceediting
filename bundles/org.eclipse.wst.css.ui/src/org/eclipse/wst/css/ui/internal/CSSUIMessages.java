@@ -115,4 +115,10 @@ public class CSSUIMessages extends NLS {
 	public static String NewCSSTemplatesWizardPage_6;
 	public static String CSSContentSettingsPropertyPage_0;
 	public static String CSSContentSettingsPropertyPage_1;
+	public static String SyntaxColoringPage_0;
+	public static String SyntaxColoringPage_2;
+	public static String SyntaxColoringPage_3;
+	public static String SyntaxColoringPage_4;
+	public static String SyntaxColoringPage_5;
+	public static String SyntaxColoringPage_6;
 }

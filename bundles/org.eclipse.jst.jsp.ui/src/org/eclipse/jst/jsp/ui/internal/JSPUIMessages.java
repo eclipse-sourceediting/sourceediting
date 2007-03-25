@@ -104,4 +104,10 @@ public class JSPUIMessages extends NLS {
 	public static String ProjectJSPFContentSettingsPropertyPage_0;
 	public static String Title_InvalidValue;
 	public static String Message_InvalidValue;
+	public static String SyntaxColoringPage_0;
+	public static String SyntaxColoringPage_2;
+	public static String SyntaxColoringPage_3;
+	public static String SyntaxColoringPage_4;
+	public static String SyntaxColoringPage_5;
+	public static String SyntaxColoringPage_6;
 }

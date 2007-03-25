@@ -64,6 +64,12 @@ public class DTDUIMessages extends NLS {
 	public static String NewDTDTemplatesWizardPage_4;
 	public static String NewDTDTemplatesWizardPage_5;
 	public static String NewDTDTemplatesWizardPage_6;
+	public static String SyntaxColoringPage_0;
+	public static String SyntaxColoringPage_2;
+	public static String SyntaxColoringPage_3;
+	public static String SyntaxColoringPage_4;
+	public static String SyntaxColoringPage_5;
+	public static String SyntaxColoringPage_6;
 
 	static {
 		// load message values from bundle file
