@@ -12,52 +12,35 @@ package org.eclipse.wst.jsdt.web.ui;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.ITextDoubleClickStrategy;
 import org.eclipse.jface.text.ITextHover;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
-import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.formatter.ContentFormatter;
-import org.eclipse.jface.text.formatter.ContextBasedFormattingStrategy;
 import org.eclipse.jface.text.formatter.IContentFormatter;
-import org.eclipse.jface.text.formatter.MultiPassContentFormatter;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
-import org.eclipse.jface.text.information.IInformationPresenter;
 import org.eclipse.jface.text.information.IInformationProvider;
 import org.eclipse.jface.text.source.ISourceViewer;
+import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.eclipse.wst.jsdt.ui.JavaUI;
 import org.eclipse.wst.jsdt.ui.PreferenceConstants;
 import org.eclipse.wst.jsdt.ui.text.IJavaPartitions;
 import org.eclipse.wst.jsdt.ui.text.JavaSourceViewerConfiguration;
-import org.eclipse.wst.jsdt.web.core.internal.text.StructuredTextPartitionerForJSP;
 import org.eclipse.wst.jsdt.web.core.text.IJSPPartitions;
 import org.eclipse.wst.jsdt.web.ui.internal.autoedit.AutoEditStrategyForTabs;
-import org.eclipse.wst.jsdt.web.ui.internal.autoedit.StructuredAutoEditStrategyJSP;
 import org.eclipse.wst.jsdt.web.ui.internal.contentassist.JSDTContentAssistant;
-
 import org.eclipse.wst.jsdt.web.ui.internal.format.FormattingStrategyJSPJava;
 import org.eclipse.wst.jsdt.web.ui.internal.hyperlink.JSPJavaHyperlinkDetector;
-import org.eclipse.wst.jsdt.web.ui.internal.hyperlink.XMLHyperlinkDetector;
 import org.eclipse.wst.jsdt.web.ui.internal.style.java.LineStyleProviderForJSDT;
 import org.eclipse.wst.jsdt.web.ui.internal.taginfo.JSDTHoverProcessor;
 import org.eclipse.wst.jsdt.web.ui.internal.taginfo.JSDTInformationProvider;
-import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
-import org.eclipse.wst.common.project.facet.core.runtime.RuntimeManager;
-import org.eclipse.wst.css.core.text.ICSSPartitions;
-import org.eclipse.wst.html.core.internal.format.HTMLFormatProcessorImpl;
-import org.eclipse.wst.html.core.text.IHTMLPartitions;
-import org.eclipse.wst.html.ui.StructuredTextViewerConfigurationHTML;
-import org.eclipse.wst.sse.core.text.IStructuredPartitions;
 import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
-import org.eclipse.wst.sse.ui.internal.format.StructuredFormattingStrategy;
 import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
 import org.eclipse.wst.sse.ui.internal.taginfo.TextHoverManager;
 import org.eclipse.wst.sse.ui.internal.util.EditorUtility;
-import org.eclipse.wst.xml.core.text.IXMLPartitions;
 import org.eclipse.wst.xml.ui.StructuredTextViewerConfigurationXML;
 
 /**

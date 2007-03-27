@@ -83,7 +83,7 @@ public class AutoEditStrategyForJs implements IAutoEditStrategy{
     				javaProject = JavaCore.create(project);
            
 		}finally{
-			if(model!=null)	model.releaseFromEdit();
+			if(model!=null)	model.releaseFromRead();
 		}
 		return javaProject;
 	}

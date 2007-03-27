@@ -3,9 +3,8 @@ package org.eclipse.wst.jsdt.web.ui.internal.preferences;
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.templates.Template;
-import org.eclipse.wst.jsdt.web.ui.internal.JSPUIPlugin;
-import org.eclipse.wst.jsdt.web.ui.internal.style.IStyleConstantsJSP;
 import org.eclipse.wst.html.ui.internal.style.IStyleConstantsHTML;
+import org.eclipse.wst.jsdt.web.ui.internal.JSPUIPlugin;
 import org.eclipse.wst.sse.ui.internal.preferences.ui.ColorHelper;
 import org.eclipse.wst.xml.ui.internal.style.IStyleConstantsXML;
 
@@ -55,8 +54,7 @@ public class JSPUIPreferenceInitializer extends AbstractPreferenceInitializer {
 		styleValue = ColorHelper.getColorString(191, 95, 63) + NOBACKGROUNDBOLD;
 		store.setDefault(IStyleConstantsHTML.SCRIPT_AREA_BORDER, styleValue);
 
-		styleValue = "null" + NOBACKGROUNDBOLD; //$NON-NLS-1$
-		store.setDefault(IStyleConstantsJSP.JSP_CONTENT, styleValue);
+		
 
 		// set default new jsp file template to use in new file wizard
 		/*

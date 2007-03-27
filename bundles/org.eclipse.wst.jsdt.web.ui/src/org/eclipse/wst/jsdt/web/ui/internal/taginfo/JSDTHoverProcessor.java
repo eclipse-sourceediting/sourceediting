@@ -161,7 +161,7 @@ public class JSDTHoverProcessor extends AbstractHoverProcessor {
 	 *      int)
 	 */
 	public IRegion getHoverRegion(ITextViewer textViewer, int offset) {
-		return JavaWordFinder.findWord(textViewer.getDocument(), offset);
+		return JsWordFinder.findWord(textViewer.getDocument(), offset);
 	}
 
 	private String getInfoText(IJavaElement member) {
