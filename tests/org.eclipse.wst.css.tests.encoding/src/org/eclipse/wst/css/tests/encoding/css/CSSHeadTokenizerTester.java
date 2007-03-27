@@ -115,12 +115,12 @@ public class CSSHeadTokenizerTester extends TestCase {
 		doTestFile(filename, null);
 	}
 
-	public void testEUCJP() throws IOException {
+	public void _testEUCJP() throws IOException {
 		String filename = this.fileLocation + "encoding_test_eucjp.css";
 		doTestFile(filename, "EUC-JP");
 	}
 
-	public void testJIS() throws IOException {
+	public void _testJIS() throws IOException {
 		String filename = this.fileLocation + "encoding_test_jis.css";
 		doTestFile(filename, "ISO-2022-JP");
 	}

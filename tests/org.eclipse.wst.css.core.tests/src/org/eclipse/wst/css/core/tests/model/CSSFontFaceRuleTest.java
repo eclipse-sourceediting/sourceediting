@@ -61,7 +61,7 @@ public class CSSFontFaceRuleTest extends AbstractModelTest {
 		assertEquals("expanded", primitiveValue.getStringValue());
 	}
 
-	public void testInsertText1() throws IOException {
+	public void _testInsertText1() throws IOException {
 		ICSSModel model = getModel();
 		IStructuredDocument structuredDocument = model.getStructuredDocument();
 		structuredDocument.set(FileUtil.createString("src/org/eclipse/wst/css/core/tests/testfiles", "CSSFontFaceRuleTest.css"));
@@ -111,7 +111,7 @@ public class CSSFontFaceRuleTest extends AbstractModelTest {
 		checkPrimitiveNumber(valueList.item(2), new PrimitiveNumber(ICSSPrimitiveValue.CSS_INTEGER, 900));
 	}
 
-	public void testInsertText2() throws IOException {
+	public void _testInsertText2() throws IOException {
 		ICSSModel model = getModel();
 		IStructuredDocument structuredDocument = model.getStructuredDocument();
 		structuredDocument.set(FileUtil.createString("src/org/eclipse/wst/css/core/tests/testfiles", "CSSFontFaceRuleTest.css"));
@@ -179,7 +179,7 @@ public class CSSFontFaceRuleTest extends AbstractModelTest {
 		checkPrimitiveString(value, new PrimitiveString(CSSPrimitiveValue.CSS_IDENT, "all"));
 	}
 
-	public void testInsertText3() throws IOException {
+	public void _testInsertText3() throws IOException {
 		ICSSModel model = getModel();
 		IStructuredDocument structuredDocument = model.getStructuredDocument();
 		structuredDocument.set(FileUtil.createString("src/org/eclipse/wst/css/core/tests/testfiles", "CSSFontFaceRuleTest.css"));
