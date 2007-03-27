@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,7 +24,7 @@ import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.xml.core.internal.provisional.format.FormatProcessorXML;
-import org.eclipse.wst.xml.core.internal.provisional.format.IStructuredFormatPreferencesXML;
+import org.eclipse.wst.xml.core.internal.provisional.format.StructuredFormatPreferencesXML;
 
 public class FormatTester extends TestCase {
 	private static final boolean PRINT_FAILED_FORMAT_TESTS = false;
@@ -51,7 +51,7 @@ public class FormatTester extends TestCase {
 
 		// init FormatPreferences
 		IStructuredFormatPreferences formatPreferences = fFormatProcessor.getFormatPreferences();
-		((IStructuredFormatPreferencesXML) formatPreferences).setSplitMultiAttrs(false);
+		((StructuredFormatPreferencesXML) formatPreferences).setSplitMultiAttrs(false);
 		formatPreferences.setLineWidth(999);
 		formatPreferences.setIndent("\t");
 		formatPreferences.setClearAllBlankLines(false);
@@ -77,7 +77,7 @@ public class FormatTester extends TestCase {
 
 		// init FormatPreferences
 		IStructuredFormatPreferences formatPreferences = fFormatProcessor.getFormatPreferences();
-		((IStructuredFormatPreferencesXML) formatPreferences).setSplitMultiAttrs(false);
+		((StructuredFormatPreferencesXML) formatPreferences).setSplitMultiAttrs(false);
 		formatPreferences.setLineWidth(999);
 		formatPreferences.setIndent("\t");
 		formatPreferences.setClearAllBlankLines(false);
@@ -103,7 +103,7 @@ public class FormatTester extends TestCase {
 
 		// init FormatPreferences
 		IStructuredFormatPreferences formatPreferences = fFormatProcessor.getFormatPreferences();
-		((IStructuredFormatPreferencesXML) formatPreferences).setSplitMultiAttrs(false);
+		((StructuredFormatPreferencesXML) formatPreferences).setSplitMultiAttrs(false);
 		formatPreferences.setLineWidth(999);
 		formatPreferences.setIndent("\t");
 		formatPreferences.setClearAllBlankLines(false);
@@ -129,7 +129,7 @@ public class FormatTester extends TestCase {
 
 		// init FormatPreferences
 		IStructuredFormatPreferences formatPreferences = fFormatProcessor.getFormatPreferences();
-		((IStructuredFormatPreferencesXML) formatPreferences).setSplitMultiAttrs(false);
+		((StructuredFormatPreferencesXML) formatPreferences).setSplitMultiAttrs(false);
 		formatPreferences.setLineWidth(999);
 		formatPreferences.setIndent("\t");
 		formatPreferences.setClearAllBlankLines(false);
@@ -155,7 +155,7 @@ public class FormatTester extends TestCase {
 
 		// init FormatPreferences
 		IStructuredFormatPreferences formatPreferences = fFormatProcessor.getFormatPreferences();
-		((IStructuredFormatPreferencesXML) formatPreferences).setSplitMultiAttrs(false);
+		((StructuredFormatPreferencesXML) formatPreferences).setSplitMultiAttrs(false);
 		formatPreferences.setLineWidth(999);
 		formatPreferences.setIndent("\t");
 		formatPreferences.setClearAllBlankLines(false);
@@ -181,7 +181,7 @@ public class FormatTester extends TestCase {
 
 		// init FormatPreferences
 		IStructuredFormatPreferences formatPreferences = fFormatProcessor.getFormatPreferences();
-		((IStructuredFormatPreferencesXML) formatPreferences).setSplitMultiAttrs(false);
+		((StructuredFormatPreferencesXML) formatPreferences).setSplitMultiAttrs(false);
 		formatPreferences.setLineWidth(999);
 		formatPreferences.setIndent("\t");
 		formatPreferences.setClearAllBlankLines(false);
@@ -207,7 +207,7 @@ public class FormatTester extends TestCase {
 
 		// init FormatPreferences
 		IStructuredFormatPreferences formatPreferences = fFormatProcessor.getFormatPreferences();
-		((IStructuredFormatPreferencesXML) formatPreferences).setSplitMultiAttrs(false);
+		((StructuredFormatPreferencesXML) formatPreferences).setSplitMultiAttrs(false);
 		formatPreferences.setLineWidth(999);
 		formatPreferences.setIndent("\t");
 		formatPreferences.setClearAllBlankLines(false);
@@ -233,7 +233,7 @@ public class FormatTester extends TestCase {
 
 		// init FormatPreferences
 		IStructuredFormatPreferences formatPreferences = fFormatProcessor.getFormatPreferences();
-		((IStructuredFormatPreferencesXML) formatPreferences).setSplitMultiAttrs(false);
+		((StructuredFormatPreferencesXML) formatPreferences).setSplitMultiAttrs(false);
 		formatPreferences.setLineWidth(999);
 		formatPreferences.setIndent("\t");
 		formatPreferences.setClearAllBlankLines(false);
@@ -259,7 +259,7 @@ public class FormatTester extends TestCase {
 
 		// init FormatPreferences
 		IStructuredFormatPreferences formatPreferences = fFormatProcessor.getFormatPreferences();
-		((IStructuredFormatPreferencesXML) formatPreferences).setSplitMultiAttrs(false);
+		((StructuredFormatPreferencesXML) formatPreferences).setSplitMultiAttrs(false);
 		formatPreferences.setLineWidth(999);
 		formatPreferences.setIndent("\t");
 		formatPreferences.setClearAllBlankLines(false);
@@ -285,7 +285,7 @@ public class FormatTester extends TestCase {
 
 		// init FormatPreferences
 		IStructuredFormatPreferences formatPreferences = fFormatProcessor.getFormatPreferences();
-		((IStructuredFormatPreferencesXML) formatPreferences).setSplitMultiAttrs(false);
+		((StructuredFormatPreferencesXML) formatPreferences).setSplitMultiAttrs(false);
 		formatPreferences.setLineWidth(999);
 		formatPreferences.setIndent("\t");
 		formatPreferences.setClearAllBlankLines(false);
@@ -311,7 +311,7 @@ public class FormatTester extends TestCase {
 
 		// init FormatPreferences
 		IStructuredFormatPreferences formatPreferences = fFormatProcessor.getFormatPreferences();
-		((IStructuredFormatPreferencesXML) formatPreferences).setSplitMultiAttrs(false);
+		((StructuredFormatPreferencesXML) formatPreferences).setSplitMultiAttrs(false);
 		formatPreferences.setLineWidth(999);
 		formatPreferences.setIndent("\t");
 		formatPreferences.setClearAllBlankLines(false);
@@ -337,7 +337,7 @@ public class FormatTester extends TestCase {
 
 		// init FormatPreferences
 		IStructuredFormatPreferences formatPreferences = fFormatProcessor.getFormatPreferences();
-		((IStructuredFormatPreferencesXML) formatPreferences).setSplitMultiAttrs(true);
+		((StructuredFormatPreferencesXML) formatPreferences).setSplitMultiAttrs(true);
 		formatPreferences.setLineWidth(72);
 		formatPreferences.setIndent("\t");
 		formatPreferences.setClearAllBlankLines(false);
@@ -363,7 +363,7 @@ public class FormatTester extends TestCase {
 
 		// init FormatPreferences
 		IStructuredFormatPreferences formatPreferences = fFormatProcessor.getFormatPreferences();
-		((IStructuredFormatPreferencesXML) formatPreferences).setSplitMultiAttrs(false);
+		((StructuredFormatPreferencesXML) formatPreferences).setSplitMultiAttrs(false);
 		formatPreferences.setLineWidth(72);
 		formatPreferences.setIndent("\t");
 		formatPreferences.setClearAllBlankLines(false);
@@ -389,7 +389,7 @@ public class FormatTester extends TestCase {
 
 		// init FormatPreferences
 		IStructuredFormatPreferences formatPreferences = fFormatProcessor.getFormatPreferences();
-		((IStructuredFormatPreferencesXML) formatPreferences).setSplitMultiAttrs(false);
+		((StructuredFormatPreferencesXML) formatPreferences).setSplitMultiAttrs(false);
 		formatPreferences.setLineWidth(999);
 		formatPreferences.setIndent("\t");
 		formatPreferences.setClearAllBlankLines(false);
@@ -415,7 +415,7 @@ public class FormatTester extends TestCase {
 
 		// init FormatPreferences
 		IStructuredFormatPreferences formatPreferences = fFormatProcessor.getFormatPreferences();
-		((IStructuredFormatPreferencesXML) formatPreferences).setSplitMultiAttrs(false);
+		((StructuredFormatPreferencesXML) formatPreferences).setSplitMultiAttrs(false);
 		formatPreferences.setLineWidth(999);
 		formatPreferences.setIndent("\t");
 		formatPreferences.setClearAllBlankLines(false);
@@ -441,7 +441,7 @@ public class FormatTester extends TestCase {
 
 		// init FormatPreferences
 		IStructuredFormatPreferences formatPreferences = fFormatProcessor.getFormatPreferences();
-		((IStructuredFormatPreferencesXML) formatPreferences).setSplitMultiAttrs(true);
+		((StructuredFormatPreferencesXML) formatPreferences).setSplitMultiAttrs(true);
 		formatPreferences.setLineWidth(72);
 		formatPreferences.setIndent("\t");
 		formatPreferences.setClearAllBlankLines(false);
@@ -467,7 +467,7 @@ public class FormatTester extends TestCase {
 
 		// init FormatPreferences
 		IStructuredFormatPreferences formatPreferences = fHTMLFormatProcessor.getFormatPreferences();
-		((IStructuredFormatPreferencesXML) formatPreferences).setSplitMultiAttrs(false);
+		((StructuredFormatPreferencesXML) formatPreferences).setSplitMultiAttrs(false);
 		formatPreferences.setLineWidth(72);
 		formatPreferences.setIndent("\t");
 		formatPreferences.setClearAllBlankLines(false);

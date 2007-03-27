@@ -22,26 +22,27 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.wst.sse.core.StructuredModelManager;
+import org.eclipse.wst.sse.core.internal.format.AbstractStructuredFormatProcessor;
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatPreferences;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.util.URIResolver;
 import org.eclipse.wst.xml.core.internal.provisional.format.FormatProcessorXML;
-import org.eclipse.wst.xml.core.internal.provisional.format.IStructuredFormatPreferencesXML;
+import org.eclipse.wst.xml.core.internal.provisional.format.StructuredFormatPreferencesXML;
 import org.eclipse.wst.xml.core.tests.util.StringCompareUtil;
 
 public class TestFormatProcessorXML extends TestCase {
 
 	private static final boolean SPLIT_MULTI_ATTRS = false;
 
-	private static final String INDENT = " ";
+	private static final String INDENT = "\t";
 
 	private static final boolean CLEAR_ALL_BLANK_LINES = false;
 
 	private static final int MAX_LINE_WIDTH = 72;
 
 	private static final String UTF_8 = "UTF-8";
-	
+
 	private StringCompareUtil fStringCompareUtil;
 
 	public TestFormatProcessorXML(String name) {
@@ -124,6 +125,10 @@ public class TestFormatProcessorXML extends TestCase {
 	}
 
 	protected void formatAndAssertEquals(String beforePath, String afterPath) throws UnsupportedEncodingException, IOException, CoreException {
+		formatAndAssertEquals(beforePath, afterPath, true);
+	}
+
+	private void formatAndAssertEquals(String beforePath, String afterPath, boolean resetPreferences) throws UnsupportedEncodingException, IOException, CoreException {
 		IStructuredModel beforeModel = null, afterModel = null;
 		try {
 			beforeModel = getModelForEdit(beforePath);
@@ -132,13 +137,12 @@ public class TestFormatProcessorXML extends TestCase {
 			afterModel = getModelForEdit(afterPath);
 			assertNotNull("could not retrieve structured model for : " + afterPath, afterModel);
 
-			IStructuredFormatPreferences formatPreferences = formatProcessor.getFormatPreferences();
-			formatPreferences.setLineWidth(MAX_LINE_WIDTH);
-			formatPreferences.setClearAllBlankLines(CLEAR_ALL_BLANK_LINES);
-			formatPreferences.setIndent(INDENT);
-			((IStructuredFormatPreferencesXML) formatPreferences).setSplitMultiAttrs(SPLIT_MULTI_ATTRS);
+			if (resetPreferences)
+				resetPreferencesToDefault();
 
+			((AbstractStructuredFormatProcessor) formatProcessor).refreshFormatPreferences = false;
 			formatProcessor.formatModel(beforeModel);
+			((AbstractStructuredFormatProcessor) formatProcessor).refreshFormatPreferences = true;
 
 			ByteArrayOutputStream formattedBytes = new ByteArrayOutputStream();
 			beforeModel.save(formattedBytes); // "beforeModel" should now be
@@ -147,9 +151,9 @@ public class TestFormatProcessorXML extends TestCase {
 			ByteArrayOutputStream afterBytes = new ByteArrayOutputStream();
 			afterModel.save(afterBytes);
 
-			String formattedContents = new String(afterBytes.toByteArray(), UTF_8);
-			String expectedContents = new String(formattedBytes.toByteArray(), UTF_8);
-			assertTrue("Formatted document differs from the expected", fStringCompareUtil.equalsIgnoreLineSeperator(formattedContents, expectedContents));
+			String expectedContents = new String(afterBytes.toByteArray(), UTF_8);
+			String actualContents = new String(formattedBytes.toByteArray(), UTF_8);
+			assertTrue("Formatted document differs from the expected.\nExpected Contents:\n" + expectedContents + "\nActual Contents:\n" + actualContents, fStringCompareUtil.equalsIgnoreLineSeperator(expectedContents, actualContents));
 		}
 		finally {
 			if (beforeModel != null)
@@ -157,6 +161,14 @@ public class TestFormatProcessorXML extends TestCase {
 			if (afterModel != null)
 				afterModel.releaseFromEdit();
 		}
+	}
+
+	private void resetPreferencesToDefault() {
+		IStructuredFormatPreferences formatPreferences = formatProcessor.getFormatPreferences();
+		formatPreferences.setLineWidth(MAX_LINE_WIDTH);
+		formatPreferences.setClearAllBlankLines(CLEAR_ALL_BLANK_LINES);
+		formatPreferences.setIndent(INDENT);
+		((StructuredFormatPreferencesXML) formatPreferences).setSplitMultiAttrs(SPLIT_MULTI_ATTRS);
 	}
 
 	public void testSimpleXml() throws UnsupportedEncodingException, IOException, CoreException {
@@ -175,10 +187,36 @@ public class TestFormatProcessorXML extends TestCase {
 		// BUG115716
 		formatAndAssertEquals("testfiles/xml/oneline.xml", "testfiles/xml/oneline-fmt.xml");
 	}
-	
+
 	public void testOneLineTextNodeFormat() throws UnsupportedEncodingException, IOException, CoreException {
 		// BUG166441
 		formatAndAssertEquals("testfiles/xml/onelineTextNode.xml", "testfiles/xml/onelineTextNode-fmt.xml");
 	}
 
+	public void testEmptyContentNodeFormat() throws UnsupportedEncodingException, IOException, CoreException {
+		// BUG174243
+		IStructuredFormatPreferences formatPreferences = formatProcessor.getFormatPreferences();
+		((StructuredFormatPreferencesXML) formatPreferences).setSplitMultiAttrs(true);
+		formatAndAssertEquals("testfiles/xml/usetagswithemptycontent.xml", "testfiles/xml/usetagswithemptycontent-fmt.xml", false);
+	}
+
+	public void testXSLFormat() throws UnsupportedEncodingException, IOException, CoreException {
+		// BUG108074
+		formatAndAssertEquals("testfiles/xml/xslattributetext.xsl", "testfiles/xml/xslattributetext-fmt.xsl");
+	}
+
+	public void testEntityFormat() throws UnsupportedEncodingException, IOException, CoreException {
+		// BUG102076
+		formatAndAssertEquals("testfiles/xml/entities.xml", "testfiles/xml/entities-fmt.xml");
+	}
+
+	public void testPreservePCDATAFormat() throws UnsupportedEncodingException, IOException, CoreException {
+		// BUG84688
+		IStructuredFormatPreferences formatPreferences = formatProcessor.getFormatPreferences();
+		((StructuredFormatPreferencesXML) formatPreferences).setPreservePCDATAContent(true);
+		formatAndAssertEquals("testfiles/xml/xml-preservepcdata.xml", "testfiles/xml/xml-preservepcdata-yes-fmt.xml", false);
+
+		((StructuredFormatPreferencesXML) formatPreferences).setPreservePCDATAContent(false);
+		formatAndAssertEquals("testfiles/xml/xml-preservepcdata.xml", "testfiles/xml/xml-preservepcdata-no-fmt.xml", false);
+	}
 }
