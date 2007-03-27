@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -35,7 +35,8 @@ public class FormatProcessorXML extends AbstractStructuredFormatProcessor {
 			Preferences preferences = getModelPreferences();
 			if (preferences != null) {
 				fFormatPreferences.setLineWidth(preferences.getInt(XMLCorePreferenceNames.LINE_WIDTH));
-				((IStructuredFormatPreferencesXML) fFormatPreferences).setSplitMultiAttrs(preferences.getBoolean(XMLCorePreferenceNames.SPLIT_MULTI_ATTRS));
+				((StructuredFormatPreferencesXML) fFormatPreferences).setSplitMultiAttrs(preferences.getBoolean(XMLCorePreferenceNames.SPLIT_MULTI_ATTRS));
+				((StructuredFormatPreferencesXML) fFormatPreferences).setPreservePCDATAContent(preferences.getBoolean(XMLCorePreferenceNames.PRESERVE_CDATACONTENT));
 				fFormatPreferences.setClearAllBlankLines(preferences.getBoolean(XMLCorePreferenceNames.CLEAR_ALL_BLANK_LINES));
 
 				char indentChar = ' ';
@@ -85,6 +86,10 @@ public class FormatProcessorXML extends AbstractStructuredFormatProcessor {
 			}
 			case Node.DOCUMENT_NODE : {
 				formatter = new DocumentNodeFormatter();
+				break;
+			}
+			case Node.ENTITY_REFERENCE_NODE : {
+				formatter = new EntityReferenceFormatter();
 				break;
 			}
 			default : {

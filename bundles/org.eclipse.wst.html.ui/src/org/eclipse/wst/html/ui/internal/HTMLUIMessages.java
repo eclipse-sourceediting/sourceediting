@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2005 IBM Corporation and others. All rights reserved.   This
+ * Copyright (c) 2005, 2007 IBM Corporation and others. All rights reserved.   This
  * program and the accompanying materials are made available under the terms of
  * the Eclipse Public License v1.0 which accompanies this distribution, and is
  * available at http://www.eclipse.org/legal/epl-v10.html
@@ -83,6 +83,17 @@ public class HTMLUIMessages extends NLS {
 	public static String WebContentSettingsPropertyPage_0;
 	public static String ProjectWebContentSettingsPropertyPage_0;
 	
+	public static String Content_assist_UI_;
+	public static String Automatically_make_suggest_UI_;
+	public static String Prompt_when_these_characte_UI_;
+	public static String Formatting_UI_;
+	public static String Line_width__UI_;
+	public static String Split_multiple_attributes;
+	public static String Indent_using_tabs;
+	public static String Indent_using_spaces;
+	public static String Indentation_size;
+	public static String Indentation_size_tip;
+	public static String Clear_all_blank_lines_UI_;
 	public static String Preferred_markup_case_UI_;
 	public static String Tag_names__UI_;
 	public static String Tag_names_Upper_case_UI_;

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -28,7 +28,6 @@ import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
-import org.eclipse.wst.xml.core.internal.provisional.format.IStructuredFormatPreferencesXML;
 import org.eclipse.wst.xml.core.internal.provisional.format.StructuredFormatPreferencesXML;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -613,7 +612,7 @@ public class HTMLFormatter implements IStructuredFormatter {
 			Preferences preferences = HTMLCorePlugin.getDefault().getPluginPreferences();
 			if (preferences != null) {
 				fFormatPreferences.setLineWidth(preferences.getInt(HTMLCorePreferenceNames.LINE_WIDTH));
-				((IStructuredFormatPreferencesXML) fFormatPreferences).setSplitMultiAttrs(preferences.getBoolean(HTMLCorePreferenceNames.SPLIT_MULTI_ATTRS));
+				((StructuredFormatPreferencesXML) fFormatPreferences).setSplitMultiAttrs(preferences.getBoolean(HTMLCorePreferenceNames.SPLIT_MULTI_ATTRS));
 				fFormatPreferences.setClearAllBlankLines(preferences.getBoolean(HTMLCorePreferenceNames.CLEAR_ALL_BLANK_LINES));
 
 				char indentChar = ' ';

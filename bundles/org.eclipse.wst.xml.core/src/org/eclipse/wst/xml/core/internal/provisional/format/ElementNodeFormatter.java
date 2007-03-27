@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -31,18 +31,23 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.provisional.document.ISourceGenerator;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.eclipse.wst.xml.core.internal.ssemodelquery.ModelQueryAdapter;
+import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
 
 public class ElementNodeFormatter extends DocumentNodeFormatter {
-	static protected final char DOUBLE_QUOTE = '"';//$NON-NLS-1$
-	static protected final String DOUBLE_QUOTES = "\"\"";//$NON-NLS-1$
-	static protected final char EQUAL_CHAR = '='; // equal sign$NON-NLS-1$
-	static protected final String PRESERVE = "preserve";//$NON-NLS-1$
-	static protected final String PRESERVE_QUOTED = "\"preserve\"";//$NON-NLS-1$
-	static protected final char SINGLE_QUOTE = '\'';//$NON-NLS-1$
-	static protected final String XML_SPACE = "xml:space";//$NON-NLS-1$
+	static private final char DOUBLE_QUOTE = '"';//$NON-NLS-1$
+	static private final String DOUBLE_QUOTES = "\"\"";//$NON-NLS-1$
+	static private final char EQUAL_CHAR = '='; // equal sign$NON-NLS-1$
+	static private final String PRESERVE = "preserve";//$NON-NLS-1$
+	static private final String PRESERVE_QUOTED = "\"preserve\"";//$NON-NLS-1$
+	static private final char SINGLE_QUOTE = '\'';//$NON-NLS-1$
+	static private final String XML_SPACE = "xml:space";//$NON-NLS-1$
+	static private final char SPACE_CHAR = ' '; //$NON-NLS-1$
+	static private final String XSL_NAMESPACE = "http://www.w3.org/1999/XSL/Transform"; //$NON-NLS-1$
+	static private final String XSL_ATTRIBUTE = "attribute"; //$NON-NLS-1$
+	static private final String XSL_TEXT = "text"; //$NON-NLS-1$
 
 	protected void formatEndTag(IDOMNode node, IStructuredFormatContraints formatContraints) {
 		if (!isEndTagMissing(node)) {
@@ -83,8 +88,14 @@ public class ElementNodeFormatter extends DocumentNodeFormatter {
 					insertAfterNode(lastChild, lineDelimiter + nodeIndentation);
 			}
 			else if (lastChild == null && firstStructuredDocumentRegionContainsLineDelimiters(node)) {
-				// indent end tag
-				replace(structuredDocument, node.getFirstStructuredDocumentRegion().getEndOffset(), 0, lineDelimiter + nodeIndentation);
+				// BUG174243 do not indent end tag if node has empty content
+				// (otherwise new text node would be introduced)
+				ModelQueryAdapter adapter = (ModelQueryAdapter) ((IDOMDocument) node.getOwnerDocument()).getAdapterFor(ModelQueryAdapter.class);
+				CMElementDeclaration elementDeclaration = (CMElementDeclaration) adapter.getModelQuery().getCMNode(node);
+				if ((elementDeclaration == null) || (elementDeclaration.getContentType() != CMElementDeclaration.EMPTY)) {
+					// indent end tag
+					replace(structuredDocument, node.getFirstStructuredDocumentRegion().getEndOffset(), 0, lineDelimiter + nodeIndentation);
+				}
 			}
 
 			// format end tag name
@@ -141,10 +152,13 @@ public class ElementNodeFormatter extends DocumentNodeFormatter {
 	 * available.
 	 */
 	protected void formatStartTag(IDOMNode node, IStructuredFormatContraints formatContraints) {
-		String singleIndent = getFormatPreferences().getIndent();
+		StructuredFormatPreferencesXML preferences = (StructuredFormatPreferencesXML) getFormatPreferences();
+		String singleIndent = preferences.getIndent();
 		String lineIndent = formatContraints.getCurrentIndent();
 		String attrIndent = lineIndent + singleIndent;
-		boolean splitMultiAttrs = ((IStructuredFormatPreferencesXML) fFormatPreferences).getSplitMultiAttrs();
+		boolean splitMultiAttrs = preferences.getSplitMultiAttrs();
+		boolean sawXmlSpace = false;
+
 		IStructuredDocumentRegion flatNode = node.getFirstStructuredDocumentRegion();
 		NamedNodeMap attributes = node.getAttributes();
 
@@ -160,7 +174,7 @@ public class ElementNodeFormatter extends DocumentNodeFormatter {
 				int lineOffset = node.getStructuredDocument().getLineInformationOfOffset(nodeNameOffset).getOffset();
 				String text = node.getStructuredDocument().get(lineOffset, nodeNameOffset - lineOffset);
 				int usedWidth = getIndentationLength(text);
-				currentAvailableLineWidth = getFormatPreferences().getLineWidth() - usedWidth;
+				currentAvailableLineWidth = preferences.getLineWidth() - usedWidth;
 			}
 			catch (BadLocationException e) {
 				// log for now, unless we find reason not to
@@ -171,7 +185,6 @@ public class ElementNodeFormatter extends DocumentNodeFormatter {
 			String lineDelimiter = node.getModel().getStructuredDocument().getLineDelimiter();
 			int attrLength = attributes.getLength();
 			int lastUndefinedRegionOffset = 0;
-			boolean sawXmlSpace = false;
 
 			for (int i = 0; i < attrLength; i++) {
 				AttrImpl attr = (AttrImpl) attributes.item(i);
@@ -259,7 +272,7 @@ public class ElementNodeFormatter extends DocumentNodeFormatter {
 						}
 						else {
 							stringBuffer.append(lineDelimiter + attrIndent);
-							currentAvailableLineWidth = getFormatPreferences().getLineWidth() - attrIndent.length();
+							currentAvailableLineWidth = preferences.getLineWidth() - attrIndent.length();
 						}
 
 						stringBuffer.append(flatNode.getText(nameRegion));
@@ -292,7 +305,7 @@ public class ElementNodeFormatter extends DocumentNodeFormatter {
 						}
 						else {
 							stringBuffer.append(lineDelimiter + attrIndent);
-							currentAvailableLineWidth = getFormatPreferences().getLineWidth() - attrIndent.length();
+							currentAvailableLineWidth = preferences.getLineWidth() - attrIndent.length();
 						}
 
 						stringBuffer.append(flatNode.getText(nameRegion));
@@ -334,6 +347,17 @@ public class ElementNodeFormatter extends DocumentNodeFormatter {
 
 			replace(structuredDocument, offset, length, stringBuffer.toString());
 
+			// BUG108074 & BUG84688 - preserve whitespace in xsl:text &
+			// xsl:attribute
+			String nodeNamespaceURI = node.getNamespaceURI();
+			if (XSL_NAMESPACE.equals(nodeNamespaceURI)) {
+				String nodeName = ((Element) node).getLocalName();
+				if (XSL_ATTRIBUTE.equals(nodeName) || XSL_TEXT.equals(nodeName)) {
+					sawXmlSpace = true;
+					formatContraints.setInPreserveSpaceElement(true);
+				}
+			}
+
 			// If we didn't see a xml:space attribute above, we'll look for
 			// one in the DTD.
 			// We do not check for a conflict between a DTD's 'fixed' value
@@ -343,19 +367,25 @@ public class ElementNodeFormatter extends DocumentNodeFormatter {
 				ModelQueryAdapter adapter = (ModelQueryAdapter) ((IDOMDocument) node.getOwnerDocument()).getAdapterFor(ModelQueryAdapter.class);
 				CMElementDeclaration elementDeclaration = (CMElementDeclaration) adapter.getModelQuery().getCMNode(node);
 				if (elementDeclaration != null) {
-					CMNamedNodeMap cmAttributes = elementDeclaration.getAttributes();
-					// Check implied values from the DTD way.
-					CMAttributeDeclaration attributeDeclaration = (CMAttributeDeclaration) cmAttributes.getNamedItem(XML_SPACE);
-					if (attributeDeclaration != null) {
-						// CMAttributeDeclaration found, check it out.
-						String defaultValue = attributeDeclaration.getAttrType().getImpliedValue();
+					int contentType = elementDeclaration.getContentType();
+					if (preferences.isPreservePCDATAContent() && contentType == CMElementDeclaration.PCDATA) {
+						formatContraints.setInPreserveSpaceElement(true);
+					}
+					else {
+						CMNamedNodeMap cmAttributes = elementDeclaration.getAttributes();
+						// Check implied values from the DTD way.
+						CMAttributeDeclaration attributeDeclaration = (CMAttributeDeclaration) cmAttributes.getNamedItem(XML_SPACE);
+						if (attributeDeclaration != null) {
+							// CMAttributeDeclaration found, check it out.
+							String defaultValue = attributeDeclaration.getAttrType().getImpliedValue();
 
-						// xml:space="preserve" means preserve space,
-						// everything else means back to default.
-						if (defaultValue.compareTo(PRESERVE) == 0)
-							formatContraints.setInPreserveSpaceElement(true);
-						else
-							formatContraints.setInPreserveSpaceElement(false);
+							// xml:space="preserve" means preserve space,
+							// everything else means back to default.
+							if (defaultValue.compareTo(PRESERVE) == 0)
+								formatContraints.setInPreserveSpaceElement(true);
+							else
+								formatContraints.setInPreserveSpaceElement(false);
+						}
 					}
 				}
 			}
@@ -377,7 +407,7 @@ public class ElementNodeFormatter extends DocumentNodeFormatter {
 		}
 
 		if (result.length() > 0)
-			return SPACE + result.trim();
+			return SPACE_CHAR + result.trim();
 		else
 			return result;
 	}

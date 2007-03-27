@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -56,6 +56,7 @@ public class XMLSourcePreferencePage extends AbstractPreferencePage implements M
 	private Button fIndentUsingTabs;
 	private Button fIndentUsingSpaces;
 	private Spinner fIndentationSize;
+	private Button fPreservePCDATAContent;
 
 	// grammar constraints
 	protected Button fUseInferredGrammar;
@@ -107,6 +108,8 @@ public class XMLSourcePreferencePage extends AbstractPreferencePage implements M
 
 		fSplitMultiAttrs = createCheckBox(formattingGroup, XMLUIMessages.Split_multiple_attributes);
 		((GridData) fSplitMultiAttrs.getLayoutData()).horizontalSpan = 2;
+		fPreservePCDATAContent = createCheckBox(formattingGroup, XMLUIMessages.Preserve_PCDATA_Content);
+		((GridData) fPreservePCDATAContent.getLayoutData()).horizontalSpan = 2;
 		fClearAllBlankLines = createCheckBox(formattingGroup, XMLUIMessages.Clear_all_blank_lines_UI_);
 		((GridData) fClearAllBlankLines.getLayoutData()).horizontalSpan = 2;
 
@@ -199,6 +202,7 @@ public class XMLSourcePreferencePage extends AbstractPreferencePage implements M
 		fLineWidthText.setText(getModelPreferences().getString(XMLCorePreferenceNames.LINE_WIDTH));
 		fSplitMultiAttrs.setSelection(getModelPreferences().getBoolean(XMLCorePreferenceNames.SPLIT_MULTI_ATTRS));
 		fClearAllBlankLines.setSelection(getModelPreferences().getBoolean(XMLCorePreferenceNames.CLEAR_ALL_BLANK_LINES));
+		fPreservePCDATAContent.setSelection(getModelPreferences().getBoolean(XMLCorePreferenceNames.PRESERVE_CDATACONTENT));
 
 		if (XMLCorePreferenceNames.TAB.equals(getModelPreferences().getString(XMLCorePreferenceNames.INDENTATION_CHAR))) {
 			fIndentUsingTabs.setSelection(true);
@@ -245,6 +249,7 @@ public class XMLSourcePreferencePage extends AbstractPreferencePage implements M
 		fLineWidthText.setText(getModelPreferences().getDefaultString(XMLCorePreferenceNames.LINE_WIDTH));
 		fSplitMultiAttrs.setSelection(getModelPreferences().getDefaultBoolean(XMLCorePreferenceNames.SPLIT_MULTI_ATTRS));
 		fClearAllBlankLines.setSelection(getModelPreferences().getDefaultBoolean(XMLCorePreferenceNames.CLEAR_ALL_BLANK_LINES));
+		fPreservePCDATAContent.setSelection(getModelPreferences().getDefaultBoolean(XMLCorePreferenceNames.PRESERVE_CDATACONTENT));
 
 		if (XMLCorePreferenceNames.TAB.equals(getModelPreferences().getDefaultString(XMLCorePreferenceNames.INDENTATION_CHAR))) {
 			fIndentUsingTabs.setSelection(true);
@@ -303,6 +308,7 @@ public class XMLSourcePreferencePage extends AbstractPreferencePage implements M
 		getModelPreferences().setValue(XMLCorePreferenceNames.LINE_WIDTH, fLineWidthText.getText());
 		getModelPreferences().setValue(XMLCorePreferenceNames.SPLIT_MULTI_ATTRS, fSplitMultiAttrs.getSelection());
 		getModelPreferences().setValue(XMLCorePreferenceNames.CLEAR_ALL_BLANK_LINES, fClearAllBlankLines.getSelection());
+		getModelPreferences().setValue(XMLCorePreferenceNames.PRESERVE_CDATACONTENT, fPreservePCDATAContent.getSelection());
 
 		if (fIndentUsingTabs.getSelection()) {
 			getModelPreferences().setValue(XMLCorePreferenceNames.INDENTATION_CHAR, XMLCorePreferenceNames.TAB);

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -39,97 +39,13 @@ import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.w3c.dom.Node;
 
 public class NodeFormatter implements IStructuredFormatter {
-	static protected final String CR = "\r"; //$NON-NLS-1$
-	static protected final String CRLF = "\r\n"; //$NON-NLS-1$
-	static protected final String DELIMITERS = " \t\n\r\f"; //$NON-NLS-1$
 	static protected final String EMPTY_STRING = ""; //$NON-NLS-1$
-	static protected final String FF = "\f"; //$NON-NLS-1$
-	static protected final String LF = "\n"; //$NON-NLS-1$
-	static protected final String SPACE = " "; //$NON-NLS-1$
-	static protected final char SPACE_CHAR = ' '; //$NON-NLS-1$
-	static protected final String TAB = "\t"; //$NON-NLS-1$
-	static protected final char TAB_CHAR = '\t'; //$NON-NLS-1$
+	static private final char SPACE_CHAR = ' '; //$NON-NLS-1$
+	static private final char TAB_CHAR = '\t'; //$NON-NLS-1$
+	static private final String TAB = "\t"; //$NON-NLS-1$
 	protected IStructuredFormatContraints fFormatContraints = null;
 	protected IStructuredFormatPreferences fFormatPreferences = null;
 	protected IProgressMonitor fProgressMonitor = null;
-
-	protected String compressSpaces(String string, IStructuredFormatContraints formatContraints) {
-		/*
-		 * Note that the StructuredTextEditor supports mixed new line
-		 * characters (CR, LF, CRLF) in one file. We have to handle that when
-		 * we try to preserve blank lines.
-		 */
-		String[] stringArray = null;
-		boolean clearAllBlankLines = formatContraints.getClearAllBlankLines();
-
-		if (clearAllBlankLines)
-			stringArray = StringUtils.asArray(string);
-		else
-			stringArray = StringUtils.asArray(string, DELIMITERS, true);
-
-		StringBuffer compressedString = new StringBuffer();
-		if (stringArray.length > 0) {
-			boolean cr = false, lf = false, cr2 = false, nonSpace = true;
-
-			if (stringArray[0].compareTo(CR) == 0)
-				cr = true;
-			else if (stringArray[0].compareTo(LF) == 0)
-				lf = true;
-			else if ((stringArray[0].compareTo(SPACE) != 0) && (stringArray[0].compareTo(TAB) != 0) && (stringArray[0].compareTo(FF) != 0)) {
-				compressedString.append(stringArray[0]);
-				nonSpace = true;
-			}
-
-			for (int i = 1; i < stringArray.length; i++) {
-				if (stringArray[i].compareTo(CR) == 0) {
-					if (cr && lf) {
-						if (nonSpace) {
-							compressedString.append(CR + LF);
-							nonSpace = false;
-						}
-						compressedString.append(stringArray[i]);
-						cr2 = true;
-					}
-					else if (cr) {
-						if (nonSpace) {
-							compressedString.append(CR);
-							nonSpace = false;
-						}
-						compressedString.append(stringArray[i]);
-						cr2 = true;
-					}
-					else
-						cr = true;
-				}
-				else if (stringArray[i].compareTo(LF) == 0) {
-					if (cr && lf && cr2) {
-						compressedString.append(stringArray[i]);
-					}
-					else if (lf) {
-						if (nonSpace) {
-							compressedString.append(LF);
-							nonSpace = false;
-						}
-						compressedString.append(stringArray[i]);
-					}
-					else
-						lf = true;
-				}
-				else if ((stringArray[i].compareTo(SPACE) != 0) && (stringArray[i].compareTo(TAB) != 0) && (stringArray[i].compareTo(FF) != 0)) {
-					if (compressedString.length() > 0)
-						compressedString.append(SPACE);
-					compressedString.append(stringArray[i]);
-
-					cr = false;
-					lf = false;
-					cr2 = false;
-					nonSpace = true;
-				}
-			}
-		}
-
-		return compressedString.toString();
-	}
 
 	protected boolean firstStructuredDocumentRegionContainsLineDelimiters(IDOMNode node) {
 		boolean result = false;
@@ -166,19 +82,7 @@ public class NodeFormatter implements IStructuredFormatter {
 		if (node != null) {
 			IDOMNode nextSibling = (IDOMNode) node.getNextSibling();
 			IStructuredDocument doc = node.getModel().getStructuredDocument();
-			int line = doc.getLineOfOffset(node.getEndOffset());
-			String lineDelimiter = doc.getLineDelimiter();
-			try {
-				lineDelimiter = doc.getLineDelimiter(line);
-			}
-			catch (BadLocationException e) {
-				// log for now, unless we find reason not to
-				Logger.log(Logger.INFO, e.getMessage());
-			}
-			// BUG115716: if cannot get line delimiter from current line, just
-			// use default line delimiter
-			if (lineDelimiter == null)
-				lineDelimiter = doc.getLineDelimiter();
+			String lineDelimiter = getLineDelimiter(node, doc);
 
 			if (node.getParentNode() != null) {
 				if (node.getParentNode().getNodeType() == Node.DOCUMENT_NODE)
@@ -254,21 +158,8 @@ public class NodeFormatter implements IStructuredFormatter {
 		if (node != null) {
 			IDOMNode previousSibling = (IDOMNode) node.getPreviousSibling();
 			IStructuredDocument doc = node.getModel().getStructuredDocument();
-			int line = doc.getLineOfOffset(node.getStartOffset());
-			String lineDelimiter = doc.getLineDelimiter();
-			try {
-				if (line > 0) {
-					lineDelimiter = doc.getLineDelimiter(line - 1);
-				}
-			}
-			catch (BadLocationException e) {
-				// log for now, unless we find reason not to
-				Logger.log(Logger.INFO, e.getMessage());
-			}
-			// BUG115716: if cannot get line delimiter from current line, just
-			// use default line delimiter
-			if (lineDelimiter == null)
-				lineDelimiter = doc.getLineDelimiter();
+			String lineDelimiter = getLineDelimiter(node, doc);
+			
 			String lineIndent = formatContraints.getCurrentIndent();
 
 			if (node.getParentNode() != null) {
@@ -318,6 +209,25 @@ public class NodeFormatter implements IStructuredFormatter {
 				}
 			}
 		}
+	}
+
+	private String getLineDelimiter(IDOMNode node, IStructuredDocument doc) {
+		int line = doc.getLineOfOffset(node.getStartOffset());
+		String lineDelimiter = doc.getLineDelimiter();
+		try {
+			if (line > 0) {
+				lineDelimiter = doc.getLineDelimiter(line - 1);
+			}
+		}
+		catch (BadLocationException e) {
+			// log for now, unless we find reason not to
+			Logger.log(Logger.INFO, e.getMessage());
+		}
+		// BUG115716: if cannot get line delimiter from current line, just
+		// use default line delimiter
+		if (lineDelimiter == null)
+			lineDelimiter = doc.getLineDelimiter();
+		return lineDelimiter;
 	}
 
 	protected void formatNode(IDOMNode node, IStructuredFormatContraints formatContraints) {
@@ -417,10 +327,6 @@ public class NodeFormatter implements IStructuredFormatter {
 		}
 	}
 
-	protected String getCompressedNodeText(IDOMNode node, IStructuredFormatContraints formatContraints) {
-		return compressSpaces(getNodeText(node), formatContraints);
-	}
-
 	protected IDOMNode getDeepestChildNode(IDOMNode node) {
 		IDOMNode result = null;
 		IDOMNode lastChild = (IDOMNode) node.getLastChild();
@@ -454,7 +360,8 @@ public class NodeFormatter implements IStructuredFormatter {
 			Preferences preferences = getModelPreferences();
 			if (preferences != null) {
 				fFormatPreferences.setLineWidth(preferences.getInt(XMLCorePreferenceNames.LINE_WIDTH));
-				((IStructuredFormatPreferencesXML) fFormatPreferences).setSplitMultiAttrs(preferences.getBoolean(XMLCorePreferenceNames.SPLIT_MULTI_ATTRS));
+				((StructuredFormatPreferencesXML) fFormatPreferences).setSplitMultiAttrs(preferences.getBoolean(XMLCorePreferenceNames.SPLIT_MULTI_ATTRS));
+				((StructuredFormatPreferencesXML) fFormatPreferences).setPreservePCDATAContent(preferences.getBoolean(XMLCorePreferenceNames.PRESERVE_CDATACONTENT));
 				fFormatPreferences.setClearAllBlankLines(preferences.getBoolean(XMLCorePreferenceNames.CLEAR_ALL_BLANK_LINES));
 
 				char indentChar = ' ';
@@ -487,7 +394,7 @@ public class NodeFormatter implements IStructuredFormatter {
 				formatter = new ElementNodeFormatter();
 				break;
 			}
-			case Node.TEXT_NODE : {
+			case Node.TEXT_NODE: {
 				if (node instanceof CDATASectionImpl)
 					formatter = new NodeFormatter();
 				else
@@ -504,6 +411,10 @@ public class NodeFormatter implements IStructuredFormatter {
 			}
 			case Node.DOCUMENT_NODE : {
 				formatter = new DocumentNodeFormatter();
+				break;
+			}
+			case Node.ENTITY_REFERENCE_NODE : {
+				formatter = new EntityReferenceFormatter();
 				break;
 			}
 			default : {

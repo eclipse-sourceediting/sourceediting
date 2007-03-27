@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -151,7 +151,7 @@ public class XMLCorePreferenceNames {
 	 * 
 	 */
 	public static final String CLEANUP_EOL_CODE = "cleanupEOLCode";//$NON-NLS-1$
-	
+
 	/**
 	 * Indicates whether or not a warning should be produced when validating a
 	 * file that specifies not grammar.
@@ -162,4 +162,13 @@ public class XMLCorePreferenceNames {
 	 * 
 	 */
 	public static final String WARN_NO_GRAMMAR = "warnNoGrammar";//$NON-NLS-1$
+
+	/**
+	 * Indicates if all whitespace in tags with CDATA content should be
+	 * preserved.
+	 * <p>
+	 * Value is of type <code>Boolean</code>.
+	 * </p>
+	 */
+	public static final String PRESERVE_CDATACONTENT = "preserveCDATAContent";//$NON-NLS-1$
 }

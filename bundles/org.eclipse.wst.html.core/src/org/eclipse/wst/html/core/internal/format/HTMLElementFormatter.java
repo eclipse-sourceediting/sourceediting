@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,7 +24,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
-import org.eclipse.wst.xml.core.internal.provisional.format.IStructuredFormatPreferencesXML;
+import org.eclipse.wst.xml.core.internal.provisional.format.StructuredFormatPreferencesXML;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.w3c.dom.Attr;
 import org.w3c.dom.NamedNodeMap;
@@ -155,7 +155,7 @@ public class HTMLElementFormatter extends HTMLFormatter {
 				formatStyleAttr(attr);
 		}
 		boolean insertBreak = false;
-		insertBreak = ((IStructuredFormatPreferencesXML) getFormatPreferences()).getSplitMultiAttrs();
+		insertBreak = ((StructuredFormatPreferencesXML) getFormatPreferences()).getSplitMultiAttrs();
 
 		if (insertBreak) {
 			NamedNodeMap attributes = element.getAttributes();

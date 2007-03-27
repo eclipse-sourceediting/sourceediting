@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,8 +14,9 @@ package org.eclipse.wst.xml.core.internal.provisional.format;
 
 import org.eclipse.wst.sse.core.internal.format.StructuredFormatPreferences;
 
-public class StructuredFormatPreferencesXML extends StructuredFormatPreferences implements IStructuredFormatPreferencesXML {
+public class StructuredFormatPreferencesXML extends StructuredFormatPreferences {
 	private boolean fSplitMultiAttrs;
+	private boolean fPreservePCDATAContent;
 
 	public boolean getSplitMultiAttrs() {
 		return fSplitMultiAttrs;
@@ -23,5 +24,13 @@ public class StructuredFormatPreferencesXML extends StructuredFormatPreferences 
 
 	public void setSplitMultiAttrs(boolean splitMultiAttrs) {
 		fSplitMultiAttrs = splitMultiAttrs;
+	}
+
+	public boolean isPreservePCDATAContent() {
+		return fPreservePCDATAContent;
+	}
+
+	public void setPreservePCDATAContent(boolean preservePCDATAContent) {
+		fPreservePCDATAContent = preservePCDATAContent;
 	}
 }
