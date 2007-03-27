@@ -12,8 +12,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
-import org.eclipse.wst.jsdt.web.ui.internal.JSPUIPlugin;
-import org.eclipse.wst.jsdt.web.ui.internal.Logger;
 import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
@@ -22,6 +20,8 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
+import org.eclipse.wst.jsdt.web.ui.internal.JSPUIPlugin;
+import org.eclipse.wst.jsdt.web.ui.internal.Logger;
 
 /**
  * Hyperlink for URLs (opens in read-only mode)

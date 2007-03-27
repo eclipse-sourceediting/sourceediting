@@ -15,12 +15,12 @@ import java.util.HashMap;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.wst.jsdt.ui.search.ISearchRequestor;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.wst.jsdt.web.ui.internal.Logger;
 import org.eclipse.search.ui.NewSearchUI;
 import org.eclipse.search.ui.text.Match;
+import org.eclipse.wst.jsdt.ui.search.ISearchRequestor;
+import org.eclipse.wst.jsdt.web.ui.internal.Logger;
 
 /**
  * @author pavery

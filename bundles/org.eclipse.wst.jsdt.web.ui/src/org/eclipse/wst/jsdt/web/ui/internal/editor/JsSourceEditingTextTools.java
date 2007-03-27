@@ -10,15 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.jsdt.web.ui.internal.editor;
 
-import org.eclipse.wst.jsdt.web.core.internal.document.PageDirectiveAdapter;
-import org.eclipse.wst.jsdt.web.core.internal.provisional.JSP11Namespace;
-import org.eclipse.wst.jsdt.web.core.internal.provisional.JSP12Namespace;
-import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.ui.internal.provisional.XMLSourceEditingTextTools;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 /**
  * Implements ISourceEditingTextTools interface

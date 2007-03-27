@@ -15,10 +15,6 @@ package org.eclipse.wst.jsdt.web.core.internal.preferences;
  * Common preference keys used by JSP core
  */
 public class JSPCorePreferenceNames {
-	private JSPCorePreferenceNames() {
-		// empty private constructor so users cannot instantiate class
-	}
-
 	/**
 	 * The default extension to use when none is specified in the New JSP File
 	 * Wizard.
@@ -26,8 +22,8 @@ public class JSPCorePreferenceNames {
 	 * Value is of type <code>String</code>.
 	 * </p>
 	 */
-	public static final String DEFAULT_EXTENSION = "defaultExtension"; //$NON-NLS-1$
-
+	public static final String DEFAULT_EXTENSION  = "defaultExtension"; //$NON-NLS-1$
+																		 
 	/**
 	 * Indicates if JSP fragments should be compiled/validated. JSP fragments
 	 * will be validated when true.
@@ -35,5 +31,9 @@ public class JSPCorePreferenceNames {
 	 * Value is of type <code>Boolean</code>.
 	 * </p>
 	 */
-	public static final String VALIDATE_FRAGMENTS = "validateFragments";//$NON-NLS-1$
+	public static final String VALIDATE_FRAGMENTS = "validateFragments"; //$NON-NLS-1$
+																		 
+	private JSPCorePreferenceNames() {
+		// empty private constructor so users cannot instantiate class
+	}
 }

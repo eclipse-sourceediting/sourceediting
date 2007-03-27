@@ -3,13 +3,13 @@ package org.eclipse.wst.jsdt.web.ui.internal.hyperlink;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
-import org.eclipse.wst.jsdt.web.ui.internal.Logger;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.texteditor.ITextEditor;
+import org.eclipse.wst.jsdt.web.ui.internal.Logger;
 
 /**
  * Hyperlink for files within the workspace. (As long as there is an IFile, this

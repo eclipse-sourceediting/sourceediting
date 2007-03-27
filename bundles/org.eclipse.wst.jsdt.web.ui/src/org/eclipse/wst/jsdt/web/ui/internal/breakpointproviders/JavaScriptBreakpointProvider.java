@@ -18,9 +18,9 @@ import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.IBreakpointManager;
 import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.ui.IEditorInput;
 import org.eclipse.wst.jsdt.web.ui.internal.JSPUIMessages;
 import org.eclipse.wst.jsdt.web.ui.internal.JSPUIPlugin;
-import org.eclipse.ui.IEditorInput;
 import org.w3c.dom.Document;
 
 /**

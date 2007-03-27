@@ -10,8 +10,8 @@
  *******************************************************************************/
 package org.eclipse.wst.jsdt.web.ui.internal.preferences.ui;
 
-import org.eclipse.wst.jsdt.web.ui.internal.style.IStyleConstantsJSP;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.wst.jsdt.web.ui.internal.style.IStyleConstantsJSP;
 import org.eclipse.wst.sse.ui.internal.preferences.ui.StyledTextColorPicker;
 
 /**

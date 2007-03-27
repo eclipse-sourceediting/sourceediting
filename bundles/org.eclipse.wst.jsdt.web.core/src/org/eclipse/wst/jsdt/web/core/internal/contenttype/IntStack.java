@@ -21,37 +21,37 @@ import java.util.EmptyStackException;
 
 public class IntStack {
 	private int[] list = null;
-
-	private int size = 0;
-
+	
+	private int   size = 0;
+	
 	public IntStack() {
 		this(100);
 	}
-
+	
 	public IntStack(int maxdepth) {
 		super();
 		list = new int[maxdepth];
 		initialize();
 	}
-
+	
 	public void clear() {
 		initialize();
 	}
-
+	
 	public boolean empty() {
 		return size == 0;
 	}
-
+	
 	public int get(int slot) {
 		return list[slot];
 	}
-
+	
 	private void initialize() {
 		for (int i = 0; i < list.length; i++) {
 			list[i] = -1;
 		}
 	}
-
+	
 	/**
 	 * Returns the int at the top of the stack without removing it
 	 * 
@@ -65,7 +65,7 @@ public class IntStack {
 		}
 		return list[size - 1];
 	}
-
+	
 	/**
 	 * Removes and returns the int at the top of the stack
 	 * 
@@ -79,7 +79,7 @@ public class IntStack {
 		size--;
 		return value;
 	}
-
+	
 	/**
 	 * Pushes an item onto the top of this stack.
 	 * 
@@ -94,7 +94,7 @@ public class IntStack {
 		list[size++] = newValue;
 		return newValue;
 	}
-
+	
 	public int size() {
 		return list.length;
 	}

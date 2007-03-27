@@ -13,15 +13,8 @@
 package org.eclipse.wst.jsdt.web.ui.internal.java.refactoring;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.wst.jsdt.core.IJavaElement;
-import org.eclipse.wst.jsdt.core.IMethod;
-import org.eclipse.wst.jsdt.core.IPackageFragment;
-import org.eclipse.wst.jsdt.core.IType;
-import org.eclipse.wst.jsdt.ui.refactoring.RenameSupport;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.wst.jsdt.web.ui.internal.JSPUIMessages;
-import org.eclipse.wst.jsdt.web.ui.internal.Logger;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.ui.IActionDelegate2;
 import org.eclipse.ui.IEditorActionDelegate;
@@ -30,6 +23,13 @@ import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.texteditor.ITextEditor;
+import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.IMethod;
+import org.eclipse.wst.jsdt.core.IPackageFragment;
+import org.eclipse.wst.jsdt.core.IType;
+import org.eclipse.wst.jsdt.ui.refactoring.RenameSupport;
+import org.eclipse.wst.jsdt.web.ui.internal.JSPUIMessages;
+import org.eclipse.wst.jsdt.web.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.util.PlatformStatusLineUtil;
 
 /**

@@ -10,9 +10,9 @@
  *******************************************************************************/
 package org.eclipse.wst.jsdt.web.ui.internal.java.refactoring;
 
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.jsdt.core.IJavaElement;
 import org.eclipse.wst.jsdt.web.ui.internal.JSPUIMessages;
-import org.eclipse.osgi.util.NLS;
 
 /**
  * Overrides get description

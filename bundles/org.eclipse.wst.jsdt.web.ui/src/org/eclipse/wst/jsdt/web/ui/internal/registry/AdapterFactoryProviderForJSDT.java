@@ -10,13 +10,10 @@
  *******************************************************************************/
 package org.eclipse.wst.jsdt.web.ui.internal.registry;
 
+import org.eclipse.wst.html.core.internal.modelhandler.ModelHandlerForHTML;
 import org.eclipse.wst.jsdt.web.core.internal.java.IJSPTranslation;
 import org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslationAdapterFactory;
 import org.eclipse.wst.jsdt.web.ui.views.contentoutline.JFaceNodeAdapterFactoryForJSDT;
-//import org.eclipse.wst.jsdt.web.core.internal.modelhandler.ModelHandlerForJSP;
-import org.eclipse.wst.html.core.internal.modelhandler.ModelHandlerForHTML;
-import org.eclipse.wst.html.ui.internal.contentoutline.JFaceNodeAdapterFactoryForHTML;
-import org.eclipse.wst.sse.core.internal.PropagatingAdapter;
 import org.eclipse.wst.sse.core.internal.ltk.modelhandler.IDocumentTypeHandler;
 import org.eclipse.wst.sse.core.internal.model.FactoryRegistry;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapterFactory;
@@ -24,8 +21,6 @@ import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.ui.internal.contentoutline.IJFaceNodeAdapter;
 import org.eclipse.wst.sse.ui.internal.provisional.registry.AdapterFactoryProvider;
 import org.eclipse.wst.sse.ui.internal.util.Assert;
-import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
-import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 
 public class AdapterFactoryProviderForJSDT implements AdapterFactoryProvider {
 

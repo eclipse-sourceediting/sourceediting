@@ -20,36 +20,34 @@ import org.eclipse.wst.sse.core.internal.ltk.modelhandler.IModelHandler;
 import org.eclipse.wst.sse.core.internal.provisional.IModelLoader;
 
 public class ModelHandlerForHTML extends AbstractModelHandler implements IModelHandler {
-	/** 
-	 * Needs to match what's in plugin registry. 
-	 * In fact, can be overwritten at run time with 
-	 * what's in registry! (so should never be 'final')
-	 */
-	static String AssociatedContentTypeID = "org.eclipse.wst.html.core.htmlsource"; //$NON-NLS-1$
 	/**
-	 * Needs to match what's in plugin registry. 
-	 * In fact, can be overwritten at run time with 
-	 * what's in registry! (so should never be 'final')
+	 * Needs to match what's in plugin registry. In fact, can be overwritten at
+	 * run time with what's in registry! (so should never be 'final')
 	 */
-	private static String ModelHandlerID_HTML = "org.eclipse.wst.html.core.modelhandler"; //$NON-NLS-1$
-
-
+	static String		 AssociatedContentTypeID = "org.eclipse.wst.html.core.htmlsource";  //$NON-NLS-1$
+	/**
+	 * Needs to match what's in plugin registry. In fact, can be overwritten at
+	 * run time with what's in registry! (so should never be 'final')
+	 */
+	private static String ModelHandlerID_HTML	 = "org.eclipse.wst.html.core.modelhandler"; //$NON-NLS-1$
+																							  
 	public ModelHandlerForHTML() {
 		super();
-		setId(ModelHandlerID_HTML);
-		setAssociatedContentTypeId(AssociatedContentTypeID);
+		setId(ModelHandlerForHTML.ModelHandlerID_HTML);
+		setAssociatedContentTypeId(ModelHandlerForHTML.AssociatedContentTypeID);
 	}
-
-	public IModelLoader getModelLoader() {
-		return new HTMLModelLoader();
-	}
-
-	public IDocumentCharsetDetector getEncodingDetector() {
-		return new HTMLDocumentCharsetDetector();
-	}
-
+	
 	public IDocumentLoader getDocumentLoader() {
 		return new HTMLDocumentLoader();
 	}
-
+	
+	@Override
+	public IDocumentCharsetDetector getEncodingDetector() {
+		return new HTMLDocumentCharsetDetector();
+	}
+	
+	public IModelLoader getModelLoader() {
+		return new HTMLModelLoader();
+	}
+	
 }

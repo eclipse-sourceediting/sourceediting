@@ -1,8 +1,10 @@
 package org.eclipse.wst.jsdt.web.ui.internal.contentassist;
 
+import java.util.Arrays;
+import java.util.Vector;
+
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
-import org.eclipse.wst.jsdt.ui.text.java.CompletionProposalCollector;
 import org.eclipse.wst.jsdt.web.core.internal.java.IJSPTranslation;
 import org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslation;
 import org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslationAdapter;
@@ -10,8 +12,6 @@ import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.ui.internal.contentassist.AbstractContentAssistProcessor;
-import java.util.Vector;
-import java.util.Arrays;
 
 public class JSDTContentAssistant extends AbstractContentAssistProcessor {
     

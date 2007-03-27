@@ -1,31 +1,17 @@
 package org.eclipse.wst.jsdt.web.ui.views.contentoutline;
 
 
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Vector;
 
-import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.text.Position;
 import org.eclipse.wst.jsdt.core.IJavaElement;
-import org.eclipse.wst.jsdt.internal.core.CompilationUnit;
-import org.eclipse.wst.jsdt.internal.core.JavaElement;
-import org.eclipse.wst.jsdt.internal.core.NamedMember;
 import org.eclipse.wst.jsdt.internal.core.SourceMethod;
-import org.eclipse.wst.jsdt.internal.core.SourceRefElement;
-import org.eclipse.wst.jsdt.internal.core.SourceType;
-import org.eclipse.wst.jsdt.internal.ui.compare.JavaNode;
 import org.eclipse.wst.sse.core.internal.model.FactoryRegistry;
 import org.eclipse.wst.sse.core.internal.provisional.AbstractNotifier;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.xml.core.internal.document.ElementImpl;
-import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.w3c.dom.Node;
 
 public class JsJfaceNode extends ElementImpl implements IndexedRegion, INodeNotifier,Node{

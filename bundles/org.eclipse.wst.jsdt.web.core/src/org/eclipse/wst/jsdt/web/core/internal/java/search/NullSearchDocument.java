@@ -19,27 +19,27 @@ import org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslator;
  * @author pavery
  */
 public class NullSearchDocument extends SearchDocument {
-
+	
 	StringBuffer fEmptyServletBuffer = null;
-
+	
 	public NullSearchDocument(String documentPath) {
 		super(documentPath, new JSPSearchParticipant());
 		this.fEmptyServletBuffer = new JSPTranslator().getEmptyTranslation();
 	}
-
+	
 	@Override
 	public byte[] getByteContents() {
 		return this.fEmptyServletBuffer.toString().getBytes();
 	}
-
+	
 	@Override
 	public char[] getCharContents() {
 		return this.fEmptyServletBuffer.toString().toCharArray();
 	}
-
+	
 	@Override
 	public String getEncoding() {
 		return null;
 	}
-
+	
 }

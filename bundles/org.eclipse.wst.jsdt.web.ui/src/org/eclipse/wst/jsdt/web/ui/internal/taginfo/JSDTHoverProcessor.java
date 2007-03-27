@@ -14,14 +14,14 @@ import java.io.Reader;
 import java.util.List;
 import java.util.Vector;
 
+import org.eclipse.jface.text.IRegion;
+import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.wst.jsdt.core.IJavaElement;
 import org.eclipse.wst.jsdt.core.IMember;
 import org.eclipse.wst.jsdt.core.IMethod;
 import org.eclipse.wst.jsdt.core.JavaModelException;
 import org.eclipse.wst.jsdt.ui.JavaElementLabels;
 import org.eclipse.wst.jsdt.ui.JavadocContentAccess;
-import org.eclipse.jface.text.IRegion;
-import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.wst.jsdt.web.core.internal.java.IJSPTranslation;
 import org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslation;
 import org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslationAdapter;

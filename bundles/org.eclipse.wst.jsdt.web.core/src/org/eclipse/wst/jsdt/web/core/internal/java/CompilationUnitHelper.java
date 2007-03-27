@@ -11,33 +11,35 @@ import org.eclipse.wst.jsdt.core.WorkingCopyOwner;
  * @author pavery
  */
 public class CompilationUnitHelper {
-
-	private JSPProblemRequestor fProblemRequestor = null;
-	private WorkingCopyOwner fWorkingCopyOwner = null;
+	
 	private static CompilationUnitHelper instance;
-
+	
+	public synchronized static final CompilationUnitHelper getInstance() {
+		
+		if (CompilationUnitHelper.instance == null) {
+			CompilationUnitHelper.instance = new CompilationUnitHelper();
+		}
+		return CompilationUnitHelper.instance;
+	}
+	
+	private JSPProblemRequestor fProblemRequestor = null;
+	
+	private WorkingCopyOwner	fWorkingCopyOwner = null;
+	
 	private CompilationUnitHelper() {
 		// force use of instance
 	}
-
-	public synchronized static final CompilationUnitHelper getInstance() {
-
-		if (instance == null) {
-			instance = new CompilationUnitHelper();
-		}
-		return instance;
-	}
-
+	
 	public JSPProblemRequestor getProblemRequestor() {
-
+		
 		if (fProblemRequestor == null) {
 			fProblemRequestor = new JSPProblemRequestor();
 		}
 		return fProblemRequestor;
 	}
-
+	
 	public WorkingCopyOwner getWorkingCopyOwner() {
-
+		
 		if (fWorkingCopyOwner == null) {
 			fWorkingCopyOwner = new WorkingCopyOwner() {
 				@Override

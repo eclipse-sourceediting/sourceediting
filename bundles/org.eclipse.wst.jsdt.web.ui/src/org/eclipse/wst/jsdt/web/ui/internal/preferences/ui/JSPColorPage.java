@@ -16,18 +16,17 @@ import java.util.Hashtable;
 import java.util.Iterator;
 
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.wst.jsdt.web.core.internal.provisional.contenttype.ContentTypeIdForJSP;
-import org.eclipse.wst.jsdt.web.core.internal.regions.DOMJSPRegionContexts;
-import org.eclipse.wst.jsdt.web.ui.internal.JSPUIMessages;
-import org.eclipse.wst.jsdt.web.ui.internal.JSPUIPlugin;
-import org.eclipse.wst.jsdt.web.ui.internal.editor.IHelpContextIds;
-import org.eclipse.wst.jsdt.web.ui.internal.style.IStyleConstantsJSP;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.html.ui.internal.style.IStyleConstantsHTML;
+import org.eclipse.wst.jsdt.web.core.internal.provisional.contenttype.ContentTypeIdForJSP;
+import org.eclipse.wst.jsdt.web.ui.internal.JSPUIMessages;
+import org.eclipse.wst.jsdt.web.ui.internal.JSPUIPlugin;
+import org.eclipse.wst.jsdt.web.ui.internal.editor.IHelpContextIds;
+import org.eclipse.wst.jsdt.web.ui.internal.style.IStyleConstantsJSP;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore;
@@ -112,39 +111,39 @@ public class JSPColorPage extends XMLColorPage {
 		// HTMLColorManager.SCRIPT_AREA);
 		// contextStyleMap.put(XMLJSPRegionContexts.BLOCK_TEXT,
 		// HTMLColorManager.SCRIPT_AREA);
-		contextStyleMap.put(DOMJSPRegionContexts.JSP_DECLARATION_OPEN,
-				IStyleConstantsHTML.SCRIPT_AREA_BORDER);
-		contextStyleMap.put(DOMJSPRegionContexts.JSP_SCRIPTLET_OPEN,
-				IStyleConstantsHTML.SCRIPT_AREA_BORDER);
-		contextStyleMap.put(DOMJSPRegionContexts.JSP_EXPRESSION_OPEN,
-				IStyleConstantsHTML.SCRIPT_AREA_BORDER);
-		contextStyleMap.put(DOMJSPRegionContexts.JSP_DIRECTIVE_OPEN,
-				IStyleConstantsHTML.SCRIPT_AREA_BORDER);
-		contextStyleMap.put(DOMJSPRegionContexts.JSP_DIRECTIVE_CLOSE,
-				IStyleConstantsHTML.SCRIPT_AREA_BORDER);
-		contextStyleMap.put(DOMJSPRegionContexts.JSP_CLOSE,
-				IStyleConstantsHTML.SCRIPT_AREA_BORDER);
-
-		contextStyleMap.put(DOMJSPRegionContexts.JSP_CONTENT,
-				IStyleConstantsJSP.JSP_CONTENT);
-
-		contextStyleMap.put(DOMJSPRegionContexts.JSP_DIRECTIVE_NAME,
-				IStyleConstantsXML.TAG_NAME);
-		contextStyleMap.put(DOMJSPRegionContexts.JSP_ROOT_TAG_NAME,
-				IStyleConstantsXML.TAG_NAME);
-		contextStyleMap.put(DOMJSPRegionContexts.JSP_COMMENT_OPEN,
-				IStyleConstantsXML.COMMENT_BORDER);
-		contextStyleMap.put(DOMJSPRegionContexts.JSP_COMMENT_TEXT,
-				IStyleConstantsXML.COMMENT_TEXT);
-		contextStyleMap.put(DOMJSPRegionContexts.JSP_COMMENT_CLOSE,
-				IStyleConstantsXML.COMMENT_BORDER);
-
-		contextStyleMap.put(
-				DOMJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_DQUOTE,
-				IStyleConstantsXML.TAG_ATTRIBUTE_VALUE);
-		contextStyleMap.put(
-				DOMJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_SQUOTE,
-				IStyleConstantsXML.TAG_ATTRIBUTE_VALUE);
+//		contextStyleMap.put(DOMJSPRegionContexts.JSP_DECLARATION_OPEN,
+//				IStyleConstantsHTML.SCRIPT_AREA_BORDER);
+//		contextStyleMap.put(DOMJSPRegionContexts.JSP_SCRIPTLET_OPEN,
+//				IStyleConstantsHTML.SCRIPT_AREA_BORDER);
+//		contextStyleMap.put(DOMJSPRegionContexts.JSP_EXPRESSION_OPEN,
+//				IStyleConstantsHTML.SCRIPT_AREA_BORDER);
+//		contextStyleMap.put(DOMJSPRegionContexts.JSP_DIRECTIVE_OPEN,
+//				IStyleConstantsHTML.SCRIPT_AREA_BORDER);
+//		contextStyleMap.put(DOMJSPRegionContexts.JSP_DIRECTIVE_CLOSE,
+//				IStyleConstantsHTML.SCRIPT_AREA_BORDER);
+//		contextStyleMap.put(DOMJSPRegionContexts.JSP_CLOSE,
+//				IStyleConstantsHTML.SCRIPT_AREA_BORDER);
+//
+//		contextStyleMap.put(DOMJSPRegionContexts.JSP_CONTENT,
+//				IStyleConstantsJSP.JSP_CONTENT);
+//
+//		contextStyleMap.put(DOMJSPRegionContexts.JSP_DIRECTIVE_NAME,
+//				IStyleConstantsXML.TAG_NAME);
+//		contextStyleMap.put(DOMJSPRegionContexts.JSP_ROOT_TAG_NAME,
+//				IStyleConstantsXML.TAG_NAME);
+//		contextStyleMap.put(DOMJSPRegionContexts.JSP_COMMENT_OPEN,
+//				IStyleConstantsXML.COMMENT_BORDER);
+//		contextStyleMap.put(DOMJSPRegionContexts.JSP_COMMENT_TEXT,
+//				IStyleConstantsXML.COMMENT_TEXT);
+//		contextStyleMap.put(DOMJSPRegionContexts.JSP_COMMENT_CLOSE,
+//				IStyleConstantsXML.COMMENT_BORDER);
+//
+//		contextStyleMap.put(
+//				DOMJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_DQUOTE,
+//				IStyleConstantsXML.TAG_ATTRIBUTE_VALUE);
+//		contextStyleMap.put(
+//				DOMJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_SQUOTE,
+//				IStyleConstantsXML.TAG_ATTRIBUTE_VALUE);
 	}
 
 	@Override

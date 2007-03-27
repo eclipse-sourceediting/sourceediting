@@ -18,15 +18,15 @@ package org.eclipse.wst.jsdt.web.ui.internal.java.refactoring;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.wst.jsdt.core.IMethod;
-import org.eclipse.wst.jsdt.core.JavaModelException;
-import org.eclipse.wst.jsdt.web.ui.internal.JSPUIMessages;
-import org.eclipse.wst.jsdt.web.ui.internal.Logger;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.CompositeChange;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.participants.CheckConditionsContext;
 import org.eclipse.ltk.core.refactoring.participants.RenameParticipant;
+import org.eclipse.wst.jsdt.core.IMethod;
+import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.web.ui.internal.JSPUIMessages;
+import org.eclipse.wst.jsdt.web.ui.internal.Logger;
 
 /**
  * @author pavery

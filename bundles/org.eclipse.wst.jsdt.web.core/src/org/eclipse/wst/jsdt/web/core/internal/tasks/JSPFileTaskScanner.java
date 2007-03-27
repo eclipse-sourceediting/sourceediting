@@ -10,14 +10,13 @@
  *******************************************************************************/
 package org.eclipse.wst.jsdt.web.core.internal.tasks;
 
-import org.eclipse.wst.jsdt.web.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.xml.core.internal.tasks.XMLFileTaskScanner;
 
 public class JSPFileTaskScanner extends XMLFileTaskScanner {
 	@Override
-	protected boolean isCommentRegion(IStructuredDocumentRegion region,ITextRegion textRegion) {
+	protected boolean isCommentRegion(IStructuredDocumentRegion region, ITextRegion textRegion) {
 		return super.isCommentRegion(region, textRegion);
 	}
 }

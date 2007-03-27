@@ -17,22 +17,21 @@ import org.eclipse.wst.sse.core.internal.ltk.modelhandler.EmbeddedTypeHandler;
  * event a re-init is needed.
  */
 public class EmbeddedTypeStateData {
-
-	EmbeddedTypeHandler oldHandler;
+	
 	EmbeddedTypeHandler newHandler;
-
-	public EmbeddedTypeStateData(EmbeddedTypeHandler oldHandler,
-			EmbeddedTypeHandler newHandler) {
+	EmbeddedTypeHandler oldHandler;
+	
+	public EmbeddedTypeStateData(EmbeddedTypeHandler oldHandler, EmbeddedTypeHandler newHandler) {
 		this.oldHandler = oldHandler;
 		this.newHandler = newHandler;
 	}
-
+	
 	public EmbeddedTypeHandler getNewHandler() {
 		return newHandler;
 	}
-
+	
 	public EmbeddedTypeHandler getOldHandler() {
 		return oldHandler;
 	}
-
+	
 }

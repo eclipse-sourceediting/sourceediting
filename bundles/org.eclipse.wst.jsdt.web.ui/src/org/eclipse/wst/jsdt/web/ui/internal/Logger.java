@@ -10,12 +10,12 @@
  *******************************************************************************/
 package org.eclipse.wst.jsdt.web.ui.internal;
 
-import com.ibm.icu.util.StringTokenizer;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.osgi.framework.Bundle;
+
+import com.ibm.icu.util.StringTokenizer;
 
 /**
  * Small convenience class to log messages to plugin's log file and also, if

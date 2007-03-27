@@ -13,15 +13,14 @@
 package org.eclipse.wst.jsdt.web.ui.internal.java.search;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.wst.jsdt.core.IJavaElement;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextSelection;
+import org.eclipse.search.ui.ISearchQuery;
+import org.eclipse.wst.jsdt.core.IJavaElement;
 import org.eclipse.wst.jsdt.web.core.internal.java.IJSPTranslation;
 import org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslation;
 import org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslationAdapter;
-import org.eclipse.wst.jsdt.web.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.wst.jsdt.web.core.text.IJSPPartitions;
-import org.eclipse.search.ui.ISearchQuery;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
@@ -43,8 +42,7 @@ public class JSPFindOccurrencesProcessor extends FindOccurrencesProcessor {
 
 	@Override
 	protected String[] getRegionTypes() {
-		return new String[] { DOMRegionContext.BLOCK_TEXT,
-				DOMJSPRegionContexts.JSP_CONTENT };
+		return new String[] { DOMRegionContext.BLOCK_TEXT };
 	}
 
 	@Override

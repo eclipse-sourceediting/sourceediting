@@ -13,13 +13,13 @@ package org.eclipse.wst.jsdt.web.ui.internal.java.search;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.osgi.util.NLS;
+import org.eclipse.search.ui.ISearchResult;
 import org.eclipse.wst.jsdt.core.IJavaElement;
 import org.eclipse.wst.jsdt.core.search.SearchDocument;
 import org.eclipse.wst.jsdt.web.core.internal.java.search.JSPSearchScope;
 import org.eclipse.wst.jsdt.web.core.internal.java.search.JSPSearchSupport;
 import org.eclipse.wst.jsdt.web.ui.internal.JSPUIMessages;
-import org.eclipse.osgi.util.NLS;
-import org.eclipse.search.ui.ISearchResult;
 import org.eclipse.wst.sse.ui.internal.search.BasicSearchQuery;
 
 /**

@@ -1,11 +1,11 @@
 package org.eclipse.wst.jsdt.web.ui.internal.hyperlink;
 
-import org.eclipse.wst.jsdt.core.IJavaElement;
-import org.eclipse.wst.jsdt.ui.JavaUI;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
-import org.eclipse.wst.jsdt.web.ui.internal.Logger;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.ui.JavaUI;
+import org.eclipse.wst.jsdt.web.ui.internal.Logger;
 
 /**
  * Hyperlink for JSP Java elements

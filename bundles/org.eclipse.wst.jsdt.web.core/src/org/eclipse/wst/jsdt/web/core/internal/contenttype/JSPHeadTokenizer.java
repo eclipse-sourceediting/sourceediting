@@ -25,68 +25,63 @@ import org.eclipse.wst.xml.core.internal.contenttype.XMLHeadTokenizerConstants;
  * <tt>D:/builds/Workspaces/WTP15maintenance/org.eclipse.wst.jsdt.web.core/DevTimeSupport/HeadParsers/JSPHeadTokenizer.jFlex</tt>
  */
 public class JSPHeadTokenizer {
-
+	
+	public static final int	 DQ_STRING			= 8;
+	
+	private final static int	MAX_TO_SCAN		  = 8000;
+	
+	public static final int	 QuotedAttributeValue = 6;
+	public static final int	 SQ_STRING			= 10;
+	public static final int	 ST_PAGE_DIRECTIVE	= 4;
+	public static final int	 ST_XMLDecl		   = 2;
+	public static final int	 UnDelimitedString	= 12;
 	/** This character denotes the end of file */
-	public static final int YYEOF = -1;
-
-	/** initial size of the lookahead buffer */
-	private static final int ZZ_BUFFERSIZE = 8192;
-
+	public static final int	 YYEOF				= -1;
 	/** lexical states */
-	public static final int YYINITIAL = 0;
-	public static final int UnDelimitedString = 12;
-	public static final int DQ_STRING = 8;
-	public static final int SQ_STRING = 10;
-	public static final int ST_XMLDecl = 2;
-	public static final int ST_PAGE_DIRECTIVE = 4;
-	public static final int QuotedAttributeValue = 6;
-
+	public static final int	 YYINITIAL			= 0;
+	
+	/**
+	 * Translates DFA states to action switch labels.
+	 */
+	private static final int[]  ZZ_ACTION			= JSPHeadTokenizer.zzUnpackAction();
+	
+	private static final String ZZ_ACTION_PACKED_0   = "\10\0\20\1\2\2\1\1\1\3\1\4\1\5\1\6" + "\1\5\1\7\2\5\1\7\1\10\2\11\4\0\1\12" + "\1\13\6\0\1\14\5\0\1\15\1\16\1\0\1\17" + "\1\0\1\20\4\0\1\21\36\0\1\22\20\0\1\23" + "\2\0\1\24\6\0\1\25\1\26\22\0\1\27\5\0" + "\1\30\52\0\1\31\5\0\1\32\12\0\1\32";
+	
+	/** initial size of the lookahead buffer */
+	private static final int	ZZ_BUFFERSIZE		= 8192;
+	
+	/**
+	 * Translates characters to character classes
+	 */
+	private static final char[] ZZ_CMAP			  = JSPHeadTokenizer.zzUnpackCMap(JSPHeadTokenizer.ZZ_CMAP_PACKED);
+	
+	/**
+	 * Translates characters to character classes
+	 */
+	private static final String ZZ_CMAP_PACKED	   = "\11\0\1\6\1\11\2\0\1\10\22\0\1\34\1\17\1\37\2\0" + "\1\51\1\0\1\40\6\0\1\43\1\33\1\0\1\47\1\0\1\44" + "\5\0\1\50\1\41\1\0\1\12\1\7\1\56\1\13\1\52\1\53" + "\1\31\1\22\1\20\1\26\1\0\1\46\1\27\1\32\1\54\1\0" + "\1\16\1\15\1\35\1\21\1\25\1\0\1\45\1\36\1\23\1\30" + "\1\55\1\42\1\14\1\24\7\0\1\53\1\31\1\22\1\20\1\26" + "\1\0\1\46\1\27\1\32\1\54\1\0\1\16\1\15\1\35\1\21" + "\1\25\1\0\1\45\1\36\1\23\1\30\1\55\1\42\1\14\1\24" + "\101\0\1\4\3\0\1\5\17\0\1\3\16\0\1\1\20\0\1\3" + "\16\0\1\1\1\2\170\0\1\2\ufe87\0";
+	
+	/* error messages for the codes above */
+	private static final String ZZ_ERROR_MSG[]	   = { "Unkown internal scanner error", "Error: could not match input", "Error: pushback value was too large" };
+	
 	/**
 	 * ZZ_LEXSTATE[l] is the state in the DFA for the lexical state l
 	 * ZZ_LEXSTATE[l+1] is the state in the DFA for the lexical state l at the
 	 * beginning of a line l is of the form l = 2*k, k a non negative integer
 	 */
-	private static final int ZZ_LEXSTATE[] = { 0, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6,
-			6, 7, 7 };
-
-	/**
-	 * Translates characters to character classes
-	 */
-	private static final String ZZ_CMAP_PACKED = "\11\0\1\6\1\11\2\0\1\10\22\0\1\34\1\17\1\37\2\0"
-			+ "\1\51\1\0\1\40\6\0\1\43\1\33\1\0\1\47\1\0\1\44"
-			+ "\5\0\1\50\1\41\1\0\1\12\1\7\1\56\1\13\1\52\1\53"
-			+ "\1\31\1\22\1\20\1\26\1\0\1\46\1\27\1\32\1\54\1\0"
-			+ "\1\16\1\15\1\35\1\21\1\25\1\0\1\45\1\36\1\23\1\30"
-			+ "\1\55\1\42\1\14\1\24\7\0\1\53\1\31\1\22\1\20\1\26"
-			+ "\1\0\1\46\1\27\1\32\1\54\1\0\1\16\1\15\1\35\1\21"
-			+ "\1\25\1\0\1\45\1\36\1\23\1\30\1\55\1\42\1\14\1\24"
-			+ "\101\0\1\4\3\0\1\5\17\0\1\3\16\0\1\1\20\0\1\3"
-			+ "\16\0\1\1\1\2\170\0\1\2\ufe87\0";
-
-	/**
-	 * Translates characters to character classes
-	 */
-	private static final char[] ZZ_CMAP = zzUnpackCMap(ZZ_CMAP_PACKED);
-
-	/**
-	 * Translates DFA states to action switch labels.
-	 */
-	private static final int[] ZZ_ACTION = zzUnpackAction();
-
-	private static final String ZZ_ACTION_PACKED_0 = "\10\0\20\1\2\2\1\1\1\3\1\4\1\5\1\6"
-			+ "\1\5\1\7\2\5\1\7\1\10\2\11\4\0\1\12"
-			+ "\1\13\6\0\1\14\5\0\1\15\1\16\1\0\1\17"
-			+ "\1\0\1\20\4\0\1\21\36\0\1\22\20\0\1\23"
-			+ "\2\0\1\24\6\0\1\25\1\26\22\0\1\27\5\0"
-			+ "\1\30\52\0\1\31\5\0\1\32\12\0\1\32";
-
+	private static final int	ZZ_LEXSTATE[]		= { 0, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7 };
+	
+	private static final int	ZZ_NO_MATCH		  = 1;
+	private static final int	ZZ_PUSHBACK_2BIG	 = 2;
+	/* error codes */
+	private static final int	ZZ_UNKNOWN_ERROR	 = 0;
+	
 	private static int[] zzUnpackAction() {
 		int[] result = new int[212];
 		int offset = 0;
-		offset = zzUnpackAction(ZZ_ACTION_PACKED_0, offset, result);
+		offset = JSPHeadTokenizer.zzUnpackAction(JSPHeadTokenizer.ZZ_ACTION_PACKED_0, offset, result);
 		return result;
 	}
-
+	
 	private static int zzUnpackAction(String packed, int offset, int[] result) {
 		int i = 0; /* index in packed string */
 		int j = offset; /* index in unpacked array */
@@ -100,210 +95,7 @@ public class JSPHeadTokenizer {
 		}
 		return j;
 	}
-
-	/* error codes */
-	private static final int ZZ_UNKNOWN_ERROR = 0;
-	private static final int ZZ_NO_MATCH = 1;
-	private static final int ZZ_PUSHBACK_2BIG = 2;
-
-	/* error messages for the codes above */
-	private static final String ZZ_ERROR_MSG[] = {
-			"Unkown internal scanner error", "Error: could not match input",
-			"Error: pushback value was too large" };
-
-	/** the input device */
-	private java.io.Reader zzReader;
-
-	/** the current state of the DFA */
-	private int zzState;
-
-	/** the current lexical state */
-	private int zzLexicalState = YYINITIAL;
-
-	/**
-	 * this buffer contains the current text to be matched and is the source of
-	 * the yytext() string
-	 */
-	private char zzBuffer[] = new char[ZZ_BUFFERSIZE];
-
-	/** the textposition at the last accepting state */
-	private int zzMarkedPos;
-
-	/** the textposition at the last state to be included in yytext */
-	private int zzPushbackPos;
-
-	/** the current text position in the buffer */
-	private int zzCurrentPos;
-
-	/** startRead marks the beginning of the yytext() string in the buffer */
-	private int zzStartRead;
-
-	/**
-	 * endRead marks the last character in the buffer, that has been read from
-	 * input
-	 */
-	private int zzEndRead;
-
-	/** number of newlines encountered up to the start of the matched text */
-	// private int yyline;
-	/** the number of characters up to the start of the matched text */
-	private int yychar;
-
-	/**
-	 * the number of characters from the last newline up to the start of the
-	 * matched text
-	 */
-	// private int yycolumn;
-	/**
-	 * zzAtBOL == true <=> the scanner is currently at the beginning of a line
-	 */
-	private boolean zzAtBOL = true;
-
-	/** zzAtEOF == true <=> the scanner is at the EOF */
-	private boolean zzAtEOF;
-
-	/** denotes if the user-EOF-code has already been executed */
-	private boolean zzEOFDone;
-
-	/* user code: */
-
-	private boolean hasMore = true;
-	private final static int MAX_TO_SCAN = 8000;
-	StringBuffer string = new StringBuffer();
-	// state stack for easier state handling
-	private IntStack fStateStack = new IntStack();
-	private String valueText = null;
-	private boolean isXHTML;
-	private boolean isWML;
-
-	public JSPHeadTokenizer() {
-		super();
-	}
-
-	public void reset(Reader in) {
-		/* the input device */
-		zzReader = in;
-
-		/* the current state of the DFA */
-		zzState = 0;
-
-		/* the current lexical state */
-		zzLexicalState = YYINITIAL;
-
-		/*
-		 * this buffer contains the current text to be matched and is the source
-		 * of the yytext() string
-		 */
-		java.util.Arrays.fill(zzBuffer, (char) 0);
-
-		/* the textposition at the last accepting state */
-		zzMarkedPos = 0;
-
-		/* the textposition at the last state to be included in yytext */
-		zzPushbackPos = 0;
-
-		/* the current text position in the buffer */
-		zzCurrentPos = 0;
-
-		/* startRead marks the beginning of the yytext() string in the buffer */
-		zzStartRead = 0;
-
-		/**
-		 * endRead marks the last character in the buffer, that has been read
-		 * from input
-		 */
-		zzEndRead = 0;
-
-		/* number of newlines encountered up to the start of the matched text */
-		// yyline = 0;
-		/* the number of characters up to the start of the matched text */
-		yychar = 0;
-
-		/**
-		 * the number of characters from the last newline up to the start of the
-		 * matched text
-		 */
-		// yycolumn = 0;
-		/**
-		 * yy_atBOL == true <=> the scanner is currently at the beginning of a
-		 * line
-		 */
-		zzAtBOL = true;
-
-		/* yy_atEOF == true <=> the scanner has returned a value for EOF */
-		zzAtEOF = false;
-
-		/* denotes if the user-EOF-code has already been executed */
-		zzEOFDone = false;
-
-		fStateStack.clear();
-
-		hasMore = true;
-		isXHTML = false;
-		isWML = false;
-
-	}
-
-	public final HeadParserToken getNextToken() throws IOException {
-		String context = null;
-		context = primGetNextToken();
-		HeadParserToken result = null;
-		if (valueText != null) {
-			result = createToken(context, yychar, valueText);
-			valueText = null;
-		} else {
-			result = createToken(context, yychar, yytext());
-		}
-		return result;
-	}
-
-	public final boolean hasMoreTokens() {
-		return hasMore && yychar < MAX_TO_SCAN;
-	}
-
-	private void pushCurrentState() {
-		fStateStack.push(yystate());
-
-	}
-
-	private void popState() {
-		yybegin(fStateStack.pop());
-	}
-
-	private HeadParserToken createToken(String context, int start, String text) {
-		return new HeadParserToken(context, start, text);
-	}
-
-	public boolean isXHTML() {
-		return isXHTML;
-	}
-
-	public boolean isWML() {
-		return isWML;
-	}
-
-	/**
-	 * Creates a new scanner There is also a java.io.InputStream version of this
-	 * constructor.
-	 * 
-	 * @param in
-	 *            the java.io.Reader to read input from.
-	 */
-	public JSPHeadTokenizer(java.io.Reader in) {
-		this.zzReader = in;
-	}
-
-	/**
-	 * Creates a new scanner. There is also java.io.Reader version of this
-	 * constructor.
-	 * 
-	 * @param in
-	 *            the java.io.Inputstream to read input from.
-	 */
-	public JSPHeadTokenizer(java.io.InputStream in) {
-		this(new java.io.InputStreamReader(in));
-	}
-
+	
 	/**
 	 * Unpacks the compressed character translation table.
 	 * 
@@ -324,183 +116,129 @@ public class JSPHeadTokenizer {
 		}
 		return map;
 	}
+	
+	// state stack for easier state handling
+	private IntStack	   fStateStack	= new IntStack();
+	
+	private boolean		hasMore		= true;
+	
+	private boolean		isWML;
+	
+	private boolean		isXHTML;
+	
+	StringBuffer		   string		 = new StringBuffer();
+	
+	private String		 valueText	  = null;
+	
+	/** number of newlines encountered up to the start of the matched text */
+	// private int yyline;
+	/** the number of characters up to the start of the matched text */
+	private int			yychar;
+	
+	/**
+	 * the number of characters from the last newline up to the start of the
+	 * matched text
+	 */
+	// private int yycolumn;
+	/**
+	 * zzAtBOL == true <=> the scanner is currently at the beginning of a line
+	 */
+	private boolean		zzAtBOL		= true;
+	
+	/** zzAtEOF == true <=> the scanner is at the EOF */
+	private boolean		zzAtEOF;
+	
+	/**
+	 * this buffer contains the current text to be matched and is the source of
+	 * the yytext() string
+	 */
+	private char		   zzBuffer[]	 = new char[JSPHeadTokenizer.ZZ_BUFFERSIZE];
+	
+	/** the current text position in the buffer */
+	private int			zzCurrentPos;
+	
+	/* user code: */
 
 	/**
-	 * Refills the input buffer.
-	 * 
-	 * @return <code>false</code>, iff there was new input.
-	 * 
-	 * @exception java.io.IOException
-	 *                if any I/O-Error occurs
+	 * endRead marks the last character in the buffer, that has been read from
+	 * input
 	 */
-	private boolean zzRefill() throws java.io.IOException {
-
-		/* first: make room (if you can) */
-		if (zzStartRead > 0) {
-			System.arraycopy(zzBuffer, zzStartRead, zzBuffer, 0, zzEndRead
-					- zzStartRead);
-
-			/* translate stored positions */
-			zzEndRead -= zzStartRead;
-			zzCurrentPos -= zzStartRead;
-			zzMarkedPos -= zzStartRead;
-			zzPushbackPos -= zzStartRead;
-			zzStartRead = 0;
-		}
-
-		/* is the buffer big enough? */
-		if (zzCurrentPos >= zzBuffer.length) {
-			/* if not: blow it up */
-			char newBuffer[] = new char[zzCurrentPos * 2];
-			System.arraycopy(zzBuffer, 0, newBuffer, 0, zzBuffer.length);
-			zzBuffer = newBuffer;
-		}
-
-		/* finally: fill the buffer with new input */
-		int numRead = zzReader.read(zzBuffer, zzEndRead, zzBuffer.length
-				- zzEndRead);
-
-		if (numRead < 0) {
-			return true;
+	private int			zzEndRead;
+	/** denotes if the user-EOF-code has already been executed */
+	private boolean		zzEOFDone;
+	/** the current lexical state */
+	private int			zzLexicalState = JSPHeadTokenizer.YYINITIAL;
+	/** the textposition at the last accepting state */
+	private int			zzMarkedPos;
+	/** the textposition at the last state to be included in yytext */
+	private int			zzPushbackPos;
+	/** the input device */
+	private java.io.Reader zzReader;
+	/** startRead marks the beginning of the yytext() string in the buffer */
+	private int			zzStartRead;
+	
+	/** the current state of the DFA */
+	private int			zzState;
+	
+	public JSPHeadTokenizer() {
+		super();
+	}
+	
+	/**
+	 * Creates a new scanner. There is also java.io.Reader version of this
+	 * constructor.
+	 * 
+	 * @param in
+	 *            the java.io.Inputstream to read input from.
+	 */
+	public JSPHeadTokenizer(java.io.InputStream in) {
+		this(new java.io.InputStreamReader(in));
+	}
+	
+	/**
+	 * Creates a new scanner There is also a java.io.InputStream version of this
+	 * constructor.
+	 * 
+	 * @param in
+	 *            the java.io.Reader to read input from.
+	 */
+	public JSPHeadTokenizer(java.io.Reader in) {
+		this.zzReader = in;
+	}
+	
+	private HeadParserToken createToken(String context, int start, String text) {
+		return new HeadParserToken(context, start, text);
+	}
+	
+	public final HeadParserToken getNextToken() throws IOException {
+		String context = null;
+		context = primGetNextToken();
+		HeadParserToken result = null;
+		if (valueText != null) {
+			result = createToken(context, yychar, valueText);
+			valueText = null;
 		} else {
-			zzEndRead += numRead;
-			return false;
+			result = createToken(context, yychar, yytext());
 		}
+		return result;
 	}
-
-	/**
-	 * Closes the input stream.
-	 */
-	public final void yyclose() throws java.io.IOException {
-		zzAtEOF = true; /* indicate end of file */
-		zzEndRead = zzStartRead; /* invalidate buffer */
-
-		if (zzReader != null) {
-			zzReader.close();
-		}
+	
+	public final boolean hasMoreTokens() {
+		return hasMore && yychar < JSPHeadTokenizer.MAX_TO_SCAN;
 	}
-
-	/**
-	 * Resets the scanner to read from a new input stream. Does not close the
-	 * old reader.
-	 * 
-	 * All internal variables are reset, the old input stream <b>cannot</b> be
-	 * reused (internal buffer is discarded and lost). Lexical state is set to
-	 * <tt>ZZ_INITIAL</tt>.
-	 * 
-	 * @param reader
-	 *            the new input stream
-	 */
-	public final void yyreset(java.io.Reader reader) {
-		zzReader = reader;
-		zzAtBOL = true;
-		zzAtEOF = false;
-		zzEndRead = zzStartRead = 0;
-		zzCurrentPos = zzMarkedPos = zzPushbackPos = 0;
-		// yyline = yychar = yycolumn = 0;
-		zzLexicalState = YYINITIAL;
+	
+	public boolean isWML() {
+		return isWML;
 	}
-
-	/**
-	 * Returns the current lexical state.
-	 */
-	public final int yystate() {
-		return zzLexicalState;
+	
+	public boolean isXHTML() {
+		return isXHTML;
 	}
-
-	/**
-	 * Enters a new lexical state
-	 * 
-	 * @param newState
-	 *            the new lexical state
-	 */
-	public final void yybegin(int newState) {
-		zzLexicalState = newState;
+	
+	private void popState() {
+		yybegin(fStateStack.pop());
 	}
-
-	/**
-	 * Returns the text matched by the current regular expression.
-	 */
-	public final String yytext() {
-		return new String(zzBuffer, zzStartRead, zzMarkedPos - zzStartRead);
-	}
-
-	/**
-	 * Returns the character at position <tt>pos</tt> from the matched text.
-	 * 
-	 * It is equivalent to yytext().charAt(pos), but faster
-	 * 
-	 * @param pos
-	 *            the position of the character to fetch. A value from 0 to
-	 *            yylength()-1.
-	 * 
-	 * @return the character at position pos
-	 */
-	public final char yycharat(int pos) {
-		return zzBuffer[zzStartRead + pos];
-	}
-
-	/**
-	 * Returns the length of the matched text region.
-	 */
-	public final int yylength() {
-		return zzMarkedPos - zzStartRead;
-	}
-
-	/**
-	 * Reports an error that occured while scanning.
-	 * 
-	 * In a wellformed scanner (no or only correct usage of yypushback(int) and
-	 * a match-all fallback rule) this method will only be called with things
-	 * that "Can't Possibly Happen". If this method is called, something is
-	 * seriously wrong (e.g. a JFlex bug producing a faulty scanner etc.).
-	 * 
-	 * Usual syntax/scanner level error handling should be done in error
-	 * fallback rules.
-	 * 
-	 * @param errorCode
-	 *            the code of the errormessage to display
-	 */
-	private void zzScanError(int errorCode) {
-		String message;
-		try {
-			message = ZZ_ERROR_MSG[errorCode];
-		} catch (ArrayIndexOutOfBoundsException e) {
-			message = ZZ_ERROR_MSG[ZZ_UNKNOWN_ERROR];
-		}
-
-		throw new Error(message);
-	}
-
-	/**
-	 * Pushes the specified amount of characters back into the input stream.
-	 * 
-	 * They will be read again by then next call of the scanning method
-	 * 
-	 * @param number
-	 *            the number of characters to be read again. This number must
-	 *            not be greater than yylength()!
-	 */
-	public void yypushback(int number) {
-		if (number > yylength()) {
-			zzScanError(ZZ_PUSHBACK_2BIG);
-		}
-
-		zzMarkedPos -= number;
-	}
-
-	/**
-	 * Contains user EOF-code, which will be executed exactly once, when the end
-	 * of file is reached
-	 */
-	private void zzDoEOF() {
-		if (!zzEOFDone) {
-			zzEOFDone = true;
-			hasMore = false;
-
-		}
-	}
-
+	
 	/**
 	 * Resumes scanning until the next regular expression is matched, the end of
 	 * input is encountered or an I/O-Error occurs.
@@ -512,19 +250,19 @@ public class JSPHeadTokenizer {
 	public String primGetNextToken() throws java.io.IOException {
 		int zzInput;
 		int zzAction;
-
+		
 		// cached fields:
 		int zzCurrentPosL;
 		int zzMarkedPosL;
 		int zzEndReadL = zzEndRead;
 		char[] zzBufferL = zzBuffer;
-		char[] zzCMapL = ZZ_CMAP;
-
+		char[] zzCMapL = JSPHeadTokenizer.ZZ_CMAP;
+		
 		while (true) {
 			zzMarkedPosL = zzMarkedPos;
-
+			
 			yychar += zzMarkedPosL - zzStartRead;
-
+			
 			if (zzMarkedPosL > zzStartRead) {
 				switch (zzBufferL[zzMarkedPosL - 1]) {
 				case '\n':
@@ -556,22 +294,22 @@ public class JSPHeadTokenizer {
 				}
 			}
 			zzAction = -1;
-
+			
 			zzCurrentPosL = zzCurrentPos = zzStartRead = zzMarkedPosL;
-
+			
 			if (zzAtBOL) {
-				zzState = ZZ_LEXSTATE[zzLexicalState + 1];
+				zzState = JSPHeadTokenizer.ZZ_LEXSTATE[zzLexicalState + 1];
 			} else {
-				zzState = ZZ_LEXSTATE[zzLexicalState];
+				zzState = JSPHeadTokenizer.ZZ_LEXSTATE[zzLexicalState];
 			}
-
+			
 			zzForAction: {
 				while (true) {
-
+					
 					if (zzCurrentPosL < zzEndReadL) {
 						zzInput = zzBufferL[zzCurrentPosL++];
 					} else if (zzAtEOF) {
-						zzInput = YYEOF;
+						zzInput = JSPHeadTokenizer.YYEOF;
 						break zzForAction;
 					} else {
 						// store back cached positions
@@ -584,17 +322,17 @@ public class JSPHeadTokenizer {
 						zzBufferL = zzBuffer;
 						zzEndReadL = zzEndRead;
 						if (eof) {
-							zzInput = YYEOF;
+							zzInput = JSPHeadTokenizer.YYEOF;
 							break zzForAction;
 						} else {
 							zzInput = zzBufferL[zzCurrentPosL++];
 						}
 					}
 					zzInput = zzCMapL[zzInput];
-
+					
 					boolean zzIsFinal = false;
 					boolean zzNoLookAhead = false;
-
+					
 					zzForNext: {
 						switch (zzState) {
 						case 0:
@@ -609,7 +347,7 @@ public class JSPHeadTokenizer {
 								zzState = 8;
 								break zzForNext;
 							}
-
+							
 						case 1:
 							switch (zzInput) {
 							case 1:
@@ -641,7 +379,7 @@ public class JSPHeadTokenizer {
 								zzState = 8;
 								break zzForNext;
 							}
-
+							
 						case 2:
 							switch (zzInput) {
 							case 6:
@@ -669,7 +407,7 @@ public class JSPHeadTokenizer {
 								zzState = 8;
 								break zzForNext;
 							}
-
+							
 						case 3:
 							switch (zzInput) {
 							case 14:
@@ -698,7 +436,7 @@ public class JSPHeadTokenizer {
 								zzState = 8;
 								break zzForNext;
 							}
-
+							
 						case 4:
 							switch (zzInput) {
 							case 6:
@@ -727,7 +465,7 @@ public class JSPHeadTokenizer {
 								zzState = 24;
 								break zzForNext;
 							}
-
+							
 						case 5:
 							switch (zzInput) {
 							case 8:
@@ -759,7 +497,7 @@ public class JSPHeadTokenizer {
 								zzState = 29;
 								break zzForNext;
 							}
-
+							
 						case 6:
 							switch (zzInput) {
 							case 8:
@@ -782,7 +520,7 @@ public class JSPHeadTokenizer {
 								zzState = 29;
 								break zzForNext;
 							}
-
+							
 						case 7:
 							switch (zzInput) {
 							case 11:
@@ -813,7 +551,7 @@ public class JSPHeadTokenizer {
 								zzState = 29;
 								break zzForNext;
 							}
-
+							
 						case 9:
 							switch (zzInput) {
 							case 15:
@@ -831,7 +569,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 10:
 							switch (zzInput) {
 							case 2:
@@ -842,7 +580,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 11:
 							switch (zzInput) {
 							case 1:
@@ -853,7 +591,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 12:
 							switch (zzInput) {
 							case 4:
@@ -862,7 +600,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 13:
 							switch (zzInput) {
 							case 6:
@@ -877,7 +615,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 14:
 							switch (zzInput) {
 							case 15:
@@ -898,7 +636,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 15:
 							switch (zzInput) {
 							case 6:
@@ -913,7 +651,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 16:
 							switch (zzInput) {
 							case 46:
@@ -924,7 +662,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 17:
 							switch (zzInput) {
 							case 29:
@@ -933,7 +671,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 18:
 							switch (zzInput) {
 							case 22:
@@ -942,7 +680,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 19:
 							switch (zzInput) {
 							case 43:
@@ -951,7 +689,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 20:
 							switch (zzInput) {
 							case 17:
@@ -960,7 +698,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 21:
 							switch (zzInput) {
 							case 43:
@@ -969,7 +707,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 22:
 							switch (zzInput) {
 							case 46:
@@ -980,7 +718,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 23:
 							switch (zzInput) {
 							case 46:
@@ -991,7 +729,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 25:
 							switch (zzInput) {
 							case 6:
@@ -1009,7 +747,7 @@ public class JSPHeadTokenizer {
 								zzState = 24;
 								break zzForNext;
 							}
-
+							
 						case 26:
 							switch (zzInput) {
 							case 6:
@@ -1027,7 +765,7 @@ public class JSPHeadTokenizer {
 								zzState = 24;
 								break zzForNext;
 							}
-
+							
 						case 31:
 							switch (zzInput) {
 							case 46:
@@ -1038,7 +776,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 33:
 							switch (zzInput) {
 							case 10:
@@ -1047,7 +785,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 34:
 							switch (zzInput) {
 							case 46:
@@ -1058,7 +796,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 35:
 							switch (zzInput) {
 							case 10:
@@ -1067,7 +805,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 38:
 							switch (zzInput) {
 							case 10:
@@ -1076,7 +814,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 39:
 							switch (zzInput) {
 							case 16:
@@ -1085,7 +823,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 40:
 							switch (zzInput) {
 							case 19:
@@ -1094,7 +832,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 41:
 							switch (zzInput) {
 							case 6:
@@ -1109,7 +847,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 42:
 							switch (zzInput) {
 							case 30:
@@ -1118,7 +856,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 45:
 							switch (zzInput) {
 							case 5:
@@ -1129,7 +867,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 46:
 							switch (zzInput) {
 							case 6:
@@ -1144,7 +882,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 47:
 							switch (zzInput) {
 							case 11:
@@ -1153,7 +891,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 48:
 							switch (zzInput) {
 							case 12:
@@ -1162,7 +900,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 49:
 							switch (zzInput) {
 							case 6:
@@ -1177,7 +915,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 50:
 							switch (zzInput) {
 							case 46:
@@ -1188,7 +926,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 52:
 							switch (zzInput) {
 							case 18:
@@ -1197,7 +935,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 53:
 							switch (zzInput) {
 							case 37:
@@ -1206,7 +944,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 54:
 							switch (zzInput) {
 							case 29:
@@ -1215,7 +953,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 55:
 							switch (zzInput) {
 							case 29:
@@ -1224,7 +962,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 56:
 							switch (zzInput) {
 							case 38:
@@ -1233,7 +971,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 59:
 							switch (zzInput) {
 							case 6:
@@ -1251,7 +989,7 @@ public class JSPHeadTokenizer {
 								zzState = 24;
 								break zzForNext;
 							}
-
+							
 						case 61:
 							switch (zzInput) {
 							case 32:
@@ -1262,7 +1000,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 63:
 							switch (zzInput) {
 							case 17:
@@ -1271,7 +1009,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 64:
 							switch (zzInput) {
 							case 13:
@@ -1280,7 +1018,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 65:
 							switch (zzInput) {
 							case 6:
@@ -1295,7 +1033,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 66:
 							switch (zzInput) {
 							case 21:
@@ -1304,7 +1042,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 68:
 							switch (zzInput) {
 							case 13:
@@ -1313,7 +1051,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 69:
 							switch (zzInput) {
 							case 17:
@@ -1322,7 +1060,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 70:
 							switch (zzInput) {
 							case 30:
@@ -1331,7 +1069,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 71:
 							switch (zzInput) {
 							case 38:
@@ -1340,7 +1078,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 72:
 							switch (zzInput) {
 							case 19:
@@ -1349,7 +1087,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 73:
 							switch (zzInput) {
 							case 22:
@@ -1358,7 +1096,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 74:
 							switch (zzInput) {
 							case 18:
@@ -1367,7 +1105,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 75:
 							switch (zzInput) {
 							case 14:
@@ -1376,7 +1114,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 76:
 							switch (zzInput) {
 							case 43:
@@ -1385,7 +1123,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 77:
 							switch (zzInput) {
 							case 33:
@@ -1394,7 +1132,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 78:
 							switch (zzInput) {
 							case 14:
@@ -1403,7 +1141,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 79:
 							switch (zzInput) {
 							case 16:
@@ -1412,7 +1150,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 80:
 							switch (zzInput) {
 							case 26:
@@ -1421,7 +1159,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 81:
 							switch (zzInput) {
 							case 24:
@@ -1430,7 +1168,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 82:
 							switch (zzInput) {
 							case 22:
@@ -1439,7 +1177,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 83:
 							switch (zzInput) {
 							case 22:
@@ -1448,7 +1186,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 84:
 							switch (zzInput) {
 							case 19:
@@ -1457,7 +1195,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 85:
 							switch (zzInput) {
 							case 6:
@@ -1472,7 +1210,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 86:
 							switch (zzInput) {
 							case 38:
@@ -1481,7 +1219,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 87:
 							switch (zzInput) {
 							case 16:
@@ -1490,7 +1228,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 88:
 							switch (zzInput) {
 							case 6:
@@ -1503,7 +1241,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 89:
 							switch (zzInput) {
 							case 26:
@@ -1512,7 +1250,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 90:
 							switch (zzInput) {
 							case 17:
@@ -1521,7 +1259,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 91:
 							switch (zzInput) {
 							case 43:
@@ -1530,7 +1268,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 92:
 							switch (zzInput) {
 							case 29:
@@ -1539,7 +1277,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 93:
 							switch (zzInput) {
 							case 29:
@@ -1548,7 +1286,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 94:
 							switch (zzInput) {
 							case 20:
@@ -1557,7 +1295,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 95:
 							switch (zzInput) {
 							case 13:
@@ -1566,7 +1304,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 96:
 							switch (zzInput) {
 							case 22:
@@ -1575,7 +1313,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 97:
 							switch (zzInput) {
 							case 26:
@@ -1584,7 +1322,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 98:
 							switch (zzInput) {
 							case 6:
@@ -1597,7 +1335,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 99:
 							switch (zzInput) {
 							case 29:
@@ -1606,7 +1344,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 100:
 							switch (zzInput) {
 							case 29:
@@ -1615,7 +1353,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 101:
 							switch (zzInput) {
 							case 38:
@@ -1624,7 +1362,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 102:
 							switch (zzInput) {
 							case 19:
@@ -1633,7 +1371,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 103:
 							switch (zzInput) {
 							case 18:
@@ -1642,7 +1380,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 104:
 							switch (zzInput) {
 							case 21:
@@ -1651,7 +1389,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 105:
 							switch (zzInput) {
 							case 14:
@@ -1660,7 +1398,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 106:
 							switch (zzInput) {
 							case 6:
@@ -1673,7 +1411,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 107:
 							switch (zzInput) {
 							case 37:
@@ -1682,7 +1420,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 108:
 							switch (zzInput) {
 							case 38:
@@ -1691,7 +1429,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 109:
 							switch (zzInput) {
 							case 6:
@@ -1707,7 +1445,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 110:
 							switch (zzInput) {
 							case 22:
@@ -1716,7 +1454,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 111:
 							switch (zzInput) {
 							case 19:
@@ -1725,7 +1463,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 112:
 							switch (zzInput) {
 							case 17:
@@ -1734,7 +1472,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 113:
 							switch (zzInput) {
 							case 22:
@@ -1743,7 +1481,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 114:
 							switch (zzInput) {
 							case 29:
@@ -1752,7 +1490,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 115:
 							switch (zzInput) {
 							case 6:
@@ -1765,7 +1503,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 116:
 							switch (zzInput) {
 							case 22:
@@ -1774,7 +1512,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 117:
 							switch (zzInput) {
 							case 6:
@@ -1790,7 +1528,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 118:
 							switch (zzInput) {
 							case 6:
@@ -1803,7 +1541,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 119:
 							switch (zzInput) {
 							case 6:
@@ -1819,7 +1557,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 120:
 							switch (zzInput) {
 							case 20:
@@ -1828,7 +1566,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 121:
 							switch (zzInput) {
 							case 16:
@@ -1837,7 +1575,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 122:
 							switch (zzInput) {
 							case 6:
@@ -1855,7 +1593,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 123:
 							switch (zzInput) {
 							case 30:
@@ -1864,7 +1602,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 124:
 							switch (zzInput) {
 							case 18:
@@ -1873,7 +1611,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 125:
 							switch (zzInput) {
 							case 6:
@@ -1886,7 +1624,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 126:
 							switch (zzInput) {
 							case 6:
@@ -1899,7 +1637,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 127:
 							switch (zzInput) {
 							case 21:
@@ -1908,7 +1646,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 128:
 							switch (zzInput) {
 							case 26:
@@ -1917,7 +1655,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 129:
 							switch (zzInput) {
 							case 19:
@@ -1926,7 +1664,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 130:
 							switch (zzInput) {
 							case 13:
@@ -1935,7 +1673,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 131:
 							switch (zzInput) {
 							case 6:
@@ -1950,7 +1688,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 132:
 							switch (zzInput) {
 							case 19:
@@ -1959,7 +1697,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 133:
 							switch (zzInput) {
 							case 22:
@@ -1968,7 +1706,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 134:
 							switch (zzInput) {
 							case 29:
@@ -1977,7 +1715,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 135:
 							switch (zzInput) {
 							case 13:
@@ -1986,7 +1724,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 136:
 							switch (zzInput) {
 							case 14:
@@ -1995,7 +1733,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 137:
 							switch (zzInput) {
 							case 6:
@@ -2011,7 +1749,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 138:
 							switch (zzInput) {
 							case 26:
@@ -2020,7 +1758,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 139:
 							switch (zzInput) {
 							case 6:
@@ -2036,7 +1774,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 140:
 							switch (zzInput) {
 							case 38:
@@ -2045,7 +1783,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 141:
 							switch (zzInput) {
 							case 14:
@@ -2054,7 +1792,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 142:
 							switch (zzInput) {
 							case 6:
@@ -2069,7 +1807,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 143:
 							switch (zzInput) {
 							case 23:
@@ -2078,7 +1816,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 144:
 							switch (zzInput) {
 							case 45:
@@ -2087,7 +1825,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 145:
 							switch (zzInput) {
 							case 6:
@@ -2100,7 +1838,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 146:
 							switch (zzInput) {
 							case 6:
@@ -2116,7 +1854,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 147:
 							switch (zzInput) {
 							case 6:
@@ -2131,7 +1869,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 148:
 							switch (zzInput) {
 							case 24:
@@ -2140,7 +1878,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 149:
 							switch (zzInput) {
 							case 19:
@@ -2149,7 +1887,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 150:
 							switch (zzInput) {
 							case 22:
@@ -2158,7 +1896,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 151:
 							switch (zzInput) {
 							case 6:
@@ -2171,7 +1909,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 152:
 							switch (zzInput) {
 							case 24:
@@ -2180,7 +1918,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 153:
 							switch (zzInput) {
 							case 25:
@@ -2189,7 +1927,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 154:
 							switch (zzInput) {
 							case 19:
@@ -2198,7 +1936,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 155:
 							switch (zzInput) {
 							case 35:
@@ -2207,7 +1945,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 156:
 							switch (zzInput) {
 							case 25:
@@ -2216,7 +1954,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 157:
 							switch (zzInput) {
 							case 14:
@@ -2225,7 +1963,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 158:
 							switch (zzInput) {
 							case 21:
@@ -2234,7 +1972,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 159:
 							switch (zzInput) {
 							case 21:
@@ -2243,7 +1981,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 160:
 							switch (zzInput) {
 							case 14:
@@ -2252,7 +1990,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 161:
 							switch (zzInput) {
 							case 26:
@@ -2261,7 +1999,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 162:
 							switch (zzInput) {
 							case 33:
@@ -2270,7 +2008,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 163:
 							switch (zzInput) {
 							case 26:
@@ -2279,7 +2017,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 164:
 							switch (zzInput) {
 							case 18:
@@ -2288,7 +2026,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 165:
 							switch (zzInput) {
 							case 27:
@@ -2297,7 +2035,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 166:
 							switch (zzInput) {
 							case 18:
@@ -2306,7 +2044,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 167:
 							switch (zzInput) {
 							case 27:
@@ -2318,7 +2056,7 @@ public class JSPHeadTokenizer {
 								zzState = 167;
 								break zzForNext;
 							}
-
+							
 						case 168:
 							switch (zzInput) {
 							case 27:
@@ -2327,7 +2065,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 169:
 							switch (zzInput) {
 							case 27:
@@ -2339,7 +2077,7 @@ public class JSPHeadTokenizer {
 								zzState = 169;
 								break zzForNext;
 							}
-
+							
 						case 170:
 							switch (zzInput) {
 							case 27:
@@ -2351,7 +2089,7 @@ public class JSPHeadTokenizer {
 								zzState = 167;
 								break zzForNext;
 							}
-
+							
 						case 171:
 							switch (zzInput) {
 							case 34:
@@ -2360,7 +2098,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 172:
 							switch (zzInput) {
 							case 27:
@@ -2372,7 +2110,7 @@ public class JSPHeadTokenizer {
 								zzState = 169;
 								break zzForNext;
 							}
-
+							
 						case 173:
 							switch (zzInput) {
 							case 27:
@@ -2387,7 +2125,7 @@ public class JSPHeadTokenizer {
 								zzState = 167;
 								break zzForNext;
 							}
-
+							
 						case 174:
 							switch (zzInput) {
 							case 34:
@@ -2396,7 +2134,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 175:
 							switch (zzInput) {
 							case 27:
@@ -2411,7 +2149,7 @@ public class JSPHeadTokenizer {
 								zzState = 169;
 								break zzForNext;
 							}
-
+							
 						case 176:
 							switch (zzInput) {
 							case 27:
@@ -2426,7 +2164,7 @@ public class JSPHeadTokenizer {
 								zzState = 167;
 								break zzForNext;
 							}
-
+							
 						case 177:
 							switch (zzInput) {
 							case 34:
@@ -2435,7 +2173,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 178:
 							switch (zzInput) {
 							case 27:
@@ -2450,7 +2188,7 @@ public class JSPHeadTokenizer {
 								zzState = 169;
 								break zzForNext;
 							}
-
+							
 						case 179:
 							switch (zzInput) {
 							case 27:
@@ -2465,7 +2203,7 @@ public class JSPHeadTokenizer {
 								zzState = 167;
 								break zzForNext;
 							}
-
+							
 						case 180:
 							switch (zzInput) {
 							case 35:
@@ -2474,7 +2212,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 181:
 							switch (zzInput) {
 							case 27:
@@ -2489,7 +2227,7 @@ public class JSPHeadTokenizer {
 								zzState = 169;
 								break zzForNext;
 							}
-
+							
 						case 182:
 							switch (zzInput) {
 							case 27:
@@ -2504,7 +2242,7 @@ public class JSPHeadTokenizer {
 								zzState = 167;
 								break zzForNext;
 							}
-
+							
 						case 183:
 							switch (zzInput) {
 							case 34:
@@ -2513,7 +2251,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 184:
 							switch (zzInput) {
 							case 27:
@@ -2528,7 +2266,7 @@ public class JSPHeadTokenizer {
 								zzState = 169;
 								break zzForNext;
 							}
-
+							
 						case 185:
 							switch (zzInput) {
 							case 27:
@@ -2543,7 +2281,7 @@ public class JSPHeadTokenizer {
 								zzState = 167;
 								break zzForNext;
 							}
-
+							
 						case 186:
 							switch (zzInput) {
 							case 36:
@@ -2552,7 +2290,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 187:
 							switch (zzInput) {
 							case 27:
@@ -2567,7 +2305,7 @@ public class JSPHeadTokenizer {
 								zzState = 169;
 								break zzForNext;
 							}
-
+							
 						case 188:
 							switch (zzInput) {
 							case 27:
@@ -2582,7 +2320,7 @@ public class JSPHeadTokenizer {
 								zzState = 167;
 								break zzForNext;
 							}
-
+							
 						case 189:
 							switch (zzInput) {
 							case 35:
@@ -2591,7 +2329,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 190:
 							switch (zzInput) {
 							case 27:
@@ -2606,7 +2344,7 @@ public class JSPHeadTokenizer {
 								zzState = 169;
 								break zzForNext;
 							}
-
+							
 						case 191:
 							switch (zzInput) {
 							case 27:
@@ -2622,7 +2360,7 @@ public class JSPHeadTokenizer {
 								zzState = 167;
 								break zzForNext;
 							}
-
+							
 						case 192:
 							switch (zzInput) {
 							case 17:
@@ -2631,7 +2369,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 193:
 							switch (zzInput) {
 							case 27:
@@ -2646,7 +2384,7 @@ public class JSPHeadTokenizer {
 								zzState = 169;
 								break zzForNext;
 							}
-
+							
 						case 194:
 							switch (zzInput) {
 							case 27:
@@ -2658,7 +2396,7 @@ public class JSPHeadTokenizer {
 								zzState = 167;
 								break zzForNext;
 							}
-
+							
 						case 195:
 							switch (zzInput) {
 							case 37:
@@ -2667,7 +2405,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 196:
 							switch (zzInput) {
 							case 27:
@@ -2682,7 +2420,7 @@ public class JSPHeadTokenizer {
 								zzState = 169;
 								break zzForNext;
 							}
-
+							
 						case 197:
 							switch (zzInput) {
 							case 38:
@@ -2691,7 +2429,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 198:
 							switch (zzInput) {
 							case 27:
@@ -2707,7 +2445,7 @@ public class JSPHeadTokenizer {
 								zzState = 169;
 								break zzForNext;
 							}
-
+							
 						case 199:
 							switch (zzInput) {
 							case 27:
@@ -2716,7 +2454,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 200:
 							switch (zzInput) {
 							case 27:
@@ -2728,7 +2466,7 @@ public class JSPHeadTokenizer {
 								zzState = 169;
 								break zzForNext;
 							}
-
+							
 						case 201:
 							switch (zzInput) {
 							case 39:
@@ -2737,7 +2475,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 202:
 							switch (zzInput) {
 							case 40:
@@ -2746,7 +2484,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 203:
 							switch (zzInput) {
 							case 40:
@@ -2755,7 +2493,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 204:
 							switch (zzInput) {
 							case 40:
@@ -2764,7 +2502,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 205:
 							switch (zzInput) {
 							case 27:
@@ -2773,7 +2511,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 206:
 							switch (zzInput) {
 							case 12:
@@ -2782,7 +2520,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 207:
 							switch (zzInput) {
 							case 23:
@@ -2791,7 +2529,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 208:
 							switch (zzInput) {
 							case 19:
@@ -2800,7 +2538,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 209:
 							switch (zzInput) {
 							case 13:
@@ -2809,7 +2547,7 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						case 210:
 							switch (zzInput) {
 							case 14:
@@ -2820,15 +2558,15 @@ public class JSPHeadTokenizer {
 							default:
 								break zzForAction;
 							}
-
+							
 						default:
 							// if this is ever reached, there is a serious bug
 							// in JFlex
-							zzScanError(ZZ_UNKNOWN_ERROR);
+							zzScanError(JSPHeadTokenizer.ZZ_UNKNOWN_ERROR);
 							break;
 						}
 					}
-
+					
 					if (zzIsFinal) {
 						zzAction = zzState;
 						zzMarkedPosL = zzCurrentPosL;
@@ -2836,14 +2574,14 @@ public class JSPHeadTokenizer {
 							break zzForAction;
 						}
 					}
-
+					
 				}
 			}
-
+			
 			// store back cached position
 			zzMarkedPos = zzMarkedPosL;
-
-			switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
+			
+			switch (zzAction < 0 ? zzAction : JSPHeadTokenizer.ZZ_ACTION[zzAction]) {
 			case 10: {
 				if (yychar == 0) {
 					hasMore = false;
@@ -2861,7 +2599,7 @@ public class JSPHeadTokenizer {
 			case 28:
 				break;
 			case 4: {
-				yybegin(SQ_STRING);
+				yybegin(JSPHeadTokenizer.SQ_STRING);
 				string.setLength(0);
 			}
 			case 29:
@@ -2873,7 +2611,7 @@ public class JSPHeadTokenizer {
 				break;
 			case 22: {
 				pushCurrentState();
-				yybegin(QuotedAttributeValue);
+				yybegin(JSPHeadTokenizer.QuotedAttributeValue);
 				return JSPHeadTokenizerConstants.PageLanguage;
 			}
 			case 31:
@@ -2885,13 +2623,13 @@ public class JSPHeadTokenizer {
 				break;
 			case 24: {
 				pushCurrentState();
-				yybegin(QuotedAttributeValue);
+				yybegin(JSPHeadTokenizer.QuotedAttributeValue);
 				return JSPHeadTokenizerConstants.PageEncoding;
 			}
 			case 33:
 				break;
 			case 1: {
-				if (yychar > MAX_TO_SCAN) {
+				if (yychar > JSPHeadTokenizer.MAX_TO_SCAN) {
 					hasMore = false;
 					return EncodingParserConstants.MAX_CHARS_REACHED;
 				}
@@ -2938,21 +2676,21 @@ public class JSPHeadTokenizer {
 			case 39:
 				break;
 			case 14: {
-				yybegin(YYINITIAL);
+				yybegin(JSPHeadTokenizer.YYINITIAL);
 				return JSPHeadTokenizerConstants.PageDirectiveEnd;
 			}
 			case 40:
 				break;
 			case 23: {
 				pushCurrentState();
-				yybegin(QuotedAttributeValue);
+				yybegin(JSPHeadTokenizer.QuotedAttributeValue);
 				return JSPHeadTokenizerConstants.PageContentType;
 			}
 			case 41:
 				break;
 			case 18: {
 				if (yychar == 0) {
-					yybegin(ST_XMLDecl);
+					yybegin(JSPHeadTokenizer.ST_XMLDecl);
 					return XMLHeadTokenizerConstants.XMLDeclStart;
 				}
 			}
@@ -2968,19 +2706,19 @@ public class JSPHeadTokenizer {
 				break;
 			case 2: {
 				yypushback(1);
-				yybegin(UnDelimitedString);
+				yybegin(JSPHeadTokenizer.UnDelimitedString);
 				string.setLength(0);
 			}
 			case 44:
 				break;
 			case 12: {
-				yybegin(YYINITIAL);
+				yybegin(JSPHeadTokenizer.YYINITIAL);
 				return XMLHeadTokenizerConstants.XMLDeclEnd;
 			}
 			case 45:
 				break;
 			case 13: {
-				yybegin(YYINITIAL);
+				yybegin(JSPHeadTokenizer.YYINITIAL);
 				return JSPHeadTokenizerConstants.PageDirectiveEnd;
 			}
 			case 46:
@@ -2991,21 +2729,21 @@ public class JSPHeadTokenizer {
 			case 47:
 				break;
 			case 19: {
-				yybegin(ST_PAGE_DIRECTIVE);
+				yybegin(JSPHeadTokenizer.ST_PAGE_DIRECTIVE);
 				return JSPHeadTokenizerConstants.PageDirectiveStart;
 			}
 			case 48:
 				break;
 			case 21: {
 				pushCurrentState();
-				yybegin(QuotedAttributeValue);
+				yybegin(JSPHeadTokenizer.QuotedAttributeValue);
 				return XMLHeadTokenizerConstants.XMLDelEncoding;
 			}
 			case 49:
 				break;
 			case 20: {
 				pushCurrentState();
-				yybegin(QuotedAttributeValue);
+				yybegin(JSPHeadTokenizer.QuotedAttributeValue);
 				return XMLHeadTokenizerConstants.XMLDeclVersion;
 			}
 			case 50:
@@ -3019,13 +2757,13 @@ public class JSPHeadTokenizer {
 			case 51:
 				break;
 			case 3: {
-				yybegin(DQ_STRING);
+				yybegin(JSPHeadTokenizer.DQ_STRING);
 				string.setLength(0);
 			}
 			case 52:
 				break;
 			default:
-				if (zzInput == YYEOF && zzStartRead == zzCurrentPos) {
+				if (zzInput == JSPHeadTokenizer.YYEOF && zzStartRead == zzCurrentPos) {
 					zzAtEOF = true;
 					zzDoEOF();
 					{
@@ -3033,10 +2771,253 @@ public class JSPHeadTokenizer {
 						return EncodingParserConstants.EOF;
 					}
 				} else {
-					zzScanError(ZZ_NO_MATCH);
+					zzScanError(JSPHeadTokenizer.ZZ_NO_MATCH);
 				}
 			}
 		}
 	}
-
+	
+	private void pushCurrentState() {
+		fStateStack.push(yystate());
+		
+	}
+	
+	public void reset(Reader in) {
+		/* the input device */
+		zzReader = in;
+		
+		/* the current state of the DFA */
+		zzState = 0;
+		
+		/* the current lexical state */
+		zzLexicalState = JSPHeadTokenizer.YYINITIAL;
+		
+		/*
+		 * this buffer contains the current text to be matched and is the source
+		 * of the yytext() string
+		 */
+		java.util.Arrays.fill(zzBuffer, (char) 0);
+		
+		/* the textposition at the last accepting state */
+		zzMarkedPos = 0;
+		
+		/* the textposition at the last state to be included in yytext */
+		zzPushbackPos = 0;
+		
+		/* the current text position in the buffer */
+		zzCurrentPos = 0;
+		
+		/* startRead marks the beginning of the yytext() string in the buffer */
+		zzStartRead = 0;
+		
+		/**
+		 * endRead marks the last character in the buffer, that has been read
+		 * from input
+		 */
+		zzEndRead = 0;
+		
+		/* number of newlines encountered up to the start of the matched text */
+		// yyline = 0;
+		/* the number of characters up to the start of the matched text */
+		yychar = 0;
+		
+		/**
+		 * the number of characters from the last newline up to the start of the
+		 * matched text
+		 */
+		// yycolumn = 0;
+		/**
+		 * yy_atBOL == true <=> the scanner is currently at the beginning of a
+		 * line
+		 */
+		zzAtBOL = true;
+		
+		/* yy_atEOF == true <=> the scanner has returned a value for EOF */
+		zzAtEOF = false;
+		
+		/* denotes if the user-EOF-code has already been executed */
+		zzEOFDone = false;
+		
+		fStateStack.clear();
+		
+		hasMore = true;
+		isXHTML = false;
+		isWML = false;
+		
+	}
+	
+	/**
+	 * Enters a new lexical state
+	 * 
+	 * @param newState
+	 *            the new lexical state
+	 */
+	public final void yybegin(int newState) {
+		zzLexicalState = newState;
+	}
+	
+	/**
+	 * Returns the character at position <tt>pos</tt> from the matched text.
+	 * 
+	 * It is equivalent to yytext().charAt(pos), but faster
+	 * 
+	 * @param pos
+	 *            the position of the character to fetch. A value from 0 to
+	 *            yylength()-1.
+	 * 
+	 * @return the character at position pos
+	 */
+	public final char yycharat(int pos) {
+		return zzBuffer[zzStartRead + pos];
+	}
+	
+	/**
+	 * Closes the input stream.
+	 */
+	public final void yyclose() throws java.io.IOException {
+		zzAtEOF = true; /* indicate end of file */
+		zzEndRead = zzStartRead; /* invalidate buffer */
+		
+		if (zzReader != null) {
+			zzReader.close();
+		}
+	}
+	
+	/**
+	 * Returns the length of the matched text region.
+	 */
+	public final int yylength() {
+		return zzMarkedPos - zzStartRead;
+	}
+	
+	/**
+	 * Pushes the specified amount of characters back into the input stream.
+	 * 
+	 * They will be read again by then next call of the scanning method
+	 * 
+	 * @param number
+	 *            the number of characters to be read again. This number must
+	 *            not be greater than yylength()!
+	 */
+	public void yypushback(int number) {
+		if (number > yylength()) {
+			zzScanError(JSPHeadTokenizer.ZZ_PUSHBACK_2BIG);
+		}
+		
+		zzMarkedPos -= number;
+	}
+	
+	/**
+	 * Resets the scanner to read from a new input stream. Does not close the
+	 * old reader.
+	 * 
+	 * All internal variables are reset, the old input stream <b>cannot</b> be
+	 * reused (internal buffer is discarded and lost). Lexical state is set to
+	 * <tt>ZZ_INITIAL</tt>.
+	 * 
+	 * @param reader
+	 *            the new input stream
+	 */
+	public final void yyreset(java.io.Reader reader) {
+		zzReader = reader;
+		zzAtBOL = true;
+		zzAtEOF = false;
+		zzEndRead = zzStartRead = 0;
+		zzCurrentPos = zzMarkedPos = zzPushbackPos = 0;
+		// yyline = yychar = yycolumn = 0;
+		zzLexicalState = JSPHeadTokenizer.YYINITIAL;
+	}
+	
+	/**
+	 * Returns the current lexical state.
+	 */
+	public final int yystate() {
+		return zzLexicalState;
+	}
+	
+	/**
+	 * Returns the text matched by the current regular expression.
+	 */
+	public final String yytext() {
+		return new String(zzBuffer, zzStartRead, zzMarkedPos - zzStartRead);
+	}
+	
+	/**
+	 * Contains user EOF-code, which will be executed exactly once, when the end
+	 * of file is reached
+	 */
+	private void zzDoEOF() {
+		if (!zzEOFDone) {
+			zzEOFDone = true;
+			hasMore = false;
+			
+		}
+	}
+	
+	/**
+	 * Refills the input buffer.
+	 * 
+	 * @return <code>false</code>, iff there was new input.
+	 * 
+	 * @exception java.io.IOException
+	 *                if any I/O-Error occurs
+	 */
+	private boolean zzRefill() throws java.io.IOException {
+		
+		/* first: make room (if you can) */
+		if (zzStartRead > 0) {
+			System.arraycopy(zzBuffer, zzStartRead, zzBuffer, 0, zzEndRead - zzStartRead);
+			
+			/* translate stored positions */
+			zzEndRead -= zzStartRead;
+			zzCurrentPos -= zzStartRead;
+			zzMarkedPos -= zzStartRead;
+			zzPushbackPos -= zzStartRead;
+			zzStartRead = 0;
+		}
+		
+		/* is the buffer big enough? */
+		if (zzCurrentPos >= zzBuffer.length) {
+			/* if not: blow it up */
+			char newBuffer[] = new char[zzCurrentPos * 2];
+			System.arraycopy(zzBuffer, 0, newBuffer, 0, zzBuffer.length);
+			zzBuffer = newBuffer;
+		}
+		
+		/* finally: fill the buffer with new input */
+		int numRead = zzReader.read(zzBuffer, zzEndRead, zzBuffer.length - zzEndRead);
+		
+		if (numRead < 0) {
+			return true;
+		} else {
+			zzEndRead += numRead;
+			return false;
+		}
+	}
+	
+	/**
+	 * Reports an error that occured while scanning.
+	 * 
+	 * In a wellformed scanner (no or only correct usage of yypushback(int) and
+	 * a match-all fallback rule) this method will only be called with things
+	 * that "Can't Possibly Happen". If this method is called, something is
+	 * seriously wrong (e.g. a JFlex bug producing a faulty scanner etc.).
+	 * 
+	 * Usual syntax/scanner level error handling should be done in error
+	 * fallback rules.
+	 * 
+	 * @param errorCode
+	 *            the code of the errormessage to display
+	 */
+	private void zzScanError(int errorCode) {
+		String message;
+		try {
+			message = JSPHeadTokenizer.ZZ_ERROR_MSG[errorCode];
+		} catch (ArrayIndexOutOfBoundsException e) {
+			message = JSPHeadTokenizer.ZZ_ERROR_MSG[JSPHeadTokenizer.ZZ_UNKNOWN_ERROR];
+		}
+		
+		throw new Error(message);
+	}
+	
 }

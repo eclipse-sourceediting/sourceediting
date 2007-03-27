@@ -31,64 +31,62 @@ import org.eclipse.wst.sse.core.internal.encoding.CodedIO;
  */
 
 public class ByteReader extends Reader {
-
+	
 	public static final int DEFAULT_BUFFER_SIZE = CodedIO.MAX_BUF_SIZE;
-
-	protected byte[] fBuffer;
-
-	protected InputStream fInputStream;
-
+	
+	protected byte[]		fBuffer;
+	
+	protected InputStream   fInputStream;
+	
 	protected ByteReader() {
 		super();
 	}
-
+	
 	public ByteReader(InputStream inputStream) {
-		this(inputStream, DEFAULT_BUFFER_SIZE);
+		this(inputStream, ByteReader.DEFAULT_BUFFER_SIZE);
 		if (!inputStream.markSupported()) {
-			throw new IllegalArgumentException(
-					"ByteReader is required to have a resettable stream"); //$NON-NLS-1$
+			throw new IllegalArgumentException("ByteReader is required to have a resettable stream"); //$NON-NLS-1$
 		}
 	}
-
+	
 	public ByteReader(InputStream inputStream, int size) {
 		this.fInputStream = inputStream;
 		if (!inputStream.markSupported()) {
-			throw new IllegalArgumentException(
-					"ByteReader is required to have a resettable stream"); //$NON-NLS-1$
+			throw new IllegalArgumentException("ByteReader is required to have a resettable stream"); //$NON-NLS-1$
 		}
 		this.fBuffer = new byte[size];
-
+		
 	}
-
+	
 	@Override
 	public void close() throws IOException {
 		this.fInputStream.close();
 	}
-
+	
 	@Override
 	public void mark(int readAheadLimit) {
 		this.fInputStream.mark(readAheadLimit);
 	}
-
+	
 	@Override
 	public boolean markSupported() {
 		return true;
 	}
-
+	
 	@Override
 	public int read() throws IOException {
 		int b0 = this.fInputStream.read();
 		return (b0 & 0x00FF);
 	}
-
+	
 	@Override
 	public int read(char ch[], int offset, int length) throws IOException {
 		if (length > this.fBuffer.length) {
 			length = this.fBuffer.length;
 		}
-
+		
 		int count = this.fInputStream.read(this.fBuffer, 0, length);
-
+		
 		for (int i = 0; i < count; i++) {
 			int b0 = this.fBuffer[i];
 			// the 0x00FF is to "lose" the negative bits filled in the byte to
@@ -99,20 +97,20 @@ public class ByteReader extends Reader {
 		}
 		return count;
 	}
-
+	
 	@Override
 	public boolean ready() throws IOException {
 		return this.fInputStream.available() > 0;
 	}
-
+	
 	@Override
 	public void reset() throws IOException {
 		this.fInputStream.reset();
 	}
-
+	
 	@Override
 	public long skip(long n) throws IOException {
 		return this.fInputStream.skip(n);
 	}
-
+	
 }

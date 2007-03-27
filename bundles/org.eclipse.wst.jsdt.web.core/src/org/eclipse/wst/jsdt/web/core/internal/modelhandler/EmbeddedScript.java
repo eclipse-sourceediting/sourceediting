@@ -12,59 +12,33 @@ package org.eclipse.wst.jsdt.web.core.internal.modelhandler;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.eclipse.wst.html.core.internal.modelquery.ModelQueryAdapterFactoryForEmbeddedHTML;
 import org.eclipse.wst.jsdt.web.core.internal.java.IJSPTranslation;
 import org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslationAdapterFactory;
-//import org.eclipse.wst.jsdt.web.core.internal.modelhandler.ModelHandlerForJSP;
-import org.eclipse.wst.html.core.internal.modelhandler.ModelHandlerForHTML;
-
-import org.eclipse.wst.sse.core.internal.PropagatingAdapter;
-import org.eclipse.wst.sse.core.internal.ltk.modelhandler.IDocumentTypeHandler;
-import org.eclipse.wst.sse.core.internal.model.FactoryRegistry;
-import org.eclipse.wst.sse.core.internal.provisional.INodeAdapterFactory;
-import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
-
-
-import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
-import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
-import org.eclipse.wst.css.core.internal.provisional.adapters.IStyleSelectorAdapter;
-import org.eclipse.wst.css.core.internal.provisional.adapters.IStyleSheetAdapter;
-import org.eclipse.wst.html.core.internal.document.HTMLDocumentTypeAdapterFactory;
-import org.eclipse.wst.html.core.internal.document.HTMLModelParserAdapterFactory;
-import org.eclipse.wst.html.core.internal.htmlcss.HTMLStyleSelectorAdapterFactory;
-import org.eclipse.wst.html.core.internal.htmlcss.StyleAdapterFactory;
-import org.eclipse.wst.html.core.internal.modelquery.ModelQueryAdapterFactoryForEmbeddedHTML;
-
 import org.eclipse.wst.sse.core.internal.ltk.modelhandler.EmbeddedTypeHandler;
-import org.eclipse.wst.sse.core.internal.ltk.parser.BlockMarker;
-import org.eclipse.wst.sse.core.internal.ltk.parser.BlockTagParser;
 import org.eclipse.wst.sse.core.internal.ltk.parser.JSPCapableParser;
 import org.eclipse.wst.sse.core.internal.model.FactoryRegistry;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapterFactory;
 import org.eclipse.wst.sse.core.internal.util.Assert;
 
-import org.eclipse.wst.xml.core.internal.document.DocumentTypeAdapter;
-import org.eclipse.wst.xml.core.internal.document.ModelParserAdapter;
-import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
-
 public class EmbeddedScript implements EmbeddedTypeHandler {
-
+	
+	static String AssociatedContentTypeID	= "org.eclipse.wst.html.core.htmlsource";					   //$NON-NLS-1$
 	public String ContentTypeID_EmbeddedHTML = "org.eclipse.wst.html.core.internal.contenttype.EmbeddedHTML"; //$NON-NLS-1$
-	private List supportedMimeTypes;
-	static String AssociatedContentTypeID = "org.eclipse.wst.html.core.htmlsource"; //$NON-NLS-1$
+	private List  supportedMimeTypes;
+	
 	/**
 	 * Constructor for EmbeddedHTML.
 	 */
 	public EmbeddedScript() {
 		super();
 	}
-
-	/**
-	 * @see EmbeddedContentType#getFamilyId()
-	 */
-	public String getFamilyId() {
-		return AssociatedContentTypeID;
+	
+	public boolean canHandleMimeType(String mimeType) {
+		return getSupportedMimeTypes().contains(mimeType);
 	}
-
+	
 	/*
 	 * Only "model side" embedded factories can be added here.
 	 */
@@ -74,14 +48,14 @@ public class EmbeddedScript implements EmbeddedTypeHandler {
 		// factories.addAll(PluginContributedFactoryReader.getInstance().getFactories(this));
 		return factories;
 	}
-
-	/*
-	 * @see EmbeddedContentType#initializeParser(RegionParser)
+	
+	/**
+	 * @see EmbeddedContentType#getFamilyId()
 	 */
-	public void initializeParser(JSPCapableParser parser) {
-		
+	public String getFamilyId() {
+		return EmbeddedScript.AssociatedContentTypeID;
 	}
-
+	
 	public List getSupportedMimeTypes() {
 		if (supportedMimeTypes == null) {
 			supportedMimeTypes = new ArrayList();
@@ -92,7 +66,7 @@ public class EmbeddedScript implements EmbeddedTypeHandler {
 		}
 		return supportedMimeTypes;
 	}
-
+	
 	public void initializeFactoryRegistry(FactoryRegistry registry) {
 		Assert.isNotNull(registry);
 		INodeAdapterFactory factory = null;
@@ -101,13 +75,31 @@ public class EmbeddedScript implements EmbeddedTypeHandler {
 			factory = new JSPTranslationAdapterFactory();
 			registry.addFactory(factory);
 		}
-
+		
 	}
-
+	
+	/*
+	 * @see EmbeddedContentType#initializeParser(RegionParser)
+	 */
+	public void initializeParser(JSPCapableParser parser) {
+		
+	}
+	
+	/**
+	 * will someday be controlled via extension point
+	 */
+	public boolean isDefault() {
+		return true;
+	}
+	
+	public EmbeddedTypeHandler newInstance() {
+		return new EmbeddedScript();
+	}
+	
 	public void uninitializeFactoryRegistry(FactoryRegistry registry) {
 		Assert.isNotNull(registry);
-
-		// ISSUE: should these factories be released? Or just 
+		
+		// ISSUE: should these factories be released? Or just
 		// removed from this registry, because we are getting ready to
 		// re-add them?
 		INodeAdapterFactory factory = null;
@@ -117,23 +109,8 @@ public class EmbeddedScript implements EmbeddedTypeHandler {
 			registry.removeFactory(factory);
 		}
 	}
-
+	
 	public void uninitializeParser(JSPCapableParser parser) {
 		
-	}
-
-	public EmbeddedTypeHandler newInstance() {
-		return new EmbeddedScript();
-	}
-
-	/**
-	 * will someday be controlled via extension point
-	 */
-	public boolean isDefault() {
-		return true;
-	}
-
-	public boolean canHandleMimeType(String mimeType) {
-		return getSupportedMimeTypes().contains(mimeType);
 	}
 }

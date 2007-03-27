@@ -24,7 +24,7 @@ package org.eclipse.wst.jsdt.web.core.internal;
  * </p>
  */
 public final class Assert {
-
+	
 	/**
 	 * <code>AssertionFailedException</code> is a runtime exception thrown by
 	 * some of the methods in <code>Assert</code>.
@@ -39,14 +39,14 @@ public final class Assert {
 		 * Comment for <code>serialVersionUID</code>
 		 */
 		private static final long serialVersionUID = 1L;
-
+		
 		/**
 		 * Constructs a new exception.
 		 */
 		public AssertionFailedException() {
 			super();
 		}
-
+		
 		/**
 		 * Constructs a new exception with the given message.
 		 */
@@ -54,7 +54,7 @@ public final class Assert {
 			super(detail);
 		}
 	}
-
+	
 	/**
 	 * Asserts that an argument is legal. If the given boolean is not
 	 * <code>true</code>, an <code>IllegalArgumentException</code> is
@@ -76,7 +76,7 @@ public final class Assert {
 		}
 		return expression;
 	}
-
+	
 	/**
 	 * Asserts that the given object is not <code>null</code>. If this is not
 	 * the case, some kind of unchecked exception is thrown. The given message
@@ -94,7 +94,7 @@ public final class Assert {
 			throw new Assert().new AssertionFailedException(message);
 		}
 	}
-
+	
 	/**
 	 * Asserts that the given boolean is <code>true</code>. If this is not
 	 * the case, some kind of unchecked exception is thrown. The given message
@@ -113,7 +113,7 @@ public final class Assert {
 		}
 		return expression;
 	}
-
+	
 	/* This class is not intended to be instantiated. */
 	private Assert() {
 	}

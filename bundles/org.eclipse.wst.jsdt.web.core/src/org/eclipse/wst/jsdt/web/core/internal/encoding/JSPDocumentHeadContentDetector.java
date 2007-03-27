@@ -19,16 +19,15 @@ import org.eclipse.wst.sse.core.internal.document.DocumentReader;
  * directiive
  * 
  */
-public class JSPDocumentHeadContentDetector extends JSPResourceEncodingDetector
-		implements IJSPHeadContentDetector {
-
+public class JSPDocumentHeadContentDetector extends JSPResourceEncodingDetector implements IJSPHeadContentDetector {
+	
 	public JSPDocumentHeadContentDetector() {
 		super();
 	}
-
+	
 	public void set(IDocument document) {
 		set(new DocumentReader(document, 0));
-
+		
 	}
-
+	
 }

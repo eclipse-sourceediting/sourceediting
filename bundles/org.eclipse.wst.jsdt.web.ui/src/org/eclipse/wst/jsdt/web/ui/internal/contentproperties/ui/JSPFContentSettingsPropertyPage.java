@@ -14,10 +14,6 @@ package org.eclipse.wst.jsdt.web.ui.internal.contentproperties.ui;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.wst.jsdt.web.core.internal.contentproperties.JSPFContentProperties;
-import org.eclipse.wst.jsdt.web.ui.internal.JSPUIMessages;
-import org.eclipse.wst.jsdt.web.ui.internal.Logger;
-import org.eclipse.wst.jsdt.web.ui.internal.editor.IHelpContextIds;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -32,6 +28,10 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PropertyPage;
+import org.eclipse.wst.jsdt.web.core.internal.contentproperties.JSPFContentProperties;
+import org.eclipse.wst.jsdt.web.ui.internal.JSPUIMessages;
+import org.eclipse.wst.jsdt.web.ui.internal.Logger;
+import org.eclipse.wst.jsdt.web.ui.internal.editor.IHelpContextIds;
 
 /**
  * JSP Fragment Property Page

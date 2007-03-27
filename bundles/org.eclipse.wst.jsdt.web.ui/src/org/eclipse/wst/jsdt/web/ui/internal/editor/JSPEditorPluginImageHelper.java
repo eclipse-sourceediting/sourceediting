@@ -15,9 +15,9 @@ import java.util.HashMap;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.wst.jsdt.web.ui.internal.JSPUIPlugin;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.wst.jsdt.web.ui.internal.JSPUIPlugin;
 
 /**
  * Helper class to handle images provided by this plug-in.

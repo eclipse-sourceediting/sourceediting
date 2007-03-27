@@ -23,41 +23,14 @@ import org.eclipse.wst.jsdt.core.IJavaElement;
  * 
  */
 public interface IJSPTranslation {
-
-	/**
-	 * The string contents of the translated document.
-	 * 
-	 * @return the string contents of the translated document.
-	 */
-	public String getJavaText();
-
-	/**
-	 * The corresponding java offset in the translated document for a given jsp
-	 * offset.
-	 * 
-	 * @param jspPosition
-	 * @return the java offset that maps to jspOffset, -1 if the position has no
-	 *         mapping.
-	 */
-	public int getJavaOffset(int jspOffset);
-
-	/**
-	 * The corresponding jsp offset in the source document for a given jsp
-	 * offset in the translated document.
-	 * 
-	 * @param javaPosition
-	 * @return the jsp offset that maps to javaOffset, -1 if the position has no
-	 *         mapping.
-	 */
-	public int getJspOffset(int javaOffset);
-
+	
 	/**
 	 * The corresponding CompilationUnit for the translated JSP document
 	 * 
 	 * @return an ICompilationUnit of the translation
 	 */
 	public ICompilationUnit getCompilationUnit();
-
+	
 	/**
 	 * Returns the IJavaElements corresponding to the JSP range in the JSP
 	 * StructuredDocument
@@ -69,7 +42,45 @@ public interface IJSPTranslation {
 	 * @return IJavaElements corresponding to the JSP selection
 	 */
 	public IJavaElement[] getElementsFromJspRange(int jspStart, int jspEnd);
-
+	
+	/**
+	 * The corresponding java offset in the translated document for a given jsp
+	 * offset.
+	 * 
+	 * @param jspPosition
+	 * @return the java offset that maps to jspOffset, -1 if the position has no
+	 *         mapping.
+	 */
+	public int getJavaOffset(int jspOffset);
+	
+	/**
+	 * The string contents of the translated document.
+	 * 
+	 * @return the string contents of the translated document.
+	 */
+	public String getJavaText();
+	
+	/**
+	 * The corresponding jsp offset in the source document for a given jsp
+	 * offset in the translated document.
+	 * 
+	 * @param javaPosition
+	 * @return the jsp offset that maps to javaOffset, -1 if the position has no
+	 *         mapping.
+	 */
+	public int getJspOffset(int javaOffset);
+	
+	/**
+	 * @return the List of problems collected during reconcile of the
+	 *         compilation unit
+	 */
+	public List getProblems();
+	
+	/**
+	 * Reconciles the compilation unit for this JSPTranslation
+	 */
+	public void reconcileCompilationUnit();
+	
 	/**
 	 * Must be set true in order for problems to be collected during reconcile.
 	 * If set false, problems will be ignored during reconcile.
@@ -77,18 +88,7 @@ public interface IJSPTranslation {
 	 * @param collect
 	 */
 	public void setProblemCollectingActive(boolean collect);
-
-	/**
-	 * Reconciles the compilation unit for this JSPTranslation
-	 */
-	public void reconcileCompilationUnit();
-
-	/**
-	 * @return the List of problems collected during reconcile of the
-	 *         compilation unit
-	 */
-	public List getProblems();
-
+	
 	// add these API once finalized
 	// getJspEdits(TextEdit javaEdit)
 	// getJavaRanges()

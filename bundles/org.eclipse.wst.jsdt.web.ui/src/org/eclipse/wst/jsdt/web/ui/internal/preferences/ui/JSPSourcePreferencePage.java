@@ -1,7 +1,6 @@
 package org.eclipse.wst.jsdt.web.ui.internal.preferences.ui;
 
 import org.eclipse.jface.preference.PreferencePage;
-import org.eclipse.wst.jsdt.web.ui.internal.JSPUIMessages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.graphics.Point;
@@ -14,6 +13,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.dialogs.PreferenceLinkArea;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
+import org.eclipse.wst.jsdt.web.ui.internal.JSPUIMessages;
 
 public class JSPSourcePreferencePage extends PreferencePage implements
 		IWorkbenchPreferencePage {

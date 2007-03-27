@@ -19,32 +19,32 @@ import org.eclipse.osgi.util.NLS;
  */
 public class JSPCoreMessages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.wst.jsdt.web.core.internal.JSPCorePluginResources"; //$NON-NLS-1$
-
-	public static String JSPDirectiveValidator_0;
-	public static String JSPDirectiveValidator_1;
-	public static String JSPDirectiveValidator_2;
-	public static String JSPDirectiveValidator_3;
-	public static String JSPIndexManager_0;
-	public static String JSPIndexManager_2;
-	public static String JSP_Search;
-	public static String JSPEL_Syntax;
-	public static String JSPEL_Token;
-	public static String JSPDocumentLoader_1;
-	public static String JSPFContentPropertiesManager_Updating;
-	public static String JSPFContentPropertiesManager_Problems_Updating;
-	public static String JSPBatchValidator_0;
-
+																											   
+	public static String		JSP_Search;
+	public static String		JSPBatchValidator_0;
+	public static String		JSPDirectiveValidator_0;
+	public static String		JSPDirectiveValidator_1;
+	public static String		JSPDirectiveValidator_2;
+	public static String		JSPDirectiveValidator_3;
+	public static String		JSPDocumentLoader_1;
+	public static String		JSPEL_Syntax;
+	public static String		JSPEL_Token;
+	public static String		JSPFContentPropertiesManager_Problems_Updating;
+	public static String		JSPFContentPropertiesManager_Updating;
+	public static String		JSPIndexManager_0;
+	public static String		JSPIndexManager_2;
+	
 	/**
 	 * @deprecated
 	 */
 	@Deprecated
-	public static String MESSAGE_JSP_VALIDATING_MESSAGE_UI_;
-
-	private JSPCoreMessages() {
-	}
-
+	public static String		MESSAGE_JSP_VALIDATING_MESSAGE_UI_;
+	
 	static {
 		// initialize resource bundle
-		NLS.initializeMessages(BUNDLE_NAME, JSPCoreMessages.class);
+		NLS.initializeMessages(JSPCoreMessages.BUNDLE_NAME, JSPCoreMessages.class);
+	}
+	
+	private JSPCoreMessages() {
 	}
 }

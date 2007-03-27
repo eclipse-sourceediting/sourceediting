@@ -5,16 +5,14 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import org.eclipse.jface.text.contentassist.IContextInformation;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.jsdt.core.CompletionProposal;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
 import org.eclipse.wst.jsdt.core.Signature;
 import org.eclipse.wst.jsdt.ui.text.java.CompletionProposalCollector;
 import org.eclipse.wst.jsdt.ui.text.java.CompletionProposalComparator;
 import org.eclipse.wst.jsdt.ui.text.java.IJavaCompletionProposal;
-import org.eclipse.jface.text.contentassist.ICompletionProposal;
-import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslation;
-import org.eclipse.swt.graphics.Image;
 
 /**
  * Passed into ICodeComplete#codeComplete(int offset, CompletionRequestor

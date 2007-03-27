@@ -20,8 +20,8 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.wst.jsdt.core.search.SearchParticipant;
 import org.eclipse.jface.text.Position;
+import org.eclipse.wst.jsdt.core.search.SearchParticipant;
 import org.eclipse.wst.jsdt.web.core.internal.Logger;
 import org.eclipse.wst.jsdt.web.core.internal.java.IJSPTranslation;
 import org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslation;
@@ -45,51 +45,104 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
  * @author pavery
  */
 public class JSPSearchDocument {
-
-	private String UNKNOWN_PATH = "**path unknown**"; //$NON-NLS-1$
-	private String fJSPPathString = UNKNOWN_PATH;
-	private String fCUPath = UNKNOWN_PATH;
-	private SearchParticipant fParticipant = null;
-	private long fLastModifiedStamp;
-	private char[] fCachedCharContents;
-
+	
+	private char[]			fCachedCharContents;
+	private long			  fLastModifiedStamp;
+	private SearchParticipant fParticipant   = null;
+	private String			UNKNOWN_PATH   = "**path unknown**"; //$NON-NLS-1$
+	private String			fCUPath		= UNKNOWN_PATH;
+	private String			fJSPPathString = UNKNOWN_PATH;																   
 	/**
 	 * @param file
 	 * @param participant
 	 * @throws CoreException
 	 */
 	public JSPSearchDocument(String filePath, SearchParticipant participant) {
-
+		
 		this.fJSPPathString = filePath;
 		this.fParticipant = participant;
 	}
-
-	public SearchParticipant getParticipant() {
-		return this.fParticipant;
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.wst.jsdt.core.search.SearchDocument#getByteContents()
+	 */
+	public byte[] getByteContents() {
+		// TODO Auto-generated method stub
+		return null;
 	}
-
+	
 	/**
 	 * @see org.eclipse.wst.jsdt.core.search.SearchDocument#getCharContents()
 	 */
 	public char[] getCharContents() {
-
+		
 		if (fCachedCharContents == null || isDirty()) {
 			JSPTranslation trans = getJSPTranslation();
-			fCachedCharContents = trans != null ? trans.getJavaText()
-					.toCharArray() : new char[0];
+			fCachedCharContents = trans != null ? trans.getJavaText().toCharArray() : new char[0];
 			fCUPath = trans.getJavaPath();
 		}
 		return fCachedCharContents;
 	}
-
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.wst.jsdt.core.search.SearchDocument#getEncoding()
+	 */
+	public String getEncoding() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	public IFile getFile() {
+		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+		IPath jspPath = new Path(this.fJSPPathString);
+		IFile jspFile = root.getFile(jspPath);
+		if (!jspFile.exists()) {
+			// possibly outside workspace
+			jspFile = root.getFileForLocation(jspPath);
+		}
+		return jspFile;
+	}
+	
 	public String getJavaText() {
 		return new String(getCharContents());
 	}
-
-	private IModelManager getModelManager() {
-		return StructuredModelManager.getModelManager();
+	
+	public int getJspOffset(int javaOffset) {
+		// copied from JSPTranslation
+		int result = -1;
+		int offsetInRange = 0;
+		Position jspPos, javaPos = null;
+		JSPTranslation trans = getJSPTranslation();
+		if (trans != null) {
+			HashMap java2jspMap = trans.getJava2JspMap();
+			
+			// iterate all mapped java ranges
+			Iterator it = java2jspMap.keySet().iterator();
+			while (it.hasNext()) {
+				javaPos = (Position) it.next();
+				// need to count the last position as included
+				if (!javaPos.includes(javaOffset) && !(javaPos.offset + javaPos.length == javaOffset)) {
+					continue;
+				}
+				
+				offsetInRange = javaOffset - javaPos.offset;
+				jspPos = (Position) java2jspMap.get(javaPos);
+				
+				if (jspPos != null) {
+					result = jspPos.offset + offsetInRange;
+				} else {
+					Logger.log(Logger.ERROR, "jspPosition was null!" + javaOffset); //$NON-NLS-1$
+				}
+				break;
+			}
+		}
+		return result;
 	}
-
+	
 	/**
 	 * It's not recommended for clients to hold on to this JSPTranslation since
 	 * it's kind of large. If possible, hold on to the JSPSearchDocument, which
@@ -104,7 +157,7 @@ public class JSPSearchDocument {
 		if (!JSPSearchSupport.isJsp(jspFile)) {
 			return translation;
 		}
-
+		
 		IStructuredModel model = null;
 		try {
 			// get existing model for read, then get document from it
@@ -117,8 +170,7 @@ public class JSPSearchDocument {
 				IDOMModel xmlModel = (IDOMModel) model;
 				setupAdapterFactory(xmlModel);
 				IDOMDocument doc = xmlModel.getDocument();
-				JSPTranslationAdapter adapter = (JSPTranslationAdapter) doc
-						.getAdapterFor(IJSPTranslation.class);
+				JSPTranslationAdapter adapter = (JSPTranslationAdapter) doc.getAdapterFor(IJSPTranslation.class);
 				translation = adapter.getJSPTranslation();
 			}
 		} catch (IOException e) {
@@ -136,17 +188,15 @@ public class JSPSearchDocument {
 		}
 		return translation;
 	}
-
-	/**
-	 * add the factory for JSPTranslationAdapter here
-	 * 
-	 * @param sm
-	 */
-	private void setupAdapterFactory(IStructuredModel sm) {
-		JSPTranslationAdapterFactory factory = new JSPTranslationAdapterFactory();
-		sm.getFactoryRegistry().addFactory(factory);
+	
+	private IModelManager getModelManager() {
+		return StructuredModelManager.getModelManager();
 	}
-
+	
+	public SearchParticipant getParticipant() {
+		return this.fParticipant;
+	}
+	
 	/**
 	 * the path to the Java compilation unit
 	 * 
@@ -165,52 +215,7 @@ public class JSPSearchDocument {
 		}
 		return fCUPath != null ? fCUPath : UNKNOWN_PATH;
 	}
-
-	public int getJspOffset(int javaOffset) {
-		// copied from JSPTranslation
-		int result = -1;
-		int offsetInRange = 0;
-		Position jspPos, javaPos = null;
-		JSPTranslation trans = getJSPTranslation();
-		if (trans != null) {
-			HashMap java2jspMap = trans.getJava2JspMap();
-
-			// iterate all mapped java ranges
-			Iterator it = java2jspMap.keySet().iterator();
-			while (it.hasNext()) {
-				javaPos = (Position) it.next();
-				// need to count the last position as included
-				if (!javaPos.includes(javaOffset)
-						&& !(javaPos.offset + javaPos.length == javaOffset)) {
-					continue;
-				}
-
-				offsetInRange = javaOffset - javaPos.offset;
-				jspPos = (Position) java2jspMap.get(javaPos);
-
-				if (jspPos != null) {
-					result = jspPos.offset + offsetInRange;
-				} else {
-					Logger.log(Logger.ERROR,
-							"jspPosition was null!" + javaOffset); //$NON-NLS-1$
-				}
-				break;
-			}
-		}
-		return result;
-	}
-
-	public IFile getFile() {
-		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-		IPath jspPath = new Path(this.fJSPPathString);
-		IFile jspFile = root.getFile(jspPath);
-		if (!jspFile.exists()) {
-			// possibly outside workspace
-			jspFile = root.getFileForLocation(jspPath);
-		}
-		return jspFile;
-	}
-
+	
 	private boolean isDirty() {
 		boolean modified = false;
 		IFile f = getFile();
@@ -223,36 +228,26 @@ public class JSPSearchDocument {
 		}
 		return modified;
 	}
-
+	
 	public void release() {
 		// nothing to do now since JSPTranslation is created on the fly
 	}
-
+	
+	/**
+	 * add the factory for JSPTranslationAdapter here
+	 * 
+	 * @param sm
+	 */
+	private void setupAdapterFactory(IStructuredModel sm) {
+		JSPTranslationAdapterFactory factory = new JSPTranslationAdapterFactory();
+		sm.getFactoryRegistry().addFactory(factory);
+	}
+	
 	/**
 	 * for debugging
 	 */
 	@Override
 	public String toString() {
 		return "[JSPSearchDocument:" + this.fJSPPathString + "]"; //$NON-NLS-1$ //$NON-NLS-2$ 
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.jsdt.core.search.SearchDocument#getEncoding()
-	 */
-	public String getEncoding() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.jsdt.core.search.SearchDocument#getByteContents()
-	 */
-	public byte[] getByteContents() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 }

@@ -1,12 +1,11 @@
 package org.eclipse.wst.jsdt.web.ui.internal.contentassist;
 
-import org.eclipse.wst.jsdt.ui.text.java.IJavaCompletionProposal;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
 import org.eclipse.wst.jsdt.internal.ui.text.java.JavaCompletionProposal;
+import org.eclipse.wst.jsdt.ui.text.java.IJavaCompletionProposal;
 
 /**
  * Implements IJavaCompletionProposal for use with JSPProposalCollector.

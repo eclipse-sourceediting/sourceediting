@@ -12,17 +12,17 @@ package org.eclipse.wst.jsdt.web.ui.internal.editor;
 
 import java.util.ResourceBundle;
 
-import org.eclipse.wst.jsdt.ui.actions.RefactorActionGroup;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.wst.jsdt.web.ui.internal.IActionConstantsJSP;
-import org.eclipse.wst.jsdt.web.ui.internal.IActionDefinitionIdsJSP;
-import org.eclipse.wst.jsdt.web.ui.internal.JSPUIMessages;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.texteditor.RetargetTextEditorAction;
 import org.eclipse.wst.html.ui.internal.edit.ui.ActionContributorHTML;
+import org.eclipse.wst.jsdt.ui.actions.RefactorActionGroup;
+import org.eclipse.wst.jsdt.web.ui.internal.IActionConstantsJSP;
+import org.eclipse.wst.jsdt.web.ui.internal.IActionDefinitionIdsJSP;
+import org.eclipse.wst.jsdt.web.ui.internal.JSPUIMessages;
 import org.eclipse.wst.sse.ui.internal.actions.StructuredTextEditorActionConstants;
 
 /**

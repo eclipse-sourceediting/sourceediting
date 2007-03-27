@@ -14,18 +14,18 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.wst.jsdt.web.core.internal.JSPCorePlugin;
-import org.eclipse.wst.jsdt.web.core.internal.preferences.JSPCorePreferenceNames;
-import org.eclipse.wst.jsdt.web.core.internal.provisional.contenttype.ContentTypeIdForJSP;
-import org.eclipse.wst.jsdt.web.ui.internal.JSPUIMessages;
-import org.eclipse.wst.jsdt.web.ui.internal.JSPUIPlugin;
-import org.eclipse.wst.jsdt.web.ui.internal.editor.IHelpContextIds;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.html.ui.internal.preferences.ui.HTMLFilesPreferencePage;
+import org.eclipse.wst.jsdt.web.core.internal.JSPCorePlugin;
+import org.eclipse.wst.jsdt.web.core.internal.preferences.JSPCorePreferenceNames;
+import org.eclipse.wst.jsdt.web.core.internal.provisional.contenttype.ContentTypeIdForJSP;
+import org.eclipse.wst.jsdt.web.ui.internal.JSPUIMessages;
+import org.eclipse.wst.jsdt.web.ui.internal.JSPUIPlugin;
+import org.eclipse.wst.jsdt.web.ui.internal.editor.IHelpContextIds;
 
 public class JSPFilesPreferencePage extends HTMLFilesPreferencePage {
 	private Button fValidateFragments;

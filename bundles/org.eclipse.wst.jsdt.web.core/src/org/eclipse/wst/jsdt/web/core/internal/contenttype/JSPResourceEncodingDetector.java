@@ -30,221 +30,106 @@ import org.eclipse.wst.xml.core.internal.contenttype.EncodingParserConstants;
 import org.eclipse.wst.xml.core.internal.contenttype.XMLHeadTokenizerConstants;
 
 public class JSPResourceEncodingDetector implements IResourceCharsetDetector {
-
-	private String fCharset;
-
-	private String fContentType;
-
-	private String fContentTypeValue;
-
-	private String fLanguage;
-
-	private String fPageEncodingValue;
-
-	private JSPHeadTokenizer fTokenizer;
-
-	private String fXMLDecEncodingName;
-
-	private boolean unicodeCase;
-
-	private EncodingMemento fEncodingMemento;
-
-	private boolean fHeaderParsed;
-
-	private Reader fReader;
-
-	private boolean fXHTML;
-
-	private boolean fWML;
-
-	/**
-	 * No Arg constructor.
-	 */
-	public JSPResourceEncodingDetector() {
-		super();
-	}
-
+	
 	class NullMemento extends EncodingMemento {
 		/**
 		 * 
 		 */
 		public NullMemento() {
 			super();
-			String defaultCharset = NonContentBasedEncodingRules
-					.useDefaultNameRules(null);
+			String defaultCharset = NonContentBasedEncodingRules.useDefaultNameRules(null);
 			setJavaCharsetName(defaultCharset);
 			setAppropriateDefault(defaultCharset);
 			setDetectedCharsetName(null);
 		}
-
+		
 	}
-
+	
+	private String		   fCharset;
+	
+	private String		   fContentType;
+	
+	private String		   fContentTypeValue;
+	
+	private EncodingMemento  fEncodingMemento;
+	
+	private boolean		  fHeaderParsed;
+	
+	private String		   fLanguage;
+	
+	private String		   fPageEncodingValue;
+	
+	private Reader		   fReader;
+	
+	private JSPHeadTokenizer fTokenizer;
+	
+	private boolean		  fWML;
+	
+	private boolean		  fXHTML;
+	
+	private String		   fXMLDecEncodingName;
+	
+	private boolean		  unicodeCase;
+	
 	/**
-	 * @return Returns the contentType.
+	 * No Arg constructor.
 	 */
-	public String getContentType() throws IOException {
-		ensureInputSet();
-		if (!fHeaderParsed) {
-			parseInput();
-			// we keep track of if header's already been parse, so can make
-			// multiple 'get' calls, without causing reparsing.
-			fHeaderParsed = true;
-			// Note: there is a "hidden assumption" here that an empty
-			// string in content should be treated same as not present.
-		}
-		return fContentType;
+	public JSPResourceEncodingDetector() {
+		super();
 	}
-
-	public String getEncoding() throws IOException {
-		return getEncodingMemento().getDetectedCharsetName();
-	}
-
-	// to ensure consist overall rules used, we'll mark as
-	// final,
-	// and require subclasses to provide certain pieces of
-	// the
-	// implementation
-	public EncodingMemento getEncodingMemento() throws IOException {
-		ensureInputSet();
-		if (!fHeaderParsed) {
-			parseInput();
-			// we keep track of if header's already been
-			// parse, so can make
-			// multiple 'get' calls, without causing
-			// reparsing.
-			fHeaderParsed = true;
-			// Note: there is a "hidden assumption" here
-			// that an empty
-			// string in content should be treated same as
-			// not present.
-		}
-		if (fEncodingMemento == null) {
-			handleSpecDefault();
-		}
-		if (fEncodingMemento == null) {
-			// safty net
-			fEncodingMemento = new NullMemento();
-		}
-		return fEncodingMemento;
-	}
-
-	public String getLanguage() throws IOException {
-		ensureInputSet();
-		if (!fHeaderParsed) {
-			parseInput();
-			fHeaderParsed = true;
-		}
-		return fLanguage;
-	}
-
-	public String getSpecDefaultEncoding() {
-		// by JSP Spec
-		final String enc = "ISO-8859-1"; //$NON-NLS-1$
-		return enc;
-	}
-
-	public EncodingMemento getSpecDefaultEncodingMemento() {
-		resetAll();
-		EncodingMemento result = null;
-		String enc = getSpecDefaultEncoding();
-		if (enc != null) {
-			createEncodingMemento(enc,
-					EncodingMemento.DEFAULTS_ASSUMED_FOR_EMPTY_INPUT);
-			fEncodingMemento.setAppropriateDefault(enc);
-			result = fEncodingMemento;
-		}
-		return result;
-	}
-
-	/**
-	 * 
-	 */
-	public void set(InputStream inputStream) {
-		resetAll();
-		fReader = new ByteReader(inputStream);
-		try {
-			fReader.mark(CodedIO.MAX_MARK_SIZE);
-		} catch (IOException e) {
-			// impossible, since we know ByteReader
-			// supports marking
-			throw new Error(e);
-		}
-	}
-
-	/**
-	 * 
-	 */
-	public void set(IStorage iStorage) throws CoreException {
-		resetAll();
-		InputStream inputStream = iStorage.getContents();
-		InputStream resettableStream = new BufferedInputStream(inputStream,
-				CodedIO.MAX_BUF_SIZE);
-		resettableStream.mark(CodedIO.MAX_MARK_SIZE);
-		set(resettableStream);
-		// TODO we'll need to "remember" IFile, or
-		// get its (or its project's) settings, in case
-		// those are needed to handle cases when the
-		// encoding is not in the file stream.
-	}
-
-	/**
-	 * Note: this is not part of interface to help avoid confusion ... it
-	 * expected this Reader is a well formed character reader ... that is, its
-	 * all ready been determined to not be a unicode marked input stream. And,
-	 * its assumed to be in the correct position, at position zero, ready to
-	 * read first character.
-	 */
-	public void set(Reader reader) {
-		resetAll();
-		fReader = reader;
-		if (!fReader.markSupported()) {
-			fReader = new BufferedReader(fReader);
-		}
-		try {
-			fReader.mark(CodedIO.MAX_MARK_SIZE);
-		} catch (IOException e) {
-			// impossble, since we just checked if markable
-			throw new Error(e);
-		}
-	}
-
+	
 	private boolean canHandleAsUnicodeStream(String tokenType) {
 		boolean canHandleAsUnicode = false;
 		if (tokenType == EncodingParserConstants.UTF83ByteBOM) {
 			canHandleAsUnicode = true;
 			String enc = "UTF-8"; //$NON-NLS-1$
-			createEncodingMemento(enc,
-					EncodingMemento.DETECTED_STANDARD_UNICODE_BYTES);
+			createEncodingMemento(enc, EncodingMemento.DETECTED_STANDARD_UNICODE_BYTES);
 			fEncodingMemento.setUTF83ByteBOMUsed(true);
 		} else if (tokenType == EncodingParserConstants.UTF16BE) {
 			canHandleAsUnicode = true;
 			String enc = "UTF-16BE"; //$NON-NLS-1$
-			createEncodingMemento(enc,
-					EncodingMemento.DETECTED_STANDARD_UNICODE_BYTES);
+			createEncodingMemento(enc, EncodingMemento.DETECTED_STANDARD_UNICODE_BYTES);
 		} else if (tokenType == EncodingParserConstants.UTF16LE) {
 			canHandleAsUnicode = true;
 			String enc = "UTF-16"; //$NON-NLS-1$
-			createEncodingMemento(enc,
-					EncodingMemento.DETECTED_STANDARD_UNICODE_BYTES);
+			createEncodingMemento(enc, EncodingMemento.DETECTED_STANDARD_UNICODE_BYTES);
 		}
 		return canHandleAsUnicode;
 	}
-
+	
 	/**
 	 * Note: once this instance is created, trace info still needs to be
 	 * appended by caller, depending on the context its created.
 	 */
 	private void createEncodingMemento(String detectedCharsetName) {
 		fEncodingMemento = new EncodingMemento();
-		fEncodingMemento
-				.setJavaCharsetName(getAppropriateJavaCharset(detectedCharsetName));
+		fEncodingMemento.setJavaCharsetName(getAppropriateJavaCharset(detectedCharsetName));
 		fEncodingMemento.setDetectedCharsetName(detectedCharsetName);
 		// TODO: if detectedCharset and spec default is
 		// null, need to use "work
 		// bench based" defaults.
 		fEncodingMemento.setAppropriateDefault(getSpecDefaultEncoding());
 	}
-
+	
+	/**
+	 * convience method all subclasses can use (but not override)
+	 * 
+	 * @param detectedCharsetName
+	 * @param reason
+	 */
+	private void createEncodingMemento(String detectedCharsetName, String reason) {
+		createEncodingMemento(detectedCharsetName);
+	}
+	
+	/**
+	 * convience method all subclasses can use (but not override)
+	 */
+	private void ensureInputSet() {
+		if (fReader == null) {
+			throw new IllegalStateException("input must be set before use"); //$NON-NLS-1$
+		}
+	}
+	
 	/**
 	 * There can sometimes be mulitple 'encodings' specified in a file. This is
 	 * an attempt to centralize the rules for deciding between them. Returns
@@ -262,7 +147,7 @@ public class JSPResourceEncodingDetector implements IResourceCharsetDetector {
 		}
 		return result;
 	}
-
+	
 	/**
 	 * This method can return null, if invalid charset name (in which case
 	 * "appropriateDefault" should be used, if a name is really need for some
@@ -307,14 +192,90 @@ public class JSPResourceEncodingDetector implements IResourceCharsetDetector {
 		}
 		return result;
 	}
-
+	
+	/**
+	 * @return Returns the contentType.
+	 */
+	public String getContentType() throws IOException {
+		ensureInputSet();
+		if (!fHeaderParsed) {
+			parseInput();
+			// we keep track of if header's already been parse, so can make
+			// multiple 'get' calls, without causing reparsing.
+			fHeaderParsed = true;
+			// Note: there is a "hidden assumption" here that an empty
+			// string in content should be treated same as not present.
+		}
+		return fContentType;
+	}
+	
+	public String getEncoding() throws IOException {
+		return getEncodingMemento().getDetectedCharsetName();
+	}
+	
+	// to ensure consist overall rules used, we'll mark as
+	// final,
+	// and require subclasses to provide certain pieces of
+	// the
+	// implementation
+	public EncodingMemento getEncodingMemento() throws IOException {
+		ensureInputSet();
+		if (!fHeaderParsed) {
+			parseInput();
+			// we keep track of if header's already been
+			// parse, so can make
+			// multiple 'get' calls, without causing
+			// reparsing.
+			fHeaderParsed = true;
+			// Note: there is a "hidden assumption" here
+			// that an empty
+			// string in content should be treated same as
+			// not present.
+		}
+		if (fEncodingMemento == null) {
+			handleSpecDefault();
+		}
+		if (fEncodingMemento == null) {
+			// safty net
+			fEncodingMemento = new NullMemento();
+		}
+		return fEncodingMemento;
+	}
+	
+	public String getLanguage() throws IOException {
+		ensureInputSet();
+		if (!fHeaderParsed) {
+			parseInput();
+			fHeaderParsed = true;
+		}
+		return fLanguage;
+	}
+	
+	public String getSpecDefaultEncoding() {
+		// by JSP Spec
+		final String enc = "ISO-8859-1"; //$NON-NLS-1$
+		return enc;
+	}
+	
+	public EncodingMemento getSpecDefaultEncodingMemento() {
+		resetAll();
+		EncodingMemento result = null;
+		String enc = getSpecDefaultEncoding();
+		if (enc != null) {
+			createEncodingMemento(enc, EncodingMemento.DEFAULTS_ASSUMED_FOR_EMPTY_INPUT);
+			fEncodingMemento.setAppropriateDefault(enc);
+			result = fEncodingMemento;
+		}
+		return result;
+	}
+	
 	private JSPHeadTokenizer getTokinizer() {
 		if (fTokenizer == null) {
 			fTokenizer = new JSPHeadTokenizer();
 		}
 		return fTokenizer;
 	}
-
+	
 	private void handleSpecDefault() {
 		String encodingName;
 		encodingName = getSpecDefaultEncoding();
@@ -326,21 +287,41 @@ public class JSPResourceEncodingDetector implements IResourceCharsetDetector {
 			fEncodingMemento.setAppropriateDefault(encodingName);
 		}
 	}
-
+	
 	private boolean isLegalString(String valueTokenType) {
 		boolean result = false;
 		if (valueTokenType != null) {
-			result = valueTokenType.equals(EncodingParserConstants.StringValue)
-					|| valueTokenType
-							.equals(EncodingParserConstants.UnDelimitedStringValue)
-					|| valueTokenType
-							.equals(EncodingParserConstants.InvalidTerminatedStringValue)
-					|| valueTokenType
-							.equals(EncodingParserConstants.InvalidTermintatedUnDelimitedStringValue);
+			result = valueTokenType.equals(EncodingParserConstants.StringValue) || valueTokenType.equals(EncodingParserConstants.UnDelimitedStringValue) || valueTokenType.equals(EncodingParserConstants.InvalidTerminatedStringValue) || valueTokenType.equals(EncodingParserConstants.InvalidTermintatedUnDelimitedStringValue);
 		}
 		return result;
 	}
-
+	
+	public boolean isWML() throws IOException {
+		ensureInputSet();
+		if (!fHeaderParsed) {
+			parseInput();
+			// we keep track of if header's already been parse, so can make
+			// multiple 'get' calls, without causing reparsing.
+			fHeaderParsed = true;
+			// Note: there is a "hidden assumption" here that an empty
+			// string in content should be treated same as not present.
+		}
+		return fWML;
+	}
+	
+	public boolean isXHTML() throws IOException {
+		ensureInputSet();
+		if (!fHeaderParsed) {
+			parseInput();
+			// we keep track of if header's already been parse, so can make
+			// multiple 'get' calls, without causing reparsing.
+			fHeaderParsed = true;
+			// Note: there is a "hidden assumption" here that an empty
+			// string in content should be treated same as not present.
+		}
+		return fXHTML;
+	}
+	
 	/**
 	 * This method should be exactly the same as what is in
 	 * JSPHeadTokenizerTester
@@ -375,7 +356,7 @@ public class JSPResourceEncodingDetector implements IResourceCharsetDetector {
 			fCharset = parts[1];
 		}
 	}
-
+	
 	/**
 	 * Looks for what ever encoding properties the tokenizer returns. Its the
 	 * responsibility of the tokenizer to stop when appropriate and not go too
@@ -384,7 +365,7 @@ public class JSPResourceEncodingDetector implements IResourceCharsetDetector {
 	private void parseHeader(JSPHeadTokenizer tokenizer) throws IOException {
 		fPageEncodingValue = null;
 		fCharset = null;
-
+		
 		HeadParserToken token = null;
 		do {
 			// don't use 'get' here (at least until reset issue fixed)
@@ -393,7 +374,7 @@ public class JSPResourceEncodingDetector implements IResourceCharsetDetector {
 			if (canHandleAsUnicodeStream(tokenType)) {
 				unicodeCase = true;
 			} else {
-
+				
 				if (tokenType == XMLHeadTokenizerConstants.XMLDelEncoding) {
 					if (tokenizer.hasMoreTokens()) {
 						HeadParserToken valueToken = tokenizer.getNextToken();
@@ -438,9 +419,9 @@ public class JSPResourceEncodingDetector implements IResourceCharsetDetector {
 		if (tokenizer.isWML()) {
 			fWML = true;
 		}
-
+		
 	}
-
+	
 	private void parseInput() throws IOException {
 		JSPHeadTokenizer tokenizer = getTokinizer();
 		fReader.reset();
@@ -450,12 +431,11 @@ public class JSPResourceEncodingDetector implements IResourceCharsetDetector {
 		if (!unicodeCase) {
 			String enc = getAppropriateEncoding();
 			if (enc != null && enc.length() > 0) {
-				createEncodingMemento(enc,
-						EncodingMemento.FOUND_ENCODING_IN_CONTENT);
+				createEncodingMemento(enc, EncodingMemento.FOUND_ENCODING_IN_CONTENT);
 			}
 		}
 	}
-
+	
 	/**
 	 * 
 	 */
@@ -471,49 +451,55 @@ public class JSPResourceEncodingDetector implements IResourceCharsetDetector {
 		fXHTML = false;
 		fWML = false;
 	}
-
+	
 	/**
-	 * convience method all subclasses can use (but not override)
 	 * 
-	 * @param detectedCharsetName
-	 * @param reason
 	 */
-	private void createEncodingMemento(String detectedCharsetName, String reason) {
-		createEncodingMemento(detectedCharsetName);
+	public void set(InputStream inputStream) {
+		resetAll();
+		fReader = new ByteReader(inputStream);
+		try {
+			fReader.mark(CodedIO.MAX_MARK_SIZE);
+		} catch (IOException e) {
+			// impossible, since we know ByteReader
+			// supports marking
+			throw new Error(e);
+		}
 	}
-
+	
 	/**
-	 * convience method all subclasses can use (but not override)
+	 * 
 	 */
-	private void ensureInputSet() {
-		if (fReader == null) {
-			throw new IllegalStateException("input must be set before use"); //$NON-NLS-1$
-		}
+	public void set(IStorage iStorage) throws CoreException {
+		resetAll();
+		InputStream inputStream = iStorage.getContents();
+		InputStream resettableStream = new BufferedInputStream(inputStream, CodedIO.MAX_BUF_SIZE);
+		resettableStream.mark(CodedIO.MAX_MARK_SIZE);
+		set(resettableStream);
+		// TODO we'll need to "remember" IFile, or
+		// get its (or its project's) settings, in case
+		// those are needed to handle cases when the
+		// encoding is not in the file stream.
 	}
-
-	public boolean isWML() throws IOException {
-		ensureInputSet();
-		if (!fHeaderParsed) {
-			parseInput();
-			// we keep track of if header's already been parse, so can make
-			// multiple 'get' calls, without causing reparsing.
-			fHeaderParsed = true;
-			// Note: there is a "hidden assumption" here that an empty
-			// string in content should be treated same as not present.
+	
+	/**
+	 * Note: this is not part of interface to help avoid confusion ... it
+	 * expected this Reader is a well formed character reader ... that is, its
+	 * all ready been determined to not be a unicode marked input stream. And,
+	 * its assumed to be in the correct position, at position zero, ready to
+	 * read first character.
+	 */
+	public void set(Reader reader) {
+		resetAll();
+		fReader = reader;
+		if (!fReader.markSupported()) {
+			fReader = new BufferedReader(fReader);
 		}
-		return fWML;
-	}
-
-	public boolean isXHTML() throws IOException {
-		ensureInputSet();
-		if (!fHeaderParsed) {
-			parseInput();
-			// we keep track of if header's already been parse, so can make
-			// multiple 'get' calls, without causing reparsing.
-			fHeaderParsed = true;
-			// Note: there is a "hidden assumption" here that an empty
-			// string in content should be treated same as not present.
+		try {
+			fReader.mark(CodedIO.MAX_MARK_SIZE);
+		} catch (IOException e) {
+			// impossble, since we just checked if markable
+			throw new Error(e);
 		}
-		return fXHTML;
 	}
 }

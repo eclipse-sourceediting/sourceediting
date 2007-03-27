@@ -1,25 +1,13 @@
 package org.eclipse.wst.jsdt.web.ui.views.contentoutline;
 
 
-import java.util.Enumeration;
-import java.util.Hashtable;
-import org.eclipse.wst.jsdt.internal.ui.compare.JavaNode;
-
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.Position;
-import org.eclipse.jface.viewers.IContentProvider;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.html.ui.internal.contentoutline.JFaceNodeAdapterForHTML;
 import org.eclipse.wst.jsdt.core.IJavaElement;
 import org.eclipse.wst.jsdt.core.JavaModelException;
-import org.eclipse.wst.jsdt.internal.core.NamedMember;
-import org.eclipse.wst.jsdt.internal.core.SourceMethod;
 import org.eclipse.wst.jsdt.internal.core.SourceRefElement;
-import org.eclipse.wst.jsdt.internal.core.SourceType;
 import org.eclipse.wst.jsdt.ui.JavaElementLabelProvider;
 import org.eclipse.wst.jsdt.ui.StandardJavaElementContentProvider;
 import org.eclipse.wst.jsdt.web.core.internal.Logger;
@@ -38,7 +26,6 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeAdapterFactory;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
     

@@ -11,7 +11,6 @@
  *******************************************************************************/
 package org.eclipse.wst.jsdt.web.ui.internal.projection;
 
-import org.eclipse.wst.jsdt.web.core.internal.provisional.JSP11Namespace;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.w3c.dom.Node;
@@ -75,7 +74,7 @@ public class ProjectionModelNodeAdapterFactoryJSP extends
 		if (node.getNodeType() == Node.ELEMENT_NODE) {
 			String tagName = node.getNodeName();
 			// node is only projectable if it is jsp scriptlet tag
-			if (JSP11Namespace.ElementName.SCRIPTLET.equalsIgnoreCase(tagName)) {
+			if ("JSP11Namespace.ElementName.SCRIPTLET".equalsIgnoreCase(tagName)) {
 				return true;
 			}
 		}

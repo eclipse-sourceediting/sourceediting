@@ -16,7 +16,7 @@
 	      	<and>
         		<or>
         			<requires facet="wst.web" version="[1.0"/>
-	      			<requires facet="jst.web" version="[1.0"/>
+	      			<requires facet="jst.web" version="[2.4"/>
 	      		</or>
 	      	<conflicts group="script.javascript"/>
 	      	</and>
@@ -36,11 +36,11 @@
 			<delegate class="org.eclipse.wst.jsdt.web.core.internal.project.JsNatureUninstaller"/>
 		</event-handler>
 
-		<event-handler facet="jst.web" type="POST_INSTALL"  version="[1.0">
+		<event-handler facet="jst.web" type="POST_INSTALL"  version="[2.4">
 	   		<delegate class="org.eclipse.wst.jsdt.web.core.internal.project.JsNatureInstaller"/>
 		</event-handler>
 	
-		<event-handler facet="jst.web" type="POST_UNINSTALL" version="[1.0">
+		<event-handler facet="jst.web" type="POST_UNINSTALL" version="[2.4">
 			<delegate class="org.eclipse.wst.jsdt.web.core.internal.project.JsNatureUninstaller"/>
 		</event-handler>
 

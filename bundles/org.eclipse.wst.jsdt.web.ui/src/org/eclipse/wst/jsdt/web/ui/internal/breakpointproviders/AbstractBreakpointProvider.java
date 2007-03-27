@@ -14,9 +14,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.wst.jsdt.web.core.internal.contentmodel.tld.provisional.TLDElementDeclaration;
-import org.eclipse.wst.jsdt.web.core.internal.provisional.JSP12Namespace;
-import org.eclipse.wst.jsdt.web.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
@@ -137,7 +134,7 @@ public abstract class AbstractBreakpointProvider implements IBreakpointProvider 
 					// Java not Javascript by
 					// checking the content assist adapter's type.
 					if (region.getType().equals(
-							DOMJSPRegionContexts.JSP_CONTENT)) {
+							"DOMJSPRegionContexts.JSP_CONTENT")) {
 						// DWM: this logic is not incorrect ... given changes
 						// to adapters, etc.
 						// but probably don't need anything here, since both
@@ -172,14 +169,14 @@ public abstract class AbstractBreakpointProvider implements IBreakpointProvider 
 							&& (isCustomTagRegion(model
 									.getIndexedRegion(regionStartOffset))
 									|| regionContainer.getText(region).equals(
-											JSP12Namespace.ElementName.USEBEAN)
+											"JSP12Namespace.ElementName.USEBEAN")
 									|| regionContainer
 											.getText(region)
 											.equals(
-													JSP12Namespace.ElementName.GETPROPERTY) || regionContainer
+													"JSP12Namespace.ElementName.GETPROPERTY") || regionContainer
 									.getText(region)
 									.equals(
-											JSP12Namespace.ElementName.SETPROPERTY))) {
+											"JSP12Namespace.ElementName.SETPROPERTY"))) {
 
 						if (regionStartOffset > startOffset) {
 							return regionStartOffset;
@@ -199,17 +196,17 @@ public abstract class AbstractBreakpointProvider implements IBreakpointProvider 
 									.getDocumentElement();
 							if (root != null
 									&& root.getNodeName().equals(
-											JSP12Namespace.ElementName.ROOT)
+											"JSP12Namespace.ElementName.ROOT")
 									&& domNode.getNodeType() == Node.TEXT_NODE
 									&& domNode.getParentNode() != null) {
 								String parentName = domNode.getParentNode()
 										.getNodeName();
 								isCodeNode = parentName
-										.equals(JSP12Namespace.ElementName.SCRIPTLET)
+										.equals("JSP12Namespace.ElementName.SCRIPTLET")
 										|| parentName
-												.equals(JSP12Namespace.ElementName.EXPRESSION)
+												.equals("JSP12Namespace.ElementName.EXPRESSION")
 										|| parentName
-												.equals(JSP12Namespace.ElementName.DECLARATION);
+												.equals("JSP12Namespace.ElementName.DECLARATION");
 							}
 						}
 						if (isCodeNode) {
@@ -235,7 +232,7 @@ public abstract class AbstractBreakpointProvider implements IBreakpointProvider 
 			CMElementDeclaration decl = mq.getCMElementDeclaration(xmlElement);
 			if (decl instanceof CMNodeWrapper) {
 				CMNode cmNode = ((CMNodeWrapper) decl).getOriginNode();
-				return cmNode instanceof TLDElementDeclaration;
+				//return cmNode instanceof TLDElementDeclaration;
 			}
 		}
 		return false;

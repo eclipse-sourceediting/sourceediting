@@ -4,20 +4,11 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
-
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
-import org.eclipse.wst.jsdt.internal.ui.text.correction.AssistContext;
 import org.eclipse.wst.jsdt.internal.ui.text.java.TemplateCompletionProposalComputer;
 import org.eclipse.wst.jsdt.ui.text.java.JavaContentAssistInvocationContext;
-import org.eclipse.wst.jsdt.web.core.internal.java.IJSPTranslation;
-import org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslation;
 import org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslationAdapter;
-import org.eclipse.wst.sse.core.StructuredModelManager;
-import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
-import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 
 public class JSDTTemplateAssistProcessor {
  

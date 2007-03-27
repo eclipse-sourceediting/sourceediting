@@ -24,26 +24,26 @@ public class ContentTypeIdForJSP {
 	 * plugin.xml file. Note: this value is intentially set with default
 	 * protected method so it will not be inlined.
 	 */
-	public final static String ContentTypeID_JSP = getConstantString();
+	public final static String ContentTypeID_JSP		 = ContentTypeIdForJSP.getConstantString();
 	/**
 	 * The value of the contenttype id field must match what is specified in
 	 * plugin.xml file. Note: this value is intentially set with default
 	 * protected method so it will not be inlined.
 	 */
-	public final static String ContentTypeID_JSPFRAGMENT = getFragmentConstantString();
-
+	public final static String ContentTypeID_JSPFRAGMENT = ContentTypeIdForJSP.getFragmentConstantString();
+	
+	static String getConstantString() {
+		return "org.eclipse.wst.html.core.htmlsource"; //$NON-NLS-1$
+	}
+	
+	static String getFragmentConstantString() {
+		return "org.eclipse.wst.html.core.htmlsource"; //$NON-NLS-1$
+	}
+	
 	/**
 	 * Don't allow instantiation.
 	 */
 	private ContentTypeIdForJSP() {
 		super();
-	}
-
-	static String getConstantString() {
-		return "org.eclipse.wst.html.core.htmlsource"; //$NON-NLS-1$
-	}
-
-	static String getFragmentConstantString() {
-		return "org.eclipse.wst.html.core.htmlsource"; //$NON-NLS-1$
 	}
 }

@@ -14,11 +14,11 @@ import java.io.IOException;
 import java.io.Reader;
 import java.net.URL;
 
-import org.eclipse.wst.jsdt.web.ui.internal.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTError;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.wst.jsdt.web.ui.internal.Logger;
 
 /**
  * Provides a set of convenience methods for creating HTML pages.

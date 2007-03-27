@@ -16,7 +16,7 @@ import org.eclipse.wst.sse.core.internal.document.IDocumentCharsetDetector;
 
 public interface IJSPHeadContentDetector extends IDocumentCharsetDetector {
 	String getContentType() throws IOException;
-
+	
 	String getLanguage() throws IOException;
-
+	
 }

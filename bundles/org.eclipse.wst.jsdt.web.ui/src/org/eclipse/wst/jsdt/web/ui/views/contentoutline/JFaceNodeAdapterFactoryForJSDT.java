@@ -12,7 +12,6 @@ package org.eclipse.wst.jsdt.web.ui.views.contentoutline;
 
 
 
-import org.eclipse.wst.html.ui.internal.contentoutline.JFaceNodeAdapterForHTML;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapterFactory;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;

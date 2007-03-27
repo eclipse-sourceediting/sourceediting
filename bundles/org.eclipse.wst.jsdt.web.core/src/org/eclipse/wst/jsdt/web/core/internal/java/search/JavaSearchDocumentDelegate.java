@@ -25,52 +25,52 @@ import org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslationExtension;
 /* Used to extend SearchDocument */
 
 public class JavaSearchDocumentDelegate extends JavaSearchDocument {
-
+	
 	private JSPSearchDocument fJSPSearchDoc = null;
-
+	
 	public JavaSearchDocumentDelegate(JSPSearchDocument jspSearchDoc) {
-
+		
 		super(jspSearchDoc.getPath(), jspSearchDoc.getParticipant());
 		this.fJSPSearchDoc = jspSearchDoc;
 	}
-
+	
 	@Override
 	public byte[] getByteContents() {
-
+		
 		return this.fJSPSearchDoc.getByteContents();
 	}
-
+	
 	@Override
 	public char[] getCharContents() {
-
+		
 		return this.fJSPSearchDoc.getCharContents();
 	}
-
+	
+	@Override
+	public String getEncoding() {
+		
+		return this.fJSPSearchDoc.getEncoding();
+	}
+	
+	public IFile getFile() {
+		
+		return this.fJSPSearchDoc.getFile();
+	}
+	
 	public String getJavaText() {
 		return this.fJSPSearchDoc.getJavaText();
 	}
-
-	@Override
-	public String getEncoding() {
-
-		return this.fJSPSearchDoc.getEncoding();
-	}
-
-	public IFile getFile() {
-
-		return this.fJSPSearchDoc.getFile();
-	}
-
-	public JSPTranslationExtension getJspTranslation() {
-
-		return this.fJSPSearchDoc.getJSPTranslation();
-	}
-
+	
 	public int getJspOffset(int javaOffset) {
-
+		
 		return this.fJSPSearchDoc.getJspOffset(javaOffset);
 	}
-
+	
+	public JSPTranslationExtension getJspTranslation() {
+		
+		return this.fJSPSearchDoc.getJSPTranslation();
+	}
+	
 	public void release() {
 		this.fJSPSearchDoc.release();
 	}

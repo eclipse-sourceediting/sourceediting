@@ -30,19 +30,6 @@ import org.osgi.service.prefs.Preferences;
  * @since 1.1
  */
 public class JSPFContentProperties {
-	static final String JSPCORE_ID = JSPCorePlugin.getDefault().getBundle()
-			.getSymbolicName();
-	private static final String PROJECT_KEY = "<project>"; //$NON-NLS-1$
-
-	/**
-	 * A named key that controls the default language for JSP Fragments
-	 * <p>
-	 * Value is of type <code>String</code>.
-	 * </p>
-	 * 
-	 * @since 1.1
-	 */
-	public static final String JSPLANGUAGE = "jsp-language"; //$NON-NLS-1$
 	/**
 	 * A named key that controls the default content type for JSP Fragments
 	 * <p>
@@ -51,7 +38,19 @@ public class JSPFContentProperties {
 	 * 
 	 * @since 1.1
 	 */
-	public static final String JSPCONTENTTYPE = "jsp-content-type"; //$NON-NLS-1$
+	public static final String  JSPCONTENTTYPE	 = "jsp-content-type";									  //$NON-NLS-1$
+	static final String		 JSPCORE_ID		 = JSPCorePlugin.getDefault().getBundle().getSymbolicName();
+	
+	/**
+	 * A named key that controls the default language for JSP Fragments
+	 * <p>
+	 * Value is of type <code>String</code>.
+	 * </p>
+	 * 
+	 * @since 1.1
+	 */
+	public static final String  JSPLANGUAGE		= "jsp-language";										  //$NON-NLS-1$
+	private static final String PROJECT_KEY		= "<project>";											 //$NON-NLS-1$
 	/**
 	 * Indicates if JSP fragments should be compiled/validated. JSP fragments
 	 * will be validated when true.
@@ -61,8 +60,8 @@ public class JSPFContentProperties {
 	 * 
 	 * @since 1.1
 	 */
-	public static final String VALIDATE_FRAGMENTS = "validateFragments";//$NON-NLS-1$
-
+	public static final String  VALIDATE_FRAGMENTS = "validateFragments";									  //$NON-NLS-1$
+																											   
 	/**
 	 * Generates a preference key based on resourcePath
 	 * 
@@ -72,13 +71,13 @@ public class JSPFContentProperties {
 	 *         without the filename); PROJECT_KEY if resourcePath is null
 	 */
 	static String getKeyFor(IPath resourcePath) {
-		String key = PROJECT_KEY;
+		String key = JSPFContentProperties.PROJECT_KEY;
 		if (resourcePath != null && resourcePath.segmentCount() > 1) {
 			key = resourcePath.removeFirstSegments(1).toString();
 		}
 		return key;
 	}
-
+	
 	/**
 	 * Get the preferences node associated with the given project scope and
 	 * preference key (subNode) If create is true, the preference node will be
@@ -95,17 +94,14 @@ public class JSPFContentProperties {
 	 *         preference key. null if one could not be found and create is
 	 *         false
 	 */
-	static Preferences getPreferences(IProject project, String preferenceKey,
-			boolean create) {
+	static Preferences getPreferences(IProject project, String preferenceKey, boolean create) {
 		if (create) {
 			// create all nodes down to the one we are interested in
-			return new ProjectScope(project).getNode(JSPCORE_ID).node(
-					preferenceKey);
+			return new ProjectScope(project).getNode(JSPFContentProperties.JSPCORE_ID).node(preferenceKey);
 		}
 		// be careful looking up for our node so not to create any nodes as
 		// side effect
-		Preferences node = Platform.getPreferencesService().getRootNode().node(
-				ProjectScope.SCOPE);
+		Preferences node = Platform.getPreferencesService().getRootNode().node(ProjectScope.SCOPE);
 		try {
 			// TODO once bug 90500 is fixed, should be as simple as this:
 			// String path = project.getName() + IPath.SEPARATOR +
@@ -117,22 +113,21 @@ public class JSPFContentProperties {
 				return null;
 			}
 			node = node.node(project.getName());
-			if (!node.nodeExists(JSPCORE_ID)) {
+			if (!node.nodeExists(JSPFContentProperties.JSPCORE_ID)) {
 				return null;
 			}
-			node = node.node(JSPCORE_ID);
+			node = node.node(JSPFContentProperties.JSPCORE_ID);
 			if (!node.nodeExists(preferenceKey)) {
 				return null;
 			}
 			return node.node(preferenceKey);
 		} catch (BackingStoreException e) {
 			// nodeExists failed
-			Logger.log(Logger.WARNING_DEBUG,
-					"Could not retrieve preference node", e); //$NON-NLS-1$
+			Logger.log(Logger.WARNING_DEBUG, "Could not retrieve preference node", e); //$NON-NLS-1$
 		}
 		return null;
 	}
-
+	
 	/**
 	 * Returns the value for the given key in the given context.
 	 * 
@@ -147,15 +142,14 @@ public class JSPFContentProperties {
 	 * @return Returns the current value for the key.
 	 * @since 1.1
 	 */
-	public static String getProperty(String key, IResource resource,
-			boolean recurse) {
+	public static String getProperty(String key, IResource resource, boolean recurse) {
 		String val = null;
 		if (resource != null) {
 			IProject project = resource.getProject();
 			if (project != null) {
-				Preferences preferences = getPreferences(project, key, false);
+				Preferences preferences = JSPFContentProperties.getPreferences(project, key, false);
 				if (preferences != null) {
-					val = internalGetProperty(resource, recurse, preferences);
+					val = JSPFContentProperties.internalGetProperty(resource, recurse, preferences);
 				}
 			}
 		}
@@ -164,26 +158,24 @@ public class JSPFContentProperties {
 		// lookup by falling back to workspace's default
 		// setting
 		if (val == null && recurse) {
-			val = getWorkbenchPreference(key);
+			val = JSPFContentProperties.getWorkbenchPreference(key);
 		}
 		return val;
 	}
-
+	
 	private static String getWorkbenchPreference(String key) {
-		return Platform.getPreferencesService().getString(JSPCORE_ID, key,
-				null, null);
+		return Platform.getPreferencesService().getString(JSPFContentProperties.JSPCORE_ID, key, null, null);
 	}
-
-	private static String internalGetProperty(IResource resource,
-			boolean recurse, Preferences preferences) {
-		String value = preferences.get(getKeyFor(resource.getFullPath()), null);
+	
+	private static String internalGetProperty(IResource resource, boolean recurse, Preferences preferences) {
+		String value = preferences.get(JSPFContentProperties.getKeyFor(resource.getFullPath()), null);
 		if (value == null && resource != resource.getProject() && recurse) {
-			value = preferences.get(getKeyFor(null), null);
+			value = preferences.get(JSPFContentProperties.getKeyFor(null), null);
 		}
-
+		
 		return value;
 	}
-
+	
 	/**
 	 * Sets the value for the given key in the given context.
 	 * 
@@ -196,24 +188,21 @@ public class JSPFContentProperties {
 	 *            the key is removed from properties.
 	 * @since 1.1
 	 */
-	public static void setProperty(String key, IResource resource, String value)
-			throws CoreException {
+	public static void setProperty(String key, IResource resource, String value) throws CoreException {
 		if (resource != null) {
 			IProject project = resource.getProject();
 			if (project != null) {
-				Preferences preferences = getPreferences(project, key, true);
+				Preferences preferences = JSPFContentProperties.getPreferences(project, key, true);
 				if (value == null || value.trim().length() == 0) {
-					preferences.remove(getKeyFor(resource.getFullPath()));
+					preferences.remove(JSPFContentProperties.getKeyFor(resource.getFullPath()));
 				} else {
-					preferences.put(getKeyFor(resource.getFullPath()), value);
+					preferences.put(JSPFContentProperties.getKeyFor(resource.getFullPath()), value);
 				}
 				try {
 					// save changes
 					preferences.flush();
 				} catch (BackingStoreException e) {
-					throw new CoreException(new Status(IStatus.ERROR,
-							JSPCORE_ID, IStatus.ERROR,
-							"Unable to set property", e)); //$NON-NLS-1$
+					throw new CoreException(new Status(IStatus.ERROR, JSPFContentProperties.JSPCORE_ID, IStatus.ERROR, "Unable to set property", e)); //$NON-NLS-1$
 				}
 			}
 		}

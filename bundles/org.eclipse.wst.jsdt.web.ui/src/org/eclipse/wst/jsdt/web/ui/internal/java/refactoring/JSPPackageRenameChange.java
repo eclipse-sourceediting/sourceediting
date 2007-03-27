@@ -12,12 +12,12 @@ package org.eclipse.wst.jsdt.web.ui.internal.java.refactoring;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.ltk.core.refactoring.Change;
+import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.wst.jsdt.core.IPackageFragment;
 import org.eclipse.wst.jsdt.web.core.internal.java.search.JSPSearchScope;
 import org.eclipse.wst.jsdt.web.core.internal.java.search.JSPSearchSupport;
 import org.eclipse.wst.jsdt.web.ui.internal.JSPUIMessages;
-import org.eclipse.ltk.core.refactoring.Change;
-import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 
 /**
  * @author pavery
