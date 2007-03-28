@@ -468,5 +468,21 @@
 			categoryId="org.eclipse.ui.category.edit"
 			id="org.eclipse.wst.xsd.ui.refactor.renameTargetNamespace">
 		</command>
-	</extension>	
+	</extension>
+	<extension
+		point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectorTargets">
+		<target
+			id="org.eclipse.wst.xsd.core.xsdsource"
+			name="%XSD_Source_target_name">
+		</target>
+	</extension>
+	<extension
+		point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectors">
+		<hyperlinkDetector
+			class="org.eclipse.wst.xsd.ui.internal.editor.XSDHyperlinkDetector"
+			id="org.eclipse.wst.xsd.ui.internal.editor.XSDHyperlinkDetector"
+			name="%XSD_hyperlink"
+			targetId="org.eclipse.wst.xsd.core.xsdsource">
+		</hyperlinkDetector>
+   </extension>
 </plugin>
