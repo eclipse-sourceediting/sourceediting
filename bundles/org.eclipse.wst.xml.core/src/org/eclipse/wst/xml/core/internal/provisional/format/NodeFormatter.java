@@ -159,7 +159,7 @@ public class NodeFormatter implements IStructuredFormatter {
 			IDOMNode previousSibling = (IDOMNode) node.getPreviousSibling();
 			IStructuredDocument doc = node.getModel().getStructuredDocument();
 			String lineDelimiter = getLineDelimiter(node, doc);
-			
+
 			String lineIndent = formatContraints.getCurrentIndent();
 
 			if (node.getParentNode() != null) {
@@ -394,11 +394,12 @@ public class NodeFormatter implements IStructuredFormatter {
 				formatter = new ElementNodeFormatter();
 				break;
 			}
-			case Node.TEXT_NODE: {
-				if (node instanceof CDATASectionImpl)
-					formatter = new NodeFormatter();
-				else
-					formatter = new TextNodeFormatter();
+			case Node.TEXT_NODE : {
+				formatter = new TextNodeFormatter();
+				break;
+			}
+			case Node.CDATA_SECTION_NODE : {
+				formatter = new NoMoveFormatter();
 				break;
 			}
 			case Node.COMMENT_NODE : {
@@ -414,7 +415,7 @@ public class NodeFormatter implements IStructuredFormatter {
 				break;
 			}
 			case Node.ENTITY_REFERENCE_NODE : {
-				formatter = new EntityReferenceFormatter();
+				formatter = new NoMoveFormatter();
 				break;
 			}
 			default : {

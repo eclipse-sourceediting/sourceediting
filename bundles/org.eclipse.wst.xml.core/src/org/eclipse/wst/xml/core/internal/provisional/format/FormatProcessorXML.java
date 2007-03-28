@@ -17,7 +17,6 @@ import org.eclipse.wst.sse.core.internal.format.AbstractStructuredFormatProcesso
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatPreferences;
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatter;
 import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
-import org.eclipse.wst.xml.core.internal.document.CDATASectionImpl;
 import org.eclipse.wst.xml.core.internal.preferences.XMLCorePreferenceNames;
 import org.w3c.dom.Node;
 
@@ -70,10 +69,11 @@ public class FormatProcessorXML extends AbstractStructuredFormatProcessor {
 				break;
 			}
 			case Node.TEXT_NODE : {
-				if (node instanceof CDATASectionImpl)
-					formatter = new NodeFormatter();
-				else
-					formatter = new TextNodeFormatter();
+				formatter = new TextNodeFormatter();
+				break;
+			}
+			case Node.CDATA_SECTION_NODE : {
+				formatter = new NoMoveFormatter();
 				break;
 			}
 			case Node.COMMENT_NODE : {
@@ -89,7 +89,7 @@ public class FormatProcessorXML extends AbstractStructuredFormatProcessor {
 				break;
 			}
 			case Node.ENTITY_REFERENCE_NODE : {
-				formatter = new EntityReferenceFormatter();
+				formatter = new NoMoveFormatter();
 				break;
 			}
 			default : {

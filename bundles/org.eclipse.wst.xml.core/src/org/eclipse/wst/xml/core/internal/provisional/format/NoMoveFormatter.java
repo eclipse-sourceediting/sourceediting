@@ -17,7 +17,7 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
  * Formats entities which really need no formatting. They are just like text
  * nodes.
  */
-public class EntityReferenceFormatter extends NodeFormatter {
+class NoMoveFormatter extends NodeFormatter {
 	protected void formatIndentationBeforeNode(IDOMNode node, IStructuredFormatContraints formatContraints) {
 		// node nothing
 	}

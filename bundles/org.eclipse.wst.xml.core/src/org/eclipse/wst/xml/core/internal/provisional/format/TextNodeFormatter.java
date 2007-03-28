@@ -141,11 +141,11 @@ public class TextNodeFormatter extends NodeFormatter {
 				// handle first line specially to check for allowWhitespace
 				if (vectorSize > 0) {
 					// determines whether or not to allow whitespace if there
-					// is an entity before it
+					// is an entity or cdata before it
 					boolean allowWhitespace = true;
 					if (!Character.isWhitespace(nodeText.charAt(0))) {
 						Node previousSibling = node.getPreviousSibling();
-						if (previousSibling != null && previousSibling.getNodeType() == Node.ENTITY_REFERENCE_NODE)
+						if (previousSibling != null && (previousSibling.getNodeType() == Node.ENTITY_REFERENCE_NODE || previousSibling.getNodeType() == Node.CDATA_SECTION_NODE))
 							allowWhitespace = false;
 					}
 					String theString = (String) vector.get(0);
@@ -207,7 +207,7 @@ public class TextNodeFormatter extends NodeFormatter {
 								reflowedText = StringUtils.appendIfNotEndWith(reflowedText, nodeIndentation);
 							}
 						}
-						else if (nextSibling.getNodeType() == Node.ENTITY_REFERENCE_NODE) {
+						else if (nextSibling.getNodeType() == Node.ENTITY_REFERENCE_NODE || nextSibling.getNodeType() == Node.CDATA_SECTION_NODE) {
 							int textLength = nodeText.length();
 							if (textLength > 0 && Character.isWhitespace(nodeText.charAt(textLength - 1))) {
 								reflowedText = StringUtils.appendIfNotEndWith(reflowedText, lineDelimiter);
