@@ -26,10 +26,8 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jst.jsp.core.internal.provisional.JSP11Namespace;
-import org.eclipse.jst.jsp.core.internal.provisional.JSP20Namespace;
 import org.eclipse.jst.jsp.core.taglib.IJarRecord;
 import org.eclipse.jst.jsp.core.taglib.ITLDRecord;
-import org.eclipse.jst.jsp.core.taglib.ITagDirRecord;
 import org.eclipse.jst.jsp.core.taglib.ITaglibDescriptor;
 import org.eclipse.jst.jsp.core.taglib.ITaglibRecord;
 import org.eclipse.jst.jsp.core.taglib.IURLRecord;
@@ -181,6 +179,8 @@ public class JSPTaglibDirectiveContentAssistProcessor extends JSPDummyContentAss
 							}
 							break;
 						}
+						case ITaglibRecord.TAGDIR :
+							break;
 					}
 				}
 				/*
@@ -214,68 +214,7 @@ public class JSPTaglibDirectiveContentAssistProcessor extends JSPDummyContentAss
 						catch (Exception e) {
 							Logger.logException(e);
 						}
-						if (image == null) {
-							image = XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_ATTRIBUTE);
-						}
-						CustomCompletionProposal proposal = new CustomCompletionProposal("\"" + uri + "\"", start, length, uri.length() + 2, image, uri, null, additionalInfo, IRelevanceConstants.R_NONE);
-						contentAssistRequest.addProposal(proposal);
-					}
-				}
-			}
-			else if (attributeName.equals(JSP20Namespace.ATTR_NAME_TAGDIR)) {
-				ITaglibRecord[] availableTaglibRecords = TaglibIndex.getAvailableTaglibRecords(basePath);
-				/*
-				 * a simple enough way to remove duplicates (resolution at
-				 * runtime would be nondeterministic anyway)
-				 */
-				Map uriToRecords = new HashMap();
-				for (int taglibRecordNumber = 0; taglibRecordNumber < availableTaglibRecords.length; taglibRecordNumber++) {
-					ITaglibRecord taglibRecord = availableTaglibRecords[taglibRecordNumber];
-					String uri = null;
-					if (taglibRecord.getRecordType() == ITaglibRecord.TAGDIR) {
-						IPath path = ((ITagDirRecord) taglibRecord).getPath();
-						IPath localContextRoot = TaglibIndex.getContextRoot(basePath);
-						if (localContextRoot.isPrefixOf(path)) {
-							uri = IPath.SEPARATOR + path.removeFirstSegments(localContextRoot.segmentCount()).toString();
-							uriToRecords.put(uri, taglibRecord);
-						}
-					}
-				}
-				/*
-				 * use the records and their descriptors to construct
-				 * proposals
-				 */
-				Object[] uris = uriToRecords.keySet().toArray();
-				for (int uriNumber = 0; uriNumber < uris.length; uriNumber++) {
-					String uri = uris[uriNumber].toString();
-					ITaglibRecord taglibRecord = (ITaglibRecord) uriToRecords.get(uri);
-					ITaglibDescriptor descriptor = (taglibRecord).getDescriptor();
-					if (uri != null && uri.length() > 0 && (matchString.length() == 0 || uri.toLowerCase(Locale.US).startsWith(lowerCaseMatch))) {
-						String url = getSmallImageURL(taglibRecord);
-						ImageDescriptor imageDescriptor = null;
-						if (url != null) {
-							imageDescriptor = JSPUIPlugin.getInstance().getImageRegistry().getDescriptor(url);
-						}
-						if (imageDescriptor == null && url != null) {
-							URL imageURL;
-							try {
-								imageURL = new URL(url);
-								imageDescriptor = ImageDescriptor.createFromURL(imageURL);
-								JSPUIPlugin.getInstance().getImageRegistry().put(url, imageDescriptor);
-							}
-							catch (MalformedURLException e) {
-								Logger.logException(e);
-							}
-						}
-						String additionalInfo = descriptor.getDescription() + "<br/>" + descriptor.getTlibVersion();
-						Image image = null;
-						try {
-							image = JSPUIPlugin.getInstance().getImageRegistry().get(url);
-						}
-						catch (Exception e) {
-							Logger.logException(e);
-						}
-						if (image == null) {
+						if(image == null) {
 							image = XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_ATTRIBUTE);
 						}
 						CustomCompletionProposal proposal = new CustomCompletionProposal("\"" + uri + "\"", start, length, uri.length() + 2, image, uri, null, additionalInfo, IRelevanceConstants.R_NONE);
@@ -285,63 +224,31 @@ public class JSPTaglibDirectiveContentAssistProcessor extends JSPDummyContentAss
 			}
 			else if (attributeName.equals(JSP11Namespace.ATTR_NAME_PREFIX)) {
 				Node uriAttr = node.getAttributes().getNamedItem(JSP11Namespace.ATTR_NAME_URI);
-				String uri = null;
-				if (uriAttr != null) {
-					uri = uriAttr.getNodeValue();
-					ITaglibRecord[] availableTaglibRecords = TaglibIndex.getAvailableTaglibRecords(basePath);
-					Map prefixMap = new HashMap();
-					for (int taglibrecordNumber = 0; taglibrecordNumber < availableTaglibRecords.length; taglibrecordNumber++) {
-						ITaglibDescriptor descriptor = availableTaglibRecords[taglibrecordNumber].getDescriptor();
-						if (descriptor != null && descriptor.getURI() != null && descriptor.getURI().toLowerCase(Locale.US).equals(uri.toLowerCase(Locale.US))) {
-							String shortName = descriptor.getShortName().trim();
-							if (shortName.length() > 0) {
-								boolean valid = true;
-								for (int character = 0; character < shortName.length(); character++) {
-									valid = valid && !Character.isWhitespace(shortName.charAt(character));
-								}
-								if (valid) {
-									prefixMap.put(shortName, descriptor);
-								}
+				String uri = uriAttr.getNodeValue();
+				ITaglibRecord[] availableTaglibRecords = TaglibIndex.getAvailableTaglibRecords(basePath);
+				Map prefixMap = new HashMap();
+				for (int taglibrecordNumber = 0; taglibrecordNumber < availableTaglibRecords.length; taglibrecordNumber++) {
+					ITaglibDescriptor descriptor = availableTaglibRecords[taglibrecordNumber].getDescriptor();
+					if (descriptor != null && descriptor.getURI().toLowerCase(Locale.US).equals(uri.toLowerCase(Locale.US))) {
+						String shortName = descriptor.getShortName().trim();
+						if (shortName.length() > 0) {
+							boolean valid = true;
+							for (int character = 0; character < shortName.length(); character++) {
+								valid = valid && !Character.isWhitespace(shortName.charAt(character));
+							}
+							if (valid) {
+								prefixMap.put(shortName, descriptor);
 							}
 						}
-					}
-					Object prefixes[] = prefixMap.keySet().toArray();
-					for (int j = 0; j < prefixes.length; j++) {
-						String prefix = (String) prefixes[j];
-						ITaglibDescriptor descriptor = (ITaglibDescriptor) prefixMap.get(prefix);
-						Image image = XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_ATTRIBUTE);
-						CustomCompletionProposal proposal = new CustomCompletionProposal("\"" + prefix + "\"", start, length, prefix.length() + 2, image, prefix, null, descriptor.getDescription(), IRelevanceConstants.R_NONE);
-						contentAssistRequest.addProposal(proposal);
 					}
 				}
-				else {
-					Node dirAttr = node.getAttributes().getNamedItem(JSP20Namespace.ATTR_NAME_TAGDIR);
-					if (dirAttr != null) {
-						String dir = dirAttr.getNodeValue();
-						if (dir != null) {
-							ITaglibRecord record = TaglibIndex.resolve(basePath.toString(), dir, false);
-							if (record != null) {
-								ITaglibDescriptor descriptor = record.getDescriptor();
-								if (descriptor != null) {
-									String shortName = descriptor.getShortName();
-
-									Image image = XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_ATTRIBUTE);
-									CustomCompletionProposal proposal = new CustomCompletionProposal("\"" + shortName + "\"", start, length, shortName.length() + 2, image, shortName, null, descriptor.getDescription(), IRelevanceConstants.R_NONE);
-									contentAssistRequest.addProposal(proposal);
-								}
-								else {
-									if (dir.startsWith("/WEB-INF/")) {
-										dir = dir.substring(9);
-									}
-									String prefix = StringUtils.replace(dir, "/", "-");
-
-									Image image = XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_ATTRIBUTE);
-									CustomCompletionProposal proposal = new CustomCompletionProposal("\"" + prefix + "\"", start, length, prefix.length() + 2, image, prefix, null, descriptor.getDescription(), IRelevanceConstants.R_NONE);
-									contentAssistRequest.addProposal(proposal);
-								}
-							}
-						}
-					}
+				Object prefixes[] = prefixMap.keySet().toArray();
+				for (int j = 0; j < prefixes.length; j++) {
+					String prefix = (String) prefixes[j];
+					ITaglibDescriptor descriptor = (ITaglibDescriptor) prefixMap.get(prefix);
+					Image image = XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_ATTRIBUTE);
+					CustomCompletionProposal proposal = new CustomCompletionProposal("\"" + prefix + "\"", start, length, prefix.length() + 2, image, prefix, null, descriptor.getDescription(), IRelevanceConstants.R_NONE);
+					contentAssistRequest.addProposal(proposal);
 				}
 			}
 		}
