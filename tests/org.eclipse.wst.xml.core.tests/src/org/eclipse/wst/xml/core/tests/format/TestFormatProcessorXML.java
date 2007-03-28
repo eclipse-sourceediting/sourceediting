@@ -219,4 +219,10 @@ public class TestFormatProcessorXML extends TestCase {
 		((StructuredFormatPreferencesXML) formatPreferences).setPreservePCDATAContent(false);
 		formatAndAssertEquals("testfiles/xml/xml-preservepcdata.xml", "testfiles/xml/xml-preservepcdata-no-fmt.xml", false);
 	}
+
+	public void testPreserveCDATAFormat() throws UnsupportedEncodingException, IOException, CoreException {
+		// BUG161330
+		formatAndAssertEquals("testfiles/xml/usecdata.xml", "testfiles/xml/usecdata-fmt.xml");
+		formatAndAssertEquals("testfiles/xml/usecdata2.xml", "testfiles/xml/usecdata2-fmt.xml");
+	}
 }
