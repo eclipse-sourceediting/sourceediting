@@ -8,6 +8,8 @@ Bundle-Activator: org.eclipse.wst.html.core.tests.HTMLCoreTestsPlugin
 Bundle-Vendor: %Bundle-Vendor.0
 Bundle-Localization: plugin
 Export-Package: org.eclipse.wst.html.core.tests,
+ org.eclipse.wst.html.core.tests.format,
+ org.eclipse.wst.html.core.tests.format.testfiles.html,
  org.eclipse.wst.html.core.tests.misc,
  org.eclipse.wst.html.core.tests.model,
  org.eclipse.wst.html.core.tests.parser,
