@@ -20,7 +20,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.content.IContentDescription;
+import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.jdt.debug.core.JDIDebugModel;
 import org.eclipse.jface.text.BadLocationException;
@@ -41,7 +44,7 @@ import org.eclipse.wst.sse.ui.internal.provisional.extensions.breakpoint.IBreakp
  * Source JSP page
  */
 public class JavaStratumBreakpointProvider implements IBreakpointProvider, IExecutableExtension {
-	private String fClassPattern = null;
+	private Object fData = null;
 
 	public IStatus addBreakpoint(IDocument document, IEditorInput input, int editorLineNumber, int offset) throws CoreException {
 		// check if there is a valid position to set breakpoint
@@ -50,7 +53,7 @@ public class JavaStratumBreakpointProvider implements IBreakpointProvider, IExec
 		if (pos >= 0) {
 			IResource res = getResourceFromInput(input);
 			if (res != null) {
-				String path = null; //res.getName();// res.getFullPath().removeFirstSegments(2).toString();
+				String path = null;
 				IBreakpoint point = JDIDebugModel.createStratumBreakpoint(res, "JSP", res.getName(), path, getClassPattern(res), editorLineNumber, pos, pos, 0, true, null); //$NON-NLS-1$
 				if (point == null) {
 					status = new Status(IStatus.ERROR, JSPUIPlugin.ID, IStatus.ERROR, "unsupported input type", null); //$NON-NLS-1$
@@ -85,15 +88,48 @@ public class JavaStratumBreakpointProvider implements IBreakpointProvider, IExec
 		if (resource != null) {
 			String shortName = resource.getName();
 			String extension = resource.getFileExtension();
-			if (extension != null && extension.length() > shortName.length() - 1) {
+			if (extension != null && extension.length() < shortName.length()) {
 				shortName = shortName.substring(0, shortName.length() - extension.length() - 1);
 			}
-			/*
-			 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=154475
-			 */
-			return fClassPattern + ",_" + shortName;
+			if (fData instanceof String && fData.toString().length() > 0) {
+				/*
+				 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=154475
+				 */
+				return fData + ",_" + shortName;
+			}
+			else if (fData instanceof Map && resource.isAccessible()) {
+				IContentType[] types = Platform.getContentTypeManager().findContentTypesFor(resource.getName());
+				if (types.length == 0) {
+					IContentDescription d = null;
+					try {
+						// optimized description lookup, might not succeed
+						d = ((IFile) resource).getContentDescription();
+						if (d != null) {
+							types = new IContentType[]{d.getContentType()};
+						}
+					}
+					catch (CoreException e) {
+						/*
+						 * should not be possible given the accessible and
+						 * file type check above
+						 */
+					}
+				}
+				if (types == null) {
+					types = Platform.getContentTypeManager().findContentTypesFor(resource.getName());
+				}
+				StringBuffer patternBuffer = new StringBuffer("_" + shortName);
+				for (int i = 0; i < types.length; i++) {
+					Object pattern = ((Map) fData).get(types[i].getId());
+					if (pattern != null) {
+						patternBuffer.append(","); //$NON-NLS-1$
+						patternBuffer.append(pattern);
+					}
+				}
+				return patternBuffer.toString();
+			}
 		}
-		return fClassPattern;
+		return "*jsp";
 	}
 
 	public IResource getResource(IEditorInput input) {
@@ -169,11 +205,7 @@ public class JavaStratumBreakpointProvider implements IBreakpointProvider, IExec
 	 *      java.lang.String, java.lang.Object)
 	 */
 	public void setInitializationData(IConfigurationElement config, String propertyName, Object data) throws CoreException {
-		if (data != null) {
-			if (data instanceof String && data.toString().length() > 0) {
-				fClassPattern = (String) data;
-			}
-		}
+		fData = data;
 	}
 
 	public void setSourceEditingTextTools(ISourceEditingTextTools tools) {
