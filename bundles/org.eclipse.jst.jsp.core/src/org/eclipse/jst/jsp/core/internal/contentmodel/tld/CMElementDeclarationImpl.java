@@ -34,55 +34,63 @@ public class CMElementDeclarationImpl implements TLDElementDeclaration {
 	// (empty|JSP|tagdependant|scriptless) - optional, defaults to JSP
 	private String bodycontent = JSP11TLDNames.CONTENT_JSP;
 
-	/** 
+	/**
 	 * since JSP 1.2
 	 * 
 	 * Usage information
 	 */
 	private String description;
-	
-	/** 
+
+	/**
 	 * since JSP 1.2
 	 */
 	private String displayName;
 
-	/** 
-	 * since JSP 2.0
-	 */
-	private String fExample;
-
 	private CMDocument fOwnerDocument;
-	
+
 	private String fPath = null;
 
 	private List fTagExtensions = new ArrayList(0);
-	/** 
+	/**
 	 * since JSP 1.2
 	 */
 	private String largeIcon;
-	
-	
+
+
 	private int maxOccur = -1;
 	private int minOccur = 0;
 
 	// required tag name
 	private String nodeName = null;
-	
-	/** 
+
+	/**
 	 * since JSP 1.2
 	 */
 	private String smallIcon;
-	
+
 	// tag handler class - required
 	private String tagclass = null;
-	
-	// tag extra info class (subclass of javax.servlet.jsp.TagExtraInfo) - optional
+
+	// tag extra info class (subclass of javax.servlet.jsp.TagExtraInfo) -
+	// optional
 	private String teiclass = null;
 
-	/** 
+	/**
 	 * since JSP 1.2
 	 */
 	private List variables;
+
+	/**
+	 * since JSP 2.0
+	 */
+	private String fExample;
+	private String fImport;
+	private String fScriptingLanguage;
+	private String fDynamicAttributes;
+	private String fIsELIgnored;
+	private String fPageEncoding;
+
+	private String fLocationString;
 
 	/**
 	 * CMElementDeclarationImpl constructor comment.
@@ -94,8 +102,9 @@ public class CMElementDeclarationImpl implements TLDElementDeclaration {
 
 	/**
 	 * getAttributes method
+	 * 
 	 * @return CMNamedNodeMap
-	 *
+	 * 
 	 * Returns CMNamedNodeMap of AttributeDeclaration
 	 */
 	public CMNamedNodeMap getAttributes() {
@@ -112,10 +121,11 @@ public class CMElementDeclarationImpl implements TLDElementDeclaration {
 
 	/**
 	 * getCMContent method
+	 * 
 	 * @return CMContent
-	 *
-	 * Returns the root node of this element's content model.
-	 * This can be an CMElementDeclaration or a CMGroup
+	 * 
+	 * Returns the root node of this element's content model. This can be an
+	 * CMElementDeclaration or a CMGroup
 	 */
 	public CMContent getContent() {
 		return null;
@@ -123,15 +133,15 @@ public class CMElementDeclarationImpl implements TLDElementDeclaration {
 
 	/**
 	 * getContentType method
+	 * 
 	 * @return int
-	 *
-	 * Returns one of :
-	 * ANY, EMPTY, ELEMENT, MIXED, PCDATA, CDATA.
+	 * 
+	 * Returns one of : ANY, EMPTY, ELEMENT, MIXED, PCDATA, CDATA.
 	 */
 	public int getContentType() {
-		if (bodycontent.equals(JSP11TLDNames.CONTENT_EMPTY))
+		if (getBodycontent().equals(JSP11TLDNames.CONTENT_EMPTY))
 			return EMPTY;
-		if (bodycontent.equals(JSP11TLDNames.CONTENT_TAGDEPENDENT))
+		if (getBodycontent().equals(JSP11TLDNames.CONTENT_TAGDEPENDENT))
 			return PCDATA;
 		else
 			// JSP
@@ -140,6 +150,7 @@ public class CMElementDeclarationImpl implements TLDElementDeclaration {
 
 	/**
 	 * getDataType method
+	 * 
 	 * @return java.lang.String
 	 */
 	public CMDataType getDataType() {
@@ -148,6 +159,7 @@ public class CMElementDeclarationImpl implements TLDElementDeclaration {
 
 	/**
 	 * Gets the description.
+	 * 
 	 * @return Returns a String
 	 */
 	public String getDescription() {
@@ -156,6 +168,7 @@ public class CMElementDeclarationImpl implements TLDElementDeclaration {
 
 	/**
 	 * Gets the displayName.
+	 * 
 	 * @return Returns a String
 	 */
 	public String getDisplayName() {
@@ -164,17 +177,20 @@ public class CMElementDeclarationImpl implements TLDElementDeclaration {
 
 	/**
 	 * getElementName method
+	 * 
 	 * @return java.lang.String
 	 */
 	public String getElementName() {
 		return getNodeName();
 	}
+
 	/**
 	 * @return Returns the example.
 	 */
 	public String getExample() {
 		return fExample;
 	}
+
 	/**
 	 * @return Returns the extensions.
 	 */
@@ -192,6 +208,7 @@ public class CMElementDeclarationImpl implements TLDElementDeclaration {
 
 	/**
 	 * Gets the largeIcon.
+	 * 
 	 * @return Returns a String
 	 */
 	public String getLargeIcon() {
@@ -200,8 +217,9 @@ public class CMElementDeclarationImpl implements TLDElementDeclaration {
 
 	/**
 	 * getLocalElements method
+	 * 
 	 * @return CMNamedNodeMap
-	 *
+	 * 
 	 * Returns a list of locally defined elements.
 	 */
 	public CMNamedNodeMap getLocalElements() {
@@ -210,8 +228,9 @@ public class CMElementDeclarationImpl implements TLDElementDeclaration {
 
 	/**
 	 * getMaxOccur method
+	 * 
 	 * @return int
-	 *
+	 * 
 	 * If -1, it's UNBOUNDED.
 	 */
 	public int getMaxOccur() {
@@ -220,10 +239,10 @@ public class CMElementDeclarationImpl implements TLDElementDeclaration {
 
 	/**
 	 * getMinOccur method
+	 * 
 	 * @return int
-	 *
-	 * If 0, it's OPTIONAL.
-	 * If 1, it's REQUIRED.
+	 * 
+	 * If 0, it's OPTIONAL. If 1, it's REQUIRED.
 	 */
 	public int getMinOccur() {
 		return minOccur;
@@ -231,6 +250,7 @@ public class CMElementDeclarationImpl implements TLDElementDeclaration {
 
 	/**
 	 * getNodeName method
+	 * 
 	 * @return java.lang.String
 	 */
 	public String getNodeName() {
@@ -239,10 +259,11 @@ public class CMElementDeclarationImpl implements TLDElementDeclaration {
 
 	/**
 	 * getNodeType method
+	 * 
 	 * @return int
-	 *
+	 * 
 	 * Returns one of :
-	 *
+	 * 
 	 */
 	public int getNodeType() {
 		return CMNode.ELEMENT_DECLARATION;
@@ -254,6 +275,7 @@ public class CMElementDeclarationImpl implements TLDElementDeclaration {
 	public CMDocument getOwnerDocument() {
 		return fOwnerDocument;
 	}
+
 	/**
 	 * @return Returns the path.
 	 */
@@ -263,21 +285,24 @@ public class CMElementDeclarationImpl implements TLDElementDeclaration {
 
 	/**
 	 * getProperty method
+	 * 
 	 * @return java.lang.Object
-	 *
+	 * 
 	 * Returns the object property described by the propertyName
-	 *
+	 * 
 	 */
 	public Object getProperty(String propertyName) {
 		if (propertyName != null && propertyName.equals("tagInfo")) { //$NON-NLS-1$
-			return getTagInfo();	// return tag info
-			// bug88336 no need to restore markers 
-			// return StringUtils.restoreMarkers(getTagInfo()); // return tag description
+			return getTagInfo(); // return tag info
+			// bug88336 no need to restore markers
+			// return StringUtils.restoreMarkers(getTagInfo()); // return tag
+			// description
 		}
-		else if (propertyName != null && propertyName.equals("description")) {	//$NON-NLS-1$
+		else if (propertyName != null && propertyName.equals("description")) { //$NON-NLS-1$
 			return getDescription();
-			// bug88336 no need to restore markers 
-			// return StringUtils.restoreMarkers(getDescription()); // return tag description
+			// bug88336 no need to restore markers
+			// return StringUtils.restoreMarkers(getDescription()); // return
+			// tag description
 		}
 		else if (propertyName.equals(TLDDocument.CM_KIND)) {
 			return TLDDocument.JSP_TLD;
@@ -290,15 +315,17 @@ public class CMElementDeclarationImpl implements TLDElementDeclaration {
 
 	/**
 	 * Gets the smallIcon.
+	 * 
 	 * @return Returns a String
 	 */
 	public String getSmallIcon() {
 		return smallIcon;
 	}
-	
+
 	/**
-	 * Returns the XPath of this element
-	 * (currently just returns the node name)
+	 * Returns the XPath of this element (currently just returns the node
+	 * name)
+	 * 
 	 * @return
 	 */
 	private String getSpec() {
@@ -312,18 +339,19 @@ public class CMElementDeclarationImpl implements TLDElementDeclaration {
 	public String getTagclass() {
 		return tagclass;
 	}
-	
+
 	/**
 	 * Get the taginfo for this current element
+	 * 
 	 * @return String taginfo if it exists, null otherwise
 	 */
 	private String getTagInfo() {
 		if (getOwnerDocument().supports("annotationMap")) { //$NON-NLS-1$
-			AnnotationMap map = (AnnotationMap)getOwnerDocument().getProperty("annotationMap"); //$NON-NLS-1$
+			AnnotationMap map = (AnnotationMap) getOwnerDocument().getProperty("annotationMap"); //$NON-NLS-1$
 			String spec = getSpec();
 			String result = map.getProperty(spec, "tagInfo"); //$NON-NLS-1$
 			return result;
-			// bug88336 no need to restore markers 
+			// bug88336 no need to restore markers
 			// return StringUtils.restoreMarkers(result); // return tag info
 		}
 		return null;
@@ -339,17 +367,20 @@ public class CMElementDeclarationImpl implements TLDElementDeclaration {
 
 	/**
 	 * Gets the variables.
+	 * 
 	 * @return Returns a List
 	 */
 	public List getVariables() {
-		if (variables == null)
+		if (variables == null) {
 			variables = new ArrayList();
+		}
 		return variables;
 	}
 
 	/**
 	 * 
-	 * @param newBodycontent java.lang.String
+	 * @param newBodycontent
+	 *            java.lang.String
 	 */
 	public void setBodycontent(String newBodycontent) {
 		bodycontent = newBodycontent;
@@ -357,7 +388,9 @@ public class CMElementDeclarationImpl implements TLDElementDeclaration {
 
 	/**
 	 * Sets the description.
-	 * @param description The description to set
+	 * 
+	 * @param description
+	 *            The description to set
 	 */
 	public void setDescription(String description) {
 		this.description = description;
@@ -365,13 +398,17 @@ public class CMElementDeclarationImpl implements TLDElementDeclaration {
 
 	/**
 	 * Sets the displayName.
-	 * @param displayName The displayName to set
+	 * 
+	 * @param displayName
+	 *            The displayName to set
 	 */
 	public void setDisplayName(String displayName) {
 		this.displayName = displayName;
 	}
+
 	/**
-	 * @param example The example to set.
+	 * @param example
+	 *            The example to set.
 	 */
 	public void setExample(String example) {
 		fExample = example;
@@ -379,7 +416,9 @@ public class CMElementDeclarationImpl implements TLDElementDeclaration {
 
 	/**
 	 * Sets the largeIcon.
-	 * @param largeIcon The largeIcon to set
+	 * 
+	 * @param largeIcon
+	 *            The largeIcon to set
 	 */
 	public void setLargeIcon(String largeIcon) {
 		this.largeIcon = largeIcon;
@@ -388,8 +427,10 @@ public class CMElementDeclarationImpl implements TLDElementDeclaration {
 	public void setNodeName(String string) {
 		nodeName = string;
 	}
+
 	/**
-	 * @param path The path to set.
+	 * @param path
+	 *            The path to set.
 	 */
 	public void setPath(String path) {
 		fPath = path;
@@ -397,7 +438,9 @@ public class CMElementDeclarationImpl implements TLDElementDeclaration {
 
 	/**
 	 * Sets the smallIcon.
-	 * @param smallIcon The smallIcon to set
+	 * 
+	 * @param smallIcon
+	 *            The smallIcon to set
 	 */
 	public void setSmallIcon(String smallIcon) {
 		this.smallIcon = smallIcon;
@@ -405,7 +448,8 @@ public class CMElementDeclarationImpl implements TLDElementDeclaration {
 
 	/**
 	 * 
-	 * @param newTagclass java.lang.String
+	 * @param newTagclass
+	 *            java.lang.String
 	 */
 	public void setTagclass(String newTagclass) {
 		tagclass = newTagclass;
@@ -413,7 +457,8 @@ public class CMElementDeclarationImpl implements TLDElementDeclaration {
 
 	/**
 	 * 
-	 * @param newTeiclass java.lang.String
+	 * @param newTeiclass
+	 *            java.lang.String
 	 */
 	public void setTeiclass(String newTeiclass) {
 		teiclass = newTeiclass;
@@ -421,7 +466,9 @@ public class CMElementDeclarationImpl implements TLDElementDeclaration {
 
 	/**
 	 * Sets the variables.
-	 * @param variables The variables to set
+	 * 
+	 * @param variables
+	 *            The variables to set
 	 */
 	public void setVariables(List variables) {
 		this.variables = variables;
@@ -457,5 +504,55 @@ public class CMElementDeclarationImpl implements TLDElementDeclaration {
 			buffer.append("\n\t\t" + StringUtils.replace(getVariables().get(i).toString(), "\n", "\n\t\t")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
 		return buffer.toString();
+	}
+
+	public String getImport() {
+		return fImport;
+	}
+
+	public String getScriptingLanguage() {
+		return fScriptingLanguage;
+	}
+
+	public String getDynamicAttributes() {
+		return fDynamicAttributes;
+	}
+
+	public void setImport(String import1) {
+		fImport = import1;
+	}
+
+	public void setScriptingLanguage(String scriptingLanguage) {
+		fScriptingLanguage = scriptingLanguage;
+	}
+
+	public void setDynamicAttributes(String dynamicAttributes) {
+		fDynamicAttributes = dynamicAttributes;
+	}
+
+	public String getIsELIgnored() {
+		return fIsELIgnored;
+	}
+
+	public String getPageEncoding() {
+		return fPageEncoding;
+	}
+
+	public void setIsELIgnored(String isELIgnored) {
+		fIsELIgnored = isELIgnored;
+	}
+
+	public void setPageEncoding(String pageEncoding) {
+		fPageEncoding = pageEncoding;
+	}
+
+	public String getLocationString() {
+		if (fLocationString == null)
+			return ((CMDocumentImpl) fOwnerDocument).getLocationString();
+		return fLocationString;
+	}
+
+	public void setLocationString(String url) {
+		fLocationString = url;
 	}
 }

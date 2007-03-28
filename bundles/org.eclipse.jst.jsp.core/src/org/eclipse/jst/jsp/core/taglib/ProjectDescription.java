@@ -73,6 +73,7 @@ import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.JSP12TLDNa
 import org.eclipse.jst.jsp.core.internal.util.DocumentProvider;
 import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
 import org.eclipse.wst.sse.core.internal.util.JarUtilities;
+import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
 import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalog;
 import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalogEntry;
@@ -108,12 +109,12 @@ class ProjectDescription {
 						updateJAR(resource, delta.getKind());
 					}
 				}
-				else if (resource.getName().endsWith(".tag") || resource.getName().endsWith(".tagx")) { //$NON-NLS-1$ //$NON-NLS-2$
+				else if (resource.getFileExtension().equals("tag") || resource.getFileExtension().equals("tagx")) { //$NON-NLS-1$ //$NON-NLS-2$
 					if (delta.getKind() == IResourceDelta.REMOVED) {
-						removeTagDir(resource);
+						removeTag(resource);
 					}
 					else {
-						updateTagDir(resource, delta.getKind());
+						updateTag(resource, delta.getKind());
 					}
 				}
 				else if (resource.getName().equals(WEB_XML) && resource.getParent().getName().equals(WEB_INF)) {
@@ -131,6 +132,7 @@ class ProjectDescription {
 
 	class Indexer implements IResourceProxyVisitor {
 		public boolean visit(IResourceProxy proxy) throws CoreException {
+			boolean visitMembers = true;
 			if (proxy.getType() == IResource.FILE) {
 				if (proxy.getName().endsWith(".tld")) { //$NON-NLS-1$
 					updateTLD(proxy.requestResource(), ITaglibIndexDelta.ADDED);
@@ -139,14 +141,17 @@ class ProjectDescription {
 					updateJAR(proxy.requestResource(), ITaglibIndexDelta.ADDED);
 				}
 				else if (proxy.getName().endsWith(".tag") || proxy.getName().endsWith(".tagx")) { //$NON-NLS-1$ //$NON-NLS-2$
-					updateTagDir(proxy.requestResource(), ITaglibIndexDelta.ADDED);
+					updateTagDir(proxy.requestResource().getParent(), ITaglibIndexDelta.ADDED);
+					// any folder with these files will create a record for
+					// that folder in one pass
+					visitMembers = false;
 				}
 				else if (proxy.getName().equals(WEB_XML) && proxy.requestResource().getParent().getName().equals(WEB_INF)) {
 					updateWebXML(proxy.requestResource(), ITaglibIndexDelta.ADDED);
 				}
 			}
 			String name = proxy.getName();
-			return name.length() != 0 && name.charAt(0) != '.';
+			return name.length() != 0 && name.charAt(0) != '.' && visitMembers;
 		}
 	}
 
@@ -218,8 +223,7 @@ class ProjectDescription {
 
 	static class TagDirRecord implements ITagDirRecord {
 		TaglibInfo info;
-		IPath location;
-		String shortName;
+		IPath path;
 		// a List holding Strings of .tag and .tagx filenames relative to the
 		// tagdir's location
 		List tags = new ArrayList(0);
@@ -227,18 +231,20 @@ class ProjectDescription {
 		public boolean equals(Object obj) {
 			if (!(obj instanceof TagDirRecord))
 				return false;
-			return ((TagDirRecord) obj).location.equals(location) && ((TagDirRecord) obj).info.equals(info);
+			return ((TagDirRecord) obj).path.equals(path) && ((TagDirRecord) obj).info.equals(info);
 		}
 
 		public ITaglibDescriptor getDescriptor() {
-			return info != null ? info : new TaglibInfo();
+			return info != null ? info : (info = new TaglibInfo());
 		}
 
-		/**
-		 * @return Returns the location.
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see org.eclipse.jst.jsp.core.taglib.ITagDirRecord#getPath()
 		 */
-		public IPath getLocation() {
-			return location;
+		public IPath getPath() {
+			return path;
 		}
 
 		public int getRecordType() {
@@ -246,21 +252,14 @@ class ProjectDescription {
 		}
 
 		/**
-		 * @return Returns the shortName.
-		 */
-		public String getShortName() {
-			return shortName;
-		}
-
-		/**
 		 * @return Returns the tags.
 		 */
-		public String[] getTags() {
+		public String[] getTagFilenames() {
 			return (String[]) tags.toArray(new String[tags.size()]);
 		}
 
 		public String toString() {
-			return "TagdirRecord: " + location + " <-> " + shortName; //$NON-NLS-1$ //$NON-NLS-2$
+			return "TagdirRecord: " + path + " <-> " + info.shortName; //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 
@@ -757,7 +756,15 @@ class ProjectDescription {
 	 * @return
 	 */
 	private JarRecord createJARRecord(IResource jar) {
-		return createJARRecord(jar.getLocation().toString());
+		IPath location = jar.getLocation();
+		JarRecord jarRecord = null;
+		if (location != null) {
+			jarRecord = createJARRecord(location.toString());
+		}
+		else {
+			jarRecord = createJARRecord(jar.getLocationURI().toString());
+		}
+		return jarRecord;
 	}
 
 	private JarRecord createJARRecord(String fileLocation) {
@@ -771,28 +778,51 @@ class ProjectDescription {
 	/**
 	 * @return
 	 */
-	TagDirRecord createTagdirRecord(IResource tagFile) {
-		IContainer tagdir = tagFile.getParent();
-		String tagdirLocation = tagdir.getFullPath().toString();
-		TagDirRecord record = (TagDirRecord) fTagDirReferences.get(tagdirLocation);
-		if (record == null) {
-			record = new TagDirRecord();
-			record.location = tagdir.getFullPath();
-			// JSP 2.0 section 8.4.3
-			if (tagdir.getName().equals("tags")) //$NON-NLS-1$
-				record.shortName = "tags"; //$NON-NLS-1$
-			else {
-				IPath tagdirPath = tagdir.getFullPath();
-				String[] segments = tagdirPath.segments();
-				for (int i = 1; record.shortName == null && i < segments.length; i++) {
-					if (segments[i - 1].equals("WEB-INF") && segments[i].equals("tags")) { //$NON-NLS-1$ //$NON-NLS-2$
-						IPath tagdirLocalPath = tagdirPath.removeFirstSegments(i + 1);
-						record.shortName = tagdirLocalPath.toString().replace('/', '-');
-					}
+	private TagDirRecord createTagdirRecord(IFolder tagdir) {
+		IPath tagdirPath = tagdir.getFullPath();
+		TagDirRecord record = new TagDirRecord();
+		record.path = tagdir.getFullPath();
+		record.info = new TaglibInfo();
+		// 8.4.3
+		if (tagdir.getName().equals("tags")) //$NON-NLS-1$
+			record.info.shortName = "tags"; //$NON-NLS-1$
+		else {
+			boolean determined = false;
+			IPath path = tagdirPath;
+			String[] segments = path.segments();
+			for (int i = 1; i < segments.length; i++) {
+				if (segments[i - 1].equals("WEB-INF") && segments[i].equals("tags")) { //$NON-NLS-1$ //$NON-NLS-2$
+					IPath tagdirLocalPath = path.removeFirstSegments(i + 1);
+					record.info.shortName = StringUtils.replace(tagdirLocalPath.toString(), "/", "-");
+					determined = true;
 				}
 			}
-
+			if (!determined) {
+				record.info.shortName = StringUtils.replace(tagdirPath.toString(), "/", "-");
+			}
 		}
+		// 8.4.3
+		record.info.tlibVersion = "1.0";
+		record.info.description = "";
+		record.info.displayName = "";
+		record.info.smallIcon = "";
+		record.info.largeIcon = "";
+
+		try {
+			IResource[] tagfiles = tagdir.members();
+			for (int i = 0; i < tagfiles.length; i++) {
+				if (tagfiles[i].getType() != IResource.FILE)
+					continue;
+				String extension = tagfiles[i].getFileExtension();
+				if (extension != null && (extension.equals("tag") || extension.equals("tagx"))) {
+					record.tags.add(tagfiles[i].getName());
+				}
+			}
+		}
+		catch (CoreException e) {
+			Logger.logException(e);
+		}
+
 		return record;
 	}
 
@@ -805,7 +835,7 @@ class ProjectDescription {
 		record.path = tld.getFullPath();
 		InputStream contents = null;
 		try {
-			if (tld.getLocation() != null) {
+			if (tld.isAccessible()) {
 				contents = ((IFile) tld).getContents(true);
 				String basePath = tld.getFullPath().toString();
 				TaglibInfo info = extractInfo(basePath, contents);
@@ -1114,33 +1144,19 @@ class ProjectDescription {
 		IJavaElement element = delta.getElement();
 		if (element.getElementType() == IJavaElement.PACKAGE_FRAGMENT_ROOT && ((IPackageFragmentRoot) element).isArchive()) {
 			time0 = System.currentTimeMillis();
-			String libPath = null;
+			if (element.getElementType() == IJavaElement.PACKAGE_FRAGMENT_ROOT && ((IPackageFragmentRoot) element).isExternal()) {
+			}
+			String libLocation = null;
 			int taglibRecordEventKind = -1;
-			if ((delta.getFlags() & IJavaElementDelta.F_ADDED_TO_CLASSPATH) > 0) {
+			if ((delta.getFlags() & IJavaElementDelta.F_ADDED_TO_CLASSPATH) > 0 || (delta.getFlags() & IJavaElementDelta.F_ARCHIVE_CONTENT_CHANGED) > 0 || (delta.getFlags() & IJavaElementDelta.F_REMOVED_FROM_CLASSPATH) > 0) {
 				taglibRecordEventKind = ITaglibIndexDelta.ADDED;
 				IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(element.getPath());
-				if (file.exists())
-					libPath = file.getLocation().toString();
-				else
-					libPath = element.getPath().toString();
-			}
-			else if ((delta.getFlags() & IJavaElementDelta.F_REMOVED_FROM_CLASSPATH) > 0) {
-				taglibRecordEventKind = ITaglibIndexDelta.REMOVED;
-				IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(element.getPath());
 				if (file.getLocation() != null)
-					libPath = file.getLocation().toString();
+					libLocation = file.getLocation().toString();
 				else
-					libPath = element.getPath().toString();
+					libLocation = file.getLocationURI().toString();
 			}
-			else if ((delta.getFlags() & IJavaElementDelta.F_ARCHIVE_CONTENT_CHANGED) > 0) {
-				taglibRecordEventKind = ITaglibIndexDelta.CHANGED;
-				IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(element.getPath());
-				if (file.exists())
-					libPath = file.getLocation().toString();
-				else
-					libPath = element.getPath().toString();
-			}
-			if (libPath != null) {
+			if (libLocation != null) {
 				boolean fragmentisExported = true;
 				try {
 					IClasspathEntry rawClasspathEntry = ((IPackageFragmentRoot) element).getRawClasspathEntry();
@@ -1157,7 +1173,7 @@ class ProjectDescription {
 				catch (JavaModelException e) {
 					Logger.logException("Problem handling build path entry for " + element.getPath(), e); //$NON-NLS-1$
 				}
-				updateClasspathLibrary(libPath, taglibRecordEventKind, fragmentisExported);
+				updateClasspathLibrary(libLocation, taglibRecordEventKind, fragmentisExported);
 			}
 			if (_debugIndexTime)
 				Logger.log(Logger.INFO, "processed build path delta for " + fProject.getName() + "(" + element.getPath() + ") in " + (System.currentTimeMillis() - time0) + "ms"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -1323,10 +1339,22 @@ class ProjectDescription {
 		}
 	}
 
-	void removeTagDir(IResource tagFile) {
-		// IContainer tagdir = tagFile.getParent();
-		// String tagdirLocation = tagdir.getFullPath().toString();
-		// fTagDirReferences.remove(tagdirLocation);
+	void removeTag(IResource resource) {
+		TagDirRecord record = (TagDirRecord) fTagDirReferences.get(resource.getParent().getFullPath().toString());
+		if (record != null) {
+			record.tags.remove(resource.getName());
+			TaglibIndex.getInstance().addDelta(new TaglibIndexDelta(fProject, record, ITaglibIndexDelta.CHANGED));
+		}
+	}
+
+	void removeTagDir(IResource tagdir) {
+		IPath tagdirPath = tagdir.getFullPath();
+		if (_debugIndexCreation)
+			Logger.log(Logger.INFO, "removing record for " + tagdirPath); //$NON-NLS-1$
+		ITaglibRecord record = (ITaglibRecord) fTagDirReferences.remove(tagdirPath.toString());
+		if (record != null) {
+			TaglibIndex.getInstance().addDelta(new TaglibIndexDelta(fProject, record, ITaglibIndexDelta.REMOVED));
+		}
 	}
 
 	void removeTLD(IResource tld) {
@@ -1873,19 +1901,46 @@ class ProjectDescription {
 		}
 	}
 
-	void updateTagDir(IResource tagFile, int deltaKind) {
-		return;
+
+	void updateTag(IResource resource, int kind) {
+		TagDirRecord record = (TagDirRecord) fTagDirReferences.get(resource.getParent().getFullPath().toString());
+		if (record == null) {
+			record = createTagdirRecord((IFolder) resource.getParent());
+			fTagDirReferences.put(resource.getParent().getFullPath().toString(), record);
+			TaglibIndex.getInstance().addDelta(new TaglibIndexDelta(fProject, record, ITaglibIndexDelta.ADDED));
+		}
+		else {
+			if (!record.tags.contains(resource.getName())) {
+				record.tags.add(resource.getName());
+				TaglibIndex.getInstance().addDelta(new TaglibIndexDelta(fProject, record, ITaglibIndexDelta.CHANGED));
+			}
+		}
+	}
+
+	void updateTagDir(IResource tagdirResource, int deltaKind) {
 		/**
-		 * Make sure the tag file is n a WEB-INF/tags folder because of the
-		 * shortname computation requirements
+		 * 8.4.1: tag files are loose files under /WEB-INF/tags
 		 */
-		// if ((tagFile.getType() & IResource.FOLDER) > 0 ||
-		// tagFile.getFullPath().toString().indexOf("WEB-INF/tags") < 0)
-		// return;
-		// TagDirRecord record = createTagdirRecord(tagFile);
-		// if (record != null) {
-		// record.tags.add(tagFile.getName());
-		// }
+		if ((tagdirResource.getType() & IResource.FOLDER) != 0) {
+			if (_debugIndexCreation)
+				Logger.log(Logger.INFO, "creating record for directory " + tagdirResource.getFullPath()); //$NON-NLS-1$
+			TagDirRecord record = (TagDirRecord) fTagDirReferences.get(tagdirResource.getFullPath().toString());
+			if (record == null) {
+				record = createTagdirRecord((IFolder) tagdirResource);
+				fTagDirReferences.put(tagdirResource.getFullPath().toString(), record);
+				TaglibIndex.getInstance().addDelta(new TaglibIndexDelta(fProject, record, deltaKind));
+			}
+			else {
+
+			}
+		}
+		/**
+		 * 8.4.1: tag files can also be packaged in the /META-INF/tags folder
+		 * of a jar in /WEB-INF/lib/ (8.4.2: but must be mentioned in a .tld)
+		 */
+		else {
+			// these tags are merely surfaced when the TLD is modelled
+		}
 	}
 
 	void updateTLD(IResource tld, int deltaKind) {

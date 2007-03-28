@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -48,9 +49,10 @@ import org.eclipse.jst.jsp.core.internal.provisional.JSP12Namespace;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.jst.jsp.core.taglib.IJarRecord;
 import org.eclipse.jst.jsp.core.taglib.ITLDRecord;
+import org.eclipse.jst.jsp.core.taglib.ITagDirRecord;
+import org.eclipse.jst.jsp.core.taglib.ITaglibIndexDelta;
 import org.eclipse.jst.jsp.core.taglib.ITaglibIndexListener;
 import org.eclipse.jst.jsp.core.taglib.ITaglibRecord;
-import org.eclipse.jst.jsp.core.taglib.ITaglibIndexDelta;
 import org.eclipse.jst.jsp.core.taglib.IURLRecord;
 import org.eclipse.jst.jsp.core.taglib.TaglibIndex;
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolverPlugin;
@@ -108,6 +110,13 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 		 * @param anchorStructuredDocumentRegion
 		 */
 		protected void enableTaglibFromURI(String prefix, String uri, IStructuredDocumentRegion anchorStructuredDocumentRegion) {
+			enableTags(prefix, uri, anchorStructuredDocumentRegion);
+			if (_debug) {
+				System.out.println("TLDCMDocumentManager registered a tracker for " + uri + " with prefix " + prefix); //$NON-NLS-2$//$NON-NLS-1$
+			}
+		}
+
+		private void enableTags(String prefix, String uri, IStructuredDocumentRegion anchorStructuredDocumentRegion) {
 			if (prefix == null || uri == null || bannedPrefixes.contains(prefix))
 				return;
 			// Try to load the CMDocument for this URI
@@ -119,9 +128,6 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 				return;
 			}
 			registerTaglib(prefix, uri, anchorStructuredDocumentRegion, tld);
-			if (_debug) {
-				System.out.println("TLDCMDocumentManager registered a tracker for " + uri + " with prefix " + prefix); //$NON-NLS-2$//$NON-NLS-1$
-			}
 		}
 
 		/**
@@ -138,21 +144,8 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 		 * @param uri
 		 * @param taglibStructuredDocumentRegion
 		 */
-		protected void enableTagsInDir(String prefix, String tagdir, IStructuredDocumentRegion taglibStructuredDocumentRegion) {
-			if (prefix == null || tagdir == null || bannedPrefixes.contains(prefix))
-				return;
-			if (_debug) {
-				System.out.println("TLDCMDocumentManager enabling tags from directory" + tagdir + " for prefix " + prefix); //$NON-NLS-2$//$NON-NLS-1$
-			}
-			// Try to load the CMDocument for this URI
-			CMDocument tld = getImplicitCMDocument(tagdir);
-			if (tld == null || !(tld instanceof TLDDocument)) {
-				if (_debug) {
-					System.out.println("TLDCMDocumentManager failed to create a CMDocument for director " + tagdir); //$NON-NLS-1$
-				}
-				return;
-			}
-			registerTaglib(prefix, tagdir, taglibStructuredDocumentRegion, tld);
+		protected void enableTagsInDir(String prefix, String tagdir, IStructuredDocumentRegion anchorStructuredDocumentRegion) {
+			enableTags(prefix, tagdir, anchorStructuredDocumentRegion);
 			if (_debug) {
 				System.out.println("TLDCMDocumentManager registered a tracker for directory" + tagdir + " with prefix " + prefix); //$NON-NLS-2$//$NON-NLS-1$
 			}
@@ -347,14 +340,29 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 						}
 					}
 					else if (taglib && region.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
-						uri = textSource.getText(taglibStructuredDocumentRegion.getStartOffset(region), region.getTextLength());
-						if (uri != null && prefix != null && (StringUtils.strip(uri).length() > 0) && (StringUtils.strip(prefix).length() > 0)) {
-							if (anchorStructuredDocumentRegion == null)
-								enableTaglibFromURI(StringUtils.strip(prefix), StringUtils.strip(uri), taglibStructuredDocumentRegion);
-							else
-								enableTaglibFromURI(StringUtils.strip(prefix), StringUtils.strip(uri), anchorStructuredDocumentRegion);
-							uri = null;
-							prefix = null;
+						if (prefix != null && prefix.length() > 0) {
+							uri = textSource.getText(taglibStructuredDocumentRegion.getStartOffset(region), region.getTextLength());
+							uri = StringUtils.strip(uri);
+							if (uri != null && uri.length() > 0) {
+								if (uri.startsWith(URN_TLD)) {
+									uri = uri.substring(URN_TLD.length());
+									if (anchorStructuredDocumentRegion == null)
+										enableTaglibFromURI(prefix, uri, taglibStructuredDocumentRegion);
+									else
+										enableTaglibFromURI(prefix, uri, anchorStructuredDocumentRegion);
+									uri = null;
+									prefix = null;
+								}
+								else if (uri.startsWith(URN_TAGDIR)) {
+									uri = uri.substring(URN_TAGDIR.length());
+									if (anchorStructuredDocumentRegion == null)
+										enableTagsInDir(prefix, uri, taglibStructuredDocumentRegion);
+									else
+										enableTagsInDir(prefix, uri, anchorStructuredDocumentRegion);
+									uri = null;
+									prefix = null;
+								}
+							}
 						}
 					}
 				}
@@ -405,11 +413,11 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 					// process value
 					else if (region.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
 						if (JSP11TLDNames.PREFIX.equals(attrName))
-							prefix = textSource.getText(startOffset, textLength);
+							prefix = StringUtils.strip(textSource.getText(startOffset, textLength));
 						else if (JSP11TLDNames.URI.equals(attrName))
-							uri = textSource.getText(startOffset, textLength);
+							uri = StringUtils.strip(textSource.getText(startOffset, textLength));
 						else if (JSP20TLDNames.TAGDIR.equals(attrName))
-							tagdir = textSource.getText(startOffset, textLength);
+							tagdir = StringUtils.strip(textSource.getText(startOffset, textLength));
 					}
 				}
 			}
@@ -418,13 +426,13 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 				uri = null;
 				prefix = null;
 			}
-			if (uri != null && prefix != null && (StringUtils.strip(uri).length() > 0) && (StringUtils.strip(prefix).length() > 0)) {
+			if (uri != null && prefix != null && uri.length() > 0 && prefix.length() > 0) {
 				if (anchorStructuredDocumentRegion == null)
-					enableTaglibFromURI(StringUtils.strip(prefix), StringUtils.strip(uri), taglibStructuredDocumentRegion);
+					enableTaglibFromURI(prefix, StringUtils.strip(uri), taglibStructuredDocumentRegion);
 				else
-					enableTaglibFromURI(StringUtils.strip(prefix), StringUtils.strip(uri), anchorStructuredDocumentRegion);
+					enableTaglibFromURI(prefix, uri, anchorStructuredDocumentRegion);
 			}
-			else if (tagdir != null && prefix != null && (StringUtils.strip(tagdir).length() > 0) && (StringUtils.strip(prefix).length() > 0)) {
+			else if (tagdir != null && prefix != null && tagdir.length() > 0 && prefix.length() > 0) {
 				if (anchorStructuredDocumentRegion == null)
 					enableTagsInDir(StringUtils.strip(prefix), StringUtils.strip(tagdir), taglibStructuredDocumentRegion);
 				else
@@ -718,9 +726,11 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 	protected static List bannedPrefixes = null;
 
 	private static Hashtable fCache = null;
-	static final String XMLNS = "xmlns:"; //$NON-NLS-1$ 
+	String XMLNS = "xmlns:"; //$NON-NLS-1$ 
+	protected String URN_TAGDIR = "urn:jsptagdir:";
+	protected String URN_TLD = "urn:jsptld:";
 
-	static final int XMLNS_LENGTH = XMLNS.length();
+	int XMLNS_LENGTH = XMLNS.length();
 
 	static {
 		bannedPrefixes = new ArrayList(7);
@@ -763,9 +773,8 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 			}
 				break;
 			case (ITaglibRecord.TAGDIR) : {
-				// TagDirRecord record = (TagDirRecord) reference;
-				// document =
-				// buildCMDocumentFromDirectory(record.getLocation().toFile());
+				ITagDirRecord record = (ITagDirRecord) reference;
+				identifier = record.getPath();
 			}
 				break;
 			case (ITaglibRecord.URL) : {
@@ -779,6 +788,7 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 		}
 		return identifier;
 	}
+
 	private CMDocumentFactoryTLD fCMDocumentBuilder = null;
 
 	private DirectiveStructuredDocumentRegionHandler fDirectiveHandler = null;
@@ -825,10 +835,11 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 	}
 
 	/**
-	 * Derives an unique cache key for the give URI. The URI is "resolved"
-	 * and a unique value generated from the result. This ensures that two
-	 * different relative references from different files do not have overlapping
-	 * TLD records in the shared cache if they don't resolve to the same TLD.
+	 * Derives an unique cache key for the give URI. The URI is "resolved" and
+	 * a unique value generated from the result. This ensures that two
+	 * different relative references from different files do not have
+	 * overlapping TLD records in the shared cache if they don't resolve to
+	 * the same TLD.
 	 * 
 	 * @param uri
 	 * @return
@@ -849,22 +860,6 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 		if (uri == null || uri.length() == 0)
 			return null;
 		String reference = uri;
-		/**
-		 * JSP 1.2 Specification, section 5.2.2 jsp-1_2-fcs-spec.pdf, page 87
-		 */
-		String URNprefix = "urn:jsptld:"; //$NON-NLS-1$
-		if (reference.startsWith(URNprefix)) {
-			/**
-			 * @see section 7.3.2
-			 */
-			if (reference.length() > URNprefix.length())
-				reference = reference.substring(11);
-		}
-		else {
-			/**
-			 * @see section 7.3.6
-			 */
-		}
 		Object cacheKey = getCacheKey(reference);
 		CMDocument doc = (CMDocument) getDocuments().get(cacheKey);
 		if (doc == null) {
@@ -1005,38 +1000,6 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 	}
 
 	/**
-	 * Return the CMDocument at the tagdir (cached)
-	 */
-	protected CMDocument getImplicitCMDocument(String tagdir) {
-		if (tagdir == null || tagdir.length() == 0)
-			return null;
-		String reference = tagdir;
-		/**
-		 * JSP 1.2 Specification, section 5.2.2 jsp-1_2-fcs-spec.pdf, page 87
-		 */
-		String URNprefix = "urn:jsptld:"; //$NON-NLS-1$
-		if (reference.startsWith(URNprefix)) {
-			/**
-			 * @see section 7.3.2
-			 */
-			if (reference.length() > URNprefix.length())
-				reference = reference.substring(11);
-		}
-		else {
-			/**
-			 * @see section 7.3.6
-			 */
-		}
-		CMDocument doc = (CMDocument) getDocuments().get(reference);
-		if (doc == null) {
-			doc = loadTagDir(reference);
-			if (doc != null)
-				getDocuments().put(reference, doc);
-		}
-		return doc;
-	}
-
-	/**
 	 * Gets the includes.
 	 * 
 	 * @return Returns a Stack
@@ -1125,28 +1088,16 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 		return result;
 	}
 
-	public void indexChanged(ITaglibIndexDelta event) {}
-
-	/**
-	 * Loads the tags from the specified URI. It must point to a URL of valid
-	 * tag files to work.
-	 */
-	protected CMDocument loadTagDir(String uri) {
-		ITaglibRecord reference = TaglibIndex.resolve(getCurrentParserPath().toString(), uri, false);
-		if (reference != null) {
-			CMDocument document = getCMDocumentBuilder().createCMDocument(reference);
-			if (document != null) {
-				return document;
+	public void indexChanged(ITaglibIndexDelta event) {
+		synchronized (getSharedDocumentCache()) {
+			Iterator values = getSharedDocumentCache().values().iterator();
+			while (values.hasNext()) {
+				Object o = values.next();
+				if (o instanceof Reference) {
+					values.remove();
+				}
 			}
 		}
-		// JSP2_TODO: implement for JSP 2.0
-		String location = URIResolverPlugin.createResolver().resolve(getCurrentBaseLocation().toString(), null, uri);
-		if (location == null)
-			return null;
-		if (_debug) {
-			System.out.println("Loading tags from dir" + uri + " at " + location); //$NON-NLS-2$//$NON-NLS-1$
-		}
-		return getCMDocumentBuilder().createCMDocument(location);
 	}
 
 	/**

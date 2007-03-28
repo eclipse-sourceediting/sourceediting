@@ -12,6 +12,7 @@
 package org.eclipse.jst.jsp.core.taglib;
 
 import java.io.File;
+import java.lang.ref.Reference;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Hashtable;
@@ -338,7 +339,7 @@ public final class TaglibIndex {
 	static final boolean _debugResolution = "true".equals(Platform.getDebugOption("org.eclipse.jst.jsp.core/taglib/resolve")); //$NON-NLS-1$ //$NON-NLS-2$
 
 	static TaglibIndex _instance = new TaglibIndex();
-	
+
 	private boolean initialized;
 
 	private static final CRC32 checksumCalculator = new CRC32();
@@ -378,7 +379,22 @@ public final class TaglibIndex {
 		for (int i = 0; i < deltas.length; i++) {
 			ITaglibRecord taglibRecord = deltas[i].getTaglibRecord();
 			if (taglibRecord != null) {
-				TLDCMDocumentManager.getSharedDocumentCache().remove(TLDCMDocumentManager.getUniqueIdentifier(taglibRecord));
+				Object uniqueIdentifier = TLDCMDocumentManager.getUniqueIdentifier(taglibRecord);
+				if (uniqueIdentifier != null) {
+					TLDCMDocumentManager.getSharedDocumentCache().remove(uniqueIdentifier);
+				}
+				else {
+					Logger.log(Logger.ERROR, "identifier for " + taglibRecord + " was null");
+				}
+			}
+		}
+		synchronized (TLDCMDocumentManager.getSharedDocumentCache()) {
+			Iterator values = TLDCMDocumentManager.getSharedDocumentCache().values().iterator();
+			while (values.hasNext()) {
+				Object o = values.next();
+				if (o instanceof Reference) {
+					values.remove();
+				}
 			}
 		}
 
@@ -445,8 +461,8 @@ public final class TaglibIndex {
 	public static IPath getContextRoot(IPath path) {
 		try {
 			LOCK.acquire();
-			if(getInstance().isInitialized()) {
-			return getInstance().internalGetContextRoot(path);
+			if (getInstance().isInitialized()) {
+				return getInstance().internalGetContextRoot(path);
 			}
 		}
 		finally {
@@ -466,7 +482,8 @@ public final class TaglibIndex {
 	 *            the listener to be removed
 	 */
 	public static void removeTaglibIndexListener(ITaglibIndexListener listener) {
-		if (!getInstance().isInitialized()) return;
+		if (!getInstance().isInitialized())
+			return;
 		try {
 			LOCK.acquire();
 			if (getInstance().isInitialized())
@@ -524,6 +541,8 @@ public final class TaglibIndex {
 					}
 						break;
 					case (ITaglibRecord.TAGDIR) : {
+						ITagDirRecord record = (ITagDirRecord) result;
+						Logger.log(Logger.INFO, "TaglibIndex resolved " + basePath + ":" + reference + " = " + record.getPath()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 					}
 						break;
 					case (ITaglibRecord.URL) : {
@@ -590,17 +609,18 @@ public final class TaglibIndex {
 
 	private void initializeInstance() {
 
-		if (isInitialized()) return;
+		if (isInitialized())
+			return;
 		try {
 			LOCK.acquire();
 			/*
-			 check again, just incase it was initialized on another 
-			 thread, while we were waiting for the lock
+			 * check again, just incase it was initialized on another thread,
+			 * while we were waiting for the lock
 			 */
 			if (!isInitialized()) {
 				/*
-				 * Only consider a crash if a value exists and is DIRTY (not a new
-				 * workspace)
+				 * Only consider a crash if a value exists and is DIRTY (not a
+				 * new workspace)
 				 */
 				if (DIRTY.equalsIgnoreCase(getState())) {
 					Logger.log(Logger.ERROR, "A workspace crash was detected. The previous session did not exit normally. Not using saved taglib indexes"); //$NON-NLS-3$
@@ -616,7 +636,7 @@ public final class TaglibIndex {
 				}
 				setIntialized(true);
 			}
-		} 
+		}
 		finally {
 			LOCK.release();
 		}
@@ -900,8 +920,8 @@ public final class TaglibIndex {
 			JavaCore.removeElementChangedListener(fClasspathChangeListener);
 
 			/*
-			 * Clearing the existing saved states helps prune dead data from the
-			 * index folder.
+			 * Clearing the existing saved states helps prune dead data from
+			 * the index folder.
 			 */
 			removeIndexes(true);
 

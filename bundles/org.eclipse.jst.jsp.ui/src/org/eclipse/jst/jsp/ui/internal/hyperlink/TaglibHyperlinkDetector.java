@@ -11,9 +11,13 @@
 package org.eclipse.jst.jsp.ui.internal.hyperlink;
 
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
@@ -25,7 +29,12 @@ import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.jface.text.hyperlink.AbstractHyperlinkDetector;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.text.hyperlink.URLHyperlink;
+import org.eclipse.jst.jsp.core.internal.contentmodel.TaglibController;
+import org.eclipse.jst.jsp.core.internal.contentmodel.tld.CMElementDeclarationImpl;
+import org.eclipse.jst.jsp.core.internal.contentmodel.tld.TLDCMDocumentManager;
+import org.eclipse.jst.jsp.core.internal.contentmodel.tld.TaglibTracker;
 import org.eclipse.jst.jsp.core.internal.provisional.JSP11Namespace;
+import org.eclipse.jst.jsp.core.internal.provisional.JSP12Namespace;
 import org.eclipse.jst.jsp.core.taglib.ITLDRecord;
 import org.eclipse.jst.jsp.core.taglib.ITaglibRecord;
 import org.eclipse.jst.jsp.core.taglib.TaglibIndex;
@@ -37,10 +46,13 @@ import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitioning;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.utils.StringUtils;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
+import org.eclipse.wst.xml.core.internal.provisional.contentmodel.CMNodeWrapper;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
 /**
@@ -48,6 +60,10 @@ import org.w3c.dom.Node;
  */
 public class TaglibHyperlinkDetector extends AbstractHyperlinkDetector {
 	private final String HTTP_PROTOCOL = "http://";//$NON-NLS-1$
+	private final String JAR_PROTOCOL = "jar:file:";//$NON-NLS-1$
+	//private String URN_TAGDIR = "urn:jsptagdir:";
+	private String URN_TLD = "urn:jsptld:";
+	private String XMLNS = "xmlns:"; //$NON-NLS-1$ 
 
 	public IHyperlink[] detectHyperlinks(ITextViewer textViewer, IRegion region, boolean canShowMultipleHyperlinks) {
 		IHyperlink hyperlink = null;
@@ -61,24 +77,83 @@ public class TaglibHyperlinkDetector extends AbstractHyperlinkDetector {
 					if (partition != null && partition.getType() == IJSPPartitions.JSP_DIRECTIVE) {
 						// check if jsp taglib directive
 						Node currentNode = getCurrentNode(doc, region.getOffset());
-						if (currentNode != null && currentNode.getNodeType() == Node.ELEMENT_NODE && JSP11Namespace.ElementName.DIRECTIVE_TAGLIB.equalsIgnoreCase(currentNode.getNodeName())) {
-							// get the uri attribute
-							Attr taglibNode = ((Element) currentNode).getAttributeNode(JSP11Namespace.ATTR_NAME_URI);
-							ITaglibRecord reference = TaglibIndex.resolve(getBaseLocationForTaglib(doc), taglibNode.getValue(), false);
-							if (reference != null) {
-								// handle taglibs
-								switch (reference.getRecordType()) {
-									case (ITaglibRecord.TLD) : {
-										ITLDRecord record = (ITLDRecord) reference;
-										String uriString = record.getPath().toString();
-										IRegion hyperlinkRegion = getHyperlinkRegion(taglibNode);
-										hyperlink = createHyperlink(uriString, hyperlinkRegion, doc, taglibNode);
+						if (currentNode != null && currentNode.getNodeType() == Node.ELEMENT_NODE) {
+							if (JSP11Namespace.ElementName.DIRECTIVE_TAGLIB.equalsIgnoreCase(currentNode.getNodeName())) {
+								// get the uri attribute
+								Attr taglibNode = ((Element) currentNode).getAttributeNode(JSP11Namespace.ATTR_NAME_URI);
+								if (taglibNode != null) {
+									ITaglibRecord reference = TaglibIndex.resolve(getBaseLocationForTaglib(doc), taglibNode.getValue(), false);
+									// when using a tagdir
+									// (ITaglibRecord.TAGDIR),
+									// there's nothing to link to
+									if (reference != null) {
+										// handle taglibs
+										switch (reference.getRecordType()) {
+											case (ITaglibRecord.TLD) : {
+												ITLDRecord record = (ITLDRecord) reference;
+												String uriString = record.getPath().toString();
+												IRegion hyperlinkRegion = getHyperlinkRegion(taglibNode);
+												hyperlink = createHyperlink(uriString, hyperlinkRegion, doc, taglibNode);
+											}
+												break;
+											case (ITaglibRecord.JAR) :
+											case (ITaglibRecord.URL) : {
+												IRegion hyperlinkRegion = getHyperlinkRegion(taglibNode);
+												hyperlink = new TaglibJarUriHyperlink(hyperlinkRegion, reference);
+											}
+										}
 									}
-										break;
-									case (ITaglibRecord.JAR) :
-									case (ITaglibRecord.URL) : {
-										IRegion hyperlinkRegion = getHyperlinkRegion(taglibNode);
-										hyperlink = new TaglibJarUriHyperlink(hyperlinkRegion, reference);
+								}
+							}
+							else if (JSP12Namespace.ElementName.ROOT.equalsIgnoreCase(currentNode.getNodeName())) {
+								NamedNodeMap attrs = currentNode.getAttributes();
+								for (int i = 0; i < attrs.getLength(); i++) {
+									Attr attr = (Attr) attrs.item(i);
+									if (attr.getNodeName().startsWith(XMLNS)) {
+										String uri = StringUtils.strip(attr.getNodeValue());
+										if (uri.startsWith(URN_TLD)) {
+											uri = uri.substring(URN_TLD.length());
+										}
+										ITaglibRecord reference = TaglibIndex.resolve(getBaseLocationForTaglib(doc), uri, false);
+										// when using a tagdir
+										// (ITaglibRecord.TAGDIR),
+										// there's nothing to link to
+										if (reference != null) {
+											// handle taglibs
+											switch (reference.getRecordType()) {
+												case (ITaglibRecord.TLD) : {
+													ITLDRecord record = (ITLDRecord) reference;
+													String uriString = record.getPath().toString();
+													IRegion hyperlinkRegion = getHyperlinkRegion(attr);
+													hyperlink = createHyperlink(uriString, hyperlinkRegion, doc, attr);
+												}
+													break;
+												case (ITaglibRecord.JAR) :
+												case (ITaglibRecord.URL) : {
+													IRegion hyperlinkRegion = getHyperlinkRegion(attr);
+													hyperlink = new TaglibJarUriHyperlink(hyperlinkRegion, reference);
+												}
+											}
+										}
+									}
+								}
+							}
+							else {
+								// custom tag to its TLD or tag file
+								TLDCMDocumentManager documentManager = TaglibController.getTLDCMDocumentManager(doc);
+								if (documentManager != null) {
+									List documentTrackers = documentManager.getCMDocumentTrackers(currentNode.getPrefix(), region.getOffset());
+									for (int i = 0; i < documentTrackers.size(); i++) {
+										TaglibTracker tracker = (TaglibTracker) documentTrackers.get(i);
+										CMElementDeclaration decl = (CMElementDeclaration) tracker.getElements().getNamedItem(currentNode.getNodeName());
+										if (decl != null) {
+											decl = (CMElementDeclaration) ((CMNodeWrapper) decl).getOriginNode();
+											if (decl instanceof CMElementDeclarationImpl) {
+												String base = ((CMElementDeclarationImpl) decl).getLocationString();
+												IRegion hyperlinkRegion = getHyperlinkRegion(currentNode);
+												hyperlink = createHyperlink(base, hyperlinkRegion, doc, currentNode);
+											}
+										}
 									}
 								}
 							}
@@ -146,6 +221,11 @@ public class TaglibHyperlinkDetector extends AbstractHyperlinkDetector {
 					hyperRegion = new Region(regOffset, regLength);
 				}
 			}
+			if (nodeType == Node.ELEMENT_NODE) {
+				// handle doc type node
+				IDOMNode docNode = (IDOMNode) node;
+				hyperRegion = new Region(docNode.getStartOffset(), docNode.getFirstStructuredDocumentRegion().getTextLength());
+			}
 		}
 		return hyperRegion;
 	}
@@ -162,7 +242,11 @@ public class TaglibHyperlinkDetector extends AbstractHyperlinkDetector {
 		 * Note at this point, fileString is already guaranteed to be pointing
 		 * to an existing file in the workspace, so we can just call getFile.
 		 */
-		return ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(fileString));
+		IPath path = new Path(fileString);
+		if (path.segmentCount() > 1) {
+			return ResourcesPlugin.getWorkspace().getRoot().getFile(path);
+		}
+		return null;
 	}
 
 	/**
@@ -176,15 +260,24 @@ public class TaglibHyperlinkDetector extends AbstractHyperlinkDetector {
 		IHyperlink link = null;
 
 		if (uriString != null) {
+			// try to locate the file in the workspace
+			IFile file = getFile(uriString);
+
 			String temp = uriString.toLowerCase();
 			if (temp.startsWith(HTTP_PROTOCOL)) {
 				// this is a URLHyperlink since this is a web address
 				link = new URLHyperlink(hyperlinkRegion, uriString);
 			}
-
-			// try to locate the file in the workspace
-			IFile file = getFile(uriString);
-			if (file != null) {
+			else if (temp.startsWith(JAR_PROTOCOL)) {
+				// this is a URLFileHyperlink since this is a local address
+				try {
+					link = new URLFileHyperlink(hyperlinkRegion, new URL(uriString));
+				}
+				catch (MalformedURLException e) {
+					Logger.log(Logger.WARNING_DEBUG, e.getMessage(), e);
+				}
+			}
+			else if (file != null && file.isAccessible()) {
 				// this is a WorkspaceFileHyperlink since file exists in
 				// workspace
 				link = new WorkspaceFileHyperlink(hyperlinkRegion, file);

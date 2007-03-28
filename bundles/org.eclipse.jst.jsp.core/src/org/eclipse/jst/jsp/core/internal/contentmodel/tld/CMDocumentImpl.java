@@ -88,6 +88,8 @@ public class CMDocumentImpl implements TLDDocument {
 	// A unique public URI describing this taglib.  Recommended to be the URL
 	// to the descriptor
 	private String fURI = null;
+	
+	private String fLocationString;
 
 	protected TLDValidator validator;
 	
@@ -441,5 +443,13 @@ public class CMDocumentImpl implements TLDDocument {
 			buffer.append(StringUtils.replace(elements.item(i).toString(), "\n", "\n\t\t")); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		return buffer.toString();
+	}
+
+	public String getLocationString() {
+		return fLocationString;
+	}
+
+	public void setLocationString(String url) {
+		fLocationString = url;
 	}
 }

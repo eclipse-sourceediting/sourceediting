@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.core.taglib;
 
+import org.eclipse.core.runtime.IPath;
+
 /**
  * A record representing a folder of .tag/.tagx files
  * <p>
@@ -20,5 +22,8 @@ package org.eclipse.jst.jsp.core.taglib;
  * @since 1.0
  */
 public interface ITagDirRecord extends ITaglibRecord {
-
+	/**
+	 * @return Returns the path within the workspace to this directory.
+	 */
+	IPath getPath();
 }

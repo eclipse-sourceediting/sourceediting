@@ -26,7 +26,7 @@ public class CMAttributeDeclarationImpl implements TLDAttributeDeclaration {
 
 	private CMDataType attrType = new CMDataTypeImpl(CMDataType.CDATA);
 	private String fDescription;
-	
+
 	//
 	private boolean fIsFragment = false;
 
@@ -38,8 +38,9 @@ public class CMAttributeDeclarationImpl implements TLDAttributeDeclaration {
 	private String name = null;
 	// optional "required" element present, defaults to not present
 	private boolean required = false;
-	
-	// optional run-time (scriplet derived) value of attributes, defaults to none/false
+
+	// optional run-time (scriplet derived) value of attributes, defaults to
+	// none/false
 	private String rtexprvalue = null;
 
 	private String type = null;
@@ -54,6 +55,7 @@ public class CMAttributeDeclarationImpl implements TLDAttributeDeclaration {
 
 	/**
 	 * getAttrName method
+	 * 
 	 * @return java.lang.String
 	 */
 	public String getAttrName() {
@@ -62,6 +64,7 @@ public class CMAttributeDeclarationImpl implements TLDAttributeDeclaration {
 
 	/**
 	 * getAttrType method
+	 * 
 	 * @return CMDataType
 	 */
 	public CMDataType getAttrType() {
@@ -74,6 +77,7 @@ public class CMAttributeDeclarationImpl implements TLDAttributeDeclaration {
 	public String getDefaultValue() {
 		return ""; //$NON-NLS-1$
 	}
+
 	/**
 	 * @return Returns the description.
 	 */
@@ -98,6 +102,7 @@ public class CMAttributeDeclarationImpl implements TLDAttributeDeclaration {
 
 	/**
 	 * getNodeName method
+	 * 
 	 * @return java.lang.String
 	 */
 	public String getNodeName() {
@@ -106,16 +111,19 @@ public class CMAttributeDeclarationImpl implements TLDAttributeDeclaration {
 
 	/**
 	 * getNodeType method
+	 * 
 	 * @return int
-	 *
+	 * 
 	 * Returns one of :
-	 *
+	 * 
 	 */
 	public int getNodeType() {
 		return CMNode.ATTRIBUTE_DECLARATION;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.jst.jsp.core.contentmodel.tld.TLDAttributeDeclaration#getOwnerDocument()
 	 */
 	public CMDocument getOwnerDocument() {
@@ -124,10 +132,11 @@ public class CMAttributeDeclarationImpl implements TLDAttributeDeclaration {
 
 	/**
 	 * getProperty method
+	 * 
 	 * @return java.lang.Object
-	 *
+	 * 
 	 * Returns the object property desciped by the propertyName
-	 *
+	 * 
 	 */
 	public Object getProperty(String propertyName) {
 		if (propertyName != null && propertyName.equals(JSP12TLDNames.DESCRIPTION)) {
@@ -156,12 +165,13 @@ public class CMAttributeDeclarationImpl implements TLDAttributeDeclaration {
 
 	/**
 	 * getUsage method
-	 * @return int
-	 * OPTIONAL|REQUIRED
+	 * 
+	 * @return int OPTIONAL|REQUIRED
 	 */
 	public int getUsage() {
 		return required ? REQUIRED : OPTIONAL;
 	}
+
 	/**
 	 * @return Returns the isFragment.
 	 */
@@ -176,14 +186,18 @@ public class CMAttributeDeclarationImpl implements TLDAttributeDeclaration {
 	public boolean isRequired() {
 		return required;
 	}
+
 	/**
-	 * @param description The description to set.
+	 * @param description
+	 *            The description to set.
 	 */
 	public void setDescription(String description) {
 		fDescription = description;
 	}
+
 	/**
-	 * @param isFragment The isFragment to set.
+	 * @param isFragment
+	 *            The isFragment to set.
 	 */
 	public void setFragment(boolean isFragment) {
 		fIsFragment = isFragment;
@@ -191,7 +205,8 @@ public class CMAttributeDeclarationImpl implements TLDAttributeDeclaration {
 
 	/**
 	 * 
-	 * @param newId java.lang.String
+	 * @param newId
+	 *            java.lang.String
 	 */
 	public void setId(String newId) {
 		id = newId;
@@ -203,7 +218,8 @@ public class CMAttributeDeclarationImpl implements TLDAttributeDeclaration {
 
 	/**
 	 * 
-	 * @param newRequired boolean
+	 * @param newRequired
+	 *            boolean
 	 */
 	public void setRequired(boolean newRequired) {
 		required = newRequired;
@@ -211,18 +227,22 @@ public class CMAttributeDeclarationImpl implements TLDAttributeDeclaration {
 
 	/**
 	 * 
-	 * @param newRequired boolean
+	 * @param newRequired
+	 *            boolean
 	 */
 	public void setRequiredString(String newRequired) {
-		if (newRequired.equalsIgnoreCase("true") || newRequired.equalsIgnoreCase("yes")) //$NON-NLS-2$//$NON-NLS-1$
-			setRequired(true);
-		else if (newRequired.equalsIgnoreCase("false") || newRequired.equalsIgnoreCase("no")) //$NON-NLS-2$//$NON-NLS-1$
-			setRequired(false);
+		if (newRequired != null) {
+			if (newRequired.equalsIgnoreCase(JSP12TLDNames.TRUE) || newRequired.equalsIgnoreCase(JSP12TLDNames.YES))
+				setRequired(true);
+			else if (newRequired.equalsIgnoreCase(JSP12TLDNames.FALSE) || newRequired.equalsIgnoreCase(JSP12TLDNames.NO))
+				setRequired(false);
+		}
 	}
 
 	/**
 	 * 
-	 * @param newRtexprvalue java.lang.String
+	 * @param newRtexprvalue
+	 *            java.lang.String
 	 */
 	public void setRtexprvalue(String newRtexprvalue) {
 		rtexprvalue = newRtexprvalue;
@@ -249,7 +269,8 @@ public class CMAttributeDeclarationImpl implements TLDAttributeDeclaration {
 		buffer.append("\n\t " + super.toString()); //$NON-NLS-1$
 		buffer.append("\n\t name:" + StringUtils.escape(getNodeName())); //$NON-NLS-1$
 		// Boolean.toString(boolean) is introduced in 1.4
-		//buffer.append("\n\t required:" + StringUtils.escape(Boolean.toString(isRequired())));
+		// buffer.append("\n\t required:" +
+		// StringUtils.escape(Boolean.toString(isRequired())));
 		buffer.append("\n\t required:" + StringUtils.toString(isRequired())); //$NON-NLS-1$
 		buffer.append("\n\t rtexpr:" + StringUtils.escape(getRtexprvalue())); //$NON-NLS-1$
 		if (getId() != null)

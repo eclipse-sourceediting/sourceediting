@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -48,6 +48,8 @@ import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.contentmodel.TaglibController;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.TLDCMDocumentManager;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.JSP12TLDNames;
+import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDElementDeclaration;
+import org.eclipse.jst.jsp.core.internal.provisional.JSP11Namespace;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.jst.jsp.core.internal.taglib.TaglibHelper;
 import org.eclipse.jst.jsp.core.internal.taglib.TaglibHelperManager;
@@ -156,7 +158,7 @@ public class JSPTranslator {
 	 * A map of tag names to tag library variable information; used to store
 	 * the ones needed for AT_END variable support.
 	 */
-	private HashMap fTagToVariableMap = null;
+	private StackMap fTagToVariableMap = null;
 
 	private StringBuffer fResult; // the final traslated java document
 	// string buffer
@@ -721,15 +723,22 @@ public class JSPTranslator {
 	public final String getJspText() {
 		return fJspTextBuffer.toString();
 	}
-
+	
+	/**
+	 * @deprecated
+	 * @param tagToAdd
+	 */
 	protected void addTaglibVariables(String tagToAdd) {
+		addTaglibVariables(tagToAdd, getCurrentNode());
+	}
+
+	protected void addTaglibVariables(String tagToAdd, IStructuredDocumentRegion customTag) {
 		IFile f = getFile();
 
 		if (f == null || !f.exists())
 			return;
 
 		TaglibHelper helper = TaglibHelperManager.getInstance().getTaglibHelper(f);
-		IStructuredDocumentRegion customTag = getCurrentNode();
 		/*
 		 * Variables can declare as available when NESTED, AT_BEGIN, or
 		 * AT_END. For AT_END variables, store the entire list of variables in
@@ -749,7 +758,7 @@ public class JSPTranslator {
 				}
 				if (taglibVars[i].getScope() == VariableInfo.AT_END) {
 					decl = taglibVars[i].getDeclarationString();
-					fTagToVariableMap.put(tagToAdd, taglibVars);
+					fTagToVariableMap.push(tagToAdd, taglibVars);
 				}
 			}
 			for (int i = 0; i < taglibVars.length; i++) {
@@ -757,7 +766,7 @@ public class JSPTranslator {
 					decl = taglibVars[i].getDeclarationString();
 					appendToBuffer("{", fUserCode, false, fCurrentNode);
 					appendToBuffer(decl, fUserCode, false, fCurrentNode);
-					fTagToVariableMap.put(tagToAdd, taglibVars);
+					fTagToVariableMap.push(tagToAdd, taglibVars);
 				}
 			}
 			if (customTag.getLastRegion().getType().equals(DOMRegionContext.XML_EMPTY_TAG_CLOSE)) {
@@ -784,7 +793,7 @@ public class JSPTranslator {
 		 * "unroll" correctly.
 		 */
 		else if (customTag.getFirstRegion().getType().equals(DOMRegionContext.XML_END_TAG_OPEN)) {
-			TaglibVariable[] taglibVars = (TaglibVariable[]) fTagToVariableMap.remove(tagToAdd);
+			TaglibVariable[] taglibVars = (TaglibVariable[]) fTagToVariableMap.pop(tagToAdd);
 			if (taglibVars != null) {
 				for (int i = taglibVars.length; i > 0; i--) {
 					if (taglibVars[i-1].getScope() == VariableInfo.NESTED) {
@@ -830,9 +839,8 @@ public class JSPTranslator {
 	 */
 	public void translate() {
 		if (fTagToVariableMap == null) {
-			fTagToVariableMap = new HashMap(2);
+			fTagToVariableMap = new StackMap();
 		}
-
 		setCurrentNode(fStructuredDocument.getFirstStructuredDocumentRegion());
 
 		while (getCurrentNode() != null && !isCanceled()) {
@@ -1113,7 +1121,7 @@ public class JSPTranslator {
 			{
 				String fullTagName = container.getText(r);
 				if (fullTagName.indexOf(':') > -1) {
-					addTaglibVariables(fullTagName); // it may be a custom
+					addTaglibVariables(fullTagName, getCurrentNode()); // it may be a custom
 					// tag
 				}
 				StringTokenizer st = new StringTokenizer(fullTagName, ":.", false); //$NON-NLS-1$
@@ -1139,7 +1147,15 @@ public class JSPTranslator {
 							if (st.hasMoreTokens()) {
 								String directiveName = st.nextToken();
 								if (directiveName.equals("taglib")) { //$NON-NLS-1$
-									handleTaglib();
+									while (r != null && regions.hasNext() && !r.getType().equals(DOMRegionContext.XML_TAG_ATTRIBUTE_NAME)) {
+										r = (ITextRegion) regions.next();
+										if(container.getText(r).equals(JSP11Namespace.ATTR_NAME_PREFIX)) {
+											String prefix = getAttributeValue(r, regions);
+											if (prefix != null) {
+												handleTaglib(prefix);
+											}
+										}
+									}
 									return;
 								}
 								else if (directiveName.equals("include")) { //$NON-NLS-1$
@@ -1407,15 +1423,10 @@ public class JSPTranslator {
 	public IJSPELTranslator getELTranslator() {
 		if (fELTranslator == null) {
 
-			IExtensionPoint extensionPoint = Platform.getExtensionRegistry().getExtensionPoint(JSP_CORE_PLUGIN_ID, // name
-						// of
-						// plugin
-						// that
-						// exposes
-						// this
-						// extension
-						// point
-						EL_TRANSLATOR_EXTENSION_NAME); // - extension id
+			/*
+			 * name of plugin that exposes this extension point
+			 */
+			IExtensionPoint extensionPoint = Platform.getExtensionRegistry().getExtensionPoint(JSP_CORE_PLUGIN_ID, EL_TRANSLATOR_EXTENSION_NAME); // - extension id
 
 			// Iterate over all declared extensions of this extension point.
 			// A single plugin may extend the extension point more than once,
@@ -1595,7 +1606,7 @@ public class JSPTranslator {
 			// skips
 			// attrs?
 			regionText = getCurrentNode().getText(r);
-			if (regionText.indexOf("taglib") > -1) { //$NON-NLS-1$
+			if (regionText.equals("taglib")) { //$NON-NLS-1$
 				// add custom tag block markers here
 				handleTaglib();
 				return;
@@ -1613,7 +1624,7 @@ public class JSPTranslator {
 				if (attrValue != null)
 					handleIncludeFile(fileLocation);
 			}
-			else if (regionText.indexOf("page") > -1) { //$NON-NLS-1$
+			else if (regionText.equals("page")) { //$NON-NLS-1$
 				translatePageDirectiveAttributes(regions);
 			}
 		}
@@ -1626,6 +1637,8 @@ public class JSPTranslator {
 	 * markers that came from <@taglib> directives, (not <@include>), since
 	 * include file taglibs are handled on the fly when they are encountered. *
 	 * @param regions
+	 * 
+	 * @deprecated - does not properly handle prefixes
 	 */
 	protected void handleTaglib() {
 		// get/create TLDCMDocument
@@ -1659,6 +1672,29 @@ public class JSPTranslator {
 	}
 
 	/*
+	 * This method should ideally only be called once per run through
+	 * JSPTranslator This is intended for use by inner helper classes that
+	 * need to add block markers to their own parsers. This method only adds
+	 * markers that came from <@taglib> directives, (not <@include>), since
+	 * include file taglibs are handled on the fly when they are encountered. *
+	 * @param regions
+	 */
+	private void handleTaglib(String prefix) {
+		// get/create TLDCMDocument
+		TLDCMDocumentManager mgr = TaglibController.getTLDCMDocumentManager(fStructuredDocument);
+		if (mgr != null) {
+			// get trackers for the CMDocuments enabled at this offset
+			List trackers = mgr.getCMDocumentTrackers(getCurrentNode().getEnd());
+			Iterator it = trackers.iterator();
+			CMDocumentTracker tracker = null;
+			while (it.hasNext()) {
+				tracker = (CMDocumentTracker) it.next();
+				addBlockMarkers(prefix + ":", tracker.getDocument());
+			}
+		}
+	}
+
+	/*
 	 * adds block markers to JSPTranslator's block marker list for all
 	 * elements in doc @param doc
 	 */
@@ -1669,6 +1705,24 @@ public class JSPTranslator {
 			while (elements.hasNext()) {
 				node = (CMNode) elements.next();
 				getBlockMarkers().add(new BlockMarker(node.getNodeName(), null, DOMJSPRegionContexts.JSP_CONTENT, true));
+			}
+		}
+	}
+
+	/*
+	 * adds block markers to JSPTranslator's block marker list for all
+	 * elements in doc @param doc
+	 */
+	protected void addBlockMarkers(String prefix, CMDocument doc) {
+		if (doc.getElements().getLength() > 0) {
+			Iterator elements = doc.getElements().iterator();
+			CMNode node = null;
+			while (elements.hasNext()) {
+				node = (CMNode) elements.next();
+				if (node instanceof TLDElementDeclaration && ((TLDElementDeclaration) node).getBodycontent().equals(JSP12TLDNames.CONTENT_TAGDEPENDENT))
+					getBlockMarkers().add(new BlockMarker(prefix + node.getNodeName(), null, DOMRegionContext.BLOCK_TEXT, true));
+				else
+					getBlockMarkers().add(new BlockMarker(prefix + node.getNodeName(), null, DOMJSPRegionContexts.JSP_CONTENT, true));
 			}
 		}
 	}
@@ -1769,10 +1823,7 @@ public class JSPTranslator {
 			if (!getIncludes().contains(fileLocation) && getBaseLocation() != null && !fileLocation.equals(getBaseLocation())) {
 				getIncludes().push(fileLocation);
 				JSPIncludeRegionHelper helper = new JSPIncludeRegionHelper(this);
-				boolean parsed = helper.parse(fileLocation);
-				if (!parsed) {
-					Logger.log(Logger.ERROR_DEBUG, "Error: included file " + filename + " not found {" + getBaseLocation() + ")");
-				}
+				helper.parse(fileLocation);
 				getIncludes().pop();
 			}
 		}

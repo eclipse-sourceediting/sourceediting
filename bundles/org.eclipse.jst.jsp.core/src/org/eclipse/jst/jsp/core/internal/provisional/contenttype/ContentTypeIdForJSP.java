@@ -33,6 +33,13 @@ public class ContentTypeIdForJSP {
 	public final static String ContentTypeID_JSPFRAGMENT = getFragmentConstantString();
 
 	/**
+	 * The value of the contenttype id field must match what is specified in
+	 * plugin.xml file. Note: this value is intentially set with default
+	 * protected method so it will not be inlined.
+	 */
+	public final static String ContentTypeID_JSPTAG = getTagConstantString();
+
+	/**
 	 * Don't allow instantiation.
 	 */
 	private ContentTypeIdForJSP() {
@@ -46,4 +53,9 @@ public class ContentTypeIdForJSP {
 	static String getFragmentConstantString() {
 		return "org.eclipse.jst.jsp.core.jspfragmentsource"; //$NON-NLS-1$
 	}
+	
+	static String getTagConstantString() {
+		return "org.eclipse.jst.jsp.core.tagsource"; //$NON-NLS-1$
+	}
+
 }

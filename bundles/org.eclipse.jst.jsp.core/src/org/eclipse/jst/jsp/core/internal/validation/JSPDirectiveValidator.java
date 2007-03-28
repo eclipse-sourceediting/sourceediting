@@ -182,7 +182,7 @@ public class JSPDirectiveValidator extends JSPValidator {
 
 				reporter.addMessage(fMessageOriginator, message);
 			}
-			else if(fSeverityIncludeFileMissing != NO_SEVERITY){
+			else if (fSeverityIncludeFileMissing != NO_SEVERITY) {
 				IPath testPath = null;
 				if (fileValue.startsWith("/")) {
 					testPath = TaglibIndex.getContextRoot(file.getFullPath()).append(new Path(fileValue));
@@ -272,8 +272,8 @@ public class JSPDirectiveValidator extends JSPValidator {
 					// tagdir specified but empty string
 					String msgText = NLS.bind(JSPCoreMessages.JSPDirectiveValidator_3, JSP20Namespace.ATTR_NAME_TAGDIR);
 					LocalizedMessage message = new LocalizedMessage(fSeverityTaglibMissingURI, msgText, file);
-					int start = documentRegion.getStartOffset(uriValueRegion);
-					int length = uriValueRegion.getTextLength();
+					int start = documentRegion.getStartOffset(tagdirValueRegion);
+					int length = tagdirValueRegion.getTextLength();
 					int lineNo = sDoc.getLineOfOffset(start);
 					message.setLineNo(lineNo);
 					message.setOffset(start);
@@ -368,6 +368,9 @@ public class JSPDirectiveValidator extends JSPValidator {
 				for (int regionNumber = 0; regionNumber < valueRegions.size(); regionNumber++) {
 					IStructuredDocumentRegion documentRegion = (IStructuredDocumentRegion) fPrefixValueRegionToDocumentRegionMap.get(valueRegions.get(regionNumber));
 					ITextRegion uriValueRegion = getAttributeValueRegion(documentRegion, JSP11Namespace.ATTR_NAME_URI);
+					if (uriValueRegion == null) {
+						uriValueRegion = getAttributeValueRegion(documentRegion, JSP20Namespace.ATTR_NAME_TAGDIR);
+					}
 					String uri2 = StringUtils.stripQuotes(documentRegion.getText(uriValueRegion));
 					if (uri == null) {
 						uri = uri2;

@@ -1,8 +1,19 @@
+/*******************************************************************************
+ * Copyright (c) 2004, 2007 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.jst.jsp.core.internal.taglib;
 
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -14,8 +25,11 @@ import javax.servlet.jsp.tagext.TagData;
 import javax.servlet.jsp.tagext.TagExtraInfo;
 import javax.servlet.jsp.tagext.TagInfo;
 import javax.servlet.jsp.tagext.TagLibraryInfo;
+import javax.servlet.jsp.tagext.ValidationMessage;
 import javax.servlet.jsp.tagext.VariableInfo;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -65,6 +79,7 @@ public class TaglibHelper {
 
 	private IProject fProject = null;
 	private TaglibClassLoader fLoader = null;
+	private Collection fValidationMessages = null;
 
 	private Set fProjectEntries = null;
 	private Set fContainerEntries = null;
@@ -73,6 +88,7 @@ public class TaglibHelper {
 		setProject(project);
 		fProjectEntries = new HashSet();
 		fContainerEntries = new HashSet();
+		fValidationMessages = new HashSet();
 	}
 
 	/**
@@ -87,6 +103,7 @@ public class TaglibHelper {
 	public TaglibVariable[] getTaglibVariables(String tagToAdd, IStructuredDocument structuredDoc, IStructuredDocumentRegion customTag) {
 
 		List results = new ArrayList();
+		fValidationMessages.clear();
 		ModelQuery mq = getModelQuery(structuredDoc);
 		if (mq != null) {
 			TLDCMDocumentManager mgr = TaglibController.getTLDCMDocumentManager(structuredDoc);
@@ -149,6 +166,10 @@ public class TaglibHelper {
 			TLDVariable var = (TLDVariable) it.next();
 			String varName = var.getNameGiven();
 			if (varName == null) {
+				// 2.0
+				varName = var.getAlias();
+			}
+			if (varName == null) {
 				String attrName = var.getNameFromAttribute();
 				/*
 				 * Iterate through the document region to find the
@@ -191,7 +212,6 @@ public class TaglibHelper {
 	 *            URI where the tld can be found
 	 */
 	private void addTEIVariables(IStructuredDocumentRegion customTag, List results, TLDElementDeclaration decl, String prefix, String uri) {
-
 		String teiClassname = decl.getTeiclass();
 		if (teiClassname == null || teiClassname.length() == 0)
 			return;
@@ -200,6 +220,10 @@ public class TaglibHelper {
 
 		Class teiClass = null;
 		try {
+			/*
+			 * JDT could tell us about it, but loading and calling it would
+			 * still take time
+			 */
 			teiClass = Class.forName(teiClassname, true, loader);
 			if (teiClass != null) {
 				Object teiObject = teiClass.newInstance();
@@ -212,12 +236,17 @@ public class TaglibHelper {
 
 						// add to results
 						TagData td = new TagData(tagDataTable);
-						if (tei.isValid(td)) {
-							VariableInfo[] vInfos = tei.getVariableInfo(td);
-							if (vInfos != null) {
-								for (int i = 0; i < vInfos.length; i++) {
-									results.add(new TaglibVariable(vInfos[i].getClassName(), vInfos[i].getVarName(), vInfos[i].getScope()));
-								}
+						if (!tei.isValid(td)) {
+							ValidationMessage[] messages = tei.validate(td);
+							for (int i = 0; i < messages.length; i++) {
+								fValidationMessages.add(messages[i]);
+								// Logger.log(Logger.WARNING_DEBUG, decl.getElementName() + "@" + customTag.getStartOffset() + " [" + messages[i].getId() + "] : " + messages[i].getMessage());
+							}
+						}
+						VariableInfo[] vInfos = tei.getVariableInfo(td);
+						if (vInfos != null) {
+							for (int i = 0; i < vInfos.length; i++) {
+								results.add(new TaglibVariable(vInfos[i].getClassName(), vInfos[i].getVarName(), vInfos[i].getScope()));
 							}
 						}
 					}
@@ -371,12 +400,11 @@ public class TaglibHelper {
 				if (p.hasNature(JavaCore.NATURE_ID)) {
 
 					IJavaProject project = JavaCore.create(p);
-					IPath wkspaceRoot = ResourcesPlugin.getWorkspace().getRoot().getLocation();
 
 					try {
 						IClasspathEntry[] entries = project.getRawClasspath();
-						addDefaultDirEntry(loader, project, wkspaceRoot);
-						addClasspathEntries(loader, project, wkspaceRoot, entries);
+						addDefaultDirEntry(loader, project);
+						addClasspathEntries(loader, project, entries);
 					}
 					catch (JavaModelException e) {
 						Logger.logException(e);
@@ -389,7 +417,7 @@ public class TaglibHelper {
 		}
 	}
 
-	private void addClasspathEntries(TaglibClassLoader loader, IJavaProject project, IPath wkspaceRoot, IClasspathEntry[] entries) throws JavaModelException {
+	private void addClasspathEntries(TaglibClassLoader loader, IJavaProject project, IClasspathEntry[] entries) throws JavaModelException {
 		IClasspathEntry entry;
 		for (int i = 0; i < entries.length; i++) {
 
@@ -399,19 +427,19 @@ public class TaglibHelper {
 
 			switch (entry.getEntryKind()) {
 				case IClasspathEntry.CPE_SOURCE :
-					addSourceEntry(loader, wkspaceRoot, entry);
+					addSourceEntry(loader, entry);
 					break;
 				case IClasspathEntry.CPE_LIBRARY :
-					addLibraryEntry(loader, wkspaceRoot, entry.getPath().toString());
+					addLibraryEntry(loader, entry.getPath());
 					break;
 				case IClasspathEntry.CPE_PROJECT :
 					addProjectEntry(loader, entry);
 					break;
 				case IClasspathEntry.CPE_VARIABLE :
-					addVariableEntry(loader, wkspaceRoot, entry);
+					addVariableEntry(loader, entry);
 					break;
 				case IClasspathEntry.CPE_CONTAINER :
-					addContainerEntry(loader, project, wkspaceRoot, entry);
+					addContainerEntry(loader, project, entry);
 					break;
 			}
 		}
@@ -421,8 +449,7 @@ public class TaglibHelper {
 	 * @param loader
 	 * @param entry
 	 */
-	private void addVariableEntry(TaglibClassLoader loader, IPath wkspaceRoot, IClasspathEntry entry) {
-
+	private void addVariableEntry(TaglibClassLoader loader, IClasspathEntry entry) {
 		if (DEBUG)
 			System.out.println(" -> adding variable entry: [" + entry + "]"); //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -442,18 +469,17 @@ public class TaglibHelper {
 					return;
 				}
 			}
-			addLibraryEntry(loader, wkspaceRoot, variablePath.toString());
+			addLibraryEntry(loader, variablePath);
 		}
 	}
 
 	/**
 	 * @param loader
 	 * @param project
-	 * @param wkspaceRoot
 	 * @param entry
 	 * @throws JavaModelException
 	 */
-	private void addContainerEntry(TaglibClassLoader loader, IJavaProject project, IPath wkspaceRoot, IClasspathEntry entry) throws JavaModelException {
+	private void addContainerEntry(TaglibClassLoader loader, IJavaProject project, IClasspathEntry entry) throws JavaModelException {
 
 		IClasspathContainer container = JavaCore.getClasspathContainer(entry.getPath(), project);
 		if (container != null) {
@@ -463,7 +489,7 @@ public class TaglibHelper {
 
 				IClasspathEntry[] cpes = container.getClasspathEntries();
 				// recursive call here
-				addClasspathEntries(loader, project, wkspaceRoot, cpes);
+				addClasspathEntries(loader, project, cpes);
 			}
 		}
 	}
@@ -486,60 +512,60 @@ public class TaglibHelper {
 	/**
 	 * @param loader
 	 * @param project
-	 * @param wkspaceRoot
+	 * @param projectLocation
 	 * @throws JavaModelException
 	 */
-	private void addDefaultDirEntry(TaglibClassLoader loader, IJavaProject project, IPath wkspaceRoot) throws JavaModelException {
-
+	private void addDefaultDirEntry(TaglibClassLoader loader, IJavaProject project) throws JavaModelException {
 		// add default bin directory for the project
 		IPath outputLocation = project.getOutputLocation();
-		if (!outputLocation.toFile().exists()) {
-			outputLocation = wkspaceRoot.append(outputLocation);
+		IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getFolder(outputLocation);
+		if (folder != null && folder.isAccessible()) {
+			outputLocation = folder.getLocation();
+			loader.addDirectory(outputLocation.toString());
 		}
-		loader.addDirectory(outputLocation.toString());
 	}
 
 	/**
 	 * @param loader
-	 * @param wkspaceRoot
 	 * @param entry
 	 */
-	private void addLibraryEntry(TaglibClassLoader loader, IPath wkspaceRoot, String libPath) {
-
-		String jarPath = libPath;
-		File file = new File(jarPath);
+	private void addLibraryEntry(TaglibClassLoader loader, IPath libPath) {
+		String jarPathString = libPath.toString();
+		File file = new File(libPath.toOSString());
 
 		// if not absolute path, it's workspace relative
-		if (!file.exists()) {
-			jarPath = wkspaceRoot.append(jarPath).toString();
+		if (!file.exists() && libPath.segmentCount() > 1) {
+			IFile jarFile = ResourcesPlugin.getWorkspace().getRoot().getFile(libPath);
+			if (jarFile.isAccessible() && jarFile.getLocation() != null) {
+				jarPathString = jarFile.getLocation().toString();
+			}
 		}
 
-		if (jarPath.endsWith(".jar")) { //$NON-NLS-1$ 
-			loader.addJar(jarPath);
-		}
-		else if (file.isDirectory()) {
-			// it's actually a folder containing binaries
-			loader.addDirectory(jarPath);
+		if (jarPathString != null) {
+			if (jarPathString.endsWith(".jar")) { //$NON-NLS-1$ 
+				loader.addJar(jarPathString);
+			}
+			else if (file.isDirectory()) {
+				// it's actually a folder containing binaries
+				loader.addDirectory(jarPathString);
+			}
 		}
 	}
 
 	/**
 	 * @param loader
-	 * @param wkspaceRoot
 	 * @param entry
 	 */
-	private void addSourceEntry(TaglibClassLoader loader, IPath wkspaceRoot, IClasspathEntry entry) {
-
+	private void addSourceEntry(TaglibClassLoader loader, IClasspathEntry entry) {
 		// add bin directory for specific entry if it has
 		// one
-		if (entry.getOutputLocation() != null) {
-			String outputPath = entry.getOutputLocation().toString();
-			File file = entry.getOutputLocation().toFile();
-			// if not absolute path, it's workspace relative
-			if (!file.exists()) {
-				outputPath = wkspaceRoot.append(entry.getOutputLocation()).toString();
+		IPath outputLocation = entry.getOutputLocation();
+		if (outputLocation != null && outputLocation.segmentCount() > 1) {
+			IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getFolder(outputLocation);
+			if (folder != null && folder.isAccessible()) {
+				outputLocation = folder.getLocation();
+				loader.addDirectory(outputLocation.toString());
 			}
-			loader.addDirectory(outputPath);
 		}
 	}
 
@@ -575,5 +601,9 @@ public class TaglibHelper {
 	 */
 	public void setProject(IProject p) {
 		fProject = p;
+	}
+
+	Collection getValidationMessages() {
+		return fValidationMessages;
 	}
 }

@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional;
 
-/*nlsXXX*/
+/* nlsXXX */
 public interface JSP20TLDNames extends JSP12TLDNames {
 	String CONTENT_SCRIPTLESS = "scriptless"; //$NON-NLS-1$
 	String EXAMPLE = "example"; //$NON-NLS-1$
@@ -25,7 +25,14 @@ public interface JSP20TLDNames extends JSP12TLDNames {
 	String TAG_FILE = "tag-file"; //$NON-NLS-1$
 
 	String TAGDIR = "tagdir"; //$NON-NLS-1$
-	
+
 	String TAGLIB_EXTENSION = "taglib-extension"; //$NON-NLS-1$
 
+	String DYNAMIC_ATTRIBUTES = "dynamic-attributes"; //$NON-NLS-1$
+	String SCRIPTING_LANGUAGE = "language"; //$NON-NLS-1$
+	String IMPORT = "import"; //$NON-NLS-1$
+	String IS_EL_IGNORED = "isELIgnored"; //$NON-NLS-1$
+	String PAGE_ENCODING = "pageEncoding"; //$NON-NLS-1$
+	String TYPE = "type"; //$NON-NLS-1$
+	String VARIABLE_ALIAS = "alias"; //$NON-NLS-1$
 }

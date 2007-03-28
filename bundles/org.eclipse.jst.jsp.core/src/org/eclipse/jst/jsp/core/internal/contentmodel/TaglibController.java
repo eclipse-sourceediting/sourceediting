@@ -58,18 +58,22 @@ public class TaglibController implements IDocumentSetupParticipant {
 			int type = delta.getKind();
 			if (type == ITaglibIndexDelta.CHANGED || type == ITaglibIndexDelta.REMOVED) {
 				ITaglibIndexDelta[] deltas = delta.getAffectedChildren();
+				boolean affected = false;
 				for (int i = 0; i < deltas.length; i++) {
 					Object key = TLDCMDocumentManager.getUniqueIdentifier(deltas[i].getTaglibRecord());
 					if (tldDocumentManager.getDocuments().containsKey(key)) {
-						if (_debugCache) {
-							System.out.println("TLDCMDocumentManager cleared its private CMDocument cache"); //$NON-NLS-1$
-						}
-						tldDocumentManager.getDocuments().remove(key);
-						tldDocumentManager.getSourceParser().resetHandlers();
+						affected = true;
+					}
+				}
+				if (affected) {
+					if (_debugCache) {
+						System.out.println("TLDCMDocumentManager cleared its private CMDocument cache"); //$NON-NLS-1$
+					}
+					tldDocumentManager.getDocuments().clear();
+					tldDocumentManager.getSourceParser().resetHandlers();
 
-						if (document instanceof BasicStructuredDocument) {
-							((BasicStructuredDocument) document).reparse(this);
-						}
+					if (document instanceof BasicStructuredDocument) {
+						((BasicStructuredDocument) document).reparse(this);
 					}
 				}
 			}

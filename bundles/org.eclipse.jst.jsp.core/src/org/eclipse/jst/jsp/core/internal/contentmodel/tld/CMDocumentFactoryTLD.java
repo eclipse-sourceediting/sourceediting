@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.core.internal.contentmodel.tld;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,9 +18,19 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.JSP11TLDNames;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.JSP12TLDNames;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.JSP20TLDNames;
@@ -29,21 +40,37 @@ import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDInitPar
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDListener;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDValidator;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDVariable;
+import org.eclipse.jst.jsp.core.internal.modelhandler.ModelHandlerForJSP;
+import org.eclipse.jst.jsp.core.internal.provisional.JSP11Namespace;
+import org.eclipse.jst.jsp.core.internal.provisional.JSP20Namespace;
+import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.jst.jsp.core.internal.util.DocumentProvider;
 import org.eclipse.jst.jsp.core.taglib.IJarRecord;
 import org.eclipse.jst.jsp.core.taglib.ITLDRecord;
+import org.eclipse.jst.jsp.core.taglib.ITagDirRecord;
 import org.eclipse.jst.jsp.core.taglib.ITaglibRecord;
 import org.eclipse.jst.jsp.core.taglib.IURLRecord;
+import org.eclipse.jst.jsp.core.taglib.TaglibIndex;
 import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.sse.core.internal.util.JarUtilities;
+import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.factory.CMDocumentFactory;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.w3c.dom.Element;
 import org.w3c.dom.EntityReference;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.Attributes;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * CMDocumentBuilder for Taglib Descriptors
@@ -85,11 +112,36 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 	 * @param fileName
 	 * @return
 	 */
-	private CMDocument buildCMDocumentFromDirectory(File directory) {
+	private CMDocumentImpl buildCMDocumentFromFolder(IPath path) {
 		if (_debug) {
-			System.out.println("not implemented: tagdir loading for " + directory.getAbsolutePath()); //$NON-NLS-1$
+			System.out.println("tagdir loading for " + path); //$NON-NLS-1$
 		}
-		return null;
+		// EBNF is listed at 1.3.10
+		CMDocumentImpl document = new CMDocumentImpl();
+		document.setBaseLocation(path.toString());
+		document.setTlibversion("1.0"); //$NON-NLS-1$
+		IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getFolder(path);
+		IResource[] tagfiles;
+		try {
+			tagfiles = folder.members();
+			for (int i = 0; i < tagfiles.length; i++) {
+				if (tagfiles[i].getType() == IResource.FILE) {
+					if (tagfiles[i].getType() != IResource.FILE)
+						continue;
+					String extension = tagfiles[i].getFileExtension();
+					if (extension != null && (extension.equals("tag") || extension.equals("tagx"))) {
+						CMElementDeclaration ed = createElementDeclaration(document, (IFile) tagfiles[i]);
+						if (ed != null) {
+							document.fElements.setNamedItem(ed.getNodeName(), ed);
+						}
+					}
+				}
+			}
+		}
+		catch (CoreException e) {
+			Logger.logException(e);
+		}
+		return document;
 	}
 
 	/**
@@ -210,29 +262,50 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 	 */
 	private CMDocument createCMDocumentFromFile(String fileName) {
 		CMDocument result = null;
-		File file = new File(fileName);
-		try {
-			if (file.isDirectory()) {
-				result = buildCMDocumentFromDirectory(file);
-			}
+		if (fileName.endsWith(".jar")) { //$NON-NLS-1$
+			result = buildCMDocumentFromJar(fileName);
 		}
-		catch (SecurityException e) {
-			result = null;
-		}
-		if (result == null) {
-			if (fileName.endsWith(".jar")) { //$NON-NLS-1$
-				result = buildCMDocumentFromJar(fileName);
+		else {
+			File file = new File(fileName);
+			try {
+				if (file.isDirectory()) {
+					result = buildCMDocumentFromDirectory(file);
+				}
+				else {
+					result = buildCMDocumentFromFile(fileName);
+				}
 			}
-			else {
-				result = buildCMDocumentFromFile(fileName);
+			catch (SecurityException e) {
+				result = null;
 			}
 		}
 		return result;
 	}
 
-	protected CMElementDeclaration createElementDeclaration(CMDocument cmdocument, Element tagFileNode, String path) {
-		CMElementDeclarationImpl ed = new CMElementDeclarationImpl(cmdocument);
-		boolean hasName = false;
+	private CMDocument buildCMDocumentFromDirectory(File file) {
+		IFile[] foundFilesForLocation = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocation(new Path(file.getPath()));
+		for (int i = 0; i < foundFilesForLocation.length; i++) {
+			if (foundFilesForLocation[i].isAccessible() && foundFilesForLocation[i].getType() == IResource.FOLDER) {
+				return buildCMDocumentFromFolder(foundFilesForLocation[i].getFullPath());
+			}
+		}
+		return null;
+	}
+
+	protected CMElementDeclaration createElementDeclaration(CMDocumentImpl document, Element tagFileNode, String path) {
+		CMElementDeclarationImpl ed = new CMElementDeclarationImpl(document);
+		// preload with information from the tag file--it can be overwritten
+		// by the values from the TLD
+		IPath tagPath = new Path(document.getBaseLocation()).removeLastSegments(1).append(path);
+		IFile tagFile = ResourcesPlugin.getWorkspace().getRoot().getFile(tagPath);
+		if (tagFile.isAccessible()) {
+			if (tagPath.getFileExtension().equals("tag")) {
+				loadTagFile(ed, tagFile, true);
+			}
+			else if (tagPath.getFileExtension().equals("tagx")) {
+				loadTagXFile(ed, tagFile, true);
+			}
+		}
 
 		// load information declared within the .tld
 		Node child = tagFileNode.getFirstChild();
@@ -253,7 +326,6 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 				}
 				else if (nodeName.equals(JSP12TLDNames.NAME) && child.hasChildNodes()) {
 					ed.setNodeName(getContainedText(child));
-					hasName = ed.getNodeName().trim().length() > 0;
 				}
 				else if (nodeName.equals(JSP20TLDNames.PATH) && child.hasChildNodes()) {
 					ed.setPath(getContainedText(child));
@@ -264,12 +336,7 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 			}
 			child = child.getNextSibling();
 		}
-		if (hasName) {
-			// load information declared within the .tag(x) file
-			// JSP2_TODO: implement for JSP 2.0
-			return ed;
-		}
-		return null;
+		return ed;
 	}
 
 	protected CMElementDeclaration createElementDeclaration(CMDocument document, Node tagNode) {
@@ -327,6 +394,27 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 			}
 			child = child.getNextSibling();
 		}
+		return ed;
+	}
+
+	private CMElementDeclaration createElementDeclaration(CMDocument document, IFile tagFile) {
+		CMElementDeclarationImpl ed = new CMElementDeclarationImpl(document);
+		// in tag files, the default body content is scriptless instead of JSP
+		ed.setBodycontent(JSP20TLDNames.CONTENT_SCRIPTLESS);
+		String shortFilename = tagFile.getName();
+		String fileExtension = tagFile.getFileExtension();
+		if (fileExtension != null && fileExtension.length() > 0) {
+			shortFilename = shortFilename.substring(0, shortFilename.length() - fileExtension.length() - 1);
+		}
+		ed.setNodeName(shortFilename);
+		ed.setPath(tagFile.getFullPath().toString());
+		if (fileExtension.equals("tag")) {
+			loadTagFile(ed, tagFile, true);
+		}
+		else if (fileExtension.equals("tagx")) {
+			loadTagXFile(ed, tagFile, true);
+		}
+
 		return ed;
 	}
 
@@ -520,10 +608,11 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 			else if (nodeName.equals(JSP20TLDNames.TAG_FILE) && child.getNodeType() == Node.ELEMENT_NODE && child.hasChildNodes()) {
 				Element tagFileElement = (Element) child;
 				String path = tagFileElement.getAttribute(JSP20TLDNames.PATH);
-
-				CMElementDeclarationImpl ed = (CMElementDeclarationImpl) createElementDeclaration(document, tagFileElement, path);
-				if (ed != null) {
-					document.fElements.setNamedItem(ed.getNodeName(), ed);
+				if (path != null && path.length() > 0) {
+					CMElementDeclarationImpl ed = (CMElementDeclarationImpl) createElementDeclaration(document, tagFileElement, path);
+					if (ed != null) {
+						document.fElements.setNamedItem(ed.getNodeName(), ed);
+					}
 				}
 			}
 			// other one-of-a-kind children
@@ -587,6 +676,296 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 		return document;
 	}
 
+	private void loadTagXFile(final CMElementDeclarationImpl ed, IFile tagxFile, boolean allowIncludes) {
+		try {
+			SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
+			InputSource inputSource = new InputSource(tagxFile.getFullPath().toString());
+			InputStream input = tagxFile.getContents(false);
+			inputSource.setByteStream(input);
+			parser.parse(inputSource, new DefaultHandler() {
+				public InputSource resolveEntity(String publicId, String systemId) throws IOException, SAXException {
+					InputSource inputSource2 = new InputSource(systemId);
+					inputSource2.setByteStream(new ByteArrayInputStream(new byte[0]));
+					return inputSource2;
+				}
+
+				public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+					super.startElement(uri, localName, qName, attributes);
+					if (qName.equals(JSP20Namespace.ElementName.DIRECTIVE_TAG)) {
+						if (attributes.getIndex(JSP12TLDNames.DISPLAY_NAME) >= 0)
+							ed.setDisplayName(attributes.getValue(JSP12TLDNames.DISPLAY_NAME));
+						if (attributes.getIndex(JSP12TLDNames.BODY_CONTENT) >= 0)
+							ed.setBodycontent(attributes.getValue(JSP12TLDNames.BODY_CONTENT));
+						if (attributes.getIndex(JSP20TLDNames.DYNAMIC_ATTRIBUTES) >= 0)
+							ed.setDynamicAttributes(attributes.getValue(JSP20TLDNames.DYNAMIC_ATTRIBUTES));
+						if (attributes.getIndex(JSP12TLDNames.SMALL_ICON) >= 0)
+							ed.setSmallIcon(attributes.getValue(JSP12TLDNames.SMALL_ICON));
+						if (attributes.getIndex(JSP12TLDNames.LARGE_ICON) >= 0)
+							ed.setLargeIcon(attributes.getValue(JSP12TLDNames.LARGE_ICON));
+						if (attributes.getIndex(JSP12TLDNames.DESCRIPTION) >= 0)
+							ed.setDescription(attributes.getValue(JSP12TLDNames.DESCRIPTION));
+						if (attributes.getIndex(JSP20TLDNames.EXAMPLE) >= 0)
+							ed.setExample(attributes.getValue(JSP20TLDNames.EXAMPLE));
+						if (attributes.getIndex(JSP20TLDNames.SCRIPTING_LANGUAGE) >= 0)
+							ed.setScriptingLanguage(attributes.getValue(JSP20TLDNames.SCRIPTING_LANGUAGE));
+						if (attributes.getIndex(JSP20TLDNames.IMPORT) >= 0)
+							ed.setImport(attributes.getValue(JSP20TLDNames.IMPORT));
+						if (attributes.getIndex(JSP20TLDNames.PAGE_ENCODING) >= 0)
+							ed.setPageEncoding(attributes.getValue(JSP20TLDNames.PAGE_ENCODING));
+						if (attributes.getIndex(JSP20TLDNames.IS_EL_IGNORED) >= 0)
+							ed.setIsELIgnored(attributes.getValue(JSP20TLDNames.IS_EL_IGNORED));
+					}
+					else if (qName.equals(JSP20Namespace.ElementName.DIRECTIVE_ATTRIBUTE)) {
+						CMAttributeDeclarationImpl attribute = new CMAttributeDeclarationImpl(ed.getOwnerDocument());
+						String nameValue = attributes.getValue(JSP12TLDNames.NAME);
+						attribute.setNodeName(nameValue);
+						if (attributes.getIndex(JSP20TLDNames.FRAGMENT) >= 0)
+							attribute.setFragment(Boolean.parseBoolean(attributes.getValue(JSP20TLDNames.FRAGMENT)));
+						if (attributes.getIndex(JSP12TLDNames.RTEXPRVALUE) >= 0)
+							attribute.setRtexprvalue(attributes.getValue(JSP12TLDNames.RTEXPRVALUE));
+						if (attributes.getIndex(JSP20TLDNames.TYPE) >= 0)
+							attribute.setType(attributes.getValue(JSP20TLDNames.TYPE));
+						if (attributes.getIndex(JSP12TLDNames.DESCRIPTION) >= 0)
+							attribute.setDescription(attributes.getValue(JSP12TLDNames.DESCRIPTION));
+						if (attributes.getIndex(JSP12TLDNames.REQUIRED) >= 0)
+							attribute.setRequiredString(attributes.getValue(JSP12TLDNames.REQUIRED));
+						if (nameValue != null && nameValue.length() > 0) {
+							ed.fAttributes.setNamedItem(nameValue, attribute);
+						}
+					}
+					else if (qName.equals(JSP20Namespace.ElementName.DIRECTIVE_VARIABLE)) {
+						TLDVariableImpl variable = new TLDVariableImpl();
+						if (attributes.getIndex(JSP12TLDNames.VARIABLE_NAME_GIVEN) >= 0)
+							variable.setNameGiven(attributes.getValue(JSP12TLDNames.VARIABLE_NAME_GIVEN));
+						if (attributes.getIndex(JSP12TLDNames.VARIABLE_NAME_FROM_ATTRIBUTE) >= 0)
+							variable.setNameFromAttribute(attributes.getValue(JSP12TLDNames.VARIABLE_NAME_FROM_ATTRIBUTE));
+						if (attributes.getIndex(JSP20TLDNames.VARIABLE_ALIAS) >= 0)
+							variable.setAlias(attributes.getValue(JSP20TLDNames.VARIABLE_ALIAS));
+						if (attributes.getIndex(JSP12TLDNames.VARIABLE_CLASS) >= 0)
+							variable.setVariableClass(attributes.getValue(JSP12TLDNames.VARIABLE_CLASS));
+						if (attributes.getIndex(JSP12TLDNames.VARIABLE_DECLARE) >= 0)
+							variable.setDeclareString(attributes.getValue(JSP12TLDNames.VARIABLE_DECLARE));
+						if (attributes.getIndex(JSP11Namespace.ATTR_NAME_SCOPE) >= 0)
+							variable.setScope(attributes.getValue(JSP11Namespace.ATTR_NAME_SCOPE));
+						if (attributes.getIndex(JSP12TLDNames.DESCRIPTION) >= 0)
+							variable.setDescription(attributes.getValue(JSP12TLDNames.DESCRIPTION));
+						if (variable.getAlias() != null || variable.getNameFromAttribute() != null || variable.getNameGiven() != null) {
+							ed.getVariables().add(variable);
+						}
+					}
+					else if (qName.equals(JSP11Namespace.ElementName.DIRECTIVE_INCLUDE)) {
+						IPath filePath = null;
+						String text = attributes.getValue(JSP11Namespace.ATTR_NAME_FILE);
+						if (text != null) {
+							if (text.startsWith("/")) { //$NON-NLS-1$
+								IPath contextRoot = TaglibIndex.getContextRoot(new Path(((CMDocumentImpl) ed.getOwnerDocument()).getBaseLocation()));
+								filePath = contextRoot.append(text);
+							}
+							else {
+								filePath = new Path(((CMDocumentImpl) ed.getOwnerDocument()).getBaseLocation()).removeLastSegments(1).append(text);
+							}
+							IFile includedFile = ResourcesPlugin.getWorkspace().getRoot().getFile(filePath);
+							if (includedFile.isAccessible()) {
+								loadTagXFile(ed, includedFile, false);
+							}
+						}
+					}
+				}
+			});
+			input.close();
+		}
+		catch (ParserConfigurationException e) {
+			Logger.logException(e);
+		}
+		catch (SAXException e) {
+			Logger.logException(e);
+		}
+		catch (IOException e) {
+			Logger.logException(e);
+		}
+		catch (CoreException e) {
+			Logger.logException(e);
+		}
+		ed.setLocationString(tagxFile.getFullPath().toString());
+	}
+
+	private void loadTagFile(CMElementDeclarationImpl ed, IFile tagFile, boolean allowIncludes) {
+		try {
+			IStructuredDocument document = (IStructuredDocument) new ModelHandlerForJSP().getDocumentLoader().createNewStructuredDocument(tagFile);
+			IStructuredDocumentRegion documentRegion = document.getFirstStructuredDocumentRegion();
+			while (documentRegion != null) {
+				if (documentRegion.getType().equals(DOMJSPRegionContexts.JSP_DIRECTIVE_NAME)) {
+					if (documentRegion.getNumberOfRegions() > 2) {
+						ITextRegionList regions = documentRegion.getRegions();
+						String directiveName = documentRegion.getText(regions.get(1));
+						if (JSP12TLDNames.TAG.equals(directiveName)) {
+							// 8.5.1
+							String attrName = null;
+							for (int i = 2; i < documentRegion.getNumberOfRegions(); i++) {
+								ITextRegion region = regions.get(i);
+								String text = documentRegion.getText(region);
+								if (region.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME) {
+									attrName = text;
+								}
+								// process value
+								else if (region.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
+									text = StringUtils.strip(text);
+									if (JSP12TLDNames.DISPLAY_NAME.equals(attrName)) {
+										ed.setDisplayName(text);
+									}
+									else if (JSP12TLDNames.BODY_CONTENT.equals(attrName)) {
+										ed.setBodycontent(text);
+									}
+									else if (JSP20TLDNames.DYNAMIC_ATTRIBUTES.equals(attrName)) {
+										ed.setDynamicAttributes(text);
+									}
+									else if (JSP12TLDNames.SMALL_ICON.equals(attrName)) {
+										ed.setSmallIcon(text);
+									}
+									else if (JSP12TLDNames.LARGE_ICON.equals(attrName)) {
+										ed.setLargeIcon(text);
+									}
+									else if (JSP12TLDNames.DESCRIPTION.equals(attrName)) {
+										ed.setDescription(text);
+									}
+									else if (JSP20TLDNames.EXAMPLE.equals(attrName)) {
+										ed.setExample(text);
+									}
+									else if (JSP20TLDNames.SCRIPTING_LANGUAGE.equals(attrName)) {
+										ed.setScriptingLanguage(text);
+									}
+									else if (JSP20TLDNames.IMPORT.equals(attrName)) {
+										ed.setImport(text);
+									}
+									else if (JSP20TLDNames.PAGE_ENCODING.equals(attrName)) {
+										ed.setPageEncoding(text);
+									}
+									else if (JSP20TLDNames.IS_EL_IGNORED.equals(attrName)) {
+										ed.setIsELIgnored(text);
+									}
+								}
+							}
+						}
+						else if (JSP12TLDNames.ATTRIBUTE.equals(directiveName)) {
+							CMAttributeDeclarationImpl attribute = new CMAttributeDeclarationImpl(ed.getOwnerDocument());
+							// 8.5.2
+							String attrName = null;
+							for (int i = 2; i < documentRegion.getNumberOfRegions(); i++) {
+								ITextRegion region = regions.get(i);
+								String text = documentRegion.getText(region);
+								if (region.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME) {
+									attrName = text;
+								}
+								// process value
+								else if (region.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE && attrName != null) {
+									text = StringUtils.strip(text);
+									if (JSP12TLDNames.NAME.equals(attrName)) {
+										attribute.setNodeName(text);
+									}
+									else if (JSP20TLDNames.FRAGMENT.equals(attrName)) {
+										attribute.setFragment(Boolean.parseBoolean(text));
+									}
+									else if (JSP12TLDNames.RTEXPRVALUE.equals(attrName)) {
+										attribute.setRtexprvalue(text);
+									}
+									else if (JSP20TLDNames.TYPE.equals(attrName)) {
+										attribute.setType(text);
+									}
+									else if (JSP12TLDNames.DESCRIPTION.equals(attrName)) {
+										attribute.setDescription(text);
+									}
+									else if (JSP12TLDNames.REQUIRED.equals(attrName)) {
+										attribute.setRequiredString(text);
+									}
+								}
+							}
+							if (attribute.getNodeName() != null) {
+								ed.fAttributes.setNamedItem(attribute.getNodeName(), attribute);
+							}
+						}
+						else if (JSP12TLDNames.VARIABLE.equals(directiveName)) {
+							TLDVariableImpl variable = new TLDVariableImpl();
+							String attrName = null;
+							for (int i = 2; i < documentRegion.getNumberOfRegions(); i++) {
+								ITextRegion region = regions.get(i);
+								String text = documentRegion.getText(region);
+								if (region.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME) {
+									attrName = text;
+								}
+								// process value
+								else if (region.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE && attrName != null) {
+									text = StringUtils.strip(text);
+									if (JSP12TLDNames.VARIABLE_NAME_GIVEN.equals(attrName)) {
+										variable.setNameGiven(text);
+									}
+									else if (JSP12TLDNames.VARIABLE_NAME_FROM_ATTRIBUTE.equals(attrName)) {
+										variable.setNameFromAttribute(text);
+									}
+									else if (JSP20TLDNames.VARIABLE_ALIAS.equals(attrName)) {
+										variable.setAlias(text);
+									}
+									else if (JSP12TLDNames.VARIABLE_CLASS.equals(attrName)) {
+										variable.setVariableClass(text);
+									}
+									else if (JSP12TLDNames.VARIABLE_DECLARE.equals(attrName)) {
+										variable.setDeclareString(text);
+									}
+									else if (JSP11Namespace.ATTR_NAME_SCOPE.equals(attrName)) {
+										variable.setScope(text);
+									}
+									else if (JSP12TLDNames.DESCRIPTION.equals(attrName)) {
+										variable.setDescription(text);
+									}
+								}
+							}
+							if (variable.getAlias() != null || variable.getNameFromAttribute() != null || variable.getNameGiven() != null) {
+								ed.getVariables().add(variable);
+							}
+						}
+						else if ("include".equals(directiveName) && allowIncludes) {
+							String attrName = null;
+							for (int i = 2; i < documentRegion.getNumberOfRegions(); i++) {
+								ITextRegion region = regions.get(i);
+								String text = documentRegion.getText(region);
+								if (region.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME) {
+									attrName = text;
+								}
+								// process value
+								else if (region.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE && attrName != null) {
+									text = StringUtils.strip(text);
+									if (JSP11Namespace.ATTR_NAME_FILE.equals(attrName)) {
+										IPath filePath = null;
+										if (text.startsWith("/")) { //$NON-NLS-1$
+											IPath contextRoot = TaglibIndex.getContextRoot(new Path(((CMDocumentImpl) ed.getOwnerDocument()).getBaseLocation()));
+											filePath = contextRoot.append(text);
+										}
+										else {
+											filePath = new Path(((CMDocumentImpl) ed.getOwnerDocument()).getBaseLocation()).removeLastSegments(1).append(text);
+										}
+										IFile includedFile = ResourcesPlugin.getWorkspace().getRoot().getFile(filePath);
+										if (includedFile.isAccessible()) {
+											loadTagFile(ed, includedFile, false);
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+
+				documentRegion = documentRegion.getNext();
+			}
+
+		}
+		catch (IOException e) {
+			Logger.logException("problem parsing " + tagFile, e);
+		}
+		catch (CoreException e) {
+			Logger.logException("problem parsing " + tagFile, e);
+		}
+		ed.setLocationString(tagFile.getFullPath().toString());
+	}
+
 	/**
 	 * @param reference
 	 * @return
@@ -599,6 +978,7 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 				IResource file = ResourcesPlugin.getWorkspace().getRoot().getFile(record.getPath());
 				if (file.getLocation() != null) {
 					document = (CMDocumentImpl) buildCMDocumentFromFile(file.getLocation().toString());
+					document.setLocationString(record.getPath().toString());
 					if (_debug && document != null && document.getElements().getLength() == 0) {
 						System.out.println("failure parsing " + record.getPath()); //$NON-NLS-1$
 					}
@@ -617,6 +997,7 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 			case (ITaglibRecord.JAR) : {
 				IJarRecord record = (IJarRecord) reference;
 				document = (CMDocumentImpl) buildCMDocumentFromJar(record.getLocation().toString());
+				document.setLocationString("jar:file:" + record.getLocation().toString() + "!META-INF/taglib.tld");
 				if (document.getSmallIcon() != null) {
 					String iconPath = URIHelper.normalize(((TLDDocument) document).getSmallIcon(), record.getLocation().toString() + "!META-INF/", "/"); //$NON-NLS-1$ //$NON-NLS-2$
 					document.setProperty(JSP12TLDNames.SMALL_ICON, "jar:file:" + iconPath); //$NON-NLS-1$
@@ -631,9 +1012,8 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 			}
 				break;
 			case (ITaglibRecord.TAGDIR) : {
-				// TagDirRecord record = (TagDirRecord) reference;
-				// document =
-				// buildCMDocumentFromDirectory(record.getLocation().toFile());
+				ITagDirRecord record = (ITagDirRecord) reference;
+				document = buildCMDocumentFromFolder(record.getPath());
 			}
 				break;
 			case (ITaglibRecord.URL) : {
@@ -646,6 +1026,7 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 						connection.setUseCaches(false);
 						urlContents = connection.getInputStream();
 						document = (CMDocumentImpl) buildCMDocument(record.getBaseLocation(), urlContents);
+						document.setLocationString(record.getURL().toString());
 						if (document.getSmallIcon() != null) {
 							String iconPath = URIHelper.normalize(((TLDDocument) document).getSmallIcon(), record.getURL().toString(), "/"); //$NON-NLS-1$
 							document.setProperty(JSP12TLDNames.SMALL_ICON, iconPath);

@@ -12,7 +12,8 @@ package org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional;
 
 /**
  * Information on the scripting variables defined by this tag.
- * @see  JSP 1.2
+ * 
+ * @see JSP 1.2
  */
 public interface TLDVariable {
 
@@ -27,15 +28,18 @@ public interface TLDVariable {
 	String getDescription();
 
 	/**
-	 * The name of an attribute whose (translation time) value will give the name of the variable, or null of the name is not to be obtained this way.
+	 * The name of an attribute whose (translation time) value will give the
+	 * name of the variable, or null of the name is not to be obtained this
+	 * way.
 	 */
 	String getNameFromAttribute();
 
 	/**
-	 * The variable name given as a constant, or null of the name is not specified.
+	 * The variable name given as a constant, or null of the name is not
+	 * specified.
 	 */
 	String getNameGiven();
-	
+
 	/**
 	 * The scope of the scripting variable defined.
 	 */
@@ -45,4 +49,9 @@ public interface TLDVariable {
 	 * Name of the class of the variable, java.lang.String if null
 	 */
 	String getVariableClass();
+
+	/**
+	 * A locally scoped attribute to hold the value of this variable
+	 */
+	String getAlias();
 }

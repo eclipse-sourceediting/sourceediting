@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,8 +22,10 @@ import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.parser.JSPSourceParser;
 import org.eclipse.jst.jsp.core.internal.provisional.JSP11Namespace;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
+import org.eclipse.wst.sse.core.internal.document.StructuredDocumentFactory;
 import org.eclipse.wst.sse.core.internal.ltk.parser.BlockMarker;
 import org.eclipse.wst.sse.core.internal.ltk.parser.StructuredDocumentRegionHandler;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
@@ -92,18 +94,27 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 	 * @return
 	 */
 	public boolean parse(String filename) {
+		getLocalParser().removeStructuredDocumentRegionHandler(this);
 		// from outer class
 		List blockMarkers = this.fTranslator.getBlockMarkers();
+		IStructuredDocument document = StructuredDocumentFactory.getNewStructuredDocumentInstance(getLocalParser());
 		String contents = getContents(filename);
 		if(contents == null)
 			return false;
-		reset(contents);
 		// this adds the current markers from the outer class list
 		// to this parser so parsing works correctly
 		for (int i = 0; i < blockMarkers.size(); i++) {
 			addBlockMarker((BlockMarker) blockMarkers.get(i));
 		}
-		forceParse();
+		reset(contents);
+//		forceParse();
+		document.set(contents);
+		IStructuredDocumentRegion cursor = document.getFirstStructuredDocumentRegion();
+		while(cursor != null) {
+			nodeParsed(cursor);
+			cursor = cursor.getNext();
+		}
+		getLocalParser().addStructuredDocumentRegionHandler(this);
 		return true;
 	}
 
@@ -118,9 +129,21 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 		try {
 			
 			handleScopingIfNecessary(sdRegion);
-			
-			if (isJSPStartRegion(sdRegion)) {
+			if (isJSPEndRegion(sdRegion)) {
 				String nameStr = getRegionName(sdRegion);
+				if (isPossibleCustomTag(nameStr)) {
+					// this custom tag may define variables
+					this.fTranslator.addTaglibVariables(nameStr, sdRegion);
+				}
+			}
+			else if (isJSPStartRegion(sdRegion)) {
+				String nameStr = getRegionName(sdRegion);
+				if (sdRegion.getFirstRegion().getType() == DOMRegionContext.XML_TAG_OPEN) {
+					if (isPossibleCustomTag(nameStr)) {
+						// this custom tag may define variables
+						this.fTranslator.addTaglibVariables(nameStr, sdRegion);
+					}
+				}
 				if (isJSPRegion(nameStr))
 					fTagname = nameStr;
 				else
@@ -134,6 +157,8 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 				if(fTagname != null && sdRegion.getFirstRegion().getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_OPEN) {
 					processOtherRegions(sdRegion);	
 				}
+
+
 				// handle jsp:useBean
 				if(fTagname != null && fTagname.equals(JSP11Namespace.ElementName.USEBEAN)) {
 					processUseBean(sdRegion);
@@ -399,6 +424,10 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 	 */
 	protected boolean isJSPStartRegion(IStructuredDocumentRegion sdRegion) {
 		return (sdRegion.getFirstRegion().getType() == DOMRegionContext.XML_TAG_OPEN || sdRegion.getFirstRegion().getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_OPEN);
+	}
+
+	private boolean isJSPEndRegion(IStructuredDocumentRegion sdRegion) {
+		return (sdRegion.getFirstRegion().getType() == DOMRegionContext.XML_END_TAG_OPEN);
 	}
 
 	protected boolean isJSPRegion(String tagName) {

@@ -18,7 +18,7 @@ import org.eclipse.wst.sse.core.utils.StringUtils;
 public class TLDVariableImpl implements TLDVariable {
 	// optional - defaults to true
 	private boolean declare = true;
-	
+
 	private String fDescription;
 	// required
 	private String nameFromAttribute;
@@ -28,6 +28,8 @@ public class TLDVariableImpl implements TLDVariable {
 	private String scope = JSP12TLDNames.VARIABLE_SCOPE_NESTED;
 	// required - defaults to a String
 	private String variableClass = "java.lang.String"; //$NON-NLS-1$
+
+	private String fAlias;
 
 	public boolean getDeclare() {
 		return declare;
@@ -61,10 +63,14 @@ public class TLDVariableImpl implements TLDVariable {
 	}
 
 	public void setDeclareString(String decl) {
-		setDeclare(decl.equals(JSP12TLDNames.TRUE) || decl.equals(JSP12TLDNames.YES));
+		if (decl != null) {
+			setDeclare(decl.equals(JSP12TLDNames.TRUE) || decl.equals(JSP12TLDNames.YES));
+		}
 	}
+
 	/**
-	 * @param description The description to set.
+	 * @param description
+	 *            The description to set.
 	 */
 	public void setDescription(String description) {
 		fDescription = description;
@@ -92,10 +98,19 @@ public class TLDVariableImpl implements TLDVariable {
 		buffer.append("\n\t name given:" + StringUtils.escape(getNameGiven())); //$NON-NLS-1$
 		buffer.append("\n\t name from attribute:" + StringUtils.escape(getNameFromAttribute())); //$NON-NLS-1$
 		// Boolean.toString(boolean) is introduced in JDK 1.4
-		//buffer.append("\n\t declare:" + StringUtils.escape(Boolean.toString(getDeclare())));
+		// buffer.append("\n\t declare:" +
+		// StringUtils.escape(Boolean.toString(getDeclare())));
 		buffer.append("\n\t declare:" + StringUtils.toString(getDeclare())); //$NON-NLS-1$
 		buffer.append("\n\t scope:" + StringUtils.escape(getScope())); //$NON-NLS-1$
 		buffer.append("\n\t variable class:" + StringUtils.escape(getVariableClass())); //$NON-NLS-1$
 		return buffer.toString();
+	}
+
+	public String getAlias() {
+		return fAlias;
+	}
+
+	public void setAlias(String alias) {
+		fAlias = alias;
 	}
 }
