@@ -110,7 +110,8 @@ public class HTMLFormatter implements IStructuredFormatter {
 			if (next == null && element.getEndStructuredDocumentRegion() == null)
 				return false;
 
-			// insert line break under non-HTML elements including JSP elements
+			// insert line break under non-HTML elements including JSP
+			// elements
 			if (element.getPrefix() != null)
 				return true;
 
@@ -175,7 +176,8 @@ public class HTMLFormatter implements IStructuredFormatter {
 			if (prev == null && element.getStartStructuredDocumentRegion() == null)
 				return false;
 
-			// insert line break under non-HTML elements including JSP elements
+			// insert line break under non-HTML elements including JSP
+			// elements
 			if (element.getPrefix() != null)
 				return true;
 
@@ -386,6 +388,10 @@ public class HTMLFormatter implements IStructuredFormatter {
 			return;
 		if (node.getNodeType() == Node.TEXT_NODE)
 			return;
+		// don't insert break if node is on the last line
+		int documentLength = node.getStructuredDocument().getLength();
+		if (documentLength < 1 || (node.getEndOffset() >= (documentLength - 1)))
+			return;
 		Node parent = node.getParentNode();
 		if (parent == null)
 			return;
@@ -482,9 +488,11 @@ public class HTMLFormatter implements IStructuredFormatter {
 		int startOffset = flatNode.getStartOffset();
 		if (structuredDocument.containsReadOnly(startOffset + offset, length))
 			return;
-		// We use 'structuredDocument' as the requester object just so this and the other
-		// format-related 'repalceText' (in replaceSource) can use the same requester.
-		// Otherwise, if requester is not identical, 
+		// We use 'structuredDocument' as the requester object just so this
+		// and the other
+		// format-related 'repalceText' (in replaceSource) can use the same
+		// requester.
+		// Otherwise, if requester is not identical,
 		// the undo group gets "broken" into multiple pieces based
 		// on the requesters being different. Technically, any unique, common
 		// requester object would work.
@@ -503,12 +511,14 @@ public class HTMLFormatter implements IStructuredFormatter {
 			source = new String();
 		if (structuredDocument.containsReadOnly(offset, length))
 			return;
-		// We use 'structuredDocument' as the requester object just so this and the other
-		// format-related 'repalceText' (in replaceSource) can use the same requester.
-		// Otherwise, if requester is not identical, 
+		// We use 'structuredDocument' as the requester object just so this
+		// and the other
+		// format-related 'repalceText' (in replaceSource) can use the same
+		// requester.
+		// Otherwise, if requester is not identical,
 		// the undo group gets "broken" into multiple pieces based
 		// on the requesters being different. Technically, any unique, common
-		// requester object would work. 
+		// requester object would work.
 		structuredDocument.replaceText(structuredDocument, offset, length, source);
 	}
 
@@ -587,19 +597,19 @@ public class HTMLFormatter implements IStructuredFormatter {
 	/**
 	 */
 	protected boolean splitLines() {
-		return true;//getFormatPreferences().getSplitLines();
+		return true;// getFormatPreferences().getSplitLines();
 	}
 
 	protected IStructuredFormatPreferences fFormatPreferences = null;
 	protected HTMLFormatContraints fFormatContraints = null;
 	protected IProgressMonitor fProgressMonitor = null;
 
-	//public void format(XMLNode node, FormatContraints formatContraints) {
-	//	if (formatContraints.getFormatWithSiblingIndent())
-	//		formatContraints.setCurrentIndent(getSiblingIndent(node));
+	// public void format(XMLNode node, FormatContraints formatContraints) {
+	// if (formatContraints.getFormatWithSiblingIndent())
+	// formatContraints.setCurrentIndent(getSiblingIndent(node));
 	//
-	//	formatNode(node, formatContraints);
-	//}
+	// formatNode(node, formatContraints);
+	// }
 
 	public void setFormatPreferences(IStructuredFormatPreferences formatPreferences) {
 		fFormatPreferences = formatPreferences;

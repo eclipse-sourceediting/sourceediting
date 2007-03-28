@@ -12,7 +12,8 @@ package org.eclipse.wst.html.core.internal.format;
 
 import java.util.Iterator;
 
-import org.eclipse.wst.css.core.internal.format.CSSSourceFormatter;
+import org.eclipse.wst.css.core.internal.formatter.CSSSourceFormatter;
+import org.eclipse.wst.css.core.internal.formatter.CSSSourceFormatterFactory;
 import org.eclipse.wst.css.core.internal.provisional.adapters.IStyleDeclarationAdapter;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSModel;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
@@ -108,7 +109,7 @@ public class HTMLElementFormatter extends HTMLFormatter {
 		// String newEndTag = endStructuredDocumentRegion.getText();
 		// if (newEndTag != null && newEndTag.length() > 0) {
 		// setWidth(contraints, newEndTag);
-		//		}
+		// }
 	}
 
 	/**
@@ -339,10 +340,12 @@ public class HTMLElementFormatter extends HTMLFormatter {
 		if (document == null)
 			return null;
 		INodeNotifier notifier = (INodeNotifier) document;
-		INodeAdapter adapter = notifier.getAdapterFor(CSSSourceFormatter.class);
-		if (adapter == null)
+		CSSSourceFormatter formatter = (CSSSourceFormatter) notifier.getAdapterFor(CSSSourceFormatter.class);
+		// try another way to get formatter
+		if (formatter == null)
+			formatter = CSSSourceFormatterFactory.getInstance().getSourceFormatter(notifier);
+		if (formatter == null)
 			return null;
-		CSSSourceFormatter formatter = (CSSSourceFormatter) adapter;
 		StringBuffer buffer = formatter.format(document);
 		if (buffer == null)
 			return null;

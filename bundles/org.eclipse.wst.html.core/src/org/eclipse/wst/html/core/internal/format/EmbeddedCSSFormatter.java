@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,7 +12,8 @@ package org.eclipse.wst.html.core.internal.format;
 
 
 
-import org.eclipse.wst.css.core.internal.format.CSSSourceFormatter;
+import org.eclipse.wst.css.core.internal.formatter.CSSSourceFormatter;
+import org.eclipse.wst.css.core.internal.formatter.CSSSourceFormatterFactory;
 import org.eclipse.wst.css.core.internal.provisional.adapters.IStyleSheetAdapter;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSModel;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
@@ -26,7 +27,8 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMText;
 
 public class EmbeddedCSSFormatter extends HTMLFormatter {
 
-	//private IAdapterFactory factory = new CSSSourceFormatterFactory(CSSSourceFormatter.class, true);
+	// private IAdapterFactory factory = new
+	// CSSSourceFormatterFactory(CSSSourceFormatter.class, true);
 	/**
 	 */
 	protected EmbeddedCSSFormatter() {
@@ -61,10 +63,12 @@ public class EmbeddedCSSFormatter extends HTMLFormatter {
 		if (document == null)
 			return null;
 		INodeNotifier notifier = (INodeNotifier) document;
-		INodeAdapter adapter = notifier.getAdapterFor(CSSSourceFormatter.class);
-		if (adapter == null)
+		CSSSourceFormatter formatter = (CSSSourceFormatter) notifier.getAdapterFor(CSSSourceFormatter.class);
+		// try another way to get formatter
+		if (formatter == null)
+			formatter = CSSSourceFormatterFactory.getInstance().getSourceFormatter(notifier);
+		if (formatter == null)
 			return null;
-		CSSSourceFormatter formatter = (CSSSourceFormatter) adapter;
 		StringBuffer buffer = formatter.format(document);
 		if (buffer == null)
 			return null;
