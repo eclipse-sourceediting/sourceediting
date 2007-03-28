@@ -53,3 +53,4 @@ Require-Bundle: com.ibm.icu;bundle-version="[3.4.4,4.0.0)",
  javax.servlet;bundle-version="[2.0.0,3.0.0)",
  javax.servlet.jsp;bundle-version="[2.0.0,3.0.0)"
 Eclipse-LazyStart: true; exceptions="org.eclipse.jst.jsp.core.internal.contenttype"
+Bundle-RequiredExecutionEnvironment: J2SE-1.4
