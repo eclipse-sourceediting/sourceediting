@@ -9,6 +9,12 @@
 			category="org.eclipse.wst.sse.ui.tests"
 			class="org.eclipse.jst.jsp.ui.tests.viewer.ViewerTestJSP"
 			id="org.eclipse.jst.jsp.ui.tests.viewer.ViewerTestJSP" />
+		<view
+			name="%taglibview.name.0"
+			icon="$nl$/icons/sourceEditor.gif"
+			category="org.eclipse.wst.sse.ui.tests"
+			class="org.eclipse.jst.jsp.ui.tests.TaglibIndexDeltaTraceView"
+			id="org.eclipse.jst.jsp.ui.tests.TaglibIndexDeltaTraceView" />
 	</extension>
 
 </plugin>

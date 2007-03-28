@@ -18,19 +18,20 @@ import java.util.ResourceBundle;
 
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Plugin;
+import org.eclipse.jface.resource.ImageRegistry;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 /**
  * The main plugin class to be used in the desktop.
  */
-public class JSPUITestsPlugin extends Plugin {
+public class JSPUITestsPlugin extends AbstractUIPlugin {
 	//The shared instance.
 	private static JSPUITestsPlugin plugin;
 	//Resource bundle.
 	private ResourceBundle resourceBundle;
 	public static final String ID = "org.eclipse.jst.jsp.ui.tests";
 
-	/**
+    /**
 	 * The constructor.
 	 */
 	public JSPUITestsPlugin() {
@@ -92,5 +93,10 @@ public class JSPUITestsPlugin extends Plugin {
 		String location = path + filepath;
 		File result = new File(location);
 		return result;
+	}
+	
+	protected void initializeImageRegistry(ImageRegistry reg) {
+		super.initializeImageRegistry(reg);
+		JSPUITestImages.initializeImageRegistry(reg);
 	}
 }
