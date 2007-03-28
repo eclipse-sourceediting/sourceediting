@@ -683,7 +683,7 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 			InputStream input = tagxFile.getContents(false);
 			inputSource.setByteStream(input);
 			parser.parse(inputSource, new DefaultHandler() {
-				public InputSource resolveEntity(String publicId, String systemId) throws IOException, SAXException {
+				public InputSource resolveEntity(String publicId, String systemId) throws SAXException {
 					InputSource inputSource2 = new InputSource(systemId);
 					inputSource2.setByteStream(new ByteArrayInputStream(new byte[0]));
 					return inputSource2;
@@ -720,7 +720,7 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 						String nameValue = attributes.getValue(JSP12TLDNames.NAME);
 						attribute.setNodeName(nameValue);
 						if (attributes.getIndex(JSP20TLDNames.FRAGMENT) >= 0)
-							attribute.setFragment(Boolean.parseBoolean(attributes.getValue(JSP20TLDNames.FRAGMENT)));
+							attribute.setFragment(Boolean.valueOf(attributes.getValue(JSP20TLDNames.FRAGMENT)).booleanValue());
 						if (attributes.getIndex(JSP12TLDNames.RTEXPRVALUE) >= 0)
 							attribute.setRtexprvalue(attributes.getValue(JSP12TLDNames.RTEXPRVALUE));
 						if (attributes.getIndex(JSP20TLDNames.TYPE) >= 0)
@@ -863,7 +863,7 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 										attribute.setNodeName(text);
 									}
 									else if (JSP20TLDNames.FRAGMENT.equals(attrName)) {
-										attribute.setFragment(Boolean.parseBoolean(text));
+										attribute.setFragment(Boolean.valueOf(text).booleanValue());
 									}
 									else if (JSP12TLDNames.RTEXPRVALUE.equals(attrName)) {
 										attribute.setRtexprvalue(text);
