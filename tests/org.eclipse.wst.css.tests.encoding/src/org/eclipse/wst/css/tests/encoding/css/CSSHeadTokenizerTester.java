@@ -120,7 +120,7 @@ public class CSSHeadTokenizerTester extends TestCase {
 		doTestFile(filename, "EUC-JP");
 	}
 
-	public void _testJIS() throws IOException {
+	public void testJIS() throws IOException {
 		String filename = this.fileLocation + "encoding_test_jis.css";
 		doTestFile(filename, "ISO-2022-JP");
 	}
@@ -140,7 +140,7 @@ public class CSSHeadTokenizerTester extends TestCase {
 		doTestFile(filename, "ISO-8859-6");
 	}
 
-	public void testShiftJIS() throws IOException {
+	public void _testShiftJIS() throws IOException {
 		String filename = this.fileLocation + "encoding_test_sjis.css";
 		doTestFile(filename, "SHIFT_JIS");
 	}
