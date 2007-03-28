@@ -12,6 +12,7 @@ import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.xml.core.internal.document.ElementImpl;
+import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 public class JsJfaceNode extends ElementImpl implements IndexedRegion, INodeNotifier,Node{
@@ -160,5 +161,17 @@ public class JsJfaceNode extends ElementImpl implements IndexedRegion, INodeNoti
 //        return result;
 //    }
     
+    public short getNodeType(){
+    	return parent.getNodeType();
+    }
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.xml.core.internal.document.NodeImpl#getOwnerDocument()
+	 */
+	@Override
+	public Document getOwnerDocument() {
+		
+		return parent.getOwnerDocument();
+	}
     
 }
