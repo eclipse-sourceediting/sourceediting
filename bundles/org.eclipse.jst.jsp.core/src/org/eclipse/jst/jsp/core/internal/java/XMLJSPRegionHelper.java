@@ -135,6 +135,7 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 					// this custom tag may define variables
 					this.fTranslator.addTaglibVariables(nameStr, sdRegion);
 				}
+				fTagname = null;
 			}
 			else if (isJSPStartRegion(sdRegion)) {
 				String nameStr = getRegionName(sdRegion);
