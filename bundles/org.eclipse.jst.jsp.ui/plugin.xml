@@ -6,7 +6,7 @@
 		<editor
 			name="%JSP_Source_Page_Editor.name"
 			icon="$nl$/icons//full/obj16/sourceEditor.gif"
-			extensions="jsp, jsf, jspf, jspx, tag, tagx, tagf"
+			extensions="jsp, jsf, jspf, jspx, tag, tagf"
 			contributorClass="org.eclipse.jst.jsp.ui.internal.editor.ActionContributorJSP"
 			class="org.eclipse.wst.sse.ui.StructuredTextEditor"
 			symbolicFontName="org.eclipse.wst.sse.ui.textfont"
@@ -309,14 +309,17 @@
 	<!--======================================================================================-->
 	<extension point="org.eclipse.wst.sse.ui.breakpoint">
 		<breakpointContribution id="org.eclipse.jst.jsp.ui.providers">
+			<!-- 
+				<provider
+				extensions="jsp, jspf, jsf"
+				class="org.eclipse.jst.jsp.ui.internal.breakpointproviders.JavaStratumBreakpointProvider"
+				id="org.eclipse.jst.jsp.ui.internal.breakpointproviders.JavaStratumBreakpointProvider">
+				</provider>
+			-->
 			<provider
 				contentTypes="org.eclipse.jst.jsp.core.jspsource"
-				id="org.eclipse.jst.jsp.ui.internal.breakpointproviders.JavaStratumBreakpointProvider">
-				<class class="org.eclipse.jst.jsp.ui.internal.breakpointproviders.JavaStratumBreakpointProvider">
-					<parameter name="org.eclipse.jst.jsp.core.jspsource" value="*jsp,jsp_servlet._*"/>
-					<parameter name="org.eclipse.jst.jsp.core.tagsource" value="tag,*tagx,tag._*,tagx._*"/>
-				</class>
-			</provider>
+				class="org.eclipse.jst.jsp.ui.internal.breakpointproviders.JavaStratumBreakpointProvider:*jsp,jsp_servlet._*"
+				id="org.eclipse.jst.jsp.ui.internal.breakpointproviders.JavaStratumBreakpointProvider" />
 		</breakpointContribution>
 	</extension>
 
