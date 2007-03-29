@@ -57,6 +57,7 @@ public class XMLSourcePreferencePage extends AbstractPreferencePage implements M
 	private Button fIndentUsingSpaces;
 	private Spinner fIndentationSize;
 	private Button fPreservePCDATAContent;
+	private Button fAlignEndBracket;
 
 	// grammar constraints
 	protected Button fUseInferredGrammar;
@@ -108,6 +109,8 @@ public class XMLSourcePreferencePage extends AbstractPreferencePage implements M
 
 		fSplitMultiAttrs = createCheckBox(formattingGroup, XMLUIMessages.Split_multiple_attributes);
 		((GridData) fSplitMultiAttrs.getLayoutData()).horizontalSpan = 2;
+		fAlignEndBracket = createCheckBox(formattingGroup, XMLUIMessages.Align_final_bracket);
+		((GridData) fAlignEndBracket.getLayoutData()).horizontalSpan = 2;
 		fPreservePCDATAContent = createCheckBox(formattingGroup, XMLUIMessages.Preserve_PCDATA_Content);
 		((GridData) fPreservePCDATAContent.getLayoutData()).horizontalSpan = 2;
 		fClearAllBlankLines = createCheckBox(formattingGroup, XMLUIMessages.Clear_all_blank_lines_UI_);
@@ -201,6 +204,7 @@ public class XMLSourcePreferencePage extends AbstractPreferencePage implements M
 		// Formatting
 		fLineWidthText.setText(getModelPreferences().getString(XMLCorePreferenceNames.LINE_WIDTH));
 		fSplitMultiAttrs.setSelection(getModelPreferences().getBoolean(XMLCorePreferenceNames.SPLIT_MULTI_ATTRS));
+		fAlignEndBracket.setSelection(getModelPreferences().getBoolean(XMLCorePreferenceNames.ALIGN_END_BRACKET));
 		fClearAllBlankLines.setSelection(getModelPreferences().getBoolean(XMLCorePreferenceNames.CLEAR_ALL_BLANK_LINES));
 		fPreservePCDATAContent.setSelection(getModelPreferences().getBoolean(XMLCorePreferenceNames.PRESERVE_CDATACONTENT));
 
@@ -248,6 +252,7 @@ public class XMLSourcePreferencePage extends AbstractPreferencePage implements M
 		// Formatting
 		fLineWidthText.setText(getModelPreferences().getDefaultString(XMLCorePreferenceNames.LINE_WIDTH));
 		fSplitMultiAttrs.setSelection(getModelPreferences().getDefaultBoolean(XMLCorePreferenceNames.SPLIT_MULTI_ATTRS));
+		fAlignEndBracket.setSelection(getModelPreferences().getDefaultBoolean(XMLCorePreferenceNames.ALIGN_END_BRACKET));
 		fClearAllBlankLines.setSelection(getModelPreferences().getDefaultBoolean(XMLCorePreferenceNames.CLEAR_ALL_BLANK_LINES));
 		fPreservePCDATAContent.setSelection(getModelPreferences().getDefaultBoolean(XMLCorePreferenceNames.PRESERVE_CDATACONTENT));
 
@@ -307,6 +312,7 @@ public class XMLSourcePreferencePage extends AbstractPreferencePage implements M
 		// Formatting
 		getModelPreferences().setValue(XMLCorePreferenceNames.LINE_WIDTH, fLineWidthText.getText());
 		getModelPreferences().setValue(XMLCorePreferenceNames.SPLIT_MULTI_ATTRS, fSplitMultiAttrs.getSelection());
+		getModelPreferences().setValue(XMLCorePreferenceNames.ALIGN_END_BRACKET, fAlignEndBracket.getSelection());
 		getModelPreferences().setValue(XMLCorePreferenceNames.CLEAR_ALL_BLANK_LINES, fClearAllBlankLines.getSelection());
 		getModelPreferences().setValue(XMLCorePreferenceNames.PRESERVE_CDATACONTENT, fPreservePCDATAContent.getSelection());
 

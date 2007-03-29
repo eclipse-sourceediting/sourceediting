@@ -48,6 +48,7 @@ public class HTMLSourcePreferencePage extends AbstractPreferencePage {
 	// Formatting
 	private Text fLineWidthText;
 	private Button fSplitMultiAttrs;
+	private Button fAlignEndBracket;
 	private Button fIndentUsingTabs;
 	private Button fIndentUsingSpaces;
 	private Spinner fIndentationSize;
@@ -102,6 +103,8 @@ public class HTMLSourcePreferencePage extends AbstractPreferencePage {
 
 		fSplitMultiAttrs = createCheckBox(formattingGroup, HTMLUIMessages.Split_multiple_attributes);
 		((GridData) fSplitMultiAttrs.getLayoutData()).horizontalSpan = 2;
+		fAlignEndBracket = createCheckBox(formattingGroup, HTMLUIMessages.Align_final_bracket);
+		((GridData) fAlignEndBracket.getLayoutData()).horizontalSpan = 2;
 		fClearAllBlankLines = createCheckBox(formattingGroup, HTMLUIMessages.Clear_all_blank_lines_UI_);
 		((GridData) fClearAllBlankLines.getLayoutData()).horizontalSpan = 2;
 
@@ -148,6 +151,7 @@ public class HTMLSourcePreferencePage extends AbstractPreferencePage {
 		// Formatting
 		fLineWidthText.setText(getModelPreferences().getDefaultString(HTMLCorePreferenceNames.LINE_WIDTH));
 		fSplitMultiAttrs.setSelection(getModelPreferences().getDefaultBoolean(HTMLCorePreferenceNames.SPLIT_MULTI_ATTRS));
+		fAlignEndBracket.setSelection(getModelPreferences().getDefaultBoolean(HTMLCorePreferenceNames.ALIGN_END_BRACKET));
 		fClearAllBlankLines.setSelection(getModelPreferences().getDefaultBoolean(HTMLCorePreferenceNames.CLEAR_ALL_BLANK_LINES));
 
 		if (HTMLCorePreferenceNames.TAB.equals(getModelPreferences().getDefaultString(HTMLCorePreferenceNames.INDENTATION_CHAR))) {
@@ -181,6 +185,7 @@ public class HTMLSourcePreferencePage extends AbstractPreferencePage {
 		// Formatting
 		fLineWidthText.setText(getModelPreferences().getString(HTMLCorePreferenceNames.LINE_WIDTH));
 		fSplitMultiAttrs.setSelection(getModelPreferences().getBoolean(HTMLCorePreferenceNames.SPLIT_MULTI_ATTRS));
+		fAlignEndBracket.setSelection(getModelPreferences().getBoolean(HTMLCorePreferenceNames.ALIGN_END_BRACKET));
 		fClearAllBlankLines.setSelection(getModelPreferences().getBoolean(HTMLCorePreferenceNames.CLEAR_ALL_BLANK_LINES));
 
 		if (HTMLCorePreferenceNames.TAB.equals(getModelPreferences().getString(HTMLCorePreferenceNames.INDENTATION_CHAR))) {
@@ -219,6 +224,7 @@ public class HTMLSourcePreferencePage extends AbstractPreferencePage {
 		// Formatting
 		getModelPreferences().setValue(HTMLCorePreferenceNames.LINE_WIDTH, fLineWidthText.getText());
 		getModelPreferences().setValue(HTMLCorePreferenceNames.SPLIT_MULTI_ATTRS, fSplitMultiAttrs.getSelection());
+		getModelPreferences().setValue(HTMLCorePreferenceNames.ALIGN_END_BRACKET, fAlignEndBracket.getSelection());
 		getModelPreferences().setValue(HTMLCorePreferenceNames.CLEAR_ALL_BLANK_LINES, fClearAllBlankLines.getSelection());
 
 		if (fIndentUsingTabs.getSelection()) {

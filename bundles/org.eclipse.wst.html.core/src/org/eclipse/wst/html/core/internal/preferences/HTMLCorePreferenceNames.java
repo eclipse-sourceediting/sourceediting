@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -91,6 +91,15 @@ public class HTMLCorePreferenceNames {
 	 * </p>
 	 */
 	public static final String SPLIT_MULTI_ATTRS = "splitMultiAttrs";//$NON-NLS-1$
+
+	/**
+	 * Indicates if end brackets of start tags should be placed on a new line
+	 * if the start tag spans more than one line.
+	 * <p>
+	 * Value is of type <code>Boolean</code>.
+	 * </p>
+	 */
+	public static final String ALIGN_END_BRACKET = "alignEndBracket";//$NON-NLS-1$
 
 	/**
 	 * Indicates whether or not cleanup processor should format source.

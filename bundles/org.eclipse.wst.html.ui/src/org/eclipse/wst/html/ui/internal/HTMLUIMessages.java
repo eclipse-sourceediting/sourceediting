@@ -89,6 +89,7 @@ public class HTMLUIMessages extends NLS {
 	public static String Formatting_UI_;
 	public static String Line_width__UI_;
 	public static String Split_multiple_attributes;
+	public static String Align_final_bracket;
 	public static String Indent_using_tabs;
 	public static String Indent_using_spaces;
 	public static String Indentation_size;

@@ -157,6 +157,7 @@ public class ElementNodeFormatter extends DocumentNodeFormatter {
 		String lineIndent = formatContraints.getCurrentIndent();
 		String attrIndent = lineIndent + singleIndent;
 		boolean splitMultiAttrs = preferences.getSplitMultiAttrs();
+		boolean alignEndBracket = preferences.isAlignEndBracket();
 		boolean sawXmlSpace = false;
 
 		IStructuredDocumentRegion flatNode = node.getFirstStructuredDocumentRegion();
@@ -185,6 +186,7 @@ public class ElementNodeFormatter extends DocumentNodeFormatter {
 			String lineDelimiter = node.getModel().getStructuredDocument().getLineDelimiter();
 			int attrLength = attributes.getLength();
 			int lastUndefinedRegionOffset = 0;
+			boolean startTagSpansOver1Line = false;
 
 			for (int i = 0; i < attrLength; i++) {
 				AttrImpl attr = (AttrImpl) attributes.item(i);
@@ -231,6 +233,7 @@ public class ElementNodeFormatter extends DocumentNodeFormatter {
 				if (splitMultiAttrs && attrLength > 1) {
 					stringBuffer.append(lineDelimiter + attrIndent);
 					stringBuffer.append(flatNode.getText(nameRegion));
+					startTagSpansOver1Line = true;
 					if (valueRegion != null) {
 						// append undefined regions
 						undefinedRegion = getUndefinedRegions(node, lastUndefinedRegionOffset, flatNode.getStartOffset(equalRegion) - lastUndefinedRegionOffset);
@@ -272,6 +275,7 @@ public class ElementNodeFormatter extends DocumentNodeFormatter {
 						}
 						else {
 							stringBuffer.append(lineDelimiter + attrIndent);
+							startTagSpansOver1Line = true;
 							currentAvailableLineWidth = preferences.getLineWidth() - attrIndent.length();
 						}
 
@@ -305,6 +309,7 @@ public class ElementNodeFormatter extends DocumentNodeFormatter {
 						}
 						else {
 							stringBuffer.append(lineDelimiter + attrIndent);
+							startTagSpansOver1Line = true;
 							currentAvailableLineWidth = preferences.getLineWidth() - attrIndent.length();
 						}
 
@@ -338,12 +343,18 @@ public class ElementNodeFormatter extends DocumentNodeFormatter {
 					if (lastRegion.getType() == DOMRegionContext.XML_TAG_CLOSE || lastRegion.getType() == DOMRegionContext.XML_EMPTY_TAG_CLOSE)
 						length = length - lastRegion.getLength();
 
-					if (lastRegion.getType() == DOMRegionContext.XML_EMPTY_TAG_CLOSE)
+					if (lastRegion.getType() == DOMRegionContext.XML_EMPTY_TAG_CLOSE) {
 						// leave space before XML_EMPTY_TAG_CLOSE: <tagName />
-						stringBuffer.append(SPACE_CHAR);
+						// unless already going to move end bracket
+						if (!startTagSpansOver1Line || !alignEndBracket)
+							stringBuffer.append(SPACE_CHAR);
+					}
 				}
 			}
 
+			if (startTagSpansOver1Line && alignEndBracket) {
+				stringBuffer.append(lineDelimiter).append(lineIndent);
+			}
 
 			replace(structuredDocument, offset, length, stringBuffer.toString());
 

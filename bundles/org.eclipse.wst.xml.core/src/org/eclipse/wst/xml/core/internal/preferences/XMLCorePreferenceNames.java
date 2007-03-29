@@ -171,4 +171,13 @@ public class XMLCorePreferenceNames {
 	 * </p>
 	 */
 	public static final String PRESERVE_CDATACONTENT = "preserveCDATAContent";//$NON-NLS-1$
+
+	/**
+	 * Indicates if end brackets of start tags should be placed on a new line
+	 * if the start tag spans more than one line.
+	 * <p>
+	 * Value is of type <code>Boolean</code>.
+	 * </p>
+	 */
+	public static final String ALIGN_END_BRACKET = "alignEndBracket";//$NON-NLS-1$
 }

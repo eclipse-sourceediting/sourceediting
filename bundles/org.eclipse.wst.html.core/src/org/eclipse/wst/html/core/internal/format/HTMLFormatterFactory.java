@@ -86,6 +86,7 @@ class HTMLFormatterFactory {
 			if (preferences != null) {
 				fFormatPreferences.setLineWidth(preferences.getInt(HTMLCorePreferenceNames.LINE_WIDTH));
 				fFormatPreferences.setSplitMultiAttrs(preferences.getBoolean(HTMLCorePreferenceNames.SPLIT_MULTI_ATTRS));
+				fFormatPreferences.setAlignEndBracket(preferences.getBoolean(HTMLCorePreferenceNames.ALIGN_END_BRACKET));
 				fFormatPreferences.setClearAllBlankLines(preferences.getBoolean(HTMLCorePreferenceNames.CLEAR_ALL_BLANK_LINES));
 
 				char indentChar = ' ';

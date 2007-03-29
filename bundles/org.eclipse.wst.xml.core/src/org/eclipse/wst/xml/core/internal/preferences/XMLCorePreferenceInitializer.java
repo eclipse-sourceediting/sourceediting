@@ -35,6 +35,7 @@ public class XMLCorePreferenceInitializer extends AbstractPreferenceInitializer 
 		node.put(XMLCorePreferenceNames.INDENTATION_CHAR, XMLCorePreferenceNames.TAB);
 		node.putInt(XMLCorePreferenceNames.INDENTATION_SIZE, 1);
 		node.putBoolean(XMLCorePreferenceNames.SPLIT_MULTI_ATTRS, false);
+		node.putBoolean(XMLCorePreferenceNames.ALIGN_END_BRACKET, false);
 		node.putBoolean(XMLCorePreferenceNames.PRESERVE_CDATACONTENT, false);
 
 		// cleanup preferences
@@ -52,7 +53,7 @@ public class XMLCorePreferenceInitializer extends AbstractPreferenceInitializer 
 		// this could be made smarter by actually looking up the content
 		// type's valid extensions
 		node.put(XMLCorePreferenceNames.DEFAULT_EXTENSION, "xml"); //$NON-NLS-1$
-		
+
 		node.putBoolean(XMLCorePreferenceNames.WARN_NO_GRAMMAR, false);
 	}
 }

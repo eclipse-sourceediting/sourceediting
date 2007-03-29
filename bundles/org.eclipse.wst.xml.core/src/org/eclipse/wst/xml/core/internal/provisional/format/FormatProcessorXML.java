@@ -35,6 +35,7 @@ public class FormatProcessorXML extends AbstractStructuredFormatProcessor {
 			if (preferences != null) {
 				fFormatPreferences.setLineWidth(preferences.getInt(XMLCorePreferenceNames.LINE_WIDTH));
 				((StructuredFormatPreferencesXML) fFormatPreferences).setSplitMultiAttrs(preferences.getBoolean(XMLCorePreferenceNames.SPLIT_MULTI_ATTRS));
+				((StructuredFormatPreferencesXML) fFormatPreferences).setAlignEndBracket(preferences.getBoolean(XMLCorePreferenceNames.ALIGN_END_BRACKET));
 				((StructuredFormatPreferencesXML) fFormatPreferences).setPreservePCDATAContent(preferences.getBoolean(XMLCorePreferenceNames.PRESERVE_CDATACONTENT));
 				fFormatPreferences.setClearAllBlankLines(preferences.getBoolean(XMLCorePreferenceNames.CLEAR_ALL_BLANK_LINES));
 

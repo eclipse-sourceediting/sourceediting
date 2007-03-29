@@ -157,6 +157,8 @@ public class HTMLElementFormatter extends HTMLFormatter {
 		}
 		boolean insertBreak = false;
 		insertBreak = ((StructuredFormatPreferencesXML) getFormatPreferences()).getSplitMultiAttrs();
+		boolean alignEndBracket = ((StructuredFormatPreferencesXML) getFormatPreferences()).isAlignEndBracket();
+		boolean attributesSplitted = false;
 
 		if (insertBreak) {
 			NamedNodeMap attributes = element.getAttributes();
@@ -164,6 +166,7 @@ public class HTMLElementFormatter extends HTMLFormatter {
 				insertBreak = false;
 		}
 		String breakSpaces = getBreakSpaces(element);
+		String originalBreakSpaces = breakSpaces;
 		String indent = getIndent();
 		if (indent != null && indent.length() > 0) {
 			breakSpaces += indent;
@@ -219,6 +222,7 @@ public class HTMLElementFormatter extends HTMLFormatter {
 					if (insertBreak || !isWidthAvailable(contraints, count + 1)) {
 						replaceTailingSpaces(startStructuredDocumentRegion, lastBreakRegion, breakSpaces);
 						setWidth(contraints, breakSpaces);
+						attributesSplitted = true;
 					}
 					else {
 						compressTailingSpaces(startStructuredDocumentRegion, lastBreakRegion);
@@ -243,6 +247,7 @@ public class HTMLElementFormatter extends HTMLFormatter {
 				if (insertBreak || !isWidthAvailable(contraints, count + 1)) {
 					replaceTailingSpaces(startStructuredDocumentRegion, lastBreakRegion, breakSpaces);
 					setWidth(contraints, breakSpaces);
+					attributesSplitted = true;
 				}
 				else {
 					compressTailingSpaces(startStructuredDocumentRegion, lastBreakRegion);
@@ -272,6 +277,12 @@ public class HTMLElementFormatter extends HTMLFormatter {
 		}
 		else {
 			addWidth(contraints, startStructuredDocumentRegion.getLength());
+		}
+		// BUG113584 - align last bracket
+		if (alignEndBracket && attributesSplitted) {
+			removeTailingSpaces(startStructuredDocumentRegion, lastBreakRegion);
+			replaceTailingSpaces(startStructuredDocumentRegion, lastBreakRegion, originalBreakSpaces);
+			contraints.setAvailableLineWidth(getLineWidth() - originalBreakSpaces.length() - 1);
 		}
 	}
 
