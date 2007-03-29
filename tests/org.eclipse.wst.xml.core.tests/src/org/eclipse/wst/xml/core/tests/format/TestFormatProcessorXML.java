@@ -225,4 +225,30 @@ public class TestFormatProcessorXML extends TestCase {
 		formatAndAssertEquals("testfiles/xml/usecdata.xml", "testfiles/xml/usecdata-fmt.xml");
 		formatAndAssertEquals("testfiles/xml/usecdata2.xml", "testfiles/xml/usecdata2-fmt.xml");
 	}
+
+	public void testSplitAttributesFormat() throws UnsupportedEncodingException, IOException, CoreException {
+		// BUG113584
+		IStructuredFormatPreferences formatPreferences = formatProcessor.getFormatPreferences();
+		((StructuredFormatPreferencesXML) formatPreferences).setSplitMultiAttrs(true);
+		((StructuredFormatPreferencesXML) formatPreferences).setAlignEndBracket(false);
+		formatAndAssertEquals("testfiles/xml/multiattributes.xml", "testfiles/xml/multiattributes-yessplit-noalign-fmt.xml", false);
+
+		((StructuredFormatPreferencesXML) formatPreferences).setSplitMultiAttrs(false);
+		((StructuredFormatPreferencesXML) formatPreferences).setAlignEndBracket(false);
+		formatAndAssertEquals("testfiles/xml/multiattributes.xml", "testfiles/xml/multiattributes-nosplit-noalign-fmt.xml", false);
+
+	}
+
+	public void testAlignEndBracketFormat() throws UnsupportedEncodingException, IOException, CoreException {
+		// BUG113584
+		IStructuredFormatPreferences formatPreferences = formatProcessor.getFormatPreferences();
+		((StructuredFormatPreferencesXML) formatPreferences).setSplitMultiAttrs(false);
+		((StructuredFormatPreferencesXML) formatPreferences).setAlignEndBracket(true);
+		formatAndAssertEquals("testfiles/xml/multiattributes.xml", "testfiles/xml/multiattributes-nosplit-yesalign-fmt.xml", false);
+
+		((StructuredFormatPreferencesXML) formatPreferences).setSplitMultiAttrs(true);
+		((StructuredFormatPreferencesXML) formatPreferences).setAlignEndBracket(true);
+		formatAndAssertEquals("testfiles/xml/multiattributes.xml", "testfiles/xml/multiattributes-yessplit-yesalign-fmt.xml", false);
+
+	}
 }

@@ -179,4 +179,12 @@ public class TestFormatProcessorHTML extends TestCase {
 		// BUG92957
 		formatAndAssertEquals("testfiles/html/htmlwithcss.html", "testfiles/html/htmlwithcss-fmt.html");
 	}
+	
+	public void testAttributeFormat() throws UnsupportedEncodingException, IOException, CoreException {
+		// BUG113584
+		IStructuredFormatPreferences formatPreferences = formatProcessor.getFormatPreferences();
+		((StructuredFormatPreferencesXML) formatPreferences).setSplitMultiAttrs(true);
+		((StructuredFormatPreferencesXML) formatPreferences).setAlignEndBracket(true);
+		formatAndAssertEquals("testfiles/html/attributesformat.html", "testfiles/html/attributesformat-fmt.html", false);
+	}
 }
