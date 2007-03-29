@@ -226,10 +226,8 @@ public final class XMLSyntaxColoringPage extends PreferencePage implements IWork
 				PreferencesUtil.createPreferenceDialogOn(parent.getShell(), e.text, null, null);
 			}
 		});
-
-		GridData linkData= new GridData(SWT.FILL, SWT.BEGINNING, true, false, 2, 1);
-		linkData.widthHint= 150; // only expand further if anyone else requires it
-		link.setLayoutData(linkData);
+		link.setLayoutData(new GridData());
+		((GridData) link.getLayoutData()).horizontalSpan = 2;
 
 		new Label(pageComponent, SWT.NONE).setLayoutData(new GridData());
 		new Label(pageComponent, SWT.NONE).setLayoutData(new GridData());
