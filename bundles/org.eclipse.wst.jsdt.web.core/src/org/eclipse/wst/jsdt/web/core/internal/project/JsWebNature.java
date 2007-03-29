@@ -111,7 +111,9 @@ public class JsWebNature implements IProjectNature {
 		fJavaProject = (JavaProject) JavaCore.create(fCurrProject);
 		fJavaProject.setProject(fCurrProject);
 		try {
-			fJavaProject.setRawClasspath((IClasspathEntry[]) classPathEntries.toArray(new IClasspathEntry[] {}), fOutputLocation, monitor);
+			// , fOutputLocation
+			if(!hasProjectClassPathFile() )fJavaProject.setRawClasspath((IClasspathEntry[]) classPathEntries.toArray(new IClasspathEntry[] {}), fOutputLocation, monitor);
+			if(hasProjectClassPathFile() )fJavaProject.setRawClasspath((IClasspathEntry[]) classPathEntries.toArray(new IClasspathEntry[] {}),  monitor);
 		} catch (Exception e) {
 			System.out.println(e);
 		}
@@ -144,9 +146,13 @@ public class JsWebNature implements IProjectNature {
 	
 	private IPath getCurrentOutputPath() {
 		IPath outputLocation = null;
+		
 		if (hasProjectClassPathFile()) {
 			try {
-				outputLocation = getJavaProject().getOutputLocation();
+			
+				
+				
+				
 			} catch (Exception e) {
 				if (DEBUG) {
 					System.out.println("Error checking sourcepath:" + e);
