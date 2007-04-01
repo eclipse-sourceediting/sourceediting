@@ -31,6 +31,13 @@
 			<accessrule kind="accessible" pattern="org/apache/xerces/parsers/AbstractSAXParser"/>
 		</accessrules>
 	</classpathentry>
-	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins">
+		<accessrules>
+			<accessrule kind="accessible" pattern="org/eclipse/wst/validation/**"/>
+			<accessrule kind="accessible" pattern="org/eclipse/wst/common/internal/emf/resource/**"/>
+			<accessrule kind="accessible" pattern="org/eclipse/wst/common/internal/emf/utilities/**"/>
+			<accessrule kind="accessible" pattern="org/eclipse/wst/common/internal/emfworkbench/**"/>
+		</accessrules>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
