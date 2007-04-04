@@ -152,7 +152,7 @@ public class JsWebNature implements IProjectNature {
 			
 				
 				
-				
+				System.out.println("Hello");
 			} catch (Exception e) {
 				if (DEBUG) {
 					System.out.println("Error checking sourcepath:" + e);
