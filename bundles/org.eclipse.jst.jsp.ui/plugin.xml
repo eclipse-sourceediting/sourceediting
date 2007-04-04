@@ -314,7 +314,7 @@
 				id="org.eclipse.jst.jsp.ui.internal.breakpointproviders.JavaStratumBreakpointProvider">
 				<class class="org.eclipse.jst.jsp.ui.internal.breakpointproviders.JavaStratumBreakpointProvider">
 					<parameter name="org.eclipse.jst.jsp.core.jspsource" value="*jsp,jsp_servlet._*"/>
-					<parameter name="org.eclipse.jst.jsp.core.tagsource" value="tag,*tagx,tag._*,tagx._*"/>
+					<parameter name="org.eclipse.jst.jsp.core.tagsource" value="*tag,*tagx,tag._*,tagx._*"/>
 				</class>
 			</provider>
 		</breakpointContribution>
