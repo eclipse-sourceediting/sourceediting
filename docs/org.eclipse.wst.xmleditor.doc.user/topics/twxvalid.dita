@@ -24,7 +24,7 @@ However, there will be other cases when it will be beneficial to perform formal
 validation on your documents.</p></context>
 <steps>
 <step><cmd>You can validate your file by selecting it in the Navigator view,
-right-clicking it, and clicking <uicontrol>Validate XML file</uicontrol>.</cmd>
+right-clicking it, and clicking <uicontrol>Validate<?Pub Caret?></uicontrol>.</cmd>
 </step>
 </steps>
 <result><p>Any validation problems are indicated in the Problems view. </p></result>
@@ -44,7 +44,7 @@ page.</p></postreq>
 </taskbody>
 <related-links>
 <link href="../../org.eclipse.jst.j2ee.doc.user/topics/tjval.dita" scope="peer">
-<desc>General validation information</desc>
-</link>
+<linktext>Validating code in enterprise applications</linktext></link>
 </related-links>
 </task>
+<?Pub *0000002727?>
