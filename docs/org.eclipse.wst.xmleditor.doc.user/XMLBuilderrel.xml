@@ -3,7 +3,7 @@
 <?NLS TYPE="org.eclipse.help.toc"?>
 
 <toc topic="topics/tcretxml.html">
-<topic label="Creating empty XML files" href="topics/tcretxml.html"/>
+<topic label="Creating XML files" href="topics/tcretxml.html"/>
 <topic label="Generating XML files from DTDs" href="topics/tcrexdtd.html"/>
 <topic label="Generating XML files from XML schemas" href="topics/tcrexxsd.html"/>
 <topic label="Editing XML files" href="topics/txedttag.html"/>

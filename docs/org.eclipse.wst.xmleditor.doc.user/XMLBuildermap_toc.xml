@@ -5,7 +5,7 @@
 <toc label="Developing XML files" topic="topics/cworkXML.html">
 <topic label="Working with XML files" href="topics/cworkXML.html">
 <topic label="Creating XML files" href="topics/ccreatxm.html">
-<topic label="Creating empty XML files" href="topics/tcretxml.html"/>
+<topic label="Creating XML files" href="topics/tcretxml.html"/>
 <topic label="Generating XML files from DTDs" href="topics/tcrexdtd.html"/>
 <topic label="Generating XML files from XML schemas" href="topics/tcrexxsd.html"/>
 </topic>

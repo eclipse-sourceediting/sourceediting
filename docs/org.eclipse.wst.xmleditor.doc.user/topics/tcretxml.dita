@@ -1,38 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
-<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<!--Arbortext, Inc., 1988-2006, v.4002-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
+ "task.dtd">
 <task id="tcretxml" xml:lang="en-us">
-<title>Creating empty XML files</title>
+<title>Creating XML files</title>
 <titlealts>
-<searchtitle>Creating empty XML files</searchtitle>
+<searchtitle>Creating XML files</searchtitle>
 </titlealts>
-<shortdesc>You can create a new, empty XML file, which you can then edit in
-the XML editor. When you create a new, empty XML file, it is not associated
-with a DTD or XML schema file, so there are no restrictions on the kind of
-content it can contain.</shortdesc>
+<shortdesc>You can create a new XML file which you can then edit in the XML
+editor. You create a new XML file that is not associated with a DTD or XML
+schema file, so there are no restrictions on the kind of content it can contain.</shortdesc>
 <prolog><metadata>
 <keywords><indexterm>XML files<indexterm>creating</indexterm></indexterm>
 </keywords>
 </metadata></prolog>
 <taskbody>
 <context><p>The following instructions were written for the Resource perspective,
-but they will also work in many other perspectives.</p><p>To create a new,
-empty XML file, follow these instructions:</p></context>
+but they will also work in many other perspectives.</p><p>To create a new
+XML file, follow these instructions:</p></context>
 <steps>
 <step><cmd>If necessary, create a project to contain the XML file.</cmd></step>
 <step><cmd>In the workbench, click <menucascade><uicontrol>File</uicontrol>
 <uicontrol>New</uicontrol><uicontrol>Other</uicontrol><uicontrol>XML</uicontrol>
-<uicontrol>XML</uicontrol></menucascade> and click <uicontrol>Next</uicontrol>. </cmd>
+<uicontrol>XML</uicontrol></menucascade> and click <uicontrol>Next</uicontrol>.</cmd>
 </step>
-<step><cmd>Click the <uicontrol>Create XML file from scratch</uicontrol> radio
-button.</cmd></step>
-<step><cmd>Click <uicontrol>Next.</uicontrol></cmd></step>
 <step><cmd>Select the project or folder that will contain the XML file.</cmd>
 </step>
 <step><cmd>In the <uicontrol>File name</uicontrol> field, type the name of
 the XML file, for example <userinput>MyXMLFile.xml</userinput>. The name of
 your XML file  <varname>must</varname> end in <userinput>.xml</userinput>.</cmd>
 </step>
+<step><cmd>Click <uicontrol>Next.</uicontrol></cmd></step>
+<step><cmd>Click the <uicontrol>Create XML file from an XML template</uicontrol> radio
+button.</cmd></step>
 <step><cmd>Click  <uicontrol>Finish</uicontrol>.</cmd></step>
 </steps>
 </taskbody>
