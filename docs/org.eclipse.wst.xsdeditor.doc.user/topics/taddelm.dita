@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
+<!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
  "task.dtd">
-<?Pub Inc?>
 <task id="taddelm" xml:lang="en-us">
 <title>Adding elements</title>
 <titlealts>
@@ -36,9 +35,9 @@ the Set Type dialog for more options.</cmd><info>The Set Type dialog lists
 all built-in and user-defined types currently available. You can change the <uicontrol>Scope</uicontrol> of
 the list by selecting one of the following options:<ul>
 <li><uicontrol>Workspace</uicontrol>. Lists all of the types available in
-your workspace. </li>
+your workspace.</li>
 <li><uicontrol>Enclosing Project</uicontrol>. Lists all of the types available
-in the project that contains your file. </li>
+in the project that contains your file.</li>
 <li>(Default) <uicontrol>Current Resource</uicontrol>. List all of the types
 available in your current file.</li>
 <li><uicontrol>Working Sets</uicontrol>. List all the types available within
@@ -47,7 +46,7 @@ the selected working set.</li>
 </substeps>
 </step>
 <step><cmd>(Optional) In the Properties view, select the appropriate value
-in the <uicontrol>MinOccurs</uicontrol> field.</cmd><info>This is the <?Pub Caret?>number
+in the <uicontrol>MinOccurs</uicontrol> field.</cmd><info>This is the number
 of times the element can appear in an instance document. If you want the element
 to be optional, select <uicontrol>0</uicontrol>. Otherwise, select <uicontrol>1</uicontrol>. </info>
 </step>
@@ -68,4 +67,3 @@ of any data that can be contained inside the element. For more information
 about working with content models, refer to the related tasks.</postreq>
 </taskbody>
 </task>
-<?Pub *0000004079?>
