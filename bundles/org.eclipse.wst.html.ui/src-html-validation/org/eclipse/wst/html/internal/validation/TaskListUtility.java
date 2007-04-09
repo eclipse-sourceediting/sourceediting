@@ -262,7 +262,7 @@ public class TaskListUtility {
 							// }
 							continue;
 						}
-						catch (Throwable exc) {
+						catch (Exception exc) {
 							// Logger logger =
 							// ValidationPlugin.getPlugin().getMsgLogger();
 							// if (logger.isLoggingLevel(Level.SEVERE)) {
