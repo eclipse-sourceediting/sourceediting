@@ -49,11 +49,14 @@ import org.eclipse.jst.jsp.core.internal.contentmodel.TaglibController;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.TLDCMDocumentManager;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.JSP12TLDNames;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDElementDeclaration;
+import org.eclipse.jst.jsp.core.internal.contenttype.DeploymentDescriptorPropertyCache;
+import org.eclipse.jst.jsp.core.internal.contenttype.DeploymentDescriptorPropertyCache.PropertyGroup;
 import org.eclipse.jst.jsp.core.internal.provisional.JSP11Namespace;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.jst.jsp.core.internal.taglib.TaglibHelper;
 import org.eclipse.jst.jsp.core.internal.taglib.TaglibHelperManager;
 import org.eclipse.jst.jsp.core.internal.taglib.TaglibVariable;
+import org.eclipse.jst.jsp.core.internal.util.ZeroStructuredDocumentRegion;
 import org.eclipse.jst.jsp.core.jspel.IJSPELTranslator;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.ltk.parser.BlockMarker;
@@ -184,6 +187,7 @@ public class JSPTranslator {
 
 	/** used to avoid infinite looping include files */
 	private Stack fIncludes = null;
+	private boolean fProcessIncludes = true;
 	/** mostly for helper classes, so they parse correctly */
 	private ArrayList fBlockMarkers = null;
 	/**
@@ -363,7 +367,6 @@ public class JSPTranslator {
 	 * @return
 	 */
 	private String createClassname(IDOMNode node) {
-
 		String classname = ""; //$NON-NLS-1$
 		if (node != null) {
 			String base = node.getModel().getBaseLocation();
@@ -723,7 +726,7 @@ public class JSPTranslator {
 	public final String getJspText() {
 		return fJspTextBuffer.toString();
 	}
-	
+
 	/**
 	 * @deprecated
 	 * @param tagToAdd
@@ -775,7 +778,7 @@ public class JSPTranslator {
 				 * correctly.
 				 */
 				for (int i = taglibVars.length; i > 0; i--) {
-					if (taglibVars[i-1].getScope() == VariableInfo.NESTED) {
+					if (taglibVars[i - 1].getScope() == VariableInfo.NESTED) {
 						appendToBuffer("}", fUserCode, false, fCurrentNode);
 					}
 				}
@@ -796,7 +799,7 @@ public class JSPTranslator {
 			TaglibVariable[] taglibVars = (TaglibVariable[]) fTagToVariableMap.pop(tagToAdd);
 			if (taglibVars != null) {
 				for (int i = taglibVars.length; i > 0; i--) {
-					if (taglibVars[i-1].getScope() == VariableInfo.NESTED) {
+					if (taglibVars[i - 1].getScope() == VariableInfo.NESTED) {
 						appendToBuffer("}", fUserCode, false, fCurrentNode);
 					}
 				}
@@ -841,6 +844,10 @@ public class JSPTranslator {
 		if (fTagToVariableMap == null) {
 			fTagToVariableMap = new StackMap();
 		}
+
+		setCurrentNode(new ZeroStructuredDocumentRegion(fStructuredDocument, 0));
+		translatePreludes();
+
 		setCurrentNode(fStructuredDocument.getFirstStructuredDocumentRegion());
 
 		while (getCurrentNode() != null && !isCanceled()) {
@@ -858,6 +865,10 @@ public class JSPTranslator {
 			if (getCurrentNode() != null)
 				advanceNextNode();
 		}
+
+		setCurrentNode(new ZeroStructuredDocumentRegion(fStructuredDocument, fStructuredDocument.getLength()));
+		translateCodas();
+
 		buildResult();
 
 		fTagToVariableMap.clear();
@@ -1121,7 +1132,10 @@ public class JSPTranslator {
 			{
 				String fullTagName = container.getText(r);
 				if (fullTagName.indexOf(':') > -1) {
-					addTaglibVariables(fullTagName, getCurrentNode()); // it may be a custom
+					addTaglibVariables(fullTagName, getCurrentNode()); // it
+																		// may
+																		// be a
+																		// custom
 					// tag
 				}
 				StringTokenizer st = new StringTokenizer(fullTagName, ":.", false); //$NON-NLS-1$
@@ -1149,7 +1163,7 @@ public class JSPTranslator {
 								if (directiveName.equals("taglib")) { //$NON-NLS-1$
 									while (r != null && regions.hasNext() && !r.getType().equals(DOMRegionContext.XML_TAG_ATTRIBUTE_NAME)) {
 										r = (ITextRegion) regions.next();
-										if(container.getText(r).equals(JSP11Namespace.ATTR_NAME_PREFIX)) {
+										if (container.getText(r).equals(JSP11Namespace.ATTR_NAME_PREFIX)) {
 											String prefix = getAttributeValue(r, regions);
 											if (prefix != null) {
 												handleTaglib(prefix);
@@ -1426,7 +1440,9 @@ public class JSPTranslator {
 			/*
 			 * name of plugin that exposes this extension point
 			 */
-			IExtensionPoint extensionPoint = Platform.getExtensionRegistry().getExtensionPoint(JSP_CORE_PLUGIN_ID, EL_TRANSLATOR_EXTENSION_NAME); // - extension id
+			IExtensionPoint extensionPoint = Platform.getExtensionRegistry().getExtensionPoint(JSP_CORE_PLUGIN_ID, EL_TRANSLATOR_EXTENSION_NAME); // -
+																																					// extension
+																																					// id
 
 			// Iterate over all declared extensions of this extension point.
 			// A single plugin may extend the extension point more than once,
@@ -1809,7 +1825,7 @@ public class JSPTranslator {
 	}
 
 	protected void handleIncludeFile(String filename) {
-		if (filename != null) {
+		if (filename != null && fProcessIncludes) {
 			String fileLocation = null;
 			if (getResolver() != null) {
 				fileLocation = (getIncludes().empty()) ? getResolver().getLocationByURI(StringUtils.strip(filename)) : getResolver().getLocationByURI(StringUtils.strip(filename), (String) getIncludes().peek());
@@ -2471,5 +2487,45 @@ public class JSPTranslator {
 
 	public IStructuredDocument getStructuredDocument() {
 		return fStructuredDocument;
+	}
+
+	private void translateCodas() {
+		fProcessIncludes = false;
+		if (getBaseLocation() != null) {
+			Path basePath = new Path(getBaseLocation());
+			PropertyGroup propertyGroup = DeploymentDescriptorPropertyCache.getInstance().getPropertyGroup(basePath);
+			if (propertyGroup != null) {
+				IPath[] codas = propertyGroup.getIncludeCoda();
+				for (int i = 0; i < codas.length; i++) {
+					if (!getIncludes().contains(codas[i].toString()) && !codas[i].equals(basePath)) {
+						getIncludes().push(codas[i]);
+						JSPIncludeRegionHelper helper = new JSPIncludeRegionHelper(this);
+						helper.parse(codas[i].toString());
+						getIncludes().pop();
+					}
+				}
+			}
+		}
+		fProcessIncludes = true;
+	}
+
+	private void translatePreludes() {
+		fProcessIncludes = false;
+		if (getBaseLocation() != null) {
+			Path basePath = new Path(getBaseLocation());
+			PropertyGroup propertyGroup = DeploymentDescriptorPropertyCache.getInstance().getPropertyGroup(basePath);
+			if (propertyGroup != null) {
+				IPath[] preludes = propertyGroup.getIncludePrelude();
+				for (int i = 0; i < preludes.length; i++) {
+					if (!getIncludes().contains(preludes[i].toString()) && !preludes[i].equals(basePath)) {
+						getIncludes().push(preludes[i]);
+						JSPIncludeRegionHelper helper = new JSPIncludeRegionHelper(this);
+						helper.parse(preludes[i].toString());
+						getIncludes().pop();
+					}
+				}
+			}
+		}
+		fProcessIncludes = true;
 	}
 }

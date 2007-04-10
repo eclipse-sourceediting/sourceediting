@@ -352,7 +352,7 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 		else if (isTaglibDirective(fTagname)) {
 			// also add the ones created here to the parent document
 			String prefix = getAttributeValue("prefix", sdRegion); //$NON-NLS-1$
-			List docs = this.fTranslator.getTLDCMDocumentManager().getCMDocumentTrackers(prefix, this.fTranslator.getCurrentNode().getEnd());
+			List docs = this.fTranslator.getTLDCMDocumentManager().getCMDocumentTrackers(prefix, this.fTranslator.getCurrentNode().getStartOffset());
 			Iterator it = docs.iterator();
 			Iterator elements = null;
 			CMNode node = null;
@@ -498,7 +498,7 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 			if(f != null && !f.exists()) {
 				f = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(filePath);
 			}
-            if (f != null && f.exists()) {
+            if (f != null && f.isAccessible()) {
     			is = f.getContents();
     			while ((c = is.read()) != -1) {
     				count++;
@@ -511,8 +511,10 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
             }
 		}
 		catch (Exception e) {
-			if (Debug.debugStructuredDocument)
+			if (Debug.debugStructuredDocument) {
+				Logger.logException(e);
 				e.printStackTrace();
+			}
 		}
 		finally {
 			try {
