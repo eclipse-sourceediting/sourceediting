@@ -113,7 +113,7 @@ public class TaglibHelper {
 			if (mgr == null)
 				return new TaglibVariable[0];
 
-			List trackers = mgr.getCMDocumentTrackers(customTag.getStartOffset());
+			List trackers = mgr.getCMDocumentTrackers(-1);
 			Iterator taglibs = trackers.iterator();
 
 			// TaglibSupport support = ((TaglibModelQuery)
@@ -506,9 +506,10 @@ public class TaglibHelper {
 			System.out.println(" -> project entry: [" + entry + "]"); //$NON-NLS-1$ //$NON-NLS-2$
 
 		IPath path = entry.getPath();
-		IProject refereceProj = ResourcesPlugin.getWorkspace().getRoot().getProject(path.toString());
-		if (refereceProj != null && refereceProj.exists())
-			addClasspathEntriesForProject(refereceProj, loader);
+		IProject referenceProject = ResourcesPlugin.getWorkspace().getRoot().getProject(path.toString());
+		if (referenceProject != null && referenceProject.isAccessible()) {
+			addClasspathEntriesForProject(referenceProject, loader);
+		}
 	}
 
 	/**
@@ -548,7 +549,10 @@ public class TaglibHelper {
 				loader.addJar(jarPathString);
 			}
 			else if (file.isDirectory()) {
-				// it's actually a folder containing binaries
+				/*
+				 * unlikely, the UI prevents adding folder variables to the
+				 * classpath - it's actually a folder containing binaries
+				 */
 				loader.addDirectory(jarPathString);
 			}
 		}
