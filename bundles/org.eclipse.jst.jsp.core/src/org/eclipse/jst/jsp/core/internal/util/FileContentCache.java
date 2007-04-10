@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.core.internal.util;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -21,11 +22,15 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.eclipse.core.filebuffers.FileBuffers;
+import org.eclipse.core.filebuffers.ITextFileBuffer;
+import org.eclipse.core.filebuffers.LocationKind;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.core.runtime.content.IContentDescription;
@@ -40,8 +45,7 @@ public class FileContentCache {
 
 		CacheEntry(IPath path) {
 			this.path = path;
-			IFile file = getFile(path);
-			modificationStamp = file.getModificationStamp();
+			modificationStamp = getModificationStamp(path);
 			contents = readContents(path);
 		}
 
@@ -53,10 +57,10 @@ public class FileContentCache {
 			if (modificationStamp == IResource.NULL_STAMP) {
 				return true;
 			}
-			IFile file = getFile(path);
-			long newStamp = file.getModificationStamp();
+			long newStamp = getModificationStamp(path);
 			return newStamp > modificationStamp;
 		}
+
 		private String detectCharset(IFile file) {
 			if (file.getType() == IResource.FILE && file.isAccessible()) {
 				IContentDescription d = null;
@@ -98,6 +102,16 @@ public class FileContentCache {
 			}
 			return ResourcesPlugin.getEncoding();
 		}
+
+		private long getModificationStamp(IPath filePath) {
+			IFile f = getFile(filePath);
+			if (f.isAccessible()) {
+				return f.getModificationStamp();
+			}
+			File file = filePath.toFile();
+			return file.lastModified();
+		}
+
 		private String readContents(IPath filePath) {
 			if (DEBUG)
 				System.out.println("readContents:" + filePath);
@@ -105,8 +119,8 @@ public class FileContentCache {
 			InputStream is = null;
 			try {
 				IFile f = getFile(filePath);
-				String charset = detectCharset(f);
-				if (f != null && f.isAccessible()) {
+				if (f.isAccessible()) {
+					String charset = detectCharset(f);
 					is = f.getContents();
 					Reader reader = new InputStreamReader(is, charset);
 					char[] readBuffer = new char[2048];
@@ -115,10 +129,6 @@ public class FileContentCache {
 						s.append(readBuffer, 0, n);
 						n = reader.read(readBuffer);
 					}
-				}
-				else {
-					// error condition, file could not be found
-					return null;
 				}
 			}
 			catch (Exception e) {
@@ -135,6 +145,20 @@ public class FileContentCache {
 				}
 				catch (Exception e) {
 					// nothing to do
+				}
+			}
+			if (is == null) {
+				try {
+					FileBuffers.getTextFileBufferManager().connect(filePath, LocationKind.LOCATION, new NullProgressMonitor());
+					ITextFileBuffer buffer = FileBuffers.getTextFileBufferManager().getTextFileBuffer(filePath, LocationKind.LOCATION);
+					if (buffer != null) {
+						s.append(buffer.getDocument().get());
+						FileBuffers.getTextFileBufferManager().disconnect(filePath, LocationKind.LOCATION, new NullProgressMonitor());
+					}
+				}
+				catch (CoreException e) {
+					// nothing to do
+					e.printStackTrace();
 				}
 			}
 			return s.toString();
