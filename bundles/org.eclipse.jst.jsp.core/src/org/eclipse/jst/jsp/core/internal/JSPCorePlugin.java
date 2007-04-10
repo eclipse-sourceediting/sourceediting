@@ -14,6 +14,7 @@ import org.eclipse.core.runtime.Plugin;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jst.jsp.core.internal.contentmodel.TaglibController;
 import org.eclipse.jst.jsp.core.internal.contentproperties.JSPFContentPropertiesManager;
+import org.eclipse.jst.jsp.core.internal.contenttype.DeploymentDescriptorPropertyGroupCache;
 import org.eclipse.jst.jsp.core.internal.java.search.JSPIndexManager;
 import org.eclipse.jst.jsp.core.internal.taglib.TaglibHelperManager;
 import org.eclipse.jst.jsp.core.taglib.TaglibIndex;
@@ -52,9 +53,11 @@ public class JSPCorePlugin extends Plugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 
+		/*
+		 * JSPIndexManager depends on TaglibController, so TaglibController
+		 * should be started first
+		 */
 		TaglibIndex.startup();
-		// JSPIndexManager depends on TaglibController, so TaglibController
-		// should be started first
 		TaglibController.startup();
 
 		// listen for classpath changes
@@ -66,6 +69,7 @@ public class JSPCorePlugin extends Plugin {
 		// listen for resource changes to update content properties keys
 		JSPFContentPropertiesManager.startup();
 
+		DeploymentDescriptorPropertyGroupCache.start();
 	}
 
 	/*
@@ -74,8 +78,12 @@ public class JSPCorePlugin extends Plugin {
 	 * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
 	 */
 	public void stop(BundleContext context) throws Exception {
-		// stop listenning for resource changes to update content properties
-		// keys
+		DeploymentDescriptorPropertyGroupCache.stop();
+
+		/*
+		 * stop listening for resource changes to update content properties
+		 * keys
+		 */
 		JSPFContentPropertiesManager.shutdown();
 
 		// stop any indexing

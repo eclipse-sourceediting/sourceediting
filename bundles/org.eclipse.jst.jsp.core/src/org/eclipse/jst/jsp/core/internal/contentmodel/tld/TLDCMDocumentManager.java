@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,15 +10,7 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.core.internal.contentmodel.tld;
 
-
-
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -30,13 +22,12 @@ import java.util.Map;
 import java.util.Stack;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.QualifiedName;
-import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.contentmodel.TaglibController;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.JSP11TLDNames;
@@ -44,9 +35,13 @@ import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.JSP12TLDNa
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.JSP20TLDNames;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDDocument;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDElementDeclaration;
+import org.eclipse.jst.jsp.core.internal.contenttype.DeploymentDescriptorPropertyGroupCache;
+import org.eclipse.jst.jsp.core.internal.contenttype.DeploymentDescriptorPropertyGroupCache.PropertyGroup;
 import org.eclipse.jst.jsp.core.internal.parser.JSPSourceParser;
 import org.eclipse.jst.jsp.core.internal.provisional.JSP12Namespace;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
+import org.eclipse.jst.jsp.core.internal.util.FileContentCache;
+import org.eclipse.jst.jsp.core.internal.util.ZeroStructuredDocumentRegion;
 import org.eclipse.jst.jsp.core.taglib.IJarRecord;
 import org.eclipse.jst.jsp.core.taglib.ITLDRecord;
 import org.eclipse.jst.jsp.core.taglib.ITagDirRecord;
@@ -73,7 +68,6 @@ import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 public class TLDCMDocumentManager implements ITaglibIndexListener {
 
 	protected class DirectiveStructuredDocumentRegionHandler implements StructuredDocumentRegionHandler, StructuredDocumentRegionHandlerExtension {
-
 		/**
 		 * Adds a block tagname (fully namespace qualified) into the list of
 		 * block tag names for the parser. The marker
@@ -152,6 +146,10 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 		}
 
 		public void nodeParsed(IStructuredDocumentRegion aCoreStructuredDocumentRegion) {
+			if (!preludesHandled) {
+				handlePreludes();
+				preludesHandled = true;
+			}
 			// could test > 1, but since we only care if there are 8 (<%@,
 			// taglib, uri, =, where, prefix, =, what) [or 4 for includes]
 			if (aCoreStructuredDocumentRegion.getNumberOfRegions() > 4 && aCoreStructuredDocumentRegion.getRegions().get(1).getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_NAME) {
@@ -242,7 +240,7 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 				includedFile = null;
 			}
 
-			if (includedFile != null) {
+			if (fProcessIncludes && includedFile != null) {
 				// strip any extraneous quotes and white space
 				includedFile = StringUtils.strip(includedFile).trim();
 				IPath filePath = null;
@@ -528,124 +526,8 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 			taglibReferences.add(reference);
 		}
 
-		private String detectCharset(IFile file) {
-			if (file.getType() == IResource.FILE && file.isAccessible()) {
-				IContentDescription d = null;
-				try {
-					// optimized description lookup, might not succeed
-					d = file.getContentDescription();
-					if (d != null)
-						return d.getCharset();
-				}
-				catch (CoreException e) {
-					// should not be possible given the accessible and file
-					// type
-					// check above
-				}
-				InputStream contents = null;
-				try {
-					contents = file.getContents();
-					IContentDescription description = Platform.getContentTypeManager().getDescriptionFor(contents, file.getName(), new QualifiedName[]{IContentDescription.CHARSET});
-					if (description != null) {
-						return description.getCharset();
-					}
-				}
-				catch (IOException e) {
-					// will try to cleanup in finally
-				}
-				catch (CoreException e) {
-					Logger.logException(e);
-				}
-				finally {
-					if (contents != null) {
-						try {
-							contents.close();
-						}
-						catch (Exception e) {
-							// not sure how to recover at this point
-						}
-					}
-				}
-			}
-			return ResourcesPlugin.getEncoding();
-		}
-
 		protected String getContents(IPath filePath) {
-			StringBuffer s = new StringBuffer();
-			IFile iFile = ResourcesPlugin.getWorkspace().getRoot().getFile(filePath);
-			if (iFile != null && iFile.exists()) {
-				String charset = detectCharset(iFile);
-				InputStream contents = null;
-				try {
-					contents = iFile.getContents();
-					Reader reader = new InputStreamReader(contents, charset);
-					char[] readBuffer = new char[2048];
-					int n = reader.read(readBuffer);
-					while (n > 0) {
-						s.append(readBuffer, 0, n);
-						n = reader.read(readBuffer);
-					}
-				}
-				catch (Exception e) {
-					if (Debug.debugStructuredDocument)
-						Logger.log(Logger.WARNING, "An exception occured while scanning " + filePath, e); //$NON-NLS-1$
-				}
-				finally {
-					try {
-						if (contents != null) {
-							contents.close();
-						}
-					}
-					catch (Exception e) {
-						// nothing to do
-					}
-				}
-			}
-			else {
-				int c = 0;
-				int length = 0;
-				int count = 0;
-				File file = null;
-				FileInputStream fis = null;
-				try {
-					file = new File(filePath.toString());
-					length = (int) file.length();
-					fis = new FileInputStream(file);
-					while (((c = fis.read()) >= 0) && (count < length)) {
-						count++;
-						s.append((char) c);
-					}
-				}
-				catch (FileNotFoundException e) {
-					if (Debug.debugStructuredDocument)
-						System.out.println("File not found : \"" + filePath + "\""); //$NON-NLS-2$//$NON-NLS-1$
-				}
-				catch (ArrayIndexOutOfBoundsException e) {
-					if (Debug.debugStructuredDocument)
-						System.out.println("Usage wrong: specify inputfile"); //$NON-NLS-1$
-					//$NON-NLS-1$
-				}
-				catch (IOException e) {
-					if (Debug.debugStructuredDocument)
-						System.out.println("An I/O error occured while scanning :"); //$NON-NLS-1$
-					//$NON-NLS-1$
-				}
-				catch (Exception e) {
-					if (Debug.debugStructuredDocument)
-						e.printStackTrace();
-				}
-				finally {
-					try {
-						if (fis != null) {
-							fis.close();
-						}
-					}
-					catch (Exception e) {
-						// nothing to do
-					}
-				}
-			}
-			return s.toString();
+			return FileContentCache.getInstance().getContents(filePath);
 		}
 
 		public void nodeParsed(IStructuredDocumentRegion aCoreStructuredDocumentRegion) {
@@ -702,6 +584,7 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 	 */
 	static class TLDCacheEntry {
 		CMDocument document;
+		long modificationStamp;
 		int referenceCount;
 	}
 
@@ -810,6 +693,8 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 	private List fTaglibTrackers = null;
 
 	Map fTLDCMReferencesMap = new HashMap();
+	boolean fProcessIncludes = true;
+	boolean preludesHandled = false;
 
 	public TLDCMDocumentManager() {
 		super();
@@ -827,7 +712,7 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 					TLDCacheEntry entry = (TLDCacheEntry) o;
 					entry.referenceCount--;
 					if (entry.referenceCount <= 0) {
-						getSharedDocumentCache().put(key, new WeakReference(entry.document));
+						getSharedDocumentCache().put(key, new WeakReference(entry));
 					}
 				}
 			}
@@ -861,6 +746,7 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 			return null;
 		String reference = uri;
 		Object cacheKey = getCacheKey(reference);
+		long lastModified = getModificationStamp(reference);
 		CMDocument doc = (CMDocument) getDocuments().get(cacheKey);
 		if (doc == null) {
 			/*
@@ -876,16 +762,25 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 					if (_debugCache) {
 						System.out.println("TLDCMDocument cache hit on " + cacheKey);
 					}
-					doc = entry.document;
-					entry.referenceCount++;
+					if (entry != null && entry.modificationStamp != IResource.NULL_STAMP && entry.modificationStamp >= lastModified) {
+						doc = entry.document;
+						entry.referenceCount++;
+					}
+					else {
+						getSharedDocumentCache().remove(cacheKey);
+					}
 				}
-				else if (o instanceof WeakReference) {
-					doc = (CMDocument) ((WeakReference) o).get();
-					if (doc != null) {
-						TLDCacheEntry entry = new TLDCacheEntry();
-						entry.document = doc;
-						entry.referenceCount = 1;
-						getSharedDocumentCache().put(cacheKey, entry);
+				else if (o instanceof Reference) {
+					TLDCacheEntry entry = (TLDCacheEntry) ((Reference) o).get();
+					if (entry != null) {
+						if (entry.modificationStamp != IResource.NULL_STAMP && entry.modificationStamp >= lastModified) {
+							doc = entry.document;
+							entry.referenceCount = 1;
+							getSharedDocumentCache().put(cacheKey, entry);
+						}
+					}
+					else {
+						getSharedDocumentCache().remove(cacheKey);
 					}
 				}
 			}
@@ -899,6 +794,7 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 					TLDCacheEntry entry = new TLDCacheEntry();
 					doc = entry.document = descriptor.document;
 					entry.referenceCount = 1;
+					entry.modificationStamp = getModificationStamp(reference);
 					getSharedDocumentCache().put(cacheKey, entry);
 				}
 			}
@@ -908,6 +804,58 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 		}
 		return doc;
 	}
+
+	private long getModificationStamp(String reference) {
+		ITaglibRecord record = TaglibIndex.resolve(getCurrentParserPath().toString(), reference, false);
+		long modificationStamp = IResource.NULL_STAMP;
+		if (record != null) {
+			switch (record.getRecordType()) {
+				case (ITaglibRecord.TLD) : {
+					IFile tldfile = ResourcesPlugin.getWorkspace().getRoot().getFile(((ITLDRecord) record).getPath());
+					if (tldfile.isAccessible()) {
+						modificationStamp = tldfile.getModificationStamp();
+					}
+				}
+					break;
+				case (ITaglibRecord.JAR) : {
+					File jarfile = new File(((IJarRecord) record).getLocation().toOSString());
+					if (jarfile.exists()) {
+						try {
+							modificationStamp = jarfile.lastModified();
+						}
+						catch (SecurityException e) {
+							modificationStamp = IResource.NULL_STAMP;
+						}
+					}
+				}
+					break;
+				case (ITaglibRecord.TAGDIR) : {
+					IFolder tagFolder = ResourcesPlugin.getWorkspace().getRoot().getFolder(((ITagDirRecord) record).getPath());
+					if (tagFolder.isAccessible()) {
+						IResource[] members;
+						try {
+							members = tagFolder.members();
+							for (int i = 0; i < members.length; i++) {
+								modificationStamp = Math.max(modificationStamp, members[i].getModificationStamp());
+							}
+						}
+						catch (CoreException e) {
+							modificationStamp = IResource.NULL_STAMP;
+						}
+					}
+				}
+					break;
+				case (ITaglibRecord.URL) : {
+					modificationStamp = IResource.NULL_STAMP;
+				}
+					break;
+				default :
+					break;
+			}
+		}
+		return modificationStamp;
+	}
+
 
 	/**
 	 * Gets the cMDocumentBuilder.
@@ -1032,6 +980,39 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 		return fTaglibTrackers;
 	}
 
+	void handlePreludes() {
+		IStructuredDocumentRegion anchor = new ZeroStructuredDocumentRegion(null, 0);
+		fProcessIncludes = false;
+
+		IPath currentBaseLocation = getCurrentBaseLocation();
+		if (currentBaseLocation != null) {
+			PropertyGroup propertyGroup = DeploymentDescriptorPropertyGroupCache.getInstance().getPropertyGroup(currentBaseLocation);
+			if (propertyGroup != null) {
+				IPath[] preludes = propertyGroup.getIncludePrelude();
+				for (int i = 0; i < preludes.length; i++) {
+					if (!getIncludes().contains(preludes[i]) && !preludes[i].equals(currentBaseLocation)) {
+						getIncludes().push(preludes[i]);
+						if (getParser() != null) {
+							IncludeHelper includeHelper = new IncludeHelper(anchor, getParser());
+							includeHelper.parse(preludes[i]);
+							List references = includeHelper.taglibReferences;
+							fTLDCMReferencesMap.put(preludes[i], references);
+							/*
+							 * TODO: walk up the include hierarchy and add
+							 * these references to each of the parents.
+							 */
+						}
+						else
+							Logger.log(Logger.WARNING, "Warning: parser text was requested by " + getClass().getName() + " but none was available; taglib support disabled"); //$NON-NLS-1$ //$NON-NLS-2$
+						getIncludes().pop();
+					}
+				}
+			}
+		}
+
+		fProcessIncludes = true;
+	}
+
 	/**
 	 * @param filePath
 	 *            the path to check for modification
@@ -1142,6 +1123,7 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 		if (_debug) {
 			System.out.println("TLDCMDocumentManager cleared its taglib trackers\n"); //$NON-NLS-1$
 		}
+		preludesHandled = false;
 		getTaglibTrackers().clear();
 	}
 

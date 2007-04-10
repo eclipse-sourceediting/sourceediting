@@ -10,18 +10,16 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.core.internal.java;
 
-import java.io.InputStream;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.parser.JSPSourceParser;
 import org.eclipse.jst.jsp.core.internal.provisional.JSP11Namespace;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
+import org.eclipse.jst.jsp.core.internal.util.FileContentCache;
 import org.eclipse.wst.sse.core.internal.document.StructuredDocumentFactory;
 import org.eclipse.wst.sse.core.internal.ltk.parser.BlockMarker;
 import org.eclipse.wst.sse.core.internal.ltk.parser.StructuredDocumentRegionHandler;
@@ -30,7 +28,6 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentReg
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
-import org.eclipse.wst.sse.core.internal.util.Debug;
 import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
@@ -488,44 +485,7 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 	 * @return the contents, null if the file could not be found
 	 */
 	protected String getContents(String fileName) {
-		StringBuffer s = new StringBuffer();
-		int c = 0;
-		int count = 0;
-		InputStream is = null;
-		try {
-			IPath filePath = new Path(fileName);
-			IFile f = ResourcesPlugin.getWorkspace().getRoot().getFile(filePath);
-			if(f != null && !f.exists()) {
-				f = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(filePath);
-			}
-            if (f != null && f.isAccessible()) {
-    			is = f.getContents();
-    			while ((c = is.read()) != -1) {
-    				count++;
-    				s.append((char) c);
-    			}
-            }
-            else {
-            	// error condition, file could not be found
-            	return null;
-            }
-		}
-		catch (Exception e) {
-			if (Debug.debugStructuredDocument) {
-				Logger.logException(e);
-				e.printStackTrace();
-			}
-		}
-		finally {
-			try {
-				if (is != null) {
-					is.close();
-				}
-			}
-			catch (Exception e) {
-				// nothing to do
-			}
-		}
-		return s.toString();
+		IPath filePath = new Path(fileName);
+		return FileContentCache.getInstance().getContents(filePath.makeAbsolute());
 	}
 }

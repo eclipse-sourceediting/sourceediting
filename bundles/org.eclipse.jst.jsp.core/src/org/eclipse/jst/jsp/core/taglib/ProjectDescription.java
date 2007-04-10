@@ -1928,8 +1928,8 @@ class ProjectDescription {
 		else {
 			if (!record.tags.contains(resource.getName())) {
 				record.tags.add(resource.getName());
-				TaglibIndex.getInstance().addDelta(new TaglibIndexDelta(fProject, record, ITaglibIndexDelta.CHANGED));
 			}
+			TaglibIndex.getInstance().addDelta(new TaglibIndexDelta(fProject, record, ITaglibIndexDelta.CHANGED));
 		}
 	}
 
