@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -161,7 +162,7 @@ abstract class PropertyPreferencePage extends PropertyPage implements IWorkbench
 			selectionAdapter.widgetSelected(null);
 			fEnableProjectSettings.addSelectionListener(selectionAdapter);
 		}
-		
+
 		applyDialogFont(composite);
 		return composite;
 	}
@@ -186,8 +187,18 @@ abstract class PropertyPreferencePage extends PropertyPage implements IWorkbench
 	protected abstract String getPreferencePageID();
 
 	protected IProject getProject() {
-		if (getElement() != null && getElement() instanceof IProject) {
-			return (IProject) getElement();
+		if (getElement() != null) {
+			if (getElement() instanceof IProject) {
+				return (IProject) getElement();
+			}
+			Object adapter = getElement().getAdapter(IProject.class);
+			if (adapter instanceof IProject) {
+				return (IProject) adapter;
+			}
+			adapter = getElement().getAdapter(IResource.class);
+			if (adapter instanceof IProject) {
+				return (IProject) adapter;
+			}
 		}
 		return null;
 	}
