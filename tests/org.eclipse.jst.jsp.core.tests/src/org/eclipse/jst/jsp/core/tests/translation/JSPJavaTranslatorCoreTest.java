@@ -116,7 +116,7 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
 		assertTrue(project.exists());
 		JSPCorePlugin.getDefault().getPluginPreferences().setValue(JSPCorePreferenceNames.VALIDATE_FRAGMENTS, true);
 		BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/" + testName, "/" + testName);
-		BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/struts.jar", "/" + testName + "/struts.jar");
+		BundleResourceUtil.copyBundleEntryIntoWorkspace("/testfiles/struts.jar", "/" + testName + "/struts.jar");
 		project.build(IncrementalProjectBuilder.CLEAN_BUILD, new NullProgressMonitor());
 		project.build(IncrementalProjectBuilder.FULL_BUILD, new NullProgressMonitor());
 		project.build(IncrementalProjectBuilder.FULL_BUILD, "org.eclipse.wst.validation.validationbuilder", null, new NullProgressMonitor());
@@ -137,7 +137,7 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
 		assertTrue(project.exists());
 		JSPCorePlugin.getDefault().getPluginPreferences().setValue(JSPCorePreferenceNames.VALIDATE_FRAGMENTS, true);
 		BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/" + testName, "/" + testName);
-		BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/struts.jar", "/" + testName + "/struts.jar");
+		BundleResourceUtil.copyBundleEntryIntoWorkspace("/testfiles/struts.jar", "/" + testName + "/struts.jar");
 		project.build(IncrementalProjectBuilder.CLEAN_BUILD, new NullProgressMonitor());
 		project.build(IncrementalProjectBuilder.FULL_BUILD, new NullProgressMonitor());
 		project.build(IncrementalProjectBuilder.FULL_BUILD, "org.eclipse.wst.validation.validationbuilder", null, new NullProgressMonitor());
@@ -146,6 +146,26 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
 		Platform.getJobManager().join(ResourcesPlugin.FAMILY_MANUAL_BUILD, new NullProgressMonitor());
 		JSPCorePlugin.getDefault().getPluginPreferences().setValue(JSPCorePreferenceNames.VALIDATE_FRAGMENTS, doValidateSegments);
 		IFile main = project.getFile("main.jsp");
+		IMarker[] markers = main.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_ZERO);
+		assertTrue("problem markers found", markers.length == 0);
+	}
+	public void test_109721() throws Exception {
+		boolean doValidateSegments = JSPCorePlugin.getDefault().getPluginPreferences().getBoolean(JSPCorePreferenceNames.VALIDATE_FRAGMENTS);
+		String testName = "bug_109721";
+		// Create new project
+		IProject project = BundleResourceUtil.createSimpleProject(testName, Platform.getStateLocation(JSPCoreTestsPlugin.getDefault().getBundle()).append(testName), null);
+		assertTrue(project.exists());
+		JSPCorePlugin.getDefault().getPluginPreferences().setValue(JSPCorePreferenceNames.VALIDATE_FRAGMENTS, true);
+		BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/" + testName, "/" + testName);
+		BundleResourceUtil.copyBundleEntryIntoWorkspace("/testfiles/struts.jar", "/" + testName + "/WebContent/WEB-INF/lib/struts.jar");
+		project.build(IncrementalProjectBuilder.CLEAN_BUILD, new NullProgressMonitor());
+		project.build(IncrementalProjectBuilder.FULL_BUILD, new NullProgressMonitor());
+		project.build(IncrementalProjectBuilder.FULL_BUILD, "org.eclipse.wst.validation.validationbuilder", null, new NullProgressMonitor());
+		Platform.getJobManager().join(ValidatorManager.VALIDATOR_JOB_FAMILY, new NullProgressMonitor());
+		Platform.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, new NullProgressMonitor());
+		Platform.getJobManager().join(ResourcesPlugin.FAMILY_MANUAL_BUILD, new NullProgressMonitor());
+		JSPCorePlugin.getDefault().getPluginPreferences().setValue(JSPCorePreferenceNames.VALIDATE_FRAGMENTS, doValidateSegments);
+		IFile main = project.getFile("WebContent/main.jsp");
 		IMarker[] markers = main.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_ZERO);
 		assertTrue("problem markers found", markers.length == 0);
 	}
