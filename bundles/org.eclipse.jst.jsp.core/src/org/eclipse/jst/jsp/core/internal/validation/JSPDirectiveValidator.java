@@ -371,13 +371,15 @@ public class JSPDirectiveValidator extends JSPValidator {
 					if (uriValueRegion == null) {
 						uriValueRegion = getAttributeValueRegion(documentRegion, JSP20Namespace.ATTR_NAME_TAGDIR);
 					}
-					String uri2 = StringUtils.stripQuotes(documentRegion.getText(uriValueRegion));
-					if (uri == null) {
-						uri = uri2;
-					}
-					else {
-						if (collator.compare(uri, uri2) != 0) {
-							severity = fSeverityTaglibDuplicatePrefixWithDifferentURIs;
+					if (uriValueRegion != null) {
+						String uri2 = StringUtils.stripQuotes(documentRegion.getText(uriValueRegion));
+						if (uri == null) {
+							uri = uri2;
+						}
+						else {
+							if (collator.compare(uri, uri2) != 0) {
+								severity = fSeverityTaglibDuplicatePrefixWithDifferentURIs;
+							}
 						}
 					}
 				}
