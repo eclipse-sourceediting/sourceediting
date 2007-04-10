@@ -761,34 +761,36 @@ public final class TaglibIndex {
 		ITaglibRecord[] records = new ITaglibRecord[0];
 		if (path.segmentCount() > 0) {
 			IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(path.segment(0));
-			ProjectDescription description = createDescription(project);
-			List availableRecords = description.getAvailableTaglibRecords(path);
-
-			// ICatalog catalog =
-			// XMLCorePlugin.getDefault().getDefaultXMLCatalog();
-			// while (catalog != null) {
-			// ICatalogEntry[] entries = catalog.getCatalogEntries();
-			// for (int i = 0; i < entries.length; i++) {
-			// // System.out.println(entries[i].getURI());
-			// }
-			// INextCatalog[] nextCatalogs = catalog.getNextCatalogs();
-			// for (int i = 0; i < nextCatalogs.length; i++) {
-			// ICatalogEntry[] entries2 =
-			// nextCatalogs[i].getReferencedCatalog().getCatalogEntries();
-			// for (int j = 0; j < entries2.length; j++) {
-			// // System.out.println(entries2[j].getURI());
-			// }
-			// }
-			// }
-
-			records = (ITaglibRecord[]) availableRecords.toArray(records);
+			if(project.isAccessible()) {
+				ProjectDescription description = createDescription(project);
+				List availableRecords = description.getAvailableTaglibRecords(path);
+	
+				// ICatalog catalog =
+				// XMLCorePlugin.getDefault().getDefaultXMLCatalog();
+				// while (catalog != null) {
+				// ICatalogEntry[] entries = catalog.getCatalogEntries();
+				// for (int i = 0; i < entries.length; i++) {
+				// // System.out.println(entries[i].getURI());
+				// }
+				// INextCatalog[] nextCatalogs = catalog.getNextCatalogs();
+				// for (int i = 0; i < nextCatalogs.length; i++) {
+				// ICatalogEntry[] entries2 =
+				// nextCatalogs[i].getReferencedCatalog().getCatalogEntries();
+				// for (int j = 0; j < entries2.length; j++) {
+				// // System.out.println(entries2[j].getURI());
+				// }
+				// }
+				// }
+				
+				records = (ITaglibRecord[]) availableRecords.toArray(records);
+			}
 		}
 		return records;
 	}
 
 	private IPath internalGetContextRoot(IPath path) {
 		IFile baseResource = FileBuffers.getWorkspaceFileAtLocation(path);
-		if (baseResource != null) {
+		if (baseResource != null && baseResource.getProject().isAccessible()) {
 			IProject project = baseResource.getProject();
 			ProjectDescription description = getInstance().createDescription(project);
 			IPath rootPath = description.getLocalRoot(baseResource.getFullPath());
