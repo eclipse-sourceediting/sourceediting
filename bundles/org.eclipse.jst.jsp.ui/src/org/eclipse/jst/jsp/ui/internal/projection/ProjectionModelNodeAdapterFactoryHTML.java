@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,7 +7,7 @@
  *
  * Contributors:
  *     IBM Corporation - initial API and implementation
- *     
+ *     Tom Turrell-Croft, left@ultrasis.com - [174307] Enable folding for div tags in JSP and HTML files
  *******************************************************************************/
 package org.eclipse.jst.jsp.ui.internal.projection;
 
@@ -86,8 +86,8 @@ public class ProjectionModelNodeAdapterFactoryHTML extends AbstractAdapterFactor
 		if (node.getNodeType() == Node.ELEMENT_NODE) {
 			String tagName = node.getNodeName();
 			// node is only projectable if it is head, body, script, style,
-			// table, ul, ol tags
-			if (HTML40Namespace.ElementName.HEAD.equalsIgnoreCase(tagName) || HTML40Namespace.ElementName.BODY.equalsIgnoreCase(tagName) || HTML40Namespace.ElementName.SCRIPT.equalsIgnoreCase(tagName) || HTML40Namespace.ElementName.STYLE.equalsIgnoreCase(tagName) || HTML40Namespace.ElementName.TABLE.equalsIgnoreCase(tagName) || HTML40Namespace.ElementName.UL.equalsIgnoreCase(tagName) || HTML40Namespace.ElementName.OL.equalsIgnoreCase(tagName))
+			// table, ul, ol and div tags
+			if (HTML40Namespace.ElementName.HEAD.equalsIgnoreCase(tagName) || HTML40Namespace.ElementName.BODY.equalsIgnoreCase(tagName) || HTML40Namespace.ElementName.SCRIPT.equalsIgnoreCase(tagName) || HTML40Namespace.ElementName.STYLE.equalsIgnoreCase(tagName) || HTML40Namespace.ElementName.TABLE.equalsIgnoreCase(tagName) || HTML40Namespace.ElementName.UL.equalsIgnoreCase(tagName) || HTML40Namespace.ElementName.OL.equalsIgnoreCase(tagName) || HTML40Namespace.ElementName.DIV.equalsIgnoreCase(tagName))
 				return true;
 		}
 		return false;
