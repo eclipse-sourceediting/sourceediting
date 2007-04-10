@@ -580,11 +580,18 @@ public class DeploymentDescriptorPropertyGroupCache {
 	 */
 	public PropertyGroup getPropertyGroup(IPath jspFilePath) {
 		IPath contextRoot = TaglibIndex.getContextRoot(jspFilePath);
+		if (contextRoot == null)
+			return null;
+
 		IPath webxmlPath = contextRoot.append(WEB_INF_WEB_XML);
 		Reference groupHolder = (Reference) fPropertyGroupContainerReferences.get(webxmlPath);
 		PropertyGroupContainer groupContainer = null;
-		IFile webxmlFiles = ResourcesPlugin.getWorkspace().getRoot().getFile(webxmlPath);
-		if (groupHolder == null || ((groupContainer = (PropertyGroupContainer) groupHolder.get()) == null) || (groupContainer.modificationStamp == IResource.NULL_STAMP) || (groupContainer.modificationStamp != webxmlFiles.getModificationStamp())) {
+		IFile webxmlFile = ResourcesPlugin.getWorkspace().getRoot().getFile(webxmlPath);
+
+		if (!webxmlFile.isAccessible())
+			return null;
+
+		if (groupHolder == null || ((groupContainer = (PropertyGroupContainer) groupHolder.get()) == null) || (groupContainer.modificationStamp == IResource.NULL_STAMP) || (groupContainer.modificationStamp != webxmlFile.getModificationStamp())) {
 			groupContainer = fetchPropertyGroupContainer(webxmlPath, new NullProgressMonitor());
 		}
 

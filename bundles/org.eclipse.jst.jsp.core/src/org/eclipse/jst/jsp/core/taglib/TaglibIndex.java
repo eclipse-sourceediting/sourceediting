@@ -594,7 +594,7 @@ public final class TaglibIndex {
 
 	private TaglibIndexDelta fCurrentTopLevelDelta = null;
 
-	Map fProjectDescriptions;
+	Map fProjectDescriptions = new Hashtable();
 
 	private ResourceChangeListener fResourceChangeListener;
 

@@ -109,7 +109,9 @@ public class FileContentCache {
 				return f.getModificationStamp();
 			}
 			File file = filePath.toFile();
-			return file.lastModified();
+			if (file.exists())
+				return file.lastModified();
+			return IResource.NULL_STAMP;
 		}
 
 		private String readContents(IPath filePath) {
