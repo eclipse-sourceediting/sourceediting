@@ -76,8 +76,14 @@ public class JSPJavaValidator extends JSPValidator {
 			if (region.getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_NAME) {
 				if (getDirectiveName(region).equals("include")) { //$NON-NLS-1$
 					ITextRegion fileValueRegion = getAttributeValueRegion(region, "file"); //$NON-NLS-1$
-					m.setOffset(region.getStartOffset(fileValueRegion));
-					m.setLength(fileValueRegion.getTextLength());
+					if(fileValueRegion != null) {
+						m.setOffset(region.getStartOffset(fileValueRegion));
+						m.setLength(fileValueRegion.getTextLength());
+					}
+					else {
+						m.setOffset(region.getStartOffset());
+						m.setLength(region.getTextLength());
+					}
 					break;
 				}
 			}
