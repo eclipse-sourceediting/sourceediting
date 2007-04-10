@@ -1240,23 +1240,21 @@ class ProjectDescription {
 				/*
 				 * Ignore libs in required projects that are not exported
 				 */
-				if (fClasspathProjects.size() < 2 || entry.isExported()) {
-					IPath libPath = entry.getPath();
-					if (!fClasspathJars.containsKey(libPath.toString())) {
-						if (libPath.toFile().exists()) {
-							updateClasspathLibrary(libPath.toString(), ITaglibIndexDelta.ADDED, entry.isExported());
-						}
-						else {
-							/*
-							 * Note: .jars on the classpath inside of the
-							 * project will have duplicate entries in the JAR
-							 * references table that will e returned to
-							 * getAvailableTaglibRecords().
-							 */
-							IFile libFile = ResourcesPlugin.getWorkspace().getRoot().getFile(libPath);
-							if (libFile != null && libFile.exists()) {
-								updateClasspathLibrary(libFile.getLocation().toString(), ITaglibIndexDelta.ADDED, entry.isExported());
-							}
+				IPath libPath = entry.getPath();
+				if (!fClasspathJars.containsKey(libPath.toString())) {
+					if (libPath.toFile().exists()) {
+						updateClasspathLibrary(libPath.toString(), ITaglibIndexDelta.ADDED, entry.isExported());
+					}
+					else {
+						/*
+						 * Note: .jars on the classpath inside of the project
+						 * will have duplicate entries in the JAR references
+						 * table that will e returned to
+						 * getAvailableTaglibRecords().
+						 */
+						IFile libFile = ResourcesPlugin.getWorkspace().getRoot().getFile(libPath);
+						if (libFile != null && libFile.exists()) {
+							updateClasspathLibrary(libFile.getLocation().toString(), ITaglibIndexDelta.ADDED, entry.isExported());
 						}
 					}
 				}
@@ -1275,7 +1273,25 @@ class ProjectDescription {
 				break;
 			case IClasspathEntry.CPE_SOURCE :
 				break;
-			case IClasspathEntry.CPE_VARIABLE :
+			case IClasspathEntry.CPE_VARIABLE : {
+				IPath libPath = JavaCore.getResolvedVariablePath(entry.getPath());
+				if (libPath != null) {
+					File file = new File(libPath.toOSString());
+
+					// file in filesystem
+					if (file.exists() && !file.isDirectory()) {
+						updateClasspathLibrary(libPath.toString(), ITaglibRecordEvent.ADDED, entry.isExported());
+					}
+					else {
+						// workspace file
+						IFile jarFile = ResourcesPlugin.getWorkspace().getRoot().getFile(libPath);
+						if (jarFile.isAccessible() && jarFile.getType() == IResource.FILE && jarFile.getLocation() != null) {
+							String jarPathString = jarFile.getLocation().toString();
+							updateClasspathLibrary(jarPathString, ITaglibRecordEvent.ADDED, entry.isExported());
+						}
+					}
+				}
+			}
 				break;
 		}
 	}
