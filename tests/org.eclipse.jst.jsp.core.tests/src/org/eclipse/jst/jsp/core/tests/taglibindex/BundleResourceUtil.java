@@ -90,6 +90,9 @@ public class BundleResourceUtil {
 				e.printStackTrace();
 			}
 		}
+		else {
+			System.err.println("can't find " + entryname);
+		}
 		return file;
 	}
 

@@ -262,7 +262,7 @@ public class TestIndex extends TestCase {
 		 */
 		IFile main = project.getFile("main.jsp");
 		IMarker[] markers = main.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_ZERO);
-		assertTrue("problem markers found", markers.length == 0);
+		assertEquals("problem markers found", 0, markers.length);
 	}
 
 	/**
