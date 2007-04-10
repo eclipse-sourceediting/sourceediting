@@ -113,7 +113,7 @@ public class TaglibHelper {
 			if (mgr == null)
 				return new TaglibVariable[0];
 
-			List trackers = mgr.getCMDocumentTrackers(customTag.getEndOffset());
+			List trackers = mgr.getCMDocumentTrackers(customTag.getStartOffset());
 			Iterator taglibs = trackers.iterator();
 
 			// TaglibSupport support = ((TaglibModelQuery)
@@ -455,8 +455,10 @@ public class TaglibHelper {
 
 		// variable should either be a project or a library entry
 
+		// BUG 169431
 		String variableName = entry.getPath().toString();
-		IPath variablePath = JavaCore.getClasspathVariable(variableName);
+		IPath variablePath = JavaCore.getResolvedVariablePath(entry.getPath());
+		variablePath = JavaCore.getClasspathVariable(variableName);
 
 		// RATLC01076854
 		// variable paths may not exist
