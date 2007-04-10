@@ -56,6 +56,9 @@ public class JSPTranslationTest extends TestCase {
 	public JSPTranslationTest(String name) {
 		super(name);
 	}
+	public JSPTranslationTest() {
+		super("JSPTranslationTest");
+	}
 
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -267,7 +270,7 @@ public class JSPTranslationTest extends TestCase {
 		}
 		assertTrue("expected JSP position missing: " + jspPos, found);
 		assertNotNull("no expected java position for jspPos: " + printPos(jspPos), expectedJavaPos);
-		assertEquals("unexpected java position was:" + printPos(javaPos) + " but expected:" + printPos(expectedJavaPos), javaPos, expectedJavaPos);
+		assertEquals("unexpected java position for jsp position "+printPos(jspPos)+" was:" + printPos(javaPos) + " but expected:" + printPos(expectedJavaPos), javaPos, expectedJavaPos);
 	}
 	private String printPos(Position pos) {
 		return pos != null ? "[" + pos.offset +":"+ pos.length + "]" : "null";
