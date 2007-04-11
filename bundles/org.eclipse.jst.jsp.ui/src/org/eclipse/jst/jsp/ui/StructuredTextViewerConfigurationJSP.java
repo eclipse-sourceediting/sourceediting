@@ -377,12 +377,13 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 
 					StringBuffer s = new StringBuffer();
 					Node node = (Node) element;
-					if (node.getNodeType() != Node.DOCUMENT_NODE) {
-						while (node != null && node.getNodeType() != Node.DOCUMENT_NODE) {
+					while (node != null) {
+						if (node.getNodeType() != Node.DOCUMENT_NODE) {
 							s.insert(0, super.getText(node));
-							node = node.getParentNode();
-							if (node != null)
-								s.insert(0, IPath.SEPARATOR);
+						}
+						node = node.getParentNode();
+						if (node != null && node.getNodeType() != Node.DOCUMENT_NODE) {
+							s.insert(0, IPath.SEPARATOR);
 						}
 					}
 					return s.toString();

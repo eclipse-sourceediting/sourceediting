@@ -51,7 +51,10 @@ public class JFaceNodeLabelProvider extends LabelProvider {
 	 * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
 	 */
 	public Image getImage(Object element) {
-		return getAdapter(element).getLabelImage(element);
+		IJFaceNodeAdapter adapter = getAdapter(element);
+		if (adapter != null)
+			return adapter.getLabelImage(element);
+		return super.getImage(element);
 	}
 
 	/*
@@ -60,7 +63,10 @@ public class JFaceNodeLabelProvider extends LabelProvider {
 	 * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
 	 */
 	public String getText(Object element) {
-		return getAdapter(element).getLabelText(element);
+		IJFaceNodeAdapter adapter = getAdapter(element);
+		if (adapter != null)
+			return adapter.getLabelText(element);
+		return super.getText(element);
 	}
 
 	/*

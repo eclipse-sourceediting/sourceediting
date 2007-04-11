@@ -234,8 +234,9 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 							s.insert(0, super.getText(node));
 						}
 						node = node.getParentNode();
-						if (node != null && node.getNodeType() != Node.DOCUMENT_NODE)
+						if (node != null && node.getNodeType() != Node.DOCUMENT_NODE) {
 							s.insert(0, IPath.SEPARATOR);
+						}
 					}
 					return s.toString();
 				}
