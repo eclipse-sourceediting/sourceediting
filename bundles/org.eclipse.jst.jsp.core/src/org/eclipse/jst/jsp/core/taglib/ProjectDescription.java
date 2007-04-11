@@ -1108,9 +1108,9 @@ class ProjectDescription {
 				break;
 			case IClasspathEntry.CPE_LIBRARY : {
 				/*
-				 * Ignore libs in required projects that are not exported
+				 * Track all libs now since required projects are consulted
+				 * for their build path jars separately
 				 */
-				if (fClasspathProjects.size() < 2 || entry.isExported()) {
 					IPath libPath = entry.getPath();
 					if (!fClasspathJars.containsKey(libPath.toString())) {
 						if (libPath.toFile().exists()) {
@@ -1129,7 +1129,6 @@ class ProjectDescription {
 							}
 						}
 					}
-				}
 			}
 				break;
 			case IClasspathEntry.CPE_PROJECT : {
@@ -1145,7 +1144,25 @@ class ProjectDescription {
 				break;
 			case IClasspathEntry.CPE_SOURCE :
 				break;
-			case IClasspathEntry.CPE_VARIABLE :
+			case IClasspathEntry.CPE_VARIABLE : {
+				IPath libPath = JavaCore.getResolvedVariablePath(entry.getPath());
+				if (libPath != null) {
+					File file = new File(libPath.toOSString());
+
+					// file in filesystem
+					if (file.exists() && !file.isDirectory()) {
+						updateClasspathLibrary(libPath.toString(), ITaglibRecordEvent.ADDED, entry.isExported());
+					}
+					else {
+						// workspace file
+						IFile jarFile = ResourcesPlugin.getWorkspace().getRoot().getFile(libPath);
+						if (jarFile.isAccessible() && jarFile.getType() == IResource.FILE && jarFile.getLocation() != null) {
+							String jarPathString = jarFile.getLocation().toString();
+							updateClasspathLibrary(jarPathString, ITaglibRecordEvent.ADDED, entry.isExported());
+						}
+					}
+				}
+			}
 				break;
 		}
 	}
