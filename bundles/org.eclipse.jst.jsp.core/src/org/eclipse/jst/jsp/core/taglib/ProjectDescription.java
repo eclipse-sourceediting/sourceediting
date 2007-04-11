@@ -761,7 +761,7 @@ class ProjectDescription {
 		if (location != null) {
 			jarRecord = createJARRecord(location.toString());
 		}
-		else {
+		else if (jar.getLocationURI() != null) {
 			jarRecord = createJARRecord(jar.getLocationURI().toString());
 		}
 		return jarRecord;
@@ -1151,10 +1151,10 @@ class ProjectDescription {
 			if ((delta.getFlags() & IJavaElementDelta.F_ADDED_TO_CLASSPATH) > 0 || (delta.getFlags() & IJavaElementDelta.F_ARCHIVE_CONTENT_CHANGED) > 0 || (delta.getFlags() & IJavaElementDelta.F_REMOVED_FROM_CLASSPATH) > 0) {
 				taglibRecordEventKind = ITaglibIndexDelta.ADDED;
 				IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(element.getPath());
-				if (file.getLocation() != null)
+				if (file.isAccessible() && file.getLocation() != null)
 					libLocation = file.getLocation().toString();
 				else
-					libLocation = file.getLocationURI().toString();
+					libLocation = element.getPath().toString();
 			}
 			if (libLocation != null) {
 				boolean fragmentisExported = true;
@@ -1864,7 +1864,11 @@ class ProjectDescription {
 		if (_debugIndexCreation)
 			Logger.log(Logger.INFO, "creating records for JAR " + jar.getFullPath()); //$NON-NLS-1$
 
-		String jarLocationString = jar.getLocation().toString();
+		String jarLocationString = null;
+		if (jar.getLocation() != null)
+			jarLocationString = jar.getLocation().toString();
+		else
+			jarLocationString = jar.getLocationURI().toString();
 		String[] entries = JarUtilities.getEntryNames(jar);
 		JarRecord jarRecord = createJARRecord(jar);
 		fJARReferences.put(jar.getFullPath().toString(), jarRecord);
