@@ -207,18 +207,17 @@ public class JSPDirectiveValidator extends JSPValidator implements ISourceValida
 			int length = valueRegion.getTextLength();
 			taglibPrefix = StringUtils.stripQuotes(taglibPrefix);
 
-			int sev = IMessage.HIGH_SEVERITY;
 			LocalizedMessage message = null;
 
 			// check for errors
 			// use file if available (for markers)
 			if (isReservedPrefix(taglibPrefix)) {
-
+				int sev = IMessage.HIGH_SEVERITY;
 				String msgText = JSPCoreMessages.JSPDirectiveValidator_0 + taglibPrefix + "'"; //$NON-NLS-2$ //$NON-NLS-1$
 				message = (file == null ? new LocalizedMessage(sev, msgText) : new LocalizedMessage(sev, msgText, file));
 			}
 			else if (isDuplicatePrefix(sdRegion, taglibPrefix)) {
-
+				int sev = IMessage.NORMAL_SEVERITY;
 				String msgText = JSPCoreMessages.JSPDirectiveValidator_2 + taglibPrefix + "'"; //$NON-NLS-2$ //$NON-NLS-1$
 				message = (file == null ? new LocalizedMessage(sev, msgText) : new LocalizedMessage(sev, msgText, file));
 			}
