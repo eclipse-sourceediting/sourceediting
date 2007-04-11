@@ -23,6 +23,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.jobs.Job;
@@ -239,22 +240,32 @@ public class TestIndex extends TestCase {
 		// Create new project
 		IProject j = BundleResourceUtil.createSimpleProject("j", null, null);
 		assertTrue(j.exists());
-		BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/j" + testName, "/j");
+		BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/j", "/j");
 		IProject k = BundleResourceUtil.createSimpleProject("k", null, null);
 		assertTrue(k.exists());
-		BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/k" + testName, "/k");
+		BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/k", "/k");
 
 		IProject project = BundleResourceUtil.createSimpleProject(testName, Platform.getStateLocation(JSPCoreTestsPlugin.getDefault().getBundle()).append(testName), null);
 		assertTrue(project.exists());
 		JSPCorePlugin.getDefault().getPluginPreferences().setValue(JSPCorePreferenceNames.VALIDATE_FRAGMENTS, true);
 		BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/" + testName, "/" + testName);
-		BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/struts.jar", "/" + testName + "/struts.jar");
+		BundleResourceUtil.copyBundleEntryIntoWorkspace("/testfiles/struts.jar", "/" + testName + "/struts.jar");
+		j.build(IncrementalProjectBuilder.CLEAN_BUILD, new NullProgressMonitor());
+		k.build(IncrementalProjectBuilder.CLEAN_BUILD, new NullProgressMonitor());
 		project.build(IncrementalProjectBuilder.CLEAN_BUILD, new NullProgressMonitor());
 		project.build(IncrementalProjectBuilder.FULL_BUILD, new NullProgressMonitor());
 		project.build(IncrementalProjectBuilder.FULL_BUILD, "org.eclipse.wst.validation.validationbuilder", null, new NullProgressMonitor());
-		Job.getJobManager().join(ValidatorManager.VALIDATOR_JOB_FAMILY, new NullProgressMonitor());
-		Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, new NullProgressMonitor());
-		Job.getJobManager().join(ResourcesPlugin.FAMILY_MANUAL_BUILD, new NullProgressMonitor());
+		try {
+			Job.getJobManager().join(ValidatorManager.VALIDATOR_JOB_FAMILY, new NullProgressMonitor());
+			Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, new NullProgressMonitor());
+			Job.getJobManager().join(ResourcesPlugin.FAMILY_MANUAL_BUILD, new NullProgressMonitor());
+		}
+		catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		catch (OperationCanceledException e) {
+			e.printStackTrace();
+		}
 		JSPCorePlugin.getDefault().getPluginPreferences().setValue(JSPCorePreferenceNames.VALIDATE_FRAGMENTS, doValidateSegments);
 		/*
 		 * main.jsp contains numerous references to tags in struts.jar, which
@@ -262,7 +273,11 @@ public class TestIndex extends TestCase {
 		 */
 		IFile main = project.getFile("main.jsp");
 		IMarker[] markers = main.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_ZERO);
-		assertEquals("problem markers found", 0, markers.length);
+		StringBuffer s = new StringBuffer();
+		for (int i = 0; i < markers.length; i++) {
+			s.append("\n" + markers[i].getAttribute(IMarker.LINE_NUMBER) + ":" + markers[i].getAttribute(IMarker.MESSAGE));
+		}
+		assertEquals("problem markers found" + s.toString(), 0, markers.length);
 	}
 
 	/**
@@ -350,7 +365,7 @@ public class TestIndex extends TestCase {
 		assertEquals("ITaglibRecords were found", 0, records.length);
 		// make sure project 2 sees two taglibs
 		ITaglibRecord[] records2 = TaglibIndex.getAvailableTaglibRecords(new Path("/testavailable2/WebContent"));
-		if(records2.length != 2) {
+		if (records2.length != 2) {
 			for (int i = 0; i < records2.length; i++) {
 				System.err.println(records2[i]);
 			}

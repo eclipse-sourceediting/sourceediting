@@ -9,7 +9,6 @@
 <body>
 <!-- note: the directive for bean exists in header.jspf as specified in the web.xml file -->
 <bean:define id="foo" ></bean:define>
-<logic:iterate id="iterator" property="foo"></logic:iterate>
-
+<%=alpha%>
 </body>
 </html>

@@ -20,7 +20,9 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jst.jsp.core.internal.JSPCorePlugin;
 import org.eclipse.jst.jsp.core.internal.java.IJSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslation;
@@ -93,21 +95,29 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
 		model.releaseFromRead();
 	}
 
-//	public void testMangling() {
-//		assertEquals("simple_tag", JSP2ServletNameUtil.mangle("simple.tag"));
-//		assertEquals("simple_jspf", JSP2ServletNameUtil.mangle("simple.jspf"));
-//		assertEquals("sim_005f_005fple_tagx", JSP2ServletNameUtil.mangle("sim__ple.tagx"));
-//		assertEquals(new Path("Project.folder.simple_tag"), JSP2ServletNameUtil.mangle(new Path("/Project/folder/simple.tag")));
-//		assertEquals(new Path("Project.fold_005fer.simple_jspx"), JSP2ServletNameUtil.mangle(new Path("/Project/fold_er/simple.jspx")));
-//	}
-//
-//	public void testUnmangling() {
-//		assertEquals("simple.tag", JSP2ServletNameUtil.unmangle("simple_tag"));
-//		assertEquals("simple.jspf", JSP2ServletNameUtil.unmangle("simple_jspf"));
-//		assertEquals("sim__ple.tagx", JSP2ServletNameUtil.unmangle("sim_005f_005fple_tagx"));
-//		assertEquals(new Path("/Project/folder/simple.tag"), JSP2ServletNameUtil.unmangle(new Path("Project.folder.simple_tag")));
-//		assertEquals(new Path("/Project/fold_er/simple.jspx"), JSP2ServletNameUtil.unmangle(new Path("Project.fold_005fer.simple_jspx")));
-//	}
+	// public void testMangling() {
+	// assertEquals("simple_tag", JSP2ServletNameUtil.mangle("simple.tag"));
+	// assertEquals("simple_jspf", JSP2ServletNameUtil.mangle("simple.jspf"));
+	// assertEquals("sim_005f_005fple_tagx",
+	// JSP2ServletNameUtil.mangle("sim__ple.tagx"));
+	// assertEquals(new Path("Project.folder.simple_tag"),
+	// JSP2ServletNameUtil.mangle(new Path("/Project/folder/simple.tag")));
+	// assertEquals(new Path("Project.fold_005fer.simple_jspx"),
+	// JSP2ServletNameUtil.mangle(new Path("/Project/fold_er/simple.jspx")));
+	// }
+	//
+	// public void testUnmangling() {
+	// assertEquals("simple.tag", JSP2ServletNameUtil.unmangle("simple_tag"));
+	// assertEquals("simple.jspf",
+	// JSP2ServletNameUtil.unmangle("simple_jspf"));
+	// assertEquals("sim__ple.tagx",
+	// JSP2ServletNameUtil.unmangle("sim_005f_005fple_tagx"));
+	// assertEquals(new Path("/Project/folder/simple.tag"),
+	// JSP2ServletNameUtil.unmangle(new Path("Project.folder.simple_tag")));
+	// assertEquals(new Path("/Project/fold_er/simple.jspx"),
+	// JSP2ServletNameUtil.unmangle(new
+	// Path("Project.fold_005fer.simple_jspx")));
+	// }
 	public void test_174042() throws Exception {
 		boolean doValidateSegments = JSPCorePlugin.getDefault().getPluginPreferences().getBoolean(JSPCorePreferenceNames.VALIDATE_FRAGMENTS);
 		String testName = "bug_174042";
@@ -120,13 +130,25 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
 		project.build(IncrementalProjectBuilder.CLEAN_BUILD, new NullProgressMonitor());
 		project.build(IncrementalProjectBuilder.FULL_BUILD, new NullProgressMonitor());
 		project.build(IncrementalProjectBuilder.FULL_BUILD, "org.eclipse.wst.validation.validationbuilder", null, new NullProgressMonitor());
-		Platform.getJobManager().join(ValidatorManager.VALIDATOR_JOB_FAMILY, new NullProgressMonitor());
-		Platform.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, new NullProgressMonitor());
-		Platform.getJobManager().join(ResourcesPlugin.FAMILY_MANUAL_BUILD, new NullProgressMonitor());
+		try {
+			Job.getJobManager().join(ValidatorManager.VALIDATOR_JOB_FAMILY, new NullProgressMonitor());
+			Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, new NullProgressMonitor());
+			Job.getJobManager().join(ResourcesPlugin.FAMILY_MANUAL_BUILD, new NullProgressMonitor());
+		}
+		catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		catch (OperationCanceledException e) {
+			e.printStackTrace();
+		}
 		JSPCorePlugin.getDefault().getPluginPreferences().setValue(JSPCorePreferenceNames.VALIDATE_FRAGMENTS, doValidateSegments);
 		IFile main = project.getFile("main.jsp");
 		IMarker[] markers = main.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_ZERO);
-		assertTrue("problem markers found", markers.length == 0);
+		StringBuffer s = new StringBuffer();
+		for (int i = 0; i < markers.length; i++) {
+			s.append("\n" + markers[i].getAttribute(IMarker.LINE_NUMBER) + ":" + markers[i].getAttribute(IMarker.MESSAGE));
+		}
+		assertEquals("problem markers found" + s.toString(), 0, markers.length);
 	}
 
 	public void test_178443() throws Exception {
@@ -141,14 +163,27 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
 		project.build(IncrementalProjectBuilder.CLEAN_BUILD, new NullProgressMonitor());
 		project.build(IncrementalProjectBuilder.FULL_BUILD, new NullProgressMonitor());
 		project.build(IncrementalProjectBuilder.FULL_BUILD, "org.eclipse.wst.validation.validationbuilder", null, new NullProgressMonitor());
-		Platform.getJobManager().join(ValidatorManager.VALIDATOR_JOB_FAMILY, new NullProgressMonitor());
-		Platform.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, new NullProgressMonitor());
-		Platform.getJobManager().join(ResourcesPlugin.FAMILY_MANUAL_BUILD, new NullProgressMonitor());
+		try {
+			Job.getJobManager().join(ValidatorManager.VALIDATOR_JOB_FAMILY, new NullProgressMonitor());
+			Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, new NullProgressMonitor());
+			Job.getJobManager().join(ResourcesPlugin.FAMILY_MANUAL_BUILD, new NullProgressMonitor());
+		}
+		catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		catch (OperationCanceledException e) {
+			e.printStackTrace();
+		}
 		JSPCorePlugin.getDefault().getPluginPreferences().setValue(JSPCorePreferenceNames.VALIDATE_FRAGMENTS, doValidateSegments);
 		IFile main = project.getFile("main.jsp");
 		IMarker[] markers = main.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_ZERO);
-		assertTrue("problem markers found", markers.length == 0);
+		StringBuffer s = new StringBuffer();
+		for (int i = 0; i < markers.length; i++) {
+			s.append("\n" + markers[i].getAttribute(IMarker.LINE_NUMBER) + ":" + markers[i].getAttribute(IMarker.MESSAGE));
+		}
+		assertEquals("problem markers found" + s.toString(), 0, markers.length);
 	}
+
 	public void test_109721() throws Exception {
 		boolean doValidateSegments = JSPCorePlugin.getDefault().getPluginPreferences().getBoolean(JSPCorePreferenceNames.VALIDATE_FRAGMENTS);
 		String testName = "bug_109721";
@@ -161,12 +196,24 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
 		project.build(IncrementalProjectBuilder.CLEAN_BUILD, new NullProgressMonitor());
 		project.build(IncrementalProjectBuilder.FULL_BUILD, new NullProgressMonitor());
 		project.build(IncrementalProjectBuilder.FULL_BUILD, "org.eclipse.wst.validation.validationbuilder", null, new NullProgressMonitor());
-		Platform.getJobManager().join(ValidatorManager.VALIDATOR_JOB_FAMILY, new NullProgressMonitor());
-		Platform.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, new NullProgressMonitor());
-		Platform.getJobManager().join(ResourcesPlugin.FAMILY_MANUAL_BUILD, new NullProgressMonitor());
+		try {
+			Job.getJobManager().join(ValidatorManager.VALIDATOR_JOB_FAMILY, new NullProgressMonitor());
+			Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, new NullProgressMonitor());
+			Job.getJobManager().join(ResourcesPlugin.FAMILY_MANUAL_BUILD, new NullProgressMonitor());
+		}
+		catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		catch (OperationCanceledException e) {
+			e.printStackTrace();
+		}
 		JSPCorePlugin.getDefault().getPluginPreferences().setValue(JSPCorePreferenceNames.VALIDATE_FRAGMENTS, doValidateSegments);
 		IFile main = project.getFile("WebContent/main.jsp");
 		IMarker[] markers = main.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_ZERO);
-		assertTrue("problem markers found", markers.length == 0);
+		StringBuffer s = new StringBuffer();
+		for (int i = 0; i < markers.length; i++) {
+			s.append("\n" + markers[i].getAttribute(IMarker.LINE_NUMBER) + ":" + markers[i].getAttribute(IMarker.MESSAGE));
+		}
+		assertEquals("problem markers found" + s.toString(), 0, markers.length);
 	}
 }

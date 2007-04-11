@@ -36,6 +36,12 @@ public class JSPCoreTestSuite extends TestSuite {
 	public JSPCoreTestSuite() {
 		super("SSE JSP Core Test Suite");
 
+		String noninteractive = System.getProperty("wtp.autotest.noninteractive");
+		String wtp_autotest_noninteractive = null;
+		if (noninteractive != null)
+			wtp_autotest_noninteractive = noninteractive;
+		System.setProperty("wtp.autotest.noninteractive", "true");
+
 		addTest(TestCeanupFormat.suite());
 		addTest(ModelCloneSuite.suite());
 		addTest(new TestSuite(TestModelHandlers.class, "TestModelHandlers"));
@@ -53,5 +59,7 @@ public class JSPCoreTestSuite extends TestSuite {
 		addTest(new TestSuite(JSPJavaValidatorTest.class, "JSP Java Validator Tests"));
 		addTest(new TestSuite(TestImportedNodes.class, "Imported Nodes Tests"));
 
+		if (wtp_autotest_noninteractive != null)
+			System.setProperty("wtp.autotest.noninteractive", wtp_autotest_noninteractive);
 	}
 }

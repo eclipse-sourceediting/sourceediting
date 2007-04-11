@@ -63,6 +63,14 @@ public class BundleResourceUtil {
 		IFile file = null;
 		URL entry = JSPCoreTestsPlugin.getDefault().getBundle().getEntry(entryname);
 		if (entry != null) {
+			IPath path = new Path(fullPath);
+//			for (int j = 1; j <= path.segmentCount() - 2; j++) {
+//				IPath folderPath = path.removeLastSegments(path.segmentCount() - j);
+//				IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getFolder(folderPath);
+//				if (!folder.exists()) {
+//					folder.create(true, true, null);
+//				}
+//			}
 			try {
 				byte[] b = new byte[2048];
 				InputStream input = entry.openStream();
@@ -71,7 +79,7 @@ public class BundleResourceUtil {
 				while ((i = input.read(b)) > -1) {
 					output.write(b, 0, i);
 				}
-				file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(fullPath));
+				file = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
 				if (file != null) {
 					if (!file.exists()) {
 						file.create(new ByteArrayInputStream(output.toByteArray()), true, new NullProgressMonitor());
@@ -149,36 +157,39 @@ public class BundleResourceUtil {
 		}
 		return project;
 	}
+
 	public static final String JAVA_NATURE_ID = "org.eclipse.jdt.core.javanature";
-	
+
 	/**
-	 * Add a library entry (like a jar) to the classpath of a project.
-	 * The jar must be in your poject. You can copy the jar into your workspace using
+	 * Add a library entry (like a jar) to the classpath of a project. The jar
+	 * must be in your poject. You can copy the jar into your workspace using
 	 * copyBundleEntryIntoWorkspace(String entryname, String fullPath)
 	 * 
-	 * @param proj assumed it has java nature
-	 * @param pathToJar project relative, no leading slash
+	 * @param proj
+	 *            assumed it has java nature
+	 * @param pathToJar
+	 *            project relative, no leading slash
 	 */
 	public static void addLibraryEntry(IProject proj, String pathToJar) {
-		
+
 		IPath projLocation = proj.getLocation();
 		IPath absJarPath = projLocation.append(pathToJar);
-		
+
 		IJavaProject jProj = JavaCore.create(proj);
-		
+
 		IClasspathEntry strutsJarEntry = JavaCore.newLibraryEntry(absJarPath, null, null);
 		try {
 			IClasspathEntry[] currentEntries = jProj.getRawClasspath();
-			
+
 			List l = new ArrayList();
 			l.addAll(Arrays.asList(currentEntries));
 			l.add(strutsJarEntry);
-			
-			IClasspathEntry[] newEntries = (IClasspathEntry[])l.toArray(new IClasspathEntry[l.size()]);
+
+			IClasspathEntry[] newEntries = (IClasspathEntry[]) l.toArray(new IClasspathEntry[l.size()]);
 			jProj.setRawClasspath(newEntries, new NullProgressMonitor());
 		}
 		catch (JavaModelException e) {
 			e.printStackTrace();
-		}	
+		}
 	}
 }
