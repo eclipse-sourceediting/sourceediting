@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -26,15 +25,11 @@ import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.taglib.TaglibIndex;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -50,38 +45,6 @@ import org.w3c.dom.NodeList;
  * is not persisted.
  */
 public class DeploymentDescriptorPropertyGroupCache {
-	private class DescriptorReader extends WorkspaceJob {
-		private List queue = new Vector();
-
-		public DescriptorReader() {
-			super("Updating Deployment Descriptor Cache");
-			setSystem(true);
-			setPriority(Job.SHORT);
-		}
-
-		void read(IPath path) {
-			queue.add(path);
-		}
-
-		public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
-			if (monitor.isCanceled())
-				return Status.CANCEL_STATUS;
-
-			while (!queue.isEmpty()) {
-				IPath path = (IPath) queue.remove(0);
-
-				IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
-				if (file.isAccessible()) {
-					fetchPropertyGroupContainer(path, monitor);
-				}
-				else {
-					fPropertyGroupContainerReferences.remove(path);
-				}
-			}
-			return Status.OK_STATUS;
-		}
-	}
-
 	private static class PropertyGroupContainer {
 		long modificationStamp;
 		PropertyGroup[] groups;
@@ -559,8 +522,6 @@ public class DeploymentDescriptorPropertyGroupCache {
 
 	private Map fPropertyGroupContainerReferences = new Hashtable();
 
-	private DescriptorReader fReaderJob = new DescriptorReader();
-
 	private IResourceChangeListener fResourceChangeListener = new ResourceChangeListener();
 
 	private DeploymentDescriptorPropertyGroupCache() {
@@ -659,8 +620,7 @@ public class DeploymentDescriptorPropertyGroupCache {
 		return propertyGroupContainer;
 	}
 
-	private void updateCacheEntry(final IPath fullPath) {
-		fReaderJob.read(fullPath);
-		fReaderJob.schedule();
+	private void updateCacheEntry(IPath fullPath) {
+		fPropertyGroupContainerReferences.remove(fullPath);
 	}
 }

@@ -1276,7 +1276,7 @@ class ProjectDescription {
 			case IClasspathEntry.CPE_VARIABLE : {
 				IPath libPath = JavaCore.getResolvedVariablePath(entry.getPath());
 				if (libPath != null) {
-					File file = new File(libPath.toOSString());
+					File file = libPath.toFile();
 
 					// file in filesystem
 					if (file.exists() && !file.isDirectory()) {

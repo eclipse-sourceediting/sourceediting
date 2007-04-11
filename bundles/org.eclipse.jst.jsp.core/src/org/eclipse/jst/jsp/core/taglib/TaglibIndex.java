@@ -594,7 +594,7 @@ public final class TaglibIndex {
 
 	private TaglibIndexDelta fCurrentTopLevelDelta = null;
 
-	Map fProjectDescriptions = new Hashtable();
+	Map fProjectDescriptions = null;
 
 	private ResourceChangeListener fResourceChangeListener;
 
@@ -731,7 +731,9 @@ public final class TaglibIndex {
 
 	ProjectDescription getDescription(IProject project) {
 		ProjectDescription description = null;
-		description = (ProjectDescription) fProjectDescriptions.get(project);
+		if (isInitialized()) {
+			description = (ProjectDescription) fProjectDescriptions.get(project);
+		}
 		return description;
 	}
 
@@ -761,10 +763,10 @@ public final class TaglibIndex {
 		ITaglibRecord[] records = new ITaglibRecord[0];
 		if (path.segmentCount() > 0) {
 			IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(path.segment(0));
-			if(project.isAccessible()) {
+			if (project.isAccessible()) {
 				ProjectDescription description = createDescription(project);
 				List availableRecords = description.getAvailableTaglibRecords(path);
-	
+
 				// ICatalog catalog =
 				// XMLCorePlugin.getDefault().getDefaultXMLCatalog();
 				// while (catalog != null) {
@@ -781,7 +783,7 @@ public final class TaglibIndex {
 				// }
 				// }
 				// }
-				
+
 				records = (ITaglibRecord[]) availableRecords.toArray(records);
 			}
 		}
