@@ -148,21 +148,24 @@ public class ModelQueryAdapterFactoryForJSP extends AbstractAdapterFactory imple
 
 	protected void updateResolver(IStructuredModel model) {
 		String baseLocation = model.getBaseLocation();
-		IFile baseFile = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(model.getBaseLocation()));
-		if (baseFile != null) {
-			baseLocation = baseFile.getLocation().toString();
+		Path path = new Path(model.getBaseLocation());
+		if (path.segmentCount() > 1) {
+			IFile baseFile = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
+			if (baseFile.isAccessible()) {
+				baseLocation = baseFile.getLocation().toString();
+				modelQueryAdapterImpl.setIdResolver(new XMLCatalogIdResolver(baseLocation, model.getResolver()));
+			}
 		}
-		modelQueryAdapterImpl.setIdResolver(new XMLCatalogIdResolver(baseLocation, model.getResolver()));
 	}
 
 	public void modelAboutToBeReinitialized(IStructuredModel structuredModel) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void modelReinitialized(IStructuredModel structuredModel) {
 		updateResolver(structuredModel);
-		
+
 	}
 
 }
