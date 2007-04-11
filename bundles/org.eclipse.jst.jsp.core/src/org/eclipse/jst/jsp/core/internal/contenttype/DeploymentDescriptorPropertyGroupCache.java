@@ -243,13 +243,21 @@ public class DeploymentDescriptorPropertyGroupCache {
 
 	private static class ResourceErrorHandler implements ErrorHandler {
 		private IPath fPath;
+		private boolean fDoLogExceptions = false;
+
+		ResourceErrorHandler(boolean logExceptions) {
+			super();
+			fDoLogExceptions = logExceptions;
+		}
 
 		public void error(SAXParseException exception) throws SAXException {
-			Logger.log(Logger.WARNING, "SAXParseException with " + fPath + " (error) while reading descriptor: " + exception.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			if (fDoLogExceptions)
+				Logger.log(Logger.WARNING, "SAXParseException with " + fPath + " (error) while reading descriptor: " + exception.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
 
 		public void fatalError(SAXParseException exception) throws SAXException {
-			Logger.log(Logger.WARNING, "SAXParseException with " + fPath + " (fatalError) while reading descriptor: " + exception.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			if (fDoLogExceptions)
+				Logger.log(Logger.WARNING, "SAXParseException with " + fPath + " (fatalError) while reading descriptor: " + exception.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
 
 		public void setPath(IPath path) {
@@ -257,7 +265,8 @@ public class DeploymentDescriptorPropertyGroupCache {
 		}
 
 		public void warning(SAXParseException exception) throws SAXException {
-			Logger.log(Logger.WARNING, "SAXParseException with " + fPath + " (warning) while reading descriptor: " + exception.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			if (fDoLogExceptions)
+				Logger.log(Logger.WARNING, "SAXParseException with " + fPath + " (warning) while reading descriptor: " + exception.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
 	}
 
@@ -698,7 +707,7 @@ public class DeploymentDescriptorPropertyGroupCache {
 	 */
 	private ErrorHandler getErrorHandler(IPath path) {
 		if (errorHandler == null) {
-			errorHandler = new ResourceErrorHandler();
+			errorHandler = new ResourceErrorHandler(false);
 		}
 		errorHandler.setPath(path);
 		return errorHandler;
