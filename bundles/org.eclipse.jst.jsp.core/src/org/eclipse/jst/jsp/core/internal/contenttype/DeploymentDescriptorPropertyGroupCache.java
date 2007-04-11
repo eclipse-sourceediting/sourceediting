@@ -11,12 +11,17 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.core.internal.contenttype;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+
+import javax.xml.parsers.DocumentBuilder;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -31,26 +36,32 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jst.jsp.core.internal.Logger;
+import org.eclipse.jst.jsp.core.internal.util.CommonXML;
 import org.eclipse.jst.jsp.core.taglib.TaglibIndex;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
+import org.w3c.dom.Document;
 import org.w3c.dom.EntityReference;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.EntityResolver;
+import org.xml.sax.ErrorHandler;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 /**
  * A cache fo property group information stored in web.xml files. Information
  * is not persisted.
  */
 public class DeploymentDescriptorPropertyGroupCache {
-	private static class PropertyGroupContainer {
-		long modificationStamp;
-		PropertyGroup[] groups;
-	}
-
-	public static class PropertyGroup {
+	/**
+	 * Represntation of the JSP 2.0 property-group definitions from a servlet
+	 * deployment descriptor.
+	 */
+	public static final class PropertyGroup {
 		static PropertyGroup createFrom(IPath path, Node propertyGroupNode) {
 			PropertyGroup group = new PropertyGroup(path);
 			Node propertyGroupID = propertyGroupNode.getAttributes().getNamedItem(ID);
@@ -61,6 +72,9 @@ public class DeploymentDescriptorPropertyGroupCache {
 			while (node != null) {
 				if (node.getNodeType() == Node.ELEMENT_NODE) {
 					String name = node.getLocalName();
+					if (name == null) {
+						name = node.getNodeName();
+					}
 					if (IS_XML.equals(name)) {
 						group.setIsXML(getContainedText(node));
 					}
@@ -90,18 +104,23 @@ public class DeploymentDescriptorPropertyGroupCache {
 			return group;
 		}
 
+		private boolean el_ignored;
+
+		private String id;
+
+		private IPath[] include_coda = new IPath[0];
+
+		private IPath[] include_prelude = new IPath[0];
+		private boolean is_xml;
+		private StringMatcher matcher;
+		private String page_encoding;
+		private boolean scripting_invalid;
+		String url_pattern;
+		private IPath webxmlPath;
+
 		private PropertyGroup(IPath path) {
 			super();
 			this.webxmlPath = path;
-		}
-
-		private void addPrelude(String containedText) {
-			if (containedText.length() > 0) {
-				IPath[] preludes = new IPath[include_prelude.length + 1];
-				System.arraycopy(include_prelude, 0, preludes, 0, include_prelude.length);
-				preludes[include_prelude.length] = webxmlPath.removeLastSegments(2).append(containedText);
-				include_prelude = preludes;
-			}
 		}
 
 		private void addCoda(String containedText) {
@@ -113,17 +132,14 @@ public class DeploymentDescriptorPropertyGroupCache {
 			}
 		}
 
-		private boolean el_ignored;
-		private String id;
-		private IPath[] include_coda = new IPath[0];
-		private IPath[] include_prelude = new IPath[0];
-		private boolean is_xml;
-		private String page_encoding;
-		private boolean scripting_invalid;
-		private StringMatcher matcher;
-		private IPath webxmlPath;
-
-		String url_pattern;
+		private void addPrelude(String containedText) {
+			if (containedText.length() > 0) {
+				IPath[] preludes = new IPath[include_prelude.length + 1];
+				System.arraycopy(include_prelude, 0, preludes, 0, include_prelude.length);
+				preludes[include_prelude.length] = webxmlPath.removeLastSegments(2).append(containedText);
+				include_prelude = preludes;
+			}
+		}
 
 		public String getId() {
 			return id;
@@ -191,6 +207,11 @@ public class DeploymentDescriptorPropertyGroupCache {
 		}
 	}
 
+	private static class PropertyGroupContainer {
+		PropertyGroup[] groups;
+		long modificationStamp;
+	}
+
 	private static class ResourceChangeListener implements IResourceChangeListener {
 		public void resourceChanged(IResourceChangeEvent event) {
 			IResourceDelta delta = event.getDelta();
@@ -220,12 +241,32 @@ public class DeploymentDescriptorPropertyGroupCache {
 		}
 	}
 
+	private static class ResourceErrorHandler implements ErrorHandler {
+		private IPath fPath;
+
+		public void error(SAXParseException exception) throws SAXException {
+			Logger.log(Logger.WARNING, "SAXParseException with " + fPath + " (error) while reading descriptor: " + exception.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		}
+
+		public void fatalError(SAXParseException exception) throws SAXException {
+			Logger.log(Logger.WARNING, "SAXParseException with " + fPath + " (fatalError) while reading descriptor: " + exception.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		}
+
+		public void setPath(IPath path) {
+			fPath = path;
+		}
+
+		public void warning(SAXParseException exception) throws SAXException {
+			Logger.log(Logger.WARNING, "SAXParseException with " + fPath + " (warning) while reading descriptor: " + exception.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		}
+	}
+
 	/**
 	 * Copied from org.eclipse.core.internal.propertytester.StringMatcher, but
 	 * should be replaced with a more accurate implementation of the rules in
 	 * Servlet spec SRV.11.2
 	 */
-	static class StringMatcher {
+	private static class StringMatcher {
 		private static final char SINGLE_WILD_CARD = '\u0000';
 
 		/**
@@ -520,9 +561,13 @@ public class DeploymentDescriptorPropertyGroupCache {
 		ResourcesPlugin.getWorkspace().removeResourceChangeListener(getInstance().fResourceChangeListener);
 	}
 
+	private ResourceErrorHandler errorHandler;
+
 	private Map fPropertyGroupContainerReferences = new Hashtable();
 
 	private IResourceChangeListener fResourceChangeListener = new ResourceChangeListener();
+
+	private EntityResolver resolver;
 
 	private DeploymentDescriptorPropertyGroupCache() {
 		super();
@@ -535,76 +580,88 @@ public class DeploymentDescriptorPropertyGroupCache {
 	}
 
 	/**
-	 * @param jspFilePath
-	 * @return a PropertyGroup containing the property group information
-	 *         matching the given path or null
+	 * parse the specified resource using Xerces, and if that fails, use the
+	 * SSE XML parser to find the property groups.
 	 */
-	public PropertyGroup getPropertyGroup(IPath jspFilePath) {
-		IPath contextRoot = TaglibIndex.getContextRoot(jspFilePath);
-		if (contextRoot == null)
-			return null;
-
-		IPath webxmlPath = contextRoot.append(WEB_INF_WEB_XML);
-		Reference groupHolder = (Reference) fPropertyGroupContainerReferences.get(webxmlPath);
-		PropertyGroupContainer groupContainer = null;
-		IFile webxmlFile = ResourcesPlugin.getWorkspace().getRoot().getFile(webxmlPath);
-
-		if (!webxmlFile.isAccessible())
-			return null;
-
-		if (groupHolder == null || ((groupContainer = (PropertyGroupContainer) groupHolder.get()) == null) || (groupContainer.modificationStamp == IResource.NULL_STAMP) || (groupContainer.modificationStamp != webxmlFile.getModificationStamp())) {
-			groupContainer = fetchPropertyGroupContainer(webxmlPath, new NullProgressMonitor());
-		}
-
-		for (int i = 0; i < groupContainer.groups.length; i++) {
-			if (groupContainer.groups[i].matches(jspFilePath.removeFirstSegments(contextRoot.segmentCount()).toString(), false)) {
-				return groupContainer.groups[i];
-			}
-		}
-		for (int i = 0; i < groupContainer.groups.length; i++) {
-			if (groupContainer.groups[i].matches(jspFilePath.removeFirstSegments(contextRoot.segmentCount()).toString(), true)) {
-				return groupContainer.groups[i];
-			}
-		}
-		return null;
-	}
-
-	private PropertyGroupContainer fetchPropertyGroupContainer(IPath fullPath, IProgressMonitor monitor) {
+	private PropertyGroupContainer fetchPropertyGroupContainer(IFile file, IProgressMonitor monitor) {
 		monitor.beginTask("Reading Deployment Descriptor", 3);
 		PropertyGroup groups[] = null;
 
-		IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(fullPath);
 		IStructuredModel model = null;
 		List groupList = new ArrayList();
 		SubProgressMonitor subMonitor = new SubProgressMonitor(monitor, 2);
+		DocumentBuilder builder = CommonXML.getDocumentBuilder(false);
+		builder.setEntityResolver(getEntityResolver());
+		builder.setErrorHandler(getErrorHandler(file.getFullPath()));
+		InputStream is = null;
 		try {
-			/**
-			 * Chiefly because the web.xml file itself is editable, use SSE to
-			 * get the DOM Document because it is more fault tolerant.
-			 */
-			model = StructuredModelManager.getModelManager().getModelForRead(file);
-			monitor.worked(1);
-			if (model instanceof IDOMModel) {
-				IDOMDocument document = ((IDOMModel) model).getDocument();
-				NodeList propertyGroupElements = document.getElementsByTagName(JSP_PROPERTY_GROUP);
-				int length = propertyGroupElements.getLength();
-				subMonitor.beginTask("Reading Property Groups", length);
-				for (int i = 0; i < length; i++) {
-					PropertyGroup group = PropertyGroup.createFrom(fullPath, propertyGroupElements.item(i));
-					subMonitor.worked(1);
-					if (group != null) {
-						groupList.add(group);
-					}
+			InputSource inputSource = new InputSource();
+			is = file.getContents();
+			inputSource.setByteStream(is);
+			inputSource.setSystemId(file.getFullPath().toString());
+			Document document = builder.parse(inputSource);
+			NodeList propertyGroupElements = document.getElementsByTagName(JSP_PROPERTY_GROUP);
+			int length = propertyGroupElements.getLength();
+			subMonitor.beginTask("Reading Property Groups", length);
+			for (int i = 0; i < length; i++) {
+				PropertyGroup group = PropertyGroup.createFrom(file.getFullPath(), propertyGroupElements.item(i));
+				subMonitor.worked(1);
+				if (group != null) {
+					groupList.add(group);
 				}
 			}
 		}
-		catch (Exception e) {
+		catch (SAXException e1) {
+			/* encountered a fatal parsing error, try our own parser */
+			try {
+				/**
+				 * Chiefly because the web.xml file itself is editable, use
+				 * SSE to get the DOM Document because it is more fault
+				 * tolerant.
+				 */
+				model = StructuredModelManager.getModelManager().getModelForRead(file);
+				monitor.worked(1);
+				if (model instanceof IDOMModel) {
+					IDOMDocument document = ((IDOMModel) model).getDocument();
+					NodeList propertyGroupElements = document.getElementsByTagName(JSP_PROPERTY_GROUP);
+					int length = propertyGroupElements.getLength();
+					subMonitor.beginTask("Reading Property Groups", length);
+					for (int i = 0; i < length; i++) {
+						PropertyGroup group = PropertyGroup.createFrom(file.getFullPath(), propertyGroupElements.item(i));
+						subMonitor.worked(1);
+						if (group != null) {
+							groupList.add(group);
+						}
+					}
+				}
+			}
+			catch (Exception e) {
+				Logger.logException(e);
+			}
+			finally {
+				if (model != null) {
+					model.releaseFromRead();
+				}
+			}
+		}
+		catch (IOException e1) {
+			/* file is unreadable, create no property groups */
+		}
+		catch (CoreException e) {
+			/*
+			 * file is unreadable, create no property groups but log the
+			 * exception
+			 */
 			Logger.logException(e);
 		}
 		finally {
-			if (model != null) {
-				model.releaseFromRead();
-			}
+			if (is != null)
+				try {
+					is.close();
+				}
+				catch (IOException e) {
+					// nothing to do
+				}
 			groups = (PropertyGroup[]) groupList.toArray(new PropertyGroup[groupList.size()]);
 			subMonitor.done();
 		}
@@ -612,12 +669,79 @@ public class DeploymentDescriptorPropertyGroupCache {
 		if (groups == null) {
 			groups = new PropertyGroup[0];
 		}
+
 		PropertyGroupContainer propertyGroupContainer = new PropertyGroupContainer();
 		propertyGroupContainer.modificationStamp = file.getModificationStamp();
 		propertyGroupContainer.groups = groups;
 		monitor.done();
-		fPropertyGroupContainerReferences.put(fullPath.makeAbsolute(), new SoftReference(propertyGroupContainer));
+		fPropertyGroupContainerReferences.put(file.getFullPath(), new SoftReference(propertyGroupContainer));
 		return propertyGroupContainer;
+	}
+
+	private EntityResolver getEntityResolver() {
+		if (resolver == null) {
+			resolver = new EntityResolver() {
+				public InputSource resolveEntity(String publicID, String systemID) throws SAXException, IOException {
+					InputSource result = new InputSource(new ByteArrayInputStream(new byte[0]));
+					result.setPublicId(publicID);
+					result.setSystemId(systemID != null ? systemID : "/_" + getClass().getName()); //$NON-NLS-1$
+					return result;
+				}
+			};
+		}
+		return resolver;
+	}
+
+	/**
+	 * Returns an ErrorHandler that will not stop the parser on reported
+	 * errors
+	 */
+	private ErrorHandler getErrorHandler(IPath path) {
+		if (errorHandler == null) {
+			errorHandler = new ResourceErrorHandler();
+		}
+		errorHandler.setPath(path);
+		return errorHandler;
+	}
+
+	/**
+	 * @param jspFilePath
+	 * @return a PropertyGroup containing the property group information
+	 *         matching the file at the given path or null if no web.xml file
+	 *         exists or no matching property group was defined. A returned
+	 *         PropertyGroup object should be considered short-lived and not
+	 *         saved for later use.
+	 */
+	public PropertyGroup getPropertyGroup(IPath jspFilePath) {
+		IPath contextRoot = TaglibIndex.getContextRoot(jspFilePath);
+		if (contextRoot == null)
+			return null;
+
+		IPath webxmlPath = contextRoot.append(WEB_INF_WEB_XML);
+		IFile webxmlFile = ResourcesPlugin.getWorkspace().getRoot().getFile(webxmlPath);
+		if (!webxmlFile.isAccessible())
+			return null;
+
+		PropertyGroup matchingGroup = null;
+
+		Reference groupHolder = (Reference) fPropertyGroupContainerReferences.get(webxmlPath);
+		PropertyGroupContainer groupContainer = null;
+
+		if (groupHolder == null || ((groupContainer = (PropertyGroupContainer) groupHolder.get()) == null) || (groupContainer.modificationStamp == IResource.NULL_STAMP) || (groupContainer.modificationStamp != webxmlFile.getModificationStamp())) {
+			groupContainer = fetchPropertyGroupContainer(webxmlFile, new NullProgressMonitor());
+		}
+
+		for (int i = 0; i < groupContainer.groups.length && matchingGroup == null; i++) {
+			if (groupContainer.groups[i].matches(jspFilePath.removeFirstSegments(contextRoot.segmentCount()).toString(), false)) {
+				matchingGroup = groupContainer.groups[i];
+			}
+		}
+		for (int i = 0; i < groupContainer.groups.length && matchingGroup == null; i++) {
+			if (groupContainer.groups[i].matches(jspFilePath.removeFirstSegments(contextRoot.segmentCount()).toString(), true)) {
+				matchingGroup = groupContainer.groups[i];
+			}
+		}
+		return matchingGroup;
 	}
 
 	private void updateCacheEntry(IPath fullPath) {
