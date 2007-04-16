@@ -103,7 +103,14 @@ public abstract class XSDBaseAttributeAdapter extends XSDBaseAdapter implements 
 
   public String getTypeNameQualifier()
   {
-    // TODO Auto-generated method stub
+    XSDAttributeDeclaration attr = getResolvedXSDAttributeDeclaration();
+    if (attr != null)
+    {
+      if (attr.getTypeDefinition() != null)
+      {
+        return attr.getTypeDefinition().getTargetNamespace();        
+      }
+    }
     return null;
   }
 
