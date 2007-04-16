@@ -54,6 +54,7 @@ import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolverPlugin
 import org.eclipse.wst.sse.core.internal.ltk.parser.BlockMarker;
 import org.eclipse.wst.sse.core.internal.ltk.parser.StructuredDocumentRegionHandler;
 import org.eclipse.wst.sse.core.internal.ltk.parser.StructuredDocumentRegionHandlerExtension;
+import org.eclipse.wst.sse.core.internal.ltk.parser.TagMarker;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
@@ -299,7 +300,7 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 							 * relative to the JSP fragment.
 							 */
 							enableTaglibFromURI(reference.prefix, reference.uri, includeStructuredDocumentRegion);
-
+							getParser().addNestablePrefix(new TagMarker(reference.prefix + ":")); //$NON-NLS-1$
 						}
 					}
 				}
@@ -981,7 +982,7 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 	}
 
 	void handlePreludes() {
-		IStructuredDocumentRegion anchor = new ZeroStructuredDocumentRegion(null, 0);
+		IStructuredDocumentRegion anchor = new ZeroStructuredDocumentRegion(null, -1);
 		fProcessIncludes = false;
 
 		IPath currentBaseLocation = getCurrentBaseLocation();
@@ -997,10 +998,10 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 							includeHelper.parse(preludes[i]);
 							List references = includeHelper.taglibReferences;
 							fTLDCMReferencesMap.put(preludes[i], references);
-							/*
-							 * TODO: walk up the include hierarchy and add
-							 * these references to each of the parents.
-							 */
+							for (int j = 0; j < references.size(); j++) {
+								TLDCMDocumentReference reference = (TLDCMDocumentReference) references.get(j);
+								getParser().addNestablePrefix(new TagMarker(reference.prefix + ":")); //$NON-NLS-1$
+							}
 						}
 						else
 							Logger.log(Logger.WARNING, "Warning: parser text was requested by " + getClass().getName() + " but none was available; taglib support disabled"); //$NON-NLS-1$ //$NON-NLS-2$
