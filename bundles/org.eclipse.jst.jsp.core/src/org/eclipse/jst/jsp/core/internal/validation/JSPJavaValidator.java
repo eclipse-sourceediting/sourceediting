@@ -21,10 +21,9 @@ import org.eclipse.jdt.core.compiler.IProblem;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.java.IJSPTranslation;
-import org.eclipse.jst.jsp.core.internal.java.JSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapter;
-import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapterFactory;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationExtension;
+import org.eclipse.jst.jsp.core.internal.modelhandler.ModelHandlerForJSP;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
@@ -58,7 +57,7 @@ public class JSPJavaValidator extends JSPValidator {
 	 * @param m
 	 * @param translation
 	 */
-	private void adjustIndirectPosition(IMessage m, JSPTranslation translation) {
+	private void adjustIndirectPosition(IMessage m, IJSPTranslation translation) {
 
 		if (!(translation instanceof JSPTranslationExtension))
 			return;
@@ -100,7 +99,7 @@ public class JSPJavaValidator extends JSPValidator {
 	 * @return message representation of the problem, or null if it could not
 	 *         create one
 	 */
-	private IMessage createMessageFromProblem(IProblem problem, IFile f, JSPTranslation translation, IStructuredDocument structuredDoc) {
+	private IMessage createMessageFromProblem(IProblem problem, IFile f, IJSPTranslation translation, IStructuredDocument structuredDoc) {
 
 		int sourceStart = translation.getJspOffset(problem.getSourceStart());
 		int sourceEnd = translation.getJspOffset(problem.getSourceEnd());
@@ -132,11 +131,11 @@ public class JSPJavaValidator extends JSPValidator {
 	void performValidation(IFile f, IReporter reporter, IStructuredModel model) {
 		if (model instanceof IDOMModel) {
 			IDOMModel domModel = (IDOMModel) model;
-			setupAdapterFactory(domModel);
+			ModelHandlerForJSP.ensureTranslationAdapterFactory(domModel);
 
 			IDOMDocument xmlDoc = domModel.getDocument();
 			JSPTranslationAdapter translationAdapter = (JSPTranslationAdapter) xmlDoc.getAdapterFor(IJSPTranslation.class);
-			JSPTranslation translation = translationAdapter.getJSPTranslation();
+			IJSPTranslation translation = translationAdapter.getJSPTranslation();
 
 			if (!reporter.isCancelled()) {
 				translation.setProblemCollectingActive(true);
@@ -149,19 +148,6 @@ public class JSPJavaValidator extends JSPValidator {
 						reporter.addMessage(fMessageOriginator, m);
 				}
 			}
-		}
-	}
-
-	/**
-	 * When loading model from a file, you need to explicitly add adapter
-	 * factory.
-	 * 
-	 * @param sm
-	 */
-	private void setupAdapterFactory(IStructuredModel sm) {
-		if (sm.getFactoryRegistry().getFactoryFor(IJSPTranslation.class) == null) {
-			JSPTranslationAdapterFactory factory = new JSPTranslationAdapterFactory();
-			sm.getFactoryRegistry().addFactory(factory);
 		}
 	}
 

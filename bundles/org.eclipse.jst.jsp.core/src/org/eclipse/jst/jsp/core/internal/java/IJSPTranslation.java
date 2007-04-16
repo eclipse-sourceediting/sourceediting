@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -59,6 +59,13 @@ public interface IJSPTranslation {
 	 */
 	public IJavaElement[] getElementsFromJspRange(int jspStart, int jspEnd);
 
+	/**
+	 * @param javaOffset
+	 * @return whether the given offset within the translated Java source maps
+	 *         directly to a scripting region in the original JSP
+	 */
+	public boolean isIndirect(int javaOffset);
+	
 	/**
 	 * Must be set true in order for problems to be collected during reconcile.
 	 * If set false, problems will be ignored during reconcile.

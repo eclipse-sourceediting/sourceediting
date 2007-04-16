@@ -130,7 +130,7 @@ public class JSPTranslationAdapter implements INodeAdapter, IDocumentListener {
 			}
 			else {
 				// empty document case
-				translator = new JSPTranslator();
+				translator = createTranslator();
 				StringBuffer emptyContents = translator.getEmptyTranslation();
 				fJavaDocument = new Document(emptyContents.toString());
 			}
@@ -146,6 +146,10 @@ public class JSPTranslationAdapter implements INodeAdapter, IDocumentListener {
 		return fJSPTranslation;
 	}
 
+	JSPTranslator createTranslator() {
+		return new JSPTranslator();
+	}
+
 	/**
 	 * Returns the JSPTranslator for this adapter. If it's null, a new
 	 * translator is created with the xmlNode. Otherwise the
@@ -159,7 +163,7 @@ public class JSPTranslationAdapter implements INodeAdapter, IDocumentListener {
 	private JSPTranslator getTranslator(IDOMNode xmlNode) {
 		if (fTranslator == null) {
 			fTranslationMonitor = new NullProgressMonitor();
-			fTranslator = new JSPTranslator();
+			fTranslator = createTranslator();
 			fTranslator.reset(xmlNode, fTranslationMonitor);
 		}
 		else

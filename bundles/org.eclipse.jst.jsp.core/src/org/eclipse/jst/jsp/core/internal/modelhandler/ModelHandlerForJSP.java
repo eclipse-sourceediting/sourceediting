@@ -10,17 +10,25 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.core.internal.modelhandler;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Preferences;
+import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.jst.jsp.core.internal.JSPCorePlugin;
 import org.eclipse.jst.jsp.core.internal.encoding.JSPDocumentHeadContentDetector;
 import org.eclipse.jst.jsp.core.internal.encoding.JSPDocumentLoader;
+import org.eclipse.jst.jsp.core.internal.java.IJSPTranslation;
+import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapterFactory;
+import org.eclipse.jst.jsp.core.internal.java.TagTranslationAdapterFactory;
 import org.eclipse.jst.jsp.core.internal.parser.JSPSourceParser;
+import org.eclipse.jst.jsp.core.internal.provisional.contenttype.ContentTypeIdForJSP;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.wst.sse.core.internal.document.IDocumentCharsetDetector;
 import org.eclipse.wst.sse.core.internal.document.IDocumentLoader;
 import org.eclipse.wst.sse.core.internal.ltk.modelhandler.AbstractModelHandler;
 import org.eclipse.wst.sse.core.internal.ltk.parser.BlockMarker;
 import org.eclipse.wst.sse.core.internal.provisional.IModelLoader;
+import org.eclipse.wst.sse.core.internal.provisional.INodeAdapterFactory;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 
 public class ModelHandlerForJSP extends AbstractModelHandler {
 
@@ -63,4 +71,43 @@ public class ModelHandlerForJSP extends AbstractModelHandler {
 		return new JSPDocumentLoader();
 	}
 
+	public static void ensureTranslationAdapterFactory(IStructuredModel sm) {
+		if (sm.getFactoryRegistry().getFactoryFor(IJSPTranslation.class) == null) {
+			/*
+			 * Check for tag/tagx files, otherwise add the JSP translation
+			 * factory for better compatibility with other possible subtypes
+			 * of JSP.
+			 */
+			IContentType thisContentType = Platform.getContentTypeManager().getContentType(sm.getContentTypeIdentifier());
+			IContentType tagContentType = Platform.getContentTypeManager().getContentType(ContentTypeIdForJSP.ContentTypeID_JSPTAG);
+			if (thisContentType.isKindOf(tagContentType)) {
+				INodeAdapterFactory factory = new TagTranslationAdapterFactory();
+				sm.getFactoryRegistry().addFactory(factory);
+			}
+			else {
+				INodeAdapterFactory factory = null;
+//				if (false) {
+//					IContentType textContentType = Platform.getContentTypeManager().getContentType(IContentTypeManager.CT_TEXT);
+//					IContentType jspContentType = Platform.getContentTypeManager().getContentType(ContentTypeIdForJSP.ContentTypeID_JSP);
+//					/*
+//					 * This IAdapterManager call is temporary placeholder code
+//					 * that should not be relied upon in any way!
+//					 */
+//					if (thisContentType.isKindOf(jspContentType)) {
+//						IContentType testContentType = thisContentType;
+//						INodeAdapterFactory holdFactory = null;
+//						while (!testContentType.equals(textContentType) && holdFactory == null) {
+//							holdFactory = (INodeAdapterFactory) Platform.getAdapterManager().getAdapter(testContentType.getId(), IJSPTranslation.class.getName());
+//							testContentType = testContentType.getBaseType();
+//						}
+//					}
+//				}
+				if (factory == null) {
+					factory = new JSPTranslationAdapterFactory();
+				}
+
+				sm.getFactoryRegistry().addFactory(factory);
+			}
+		}
+	}
 }

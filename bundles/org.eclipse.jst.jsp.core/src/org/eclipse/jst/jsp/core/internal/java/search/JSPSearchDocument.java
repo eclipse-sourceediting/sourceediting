@@ -28,8 +28,8 @@ import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.java.IJSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapter;
-import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapterFactory;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationExtension;
+import org.eclipse.jst.jsp.core.internal.modelhandler.ModelHandlerForJSP;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.exceptions.UnsupportedCharsetExceptionWithDetail;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
@@ -147,8 +147,7 @@ public class JSPSearchDocument {
 	 * @param sm
 	 */
 	private void setupAdapterFactory(IStructuredModel sm) {
-		JSPTranslationAdapterFactory factory = new JSPTranslationAdapterFactory();
-		sm.getFactoryRegistry().addFactory(factory);
+		ModelHandlerForJSP.ensureTranslationAdapterFactory(sm);
 	}
 
 	/**

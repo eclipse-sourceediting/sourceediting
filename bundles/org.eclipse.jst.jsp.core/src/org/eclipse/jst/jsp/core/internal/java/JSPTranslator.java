@@ -83,8 +83,6 @@ import com.ibm.icu.util.StringTokenizer;
  * Translates a JSP document into a HttpServlet. Keeps two way mapping from
  * java translation to the original JSP source, which can be obtained through
  * getJava2JspRanges() and getJsp2JavaRanges().
- * 
- * @author pavery
  */
 public class JSPTranslator {
 
@@ -100,26 +98,21 @@ public class JSPTranslator {
 	private static final String JSP_CORE_PLUGIN_ID = "org.eclipse.jst.jsp.core"; //$NON-NLS-1$
 
 	// for debugging
-	private static final boolean DEBUG;
+	private static final boolean DEBUG = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.jst.jsp.core/debug/jspjavamapping")); //$NON-NLS-1$  //$NON-NLS-2$
 	private static final boolean DEBUG_SAVE_OUTPUT = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.jst.jsp.core/debug/jsptranslationstodisk")); //$NON-NLS-1$  //$NON-NLS-2$
 
 	private IJSPELTranslator fELTranslator = null;
 
-	static {
-		String value = Platform.getDebugOption("org.eclipse.jst.jsp.core/debug/jspjavamapping"); //$NON-NLS-1$
-		DEBUG = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
-	}
-
 	public static final String ENDL = "\n"; //$NON-NLS-1$
 
-	private String fClassHeader = "public class _JSPServlet extends "; //$NON-NLS-1$
-	private String fClassname = "_JSPServlet"; //$NON-NLS-1$
+	String fClassHeader = "public class _JSPServlet extends "; //$NON-NLS-1$
+	String fClassname = "_JSPServlet"; //$NON-NLS-1$
 
-	private String fImplicitImports = "import javax.servlet.*;" + ENDL + //$NON-NLS-1$
+	String fImplicitImports = "import javax.servlet.*;" + ENDL + //$NON-NLS-1$
 				"import javax.servlet.http.*;" + ENDL + //$NON-NLS-1$
 				"import javax.servlet.jsp.*;" + ENDL + ENDL; //$NON-NLS-1$
 
-	private String fServiceHeader = "public void _jspService(javax.servlet.http.HttpServletRequest request," + //$NON-NLS-1$
+	String fServiceHeader = "public void _jspService(javax.servlet.http.HttpServletRequest request," + //$NON-NLS-1$
 				" javax.servlet.http.HttpServletResponse response)" + ENDL + //$NON-NLS-1$
 				"\t\tthrows java.io.IOException, javax.servlet.ServletException {" + ENDL + //$NON-NLS-1$
 				"javax.servlet.jsp.PageContext pageContext = null;" + ENDL + //$NON-NLS-1$
@@ -133,7 +126,7 @@ public class JSPTranslator {
 	private String fException = "Throwable exception = null;"; //$NON-NLS-1$
 	public static final String EXPRESSION_PREFIX = "out.print(\"\"+"; //$NON-NLS-1$
 	public static final String EXPRESSION_SUFFIX = ");"; //$NON-NLS-1$
-	private String fSuperclass = "javax.servlet.http.HttpServlet"; //$NON-NLS-1$
+	String fSuperclass = "javax.servlet.http.HttpServlet"; //$NON-NLS-1$
 
 	private String fTryCatchStart = ENDL + "try {" + ENDL; //$NON-NLS-1$
 	private String fTryCatchEnd = " } catch (java.lang.Exception e) {} " + ENDL; //$NON-NLS-1$
@@ -245,6 +238,11 @@ public class JSPTranslator {
 	 * EL Translator ID
 	 */
 	private String fELTranslatorID;
+	
+	public JSPTranslator() {
+		super();
+		init();
+	}
 
 	/**
 	 * configure using an XMLNode
@@ -900,6 +898,26 @@ public class JSPTranslator {
 				}
 			}
 		}
+	}
+	
+	protected void init() {
+		fClassHeader = "public class _JSPServlet extends "; //$NON-NLS-1$
+		fClassname = "_JSPServlet"; //$NON-NLS-1$
+
+		fImplicitImports = "import javax.servlet.*;" + ENDL + //$NON-NLS-1$
+					"import javax.servlet.http.*;" + ENDL + //$NON-NLS-1$
+					"import javax.servlet.jsp.*;" + ENDL + ENDL; //$NON-NLS-1$
+
+		fServiceHeader = "public void _jspService(javax.servlet.http.HttpServletRequest request," + //$NON-NLS-1$
+					" javax.servlet.http.HttpServletResponse response)" + ENDL + //$NON-NLS-1$
+					"\t\tthrows java.io.IOException, javax.servlet.ServletException {" + ENDL + //$NON-NLS-1$
+					"javax.servlet.jsp.PageContext pageContext = null;" + ENDL + //$NON-NLS-1$
+					"javax.servlet.http.HttpSession session = null;" + ENDL + //$NON-NLS-1$
+					"javax.servlet.ServletContext application = null;" + ENDL + //$NON-NLS-1$
+					"javax.servlet.ServletConfig config = null;" + ENDL + //$NON-NLS-1$ 
+					"javax.servlet.jsp.JspWriter out = null;" + ENDL + //$NON-NLS-1$
+					"Object page = null;" + ENDL; //$NON-NLS-1$
+		fSuperclass = "javax.servlet.http.HttpServlet"; //$NON-NLS-1$
 	}
 
 	/**
