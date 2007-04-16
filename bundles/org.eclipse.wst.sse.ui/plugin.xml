@@ -153,12 +153,6 @@
 			categoryId="org.eclipse.ui.category.edit"
 			id="org.eclipse.wst.sse.ui.show.javadoc">
 		</command>
-		<command
-			name="%ActionDefinition.quickFix.name"
-			description="%ActionDefinition.quickFix.description"
-			categoryId="org.eclipse.ui.category.edit"
-			id="org.eclipse.wst.sse.ui.edit.text.java.correction.assist.proposals">
-		</command>
 		<!-- Source commands -->
 		<command
 			name="%command.toggle.comment.name"
@@ -252,12 +246,6 @@
 			sequence="F2"
 			contextId="org.eclipse.wst.sse.ui.structuredTextEditorScope"
 			commandId="org.eclipse.wst.sse.ui.show.javadoc"
-			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
-		</key>
-		<key
-			sequence="M1+1"
-			contextId="org.eclipse.wst.sse.ui.structuredTextEditorScope"
-			commandId="org.eclipse.wst.sse.ui.edit.text.java.correction.assist.proposals"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
 		</key>
 		<!-- Source commands -->

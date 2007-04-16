@@ -15,6 +15,7 @@ package org.eclipse.wst.xml.ui.internal.validation;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
+import org.eclipse.jface.text.quickassist.IQuickAssistProcessor;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
@@ -59,6 +60,7 @@ public class MarkupValidator implements IValidator, ISourceValidator {
 	protected String SEVERITY_SYNTAX_ERROR = TemporaryAnnotation.ANNOT_ERROR;
 	// used for attribute quote checking
 	private String SQUOTE = "'"; //$NON-NLS-1$
+	private final String QUICKASSISTPROCESSOR = IQuickAssistProcessor.class.getName();
 
 	private IDocument fDocument;
 
@@ -74,7 +76,12 @@ public class MarkupValidator implements IValidator, ISourceValidator {
 		message.setLength(length);
 		message.setLineNo(lineNo);
 
-		AnnotationInfo info = new AnnotationInfo(message, problemId, attributeValueText);
+		MarkupQuickAssistProcessor processor = new MarkupQuickAssistProcessor();
+		processor.setProblemId(problemId);
+		processor.setAdditionalFixInfo(attributeValueText);
+		message.setAttribute(QUICKASSISTPROCESSOR, processor);
+
+		AnnotationInfo info = new AnnotationInfo(message);
 		((IncrementalReporter) reporter).addAnnotationInfo(this, info);
 	}
 
@@ -107,7 +114,11 @@ public class MarkupValidator implements IValidator, ISourceValidator {
 			message.setLength(end - start);
 			message.setLineNo(getLineNumber(start));
 
-			AnnotationInfo info = new AnnotationInfo(message, ProblemIDsXML.AttrsInEndTag, null);
+			MarkupQuickAssistProcessor processor = new MarkupQuickAssistProcessor();
+			processor.setProblemId(ProblemIDsXML.AttrsInEndTag);
+			message.setAttribute(QUICKASSISTPROCESSOR, processor);
+
+			AnnotationInfo info = new AnnotationInfo(message);
 			((IncrementalReporter) reporter).addAnnotationInfo(this, info);
 		}
 	}
@@ -141,7 +152,11 @@ public class MarkupValidator implements IValidator, ISourceValidator {
 			message.setLength(length);
 			message.setLineNo(lineNo);
 
-			AnnotationInfo info = new AnnotationInfo(message, ProblemIDsXML.MissingClosingBracket, null);
+			MarkupQuickAssistProcessor processor = new MarkupQuickAssistProcessor();
+			processor.setProblemId(ProblemIDsXML.MissingClosingBracket);
+			message.setAttribute(QUICKASSISTPROCESSOR, processor);
+
+			AnnotationInfo info = new AnnotationInfo(message);
 			((IncrementalReporter) reporter).addAnnotationInfo(this, info);
 		}
 	}
@@ -167,7 +182,11 @@ public class MarkupValidator implements IValidator, ISourceValidator {
 				message.setLength(length);
 				message.setLineNo(lineNo);
 
-				AnnotationInfo info = new AnnotationInfo(message, ProblemIDsXML.EmptyTag, null);
+				MarkupQuickAssistProcessor processor = new MarkupQuickAssistProcessor();
+				processor.setProblemId(ProblemIDsXML.EmptyTag);
+				message.setAttribute(QUICKASSISTPROCESSOR, processor);
+
+				AnnotationInfo info = new AnnotationInfo(message);
 				((IncrementalReporter) reporter).addAnnotationInfo(this, info);
 			}
 		}
@@ -224,7 +243,12 @@ public class MarkupValidator implements IValidator, ISourceValidator {
 					int insertOffset = structuredDocumentRegion.getTextEndOffset(equalsRegion) - end;
 					Object[] additionalFixInfo = {structuredDocumentRegion.getText(nameRegion), new Integer(insertOffset)};
 
-					AnnotationInfo info = new AnnotationInfo(message, ProblemIDsXML.MissingAttrValue, additionalFixInfo);
+					MarkupQuickAssistProcessor processor = new MarkupQuickAssistProcessor();
+					processor.setProblemId(ProblemIDsXML.MissingAttrValue);
+					processor.setAdditionalFixInfo(additionalFixInfo);
+					message.setAttribute(QUICKASSISTPROCESSOR, processor);
+
+					AnnotationInfo info = new AnnotationInfo(message);
 
 					((IncrementalReporter) reporter).addAnnotationInfo(this, info);
 
@@ -247,7 +271,12 @@ public class MarkupValidator implements IValidator, ISourceValidator {
 					message.setLength(textLength);
 					message.setLineNo(lineNo);
 
-					AnnotationInfo info = new AnnotationInfo(message, ProblemIDsXML.NoAttrValue, structuredDocumentRegion.getText(previousRegion));
+					MarkupQuickAssistProcessor processor = new MarkupQuickAssistProcessor();
+					processor.setProblemId(ProblemIDsXML.NoAttrValue);
+					processor.setAdditionalFixInfo(structuredDocumentRegion.getText(previousRegion));
+					message.setAttribute(QUICKASSISTPROCESSOR, processor);
+
+					AnnotationInfo info = new AnnotationInfo(message);
 
 					((IncrementalReporter) reporter).addAnnotationInfo(this, info);
 
@@ -288,7 +317,11 @@ public class MarkupValidator implements IValidator, ISourceValidator {
 					message.setLength(length);
 					message.setLineNo(getLineNumber(start));
 
-					AnnotationInfo info = new AnnotationInfo(message, ProblemIDsXML.SpacesBeforeTagName, null);
+					MarkupQuickAssistProcessor processor = new MarkupQuickAssistProcessor();
+					processor.setProblemId(ProblemIDsXML.SpacesBeforeTagName);
+					message.setAttribute(QUICKASSISTPROCESSOR, processor);
+
+					AnnotationInfo info = new AnnotationInfo(message);
 					((IncrementalReporter) reporter).addAnnotationInfo(this, info);
 				}
 			}
@@ -320,7 +353,11 @@ public class MarkupValidator implements IValidator, ISourceValidator {
 					message.setLength(length);
 					message.setLineNo(getLineNumber(start));
 
-					AnnotationInfo info = new AnnotationInfo(message, ProblemIDsXML.NamespaceInPI, null);
+					MarkupQuickAssistProcessor processor = new MarkupQuickAssistProcessor();
+					processor.setProblemId(ProblemIDsXML.NamespaceInPI);
+					message.setAttribute(QUICKASSISTPROCESSOR, processor);
+
+					AnnotationInfo info = new AnnotationInfo(message);
 					((IncrementalReporter) reporter).addAnnotationInfo(this, info);
 
 					errorCount++;
@@ -450,8 +487,13 @@ public class MarkupValidator implements IValidator, ISourceValidator {
 
 							Object[] additionalFixInfo = getStartEndFixInfo(xmlNode, tagName, r);
 
-							AnnotationInfo info = new AnnotationInfo(message, ProblemIDsXML.MissingEndTag, additionalFixInfo);
-							// annotation.setAdditionalFixInfo(additionalFixInfo);
+							MarkupQuickAssistProcessor processor = new MarkupQuickAssistProcessor();
+							processor.setProblemId(ProblemIDsXML.MissingEndTag);
+							processor.setAdditionalFixInfo(additionalFixInfo);
+							message.setAttribute(QUICKASSISTPROCESSOR, processor);
+
+							AnnotationInfo info = new AnnotationInfo(message);
+
 							((IncrementalReporter) reporter).addAnnotationInfo(this, info);
 						}
 						else {
@@ -503,7 +545,11 @@ public class MarkupValidator implements IValidator, ISourceValidator {
 				message.setLength(length);
 				message.setLineNo(getLineNumber(start));
 
-				AnnotationInfo info = new AnnotationInfo(message, ProblemIDsXML.SpacesBeforePI, null);
+				MarkupQuickAssistProcessor processor = new MarkupQuickAssistProcessor();
+				processor.setProblemId(ProblemIDsXML.SpacesBeforePI);
+				message.setAttribute(QUICKASSISTPROCESSOR, processor);
+
+				AnnotationInfo info = new AnnotationInfo(message);
 				((IncrementalReporter) reporter).addAnnotationInfo(this, info);
 
 				// Position p = new Position(start, length);

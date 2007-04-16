@@ -1,14 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
  *     IBM Corporation - initial API and implementation
- *     Jens Lukowski/Innoopract - initial renaming/restructuring
- *     
  *******************************************************************************/
 package org.eclipse.wst.xml.ui.internal.correction;
 
@@ -16,13 +14,18 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
+import org.eclipse.jface.text.quickassist.IQuickAssistInvocationContext;
+import org.eclipse.jface.text.quickassist.IQuickAssistProcessor;
+import org.eclipse.jface.text.source.Annotation;
+import org.eclipse.jface.text.source.ISourceViewer;
+import org.eclipse.wst.sse.core.StructuredModelManager;
+import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
-import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
-import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
-import org.eclipse.wst.sse.ui.internal.correction.IQuickAssistProcessor;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
@@ -35,32 +38,36 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
-/**
- * @deprecated since 2.0 RC0 Use
- *             org.eclipse.jface.text.quickassist.IQuickAssistProcessor;
- */
-public class QuickAssistProcessorXML implements IQuickAssistProcessor {
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.sse.ui.correction.IQuickAssistProcessor#canAssist(org.eclipse.wst.sse.core.text.IStructuredDocument,
-	 *      int)
-	 */
-	public boolean canAssist(StructuredTextViewer viewer, int offset) {
+public class XMLQuickAssistProcessor implements IQuickAssistProcessor {
+
+	public boolean canAssist(IQuickAssistInvocationContext invocationContext) {
 		return true;
 	}
 
-	/**
-	 * @param proposals
-	 * @param viewer
-	 * @param offset
-	 */
-	protected void getInsertRequiredAttrs(ArrayList proposals, StructuredTextViewer viewer, int offset) {
-		IDOMNode node = (IDOMNode) ContentAssistUtils.getNodeAt(viewer, offset);
+	public boolean canFix(Annotation annotation) {
+		return false;
+	}
+
+	public ICompletionProposal[] computeQuickAssistProposals(IQuickAssistInvocationContext invocationContext) {
+		List proposals = new ArrayList();
+
+		getLocalRenameQuickAssistProposal(proposals, invocationContext.getSourceViewer(), invocationContext.getOffset());
+		getSurroundWithNewElementQuickAssistProposal(proposals, invocationContext.getSourceViewer(), invocationContext.getOffset());
+		getInsertRequiredAttrs(proposals, invocationContext.getSourceViewer(), invocationContext.getOffset());
+
+		return (ICompletionProposal[]) proposals.toArray(new ICompletionProposal[proposals.size()]);
+	}
+
+	public String getErrorMessage() {
+		return null;
+	}
+
+	private void getInsertRequiredAttrs(List proposals, ISourceViewer viewer, int offset) {
+		IDOMNode node = (IDOMNode) getNodeAt(viewer, offset);
 		if ((node != null) && (node.getNodeType() == Node.ELEMENT_NODE)) {
 			IStructuredDocumentRegion startStructuredDocumentRegion = node.getStartStructuredDocumentRegion();
 			if ((startStructuredDocumentRegion != null) && startStructuredDocumentRegion.containsOffset(offset)) {
-				IDOMNode cursorNode = (IDOMNode) ContentAssistUtils.getNodeAt(viewer, offset);
+				IDOMNode cursorNode = (IDOMNode) getNodeAt(viewer, offset);
 				List requiredAttrs = getRequiredAttrs(cursorNode);
 				if (requiredAttrs.size() > 0) {
 					NamedNodeMap currentAttrs = node.getAttributes();
@@ -92,13 +99,8 @@ public class QuickAssistProcessorXML implements IQuickAssistProcessor {
 		}
 	}
 
-	/**
-	 * @param proposals
-	 * @param viewer
-	 * @param offset
-	 */
-	protected void getLocalRenameQuickAssistProposal(ArrayList proposals, StructuredTextViewer viewer, int offset) {
-		IDOMNode node = (IDOMNode) ContentAssistUtils.getNodeAt(viewer, offset);
+	private void getLocalRenameQuickAssistProposal(List proposals, ISourceViewer viewer, int offset) {
+		IDOMNode node = (IDOMNode) getNodeAt(viewer, offset);
 		IStructuredDocumentRegion startStructuredDocumentRegion = node == null ? null : node.getStartStructuredDocumentRegion();
 		IStructuredDocumentRegion endStructuredDocumentRegion = node == null ? null : node.getEndStructuredDocumentRegion();
 
@@ -118,7 +120,7 @@ public class QuickAssistProcessorXML implements IQuickAssistProcessor {
 		}
 	}
 
-	protected ModelQuery getModelQuery(Node node) {
+	private ModelQuery getModelQuery(Node node) {
 		if (node.getNodeType() == Node.DOCUMENT_NODE) {
 			return ModelQueryUtil.getModelQuery((Document) node);
 		}
@@ -127,23 +129,7 @@ public class QuickAssistProcessorXML implements IQuickAssistProcessor {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.sse.ui.correction.IQuickAssistProcessor#getProposals(org.eclipse.wst.sse.core.text.IStructuredDocument,
-	 *      int)
-	 */
-	public ICompletionProposal[] getProposals(StructuredTextViewer viewer, int offset) throws CoreException {
-		ArrayList proposals = new ArrayList();
-
-		getLocalRenameQuickAssistProposal(proposals, viewer, offset);
-		getSurroundWithNewElementQuickAssistProposal(proposals, viewer, offset);
-		getInsertRequiredAttrs(proposals, viewer, offset);
-
-		return (ICompletionProposal[]) proposals.toArray(new ICompletionProposal[proposals.size()]);
-	}
-
-	protected List getRequiredAttrs(Node node) {
+	private List getRequiredAttrs(Node node) {
 		List result = new ArrayList();
 
 		ModelQuery modelQuery = getModelQuery(node);
@@ -165,15 +151,49 @@ public class QuickAssistProcessorXML implements IQuickAssistProcessor {
 		return result;
 	}
 
-	/**
-	 * @param proposals
-	 * @param viewer
-	 * @param offset
-	 */
-	protected void getSurroundWithNewElementQuickAssistProposal(ArrayList proposals, StructuredTextViewer viewer, int offset) {
-		IDOMNode node = (IDOMNode) ContentAssistUtils.getNodeAt(viewer, offset);
+	private void getSurroundWithNewElementQuickAssistProposal(List proposals, ISourceViewer viewer, int offset) {
+		IDOMNode node = (IDOMNode) getNodeAt(viewer, offset);
 		if (node != null) {
 			proposals.add(new SurroundWithNewElementQuickAssistProposal());
 		}
+	}
+
+	/**
+	 * Returns the closest IndexedRegion for the offset and viewer allowing
+	 * for differences between viewer offsets and model positions. note: this
+	 * method returns an IndexedRegion for read only
+	 * 
+	 * @param viewer
+	 *            the viewer whose document is used to compute the proposals
+	 * @param documentOffset
+	 *            an offset within the document for which completions should
+	 *            be computed
+	 * @return an IndexedRegion
+	 */
+	private IndexedRegion getNodeAt(ITextViewer viewer, int documentOffset) {
+		// copied from ContentAssistUtils.getNodeAt()
+		if (viewer == null)
+			return null;
+
+		IndexedRegion node = null;
+		IModelManager mm = StructuredModelManager.getModelManager();
+		IStructuredModel model = null;
+		if (mm != null)
+			model = mm.getExistingModelForRead(viewer.getDocument());
+		try {
+			if (model != null) {
+				int lastOffset = documentOffset;
+				node = model.getIndexedRegion(documentOffset);
+				while (node == null && lastOffset >= 0) {
+					lastOffset--;
+					node = model.getIndexedRegion(lastOffset);
+				}
+			}
+		}
+		finally {
+			if (model != null)
+				model.releaseFromRead();
+		}
+		return node;
 	}
 }

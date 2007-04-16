@@ -20,7 +20,6 @@ import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.text.ITextViewerExtension2;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.TextSelection;
-import org.eclipse.jface.text.contentassist.ContentAssistant;
 import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.formatter.FormattingContext;
 import org.eclipse.jface.text.formatter.FormattingContextProperties;
@@ -29,6 +28,7 @@ import org.eclipse.jface.text.formatter.IFormattingContext;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.jface.text.information.IInformationPresenter;
 import org.eclipse.jface.text.projection.ProjectionDocument;
+import org.eclipse.jface.text.quickassist.IQuickAssistAssistant;
 import org.eclipse.jface.text.reconciler.IReconciler;
 import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.IOverviewRuler;
@@ -59,13 +59,12 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 	/** Text operation codes */
 	private static final int BASE = ProjectionViewer.COLLAPSE_ALL; // see
 	// ProjectionViewer.COLLAPSE_ALL
-	private static final int CLEANUP_DOCUMENT = BASE + 1;
+	private static final int CLEANUP_DOCUMENT = BASE + 4;
 	public static final int FORMAT_ACTIVE_ELEMENTS = BASE + 3;
 
 	private static final String FORMAT_ACTIVE_ELEMENTS_TEXT = SSEUIMessages.Format_Active_Elements_UI_; //$NON-NLS-1$
 	public static final int FORMAT_DOCUMENT = BASE + 2;
 	private static final String FORMAT_DOCUMENT_TEXT = SSEUIMessages.Format_Document_UI_; //$NON-NLS-1$
-	public static final int QUICK_FIX = BASE + 4;
 	private static final String TEXT_CUT = SSEUIMessages.Text_Cut_UI_; //$NON-NLS-1$
 	private static final String TEXT_PASTE = SSEUIMessages.Text_Paste_UI_; //$NON-NLS-1$
 	private static final String TEXT_SHIFT_LEFT = SSEUIMessages.Text_Shift_Left_UI_; //$NON-NLS-1$ = "Text Shift Left"
@@ -74,8 +73,6 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 
 	private boolean fBackgroundupdateInProgress;
 	private StructuredContentCleanupHandler fContentCleanupHandler = null;
-	private IContentAssistant fCorrectionAssistant;
-	private boolean fCorrectionAssistantInstalled;
 	private IDocumentAdapter fDocAdapter;
 
 	private Highlighter fHighlighter;
@@ -122,9 +119,6 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 					return isEditable() && (!((IStructuredDocument) doc).containsReadOnly(getSelectedRange().x, 0));
 				}
 				break;
-			}
-			case QUICK_FIX : {
-				return isEditable();
 			}
 			case CLEANUP_DOCUMENT : {
 				return (fContentCleanupHandler != null && isEditable());
@@ -195,6 +189,25 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 				// disable the content assist operation if no content
 				// assistant
 				enableOperation(CONTENTASSIST_PROPOSALS, false);
+			}
+		}
+
+		IQuickAssistAssistant quickAssistant = configuration.getQuickAssistAssistant(this);
+		if (quickAssistant != fQuickAssistAssistant || quickAssistant == null || fQuickAssistAssistant == null) {
+			if (fQuickAssistAssistant != null)
+				fQuickAssistAssistant.uninstall();
+
+			fQuickAssistAssistant = quickAssistant;
+
+			if (fQuickAssistAssistant != null) {
+				fQuickAssistAssistant.install(this);
+				fQuickAssistAssistantInstalled = true;
+			}
+			else {
+				// 248036
+				// disable the content assist operation if no content
+				// assistant
+				enableOperation(QUICK_ASSIST, false);
 			}
 		}
 
@@ -392,12 +405,6 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 					// setErrorMessage(err);
 					// new OneTimeListener(getTextWidget(), new
 					// ClearErrorMessage());
-				}
-				break;
-			case QUICK_FIX :
-				if (isEditable() && fCorrectionAssistant != null && fCorrectionAssistantInstalled) {
-					String msg = fCorrectionAssistant.showPossibleCompletions();
-					setErrorMessage(msg);
 				}
 				break;
 			case SHIFT_RIGHT :
@@ -643,34 +650,6 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 		return super.modelRange2WidgetRange(modelRange);
 	}
 
-	/**
-	 * Sets the correction assistant for the viewer. This method is temporary
-	 * workaround until the base adds a generic way to add
-	 * quickfix/quickassist.
-	 * 
-	 * @param correctionAssistant
-	 */
-	public void setCorrectionAssistant(IContentAssistant correctionAssistant) {
-		// correction assistant
-		if (fCorrectionAssistant != null)
-			fCorrectionAssistant.uninstall();
-		fCorrectionAssistant = correctionAssistant;
-		if (fCorrectionAssistant != null) {
-			// configuration
-			if (fCorrectionAssistant instanceof ContentAssistant) {
-				((ContentAssistant) fCorrectionAssistant).setDocumentPartitioning(getDocumentPartitioning());
-			}
-
-			fCorrectionAssistant.install(this);
-			fCorrectionAssistantInstalled = true;
-		}
-		else {
-			// disable the correction assist operation if no correction
-			// assistant
-			enableOperation(QUICK_FIX, false);
-		}
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -738,9 +717,6 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 		if (fHighlighter != null) {
 			fHighlighter.uninstall();
 			fHighlighter = null;
-		}
-		if (fCorrectionAssistant != null) {
-			fCorrectionAssistant.uninstall();
 		}
 
 		if (fAnnotationHover instanceof StructuredTextAnnotationHover) {

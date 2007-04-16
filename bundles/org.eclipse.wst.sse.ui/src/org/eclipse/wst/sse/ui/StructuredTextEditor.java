@@ -166,7 +166,6 @@ import org.eclipse.wst.sse.ui.internal.UnknownContentTypeDialog;
 import org.eclipse.wst.sse.ui.internal.actions.ActionDefinitionIds;
 import org.eclipse.wst.sse.ui.internal.actions.StructuredTextEditorActionConstants;
 import org.eclipse.wst.sse.ui.internal.contentoutline.ConfigurableContentOutlinePage;
-import org.eclipse.wst.sse.ui.internal.correction.CorrectionAssistantProvider;
 import org.eclipse.wst.sse.ui.internal.debug.BreakpointRulerAction;
 import org.eclipse.wst.sse.ui.internal.debug.EditBreakpointAction;
 import org.eclipse.wst.sse.ui.internal.debug.ManageBreakpointAction;
@@ -804,7 +803,8 @@ public class StructuredTextEditor extends TextEditor {
 							return false;
 
 						try {
-							// ISSUE: pricey! (a cached hash might be in order, if this 
+							// ISSUE: pricey! (a cached hash might be in
+							// order, if this
 							// was ever really ever used very often.
 							String sContent = sDocument.get(fOffset, fLength);
 							String content = document.get(fOffset, fLength);
@@ -991,7 +991,7 @@ public class StructuredTextEditor extends TextEditor {
 			// But not clear is this default would apply for our editor.
 			boolean result = true;
 			// if editor is "gone", can not be valid
-			StructuredTextEditor e = getStructuredTextEditor(); 
+			StructuredTextEditor e = getStructuredTextEditor();
 			if (e == null || e.fEditorDisposed) {
 				result = false;
 			}
@@ -1620,13 +1620,6 @@ public class StructuredTextEditor extends TextEditor {
 		action.setActionDefinitionId(ITextEditorActionDefinitionIds.CONTENT_ASSIST_CONTEXT_INFORMATION);
 		setAction(StructuredTextEditorActionConstants.ACTION_NAME_CONTENTASSIST_CONTEXT_INFORMATION, action);
 		markAsStateDependentAction(StructuredTextEditorActionConstants.ACTION_NAME_CONTENTASSIST_CONTEXT_INFORMATION, true);
-		// StructuredTextViewer Action - requesting
-		// correction assist to show
-		// correction proposals for the current position
-		action = new TextOperationAction(resourceBundle, StructuredTextEditorActionConstants.ACTION_NAME_QUICK_FIX + UNDERSCORE, this, StructuredTextViewer.QUICK_FIX, true);
-		action.setActionDefinitionId(ActionDefinitionIds.QUICK_FIX);
-		setAction(StructuredTextEditorActionConstants.ACTION_NAME_QUICK_FIX, action);
-		markAsStateDependentAction(StructuredTextEditorActionConstants.ACTION_NAME_QUICK_FIX, true);
 		// StructuredTextViewer Action - requesting format
 		// of the whole
 		// document
@@ -1704,22 +1697,6 @@ public class StructuredTextEditor extends TextEditor {
 			cfg = (ContentOutlineConfiguration) builder.getConfiguration(ExtendedConfigurationBuilder.CONTENTOUTLINECONFIGURATION, ids[i]);
 		}
 		return cfg;
-	}
-
-	/**
-	 * Only gets the correction assistant associted with the current source
-	 * viewer configuration.
-	 * 
-	 * @return IContentAssistant or null
-	 */
-	private IContentAssistant createCorrectionAssistant() {
-		IContentAssistant assist = null;
-		ExtendedConfigurationBuilder builder = ExtendedConfigurationBuilder.getInstance();
-		CorrectionAssistantProvider provider = (CorrectionAssistantProvider) builder.getConfiguration("correctionassistant", fViewerConfigurationTargetId); //$NON-NLS-1$
-		if (provider != null) {
-			assist = provider.getCorrectionAssistant(getSourceViewer());
-		}
-		return assist;
 	}
 
 	protected void createModelDependentFields() {
@@ -1992,7 +1969,8 @@ public class StructuredTextEditor extends TextEditor {
 			fStructuredModel.removeModelStateListener(getInternalModelStateListener());
 		}
 
-		// BUG155335 - if there was no document provider, there was nothing added
+		// BUG155335 - if there was no document provider, there was nothing
+		// added
 		// to document, so nothing to remove
 		if (getDocumentProvider() != null) {
 			IDocument doc = getDocumentProvider().getDocument(getEditorInput());
@@ -2543,7 +2521,7 @@ public class StructuredTextEditor extends TextEditor {
 			}
 			return;
 		}
-		
+
 		// update content assist preferences
 		if (EditorPreferenceNames.CODEASSIST_PROPOSALS_BACKGROUND.equals(property)) {
 			ISourceViewer sourceViewer = getSourceViewer();
@@ -2552,7 +2530,7 @@ public class StructuredTextEditor extends TextEditor {
 				if (configuration != null) {
 					IContentAssistant contentAssistant = configuration.getContentAssistant(sourceViewer);
 					if (contentAssistant instanceof ContentAssistant) {
-						ContentAssistant assistant = (ContentAssistant)contentAssistant;
+						ContentAssistant assistant = (ContentAssistant) contentAssistant;
 						RGB rgb = PreferenceConverter.getColor(getPreferenceStore(), EditorPreferenceNames.CODEASSIST_PROPOSALS_BACKGROUND);
 						Color color = EditorUtility.getColor(rgb);
 						assistant.setProposalSelectorBackground(color);
@@ -2560,7 +2538,7 @@ public class StructuredTextEditor extends TextEditor {
 				}
 			}
 		}
-		
+
 		// update content assist preferences
 		if (EditorPreferenceNames.CODEASSIST_PROPOSALS_FOREGROUND.equals(property)) {
 			ISourceViewer sourceViewer = getSourceViewer();
@@ -2569,7 +2547,7 @@ public class StructuredTextEditor extends TextEditor {
 				if (configuration != null) {
 					IContentAssistant contentAssistant = configuration.getContentAssistant(sourceViewer);
 					if (contentAssistant instanceof ContentAssistant) {
-						ContentAssistant assistant = (ContentAssistant)contentAssistant;
+						ContentAssistant assistant = (ContentAssistant) contentAssistant;
 						RGB rgb = PreferenceConverter.getColor(getPreferenceStore(), EditorPreferenceNames.CODEASSIST_PROPOSALS_FOREGROUND);
 						Color color = EditorUtility.getColor(rgb);
 						assistant.setProposalSelectorForeground(color);
@@ -2577,7 +2555,7 @@ public class StructuredTextEditor extends TextEditor {
 				}
 			}
 		}
-		
+
 		// update content assist preferences
 		if (EditorPreferenceNames.CODEASSIST_PARAMETERS_BACKGROUND.equals(property)) {
 			ISourceViewer sourceViewer = getSourceViewer();
@@ -2586,7 +2564,7 @@ public class StructuredTextEditor extends TextEditor {
 				if (configuration != null) {
 					IContentAssistant contentAssistant = configuration.getContentAssistant(sourceViewer);
 					if (contentAssistant instanceof ContentAssistant) {
-						ContentAssistant assistant = (ContentAssistant)contentAssistant;
+						ContentAssistant assistant = (ContentAssistant) contentAssistant;
 						RGB rgb = PreferenceConverter.getColor(getPreferenceStore(), EditorPreferenceNames.CODEASSIST_PARAMETERS_BACKGROUND);
 						Color color = EditorUtility.getColor(rgb);
 						assistant.setContextInformationPopupBackground(color);
@@ -2595,7 +2573,7 @@ public class StructuredTextEditor extends TextEditor {
 				}
 			}
 		}
-		
+
 		// update content assist preferences
 		if (EditorPreferenceNames.CODEASSIST_PARAMETERS_FOREGROUND.equals(property)) {
 			ISourceViewer sourceViewer = getSourceViewer();
@@ -2604,7 +2582,7 @@ public class StructuredTextEditor extends TextEditor {
 				if (configuration != null) {
 					IContentAssistant contentAssistant = configuration.getContentAssistant(sourceViewer);
 					if (contentAssistant instanceof ContentAssistant) {
-						ContentAssistant assistant = (ContentAssistant)contentAssistant;
+						ContentAssistant assistant = (ContentAssistant) contentAssistant;
 						RGB rgb = PreferenceConverter.getColor(getPreferenceStore(), EditorPreferenceNames.CODEASSIST_PARAMETERS_FOREGROUND);
 						Color color = EditorUtility.getColor(rgb);
 						assistant.setContextInformationPopupForeground(color);
@@ -2613,7 +2591,7 @@ public class StructuredTextEditor extends TextEditor {
 				}
 			}
 		}
-		
+
 		super.handlePreferenceStoreChanged(event);
 	}
 
@@ -2653,12 +2631,14 @@ public class StructuredTextEditor extends TextEditor {
 			setDocumentProvider(documentProvider);
 		}
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.ui.texteditor.AbstractTextEditor#initializeDragAndDrop(org.eclipse.jface.text.source.ISourceViewer)
 	 */
 	protected void initializeDragAndDrop(ISourceViewer viewer) {
-		IPreferenceStore store= getPreferenceStore();
+		IPreferenceStore store = getPreferenceStore();
 		if (store != null && store.getBoolean(PREFERENCE_TEXT_DRAG_AND_DROP_ENABLED))
 			initializeDrop(viewer);
 	}
@@ -2742,10 +2722,6 @@ public class StructuredTextEditor extends TextEditor {
 		if (isFoldingEnabled()) {
 			installProjectionSupport();
 		}
-
-		// initialize source viewer's correction assistant
-		IContentAssistant correctionAssistant = createCorrectionAssistant();
-		getTextViewer().setCorrectionAssistant(correctionAssistant);
 	}
 
 	protected void initSourceViewer(StructuredTextViewer sourceViewer) {
@@ -2754,7 +2730,7 @@ public class StructuredTextEditor extends TextEditor {
 		fMouseTracker = new MouseTracker();
 		fMouseTracker.start(sourceViewer.getTextWidget());
 	}
-	
+
 	protected void installTextDragAndDrop(ISourceViewer viewer) {
 		// do nothing
 	}
@@ -3048,10 +3024,6 @@ public class StructuredTextEditor extends TextEditor {
 			// also unconfigure before configuring
 			stv.unconfigure();
 			stv.configure(config);
-
-			// update source viewer's correction assistant as well
-			IContentAssistant correctionAssistant = createCorrectionAssistant();
-			stv.setCorrectionAssistant(correctionAssistant);
 		}
 	}
 
@@ -3080,7 +3052,7 @@ public class StructuredTextEditor extends TextEditor {
 		fBusyTimer = new Timer(true);
 		fBusyTimer.schedule(new TimeOutExpired(), BUSY_STATE_DELAY);
 	}
-	
+
 	protected void uninstallTextDragAndDrop(ISourceViewer viewer) {
 		// do nothing
 	}
@@ -3107,7 +3079,7 @@ public class StructuredTextEditor extends TextEditor {
 		disposeModelDependentFields();
 
 		fShowInTargetIds = createShowInTargetIds();
-		
+
 		if (getSourceViewerConfiguration() instanceof StructuredTextViewerConfiguration && fStatusLineLabelProvider != null) {
 			fStatusLineLabelProvider.dispose();
 		}

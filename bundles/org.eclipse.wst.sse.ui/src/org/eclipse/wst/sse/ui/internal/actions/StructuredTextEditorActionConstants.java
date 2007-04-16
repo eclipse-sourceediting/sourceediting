@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,7 +26,6 @@ public interface StructuredTextEditorActionConstants {
 	public final static String ACTION_NAME_INFORMATION = "ShowTooltipDesc";//$NON-NLS-1$
 	public final static String ACTION_NAME_MANAGE_BREAKPOINTS = "ManageBreakpoints";//$NON-NLS-1$
 	public final static String ACTION_NAME_OPEN_FILE = "OpenFileFromSource";//$NON-NLS-1$
-	public final static String ACTION_NAME_QUICK_FIX = "QuickFix";//$NON-NLS-1$
 	public final static String ACTION_NAME_REMOVE_BLOCK_COMMENT = "RemoveBlockComment";//$NON-NLS-1$
 	public final static String ACTION_NAME_STRUCTURE_SELECT_ENCLOSING = "StructureSelectEnclosing";//$NON-NLS-1$
 	public final static String ACTION_NAME_STRUCTURE_SELECT_HISTORY = "StructureSelectHistory";//$NON-NLS-1$
@@ -43,6 +42,6 @@ public interface StructuredTextEditorActionConstants {
 
 	public final static String GROUP_NAME_MENU_ADDITIONS = "MenuAdditions";//$NON-NLS-1$
 	public final static String GROUP_NAME_TOOLBAR_ADDITIONS = "ToolbarAdditions";//$NON-NLS-1$
-	
+
 	public final static String STATUS_CATEGORY_OFFSET = "Offset";//$NON-NLS-1$
 }

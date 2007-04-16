@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,6 +16,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.source.Annotation;
 
+/**
+ * @deprecated since 2.0 RC0 Use
+ *             org.eclipse.jface.text.quickassist.IQuickAssistProcessor;
+ */
 public interface IQuickFixProcessor {
 	/**
 	 * Returns true if the processor can fix the given problem. This test

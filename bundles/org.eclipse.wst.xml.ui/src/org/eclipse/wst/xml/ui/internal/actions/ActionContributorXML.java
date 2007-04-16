@@ -53,7 +53,6 @@ public class ActionContributorXML extends ActionContributor {
 	protected RetargetTextEditorAction fFormatActiveElements = null;
 	protected RetargetTextEditorAction fFormatDocument = null;
 	protected RetargetTextEditorAction fOpenFileAction = null; // open file
-	protected RetargetTextEditorAction fQuickFix = null;
 
 	protected RetargetTextEditorAction fShowTooltipAction = null; // show
 	protected RetargetTextEditorAction fUncomment = null;
@@ -69,9 +68,6 @@ public class ActionContributorXML extends ActionContributor {
 
 		fContentAssist = new RetargetTextEditorAction(resourceBundle, ""); //$NON-NLS-1$
 		fContentAssist.setActionDefinitionId(ITextEditorActionDefinitionIds.CONTENT_ASSIST_PROPOSALS);
-
-		fQuickFix = new RetargetTextEditorAction(resourceBundle, ""); //$NON-NLS-1$
-		fQuickFix.setActionDefinitionId(ActionDefinitionIds.QUICK_FIX);
 
 		// source commands
 		fCleanupDocument = new RetargetTextEditorAction(resourceBundle, ""); //$NON-NLS-1$
@@ -102,7 +98,6 @@ public class ActionContributorXML extends ActionContributor {
 			editMenu.add(fCommandsSeparator);
 			editMenu.add(fShowTooltipAction);
 			editMenu.add(fContentAssist);
-			editMenu.add(fQuickFix);
 			editMenu.add(fMenuAdditionsGroupMarker);
 		}
 
@@ -164,7 +159,6 @@ public class ActionContributorXML extends ActionContributor {
 
 		fShowTooltipAction.setAction(getAction(textEditor, StructuredTextEditorActionConstants.ACTION_NAME_INFORMATION));
 		fContentAssist.setAction(getAction(textEditor, StructuredTextEditorActionConstants.ACTION_NAME_CONTENTASSIST_PROPOSALS));
-		fQuickFix.setAction(getAction(textEditor, StructuredTextEditorActionConstants.ACTION_NAME_QUICK_FIX));
 
 		fCleanupDocument.setAction(getAction(textEditor, StructuredTextEditorActionConstants.ACTION_NAME_CLEANUP_DOCUMENT));
 		fFormatDocument.setAction(getAction(textEditor, StructuredTextEditorActionConstants.ACTION_NAME_FORMAT_DOCUMENT));
@@ -188,7 +182,6 @@ public class ActionContributorXML extends ActionContributor {
 
 		fShowTooltipAction.setEnabled(enabled);
 		fContentAssist.setEnabled(enabled);
-		fQuickFix.setEnabled(enabled);
 		// cleanup and format document actions do not rely on source viewer
 		// being enabled
 		// fCleanupDocument.setEnabled(enabled);

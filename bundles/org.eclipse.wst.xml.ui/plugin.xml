@@ -59,9 +59,9 @@
 			class="org.eclipse.wst.xml.ui.internal.projection.StructuredTextFoldingProviderXML"
 			target="org.eclipse.core.runtime.xml, org.eclipse.wst.xml.core.xmlsource" />
 		<provisionalConfiguration
-			type="correctionassistant"
-			class="org.eclipse.wst.xml.ui.internal.correction.CorrectionAssistantProviderXML"
-			target="org.eclipse.core.runtime.xml, org.eclipse.wst.xml.core.xmlsource" />
+			type="org.eclipse.jface.text.quickassist.IQuickAssistProcessor"
+			class="org.eclipse.wst.xml.ui.internal.correction.XMLQuickAssistProcessor"
+			target="org.eclipse.wst.xml.XML_DEFAULT" />
 		<provisionalDefinition
 			type="preferencepages"
 			value="org.eclipse.wst.sse.ui.preferences.xml, org.eclipse.wst.sse.ui.preferences.xml.source, org.eclipse.wst.sse.ui.preferences.xml.templates, org.eclipse.wst.sse.ui.preferences.xml.colors"

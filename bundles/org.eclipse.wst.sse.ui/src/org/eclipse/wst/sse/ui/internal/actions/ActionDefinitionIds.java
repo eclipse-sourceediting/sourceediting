@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,7 +18,8 @@ package org.eclipse.wst.sse.ui.internal.actions;
  * Defines the definitions ids for editor actions.
  */
 public interface ActionDefinitionIds {
-	//TODO: Can these be better defined with a "plugin prefix" to be more portable? 
+	// TODO: Can these be better defined with a "plugin prefix" to be more
+	// portable?
 	public final static String ADD_BLOCK_COMMENT = "org.eclipse.wst.sse.ui.add.block.comment";//$NON-NLS-1$
 
 	public final static String CLEANUP_DOCUMENT = "org.eclipse.wst.sse.ui.cleanup.document";//$NON-NLS-1$
@@ -30,7 +31,6 @@ public interface ActionDefinitionIds {
 	public final static String INFORMATION = "org.eclipse.wst.sse.ui.show.javadoc";//$NON-NLS-1$
 	public final static String MANAGE_BREAKPOINTS = "org.eclipse.wst.sse.ui.breakpoints.manage";//$NON-NLS-1$
 	public final static String OPEN_FILE = "org.eclipse.wst.sse.ui.open.file.from.source";//$NON-NLS-1$
-	public final static String QUICK_FIX = "org.eclipse.wst.sse.ui.edit.text.java.correction.assist.proposals";//$NON-NLS-1$
 	public final static String REMOVE_BLOCK_COMMENT = "org.eclipse.wst.sse.ui.remove.block.comment";//$NON-NLS-1$
 	public final static String STRUCTURE_SELECT_ENCLOSING = "org.eclipse.wst.sse.ui.structure.select.enclosing";//$NON-NLS-1$
 	public final static String STRUCTURE_SELECT_HISTORY = "org.eclipse.wst.sse.ui.structure.select.last";//$NON-NLS-1$

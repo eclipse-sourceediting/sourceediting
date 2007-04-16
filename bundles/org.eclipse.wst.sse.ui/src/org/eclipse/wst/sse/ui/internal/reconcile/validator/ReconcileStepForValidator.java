@@ -24,6 +24,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.Position;
+import org.eclipse.jface.text.quickassist.IQuickAssistProcessor;
 import org.eclipse.jface.text.reconciler.DirtyRegion;
 import org.eclipse.jface.text.reconciler.IReconcilableModel;
 import org.eclipse.jface.text.reconciler.IReconcileResult;
@@ -58,6 +59,7 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 	private IncrementalReporter fReporter = null;
 	private int fScope = -1;
 	private IValidator fValidator = null;
+	private final String QUICKASSISTPROCESSOR = IQuickAssistProcessor.class.getName();
 
 
 	public ReconcileStepForValidator(IValidator v, int scope) {
@@ -77,39 +79,42 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 	 * @param messages
 	 * @return
 	 */
-//	protected IReconcileResult[] createAnnotations(List messageList) {
-//		List annotations = new ArrayList();
-//		for (int i = 0; i < messageList.size(); i++) {
-//			IMessage validationMessage = (IMessage) messageList.get(i);
-//
-//			int offset = validationMessage.getOffset();
-//
-//			if (offset < 0)
-//				continue;
-//
-//			String messageText = null;
-//			try {
-//				messageText = validationMessage.getText(validationMessage.getClass().getClassLoader());
-//			}
-//			catch (Exception t) {
-//				Logger.logException("exception reporting message from validator", t); //$NON-NLS-1$
-//				continue;
-//			}
-//			
-//			String type = getSeverity(validationMessage);
-//			// this position seems like it would be possibly be the wrong
-//			// length
-//			int length = validationMessage.getLength();
-//			if (length >= 0) {
-//				Position p = new Position(offset, length);
-//				ReconcileAnnotationKey key = createKey(getPartitionType(getDocument(), offset), getScope());
-//				annotations.add(new TemporaryAnnotation(p, type, messageText, key));
-//			}
-//		}
-//
-//		return (IReconcileResult[]) annotations.toArray(new IReconcileResult[annotations.size()]);
-//	}
-
+	// protected IReconcileResult[] createAnnotations(List messageList) {
+	// List annotations = new ArrayList();
+	// for (int i = 0; i < messageList.size(); i++) {
+	// IMessage validationMessage = (IMessage) messageList.get(i);
+	//
+	// int offset = validationMessage.getOffset();
+	//
+	// if (offset < 0)
+	// continue;
+	//
+	// String messageText = null;
+	// try {
+	// messageText =
+	// validationMessage.getText(validationMessage.getClass().getClassLoader());
+	// }
+	// catch (Exception t) {
+	// Logger.logException("exception reporting message from validator", t);
+	// //$NON-NLS-1$
+	// continue;
+	// }
+	//			
+	// String type = getSeverity(validationMessage);
+	// // this position seems like it would be possibly be the wrong
+	// // length
+	// int length = validationMessage.getLength();
+	// if (length >= 0) {
+	// Position p = new Position(offset, length);
+	// ReconcileAnnotationKey key = createKey(getPartitionType(getDocument(),
+	// offset), getScope());
+	// annotations.add(new TemporaryAnnotation(p, type, messageText, key));
+	// }
+	// }
+	//
+	// return (IReconcileResult[]) annotations.toArray(new
+	// IReconcileResult[annotations.size()]);
+	// }
 	/**
 	 * Converts a map of IValidatorForReconcile to List to annotations based
 	 * on those messages
@@ -118,13 +123,13 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 	 * @return
 	 */
 	protected IReconcileResult[] createAnnotations(AnnotationInfo[] infos) {
-		
-	
+
+
 		List annotations = new ArrayList();
 		for (int i = 0; i < infos.length; i++) {
-			
+
 			AnnotationInfo info = infos[i];
-			
+
 			IMessage validationMessage = info.getMessage();
 			int offset = validationMessage.getOffset();
 			if (offset < 0)
@@ -146,17 +151,17 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 
 				Position p = new Position(offset, length);
 				ReconcileAnnotationKey key = createKey(getPartitionType(getDocument(), offset), getScope());
-				
-				if(info.getProblemId() == AnnotationInfo.NO_PROBLEM_ID) {
-					// create an annotation w/ no fix info
-					annotations.add(new TemporaryAnnotation(p, type, messageText, key));
+
+				// create an annotation w/ problem ID and fix info
+				TemporaryAnnotation annotation = new TemporaryAnnotation(p, type, messageText, key);
+				Object extraInfo = info.getAdditionalFixInfo();
+				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=170988
+				// add quick fix information
+				if (extraInfo == null) {
+					extraInfo = validationMessage.getAttribute(QUICKASSISTPROCESSOR);
 				}
-				else {
-					// create an annotation w/ problem ID and fix info
-					TemporaryAnnotation annotation = new TemporaryAnnotation(p, type, messageText, key, info.getProblemId());
-					annotation.setAdditionalFixInfo(info.getAdditionalFixInfo());
-					annotations.add(annotation);
-				}
+				annotation.setAdditionalFixInfo(extraInfo);
+				annotations.add(annotation);
 			}
 		}
 		return (IReconcileResult[]) annotations.toArray(new IReconcileResult[annotations.size()]);
@@ -180,7 +185,7 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 		}
 		return type;
 	}
-	
+
 	private IFile getFile() {
 		IStructuredModel model = null;
 		IFile file = null;
@@ -219,6 +224,7 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 
 	/**
 	 * If this validator is partial or total
+	 * 
 	 * @return
 	 */
 	public int getScope() {
@@ -236,7 +242,7 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 		IReconcileResult[] results = EMPTY_RECONCILE_RESULT_SET;
 		if (dirtyRegion != null) {
 			try {
-				if(fValidator instanceof ISourceValidator) {
+				if (fValidator instanceof ISourceValidator) {
 					results = validate(dirtyRegion, subRegion);
 				}
 				else {
@@ -260,7 +266,7 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 			debugString.append(fValidator.toString());
 		return debugString.toString();
 	}
-	
+
 	protected IReconcileResult[] validate() {
 		IReconcileResult[] results = EMPTY_RECONCILE_RESULT_SET;
 
@@ -279,7 +285,7 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 			// results = createAnnotations(reporter.getMessages());
 			results = createAnnotations(reporter.getAnnotationInfo());
 			reporter.removeAllMessages(fValidator);
-			
+
 			fValidator.cleanup(reporter);
 		}
 		catch (Exception e) {
@@ -287,32 +293,32 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 		}
 		return results;
 	}
-	
+
 	public void setInputModel(IReconcilableModel inputModel) {
-		if(inputModel instanceof DocumentAdapter) {
-			IDocument document = ((DocumentAdapter)inputModel).getDocument();
-			if(document != null) {
-				if(fValidator instanceof ISourceValidator) {
+		if (inputModel instanceof DocumentAdapter) {
+			IDocument document = ((DocumentAdapter) inputModel).getDocument();
+			if (document != null) {
+				if (fValidator instanceof ISourceValidator) {
 					// notify that document connecting
-					((ISourceValidator)fValidator).connect(document);
+					((ISourceValidator) fValidator).connect(document);
 				}
 			}
 		}
 		super.setInputModel(inputModel);
 	}
-	
+
 	public void release() {
-		if(fValidator instanceof ISourceValidator) {
+		if (fValidator instanceof ISourceValidator) {
 			IDocument document = getDocument();
-			if(document != null) {
+			if (document != null) {
 				// notify that document disconnecting
-				((ISourceValidator)fValidator).disconnect(document);
+				((ISourceValidator) fValidator).disconnect(document);
 			}
 			fValidator.cleanup(getReporter());
 		}
 		super.release();
 	}
-	
+
 	protected IReconcileResult[] validate(DirtyRegion dirtyRegion, IRegion subRegion) {
 		IReconcileResult[] results = EMPTY_RECONCILE_RESULT_SET;
 

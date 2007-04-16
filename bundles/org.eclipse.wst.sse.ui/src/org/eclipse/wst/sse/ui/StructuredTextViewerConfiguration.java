@@ -27,6 +27,8 @@ import org.eclipse.jface.text.information.IInformationPresenter;
 import org.eclipse.jface.text.information.IInformationProvider;
 import org.eclipse.jface.text.information.InformationPresenter;
 import org.eclipse.jface.text.presentation.IPresentationReconciler;
+import org.eclipse.jface.text.quickassist.IQuickAssistAssistant;
+import org.eclipse.jface.text.quickassist.QuickAssistAssistant;
 import org.eclipse.jface.text.reconciler.IReconciler;
 import org.eclipse.jface.text.source.IAnnotationHover;
 import org.eclipse.jface.text.source.ISourceViewer;
@@ -42,6 +44,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitionin
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.StructuredTextAnnotationHover;
 import org.eclipse.wst.sse.ui.internal.contentassist.StructuredContentAssistant;
+import org.eclipse.wst.sse.ui.internal.correction.CompoundQuickAssistProcessor;
 import org.eclipse.wst.sse.ui.internal.derived.HTMLTextPresenter;
 import org.eclipse.wst.sse.ui.internal.hyperlink.HighlighterHyperlinkPresenter;
 import org.eclipse.wst.sse.ui.internal.preferences.EditorPreferenceNames;
@@ -76,6 +79,10 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 	 * is added to a viewer can cause odd key-eating by the wrong one.
 	 */
 	private StructuredContentAssistant fContentAssistant = null;
+	/*
+	 * One instance per configuration because it's just like content assistant
+	 */
+	private IQuickAssistAssistant fQuickAssistant = null;
 	/*
 	 * One instance per configuration
 	 */
@@ -428,6 +435,43 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 		 * not use presentation reconciler
 		 */
 		return null;
+	}
+
+	/*
+	 * @see org.eclipse.jface.text.source.SourceViewerConfiguration#getQuickAssistAssistant(org.eclipse.jface.text.source.ISourceViewer)
+	 */
+	public IQuickAssistAssistant getQuickAssistAssistant(ISourceViewer sourceViewer) {
+		if (fQuickAssistant == null) {
+			IQuickAssistAssistant assistant = new QuickAssistAssistant();
+			assistant.setQuickAssistProcessor(new CompoundQuickAssistProcessor());
+			assistant.setInformationControlCreator(getQuickAssistAssistantInformationControlCreator());
+
+			// Waiting for color preferences, see:
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=133731
+			// set content assist preferences
+			if (fPreferenceStore != null) {
+				Color color = getColor(EditorPreferenceNames.CODEASSIST_PROPOSALS_BACKGROUND);
+				assistant.setProposalSelectorBackground(color);
+
+				color = getColor(EditorPreferenceNames.CODEASSIST_PROPOSALS_FOREGROUND);
+				assistant.setProposalSelectorForeground(color);
+			}
+			fQuickAssistant = assistant;
+		}
+		return fQuickAssistant;
+	}
+
+	/**
+	 * Returns the information control creator for the quick assist assistant.
+	 * 
+	 * @return the information control creator
+	 */
+	private IInformationControlCreator getQuickAssistAssistantInformationControlCreator() {
+		return new IInformationControlCreator() {
+			public IInformationControl createInformationControl(Shell parent) {
+				return new DefaultInformationControl(parent, SWT.NONE, new HTMLTextPresenter(true));
+			}
+		};
 	}
 
 	/**

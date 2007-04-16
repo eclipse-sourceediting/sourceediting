@@ -88,12 +88,10 @@ public class SpellcheckStrategy extends StructuredTextReconcilingStrategy {
 				return;
 
 			TemporaryAnnotation annotation = new TemporaryAnnotation(new Position(problem.getOffset(), problem.getLength()), TemporaryAnnotation.ANNOT_WARNING, problem.getMessage(), fReconcileAnnotationKey);
-			/*
-			 * TODO: create and use an IQuickFixProcessor that uses
-			 * problem.getProposals() for fixes [note, the default engine
-			 * doesn't propose fixes, at least without a dictionary].
-			 */
-			annotation.setAdditionalFixInfo(problem);
+
+			SpellingQuickAssistProcessor quickAssistProcessor = new SpellingQuickAssistProcessor();
+			quickAssistProcessor.setSpellingProblem(problem);
+			annotation.setAdditionalFixInfo(quickAssistProcessor);
 			annotations.add(annotation);
 			if (_DEBUG_SPELLING) {
 				Logger.log(Logger.INFO_DEBUG, problem.getMessage());
