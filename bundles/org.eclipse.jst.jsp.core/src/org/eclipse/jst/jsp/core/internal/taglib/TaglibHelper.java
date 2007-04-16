@@ -205,7 +205,7 @@ public class TaglibHelper {
 	 * @param results
 	 *            list where the <code>TaglibVariable</code> s are added
 	 * @param decl
-	 *            TLDElementDelcaration for the custom tag
+	 *            TLDElementDeclaration for the custom tag
 	 * @param prefix
 	 *            custom tag prefix
 	 * @param uri
@@ -374,7 +374,6 @@ public class TaglibHelper {
 	}
 
 	private TaglibClassLoader getClassloader() {
-
 		if (fLoader == null) {
 			fLoader = new TaglibClassLoader(this.getClass().getClassLoader());
 			fProjectEntries.clear();
@@ -506,7 +505,7 @@ public class TaglibHelper {
 			System.out.println(" -> project entry: [" + entry + "]"); //$NON-NLS-1$ //$NON-NLS-2$
 
 		IPath path = entry.getPath();
-		IProject referenceProject = ResourcesPlugin.getWorkspace().getRoot().getProject(path.toString());
+		IProject referenceProject = ResourcesPlugin.getWorkspace().getRoot().getProject(path.segment(0));
 		if (referenceProject != null && referenceProject.isAccessible()) {
 			addClasspathEntriesForProject(referenceProject, loader);
 		}
@@ -520,12 +519,26 @@ public class TaglibHelper {
 	 */
 	private void addDefaultDirEntry(TaglibClassLoader loader, IJavaProject project) throws JavaModelException {
 		// add default bin directory for the project
-		IPath outputLocation = project.getOutputLocation();
-		IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getFolder(outputLocation);
-		if (folder != null && folder.isAccessible()) {
-			outputLocation = folder.getLocation();
-			loader.addDirectory(outputLocation.toString());
+		IPath outputPath = project.getOutputLocation();
+		String outputLocation = null;
+		if (!outputPath.toFile().exists()) {
+			if (outputPath.segmentCount() > 1) {
+				IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getFolder(outputPath);
+				if (folder.getLocation() != null) {
+					outputLocation = folder.getLocation().toString();
+				}
+			}
+			else {
+				IProject iproject = ResourcesPlugin.getWorkspace().getRoot().getProject(outputPath.segment(0));
+				if (iproject.getLocation() != null) {
+					outputLocation = iproject.getLocation().toString();
+				}
+			}
 		}
+		else {
+			outputLocation = outputPath.toString();
+		}
+		loader.addDirectory(outputLocation);
 	}
 
 	/**
