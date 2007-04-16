@@ -17,28 +17,18 @@ import java.net.URL;
 import junit.framework.TestCase;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.internal.core.ClasspathEntry;
-import org.eclipse.jst.jsp.core.internal.JSPCorePlugin;
-import org.eclipse.jst.jsp.core.internal.preferences.JSPCorePreferenceNames;
 import org.eclipse.jst.jsp.core.taglib.IJarRecord;
 import org.eclipse.jst.jsp.core.taglib.ITaglibRecord;
 import org.eclipse.jst.jsp.core.taglib.IURLRecord;
 import org.eclipse.jst.jsp.core.taglib.TaglibIndex;
-import org.eclipse.jst.jsp.core.tests.JSPCoreTestsPlugin;
-import org.eclipse.wst.validation.internal.operations.ValidatorManager;
 
 /**
  * Tests for the TaglibIndex.
@@ -232,52 +222,6 @@ public class TestIndex extends TestCase {
 		assertNotNull("record not returned for " + uri, taglibRecord2);
 		assertEquals(ITaglibRecord.JAR, taglibRecord2.getRecordType());
 		assertEquals(uri, ((IJarRecord) taglibRecord2).getURI());
-	}
-
-	public void test_181057a() throws Exception {
-		boolean doValidateSegments = JSPCorePlugin.getDefault().getPluginPreferences().getBoolean(JSPCorePreferenceNames.VALIDATE_FRAGMENTS);
-		String testName = "bug_181057";
-		// Create new project
-		IProject j = BundleResourceUtil.createSimpleProject("j", null, null);
-		assertTrue(j.exists());
-		BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/j", "/j");
-		IProject k = BundleResourceUtil.createSimpleProject("k", null, null);
-		assertTrue(k.exists());
-		BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/k", "/k");
-
-		IProject project = BundleResourceUtil.createSimpleProject(testName, Platform.getStateLocation(JSPCoreTestsPlugin.getDefault().getBundle()).append(testName), null);
-		assertTrue(project.exists());
-		JSPCorePlugin.getDefault().getPluginPreferences().setValue(JSPCorePreferenceNames.VALIDATE_FRAGMENTS, true);
-		BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/" + testName, "/" + testName);
-		BundleResourceUtil.copyBundleEntryIntoWorkspace("/testfiles/struts.jar", "/" + testName + "/struts.jar");
-		j.build(IncrementalProjectBuilder.CLEAN_BUILD, new NullProgressMonitor());
-		k.build(IncrementalProjectBuilder.CLEAN_BUILD, new NullProgressMonitor());
-		project.build(IncrementalProjectBuilder.CLEAN_BUILD, new NullProgressMonitor());
-		project.build(IncrementalProjectBuilder.FULL_BUILD, new NullProgressMonitor());
-		project.build(IncrementalProjectBuilder.FULL_BUILD, "org.eclipse.wst.validation.validationbuilder", null, new NullProgressMonitor());
-		try {
-			Job.getJobManager().join(ValidatorManager.VALIDATOR_JOB_FAMILY, new NullProgressMonitor());
-			Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, new NullProgressMonitor());
-			Job.getJobManager().join(ResourcesPlugin.FAMILY_MANUAL_BUILD, new NullProgressMonitor());
-		}
-		catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		catch (OperationCanceledException e) {
-			e.printStackTrace();
-		}
-		JSPCorePlugin.getDefault().getPluginPreferences().setValue(JSPCorePreferenceNames.VALIDATE_FRAGMENTS, doValidateSegments);
-		/*
-		 * main.jsp contains numerous references to tags in struts.jar, which
-		 * is at the end of the build path
-		 */
-		IFile main = project.getFile("main.jsp");
-		IMarker[] markers = main.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_ZERO);
-		StringBuffer s = new StringBuffer();
-		for (int i = 0; i < markers.length; i++) {
-			s.append("\n" + markers[i].getAttribute(IMarker.LINE_NUMBER) + ":" + markers[i].getAttribute(IMarker.MESSAGE));
-		}
-		assertEquals("problem markers found" + s.toString(), 0, markers.length);
 	}
 
 	/**
