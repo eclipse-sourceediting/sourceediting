@@ -299,6 +299,7 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 		IPath tagPath = new Path(document.getBaseLocation()).removeLastSegments(1).append(path);
 		IFile tagFile = ResourcesPlugin.getWorkspace().getRoot().getFile(tagPath);
 		if (tagFile.isAccessible()) {
+			ed.setPath(tagFile.getFullPath().toString());
 			if (tagPath.getFileExtension().equals("tag")) {
 				loadTagFile(ed, tagFile, true);
 			}
@@ -336,6 +337,11 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 			}
 			child = child.getNextSibling();
 		}
+		
+		if (tagFile.getLocation() != null && ed.getSmallIcon() != null) {
+			ed.setSmallIconURL(URIHelper.normalize(ed.getSmallIcon(), "file:" + tagFile.getLocation().toString(), tagFile.getLocation().removeLastSegments(1).toString()));
+		}
+
 		return ed;
 	}
 
@@ -415,6 +421,9 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 			loadTagXFile(ed, tagFile, true);
 		}
 
+		if (tagFile.getLocation() != null && ed.getSmallIcon() != null) {
+			ed.setSmallIconURL(URIHelper.normalize(ed.getSmallIcon(), "file:" + tagFile.getLocation().toString(), tagFile.getLocation().removeLastSegments(1).toString()));
+		}
 		return ed;
 	}
 

@@ -91,6 +91,7 @@ public class CMElementDeclarationImpl implements TLDElementDeclaration {
 	private String fPageEncoding;
 
 	private String fLocationString;
+	private String smallIconURL;
 
 	/**
 	 * CMElementDeclarationImpl constructor comment.
@@ -308,6 +309,9 @@ public class CMElementDeclarationImpl implements TLDElementDeclaration {
 			return TLDDocument.JSP_TLD;
 		}
 		else if (propertyName.equals(JSP12TLDNames.SMALL_ICON) || propertyName.equals(JSP12TLDNames.LARGE_ICON)) {
+			if (smallIconURL != null) {
+				return smallIconURL;
+			}
 			return getOwnerDocument().getProperty(propertyName);
 		}
 		return null;
@@ -320,6 +324,10 @@ public class CMElementDeclarationImpl implements TLDElementDeclaration {
 	 */
 	public String getSmallIcon() {
 		return smallIcon;
+	}
+
+	String getSmallIconURL() {
+		return smallIconURL;
 	}
 
 	/**
@@ -444,6 +452,10 @@ public class CMElementDeclarationImpl implements TLDElementDeclaration {
 	 */
 	public void setSmallIcon(String smallIcon) {
 		this.smallIcon = smallIcon;
+	}
+
+	void setSmallIconURL(String url) {
+		smallIconURL = url;
 	}
 
 	/**
