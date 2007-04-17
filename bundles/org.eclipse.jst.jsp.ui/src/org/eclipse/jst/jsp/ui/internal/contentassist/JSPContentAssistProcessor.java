@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,7 +18,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewer;
@@ -40,7 +39,6 @@ import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.jst.jsp.ui.internal.Logger;
 import org.eclipse.jst.jsp.ui.internal.editor.JSPEditorPluginImageHelper;
 import org.eclipse.jst.jsp.ui.internal.editor.JSPEditorPluginImages;
-import org.eclipse.jst.jsp.ui.internal.preferences.JSPUIPreferenceNames;
 import org.eclipse.jst.jsp.ui.internal.templates.TemplateContextTypeIdsJSP;
 import org.eclipse.wst.css.ui.internal.contentassist.CSSContentAssistProcessor;
 import org.eclipse.wst.html.core.internal.contentmodel.HTMLCMDocumentFactory;
@@ -471,7 +469,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor {
 							domDoc = (Document) node;
 						else
 							domDoc = node.getOwnerDocument();
-						
+
 						// Show XML tag forms of JSP markers if jsp:root is
 						// the document element OR it's HTML but
 						// isn't really in the text.
@@ -484,7 +482,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor {
 						rejectElements.add(JSP12Namespace.ElementName.DIRECTIVE_PAGE);
 						rejectElements.add(JSP12Namespace.ElementName.TEXT);
 						rejectElements.add(JSP12Namespace.ElementName.DIRECTIVE_TAGLIB);
-							
+
 						if (isXMLFormat(domDoc)) {
 
 							// jsp actions
@@ -499,8 +497,8 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor {
 							rejectElements.add(JSP12Namespace.ElementName.PARAM);
 							rejectElements.add(JSP12Namespace.ElementName.PARAMS);
 						}
-						
-						
+
+
 						// don't show jsp:root if a document element already
 						// exists
 						Element docElement = domDoc.getDocumentElement();
@@ -513,7 +511,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor {
 								continue;
 							elementDecls.add(ed);
 						}
-					
+
 					}
 				}
 			}
@@ -1066,11 +1064,8 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor {
 
 
 	public char[] getCompletionProposalAutoActivationCharacters() {
-		IPreferenceStore store = JSPUIPlugin.getDefault().getPreferenceStore();
-		String key = JSPUIPreferenceNames.AUTO_PROPOSE_CODE;
-
-		String chars = store.getString(key);
-		return (chars != null) ? chars.toCharArray() : new char[0];
+		IContentAssistProcessor p = (IContentAssistProcessor) fPartitionToProcessorMap.get(IHTMLPartitions.HTML_DEFAULT);
+		return p.getCompletionProposalAutoActivationCharacters();
 	}
 
 	/*
@@ -1209,7 +1204,8 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor {
 			}
 		}
 
-		// bug115927 use original document position for all/any region templates
+		// bug115927 use original document position for all/any region
+		// templates
 		addTemplates(request, TemplateContextTypeIdsJSP.ALL, documentPosition);
 		return request;
 	}
@@ -1230,7 +1226,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor {
 	private void addTemplates(ContentAssistRequest contentAssistRequest, String context) {
 		addTemplates(contentAssistRequest, context, contentAssistRequest.getReplacementBeginPosition());
 	}
-	
+
 	/**
 	 * Adds templates to the list of proposals
 	 * 
@@ -1259,7 +1255,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor {
 			}
 		}
 	}
-	
+
 	protected void addEntityProposals(ContentAssistRequest contentAssistRequest, int documentPosition, ITextRegion completionRegion, IDOMNode treeNode) {
 		// ignore
 	}
