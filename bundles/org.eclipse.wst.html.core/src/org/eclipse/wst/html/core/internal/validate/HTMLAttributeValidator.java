@@ -227,7 +227,7 @@ public class HTMLAttributeValidator extends PrimeValidator {
 			if (region == null)
 				continue;
 			String regionType = region.getType();
-			if (regionType == DOMRegionContext.XML_TAG_OPEN || (isNextedTagName(regionType)))
+			if (regionType == DOMRegionContext.XML_TAG_OPEN || (isNestedTagName(regionType)))
 				return true;
 		}
 		return false;
@@ -237,7 +237,7 @@ public class HTMLAttributeValidator extends PrimeValidator {
      * ISSUE: this is a bit of hidden JSP knowledge that was implemented this
      * way for expedency. Should be evolved in future to depend on "nestedContext".
      */
-	private boolean isNextedTagName(String regionType) {
+	private boolean isNestedTagName(String regionType) {
 		final String JSP_SCRIPTLET_OPEN = "JSP_SCRIPTLET_OPEN"; //$NON-NLS-1$
 		final String JSP_EXPRESSION_OPEN = "JSP_EXPRESSION_OPEN"; //$NON-NLS-1$
 		final String JSP_DECLARATION_OPEN = "JSP_DECLARATION_OPEN"; //$NON-NLS-1$
