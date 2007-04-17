@@ -29,7 +29,7 @@ class TagTranslator extends JSPTranslator {
 					"javax.servlet.http.HttpServletResponse response = null;" + ENDL + //$NON-NLS-1$
 					"javax.servlet.http.HttpServletRequest request = null;" + ENDL + //$NON-NLS-1$
 					"JspContext jspContext = null;" + ENDL + //$NON-NLS-1$
-					"javax.servlet.http.HttpSession session" + ENDL + //$NON-NLS-1$
+					"javax.servlet.http.HttpSession session = null;" + ENDL + //$NON-NLS-1$
 					"javax.servlet.ServletContext application = null;" + ENDL + //$NON-NLS-1$
 					"javax.servlet.jsp.JspWriter out = null;" + ENDL + //$NON-NLS-1$
 					"javax.servlet.ServletConfig config = null;" + ENDL; //$NON-NLS-1$ 
