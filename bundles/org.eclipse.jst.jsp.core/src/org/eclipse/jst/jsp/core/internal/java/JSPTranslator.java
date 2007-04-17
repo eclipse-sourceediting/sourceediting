@@ -238,7 +238,7 @@ public class JSPTranslator {
 	 * EL Translator ID
 	 */
 	private String fELTranslatorID;
-	
+
 	public JSPTranslator() {
 		super();
 		init();
@@ -899,7 +899,7 @@ public class JSPTranslator {
 			}
 		}
 	}
-	
+
 	protected void init() {
 		fClassHeader = "public class _JSPServlet extends "; //$NON-NLS-1$
 		fClassname = "_JSPServlet"; //$NON-NLS-1$
@@ -1151,9 +1151,9 @@ public class JSPTranslator {
 				String fullTagName = container.getText(r);
 				if (fullTagName.indexOf(':') > -1) {
 					addTaglibVariables(fullTagName, getCurrentNode()); // it
-																		// may
-																		// be a
-																		// custom
+					// may
+					// be a
+					// custom
 					// tag
 				}
 				StringTokenizer st = new StringTokenizer(fullTagName, ":.", false); //$NON-NLS-1$
@@ -1216,6 +1216,12 @@ public class JSPTranslator {
 										// 'regions' contain the attrs
 										translatePageDirectiveAttributes(regions);
 									}
+								}
+								else if (directiveName.equals("tag")) { //$NON-NLS-1$
+									translatePageDirectiveAttributes(regions);
+								}
+								else if (directiveName.equals("variable")) { //$NON-NLS-1$
+									translateVariableDirectiveAttributes(regions);
 								}
 							}
 						}
@@ -1459,8 +1465,8 @@ public class JSPTranslator {
 			 * name of plugin that exposes this extension point
 			 */
 			IExtensionPoint extensionPoint = Platform.getExtensionRegistry().getExtensionPoint(JSP_CORE_PLUGIN_ID, EL_TRANSLATOR_EXTENSION_NAME); // -
-																																					// extension
-																																					// id
+			// extension
+			// id
 
 			// Iterate over all declared extensions of this extension point.
 			// A single plugin may extend the extension point more than once,
@@ -1661,6 +1667,66 @@ public class JSPTranslator {
 			else if (regionText.equals("page")) { //$NON-NLS-1$
 				translatePageDirectiveAttributes(regions);
 			}
+			else if (regionText.equals("tag")) { //$NON-NLS-1$
+				translatePageDirectiveAttributes(regions);
+			}
+			else if (regionText.equals("variable")) { //$NON-NLS-1$
+				translateVariableDirectiveAttributes(regions);
+			}
+		}
+	}
+
+	private void translateVariableDirectiveAttributes(Iterator regions) {
+		ITextRegion r = null;
+		String attrName, attrValue;
+
+		String nameGiven = null;
+		String varClass = "java.lang.String"; //$NON-NLS-1$ // the default class...
+		String aliasFor = null;
+		String description = null;
+
+		// iterate all attributes
+		while (regions.hasNext() && (r = (ITextRegion) regions.next()) != null && r.getType() != DOMJSPRegionContexts.JSP_CLOSE) {
+			attrName = attrValue = null;
+			if (r.getType().equals(DOMRegionContext.XML_TAG_ATTRIBUTE_NAME)) {
+
+				attrName = getCurrentNode().getText(r).trim();
+				if (attrName.length() > 0) {
+					if (regions.hasNext() && (r = (ITextRegion) regions.next()) != null && r.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS) {
+						if (regions.hasNext() && (r = (ITextRegion) regions.next()) != null && r.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
+
+							attrValue = StringUtils.strip(getCurrentNode().getText(r));
+						}
+						// has equals, but no value?
+					}
+					if (attrName.equals(JSP12TLDNames.VARIABLE_CLASS)) {
+						varClass = attrValue;
+					}
+					else if (attrName.equals(JSP12TLDNames.VARIABLE_NAME_FROM_ATTRIBUTE)) {
+						/*
+						 * note that since we're not running within the
+						 * context of a JSP, there's no way to determine what
+						 * the right name would be
+						 */
+					}
+					else if (attrName.equals(JSP12TLDNames.VARIABLE_NAME_GIVEN)) {
+						nameGiven = attrValue;
+					}
+					else if (attrName.equals(JSP12TLDNames.DESCRIPTION)) {
+						description = attrValue;
+					}
+				}
+			}
+			String varName = nameGiven;
+			if (varName == null) {
+				// 2.0
+				varName = aliasFor;
+			}
+			if (varName != null && varClass != null) {
+				String declaration = new TaglibVariable(varClass, varName, "", description).getDeclarationString();
+
+				appendToBuffer(declaration, fUserCode, false, fCurrentNode);
+			}
 		}
 	}
 
@@ -1781,7 +1847,7 @@ public class JSPTranslator {
 	}
 
 	/**
-	 * takes an emnumeration of the attributes of a directive tag
+	 * takes an emnumeration of the attributes of a page directove
 	 */
 	protected void translatePageDirectiveAttributes(Iterator regions) {
 		ITextRegion r = null;
@@ -1807,7 +1873,7 @@ public class JSPTranslator {
 	}
 
 	/**
-	 * sets the appropriate page directive attribute
+	 * sets the appropriate page/tag directive attribute
 	 */
 	protected void setDirectiveAttribute(String attrName, String attrValue) {
 		if (attrValue == null)

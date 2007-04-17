@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.ui.internal.registry;
 
-import org.eclipse.jst.jsp.core.internal.java.IJSPTranslation;
-import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapterFactory;
 import org.eclipse.jst.jsp.core.internal.modelhandler.ModelHandlerForJSP;
 import org.eclipse.wst.html.ui.internal.contentoutline.JFaceNodeAdapterFactoryForHTML;
 import org.eclipse.wst.sse.core.internal.PropagatingAdapter;
@@ -48,11 +46,7 @@ public class AdapterFactoryProviderForJSP implements AdapterFactoryProvider {
 			factoryRegistry.addFactory(factory);
 		}
 
-		factory = factoryRegistry.getFactoryFor(IJSPTranslation.class);
-		if (factory == null) {
-			factory = new JSPTranslationAdapterFactory();
-			factoryRegistry.addFactory(factory);
-		}
+		ModelHandlerForJSP.ensureTranslationAdapterFactory(structuredModel);
 	}
 
 	protected void addPropagatingAdapters(IStructuredModel structuredModel) {

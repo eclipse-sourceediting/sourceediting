@@ -192,7 +192,7 @@ public class TaglibHelper {
 				if (var.getVariableClass() != null) {
 					varClass = var.getVariableClass();
 				}
-				results.add(new TaglibVariable(varClass, varName, var.getScope()));
+				results.add(new TaglibVariable(varClass, varName, var.getScope(), var.getDescription()));
 			}
 		}
 	}
@@ -246,7 +246,7 @@ public class TaglibHelper {
 						VariableInfo[] vInfos = tei.getVariableInfo(td);
 						if (vInfos != null) {
 							for (int i = 0; i < vInfos.length; i++) {
-								results.add(new TaglibVariable(vInfos[i].getClassName(), vInfos[i].getVarName(), vInfos[i].getScope()));
+								results.add(new TaglibVariable(vInfos[i].getClassName(), vInfos[i].getVarName(), vInfos[i].getScope(), decl.getDescription()));
 							}
 						}
 					}
