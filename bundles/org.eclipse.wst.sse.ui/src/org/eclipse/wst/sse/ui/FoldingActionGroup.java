@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006 IBM Corporation and others.
+ * Copyright (c) 2006, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -92,7 +92,10 @@ class FoldingActionGroup extends ActionGroup {
 				setEnabled(isEnabled);
 			}
 		};
-		fToggle.setChecked(true);
+		
+		IPreferenceStore store = SSEUIPlugin.getDefault().getPreferenceStore();
+		boolean checked = store.getBoolean(IStructuredTextFoldingProvider.FOLDING_ENABLED);
+		fToggle.setChecked(checked);
 		fToggle.setActionDefinitionId(IFoldingCommandIds.FOLDING_TOGGLE);
 		editor.setAction("FoldingToggle", fToggle); //$NON-NLS-1$
 
