@@ -51,6 +51,7 @@ public class CMDocumentManagerImpl implements CMDocumentManager
     this.cmDocumentReferenceProvider = cmDocumentReferenceProvider;
     setPropertyEnabled(PROPERTY_AUTO_LOAD, true);
     setPropertyEnabled(PROPERTY_USE_CACHED_RESOLVED_URI, false);
+    setPropertyEnabled(PROPERTY_PERFORM_URI_RESOLUTION, true);
   }         
 
        
@@ -158,7 +159,16 @@ public CMDocument getCMDocument(String publicId, String systemId, String type)
 
     if (getPropertyEnabled(PROPERTY_AUTO_LOAD))
     {
-      resolvedURI = lookupOrCreateResolvedURI(publicId, systemId);
+      // See https://bugs.eclipse.org/bugs/show_bug.cgi?id=136399
+
+      if (getPropertyEnabled(PROPERTY_PERFORM_URI_RESOLUTION))
+      {
+        resolvedURI = lookupOrCreateResolvedURI(publicId, systemId);
+      }
+      else
+      {
+        resolvedURI = systemId;
+      }
     }    
     else
     {
@@ -252,8 +262,6 @@ public CMDocument getCMDocument(String publicId, String systemId, String type)
     cmDocumentCache.setStatus(resolvedURI, CMDocumentCache.STATUS_LOADING);
   
     CMDocument result = null;         
-    int x = 1;
-    x++;
     if (resolvedURI != null && resolvedURI.length() > 0)
     {
       // try to get from cache

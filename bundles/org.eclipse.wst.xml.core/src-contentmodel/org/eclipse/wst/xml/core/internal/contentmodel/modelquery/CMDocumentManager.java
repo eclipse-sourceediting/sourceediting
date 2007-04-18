@@ -59,6 +59,14 @@ public interface CMDocumentManager {
 	public static final String PROPERTY_USE_CACHED_RESOLVED_URI = "useCachedResovledURI"; //$NON-NLS-1$
 
 	/**
+	 * See https://bugs.eclipse.org/bugs/show_bug.cgi?id=136399
+	 * Allows a client to control whether the document manager attempts to resolve a
+	 * CM document's URI. When set to false, the CM systemID will be assumed to point
+	 * to an already resolved URI. By default this property is set to true.
+	 */
+	public static final String PROPERTY_PERFORM_URI_RESOLUTION = "performURIResolution"; //$NON-NLS-1$
+	
+	/**
 	 * Set the enabled state of a property.
 	 */
 	public void setPropertyEnabled(String propertyName, boolean enabled);

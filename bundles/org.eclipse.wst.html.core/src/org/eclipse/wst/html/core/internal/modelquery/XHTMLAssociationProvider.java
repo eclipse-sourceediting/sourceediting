@@ -13,6 +13,7 @@ package org.eclipse.wst.html.core.internal.modelquery;
 
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
+import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.CMDocumentManager;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelqueryimpl.XMLAssociationProvider;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.CMDocumentCache;
 import org.w3c.dom.Document;
@@ -39,6 +40,14 @@ class XHTMLAssociationProvider extends XMLAssociationProvider {
 	public XHTMLAssociationProvider(CMDocumentCache cache, URIResolver idResolver) {
 		super(cache);
 		this.idResolver = idResolver;
+		   
+		// See https://bugs.eclipse.org/bugs/show_bug.cgi?id=136399. If the CM document URI
+		// is resolved and cached at this level instruct the CM model manager to avoid 
+		// re-resolving the URI.
+
+		if (USE_QUICK_CACHE) {
+		  documentManager.setPropertyEnabled(CMDocumentManager.PROPERTY_PERFORM_URI_RESOLUTION, false);
+		}
 	}
 
 	/**
