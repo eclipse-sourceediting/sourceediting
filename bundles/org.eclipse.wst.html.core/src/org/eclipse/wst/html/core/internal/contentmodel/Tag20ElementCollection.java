@@ -356,23 +356,23 @@ final class Tag20ElementCollection extends JSPElementCollection implements JSP20
 
 	static {
 		names = new String[TagIds20.getNumOfIds()];
-		names[TagIds20.ID_SCRIPTLET] = JSP11Namespace.ElementName.SCRIPTLET;
-		names[TagIds20.ID_EXPRESSION] = JSP11Namespace.ElementName.EXPRESSION;
-		names[TagIds20.ID_DECLARATION] = JSP11Namespace.ElementName.DECLARATION;
+		names[Ids.ID_SCRIPTLET] = JSP11Namespace.ElementName.SCRIPTLET;
+		names[Ids.ID_EXPRESSION] = JSP11Namespace.ElementName.EXPRESSION;
+		names[Ids.ID_DECLARATION] = JSP11Namespace.ElementName.DECLARATION;
 		names[TagIds20.ID_DIRECTIVE_TAG] = JSP20Namespace.ElementName.DIRECTIVE_TAG;
-		names[TagIds20.ID_DIRECTIVE_INCLUDE] = JSP11Namespace.ElementName.DIRECTIVE_INCLUDE;
-		names[TagIds20.ID_DIRECTIVE_TAGLIB] = JSP11Namespace.ElementName.DIRECTIVE_TAGLIB;
-		names[TagIds20.ID_USEBEAN] = JSP11Namespace.ElementName.USEBEAN;
-		names[TagIds20.ID_SETPROPERTY] = JSP11Namespace.ElementName.SETPROPERTY;
-		names[TagIds20.ID_GETPROPERTY] = JSP11Namespace.ElementName.GETPROPERTY;
-		names[TagIds20.ID_INCLUDE] = JSP11Namespace.ElementName.INCLUDE;
-		names[TagIds20.ID_FORWARD] = JSP11Namespace.ElementName.FORWARD;
-		names[TagIds20.ID_PLUGIN] = JSP11Namespace.ElementName.PLUGIN;
-		names[TagIds20.ID_PARAMS] = JSP11Namespace.ElementName.PARAMS;
-		names[TagIds20.ID_FALLBACK] = JSP11Namespace.ElementName.FALLBACK;
-		names[TagIds20.ID_PARAM] = JSP11Namespace.ElementName.PARAM;
-		names[TagIds20.ID_ROOT] = JSP11Namespace.ElementName.ROOT;
-		names[TagIds20.ID_TEXT] = JSP11Namespace.ElementName.TEXT;
+		names[Ids.ID_DIRECTIVE_INCLUDE] = JSP11Namespace.ElementName.DIRECTIVE_INCLUDE;
+		names[Ids.ID_DIRECTIVE_TAGLIB] = JSP11Namespace.ElementName.DIRECTIVE_TAGLIB;
+		names[Ids.ID_USEBEAN] = JSP11Namespace.ElementName.USEBEAN;
+		names[Ids.ID_SETPROPERTY] = JSP11Namespace.ElementName.SETPROPERTY;
+		names[Ids.ID_GETPROPERTY] = JSP11Namespace.ElementName.GETPROPERTY;
+		names[Ids.ID_INCLUDE] = JSP11Namespace.ElementName.INCLUDE;
+		names[Ids.ID_FORWARD] = JSP11Namespace.ElementName.FORWARD;
+		names[Ids.ID_PLUGIN] = JSP11Namespace.ElementName.PLUGIN;
+		names[Ids.ID_PARAMS] = JSP11Namespace.ElementName.PARAMS;
+		names[Ids.ID_FALLBACK] = JSP11Namespace.ElementName.FALLBACK;
+		names[Ids.ID_PARAM] = JSP11Namespace.ElementName.PARAM;
+		names[Ids.ID_ROOT] = JSP11Namespace.ElementName.ROOT;
+		names[Ids.ID_TEXT] = JSP11Namespace.ElementName.TEXT;
 		names[TagIds20.ID_DIRECTIVE_VARIABLE] = JSP20Namespace.ElementName.DIRECTIVE_VARIABLE;
 		names[TagIds20.ID_DIRECTIVE_ATTRIBUTE] = JSP20Namespace.ElementName.DIRECTIVE_ATTRIBUTE;
 		names[TagIds20.ID_BODY] = JSP20Namespace.ElementName.BODY;
@@ -472,9 +472,17 @@ final class Tag20ElementCollection extends JSPElementCollection implements JSP20
 				packet.indentChild = true;
 				packet.format = HTMLElementDeclaration.FORMAT_JSP_SCRIPT;
 				break;
+			case TagIds20.ID_ELEMENT :
+				// declaration
+				packet.name = JSP20Namespace.ElementName.ELEMENT;
+				packet.content = CMElementDeclaration.CDATA;
+				packet.layout = HTMLElementDeclaration.LAYOUT_OBJECT;
+				packet.indentChild = true;
+				packet.format = HTMLElementDeclaration.FORMAT_JSP_SCRIPT;
+				break;
 			case TagIds20.ID_ATTRIBUTE :
 				// declaration
-				packet.name = ATTRIBUTE;
+				packet.name = JSP20Namespace.ElementName.ATTRIBUTE;
 				packet.content = CMElementDeclaration.CDATA;
 				packet.layout = HTMLElementDeclaration.LAYOUT_OBJECT;
 				packet.indentChild = true;
@@ -482,7 +490,7 @@ final class Tag20ElementCollection extends JSPElementCollection implements JSP20
 				break;
 			case TagIds20.ID_DOBODY :
 				// declaration
-				packet.name = BODY;
+				packet.name = JSP20Namespace.ElementName.DOBODY;
 				packet.content = CMElementDeclaration.CDATA;
 				packet.layout = HTMLElementDeclaration.LAYOUT_OBJECT;
 				packet.indentChild = true;
@@ -490,7 +498,15 @@ final class Tag20ElementCollection extends JSPElementCollection implements JSP20
 				break;
 			case TagIds20.ID_INVOKE :
 				// declaration
-				packet.name = BODY;
+				packet.name = JSP20Namespace.ElementName.INVOKE;
+				packet.content = CMElementDeclaration.CDATA;
+				packet.layout = HTMLElementDeclaration.LAYOUT_OBJECT;
+				packet.indentChild = true;
+				packet.format = HTMLElementDeclaration.FORMAT_JSP_SCRIPT;
+				break;
+			case TagIds20.ID_OUTPUT :
+				// declaration
+				packet.name = JSP20Namespace.ElementName.OUTPUT;
 				packet.content = CMElementDeclaration.CDATA;
 				packet.layout = HTMLElementDeclaration.LAYOUT_OBJECT;
 				packet.indentChild = true;

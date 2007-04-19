@@ -165,15 +165,6 @@ final class JSP20ElementCollection extends JSPElementCollection implements JSP20
 	}
 
 	/**
-	 * @return org.eclipse.wst.xml.core.internal.contentmodel.CMNode
-	 * @param elementName
-	 *            java.lang.String
-	 */
-	protected CMNode create(String elementName) {
-		return createElemDecl(getID(elementName));
-	}
-
-	/**
 	 * @param eid
 	 *            int
 	 */
@@ -220,23 +211,35 @@ final class JSP20ElementCollection extends JSPElementCollection implements JSP20
 		switch (eid) {
 			case Ids20.ID_BODY :
 				// declaration
-				packet.name = BODY;
+				packet.name = JSP20Namespace.ElementName.BODY;
 				packet.content = CMElementDeclaration.CDATA;
 				packet.layout = HTMLElementDeclaration.LAYOUT_OBJECT;
 				packet.indentChild = true;
 				packet.format = HTMLElementDeclaration.FORMAT_JSP_SCRIPT;
 				break;
 			case Ids20.ID_ELEMENT :
+				// declaration
+				packet.name = JSP20Namespace.ElementName.ELEMENT;
+				packet.content = CMElementDeclaration.CDATA;
+				packet.layout = HTMLElementDeclaration.LAYOUT_OBJECT;
+				packet.indentChild = true;
+				packet.format = HTMLElementDeclaration.FORMAT_JSP_SCRIPT;
 				break;
 			case Ids20.ID_ATTRIBUTE :
 				// declaration
-				packet.name = ATTRIBUTE;
+				packet.name = JSP20Namespace.ElementName.ATTRIBUTE;
 				packet.content = CMElementDeclaration.CDATA;
 				packet.layout = HTMLElementDeclaration.LAYOUT_OBJECT;
 				packet.indentChild = true;
 				packet.format = HTMLElementDeclaration.FORMAT_JSP_SCRIPT;
 				break;
 			case Ids20.ID_OUTPUT :
+				// declaration
+				packet.name = JSP20Namespace.ElementName.OUTPUT;
+				packet.content = CMElementDeclaration.CDATA;
+				packet.layout = HTMLElementDeclaration.LAYOUT_OBJECT;
+				packet.indentChild = true;
+				packet.format = HTMLElementDeclaration.FORMAT_JSP_SCRIPT;
 				break;
 			default :
 				return super.createElemDecl(eid);
