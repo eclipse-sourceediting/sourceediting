@@ -21,6 +21,8 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
@@ -130,6 +132,17 @@ class TaskScanningJob extends Job {
 	protected IStatus run(IProgressMonitor monitor) {
 		if (frameworkIsShuttingDown())
 			return Status.CANCEL_STATUS;
+
+		try {
+			getJobManager().join(ResourcesPlugin.FAMILY_AUTO_REFRESH, new NullProgressMonitor());
+			getJobManager().join(ResourcesPlugin.FAMILY_MANUAL_BUILD, new NullProgressMonitor());
+			getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, new NullProgressMonitor());
+		}
+		catch (OperationCanceledException e1) {
+			return Status.CANCEL_STATUS;
+		}
+		catch (InterruptedException e1) {
+		}
 
 		validateRememberedProjectList(TASK_TAG_PROJECTS_ALREADY_SCANNED);
 

@@ -28,12 +28,12 @@ import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
 
 /**
- * Factory for element declarations of the JSP 1.1.
+ * Factory for element declarations of the JSP 1.1 and 1.2.
  */
-final class JSPElementCollection extends DeclCollection implements JSP11Namespace.ElementName {
+class JSPElementCollection extends DeclCollection implements JSP11Namespace.ElementName {
 
 
-	private class TypePacket {
+	class TypePacket {
 		public String name = null;
 		public int content = CMElementDeclaration.EMPTY;
 		public int omit = HTMLElementDeclaration.OMIT_NONE;
@@ -48,7 +48,7 @@ final class JSPElementCollection extends DeclCollection implements JSP11Namespac
 	}
 
 	/** JSP element declaration. */
-	private class ElemDecl extends CMContentImpl implements HTMLElementDeclaration, HTMLPropertyDeclaration {
+	class ElemDecl extends CMContentImpl implements HTMLElementDeclaration, HTMLPropertyDeclaration {
 		private TypePacket type = null;
 		private CMGroupImpl content = null;
 		private CMNamedNodeMapImpl attributes = null;
@@ -192,7 +192,7 @@ final class JSPElementCollection extends DeclCollection implements JSP11Namespac
 	}
 
 	// element IDs
-	private static class Ids {
+	static class Ids {
 		public static final int ID_SCRIPTLET = 0;
 		public static final int ID_EXPRESSION = 1;
 		public static final int ID_DECLARATION = 2;
@@ -234,9 +234,9 @@ final class JSPElementCollection extends DeclCollection implements JSP11Namespac
 	}
 
 	// attribute creater
-	private class JACreater implements JSP11Namespace {
+	class JACreater implements JSP11Namespace {
 		// attribute declaration
-		private class AttrDecl extends CMNodeImpl implements HTMLAttributeDeclaration {
+		class AttrDecl extends CMNodeImpl implements HTMLAttributeDeclaration {
 			HTMLCMDataTypeImpl type = null;
 			int usage = CMAttributeDeclaration.OPTIONAL;
 
@@ -279,7 +279,7 @@ final class JSPElementCollection extends DeclCollection implements JSP11Namespac
 			}
 		}
 
-		private CMNamedNodeMapImpl declarations = null;
+		CMNamedNodeMapImpl declarations = null;
 
 		public JACreater() {
 			declarations = new CMNamedNodeMapImpl();
@@ -676,6 +676,10 @@ final class JSPElementCollection extends DeclCollection implements JSP11Namespac
 		names[Ids.ID_TEXT] = TEXT;
 	}
 
+	JSPElementCollection(String[] names, boolean tolerant) {
+		super(names, tolerant);
+	}
+
 	/**
 	 */
 	public JSPElementCollection() {
@@ -693,7 +697,7 @@ final class JSPElementCollection extends DeclCollection implements JSP11Namespac
 	/**
 	 * @param eid int
 	 */
-	private CMGroupImpl createContent(int eid) {
+	CMGroupImpl createContent(int eid) {
 		if (eid == ID_UNKNOWN)
 			return null;
 
@@ -757,7 +761,7 @@ final class JSPElementCollection extends DeclCollection implements JSP11Namespac
 	/**
 	 * @param eid int
 	 */
-	private HTMLElementDeclaration createElemDecl(int eid) {
+	HTMLElementDeclaration createElemDecl(int eid) {
 		if (eid == ID_UNKNOWN)
 			return null;
 

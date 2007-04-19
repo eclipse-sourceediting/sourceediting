@@ -12,7 +12,9 @@ package org.eclipse.wst.html.core.internal.contentmodel;
 
 
 
+import java.util.Arrays;
 import java.util.Hashtable;
+import java.util.List;
 
 import org.eclipse.wst.html.core.internal.contentmodel.chtml.CHCMDocImpl;
 import org.eclipse.wst.html.core.internal.provisional.HTML40Namespace;
@@ -25,19 +27,9 @@ import org.eclipse.wst.xml.core.internal.provisional.contentmodel.CMDocType;
 public final class HTMLCMDocumentFactory {
 
 	private static Hashtable cmdocs = new Hashtable();
+	private static List supportedCMtypes = Arrays.asList(new Object[]{CMDocType.HTML_DOC_TYPE, CMDocType.CHTML_DOC_TYPE, CMDocType.JSP11_DOC_TYPE, CMDocType.JSP12_DOC_TYPE, CMDocType.JSP20_DOC_TYPE, CMDocType.TAG20_DOC_TYPE});
 
-	static {
-		CMNamespaceImpl h40ns = new CMNamespaceImpl(HTML40Namespace.HTML40_URI, HTML40Namespace.HTML40_TAG_PREFIX);
-		CMNamespaceImpl j11ns = new CMNamespaceImpl(JSP11Namespace.JSP11_URI, JSP11Namespace.JSP_TAG_PREFIX);
-
-		HCMDocImpl html40doc = new HCMDocImpl(CMDocType.HTML_DOC_TYPE, h40ns);
-		CHCMDocImpl chtmldoc = new CHCMDocImpl(CMDocType.CHTML_DOC_TYPE, h40ns);
-		JCMDocImpl jsp11doc = new JCMDocImpl(CMDocType.JSP11_DOC_TYPE, j11ns);
-
-		cmdocs.put(CMDocType.HTML_DOC_TYPE, html40doc);
-		cmdocs.put(CMDocType.CHTML_DOC_TYPE, chtmldoc);
-		cmdocs.put(CMDocType.JSP11_DOC_TYPE, jsp11doc);
-	}
+	private static JCMDocImpl jsp11doc = null;
 
 	/**
 	 * HTMLCMAdapterFactory constructor.
@@ -48,13 +40,54 @@ public final class HTMLCMDocumentFactory {
 
 	/**
 	 * @return org.eclipse.wst.xml.core.internal.contentmodel.CMDocument
-	 * @param cmtype java.lang.String
+	 * @param cmtype
+	 *            java.lang.String
 	 */
 	public static CMDocument getCMDocument(String cmtype) {
 		Object obj = cmdocs.get(cmtype);
-		if (obj == null)
-			return null;
+		if (obj == null && cmtype != null) {
+			if (supportedCMtypes.contains(cmtype)) {
+				obj = doCreateCMDocument(cmtype);
+				cmdocs.put(cmtype, obj);
+			}
+		}
 
 		return (CMDocument) obj;
+	}
+
+	private static Object doCreateCMDocument(String cmtype) {
+		if (CMDocType.HTML_DOC_TYPE.equals(cmtype)) {
+			CMNamespaceImpl h40ns = new CMNamespaceImpl(HTML40Namespace.HTML40_URI, HTML40Namespace.HTML40_TAG_PREFIX);
+			HCMDocImpl html40doc = new HCMDocImpl(CMDocType.HTML_DOC_TYPE, h40ns);
+			return html40doc;
+		}
+
+		else if (CMDocType.JSP20_DOC_TYPE.equals(cmtype)) {
+			CMNamespaceImpl j20ns = new CMNamespaceImpl(JSP20Namespace.JSP20_URI, JSP11Namespace.JSP_TAG_PREFIX);
+			JCM20DocImpl jsp20doc = new JCM20DocImpl(CMDocType.JSP20_DOC_TYPE, j20ns);
+			return jsp20doc;
+		}
+
+		else if (CMDocType.TAG20_DOC_TYPE.equals(cmtype)) {
+			CMNamespaceImpl j20ns = new CMNamespaceImpl(JSP20Namespace.JSP20_URI, JSP11Namespace.JSP_TAG_PREFIX);
+			TagCMDocImpl tag20doc = new TagCMDocImpl(CMDocType.TAG20_DOC_TYPE, j20ns);
+			return tag20doc;
+		}
+
+		else if (CMDocType.JSP11_DOC_TYPE.equals(cmtype) || CMDocType.JSP12_DOC_TYPE.equals(cmtype)) {
+			if (jsp11doc == null) {
+				CMNamespaceImpl j11ns = new CMNamespaceImpl(JSP11Namespace.JSP11_URI, JSP11Namespace.JSP_TAG_PREFIX);
+				jsp11doc = new JCMDocImpl(CMDocType.JSP11_DOC_TYPE, j11ns);
+			}
+			return jsp11doc;
+		}
+
+		else if (CMDocType.CHTML_DOC_TYPE.equals(cmtype)) {
+			CMNamespaceImpl cH40ns = new CMNamespaceImpl(HTML40Namespace.HTML40_URI, HTML40Namespace.HTML40_TAG_PREFIX);
+			CHCMDocImpl chtmldoc = new CHCMDocImpl(CMDocType.CHTML_DOC_TYPE, cH40ns);
+			return chtmldoc;
+		}
+
+		return null;
 	}
 }

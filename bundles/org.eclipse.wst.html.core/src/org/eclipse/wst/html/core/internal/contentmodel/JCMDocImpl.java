@@ -16,7 +16,7 @@ import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
 
 /**
- * Implementation of CMDocument for the JSP 1.1.
+ * Implementation of CMDocument for JSP 1.1 and JSP 1.2.
  */
 class JCMDocImpl extends CMNodeImpl implements JSPCMDocument {
 
@@ -28,9 +28,13 @@ class JCMDocImpl extends CMNodeImpl implements JSPCMDocument {
 	 * HCMDocImpl constructor comment.
 	 */
 	public JCMDocImpl(String docTypeName, CMNamespaceImpl targetNamespace) {
+		this(docTypeName, targetNamespace, new JSPElementCollection());
+	}
+
+	JCMDocImpl(String docTypeName, CMNamespaceImpl targetNamespace, JSPElementCollection collection) {
 		super(docTypeName);
 		namespace = targetNamespace;
-		elements = new JSPElementCollection();
+		elements = collection;
 	}
 
 	public HTMLElementDeclaration getElementDeclaration(String elementName) {

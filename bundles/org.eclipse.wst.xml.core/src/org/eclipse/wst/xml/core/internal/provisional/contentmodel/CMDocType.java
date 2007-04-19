@@ -17,5 +17,7 @@ public interface CMDocType {
 	public final static String CHTML_DOC_TYPE = "CHTML";//$NON-NLS-1$
 	public final static String HTML_DOC_TYPE = "HTML";//$NON-NLS-1$
 	public final static String JSP11_DOC_TYPE = "JSP11";//$NON-NLS-1$
-
+	public final static String JSP12_DOC_TYPE = "JSP12";//$NON-NLS-1$
+	public final static String JSP20_DOC_TYPE = "JSP20";//$NON-NLS-1$
+	public final static String TAG20_DOC_TYPE = "JSP20.TAG";//$NON-NLS-1$
 }
