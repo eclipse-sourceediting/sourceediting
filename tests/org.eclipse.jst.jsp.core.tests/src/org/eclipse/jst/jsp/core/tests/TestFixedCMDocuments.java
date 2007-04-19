@@ -14,6 +14,11 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 
 import org.eclipse.jst.jsp.core.internal.contentmodel.JSPCMDocumentFactory;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
 import org.eclipse.wst.xml.core.internal.provisional.contentmodel.CMDocType;
 
 public class TestFixedCMDocuments extends TestCase {
@@ -29,27 +34,58 @@ public class TestFixedCMDocuments extends TestCase {
 		return new TestFixedCMDocuments();
 	}
 
-	public void testCHTMLdocumentAvailable() {
-		assertNotNull("missing doc", JSPCMDocumentFactory.getCMDocument(CMDocType.CHTML_DOC_TYPE));
+	public void testCHTMLdocument() {
+		checkDocument(CMDocType.CHTML_DOC_TYPE);
 	}
 
-	public void testHTML4documentAvailable() {
-		assertNotNull("missing doc", JSPCMDocumentFactory.getCMDocument(CMDocType.HTML_DOC_TYPE));
+	private void checkDocument(Object documentKey) {
+		CMDocument document = JSPCMDocumentFactory.getCMDocument(documentKey.toString());
+		assertNotNull("missing doc:" + documentKey.toString(), document);
+		CMNamedNodeMap elements = document.getElements();
+		for (int i = 0; i < elements.getLength(); i++) {
+			CMNode item = elements.item(i);
+			verifyElementDeclarationHasName(item);
+		}
 	}
 
-	public void testJSP11documentAvailable() {
-		assertNotNull("missing doc", JSPCMDocumentFactory.getCMDocument(CMDocType.JSP11_DOC_TYPE));
+	private void verifyElementDeclarationHasName(CMNode item) {
+		assertTrue(item.getNodeType() == CMNode.ELEMENT_DECLARATION);
+		assertNotNull("no name on an element declaration", item.getNodeName());
+		CMNamedNodeMap attrs = ((CMElementDeclaration) item).getAttributes();
+		for (int i = 0; i < attrs.getLength(); i++) {
+			CMNode attr = attrs.item(i);
+			verifyAttributeDeclaration(((CMElementDeclaration) item), attr);
+		}
 	}
 
-	public void testJSP12documentAvailable() {
-		assertNotNull("missing doc", JSPCMDocumentFactory.getCMDocument(CMDocType.JSP12_DOC_TYPE));
+	private void verifyAttributeDeclaration(CMElementDeclaration elemDecl, CMNode attr) {
+		assertTrue(attr.getNodeType() == CMNode.ATTRIBUTE_DECLARATION);
+		assertNotNull("no name on an attribute declaration", attr.getNodeName());
+		CMAttributeDeclaration attrDecl = (CMAttributeDeclaration) attr;
+		assertNotNull("no attribute 'type' on an attribute declaration " + elemDecl.getNodeName() + "/" + attr.getNodeName(), attrDecl.getAttrType());
 	}
 
-	public void testJSP20documentAvailable() {
-		assertNotNull("missing doc", JSPCMDocumentFactory.getCMDocument(CMDocType.JSP20_DOC_TYPE));
+	public void testHTML4document() {
+		checkDocument(CMDocType.HTML_DOC_TYPE);
 	}
 
-	public void testTag20documentAvailable() {
-		assertNotNull("missing doc", JSPCMDocumentFactory.getCMDocument(CMDocType.TAG20_DOC_TYPE));
+	public void testJSP11document() {
+		checkDocument(CMDocType.JSP11_DOC_TYPE);
+
+	}
+
+	public void testJSP12document() {
+		checkDocument(CMDocType.JSP12_DOC_TYPE);
+
+	}
+
+	public void testJSP20document() {
+		checkDocument(CMDocType.JSP20_DOC_TYPE);
+
+	}
+
+	public void testTag20document() {
+		checkDocument(CMDocType.TAG20_DOC_TYPE);
+
 	}
 }
