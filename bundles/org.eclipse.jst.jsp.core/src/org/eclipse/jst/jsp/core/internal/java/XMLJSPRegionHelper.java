@@ -16,6 +16,7 @@ import java.util.List;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jst.jsp.core.internal.Logger;
+import org.eclipse.jst.jsp.core.internal.contentmodel.tld.TLDCMDocumentManager;
 import org.eclipse.jst.jsp.core.internal.parser.JSPSourceParser;
 import org.eclipse.jst.jsp.core.internal.provisional.JSP11Namespace;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
@@ -35,8 +36,9 @@ import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
 
 /**
- * Parser/helper class for JSPTranslator.  Used for parsing XML-JSP regions (in a script block)
- * A lot of logic borrowed from TLDCMDocumentManager.  There should be only one XMLJSPRegionHelper per text file
+ * Parser/helper class for JSPTranslator. Used for parsing XML-JSP regions (in
+ * a script block) A lot of logic borrowed from TLDCMDocumentManager. There
+ * should be only one XMLJSPRegionHelper per text file
  * 
  * @author pavery
  */
@@ -44,7 +46,8 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 	private final JSPTranslator fTranslator;
 	protected JSPSourceParser fLocalParser = null;
 	protected String fTextToParse = null;
-	// need this if not at the start of the document (eg. parsing just a script block)
+	// need this if not at the start of the document (eg. parsing just a
+	// script block)
 	protected int fStartOfTextToParse = 0;
 	// name of the open tag that was last handled (if we are interested in it)
 	protected String fTagname = null;
@@ -87,8 +90,7 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 	/*
 	 * parse an entire file
 	 * 
-	 * @param filename
-	 * @return
+	 * @param filename @return
 	 */
 	public boolean parse(String filename) {
 		getLocalParser().removeStructuredDocumentRegionHandler(this);
@@ -96,7 +98,7 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 		List blockMarkers = this.fTranslator.getBlockMarkers();
 		IStructuredDocument document = StructuredDocumentFactory.getNewStructuredDocumentInstance(getLocalParser());
 		String contents = getContents(filename);
-		if(contents == null)
+		if (contents == null)
 			return false;
 		// this adds the current markers from the outer class list
 		// to this parser so parsing works correctly
@@ -104,10 +106,10 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 			addBlockMarker((BlockMarker) blockMarkers.get(i));
 		}
 		reset(contents);
-//		forceParse();
+		// forceParse();
 		document.set(contents);
 		IStructuredDocumentRegion cursor = document.getFirstStructuredDocumentRegion();
-		while(cursor != null) {
+		while (cursor != null) {
 			nodeParsed(cursor);
 			cursor = cursor.getNext();
 		}
@@ -117,14 +119,14 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 
 
 	/*
-	 * listens to parser node parsed events
-	 * adds to local scriplet, expression, declaration buffers
-	 * determines which type of region the cursor is in, and adjusts cursor offset accordingly 
+	 * listens to parser node parsed events adds to local scriplet,
+	 * expression, declaration buffers determines which type of region the
+	 * cursor is in, and adjusts cursor offset accordingly
 	 */
 	public void nodeParsed(IStructuredDocumentRegion sdRegion) {
 
 		try {
-			
+
 			handleScopingIfNecessary(sdRegion);
 			if (isJSPEndRegion(sdRegion)) {
 				String nameStr = getRegionName(sdRegion);
@@ -146,19 +148,19 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 					fTagname = nameStr;
 				else
 					fTagname = null;
-				
+
 
 				// this section assumes important content (to translate)
 				// IS the opening tag
-				
+
 				// handle include and directive
-				if(fTagname != null && sdRegion.getFirstRegion().getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_OPEN) {
-					processOtherRegions(sdRegion);	
+				if (fTagname != null && sdRegion.getFirstRegion().getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_OPEN) {
+					processOtherRegions(sdRegion);
 				}
 
 
 				// handle jsp:useBean
-				if(fTagname != null && fTagname.equals(JSP11Namespace.ElementName.USEBEAN)) {
+				if (fTagname != null && fTagname.equals(JSP11Namespace.ElementName.USEBEAN)) {
 					processUseBean(sdRegion);
 				}
 			}
@@ -186,10 +188,10 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 		}
 		catch (NullPointerException e) {
 			// logging this exception that I've seen a couple of times...
-			// seems to happen during shutdown of unit tests, at which 
+			// seems to happen during shutdown of unit tests, at which
 			// point Logger has already been unloaded
 			try {
-			Logger.logException("XMLJSPRegionHelper: exception in node parsing", e); //$NON-NLS-1$
+				Logger.logException("XMLJSPRegionHelper: exception in node parsing", e); //$NON-NLS-1$
 			}
 			catch (NoClassDefFoundError ex) {
 				// do nothing, since we're just ending
@@ -199,35 +201,35 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 
 
 	private void handleScopingIfNecessary(IStructuredDocumentRegion sdRegion) {
-		if(true)
+		if (true)
 			return;
 
 		// fix to make sure custom tag block have their own scope
 		// we add '{' for custom tag open and '}' for custom tag close
 		// in the translation
-		if(sdRegion.getFirstRegion().getType() == DOMRegionContext.XML_TAG_OPEN) {
-			if(!isSelfClosingTag(sdRegion)) {
+		if (sdRegion.getFirstRegion().getType() == DOMRegionContext.XML_TAG_OPEN) {
+			if (!isSelfClosingTag(sdRegion)) {
 				String nameStr = getRegionName(sdRegion);
-				if(isPossibleCustomTag(nameStr)) {
+				if (isPossibleCustomTag(nameStr)) {
 					startScope(nameStr);
 				}
 			}
 		}
-		else if(sdRegion.getFirstRegion().getType() == DOMRegionContext.XML_END_TAG_OPEN) {
+		else if (sdRegion.getFirstRegion().getType() == DOMRegionContext.XML_END_TAG_OPEN) {
 			String nameStr = getRegionName(sdRegion);
-			if(isPossibleCustomTag(nameStr)) {
+			if (isPossibleCustomTag(nameStr)) {
 				endScope(nameStr);
 			}
 		}
 	}
-	
+
 	private boolean isSelfClosingTag(ITextRegionCollection containerRegion) {
-		
-		if(containerRegion == null)
+
+		if (containerRegion == null)
 			return false;
-		
+
 		ITextRegionList regions = containerRegion.getRegions();
-		ITextRegion r = regions.get(regions.size()-1);
+		ITextRegion r = regions.get(regions.size() - 1);
 		return r.getType() == DOMRegionContext.XML_EMPTY_TAG_CLOSE;
 	}
 
@@ -296,8 +298,8 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 
 	/*
 	 * Substitutes values for entity references, strips CDATA tags, and keeps
-	 * track of string length(s) for cursor position calculation later.
-	 * @param sdRegion
+	 * track of string length(s) for cursor position calculation later. @param
+	 * sdRegion
 	 */
 	protected void prepareText(IStructuredDocumentRegion sdRegion) {
 		fTextBefore = fTextToParse.substring(sdRegion.getStartOffset(), sdRegion.getEndOffset());
@@ -312,16 +314,16 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 			beanClass = getAttributeValue("class", sdRegion); //$NON-NLS-1$
 			beanType = getAttributeValue("type", sdRegion); //$NON-NLS-1$
 			beanId = getAttributeValue("id", sdRegion); //$NON-NLS-1$
-			
+
 			if (beanId != null && (beanType != null || beanClass != null)) {
 				if (beanType.equals("")) //$NON-NLS-1$
-				    beanType = beanClass;
+					beanType = beanClass;
 				String prefix = beanType + " " + beanId + " = "; //$NON-NLS-1$ //$NON-NLS-2$
 				String suffix = "null;\n"; //$NON-NLS-1$
 				if (beanClass != null)
 					suffix = "new " + beanClass + "();\n"; //$NON-NLS-1$ //$NON-NLS-2$
 				beanDecl = prefix + suffix;
-			}	
+			}
 
 			IStructuredDocumentRegion currentNode = fTranslator.getCurrentNode();
 			this.fTranslator.translateScriptletString(beanDecl, currentNode, currentNode.getStartOffset(), currentNode.getLength());
@@ -349,24 +351,28 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 		else if (isTaglibDirective(fTagname)) {
 			// also add the ones created here to the parent document
 			String prefix = getAttributeValue("prefix", sdRegion); //$NON-NLS-1$
-			List docs = this.fTranslator.getTLDCMDocumentManager().getCMDocumentTrackers(prefix, this.fTranslator.getCurrentNode().getStartOffset());
-			Iterator it = docs.iterator();
-			Iterator elements = null;
-			CMNode node = null;
-			CMDocument doc = null;
-			BlockMarker marker = null;
-			while (it.hasNext()) {
-				doc = (CMDocument) it.next();
-				elements = doc.getElements().iterator();
-				while (elements.hasNext()) {
-					node = (CMNode) elements.next();
-					marker = new BlockMarker(node.getNodeName(), null, DOMJSPRegionContexts.JSP_CONTENT, true);
-					// global scope is OK because we have encountered this <@taglib> directive
-					// so it all markers from it should will be in scope
-					// add to this local parser
-					addBlockMarker(marker);
-					// add to outer class marker list, for 
-					this.fTranslator.getBlockMarkers().add(marker);
+			TLDCMDocumentManager documentManager = this.fTranslator.getTLDCMDocumentManager();
+			if (documentManager != null) {
+				List docs = documentManager.getCMDocumentTrackers(prefix, this.fTranslator.getCurrentNode().getStartOffset());
+				Iterator it = docs.iterator();
+				Iterator elements = null;
+				CMNode node = null;
+				CMDocument doc = null;
+				BlockMarker marker = null;
+				while (it.hasNext()) {
+					doc = (CMDocument) it.next();
+					elements = doc.getElements().iterator();
+					while (elements.hasNext()) {
+						node = (CMNode) elements.next();
+						marker = new BlockMarker(node.getNodeName(), null, DOMJSPRegionContexts.JSP_CONTENT, true);
+						// global scope is OK because we have encountered this
+						// <@taglib> directive
+						// so it all markers from it should will be in scope
+						// add to this local parser
+						addBlockMarker(marker);
+						// add to outer class marker list, for
+						this.fTranslator.getBlockMarkers().add(marker);
+					}
 				}
 			}
 		}
@@ -381,13 +387,14 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 			}
 			String importValue = getAttributeValue("import", sdRegion); //$NON-NLS-1$
 			if (importValue != "") { //$NON-NLS-1$
-				// had to add "false" parameter to ensure these 
-				// imports don't get added to jsp <-> java map (since they are from an included file)
+				// had to add "false" parameter to ensure these
+				// imports don't get added to jsp <-> java map (since they are
+				// from an included file)
 				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=81687
 				this.fTranslator.addImports(importValue, false);
 			}
 		}
-	}	
+	}
 
 	/*
 	 * convenience method to get an attribute value from attribute name
@@ -416,9 +423,11 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 		return StringUtils.stripQuotes(attrValue);
 	}
 
-	// these methods determine what content gets added to the local scriplet, expression, declaration buffers
+	// these methods determine what content gets added to the local scriplet,
+	// expression, declaration buffers
 	/*
-	 * return true for elements whose contents we might want to add to the java file we are building
+	 * return true for elements whose contents we might want to add to the
+	 * java file we are building
 	 */
 	protected boolean isJSPStartRegion(IStructuredDocumentRegion sdRegion) {
 		return (sdRegion.getFirstRegion().getType() == DOMRegionContext.XML_TAG_OPEN || sdRegion.getFirstRegion().getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_OPEN);
@@ -468,9 +477,9 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 
 		String nameStr = ""; //$NON-NLS-1$
 		ITextRegionList regions = sdRegion.getRegions();
-		for(int i=0; i<regions.size(); i++) {
+		for (int i = 0; i < regions.size(); i++) {
 			ITextRegion r = regions.get(i);
-			if(r.getType() == DOMRegionContext.XML_TAG_NAME) {
+			if (r.getType() == DOMRegionContext.XML_TAG_NAME) {
 				nameStr = fTextToParse.substring(sdRegion.getStartOffset(r), sdRegion.getTextEndOffset(r));
 				break;
 			}

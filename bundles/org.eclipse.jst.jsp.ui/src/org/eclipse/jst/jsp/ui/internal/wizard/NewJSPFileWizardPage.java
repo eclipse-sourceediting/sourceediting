@@ -227,13 +227,12 @@ class NewJSPFileWizardPage extends WizardNewFileCreationPage {
 		IFacetedProject faceted = null;
 		try {
 			faceted = ProjectFacetsManager.create(project);
+			if (faceted != null && faceted.hasProjectFacet(ProjectFacetsManager.getProjectFacet(IModuleConstants.JST_WEB_MODULE))) {
+				return true;
+			}
 		}
 		catch (CoreException e) {
 			Logger.log(Logger.WARNING_DEBUG, e.getMessage(), e);
-		}
-
-		if (faceted != null && faceted.hasProjectFacet(ProjectFacetsManager.getProjectFacet(IModuleConstants.JST_WEB_MODULE))) {
-			return true;
 		}
 
 		return false;

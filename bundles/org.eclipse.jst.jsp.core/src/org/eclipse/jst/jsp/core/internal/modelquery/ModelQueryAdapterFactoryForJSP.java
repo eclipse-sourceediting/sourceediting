@@ -88,13 +88,17 @@ public class ModelQueryAdapterFactoryForJSP extends AbstractAdapterFactory imple
 					}
 					URIResolver resolver = new XMLCatalogIdResolver(baseLocation, model.getResolver());
 
-					ModelQuery modelQuery = new JSPModelQueryImpl(model, resolver);
+					ModelQuery modelQuery = createModelQuery(model, resolver);
 					modelQuery.setEditMode(ModelQuery.EDIT_MODE_UNCONSTRAINED);
 					modelQueryAdapterImpl = new JSPModelQueryAdapterImpl(CMDocumentCache.getInstance(), modelQuery, resolver);
 				}
 			}
 		}
 		return modelQueryAdapterImpl;
+	}
+
+	ModelQuery createModelQuery(IStructuredModel model, URIResolver resolver) {
+		return new JSPModelQueryImpl(model, resolver);
 	}
 
 	/**

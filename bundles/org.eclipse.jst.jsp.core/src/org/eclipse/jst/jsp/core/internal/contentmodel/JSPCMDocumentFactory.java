@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,61 +12,40 @@ package org.eclipse.jst.jsp.core.internal.contentmodel;
 
 import org.eclipse.wst.html.core.internal.contentmodel.HTMLCMDocumentFactory;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
-import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
-import org.eclipse.wst.xml.core.internal.contentmodel.CMNamespace;
 import org.eclipse.wst.xml.core.internal.provisional.contentmodel.CMDocType;
 
 /**
- * CMDocument factory for JSP documents.
+ * CMDocument factory for JSP documents (which for now live in the HTML Core
+ * plugin).
  */
 public final class JSPCMDocumentFactory {
-
-	static class CMDocImpl implements CMDocument {
-		public CMDocImpl() {
-			super();
-		}
-
-		private static CMDocument jcm = HTMLCMDocumentFactory.getCMDocument(CMDocType.JSP11_DOC_TYPE);
-
-		public String getNodeName() {
-			return jcm.getNodeName();
-		}
-
-		public int getNodeType() {
-			return jcm.getNodeType();
-		}
-
-		public CMNamedNodeMap getElements() {
-			return jcm.getElements();
-		}
-
-		public CMNamedNodeMap getEntities() {
-			return jcm.getEntities();
-		}
-
-		public CMNamespace getNamespace() {
-			return jcm.getNamespace();
-		}
-
-		public Object getProperty(String propertyName) {
-			return null;
-		}
-
-		public boolean supports(String propertyName) {
-			return false;
-		}
-	}
-
-	private static CMDocument mycm;
 
 	private JSPCMDocumentFactory() {
 		super();
 	}
 
 	public static CMDocument getCMDocument() {
-		if (mycm == null) {
-			mycm = new CMDocImpl();
-		}
-		return mycm;
+		return getCMDocument(CMDocType.JSP20_DOC_TYPE);
+	}
+
+	/**
+	 * @return org.eclipse.wst.xml.core.internal.contentmodel.CMDocument
+	 * @param cmtype
+	 *            java.lang.String
+	 */
+	public static CMDocument getCMDocument(String cmtype) {
+		if (cmtype == null)
+			return getCMDocument();
+		return HTMLCMDocumentFactory.getCMDocument(cmtype);
+	}
+
+	public static CMDocument getCMDocument(float jspVersion) {
+		if (jspVersion >= 2)
+			return getCMDocument(CMDocType.JSP20_DOC_TYPE);
+		if (jspVersion >= 1.2)
+			return getCMDocument(CMDocType.JSP12_DOC_TYPE);
+		if (jspVersion >= 1)
+			return getCMDocument(CMDocType.JSP11_DOC_TYPE);
+		return getCMDocument();
 	}
 }

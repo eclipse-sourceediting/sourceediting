@@ -32,4 +32,11 @@
 <template name="%Templates.jspxhtml.name" description="%Templates.jspxhtml.desc" id="org.eclipse.jst.jsp.ui.templates.jspxhtml" context="jsp_new" enabled="true">%Templates.jspxhtml.content</template>
 
 <template name="%Templates.jspxhtmlxml.name" description="%Templates.jspxhtmlxml.desc" id="org.eclipse.jst.jsp.ui.templates.jspxhtmlxml" context="jsp_new" enabled="true">%Templates.jspxhtmlxml.content</template>
+
+<template name="%Templates.jsptagdirective.name" description="%Templates.jsptagdirective.desc" id="org.eclipse.jst.jsp.ui.templates.jsptagdirective" context="jsp_tag" enabled="true">%Templates.jsptagdirective.content</template>
+
+<template name="%Templates.jspvariabledirective.name" description="%Templates.jspvariabledirective.desc" id="org.eclipse.jst.jsp.ui.templates.jspvariabledirective" context="jsp_tag" enabled="true">%Templates.jspvariabledirective.content</template>
+
+<template name="%Templates.jspattributedirective.name" description="%Templates.jspattributedirective.desc" id="org.eclipse.jst.jsp.ui.templates.jspattributedirective" context="jsp_tag" enabled="true">%Templates.jspattributedirective.content</template>
+
 </templates>

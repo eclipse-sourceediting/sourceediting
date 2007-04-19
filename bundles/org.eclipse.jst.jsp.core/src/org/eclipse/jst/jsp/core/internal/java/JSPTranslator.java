@@ -49,8 +49,8 @@ import org.eclipse.jst.jsp.core.internal.contentmodel.TaglibController;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.TLDCMDocumentManager;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.JSP12TLDNames;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDElementDeclaration;
-import org.eclipse.jst.jsp.core.internal.contenttype.DeploymentDescriptorPropertyGroupCache;
-import org.eclipse.jst.jsp.core.internal.contenttype.DeploymentDescriptorPropertyGroupCache.PropertyGroup;
+import org.eclipse.jst.jsp.core.internal.contenttype.DeploymentDescriptorPropertyCache;
+import org.eclipse.jst.jsp.core.internal.contenttype.DeploymentDescriptorPropertyCache.PropertyGroup;
 import org.eclipse.jst.jsp.core.internal.provisional.JSP11Namespace;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.jst.jsp.core.internal.taglib.TaglibHelper;
@@ -2577,7 +2577,7 @@ public class JSPTranslator {
 		fProcessIncludes = false;
 		if (getBaseLocation() != null) {
 			Path basePath = new Path(getBaseLocation());
-			PropertyGroup propertyGroup = DeploymentDescriptorPropertyGroupCache.getInstance().getPropertyGroup(basePath);
+			PropertyGroup propertyGroup = DeploymentDescriptorPropertyCache.getInstance().getPropertyGroup(basePath);
 			if (propertyGroup != null) {
 				IPath[] codas = propertyGroup.getIncludeCoda();
 				for (int i = 0; i < codas.length; i++) {
@@ -2597,7 +2597,7 @@ public class JSPTranslator {
 		fProcessIncludes = false;
 		if (getBaseLocation() != null) {
 			Path basePath = new Path(getBaseLocation());
-			PropertyGroup propertyGroup = DeploymentDescriptorPropertyGroupCache.getInstance().getPropertyGroup(basePath);
+			PropertyGroup propertyGroup = DeploymentDescriptorPropertyCache.getInstance().getPropertyGroup(basePath);
 			if (propertyGroup != null) {
 				IPath[] preludes = propertyGroup.getIncludePrelude();
 				for (int i = 0; i < preludes.length; i++) {

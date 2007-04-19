@@ -14,6 +14,7 @@ package org.eclipse.jst.jsp.core.internal.contenttype;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringReader;
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
 import java.util.ArrayList;
@@ -34,15 +35,18 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.util.CommonXML;
+import org.eclipse.jst.jsp.core.internal.util.FileContentCache;
 import org.eclipse.jst.jsp.core.taglib.TaglibIndex;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.EntityReference;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -56,7 +60,18 @@ import org.xml.sax.SAXParseException;
  * A cache fo property group information stored in web.xml files. Information
  * is not persisted.
  */
-public class DeploymentDescriptorPropertyGroupCache {
+public class DeploymentDescriptorPropertyCache {
+	private static class DeploymentDescriptor {
+		PropertyGroup[] groups;
+		long modificationStamp;
+		Float version = new Float(1f);
+	}
+
+	private static class FacetCore {
+		long modificationStamp;
+		float version = 1f;
+	}
+
 	/**
 	 * Represntation of the JSP 2.0 property-group definitions from a servlet
 	 * deployment descriptor.
@@ -207,11 +222,6 @@ public class DeploymentDescriptorPropertyGroupCache {
 		}
 	}
 
-	private static class PropertyGroupContainer {
-		PropertyGroup[] groups;
-		long modificationStamp;
-	}
-
 	private static class ResourceChangeListener implements IResourceChangeListener {
 		public void resourceChanged(IResourceChangeEvent event) {
 			IResourceDelta delta = event.getDelta();
@@ -242,8 +252,8 @@ public class DeploymentDescriptorPropertyGroupCache {
 	}
 
 	private static class ResourceErrorHandler implements ErrorHandler {
-		private IPath fPath;
 		private boolean fDoLogExceptions = false;
+		private IPath fPath;
 
 		ResourceErrorHandler(boolean logExceptions) {
 			super();
@@ -516,22 +526,31 @@ public class DeploymentDescriptorPropertyGroupCache {
 		}
 	}
 
-	private static DeploymentDescriptorPropertyGroupCache _instance = new DeploymentDescriptorPropertyGroupCache();
+	private static DeploymentDescriptorPropertyCache _instance = new DeploymentDescriptorPropertyCache();
 
+	private static final float defaultWebAppVersion = 2.4f;
 	private static String EL_IGNORED = "el-ignored";
+	private static final String FACET_FACET = "facet";
+	private static final String FACET_INSTALLED = "installed";
+	private static final String FACET_VERSION = "version";
+	private static final String FACET_WEB_APP = "jst.web";
 	private static String ID = "id";
 	private static String INCLUDE_CODA = "include-coda";
 	private static String INCLUDE_PRELUDE = "include-prelude";
+
 	private static String IS_XML = "is-xml";
 	private static String JSP_PROPERTY_GROUP = "jsp-property-group";
 	private static String PAGE_ENCODING = "page-encoding";
+
 	private static String SCRIPTING_INVALID = "scripting-invalid";
 	private static String URL_PATTERN = "url-pattern";
+	private static final String WEB_APP_ELEMENT_LOCAL_NAME = ":web-app";
+	private static final String WEB_APP_ELEMENT_NAME = "web-app";
 
+	private static final String WEB_APP_VERSION_NAME = "version";
 	private static final String WEB_INF = "WEB-INF";
 	private static final String WEB_XML = "web.xml";
 	private static final String WEB_INF_WEB_XML = WEB_INF + IPath.SEPARATOR + WEB_XML;
-
 
 	static String getContainedText(Node parent) {
 		NodeList children = parent.getChildNodes();
@@ -558,7 +577,7 @@ public class DeploymentDescriptorPropertyGroupCache {
 		return s.toString().trim();
 	}
 
-	public static DeploymentDescriptorPropertyGroupCache getInstance() {
+	public static DeploymentDescriptorPropertyCache getInstance() {
 		return _instance;
 	}
 
@@ -572,18 +591,66 @@ public class DeploymentDescriptorPropertyGroupCache {
 
 	private ResourceErrorHandler errorHandler;
 
-	private Map fPropertyGroupContainerReferences = new Hashtable();
+	private Map fDeploymentDescriptors = new Hashtable();
+	private Map fFacetCores = new Hashtable();
 
 	private IResourceChangeListener fResourceChangeListener = new ResourceChangeListener();
 
 	private EntityResolver resolver;
 
-	private DeploymentDescriptorPropertyGroupCache() {
+
+	private DeploymentDescriptorPropertyCache() {
 		super();
 	}
 
+	private void _parseDocument(IFile file, Float[] version, List groupList, SubProgressMonitor subMonitor, Document document) {
+		Element webapp = document.getDocumentElement();
+		if (webapp != null) {
+			if (webapp.getTagName().equals(WEB_APP_ELEMENT_NAME) || webapp.getNodeName().endsWith(WEB_APP_ELEMENT_LOCAL_NAME)) {
+				String versionValue = webapp.getAttribute(WEB_APP_VERSION_NAME);
+				if (versionValue != null) {
+					try {
+						version[0] = Float.valueOf(versionValue);
+					}
+					catch (NumberFormatException e) {
+						// doesn't matter
+					}
+				}
+			}
+		}
+		NodeList propertyGroupElements = document.getElementsByTagName(JSP_PROPERTY_GROUP);
+		int length = propertyGroupElements.getLength();
+		subMonitor.beginTask("Reading Property Groups", length);
+		for (int i = 0; i < length; i++) {
+			PropertyGroup group = PropertyGroup.createFrom(file.getFullPath(), propertyGroupElements.item(i));
+			subMonitor.worked(1);
+			if (group != null) {
+				groupList.add(group);
+			}
+		}
+	}
+
+	/**
+	 * Convert the SRV spec version to the JSP spec version
+	 */
+	private float convertSpecVersions(float version) {
+		if (version > 0) {
+			if (version == 2.5f)
+				return 2.1f;
+			else if (version == 2.4f)
+				return 2.0f;
+			else if (version == 2.3f)
+				return 1.2f;
+			else if (version == 2.2f)
+				return 1.1f;
+			else if (version == 2.1f)
+				return 1.0f;
+		}
+		return convertSpecVersions(defaultWebAppVersion);
+	}
+
 	void deploymentDescriptorChanged(final IPath fullPath) {
-		if (fPropertyGroupContainerReferences.containsKey(fullPath.makeAbsolute())) {
+		if (fDeploymentDescriptors.containsKey(fullPath.makeAbsolute())) {
 			updateCacheEntry(fullPath);
 		}
 	}
@@ -592,12 +659,13 @@ public class DeploymentDescriptorPropertyGroupCache {
 	 * parse the specified resource using Xerces, and if that fails, use the
 	 * SSE XML parser to find the property groups.
 	 */
-	private PropertyGroupContainer fetchPropertyGroupContainer(IFile file, IProgressMonitor monitor) {
+	private DeploymentDescriptor fetchDescriptor(IFile file, IProgressMonitor monitor) {
 		monitor.beginTask("Reading Deployment Descriptor", 3);
 		PropertyGroup groups[] = null;
 
 		IStructuredModel model = null;
 		List groupList = new ArrayList();
+		Float[] version = new Float[1];
 		SubProgressMonitor subMonitor = new SubProgressMonitor(monitor, 2);
 		DocumentBuilder builder = CommonXML.getDocumentBuilder(false);
 		builder.setEntityResolver(getEntityResolver());
@@ -609,16 +677,7 @@ public class DeploymentDescriptorPropertyGroupCache {
 			inputSource.setByteStream(is);
 			inputSource.setSystemId(file.getFullPath().toString());
 			Document document = builder.parse(inputSource);
-			NodeList propertyGroupElements = document.getElementsByTagName(JSP_PROPERTY_GROUP);
-			int length = propertyGroupElements.getLength();
-			subMonitor.beginTask("Reading Property Groups", length);
-			for (int i = 0; i < length; i++) {
-				PropertyGroup group = PropertyGroup.createFrom(file.getFullPath(), propertyGroupElements.item(i));
-				subMonitor.worked(1);
-				if (group != null) {
-					groupList.add(group);
-				}
-			}
+			_parseDocument(file, version, groupList, subMonitor, document);
 		}
 		catch (SAXException e1) {
 			/* encountered a fatal parsing error, try our own parser */
@@ -632,16 +691,7 @@ public class DeploymentDescriptorPropertyGroupCache {
 				monitor.worked(1);
 				if (model instanceof IDOMModel) {
 					IDOMDocument document = ((IDOMModel) model).getDocument();
-					NodeList propertyGroupElements = document.getElementsByTagName(JSP_PROPERTY_GROUP);
-					int length = propertyGroupElements.getLength();
-					subMonitor.beginTask("Reading Property Groups", length);
-					for (int i = 0; i < length; i++) {
-						PropertyGroup group = PropertyGroup.createFrom(file.getFullPath(), propertyGroupElements.item(i));
-						subMonitor.worked(1);
-						if (group != null) {
-							groupList.add(group);
-						}
-					}
+					_parseDocument(file, version, groupList, subMonitor, document);
 				}
 			}
 			catch (Exception e) {
@@ -679,12 +729,52 @@ public class DeploymentDescriptorPropertyGroupCache {
 			groups = new PropertyGroup[0];
 		}
 
-		PropertyGroupContainer propertyGroupContainer = new PropertyGroupContainer();
-		propertyGroupContainer.modificationStamp = file.getModificationStamp();
-		propertyGroupContainer.groups = groups;
+		DeploymentDescriptor deploymentDescriptor = new DeploymentDescriptor();
+		deploymentDescriptor.modificationStamp = file.getModificationStamp();
+		deploymentDescriptor.groups = groups;
+		deploymentDescriptor.version = version[0];
 		monitor.done();
-		fPropertyGroupContainerReferences.put(file.getFullPath(), new SoftReference(propertyGroupContainer));
-		return propertyGroupContainer;
+		fDeploymentDescriptors.put(file.getFullPath(), new SoftReference(deploymentDescriptor));
+		return deploymentDescriptor;
+	}
+
+	private FacetCore fetchFacetCore(IFile facetConfigFile) {
+		FacetCore facetCore = new FacetCore();
+		facetCore.modificationStamp = facetConfigFile.getModificationStamp();
+		facetCore.version = defaultWebAppVersion;
+
+		DocumentBuilder builder = CommonXML.getDocumentBuilder(false);
+		builder.setEntityResolver(getEntityResolver());
+		builder.setErrorHandler(getErrorHandler(facetConfigFile.getFullPath()));
+		String input = null;
+		try {
+			InputSource inputSource = new InputSource();
+			input = FileContentCache.getInstance().getContents(facetConfigFile.getFullPath());
+			inputSource.setCharacterStream(new StringReader(input));
+			inputSource.setSystemId(facetConfigFile.getFullPath().toString());
+			Document document = builder.parse(inputSource);
+			NodeList installedList = document.getElementsByTagName(FACET_INSTALLED);
+			for (int i = 0; i < installedList.getLength(); i++) {
+				Element installed = (Element) installedList.item(i);
+				String facetName = installed.getAttribute(FACET_FACET);
+				if (FACET_WEB_APP.equals(facetName)) {
+					try {
+						facetCore.version = Float.valueOf(installed.getAttribute(FACET_VERSION)).floatValue();
+					}
+					catch (NumberFormatException e) {
+						// badly written file
+					}
+				}
+			}
+		}
+		catch (SAXException e1) {
+			Logger.logException(e1);
+		}
+		catch (IOException e1) {
+			// unlikely
+		}
+		fFacetCores.put(facetConfigFile.getFullPath(), new SoftReference(facetCore));
+		return facetCore;
 	}
 
 	private EntityResolver getEntityResolver() {
@@ -714,6 +804,46 @@ public class DeploymentDescriptorPropertyGroupCache {
 	}
 
 	/**
+	 * @param fullPath
+	 * @return the JSP version supported by the web application containing the
+	 *         path. A value stated within a web.xml file takes priority.
+	 */
+	public float getJSPVersion(IPath fullPath) {
+		float version = defaultWebAppVersion;
+		IPath contextRoot = TaglibIndex.getContextRoot(fullPath);
+		if (contextRoot != null) {
+			IPath webxmlPath = contextRoot.append(WEB_INF_WEB_XML);
+			IFile webxmlFile = ResourcesPlugin.getWorkspace().getRoot().getFile(webxmlPath);
+			if (webxmlFile.isAccessible()) {
+				Reference descriptorHolder = (Reference) fDeploymentDescriptors.get(webxmlPath);
+				DeploymentDescriptor descriptor = null;
+
+				if (descriptorHolder == null || ((descriptor = (DeploymentDescriptor) descriptorHolder.get()) == null) || (descriptor.modificationStamp == IResource.NULL_STAMP) || (descriptor.modificationStamp != webxmlFile.getModificationStamp())) {
+					descriptor = fetchDescriptor(webxmlFile, new NullProgressMonitor());
+				}
+
+				if (descriptor.version != null) {
+					version = descriptor.version.floatValue();
+					return convertSpecVersions(version);
+				}
+			}
+		}
+		// Parse the .settings/org.eclipse.wst.common.project.facet.core.xml
+		IPath facetConfigPath = new Path(fullPath.makeAbsolute().segment(0)).append(".settings/org.eclipse.wst.common.project.facet.core.xml");
+		IFile facetConfigFile = ResourcesPlugin.getWorkspace().getRoot().getFile(facetConfigPath);
+		if (facetConfigFile.isAccessible()) {
+			FacetCore facetCore = null;
+			Reference facetCoreHolder = (Reference) fFacetCores.get(facetConfigPath);
+			if (facetCoreHolder == null || ((facetCore = (FacetCore) facetCoreHolder.get()) == null) || (facetCore.modificationStamp == IResource.NULL_STAMP) || (facetCore.modificationStamp != facetConfigFile.getModificationStamp())) {
+				facetCore = fetchFacetCore(facetConfigFile);
+				version = facetCore.version;
+			}
+
+		}
+		return convertSpecVersions(version);
+	}
+
+	/**
 	 * @param jspFilePath
 	 * @return a PropertyGroup containing the property group information
 	 *         matching the file at the given path or null if no web.xml file
@@ -731,29 +861,30 @@ public class DeploymentDescriptorPropertyGroupCache {
 		if (!webxmlFile.isAccessible())
 			return null;
 
+		Reference descriptorHolder = (Reference) fDeploymentDescriptors.get(webxmlPath);
+		DeploymentDescriptor descriptor = null;
+
+		if (descriptorHolder == null || ((descriptor = (DeploymentDescriptor) descriptorHolder.get()) == null) || (descriptor.modificationStamp == IResource.NULL_STAMP) || (descriptor.modificationStamp != webxmlFile.getModificationStamp())) {
+			descriptor = fetchDescriptor(webxmlFile, new NullProgressMonitor());
+		}
+
 		PropertyGroup matchingGroup = null;
 
-		Reference groupHolder = (Reference) fPropertyGroupContainerReferences.get(webxmlPath);
-		PropertyGroupContainer groupContainer = null;
-
-		if (groupHolder == null || ((groupContainer = (PropertyGroupContainer) groupHolder.get()) == null) || (groupContainer.modificationStamp == IResource.NULL_STAMP) || (groupContainer.modificationStamp != webxmlFile.getModificationStamp())) {
-			groupContainer = fetchPropertyGroupContainer(webxmlFile, new NullProgressMonitor());
-		}
-
-		for (int i = 0; i < groupContainer.groups.length && matchingGroup == null; i++) {
-			if (groupContainer.groups[i].matches(jspFilePath.removeFirstSegments(contextRoot.segmentCount()).toString(), false)) {
-				matchingGroup = groupContainer.groups[i];
+		for (int i = 0; i < descriptor.groups.length && matchingGroup == null; i++) {
+			if (descriptor.groups[i].matches(jspFilePath.removeFirstSegments(contextRoot.segmentCount()).toString(), false)) {
+				matchingGroup = descriptor.groups[i];
 			}
 		}
-		for (int i = 0; i < groupContainer.groups.length && matchingGroup == null; i++) {
-			if (groupContainer.groups[i].matches(jspFilePath.removeFirstSegments(contextRoot.segmentCount()).toString(), true)) {
-				matchingGroup = groupContainer.groups[i];
+		for (int i = 0; i < descriptor.groups.length && matchingGroup == null; i++) {
+			if (descriptor.groups[i].matches(jspFilePath.removeFirstSegments(contextRoot.segmentCount()).toString(), true)) {
+				matchingGroup = descriptor.groups[i];
 			}
 		}
 		return matchingGroup;
 	}
 
 	private void updateCacheEntry(IPath fullPath) {
-		fPropertyGroupContainerReferences.remove(fullPath);
+		/* don't update right now; remove and wait for another query to update */
+		fDeploymentDescriptors.remove(fullPath);
 	}
 }

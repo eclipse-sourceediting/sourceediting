@@ -14,6 +14,11 @@
 			associatedContentTypeId="org.eclipse.jst.jsp.core.jspfragmentsource"
 			id="org.eclipse.jst.jsp.core.internal.modelhandler">
 		</modelHandler>
+		<modelHandler
+			class="org.eclipse.jst.jsp.core.internal.modelhandler.ModelHandlerForTag"
+			associatedContentTypeId="org.eclipse.jst.jsp.core.tagsource"
+			id="org.eclipse.jst.jsp.core.internal.modelhandler.tag">
+		</modelHandler>
 	</extension>
 
 	<extension point="org.eclipse.wst.xml.core.documentFactories">

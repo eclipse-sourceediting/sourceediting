@@ -18,6 +18,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewer;
@@ -26,12 +27,15 @@ import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
+import org.eclipse.jst.jsp.core.internal.contentmodel.JSPCMDocumentFactory;
 import org.eclipse.jst.jsp.core.internal.contentmodel.TaglibController;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.TLDCMDocumentManager;
+import org.eclipse.jst.jsp.core.internal.contenttype.DeploymentDescriptorPropertyCache;
 import org.eclipse.jst.jsp.core.internal.document.PageDirectiveAdapter;
 import org.eclipse.jst.jsp.core.internal.document.PageDirectiveAdapterFactory;
 import org.eclipse.jst.jsp.core.internal.provisional.JSP11Namespace;
 import org.eclipse.jst.jsp.core.internal.provisional.JSP12Namespace;
+import org.eclipse.jst.jsp.core.internal.provisional.JSP20Namespace;
 import org.eclipse.jst.jsp.core.internal.provisional.contenttype.ContentTypeIdForJSP;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.jst.jsp.core.text.IJSPPartitions;
@@ -41,7 +45,6 @@ import org.eclipse.jst.jsp.ui.internal.editor.JSPEditorPluginImageHelper;
 import org.eclipse.jst.jsp.ui.internal.editor.JSPEditorPluginImages;
 import org.eclipse.jst.jsp.ui.internal.templates.TemplateContextTypeIdsJSP;
 import org.eclipse.wst.css.ui.internal.contentassist.CSSContentAssistProcessor;
-import org.eclipse.wst.html.core.internal.contentmodel.HTMLCMDocumentFactory;
 import org.eclipse.wst.html.core.internal.contentmodel.HTMLElementDeclaration;
 import org.eclipse.wst.html.core.internal.contentmodel.JSPCMDocument;
 import org.eclipse.wst.html.core.internal.provisional.HTMLCMProperties;
@@ -456,11 +459,14 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor {
 			if (mqAdapter != null) {
 				CMDocument doc = mqAdapter.getModelQuery().getCorrespondingCMDocument(node);
 				if (doc != null) {
+					CMDocument jcmdoc = getDefaultJSPCMDocument((IDOMNode) node);
+					CMNamedNodeMap jspelements = jcmdoc.getElements();
 
-					CMDocument JCMDoc = HTMLCMDocumentFactory.getCMDocument(CMDocType.JSP11_DOC_TYPE);
-					CMNamedNodeMap jspelements = JCMDoc.getElements();
-
-					if (jspelements != null) {
+					/*
+					 * For a built-in JSP action the content model is properly
+					 * set up, so don't just blindly add the rest
+					 */
+					if (jspelements != null && !(doc instanceof JSPCMDocument)) {
 						List rejectElements = new ArrayList();
 
 						// determine if the document is in XML form
@@ -482,9 +488,10 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor {
 						rejectElements.add(JSP12Namespace.ElementName.DIRECTIVE_PAGE);
 						rejectElements.add(JSP12Namespace.ElementName.TEXT);
 						rejectElements.add(JSP12Namespace.ElementName.DIRECTIVE_TAGLIB);
-
+						rejectElements.add(JSP20Namespace.ElementName.DIRECTIVE_TAG);
+						rejectElements.add(JSP20Namespace.ElementName.DIRECTIVE_ATTRIBUTE);
+						rejectElements.add(JSP20Namespace.ElementName.DIRECTIVE_VARIABLE);
 						if (isXMLFormat(domDoc)) {
-
 							// jsp actions
 							rejectElements.add(JSP12Namespace.ElementName.FALLBACK);
 							rejectElements.add(JSP12Namespace.ElementName.USEBEAN);
@@ -514,9 +521,46 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor {
 
 					}
 				}
+				// No cm document (such as for the Document (a non-Element) node itself)
+				else {
+					CMNamedNodeMap jspElements = getDefaultJSPCMDocument((IDOMNode) node).getElements();
+					int length = jspElements.getLength();
+					for (int i = 0; i < length; i++) {
+						elementDecls.add(jspElements.item(i));
+					}
+				}
 			}
 		}
 		return elementDecls;
+	}
+
+	/**
+	 * For JSP files and segments, this is just the JSP
+	 *         document, but when editing tag files and their fragments, it
+	 *         should be the tag document.
+	 * 
+	 * It may also vary based on the model being edited in the future.
+	 * 
+	 * @return the default non-embedded CMDocument for the document being
+	 *         edited. 
+	 */
+	CMDocument getDefaultJSPCMDocument(IDOMNode node) {
+		// handle tag files here
+		String contentType = node.getModel().getContentTypeIdentifier();
+		if (ContentTypeIdForJSP.ContentTypeID_JSPTAG.equals(contentType))
+			return JSPCMDocumentFactory.getCMDocument(CMDocType.TAG20_DOC_TYPE);
+
+		CMDocument jcmdoc = null;
+		String modelPath = node.getModel().getBaseLocation();
+		if (modelPath != null && !IModelManager.UNMANAGED_MODEL.equals(modelPath)) {
+			float version = DeploymentDescriptorPropertyCache.getInstance().getJSPVersion(new Path(modelPath));
+			jcmdoc = JSPCMDocumentFactory.getCMDocument(version);
+		}
+		if (jcmdoc == null) {
+			jcmdoc = JSPCMDocumentFactory.getCMDocument();
+		}
+
+		return jcmdoc;
 	}
 
 	protected List getAvailableChildrenAtIndex(Element parent, int index, int validityChecking) {

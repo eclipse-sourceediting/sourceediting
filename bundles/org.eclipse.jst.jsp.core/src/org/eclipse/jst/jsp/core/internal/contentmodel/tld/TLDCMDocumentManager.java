@@ -35,8 +35,8 @@ import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.JSP12TLDNa
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.JSP20TLDNames;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDDocument;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDElementDeclaration;
-import org.eclipse.jst.jsp.core.internal.contenttype.DeploymentDescriptorPropertyGroupCache;
-import org.eclipse.jst.jsp.core.internal.contenttype.DeploymentDescriptorPropertyGroupCache.PropertyGroup;
+import org.eclipse.jst.jsp.core.internal.contenttype.DeploymentDescriptorPropertyCache;
+import org.eclipse.jst.jsp.core.internal.contenttype.DeploymentDescriptorPropertyCache.PropertyGroup;
 import org.eclipse.jst.jsp.core.internal.parser.JSPSourceParser;
 import org.eclipse.jst.jsp.core.internal.provisional.JSP12Namespace;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
@@ -987,7 +987,7 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 
 		IPath currentBaseLocation = getCurrentBaseLocation();
 		if (currentBaseLocation != null) {
-			PropertyGroup propertyGroup = DeploymentDescriptorPropertyGroupCache.getInstance().getPropertyGroup(currentBaseLocation);
+			PropertyGroup propertyGroup = DeploymentDescriptorPropertyCache.getInstance().getPropertyGroup(currentBaseLocation);
 			if (propertyGroup != null) {
 				IPath[] preludes = propertyGroup.getIncludePrelude();
 				for (int i = 0; i < preludes.length; i++) {

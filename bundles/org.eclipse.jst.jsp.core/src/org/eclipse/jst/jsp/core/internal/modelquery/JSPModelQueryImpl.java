@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,6 +25,7 @@ import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelqueryimpl.ModelQueryImpl;
+import org.eclipse.wst.xml.core.internal.contentmodel.modelqueryimpl.SimpleAssociationProvider;
 import org.eclipse.wst.xml.core.internal.ssemodelquery.ModelQueryAdapter;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
@@ -37,7 +38,7 @@ public class JSPModelQueryImpl extends ModelQueryImpl {
 	private HashMap embeddedModelQueries = new HashMap();
 
 	public JSPModelQueryImpl(IStructuredModel model, URIResolver resolver) {
-		super(new JSPModelQueryAssociationProvider());
+		super(new SimpleAssociationProvider(new JSPModelQueryCMProvider()));
 		jspModel = model;
 	}
 
