@@ -799,8 +799,8 @@ public final class TaglibIndex {
 			return rootPath;
 		}
 		// try to handle out-of-workspace paths
-		IPath root = path;
-		while (root != null && !root.isRoot())
+		IPath root = path.makeAbsolute();
+		while (root.segmentCount() > 0 && !root.isRoot())
 			root = root.removeLastSegments(1);
 		if (root == null)
 			root = path;
@@ -849,9 +849,11 @@ public final class TaglibIndex {
 				baseResource = files[0];
 		}
 		if (baseResource != null) {
-			project = baseResource.getProject();
-			ProjectDescription description = createDescription(project);
-			resolved = description.resolve(basePath, reference);
+			project = ResourcesPlugin.getWorkspace().getRoot().getProject(baseIPath.segment(0));
+			if (project.isAccessible()) {
+				ProjectDescription description = createDescription(project);
+				resolved = description.resolve(basePath, reference);
+			}
 		}
 
 		return resolved;
