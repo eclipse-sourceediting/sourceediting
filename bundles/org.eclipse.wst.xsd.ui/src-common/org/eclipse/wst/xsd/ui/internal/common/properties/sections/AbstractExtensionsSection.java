@@ -29,6 +29,7 @@ import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.MouseTrackAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -212,7 +213,9 @@ public abstract class AbstractExtensionsSection extends AbstractSection
     gridData.grabExcessVerticalSpace = true;
     gridData.verticalAlignment = GridData.FILL;
     gridData.horizontalAlignment = GridData.FILL;
-    gridData.widthHint = w;
+    // The initial size should be set, not the widthHint, which forces the width
+    // to remain constant.
+    sashForm.setSize(w, SWT.DEFAULT);
     sashForm.setLayoutData(gridData);
     sashForm.setForeground(ColorConstants.white);
     sashForm.setBackground(ColorConstants.white);
@@ -546,7 +549,31 @@ public abstract class AbstractExtensionsSection extends AbstractSection
           // if nothing is selected then don't show any details
           //
           extensionDetailsViewer.setInput(null);
-        }  
+        }
+
+        // Upon element selection, the details view populates fine, but there is no vertical scrollbar,
+        // so it misleads the user into thinking there are no other attributes available
+        // See https://bugs.eclipse.org/bugs/show_bug.cgi?id=174073
+        // This is a workaround to force a layout of the tab composite
+        IWorkbenchPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart();
+        if (part instanceof PropertySheet)
+        {
+          PropertySheet sheet = (PropertySheet)part;
+          if (sheet.getCurrentPage() instanceof TabbedPropertySheetPage)
+          {
+            TabbedPropertySheetPage tabbedPage = (TabbedPropertySheetPage)sheet.getCurrentPage();
+            if (tabbedPage.getControl() instanceof Composite)
+            {
+              Composite c = (Composite)tabbedPage.getControl();
+              Point p = c.getSize();
+              // c.layout(true, true) doesn't appear to work.
+              // But this forces a relayout:
+              c.setSize(p.x, p.y + 1);
+              // Change the size back to the original
+              c.setSize(p.x, p.y);
+            }
+          }
+        }
       }
       removeButton.setEnabled(isDeleteEnabled);
     }
