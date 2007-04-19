@@ -64,12 +64,12 @@ public class DeploymentDescriptorPropertyCache {
 	private static class DeploymentDescriptor {
 		PropertyGroup[] groups;
 		long modificationStamp;
-		Float version = new Float(1f);
+		Float version = new Float(defaultWebAppVersion);
 	}
 
 	private static class FacetCore {
 		long modificationStamp;
-		float version = 1f;
+		float version = defaultWebAppVersion;
 	}
 
 	/**
