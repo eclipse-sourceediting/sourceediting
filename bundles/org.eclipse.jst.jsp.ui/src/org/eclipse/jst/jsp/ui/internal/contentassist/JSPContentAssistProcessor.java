@@ -464,9 +464,10 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor {
 
 					/*
 					 * For a built-in JSP action the content model is properly
-					 * set up, so don't just blindly add the rest
+					 * set up, so don't just blindly add the rest--unless this
+					 * will be a direct child of the document
 					 */
-					if (jspelements != null && !(doc instanceof JSPCMDocument)) {
+					if (jspelements != null && (!(doc instanceof JSPCMDocument) || node.getNodeType() == Node.DOCUMENT_NODE)) {
 						List rejectElements = new ArrayList();
 
 						// determine if the document is in XML form

@@ -211,7 +211,7 @@ public class HTMLContentAssistProcessor extends AbstractContentAssistProcessor i
 		// handle blank HTML document case
 		if (treeNode == null || isViewerEmpty(textViewer)) {
 			// cursor is at the EOF
-			ICompletionProposal htmlTagProposal = getHTMLTagPropsosal((StructuredTextViewer) textViewer, documentPosition);
+			ICompletionProposal htmlTagProposal = getHTMLTagProposal((StructuredTextViewer) textViewer, documentPosition);
 			ICompletionProposal[] superResults = super.computeCompletionProposals(textViewer, documentPosition);
 			if (superResults != null && superResults.length > 0 && htmlTagProposal != null) {
 				ICompletionProposal[] blankHTMLDocResults = new ICompletionProposal[superResults.length + 1];
@@ -321,7 +321,7 @@ public class HTMLContentAssistProcessor extends AbstractContentAssistProcessor i
 	/**
 	 * @return ICompletionProposal
 	 */
-	private ICompletionProposal getHTMLTagPropsosal(StructuredTextViewer viewer, int documentPosition) {
+	private ICompletionProposal getHTMLTagProposal(StructuredTextViewer viewer, int documentPosition) {
 		IModelManager mm = StructuredModelManager.getModelManager();
 		IStructuredModel model = null;
 		ICompletionProposal result = null;
@@ -336,24 +336,28 @@ public class HTMLContentAssistProcessor extends AbstractContentAssistProcessor i
 					if (mq != null) {
 
 						// XHTML requires lowercase tagname for lookup
-						CMElementDeclaration htmlDecl = (CMElementDeclaration) mq.getCorrespondingCMDocument(doc).getElements().getNamedItem(HTML40Namespace.ElementName.HTML.toLowerCase());
-						if (htmlDecl != null) {
-							StringBuffer proposedTextBuffer = new StringBuffer();
-							getContentGenerator().generateTag(doc, htmlDecl, proposedTextBuffer);
+						CMDocument correspondingCMDocument = mq.getCorrespondingCMDocument(doc);
+						if (correspondingCMDocument != null) {
+							CMElementDeclaration htmlDecl = (CMElementDeclaration) correspondingCMDocument.getElements().getNamedItem(HTML40Namespace.ElementName.HTML.toLowerCase());
+							if (htmlDecl != null) {
+								StringBuffer proposedTextBuffer = new StringBuffer();
+								getContentGenerator().generateTag(doc, htmlDecl, proposedTextBuffer);
 
-							String proposedText = proposedTextBuffer.toString();
-							String requiredName = getContentGenerator().getRequiredName(doc, htmlDecl);
+								String proposedText = proposedTextBuffer.toString();
+								String requiredName = getContentGenerator().getRequiredName(doc, htmlDecl);
 
-							CustomCompletionProposal proposal = new CustomCompletionProposal(proposedText, documentPosition,
-							/* start pos */
-							0, /* replace length */
-							requiredName.length() + 2, /*
-														 * cursor position
-														 * after (relavtive to
-														 * start)
-														 */
-							HTMLEditorPluginImageHelper.getInstance().getImage(HTMLEditorPluginImages.IMG_OBJ_TAG_GENERIC), requiredName, null, null, XMLRelevanceConstants.R_TAG_NAME);
-							result = proposal;
+								CustomCompletionProposal proposal = new CustomCompletionProposal(proposedText, documentPosition,
+								/* start pos */
+								0, /* replace length */
+								requiredName.length() + 2, /*
+															 * cursor position
+															 * after
+															 * (relavtive to
+															 * start)
+															 */
+								HTMLEditorPluginImageHelper.getInstance().getImage(HTMLEditorPluginImages.IMG_OBJ_TAG_GENERIC), requiredName, null, null, XMLRelevanceConstants.R_TAG_NAME);
+								result = proposal;
+							}
 						}
 					}
 				}
