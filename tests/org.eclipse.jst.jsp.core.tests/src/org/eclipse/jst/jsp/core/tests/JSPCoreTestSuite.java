@@ -23,6 +23,7 @@ import org.eclipse.jst.jsp.core.tests.model.TestModelWithNoFile;
 import org.eclipse.jst.jsp.core.tests.source.JSPTokenizerTest;
 import org.eclipse.jst.jsp.core.tests.taglibindex.TestIndex;
 import org.eclipse.jst.jsp.core.tests.translation.JSPJavaTranslatorCoreTest;
+import org.eclipse.jst.jsp.core.tests.validation.JSPActionValidatorTest;
 import org.eclipse.jst.jsp.core.tests.validation.JSPJavaValidatorTest;
 import org.eclipse.jst.jsp.css.core.tests.source.JSPedCSSSourceParserTest;
 
@@ -59,6 +60,7 @@ public class JSPCoreTestSuite extends TestSuite {
 		addTest(new TestSuite(JSPJavaValidatorTest.class, "JSP Java Validator Tests"));
 		addTest(new TestSuite(TestImportedNodes.class, "Imported Nodes Tests"));
 		addTest(new TestSuite(TestFixedCMDocuments.class, "Fixed CMDocument Creation Tests"));
+		addTest(new TestSuite(JSPActionValidatorTest.class, "JSP Action Validator Tests"));
 
 		if (wtp_autotest_noninteractive != null)
 			System.setProperty("wtp.autotest.noninteractive", wtp_autotest_noninteractive);
