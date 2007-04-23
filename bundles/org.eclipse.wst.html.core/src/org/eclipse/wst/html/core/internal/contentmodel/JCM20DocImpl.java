@@ -14,11 +14,11 @@ package org.eclipse.wst.html.core.internal.contentmodel;
 
 
 /**
- * Implementation of CMDocument for the JSP 2.0.
+ * Implementation of CMDocument for JSP 2.0.
  */
 class JCM20DocImpl extends JCMDocImpl {
 	/**
-	 * HCMDocImpl constructor comment.
+	 * JCM20DocImpl constructor comment.
 	 */
 	public JCM20DocImpl(String docTypeName, CMNamespaceImpl targetNamespace) {
 		super(docTypeName, targetNamespace, new JSP20ElementCollection());
