@@ -74,6 +74,9 @@ final class JSP20ElementCollection extends JSPElementCollection implements JSP20
 				case Ids20.ID_OUTPUT :
 					createForOutput();
 					break;
+				case Ids.ID_DIRECTIVE_TAGLIB :
+					createForDirTaglib();
+					break;
 				default :
 					super.getDeclarations(eid);
 			}
@@ -108,6 +111,28 @@ final class JSP20ElementCollection extends JSPElementCollection implements JSP20
 			declarations.putNamedItem(JSP20Namespace.ATTR_NAME_DOCTYPE_PUBLIC, adec);
 		}
 
+		/**
+		 * Changed in 2.0
+		 */
+		private void createForDirTaglib() {
+			// ("uri" URI OPTIONAL)
+			AttrDecl adec = new AttrDecl(ATTR_NAME_URI);
+			adec.type = new HTMLCMDataTypeImpl(CMDataType.URI);
+			adec.usage = CMAttributeDeclaration.OPTIONAL;
+			declarations.putNamedItem(ATTR_NAME_URI, adec);
+
+			adec = new AttrDecl(JSP20Namespace.ATTR_NAME_TAGDIR);
+			adec.type = new HTMLCMDataTypeImpl(CMDataType.URI);
+			adec.usage = CMAttributeDeclaration.OPTIONAL;
+			declarations.putNamedItem(JSP20Namespace.ATTR_NAME_TAGDIR, adec);
+
+			// ("prefix" CDATA REQUIRED)
+			adec = new AttrDecl(ATTR_NAME_PREFIX);
+			adec.type = new HTMLCMDataTypeImpl(CMDataType.CDATA);
+			adec.usage = CMAttributeDeclaration.REQUIRED;
+			declarations.putNamedItem(ATTR_NAME_PREFIX, adec);
+		}
+		
 		private void createForElement() {
 			AttrDecl adec = new AttrDecl(ATTR_NAME_NAME);
 			adec.type = new HTMLCMDataTypeImpl(CMDataType.CDATA);
@@ -240,6 +265,13 @@ final class JSP20ElementCollection extends JSPElementCollection implements JSP20
 				packet.layout = HTMLElementDeclaration.LAYOUT_OBJECT;
 				packet.indentChild = true;
 				packet.format = HTMLElementDeclaration.FORMAT_JSP_SCRIPT;
+				break;
+			case Ids.ID_DIRECTIVE_TAGLIB :
+				// directive.taglib
+				packet.name = DIRECTIVE_TAGLIB;
+				packet.omit = HTMLElementDeclaration.OMIT_END;
+				packet.layout = HTMLElementDeclaration.LAYOUT_HIDDEN;
+				packet.format = HTMLElementDeclaration.FORMAT_JSP_DIRECTIVE;
 				break;
 			default :
 				return super.createElemDecl(eid);
