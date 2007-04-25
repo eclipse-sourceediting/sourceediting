@@ -109,8 +109,11 @@ public class ADTContentOutlineProvider implements ITreeContentProvider, IADTObje
     if (viewer instanceof TreeViewer)
     {
       TreeViewer treeViewer = (TreeViewer) viewer;
-      treeViewer.refresh(object);
-      treeViewer.reveal(object);
+      if (treeViewer.getTree() != null && !treeViewer.getTree().isDisposed())
+      {
+        treeViewer.refresh(object);
+        treeViewer.reveal(object);
+      }
     }
   }
 
