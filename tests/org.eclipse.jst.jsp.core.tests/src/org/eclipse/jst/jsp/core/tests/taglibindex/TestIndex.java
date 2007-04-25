@@ -50,7 +50,7 @@ public class TestIndex extends TestCase {
 			System.setProperty("wtp.autotest.noninteractive", wtp_autotest_noninteractive);
 	}
 
-	public void testBug118251_e() throws Exception {
+	public void testAvailableAfterAddingJARToBuildPath() throws Exception {
 		String url = "http://example.com/sample2_for_118251-e";
 
 		// Create new project
@@ -67,7 +67,7 @@ public class TestIndex extends TestCase {
 		// bug_118251-e/.classpath
 		// bug_118251-e/.project
 		ITaglibRecord taglibRecord = TaglibIndex.resolve("/bug_118251-e/WebContent/test1.jsp", url, false);
-		assertNotNull("record found for " + url, taglibRecord);
+		assertNull("unexpected record found for " + url, taglibRecord);
 
 		records = TaglibIndex.getAvailableTaglibRecords(new Path("/bug_118251-e/WebContent/"));
 		assertEquals("wrong number of taglib records found after unpacking but before copying", 2, records.length);
@@ -82,13 +82,13 @@ public class TestIndex extends TestCase {
 
 		url = "http://example.com/sample-taglib";
 		taglibRecord = TaglibIndex.resolve("/bug_118251-e/WebContent/test1.jsp", url, false);
-		assertNotNull("no record found for " + url, taglibRecord);
+		assertNotNull("expected record missing for " + url, taglibRecord);
 
 		records = TaglibIndex.getAvailableTaglibRecords(new Path("/bug_118251-e/WebContent/"));
 		assertEquals("wrong number of taglib records found after copying", 3, records.length);
 	}
 
-	public void testBug118251_f() throws Exception {
+	public void testAvailableAfterCopyingJARIntoProject() throws Exception {
 		// Create new project
 		IProject project = BundleResourceUtil.createSimpleProject("bug_118251-f", null, null);
 		assertTrue(project.exists());
@@ -104,7 +104,7 @@ public class TestIndex extends TestCase {
 		// bug_118251-f/.project
 		String url = "http://example.com/sample-taglib";
 		ITaglibRecord taglibRecord = TaglibIndex.resolve("/bug_118251-f/WebContent/test1.jsp", url, false);
-		assertNull("record found for " + url, taglibRecord);
+		assertNull("unexpected record found for " + url, taglibRecord);
 
 		records = TaglibIndex.getAvailableTaglibRecords(new Path("/bug_118251-f/WebContent/"));
 		assertEquals("wrong number of taglib records found after unpacking but before copying", 3, records.length);
@@ -122,7 +122,7 @@ public class TestIndex extends TestCase {
 		assertTrue("record found was wrong type", taglibRecord instanceof IURLRecord);
 		assertNotNull("record has no base location", ((IURLRecord) taglibRecord).getBaseLocation());
 		assertEquals("record has wrong short name", "sample", ((IURLRecord) taglibRecord).getShortName());
-		assertEquals("record has wrong URI", url, ((IURLRecord) taglibRecord).getURI());
+		assertEquals("record has wrong URI", url, ((IURLRecord) taglibRecord).getDescriptor().getURI());
 		URL recordURL = ((IURLRecord) taglibRecord).getURL();
 		assertNotNull("record has no URL", recordURL);
 		assertTrue("record has wrong URL", recordURL.toString().length() > 4);
@@ -139,7 +139,7 @@ public class TestIndex extends TestCase {
 		assertEquals("wrong number of taglib records found after copying", 4, records.length);
 	}
 
-	public void testBug118251_g() throws Exception {
+	public void testAvailableAfterCopyingJARIntoProject2() throws Exception {
 		// Create new project
 		IProject project = BundleResourceUtil.createSimpleProject("bug_118251-g", null, null);
 		assertTrue(project.exists());
@@ -155,7 +155,7 @@ public class TestIndex extends TestCase {
 		// bug_118251-g/.project
 		String url = "http://example.com/sample-taglib";
 		ITaglibRecord taglibRecord = TaglibIndex.resolve("/bug_118251-g/Web Content/test1.jsp", url, false);
-		assertNull("record found for " + url, taglibRecord);
+		assertNull("unexpected record found for " + url, taglibRecord);
 
 		records = TaglibIndex.getAvailableTaglibRecords(new Path("/bug_118251-g/Web Content/"));
 		assertEquals("wrong number of taglib records found after unpacking but before copying", 3, records.length);
@@ -173,7 +173,7 @@ public class TestIndex extends TestCase {
 		assertTrue("record found was wrong type", taglibRecord instanceof IURLRecord);
 		assertNotNull("record has no base location", ((IURLRecord) taglibRecord).getBaseLocation());
 		assertEquals("record has wrong short name", "sample", ((IURLRecord) taglibRecord).getShortName());
-		assertEquals("record has wrong URI", url, ((IURLRecord) taglibRecord).getURI());
+		assertEquals("record has wrong URI", url, ((IURLRecord) taglibRecord).getDescriptor().getURI());
 		URL recordURL = ((IURLRecord) taglibRecord).getURL();
 		assertNotNull("record has no URL", recordURL);
 		assertTrue("record has wrong URL", recordURL.toString().length() > 4);
@@ -190,7 +190,7 @@ public class TestIndex extends TestCase {
 		assertEquals("wrong number of taglib records found after copying", 4, records.length);
 	}
 
-	public void test_148717_a() throws Exception {
+	public void testWebXMLTaglibMappingsToJARs() throws Exception {
 		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject("bug_148717");
 		if (!project.exists()) {
 			// Create new project
@@ -206,7 +206,7 @@ public class TestIndex extends TestCase {
 		ITaglibRecord taglibRecord = TaglibIndex.resolve("/bug_148717/WebContent/", uri, false);
 		assertNotNull("record not found for " + uri, taglibRecord);
 		assertEquals(ITaglibRecord.JAR, taglibRecord.getRecordType());
-		assertEquals(uri, ((IJarRecord) taglibRecord).getURI());
+		assertEquals(uri, ((IJarRecord) taglibRecord).getDescriptor().getURI());
 
 		ITaglibRecord taglibRecord2 = null;
 		ITaglibRecord[] records = TaglibIndex.getAvailableTaglibRecords(new Path("/bug_148717/WebContent/"));
@@ -221,13 +221,13 @@ public class TestIndex extends TestCase {
 		}
 		assertNotNull("record not returned for " + uri, taglibRecord2);
 		assertEquals(ITaglibRecord.JAR, taglibRecord2.getRecordType());
-		assertEquals(uri, ((IJarRecord) taglibRecord2).getURI());
+		assertEquals(uri, ((IJarRecord) taglibRecord2).getDescriptor().getURI());
 	}
 
 	/**
 	 * test caching from session-to-session
 	 */
-	public void testCaching1() throws Exception {
+	public void testRecordCacheCountBetweenSessions() throws Exception {
 		TaglibIndex.shutdown();
 		// Create new project
 		IProject project = BundleResourceUtil.createSimpleProject("testcache1", null, null);
@@ -288,7 +288,7 @@ public class TestIndex extends TestCase {
 		assertEquals("total ITaglibRecord count doesn't match changed value (4th restart, add jar to build path)", records.length + 2, records2.length);
 	}
 
-	public void testAvailableFromExportedBuildpaths() throws Exception {
+	public void testAvailableFromExportedOnBuildpathFromAnotherProject() throws Exception {
 		TaglibIndex.shutdown();
 
 		// Create project 1
@@ -333,7 +333,7 @@ public class TestIndex extends TestCase {
 			IClasspathEntry entry = entries[i];
 			if (entry.getPath().equals(new Path("/testavailable2/WebContent/WEB-INF/lib/sample_tld.jar"))) {
 				found = true;
-				assertFalse("was exported", ((ClasspathEntry) entry).isExported);
+				assertFalse("was exported", entry.isExported());
 				((ClasspathEntry) entry).isExported = true;
 			}
 		}
