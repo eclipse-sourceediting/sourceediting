@@ -13,6 +13,7 @@ package org.eclipse.jst.jsp.core.tests.validation;
 import junit.framework.TestCase;
 
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jst.jsp.core.internal.validation.JSPActionValidator;
 import org.eclipse.jst.jsp.core.tests.taglibindex.BundleResourceUtil;
@@ -52,9 +53,9 @@ public class JSPActionValidatorTest extends TestCase {
 		IReporter reporter = new ReporterForTest();
 		ValidationContextForTest helper = new ValidationContextForTest();
 		String filePath = "/" + PROJECT_NAME + "/WebContent/undefinedattribute.jsp";
+		assertTrue("unable to find file: " + filePath, ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(filePath)).exists());
 		helper.setURI(filePath);
 		validator.validate(helper, reporter);
-
 
 		assertTrue("jsp action validator did not detect undefined attributes", reporter.getMessages().size() == 3);
 	}
@@ -69,6 +70,8 @@ public class JSPActionValidatorTest extends TestCase {
 		IReporter reporter = new ReporterForTest();
 		ValidationContextForTest helper = new ValidationContextForTest();
 		String filePath = "/" + PROJECT_NAME + "/WebContent/norequiredattribute.jsp";
+		assertTrue("unable to find file: " + filePath, ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(filePath)).exists());
+
 		helper.setURI(filePath);
 		validator.validate(helper, reporter);
 
@@ -85,9 +88,10 @@ public class JSPActionValidatorTest extends TestCase {
 		IReporter reporter = new ReporterForTest();
 		ValidationContextForTest helper = new ValidationContextForTest();
 		String filePath = "/" + PROJECT_NAME + "/WebContent/worksfine.jsp";
+		assertTrue("unable to find file: " + filePath, ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(filePath)).exists());
+
 		helper.setURI(filePath);
 		validator.validate(helper, reporter);
-
 
 		assertTrue("jsp action validator found errors when it should not have", reporter.getMessages().isEmpty());
 	}
