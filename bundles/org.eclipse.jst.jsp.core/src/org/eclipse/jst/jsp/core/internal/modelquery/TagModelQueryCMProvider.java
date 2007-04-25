@@ -70,6 +70,9 @@ public class TagModelQueryCMProvider implements ModelQueryCMProvider {
 		catch (Exception e) {
 			e.printStackTrace();
 		}
+		if (result == null) {
+			result = tagdoc;
+		}
 		return result;
 	}
 }
