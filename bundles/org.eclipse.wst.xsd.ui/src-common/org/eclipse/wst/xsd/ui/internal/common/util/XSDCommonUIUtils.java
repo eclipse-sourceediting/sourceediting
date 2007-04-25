@@ -67,12 +67,16 @@ public class XSDCommonUIUtils
     {
       if (xsdAnnotation.getApplicationInformation().size() > 0)
       {
-        Image newImage = XSDEditorPlugin.getDefault().getImageRegistry().get(input.getClass().getName() + isReadOnly);
+        // Will use the class name appended by the read only state as the name of the image.
+        // There is a disabled and an enabled version of each baseImage, so we can't simply
+        // use the component name as the name of the image
+        String imageName = input.getClass().getName() + isReadOnly;
+        Image newImage = XSDEditorPlugin.getDefault().getImageRegistry().get(imageName);
         if (newImage == null)
         {
           ImageOverlayDescriptor ovr = new ImageOverlayDescriptor(baseImage, isReadOnly);
           newImage = ovr.getImage();
-          XSDEditorPlugin.getDefault().getImageRegistry().put(input.getClass().getName() + isReadOnly, newImage);
+          XSDEditorPlugin.getDefault().getImageRegistry().put(imageName, newImage);
         }
         return newImage;
       }
