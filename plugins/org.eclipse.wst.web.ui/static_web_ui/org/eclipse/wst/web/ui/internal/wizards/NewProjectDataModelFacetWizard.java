@@ -47,15 +47,18 @@ import org.eclipse.wst.common.frameworks.datamodel.IDataModelListener;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModelOperation;
 import org.eclipse.wst.common.frameworks.internal.datamodel.DataModelPausibleOperationImpl;
 import org.eclipse.wst.common.frameworks.internal.datamodel.ui.DataModelWizardPage;
+import org.eclipse.wst.common.project.facet.core.FacetedProjectFramework;
 import org.eclipse.wst.common.project.facet.core.IFacetedProject;
 import org.eclipse.wst.common.project.facet.core.IFacetedProjectTemplate;
 import org.eclipse.wst.common.project.facet.core.IPreset;
 import org.eclipse.wst.common.project.facet.core.IProjectFacetVersion;
+import org.eclipse.wst.common.project.facet.core.ProjectFacetsManager;
 import org.eclipse.wst.common.project.facet.core.IFacetedProject.Action.Type;
 import org.eclipse.wst.common.project.facet.core.runtime.IRuntime;
 import org.eclipse.wst.common.project.facet.ui.ModifyFacetedProjectWizard;
 import org.eclipse.wst.common.project.facet.ui.internal.AbstractDataModel;
 import org.eclipse.wst.common.project.facet.ui.internal.ChangeTargetedRuntimesDataModel;
+import org.eclipse.wst.common.project.facet.ui.internal.ModifyFacetedProjectDataModel;
 import org.eclipse.wst.web.internal.DelegateConfigurationElement;
 import org.eclipse.wst.web.ui.internal.Logger;
 import org.eclipse.wst.web.ui.internal.WSTWebUIPlugin;
@@ -147,7 +150,7 @@ public abstract class NewProjectDataModelFacetWizard extends ModifyFacetedProjec
             // If preset is specified, select the runtime only if supports all
             // of the facets included in the preset.
 
-            this.facetsSelectionPage.panel.selectPreset( preset );
+            this.facetsSelectionPage.panel.getDataModel().setSelectedPreset( preset.getId() );
             
             boolean supports = false;
             
@@ -258,8 +261,8 @@ public abstract class NewProjectDataModelFacetWizard extends ModifyFacetedProjec
     
     protected void setRuntimeAndDefaultFacets( final IRuntime runtime )
     {
-        final ChangeTargetedRuntimesDataModel rdm
-            = getModel().getTargetedRuntimesDataModel();
+        final ModifyFacetedProjectDataModel dm = getModel();
+        final ChangeTargetedRuntimesDataModel rdm = dm.getTargetedRuntimesDataModel();
 
         rdm.setTargetedRuntimes( Collections.EMPTY_SET );
         this.facetsSelectionPage.setDefaultFacetsForRuntime( runtime );
@@ -268,6 +271,8 @@ public abstract class NewProjectDataModelFacetWizard extends ModifyFacetedProjec
         {
             rdm.setTargetedRuntimes( Collections.singleton( runtime ) );
         }
+        
+        dm.setSelectedPreset( FacetedProjectFramework.DEFAULT_CONFIGURATION_PRESET_ID );
     }
 
 	public String getProjectName() {
