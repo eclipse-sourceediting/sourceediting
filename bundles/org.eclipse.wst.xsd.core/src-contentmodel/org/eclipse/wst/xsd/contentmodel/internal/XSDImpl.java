@@ -119,6 +119,7 @@ public class XSDImpl
   public static final String PROPERTY_NAMESPACE_INFO = "http://org.eclipse.wst/cm/properties/namespaceInfo";
   public static final String PROPERTY_ELEMENT_FORM_DEFAULT = "http://org.eclipse.wst/cm/properties/elementFormDefault";
   public static final String PROPERTY_ANNOTATION_MAP = "annotationMap";
+  public static final String PROPERTY_COMPLETE_NAMESPACE_INFO = "http://org.eclipse.wst/cm/properties/completeNamespaceInfo";
   /*
    * properties common to all CMElementDeclaration nodes: PROPERTY_XSITYPES
    * PROPERTY_DERIVED_ELEMENT_DECLARATION PROPERTY_SUBSTITUTION_GROUP
@@ -930,6 +931,10 @@ public class XSDImpl
         getImportedNamespaceInfo(xsdSchema, list);
         result = list;
       }
+      else if (propertyName.equals(PROPERTY_COMPLETE_NAMESPACE_INFO))
+      {
+    	  result = getAllNamespaceInfo();
+      }
       else if (propertyName.equals(PROPERTY_ELEMENT_FORM_DEFAULT))
       {
         result = xsdSchema.getElementFormDefault().getName();
@@ -1098,6 +1103,82 @@ public class XSDImpl
           addLocalElementDefinitions(map, ed);
         }  
       }               
+    } 
+    
+    
+    /**
+     * Generates a List of NamespaceInfo objects corresponding to the target namespace of the given schema 
+     * and the target namespaces of all its recursively imported/included referenced schemas. All namespace
+     * prefixes in the list are guaranteed to be unique. Prefix collitions are resolved by concatenating
+     * integer numbers to each repeated prefix found i.e. tns, tns1, tns2...
+     * All schema locations in the list are formated as encoded URIs relative to the given schema.
+     * Schemas that are imported/included but not referenced will not appear in the list.
+     * @return List of NamespaceInfo objects
+     * 
+     */
+	public List getAllNamespaceInfo() {
+		List namespaceList = new ArrayList();
+		List resources  = xsdSchema.eResource().getResourceSet().getResources();
+		Iterator i = resources.iterator();
+		while(i.hasNext()) {
+			XSDResourceImpl resource = (XSDResourceImpl) i.next();
+			if(resource.isLoaded()) {
+				XSDSchema schema = resource.getSchema();
+				if(!isDataInNamespaceList(namespaceList, 0, schema.getTargetNamespace())) {
+					NamespaceInfo info = new NamespaceInfo();
+					info.uri = schema.getTargetNamespace();
+					info.prefix = getPrefix(schema,schema.getTargetNamespace());
+					info.isPrefixRequired = isPrefixRequired(schema);
+	    			int n = 1;
+	    			if(info.prefix == null || info.prefix.equals("")) {
+	    				info.prefix = "p";
+	    			}
+	    			String prefix = info.prefix;
+	    			while(isDataInNamespaceList(namespaceList, 1, info.prefix)) {
+	    				info.prefix = prefix + n++;
+	    			}
+	    			URI relative = URI.createURI(xsdSchema.getSchemaLocation(), true);
+					URI absolute = URI.createURI(schema.getSchemaLocation(), true);
+					URI resolvedRelative = absolute.deresolve(relative);
+					info.locationHint = resolvedRelative.toString();
+	    			namespaceList.add(info);
+				}
+			}
+		}
+		return namespaceList;	
+	}
+
+
+    /**
+     * Searches for a given value in a list of namespaces.
+     * 
+     * @param namespaceList:	List of NamespaceInfo objects
+     * @param data:				integer representing the data in the namespace as follows:
+     * 								0:	uri
+     * 								1:	prefix
+     * 								2:	locationHint
+     * @param value				String containing the value for search
+     * @return					true if the value is found, false otherwise
+     */
+    private boolean isDataInNamespaceList(List namespaceList, int data, String value) {
+		if (namespaceList != null) {
+			Iterator i = namespaceList.iterator();
+			while (i.hasNext()) {
+				NamespaceInfo namespaceInfo = (NamespaceInfo) i.next();
+				switch(data) {
+					case 0:	if (namespaceInfo.uri != null && namespaceInfo.uri.equals(value)) {
+						return true;
+					}
+					case 1:	if (namespaceInfo.prefix != null && namespaceInfo.prefix.equals(value)) {
+						return true;
+					}
+					case 2:	if (namespaceInfo.locationHint != null && namespaceInfo.locationHint.equals(value)) {
+						return true;
+					}
+				}
+			}
+		}
+    	return false;
     }
   }
   /**

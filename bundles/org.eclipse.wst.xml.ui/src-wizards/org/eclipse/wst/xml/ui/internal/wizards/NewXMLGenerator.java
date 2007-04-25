@@ -220,7 +220,7 @@ public class NewXMLGenerator {
 	public void createNamespaceInfoList() {
 		List result = new Vector();
 		if (cmDocument != null) {
-			result = (List) cmDocument.getProperty("http://org.eclipse.wst/cm/properties/namespaceInfo"); //$NON-NLS-1$
+			result = (List) cmDocument.getProperty("http://org.eclipse.wst/cm/properties/completeNamespaceInfo"); //$NON-NLS-1$
 			if (result != null) {
 				int size = result.size();
 				for (int i = 0; i < size; i++) {
@@ -240,9 +240,11 @@ public class NewXMLGenerator {
 						}
 						info.locationHint = locationInfo;
 						info.setProperty("locationHint-readOnly", "true"); //$NON-NLS-1$ //$NON-NLS-2$
+						info.setProperty("uri-readOnly", "true"); //$NON-NLS-1$ //$NON-NLS-2$
+						info.setProperty("unremovable", "true"); //$NON-NLS-1$ //$NON-NLS-2$
+					} else {
+						info.locationHint = null;
 					}
-					info.setProperty("uri-readOnly", "true"); //$NON-NLS-1$ //$NON-NLS-2$
-					info.setProperty("unremovable", "true"); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 			}
 
@@ -271,15 +273,16 @@ public class NewXMLGenerator {
 	public String[] getNamespaceInfoErrors() {
 		String[] errorList = null;
 
-		if ((namespaceInfoList != null) && isMissingNamespaceLocation()) {
-			String title = XMLWizardsMessages._UI_LABEL_NO_LOCATION_HINT;
-			String message = XMLWizardsMessages._UI_WARNING_MSG_NO_LOCATION_HINT_1 + " " + XMLWizardsMessages._UI_WARNING_MSG_NO_LOCATION_HINT_2 + "\n\n" + XMLWizardsMessages._UI_WARNING_MSG_NO_LOCATION_HINT_3; //$NON-NLS-1$ //$NON-NLS-2$
-
-			errorList = new String[2];
-			errorList[0] = title;
-			errorList[1] = message;
-		}
-
+// No warnings should be given when namespaces entries have missing location hints
+// See https://bugs.eclipse.org/bugs/show_bug.cgi?id=105128		
+//		if ((namespaceInfoList != null) && isMissingNamespaceLocation()) {
+//			String title = XMLWizardsMessages._UI_LABEL_NO_LOCATION_HINT;
+//			String message = XMLWizardsMessages._UI_WARNING_MSG_NO_LOCATION_HINT_1 + " " + XMLWizardsMessages._UI_WARNING_MSG_NO_LOCATION_HINT_2 + "\n\n" + XMLWizardsMessages._UI_WARNING_MSG_NO_LOCATION_HINT_3; //$NON-NLS-1$ //$NON-NLS-2$
+//
+//			errorList = new String[2];
+//			errorList[0] = title;
+//			errorList[1] = message;
+//		}
 		return errorList;
 	}
 
@@ -390,6 +393,4 @@ public class NewXMLGenerator {
 		}
 		return result;
 	}
-
-
 }
