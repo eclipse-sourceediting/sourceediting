@@ -37,6 +37,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.sse.core.internal.util.Debug;
 import org.eclipse.wst.sse.ui.internal.IReleasable;
+import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
@@ -1249,7 +1250,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 
 		fTextViewer = textViewer;
 
-		IndexedRegion treeNode = ContentAssistUtils.getNodeAt(textViewer, documentPosition);
+		IndexedRegion treeNode = ContentAssistUtils.getNodeAt((StructuredTextViewer) textViewer, documentPosition);
 
 		Node node = (Node) treeNode;
 		while (node != null && node.getNodeType() == Node.TEXT_NODE && node.getParentNode() != null)
@@ -2068,7 +2069,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 		// return
 		// (IStructuredDocumentRegion)ContentAssistUtils.getNodeAt((StructuredTextViewer)fTextViewer,
 		// pos);
-		return ContentAssistUtils.getStructuredDocumentRegion(fTextViewer, pos);
+		return ContentAssistUtils.getStructuredDocumentRegion((StructuredTextViewer) fTextViewer, pos);
 	}
 
 	private String getTagName(IStructuredDocumentRegion sdRegion) {

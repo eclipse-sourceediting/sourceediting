@@ -322,7 +322,7 @@ public class XSDImportSection extends SchemaLocationSection
     if (event.widget == prefixText)
     {
       String newPrefix = prefixText.getText();
-      if (oldPrefixValue.equals(newPrefix))
+      if (oldPrefixValue.equals(newPrefix) || !isValidSchemaLocation)
         return;
       Map map = xsdSchema.getQNamePrefixToNamespaceMap();
       String key = prefixText.getText();      

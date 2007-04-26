@@ -88,13 +88,22 @@ public class XSDElementReferenceEditManager implements ComponentReferenceEditMan
   
 //TODO not changed yet
   public void modifyComponentReference(Object referencingObject, ComponentSpecification component)
-  {    
+  {
+    XSDElementDeclaration concreteComponent = null;
     if (referencingObject instanceof Adapter)
     {
       Adapter adapter = (Adapter)referencingObject;
-      if (adapter.getTarget() instanceof XSDConcreteComponent)
+      if (adapter.getTarget() instanceof XSDElementDeclaration)
       {
-        XSDElementDeclaration concreteComponent = (XSDElementDeclaration)adapter.getTarget();
+        concreteComponent = (XSDElementDeclaration)adapter.getTarget();
+      }
+    }
+    else if (referencingObject instanceof XSDConcreteComponent)
+    {
+      concreteComponent = (XSDElementDeclaration) referencingObject;
+    }
+    if (concreteComponent != null)
+    {
         if (component.isNew())
         {  
           XSDElementDeclaration elementDec = null;
@@ -107,8 +116,7 @@ public class XSDElementReferenceEditManager implements ComponentReferenceEditMan
           }
           if (elementDec != null)
           {
-            Command command = new UpdateElementReferenceCommand(Messages._UI_ACTION_UPDATE_ELEMENT_REFERENCE,
-            		concreteComponent, elementDec);
+            Command command = new UpdateElementReferenceCommand(Messages._UI_ACTION_UPDATE_ELEMENT_REFERENCE, concreteComponent, elementDec);
             command.execute();
           }  
         }  
@@ -119,6 +127,5 @@ public class XSDElementReferenceEditManager implements ComponentReferenceEditMan
           command.execute();
         }  
       }
-    }
   }
 }

@@ -31,6 +31,7 @@ import org.eclipse.wst.xsd.ui.internal.adt.facade.IType;
 import org.eclipse.wst.xsd.ui.internal.adt.typeviz.design.figures.HeadingFigure;
 import org.eclipse.wst.xsd.ui.internal.adt.typeviz.design.figures.RoundedLineBorder;
 import org.eclipse.wst.xsd.ui.internal.adt.typeviz.design.figures.StructureFigure;
+import org.eclipse.wst.xsd.ui.internal.common.util.XSDCommonUIUtils;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
 
 public class XSDSimpleTypeEditPart extends BaseTypeConnectingEditPart
@@ -66,7 +67,7 @@ public class XSDSimpleTypeEditPart extends BaseTypeConnectingEditPart
     headingFigure.setIsReadOnly(adapter.isReadOnly());
     Label label = headingFigure.getLabel();
     label.setText(name);
-    label.setIcon(adapter.getImage());    
+    label.setIcon(XSDCommonUIUtils.getUpdatedImage(adapter.getXSDTypeDefinition(), adapter.getImage(), adapter.isReadOnly()));    
   }
   
   public IStructureFigure getStructureFigure()

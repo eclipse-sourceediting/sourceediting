@@ -167,6 +167,12 @@
 	 	id="prop.section.XSDElementDeclarationSection">
 	    <input type="org.eclipse.xsd.XSDElementDeclaration">
 	    </input>
+	 </propertySection>
+	 <propertySection tab="property.tab.advanced" 
+        class="org.eclipse.wst.xsd.ui.internal.common.properties.sections.XSDElementDeclarationAdvancedSection"  
+	 	id="prop.section.XSDElementDeclarationAdvancedSection">
+	    <input type="org.eclipse.xsd.XSDElementDeclaration">
+	    </input>   
 	 </propertySection> 
 	 <propertySection tab="property.tab.general" 
         class="org.eclipse.wst.xsd.ui.internal.common.properties.sections.XSDAttributeDeclarationSection"

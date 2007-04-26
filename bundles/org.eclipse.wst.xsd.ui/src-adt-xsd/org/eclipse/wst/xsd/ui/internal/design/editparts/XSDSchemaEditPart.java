@@ -24,14 +24,17 @@ import org.eclipse.draw2d.ToolbarLayout;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.xsd.ui.internal.adapters.CategoryAdapter;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDSchemaAdapter;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.BaseEditPart;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editpolicies.KeyBoardAccessibilityEditPolicy;
 import org.eclipse.wst.xsd.ui.internal.adt.typeviz.design.figures.HeadingFigure;
+import org.eclipse.wst.xsd.ui.internal.common.util.XSDCommonUIUtils;
 import org.eclipse.wst.xsd.ui.internal.design.editpolicies.SelectionHandlesEditPolicyImpl;
 import org.eclipse.wst.xsd.ui.internal.design.layouts.FillLayout;
 import org.eclipse.wst.xsd.ui.internal.editor.Messages;
+import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDSchema;
 
 public class XSDSchemaEditPart extends BaseEditPart
@@ -139,6 +142,14 @@ public class XSDSchemaEditPart extends BaseEditPart
     LineBorder border = (LineBorder) outer.getBorder();
     border.setWidth(isSelected ? 2 : 1);
     headingFigure.setSelected(isSelected);
+
+    XSDSchemaAdapter schemaAdapter = (XSDSchemaAdapter) getModel();
+    Image image = schemaAdapter.getImage();
+    headingFigure.getLabel().setIcon(image);
+    if (image != null)
+    {
+      headingFigure.getLabel().setIcon(XSDCommonUIUtils.getUpdatedImage((XSDConcreteComponent) schemaAdapter.getTarget(), image, false));
+    }
     outer.repaint();
     
     String targetNamespaceValue = ((XSDSchema) ((XSDSchemaAdapter) getModel()).getTarget()).getTargetNamespace();

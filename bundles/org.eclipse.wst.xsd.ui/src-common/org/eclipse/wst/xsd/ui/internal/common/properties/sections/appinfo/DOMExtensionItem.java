@@ -161,12 +161,12 @@ class DOMExtensionItem extends ExtensionItem
     {
       case KIND_ATTR_TEXT :
       case KIND_ELEMENT_ATTR : {
-        // note intentional fall-thru!!
-        return new UpdateAttributeValueCommand(parent, attribute.getNodeName(), newValue);
+        // note intentional fall-thru!!               
+        return new UpdateAttributeValueCommand(parent, attribute.getNodeName(), newValue, true);
       }
       case KIND_ELEMENT_CMATTRIBUTE : {
         final CMAttributeDeclaration ad = (CMAttributeDeclaration) cmNode;
-        return new UpdateAttributeValueCommand(parent, ad.getAttrName(), newValue);
+        return new UpdateAttributeValueCommand(parent, ad.getAttrName(), newValue, true);
       }
       case KIND_ELEMENT_TEXT : {
         return new UpdateTextValueCommand(parent, newValue);

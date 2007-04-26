@@ -100,7 +100,7 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 
 	public void beginBackgroundUpdate() {
 		fBackgroundupdateInProgress = true;
-		disableRedrawing();
+		setRedraw(false);
 	}
 
 	/*
@@ -493,7 +493,7 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 
 	public void endBackgroundUpdate() {
 		fBackgroundupdateInProgress = false;
-		enabledRedrawing();
+		setRedraw(true);
 	}
 
 	protected void handleDispose() {

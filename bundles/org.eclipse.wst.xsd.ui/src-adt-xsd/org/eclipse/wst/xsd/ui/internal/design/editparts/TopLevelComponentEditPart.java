@@ -50,6 +50,7 @@ import org.eclipse.wst.xsd.ui.internal.adt.design.editpolicies.IADTUpdateCommand
 import org.eclipse.wst.xsd.ui.internal.adt.design.editpolicies.SimpleDirectEditPolicy;
 import org.eclipse.wst.xsd.ui.internal.adt.typeviz.design.figures.FieldFigure;
 import org.eclipse.wst.xsd.ui.internal.common.commands.UpdateNameCommand;
+import org.eclipse.wst.xsd.ui.internal.common.util.XSDCommonUIUtils;
 import org.eclipse.wst.xsd.ui.internal.design.editpolicies.SelectionHandlesEditPolicyImpl;
 import org.eclipse.wst.xsd.ui.internal.design.editpolicies.TopLevelComponentLabelCellEditorLocator;
 import org.eclipse.wst.xsd.ui.internal.design.editpolicies.TopLevelNameDirectEditManager;
@@ -57,6 +58,7 @@ import org.eclipse.wst.xsd.ui.internal.design.figures.HyperLinkLabel;
 import org.eclipse.wst.xsd.ui.internal.design.layouts.FillLayout;
 import org.eclipse.wst.xsd.ui.internal.editor.Messages;
 import org.eclipse.wst.xsd.ui.internal.utils.OpenOnSelectionHelper;
+import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDNamedComponent;
 import org.eclipse.xsd.XSDSchemaDirective;
 import org.eclipse.xsd.impl.XSDImportImpl;
@@ -106,7 +108,9 @@ public class TopLevelComponentEditPart extends BaseEditPart implements IFeedback
       label.setText(adapter.getText());
       Image image = adapter.getImage();
       if (image != null)
-        label.setIcon(image);
+      {
+        label.setIcon(XSDCommonUIUtils.getUpdatedImage((XSDConcreteComponent) adapter.getTarget(), image, isReadOnly));
+      }
       // arrowLabel.setVisible(Boolean.TRUE.equals(adapter.getProperty(getModel(),
       // "drillDown")));
     }

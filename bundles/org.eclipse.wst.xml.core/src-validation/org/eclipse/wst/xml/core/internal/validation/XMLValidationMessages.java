@@ -24,6 +24,7 @@ public class XMLValidationMessages extends NLS {
 	public static String _UI_PROBLEMS_CONNECTION_REFUSED;
 	public static String _UI_REF_FILE_ERROR_MESSAGE;
 	public static String _WARN_NO_GRAMMAR;
+	public static String Message_XML_validation_message_ui;
 
 	static {
 		// load message values from bundle file

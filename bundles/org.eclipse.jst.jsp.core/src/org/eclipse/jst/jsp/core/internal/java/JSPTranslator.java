@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,7 @@ package org.eclipse.jst.jsp.core.internal.java;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -21,17 +22,23 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
-import com.ibm.icu.util.StringTokenizer;
+
+import javax.servlet.jsp.tagext.VariableInfo;
 
 import org.eclipse.core.filebuffers.FileBuffers;
+import org.eclipse.core.filebuffers.ITextFileBuffer;
+import org.eclipse.core.filebuffers.ITextFileBufferManager;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.QualifiedName;
@@ -41,6 +48,8 @@ import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.contentmodel.TaglibController;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.TLDCMDocumentManager;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.JSP12TLDNames;
+import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDElementDeclaration;
+import org.eclipse.jst.jsp.core.internal.provisional.JSP11Namespace;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.jst.jsp.core.internal.taglib.TaglibHelper;
 import org.eclipse.jst.jsp.core.internal.taglib.TaglibHelperManager;
@@ -65,6 +74,8 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
+import com.ibm.icu.util.StringTokenizer;
+
 /**
  * Translates a JSP document into a HttpServlet. Keeps two way mapping from
  * java translation to the original JSP source, which can be obtained through
@@ -87,6 +98,7 @@ public class JSPTranslator {
 
 	// for debugging
 	private static final boolean DEBUG;
+	private static final boolean DEBUG_SAVE_OUTPUT = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.jst.jsp.core/debug/jsptranslationstodisk")); //$NON-NLS-1$  //$NON-NLS-2$
 
 	private IJSPELTranslator fELTranslator = null;
 
@@ -141,6 +153,12 @@ public class JSPTranslator {
 
 	/** user defined imports */
 	private StringBuffer fUserImports = new StringBuffer();
+
+	/**
+	 * A map of tag names to tag library variable information; used to store
+	 * the ones needed for AT_END variable support.
+	 */
+	private HashMap fTagToVariableMap = null;
 
 	private StringBuffer fResult; // the final traslated java document
 	// string buffer
@@ -330,7 +348,8 @@ public class JSPTranslator {
 					}
 				}
 				catch (CoreException e) {
-					// ISSUE: why do we log this here? Instead of allowing to throwup?
+					// ISSUE: why do we log this here? Instead of allowing to
+					// throwup?
 					Logger.logException(e);
 				}
 
@@ -669,6 +688,29 @@ public class JSPTranslator {
 			Logger.log(Logger.INFO_DEBUG, debugString.toString());
 		}
 
+		if (DEBUG_SAVE_OUTPUT) {
+			IProject project = getFile().getProject();
+			String shortenedClassname = StringUtils.replace(getFile().getName(), ".", "_");
+			String filename = shortenedClassname + ".java";
+			IPath path = project.getFullPath().append("src/" + filename);
+			try {
+				IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
+				if (!file.exists()) {
+					file.create(new ByteArrayInputStream(new byte[0]), true, new NullProgressMonitor());
+				}
+				ITextFileBufferManager textFileBufferManager = FileBuffers.getTextFileBufferManager();
+				textFileBufferManager.connect(path, new NullProgressMonitor());
+				ITextFileBuffer javaOutputBuffer = textFileBufferManager.getTextFileBuffer(path);
+				javaOutputBuffer.getDocument().set(StringUtils.replace(fResult.toString(), getClassname(), shortenedClassname));
+				javaOutputBuffer.commit(new NullProgressMonitor(), true);
+				textFileBufferManager.disconnect(path, new NullProgressMonitor());
+			}
+			catch (Exception e) {
+				// this is just for debugging, ignore
+			}
+			System.out.println("Updated translation: " + path);
+		}
+
 		return fResult;
 	}
 
@@ -681,20 +723,86 @@ public class JSPTranslator {
 	public final String getJspText() {
 		return fJspTextBuffer.toString();
 	}
-
+	
 	protected void addTaglibVariables(String tagToAdd) {
+		addTaglibVariables(tagToAdd, getCurrentNode());
+	}
+
+	protected void addTaglibVariables(String tagToAdd, IStructuredDocumentRegion customTag) {
 		IFile f = getFile();
 
 		if (f == null || !f.exists())
 			return;
 
 		TaglibHelper helper = TaglibHelperManager.getInstance().getTaglibHelper(f);
-		IStructuredDocumentRegion customTag = getCurrentNode();
-		TaglibVariable[] taglibVars = helper.getTaglibVariables(tagToAdd, getStructuredDocument(), customTag);
+		/*
+		 * Variables can declare as available when NESTED, AT_BEGIN, or
+		 * AT_END. For AT_END variables, store the entire list of variables in
+		 * the map field so it can be used on the end tag.
+		 */
 		String decl = ""; //$NON-NLS-1$
-		for (int i = 0; i < taglibVars.length; i++) {
-			decl = taglibVars[i].getDeclarationString();
-			appendToBuffer(decl, fUserCode, false, fCurrentNode);
+		if (customTag.getFirstRegion().getType().equals(DOMRegionContext.XML_TAG_OPEN)) {
+			TaglibVariable[] taglibVars = helper.getTaglibVariables(tagToAdd, getStructuredDocument(), customTag);
+			/*
+			 * These loops are duplicated intentionally to keep the nesting
+			 * scoped variables from interfering with the others
+			 */
+			for (int i = 0; i < taglibVars.length; i++) {
+				if (taglibVars[i].getScope() == VariableInfo.AT_BEGIN) {
+					decl = taglibVars[i].getDeclarationString();
+					appendToBuffer(decl, fUserCode, false, fCurrentNode);
+				}
+				if (taglibVars[i].getScope() == VariableInfo.AT_END) {
+					decl = taglibVars[i].getDeclarationString();
+					fTagToVariableMap.put(tagToAdd, taglibVars);
+				}
+			}
+			for (int i = 0; i < taglibVars.length; i++) {
+				if (taglibVars[i].getScope() == VariableInfo.NESTED) {
+					decl = taglibVars[i].getDeclarationString();
+					appendToBuffer("{", fUserCode, false, fCurrentNode);
+					appendToBuffer(decl, fUserCode, false, fCurrentNode);
+					fTagToVariableMap.put(tagToAdd, taglibVars);
+				}
+			}
+			if (customTag.getLastRegion().getType().equals(DOMRegionContext.XML_EMPTY_TAG_CLOSE)) {
+				/*
+				 * Process NESTED variables backwards so the scopes "unroll"
+				 * correctly.
+				 */
+				for (int i = taglibVars.length; i > 0; i--) {
+					if (taglibVars[i-1].getScope() == VariableInfo.NESTED) {
+						appendToBuffer("}", fUserCode, false, fCurrentNode);
+					}
+				}
+				/* Treat this as the end for empty tags */
+				for (int i = 0; i < taglibVars.length; i++) {
+					if (taglibVars[i].getScope() == VariableInfo.AT_END) {
+						decl = taglibVars[i].getDeclarationString();
+						appendToBuffer(decl, fUserCode, false, fCurrentNode);
+					}
+				}
+			}
+		}
+		/*
+		 * Process NESTED variables for an end tag backwards so the scopes
+		 * "unroll" correctly.
+		 */
+		else if (customTag.getFirstRegion().getType().equals(DOMRegionContext.XML_END_TAG_OPEN)) {
+			TaglibVariable[] taglibVars = (TaglibVariable[]) fTagToVariableMap.remove(tagToAdd);
+			if (taglibVars != null) {
+				for (int i = taglibVars.length; i > 0; i--) {
+					if (taglibVars[i-1].getScope() == VariableInfo.NESTED) {
+						appendToBuffer("}", fUserCode, false, fCurrentNode);
+					}
+				}
+				for (int i = 0; i < taglibVars.length; i++) {
+					if (taglibVars[i].getScope() == VariableInfo.AT_END) {
+						decl = taglibVars[i].getDeclarationString();
+						appendToBuffer(decl, fUserCode, false, fCurrentNode);
+					}
+				}
+			}
 		}
 	}
 
@@ -726,6 +834,10 @@ public class JSPTranslator {
 	 * structuredDocument nodes
 	 */
 	public void translate() {
+		if (fTagToVariableMap == null) {
+			fTagToVariableMap = new HashMap(2);
+		}
+
 		setCurrentNode(fStructuredDocument.getFirstStructuredDocumentRegion());
 
 		while (getCurrentNode() != null && !isCanceled()) {
@@ -744,6 +856,8 @@ public class JSPTranslator {
 				advanceNextNode();
 		}
 		buildResult();
+
+		fTagToVariableMap.clear();
 	}
 
 	protected void setDocumentContent(IDocument document, InputStream contentStream, String charset) {
@@ -846,7 +960,7 @@ public class JSPTranslator {
 				// translateJSPNode(region, regions, type, JSPType);
 				translateJSPNode(containerRegion, regions, type, JSPType);
 			}
-			else if (type != null && type == DOMRegionContext.XML_TAG_OPEN) {
+			else if (type != null && (type == DOMRegionContext.XML_TAG_OPEN || type == DOMRegionContext.XML_END_TAG_OPEN)) {
 				translateXMLNode(containerRegion, regions);
 			}
 		}
@@ -854,6 +968,9 @@ public class JSPTranslator {
 	}
 
 	private void handleScopingIfNecessary(ITextRegionCollection containerRegion) {
+		if (true)
+			return;
+
 		// code within a custom tag gets its own scope
 		// so if we encounter a start of a custom tag, we add '{'
 		// and for the end of a custom tag we add '}'
@@ -999,9 +1116,10 @@ public class JSPTranslator {
 			if (r.getType() == DOMRegionContext.XML_TAG_NAME || r.getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_NAME)
 
 			{
-				String fullTagName = container.getFullText(r).trim();
+				String fullTagName = container.getText(r);
 				if (fullTagName.indexOf(':') > -1) {
-					addTaglibVariables(fullTagName); // it may be a taglib
+					addTaglibVariables(fullTagName); // it may be a custom
+					// tag
 				}
 				StringTokenizer st = new StringTokenizer(fullTagName, ":.", false); //$NON-NLS-1$
 				if (st.hasMoreTokens() && st.nextToken().equals("jsp")) //$NON-NLS-1$
@@ -1026,7 +1144,15 @@ public class JSPTranslator {
 							if (st.hasMoreTokens()) {
 								String directiveName = st.nextToken();
 								if (directiveName.equals("taglib")) { //$NON-NLS-1$
-									handleTaglib();
+									while (r != null && regions.hasNext() && !r.getType().equals(DOMRegionContext.XML_TAG_ATTRIBUTE_NAME)) {
+										r = (ITextRegion) regions.next();
+										if(container.getText(r).equals(JSP11Namespace.ATTR_NAME_PREFIX)) {
+											String prefix = getAttributeValue(r, regions);
+											if (prefix != null) {
+												handleTaglib(prefix);
+											}
+										}
+									}
 									return;
 								}
 								else if (directiveName.equals("include")) { //$NON-NLS-1$
@@ -1099,30 +1225,37 @@ public class JSPTranslator {
 		// tag name is not jsp
 		// handle embedded jsp attributes...
 		ITextRegion embedded = null;
-		//Iterator attrRegions = null;
-		//ITextRegion attrChunk = null;
+		// Iterator attrRegions = null;
+		// ITextRegion attrChunk = null;
 		while (regions.hasNext()) {
 			embedded = (ITextRegion) regions.next();
 			if (embedded instanceof ITextRegionContainer) {
 				// parse out container
-				
+
 				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=130606
 				// fix exponential iteration problem w/ embedded expressions
 				translateEmbeddedJSPInAttribute((ITextRegionContainer) embedded);
-//				attrRegions = ((ITextRegionContainer) embedded).getRegions().iterator();
-//				while (attrRegions.hasNext()) {
-//					attrChunk = (ITextRegion) attrRegions.next();
-//					String type = attrChunk.getType();
-//					// embedded JSP in attribute support only want to
-//					// translate one time per
-//					// embedded region so we only translate on the JSP open
-//					// tags (not content)
-//					if (type == DOMJSPRegionContexts.JSP_EXPRESSION_OPEN || type == DOMJSPRegionContexts.JSP_SCRIPTLET_OPEN || type == DOMJSPRegionContexts.JSP_DECLARATION_OPEN || type == DOMJSPRegionContexts.JSP_DIRECTIVE_OPEN || type == DOMJSPRegionContexts.JSP_EL_OPEN) {
-//						// now call jsptranslate
-//						translateEmbeddedJSPInAttribute((ITextRegionContainer) embedded);
-//						break;
-//					}
-//				}
+				// attrRegions = ((ITextRegionContainer)
+				// embedded).getRegions().iterator();
+				// while (attrRegions.hasNext()) {
+				// attrChunk = (ITextRegion) attrRegions.next();
+				// String type = attrChunk.getType();
+				// // embedded JSP in attribute support only want to
+				// // translate one time per
+				// // embedded region so we only translate on the JSP open
+				// // tags (not content)
+				// if (type == DOMJSPRegionContexts.JSP_EXPRESSION_OPEN ||
+				// type ==
+				// DOMJSPRegionContexts.JSP_SCRIPTLET_OPEN || type ==
+				// DOMJSPRegionContexts.JSP_DECLARATION_OPEN || type ==
+				// DOMJSPRegionContexts.JSP_DIRECTIVE_OPEN || type ==
+				// DOMJSPRegionContexts.JSP_EL_OPEN) {
+				// // now call jsptranslate
+				// translateEmbeddedJSPInAttribute((ITextRegionContainer)
+				// embedded);
+				// break;
+				// }
+				// }
 			}
 		}
 	}
@@ -1506,6 +1639,8 @@ public class JSPTranslator {
 	 * markers that came from <@taglib> directives, (not <@include>), since
 	 * include file taglibs are handled on the fly when they are encountered. *
 	 * @param regions
+	 * 
+	 * @deprecated - does not properly handle prefixes
 	 */
 	protected void handleTaglib() {
 		// get/create TLDCMDocument
@@ -1539,6 +1674,29 @@ public class JSPTranslator {
 	}
 
 	/*
+	 * This method should ideally only be called once per run through
+	 * JSPTranslator This is intended for use by inner helper classes that
+	 * need to add block markers to their own parsers. This method only adds
+	 * markers that came from <@taglib> directives, (not <@include>), since
+	 * include file taglibs are handled on the fly when they are encountered. *
+	 * @param regions
+	 */
+	private void handleTaglib(String prefix) {
+		// get/create TLDCMDocument
+		TLDCMDocumentManager mgr = TaglibController.getTLDCMDocumentManager(fStructuredDocument);
+		if (mgr != null) {
+			// get trackers for the CMDocuments enabled at this offset
+			List trackers = mgr.getCMDocumentTrackers(getCurrentNode().getEnd());
+			Iterator it = trackers.iterator();
+			CMDocumentTracker tracker = null;
+			while (it.hasNext()) {
+				tracker = (CMDocumentTracker) it.next();
+				addBlockMarkers(prefix + ":", tracker.getDocument());
+			}
+		}
+	}
+
+	/*
 	 * adds block markers to JSPTranslator's block marker list for all
 	 * elements in doc @param doc
 	 */
@@ -1549,6 +1707,24 @@ public class JSPTranslator {
 			while (elements.hasNext()) {
 				node = (CMNode) elements.next();
 				getBlockMarkers().add(new BlockMarker(node.getNodeName(), null, DOMJSPRegionContexts.JSP_CONTENT, true));
+			}
+		}
+	}
+
+	/*
+	 * adds block markers to JSPTranslator's block marker list for all
+	 * elements in doc @param doc
+	 */
+	protected void addBlockMarkers(String prefix, CMDocument doc) {
+		if (doc.getElements().getLength() > 0) {
+			Iterator elements = doc.getElements().iterator();
+			CMNode node = null;
+			while (elements.hasNext()) {
+				node = (CMNode) elements.next();
+				if (node instanceof TLDElementDeclaration && ((TLDElementDeclaration) node).getBodycontent().equals(JSP12TLDNames.CONTENT_TAGDEPENDENT))
+					getBlockMarkers().add(new BlockMarker(prefix + node.getNodeName(), null, DOMRegionContext.BLOCK_TEXT, true));
+				else
+					getBlockMarkers().add(new BlockMarker(prefix + node.getNodeName(), null, DOMJSPRegionContexts.JSP_CONTENT, true));
 			}
 		}
 	}
@@ -1649,7 +1825,10 @@ public class JSPTranslator {
 			if (!getIncludes().contains(fileLocation) && getBaseLocation() != null && !fileLocation.equals(getBaseLocation())) {
 				getIncludes().push(fileLocation);
 				JSPIncludeRegionHelper helper = new JSPIncludeRegionHelper(this);
-				helper.parse(fileLocation);
+				boolean parsed = helper.parse(fileLocation);
+				if (!parsed) {
+					Logger.log(Logger.ERROR_DEBUG, "Error: included file " + filename + " not found {" + getBaseLocation() + ")");
+				}
 				getIncludes().pop();
 			}
 		}
@@ -1819,7 +1998,7 @@ public class JSPTranslator {
 			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=128490
 			// length of 11 is the length of jsp:useBean
 			// and saves the expensive getText.equals call
-			if(r.getType() == DOMRegionContext.XML_TAG_NAME) {
+			if (r.getType() == DOMRegionContext.XML_TAG_NAME) {
 				if (r.getTextLength() == 11 && jspReferenceRegion.getText(r).equals("jsp:useBean")) { //$NON-NLS-1$
 					isUseBean = true;
 				}

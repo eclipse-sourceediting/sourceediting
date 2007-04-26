@@ -10,9 +10,6 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.common.properties.sections;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.xerces.util.XMLChar;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.jface.viewers.ISelection;
@@ -38,9 +35,9 @@ import org.eclipse.wst.xsd.ui.internal.common.commands.UpdateNameCommand;
 import org.eclipse.wst.xsd.ui.internal.dialogs.NewTypeDialog;
 import org.eclipse.wst.xsd.ui.internal.editor.Messages;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorCSHelpIds;
+import org.eclipse.wst.xsd.ui.internal.editor.XSDElementReferenceEditManager;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDTypeReferenceEditManager;
 import org.eclipse.wst.xsd.ui.internal.editor.search.XSDSearchListDialogDelegate;
-import org.eclipse.wst.xsd.ui.internal.util.TypesHelper;
 import org.eclipse.xsd.XSDElementDeclaration;
 import org.eclipse.xsd.XSDTypeDefinition;
 import org.eclipse.xsd.util.XSDConstants;
@@ -215,15 +212,6 @@ public class XSDElementDeclarationSection extends MultiplicitySection
     init();
     relayout();
     
-    if (isElementReference)
-    {
-      TypesHelper helper = new TypesHelper(xsdSchema);
-      List items = new ArrayList();
-      items = helper.getGlobalElements();
-      items.add(0, ""); //$NON-NLS-1$
-      componentNameCombo.setItems((String [])items.toArray(new String[0]));
-    }
-//    fillTypesCombo();
     setListenerEnabled(true);
   }
   
@@ -347,8 +335,8 @@ public class XSDElementDeclarationSection extends MultiplicitySection
           }
         }
 
-        maxCombo.setEnabled(!xsdElementDeclaration.isGlobal());
-        minCombo.setEnabled(!xsdElementDeclaration.isGlobal());
+        maxCombo.setEnabled(!xsdElementDeclaration.isGlobal() || isElementReference);
+        minCombo.setEnabled(!xsdElementDeclaration.isGlobal() || isElementReference);
       }
     }
 
@@ -407,13 +395,39 @@ public class XSDElementDeclarationSection extends MultiplicitySection
     }
     else if (e.widget == componentNameCombo)
     {
-      String newValue = componentNameCombo.getText();
-      String newName = newValue.substring(newValue.indexOf(":") + 1); //$NON-NLS-1$
-      if (isElementReference)
+      IEditorPart editor = getActiveEditor();
+      if (editor == null) return;
+      ComponentReferenceEditManager manager = (ComponentReferenceEditManager)editor.getAdapter(XSDElementReferenceEditManager.class);    
+
+      String selection = componentNameCombo.getText();
+      ComponentSpecification newValue;
+      IComponentDialog dialog= null;
+      if ( selection.equals(Messages._UI_ACTION_BROWSE))
       {
-        XSDElementDeclaration elementRef = (XSDElementDeclaration)input;
-        elementRef.getElement().setAttribute(XSDConstants.REF_ATTRIBUTE, newValue);
-        nameText.setText(newName);
+        dialog = manager.getBrowseDialog();
+      }
+      else if ( selection.equals(Messages._UI_ACTION_NEW))
+      {
+        dialog = manager.getNewDialog();
+      }
+
+      if (dialog != null)
+      {
+        if (dialog.createAndOpen() == Window.OK)
+        {
+          newValue = dialog.getSelectedComponent();
+          manager.modifyComponentReference(input, newValue);
+        }
+        else
+        {
+          componentNameCombo.setText("");
+        }
+      }
+      else //use the value from selected quickPick item
+      {
+        newValue = getComponentSpecFromQuickPickForValue(selection, manager);
+        if (newValue != null)
+          manager.modifyComponentReference(input, newValue);
       }
 
     }
@@ -518,7 +532,36 @@ public class XSDElementDeclarationSection extends MultiplicitySection
   protected void refreshRefCombo()
   {
     componentNameCombo.setText(""); //$NON-NLS-1$
-
+    fillElementsCombo();
+  }
+  
+  private void fillElementsCombo()
+  {
+    IEditorPart editor = getActiveEditor();
+    ComponentReferenceEditManager manager = (ComponentReferenceEditManager)editor.getAdapter(XSDElementReferenceEditManager.class);    
+    
+    componentNameCombo.removeAll();
+    componentNameCombo.add(Messages._UI_ACTION_BROWSE);
+    componentNameCombo.add(Messages._UI_ACTION_NEW);
+    ComponentSpecification[] quickPicks = manager.getQuickPicks();
+    if (quickPicks != null)
+    {
+      for (int i=0; i < quickPicks.length; i++)
+      {
+        ComponentSpecification componentSpecification = quickPicks[i];
+        componentNameCombo.add(componentSpecification.getName());
+      }  
+    }
+    ComponentSpecification[] history = manager.getHistory();
+    if (history != null)
+    {
+      for (int i=0; i < history.length; i++)
+      {
+        ComponentSpecification componentSpecification = history[i];
+        componentNameCombo.add(componentSpecification.getName());
+      }  
+    }
+    
     XSDElementDeclaration namedComponent = (XSDElementDeclaration) input;
     Element element = namedComponent.getElement();
     if (element != null)
@@ -528,7 +571,13 @@ public class XSDElementDeclarationSection extends MultiplicitySection
       {
         attrValue = ""; //$NON-NLS-1$
       }
+      ComponentSpecification ret = getComponentSpecFromQuickPickForValue(attrValue, manager);
+      if (ret == null)
+      {
+        componentNameCombo.add(attrValue);
+      }
       componentNameCombo.setText(attrValue);
-    }
+    } 
   }
+
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,6 +18,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
+import org.eclipse.wst.sse.core.internal.text.BasicStructuredDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMText;
@@ -50,7 +51,11 @@ class ReadOnlyController {
 		if (doc == null) {
 			return;
 		}
-		doc.makeReadOnly(offset, length);
+		if (doc instanceof BasicStructuredDocument) {
+			((BasicStructuredDocument)doc).makeReadOnly(offset, length, canInsertBefore, canInsertAfter);
+		} else {
+			doc.makeReadOnly(offset, length);
+		}
 	}
 
 	static private void lock(IStructuredDocumentRegion node, boolean canInsertBefore, boolean canInsertAfter) {
@@ -61,7 +66,11 @@ class ReadOnlyController {
 		if (doc == null) {
 			return;
 		}
-		doc.makeReadOnly(node.getStart(), node.getLength());
+		if (doc instanceof BasicStructuredDocument) {
+			((BasicStructuredDocument)doc).makeReadOnly(node.getStart(), node.getLength(), canInsertBefore, canInsertAfter);
+		} else {
+			doc.makeReadOnly(node.getStart(), node.getLength());
+		}
 	}
 
 	static private void unlock(IStructuredDocumentRegion node) {

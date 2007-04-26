@@ -22,6 +22,7 @@ import org.eclipse.wst.xml.core.internal.validation.core.ValidationReport;
 import org.eclipse.wst.xsd.core.internal.XSDCorePlugin;
 import org.eclipse.wst.xsd.core.internal.preferences.XSDCorePreferenceNames;
 import org.eclipse.wst.xsd.core.internal.validation.XSDValidationConfiguration;
+import org.eclipse.wst.xsd.core.internal.validation.XSDValidationMessages;
 
 public class Validator extends AbstractNestedValidator
 {
@@ -55,6 +56,14 @@ public class Validator extends AbstractNestedValidator
 	xsdConfigurations.remove(context);
 	
 	super.teardownValidation(context);
+  }
+
+  /* (non-Javadoc)
+   * @see org.eclipse.wst.xml.core.internal.validation.core.AbstractNestedValidator#getValidatorName()
+   */
+  protected String getValidatorName() 
+  {
+	return XSDValidationMessages.Message_XSD_validation_message_ui;
   }
 
   /* (non-Javadoc)

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--Arbortext, Inc., 1988-2005, v.4002-->
-<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN"  "concept.dtd">
-<?Pub Inc?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN"
+ "concept.dtd">
 <concept id="cxmlcat" xml:lang="en-us">
 <title>XML file associations with DTDs and XML schemas</title>
 <titlealts>
@@ -107,10 +107,9 @@ XML files - Office.xml, House.xml, Apartment.xml, Bank.xml, and PostOffice.xml.
 You move the DTD file Building.dtd to a new location. If you have a direction
 association between Building.dtd and all the XML files, you will have to update
 the &lt;DOCTTYPE> declaration in each XML file to reflect the new location
-of Building.dtd.<?Pub Caret?> If, however, you have an XML Catalog association,
-and all the XML files just refer to the Key of Building.dtd, then you only
-have to update the URI and all the XML files will point to the new location
-of Building.dtd.</p></section>
+of Building.dtd. If, however, you have an XML Catalog association, and all
+the XML files just refer to the Key of Building.dtd, then you only have to
+update the URI and all the XML files will point to the new location of Building.dtd.</p></section>
 <section><title>Updating an entry in the XML Catalog</title><p>After you have
 updated an entry in the XML Catalog, you might need to refresh the XML editor
 view so that it uses the new information. To do this, click the <uicontrol>Reload
@@ -119,9 +118,6 @@ Dependencies</uicontrol> toolbar button <image href="../images/rldgrmr.gif">
 the view will be updated using the current XML Catalog settings. You only
 need to refresh the XML editor view when you have an XML file open that references
 the XML Catalog entry that was updated.</p><p>For more information, refer
-to the related tasks.</p><p>(c) Copyright 2001, World Wide Web Consortium
-(Massachusetts Institute of Technology, Institut National de Recherche en
-Informatique et en Automatique, Keio University).</p></section>
+to the related tasks.</p></section>
 </conbody>
 </concept>
-<?Pub *0000008844?>

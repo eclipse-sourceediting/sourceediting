@@ -588,7 +588,7 @@ public class MarkupValidator implements IValidator, ISourceValidator {
 	}
 
 	public void disconnect(IDocument document) {
-		setDocument(null);
+		// nothing to do	
 	}
 
 	public void validate(IRegion dirtyRegion, IValidationContext helper, IReporter reporter) {

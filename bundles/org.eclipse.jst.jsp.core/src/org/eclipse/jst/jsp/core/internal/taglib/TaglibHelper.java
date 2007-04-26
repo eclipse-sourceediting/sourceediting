@@ -16,6 +16,8 @@ import javax.servlet.jsp.tagext.TagInfo;
 import javax.servlet.jsp.tagext.TagLibraryInfo;
 import javax.servlet.jsp.tagext.VariableInfo;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -85,7 +87,6 @@ public class TaglibHelper {
 	 *            tag
 	 */
 	public TaglibVariable[] getTaglibVariables(String tagToAdd, IStructuredDocument structuredDoc, IStructuredDocumentRegion customTag) {
-
 		List results = new ArrayList();
 		ModelQuery mq = getModelQuery(structuredDoc);
 		if (mq != null) {
@@ -96,7 +97,7 @@ public class TaglibHelper {
 			if (mgr == null)
 				return new TaglibVariable[0];
 
-			List trackers = mgr.getCMDocumentTrackers(customTag.getEndOffset());
+			List trackers = mgr.getCMDocumentTrackers(-1);
 			Iterator taglibs = trackers.iterator();
 
 			// TaglibSupport support = ((TaglibModelQuery)
@@ -171,7 +172,7 @@ public class TaglibHelper {
 				if (var.getVariableClass() != null) {
 					varClass = var.getVariableClass();
 				}
-				results.add(new TaglibVariable(varClass, varName));
+				results.add(new TaglibVariable(varClass, varName, var.getScope()));
 			}
 		}
 	}
@@ -184,7 +185,7 @@ public class TaglibHelper {
 	 * @param results
 	 *            list where the <code>TaglibVariable</code> s are added
 	 * @param decl
-	 *            TLDElementDelcaration for the custom tag
+	 *            TLDElementDeclaration for the custom tag
 	 * @param prefix
 	 *            custom tag prefix
 	 * @param uri
@@ -196,7 +197,7 @@ public class TaglibHelper {
 		if (teiClassname == null || teiClassname.length() == 0)
 			return;
 
-		ClassLoader loader = getClassloader();
+		TaglibClassLoader loader = getClassloader();
 
 		Class teiClass = null;
 		try {
@@ -216,7 +217,7 @@ public class TaglibHelper {
 							VariableInfo[] vInfos = tei.getVariableInfo(td);
 							if (vInfos != null) {
 								for (int i = 0; i < vInfos.length; i++) {
-									results.add(new TaglibVariable(vInfos[i].getClassName(), vInfos[i].getVarName()));
+									results.add(new TaglibVariable(vInfos[i].getClassName(), vInfos[i].getVarName(), vInfos[i].getScope()));
 								}
 							}
 						}
@@ -298,7 +299,6 @@ public class TaglibHelper {
 	 * @param e
 	 */
 	private void logException(String teiClassname, Throwable e) {
-
 		String message = "teiClassname: ["; //$NON-NLS-1$ 
 		if (teiClassname != null)
 			message += teiClassname;
@@ -344,8 +344,8 @@ public class TaglibHelper {
 		return tagDataTable;
 	}
 
-	private ClassLoader getClassloader() {
-
+	private TaglibClassLoader getClassloader() {
+		
 		if (fLoader == null) {
 			fLoader = new TaglibClassLoader(this.getClass().getClassLoader());
 			fProjectEntries.clear();
@@ -371,12 +371,11 @@ public class TaglibHelper {
 				if (p.hasNature(JavaCore.NATURE_ID)) {
 
 					IJavaProject project = JavaCore.create(p);
-					IPath wkspaceRoot = ResourcesPlugin.getWorkspace().getRoot().getLocation();
 
 					try {
 						IClasspathEntry[] entries = project.getRawClasspath();
-						addDefaultDirEntry(loader, project, wkspaceRoot);
-						addClasspathEntries(loader, project, wkspaceRoot, entries);
+						addDefaultDirEntry(loader, project);
+						addClasspathEntries(loader, project, entries);
 					}
 					catch (JavaModelException e) {
 						Logger.logException(e);
@@ -389,7 +388,7 @@ public class TaglibHelper {
 		}
 	}
 
-	private void addClasspathEntries(TaglibClassLoader loader, IJavaProject project, IPath wkspaceRoot, IClasspathEntry[] entries) throws JavaModelException {
+	private void addClasspathEntries(TaglibClassLoader loader, IJavaProject project, IClasspathEntry[] entries) throws JavaModelException {
 		IClasspathEntry entry;
 		for (int i = 0; i < entries.length; i++) {
 
@@ -399,19 +398,19 @@ public class TaglibHelper {
 
 			switch (entry.getEntryKind()) {
 				case IClasspathEntry.CPE_SOURCE :
-					addSourceEntry(loader, wkspaceRoot, entry);
+					addSourceEntry(loader, entry);
 					break;
 				case IClasspathEntry.CPE_LIBRARY :
-					addLibraryEntry(loader, wkspaceRoot, entry.getPath().toString());
+					addLibraryEntry(loader, project, entry.getPath());
 					break;
 				case IClasspathEntry.CPE_PROJECT :
 					addProjectEntry(loader, entry);
 					break;
 				case IClasspathEntry.CPE_VARIABLE :
-					addVariableEntry(loader, wkspaceRoot, entry);
+					addVariableEntry(loader, project, entry);
 					break;
 				case IClasspathEntry.CPE_CONTAINER :
-					addContainerEntry(loader, project, wkspaceRoot, entry);
+					addContainerEntry(loader, project, entry);
 					break;
 			}
 		}
@@ -421,15 +420,15 @@ public class TaglibHelper {
 	 * @param loader
 	 * @param entry
 	 */
-	private void addVariableEntry(TaglibClassLoader loader, IPath wkspaceRoot, IClasspathEntry entry) {
-
+	private void addVariableEntry(TaglibClassLoader loader, IJavaProject project, IClasspathEntry entry) {
 		if (DEBUG)
 			System.out.println(" -> adding variable entry: [" + entry + "]"); //$NON-NLS-1$ //$NON-NLS-2$
 
 		// variable should either be a project or a library entry
 
-		String variableName = entry.getPath().toString();
-		IPath variablePath = JavaCore.getClasspathVariable(variableName);
+		IPath variablePath = entry.getPath();
+		//		String variableName = entry.getPath().toString();
+		variablePath = JavaCore.getResolvedVariablePath(variablePath);
 
 		// RATLC01076854
 		// variable paths may not exist
@@ -437,23 +436,22 @@ public class TaglibHelper {
 		if (variablePath != null) {
 			if (variablePath.segments().length == 1) {
 				IProject varProj = ResourcesPlugin.getWorkspace().getRoot().getProject(variablePath.toString());
-				if (varProj != null && varProj.exists()) {
+				if (varProj != null && varProj.isAccessible()) {
 					addClasspathEntriesForProject(varProj, loader);
 					return;
 				}
 			}
-			addLibraryEntry(loader, wkspaceRoot, variablePath.toString());
+			addLibraryEntry(loader, project, variablePath);
 		}
 	}
 
 	/**
 	 * @param loader
 	 * @param project
-	 * @param wkspaceRoot
 	 * @param entry
 	 * @throws JavaModelException
 	 */
-	private void addContainerEntry(TaglibClassLoader loader, IJavaProject project, IPath wkspaceRoot, IClasspathEntry entry) throws JavaModelException {
+	private void addContainerEntry(TaglibClassLoader loader, IJavaProject project, IClasspathEntry entry) throws JavaModelException {
 
 		IClasspathContainer container = JavaCore.getClasspathContainer(entry.getPath(), project);
 		if (container != null) {
@@ -463,7 +461,7 @@ public class TaglibHelper {
 
 				IClasspathEntry[] cpes = container.getClasspathEntries();
 				// recursive call here
-				addClasspathEntries(loader, project, wkspaceRoot, cpes);
+				addClasspathEntries(loader, project, cpes);
 			}
 		}
 	}
@@ -473,73 +471,99 @@ public class TaglibHelper {
 	 * @param entry
 	 */
 	private void addProjectEntry(TaglibClassLoader loader, IClasspathEntry entry) {
-
 		if (DEBUG)
 			System.out.println(" -> project entry: [" + entry + "]"); //$NON-NLS-1$ //$NON-NLS-2$
 
 		IPath path = entry.getPath();
-		IProject refereceProj = ResourcesPlugin.getWorkspace().getRoot().getProject(path.toString());
-		if (refereceProj != null && refereceProj.exists())
-			addClasspathEntriesForProject(refereceProj, loader);
+		IProject referenceProj = ResourcesPlugin.getWorkspace().getRoot().getProject(path.segment(0));
+		if (referenceProj != null && referenceProj.isAccessible()) {
+			addClasspathEntriesForProject(referenceProj, loader);
+		}
 	}
 
 	/**
 	 * @param loader
 	 * @param project
-	 * @param wkspaceRoot
+	 * @param projectLocation
 	 * @throws JavaModelException
 	 */
-	private void addDefaultDirEntry(TaglibClassLoader loader, IJavaProject project, IPath wkspaceRoot) throws JavaModelException {
-
+	private void addDefaultDirEntry(TaglibClassLoader loader, IJavaProject project) throws JavaModelException {
 		// add default bin directory for the project
-		IPath outputLocation = project.getOutputLocation();
-		if (!outputLocation.toFile().exists()) {
-			outputLocation = wkspaceRoot.append(outputLocation);
+		IPath outputPath = project.getOutputLocation();
+		String outputLocation = null;
+		if (!outputPath.toFile().exists()) {
+			if (outputPath.segmentCount() > 1) {
+				// separate source and output folders
+				IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getFolder(outputPath);
+				if (folder.isAccessible() && folder.getLocation() != null) {
+					outputLocation = folder.getLocation().toString();
+				}
+			}
+			else {
+				// project as output folder (default for <=3.2)
+				IProject iproject = ResourcesPlugin.getWorkspace().getRoot().getProject(outputPath.segment(0));
+				if (iproject.getLocation() != null) {
+					outputLocation = iproject.getLocation().toString();
+				}
+			}
 		}
-		loader.addDirectory(outputLocation.toString());
+		else {
+			outputLocation = outputPath.toString();
+		}
+		loader.addDirectory(outputLocation);
 	}
 
 	/**
 	 * @param loader
-	 * @param wkspaceRoot
 	 * @param entry
 	 */
-	private void addLibraryEntry(TaglibClassLoader loader, IPath wkspaceRoot, String libPath) {
-
-		String jarPath = libPath;
-		File file = new File(jarPath);
+	private void addLibraryEntry(TaglibClassLoader loader, IJavaProject project, IPath libPath) {
+		String jarPathString = libPath.toString();
+		File file = new File(libPath.toOSString());
 
 		// if not absolute path, it's workspace relative
-		if (!file.exists()) {
-			jarPath = wkspaceRoot.append(jarPath).toString();
+		if (!file.exists() && libPath.segmentCount() > 1) {
+			/*
+			 * unlikely, the UI prevents adding folder variables to the
+			 * classpath
+			 */
+			IFile jarFile = ResourcesPlugin.getWorkspace().getRoot().getFile(libPath);
+			if(jarFile.isAccessible() && jarFile.getLocation() != null) {
+				jarPathString = jarFile.getLocation().toString();
+			}
 		}
 
-		if (jarPath.endsWith(".jar")) { //$NON-NLS-1$ 
-			loader.addJar(jarPath);
-		}
-		else if (file.isDirectory()) {
-			// it's actually a folder containing binaries
-			loader.addDirectory(jarPath);
+		if (jarPathString != null) {
+			if (jarPathString.endsWith(".jar")) { //$NON-NLS-1$ 
+				loader.addJar(jarPathString);
+			}
+			else if (file.isDirectory()) {
+				// it's actually a folder containing binaries
+				loader.addDirectory(jarPathString);
+			}
 		}
 	}
 
 	/**
 	 * @param loader
-	 * @param wkspaceRoot
 	 * @param entry
 	 */
-	private void addSourceEntry(TaglibClassLoader loader, IPath wkspaceRoot, IClasspathEntry entry) {
-
+	private void addSourceEntry(TaglibClassLoader loader, IClasspathEntry entry) {
 		// add bin directory for specific entry if it has
 		// one
-		if (entry.getOutputLocation() != null) {
-			String outputPath = entry.getOutputLocation().toString();
-			File file = entry.getOutputLocation().toFile();
-			// if not absolute path, it's workspace relative
-			if (!file.exists()) {
-				outputPath = wkspaceRoot.append(entry.getOutputLocation()).toString();
+		IPath outputLocation = entry.getOutputLocation();
+		if(outputLocation != null && outputLocation.segmentCount() > 1) {
+			IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getFolder(outputLocation);
+			if (folder != null && folder.isAccessible()) {
+				outputLocation = folder.getLocation();
+				loader.addDirectory(outputLocation.toString());
 			}
-			loader.addDirectory(outputPath);
+		}
+		else {
+			IPath location = getProject().getLocation();
+			if(location != null) {
+				loader.addDirectory(location.toString());
+			}
 		}
 	}
 

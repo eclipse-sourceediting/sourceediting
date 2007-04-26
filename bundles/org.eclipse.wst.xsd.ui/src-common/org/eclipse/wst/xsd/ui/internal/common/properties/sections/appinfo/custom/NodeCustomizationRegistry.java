@@ -20,6 +20,7 @@ public class NodeCustomizationRegistry
   private static final String NAMESPACE = "namespace"; //$NON-NLS-1$  
   private static final String LABEL_PROVIDER_CLASS_ATTRIBUTE_NAME = "labelProviderClass";     
   private static final String NODE_EDITOR_PROVIDER_CLASS_ATTRIBUTE_NAME = "nodeEditorProviderClass"; //$NON-NLS-1$
+  private static final String FILTER_CLASS_ATTRIBUTE_NAME = "filterClass"; 
 
 
   protected String extensionId;
@@ -33,10 +34,11 @@ public class NodeCustomizationRegistry
   private class Descriptor
   {
     IConfigurationElement configurationElement;
-    
     NodeEditorProvider nodeEditorProvider;
+    NodeFilter nodeFilter;    
     boolean nodeEditorProviderFailedToLoad = false;
     boolean labelProviderFailedToLoad = false;
+    boolean nodeFilterFailedToLoad = false;    
     
     Descriptor(IConfigurationElement element)
     {
@@ -73,6 +75,22 @@ public class NodeCustomizationRegistry
         }
       }
       return null;
+    }
+
+    public NodeFilter getNodeFilter()
+    {
+      if (!nodeEditorProviderFailedToLoad)
+      {  
+        try
+        {
+          nodeFilter = (NodeFilter)configurationElement.createExecutableExtension(FILTER_CLASS_ATTRIBUTE_NAME);
+        }
+        catch (Exception e) 
+        {
+          nodeEditorProviderFailedToLoad = true;
+        }
+      }
+      return nodeFilter;
     }
   }
 
@@ -123,6 +141,16 @@ public class NodeCustomizationRegistry
     if (descriptor != null)
     {  
       return descriptor.createLabelProvider();       
+    }
+    return null;    
+  }
+  
+  public NodeFilter getNodeFilter(String namespace)
+  {
+    Descriptor descriptor = getDescriptor(namespace);
+    if (descriptor != null)
+    {  
+      return descriptor.getNodeFilter();       
     }
     return null;    
   }

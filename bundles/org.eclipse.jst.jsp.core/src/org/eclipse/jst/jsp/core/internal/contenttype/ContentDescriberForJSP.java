@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004-2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,12 +19,13 @@ import org.eclipse.core.runtime.content.IContentDescriber;
 import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.core.runtime.content.ITextContentDescriber;
 import org.eclipse.jst.jsp.core.internal.provisional.contenttype.IContentDescriptionForJSP;
+import org.eclipse.wst.html.core.internal.provisional.contenttype.ContentTypeFamilyForHTML;
 import org.eclipse.wst.sse.core.internal.encoding.EncodingMemento;
 import org.eclipse.wst.sse.core.internal.encoding.IContentDescriptionExtended;
 import org.eclipse.wst.sse.core.internal.encoding.IResourceCharsetDetector;
 
 public final class ContentDescriberForJSP implements ITextContentDescriber {
-	private final static QualifiedName[] SUPPORTED_OPTIONS = {IContentDescription.CHARSET, IContentDescription.BYTE_ORDER_MARK, IContentDescriptionExtended.DETECTED_CHARSET, IContentDescriptionExtended.UNSUPPORTED_CHARSET, IContentDescriptionExtended.APPROPRIATE_DEFAULT, IContentDescriptionForJSP.CONTENT_TYPE_ATTRIBUTE, IContentDescriptionForJSP.LANGUAGE_ATTRIBUTE};
+	private final static QualifiedName[] SUPPORTED_OPTIONS = {IContentDescription.CHARSET, IContentDescription.BYTE_ORDER_MARK, IContentDescriptionExtended.DETECTED_CHARSET, IContentDescriptionExtended.UNSUPPORTED_CHARSET, IContentDescriptionExtended.APPROPRIATE_DEFAULT, IContentDescriptionForJSP.CONTENT_TYPE_ATTRIBUTE, IContentDescriptionForJSP.LANGUAGE_ATTRIBUTE, IContentDescriptionForJSP.CONTENT_FAMILY_ATTRIBUTE};
 
 	/*
 	 * (non-Javadoc)
@@ -129,10 +130,24 @@ public final class ContentDescriberForJSP implements ITextContentDescriber {
 			if (language != null && language.length() > 0) {
 				description.setProperty(IContentDescriptionForJSP.LANGUAGE_ATTRIBUTE, language);
 			}
+			/*
+			 * content type is literally the content type that's in the page
+			 * directive
+			 */
 			String contentTypeAttribute = jspDetector.getContentType();
 			if (contentTypeAttribute != null && contentTypeAttribute.length() > 0) {
 				description.setProperty(IContentDescriptionForJSP.CONTENT_TYPE_ATTRIBUTE, contentTypeAttribute);
 			}
+			/*
+			 * content family is the general class of content, when its
+			 * different from what's defined by content type
+			 */
+			if (jspDetector.isXHTML() || jspDetector.isWML()) {
+				// ISSUE: long term this logic and value should be contributed by extension point
+				description.setProperty(IContentDescriptionForJSP.CONTENT_FAMILY_ATTRIBUTE, ContentTypeFamilyForHTML.HTML_FAMILY);
+			}
+
+
 		}
 	}
 

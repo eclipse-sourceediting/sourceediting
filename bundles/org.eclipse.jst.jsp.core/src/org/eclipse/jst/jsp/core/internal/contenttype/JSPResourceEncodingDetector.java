@@ -53,6 +53,10 @@ public class JSPResourceEncodingDetector implements IResourceCharsetDetector {
 
 	private Reader fReader;
 
+	private boolean fXHTML;
+
+	private boolean fWML;
+
 
 	/**
 	 * No Arg constructor.
@@ -428,6 +432,13 @@ public class JSPResourceEncodingDetector implements IResourceCharsetDetector {
 		if (fContentTypeValue != null) {
 			parseContentTypeValue(fContentTypeValue);
 		}
+		if (tokenizer.isXHTML()) {
+			fXHTML = true;
+		}
+		if (tokenizer.isWML() ) {
+			fWML = true;
+		}
+		
 
 	}
 
@@ -457,6 +468,8 @@ public class JSPResourceEncodingDetector implements IResourceCharsetDetector {
 		fPageEncodingValue = null;
 		fXMLDecEncodingName = null;
 		unicodeCase = false;
+		fXHTML=false;
+		fWML=false;
 	}
 
 
@@ -478,5 +491,31 @@ public class JSPResourceEncodingDetector implements IResourceCharsetDetector {
 		if (fReader == null) {
 			throw new IllegalStateException("input must be set before use"); //$NON-NLS-1$
 		}
+	}
+
+	public boolean isWML() throws IOException {
+		ensureInputSet();
+		if (!fHeaderParsed) {
+			parseInput();
+			// we keep track of if header's already been parse, so can make
+			// multiple 'get' calls, without causing reparsing.
+			fHeaderParsed = true;
+			// Note: there is a "hidden assumption" here that an empty
+			// string in content should be treated same as not present.
+		}
+		return fWML;
+	}
+
+	public boolean isXHTML() throws IOException {
+		ensureInputSet();
+		if (!fHeaderParsed) {
+			parseInput();
+			// we keep track of if header's already been parse, so can make
+			// multiple 'get' calls, without causing reparsing.
+			fHeaderParsed = true;
+			// Note: there is a "hidden assumption" here that an empty
+			// string in content should be treated same as not present.
+		}
+		return fXHTML;
 	}
 }

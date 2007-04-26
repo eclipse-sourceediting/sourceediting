@@ -16,10 +16,13 @@ import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatProcessor;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.provisional.format.FormatProcessorXML;
+import org.eclipse.wst.xsd.ui.internal.adt.design.ImageOverlayDescriptor;
+import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.xsd.XSDAnnotation;
 import org.eclipse.xsd.XSDAttributeDeclaration;
 import org.eclipse.xsd.XSDAttributeGroupDefinition;
@@ -54,6 +57,31 @@ public class XSDCommonUIUtils
   public XSDCommonUIUtils()
   {
     super();
+  }
+  
+  public static Image getUpdatedImage(XSDConcreteComponent input, Image baseImage, boolean isReadOnly)
+  {
+    XSDAnnotation xsdAnnotation = getInputXSDAnnotation(input, false);
+    
+    if (xsdAnnotation != null)
+    {
+      if (xsdAnnotation.getApplicationInformation().size() > 0)
+      {
+        // Will use the class name appended by the read only state as the name of the image.
+        // There is a disabled and an enabled version of each baseImage, so we can't simply
+        // use the component name as the name of the image
+        String imageName = input.getClass().getName() + isReadOnly;
+        Image newImage = XSDEditorPlugin.getDefault().getImageRegistry().get(imageName);
+        if (newImage == null)
+        {
+          ImageOverlayDescriptor ovr = new ImageOverlayDescriptor(baseImage, isReadOnly);
+          newImage = ovr.getImage();
+          XSDEditorPlugin.getDefault().getImageRegistry().put(imageName, newImage);
+        }
+        return newImage;
+      }
+    }
+    return baseImage;
   }
 
   public static XSDAnnotation getInputXSDAnnotation(XSDConcreteComponent input, boolean createIfNotExist)

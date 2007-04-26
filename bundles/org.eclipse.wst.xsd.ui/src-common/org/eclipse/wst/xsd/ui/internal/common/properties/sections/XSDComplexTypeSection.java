@@ -250,6 +250,10 @@ public class XSDComplexTypeSection extends RefactoringSection implements Selecti
           newValue = dialog.getSelectedComponent();
           manager.modifyComponentReference(input, newValue);
         }
+        else
+        {
+          refresh();
+        }
       }
     }
     else if (e.widget == derivedByCombo)

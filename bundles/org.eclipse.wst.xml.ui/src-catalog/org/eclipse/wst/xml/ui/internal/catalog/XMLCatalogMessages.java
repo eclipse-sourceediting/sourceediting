@@ -30,10 +30,12 @@ public class XMLCatalogMessages extends NLS {
 	public static String UI_LABEL_KEY;
 	public static String UI_LABEL_KEY_COLON;
 	public static String UI_LABEL_DETAILS_KEY_COLON;
+	public static String UI_LABEL_DETAILS_IN_JAR_FILE;
 	public static String UI_LABEL_URI;
-	public static String UI_LABEL_URI_COLON;
+	public static String UI_LABEL_LOCATION_COLON;
 	public static String UI_LABEL_CATALOG_URI_COLON;
 	public static String UI_LABEL_DETAILS_URI_COLON;
+	public static String UI_LABEL_DETAILS_URI_LOCATION;
 	public static String UI_KEY_TYPE_COLON;
 	public static String UI_KEY_TYPE_DETAILS_COLON;
 	public static String UI_KEY_TYPE_DESCRIPTION_XSD_PUBLIC;
@@ -43,6 +45,9 @@ public class XMLCatalogMessages extends NLS {
 	public static String UI_KEY_TYPE_DESCRIPTION_URI;
 	public static String UI_LABEL_SPECIFY_ALTERNATIVE_WEB_URL;
 	public static String UI_WARNING_URI_MUST_NOT_HAVE_DOTS;
+	public static String UI_LABEL_FILE_SELECTION;
+	public static String UI_LABEL_CHOOSE_FILE_TO_ADD_TO_CATALOG;
+
 
 	public static String UI_WARNING_URI_NOT_FOUND_COLON;
 	public static String UI_WARNING_URI_NOT_FOUND_LONG;
@@ -51,6 +56,7 @@ public class XMLCatalogMessages extends NLS {
 	public static String UI_WARNING_NO_ELEMENT;
 	public static String UI_WARNING_NO_ELEMENT_DTD_LONG;
 	public static String UI_WARNING_NO_ELEMENT_XSD_LONG;
+	public static String UI_WARNING_SHOULD_BE_FULLY_QUALIFIED_URI;
 
 
 	//NewModelWizard
@@ -91,7 +97,8 @@ public class XMLCatalogMessages extends NLS {
 	public static String UI_LABEL_DETAILS;
 	public static String UI_LABEL_USER_SPECIFIED_ENTRIES;
 	public static String UI_LABEL_PLUGIN_SPECIFIED_ENTRIES;
-
+	public static String UI_LABEL_PLATFORM_RESOURCE;
+	public static String UI_LABEL_FILE_SYSTEM_RESOURCE;
 	// AdvancedOptionsDialog
 	public static String UI_BUTTON_IMPORT;
 	public static String UI_BUTTON_EXPORT;

@@ -37,7 +37,7 @@ import org.eclipse.xsd.XSDNamedComponent;
 import org.eclipse.xsd.util.XSDConstants;
 import org.w3c.dom.Element;
 
-public class XSDModelGroupDefinitionSection extends RefactoringSection
+public class XSDModelGroupDefinitionSection extends MultiplicitySection
 {
   protected Text nameText;
   protected CCombo componentNameCombo;
@@ -74,6 +74,7 @@ public class XSDModelGroupDefinitionSection extends RefactoringSection
       data = new GridData();
       data.grabExcessHorizontalSpace = true;
       data.horizontalAlignment = GridData.FILL;
+      data.horizontalSpan = 2;
 
       componentNameCombo = getWidgetFactory().createCCombo(composite, SWT.FLAT);
       componentNameCombo.addSelectionListener(this);
@@ -81,7 +82,50 @@ public class XSDModelGroupDefinitionSection extends RefactoringSection
       
       PlatformUI.getWorkbench().getHelpSystem().setHelp(componentNameCombo,
       		XSDEditorCSHelpIds.GENERAL_TAB__MODELGROUP_REFS__REF);
+      
+      // ------------------------------------------------------------------
+      // min property
+      // ------------------------------------------------------------------
+      getWidgetFactory().createCLabel(composite, 
+    		  org.eclipse.wst.xsd.ui.internal.editor.Messages.UI_LABEL_MINOCCURS);
+      
+      data = new GridData();
+      data.grabExcessHorizontalSpace = true;
+      data.horizontalAlignment = GridData.FILL;
+      data.horizontalSpan = 2;
 
+      minCombo = getWidgetFactory().createCCombo(composite, SWT.FLAT);
+      minCombo.setLayoutData(data);
+      minCombo.add("0"); //$NON-NLS-1$
+      minCombo.add("1"); //$NON-NLS-1$
+      applyAllListeners(minCombo);
+      minCombo.addSelectionListener(this);
+      
+      PlatformUI.getWorkbench().getHelpSystem().setHelp(minCombo,
+      		XSDEditorCSHelpIds.GENERAL_TAB__MODELGROUP__MIN_OCCURENCE);
+
+      // ------------------------------------------------------------------
+      // max property
+      // ------------------------------------------------------------------
+      getWidgetFactory().createCLabel(composite, 
+    		  org.eclipse.wst.xsd.ui.internal.editor.Messages.UI_LABEL_MAXOCCURS);
+
+      data = new GridData();
+      data.grabExcessHorizontalSpace = true;
+      data.horizontalAlignment = GridData.FILL;
+      data.horizontalSpan = 2;
+
+      maxCombo = getWidgetFactory().createCCombo(composite, SWT.FLAT);
+      maxCombo.setLayoutData(data);
+      maxCombo.add("0"); //$NON-NLS-1$
+      maxCombo.add("1"); //$NON-NLS-1$
+      maxCombo.add("unbounded"); //$NON-NLS-1$
+      applyAllListeners(maxCombo);
+      maxCombo.addSelectionListener(this);
+      
+      PlatformUI.getWorkbench().getHelpSystem().setHelp(maxCombo,
+      		XSDEditorCSHelpIds.GENERAL_TAB__MODELGROUP__MAX_OCCURENCE);
+      
     }
     else
     {
@@ -142,6 +186,12 @@ public class XSDModelGroupDefinitionSection extends RefactoringSection
           attrValue = ""; //$NON-NLS-1$
         }
         componentNameCombo.setText(attrValue);
+
+        // refresh min max
+        if (minCombo != null && maxCombo != null)
+        {
+          refreshMinMax();
+        }
       }
     }
     else
