@@ -250,7 +250,7 @@ public class ExtensionsSection extends AbstractExtensionsSection
   /**
    * This filter is to be used by the dialog invoked when addButton is pressed
    */
-  private class AddExtensionsComponentDialogFilter extends ViewerFilter
+  protected class AddExtensionsComponentDialogFilter extends ViewerFilter
   {
     private Object input;
     private AddExtensionsComponentDialog dialog;
@@ -270,6 +270,13 @@ public class ExtensionsSection extends AbstractExtensionsSection
         // here we obtain the node filter that was registered for the applicable namespace
         // notied
         NodeFilter filter = XSDEditorPlugin.getPlugin().getNodeCustomizationRegistry().getNodeFilter(spec.getNamespaceURI());
+        
+        if (filter == null)
+        {
+          // Check if a node filter has been specified, if so, then use it
+          filter = spec.getNodeFilter();
+        }
+
         if (filter instanceof ExtensionItemFilter)
         {
           ExtensionItemFilter extensionItemFilter = (ExtensionItemFilter)filter;
