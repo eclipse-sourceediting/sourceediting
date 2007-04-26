@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,7 @@ package org.eclipse.jst.jsp.core.internal.java;
 
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jst.jsp.core.internal.modelhandler.ModelHandlerForJSP;
 import org.eclipse.text.edits.CopySourceEdit;
 import org.eclipse.text.edits.CopyTargetEdit;
 import org.eclipse.text.edits.DeleteEdit;
@@ -96,6 +97,7 @@ public class JSPTranslationUtil {
 	public JSPTranslationExtension getTranslation() {
 		if (fTranslation == null) {
 			IDOMModel xmlModel = (IDOMModel) getModelManager().getExistingModelForRead(fDocument);
+			ModelHandlerForJSP.ensureTranslationAdapterFactory(xmlModel);
 			try {
 				IDOMDocument xmlDoc = xmlModel.getDocument();
 

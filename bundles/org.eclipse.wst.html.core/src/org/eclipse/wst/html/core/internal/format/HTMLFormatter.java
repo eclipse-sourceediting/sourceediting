@@ -32,6 +32,7 @@ import org.eclipse.wst.xml.core.internal.provisional.format.StructuredFormatPref
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.Text;
 
 public class HTMLFormatter implements IStructuredFormatter {
 
@@ -95,6 +96,42 @@ public class HTMLFormatter implements IStructuredFormatter {
 		if (parent == null)
 			return false;
 		Node next = node.getNextSibling();
+
+		// special exception if this node is a non-HTML tag (like JSP
+		// elements)
+		if (node.getPrefix() != null) {
+			boolean canInsertBreakBefore = false;
+			// if a whitespace does not exist after it, do not add one
+			if (next != null && next.getNodeType() == Node.TEXT_NODE) {
+				String theText = ((Text) next).getData();
+				if (theText != null && theText.length() > 0) {
+					char theChar = theText.charAt(0);
+					canInsertBreakBefore = Character.isWhitespace(theChar);
+				}
+			}
+			// if cannot insert break, go ahead and return false (otherwise,
+			// continue processing)
+			if (!canInsertBreakBefore)
+				return canInsertBreakBefore;
+		}
+
+		// special exception if next node is a non-HTML tag (like JSP
+		// elements)
+		if (next != null && next.getPrefix() != null) {
+			boolean canInsertBreakBefore = false;
+			// if a whitespace does not exist before it, do not add one
+			if (node.getNodeType() == Node.TEXT_NODE) {
+				String theText = ((Text) node).getData();
+				if (theText != null && theText.length() > 0) {
+					char theChar = theText.charAt(theText.length() - 1);
+					canInsertBreakBefore = Character.isWhitespace(theChar);
+				}
+			}
+			// if cannot insert break, go ahead and return false (otherwise,
+			// continue processing)
+			if (!canInsertBreakBefore)
+				return canInsertBreakBefore;
+		}
 
 		if (parent.getNodeType() == Node.DOCUMENT_NODE) {
 			if (node.getNodeType() == Node.ELEMENT_NODE) {
@@ -164,6 +201,42 @@ public class HTMLFormatter implements IStructuredFormatter {
 		if (parent == null)
 			return false;
 		Node prev = node.getPreviousSibling();
+
+		// special exception if this node is a non-HTML tag (like JSP
+		// elements)
+		if (node.getPrefix() != null) {
+			boolean canInsertBreakBefore = false;
+			// if a whitespace does not exist before it, do not add one
+			if (prev != null && prev.getNodeType() == Node.TEXT_NODE) {
+				String theText = ((Text) prev).getData();
+				if (theText != null && theText.length() > 0) {
+					char theChar = theText.charAt(theText.length() - 1);
+					canInsertBreakBefore = Character.isWhitespace(theChar);
+				}
+			}
+			// if cannot insert break, go ahead and return false (otherwise,
+			// continue processing)
+			if (!canInsertBreakBefore)
+				return canInsertBreakBefore;
+		}
+
+		// special exception if previous node is a non-HTML tag (like JSP
+		// elements)
+		if (prev != null && prev.getPrefix() != null) {
+			boolean canInsertBreakBefore = false;
+			// if a whitespace does not exist after it, do not add one
+			if (node.getNodeType() == Node.TEXT_NODE) {
+				String theText = ((Text) node).getData();
+				if (theText != null && theText.length() > 0) {
+					char theChar = theText.charAt(0);
+					canInsertBreakBefore = Character.isWhitespace(theChar);
+				}
+			}
+			// if cannot insert break, go ahead and return false (otherwise,
+			// continue processing)
+			if (!canInsertBreakBefore)
+				return canInsertBreakBefore;
+		}
 
 		if (parent.getNodeType() == Node.DOCUMENT_NODE) {
 			if (prev == null)
