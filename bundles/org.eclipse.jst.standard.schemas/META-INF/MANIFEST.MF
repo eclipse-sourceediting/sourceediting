@@ -1,6 +1,8 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: JEE Related Schemas
+Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.eclipse.jst.standard.schemas;singleton:=true
 Bundle-Version: 1.0.0
-Bundle-Vendor: Eclipse.org
+Bundle-Vendor: %Bundle-Vendor.0
+Require-Bundle: org.eclipse.wst.xml.core
+Bundle-Localization: plugin
