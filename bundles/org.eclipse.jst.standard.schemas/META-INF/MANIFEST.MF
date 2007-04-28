@@ -6,3 +6,4 @@ Bundle-Version: 1.0.0
 Bundle-Vendor: %Bundle-Vendor.0
 Require-Bundle: org.eclipse.wst.xml.core
 Bundle-Localization: plugin
+Bundle-ClassPath: .
