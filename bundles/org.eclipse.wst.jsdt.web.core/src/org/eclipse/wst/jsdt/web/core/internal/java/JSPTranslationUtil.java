@@ -28,31 +28,32 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 
 public class JSPTranslationUtil {
-	protected IDocument			   fDocument	= null;
+	protected IDocument fDocument = null;
+
 	protected JSPTranslationExtension fTranslation = null;
-	
+
 	public JSPTranslationUtil(IDocument document) {
 		fDocument = document;
 	}
-	
+
 	public ICompilationUnit getCompilationUnit() {
 		return getTranslation().getCompilationUnit();
 	}
-	
+
 	public IJavaProject getJavaProject() {
 		return getTranslation().getJavaProject();
 	}
-	
+
 	protected IModelManager getModelManager() {
 		return StructuredModelManager.getModelManager();
 	}
-	
+
 	public JSPTranslationExtension getTranslation() {
 		if (fTranslation == null) {
 			IDOMModel xmlModel = (IDOMModel) getModelManager().getExistingModelForRead(fDocument);
 			try {
 				IDOMDocument xmlDoc = xmlModel.getDocument();
-				
+
 				JSPTranslationAdapter translationAdapter = (JSPTranslationAdapter) xmlDoc.getAdapterFor(IJSPTranslation.class);
 				if (translationAdapter != null) {
 					fTranslation = translationAdapter.getJSPTranslation();
@@ -63,17 +64,17 @@ public class JSPTranslationUtil {
 				}
 			}
 		}
-		
+
 		return fTranslation;
 	}
-	
+
 	public TextEdit translateTextEdit(TextEdit textEdit) {
 		TextEdit translatedTextEdit = null;
-		
+
 		int javaOffset = textEdit.getOffset();
 		int jspOffset = getTranslation().getJspOffset(textEdit.getOffset());
 		int length = textEdit.getLength();
-		
+
 		if (textEdit instanceof MultiTextEdit) {
 			translatedTextEdit = new MultiTextEdit();
 			TextEdit[] children = ((MultiTextEdit) textEdit).getChildren();
@@ -87,7 +88,7 @@ public class JSPTranslationUtil {
 			if (jspOffset == -1) {
 				return null;
 			}
-			
+
 			if (!getTranslation().javaSpansMultipleJspPartitions(javaOffset, length)) {
 				translatedTextEdit = new ReplaceEdit(jspOffset, length, ((ReplaceEdit) textEdit).getText());
 			}
@@ -118,7 +119,7 @@ public class JSPTranslationUtil {
 		} else {
 			System.out.println("Need to translate " + textEdit); //$NON-NLS-1$
 		}
-		
+
 		return translatedTextEdit;
 	}
 }

@@ -37,12 +37,12 @@ public class JSDTProposalCollector extends CompletionProposalCollector {
 		fTranslation = translation;
 	}
 	
-	public List getGeneratedFunctionNames(){
-		if(fGeneratedFunctionNames==null){
-			fGeneratedFunctionNames = fTranslation.getGeneratedFunctionNames();
-		}
-		return fGeneratedFunctionNames;
-	}
+//	public List getGeneratedFunctionNames(){
+//		if(fGeneratedFunctionNames==null){
+//			fGeneratedFunctionNames = fTranslation.getGeneratedFunctionNames();
+//		}
+//		return fGeneratedFunctionNames;
+//	}
     
 	/**
 	 * Ensures that we only return JSPCompletionProposals.
@@ -98,9 +98,9 @@ public class JSDTProposalCollector extends CompletionProposalCollector {
 
 			// default behavior
 //			if (jspProposal == null) {
-			for(int i = 0;i<getGeneratedFunctionNames().size();i++){
-				if((new String(proposal.getName())).equalsIgnoreCase((String)getGeneratedFunctionNames().get(i))) return jspProposal;
-			}
+//			for(int i = 0;i<getGeneratedFunctionNames().size();i++){
+//				if((new String(proposal.getName())).equalsIgnoreCase((String)getGeneratedFunctionNames().get(i))) return jspProposal;
+//			}
 			jspProposal = createJspProposal(proposal);
 			//}
 		}
@@ -177,9 +177,9 @@ public class JSDTProposalCollector extends CompletionProposalCollector {
 		Image image = javaProposal.getImage();
 		String displayString = javaProposal.getDisplayString();
 		displayString = getTranslation().fixupMangledName(displayString);
-		for(int i = 0;i<getGeneratedFunctionNames().size();i++){
-			displayString.replace((String)getGeneratedFunctionNames().get(i), "");
-		}
+//		for(int i = 0;i<getGeneratedFunctionNames().size();i++){
+//			displayString.replace((String)getGeneratedFunctionNames().get(i), "");
+//		}
 		
 		
 		IContextInformation contextInformation = javaProposal

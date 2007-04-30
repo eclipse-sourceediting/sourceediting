@@ -36,33 +36,40 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
  * @author pavery
  */
 public class JSPTranslationAdapter implements INodeAdapter, IDocumentListener {
-	
+
 	// for debugging
-	private static final boolean	DEBUG			   = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.jsdt.web.core/debug/jsptranslation")); //$NON-NLS-1$  //$NON-NLS-2$
-																																								  
-	private IFolder				 binOutput;
-	private boolean				 fDocumentIsDirty	= true;
-	private IDocument			   fJavaDocument	   = null;
-	private IDocument			   fJspDocument		= null;
-	private JSPTranslationExtension fJSPTranslation	 = null;
-	private NullProgressMonitor	 fTranslationMonitor = null;
-	private JSPTranslator		   fTranslator		 = null;
-	
-	private IDOMModel			   fXMLModel;
-	private IFolder				 srcOutput;
-	
+	private static final boolean DEBUG = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.jsdt.web.core/debug/jsptranslation")); //$NON-NLS-1$  //$NON-NLS-2$
+
+	private IFolder binOutput;
+
+	private boolean fDocumentIsDirty = true;
+
+	private IDocument fJavaDocument = null;
+
+	private IDocument fJspDocument = null;
+
+	private JSPTranslationExtension fJSPTranslation = null;
+
+	private NullProgressMonitor fTranslationMonitor = null;
+
+	private JSPTranslator fTranslator = null;
+
+	private IDOMModel fXMLModel;
+
+	private IFolder srcOutput;
+
 	public JSPTranslationAdapter(IDOMModel xmlModel) {
 		setXMLModel(xmlModel);
 		initializeJavaPlugins();
 	}
-	
+
 	/**
 	 * @see org.eclipse.jface.text.IDocumentListener#documentAboutToBeChanged(org.eclipse.jface.text.DocumentEvent)
 	 */
 	public void documentAboutToBeChanged(DocumentEvent event) {
 		// do nothing
 	}
-	
+
 	/**
 	 * @see org.eclipse.jface.text.IDocumentListener#documentChanged(org.eclipse.jface.text.DocumentEvent)
 	 */
@@ -70,18 +77,18 @@ public class JSPTranslationAdapter implements INodeAdapter, IDocumentListener {
 		// mark translation for rebuilding
 		fDocumentIsDirty = true;
 	}
-	
+
 	public String getBaseLocation() {
 		return getXMLModel().getBaseLocation();
 	}
-	
+
 	public IFolder getBinLocation() {
-		
+
 		return this.binOutput;
 	}
-	
+
 	public IJavaProject getJavaProject() {
-		
+
 		IJavaProject javaProject = null;
 		try {
 			String baseLocation = getXMLModel().getBaseLocation();
@@ -94,122 +101,29 @@ public class JSPTranslationAdapter implements INodeAdapter, IDocumentListener {
 			if (filePath.segmentCount() > 0) {
 				project = root.getProject(filePath.segment(0));
 			}
-			
+
 			if (project != null) {
 				javaProject = JavaCore.create(project);
 			}
-			
-			// JsWebNature jsdtNature = new JsWebNature(project);
-			//			
-			// if(jsdtNature.isValidJSDTProject()){
-			// return jsdtNature.getJavaProject();
-			// }else{
-			// jsdtNature.configure();
-			// return jsdtNature.getJavaProject();
-			// }
-			
-			// IFile[] files =
-			// ResourcesPlugin.getWorkspace().getRoot().findFilesForLocation(new
-			// Path(baseLocation));
-			// for (int i = 0; project == null && i < files.length; i++) {
-			// if (files[i].getType() != IResource.PROJECT) {
-			// project = files[i].getProject();
-			// break;
-			// }
-			// }
-			
-			/* Ensure this project has the JS nature */
-			// if (project != null) {
-			// // JavaCore.create(filePath.segment(0));
-			// // System.out.println("Filepath for javaproject:"+filePath);
-			// javaProject = org.eclipse.jsdt.core.JavaCore.create(project);
-			//
-			// java.util.Hashtable options = org.eclipse.jsdt.core.JavaCore
-			// .getOptions();
-			//
-			// Enumeration e = options.keys();
-			//
-			// while (e.hasMoreElements()) {
-			// Object ne = e.nextElement();
-			// ((JavaProject) javaProject).setOption((String) ne,
-			// (String) options.get(ne));
-			//
-			// }
-			// if (javaProject instanceof JavaProject) {
-			// ((JavaProject) javaProject).configure();
-			//
-			// }
-			// if (javaProject.getOutputLocation() == null) {
-			// IFolder binOutput = project.getFolder("build");
-			// this.binOutput = binOutput;
-			//
-			// if (!binOutput.exists()) {
-			// binOutput.create(true, true, new NullProgressMonitor());
-			// }
-			// // javaProject.setRawClasspath(entries, outputLocation,
-			// // monitor);
-			// javaProject.setOutputLocation(binOutput.getFullPath(),
-			// new NullProgressMonitor());
-			// } else {
-			// this.binOutput = project.getFolder(javaProject
-			// .getOutputLocation());
-			// }
-			// addContainerToClassPath(javaProject,new Path(baseLocation));
-			/*
-			 * if(javaProject instanceof JavaProject){
-			 * ((JavaProject)javaProject).configure(); }
-			 * 
-			 * if( javaProject.getOutputLocation() == null){ IFolder binOutput =
-			 * project.getFolder("bin"); this.binOutput=binOutput;
-			 * 
-			 * 
-			 * if(!binOutput.exists()) binOutput.create(true, true, new
-			 * NullProgressMonitor()); //javaProject.setRawClasspath(entries,
-			 * outputLocation, monitor);
-			 * javaProject.setOutputLocation(binOutput.getFullPath(), new
-			 * NullProgressMonitor()); }else{
-			 * this.binOutput=project.getFolder(javaProject.getOutputLocation()); }
-			 * 
-			 * srcOutput = project.getFolder("src"); if(!srcOutput.exists())
-			 * srcOutput.create(true, true, new NullProgressMonitor());
-			 */
-			/* Add a src and bin folder to the projects path */
-			// addSourceLocationToCp(javaProject,srcOutput.getFullPath());
-			// addContainerToClassPath(javaProject,binOutput.getFullPath());
-			// IProjectDescription desc = project.getDescription();
-			// System.out.println("Project Name:" + desc.getName());
-			//
-			// }
-			//
-			// if (project != null
-			// && !project.hasNature(JsDataTypes.natureHandlerID)) {
-			// IProjectDescription desc = project.getDescription();
-			// String oldNatures[] = desc.getNatureIds();
-			// String newNatures[] = new String[oldNatures.length + 1];
-			// System.arraycopy(oldNatures, 0, newNatures, 0,
-			// oldNatures.length);
-			// newNatures[oldNatures.length] = JsDataTypes.natureHandlerID;
-			// desc.setNatureIds(newNatures);
-			// project.setDescription(desc, fTranslationMonitor);
-			//
-			// }
+
 		} catch (Exception ex) {
 			if (getXMLModel() != null) {
-				Logger.logException("(JSPTranslationAdapter) problem getting java project from the XMLModel's baseLocation > " + getXMLModel().getBaseLocation(), ex); //$NON-NLS-1$
+				Logger.logException(
+						"(JSPTranslationAdapter) problem getting java project from the XMLModel's baseLocation > " + getXMLModel().getBaseLocation(), ex); //$NON-NLS-1$
 			} else {
 				Logger.logException("(JSPTranslationAdapter) problem getting java project", ex); //$NON-NLS-1$
 			}
 		}
 		return javaProject;
 	}
-	
+
 	/**
 	 * Returns the JSPTranslation for this adapter.
 	 * 
 	 * @return a JSPTranslationExtension
 	 */
 	public synchronized JSPTranslationExtension getJSPTranslation() {
-		
+
 		if (fJSPTranslation == null || fDocumentIsDirty) {
 			JSPTranslator translator = null;
 			if (getXMLModel() != null && getXMLModel().getIndexedRegion(0) != null) {
@@ -235,7 +149,7 @@ public class JSPTranslationAdapter implements INodeAdapter, IDocumentListener {
 		}
 		return fJSPTranslation;
 	}
-	
+
 	/**
 	 * Gets (or creates via JavaCore) a JavaProject based on the location of
 	 * this adapter's XMLModel. Returns null for non IFile based models.
@@ -251,10 +165,10 @@ public class JSPTranslationAdapter implements INodeAdapter, IDocumentListener {
 	// return null;
 	// }
 	public IFolder getSrcLocation() {
-		
+
 		return this.srcOutput;
 	}
-	
+
 	/**
 	 * Returns the JSPTranslator for this adapter. If it's null, a new
 	 * translator is created with the xmlNode. Otherwise the
@@ -275,51 +189,51 @@ public class JSPTranslationAdapter implements INodeAdapter, IDocumentListener {
 		}
 		return fTranslator;
 	}
-	
+
 	/**
 	 * @return the XMLModel for this adapter.
 	 */
 	private IDOMModel getXMLModel() {
 		return fXMLModel;
 	}
-	
+
 	/**
 	 * Initialize the required Java Plugins
 	 */
 	protected void initializeJavaPlugins() {
 		JavaCore.getPlugin();
 		getJavaProject();
-		
+
 	}
-	
+
 	public boolean isAdapterForType(Object type) {
 		return type.equals(IJSPTranslation.class);
 	}
-	
+
 	public void notifyChanged(INodeNotifier notifier, int eventType, Object changedFeature, Object oldValue, Object newValue, int pos) {
 		// nothing to do
 	}
-	
+
 	public void release() {
-		
+
 		if (fJspDocument != null) {
 			fJspDocument.removeDocumentListener(this);
 		}
-		
+
 		if (fTranslationMonitor != null) {
 			fTranslationMonitor.setCanceled(true);
 		}
-		
+
 		if (fJSPTranslation != null) {
-			
+
 			if (JSPTranslationAdapter.DEBUG) {
 				System.out.println("JSPTranslationAdapter releasing:" + fJSPTranslation); //$NON-NLS-1$
 			}
-			
+
 			fJSPTranslation.release();
 		}
 	}
-	
+
 	/**
 	 * Automatically set through the setXMLModel(XMLModel)
 	 * 
@@ -332,10 +246,10 @@ public class JSPTranslationAdapter implements INodeAdapter, IDocumentListener {
 		if (doc != null) {
 			doc.addDocumentListener(this);
 			fJspDocument = doc;
-			
+
 		}
 	}
-	
+
 	/**
 	 * set the XMLModel for this adapter. Must be called.
 	 * 

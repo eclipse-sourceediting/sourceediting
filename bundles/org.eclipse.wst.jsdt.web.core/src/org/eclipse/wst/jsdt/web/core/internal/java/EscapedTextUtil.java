@@ -23,9 +23,9 @@ import com.ibm.icu.util.StringTokenizer;
  * @author pavery
  */
 public class EscapedTextUtil {
-	
+
 	public static Properties fXMLtoJavaLookup = null;
-	
+
 	/**
 	 * @return unescaped full text of that region, "" if there is no text
 	 */
@@ -33,7 +33,7 @@ public class EscapedTextUtil {
 		String test = (parent != r) ? parent.getFullText(r) : parent.getFullText();
 		return EscapedTextUtil.getUnescapedText(test);
 	}
-	
+
 	public static String getUnescapedText(String test) {
 		EscapedTextUtil.initLookup();
 		StringBuffer buffer = new StringBuffer();
@@ -61,7 +61,7 @@ public class EscapedTextUtil {
 		}
 		return ""; //$NON-NLS-1$
 	}
-	
+
 	/**
 	 * initialize lookup tables
 	 */
@@ -74,7 +74,7 @@ public class EscapedTextUtil {
 		EscapedTextUtil.fXMLtoJavaLookup.setProperty("&gt;", ">"); //$NON-NLS-2$ //$NON-NLS-1$
 		EscapedTextUtil.fXMLtoJavaLookup.setProperty("&nbsp;", " "); //$NON-NLS-2$ //$NON-NLS-1$
 	}
-	
+
 	/**
 	 * Get the String representation of an entity reference.
 	 */

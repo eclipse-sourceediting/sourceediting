@@ -49,7 +49,7 @@ public class JSDTHoverProcessor extends AbstractHoverProcessor {
 			| JavaElementLabels.USE_RESOLVED;
 	private final long LOCAL_VARIABLE_FLAGS = LABEL_FLAGS
 			& ~JavaElementLabels.F_FULLY_QUALIFIED
-			| JavaElementLabels.F_POST_QUALIFIED;
+			& ~JavaElementLabels.F_POST_QUALIFIED;
 
 	private String getHoverInfo(IJavaElement[] result) {
 		StringBuffer buffer = new StringBuffer();
@@ -121,29 +121,29 @@ public class JSDTHoverProcessor extends AbstractHoverProcessor {
 
 					IJavaElement[] result = translation	.getElementsFromJspRange(hoverRegion.getOffset(),hoverRegion.getOffset()+ hoverRegion.getLength());
 					
-					Vector filteredResults = new Vector();
-					List badFunctions = translation.getGeneratedFunctionNames();
-					boolean bad = false;
-					for(int i = 0;i<result.length;i++){
-						bad=false;
-						if(result[i] instanceof IMethod){
-							for(int j=0;j<badFunctions.size() && ! bad;j++){
-								if(((IMethod)result[i]).getElementName().equalsIgnoreCase((String)badFunctions.get(j))){
-									bad=true;
-									continue;
-								}
-							}
-						 if(!bad)filteredResults.add(result[i]);
-						}
-					}
-					if(filteredResults.size()<1) return new String();
-					
-					String filteredResult = translation.fixupMangledName(getHoverInfo((IJavaElement[])filteredResults.toArray(new IJavaElement[]{})));
-					for(int i = 0;i<badFunctions.size();i++){
-						filteredResult.replace((String)badFunctions.get(i), "");
-					}
-					return filteredResult;
-					//return getHoverInfo(result);
+//					Vector filteredResults = new Vector();
+//					List badFunctions = translation.getGeneratedFunctionNames();
+//					boolean bad = false;
+//					for(int i = 0;i<result.length;i++){
+//						bad=false;
+//						if(result[i] instanceof IMethod){
+//							for(int j=0;j<badFunctions.size() && ! bad;j++){
+//								if(((IMethod)result[i]).getElementName().equalsIgnoreCase((String)badFunctions.get(j))){
+//									bad=true;
+//									continue;
+//								}
+//							}
+//						 if(!bad)filteredResults.add(result[i]);
+//						}
+//					}
+//					if(filteredResults.size()<1) return new String();
+//					
+//					String filteredResult = translation.fixupMangledName(getHoverInfo((IJavaElement[])filteredResults.toArray(new IJavaElement[]{})));
+//					for(int i = 0;i<badFunctions.size();i++){
+//						filteredResult.replace((String)badFunctions.get(i), "");
+//					}
+//					return filteredResult;
+					return getHoverInfo(result);
 				}
 			}
 		} finally {

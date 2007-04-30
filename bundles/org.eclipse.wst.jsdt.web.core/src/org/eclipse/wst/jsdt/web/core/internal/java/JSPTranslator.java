@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -58,74 +59,57 @@ import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
  * @author pavery
  */
 public class JSPTranslator {
-	
+
 	// for debugging
-	private static final boolean	  DEBUG;
-	private static final boolean	  DEBUG_SAVE_OUTPUT	   = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.jsdt.web.core/debug/jsptranslationstodisk")); //$NON-NLS-1$  //$NON-NLS-2$
-	public static final String		ENDL					= "\n";																										 //$NON-NLS-1$
-	public static final String		EXPRESSION_PREFIX	   = "if(document) document.write(\"\"+";																		  //$NON-NLS-1$
-	public static final String		EXPRESSION_SUFFIX	   = ");";																										 //$NON-NLS-1$
-	public static final String		FUNCTION_PREFIX		 = "function ";
-	
-	public static final String		FUNCTION_SUFFIX		 = "} ";
-	
+	private static final boolean DEBUG;
+
+	private static final boolean DEBUG_SAVE_OUTPUT = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.jsdt.web.core/debug/jsptranslationstodisk")); //$NON-NLS-1$  //$NON-NLS-2$
+
+	public static final String ENDL = "\n"; //$NON-NLS-1$
+
+
 	static {
 		String value = Platform.getDebugOption("org.eclipse.wst.jsdt.web.core/debug/jspjavamapping"); //$NON-NLS-1$
-		DEBUG = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
+		//DEBUG = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
+		DEBUG=true;
 	}
 	
-	private String					fClassname			  = "_JSSourceFile";																							  //$NON-NLS-1$
-																																											   
 	private IStructuredDocumentRegion fCurrentNode;
 	
-	/* the big string buffers curser position */
-	// private int fCursorPosition = -1;
-	/* Buffer where the cursor is */
-	// private StringBuffer fCursorOwner = null; // the buffer where the cursor
-	// is
-	List							  fGeneratedFunctionNames = new Vector();
-	
-	/* map of imports */
-	private HashMap				   fImportRanges		   = new HashMap();
+	private String fClassname;
+
 	/* map of ALL ranges */
-	HashMap						   fJava2JspRanges		 = new HashMap();
-	
-	/* map of JS type ranges */
-	HashMap						   fJsContentRanges		= new HashMap();
-	
+	HashMap fJsToHTMLRanges = new HashMap();
+
 	/**
 	 * save JSP document text for later use may just want to read this from the
 	 * file or strucdtured document depending what is available
 	 */
-	private StringBuffer			  fJspTextBuffer		  = new StringBuffer();
-	
-	/** used to avoid infinite looping include files */
-	// private Stack fIncludes = null;
-	private IProgressMonitor		  fProgressMonitor		= null;
-	
-	/** user defined imports */
-	// private StringBuffer fUserImports = new StringBuffer();
-	private StringBuffer			  fResult;																																// the
-																																											// final
-																																											// traslated
-																																											// java
-																																											// document
-	// string buffer
-	
-	StringBuffer					  fScriptText			 = new StringBuffer();
-	private IStructuredDocument	   fStructuredDocument	 = null;
-	private IDOMModel				 fStructuredModel		= null;
-	
+	private StringBuffer fJspTextBuffer = new StringBuffer();
+
+	private IProgressMonitor fProgressMonitor = null;
+
+	private StringBuffer fResult; // the
+
+	// final
+	private ArrayList rawImports = new ArrayList(); // traslated
+
+	StringBuffer fScriptText = new StringBuffer();
+
+	private IStructuredDocument fStructuredDocument = null;
+
+	private IDOMModel fStructuredModel = null;
+
 	/* use java script by default */
-	private boolean				   isGlobalJs			  = true;
-	
-	private int					   scriptOffset			= 0;
-	
+	private boolean isGlobalJs = true;
+
+	private int scriptOffset = 0;
+
 	private void advanceNextNode() {
 		setCurrentNode(getCurrentNode().getNext());
-		
+
 	}
-	
+
 	protected void append(StringBuffer buf) {
 		/*
 		 * if (getCursorOwner() == buf) { fCursorPosition = fResult.length() +
@@ -134,12 +118,12 @@ public class JSPTranslator {
 		// fCursorPosition = fResult.length();
 		fResult.append(buf.toString());
 	}
-	
+
 	/**
 	 * put the final java document together
 	 */
 	private final void buildResult() {
-		
+
 		// to build the java document this is the order:
 		// 
 		// + default imports
@@ -152,7 +136,7 @@ public class JSPTranslator {
 		// + user code
 		// + try/catch end
 		// + service method footer
-		
+
 		// fResult = new StringBuffer(fImplicitImports.length() +
 		// fUserImports.length() + fClassHeader.length() +
 		// fUserDeclarations.length() + fServiceHeader.length() +
@@ -161,22 +145,22 @@ public class JSPTranslator {
 		// + fUserCode.length() + fTryCatchEnd.length() // try/catch
 		// // end
 		// + fFooter.length());
-		
+
 		fResult = new StringBuffer(fScriptText.length());
 		int javaOffset = 0;
 		append(fScriptText);
 		javaOffset += fScriptText.length();
-		
+
 		// user imports
-		updateRanges(fImportRanges, javaOffset);
+		//updateRanges(fImportRanges, javaOffset);
 		// append(fUserImports);
 		// javaOffset += fUserImports.length();
-		
-		fJava2JspRanges.putAll(fJsContentRanges);
+
+		//fJava2JspRanges.putAll(fJsContentRanges);
 		// fJava2JspRanges.putAll(fImportRanges);
-		
+
 	}
-	
+
 	/**
 	 * configure using an XMLNode
 	 * 
@@ -184,19 +168,19 @@ public class JSPTranslator {
 	 * @param monitor
 	 */
 	private void configure(IDOMNode node, IProgressMonitor monitor) {
-		
+
 		fProgressMonitor = monitor;
 		fStructuredModel = node.getModel();
 		String baseLocation = fStructuredModel.getBaseLocation();
-		
+
 		fStructuredDocument = fStructuredModel.getStructuredDocument();
-		
+
 		String className = createClassname(node);
 		if (className.length() > 0) {
 			setClassname(className);
 		}
 	}
-	
+
 	/**
 	 * memory saving configure (no StructuredDocument in memory) currently
 	 * doesn't handle included files
@@ -209,48 +193,50 @@ public class JSPTranslator {
 		// fStructuredModel, fPositionNode, fModelQuery, fStructuredDocument
 		// are all null
 		fProgressMonitor = monitor;
-		
+
 		String className = createClassname(jspFile);
 		if (className.length() > 0) {
 			setClassname(className);
 		}
 	}
-	
+
 	/**
 	 * @param node
 	 * @return
 	 */
 	private String createClassname(IDOMNode node) {
-		
+
 		String classname = ""; //$NON-NLS-1$
 		if (node != null) {
 			String base = node.getModel().getBaseLocation();
+			//classname = base;
 			classname = JSP2ServletNameUtil.mangle(base);
 		}
 		return classname;
 	}
-	
+
 	/**
 	 * @param jspFile
 	 * @return
 	 */
 	private String createClassname(IFile jspFile) {
-		
+
 		String classname = ""; //$NON-NLS-1$
 		if (jspFile != null) {
 			classname = JSP2ServletNameUtil.mangle(jspFile.getFullPath().toString());
+			//classname = jspFile.getFullPath().toString();
 		}
 		return classname;
 	}
-	
+
 	public String getClassname() {
 		return this.fClassname != null ? this.fClassname : "GenericJSSourceFile"; //$NON-NLS-1$
 	}
-	
+
 	final public IStructuredDocumentRegion getCurrentNode() {
 		return fCurrentNode;
 	}
-	
+
 	/**
 	 * @return just the "shell" of a servlet, nothing contributed from the JSP
 	 *         doc
@@ -260,12 +246,12 @@ public class JSPTranslator {
 		buildResult();
 		return getTranslation();
 	}
-	
-	public List getFakeFunctionNames() {
-		return fGeneratedFunctionNames;
+
+	public List getExcludedElements() {
+		return null;
 	}
-	
-	private IFile getFile() {
+
+	public IFile getFile() {
 		IFile f = null;
 		IStructuredModel sModel = StructuredModelManager.getModelManager().getExistingModelForRead(getStructuredDocument());
 		try {
@@ -279,34 +265,27 @@ public class JSPTranslator {
 		}
 		return f;
 	}
-	
-	// final public StringBuffer getCursorOwner() {
-	// return fCursorOwner;
-	// }
-	
-	public HashMap getJava2JspImportRanges() {
-		return fImportRanges;
-	}
+
 	
 	public HashMap getJava2JspIndirectRanges() {
 		// Return nothing for now
 		return new HashMap();
 	}
-	
+
 	/**
 	 * map of ranges (positions) in java document to ranges in jsp document
 	 * 
 	 * @return a map of java positions to jsp positions.
 	 */
 	public HashMap getJava2JspRanges() {
-		return fJava2JspRanges;
+		return fJsToHTMLRanges;
 	}
-	
+
 	public HashMap getJava2JspUseBeanRanges() {
 		// Return nothing for now
 		return new HashMap();
 	}
-	
+
 	/**
 	 * map of ranges in jsp document to ranges in java document.
 	 * 
@@ -314,21 +293,21 @@ public class JSPTranslator {
 	 *         translation has occured yet (the map hasn't been built).
 	 */
 	public HashMap getJsp2JavaRanges() {
-		if (fJava2JspRanges == null) {
+		if (fJsToHTMLRanges == null) {
 			return null;
 		}
 		HashMap flipFlopped = new HashMap();
-		Iterator keys = fJava2JspRanges.keySet().iterator();
-		
+		Iterator keys = fJsToHTMLRanges.keySet().iterator();
+
 		Object range = null;
 		while (keys.hasNext()) {
 			range = keys.next();
 			// System.out.println("Offset:"+ p.offset + " length:" + p.length);
-			flipFlopped.put(fJava2JspRanges.get(range), range);
+			flipFlopped.put(fJsToHTMLRanges.get(range), range);
 		}
 		return flipFlopped;
 	}
-	
+
 	/**
 	 * Only valid after a configure(...), translate(...) or
 	 * translateFromFile(...) call
@@ -338,11 +317,11 @@ public class JSPTranslator {
 	public final String getJspText() {
 		return fJspTextBuffer.toString();
 	}
-	
+
 	public IStructuredDocument getStructuredDocument() {
 		return fStructuredDocument;
 	}
-	
+
 	/**
 	 * Only valid after a configure(...), translate(...) or
 	 * translateFromFile(...) call
@@ -350,11 +329,11 @@ public class JSPTranslator {
 	 * @return the current result (java translation) buffer
 	 */
 	public final StringBuffer getTranslation() {
-		
+
 		if (JSPTranslator.DEBUG) {
 			StringBuffer debugString = new StringBuffer();
 			try {
-				Iterator it = fJava2JspRanges.keySet().iterator();
+				Iterator it = fJsToHTMLRanges.keySet().iterator();
 				while (it.hasNext()) {
 					debugString.append("--------------------------------------------------------------\n"); //$NON-NLS-1$
 					Position java = (Position) it.next();
@@ -363,7 +342,7 @@ public class JSPTranslator {
 					debugString.append("--------------------------------------------------------------\n"); //$NON-NLS-1$
 					debugString.append("|maps to...|\n"); //$NON-NLS-1$
 					debugString.append("==============================================================\n"); //$NON-NLS-1$
-					Position jsp = (Position) fJava2JspRanges.get(java);
+					Position jsp = (Position) fJsToHTMLRanges.get(java);
 					debugString.append("JSP range:[" + jsp.offset + ":" + jsp.length + "]\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 					debugString.append("[" + fJspTextBuffer.toString().substring(jsp.offset, jsp.offset + jsp.length) + "]\n"); //$NON-NLS-1$ //$NON-NLS-2$
 					debugString.append("==============================================================\n"); //$NON-NLS-1$
@@ -375,7 +354,7 @@ public class JSPTranslator {
 			}
 			Logger.log(Logger.INFO_DEBUG, debugString.toString());
 		}
-		
+
 		if (JSPTranslator.DEBUG) {
 			IProject project = getFile().getProject();
 			String shortenedClassname = StringUtils.replace(getFile().getName(), ".", "_");
@@ -397,10 +376,10 @@ public class JSPTranslator {
 			}
 			System.out.println("Updated translation: " + path);
 		}
-		
+
 		return fResult;
 	}
-	
+
 	/**
 	 * 
 	 * @return the status of the translator's progrss monitor, false if the
@@ -409,7 +388,7 @@ public class JSPTranslator {
 	private boolean isCanceled() {
 		return (fProgressMonitor == null) ? false : fProgressMonitor.isCanceled();
 	}
-	
+
 	/**
 	 * Reinitialize some fields
 	 */
@@ -420,39 +399,33 @@ public class JSPTranslator {
 		if (fProgressMonitor != null) {
 			fProgressMonitor.setCanceled(false);
 		}
-		
-		// reinit fields
-		
-		// fCursorPosition = -1;
-		
-		// fUserImports = new StringBuffer();
 		fScriptText = new StringBuffer();
-		
+
 		fResult = null;
-		
+
 		fCurrentNode = null;
-		
-		fJava2JspRanges.clear();
-		fImportRanges.clear();
-		fJsContentRanges.clear();
-		
-		fJspTextBuffer = new StringBuffer();
-		fGeneratedFunctionNames.clear();
-		
-	}
+
+		fJsToHTMLRanges.clear();
 	
+		fJspTextBuffer = new StringBuffer();
+		
+		rawImports.clear();
+		
+
+	}
+
 	/**
 	 * So that the JSPTranslator can be reused.
 	 */
 	public void reset(IDOMNode node, IProgressMonitor progress) {
-		
+
 		// initialize some things on node
 		configure(node, progress);
 		reset();
 		// set the jsp text buffer
 		fJspTextBuffer.append(fStructuredDocument.get());
 	}
-	
+
 	/**
 	 * conservative version (no StructuredDocument/Model)
 	 * 
@@ -460,22 +433,22 @@ public class JSPTranslator {
 	 * @param progress
 	 */
 	public void reset(IFile jspFile, IProgressMonitor progress) {
-		
+
 		// initialize some things on node
 		configure(jspFile, progress);
 		reset();
 		// set the jsp text buffer
 		setJspText(jspFile);
 	}
-	
+
 	public void setClassname(String classname) {
 		this.fClassname = classname;
 	}
-	
+
 	private IStructuredDocumentRegion setCurrentNode(IStructuredDocumentRegion currentNode) {
 		return this.fCurrentNode = currentNode;
 	}
-	
+
 	protected void setDocumentContent(IDocument document, InputStream contentStream, String charset) {
 		Reader in = null;
 		try {
@@ -500,7 +473,7 @@ public class JSPTranslator {
 			}
 		}
 	}
-	
+
 	/**
 	 * Set the jsp text from an IFile
 	 * 
@@ -522,7 +495,7 @@ public class JSPTranslator {
 			Logger.logException(e);
 		}
 	}
-	
+
 	/*
 	 * returns string minus CDATA open and close text
 	 */
@@ -549,7 +522,7 @@ public class JSPTranslator {
 		}
 		return resultText;
 	}
-	
+
 	public void translate() {
 		setCurrentNode(fStructuredDocument.getFirstStructuredDocumentRegion());
 		while (getCurrentNode() != null && !isCanceled()) {
@@ -557,11 +530,11 @@ public class JSPTranslator {
 			// type:"+getCurrentNode().getType()+"---------------------------------:");
 			// System.out.println(new NodeHelper(getCurrentNode()));
 			// i.println("/---------------------------------------------------");
-			
+
 			if (getCurrentNode().getType() == DOMRegionContext.XML_TAG_NAME) {
-				
+
 				NodeHelper nh = new NodeHelper(getCurrentNode());
-				
+
 				if ((!nh.isEndTag() || nh.isSelfClosingTag()) && nh.nameEquals("script")) {
 					/*
 					 * Handles the following cases: <script
@@ -570,7 +543,8 @@ public class JSPTranslator {
 					 * language=javascripttype <script src=''> global js type.
 					 * <script> (global js type)
 					 */
-					if (NodeHelper.isInArray(JsDataTypes.JSVALIDDATATYPES, nh.getAttributeValue("type")) || NodeHelper.isInArray(JsDataTypes.JSVALIDDATATYPES, nh.getAttributeValue("language")) || isGlobalJs) {
+					if (NodeHelper.isInArray(JsDataTypes.JSVALIDDATATYPES, nh.getAttributeValue("type"))
+							|| NodeHelper.isInArray(JsDataTypes.JSVALIDDATATYPES, nh.getAttributeValue("language")) || isGlobalJs) {
 						if (nh.containsAttribute(new String[] { "src" })) {
 							// Handle import
 							translateScriptImportNode(getCurrentNode());
@@ -594,27 +568,19 @@ public class JSPTranslator {
 			}
 		} // end while loop
 		buildResult();
-		
+
 	}
-	
+
 	public void translateInlineJSNode(IStructuredDocumentRegion container) {
 		// System.out
 		// .println("JSPTranslator.translateInlineJSNode Entered
 		// w/ScriptOffset:"
 		// + scriptOffset);
-		
+
 		NodeHelper nh = new NodeHelper(container);
 		// System.out.println("inline js node looking at:\n" + nh);
 		/* start a function header.. will amend later */
-		String functionConstant = "function ";
-		String header = "_" + nh.getElementAsFlatString();
-		String footer = "}";
-		
-		/* Start looping through the region. May have mutlipel even attribs */
-		if (container == null) {
-			return;
-		}
-		
+
 		ITextRegionList t = container.getRegions();
 		ITextRegion r;
 		Iterator regionIterator = t.iterator();
@@ -623,9 +589,9 @@ public class JSPTranslator {
 			if (r.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME) {
 				int start = r.getStart();
 				int offset = r.getTextEnd();
-				
+
 				String tagAttrname = container.getText().substring(start, offset).trim();
-				
+
 				/*
 				 * Attribute values aren't case sensative, also make sure next
 				 * region is attrib value
@@ -637,62 +603,47 @@ public class JSPTranslator {
 					if (regionIterator.hasNext()) {
 						r = ((ITextRegion) regionIterator.next());
 					}
-					
+
 					if (r.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
-						
+
 						int valStartOffset = container.getStartOffset(r);
 						// int valEndOffset = r.getTextEnd();
 						String rawText = container.getText().substring(r.getStart(), r.getTextEnd());
-						
-						String newFunctionHeader = functionConstant + header + "_" + scriptOffset + tagAttrname + "(){";
-						/* add functiont to invalid function name list */
-						fGeneratedFunctionNames.add(new String(header + "_" + scriptOffset + tagAttrname));
-						
-						String rawFunction = nh.stripEndQuotes(rawText);
-						
-						/*
-						 * Determine if we should put a ; after the raw function
-						 * text
-						 */
-						boolean needsSemiColon = !(rawFunction.length() > 0 && rawFunction.trim().charAt(rawFunction.trim().length() - 1) == ';');
-						
-						int offsetForQutoes = (nh.isQuoted(rawText)) ? 1 : 0;
-						
-						Position inScript = new Position(scriptOffset + newFunctionHeader.length(), rawFunction.length());
-						
+
+						Position inScript = new Position(scriptOffset, rawText.length());
+
 						/* Quoted text starts +1 and ends -1 char */
-						Position inHtml = new Position(valStartOffset + offsetForQutoes, rawText.length() - 2 * offsetForQutoes);
-						
+						Position inHtml = new Position(valStartOffset, rawText.length());
+
 						/*
 						 * build the function. Addiotional function "baggage"
 						 * not of concern to editor
 						 */
-						String emulatedFunction = newFunctionHeader + rawFunction + (needsSemiColon ? ";" : "") + footer;
-						
-						fJsContentRanges.put(inScript, inHtml);
-						fScriptText.append(emulatedFunction);
+
+						fJsToHTMLRanges.put(inScript, inHtml);
+						fScriptText.append(rawText);
 						scriptOffset = fScriptText.length();
 						if (JSPTranslator.DEBUG) {
 							System.out.println("START-----------------JS Translator Script loop---------------");
-							System.out.println("Translated to:\n" + emulatedFunction + "\n");
+							System.out.println("Translated to:\n" + rawText + "\n");
 							System.out.println("HTML Position:[" + inHtml.getOffset() + "," + inHtml.getLength() + "]");
 							System.out.println("Script Position:[" + inScript.getOffset() + "," + inScript.getLength() + "]");
-							System.out.println("Added (js) Text length:" + emulatedFunction.length());
+							System.out.println("Added (js) Text length:" + rawText.length());
 							System.out.println("END-----------------JS Translator Script loop---------------");
 						}
 					}
 				}
 			}
-			
+
 		}
-		// System.out
-		// .println("JSPTranslator.translateInlineJSNode Left w/ScriptOffset:"
-		// + scriptOffset);
-		
 	}
-	
+
+	public ArrayList getRawImports() {
+		return this.rawImports;
+	}
+
 	public void translateJSNode(IStructuredDocumentRegion container) {
-		
+
 		ITextRegionCollection containerRegion = container;
 		Iterator regions = containerRegion.getRegions().iterator();
 		ITextRegion region = null;
@@ -704,7 +655,7 @@ public class JSPTranslator {
 			if (type == DOMRegionContext.BLOCK_TEXT) {
 				int scriptStart = container.getStartOffset();
 				int scriptTextEnd = container.getEndOffset() - container.getStartOffset();
-				
+
 				//	   			
 				// System.out.println("Container getStartOffset():" +
 				// container.getStartOffset());
@@ -722,7 +673,7 @@ public class JSPTranslator {
 				// container.getText().length());
 				//	   			
 				// System.out.println("Container Text:" + container.getText());
-				
+
 				String regionText = container.getText().substring(region.getStart(), region.getEnd());
 				int regionLength = regionText.length();
 				Position inScript = new Position(scriptOffset, regionLength);
@@ -735,26 +686,25 @@ public class JSPTranslator {
 					System.out.println("END-----------------JS Translator Script loop---------------");
 					//				
 				}
-				fJsContentRanges.put(inScript, inHtml);
+				fJsToHTMLRanges.put(inScript, inHtml);
 				fScriptText.append(regionText);
-				
+
 				scriptOffset = fScriptText.length();
-				
-				// System.out
-				// .println("JSPTranslator.translateJSNode Left w/ScriptOffset:"
-				// + scriptOffset);
 			}
 		}
 	}
-	
-	// final public int getCursorPosition() {
-	// return fCursorPosition;
-	// }
-	
+
+
 	public void translateScriptImportNode(IStructuredDocumentRegion region) {
+		NodeHelper nh = new NodeHelper(region);
+		addImport( nh.getAttributeValue("src") );
 		
 	}
 	
+	private void addImport(String importName) {
+		if (importName != null && !importName.equals("") ) rawImports.add(importName);
+	}
+
 	/**
 	 * @param r
 	 *            the region to be unescaped (XMLContent, XML ENTITY REFERENCE,
@@ -791,16 +741,5 @@ public class JSPTranslator {
 		}
 		return (lengthBefore - lengthAfter + cdata_tags_length);
 	}
-	
-	/**
-	 * @param javaRanges
-	 * @param offsetInJava
-	 */
-	private void updateRanges(HashMap rangeMap, int offsetInJava) {
-		// just need to update java ranges w/ the offset we now know
-		Iterator it = rangeMap.keySet().iterator();
-		while (it.hasNext()) {
-			((Position) it.next()).offset += offsetInJava;
-		}
-	}
+
 }

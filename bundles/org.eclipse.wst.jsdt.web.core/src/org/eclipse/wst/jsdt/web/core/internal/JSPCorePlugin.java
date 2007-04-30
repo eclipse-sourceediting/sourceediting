@@ -21,7 +21,7 @@ import org.osgi.framework.BundleContext;
 public class JSPCorePlugin extends Plugin {
 	// The shared instance.
 	private static JSPCorePlugin plugin;
-	public static final String   PLUGIN_ID = "org.eclipse.wst.jsdt.web";
+	public static final String   PLUGIN_ID = "org.eclipse.wst.jsdt.web.core";
 	
 	/**
 	 * Returns the shared instance.
