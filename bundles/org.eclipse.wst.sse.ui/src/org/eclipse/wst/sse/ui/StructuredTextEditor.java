@@ -109,7 +109,6 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IPageLayout;
-import org.eclipse.ui.IPathEditorInput;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.IWorkbenchActionConstants;
@@ -2963,7 +2962,7 @@ public class StructuredTextEditor extends TextEditor {
 			// largely untested
 			setDocumentProvider(StructuredModelDocumentProvider.getInstance());
 		}
-		else if (input instanceof IStorageEditorInput && !(input instanceof IFileEditorInput) && !(input instanceof IPathEditorInput)) {
+		else if (input instanceof IStorageEditorInput && !(input instanceof IFileEditorInput)) {
 			setDocumentProvider(StorageModelProvider.getInstance());
 		}
 		else {
