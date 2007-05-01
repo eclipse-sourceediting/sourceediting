@@ -68,7 +68,7 @@
 			target="org.eclipse.core.runtime.xml, org.eclipse.wst.xml.core.xmlsource" />
 		<provisionalDefinition
 			type="spellingregions"
-			value="XML_COMMENT_TEXT, XML_CONTENT"
+			value="XML_COMMENT_TEXT, XML_CONTENT, XML_DEFAULT"
 			target="org.eclipse.core.runtime.xml, org.eclipse.wst.xml.core.xmlsource" />
 	</extension>
 
