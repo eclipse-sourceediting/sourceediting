@@ -324,7 +324,8 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 			String prefix = null;
 			boolean taglib = false;
 			try {
-				for (int i = 0; i < regions.size(); i++) {
+				// skip the first two, they're the open bracket and name
+				for (int i = 2; i < regions.size(); i++) {
 					ITextRegion region = regions.get(i);
 					if (region.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME) {
 						String name = textSource.getText(taglibStructuredDocumentRegion.getStartOffset(region), region.getTextLength());
@@ -345,22 +346,18 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 							if (uri != null && uri.length() > 0) {
 								if (uri.startsWith(URN_TLD)) {
 									uri = uri.substring(URN_TLD.length());
-									if (anchorStructuredDocumentRegion == null)
-										enableTaglibFromURI(prefix, uri, taglibStructuredDocumentRegion);
-									else
-										enableTaglibFromURI(prefix, uri, anchorStructuredDocumentRegion);
-									uri = null;
-									prefix = null;
 								}
 								else if (uri.startsWith(URN_TAGDIR)) {
 									uri = uri.substring(URN_TAGDIR.length());
-									if (anchorStructuredDocumentRegion == null)
-										enableTagsInDir(prefix, uri, taglibStructuredDocumentRegion);
-									else
-										enableTagsInDir(prefix, uri, anchorStructuredDocumentRegion);
-									uri = null;
-									prefix = null;
 								}
+								if (anchorStructuredDocumentRegion == null) {
+									enableTags(prefix, uri, taglibStructuredDocumentRegion);
+								}
+								else {
+									enableTags(prefix, uri, anchorStructuredDocumentRegion);
+								}
+								uri = null;
+								prefix = null;
 							}
 						}
 					}
