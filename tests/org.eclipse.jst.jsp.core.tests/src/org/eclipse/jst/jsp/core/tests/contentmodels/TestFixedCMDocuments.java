@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.jst.jsp.core.tests;
+package org.eclipse.jst.jsp.core.tests.contentmodels;
 
 import junit.framework.Test;
 import junit.framework.TestCase;

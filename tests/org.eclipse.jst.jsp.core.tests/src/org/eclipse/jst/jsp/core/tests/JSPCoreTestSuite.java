@@ -14,6 +14,8 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.eclipse.jst.jsp.core.tests.cleanupformat.FormatTester;
+import org.eclipse.jst.jsp.core.tests.contentmodels.TestFixedCMDocuments;
+import org.eclipse.jst.jsp.core.tests.contentmodels.TestTaglibCMTests;
 import org.eclipse.jst.jsp.core.tests.contenttypeidentifier.contentspecific.TestContentTypeHandlers;
 import org.eclipse.jst.jsp.core.tests.contenttypeidentifier.contentspecific.TestModelHandlers;
 import org.eclipse.jst.jsp.core.tests.dom.TestImportedNodes;
@@ -26,8 +28,6 @@ import org.eclipse.jst.jsp.core.tests.translation.JSPJavaTranslatorCoreTest;
 import org.eclipse.jst.jsp.core.tests.validation.JSPActionValidatorTest;
 import org.eclipse.jst.jsp.core.tests.validation.JSPJavaValidatorTest;
 import org.eclipse.jst.jsp.css.core.tests.source.JSPedCSSSourceParserTest;
-
-
 
 public class JSPCoreTestSuite extends TestSuite {
 	public static Test suite() {
@@ -50,7 +50,7 @@ public class JSPCoreTestSuite extends TestSuite {
 		addTest(new TestSuite(TestModelManager.class, "TestModelManager"));
 		addTest(new TestSuite(FormatTester.class, "FormatTester"));
 		addTest(new TestSuite(TestModelRelease.class, "JSP Model Tests"));
-		addTest(new TestSuite(TestModelWithNoFile.class, "JSP Model Tests"));
+		addTest(new TestSuite(TestModelWithNoFile.class, "JSP Model with no file Tests"));
 		addTest(new TestSuite(TestIndex.class, "TaglibIndex Tests"));
 		addTest(new TestSuite(JSPTokenizerTest.class, "Special Parsing Tests"));
 		addTest(new TestSuite(JSPJavaTranslatorCoreTest.class));
@@ -60,6 +60,7 @@ public class JSPCoreTestSuite extends TestSuite {
 		addTest(new TestSuite(JSPJavaValidatorTest.class, "JSP Java Validator Tests"));
 		addTest(new TestSuite(TestImportedNodes.class, "Imported Nodes Tests"));
 		addTest(new TestSuite(TestFixedCMDocuments.class, "Fixed CMDocument Creation Tests"));
+		addTest(new TestSuite(TestTaglibCMTests.class, "Custom Tag Library Content Model Tests"));
 		addTest(new TestSuite(JSPActionValidatorTest.class, "JSP Action Validator Tests"));
 
 		if (wtp_autotest_noninteractive != null)
