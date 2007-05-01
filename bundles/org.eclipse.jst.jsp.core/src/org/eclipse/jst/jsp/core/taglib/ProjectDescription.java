@@ -109,7 +109,7 @@ class ProjectDescription {
 						updateJAR(resource, delta.getKind());
 					}
 				}
-				else if (resource.getFileExtension().equals("tag") || resource.getFileExtension().equals("tagx")) { //$NON-NLS-1$ //$NON-NLS-2$
+				else if ("tag".equalsIgnoreCase(resource.getFileExtension()) || "tagx".equalsIgnoreCase(resource.getFileExtension())) { //$NON-NLS-1$ //$NON-NLS-2$
 					if (delta.getKind() == IResourceDelta.REMOVED) {
 						removeTag(resource);
 					}
@@ -2029,7 +2029,7 @@ class ProjectDescription {
 					 * 
 					 * Also support mappings to .jar files
 					 */
-					if (resource.getFileExtension().equalsIgnoreCase(("jar"))) { //$NON-NLS-1$
+					if ("jar".equalsIgnoreCase(resource.getFileExtension())) { //$NON-NLS-1$
 						JarRecord jarRecord = createJARRecord(resource);
 						String[] entries = JarUtilities.getEntryNames(resource);
 						for (int jEntry = 0; jEntry < entries.length; jEntry++) {
