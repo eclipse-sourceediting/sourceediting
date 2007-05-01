@@ -133,6 +133,28 @@
 			id="tldsource"
 			base-type="org.eclipse.core.runtime.xml"
 			default-charset="UTF-8"/>
+
+  	<!--======================================================================================-->
+	<!-- minimal content-type css jsp support                                                 -->
+	<!--======================================================================================-->
+        <content-type
+			file-extensions="jsp"
+			priority="high"
+			name="%contentTypeCSSJSPName"
+			id="cssjspsource"
+			base-type="org.eclipse.jst.jsp.core.jspsource">
+			<describer
+				class="org.eclipse.jst.jsp.css.core.internal.contenttype.ContentDescriberForJSPedCSS" />
+		</content-type>
+        <content-type
+	        file-extensions="jspf"
+			priority="high"
+			name="%contentTypeCSSJSPFName"
+			id="cssjspfragmentsource"
+			base-type="org.eclipse.jst.jsp.core.cssjspsource">
+			<describer
+				class="org.eclipse.jst.jsp.css.core.internal.contenttype.ContentDescriberForJSPedCSS" />
+		</content-type>
 	</extension>
 
 	<!-- initialize jsp core preferences -->
@@ -150,7 +172,6 @@
 		point="org.eclipse.wst.validation.validator">
 		<validator>
 			<projectNature id="org.eclipse.jdt.core.javanature" />
-
 			<filter
 				objectClass="org.eclipse.core.resources.IFile"
 				nameFilter="*.jsp">
@@ -171,17 +192,15 @@
 				objectClass="org.eclipse.core.resources.IFile"
 				nameFilter="*.jtpl">
 			</filter>
-
+         	<contentTypeBinding contentTypeId="org.eclipse.jst.jsp.core.jspsource"/>
+			<!-- needed until bug 181443 is implemented -->
+         	<contentTypeBinding contentTypeId="org.eclipse.jst.jsp.core.jspfragmentsource"/>
+         	<contentTypeBinding contentTypeId="org.eclipse.jst.jsp.core.tagsource"/>
 			<enablement/>
-
-			<helper
-				class="org.eclipse.wst.validation.internal.operations.WorkbenchContext">
-			</helper>
-
+			<helper class="org.eclipse.wst.validation.internal.operations.WorkbenchContext"/>
 			<run
 				enabled="true"
-				class="org.eclipse.jst.jsp.core.internal.validation.JSPBatchValidator">
-			</run>
+				class="org.eclipse.jst.jsp.core.internal.validation.JSPBatchValidator"/>
 		</validator>
 	</extension>
 	
@@ -211,20 +230,17 @@
 				objectClass="org.eclipse.core.resources.IFile"
 				nameFilter="*.jtpl">
 			</filter>
-
-			<enablement />
-			
-			<helper
-				class="org.eclipse.wst.validation.internal.operations.WorkbenchContext">
-			</helper>
-		
-		<run
-             async="true"
-             fullBuild="true"
-             incremental="true"
-             enabled="true"
-			 class="org.eclipse.jst.jsp.core.internal.validation.JSPContentValidator">
-         </run>
+         	<contentTypeBinding contentTypeId="org.eclipse.jst.jsp.core.jspsource"/>			
+         	<!-- <contentTypeBinding contentTypeId="org.eclipse.jst.jsp.core.jspfragmentsource"/> -->
+         	<!-- <contentTypeBinding contentTypeId="org.eclipse.jst.jsp.core.tagsource"/> -->
+			<enablement />			
+			<helper class="org.eclipse.wst.validation.internal.operations.WorkbenchContext"/>
+			<run
+				async="true"
+				fullBuild="true"
+				incremental="true"
+				enabled="true"
+				class="org.eclipse.jst.jsp.core.internal.validation.JSPContentValidator"/>
 		</validator>
 	</extension>
 	
@@ -236,31 +252,6 @@
           id="org.eclipse.jst.jsp.defaultJSP20"/>
     </extension>
     
-  	<!--======================================================================================-->
-	<!-- minimal content-type css jsp support                                                 -->
-	<!--======================================================================================-->
-    <extension
-         point="org.eclipse.core.runtime.contentTypes">
-        <content-type
-			file-extensions="jsp"
-			priority="high"
-			name="%contentTypeCSSJSPName"
-			id="cssjspsource"
-			base-type="org.eclipse.jst.jsp.core.jspsource">
-			<describer
-				class="org.eclipse.jst.jsp.css.core.internal.contenttype.ContentDescriberForJSPedCSS" />
-		</content-type>
-        <content-type
-	        file-extensions="jspf"
-			priority="high"
-			name="%contentTypeCSSJSPFName"
-			id="cssjspfragmentsource"
-			base-type="org.eclipse.jst.jsp.core.cssjspsource">
-			<describer
-				class="org.eclipse.jst.jsp.css.core.internal.contenttype.ContentDescriberForJSPedCSS" />
-		</content-type>
-	</extension>
-
 	<extension point="org.eclipse.wst.sse.core.modelHandler">
 		<modelHandler
 			class="org.eclipse.jst.jsp.css.core.internal.modelhandler.ModelHandlerForJSPedCSS"

@@ -99,16 +99,14 @@
 				caseSensitive="false"
 				nameFilter="*.dtd">
 			</filter>
-			<helper
-				class="org.eclipse.wst.xml.core.internal.validation.core.Helper">
-			</helper>
+         	<contentTypeBinding contentTypeId="org.eclipse.wst.dtd.core.dtdsource"/>
+			<helper class="org.eclipse.wst.xml.core.internal.validation.core.Helper"/>
 			<run
-         async="true"
-         class="org.eclipse.wst.dtd.core.internal.validation.eclipse.Validator"
-         enabled="true"
-         fullBuild="true"
-         incremental="true">
-			</run>
+				async="true"
+         		class="org.eclipse.wst.dtd.core.internal.validation.eclipse.Validator"
+         		enabled="true"
+         		fullBuild="true"
+         		incremental="true"/>
 		</validator>
 	</extension>
 

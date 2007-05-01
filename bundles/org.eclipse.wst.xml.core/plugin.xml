@@ -5,7 +5,6 @@
    <!-- An extension for contributing a XML validation error customizer. -->
    <extension-point id="errorCustomizer" name="%XML_Validation_Error_Customizer.name" schema="schema/errorCustomizer.exsd"/>
 
-
 	<extension point="org.eclipse.wst.sse.core.modelHandler">
 		<modelHandler
 			default="true"
@@ -103,30 +102,6 @@
 		</processor>
 	</extension>
 
-	<extension point="org.eclipse.core.runtime.contentTypes">
-		<content-type
-			file-extensions="xml,xsl,xslt,wsdl,xsd,exsd,xmi"
-			priority="low"
-			name="%XML_Content_Type_Extension_Element.name"
-			id="xmlsource"
-			base-type="org.eclipse.core.runtime.text"
-			default-charset="UTF-8">
-			<describer
-				class="org.eclipse.wst.xml.core.internal.contenttype.ContentDescriberForXML" />
-		</content-type>
-	</extension>
-
-	<extension point="org.eclipse.core.runtime.contentTypes">
-		<content-type
-			file-extensions="xsl,xslt"
-			priority="high"
-			name="%XSL_Content_Type_Extension_Element.name"
-			id="xslsource"
-			base-type="org.eclipse.core.runtime.xml"
-			default-charset="UTF-8">
-		</content-type>
-	</extension>
-
 	<!--  https://bugs.eclipse.org/bugs/show_bug.cgi?id=103083 -->\
 	<!--  FYI: this xmi type *should* be defined in EMF, but, since isn't
 			we will here. In future versions is could be removed -->
@@ -138,12 +113,31 @@
 			id="xmisource"
 			base-type="org.eclipse.core.runtime.xml">
 		</content-type>
+
+		<content-type
+			file-extensions="xml,xsl,xslt,wsdl,xsd,exsd,xmi"
+			priority="low"
+			name="%XML_Content_Type_Extension_Element.name"
+			id="xmlsource"
+			base-type="org.eclipse.core.runtime.text"
+			default-charset="UTF-8">
+			<describer class="org.eclipse.wst.xml.core.internal.contenttype.ContentDescriberForXML" />
+		</content-type>
+
+		<content-type
+			file-extensions="xsl,xslt"
+			priority="high"
+			name="%XSL_Content_Type_Extension_Element.name"
+			id="xslsource"
+			base-type="org.eclipse.core.runtime.xml"
+			default-charset="UTF-8">
+		</content-type>
 	</extension>
+
 
 	<!-- initialize xml core preferences -->
 	<extension point="org.eclipse.core.runtime.preferences">
-		<initializer
-			class="org.eclipse.wst.xml.core.internal.preferences.XMLCorePreferenceInitializer" />
+		<initializer class="org.eclipse.wst.xml.core.internal.preferences.XMLCorePreferenceInitializer" />
 	</extension>
 
 	<extension-point id="documentFactories" name="%Content_Model_Document_Factories_Extension.name" schema="schema/documentFactories.exsd"/>
@@ -169,16 +163,14 @@
 		name="%XML_Validator.name"
        point="org.eclipse.wst.validation.validator">
     <validator>
-    <!-- There is a custom XML validator for EJBs -->
+			<!-- There is a custom XML validator for EJBs -->
 			<projectNature
 				include="false"
-				id="org.eclipse.jst.j2ee.ejb.EJBNature">
-			</projectNature>
+				id="org.eclipse.jst.j2ee.ejb.EJBNature"/>
 			<!-- There is a custom XML validator for EARs -->
 			<projectNature
 				include="false"
-				id="org.eclipse.jst.j2ee.EARNature">
-			</projectNature>
+				id="org.eclipse.jst.j2ee.EARNature"/>
 			<filter
 				objectClass="org.eclipse.core.resources.IFile"
 				caseSensitive="false"
@@ -194,21 +186,24 @@
 				caseSensitive="false"
 				nameFilter="*.wdo-connections">
 			</filter>
+         	<!-- needed until bug 181443 is implemented -->
 			<filter
 				objectClass="org.eclipse.core.resources.IFile"
 				caseSensitive="false"
 				nameFilter="*.tld" />
-				
-    <helper
-				class="org.eclipse.wst.xml.core.internal.validation.core.Helper">
-			</helper>
-			
-       <run
-             async="true"
-             class="org.eclipse.wst.xml.core.internal.validation.eclipse.Validator"
-             enabled="true"
-             fullBuild="true"
-             incremental="true"/>
+         	<contentTypeBinding contentTypeId="org.eclipse.core.runtime.xml"/>
+         	<!-- needed until bug 181443 is implemented -->
+         	<contentTypeBinding contentTypeId="org.eclipse.wst.xml.core.xmlsource"/>
+         	<contentTypeBinding contentTypeId="org.eclipse.wst.xml.core.xslsource"/>
+         	<contentTypeBinding contentTypeId="org.eclipse.wst.xml.core.xmisource"/>
+         	<contentTypeBinding contentTypeId="org.eclipse.jst.jsp.core.tldsource"/>
+			<helper class="org.eclipse.wst.xml.core.internal.validation.core.Helper"/>
+			<run
+				async="true"
+				class="org.eclipse.wst.xml.core.internal.validation.eclipse.Validator"
+				enabled="true"
+				fullBuild="true"
+				incremental="true"/>
     </validator>
  </extension>
 

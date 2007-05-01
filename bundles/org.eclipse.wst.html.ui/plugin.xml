@@ -262,21 +262,16 @@
 				objectClass="org.eclipse.core.resources.IFile"
 				nameFilter="*.wml">
 			</filter>
-			
+         	<contentTypeBinding contentTypeId="org.eclipse.wst.html.core.htmlsource"/>			
 			<projectNature id=""/>
 			<enablement></enablement>
-			
-			<helper
-				class="org.eclipse.wst.html.internal.validation.HTMLValidationWorkbenchHelper">
-			</helper>
-		
-		<run
-             async="true"
-             fullBuild="true"
-             incremental="true"
-             enabled="true"
-			 class="org.eclipse.wst.html.internal.validation.HTMLValidator">
-         </run>
+			<helper class="org.eclipse.wst.html.internal.validation.HTMLValidationWorkbenchHelper"/>
+			<run
+				async="true"
+				fullBuild="true"
+				incremental="true"
+				enabled="true"
+				class="org.eclipse.wst.html.internal.validation.HTMLValidator"/>
 		</validator>
 	</extension>
 
