@@ -380,19 +380,7 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 
 	protected void processPageDirective(IStructuredDocumentRegion sdRegion) {
 		if (isPageDirective(fTagname)) {
-			while (sdRegion != null) {
-				if (sdRegion.getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_NAME)
-					break;
-				sdRegion = sdRegion.getPrevious();
-			}
-			String importValue = getAttributeValue("import", sdRegion); //$NON-NLS-1$
-			if (importValue != "") { //$NON-NLS-1$
-				// had to add "false" parameter to ensure these
-				// imports don't get added to jsp <-> java map (since they are
-				// from an included file)
-				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=81687
-				this.fTranslator.addImports(importValue, false);
-			}
+			this.fTranslator.translatePageDirectiveAttributes(sdRegion.getRegions().iterator(), sdRegion);
 		}
 	}
 

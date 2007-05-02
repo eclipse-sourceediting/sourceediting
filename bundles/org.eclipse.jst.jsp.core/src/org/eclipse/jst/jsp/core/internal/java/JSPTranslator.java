@@ -1214,11 +1214,11 @@ public class JSPTranslator {
 									// setCurrentNode(getCurrentNode().getNext());
 									if (getCurrentNode() != null) {
 										// 'regions' contain the attrs
-										translatePageDirectiveAttributes(regions);
+										translatePageDirectiveAttributes(regions, getCurrentNode());
 									}
 								}
 								else if (directiveName.equals("tag")) { //$NON-NLS-1$
-									translatePageDirectiveAttributes(regions);
+									translatePageDirectiveAttributes(regions, getCurrentNode());
 								}
 								else if (directiveName.equals("variable")) { //$NON-NLS-1$
 									translateVariableDirectiveAttributes(regions);
@@ -1665,10 +1665,10 @@ public class JSPTranslator {
 					handleIncludeFile(fileLocation);
 			}
 			else if (regionText.equals("page")) { //$NON-NLS-1$
-				translatePageDirectiveAttributes(regions);
+				translatePageDirectiveAttributes(regions, getCurrentNode());
 			}
 			else if (regionText.equals("tag")) { //$NON-NLS-1$
-				translatePageDirectiveAttributes(regions);
+				translatePageDirectiveAttributes(regions, getCurrentNode());
 			}
 			else if (regionText.equals("variable")) { //$NON-NLS-1$
 				translateVariableDirectiveAttributes(regions);
@@ -1847,9 +1847,12 @@ public class JSPTranslator {
 	}
 
 	/**
-	 * takes an emnumeration of the attributes of a page directove
+	 * takes an iterator of the attributes of a page directive and the
+	 * directive itself. The iterator is used in case it can be optimized,
+	 * but the documentRegion is still required to ensure that the values are
+	 * extracted from the correct text.
 	 */
-	protected void translatePageDirectiveAttributes(Iterator regions) {
+	protected void translatePageDirectiveAttributes(Iterator regions, IStructuredDocumentRegion documentRegion) {
 		ITextRegion r = null;
 		String attrName, attrValue;
 		// iterate all attributes
@@ -1857,12 +1860,12 @@ public class JSPTranslator {
 			attrName = attrValue = null;
 			if (r.getType().equals(DOMRegionContext.XML_TAG_ATTRIBUTE_NAME)) {
 
-				attrName = getCurrentNode().getText(r).trim();
+				attrName = documentRegion.getText(r).trim();
 				if (attrName.length() > 0) {
 					if (regions.hasNext() && (r = (ITextRegion) regions.next()) != null && r.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS) {
 						if (regions.hasNext() && (r = (ITextRegion) regions.next()) != null && r.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
 
-							attrValue = StringUtils.strip(getCurrentNode().getText(r));
+							attrValue = StringUtils.strip(documentRegion.getText(r));
 						}
 						// has equals, but no value?
 					}
