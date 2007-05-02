@@ -775,4 +775,11 @@ static class CategoryContentProvider implements IStructuredContentProvider
   {
     return super.close();
   }
+  
+  protected void enableButtons(boolean value)
+  {
+    editButton.setEnabled(value);
+    addButton.setEnabled(value);
+    removeButton.setEnabled(value);
+  }
 }
