@@ -58,6 +58,7 @@ import org.eclipse.jst.jsp.core.internal.taglib.TaglibHelperManager;
 import org.eclipse.jst.jsp.core.internal.taglib.TaglibVariable;
 import org.eclipse.jst.jsp.core.internal.util.ZeroStructuredDocumentRegion;
 import org.eclipse.jst.jsp.core.jspel.IJSPELTranslator;
+import org.eclipse.wst.html.core.internal.contentmodel.JSP20Namespace;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.ltk.parser.BlockMarker;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
@@ -81,7 +82,7 @@ import com.ibm.icu.util.StringTokenizer;
 
 /**
  * Translates a JSP document into a HttpServlet. Keeps two way mapping from
- * java translation to the original JSP source, which can be obtained through
+ * Java translation to the original JSP source, which can be obtained through
  * getJava2JspRanges() and getJsp2JavaRanges().
  */
 public class JSPTranslator {
@@ -1668,14 +1669,64 @@ public class JSPTranslator {
 				translatePageDirectiveAttributes(regions, getCurrentNode());
 			}
 			else if (regionText.equals("tag")) { //$NON-NLS-1$
+				// some attributes overlap, so both are handled in this method
 				translatePageDirectiveAttributes(regions, getCurrentNode());
 			}
 			else if (regionText.equals("variable")) { //$NON-NLS-1$
 				translateVariableDirectiveAttributes(regions);
 			}
+			else if (regionText.equals("attribute")) { //$NON-NLS-1$
+				translateAttributeDirectiveAttributes(regions);
+			}
 		}
 	}
+	
+	private void translateAttributeDirectiveAttributes(Iterator regions) {
+		ITextRegion r = null;
+		String attrName, attrValue;
 
+		String varType = "java.lang.String"; //$NON-NLS-1$ // the default class...
+		String varName = null;
+		String description = "";//$NON-NLS-1$ 
+		boolean isFragment = false;
+
+		// iterate all attributes
+		while (regions.hasNext() && (r = (ITextRegion) regions.next()) != null && r.getType() != DOMJSPRegionContexts.JSP_CLOSE) {
+			attrName = attrValue = null;
+			if (r.getType().equals(DOMRegionContext.XML_TAG_ATTRIBUTE_NAME)) {
+				attrName = getCurrentNode().getText(r).trim();
+				if (attrName.length() > 0) {
+					if (regions.hasNext() && (r = (ITextRegion) regions.next()) != null && r.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS) {
+						if (regions.hasNext() && (r = (ITextRegion) regions.next()) != null && r.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
+							attrValue = StringUtils.strip(getCurrentNode().getText(r));
+						}
+						// has equals, but no value?
+					}
+					if (attrName.equals(JSP11Namespace.ATTR_NAME_TYPE)) {
+						varType = attrValue;
+					}
+					else if (attrName.equals(JSP20Namespace.ATTR_NAME_FRAGMENT)) {
+						isFragment = Boolean.parseBoolean(attrValue);
+					}
+					else if (attrName.equals(JSP11Namespace.ATTR_NAME_NAME)) {
+						varName = attrValue;
+					}
+					else if (attrName.equals(JSP20Namespace.ATTR_NAME_DESCRIPTION)) {
+						description = attrValue;
+					}
+				}
+			}
+			if (varName != null) {
+				if(isFragment) {
+					// 2.0:JSP.8.5.2
+					varType = "javax.servlet.jsp.tagext.JspFragment";
+				}
+				String declaration = new TaglibVariable(varType, varName, "", description).getDeclarationString();
+				appendToBuffer(declaration, fUserDeclarations, false, fCurrentNode);
+			}
+		}
+	}
+		
 	private void translateVariableDirectiveAttributes(Iterator regions) {
 		ITextRegion r = null;
 		String attrName, attrValue;
