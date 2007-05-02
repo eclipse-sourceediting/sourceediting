@@ -31,6 +31,10 @@
 			type="contentformater"
 			class="org.eclipse.wst.jsdt.web.ui.internal.format.FormattingStrategyJSPJava"
 			target="org.eclipse.wst.html.SCRIPT" />
+		<provisionalConfiguration
+			type="hyperlinkdetector"
+			class="org.eclipse.wst.jsdt.web.ui.internal.hyperlink.JSPJavaHyperlinkDetector"
+			target="org.eclipse.wst.html.SCRIPT" />
 	</extension>
 <!--
 	<extension point="org.eclipse.wst.sse.ui.editorConfiguration">
@@ -68,12 +72,28 @@
 			class="org.eclipse.wst.jsdt.web.core.internal.validation.JsValidator"
 			id="org.eclipse.wst.jsdt.web.jspsourcevalidator">
 			<contentTypeIdentifier id="org.eclipse.wst.html.core.htmlsource">
-				<partitionType id="org.eclipse.wst.html.SCRIPT" />
-				<partitionType id="org.eclipse.wst.html.SCRIPT.EVENT" />
+				<partitionType id="org.eclipse.wst.html.SCRIPT"></partitionType>
+				<partitionType id="org.eclipse.wst.html.SCRIPT.EVENT"></partitionType>
+			</contentTypeIdentifier>
+		</validator>
+
+		
+	</extension>
+	<!--
+	<extension point="org.eclipse.wst.sse.ui.sourcevalidation">
+		<validator
+			scope="partial"
+			class="org.eclipse.wst.html.internal.validation.HTMLPartValidator"
+			id="org.eclipse.wst.jsdt.web.HTMLPartValidator">
+			<contentTypeIdentifier id="org.eclipse.wst.html.core.htmlsource">
+				<partitionType id="org.eclipse.wst.html.HTML_DECLARATION"></partitionType>
+				<partitionType id="org.eclipse.wst.html.HTML_COMMENT"></partitionType>
+				<partitionType id="org.eclipse.wst.html.HTML_DEFAULT"></partitionType>
+				<partitionType id="org.eclipse.wst.sse.ST_DEFAULT"></partitionType>
 			</contentTypeIdentifier>
 		</validator>
 	</extension>
-	
+	-->
 	<!--======================================================================================-->
 	<!-- JSP UI Adapter factories					   						  				  -->
 	<!--======================================================================================-->

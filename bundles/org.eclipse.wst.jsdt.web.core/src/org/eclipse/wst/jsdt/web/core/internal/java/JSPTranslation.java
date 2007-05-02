@@ -100,6 +100,8 @@ public class JSPTranslation implements IJSPTranslation {
 	private DocumentContextFragmentRoot fDocumentScope;
 	
 	private String[] cuImports;
+	
+	private ArrayList importRanges;
 
 	public JSPTranslation(IJavaProject javaProj, JSPTranslator translator) {
 
@@ -112,9 +114,10 @@ public class JSPTranslation implements IJSPTranslation {
 			fClassname = translator.getClassname();
 			fJava2JspMap = translator.getJava2JspRanges();
 			fJsp2JavaMap = translator.getJsp2JavaRanges();
+			fJspName = translator.getFile().getName();
 			fDocumentScope = new DocumentContextFragmentRoot(fJavaProject, translator.getFile());
 			fGeneratedFunctionNames = translator.getExcludedElements();
-
+			importRanges = translator.getImportHtmlRanges();
 			// fJava2JspIndirectMap = translator.getJava2JspIndirectRanges();
 			ArrayList rawImports = translator.getRawImports();
 			if(rawImports!=null) {
@@ -123,6 +126,14 @@ public class JSPTranslation implements IJSPTranslation {
 				cuImports = new String[0];
 			}
 		}
+	}
+	
+	public boolean isImportRange(int offset) {
+		for(int i = 0;i<importRanges.size();i++) {
+			Position p = (Position)importRanges.get(i);
+			if(p.includes(offset))return true;
+		}
+		return false;
 	}
 
 	/**
@@ -133,7 +144,7 @@ public class JSPTranslation implements IJSPTranslation {
 	 */
 	private ICompilationUnit createCompilationUnit() throws JavaModelException {
 
-		fDocumentScope.addFilesToScope(cuImports);
+		fDocumentScope.setScope(cuImports);
 		//
 		ICompilationUnit cu = fDocumentScope.getDefaultPackageFragment().getCompilationUnit(getClassname()  + JsDataTypes.BASE_FILE_EXTENSION ).getWorkingCopy(getWorkingCopyOwner(),
 				getProblemRequestor(), getProgressMonitor());
@@ -177,7 +188,7 @@ public class JSPTranslation implements IJSPTranslation {
 			return null;
 		}
 
-		return displayString.replaceAll(getMangledName(), getJspName());
+		return displayString.replaceAll(getMangledName() + ".js", getJspName());
 	}
 
 	public IJavaElement[] getAllElementsFromJspRange(int jspStart, int jspEnd) {
@@ -245,7 +256,7 @@ public class JSPTranslation implements IJSPTranslation {
 				if (fCompilationUnit == null) {
 					fCompilationUnit = createCompilationUnit();
 				}
-				reconcileCompilationUnit();
+				//reconcileCompilationUnit();
 			} catch (JavaModelException jme) {
 				if (JSPTranslation.DEBUG) {
 					Logger.logException("error creating JSP working copy... ", jme); //$NON-NLS-1$

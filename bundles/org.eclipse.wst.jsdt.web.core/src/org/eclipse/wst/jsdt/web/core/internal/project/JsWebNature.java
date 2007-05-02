@@ -124,8 +124,8 @@ public class JsWebNature implements IProjectNature {
 		if (hasAValidSourcePath()) {
 			return;
 		}
-		IPath projectPath = fCurrProject.getFullPath();
-		classPathEntries.add(JavaCore.newSourceEntry(projectPath));
+		//IPath projectPath = fCurrProject.getFullPath();
+		//classPathEntries.add(JavaCore.newSourceEntry(projectPath));
 	}
 	
 	public void deconfigure() throws CoreException {

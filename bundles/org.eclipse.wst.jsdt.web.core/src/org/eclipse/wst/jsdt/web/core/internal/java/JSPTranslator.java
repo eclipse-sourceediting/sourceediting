@@ -70,8 +70,8 @@ public class JSPTranslator {
 
 	static {
 		String value = Platform.getDebugOption("org.eclipse.wst.jsdt.web.core/debug/jspjavamapping"); //$NON-NLS-1$
-		//DEBUG = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
-		DEBUG=true;
+		DEBUG = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
+		
 	}
 	
 	private IStructuredDocumentRegion fCurrentNode;
@@ -104,6 +104,8 @@ public class JSPTranslator {
 	private boolean isGlobalJs = true;
 
 	private int scriptOffset = 0;
+	
+	private ArrayList importLocationsInHtml = new ArrayList();
 
 	private void advanceNextNode() {
 		setCurrentNode(getCurrentNode().getNext());
@@ -411,9 +413,15 @@ public class JSPTranslator {
 		
 		rawImports.clear();
 		
+		importLocationsInHtml.clear();
+		
 
 	}
 
+	public ArrayList getImportHtmlRanges() {
+		return importLocationsInHtml;
+	}
+	
 	/**
 	 * So that the JSPTranslator can be reused.
 	 */
@@ -548,12 +556,13 @@ public class JSPTranslator {
 						if (nh.containsAttribute(new String[] { "src" })) {
 							// Handle import
 							translateScriptImportNode(getCurrentNode());
-						} else {
-							// handle script section
-							if (getCurrentNode().getNext() != null && getCurrentNode().getNext().getType() == DOMRegionContext.BLOCK_TEXT) {
-								translateJSNode(getCurrentNode().getNext());
-							}
 						}
+						//} else {
+							// handle script section
+						if (getCurrentNode().getNext() != null && getCurrentNode().getNext().getType() == DOMRegionContext.BLOCK_TEXT) {
+							translateJSNode(getCurrentNode().getNext());
+						}
+						
 					} // End search for <script> sections
 				} else if (nh.containsAttribute(JsDataTypes.HTMLATREVENTS)) {
 					/* Check for embeded JS events in any tags */
@@ -697,6 +706,8 @@ public class JSPTranslator {
 
 	public void translateScriptImportNode(IStructuredDocumentRegion region) {
 		NodeHelper nh = new NodeHelper(region);
+		Position inHtml = new Position(region.getStartOffset(), region.getEndOffset());
+		importLocationsInHtml.add(inHtml);
 		addImport( nh.getAttributeValue("src") );
 		
 	}

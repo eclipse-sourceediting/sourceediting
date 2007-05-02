@@ -51,3 +51,4 @@ Require-Bundle: org.eclipse.ui.ide;bundle-version="[3.2.0,4.0.0)",
  org.eclipse.wst.jsdt.core,
  org.eclipse.wst.jsdt.ui
 Eclipse-LazyStart: true
+Import-Package: org.eclipse.wst.validation.internal.provisional.core

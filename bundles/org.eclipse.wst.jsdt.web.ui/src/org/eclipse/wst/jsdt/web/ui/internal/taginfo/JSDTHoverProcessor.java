@@ -49,7 +49,7 @@ public class JSDTHoverProcessor extends AbstractHoverProcessor {
 			| JavaElementLabels.USE_RESOLVED;
 	private final long LOCAL_VARIABLE_FLAGS = LABEL_FLAGS
 			& ~JavaElementLabels.F_FULLY_QUALIFIED
-			& ~JavaElementLabels.F_POST_QUALIFIED;
+			| JavaElementLabels.F_POST_QUALIFIED;
 
 	private String getHoverInfo(IJavaElement[] result) {
 		StringBuffer buffer = new StringBuffer();
@@ -143,7 +143,7 @@ public class JSDTHoverProcessor extends AbstractHoverProcessor {
 //						filteredResult.replace((String)badFunctions.get(i), "");
 //					}
 //					return filteredResult;
-					return getHoverInfo(result);
+					return  translation.fixupMangledName(getHoverInfo(result));
 				}
 			}
 		} finally {

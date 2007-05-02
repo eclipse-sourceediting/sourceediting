@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.wst.jsdt.web.core.internal.java;
 
+import java.util.Collection;
+
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -18,10 +20,13 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentListener;
+import org.eclipse.jface.text.ITypedRegion;
+import org.eclipse.jface.text.Position;
 import org.eclipse.wst.jsdt.core.IJavaProject;
 import org.eclipse.wst.jsdt.core.JavaCore;
 import org.eclipse.wst.jsdt.web.core.internal.Logger;
@@ -74,7 +79,19 @@ public class JSPTranslationAdapter implements INodeAdapter, IDocumentListener {
 	 * @see org.eclipse.jface.text.IDocumentListener#documentChanged(org.eclipse.jface.text.DocumentEvent)
 	 */
 	public void documentChanged(DocumentEvent event) {
-		// mark translation for rebuilding
+		// Import may have changed, if so we need to signal for revalidation of other script regions.
+		if(fJSPTranslation!=null && fJSPTranslation.isImportRange(event.getOffset())){
+			
+			Position firstPosition = (Position)fJSPTranslation.getJava2JspMap().values().iterator().next();
+			try {
+				if(!firstPosition.includes(event.getOffset())) 
+					fJspDocument.replace(firstPosition.offset, 0, "");
+			} catch (BadLocationException ex) {
+				// TODO Auto-generated catch block
+				ex.printStackTrace();
+			}
+			
+		}
 		fDocumentIsDirty = true;
 	}
 
