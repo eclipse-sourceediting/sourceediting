@@ -476,8 +476,9 @@ class ProjectDescription {
 	static boolean _debugIndexTime = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.jst.jsp.core/taglib/indextime")); //$NON-NLS-1$ //$NON-NLS-2$
 
 	private static final String BUILDPATH_DIRTY = "BUILDPATH_DIRTY"; //$NON-NLS-1$
+	private static final String BUILDPATH_ENTRIES = "BUILDPATH_ENTRIES"; //$NON-NLS-1$
 	private static final String BUILDPATH_PROJECT = "BUILDPATH_PROJECT"; //$NON-NLS-1$
-	private static final String SAVE_FORMAT_VERSION = "Tag Library Index 1.0.2"; //$NON-NLS-1$
+	private static final String SAVE_FORMAT_VERSION = "Tag Library Index 1.0.3"; //$NON-NLS-1$
 	private static final String WEB_INF = "WEB-INF"; //$NON-NLS-1$
 	private static final IPath WEB_INF_PATH = new Path(WEB_INF);
 	private static final String WEB_XML = "web.xml"; //$NON-NLS-1$
@@ -487,6 +488,13 @@ class ProjectDescription {
 	 * be skipped until a resolve/getAvailable call is made.
 	 */
 	boolean fBuildPathIsDirty = false;
+
+	/**
+	 * Count of entries on the build path. Primary use case is for classpath
+	 * containers that add an entry. Without notification (3.3), we can only
+	 * check after-the-fact.
+	 */
+	int fBuildPathEntryCount = 0;
 
 	/**
 	 * A cached copy of all of the records createable from the XMLCatalog.
@@ -861,6 +869,23 @@ class ProjectDescription {
 	}
 
 	private void ensureUpTodate() {
+		if (!fBuildPathIsDirty) {
+			/*
+			 * Double-check that the number of build path entries has not
+			 * changed. This should cover most cases such as when a library is
+			 * added into or removed from a container.
+			 */
+			try {
+				IJavaProject jproject = JavaCore.create(fProject);
+				if (jproject != null) {
+					IClasspathEntry[] entries = jproject.getResolvedClasspath(false);
+					fBuildPathIsDirty = (fBuildPathEntryCount != entries.length);
+				}
+			}
+			catch (JavaModelException e) {
+				Logger.logException(e);
+			}
+		}
 		if (fBuildPathIsDirty) {
 			indexClasspath();
 			fBuildPathIsDirty = false;
@@ -1173,6 +1198,12 @@ class ProjectDescription {
 				catch (JavaModelException e) {
 					Logger.logException("Problem handling build path entry for " + element.getPath(), e); //$NON-NLS-1$
 				}
+				if ((delta.getFlags() & IJavaElementDelta.F_ADDED_TO_CLASSPATH) > 0) {
+					fBuildPathEntryCount++;
+				}
+				else if ((delta.getFlags() & IJavaElementDelta.F_REMOVED_FROM_CLASSPATH) > 0) {
+					fBuildPathEntryCount--;
+				}
 				updateClasspathLibrary(libLocation, taglibRecordEventKind, fragmentisExported);
 			}
 			if (_debugIndexTime)
@@ -1205,13 +1236,14 @@ class ProjectDescription {
 		fClasspathProjects.clear();
 		fClasspathReferences.clear();
 		fClasspathJars.clear();
+		fBuildPathEntryCount = 0;
 
 		IJavaProject javaProject = JavaCore.create(fProject);
 		/*
 		 * If the Java nature isn't present (or something else is wrong),
 		 * don't check the build path.
 		 */
-		if (javaProject.exists()) {
+		if (javaProject != null && javaProject.exists()) {
 			indexClasspath(javaProject);
 		}
 		// else {
@@ -1318,6 +1350,7 @@ class ProjectDescription {
 		if (project.equals(fProject)) {
 			try {
 				IClasspathEntry[] entries = javaProject.getResolvedClasspath(true);
+				fBuildPathEntryCount = javaProject.getResolvedClasspath(false).length;
 				for (int i = 0; i < entries.length; i++) {
 					indexClasspath(entries[i]);
 				}
@@ -1664,9 +1697,12 @@ class ProjectDescription {
 											}
 										}
 									}
-									// last since only occurs once
+									// last since they occur once
 									else if (BUILDPATH_DIRTY.equalsIgnoreCase(tokenType)) {
 										fBuildPathIsDirty = Boolean.valueOf(toker.nextToken()).booleanValue();
+									}
+									else if (BUILDPATH_ENTRIES.equalsIgnoreCase(tokenType)) {
+										fBuildPathEntryCount = Integer.valueOf(toker.nextToken()).intValue();
 									}
 								}
 								if (libraryRecord != null && notifyOnRestoration) {
@@ -1729,6 +1765,8 @@ class ProjectDescription {
 			writer.write(SAVE_FORMAT_VERSION);
 			writer.write('\n'); //$NON-NLS-1$
 			writer.write(BUILDPATH_DIRTY + "|" + fBuildPathIsDirty); //$NON-NLS-1$
+			writer.write('\n'); //$NON-NLS-1$
+			writer.write(BUILDPATH_ENTRIES + "|" + fBuildPathEntryCount); //$NON-NLS-1$
 			writer.write('\n'); //$NON-NLS-1$
 
 			IProject[] projects = (IProject[]) fClasspathProjects.toArray(new IProject[0]);
