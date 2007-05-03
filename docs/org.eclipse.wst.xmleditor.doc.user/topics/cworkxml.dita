@@ -9,7 +9,7 @@
 <related-links>
 <linklist>
 <link href="ccreatxm.dita"><linktext>Creating XML files</linktext></link>
-<link href="txedttag.dita"><linktext>Editing XML files</linktext><?Pub Caret1?>
+<link href="txedttag.dita"><linktext>Editing XML files</linktext>
 </link>
 <link href="twxvalid.dita"><linktext>Validating XML files</linktext></link>
 <link href="cxmlcat.dita"><linktext>XML file associations with DTDs and XML

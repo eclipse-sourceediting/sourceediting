@@ -13,10 +13,9 @@ assist rules.  To apply the formatting styles, right-click in in the Source
 view for your XML document, and click <menucascade><uicontrol>Format</uicontrol>
 <uicontrol>Document</uicontrol></menucascade>.</shortdesc>
 <prolog><metadata>
-<keywords><indexterm>XML editor<indexterm>setting<indexterm>line wrapping
-rules</indexterm></indexterm></indexterm><indexterm>XML editor<indexterm>setting<indexterm>content
-assist rules</indexterm></indexterm></indexterm><indexterm>XML editor<indexterm>setting<indexterm>indentation
-style</indexterm></indexterm></indexterm></keywords>
+<keywords><indexterm>XML editor<indexterm>preferences</indexterm></indexterm>
+<indexterm>preferences<indexterm>XML editor</indexterm></indexterm>
+</keywords>
 </metadata></prolog>
 <taskbody>
 <context><p>To define XML preferences, perform the following steps:</p></context>

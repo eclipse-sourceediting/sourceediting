@@ -11,10 +11,9 @@
 code in the Source view of the XML editor. You can also use content assist
 to insert templates into your XML code.</shortdesc>
 <prolog><metadata>
-<keywords><indexterm>XML editor<indexterm>editing<indexterm>content assist</indexterm></indexterm></indexterm>
-<indexterm>XML editor<indexterm>content assist</indexterm></indexterm><indexterm>XML
-files<indexterm>editing<indexterm>content assist</indexterm></indexterm></indexterm>
-</keywords><?Pub Caret1?>
+<keywords><indexterm>XML editor<indexterm>content assist</indexterm></indexterm>
+<indexterm>XML files<indexterm>content assist</indexterm></indexterm>
+</keywords>
 </metadata></prolog>
 <taskbody>
 <context><p>The placement of the cursor in your source file provides the context

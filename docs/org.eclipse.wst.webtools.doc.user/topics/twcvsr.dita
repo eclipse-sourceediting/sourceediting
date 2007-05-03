@@ -5,7 +5,10 @@
 <task id="twcvsr" xml:lang="en-us">
 <title>Setting CVS repository defaults</title>
 <prolog><metadata>
-<keywords><indexterm>CVS<indexterm>setting repository defaults</indexterm></indexterm><indexterm>cvsignore file<indexterm>creating</indexterm></indexterm>
+<keywords><indexterm>build output folders<indexterm>ignoring in CVS</indexterm></indexterm>
+<indexterm>CVS<indexterm>setting repository defaults</indexterm></indexterm>
+<indexterm>cvsignore files<indexterm>creating</indexterm></indexterm>
+<indexterm>repositories<indexterm>default CVS settings</indexterm></indexterm>
 </keywords>
 </metadata></prolog>
 <taskbody>

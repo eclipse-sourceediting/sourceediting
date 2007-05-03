@@ -2,7 +2,7 @@
 <!--Arbortext, Inc., 1988-2005, v.4002-->
 <!DOCTYPE reference PUBLIC "-//OASIS//DTD DITA Reference//EN"
  "reference.dtd">
-<reference id="ricons" xml:lang="en-us"><?Pub Caret1?>
+<reference id="ricons" xml:lang="en-us">
 <title>Icons used in the XML schema editor</title>
 <titlealts>
 <searchtitle>XML schema editor icons</searchtitle>
@@ -11,7 +11,7 @@
 and Properties view.</shortdesc>
 <prolog><metadata>
 <keywords><indexterm>XML schema editor<indexterm>icons</indexterm></indexterm>
-<indexterm>Icons<indexterm>XML schema editor</indexterm></indexterm></keywords>
+</keywords>
 </metadata></prolog>
 <refbody>
 <section></section>

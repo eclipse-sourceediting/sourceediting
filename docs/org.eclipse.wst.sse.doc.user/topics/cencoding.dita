@@ -6,7 +6,11 @@
 <title>File Encoding</title>
 <shortdesc></shortdesc>
 <prolog><metadata>
-<keywords><indexterm>encoding<indexterm>files</indexterm></indexterm></keywords>
+<keywords><indexterm>character encoding<indexterm>location in files</indexterm></indexterm>
+<indexterm>JSP files<indexterm>character encoding</indexterm></indexterm>
+<indexterm>XHTML<indexterm>character encoding</indexterm></indexterm>
+<indexterm>XML<indexterm>character encoding</indexterm></indexterm>
+</keywords>
 </metadata></prolog>
 <conbody>
 <p> The character encoding in XML, (X)HTML files, and JSP files can be specified

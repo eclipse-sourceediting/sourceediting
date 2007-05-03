@@ -17,7 +17,7 @@ view.</shortdesc>
 <tgroup cols="2"><colspec colname="COLSPEC0"/><colspec colname="COLSPEC1"/>
 <tbody>
 <row>
-<entry colname="COLSPEC0" valign="bottom"><b>Icon</b></entry><?Pub Caret1?>
+<entry colname="COLSPEC0" valign="bottom"><b>Icon</b></entry>
 <entry colname="COLSPEC1" valign="bottom"><b>Description</b></entry>
 </row>
 <row>

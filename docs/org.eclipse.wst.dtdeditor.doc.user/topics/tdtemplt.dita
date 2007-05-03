@@ -11,8 +11,8 @@ a DTD file when it is created. You may find a template useful when you have
 a certain piece of code you want to reuse several times, and you do not want
 to write it out every time.</shortdesc>
 <prolog><metadata>
-<keywords><indexterm>DTD templates<indexterm>creating</indexterm></indexterm>
-<indexterm>templates<indexterm>DTDs</indexterm></indexterm>
+<keywords><indexterm>DTD<indexterm>creating templates</indexterm></indexterm>
+<indexterm>templates<indexterm>DTD</indexterm></indexterm>
 </keywords>
 </metadata></prolog>
 <taskbody>

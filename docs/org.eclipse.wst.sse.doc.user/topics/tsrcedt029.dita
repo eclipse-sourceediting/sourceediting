@@ -9,7 +9,8 @@
 code that you can insert into a file. You can use the default template as
 provided, customize that template, or create your own templates.</shortdesc>
 <prolog><metadata>
-<keywords><indexterm>xml templates<indexterm>adding</indexterm><indexterm>removing</indexterm></indexterm><indexterm>templates<indexterm>XML</indexterm></indexterm>
+<keywords><indexterm>templates<indexterm>XML</indexterm></indexterm>
+<indexterm>xml templates<indexterm>adding</indexterm></indexterm>
 
 
 </keywords>

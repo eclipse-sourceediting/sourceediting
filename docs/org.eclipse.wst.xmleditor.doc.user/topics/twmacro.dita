@@ -11,10 +11,8 @@ code that you can insert into a file. You may find a template useful when
 you have a certain piece of code you want to reuse several times, and you
 do not want to write it out every time.</shortdesc>
 <prolog><metadata>
-<keywords><indexterm>XML templates<indexterm>creating</indexterm></indexterm>
-<indexterm>XML templates<indexterm>editing</indexterm></indexterm><indexterm>XML
-templates<indexterm>removing</indexterm></indexterm><indexterm>XML templates<indexterm>importing</indexterm></indexterm>
-<indexterm>XML templates<indexterm>exporting</indexterm></indexterm></keywords>
+<keywords><indexterm>XML templates<indexterm>working with predefined code</indexterm></indexterm>
+</keywords>
 </metadata></prolog>
 <taskbody>
 <context><p>You can use a default template as provided, customize that template,

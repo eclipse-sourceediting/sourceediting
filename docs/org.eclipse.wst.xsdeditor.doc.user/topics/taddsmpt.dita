@@ -8,14 +8,12 @@
 <titlealts>
 <searchtitle>Adding simple types</searchtitle>
 </titlealts>
-<shortdesc>Simple types are used to create<?Pub Caret?> derived datatypes.
+<shortdesc>Simple types are used to create derived datatypes.
 They provide a set of constraints on the value space (a set of values) and
 the lexical space (a set of valid literals) of a datatype.</shortdesc>
 <prolog><metadata>
-<keywords><indexterm>XML schema editor<indexterm>adding<indexterm>simple types</indexterm></indexterm></indexterm>
-<indexterm>XML schema editor<indexterm>simple types<indexterm>adding</indexterm></indexterm></indexterm>
-<indexterm>XML schema files<indexterm>adding<indexterm>simple types</indexterm></indexterm></indexterm>
-<indexterm>XML schema files<indexterm>simple types<indexterm>adding</indexterm></indexterm></indexterm>
+<keywords><indexterm>XML schema editor<indexterm>simple types</indexterm></indexterm>
+<indexterm>XML schema files<indexterm>simple types</indexterm></indexterm>
 </keywords>
 </metadata></prolog>
 <taskbody>

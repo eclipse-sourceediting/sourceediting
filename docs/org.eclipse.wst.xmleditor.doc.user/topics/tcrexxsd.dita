@@ -14,6 +14,7 @@ associated with your XML schema, and contains at least some of the elements
 and attributes in your XML schema.</shortdesc>
 <prolog><metadata>
 <keywords><indexterm>XML files<indexterm>generating from XML schemas</indexterm></indexterm>
+<indexterm>XML schemas<indexterm>generating XML files</indexterm></indexterm>
 </keywords>
 </metadata></prolog>
 <taskbody>
@@ -59,7 +60,7 @@ the target namespace of the XML schema.</cmd><info>Your XML file should be
 associated with the same namespace as its XML schema is associated with.</info>
 </step>
 <step><cmd>All qualified elements and attributes in the XML file associated
-with the namespace will be prefixed with the <uicontrol>Prefix</uicontrol> value.</cmd><?Pub Caret1?>
+with the namespace will be prefixed with the <uicontrol>Prefix</uicontrol> value.</cmd>
 </step>
 <step><cmd>The  <uicontrol>Location Hint</uicontrol> field contains the location
 of the XML schema.</cmd></step>

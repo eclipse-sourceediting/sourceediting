@@ -11,9 +11,11 @@
 single artifact change, and have that change implemented throughout all other
 dependant artifacts.</shortdesc>
 <prolog><metadata>
-<keywords><indexterm>XML schema files</indexterm><indexterm>XML schema editor</indexterm>
-<indexterm>refactoring</indexterm><indexterm>renaming</indexterm><indexterm>editing
-XML schemas</indexterm><indexterm>dependant artifacts</indexterm></keywords>
+<keywords><indexterm>dependent artifacts<indexterm>refactorting XML schema files</indexterm></indexterm>
+<indexterm>refactoring<indexterm>XML schema files</indexterm></indexterm>
+<indexterm>renaming<indexterm>XML schema files</indexterm></indexterm>
+<indexterm>XML schemas<indexterm>editing</indexterm></indexterm>
+</keywords>
 </metadata></prolog>
 <taskbody>
 <prereq></prereq>
@@ -30,7 +32,7 @@ the artifact, click <menucascade><uicontrol>Refactor</uicontrol><uicontrol>Renam
 for that artifact</info>
 <substeps>
 <substep><cmd>Type in the new name of the artifact.</cmd></substep>
-<substep><cmd>(Optional) Click <b>Preview</b><?Pub Caret?>.</cmd><info>A window
+<substep><cmd>(Optional) Click <b>Preview</b>.</cmd><info>A window
 will open indicating all of the changes which will take place due to the refactoring.</info>
 </substep>
 <substep><cmd>Click <uicontrol>OK.</uicontrol></cmd></substep>

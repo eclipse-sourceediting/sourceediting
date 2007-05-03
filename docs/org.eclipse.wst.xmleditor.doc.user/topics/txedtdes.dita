@@ -13,8 +13,8 @@ easier. Content and attribute values can be edited directly in the table cells,
 while pop-up menus on the tree elements give alternatives that are valid for
 that particular element.</shortdesc>
 <prolog><metadata>
-<keywords><indexterm>XML editor<indexterm>editing<indexterm>in the Design
-view</indexterm></indexterm></indexterm></keywords>
+<keywords><indexterm>XML editor<indexterm>Design view</indexterm></indexterm>
+</keywords>
 </metadata></prolog>
 <taskbody>
 <context><p> For example, the <uicontrol>Add child</uicontrol> menu item will
@@ -66,7 +66,7 @@ and the item you have selected is the only one that exists in your XML file).</l
 an attribute to the element that you selected. Any attributes you are allowed
 to add to the element will be listed. After you have added the attribute to
 the XML file, you can click in the right-hand column to change the value of
-the attribute. If the attribute has set values, they will appear in a list<?Pub Caret?>.</li>
+the attribute. If the attribute has set values, they will appear in a list.</li>
 <li> <uicontrol>Add Child</uicontrol> - Click this to add another element,
 a comment, or a processing instruction as a child of the parent element.</li>
 <li> <uicontrol>Add Before</uicontrol>  - Click this to add a child element,

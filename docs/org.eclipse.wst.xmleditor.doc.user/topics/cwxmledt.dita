@@ -48,7 +48,7 @@ children at that point (as long as grammar constraints are on).</li>
 </ul></p><p>The Design view is especially helpful if you are new to XML, or
 need to do form-oriented editing. For example, you could use the Create XML
 File wizard to create a template XML file for a job description form from
-a job description <?Pub Caret?>DTD. After those steps are completed, you would
+a job description DTD. After those steps are completed, you would
 only have to fill in the form data using the Design view.</p><p>The following
 links provide more information about the XML editor:</p></section>
 </conbody>

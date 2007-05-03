@@ -8,7 +8,8 @@
 <shortdesc>You create and maintain the resources for your Web applications
 in Web projects.</shortdesc>
 <prolog><metadata>
-<keywords><indexterm>dynamic Web projects<indexterm>creating</indexterm></indexterm><indexterm>Web projects<indexterm>dynamic<indexterm>creating</indexterm></indexterm></indexterm>
+<keywords><indexterm>Web projects<indexterm>creating dynamic projects</indexterm></indexterm>
+<indexterm>Web applications<indexterm>resources</indexterm></indexterm>
 
 </keywords>
 </metadata></prolog>

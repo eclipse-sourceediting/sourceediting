@@ -11,10 +11,8 @@
 The content model is a representation of any data that can be grouped together
 by the group, such as elements, element references, and group references.</shortdesc>
 <prolog><metadata>
-<keywords><indexterm>XML schema editor<indexterm>adding<indexterm>groups</indexterm></indexterm></indexterm>
-<indexterm>XML schema editor<indexterm>groups<indexterm>adding</indexterm></indexterm></indexterm>
-<indexterm>XML schema files<indexterm>adding<indexterm>groups</indexterm></indexterm></indexterm>
-<indexterm>XML schema files<indexterm>groups<indexterm>adding</indexterm></indexterm></indexterm>
+<keywords><indexterm>XML schema editor<indexterm>groups</indexterm></indexterm>
+<indexterm>XML schema files<indexterm>groups</indexterm></indexterm>
 </keywords>
 </metadata></prolog>
 <taskbody>
@@ -32,7 +30,7 @@ to provide any information about this group element.</cmd><info>The <uicontrol>D
 is used for human readable material, such as a description.</info></step>
 <step><cmd>Click the <uicontrol>Extensions</uicontrol> tab if you want to
 add application information elements to your annotations of schema components.</cmd>
-<info>The <uicontrol>Extensions</uicontrol><?Pub Caret?> page allows you to
+<info>The <uicontrol>Extensions</uicontrol> page allows you to
 specify the schema and add XML content to your annotations.</info></step>
 <step><cmd>In the Outline view, expand the <uicontrol>Groups</uicontrol> folder
 and your new group.</cmd></step>

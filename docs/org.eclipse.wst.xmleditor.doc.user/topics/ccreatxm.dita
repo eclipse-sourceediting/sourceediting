@@ -11,7 +11,7 @@
 <link href="tcretxml.dita"><linktext>Creating empty XML files</linktext></link>
 <link href="tcrexdtd.dita"><linktext>Generating XML files from a DTDs</linktext>
 </link>
-<link href="tcrexxsd.dita"><linktext>Generating XML files from <?Pub Caret?>XML
+<link href="tcrexxsd.dita"><linktext>Generating XML files from XML
 schemas</linktext></link>
 </linklist>
 </related-links>

@@ -5,8 +5,9 @@
 <concept id="cwservbn" xml:lang="en-us">
 <title>Servlets</title>
 <prolog><metadata>
-<keywords><indexterm>servlets<indexterm>overview</indexterm></indexterm><indexterm>dynamic
-content<indexterm>servlets</indexterm></indexterm></keywords>
+<keywords><indexterm>servlets<indexterm>overview</indexterm></indexterm>
+<indexterm>Web servers<indexterm>generating dynamic content</indexterm></indexterm>
+</keywords>
 </metadata></prolog>
 <conbody>
 <p>Servlets are server-side <tm tmclass="special" tmowner="Sun Microsystems, Inc."

@@ -8,8 +8,8 @@
 </titlealts>
 <shortdesc>This file contains information about editing XML files.</shortdesc>
 <prolog><metadata>
-<keywords><indexterm>XML files<indexterm>editing</indexterm></indexterm><indexterm>XML
-editor<indexterm>editing</indexterm><indexterm>XML files</indexterm></indexterm>
+<keywords><indexterm>XML editor<indexterm>XML files</indexterm></indexterm>
+<indexterm>XML files<indexterm>editing</indexterm></indexterm>
 </keywords>
 </metadata></prolog>
 <taskbody>

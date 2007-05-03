@@ -5,7 +5,8 @@
 <task id="twpcnvrt" xml:lang="en-us">
 <title>Converting static Web projects to dynamic Web projects</title>
 <prolog><metadata>
-<keywords><indexterm>static Web projects<indexterm>converting to dynamic</indexterm></indexterm><indexterm>dynamic Web projects<indexterm>converting from static</indexterm></indexterm><indexterm>Web projects<indexterm>dynamic<indexterm>converting from static</indexterm></indexterm></indexterm>
+<keywords><indexterm>static Web projects<indexterm>converting to dynamic</indexterm></indexterm>
+<indexterm>Web projects<indexterm>converting static to dynamic</indexterm></indexterm>
 </keywords>
 </metadata></prolog>
 <taskbody>

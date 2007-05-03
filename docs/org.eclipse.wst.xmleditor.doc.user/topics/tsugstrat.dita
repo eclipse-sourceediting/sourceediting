@@ -12,8 +12,8 @@ valid, will be displayed lower in the list with de-emphasized icons. When
 the suggestion strategy is set to "Lax", all suggestions will displayed in
 the list with de-emphasized icons.</shortdesc>
 <prolog><metadata>
-<keywords><indexterm>XML editor<indexterm>setting<indexterm>source suggestion
-strategy<?Pub Caret?></indexterm></indexterm></indexterm></keywords>
+<keywords><indexterm>XML editor<indexterm>source suggestion strategy</indexterm></indexterm>
+</keywords>
 </metadata></prolog>
 <taskbody>
 <context>To set the suggestion strategy used by content assist:</context>

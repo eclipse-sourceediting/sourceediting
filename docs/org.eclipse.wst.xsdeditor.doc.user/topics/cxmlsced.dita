@@ -8,7 +8,7 @@
 <searchtitle>XML schema editor</searchtitle>
 </titlealts>
 <shortdesc>This product provides an XML schema editor for creating, viewing,
-and validating XML schemas. X<?Pub Caret1?>ML schemas are a formal specification
+and validating XML schemas. XML schemas are a formal specification
 of element names that indicates which elements are allowed in an XML file,
 and in which combinations. </shortdesc>
 <prolog><metadata>

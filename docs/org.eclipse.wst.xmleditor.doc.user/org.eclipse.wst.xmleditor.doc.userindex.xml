@@ -2,7 +2,7 @@
 <index>
   <entry keyword="XML files">
     <entry keyword="creating">
-      <topic href="topics/tcretxml.html#tcretxml" title="Creating empty XML files"/>
+      <topic href="topics/tcretxml.html#tcretxml" title="Creating XML files"/>
     </entry>
     <entry keyword="generating from DTDs">
       <topic href="topics/tcrexdtd.html#tcrexdtd" title="Generating XML files from DTDs"/>
@@ -12,155 +12,113 @@
     </entry>
     <entry keyword="editing">
       <topic href="topics/txedttag.html#txedttag" title="Editing XML files"/>
-      <entry keyword="DOCTYPE declarations">
-        <topic href="topics/tedtdoc.html#tedtdoc" title="Editing DOCTYPE declarations"/>
-      </entry>
-      <entry keyword="namespace information">
-        <topic href="topics/tedtsch.html#tedtsch" title="Editing namespace information"/>
-      </entry>
-      <entry keyword="processing instructions">
-        <topic href="topics/tedtproc.html#tedtproc" title="Editing XML processing instructions"/>
-      </entry>
-      <entry keyword="content assist">
-        <topic href="topics/twcdast.html#twcdast" title="Using XML content assist"/>
-      </entry>
-      <entry keyword="with DTD or XML schema constraints">
-        <topic href="topics/tedtcnst.html#tedtcnst" title="Editing with DTD or XML schema constraints"/>
-      </entry>
     </entry>
-    <entry keyword="specifying">
-      <entry keyword="line delimiters">
-        <topic href="topics/tedtenc.html#tedtenc" title="Specifying XML default encoding line delimiters"/>
-      </entry>
-      <entry keyword="encoding">
-        <topic href="topics/tedtenc.html#tedtenc" title="Specifying XML default encoding line delimiters"/>
-      </entry>
-    </entry>
-    <entry keyword="DOCTYPE declarations">
-      <entry keyword="editing">
-        <topic href="topics/tedtdoc.html#tedtdoc" title="Editing DOCTYPE declarations"/>
-      </entry>
+    <entry keyword="specifying line delimiters">
+      <topic href="topics/tedtenc.html#tedtenc" title="Specifying XML default encoding line delimiters"/>
     </entry>
     <entry keyword="namespace information">
-      <entry keyword="editing">
-        <topic href="topics/tedtsch.html#tedtsch" title="Editing namespace information"/>
-      </entry>
+      <topic href="topics/tedtsch.html#tedtsch" title="Editing namespace information"/>
     </entry>
     <entry keyword="processing instructions">
-      <entry keyword="editing">
-        <topic href="topics/tedtproc.html#tedtproc" title="Editing XML processing instructions"/>
-      </entry>
+      <topic href="topics/tedtproc.html#tedtproc" title="Editing XML processing instructions"/>
+    </entry>
+    <entry keyword="content assist">
+      <topic href="topics/twcdast.html#twcdast" title="Using XML content assist"/>
+    </entry>
+    <entry keyword="editing with constraints">
+      <topic href="topics/tedtcnst.html#tedtcnst" title="Editing with DTD or XML schema constraints"/>
     </entry>
     <entry keyword="validating">
       <topic href="topics/twxvalid.html#twxvalid" title="Validating XML files"/>
     </entry>
-    <entry keyword="associating with DTDs">
-      <topic href="topics/cxmlcat.html#cxmlcat" title="XML file associations with DTDs and XML schemas"/>
-    </entry>
-    <entry keyword="associating with XML schemas">
+    <entry keyword="associations">
       <topic href="topics/cxmlcat.html#cxmlcat" title="XML file associations with DTDs and XML schemas"/>
     </entry>
     <entry keyword="updating with associated changes">
       <topic href="topics/tedtgram.html#tedtgram" title="Updating XML files with changes made to DTDs and schemas"/>
     </entry>
   </entry>
-  <entry keyword="XML editor">
-    <entry keyword="editing">
-      <topic href="topics/txedttag.html#txedttag" title="Editing XML files"/>
-      <entry keyword="in the Design view">
-        <topic href="topics/txedtdes.html#txedtdes" title="Editing in the Design view"/>
-      </entry>
-      <entry keyword="DOCTYPE declarations">
-        <topic href="topics/tedtdoc.html#tedtdoc" title="Editing DOCTYPE declarations"/>
-      </entry>
-      <entry keyword="namespace information">
-        <topic href="topics/tedtsch.html#tedtsch" title="Editing namespace information"/>
-      </entry>
-      <entry keyword="processing instructions">
-        <topic href="topics/tedtproc.html#tedtproc" title="Editing XML processing instructions"/>
-      </entry>
-      <entry keyword="in the Source view">
-        <topic href="topics/txedtsrc.html#txedtsrc" title="Editing in the Source view"/>
-      </entry>
-      <entry keyword="content assist">
-        <topic href="topics/twcdast.html#twcdast" title="Using XML content assist"/>
-      </entry>
-      <entry keyword="with DTD or XML schema constraints">
-        <topic href="topics/tedtcnst.html#tedtcnst" title="Editing with DTD or XML schema constraints"/>
-      </entry>
+  <entry keyword="DTD">
+    <entry keyword="generating XML files">
+      <topic href="topics/tcrexdtd.html#tcrexdtd" title="Generating XML files from DTDs"/>
     </entry>
+  </entry>
+  <entry keyword="XML schemas">
+    <entry keyword="generating XML files">
+      <topic href="topics/tcrexxsd.html#tcrexxsd" title="Generating XML files from XML schemas"/>
+    </entry>
+  </entry>
+  <entry keyword="XML editor">
     <entry keyword="XML files">
       <topic href="topics/txedttag.html#txedttag" title="Editing XML files"/>
     </entry>
     <entry keyword="overview">
       <topic href="topics/cwxmledt.html#cwxmledt" title="XML editor"/>
     </entry>
-    <entry keyword="setting">
-      <entry keyword="line wrapping rules">
-        <topic href="topics/txprefs.html#txprefs" title="Defining XML editor preferences"/>
-      </entry>
-      <entry keyword="content assist rules">
-        <topic href="topics/txprefs.html#txprefs" title="Defining XML editor preferences"/>
-      </entry>
-      <entry keyword="indentation style">
-        <topic href="topics/txprefs.html#txprefs" title="Defining XML editor preferences"/>
-      </entry>
-      <entry keyword="source suggestion strategy">
-        <topic href="topics/tsugstrat.html#xmlsourcesuggestionstrategy" title="Setting the XML source suggestion strategy used by content assist"/>
-      </entry>
+    <entry keyword="preferences">
+      <topic href="topics/txprefs.html#txprefs" title="Defining XML editor preferences"/>
     </entry>
     <entry keyword="setting source highlighting styles">
       <topic href="topics/ttaghilt.html#ttaghilt" title="Setting source highlighting styles"/>
     </entry>
+    <entry keyword="source suggestion strategy">
+      <topic href="topics/tsugstrat.html#xmlsourcesuggestionstrategy" title="Setting the XML source suggestion strategy used by content assist"/>
+    </entry>
+    <entry keyword="Design view">
+      <topic href="topics/txedtdes.html#txedtdes" title="Editing in the Design view"/>
+    </entry>
     <entry keyword="DOCTYPE declarations">
-      <entry keyword="editing">
-        <topic href="topics/tedtdoc.html#tedtdoc" title="Editing DOCTYPE declarations"/>
-      </entry>
+      <topic href="topics/tedtdoc.html#tedtdoc" title="Editing DOCTYPE declarations"/>
     </entry>
     <entry keyword="namespace information">
-      <entry keyword="editing">
-        <topic href="topics/tedtsch.html#tedtsch" title="Editing namespace information"/>
-      </entry>
+      <topic href="topics/tedtsch.html#tedtsch" title="Editing namespace information"/>
     </entry>
     <entry keyword="processing instructions">
-      <entry keyword="editing">
-        <topic href="topics/tedtproc.html#tedtproc" title="Editing XML processing instructions"/>
-      </entry>
+      <topic href="topics/tedtproc.html#tedtproc" title="Editing XML processing instructions"/>
+    </entry>
+    <entry keyword="Source view">
+      <topic href="topics/txedtsrc.html#txedtsrc" title="Editing in the Source view"/>
     </entry>
     <entry keyword="content assist">
       <topic href="topics/twcdast.html#twcdast" title="Using XML content assist"/>
     </entry>
-    <entry keyword="updating">
-      <entry keyword="XML files with associated changes">
-        <topic href="topics/tedtgram.html#tedtgram" title="Updating XML files with changes made to DTDs and schemas"/>
-      </entry>
+    <entry keyword="editing with constraints">
+      <topic href="topics/tedtcnst.html#tedtcnst" title="Editing with DTD or XML schema constraints"/>
+    </entry>
+    <entry keyword="updating XML files">
+      <topic href="topics/tedtgram.html#tedtgram" title="Updating XML files with changes made to DTDs and schemas"/>
     </entry>
     <entry keyword="icons">
       <topic href="topics/rxmlbicons.html#ricons" title="Icons used in the XML editor"/>
     </entry>
   </entry>
-  <entry keyword="Encodings">
-    <entry keyword="HTML">
-      <topic href="topics/cxmlenc.html#cxmlenc" title="XML and HTML encodings"/>
+  <entry keyword="preferences">
+    <entry keyword="XML editor">
+      <topic href="topics/txprefs.html#txprefs" title="Defining XML editor preferences"/>
     </entry>
-    <entry keyword="XML">
+  </entry>
+  <entry keyword="line delimiters">
+    <entry keyword="XML files">
+      <topic href="topics/tedtenc.html#tedtenc" title="Specifying XML default encoding line delimiters"/>
+    </entry>
+  </entry>
+  <entry keyword="character encoding">
+    <entry keyword="text in files">
       <topic href="topics/cxmlenc.html#cxmlenc" title="XML and HTML encodings"/>
     </entry>
   </entry>
+  <entry keyword="encodings">
+    <entry keyword="supported character sets">
+      <topic href="topics/cxmlenc.html#cxmlenc" title="XML and HTML encodings"/>
+    </entry>
+  </entry>
+  <entry keyword="DOCTYPE declarations">
+    <entry keyword="XML editor">
+      <topic href="topics/tedtdoc.html#tedtdoc" title="Editing DOCTYPE declarations"/>
+    </entry>
+  </entry>
   <entry keyword="XML templates">
-    <entry keyword="creating">
-      <topic href="topics/twmacro.html#twmacro" title="Working with XML templates"/>
-    </entry>
-    <entry keyword="editing">
-      <topic href="topics/twmacro.html#twmacro" title="Working with XML templates"/>
-    </entry>
-    <entry keyword="removing">
-      <topic href="topics/twmacro.html#twmacro" title="Working with XML templates"/>
-    </entry>
-    <entry keyword="importing">
-      <topic href="topics/twmacro.html#twmacro" title="Working with XML templates"/>
-    </entry>
-    <entry keyword="exporting">
+    <entry keyword="working with predefined code">
       <topic href="topics/twmacro.html#twmacro" title="Working with XML templates"/>
     </entry>
   </entry>
@@ -169,12 +127,6 @@
       <topic href="topics/cxmlcat.html#cxmlcat" title="XML file associations with DTDs and XML schemas"/>
     </entry>
     <entry keyword="adding entries">
-      <topic href="topics/txmlcat.html#txmlcat" title="Adding entries to the XML Catalog"/>
-    </entry>
-    <entry keyword="importing entries">
-      <topic href="topics/txmlcat.html#txmlcat" title="Adding entries to the XML Catalog"/>
-    </entry>
-    <entry keyword="exporting entries">
       <topic href="topics/txmlcat.html#txmlcat" title="Adding entries to the XML Catalog"/>
     </entry>
   </entry>

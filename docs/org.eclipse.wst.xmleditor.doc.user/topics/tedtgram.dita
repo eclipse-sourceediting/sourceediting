@@ -8,12 +8,12 @@
 </titlealts>
 <shortdesc>If you make changes to a DTD file or XML schema associated with
 an XML file (that is currently open), click <uicontrol>XML > Reload Dependencies</uicontrol> to
-update the XML file with these changes. The changes will be reflected in <?Pub Caret?>the
+update the XML file with these changes. The changes will be reflected in the
 guided editing mechanisms available in the editor, such as content assist.</shortdesc>
 <prolog><metadata>
-<keywords><indexterm>XML editor<indexterm>updating<indexterm>XML files with
-associated changes</indexterm></indexterm></indexterm><indexterm>XML files<indexterm>updating
-with associated changes</indexterm></indexterm></keywords>
+<keywords><indexterm>XML editor<indexterm>updating XML files</indexterm></indexterm>
+<indexterm>XML files<indexterm>updating with associated changes</indexterm></indexterm>
+</keywords>
 </metadata></prolog>
 <taskbody>
 <context><p>For example, you have a DTD file called "Contact.dtd" and an XML

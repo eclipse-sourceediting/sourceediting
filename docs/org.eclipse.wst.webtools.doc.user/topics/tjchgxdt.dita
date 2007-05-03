@@ -5,11 +5,11 @@
 <task id="tjchgxdt" xml:lang="en-us">
 <title>Specifying an implicit document type for an HTML, XHTML, or JSP fragment</title>
 <prolog><metadata>
-<keywords><indexterm>document types<indexterm>implicit for fragments</indexterm></indexterm>
-<indexterm>HTML<indexterm>fragments<indexterm>implicit document type</indexterm></indexterm></indexterm>
-<indexterm>XHTML<indexterm>fragments<indexterm>implicit document type</indexterm></indexterm></indexterm>
-<indexterm>JSP<indexterm>fragments<indexterm>implicit document type</indexterm></indexterm></indexterm>
-<indexterm>doctype declaration<indexterm>implicit for fragments</indexterm></indexterm>
+<keywords><indexterm>DOCTYPE declarations<indexterm>implicit for fragments</indexterm></indexterm>
+<indexterm>document types<indexterm>implicit for fragments</indexterm></indexterm>
+<indexterm>HTML fragments<indexterm>implicit document types</indexterm></indexterm>
+<indexterm>JSP fragments<indexterm>implicit document types</indexterm></indexterm>
+<indexterm>XHTML fragments<indexterm>implicit document type for fragments</indexterm></indexterm>
 </keywords>
 </metadata></prolog>
 <taskbody>

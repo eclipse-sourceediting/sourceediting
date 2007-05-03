@@ -9,8 +9,8 @@
 <shortdesc>You can use the Source view to view and work with a file's source
 code directly.</shortdesc>
 <prolog><metadata>
-<keywords><indexterm>XML editor<indexterm>editing<indexterm>in the Source
-view</indexterm></indexterm></indexterm></keywords>
+<keywords><indexterm>XML editor<indexterm>Source view</indexterm></indexterm>
+</keywords>
 </metadata></prolog>
 <taskbody>
 <context><p> The Source view has many text editing features, such as:</p><dl>
@@ -31,7 +31,7 @@ to a file for the entire editing session. For text, changes are incremented
 one character or set of selected characters at a time.</dd>
 </dlentry><dlentry>
 <dt>Content assist</dt>
-<dd>Content assist helps you finish tags and insert macros. <?Pub Caret?>Refer
+<dd>Content assist helps you finish tags and insert macros. Refer
 to the related task for more details.</dd>
 </dlentry><dlentry>
 <dt>Template</dt>

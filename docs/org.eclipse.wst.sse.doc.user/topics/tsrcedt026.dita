@@ -10,7 +10,7 @@ tmtype="tm" trademark="JavaScript">JavaScript</tm>, and JSP code, along with
 files and custom JSP tags. The view can be extended based on additional objects
 that you define and include.</shortdesc>
 <prolog><metadata>
-<keywords><indexterm>snippets<indexterm>overview</indexterm></indexterm><indexterm>HTML<indexterm>editing<indexterm>reuse with snippets</indexterm></indexterm></indexterm><indexterm>JavaScript<indexterm>reuse with snippets</indexterm></indexterm><indexterm>JSP code<indexterm>reuse with snippets</indexterm></indexterm><indexterm>JSP tags<indexterm>custom<indexterm>reuse with snippets</indexterm></indexterm></indexterm><indexterm>HTML<indexterm>reuse with snippets</indexterm></indexterm>
+<keywords><indexterm>snippets<indexterm>overview</indexterm></indexterm>
 
 
 

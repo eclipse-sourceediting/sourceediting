@@ -9,9 +9,8 @@
 <shortdesc>You can set various preferences for XML schema files such as the
 default target namespace and XML Schema language constructs prefix used.</shortdesc>
 <prolog><metadata>
-<keywords><indexterm>XML schema files<indexterm>defining<indexterm>default
-target namespace</indexterm></indexterm></indexterm><indexterm>XML schema
-files<indexterm>defining<indexterm>schema prefix</indexterm></indexterm></indexterm>
+<keywords><indexterm>XML schema files<indexterm>editing preferences</indexterm></indexterm>
+<indexterm>preferences<indexterm>XML schema files</indexterm></indexterm>
 </keywords>
 </metadata></prolog>
 <taskbody>

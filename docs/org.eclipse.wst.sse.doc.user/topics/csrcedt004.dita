@@ -14,7 +14,8 @@ XML.</shortdesc>
 <keywords><keyword>source editors</keyword></keywords>
 </metadata></prolog>
 <conbody>
-<p><indexterm>templates<indexterm>adding</indexterm><indexterm>removing</indexterm></indexterm><indexterm>structured text editors<indexterm>overview</indexterm></indexterm>
+<p><indexterm>structured text editors<indexterm>overview</indexterm></indexterm>
+<indexterm>templates<indexterm>structured text editors</indexterm></indexterm>
 
 The structured text editor is represented by various editors that you can
 use to edit files coded with markup tags:</p>

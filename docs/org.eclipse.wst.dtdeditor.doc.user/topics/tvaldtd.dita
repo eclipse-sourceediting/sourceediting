@@ -9,7 +9,7 @@
 <shortdesc>Validating a DTD file lets you verify that it is well formed and
 does not contain any errors.</shortdesc>
 <prolog><metadata>
-<keywords><indexterm>DTDs (document type definitions)<indexterm>validating</indexterm></indexterm>
+<keywords><indexterm>DTD<indexterm>validating</indexterm></indexterm>
 </keywords>
 </metadata></prolog>
 <taskbody>

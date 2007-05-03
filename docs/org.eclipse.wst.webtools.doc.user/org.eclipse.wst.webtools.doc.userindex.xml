@@ -7,22 +7,15 @@
     <entry keyword="creating or importing">
       <topic href="topics/cwebprojects.html#cwebprojects" title="Web projects"/>
     </entry>
+    <entry keyword="resources">
+      <topic href="topics/twcreprj.html#twcreprj" title="Creating a dynamic Web project"/>
+    </entry>
     <entry keyword="server targeting">
       <topic href="topics/tservertarget.html#tservertarget" title="Server targeting for Web applications"/>
     </entry>
   </entry>
-  <entry keyword="development phases">
-    <entry keyword="Web applications">
-      <topic href="topics/ccwtover.html#ccwtover" title="Web application overview"/>
-    </entry>
-  </entry>
-  <entry keyword="information pathways">
-    <entry keyword="Web applications">
-      <topic href="topics/ccwtover.html#ccwtover" title="Web application overview"/>
-    </entry>
-  </entry>
   <entry keyword="Web tools">
-    <entry keyword="features and capabilities">
+    <entry keyword="features">
       <topic href="topics/cwtfeatures.html#cwtfeatures" title="Web tools features"/>
     </entry>
   </entry>
@@ -31,17 +24,12 @@
       <topic href="topics/ccwebvw.html#ccwebvw" title="Project Explorer view and Web development"/>
     </entry>
   </entry>
-  <entry keyword="Web perspective">
-    <entry keyword="project explorer view">
-      <topic href="topics/ccwebvw.html#ccwebvw" title="Project Explorer view and Web development"/>
-    </entry>
-  </entry>
-  <entry keyword="version control management">
-    <entry keyword="turning on and off">
-      <topic href="topics/ccwebvw.html#ccwebvw" title="Project Explorer view and Web development"/>
-    </entry>
-  </entry>
   <entry keyword="Web development">
+    <entry keyword="Project Explorer view">
+      <topic href="topics/ccwebvw.html#ccwebvw" title="Project Explorer view and Web development"/>
+    </entry>
+  </entry>
+  <entry keyword="Web perspective">
     <entry keyword="Project Explorer view">
       <topic href="topics/ccwebvw.html#ccwebvw" title="Project Explorer view and Web development"/>
     </entry>
@@ -60,19 +48,17 @@
     <entry keyword="overview">
       <topic href="topics/cwebprojects.html#cwebprojects" title="Web projects"/>
     </entry>
-    <entry keyword="dynamic">
-      <entry keyword="creating">
-        <topic href="topics/twcreprj.html#twcreprj" title="Creating a dynamic Web project"/>
-      </entry>
-      <entry keyword="overview">
-        <topic href="topics/ccwebprj.html#ccwebprj" title="Dynamic Web projects and applications"/>
-      </entry>
-      <entry keyword="converting from static">
-        <topic href="topics/twpcnvrt.html#twpcnvrt" title="Converting static Web projects to dynamic Web projects"/>
-      </entry>
+    <entry keyword="creating dynamic projects">
+      <topic href="topics/twcreprj.html#twcreprj" title="Creating a dynamic Web project"/>
+    </entry>
+    <entry keyword="dynamic projects overview">
+      <topic href="topics/ccwebprj.html#ccwebprj" title="Dynamic Web projects and applications"/>
     </entry>
     <entry keyword="creating static">
       <topic href="topics/twcresta.html#twcresta" title="Creating a static Web project"/>
+    </entry>
+    <entry keyword="converting static to dynamic">
+      <topic href="topics/twpcnvrt.html#twpcnvrt" title="Converting static Web projects to dynamic Web projects"/>
     </entry>
     <entry keyword="static">
       <topic href="topics/ccstatic.html#ccstatic" title="Static Web projects"/>
@@ -95,15 +81,11 @@
       <topic href="topics/twcrewar.html#twcrewar" title="Exporting Web Archive (WAR) files"/>
     </entry>
   </entry>
-  <entry keyword="dynamic Web projects">
-    <entry keyword="creating">
-      <topic href="topics/twcreprj.html#twcreprj" title="Creating a dynamic Web project"/>
-    </entry>
-    <entry keyword="overview">
-      <topic href="topics/ccwebprj.html#ccwebprj" title="Dynamic Web projects and applications"/>
-    </entry>
-    <entry keyword="converting from static">
-      <topic href="topics/twpcnvrt.html#twpcnvrt" title="Converting static Web projects to dynamic Web projects"/>
+  <entry keyword="enterprise applications">
+    <entry keyword="projects">
+      <entry keyword="dynamic Web projects">
+        <topic href="topics/ccwebprj.html#ccwebprj" title="Dynamic Web projects and applications"/>
+      </entry>
     </entry>
   </entry>
   <entry keyword="static Web projects">
@@ -118,7 +100,7 @@
     </entry>
   </entry>
   <entry keyword="exporting">
-    <entry keyword="War files">
+    <entry keyword="WAR files">
       <topic href="topics/twcrewar.html#twcrewar" title="Exporting Web Archive (WAR) files"/>
     </entry>
   </entry>
@@ -142,33 +124,33 @@
       <topic href="topics/tjdetags.html#tjdetags" title="Creating and editing Web pages - overview"/>
     </entry>
   </entry>
-  <entry keyword="HTML files">
-    <entry keyword="creating">
-      <topic href="topics/tjcrehtm.html#tjcrehtm" title="Creating HTML and XHTML files and framesets"/>
-    </entry>
-    <entry keyword="editing">
-      <entry keyword="preferences">
-        <topic href="topics/tjprefs.html#tjprefs" title="Defining HTML file preferences"/>
-      </entry>
-    </entry>
-  </entry>
-  <entry keyword="XHTML files">
-    <entry keyword="creating">
-      <topic href="topics/tjcrehtm.html#tjcrehtm" title="Creating HTML and XHTML files and framesets"/>
-    </entry>
-  </entry>
-  <entry keyword="WML files">
-    <entry keyword="creating">
-      <topic href="topics/tjcrehtm.html#tjcrehtm" title="Creating HTML and XHTML files and framesets"/>
-    </entry>
-  </entry>
   <entry keyword="framesets">
     <entry keyword="creating">
       <topic href="topics/tjcrehtm.html#tjcrehtm" title="Creating HTML and XHTML files and framesets"/>
     </entry>
   </entry>
-  <entry keyword="DOCTYPE declaration">
+  <entry keyword="HTML">
+    <entry keyword="creating files">
+      <topic href="topics/tjcrehtm.html#tjcrehtm" title="Creating HTML and XHTML files and framesets"/>
+    </entry>
+  </entry>
+  <entry keyword="WML">
+    <entry keyword="creating files">
+      <topic href="topics/tjcrehtm.html#tjcrehtm" title="Creating HTML and XHTML files and framesets"/>
+    </entry>
+  </entry>
+  <entry keyword="XHTML">
+    <entry keyword="creating files">
+      <topic href="topics/tjcrehtm.html#tjcrehtm" title="Creating HTML and XHTML files and framesets"/>
+    </entry>
+  </entry>
+  <entry keyword="DOCTYPE declarations">
     <entry keyword="adding automatically">
+      <topic href="topics/tjprefs.html#tjprefs" title="Defining HTML file preferences"/>
+    </entry>
+  </entry>
+  <entry keyword="HTML files">
+    <entry keyword="editing preferences">
       <topic href="topics/tjprefs.html#tjprefs" title="Defining HTML file preferences"/>
     </entry>
   </entry>
@@ -185,8 +167,8 @@
       <topic href="topics/cwservbn.html#cwservbn" title="Servlets"/>
     </entry>
   </entry>
-  <entry keyword="dynamic content">
-    <entry keyword="servlets">
+  <entry keyword="Web servers">
+    <entry keyword="generating dynamic content">
       <topic href="topics/cwservbn.html#cwservbn" title="Servlets"/>
     </entry>
   </entry>
@@ -195,14 +177,19 @@
       <topic href="topics/tjcrejsp.html#tjcrejsp" title="Creating JavaServer Pages (JSP) files"/>
     </entry>
   </entry>
-  <entry keyword="JavaServer pages">
+  <entry keyword="JSP pages">
     <entry keyword="overview">
       <topic href="topics/cpdjsps.html#cpdjsps" title="JavaServer Pages (JSP) technology"/>
     </entry>
   </entry>
-  <entry keyword="dynamic Web content">
-    <entry keyword="generating">
+  <entry keyword="Web content">
+    <entry keyword="generating dynamically">
       <topic href="topics/cpdjsps.html#cpdjsps" title="JavaServer Pages (JSP) technology"/>
+    </entry>
+  </entry>
+  <entry keyword="build output folders">
+    <entry keyword="ignoring in CVS">
+      <topic href="topics/twcvsr.html#twcvsr" title="Setting CVS repository defaults"/>
     </entry>
   </entry>
   <entry keyword="CVS">
@@ -210,8 +197,13 @@
       <topic href="topics/twcvsr.html#twcvsr" title="Setting CVS repository defaults"/>
     </entry>
   </entry>
-  <entry keyword="cvsignore file">
+  <entry keyword="cvsignore files">
     <entry keyword="creating">
+      <topic href="topics/twcvsr.html#twcvsr" title="Setting CVS repository defaults"/>
+    </entry>
+  </entry>
+  <entry keyword="repositories">
+    <entry keyword="default CVS settings">
       <topic href="topics/twcvsr.html#twcvsr" title="Setting CVS repository defaults"/>
     </entry>
   </entry>

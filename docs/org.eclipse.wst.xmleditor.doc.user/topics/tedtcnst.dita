@@ -11,9 +11,9 @@ constraints (that is, a set of rules) defined by a DTD or an XML schema, you
 can turn the constraints on and off to provide flexibility in the way you
 edit, but still maintain the validity of the document periodically.</shortdesc>
 <prolog><metadata>
-<keywords><indexterm>XML editor<indexterm>editing<indexterm>with DTD or XML
-schema constraints</indexterm></indexterm></indexterm><indexterm>XML files<?Pub Caret?><indexterm>editing<indexterm>with
-DTD or XML schema constraints</indexterm></indexterm></indexterm></keywords>
+<keywords><indexterm>XML editor<indexterm>editing with constraints</indexterm></indexterm>
+<indexterm>XML files<indexterm>editing with constraints</indexterm></indexterm>
+</keywords>
 </metadata></prolog>
 <taskbody>
 <context><p> When the constraints are turned on, and you are working in the

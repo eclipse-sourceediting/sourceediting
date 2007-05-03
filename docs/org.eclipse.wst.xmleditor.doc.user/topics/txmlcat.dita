@@ -14,8 +14,6 @@ an XML file. When the XML processor encounters it, it will use the XML Catalog
 entry to find the location of the DTD or XML schema associated with the Key</shortdesc>
 <prolog><metadata>
 <keywords><indexterm>XML catalog<indexterm>adding entries</indexterm></indexterm>
-<indexterm>XML catalog<indexterm>importing entries</indexterm></indexterm>
-<indexterm>XML catalog<indexterm>exporting entries</indexterm></indexterm>
 </keywords>
 </metadata></prolog>
 <taskbody>
@@ -97,7 +95,7 @@ resource. </cmd></substep>
 </substeps>
 </step>
 <step><cmd>Click  <uicontrol>Import</uicontrol> if you want to import an .xmlcatalog
-file.<?Pub Caret?> You will be prompted to select the file you want to import.</cmd>
+file. You will be prompted to select the file you want to import.</cmd>
 <substeps>
 <substep><cmd>When you import a .xmlcatalog file, any entries in it will be
 loaded into the XML Catalog (and any existing entries will be overwritten). </cmd>

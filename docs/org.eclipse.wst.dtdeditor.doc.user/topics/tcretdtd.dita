@@ -12,7 +12,7 @@ it manually, adding declarations that define elements, attributes, entities,
 and notations, and how they can be used for any XML files that reference the
 DTD file.</shortdesc>
 <prolog><metadata>
-<keywords><indexterm>DTDs (document type definitions)<indexterm>creating</indexterm></indexterm>
+<keywords><indexterm>DTD<indexterm>creating</indexterm></indexterm>
 </keywords>
 </metadata></prolog>
 <taskbody>

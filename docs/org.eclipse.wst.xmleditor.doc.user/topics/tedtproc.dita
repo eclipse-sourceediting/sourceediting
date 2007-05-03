@@ -9,10 +9,8 @@
 <shortdesc>If you have instructions you want to pass along to an application
 using an XML document, you can use a processing instruction. </shortdesc>
 <prolog><metadata>
-<keywords><indexterm>XML editor<indexterm>editing<indexterm>processing instructions</indexterm></indexterm></indexterm>
-<indexterm>XML editor<indexterm>processing instructions<indexterm>editing </indexterm></indexterm></indexterm>
-<indexterm>XML files<indexterm>editing<indexterm>processing instructions</indexterm></indexterm></indexterm>
-<indexterm>XML files<indexterm>processing instructions<indexterm>editing</indexterm></indexterm></indexterm>
+<keywords><indexterm>XML editor<indexterm>processing instructions</indexterm></indexterm>
+<indexterm>XML files<indexterm>processing instructions</indexterm></indexterm>
 </keywords>
 </metadata></prolog>
 <taskbody>

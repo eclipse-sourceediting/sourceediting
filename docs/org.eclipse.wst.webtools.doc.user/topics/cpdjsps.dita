@@ -5,8 +5,8 @@
 <concept id="cpdjsps" xml:lang="en-us">
 <title>JavaServer Pages (JSP) technology</title>
 <prolog><metadata>
-<keywords><indexterm>JavaServer pages<indexterm>overview</indexterm></indexterm>
-<indexterm>dynamic Web content<indexterm>generating</indexterm></indexterm>
+<keywords><indexterm>JSP pages<indexterm>overview</indexterm></indexterm>
+<indexterm>Web content<indexterm>generating dynamically</indexterm></indexterm>
 </keywords>
 </metadata></prolog>
 <conbody>

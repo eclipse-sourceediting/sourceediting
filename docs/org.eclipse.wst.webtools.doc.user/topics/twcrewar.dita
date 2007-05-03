@@ -5,10 +5,10 @@
 <task id="twcrewar" xml:lang="en-us">
 <title>Exporting Web Archive (WAR) files</title>
 <prolog><metadata>
-<keywords><indexterm>WAR files<indexterm>exporting</indexterm></indexterm>
-<indexterm>exporting<indexterm>War files</indexterm></indexterm><indexterm>Web
-projects<indexterm>exporting WAR files</indexterm></indexterm><indexterm>exporting<indexterm>War
-files</indexterm></indexterm></keywords>
+<keywords><indexterm>exporting<indexterm>WAR files</indexterm></indexterm>
+<indexterm>WAR files<indexterm>exporting</indexterm></indexterm>
+<indexterm>Web projects<indexterm>exporting WAR files</indexterm></indexterm>
+</keywords>
 </metadata></prolog>
 <taskbody>
 <context> <p> A Web archive (WAR) file is a packaged Web application that

@@ -13,6 +13,7 @@ your DTD, and contains at least some of the elements and attributes in your
 DTD.</shortdesc>
 <prolog><metadata>
 <keywords><indexterm>XML files<indexterm>generating from DTDs</indexterm></indexterm>
+<indexterm>DTD<indexterm>generating XML files</indexterm></indexterm>
 </keywords>
 </metadata></prolog>
 <taskbody>
@@ -38,7 +39,7 @@ be shown in the <uicontrol>Root element</uicontrol> list.</info></step>
 <choice><uicontrol>Create optional attributes</uicontrol>. Both mandatory
 and optional attributes will be generated.</choice>
 <choice><uicontrol>Create optional elements</uicontrol>. Both mandatory and
-optional elements will be generated.</choice><?Pub Caret1?>
+optional elements will be generated.</choice>
 <choice><uicontrol>Create first choice of required choice</uicontrol>. The
 first option of a required choice will be generated in your XML file.</choice>
 <choice><uicontrol>Fill elements and attributes with data</uicontrol>. Any

@@ -21,7 +21,7 @@ with DTDs or schemas, and validate them. </p>
 <p> The <b>DTD editor</b> is a tool for creating and viewing DTDs.   </p>
 <p>The <b>XML schema editor</b> is a tool for creating, viewing, and validating
 XML schemas. You can use the XML schema editor to perform tasks such as creating
-XML schema components and importing and viewing XML schemas. </p><?Pub Caret1?>
+XML schema components and importing and viewing XML schemas. </p>
 <p><b>Notes:</b></p>
 <section>Exercise caution when opening large files with any of the XML editors.
 If the memory limits of the workbench are exceeded, it will abruptly close

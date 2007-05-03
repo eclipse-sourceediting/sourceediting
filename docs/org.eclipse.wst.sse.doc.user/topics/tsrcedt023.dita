@@ -11,7 +11,8 @@ to be able to correctly resolve links to servlets or <tm tmclass="special"
 tmowner="Sun Microsystems, Inc." tmtype="tm" trademark="Java">Java</tm> beans
 in JSP and HTML files.</shortdesc>
 <prolog><metadata>
-<keywords><indexterm>JSP files<indexterm>content assist enablement</indexterm></indexterm><indexterm>content assist<indexterm>enabling for JSP files</indexterm></indexterm>
+<keywords><indexterm>content assistance<indexterm>enabling for JSP files</indexterm></indexterm>
+<indexterm>JSP files<indexterm>enabling content assistance</indexterm></indexterm>
 
 
 </keywords>

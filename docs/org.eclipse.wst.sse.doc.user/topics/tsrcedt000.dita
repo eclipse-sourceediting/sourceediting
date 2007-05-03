@@ -11,7 +11,8 @@
 text editor</term>. This is a generic term for several editors that you can
 use to edit any of several markup languages, such as HTML.</shortdesc>
 <prolog><metadata>
-<keywords><indexterm>markup languages<indexterm>editing</indexterm><indexterm>structured text editors<indexterm>markup language editing</indexterm><indexterm>overview</indexterm></indexterm></indexterm>
+<keywords><indexterm>markup languages<indexterm>editing text</indexterm></indexterm>
+<indexterm>text<indexterm>editing in markup languages</indexterm></indexterm>
 </keywords>
 </metadata></prolog>
 <taskbody>

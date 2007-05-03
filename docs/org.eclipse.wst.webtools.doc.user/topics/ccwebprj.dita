@@ -5,8 +5,8 @@
 <concept id="ccwebprj" xml:lang="en-us">
 <title>Dynamic Web projects and applications</title>
 <prolog><metadata>
-<keywords><indexterm>Web projects<indexterm>dynamic<indexterm>overview</indexterm></indexterm></indexterm>
-<indexterm>dynamic Web projects<indexterm>overview</indexterm></indexterm>
+<keywords><indexterm>enterprise applications<indexterm>projects<indexterm>dynamic Web projects</indexterm></indexterm></indexterm>
+<indexterm>Web projects<indexterm>dynamic projects overview</indexterm></indexterm>
 </keywords>
 </metadata></prolog>
 <conbody>

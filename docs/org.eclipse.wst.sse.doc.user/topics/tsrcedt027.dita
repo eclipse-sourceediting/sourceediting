@@ -11,7 +11,8 @@
 that you can insert into a file. You can use the default templates as provided,
 customize the default templates, or create your own templates.</shortdesc>
 <prolog><metadata>
-<keywords><indexterm>markup languages<indexterm>adding and removing templates</indexterm></indexterm>
+<keywords><indexterm>markup languages<indexterm>templates</indexterm></indexterm>
+<indexterm>templates<indexterm>markup languages</indexterm></indexterm>
 </keywords>
 </metadata></prolog>
 <taskbody>

@@ -10,10 +10,8 @@
 of it to associate it with a DTD file. You can edit your DOCTYPE declaration
 to change the DTD file your XML file is associated with.</shortdesc>
 <prolog><metadata>
-<keywords><indexterm>XML editor<indexterm>editing<indexterm>DOCTYPE declarations</indexterm></indexterm></indexterm>
-<indexterm>XML editor<indexterm>DOCTYPE declarations<indexterm>editing</indexterm></indexterm></indexterm>
-<indexterm>XML files<indexterm>editing<indexterm>DOCTYPE declarations</indexterm></indexterm></indexterm>
-<indexterm>XML files<indexterm>DOCTYPE declarations<indexterm>editing</indexterm></indexterm></indexterm>
+<keywords><indexterm>DOCTYPE declarations<indexterm>XML editor</indexterm></indexterm>
+<indexterm>XML editor<indexterm>DOCTYPE declarations</indexterm></indexterm>
 </keywords>
 </metadata></prolog>
 <taskbody>

@@ -9,8 +9,8 @@
 <shortdesc>If you have created any XML schema components you no longer need,
 you can delete them.</shortdesc>
 <prolog><metadata>
-<keywords><indexterm>XML schema editor<indexterm>deleting<indexterm>components</indexterm></indexterm></indexterm>
-<indexterm>XML schema files<indexterm>deleting<indexterm>components</indexterm></indexterm></indexterm>
+<keywords><indexterm>XML schema editor<indexterm>deleting components</indexterm></indexterm>
+<indexterm>XML schema files<indexterm>deleting components</indexterm></indexterm>
 </keywords>
 </metadata></prolog>
 <taskbody>

@@ -25,7 +25,7 @@ However, there will be other cases when it will be beneficial to perform formal
 validation on your documents.</p></context>
 <steps>
 <step><cmd>You can validate your file by selecting it in the Navigator view,
-right-clicking it, and clicking <uicontrol>Validate<?Pub Caret?></uicontrol>.</cmd>
+right-clicking it, and clicking <uicontrol>Validate</uicontrol>.</cmd>
 </step>
 </steps>
 <result><p>Any validation problems are indicated in the Problems view. </p></result>

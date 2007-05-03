@@ -12,10 +12,8 @@ with. If desired, you can change the schema and namespace your XML file is
 associated with or add a new association. Modifying any associations can impact
 what content is allowed in the XML file.</shortdesc>
 <prolog><metadata>
-<keywords><indexterm>XML editor<indexterm>editing<indexterm>namespace information</indexterm></indexterm></indexterm>
-<indexterm>XML editor<indexterm>namespace information<indexterm>editing</indexterm></indexterm></indexterm>
-<indexterm>XML files<indexterm>editing<indexterm>namespace information</indexterm></indexterm></indexterm>
-<indexterm>XML files<indexterm>namespace information<indexterm>editing</indexterm></indexterm></indexterm>
+<keywords><indexterm>XML editor<indexterm>namespace information</indexterm></indexterm>
+<indexterm>XML files<indexterm>namespace information</indexterm></indexterm>
 </keywords>
 </metadata></prolog>
 <taskbody>

@@ -18,7 +18,7 @@ of the XML schema.</shortdesc>
 <taskbody>
 <context><p>The following instructions were written for the Resource perspective,
 but they will also work in many other perspectives.</p><p>To import an XML
-schema into the workbench<?Pub Caret?>:</p></context>
+schema into the workbench:</p></context>
 <steps>
 <step><cmd>Click <menucascade><uicontrol>File > Import</uicontrol></menucascade>.</cmd>
 </step>

@@ -11,15 +11,12 @@
 <shortdesc>As schemas become larger, it is often desirable to divide their
 content among several schema documents for purposes such as ease of maintenance,
 reuse, and readability. You can use the <codeph>include</codeph> element to
-bring<?Pub Caret?> in definitions and declarations from the included schema
+bring in definitions and declarations from the included schema
 into the current schema. The included schema must be in the same target namespace
 as the including schema. </shortdesc>
 <prolog><metadata>
-<keywords><indexterm>XML schema editor<indexterm>adding<indexterm>include
-elements</indexterm></indexterm></indexterm><indexterm>XML schema editor<indexterm>include
-elements<indexterm>adding</indexterm></indexterm></indexterm><indexterm>XML
-schema files<indexterm>adding<indexterm>include elements</indexterm></indexterm></indexterm>
-<indexterm>XML schema files<indexterm>include elements<indexterm>adding</indexterm></indexterm></indexterm>
+<keywords><indexterm>XML schema editor<indexterm>include elements</indexterm></indexterm>
+<indexterm>XML schema files<indexterm>include elements</indexterm></indexterm>
 </keywords>
 </metadata></prolog>
 <taskbody>

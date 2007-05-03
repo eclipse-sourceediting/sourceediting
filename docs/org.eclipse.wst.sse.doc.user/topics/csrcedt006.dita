@@ -9,7 +9,8 @@ finish a line of code in a structured text editor. The placement of the cursor
 in the source file provides the context for the content assist to offer suggestions
 for completion.</shortdesc>
 <prolog><metadata>
-<keywords><indexterm>content assist<indexterm>overview</indexterm></indexterm><indexterm>structured text editors<indexterm>content assist</indexterm></indexterm>
+<keywords><indexterm>content assistance<indexterm>overview</indexterm></indexterm>
+<indexterm>structured text editors<indexterm>content assistance</indexterm></indexterm>
 
 
 </keywords>

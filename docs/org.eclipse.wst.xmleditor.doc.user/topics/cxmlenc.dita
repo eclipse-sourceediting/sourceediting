@@ -2,7 +2,7 @@
 <!--Arbortext, Inc., 1988-2005, v.4002-->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN"  "concept.dtd">
 <?Pub Inc?>
-<concept id="cxmlenc" xml:lang="en-us"><?Pub Caret?>
+<concept id="cxmlenc" xml:lang="en-us">
 <title>XML and HTML encodings</title>
 <titlealts>
 <searchtitle>XML and HTML encodings</searchtitle>
@@ -10,7 +10,8 @@
 <shortdesc>Encodings enable you to specify what character encoding your text
 is in.</shortdesc>
 <prolog><metadata>
-<keywords><indexterm>Encodings<indexterm>HTML</indexterm></indexterm><indexterm>Encodings<indexterm>XML</indexterm></indexterm>
+<keywords><indexterm>character encoding<indexterm>text in files</indexterm></indexterm>
+<indexterm>encodings<indexterm>supported character sets</indexterm></indexterm>
 </keywords>
 </metadata></prolog>
 <conbody>

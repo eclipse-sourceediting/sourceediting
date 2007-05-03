@@ -33,7 +33,7 @@ and click <uicontrol>OK</uicontrol>.</cmd></step>
 make the type bold.</cmd></step>
 <step><cmd>Click <uicontrol>Restore Default</uicontrol> to set the highlighting
 styles back to their default values. If you only want to reset the value for
-a particular content type, select it in the <uicontrol>Content type </uicontrol> <?Pub Caret?>field,
+a particular content type, select it in the <uicontrol>Content type </uicontrol> field,
 the click the <uicontrol>Restore Default</uicontrol> button next to it. </cmd>
 </step>
 <step><cmd>Click <uicontrol>OK</uicontrol> to save your changes.</cmd></step>

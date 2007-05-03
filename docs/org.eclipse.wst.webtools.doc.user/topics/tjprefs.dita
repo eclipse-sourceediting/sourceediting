@@ -10,7 +10,8 @@
 </keywords>
 </metadata></prolog>
 <taskbody>
-<context> <p><indexterm>HTML files<indexterm>editing<indexterm>preferences</indexterm></indexterm></indexterm><indexterm>DOCTYPE declaration<indexterm>adding automatically</indexterm></indexterm><indexterm>HTML files<indexterm>editing<indexterm>preferences</indexterm></indexterm></indexterm><indexterm>DOCTYPE declaration<indexterm>adding automatically</indexterm></indexterm>
+<context> <p><indexterm>DOCTYPE declarations<indexterm>adding automatically</indexterm></indexterm>
+<indexterm>HTML files<indexterm>editing preferences</indexterm></indexterm>
 To define general HTML file preferences, complete the following
 steps::</p></context>
 <steps>

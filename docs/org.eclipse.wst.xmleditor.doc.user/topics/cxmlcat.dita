@@ -12,9 +12,9 @@ bound by any structural rules contained in the DTD or XML schema. To be consider
 a valid XML file, a document must be accompanied by a DTD or an XML schema,
 and conform to all of the declarations in the DTD or the XML schema.</shortdesc>
 <prolog><metadata>
-<keywords><indexterm>XML files<indexterm>associating with DTDs</indexterm></indexterm>
-<indexterm>XML files<indexterm>associating with XML schemas</indexterm></indexterm>
-<indexterm>XML catalog<indexterm>overview</indexterm></indexterm></keywords>
+<keywords><indexterm>XML catalog<indexterm>overview</indexterm></indexterm>
+<indexterm>XML files<indexterm>associations</indexterm></indexterm>
+</keywords>
 </metadata></prolog>
 <conbody>
 <p>There are two different ways to associate XML files with DTDs or XML schemas.</p>

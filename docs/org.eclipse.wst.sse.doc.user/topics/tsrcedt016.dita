@@ -10,7 +10,8 @@
 <shortdesc>This documentation describes how to delete or hide drawers and
 items in the Snippets view.</shortdesc>
 <prolog><metadata>
-<keywords><indexterm>snippets<indexterm>deleting or hiding drawers</indexterm></indexterm><indexterm>drawers<indexterm>deleting snippets</indexterm><indexterm>hiding snippets</indexterm></indexterm>
+<keywords><indexterm>drawers<indexterm>snippets view</indexterm></indexterm>
+<indexterm>snippets<indexterm>modifying drawers</indexterm></indexterm>
 
 
 </keywords>

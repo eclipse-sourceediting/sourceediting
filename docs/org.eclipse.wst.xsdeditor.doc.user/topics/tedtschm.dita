@@ -11,9 +11,9 @@
 <shortdesc>After you create an XML schema, you can edit its various properties,
 such as its namespace and prefix.</shortdesc>
 <prolog><metadata>
-<keywords><indexterm>XML schema editor<indexterm>editing XML schemas<indexterm>simple
-types</indexterm></indexterm></indexterm><indexterm>XML schema files<indexterm>editing<indexterm>simple
-types</indexterm></indexterm></indexterm></keywords>
+<keywords><indexterm>XML schema editor<indexterm>XML schema properties</indexterm></indexterm>
+<indexterm>XML schema files<indexterm>editing properties</indexterm></indexterm>
+</keywords>
 </metadata></prolog>
 <taskbody>
 <context><p>The following instructions were written for the Resource perspective,
@@ -23,7 +23,7 @@ properties follow these steps:</p></context>
 <step><cmd>Create a new XML schema or double-click an existing schema in the
 Navigator view.</cmd><info> It will automatically open in the XML schema editor.</info>
 </step>
-<step><cmd>In the Outline view, click <uicontrol>Directives</uicontrol>.<?Pub Caret?></cmd>
+<step><cmd>In the Outline view, click <uicontrol>Directives</uicontrol>.</cmd>
 </step>
 <step><cmd>In the Properties view, click the <uicontrol>General</uicontrol> tab.</cmd>
 </step>
