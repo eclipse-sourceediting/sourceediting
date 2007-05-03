@@ -12,6 +12,8 @@ package org.eclipse.jst.jsp.core.internal.taglib;
 
 import javax.servlet.jsp.tagext.VariableInfo;
 
+import org.eclipse.wst.sse.core.utils.StringUtils;
+
 /**
  * Contains info about a TaglibVariable: classname, variablename.
  */
@@ -28,6 +30,9 @@ public class TaglibVariable {
 	private final static String AT_END = "AT_END";
 	private final static String AT_BEGIN = "AT_BEGIN";
 	private final static String NESTED = "NESTED";
+
+	public static final int M_PRIVATE = 1;
+	public static final int M_NONE = 0;
 
 	/**
 	 * 
@@ -94,16 +99,35 @@ public class TaglibVariable {
 	 * @return
 	 */
 	public final String getDeclarationString() {
+		return getDeclarationString(false, M_NONE);
+	}
+
+	/**
+	 * Convenience method.
+	 * 
+	 * @return
+	 */
+	public final String getDeclarationString(boolean includeDoc, int style) {
 		String declaration = null;
 		/*
-		 * no description for now --JDT would need to show it for local vars
-		 * and ILocalVariable has no doc range
+		 * no description for now --JDT would need to show it for local
+		 * variables and ILocalVariable has no "doc range"
 		 */
-		if (false && getDescription() != null) {
-			declaration = "/** " + ENDL + getDescription() + ENDL + " */ " + ENDL + getVarClass() + " " + getVarName() + " = null;" + ENDL; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+		if (includeDoc && getDescription() != null) {
+			if (style == M_PRIVATE) {
+				declaration = "/** " + ENDL + StringUtils.replace(getDescription(), "*/", "*\\/") + ENDL + " */ " + ENDL + "private " + getVarClass() + " " + getVarName() + " = null;" + ENDL; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$  //$NON-NLS-5$
+			}
+			else {
+				declaration = "/** " + ENDL + StringUtils.replace(getDescription(), "*/", "*\\/") + ENDL + " */ " + ENDL + getVarClass() + " " + getVarName() + " = null;" + ENDL; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$  //$NON-NLS-5$
+			}
 		}
 		else {
-			declaration = getVarClass() + " " + getVarName() + " = null;" + ENDL; //$NON-NLS-1$ //$NON-NLS-2$
+			if (style == M_PRIVATE) {
+				declaration = "private " + getVarClass() + " " + getVarName() + " = null;" + ENDL; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			}
+			else {
+				declaration = getVarClass() + " " + getVarName() + " = null;" + ENDL; //$NON-NLS-1$ //$NON-NLS-2$
+			}
 		}
 		return declaration;
 	}

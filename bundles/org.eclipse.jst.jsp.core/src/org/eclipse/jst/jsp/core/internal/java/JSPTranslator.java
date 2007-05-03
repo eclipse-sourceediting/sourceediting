@@ -1680,7 +1680,7 @@ public class JSPTranslator {
 			}
 		}
 	}
-	
+
 	private void translateAttributeDirectiveAttributes(Iterator regions) {
 		ITextRegion r = null;
 		String attrName, attrValue;
@@ -1706,7 +1706,7 @@ public class JSPTranslator {
 						varType = attrValue;
 					}
 					else if (attrName.equals(JSP20Namespace.ATTR_NAME_FRAGMENT)) {
-						isFragment = "true".equalsIgnoreCase(attrValue);
+						isFragment = Boolean.valueOf(attrValue).booleanValue();
 					}
 					else if (attrName.equals(JSP11Namespace.ATTR_NAME_NAME)) {
 						varName = attrValue;
@@ -1716,17 +1716,17 @@ public class JSPTranslator {
 					}
 				}
 			}
-			if (varName != null) {
-				if(isFragment) {
-					// 2.0:JSP.8.5.2
-					varType = "javax.servlet.jsp.tagext.JspFragment";
-				}
-				String declaration = new TaglibVariable(varType, varName, "", description).getDeclarationString();
-				appendToBuffer(declaration, fUserDeclarations, false, fCurrentNode);
+		}
+		if (varName != null) {
+			if (isFragment) {
+				// 2.0:JSP.8.5.2
+				varType = "javax.servlet.jsp.tagext.JspFragment";
 			}
+			String declaration = new TaglibVariable(varType, varName, "", description).getDeclarationString(true, TaglibVariable.M_PRIVATE);
+			appendToBuffer(declaration, fUserDeclarations, false, fCurrentNode);
 		}
 	}
-		
+
 	private void translateVariableDirectiveAttributes(Iterator regions) {
 		ITextRegion r = null;
 		String attrName, attrValue;
@@ -1899,8 +1899,8 @@ public class JSPTranslator {
 
 	/**
 	 * takes an iterator of the attributes of a page directive and the
-	 * directive itself. The iterator is used in case it can be optimized,
-	 * but the documentRegion is still required to ensure that the values are
+	 * directive itself. The iterator is used in case it can be optimized, but
+	 * the documentRegion is still required to ensure that the values are
 	 * extracted from the correct text.
 	 */
 	protected void translatePageDirectiveAttributes(Iterator regions, IStructuredDocumentRegion documentRegion) {
