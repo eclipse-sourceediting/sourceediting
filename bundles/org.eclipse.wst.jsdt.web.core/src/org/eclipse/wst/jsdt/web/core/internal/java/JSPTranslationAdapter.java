@@ -80,7 +80,7 @@ public class JSPTranslationAdapter implements INodeAdapter, IDocumentListener {
 	 */
 	public void documentChanged(DocumentEvent event) {
 		// Import may have changed, if so we need to signal for revalidation of other script regions.
-		if(fJSPTranslation!=null && fJSPTranslation.isImportRange(event.getOffset())){
+		if(event!=null && fJSPTranslation!=null && fJSPTranslation.isImportRange(event.getOffset())){
 			
 			Position firstPosition = (Position)fJSPTranslation.getJava2JspMap().values().iterator().next();
 			try {
@@ -143,6 +143,7 @@ public class JSPTranslationAdapter implements INodeAdapter, IDocumentListener {
 
 		if (fJSPTranslation == null || fDocumentIsDirty) {
 			JSPTranslator translator = null;
+			
 			if (getXMLModel() != null && getXMLModel().getIndexedRegion(0) != null) {
 				translator = getTranslator((IDOMNode) getXMLModel().getIndexedRegion(0));
 				translator.translate();

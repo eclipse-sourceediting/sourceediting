@@ -133,6 +133,7 @@ public class JsValidator extends JSPValidator {
 			
 			IDOMDocument xmlDoc = domModel.getDocument();
 			JSPTranslationAdapter translationAdapter = (JSPTranslationAdapter) xmlDoc.getAdapterFor(IJSPTranslation.class);
+			translationAdapter.documentChanged(null);
 			JSPTranslation translation = translationAdapter.getJSPTranslation();
 			
 			if (!reporter.isCancelled()) {

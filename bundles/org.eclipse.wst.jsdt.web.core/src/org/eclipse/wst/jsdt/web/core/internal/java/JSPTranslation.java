@@ -144,7 +144,7 @@ public class JSPTranslation implements IJSPTranslation {
 	 */
 	private ICompilationUnit createCompilationUnit() throws JavaModelException {
 
-		fDocumentScope.setScope(cuImports);
+		fDocumentScope.setIncludedFiles(cuImports);
 		//
 		ICompilationUnit cu = fDocumentScope.getDefaultPackageFragment().getCompilationUnit(getClassname()  + JsDataTypes.BASE_FILE_EXTENSION ).getWorkingCopy(getWorkingCopyOwner(),
 				getProblemRequestor(), getProgressMonitor());
