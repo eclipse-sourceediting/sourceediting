@@ -357,7 +357,7 @@ public class JSPSearchSupport {
 		// pa_TODO need to add to java path too, so JDT search support knows
 		// there should be a non internal way to do this.
 		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=77564
-		JavaModelManager.getJavaModelManager().getIndexManager().indexLocations.put(containerPath, indexLocation);
+		JavaModelManager.getJavaModelManager().getIndexManager().indexLocations.put(containerPath, new Path(indexLocation));
 		// }
 		return new Path(indexLocation);
 	}
@@ -389,7 +389,7 @@ public class JSPSearchSupport {
 		String classname = split[split.length - 1];
 		
 		// ignore anything but .java matches (like .class binary matches)
-		if (!searchDocPath.endsWith(".java")) { //$NON-NLS-1$
+		if (!searchDocPath.endsWith(".js")) { //$NON-NLS-1$
 			return null;
 		}
 		
