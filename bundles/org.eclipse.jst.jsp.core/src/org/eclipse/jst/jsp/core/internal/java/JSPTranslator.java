@@ -1706,7 +1706,7 @@ public class JSPTranslator {
 						varType = attrValue;
 					}
 					else if (attrName.equals(JSP20Namespace.ATTR_NAME_FRAGMENT)) {
-						isFragment = Boolean.parseBoolean(attrValue);
+						isFragment = "true".equalsIgnoreCase(attrValue);
 					}
 					else if (attrName.equals(JSP11Namespace.ATTR_NAME_NAME)) {
 						varName = attrValue;
