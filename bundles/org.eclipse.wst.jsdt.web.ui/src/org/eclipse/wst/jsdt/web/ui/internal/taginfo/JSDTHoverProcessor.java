@@ -114,8 +114,7 @@ public class JSDTHoverProcessor extends AbstractHoverProcessor {
 		try {
 			if (xmlModel != null) {
 				IDOMDocument xmlDoc = xmlModel.getDocument();
-				JSPTranslationAdapter adapter = (JSPTranslationAdapter) xmlDoc
-						.getAdapterFor(IJSPTranslation.class);
+				JSPTranslationAdapter adapter = (JSPTranslationAdapter) xmlDoc.getAdapterFor(IJSPTranslation.class);
 				if (adapter != null) {
 					JSPTranslation translation = adapter.getJSPTranslation();
 

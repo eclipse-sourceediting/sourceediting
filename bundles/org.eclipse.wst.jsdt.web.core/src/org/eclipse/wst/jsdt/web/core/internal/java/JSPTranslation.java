@@ -16,6 +16,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
@@ -102,6 +103,8 @@ public class JSPTranslation implements IJSPTranslation {
 	private String[] cuImports;
 	
 	private ArrayList importRanges;
+	
+	private IFile targetFile;
 
 	public JSPTranslation(IJavaProject javaProj, JSPTranslator translator) {
 
@@ -115,7 +118,12 @@ public class JSPTranslation implements IJSPTranslation {
 			fJava2JspMap = translator.getJava2JspRanges();
 			fJsp2JavaMap = translator.getJsp2JavaRanges();
 			fJspName = translator.getFile().getName();
-			fDocumentScope = new DocumentContextFragmentRoot(fJavaProject, translator.getFile());
+			
+			targetFile =  translator.getFile();
+			fDocumentScope = new DocumentContextFragmentRoot(fJavaProject,
+															 targetFile,
+															 WebRootFinder.getWebContentFolder(javaProj.getProject()),
+															 WebRootFinder.getServerContextRoot(javaProj.getProject()));
 			fGeneratedFunctionNames = translator.getExcludedElements();
 			importRanges = translator.getImportHtmlRanges();
 			// fJava2JspIndirectMap = translator.getJava2JspIndirectRanges();
@@ -127,6 +135,7 @@ public class JSPTranslation implements IJSPTranslation {
 			}
 		}
 	}
+
 	
 	public boolean isImportRange(int offset) {
 		for(int i = 0;i<importRanges.size();i++) {
