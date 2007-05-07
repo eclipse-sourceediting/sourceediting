@@ -66,7 +66,7 @@ class JSPElementCollection extends DeclCollection implements JSP11Namespace.Elem
 			attributes = attrs;
 		}
 
-		// implementes CMNode
+		// implements CMNode
 		public int getNodeType() {
 			return CMNode.ELEMENT_DECLARATION;
 		}
@@ -88,7 +88,7 @@ class JSPElementCollection extends DeclCollection implements JSP11Namespace.Elem
 
 		public Object getProperty(String propertyName) {
 			if (propertyName.equals(HTMLCMProperties.SHOULD_IGNORE_CASE)) {
-				return new Boolean(false); //D208839
+				return Boolean.FALSE; //D208839
 			}
 			else if (propertyName.equals(HTMLCMProperties.CONTENT_HINT)) {
 				String myName = getElementName();
@@ -507,9 +507,10 @@ class JSPElementCollection extends DeclCollection implements JSP11Namespace.Elem
 			// ("flush" ENUM REQUIRED (true|false)); Defect TORO:185241
 			adec = new AttrDecl(ATTR_NAME_FLUSH);
 			adec.type = new HTMLCMDataTypeImpl(CMDataType.ENUM);
-			adec.usage = CMAttributeDeclaration.REQUIRED;
+			adec.usage = CMAttributeDeclaration.OPTIONAL;
 			String[] values = {ATTR_VALUE_TRUE, ATTR_VALUE_FALSE};
 			adec.type.setEnumValues(values);
+			adec.type.setImpliedValue(CMDataType.IMPLIED_VALUE_DEFAULT, ATTR_VALUE_FALSE);
 			declarations.putNamedItem(ATTR_NAME_FLUSH, adec);
 		}
 
