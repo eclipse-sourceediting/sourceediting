@@ -877,7 +877,7 @@ class ProjectDescription {
 			 */
 			try {
 				IJavaProject jproject = JavaCore.create(fProject);
-				if (jproject != null) {
+				if (jproject != null && jproject.exists()) {
 					IClasspathEntry[] entries = jproject.getResolvedClasspath(false);
 					fBuildPathIsDirty = (fBuildPathEntryCount != entries.length);
 				}
