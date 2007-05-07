@@ -47,6 +47,13 @@ class URLFileHyperlink implements IHyperlink {
 			return fStorage != null;
 		}
 
+		public boolean equals(Object obj) {
+			if (obj instanceof StorageEditorInput) {
+				return fStorage.equals(((StorageEditorInput) obj).fStorage);
+			}
+			return super.equals(obj);
+		}
+
 		public ImageDescriptor getImageDescriptor() {
 			return null;
 		}
@@ -67,12 +74,19 @@ class URLFileHyperlink implements IHyperlink {
 			return null;
 		}
 	}
-	
+
 	static class URLStorage implements IStorage {
 		URL fURL = null;
 
 		URLStorage(URL url) {
 			fURL = url;
+		}
+
+		public boolean equals(Object obj) {
+			if (obj instanceof URLStorage) {
+				return fURL.equals(((URLStorage) obj).fURL);
+			}
+			return super.equals(obj);
 		}
 
 		public InputStream getContents() throws CoreException {
@@ -157,5 +171,4 @@ class URLFileHyperlink implements IHyperlink {
 			}
 		}
 	}
-
 }
