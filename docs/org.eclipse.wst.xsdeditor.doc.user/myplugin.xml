@@ -20,6 +20,7 @@
 
 <extension point="org.eclipse.help.toc">
     <toc file="XSDeditormap_toc.xml"/>
+       <index path="index/"/>
       
 </extension>
 
