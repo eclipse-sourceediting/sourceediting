@@ -2,13 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="static_web_project"/>
 	<classpathentry kind="src" path="property_files"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins">
-		<accessrules>
-			<accessrule kind="accessible" pattern="org/eclipse/wst/common/**"/>
-			<accessrule kind="accessible" pattern="org/eclipse/wst/server/**"/>
-			<accessrule kind="accessible" pattern="org/eclipse/wst/validation/**"/>
-		</accessrules>
-	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
