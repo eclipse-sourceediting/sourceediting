@@ -224,7 +224,7 @@ Each catalog extension consists of a single catalogContribution element.
       <documentation>
          &lt;pre&gt;
    &lt;extension 
-         point=&quot;org.eclipse.wst.xml.uriresolver.catalogContributions&quot;&gt;
+         point=&quot;org.eclipse.wst.xml.core.catalogContributions&quot;&gt;
       &lt;catalogContribution&gt; 
          &lt;system 
                systemId=&quot;http://schemas.xmlsoap.org/wsdl/&quot;
@@ -239,9 +239,6 @@ Each catalog extension consists of a single catalogContribution element.
          &lt;public
                publicId=&quot;http://www.w3.org/1999/XSL/Transform&quot;
                uri=&quot;data/xsd/XSLSchema.xsd&quot;&gt;
-            &lt;property 
-                  name=&quot;webURL&quot;
-                  value=&quot;http://schemas.xmlsoap.org/wsdl/&quot;/&gt;
          &lt;/public&gt;
          &lt;nextCatalog
                id=&quot;nestedCatalog&quot; 
