@@ -34,9 +34,10 @@ class JSPJavaSelectionProvider {
 		if (selection instanceof ITextSelection) {
 			ITextSelection textSelection = (ITextSelection) selection;
 			// get the JSP translation object for this editor's document
-			IStructuredModel model = StructuredModelManager.getModelManager()
-					.getExistingModelForRead(document);
+			IStructuredModel model = null;
 			try {
+				 model = StructuredModelManager.getModelManager()
+					.getExistingModelForRead(document);
 				if (model instanceof IDOMModel) {
 					IDOMModel xmlModel = (IDOMModel) model;
 					IDOMDocument xmlDoc = xmlModel.getDocument();

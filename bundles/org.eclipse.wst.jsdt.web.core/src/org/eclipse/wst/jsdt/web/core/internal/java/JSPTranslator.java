@@ -255,8 +255,9 @@ public class JSPTranslator {
 
 	public IFile getFile() {
 		IFile f = null;
-		IStructuredModel sModel = StructuredModelManager.getModelManager().getExistingModelForRead(getStructuredDocument());
+		IStructuredModel sModel = null;
 		try {
+			sModel = StructuredModelManager.getModelManager().getExistingModelForRead(getStructuredDocument());
 			if (sModel != null) {
 				f = FileBuffers.getWorkspaceFileAtLocation(new Path(sModel.getBaseLocation()));
 			}

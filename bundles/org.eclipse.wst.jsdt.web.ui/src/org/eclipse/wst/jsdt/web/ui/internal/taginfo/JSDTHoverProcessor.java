@@ -110,8 +110,9 @@ public class JSDTHoverProcessor extends AbstractHoverProcessor {
 	public String getHoverInfo(ITextViewer textViewer, IRegion hoverRegion) {
 		// get JSP translation object for this viewer's document
 
-		IDOMModel xmlModel = (IDOMModel) StructuredModelManager.getModelManager().getExistingModelForRead(textViewer.getDocument());
+		IDOMModel xmlModel = null;
 		try {
+			xmlModel = (IDOMModel) StructuredModelManager.getModelManager().getExistingModelForRead(textViewer.getDocument());
 			if (xmlModel != null) {
 				IDOMDocument xmlDoc = xmlModel.getDocument();
 				JSPTranslationAdapter adapter = (JSPTranslationAdapter) xmlDoc.getAdapterFor(IJSPTranslation.class);

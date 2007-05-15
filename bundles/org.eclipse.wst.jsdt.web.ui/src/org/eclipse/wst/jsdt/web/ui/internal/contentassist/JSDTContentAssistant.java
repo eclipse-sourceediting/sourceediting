@@ -57,10 +57,11 @@ public class JSDTContentAssistant extends AbstractContentAssistProcessor {
     
         IDOMModel xmlModel = null;
     
-        xmlModel = (IDOMModel) StructuredModelManager.getModelManager().getExistingModelForRead(viewer.getDocument());
+      
         
         try {
-            IDOMDocument xmlDoc = xmlModel.getDocument();
+        	xmlModel = (IDOMModel) StructuredModelManager.getModelManager().getExistingModelForRead(viewer.getDocument());
+        	IDOMDocument xmlDoc = xmlModel.getDocument();
             
             if (fTranslationAdapter == null) {
                 fTranslationAdapter = (JSPTranslationAdapter) xmlDoc.getAdapterFor(IJSPTranslation.class);

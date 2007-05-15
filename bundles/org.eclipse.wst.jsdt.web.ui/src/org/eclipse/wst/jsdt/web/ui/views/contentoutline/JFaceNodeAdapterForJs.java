@@ -104,7 +104,7 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
        
         IJavaElement[] result = null;
         IDocument viewerDoc = null;
-        
+        IDOMDocument xmlDoc=null;
         try {
             if (modelManager != null) {
                 IStructuredDocument doc = ((NodeImpl) node).getStructuredDocument();
@@ -112,25 +112,10 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
                 model = modelManager.getExistingModelForRead(doc);
             }
             IDOMModel domModel = (IDOMModel) model;
-            IDOMDocument xmlDoc = domModel.getDocument();
-            viewerDoc = xmlDoc.getStructuredDocument();
-            
-            JSPTranslationAdapter translationAdapter = (JSPTranslationAdapter) xmlDoc.getAdapterFor(IJSPTranslation.class);
-            translation = translationAdapter.getJSPTranslation();
-            
-            
-            int startOffset = 0;
-            int endOffset = 0;
-            int type = node.getNodeType();
-            if (node.getNodeType() == Node.TEXT_NODE && (node instanceof NodeImpl) && translation != null) {
-                startOffset = ((NodeImpl) node).getStartOffset();
-                endOffset = ((NodeImpl) node).getEndOffset();
-                
-                result = translation.getAllElementsFromJspRange(startOffset, endOffset);
-                
-            }
-            if (result == null)
-                return null;
+            xmlDoc = domModel.getDocument();
+           
+           
+
             } catch (Exception e) {
                     Logger.logException(e);
             } finally {
@@ -139,6 +124,25 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
                         model.releaseFromRead();
                     }
             }
+            if (xmlDoc==null)
+                return null;
+            
+            viewerDoc = xmlDoc.getStructuredDocument();
+            
+            JSPTranslationAdapter translationAdapter = (JSPTranslationAdapter) xmlDoc.getAdapterFor(IJSPTranslation.class);
+            translation = translationAdapter.getJSPTranslation();
+            int startOffset = 0;
+            int endOffset = 0;
+            int type = node.getNodeType();
+            if (node.getNodeType() == Node.TEXT_NODE && (node instanceof NodeImpl) && translation != null) {
+                startOffset = ((NodeImpl) node).getStartOffset();
+                endOffset = ((NodeImpl) node).getEndOffset();
+                result = translation.getAllElementsFromJspRange(startOffset, endOffset);
+            }
+            
+            if (result == null)
+                return null;
+            
             Object[] newResults=new Object[result.length];
            
             for (int i = 0; i < result.length; i++) {

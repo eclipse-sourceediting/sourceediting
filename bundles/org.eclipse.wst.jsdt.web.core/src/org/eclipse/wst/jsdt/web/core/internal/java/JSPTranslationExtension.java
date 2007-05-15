@@ -265,7 +265,7 @@ public class JSPTranslationExtension extends JSPTranslation {
 	@Override
 	public String getJavaText() {
 		String jsdoctext = getJavaDocument().get();
-		System.out.println(jsdoctext);
+		//System.out.println(jsdoctext);
 		return getJavaDocument() != null ? getJavaDocument().get() : ""; //$NON-NLS-1$
 	}
 

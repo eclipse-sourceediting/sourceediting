@@ -4,6 +4,7 @@
 	
  <!-- JS Facet for faceted web projects (sse -->
       <!-- advanced js facet -->
+      <!--
    	<extension point="org.eclipse.wst.common.project.facet.core.facets">
   	  <project-facet id="wst.jsdt.script">
   	  	<label>JavaScript Development Toolkit</label>
@@ -24,7 +25,7 @@
 	      <group-member id="script.javascript"/> 
   	  </project-facet-version>
  	</extension>
-   
+   -->
    <!-- end advanced js facet -->
    <extension point="org.eclipse.wst.common.project.facet.core.facets">
    

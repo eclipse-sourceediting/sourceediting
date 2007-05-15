@@ -68,9 +68,10 @@ public class JSPFindOccurrencesProcessor extends FindOccurrencesProcessor {
 			IDocument document, ITextSelection selection) {
 		IJavaElement[] elements = new IJavaElement[0];
 		// get JSP translation object for this viewer's document
-		IStructuredModel model = StructuredModelManager.getModelManager()
-				.getExistingModelForRead(document);
+		IStructuredModel model = null;
 		try {
+			model = StructuredModelManager.getModelManager()
+			.getExistingModelForRead(document);
 			if (model != null && model instanceof IDOMModel) {
 				IDOMDocument xmlDoc = ((IDOMModel) model).getDocument();
 				JSPTranslationAdapter adapter = (JSPTranslationAdapter) xmlDoc

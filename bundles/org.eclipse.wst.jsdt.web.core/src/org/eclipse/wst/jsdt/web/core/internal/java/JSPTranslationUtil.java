@@ -50,8 +50,9 @@ public class JSPTranslationUtil {
 
 	public JSPTranslationExtension getTranslation() {
 		if (fTranslation == null) {
-			IDOMModel xmlModel = (IDOMModel) getModelManager().getExistingModelForRead(fDocument);
+			IDOMModel xmlModel=null;
 			try {
+				xmlModel = (IDOMModel) getModelManager().getExistingModelForRead(fDocument);
 				IDOMDocument xmlDoc = xmlModel.getDocument();
 
 				JSPTranslationAdapter translationAdapter = (JSPTranslationAdapter) xmlDoc.getAdapterFor(IJSPTranslation.class);
