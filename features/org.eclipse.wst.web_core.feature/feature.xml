@@ -50,7 +50,7 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.wst.html.standard.dtds"
+         id="org.eclipse.wst.standard.schemas"
          download-size="0"
          install-size="0"
          version="0.0.0"
