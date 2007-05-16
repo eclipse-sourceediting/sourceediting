@@ -77,8 +77,16 @@
             <uri
                 name="http://java.sun.com/xml/ns/j2ee/j2ee_jaxrpc_mapping_1_1.xsd"
                 uri="dtdsAndSchemas/j2ee_jaxrpc_mapping_1_1.xsd" />
-
-
+			<uri
+                name="http://java.sun.com/xml/ns/j2ee/j2ee_web_services_1_1.xsd"
+                uri="dtdsAndSchemas/j2ee_web_services_1_1.xsd" />
+            <uri
+                name="http://java.sun.com/xml/ns/j2ee/j2ee_web_services_client_1_1.xsd"
+                uri="dtdsAndSchemas/j2ee_web_services_client_1_1.xsd" />
+			
+			<uri
+                name="http://www.ibm.com/webservices/xsd/j2ee_jaxrpc_mapping_1_1.xsd"
+                uri="dtdsAndSchemas/j2ee_jaxrpc_mapping_1_1.xsd" />
             <uri
                 name="http://www.ibm.com/webservices/xsd/j2ee_web_services_1_1.xsd"
                 uri="dtdsAndSchemas/j2ee_web_services_1_1.xsd" />
