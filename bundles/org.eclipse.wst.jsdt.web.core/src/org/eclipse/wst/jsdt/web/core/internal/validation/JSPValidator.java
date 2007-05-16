@@ -41,21 +41,23 @@ import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
  * Performs some common JSP validation tasks
  */
 public class JSPValidator implements IValidatorJob {
-	
+
 	protected class JSPFileVisitor implements IResourceProxyVisitor {
-		
+
 		private IContentType[] fContentTypes = null;
-		private List		   fFiles		= new ArrayList();
-		private IReporter	  fReporter	 = null;
-		
+
+		private List fFiles = new ArrayList();
+
+		private IReporter fReporter = null;
+
 		public JSPFileVisitor(IReporter reporter) {
 			fReporter = reporter;
 		}
-		
+
 		public final IFile[] getFiles() {
 			return (IFile[]) fFiles.toArray(new IFile[fFiles.size()]);
 		}
-		
+
 		/**
 		 * Gets list of content types this visitor is interested in
 		 * 
@@ -64,11 +66,12 @@ public class JSPValidator implements IValidatorJob {
 		private IContentType[] getValidContentTypes() {
 			if (fContentTypes == null) {
 				// currently "hard-coded" to be jsp & jspf
-				fContentTypes = new IContentType[] { Platform.getContentTypeManager().getContentType(ContentTypeIdForJSP.ContentTypeID_JSP), Platform.getContentTypeManager().getContentType(ContentTypeIdForJSP.ContentTypeID_JSPFRAGMENT) };
+				fContentTypes = new IContentType[] { Platform.getContentTypeManager().getContentType(ContentTypeIdForJSP.ContentTypeID_JSP),
+						Platform.getContentTypeManager().getContentType(ContentTypeIdForJSP.ContentTypeID_JSPFRAGMENT) };
 			}
 			return fContentTypes;
 		}
-		
+
 		/**
 		 * Checks if fileName is some type of JSP (including JSP fragments)
 		 * 
@@ -77,7 +80,7 @@ public class JSPValidator implements IValidatorJob {
 		 */
 		private boolean isJSPType(String fileName) {
 			boolean valid = false;
-			
+
 			IContentType[] types = getValidContentTypes();
 			int i = 0;
 			while (i < types.length && !valid) {
@@ -86,25 +89,25 @@ public class JSPValidator implements IValidatorJob {
 			}
 			return valid;
 		}
-		
+
 		public boolean visit(IResourceProxy proxy) throws CoreException {
-			
+
 			// check validation
 			if (fReporter.isCancelled()) {
 				return false;
 			}
-			
+
 			if (proxy.getType() == IResource.FILE) {
-				
+
 				if (isJSPType(proxy.getName())) {
 					IFile file = (IFile) proxy.requestResource();
 					if (file.exists()) {
-						
+
 						if (JSPValidator.DEBUG) {
 							System.out.println("(+) JSPValidator adding file: " + file.getName()); //$NON-NLS-1$
 						}
 						fFiles.add(file);
-						
+
 						// don't search deeper for files
 						return false;
 					}
@@ -113,70 +116,70 @@ public class JSPValidator implements IValidatorJob {
 			return true;
 		}
 	}
-	
+
 	protected class LocalizedMessage extends Message {
-		
+
 		private String _message = null;
-		
+
 		public LocalizedMessage(int severity, String messageText) {
 			this(severity, messageText, null);
 		}
-		
+
 		public LocalizedMessage(int severity, String messageText, IResource targetObject) {
 			this(severity, messageText, (Object) targetObject);
 		}
-		
+
 		public LocalizedMessage(int severity, String messageText, Object targetObject) {
 			super(null, severity, null);
 			setLocalizedMessage(messageText);
 			setTargetObject(targetObject);
 		}
-		
+
 		public String getLocalizedMessage() {
 			return _message;
 		}
-		
+
 		@Override
 		public String getText() {
 			return getLocalizedMessage();
 		}
-		
+
 		@Override
 		public String getText(ClassLoader cl) {
 			return getLocalizedMessage();
 		}
-		
+
 		@Override
 		public String getText(Locale l) {
 			return getLocalizedMessage();
 		}
-		
+
 		@Override
 		public String getText(Locale l, ClassLoader cl) {
 			return getLocalizedMessage();
 		}
-		
+
 		public void setLocalizedMessage(String message) {
 			_message = message;
 		}
 	}
-	
+
 	// for debugging
-	static final boolean		DEBUG;
-	
+	static final boolean DEBUG;
+
 	private static final String PLUGIN_ID_JSP_CORE = "org.eclipse.wst.jsdt.web.core"; //$NON-NLS-1$
-																					  
+
 	static {
 		String value = Platform.getDebugOption("org.eclipse.wst.jsdt.web.core/debug/jspvalidator"); //$NON-NLS-1$
 		DEBUG = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
 	}
-	
-	private IContentType		fJSPFContentType   = null;
-	
+
+	private IContentType fJSPFContentType = null;
+
 	public void cleanup(IReporter reporter) {
 		// nothing to do
 	}
-	
+
 	/**
 	 * Checks if file is a jsp fragment or not. If so, check if the fragment
 	 * should be validated or not.
@@ -192,7 +195,8 @@ public class JSPValidator implements IValidatorJob {
 		// quick check to see if this is possibly a jsp fragment
 		if (getJSPFContentType().isAssociatedWith(file.getName())) {
 			// get preference for validate jsp fragments
-			boolean shouldValidateFragments = Boolean.valueOf(JSPFContentProperties.getProperty(JSPFContentProperties.VALIDATE_FRAGMENTS, file, true)).booleanValue();
+			boolean shouldValidateFragments = Boolean.valueOf(JSPFContentProperties.getProperty(JSPFContentProperties.VALIDATE_FRAGMENTS, file, true))
+					.booleanValue();
 			/*
 			 * if jsp fragments should not be validated, check if file is really
 			 * jsp fragment
@@ -204,7 +208,7 @@ public class JSPValidator implements IValidatorJob {
 		}
 		return shouldValidate;
 	}
-	
+
 	protected String getAttributeValue(IStructuredDocumentRegion sdr, String attrName) {
 		ITextRegion r = getAttributeValueRegion(sdr, attrName);
 		if (r != null) {
@@ -212,7 +216,7 @@ public class JSPValidator implements IValidatorJob {
 		}
 		return ""; //$NON-NLS-1$
 	}
-	
+
 	/**
 	 * 
 	 * @param sdr
@@ -238,7 +242,7 @@ public class JSPValidator implements IValidatorJob {
 		}
 		return valueRegion;
 	}
-	
+
 	/**
 	 * 
 	 * @param sdr
@@ -256,7 +260,7 @@ public class JSPValidator implements IValidatorJob {
 		}
 		return name;
 	}
-	
+
 	/**
 	 * Returns JSP fragment content type
 	 * 
@@ -268,11 +272,11 @@ public class JSPValidator implements IValidatorJob {
 		}
 		return fJSPFContentType;
 	}
-	
+
 	public ISchedulingRule getSchedulingRule(IValidationContext helper) {
 		return null;
 	}
-	
+
 	/**
 	 * Determines if file is jsp fragment or not (does a deep, indepth check,
 	 * looking into contents of file)
@@ -289,7 +293,8 @@ public class JSPValidator implements IValidatorJob {
 			// it can be null
 			if (contentDescription == null) {
 				is = file.getContents();
-				contentDescription = Platform.getContentTypeManager().getDescriptionFor(is, file.getName(), new QualifiedName[] { IContentDescription.CHARSET });
+				contentDescription = Platform.getContentTypeManager()
+						.getDescriptionFor(is, file.getName(), new QualifiedName[] { IContentDescription.CHARSET });
 			}
 			if (contentDescription != null) {
 				String fileCtId = contentDescription.getContentType().getId();
@@ -311,7 +316,7 @@ public class JSPValidator implements IValidatorJob {
 		}
 		return isFragment;
 	}
-	
+
 	private boolean shouldValidate(IFile file) {
 		IResource resource = file;
 		do {
@@ -322,7 +327,7 @@ public class JSPValidator implements IValidatorJob {
 		} while ((resource.getType() & IResource.PROJECT) == 0);
 		return true;
 	}
-	
+
 	public void validate(IValidationContext helper, IReporter reporter) throws ValidationException {
 		/* Added by BC ---- */
 
@@ -333,16 +338,16 @@ public class JSPValidator implements IValidatorJob {
 		IWorkspaceRoot wsRoot = ResourcesPlugin.getWorkspace().getRoot();
 		if (uris.length > 0) {
 			IFile currentFile = null;
-			
+
 			for (int i = 0; i < uris.length && !reporter.isCancelled(); i++) {
 				currentFile = wsRoot.getFile(new Path(uris[i]));
 				if (currentFile != null && currentFile.exists()) {
 					if (shouldValidate(currentFile) && fragmentCheck(currentFile)) {
-						
+
 						int percent = (i * 100) / uris.length + 1;
 						Message message = new LocalizedMessage(IMessage.LOW_SEVERITY, percent + "% " + uris[i]);
 						reporter.displaySubtask(this, message);
-						
+
 						validateFile(currentFile, reporter);
 					}
 					if (JSPValidator.DEBUG) {
@@ -351,10 +356,10 @@ public class JSPValidator implements IValidatorJob {
 				}
 			}
 		} else {
-			
+
 			// if uris[] length 0 -> validate() gets called for each project
 			if (helper instanceof IWorkbenchContext) {
-				
+
 				IProject project = ((IWorkbenchContext) helper).getProject();
 				JSPFileVisitor visitor = new JSPFileVisitor(reporter);
 				try {
@@ -371,7 +376,7 @@ public class JSPValidator implements IValidatorJob {
 						int percent = (i * 100) / files.length + 1;
 						Message message = new LocalizedMessage(IMessage.LOW_SEVERITY, percent + "% " + files[i].getFullPath().toString());
 						reporter.displaySubtask(this, message);
-						
+
 						validateFile(files[i], reporter);
 					}
 					if (JSPValidator.DEBUG) {
@@ -381,7 +386,7 @@ public class JSPValidator implements IValidatorJob {
 			}
 		}
 	}
-	
+
 	/**
 	 * Validate one file. It's assumed that the file has JSP content type.
 	 * 
@@ -391,7 +396,7 @@ public class JSPValidator implements IValidatorJob {
 	protected void validateFile(IFile f, IReporter reporter) {
 		// subclasses should implement (for batch validation)
 	}
-	
+
 	public IStatus validateInJob(IValidationContext helper, IReporter reporter) throws ValidationException {
 		IStatus status = Status.OK_STATUS;
 		try {

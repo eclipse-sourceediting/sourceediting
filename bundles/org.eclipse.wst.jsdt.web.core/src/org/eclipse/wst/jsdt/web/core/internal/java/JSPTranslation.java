@@ -200,7 +200,7 @@ public class JSPTranslation implements IJSPTranslation {
 		return displayString.replaceAll(getMangledName() + ".js", getJspName());
 	}
 
-	public IJavaElement[] getAllElementsFromJspRange(int jspStart, int jspEnd) {
+	public IJavaElement[]  getAllElementsFromJspRange(int jspStart, int jspEnd) {
 
 		int javaPositionStart = getJavaOffset(jspStart);
 		int javaPositionEnd = getJavaOffset(jspEnd);
@@ -208,9 +208,10 @@ public class JSPTranslation implements IJSPTranslation {
 		IJavaElement[] EMTPY_RESULT_SET = new IJavaElement[0];
 		IJavaElement[] result = EMTPY_RESULT_SET;
 
-		ICompilationUnit cu = getCompilationUnit();
+		ICompilationUnit cu=getCompilationUnit();
 		IJavaElement[] allChildren = null;
 		synchronized (cu) {
+			
 			try {
 				allChildren = cu.getChildren();
 			} catch (JavaModelException e) {
@@ -275,7 +276,35 @@ public class JSPTranslation implements IJSPTranslation {
 		}
 		return fCompilationUnit;
 	}
+	public IJavaElement[] getElementsFromJspRange1(int jspStart, int jspEnd) {
 
+		int javaPositionStart = getJavaOffset(jspStart);
+		int javaPositionEnd = getJavaOffset(jspEnd);
+
+		IJavaElement[] EMTPY_RESULT_SET = new IJavaElement[0];
+		IJavaElement[] result = EMTPY_RESULT_SET;
+		try {
+			ICompilationUnit cu = getCompilationUnit();
+			if (cu != null) {
+				synchronized (cu) {
+					int cuDocLength = cu.getBuffer().getLength();
+					int javaLength = javaPositionEnd - javaPositionStart;
+					if (cuDocLength > 0 && javaPositionStart >= 0
+							&& javaLength >= 0 && javaPositionEnd < cuDocLength) {
+						result = cu.codeSelect(javaPositionStart, javaLength);
+					}
+				}
+			}
+
+			if (result == null || result.length == 0) {
+				return EMTPY_RESULT_SET;
+			}
+		} catch (JavaModelException x) {
+			Logger.logException(x);
+		}
+
+		return result;
+	}
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -290,17 +319,17 @@ public class JSPTranslation implements IJSPTranslation {
 		IJavaElement[] EMTPY_RESULT_SET = new IJavaElement[0];
 		IJavaElement[] result = EMTPY_RESULT_SET;
 		try {
-			ICompilationUnit cu = getCompilationUnit();
+			ICompilationUnit compUnit = getCompilationUnit();
 			// cu.makeConsistent(getProgressMonitor());
 			// cu.reconcile(ICompilationUnit.NO_AST, true,
 			// getWorkingCopyOwner(), getProgressMonitor());
-			if (cu != null) {
-				synchronized (cu) {
-					int cuDocLength = cu.getBuffer().getLength();
+			if (compUnit != null) {
+				synchronized (compUnit) {
+					int cuDocLength = compUnit.getBuffer().getLength();
 					int javaLength = javaPositionEnd - javaPositionStart;
 					if (cuDocLength > 0 && javaPositionStart >= 0 && javaLength >= 0 && javaPositionEnd <= cuDocLength) {
 
-						result = cu.codeSelect(javaPositionStart, javaLength, getWorkingCopyOwner());
+						result = compUnit.codeSelect(javaPositionStart, javaLength, getWorkingCopyOwner());
 
 					}
 				}
