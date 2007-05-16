@@ -73,6 +73,7 @@ public class JSDTHoverProcessor extends AbstractHoverProcessor {
 		} else {
 
 			IJavaElement curr = result[0];
+			if(curr==null) return null;
 			if (curr instanceof IMember) {
 				IMember member = (IMember) curr;
 				HTMLPrinter.addSmallHeader(buffer, getInfoText(member));

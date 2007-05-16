@@ -29,7 +29,10 @@ public class JsJfaceNode extends ElementImpl implements IndexedRegion, INodeNoti
                  return adapterRegistry;
             }
         }
-   
+   public boolean equals(Object o) {
+	   return (o!=null && o instanceof JsJfaceNode && ((JsJfaceNode)o).parent == this.parent && ((JsJfaceNode)o).fEnclosedObject ==this.fEnclosedObject && ((JsJfaceNode)o).fDocPosition == this.fDocPosition);
+   }
+        
    public JsJfaceNode(Node parent, IJavaElement enclosedObject, Position structureDocLocation) {
 	   super();
 	   //super((ElementImpl)parent);

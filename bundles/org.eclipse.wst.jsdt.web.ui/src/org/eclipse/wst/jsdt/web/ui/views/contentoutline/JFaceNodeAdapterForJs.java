@@ -28,6 +28,8 @@ import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeAdapterFactory;
 import org.w3c.dom.Node;
 
 public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
+	Object nodeCache;
+	Object valueCache;
     
     public JFaceNodeAdapterForJs(JFaceNodeAdapterFactory adapterFactory) {
         super(adapterFactory);   
@@ -76,7 +78,8 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
         Node node = (Node) object;
         if ( isJSElementParent(node) ) {
             Object[] nodes = getJSElementsFromNode(node.getFirstChild());
-             return (nodes != null && nodes.length > 0);
+             boolean hasElements =  (nodes != null && nodes.length > 0);
+             return hasElements;
         }
         return super.hasChildren(object);
     }
@@ -98,7 +101,38 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
     }
     
     private Object[] getJSElementsFromNode(Node node) {
-        IStructuredModel model = null;
+    		
+    		synchronized(node) {
+	            IJavaElement[]  result = getJavaElementsInRange(node);
+	              if (result == null)
+	                return null;
+	            
+	            Object[] newResults=new Object[result.length];
+	           
+	            for (int i = 0; i < result.length; i++) {
+	                int htmllength = 0;
+	                int htmloffset = 0;
+	                Position position=null;
+	                try {
+	                    htmllength = ((SourceRefElement) (result[i])).getSourceRange().getLength();
+	                    htmloffset = getTranslation(node).getJspOffset(((SourceRefElement) (result[i])).getSourceRange().getOffset());
+	                    position = new Position(htmloffset, htmllength);
+	                } catch (JavaModelException e) {
+	                    e.printStackTrace();
+	                }
+	              
+	                
+	                newResults[i] = getJsNode(node.getParentNode(), (IJavaElement)result[i], position);
+	             }
+	            valueCache = newResults;
+	            nodeCache = node;
+	            return newResults;
+    		}
+    		
+    }
+    
+    private  JSPTranslation getTranslation(Node node) {
+    	IStructuredModel model = null;
         IModelManager modelManager = StructuredModelManager.getModelManager();
         JSPTranslation translation = null;
        
@@ -107,15 +141,19 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
         IDOMDocument xmlDoc=null;
         try {
             if (modelManager != null) {
-                IStructuredDocument doc = ((NodeImpl) node).getStructuredDocument();
+            	IStructuredDocument doc=null;
+            	
+            		doc = ((NodeImpl) node).getStructuredDocument();
                // model = modelManager.getExistingModelForRead(doc);
-                model = modelManager.getExistingModelForRead(doc);
+                	model = modelManager.getModelForRead(doc);
+            	
             }
             IDOMModel domModel = (IDOMModel) model;
             xmlDoc = domModel.getDocument();
-           
-           
-
+            viewerDoc = xmlDoc.getStructuredDocument();
+            
+            JSPTranslationAdapter translationAdapter = (JSPTranslationAdapter) xmlDoc.getAdapterFor(IJSPTranslation.class);
+            translation = translationAdapter.getJSPTranslation();
             } catch (Exception e) {
                     Logger.logException(e);
             } finally {
@@ -127,45 +165,28 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
             if (xmlDoc==null)
                 return null;
             
-            viewerDoc = xmlDoc.getStructuredDocument();
-            
-            JSPTranslationAdapter translationAdapter = (JSPTranslationAdapter) xmlDoc.getAdapterFor(IJSPTranslation.class);
-            translation = translationAdapter.getJSPTranslation();
-            int startOffset = 0;
-            int endOffset = 0;
-            int type = node.getNodeType();
-            if (node.getNodeType() == Node.TEXT_NODE && (node instanceof NodeImpl) && translation != null) {
-                startOffset = ((NodeImpl) node).getStartOffset();
-                endOffset = ((NodeImpl) node).getEndOffset();
-                result = translation.getAllElementsFromJspRange(startOffset, endOffset);
-            }
-            
-            if (result == null)
-                return null;
-            
-            Object[] newResults=new Object[result.length];
-           
-            for (int i = 0; i < result.length; i++) {
-                int htmllength = 0;
-                int htmloffset = 0;
-                Position position=null;
-                try {
-                    htmllength = ((SourceRefElement) (result[i])).getSourceRange().getLength();
-                    htmloffset = translation.getJspOffset(((SourceRefElement) (result[i])).getSourceRange().getOffset());
-                    position = new Position(htmloffset, htmllength);
-                } catch (JavaModelException e) {
-                    e.printStackTrace();
-                }
-              
-                
-                newResults[i] = getJsNode(node.getParentNode(), (IJavaElement)result[i], position, model.getFactoryRegistry());
-             }
-            return newResults;
+            return translation;
     }
     
-    private Object getJsNode(Node parent, IJavaElement root, Position position, FactoryRegistry registry){
+    private IJavaElement[] getJavaElementsInRange(Node node) {
+    	 
+             int startOffset = 0;
+             int endOffset = 0;
+             int type = node.getNodeType();
+             IJavaElement[] result=null;
+             if (node.getNodeType() == Node.TEXT_NODE && (node instanceof NodeImpl)) {
+                 startOffset = ((NodeImpl) node).getStartOffset();
+                 endOffset = ((NodeImpl) node).getEndOffset();
+                
+                	 result = getTranslation(node).getAllElementsFromJspRange(startOffset, endOffset);
+                
+             }
+             return result;
+    }
+    
+    private Object getJsNode(Node parent, IJavaElement root, Position position/*, FactoryRegistry registry*/){
         JsJfaceNode instance = new JsJfaceNode(parent, root, position);
-        ((JsJfaceNode)instance).setAdapterRegistry(registry);
+       //((JsJfaceNode)instance).setAdapterRegistry(registry);
         
         INodeAdapter adapter = ((JsJfaceNode)instance).getAdapterFor(IJFaceNodeAdapter.class);
         if(!(adapter instanceof JFaceNodeAdapterForJs)){
