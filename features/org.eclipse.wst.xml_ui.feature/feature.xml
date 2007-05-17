@@ -31,8 +31,8 @@
 
    <requires>
       <import feature="org.eclipse.gef" version="3.3.0" match="compatible"/>
+      <import feature="org.eclipse.emf.edit.ui" version="2.3.0" match="compatible"/>
    </requires>
-
 
    <plugin
          id="org.eclipse.wst.dtd.ui"
