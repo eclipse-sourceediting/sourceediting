@@ -41,7 +41,7 @@ public interface IJSPTranslation {
 	 *            ending offset in the JSP document
 	 * @return IJavaElements corresponding to the JSP selection
 	 */
-	public IJavaElement[] getElementsFromJspRange(int jspStart, int jspEnd);
+	public IJavaElement[] getElementsFromJsRange(int jspStart, int jspEnd);
 
 	/**
 	 * The corresponding java offset in the translated document for a given jsp
@@ -51,7 +51,7 @@ public interface IJSPTranslation {
 	 * @return the java offset that maps to jspOffset, -1 if the position has no
 	 *         mapping.
 	 */
-	public int getJavaOffset(int jspOffset);
+	public int getJsOffset(int jspOffset);
 
 	/**
 	 * The string contents of the translated document.

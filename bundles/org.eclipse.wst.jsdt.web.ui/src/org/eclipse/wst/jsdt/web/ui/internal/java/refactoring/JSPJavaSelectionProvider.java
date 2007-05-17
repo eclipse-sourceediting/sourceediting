@@ -47,7 +47,7 @@ class JSPJavaSelectionProvider {
 					if (adapter != null) {
 						JSPTranslation translation = adapter
 								.getJSPTranslation();
-						elements = translation.getElementsFromJspRange(
+						elements = translation.getElementsFromJsRange(
 								textSelection.getOffset(), textSelection
 										.getOffset()
 										+ textSelection.getLength());

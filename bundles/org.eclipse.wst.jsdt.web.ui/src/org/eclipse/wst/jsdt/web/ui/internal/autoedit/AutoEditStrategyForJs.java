@@ -18,59 +18,46 @@ import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 
-public class AutoEditStrategyForJs implements IAutoEditStrategy{
-	
+public class AutoEditStrategyForJs implements IAutoEditStrategy {
 	private IAutoEditStrategy[] fStrategies;
 	
-	public AutoEditStrategyForJs(){
+	public AutoEditStrategyForJs() {
 		super();
 	}
 	
-	public IAutoEditStrategy[] getAutoEditStrategies(IDocument document){
-		if(fStrategies!=null) return fStrategies;
-		
+	public IAutoEditStrategy[] getAutoEditStrategies(IDocument document) {
+		if (fStrategies != null) return fStrategies;
 		String partitioning = IHTMLPartitions.SCRIPT;
-
-		fStrategies = new IAutoEditStrategy[]{new JavaDocAutoIndentStrategy(partitioning),
-											  new SmartSemicolonAutoEditStrategy(partitioning),
-											 
-											  new JavaAutoIndentStrategy(partitioning,  getJavaProject(document))};
+		fStrategies = new IAutoEditStrategy[] { new JavaDocAutoIndentStrategy(partitioning), new SmartSemicolonAutoEditStrategy(partitioning),
+				new JavaAutoIndentStrategy(partitioning, getJavaProject(document)) };
 		/* new AutoEditStrategyForTabs() */
 		return fStrategies;
 	}
 	
-
 	public void customizeDocumentCommand(IDocument document, DocumentCommand command) {
 		IAutoEditStrategy[] strats = getAutoEditStrategies(document);
-		for(int i=0;i<strats.length;i++){
+		for (int i = 0; i < strats.length; i++) {
 			strats[i].customizeDocumentCommand(document, command);
 		}
-		
 	}
 	
-	private IJavaProject getJavaProject(IDocument document){
-	
+	private IJavaProject getJavaProject(IDocument document) {
 		IDOMModel model = null;
 		IJavaProject javaProject = null;
 		IStructuredDocument structDoc = null;
-		
 		try {
-                model = (IDOMModel) StructuredModelManager.getModelManager().getExistingModelForRead(document);
-    			String baseLocation = model.getBaseLocation();
-    			IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-    			IPath filePath = new Path(baseLocation);
-    			IProject project = null;
-    			if (filePath.segmentCount() > 0) {
-    				project = root.getProject(filePath.segment(0));
-    			}
-    
-    			if(project!=null)
-    				javaProject = JavaCore.create(project);
-           
-		}finally{
-			if(model!=null)	model.releaseFromRead();
+			model = (IDOMModel) StructuredModelManager.getModelManager().getExistingModelForRead(document);
+			String baseLocation = model.getBaseLocation();
+			IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+			IPath filePath = new Path(baseLocation);
+			IProject project = null;
+			if (filePath.segmentCount() > 0) {
+				project = root.getProject(filePath.segment(0));
+			}
+			if (project != null) javaProject = JavaCore.create(project);
+		} finally {
+			if (model != null) model.releaseFromRead();
 		}
 		return javaProject;
 	}
-	
 }

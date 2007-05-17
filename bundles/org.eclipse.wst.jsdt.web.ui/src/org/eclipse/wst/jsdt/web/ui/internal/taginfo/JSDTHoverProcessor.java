@@ -120,7 +120,7 @@ public class JSDTHoverProcessor extends AbstractHoverProcessor {
 				if (adapter != null) {
 					JSPTranslation translation = adapter.getJSPTranslation();
 
-					IJavaElement[] result = translation	.getElementsFromJspRange(hoverRegion.getOffset(),hoverRegion.getOffset()+ hoverRegion.getLength());
+					IJavaElement[] result = translation	.getElementsFromJsRange(hoverRegion.getOffset(),hoverRegion.getOffset()+ hoverRegion.getLength());
 					
 //					Vector filteredResults = new Vector();
 //					List badFunctions = translation.getGeneratedFunctionNames();

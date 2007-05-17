@@ -118,7 +118,7 @@ public class JSPSearchDocument {
 		Position jspPos, javaPos = null;
 		JSPTranslation trans = getJSPTranslation();
 		if (trans != null) {
-			HashMap java2jspMap = trans.getJava2JspMap();
+			HashMap java2jspMap = trans.getJs2HtmlMap();
 			
 			// iterate all mapped java ranges
 			Iterator it = java2jspMap.keySet().iterator();
@@ -159,6 +159,7 @@ public class JSPSearchDocument {
 		}
 		
 		IStructuredModel model = null;
+		
 		try {
 			// get existing model for read, then get document from it
 			IModelManager modelManager = getModelManager();
@@ -166,13 +167,7 @@ public class JSPSearchDocument {
 				model = modelManager.getModelForRead(jspFile);
 			}
 			// handle unsupported
-			if (model instanceof IDOMModel) {
-				IDOMModel xmlModel = (IDOMModel) model;
-				setupAdapterFactory(xmlModel);
-				IDOMDocument doc = xmlModel.getDocument();
-				JSPTranslationAdapter adapter = (JSPTranslationAdapter) doc.getAdapterFor(IJSPTranslation.class);
-				translation = adapter.getJSPTranslation();
-			}
+			
 		} catch (IOException e) {
 			Logger.logException(e);
 		} catch (CoreException e) {
@@ -186,7 +181,15 @@ public class JSPSearchDocument {
 				model.releaseFromRead();
 			}
 		}
-		return translation;
+		
+		if (model instanceof IDOMModel) {
+			IDOMModel xmlModel = (IDOMModel) model;
+			setupAdapterFactory(xmlModel);
+			IDOMDocument doc = xmlModel.getDocument();
+			JSPTranslationAdapter adapter = (JSPTranslationAdapter) doc.getAdapterFor(IJSPTranslation.class);
+			return adapter.getJSPTranslation();
+		}
+		return null;
 	}
 	
 	private IModelManager getModelManager() {

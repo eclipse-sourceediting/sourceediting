@@ -74,7 +74,7 @@ public class JSDTContentAssistantProcessor extends AbstractContentAssistProcesso
             if (fTranslationAdapter != null) {
                 
                 JSPTranslation translation = fTranslationAdapter.getJSPTranslation();
-                fJavaPosition = translation.getJavaOffset(getDocumentPosition());
+                fJavaPosition = translation.getJsOffset(getDocumentPosition());
                 
                 if (DEBUG) {
                     System.out.println("Cursor Location in Java Offset:" + fJavaPosition);

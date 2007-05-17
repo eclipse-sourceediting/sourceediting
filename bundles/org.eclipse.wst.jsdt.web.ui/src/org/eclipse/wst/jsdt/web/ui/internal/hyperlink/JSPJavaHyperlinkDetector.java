@@ -131,7 +131,7 @@ public class JSPJavaHyperlinkDetector implements IHyperlinkDetector {
 			JSPTranslation jspTranslation = getJSPTranslation(document);
 			if (jspTranslation != null) {
 				// check if we are in JSP Java content
-				int javaOffset = jspTranslation.getJavaOffset(region
+				int javaOffset = jspTranslation.getJsOffset(region
 						.getOffset());
 				if (javaOffset > -1) {
 					// check that we are not in indirect Java content (like
@@ -139,7 +139,7 @@ public class JSPJavaHyperlinkDetector implements IHyperlinkDetector {
 					if (!jspTranslation.isIndirect(javaOffset)) {
 						// get Java elements
 						IJavaElement[] elements = jspTranslation
-								.getElementsFromJspRange(region.getOffset(),
+								.getElementsFromJsRange(region.getOffset(),
 										region.getOffset() + region.getLength());
 						if (elements != null && elements.length > 0) {
 							// create a JSPJavaHyperlink for each Java element

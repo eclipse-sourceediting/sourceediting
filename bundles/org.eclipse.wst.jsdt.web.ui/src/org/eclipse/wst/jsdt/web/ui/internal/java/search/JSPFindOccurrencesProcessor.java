@@ -80,7 +80,7 @@ public class JSPFindOccurrencesProcessor extends FindOccurrencesProcessor {
 					JSPTranslation translation = adapter.getJSPTranslation();
 
 					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=102211
-					elements = translation.getElementsFromJspRange(selection
+					elements = translation.getElementsFromJsRange(selection
 							.getOffset(), selection.getOffset()
 							+ selection.getLength());
 				}

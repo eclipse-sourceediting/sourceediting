@@ -40,19 +40,11 @@ public class JSPTranslationUtil {
 		return getTranslation().getCompilationUnit();
 	}
 
-	public IJavaProject getJavaProject() {
-		return getTranslation().getJavaProject();
-	}
-
-	protected IModelManager getModelManager() {
-		return StructuredModelManager.getModelManager();
-	}
-
 	public JSPTranslationExtension getTranslation() {
 		if (fTranslation == null) {
 			IDOMModel xmlModel=null;
 			try {
-				xmlModel = (IDOMModel) getModelManager().getExistingModelForRead(fDocument);
+				xmlModel = (IDOMModel) StructuredModelManager.getModelManager().getExistingModelForRead(fDocument);
 				IDOMDocument xmlDoc = xmlModel.getDocument();
 
 				JSPTranslationAdapter translationAdapter = (JSPTranslationAdapter) xmlDoc.getAdapterFor(IJSPTranslation.class);
