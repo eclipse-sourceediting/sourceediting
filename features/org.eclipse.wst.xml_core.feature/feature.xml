@@ -24,6 +24,7 @@
    <requires>
       <import feature="org.eclipse.emf.ecore" version="2.3.0" match="compatible"/>
       <import feature="org.eclipse.emf.common" version="2.3.0" match="compatible"/>
+      <import feature="org.eclipse.xsd" version="2.3.0" match="compatible"/>
    </requires>
 
    <plugin
