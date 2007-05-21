@@ -86,7 +86,9 @@
                 uri="xsd/soapenc.xsd" />
 
 
-
+            <!-- these are removed from the catalog, since they are -not- 
+            the same as those in the xsd.ui plugin, which 
+            point to the org.eclipse.xsd versions
             <uri
                 name="http://www.w3.org/2001/XMLSchema"
                 uri="dtdsAndSchemas/XMLSchema.dtd" />
@@ -94,7 +96,7 @@
             <system
                 systemId="http://www.w3.org/2001/xml.xsd"
                 uri="dtdsAndSchemas/xml.xsd" />
-
+             -->
         </catalogContribution>
 
     </extension>
