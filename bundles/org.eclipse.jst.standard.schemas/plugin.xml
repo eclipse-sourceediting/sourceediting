@@ -77,14 +77,14 @@
             <uri
                 name="http://java.sun.com/xml/ns/j2ee/j2ee_jaxrpc_mapping_1_1.xsd"
                 uri="dtdsAndSchemas/j2ee_jaxrpc_mapping_1_1.xsd" />
-			<uri
+            <uri
                 name="http://java.sun.com/xml/ns/j2ee/j2ee_web_services_1_1.xsd"
                 uri="dtdsAndSchemas/j2ee_web_services_1_1.xsd" />
             <uri
                 name="http://java.sun.com/xml/ns/j2ee/j2ee_web_services_client_1_1.xsd"
                 uri="dtdsAndSchemas/j2ee_web_services_client_1_1.xsd" />
-			
-			<uri
+
+            <uri
                 name="http://www.ibm.com/webservices/xsd/j2ee_jaxrpc_mapping_1_1.xsd"
                 uri="dtdsAndSchemas/j2ee_jaxrpc_mapping_1_1.xsd" />
             <uri
@@ -107,20 +107,14 @@
                 name="http://java.sun.com/xml/ns/javaee/javaee_web_services_client_1_2.xsd"
                 uri="dtdsAndSchemas/javaee_web_services_client_1_2.xsd" />
 
-
-            <uri
-                name="http://java.sun.com/xml/ns/jax-rpc/ri/config/jax-rpc-ri-config.xsd"
-                uri="dtdsAndSchemas/jax-rpc-ri-config.xsd" />
-
-
             <uri
                 name="http://java.sun.com/xml/ns/j2ee/jsp_2_0.xsd"
                 uri="dtdsAndSchemas/jsp_2_0.xsd" />
             <uri
                 name="http://java.sun.com/xml/ns/j2ee/jsp_2_1.xsd"
                 uri="dtdsAndSchemas/jsp_2_1.xsd" />
-                
-      
+
+
             <public
                 publicId="-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN"
                 uri="dtdsAndSchemas/web-app_2_2.dtd"
@@ -138,17 +132,17 @@
             <uri
                 name="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
                 uri="dtdsAndSchemas/web-app_2_5.xsd" />
-      
+
 
             <public
                 publicId="-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.1//EN"
                 uri="dtdsAndSchemas/web-jsptaglibrary_1_1.dtd"
-                webURL="http://java.sun.com/dtd/web-jsptaglibrary_1_1.dtd"/>
-            
+                webURL="http://java.sun.com/dtd/web-jsptaglibrary_1_1.dtd" />
+
             <public
                 publicId="-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN"
                 uri="dtdsAndSchemas/web-jsptaglibrary_1_2.dtd"
-                webURL="http://java.sun.com/dtd/web-jsptaglibrary_1_2.dtd"/>
+                webURL="http://java.sun.com/dtd/web-jsptaglibrary_1_2.dtd" />
             <uri
                 name="http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd"
                 uri="dtdsAndSchemas/web-jsptaglibrary_2_0.xsd" />
