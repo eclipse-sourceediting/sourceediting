@@ -34,14 +34,11 @@ public class StaticWebDeployableObjectAdapterUtil {
 
 	public static IModuleArtifact getModuleObject(Object obj) {
 		IResource resource = null;
-		if (obj instanceof IResource) {
+		if (obj instanceof IResource)
 			resource = (IResource) obj;
-			IProject project = ProjectUtilities.getProject(resource);
-			if (project != null && !hasInterestedComponents(project))
-				return null;
-		}
 		else if (obj instanceof IAdaptable)
 			resource = (IResource) ((IAdaptable) obj).getAdapter(IResource.class);
+		
 		if (resource == null)
 			return null;
 		
@@ -49,10 +46,13 @@ public class StaticWebDeployableObjectAdapterUtil {
 			IProject project = (IProject) resource;
 			if (hasInterestedComponents(project))
 				return new WebResource(getModule(project), new Path("")); //$NON-NLS-1$
-			return null;
-			
+			return null;	
 		}
+		
 		IProject project = ProjectUtilities.getProject(resource);
+		if (project != null && !hasInterestedComponents(project))
+			return null;
+		
 		IVirtualComponent comp = ComponentCore.createComponent(project);
 		// determine path
 		IPath rootPath = comp.getRootFolder().getProjectRelativePath();
