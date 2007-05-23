@@ -240,7 +240,9 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 				fContentAssistant.setContextInformationPopupForeground(color);
 				fContentAssistant.setContextSelectorForeground(color);
 			}
+		}
 
+		if (!fContentAssistant.isInitialized()) {
 			// add content assist processors for each partition type
 			String[] types = getConfiguredContentTypes(sourceViewer);
 			for (int i = 0; i < types.length; i++) {

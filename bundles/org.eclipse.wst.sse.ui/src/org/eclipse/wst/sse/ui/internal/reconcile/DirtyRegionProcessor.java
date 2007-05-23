@@ -55,9 +55,9 @@ import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 public class DirtyRegionProcessor extends Job implements IReconciler, IReconcilerExtension, IConfigurableReconciler {
 	class DocumentListener implements IDocumentListener {
 		public void documentAboutToBeChanged(DocumentEvent event) {
-			/* 
-			 * if in rewrite session and already going to reprocess
-			 * entire document after rewrite session, do nothing
+			/*
+			 * if in rewrite session and already going to reprocess entire
+			 * document after rewrite session, do nothing
 			 */
 			if (isInRewriteSession() && fReprocessAfterRewrite)
 				return;
@@ -66,9 +66,9 @@ public class DirtyRegionProcessor extends Job implements IReconciler, IReconcile
 		}
 
 		public void documentChanged(DocumentEvent event) {
-			/* 
-			 * if in rewrite session and already going to reprocess
-			 * entire document after rewrite session, do nothing
+			/*
+			 * if in rewrite session and already going to reprocess entire
+			 * document after rewrite session, do nothing
 			 */
 			if (isInRewriteSession() && fReprocessAfterRewrite)
 				return;
@@ -107,13 +107,14 @@ public class DirtyRegionProcessor extends Job implements IReconciler, IReconcile
 				if (isInRewriteSession()) {
 					/*
 					 * while in rewrite session, found a dirty region, so flag
-					 * that entire document needs to be reprocesed after rewrite
-					 * session
+					 * that entire document needs to be reprocesed after
+					 * rewrite session
 					 */
 					if (!fReprocessAfterRewrite && (dr != null)) {
 						fReprocessAfterRewrite = true;
 					}
-				} else {
+				}
+				else {
 					processDirtyRegion(dr);
 				}
 			}
@@ -176,13 +177,13 @@ public class DirtyRegionProcessor extends Job implements IReconciler, IReconcile
 
 	class DocumentRewriteSessionListener implements IDocumentRewriteSessionListener {
 		long time0 = 0;
-		
+
 		public void documentRewriteSessionChanged(DocumentRewriteSessionEvent event) {
 			boolean oldValue = fInRewriteSession;
 			fInRewriteSession = event != null && event.getChangeType().equals(DocumentRewriteSessionEvent.SESSION_START);
 
 			if (event.getChangeType().equals(DocumentRewriteSessionEvent.SESSION_START)) {
-				if(DEBUG) {
+				if (DEBUG) {
 					time0 = System.currentTimeMillis();
 				}
 				flushDirtyRegionQueue();
@@ -190,7 +191,7 @@ public class DirtyRegionProcessor extends Job implements IReconciler, IReconcile
 			}
 			else if (event.getChangeType().equals(DocumentRewriteSessionEvent.SESSION_STOP)) {
 				if (fInRewriteSession ^ oldValue && fDocument != null) {
-					if(DEBUG) {
+					if (DEBUG) {
 						Logger.log(Logger.INFO, "Rewrite session lasted " + (System.currentTimeMillis() - time0) + "ms");
 						time0 = System.currentTimeMillis();
 					}
@@ -254,8 +255,7 @@ public class DirtyRegionProcessor extends Job implements IReconciler, IReconcile
 	private ITextViewer fViewer;
 	boolean fInRewriteSession = false;
 	/**
-	 * true if entire document needs to be reprocessed after
-	 * rewrite session
+	 * true if entire document needs to be reprocessed after rewrite session
 	 */
 	boolean fReprocessAfterRewrite = false;
 
@@ -519,10 +519,7 @@ public class DirtyRegionProcessor extends Job implements IReconciler, IReconcile
 	void handleInputDocumentChanged(IDocument oldInput, IDocument newInput) {
 		// don't bother if reconciler not installed
 		if (isInstalled()) {
-
-			reconcilerDocumentChanged(newInput);
 			setDocument(newInput);
-			setEntireDocumentDirty(newInput);
 		}
 	}
 
@@ -598,30 +595,11 @@ public class DirtyRegionProcessor extends Job implements IReconciler, IReconcile
 		}
 	}
 
-	/**
-	 * Reinitializes listeners and sets new document onall strategies.
-	 * 
-	 * @see org.eclipse.jface.text.reconciler.AbstractReconciler#reconcilerDocumentChanged(IDocument)
-	 */
-	void reconcilerDocumentChanged(IDocument newDocument) {
-		IDocument currentDoc = getDocument();
-
-		// unhook old document listener
-		if (currentDoc != null)
-			currentDoc.removeDocumentListener(fDocumentListener);
-		// hook up new document listener
-		if (newDocument != null)
-			newDocument.addDocumentListener(fDocumentListener);
-
-		// sets document on all strategies
-		setDocument(newDocument);
-	}
-
 	protected IStatus run(IProgressMonitor monitor) {
 		IStatus status = Status.OK_STATUS;
-		if(!PlatformUI.isWorkbenchRunning())
+		if (!PlatformUI.isWorkbenchRunning())
 			return status;
-		
+
 		try {
 			beginProcessing();
 
@@ -655,15 +633,25 @@ public class DirtyRegionProcessor extends Job implements IReconciler, IReconcile
 	}
 
 	public void setDocument(IDocument doc) {
-		if (fDocument != null && fDocument instanceof IDocumentExtension4) {
-			((IDocumentExtension4) fDocument).removeDocumentRewriteSessionListener(fDocumentRewriteSessionListener);
+		if (fDocument != null) {
+			// unhook old document listener
+			fDocument.removeDocumentListener(fDocumentListener);
+			if (fDocument instanceof IDocumentExtension4) {
+				((IDocumentExtension4) fDocument).removeDocumentRewriteSessionListener(fDocumentRewriteSessionListener);
+			}
 		}
 
 		fDocument = doc;
 
-		if (fDocument != null && fDocument instanceof IDocumentExtension4) {
-			((IDocumentExtension4) fDocument).addDocumentRewriteSessionListener(fDocumentRewriteSessionListener);
+		if (fDocument != null) {
+			if (fDocument instanceof IDocumentExtension4) {
+				((IDocumentExtension4) fDocument).addDocumentRewriteSessionListener(fDocumentRewriteSessionListener);
+			}
+			// hook up new document listener
+			fDocument.addDocumentListener(fDocumentListener);
 		}
+		
+		setEntireDocumentDirty(doc);
 	}
 
 	/**
@@ -723,8 +711,6 @@ public class DirtyRegionProcessor extends Job implements IReconciler, IReconcile
 			// removes widget listener
 			getTextViewer().removeTextInputListener(fTextInputListener);
 			setInstalled(false);
-			// removes document listeners
-			reconcilerDocumentChanged(null);
 		}
 		setDocument(null);
 	}
