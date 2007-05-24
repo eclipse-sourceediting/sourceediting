@@ -316,12 +316,24 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 			beanId = getAttributeValue("id", sdRegion); //$NON-NLS-1$
 
 			if (beanId != null && (beanType != null || beanClass != null)) {
-				if (beanType.equals("")) //$NON-NLS-1$
-					beanType = beanClass;
-				String prefix = beanType + " " + beanId + " = "; //$NON-NLS-1$ //$NON-NLS-2$
+				String prefix = null;
+				if (beanType.length() != 0) {
+					/* a type was specified */
+					prefix = beanType + " " + beanId + " = "; //$NON-NLS-1$ //$NON-NLS-2$
+				}
+				else {
+					/* no type was specified, use the concrete class value */
+					prefix = beanClass + " " + beanId + " = "; //$NON-NLS-1$ //$NON-NLS-2$
+				}
+				/*
+				 * Define as null by default. If a concrete class was
+				 * specified, supply a default constructor invocation instead.
+				 */
 				String suffix = "null;\n"; //$NON-NLS-1$
-				if (beanClass != null)
+				// 186771 - JSP Validator problem with included useBean
+				if (beanClass.length() > 0) {
 					suffix = "new " + beanClass + "();\n"; //$NON-NLS-1$ //$NON-NLS-2$
+				}
 				beanDecl = prefix + suffix;
 			}
 
