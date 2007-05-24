@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -27,6 +27,7 @@ import org.eclipse.core.filebuffers.IFileBuffer;
 import org.eclipse.core.filebuffers.IFileBufferListener;
 import org.eclipse.core.filebuffers.ITextFileBuffer;
 import org.eclipse.core.filebuffers.ITextFileBufferManager;
+import org.eclipse.core.filebuffers.LocationKind;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -82,6 +83,13 @@ public class FileBufferModelManager {
 
 		int bufferReferenceCount = 0;
 		int modelReferenceCount = 0;
+
+		/**
+		 * The default value is the "compatibility" kind from before there was
+		 * a LocationKind hint object--this is expected to be overridden at
+		 * runtime.
+		 */
+		LocationKind locationKind = LocationKind.NORMALIZE;
 	}
 
 	/**
@@ -506,11 +514,24 @@ public class FileBufferModelManager {
 			if (Logger.DEBUG_FILEBUFFERMODELMANAGEMENT) {
 				Logger.log(Logger.INFO, "FileBufferModelManager connecting to File " + location); //$NON-NLS-1$
 			}
-			bufferManager.connect(location, getProgressMonitor());
-			ITextFileBuffer buffer = bufferManager.getTextFileBuffer(location);
+			bufferManager.connect(location, LocationKind.LOCATION, getProgressMonitor());
+			ITextFileBuffer buffer = bufferManager.getTextFileBuffer(location, LocationKind.LOCATION);
 			if (buffer != null) {
 				DocumentInfo info = (DocumentInfo) fDocumentMap.get(buffer.getDocument());
-				info.selfConnected = true;
+				if (info != null) {
+					/*
+					 * Note: "info" being null at this point is a slight
+					 * error.
+					 * 
+					 * The connect call from above (or at some time earlier in
+					 * the session) would have notified the FileBufferMapper
+					 * of the creation of the corresponding text buffer and
+					 * created the DocumentInfo object for
+					 * IStructuredDocuments.
+					 */
+					info.locationKind = LocationKind.LOCATION;
+					info.selfConnected = true;
+				}
 				model = getModel((IStructuredDocument) buffer.getDocument());
 			}
 		}
@@ -538,8 +559,8 @@ public class FileBufferModelManager {
 			// here, not IFile#getLocation.
 			IPath location = file.getFullPath();
 			if (location != null) {
-				bufferManager.connect(location, getProgressMonitor());
-				ITextFileBuffer buffer = bufferManager.getTextFileBuffer(location);
+				bufferManager.connect(location, LocationKind.IFILE, getProgressMonitor());
+				ITextFileBuffer buffer = bufferManager.getTextFileBuffer(location, LocationKind.IFILE);
 				if (buffer != null) {
 					DocumentInfo info = (DocumentInfo) fDocumentMap.get(buffer.getDocument());
 					if (info != null) {
@@ -554,6 +575,7 @@ public class FileBufferModelManager {
 						 * DocumentInfo object for IStructuredDocuments.
 						 */
 						info.selfConnected = true;
+						info.locationKind = LocationKind.IFILE;
 					}
 					/*
 					 * Check the document type. Although returning null for
@@ -652,7 +674,7 @@ public class FileBufferModelManager {
 				}
 				IPath location = info.buffer.getLocation();
 				try {
-					FileBuffers.getTextFileBufferManager().disconnect(location, getProgressMonitor());
+					FileBuffers.getTextFileBufferManager().disconnect(location, info.locationKind, getProgressMonitor());
 				}
 				catch (CoreException e) {
 					Logger.logException("Error releasing model for " + location, e); //$NON-NLS-1$
