@@ -586,6 +586,7 @@ class ProjectDescription {
 	void addBuildPathReferences(Map references, List projectsProcessed, boolean exportedOnly) {
 		ensureUpTodate();
 
+		// Add the build path references that are exported from this project
 		Enumeration keys = fClasspathReferences.keys();
 		while (keys.hasMoreElements()) {
 			Object key = keys.nextElement();
@@ -878,7 +879,7 @@ class ProjectDescription {
 			try {
 				IJavaProject jproject = JavaCore.create(fProject);
 				if (jproject != null && jproject.exists()) {
-					IClasspathEntry[] entries = jproject.getResolvedClasspath(false);
+					IClasspathEntry[] entries = jproject.getResolvedClasspath(true);
 					fBuildPathIsDirty = (fBuildPathEntryCount != entries.length);
 				}
 			}
@@ -1350,7 +1351,7 @@ class ProjectDescription {
 		if (project.equals(fProject)) {
 			try {
 				IClasspathEntry[] entries = javaProject.getResolvedClasspath(true);
-				fBuildPathEntryCount = javaProject.getResolvedClasspath(false).length;
+				fBuildPathEntryCount = entries.length;
 				for (int i = 0; i < entries.length; i++) {
 					indexClasspath(entries[i]);
 				}
