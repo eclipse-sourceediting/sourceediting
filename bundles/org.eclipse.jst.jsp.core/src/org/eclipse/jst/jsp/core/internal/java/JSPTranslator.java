@@ -1728,57 +1728,11 @@ public class JSPTranslator {
 	}
 
 	private void translateVariableDirectiveAttributes(Iterator regions) {
-		ITextRegion r = null;
-		String attrName, attrValue;
-
-		String nameGiven = null;
-		String varClass = "java.lang.String"; //$NON-NLS-1$ // the default class...
-		String aliasFor = null;
-		String description = null;
-
-		// iterate all attributes
-		while (regions.hasNext() && (r = (ITextRegion) regions.next()) != null && r.getType() != DOMJSPRegionContexts.JSP_CLOSE) {
-			attrName = attrValue = null;
-			if (r.getType().equals(DOMRegionContext.XML_TAG_ATTRIBUTE_NAME)) {
-
-				attrName = getCurrentNode().getText(r).trim();
-				if (attrName.length() > 0) {
-					if (regions.hasNext() && (r = (ITextRegion) regions.next()) != null && r.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS) {
-						if (regions.hasNext() && (r = (ITextRegion) regions.next()) != null && r.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
-
-							attrValue = StringUtils.strip(getCurrentNode().getText(r));
-						}
-						// has equals, but no value?
-					}
-					if (attrName.equals(JSP12TLDNames.VARIABLE_CLASS)) {
-						varClass = attrValue;
-					}
-					else if (attrName.equals(JSP12TLDNames.VARIABLE_NAME_FROM_ATTRIBUTE)) {
-						/*
-						 * note that since we're not running within the
-						 * context of a JSP, there's no way to determine what
-						 * the right name would be
-						 */
-					}
-					else if (attrName.equals(JSP12TLDNames.VARIABLE_NAME_GIVEN)) {
-						nameGiven = attrValue;
-					}
-					else if (attrName.equals(JSP12TLDNames.DESCRIPTION)) {
-						description = attrValue;
-					}
-				}
-			}
-			String varName = nameGiven;
-			if (varName == null) {
-				// 2.0
-				varName = aliasFor;
-			}
-			if (varName != null && varClass != null) {
-				String declaration = new TaglibVariable(varClass, varName, "", description).getDeclarationString();
-
-				appendToBuffer(declaration, fUserCode, false, fCurrentNode);
-			}
-		}
+		/*
+		 * Shouldn't create a scripting variable in *this* tag file's
+		 * translation, only in JSP files that use it -
+		 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=188780
+		 */
 	}
 
 	/*
