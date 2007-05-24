@@ -236,6 +236,14 @@ final class Tag20ElementCollection extends JSPElementCollection implements JSP20
 			adec.type = new HTMLCMDataTypeImpl(CMDataType.CDATA);
 			adec.usage = CMAttributeDeclaration.OPTIONAL;
 			declarations.putNamedItem(JSP20Namespace.ATTR_NAME_DESCRIPTION, adec);
+
+			adec = new AttrDecl(JSP11Namespace.ATTR_NAME_SCOPE);
+			adec.type = new HTMLCMDataTypeImpl(CMDataType.CDATA);
+			adec.usage = CMAttributeDeclaration.OPTIONAL;
+			values = new String[]{JSP20Namespace.ATTR_VALUE_SCOPE_NESTED, JSP20Namespace.ATTR_VALUE_SCOPE_AT_BEGIN, JSP20Namespace.ATTR_VALUE_SCOPE_AT_END};
+			adec.type.setEnumValues(values);
+			adec.type.setImpliedValue(CMDataType.IMPLIED_VALUE_DEFAULT, JSP20Namespace.ATTR_VALUE_SCOPE_NESTED);
+			declarations.putNamedItem(JSP11Namespace.ATTR_NAME_SCOPE, adec);
 		}
 
 		private void createForDoBody() {

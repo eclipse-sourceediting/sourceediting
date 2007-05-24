@@ -74,4 +74,8 @@ public interface JSP20Namespace extends JSP11Namespace {
 
 	String ATTR_VALUE_NO = "no";
 	String ATTR_VALUE_YES = "yes";
+
+	String ATTR_VALUE_SCOPE_AT_END = "AT_END";
+	String ATTR_VALUE_SCOPE_AT_BEGIN = "AT_BEGIN";
+	String ATTR_VALUE_SCOPE_NESTED = "NESTED";
 }
