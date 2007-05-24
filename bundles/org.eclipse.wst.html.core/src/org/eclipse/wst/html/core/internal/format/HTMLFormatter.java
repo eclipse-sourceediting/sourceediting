@@ -38,6 +38,8 @@ public class HTMLFormatter implements IStructuredFormatter {
 
 	private static final String HTML_NAME = "html";//$NON-NLS-1$
 	private static final String BODY_NAME = "BODY";//$NON-NLS-1$
+	// hidden jsp logic that should be removed when jsp formatter is created
+	private static final String JSP = "jsp";//$NON-NLS-1$
 
 	/**
 	 */
@@ -99,40 +101,46 @@ public class HTMLFormatter implements IStructuredFormatter {
 
 		// special exception if this node is a non-HTML tag (like JSP
 		// elements)
-		if (node.getPrefix() != null) {
-			boolean canInsertBreakBefore = false;
+		// BUG188093 - only preserve whitespace for jsp (not custom) tags
+		String prefix = node.getPrefix();
+		if (prefix != null && JSP.equals(prefix)) {
+			boolean canInsertBreakAfter = false;
 			// if a whitespace does not exist after it, do not add one
 			if (next != null && next.getNodeType() == Node.TEXT_NODE) {
 				String theText = ((Text) next).getData();
 				if (theText != null && theText.length() > 0) {
 					char theChar = theText.charAt(0);
-					canInsertBreakBefore = Character.isWhitespace(theChar);
+					canInsertBreakAfter = Character.isWhitespace(theChar);
 				}
 			}
 			// if cannot insert break, go ahead and return false (otherwise,
 			// continue processing)
-			if (!canInsertBreakBefore)
-				return canInsertBreakBefore;
+			if (!canInsertBreakAfter)
+				return false;
 		}
 
 		// special exception if next node is a non-HTML tag (like JSP
 		// elements)
-		if (next != null && next.getPrefix() != null) {
-			boolean canInsertBreakBefore = false;
-			// if a whitespace does not exist before it, do not add one
-			if (node.getNodeType() == Node.TEXT_NODE) {
-				String theText = ((Text) node).getData();
-				if (theText != null && theText.length() > 0) {
-					char theChar = theText.charAt(theText.length() - 1);
-					canInsertBreakBefore = Character.isWhitespace(theChar);
+		// BUG188093 - only preserve whitespace for jsp (not custom) tags
+		if (next != null) {
+			prefix = next.getPrefix();
+			if (prefix != null && JSP.equals(prefix)) {
+				boolean canInsertBreakAfterPrevious = false;
+				// if a whitespace does not exist before it, do not add one
+				if (node.getNodeType() == Node.TEXT_NODE) {
+					String theText = ((Text) node).getData();
+					if (theText != null && theText.length() > 0) {
+						char theChar = theText.charAt(theText.length() - 1);
+						canInsertBreakAfterPrevious = Character.isWhitespace(theChar);
+					}
 				}
+				// if cannot insert break, go ahead and return false
+				// (otherwise,
+				// continue processing)
+				if (!canInsertBreakAfterPrevious)
+					return false;
 			}
-			// if cannot insert break, go ahead and return false (otherwise,
-			// continue processing)
-			if (!canInsertBreakBefore)
-				return canInsertBreakBefore;
 		}
-
 		if (parent.getNodeType() == Node.DOCUMENT_NODE) {
 			if (node.getNodeType() == Node.ELEMENT_NODE) {
 				// do not insert break after unclosed tag
@@ -204,7 +212,9 @@ public class HTMLFormatter implements IStructuredFormatter {
 
 		// special exception if this node is a non-HTML tag (like JSP
 		// elements)
-		if (node.getPrefix() != null) {
+		// BUG188093 - only preserve whitespace for jsp (not custom) tags
+		String prefix = node.getPrefix();
+		if (prefix != null && JSP.equals(prefix)) {
 			boolean canInsertBreakBefore = false;
 			// if a whitespace does not exist before it, do not add one
 			if (prev != null && prev.getNodeType() == Node.TEXT_NODE) {
@@ -217,25 +227,30 @@ public class HTMLFormatter implements IStructuredFormatter {
 			// if cannot insert break, go ahead and return false (otherwise,
 			// continue processing)
 			if (!canInsertBreakBefore)
-				return canInsertBreakBefore;
+				return false;
 		}
 
 		// special exception if previous node is a non-HTML tag (like JSP
 		// elements)
-		if (prev != null && prev.getPrefix() != null) {
-			boolean canInsertBreakBefore = false;
-			// if a whitespace does not exist after it, do not add one
-			if (node.getNodeType() == Node.TEXT_NODE) {
-				String theText = ((Text) node).getData();
-				if (theText != null && theText.length() > 0) {
-					char theChar = theText.charAt(0);
-					canInsertBreakBefore = Character.isWhitespace(theChar);
+		// BUG188093 - only preserve whitespace for jsp (not custom) tags
+		if (prev != null) {
+			prefix = prev.getPrefix();
+			if (prefix != null && JSP.equals(prefix)) {
+				boolean canInsertBreakBeforeNext = false;
+				// if a whitespace does not exist after it, do not add one
+				if (node.getNodeType() == Node.TEXT_NODE) {
+					String theText = ((Text) node).getData();
+					if (theText != null && theText.length() > 0) {
+						char theChar = theText.charAt(0);
+						canInsertBreakBeforeNext = Character.isWhitespace(theChar);
+					}
 				}
+				// if cannot insert break, go ahead and return false
+				// (otherwise,
+				// continue processing)
+				if (!canInsertBreakBeforeNext)
+					return false;
 			}
-			// if cannot insert break, go ahead and return false (otherwise,
-			// continue processing)
-			if (!canInsertBreakBefore)
-				return canInsertBreakBefore;
 		}
 
 		if (parent.getNodeType() == Node.DOCUMENT_NODE) {
