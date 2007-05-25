@@ -150,7 +150,21 @@
                 name="http://java.sun.com/xml/ns/javaee/web-jsptaglibrary_2_1.xsd"
                 uri="dtdsAndSchemas/web-jsptaglibrary_2_1.xsd" />
 
+            <public
+                publicId="-//Sun Microsystems, Inc.//DTD JavaServer Faces Config 1.0//EN"
+                uri="dtdsAndSchemas/web-facesconfig_1_0.dtd"
+                webURL="http://java.sun.com/dtd/web-facesconfig_1_0.dtd" />
 
+            <public
+                publicId="-//Sun Microsystems, Inc.//DTD JavaServer Faces Config 1.1//EN"
+                uri="dtdsAndSchemas/web-facesconfig_1_1.dtd"
+                webURL="http://java.sun.com/dtd/web-facesconfig_1_1.dtd" />
+
+                
+            <uri
+                name="http://java.sun.com/xml/ns/j2ee/web-facesconfig_1_2.xsd"
+                uri="dtdsAndSchemas/web-facesconfig_1_2.xsd" />
+                
         </catalogContribution>
 
     </extension>
