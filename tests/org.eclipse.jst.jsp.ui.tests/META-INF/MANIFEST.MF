@@ -48,3 +48,4 @@ Require-Bundle: org.eclipse.jface.text,
  org.eclipse.wst.html.ui,
  org.eclipse.wst.validation
 Eclipse-LazyStart: true
+Bundle-RequiredExecutionEnvironment: J2SE-1.4
