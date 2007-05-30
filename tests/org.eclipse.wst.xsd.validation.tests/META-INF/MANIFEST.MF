@@ -18,3 +18,4 @@ Eclipse-LazyStart: true
 Export-Package: org.eclipse.wst.xsd.core.internal.validation;x-internal:=true,
  org.eclipse.wst.xsd.core.internal.validation.eclipse;x-internal:=true,
  org.eclipse.wst.xsd.validation.tests.internal;x-internal:=true
+Bundle-RequiredExecutionEnvironment: J2SE-1.4
