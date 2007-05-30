@@ -119,6 +119,12 @@ public class HTMLUIMessages extends NLS {
 	public static String EOL_Windows_UI;
 	public static String EOL_Unix_UI;
 	public static String EOL_Mac_UI;
+	public static String SyntaxColoringPage_0;
+	public static String SyntaxColoringPage_2;
+	public static String SyntaxColoringPage_3;
+	public static String SyntaxColoringPage_4;
+	public static String SyntaxColoringPage_5;
+	public static String SyntaxColoringPage_6;
 
 	// below are possibly unused strings that may be deleted
 	public static String HTMLFilesPreferencePage_1;

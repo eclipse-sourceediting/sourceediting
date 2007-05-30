@@ -243,7 +243,7 @@ public final class HTMLSyntaxColoringPage extends PreferencePage implements IWor
 		Composite styleEditor = createComposite(top, 1);
 		((GridLayout) styleEditor.getLayout()).marginRight = 5;
 		((GridLayout) styleEditor.getLayout()).marginLeft = 0;
-		createLabel(styleEditor, "Syntax Element:");
+		createLabel(styleEditor, HTMLUIMessages.SyntaxColoringPage_0);
 		fStylesViewer = createStylesViewer(styleEditor);
 		GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
 		gridData.horizontalIndent = 0;
@@ -256,8 +256,8 @@ public final class HTMLSyntaxColoringPage extends PreferencePage implements IWor
 
 		Composite editingComposite = createComposite(top, 1);
 		((GridLayout) styleEditor.getLayout()).marginLeft = 5;
-		createLabel(editingComposite, "");
-		Button enabler = createCheckbox(editingComposite, "Enable");
+		createLabel(editingComposite, ""); //$NON-NLS-1$
+		Button enabler = createCheckbox(editingComposite, HTMLUIMessages.SyntaxColoringPage_2);
 		enabler.setEnabled(false);
 		enabler.setSelection(true);
 		Composite editControls = createComposite(editingComposite, 2);
@@ -283,16 +283,16 @@ public final class HTMLSyntaxColoringPage extends PreferencePage implements IWor
 		fBackgroundColor.setLayoutData(gd);
 		fBackgroundColorEditor.setEnabled(false);
 
-		fBold = createCheckbox(editControls, "&Bold");
+		fBold = createCheckbox(editControls, HTMLUIMessages.SyntaxColoringPage_3);
 		fBold.setEnabled(false);
 		((GridData) fBold.getLayoutData()).horizontalSpan = 2;
-		fItalic = createCheckbox(editControls, "&Italic");
+		fItalic = createCheckbox(editControls, HTMLUIMessages.SyntaxColoringPage_4);
 		fItalic.setEnabled(false);
 		((GridData) fItalic.getLayoutData()).horizontalSpan = 2;
-		fStrike = createCheckbox(editControls, "&Strikethrough");
+		fStrike = createCheckbox(editControls, HTMLUIMessages.SyntaxColoringPage_5);
 		fStrike.setEnabled(false);
 		((GridData) fStrike.getLayoutData()).horizontalSpan = 2;
-		fUnderline = createCheckbox(editControls, "&Underline");
+		fUnderline = createCheckbox(editControls, HTMLUIMessages.SyntaxColoringPage_6);
 		fUnderline.setEnabled(false);
 		((GridData) fUnderline.getLayoutData()).horizontalSpan = 2;
 		fClearStyle = new Button(editingComposite, SWT.PUSH);
@@ -314,7 +314,7 @@ public final class HTMLSyntaxColoringPage extends PreferencePage implements IWor
 		gridData3.horizontalSpan = 2;
 		fText.setLayoutData(gridData3);
 		fText.setEditable(false);
-		fText.setFont(JFaceResources.getFont("org.eclipse.wst.sse.ui.textfont"));
+		fText.setFont(JFaceResources.getFont("org.eclipse.wst.sse.ui.textfont")); //$NON-NLS-1$
 		fText.addKeyListener(getTextKeyListener());
 		fText.addSelectionListener(getTextSelectionListener());
 		fText.addMouseListener(getTextMouseListener());
