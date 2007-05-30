@@ -6,6 +6,6 @@
 		<accessrules>
 			<accessrule kind="accessible" pattern="org/eclipse/wst/**"/>
 		</accessrules>
-	</classpathentry>	<classpathentry kind="output" path="bin"/>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
