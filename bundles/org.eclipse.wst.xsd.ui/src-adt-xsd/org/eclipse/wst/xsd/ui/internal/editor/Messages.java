@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -71,6 +71,7 @@ public class Messages extends NLS
   public static String _UI_LABEL_SET_COMMON_BUILT_IN_TYPES;
   public static String _UI_LABEL_SELECT_TYPES_FILTER_OUT;
   public static String _UI_LABEL_NEW_TYPE;
+  public static String _UI_VALUE_NEW_TYPE;  
   public static String _UI_LABEL_COMPLEX_TYPE;
   public static String _UI_LABEL_SIMPLE_TYPE;
   public static String _UI_LABEL_NEW_ELEMENT;

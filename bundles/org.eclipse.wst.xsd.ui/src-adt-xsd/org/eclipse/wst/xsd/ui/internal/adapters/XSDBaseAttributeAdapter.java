@@ -30,6 +30,7 @@ import org.eclipse.wst.xsd.ui.internal.editor.Messages;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.xsd.XSDAttributeDeclaration;
 import org.eclipse.xsd.XSDTypeDefinition;
+import org.eclipse.xsd.util.XSDConstants;
 
 // a base adapter for reuse by an AttributeUse and AttributeDeclaration
 //
@@ -63,7 +64,7 @@ public abstract class XSDBaseAttributeAdapter extends XSDBaseAdapter implements 
 
   public String getKind()
   {
-    return "attribute"; //$NON-NLS-1$
+    return XSDConstants.ATTRIBUTE_ELEMENT_TAG;
   }
 
   public int getMaxOccurs()

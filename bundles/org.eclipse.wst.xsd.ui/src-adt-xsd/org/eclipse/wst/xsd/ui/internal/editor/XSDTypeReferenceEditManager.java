@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,10 +16,14 @@ import java.util.List;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.gef.commands.Command;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.common.ui.internal.search.dialogs.ComponentSpecification;
 import org.eclipse.wst.common.ui.internal.search.dialogs.IComponentDescriptionProvider;
 import org.eclipse.wst.xsd.ui.internal.adt.edit.ComponentReferenceEditManager;
+import org.eclipse.wst.xsd.ui.internal.adt.edit.ComponentReferenceEditManager2;
 import org.eclipse.wst.xsd.ui.internal.adt.edit.IComponentDialog;
+import org.eclipse.wst.xsd.ui.internal.adt.facade.IADTObject;
+import org.eclipse.wst.xsd.ui.internal.adt.facade.IField;
 import org.eclipse.wst.xsd.ui.internal.common.commands.AddXSDComplexTypeDefinitionCommand;
 import org.eclipse.wst.xsd.ui.internal.common.commands.AddXSDSimpleTypeDefinitionCommand;
 import org.eclipse.wst.xsd.ui.internal.common.commands.UpdateTypeReferenceAndManageDirectivesCommand;
@@ -37,12 +41,12 @@ import org.eclipse.xsd.XSDTypeDefinition;
 import org.eclipse.xsd.util.XSDConstants;
 import org.eclipse.xsd.util.XSDSchemaBuildingTools;
 
-public class XSDTypeReferenceEditManager implements ComponentReferenceEditManager
+public class XSDTypeReferenceEditManager implements ComponentReferenceEditManager, ComponentReferenceEditManager2
 {  
   protected IFile currentFile;
   protected XSDSchema[] schemas;
-  
   private static ComponentSpecification result[];
+  private IADTObject referencer;
   
   public XSDTypeReferenceEditManager(IFile currentFile, XSDSchema[] schemas)
   {
@@ -53,6 +57,16 @@ public class XSDTypeReferenceEditManager implements ComponentReferenceEditManage
   public void addToHistory(ComponentSpecification component)
   {
     // TODO (cs) implement me!    
+  }
+  
+  public IADTObject getReferencer()
+  {
+    return referencer;
+  }
+  
+  public void setReferencer(IADTObject referencer)
+  {
+    this.referencer = referencer;
   }
 
   public IComponentDialog getBrowseDialog()
@@ -82,12 +96,33 @@ public class XSDTypeReferenceEditManager implements ComponentReferenceEditManage
 
   public IComponentDialog getNewDialog()
   {
-	  if (schemas.length > 0) {
-		  return new NewTypeDialog(schemas[0]);
-	  }
-	  else {
-		  return new NewTypeDialog();
-	  }
+    NewTypeDialog result = null;
+    if (schemas.length > 0) 
+    {
+      result = new NewTypeDialog(schemas[0]);
+    }
+    else 
+    {
+      result = new NewTypeDialog();
+    }
+    if (referencer instanceof IField)
+    {
+      IField field = (IField)referencer;
+      if (XSDConstants.ATTRIBUTE_ELEMENT_TAG.equals(field.getKind()))
+      {
+        result.allowComplexType(false);
+      }
+      String fieldName = field.getName();
+      if (fieldName != null)
+      {  
+        fieldName = fieldName.trim();
+        if (fieldName.length() > 0)
+        {  
+          result.setDefaultName(NLS.bind(Messages._UI_VALUE_NEW_TYPE, fieldName));
+        }  
+      }  
+    }
+    return result;
   }
 
   public ComponentSpecification[] getQuickPicks()
