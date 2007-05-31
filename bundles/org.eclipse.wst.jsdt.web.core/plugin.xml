@@ -47,6 +47,34 @@
 
 	
 	</extension>
+	
+	   <extension id="embeded.jsNature" name="JavaScript Embeded" point="org.eclipse.core.resources.natures"> 
+		   <runtime>          
+		   	<run class="org.eclipse.wst.jsdt.web.core.internal.project.JsWebNature"/>       
+		   </runtime>       
+	 	   <builder id="org.eclipse.wst.jsdt.web.core.embeded.javascript"/>    
+	   </extension> 
+	   
+	  <extension  point="org.eclipse.wst.jsdt.core.classpathContainerInitializer">
+	      <classpathContainerInitializer
+	            class="org.eclipse.wst.jsdt.web.core.internal.project.WebProjectClassPathContainerInitializer"
+	            id="org.eclipse.wst.jsdt.launching.WebProject">
+	      </classpathContainerInitializer>
+  	 </extension>
+	   
+	   	<!-- 
+	   	Not using this at the moment, but everythings in place if we need in the future. 
+	    -->  
+	   
+	   <extension id="embeded.javascript" name="Embeded JavaScript Builder" point="org.eclipse.core.resources.builders">       
+		   	<builder hasNature="true" callOnEmptyDelta="true">
+		   	      
+		   	<run class="org.eclipse.wst.jsdt.web.core.internal.IncrementalBuilder"/>      
+		   </builder>    
+	   </extension>
+	
+	
+	
 	<!--
 	<extension point="org.eclipse.wst.common.project.facet.core.defaultFacets">
   	

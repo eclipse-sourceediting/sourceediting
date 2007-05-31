@@ -36,57 +36,63 @@ import org.eclipse.wst.jsdt.web.core.internal.provisional.contenttype.ContentTyp
  * @author pavery
  */
 public class IndexWorkspaceJob extends Job {
-	
+
+	// for debugging
+	static final boolean DEBUG;
+	static {
+		String value = Platform
+				.getDebugOption("org.eclipse.wst.jsdt.web.core/debug/jspindexmanager"); //$NON-NLS-1$
+		DEBUG = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
+		
+	}
+
 	/**
 	 * Visitor that retrieves jsp project paths for all jsp files in the
 	 * workspace, and adds the files to be indexed as they are encountered
 	 */
 	private class JSPFileVisitor implements IResourceProxyVisitor {
-		private List	 files		 = new ArrayList();
-		
+		private List files = new ArrayList();
+
 		// monitor from the Job
 		IProgressMonitor fInnerMonitor = null;
-		
+
 		public JSPFileVisitor(IProgressMonitor monitor) {
 			this.fInnerMonitor = monitor;
 		}
-		
-		public final IFile[] getFiles() {
-			return (IFile[]) this.files.toArray(new IFile[this.files.size()]);
-		}
-		
+
 		public boolean visit(IResourceProxy proxy) throws CoreException {
-			
+
 			// check job canceled
 			if (this.fInnerMonitor != null && this.fInnerMonitor.isCanceled()) {
 				setCanceledState();
 				return false;
 			}
-			
+
 			// check search support canceled
 			if (JSPSearchSupport.getInstance().isCanceled()) {
 				setCanceledState();
 				return false;
 			}
-			
+
 			if (proxy.getType() == IResource.FILE) {
-				
+
 				// https://w3.opensource.ibm.com/bugzilla/show_bug.cgi?id=3553
 				// check this before description
 				// check name before actually getting the file (less work)
 				if (getJspContentType().isAssociatedWith(proxy.getName())) {
 					IFile file = (IFile) proxy.requestResource();
 					if (file.exists()) {
-						
-						if (IndexWorkspaceJob.DEBUG) {
-							System.out.println("(+) IndexWorkspaceJob adding file: " + file.getName()); //$NON-NLS-1$
+
+						if (DEBUG) {
+							System.out
+									.println("(+) IndexWorkspaceJob adding file: " + file.getName()); //$NON-NLS-1$
 						}
 						// this call will check the ContentTypeDescription, so
 						// don't need to do it here.
 						// JSPSearchSupport.getInstance().addJspFile(file);
 						this.files.add(file);
 						this.fInnerMonitor.subTask(proxy.getName());
-						
+
 						// don't search deeper for files
 						return false;
 					}
@@ -94,18 +100,14 @@ public class IndexWorkspaceJob extends Job {
 			}
 			return true;
 		}
+
+		public final IFile[] getFiles() {
+			return (IFile[]) this.files.toArray(new IFile[this.files.size()]);
+		}
 	}
-	
-	// for debugging
-	static final boolean DEBUG;
-	
-	static {
-		String value = Platform.getDebugOption("org.eclipse.wst.jsdt.web.core/debug/jspindexmanager"); //$NON-NLS-1$
-		DEBUG = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
-	}
-	
+
 	private IContentType fContentTypeJSP = null;
-	
+
 	public IndexWorkspaceJob() {
 		// pa_TODO may want to say something like "Rebuilding JSP Index" to be
 		// more
@@ -115,14 +117,15 @@ public class IndexWorkspaceJob extends Job {
 		setPriority(Job.LONG);
 		setSystem(true);
 	}
-	
+
 	IContentType getJspContentType() {
 		if (this.fContentTypeJSP == null) {
-			this.fContentTypeJSP = Platform.getContentTypeManager().getContentType(ContentTypeIdForJSP.ContentTypeID_JSP);
+			this.fContentTypeJSP = Platform.getContentTypeManager()
+					.getContentType(ContentTypeIdForJSP.ContentTypeID_JSP);
 		}
 		return this.fContentTypeJSP;
 	}
-	
+
 	/**
 	 * @see org
 	 *      eclipse.core.internal.jobs.InternalJob#run(org.eclipse.core.runtime.IProgressMonitor)
@@ -130,30 +133,31 @@ public class IndexWorkspaceJob extends Job {
 	 */
 	@Override
 	protected IStatus run(IProgressMonitor monitor) {
-		
+
 		IStatus status = Status.OK_STATUS;
-		
+
 		if (monitor.isCanceled()) {
 			setCanceledState();
 			return Status.CANCEL_STATUS;
 		}
-		
-		if (IndexWorkspaceJob.DEBUG) {
+
+		if (DEBUG) {
 			System.out.println(" ^ IndexWorkspaceJob started: "); //$NON-NLS-1$
 		}
-		
+
 		long start = System.currentTimeMillis();
-		
+
 		try {
 			JSPFileVisitor visitor = new JSPFileVisitor(monitor);
 			// collect all jsp files
-			ResourcesPlugin.getWorkspace().getRoot().accept(visitor, IResource.DEPTH_INFINITE);
+			ResourcesPlugin.getWorkspace().getRoot().accept(visitor,
+					IResource.DEPTH_INFINITE);
 			// request indexing
 			// this is pretty much like faking an entire workspace resource
 			// delta
 			JSPIndexManager.getInstance().indexFiles(visitor.getFiles());
 		} catch (CoreException e) {
-			if (IndexWorkspaceJob.DEBUG) {
+			if (DEBUG) {
 				e.printStackTrace();
 			}
 		} finally {
@@ -162,13 +166,14 @@ public class IndexWorkspaceJob extends Job {
 			}
 		}
 		long finish = System.currentTimeMillis();
-		if (IndexWorkspaceJob.DEBUG) {
-			System.out.println(" ^ IndexWorkspaceJob finished\n   total time running: " + (finish - start)); //$NON-NLS-1$
+		if (DEBUG) {
+			System.out
+					.println(" ^ IndexWorkspaceJob finished\n   total time running: " + (finish - start)); //$NON-NLS-1$
 		}
-		
+
 		return status;
 	}
-	
+
 	void setCanceledState() {
 		JSPIndexManager.getInstance().setIndexState(JSPIndexManager.S_CANCELED);
 	}

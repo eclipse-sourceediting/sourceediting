@@ -130,7 +130,7 @@ public class JSPTranslation implements IJSPTranslation {
 				setMangledName(cuName.substring(0, cuName.lastIndexOf('.')));
 				// set name of jsp file
 				String unmangled = JSP2ServletNameUtil.unmangle(cuName);
-				setHtmlFileName(unmangled.substring(unmangled.lastIndexOf('/') + 1, unmangled.lastIndexOf('.')));
+				setHtmlFileName(unmangled.substring(unmangled.lastIndexOf('/') + 1, unmangled.length()));
 			}
 		}
 		

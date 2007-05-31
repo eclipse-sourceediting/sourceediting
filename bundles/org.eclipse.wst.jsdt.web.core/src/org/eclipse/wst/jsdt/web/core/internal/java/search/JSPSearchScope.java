@@ -25,71 +25,77 @@ import org.eclipse.wst.jsdt.core.search.IJavaSearchScope;
  * @author pavery
  */
 public class JSPSearchScope implements IJavaSearchScope {
-	
-	private boolean fEnclosesAll   = false;
-	private List	fJavaElements  = null;
-	private List	fResourcePaths = null;
-	
+
+	private boolean fEnclosesAll = false;
+	private List fResourcePaths = null;
+	private List fJavaElements = null;
+
 	public JSPSearchScope() {
 		// empty constructor just returns true for everything
 		// everything is in scope
 		this.fEnclosesAll = true;
 		init();
 	}
-	
-	public JSPSearchScope(IJavaElement[] javaElement) {
-		init();
-		fJavaElements.addAll(Arrays.asList(javaElement));
-	}
-	
+
 	public JSPSearchScope(String[] resourceStringPath) {
 		init();
 		fResourcePaths.addAll(Arrays.asList(resourceStringPath));
 	}
-	
-	public void addElement(IJavaElement element) {
-		this.fJavaElements.add(element);
+
+	public JSPSearchScope(IJavaElement[] javaElement) {
+		init();
+		fJavaElements.addAll(Arrays.asList(javaElement));
 	}
-	
-	public void addPath(String path) {
-		this.fResourcePaths.add(path);
+
+	private void init() {
+		this.fResourcePaths = new ArrayList();
+		this.fJavaElements = new ArrayList();
 	}
-	
-	public boolean encloses(IJavaElement element) {
-		
-		// pa_TOD implement
-		if (this.fEnclosesAll) {
-			return true;
-		}
-		
-		return true;
-	}
-	
-	public boolean encloses(IResourceProxy element) {
-		
-		if (this.fEnclosesAll) {
-			return true;
-		} else if (enclosesPath(element.requestFullPath().toOSString())) {
-			return true;
-		}
-		
-		return true;
-	}
-	
+
 	public boolean encloses(String resourcePathString) {
-		
+
 		if (this.fEnclosesAll) {
 			return true;
 		} else if (enclosesPath(resourcePathString)) {
 			return true;
 		}
-		
+
 		return false;
 	}
-	
+
+	public boolean encloses(IJavaElement element) {
+
+		// pa_TOD implement
+		if (this.fEnclosesAll) {
+			return true;
+		}
+
+		return true;
+	}
+
+	public boolean encloses(IResourceProxy element) {
+
+		if (this.fEnclosesAll) {
+			return true;
+		} else if (enclosesPath(element.requestFullPath().toOSString())) {
+			return true;
+		}
+
+		return true;
+	}
+
+	public void addPath(String path) {
+		this.fResourcePaths.add(path);
+	}
+
+	public void addElement(IJavaElement element) {
+		this.fJavaElements.add(element);
+	}
+
 	private boolean enclosesPath(String possible) {
-		
-		String[] paths = (String[]) fResourcePaths.toArray(new String[fResourcePaths.size()]);
+
+		String[] paths = (String[]) fResourcePaths
+				.toArray(new String[fResourcePaths.size()]);
 		for (int i = 0; i < paths.length; i++) {
 			if (possible.equals(paths[i])) {
 				return true;
@@ -97,35 +103,32 @@ public class JSPSearchScope implements IJavaSearchScope {
 		}
 		return false;
 	}
-	
+
+	public String getDescription() {
+
+		return "JSPSearchScope"; //$NON-NLS-1$
+	}
+
 	public IPath[] enclosingProjectsAndJars() {
-		
+
 		// pa_TODO
 		return null;
 	}
-	
-	public String getDescription() {
-		
-		return "JSPSearchScope"; //$NON-NLS-1$
-	}
-	
+
 	public boolean includesBinaries() {
+		/* TEMP CHANGE BC may 30*/
 		return false;
 	}
-	
+
 	public boolean includesClasspaths() {
+		/* TEMP CHANGE BC may 30*/
 		return false;
 	}
-	
-	private void init() {
-		this.fResourcePaths = new ArrayList();
-		this.fJavaElements = new ArrayList();
-	}
-	
+
 	public void setIncludesBinaries(boolean includesBinaries) {
 		// do nothing
 	}
-	
+
 	public void setIncludesClasspaths(boolean includesClasspaths) {
 		// do nothing
 	}

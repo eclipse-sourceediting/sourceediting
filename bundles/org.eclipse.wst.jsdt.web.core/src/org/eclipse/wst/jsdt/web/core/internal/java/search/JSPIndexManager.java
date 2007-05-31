@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
@@ -26,6 +27,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
@@ -39,6 +41,7 @@ import org.eclipse.wst.jsdt.internal.core.search.indexing.IndexManager;
 import org.eclipse.wst.jsdt.web.core.internal.JSPCoreMessages;
 import org.eclipse.wst.jsdt.web.core.internal.JSPCorePlugin;
 import org.eclipse.wst.jsdt.web.core.internal.Logger;
+import org.eclipse.wst.jsdt.web.core.internal.project.JsWebNature;
 import org.eclipse.wst.jsdt.web.core.internal.provisional.contenttype.ContentTypeIdForJSP;
 import org.eclipse.osgi.util.NLS;
 import org.osgi.framework.Bundle;
@@ -57,6 +60,7 @@ public class JSPIndexManager {
 		String value = Platform
 				.getDebugOption("org.eclipse.wst.jsdt.web.core/debug/jspindexmanager"); //$NON-NLS-1$
 		DEBUG = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
+		
 	}
 
 	private static final String PKEY_INDEX_STATE = "jspIndexState"; //$NON-NLS-1$
@@ -268,19 +272,12 @@ public class JSPIndexManager {
 					try {
 						ss.addJspFile(filesToBeProcessed[lastFileCursor]);
 						// JSP Indexer processing n files
-						processingNFiles = NLS
-								.bind(
-										JSPCoreMessages.JSPIndexManager_2,
-										new String[] { Integer
-												.toString((filesToBeProcessed.length - lastFileCursor)) });
-						monitor
-								.subTask(processingNFiles
-										+ " - " + filesToBeProcessed[lastFileCursor].getName()); //$NON-NLS-1$
+						processingNFiles = NLS.bind(JSPCoreMessages.JSPIndexManager_2,new String[] { Integer.toString((filesToBeProcessed.length - lastFileCursor)) });
+						monitor.subTask(processingNFiles + " - " + filesToBeProcessed[lastFileCursor].getName()); //$NON-NLS-1$
 						monitor.worked(1);
 
 						if (DEBUG) {
-							System.out
-									.println("JSPIndexManager Job added file: " + filesToBeProcessed[lastFileCursor].getName()); //$NON-NLS-1$
+							System.out.println("JSPIndexManager Job added file: " + filesToBeProcessed[lastFileCursor].getName()); //$NON-NLS-1$
 						}
 					} catch (Exception e) {
 						// RATLC00284776
@@ -413,6 +410,7 @@ public class JSPIndexManager {
 			// https://w3.opensource.ibm.com/bugzilla/show_bug.cgi?id=5091
 			// makes sure IndexManager is aware of our indexes
 			saveIndexes();
+			rebuildIndexIfNeeded();
 			singleInstance.initializing = false;
 
 		}
@@ -534,28 +532,35 @@ public class JSPIndexManager {
 	// https://w3.opensource.ibm.com/bugzilla/show_bug.cgi?id=5091
 	// makes sure IndexManager is aware of our indexes
 	void saveIndexes() {
-		IndexManager indexManager = JavaModelManager.getJavaModelManager()
-				.getIndexManager();
-		IPath jspModelWorkingLocation = JSPSearchSupport.getInstance()
-				.getModelJspPluginWorkingLocation();
-
-		File folder = new File(jspModelWorkingLocation.toOSString());
-		String[] files = folder.list();
-		String locay = ""; //$NON-NLS-1$
-		Index index = null;
-		try {
-			for (int i = 0; i < files.length; i++) {
-				if (files[i].toLowerCase().endsWith(".index")) { //$NON-NLS-1$
-					locay = jspModelWorkingLocation.toString() + "/" + files[i]; //$NON-NLS-1$
-					// reuse index file
-					index = new Index(locay, "Index for " + locay, true); //$NON-NLS-1$
-					indexManager.saveIndex(index);
+		IndexManager indexManager = JavaModelManager.getJavaModelManager().getIndexManager();
+		IProject[] allProjects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+			
+		for(int j = 0;j<allProjects.length;j++) {
+			
+			if(!JsWebNature.hasNature(allProjects[j]) || !allProjects[j].isOpen()) continue;
+			
+			IPath jspModelWorkingLocation = JSPSearchSupport.getInstance().getModelJspPluginWorkingLocation(allProjects[j]);
+	
+			File folder = new File(jspModelWorkingLocation.toOSString());
+			String[] files = folder.list();
+			String locay = ""; //$NON-NLS-1$
+			Index index = null;
+			try {
+				for (int i = 0; i < files.length; i++) {
+					if (files[i].toLowerCase().endsWith(".index")) { //$NON-NLS-1$
+						locay = jspModelWorkingLocation.toString() + "/" + files[i]; //$NON-NLS-1$
+						// reuse index file
+//						index = new Index(locay, allProjects[j].getFullPath().toOSString(), true); //$NON-NLS-1$
+//						index.save();
+						indexManager.getIndex( allProjects[j].getFullPath(), new Path(locay), true, false);
+						//indexManager.saveIndex(index);
+					}
 				}
-			}
-		} catch (Exception e) {
-			// we should be shutting down, want to shut down quietly
-			if (DEBUG) {
-				e.printStackTrace();
+			} catch (Exception e) {
+				// we should be shutting down, want to shut down quietly
+				if (DEBUG) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}
@@ -591,13 +596,13 @@ public class JSPIndexManager {
 		// stop listening
 		ResourcesPlugin.getWorkspace().removeResourceChangeListener(
 				jspResourceChangeListener);
-
+		//saveIndexes();
 		// stop any searching
 		JSPSearchSupport.getInstance().setCanceled(true);
 
 		// stop listening to jobs
 		Platform.getJobManager().removeJobChangeListener(indexJobCoordinator);
-
+		
 		int maxwait = 5000;
 		if (processFilesJob != null) {
 			processFilesJob.cancel();

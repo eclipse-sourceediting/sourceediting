@@ -14,6 +14,9 @@ import java.io.File;
 import java.util.zip.CRC32;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -50,42 +53,69 @@ import org.eclipse.wst.jsdt.web.core.internal.provisional.contenttype.ContentTyp
  * @author pavery
  */
 public class JSPSearchSupport {
-	
+
+	// for debugging
+	static final boolean DEBUG;
+	static {
+		String value = Platform
+				.getDebugOption("org.eclipse.wst.jsdt.web.core/debug/jspsearch"); //$NON-NLS-1$
+		DEBUG = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
+		
+	}
+
+	private static JSPSearchSupport singleton = null;
+
+	private JSPSearchParticipant fParticipant = null;
+
+	//private IPath fJspPluginLocation = null;
+
+	// pa_TODO may be slow (esp for indexing entire workspace)
+	private final CRC32 fChecksumCalculator = new CRC32();
+
+	/** main cancel montior for all search support */
+	private final IProgressMonitor fMonitor = new NullProgressMonitor();
+
+	private JSPSearchSupport() {
+		// force use of single instance
+	}
+
 	/**
 	 * This operation ensures that the live resource's search markers show up in
 	 * the open editor. It also allows the ability to pass in a ProgressMonitor
 	 */
 	private class SearchJob extends Job implements IJavaSearchConstants {
-		
-		IJavaElement	 fElement		 = null;
-		
-		boolean		  fIsCaseSensitive = false;
-		
-		int			  fLimitTo		 = IJavaSearchConstants.ALL_OCCURRENCES;
-		
-		int			  fMatchMode	   = SearchPattern.R_PATTERN_MATCH;
-		
-		SearchRequestor  fRequestor	   = null;
-		
-		IJavaSearchScope fScope		   = null;
-		
-		int			  fSearchFor	   = IJavaSearchConstants.FIELD;
-		
-		String		   fSearchText	  = "";								  //$NON-NLS-1$
-																				  
+
+		String fSearchText = ""; //$NON-NLS-1$
+
+		IJavaSearchScope fScope = null;
+
+		int fSearchFor = FIELD;
+
+		int fLimitTo = ALL_OCCURRENCES;
+
+		int fMatchMode = SearchPattern.R_PATTERN_MATCH;
+
+		boolean fIsCaseSensitive = false;
+
+		SearchRequestor fRequestor = null;
+
+		IJavaElement fElement = null;
+
 		// constructor w/ java element
-		public SearchJob(IJavaElement element, IJavaSearchScope scope, SearchRequestor requestor) {
-			
+		public SearchJob(IJavaElement element, IJavaSearchScope scope,
+				SearchRequestor requestor) {
+
 			super(JSPCoreMessages.JSP_Search + element.getElementName());
 			this.fElement = element;
 			this.fScope = scope;
 			this.fRequestor = requestor;
 		}
-		
+
 		// constructor w/ search text
-		public SearchJob(String searchText, IJavaSearchScope scope, int searchFor, int limitTo, int matchMode, boolean isCaseSensitive,
-				SearchRequestor requestor) {
-			
+		public SearchJob(String searchText, IJavaSearchScope scope,
+				int searchFor, int limitTo, int matchMode,
+				boolean isCaseSensitive, SearchRequestor requestor) {
+
 			super(JSPCoreMessages.JSP_Search + searchText);
 			this.fSearchText = searchText;
 			this.fScope = scope;
@@ -95,27 +125,30 @@ public class JSPSearchSupport {
 			this.fIsCaseSensitive = isCaseSensitive;
 			this.fRequestor = requestor;
 		}
-		
+
 		@Override
 		public IStatus run(IProgressMonitor jobMonitor) {
-			
+
 			if (jobMonitor != null && jobMonitor.isCanceled()) {
 				return Status.CANCEL_STATUS;
 			}
 			if (JSPSearchSupport.getInstance().isCanceled()) {
 				return Status.CANCEL_STATUS;
 			}
-			
+
 			SearchPattern javaSearchPattern = null;
 			// if an element is available, use that to create search pattern
 			// (eg. LocalVariable)
 			// otherwise use the text and other paramters
 			if (this.fElement != null) {
-				javaSearchPattern = SearchPattern.createPattern(this.fElement, this.fLimitTo);
+				javaSearchPattern = SearchPattern.createPattern(this.fElement,
+						this.fLimitTo);
 			} else {
-				javaSearchPattern = SearchPattern.createPattern(this.fSearchText, this.fSearchFor, this.fLimitTo, this.fMatchMode);
+				javaSearchPattern = SearchPattern.createPattern(
+						this.fSearchText, this.fSearchFor, this.fLimitTo,
+						this.fMatchMode);
 			}
-			
+
 			if (javaSearchPattern != null) {
 				JSPSearchParticipant[] participants = { getSearchParticipant() };
 				SearchEngine engine = new SearchEngine();
@@ -123,15 +156,16 @@ public class JSPSearchSupport {
 					if (jobMonitor != null) {
 						jobMonitor.beginTask("", IProgressMonitor.UNKNOWN); //$NON-NLS-1$
 					}
-					engine.search(javaSearchPattern, participants, this.fScope, this.fRequestor, jobMonitor);
+					engine.search(javaSearchPattern, participants, this.fScope,
+							this.fRequestor, jobMonitor);
 				} catch (CoreException e) {
-					if (JSPSearchSupport.DEBUG) {
+					if (DEBUG) {
 						Logger.logException(e);
 					}
 				}
 				// non-CoreExceptions will permanently stall the Worker thread
 				catch (Exception e) {
-					if (JSPSearchSupport.DEBUG) {
+					if (DEBUG) {
 						Logger.logException(e);
 					}
 				} finally {
@@ -143,41 +177,44 @@ public class JSPSearchSupport {
 			return Status.OK_STATUS;
 		}
 	}
-	
+
 	// end SearchJob
 	/**
 	 * Runnable forces caller to wait until finished (as opposed to using a Job)
 	 */
-	private class SearchRunnable implements IWorkspaceRunnable, IJavaSearchConstants {
-		
-		IJavaElement	 fElement		 = null;
-		
-		boolean		  fIsCaseSensitive = false;
-		
-		int			  fLimitTo		 = IJavaSearchConstants.ALL_OCCURRENCES;
-		
-		int			  fMatchMode	   = SearchPattern.R_PATTERN_MATCH;
-		
-		SearchRequestor  fRequestor	   = null;
-		
-		IJavaSearchScope fScope		   = null;
-		
-		int			  fSearchFor	   = IJavaSearchConstants.FIELD;
-		
-		String		   fSearchText	  = "";								  //$NON-NLS-1$
-																				  
+	private class SearchRunnable implements IWorkspaceRunnable,
+			IJavaSearchConstants {
+
+		String fSearchText = ""; //$NON-NLS-1$
+
+		IJavaSearchScope fScope = null;
+
+		int fSearchFor = FIELD;
+
+		int fLimitTo = ALL_OCCURRENCES;
+
+		int fMatchMode = SearchPattern.R_PATTERN_MATCH;
+
+		boolean fIsCaseSensitive = false;
+
+		SearchRequestor fRequestor = null;
+
+		IJavaElement fElement = null;
+
 		// constructor w/ java element
-		public SearchRunnable(IJavaElement element, IJavaSearchScope scope, SearchRequestor requestor) {
-			
+		public SearchRunnable(IJavaElement element, IJavaSearchScope scope,
+				SearchRequestor requestor) {
+
 			this.fElement = element;
 			this.fScope = scope;
 			this.fRequestor = requestor;
 		}
-		
+
 		// constructor w/ search text
-		public SearchRunnable(String searchText, IJavaSearchScope scope, int searchFor, int limitTo, int matchMode, boolean isCaseSensitive,
-				SearchRequestor requestor) {
-			
+		public SearchRunnable(String searchText, IJavaSearchScope scope,
+				int searchFor, int limitTo, int matchMode,
+				boolean isCaseSensitive, SearchRequestor requestor) {
+
 			this.fSearchText = searchText;
 			this.fScope = scope;
 			this.fSearchFor = searchFor;
@@ -186,26 +223,28 @@ public class JSPSearchSupport {
 			this.fIsCaseSensitive = isCaseSensitive;
 			this.fRequestor = requestor;
 		}
-		
+
 		public void run(IProgressMonitor monitor) throws CoreException {
-			
+
 			if (monitor != null && monitor.isCanceled()) {
 				return;
 			}
 			if (JSPSearchSupport.getInstance().isCanceled()) {
 				return;
 			}
-			
+
 			SearchPattern javaSearchPattern = null;
 			// if an element is available, use that to create search pattern
 			// (eg. LocalVariable)
 			// otherwise use the text and other paramters
 			if (this.fElement != null) {
-				javaSearchPattern = SearchPattern.createPattern(this.fElement, fLimitTo);
+				javaSearchPattern = SearchPattern.createPattern(this.fElement,
+						fLimitTo);
 			} else {
-				javaSearchPattern = SearchPattern.createPattern(fSearchText, fSearchFor, fLimitTo, fMatchMode);
+				javaSearchPattern = SearchPattern.createPattern(fSearchText,
+						fSearchFor, fLimitTo, fMatchMode);
 			}
-			
+
 			if (javaSearchPattern != null) {
 				JSPSearchParticipant[] participants = { getSearchParticipant() };
 				SearchEngine engine = new SearchEngine();
@@ -213,7 +252,8 @@ public class JSPSearchSupport {
 					if (monitor != null) {
 						monitor.beginTask("", 0); //$NON-NLS-1$
 					}
-					engine.search(javaSearchPattern, participants, fScope, fRequestor, monitor);
+					engine.search(javaSearchPattern, participants, fScope,
+							fRequestor, monitor);
 				} catch (CoreException e) {
 					Logger.logException(e);
 					// throw e;
@@ -229,17 +269,9 @@ public class JSPSearchSupport {
 			}
 		}
 	}
-	
-	// for debugging
-	static final boolean			DEBUG;
-	
-	private static JSPSearchSupport singleton = null;
-	
-	static {
-		String value = Platform.getDebugOption("org.eclipse.wst.jsdt.web.core/debug/jspsearch"); //$NON-NLS-1$
-		DEBUG = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
-	}
-	
+
+	// end SearchRunnable
+
 	/**
 	 * Clients should access the methods of this class via the single instance
 	 * via getInstance()
@@ -247,13 +279,13 @@ public class JSPSearchSupport {
 	 * @return
 	 */
 	public synchronized static JSPSearchSupport getInstance() {
-		
-		if (JSPSearchSupport.singleton == null) {
-			JSPSearchSupport.singleton = new JSPSearchSupport();
+
+		if (singleton == null) {
+			singleton = new JSPSearchSupport();
 		}
-		return JSPSearchSupport.singleton;
+		return singleton;
 	}
-	
+
 	/**
 	 * Utility method to check if a file is a jsp file (since this is done
 	 * frequently)
@@ -263,35 +295,20 @@ public class JSPSearchSupport {
 		// because this method is called frequently
 		// and IO is expensive
 		boolean isJsp = false;
-		
+
 		if (file != null && file.exists()) {
-			
-			IContentType contentTypeJSP = Platform.getContentTypeManager().getContentType(ContentTypeIdForJSP.ContentTypeID_JSP);
+
+			IContentType contentTypeJSP = Platform.getContentTypeManager()
+					.getContentType(ContentTypeIdForJSP.ContentTypeID_JSP);
 			// check this before description, it's less expensive
 			if (contentTypeJSP.isAssociatedWith(file.getName())) {
 				isJsp = true;
 			}
 		}
-		
+
 		return isJsp;
 	}
-	
-	// pa_TODO may be slow (esp for indexing entire workspace)
-	private final CRC32			fChecksumCalculator = new CRC32();
-	
-	private IPath				  fJspPluginLocation  = null;
-	
-	/** main cancel montior for all search support */
-	private final IProgressMonitor fMonitor			= new NullProgressMonitor();
-	
-	// end SearchRunnable
-	
-	private JSPSearchParticipant   fParticipant		= null;
-	
-	private JSPSearchSupport() {
-		// force use of single instance
-	}
-	
+
 	/**
 	 * schedules a search document representing this JSP file for indexing (by
 	 * the java indexer)
@@ -305,210 +322,35 @@ public class JSPSearchSupport {
 		if (JSPSearchSupport.getInstance().isCanceled() || !file.isAccessible()) {
 			return null;
 		}
-		
-		if (JSPSearchSupport.DEBUG) {
+
+		if (DEBUG) {
 			System.out.println("adding JSP file:" + file.getFullPath()); //$NON-NLS-1$
 		}
-		
+
 		// create
 		SearchDocument delegate = createSearchDocument(file);
 		// null if not a jsp file
 		if (delegate != null) {
 			try {
-				getSearchParticipant().scheduleDocumentIndexing(delegate, computeIndexLocation(file.getParent().getFullPath()));
+				getSearchParticipant().scheduleDocumentIndexing(delegate,
+						computeIndexLocation(file.getParent().getFullPath()));
 			} catch (Exception e) {
 				// ensure that failure here doesn't keep other documents from
 				// being indexed
 				// if peformed in a batch call (like JSPIndexManager)
-				if (JSPSearchSupport.DEBUG) {
+				if (DEBUG) {
 					e.printStackTrace();
 				}
 			}
 		}
-		
-		if (JSPSearchSupport.DEBUG) {
+
+		if (DEBUG) {
 			System.out.println("scheduled" + delegate + "for indexing"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
-		
+
 		return delegate;
 	}
-	
-	// This is called from JSPPathIndexer
-	// pa_TODO
-	// how can we make sure participant indexLocations are updated at startup?
-	public final IPath computeIndexLocation(IPath containerPath) {
-		
-		String indexLocation = null;
-		// we don't want to inadvertently use a JDT Index
-		// we want to be sure to use the Index from the JSP location
-		// Object obj = indexLocations.get(containerPath);
-		// if (obj != null) {
-		// indexLocation = (String) obj;
-		// } else {
-		// create index entry
-		String pathString = containerPath.toOSString();
-		this.fChecksumCalculator.reset();
-		this.fChecksumCalculator.update(pathString.getBytes());
-		String fileName = Long.toString(this.fChecksumCalculator.getValue()) + ".index"; //$NON-NLS-1$
-		// this is the only difference from
-		// IndexManager#computeIndexLocation(...)
-		indexLocation = getModelJspPluginWorkingLocation().append(fileName).toOSString();
-		
-		// pa_TODO need to add to java path too, so JDT search support knows
-		// there should be a non internal way to do this.
-		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=77564
-		JavaModelManager.getJavaModelManager().getIndexManager().indexLocations.put(containerPath, new Path(indexLocation));
-		// }
-		return new Path(indexLocation);
-	}
-	
-	/**
-	 * @param jspFile
-	 * @return SearchDocument if the file is not null, exists, and is a JSP
-	 *         file, otherwise null.
-	 */
-	private SearchDocument createSearchDocument(IFile jspFile) {
-		
-		JavaSearchDocumentDelegate delegate = null;
-		if (jspFile != null && jspFile.exists() && JSPSearchSupport.isJsp(jspFile)) {
-			
-			delegate = new JavaSearchDocumentDelegate(new JSPSearchDocument(jspFile.getFullPath().toString(), getSearchParticipant()));
-		}
-		return delegate;
-		
-	}
-	
-	/**
-	 * Unmangles the searchDocPath and returns the corresponding JSP file.
-	 * 
-	 * @param searchDocPath
-	 */
-	private IFile fileForCUPath(String searchDocPath) {
-		
-		String[] split = searchDocPath.split("/"); //$NON-NLS-1$
-		String classname = split[split.length - 1];
-		
-		// ignore anything but .java matches (like .class binary matches)
-		if (!searchDocPath.endsWith(".js")) { //$NON-NLS-1$
-			return null;
-		}
-		
-		String filePath = JSP2ServletNameUtil.unmangle(classname);
-		
-		// try absolute path
-		IFile f = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(new Path(filePath));
-		// workspace relative then
-		if (f == null) {
-			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=86009
-			// must have a project name as well
-			// which would mean >= 2 path segments
-			IPath path = new Path(filePath);
-			if (path.segmentCount() >= 2) {
-				f = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
-			}
-		}
-		return f;
-	}
-	
-	// copied from JDT IndexManager
-	public IPath getModelJspPluginWorkingLocation() {
-		
-		if (this.fJspPluginLocation != null) {
-			return this.fJspPluginLocation;
-		}
-		
-		// Append the folder name "jspsearch" to keep the state location area
-		// cleaner
-		IPath stateLocation = JSPCorePlugin.getDefault().getStateLocation().append("jspsearch");
-		
-		// pa_TODO workaround for
-		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=62267
-		// copied from IndexManager
-		String device = stateLocation.getDevice();
-		if (device != null && device.charAt(0) == '/') {
-			stateLocation = stateLocation.setDevice(device.substring(1));
-		}
-		
-		// ensure that it exists on disk
-		File folder = new File(stateLocation.toOSString());
-		if (!folder.isDirectory()) {
-			try {
-				folder.mkdir();
-			} catch (SecurityException e) {
-			}
-		}
-		
-		return this.fJspPluginLocation = stateLocation;
-	}
-	
-	/**
-	 * JSP Indexing and Search jobs check this
-	 * 
-	 * @return
-	 */
-	public final IProgressMonitor getProgressMonitor() {
-		
-		return this.fMonitor;
-	}
-	
-	/**
-	 * Centralized place to access JSPSearchDocuments (used by
-	 * JSPSearchParticipant and JSPSearchRequestor)
-	 * 
-	 * @param searchDocPath
-	 * @param doc
-	 * @return the JSPSearchDocument or null if one is not found
-	 */
-	public SearchDocument getSearchDocument(String searchDocPath) {
-		
-		SearchDocument delegate = null;
-		IFile f = fileForCUPath(searchDocPath);
-		if (f != null) {
-			delegate = createSearchDocument(f);
-		} else {
-			// handle failure case... (file deleted maybe?)
-		}
-		return delegate;
-	}
-	
-	JSPSearchParticipant getSearchParticipant() {
-		
-		if (this.fParticipant == null) {
-			this.fParticipant = new JSPSearchParticipant();
-		}
-		return this.fParticipant;
-	}
-	
-	/**
-	 * JSP Indexing and Search jobs check this
-	 * 
-	 * @return
-	 */
-	public synchronized final boolean isCanceled() {
-		
-		return fMonitor.isCanceled();
-	}
-	
-	/**
-	 * Search for an IJavaElement, constrained by the given parameters. Runs in
-	 * a background Job (results may still come in after this method call)
-	 * 
-	 * @param element
-	 * @param scope
-	 * @param requestor
-	 */
-	public void search(IJavaElement element, IJavaSearchScope scope, SearchRequestor requestor) {
-		
-		JSPIndexManager.getInstance().rebuildIndexIfNeeded();
-		
-		SearchJob job = new SearchJob(element, scope, requestor);
-		setCanceled(false);
-		job.setUser(true);
-		// https://w3.opensource.ibm.com/bugzilla/show_bug.cgi?id=5032
-		// job.setRule(ResourcesPlugin.getWorkspace().getRoot());
-		job.schedule();
-	}
-	
+
 	/**
 	 * Perform a java search w/ the given parameters. Runs in a background Job
 	 * (results may still come in after this method call)
@@ -529,11 +371,14 @@ public class JSPSearchSupport {
 	 *            passed in to accept search matches (and do "something" with
 	 *            them)
 	 */
-	public void search(String searchText, IJavaSearchScope scope, int searchFor, int limitTo, int matchMode, boolean isCaseSensitive, SearchRequestor requestor) {
-		
+	public void search(String searchText, IJavaSearchScope scope,
+			int searchFor, int limitTo, int matchMode, boolean isCaseSensitive,
+			SearchRequestor requestor) {
+
 		JSPIndexManager.getInstance().rebuildIndexIfNeeded();
-		
-		SearchJob job = new SearchJob(searchText, scope, searchFor, limitTo, matchMode, isCaseSensitive, requestor);
+
+		SearchJob job = new SearchJob(searchText, scope, searchFor, limitTo,
+				matchMode, isCaseSensitive, requestor);
 		setCanceled(false);
 		job.setUser(true);
 		// https://w3.opensource.ibm.com/bugzilla/show_bug.cgi?id=5032
@@ -542,7 +387,28 @@ public class JSPSearchSupport {
 		// job.setRule(ResourcesPlugin.getWorkspace().getRoot());
 		job.schedule();
 	}
-	
+
+	/**
+	 * Search for an IJavaElement, constrained by the given parameters. Runs in
+	 * a background Job (results may still come in after this method call)
+	 * 
+	 * @param element
+	 * @param scope
+	 * @param requestor
+	 */
+	public void search(IJavaElement element, IJavaSearchScope scope,
+			SearchRequestor requestor) {
+
+		JSPIndexManager.getInstance().rebuildIndexIfNeeded();
+
+		SearchJob job = new SearchJob(element, scope, requestor);
+		setCanceled(false);
+		job.setUser(true);
+		// https://w3.opensource.ibm.com/bugzilla/show_bug.cgi?id=5032
+		// job.setRule(ResourcesPlugin.getWorkspace().getRoot());
+		job.schedule();
+	}
+
 	/**
 	 * Search for an IJavaElement, constrained by the given parameters. Runs in
 	 * an IWorkspace runnable (results will be reported by the end of this
@@ -552,19 +418,163 @@ public class JSPSearchSupport {
 	 * @param scope
 	 * @param requestor
 	 */
-	public void searchRunnable(IJavaElement element, IJavaSearchScope scope, SearchRequestor requestor) {
-		
+	public void searchRunnable(IJavaElement element, IJavaSearchScope scope,
+			SearchRequestor requestor) {
+
 		JSPIndexManager.getInstance().rebuildIndexIfNeeded();
-		
-		SearchRunnable searchRunnable = new SearchRunnable(element, scope, requestor);
+
+		SearchRunnable searchRunnable = new SearchRunnable(element, scope,
+				requestor);
 		try {
 			setCanceled(false);
-			ResourcesPlugin.getWorkspace().run(searchRunnable, JSPSearchSupport.getInstance().getProgressMonitor());
+			ResourcesPlugin.getWorkspace().run(searchRunnable,
+					JSPSearchSupport.getInstance().getProgressMonitor());
 		} catch (CoreException e) {
 			e.printStackTrace();
 		}
 	}
+
+	/**
+	 * @param jspFile
+	 * @return SearchDocument if the file is not null, exists, and is a JSP
+	 *         file, otherwise null.
+	 */
+	private SearchDocument createSearchDocument(IFile jspFile) {
+
+		JavaSearchDocumentDelegate delegate = null;
+		if (jspFile != null && jspFile.exists() && isJsp(jspFile)) {
+
+			delegate = new JavaSearchDocumentDelegate(new JSPSearchDocument(
+					jspFile.getFullPath().toString(), getSearchParticipant()));
+		}
+		return delegate;
+
+	}
+
+	/**
+	 * Centralized place to access JSPSearchDocuments (used by
+	 * JSPSearchParticipant and JSPSearchRequestor)
+	 * 
+	 * @param searchDocPath
+	 * @param doc
+	 * @return the JSPSearchDocument or null if one is not found
+	 */
+	public SearchDocument getSearchDocument(String searchDocPath) {
+
+		SearchDocument delegate = null;
+		IFile f = fileForCUPath(searchDocPath);
+		if (f != null) {
+			delegate = createSearchDocument(f);
+		} else {
+			// handle failure case... (file deleted maybe?)
+		}
+		return delegate;
+	}
+
+	/**
+	 * Unmangles the searchDocPath and returns the corresponding JSP file.
+	 * 
+	 * @param searchDocPath
+	 */
+	private IFile fileForCUPath(String searchDocPath) {
+
+		String[] split = searchDocPath.split("/"); //$NON-NLS-1$
+		String classname = split[split.length - 1];
+
+		// ignore anything but .java matches (like .class binary matches)
+		if (!searchDocPath.endsWith(".js")) { //$NON-NLS-1$
+			return null;
+		}
+
+		String filePath = JSP2ServletNameUtil.unmangle(classname);
+
+		// try absolute path
+		IFile f = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(
+				new Path(filePath));
+		// workspace relative then
+		if (f == null) {
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=86009
+			// must have a project name as well
+			// which would mean >= 2 path segments
+			IPath path = new Path(filePath);
+			if (path.segmentCount() >= 2) {
+				f = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
+			}
+		}
+		return f;
+	}
+
+	JSPSearchParticipant getSearchParticipant() {
+
+		if (this.fParticipant == null) {
+			this.fParticipant = new JSPSearchParticipant();
+		}
+		return this.fParticipant;
+	}
+
+	// This is called from JSPPathIndexer
+	// pa_TODO
+	// how can we make sure participant indexLocations are updated at startup?
+	public final IPath computeIndexLocation(IPath containerPath) {
+
+		String indexLocation = null;
+		// we don't want to inadvertently use a JDT Index
+		// we want to be sure to use the Index from the JSP location
+		// Object obj = indexLocations.get(containerPath);
+		// if (obj != null) {
+		// indexLocation = (String) obj;
+		// } else {
+		// create index entry
+		String pathString = containerPath.toOSString();
+		this.fChecksumCalculator.reset();
+		this.fChecksumCalculator.update(pathString.getBytes());
+		String fileName = Long.toString(this.fChecksumCalculator.getValue())
+				+ ".index"; //$NON-NLS-1$
+		// this is the only difference from
+		// IndexManager#computeIndexLocation(...)
+		indexLocation = getModelJspPluginWorkingLocation(getProject(containerPath)).append(fileName).toOSString();
+
+		// pa_TODO need to add to java path too, so JDT search support knows
+		// there should be a non internal way to do this.
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=77564
+		JavaModelManager.getJavaModelManager().getIndexManager().indexLocations.put(containerPath, new Path(indexLocation));
+		// }
+		return new Path(indexLocation);
+	}
+
+	public final IPath computeContainerLocation(IPath indexLocation) {
+
+		return null;
+	}
 	
+	private IProject getProject(IPath path) {
+		// Return the project containing the given path
+		IWorkspace workspace = ResourcesPlugin.getWorkspace();
+		IResource resource = workspace.getRoot().findMember(path.toString());
+		if(resource==null) return null;
+		IProject project = resource.getProject();
+		
+		return project;
+	}
+	// copied from JDT IndexManager
+	public IPath getModelJspPluginWorkingLocation(IProject project) {
+		if(project==null) {
+			System.out.println("Null project");
+		}
+		IPath workingLocationFile = project.getWorkingLocation(JSPCorePlugin.PLUGIN_ID).append("jspsearch");
+
+		// ensure that it exists on disk
+		File folder = new File(workingLocationFile.toOSString());
+		if (!folder.isDirectory()) {
+			try {
+				folder.mkdir();
+			} catch (SecurityException e) {
+			}
+		}
+
+		return workingLocationFile;
+	}
+
 	/**
 	 * JSP Indexing and Search jobs check this
 	 * 
@@ -573,5 +583,25 @@ public class JSPSearchSupport {
 	public synchronized final void setCanceled(boolean cancel) {
 		// System.out.println("search support monitor" + fMonitor);
 		fMonitor.setCanceled(cancel);
+	}
+
+	/**
+	 * JSP Indexing and Search jobs check this
+	 * 
+	 * @return
+	 */
+	public synchronized final boolean isCanceled() {
+
+		return fMonitor.isCanceled();
+	}
+
+	/**
+	 * JSP Indexing and Search jobs check this
+	 * 
+	 * @return
+	 */
+	public final IProgressMonitor getProgressMonitor() {
+
+		return this.fMonitor;
 	}
 }

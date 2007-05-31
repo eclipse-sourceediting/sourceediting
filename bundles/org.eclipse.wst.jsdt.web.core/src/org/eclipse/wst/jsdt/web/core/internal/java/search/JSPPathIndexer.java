@@ -33,52 +33,65 @@ import org.eclipse.wst.jsdt.web.core.internal.provisional.contenttype.ContentTyp
  * @author pavery
  */
 public class JSPPathIndexer {
-	
+
+	// for debugging
+	static final boolean DEBUG;
+	static {
+		String value = Platform
+				.getDebugOption("org.eclipse.wst.jsdt.web.core/debug/jspsearch"); //$NON-NLS-1$
+		DEBUG = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
+		
+	}
+
 	// visitor that retrieves jsp project paths for all jsp files in the
 	// workspace
 	class JSPFileVisitor implements IResourceProxyVisitor {
 		// hash map forces only one of each file
-		private HashMap  fPaths   = new HashMap();
-		SearchPattern	fPattern = null;
-		IJavaSearchScope fScope   = null;
-		
+		private HashMap fPaths = new HashMap();
+		IJavaSearchScope fScope = null;
+		SearchPattern fPattern = null;
+
 		public JSPFileVisitor(SearchPattern pattern, IJavaSearchScope scope) {
 			this.fPattern = pattern;
 			this.fScope = scope;
 		}
-		
-		public IPath[] getPaths() {
-			return (IPath[]) fPaths.values().toArray(new IPath[fPaths.size()]);
-		}
-		
+
 		public boolean visit(IResourceProxy proxy) throws CoreException {
-			
+
 			if (JSPSearchSupport.getInstance().isCanceled()) {
 				return false;
 			}
-			
+
 			if (proxy.getType() == IResource.FILE) {
-				
-				IContentType contentTypeJSP = Platform.getContentTypeManager().getContentType(ContentTypeIdForJSP.ContentTypeID_JSP);
+
+				IContentType contentTypeJSP = Platform.getContentTypeManager()
+						.getContentType(ContentTypeIdForJSP.ContentTypeID_JSP);
 				// https://w3.opensource.ibm.com/bugzilla/show_bug.cgi?id=3553
 				// check this before description
 				// check name before actually getting the file (less work)
 				if (contentTypeJSP.isAssociatedWith(proxy.getName())) {
-					
+
 					IFile file = (IFile) proxy.requestResource();
-					IContentDescription contentDescription = file.getContentDescription();
+					IContentDescription contentDescription = file
+							.getContentDescription();
 					String ctId = null;
 					if (contentDescription != null) {
 						ctId = contentDescription.getContentType().getId();
 					}
 					if (ContentTypeIdForJSP.ContentTypeID_JSP.equals(ctId)) {
-						if (this.fScope.encloses(proxy.requestFullPath().toString())) {
-							
-							if (JSPPathIndexer.DEBUG) {
-								System.out.println("adding selected index path:" + file.getParent().getFullPath()); //$NON-NLS-1$
+						if (this.fScope.encloses(proxy.requestFullPath()
+								.toString())) {
+
+							if (DEBUG) {
+								System.out
+										.println("adding selected index path:" + file.getParent().getFullPath()); //$NON-NLS-1$
 							}
-							
-							fPaths.put(file.getParent().getFullPath(), JSPSearchSupport.getInstance().computeIndexLocation(file.getParent().getFullPath()));
+
+							fPaths.put(file.getParent().getFullPath(),
+									JSPSearchSupport.getInstance()
+											.computeIndexLocation(
+													file.getParent()
+															.getFullPath()));
 						}
 					}
 				}
@@ -87,18 +100,15 @@ public class JSPPathIndexer {
 			}
 			return true;
 		}
+
+		public IPath[] getPaths() {
+			return (IPath[]) fPaths.values().toArray(new IPath[fPaths.size()]);
+		}
 	}
-	
-	// for debugging
-	static final boolean DEBUG;
-	
-	static {
-		String value = Platform.getDebugOption("org.eclipse.wst.jsdt.web.core/debug/jspsearch"); //$NON-NLS-1$
-		DEBUG = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
-	}
-	
-	public IPath[] getVisibleJspPaths(SearchPattern pattern, IJavaSearchScope scope) {
-		
+
+	public IPath[] getVisibleJspPaths(SearchPattern pattern,
+			IJavaSearchScope scope) {
+
 		JSPFileVisitor jspFileVisitor = new JSPFileVisitor(pattern, scope);
 		try {
 			ResourcesPlugin.getWorkspace().getRoot().accept(jspFileVisitor, 0);

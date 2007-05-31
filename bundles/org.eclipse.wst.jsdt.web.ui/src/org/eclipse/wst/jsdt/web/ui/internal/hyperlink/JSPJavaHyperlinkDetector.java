@@ -11,6 +11,7 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.Region;
+import org.eclipse.jface.text.hyperlink.AbstractHyperlinkDetector;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.wst.jsdt.core.IField;
@@ -33,7 +34,7 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 /**
  * Detects hyperlinks in JSP Java content
  */
-public class JSPJavaHyperlinkDetector implements IHyperlinkDetector {
+public class JSPJavaHyperlinkDetector extends AbstractHyperlinkDetector {
 
 	private IHyperlink createHyperlink(IJavaElement element, IRegion region,
 			IDocument document) {

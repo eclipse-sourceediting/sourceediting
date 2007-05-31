@@ -3,6 +3,7 @@ package org.eclipse.wst.jsdt.web.core.internal.project;
 import java.util.Arrays;
 import java.util.Vector;
 
+import org.eclipse.core.resources.ICommand;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IProjectNature;
@@ -12,25 +13,33 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.wst.jsdt.core.IClasspathEntry;
 import org.eclipse.wst.jsdt.core.JavaCore;
 import org.eclipse.wst.jsdt.internal.core.JavaProject;
 import org.eclipse.wst.jsdt.ui.PreferenceConstants;
 
 public class JsWebNature implements IProjectNature {
-	
 	private static final String FILENAME_CLASSPATH = ".classpath"; //$NON-NLS-1$
+	private static final String BUILDER_ID = "org.eclipse.wst.jsdt.web.core.embeded.javascript"; //$NON-NLS-1$
+	//private static final String NATURE_IDS[] = {"org.eclipse.wst.jsdt.web.core.embeded.jsNature",JavaCore.NATURE_ID}; //$NON-NLS-1$
+	private static final String NATURE_IDS[] = {JavaCore.NATURE_ID}; //$NON-NLS-1$
+	private static final String CONTAINER_ID="org.eclipse.wst.jsdt.launching.WebProject";
+	
 	
 	public static void addJsNature(IProject project, IProgressMonitor monitor) throws CoreException {
 		if (monitor != null && monitor.isCanceled()) {
 			throw new OperationCanceledException();
 		}
-		if (!project.hasNature(JavaCore.NATURE_ID)) {
+		if (!hasNature(project)) {
 			IProjectDescription description = project.getDescription();
 			String[] prevNatures = description.getNatureIds();
-			String[] newNatures = new String[prevNatures.length + 1];
+			String[] newNatures = new String[prevNatures.length + NATURE_IDS.length];
 			System.arraycopy(prevNatures, 0, newNatures, 0, prevNatures.length);
-			newNatures[prevNatures.length] = JavaCore.NATURE_ID;
+			//newNatures[prevNatures.length] = JavaCore.NATURE_ID;
+			for(int i = 0;i<NATURE_IDS.length;i++) {
+				newNatures[prevNatures.length + i] = NATURE_IDS[i];
+			}
 			description.setNatureIds(newNatures);
 			project.setDescription(description, monitor);
 		} else {
@@ -40,30 +49,36 @@ public class JsWebNature implements IProjectNature {
 		}
 	}
 	
-	public static boolean hasJsNature(IProject project) {
-		boolean valid = false;
-		try {
-			valid = project.hasNature(JavaCore.NATURE_ID);
-		} catch (Exception e) {
-		}
+	public static boolean hasNature(IProject project) {
 		
-		return valid;
+		try {
+			for(int i = 0;i<NATURE_IDS.length;i++) {
+				if(!project.hasNature(NATURE_IDS[i])) return false; 
+			}
+		} catch (CoreException ex) {
+			return false;
+		}
+		return true;
 	}
+
 	
 	public static void removeJsNature(IProject project, IProgressMonitor monitor) throws CoreException {
 		if (monitor != null && monitor.isCanceled()) {
 			throw new OperationCanceledException();
 		}
-		if (project.hasNature(JavaCore.NATURE_ID)) {
+		if (hasNature(project)) {
 			IProjectDescription description = project.getDescription();
 			String[] prevNatures = description.getNatureIds();
-			String[] newNatures = new String[prevNatures.length - 1];
-			
+			String[] newNatures = new String[prevNatures.length - NATURE_IDS.length];
 			int k = 0;
+			head:
 			for (int i = 0; i < prevNatures.length; i++) {
-				if (prevNatures[i] != JavaCore.NATURE_ID) {
-					newNatures[k++] = prevNatures[i];
+				for(int j = 0;j< NATURE_IDS.length;j++) {
+					if (prevNatures[i] == NATURE_IDS[j]) continue head;
 				}
+				
+				newNatures[k++] = prevNatures[i];
+				
 			}
 			description.setNatureIds(newNatures);
 			project.setDescription(description, monitor);
@@ -73,15 +88,11 @@ public class JsWebNature implements IProjectNature {
 			}
 		}
 	}
-	
-	private Vector		   classPathEntries = new Vector();
-	private boolean		  DEBUG			= false;
-	private IProject		 fCurrProject;
-	
-	private JavaProject	  fJavaProject;
-	
-	private IPath			fOutputLocation;
-	
+	private Vector classPathEntries = new Vector();
+	private boolean DEBUG = false;
+	private IProject fCurrProject;
+	private JavaProject fJavaProject;
+	private IPath fOutputLocation;
 	private IProgressMonitor monitor;
 	
 	public JsWebNature() {
@@ -107,16 +118,19 @@ public class JsWebNature implements IProjectNature {
 		initOutputPath();
 		createSourceClassPath();
 		initJREEntry();
+		initLocalClassPath();
 		JsWebNature.addJsNature(fCurrProject, monitor);
 		fJavaProject = (JavaProject) JavaCore.create(fCurrProject);
 		fJavaProject.setProject(fCurrProject);
 		try {
 			// , fOutputLocation
-			if(!hasProjectClassPathFile() )fJavaProject.setRawClasspath((IClasspathEntry[]) classPathEntries.toArray(new IClasspathEntry[] {}), fOutputLocation, monitor);
-			if(hasProjectClassPathFile() )fJavaProject.setRawClasspath((IClasspathEntry[]) classPathEntries.toArray(new IClasspathEntry[] {}),  monitor);
+			if (!hasProjectClassPathFile())
+				fJavaProject.setRawClasspath((IClasspathEntry[]) classPathEntries.toArray(new IClasspathEntry[] {}), fOutputLocation, monitor);
+			if (hasProjectClassPathFile()) fJavaProject.setRawClasspath((IClasspathEntry[]) classPathEntries.toArray(new IClasspathEntry[] {}), monitor);
 		} catch (Exception e) {
 			System.out.println(e);
 		}
+		//getJavaProject().addToBuildSpec(BUILDER_ID);
 		fCurrProject.refreshLocal(IResource.DEPTH_INFINITE, monitor);
 	}
 	
@@ -124,19 +138,26 @@ public class JsWebNature implements IProjectNature {
 		if (hasAValidSourcePath()) {
 			return;
 		}
-		//IPath projectPath = fCurrProject.getFullPath();
-		//classPathEntries.add(JavaCore.newSourceEntry(projectPath));
+		// IPath projectPath = fCurrProject.getFullPath();
+		// classPathEntries.add(JavaCore.newSourceEntry(projectPath));
 	}
 	
 	public void deconfigure() throws CoreException {
+		Vector badEntries = new Vector();
 		IClasspathEntry[] defaultJRELibrary = PreferenceConstants.getDefaultJRELibrary();
+		IClasspathEntry[] localEntries = initLocalClassPath();
+		
+		badEntries.addAll(Arrays.asList(defaultJRELibrary));
+		badEntries.addAll(Arrays.asList(localEntries));
+		
 		IClasspathEntry[] entries = getRawClassPath();
 		Vector goodEntries = new Vector();
 		for (int i = 0; i < entries.length; i++) {
-			if (entries[i] != defaultJRELibrary[0]) {
+			if (!badEntries.contains(entries[i])) {
 				goodEntries.add(entries[i]);
 			}
 		}
+		//getJavaProject().removeFromBuildSpec(BUILDER_ID);
 		IPath outputLocation = getJavaProject().getOutputLocation();
 		getJavaProject().setRawClasspath((IClasspathEntry[]) goodEntries.toArray(new IClasspathEntry[] {}), outputLocation, monitor);
 		getJavaProject().deconfigure();
@@ -146,13 +167,9 @@ public class JsWebNature implements IProjectNature {
 	
 	private IPath getCurrentOutputPath() {
 		IPath outputLocation = null;
-		
 		if (hasProjectClassPathFile()) {
 			try {
-			
-				
-				
-				System.out.println("Hello");
+				System.out.println("Project Scope already configured!!!!!!  please validate nature installer");
 			} catch (Exception e) {
 				if (DEBUG) {
 					System.out.println("Error checking sourcepath:" + e);
@@ -163,7 +180,6 @@ public class JsWebNature implements IProjectNature {
 	}
 	
 	public JavaProject getJavaProject() {
-		
 		if (fJavaProject == null) {
 			fJavaProject = (JavaProject) JavaCore.create(fCurrProject);
 			fJavaProject.setProject(fCurrProject);
@@ -184,7 +200,6 @@ public class JsWebNature implements IProjectNature {
 	private boolean hasAValidSourcePath() {
 		if (hasProjectClassPathFile()) {
 			try {
-				
 				IClasspathEntry[] entries = getRawClassPath();
 				for (int i = 0; i < entries.length; i++) {
 					if (entries[i].getEntryKind() == IClasspathEntry.CPE_SOURCE) {
@@ -223,7 +238,11 @@ public class JsWebNature implements IProjectNature {
 			}
 		}
 	}
-	
+	private IClasspathEntry[] initLocalClassPath() {
+		IClasspathEntry library = JavaCore.newContainerEntry( new Path(CONTAINER_ID));
+		classPathEntries.add(library);
+		return new IClasspathEntry[] {library};
+	}
 	private void initOutputPath() {
 		if (fOutputLocation == null) {
 			fOutputLocation = getCurrentOutputPath();
@@ -231,11 +250,9 @@ public class JsWebNature implements IProjectNature {
 		if (fOutputLocation == null) {
 			fOutputLocation = fCurrProject.getFullPath();
 		}
-		
 	}
 	
 	public void setProject(IProject project) {
 		this.fCurrProject = project;
 	}
-	
 }

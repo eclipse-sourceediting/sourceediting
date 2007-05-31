@@ -102,8 +102,8 @@ public class JSP2ServletNameUtil {
 		String possible = ""; //$NON-NLS-1$
 
 		// remove the .java extension if there is one
-		if (qualifiedTypeName.endsWith(".java")) {
-			qualifiedTypeName = qualifiedTypeName.substring(0, qualifiedTypeName.length() - 5);
+		if (qualifiedTypeName.endsWith(".js")) {
+			qualifiedTypeName = qualifiedTypeName.substring(0, qualifiedTypeName.length() - 3);
 		}
 
 		for (int i = 1; i < qualifiedTypeName.length(); i++) { // start at

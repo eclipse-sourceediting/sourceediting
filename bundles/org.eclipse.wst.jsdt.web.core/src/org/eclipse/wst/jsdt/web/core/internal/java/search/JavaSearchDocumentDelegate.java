@@ -11,6 +11,7 @@
 package org.eclipse.wst.jsdt.web.core.internal.java.search;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.wst.jsdt.core.IJavaElement;
 import org.eclipse.wst.jsdt.internal.core.search.JavaSearchDocument;
 import org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslationExtension;
 
@@ -25,53 +26,66 @@ import org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslationExtension;
 /* Used to extend SearchDocument */
 
 public class JavaSearchDocumentDelegate extends JavaSearchDocument {
-	
+
 	private JSPSearchDocument fJSPSearchDoc = null;
-	
+
 	public JavaSearchDocumentDelegate(JSPSearchDocument jspSearchDoc) {
-		
+
 		super(jspSearchDoc.getPath(), jspSearchDoc.getParticipant());
 		this.fJSPSearchDoc = jspSearchDoc;
 	}
-	
+
 	@Override
 	public byte[] getByteContents() {
-		
+
 		return this.fJSPSearchDoc.getByteContents();
 	}
-	
+
 	@Override
 	public char[] getCharContents() {
-		
+
 		return this.fJSPSearchDoc.getCharContents();
 	}
-	
-	@Override
-	public String getEncoding() {
-		
-		return this.fJSPSearchDoc.getEncoding();
-	}
-	
-	public IFile getFile() {
-		
-		return this.fJSPSearchDoc.getFile();
-	}
-	
+
 	public String getJavaText() {
 		return this.fJSPSearchDoc.getJavaText();
 	}
-	
-	public int getJspOffset(int javaOffset) {
-		
-		return this.fJSPSearchDoc.getJspOffset(javaOffset);
+
+	@Override
+	public String getEncoding() {
+
+		return this.fJSPSearchDoc.getEncoding();
 	}
-	
+
+	public IFile getFile() {
+
+		return this.fJSPSearchDoc.getFile();
+	}
+
 	public JSPTranslationExtension getJspTranslation() {
-		
+
 		return this.fJSPSearchDoc.getJSPTranslation();
 	}
-	
+
+	public int getJspOffset(int javaOffset) {
+
+		return this.fJSPSearchDoc.getJspOffset(javaOffset);
+	}
+
 	public void release() {
 		this.fJSPSearchDoc.release();
 	}
+	
+	public boolean isVirtual() {
+		return true;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.jsdt.core.search.SearchDocument#getJavaElement()
+	 */
+	public IJavaElement getJavaElement() {
+		return getJspTranslation().getCompilationUnit();
+	}
+	
+	
 }

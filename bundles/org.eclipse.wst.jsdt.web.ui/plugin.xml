@@ -36,6 +36,38 @@
 			class="org.eclipse.wst.jsdt.web.ui.internal.hyperlink.JSPJavaHyperlinkDetector"
 			target="org.eclipse.wst.html.SCRIPT" />
 	</extension>
+	<extension
+		point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectorTargets">
+		<target
+			id="org.eclipse.wst.html.SCRIPT"
+			name="JavaScirpt Source">
+		</target>
+	</extension>
+	
+	<extension
+		point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectorTargets">
+		<target
+			id="org.eclipse.wst.html.SCRIPT.EVENT"
+			name="JavaScirpt Event Source">
+		</target>
+	</extension>
+	
+	 <extension
+         point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectors">
+
+      <hyperlinkDetector
+            class="org.eclipse.wst.jsdt.web.ui.internal.hyperlink.JSPJavaHyperlinkDetector"
+            id="org.eclipse.wst.jsdt.web.ui.internal.hyperlink.script.JSPJavaHyperlinkDetector"
+            name="Java Element HyperLink Detector"
+            targetId="org.eclipse.wst.html.SCRIPT">
+      </hyperlinkDetector>
+      <hyperlinkDetector
+            class="org.eclipse.wst.jsdt.web.ui.internal.hyperlink.JSPJavaHyperlinkDetector"
+            id="org.eclipse.wst.jsdt.web.ui.internal.hyperlink.script.event.JSPJavaHyperlinkDetector"
+            name="Java Element HyperLink Detector"
+            targetId="org.eclipse.wst.html.SCRIPT.EVENT">
+      </hyperlinkDetector>  
+   </extension>
 <!--
 	<extension point="org.eclipse.wst.sse.ui.editorConfiguration">
 		<sourceViewerConfiguration

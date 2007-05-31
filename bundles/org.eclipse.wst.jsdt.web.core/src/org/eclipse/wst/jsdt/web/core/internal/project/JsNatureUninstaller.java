@@ -37,7 +37,7 @@ public class JsNatureUninstaller implements IDelegate {
 		monitor.subTask("Removing JavaScript Development Toolking Nature...");
 		SubProgressMonitor sub = new SubProgressMonitor(monitor, 25);
 		
-		if (!JsWebNature.hasJsNature(project)) {
+		if (!JsWebNature.hasNature(project)) {
 			return;
 		}
 		
