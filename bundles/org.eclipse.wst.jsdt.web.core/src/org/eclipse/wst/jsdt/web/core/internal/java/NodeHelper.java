@@ -231,7 +231,8 @@ public class NodeHelper {
 		if (region == null) {
 			return false;
 		}
-		return (getTagName().equalsIgnoreCase(name));
+		String tagName;
+		return ((tagName = getTagName())!=null && tagName.equalsIgnoreCase(name));
 	}
 
 	public String stripEndQuotes(String text) {

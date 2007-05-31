@@ -88,18 +88,31 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
 		return false;
 	}
 	
-	private Object[] getJSElementsFromNode(Node node) {
+	private synchronized Object[]  getJSElementsFromNode(Node node) {
+		int startOffset = 0;
 		
-			IJavaElement[] result = getJavaElementsInRange(node);
-			if (result == null) return null;
-			Object[] newResults = new Object[result.length];
-			for (int i = 0; i < result.length; i++) {
+		int endOffset = 0;
+		int type = node.getNodeType();
+		IJavaElement[] result = null;
+		JSPTranslation translation = null;
+		if (node.getNodeType() == Node.TEXT_NODE && (node instanceof NodeImpl)) {
+			startOffset = ((NodeImpl) node).getStartOffset();
+			endOffset = ((NodeImpl) node).getEndOffset();
+			translation = getTranslation(node);
+			result = translation.getAllElementsInJsRange(startOffset, endOffset);
+		}
+		
+		
+			
+		if (result == null) return null;
+		Object[] newResults = new Object[result.length];
+		for (int i = 0; i < result.length; i++) {
 				int htmllength = 0;
 				int htmloffset = 0;
 				Position position = null;
 				try {
 					htmllength = ((SourceRefElement) (result[i])).getSourceRange().getLength();
-					htmloffset = getTranslation(node).getJspOffset(((SourceRefElement) (result[i])).getSourceRange().getOffset());
+					htmloffset = translation.getJspOffset(((SourceRefElement) (result[i])).getSourceRange().getOffset());
 					position = new Position(htmloffset, htmllength);
 				} catch (JavaModelException e) {
 					e.printStackTrace();
@@ -138,18 +151,7 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
 			return translationAdapter.getJSPTranslation();
 	}
 	
-	private IJavaElement[] getJavaElementsInRange(Node node) {
-		int startOffset = 0;
-		int endOffset = 0;
-		int type = node.getNodeType();
-		IJavaElement[] result = null;
-		if (node.getNodeType() == Node.TEXT_NODE && (node instanceof NodeImpl)) {
-			startOffset = ((NodeImpl) node).getStartOffset();
-			endOffset = ((NodeImpl) node).getEndOffset();
-			result = getTranslation(node).getAllElementsInJsRange(startOffset, endOffset);
-		}
-		return result;
-	}
+
 	
 	private Object getJsNode(Node parent, IJavaElement root, Position position) {
 		JsJfaceNode instance = new JsJfaceNode(parent, root, position);
