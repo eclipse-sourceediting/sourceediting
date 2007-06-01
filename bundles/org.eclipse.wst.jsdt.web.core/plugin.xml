@@ -96,7 +96,7 @@
     </extension>
 	-->
 	
-	<!--
+	
 	<extension point="org.eclipse.wst.sse.core.modelHandler">
 		<modelHandler
 			class="org.eclipse.wst.jsdt.web.core.internal.modelhandler.ModelHandlerForJSP"
@@ -112,7 +112,7 @@
 			id="org.eclipse.wst.jsdt.web.core.internal.modelhandler">
 		</modelHandler>
 	</extension>
-	-->
+	
 	
 	<!--
 	<extension point="org.eclipse.wst.sse.core.embeddedTypeHandler">

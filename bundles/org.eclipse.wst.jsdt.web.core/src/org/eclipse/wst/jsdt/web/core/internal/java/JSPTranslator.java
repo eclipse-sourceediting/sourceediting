@@ -470,8 +470,8 @@ public class JSPTranslator {
 		
 		if (importName != null && !importName.equals("")) {
 			rawImports.add(importName);
-		//	Position inHtml = new Position(region.getStartOffset(), region.getEndOffset());
-			//importLocationsInHtml.add(inHtml);
+			Position inHtml = new Position(region.getStartOffset(), region.getEndOffset());
+			importLocationsInHtml.add(inHtml);
 			
 		}
 		

@@ -30,6 +30,9 @@ import org.eclipse.jface.text.Position;
 import org.eclipse.wst.jsdt.core.IJavaProject;
 import org.eclipse.wst.jsdt.core.JavaCore;
 import org.eclipse.wst.jsdt.web.core.internal.Logger;
+import org.eclipse.wst.jsdt.web.core.internal.modelhandler.IWebDocumentChangeListener;
+import org.eclipse.wst.jsdt.web.core.internal.modelhandler.IWebResourceChangedListener;
+import org.eclipse.wst.jsdt.web.core.internal.modelhandler.WebResourceChangeHandler;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
@@ -44,7 +47,7 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
  * 
  * @author pavery
  */
-public class JSPTranslationAdapter implements INodeAdapter, IDocumentListener {
+public class JSPTranslationAdapter implements INodeAdapter, IWebDocumentChangeListener {
 	// for debugging
 	private static final boolean DEBUG = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.jsdt.web.core/debug/jsptranslation")); //$NON-NLS-1$  //$NON-NLS-2$
 	private boolean fDocumentIsDirty = true;
@@ -59,53 +62,54 @@ public class JSPTranslationAdapter implements INodeAdapter, IDocumentListener {
 	public JSPTranslationAdapter(IDOMModel xmlModel) {
 		fXMLModel = xmlModel;
 		
-		if (fJspDocument != null) {
-			fJspDocument.removeDocumentListener(this);
-		}
+		/* notifies this when resources change */
+		WebResourceChangeHandler.getInstance(xmlModel, this);
+		
 		fJspDocument = fXMLModel.getStructuredDocument();
 		
-		if (fJspDocument != null) {
-			fJspDocument.addDocumentListener(this);
-		}
+//		
+//		if (fJspDocument != null) {
+//			fJspDocument.addDocumentListener(this);
+//		}
 		fDocumentIsDirty = true;
 		initializeJavaPlugins();
 	}
 	
-	/**
-	 * @see org.eclipse.jface.text.IDocumentListener#documentAboutToBeChanged(org.eclipse.jface.text.DocumentEvent)
-	 */
-	public void documentAboutToBeChanged(DocumentEvent event) {
-	// do nothing
-	}
-	
-	/**
-	 * @see org.eclipse.jface.text.IDocumentListener#documentChanged(org.eclipse.jface.text.DocumentEvent)
-	 */
-	public void documentChanged(DocumentEvent event) {
-		// Import may have changed, if so we need to signal for revalidation of
-		// other script regions.
-		//if(event==null) {
-			fDocumentIsDirty = true;
-			if(event==null) return;
-		//}
-		IStructuredDocumentRegion[] regions = ((IStructuredDocument)fJspDocument).getStructuredDocumentRegions(event.getOffset(), event.getLength());
-		for(int i = 0;i<regions.length;i++) {
-			NodeHelper helper = new NodeHelper(regions[i]);
-			if(helper.nameEquals("script")) {
-				fDocumentIsDirty = true;
-				String importName = helper.getAttributeValue("src");
-				if(importName!=null ) {
-					try {
-						((BasicStructuredDocument)fJspDocument).replace(0, fJspDocument.getLength(), fJspDocument.get());
-					} catch (BadLocationException ex) {
-						// TODO Auto-generated catch block
-						ex.printStackTrace();
-					}
-				}
-			}
-		}
-
-	}
+//	/**
+//	 * @see org.eclipse.jface.text.IDocumentListener#documentAboutToBeChanged(org.eclipse.jface.text.DocumentEvent)
+//	 */
+//	public void documentAboutToBeChanged(DocumentEvent event) {
+//	// do nothing
+//	}
+//	
+//	/**
+//	 * @see org.eclipse.jface.text.IDocumentListener#documentChanged(org.eclipse.jface.text.DocumentEvent)
+//	 */
+//	public void documentChanged(DocumentEvent event) {
+//		// Import may have changed, if so we need to signal for revalidation of
+//		// other script regions.
+//		//if(event==null) {
+//			fDocumentIsDirty = true;
+//			if(event==null) return;
+//		//}
+//		IStructuredDocumentRegion[] regions = ((IStructuredDocument)fJspDocument).getStructuredDocumentRegions(event.getOffset(), event.getLength());
+//		for(int i = 0;i<regions.length;i++) {
+//			NodeHelper helper = new NodeHelper(regions[i]);
+//			if(helper.nameEquals("script")) {
+//				fDocumentIsDirty = true;
+//				String importName = helper.getAttributeValue("src");
+//				if(importName!=null ) {
+//					try {
+//						((BasicStructuredDocument)fJspDocument).replace(0, fJspDocument.getLength(), fJspDocument.get());
+//					} catch (BadLocationException ex) {
+//						// TODO Auto-generated catch block
+//						ex.printStackTrace();
+//					}
+//				}
+//			}
+//		}
+//
+//	}
 	public IJavaProject getJavaProject() {
 		IJavaProject javaProject = null;
 		try {
@@ -211,9 +215,9 @@ public class JSPTranslationAdapter implements INodeAdapter, IDocumentListener {
 	}
 	
 	public void release() {
-		if (fJspDocument != null) {
-			fJspDocument.removeDocumentListener(this);
-		}
+//		if (fJspDocument != null) {
+//			fJspDocument.removeDocumentListener(this);
+//		}
 		if (fTranslationMonitor != null) {
 			fTranslationMonitor.setCanceled(true);
 		}
@@ -223,5 +227,24 @@ public class JSPTranslationAdapter implements INodeAdapter, IDocumentListener {
 			}
 			fJSPTranslation.release();
 		}
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.jsdt.web.core.internal.modelhandler.IWebResourceChangedListener#resourceChanged()
+	 */
+	public void resourceChanged() {
+		fDocumentIsDirty = true;
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.jsdt.web.core.internal.modelhandler.IWebDocumentChangeListener#isInterestingLocation(int)
+	 */
+	public int getIntrestLevelAtOffset(int documentOffset) {
+	
+		if(fJSPTranslation.ifOffsetInImportNode(documentOffset)) return IWebDocumentChangeListener.DIRTY_MODEL;
+		if(fJSPTranslation.isOffsetInScriptNode(documentOffset)) return IWebDocumentChangeListener.DIRTY_DOC;
+		
+		return IWebDocumentChangeListener.BORING;
 	}
 }

@@ -18,6 +18,7 @@ import org.eclipse.wst.jsdt.core.IClasspathEntry;
 import org.eclipse.wst.jsdt.core.JavaCore;
 import org.eclipse.wst.jsdt.internal.core.JavaProject;
 import org.eclipse.wst.jsdt.ui.PreferenceConstants;
+import org.eclipse.wst.jsdt.web.core.internal.java.WebRootFinder;
 
 public class JsWebNature implements IProjectNature {
 	private static final String FILENAME_CLASSPATH = ".classpath"; //$NON-NLS-1$
@@ -241,7 +242,10 @@ public class JsWebNature implements IProjectNature {
 	private IClasspathEntry[] initLocalClassPath() {
 		IClasspathEntry library = JavaCore.newContainerEntry( new Path(CONTAINER_ID));
 		classPathEntries.add(library);
-		return new IClasspathEntry[] {library};
+//		IPath webRoot = WebRootFinder.getWebContentFolder(fCurrProject);
+//		IClasspathEntry source = JavaCore.newSourceEntry(webRoot.append("/"));
+//		classPathEntries.add(source);
+		return new IClasspathEntry[] {library/*, source*/};
 	}
 	private void initOutputPath() {
 		if (fOutputLocation == null) {

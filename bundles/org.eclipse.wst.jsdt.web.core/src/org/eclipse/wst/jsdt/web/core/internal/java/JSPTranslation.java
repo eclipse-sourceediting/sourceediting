@@ -91,12 +91,17 @@ public class JSPTranslation implements IJSPTranslation {
 		}
 	}
 	
-	public boolean isImportRange(int offset) {
+	public boolean ifOffsetInImportNode(int offset) {
+		/* check import nodes */
 		for (int i = 0; i < importRanges.size(); i++) {
 			Position p = (Position) importRanges.get(i);
 			if (p.includes(offset)) return true;
 		}
 		return false;
+	}
+	
+	public boolean isOffsetInScriptNode(int offset) {
+		return isInRanges(offset, fHtmlToJsMap);
 	}
 	
 	/**
