@@ -50,6 +50,7 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 public class JSPTranslationAdapter implements INodeAdapter, IWebDocumentChangeListener {
 	// for debugging
 	private static final boolean DEBUG = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.jsdt.web.core/debug/jsptranslation")); //$NON-NLS-1$  //$NON-NLS-2$
+
 	private boolean fDocumentIsDirty = true;
 	private IDocument fJavaDocument = null;
 	private IDocument fJspDocument = null;

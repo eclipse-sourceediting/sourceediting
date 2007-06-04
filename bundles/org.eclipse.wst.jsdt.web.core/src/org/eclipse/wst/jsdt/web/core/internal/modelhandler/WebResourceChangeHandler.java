@@ -143,9 +143,9 @@ public class WebResourceChangeHandler implements IResourceChangeListener, IDocum
 				}
 				
 				try {
-					for(int i =0;i<fchangeListener.size();i++) {
-						((IWebResourceChangedListener)fchangeListener.get(i)).resourceChanged();
-					}
+//					for(int i =0;i<fchangeListener.size();i++) {
+//						((IWebResourceChangedListener)fchangeListener.get(i)).resourceChanged();
+//					}
 					
 					xmlModel = (IDOMModel) StructuredModelManager.getModelManager().getExistingModelForEdit(((IStructuredModel)modelRef).getBaseLocation());
 					if(xmlModel!=null){
