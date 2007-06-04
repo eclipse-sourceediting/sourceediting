@@ -169,7 +169,8 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 				fReconciler.install(this);
 				// https://w3.opensource.ibm.com/bugzilla/show_bug.cgi?id=3858
 				// still need set document on the reconciler (strategies)
-				((StructuredRegionProcessor) fReconciler).setDocument(getDocument());
+				if (fReconciler instanceof StructuredRegionProcessor)
+					((StructuredRegionProcessor) fReconciler).setDocument(getDocument());
 			}
 		}
 
