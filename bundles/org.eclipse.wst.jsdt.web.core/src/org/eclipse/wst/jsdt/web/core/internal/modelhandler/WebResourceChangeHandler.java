@@ -67,6 +67,7 @@ public class WebResourceChangeHandler implements IResourceChangeListener, IDocum
 	 * 
 	 */
 	private static final boolean CHECK_INTREST_LEVEL=false;
+	private static final boolean SIGNAL_MODEL=false;
 	
 	
 	private WebResourceChangeHandler() {}
@@ -83,10 +84,8 @@ public class WebResourceChangeHandler implements IResourceChangeListener, IDocum
 	}
 	
 	private IStructuredModel getModel() {
-		
 			if(instances==null) return null;
-			return (IStructuredModel)instances.get(this);
-		
+			return (IStructuredModel)instances.get(this);	
 	}
 
 
@@ -130,6 +129,11 @@ public class WebResourceChangeHandler implements IResourceChangeListener, IDocum
 		}
 		
 		public void signalAllDirtyModel() {
+			for(int i =0;i<fchangeListener.size();i++) {
+				((IWebResourceChangedListener)fchangeListener.get(i)).resourceChanged();
+			}
+			
+			if(!SIGNAL_MODEL) return;
 			
 				IDOMModel xmlModel=null;
 				Object modelRef = getModel();
