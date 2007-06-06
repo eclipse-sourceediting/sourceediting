@@ -210,6 +210,7 @@ public class WebResourceChangeHandler implements IResourceChangeListener, IDocum
 		}
 		
 		if(o!=null) {
+			
 				IStructuredModel fXMLModel = (IStructuredModel)o;
 				IStructuredDocument fJspDocument = fXMLModel.getStructuredDocument();	
 				if (fJspDocument != null) {
@@ -219,6 +220,7 @@ public class WebResourceChangeHandler implements IResourceChangeListener, IDocum
 	}
 
 	public void processPostModelEvent(ModelLifecycleEvent event) {
+		if(irritator!=null) irritator.signalAllDirtyModel();
 		if(instances==null) return;
 		if(event.getType() == ModelLifecycleEvent.MODEL_RELEASED) {
 			synchronized(instances) {	

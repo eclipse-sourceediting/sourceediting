@@ -387,6 +387,21 @@ public class JSPTranslator {
 						int valStartOffset = container.getStartOffset(r);
 						// int valEndOffset = r.getTextEnd();
 						String rawText = container.getText().substring(r.getStart(), r.getTextEnd());
+						if(rawText==null || rawText.length()==0) return;
+						
+						/* Strip quotes */
+						switch(rawText.charAt(0)) {
+							case '\'':
+							case '"':
+								rawText = rawText.substring(1);
+								valStartOffset++;
+						}
+						switch(rawText.charAt(rawText.length()-1)) {
+							case '\'':
+							case '"':
+								rawText = rawText.substring(0,rawText.length()-1);
+								
+						}
 						Position inScript = new Position(scriptOffset, rawText.length());
 						/* Quoted text starts +1 and ends -1 char */
 						Position inHtml = new Position(valStartOffset, rawText.length());
