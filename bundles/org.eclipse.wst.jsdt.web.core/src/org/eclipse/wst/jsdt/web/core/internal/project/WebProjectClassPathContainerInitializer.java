@@ -18,8 +18,9 @@ import org.eclipse.wst.jsdt.web.core.internal.java.JSP2ServletNameUtil;
  *
  */
 public class WebProjectClassPathContainerInitializer extends ClasspathContainerInitializer {
-
-	private static final String MANGLED_BUTT = ".htm";
+/* Some tokens for us to identify mangled paths */
+	private static final String MANGLED_BUTT1 = "htm";
+	private static final String MANGLED_BUTT2 = ".js";
 	
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.jsdt.core.ClasspathContainerInitializer#initialize(org.eclipse.core.runtime.IPath, org.eclipse.wst.jsdt.core.IJavaProject)
@@ -79,7 +80,7 @@ public class WebProjectClassPathContainerInitializer extends ClasspathContainerI
 	private static String getUnmangedHtmlPath(String containerPathString) {
 		if(containerPathString==null) return null;
 		
-		if(containerPathString.toLowerCase().indexOf(MANGLED_BUTT)==-1) {
+		if(containerPathString.toLowerCase().indexOf(MANGLED_BUTT1)!=-1 && containerPathString.toLowerCase().indexOf(MANGLED_BUTT2)!=-1) {
 			return  JSP2ServletNameUtil.unmangle(containerPathString);
 		}
 		return null;
