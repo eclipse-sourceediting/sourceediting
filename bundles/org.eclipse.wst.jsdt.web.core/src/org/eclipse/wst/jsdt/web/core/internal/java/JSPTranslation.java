@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.text.Position;
 import org.eclipse.wst.jsdt.core.IBuffer;
+import org.eclipse.wst.jsdt.core.IClasspathEntry;
 import org.eclipse.wst.jsdt.core.ICompilationUnit;
 import org.eclipse.wst.jsdt.core.IJavaElement;
 import org.eclipse.wst.jsdt.core.IJavaProject;
@@ -36,6 +37,7 @@ import org.eclipse.wst.jsdt.internal.core.DocumentContextFragmentRoot;
 import org.eclipse.wst.jsdt.internal.core.SourceRefElement;
 import org.eclipse.wst.jsdt.ui.StandardJavaElementContentProvider;
 import org.eclipse.wst.jsdt.web.core.internal.Logger;
+import org.eclipse.wst.jsdt.web.core.internal.project.JsWebNature;
 
 /**
  * @author brad childs
@@ -43,6 +45,8 @@ import org.eclipse.wst.jsdt.web.core.internal.Logger;
 public class JSPTranslation implements IJSPTranslation {
 	// for debugging
 	private static final boolean DEBUG;
+	
+	
 	
 	static {
 		String value = Platform.getDebugOption("org.eclipse.wst.jsdt.web.core/debug/jsptranslation"); //$NON-NLS-1$
@@ -79,7 +83,11 @@ public class JSPTranslation implements IJSPTranslation {
 			fHtmlToJsMap = translator.getHtml2JsRanges();
 			fJsName = translator.getFile().getName();
 			targetFile = translator.getFile();
-			fDocumentScope = new DocumentContextFragmentRoot(fJavaProject, targetFile, WebRootFinder.getWebContentFolder(javaProj.getProject()), WebRootFinder.getServerContextRoot(javaProj.getProject()));
+			fDocumentScope = new DocumentContextFragmentRoot(fJavaProject, 
+															 targetFile, 
+															 WebRootFinder.getWebContentFolder(javaProj.getProject()), 
+															 WebRootFinder.getServerContextRoot(javaProj.getProject()),
+															 JsWebNature.VIRTUAL_SCOPE_ENTRY);
 			fGeneratedFunctionNames = translator.getExcludedElements();
 			importRanges = translator.getImportHtmlRanges();
 			ArrayList rawImports = translator.getRawImports();

@@ -3,6 +3,9 @@
 <plugin>
 	
  	<extension point="org.eclipse.wst.sse.ui.editorConfiguration">
+ 		<contentOutlineConfiguration
+			class="org.eclipse.wst.jsdt.web.ui.views.provisional.contentoutline.JsContentOutlineConfig"
+			target="org.eclipse.wst.html.core.htmlsource" />		
 		<provisionalConfiguration
 			type="contentassistprocessor"
 			class="org.eclipse.wst.jsdt.web.ui.internal.contentassist.JSDTContentAssistant"
@@ -54,7 +57,6 @@
 	
 	 <extension
          point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectors">
-
       <hyperlinkDetector
             class="org.eclipse.wst.jsdt.web.ui.internal.hyperlink.JSPJavaHyperlinkDetector"
             id="org.eclipse.wst.jsdt.web.ui.internal.hyperlink.script.JSPJavaHyperlinkDetector"
@@ -68,6 +70,50 @@
             targetId="org.eclipse.wst.html.SCRIPT.EVENT">
       </hyperlinkDetector>  
    </extension>
+  
+  
+    <extension
+         point="org.eclipse.ui.popupMenus">
+
+      <objectContribution
+            objectClass="org.eclipse.wst.jsdt.web.ui.actions.IJavaWebNode"
+            id="org.eclipse.wst.jsdt.web.ui.JavaActions">
+         <menu
+               label="Hierarchy"
+               id="show.hierarchy">
+         </menu>
+         <action
+               label="Open Type Hierarchy"
+               tooltip=""
+               class="org.eclipse.wst.jsdt.web.ui.actions.OpenTypeHierarchy"
+               enablesFor="1"
+               id="org.eclipse.wst.jsdt.ui.actions.OpenTypeHierarchyAction">
+         </action>
+          <action
+               label="Open Call Hierarchy"          
+               tooltip="Open Call Hierarchy"
+               class="org.eclipse.wst.jsdt.web.ui.actions.OpenCallHierarchyAction"
+               enablesFor="1"
+               id="org.eclipse.wst.jsdt.internal.ui.callhierarchy.OpenCallHierarchyAction">
+         </action>
+      </objectContribution>
+      
+		
+	</extension>
+	
+  <!-- Additional adapters for java elements.. this one is so the element will 
+       be displayed properly in ui
+   -->
+    <!--	
+   <extension point="org.eclipse.core.runtime.adapters">
+		<factory 
+            class="org.eclipse.wst.jsdt.web.ui.JsWebElementAdapterFactory" 
+            adaptableType="org.eclipse.wst.jsdt.core.IJavaElement">
+            <adapter type="org.eclipse.ui.views.properties.IPropertySourceProvider"/>
+   		</factory>
+   </extension>
+   -->
+   
 <!--
 	<extension point="org.eclipse.wst.sse.ui.editorConfiguration">
 		<sourceViewerConfiguration
@@ -441,6 +487,7 @@
 	<extension point="org.eclipse.ui.editorActions">
 		<editorContribution
 			id="org.eclipse.wst.jsdt.web.core.jspsource.source.editorActions"
+			contributorClass="org.eclipse.wst.jsdt.internal.ui.javaeditor.CompilationUnitEditorActionContributor"
 			targetID="org.eclipse.wst.html.core.htmlsource">
 			<action
 				id="CleanupDocument"

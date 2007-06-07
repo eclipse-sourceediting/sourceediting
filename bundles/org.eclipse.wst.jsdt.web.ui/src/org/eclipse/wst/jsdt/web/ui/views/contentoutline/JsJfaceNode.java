@@ -3,9 +3,11 @@ package org.eclipse.wst.jsdt.web.ui.views.contentoutline;
 
 import java.util.Collection;
 
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.text.Position;
 import org.eclipse.wst.jsdt.core.IJavaElement;
 import org.eclipse.wst.jsdt.internal.core.SourceMethod;
+import org.eclipse.wst.jsdt.web.ui.actions.IJavaWebNode;
 import org.eclipse.wst.sse.core.internal.model.FactoryRegistry;
 import org.eclipse.wst.sse.core.internal.provisional.AbstractNotifier;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
@@ -15,7 +17,7 @@ import org.eclipse.wst.xml.core.internal.document.ElementImpl;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
-public class JsJfaceNode extends ElementImpl implements IndexedRegion, INodeNotifier,Node{
+public class JsJfaceNode extends ElementImpl implements IndexedRegion, INodeNotifier,Node, IJavaWebNode{
     
     private FactoryRegistry  adapterRegistry;
     private Position fDocPosition;
@@ -40,11 +42,7 @@ public class JsJfaceNode extends ElementImpl implements IndexedRegion, INodeNoti
        fDocPosition = structureDocLocation;
        fEnclosedObject = enclosedObject;
        this.parent = parent;
-       if(parent instanceof SourceMethod){
-           SourceMethod method = (SourceMethod)parent;
-           
-        
-       }
+       
        
     
    }
@@ -175,6 +173,10 @@ public class JsJfaceNode extends ElementImpl implements IndexedRegion, INodeNoti
 	public Document getOwnerDocument() {
 		
 		return parent.getOwnerDocument();
+	}
+
+	public IJavaElement getJavaElement() {
+		return (IJavaElement)fEnclosedObject;
 	}
     
 }

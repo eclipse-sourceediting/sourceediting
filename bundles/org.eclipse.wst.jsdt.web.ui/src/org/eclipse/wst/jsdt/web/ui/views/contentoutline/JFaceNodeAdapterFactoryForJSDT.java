@@ -12,6 +12,7 @@ package org.eclipse.wst.jsdt.web.ui.views.contentoutline;
 
 
 
+import org.eclipse.wst.jsdt.web.ui.views.provisional.contentoutline.JsContentOutlineConfig;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapterFactory;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
@@ -24,6 +25,8 @@ import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeAdapterFactory;
  * DOM nodes in a tree.
  */
 public class JFaceNodeAdapterFactoryForJSDT extends JFaceNodeAdapterFactory {
+	
+	
 
 
 	public JFaceNodeAdapterFactoryForJSDT() {
@@ -38,7 +41,11 @@ public class JFaceNodeAdapterFactoryForJSDT extends JFaceNodeAdapterFactory {
 		if (singletonAdapter == null) {
 			// create the JFaceNodeAdapter
 			//singletonAdapter = new JFaceNodeAdapterForJSDT(this);
-            singletonAdapter = new JFaceNodeAdapterForJs(this);
+            if(JsContentOutlineConfig.USE_ADVANCED) {
+            	singletonAdapter = new org.eclipse.wst.jsdt.web.ui.views.provisional.contentoutline.JFaceNodeAdapterForJs(this);
+            }else {
+            	singletonAdapter = new org.eclipse.wst.jsdt.web.ui.views.contentoutline.JFaceNodeAdapterForJs(this);
+            }
 			initAdapter(singletonAdapter, node);
 		}
 		return singletonAdapter;
