@@ -6,6 +6,8 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.html.ui.internal.contentoutline.JFaceNodeAdapterForHTML;
 import org.eclipse.wst.jsdt.core.IJavaElement;
 import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.internal.core.JavaElement;
+import org.eclipse.wst.jsdt.internal.core.SourceMethod;
 import org.eclipse.wst.jsdt.internal.core.SourceRefElement;
 import org.eclipse.wst.jsdt.ui.JavaElementLabelProvider;
 import org.eclipse.wst.jsdt.ui.StandardJavaElementContentProvider;
@@ -13,6 +15,7 @@ import org.eclipse.wst.jsdt.web.core.internal.Logger;
 import org.eclipse.wst.jsdt.web.core.internal.java.IJSPTranslation;
 import org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslation;
 import org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslationAdapter;
+import org.eclipse.wst.jsdt.web.ui.actions.IJavaWebNode;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.model.FactoryRegistry;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
@@ -33,7 +36,34 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
 	
 	public Object[] getChildren(Object object) {
 		if (object instanceof IJavaElement) return getJavaElementProvider().getChildren(object);
+		
+		
+		if(object instanceof IJavaWebNode) {
+			JavaElement enclosedElement = (JavaElement)((IJavaWebNode)object).getJavaElement();
+			if(enclosedElement!=null) {
+				try {
+					IJavaElement[] children = enclosedElement.getChildren();
+					if(children==null) return new IJavaElement[0];
+					Object[] nodes = new Object[children.length];
+					
+					Node parent = ((IJavaWebNode)object).getParentNode();
+					JSPTranslation translation = getTranslation(parent);
+					
+					
+					
+					for(int i = 0;i<children.length;i++) {
+						int htmllength = ((SourceRefElement) (children[i])).getSourceRange().getLength();
+						int htmloffset = translation.getJspOffset(((SourceRefElement) (children[i])).getSourceRange().getOffset());
+						Position position = new Position(htmloffset, htmllength);
+						nodes[i] = getJsNode(parent, children[i], position);
+					}
+					return nodes;
+				
+				} catch (JavaModelException ex) {}
+			}
+		}
 		Node node = (Node) object;
+		
 		if (isJSElementParent(node)) {
 			Object[] results = getJSElementsFromNode(node.getFirstChild());
 			return results;
@@ -47,13 +77,13 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
 	}
 	
 	public String getLabelText(Object node) {
-		if (node instanceof JsJfaceNode) return getJavaElementLabelProvider().getText(((JsJfaceNode) node).getJsElement());
+		if (node instanceof JsJfaceNode) return getJavaElementLabelProvider().getText(((JsJfaceNode) node).getJavaElement());
 		if (node instanceof IJavaElement) return getJavaElementLabelProvider().getText((IJavaElement) node);
 		return super.getLabelText(node);
 	}
 	
 	public Image getLabelImage(Object node) {
-		if (node instanceof JsJfaceNode) return getJavaElementLabelProvider().getImage(((JsJfaceNode) node).getJsElement());
+		if (node instanceof JsJfaceNode) return getJavaElementLabelProvider().getImage(((JsJfaceNode) node).getJavaElement());
 		if (node instanceof IJavaElement) return getJavaElementLabelProvider().getImage((IJavaElement) node);
 		return super.getLabelImage(node);
 	}
@@ -66,6 +96,14 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
 	public boolean hasChildren(Object object) {
 		if (object instanceof IJavaElement) return getJavaElementProvider().hasChildren(object);
 		Node node = (Node) object;
+		if(node instanceof IJavaWebNode) {
+			JavaElement enclosedElement = (JavaElement)((IJavaWebNode)object).getJavaElement();
+			if(enclosedElement!=null) {
+				try {
+					return enclosedElement.hasChildren();
+				} catch (JavaModelException ex) {}
+			}
+		}
 		if (isJSElementParent(node)) {
 			Object[] nodes = getJSElementsFromNode(node.getFirstChild());
 			boolean hasElements = (nodes != null && nodes.length > 0);
@@ -154,7 +192,14 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
 
 	
 	private Object getJsNode(Node parent, IJavaElement root, Position position) {
-		JsJfaceNode instance = new JsJfaceNode(parent, root, position);
+		JsJfaceNode instance;
+		
+		if(root.getElementType()==IJavaElement.TYPE) {
+			instance = new JsJfaceNode(parent, position,((SourceRefElement)root).getElementName());
+		}else {
+			instance = new JsJfaceNode(parent, position);
+		}
+		
 		// ((JsJfaceNode)instance).setAdapterRegistry(registry);
 		INodeAdapter adapter = ((JsJfaceNode) instance).getAdapterFor(IJFaceNodeAdapter.class);
 		if (!(adapter instanceof JFaceNodeAdapterForJs)) {

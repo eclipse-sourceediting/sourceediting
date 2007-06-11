@@ -36,6 +36,9 @@ public class SimpleJSDTActionProxy implements IObjectActionDelegate  {
 	
 	public SimpleJSDTActionProxy() {}
 	
+	protected void setSelection(ISelection selection) {
+		this.currentSelection=selection;
+	}
 	
 	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
 		this.targetWorkbenchPart = targetPart;

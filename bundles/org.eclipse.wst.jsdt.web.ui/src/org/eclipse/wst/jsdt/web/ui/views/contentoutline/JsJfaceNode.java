@@ -4,16 +4,30 @@ package org.eclipse.wst.jsdt.web.ui.views.contentoutline;
 import java.util.Collection;
 
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.text.Position;
 import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.IOpenable;
+import org.eclipse.wst.jsdt.core.JavaModelException;
 import org.eclipse.wst.jsdt.internal.core.SourceMethod;
+import org.eclipse.wst.jsdt.web.core.internal.Logger;
+import org.eclipse.wst.jsdt.web.core.internal.java.IJSPTranslation;
+import org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslation;
+import org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslationAdapter;
 import org.eclipse.wst.jsdt.web.ui.actions.IJavaWebNode;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.model.FactoryRegistry;
 import org.eclipse.wst.sse.core.internal.provisional.AbstractNotifier;
+import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.xml.core.internal.document.ElementImpl;
+import org.eclipse.wst.xml.core.internal.document.NodeImpl;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
@@ -21,8 +35,8 @@ public class JsJfaceNode extends ElementImpl implements IndexedRegion, INodeNoti
     
     private FactoryRegistry  adapterRegistry;
     private Position fDocPosition;
-    private IJavaElement fEnclosedObject;
     private Node parent;
+    private String typeName;
    
     private JsAdaptableNode adaptableDomNode = new JsAdaptableNode();
     
@@ -32,16 +46,19 @@ public class JsJfaceNode extends ElementImpl implements IndexedRegion, INodeNoti
             }
         }
    public boolean equals(Object o) {
-	   return (o!=null && o instanceof JsJfaceNode && ((JsJfaceNode)o).parent == this.parent && ((JsJfaceNode)o).fEnclosedObject ==this.fEnclosedObject && ((JsJfaceNode)o).fDocPosition == this.fDocPosition);
+	   return (o!=null && o instanceof JsJfaceNode && ((JsJfaceNode)o).parent == this.parent  && ((JsJfaceNode)o).fDocPosition == this.fDocPosition);
    }
-        
-   public JsJfaceNode(Node parent, IJavaElement enclosedObject, Position structureDocLocation) {
+   public JsJfaceNode(Node parent, Position structureDocLocation) {
+	   this(parent,structureDocLocation,  null);
+   }
+   public JsJfaceNode(Node parent, Position structureDocLocation,  String typeName) {
 	   super();
 	   //super((ElementImpl)parent);
        // super(parentObject, parentObject.getElementName());
        fDocPosition = structureDocLocation;
-       fEnclosedObject = enclosedObject;
+      
        this.parent = parent;
+       this.typeName = typeName;
        
        
     
@@ -52,9 +69,6 @@ public class JsJfaceNode extends ElementImpl implements IndexedRegion, INodeNoti
        
    }
    
-   public IJavaElement getJsElement(){
-       return fEnclosedObject;
-   }
    
    public void setAdapterRegistry(FactoryRegistry registry){
        this.adapterRegistry = registry;
@@ -175,8 +189,50 @@ public class JsJfaceNode extends ElementImpl implements IndexedRegion, INodeNoti
 		return parent.getOwnerDocument();
 	}
 
-	public IJavaElement getJavaElement() {
-		return (IJavaElement)fEnclosedObject;
+	public synchronized IJavaElement getJavaElement() {
+		/* since this may become 'stale' we need to rediscover our element every time we're asked */
+		JSPTranslation tran = getTranslation();
+		int startOffset = getStartOffset();
+		int endOffset = getLength();
+		
+		if(typeName!=null) {
+			IJavaElement myType = tran.getCompilationUnit().getType(typeName);
+			return myType;
+		}
+		
+		IJavaElement elements[] = tran.getAllElementsInJsRange(startOffset,startOffset+endOffset);
+		if(elements!=null ) {
+			return elements[0];
+		}else{
+			System.out.println("error in JsJfaceNode... I couldn't retrieve my java element from the original page");
+			return null;
+		}
 	}
-    
+	private JSPTranslation getTranslation() {
+		
+		IStructuredModel model = null;
+		IModelManager modelManager = StructuredModelManager.getModelManager();
+		IDOMDocument xmlDoc = null;
+		try {
+			if (modelManager != null) {
+				IStructuredDocument doc = ((NodeImpl) parent).getStructuredDocument();
+				model = modelManager.getExistingModelForRead(doc);
+				
+				// model = modelManager.getModelForRead(doc);
+			}
+			IDOMModel domModel = (IDOMModel) model;
+			xmlDoc = domModel.getDocument();
+		} catch (Exception e) {
+			Logger.logException(e);
+		} finally {
+			if (model != null) {
+				// model.changedModel();
+				model.releaseFromRead();
+			}
+		}
+		
+		if (xmlDoc == null) return null;
+		JSPTranslationAdapter translationAdapter = (JSPTranslationAdapter)xmlDoc.getAdapterFor(IJSPTranslation.class);
+		return translationAdapter.getJSPTranslation();
+}
 }
