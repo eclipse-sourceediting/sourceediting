@@ -60,7 +60,8 @@ public class JsContentOutlineConfig extends HTMLContentOutlineConfiguration{
 
 
 	public IMenuListener getMenuListener(TreeViewer treeViewer) {
-		if(!USE_ADVANCED) return super.getMenuListener(treeViewer);
+	//	if(!USE_ADVANCED) 
+			//return super.getMenuListener(treeViewer);
 		return new JsMenuListener(treeViewer);
 		
 	}

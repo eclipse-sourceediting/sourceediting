@@ -74,56 +74,66 @@
   
     <extension
          point="org.eclipse.ui.popupMenus">
-	<!-- content outline contributions for Open Type and Open Hierarchy menu -->
+	<!-- content outline contributions for Open Type and Open Hierarchy menu.  Menus show up in reverse order of decliration (google it). -->
       <objectContribution
             objectClass="org.eclipse.wst.jsdt.web.ui.actions.IJavaWebNode"
             id="org.eclipse.wst.jsdt.web.ui.JavaActions">
+            <!-- Declerations Search Menu -->
             <menu
-         		id="org.eclipse.wst.jsdt.web.open"
-         		label="Open"
-         		path="additions">
-     		 	<separator name="open"/>
-     	 	</menu>
-         <action
-               label="Type Hierarchy"
-               tooltip=""
-               menubarPath="org.eclipse.wst.jsdt.web.open/open" 
-               
-               class="org.eclipse.wst.jsdt.web.ui.actions.OpenTypeHierarchy"
-               enablesFor="1"
-               id="org.eclipse.wst.jsdt.ui.actions.OpenTypeHierarchyAction">
-         </action>
-          <action
-               label="Call Hierarchy"          
-               tooltip="Open Call Hierarchy"
-               menubarPath="org.eclipse.wst.jsdt.web.open/open" 
-               class="org.eclipse.wst.jsdt.web.ui.actions.OpenCallHierarchyAction"
-               enablesFor="1"
-               id="org.eclipse.wst.jsdt.internal.ui.callhierarchy.OpenCallHierarchyAction">
-         </action>
-         <!-- content outline contributions for Find occurances menu's -->
-         <menu
-                id="org.eclipse.wst.jsdt.web.references"
-         		label="References"
-         		path="additions">
-     		 	<separator name="references"/>
+                id="org.eclipse.wst.jsdt.web.declerations"
+         		label="Declerations"
+         		path="group.search">
+     		 	<separator name="declerations"/>
          </menu>
          <action
-               label="Workspace"
-               tooltip=""
-               menubarPath="org.eclipse.wst.jsdt.web.references/references"
+               label="Working Set"          
+               tooltip="Working Set"
+               menubarPath="org.eclipse.wst.jsdt.web.declerations/declerations"
+               class="org.eclipse.wst.jsdt.web.ui.actions.FindReferencesInWorkingSetAction"
+               enablesFor="1"
+               id="org.eclipse.wst.jsdt.ui.actions.FindDeclarationsInWorkingSetAction">
+         </action>  
+         <action
+               label="Hierarchy"          
+               tooltip="Hierarchy"
+               menubarPath="org.eclipse.wst.jsdt.web.declerations/declerations"
                class="org.eclipse.wst.jsdt.web.ui.actions.FindReferencesAction"
                enablesFor="1"
-               id="org.eclipse.wst.jsdt.ui.actions.FindReferencesAction">
-         </action>
+               id="org.eclipse.wst.jsdt.ui.actions.FindDeclarationsInHierarchyAction">
+         </action> 
           <action
                label="Project"          
                tooltip="Project"
-               menubarPath="org.eclipse.wst.jsdt.web.references/references"
+               menubarPath="org.eclipse.wst.jsdt.web.declerations/declerations"
                class="org.eclipse.wst.jsdt.web.ui.actions.FindReferencesAction"
                enablesFor="1"
-               id="org.eclipse.wst.jsdt.ui.actions.FindReferencesInProjectAction">
+               id="org.eclipse.wst.jsdt.ui.actions.FindDeclarationsInProjectAction">
          </action>
+         
+         <action
+               label="Workspace"
+               tooltip=""
+               menubarPath="org.eclipse.wst.jsdt.web.declerations/declerations"
+               class="org.eclipse.wst.jsdt.web.ui.actions.FindReferencesAction"
+               enablesFor="1"
+               id="org.eclipse.wst.jsdt.ui.actions.FindDeclarationsAction">
+         </action>   
+            
+            <!-- Refrences Search menu -->
+          <menu
+                id="org.eclipse.wst.jsdt.web.references"
+         		label="References"
+         		path="group.search">
+     		 	<separator name="references"/>
+         </menu>
+         <action
+               label="Working Set"          
+               tooltip="Working Set"
+               menubarPath="org.eclipse.wst.jsdt.web.references/references"
+               class="org.eclipse.wst.jsdt.web.ui.actions.FindReferencesInWorkingSetAction"
+               enablesFor="1"
+               id="org.eclipse.wst.jsdt.ui.actions.FindReferencesInWorkingSetAction">
+         </action>  
          <action
                label="Hierarchy"          
                tooltip="Hierarchy"
@@ -132,15 +142,82 @@
                enablesFor="1"
                id="org.eclipse.wst.jsdt.ui.actions.FindReferencesInHierarchyAction">
          </action> 
-         <action
-               label="Working Set"          
-               tooltip="Working Set"
+          <action
+               label="Project"          
+               tooltip="Project"
                menubarPath="org.eclipse.wst.jsdt.web.references/references"
                class="org.eclipse.wst.jsdt.web.ui.actions.FindReferencesAction"
                enablesFor="1"
-               id="org.eclipse.wst.jsdt.ui.actions.FindReferencesInWorkingSetAction">
+               id="org.eclipse.wst.jsdt.ui.actions.FindReferencesInProjectAction">
+         </action>
+         
+         <action
+               label="Workspace"
+               tooltip=""
+               menubarPath="org.eclipse.wst.jsdt.web.references/references"
+               class="org.eclipse.wst.jsdt.web.ui.actions.FindReferencesAction"
+               enablesFor="1"
+               id="org.eclipse.wst.jsdt.ui.actions.FindReferencesAction">
+         </action>   
+         
+         <!-- Show in Script Explorer, History and Navigator -->       
+         <menu
+                id="org.eclipse.wst.jsdt.web.showin"
+         		label="Show In"
+         		path="group.show">
+     		 	<separator name="showin"/>
+         </menu>  
+         <action
+               label="Navigator"          
+               tooltip="Show In Navigator"
+               menubarPath="org.eclipse.wst.jsdt.web.showin/showin"
+               style="push"
+               class="org.eclipse.wst.jsdt.web.ui.actions.ShowInNavigatorAction"
+               enablesFor="1"
+               id="org.eclipse.wst.jsdt.ui.actions.ShowInNavigatorViewAction">
+         </action>
+         <!-- History not working well -->
+         <!--
+         <action
+               label="History"          
+               tooltip="Show In History"
+               menubarPath="org.eclipse.wst.jsdt.web.showin/showin"
+               style="push"
+               class="org.eclipse.wst.jsdt.web.ui.actions.ShowHistoryAction"
+               enablesFor="1"
+               id="org.eclipse.wst.jsdt.internal.ui.callhierarchy.OpenCallHierarchyAction">
          </action> 
-      </objectContribution> 
+         -->
+          <action
+               label="Script Explorer"          
+               tooltip="Show In Script Explorer"
+               menubarPath="org.eclipse.wst.jsdt.web.showin/showin"
+               style="push"
+               class="org.eclipse.wst.jsdt.web.ui.actions.ShowInScriptExplorerAction"
+               enablesFor="1"
+               id="org.eclipse.wst.jsdt.ui.actions.ShowInScriptExplorer">
+         </action>
+         
+         <!-- Open Call and Type Hierarchies -->
+          <action
+               label="Open Call Hierarchy"          
+               tooltip="Open Call Hierarchy"
+             menubarPath="group.show"
+             style="push"
+               class="org.eclipse.wst.jsdt.web.ui.actions.OpenCallHierarchyAction"
+               enablesFor="1"
+               id="org.eclipse.wst.jsdt.internal.ui.callhierarchy.OpenCallHierarchyAction">
+         </action>
+         <action
+               label="Open Type Hierarchy"
+               tooltip="Open Type Hierarchy"
+   			menubarPath="group.show"
+   			style="push"
+               class="org.eclipse.wst.jsdt.web.ui.actions.OpenTypeHierarchy"
+               enablesFor="1"
+               id="org.eclipse.wst.jsdt.ui.actions.OpenTypeHierarchyAction">
+         </action>
+       </objectContribution> 
 		
 	</extension>
 	

@@ -5,8 +5,11 @@ import org.eclipse.jface.text.Position;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.html.ui.internal.contentoutline.JFaceNodeAdapterForHTML;
 import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.IType;
+import org.eclipse.wst.jsdt.core.ITypeRoot;
 import org.eclipse.wst.jsdt.core.JavaModelException;
 import org.eclipse.wst.jsdt.internal.core.JavaElement;
+import org.eclipse.wst.jsdt.internal.core.SourceField;
 import org.eclipse.wst.jsdt.internal.core.SourceMethod;
 import org.eclipse.wst.jsdt.internal.core.SourceRefElement;
 import org.eclipse.wst.jsdt.ui.JavaElementLabelProvider;
@@ -192,10 +195,13 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
 
 	
 	private Object getJsNode(Node parent, IJavaElement root, Position position) {
-		JsJfaceNode instance;
+		JsJfaceNode instance = null;
 		
 		if(root.getElementType()==IJavaElement.TYPE) {
 			instance = new JsJfaceNode(parent, position,((SourceRefElement)root).getElementName());
+		}else if(root.getElementType()==IJavaElement.FIELD) {
+			/* Field refrence, possibly to a type may need to implement later */
+			instance = new JsJfaceNode(parent, position);
 		}else {
 			instance = new JsJfaceNode(parent, position);
 		}
