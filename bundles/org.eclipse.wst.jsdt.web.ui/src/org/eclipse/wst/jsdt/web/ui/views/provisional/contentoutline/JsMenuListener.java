@@ -5,6 +5,7 @@ package org.eclipse.wst.jsdt.web.ui.views.provisional.contentoutline;
 
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.Separator;
@@ -81,7 +82,7 @@ public class JsMenuListener extends XMLNodeActionManager implements IMenuListene
 						javaCount++;
 					}
 				}
-
+				IContributionItem[] items = manager.getItems();
 //				manager.add(new Separator(IContextMenuConstants.GROUP_NEW));
 //				menu.add(new GroupMarker(IContextMenuConstants.GROUP_GOTO));
 //				menu.add(new Separator(IContextMenuConstants.GROUP_OPEN));
@@ -118,6 +119,24 @@ public class JsMenuListener extends XMLNodeActionManager implements IMenuListene
 					
 					manager.add(new Separator(EDIT_GROUP_ID));
 					manager.add(new GroupMarker(EDIT_GROUP_ID));
+					/* Menu for:
+					 * 
+					 * Source-->
+					 *     Generate Element Comment
+
+					 *     
+					 * Refactor-->
+					 *    Rename
+					 *    Move
+					 *    Change Function Signature
+					 *    Inline
+					 *    Introduce Indirection
+					 *    Infer Generic Type Arguments 
+					 */ 
+					
+					
+					manager.add(new Separator(IContextMenuConstants.GROUP_SOURCE));
+					manager.add(new GroupMarker(IContextMenuConstants.GROUP_SOURCE));
 					/* Menu for:
 					 * 
 					 * Refrences-->

@@ -208,6 +208,14 @@ public class JsJfaceNode extends ElementImpl implements IndexedRegion, INodeNoti
 			return null;
 		}
 	}
+	
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.xml.core.internal.document.NodeImpl#getStructuredDocument()
+	 */
+	public IStructuredDocument getStructuredDocument() {
+		return ((NodeImpl) parent).getStructuredDocument();
+	}
 	private JSPTranslation getTranslation() {
 		
 		IStructuredModel model = null;

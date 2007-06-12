@@ -9,7 +9,6 @@ Bundle-Localization: plugin
 Export-Package: org.eclipse.wst.jsdt.web.ui,
  org.eclipse.wst.jsdt.web.ui.internal;x-internal:=true,
  org.eclipse.wst.jsdt.web.ui.internal.autoedit;x-internal:=true,
- org.eclipse.wst.jsdt.web.ui.internal.breakpointproviders;x-internal:=true,
  org.eclipse.wst.jsdt.web.ui.internal.contentassist;x-internal:=true,
  org.eclipse.wst.jsdt.web.ui.internal.contentproperties.ui;x-internal:=true,
  org.eclipse.wst.jsdt.web.ui.internal.derived;x-internal:=true,

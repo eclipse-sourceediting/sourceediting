@@ -159,6 +159,108 @@
                enablesFor="1"
                id="org.eclipse.wst.jsdt.ui.actions.FindReferencesAction">
          </action>   
+         <!-- Source and Refactoring Menu's -->
+          <menu
+                id="org.eclipse.wst.jsdt.web.refactor"
+         		label="Refactor"
+         		path="group.generate">
+     		 	<separator name="refactor"/>
+         </menu>
+
+         <menu
+                id="org.eclipse.wst.jsdt.web.source"
+         		label="Source"
+         		path="group.generate">
+     		 	<separator name="source"/>
+         </menu>
+         <!-- Source Actions -->
+		 <action
+               label="Generate Element Comment"          
+               tooltip="Generate Element Comment"
+               menubarPath="org.eclipse.wst.jsdt.web.source/source"
+               style="push"
+               class="org.eclipse.wst.jsdt.web.ui.actions.SourceActionsAction"
+               enablesFor="*"
+               id="org.eclipse.wst.jsdt.web.ui.generate.element.comment">
+         </action>
+         <!-- Refactor Actions -->
+         <action
+               label="Change Function Signature"          
+               tooltip="Change Function Signature"
+               menubarPath="org.eclipse.wst.jsdt.web.refactor/refactor"
+               style="push"
+               class="org.eclipse.wst.jsdt.web.ui.actions.SourceActionsAction"
+               enablesFor="*"
+               id="org.eclipse.wst.jsdt.web.ui.change.function.signature">
+         </action>
+         <action
+               label="Move"          
+               tooltip="Move"
+               menubarPath="org.eclipse.wst.jsdt.web.refactor/refactor"
+               style="push"
+               class="org.eclipse.wst.jsdt.web.ui.actions.SourceActionsAction"
+               enablesFor="*"
+               id="org.eclipse.wst.jsdt.web.ui.Move">
+         </action>
+         <action
+               label="Rename"          
+               tooltip="Rename"
+               menubarPath="org.eclipse.wst.jsdt.web.refactor/refactor"
+               style="push"
+               class="org.eclipse.wst.jsdt.web.ui.actions.SourceActionsAction"
+               enablesFor="*"
+               id="org.eclipse.wst.jsdt.web.ui.rename">
+         </action>
+         
+         
+         <!-- Edit  (cut copy paste etc.. -->
+          <action
+               label="Delete"          
+               tooltip="Delete"
+               menubarPath="group.edit"
+               style="push"
+               class="org.eclipse.wst.jsdt.web.ui.actions.StandardEditorActionsAction"
+               enablesFor="*"
+               id="org.eclipse.wst.jsdt.web.ui.delete">
+         </action>
+        
+         <action
+               label="Paste After"          
+               tooltip="Paste"
+                     menubarPath="group.edit"
+               style="push"
+               class="org.eclipse.wst.jsdt.web.ui.actions.StandardEditorActionsAction"
+               enablesFor="1"
+               id="org.eclipse.wst.jsdt.web.ui.paste.after">
+         </action>
+          <action
+               label="Paste Before"          
+               tooltip="Paste"
+                     menubarPath="group.edit"
+               style="push"
+               class="org.eclipse.wst.jsdt.web.ui.actions.StandardEditorActionsAction"
+               enablesFor="1"
+               id="org.eclipse.wst.jsdt.web.ui.paste.before">
+         </action>
+         <action
+               label="Copy"          
+               tooltip="Copy"
+                     menubarPath="group.edit"
+               style="push"
+               class="org.eclipse.wst.jsdt.web.ui.actions.StandardEditorActionsAction"
+               enablesFor="*"
+               id="org.eclipse.wst.jsdt.web.ui.copy">
+         </action>
+
+         <action
+               label="Cut"          
+               tooltip="Cut"
+               menubarPath="group.edit"
+               style="push"
+               class="org.eclipse.wst.jsdt.web.ui.actions.StandardEditorActionsAction"
+               enablesFor="*"
+               id="org.eclipse.wst.jsdt.web.ui.cut">
+         </action>         
          
          <!-- Show in Script Explorer, History and Navigator -->       
          <menu
