@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2002,2007 IBM Corporation and others.
+ * Copyright (c) 2002, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,7 +19,6 @@ import java.util.Vector;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.wst.xml.core.internal.Logger;
@@ -32,6 +31,7 @@ import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.CMDocumentManag
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.CMDocumentReferenceProvider;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.CMDocumentCache;
 
+
 /**
  *
  */
@@ -42,7 +42,6 @@ public class CMDocumentManagerImpl implements CMDocumentManager
   protected List listenerList = new Vector(); 
   protected Hashtable propertyTable = new Hashtable();
   protected Hashtable publicIdTable = new Hashtable();
-  static final boolean DEBUG_MANAGER = Boolean.valueOf(Platform.getDebugOption("org.eclipse.wst.xml.core/debug/cmdocumentmanager")).booleanValue(); //$NON-NLS-1$
 
        
   public CMDocumentManagerImpl(CMDocumentCache cmDocumentCache, CMDocumentReferenceProvider cmDocumentReferenceProvider)
@@ -160,7 +159,7 @@ public CMDocument getCMDocument(String publicId, String systemId, String type)
     if (getPropertyEnabled(PROPERTY_AUTO_LOAD))
     {
       // See https://bugs.eclipse.org/bugs/show_bug.cgi?id=136399
-
+      
       if (getPropertyEnabled(PROPERTY_PERFORM_URI_RESOLUTION))
       {
         resolvedURI = lookupOrCreateResolvedURI(publicId, systemId);
@@ -264,27 +263,16 @@ public CMDocument getCMDocument(String publicId, String systemId, String type)
     CMDocument result = null;         
     if (resolvedURI != null && resolvedURI.length() > 0)
     {
-      // try to get from cache
-    	result = cmDocumentCache.getCMDocument(resolvedURI);
-    	if(result == null){
-    		if (DEBUG_MANAGER)
-					System.out.println("CMDocumentManager building " + resolvedURI + "[" + type + "]");
-	      // TODO... pass the TYPE thru to the CMDocumentBuilder
-	      result = ContentModelManager.getInstance().createCMDocument(resolvedURI, type);
-	      
-	      //	    load the annotation files for the document 
-	      if (result != null && publicId != null)
-	      {    
-	        AnnotationUtility.loadAnnotationsForGrammar(publicId, result);
-	      }
-    	}
-    	else {
-    		if (DEBUG_MANAGER)
-    			System.out.println("CMDocumentManager retrieving cached document " + resolvedURI + "[" + type + "]");
-    	}
+      // TODO... pass the TYPE thru to the CMDocumentBuilder
+      result = ContentModelManager.getInstance().createCMDocument(resolvedURI, type);
     }
     if (result != null)
     { 
+      // load the annotation files for the document 
+      if (publicId != null)
+      {    
+        AnnotationUtility.loadAnnotationsForGrammar(publicId, result);
+      }
       cmDocumentCache.putCMDocument(resolvedURI, result);
     }
     else

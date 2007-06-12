@@ -163,6 +163,7 @@ public class ModelQueryAdapterFactoryForXML extends AbstractAdapterFactory {
 				if (org.eclipse.wst.sse.core.internal.util.Debug.displayInfo)
 					System.out.println("----------------ModelQueryAdapterFactoryForXML... baseLocation : " + baseLocation); //$NON-NLS-1$
 
+				CMDocumentCache cmDocumentCache = new CMDocumentCache();
 				ModelQuery modelQuery = null;
 				URIResolver idResolver = null;
 
@@ -172,7 +173,7 @@ public class ModelQueryAdapterFactoryForXML extends AbstractAdapterFactory {
 				if (baseLocation != null || resolver != null) {
 					idResolver = new XMLCatalogIdResolver(baseLocation, resolver);
 				}
-				modelQuery = new XMLModelQueryImpl(CMDocumentCache.getInstance(), idResolver);
+				modelQuery = new XMLModelQueryImpl(cmDocumentCache, idResolver);
 
 				// cs todo...
 				// for now we create a CMDocumentCache on a 'per editor' basis
@@ -183,7 +184,7 @@ public class ModelQueryAdapterFactoryForXML extends AbstractAdapterFactory {
 				if (documentManager != null) {
 					configureDocumentManager(documentManager);
 				}
-				modelQueryAdapterImpl = new ModelQueryAdapterImpl(CMDocumentCache.getInstance(), modelQuery, idResolver);
+				modelQueryAdapterImpl = new ModelQueryAdapterImpl(cmDocumentCache, modelQuery, idResolver);
 			}
 		}
 		return modelQueryAdapterImpl;

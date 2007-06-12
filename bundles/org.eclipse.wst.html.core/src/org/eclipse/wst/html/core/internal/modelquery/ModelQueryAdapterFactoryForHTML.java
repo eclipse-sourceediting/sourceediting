@@ -192,9 +192,10 @@ public class ModelQueryAdapterFactoryForHTML extends AbstractAdapterFactory {
 				if (baseLocation != null || resolver != null) {
 					idResolver = new XMLCatalogIdResolver(baseLocation, resolver);
 				}
-				ModelQuery modelQuery = new HTMLModelQueryImpl(CMDocumentCache.getInstance(), idResolver);
+				CMDocumentCache documentCache = new CMDocumentCache();
+				ModelQuery modelQuery = new HTMLModelQueryImpl(documentCache, idResolver);
 				modelQuery.setEditMode(ModelQuery.EDIT_MODE_UNCONSTRAINED);
-				modelQueryAdapter = new ModelQueryAdapterImpl(CMDocumentCache.getInstance(), modelQuery, idResolver);
+				modelQueryAdapter = new ModelQueryAdapterImpl(documentCache, modelQuery, idResolver);
 			}
 		}
 		return modelQueryAdapter;

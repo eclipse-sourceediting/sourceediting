@@ -90,7 +90,7 @@ public class ModelQueryAdapterFactoryForJSP extends AbstractAdapterFactory imple
 
 					ModelQuery modelQuery = createModelQuery(model, resolver);
 					modelQuery.setEditMode(ModelQuery.EDIT_MODE_UNCONSTRAINED);
-					modelQueryAdapterImpl = new JSPModelQueryAdapterImpl(CMDocumentCache.getInstance(), modelQuery, resolver);
+					modelQueryAdapterImpl = new JSPModelQueryAdapterImpl(new CMDocumentCache(), modelQuery, resolver);
 				}
 			}
 		}
