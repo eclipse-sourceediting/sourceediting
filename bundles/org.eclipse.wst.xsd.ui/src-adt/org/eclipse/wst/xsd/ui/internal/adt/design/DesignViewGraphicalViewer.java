@@ -24,6 +24,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.IHolderEditPart;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.RootContentEditPart;
+import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.StructureEditPart;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IGraphElement;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IModelProxy;
 import org.eclipse.wst.xsd.ui.internal.adt.editor.CommonSelectionManager;
@@ -214,8 +215,56 @@ public class DesignViewGraphicalViewer extends ScrollingGraphicalViewer implemen
         EditPart editPart = getEditPart((EditPart)i.next(), object);
         if (editPart != null)
         {
-          result = editPart;
-          break;
+          // First check to see if there is a selection
+          ISelection currentSelection = getSelection();
+          
+          // If there is a selection then we will try to find the 
+          // target edit part that is a child of the enclosing container.
+          // This is handy when you add an element to a structured edit part
+          // then you want to select the element immediately and put it in
+          // direct edit mode
+          if (currentSelection != null)
+          {
+            if (currentSelection instanceof StructuredSelection)
+            {
+              EditPart targetStructureEditPart = (EditPart)((StructuredSelection)currentSelection).getFirstElement();
+              if (targetStructureEditPart != null)
+              {
+                while (targetStructureEditPart != null)
+                {
+                  if (targetStructureEditPart instanceof StructureEditPart)
+                  {
+                    break;
+                  }
+                  targetStructureEditPart = targetStructureEditPart.getParent();
+                }
+              }
+              EditPart potentialEditPartToSelect = editPart;
+              
+              while (potentialEditPartToSelect != null)
+              {
+                if (potentialEditPartToSelect instanceof StructureEditPart)
+                {
+                  break;
+                }
+                potentialEditPartToSelect = potentialEditPartToSelect.getParent();
+              }
+              
+              // If we found a potential edit part to select then return it
+              // OR, if there is no target found, then we should just return
+              // the edit part we found
+              if (potentialEditPartToSelect == targetStructureEditPart || potentialEditPartToSelect == null || targetStructureEditPart == null)
+              {
+                result = editPart;
+                break;
+              }
+            }
+          }
+          else // Otherwise just find the first one and return
+          {
+            result = editPart;
+            break;
+          }
         }
       }            
     }
