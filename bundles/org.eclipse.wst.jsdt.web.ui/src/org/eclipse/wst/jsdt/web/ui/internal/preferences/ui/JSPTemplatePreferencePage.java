@@ -21,7 +21,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.texteditor.templates.TemplatePreferencePage;
 import org.eclipse.wst.jsdt.web.core.internal.provisional.contenttype.ContentTypeIdForJSP;
-import org.eclipse.wst.jsdt.web.ui.StructuredTextViewerConfigurationJSP;
+import org.eclipse.wst.jsdt.web.ui.StructuredTextViewerConfigurationJSDT;
 import org.eclipse.wst.jsdt.web.ui.internal.JSPUIPlugin;
 import org.eclipse.wst.jsdt.web.ui.internal.editor.IHelpContextIds;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -89,7 +89,7 @@ public class JSPTemplatePreferencePage extends TemplatePreferencePage {
 		SourceViewer viewer = null;
 		String contentTypeID = ContentTypeIdForJSP.ContentTypeID_JSP;
 		SourceViewerConfiguration sourceViewerConfiguration = new StructuredTextViewerConfiguration() {
-			StructuredTextViewerConfiguration baseConfiguration = new StructuredTextViewerConfigurationJSP();
+			StructuredTextViewerConfiguration baseConfiguration = new StructuredTextViewerConfigurationJSDT();
 
 			@Override
 			public String[] getConfiguredContentTypes(ISourceViewer sourceViewer) {

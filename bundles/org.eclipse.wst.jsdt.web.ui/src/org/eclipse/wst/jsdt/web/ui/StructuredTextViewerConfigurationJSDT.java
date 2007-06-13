@@ -1,0 +1,247 @@
+/*******************************************************************************
+ * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
+package org.eclipse.wst.jsdt.web.ui;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Vector;
+
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Preferences;
+import org.eclipse.jface.text.IAutoEditStrategy;
+import org.eclipse.jface.text.ITextDoubleClickStrategy;
+import org.eclipse.jface.text.ITextHover;
+import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
+import org.eclipse.jface.text.formatter.IContentFormatter;
+import org.eclipse.jface.text.formatter.IFormattingStrategy;
+import org.eclipse.jface.text.formatter.MultiPassContentFormatter;
+import org.eclipse.jface.text.information.IInformationProvider;
+import org.eclipse.jface.text.source.ISourceViewer;
+import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.wst.css.core.text.ICSSPartitions;
+import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
+import org.eclipse.wst.html.core.internal.format.HTMLFormatProcessorImpl;
+import org.eclipse.wst.html.core.internal.preferences.HTMLCorePreferenceNames;
+import org.eclipse.wst.html.core.internal.provisional.contenttype.ContentTypeIdForHTML;
+import org.eclipse.wst.html.core.internal.text.StructuredTextPartitionerForHTML;
+import org.eclipse.wst.html.core.text.IHTMLPartitions;
+import org.eclipse.wst.html.ui.StructuredTextViewerConfigurationHTML;
+import org.eclipse.wst.html.ui.internal.autoedit.StructuredAutoEditStrategyHTML;
+import org.eclipse.wst.html.ui.internal.contentassist.HTMLContentAssistProcessor;
+import org.eclipse.wst.html.ui.internal.contentassist.NoRegionContentAssistProcessorForHTML;
+import org.eclipse.wst.html.ui.internal.style.LineStyleProviderForHTML;
+import org.eclipse.wst.html.ui.internal.taginfo.HTMLInformationProvider;
+import org.eclipse.wst.html.ui.internal.taginfo.HTMLTagInfoHoverProcessor;
+import org.eclipse.wst.jsdt.web.ui.internal.autoedit.AutoEditStrategyForTabs;
+import org.eclipse.wst.sse.core.text.IStructuredPartitions;
+import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
+import org.eclipse.wst.sse.ui.internal.ExtendedConfigurationBuilder;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
+import org.eclipse.wst.sse.ui.internal.format.StructuredFormattingStrategy;
+import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
+import org.eclipse.wst.sse.ui.internal.taginfo.TextHoverManager;
+import org.eclipse.wst.sse.ui.internal.util.EditorUtility;
+import org.eclipse.wst.xml.core.internal.provisional.contenttype.ContentTypeIdForXML;
+import org.eclipse.wst.xml.core.internal.text.rules.StructuredTextPartitionerForXML;
+import org.eclipse.wst.xml.core.text.IXMLPartitions;
+import org.eclipse.wst.xml.ui.StructuredTextViewerConfigurationXML;
+import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeLabelProvider;
+import org.w3c.dom.Node;
+
+/**
+ * Configuration for a source viewer which shows Html and supports JSDT.
+ * <p>
+ * Clients can subclass and override just those methods which must be specific
+ * to their needs.
+ * </p>
+ * 
+ * @see org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration
+ * @since 1.0
+ */
+public class StructuredTextViewerConfigurationJSDT extends StructuredTextViewerConfigurationHTML {
+	/*
+	 * One instance per configuration because not sourceviewer-specific and it's
+	 * a String array
+	 */
+	private String[] fConfiguredContentTypes;
+	/*
+	 * One instance per configuration
+	 */
+	private LineStyleProvider fLineStyleProviderForEmbeddedCSS;
+	/*
+	 * One instance per configuration
+	 */
+	private LineStyleProvider fLineStyleProviderForHTML;
+	/*
+	 * One instance per configuration
+	 */
+	private LineStyleProvider fLineStyleProviderForJavascript;
+	/*
+	 * One instance per configuration
+	 */
+	private StructuredTextViewerConfiguration fXMLSourceViewerConfiguration;
+	private ILabelProvider fStatusLineLabelProvider;
+	/*
+	 * Extension point identifications for externalalized content providers
+	 * [Bradley Childs - childsb@us.ibm.com]
+	 */
+	public static final class externalTypeExtension {
+		public static final String HOVER_ID = "texthover";
+		public static final String INFORMATIONPROVIDER_ID = "informationpresenter";
+		public static final String AUTOEDIT_ID = "autoeditstrategy";
+		public static final String CONTENT_FORMATER = "contentformater";
+		public static final String HYPERLINK_DETECTOR = "hyperlinkdetector";
+		public static final String CONTENT_ASSIST = "contentassistprocessor";
+		public static final String HYPERLINK_DETECTOR_TARGETS = "hyperlinkdetector";
+	}
+	
+	/**
+	 * Create new instance of StructuredTextViewerConfigurationHTML
+	 */
+	public StructuredTextViewerConfigurationJSDT() {
+		// Must have empty constructor to createExecutableExtension
+		super();
+	}
+	
+	public IAutoEditStrategy[] getAutoEditStrategies(ISourceViewer sourceViewer, String contentType) {
+		List allStrategies = new ArrayList(0);
+		Object externalAutoEditProvider = ExtendedConfigurationBuilder.getInstance().getConfiguration(externalTypeExtension.AUTOEDIT_ID, contentType);
+		if (externalAutoEditProvider != null) {
+			allStrategies.add(externalAutoEditProvider);
+		} else {
+			IAutoEditStrategy[] superStrategies = super.getAutoEditStrategies(sourceViewer, contentType);
+			for (int i = 0; i < superStrategies.length; i++) {
+				allStrategies.add(superStrategies[i]);
+			}
+		}
+		// be sure this is added last in list, so it has a change to modify
+		// previous results.
+		// add auto edit strategy that handles when tab key is pressed
+		allStrategies.add(new AutoEditStrategyForTabs());
+		return (IAutoEditStrategy[]) allStrategies.toArray(new IAutoEditStrategy[allStrategies.size()]);
+	}
+	
+	public String[] getConfiguredContentTypes(ISourceViewer sourceViewer) {
+		if (fConfiguredContentTypes == null) {
+			fConfiguredContentTypes = super.getConfiguredContentTypes(sourceViewer);
+		}
+		return fConfiguredContentTypes;
+	}
+	
+	/* Content assist procesors are contributed by extension for SSE now */
+	protected IContentAssistProcessor[] getContentAssistProcessors(ISourceViewer sourceViewer, String partitionType) {
+		return super.getContentAssistProcessors(sourceViewer, partitionType);
+	}
+	
+	public IContentFormatter getContentFormatter(ISourceViewer sourceViewer) {
+		final IContentFormatter formatter = super.getContentFormatter(sourceViewer);
+		/*
+		 * Check for any externally supported auto edit strategies from EP.
+		 * [Bradley Childs - childsb@us.ibm.com]
+		 */
+		String[] contentTypes = getConfiguredContentTypes(sourceViewer);
+		for (int i = 0; i < contentTypes.length; i++) {
+			IFormattingStrategy cf = (IFormattingStrategy) ExtendedConfigurationBuilder.getInstance().getConfiguration(externalTypeExtension.CONTENT_FORMATER, contentTypes[i]);
+			if (cf != null && formatter instanceof MultiPassContentFormatter) ((MultiPassContentFormatter) formatter).setSlaveStrategy(cf, contentTypes[i]);
+		}
+		return formatter;
+	}
+	
+	public ITextDoubleClickStrategy getDoubleClickStrategy(ISourceViewer sourceViewer, String contentType) {
+		return super.getDoubleClickStrategy(sourceViewer, contentType);
+	}
+	
+	public String[] getIndentPrefixes(ISourceViewer sourceViewer, String contentType) {
+		return super.getIndentPrefixes(sourceViewer, contentType);
+	}
+	
+	protected IInformationProvider getInformationProvider(ISourceViewer sourceViewer, String partitionType) {
+		IInformationProvider provider = null;
+		/*
+		 * IInformationProvider now provided by extension point [Bradley Childs -
+		 * childsb@us.ibm.com]
+		 */
+		Object externalInfoProvider = ExtendedConfigurationBuilder.getInstance().getConfiguration(externalTypeExtension.INFORMATIONPROVIDER_ID, partitionType);
+		if (externalInfoProvider != null) {
+			provider = (IInformationProvider) externalInfoProvider;
+		} else {
+			provider = super.getInformationProvider(sourceViewer, partitionType);
+		}
+		return provider;
+	}
+	
+	public LineStyleProvider[] getLineStyleProviders(ISourceViewer sourceViewer, String partitionType) {
+		LineStyleProvider[] providers = super.getLineStyleProviders(sourceViewer, partitionType);
+		return providers;
+	}
+	
+	public ILabelProvider getStatusLineLabelProvider(ISourceViewer sourceViewer) {
+		if (fStatusLineLabelProvider == null) {
+			fStatusLineLabelProvider = super.getStatusLineLabelProvider(sourceViewer);
+		}
+		return fStatusLineLabelProvider;
+	}
+	
+	public ITextHover getTextHover(ISourceViewer sourceViewer, String contentType, int stateMask) {
+		ITextHover textHover = null;
+		// look for appropriate text hover processor to return based on
+		// content type and state mask
+		TextHoverManager manager = SSEUIPlugin.getDefault().getTextHoverManager();
+		TextHoverManager.TextHoverDescriptor[] hoverDescs = manager.getTextHovers();
+		int i = 0;
+		while (i < hoverDescs.length && textHover == null) {
+			if (hoverDescs[i].isEnabled() && EditorUtility.computeStateMask(hoverDescs[i].getModifierString()) == stateMask) {
+				String hoverType = hoverDescs[i].getId();
+				if (TextHoverManager.COMBINATION_HOVER.equalsIgnoreCase(hoverType)) {
+					/*
+					 * Check extension for TextHover providers [Bradley Childs -
+					 * childsb@us.ibm.com]
+					 */
+					Object externalHover = ExtendedConfigurationBuilder.getInstance().getConfiguration(externalTypeExtension.HOVER_ID, contentType);
+					if (externalHover != null) {
+						textHover = manager.createBestMatchHover((ITextHover) externalHover);
+					} else {
+						textHover = super.getTextHover(sourceViewer, contentType, stateMask);
+					}
+				} else if (TextHoverManager.DOCUMENTATION_HOVER.equalsIgnoreCase(hoverType)) {
+					/*
+					 * Check extension for TextHover providers [Bradley Childs -
+					 * childsb@us.ibm.com]
+					 */
+					Object externalHover = ExtendedConfigurationBuilder.getInstance().getConfiguration(externalTypeExtension.HOVER_ID, contentType);
+					if (externalHover != null) {
+						textHover = manager.createBestMatchHover((ITextHover) externalHover);
+					} else {
+						textHover = super.getTextHover(sourceViewer, contentType, stateMask);
+					}
+				}
+				
+			}
+			i++;
+		}
+		// no appropriate text hovers found, try super
+		if (textHover == null) {
+			textHover = super.getTextHover(sourceViewer, contentType, stateMask);
+		}
+		return textHover;
+	}
+	
+	protected Map getHyperlinkDetectorTargets(ISourceViewer sourceViewer) {
+		Map targets = super.getHyperlinkDetectorTargets(sourceViewer);
+		String[] contentTypes = getConfiguredContentTypes(sourceViewer);
+//		for (int i = 0; i < contentTypes.length; i++) {
+//			Object detector =  ExtendedConfigurationBuilder.getInstance().getConfiguration(externalTypeExtension.HYPERLINK_DETECTOR_TARGETS, contentTypes[i]);
+//			targets.put(contentTypes[i], detector);
+//		}
+		return targets;
+	}
+}

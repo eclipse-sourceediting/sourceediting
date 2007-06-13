@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
 <plugin>
-	
+
  	<extension point="org.eclipse.wst.sse.ui.editorConfiguration">
+ 	
+ 		<sourceViewerConfiguration
+			class="org.eclipse.wst.jsdt.web.ui.StructuredTextViewerConfigurationJSDT"
+			target="org.eclipse.wst.html.core.htmlsource.source" />
+			
+			
  		<contentOutlineConfiguration
 			class="org.eclipse.wst.jsdt.web.ui.views.provisional.contentoutline.JsContentOutlineConfig"
-			target="org.eclipse.wst.html.core.htmlsource" />		
+			target="org.eclipse.wst.html.core.htmlsource.source" />		
 		<provisionalConfiguration
 			type="contentassistprocessor"
 			class="org.eclipse.wst.jsdt.web.ui.internal.contentassist.JSDTContentAssistant"
@@ -179,7 +185,7 @@
                tooltip="Generate Element Comment"
                menubarPath="org.eclipse.wst.jsdt.web.source/source"
                style="push"
-               class="org.eclipse.wst.jsdt.web.ui.actions.SourceActionsAction"
+               class="org.eclipse.wst.jsdt.web.ui.actions.AddJavaDocStubAction"
                enablesFor="*"
                id="org.eclipse.wst.jsdt.web.ui.generate.element.comment">
          </action>
@@ -366,6 +372,7 @@
 	<!-- ====================================================================================== -->
 	<!-- source validation for JSP															  -->
 	<!--======================================================================================-->
+	
 	<extension point="org.eclipse.wst.sse.ui.sourcevalidation">
 		<validator
 			scope="total"
@@ -379,6 +386,7 @@
 
 		
 	</extension>
+	
 	<!--
 	<extension point="org.eclipse.wst.sse.ui.sourcevalidation">
 		<validator
