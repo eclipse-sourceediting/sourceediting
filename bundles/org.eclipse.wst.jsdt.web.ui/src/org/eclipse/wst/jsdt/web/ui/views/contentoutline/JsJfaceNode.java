@@ -216,7 +216,8 @@ public class JsJfaceNode extends ElementImpl implements IndexedRegion, INodeNoti
 	public IStructuredDocument getStructuredDocument() {
 		return ((NodeImpl) parent).getStructuredDocument();
 	}
-	private JSPTranslation getTranslation() {
+	
+	public JSPTranslation getTranslation() {
 		
 		IStructuredModel model = null;
 		IModelManager modelManager = StructuredModelManager.getModelManager();

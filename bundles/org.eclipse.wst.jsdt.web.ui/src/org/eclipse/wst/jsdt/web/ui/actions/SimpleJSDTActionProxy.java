@@ -6,6 +6,8 @@ package org.eclipse.wst.jsdt.web.ui.actions;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
@@ -19,7 +21,9 @@ import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.actions.ActionDelegate;
+import org.eclipse.wst.jsdt.core.IJavaElement;
 import org.eclipse.wst.jsdt.ui.actions.ShowInNavigatorViewAction;
+import org.eclipse.wst.jsdt.web.ui.views.contentoutline.JsJfaceNode;
 
 /**
  * @author childsb
@@ -164,4 +168,22 @@ public class SimpleJSDTActionProxy implements IObjectActionDelegate  {
 	    return actionHandlerTarget;
 
 	}
+	public static JsJfaceNode[] getJsJfaceNodesFromSelection(ISelection selection) {
+		if(selection==null) return new JsJfaceNode[0];
+		ArrayList elements = new ArrayList();
+		
+		if(selection instanceof IStructuredSelection) {
+			Iterator itt = ((IStructuredSelection)selection).iterator();
+			while(itt.hasNext()) {
+				Object element = itt.next();
+				if(element instanceof JsJfaceNode) {
+					elements.add(element);
+				}
+				
+			}
+			return (JsJfaceNode[])elements.toArray(new JsJfaceNode[elements.size()]);
+		}
+		return new JsJfaceNode[0];
+	}
+
 }

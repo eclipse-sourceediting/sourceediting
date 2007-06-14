@@ -373,7 +373,7 @@ public class JSPTranslation implements IJSPTranslation {
 	 * @see org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslation_Interface#getJavaRanges(int,
 	 *      int)
 	 */
-	public Position[] getJavaRanges(int offset, int length) {
+	public Position[] getJavaRanges2(int offset, int length) {
 		List results = new ArrayList();
 		Iterator it = getJs2HtmlMap().keySet().iterator();
 		Position p = null;
@@ -386,6 +386,20 @@ public class JSPTranslation implements IJSPTranslation {
 		return (Position[]) results.toArray(new Position[results.size()]);
 	}
 	
+	public Position[] getJavaRanges(int offset, int length) {
+		List results = new ArrayList();
+		HashMap map = getJs2HtmlMap();
+		Iterator it = map.keySet().iterator();
+		Position p = null;
+		while (it.hasNext()) {
+			p = (Position) it.next();
+			if (p.overlapsWith(offset, length)) {
+				Position inHtml = (Position)map.get(p);
+				results.add(p);
+			}
+		}
+		return (Position[]) results.toArray(new Position[results.size()]);
+	}
 	/*
 	 * (non-Javadoc)
 	 * 

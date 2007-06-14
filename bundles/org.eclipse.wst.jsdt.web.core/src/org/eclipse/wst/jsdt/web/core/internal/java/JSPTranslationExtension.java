@@ -21,6 +21,7 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.Position;
+import org.eclipse.jface.text.projection.ProjectionDocument;
 import org.eclipse.text.edits.DeleteEdit;
 import org.eclipse.text.edits.InsertEdit;
 import org.eclipse.text.edits.MalformedTreeException;
@@ -247,6 +248,18 @@ public class JSPTranslationExtension extends JSPTranslation {
 	public IDocument getJspDocument() {
 		return fJspDocument;
 	}
+	/* Process MultiEdits one edit at a time then sandwitch them together */
+	public TextEdit[] getJspEdits(MultiTextEdit textEdit) {
+		
+		TextEdit[] children = textEdit.getChildren();
+		TextEdit[] newChildren = new TextEdit[children.length];
+		
+		for(int i = 0;i<children.length;i++) {
+			TextEdit edit = getJspEdit(children[i]);
+			newChildren[i] = edit;
+		}
+		return newChildren;
+	}
 	
 	/**
 	 * Returns a corresponding TextEdit for the JSP file given a TextEdit for a
@@ -351,5 +364,29 @@ public class JSPTranslationExtension extends JSPTranslation {
 			}
 		}
 		return allJspEdits;
+	}
+	
+	public ProjectionDocument getJsDocAsProjection() {
+		ProjectionDocument proj = new ProjectionDocument(fJavaDocument);
+		if (getJavaDocument() != null && getJspDocument() != null) {
+			HashMap java2jsp = getJs2HtmlMap();
+			Iterator it = java2jsp.keySet().iterator();
+			Position javaPos = null;
+			while (it.hasNext()) {
+				javaPos = (Position) it.next();
+				try {
+					proj.addMasterDocumentRange(javaPos.getOffset(), javaPos.getLength());
+				} catch (BadLocationException e) {
+					if (JSPTranslationExtension.DEBUG) {
+						System.out.println("tyring to add Java Position:[" + javaPos.offset + ":" + javaPos.length + "] to " + getJavaPath()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$					
+						// System.out.println("substring :[" +
+						// fJavaDocument.get().substring(javaPos.offset) +
+						// "]"); //$NON-NLS-1$ //$NON-NLS-2$
+						Logger.logException(e);
+					}
+				}
+			}
+		}
+		return proj;
 	}
 }
