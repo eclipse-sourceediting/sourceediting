@@ -8,22 +8,20 @@ import java.lang.reflect.InvocationTargetException;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.wst.jsdt.core.IJavaElement;
 
-
-
 /**
  * @author childsb
- *
+ * 
  */
 public class FindReferencesInWorkingSetAction extends FindReferencesAction {
-	
-	
-	
+	@Override
 	public void run(IAction action) {
 		try {
 			Object handler = getActionHandler(action);
-			IJavaElement elements[] = getJsElementsFromSelection(getCurrentSelection());
-			if(elements==null || elements.length==0) return; 
-			executeMethod(handler, "run", new Class[] {IJavaElement.class}, new Object[] {elements[0]} );
+			IJavaElement elements[] = JsElementActionProxy.getJsElementsFromSelection(getCurrentSelection());
+			if (elements == null || elements.length == 0) {
+				return;
+			}
+			SimpleJSDTActionProxy.executeMethod(handler, "run", new Class[] { IJavaElement.class }, new Object[] { elements[0] });
 		} catch (IllegalArgumentException ex) {
 			// TODO Auto-generated catch block
 			ex.printStackTrace();
@@ -40,12 +38,8 @@ public class FindReferencesInWorkingSetAction extends FindReferencesAction {
 			// TODO Auto-generated catch block
 			ex.printStackTrace();
 		} catch (InvocationTargetException ex) {
-			// If user doesn't select a working set an exception is thrown so we wont print stack trace here 
+			// If user doesn't select a working set an exception is thrown so we
+			// wont print stack trace here
 		}
 	}
-	
-	
-	
-	
-	
 }

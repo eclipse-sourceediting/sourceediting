@@ -38,11 +38,11 @@
 			target="org.eclipse.wst.html.SCRIPT,org.eclipse.wst.html.SCRIPT.EVENT" />
 		<provisionalConfiguration
 			type="contentformater"
-			class="org.eclipse.wst.jsdt.web.ui.internal.format.FormattingStrategyJSPJava"
+			class="org.eclipse.wst.jsdt.web.ui.internal.format.FormattingStrategyJSDT"
 			target="org.eclipse.wst.html.SCRIPT" />
 		<provisionalConfiguration
 			type="hyperlinkdetector"
-			class="org.eclipse.wst.jsdt.web.ui.internal.hyperlink.JSPJavaHyperlinkDetector"
+			class="org.eclipse.wst.jsdt.web.ui.internal.hyperlink.JSDTHyperlinkDetector"
 			target="org.eclipse.wst.html.SCRIPT" />
 	</extension>
 	<extension
@@ -64,13 +64,13 @@
 	 <extension
          point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectors">
       <hyperlinkDetector
-            class="org.eclipse.wst.jsdt.web.ui.internal.hyperlink.JSPJavaHyperlinkDetector"
+            class="org.eclipse.wst.jsdt.web.ui.internal.hyperlink.JSDTHyperlinkDetector"
             id="org.eclipse.wst.jsdt.web.ui.internal.hyperlink.script.JSPJavaHyperlinkDetector"
             name="Java Element HyperLink Detector"
             targetId="org.eclipse.wst.html.SCRIPT">
       </hyperlinkDetector>
       <hyperlinkDetector
-            class="org.eclipse.wst.jsdt.web.ui.internal.hyperlink.JSPJavaHyperlinkDetector"
+            class="org.eclipse.wst.jsdt.web.ui.internal.hyperlink.JSDTHyperlinkDetector"
             id="org.eclipse.wst.jsdt.web.ui.internal.hyperlink.script.event.JSPJavaHyperlinkDetector"
             name="Java Element HyperLink Detector"
             targetId="org.eclipse.wst.html.SCRIPT.EVENT">
@@ -329,46 +329,7 @@
 		
 	</extension>
 	
-  <!-- Additional adapters for java elements.. this one is so the element will 
-       be displayed properly in ui
-   -->
-    <!--	
-   <extension point="org.eclipse.core.runtime.adapters">
-		<factory 
-            class="org.eclipse.wst.jsdt.web.ui.JsWebElementAdapterFactory" 
-            adaptableType="org.eclipse.wst.jsdt.core.IJavaElement">
-            <adapter type="org.eclipse.ui.views.properties.IPropertySourceProvider"/>
-   		</factory>
-   </extension>
-   -->
-   
-<!--
-	<extension point="org.eclipse.wst.sse.ui.editorConfiguration">
-		<sourceViewerConfiguration
-			class="org.eclipse.wst.jsdt.web.ui.StructuredTextViewerConfigurationJSP"
-			target="org.eclipse.wst.html.core.htmlsource" />
-		<provisionalConfiguration
-			type="characterpairmatcher"
-			class="org.eclipse.wst.jsdt.web.ui.internal.text.JsDocumentRegionEdgeMatcher"
-			target="org.eclipse.wst.html.core.htmlsource" />
-		<provisionalConfiguration
-			type="sourceeditingtexttools"
-			class="org.eclipse.wst.jsdt.web.ui.internal.editor.JsSourceEditingTextTools"
-			target="org.eclipse.wst.html.core.htmlsource" />
-		<provisionalConfiguration
-			type="structuredtextfoldingprovider"
-			class="org.eclipse.wst.jsdt.web.ui.internal.projection.StructuredTextFoldingProviderJSP"
-			target="org.eclipse.wst.html.core.htmlsource" />
-		<provisionalDefinition
-			type="preferencepages"
-			value="org.eclipse.wst.sse.ui.preferences.jsp, org.eclipse.wst.sse.ui.preferences.jsp.source, org.eclipse.wst.sse.ui.preferences.jsp.templates, org.eclipse.wst.sse.ui.preferences.jsp.styles"
-			target="org.eclipse.wst.html.core.htmlsource" />
-		<provisionalDefinition
-			type="showintarget"
-			value="org.eclipse.wst.jsdt.ui.PackageExplorer"
-			target="org.eclipse.wst.html.core.htmlsource" />
-	</extension>
-	-->
+  
 	<!-- ====================================================================================== -->
 	<!-- source validation for JSP															  -->
 	<!--======================================================================================-->
@@ -387,21 +348,6 @@
 		
 	</extension>
 	
-	<!--
-	<extension point="org.eclipse.wst.sse.ui.sourcevalidation">
-		<validator
-			scope="partial"
-			class="org.eclipse.wst.html.internal.validation.HTMLPartValidator"
-			id="org.eclipse.wst.jsdt.web.HTMLPartValidator">
-			<contentTypeIdentifier id="org.eclipse.wst.html.core.htmlsource">
-				<partitionType id="org.eclipse.wst.html.HTML_DECLARATION"></partitionType>
-				<partitionType id="org.eclipse.wst.html.HTML_COMMENT"></partitionType>
-				<partitionType id="org.eclipse.wst.html.HTML_DEFAULT"></partitionType>
-				<partitionType id="org.eclipse.wst.sse.ST_DEFAULT"></partitionType>
-			</contentTypeIdentifier>
-		</validator>
-	</extension>
-	-->
 	<!--======================================================================================-->
 	<!-- JSP UI Adapter factories					   						  				  -->
 	<!--======================================================================================-->
@@ -412,60 +358,7 @@
 			<contentType id="org.eclipse.wst.html.core.htmlsource" />
 		</adapterFactoryDescription>
 	</extension>
-<!--======================================================================================-->
-<!-- JSP PREFERENCE PAGES                                                                 -->
-<!--======================================================================================-->
-	<!-- Use the JSDTs prefrence pages -->
-	<!--
-	<extension point="org.eclipse.ui.preferencePages">
 
-		
-		<page
-			name="%JSP_Files.name"
-			category="org.eclipse.wst.sse.ui.internal.provisional.preferences"
-			class="org.eclipse.wst.jsdt.web.ui.internal.preferences.ui.JSPFilesPreferencePage"
-			id="org.eclipse.wst.sse.ui.preferences.jsp">
-			<keywordReference id="org.eclipse.wst.jsp.ui.files"/>
-		</page>
-		<page
-			name="%JSP_Source.name"
-			category="org.eclipse.wst.sse.ui.preferences.jsp"
-			class="org.eclipse.wst.jsdt.web.ui.internal.preferences.ui.JSPSourcePreferencePage"
-			id="org.eclipse.wst.sse.ui.preferences.jsp.source">
-		</page>
-		<page
-			name="%JSP_Templates.name"
-			category="org.eclipse.wst.sse.ui.preferences.jsp"
-			class="org.eclipse.wst.jsdt.web.ui.internal.preferences.ui.JSPTemplatePreferencePage"
-			id="org.eclipse.wst.sse.ui.preferences.jsp.templates">
-			<keywordReference id="org.eclipse.wst.jsp.ui.templates"/>
-		</page>
-		<page
-			name="%JSP_Styles.name"
-			category="org.eclipse.wst.sse.ui.preferences.jsp"
-			class="org.eclipse.wst.jsdt.web.ui.internal.preferences.ui.JSPColorPage"
-			id="org.eclipse.wst.sse.ui.preferences.jsp.styles">
-			<keywordReference id="org.eclipse.wst.jsp.ui.styles"/>
-		</page>
-	</extension>
-	-->
-	<!-- Keywords for preference and properties pages -->
-	<!--
-	<extension point="org.eclipse.ui.keywords">
-		<keyword
-			label="%preferenceKeywords.files"
-			id="org.eclipse.wst.jsp.ui.files"/>
-		<keyword
-			label="%preferenceKeywords.templates"
-			id="org.eclipse.wst.jsp.ui.templates"/>
-		<keyword
-			label="%preferenceKeywords.styles"
-			id="org.eclipse.wst.jsp.ui.styles"/>
-		<keyword
-			label="%preferenceKeywords.fragments"
-			id="org.eclipse.wst.jsp.ui.fragments"/>
-    </extension>
-	-->
 	
 
 
@@ -483,70 +376,7 @@
 		</breakpointContribution>
 	</extension>
 	-->
-	<!--======================================================================================-->
-	<!-- Snippet View contributions                                                           -->
-	<!--======================================================================================-->
-	<!--
-	<extension
-		point="org.eclipse.wst.common.snippets.SnippetContributions">
-		<category
-			label="%JSP_Extension_Element.label"
-			smallicon="icons/snippets/tag-jsp.gif"
-			id="org.eclipse.wst.jsdt.web.ui.category0"
-			contenttypes="org.eclipse.wst.html.core.htmlsource">
-			<item
-				label="%jsp_hidden_comment"
-				smallicon="icons/snippets/tag-generic.gif"
-				id="org.eclipse.wst.jsdt.web.ui.jsp_hidden_comment">
-				<content>%jsp_hidden_comment_content</content>
-			</item>
-			<item
-				label="%jsp_scriptlet"
-				smallicon="icons/snippets/jspscr.gif"
-				id="org.eclipse.wst.jsdt.web.ui.jsp_scriptlet">
-				<content>%jsp_scr_content</content>
-			</item>
-			<item
-				label="%jsp_expression"
-				smallicon="icons/snippets/jspexp.gif"
-				id="org.eclipse.wst.jsdt.web.ui.jsp_expression">
-				<content>%jsp_expression_content</content>
-			</item>
-			<item
-				label="%jsp_declaration"
-				smallicon="icons/snippets/jspdecl.gif"
-				id="org.eclipse.wst.jsdt.web.ui.jsp_declaration">
-				<content>%jsp_declaration_content</content>
-			</item>
-			<item
-				label="%jsp_include_directive"
-				smallicon="icons/snippets/jspincl.gif"
-				id="org.eclipse.wst.jsdt.web.ui.jsp_include_directive">
-				<content>%jsp_include_directive_content</content>
-			</item>
-			<item
-				label="%jsp_page_directive"
-				id="org.eclipse.wst.jsdt.web.ui.jsp_page_directive">
-				<content>%jsp_page_directive_content</content>
-			</item>
-			<item
-				label="%jsp_taglib_directive"
-				smallicon="icons/snippets/jsptaglib.gif"
-				id="org.eclipse.wst.jsdt.web.ui.jsp_taglib_directive">
-				<content>%jsp_taglib_directive_content</content>
-				<variable
-					description="%jsp_taglib_directive_uri"
-					id="uri" />
-
-				<variable
-					default="mylib"
-					description="%jsp_taglib_directive_prefix"
-					id="prefix" />
-
-			</item>
-		</category>
-	</extension>
-	-->
+	
 	
 	<!-- Editor actionsets -->
 	<!--
@@ -589,60 +419,19 @@
 	</extension>
 	
 	
-	<!--======================================================================================-->
-	<!-- Templates                                                                            -->
-	<!--======================================================================================-->
-	<!--
-	<extension point="org.eclipse.ui.editors.templates">
-		<contextType
-			name="%All_JSP_context_type_Extension_Element.name"
-			class="org.eclipse.wst.jsdt.web.ui.internal.templates.TemplateContextTypeJSP"
-			id="jsp_all" />
-
-		<contextType
-			name="%JSP_New_context_type_Extension_Element.name"
-			class="org.eclipse.wst.jsdt.web.ui.internal.templates.TemplateContextTypeJSP"
-			id="jsp_new" />
-
-		<contextType
-			name="%JSP_Tag_context_type_Extension_Element.name"
-			class="org.eclipse.wst.jsdt.web.ui.internal.templates.TemplateContextTypeJSP"
-			id="jsp_tag" />
-
-		<contextType
-			name="%JSP_Attribute_context_type_Extension_Element.name"
-			class="org.eclipse.wst.jsdt.web.ui.internal.templates.TemplateContextTypeJSP"
-			id="jsp_attribute" />
-
-		<contextType
-			name="%JSP_Attribute_value_context_type_Extension_Element.name"
-			class="org.eclipse.wst.jsdt.web.ui.internal.templates.TemplateContextTypeJSP"
-			id="jsp_attribute_value" />
-
-		<include
-			file="templates/jspdefault-templates.xml"
-			translations="$nl$/templates/jspdefault-templates.properties" />
-
-	</extension>
-	-->
+	
 	<!--======================================================================================-->
 	<!-- queryParticipant to participate in java seraches                                     -->
 	<!--======================================================================================-->
 	<extension point="org.eclipse.wst.jsdt.ui.queryParticipants">
 		<queryParticipant
-			name="%JSP_Query_Participant_Extension_Element.name"
+			name="JavaScript Query Participant"
 			nature="org.eclipse.wst.jsdt.core.jsNature"
-			class="org.eclipse.wst.jsdt.web.ui.internal.java.search.ui.JSPQueryParticipant"
-			id="org.eclipse.wst.jsdt.web.ui.java.search.ui.JSPQueryParticipant" />
+			class="org.eclipse.wst.jsdt.web.ui.internal.java.search.ui.JsQueryParticipant"
+			id="org.eclipse.wst.jsdt.web.ui.java.search.ui.JsQueryParticipant" />
 
 	</extension>
-	<!-- initialize xml ui preferences -->
-	<!--
-	<extension point="org.eclipse.core.runtime.preferences">
-		<initializer
-			class="org.eclipse.wst.jsdt.web.ui.internal.preferences.JSPUIPreferenceInitializer" />
-	</extension>
-	-->
+	
 	
 	<!--======================================================================================-->
 	<!-- Document provider for ExternalFileEditorInput                                        -->
@@ -656,41 +445,7 @@
 
 	</extension>
 	-->
-	<!-- New JSP wizard -->
-	<!--
-	<extension point="org.eclipse.ui.newWizards">
-		<wizard
-			id="org.eclipse.wst.jsdt.web.ui.internal.wizard.NewJSPWizard"
-			name="%_UI_WIZARD_NAME"
-			class="org.eclipse.wst.jsdt.web.ui.internal.wizard.NewJSPWizard"
-			category="org.eclipse.wst.web.ui"
-			icon="$nl$/icons/full/etool16/newjsp_wiz.gif">
-			<description>%_UI_WIZARD_CREATE_NEW_FILE</description>
-			<selection class="org.eclipse.core.resources.IResource" />
-		</wizard>
-	</extension>
-	-->
-	<!-- Add new JSP wizard to J2EE Project Navigator -->
-	<!--
-	<extension
-		id="org.eclipse.wst.jsdt.web.commonWizard.newJSP"
-		point="org.eclipse.ui.navigator.navigatorContent">
-		<commonWizard
-        menuGroupId="org.eclipse.wst.web.ui"
-        type="new"
-        wizardId="org.eclipse.wst.jsdt.web.ui.internal.wizard.NewJSPWizard">
-			<enablement>
-				<or>
-					<adapt type="org.eclipse.core.resources.IResource">
-						<test
-							property="org.eclipse.wst.common.project.facet.core.projectFacet"
-							value="jst.web"/>
-					</adapt>
-				</or>
-			</enablement>
-		</commonWizard>
-	</extension>
-	-->
+	
 	<extension point="org.eclipse.ui.popupMenus">
 		<viewerContribution
 			targetID="org.eclipse.wst.jsdt.web.core.jspsource.source.RulerContext"
@@ -769,7 +524,7 @@
 				id="FindOccurrences"
 				label="%FindOccurrences_label"
 				definitionId="org.eclipse.wst.sse.ui.search.find.occurrences"
-				class="org.eclipse.wst.jsdt.web.ui.internal.java.search.JSPFindOccurrencesActionDelegate"
+				class="org.eclipse.wst.jsdt.web.ui.internal.java.search.JsFindOccurrencesActionDelegate"
 				actionID="FindOccurrences">
 			</action>
 			<action
@@ -821,83 +576,5 @@
                id="org.eclipse.ui.texteditor.SelectRulerAction"/>
         </editorContribution>
 	</extension>
-	<!-- JSP Fragment Property Page -->
-	<!--
-	<extension point="org.eclipse.ui.propertyPages">
-		
-		<page
-			name="%JSPFragmentContentSettings.name"
-			class="org.eclipse.wst.jsdt.web.ui.internal.contentproperties.ui.ProjectJSPFContentSettingsPropertyPage"
-			id="org.eclipse.wst.jsdt.web.ui.internal.contentproperties.ProjectJSPFContentSettingsPropertyPage">
-         	<enabledWhen>
-               	<and>
-					<adapt type="org.eclipse.core.resources.IProject">
-						<or> 
-							<test 
-								forcePluginActivation="true"
-								property="org.eclipse.wst.common.project.facet.core.projectFacet"
-								value="jst.web" />
-						</or>
-					</adapt>
-				</and> 
-			</enabledWhen>
-			<keywordReference id="org.eclipse.wst.jsp.ui.fragments"/>
-		</page>
-		<page
-			name="%JSPFragmentContentSettings.name"
-			class="org.eclipse.wst.jsdt.web.ui.internal.contentproperties.ui.JSPFContentSettingsPropertyPage"
-			id="org.eclipse.wst.jsdt.web.ui.internal.contentproperties.JSPFContentSettingsPropertyPage">
-         	<enabledWhen>
-               	<and>
-					<adapt type="org.eclipse.core.resources.IFile">
-						<or> 
-							<test 
-								forcePluginActivation="true"
-								property="org.eclipse.core.resources.contentTypeId"
-								value="org.eclipse.wst.jsdt.web.core.jspfragmentsource" />
-							<test 
-								forcePluginActivation="true"
-								property="org.eclipse.core.resources.contentTypeId"
-								value="org.eclipse.wst.jsdt.web.core.cssjspfragmentsource" />
-						</or>
-					</adapt>
-				</and> 
-			</enabledWhen>
-			<keywordReference id="org.eclipse.wst.jsp.ui.fragments"/>
-		</page>
-	</extension>
-	-->	
-	<!--  jsp-for-css editor configurations -->		
-	<!--
-	<extension point="org.eclipse.wst.sse.ui.editorConfiguration">
-		<contentOutlineConfiguration
-			class="org.eclipse.wst.css.ui.views.contentoutline.CSSContentOutlineConfiguration"
-			target="org.eclipse.wst.jsdt.web.core.cssjspsource" />
-		<sourceViewerConfiguration
-			class="org.eclipse.wst.css.ui.StructuredTextViewerConfigurationCSS"
-			target="org.eclipse.wst.jsdt.web.core.cssjspsource" />
-		<propertySheetConfiguration
-			class="org.eclipse.wst.jsdt.web.css.ui.internal.views.properties.JSPedCSSPropertySheetConfiguration"
-			target="org.eclipse.wst.jsdt.web.core.cssjspsource" />
-		<provisionalConfiguration
-			type="characterpairmatcher"
-			class="org.eclipse.wst.css.ui.internal.text.CSSDocumentRegionEdgeMatcher"
-			target="org.eclipse.wst.jsdt.web.core.cssjspsource" />
-		<provisionalConfiguration
-			type="structuredtextfoldingprovider"
-			class="org.eclipse.wst.css.ui.internal.projection.StructuredTextFoldingProviderCSS"
-			target="org.eclipse.wst.jsdt.web.core.cssjspsource" />
-		<provisionalDefinition
-			type="preferencepages"
-			value="org.eclipse.wst.sse.ui.preferences.css, org.eclipse.wst.sse.ui.preferences.css.source, org.eclipse.wst.css.ui.preferences.templates, org.eclipse.wst.sse.ui.preferences.css.styles"
-			target="org.eclipse.wst.jsdt.web.core.cssjspsource" />
-	</extension>
-		<extension
-		point="org.eclipse.wst.sse.ui.adapterFactoryDescription">
-		<adapterFactoryDescription
-			class="org.eclipse.wst.jsdt.web.css.ui.internal.registry.AdapterFactoryProviderJSPedCSS">
-			<contentType id="org.eclipse.wst.jsdt.web.core.cssjspsource" />
-		</adapterFactoryDescription>
-	</extension>
-	-->
+	
 </plugin>

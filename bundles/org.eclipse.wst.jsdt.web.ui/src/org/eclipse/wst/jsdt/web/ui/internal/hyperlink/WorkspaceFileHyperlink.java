@@ -20,36 +20,25 @@ class WorkspaceFileHyperlink implements IHyperlink {
 	// org.eclipse.wst.xml.ui.internal.hyperlink
 	// org.eclipse.wst.html.ui.internal.hyperlink
 	// org.eclipse.wst.jsdt.web.ui.internal.hyperlink
-
-	private IRegion fRegion;
 	private IFile fFile;
 	private IRegion fHighlightRange;
-
+	private IRegion fRegion;
+	
 	public WorkspaceFileHyperlink(IRegion region, IFile file) {
 		fRegion = region;
 		fFile = file;
 	}
-
+	
 	public WorkspaceFileHyperlink(IRegion region, IFile file, IRegion range) {
 		fRegion = region;
 		fFile = file;
 		fHighlightRange = range;
 	}
-
+	
 	public IRegion getHyperlinkRegion() {
 		return fRegion;
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.jface.text.hyperlink.IHyperlink#getTypeLabel()
-	 */
-	public String getTypeLabel() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -59,22 +48,29 @@ class WorkspaceFileHyperlink implements IHyperlink {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.jface.text.hyperlink.IHyperlink#getTypeLabel()
+	 */
+	public String getTypeLabel() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
 	public void open() {
 		if (fFile != null && fFile.exists()) {
 			try {
-				IWorkbenchPage page = PlatformUI.getWorkbench()
-						.getActiveWorkbenchWindow().getActivePage();
+				IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 				IEditorPart editor = IDE.openEditor(page, fFile, true);
 				// highlight range in editor if possible
 				if (fHighlightRange != null && editor instanceof ITextEditor) {
-					((ITextEditor) editor).setHighlightRange(fHighlightRange
-							.getOffset(), fHighlightRange.getLength(), true);
+					((ITextEditor) editor).setHighlightRange(fHighlightRange.getOffset(), fHighlightRange.getLength(), true);
 				}
 			} catch (PartInitException pie) {
 				Logger.log(Logger.WARNING_DEBUG, pie.getMessage(), pie);
 			}
 		}
 	}
-
 }

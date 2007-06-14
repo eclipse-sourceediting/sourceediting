@@ -7,9 +7,6 @@ import org.eclipse.wst.jsdt.ui.StandardJavaElementContentProvider;
 
 /**
  * @author childsb
- *
+ * 
  */
-public class JsWebElementProvider extends StandardJavaElementContentProvider{
-	
-	
-}
+public class JsWebElementProvider extends StandardJavaElementContentProvider {}

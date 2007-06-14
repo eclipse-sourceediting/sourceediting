@@ -20,27 +20,26 @@ class ExternalFileHyperlink implements IHyperlink {
 	// org.eclipse.wst.xml.ui.internal.hyperlink
 	// org.eclipse.wst.html.ui.internal.hyperlink
 	// org.eclipse.wst.jsdt.web.ui.internal.hyperlink
-
-	private IRegion fHyperlinkRegion;
 	private File fHyperlinkFile;
-
+	private IRegion fHyperlinkRegion;
+	
 	public ExternalFileHyperlink(IRegion region, File file) {
 		fHyperlinkFile = file;
 		fHyperlinkRegion = region;
 	}
-
+	
 	public IRegion getHyperlinkRegion() {
 		return fHyperlinkRegion;
 	}
-
-	public String getTypeLabel() {
-		return null;
-	}
-
+	
 	public String getHyperlinkText() {
 		return null;
 	}
-
+	
+	public String getTypeLabel() {
+		return null;
+	}
+	
 	public void open() {
 		if (fHyperlinkFile != null) {
 			IEditorInput input = new ExternalFileEditorInput(fHyperlinkFile);
@@ -48,8 +47,7 @@ class ExternalFileHyperlink implements IHyperlink {
 			try {
 				descriptor = IDE.getEditorDescriptor(input.getName(), true);
 				if (descriptor != null) {
-					IWorkbenchPage page = PlatformUI.getWorkbench()
-							.getActiveWorkbenchWindow().getActivePage();
+					IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 					IDE.openEditor(page, input, descriptor.getId(), true);
 				}
 			} catch (PartInitException e) {

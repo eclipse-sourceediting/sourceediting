@@ -19,17 +19,12 @@ import org.eclipse.jface.text.Region;
  * Copied from org.eclipse.wst.jsdt.internal.ui.text.JavaWordFinder
  */
 class JsWordFinder {
-
 	public static IRegion findWord(IDocument document, int offset) {
-
 		int start = -1;
 		int end = -1;
-
 		try {
-
 			int pos = offset;
 			char c;
-
 			while (pos >= 0) {
 				c = document.getChar(pos);
 				// System.out.println("JavaWordFinder.findWord() Test java char
@@ -39,12 +34,9 @@ class JsWordFinder {
 				}
 				--pos;
 			}
-
 			start = pos;
-
 			pos = offset;
 			int length = document.getLength();
-
 			while (pos < length) {
 				c = document.getChar(pos);
 				// System.out.println("JavaWordFinder.findWord() Test java char
@@ -54,16 +46,13 @@ class JsWordFinder {
 				}
 				++pos;
 			}
-
 			end = pos;
 			// System.out.println("Start:" + start + "End:"+end);
 			// System.out.println("JavaWordFinder.findWord() Retrieved java
 			// token of:" + document.get(start, end-start) );
 		} catch (BadLocationException x) {
 		}
-
 		if (start > -1 && end > -1) {
-
 			if (start == offset && end == offset) {
 				return new Region(offset, 0);
 			} else if (start == offset) {
@@ -72,7 +61,6 @@ class JsWordFinder {
 				return new Region(start + 1, end - start - 1);
 			}
 		}
-
 		return null;
 	}
 }

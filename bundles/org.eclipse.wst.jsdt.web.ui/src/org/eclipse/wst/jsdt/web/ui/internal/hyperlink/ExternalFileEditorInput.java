@@ -21,7 +21,6 @@ class ExternalFileEditorInput implements IEditorInput, ILocationProvider {
 	// org.eclipse.wst.xml.ui.internal.hyperlink
 	// org.eclipse.wst.html.ui.internal.hyperlink
 	// org.eclipse.wst.jsdt.web.ui.internal.hyperlink
-
 	/**
 	 * The workbench adapter which simply provides the label.
 	 * 
@@ -34,21 +33,21 @@ class ExternalFileEditorInput implements IEditorInput, ILocationProvider {
 		public Object[] getChildren(Object o) {
 			return null;
 		}
-
+		
 		/*
 		 * @see org.eclipse.ui.model.IWorkbenchAdapter#getImageDescriptor(java.lang.Object)
 		 */
 		public ImageDescriptor getImageDescriptor(Object object) {
 			return null;
 		}
-
+		
 		/*
 		 * @see org.eclipse.ui.model.IWorkbenchAdapter#getLabel(java.lang.Object)
 		 */
 		public String getLabel(Object o) {
 			return ((ExternalFileEditorInput) o).getName();
 		}
-
+		
 		/*
 		 * @see org.eclipse.ui.model.IWorkbenchAdapter#getParent(java.lang.Object)
 		 */
@@ -56,51 +55,41 @@ class ExternalFileEditorInput implements IEditorInput, ILocationProvider {
 			return null;
 		}
 	}
-
 	private File fFile;
 	private WorkbenchAdapter fWorkbenchAdapter = new WorkbenchAdapter();
-
+	
 	public ExternalFileEditorInput(File file) {
 		super();
 		fFile = file;
 		fWorkbenchAdapter = new WorkbenchAdapter();
 	}
-
+	
+	/*
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object o) {
+		if (o == this) {
+			return true;
+		}
+		if (o instanceof ExternalFileEditorInput) {
+			ExternalFileEditorInput input = (ExternalFileEditorInput) o;
+			return fFile.equals(input.fFile);
+		}
+		if (o instanceof IPathEditorInput) {
+			IPathEditorInput input = (IPathEditorInput) o;
+			return getPath().equals(input.getPath());
+		}
+		return false;
+	}
+	
 	/*
 	 * @see org.eclipse.ui.IEditorInput#exists()
 	 */
 	public boolean exists() {
 		return fFile.exists();
 	}
-
-	/*
-	 * @see org.eclipse.ui.IEditorInput#getImageDescriptor()
-	 */
-	public ImageDescriptor getImageDescriptor() {
-		return null;
-	}
-
-	/*
-	 * @see org.eclipse.ui.IEditorInput#getName()
-	 */
-	public String getName() {
-		return fFile.getName();
-	}
-
-	/*
-	 * @see org.eclipse.ui.IEditorInput#getPersistable()
-	 */
-	public IPersistableElement getPersistable() {
-		return null;
-	}
-
-	/*
-	 * @see org.eclipse.ui.IEditorInput#getToolTipText()
-	 */
-	public String getToolTipText() {
-		return fFile.getAbsolutePath();
-	}
-
+	
 	/*
 	 * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
 	 */
@@ -113,7 +102,29 @@ class ExternalFileEditorInput implements IEditorInput, ILocationProvider {
 		}
 		return Platform.getAdapterManager().getAdapter(this, adapter);
 	}
-
+	
+	/*
+	 * @see org.eclipse.ui.IEditorInput#getImageDescriptor()
+	 */
+	public ImageDescriptor getImageDescriptor() {
+		return null;
+	}
+	
+	/*
+	 * @see org.eclipse.ui.IEditorInput#getName()
+	 */
+	public String getName() {
+		return fFile.getName();
+	}
+	
+	/*
+	 * @see org.eclipse.ui.IPathEditorInput#getPath()
+	 * @since 3.1
+	 */
+	public IPath getPath() {
+		return Path.fromOSString(fFile.getAbsolutePath());
+	}
+	
 	/*
 	 * @see org.eclipse.ui.editors.text.ILocationProvider#getPath(java.lang.Object)
 	 */
@@ -124,37 +135,21 @@ class ExternalFileEditorInput implements IEditorInput, ILocationProvider {
 		}
 		return null;
 	}
-
+	
 	/*
-	 * @see org.eclipse.ui.IPathEditorInput#getPath()
-	 * @since 3.1
+	 * @see org.eclipse.ui.IEditorInput#getPersistable()
 	 */
-	public IPath getPath() {
-		return Path.fromOSString(fFile.getAbsolutePath());
+	public IPersistableElement getPersistable() {
+		return null;
 	}
-
+	
 	/*
-	 * @see java.lang.Object#equals(java.lang.Object)
+	 * @see org.eclipse.ui.IEditorInput#getToolTipText()
 	 */
-	@Override
-	public boolean equals(Object o) {
-		if (o == this) {
-			return true;
-		}
-
-		if (o instanceof ExternalFileEditorInput) {
-			ExternalFileEditorInput input = (ExternalFileEditorInput) o;
-			return fFile.equals(input.fFile);
-		}
-
-		if (o instanceof IPathEditorInput) {
-			IPathEditorInput input = (IPathEditorInput) o;
-			return getPath().equals(input.getPath());
-		}
-
-		return false;
+	public String getToolTipText() {
+		return fFile.getAbsolutePath();
 	}
-
+	
 	/*
 	 * @see java.lang.Object#hashCode()
 	 */

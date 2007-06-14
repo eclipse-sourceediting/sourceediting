@@ -20,9 +20,9 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.texteditor.RetargetTextEditorAction;
 import org.eclipse.wst.html.ui.internal.edit.ui.ActionContributorHTML;
 import org.eclipse.wst.jsdt.ui.actions.RefactorActionGroup;
-import org.eclipse.wst.jsdt.web.ui.internal.IActionConstantsJSP;
-import org.eclipse.wst.jsdt.web.ui.internal.IActionDefinitionIdsJSP;
-import org.eclipse.wst.jsdt.web.ui.internal.JSPUIMessages;
+import org.eclipse.wst.jsdt.web.ui.internal.IActionConstantsJs;
+import org.eclipse.wst.jsdt.web.ui.internal.IActionDefinitionIdsJs;
+import org.eclipse.wst.jsdt.web.ui.internal.JsUIMessages;
 import org.eclipse.wst.sse.ui.internal.actions.StructuredTextEditorActionConstants;
 
 /**
@@ -39,71 +39,46 @@ import org.eclipse.wst.sse.ui.internal.actions.StructuredTextEditorActionConstan
  * Note that this class is still valid for single page editor.
  */
 public class ActionContributorJSP extends ActionContributorHTML {
-
-	private RetargetTextEditorAction renameElementAction = null;
+	private static final String[] EDITOR_IDS = { "org.eclipse.wst.html.core.htmlsource.source", "org.eclipse.wst.sse.ui.StructuredTextEditor" }; //$NON-NLS-1$ //$NON-NLS-2$
 	private RetargetTextEditorAction moveElementAction = null;
 	private IMenuManager refactorMenu = null;
-
-	private static final String[] EDITOR_IDS = {
-			"org.eclipse.wst.html.core.htmlsource.source", "org.eclipse.wst.sse.ui.StructuredTextEditor" }; //$NON-NLS-1$ //$NON-NLS-2$
-
+	private RetargetTextEditorAction renameElementAction = null;
+	
 	public ActionContributorJSP() {
 		super();
-
-		ResourceBundle bundle = JSPUIMessages.getResourceBundle();
-		this.renameElementAction = new RetargetTextEditorAction(bundle,
-				IActionConstantsJSP.ACTION_NAME_RENAME_ELEMENT
-						+ StructuredTextEditorActionConstants.UNDERSCORE);
-		this.renameElementAction
-				.setActionDefinitionId(IActionDefinitionIdsJSP.RENAME_ELEMENT);
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(
-				this.renameElementAction,
-				IHelpContextIds.JSP_REFACTORRENAME_HELPID);
-
-		this.moveElementAction = new RetargetTextEditorAction(bundle,
-				IActionConstantsJSP.ACTION_NAME_MOVE_ELEMENT
-						+ StructuredTextEditorActionConstants.UNDERSCORE);
-		this.moveElementAction
-				.setActionDefinitionId(IActionDefinitionIdsJSP.MOVE_ELEMENT);
-		PlatformUI.getWorkbench().getHelpSystem()
-				.setHelp(this.moveElementAction,
-						IHelpContextIds.JSP_REFACTORMOVE_HELPID);
-
+		ResourceBundle bundle = JsUIMessages.getResourceBundle();
+		this.renameElementAction = new RetargetTextEditorAction(bundle, IActionConstantsJs.ACTION_NAME_RENAME_ELEMENT + StructuredTextEditorActionConstants.UNDERSCORE);
+		this.renameElementAction.setActionDefinitionId(IActionDefinitionIdsJs.RENAME_ELEMENT);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(this.renameElementAction, IHelpContextIds.JSP_REFACTORRENAME_HELPID);
+		this.moveElementAction = new RetargetTextEditorAction(bundle, IActionConstantsJs.ACTION_NAME_MOVE_ELEMENT + StructuredTextEditorActionConstants.UNDERSCORE);
+		this.moveElementAction.setActionDefinitionId(IActionDefinitionIdsJs.MOVE_ELEMENT);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(this.moveElementAction, IHelpContextIds.JSP_REFACTORMOVE_HELPID);
 		// the refactor menu, add the menu itself to add all refactor actions
-		this.refactorMenu = new MenuManager(
-				JSPUIMessages.ActionContributorJSP_0,
-				RefactorActionGroup.MENU_ID);
+		this.refactorMenu = new MenuManager(JsUIMessages.ActionContributorJSP_0, RefactorActionGroup.MENU_ID);
 		refactorMenu.add(this.renameElementAction);
 		refactorMenu.add(this.moveElementAction);
 	}
-
-	@Override
-	protected String[] getExtensionIDs() {
-		return EDITOR_IDS;
-	}
-
+	
 	@Override
 	protected void addToMenu(IMenuManager menu) {
 		super.addToMenu(menu);
-
 		menu.insertAfter(IWorkbenchActionConstants.M_EDIT, this.refactorMenu);
 	}
-
+	
+	@Override
+	protected String[] getExtensionIDs() {
+		return ActionContributorJSP.EDITOR_IDS;
+	}
+	
 	@Override
 	public void setActiveEditor(IEditorPart activeEditor) {
-
 		super.setActiveEditor(activeEditor);
-		this.renameElementAction.setAction(getAction(
-				getTextEditor(getActiveEditorPart()),
-				IActionConstantsJSP.ACTION_NAME_RENAME_ELEMENT));
-		this.moveElementAction.setAction(getAction(
-				getTextEditor(getActiveEditorPart()),
-				IActionConstantsJSP.ACTION_NAME_MOVE_ELEMENT));
+		this.renameElementAction.setAction(getAction(getTextEditor(getActiveEditorPart()), IActionConstantsJs.ACTION_NAME_RENAME_ELEMENT));
+		this.moveElementAction.setAction(getAction(getTextEditor(getActiveEditorPart()), IActionConstantsJs.ACTION_NAME_MOVE_ELEMENT));
 	}
-
+	
 	@Override
 	public void setViewerSpecificContributionsEnabled(boolean enabled) {
-
 		super.setViewerSpecificContributionsEnabled(enabled);
 		this.renameElementAction.setEnabled(enabled);
 		this.moveElementAction.setEnabled(enabled);

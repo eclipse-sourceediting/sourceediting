@@ -16,9 +16,9 @@ import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.jsdt.core.IJavaElement;
-import org.eclipse.wst.jsdt.web.core.internal.java.IJSPTranslation;
-import org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslation;
-import org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslationAdapter;
+import org.eclipse.wst.jsdt.web.core.internal.java.IJsTranslation;
+import org.eclipse.wst.jsdt.web.core.internal.java.JsTranslation;
+import org.eclipse.wst.jsdt.web.core.internal.java.JsTranslationAdapter;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
@@ -27,30 +27,21 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 class JSPJavaSelectionProvider {
 	static IJavaElement[] getSelection(ITextEditor textEditor) {
 		IJavaElement[] elements = null;
-
-		IDocument document = textEditor.getDocumentProvider().getDocument(
-				textEditor.getEditorInput());
+		IDocument document = textEditor.getDocumentProvider().getDocument(textEditor.getEditorInput());
 		ISelection selection = textEditor.getSelectionProvider().getSelection();
 		if (selection instanceof ITextSelection) {
 			ITextSelection textSelection = (ITextSelection) selection;
 			// get the JSP translation object for this editor's document
 			IStructuredModel model = null;
 			try {
-				 model = StructuredModelManager.getModelManager()
-					.getExistingModelForRead(document);
+				model = StructuredModelManager.getModelManager().getExistingModelForRead(document);
 				if (model instanceof IDOMModel) {
 					IDOMModel xmlModel = (IDOMModel) model;
 					IDOMDocument xmlDoc = xmlModel.getDocument();
-
-					JSPTranslationAdapter adapter = (JSPTranslationAdapter) xmlDoc
-							.getAdapterFor(IJSPTranslation.class);
+					JsTranslationAdapter adapter = (JsTranslationAdapter) xmlDoc.getAdapterFor(IJsTranslation.class);
 					if (adapter != null) {
-						JSPTranslation translation = adapter
-								.getJSPTranslation();
-						elements = translation.getElementsFromJsRange(
-								textSelection.getOffset(), textSelection
-										.getOffset()
-										+ textSelection.getLength());
+						JsTranslation translation = adapter.getJSPTranslation();
+						elements = translation.getElementsFromJsRange(textSelection.getOffset(), textSelection.getOffset() + textSelection.getLength());
 					}
 				}
 			} finally {
@@ -64,5 +55,4 @@ class JSPJavaSelectionProvider {
 		}
 		return elements;
 	}
-
 }

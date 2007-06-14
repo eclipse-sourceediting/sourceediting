@@ -12,7 +12,7 @@ package org.eclipse.wst.jsdt.web.ui.internal.java.refactoring;
 
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.jsdt.core.IJavaElement;
-import org.eclipse.wst.jsdt.web.ui.internal.JSPUIMessages;
+import org.eclipse.wst.jsdt.web.ui.internal.JsUIMessages;
 
 /**
  * Overrides get description
@@ -20,7 +20,6 @@ import org.eclipse.wst.jsdt.web.ui.internal.JSPUIMessages;
  * @author pavery
  */
 public class JSPPackageRenameRequestor extends BasicRefactorSearchRequestor {
-
 	/**
 	 * Element is the old package. newName is the new package name.
 	 * 
@@ -30,7 +29,7 @@ public class JSPPackageRenameRequestor extends BasicRefactorSearchRequestor {
 	public JSPPackageRenameRequestor(IJavaElement element, String newName) {
 		super(element, newName);
 	}
-
+	
 	/*
 	 * @see org.eclipse.wst.jsdt.web.ui.internal.java.refactoring.BasicRefactorSearchRequestor#getDescription()
 	 */
@@ -38,9 +37,7 @@ public class JSPPackageRenameRequestor extends BasicRefactorSearchRequestor {
 	protected String getDescription() {
 		String packageName = getElement().getElementName();
 		String newName = getNewName();
-		String description = NLS.bind(
-				JSPUIMessages.BasicRefactorSearchRequestor_5, (new String[] {
-						packageName, newName }));
+		String description = NLS.bind(JsUIMessages.BasicRefactorSearchRequestor_5, (new String[] { packageName, newName }));
 		return description;
 	}
 }

@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.wst.jsdt.web.ui.views.contentoutline;
 
-
-
 import org.eclipse.wst.jsdt.web.ui.views.provisional.contentoutline.JsContentOutlineConfig;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapterFactory;
@@ -20,39 +18,35 @@ import org.eclipse.wst.sse.ui.internal.contentoutline.IJFaceNodeAdapter;
 import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeAdapterFactory;
 
 /**
- * An adapter factory to create JFaceNodeAdapters.  Use this
- * adapter factory with a JFaceAdapterContentProvider to display
- * DOM nodes in a tree.
+ * An adapter factory to create JFaceNodeAdapters. Use this adapter factory with
+ * a JFaceAdapterContentProvider to display DOM nodes in a tree.
  */
 public class JFaceNodeAdapterFactoryForJSDT extends JFaceNodeAdapterFactory {
-	
-	
-
-
 	public JFaceNodeAdapterFactoryForJSDT() {
 		this(IJFaceNodeAdapter.class, true);
 	}
-
+	
 	public JFaceNodeAdapterFactoryForJSDT(Object adapterKey, boolean registerAdapters) {
 		super(adapterKey, registerAdapters);
 	}
-
+	
+	@Override
+	public INodeAdapterFactory copy() {
+		return new JFaceNodeAdapterFactoryForJSDT(getAdapterKey(), isShouldRegisterAdapter());
+	}
+	
+	@Override
 	protected INodeAdapter createAdapter(INodeNotifier node) {
 		if (singletonAdapter == null) {
 			// create the JFaceNodeAdapter
-			//singletonAdapter = new JFaceNodeAdapterForJSDT(this);
-            if(JsContentOutlineConfig.USE_ADVANCED) {
-            	singletonAdapter = new org.eclipse.wst.jsdt.web.ui.views.provisional.contentoutline.JFaceNodeAdapterForJs(this);
-            }else {
-            	singletonAdapter = new org.eclipse.wst.jsdt.web.ui.views.contentoutline.JFaceNodeAdapterForJs(this);
-            }
+			// singletonAdapter = new JFaceNodeAdapterForJSDT(this);
+			if (JsContentOutlineConfig.USE_ADVANCED) {
+				singletonAdapter = new org.eclipse.wst.jsdt.web.ui.views.provisional.contentoutline.JFaceNodeAdapterForJs(this);
+			} else {
+				singletonAdapter = new org.eclipse.wst.jsdt.web.ui.views.contentoutline.JFaceNodeAdapterForJs(this);
+			}
 			initAdapter(singletonAdapter, node);
 		}
 		return singletonAdapter;
 	}
-
-	public INodeAdapterFactory copy() {
-		return new JFaceNodeAdapterFactoryForJSDT(getAdapterKey(), isShouldRegisterAdapter());
-	}
-
 }

@@ -19,45 +19,14 @@ import org.eclipse.ltk.core.refactoring.participants.CheckConditionsContext;
 import org.eclipse.ltk.core.refactoring.participants.MoveParticipant;
 import org.eclipse.wst.jsdt.core.IPackageFragment;
 import org.eclipse.wst.jsdt.core.IType;
-import org.eclipse.wst.jsdt.web.ui.internal.JSPUIMessages;
+import org.eclipse.wst.jsdt.web.ui.internal.JsUIMessages;
 
 /**
  * @author pavery
  */
 public class JSPTypeMoveParticipant extends MoveParticipant {
-
 	IType fType = null;
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ltk.core.refactoring.participants.RefactoringParticipant#initialize(java.lang.Object)
-	 */
-	@Override
-	protected boolean initialize(Object element) {
-
-		if (element instanceof IType) {
-			this.fType = (IType) element;
-			return true;
-		}
-		return false;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ltk.core.refactoring.participants.RefactoringParticipant#getName()
-	 */
-	@Override
-	public String getName() {
-
-		String name = ""; //$NON-NLS-1$
-		if (this.fType != null) {
-			name = this.fType.getElementName();
-		}
-		return name;
-	}
-
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -65,12 +34,11 @@ public class JSPTypeMoveParticipant extends MoveParticipant {
 	 *      org.eclipse.ltk.core.refactoring.participants.CheckConditionsContext)
 	 */
 	@Override
-	public RefactoringStatus checkConditions(IProgressMonitor pm,
-			CheckConditionsContext context) {
+	public RefactoringStatus checkConditions(IProgressMonitor pm, CheckConditionsContext context) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -78,23 +46,45 @@ public class JSPTypeMoveParticipant extends MoveParticipant {
 	 */
 	@Override
 	public Change createChange(IProgressMonitor pm) throws CoreException {
-
 		if (pm != null && pm.isCanceled()) {
 			return null;
 		}
-
 		CompositeChange multiChange = null;
 		Object dest = getArguments().getDestination();
-
 		if (dest instanceof IPackageFragment) {
-			Change[] changes = JSPTypeMoveChange.createChangesFor(fType,
-					((IPackageFragment) dest).getElementName());
+			Change[] changes = JSPTypeMoveChange.createChangesFor(fType, ((IPackageFragment) dest).getElementName());
 			if (changes.length > 0) {
-				multiChange = new CompositeChange(JSPUIMessages.JSP_changes,
-						changes);
+				multiChange = new CompositeChange(JsUIMessages.JSP_changes, changes);
 			}
 		}
 		return multiChange;
 	}
-
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.ltk.core.refactoring.participants.RefactoringParticipant#getName()
+	 */
+	@Override
+	public String getName() {
+		String name = ""; //$NON-NLS-1$
+		if (this.fType != null) {
+			name = this.fType.getElementName();
+		}
+		return name;
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.ltk.core.refactoring.participants.RefactoringParticipant#initialize(java.lang.Object)
+	 */
+	@Override
+	protected boolean initialize(Object element) {
+		if (element instanceof IType) {
+			this.fType = (IType) element;
+			return true;
+		}
+		return false;
+	}
 }

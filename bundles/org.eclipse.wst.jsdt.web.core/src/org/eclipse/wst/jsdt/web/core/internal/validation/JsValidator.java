@@ -19,10 +19,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.wst.jsdt.core.compiler.IProblem;
 import org.eclipse.wst.jsdt.web.core.internal.Logger;
-import org.eclipse.wst.jsdt.web.core.internal.java.IJSPTranslation;
-import org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslation;
-import org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslationAdapter;
-import org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslationAdapterFactory;
+import org.eclipse.wst.jsdt.web.core.internal.java.IJsTranslation;
+import org.eclipse.wst.jsdt.web.core.internal.java.JsTranslation;
+import org.eclipse.wst.jsdt.web.core.internal.java.JsTranslationAdapter;
+import org.eclipse.wst.jsdt.web.core.internal.java.JsTranslationAdapterFactory;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
@@ -36,19 +36,16 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 
 public class JsValidator extends JSPValidator {
 	private static final boolean DEBUG = Boolean.valueOf(Platform.getDebugOption("org.eclipse.wst.jsdt.web.core/debug/jspvalidator")).booleanValue(); //$NON-NLS-1$
-
 	private IValidator fMessageOriginator;
-
+	
 	public JsValidator() {
 		this.fMessageOriginator = this;
 	}
-
+	
 	public JsValidator(IValidator validator) {
 		this.fMessageOriginator = validator;
 	}
-
 	
-
 	/**
 	 * Creates an IMessage from an IProblem
 	 * 
@@ -59,40 +56,31 @@ public class JsValidator extends JSPValidator {
 	 * @return message representation of the problem, or null if it could not
 	 *         create one
 	 */
-	private IMessage createMessageFromProblem(IProblem problem, IFile f, JSPTranslation translation, IStructuredDocument structuredDoc) {
-
+	private IMessage createMessageFromProblem(IProblem problem, IFile f, JsTranslation translation, IStructuredDocument structuredDoc) {
 		int sourceStart = problem.getSourceStart();
-		int sourceEnd =   problem.getSourceEnd();
+		int sourceEnd = problem.getSourceEnd();
 		if (sourceStart == -1) {
 			return null;
 		}
-
 		// line number for marker starts @ 1
 		// line number from document starts @ 0
 		int lineNo = structuredDoc.getLineOfOffset(sourceStart) + 1;
-
 		int sev = problem.isError() ? IMessage.HIGH_SEVERITY : IMessage.NORMAL_SEVERITY;
-
 		IMessage m = new LocalizedMessage(sev, problem.getMessage(), f);
-
 		m.setLineNo(lineNo);
 		m.setOffset(sourceStart);
 		m.setLength(sourceEnd - sourceStart + 1);
-
 		return m;
 	}
-
+	
 	void performValidation(IFile f, IReporter reporter, IStructuredModel model) {
-
 		if (model instanceof IDOMModel) {
 			IDOMModel domModel = (IDOMModel) model;
 			setupAdapterFactory(domModel);
-
 			IDOMDocument xmlDoc = domModel.getDocument();
-			JSPTranslationAdapter translationAdapter = (JSPTranslationAdapter) xmlDoc.getAdapterFor(IJSPTranslation.class);
+			JsTranslationAdapter translationAdapter = (JsTranslationAdapter) xmlDoc.getAdapterFor(IJsTranslation.class);
 			translationAdapter.resourceChanged();
-			JSPTranslation translation = translationAdapter.getJSPTranslation();
-
+			JsTranslation translation = translationAdapter.getJSPTranslation();
 			if (!reporter.isCancelled()) {
 				translation.setProblemCollectingActive(true);
 				translation.reconcileCompilationUnit();
@@ -107,7 +95,7 @@ public class JsValidator extends JSPValidator {
 			}
 		}
 	}
-
+	
 	/**
 	 * When loading model from a file, you need to explicitly add adapter
 	 * factory.
@@ -115,18 +103,18 @@ public class JsValidator extends JSPValidator {
 	 * @param sm
 	 */
 	private void setupAdapterFactory(IStructuredModel sm) {
-		if (sm.getFactoryRegistry().getFactoryFor(IJSPTranslation.class) == null) {
-			JSPTranslationAdapterFactory factory = new JSPTranslationAdapterFactory();
+		if (sm.getFactoryRegistry().getFactoryFor(IJsTranslation.class) == null) {
+			JsTranslationAdapterFactory factory = new JsTranslationAdapterFactory();
 			sm.getFactoryRegistry().addFactory(factory);
 		}
 	}
-
+	
 	@Override
 	public void validate(IValidationContext helper, IReporter reporter) throws ValidationException {
 		reporter.removeAllMessages(this);
 		super.validate(helper, reporter);
 	}
-
+	
 	/**
 	 * Validate one file. It's assumed that the file has JSP content type.
 	 * 
@@ -138,7 +126,6 @@ public class JsValidator extends JSPValidator {
 		if (JsValidator.DEBUG) {
 			Logger.log(Logger.INFO, getClass().getName() + " validating: " + f); //$NON-NLS-1$
 		}
-
 		IStructuredModel model = null;
 		try {
 			// get jsp model, get tranlsation

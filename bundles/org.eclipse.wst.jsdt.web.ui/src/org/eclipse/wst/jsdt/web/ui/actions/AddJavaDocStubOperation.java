@@ -14,7 +14,7 @@ import org.eclipse.text.edits.MultiTextEdit;
 import org.eclipse.wst.jsdt.core.ICompilationUnit;
 import org.eclipse.wst.jsdt.core.IMember;
 import org.eclipse.wst.jsdt.web.core.internal.java.DocumentChangeListenerToTextEdit;
-import org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslation;
+import org.eclipse.wst.jsdt.web.core.internal.java.JsTranslation;
 import org.eclipse.wst.jsdt.web.ui.views.contentoutline.JsJfaceNode;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
@@ -26,45 +26,16 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
  * 
  */
 public class AddJavaDocStubOperation extends org.eclipse.wst.jsdt.internal.corext.codemanipulation.AddJavaDocStubOperation {
+	private IDocument copy;
 	/**
 	 * @param members
 	 */
 	private JsJfaceNode node;
-	private IDocument copy;
-	private DocumentChangeListenerToTextEdit textEditListener;
-;
-	
+	private DocumentChangeListenerToTextEdit textEditListener;;
 	
 	public AddJavaDocStubOperation(IMember[] members, JsJfaceNode node) {
 		super(members);
 		this.node = node;
-	}
-	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.jsdt.internal.corext.codemanipulation.AddJavaDocStubOperation#getDocument(org.eclipse.wst.jsdt.core.ICompilationUnit,
-	 *      org.eclipse.core.runtime.IProgressMonitor)
-	 */
-	protected IDocument getDocument(ICompilationUnit cu, IProgressMonitor monitor) throws CoreException {
-		return getJavaDocumentFromNode();
-	}
-	
-	protected IDocument getJavaDocumentFromNode() {
-		if (copy == null) {
-			JSPTranslation tran = (JSPTranslation) node.getTranslation();
-			copy = new Document(tran.getJsText());
-			
-			textEditListener = new DocumentChangeListenerToTextEdit();
-			copy.addDocumentListener(textEditListener);
-		}
-		return copy;
-	}
-	
-	public void run(IProgressMonitor monitor) throws CoreException, OperationCanceledException {
-		super.run(monitor);
-		applyChanges();
-		/* need to apply the text edits back to the original doc */
 	}
 	
 	protected void applyChanges() {
@@ -77,7 +48,6 @@ public class AddJavaDocStubOperation extends org.eclipse.wst.jsdt.internal.corex
 			model.aboutToChangeModel();
 			model.beginRecording(this, "Generate JsDoc", "Generate JsDoc");
 			edits.apply(doc);
-			
 		} catch (MalformedTreeException ex) {
 			// TODO Auto-generated catch block
 			ex.printStackTrace();
@@ -91,5 +61,33 @@ public class AddJavaDocStubOperation extends org.eclipse.wst.jsdt.internal.corex
 				model.releaseFromEdit();
 			}
 		}
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.wst.jsdt.internal.corext.codemanipulation.AddJavaDocStubOperation#getDocument(org.eclipse.wst.jsdt.core.ICompilationUnit,
+	 *      org.eclipse.core.runtime.IProgressMonitor)
+	 */
+	@Override
+	protected IDocument getDocument(ICompilationUnit cu, IProgressMonitor monitor) throws CoreException {
+		return getJavaDocumentFromNode();
+	}
+	
+	protected IDocument getJavaDocumentFromNode() {
+		if (copy == null) {
+			JsTranslation tran = node.getTranslation();
+			copy = new Document(tran.getJsText());
+			textEditListener = new DocumentChangeListenerToTextEdit();
+			copy.addDocumentListener(textEditListener);
+		}
+		return copy;
+	}
+	
+	@Override
+	public void run(IProgressMonitor monitor) throws CoreException, OperationCanceledException {
+		super.run(monitor);
+		applyChanges();
+		/* need to apply the text edits back to the original doc */
 	}
 }

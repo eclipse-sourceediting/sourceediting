@@ -8,16 +8,10 @@ import org.w3c.dom.Node;
 
 /**
  * @author childsb
- *
+ * 
  */
 public interface IJavaWebNode {
-	
-	public IJavaElement getJavaElement() ;
+	public IJavaElement getJavaElement();
 	
 	public Node getParentNode();
-	
-	
-	
-	
-	
 }

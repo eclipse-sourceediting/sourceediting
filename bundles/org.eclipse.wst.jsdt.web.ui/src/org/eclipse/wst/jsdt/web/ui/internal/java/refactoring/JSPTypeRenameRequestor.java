@@ -14,9 +14,9 @@ import java.text.MessageFormat;
 
 import org.eclipse.wst.jsdt.core.IType;
 import org.eclipse.wst.jsdt.core.search.SearchMatch;
-import org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslation;
-import org.eclipse.wst.jsdt.web.core.internal.java.search.JavaSearchDocumentDelegate;
-import org.eclipse.wst.jsdt.web.ui.internal.JSPUIMessages;
+import org.eclipse.wst.jsdt.web.core.internal.java.JsTranslation;
+import org.eclipse.wst.jsdt.web.core.internal.java.search.JSDTSearchDocumentDelegate;
+import org.eclipse.wst.jsdt.web.ui.internal.JsUIMessages;
 
 /**
  * Creates document change(s) for a type rename. Changes are created for every
@@ -25,37 +25,10 @@ import org.eclipse.wst.jsdt.web.ui.internal.JSPUIMessages;
  * @author pavery
  */
 public class JSPTypeRenameRequestor extends BasicRefactorSearchRequestor {
-
 	public JSPTypeRenameRequestor(IType type, String newName) {
 		super(type, newName);
 	}
-
-	private IType getType() {
-		return (IType) getElement();
-	}
-
-	@Override
-	protected String getRenameText(JavaSearchDocumentDelegate searchDoc,
-			SearchMatch javaMatch) {
-
-		String renameText = getNewName();
-
-		String pkg = getType().getPackageFragment().getElementName();
-		JSPTranslation trans = searchDoc.getJspTranslation();
-		String matchText = trans.getJsText().substring(javaMatch.getOffset(),
-				javaMatch.getOffset() + javaMatch.getLength());
-
-		// if it's an import or jsp:useBean or fully qualified type, we need to
-		// add the package name as well
-//		if (trans.isImport(javaMatch.getOffset())
-//				|| /* trans.isUseBean(javaMatch.getOffset()) || */isFullyQualified(matchText)) {
-//			if (!pkg.equals("")) {
-//				renameText = pkg + "." + renameText; //$NON-NLS-1$
-//			}
-//		}
-		return renameText;
-	}
-
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -63,12 +36,31 @@ public class JSPTypeRenameRequestor extends BasicRefactorSearchRequestor {
 	 */
 	@Override
 	protected String getDescription() {
-
 		String typeName = getElement().getElementName();
 		String newName = getNewName();
-		String description = MessageFormat.format(
-				JSPUIMessages.BasicRefactorSearchRequestor_4, new String[] {
-						typeName, newName });
+		String description = MessageFormat.format(JsUIMessages.BasicRefactorSearchRequestor_4, new String[] { typeName, newName });
 		return description;
+	}
+	
+	@Override
+	protected String getRenameText(JSDTSearchDocumentDelegate searchDoc, SearchMatch javaMatch) {
+		String renameText = getNewName();
+		String pkg = getType().getPackageFragment().getElementName();
+		JsTranslation trans = searchDoc.getJspTranslation();
+		String matchText = trans.getJsText().substring(javaMatch.getOffset(), javaMatch.getOffset() + javaMatch.getLength());
+		// if it's an import or jsp:useBean or fully qualified type, we need to
+		// add the package name as well
+// if (trans.isImport(javaMatch.getOffset())
+// || /* trans.isUseBean(javaMatch.getOffset()) ||
+// */isFullyQualified(matchText)) {
+// if (!pkg.equals("")) {
+// renameText = pkg + "." + renameText; //$NON-NLS-1$
+// }
+// }
+		return renameText;
+	}
+	
+	private IType getType() {
+		return (IType) getElement();
 	}
 }

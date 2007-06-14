@@ -13,45 +13,47 @@ import org.eclipse.wst.jsdt.core.IJavaElement;
 
 /**
  * @author childsb
- *
+ * 
  */
 public class JsElementActionProxy extends SimpleJSDTActionProxy {
-	
-	
-	
-	public Object[] getRunArgs(IAction action) {
-		/* Needs to return an array of IJavaElements.  Since its one arg of type IJavaElement[] need to
-		 * put into an object array
-		 */
-		return new Object[] {getJsElementsFromSelection(getCurrentSelection())};	
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.jsdt.web.ui.actions.SimpleJSDTActionProxy#getRunArgTypes()
-	 */
-	public Class[] getRunArgTypes() {
-		return new Class[] {(new IJavaElement[0] ).getClass()};
-	}
-
 	/* Util method to get all the java elements in a selection */
 	public static IJavaElement[] getJsElementsFromSelection(ISelection selection) {
-		if(selection==null) return new IJavaElement[0];
+		if (selection == null) {
+			return new IJavaElement[0];
+		}
 		ArrayList elements = new ArrayList();
-		
-		if(selection instanceof IStructuredSelection) {
-			Iterator itt = ((IStructuredSelection)selection).iterator();
-			while(itt.hasNext()) {
+		if (selection instanceof IStructuredSelection) {
+			Iterator itt = ((IStructuredSelection) selection).iterator();
+			while (itt.hasNext()) {
 				Object element = itt.next();
-				if(element instanceof IJavaElement) {
+				if (element instanceof IJavaElement) {
 					elements.add(element);
 				}
-				if(element instanceof IJavaWebNode) {
-					elements.add(  ((IJavaWebNode)element).getJavaElement()        );
+				if (element instanceof IJavaWebNode) {
+					elements.add(((IJavaWebNode) element).getJavaElement());
 				}
 			}
-			return (IJavaElement[])elements.toArray(new IJavaElement[elements.size()]);
+			return (IJavaElement[]) elements.toArray(new IJavaElement[elements.size()]);
 		}
 		return new IJavaElement[0];
 	}
-
+	
+	@Override
+	public Object[] getRunArgs(IAction action) {
+		/*
+		 * Needs to return an array of IJavaElements. Since its one arg of type
+		 * IJavaElement[] need to put into an object array
+		 */
+		return new Object[] { JsElementActionProxy.getJsElementsFromSelection(getCurrentSelection()) };
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.wst.jsdt.web.ui.actions.SimpleJSDTActionProxy#getRunArgTypes()
+	 */
+	@Override
+	public Class[] getRunArgTypes() {
+		return new Class[] { (new IJavaElement[0]).getClass() };
+	}
 }

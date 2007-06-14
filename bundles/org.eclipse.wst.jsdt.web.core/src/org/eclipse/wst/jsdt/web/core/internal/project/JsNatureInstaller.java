@@ -9,10 +9,9 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.wst.common.project.facet.core.IDelegate;
 import org.eclipse.wst.common.project.facet.core.IProjectFacetVersion;
-import org.eclipse.wst.jsdt.web.core.internal.JSPCorePlugin;
+import org.eclipse.wst.jsdt.web.core.internal.JsCorePlugin;
 
 public class JsNatureInstaller implements IDelegate {
-	
 	public void execute(IProject project, IProjectFacetVersion fv, Object config, IProgressMonitor monitor) throws CoreException {
 		if (monitor == null) {
 			monitor = new NullProgressMonitor();
@@ -29,17 +28,14 @@ public class JsNatureInstaller implements IDelegate {
 		monitor.beginTask("Installing JavaScript Development Tools...", 100);
 		monitor.subTask("Adding JavaScript Development Toolkit Nature...");
 		SubProgressMonitor sub = new SubProgressMonitor(monitor, 25);
-		
 		try {
 			monitor.worked(20);
 			JsWebNature jsNature = new JsWebNature(project, monitor);
 			monitor.worked(20);
 			jsNature.configure();
 			monitor.worked(40);
-			
 		} catch (Exception e) {
-			throw new CoreException(new Status(IStatus.ERROR, JSPCorePlugin.PLUGIN_ID, IStatus.OK, "Error installing runtime! JavaScript Development Tools could not be added..", e));
+			throw new CoreException(new Status(IStatus.ERROR, JsCorePlugin.PLUGIN_ID, IStatus.OK, "Error installing runtime! JavaScript Development Tools could not be added..", e));
 		}
-		
 	}
 }

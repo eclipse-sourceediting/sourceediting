@@ -11,8 +11,8 @@
 package org.eclipse.wst.jsdt.web.ui.internal.registry;
 
 import org.eclipse.wst.html.core.internal.modelhandler.ModelHandlerForHTML;
-import org.eclipse.wst.jsdt.web.core.internal.java.IJSPTranslation;
-import org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslationAdapterFactory;
+import org.eclipse.wst.jsdt.web.core.internal.java.IJsTranslation;
+import org.eclipse.wst.jsdt.web.core.internal.java.JsTranslationAdapterFactory;
 import org.eclipse.wst.jsdt.web.ui.views.contentoutline.JFaceNodeAdapterFactoryForJSDT;
 import org.eclipse.wst.sse.core.internal.ltk.modelhandler.IDocumentTypeHandler;
 import org.eclipse.wst.sse.core.internal.model.FactoryRegistry;
@@ -23,7 +23,6 @@ import org.eclipse.wst.sse.ui.internal.provisional.registry.AdapterFactoryProvid
 import org.eclipse.wst.sse.ui.internal.util.Assert;
 
 public class AdapterFactoryProviderForJSDT implements AdapterFactoryProvider {
-
 	/*
 	 * @see AdapterFactoryProvider#addAdapterFactories(IStructuredModel)
 	 */
@@ -34,41 +33,35 @@ public class AdapterFactoryProviderForJSDT implements AdapterFactoryProvider {
 		// Must update/add to propagating adapters here too
 		addPropagatingAdapters(structuredModel);
 	}
-
+	
 	protected void addContentBasedFactories(IStructuredModel structuredModel) {
 		FactoryRegistry factoryRegistry = structuredModel.getFactoryRegistry();
-		
-		Assert.isNotNull(factoryRegistry,"Program Error: client caller must ensure model has factory registry"); //$NON-NLS-1$
+		Assert.isNotNull(factoryRegistry, "Program Error: client caller must ensure model has factory registry"); //$NON-NLS-1$
 		INodeAdapterFactory factory = null;
 		factory = factoryRegistry.getFactoryFor(IJFaceNodeAdapter.class);
-		
 		if (!(factory instanceof JFaceNodeAdapterFactoryForJSDT)) {
-            factoryRegistry.removeFactoriesFor(IJFaceNodeAdapter.class);
-            factory = new JFaceNodeAdapterFactoryForJSDT(IJFaceNodeAdapter.class, true);
-        	factoryRegistry.addFactory(factory);
+			factoryRegistry.removeFactoriesFor(IJFaceNodeAdapter.class);
+			factory = new JFaceNodeAdapterFactoryForJSDT(IJFaceNodeAdapter.class, true);
+			factoryRegistry.addFactory(factory);
 		}
-
-		factory = factoryRegistry.getFactoryFor(IJSPTranslation.class);
-		
+		factory = factoryRegistry.getFactoryFor(IJsTranslation.class);
 		if (factory == null) {
-			factory = new JSPTranslationAdapterFactory();
+			factory = new JsTranslationAdapterFactory();
 			factoryRegistry.addFactory(factory);
 		}
 	}
-
+	
 	protected void addPropagatingAdapters(IStructuredModel structuredModel) {}
-
+	
 	/*
 	 * @see AdapterFactoryProvider#isFor(ContentTypeDescription)
 	 */
 	public boolean isFor(IDocumentTypeHandler contentTypeDescription) {
-		//return (contentTypeDescription instanceof ModelHandlerForJSP);
+		// return (contentTypeDescription instanceof ModelHandlerForJSP);
 		return (contentTypeDescription instanceof ModelHandlerForHTML);
 	}
-
+	
 	public void reinitializeFactories(IStructuredModel structuredModel) {
 		addAdapterFactories(structuredModel);
-		
-		
 	}
 }

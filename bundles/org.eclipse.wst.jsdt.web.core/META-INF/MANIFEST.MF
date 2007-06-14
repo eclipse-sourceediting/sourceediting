@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.wst.jsdt.web.core; singleton:=true
 Bundle-Version: 1.2.0.v200611161411
-Bundle-Activator: org.eclipse.wst.jsdt.web.core.internal.JSPCorePlugin
+Bundle-Activator: org.eclipse.wst.jsdt.web.core.internal.JsCorePlugin
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Export-Package: org.eclipse.wst.jsdt.web.core.internal;x-friends:="org.eclipse.wst.jsdt.web.ui",
@@ -29,8 +29,8 @@ Require-Bundle: com.ibm.icu;bundle-version="[3.4.4,4.0.0)",
  org.eclipse.wst.validation;bundle-version="[1.1.0,1.2.0)",
  org.eclipse.jface.text,
  org.eclipse.wst.jsdt.core,
- org.eclipse.wst.jsdt.ui,
- org.eclipse.wst.common.project.facet.core
+ org.eclipse.wst.common.project.facet.core,
+ org.eclipse.wst.jsdt.ui
 Eclipse-LazyStart: true; exceptions="org.eclipse.wst.jsdt.web.core.internal.contenttype"
 Import-Package: org.eclipse.swt.widgets,
  org.eclipse.wst.common.componentcore,

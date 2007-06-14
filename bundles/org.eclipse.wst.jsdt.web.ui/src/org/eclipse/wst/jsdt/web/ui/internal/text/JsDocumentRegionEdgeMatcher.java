@@ -14,19 +14,14 @@ import org.eclipse.wst.sse.ui.internal.text.DocumentRegionEdgeMatcher;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
 public class JsDocumentRegionEdgeMatcher extends DocumentRegionEdgeMatcher {
-
-	protected final static char[] BRACKETS = { '{', '}', '(', ')', '[', ']'};
-
+	protected final static char[] BRACKETS = { '{', '}', '(', ')', '[', ']' };
+	
 	/**
 	 * @param validContexts
 	 * @param nextMatcher
 	 */
 	public JsDocumentRegionEdgeMatcher() {
-		super(new String[] { DOMRegionContext.XML_TAG_NAME,
-				DOMRegionContext.XML_COMMENT_TEXT,
-				
-				DOMRegionContext.XML_CDATA_TEXT, DOMRegionContext.XML_PI_OPEN,
-				DOMRegionContext.XML_PI_CONTENT },
-				new JsPairMatcher(BRACKETS));
+		super(new String[] { DOMRegionContext.XML_TAG_NAME, DOMRegionContext.XML_COMMENT_TEXT, DOMRegionContext.XML_CDATA_TEXT, DOMRegionContext.XML_PI_OPEN,
+				DOMRegionContext.XML_PI_CONTENT }, new JsPairMatcher(JsDocumentRegionEdgeMatcher.BRACKETS));
 	}
 }

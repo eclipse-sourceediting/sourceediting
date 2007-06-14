@@ -23,20 +23,17 @@ import com.ibm.icu.util.StringTokenizer;
  * plugin. Other plugins should make their own copy, with appropriate ID.
  */
 public class Logger {
-	private static final String PLUGIN_ID = "org.eclipse.wst.jsdt.web.ui"; //$NON-NLS-1$
-
-	private static final String TRACEFILTER_LOCATION = "/debug/tracefilter"; //$NON-NLS-1$
-
-	public static final int OK = IStatus.OK; // 0
-	public static final int INFO = IStatus.INFO; // 1
-	public static final int WARNING = IStatus.WARNING; // 2
 	public static final int ERROR = IStatus.ERROR; // 4
-
-	public static final int OK_DEBUG = 200 + OK;
-	public static final int INFO_DEBUG = 200 + INFO;
-	public static final int WARNING_DEBUG = 200 + WARNING;
-	public static final int ERROR_DEBUG = 200 + ERROR;
-
+	public static final int ERROR_DEBUG = 200 + Logger.ERROR;
+	public static final int INFO = IStatus.INFO; // 1
+	public static final int INFO_DEBUG = 200 + Logger.INFO;
+	public static final int OK = IStatus.OK; // 0
+	public static final int OK_DEBUG = 200 + Logger.OK;
+	private static final String PLUGIN_ID = "org.eclipse.wst.jsdt.web.ui"; //$NON-NLS-1$
+	private static final String TRACEFILTER_LOCATION = "/debug/tracefilter"; //$NON-NLS-1$
+	public static final int WARNING = IStatus.WARNING; // 2
+	public static final int WARNING_DEBUG = 200 + Logger.WARNING;
+	
 	/**
 	 * Adds message to log.
 	 * 
@@ -49,36 +46,33 @@ public class Logger {
 	 *            exception thrown
 	 */
 	protected static void _log(int level, String message, Throwable exception) {
-		if (level == OK_DEBUG || level == INFO_DEBUG || level == WARNING_DEBUG
-				|| level == ERROR_DEBUG) {
-			if (!isDebugging()) {
+		if (level == Logger.OK_DEBUG || level == Logger.INFO_DEBUG || level == Logger.WARNING_DEBUG || level == Logger.ERROR_DEBUG) {
+			if (!Logger.isDebugging()) {
 				return;
 			}
 		}
-
 		int severity = IStatus.OK;
 		switch (level) {
-		case INFO_DEBUG:
-		case INFO:
-			severity = IStatus.INFO;
+			case INFO_DEBUG:
+			case INFO:
+				severity = IStatus.INFO;
 			break;
-		case WARNING_DEBUG:
-		case WARNING:
-			severity = IStatus.WARNING;
+			case WARNING_DEBUG:
+			case WARNING:
+				severity = IStatus.WARNING;
 			break;
-		case ERROR_DEBUG:
-		case ERROR:
-			severity = IStatus.ERROR;
+			case ERROR_DEBUG:
+			case ERROR:
+				severity = IStatus.ERROR;
 		}
 		message = (message != null) ? message : "null"; //$NON-NLS-1$
-		Status statusObj = new Status(severity, PLUGIN_ID, severity, message,
-				exception);
-		Bundle bundle = Platform.getBundle(PLUGIN_ID);
+		Status statusObj = new Status(severity, Logger.PLUGIN_ID, severity, message, exception);
+		Bundle bundle = Platform.getBundle(Logger.PLUGIN_ID);
 		if (bundle != null) {
 			Platform.getLog(bundle).log(statusObj);
 		}
 	}
-
+	
 	/**
 	 * Prints message to log if category matches /debug/tracefilter option.
 	 * 
@@ -88,26 +82,24 @@ public class Logger {
 	 *            category of the message, to be compared with
 	 *            /debug/tracefilter
 	 */
-	protected static void _trace(String category, String message,
-			Throwable exception) {
-		if (isTracing(category)) {
+	protected static void _trace(String category, String message, Throwable exception) {
+		if (Logger.isTracing(category)) {
 			message = (message != null) ? message : "null"; //$NON-NLS-1$
-			Status statusObj = new Status(IStatus.OK, PLUGIN_ID, IStatus.OK,
-					message, exception);
-			Bundle bundle = Platform.getBundle(PLUGIN_ID);
+			Status statusObj = new Status(IStatus.OK, Logger.PLUGIN_ID, IStatus.OK, message, exception);
+			Bundle bundle = Platform.getBundle(Logger.PLUGIN_ID);
 			if (bundle != null) {
 				Platform.getLog(bundle).log(statusObj);
 			}
 		}
 	}
-
+	
 	/**
 	 * @return true if the platform is debugging
 	 */
 	public static boolean isDebugging() {
 		return Platform.inDebugMode();
 	}
-
+	
 	/**
 	 * Determines if currently tracing a category
 	 * 
@@ -115,12 +107,10 @@ public class Logger {
 	 * @return true if tracing category, false otherwise
 	 */
 	public static boolean isTracing(String category) {
-		if (!isDebugging()) {
+		if (!Logger.isDebugging()) {
 			return false;
 		}
-
-		String traceFilter = Platform.getDebugOption(PLUGIN_ID
-				+ TRACEFILTER_LOCATION);
+		String traceFilter = Platform.getDebugOption(Logger.PLUGIN_ID + Logger.TRACEFILTER_LOCATION);
 		if (traceFilter != null) {
 			StringTokenizer tokenizer = new StringTokenizer(traceFilter, ","); //$NON-NLS-1$
 			while (tokenizer.hasMoreTokens()) {
@@ -132,33 +122,32 @@ public class Logger {
 		}
 		return false;
 	}
-
+	
 	public static void log(int level, String message) {
-		_log(level, message, null);
+		Logger._log(level, message, null);
 	}
-
+	
 	public static void log(int level, String message, Throwable exception) {
-		_log(level, message, exception);
+		Logger._log(level, message, exception);
 	}
-
+	
 	public static void logException(String message, Throwable exception) {
-		_log(ERROR, message, exception);
+		Logger._log(Logger.ERROR, message, exception);
 	}
-
+	
 	public static void logException(Throwable exception) {
-		_log(ERROR, exception.getMessage(), exception);
+		Logger._log(Logger.ERROR, exception.getMessage(), exception);
 	}
-
-	public static void traceException(String category, String message,
-			Throwable exception) {
-		_trace(category, message, exception);
-	}
-
-	public static void traceException(String category, Throwable exception) {
-		_trace(category, exception.getMessage(), exception);
-	}
-
+	
 	public static void trace(String category, String message) {
-		_trace(category, message, null);
+		Logger._trace(category, message, null);
+	}
+	
+	public static void traceException(String category, String message, Throwable exception) {
+		Logger._trace(category, message, exception);
+	}
+	
+	public static void traceException(String category, Throwable exception) {
+		Logger._trace(category, exception.getMessage(), exception);
 	}
 }

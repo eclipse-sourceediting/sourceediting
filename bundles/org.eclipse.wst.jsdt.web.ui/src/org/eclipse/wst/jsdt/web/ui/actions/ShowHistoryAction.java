@@ -15,35 +15,17 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ISetSelectionTarget;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
 import org.eclipse.wst.jsdt.core.IJavaElement;
 import org.eclipse.wst.jsdt.internal.ui.util.ExceptionHandler;
-import org.eclipse.wst.jsdt.ui.actions.ShowInPackageViewAction;
 
 /**
  * @author childsb
- *
+ * 
  */
-public class ShowHistoryAction extends JsElementActionProxy{
-	
-	
-
-	public void selectionChanged(IAction action, ISelection selection) {
-		setSelection(selection);
-		IJavaElement elements[] = getJsElementsFromSelection(getCurrentSelection());
-		
-		for(int i = 0;i<elements.length;i++) {
-			if(elements[i].isVirtual()) {
-				
-				IResource resource = getHostResource( elements[i]);
-				if(resource==null || !resource.exists()) {
-					action.setEnabled(false);
-				}
-			}
-		}
-	}
-	
-	/* (non-Javadoc)
+public class ShowHistoryAction extends JsElementActionProxy {
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
 	 */
 	private IResource getHostResource(IJavaElement virtualElement) {
@@ -51,34 +33,46 @@ public class ShowHistoryAction extends JsElementActionProxy{
 		IPath path = new Path(virtualElement.getHostPath().getPath());
 		IResource host = project.getWorkspace().getRoot().findMember(path);
 		return host;
-		
 	}
 	
-
+	@Override
 	public void run(IAction action) {
-		IJavaElement elements[] = getJsElementsFromSelection(getCurrentSelection());
-		if(elements==null || elements.length==0) return;
-		
+		IJavaElement elements[] = JsElementActionProxy.getJsElementsFromSelection(getCurrentSelection());
+		if (elements == null || elements.length == 0) {
+			return;
+		}
 		IResource resource = null;
-		
-		if(elements[0].isVirtual()) {
+		if (elements[0].isVirtual()) {
 			resource = getHostResource(elements[0]);
-		}else {
+		} else {
 			resource = elements[0].getResource();
 		}
-		
-		if (resource == null)
+		if (resource == null) {
 			return;
+		}
 		try {
-			IWorkbenchPage page= targetWorkbenchPart.getSite().getPage();
-			IViewPart view= page.showView(IPageLayout.ID_RES_NAV);
+			IWorkbenchPage page = targetWorkbenchPart.getSite().getPage();
+			IViewPart view = page.showView(IPageLayout.ID_RES_NAV);
 			if (view instanceof ISetSelectionTarget) {
-				
-				ISelection selection= new StructuredSelection(resource);
-				((ISetSelectionTarget)view).selectReveal(selection);
+				ISelection selection = new StructuredSelection(resource);
+				((ISetSelectionTarget) view).selectReveal(selection);
 			}
-		} catch(PartInitException e) {
-			ExceptionHandler.handle(e, targetWorkbenchPart.getSite().getShell(), "Error Opening in Script View", "Error while displaying element in Script View:\n" + e); 
+		} catch (PartInitException e) {
+			ExceptionHandler.handle(e, targetWorkbenchPart.getSite().getShell(), "Error Opening in Script View", "Error while displaying element in Script View:\n" + e);
+		}
+	}
+	
+	@Override
+	public void selectionChanged(IAction action, ISelection selection) {
+		setSelection(selection);
+		IJavaElement elements[] = JsElementActionProxy.getJsElementsFromSelection(getCurrentSelection());
+		for (int i = 0; i < elements.length; i++) {
+			if (elements[i].isVirtual()) {
+				IResource resource = getHostResource(elements[i]);
+				if (resource == null || !resource.exists()) {
+					action.setEnabled(false);
+				}
+			}
 		}
 	}
 }

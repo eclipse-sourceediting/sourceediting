@@ -26,65 +26,25 @@ import org.eclipse.wst.jsdt.web.ui.internal.derived.SingleCharReader;
  * Reads from a document either forwards or backwards. May be configured to skip
  * comments and strings.
  * 
- * Copied from org.eclipse.wst.jsdt.internal.ui.text so we don't have to depend on
- * the org.eclipse.wst.jsdt.ui plugin.
+ * Copied from org.eclipse.wst.jsdt.internal.ui.text so we don't have to depend
+ * on the org.eclipse.wst.jsdt.ui plugin.
  * 
  * No modifications were made.
  */
 class JsCodeReader extends SingleCharReader {
-
 	/** The EOF character */
 	public static final int EOF = -1;
-
-	private boolean fSkipComments = false;
-	private boolean fSkipStrings = false;
-	private boolean fForward = false;
-
-	private IDocument fDocument;
-	private int fOffset;
-
-	private int fEnd = -1;
 	private int fCachedLineNumber = -1;
 	private int fCachedLineOffset = -1;
-
-	public JsCodeReader() {
-	}
-
-	/**
-	 * Returns the offset of the last read character. Should only be called
-	 * after read has been called.
-	 */
-	public int getOffset() {
-		return fForward ? fOffset - 1 : fOffset;
-	}
-
-	public void configureForwardReader(IDocument document, int offset,
-			int length, boolean skipComments, boolean skipStrings)
-			throws IOException {
-		fDocument = document;
-		fOffset = offset;
-		fSkipComments = skipComments;
-		fSkipStrings = skipStrings;
-
-		fForward = true;
-		fEnd = Math.min(fDocument.getLength(), fOffset + length);
-	}
-
-	public void configureBackwardReader(IDocument document, int offset,
-			boolean skipComments, boolean skipStrings) throws IOException {
-		fDocument = document;
-		fOffset = offset;
-		fSkipComments = skipComments;
-		fSkipStrings = skipStrings;
-
-		fForward = false;
-		try {
-			fCachedLineNumber = fDocument.getLineOfOffset(fOffset);
-		} catch (BadLocationException x) {
-			throw new IOException(x.getMessage());
-		}
-	}
-
+	private IDocument fDocument;
+	private int fEnd = -1;
+	private boolean fForward = false;
+	private int fOffset;
+	private boolean fSkipComments = false;
+	private boolean fSkipStrings = false;
+	
+	public JsCodeReader() {}
+	
 	/*
 	 * @see Reader#close()
 	 */
@@ -92,19 +52,37 @@ class JsCodeReader extends SingleCharReader {
 	public void close() throws IOException {
 		fDocument = null;
 	}
-
-	/*
-	 * @see SingleCharReader#read()
-	 */
-	@Override
-	public int read() throws IOException {
+	
+	public void configureBackwardReader(IDocument document, int offset, boolean skipComments, boolean skipStrings) throws IOException {
+		fDocument = document;
+		fOffset = offset;
+		fSkipComments = skipComments;
+		fSkipStrings = skipStrings;
+		fForward = false;
 		try {
-			return fForward ? readForwards() : readBackwards();
+			fCachedLineNumber = fDocument.getLineOfOffset(fOffset);
 		} catch (BadLocationException x) {
 			throw new IOException(x.getMessage());
 		}
 	}
-
+	
+	public void configureForwardReader(IDocument document, int offset, int length, boolean skipComments, boolean skipStrings) throws IOException {
+		fDocument = document;
+		fOffset = offset;
+		fSkipComments = skipComments;
+		fSkipStrings = skipStrings;
+		fForward = true;
+		fEnd = Math.min(fDocument.getLength(), fOffset + length);
+	}
+	
+	/**
+	 * Returns the offset of the last read character. Should only be called
+	 * after read has been called.
+	 */
+	public int getOffset() {
+		return fForward ? fOffset - 1 : fOffset;
+	}
+	
 	private void gotoCommentEnd() throws BadLocationException {
 		while (fOffset < fEnd) {
 			char current = fDocument.getChar(fOffset++);
@@ -116,7 +94,21 @@ class JsCodeReader extends SingleCharReader {
 			}
 		}
 	}
-
+	
+	private void gotoCommentStart() throws BadLocationException {
+		while (0 < fOffset) {
+			char current = fDocument.getChar(fOffset--);
+			if (current == '*' && 0 <= fOffset && fDocument.getChar(fOffset) == '/') {
+				return;
+			}
+		}
+	}
+	
+	private void gotoLineEnd() throws BadLocationException {
+		int line = fDocument.getLineOfOffset(fOffset);
+		fOffset = fDocument.getLineOffset(line + 1);
+	}
+	
 	private void gotoStringEnd(char delimiter) throws BadLocationException {
 		while (fOffset < fEnd) {
 			char current = fDocument.getChar(fOffset++);
@@ -128,79 +120,7 @@ class JsCodeReader extends SingleCharReader {
 			}
 		}
 	}
-
-	private void gotoLineEnd() throws BadLocationException {
-		int line = fDocument.getLineOfOffset(fOffset);
-		fOffset = fDocument.getLineOffset(line + 1);
-	}
-
-	private int readForwards() throws BadLocationException {
-		while (fOffset < fEnd) {
-			char current = fDocument.getChar(fOffset++);
-
-			switch (current) {
-			case '/':
-
-				if (fSkipComments && fOffset < fEnd) {
-					char next = fDocument.getChar(fOffset);
-					if (next == '*') {
-						// a comment starts, advance to the comment end
-						++fOffset;
-						gotoCommentEnd();
-						continue;
-					} else if (next == '/') {
-						// '//'-comment starts, advance to the line end
-						gotoLineEnd();
-						continue;
-					}
-				}
-
-				return current;
-
-			case '"':
-			case '\'':
-
-				if (fSkipStrings) {
-					gotoStringEnd(current);
-					continue;
-				}
-
-				return current;
-			}
-
-			return current;
-		}
-
-		return EOF;
-	}
-
-	private void handleSingleLineComment() throws BadLocationException {
-		int line = fDocument.getLineOfOffset(fOffset);
-		if (line < fCachedLineNumber) {
-			fCachedLineNumber = line;
-			fCachedLineOffset = fDocument.getLineOffset(line);
-			int offset = fOffset;
-			while (fCachedLineOffset < offset) {
-				char current = fDocument.getChar(offset--);
-				if (current == '/' && fCachedLineOffset <= offset
-						&& fDocument.getChar(offset) == '/') {
-					fOffset = offset;
-					return;
-				}
-			}
-		}
-	}
-
-	private void gotoCommentStart() throws BadLocationException {
-		while (0 < fOffset) {
-			char current = fDocument.getChar(fOffset--);
-			if (current == '*' && 0 <= fOffset
-					&& fDocument.getChar(fOffset) == '/') {
-				return;
-			}
-		}
-	}
-
+	
 	private void gotoStringStart(char delimiter) throws BadLocationException {
 		while (0 < fOffset) {
 			char current = fDocument.getChar(fOffset);
@@ -212,45 +132,95 @@ class JsCodeReader extends SingleCharReader {
 			--fOffset;
 		}
 	}
-
+	
+	private void handleSingleLineComment() throws BadLocationException {
+		int line = fDocument.getLineOfOffset(fOffset);
+		if (line < fCachedLineNumber) {
+			fCachedLineNumber = line;
+			fCachedLineOffset = fDocument.getLineOffset(line);
+			int offset = fOffset;
+			while (fCachedLineOffset < offset) {
+				char current = fDocument.getChar(offset--);
+				if (current == '/' && fCachedLineOffset <= offset && fDocument.getChar(offset) == '/') {
+					fOffset = offset;
+					return;
+				}
+			}
+		}
+	}
+	
+	/*
+	 * @see SingleCharReader#read()
+	 */
+	@Override
+	public int read() throws IOException {
+		try {
+			return fForward ? readForwards() : readBackwards();
+		} catch (BadLocationException x) {
+			throw new IOException(x.getMessage());
+		}
+	}
+	
 	private int readBackwards() throws BadLocationException {
-
 		while (0 < fOffset) {
 			--fOffset;
-
 			handleSingleLineComment();
-
 			char current = fDocument.getChar(fOffset);
 			switch (current) {
-			case '/':
-
-				if (fSkipComments && fOffset > 1) {
-					char next = fDocument.getChar(fOffset - 1);
-					if (next == '*') {
-						// a comment ends, advance to the comment start
-						fOffset -= 2;
-						gotoCommentStart();
+				case '/':
+					if (fSkipComments && fOffset > 1) {
+						char next = fDocument.getChar(fOffset - 1);
+						if (next == '*') {
+							// a comment ends, advance to the comment start
+							fOffset -= 2;
+							gotoCommentStart();
+							continue;
+						}
+					}
+					return current;
+				case '"':
+				case '\'':
+					if (fSkipStrings) {
+						--fOffset;
+						gotoStringStart(current);
 						continue;
 					}
-				}
-
-				return current;
-
-			case '"':
-			case '\'':
-
-				if (fSkipStrings) {
-					--fOffset;
-					gotoStringStart(current);
-					continue;
-				}
-
-				return current;
+					return current;
 			}
-
 			return current;
 		}
-
-		return EOF;
+		return JsCodeReader.EOF;
+	}
+	
+	private int readForwards() throws BadLocationException {
+		while (fOffset < fEnd) {
+			char current = fDocument.getChar(fOffset++);
+			switch (current) {
+				case '/':
+					if (fSkipComments && fOffset < fEnd) {
+						char next = fDocument.getChar(fOffset);
+						if (next == '*') {
+							// a comment starts, advance to the comment end
+							++fOffset;
+							gotoCommentEnd();
+							continue;
+						} else if (next == '/') {
+							// '//'-comment starts, advance to the line end
+							gotoLineEnd();
+							continue;
+						}
+					}
+					return current;
+				case '"':
+				case '\'':
+					if (fSkipStrings) {
+						gotoStringEnd(current);
+						continue;
+					}
+					return current;
+			}
+			return current;
+		}
+		return JsCodeReader.EOF;
 	}
 }

@@ -3,7 +3,6 @@ package org.eclipse.wst.jsdt.web.core.internal.project;
 import java.util.Arrays;
 import java.util.Vector;
 
-import org.eclipse.core.resources.ICommand;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IProjectNature;
@@ -18,29 +17,28 @@ import org.eclipse.wst.jsdt.core.IClasspathEntry;
 import org.eclipse.wst.jsdt.core.JavaCore;
 import org.eclipse.wst.jsdt.internal.core.JavaProject;
 import org.eclipse.wst.jsdt.ui.PreferenceConstants;
-import org.eclipse.wst.jsdt.web.core.internal.java.WebRootFinder;
 
 public class JsWebNature implements IProjectNature {
 	private static final String FILENAME_CLASSPATH = ".classpath"; //$NON-NLS-1$
-	private static final String BUILDER_ID = "org.eclipse.wst.jsdt.web.core.embeded.javascript"; //$NON-NLS-1$
-	//private static final String NATURE_IDS[] = {"org.eclipse.wst.jsdt.web.core.embeded.jsNature",JavaCore.NATURE_ID}; //$NON-NLS-1$
-	private static final String NATURE_IDS[] = {JavaCore.NATURE_ID}; //$NON-NLS-1$
-	
-	public static final IPath VIRTUAL_CONTAINER_PATH=new Path("org.eclipse.wst.jsdt.launching.WebProject");
-	public static final IClasspathEntry VIRTUAL_SCOPE_ENTRY = JavaCore.newContainerEntry(VIRTUAL_CONTAINER_PATH);
+	// private static final String NATURE_IDS[] =
+	// {"org.eclipse.wst.jsdt.web.core.embeded.jsNature",JavaCore.NATURE_ID};
+	// //$NON-NLS-1$
+	private static final String NATURE_IDS[] = { JavaCore.NATURE_ID };
+	public static final IPath VIRTUAL_CONTAINER_PATH = new Path("org.eclipse.wst.jsdt.launching.WebProject");
+	public static final IClasspathEntry VIRTUAL_SCOPE_ENTRY = JavaCore.newContainerEntry(JsWebNature.VIRTUAL_CONTAINER_PATH);
 	
 	public static void addJsNature(IProject project, IProgressMonitor monitor) throws CoreException {
 		if (monitor != null && monitor.isCanceled()) {
 			throw new OperationCanceledException();
 		}
-		if (!hasNature(project)) {
+		if (!JsWebNature.hasNature(project)) {
 			IProjectDescription description = project.getDescription();
 			String[] prevNatures = description.getNatureIds();
-			String[] newNatures = new String[prevNatures.length + NATURE_IDS.length];
+			String[] newNatures = new String[prevNatures.length + JsWebNature.NATURE_IDS.length];
 			System.arraycopy(prevNatures, 0, newNatures, 0, prevNatures.length);
-			//newNatures[prevNatures.length] = JavaCore.NATURE_ID;
-			for(int i = 0;i<NATURE_IDS.length;i++) {
-				newNatures[prevNatures.length + i] = NATURE_IDS[i];
+			// newNatures[prevNatures.length] = JavaCore.NATURE_ID;
+			for (int i = 0; i < JsWebNature.NATURE_IDS.length; i++) {
+				newNatures[prevNatures.length + i] = JsWebNature.NATURE_IDS[i];
 			}
 			description.setNatureIds(newNatures);
 			project.setDescription(description, monitor);
@@ -52,35 +50,34 @@ public class JsWebNature implements IProjectNature {
 	}
 	
 	public static boolean hasNature(IProject project) {
-		
 		try {
-			for(int i = 0;i<NATURE_IDS.length;i++) {
-				if(!project.hasNature(NATURE_IDS[i])) return false; 
+			for (int i = 0; i < JsWebNature.NATURE_IDS.length; i++) {
+				if (!project.hasNature(JsWebNature.NATURE_IDS[i])) {
+					return false;
+				}
 			}
 		} catch (CoreException ex) {
 			return false;
 		}
 		return true;
 	}
-
 	
 	public static void removeJsNature(IProject project, IProgressMonitor monitor) throws CoreException {
 		if (monitor != null && monitor.isCanceled()) {
 			throw new OperationCanceledException();
 		}
-		if (hasNature(project)) {
+		if (JsWebNature.hasNature(project)) {
 			IProjectDescription description = project.getDescription();
 			String[] prevNatures = description.getNatureIds();
-			String[] newNatures = new String[prevNatures.length - NATURE_IDS.length];
+			String[] newNatures = new String[prevNatures.length - JsWebNature.NATURE_IDS.length];
 			int k = 0;
-			head:
-			for (int i = 0; i < prevNatures.length; i++) {
-				for(int j = 0;j< NATURE_IDS.length;j++) {
-					if (prevNatures[i] == NATURE_IDS[j]) continue head;
+			head: for (int i = 0; i < prevNatures.length; i++) {
+				for (int j = 0; j < JsWebNature.NATURE_IDS.length; j++) {
+					if (prevNatures[i] == JsWebNature.NATURE_IDS[j]) {
+						continue head;
+					}
 				}
-				
 				newNatures[k++] = prevNatures[i];
-				
 			}
 			description.setNatureIds(newNatures);
 			project.setDescription(description, monitor);
@@ -126,13 +123,16 @@ public class JsWebNature implements IProjectNature {
 		fJavaProject.setProject(fCurrProject);
 		try {
 			// , fOutputLocation
-			if (!hasProjectClassPathFile())
+			if (!hasProjectClassPathFile()) {
 				fJavaProject.setRawClasspath((IClasspathEntry[]) classPathEntries.toArray(new IClasspathEntry[] {}), fOutputLocation, monitor);
-			if (hasProjectClassPathFile()) fJavaProject.setRawClasspath((IClasspathEntry[]) classPathEntries.toArray(new IClasspathEntry[] {}), monitor);
+			}
+			if (hasProjectClassPathFile()) {
+				fJavaProject.setRawClasspath((IClasspathEntry[]) classPathEntries.toArray(new IClasspathEntry[] {}), monitor);
+			}
 		} catch (Exception e) {
 			System.out.println(e);
 		}
-		//getJavaProject().addToBuildSpec(BUILDER_ID);
+		// getJavaProject().addToBuildSpec(BUILDER_ID);
 		fCurrProject.refreshLocal(IResource.DEPTH_INFINITE, monitor);
 	}
 	
@@ -148,10 +148,8 @@ public class JsWebNature implements IProjectNature {
 		Vector badEntries = new Vector();
 		IClasspathEntry[] defaultJRELibrary = PreferenceConstants.getDefaultJRELibrary();
 		IClasspathEntry[] localEntries = initLocalClassPath();
-		
 		badEntries.addAll(Arrays.asList(defaultJRELibrary));
 		badEntries.addAll(Arrays.asList(localEntries));
-		
 		IClasspathEntry[] entries = getRawClassPath();
 		Vector goodEntries = new Vector();
 		for (int i = 0; i < entries.length; i++) {
@@ -159,7 +157,7 @@ public class JsWebNature implements IProjectNature {
 				goodEntries.add(entries[i]);
 			}
 		}
-		//getJavaProject().removeFromBuildSpec(BUILDER_ID);
+		// getJavaProject().removeFromBuildSpec(BUILDER_ID);
 		IPath outputLocation = getJavaProject().getOutputLocation();
 		getJavaProject().setRawClasspath((IClasspathEntry[]) goodEntries.toArray(new IClasspathEntry[] {}), outputLocation, monitor);
 		getJavaProject().deconfigure();
@@ -240,14 +238,20 @@ public class JsWebNature implements IProjectNature {
 			}
 		}
 	}
+	
 	private IClasspathEntry[] initLocalClassPath() {
-	//	IClasspathEntry library = JavaCore.newContainerEntry( new Path(CONTAINER_ID));
-		classPathEntries.add(VIRTUAL_SCOPE_ENTRY);
-//		IPath webRoot = WebRootFinder.getWebContentFolder(fCurrProject);
-//		IClasspathEntry source = JavaCore.newSourceEntry(webRoot.append("/"));
-//		classPathEntries.add(source);
-		return new IClasspathEntry[] {VIRTUAL_SCOPE_ENTRY/*, source*/};
+		// IClasspathEntry library = JavaCore.newContainerEntry( new
+		// Path(CONTAINER_ID));
+		classPathEntries.add(JsWebNature.VIRTUAL_SCOPE_ENTRY);
+// IPath webRoot = WebRootFinder.getWebContentFolder(fCurrProject);
+// IClasspathEntry source = JavaCore.newSourceEntry(webRoot.append("/"));
+// classPathEntries.add(source);
+		return new IClasspathEntry[] { JsWebNature.VIRTUAL_SCOPE_ENTRY /*
+																		 * ,
+																		 * source
+																		 */};
 	}
+	
 	private void initOutputPath() {
 		if (fOutputLocation == null) {
 			fOutputLocation = getCurrentOutputPath();

@@ -20,7 +20,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
-import org.eclipse.wst.jsdt.web.ui.internal.JSPUIPlugin;
+import org.eclipse.wst.jsdt.web.ui.internal.JsUIPlugin;
 import org.eclipse.wst.jsdt.web.ui.internal.Logger;
 
 /**
@@ -31,103 +31,86 @@ class URLFileHyperlink implements IHyperlink {
 	// org.eclipse.wst.xml.ui.internal.hyperlink
 	// org.eclipse.wst.html.ui.internal.hyperlink
 	// org.eclipse.wst.jsdt.web.ui.internal.hyperlink
-
 	static class StorageEditorInput implements IStorageEditorInput {
 		IStorage fStorage = null;
-
+		
 		StorageEditorInput(IStorage storage) {
 			fStorage = storage;
 		}
-
-		public IStorage getStorage() throws CoreException {
-			return fStorage;
-		}
-
+		
 		public boolean exists() {
 			return fStorage != null;
 		}
-
-		public ImageDescriptor getImageDescriptor() {
-			return null;
-		}
-
-		public String getName() {
-			return fStorage.getName();
-		}
-
-		public IPersistableElement getPersistable() {
-			return null;
-		}
-
-		public String getToolTipText() {
-			return fStorage.getFullPath() != null ? fStorage.getFullPath()
-					.toString() : fStorage.getName();
-		}
-
+		
 		public Object getAdapter(Class adapter) {
 			return null;
 		}
+		
+		public ImageDescriptor getImageDescriptor() {
+			return null;
+		}
+		
+		public String getName() {
+			return fStorage.getName();
+		}
+		
+		public IPersistableElement getPersistable() {
+			return null;
+		}
+		
+		public IStorage getStorage() throws CoreException {
+			return fStorage;
+		}
+		
+		public String getToolTipText() {
+			return fStorage.getFullPath() != null ? fStorage.getFullPath().toString() : fStorage.getName();
+		}
 	}
-
 	static class URLStorage implements IStorage {
 		URL fURL = null;
-
+		
 		URLStorage(URL url) {
 			fURL = url;
 		}
-
+		
+		public Object getAdapter(Class adapter) {
+			return null;
+		}
+		
 		public InputStream getContents() throws CoreException {
 			InputStream stream = null;
 			try {
 				stream = fURL.openStream();
 			} catch (Exception e) {
-				throw new CoreException(new Status(IStatus.ERROR, JSPUIPlugin
-						.getDefault().getBundle().getSymbolicName(),
-						IStatus.ERROR, fURL.toString(), e));
+				throw new CoreException(new Status(IStatus.ERROR, JsUIPlugin.getDefault().getBundle().getSymbolicName(), IStatus.ERROR, fURL.toString(), e));
 			}
 			return stream;
 		}
-
+		
 		public IPath getFullPath() {
 			return new Path(fURL.toString());
 		}
-
+		
 		public String getName() {
 			return new Path(fURL.getFile()).lastSegment();
 		}
-
+		
 		public boolean isReadOnly() {
 			return true;
 		}
-
-		public Object getAdapter(Class adapter) {
-			return null;
-		}
-
 	}
-
 	private IRegion fRegion;
 	private URL fURL;
-
+	
 	public URLFileHyperlink(IRegion region, URL url) {
 		fRegion = region;
 		fURL = url;
 	}
-
+	
 	public IRegion getHyperlinkRegion() {
 		return fRegion;
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.jface.text.hyperlink.IHyperlink#getTypeLabel()
-	 */
-	public String getTypeLabel() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -137,7 +120,17 @@ class URLFileHyperlink implements IHyperlink {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.jface.text.hyperlink.IHyperlink#getTypeLabel()
+	 */
+	public String getTypeLabel() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -150,8 +143,7 @@ class URLFileHyperlink implements IHyperlink {
 			try {
 				descriptor = IDE.getEditorDescriptor(input.getName());
 				if (descriptor != null) {
-					IWorkbenchPage page = PlatformUI.getWorkbench()
-							.getActiveWorkbenchWindow().getActivePage();
+					IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 					IDE.openEditor(page, input, descriptor.getId(), true);
 				}
 			} catch (PartInitException e) {
@@ -159,5 +151,4 @@ class URLFileHyperlink implements IHyperlink {
 			}
 		}
 	}
-
 }

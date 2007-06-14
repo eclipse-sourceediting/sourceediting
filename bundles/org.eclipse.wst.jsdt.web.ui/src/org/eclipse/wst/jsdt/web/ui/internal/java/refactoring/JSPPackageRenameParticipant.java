@@ -18,7 +18,7 @@ import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.participants.CheckConditionsContext;
 import org.eclipse.ltk.core.refactoring.participants.RenameParticipant;
 import org.eclipse.wst.jsdt.core.IPackageFragment;
-import org.eclipse.wst.jsdt.web.ui.internal.JSPUIMessages;
+import org.eclipse.wst.jsdt.web.ui.internal.JsUIMessages;
 
 /**
  * Remember to change the plugin.xml file if the name of this class changes.
@@ -26,21 +26,31 @@ import org.eclipse.wst.jsdt.web.ui.internal.JSPUIMessages;
  * @author pavery
  */
 public class JSPPackageRenameParticipant extends RenameParticipant {
-
 	private IPackageFragment fPkg = null;
-
+	
 	/**
-	 * @see org.eclipse.ltk.core.refactoring.participants.RefactoringParticipant#initialize(java.lang.Object)
+	 * @see org.eclipse.ltk.core.refactoring.participants.RefactoringParticipant#checkConditions(org.eclipse.core.runtime.IProgressMonitor,
+	 *      org.eclipse.ltk.core.refactoring.participants.CheckConditionsContext)
 	 */
 	@Override
-	protected boolean initialize(Object element) {
-		if (element instanceof IPackageFragment) {
-			this.fPkg = (IPackageFragment) element;
-			return true;
-		}
-		return false;
+	public RefactoringStatus checkConditions(IProgressMonitor pm, CheckConditionsContext context) {
+		// TODO Auto-generated method stub
+		return null;
 	}
-
+	
+	/**
+	 * @see org.eclipse.ltk.core.refactoring.participants.RefactoringParticipant#createChange(org.eclipse.core.runtime.IProgressMonitor)
+	 */
+	@Override
+	public Change createChange(IProgressMonitor pm) throws CoreException {
+		Change[] changes = JSPPackageRenameChange.createChangesFor(this.fPkg, getArguments().getNewName());
+		CompositeChange multiChange = null;
+		if (changes.length > 0) {
+			multiChange = new CompositeChange(JsUIMessages.JSP_changes, changes);
+		}
+		return multiChange;
+	}
+	
 	/**
 	 * @see org.eclipse.ltk.core.refactoring.participants.RefactoringParticipant#getName()
 	 */
@@ -52,31 +62,16 @@ public class JSPPackageRenameParticipant extends RenameParticipant {
 		}
 		return name;
 	}
-
+	
 	/**
-	 * @see org.eclipse.ltk.core.refactoring.participants.RefactoringParticipant#checkConditions(org.eclipse.core.runtime.IProgressMonitor,
-	 *      org.eclipse.ltk.core.refactoring.participants.CheckConditionsContext)
+	 * @see org.eclipse.ltk.core.refactoring.participants.RefactoringParticipant#initialize(java.lang.Object)
 	 */
 	@Override
-	public RefactoringStatus checkConditions(IProgressMonitor pm,
-			CheckConditionsContext context) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	/**
-	 * @see org.eclipse.ltk.core.refactoring.participants.RefactoringParticipant#createChange(org.eclipse.core.runtime.IProgressMonitor)
-	 */
-	@Override
-	public Change createChange(IProgressMonitor pm) throws CoreException {
-		Change[] changes = JSPPackageRenameChange.createChangesFor(this.fPkg,
-				getArguments().getNewName());
-		CompositeChange multiChange = null;
-		if (changes.length > 0) {
-			multiChange = new CompositeChange(JSPUIMessages.JSP_changes,
-					changes);
+	protected boolean initialize(Object element) {
+		if (element instanceof IPackageFragment) {
+			this.fPkg = (IPackageFragment) element;
+			return true;
 		}
-		return multiChange;
+		return false;
 	}
-
 }

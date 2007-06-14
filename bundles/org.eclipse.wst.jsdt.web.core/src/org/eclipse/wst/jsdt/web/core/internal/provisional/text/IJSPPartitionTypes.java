@@ -10,16 +10,13 @@ package org.eclipse.wst.jsdt.web.core.internal.provisional.text;
  */
 @Deprecated
 public interface IJSPPartitionTypes {
-	
-	String JSP_COMMENT			= "org.eclipse.wst.jsdt.web.JSP_COMMENT";			 //$NON-NLS-1$
-	String JSP_CONTENT_DELIMITER  = IJSPPartitionTypes.JSP_SCRIPT_PREFIX + "DELIMITER"; //$NON-NLS-1$
-																						 
-	String JSP_CONTENT_JAVA	   = IJSPPartitionTypes.JSP_SCRIPT_PREFIX + "JAVA";	  //$NON-NLS-1$
+	String JSP_COMMENT = "org.eclipse.wst.jsdt.web.JSP_COMMENT"; //$NON-NLS-1$
+	String JSP_CONTENT_DELIMITER = IJSPPartitionTypes.JSP_SCRIPT_PREFIX + "DELIMITER"; //$NON-NLS-1$
+	String JSP_CONTENT_JAVA = IJSPPartitionTypes.JSP_SCRIPT_PREFIX + "JAVA"; //$NON-NLS-1$
 	String JSP_CONTENT_JAVASCRIPT = IJSPPartitionTypes.JSP_SCRIPT_PREFIX + "JAVASCRIPT"; //$NON-NLS-1$
-	String JSP_DEFAULT			= "org.eclipse.wst.jsdt.web.DEFAULT_JSP";			 //$NON-NLS-1$
-	String JSP_DEFAULT_EL		 = IJSPPartitionTypes.JSP_SCRIPT_PREFIX + "JSP_EL";	//$NON-NLS-1$
-	String JSP_DEFAULT_EL2		= IJSPPartitionTypes.JSP_SCRIPT_PREFIX + "JSP_EL2";   //$NON-NLS-1$
-	String JSP_DIRECTIVE		  = "org.eclipse.wst.jsdt.web.JSP_DIRECTIVE";		   //$NON-NLS-1$
-																						 
-	String JSP_SCRIPT_PREFIX	  = "org.eclipse.wst.jsdt.web.SCRIPT.";				 //$NON-NLS-1$
+	String JSP_DEFAULT = "org.eclipse.wst.jsdt.web.DEFAULT_JSP"; //$NON-NLS-1$
+	String JSP_DEFAULT_EL = IJSPPartitionTypes.JSP_SCRIPT_PREFIX + "JSP_EL"; //$NON-NLS-1$
+	String JSP_DEFAULT_EL2 = IJSPPartitionTypes.JSP_SCRIPT_PREFIX + "JSP_EL2"; //$NON-NLS-1$
+	String JSP_DIRECTIVE = "org.eclipse.wst.jsdt.web.JSP_DIRECTIVE"; //$NON-NLS-1$
+	String JSP_SCRIPT_PREFIX = "org.eclipse.wst.jsdt.web.SCRIPT."; //$NON-NLS-1$
 }

@@ -9,7 +9,6 @@
  *     IBM Corporation - initial API and implementation
  *     
  *******************************************************************************/
-
 package org.eclipse.wst.jsdt.web.core.internal.provisional.contenttype;
 
 /**
@@ -17,14 +16,13 @@ package org.eclipse.wst.jsdt.web.core.internal.provisional.contenttype;
  * when refering to a contentType ID. The value of the contenttype id field must
  * match what is specified in plugin.xml file.
  */
-
 public class ContentTypeIdForJSP {
 	/**
 	 * The value of the contenttype id field must match what is specified in
 	 * plugin.xml file. Note: this value is intentially set with default
 	 * protected method so it will not be inlined.
 	 */
-	public final static String ContentTypeID_JSP		 = ContentTypeIdForJSP.getConstantString();
+	public final static String ContentTypeID_JSP = ContentTypeIdForJSP.getConstantString();
 	/**
 	 * The value of the contenttype id field must match what is specified in
 	 * plugin.xml file. Note: this value is intentially set with default

@@ -19,7 +19,7 @@ import org.eclipse.ltk.core.refactoring.participants.CheckConditionsContext;
 import org.eclipse.ltk.core.refactoring.participants.RenameParticipant;
 import org.eclipse.wst.jsdt.core.IType;
 import org.eclipse.wst.jsdt.core.JavaModelException;
-import org.eclipse.wst.jsdt.web.ui.internal.JSPUIMessages;
+import org.eclipse.wst.jsdt.web.ui.internal.JsUIMessages;
 import org.eclipse.wst.jsdt.web.ui.internal.Logger;
 
 /**
@@ -28,21 +28,31 @@ import org.eclipse.wst.jsdt.web.ui.internal.Logger;
  * @author pavery
  */
 public class JSPTypeRenameParticipant extends RenameParticipant {
-
 	private IType fType = null;
-
+	
 	/**
-	 * @see org.eclipse.ltk.core.refactoring.participants.RefactoringParticipant#initialize(java.lang.Object)
+	 * @see org.eclipse.ltk.core.refactoring.participants.RefactoringParticipant#checkConditions(org.eclipse.core.runtime.IProgressMonitor,
+	 *      org.eclipse.ltk.core.refactoring.participants.CheckConditionsContext)
 	 */
 	@Override
-	protected boolean initialize(Object element) {
-		if (element instanceof IType) {
-			this.fType = (IType) element;
-			return true;
-		}
-		return false;
+	public RefactoringStatus checkConditions(IProgressMonitor pm, CheckConditionsContext context) {
+		// TODO Auto-generated method stub
+		return null;
 	}
-
+	
+	/**
+	 * @see org.eclipse.ltk.core.refactoring.participants.RefactoringParticipant#createChange(org.eclipse.core.runtime.IProgressMonitor)
+	 */
+	@Override
+	public Change createChange(IProgressMonitor pm) throws CoreException {
+		Change[] changes = JSPTypeRenameChange.createChangesFor(fType, getArguments().getNewName());
+		CompositeChange multiChange = null;
+		if (changes.length > 0) {
+			multiChange = new CompositeChange(JsUIMessages.JSP_changes, changes);
+		}
+		return multiChange;
+	}
+	
 	/**
 	 * @see org.eclipse.ltk.core.refactoring.participants.RefactoringParticipant#getName()
 	 */
@@ -58,31 +68,16 @@ public class JSPTypeRenameParticipant extends RenameParticipant {
 		}
 		return name;
 	}
-
+	
 	/**
-	 * @see org.eclipse.ltk.core.refactoring.participants.RefactoringParticipant#checkConditions(org.eclipse.core.runtime.IProgressMonitor,
-	 *      org.eclipse.ltk.core.refactoring.participants.CheckConditionsContext)
+	 * @see org.eclipse.ltk.core.refactoring.participants.RefactoringParticipant#initialize(java.lang.Object)
 	 */
 	@Override
-	public RefactoringStatus checkConditions(IProgressMonitor pm,
-			CheckConditionsContext context) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	/**
-	 * @see org.eclipse.ltk.core.refactoring.participants.RefactoringParticipant#createChange(org.eclipse.core.runtime.IProgressMonitor)
-	 */
-	@Override
-	public Change createChange(IProgressMonitor pm) throws CoreException {
-		Change[] changes = JSPTypeRenameChange.createChangesFor(fType,
-				getArguments().getNewName());
-		CompositeChange multiChange = null;
-		if (changes.length > 0) {
-			multiChange = new CompositeChange(JSPUIMessages.JSP_changes,
-					changes);
+	protected boolean initialize(Object element) {
+		if (element instanceof IType) {
+			this.fType = (IType) element;
+			return true;
 		}
-		return multiChange;
+		return false;
 	}
-
 }

@@ -13,16 +13,14 @@ package org.eclipse.wst.jsdt.web.ui.internal.style.java;
 /**
  * A Java aware word detector.
  */
-public class JavaWordDetector implements
-		org.eclipse.jface.text.rules.IWordDetector {
-
+public class JavaWordDetector implements org.eclipse.jface.text.rules.IWordDetector {
 	/**
 	 * @see org.eclipse.jface.text.rules.IWordDetector#isWordIdentifierPart
 	 */
 	public boolean isWordPart(char c) {
 		return Character.isJavaIdentifierPart(c);
 	}
-
+	
 	/**
 	 * @see org.eclipse.jface.text.rules.IWordDetector#isWordIdentifierStart
 	 */

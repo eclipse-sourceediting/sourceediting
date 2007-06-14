@@ -14,30 +14,17 @@ import java.text.MessageFormat;
 
 import org.eclipse.wst.jsdt.core.IJavaElement;
 import org.eclipse.wst.jsdt.core.search.SearchMatch;
-import org.eclipse.wst.jsdt.web.core.internal.java.search.JavaSearchDocumentDelegate;
-import org.eclipse.wst.jsdt.web.ui.internal.JSPUIMessages;
+import org.eclipse.wst.jsdt.web.core.internal.java.search.JSDTSearchDocumentDelegate;
+import org.eclipse.wst.jsdt.web.ui.internal.JsUIMessages;
 
 /**
  * @author pavery
  */
 public class JSPMethodRenameRequestor extends BasicRefactorSearchRequestor {
-
 	public JSPMethodRenameRequestor(IJavaElement element, String newName) {
 		super(element, newName);
 	}
-
-	@Override
-	protected String getRenameText(JavaSearchDocumentDelegate searchDoc,
-			SearchMatch javaMatch) {
-
-		String javaText = searchDoc.getJspTranslation().getJsText();
-		String methodText = javaText.substring(javaMatch.getOffset(), javaMatch
-				.getOffset()
-				+ javaMatch.getLength());
-		String methodSuffix = methodText.substring(methodText.indexOf("(")); //$NON-NLS-1$
-		return getNewName() + methodSuffix;
-	}
-
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -45,12 +32,17 @@ public class JSPMethodRenameRequestor extends BasicRefactorSearchRequestor {
 	 */
 	@Override
 	protected String getDescription() {
-
 		String methodName = getElement().getElementName();
 		String newName = getNewName();
-		String description = MessageFormat.format(
-				JSPUIMessages.BasicRefactorSearchRequestor_3, new String[] {
-						methodName, newName });
+		String description = MessageFormat.format(JsUIMessages.BasicRefactorSearchRequestor_3, new String[] { methodName, newName });
 		return description;
+	}
+	
+	@Override
+	protected String getRenameText(JSDTSearchDocumentDelegate searchDoc, SearchMatch javaMatch) {
+		String javaText = searchDoc.getJspTranslation().getJsText();
+		String methodText = javaText.substring(javaMatch.getOffset(), javaMatch.getOffset() + javaMatch.getLength());
+		String methodSuffix = methodText.substring(methodText.indexOf("(")); //$NON-NLS-1$
+		return getNewName() + methodSuffix;
 	}
 }

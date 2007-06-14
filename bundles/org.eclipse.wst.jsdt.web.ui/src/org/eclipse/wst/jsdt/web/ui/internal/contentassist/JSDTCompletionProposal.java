@@ -12,10 +12,9 @@ import org.eclipse.wst.jsdt.ui.text.java.IJavaCompletionProposal;
  * 
  * @plannedfor 1.0
  */
-//public class JSPCompletionProposal extends CustomCompletionProposal implements
-public class JSDTCompletionProposal extends JavaCompletionProposal implements
-		IJavaCompletionProposal {
-
+// public class JSPCompletionProposal extends CustomCompletionProposal
+// implements
+public class JSDTCompletionProposal extends JavaCompletionProposal implements IJavaCompletionProposal {
 	/*
 	 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=124483
 	 * 
@@ -24,53 +23,42 @@ public class JSDTCompletionProposal extends JavaCompletionProposal implements
 	 * reads external javadoc, and it makes no sense
 	 */
 	ICompletionProposal fJavaCompletionProposal = null;
-
-	public JSDTCompletionProposal(String replacementString,
-			int replacementOffset, int replacementLength, int cursorPosition,
-			Image image, String displayString,
-			IContextInformation contextInformation,
-			String additionalProposalInfo, int relevance,
+	
+	public JSDTCompletionProposal(String replacementString, int replacementOffset, int replacementLength, int cursorPosition, Image image,
+			String displayString, IContextInformation contextInformation, String additionalProposalInfo, int relevance,
 			boolean updateReplacementLengthOnValidate) {
-        
-        super(replacementString,replacementOffset,replacementLength,image,displayString,relevance);
-        super.setCursorPosition(cursorPosition);
-        super.setContextInformation(contextInformation);
-       
-      
-        
-//		super(replacementString, replacementOffset, replacementLength,
-//				cursorPosition, image, displayString, contextInformation,
-//				additionalProposalInfo, relevance,
-//				updateReplacementLengthOnValidate);
+		super(replacementString, replacementOffset, replacementLength, image, displayString, relevance);
+		super.setCursorPosition(cursorPosition);
+		super.setContextInformation(contextInformation);
+// super(replacementString, replacementOffset, replacementLength,
+// cursorPosition, image, displayString, contextInformation,
+// additionalProposalInfo, relevance,
+// updateReplacementLengthOnValidate);
 	}
-
+	
 	/**
 	 * Sets cursor position after applying.
 	 */
 	@Override
-	public void apply(ITextViewer viewer, char trigger, int stateMask,
-			int offset) {
+	public void apply(ITextViewer viewer, char trigger, int stateMask, int offset) {
 		super.apply(viewer, trigger, stateMask, offset);
 	}
-
-	final public ICompletionProposal getJavaCompletionProposal() {
-		return fJavaCompletionProposal;
-	}
-
-	final public void setJavaCompletionProposal(
-			ICompletionProposal javaCompletionProposal) {
-		fJavaCompletionProposal = javaCompletionProposal;
-	}
-
+	
 	@Override
 	public String getAdditionalProposalInfo() {
-
 		String additionalInfo = super.getAdditionalProposalInfo();
 		ICompletionProposal javaProposal = getJavaCompletionProposal();
 		if (javaProposal != null) {
 			additionalInfo = javaProposal.getAdditionalProposalInfo();
 		}
-
 		return additionalInfo;
+	}
+	
+	final public ICompletionProposal getJavaCompletionProposal() {
+		return fJavaCompletionProposal;
+	}
+	
+	final public void setJavaCompletionProposal(ICompletionProposal javaCompletionProposal) {
+		fJavaCompletionProposal = javaCompletionProposal;
 	}
 }

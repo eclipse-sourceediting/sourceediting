@@ -49,13 +49,12 @@ public class XMLHyperlinkDetector implements IHyperlinkDetector {
 	// org.eclipse.wst.xml.ui.internal.hyperlink
 	// org.eclipse.wst.html.ui.internal.hyperlink
 	// org.eclipse.wst.jsdt.web.ui.internal.hyperlink
-
 	private final String HTTP_PROTOCOL = "http://";//$NON-NLS-1$
 	private final String NO_NAMESPACE_SCHEMA_LOCATION = "noNamespaceSchemaLocation"; //$NON-NLS-1$
 	private final String SCHEMA_LOCATION = "schemaLocation"; //$NON-NLS-1$
 	private final String XMLNS = "xmlns"; //$NON-NLS-1$
 	private final String XSI_NAMESPACE_URI = "http://www.w3.org/2001/XMLSchema-instance"; //$NON-NLS-1$
-
+	
 	/**
 	 * Create the appropriate hyperlink
 	 * 
@@ -63,10 +62,8 @@ public class XMLHyperlinkDetector implements IHyperlinkDetector {
 	 * @param hyperlinkRegion
 	 * @return IHyperlink
 	 */
-	private IHyperlink createHyperlink(String uriString,
-			IRegion hyperlinkRegion, IDocument document, Node node) {
+	private IHyperlink createHyperlink(String uriString, IRegion hyperlinkRegion, IDocument document, Node node) {
 		IHyperlink link = null;
-
 		if (isHttp(uriString)) {
 			link = new URLHyperlink(hyperlinkRegion, uriString);
 		} else {
@@ -82,19 +79,16 @@ public class XMLHyperlinkDetector implements IHyperlinkDetector {
 				} else {
 					// this is an ExternalFileHyperlink since file does not
 					// exist in workspace
-					link = new ExternalFileHyperlink(hyperlinkRegion,
-							systemFile);
+					link = new ExternalFileHyperlink(hyperlinkRegion, systemFile);
 				}
 			}
 		}
 		return link;
 	}
-
-	public IHyperlink[] detectHyperlinks(ITextViewer textViewer,
-			IRegion region, boolean canShowMultipleHyperlinks) {
+	
+	public IHyperlink[] detectHyperlinks(ITextViewer textViewer, IRegion region, boolean canShowMultipleHyperlinks) {
 		// for now, only capable of creating 1 hyperlink
 		List hyperlinks = new ArrayList(0);
-
 		if (region != null && textViewer != null) {
 			IDocument document = textViewer.getDocument();
 			Node currentNode = getCurrentNode(document, region.getOffset());
@@ -105,8 +99,7 @@ public class XMLHyperlinkDetector implements IHyperlinkDetector {
 					uriString = getURIString(currentNode, document);
 				} else if (currentNode.getNodeType() == Node.ELEMENT_NODE) {
 					// element nodes
-					Attr currentAttr = getCurrentAttrNode(currentNode, region
-							.getOffset());
+					Attr currentAttr = getCurrentAttrNode(currentNode, region.getOffset());
 					if (currentAttr != null) {
 						// try to find link for current attribute
 						// resolve attribute value
@@ -127,11 +120,9 @@ public class XMLHyperlinkDetector implements IHyperlinkDetector {
 					currentNode = currentAttr;
 				}
 				// try to create hyperlink from information gathered
-				if (uriString != null && currentNode != null
-						&& isValidURI(uriString)) {
+				if (uriString != null && currentNode != null && isValidURI(uriString)) {
 					IRegion hyperlinkRegion = getHyperlinkRegion(currentNode);
-					IHyperlink hyperlink = createHyperlink(uriString,
-							hyperlinkRegion, document, currentNode);
+					IHyperlink hyperlink = createHyperlink(uriString, hyperlinkRegion, document, currentNode);
 					if (hyperlink != null) {
 						hyperlinks.add(hyperlink);
 					}
@@ -143,29 +134,25 @@ public class XMLHyperlinkDetector implements IHyperlinkDetector {
 		}
 		return (IHyperlink[]) hyperlinks.toArray(new IHyperlink[0]);
 	}
-
+	
 	/**
 	 * Get the base location from the current model (local file system)
 	 */
 	private String getBaseLocation(IDocument document) {
 		String baseLoc = null;
-
 		// get the base location from the current model
 		IStructuredModel sModel = null;
 		try {
-			sModel = StructuredModelManager.getModelManager()
-					.getExistingModelForRead(document);
+			sModel = StructuredModelManager.getModelManager().getExistingModelForRead(document);
 			if (sModel != null) {
 				IPath location = new Path(sModel.getBaseLocation());
 				if (location.toFile().exists()) {
 					baseLoc = location.toString();
 				} else {
 					if (location.segmentCount() > 1) {
-						baseLoc = ResourcesPlugin.getWorkspace().getRoot()
-								.getFile(location).getLocation().toString();
+						baseLoc = ResourcesPlugin.getWorkspace().getRoot().getFile(location).getLocation().toString();
 					} else {
-						baseLoc = ResourcesPlugin.getWorkspace().getRoot()
-								.getLocation().append(location).toString();
+						baseLoc = ResourcesPlugin.getWorkspace().getRoot().getLocation().append(location).toString();
 					}
 				}
 			}
@@ -176,7 +163,7 @@ public class XMLHyperlinkDetector implements IHyperlinkDetector {
 		}
 		return baseLoc;
 	}
-
+	
 	/**
 	 * Get the CMElementDeclaration for an element
 	 * 
@@ -185,15 +172,13 @@ public class XMLHyperlinkDetector implements IHyperlinkDetector {
 	 */
 	private CMElementDeclaration getCMElementDeclaration(Element element) {
 		CMElementDeclaration ed = null;
-
-		ModelQuery mq = ModelQueryUtil
-				.getModelQuery(element.getOwnerDocument());
+		ModelQuery mq = ModelQueryUtil.getModelQuery(element.getOwnerDocument());
 		if (mq != null) {
 			ed = mq.getCMElementDeclaration(element);
 		}
 		return ed;
 	}
-
+	
 	/**
 	 * Returns the attribute node within node at offset
 	 * 
@@ -202,9 +187,7 @@ public class XMLHyperlinkDetector implements IHyperlinkDetector {
 	 * @return Attr
 	 */
 	private Attr getCurrentAttrNode(Node node, int offset) {
-		if ((node instanceof IndexedRegion)
-				&& ((IndexedRegion) node).contains(offset)
-				&& (node.hasAttributes())) {
+		if ((node instanceof IndexedRegion) && ((IndexedRegion) node).contains(offset) && (node.hasAttributes())) {
 			NamedNodeMap attrs = node.getAttributes();
 			// go through each attribute in node and if attribute contains
 			// offset, return that attribute
@@ -219,7 +202,7 @@ public class XMLHyperlinkDetector implements IHyperlinkDetector {
 		}
 		return null;
 	}
-
+	
 	/**
 	 * Returns the node the cursor is currently on in the document. null if no
 	 * node is selected
@@ -233,8 +216,7 @@ public class XMLHyperlinkDetector implements IHyperlinkDetector {
 		IndexedRegion inode = null;
 		IStructuredModel sModel = null;
 		try {
-			sModel = StructuredModelManager.getModelManager()
-					.getExistingModelForRead(document);
+			sModel = StructuredModelManager.getModelManager().getExistingModelForRead(document);
 			inode = sModel.getIndexedRegion(offset);
 			if (inode == null) {
 				inode = sModel.getIndexedRegion(offset - 1);
@@ -244,13 +226,12 @@ public class XMLHyperlinkDetector implements IHyperlinkDetector {
 				sModel.releaseFromRead();
 			}
 		}
-
 		if (inode instanceof Node) {
 			return (Node) inode;
 		}
 		return null;
 	}
-
+	
 	/**
 	 * Returns an IFile from the given uri if possible, null if cannot find file
 	 * from uri.
@@ -261,20 +242,17 @@ public class XMLHyperlinkDetector implements IHyperlinkDetector {
 	 */
 	private IFile getFile(String fileString) {
 		IFile file = null;
-
 		if (fileString != null) {
-			IFile[] files = ResourcesPlugin.getWorkspace().getRoot()
-					.findFilesForLocation(new Path(fileString));
+			IFile[] files = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocation(new Path(fileString));
 			for (int i = 0; i < files.length && file == null; i++) {
 				if (files[i].exists()) {
 					file = files[i];
 				}
 			}
 		}
-
 		return file;
 	}
-
+	
 	/**
 	 * Create a file from the given uri string
 	 * 
@@ -288,7 +266,6 @@ public class XMLHyperlinkDetector implements IHyperlinkDetector {
 			// first just try to create a file directly from uriString as
 			// default in case create file from uri does not work
 			file = new File(uriString);
-
 			// try to create file from uri
 			URI uri = new URI(uriString);
 			file = new File(uri);
@@ -298,18 +275,15 @@ public class XMLHyperlinkDetector implements IHyperlinkDetector {
 		}
 		return file;
 	}
-
+	
 	private IRegion getHyperlinkRegion(Node node) {
 		IRegion hyperRegion = null;
-
 		if (node != null) {
 			short nodeType = node.getNodeType();
 			if (nodeType == Node.DOCUMENT_TYPE_NODE) {
 				// handle doc type node
 				IDOMNode docNode = (IDOMNode) node;
-				hyperRegion = new Region(docNode.getStartOffset(), docNode
-						.getEndOffset()
-						- docNode.getStartOffset());
+				hyperRegion = new Region(docNode.getStartOffset(), docNode.getEndOffset() - docNode.getStartOffset());
 			} else if (nodeType == Node.ATTRIBUTE_NODE) {
 				// handle attribute nodes
 				IDOMAttr att = (IDOMAttr) node;
@@ -329,7 +303,7 @@ public class XMLHyperlinkDetector implements IHyperlinkDetector {
 		}
 		return hyperRegion;
 	}
-
+	
 	/**
 	 * Attempts to find an attribute within element that is openable.
 	 * 
@@ -351,7 +325,7 @@ public class XMLHyperlinkDetector implements IHyperlinkDetector {
 		}
 		return null;
 	}
-
+	
 	/**
 	 * Find the location hint for the given namespaceURI if it exists
 	 * 
@@ -362,8 +336,7 @@ public class XMLHyperlinkDetector implements IHyperlinkDetector {
 	 * @return location hint (systemId) if it was found, null otherwise
 	 */
 	private String getLocationHint(Element elementNode, String namespaceURI) {
-		Attr schemaLocNode = elementNode.getAttributeNodeNS(XSI_NAMESPACE_URI,
-				SCHEMA_LOCATION);
+		Attr schemaLocNode = elementNode.getAttributeNodeNS(XSI_NAMESPACE_URI, SCHEMA_LOCATION);
 		if (schemaLocNode != null) {
 			StringTokenizer st = new StringTokenizer(schemaLocNode.getValue());
 			while (st.hasMoreTokens()) {
@@ -377,7 +350,7 @@ public class XMLHyperlinkDetector implements IHyperlinkDetector {
 		}
 		return null;
 	}
-
+	
 	/**
 	 * Returns the URI string
 	 * 
@@ -390,7 +363,6 @@ public class XMLHyperlinkDetector implements IHyperlinkDetector {
 		String baseLoc = null;
 		String publicId = null;
 		String systemId = null;
-
 		short nodeType = node.getNodeType();
 		// handle doc type node
 		if (nodeType == Node.DOCUMENT_TYPE_NODE) {
@@ -405,21 +377,16 @@ public class XMLHyperlinkDetector implements IHyperlinkDetector {
 			attrValue = StringUtils.strip(attrValue);
 			if (attrValue != null && attrValue.length() > 0) {
 				baseLoc = getBaseLocation(document);
-
 				// handle schemaLocation attribute
 				String prefix = DOMNamespaceHelper.getPrefix(attrName);
-				String unprefixedName = DOMNamespaceHelper
-						.getUnprefixedName(attrName);
+				String unprefixedName = DOMNamespaceHelper.getUnprefixedName(attrName);
 				if ((XMLNS.equals(prefix)) || (XMLNS.equals(unprefixedName))) {
 					publicId = attrValue;
-					systemId = getLocationHint(attrNode.getOwnerElement(),
-							publicId);
+					systemId = getLocationHint(attrNode.getOwnerElement(), publicId);
 					if (systemId == null) {
 						systemId = attrValue;
 					}
-				} else if ((XSI_NAMESPACE_URI.equals(DOMNamespaceHelper
-						.getNamespaceURI(attrNode)))
-						&& (SCHEMA_LOCATION.equals(unprefixedName))) {
+				} else if ((XSI_NAMESPACE_URI.equals(DOMNamespaceHelper.getNamespaceURI(attrNode))) && (SCHEMA_LOCATION.equals(unprefixedName))) {
 					// for now just use the first pair
 					// need to look into being more precise
 					StringTokenizer st = new StringTokenizer(attrValue);
@@ -431,11 +398,10 @@ public class XMLHyperlinkDetector implements IHyperlinkDetector {
 				}
 			}
 		}
-
 		resolvedURI = resolveURI(baseLoc, publicId, systemId);
 		return resolvedURI;
 	}
-
+	
 	/**
 	 * Returns true if this uriString is an http string
 	 * 
@@ -452,7 +418,7 @@ public class XMLHyperlinkDetector implements IHyperlinkDetector {
 		}
 		return isHttp;
 	}
-
+	
 	/**
 	 * Checks to see if the given attribute is openable. Attribute is openable
 	 * if it is a namespace declaration attribute or if the attribute value is
@@ -473,28 +439,20 @@ public class XMLHyperlinkDetector implements IHyperlinkDetector {
 		if ((XMLNS.equals(prefix)) || (XMLNS.equals(unprefixedName))) {
 			return true;
 		}
-
 		// determine if attribute contains schema location
-		if ((XSI_NAMESPACE_URI.equals(DOMNamespaceHelper.getNamespaceURI(attr)))
-				&& ((SCHEMA_LOCATION.equals(unprefixedName)) || (NO_NAMESPACE_SCHEMA_LOCATION
-						.equals(unprefixedName)))) {
+		if ((XSI_NAMESPACE_URI.equals(DOMNamespaceHelper.getNamespaceURI(attr))) && ((SCHEMA_LOCATION.equals(unprefixedName)) || (NO_NAMESPACE_SCHEMA_LOCATION.equals(unprefixedName)))) {
 			return true;
 		}
-
 		// determine if attribute value is of type URI
 		if (cmElement != null) {
-			CMAttributeDeclaration attrDecl = (CMAttributeDeclaration) cmElement
-					.getAttributes().getNamedItem(attrName);
-			if ((attrDecl != null)
-					&& (attrDecl.getAttrType() != null)
-					&& (CMDataType.URI.equals(attrDecl.getAttrType()
-							.getDataTypeName()))) {
+			CMAttributeDeclaration attrDecl = (CMAttributeDeclaration) cmElement.getAttributes().getNamedItem(attrName);
+			if ((attrDecl != null) && (attrDecl.getAttrType() != null) && (CMDataType.URI.equals(attrDecl.getAttrType().getDataTypeName()))) {
 				return true;
 			}
 		}
 		return false;
 	}
-
+	
 	/**
 	 * Checks whether the given uriString is really pointing to a file
 	 * 
@@ -503,7 +461,6 @@ public class XMLHyperlinkDetector implements IHyperlinkDetector {
 	 */
 	private boolean isValidURI(String uriString) {
 		boolean isValid = false;
-
 		if (isHttp(uriString)) {
 			isValid = true;
 		} else {
@@ -514,7 +471,7 @@ public class XMLHyperlinkDetector implements IHyperlinkDetector {
 		}
 		return isValid;
 	}
-
+	
 	/**
 	 * Resolves the given URI information
 	 * 
@@ -523,13 +480,11 @@ public class XMLHyperlinkDetector implements IHyperlinkDetector {
 	 * @param systemId
 	 * @return String resolved uri.
 	 */
-	private String resolveURI(String baseLocation, String publicId,
-			String systemId) {
+	private String resolveURI(String baseLocation, String publicId, String systemId) {
 		// dont resolve if there's nothing to resolve
 		if ((baseLocation == null) && (publicId == null) && (systemId == null)) {
 			return null;
 		}
-		return URIResolverPlugin.createResolver().resolve(baseLocation,
-				publicId, systemId);
+		return URIResolverPlugin.createResolver().resolve(baseLocation, publicId, systemId);
 	}
 }

@@ -23,19 +23,16 @@ import com.ibm.icu.util.StringTokenizer;
  * plugin. Other plugins should make their own copy, with appropriate ID.
  */
 public class Logger {
-	public static final int	 ERROR				= IStatus.ERROR;				  // 4
-																						
-	public static final int	 ERROR_DEBUG		  = 200 + Logger.ERROR;
-	
-	public static final int	 INFO				 = IStatus.INFO;				   // 1
-	public static final int	 INFO_DEBUG		   = 200 + Logger.INFO;
-	public static final int	 OK				   = IStatus.OK;					 // 0
-	public static final int	 OK_DEBUG			 = 200 + Logger.OK;
-	
-	private static final String PLUGIN_ID			= "org.eclipse.wst.jsdt.web.core"; //$NON-NLS-1$
-	private static final String TRACEFILTER_LOCATION = "/debug/tracefilter";		   //$NON-NLS-1$
-	public static final int	 WARNING			  = IStatus.WARNING;				// 2
-	public static final int	 WARNING_DEBUG		= 200 + Logger.WARNING;
+	public static final int ERROR = IStatus.ERROR; // 4
+	public static final int ERROR_DEBUG = 200 + Logger.ERROR;
+	public static final int INFO = IStatus.INFO; // 1
+	public static final int INFO_DEBUG = 200 + Logger.INFO;
+	public static final int OK = IStatus.OK; // 0
+	public static final int OK_DEBUG = 200 + Logger.OK;
+	private static final String PLUGIN_ID = "org.eclipse.wst.jsdt.web.core"; //$NON-NLS-1$
+	private static final String TRACEFILTER_LOCATION = "/debug/tracefilter"; //$NON-NLS-1$
+	public static final int WARNING = IStatus.WARNING; // 2
+	public static final int WARNING_DEBUG = 200 + Logger.WARNING;
 	
 	/**
 	 * Adds message to log.
@@ -54,20 +51,19 @@ public class Logger {
 				return;
 			}
 		}
-		
 		int severity = IStatus.OK;
 		switch (level) {
-		case INFO_DEBUG:
-		case INFO:
-			severity = IStatus.INFO;
+			case INFO_DEBUG:
+			case INFO:
+				severity = IStatus.INFO;
 			break;
-		case WARNING_DEBUG:
-		case WARNING:
-			severity = IStatus.WARNING;
+			case WARNING_DEBUG:
+			case WARNING:
+				severity = IStatus.WARNING;
 			break;
-		case ERROR_DEBUG:
-		case ERROR:
-			severity = IStatus.ERROR;
+			case ERROR_DEBUG:
+			case ERROR:
+				severity = IStatus.ERROR;
 		}
 		message = (message != null) ? message : "null"; //$NON-NLS-1$
 		Status statusObj = new Status(severity, Logger.PLUGIN_ID, severity, message, exception);
@@ -114,7 +110,6 @@ public class Logger {
 		if (!Logger.isDebugging()) {
 			return false;
 		}
-		
 		String traceFilter = Platform.getDebugOption(Logger.PLUGIN_ID + Logger.TRACEFILTER_LOCATION);
 		if (traceFilter != null) {
 			StringTokenizer tokenizer = new StringTokenizer(traceFilter, ","); //$NON-NLS-1$

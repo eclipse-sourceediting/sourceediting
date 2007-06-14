@@ -9,7 +9,6 @@
  *     IBM Corporation - initial API and implementation
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *******************************************************************************/
-
 package org.eclipse.wst.jsdt.web.ui.internal.derived;
 
 import java.io.IOException;
@@ -21,13 +20,24 @@ import java.io.Reader;
  * clause warning in read(..).
  */
 public abstract class SingleCharReader extends Reader {
-
+	/**
+	 * Gets the content as a String
+	 */
+	public String getString() throws IOException {
+		StringBuffer buf = new StringBuffer();
+		int ch;
+		while ((ch = read()) != -1) {
+			buf.append((char) ch);
+		}
+		return buf.toString();
+	}
+	
 	/**
 	 * @see Reader#read()
 	 */
 	@Override
 	public abstract int read() throws IOException;
-
+	
 	/**
 	 * @see Reader#read(char[],int,int)
 	 */
@@ -46,24 +56,12 @@ public abstract class SingleCharReader extends Reader {
 		}
 		return len;
 	}
-
+	
 	/**
 	 * @see Reader#ready()
 	 */
 	@Override
 	public boolean ready() throws IOException {
 		return true;
-	}
-
-	/**
-	 * Gets the content as a String
-	 */
-	public String getString() throws IOException {
-		StringBuffer buf = new StringBuffer();
-		int ch;
-		while ((ch = read()) != -1) {
-			buf.append((char) ch);
-		}
-		return buf.toString();
 	}
 }

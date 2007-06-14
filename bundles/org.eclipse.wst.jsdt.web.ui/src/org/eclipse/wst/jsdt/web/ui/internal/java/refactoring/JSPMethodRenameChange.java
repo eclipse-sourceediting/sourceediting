@@ -15,40 +15,41 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.wst.jsdt.core.IMethod;
-import org.eclipse.wst.jsdt.web.core.internal.java.search.JSPSearchScope;
-import org.eclipse.wst.jsdt.web.core.internal.java.search.JSPSearchSupport;
-import org.eclipse.wst.jsdt.web.ui.internal.JSPUIMessages;
+import org.eclipse.wst.jsdt.web.core.internal.java.search.JsSearchScope;
+import org.eclipse.wst.jsdt.web.core.internal.java.search.JsSearchSupport;
+import org.eclipse.wst.jsdt.web.ui.internal.JsUIMessages;
 
 /**
  * @author pavery
  */
 public class JSPMethodRenameChange extends Change {
-
 	public static Change[] createChangesFor(IMethod method, String newName) {
-		JSPSearchSupport support = JSPSearchSupport.getInstance();
-
+		JsSearchSupport support = JsSearchSupport.getInstance();
 		// should be handled by JSPIndexManager
 		// https://w3.opensource.ibm.com/bugzilla/show_bug.cgi?id=3036
 		// support.indexWorkspaceAndWait();
-
-		BasicRefactorSearchRequestor requestor = new JSPMethodRenameRequestor(
-				method, newName);
-		support.searchRunnable(method, new JSPSearchScope(), requestor);
-
+		BasicRefactorSearchRequestor requestor = new JSPMethodRenameRequestor(method, newName);
+		support.searchRunnable(method, new JsSearchScope(), requestor);
 		return requestor.getChanges();
 	}
-
+	
+	@Override
+	public Object getModifiedElement() {
+		// pa_TODO Auto-generated method stub
+		return null;
+	}
+	
 	@Override
 	public String getName() {
-		return JSPUIMessages.JSP_changes;
+		return JsUIMessages.JSP_changes;
 	}
-
+	
 	@Override
 	public void initializeValidationData(IProgressMonitor pm) {
-		// pa_TODO implement
-		// must be implemented to decide correct value of isValid
+	// pa_TODO implement
+	// must be implemented to decide correct value of isValid
 	}
-
+	
 	@Override
 	public RefactoringStatus isValid(IProgressMonitor pm) throws CoreException {
 		// pa_TODO implement
@@ -58,16 +59,10 @@ public class JSPMethodRenameChange extends Change {
 		// been created.
 		return new RefactoringStatus();
 	}
-
+	
 	@Override
 	public Change perform(IProgressMonitor pm) throws CoreException {
 		// pa_TODO return the "undo" change here
-		return null;
-	}
-
-	@Override
-	public Object getModifiedElement() {
-		// pa_TODO Auto-generated method stub
 		return null;
 	}
 }
