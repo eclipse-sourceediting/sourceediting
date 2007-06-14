@@ -59,12 +59,11 @@ public class BasicJSPSearchRequestor extends SearchRequestor {
 		if (searchDoc != null
 				&& searchDoc instanceof JavaSearchDocumentDelegate) {
 			JavaSearchDocumentDelegate javaSearchDoc = (JavaSearchDocumentDelegate) searchDoc;
-			int jspStart = javaSearchDoc.getJspOffset(match.getOffset());
-			int jspEnd = javaSearchDoc.getJspOffset(match.getOffset()
-					+ match.getLength());
+			int jspStart = match.getOffset();
+			int jspEnd =match.getOffset()+ match.getLength();
 
 			JSPTranslation trans = javaSearchDoc.getJspTranslation();
-			String jspText = trans.getJspText();
+			String jspText = trans.getHtmlText();
 			String javaText = javaSearchDoc.getJavaText();
 
 			if (DEBUG) {
@@ -72,7 +71,7 @@ public class BasicJSPSearchRequestor extends SearchRequestor {
 			}
 
 			if (jspStart > -1 && jspEnd > -1) {
-				addSearchMatch(new Document(trans.getJspText()), javaSearchDoc
+				addSearchMatch(new Document(trans.getHtmlText()), javaSearchDoc
 						.getFile(), jspStart, jspEnd, jspText);
 			}
 		}

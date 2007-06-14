@@ -24,9 +24,11 @@ import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.formatter.IContentFormatter;
 import org.eclipse.jface.text.formatter.IFormattingStrategy;
 import org.eclipse.jface.text.formatter.MultiPassContentFormatter;
+import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.jface.text.information.IInformationProvider;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.eclipse.wst.css.core.text.ICSSPartitions;
 import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
 import org.eclipse.wst.html.core.internal.format.HTMLFormatProcessorImpl;
@@ -235,13 +237,31 @@ public class StructuredTextViewerConfigurationJSDT extends StructuredTextViewerC
 		return textHover;
 	}
 	
-	protected Map getHyperlinkDetectorTargets(ISourceViewer sourceViewer) {
-		Map targets = super.getHyperlinkDetectorTargets(sourceViewer);
+	/* (non-Javadoc)
+	 * @see org.eclipse.ui.editors.text.TextSourceViewerConfiguration#getHyperlinkDetectors(org.eclipse.jface.text.source.ISourceViewer)
+	 */
+	public IHyperlinkDetector[] getHyperlinkDetectors(ISourceViewer sourceViewer) {
+		if (sourceViewer == null || !fPreferenceStore.getBoolean(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_HYPERLINKS_ENABLED))
+			return null;
+
+		List allDetectors = new ArrayList(0);
+		
+
+		IHyperlinkDetector[] superDetectors = super.getHyperlinkDetectors(sourceViewer);
+		for (int m = 0; m < superDetectors.length; m++) {
+			IHyperlinkDetector detector = superDetectors[m];
+			if (!allDetectors.contains(detector)) {
+				allDetectors.add(detector);
+			}
+		}
+		/* Check for external HyperLink Detectors */
 		String[] contentTypes = getConfiguredContentTypes(sourceViewer);
-//		for (int i = 0; i < contentTypes.length; i++) {
-//			Object detector =  ExtendedConfigurationBuilder.getInstance().getConfiguration(externalTypeExtension.HYPERLINK_DETECTOR_TARGETS, contentTypes[i]);
-//			targets.put(contentTypes[i], detector);
-//		}
-		return targets;
+		for(int i = 0;i<contentTypes.length;i++){
+			IHyperlinkDetector hl = (IHyperlinkDetector)ExtendedConfigurationBuilder.getInstance().getConfiguration(externalTypeExtension.HYPERLINK_DETECTOR, contentTypes[i]);
+			if(hl!=null) allDetectors.add(hl);
+		}
+		return (IHyperlinkDetector[]) allDetectors.toArray(new IHyperlinkDetector[0]);
 	}
+
+	
 }

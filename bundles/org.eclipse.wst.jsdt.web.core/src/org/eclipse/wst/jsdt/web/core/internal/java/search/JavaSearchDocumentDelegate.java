@@ -13,7 +13,7 @@ package org.eclipse.wst.jsdt.web.core.internal.java.search;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.wst.jsdt.core.IJavaElement;
 import org.eclipse.wst.jsdt.internal.core.search.JavaSearchDocument;
-import org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslationExtension;
+import org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslation;
 
 /**
  * Wrapper method to set getPath() path to be the path of the compilation unit
@@ -62,14 +62,9 @@ public class JavaSearchDocumentDelegate extends JavaSearchDocument {
 		return this.fJSPSearchDoc.getFile();
 	}
 
-	public JSPTranslationExtension getJspTranslation() {
+	public JSPTranslation getJspTranslation() {
 
 		return this.fJSPSearchDoc.getJSPTranslation();
-	}
-
-	public int getJspOffset(int javaOffset) {
-
-		return this.fJSPSearchDoc.getJspOffset(javaOffset);
 	}
 
 	public void release() {

@@ -20,6 +20,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.Position;
 import org.eclipse.wst.jsdt.core.IBuffer;
 import org.eclipse.wst.jsdt.core.IClasspathEntry;
@@ -46,70 +47,85 @@ public class JSPTranslation implements IJSPTranslation {
 	// for debugging
 	private static final boolean DEBUG;
 	
-	
-	
 	static {
 		String value = Platform.getDebugOption("org.eclipse.wst.jsdt.web.core/debug/jsptranslation"); //$NON-NLS-1$
 		DEBUG = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
 	}
 	
 	/** the name of the class (w/out extension) * */
-	private String fClassname = ""; //$NON-NLS-1$
+	private String fHtmlPageName;
+	private String fHtmlMangledPageName = ""; //$NON-NLS-1$
 	private ICompilationUnit fCompilationUnit = null;
-	private List fGeneratedFunctionNames = null;
-	private HashMap fJsToHtmlMap = null;
-	private IJavaProject fJavaProject = null;
+	private String[] cuImports;
+	private Position[] importRanges;
+	private IFile targetFile;
+	private Position[] locationsInHtml;
+	
+	
 	private String fJsText = ""; //$NON-NLS-1$
-	private HashMap fHtmlToJsMap = null;
-	private String fJsName;
 	private String fHtmlText = ""; //$NON-NLS-1$
+	private IJavaProject fJavaProject = null;
+	private IDocument fHtmlDocument = null;
+	
 	/** lock to synchronize access to the compilation unit * */
 	private byte[] fLock = null;
-	private String fMangledName;
 	private IProgressMonitor fProgressMonitor = null;
+	
 	private DocumentContextFragmentRoot fDocumentScope;
-	private String[] cuImports;
-	private ArrayList importRanges;
-	private IFile targetFile;
+	
 	
 	public JSPTranslation(IJavaProject javaProj, JSPTranslator translator) {
 		fLock = new byte[0];
 		fJavaProject = javaProj;
 		if (translator != null) {
+			translator.translate();
 			fJsText = translator.getTranslation().toString();
 			fHtmlText = translator.getHtmlText();
-			fClassname = translator.getClassname();
-			fJsToHtmlMap = translator.getJs2HtmlRanges();
-			fHtmlToJsMap = translator.getHtml2JsRanges();
-			fJsName = translator.getFile().getName();
+			fHtmlMangledPageName = translator.getClassname();
+			
+			fHtmlPageName = translator.getFile().getName();
 			targetFile = translator.getFile();
 			fDocumentScope = new DocumentContextFragmentRoot(fJavaProject, 
 															 targetFile, 
 															 WebRootFinder.getWebContentFolder(javaProj.getProject()), 
 															 WebRootFinder.getServerContextRoot(javaProj.getProject()),
 															 JsWebNature.VIRTUAL_SCOPE_ENTRY);
-			fGeneratedFunctionNames = translator.getExcludedElements();
+			
 			importRanges = translator.getImportHtmlRanges();
-			ArrayList rawImports = translator.getRawImports();
-			if (rawImports != null) {
-				cuImports = (String[]) rawImports.toArray(new String[rawImports.size()]);
-			} else {
-				cuImports = new String[0];
-			}
+			cuImports = translator.getRawImports();
+			locationsInHtml = translator.getHtmlLocations();
+			
 		}
 	}
 	
+	public JSPTranslation(IDocument htmlDocument, IJavaProject javaProj, JSPTranslator translator) {
+		this(javaProj, translator);
+		fHtmlDocument = htmlDocument;
+		
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.jsdt.web.core.internal.java.IJSPTranslation#ifOffsetInImportNode(int)
+	 */
 	public boolean ifOffsetInImportNode(int offset) {
 		/* check import nodes */
-		for (int i = 0; i < importRanges.size(); i++) {
-			Position p = (Position) importRanges.get(i);
-			if (p.includes(offset)) return true;
+		for (int i = 0; i < importRanges.length; i++) {
+			if (importRanges[i].includes(offset)) return true;
 		}
 		return false;
+		
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.jsdt.web.core.internal.java.IJSPTranslation#isOffsetInScriptNode(int)
+	 */
 	public boolean isOffsetInScriptNode(int offset) {
-		return isInRanges(offset, fHtmlToJsMap);
+		/* check import nodes */
+		for (int i = 0; i < locationsInHtml.length; i++) {
+		
+			if (locationsInHtml[i].includes(offset)) return true;
+		}
+		return false;
 	}
 	
 	/**
@@ -120,7 +136,7 @@ public class JSPTranslation implements IJSPTranslation {
 	 */
 	private ICompilationUnit createCompilationUnit() throws JavaModelException {
 		fDocumentScope.setIncludedFiles(cuImports);
-		ICompilationUnit cu = fDocumentScope.getDefaultPackageFragment().getCompilationUnit(getClassname() + JsDataTypes.BASE_FILE_EXTENSION).getWorkingCopy(getWorkingCopyOwner(), getProblemRequestor(), getProgressMonitor());
+		ICompilationUnit cu = fDocumentScope.getDefaultPackageFragment().getCompilationUnit(getMangledName() + JsDataTypes.BASE_FILE_EXTENSION).getWorkingCopy(getWorkingCopyOwner(), getProblemRequestor(), getProgressMonitor());
 		
 		IBuffer buffer;
 		try {
@@ -130,20 +146,20 @@ public class JSPTranslation implements IJSPTranslation {
 			buffer = null;
 		}
 		if (buffer != null) {
-			buffer.setContents(getJavaText());
+			buffer.setContents(getJsText());
 		}
 		
 		cu.makeConsistent(getProgressMonitor());
 		// cu.reconcile(ICompilationUnit.NO_AST, true, getWorkingCopyOwner(),
 		// getProgressMonitor());
 		
-		if (getJspName() == null || getMangledName() == null) {
+		if (getHtmlPageName() == null || getMangledName() == null) {
 			String cuName = cu.getPath().lastSegment();
 			if (cuName != null) {
-				setMangledName(cuName.substring(0, cuName.lastIndexOf('.')));
+				fHtmlMangledPageName = cuName.substring(0, cuName.lastIndexOf('.'));
 				// set name of jsp file
 				String unmangled = JSP2ServletNameUtil.unmangle(cuName);
-				setHtmlFileName(unmangled.substring(unmangled.lastIndexOf('/') + 1, unmangled.length()));
+				fHtmlPageName = unmangled.substring(unmangled.lastIndexOf('/') + 1, unmangled.length());
 			}
 		}
 		
@@ -166,25 +182,28 @@ public class JSPTranslation implements IJSPTranslation {
 	 * 
 	 * @see org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslation_Interface#fixupMangledName(java.lang.String)
 	 */
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.jsdt.web.core.internal.java.IJSPTranslation#fixupMangledName(java.lang.String)
+	 */
 	public String fixupMangledName(String displayString) {
 		if (displayString == null) {
 			return null;
 		}
-		return displayString.replaceAll(getMangledName() + ".js", getJspName());
+		return displayString.replaceAll(getMangledName() + ".js", getHtmlPageName());
 	}
 	
-	public IJavaElement[] getAllElementsInJsRange(int jspStart, int jspEnd) {
-		int javaPositionStart = getJsOffset(jspStart);
-		int javaPositionEnd = getJsOffset(jspEnd);
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.jsdt.web.core.internal.java.IJSPTranslation#getAllElementsInJsRange(int, int)
+	 */
+	public IJavaElement[] getAllElementsInJsRange(int javaPositionStart, int javaPositionEnd) {
+		
 		IJavaElement[] EMTPY_RESULT_SET = new IJavaElement[0];
 		IJavaElement[] result = EMTPY_RESULT_SET;
 		
 		IJavaElement[] allChildren = null;
-		
-		
-			try {
+		try {
 				allChildren =  getCompilationUnit().getChildren();
-			} catch (JavaModelException e) {}
+		} catch (JavaModelException e) {}
 		
 		
 		Vector validChildren = new Vector();
@@ -192,6 +211,8 @@ public class JSPTranslation implements IJSPTranslation {
 			if (allChildren[i] instanceof IJavaElement && allChildren[i].getElementType() != IJavaElement.PACKAGE_DECLARATION) {
 				ISourceRange range = getJSSourceRangeOf(allChildren[i]);
 				if (javaPositionStart <= range.getOffset() && range.getLength() + range.getOffset() <= (javaPositionEnd)) {
+					validChildren.add(allChildren[i]);
+				}else if(allChildren[i].getElementType() == IJavaElement.TYPE) {
 					validChildren.add(allChildren[i]);
 				}
 			}
@@ -205,19 +226,14 @@ public class JSPTranslation implements IJSPTranslation {
 		return result;
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslation_Interface#getClassname()
-	 */
-	public String getClassname() {
-		return fClassname;
-	}
 	
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslation_Interface#getCompilationUnit()
+	 */
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.jsdt.web.core.internal.java.IJSPTranslation#getCompilationUnit()
 	 */
 	public ICompilationUnit getCompilationUnit() {
 		synchronized (fLock) {
@@ -236,35 +252,17 @@ public class JSPTranslation implements IJSPTranslation {
 		
 	}
 	
-	public IJavaElement[] getElementsFromJspRange1(int jspStart, int jspEnd) {
-		int javaPositionStart = getJsOffset(jspStart);
-		int javaPositionEnd = getJsOffset(jspEnd);
-		IJavaElement[] EMTPY_RESULT_SET = new IJavaElement[0];
-		IJavaElement[] result = EMTPY_RESULT_SET;
-		try {
-					int cuDocLength = getCompilationUnit().getBuffer().getLength();
-					int javaLength = javaPositionEnd - javaPositionStart;
-					if (cuDocLength > 0 && javaPositionStart >= 0 && javaLength >= 0 && javaPositionEnd < cuDocLength) {
-					result =  getCompilationUnit().codeSelect(javaPositionStart, javaLength);
-			}
-			if (result == null || result.length == 0) {
-				return EMTPY_RESULT_SET;
-			}
-		} catch (JavaModelException x) {
-			Logger.logException(x);
-		}
-		return result;
-	}
-	
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslation_Interface#getElementsFromJspRange(int,
 	 *      int)
 	 */
-	public IJavaElement[] getElementsFromJsRange(int jspStart, int jspEnd) {
-		int javaPositionStart = getJsOffset(jspStart);
-		int javaPositionEnd = getJsOffset(jspEnd);
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.jsdt.web.core.internal.java.IJSPTranslation#getElementsFromJsRange(int, int)
+	 */
+	public IJavaElement[] getElementsFromJsRange(int javaPositionStart, int javaPositionEnd) {
+
 		IJavaElement[] EMTPY_RESULT_SET = new IJavaElement[0];
 		IJavaElement[] result = EMTPY_RESULT_SET;
 		try {
@@ -290,18 +288,12 @@ public class JSPTranslation implements IJSPTranslation {
 		return result;
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslation_Interface#getJava2JspMap()
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.jsdt.web.core.internal.java.IJSPTranslation#getJsElementAtOffset(int)
 	 */
-	public HashMap getJs2HtmlMap() {
-		return fJsToHtmlMap;
-	}
-	
-	public IJavaElement getJsElementAtOffset(int htmlstart) {
+	public IJavaElement getJsElementAtOffset(int jsOffset) {
 		IJavaElement elements = null;
-		int jsOffset = getJsOffset(htmlstart);
+	
 		// Position[] positions = getJavaRanges(htmlOffset, length);
 		//        
 		//ICompilationUnit cu = getCompilationUnit();
@@ -318,34 +310,6 @@ public class JSPTranslation implements IJSPTranslation {
 		return elements;
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslation_Interface#getJavaOffset(int)
-	 */
-	public int getJsOffset(int jspOffset) {
-		int result = -1;
-		int offsetInRange = 0;
-		Position jspPos, javaPos = null;
-		// iterate all mapped jsp ranges
-		Iterator it = fHtmlToJsMap.keySet().iterator();
-		while (it.hasNext()) {
-			jspPos = (Position) it.next();
-			// need to count the last position as included
-			if (!jspPos.includes(jspOffset) && !(jspPos.offset + jspPos.length == jspOffset)) {
-				continue;
-			}
-			offsetInRange = jspOffset - jspPos.offset;
-			javaPos = (Position) fHtmlToJsMap.get(jspPos);
-			if (javaPos != null) {
-				result = javaPos.offset + offsetInRange;
-			} else {
-				Logger.log(Logger.ERROR, "JavaPosition was null!" + jspOffset); //$NON-NLS-1$
-			}
-			break;
-		}
-		return result;
-	}
 	
 	/*
 	 * (non-Javadoc)
@@ -361,45 +325,16 @@ public class JSPTranslation implements IJSPTranslation {
 	 * 
 	 * @see org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslation_Interface#getJavaPath()
 	 */
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.jsdt.web.core.internal.java.IJSPTranslation#getJavaPath()
+	 */
 	public String getJavaPath() {
 		// create if necessary
 		ICompilationUnit cu = getCompilationUnit();
 		return (cu != null) ? cu.getPath().toString() : ""; //$NON-NLS-1$
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslation_Interface#getJavaRanges(int,
-	 *      int)
-	 */
-	public Position[] getJavaRanges2(int offset, int length) {
-		List results = new ArrayList();
-		Iterator it = getJs2HtmlMap().keySet().iterator();
-		Position p = null;
-		while (it.hasNext()) {
-			p = (Position) it.next();
-			if (p.overlapsWith(offset, length)) {
-				results.add(p);
-			}
-		}
-		return (Position[]) results.toArray(new Position[results.size()]);
-	}
 	
-	public Position[] getJavaRanges(int offset, int length) {
-		List results = new ArrayList();
-		HashMap map = getJs2HtmlMap();
-		Iterator it = map.keySet().iterator();
-		Position p = null;
-		while (it.hasNext()) {
-			p = (Position) it.next();
-			if (p.overlapsWith(offset, length)) {
-				Position inHtml = (Position)map.get(p);
-				results.add(p);
-			}
-		}
-		return (Position[]) results.toArray(new Position[results.size()]);
-	}
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -410,7 +345,10 @@ public class JSPTranslation implements IJSPTranslation {
 	 * 
 	 * @see org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslation_Interface#getJavaText()
 	 */
-	public String getJavaText() {
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.jsdt.web.core.internal.java.IJSPTranslation#getJsText()
+	 */
+	public String getJsText() {
 		// return (fTranslator != null) ?
 		// fTranslator.getTranslation().toString(): ""; //$NON-NLS-1$
 		return fJsText;
@@ -421,68 +359,26 @@ public class JSPTranslation implements IJSPTranslation {
 	 * 
 	 * @see org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslation_Interface#getJsp2JavaMap()
 	 */
-	public HashMap getJsp2JavaMap() {
-		return fHtmlToJsMap;
+	
+	private String getHtmlPageName() {
+		return fHtmlPageName;
 	}
 	
-	private String getJspName() {
-		return fJsName;
-	}
-	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslation_Interface#getJspOffset(int)
-	 */
-	public int getJspOffset(int javaOffset) {
-		int result = -1;
-		int offsetInRange = 0;
-		Position jspPos, javaPos = null;
-		// iterate all mapped java ranges
-		Iterator it = fJsToHtmlMap.keySet().iterator();
-		while (it.hasNext()) {
-			javaPos = (Position) it.next();
-			// need to count the last position as included
-			if (!javaPos.includes(javaOffset) && !(javaPos.offset + javaPos.length == javaOffset)) {
-				continue;
-			}
-			offsetInRange = javaOffset - javaPos.offset;
-			jspPos = (Position) fJsToHtmlMap.get(javaPos);
-			if (jspPos != null) {
-				result = jspPos.offset + offsetInRange;
-			} else {
-				Logger.log(Logger.ERROR, "jspPosition was null!" + javaOffset); //$NON-NLS-1$
-			}
-			break;
-		}
-		return result;
-	}
 	
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslation_Interface#getJspText()
 	 */
-	public String getJspText() {
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.jsdt.web.core.internal.java.IJSPTranslation#getHtmlText()
+	 */
+	public String getHtmlText() {
 		return fHtmlText;
 	}
 	
-	private ISourceRange getJSSourceRangeOf(IJavaElement element) {
-		// returns the offset in html of given element
-		ISourceRange range = null;
-		if (element instanceof SourceRefElement) {
-			try {
-				range = ((SourceRefElement) element).getSourceRange();
-			} catch (JavaModelException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		return range;
-	}
-	
 	private String getMangledName() {
-		return fMangledName;
+		return fHtmlMangledPageName;
 	}
 	
 	/**
@@ -498,6 +394,9 @@ public class JSPTranslation implements IJSPTranslation {
 	 * (non-Javadoc)
 	 * 
 	 * @see org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslation_Interface#getProblems()
+	 */
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.jsdt.web.core.internal.java.IJSPTranslation#getProblems()
 	 */
 	public List getProblems() {
 		List problems = getProblemRequestor().getCollectedProblems();
@@ -521,70 +420,16 @@ public class JSPTranslation implements IJSPTranslation {
 	 * 
 	 * @see org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslation_Interface#getWorkingCopyOwner()
 	 */
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.jsdt.web.core.internal.java.IJSPTranslation#getWorkingCopyOwner()
+	 */
 	public WorkingCopyOwner getWorkingCopyOwner() {
 		return CompilationUnitHelper.getInstance().getWorkingCopyOwner();
 	}
 	
-	public boolean isIndirect(int javaOffset) {
-		System.out.println("IMPLEMENT JSPTranslation.isIndirect(int javaOffset)");
-		return false;
-		// return isInRanges(javaOffset, fJava2JspIndirectMap, false);
-	}
 	
-	private boolean isInRanges(int javaOffset, HashMap ranges) {
-		return isInRanges(javaOffset, ranges, true);
-	}
-	
-	/**
-	 * Tells you if the given offset is included in any of the ranges
-	 * (Positions) passed in. includeEndOffset tells whether or not to include
-	 * the end offset of each range in the test.
-	 * 
-	 * @param javaOffset
-	 * @param ranges
-	 * @param includeEndOffset
-	 * @return
-	 */
-	private boolean isInRanges(int javaOffset, HashMap ranges, boolean includeEndOffset) {
-		Iterator it = ranges.keySet().iterator();
-		while (it.hasNext()) {
-			Position javaPos = (Position) it.next();
-			// also include the start and end offset (only if requested)
-			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=81687
-			if (javaPos.includes(javaOffset) || (includeEndOffset && javaPos.offset + javaPos.length == javaOffset)) {
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslation_Interface#javaSpansMultipleJspPartitions(int,
-	 *      int)
-	 */
-	public boolean javaSpansMultipleJspPartitions(int javaOffset, int javaLength) {
-		HashMap java2jsp = getJs2HtmlMap();
-		int count = 0;
-		Iterator it = java2jsp.keySet().iterator();
-		Position javaRange = null;
-		while (it.hasNext()) {
-			javaRange = (Position) it.next();
-			if (javaRange.overlapsWith(javaOffset, javaLength)) {
-				count++;
-			}
-			if (count > 1) {
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslation_Interface#reconcileCompilationUnit()
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.jsdt.web.core.internal.java.IJSPTranslation#reconcileCompilationUnit()
 	 */
 	public void reconcileCompilationUnit() {
 		//if(true) return;
@@ -610,6 +455,9 @@ public class JSPTranslation implements IJSPTranslation {
 	 * 
 	 * @see org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslation_Interface#release()
 	 */
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.jsdt.web.core.internal.java.IJSPTranslation#release()
+	 */
 	public void release() {
 		synchronized (fLock) {
 			if (fCompilationUnit != null) {
@@ -626,24 +474,34 @@ public class JSPTranslation implements IJSPTranslation {
 			}
 		}
 	}
-	
-	private void setHtmlFileName(String jspName) {
-		fJsName = jspName;
-	}
-	
-	private void setMangledName(String mangledName) {
-		fMangledName = mangledName;
-	}
-	
+
+
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslation_Interface#setProblemCollectingActive(boolean)
+	 */
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.jsdt.web.core.internal.java.IJSPTranslation#setProblemCollectingActive(boolean)
 	 */
 	public void setProblemCollectingActive(boolean collect) {
 		ICompilationUnit cu = getCompilationUnit();
 		if (cu != null) {
 			getProblemRequestor().setIsActive(collect);
 		}
+	}
+	
+	private ISourceRange getJSSourceRangeOf(IJavaElement element) {
+		// returns the offset in html of given element
+		ISourceRange range = null;
+		if (element instanceof SourceRefElement) {
+			try {
+				range = ((SourceRefElement) element).getSourceRange();
+			} catch (JavaModelException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return range;
 	}
 }

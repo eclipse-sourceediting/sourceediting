@@ -359,8 +359,7 @@ public class BasicRefactorSearchRequestor extends SearchRequestor {
 			if (delegate != null
 					&& delegate instanceof JavaSearchDocumentDelegate) {
 				JavaSearchDocumentDelegate javaDelegate = (JavaSearchDocumentDelegate) delegate;
-				changes.add(createChange(javaDelegate, javaDelegate
-						.getJspTranslation().getJspEdit(javaEdit)));
+				changes.add(createChange(javaDelegate,javaEdit));
 			}
 		}
 		return (Change[]) changes.toArray(new Change[changes.size()]);
@@ -369,7 +368,7 @@ public class BasicRefactorSearchRequestor extends SearchRequestor {
 	private Change createChange(JavaSearchDocumentDelegate searchDoc,
 			TextEdit edit) {
 
-		IDocument doc = searchDoc.getJspTranslation().getJspDocument();
+		IDocument doc = new Document(searchDoc.getJspTranslation().getJsText());
 		String file = searchDoc.getFile().getName();
 		String description = getDescription();
 		try {
@@ -383,16 +382,6 @@ public class BasicRefactorSearchRequestor extends SearchRequestor {
 		return new RenameChange(searchDoc.getFile(), doc, edit, description);
 	}
 
-	// https://w3.opensource.ibm.com/bugzilla/show_bug.cgi?id=3205
-	// only relevant for IType refactorings
-	protected boolean isFullyQualified(String matchText) {
-		if (getElement() instanceof IType) {
-			String pkg = ((IType) getElement()).getPackageFragment()
-					.getElementName();
-			return matchText.startsWith(pkg);
-		}
-		return false;
-	}
 
 	/**
 	 * Subclasses should override to better describe the change.

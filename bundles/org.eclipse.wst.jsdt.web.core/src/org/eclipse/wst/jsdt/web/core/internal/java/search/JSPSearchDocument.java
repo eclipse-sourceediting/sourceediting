@@ -11,8 +11,6 @@
 package org.eclipse.wst.jsdt.web.core.internal.java.search;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Iterator;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -21,13 +19,11 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.wst.jsdt.core.search.SearchParticipant;
-import org.eclipse.jface.text.Position;
 import org.eclipse.wst.jsdt.web.core.internal.Logger;
 import org.eclipse.wst.jsdt.web.core.internal.java.IJSPTranslation;
 import org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslation;
 import org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslationAdapter;
 import org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslationAdapterFactory;
-import org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslationExtension;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.exceptions.UnsupportedCharsetExceptionWithDetail;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
@@ -75,7 +71,7 @@ public class JSPSearchDocument {
 
 		if (fCachedCharContents == null || isDirty()) {
 			JSPTranslation trans = getJSPTranslation();
-			fCachedCharContents = trans != null ? trans.getJavaText()
+			fCachedCharContents = trans != null ? trans.getJsText()
 					.toCharArray() : new char[0];
 			fCUPath = trans.getJavaPath();
 		}
@@ -95,8 +91,8 @@ public class JSPSearchDocument {
 	 * @return the JSPTranslation for the jsp file, or null if it's an
 	 *         unsupported file.
 	 */
-	public final JSPTranslationExtension getJSPTranslation() {
-		JSPTranslationExtension translation = null;
+	public final JSPTranslation getJSPTranslation() {
+		JSPTranslation translation = null;
 		IFile jspFile = getFile();
 		if (!JSPSearchSupport.isJsp(jspFile)) {
 			return translation;
@@ -148,45 +144,13 @@ public class JSPSearchDocument {
 			if (trans != null) {
 				this.fCUPath = trans.getJavaPath();
 				// save since it's expensive to calculate again later
-				fCachedCharContents = trans.getJavaText().toCharArray();
+				fCachedCharContents = trans.getJsText().toCharArray();
 			}
 		}
 		return fCUPath != null ? fCUPath : UNKNOWN_PATH;
 	}
 
-	public int getJspOffset(int javaOffset) {
-		// copied from JSPTranslation
-		int result = -1;
-		int offsetInRange = 0;
-		Position jspPos, javaPos = null;
-		JSPTranslation trans = getJSPTranslation();
-		if (trans != null) {
-			HashMap java2jspMap = trans.getJs2HtmlMap();
 
-			// iterate all mapped java ranges
-			Iterator it = java2jspMap.keySet().iterator();
-			while (it.hasNext()) {
-				javaPos = (Position) it.next();
-				// need to count the last position as included
-				if (!javaPos.includes(javaOffset)
-						&& !(javaPos.offset + javaPos.length == javaOffset)) {
-					continue;
-				}
-
-				offsetInRange = javaOffset - javaPos.offset;
-				jspPos = (Position) java2jspMap.get(javaPos);
-
-				if (jspPos != null) {
-					result = jspPos.offset + offsetInRange;
-				} else {
-					Logger.log(Logger.ERROR,
-							"jspPosition was null!" + javaOffset); //$NON-NLS-1$
-				}
-				break;
-			}
-		}
-		return result;
-	}
 
 	public IFile getFile() {
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();

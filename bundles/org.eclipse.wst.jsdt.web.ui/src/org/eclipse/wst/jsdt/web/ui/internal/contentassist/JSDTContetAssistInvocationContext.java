@@ -29,7 +29,6 @@ public class JSDTContetAssistInvocationContext extends JavaContentAssistInvocati
     
     public static JSDTContetAssistInvocationContext getInstance(ITextViewer viewer, int offset, JSDTProposalCollector theCollector){
         JSPTranslation tran = getJSPTranslation(viewer);
-        int jsOffset = tran.getJsOffset(offset);
         return new JSDTContetAssistInvocationContext(viewer,offset,theCollector);
     }
   public IDocument getDocument() {

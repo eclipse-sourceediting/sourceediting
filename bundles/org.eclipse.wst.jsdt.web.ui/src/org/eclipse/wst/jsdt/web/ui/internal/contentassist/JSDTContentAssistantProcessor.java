@@ -74,13 +74,9 @@ public class JSDTContentAssistantProcessor extends AbstractContentAssistProcesso
             if (fTranslationAdapter != null) {
                 
                 JSPTranslation translation = fTranslationAdapter.getJSPTranslation();
-                fJavaPosition = translation.getJsOffset(getDocumentPosition());
+                fJavaPosition = getDocumentPosition();
                 
-                if (DEBUG) {
-                    System.out.println("Cursor Location in Java Offset:" + fJavaPosition);
-                    System.out.println(debug(translation));
-                }
-               
+                
                 
                 try {
                     
@@ -129,36 +125,7 @@ public class JSDTContentAssistantProcessor extends AbstractContentAssistProcesso
         this.fProposalCollector = translation;
     }
     
-    /**
-     * For debugging translation mapping only.
-     * 
-     * @param translation
-     */
-    private String debug(JSPTranslation translation) {
-        StringBuffer debugString = new StringBuffer();
-        HashMap jsp2java = translation.getJsp2JavaMap();
-        String javaText = translation.getJavaText();
-        String jspText = fViewer.getDocument().get();
-        debugString.append("[jsp2JavaMap in JSPCompletionProcessor]\r\n"); //$NON-NLS-1$
-        int jspCursPos = fViewer.getTextWidget().getCaretOffset();
-        debugString.append("jsp cursor position >> " + jspCursPos + "\n"); //$NON-NLS-1$ //$NON-NLS-2$
-        Iterator it = jsp2java.keySet().iterator();
-        while (it.hasNext()) {
-            try {
-                Position jspPos = (Position) it.next();
-                Position javaPos = (Position) jsp2java.get(jspPos);
-                debugString.append("jsp > " + jspPos.offset + ":" + jspPos.length + ":" + jspText.substring(jspPos.offset, jspPos.offset + jspPos.length) + ":\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-                debugString.append("java > " + javaPos.offset + ":" + javaPos.length + ":" + javaText.substring(javaPos.offset, javaPos.offset + javaPos.length) + ":\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-                debugString.append("char at Java pos (-1)>" + javaText.substring(javaPos.offset, javaPos.offset + javaPos.length).charAt(fJavaPosition - 1) + ":\n");
-                debugString.append("char at JSP pos (-1)>" + jspText.charAt(jspCursPos - 1) + ":\n");
-                
-                debugString.append("-------------------------------------------------\n"); //$NON-NLS-1$
-            } catch (Exception e) {
-                // eat exceptions, it's only for debug
-            }
-        }
-        return debugString.toString();
-    }
+   
     
     /**
      * Returns information about possible contexts based on the specified

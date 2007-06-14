@@ -30,7 +30,7 @@ public class JSPMethodRenameRequestor extends BasicRefactorSearchRequestor {
 	protected String getRenameText(JavaSearchDocumentDelegate searchDoc,
 			SearchMatch javaMatch) {
 
-		String javaText = searchDoc.getJspTranslation().getJavaText();
+		String javaText = searchDoc.getJspTranslation().getJsText();
 		String methodText = javaText.substring(javaMatch.getOffset(), javaMatch
 				.getOffset()
 				+ javaMatch.getLength());

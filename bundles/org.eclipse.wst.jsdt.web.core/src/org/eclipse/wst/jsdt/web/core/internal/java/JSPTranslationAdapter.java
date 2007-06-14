@@ -52,9 +52,8 @@ public class JSPTranslationAdapter implements INodeAdapter, IWebDocumentChangeLi
 	private static final boolean DEBUG = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.jsdt.web.core/debug/jsptranslation")); //$NON-NLS-1$  //$NON-NLS-2$
 
 	private boolean fDocumentIsDirty = true;
-	private IDocument fJavaDocument = null;
 	private IDocument fJspDocument = null;
-	private JSPTranslationExtension fJSPTranslation = null;
+	private JSPTranslation fJSPTranslation = null;
 	private NullProgressMonitor fTranslationMonitor = null;
 	private JSPTranslator fTranslator = null;
 	private IDOMModel fXMLModel;
@@ -142,20 +141,16 @@ public class JSPTranslationAdapter implements INodeAdapter, IWebDocumentChangeLi
 	 * 
 	 * @return a JSPTranslationExtension
 	 */
-	public JSPTranslationExtension getJSPTranslation() {
+	public JSPTranslation getJSPTranslation() {
 		synchronized(fXMLModel) {
 			if (fJSPTranslation == null || fDocumentIsDirty) {
 				JSPTranslator translator = null;
 				if (fXMLModel != null && fXMLModel.getIndexedRegion(0) != null) {
 					translator = getTranslator((IDOMNode) fXMLModel.getIndexedRegion(0));
-					translator.translate();
-					StringBuffer javaContents = translator.getTranslation();
-					fJavaDocument = new Document(javaContents.toString());
+					
 				} else {
 					// empty document case
 					translator = new JSPTranslator();
-					StringBuffer emptyContents = translator.getEmptyTranslation();
-					fJavaDocument = new Document(emptyContents.toString());
 				}
 				// it's going to be rebuilt, so we release it here
 				if (fJSPTranslation != null) {
@@ -164,7 +159,7 @@ public class JSPTranslationAdapter implements INodeAdapter, IWebDocumentChangeLi
 					}
 					fJSPTranslation.release();
 				}
-				fJSPTranslation = new JSPTranslationExtension(fXMLModel.getStructuredDocument(), fJavaDocument, getJavaProject(), translator);
+				fJSPTranslation = new JSPTranslation(fXMLModel.getStructuredDocument(),  getJavaProject(), translator);
 				fDocumentIsDirty = false;
 			}
 		}

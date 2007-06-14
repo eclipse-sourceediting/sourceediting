@@ -2,7 +2,6 @@ package org.eclipse.wst.jsdt.web.ui.internal.format;
 
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.Vector;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -10,10 +9,8 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.IDocumentExtension3;
-import org.eclipse.jface.text.IDocumentPartitioner;
-import org.eclipse.jface.text.IDocumentPartitioningListener;
 import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.jface.text.TypedPosition;
 import org.eclipse.jface.text.formatter.ContextBasedFormattingStrategy;
@@ -28,13 +25,11 @@ import org.eclipse.wst.jsdt.core.formatter.CodeFormatter;
 import org.eclipse.wst.jsdt.internal.corext.util.CodeFormatterUtil;
 import org.eclipse.wst.jsdt.internal.formatter.DefaultCodeFormatter;
 import org.eclipse.wst.jsdt.web.core.internal.java.IJSPTranslation;
+import org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslation;
 import org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslationAdapter;
-import org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslationExtension;
-import org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslationUtil;
 import org.eclipse.wst.jsdt.web.core.internal.java.ModelIrritant;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
-import org.eclipse.wst.sse.core.internal.text.rules.StructuredTextPartitioner;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 
@@ -95,14 +90,14 @@ public class FormattingStrategyJSPJava extends ContextBasedFormattingStrategy {
 		if (document != null) {
 			try {
 				//JSPTranslationUtil translationUtil = new JSPTranslationUtil(document);
-				JSPTranslationExtension translation = getTranslation(document);
+				JSPTranslation translation = getTranslation(document);
 				ICompilationUnit cu = translation.getCompilationUnit();
 				if (cu != null) {
 					String cuSource = cu.getSource();
-					int javaStart = translation.getJsOffset(partition.getOffset());
+					int javaStart = partition.getOffset();
 					int javaLength = partition.getLength();
 					TextEdit edit = CodeFormatterUtil.format2(CodeFormatter.K_COMPILATION_UNIT, cuSource, javaStart, javaLength, startIndentLevel, TextUtilities.getDefaultLineDelimiter(document), getPreferences());
-					IDocument doc = translation.getJavaDocument();
+					IDocument doc = new Document(translation.getJsText());
 					edit.apply(doc);
 					String replaceText = TextUtilities.getDefaultLineDelimiter(document) + getIndentationString(getPreferences(), startIndentLevel) + (doc.get(edit.getOffset(), edit.getLength())).trim() + TextUtilities.getDefaultLineDelimiter(document);
 					/*
@@ -121,8 +116,8 @@ public class FormattingStrategyJSPJava extends ContextBasedFormattingStrategy {
 		}
 	}
 	
-	public JSPTranslationExtension getTranslation(IStructuredDocument document) {
-		JSPTranslationExtension tran=null;
+	public JSPTranslation getTranslation(IStructuredDocument document) {
+		JSPTranslation tran=null;
 			IDOMModel xmlModel=null;
 			try {
 				xmlModel = (IDOMModel) StructuredModelManager.getModelManager().getExistingModelForRead(document);

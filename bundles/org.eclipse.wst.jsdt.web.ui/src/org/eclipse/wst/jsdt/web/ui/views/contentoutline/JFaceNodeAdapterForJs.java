@@ -56,7 +56,7 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
 					
 					for(int i = 0;i<children.length;i++) {
 						int htmllength = ((SourceRefElement) (children[i])).getSourceRange().getLength();
-						int htmloffset = translation.getJspOffset(((SourceRefElement) (children[i])).getSourceRange().getOffset());
+						int htmloffset =((SourceRefElement) (children[i])).getSourceRange().getOffset();
 						Position position = new Position(htmloffset, htmllength);
 						nodes[i] = getJsNode(parent, children[i], position);
 					}
@@ -153,7 +153,7 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
 				Position position = null;
 				try {
 					htmllength = ((SourceRefElement) (result[i])).getSourceRange().getLength();
-					htmloffset = translation.getJspOffset(((SourceRefElement) (result[i])).getSourceRange().getOffset());
+					htmloffset = ((SourceRefElement) (result[i])).getSourceRange().getOffset();
 					position = new Position(htmloffset, htmllength);
 				} catch (JavaModelException e) {
 					e.printStackTrace();

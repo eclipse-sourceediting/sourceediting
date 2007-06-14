@@ -38,7 +38,7 @@ public class JSPTypeMoveRequestor extends BasicRefactorSearchRequestor {
 		String renameText = getElement().getElementName();
 
 		JSPTranslation trans = searchDoc.getJspTranslation();
-		String matchText = trans.getJavaText().substring(javaMatch.getOffset(),
+		String matchText = trans.getJsText().substring(javaMatch.getOffset(),
 				javaMatch.getOffset() + javaMatch.getLength());
 
 		// if it's an import or jsp:useBean, we need to add the package name as

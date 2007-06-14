@@ -166,7 +166,7 @@ public class JSDTProposalCollector extends CompletionProposalCollector {
 		// replacement length
 		int length = proposal.getReplaceEnd() - offset;
 		// translate offset from Java > JSP
-		offset = fTranslation.getJspOffset(offset);
+	
 		// cursor position after must be calculated
 		int positionAfter = calculatePositionAfter(proposal, completion, offset);
 
