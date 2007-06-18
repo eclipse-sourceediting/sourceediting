@@ -17,10 +17,12 @@ import org.eclipse.ltk.core.refactoring.CompositeChange;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.participants.CheckConditionsContext;
 import org.eclipse.ltk.core.refactoring.participants.RenameParticipant;
+import org.eclipse.wst.jsdt.core.IMethod;
 import org.eclipse.wst.jsdt.core.IType;
 import org.eclipse.wst.jsdt.core.JavaModelException;
 import org.eclipse.wst.jsdt.web.ui.internal.JsUIMessages;
 import org.eclipse.wst.jsdt.web.ui.internal.Logger;
+import org.eclipse.wst.jsdt.web.ui.views.contentoutline.IJavaWebNode;
 
 /**
  * Remember to change the plugin.xml file if the name of this class changes.
@@ -77,6 +79,11 @@ public class JSPTypeRenameParticipant extends RenameParticipant {
 		if (element instanceof IType) {
 			this.fType = (IType) element;
 			return true;
+		}else if (element instanceof IJavaWebNode) {
+			if(((IJavaWebNode)element).getJavaElement() instanceof IType) {
+				this.fType = (IType) ((IJavaWebNode)element).getJavaElement();
+				return true;
+			}
 		}
 		return false;
 	}

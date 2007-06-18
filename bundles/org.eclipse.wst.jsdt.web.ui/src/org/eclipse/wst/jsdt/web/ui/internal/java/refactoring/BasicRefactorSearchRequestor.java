@@ -277,7 +277,7 @@ public class BasicRefactorSearchRequestor extends SearchRequestor {
 	}
 	
 	private Change createChange(JSDTSearchDocumentDelegate searchDoc, TextEdit edit) {
-		IDocument doc = new Document(searchDoc.getJspTranslation().getJsText());
+		IDocument doc = searchDoc.getJspTranslation().getHtmlDocument();
 		String file = searchDoc.getFile().getName();
 		String description = getDescription();
 		try {

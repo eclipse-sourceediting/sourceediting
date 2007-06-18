@@ -27,6 +27,7 @@ import org.eclipse.wst.jsdt.core.IMethod;
 import org.eclipse.wst.jsdt.core.JavaModelException;
 import org.eclipse.wst.jsdt.web.ui.internal.JsUIMessages;
 import org.eclipse.wst.jsdt.web.ui.internal.Logger;
+import org.eclipse.wst.jsdt.web.ui.views.contentoutline.IJavaWebNode;
 
 /**
  * @author pavery
@@ -85,6 +86,11 @@ public class JSPMethodRenameParticipant extends RenameParticipant {
 		if (element instanceof IMethod) {
 			this.fMethod = (IMethod) element;
 			return true;
+		}else if (element instanceof IJavaWebNode) {
+			if(((IJavaWebNode)element).getJavaElement() instanceof IMethod) {
+				this.fMethod = (IMethod) ((IJavaWebNode)element).getJavaElement();
+				return true;
+			}
 		}
 		return false;
 	}
