@@ -10,6 +10,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.web.ui.views.contentoutline.IJavaWebNode;
 
 /**
  * @author childsb

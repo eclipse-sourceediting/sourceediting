@@ -13,7 +13,6 @@ import org.eclipse.wst.jsdt.web.core.internal.Logger;
 import org.eclipse.wst.jsdt.web.core.internal.java.IJsTranslation;
 import org.eclipse.wst.jsdt.web.core.internal.java.JsTranslation;
 import org.eclipse.wst.jsdt.web.core.internal.java.JsTranslationAdapter;
-import org.eclipse.wst.jsdt.web.ui.actions.IJavaWebNode;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;

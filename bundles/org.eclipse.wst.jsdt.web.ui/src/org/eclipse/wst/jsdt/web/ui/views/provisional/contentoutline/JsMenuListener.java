@@ -17,7 +17,7 @@ import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.internal.InternalHandlerUtil;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.CompilationUnitEditorActionContributor;
 import org.eclipse.wst.jsdt.ui.IContextMenuConstants;
-import org.eclipse.wst.jsdt.web.ui.actions.IJavaWebNode;
+import org.eclipse.wst.jsdt.web.ui.views.contentoutline.IJavaWebNode;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.ui.internal.IReleasable;
 import org.eclipse.wst.xml.ui.internal.contentoutline.XMLNodeActionManager;

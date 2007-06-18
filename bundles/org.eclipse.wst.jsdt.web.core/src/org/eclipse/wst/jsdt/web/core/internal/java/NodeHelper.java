@@ -41,7 +41,9 @@ public class NodeHelper {
 	}
 	
 	public boolean attrEquals(String attribute, String value) {
-		return (new String(getAttributeValue(attribute))).equalsIgnoreCase(value);
+		String attValue = getAttributeValue(attribute);
+		if(attValue==null) return false;
+		return attValue.equalsIgnoreCase(value);
 	}
 	
 	public String AttrToString() {
