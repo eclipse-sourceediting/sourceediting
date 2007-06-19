@@ -24,8 +24,9 @@ public class JsWebNature implements IProjectNature {
 	// {"org.eclipse.wst.jsdt.web.core.embeded.jsNature",JavaCore.NATURE_ID};
 	// //$NON-NLS-1$
 	private static final String NATURE_IDS[] = { JavaCore.NATURE_ID };
-	public static final IPath VIRTUAL_CONTAINER_PATH = new Path("org.eclipse.wst.jsdt.launching.WebProject");
-	public static final IClasspathEntry VIRTUAL_SCOPE_ENTRY = JavaCore.newContainerEntry(JsWebNature.VIRTUAL_CONTAINER_PATH);
+
+	public static final IPath VIRTUAL_BROWSER_CLASSPATH = new Path("org.eclipse.wst.jsdt.launching.baseBrowserLibrary");
+	public static final IClasspathEntry VIRTUAL_SCOPE_ENTRY = JavaCore.newContainerEntry(new Path(WebProjectClassPathContainerInitializer.VIRTUAL_CONTAINER));
 	
 	public static void addJsNature(IProject project, IProgressMonitor monitor) throws CoreException {
 		if (monitor != null && monitor.isCanceled()) {
@@ -240,16 +241,14 @@ public class JsWebNature implements IProjectNature {
 	}
 	
 	private IClasspathEntry[] initLocalClassPath() {
-		// IClasspathEntry library = JavaCore.newContainerEntry( new
-		// Path(CONTAINER_ID));
+		
 		classPathEntries.add(JsWebNature.VIRTUAL_SCOPE_ENTRY);
+		IClasspathEntry browserLibrary = JavaCore.newContainerEntry( VIRTUAL_BROWSER_CLASSPATH);
+		classPathEntries.add(browserLibrary);
 // IPath webRoot = WebRootFinder.getWebContentFolder(fCurrProject);
 // IClasspathEntry source = JavaCore.newSourceEntry(webRoot.append("/"));
 // classPathEntries.add(source);
-		return new IClasspathEntry[] { JsWebNature.VIRTUAL_SCOPE_ENTRY /*
-																		 * ,
-																		 * source
-																		 */};
+		return new IClasspathEntry[] { JsWebNature.VIRTUAL_SCOPE_ENTRY , browserLibrary};
 	}
 	
 	private void initOutputPath() {

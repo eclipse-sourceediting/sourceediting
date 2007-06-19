@@ -6,20 +6,27 @@ package org.eclipse.wst.jsdt.web.core.internal.project;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.wst.jsdt.core.ClasspathContainerInitializer;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.wst.jsdt.core.IClasspathContainer;
 import org.eclipse.wst.jsdt.core.IJavaProject;
+import org.eclipse.wst.jsdt.core.compiler.libraries.BasicBrowserLibraryClassPathContainerInitializer;
+import org.eclipse.wst.jsdt.core.compiler.libraries.SystemLibraryLocation;
+
+import org.eclipse.wst.jsdt.web.core.internal.JsCorePlugin;
 import org.eclipse.wst.jsdt.web.core.internal.java.JsNameManglerUtil;
 
 /**
  * @author childsb
  * 
  */
-public class WebProjectClassPathContainerInitializer extends ClasspathContainerInitializer {
-/* Some tokens for us to identify mangled paths */
+public class WebProjectClassPathContainerInitializer extends BasicBrowserLibraryClassPathContainerInitializer {
+	private static final String CONTAINER_DESCRIPTION = "Web Project support for JSDT";
+	public static final char[] LIB_NAME = {'b','r','o','w','s','e','r','W','i','n','d','o','w','.','j','s'};
+	/* Some tokens for us to identify mangled paths */
 	private static final String MANGLED_BUTT1 = "htm";
 	private static final String MANGLED_BUTT2 = ".js";
+	public static final String VIRTUAL_CONTAINER = "org.eclipse.wst.jsdt.launching.WebProject";
 	
 	private static String getUnmangedHtmlPath(String containerPathString) {
 		if (containerPathString == null) {
@@ -29,6 +36,25 @@ public class WebProjectClassPathContainerInitializer extends ClasspathContainerI
 			return JsNameManglerUtil.unmangle(containerPathString);
 		}
 		return null;
+	}
+	public SystemLibraryLocation getLibraryLocation() {
+		return new WebBrowserLibLocation();
+	}
+	
+	class WebBrowserLibLocation extends SystemLibraryLocation {
+		WebBrowserLibLocation() {
+			super();
+		}
+		
+		@Override
+		public char[][] getLibraryFileNames() {
+			return new char[][] { WebProjectClassPathContainerInitializer.LIB_NAME };
+		}
+		
+		@Override
+		protected String getPluginId() {
+			return JsCorePlugin.PLUGIN_ID;
+		}
 	}
 	
 	/*
@@ -43,6 +69,16 @@ public class WebProjectClassPathContainerInitializer extends ClasspathContainerI
 		return false;
 	}
 	
+	@Override
+	protected IClasspathContainer getContainer(IPath containerPath, IJavaProject project) {
+		return this;
+	}
+	
+	@Override
+	public String getDescription() {
+		return WebProjectClassPathContainerInitializer.CONTAINER_DESCRIPTION;
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -51,8 +87,8 @@ public class WebProjectClassPathContainerInitializer extends ClasspathContainerI
 	 */
 	@Override
 	public String getDescription(IPath containerPath, IJavaProject project) {
-		if (containerPath.equals(JsWebNature.VIRTUAL_CONTAINER_PATH)) {
-			return new String("Web Project support for JSDT");
+		if (containerPath.equals(new Path(WebProjectClassPathContainerInitializer.VIRTUAL_CONTAINER))) {
+			return WebProjectClassPathContainerInitializer.CONTAINER_DESCRIPTION;
 		}
 		String containerPathString = containerPath.toString();
 		String unmangled = WebProjectClassPathContainerInitializer.getUnmangedHtmlPath(containerPathString);
@@ -86,14 +122,13 @@ public class WebProjectClassPathContainerInitializer extends ClasspathContainerI
 		return null;
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.jsdt.core.ClasspathContainerInitializer#initialize(org.eclipse.core.runtime.IPath,
-	 *      org.eclipse.wst.jsdt.core.IJavaProject)
-	 */
 	@Override
-	public void initialize(IPath containerPath, IJavaProject project) throws CoreException {
-	/* need this to activate the jsdt.web plugin */
+	public int getKind() {
+		return IClasspathContainer.K_APPLICATION;
+	}
+	
+	@Override
+	public IPath getPath() {
+		return new Path(WebProjectClassPathContainerInitializer.VIRTUAL_CONTAINER);
 	}
 }
