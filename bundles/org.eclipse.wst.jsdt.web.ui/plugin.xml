@@ -8,10 +8,11 @@
 			class="org.eclipse.wst.jsdt.web.ui.StructuredTextViewerConfigurationJSDT"
 			target="org.eclipse.wst.html.core.htmlsource.source" />
 			
-			
+		<!--	
  		<contentOutlineConfiguration
 			class="org.eclipse.wst.jsdt.web.ui.views.provisional.contentoutline.JsContentOutlineConfig"
 			target="org.eclipse.wst.html.core.htmlsource.source" />		
+		-->
 		<provisionalConfiguration
 			type="contentassistprocessor"
 			class="org.eclipse.wst.jsdt.web.ui.internal.contentassist.JSDTContentAssistant"
@@ -44,6 +45,20 @@
 			type="hyperlinkdetector"
 			class="org.eclipse.wst.jsdt.web.ui.internal.hyperlink.JSDTHyperlinkDetector"
 			target="org.eclipse.wst.html.SCRIPT" />
+	</extension>
+	<extension point = "org.eclipse.wst.sse.ui.extendedEditorActions">
+		<editorContribution 
+            targetID="com.ibm.sse.editor.StructuredTextEditor" 
+            id="com.ibm.sse.editor.extendedActions2"> 
+         <action 
+               popupmenuPath="group.add" 
+               label="Preferences2" 
+               class="com.ibm.sse.editor.preferences.ui.EditStructuredTextEditorPreferencesAction" 
+               id="com.ibm.sse.editor.preferences.ui.EditStructuredTextEditorPreferencesAction2"> 
+         </action> 
+      </editorContribution> 
+		
+	
 	</extension>
 	<extension
 		point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectorTargets">
@@ -82,7 +97,7 @@
          point="org.eclipse.ui.popupMenus">
 	<!-- content outline contributions for Open Type and Open Hierarchy menu.  Menus show up in reverse order of decliration (google it). -->
       <objectContribution
-            objectClass="org.eclipse.wst.jsdt.web.ui.actions.IJavaWebNode"
+            objectClass="org.eclipse.wst.jsdt.web.ui.views.contentoutline.IJavaWebNode"
             id="org.eclipse.wst.jsdt.web.ui.JavaActions">
             <!-- Declerations Search Menu -->
             <menu
@@ -576,5 +591,77 @@
                id="org.eclipse.ui.texteditor.SelectRulerAction"/>
         </editorContribution>
 	</extension>
-	
+		<!--======================================================================================-->
+	<!-- FOR JSP/JAVA RENAME PARTICIPATION                                                    -->
+	<!--======================================================================================-->
+	<extension
+		point="org.eclipse.ltk.core.refactoring.renameParticipants">
+		<renameParticipant
+			name="JSDT Web Rename Participant"
+			class="org.eclipse.wst.jsdt.web.ui.internal.java.refactoring.JSPTypeRenameParticipant"
+			id="org.eclipse.wst.jsdt.web.ui.internal.java.refactoring.JSPTypeRenameParticipant">
+			<enablement>
+				<with variable="affectedNatures">
+					<iterate operator="or">
+						<equals value="org.eclipse.wst.jsdt.core.jsNature" />
+					</iterate>
+				</with>
+				<with variable="element">
+					<instanceof value="org.eclipse.wst.jsdt.core.IType" />
+
+				</with>
+			</enablement>
+		</renameParticipant>
+		<renameParticipant
+			name="JSDT Web Rename Participant"
+			class="org.eclipse.wst.jsdt.web.ui.internal.java.refactoring.JSPTypeRenameParticipant"
+			id="org.eclipse.wst.jsdt.web.ui.internal.java.refactoring.JSPTypeRenameParticipant">
+			<enablement>
+				<with variable="affectedNatures">
+					<iterate operator="or">
+						<equals value="org.eclipse.wst.jsdt.core.jsNature" />
+					</iterate>
+				</with>
+				<with variable="element">
+					<instanceof value="org.eclipse.wst.jsdt.web.ui.views.contentoutline.IJavaWebNode" />
+
+				</with>
+			</enablement>
+		</renameParticipant>
+		<renameParticipant
+			name="JSDT Web Rename Participant"
+			class="org.eclipse.wst.jsdt.web.ui.internal.java.refactoring.JSPMethodRenameParticipant"
+			id="org.eclipse.wst.jsdt.web.ui.internal.java.refactoring.JSPMethodRenameParticipant">
+			<enablement>
+				<with variable="affectedNatures">
+					<iterate operator="or">
+						<equals value="org.eclipse.wst.jsdt.core.jsNature" />
+
+					</iterate>
+				</with>
+				<with variable="element">
+					<instanceof value="org.eclipse.wst.jsdt.core.IMethod" />
+
+				</with>
+			</enablement>
+		</renameParticipant>
+		<renameParticipant
+			name="JSDT Web Rename Participant"
+			class="org.eclipse.wst.jsdt.web.ui.internal.java.refactoring.JSPMethodRenameParticipant"
+			id="org.eclipse.wst.jsdt.web.ui.internal.java.refactoring.JSPMethodRenameParticipant">
+			<enablement>
+				<with variable="affectedNatures">
+					<iterate operator="or">
+						<equals value="org.eclipse.wst.jsdt.core.jsNature" />
+
+					</iterate>
+				</with>
+				<with variable="element">
+					<instanceof value="org.eclipse.wst.jsdt.web.ui.views.contentoutline.IJavaWebNode" />
+
+				</with>
+			</enablement>
+		</renameParticipant>
+		
+	</extension>
 </plugin>

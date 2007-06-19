@@ -11,6 +11,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.IDocumentPartitioningListener;
 import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.jface.text.TypedPosition;
 import org.eclipse.jface.text.formatter.ContextBasedFormattingStrategy;
@@ -27,9 +28,10 @@ import org.eclipse.wst.jsdt.internal.formatter.DefaultCodeFormatter;
 import org.eclipse.wst.jsdt.web.core.internal.java.IJsTranslation;
 import org.eclipse.wst.jsdt.web.core.internal.java.JsTranslation;
 import org.eclipse.wst.jsdt.web.core.internal.java.JsTranslationAdapter;
-import org.eclipse.wst.jsdt.web.core.internal.java.ModelIrritant;
+
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.eclipse.wst.sse.core.internal.text.BasicStructuredDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 
@@ -48,41 +50,22 @@ public class FormattingStrategyJSDT extends ContextBasedFormattingStrategy {
 		super();
 	}
 	
-// private class partitionerAttachedChangeListener implements
-// IDocumentPartitioningListener {
-// private IDocument attachedDoc;
-//		
-// partitionerAttachedChangeListener(IDocument attachedDoc) {
-// this.attachedDoc = attachedDoc;
-// }
-//		
-// public void documentPartitioningChanged(IDocument document) {
-// if (document == attachedDoc && document instanceof IDocumentExtension3) {
-// IDocumentExtension3 extension3 = (IDocumentExtension3) document;
-// String[] partitionings = extension3.getPartitionings();
-// Vector partitioners = new Vector();
-// for (int i = 0; i < partitionings.length; i++) {
-// IDocumentPartitioner partitioner =
-// extension3.getDocumentPartitioner(partitionings[i]);
-// if (partitioner instanceof StructuredTextPartitioner) {
-// IDOMModel xmlModel = null;
-// try {
-// xmlModel = (IDOMModel)
-// StructuredModelManager.getModelManager().getExistingModelForRead(document);
-// xmlModel.reinit();
-// } catch (Exception e) {
-// System.out.println("Exception in adapter for model re-init" + e);
-// } finally {
-// if (xmlModel != null) {
-// xmlModel.releaseFromRead();
-// }
-// }
-// document.removeDocumentPartitioningListener(this);
-// }
-// }
-// }
-// }
-// }
+	class ModelIrritant implements IDocumentPartitioningListener {
+		public ModelIrritant(IDocument attachedDoc) {}
+		
+		public void documentPartitioningChanged(IDocument document) {
+			document.removeDocumentPartitioningListener(this);
+			if (document instanceof BasicStructuredDocument) {
+				try {
+					((BasicStructuredDocument) document).replace(0, document.getLength(), document.get());
+				} catch (BadLocationException ex) {
+					// TODO Auto-generated catch block
+					ex.printStackTrace();
+				}
+			}
+		}
+	}
+	
 	/*
 	 * @see org.eclipse.jface.text.formatter.ContextBasedFormattingStrategy#format()
 	 */
@@ -113,7 +96,7 @@ public class FormattingStrategyJSDT extends ContextBasedFormattingStrategy {
 					 * 
 					 */
 					document.replaceText(document, partition.getOffset(), partition.getLength(), replaceText);
-					document.addDocumentPartitioningListener(new ModelIrritant(document));
+					//document.addDocumentPartitioningListener(new ModelIrritant(document));
 				}
 			} catch (BadLocationException e) {
 			} catch (JavaModelException e) {
