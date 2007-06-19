@@ -58,9 +58,11 @@ public class JsTranslation implements IJsTranslation {
 	private Position[] importRanges;
 	private Position[] locationsInHtml;
 	private IFile targetFile;
+	private IDocument fHtmlDocument;
 	
 	public JsTranslation(IDocument htmlDocument, IJavaProject javaProj, JsTranslator translator) {
 		this(javaProj, translator);
+		fHtmlDocument = htmlDocument;
 	}
 	
 	public JsTranslation(IJavaProject javaProj, JsTranslator translator) {
@@ -77,7 +79,12 @@ public class JsTranslation implements IJsTranslation {
 			importRanges = translator.getImportHtmlRanges();
 			cuImports = translator.getRawImports();
 			locationsInHtml = translator.getHtmlLocations();
+			fHtmlDocument = translator.getStructuredDocument();
 		}
+	}
+	
+	public IDocument getHtmlDocument() {
+		return fHtmlDocument;
 	}
 	
 	/**
