@@ -93,8 +93,8 @@ public class SpellcheckStrategy extends StructuredTextReconcilingStrategy {
 			quickAssistProcessor.setSpellingProblem(problem);
 			annotation.setAdditionalFixInfo(quickAssistProcessor);
 			annotations.add(annotation);
-			if (_DEBUG_SPELLING) {
-				Logger.log(Logger.INFO_DEBUG, problem.getMessage());
+			if (_DEBUG_SPELLING_PROBLEMS) {
+				Logger.log(Logger.INFO, problem.getMessage());
 			}
 		}
 
@@ -146,8 +146,8 @@ public class SpellcheckStrategy extends StructuredTextReconcilingStrategy {
 	private class SpellingStep extends StructuredReconcileStep {
 		protected IReconcileResult[] reconcileModel(final DirtyRegion dirtyRegion, IRegion subRegion) {
 			SpellingService service = getSpellingService(fContentTypeId + "." + SpellingService.PREFERENCE_SPELLING_ENGINE); //$NON-NLS-1$
-			if (_DEBUG_SPELLING) {
-				Logger.log(Logger.INFO_DEBUG, "Spell checking [" + subRegion.getOffset() + "-" + (subRegion.getOffset() + subRegion.getLength()) + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			if (_DEBUG_SPELLING_PROBLEMS) {
+				Logger.log(Logger.INFO, "Spell checking [" + subRegion.getOffset() + "-" + (subRegion.getOffset() + subRegion.getLength()) + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			}
 			if (getDocument() != null) {
 				service.check(getDocument(), new IRegion[]{dirtyRegion}, fSpellingContext, fProblemCollector, getProgressMonitor());
@@ -159,6 +159,7 @@ public class SpellcheckStrategy extends StructuredTextReconcilingStrategy {
 	}
 
 	static final boolean _DEBUG_SPELLING = Boolean.valueOf(Platform.getDebugOption("org.eclipse.wst.sse.ui/debug/reconcilerSpelling")).booleanValue(); //$NON-NLS-1$
+	static final boolean _DEBUG_SPELLING_PROBLEMS = Boolean.valueOf(Platform.getDebugOption("org.eclipse.wst.sse.ui/debug/reconcilerSpelling/showProblems")).booleanValue(); //$NON-NLS-1$
 
 	static final String ANNOTATION_TYPE = "org.eclipse.wst.sse.ui.temp.spelling"; //$NON-NLS-1$
 
@@ -339,41 +340,72 @@ public class SpellcheckStrategy extends StructuredTextReconcilingStrategy {
 		if (isCanceled())
 			return;
 
-		TemporaryAnnotation[] annotationsToRemove = null;
-		IReconcileResult[] annotationsToAdd = null;
-		StructuredReconcileStep structuredStep = (StructuredReconcileStep) fSpellingStep;
 		IAnnotationModel annotationModel = getAnnotationModel();
 
 		IDocument document = getDocument();
 		if (document != null) {
+			long time0 = 0;
+			if (_DEBUG_SPELLING) {
+				time0 = System.currentTimeMillis();
+			}
 			try {
-				ITypedRegion[] partitions = TextUtilities.computePartitioning(document, getDocumentPartitioning(), dirtyRegion.getOffset(), dirtyRegion.getLength(), true);
-				for (int i = 0; i < partitions.length; i++) {
-					if (isSupportedPartitionType(partitions[i].getType())) {
-						annotationsToRemove = getSpellingAnnotationsToRemove(partitions[i]);
-						annotationsToAdd = structuredStep.reconcile(dirtyRegion, partitions[i]);
-
-						if (annotationModel instanceof IAnnotationModelExtension) {
-							IAnnotationModelExtension modelExtension = (IAnnotationModelExtension) annotationModel;
-							Map annotationsToAddMap = new HashMap();
-							for (int j = 0; j < annotationsToAdd.length; j++) {
-								annotationsToAddMap.put(annotationsToAdd[j], ((TemporaryAnnotation) annotationsToAdd[j]).getPosition());
-							}
-							modelExtension.replaceAnnotations(annotationsToRemove, annotationsToAddMap);
-						}
-
-						else {
-							for (int j = 0; j < annotationsToAdd.length; j++) {
-								annotationModel.addAnnotation((TemporaryAnnotation) annotationsToAdd[j], ((TemporaryAnnotation) annotationsToAdd[j]).getPosition());
-							}
-							for (int j = 0; j < annotationsToRemove.length; j++) {
-								annotationModel.removeAnnotation(annotationsToRemove[j]);
-							}
+				/**
+				 * Apparently the default spelling engine has noticeable
+				 * overhead for each call made to it. It's faster to check the
+				 * entire dirty region at once if we know that we're not
+				 * differentiating by partition.
+				 * 
+				 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=192530
+				 */
+				if (checkByPartitions()) {
+					ITypedRegion[] partitions = TextUtilities.computePartitioning(document, getDocumentPartitioning(), dirtyRegion.getOffset(), dirtyRegion.getLength(), true);
+					if (_DEBUG_SPELLING) {
+						Logger.log(Logger.INFO, "Spell Checking " + partitions.length + " partitions");
+					}
+					for (int i = 0; i < partitions.length; i++) {
+						if (isSupportedPartitionType(partitions[i].getType())) {
+							spellCheck(dirtyRegion, partitions[i], annotationModel);
 						}
 					}
 				}
+				else {
+					if (_DEBUG_SPELLING) {
+						Logger.log(Logger.INFO, "Spell Checking [" + dirtyRegion.getOffset() + ":" + dirtyRegion.getLength() + "]");
+					}
+					spellCheck(dirtyRegion, dirtyRegion, annotationModel);
+				}
 			}
 			catch (BadLocationException e) {
+			}
+			if (_DEBUG_SPELLING) {
+				Logger.log(Logger.INFO, "time checking spelling: " + (System.currentTimeMillis() - time0));
+			}
+		}
+	}
+
+	private void spellCheck(DirtyRegion dirtyRegion, IRegion regionToBeChecked, IAnnotationModel annotationModel) {
+		StructuredReconcileStep structuredStep = (StructuredReconcileStep) fSpellingStep;
+
+		TemporaryAnnotation[] annotationsToRemove;
+		IReconcileResult[] annotationsToAdd;
+		annotationsToRemove = getSpellingAnnotationsToRemove(regionToBeChecked);
+		annotationsToAdd = structuredStep.reconcile(dirtyRegion, regionToBeChecked);
+
+		if (annotationModel instanceof IAnnotationModelExtension) {
+			IAnnotationModelExtension modelExtension = (IAnnotationModelExtension) annotationModel;
+			Map annotationsToAddMap = new HashMap();
+			for (int i = 0; i < annotationsToAdd.length; i++) {
+				annotationsToAddMap.put(annotationsToAdd[i], ((TemporaryAnnotation) annotationsToAdd[i]).getPosition());
+			}
+			modelExtension.replaceAnnotations(annotationsToRemove, annotationsToAddMap);
+		}
+
+		else {
+			for (int j = 0; j < annotationsToAdd.length; j++) {
+				annotationModel.addAnnotation((TemporaryAnnotation) annotationsToAdd[j], ((TemporaryAnnotation) annotationsToAdd[j]).getPosition());
+			}
+			for (int j = 0; j < annotationsToRemove.length; j++) {
+				annotationModel.removeAnnotation(annotationsToRemove[j]);
 			}
 		}
 	}
@@ -417,5 +449,9 @@ public class SpellcheckStrategy extends StructuredTextReconcilingStrategy {
 
 	public void setDocumentPartitioning(String partitioning) {
 		fDocumentPartitioning = partitioning;
+	}
+
+	boolean checkByPartitions() {
+		return (fSupportedPartitionTypes != null && fSupportedPartitionTypes.length > 0);
 	}
 }
