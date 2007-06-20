@@ -7,13 +7,9 @@ Bundle-Activator: org.eclipse.wst.jsdt.web.core.internal.JsCorePlugin
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Export-Package: org.eclipse.wst.jsdt.web.core.internal;x-friends:="org.eclipse.wst.jsdt.web.ui",
- org.eclipse.wst.jsdt.web.core.internal.contentproperties;x-friends:="org.eclipse.wst.jsdt.web.ui",
- org.eclipse.wst.jsdt.web.core.internal.contenttype;x-friends:="org.eclipse.wst.jsdt.web.ui",
- org.eclipse.wst.jsdt.web.core.internal.encoding;x-friends:="org.eclipse.wst.jsdt.web.ui",
  org.eclipse.wst.jsdt.web.core.internal.java;x-friends:="org.eclipse.wst.jsdt.web.ui",
  org.eclipse.wst.jsdt.web.core.internal.java.search;x-friends:="org.eclipse.wst.jsdt.web.ui",
  org.eclipse.wst.jsdt.web.core.internal.modelhandler;x-friends:="org.eclipse.wst.jsdt.web.ui",
- org.eclipse.wst.jsdt.web.core.internal.preferences;x-friends:="org.eclipse.wst.jsdt.web.ui",
  org.eclipse.wst.jsdt.web.core.internal.provisional.contenttype;x-friends:="org.eclipse.wst.jsdt.web.ui",
  org.eclipse.wst.jsdt.web.core.internal.provisional.text;x-friends:="org.eclipse.wst.jsdt.web.ui",
  org.eclipse.wst.jsdt.web.core.internal.tasks;x-friends:="org.eclipse.wst.jsdt.web.ui",
@@ -31,7 +27,7 @@ Require-Bundle: com.ibm.icu;bundle-version="[3.4.4,4.0.0)",
  org.eclipse.wst.jsdt.core,
  org.eclipse.wst.common.project.facet.core,
  org.eclipse.wst.jsdt.ui
-Eclipse-LazyStart: true; exceptions="org.eclipse.wst.jsdt.web.core.internal.contenttype"
+Eclipse-LazyStart: true
 Import-Package: org.eclipse.swt.widgets,
  org.eclipse.wst.common.componentcore,
  org.eclipse.wst.common.componentcore.internal.util,
