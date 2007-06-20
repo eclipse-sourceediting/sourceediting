@@ -117,7 +117,7 @@ public class IndexWorkspaceJob extends Job {
 	 *      eclipse.core.internal.jobs.InternalJob#run(org.eclipse.core.runtime.IProgressMonitor)
 	 *      for similar method
 	 */
-	@Override
+	
 	protected IStatus run(IProgressMonitor monitor) {
 		IStatus status = Status.OK_STATUS;
 		if (monitor.isCanceled()) {

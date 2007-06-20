@@ -39,7 +39,7 @@ public class JsElementActionProxy extends SimpleJSDTActionProxy {
 		return new IJavaElement[0];
 	}
 	
-	@Override
+	
 	public Object[] getRunArgs(IAction action) {
 		/*
 		 * Needs to return an array of IJavaElements. Since its one arg of type
@@ -53,7 +53,7 @@ public class JsElementActionProxy extends SimpleJSDTActionProxy {
 	 * 
 	 * @see org.eclipse.wst.jsdt.web.ui.actions.SimpleJSDTActionProxy#getRunArgTypes()
 	 */
-	@Override
+	
 	public Class[] getRunArgTypes() {
 		return new Class[] { (new IJavaElement[0]).getClass() };
 	}

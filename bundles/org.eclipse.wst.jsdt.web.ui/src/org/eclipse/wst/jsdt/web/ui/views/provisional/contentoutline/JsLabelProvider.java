@@ -13,7 +13,7 @@ import org.eclipse.wst.jsdt.ui.JavaElementLabelProvider;
 public class JsLabelProvider extends XMLLabelProvider {
 	JavaElementLabelProvider fLabelProvider = null;
 	
-	@Override
+	
 	public Image getImage(Object o) {
 		if (o instanceof IJavaElement) {
 			return getJavaElementLabelProvider().getImage(o);
@@ -28,7 +28,7 @@ public class JsLabelProvider extends XMLLabelProvider {
 		return fLabelProvider;
 	}
 	
-	@Override
+	
 	public String getText(Object o) {
 		if (o instanceof IJavaElement) {
 			return getJavaElementLabelProvider().getText(o);

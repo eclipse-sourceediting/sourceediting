@@ -89,7 +89,7 @@ public class JsIndexManager {
 	}
 	// end class JSPResourceVisitor
 	private class IndexJobCoordinator extends JobChangeAdapter {
-		@Override
+		
 		public void aboutToRun(IJobChangeEvent event) {
 			Job jobToCoordinate = event.getJob();
 			if (isJobToAvoid(jobToCoordinate)) {
@@ -100,7 +100,7 @@ public class JsIndexManager {
 			}
 		}
 		
-		@Override
+		
 		public void done(IJobChangeEvent event) {
 			Job jobToCoordinate = event.getJob();
 			if (isJobToAvoid(jobToCoordinate)) {
@@ -339,7 +339,7 @@ public class JsIndexManager {
 			}
 		}
 		
-		@Override
+		
 		protected IStatus run(IProgressMonitor monitor) {
 			// System.out.println("indexer monitor" + monitor);
 			if (isCanceled(monitor) || frameworkIsShuttingDown()) {
@@ -427,7 +427,7 @@ public class JsIndexManager {
 		processFilesJob.setSystem(true);
 		processFilesJob.setPriority(Job.LONG);
 		processFilesJob.addJobChangeListener(new JobChangeAdapter() {
-			@Override
+			
 			public void done(IJobChangeEvent event) {
 				super.done(event);
 				setStableState();
@@ -527,13 +527,13 @@ public class JsIndexManager {
 			System.out.println("*** JSP Index unstable, requesting re-indexing"); //$NON-NLS-1$
 		}
 		getIndexingJob().addJobChangeListener(new JobChangeAdapter() {
-			@Override
+			
 			public void aboutToRun(IJobChangeEvent event) {
 				super.aboutToRun(event);
 				setRebuildingState();
 			}
 			
-			@Override
+			
 			public void done(IJobChangeEvent event) {
 				super.done(event);
 				setStableState();

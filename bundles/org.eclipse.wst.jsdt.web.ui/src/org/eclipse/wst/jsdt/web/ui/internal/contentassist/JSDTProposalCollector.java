@@ -75,7 +75,7 @@ public class JSDTProposalCollector extends CompletionProposalCollector {
 	 * cursor-position-after - fix mangled servlet name in display string -
 	 * remove unwanted proposals (servlet constructor)
 	 */
-	@Override
+	
 	protected IJavaCompletionProposal createJavaCompletionProposal(CompletionProposal proposal) {
 		JSDTCompletionProposal jspProposal = null;
 		// ignore constructor proposals (they're not relevant for our JSP

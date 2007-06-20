@@ -109,7 +109,7 @@ public class JsValidator extends JSPValidator {
 		}
 	}
 	
-	@Override
+	
 	public void validate(IValidationContext helper, IReporter reporter) throws ValidationException {
 		reporter.removeAllMessages(this);
 		super.validate(helper, reporter);
@@ -121,7 +121,7 @@ public class JsValidator extends JSPValidator {
 	 * @param f
 	 * @param reporter
 	 */
-	@Override
+	
 	protected void validateFile(IFile f, IReporter reporter) {
 		if (JsValidator.DEBUG) {
 			Logger.log(Logger.INFO, getClass().getName() + " validating: " + f); //$NON-NLS-1$

@@ -39,12 +39,12 @@ public class JSDTCompletionProposal extends JavaCompletionProposal implements IJ
 	/**
 	 * Sets cursor position after applying.
 	 */
-	@Override
+	
 	public void apply(ITextViewer viewer, char trigger, int stateMask, int offset) {
 		super.apply(viewer, trigger, stateMask, offset);
 	}
 	
-	@Override
+	
 	public String getAdditionalProposalInfo() {
 		String additionalInfo = super.getAdditionalProposalInfo();
 		ICompletionProposal javaProposal = getJavaCompletionProposal();

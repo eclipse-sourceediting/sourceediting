@@ -33,7 +33,7 @@ public class JSPTypeMoveParticipant extends MoveParticipant {
 	 * @see org.eclipse.ltk.core.refactoring.participants.RefactoringParticipant#checkConditions(org.eclipse.core.runtime.IProgressMonitor,
 	 *      org.eclipse.ltk.core.refactoring.participants.CheckConditionsContext)
 	 */
-	@Override
+	
 	public RefactoringStatus checkConditions(IProgressMonitor pm, CheckConditionsContext context) {
 		// TODO Auto-generated method stub
 		return null;
@@ -44,7 +44,7 @@ public class JSPTypeMoveParticipant extends MoveParticipant {
 	 * 
 	 * @see org.eclipse.ltk.core.refactoring.participants.RefactoringParticipant#createChange(org.eclipse.core.runtime.IProgressMonitor)
 	 */
-	@Override
+	
 	public Change createChange(IProgressMonitor pm) throws CoreException {
 		if (pm != null && pm.isCanceled()) {
 			return null;
@@ -65,7 +65,7 @@ public class JSPTypeMoveParticipant extends MoveParticipant {
 	 * 
 	 * @see org.eclipse.ltk.core.refactoring.participants.RefactoringParticipant#getName()
 	 */
-	@Override
+	
 	public String getName() {
 		String name = ""; //$NON-NLS-1$
 		if (this.fType != null) {
@@ -79,7 +79,7 @@ public class JSPTypeMoveParticipant extends MoveParticipant {
 	 * 
 	 * @see org.eclipse.ltk.core.refactoring.participants.RefactoringParticipant#initialize(java.lang.Object)
 	 */
-	@Override
+	
 	protected boolean initialize(Object element) {
 		if (element instanceof IType) {
 			this.fType = (IType) element;

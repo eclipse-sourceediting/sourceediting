@@ -69,7 +69,7 @@ public class FormattingStrategyJSDT extends ContextBasedFormattingStrategy {
 	/*
 	 * @see org.eclipse.jface.text.formatter.ContextBasedFormattingStrategy#format()
 	 */
-	@Override
+	
 	public void format() {
 		super.format();
 		final IStructuredDocument document = (IStructuredDocument) fDocuments.removeFirst();
@@ -107,7 +107,7 @@ public class FormattingStrategyJSDT extends ContextBasedFormattingStrategy {
 	/*
 	 * @see org.eclipse.jface.text.formatter.ContextBasedFormattingStrategy#formatterStarts(org.eclipse.jface.text.formatter.IFormattingContext)
 	 */
-	@Override
+	
 	public void formatterStarts(final IFormattingContext context) {
 		fPartitions.addLast(context.getProperty(FormattingContextProperties.CONTEXT_PARTITION));
 		fDocuments.addLast(context.getProperty(FormattingContextProperties.CONTEXT_MEDIUM));
@@ -123,7 +123,7 @@ public class FormattingStrategyJSDT extends ContextBasedFormattingStrategy {
 	/*
 	 * @see org.eclipse.jface.text.formatter.ContextBasedFormattingStrategy#formatterStops()
 	 */
-	@Override
+	
 	public void formatterStops() {
 		super.formatterStops();
 		fPartitions.clear();

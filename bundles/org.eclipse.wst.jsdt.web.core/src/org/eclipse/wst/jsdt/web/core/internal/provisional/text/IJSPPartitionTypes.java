@@ -8,7 +8,7 @@ package org.eclipse.wst.jsdt.web.core.internal.provisional.text;
  * @deprecated use
  *             org.eclipse.wst.jsdt.web.core.internal.provisional.text.IJSPPartitions
  */
-@Deprecated
+
 public interface IJSPPartitionTypes {
 	String JSP_COMMENT = "org.eclipse.wst.jsdt.web.JSP_COMMENT"; //$NON-NLS-1$
 	String JSP_CONTENT_DELIMITER = IJSPPartitionTypes.JSP_SCRIPT_PREFIX + "DELIMITER"; //$NON-NLS-1$

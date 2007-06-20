@@ -65,17 +65,17 @@ public class JsFindOccurrencesProcessor extends FindOccurrencesProcessor {
 		return elements;
 	}
 	
-	@Override
+	
 	protected String[] getPartitionTypes() {
 		return new String[] { IJsPartitions.HtmlJsPartition };
 	}
 	
-	@Override
+	
 	protected String[] getRegionTypes() {
 		return new String[] { DOMRegionContext.BLOCK_TEXT };
 	}
 	
-	@Override
+	
 	protected ISearchQuery getSearchQuery(IFile file, IStructuredDocument document, String regionText, String regionType, ITextSelection textSelection) {
 		return new JsSearchQuery(file, getJavaElement(document, textSelection));
 	}

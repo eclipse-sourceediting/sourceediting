@@ -143,12 +143,12 @@ public class WebResourceChangeHandler implements IResourceChangeListener, IDocum
 		}
 	}
 	
-	@Override
+	
 	public boolean equals(Object o) {
 		return (o instanceof WebResourceChangeHandler && ((WebResourceChangeHandler) o).fchangeListener == this.fchangeListener);
 	}
 	
-	@Override
+	
 	public void finalize() {
 		ResourcesPlugin.getWorkspace().removeResourceChangeListener(this);
 		if (WebResourceChangeHandler.instances == null) {

@@ -30,12 +30,12 @@ public class JFaceNodeAdapterFactoryForJSDT extends JFaceNodeAdapterFactory {
 		super(adapterKey, registerAdapters);
 	}
 	
-	@Override
+	
 	public INodeAdapterFactory copy() {
 		return new JFaceNodeAdapterFactoryForJSDT(getAdapterKey(), isShouldRegisterAdapter());
 	}
 	
-	@Override
+	
 	protected INodeAdapter createAdapter(INodeNotifier node) {
 		if (singletonAdapter == null) {
 			// create the JFaceNodeAdapter

@@ -195,7 +195,7 @@ public class JsSearchDocument {
 	/**
 	 * for debugging
 	 */
-	@Override
+	
 	public String toString() {
 		return "[JSPSearchDocument:" + this.fJSPPathString + "]"; //$NON-NLS-1$ //$NON-NLS-2$ 
 	}

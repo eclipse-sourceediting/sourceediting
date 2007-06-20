@@ -36,12 +36,12 @@ public class JsTranslationAdapterFactory extends AbstractAdapterFactory {
 		super(IJsTranslation.class, true);
 	}
 	
-	@Override
+	
 	public INodeAdapterFactory copy() {
 		return new JsTranslationAdapterFactory();
 	}
 	
-	@Override
+	
 	protected INodeAdapter createAdapter(INodeNotifier target) {
 		if (target instanceof IDOMNode && fAdapter == null) {
 			fAdapter = new JsTranslationAdapter(((IDOMNode) target).getModel());
@@ -52,7 +52,7 @@ public class JsTranslationAdapterFactory extends AbstractAdapterFactory {
 		return fAdapter;
 	}
 	
-	@Override
+	
 	public void release() {
 		if (fAdapter != null) {
 			if (JsTranslationAdapterFactory.DEBUG) {

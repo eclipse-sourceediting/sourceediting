@@ -43,7 +43,7 @@ public class BasicJsSearchRequestor extends SearchRequestor {
 	 * 
 	 * @see org.eclipse.wst.jsdt.core.search.SearchRequestor#acceptSearchMatch(org.eclipse.wst.jsdt.core.search.SearchMatch)
 	 */
-	@Override
+	
 	public void acceptSearchMatch(SearchMatch match) throws CoreException {
 		if (JsSearchSupport.getInstance().isCanceled()) {
 			return;
@@ -83,7 +83,7 @@ public class BasicJsSearchRequestor extends SearchRequestor {
 	 * 
 	 * @see org.eclipse.wst.jsdt.core.search.SearchRequestor#beginReporting()
 	 */
-	@Override
+	
 	public void beginReporting() {
 		if (BasicJsSearchRequestor.DEBUG) {
 			System.out.println("JSP Search requestor: beginReporting()"); //$NON-NLS-1$
@@ -114,7 +114,7 @@ public class BasicJsSearchRequestor extends SearchRequestor {
 	/**
 	 * @see org.eclipse.wst.jsdt.core.search.SearchRequestor#endReporting()
 	 */
-	@Override
+	
 	public void endReporting() {
 		if (BasicJsSearchRequestor.DEBUG) {
 			System.out.println("JSP Search requestor: endReporting()"); //$NON-NLS-1$
@@ -124,7 +124,7 @@ public class BasicJsSearchRequestor extends SearchRequestor {
 	/**
 	 * @see org.eclipse.wst.jsdt.core.search.SearchRequestor#enterParticipant(org.eclipse.wst.jsdt.core.search.SearchParticipant)
 	 */
-	@Override
+	
 	public void enterParticipant(SearchParticipant participant) {
 		if (BasicJsSearchRequestor.DEBUG) {
 			System.out.println("JSP Search requestor: enterParticipant()"); //$NON-NLS-1$
@@ -134,7 +134,7 @@ public class BasicJsSearchRequestor extends SearchRequestor {
 	/**
 	 * @see org.eclipse.wst.jsdt.core.search.SearchRequestor#exitParticipant(org.eclipse.wst.jsdt.core.search.SearchParticipant)
 	 */
-	@Override
+	
 	public void exitParticipant(SearchParticipant participant) {
 		if (BasicJsSearchRequestor.DEBUG) {
 			System.out.println("JSP Search requestor: exitParticipant()"); //$NON-NLS-1$

@@ -69,7 +69,7 @@ public class AddJavaDocStubOperation extends org.eclipse.wst.jsdt.internal.corex
 	 * @see org.eclipse.wst.jsdt.internal.corext.codemanipulation.AddJavaDocStubOperation#getDocument(org.eclipse.wst.jsdt.core.ICompilationUnit,
 	 *      org.eclipse.core.runtime.IProgressMonitor)
 	 */
-	@Override
+	
 	protected IDocument getDocument(ICompilationUnit cu, IProgressMonitor monitor) throws CoreException {
 		return getJavaDocumentFromNode();
 	}
@@ -84,7 +84,7 @@ public class AddJavaDocStubOperation extends org.eclipse.wst.jsdt.internal.corex
 		return copy;
 	}
 	
-	@Override
+	
 	public void run(IProgressMonitor monitor) throws CoreException, OperationCanceledException {
 		super.run(monitor);
 		applyChanges();

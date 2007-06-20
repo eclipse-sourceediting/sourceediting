@@ -35,7 +35,7 @@ public class JsCoreMessages extends NLS {
 	/**
 	 * @deprecated
 	 */
-	@Deprecated
+
 	public static String MESSAGE_JSP_VALIDATING_MESSAGE_UI_;
 	static {
 		// initialize resource bundle

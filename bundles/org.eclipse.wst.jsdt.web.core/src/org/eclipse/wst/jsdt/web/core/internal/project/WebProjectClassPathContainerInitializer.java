@@ -46,12 +46,12 @@ public class WebProjectClassPathContainerInitializer extends BasicBrowserLibrary
 			super();
 		}
 		
-		@Override
+		
 		public char[][] getLibraryFileNames() {
 			return new char[][] { WebProjectClassPathContainerInitializer.LIB_NAME };
 		}
 		
-		@Override
+		
 		protected String getPluginId() {
 			return JsCorePlugin.PLUGIN_ID;
 		}
@@ -63,18 +63,18 @@ public class WebProjectClassPathContainerInitializer extends BasicBrowserLibrary
 	 * @see org.eclipse.wst.jsdt.core.ClasspathContainerInitializer#canUpdateClasspathContainer(org.eclipse.core.runtime.IPath,
 	 *      org.eclipse.wst.jsdt.core.IJavaProject)
 	 */
-	@Override
+	
 	public boolean canUpdateClasspathContainer(IPath containerPath, IJavaProject project) {
 		/* dont remove from this project */
 		return false;
 	}
 	
-	@Override
+	
 	protected IClasspathContainer getContainer(IPath containerPath, IJavaProject project) {
 		return this;
 	}
 	
-	@Override
+	
 	public String getDescription() {
 		return WebProjectClassPathContainerInitializer.CONTAINER_DESCRIPTION;
 	}
@@ -85,7 +85,7 @@ public class WebProjectClassPathContainerInitializer extends BasicBrowserLibrary
 	 * @see org.eclipse.wst.jsdt.core.ClasspathContainerInitializer#getDescription(org.eclipse.core.runtime.IPath,
 	 *      org.eclipse.wst.jsdt.core.IJavaProject)
 	 */
-	@Override
+	
 	public String getDescription(IPath containerPath, IJavaProject project) {
 		if (containerPath.equals(new Path(WebProjectClassPathContainerInitializer.VIRTUAL_CONTAINER))) {
 			return WebProjectClassPathContainerInitializer.CONTAINER_DESCRIPTION;
@@ -108,7 +108,7 @@ public class WebProjectClassPathContainerInitializer extends BasicBrowserLibrary
 	 * 
 	 * @see org.eclipse.wst.jsdt.core.ClasspathContainerInitializer#getHostPath(org.eclipse.core.runtime.IPath)
 	 */
-	@Override
+	
 	public URI getHostPath(IPath path, IJavaProject project) {
 		// TODO Auto-generated method stub
 		String htmlPath = WebProjectClassPathContainerInitializer.getUnmangedHtmlPath(path.toString());
@@ -122,12 +122,12 @@ public class WebProjectClassPathContainerInitializer extends BasicBrowserLibrary
 		return null;
 	}
 	
-	@Override
+	
 	public int getKind() {
 		return IClasspathContainer.K_APPLICATION;
 	}
 	
-	@Override
+	
 	public IPath getPath() {
 		return new Path(WebProjectClassPathContainerInitializer.VIRTUAL_CONTAINER);
 	}

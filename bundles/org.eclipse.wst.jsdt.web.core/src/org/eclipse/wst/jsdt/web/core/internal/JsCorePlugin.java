@@ -28,7 +28,7 @@ public class JsCorePlugin extends Plugin {
 	 * @deprecated - will be removed. Currently used to get "model preferences",
 	 *             but there are other, better ways.
 	 */
-	@Deprecated
+
 	public static JsCorePlugin getDefault() {
 		return JsCorePlugin.plugin;
 	}
@@ -46,7 +46,7 @@ public class JsCorePlugin extends Plugin {
 	 * 
 	 * @see org.eclipse.core.runtime.Plugin#start(org.osgi.framework.BundleContext)
 	 */
-	@Override
+	
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		// JSPIndexManager depends on TaglibController, so TaglibController
@@ -61,7 +61,7 @@ public class JsCorePlugin extends Plugin {
 	 * 
 	 * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
 	 */
-	@Override
+	
 	public void stop(BundleContext context) throws Exception {
 		// stop listenning for resource changes to update content properties
 		// keys

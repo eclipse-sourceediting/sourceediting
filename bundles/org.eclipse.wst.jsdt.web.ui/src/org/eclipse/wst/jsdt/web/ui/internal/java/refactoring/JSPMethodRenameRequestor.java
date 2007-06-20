@@ -30,7 +30,7 @@ public class JSPMethodRenameRequestor extends BasicRefactorSearchRequestor {
 	 * 
 	 * @see org.eclipse.wst.jsdt.web.ui.internal.java.refactoring.BasicRefactorSearchRequestor#getDescription()
 	 */
-	@Override
+	
 	protected String getDescription() {
 		String methodName = getElement().getElementName();
 		String newName = getNewName();
@@ -38,7 +38,7 @@ public class JSPMethodRenameRequestor extends BasicRefactorSearchRequestor {
 		return description;
 	}
 	
-	@Override
+	
 	protected String getRenameText(JSDTSearchDocumentDelegate searchDoc, SearchMatch javaMatch) {
 		String javaText = searchDoc.getJspTranslation().getJsText();
 		String methodText = javaText.substring(javaMatch.getOffset(), javaMatch.getOffset() + javaMatch.getLength());

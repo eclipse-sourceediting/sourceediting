@@ -12,7 +12,7 @@ import org.eclipse.wst.jsdt.core.IJavaElement;
  * 
  */
 public class OpenTypeHierarchy extends JsElementActionProxy {
-	@Override
+	
 	public void selectionChanged(IAction action, ISelection selection) {
 		IJavaElement[] elements = JsElementActionProxy.getJsElementsFromSelection(selection);
 		/* Open call hierarchy needs to be disabled for TYPEs */

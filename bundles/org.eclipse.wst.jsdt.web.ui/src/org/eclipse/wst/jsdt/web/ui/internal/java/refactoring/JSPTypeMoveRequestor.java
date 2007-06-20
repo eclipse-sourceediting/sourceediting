@@ -35,7 +35,7 @@ public class JSPTypeMoveRequestor extends BasicRefactorSearchRequestor {
 	 * 
 	 * @see org.eclipse.wst.jsdt.web.ui.internal.java.refactoring.BasicRefactorSearchRequestor#getDescription()
 	 */
-	@Override
+	
 	protected String getDescription() {
 		String typeName = getElement().getElementName();
 		String newName = getNewName();
@@ -43,7 +43,7 @@ public class JSPTypeMoveRequestor extends BasicRefactorSearchRequestor {
 		return description;
 	}
 	
-	@Override
+	
 	protected String getRenameText(JSDTSearchDocumentDelegate searchDoc, SearchMatch javaMatch) {
 		String renameText = getElement().getElementName();
 		JsTranslation trans = searchDoc.getJspTranslation();

@@ -18,7 +18,7 @@ public class JSDTContentAssistant extends AbstractContentAssistProcessor {
 	private JSDTTemplateAssistProcessor fTemplateAssistProcessor;
 	private JsTranslationAdapter fTranslationAdapter;
 	
-	@Override
+	
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer, int documentPosition) {
 		Vector proposals = new Vector();
 		ICompletionProposal[] completionProposals;

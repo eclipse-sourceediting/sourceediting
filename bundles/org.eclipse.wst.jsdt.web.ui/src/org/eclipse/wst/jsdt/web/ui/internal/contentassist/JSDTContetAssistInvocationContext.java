@@ -57,7 +57,7 @@ public class JSDTContetAssistInvocationContext extends JavaContentAssistInvocati
 // return ((CompletionProposalCollector) ( new JSPProposalCollector(
 // getJSPTranslation()) ));
 // }
-	@Override
+	
 	public IDocument getDocument() {
 		return viewer.getDocument();
 	}

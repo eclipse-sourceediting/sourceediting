@@ -22,7 +22,7 @@ public class JsOccurrencesSearchResult extends OccurrencesSearchResult {
 		super(query);
 	}
 	
-	@Override
+	
 	public Match[] getMatches() {
 		return ((JsSearchQuery) getQuery()).getMatches();
 	}

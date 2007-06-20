@@ -33,24 +33,24 @@ public class JSPPackageRenameChange extends Change {
 		return requestor.getChanges();
 	}
 	
-	@Override
+	
 	public Object getModifiedElement() {
 		// return this.pkg;
 		return null;
 	}
 	
-	@Override
+	
 	public String getName() {
 		return JsUIMessages.JSP_changes;
 	}
 	
-	@Override
+	
 	public void initializeValidationData(IProgressMonitor pm) {
 	// pa_TODO implement
 	// must be implemented to decide correct value of isValid
 	}
 	
-	@Override
+	
 	public RefactoringStatus isValid(IProgressMonitor pm) throws CoreException {
 		// pa_TODO implement
 		// This method must ensure that the change object is still valid.
@@ -60,7 +60,7 @@ public class JSPPackageRenameChange extends Change {
 		return new RefactoringStatus();
 	}
 	
-	@Override
+	
 	public Change perform(IProgressMonitor pm) throws CoreException {
 		// TODO return the "undo" change here
 		return null;

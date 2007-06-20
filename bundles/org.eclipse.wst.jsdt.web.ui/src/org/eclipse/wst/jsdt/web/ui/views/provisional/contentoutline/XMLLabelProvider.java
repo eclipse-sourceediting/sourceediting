@@ -21,7 +21,7 @@ import org.w3c.dom.Node;
 public class XMLLabelProvider extends JFaceNodeLabelProvider {
 	boolean fShowAttributes = false;
 	
-	@Override
+	
 	public String getText(Object o) {
 		StringBuffer text = new StringBuffer(super.getText(o));
 		if (o instanceof Node) {

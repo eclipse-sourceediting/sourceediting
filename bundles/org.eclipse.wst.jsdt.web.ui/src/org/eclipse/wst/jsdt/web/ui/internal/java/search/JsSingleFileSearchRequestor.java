@@ -28,7 +28,7 @@ public class JsSingleFileSearchRequestor extends BasicJsSearchRequestor {
 		this.fQuery = query;
 	}
 	
-	@Override
+	
 	protected void addSearchMatch(IDocument jspDocument, IFile jspFile, int jspStart, int jspEnd, String jspText) {
 		// add match to JSP query...
 		this.fQuery.addMatch(jspDocument, jspStart, jspEnd);

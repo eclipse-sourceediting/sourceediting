@@ -13,7 +13,7 @@ import org.eclipse.wst.jsdt.core.IJavaElement;
  * 
  */
 public class FindReferencesInWorkingSetAction extends FindReferencesAction {
-	@Override
+	
 	public void run(IAction action) {
 		try {
 			Object handler = getActionHandler(action);

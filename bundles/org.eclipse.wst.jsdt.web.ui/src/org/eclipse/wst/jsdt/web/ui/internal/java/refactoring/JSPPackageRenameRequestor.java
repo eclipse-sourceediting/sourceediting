@@ -33,7 +33,7 @@ public class JSPPackageRenameRequestor extends BasicRefactorSearchRequestor {
 	/*
 	 * @see org.eclipse.wst.jsdt.web.ui.internal.java.refactoring.BasicRefactorSearchRequestor#getDescription()
 	 */
-	@Override
+	
 	protected String getDescription() {
 		String packageName = getElement().getElementName();
 		String newName = getNewName();

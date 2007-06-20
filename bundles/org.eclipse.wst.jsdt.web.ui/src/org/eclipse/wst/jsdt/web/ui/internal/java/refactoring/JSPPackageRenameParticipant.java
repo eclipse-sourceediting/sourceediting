@@ -32,7 +32,7 @@ public class JSPPackageRenameParticipant extends RenameParticipant {
 	 * @see org.eclipse.ltk.core.refactoring.participants.RefactoringParticipant#checkConditions(org.eclipse.core.runtime.IProgressMonitor,
 	 *      org.eclipse.ltk.core.refactoring.participants.CheckConditionsContext)
 	 */
-	@Override
+	
 	public RefactoringStatus checkConditions(IProgressMonitor pm, CheckConditionsContext context) {
 		// TODO Auto-generated method stub
 		return null;
@@ -41,7 +41,7 @@ public class JSPPackageRenameParticipant extends RenameParticipant {
 	/**
 	 * @see org.eclipse.ltk.core.refactoring.participants.RefactoringParticipant#createChange(org.eclipse.core.runtime.IProgressMonitor)
 	 */
-	@Override
+	
 	public Change createChange(IProgressMonitor pm) throws CoreException {
 		Change[] changes = JSPPackageRenameChange.createChangesFor(this.fPkg, getArguments().getNewName());
 		CompositeChange multiChange = null;
@@ -54,7 +54,7 @@ public class JSPPackageRenameParticipant extends RenameParticipant {
 	/**
 	 * @see org.eclipse.ltk.core.refactoring.participants.RefactoringParticipant#getName()
 	 */
-	@Override
+	
 	public String getName() {
 		String name = ""; //$NON-NLS-1$
 		if (this.fPkg != null) {
@@ -66,7 +66,7 @@ public class JSPPackageRenameParticipant extends RenameParticipant {
 	/**
 	 * @see org.eclipse.ltk.core.refactoring.participants.RefactoringParticipant#initialize(java.lang.Object)
 	 */
-	@Override
+	
 	protected boolean initialize(Object element) {
 		if (element instanceof IPackageFragment) {
 			this.fPkg = (IPackageFragment) element;

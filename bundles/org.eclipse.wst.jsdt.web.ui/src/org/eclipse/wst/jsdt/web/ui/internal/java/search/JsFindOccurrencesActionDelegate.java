@@ -23,7 +23,7 @@ import org.eclipse.wst.sse.ui.internal.search.FindOccurrencesActionDelegate;
 public class JsFindOccurrencesActionDelegate extends FindOccurrencesActionDelegate {
 	private List fProcessors;
 	
-	@Override
+	
 	protected List getProcessors() {
 		if (fProcessors == null) {
 			fProcessors = new ArrayList();

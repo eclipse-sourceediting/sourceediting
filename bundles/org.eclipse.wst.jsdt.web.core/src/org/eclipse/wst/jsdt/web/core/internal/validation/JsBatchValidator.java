@@ -164,22 +164,22 @@ public final class JsBatchValidator implements IValidatorJob, IExecutableExtensi
 			return _message;
 		}
 		
-		@Override
+		
 		public String getText() {
 			return getLocalizedText();
 		}
 		
-		@Override
+		
 		public String getText(ClassLoader cl) {
 			return getLocalizedText();
 		}
 		
-		@Override
+		
 		public String getText(Locale l) {
 			return getLocalizedText();
 		}
 		
-		@Override
+		
 		public String getText(Locale l, ClassLoader cl) {
 			return getLocalizedText();
 		}

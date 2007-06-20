@@ -128,7 +128,7 @@ public class JsSearchSupport {
 			this.fRequestor = requestor;
 		}
 		
-		@Override
+		
 		public IStatus run(IProgressMonitor jobMonitor) {
 			if (jobMonitor != null && jobMonitor.isCanceled()) {
 				return Status.CANCEL_STATUS;

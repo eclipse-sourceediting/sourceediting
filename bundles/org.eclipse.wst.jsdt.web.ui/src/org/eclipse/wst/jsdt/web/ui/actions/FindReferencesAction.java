@@ -17,7 +17,7 @@ public class FindReferencesAction extends JsElementActionProxy {
 	 * 
 	 * @see org.eclipse.wst.jsdt.web.ui.actions.JsElementActionProxy#getRunArgs(org.eclipse.jface.action.IAction)
 	 */
-	@Override
+	
 	public Object[] getRunArgs(IAction action) {
 		IJavaElement elements[] = JsElementActionProxy.getJsElementsFromSelection(getCurrentSelection());
 		if (elements != null && elements.length > 0) {
@@ -31,12 +31,12 @@ public class FindReferencesAction extends JsElementActionProxy {
 	 * 
 	 * @see org.eclipse.wst.jsdt.web.ui.actions.JsElementActionProxy#getRunArgTypes()
 	 */
-	@Override
+	
 	public Class[] getRunArgTypes() {
 		return new Class[] { IJavaElement.class };
 	}
 	
-	@Override
+	
 	public void selectionChanged(IAction action, ISelection selection) {
 		setSelection(selection);
 	}

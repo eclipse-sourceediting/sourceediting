@@ -40,7 +40,7 @@ public class JsSearchParticipant extends SearchParticipant {
 		return debug;
 	}
 	
-	@Override
+	
 	public String getDescription() {
 		return "JSP"; //$NON-NLS-1$
 	}
@@ -57,7 +57,7 @@ public class JsSearchParticipant extends SearchParticipant {
 	 * Important to never return null here or else Java search participation
 	 * will break.
 	 */
-	@Override
+	
 	public SearchDocument getDocument(String documentPath) {
 		SearchDocument sDoc = JsSearchSupport.getInstance().getSearchDocument(documentPath);
 		if (sDoc == null) {
@@ -67,7 +67,7 @@ public class JsSearchParticipant extends SearchParticipant {
 		return sDoc;
 	}
 	
-	@Override
+	
 	public void indexDocument(SearchDocument document, IPath indexPath) {
 		if (!(document instanceof JSDTSearchDocumentDelegate)) {
 			return;
@@ -76,7 +76,7 @@ public class JsSearchParticipant extends SearchParticipant {
 		SearchEngine.getDefaultSearchParticipant().indexDocument(document, indexPath);
 	}
 	
-	@Override
+	
 	public void locateMatches(SearchDocument[] indexMatches, SearchPattern pattern, IJavaSearchScope scope, SearchRequestor requestor, IProgressMonitor monitor)
 			throws CoreException {
 		if (monitor != null && monitor.isCanceled()) {
@@ -102,7 +102,7 @@ public class JsSearchParticipant extends SearchParticipant {
 		SearchEngine.getDefaultSearchParticipant().locateMatches(indexMatches, pattern, scope, requestor, monitor);
 	}
 	
-	@Override
+	
 	public IPath[] selectIndexes(SearchPattern pattern, IJavaSearchScope scope) {
 		JsPathIndexer indexer = new JsPathIndexer();
 		return indexer.getVisibleJspPaths(pattern, scope);

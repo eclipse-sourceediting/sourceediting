@@ -224,7 +224,7 @@ public class NodeHelper {
 		return text;
 	}
 	
-	@Override
+	
 	public String toString() {
 		ITextRegionList t = region.getRegions();
 		Iterator regionIterator = t.iterator();

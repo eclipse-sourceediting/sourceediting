@@ -18,7 +18,7 @@ public class OpenCallHierarchyAction extends JsElementActionProxy {
 	 * @see org.eclipse.wst.jsdt.web.ui.actions.SimpleJSDTActionProxy#selectionChanged(org.eclipse.jface.action.IAction,
 	 *      org.eclipse.jface.viewers.ISelection)
 	 */
-	@Override
+	
 	public void selectionChanged(IAction action, ISelection selection) {
 		IJavaElement[] elements = JsElementActionProxy.getJsElementsFromSelection(selection);
 		/* Open call hierarchy needs to be disabled for TYPEs */

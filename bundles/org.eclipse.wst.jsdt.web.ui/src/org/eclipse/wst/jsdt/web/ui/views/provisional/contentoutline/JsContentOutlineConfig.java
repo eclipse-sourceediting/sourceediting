@@ -25,7 +25,7 @@ public class JsContentOutlineConfig extends HTMLContentOutlineConfiguration {
 		return fLabelProvider;
 	}
 	
-	@Override
+	
 	public ILabelProvider getLabelProvider(TreeViewer viewer) {
 		if (!JsContentOutlineConfig.USE_ADVANCED) {
 			return super.getLabelProvider(viewer);
@@ -33,14 +33,14 @@ public class JsContentOutlineConfig extends HTMLContentOutlineConfiguration {
 		return getJavaLabelProvider();
 	}
 	
-	@Override
+	
 	public IMenuListener getMenuListener(TreeViewer treeViewer) {
 		// if(!USE_ADVANCED)
 		// return super.getMenuListener(treeViewer);
 		return new JsMenuListener(treeViewer);
 	}
 	
-	@Override
+	
 	public ILabelProvider getStatusLineLabelProvider(TreeViewer treeViewer) {
 		if (!JsContentOutlineConfig.USE_ADVANCED) {
 			return super.getStatusLineLabelProvider(treeViewer);

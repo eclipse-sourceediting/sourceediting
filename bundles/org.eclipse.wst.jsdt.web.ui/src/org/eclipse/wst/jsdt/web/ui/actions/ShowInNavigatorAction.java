@@ -35,7 +35,7 @@ public class ShowInNavigatorAction extends JsElementActionProxy {
 		return host;
 	}
 	
-	@Override
+	
 	public void run(IAction action) {
 		IJavaElement elements[] = JsElementActionProxy.getJsElementsFromSelection(getCurrentSelection());
 		if (elements == null || elements.length == 0) {
@@ -62,7 +62,7 @@ public class ShowInNavigatorAction extends JsElementActionProxy {
 		}
 	}
 	
-	@Override
+	
 	public void selectionChanged(IAction action, ISelection selection) {
 		setSelection(selection);
 		IJavaElement elements[] = JsElementActionProxy.getJsElementsFromSelection(getCurrentSelection());

@@ -24,7 +24,7 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
 		super(adapterFactory);
 	}
 	
-	@Override
+	
 	public Object[] getChildren(Object object) {
 		if (object instanceof IJavaElement) {
 			return getJavaElementProvider().getChildren(object);
@@ -43,7 +43,7 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
 		return super.getChildren(object);
 	}
 	
-	@Override
+	
 	public Object[] getElements(Object object) {
 		if (object instanceof IJavaElement) {
 			return getJavaElementProvider().getElements(object);
@@ -96,7 +96,7 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
 // return newResults;
 	}
 	
-	@Override
+	
 	public Image getLabelImage(Object node) {
 		if (node instanceof IJavaElement) {
 			return getJavaElementLabelProvider().getImage(node);
@@ -104,7 +104,7 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
 		return super.getLabelImage(node);
 	}
 	
-	@Override
+	
 	public String getLabelText(Object node) {
 		if (node instanceof IJavaElement) {
 			return getJavaElementLabelProvider().getText(node);
@@ -112,7 +112,7 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
 		return super.getLabelText(node);
 	}
 	
-	@Override
+	
 	public Object getParent(Object element) {
 		if (element instanceof IJavaElement) {
 			return getJavaElementProvider().getParent(element);
@@ -147,7 +147,7 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
 		return translationAdapter.getJSPTranslation();
 	}
 	
-	@Override
+	
 	public boolean hasChildren(Object object) {
 		if (object instanceof IJavaElement) {
 			return getJavaElementProvider().hasChildren(object);

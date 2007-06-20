@@ -77,17 +77,17 @@ public class BasicRefactorSearchRequestor extends SearchRequestor {
 			this.fDescription = description;
 		}
 		
-		@Override
+		
 		public Object getModifiedElement() {
 			return getElement();
 		}
 		
-		@Override
+		
 		public String getName() {
 			return this.fDescription;
 		}
 		
-		@Override
+		
 		public IDocument getPreviewDocument(IProgressMonitor pm) throws CoreException {
 			IDocument copyDoc = new Document(fJSPDoc.get());
 			try {
@@ -135,12 +135,12 @@ public class BasicRefactorSearchRequestor extends SearchRequestor {
 			return false;
 		}
 		
-		@Override
+		
 		public RefactoringStatus isValid(IProgressMonitor pm) throws CoreException {
 			return new RefactoringStatus();
 		}
 		
-		@Override
+		
 		public Change perform(IProgressMonitor pm) throws CoreException {
 			RenameChange undoChange = null;
 			try {
@@ -192,7 +192,7 @@ public class BasicRefactorSearchRequestor extends SearchRequestor {
 			this.fJSPFile = jspFile;
 		}
 		
-		@Override
+		
 		protected void execute(IProgressMonitor monitor) throws CoreException, InvocationTargetException, InterruptedException {
 			// https://w3.opensource.ibm.com/bugzilla/show_bug.cgi?id=3765
 			// save file w/ no intermediate model creation
@@ -244,7 +244,7 @@ public class BasicRefactorSearchRequestor extends SearchRequestor {
 	/**
 	 * @see org.eclipse.wst.jsdt.core.search.SearchRequestor#acceptSearchMatch(org.eclipse.wst.jsdt.core.search.SearchMatch)
 	 */
-	@Override
+	
 	public void acceptSearchMatch(SearchMatch javaMatch) throws CoreException {
 		String matchDocumentPath = javaMatch.getResource().getFullPath().toString();
 		SearchDocument searchDoc = JsSearchSupport.getInstance().getSearchDocument(matchDocumentPath);

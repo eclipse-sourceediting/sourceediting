@@ -59,25 +59,25 @@ public class ActionContributorJSP extends ActionContributorHTML {
 		refactorMenu.add(this.moveElementAction);
 	}
 	
-	@Override
+	
 	protected void addToMenu(IMenuManager menu) {
 		super.addToMenu(menu);
 		menu.insertAfter(IWorkbenchActionConstants.M_EDIT, this.refactorMenu);
 	}
 	
-	@Override
+	
 	protected String[] getExtensionIDs() {
 		return ActionContributorJSP.EDITOR_IDS;
 	}
 	
-	@Override
+	
 	public void setActiveEditor(IEditorPart activeEditor) {
 		super.setActiveEditor(activeEditor);
 		this.renameElementAction.setAction(getAction(getTextEditor(getActiveEditorPart()), IActionConstantsJs.ACTION_NAME_RENAME_ELEMENT));
 		this.moveElementAction.setAction(getAction(getTextEditor(getActiveEditorPart()), IActionConstantsJs.ACTION_NAME_MOVE_ELEMENT));
 	}
 	
-	@Override
+	
 	public void setViewerSpecificContributionsEnabled(boolean enabled) {
 		super.setViewerSpecificContributionsEnabled(enabled);
 		this.renameElementAction.setEnabled(enabled);

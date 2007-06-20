@@ -36,7 +36,7 @@ public class CompilationUnitHelper {
 	public WorkingCopyOwner getWorkingCopyOwner() {
 		if (fWorkingCopyOwner == null) {
 			fWorkingCopyOwner = new WorkingCopyOwner() {
-				@Override
+				
 				public String toString() {
 					return "JSP Working copy owner"; //$NON-NLS-1$
 				}

@@ -37,7 +37,7 @@ public class JsSearchQuery extends BasicSearchQuery {
 		this.fElement = element;
 	}
 	
-	@Override
+	
 	public boolean canRerun() {
 		return false;
 	}
@@ -45,12 +45,12 @@ public class JsSearchQuery extends BasicSearchQuery {
 	/**
 	 * @see org.eclipse.search.ui.ISearchQuery#canRunInBackground()
 	 */
-	@Override
+	
 	public boolean canRunInBackground() {
 		return true;
 	}
 	
-	@Override
+	
 	protected IStatus doQuery() {
 		clearMatches();
 		IStatus status = Status.OK_STATUS;
@@ -91,7 +91,7 @@ public class JsSearchQuery extends BasicSearchQuery {
 	/**
 	 * @see org.eclipse.search.ui.ISearchQuery#getLabel()
 	 */
-	@Override
+	
 	public String getLabel() {
 		String[] args = { getSearchText(), getOccurrencesCountText(), getFilename() };
 		return NLS.bind(JsUIMessages.OccurrencesSearchQuery_0, args);
@@ -106,12 +106,12 @@ public class JsSearchQuery extends BasicSearchQuery {
 	/**
 	 * @see org.eclipse.search.ui.ISearchQuery#getSearchResult()
 	 */
-	@Override
+	
 	public ISearchResult getSearchResult() {
 		return new JsOccurrencesSearchResult(this);
 	}
 	
-	@Override
+	
 	protected String getSearchText() {
 		return fElement.getElementName();
 	}

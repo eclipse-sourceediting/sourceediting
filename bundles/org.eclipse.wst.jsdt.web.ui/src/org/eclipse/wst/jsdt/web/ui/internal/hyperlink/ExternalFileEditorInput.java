@@ -67,7 +67,7 @@ class ExternalFileEditorInput implements IEditorInput, ILocationProvider {
 	/*
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
-	@Override
+	
 	public boolean equals(Object o) {
 		if (o == this) {
 			return true;
@@ -153,7 +153,7 @@ class ExternalFileEditorInput implements IEditorInput, ILocationProvider {
 	/*
 	 * @see java.lang.Object#hashCode()
 	 */
-	@Override
+	
 	public int hashCode() {
 		return fFile.hashCode();
 	}

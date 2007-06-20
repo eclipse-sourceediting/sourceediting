@@ -31,17 +31,17 @@ public class JSDTSearchDocumentDelegate extends JavaSearchDocument {
 		this.fJSPSearchDoc = jspSearchDoc;
 	}
 	
-	@Override
+	
 	public byte[] getByteContents() {
 		return this.fJSPSearchDoc.getByteContents();
 	}
 	
-	@Override
+	
 	public char[] getCharContents() {
 		return this.fJSPSearchDoc.getCharContents();
 	}
 	
-	@Override
+	
 	public String getEncoding() {
 		return this.fJSPSearchDoc.getEncoding();
 	}
@@ -55,7 +55,7 @@ public class JSDTSearchDocumentDelegate extends JavaSearchDocument {
 	 * 
 	 * @see org.eclipse.wst.jsdt.core.search.SearchDocument#getJavaElement()
 	 */
-	@Override
+	
 	public IJavaElement getJavaElement() {
 		return getJspTranslation().getCompilationUnit();
 	}
@@ -68,7 +68,7 @@ public class JSDTSearchDocumentDelegate extends JavaSearchDocument {
 		return this.fJSPSearchDoc.getJSPTranslation();
 	}
 	
-	@Override
+	
 	public boolean isVirtual() {
 		return true;
 	}

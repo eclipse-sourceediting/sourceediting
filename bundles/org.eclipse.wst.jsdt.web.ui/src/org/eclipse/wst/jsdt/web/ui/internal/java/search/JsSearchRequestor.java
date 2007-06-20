@@ -37,7 +37,7 @@ public class JsSearchRequestor extends BasicJsSearchRequestor {
 		this.fJavaRequestor = javaRequestor;
 	}
 	
-	@Override
+	
 	protected void addSearchMatch(IDocument jspDocument, IFile jspFile, int jspStart, int jspEnd, String jspText) {
 		if (!jspFile.exists()) {
 			return;

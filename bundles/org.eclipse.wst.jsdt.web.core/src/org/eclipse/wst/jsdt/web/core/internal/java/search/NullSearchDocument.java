@@ -26,17 +26,17 @@ public class NullSearchDocument extends SearchDocument {
 		this.fEmptyServletBuffer = new JsTranslator().getEmptyTranslation();
 	}
 	
-	@Override
+	
 	public byte[] getByteContents() {
 		return this.fEmptyServletBuffer.toString().getBytes();
 	}
 	
-	@Override
+	
 	public char[] getCharContents() {
 		return this.fEmptyServletBuffer.toString().toCharArray();
 	}
 	
-	@Override
+	
 	public String getEncoding() {
 		return null;
 	}

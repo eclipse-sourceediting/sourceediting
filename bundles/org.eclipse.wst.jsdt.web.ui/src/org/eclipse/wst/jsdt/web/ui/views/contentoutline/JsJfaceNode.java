@@ -26,7 +26,7 @@ import org.w3c.dom.Node;
 
 public class JsJfaceNode extends ElementImpl implements IndexedRegion, INodeNotifier, Node, IJavaWebNode {
 	private class JsAdaptableNode extends AbstractNotifier {
-		@Override
+		
 		public FactoryRegistry getFactoryRegistry() {
 			return adapterRegistry;
 		}
@@ -50,19 +50,19 @@ public class JsJfaceNode extends ElementImpl implements IndexedRegion, INodeNoti
 		this.typeName = typeName;
 	}
 	
-	@Override
+	
 	public void addAdapter(INodeAdapter adapter) {
 		adaptableDomNode.addAdapter(adapter);
 	}
 	
-	@Override
+	
 	public boolean contains(int testPosition) {
 		// TODO Auto-generated method stub
 		System.out.println("Umiplement method contains");
 		return false;
 	}
 	
-	@Override
+	
 	public boolean equals(Object o) {
 		return (o != null && o instanceof JsJfaceNode && ((JsJfaceNode) o).parent == this.parent && ((JsJfaceNode) o).fDocPosition == this.fDocPosition);
 	}
@@ -87,22 +87,22 @@ public class JsJfaceNode extends ElementImpl implements IndexedRegion, INodeNoti
 // return proxy;
 // }
 //   
-	@Override
+	
 	public INodeAdapter getAdapterFor(Object type) {
 		return adaptableDomNode.getAdapterFor(type);
 	}
 	
-	@Override
+	
 	public Collection getAdapters() {
 		return adaptableDomNode.getAdapters();
 	}
 	
-	@Override
+	
 	public int getEndOffset() {
 		return fDocPosition.getOffset() + fDocPosition.getLength();
 	}
 	
-	@Override
+	
 	public INodeAdapter getExistingAdapter(Object type) {
 		// TODO Auto-generated method stub
 		return adaptableDomNode.getExistingAdapter(type);
@@ -129,12 +129,12 @@ public class JsJfaceNode extends ElementImpl implements IndexedRegion, INodeNoti
 		}
 	}
 	
-	@Override
+	
 	public int getLength() {
 		return fDocPosition.getLength();
 	}
 	
-	@Override
+	
 	public short getNodeType() {
 		return parent.getNodeType();
 	}
@@ -144,17 +144,17 @@ public class JsJfaceNode extends ElementImpl implements IndexedRegion, INodeNoti
 	 * 
 	 * @see org.eclipse.wst.xml.core.internal.document.NodeImpl#getOwnerDocument()
 	 */
-	@Override
+	
 	public Document getOwnerDocument() {
 		return parent.getOwnerDocument();
 	}
 	
-	@Override
+	
 	public Node getParentNode() {
 		return this.parent;
 	}
 	
-	@Override
+	
 	public int getStartOffset() {
 		return fDocPosition.getOffset();
 	}
@@ -196,7 +196,7 @@ public class JsJfaceNode extends ElementImpl implements IndexedRegion, INodeNoti
 	 * 
 	 * @see org.eclipse.wst.xml.core.internal.document.NodeImpl#getStructuredDocument()
 	 */
-	@Override
+	
 	public IStructuredDocument getStructuredDocument() {
 		return ((NodeImpl) parent).getStructuredDocument();
 	}
@@ -228,12 +228,12 @@ public class JsJfaceNode extends ElementImpl implements IndexedRegion, INodeNoti
 		return translationAdapter.getJSPTranslation();
 	}
 	
-	@Override
+	
 	public void notify(int eventType, Object changedFeature, Object oldValue, Object newValue, int pos) {
 		adaptableDomNode.notify(eventType, changedFeature, oldValue, newValue, pos);
 	}
 	
-	@Override
+	
 	public void removeAdapter(INodeAdapter adapter) {
 		adaptableDomNode.removeAdapter(adapter);
 	}

@@ -46,7 +46,7 @@ public class JSDTContentAssistantProcessor extends AbstractContentAssistProcesso
 	 * @return an array of completion proposals or <code>null</code> if no
 	 *         proposals are possible
 	 */
-	@Override
+	
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer, int pos) {
 		initialize(pos);
 		JSDTProposalCollector collector = null;
@@ -112,7 +112,7 @@ public class JSDTContentAssistantProcessor extends AbstractContentAssistProcesso
 	 * @return an array of context information objects or <code>null</code> if
 	 *         no context could be found
 	 */
-	@Override
+	
 	public org.eclipse.jface.text.contentassist.IContextInformation[] computeContextInformation(org.eclipse.jface.text.ITextViewer viewer, int documentOffset) {
 		return null;
 	}
@@ -144,7 +144,7 @@ public class JSDTContentAssistantProcessor extends AbstractContentAssistProcesso
 	 * @return the auto activation characters for completion proposal or
 	 *         <code>null</code> if no auto activation is desired
 	 */
-	@Override
+	
 	public char[] getCompletionProposalAutoActivationCharacters() {
 		return null;
 	}
@@ -156,7 +156,7 @@ public class JSDTContentAssistantProcessor extends AbstractContentAssistProcesso
 	 * @return the auto activation characters for presenting context information
 	 *         or <code>null</code> if no auto activation is desired
 	 */
-	@Override
+	
 	public char[] getContextInformationAutoActivationCharacters() {
 		return null;
 	}
@@ -169,7 +169,7 @@ public class JSDTContentAssistantProcessor extends AbstractContentAssistProcesso
 	 * @return a context information validator, or <code>null</code> if the
 	 *         processor is incapable of computing context information
 	 */
-	@Override
+	
 	public org.eclipse.jface.text.contentassist.IContextInformationValidator getContextInformationValidator() {
 		return null;
 	}
@@ -178,7 +178,7 @@ public class JSDTContentAssistantProcessor extends AbstractContentAssistProcesso
 		return fJspSourcePosition;
 	}
 	
-	@Override
+	
 	public String getErrorMessage() {
 		// TODO: get appropriate error message
 		// if (fCollector.getErrorMessage() != null &&
@@ -225,7 +225,7 @@ public class JSDTContentAssistantProcessor extends AbstractContentAssistProcesso
 		}
 	}
 	
-	@Override
+	
 	public void release() {
 		fTranslationAdapter = null;
 	}
