@@ -72,7 +72,7 @@ public class StructuredTextViewerConfigurationJSDT extends StructuredTextViewerC
 		super();
 	}
 	
-	@Override
+	
 	public IAutoEditStrategy[] getAutoEditStrategies(ISourceViewer sourceViewer, String contentType) {
 		List allStrategies = new ArrayList(0);
 		Object externalAutoEditProvider = ExtendedConfigurationBuilder.getInstance().getConfiguration(externalTypeExtension.AUTOEDIT_ID, contentType);
@@ -91,7 +91,7 @@ public class StructuredTextViewerConfigurationJSDT extends StructuredTextViewerC
 		return (IAutoEditStrategy[]) allStrategies.toArray(new IAutoEditStrategy[allStrategies.size()]);
 	}
 	
-	@Override
+	
 	public String[] getConfiguredContentTypes(ISourceViewer sourceViewer) {
 		if (fConfiguredContentTypes == null) {
 			fConfiguredContentTypes = super.getConfiguredContentTypes(sourceViewer);
@@ -100,12 +100,12 @@ public class StructuredTextViewerConfigurationJSDT extends StructuredTextViewerC
 	}
 	
 	/* Content assist procesors are contributed by extension for SSE now */
-	@Override
+	
 	protected IContentAssistProcessor[] getContentAssistProcessors(ISourceViewer sourceViewer, String partitionType) {
 		return super.getContentAssistProcessors(sourceViewer, partitionType);
 	}
 	
-	@Override
+	
 	public IContentFormatter getContentFormatter(ISourceViewer sourceViewer) {
 		final IContentFormatter formatter = super.getContentFormatter(sourceViewer);
 		/*
@@ -122,7 +122,7 @@ public class StructuredTextViewerConfigurationJSDT extends StructuredTextViewerC
 		return formatter;
 	}
 	
-	@Override
+	
 	public ITextDoubleClickStrategy getDoubleClickStrategy(ISourceViewer sourceViewer, String contentType) {
 		return super.getDoubleClickStrategy(sourceViewer, contentType);
 	}
@@ -132,7 +132,7 @@ public class StructuredTextViewerConfigurationJSDT extends StructuredTextViewerC
 	 * 
 	 * @see org.eclipse.ui.editors.text.TextSourceViewerConfiguration#getHyperlinkDetectors(org.eclipse.jface.text.source.ISourceViewer)
 	 */
-	@Override
+	
 	public IHyperlinkDetector[] getHyperlinkDetectors(ISourceViewer sourceViewer) {
 		if (sourceViewer == null || !fPreferenceStore.getBoolean(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_HYPERLINKS_ENABLED)) {
 			return null;
@@ -156,12 +156,12 @@ public class StructuredTextViewerConfigurationJSDT extends StructuredTextViewerC
 		return (IHyperlinkDetector[]) allDetectors.toArray(new IHyperlinkDetector[0]);
 	}
 	
-	@Override
+	
 	public String[] getIndentPrefixes(ISourceViewer sourceViewer, String contentType) {
 		return super.getIndentPrefixes(sourceViewer, contentType);
 	}
 	
-	@Override
+	
 	protected IInformationProvider getInformationProvider(ISourceViewer sourceViewer, String partitionType) {
 		IInformationProvider provider = null;
 		/*
@@ -177,13 +177,13 @@ public class StructuredTextViewerConfigurationJSDT extends StructuredTextViewerC
 		return provider;
 	}
 	
-	@Override
+	
 	public LineStyleProvider[] getLineStyleProviders(ISourceViewer sourceViewer, String partitionType) {
 		LineStyleProvider[] providers = super.getLineStyleProviders(sourceViewer, partitionType);
 		return providers;
 	}
 	
-	@Override
+	
 	public ILabelProvider getStatusLineLabelProvider(ISourceViewer sourceViewer) {
 		if (fStatusLineLabelProvider == null) {
 			fStatusLineLabelProvider = super.getStatusLineLabelProvider(sourceViewer);
@@ -191,7 +191,7 @@ public class StructuredTextViewerConfigurationJSDT extends StructuredTextViewerC
 		return fStatusLineLabelProvider;
 	}
 	
-	@Override
+	
 	public ITextHover getTextHover(ISourceViewer sourceViewer, String contentType, int stateMask) {
 		ITextHover textHover = null;
 		// look for appropriate text hover processor to return based on
