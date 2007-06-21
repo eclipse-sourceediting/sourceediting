@@ -532,7 +532,27 @@ public class FileBufferModelManager {
 					info.locationKind = LocationKind.LOCATION;
 					info.selfConnected = true;
 				}
-				model = getModel((IStructuredDocument) buffer.getDocument());
+				/*
+				 * Check the document type. Although returning null for
+				 * unknown documents would be fair, try to get a model if
+				 * the document is at least a valid type.
+				 */
+				IDocument bufferDocument = buffer.getDocument();
+				if (bufferDocument instanceof IStructuredDocument) {
+					model = getModel((IStructuredDocument) bufferDocument);
+				}
+				else {
+					/*
+					 * 190768 - Quick diff marks do not disappear in the
+					 * vertical ruler of JavaScript editor and
+					 * 
+					 * 193805 - Changes are not thrown away when close
+					 * with no save for files with no structured model
+					 * associated with them (text files, javascript files,
+					 * etc) in web project
+					 */
+					bufferManager.disconnect(location, LocationKind.IFILE, getProgressMonitor());
+				}
 			}
 		}
 		catch (CoreException e) {
@@ -585,6 +605,18 @@ public class FileBufferModelManager {
 					IDocument bufferDocument = buffer.getDocument();
 					if (bufferDocument instanceof IStructuredDocument) {
 						model = getModel((IStructuredDocument) bufferDocument);
+					}
+					else {
+						/*
+						 * 190768 - Quick diff marks do not disappear in the
+						 * vertical ruler of JavaScript editor and
+						 * 
+						 * 193805 - Changes are not thrown away when close
+						 * with no save for files with no structured model
+						 * associated with them (text files, javascript files,
+						 * etc) in web project
+						 */
+						bufferManager.disconnect(location, LocationKind.IFILE, getProgressMonitor());
 					}
 				}
 			}
