@@ -166,7 +166,7 @@ public class SimpleJSDTActionProxy implements IObjectActionDelegate {
 			// TODO Auto-generated catch block
 			ex.printStackTrace();
 		}
-		System.out.println("Unimplemented method:JSDTActionProxy.selectionChanged");
+		
 	}
 	
 	public void setActivePart(IAction action, IWorkbenchPart targetPart) {

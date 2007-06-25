@@ -19,7 +19,7 @@ import org.eclipse.wst.jsdt.internal.core.JavaProject;
 import org.eclipse.wst.jsdt.ui.PreferenceConstants;
 
 public class JsWebNature implements IProjectNature {
-	private static final String FILENAME_CLASSPATH = ".classpath"; //$NON-NLS-1$
+	//private static final String FILENAME_CLASSPATH = ".classpath"; //$NON-NLS-1$
 	// private static final String NATURE_IDS[] =
 	// {"org.eclipse.wst.jsdt.web.core.embeded.jsNature",JavaCore.NATURE_ID};
 	// //$NON-NLS-1$
@@ -220,7 +220,7 @@ public class JsWebNature implements IProjectNature {
 		if (fCurrProject == null) {
 			return false;
 		}
-		return fCurrProject.getFile(JsWebNature.FILENAME_CLASSPATH).exists();
+		return fCurrProject.getFile(JavaProject.CLASSPATH_FILENAME).exists();
 	}
 	
 	private void initJREEntry() {

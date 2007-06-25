@@ -8,11 +8,11 @@
 			class="org.eclipse.wst.jsdt.web.ui.StructuredTextViewerConfigurationJSDT"
 			target="org.eclipse.wst.html.core.htmlsource.source" />
 			
-		<!--	
+		
  		<contentOutlineConfiguration
 			class="org.eclipse.wst.jsdt.web.ui.views.provisional.contentoutline.JsContentOutlineConfig"
 			target="org.eclipse.wst.html.core.htmlsource.source" />		
-		-->
+		
 		<provisionalConfiguration
 			type="contentassistprocessor"
 			class="org.eclipse.wst.jsdt.web.ui.internal.contentassist.JSDTContentAssistant"

@@ -19,8 +19,7 @@ public class SourceActionsAction implements IObjectActionDelegate {
 	 * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
 	 */
 	public void run(IAction action) {
-		// TODO Auto-generated method stub
-		System.out.println("Unimplemented method:SourceActionsAction.run");
+	
 	}
 	
 	/*
@@ -30,8 +29,7 @@ public class SourceActionsAction implements IObjectActionDelegate {
 	 *      org.eclipse.jface.viewers.ISelection)
 	 */
 	public void selectionChanged(IAction action, ISelection selection) {
-		// TODO Auto-generated method stub
-		System.out.println("Unimplemented method:SourceActionsAction.selectionChanged");
+		action.setEnabled(false);
 	}
 	
 	/*
@@ -41,7 +39,6 @@ public class SourceActionsAction implements IObjectActionDelegate {
 	 *      org.eclipse.ui.IWorkbenchPart)
 	 */
 	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
-		// TODO Auto-generated method stub
-		System.out.println("Unimplemented method:SourceActionsAction.setActivePart");
+		
 	}
 }
