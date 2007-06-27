@@ -36,20 +36,25 @@ public class JsJfaceNode extends ElementImpl implements IndexedRegion, INodeNoti
 	private Position fDocPosition;
 	private Node parent;
 	private String typeName;
+	private IJavaElement dirtyElement;
 	
-	public JsJfaceNode(Node parent, Position structureDocLocation) {
-		this(parent, structureDocLocation, null);
+	public JsJfaceNode(Node parent, IJavaElement originalElement, Position structureDocLocation) {
+		this(parent, originalElement, structureDocLocation, null);
 	}
 	
-	public JsJfaceNode(Node parent, Position structureDocLocation, String typeName) {
+	public JsJfaceNode(Node parent, IJavaElement originalElement, Position structureDocLocation, String typeName) {
 		super();
 		// super((ElementImpl)parent);
 		// super(parentObject, parentObject.getElementName());
 		fDocPosition = structureDocLocation;
 		this.parent = parent;
 		this.typeName = typeName;
+		this.dirtyElement = originalElement;
 	}
 	
+	public IJavaElement getDirtyElement() {
+		return this.dirtyElement;
+	}
 	
 	public void addAdapter(INodeAdapter adapter) {
 		adaptableDomNode.addAdapter(adapter);

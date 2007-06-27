@@ -1,9 +1,13 @@
 package org.eclipse.wst.jsdt.web.ui.views.contentoutline;
 
+import java.util.Vector;
+
 import org.eclipse.jface.text.Position;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.html.ui.internal.contentoutline.JFaceNodeAdapterForHTML;
+import org.eclipse.wst.jsdt.core.ICompilationUnit;
 import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.ISourceRange;
 import org.eclipse.wst.jsdt.core.JavaModelException;
 import org.eclipse.wst.jsdt.internal.core.JavaElement;
 import org.eclipse.wst.jsdt.internal.core.SourceRefElement;
@@ -26,17 +30,19 @@ import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeAdapterFactory;
 import org.w3c.dom.Node;
 
 public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
+	
 	public JFaceNodeAdapterForJs(JFaceNodeAdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
 	
+	private ICompilationUnit lazyCu;
 	
 	public Object[] getChildren(Object object) {
 		if (object instanceof IJavaElement) {
 			return getJavaElementProvider().getChildren(object);
 		}
 		if (object instanceof IJavaWebNode) {
-			JavaElement enclosedElement = (JavaElement) ((IJavaWebNode) object).getJavaElement();
+			JavaElement enclosedElement = (JavaElement) ((IJavaWebNode) object).getDirtyElement();
 			if (enclosedElement != null) {
 				try {
 					IJavaElement[] children = enclosedElement.getChildren();
@@ -45,7 +51,7 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
 					}
 					Object[] nodes = new Object[children.length];
 					Node parent = ((IJavaWebNode) object).getParentNode();
-					JsTranslation translation = getTranslation(parent);
+					
 					for (int i = 0; i < children.length; i++) {
 						int htmllength = ((SourceRefElement) (children[i])).getSourceRange().getLength();
 						int htmloffset = ((SourceRefElement) (children[i])).getSourceRange().getOffset();
@@ -81,48 +87,80 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
 		return new StandardJavaElementContentProvider(true);
 	}
 	
+	private Object[] filterChildrenForRange(IJavaElement[] allChildren, Node node) {
+		int javaPositionStart = ((NodeImpl) node).getStartOffset();
+		int javaPositionEnd   = ((NodeImpl) node).getEndOffset();
+		
+		Object[] result =new Object[0];
+		
+		
+		Vector validChildren = new Vector();
+		for (int i = 0; i < allChildren.length; i++) {
+			if (allChildren[i] instanceof IJavaElement && allChildren[i].getElementType() != IJavaElement.PACKAGE_DECLARATION) {
+				ISourceRange range = null;
+				if (allChildren[i]  instanceof SourceRefElement) {
+					try {
+						range = ((SourceRefElement)allChildren[i] ).getSourceRange();
+					} catch (JavaModelException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				if (allChildren[i].getElementType() == IJavaElement.TYPE || (javaPositionStart <= range.getOffset() && range.getLength() + range.getOffset() <= (javaPositionEnd))) {
+					
+				int htmllength = range==null?0:range.getLength();
+				int htmloffset = range==null?0:range.getOffset();
+				Position position = new Position(htmloffset, htmllength);
+				validChildren.add( getJsNode(node.getParentNode(), allChildren[i], position));
+					
+				
+				}
+			}
+		}
+		if (validChildren.size() > 0) {
+			result = validChildren.toArray();
+		}
+		if (result == null || result.length == 0) {
+			return new IJavaElement[0];
+		}
+		return result;
+	}
+	
 	private synchronized Object[] getJSElementsFromNode(Node node) {
 				
 		int startOffset = 0;
 		int endOffset = 0;
 		int type = node.getNodeType();
-		IJavaElement[] result = null;
+		Object[] result = null;
 		JsTranslation translation = null;
 		if (node.getNodeType() == Node.TEXT_NODE && (node instanceof NodeImpl)) {
 			startOffset = ((NodeImpl) node).getStartOffset();
 			endOffset = ((NodeImpl) node).getEndOffset();
-			translation = getTranslation(node);
-			result = translation.getAllElementsInJsRange(startOffset, endOffset);
-		}
-		if (result == null) {
-			return null;
-		}
-		Object[] newResults = new Object[result.length];
-		for (int i = 0; i < result.length; i++) {
-			int htmllength = 0;
-			int htmloffset = 0;
-			Position position = null;
+			ICompilationUnit unit = getLazyCu(node);
+			
 			try {
-				htmllength = ((SourceRefElement) (result[i])).getSourceRange().getLength();
-				htmloffset = ((SourceRefElement) (result[i])).getSourceRange().getOffset();
-				position = new Position(htmloffset, htmllength);
-			} catch (JavaModelException e) {
-				e.printStackTrace();
+				result = filterChildrenForRange(unit.getChildren(),node);
+			} catch (JavaModelException ex) {
+				// TODO Auto-generated catch block
+				ex.printStackTrace();
+				result = new Object[0];
 			}
-			newResults[i] = getJsNode(node.getParentNode(), result[i], position);
+			
+			//translation = getTranslation(node);
+			//result = translation.getAllElementsInJsRange(startOffset, endOffset);
 		}
-		return newResults;
+		return result;
 	}
 	
 	private Object getJsNode(Node parent, IJavaElement root, Position position) {
 		JsJfaceNode instance = null;
 		if (root.getElementType() == IJavaElement.TYPE) {
-			instance = new JsJfaceNode(parent, position, ((SourceRefElement) root).getElementName());
+			instance = new JsJfaceNode(parent, root, position, ((SourceRefElement) root).getElementName());
 		} else if (root.getElementType() == IJavaElement.FIELD) {
 			/* Field refrence, possibly to a type may need to implement later */
-			instance = new JsJfaceNode(parent, position);
+			instance = new JsJfaceNode(parent, root,  position);
 		} else {
-			instance = new JsJfaceNode(parent, position);
+			instance = new JsJfaceNode(parent, root, position);
 		}
 		// ((JsJfaceNode)instance).setAdapterRegistry(registry);
 		INodeAdapter adapter = (instance).getAdapterFor(IJFaceNodeAdapter.class);
@@ -136,7 +174,7 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
 	
 	public Image getLabelImage(Object node) {
 		if (node instanceof JsJfaceNode) {
-			return getJavaElementLabelProvider().getImage(((JsJfaceNode) node).getJavaElement());
+			return getJavaElementLabelProvider().getImage(((JsJfaceNode) node).getDirtyElement());
 		}
 		if (node instanceof IJavaElement) {
 			return getJavaElementLabelProvider().getImage(node);
@@ -147,7 +185,7 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
 	
 	public String getLabelText(Object node) {
 		if (node instanceof JsJfaceNode) {
-			return getJavaElementLabelProvider().getText(((JsJfaceNode) node).getJavaElement());
+			return getJavaElementLabelProvider().getText(((JsJfaceNode) node).getDirtyElement());
 		}
 		if (node instanceof IJavaElement) {
 			return getJavaElementLabelProvider().getText(node);
@@ -161,6 +199,13 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
 			return getJavaElementProvider().getParent(element);
 		}
 		return super.getParent(element);
+	}
+	
+	private ICompilationUnit getLazyCu(Node node) {
+		if(lazyCu==null) {
+			lazyCu = getTranslation(node).getCompilationUnit();
+		}
+		return lazyCu;
 	}
 	
 	private JsTranslation getTranslation(Node node) {
@@ -197,7 +242,7 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
 		}
 		Node node = (Node) object;
 		if (node instanceof IJavaWebNode) {
-			JavaElement enclosedElement = (JavaElement) ((IJavaWebNode) object).getJavaElement();
+			JavaElement enclosedElement = (JavaElement) ((IJavaWebNode) object).getDirtyElement();
 			if (enclosedElement != null) {
 				try {
 					return enclosedElement.hasChildren();
