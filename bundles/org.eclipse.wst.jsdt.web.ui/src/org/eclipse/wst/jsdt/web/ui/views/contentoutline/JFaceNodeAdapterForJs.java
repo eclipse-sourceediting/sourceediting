@@ -82,6 +82,7 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
 	}
 	
 	private synchronized Object[] getJSElementsFromNode(Node node) {
+				
 		int startOffset = 0;
 		int endOffset = 0;
 		int type = node.getNodeType();

@@ -91,7 +91,7 @@ public interface IJsTranslation {
 	
 	public abstract boolean ifOffsetInImportNode(int offset);
 	
-	public abstract boolean isOffsetInScriptNode(int offset);
+	//public abstract boolean isOffsetInScriptNode(int offset);
 	
 	public abstract void reconcileCompilationUnit();
 	

@@ -79,7 +79,7 @@ public class JsValidator extends JSPValidator {
 			setupAdapterFactory(domModel);
 			IDOMDocument xmlDoc = domModel.getDocument();
 			JsTranslationAdapter translationAdapter = (JsTranslationAdapter) xmlDoc.getAdapterFor(IJsTranslation.class);
-			translationAdapter.resourceChanged();
+			//translationAdapter.resourceChanged();
 			JsTranslation translation = translationAdapter.getJSPTranslation();
 			if (!reporter.isCancelled()) {
 				translation.setProblemCollectingActive(true);

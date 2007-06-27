@@ -22,6 +22,7 @@ import org.eclipse.wst.jsdt.web.core.internal.java.JsNameManglerUtil;
  */
 public class WebProjectClassPathContainerInitializer extends BasicBrowserLibraryClassPathContainerInitializer {
 	private static final String CONTAINER_DESCRIPTION = "Web Project support for JSDT";
+	
 	public static final char[] LIB_NAME = {'b','r','o','w','s','e','r','W','i','n','d','o','w','.','j','s'};
 	/* Some tokens for us to identify mangled paths */
 	private static final String MANGLED_BUTT1 = "htm";
@@ -48,7 +49,8 @@ public class WebProjectClassPathContainerInitializer extends BasicBrowserLibrary
 		
 		
 		public char[][] getLibraryFileNames() {
-			return new char[][] { WebProjectClassPathContainerInitializer.LIB_NAME };
+			//return new char[][] { WebProjectClassPathContainerInitializer.LIB_NAME };
+			return new char[0][];
 		}
 		
 		

@@ -122,25 +122,25 @@ public class WebResourceChangeHandler implements IResourceChangeListener, IDocum
 	 * @see org.eclipse.jface.text.IDocumentListener#documentChanged(org.eclipse.jface.text.DocumentEvent)
 	 */
 	public void documentChanged(DocumentEvent event) {
-		if (WebResourceChangeHandler.CHECK_INTREST_LEVEL) {
-			for (int i = 0; i < fchangeListener.size(); i++) {
-				Object o = fchangeListener.get(i);
-				if (o instanceof IWebDocumentChangeListener) {
-					int intrest = ((IWebDocumentChangeListener) o).getIntrestLevelAtOffset(event.fOffset);
-					switch (intrest) {
-						case IWebDocumentChangeListener.DIRTY_MODEL:
-							irritator.signalAllDirtyModel();
-							return;
-						case IWebDocumentChangeListener.DIRTY_DOC:
-							((IWebDocumentChangeListener) o).resourceChanged();
-						break;
-					}
-					return;
-				}
-			}
-		} else {
+//		if (WebResourceChangeHandler.CHECK_INTREST_LEVEL) {
+//			for (int i = 0; i < fchangeListener.size(); i++) {
+//				Object o = fchangeListener.get(i);
+//				if (o instanceof IWebDocumentChangeListener) {
+//					int intrest = ((IWebDocumentChangeListener) o).getIntrestLevelAtOffset(event.fOffset);
+//					switch (intrest) {
+//						case IWebDocumentChangeListener.DIRTY_MODEL:
+//							irritator.signalAllDirtyModel();
+//							return;
+//						case IWebDocumentChangeListener.DIRTY_DOC:
+//							((IWebDocumentChangeListener) o).resourceChanged();
+//						break;
+//					}
+//					return;
+//				}
+//			}
+//		} else {
 			irritator.signalAllDirtyModel();
-		}
+		//}
 	}
 	
 	

@@ -23,7 +23,7 @@ public class NullSearchDocument extends SearchDocument {
 	
 	public NullSearchDocument(String documentPath) {
 		super(documentPath, new JsSearchParticipant());
-		this.fEmptyServletBuffer = new JsTranslator().getEmptyTranslation();
+		this.fEmptyServletBuffer = new StringBuffer();
 	}
 	
 	
