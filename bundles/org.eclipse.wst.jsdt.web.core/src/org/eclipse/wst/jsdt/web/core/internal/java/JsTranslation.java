@@ -16,6 +16,9 @@ import java.util.Vector;
 
 import org.eclipse.core.filebuffers.FileBuffers;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResourceChangeEvent;
+import org.eclipse.core.resources.IResourceChangeListener;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -45,7 +48,7 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 /**
  * @author brad childs
  */
-public class JsTranslation implements IJsTranslation {
+public class JsTranslation implements IJsTranslation, IResourceChangeListener {
 	// for debugging
 	private static final boolean DEBUG;
 	static {
@@ -86,6 +89,7 @@ public class JsTranslation implements IJsTranslation {
 		translator = new JsTranslator(getModel());
 		resetDocScope();
 		mangledName = createMangledName();
+		ResourcesPlugin.getWorkspace().addResourceChangeListener(this, IResourceChangeEvent.POST_CHANGE);
 //		if (xmlModel != null) {
 //			
 //			IStructuredDocument doc = xmlModel.getStructuredDocument();
@@ -554,6 +558,15 @@ public class JsTranslation implements IJsTranslation {
 		ICompilationUnit cu = getCompilationUnit();
 		if (cu != null) {
 			getProblemRequestor().setIsActive(collect);
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.core.resources.IResourceChangeListener#resourceChanged(org.eclipse.core.resources.IResourceChangeEvent)
+	 */
+	public void resourceChanged(IResourceChangeEvent event) {
+		if(fDocumentScope!=null) {
+			fDocumentScope.setDirty(true);
 		}
 	}
 }
