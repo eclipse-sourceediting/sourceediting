@@ -115,12 +115,22 @@ public class WebProjectClassPathContainerInitializer extends BasicBrowserLibrary
 		// TODO Auto-generated method stub
 		String htmlPath = WebProjectClassPathContainerInitializer.getUnmangedHtmlPath(path.toString());
 		if (htmlPath != null) {
-			try {
-				return new URI(htmlPath);
-			} catch (URISyntaxException ex) {
-				ex.printStackTrace();
-			}
+			URI fileUri =  new Path(htmlPath).toFile().toURI();
+			return fileUri;
+			//			try {
+//				return new URI(htmlPath);
+//			} catch (URISyntaxException ex) {
+//				ex.printStackTrace();
+//			}
 		}
+//		else {
+//			try {
+//				return new URI(path.toString());
+//			} catch (URISyntaxException ex) {
+//				// TODO Auto-generated catch block
+//				ex.printStackTrace();
+//			}
+//		}
 		return null;
 	}
 	
