@@ -15,6 +15,7 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.wst.jsdt.core.IClasspathEntry;
 import org.eclipse.wst.jsdt.core.JavaCore;
+import org.eclipse.wst.jsdt.core.LibrarySuperType;
 import org.eclipse.wst.jsdt.internal.core.JavaProject;
 import org.eclipse.wst.jsdt.ui.PreferenceConstants;
 
@@ -27,6 +28,8 @@ public class JsWebNature implements IProjectNature {
 
 	public static final IPath VIRTUAL_BROWSER_CLASSPATH = new Path("org.eclipse.wst.jsdt.launching.baseBrowserLibrary");
 	public static final IClasspathEntry VIRTUAL_SCOPE_ENTRY = JavaCore.newContainerEntry(new Path(WebProjectClassPathContainerInitializer.VIRTUAL_CONTAINER));
+	private static final String SUPER_TYPE_NAME = "Window";
+	private static final String SUPER_TYPE_LIBRARY = "org.eclipse.wst.jsdt.launching.baseBrowserLibrary";
 	
 	public static void addJsNature(IProject project, IProgressMonitor monitor) throws CoreException {
 		if (monitor != null && monitor.isCanceled()) {
@@ -133,6 +136,8 @@ public class JsWebNature implements IProjectNature {
 		} catch (Exception e) {
 			System.out.println(e);
 		}
+		LibrarySuperType superType = new LibrarySuperType(new Path( SUPER_TYPE_LIBRARY),  getJavaProject(), SUPER_TYPE_NAME);
+		getJavaProject().setCommonSuperType(superType);
 		// getJavaProject().addToBuildSpec(BUILDER_ID);
 		fCurrProject.refreshLocal(IResource.DEPTH_INFINITE, monitor);
 	}

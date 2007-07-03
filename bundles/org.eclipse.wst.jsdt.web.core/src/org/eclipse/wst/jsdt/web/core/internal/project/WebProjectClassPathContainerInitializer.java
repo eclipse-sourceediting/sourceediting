@@ -11,6 +11,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.wst.jsdt.core.IClasspathContainer;
 import org.eclipse.wst.jsdt.core.IJavaProject;
 import org.eclipse.wst.jsdt.core.compiler.libraries.BasicBrowserLibraryClassPathContainerInitializer;
+import org.eclipse.wst.jsdt.core.compiler.libraries.LibraryLocation;
 import org.eclipse.wst.jsdt.core.compiler.libraries.SystemLibraryLocation;
 
 import org.eclipse.wst.jsdt.web.core.internal.JsCorePlugin;
@@ -38,7 +39,7 @@ public class WebProjectClassPathContainerInitializer extends BasicBrowserLibrary
 		}
 		return null;
 	}
-	public SystemLibraryLocation getLibraryLocation() {
+	public LibraryLocation getLibraryLocation() {
 		return new WebBrowserLibLocation();
 	}
 	
