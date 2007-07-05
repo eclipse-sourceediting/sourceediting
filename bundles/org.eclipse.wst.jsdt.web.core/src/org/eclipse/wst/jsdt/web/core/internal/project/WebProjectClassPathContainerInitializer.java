@@ -8,11 +8,12 @@ import java.net.URISyntaxException;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.wst.jsdt.core.ClasspathContainerInitializer;
 import org.eclipse.wst.jsdt.core.IClasspathContainer;
 import org.eclipse.wst.jsdt.core.IJavaProject;
-import org.eclipse.wst.jsdt.core.compiler.libraries.BasicBrowserLibraryClassPathContainerInitializer;
 import org.eclipse.wst.jsdt.core.compiler.libraries.LibraryLocation;
 import org.eclipse.wst.jsdt.core.compiler.libraries.SystemLibraryLocation;
+
 
 import org.eclipse.wst.jsdt.web.core.internal.JsCorePlugin;
 import org.eclipse.wst.jsdt.web.core.internal.java.JsNameManglerUtil;
@@ -21,7 +22,7 @@ import org.eclipse.wst.jsdt.web.core.internal.java.JsNameManglerUtil;
  * @author childsb
  * 
  */
-public class WebProjectClassPathContainerInitializer extends BasicBrowserLibraryClassPathContainerInitializer {
+public class WebProjectClassPathContainerInitializer extends ClasspathContainerInitializer {
 	private static final String CONTAINER_DESCRIPTION = "Web Project support for JSDT";
 	
 	public static final char[] LIB_NAME = {'b','r','o','w','s','e','r','W','i','n','d','o','w','.','j','s'};
