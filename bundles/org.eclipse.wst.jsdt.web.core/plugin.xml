@@ -30,13 +30,7 @@
 	 	   <builder id="org.eclipse.wst.jsdt.web.core.embeded.javascript"/>    
 	   </extension> 
 	   
-	  <extension  point="org.eclipse.wst.jsdt.core.classpathContainerInitializer">
-	      <classpathContainerInitializer
-	            class="org.eclipse.wst.jsdt.web.core.internal.project.WebProjectClassPathContainerInitializer"
-	            id="org.eclipse.wst.jsdt.launching.WebProject">
-	      </classpathContainerInitializer>
-  	 </extension>
-	   
+
 	   	<!-- 
 	   	Not using this at the moment, but everythings in place if we need in the future. 
 	    -->  

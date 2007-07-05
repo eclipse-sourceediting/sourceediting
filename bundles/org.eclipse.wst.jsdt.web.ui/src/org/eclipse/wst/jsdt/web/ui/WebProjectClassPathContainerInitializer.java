@@ -1,35 +1,38 @@
 /**
  * 
  */
-package org.eclipse.wst.jsdt.web.core.internal.project;
+package org.eclipse.wst.jsdt.web.ui;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.wst.jsdt.core.ClasspathContainerInitializer;
 import org.eclipse.wst.jsdt.core.IClasspathContainer;
 import org.eclipse.wst.jsdt.core.IJavaProject;
 import org.eclipse.wst.jsdt.core.compiler.libraries.LibraryLocation;
 import org.eclipse.wst.jsdt.core.compiler.libraries.SystemLibraryLocation;
+import org.eclipse.wst.jsdt.internal.ui.IClasspathContainerInitialzerExtension;
 
 
 import org.eclipse.wst.jsdt.web.core.internal.JsCorePlugin;
 import org.eclipse.wst.jsdt.web.core.internal.java.JsNameManglerUtil;
+import org.eclipse.wst.jsdt.web.core.internal.project.JsWebNature;
 
 /**
  * @author childsb
  * 
  */
-public class WebProjectClassPathContainerInitializer extends ClasspathContainerInitializer {
+public class WebProjectClassPathContainerInitializer extends ClasspathContainerInitializer implements IClasspathContainerInitialzerExtension {
 	private static final String CONTAINER_DESCRIPTION = "Web Project support for JSDT";
 	
 	public static final char[] LIB_NAME = {'b','r','o','w','s','e','r','W','i','n','d','o','w','.','j','s'};
 	/* Some tokens for us to identify mangled paths */
 	private static final String MANGLED_BUTT1 = "htm";
 	private static final String MANGLED_BUTT2 = ".js";
-	public static final String VIRTUAL_CONTAINER = "org.eclipse.wst.jsdt.launching.WebProject";
+	
 	
 	private static String getUnmangedHtmlPath(String containerPathString) {
 		if (containerPathString == null) {
@@ -91,7 +94,7 @@ public class WebProjectClassPathContainerInitializer extends ClasspathContainerI
 	 */
 	
 	public String getDescription(IPath containerPath, IJavaProject project) {
-		if (containerPath.equals(new Path(WebProjectClassPathContainerInitializer.VIRTUAL_CONTAINER))) {
+		if (containerPath.equals(new Path(JsWebNature.VIRTUAL_CONTAINER))) {
 			return WebProjectClassPathContainerInitializer.CONTAINER_DESCRIPTION;
 		}
 		String containerPathString = containerPath.toString();
@@ -143,6 +146,13 @@ public class WebProjectClassPathContainerInitializer extends ClasspathContainerI
 	
 	
 	public IPath getPath() {
-		return new Path(WebProjectClassPathContainerInitializer.VIRTUAL_CONTAINER);
+		return new Path(JsWebNature.VIRTUAL_CONTAINER);
 	}
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.jsdt.internal.ui.IClasspathContainerInitialzerExtension#getImage(org.eclipse.core.runtime.IPath, java.lang.String, org.eclipse.wst.jsdt.core.IJavaProject)
+	 */
+	public ImageDescriptor getImage(IPath containerPath, String element, IJavaProject project) {
+		return ImageDescriptor.createFromFile(this.getClass(),"web1.gif");
+	}
+	
 }

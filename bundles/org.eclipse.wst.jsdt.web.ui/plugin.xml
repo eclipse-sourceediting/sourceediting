@@ -662,6 +662,14 @@
 				</with>
 			</enablement>
 		</renameParticipant>
-		
+
+	   
 	</extension>
+			  <extension  point="org.eclipse.wst.jsdt.core.classpathContainerInitializer">
+	      <classpathContainerInitializer
+	            class="org.eclipse.wst.jsdt.web.ui.WebProjectClassPathContainerInitializer"
+	            id="org.eclipse.wst.jsdt.launching.WebProject">
+	      </classpathContainerInitializer>
+  	 </extension>
+  	 
 </plugin>

@@ -27,7 +27,8 @@ public class JsWebNature implements IProjectNature {
 	private static final String NATURE_IDS[] = { JavaCore.NATURE_ID };
 
 	public static final IPath VIRTUAL_BROWSER_CLASSPATH = new Path("org.eclipse.wst.jsdt.launching.baseBrowserLibrary");
-	public static final IClasspathEntry VIRTUAL_SCOPE_ENTRY = JavaCore.newContainerEntry(new Path(WebProjectClassPathContainerInitializer.VIRTUAL_CONTAINER));
+	public static final String VIRTUAL_CONTAINER = "org.eclipse.wst.jsdt.launching.WebProject";
+	public static final IClasspathEntry VIRTUAL_SCOPE_ENTRY = JavaCore.newContainerEntry(new Path(VIRTUAL_CONTAINER));
 	private static final String SUPER_TYPE_NAME = "Window";
 	private static final String SUPER_TYPE_LIBRARY = "org.eclipse.wst.jsdt.launching.baseBrowserLibrary";
 	
