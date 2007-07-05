@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
@@ -29,6 +30,7 @@ import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.xsd.ui.internal.editor.InternalXSDMultiPageEditor;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
+import org.eclipse.wst.xsd.ui.internal.editor.XSDFileEditorInput;
 import org.eclipse.xsd.XSDAttributeDeclaration;
 import org.eclipse.xsd.XSDAttributeGroupDefinition;
 import org.eclipse.xsd.XSDConcreteComponent;
@@ -129,13 +131,38 @@ public class OpenOnSelectionHelper
 		        {
 							try
 							{
-								IEditorPart editorPart = workbenchWindow.getActivePage().openEditor(new FileEditorInput(schemaFile), XSDEditorPlugin.PLUGIN_ID);
-								if (editorPart instanceof InternalXSDMultiPageEditor)
-								{
-									((InternalXSDMultiPageEditor)editorPart).openOnGlobalReference(component);
-									lastResult = true;
-								}
-							}
+                IEditorPart editorPart;
+                // This first check is to ensure that the schema is actually different than the
+                // current one we are editing against in the editor, and that we are in the same
+                // resource file....hence multiple schemas in the same file.
+                if (component.getRootContainer().eResource() == xsdSchema.eResource())
+                {
+                  XSDFileEditorInput xsdFileEditorInput = new XSDFileEditorInput(schemaFile, component.getSchema());
+                  IEditorPart activeEditor = workbenchWindow.getActivePage().getActiveEditor();
+                  String editorName = null;   // will use FileEditorInput's name if still null
+                  // Try to use the same editor name as the current one
+                  if (activeEditor != null)
+                  {
+                    IEditorInput input = activeEditor.getEditorInput();
+                    if (input != null)
+                    {
+                      editorName = input.getName();
+                      xsdFileEditorInput.setEditorName(editorName);
+                    }
+                  }
+                  editorPart = workbenchWindow.getActivePage().openEditor(xsdFileEditorInput, XSDEditorPlugin.EDITOR_ID, true, 0);
+                }
+                else
+                {
+                  editorPart = workbenchWindow.getActivePage().openEditor(new FileEditorInput(schemaFile), XSDEditorPlugin.PLUGIN_ID);
+                }
+
+                if (editorPart instanceof InternalXSDMultiPageEditor)
+                {
+                  ((InternalXSDMultiPageEditor)editorPart).openOnGlobalReference(component);
+                  lastResult = true;
+                }
+              }
 							catch (PartInitException initEx)
 							{
 							}
