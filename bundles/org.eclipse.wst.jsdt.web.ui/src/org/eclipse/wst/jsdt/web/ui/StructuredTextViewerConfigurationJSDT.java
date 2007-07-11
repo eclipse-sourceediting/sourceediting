@@ -25,8 +25,10 @@ import org.eclipse.jface.text.information.IInformationProvider;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
+import org.eclipse.wst.html.core.text.IHTMLPartitions;
 import org.eclipse.wst.html.ui.StructuredTextViewerConfigurationHTML;
 import org.eclipse.wst.jsdt.web.ui.internal.autoedit.AutoEditStrategyForTabs;
+import org.eclipse.wst.jsdt.web.ui.internal.contentassist.JSDTContentAssistant;
 import org.eclipse.wst.sse.ui.internal.ExtendedConfigurationBuilder;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
@@ -102,9 +104,18 @@ public class StructuredTextViewerConfigurationJSDT extends StructuredTextViewerC
 	/* Content assist procesors are contributed by extension for SSE now */
 	
 	protected IContentAssistProcessor[] getContentAssistProcessors(ISourceViewer sourceViewer, String partitionType) {
-		return super.getContentAssistProcessors(sourceViewer, partitionType);
+		
+		IContentAssistProcessor[] processors = null;
+
+		if (partitionType == IHTMLPartitions.SCRIPT) {
+			processors = new IContentAssistProcessor[]{new JSDTContentAssistant()};
+		}
+		else{
+			processors = super.getContentAssistProcessors(sourceViewer, partitionType);
+		}
+		
+		return processors;
 	}
-	
 	
 	public IContentFormatter getContentFormatter(ISourceViewer sourceViewer) {
 		final IContentFormatter formatter = super.getContentFormatter(sourceViewer);

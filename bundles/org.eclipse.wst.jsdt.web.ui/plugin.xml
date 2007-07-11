@@ -13,10 +13,13 @@
 			class="org.eclipse.wst.jsdt.web.ui.views.provisional.contentoutline.JsContentOutlineConfig"
 			target="org.eclipse.wst.html.core.htmlsource.source" />		
 		
+		<!--
 		<provisionalConfiguration
 			type="contentassistprocessor"
 			class="org.eclipse.wst.jsdt.web.ui.internal.contentassist.JSDTContentAssistant"
 			target="org.eclipse.wst.html.SCRIPT,org.eclipse.wst.html.SCRIPT.EVENT" />
+		-->
+		
 		<provisionalConfiguration
 			type="linestyleprovider"
 			class="org.eclipse.wst.jsdt.web.ui.internal.style.java.LineStyleProviderForJSDT"
