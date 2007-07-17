@@ -197,7 +197,8 @@ public class JsTranslator extends Job implements IDocumentListener{
 							}
 							// } else {
 							// handle script section
-							if (getCurrentNode().getNext() != null && getCurrentNode().getNext().getType() == DOMRegionContext.BLOCK_TEXT) {
+							
+							if (getCurrentNode().getNext() != null /*&& getCurrentNode().getNext().getType() == DOMRegionContext.BLOCK_TEXT*/) {
 								translateJSNode(getCurrentNode().getNext());
 							}
 						} // End search for <script> sections
@@ -290,6 +291,11 @@ public class JsTranslator extends Job implements IDocumentListener{
 		ITextRegionCollection containerRegion = container;
 		Iterator regions = containerRegion.getRegions().iterator();
 		ITextRegion region = null;
+		
+		char[] spaces = getPad(container.getStartOffset() - scriptOffset);
+		fScriptText.append(spaces);
+		scriptOffset = container.getStartOffset();
+		
 		while (regions.hasNext() && !isCanceled()) {
 			region = (ITextRegion) regions.next();
 			String type = region.getType();
@@ -304,7 +310,7 @@ public class JsTranslator extends Job implements IDocumentListener{
 				// regionLength);
 				Position inHtml = new Position(scriptStart, scriptTextEnd);
 				scriptLocationInHtml.add(inHtml);
-				char[] spaces = getPad(scriptStart - scriptOffset);
+				spaces = getPad(scriptStart - scriptOffset);
 				fScriptText.append(spaces);
 				// fJsToHTMLRanges.put(inScript, inHtml);
 				fScriptText.append(regionText);
