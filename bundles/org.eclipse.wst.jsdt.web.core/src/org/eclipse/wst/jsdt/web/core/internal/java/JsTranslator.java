@@ -297,10 +297,15 @@ public class JsTranslator extends Job implements IDocumentListener{
 		Iterator regions = containerRegion.getRegions().iterator();
 		ITextRegion region = null;
 		
+		if(container==null) return;
+		
 		char[] spaces = getPad(container.getStartOffset() - scriptOffset);
 		fScriptText.append(spaces);
 		scriptOffset = container.getStartOffset();
 	
+		if(container.getType()!=DOMRegionContext.BLOCK_TEXT && container.getType()!= DOMRegionContext.XML_CDATA_TEXT) {
+			return;
+		}
 		
 		while (regions.hasNext() && !isCanceled()) {
 			region = (ITextRegion) regions.next();
@@ -317,7 +322,7 @@ public class JsTranslator extends Job implements IDocumentListener{
 				Position inHtml = new Position(scriptStart, scriptTextEnd);
 				scriptLocationInHtml.add(inHtml);
 				spaces = getPad(scriptStart - scriptOffset);
-				fScriptText.append(spaces);
+				fScriptText.append(spaces); 	
 				// fJsToHTMLRanges.put(inScript, inHtml);
 				fScriptText.append(regionText);
 				scriptOffset = fScriptText.length();
