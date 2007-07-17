@@ -128,6 +128,7 @@ public class XSDImpl
   public static final String PROPERTY_XSITYPES = "XSITypes";
   public static final String PROPERTY_DERIVED_ELEMENT_DECLARATION = "DerivedElementDeclaration";
   public static final String PROPERTY_SUBSTITUTION_GROUP = "SubstitutionGroup";
+  public static final String PROPERTY_SUBSTITUTION_GROUP_VALUE = "SubstitutionGroupValue";
   public static final String PROPERTY_ABSTRACT = "Abstract";
   /**
    * Definition info for element declarations.
@@ -1802,6 +1803,10 @@ public class XSDImpl
       {
         return getSubstitutionGroup();
       }
+      else if (propertyName.equals(PROPERTY_SUBSTITUTION_GROUP_VALUE))
+      {
+        return getSubstitutionGroupValue();
+      }
       else if (propertyName.equals(PROPERTY_ABSTRACT))
       {
         return getAbstract();
@@ -1827,6 +1832,17 @@ public class XSDImpl
         return false;
     }
 
+    /**
+     * Returns the value of the substitutionGroup attribute.
+     * 
+     * @return value of the substitutionGroup attribute
+     */
+    public String getSubstitutionGroupValue()
+    {
+      return getResolvedXSDElementDeclaration().getElement().getAttribute(XSDConstants.SUBSTITUTIONGROUP_ATTRIBUTE);
+    }
+    
+    
     /**
      * Returns whether the element is 'Abstract'.
      * 
