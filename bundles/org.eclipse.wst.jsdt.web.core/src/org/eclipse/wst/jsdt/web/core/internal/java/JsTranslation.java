@@ -141,6 +141,10 @@ public class JsTranslation implements IJsTranslation, IResourceChangeListener {
 		return fHtmlDocument;
 	}
 
+	public int getMissingTagStart() {
+		return translator.getMissingEndTagRegionStart();
+	}
+	
 	/**
 	 * Originally from ReconcileStepForJava. Creates an ICompilationUnit from
 	 * the contents of the JSP document.

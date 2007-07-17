@@ -74,6 +74,7 @@ public class JsTranslator extends Job implements IDocumentListener{
 	private byte[] finished = new byte[0];
 	private IBuffer compUnitBuff;
 	private boolean cancelParse = false;
+	private int missingEndTagRegionStart = -1;
 	
 	
 	private void advanceNextNode() {
@@ -117,6 +118,10 @@ public class JsTranslator extends Job implements IDocumentListener{
 		}
 	}
 
+	public int getMissingEndTagRegionStart() {
+		return missingEndTagRegionStart;
+	}
+	
 	public Position[] getImportHtmlRanges() {
 		synchronized(finished) {
 			return (Position[]) importLocationsInHtml.toArray(new Position[importLocationsInHtml.size()]);
@@ -159,7 +164,7 @@ public class JsTranslator extends Job implements IDocumentListener{
 			rawImports.clear();
 			importLocationsInHtml.clear();
 			scriptLocationInHtml.clear();
-			
+			missingEndTagRegionStart = -1;
 		}
 		translate();
 	}
@@ -295,6 +300,7 @@ public class JsTranslator extends Job implements IDocumentListener{
 		char[] spaces = getPad(container.getStartOffset() - scriptOffset);
 		fScriptText.append(spaces);
 		scriptOffset = container.getStartOffset();
+	
 		
 		while (regions.hasNext() && !isCanceled()) {
 			region = (ITextRegion) regions.next();
@@ -315,6 +321,19 @@ public class JsTranslator extends Job implements IDocumentListener{
 				// fJsToHTMLRanges.put(inScript, inHtml);
 				fScriptText.append(regionText);
 				scriptOffset = fScriptText.length();
+			}
+		}
+		
+		IStructuredDocumentRegion endTag = container.getNext();
+		
+		if(endTag==null) {
+			missingEndTagRegionStart = container.getStartOffset();
+		}else if(endTag!=null) {
+			NodeHelper nh = new NodeHelper(endTag);
+			String name = nh.getTagName();
+			
+			if(name==null || !name.trim().equalsIgnoreCase("script") || !nh.isEndTag()) {
+				missingEndTagRegionStart = container.getStartOffset();
 			}
 		}
 	}
