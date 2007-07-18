@@ -141,7 +141,7 @@ class CompoundContentAssistProcessor implements IContentAssistProcessor, ISubjec
 		}
 
 		IContextInformation getContextInformation(IContextInformation info) {
-			IContextInformation realInfo = null;
+			IContextInformation realInfo = info;
 			if (info instanceof WrappedContextInformation) {
 				WrappedContextInformation wrap = (WrappedContextInformation) info;
 				realInfo = wrap.getContextInformation();
