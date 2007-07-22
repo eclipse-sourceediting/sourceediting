@@ -99,7 +99,8 @@ public class WebProjectClassPathContainerInitializer extends ClasspathContainerI
 		
 		String containerPathString = containerPath.toString();
 		IPath webContext = getWebContextRoot(javaProject);
-		if(containerPath.equals(getWebContextRoot(javaProject))) {
+		String fileExtension = containerPath.getFileExtension();
+		if(containerPath.equals(getWebContextRoot(javaProject)) || (fileExtension!=null && fileExtension.equals("js"))) {
 			return webContext.toString();
 		}
 		String unmangled = WebProjectClassPathContainerInitializer.getUnmangedHtmlPath(containerPathString);
@@ -164,7 +165,7 @@ public class WebProjectClassPathContainerInitializer extends ClasspathContainerI
 		try {
 			
 			IPath contextPath = getWebContextRoot(javaProject);
-			IClasspathEntry libentry =JavaCore.newLibraryEntry(contextPath.makeAbsolute(), contextPath.makeAbsolute(), contextPath.makeAbsolute(), new IAccessRule[0], new IClasspathAttribute[0], true);
+			//entry =JavaCore.newLibraryEntry(contextPath.makeAbsolute(), null,null, new IAccessRule[0], new IClasspathAttribute[0], true);
 			//entry =JavaCore.newLibraryEntry(contextPath.makeAbsolute(), null, null, new IAccessRule[0], new IClasspathAttribute[0], true);
 			entry =JavaCore.newSourceEntry(contextPath.makeAbsolute());
 			
