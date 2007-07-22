@@ -18,6 +18,7 @@ import org.eclipse.wst.jsdt.core.JavaCore;
 import org.eclipse.wst.jsdt.core.LibrarySuperType;
 import org.eclipse.wst.jsdt.internal.core.JavaProject;
 import org.eclipse.wst.jsdt.ui.PreferenceConstants;
+import org.eclipse.wst.jsdt.web.core.internal.java.WebRootFinder;
 
 public class JsWebNature implements IProjectNature {
 	//private static final String FILENAME_CLASSPATH = ".classpath"; //$NON-NLS-1$
@@ -251,10 +252,10 @@ public class JsWebNature implements IProjectNature {
 		classPathEntries.add(JsWebNature.VIRTUAL_SCOPE_ENTRY);
 		IClasspathEntry browserLibrary = JavaCore.newContainerEntry( VIRTUAL_BROWSER_CLASSPATH);
 		classPathEntries.add(browserLibrary);
-// IPath webRoot = WebRootFinder.getWebContentFolder(fCurrProject);
-// IClasspathEntry source = JavaCore.newSourceEntry(webRoot.append("/"));
-// classPathEntries.add(source);
-		return new IClasspathEntry[] { JsWebNature.VIRTUAL_SCOPE_ENTRY , browserLibrary};
+		//IPath webRoot = WebRootFinder.getWebContentFolder(fCurrProject);
+	//	IClasspathEntry source = JavaCore.newSourceEntry(fCurrProject.getFullPath().append(webRoot).append("/"));
+	//	classPathEntries.add(source);
+		return new IClasspathEntry[] { JsWebNature.VIRTUAL_SCOPE_ENTRY , browserLibrary/*,source*/};
 	}
 	
 	private void initOutputPath() {

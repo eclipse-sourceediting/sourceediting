@@ -21,13 +21,9 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.wst.jsdt.core.IJavaProject;
 import org.eclipse.wst.jsdt.core.JavaCore;
 import org.eclipse.wst.jsdt.web.core.internal.Logger;
-import org.eclipse.wst.jsdt.web.core.internal.modelhandler.IWebDocumentChangeListener;
-import org.eclipse.wst.jsdt.web.core.internal.modelhandler.IWebResourceChangedListener;
-import org.eclipse.wst.jsdt.web.core.internal.modelhandler.WebResourceChangeHandler;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
-import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 
 /**
  * An adapter for getting a JSPTranslation of the document.
@@ -37,81 +33,27 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 public class JsTranslationAdapter implements INodeAdapter {
 	// for debugging
 	private static final boolean DEBUG = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.jsdt.web.core/debug/jsptranslation")); //$NON-NLS-1$  //$NON-NLS-2$
-	//private boolean fDocumentIsDirty = true;
+	// private boolean fDocumentIsDirty = true;
 	private IDocument fJspDocument = null;
 	private JsTranslation fJSPTranslation = null;
 	private NullProgressMonitor fTranslationMonitor = null;
-	//private JsTranslator fTranslator = null;
+	// private JsTranslator fTranslator = null;
 	private IDOMModel fXMLModel;
 	
 	public JsTranslationAdapter(IDOMModel xmlModel) {
 		fXMLModel = xmlModel;
 		/* notifies this when resources change */
-		//WebResourceChangeHandler.getInstance(xmlModel, this);
+		// WebResourceChangeHandler.getInstance(xmlModel, this);
 		fJspDocument = fXMLModel.getStructuredDocument();
 //		
 // if (fJspDocument != null) {
 // fJspDocument.addDocumentListener(this);
 // }
-		//fDocumentIsDirty = true;
+		// fDocumentIsDirty = true;
 		initializeJavaPlugins();
 	}
 	
-/*
- * (non-Javadoc)
- * 
- * @see org.eclipse.wst.jsdt.web.core.internal.modelhandler.IWebDocumentChangeListener#isInterestingLocation(int)
- */
-//	public int getIntrestLevelAtOffset(int documentOffset) {
-//		if (fJSPTranslation.ifOffsetInImportNode(documentOffset)) {
-//			return IWebDocumentChangeListener.DIRTY_MODEL;
-//		}
-//		if (fJSPTranslation.isOffsetInScriptNode(documentOffset)) {
-//			return IWebDocumentChangeListener.DIRTY_DOC;
-//		}
-//		return IWebDocumentChangeListener.BORING;
-//	}
-//	
-	// /**
-// * @see
-// org.eclipse.jface.text.IDocumentListener#documentAboutToBeChanged(org.eclipse.jface.text.DocumentEvent)
-// */
-// public void documentAboutToBeChanged(DocumentEvent event) {
-// // do nothing
-// }
-//	
-// /**
-// * @see
-// org.eclipse.jface.text.IDocumentListener#documentChanged(org.eclipse.jface.text.DocumentEvent)
-// */
-// public void documentChanged(DocumentEvent event) {
-// // Import may have changed, if so we need to signal for revalidation of
-// // other script regions.
-// //if(event==null) {
-// fDocumentIsDirty = true;
-// if(event==null) return;
-// //}
-// IStructuredDocumentRegion[] regions =
-// ((IStructuredDocument)fJspDocument).getStructuredDocumentRegions(event.getOffset(),
-// event.getLength());
-// for(int i = 0;i<regions.length;i++) {
-// NodeHelper helper = new NodeHelper(regions[i]);
-// if(helper.nameEquals("script")) {
-// fDocumentIsDirty = true;
-// String importName = helper.getAttributeValue("src");
-// if(importName!=null ) {
-// try {
-// ((BasicStructuredDocument)fJspDocument).replace(0, fJspDocument.getLength(),
-// fJspDocument.get());
-// } catch (BadLocationException ex) {
-// // TODO Auto-generated catch block
-// ex.printStackTrace();
-// }
-// }
-// }
-// }
-//
-// }
+
 	public IJavaProject getJavaProject() {
 		IJavaProject javaProject = null;
 		try {
@@ -146,22 +88,23 @@ public class JsTranslationAdapter implements INodeAdapter {
 	public JsTranslation getJSPTranslation() {
 		synchronized (fXMLModel) {
 			if (fJSPTranslation == null) {
-				//JsTranslator translator = null;
-//				if (fXMLModel != null && fXMLModel.getIndexedRegion(0) != null) {
-//					translator = getTranslator((IDOMNode) fXMLModel.getIndexedRegion(0));
-//				} else {
-//					// empty document case
-//					translator = new JsTranslator();
-//				}
-//				// it's going to be rebuilt, so we release it here
-//				if (fJSPTranslation != null) {
-//					if (JsTranslationAdapter.DEBUG) {
-//						System.out.println("JSPTranslationAdapter releasing:" + fJSPTranslation); //$NON-NLS-1$
-//					}
-//					fJSPTranslation.release();
-//				}
+				// JsTranslator translator = null;
+// if (fXMLModel != null && fXMLModel.getIndexedRegion(0) != null) {
+// translator = getTranslator((IDOMNode) fXMLModel.getIndexedRegion(0));
+// } else {
+// // empty document case
+// translator = new JsTranslator();
+// }
+// // it's going to be rebuilt, so we release it here
+// if (fJSPTranslation != null) {
+// if (JsTranslationAdapter.DEBUG) {
+// System.out.println("JSPTranslationAdapter releasing:" + fJSPTranslation);
+// //$NON-NLS-1$
+// }
+// fJSPTranslation.release();
+// }
 				fJSPTranslation = new JsTranslation(fXMLModel.getStructuredDocument(), getJavaProject());
-			//	fDocumentIsDirty = false;
+				// fDocumentIsDirty = false;
 			}
 		}
 		return fJSPTranslation;
@@ -177,17 +120,16 @@ public class JsTranslationAdapter implements INodeAdapter {
 	 *            the first node of the JSP document to be translated
 	 * @return the JSPTranslator for this adapter (creates if null)
 	 */
-//	private JsTranslator getTranslator(IDOMNode xmlNode) {
-//		if (fTranslator == null) {
-//			fTranslationMonitor = new NullProgressMonitor();
-//			fTranslator = new JsTranslator();
-//			fTranslator.reset(xmlNode, fTranslationMonitor);
-//		} else {
-//			fTranslator.reset(xmlNode, fTranslationMonitor);
-//		}
-//		return fTranslator;
-//	}
-	
+// private JsTranslator getTranslator(IDOMNode xmlNode) {
+// if (fTranslator == null) {
+// fTranslationMonitor = new NullProgressMonitor();
+// fTranslator = new JsTranslator();
+// fTranslator.reset(xmlNode, fTranslationMonitor);
+// } else {
+// fTranslator.reset(xmlNode, fTranslationMonitor);
+// }
+// return fTranslator;
+// }
 	/**
 	 * Initialize the required Java Plugins
 	 */
@@ -201,10 +143,12 @@ public class JsTranslationAdapter implements INodeAdapter {
 	}
 	
 	public void notifyChanged(INodeNotifier notifier, int eventType, Object changedFeature, Object oldValue, Object newValue, int pos) {
-//		synchronized (fXMLModel) {
-//			fDocumentIsDirty = true;
-//			System.out.println("IMPLEMENT public void notifyChanged(INodeNotifier notifier, int eventType, Object changedFeature, Object oldValue, Object newValue, int pos) {");
-//		}
+// synchronized (fXMLModel) {
+// fDocumentIsDirty = true;
+// System.out.println("IMPLEMENT public void notifyChanged(INodeNotifier
+// notifier, int eventType, Object changedFeature, Object oldValue, Object
+// newValue, int pos) {");
+// }
 	}
 	
 	public void release() {
@@ -221,13 +165,12 @@ public class JsTranslationAdapter implements INodeAdapter {
 			fJSPTranslation.release();
 		}
 	}
-	
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see org.eclipse.wst.jsdt.web.core.internal.modelhandler.IWebResourceChangedListener#resourceChanged()
 	 */
-//	public void resourceChanged() {
-//		fDocumentIsDirty = true;
-//	}
+// public void resourceChanged() {
+// fDocumentIsDirty = true;
+// }
 }

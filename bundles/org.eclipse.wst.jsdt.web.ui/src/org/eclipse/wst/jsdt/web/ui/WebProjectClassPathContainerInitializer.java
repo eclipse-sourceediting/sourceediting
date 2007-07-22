@@ -5,13 +5,24 @@ package org.eclipse.wst.jsdt.web.ui;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResourceProxy;
+import org.eclipse.core.resources.IResourceProxyVisitor;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.wst.jsdt.core.ClasspathContainerInitializer;
+import org.eclipse.wst.jsdt.core.IAccessRule;
+import org.eclipse.wst.jsdt.core.IClasspathAttribute;
 import org.eclipse.wst.jsdt.core.IClasspathContainer;
+import org.eclipse.wst.jsdt.core.IClasspathEntry;
 import org.eclipse.wst.jsdt.core.IJavaProject;
+import org.eclipse.wst.jsdt.core.JavaCore;
 import org.eclipse.wst.jsdt.core.compiler.libraries.LibraryLocation;
 import org.eclipse.wst.jsdt.core.compiler.libraries.SystemLibraryLocation;
 import org.eclipse.wst.jsdt.internal.ui.IClasspathContainerInitialzerExtension;
@@ -19,6 +30,7 @@ import org.eclipse.wst.jsdt.internal.ui.IClasspathContainerInitialzerExtension;
 
 import org.eclipse.wst.jsdt.web.core.internal.JsCorePlugin;
 import org.eclipse.wst.jsdt.web.core.internal.java.JsNameManglerUtil;
+import org.eclipse.wst.jsdt.web.core.internal.java.WebRootFinder;
 import org.eclipse.wst.jsdt.web.core.internal.project.JsWebNature;
 
 /**
@@ -33,6 +45,8 @@ public class WebProjectClassPathContainerInitializer extends ClasspathContainerI
 	private static final String MANGLED_BUTT1 = "htm";
 	private static final String MANGLED_BUTT2 = ".js";
 	
+	private IJavaProject javaProject;
+	
 	
 	private static String getUnmangedHtmlPath(String containerPathString) {
 		if (containerPathString == null) {
@@ -44,25 +58,10 @@ public class WebProjectClassPathContainerInitializer extends ClasspathContainerI
 		return null;
 	}
 	public LibraryLocation getLibraryLocation() {
-		return new WebBrowserLibLocation();
+		return null;
 	}
 	
-	class WebBrowserLibLocation extends SystemLibraryLocation {
-		WebBrowserLibLocation() {
-			super();
-		}
-		
-		
-		public char[][] getLibraryFileNames() {
-			//return new char[][] { WebProjectClassPathContainerInitializer.LIB_NAME };
-			return new char[0][];
-		}
-		
-		
-		protected String getPluginId() {
-			return JsCorePlugin.PLUGIN_ID;
-		}
-	}
+	
 	
 	/*
 	 * (non-Javadoc)
@@ -97,7 +96,12 @@ public class WebProjectClassPathContainerInitializer extends ClasspathContainerI
 		if (containerPath.equals(new Path(JsWebNature.VIRTUAL_CONTAINER))) {
 			return WebProjectClassPathContainerInitializer.CONTAINER_DESCRIPTION;
 		}
+		
 		String containerPathString = containerPath.toString();
+		IPath webContext = getWebContextRoot(javaProject);
+		if(containerPath.equals(getWebContextRoot(javaProject))) {
+			return webContext.toString();
+		}
 		String unmangled = WebProjectClassPathContainerInitializer.getUnmangedHtmlPath(containerPathString);
 		if (unmangled != null) {
 			IPath projectPath = project.getPath();
@@ -141,7 +145,7 @@ public class WebProjectClassPathContainerInitializer extends ClasspathContainerI
 	
 	
 	public int getKind() {
-		return IClasspathContainer.K_APPLICATION;
+		return IClasspathContainer.K_SYSTEM;
 	}
 	
 	
@@ -152,7 +156,68 @@ public class WebProjectClassPathContainerInitializer extends ClasspathContainerI
 	 * @see org.eclipse.wst.jsdt.internal.ui.IClasspathContainerInitialzerExtension#getImage(org.eclipse.core.runtime.IPath, java.lang.String, org.eclipse.wst.jsdt.core.IJavaProject)
 	 */
 	public ImageDescriptor getImage(IPath containerPath, String element, IJavaProject project) {
-		return ImageDescriptor.createFromFile(this.getClass(),"web1.gif");
+		return ImageDescriptor.createFromFile(this.getClass(),"web1.JPG");
+	}
+	public IClasspathEntry[] getClasspathEntries() {
+		
+		IClasspathEntry entry=null;
+		try {
+			
+			IPath contextPath = getWebContextRoot(javaProject);
+			IClasspathEntry libentry =JavaCore.newLibraryEntry(contextPath.makeAbsolute(), contextPath.makeAbsolute(), contextPath.makeAbsolute(), new IAccessRule[0], new IClasspathAttribute[0], true);
+			//entry =JavaCore.newLibraryEntry(contextPath.makeAbsolute(), null, null, new IAccessRule[0], new IClasspathAttribute[0], true);
+			entry =JavaCore.newSourceEntry(contextPath.makeAbsolute());
+			
+		} catch (RuntimeException ex) {
+			// TODO Auto-generated catch block
+			ex.printStackTrace();
+		}
+		
+		if(entry!=null) return new IClasspathEntry[] {entry};
+		return new IClasspathEntry[0];
+	}
+	public void initialize(IPath containerPath, IJavaProject project) throws CoreException {
+		this.javaProject = project;
+		super.initialize(containerPath, project);
+		
+	}
+	
+	public static IPath getWebContextRoot(IJavaProject javaProject) {
+		String webRoot = WebRootFinder.getWebContentFolder(javaProject.getProject()).toString();	
+		IPath webRootPath = javaProject.getPath().append(webRoot);
+		return webRootPath;
+	}
+	
+	public IPath[] getAllHtmlInProject() {
+		final ArrayList found = new ArrayList();
+		String webRoot = getWebContextRoot(javaProject).toString();	
+			IResourceProxyVisitor visitor = new IResourceProxyVisitor()
+			{
+				public boolean visit( IResourceProxy proxy ) throws CoreException
+				{
+					if ( proxy.getName().endsWith( ".htm" ) )
+					{
+						IPath path = proxy.requestResource().getLocation();
+						found.add(path);
+						//IClasspathEntry newLibraryEntry = JavaCore.newLibraryEntry( path,null, null, new IAccessRule[ 0 ], new IClasspathAttribute[ 0 ], true );
+						//entries.add( newLibraryEntry );
+						return false;
+					}
+					
+					return true;
+				}
+			};
+			try
+			{
+				javaProject.getProject().findMember( new Path(webRoot) ).accept( visitor, 0 );
+			}
+			catch ( CoreException e )
+			{
+			}
+		
+		
+		return (IPath[])found.toArray(new IPath[found.size()]);
+	
 	}
 	
 }
