@@ -104,7 +104,7 @@ public class JsValidator extends JSPValidator {
 	 */
 	private void setupAdapterFactory(IStructuredModel sm) {
 		if (sm.getFactoryRegistry().getFactoryFor(IJsTranslation.class) == null) {
-			JsTranslationAdapterFactory factory = new JsTranslationAdapterFactory();
+			JsTranslationAdapterFactory factory = new JsTranslationAdapterFactory(false);
 			sm.getFactoryRegistry().addFactory(factory);
 		}
 	}

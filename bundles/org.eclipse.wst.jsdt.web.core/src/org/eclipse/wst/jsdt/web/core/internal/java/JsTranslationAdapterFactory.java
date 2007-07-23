@@ -26,6 +26,8 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 public class JsTranslationAdapterFactory extends AbstractAdapterFactory {
 	// for debugging
 	private static final boolean DEBUG;
+	private boolean listenForProjectChanges;
+	
 	static {
 		String value = Platform.getDebugOption("org.eclipse.wst.jsdt.web.core/debug/jsptranslation"); //$NON-NLS-1$
 		DEBUG = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
@@ -34,17 +36,21 @@ public class JsTranslationAdapterFactory extends AbstractAdapterFactory {
 	
 	public JsTranslationAdapterFactory() {
 		super(IJsTranslation.class, true);
+		listenForProjectChanges = true;
 	}
 	
-	
+	public JsTranslationAdapterFactory(boolean listenForProjectChanges) {
+		super(IJsTranslation.class, true);
+		listenForProjectChanges = listenForProjectChanges;
+	}
 	public INodeAdapterFactory copy() {
-		return new JsTranslationAdapterFactory();
+		return new JsTranslationAdapterFactory(listenForProjectChanges);
 	}
 	
 	
 	protected INodeAdapter createAdapter(INodeNotifier target) {
 		if (target instanceof IDOMNode && fAdapter == null) {
-			fAdapter = new JsTranslationAdapter(((IDOMNode) target).getModel());
+			fAdapter = new JsTranslationAdapter(((IDOMNode) target).getModel(), listenForProjectChanges);
 			if (JsTranslationAdapterFactory.DEBUG) {
 				System.out.println("(+) JSPTranslationAdapterFactory [" + this + "] created adapter: " + fAdapter); //$NON-NLS-1$ //$NON-NLS-2$
 			}

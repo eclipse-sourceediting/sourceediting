@@ -42,10 +42,14 @@ public class JsTranslationAdapter implements INodeAdapter, IResourceChangeListen
 	// private JsTranslator fTranslator = null;
 	private IDOMModel fXMLModel;
 	
-	public JsTranslationAdapter(IDOMModel xmlModel) {
+	public JsTranslationAdapter(IDOMModel xmlModel, boolean listenForProjectChanges) {
 		fXMLModel = xmlModel;
 		fJspDocument = fXMLModel.getStructuredDocument();
 		initializeJavaPlugins();
+		
+		if(listenForProjectChanges) {
+			ResourcesPlugin.getWorkspace().addResourceChangeListener(this, IResourceChangeEvent.POST_CHANGE);
+		}
 	}
 	
 
@@ -87,9 +91,7 @@ public class JsTranslationAdapter implements INodeAdapter, IResourceChangeListen
 				fJSPTranslation = new JsTranslation(fXMLModel.getStructuredDocument(), getJavaProject());
 			}
 		}
-		if(fJSPTranslation!=null) {
-			ResourcesPlugin.getWorkspace().addResourceChangeListener(this, IResourceChangeEvent.POST_CHANGE);
-		}
+		
 		return fJSPTranslation;
 	}
 	

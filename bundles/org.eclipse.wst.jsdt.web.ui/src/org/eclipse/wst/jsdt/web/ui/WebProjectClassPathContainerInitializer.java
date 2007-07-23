@@ -48,7 +48,7 @@ public class WebProjectClassPathContainerInitializer extends ClasspathContainerI
 	private static final String MANGLED_BUTT1 = "htm";
 	private static final String MANGLED_BUTT2 = ".js";
 	
-	private IJavaProject javaProject;
+	//private IJavaProject javaProject;
 	
 	
 	private static String getUnmangedHtmlPath(String containerPathString) {
@@ -95,7 +95,7 @@ public class WebProjectClassPathContainerInitializer extends ClasspathContainerI
 	 *      org.eclipse.wst.jsdt.core.IJavaProject)
 	 */
 	
-	public String getDescription(IPath containerPath, IJavaProject project) {
+	public String getDescription(IPath containerPath, IJavaProject javaProject) {
 		if (containerPath.equals(new Path(JsWebNature.VIRTUAL_CONTAINER))) {
 			return WebProjectClassPathContainerInitializer.CONTAINER_DESCRIPTION;
 		}
@@ -108,10 +108,10 @@ public class WebProjectClassPathContainerInitializer extends ClasspathContainerI
 		}
 		String unmangled = WebProjectClassPathContainerInitializer.getUnmangedHtmlPath(containerPathString);
 		if (unmangled != null) {
-			IPath projectPath = project.getPath();
+			IPath projectPath = javaProject.getPath();
 			/* Replace the project path with the project name */
 			if (unmangled.indexOf(projectPath.toString()) >= 0) {
-				unmangled = project.getDisplayName() + ":" + unmangled.substring(projectPath.toString().length());
+				unmangled = javaProject.getDisplayName() + ":" + unmangled.substring(projectPath.toString().length());
 			}
 			return unmangled;
 		}
@@ -164,38 +164,40 @@ public class WebProjectClassPathContainerInitializer extends ClasspathContainerI
 	}
 	public IClasspathEntry[] getClasspathEntries() {
 		
-		IClasspathEntry entry=null;
-		try {
+		//IClasspathEntry entry=null;
 		
-			
-			
-			IPath contextPath = getWebContextRoot(javaProject);
-			//entry =JavaCore.newLibraryEntry(contextPath.makeAbsolute(), null,null, new IAccessRule[0], new IClasspathAttribute[0], true);
-			//entry =JavaCore.newLibraryEntry(contextPath.makeAbsolute(), null, null, new IAccessRule[0], new IClasspathAttribute[0], true);
-			//entry =JavaCore.newSourceEntry(contextPath.makeAbsolute());
-			entry = new ClasspathEntry(
-					IPackageFragmentRoot.K_SOURCE,
-					IClasspathEntry.CPE_SOURCE,
-					contextPath.makeAbsolute(),
-					ClasspathEntry.INCLUDE_ALL, ClasspathEntry.EXCLUDE_NONE,
-					null, // source attachment
-					null, // source attachment root
-					null, // custom output location
-					false,
-					null,
-					false, // no access rules to combine
-					new IClasspathAttribute[] {ClasspathEntry.EXCLUDE_VALIDATE}); 
-			
-		} catch (RuntimeException ex) {
-			// TODO Auto-generated catch block
-			ex.printStackTrace();
-		}
-		
-		if(entry!=null) return new IClasspathEntry[] {entry};
-		return new IClasspathEntry[0];
+	return new IClasspathEntry[0];
+//		try {
+//		
+//			
+//			
+//			IPath contextPath = getWebContextRoot(javaProject);
+//			//entry =JavaCore.newLibraryEntry(contextPath.makeAbsolute(), null,null, new IAccessRule[0], new IClasspathAttribute[0], true);
+//			//entry =JavaCore.newLibraryEntry(contextPath.makeAbsolute(), null, null, new IAccessRule[0], new IClasspathAttribute[0], true);
+//			//entry =JavaCore.newSourceEntry(contextPath.makeAbsolute());
+//			entry = new ClasspathEntry(
+//					IPackageFragmentRoot.K_SOURCE,
+//					IClasspathEntry.CPE_SOURCE,
+//					contextPath.makeAbsolute(),
+//					ClasspathEntry.INCLUDE_ALL, ClasspathEntry.EXCLUDE_NONE,
+//					null, // source attachment
+//					null, // source attachment root
+//					null, // custom output location
+//					false,
+//					null,
+//					false, // no access rules to combine
+//					new IClasspathAttribute[] {ClasspathEntry.EXCLUDE_VALIDATE}); 
+//			
+//		} catch (RuntimeException ex) {
+//			// TODO Auto-generated catch block
+//			ex.printStackTrace();
+//		}
+//		
+//		if(entry!=null) return new IClasspathEntry[] {entry};
+//		return new IClasspathEntry[0];
 	}
 	public void initialize(IPath containerPath, IJavaProject project) throws CoreException {
-		this.javaProject = project;
+		//this.javaProject = project;
 		super.initialize(containerPath, project);
 		
 	}
@@ -206,36 +208,36 @@ public class WebProjectClassPathContainerInitializer extends ClasspathContainerI
 		return webRootPath;
 	}
 	
-	public IPath[] getAllHtmlInProject() {
-		final ArrayList found = new ArrayList();
-		String webRoot = getWebContextRoot(javaProject).toString();	
-			IResourceProxyVisitor visitor = new IResourceProxyVisitor()
-			{
-				public boolean visit( IResourceProxy proxy ) throws CoreException
-				{
-					if ( proxy.getName().endsWith( ".htm" ) )
-					{
-						IPath path = proxy.requestResource().getLocation();
-						found.add(path);
-						//IClasspathEntry newLibraryEntry = JavaCore.newLibraryEntry( path,null, null, new IAccessRule[ 0 ], new IClasspathAttribute[ 0 ], true );
-						//entries.add( newLibraryEntry );
-						return false;
-					}
-					
-					return true;
-				}
-			};
-			try
-			{
-				javaProject.getProject().findMember( new Path(webRoot) ).accept( visitor, 0 );
-			}
-			catch ( CoreException e )
-			{
-			}
-		
-		
-		return (IPath[])found.toArray(new IPath[found.size()]);
-	
-	}
+//	public IPath[] getAllHtmlInProject() {
+//		final ArrayList found = new ArrayList();
+//		String webRoot = getWebContextRoot(javaProject).toString();	
+//			IResourceProxyVisitor visitor = new IResourceProxyVisitor()
+//			{
+//				public boolean visit( IResourceProxy proxy ) throws CoreException
+//				{
+//					if ( proxy.getName().endsWith( ".htm" ) )
+//					{
+//						IPath path = proxy.requestResource().getLocation();
+//						found.add(path);
+//						//IClasspathEntry newLibraryEntry = JavaCore.newLibraryEntry( path,null, null, new IAccessRule[ 0 ], new IClasspathAttribute[ 0 ], true );
+//						//entries.add( newLibraryEntry );
+//						return false;
+//					}
+//					
+//					return true;
+//				}
+//			};
+//			try
+//			{
+//				javaProject.getProject().findMember( new Path(webRoot) ).accept( visitor, 0 );
+//			}
+//			catch ( CoreException e )
+//			{
+//			}
+//		
+//		
+//		return (IPath[])found.toArray(new IPath[found.size()]);
+//	
+//	}
 	
 }
