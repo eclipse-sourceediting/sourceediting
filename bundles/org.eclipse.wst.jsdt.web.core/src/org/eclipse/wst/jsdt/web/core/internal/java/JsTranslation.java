@@ -50,7 +50,7 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 /**
  * @author brad childs
  */
-public class JsTranslation implements IJsTranslation, IResourceChangeListener {
+public class JsTranslation implements IJsTranslation {
 	
 	private static final boolean DEBUG;
 	static {
@@ -93,7 +93,6 @@ public class JsTranslation implements IJsTranslation, IResourceChangeListener {
 		translator = new JsTranslator(getModel());
 		resetDocScope();
 		mangledName = createMangledName();
-		ResourcesPlugin.getWorkspace().addResourceChangeListener(this, IResourceChangeEvent.POST_CHANGE);
 //		if (xmlModel != null) {
 //			
 //			IStructuredDocument doc = xmlModel.getStructuredDocument();
@@ -158,7 +157,7 @@ public class JsTranslation implements IJsTranslation, IResourceChangeListener {
 	 * @return an ICompilationUnit from the contents of the JSP document
 	 */
 	private ICompilationUnit createCompilationUnit() throws JavaModelException {
-		System.out.println("------------------------- CREATING CU ----------------------------");
+		//System.out.println("------------------------- CREATING CU ----------------------------");
 		LibrarySuperType superType = new LibrarySuperType(SUPER_TYPE_LIBRARY, fJavaProject, SUPER_TYPE_NAME);
 		String webRoot = WebRootFinder.getWebContentFolder(fJavaProject.getProject()).toString();
 		ICompilationUnit cu = fDocumentScope.getPackageFragment(webRoot).getCompilationUnit(getMangledName() + JsDataTypes.BASE_FILE_EXTENSION).getWorkingCopy(getWorkingCopyOwner(), getProblemRequestor(), getProgressMonitor());
@@ -577,11 +576,10 @@ public class JsTranslation implements IJsTranslation, IResourceChangeListener {
 	/* (non-Javadoc)
 	 * @see org.eclipse.core.resources.IResourceChangeListener#resourceChanged(org.eclipse.core.resources.IResourceChangeEvent)
 	 */
-	public void resourceChanged(IResourceChangeEvent event) {
-		IProject changedProject = (event==null || event.getResource()==null)?null:event.getResource().getProject();
-		if(changedProject!=null && getJavaProject().getProject().equals(changedProject) && fDocumentScope!=null){
+	public void classpathChange() {
+		
+		if(fDocumentScope!=null){
 			fDocumentScope.classpathChange();
 		}
-		System.out.println("Unimplemented method:ResourceChangeListener.resourceChanged");
 	}
 }

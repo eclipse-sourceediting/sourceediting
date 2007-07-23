@@ -379,6 +379,5 @@ public class JsTranslator extends Job implements IDocumentListener{
 		return Status.OK_STATUS;
 	}
 	public void finalize() {
-		System.out.println("Trying to destroy me!!!!!!!!!!!");
 	}
 }

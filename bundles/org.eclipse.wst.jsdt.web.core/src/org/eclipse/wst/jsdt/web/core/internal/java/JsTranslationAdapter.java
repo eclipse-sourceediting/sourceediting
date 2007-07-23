@@ -11,6 +11,8 @@
 package org.eclipse.wst.jsdt.web.core.internal.java;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResourceChangeEvent;
+import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
@@ -30,7 +32,7 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
  * 
  * @author pavery
  */
-public class JsTranslationAdapter implements INodeAdapter {
+public class JsTranslationAdapter implements INodeAdapter, IResourceChangeListener {
 	// for debugging
 	private static final boolean DEBUG = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.jsdt.web.core/debug/jsptranslation")); //$NON-NLS-1$  //$NON-NLS-2$
 	// private boolean fDocumentIsDirty = true;
@@ -42,14 +44,7 @@ public class JsTranslationAdapter implements INodeAdapter {
 	
 	public JsTranslationAdapter(IDOMModel xmlModel) {
 		fXMLModel = xmlModel;
-		/* notifies this when resources change */
-		// WebResourceChangeHandler.getInstance(xmlModel, this);
 		fJspDocument = fXMLModel.getStructuredDocument();
-//		
-// if (fJspDocument != null) {
-// fJspDocument.addDocumentListener(this);
-// }
-		// fDocumentIsDirty = true;
 		initializeJavaPlugins();
 	}
 	
@@ -88,76 +83,32 @@ public class JsTranslationAdapter implements INodeAdapter {
 	public JsTranslation getJSPTranslation() {
 		synchronized (fXMLModel) {
 			if (fJSPTranslation == null) {
-				// JsTranslator translator = null;
-// if (fXMLModel != null && fXMLModel.getIndexedRegion(0) != null) {
-// translator = getTranslator((IDOMNode) fXMLModel.getIndexedRegion(0));
-// } else {
-// // empty document case
-// translator = new JsTranslator();
-// }
-// // it's going to be rebuilt, so we release it here
-// if (fJSPTranslation != null) {
-// if (JsTranslationAdapter.DEBUG) {
-// System.out.println("JSPTranslationAdapter releasing:" + fJSPTranslation);
-// //$NON-NLS-1$
-// }
-// fJSPTranslation.release();
-// }
+				
 				fJSPTranslation = new JsTranslation(fXMLModel.getStructuredDocument(), getJavaProject());
-				// fDocumentIsDirty = false;
 			}
+		}
+		if(fJSPTranslation!=null) {
+			ResourcesPlugin.getWorkspace().addResourceChangeListener(this, IResourceChangeEvent.POST_CHANGE);
 		}
 		return fJSPTranslation;
 	}
 	
-	/**
-	 * Returns the JSPTranslator for this adapter. If it's null, a new
-	 * translator is created with the xmlNode. Otherwise the
-	 * translator.reset(xmlNode) is called to reset the current local
-	 * translator.
-	 * 
-	 * @param xmlNode
-	 *            the first node of the JSP document to be translated
-	 * @return the JSPTranslator for this adapter (creates if null)
-	 */
-// private JsTranslator getTranslator(IDOMNode xmlNode) {
-// if (fTranslator == null) {
-// fTranslationMonitor = new NullProgressMonitor();
-// fTranslator = new JsTranslator();
-// fTranslator.reset(xmlNode, fTranslationMonitor);
-// } else {
-// fTranslator.reset(xmlNode, fTranslationMonitor);
-// }
-// return fTranslator;
-// }
-	/**
-	 * Initialize the required Java Plugins
-	 */
+	
 	private void initializeJavaPlugins() {
 		JavaCore.getPlugin();
-		// getJavaProject();
 	}
 	
 	public boolean isAdapterForType(Object type) {
 		return type.equals(IJsTranslation.class);
 	}
 	
-	public void notifyChanged(INodeNotifier notifier, int eventType, Object changedFeature, Object oldValue, Object newValue, int pos) {
-// synchronized (fXMLModel) {
-// fDocumentIsDirty = true;
-// System.out.println("IMPLEMENT public void notifyChanged(INodeNotifier
-// notifier, int eventType, Object changedFeature, Object oldValue, Object
-// newValue, int pos) {");
-// }
-	}
+	public void notifyChanged(INodeNotifier notifier, int eventType, Object changedFeature, Object oldValue, Object newValue, int pos) {}
 	
 	public void release() {
-// if (fJspDocument != null) {
-// fJspDocument.removeDocumentListener(this);
-// }
 		if (fTranslationMonitor != null) {
 			fTranslationMonitor.setCanceled(true);
 		}
+		ResourcesPlugin.getWorkspace().removeResourceChangeListener(this);
 		if (fJSPTranslation != null) {
 			if (JsTranslationAdapter.DEBUG) {
 				System.out.println("JSPTranslationAdapter releasing:" + fJSPTranslation); //$NON-NLS-1$
@@ -165,12 +116,14 @@ public class JsTranslationAdapter implements INodeAdapter {
 			fJSPTranslation.release();
 		}
 	}
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.jsdt.web.core.internal.modelhandler.IWebResourceChangedListener#resourceChanged()
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.core.resources.IResourceChangeListener#resourceChanged(org.eclipse.core.resources.IResourceChangeEvent)
 	 */
-// public void resourceChanged() {
-// fDocumentIsDirty = true;
-// }
+	public void resourceChanged(IResourceChangeEvent event) {
+		IProject changedProject = (event==null || event.getResource()==null)?null:event.getResource().getProject();
+		if(changedProject!=null && getJavaProject().getProject().equals(changedProject) && fJSPTranslation!=null){
+			fJSPTranslation.classpathChange();
+		}	
+	}
 }
