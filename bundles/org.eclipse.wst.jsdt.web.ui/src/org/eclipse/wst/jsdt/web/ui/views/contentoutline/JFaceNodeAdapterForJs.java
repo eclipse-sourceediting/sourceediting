@@ -8,6 +8,7 @@ import org.eclipse.wst.html.ui.internal.contentoutline.JFaceNodeAdapterForHTML;
 import org.eclipse.wst.jsdt.core.ICompilationUnit;
 import org.eclipse.wst.jsdt.core.IJavaElement;
 import org.eclipse.wst.jsdt.core.ISourceRange;
+import org.eclipse.wst.jsdt.core.IType;
 import org.eclipse.wst.jsdt.core.JavaModelException;
 import org.eclipse.wst.jsdt.internal.core.JavaElement;
 import org.eclipse.wst.jsdt.internal.core.SourceRefElement;
@@ -66,11 +67,62 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
 		Node node = (Node) object;
 		if (isJSElementParent(node)) {
 			Object[] results = getJSElementsFromNode(node.getFirstChild());
-			return results;
+			
+			
+			return filter( results );
 		}
 		return super.getChildren(object);
 	}
 	
+	/*
+	 * @GINO: Anonymous -- matches anonymous types on the top level
+	 */
+	protected boolean matches(Object elementObj) {
+		
+		if( elementObj instanceof IJavaWebNode ){
+			IJavaElement element = ((IJavaWebNode)elementObj).getJavaElement();
+			if (element.getElementType() == IJavaElement.TYPE && element.getParent().getElementType() == IJavaElement.COMPILATION_UNIT ) {
+				
+				IType type = (IType)element;
+				try {
+					return type.isAnonymous();
+				} catch (JavaModelException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		return false;
+	}
+
+	/*
+	 * @GINO: Anonymous Filter from top level
+	 *
+	 */
+	protected Object[] filter(Object[] children) {
+		boolean initializers= false;
+		for (int i= 0; i < children.length; i++) {
+			if (matches(children[i])) {
+				initializers= true;
+				break;
+			}
+		}
+
+		if (!initializers)
+			return children;
+
+		Vector v= new Vector();
+		for (int i= 0; i < children.length; i++) {
+			if (matches(children[i]))
+				continue;
+			v.addElement(children[i]);
+		}
+
+		Object[] result= new Object[v.size()];
+		v.copyInto(result);
+		return result;
+	}
 	
 	public Object[] getElements(Object object) {
 		if (object instanceof IJavaElement) {
