@@ -22,9 +22,12 @@ import org.eclipse.wst.jsdt.core.IClasspathAttribute;
 import org.eclipse.wst.jsdt.core.IClasspathContainer;
 import org.eclipse.wst.jsdt.core.IClasspathEntry;
 import org.eclipse.wst.jsdt.core.IJavaProject;
+import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
 import org.eclipse.wst.jsdt.core.JavaCore;
 import org.eclipse.wst.jsdt.core.compiler.libraries.LibraryLocation;
 import org.eclipse.wst.jsdt.core.compiler.libraries.SystemLibraryLocation;
+import org.eclipse.wst.jsdt.internal.core.ClasspathAttribute;
+import org.eclipse.wst.jsdt.internal.core.ClasspathEntry;
 import org.eclipse.wst.jsdt.internal.ui.IClasspathContainerInitialzerExtension;
 
 
@@ -163,11 +166,25 @@ public class WebProjectClassPathContainerInitializer extends ClasspathContainerI
 		
 		IClasspathEntry entry=null;
 		try {
+		
+			
 			
 			IPath contextPath = getWebContextRoot(javaProject);
 			//entry =JavaCore.newLibraryEntry(contextPath.makeAbsolute(), null,null, new IAccessRule[0], new IClasspathAttribute[0], true);
 			//entry =JavaCore.newLibraryEntry(contextPath.makeAbsolute(), null, null, new IAccessRule[0], new IClasspathAttribute[0], true);
-			entry =JavaCore.newSourceEntry(contextPath.makeAbsolute());
+			//entry =JavaCore.newSourceEntry(contextPath.makeAbsolute());
+			entry = new ClasspathEntry(
+					IPackageFragmentRoot.K_SOURCE,
+					IClasspathEntry.CPE_SOURCE,
+					contextPath.makeAbsolute(),
+					ClasspathEntry.INCLUDE_ALL, ClasspathEntry.EXCLUDE_NONE,
+					null, // source attachment
+					null, // source attachment root
+					null, // custom output location
+					false,
+					null,
+					false, // no access rules to combine
+					new IClasspathAttribute[] {ClasspathEntry.EXCLUDE_VALIDATE}); 
 			
 		} catch (RuntimeException ex) {
 			// TODO Auto-generated catch block
