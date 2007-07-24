@@ -33,6 +33,7 @@ import org.eclipse.wst.jsdt.core.ICompilationUnit;
 import org.eclipse.wst.jsdt.core.IJavaElement;
 import org.eclipse.wst.jsdt.core.IJavaProject;
 import org.eclipse.wst.jsdt.core.IPackageDeclaration;
+import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
 import org.eclipse.wst.jsdt.core.ISourceRange;
 import org.eclipse.wst.jsdt.core.JavaModelException;
 import org.eclipse.wst.jsdt.core.LibrarySuperType;
@@ -91,7 +92,7 @@ public class JsTranslation implements IJsTranslation {
 	
 		
 		translator = new JsTranslator(getModel());
-		resetDocScope();
+		//resetDocScope();
 		mangledName = createMangledName();
 //		if (xmlModel != null) {
 //			
@@ -116,12 +117,15 @@ public class JsTranslation implements IJsTranslation {
 		return fJavaProject;
 	}
 
-	private void resetDocScope() {
+	private IPackageFragmentRoot getDocScope(boolean reset) {
 		if(fDocumentScope==null) {
 			fDocumentScope = new DocumentContextFragmentRoot(fJavaProject, getFile(), WebRootFinder.getWebContentFolder(fJavaProject.getProject()), WebRootFinder.getServerContextRoot(fJavaProject.getProject()), JsWebNature.VIRTUAL_SCOPE_ENTRY);
+			fDocumentScope.setIncludedFiles(translator.getRawImports());
+			return fDocumentScope;
 		}
 		
-		fDocumentScope.setIncludedFiles(translator.getRawImports());
+		if(reset) fDocumentScope.setIncludedFiles(translator.getRawImports());
+		return fDocumentScope;
 	}
 	
 	private IDOMModel getModel() {
@@ -150,6 +154,10 @@ public class JsTranslation implements IJsTranslation {
 		return translator.getMissingEndTagRegionStart();
 	}
 	
+	private String getWebRoot() {
+		return 	WebRootFinder.getWebContentFolder(fJavaProject.getProject()).toString();
+	}
+	
 	/**
 	 * Originally from ReconcileStepForJava. Creates an ICompilationUnit from
 	 * the contents of the JSP document.
@@ -159,8 +167,9 @@ public class JsTranslation implements IJsTranslation {
 	private ICompilationUnit createCompilationUnit() throws JavaModelException {
 		//System.out.println("------------------------- CREATING CU ----------------------------");
 		LibrarySuperType superType = new LibrarySuperType(SUPER_TYPE_LIBRARY, fJavaProject, SUPER_TYPE_NAME);
-		String webRoot = WebRootFinder.getWebContentFolder(fJavaProject.getProject()).toString();
-		ICompilationUnit cu = fDocumentScope.getPackageFragment(webRoot).getCompilationUnit(getMangledName() + JsDataTypes.BASE_FILE_EXTENSION).getWorkingCopy(getWorkingCopyOwner(), getProblemRequestor(), getProgressMonitor());
+		String webRoot = getWebRoot() ;
+		IPackageFragmentRoot root = getDocScope(true);
+		ICompilationUnit cu = root.getPackageFragment(webRoot).getCompilationUnit(getMangledName() + JsDataTypes.BASE_FILE_EXTENSION).getWorkingCopy(getWorkingCopyOwner(), getProblemRequestor(), getProgressMonitor());
 		//ICompilationUnit cu = fDocumentScope.getDefaultPackageFragment().getCompilationUnit(getMangledName() + JsDataTypes.BASE_FILE_EXTENSION,SUPER_TYPE_NAME).getWorkingCopy(getWorkingCopyOwner(), getProblemRequestor(), getProgressMonitor());
 		
 		IBuffer buffer;
@@ -275,7 +284,7 @@ public class JsTranslation implements IJsTranslation {
 			}
 			
 		}
-		resetDocScope();
+		getDocScope(true);
 		try {
 			fCompilationUnit = fCompilationUnit.getWorkingCopy(getWorkingCopyOwner(), getProblemRequestor(), getProgressMonitor());
 			//fCompilationUnit.makeConsistent(getProgressMonitor());
@@ -364,9 +373,13 @@ public class JsTranslation implements IJsTranslation {
 	 * @see org.eclipse.wst.jsdt.web.core.internal.java.IJSPTranslation#getJavaPath()
 	 */
 	public String getJavaPath() {
+		String webRoot = getWebRoot() ;
+		IPackageFragmentRoot root = getDocScope(false);
+		String cuPath = root.getPath().append("/" + webRoot).append("/" + getMangledName() + JsDataTypes.BASE_FILE_EXTENSION ).toString();
 		// create if necessary
-		ICompilationUnit cu = getCompilationUnit();
-		return (cu != null) ? cu.getPath().toString() : ""; //$NON-NLS-1$
+		//ICompilationUnit cu = getCompilationUnit();
+		//String otherCuPath =  (cu != null) ? cu.getPath().toString() : ""; //$NON-NLS-1$
+		return cuPath;
 	}
 	
 	/*
