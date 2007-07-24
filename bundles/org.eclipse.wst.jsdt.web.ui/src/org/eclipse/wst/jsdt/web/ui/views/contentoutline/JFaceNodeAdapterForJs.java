@@ -2,6 +2,7 @@ package org.eclipse.wst.jsdt.web.ui.views.contentoutline;
 
 import java.util.Vector;
 
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.text.Position;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.html.ui.internal.contentoutline.JFaceNodeAdapterForHTML;
@@ -256,6 +257,12 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
 	private ICompilationUnit getLazyCu(Node node) {
 		if(lazyCu==null) {
 			lazyCu = getTranslation(node).getCompilationUnit();
+			try {
+				lazyCu.makeConsistent( new NullProgressMonitor() );
+			} catch (JavaModelException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		return lazyCu;
 	}

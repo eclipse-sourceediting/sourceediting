@@ -69,7 +69,10 @@ public class JSPValidator implements IValidatorJob {
 			if (fContentTypes == null) {
 				// currently "hard-coded" to be jsp & jspf
 				fContentTypes = new IContentType[] { Platform.getContentTypeManager().getContentType(ContentTypeIdForJSP.ContentTypeID_JSP),
-						Platform.getContentTypeManager().getContentType(ContentTypeIdForJSP.ContentTypeID_JSPFRAGMENT) };
+						Platform.getContentTypeManager().getContentType(ContentTypeIdForJSP.ContentTypeID_JSPFRAGMENT), 
+						//@GINO Hardcoded support for JSPs
+						Platform.getContentTypeManager().getContentType( "org.eclipse.jst.jsp.core.jspsource" )
+						};
 			}
 			return fContentTypes;
 		}
@@ -294,7 +297,7 @@ public class JSPValidator implements IValidatorJob {
 			for (int i = 0; i < uris.length && !reporter.isCancelled(); i++) {
 				currentFile = wsRoot.getFile(new Path(uris[i]));
 				if (currentFile != null && currentFile.exists()) {
-					if (shouldValidate(currentFile) && fragmentCheck(currentFile)) {
+					if (shouldValidate(currentFile) ){ //&& fragmentCheck(currentFile)) {
 						int percent = (i * 100) / uris.length + 1;
 						Message message = new LocalizedMessage(IMessage.LOW_SEVERITY, percent + "% " + uris[i]);
 						reporter.displaySubtask(this, message);
