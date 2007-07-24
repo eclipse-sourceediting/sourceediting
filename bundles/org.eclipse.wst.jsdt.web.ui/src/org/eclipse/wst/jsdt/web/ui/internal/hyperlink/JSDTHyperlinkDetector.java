@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
@@ -13,6 +14,8 @@ import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.AbstractHyperlinkDetector;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
+import org.eclipse.wst.jsdt.core.IClassFile;
+import org.eclipse.wst.jsdt.core.ICompilationUnit;
 import org.eclipse.wst.jsdt.core.IField;
 import org.eclipse.wst.jsdt.core.IJavaElement;
 import org.eclipse.wst.jsdt.core.ILocalVariable;
@@ -40,6 +43,7 @@ public class JSDTHyperlinkDetector extends AbstractHyperlinkDetector {
 			// open local variable in the JSP file...
 			if (element instanceof ISourceReference) {
 				IFile file = null;
+				IPath outsidePath = null;
 				int jspOffset = 0;
 				IStructuredModel sModel = null;
 				// try to locate the file in the workspace
@@ -65,6 +69,30 @@ public class JSDTHyperlinkDetector extends AbstractHyperlinkDetector {
 						// link to local variable definitions
 						if (element instanceof ILocalVariable) {
 							range = ((ILocalVariable) element).getNameRange();
+							IJavaElement unit=((ILocalVariable) element).getParent();
+							ICompilationUnit myUnit = jspTranslation.getCompilationUnit();
+							
+							while(!(unit instanceof ICompilationUnit || unit instanceof IClassFile || unit==null)) {
+								unit = ((ILocalVariable) element).getParent();
+							}
+							if(unit instanceof ICompilationUnit) {
+								ICompilationUnit cu = (ICompilationUnit)unit;
+								if(cu!=myUnit) {
+									file = getFile(cu.getPath().toString());
+									if(file==null) {
+										outsidePath = cu.getPath();
+									}
+								}
+							}else if(unit instanceof IClassFile) {
+								IClassFile cu = (IClassFile)unit;
+								if(cu!=myUnit) {
+									file = getFile(cu.getPath().toString());
+									if(file==null) {
+										outsidePath = cu.getPath();
+									}
+								}
+							}
+							
 						}
 						// linking to fields of the same compilation unit
 						else if (element.getElementType() == IJavaElement.FIELD) {
@@ -85,6 +113,11 @@ public class JSDTHyperlinkDetector extends AbstractHyperlinkDetector {
 						jspOffset = range.getOffset();
 						if (jspOffset >= 0) {
 							link = new WorkspaceFileHyperlink(region, file, new Region(jspOffset, range.getLength()));
+						}
+					}else if (range!=null && outsidePath!=null) {
+						jspOffset = range.getOffset();
+						if (jspOffset >= 0) {
+							link = new ExternalFileHyperlink(region,outsidePath.toFile());
 						}
 					}
 				} catch (JavaModelException jme) {
