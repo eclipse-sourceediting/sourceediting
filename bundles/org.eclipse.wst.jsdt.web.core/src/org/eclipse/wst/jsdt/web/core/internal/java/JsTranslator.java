@@ -69,6 +69,7 @@ public class JsTranslator extends Job implements IDocumentListener{
 	private int missingEndTagRegionStart = -1;
 	
 	
+	
 	private void advanceNextNode() {
 		setCurrentNode(getCurrentNode().getNext());
 	}
@@ -76,6 +77,7 @@ public class JsTranslator extends Job implements IDocumentListener{
 	public JsTranslator(IStructuredDocument document, 	String fileName) {
 		super("JavaScript translation for : "  + fileName);
 		fStructuredDocument = document;
+		
 		fStructuredDocument.addDocumentListener(this);
 		setPriority(Job.LONG);
 		setSystem(true);
@@ -83,6 +85,18 @@ public class JsTranslator extends Job implements IDocumentListener{
 		reset();
 	}
 		
+	public JsTranslator(IStructuredDocument document, 	String fileName, boolean listenForChanges) {
+		super("JavaScript translation for : "  + fileName);
+		fStructuredDocument = document;
+		if(listenForChanges) {
+			fStructuredDocument.addDocumentListener(this);
+			setPriority(Job.LONG);
+			setSystem(true);
+			schedule();
+		}
+		reset();
+	}
+	
 	public String getJsText() {
 		synchronized(finished) {
 			return fScriptText.toString();
@@ -212,8 +226,7 @@ public class JsTranslator extends Job implements IDocumentListener{
 	}
 	
 	private void finishedTranslation() {
-		System.out.println("Updating CU Buffer..");
-		
+			
 		if(compUnitBuff!=null) compUnitBuff.setContents(fScriptText.toString());
 	}
 	

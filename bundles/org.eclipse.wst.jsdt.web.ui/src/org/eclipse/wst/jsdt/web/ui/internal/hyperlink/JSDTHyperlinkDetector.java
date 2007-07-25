@@ -23,6 +23,7 @@ import org.eclipse.wst.jsdt.core.IMethod;
 import org.eclipse.wst.jsdt.core.ISourceRange;
 import org.eclipse.wst.jsdt.core.ISourceReference;
 import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.internal.core.JavaElement;
 import org.eclipse.wst.jsdt.web.core.internal.java.IJsTranslation;
 import org.eclipse.wst.jsdt.web.core.internal.java.JsTranslation;
 import org.eclipse.wst.jsdt.web.core.internal.java.JsTranslationAdapter;
@@ -73,7 +74,7 @@ public class JSDTHyperlinkDetector extends AbstractHyperlinkDetector {
 							ICompilationUnit myUnit = jspTranslation.getCompilationUnit();
 							
 							while(!(unit instanceof ICompilationUnit || unit instanceof IClassFile || unit==null)) {
-								unit = ((ILocalVariable) element).getParent();
+								unit = ((JavaElement) unit).getParent();
 							}
 							if(unit instanceof ICompilationUnit) {
 								ICompilationUnit cu = (ICompilationUnit)unit;

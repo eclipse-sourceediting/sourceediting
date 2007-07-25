@@ -41,7 +41,7 @@ public class JsTranslationAdapterFactory extends AbstractAdapterFactory {
 	
 	public JsTranslationAdapterFactory(boolean listenForProjectChanges) {
 		super(IJsTranslation.class, true);
-		listenForProjectChanges = listenForProjectChanges;
+		this.listenForProjectChanges = listenForProjectChanges;
 	}
 	public INodeAdapterFactory copy() {
 		return new JsTranslationAdapterFactory(listenForProjectChanges);

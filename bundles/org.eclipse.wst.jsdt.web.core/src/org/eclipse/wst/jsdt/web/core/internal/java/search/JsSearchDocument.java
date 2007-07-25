@@ -130,7 +130,7 @@ public class JsSearchDocument {
 			// handle unsupported
 			if (model instanceof IDOMModel) {
 				IDOMModel xmlModel = (IDOMModel) model;
-				JsTranslationAdapterFactory factory = new JsTranslationAdapterFactory();
+				JsTranslationAdapterFactory factory = new JsTranslationAdapterFactory(false);
 				xmlModel.getFactoryRegistry().addFactory(factory);
 				IDOMDocument doc = xmlModel.getDocument();
 				JsTranslationAdapter adapter = (JsTranslationAdapter) doc.getAdapterFor(IJsTranslation.class);

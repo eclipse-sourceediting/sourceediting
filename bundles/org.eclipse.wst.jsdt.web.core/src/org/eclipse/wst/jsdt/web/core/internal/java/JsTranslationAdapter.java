@@ -48,6 +48,8 @@ public class JsTranslationAdapter implements INodeAdapter, IResourceChangeListen
 		
 		if(listenForProjectChanges) {
 			ResourcesPlugin.getWorkspace().addResourceChangeListener(this, IResourceChangeEvent.POST_CHANGE);
+		}else {
+			fJSPTranslation = new JsTranslation(fHtmlDocument, getJavaProject(), listenForProjectChanges);
 		}
 	}
 	

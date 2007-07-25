@@ -15,8 +15,10 @@ import java.util.List;
 import java.util.Vector;
 
 import org.eclipse.core.filebuffers.FileBuffers;
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -84,14 +86,24 @@ public class JsTranslation implements IJsTranslation {
 		mangledName = createMangledName();	
 	}	
 	
+	public JsTranslation(IStructuredDocument htmlDocument, IJavaProject javaProj, boolean listenForChanges) {
+		fLock = new byte[0];
+		fJavaProject = javaProj;
+		fHtmlDocument = htmlDocument;
+		setBaseLocation();
+		translator = new JsTranslator(htmlDocument, fModelBaseLocation,listenForChanges);
+		mangledName = createMangledName();	
+	}
+	
 	public IJavaProject getJavaProject() {
 		return fJavaProject;
 	}
 
 	private IPackageFragmentRoot getDocScope(boolean reset) {
 		if(fDocumentScope==null) {
-			fDocumentScope = new DocumentContextFragmentRoot(fJavaProject, getFile(), WebRootFinder.getWebContentFolder(fJavaProject.getProject()), WebRootFinder.getServerContextRoot(fJavaProject.getProject()), JsWebNature.VIRTUAL_SCOPE_ENTRY);
-			fDocumentScope.setIncludedFiles(translator.getRawImports());
+			IProject project = getJavaProject().getProject();
+			IResource absoluteRoot = ((IContainer)getJavaProject().getResource()).findMember( WebRootFinder.getWebContentFolder(fJavaProject.getProject()));
+			fDocumentScope = new DocumentContextFragmentRoot(fJavaProject, getFile(), WebRootFinder.getWebContentFolder(fJavaProject.getProject()), WebRootFinder.getServerContextRoot(fJavaProject.getProject()), JsWebNature.VIRTUAL_SCOPE_ENTRY);			fDocumentScope.setIncludedFiles(translator.getRawImports());
 			return fDocumentScope;
 		}
 		
@@ -130,6 +142,13 @@ public class JsTranslation implements IJsTranslation {
 		return 	WebRootFinder.getWebContentFolder(fJavaProject.getProject()).toString();
 	}
 	
+	public String getDirectoryUnderRoot() {
+		String webRoot = getWebRoot() ;
+		IPath projectWebRootPath = getJavaProject().getPath().append(webRoot);
+		IPath filePath = new Path(fModelBaseLocation).removeLastSegments(1);
+		return filePath.removeFirstSegments(projectWebRootPath.matchingFirstSegments(filePath)).toString();
+	}
+	
 	/**
 	 * Originally from ReconcileStepForJava. Creates an ICompilationUnit from
 	 * the contents of the JSP document.
@@ -139,9 +158,10 @@ public class JsTranslation implements IJsTranslation {
 	private ICompilationUnit createCompilationUnit() throws JavaModelException {
 		//System.out.println("------------------------- CREATING CU ----------------------------");
 		LibrarySuperType superType = new LibrarySuperType(SUPER_TYPE_LIBRARY, fJavaProject, SUPER_TYPE_NAME);
-		String webRoot = getWebRoot() ;
+		
 		IPackageFragmentRoot root = getDocScope(true);
-		ICompilationUnit cu = root.getPackageFragment(webRoot).getCompilationUnit(getMangledName() + JsDataTypes.BASE_FILE_EXTENSION).getWorkingCopy(getWorkingCopyOwner(), getProblemRequestor(), getProgressMonitor());
+		//String directoryUnderWebroot = getDirectoryUnderRoot();
+		ICompilationUnit cu = root.getPackageFragment("").getCompilationUnit(getMangledName() + JsDataTypes.BASE_FILE_EXTENSION).getWorkingCopy(getWorkingCopyOwner(), getProblemRequestor(), getProgressMonitor());
 		//ICompilationUnit cu = fDocumentScope.getDefaultPackageFragment().getCompilationUnit(getMangledName() + JsDataTypes.BASE_FILE_EXTENSION,SUPER_TYPE_NAME).getWorkingCopy(getWorkingCopyOwner(), getProblemRequestor(), getProgressMonitor());
 		
 		IBuffer buffer;
@@ -252,9 +272,13 @@ public class JsTranslation implements IJsTranslation {
 	}
 	
 	public String getJavaPath() {
-		String webRoot = getWebRoot() ;
-		IPackageFragmentRoot root = getDocScope(false);
-		String cuPath = root.getPath().append("/" + webRoot).append("/" + getMangledName() + JsDataTypes.BASE_FILE_EXTENSION ).toString();
+		//String webRoot = getWebRoot() ;
+		//IPackageFragmentRoot root = getDocScope(false);
+		//String cuPath = root.getPath().append("/" + getMangledName() + JsDataTypes.BASE_FILE_EXTENSION ).toString();
+		//ICompilationUnit cu = getCompilationUnit();
+		//IPath realCuPath = cu.getPath();
+		IPath rootPath = new Path(fModelBaseLocation).removeLastSegments(1);
+		String cuPath = rootPath.append("/" + getMangledName() + JsDataTypes.BASE_FILE_EXTENSION ).toString();
 		return cuPath;
 	}
 	
