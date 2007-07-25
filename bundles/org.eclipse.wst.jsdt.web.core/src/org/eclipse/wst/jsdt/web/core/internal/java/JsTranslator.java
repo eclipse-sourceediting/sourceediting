@@ -52,18 +52,10 @@ public class JsTranslator extends Job implements IDocumentListener{
 		String value = Platform.getDebugOption("org.eclipse.wst.jsdt.web.core/debug/jspjavamapping"); //$NON-NLS-1$
 		DEBUG = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
 	}
-	//private String fClassname;
+
 	private IStructuredDocumentRegion fCurrentNode;
-	/* map of ALL ranges */
-	/**
-	 * save JSP document text for later use may just want to read this from the
-	 * file or strucdtured document depending what is available
-	 */
-	//private StringBuffer fHtmlTextBuffer = new StringBuffer();
-	//private IProgressMonitor fProgressMonitor = null;
-	StringBuffer fScriptText = new StringBuffer();
+	private StringBuffer fScriptText = new StringBuffer();
 	private IStructuredDocument fStructuredDocument = null;
-	private IDOMModel fStructuredModel = null;
 	private ArrayList importLocationsInHtml = new ArrayList();
 	/* use java script by default */
 	private boolean isGlobalJs = true;
@@ -81,18 +73,14 @@ public class JsTranslator extends Job implements IDocumentListener{
 		setCurrentNode(getCurrentNode().getNext());
 	}
 	
-	public JsTranslator(IDOMModel node) {
-		super("JavaScript translation for : "  + node.getBaseLocation());
-	
-		fStructuredModel = node;
-		fStructuredDocument = fStructuredModel.getStructuredDocument();
+	public JsTranslator(IStructuredDocument document, 	String fileName) {
+		super("JavaScript translation for : "  + fileName);
+		fStructuredDocument = document;
 		fStructuredDocument.addDocumentListener(this);
 		setPriority(Job.LONG);
 		setSystem(true);
 		schedule();
-		
 		reset();
-
 	}
 		
 	public String getJsText() {
@@ -224,6 +212,8 @@ public class JsTranslator extends Job implements IDocumentListener{
 	}
 	
 	private void finishedTranslation() {
+		System.out.println("Updating CU Buffer..");
+		
 		if(compUnitBuff!=null) compUnitBuff.setContents(fScriptText.toString());
 	}
 	
@@ -378,6 +368,9 @@ public class JsTranslator extends Job implements IDocumentListener{
 	
 		return Status.OK_STATUS;
 	}
-	public void finalize() {
+	
+	public void release() {
+		fStructuredDocument.removeDocumentListener(this);
 	}
+	
 }

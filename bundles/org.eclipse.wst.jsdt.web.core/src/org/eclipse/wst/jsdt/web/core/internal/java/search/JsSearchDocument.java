@@ -167,7 +167,12 @@ public class JsSearchDocument {
 		if (this.fCUPath == null || isDirty() || this.fCUPath == UNKNOWN_PATH) {
 			JsTranslation trans = getJSPTranslation();
 			if (trans != null) {
-				this.fCUPath = trans.getJavaPath();
+				try {
+					this.fCUPath = trans.getJavaPath();
+				} catch (RuntimeException ex) {
+					// TODO Auto-generated catch block
+					ex.printStackTrace();
+				}
 				// save since it's expensive to calculate again later
 				fCachedCharContents = trans.getJsText().toCharArray();
 			}

@@ -61,21 +61,11 @@ public class JsTranslation implements IJsTranslation {
 	
 	private ICompilationUnit fCompilationUnit = null;
 	private DocumentContextFragmentRoot fDocumentScope;
-	
-	
-	//private String fHtmlMangledPageName = ""; //$NON-NLS-1$
-	/** the name of the class (w/out extension) * */
-	//private String fHtmlPageName;
-	//private String fHtmlText = ""; //$NON-NLS-1$
 	private IJavaProject fJavaProject = null;
-	//private String fJsText = ""; //$NON-NLS-1$
-	/** lock to synchronize access to the compilation unit * */
 	private byte[] fLock = null;
 	private IProgressMonitor fProgressMonitor = null;
-	//private Position[] importRanges;
-	//private Position[] locationsInHtml;
-	//private IFile targetFile;
 	private IStructuredDocument fHtmlDocument;
+	private String fModelBaseLocation;
 	
 	
 	private static final String SUPER_TYPE_NAME = "Window";
@@ -89,28 +79,9 @@ public class JsTranslation implements IJsTranslation {
 		fLock = new byte[0];
 		fJavaProject = javaProj;
 		fHtmlDocument = htmlDocument;
-	
-		
-		translator = new JsTranslator(getModel());
-		//resetDocScope();
-		mangledName = createMangledName();
-//		if (xmlModel != null) {
-//			
-//			IStructuredDocument doc = xmlModel.getStructuredDocument();
-//			//translator.translate();
-//			fHtmlMangledPageName = createClassname(xmlModel);
-//			fJsText = translator.getTranslation().toString();
-//			//fHtmlText = translator.getHtmlText();
-//			targetFile = getFile(xmlModel);
-//			fHtmlPageName = targetFile.getName();
-//			
-//			fDocumentScope = new DocumentContextFragmentRoot(fJavaProject, targetFile, WebRootFinder.getWebContentFolder(javaProj.getProject()), WebRootFinder.getServerContextRoot(javaProj.getProject()), JsWebNature.VIRTUAL_SCOPE_ENTRY);
-//			importRanges = translator.getImportHtmlRanges();
-//			cuImports = translator.getRawImports();
-//			locationsInHtml = translator.getHtmlLocations();
-//			//fHtmlDocument = translator.getStructuredDocument();
-//		}
-//		
+		setBaseLocation();
+		translator = new JsTranslator(htmlDocument, fModelBaseLocation);
+		mangledName = createMangledName();	
 	}	
 	
 	public IJavaProject getJavaProject() {
@@ -128,21 +99,22 @@ public class JsTranslation implements IJsTranslation {
 		return fDocumentScope;
 	}
 	
-	private IDOMModel getModel() {
+	private void setBaseLocation() {
 		IDOMModel xmlModel=null;
 		try {
 			xmlModel = (IDOMModel) StructuredModelManager.getModelManager().getExistingModelForRead(fHtmlDocument);
 			if(xmlModel==null) {
 				xmlModel = (IDOMModel) StructuredModelManager.getModelManager().getModelForRead(fHtmlDocument);
 			}
+			fModelBaseLocation = xmlModel.getBaseLocation();
 		}finally {
 			if(xmlModel!=null) xmlModel.releaseFromRead();
 		}
-		return xmlModel;
+	//	return xmlModel;
 	}
 		
 	public IFile getFile() {
-			return FileBuffers.getWorkspaceFileAtLocation(new Path(getModel().getBaseLocation()));
+			return FileBuffers.getWorkspaceFileAtLocation(new Path(fModelBaseLocation));
 	}
 		
 	
@@ -182,41 +154,9 @@ public class JsTranslation implements IJsTranslation {
 		if (buffer != null) {
 			translator.setBuffer(buffer);
 		}
-		//cu.makeConsistent(getProgressMonitor());
-		// cu.reconcile(ICompilationUnit.NO_AST, true, getWorkingCopyOwner(),
-		// getProgressMonitor());
-//		if (getHtmlPageName() == null || getMangledName() == null) {
-//			String cuName = cu.getPath().lastSegment();
-//			if (cuName != null) {
-//				//fHtmlMangledPageName = cuName.substring(0, cuName.lastIndexOf('.'));
-//				// set name of jsp file
-//				String unmangled = JsNameManglerUtil.unmangle(cuName);
-//				//fHtmlPageName = unmangled.substring(unmangled.lastIndexOf('/') + 1, unmangled.length());
-//			}
-//		}
-//		if (JsTranslation.DEBUG) {
-//			String cuText = cu.toString();
-//			System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"); //$NON-NLS-1$
-//			System.out.println("(+) JSPTranslation [" + this + "] finished creating CompilationUnit: " + cu); //$NON-NLS-1$ //$NON-NLS-2$
-//			System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"); //$NON-NLS-1$
-//			IPackageDeclaration[] ipd = cu.getPackageDeclarations();
-//			for (int i = 0; i < ipd.length; i++) {
-//				System.out.println("JSPTranslation.getCU() Package:" + ipd[i].getElementName());
-//			}
-//		}
 		return cu;
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslation_Interface#fixupMangledName(java.lang.String)
-	 */
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.jsdt.web.core.internal.java.IJSPTranslation#fixupMangledName(java.lang.String)
-	 */
 	public String fixupMangledName(String displayString) {
 		if (displayString == null) {
 			return null;
@@ -224,12 +164,6 @@ public class JsTranslation implements IJsTranslation {
 		return displayString.replaceAll(getMangledName() + ".js", getHtmlPageName());
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.jsdt.web.core.internal.java.IJSPTranslation#getAllElementsInJsRange(int,
-	 *      int)
-	 */
 	public IJavaElement[] getAllElementsInJsRange(int javaPositionStart, int javaPositionEnd) {
 		IJavaElement[] EMTPY_RESULT_SET = new IJavaElement[0];
 		IJavaElement[] result = EMTPY_RESULT_SET;
@@ -258,16 +192,6 @@ public class JsTranslation implements IJsTranslation {
 		return result;
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslation_Interface#getCompilationUnit()
-	 */
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.jsdt.web.core.internal.java.IJSPTranslation#getCompilationUnit()
-	 */
 	public ICompilationUnit getCompilationUnit() {
 		synchronized (fLock) {
 			try {
@@ -275,7 +199,6 @@ public class JsTranslation implements IJsTranslation {
 					fCompilationUnit = createCompilationUnit();
 					return fCompilationUnit;
 				}
-				// reconcileCompilationUnit();
 				
 			} catch (JavaModelException jme) {
 				if (JsTranslation.DEBUG) {
@@ -295,26 +218,11 @@ public class JsTranslation implements IJsTranslation {
 		return fCompilationUnit;
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslation_Interface#getElementsFromJspRange(int,
-	 *      int)
-	 */
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.jsdt.web.core.internal.java.IJSPTranslation#getElementsFromJsRange(int,
-	 *      int)
-	 */
 	public IJavaElement[] getElementsFromJsRange(int javaPositionStart, int javaPositionEnd) {
 		IJavaElement[] EMTPY_RESULT_SET = new IJavaElement[0];
 		IJavaElement[] result = EMTPY_RESULT_SET;
 		try {
 			ICompilationUnit cu = getCompilationUnit();
-			// cu.makeConsistent(getProgressMonitor());
-			// cu.reconcile(ICompilationUnit.NO_AST, true,
-			// getWorkingCopyOwner(), getProgressMonitor());
 			if (cu != null) {
 				synchronized (fLock) {
 					int cuDocLength = cu.getBuffer().getLength();
@@ -334,65 +242,24 @@ public class JsTranslation implements IJsTranslation {
 	}
 	
 	private String getHtmlPageName() {
-		IPath path = new Path(getModel().getBaseLocation());
+		IPath path = new Path(fModelBaseLocation);
 		return path.lastSegment();
 		
 	}
-	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslation_Interface#getJspText()
-	 */
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.jsdt.web.core.internal.java.IJSPTranslation#getHtmlText()
-	 */
+
 	public String getHtmlText() {
 		return fHtmlDocument.get();
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslation_Interface#isUseBean(int)
-	 */
-	// public boolean isUseBean(int javaOffset) {
-	// System.out.println("REMOVE JSPTranslation.isUseBean(int javaOffset)");
-	// return false;
-	// }
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslation_Interface#getJavaPath()
-	 */
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.jsdt.web.core.internal.java.IJSPTranslation#getJavaPath()
-	 */
 	public String getJavaPath() {
 		String webRoot = getWebRoot() ;
 		IPackageFragmentRoot root = getDocScope(false);
 		String cuPath = root.getPath().append("/" + webRoot).append("/" + getMangledName() + JsDataTypes.BASE_FILE_EXTENSION ).toString();
-		// create if necessary
-		//ICompilationUnit cu = getCompilationUnit();
-		//String otherCuPath =  (cu != null) ? cu.getPath().toString() : ""; //$NON-NLS-1$
 		return cuPath;
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.jsdt.web.core.internal.java.IJSPTranslation#getJsElementAtOffset(int)
-	 */
 	public IJavaElement getJsElementAtOffset(int jsOffset) {
 		IJavaElement elements = null;
-		// Position[] positions = getJavaRanges(htmlOffset, length);
-		//        
-		// ICompilationUnit cu = getCompilationUnit();
-		// synchronized (cu) {
 		try {
 			elements = getCompilationUnit().getElementAt(jsOffset);
 		} catch (JavaModelException e) {
@@ -420,8 +287,6 @@ public class JsTranslation implements IJsTranslation {
 	}
 	
 	public String getJsText() {
-		// return (fTranslator != null) ?
-		// fTranslator.getTranslation().toString(): ""; //$NON-NLS-1$
 		return translator.getJsText();
 	}
 	
@@ -430,12 +295,7 @@ public class JsTranslation implements IJsTranslation {
 	}
 	
 	private String createMangledName() {
-		String classname = ""; //$NON-NLS-1$
-		
-		String base = getModel().getBaseLocation();
-		classname = JsNameManglerUtil.mangle(base);
-		
-		return classname;
+		return JsNameManglerUtil.mangle(fModelBaseLocation);
 	}
 	
 	/**
@@ -447,26 +307,11 @@ public class JsTranslation implements IJsTranslation {
 		return CompilationUnitHelper.getInstance().getProblemRequestor();
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslation_Interface#getProblems()
-	 */
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.jsdt.web.core.internal.java.IJSPTranslation#getProblems()
-	 */
 	public List getProblems() {
 		List problems = getProblemRequestor().getCollectedProblems();
 		return problems != null ? problems : new ArrayList();
 	}
 	
-	/**
-	 * 
-	 * @return the progress monitor used in long operations (reconcile, creating
-	 *         the CompilationUnit...) in this JSPTranslation
-	 */
 	private IProgressMonitor getProgressMonitor() {
 		if (fProgressMonitor == null) {
 			fProgressMonitor = new NullProgressMonitor();
@@ -474,25 +319,10 @@ public class JsTranslation implements IJsTranslation {
 		return fProgressMonitor;
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslation_Interface#getWorkingCopyOwner()
-	 */
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.jsdt.web.core.internal.java.IJSPTranslation#getWorkingCopyOwner()
-	 */
 	public WorkingCopyOwner getWorkingCopyOwner() {
 		return CompilationUnitHelper.getInstance().getWorkingCopyOwner();
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.jsdt.web.core.internal.java.IJSPTranslation#ifOffsetInImportNode(int)
-	 */
 	public boolean ifOffsetInImportNode(int offset) {
 		Position[] importRanges = translator.getImportHtmlRanges();
 		for (int i = 0; i < importRanges.length; i++) {
@@ -502,27 +332,7 @@ public class JsTranslation implements IJsTranslation {
 		}
 		return false;
 	}
-	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.jsdt.web.core.internal.java.IJSPTranslation#isOffsetInScriptNode(int)
-	 */
-//	public boolean isOffsetInScriptNode(int offset) {
-//		/* check import nodes */
-//		for (int i = 0; i < locationsInHtml.length; i++) {
-//			if (locationsInHtml[i].includes(offset)) {
-//				return true;
-//			}
-//		}
-//		return false;
-//	}
-	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.jsdt.web.core.internal.java.IJSPTranslation#reconcileCompilationUnit()
-	 */
+
 	public void reconcileCompilationUnit() {
 		// if(true) return;
 		ICompilationUnit cu = getCompilationUnit();
@@ -542,17 +352,9 @@ public class JsTranslation implements IJsTranslation {
 		}
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslation_Interface#release()
-	 */
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.jsdt.web.core.internal.java.IJSPTranslation#release()
-	 */
+
 	public void release() {
+		if(translator!=null) translator.release();
 		synchronized (fLock) {
 			if (fCompilationUnit != null) {
 				try {
@@ -569,26 +371,13 @@ public class JsTranslation implements IJsTranslation {
 		}
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.jsdt.web.core.internal.java.JSPTranslation_Interface#setProblemCollectingActive(boolean)
-	 */
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.jsdt.web.core.internal.java.IJSPTranslation#setProblemCollectingActive(boolean)
-	 */
 	public void setProblemCollectingActive(boolean collect) {
 		ICompilationUnit cu = getCompilationUnit();
 		if (cu != null) {
 			getProblemRequestor().setIsActive(collect);
 		}
 	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.core.resources.IResourceChangeListener#resourceChanged(org.eclipse.core.resources.IResourceChangeEvent)
-	 */
+	
 	public void classpathChange() {
 		
 		if(fDocumentScope!=null){

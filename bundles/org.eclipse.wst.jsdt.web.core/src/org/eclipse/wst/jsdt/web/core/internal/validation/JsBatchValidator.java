@@ -30,6 +30,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -42,7 +43,12 @@ import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.wst.jsdt.core.IClasspathAttribute;
+import org.eclipse.wst.jsdt.core.IClasspathEntry;
+import org.eclipse.wst.jsdt.core.IJavaProject;
+import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
 import org.eclipse.wst.jsdt.core.JavaCore;
+import org.eclipse.wst.jsdt.core.JavaModelException;
 import org.eclipse.wst.jsdt.web.core.internal.JsCoreMessages;
 import org.eclipse.wst.jsdt.web.core.internal.Logger;
 import org.eclipse.wst.jsdt.web.core.internal.provisional.contenttype.ContentTypeIdForJSP;
@@ -196,6 +202,35 @@ public final class JsBatchValidator implements IValidatorJob, IExecutableExtensi
 	public void cleanup(IReporter reporter) {
 		fJSPJavaValidator.cleanup(reporter);
 	}
+	private IPath[] getLibraryPaths(IFile file) {
+		IProject project = file.getProject();
+		IJavaProject javaProject= JavaCore.create(project);
+		
+		if(javaProject==null) return new IPath[0];
+		
+		IClasspathEntry[] entries = new IClasspathEntry[0];
+		try {
+			entries = javaProject.getResolvedClasspath(true);
+		} catch (JavaModelException ex) {
+			// TODO Auto-generated catch block
+			ex.printStackTrace();
+		}
+		ArrayList ignorePaths = new ArrayList();
+		nextEntry: for(int i = 0;i<entries.length;i++) {
+			if(entries[i].getEntryKind() == IClasspathEntry.CPE_LIBRARY) {
+				IClasspathAttribute[] attribs = entries[i].getExtraAttributes();
+				for(int k=0; attribs!=null && k<attribs.length;k++) {
+					if(attribs[k].getName().equalsIgnoreCase("validate") && attribs[k].getName().equalsIgnoreCase("false")) {
+						ignorePaths.add(entries[k].getPath());
+						continue nextEntry;
+					}
+				}
+			}
+		}
+		
+		return (Path[])ignorePaths.toArray(new Path[ignorePaths.size()]);
+	}
+	
 	
 	void doValidate(IValidationContext helper, IReporter reporter) throws ValidationException {
 		reporter.removeAllMessages(this);
@@ -203,6 +238,10 @@ public final class JsBatchValidator implements IValidatorJob, IExecutableExtensi
 		if (uris.length > 0) {
 			IWorkspaceRoot wsRoot = ResourcesPlugin.getWorkspace().getRoot();
 			IFile currentFile = null;
+			
+			
+			
+			
 			for (int i = 0; i < uris.length && !reporter.isCancelled(); i++) {
 				currentFile = wsRoot.getFile(new Path(uris[i]));
 				if (currentFile != null && currentFile.exists()) {
@@ -377,6 +416,14 @@ public final class JsBatchValidator implements IValidatorJob, IExecutableExtensi
 	
 	private boolean shouldValidate(IFile file) {
 		IResource resource = file;
+		IPath[] libPaths = getLibraryPaths(file);
+		IPath filePath = file.getLocation().removeLastSegments(1);
+		for(int i = 0;i<libPaths.length;i++) {
+			if(libPaths[i].isPrefixOf(filePath)){
+				return false;
+			}
+		}
+		
 		do {
 			if (resource.isDerived() || resource.isTeamPrivateMember() || !resource.isAccessible() || resource.getName().charAt(0) == '.') {
 				return false;

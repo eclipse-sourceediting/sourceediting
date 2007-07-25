@@ -25,6 +25,7 @@ import org.eclipse.wst.jsdt.core.JavaCore;
 import org.eclipse.wst.jsdt.web.core.internal.Logger;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 
 /**
@@ -33,18 +34,16 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
  * @author pavery
  */
 public class JsTranslationAdapter implements INodeAdapter, IResourceChangeListener {
-	// for debugging
+
 	private static final boolean DEBUG = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.jsdt.web.core/debug/jsptranslation")); //$NON-NLS-1$  //$NON-NLS-2$
-	// private boolean fDocumentIsDirty = true;
-	private IDocument fJspDocument = null;
+	private IStructuredDocument fHtmlDocument = null;
 	private JsTranslation fJSPTranslation = null;
 	private NullProgressMonitor fTranslationMonitor = null;
-	// private JsTranslator fTranslator = null;
-	private IDOMModel fXMLModel;
+	private String baseLocation;
 	
 	public JsTranslationAdapter(IDOMModel xmlModel, boolean listenForProjectChanges) {
-		fXMLModel = xmlModel;
-		fJspDocument = fXMLModel.getStructuredDocument();
+		fHtmlDocument = xmlModel.getStructuredDocument();
+		baseLocation = xmlModel.getBaseLocation();
 		initializeJavaPlugins();
 		
 		if(listenForProjectChanges) {
@@ -55,27 +54,16 @@ public class JsTranslationAdapter implements INodeAdapter, IResourceChangeListen
 
 	public IJavaProject getJavaProject() {
 		IJavaProject javaProject = null;
-		try {
-			String baseLocation = fXMLModel.getBaseLocation();
-			// 20041129 (pa) the base location changed for XML model
-			// because of FileBuffers, so this code had to be updated
-			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=79686
-			IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-			IPath filePath = new Path(baseLocation);
-			IProject project = null;
-			if (filePath.segmentCount() > 0) {
-				project = root.getProject(filePath.segment(0));
-			}
-			if (project != null) {
-				javaProject = JavaCore.create(project);
-			}
-		} catch (Exception ex) {
-			if (fXMLModel != null) {
-				Logger.logException("(JSPTranslationAdapter) problem getting java project from the XMLModel's baseLocation > " + fXMLModel.getBaseLocation(), ex); //$NON-NLS-1$
-			} else {
-				Logger.logException("(JSPTranslationAdapter) problem getting java project", ex); //$NON-NLS-1$
-			}
+		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+		IPath filePath = new Path(baseLocation);
+		IProject project = null;
+		if (filePath.segmentCount() > 0) {
+			project = root.getProject(filePath.segment(0));
 		}
+		if (project != null) {
+			javaProject = JavaCore.create(project);
+		}
+		
 		return javaProject;
 	}
 	
@@ -85,13 +73,9 @@ public class JsTranslationAdapter implements INodeAdapter, IResourceChangeListen
 	 * @return a JSPTranslationExtension
 	 */
 	public JsTranslation getJSPTranslation() {
-		synchronized (fXMLModel) {
-			if (fJSPTranslation == null) {
-				
-				fJSPTranslation = new JsTranslation(fXMLModel.getStructuredDocument(), getJavaProject());
-			}
+		if (fJSPTranslation == null) {
+			fJSPTranslation = new JsTranslation(fHtmlDocument, getJavaProject());
 		}
-		
 		return fJSPTranslation;
 	}
 	

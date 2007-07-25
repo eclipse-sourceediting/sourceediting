@@ -42,7 +42,7 @@ public class JsSearchParticipant extends SearchParticipant {
 	
 	
 	public String getDescription() {
-		return "JSP"; //$NON-NLS-1$
+		return "Embeded JavaScript"; //$NON-NLS-1$
 	}
 	
 	/**

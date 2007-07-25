@@ -14,6 +14,8 @@ public interface IJavaWebNode {
 	public IJavaElement getJavaElement();
 	
 	public Node getParentNode();
+		
+	public boolean hasChildren();
 	
-	public IJavaElement getDirtyElement();
+	
 }
