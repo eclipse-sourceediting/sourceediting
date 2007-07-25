@@ -25,7 +25,7 @@ public class JSDTContetAssistInvocationContext extends JavaContentAssistInvocati
 			IDOMDocument xmlDoc = xmlModel.getDocument();
 			JsTranslationAdapter fTranslationAdapter = (JsTranslationAdapter) xmlDoc.getAdapterFor(IJsTranslation.class);
 			if (fTranslationAdapter != null) {
-				fTranslation = fTranslationAdapter.getJSPTranslation();
+				fTranslation = fTranslationAdapter.getJSPTranslation(true);
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

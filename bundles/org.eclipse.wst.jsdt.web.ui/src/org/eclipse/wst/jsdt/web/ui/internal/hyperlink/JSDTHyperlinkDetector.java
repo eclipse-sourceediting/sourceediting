@@ -205,7 +205,7 @@ public class JSDTHyperlinkDetector extends AbstractHyperlinkDetector {
 				IDOMDocument xmlDoc = xmlModel.getDocument();
 				JsTranslationAdapter adapter = (JsTranslationAdapter) xmlDoc.getAdapterFor(IJsTranslation.class);
 				if (adapter != null) {
-					translation = adapter.getJSPTranslation();
+					translation = adapter.getJSPTranslation(true);
 				}
 			}
 		} finally {

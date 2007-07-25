@@ -250,7 +250,7 @@ public class JsJfaceNode extends ElementImpl implements IndexedRegion, INodeNoti
 			return null;
 		}
 		JsTranslationAdapter translationAdapter = (JsTranslationAdapter) xmlDoc.getAdapterFor(IJsTranslation.class);
-		return translationAdapter.getJSPTranslation();
+		return translationAdapter.getJSPTranslation(true);
 	}
 	
 	

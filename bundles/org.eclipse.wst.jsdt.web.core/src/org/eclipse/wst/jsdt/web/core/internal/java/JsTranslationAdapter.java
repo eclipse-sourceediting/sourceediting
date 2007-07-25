@@ -40,19 +40,20 @@ public class JsTranslationAdapter implements INodeAdapter, IResourceChangeListen
 	private JsTranslation fJSPTranslation = null;
 	private NullProgressMonitor fTranslationMonitor = null;
 	private String baseLocation;
+	private boolean listenForChanges=false;
 	
-	public JsTranslationAdapter(IDOMModel xmlModel, boolean listenForProjectChanges) {
+	public JsTranslationAdapter(IDOMModel xmlModel) {
 		fHtmlDocument = xmlModel.getStructuredDocument();
 		baseLocation = xmlModel.getBaseLocation();
 		initializeJavaPlugins();
 		
+		
+	}
+	public void shouldListenForChanges(boolean listenForProjectChanges) {
 		if(listenForProjectChanges) {
 			ResourcesPlugin.getWorkspace().addResourceChangeListener(this, IResourceChangeEvent.POST_CHANGE);
-		}else {
-			fJSPTranslation = new JsTranslation(fHtmlDocument, getJavaProject(), listenForProjectChanges);
 		}
 	}
-	
 
 	public IJavaProject getJavaProject() {
 		IJavaProject javaProject = null;
@@ -74,10 +75,15 @@ public class JsTranslationAdapter implements INodeAdapter, IResourceChangeListen
 	 * 
 	 * @return a JSPTranslationExtension
 	 */
-	public JsTranslation getJSPTranslation() {
-		if (fJSPTranslation == null) {
-			fJSPTranslation = new JsTranslation(fHtmlDocument, getJavaProject());
+	public JsTranslation getJSPTranslation(boolean listenForChanges) {
+		if (fJSPTranslation == null && !this.listenForChanges && listenForChanges) {
+			
+			if(fJSPTranslation!=null) fJSPTranslation.release();
+			
+			fJSPTranslation = new JsTranslation(fHtmlDocument, getJavaProject(),listenForChanges);
+			this.listenForChanges=listenForChanges;
 		}
+		shouldListenForChanges(listenForChanges);
 		return fJSPTranslation;
 	}
 	

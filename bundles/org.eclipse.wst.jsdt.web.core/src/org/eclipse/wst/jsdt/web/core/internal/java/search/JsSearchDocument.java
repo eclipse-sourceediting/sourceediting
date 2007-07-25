@@ -130,11 +130,11 @@ public class JsSearchDocument {
 			// handle unsupported
 			if (model instanceof IDOMModel) {
 				IDOMModel xmlModel = (IDOMModel) model;
-				JsTranslationAdapterFactory factory = new JsTranslationAdapterFactory(false);
+				JsTranslationAdapterFactory factory = new JsTranslationAdapterFactory();
 				xmlModel.getFactoryRegistry().addFactory(factory);
 				IDOMDocument doc = xmlModel.getDocument();
 				JsTranslationAdapter adapter = (JsTranslationAdapter) doc.getAdapterFor(IJsTranslation.class);
-				translation = adapter.getJSPTranslation();
+				translation = adapter.getJSPTranslation(false);
 			}
 		} catch (IOException e) {
 			Logger.logException(e);

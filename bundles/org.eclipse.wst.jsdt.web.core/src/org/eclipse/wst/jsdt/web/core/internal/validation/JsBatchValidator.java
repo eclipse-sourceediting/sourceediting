@@ -74,6 +74,7 @@ public final class JsBatchValidator implements IValidatorJob, IExecutableExtensi
 	// for debugging
 	static final boolean DEBUG = Boolean.valueOf(Platform.getDebugOption("org.eclipse.wst.jsdt.web.core/debug/jspvalidator")).booleanValue(); //$NON-NLS-1$
 	private static final String PLUGIN_ID_JSP_CORE = "org.eclipse.wst.jsdt.web.core"; //$NON-NLS-1$
+	private IPath[] excludeLibPaths;
 	
 	/**
 	 * Gets current validation project configuration based on current project
@@ -203,6 +204,9 @@ public final class JsBatchValidator implements IValidatorJob, IExecutableExtensi
 		fJSPJavaValidator.cleanup(reporter);
 	}
 	private IPath[] getLibraryPaths(IFile file) {
+		
+		if(excludeLibPaths!=null) return excludeLibPaths;
+		
 		IProject project = file.getProject();
 		IJavaProject javaProject= JavaCore.create(project);
 		
@@ -220,15 +224,16 @@ public final class JsBatchValidator implements IValidatorJob, IExecutableExtensi
 			if(entries[i].getEntryKind() == IClasspathEntry.CPE_LIBRARY) {
 				IClasspathAttribute[] attribs = entries[i].getExtraAttributes();
 				for(int k=0; attribs!=null && k<attribs.length;k++) {
-					if(attribs[k].getName().equalsIgnoreCase("validate") && attribs[k].getName().equalsIgnoreCase("false")) {
-						ignorePaths.add(entries[k].getPath());
+					if(attribs[k].getName().equalsIgnoreCase("validate") && attribs[k].getValue().equalsIgnoreCase("false")) {
+						ignorePaths.add(entries[i].getPath());
 						continue nextEntry;
 					}
 				}
 			}
 		}
 		
-		return (Path[])ignorePaths.toArray(new Path[ignorePaths.size()]);
+		excludeLibPaths =  (Path[])ignorePaths.toArray(new Path[ignorePaths.size()]);
+		return excludeLibPaths;
 	}
 	
 	
@@ -415,9 +420,10 @@ public final class JsBatchValidator implements IValidatorJob, IExecutableExtensi
 	}
 	
 	private boolean shouldValidate(IFile file) {
+		//if(true) return true;
 		IResource resource = file;
 		IPath[] libPaths = getLibraryPaths(file);
-		IPath filePath = file.getLocation().removeLastSegments(1);
+		IPath filePath = file.getFullPath().removeLastSegments(1);
 		for(int i = 0;i<libPaths.length;i++) {
 			if(libPaths[i].isPrefixOf(filePath)){
 				return false;

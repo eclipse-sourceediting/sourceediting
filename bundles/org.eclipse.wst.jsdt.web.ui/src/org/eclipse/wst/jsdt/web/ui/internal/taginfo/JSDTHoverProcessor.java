@@ -97,7 +97,7 @@ public class JSDTHoverProcessor extends AbstractHoverProcessor {
 				IDOMDocument xmlDoc = xmlModel.getDocument();
 				JsTranslationAdapter adapter = (JsTranslationAdapter) xmlDoc.getAdapterFor(IJsTranslation.class);
 				if (adapter != null) {
-					JsTranslation translation = adapter.getJSPTranslation();
+					JsTranslation translation = adapter.getJSPTranslation(true);
 					IJavaElement[] result = translation.getElementsFromJsRange(hoverRegion.getOffset(), hoverRegion.getOffset() + hoverRegion.getLength());
 // Vector filteredResults = new Vector();
 // List badFunctions = translation.getGeneratedFunctionNames();

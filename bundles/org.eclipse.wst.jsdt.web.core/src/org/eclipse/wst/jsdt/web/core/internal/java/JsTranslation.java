@@ -76,15 +76,17 @@ public class JsTranslation implements IJsTranslation {
 	private JsTranslator translator;
 	
 	private String mangledName;
+	private boolean listenForChanges;
 	
-	public JsTranslation(IStructuredDocument htmlDocument, IJavaProject javaProj) {
-		fLock = new byte[0];
-		fJavaProject = javaProj;
-		fHtmlDocument = htmlDocument;
-		setBaseLocation();
-		translator = new JsTranslator(htmlDocument, fModelBaseLocation);
-		mangledName = createMangledName();	
-	}	
+//	public JsTranslation(IStructuredDocument htmlDocument, IJavaProject javaProj) {
+//		fLock = new byte[0];
+//		fJavaProject = javaProj;
+//		fHtmlDocument = htmlDocument;
+//		setBaseLocation();
+//		translator = new JsTranslator(htmlDocument, fModelBaseLocation);
+//		mangledName = createMangledName();
+//		listenForChanges = true;
+//	}	
 	
 	public JsTranslation(IStructuredDocument htmlDocument, IJavaProject javaProj, boolean listenForChanges) {
 		fLock = new byte[0];
@@ -93,6 +95,7 @@ public class JsTranslation implements IJsTranslation {
 		setBaseLocation();
 		translator = new JsTranslator(htmlDocument, fModelBaseLocation,listenForChanges);
 		mangledName = createMangledName();	
+		this.listenForChanges=listenForChanges;
 	}
 	
 	public IJavaProject getJavaProject() {

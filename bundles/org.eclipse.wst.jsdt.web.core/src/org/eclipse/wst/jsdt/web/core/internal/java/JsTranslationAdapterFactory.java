@@ -39,18 +39,15 @@ public class JsTranslationAdapterFactory extends AbstractAdapterFactory {
 		listenForProjectChanges = true;
 	}
 	
-	public JsTranslationAdapterFactory(boolean listenForProjectChanges) {
-		super(IJsTranslation.class, true);
-		this.listenForProjectChanges = listenForProjectChanges;
-	}
+	
 	public INodeAdapterFactory copy() {
-		return new JsTranslationAdapterFactory(listenForProjectChanges);
+		return new JsTranslationAdapterFactory();
 	}
 	
 	
 	protected INodeAdapter createAdapter(INodeNotifier target) {
 		if (target instanceof IDOMNode && fAdapter == null) {
-			fAdapter = new JsTranslationAdapter(((IDOMNode) target).getModel(), listenForProjectChanges);
+			fAdapter = new JsTranslationAdapter(((IDOMNode) target).getModel());
 			if (JsTranslationAdapterFactory.DEBUG) {
 				System.out.println("(+) JSPTranslationAdapterFactory [" + this + "] created adapter: " + fAdapter); //$NON-NLS-1$ //$NON-NLS-2$
 			}

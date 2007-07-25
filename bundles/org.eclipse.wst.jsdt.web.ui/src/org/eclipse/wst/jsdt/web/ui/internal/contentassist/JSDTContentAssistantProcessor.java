@@ -61,7 +61,7 @@ public class JSDTContentAssistantProcessor extends AbstractContentAssistProcesso
 				fTranslationAdapter = (JsTranslationAdapter) xmlDoc.getAdapterFor(IJsTranslation.class);
 			}
 			if (fTranslationAdapter != null) {
-				JsTranslation translation = fTranslationAdapter.getJSPTranslation();
+				JsTranslation translation = fTranslationAdapter.getJSPTranslation(true);
 				fJavaPosition = getDocumentPosition();
 				try {
 					ICompilationUnit cu = translation.getCompilationUnit();

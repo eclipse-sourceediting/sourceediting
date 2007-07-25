@@ -40,7 +40,7 @@ class JSPJavaSelectionProvider {
 					IDOMDocument xmlDoc = xmlModel.getDocument();
 					JsTranslationAdapter adapter = (JsTranslationAdapter) xmlDoc.getAdapterFor(IJsTranslation.class);
 					if (adapter != null) {
-						JsTranslation translation = adapter.getJSPTranslation();
+						JsTranslation translation = adapter.getJSPTranslation(true);
 						elements = translation.getElementsFromJsRange(textSelection.getOffset(), textSelection.getOffset() + textSelection.getLength());
 					}
 				}

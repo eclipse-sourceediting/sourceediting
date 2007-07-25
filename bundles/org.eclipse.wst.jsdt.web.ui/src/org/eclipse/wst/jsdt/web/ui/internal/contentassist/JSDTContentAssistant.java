@@ -68,7 +68,7 @@ public class JSDTContentAssistant extends AbstractContentAssistProcessor {
 				fTranslationAdapter = (JsTranslationAdapter) xmlDoc.getAdapterFor(IJsTranslation.class);
 			}
 			if (fTranslationAdapter != null) {
-				return fTranslationAdapter.getJSPTranslation();
+				return fTranslationAdapter.getJSPTranslation(true);
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

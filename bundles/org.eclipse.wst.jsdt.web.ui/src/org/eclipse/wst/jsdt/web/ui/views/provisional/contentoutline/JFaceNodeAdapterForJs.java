@@ -144,7 +144,7 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
 			return null;
 		}
 		JsTranslationAdapter translationAdapter = (JsTranslationAdapter) xmlDoc.getAdapterFor(IJsTranslation.class);
-		return translationAdapter.getJSPTranslation();
+		return translationAdapter.getJSPTranslation(true);
 	}
 	
 	

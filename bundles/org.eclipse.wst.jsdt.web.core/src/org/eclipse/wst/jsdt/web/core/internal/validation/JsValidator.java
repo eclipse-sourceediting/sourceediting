@@ -80,7 +80,7 @@ public class JsValidator extends JSPValidator {
 			IDOMDocument xmlDoc = domModel.getDocument();
 			JsTranslationAdapter translationAdapter = (JsTranslationAdapter) xmlDoc.getAdapterFor(IJsTranslation.class);
 			//translationAdapter.resourceChanged();
-			JsTranslation translation = translationAdapter.getJSPTranslation();
+			JsTranslation translation = translationAdapter.getJSPTranslation(false);
 			if (!reporter.isCancelled()) {
 				translation.setProblemCollectingActive(true);
 				translation.reconcileCompilationUnit();
@@ -104,7 +104,7 @@ public class JsValidator extends JSPValidator {
 	 */
 	private void setupAdapterFactory(IStructuredModel sm) {
 		if (sm.getFactoryRegistry().getFactoryFor(IJsTranslation.class) == null) {
-			JsTranslationAdapterFactory factory = new JsTranslationAdapterFactory(false);
+			JsTranslationAdapterFactory factory = new JsTranslationAdapterFactory();
 			sm.getFactoryRegistry().addFactory(factory);
 		}
 	}

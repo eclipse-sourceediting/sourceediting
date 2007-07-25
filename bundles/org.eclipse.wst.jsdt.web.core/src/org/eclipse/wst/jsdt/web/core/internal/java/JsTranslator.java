@@ -226,7 +226,6 @@ public class JsTranslator extends Job implements IDocumentListener{
 	}
 	
 	private void finishedTranslation() {
-			
 		if(compUnitBuff!=null) compUnitBuff.setContents(fScriptText.toString());
 	}
 	

@@ -171,7 +171,7 @@ public class FormattingStrategyJSDT extends ContextBasedFormattingStrategy {
 			IDOMDocument xmlDoc = xmlModel.getDocument();
 			JsTranslationAdapter translationAdapter = (JsTranslationAdapter) xmlDoc.getAdapterFor(IJsTranslation.class);
 			if (translationAdapter != null) {
-				tran = translationAdapter.getJSPTranslation();
+				tran = translationAdapter.getJSPTranslation(true);
 			}
 		} finally {
 			if (xmlModel != null) {

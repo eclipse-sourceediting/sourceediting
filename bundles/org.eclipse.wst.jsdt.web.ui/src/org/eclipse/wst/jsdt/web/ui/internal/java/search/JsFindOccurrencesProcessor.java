@@ -52,7 +52,7 @@ public class JsFindOccurrencesProcessor extends FindOccurrencesProcessor {
 				IDOMDocument xmlDoc = ((IDOMModel) model).getDocument();
 				JsTranslationAdapter adapter = (JsTranslationAdapter) xmlDoc.getAdapterFor(IJsTranslation.class);
 				if (adapter != null) {
-					JsTranslation translation = adapter.getJSPTranslation();
+					JsTranslation translation = adapter.getJSPTranslation(true);
 					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=102211
 					elements = translation.getElementsFromJsRange(selection.getOffset(), selection.getOffset() + selection.getLength());
 				}
