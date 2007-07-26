@@ -67,6 +67,7 @@ public class JsTranslator extends Job implements IDocumentListener{
 	private IBuffer compUnitBuff;
 	private boolean cancelParse = false;
 	private int missingEndTagRegionStart = -1;
+	private static final boolean ADD_SEMICOLON_AT_INLINE=true;
 	
 	
 	
@@ -280,6 +281,7 @@ public class JsTranslator extends Job implements IDocumentListener{
 							// Position inScript = new Position(scriptOffset,
 							// rawText.length());
 							/* Quoted text starts +1 and ends -1 char */
+							if(ADD_SEMICOLON_AT_INLINE) rawText = rawText + ";";
 							Position inHtml = new Position(valStartOffset, rawText.length());
 							scriptLocationInHtml.add(inHtml);
 							/* need to pad the script text with spaces */
