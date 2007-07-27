@@ -89,7 +89,7 @@ public final class JsBatchValidator implements IValidatorJob, IExecutableExtensi
                               if (project.isOpen()) {
                                       try {
                                               if (project.hasNature(JavaCore.NATURE_ID)) {
-                                                      WorkbenchReporter.removeAllMessages(project, rhinoValidator, null);
+                                              //        WorkbenchReporter.removeAllMessages(project, rhinoValidator, null);
                                               }
                                       } catch (CoreException e) {
                                               // Do nothing
@@ -261,14 +261,11 @@ public final class JsBatchValidator implements IValidatorJob, IExecutableExtensi
 	
 	
 	void doValidate(IValidationContext helper, IReporter reporter) throws ValidationException {
-		reporter.removeAllMessages(this);
+		
 		String[] uris = helper.getURIs();
 		if (uris.length > 0) {
 			IWorkspaceRoot wsRoot = ResourcesPlugin.getWorkspace().getRoot();
 			IFile currentFile = null;
-			
-			
-			
 			
 			for (int i = 0; i < uris.length && !reporter.isCancelled(); i++) {
 				currentFile = wsRoot.getFile(new Path(uris[i]));
@@ -276,6 +273,7 @@ public final class JsBatchValidator implements IValidatorJob, IExecutableExtensi
 					if (shouldValidate(currentFile) ) {
 						Message message = new LocalizedMessage(IMessage.LOW_SEVERITY, "" + (i + 1) + "/" + uris.length + " - " + currentFile.getFullPath().toString().substring(1));
 						reporter.displaySubtask(this, message);
+						reporter.removeAllMessages(this, currentFile);
 						validateFile(currentFile, reporter);
 					}
 					if (JsBatchValidator.DEBUG) {

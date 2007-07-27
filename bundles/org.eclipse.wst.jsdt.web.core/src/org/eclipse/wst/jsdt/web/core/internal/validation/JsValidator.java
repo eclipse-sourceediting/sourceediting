@@ -12,11 +12,21 @@
 package org.eclipse.wst.jsdt.web.core.internal.validation;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceProxy;
+import org.eclipse.core.resources.IResourceProxyVisitor;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.wst.jsdt.core.compiler.IProblem;
 import org.eclipse.wst.jsdt.web.core.internal.Logger;
 import org.eclipse.wst.jsdt.web.core.internal.java.IJsTranslation;
@@ -26,7 +36,9 @@ import org.eclipse.wst.jsdt.web.core.internal.java.JsTranslationAdapterFactory;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.eclipse.wst.validation.internal.core.Message;
 import org.eclipse.wst.validation.internal.core.ValidationException;
+import org.eclipse.wst.validation.internal.operations.IWorkbenchContext;
 import org.eclipse.wst.validation.internal.provisional.core.IMessage;
 import org.eclipse.wst.validation.internal.provisional.core.IReporter;
 import org.eclipse.wst.validation.internal.provisional.core.IValidationContext;
@@ -34,10 +46,54 @@ import org.eclipse.wst.validation.internal.provisional.core.IValidator;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 
-public class JsValidator extends JSPValidator {
+public class JsValidator implements IValidator{
 	private static final boolean DEBUG = Boolean.valueOf(Platform.getDebugOption("org.eclipse.wst.jsdt.web.core/debug/jspvalidator")).booleanValue(); //$NON-NLS-1$
 	private IValidator fMessageOriginator;
-	
+	protected class LocalizedMessage extends Message {
+		private String _message = null;
+		
+		public LocalizedMessage(int severity, String messageText) {
+			this(severity, messageText, null);
+		}
+		
+		public LocalizedMessage(int severity, String messageText, IResource targetObject) {
+			this(severity, messageText, (Object) targetObject);
+		}
+		
+		public LocalizedMessage(int severity, String messageText, Object targetObject) {
+			super(null, severity, null);
+			setLocalizedMessage(messageText);
+			setTargetObject(targetObject);
+		}
+		
+		public String getLocalizedMessage() {
+			return _message;
+		}
+		
+		
+		public String getText() {
+			return getLocalizedMessage();
+		}
+		
+		
+		public String getText(ClassLoader cl) {
+			return getLocalizedMessage();
+		}
+		
+		
+		public String getText(Locale l) {
+			return getLocalizedMessage();
+		}
+		
+		
+		public String getText(Locale l, ClassLoader cl) {
+			return getLocalizedMessage();
+		}
+		
+		public void setLocalizedMessage(String message) {
+			_message = message;
+		}
+	}
 	public JsValidator() {
 		this.fMessageOriginator = this;
 	}
@@ -81,9 +137,6 @@ public class JsValidator extends JSPValidator {
 			JsTranslationAdapter translationAdapter = (JsTranslationAdapter) xmlDoc.getAdapterFor(IJsTranslation.class);
 			//translationAdapter.resourceChanged();
 			JsTranslation translation = translationAdapter.getJSPTranslation(false);
-			if(translation==null) {
-				System.out.println("null trnaslation");
-			}
 			if (!reporter.isCancelled()) {
 				translation.setProblemCollectingActive(true);
 				translation.reconcileCompilationUnit();
@@ -111,13 +164,107 @@ public class JsValidator extends JSPValidator {
 			sm.getFactoryRegistry().addFactory(factory);
 		}
 	}
-	
-	
-	public void validate(IValidationContext helper, IReporter reporter) throws ValidationException {
-		reporter.removeAllMessages(this);
-		super.validate(helper, reporter);
+	private boolean shouldValidate(IFile file) {
+		IResource resource = file;
+		do {
+			if (resource.isDerived() || resource.isTeamPrivateMember() || !resource.isAccessible() || resource.getName().charAt(0) == '.') {
+				return false;
+			}
+			resource = resource.getParent();
+		} while ((resource.getType() & IResource.PROJECT) == 0);
+		return true;
 	}
-	
+	public void validate(IValidationContext helper, IReporter reporter) throws ValidationException {
+		/* Added by BC ---- */
+		// if(true) return;
+		/* end Added by BC ---- */
+		
+		String[] uris = helper.getURIs();
+		IWorkspaceRoot wsRoot = ResourcesPlugin.getWorkspace().getRoot();
+		if (uris.length > 0) {
+			IFile currentFile = null;
+			for (int i = 0; i < uris.length && !reporter.isCancelled(); i++) {
+				currentFile = wsRoot.getFile(new Path(uris[i]));
+				//reporter.removeAllMessages(this, currentFile);
+				if (currentFile != null && currentFile.exists()) {
+					if (shouldValidate(currentFile) ){ //&& fragmentCheck(currentFile)) {
+						int percent = (i * 100) / uris.length + 1;
+						Message message = new LocalizedMessage(IMessage.LOW_SEVERITY, percent + "% " + uris[i]);
+						reporter.displaySubtask(this, message);
+						validateFile(currentFile, reporter);
+					}
+					if (DEBUG) {
+						System.out.println("validating: [" + uris[i] + "]"); //$NON-NLS-1$ //$NON-NLS-2$
+					}
+				}
+			}
+		} else {
+			// if uris[] length 0 -> validate() gets called for each project
+			if (helper instanceof IWorkbenchContext) {
+				IProject project = ((IWorkbenchContext) helper).getProject();
+				JSPFileVisitor visitor = new JSPFileVisitor(reporter);
+				try {
+					// collect all jsp files for the project
+					project.accept(visitor, IResource.DEPTH_INFINITE);
+				} catch (CoreException e) {
+					if (DEBUG) {
+						e.printStackTrace();
+					}
+				}
+				IFile[] files = visitor.getFiles();
+				for (int i = 0; i < files.length && !reporter.isCancelled(); i++) {
+					if (shouldValidate(files[i])) {
+						int percent = (i * 100) / files.length + 1;
+						Message message = new LocalizedMessage(IMessage.LOW_SEVERITY, percent + "% " + files[i].getFullPath().toString());
+						reporter.displaySubtask(this, message);
+						validateFile(files[i], reporter);
+					}
+					if (DEBUG) {
+						System.out.println("validating: [" + files[i] + "]"); //$NON-NLS-1$ //$NON-NLS-2$
+					}
+				}
+			}
+		}
+	}
+
+	protected class JSPFileVisitor implements IResourceProxyVisitor {
+		private IContentType[] fContentTypes = null;
+		private List fFiles = new ArrayList();
+		private IReporter fReporter = null;
+		
+		public JSPFileVisitor(IReporter reporter) {
+			fReporter = reporter;
+		}
+		
+		public final IFile[] getFiles() {
+			return (IFile[]) fFiles.toArray(new IFile[fFiles.size()]);
+		}
+		
+		
+		public boolean visit(IResourceProxy proxy) throws CoreException {
+			// check validation
+			if (fReporter.isCancelled()) {
+				return false;
+			}
+			if (proxy.getType() == IResource.FILE) {
+				if (Util.isJsType(proxy.getName())) {
+					IFile file = (IFile) proxy.requestResource();
+					if (file.exists()) {
+						if (DEBUG) {
+							System.out.println("(+) JSPValidator adding file: " + file.getName()); //$NON-NLS-1$
+						}
+						fFiles.add(file);
+						// don't search deeper for files
+						return false;
+					}
+				}
+			}
+			return true;
+		}
+	}
+	public void cleanup(IReporter reporter) {
+		// nothing to do
+	}
 	/**
 	 * Validate one file. It's assumed that the file has JSP content type.
 	 * 
@@ -132,7 +279,10 @@ public class JsValidator extends JSPValidator {
 		IStructuredModel model = null;
 		try {
 			// get jsp model, get tranlsation
-			model = StructuredModelManager.getModelManager().getModelForRead(f);
+			model = StructuredModelManager.getModelManager().getExistingModelForRead(f);
+			if(model==null) {
+				model = StructuredModelManager.getModelManager().getModelForRead(f);
+			}
 			if (!reporter.isCancelled() && model != null) {
 				// get jsp model, get translation
 				if (model instanceof IDOMModel) {
