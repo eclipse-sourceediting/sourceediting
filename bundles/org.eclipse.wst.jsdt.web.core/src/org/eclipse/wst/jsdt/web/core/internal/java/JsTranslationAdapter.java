@@ -76,7 +76,7 @@ public class JsTranslationAdapter implements INodeAdapter, IResourceChangeListen
 	 * @return a JSPTranslationExtension
 	 */
 	public JsTranslation getJSPTranslation(boolean listenForChanges) {
-		if (fJSPTranslation == null && !this.listenForChanges && listenForChanges) {
+		if (fJSPTranslation == null || (!this.listenForChanges && listenForChanges)) {
 			
 			if(fJSPTranslation!=null) fJSPTranslation.release();
 			
