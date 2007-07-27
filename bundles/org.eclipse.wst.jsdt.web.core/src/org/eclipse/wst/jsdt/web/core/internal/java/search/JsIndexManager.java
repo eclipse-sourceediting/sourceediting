@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.jsdt.web.core.internal.java.search;
 
+import org.eclipse.wst.jsdt.web.core.internal.validation.Util;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,7 +43,7 @@ import org.eclipse.wst.jsdt.web.core.internal.JsCoreMessages;
 import org.eclipse.wst.jsdt.web.core.internal.JsCorePlugin;
 import org.eclipse.wst.jsdt.web.core.internal.Logger;
 import org.eclipse.wst.jsdt.web.core.internal.project.JsWebNature;
-import org.eclipse.wst.jsdt.web.core.internal.provisional.contenttype.ContentTypeIdForJSP;
+import org.eclipse.wst.jsdt.web.core.internal.provisional.contenttype.ContentTypeIdForEmbededJs;
 import org.osgi.framework.Bundle;
 
 /**
@@ -273,7 +274,7 @@ public class JsIndexManager {
 			// resource because it's lighter
 			int numSegments = delta.getFullPath().segmentCount();
 			String filename = delta.getFullPath().segment(numSegments - 1);
-			if (getJspContentType().isAssociatedWith(filename)) {
+			if (Util.isJsType(filename)) {
 				IResource r = delta.getResource();
 				if (r != null && r.exists() && r.getType() == IResource.FILE) {
 					this.jspFiles.put(r.getFullPath(), r);
@@ -461,12 +462,7 @@ public class JsIndexManager {
 		return JsCorePlugin.getDefault().getPluginPreferences().getInt(JsIndexManager.PKEY_INDEX_STATE);
 	}
 	
-	IContentType getJspContentType() {
-		if (this.fContentTypeJSP == null) {
-			this.fContentTypeJSP = Platform.getContentTypeManager().getContentType(ContentTypeIdForJSP.ContentTypeID_JSP);
-		}
-		return this.fContentTypeJSP;
-	}
+
 	
 	ProcessFilesJob getProcessFilesJob() {
 		return processFilesJob;

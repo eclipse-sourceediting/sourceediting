@@ -81,6 +81,9 @@ public class JsValidator extends JSPValidator {
 			JsTranslationAdapter translationAdapter = (JsTranslationAdapter) xmlDoc.getAdapterFor(IJsTranslation.class);
 			//translationAdapter.resourceChanged();
 			JsTranslation translation = translationAdapter.getJSPTranslation(false);
+			if(translation==null) {
+				System.out.println("null trnaslation");
+			}
 			if (!reporter.isCancelled()) {
 				translation.setProblemCollectingActive(true);
 				translation.reconcileCompilationUnit();

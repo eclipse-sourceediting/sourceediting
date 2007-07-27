@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 package org.eclipse.wst.jsdt.web.core.internal.java.search;
-
+import org.eclipse.wst.jsdt.web.core.internal.validation.Util;
 import java.util.HashMap;
 
 import org.eclipse.core.resources.IFile;
@@ -24,7 +24,7 @@ import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.wst.jsdt.core.search.IJavaSearchScope;
 import org.eclipse.wst.jsdt.core.search.SearchPattern;
-import org.eclipse.wst.jsdt.web.core.internal.provisional.contenttype.ContentTypeIdForJSP;
+import org.eclipse.wst.jsdt.web.core.internal.provisional.contenttype.ContentTypeIdForEmbededJs;
 
 /**
  * pa_TODO Still need to take into consideration: - focus in workspace - search
@@ -61,25 +61,25 @@ public class JsPathIndexer {
 				return false;
 			}
 			if (proxy.getType() == IResource.FILE) {
-				IContentType contentTypeJSP = Platform.getContentTypeManager().getContentType(ContentTypeIdForJSP.ContentTypeID_JSP);
+				//IContentType contentTypeJSP = Platform.getContentTypeManager().getContentType(ContentTypeIdForJSP.ContentTypeIdHtml);
 				// https://w3.opensource.ibm.com/bugzilla/show_bug.cgi?id=3553
 				// check this before description
 				// check name before actually getting the file (less work)
-				if (contentTypeJSP.isAssociatedWith(proxy.getName())) {
+				if (Util.isJsType(proxy.getName())) {
 					IFile file = (IFile) proxy.requestResource();
 					IContentDescription contentDescription = file.getContentDescription();
 					String ctId = null;
 					if (contentDescription != null) {
 						ctId = contentDescription.getContentType().getId();
 					}
-					if (ContentTypeIdForJSP.ContentTypeID_JSP.equals(ctId)) {
+					//if (ContentTypeIdForJSP.ContentTypeIdHtml.equals(ctId)) {
 						if (this.fScope.encloses(proxy.requestFullPath().toString())) {
 							if (JsPathIndexer.DEBUG) {
 								System.out.println("adding selected index path:" + file.getParent().getFullPath()); //$NON-NLS-1$
 							}
 							fPaths.put(file.getParent().getFullPath(), JsSearchSupport.getInstance().computeIndexLocation(file.getParent().getFullPath()));
 						}
-					}
+					//}
 				}
 				// don't search deeper for files
 				return false;

@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.jsdt.web.core.internal.java.search;
 
+import org.eclipse.wst.jsdt.web.core.internal.validation.Util;
 import java.io.File;
 import java.util.zip.CRC32;
 
@@ -41,7 +42,7 @@ import org.eclipse.wst.jsdt.web.core.internal.JsCoreMessages;
 import org.eclipse.wst.jsdt.web.core.internal.JsCorePlugin;
 import org.eclipse.wst.jsdt.web.core.internal.Logger;
 import org.eclipse.wst.jsdt.web.core.internal.java.JsNameManglerUtil;
-import org.eclipse.wst.jsdt.web.core.internal.provisional.contenttype.ContentTypeIdForJSP;
+import org.eclipse.wst.jsdt.web.core.internal.provisional.contenttype.ContentTypeIdForEmbededJs;
 
 /**
  * Central access to java indexing and search. All contact between JDT indexing
@@ -80,18 +81,11 @@ public class JsSearchSupport {
 	 * frequently)
 	 */
 	public static boolean isJsp(IFile file) {
-		// (pa) 20051025 removing deep content type check
-		// because this method is called frequently
-		// and IO is expensive
-		boolean isJsp = false;
+		
 		if (file != null && file.exists()) {
-			IContentType contentTypeJSP = Platform.getContentTypeManager().getContentType(ContentTypeIdForJSP.ContentTypeID_JSP);
-			// check this before description, it's less expensive
-			if (contentTypeJSP.isAssociatedWith(file.getName())) {
-				isJsp = true;
-			}
+			return Util.isJsType(file.getName());
 		}
-		return isJsp;
+		return false;
 	}
 	/**
 	 * This operation ensures that the live resource's search markers show up in

@@ -23,7 +23,7 @@ import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.wst.jsdt.web.core.internal.Logger;
-import org.eclipse.wst.jsdt.web.core.internal.provisional.contenttype.ContentTypeIdForJSP;
+import org.eclipse.wst.jsdt.web.core.internal.provisional.contenttype.ContentTypeIdForEmbededJs;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
@@ -60,39 +60,6 @@ public class JSPValidator implements IValidatorJob {
 			return (IFile[]) fFiles.toArray(new IFile[fFiles.size()]);
 		}
 		
-		/**
-		 * Gets list of content types this visitor is interested in
-		 * 
-		 * @return All JSP-related content types
-		 */
-		private IContentType[] getValidContentTypes() {
-			if (fContentTypes == null) {
-				// currently "hard-coded" to be jsp & jspf
-				fContentTypes = new IContentType[] { Platform.getContentTypeManager().getContentType(ContentTypeIdForJSP.ContentTypeID_JSP),
-						Platform.getContentTypeManager().getContentType(ContentTypeIdForJSP.ContentTypeID_JSPFRAGMENT), 
-						//@GINO Hardcoded support for JSPs
-						Platform.getContentTypeManager().getContentType( "org.eclipse.jst.jsp.core.jspsource" )
-						};
-			}
-			return fContentTypes;
-		}
-		
-		/**
-		 * Checks if fileName is some type of JSP (including JSP fragments)
-		 * 
-		 * @param fileName
-		 * @return true if filename indicates some type of JSP, false otherwise
-		 */
-		private boolean isJSPType(String fileName) {
-			boolean valid = false;
-			IContentType[] types = getValidContentTypes();
-			int i = 0;
-			while (i < types.length && !valid) {
-				valid = types[i].isAssociatedWith(fileName);
-				++i;
-			}
-			return valid;
-		}
 		
 		public boolean visit(IResourceProxy proxy) throws CoreException {
 			// check validation
@@ -100,7 +67,7 @@ public class JSPValidator implements IValidatorJob {
 				return false;
 			}
 			if (proxy.getType() == IResource.FILE) {
-				if (isJSPType(proxy.getName())) {
+				if (Util.isJsType(proxy.getName())) {
 					IFile file = (IFile) proxy.requestResource();
 					if (file.exists()) {
 						if (JSPValidator.DEBUG) {
@@ -160,7 +127,7 @@ public class JSPValidator implements IValidatorJob {
 			_message = message;
 		}
 	}
-	private IContentType fJSPFContentType = null;
+//	private IContentType fJSPFContentType = null;
 	
 	public void cleanup(IReporter reporter) {
 	// nothing to do
@@ -176,10 +143,10 @@ public class JSPValidator implements IValidatorJob {
 	 * @return false if file is a fragment and it should not be validated, true
 	 *         otherwise
 	 */
-	private boolean fragmentCheck(IFile file) {
-		return isFragment(file);
-	}
-	
+//	private boolean fragmentCheck(IFile file) {
+//		return isFragment(file);
+//	}
+//	
 	protected String getAttributeValue(IStructuredDocumentRegion sdr, String attrName) {
 		ITextRegion r = getAttributeValueRegion(sdr, attrName);
 		if (r != null) {
@@ -244,37 +211,37 @@ public class JSPValidator implements IValidatorJob {
 	 *            assumes file is not null and exists
 	 * @return true if file is jsp fragment, false otherwise
 	 */
-	private boolean isFragment(IFile file) {
-		boolean isFragment = false;
-		InputStream is = null;
-		try {
-			IContentDescription contentDescription = file.getContentDescription();
-			// it can be null
-			if (contentDescription == null) {
-				is = file.getContents();
-				contentDescription = Platform.getContentTypeManager().getDescriptionFor(is, file.getName(), new QualifiedName[] { IContentDescription.CHARSET });
-			}
-			if (contentDescription != null) {
-				String fileCtId = contentDescription.getContentType().getId();
-				isFragment = (fileCtId != null && ContentTypeIdForJSP.ContentTypeID_JSPFRAGMENT.equals(fileCtId));
-			}
-		} catch (IOException e) {
-			// ignore, assume it's invalid JSP
-		} catch (CoreException e) {
-			// ignore, assume it's invalid JSP
-		} finally {
-			// must close input stream in case others need it
-			if (is != null) {
-				try {
-					is.close();
-				} catch (Exception e) {
-					// not sure how to recover at this point
-				}
-			}
-		}
-		return isFragment;
-	}
-	
+//	private boolean isFragment(IFile file) {
+//		boolean isFragment = false;
+//		InputStream is = null;
+//		try {
+//			IContentDescription contentDescription = file.getContentDescription();
+//			// it can be null
+//			if (contentDescription == null) {
+//				is = file.getContents();
+//				contentDescription = Platform.getContentTypeManager().getDescriptionFor(is, file.getName(), new QualifiedName[] { IContentDescription.CHARSET });
+//			}
+//			if (contentDescription != null) {
+//				String fileCtId = contentDescription.getContentType().getId();
+//				isFragment = (fileCtId != null && ContentTypeIdForJSP.ContentTypeID_JSPFRAGMENT.equals(fileCtId));
+//			}
+//		} catch (IOException e) {
+//			// ignore, assume it's invalid JSP
+//		} catch (CoreException e) {
+//			// ignore, assume it's invalid JSP
+//		} finally {
+//			// must close input stream in case others need it
+//			if (is != null) {
+//				try {
+//					is.close();
+//				} catch (Exception e) {
+//					// not sure how to recover at this point
+//				}
+//			}
+//		}
+//		return isFragment;
+//	}
+//	
 	private boolean shouldValidate(IFile file) {
 		IResource resource = file;
 		do {
@@ -323,7 +290,7 @@ public class JSPValidator implements IValidatorJob {
 				}
 				IFile[] files = visitor.getFiles();
 				for (int i = 0; i < files.length && !reporter.isCancelled(); i++) {
-					if (shouldValidate(files[i]) && fragmentCheck(files[i])) {
+					if (shouldValidate(files[i])) {
 						int percent = (i * 100) / files.length + 1;
 						Message message = new LocalizedMessage(IMessage.LOW_SEVERITY, percent + "% " + files[i].getFullPath().toString());
 						reporter.displaySubtask(this, message);

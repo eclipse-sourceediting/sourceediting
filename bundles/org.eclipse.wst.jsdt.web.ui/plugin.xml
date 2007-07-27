@@ -414,20 +414,20 @@
 	
 	
 	<!-- Keybindings for jsp source editor -->
-	
+	<!--
 	<extension point="org.eclipse.ui.bindings"> -->
 	    <!--  win32:  M1=CTRL, M2=SHIFT, M3=ALT -->
 		<!-- rename refactor -->
-		
+		<!--
 		<key
 			sequence="M2+M3+R"
 			contextId="org.eclipse.wst.jsdt.web.ui.structured.text.editor.jsp.scope"
-			commandId="org.eclipse.wst.jsdt.web.ui.refactor.rename"
+			commandId="org.eclipse.wst.jsdt.ui.edit.text.java.rename.element"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
 		</key>
-		
+		-->
 		<!-- move refactor -->
-		
+		<!--
 		<key
 			sequence="M2+M3+V"
 			contextId="org.eclipse.wst.jsdt.web.ui.structured.text.editor.jsp.scope"
@@ -435,7 +435,7 @@
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
 		</key>
 	</extension>
-	
+	-->
 	
 	
 	<!--======================================================================================-->

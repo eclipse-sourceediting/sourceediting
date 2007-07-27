@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.jsdt.web.core.internal.java.search;
 
+import org.eclipse.wst.jsdt.web.core.internal.validation.Util;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +27,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.wst.jsdt.web.core.internal.JsCoreMessages;
-import org.eclipse.wst.jsdt.web.core.internal.provisional.contenttype.ContentTypeIdForJSP;
+import org.eclipse.wst.jsdt.web.core.internal.provisional.contenttype.ContentTypeIdForEmbededJs;
 
 /**
  * Re-indexes the entire workspace. Ensures the JSP Index is in a stable state
@@ -74,7 +75,7 @@ public class IndexWorkspaceJob extends Job {
 				// https://w3.opensource.ibm.com/bugzilla/show_bug.cgi?id=3553
 				// check this before description
 				// check name before actually getting the file (less work)
-				if (getJspContentType().isAssociatedWith(proxy.getName())) {
+				if (Util.isJsType(proxy.getName())) {
 					IFile file = (IFile) proxy.requestResource();
 					if (file.exists()) {
 						if (IndexWorkspaceJob.DEBUG) {
@@ -105,18 +106,7 @@ public class IndexWorkspaceJob extends Job {
 		setSystem(true);
 	}
 	
-	IContentType getJspContentType() {
-		if (this.fContentTypeJSP == null) {
-			this.fContentTypeJSP = Platform.getContentTypeManager().getContentType(ContentTypeIdForJSP.ContentTypeID_JSP);
-		}
-		return this.fContentTypeJSP;
-	}
-	
-	/**
-	 * @see org
-	 *      eclipse.core.internal.jobs.InternalJob#run(org.eclipse.core.runtime.IProgressMonitor)
-	 *      for similar method
-	 */
+
 	
 	protected IStatus run(IProgressMonitor monitor) {
 		IStatus status = Status.OK_STATUS;

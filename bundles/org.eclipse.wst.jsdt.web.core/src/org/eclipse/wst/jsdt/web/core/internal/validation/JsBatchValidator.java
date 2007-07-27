@@ -24,6 +24,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceProxy;
 import org.eclipse.core.resources.IResourceProxyVisitor;
+import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -51,7 +52,7 @@ import org.eclipse.wst.jsdt.core.JavaCore;
 import org.eclipse.wst.jsdt.core.JavaModelException;
 import org.eclipse.wst.jsdt.web.core.internal.JsCoreMessages;
 import org.eclipse.wst.jsdt.web.core.internal.Logger;
-import org.eclipse.wst.jsdt.web.core.internal.provisional.contenttype.ContentTypeIdForJSP;
+import org.eclipse.wst.jsdt.web.core.internal.provisional.contenttype.ContentTypeIdForEmbededJs;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.utils.StringUtils;
@@ -61,6 +62,7 @@ import org.eclipse.wst.validation.internal.ValidationRegistryReader;
 import org.eclipse.wst.validation.internal.core.Message;
 import org.eclipse.wst.validation.internal.core.ValidationException;
 import org.eclipse.wst.validation.internal.operations.IWorkbenchContext;
+import org.eclipse.wst.validation.internal.operations.WorkbenchReporter;
 import org.eclipse.wst.validation.internal.provisional.core.IMessage;
 import org.eclipse.wst.validation.internal.provisional.core.IReporter;
 import org.eclipse.wst.validation.internal.provisional.core.IValidationContext;
@@ -76,6 +78,27 @@ public final class JsBatchValidator implements IValidatorJob, IExecutableExtensi
 	private static final String PLUGIN_ID_JSP_CORE = "org.eclipse.wst.jsdt.web.core"; //$NON-NLS-1$
 	private IPath[] excludeLibPaths;
 	
+	private final static String [] rhinoValidator = {"org.eclipse.atf.javascript.internal.validation.JSSyntaxValidator"};
+      static { 
+              // Temp code to clear Rhino Syntax validation markers.
+              IWorkspace workspace = ResourcesPlugin.getWorkspace();
+              IProject[] projects = workspace.getRoot().getProjects();
+              for (int j = 0; j < projects.length; j++) {
+                      IProject project = projects[j];
+                      //try {
+                              if (project.isOpen()) {
+                                      try {
+                                              if (project.hasNature(JavaCore.NATURE_ID)) {
+                                                      WorkbenchReporter.removeAllMessages(project, rhinoValidator, null);
+                                              }
+                                      } catch (CoreException e) {
+                                              // Do nothing
+                                      }
+                              }
+              }
+              
+      } 
+      
 	/**
 	 * Gets current validation project configuration based on current project
 	 * (which is based on current document)
@@ -137,7 +160,7 @@ public final class JsBatchValidator implements IValidatorJob, IExecutableExtensi
 				return false;
 			}
 			if (proxy.getType() == IResource.FILE) {
-				if (isJSPType(proxy.getName()) && proxy.isAccessible()) {
+				if (Util.isJsType(proxy.getName()) && proxy.isAccessible()) {
 					IFile file = (IFile) proxy.requestResource();
 					if (JsBatchValidator.DEBUG) {
 						System.out.println("(+) JSPValidator adding file: " + file.getName()); //$NON-NLS-1$
@@ -195,7 +218,7 @@ public final class JsBatchValidator implements IValidatorJob, IExecutableExtensi
 			_message = message;
 		}
 	}
-	String fAdditionalContentTypesIDs[] = null;
+	//String fAdditionalContentTypesIDs[] = null;
 	private IContentType[] fContentTypes = null;
 	private IContentType fJSPFContentType = null;
 	private JsValidator fJSPJavaValidator = new JsValidator(this);
@@ -250,7 +273,7 @@ public final class JsBatchValidator implements IValidatorJob, IExecutableExtensi
 			for (int i = 0; i < uris.length && !reporter.isCancelled(); i++) {
 				currentFile = wsRoot.getFile(new Path(uris[i]));
 				if (currentFile != null && currentFile.exists()) {
-					if (shouldValidate(currentFile) && fragmentCheck(currentFile)) {
+					if (shouldValidate(currentFile) ) {
 						Message message = new LocalizedMessage(IMessage.LOW_SEVERITY, "" + (i + 1) + "/" + uris.length + " - " + currentFile.getFullPath().toString().substring(1));
 						reporter.displaySubtask(this, message);
 						validateFile(currentFile, reporter);
@@ -277,7 +300,7 @@ public final class JsBatchValidator implements IValidatorJob, IExecutableExtensi
 				}
 				IFile[] files = visitor.getFiles();
 				for (int i = 0; i < files.length && !reporter.isCancelled(); i++) {
-					if (shouldValidate(files[i]) && fragmentCheck(files[i])) {
+					if (shouldValidate(files[i]) ) {
 						message = new LocalizedMessage(IMessage.LOW_SEVERITY, "" + (i + 1) + "/" + files.length + " - " + files[i].getFullPath().toString().substring(1));
 						reporter.displaySubtask(this, message);
 						validateFile(files[i], reporter);
@@ -290,19 +313,19 @@ public final class JsBatchValidator implements IValidatorJob, IExecutableExtensi
 		}
 	}
 	
-	/**
-	 * Checks if file is a jsp fragment or not. If so, check if the fragment
-	 * should be validated or not.
-	 * 
-	 * @param file
-	 *            Assumes shouldValidate was already called on file so it should
-	 *            not be null and does exist
-	 * @return false if file is a fragment and it should not be validated, true
-	 *         otherwise
-	 */
-	private boolean fragmentCheck(IFile file) {
-		return isFragment(file);
-	}
+//	/**
+//	 * Checks if file is a jsp fragment or not. If so, check if the fragment
+//	 * should be validated or not.
+//	 * 
+//	 * @param file
+//	 *            Assumes shouldValidate was already called on file so it should
+//	 *            not be null and does exist
+//	 * @return false if file is a fragment and it should not be validated, true
+//	 *         otherwise
+//	 */
+//	private boolean fragmentCheck(IFile file) {
+//		return isFragment(file);
+//	}
 	
 	public ISchedulingRule getSchedulingRule(IValidationContext helper) {
 		if (helper instanceof IWorkbenchContext) {
@@ -317,88 +340,9 @@ public final class JsBatchValidator implements IValidatorJob, IExecutableExtensi
 		return null;
 	}
 	
-	/**
-	 * Gets list of content types this visitor is interested in
-	 * 
-	 * @return All JSP-related content types
-	 */
-	private IContentType[] getValidContentTypes() {
-		if (fContentTypes == null) {
-			// currently "hard-coded" to be jsp & jspf
-			fContentTypes = new IContentType[] { Platform.getContentTypeManager().getContentType(ContentTypeIdForJSP.ContentTypeID_JSP),
-					Platform.getContentTypeManager().getContentType(ContentTypeIdForJSP.ContentTypeID_JSPFRAGMENT) };
-			if (fAdditionalContentTypesIDs != null) {
-				List allTypes = new ArrayList(Arrays.asList(fContentTypes));
-				for (int i = 0; i < fAdditionalContentTypesIDs.length; i++) {
-					IContentType type = Platform.getContentTypeManager().getContentType(fAdditionalContentTypesIDs[i]);
-					if (type != null) {
-						allTypes.add(type);
-					}
-				}
-				fContentTypes = (IContentType[]) allTypes.toArray(new IContentType[allTypes.size()]);
-			}
-		}
-		return fContentTypes;
-	}
-	
-	/**
-	 * Determines if file is jsp fragment or not (does a deep, indepth check,
-	 * looking into contents of file)
-	 * 
-	 * @param file
-	 *            assumes file is not null and exists
-	 * @return true if file is jsp fragment, false otherwise
-	 */
-	private boolean isFragment(IFile file) {
-		boolean isFragment = false;
-		InputStream is = null;
-		try {
-			IContentDescription contentDescription = file.getContentDescription();
-			// it can be null
-			if (contentDescription == null) {
-				is = file.getContents();
-				contentDescription = Platform.getContentTypeManager().getDescriptionFor(is, file.getName(), new QualifiedName[] { IContentDescription.CHARSET });
-			}
-			if (contentDescription != null) {
-				String fileCtId = contentDescription.getContentType().getId();
-				isFragment = (fileCtId != null && ContentTypeIdForJSP.ContentTypeID_JSPFRAGMENT.equals(fileCtId));
-			}
-		} catch (IOException e) {
-			// ignore, assume it's invalid JSP
-		} catch (CoreException e) {
-			// ignore, assume it's invalid JSP
-		} finally {
-			/*
-			 * must close input stream in case others need it
-			 * (IFile.getContents() requirement as well)
-			 */
-			if (is != null) {
-				try {
-					is.close();
-				} catch (Exception e) {
-					// not sure how to recover at this point
-				}
-			}
-		}
-		return isFragment;
-	}
-	
-	/**
-	 * Checks if fileName is some type of JSP (including JSP fragments)
-	 * 
-	 * @param fileName
-	 * @return true if filename indicates some type of JSP, false otherwise
-	 */
-	private boolean isJSPType(String fileName) {
-		boolean valid = false;
-		IContentType[] types = getValidContentTypes();
-		int i = 0;
-		while (i < types.length && !valid) {
-			valid = types[i].isAssociatedWith(fileName);
-			++i;
-		}
-		return valid;
-	}
+
+
+
 	
 	private void performValidation(IFile f, IReporter reporter, IStructuredModel model) {
 		if (!reporter.isCancelled()) {
@@ -411,12 +355,7 @@ public final class JsBatchValidator implements IValidatorJob, IExecutableExtensi
 	 *      java.lang.String, java.lang.Object)
 	 */
 	public void setInitializationData(IConfigurationElement config, String propertyName, Object data) throws CoreException {
-		fAdditionalContentTypesIDs = new String[0];
-		if (data != null) {
-			if (data instanceof String && data.toString().length() > 0) {
-				fAdditionalContentTypesIDs = StringUtils.unpack(data.toString());
-			}
-		}
+		
 	}
 	
 	private boolean shouldValidate(IFile file) {
