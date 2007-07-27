@@ -89,7 +89,7 @@ public final class JsBatchValidator implements IValidatorJob, IExecutableExtensi
                               if (project.isOpen()) {
                                       try {
                                               if (project.hasNature(JavaCore.NATURE_ID)) {
-                                              //        WorkbenchReporter.removeAllMessages(project, rhinoValidator, null);
+                                                    WorkbenchReporter.removeAllMessages(project, rhinoValidator, null);
                                               }
                                       } catch (CoreException e) {
                                               // Do nothing
