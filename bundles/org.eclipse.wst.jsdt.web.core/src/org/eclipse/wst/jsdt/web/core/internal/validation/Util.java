@@ -21,8 +21,8 @@ public class Util {
 		boolean valid = false;
 		IContentType[] types =getJavascriptContentTypes();
 		int i = 0;
-		while (i < types.length && !valid) {
-			valid = types[i].isAssociatedWith(fileName);
+		while (types!=null && i < types.length && !valid) {
+			valid = types[i]!=null && types[i].isAssociatedWith(fileName);
 			++i;
 		}
 		return valid;

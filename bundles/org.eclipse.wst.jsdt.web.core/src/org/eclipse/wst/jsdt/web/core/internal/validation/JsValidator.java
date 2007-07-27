@@ -39,6 +39,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.validation.internal.core.Message;
 import org.eclipse.wst.validation.internal.core.ValidationException;
 import org.eclipse.wst.validation.internal.operations.IWorkbenchContext;
+import org.eclipse.wst.validation.internal.operations.WorkbenchReporter;
 import org.eclipse.wst.validation.internal.provisional.core.IMessage;
 import org.eclipse.wst.validation.internal.provisional.core.IReporter;
 import org.eclipse.wst.validation.internal.provisional.core.IValidationContext;
@@ -49,6 +50,10 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 public class JsValidator implements IValidator{
 	private static final boolean DEBUG = Boolean.valueOf(Platform.getDebugOption("org.eclipse.wst.jsdt.web.core/debug/jspvalidator")).booleanValue(); //$NON-NLS-1$
 	private IValidator fMessageOriginator;
+	
+	private static String [] jsdtValidator = {"org.eclipse.wst.jsdt.web.core.internal.validation.JsBatchValidator"};
+
+	
 	protected class LocalizedMessage extends Message {
 		private String _message = null;
 		
@@ -185,7 +190,7 @@ public class JsValidator implements IValidator{
 			IFile currentFile = null;
 			for (int i = 0; i < uris.length && !reporter.isCancelled(); i++) {
 				currentFile = wsRoot.getFile(new Path(uris[i]));
-				//reporter.removeAllMessages(this, currentFile);
+				reporter.removeAllMessages(this, currentFile);
 				if (currentFile != null && currentFile.exists()) {
 					if (shouldValidate(currentFile) ){ //&& fragmentCheck(currentFile)) {
 						int percent = (i * 100) / uris.length + 1;
@@ -286,6 +291,7 @@ public class JsValidator implements IValidator{
 			if (!reporter.isCancelled() && model != null) {
 				// get jsp model, get translation
 				if (model instanceof IDOMModel) {
+					//WorkbenchReporter.removeAllMessages(f.getProject(), jsdtValidator, f.toString());
 					reporter.removeAllMessages(fMessageOriginator, f);
 					performValidation(f, reporter, model);
 				}

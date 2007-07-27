@@ -390,7 +390,10 @@ public final class JsBatchValidator implements IValidatorJob, IExecutableExtensi
 		IStructuredModel model = null;
 		try {
 			// get JSP model on behalf of all JSP validators
-			model = StructuredModelManager.getModelManager().getModelForRead(f);
+			model = StructuredModelManager.getModelManager().getExistingModelForRead(f);
+			if(model==null) {
+				model = model = StructuredModelManager.getModelManager().getModelForRead(f);
+			}
 			if (!reporter.isCancelled() && model != null) {
 				reporter.removeAllMessages(this, f);
 				performValidation(f, reporter, model);

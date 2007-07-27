@@ -169,6 +169,9 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
 					
 				int htmllength = range==null?0:range.getLength();
 				int htmloffset = range==null?0:range.getOffset();
+				if(htmllength<0 || htmloffset<0) {
+					continue;
+				}
 				Position position = new Position(htmloffset, htmllength);
 				validChildren.add( getJsNode(node.getParentNode(), allChildren[i], position));
 					
