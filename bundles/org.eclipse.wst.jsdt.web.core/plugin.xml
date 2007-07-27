@@ -80,12 +80,12 @@
 				objectClass="org.eclipse.core.resources.IFile"
 				nameFilter="*.htm">
 			</filter>
-			<!--
+			
 			<filter
 				objectClass="org.eclipse.core.resources.IFile"
-				nameFilter="*.js">
+				nameFilter="*.jsp">
 			</filter>
-			--> 
+			 
 
 			<enablement/>
 
