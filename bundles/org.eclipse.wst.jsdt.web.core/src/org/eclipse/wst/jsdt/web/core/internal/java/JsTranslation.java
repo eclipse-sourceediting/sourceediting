@@ -336,6 +336,7 @@ public class JsTranslation implements IJsTranslation {
 	
 	public List getProblems() {
 		List problems = getProblemRequestor().getCollectedProblems();
+		getProblemRequestor().endReporting();
 		return problems != null ? problems : new ArrayList();
 	}
 	

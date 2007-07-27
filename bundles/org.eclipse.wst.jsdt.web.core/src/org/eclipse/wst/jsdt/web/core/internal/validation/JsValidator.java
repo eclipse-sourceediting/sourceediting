@@ -147,6 +147,7 @@ public class JsValidator implements IValidator{
 				translation.reconcileCompilationUnit();
 				List problems = translation.getProblems();
 				// add new messages
+				reporter.removeAllMessages(this, f);
 				for (int i = 0; i < problems.size() && !reporter.isCancelled(); i++) {
 					IMessage m = createMessageFromProblem((IProblem) problems.get(i), f, translation, domModel.getStructuredDocument());
 					if (m != null) {
