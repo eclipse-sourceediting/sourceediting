@@ -125,7 +125,9 @@ public class JsSearchDocument {
 			// get existing model for read, then get document from it
 			IModelManager modelManager = StructuredModelManager.getModelManager();
 			if (modelManager != null) {
-				model = modelManager.getModelForRead(jspFile);
+				model = modelManager.getExistingModelForRead(jspFile);
+				if(model==null)
+					model = modelManager.getModelForRead(jspFile);
 			}
 			// handle unsupported
 			if (model instanceof IDOMModel) {

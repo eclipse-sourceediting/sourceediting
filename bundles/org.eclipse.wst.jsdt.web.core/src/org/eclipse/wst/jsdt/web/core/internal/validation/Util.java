@@ -32,13 +32,14 @@ public class Util {
 	public static IContentType[] getJavascriptContentTypes() {
 
 		String[] contentTypeIds = ContentTypeIdForEmbededJs.ContentTypeIds;
-		IContentType[] fContentTypes = new IContentType[contentTypeIds.length];
+		ArrayList fContentTypes = new ArrayList();
 		
 		
 		for(int i = 0;i<contentTypeIds.length;i++) {
-			fContentTypes[i] =  Platform.getContentTypeManager().getContentType(contentTypeIds[i]);
+			IContentType ct =  Platform.getContentTypeManager().getContentType(contentTypeIds[i]);
+			if(ct!=null) fContentTypes.add(ct);
 		}
 		
-		return fContentTypes;
+		return (IContentType[])fContentTypes.toArray(new IContentType[fContentTypes.size()]);
 	}
 }
