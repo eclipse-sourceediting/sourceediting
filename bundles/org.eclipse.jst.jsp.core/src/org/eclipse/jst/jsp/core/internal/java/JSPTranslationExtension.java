@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,6 +18,8 @@ import java.util.List;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.ToolFactory;
+import org.eclipse.jdt.core.formatter.CodeFormatter;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
@@ -78,6 +80,7 @@ public class JSPTranslationExtension extends JSPTranslation {
 
 	private IDocument fJspDocument = null;
 	private IDocument fJavaDocument = null;
+	private CodeFormatter fCodeFormatter = null;
 
 	public JSPTranslationExtension(IDocument jspDocument, IDocument javaDocument, IJavaProject javaProj, JSPTranslator translator) {
 		super(javaProj, translator);
@@ -287,8 +290,12 @@ public class JSPTranslationExtension extends JSPTranslation {
 		// code
 		// 
 		// in the translated java document
-
-		textBefore = textBefore.replaceAll("\t\t\t", "\t"); //$NON-NLS-1$ //$NON-NLS-2$
+		// BUG188636 - just get indent info from code formatter
+		String level1 = getCodeFormatter().createIndentationString(1);
+		String level3 = getCodeFormatter().createIndentationString(3);
+		String theOld = "\n" + level3; //$NON-NLS-1$
+		String theNew = "\n" + level1; //$NON-NLS-1$
+		textBefore = textBefore.replaceAll(theOld, theNew);
 
 		// get indent after 2nd line break
 		StringBuffer textAfter = new StringBuffer();
@@ -311,22 +318,30 @@ public class JSPTranslationExtension extends JSPTranslation {
 	}
 
 	private String getInitialIndent(String result) {
-
-		// get indent after 2nd line break
-		String indent = ""; //$NON-NLS-1$
-		StringTokenizer st = new StringTokenizer(result, "\r\n", false); //$NON-NLS-1$
-		if (st.countTokens() > 1) {
-			String tok = st.nextToken();
-			tok = st.nextToken();
-			int index = 0;
-			if (tok != null) {
-				while (tok.charAt(index) == ' ' || tok.charAt(index) == '\t') {
-					indent += tok.charAt(index);
-					index++;
-				}
-			}
-		}
+		// BUG188636 - just get initial indent from code formatter
+		String indent = getCodeFormatter().createIndentationString(1);
+		// // get indent after 2nd line break
+		// String indent = ""; //$NON-NLS-1$
+		// StringTokenizer st = new StringTokenizer(result, "\r\n", false);
+		// //$NON-NLS-1$
+		// if (st.countTokens() > 1) {
+		// String tok = st.nextToken();
+		// tok = st.nextToken();
+		// int index = 0;
+		// if (tok != null) {
+		// while (tok.charAt(index) == ' ' || tok.charAt(index) == '\t') {
+		// indent += tok.charAt(index);
+		// index++;
+		// }
+		// }
+		// }
 		return indent;
+	}
+
+	private CodeFormatter getCodeFormatter() {
+		if (fCodeFormatter == null)
+			fCodeFormatter = ToolFactory.createCodeFormatter(null);
+		return fCodeFormatter;
 	}
 
 
