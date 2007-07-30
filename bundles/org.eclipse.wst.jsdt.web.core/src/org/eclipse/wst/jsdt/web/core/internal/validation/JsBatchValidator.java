@@ -344,7 +344,7 @@ public final class JsBatchValidator implements IValidatorJob, IExecutableExtensi
 	
 	private void performValidation(IFile f, IReporter reporter, IStructuredModel model) {
 		if (!reporter.isCancelled()) {
-			fJSPJavaValidator.performValidation(f, reporter, model);
+			fJSPJavaValidator.performValidation(f, reporter, model,true);
 		}
 	}
 	

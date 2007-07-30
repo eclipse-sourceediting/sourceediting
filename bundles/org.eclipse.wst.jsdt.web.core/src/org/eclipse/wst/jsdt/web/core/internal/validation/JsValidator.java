@@ -134,7 +134,7 @@ public class JsValidator implements IValidator{
 		return m;
 	}
 	
-	void performValidation(IFile f, IReporter reporter, IStructuredModel model) {
+	void performValidation(IFile f, IReporter reporter, IStructuredModel model, boolean inBatch) {
 		if (model instanceof IDOMModel) {
 			IDOMModel domModel = (IDOMModel) model;
 			setupAdapterFactory(domModel);
@@ -147,7 +147,7 @@ public class JsValidator implements IValidator{
 				translation.reconcileCompilationUnit();
 				List problems = translation.getProblems();
 				// add new messages
-				reporter.removeAllMessages(this, f);
+				if(!inBatch) reporter.removeAllMessages(this, f);
 				for (int i = 0; i < problems.size() && !reporter.isCancelled(); i++) {
 					IMessage m = createMessageFromProblem((IProblem) problems.get(i), f, translation, domModel.getStructuredDocument());
 					if (m != null) {
@@ -293,8 +293,8 @@ public class JsValidator implements IValidator{
 				// get jsp model, get translation
 				if (model instanceof IDOMModel) {
 					//WorkbenchReporter.removeAllMessages(f.getProject(), jsdtValidator, f.toString());
-					reporter.removeAllMessages(fMessageOriginator, f);
-					performValidation(f, reporter, model);
+					//reporter.removeAllMessages(fMessageOriginator, f);
+					performValidation(f, reporter, model, false);
 				}
 			}
 		} catch (IOException e) {
