@@ -75,6 +75,7 @@ public class SimpleJSDTActionProxy implements IObjectActionDelegate {
 		Class[] types = new Class[] { IWorkbenchSite.class };
 		Constructor cons = target.getConstructor(types);
 		Object[] args = new Object[] { targetWorkbenchPart.getSite() };
+		
 		actionHandlerTarget = cons.newInstance(args);
 		handlerTargetAction = action;
 		return actionHandlerTarget;
@@ -144,6 +145,8 @@ public class SimpleJSDTActionProxy implements IObjectActionDelegate {
 	
 	public void selectionChanged(IAction action, ISelection selection) {
 		currentSelection = selection;
+		if(targetWorkbenchPart==null) return;
+		
 		try {
 			Object handler = getActionHandler(action);
 			SimpleJSDTActionProxy.executeMethod(handler, "selectionChanged", getSelectionChangeArgTypes(), getSelectionChangeArgs(action, selection));
