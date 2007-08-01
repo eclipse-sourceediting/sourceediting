@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -74,7 +74,7 @@ public class GenericPositionManager {
 	 * @see org.eclipse.jface.text.IDocument#addPosition(java.lang.String,
 	 *      org.eclipse.jface.text.Position)
 	 */
-	public void addPosition(String category, Position position) throws BadLocationException, BadPositionCategoryException {
+	public synchronized void addPosition(String category, Position position) throws BadLocationException, BadPositionCategoryException {
 
 		if ((0 > position.offset) || (0 > position.length) || (position.offset + position.length > getDocumentLength()))
 			throw new BadLocationException();
@@ -153,7 +153,7 @@ public class GenericPositionManager {
 	 * 
 	 * @see IDocument#computeIndexInCategory(String, int)
 	 */
-	protected int computeIndexInPositionList(List positions, int offset) {
+	protected synchronized int computeIndexInPositionList(List positions, int offset) {
 
 		if (positions.size() == 0)
 			return 0;
@@ -255,6 +255,8 @@ public class GenericPositionManager {
 	/**
 	 * Returns all positions managed by the document grouped by category.
 	 * 
+	 * @deprecated - exposes volatile internals
+	 * 
 	 * @return the document's positions
 	 */
 	protected Map getDocumentManagedPositions() {
@@ -329,7 +331,7 @@ public class GenericPositionManager {
 	 * @see org.eclipse.jface.text.IDocument#removePosition(java.lang.String,
 	 *      org.eclipse.jface.text.Position)
 	 */
-	public void removePosition(String category, Position position) throws BadPositionCategoryException {
+	public synchronized void removePosition(String category, Position position) throws BadPositionCategoryException {
 
 		if (position == null)
 			return;
