@@ -120,12 +120,12 @@ public class JSPTranslator {
 				" javax.servlet.http.HttpServletResponse response)" + ENDL + //$NON-NLS-1$
 				"\t\tthrows java.io.IOException, javax.servlet.ServletException {" + ENDL + //$NON-NLS-1$
 				"javax.servlet.jsp.PageContext pageContext = null;" + ENDL + //$NON-NLS-1$
-				"javax.servlet.http.HttpSession session = null;" + ENDL + //$NON-NLS-1$
 				"javax.servlet.ServletContext application = null;" + ENDL + //$NON-NLS-1$
 				"javax.servlet.ServletConfig config = null;" + ENDL + //$NON-NLS-1$ 
 				"javax.servlet.jsp.JspWriter out = null;" + ENDL + //$NON-NLS-1$
 				"Object page = null;" + ENDL; //$NON-NLS-1$
 
+	private String fSessionVariableDeclaration = "javax.servlet.http.HttpSession session = null;" + ENDL; //$NON-NLS-1$
 	private String fFooter = "}}"; //$NON-NLS-1$
 	private String fException = "Throwable exception = null;"; //$NON-NLS-1$
 	public static final String EXPRESSION_PREFIX = "out.print(\"\"+"; //$NON-NLS-1$
@@ -143,6 +143,7 @@ public class JSPTranslator {
 	private int fCursorPosition = -1;
 	/** some page directive attributes */
 	private boolean fIsErrorPage, fCursorInExpression = false;
+	private boolean fIsInASession = true;
 
 	/** user java code in body of the service method */
 	private StringBuffer fUserCode = new StringBuffer();
@@ -435,6 +436,7 @@ public class JSPTranslator {
 		fCursorPosition = -1;
 
 		fIsErrorPage = fCursorInExpression = false;
+		fIsInASession = true;
 
 		fUserCode = new StringBuffer();
 		fUserDeclarations = new StringBuffer();
@@ -535,6 +537,11 @@ public class JSPTranslator {
 		if (fIsErrorPage) {
 			fResult.append(fException);
 			javaOffset += fException.length();
+		}
+		// session participant
+		if(fIsInASession) {
+			fResult.append(fSessionVariableDeclaration);
+			javaOffset += fSessionVariableDeclaration.length();
 		}
 
 
@@ -1177,9 +1184,9 @@ public class JSPTranslator {
 									// see:
 									// https://w3.opensource.ibm.com/bugzilla/show_bug.cgi?id=3035
 									// setCurrentNode(getCurrentNode().getNext());
-									if (getCurrentNode() != null) {
+									if (container != null) {
 										// 'regions' contain the attrs
-										translatePageDirectiveAttributes(regions);
+										translatePageDirectiveAttributes(container, regions);
 									}
 								}
 							}
@@ -1374,7 +1381,7 @@ public class JSPTranslator {
 	 */
 	protected void translateJSPNode(ITextRegion region, Iterator regions, String type, int JSPType) {
 		if (type == DOMJSPRegionContexts.JSP_DIRECTIVE_OPEN && regions != null) {
-			translateDirective(regions);
+			translateDirective(fCurrentNode, regions);
 		}
 		else {
 			ITextRegionCollection contentRegion = null;
@@ -1597,7 +1604,7 @@ public class JSPTranslator {
 	/**
 	 * /* <%@ %> /* need to pass in the directive tag region
 	 */
-	protected void translateDirective(Iterator regions) {
+	protected void translateDirective(ITextRegionCollection container, Iterator regions) {
 		ITextRegion r = null;
 		String regionText, attrValue = ""; //$NON-NLS-1$
 		while (regions.hasNext() && (r = (ITextRegion) regions.next()) != null && r.getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_NAME) { // could
@@ -1627,7 +1634,7 @@ public class JSPTranslator {
 					handleIncludeFile(fileLocation);
 			}
 			else if (regionText.indexOf("page") > -1) { //$NON-NLS-1$
-				translatePageDirectiveAttributes(regions);
+				translatePageDirectiveAttributes(container, regions);
 			}
 		}
 	}
@@ -1751,7 +1758,7 @@ public class JSPTranslator {
 	/**
 	 * takes an emnumeration of the attributes of a directive tag
 	 */
-	protected void translatePageDirectiveAttributes(Iterator regions) {
+	protected void translatePageDirectiveAttributes(ITextRegionCollection container, Iterator regions) {
 		ITextRegion r = null;
 		String attrName, attrValue;
 		// iterate all attributes
@@ -1759,12 +1766,12 @@ public class JSPTranslator {
 			attrName = attrValue = null;
 			if (r.getType().equals(DOMRegionContext.XML_TAG_ATTRIBUTE_NAME)) {
 
-				attrName = getCurrentNode().getText(r).trim();
+				attrName = container.getText(r).trim();
 				if (attrName.length() > 0) {
 					if (regions.hasNext() && (r = (ITextRegion) regions.next()) != null && r.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS) {
 						if (regions.hasNext() && (r = (ITextRegion) regions.next()) != null && r.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
 
-							attrValue = StringUtils.strip(getCurrentNode().getText(r));
+							attrValue = StringUtils.strip(container.getText(r));
 						}
 						// has equals, but no value?
 					}
@@ -1790,7 +1797,7 @@ public class JSPTranslator {
 		}
 		else if (attrName.equals("session")) //$NON-NLS-1$
 		{
-			// fSession = ("true".equalsIgnoreCase(attrValue)); //$NON-NLS-1$
+			fIsInASession = "true".equalsIgnoreCase(attrValue); //$NON-NLS-1$
 		}
 		else if (attrName.equals("buffer")) //$NON-NLS-1$
 		{
@@ -1806,7 +1813,7 @@ public class JSPTranslator {
 		}
 		else if (attrName.equals("isErrorPage")) //$NON-NLS-1$
 		{
-			fIsErrorPage = Boolean.valueOf(attrValue).booleanValue();
+			fIsErrorPage = "true".equalsIgnoreCase(attrValue); //$NON-NLS-1$
 		}
 	}
 

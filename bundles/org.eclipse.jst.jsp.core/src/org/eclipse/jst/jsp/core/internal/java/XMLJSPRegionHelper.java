@@ -390,6 +390,7 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=81687
 				this.fTranslator.addImports(importValue, false);
 			}
+			fTranslator.translatePageDirectiveAttributes(sdRegion, sdRegion.getRegions().iterator());
 		}
 	}	
 
