@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -511,7 +511,26 @@ public class FileBufferModelManager {
 			if (buffer != null) {
 				DocumentInfo info = (DocumentInfo) fDocumentMap.get(buffer.getDocument());
 				info.selfConnected = true;
-				model = getModel((IStructuredDocument) buffer.getDocument());
+				/*
+				 * Check the document type. Although returning null for
+				 * unknown documents would be fair, try to get a model if
+				 * the document is at least a valid type.
+				 */
+				IDocument bufferDocument = buffer.getDocument();
+				if (bufferDocument instanceof IStructuredDocument) {
+					model = getModel((IStructuredDocument) bufferDocument);
+				}
+				else {
+					/*
+					 * 190768 - Quick diff marks do not disappear in the
+					 * vertical ruler of JavaScript editor
+					 * 
+					 * Disconnect the buffer if it's not an
+					 * IStructuredDocument since we won't be disconnecting
+					 * during the release of an IStructuredModel
+					 */
+					bufferManager.disconnect(location, getProgressMonitor());
+				}
 			}
 		}
 		catch (CoreException e) {
@@ -563,6 +582,17 @@ public class FileBufferModelManager {
 					IDocument bufferDocument = buffer.getDocument();
 					if (bufferDocument instanceof IStructuredDocument) {
 						model = getModel((IStructuredDocument) bufferDocument);
+					}
+					else {
+						/*
+						 * 190768 - Quick diff marks do not disappear in the
+						 * vertical ruler of JavaScript editor
+						 * 
+						 * Disconnect the buffer if it's not an
+						 * IStructuredDocument since we won't be disconnecting
+						 * during the release of an IStructuredModel
+						 */
+						bufferManager.disconnect(location, getProgressMonitor());
 					}
 				}
 			}
