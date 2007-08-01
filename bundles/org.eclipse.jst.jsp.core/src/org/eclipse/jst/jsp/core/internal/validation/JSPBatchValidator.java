@@ -1,3 +1,14 @@
+/*******************************************************************************
+ * Copyright (c) 2006, 2007 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *     
+ *******************************************************************************/
 package org.eclipse.jst.jsp.core.internal.validation;
 
 import java.io.IOException;
@@ -190,6 +201,7 @@ public final class JSPBatchValidator implements IValidatorJob, IExecutableExtens
 	private JSPDirectiveValidator directiveValidator = new JSPDirectiveValidator(this);
 	private JSPELValidator elValidator = new JSPELValidator(this);
 	private JSPJavaValidator jspJavaValidator = new JSPJavaValidator(this);
+	private JSPActionValidator fJSPActionValidator = new JSPActionValidator(this);
 
 	String fAdditionalContentTypesIDs[] = null;
 
@@ -197,6 +209,7 @@ public final class JSPBatchValidator implements IValidatorJob, IExecutableExtens
 		directiveValidator.cleanup(reporter);
 		elValidator.cleanup(reporter);
 		jspJavaValidator.cleanup(reporter);
+		fJSPActionValidator.cleanup(reporter);
 	}
 
 	void doValidate(IValidationContext helper, IReporter reporter) throws ValidationException {
@@ -393,9 +406,14 @@ public final class JSPBatchValidator implements IValidatorJob, IExecutableExtens
 	}
 
 	private void performValidation(IFile f, IReporter reporter, IStructuredModel model) {
-		directiveValidator.performValidation(f, reporter, model.getStructuredDocument());
-		elValidator.performValidation(f, reporter, model.getStructuredDocument());
-		jspJavaValidator.performValidation(f, reporter, model);
+		if (!reporter.isCancelled())
+			directiveValidator.performValidation(f, reporter, model.getStructuredDocument());
+		if (!reporter.isCancelled())
+			elValidator.performValidation(f, reporter, model.getStructuredDocument());
+		if (!reporter.isCancelled())
+			jspJavaValidator.performValidation(f, reporter, model);
+		if (!reporter.isCancelled())
+			fJSPActionValidator.performValidation(f, reporter, model);
 	}
 
 	/**
