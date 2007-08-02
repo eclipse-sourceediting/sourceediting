@@ -42,6 +42,8 @@ public class ProductManager {
 							new String[]{IProductConstants.DEFAULT_RUNTIME_1,
 										IProductConstants.DEFAULT_RUNTIME_2,
 										IProductConstants.DEFAULT_RUNTIME_3};
+	private final static String USE_EAR_LIBRARIES = "true";  //$NON-NLS-1$
+	private final static String USE_WEB_APP_LIBRARIES = "true"; //$NON-NLS-1$
 	
 	/**
 	 * Return the value for the associated key from the Platform Product registry or return the
@@ -89,6 +91,10 @@ public class ProductManager {
 				return FINAL_PERSPECTIVE;
 			else if (key.equals(IProductConstants.FINAL_PERSPECTIVE_WEB))
 				return FINAL_PERSPECTIVE;
+			else if (key.equals(IProductConstants.USE_EAR_LIBRARIES))
+				return USE_EAR_LIBRARIES;
+			else if (key.equals(IProductConstants.USE_WEB_APP_LIBRARIES))
+				return USE_WEB_APP_LIBRARIES;
 		}
 		return value;
 	}
