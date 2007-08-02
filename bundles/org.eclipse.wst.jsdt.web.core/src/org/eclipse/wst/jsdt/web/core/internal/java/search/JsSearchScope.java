@@ -121,4 +121,14 @@ public class JsSearchScope implements IJavaSearchScope {
 	public void setIncludesClasspaths(boolean includesClasspaths) {
 	// do nothing
 	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.jsdt.core.search.IJavaSearchScope#shouldExclude(java.lang.String, java.lang.String)
+	 */
+	public boolean shouldExclude(String container, String resourceName) {
+		// TODO Auto-generated method stub
+		System.out.println("Unimplemented method:JsSearchScope.shouldExclude");
+		return false;
+	}
+
 }
