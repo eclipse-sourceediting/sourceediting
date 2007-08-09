@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005,2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -158,7 +158,8 @@ public class JSPDirectiveValidator extends JSPValidator implements ISourceValida
 			}
 		}
 		fFile = file;
-		fEnableSourceValidation = (fFile != null && fDocument instanceof IStructuredDocument && JSPBatchValidator.isBatchValidatorPreferenceEnabled(fFile));
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=199175
+		fEnableSourceValidation = (fFile != null && fDocument instanceof IStructuredDocument && JSPBatchValidator.isBatchValidatorPreferenceEnabled(fFile) && shouldReallyValidate(fFile));
 		if(DEBUG) {
 			Logger.log(Logger.INFO, getClass().getName() + " enablement for source validation: " + fEnableSourceValidation); //$NON-NLS-1$
 		}

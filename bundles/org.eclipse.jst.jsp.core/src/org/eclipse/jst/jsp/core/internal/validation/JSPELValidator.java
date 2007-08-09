@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2006 BEA Systems and others.
+ * Copyright (c) 2005, 2007 BEA Systems and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -87,7 +87,8 @@ public class JSPELValidator extends JSPValidator implements ISourceValidator {
 			}
 		}
 		fFile = file;
-		fEnableSourceValidation = (fDocument instanceof IStructuredDocument && JSPBatchValidator.isBatchValidatorPreferenceEnabled(fFile));
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=199175
+		fEnableSourceValidation = (fDocument instanceof IStructuredDocument && JSPBatchValidator.isBatchValidatorPreferenceEnabled(fFile) && shouldReallyValidate(fFile));
 		if(DEBUG) {
 			Logger.log(Logger.INFO, getClass().getName() + " enablement for source validation: " + fEnableSourceValidation); //$NON-NLS-1$
 		}

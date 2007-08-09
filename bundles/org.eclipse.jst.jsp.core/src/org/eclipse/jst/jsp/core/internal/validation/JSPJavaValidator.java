@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005,2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -131,7 +131,8 @@ public class JSPJavaValidator extends JSPValidator implements ISourceValidator {
 			}
 		}
 		fFile = file;
-		fEnableSourceValidation = (fFile != null && fModel != null && JSPBatchValidator.isBatchValidatorPreferenceEnabled(fFile));
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=199175
+		fEnableSourceValidation = (fFile != null && fModel != null && JSPBatchValidator.isBatchValidatorPreferenceEnabled(fFile) && shouldReallyValidate(fFile));
 		if(DEBUG) {
 			Logger.log(Logger.INFO, getClass().getName() + " enablement for source validation: " + fEnableSourceValidation); //$NON-NLS-1$
 		}
@@ -247,7 +248,7 @@ public class JSPJavaValidator extends JSPValidator implements ISourceValidator {
 		int sourceStart = translation.getJspOffset(problem.getSourceStart());
 		int sourceEnd = translation.getJspOffset(problem.getSourceEnd());
 		if (sourceStart == -1)
-			return null;
+				return null;
 
 		// line number for marker starts @ 1
 		// line number from document starts @ 0
