@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005,2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -552,6 +552,23 @@ class ProjectDescription {
 				projectsProcessed.add(buildpathProjects[i]);
 				ProjectDescription description = TaglibIndex._instance.createDescription(buildpathProjects[i]);
 				description.addBuildPathReferences(references, projectsProcessed, true);
+				
+				/*
+				 * 183756 - JSP Validation Cannot Find Tag Library Descriptor
+				 * in Referenced Projects
+				 * 
+				 * Add any TLD records having URI values from projects on the build path
+				 */
+				Map[] rootReferences = (Map[]) description.fImplicitReferences.values().toArray(new Map[description.fImplicitReferences.size()]);
+				for (int j = 0; j < rootReferences.length; j++) {
+					Iterator implicitRecords = rootReferences[j].values().iterator();
+					while (implicitRecords.hasNext()) {
+						ITaglibRecord record = (ITaglibRecord) implicitRecords.next();
+						if (record.getRecordType() == ITaglibRecord.TLD && ((ITLDRecord) record).getURI() != null) {
+							references.put(((ITLDRecord) record).getURI(), record);
+						}
+					}
+				}
 			}
 		}
 	}
