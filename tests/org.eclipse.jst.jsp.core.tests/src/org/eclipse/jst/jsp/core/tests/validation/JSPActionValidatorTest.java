@@ -10,18 +10,26 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.core.tests.validation;
 
+import java.util.Iterator;
+import java.util.List;
+
 import junit.framework.TestCase;
 
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jst.jsp.core.internal.JSPCoreMessages;
 import org.eclipse.jst.jsp.core.internal.validation.JSPActionValidator;
 import org.eclipse.jst.jsp.core.tests.taglibindex.BundleResourceUtil;
+import org.eclipse.osgi.util.NLS;
+import org.eclipse.wst.validation.internal.provisional.core.IMessage;
 import org.eclipse.wst.validation.internal.provisional.core.IReporter;
 
 public class JSPActionValidatorTest extends TestCase {
 	String wtp_autotest_noninteractive = null;
 	private static final String PROJECT_NAME = "testvalidatejspactions";
+	private static final String UNDEFINED_ATTR_IDONT = "idont";
+	private static final String REQUIRED_ATTR_NAME = "name";
 
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -57,7 +65,13 @@ public class JSPActionValidatorTest extends TestCase {
 		helper.setURI(filePath);
 		validator.validate(helper, reporter);
 
-		assertTrue("jsp action validator did not detect undefined attributes", reporter.getMessages().size() == 3);
+		boolean foundError1 = errorMessageFound(reporter, NLS.bind(JSPCoreMessages.JSPDirectiveValidator_6, UNDEFINED_ATTR_IDONT), 4);
+		if (foundError1)
+			foundError1 = errorMessageFound(reporter, NLS.bind(JSPCoreMessages.JSPDirectiveValidator_6, UNDEFINED_ATTR_IDONT), 12);
+		if (foundError1)
+			foundError1 = errorMessageFound(reporter, NLS.bind(JSPCoreMessages.JSPDirectiveValidator_6, UNDEFINED_ATTR_IDONT), 13);
+
+		assertTrue("jsp action validator did not detect undefined attributes", foundError1);
 	}
 
 	/**
@@ -75,7 +89,26 @@ public class JSPActionValidatorTest extends TestCase {
 		helper.setURI(filePath);
 		validator.validate(helper, reporter);
 
-		assertTrue("jsp action validator did not detect missing required attributes", reporter.getMessages().size() == 2);
+		boolean foundError = errorMessageFound(reporter, NLS.bind(JSPCoreMessages.JSPDirectiveValidator_5, REQUIRED_ATTR_NAME), 11);
+		if (foundError)
+			foundError = errorMessageFound(reporter, NLS.bind(JSPCoreMessages.JSPDirectiveValidator_5, REQUIRED_ATTR_NAME), 12);
+
+		assertTrue("jsp action validator did not detect missing required attributes", foundError);
+	}
+	
+	private boolean errorMessageFound(IReporter reporter, String errorMessage, int errorLineNumber) {
+		boolean foundError = false;
+		List messages = reporter.getMessages();
+		Iterator iter = messages.iterator();
+		while (iter.hasNext() && !foundError) {
+			IMessage message = (IMessage) iter.next();
+			int lineNumber = message.getLineNumber();
+			String messageText = message.getText();
+
+			if (lineNumber == errorLineNumber && messageText.startsWith(errorMessage))
+				foundError = true;
+		}
+		return foundError;
 	}
 
 	/**
