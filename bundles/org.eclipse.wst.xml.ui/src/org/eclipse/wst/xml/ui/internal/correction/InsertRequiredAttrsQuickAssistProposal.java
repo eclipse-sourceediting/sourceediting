@@ -27,6 +27,7 @@ import org.eclipse.text.edits.InsertEdit;
 import org.eclipse.text.edits.MultiTextEdit;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
@@ -62,7 +63,7 @@ public class InsertRequiredAttrsQuickAssistProposal implements ICompletionPropos
 	 *      char, int, int)
 	 */
 	public void apply(ITextViewer viewer, char trigger, int stateMask, int offset) {
-		IDOMNode node = (IDOMNode) ContentAssistUtils.getNodeAt(viewer, offset);
+		IDOMNode node = (IDOMNode) ContentAssistUtils.getNodeAt((StructuredTextViewer) viewer, offset);
 		IStructuredDocumentRegion startStructuredDocumentRegion = node.getStartStructuredDocumentRegion();
 		int index = startStructuredDocumentRegion.getEndOffset();
 		ITextRegion lastRegion = startStructuredDocumentRegion.getLastRegion();

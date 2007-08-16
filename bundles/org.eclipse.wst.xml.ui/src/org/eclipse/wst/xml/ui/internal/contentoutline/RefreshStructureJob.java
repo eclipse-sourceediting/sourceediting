@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -59,35 +59,49 @@ class RefreshStructureJob extends Job {
 		fRequests = new ArrayList(2);
 	}
 
-	private synchronized void addRequest(Node node) {
+	private synchronized void addRequest(Node newNodeRequest) {
+		/*
+		 * note: the caller must NOT pass in null node request (which, since
+		 * private method, we do not need to gaurd against here, as long 
+		 * as we gaurd against it in calling method.
+		 */
 		int size = fRequests.size();
-		if (size > 0) {
-			for (int i = 0; i < size; i++) {
-				/*
-				 * If we already have a request which contains the new
-				 * request, discard the new request
-				 */
-				Node node2 = (Node) fRequests.get(i);
-				if (contains(node2, node))
-					return;
-				/*
-				 * If new request contains any existing requests, replace it
-				 * with new request
-				 */
-				if (contains(node, node2)) {
-					fRequests.set(i, node);
-					return;
-				}
-				/**
-				 * None of the above, have a separate refresh subtree, then.
-				 */
-				fRequests.add(node);
-
+		for (int i = 0; i < size; i++) {
+			Node existingNodeRequest = (Node) fRequests.get(i);
+			/*
+			 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=157427 If we
+			 * already have a request which equals the new request, discard
+			 * the new request
+			 */
+			if (existingNodeRequest.equals(newNodeRequest))
+				return;
+			/*
+			 * If we already have a request which contains the new request,
+			 * discard the new request
+			 */
+			if (contains(existingNodeRequest, newNodeRequest))
+				return;
+			/*
+			 * If new request contains any existing requests, replace it with
+			 * new request. ISSUE: technically, we should replace ALL
+			 * contained, existing requests (such as if many siblings already
+			 * que'd up when their common parent is then requested, but, I'm
+			 * not sure if that occurs much, in practice, or if there's an
+			 * algorithm to quickly find them all. Actually, I guess we could
+			 * just go through the _rest_ of the list (i+1 to size) and remove
+			 * any that are contained by new request ... in future :) .
+			 */
+			if (contains(newNodeRequest, existingNodeRequest)) {
+				fRequests.set(i, newNodeRequest);
+				return;
 			}
 		}
-		else {
-			fRequests.add(node);
-		}
+		/*
+		 * If we get to here, either from existing request list being zero
+		 * length, or no exisitng requests "matched" new request, then add the
+		 * new request.
+		 */
+		fRequests.add(newNodeRequest);
 	}
 
 	private synchronized void addViewer(StructuredViewer viewer) {
@@ -97,6 +111,9 @@ class RefreshStructureJob extends Job {
 	}
 
 	/**
+	 * Simple hierarchical containment relationship. Note, this method returns
+	 * "false" if the two nodes are equal!
+	 * 
 	 * @param root
 	 * @param possible
 	 * @return if the root is parent of possible, return true, otherwise

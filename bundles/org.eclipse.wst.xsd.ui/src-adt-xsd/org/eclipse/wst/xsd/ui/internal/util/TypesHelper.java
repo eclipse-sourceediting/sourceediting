@@ -68,22 +68,16 @@ public class TypesHelper
     }
   }
 
-
+  // TODO This method and it's very similar getBuiltInTypeNamesList2 should 
+  // be reviewed and combined if possible. Both seem to be used from 
+  // XSDModelQueryExtension for content assist purposes.
+  
   public java.util.List getBuiltInTypeNamesList()
   {
-    Vector items = new Vector();
+    List items = new ArrayList();
     if (xsdSchema != null)
     {
       String prefix = xsdSchema.getSchemaForSchemaQNamePrefix();
-      if (prefix != null && prefix.length() > 0)
-      {
-        prefix = prefix + ":";
-      }
-      else
-      {
-        prefix = "";
-      }
-      List result = new ArrayList();
       if (xsdSchema != null)
       {
         XSDSchema schemaForSchema = XSDSchemaImpl.getSchemaForSchema(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001);
@@ -92,7 +86,7 @@ public class TypesHelper
           XSDTypeDefinition td = (XSDTypeDefinition) i.next();  
           String localName = td.getName(); 
           String prefixedName = (prefix != null && prefix.length() > 0) ? prefix + ":" + localName : localName; 
-          result.add(prefixedName);        
+          items.add(prefixedName);        
         }
       }
     }

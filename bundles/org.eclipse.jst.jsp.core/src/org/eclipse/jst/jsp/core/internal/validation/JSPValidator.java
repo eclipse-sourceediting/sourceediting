@@ -1,3 +1,14 @@
+/*******************************************************************************
+ * Copyright (c) 2006, 2007 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *     
+ *******************************************************************************/
 package org.eclipse.jst.jsp.core.internal.validation;
 
 import java.io.IOException;
@@ -326,6 +337,16 @@ public class JSPValidator implements IValidatorJob {
 		}
 		while ((resource.getType() & IResource.PROJECT) == 0);
 		return true;
+	}
+	
+	/**
+	 * Returns whether or not JSP validation should really run
+	 * @param file
+	 * @return true if should really validate. false otherwise
+	 */
+	boolean shouldReallyValidate(IFile file) {
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=199175
+		return (shouldValidate(file) && fragmentCheck(file));
 	}
 
 	// for debugging

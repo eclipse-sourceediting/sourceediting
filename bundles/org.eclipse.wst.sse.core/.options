@@ -15,3 +15,4 @@ org.eclipse.wst.sse.core/tasks/overalltime=false
 org.eclipse.wst.sse.core/tasks/time=false
 org.eclipse.wst.sse.core/tasks/preferences=false
 org.eclipse.wst.sse.core/tasks/registry=false
+org.eclipse.wst.sse.core/format=false

@@ -83,6 +83,7 @@ public class EditCatalogEntryDialog extends Dialog {
 
 		protected void computeErrorMessage() {
 			errorMessage = null;
+			warningMessage = null;
 
 			if (errorMessage == null) {
 				String fileName = resourceLocationField.getText();
@@ -93,17 +94,25 @@ public class EditCatalogEntryDialog extends Dialog {
 
 					String uri = fileName;
 					if (!URIHelper.hasProtocol(uri)) {
-						uri = URIHelper.isAbsolute(uri) ? URIHelper.prependFileProtocol(uri) : URIHelper.prependPlatformResourceProtocol(uri);
+					URIHelper.isAbsolute(uri);
+						uri = (URIHelper.isAbsolute(uri)) ? URIHelper.prependFileProtocol(uri) : URIHelper.prependPlatformResourceProtocol(uri);
 					}
 
 					if (errorMessage == null && !URIHelper.isReadableURI(uri, false)) {
 						errorMessage = XMLCatalogMessages.UI_WARNING_URI_NOT_FOUND_COLON + fileName;
 					}
-				}
-				else {
+				} else {
 					// this an error that is not actaully
 					// reported ... OK is just disabled
 					errorMessage = "";  //$NON-NLS-1$
+				}
+
+				// Make sure the key is a fully qualified URI in the cases where the key type is "System ID" or "Schema location"
+				if (keyField.getText().length() > 0 && getKeyType() == ICatalogEntry.ENTRY_TYPE_SYSTEM ) {
+					URI uri = URI.createURI(keyField.getText());
+					if (uri.scheme() == null) {
+						warningMessage = XMLCatalogMessages.UI_WARNING_SHOULD_BE_FULLY_QUALIFIED_URI;
+					}
 				}
 			}
 
@@ -156,14 +165,16 @@ public class EditCatalogEntryDialog extends Dialog {
 			group.setLayout(layout);
 
 			Label resourceLocationLabel = new Label(group, SWT.NONE);
-			resourceLocationLabel.setText(XMLCatalogMessages.UI_LABEL_URI_COLON);
+			resourceLocationLabel.setText(XMLCatalogMessages.UI_LABEL_LOCATION_COLON);
 
 			resourceLocationField = new Text(group, SWT.SINGLE | SWT.BORDER);
 			gd = new GridData();
 			gd.horizontalAlignment = SWT.FILL;
 			gd.grabExcessHorizontalSpace = true;
 			resourceLocationField.setLayoutData(gd);
-			resourceLocationField.setText(getDisplayValue(getEntry().getURI()));
+			
+			resourceLocationField.setText(getDisplayValue(URIUtils.convertURIToLocation(getEntry().getURI())));
+
 			// WorkbenchHelp.setHelp(resourceLocationField,
 			// XMLBuilderContextIds.XMLP_ENTRY_URI);
 			resourceLocationField.addModifyListener(modifyListener);
@@ -304,11 +315,7 @@ public class EditCatalogEntryDialog extends Dialog {
 		}
 
 		public void saveData() {
-			String uri = resourceLocationField.getText();
-			if (!URIHelper.hasProtocol(uri)) {
-				uri = URIHelper.isAbsolute(uri) ? URIHelper.prependFileProtocol(uri) : URIHelper.prependPlatformResourceProtocol(uri);
-			}
-			getEntry().setURI(uri);
+			getEntry().setURI(URIUtils.convertLocationToURI(resourceLocationField.getText()));
 			getEntry().setKey(keyField.getText());
 			getEntry().setEntryType(getKeyType());
 			getEntry().setAttributeValue(ICatalogEntry.ATTR_WEB_URL, checkboxButton.getSelection() ? webAddressField.getText() : null);
@@ -422,8 +429,10 @@ public class EditCatalogEntryDialog extends Dialog {
 
 		public void createAndOpen() {
 			this.create();
-			getShell().setText(XMLCatalogMessages.UI_LABEL_SELECT_FILE);
 			setBlockOnOpen(true);
+			getShell().setText(XMLCatalogMessages.UI_LABEL_FILE_SELECTION);
+			this.setTitle(XMLCatalogMessages.UI_LABEL_SELECT_FILE);
+			this.setMessage(XMLCatalogMessages.UI_LABEL_CHOOSE_FILE_TO_ADD_TO_CATALOG);
 			open();
 		}
 
@@ -436,7 +445,6 @@ public class EditCatalogEntryDialog extends Dialog {
 			filterControl.setLayoutData(gd);
 
 			filterControl.setText(XMLCatalogMessages.UI_TEXT_SELECT_FILE_FILTER_CONTROL);
-
 			filterControl.add(XMLCatalogMessages.UI_TEXT_SELECT_FILE_FILTER_CONTROL);
 
 			for (Iterator i = CatalogFileTypeRegistryReader.getXMLCatalogFileTypes().iterator(); i.hasNext();) {
@@ -551,7 +559,7 @@ public class EditCatalogEntryDialog extends Dialog {
 
 			catalogLocationField = new Text(group, SWT.SINGLE | SWT.BORDER);
 			catalogLocationField.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-			catalogLocationField.setText(getDisplayValue(getNextCatalog().getCatalogLocation()));
+			catalogLocationField.setText(URIUtils.convertURIToLocation(getDisplayValue(getNextCatalog().getCatalogLocation())));
 			// WorkbenchHelp.setHelp(resourceLocationField,
 			// XMLBuilderContextIds.XMLP_ENTRY_URI);
 			catalogLocationField.addModifyListener(modifyListener);
@@ -585,11 +593,7 @@ public class EditCatalogEntryDialog extends Dialog {
 		}
 
 		public void saveData() {
-			String uri = catalogLocationField.getText();
-			if (!URIHelper.hasProtocol(uri)) {
-				uri = URIHelper.isAbsolute(uri) ? URIHelper.prependFileProtocol(uri) : URIHelper.prependPlatformResourceProtocol(uri);
-			}
-			getNextCatalog().setCatalogLocation(URIHelper.ensureFileURIProtocolFormat(uri));
+			getNextCatalog().setCatalogLocation(URIUtils.convertLocationToURI(catalogLocationField.getText()));
 		}
 
 		protected void updateWidgets(Widget widget) {
@@ -643,6 +647,8 @@ public class EditCatalogEntryDialog extends Dialog {
 	protected ICatalogElement fCatalogElement;
 
 	protected String errorMessage;
+	
+	protected String warningMessage;
 
 	protected Button okButton;
 
@@ -839,7 +845,11 @@ public class EditCatalogEntryDialog extends Dialog {
 	}
 
 	protected void updateErrorMessageLabel(Label errorMessageLabel) {
-		errorMessageLabel.setText(errorMessage != null ? errorMessage : ""); //$NON-NLS-1$
+		if(errorMessage != null)
+		errorMessageLabel.setText(errorMessage);
+		else if (warningMessage != null)
+			errorMessageLabel.setText(warningMessage);
+		else errorMessageLabel.setText("");
 	}
 
 	protected void updateOKButtonState() {
@@ -951,7 +961,7 @@ public class EditCatalogEntryDialog extends Dialog {
 			FileDialog dialog = new FileDialog(getShell(), SWT.SINGLE);
 			String file = dialog.open();
 			if (control instanceof Text && file != null) {
-				((Text) control).setText(URIHelper.ensureFileURIProtocolFormat(URI.createFileURI(file).toString()));
+				((Text) control).setText(file);
 			}
 		}
 	}

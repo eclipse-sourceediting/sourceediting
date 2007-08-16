@@ -19,6 +19,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.ScrollBar;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
 import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalogEntry;
 import org.eclipse.wst.xml.core.internal.catalog.provisional.INextCatalog;
 
@@ -37,7 +38,7 @@ public class XMLCatalogEntryDetailsView
 	detailsText = new Text(parent, SWT.MULTI | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 
 	GridData data = new GridData(GridData.FILL_BOTH);	
-	data.heightHint = 65;
+	data.heightHint = 85;
 	detailsText.setLayoutData(data);
 
     verticalScroll = detailsText.getVerticalBar();
@@ -49,8 +50,21 @@ public class XMLCatalogEntryDetailsView
 
   public void setCatalogElement(ICatalogEntry entry)
   {                       
-    String value = getDisplayValue(entry != null ? entry.getURI() : ""); //$NON-NLS-1$
+	  
+	String value = getDisplayValue(entry != null ? entry.getURI() : ""); //$NON-NLS-1$
     String line1 = XMLCatalogMessages.UI_LABEL_DETAILS_URI_COLON + "\t\t" + value; //$NON-NLS-1$
+
+    String line0;
+    if (value.startsWith("jar:file:")) {
+    	String jarFile = URIUtils.convertURIToLocation(URIHelper.ensureURIProtocolFormat(value.substring("jar:".length(), value.indexOf('!'))));
+    	String internalFile = URIUtils.convertURIToLocation(URIHelper.ensureURIProtocolFormat("file://" + value.substring(value.indexOf('!') + 1)));
+    	line0 = XMLCatalogMessages.UI_LABEL_DETAILS_URI_LOCATION + "\t" + internalFile + " " + XMLCatalogMessages.UI_LABEL_DETAILS_IN_JAR_FILE + " " + jarFile;
+    }
+    else {
+    	value = URIUtils.convertURIToLocation(value);
+    	line0 = XMLCatalogMessages.UI_LABEL_DETAILS_URI_LOCATION + "\t" + value; //$NON-NLS-1$
+ 	
+    }
     
     value = entry != null ? getKeyTypeValue(entry) : ""; //$NON-NLS-1$
     String line2 = XMLCatalogMessages.UI_KEY_TYPE_DETAILS_COLON + "\t" + value; //$NON-NLS-1$
@@ -58,7 +72,7 @@ public class XMLCatalogEntryDetailsView
     value = getDisplayValue(entry != null ? entry.getKey() : ""); //$NON-NLS-1$
     String line3 = XMLCatalogMessages.UI_LABEL_DETAILS_KEY_COLON + "\t\t" + value; //$NON-NLS-1$
 
-    String entireString = "\n" + line1 + "\n" + line2 + "\n" + line3; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    String entireString = "\n" + line0 + "\n" + line1 + "\n" + line2 + "\n" + line3; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     detailsText.setText(entireString);
   }  
   
@@ -67,7 +81,9 @@ public class XMLCatalogEntryDetailsView
     String value = getDisplayValue(nextCatalog != null ? nextCatalog.getCatalogLocation() : ""); //$NON-NLS-1$
     String line1 = XMLCatalogMessages.UI_LABEL_DETAILS_URI_COLON + "\t\t" + value; //$NON-NLS-1$
     
-    String entireString = "\n" + line1; //$NON-NLS-1$
+    String line0 = XMLCatalogMessages.UI_LABEL_DETAILS_URI_LOCATION + "\t" + URIUtils.convertURIToLocation(value);
+    
+    String entireString = "\n" + line0 + "\n" + line1; //$NON-NLS-1$
     detailsText.setText(entireString);
   }  
 

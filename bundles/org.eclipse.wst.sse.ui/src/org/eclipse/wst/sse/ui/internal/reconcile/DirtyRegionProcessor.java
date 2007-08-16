@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -27,9 +27,12 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DocumentEvent;
+import org.eclipse.jface.text.DocumentRewriteSessionEvent;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentExtension3;
+import org.eclipse.jface.text.IDocumentExtension4;
 import org.eclipse.jface.text.IDocumentListener;
+import org.eclipse.jface.text.IDocumentRewriteSessionListener;
 import org.eclipse.jface.text.ITextInputListener;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.ITypedRegion;
@@ -51,11 +54,24 @@ import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 public class DirtyRegionProcessor extends Job implements IReconciler, IReconcilerExtension, IConfigurableReconciler {
 	class DocumentListener implements IDocumentListener {
 		public void documentAboutToBeChanged(DocumentEvent event) {
+			/* 
+			 * if in rewrite session and already going to reprocess
+			 * entire document after rewrite session, do nothing
+			 */
+			if (isInRewriteSession() && fReprocessAfterRewrite)
+				return;
 			// save partition type (to see if it changes in documentChanged())
 			fLastPartitions = getPartitions(event.getOffset(), event.getLength());
 		}
 
 		public void documentChanged(DocumentEvent event) {
+			/* 
+			 * if in rewrite session and already going to reprocess
+			 * entire document after rewrite session, do nothing
+			 */
+			if (isInRewriteSession() && fReprocessAfterRewrite)
+				return;
+
 			if (partitionsChanged(event)) {
 				// pa_TODO
 				// this is a simple way to ensure old
@@ -87,7 +103,18 @@ public class DirtyRegionProcessor extends Job implements IReconciler, IReconcile
 						dr = createDirtyRegion(event.getOffset(), event.getLength(), DirtyRegion.INSERT);
 					}
 				}
-				processDirtyRegion(dr);
+				if (isInRewriteSession()) {
+					/*
+					 * while in rewrite session, found a dirty region, so flag
+					 * that entire document needs to be reprocesed after rewrite
+					 * session
+					 */
+					if (!fReprocessAfterRewrite && (dr != null)) {
+						fReprocessAfterRewrite = true;
+					}
+				} else {
+					processDirtyRegion(dr);
+				}
 			}
 		}
 
@@ -146,6 +173,39 @@ public class DirtyRegionProcessor extends Job implements IReconciler, IReconcile
 		}
 	}
 
+	class DocumentRewriteSessionListener implements IDocumentRewriteSessionListener {
+		long time0 = 0;
+		
+		public void documentRewriteSessionChanged(DocumentRewriteSessionEvent event) {
+			boolean oldValue = fInRewriteSession;
+			fInRewriteSession = event != null && event.getChangeType().equals(DocumentRewriteSessionEvent.SESSION_START);
+
+			if (event.getChangeType().equals(DocumentRewriteSessionEvent.SESSION_START)) {
+				if(DEBUG) {
+					time0 = System.currentTimeMillis();
+				}
+				flushDirtyRegionQueue();
+				fReprocessAfterRewrite = false;
+			}
+			else if (event.getChangeType().equals(DocumentRewriteSessionEvent.SESSION_STOP)) {
+				if (fInRewriteSession ^ oldValue && fDocument != null) {
+					if(DEBUG) {
+						Logger.log(Logger.INFO, "Rewrite session lasted " + (System.currentTimeMillis() - time0) + "ms");
+						time0 = System.currentTimeMillis();
+					}
+					if (fReprocessAfterRewrite) {
+						DirtyRegion entireDocument = createDirtyRegion(0, fDocument.getLength(), DirtyRegion.INSERT);
+						processDirtyRegion(entireDocument);
+					}
+					if (DEBUG) {
+						Logger.log(Logger.INFO, "Full document reprocess took " + (System.currentTimeMillis() - time0) + "ms");
+					}
+					fReprocessAfterRewrite = false;
+				}
+			}
+		}
+	}
+
 	/** debug flag */
 	protected static final boolean DEBUG;
 	private static final long UPDATE_DELAY = 750;
@@ -165,6 +225,8 @@ public class DirtyRegionProcessor extends Job implements IReconciler, IReconcile
 	private IDocument fDocument = null;
 
 	private IDocumentListener fDocumentListener = new DocumentListener();
+	private IDocumentRewriteSessionListener fDocumentRewriteSessionListener = new DocumentRewriteSessionListener();
+
 	/**
 	 * set true after first install to prevent duplicate work done in the
 	 * install method (since install gets called multiple times)
@@ -189,6 +251,12 @@ public class DirtyRegionProcessor extends Job implements IReconciler, IReconcile
 	private TextInputListener fTextInputListener = null;
 	/** the text viewer */
 	private ITextViewer fViewer;
+	boolean fInRewriteSession = false;
+	/**
+	 * true if entire document needs to be reprocessed after
+	 * rewrite session
+	 */
+	boolean fReprocessAfterRewrite = false;
 
 	/**
 	 * Creates a new StructuredRegionProcessor
@@ -272,6 +340,14 @@ public class DirtyRegionProcessor extends Job implements IReconciler, IReconcile
 			tr = new ITypedRegion[0];
 		}
 		return tr;
+	}
+
+	/**
+	 * @deprecated use getOuterRegion() instead
+	 */
+	protected boolean contains(DirtyRegion root, DirtyRegion possible) {
+		// remove method post wtp 1.5.1
+		return isContained(root, possible);
 	}
 
 	/**
@@ -481,6 +557,10 @@ public class DirtyRegionProcessor extends Job implements IReconciler, IReconcile
 		return fIsInstalled;
 	}
 
+	boolean isInRewriteSession() {
+		return fInRewriteSession;
+	}
+
 	/**
 	 * Subclasses should implement for specific handling of dirty regions. The
 	 * method is invoked for each dirty region in the Job's queue.
@@ -488,6 +568,9 @@ public class DirtyRegionProcessor extends Job implements IReconciler, IReconcile
 	 * @param dirtyRegion
 	 */
 	protected void process(DirtyRegion dirtyRegion) {
+		if (isInRewriteSession()) {
+			return;
+		}
 		/*
 		 * Break the dirty region into a sequence of partitions and find the
 		 * corresponding strategy to reconcile those partitions. If a strategy
@@ -576,7 +659,15 @@ public class DirtyRegionProcessor extends Job implements IReconciler, IReconcile
 	}
 
 	public void setDocument(IDocument doc) {
+		if (fDocument != null && fDocument instanceof IDocumentExtension4) {
+			((IDocumentExtension4) fDocument).removeDocumentRewriteSessionListener(fDocumentRewriteSessionListener);
+		}
+
 		fDocument = doc;
+
+		if (fDocument != null && fDocument instanceof IDocumentExtension4) {
+			((IDocumentExtension4) fDocument).addDocumentRewriteSessionListener(fDocumentRewriteSessionListener);
+		}
 	}
 
 	/**
@@ -601,7 +692,7 @@ public class DirtyRegionProcessor extends Job implements IReconciler, IReconcile
 		if (document != null && isInstalled()) {
 
 			// since we're marking the entire doc dirty
-			getDirtyRegionQueue().clear();
+			flushDirtyRegionQueue();
 			DirtyRegion entireDocument = createDirtyRegion(0, document.getLength(), DirtyRegion.INSERT);
 			processDirtyRegion(entireDocument);
 		}

@@ -109,17 +109,23 @@ public class StructuredTextPartitionerForJSP extends StructuredTextPartitioner {
 
 	private IStructuredTextPartitioner createStructuredTextPartitioner(IStructuredDocument structuredDocument) {
 		IStructuredTextPartitioner result = null;
+		// this same detector should underly content describer, to have consistent results
 		JSPDocumentHeadContentDetector jspHeadContentDetector = new JSPDocumentHeadContentDetector();
 		jspHeadContentDetector.set(structuredDocument);
-		String contentType;
+		String contentType = null;
 		try {
 			contentType = jspHeadContentDetector.getContentType();
+			// if XHTML or WML, that trumps what is in the page directive
+			if (jspHeadContentDetector.isXHTML() || jspHeadContentDetector.isWML()) {
+				contentType = "text/html";
+			}
 		}
 		catch (IOException e) {
-			// should be impossible in this context
+			// impossible in this context, since working with document stream
 			throw new Error(e);
 		}
-		if (contentType == null) {
+		// null or empty, treat as "default"
+		if (contentType == null || contentType.length() == 0) {
 			contentType = "text/html"; //$NON-NLS-1$
 		}
 		// we currently only have two ... eventually should

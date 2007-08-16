@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006 IBM Corporation and others.
+ * Copyright (c) 2006, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,6 +13,9 @@ package org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo;
 import java.util.StringTokenizer;
 
 import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.wst.xsd.ui.internal.common.commands.ExtensibleAddExtensionCommand;
+import org.eclipse.wst.xsd.ui.internal.common.commands.ExtensibleRemoveExtensionNodeCommand;
+import org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo.custom.NodeFilter;
 
 public class SpecificationForExtensionsSchema
 {
@@ -22,6 +25,10 @@ public class SpecificationForExtensionsSchema
   private String location;
   private ILabelProvider labelProvider;
   private boolean isDefaultSchema = false;
+  private ExtensibleAddExtensionCommand addCommand;
+  private ExtensibleRemoveExtensionNodeCommand removeCommand;
+  private NodeFilter nodeFilter;
+  private String classification;
   
   /**
    * Either the workspace-relative path of the xsd file or the namespace
@@ -121,12 +128,32 @@ public class SpecificationForExtensionsSchema
   {
     return labelProvider;
   }
-
+  
   public void setLabelProvider(ILabelProvider labelProvider)
   {
     this.labelProvider = labelProvider;
   }
-  
+
+  public ExtensibleAddExtensionCommand getExtensibleAddExtensionCommand()
+  {
+    return addCommand;
+  }
+
+  public void setExtensibleAddExtensionCommand(ExtensibleAddExtensionCommand addCommand)
+  {
+    this.addCommand = addCommand;
+  }
+
+  public ExtensibleRemoveExtensionNodeCommand getExtensibleRemoveExtensionNodeCommand()
+  {
+    return removeCommand;
+  }
+
+  public void setExtensibleRemoveExtensionNodeCommand(ExtensibleRemoveExtensionNodeCommand removeCommand)
+  {
+    this.removeCommand = removeCommand;
+  }
+
   public boolean isDefautSchema(){
 	  return isDefaultSchema ;
   }
@@ -149,5 +176,44 @@ public class SpecificationForExtensionsSchema
 
   public void setFromCatalog(boolean fromCatalog) {
 	this.fromCatalog = fromCatalog;
+  }
+  
+  /**
+   * There is no support for setting this via the extension point defined in the plugin.xml
+   * This allows extenders to provide a filter for a category that has been added 
+   * dynamically (programmatically)
+   * @param nodeFilter
+   */ 
+  public void setNodeFilter(NodeFilter nodeFilter)
+  {
+    this.nodeFilter = nodeFilter;
+  }
+  
+  /**
+   * Get the node filter
+   * @return NodeFilter
+   */
+  public NodeFilter getNodeFilter()
+  {
+    return nodeFilter;
+  }
+  
+  /**
+   * There is no support for setting this via the extension point defined in the plugin.xml
+   * This allows extenders to group categories into groups or classificationss  
+   * @param classification
+   */
+  public void setClassification(String classification)
+  {
+    this.classification = classification;
+  }
+  
+  /**
+   * Get the classification
+   * @return String
+   */
+  public String getClassification()
+  {
+    return classification;
   }
 }

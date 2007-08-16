@@ -24,4 +24,8 @@ public abstract class ProductCustomizationProvider
   {
     return "";
   }
+  
+  public void handleAction(String actionId)
+  {    
+  }
 }

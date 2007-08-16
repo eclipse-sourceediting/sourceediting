@@ -2,6 +2,7 @@ org.eclipse.jst.jsp.core/debug=true
 org.eclipse.jst.jsp.core/debug/tracefilter=
 org.eclipse.jst.jsp.core/debug/jspindexmanager=false
 org.eclipse.jst.jsp.core/debug/jsptranslation=false
+org.eclipse.jst.jsp.core/debug/jsptranslationstodisk=false
 org.eclipse.jst.jsp.core/debug/jspsearch=false
 
 org.eclipse.jst.jsp.core/taglib/resolve=false
@@ -27,8 +28,8 @@ org.eclipse.jst.jsp.core/taglib/indexcreation=false
 org.eclipse.jst.jsp.core/taglib/resolve=false
 
 org.eclipse.jst.jsp.core/debug/jspjavamapping=false
-
 org.eclipse.jst.jsp.core/debug/jspvalidator=false
 org.eclipse.jst.jsp.core/debug/taglibvars=false
 
-org.eclipse.jst.jsp.core/debug/taglibclassloader
+org.eclipse.jst.jsp.core/debug/taglibclassloader=false
+org.eclipse.jst.jsp.core/debug/fragments/cache=false

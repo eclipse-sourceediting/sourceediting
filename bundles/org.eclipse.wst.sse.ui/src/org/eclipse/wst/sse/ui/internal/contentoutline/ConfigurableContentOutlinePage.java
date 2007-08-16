@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -92,7 +92,7 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 	 * Provides double-click registration so it can be done before the Control
 	 * is created.
 	 */
-	private class DoubleClickProvider implements IDoubleClickListener {
+	class DoubleClickProvider implements IDoubleClickListener {
 		private IDoubleClickListener[] listeners = null;
 
 		void addDoubleClickListener(IDoubleClickListener newListener) {
@@ -359,9 +359,9 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 		}
 
 		fDragAdapter = new DelegatingDragAdapter();
-		fDragSource = new DragSource(getControl(), DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK);
+		fDragSource = new DragSource(getControl(), DND.DROP_COPY | DND.DROP_MOVE);
 		fDropAdapter = new DelegatingDropAdapter();
-		fDropTarget = new DropTarget(getControl(), DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK);
+		fDropTarget = new DropTarget(getControl(), DND.DROP_COPY | DND.DROP_MOVE);
 
 		setConfiguration(getConfiguration());
 

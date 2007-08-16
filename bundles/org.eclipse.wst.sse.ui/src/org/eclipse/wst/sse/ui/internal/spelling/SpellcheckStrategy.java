@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006 IBM Corporation and others.
+ * Copyright (c) 2006, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -44,6 +44,10 @@ import org.eclipse.ui.texteditor.spelling.SpellingContext;
 import org.eclipse.ui.texteditor.spelling.SpellingEngineDescriptor;
 import org.eclipse.ui.texteditor.spelling.SpellingProblem;
 import org.eclipse.ui.texteditor.spelling.SpellingService;
+import org.eclipse.wst.sse.core.internal.parser.ForeignRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.sse.ui.internal.ExtendedConfigurationBuilder;
 import org.eclipse.wst.sse.ui.internal.Logger;
@@ -80,6 +84,9 @@ public class SpellcheckStrategy extends StructuredTextReconcilingStrategy {
 		List annotations = new ArrayList();
 
 		public void accept(SpellingProblem problem) {
+			if (!isInterestingProblem(problem))
+				return;
+
 			TemporaryAnnotation annotation = new TemporaryAnnotation(new Position(problem.getOffset(), problem.getLength()), TemporaryAnnotation.ANNOT_WARNING, problem.getMessage(), fReconcileAnnotationKey);
 			/*
 			 * TODO: create and use an IQuickFixProcessor that uses
@@ -101,6 +108,36 @@ public class SpellcheckStrategy extends StructuredTextReconcilingStrategy {
 		}
 
 		public void endCollecting() {
+		}
+
+		/**
+		 * Judge whether a spelling problem is "interesting". Accept any
+		 * regions that are explictly allowed, and since valid prose areas are
+		 * rarely in a complicated document region, accept any document region
+		 * with more than one text region and reject any document regions
+		 * containing foreign text regions.
+		 * 
+		 * @param problem
+		 *            a SpellingProblem
+		 * @return whether the collector should accept the given
+		 *         SpellingProblem
+		 */
+		boolean isInterestingProblem(SpellingProblem problem) {
+			if (getDocument() instanceof IStructuredDocument) {
+				IStructuredDocumentRegion documentRegion = ((IStructuredDocument) getDocument()).getRegionAtCharacterOffset(problem.getOffset());
+				if (documentRegion != null) {
+					ITextRegion textRegion = documentRegion.getRegionAtCharacterOffset(problem.getOffset());
+					if (textRegion != null) {
+						return true;
+					}
+					if (documentRegion.getFirstRegion() instanceof ForeignRegion)
+						return false;
+					if (documentRegion.getRegions().size() == 1)
+						return true;
+					return false;
+				}
+			}
+			return true;
 		}
 
 		IReconcileResult[] getResults() {
@@ -282,38 +319,30 @@ public class SpellcheckStrategy extends StructuredTextReconcilingStrategy {
 		if (isCanceled())
 			return;
 
-		TemporaryAnnotation[] annotationsToRemove = null;
-		IReconcileResult[] annotationsToAdd = null;
-		StructuredReconcileStep structuredStep = (StructuredReconcileStep) fSpellingStep;
 		IAnnotationModel annotationModel = getAnnotationModel();
 
 		IDocument document = getDocument();
 		if (document != null) {
 			try {
-				ITypedRegion[] partitions = TextUtilities.computePartitioning(document, getDocumentPartitioning(), dirtyRegion.getOffset(), dirtyRegion.getLength(), true);
-				for (int i = 0; i < partitions.length; i++) {
-					if (isSupportedPartitionType(partitions[i].getType())) {
-						annotationsToRemove = getSpellingAnnotationsToRemove(partitions[i]);
-						annotationsToAdd = structuredStep.reconcile(dirtyRegion, partitions[i]);
-
-						if (annotationModel instanceof IAnnotationModelExtension) {
-							IAnnotationModelExtension modelExtension = (IAnnotationModelExtension) annotationModel;
-							Map annotationsToAddMap = new HashMap();
-							for (int j = 0; j < annotationsToAdd.length; j++) {
-								annotationsToAddMap.put(annotationsToAdd[j], ((TemporaryAnnotation) annotationsToAdd[j]).getPosition());
-							}
-							modelExtension.replaceAnnotations(annotationsToRemove, annotationsToAddMap);
-						}
-
-						else {
-							for (int j = 0; j < annotationsToAdd.length; j++) {
-								annotationModel.addAnnotation((TemporaryAnnotation) annotationsToAdd[j], ((TemporaryAnnotation) annotationsToAdd[j]).getPosition());
-							}
-							for (int j = 0; j < annotationsToRemove.length; j++) {
-								annotationModel.removeAnnotation(annotationsToRemove[j]);
-							}
+				/**
+				 * Apparently the default spelling engine has noticeable
+				 * overhead for each call made to it, as well as the
+				 * IAnnotatioModel updates we would perform for each. It's
+				 * faster to check the entire dirty region at once if we know
+				 * that we're not differentiating by partition.
+				 * 
+				 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=192530
+				 */
+				if (checkByPartitions()) {
+					ITypedRegion[] partitions = TextUtilities.computePartitioning(document, getDocumentPartitioning(), dirtyRegion.getOffset(), dirtyRegion.getLength(), true);
+					for (int i = 0; i < partitions.length; i++) {
+						if (isSupportedPartitionType(partitions[i].getType())) {
+							spellCheck(dirtyRegion, partitions[i], annotationModel);
 						}
 					}
+				}
+				else {
+					spellCheck(dirtyRegion, dirtyRegion, annotationModel);
 				}
 			}
 			catch (BadLocationException e) {
@@ -321,6 +350,37 @@ public class SpellcheckStrategy extends StructuredTextReconcilingStrategy {
 		}
 	}
 
+	boolean checkByPartitions() {
+		return (fSupportedPartitionTypes != null && fSupportedPartitionTypes.length > 0);
+	}
+	
+	private void spellCheck(DirtyRegion dirtyRegion, IRegion regionToBeChecked, IAnnotationModel annotationModel) {
+		StructuredReconcileStep structuredStep = (StructuredReconcileStep) fSpellingStep;
+
+		TemporaryAnnotation[] annotationsToRemove;
+		IReconcileResult[] annotationsToAdd;
+		annotationsToRemove = getSpellingAnnotationsToRemove(regionToBeChecked);
+		annotationsToAdd = structuredStep.reconcile(dirtyRegion, regionToBeChecked);
+
+		if (annotationModel instanceof IAnnotationModelExtension) {
+			IAnnotationModelExtension modelExtension = (IAnnotationModelExtension) annotationModel;
+			Map annotationsToAddMap = new HashMap();
+			for (int i = 0; i < annotationsToAdd.length; i++) {
+				annotationsToAddMap.put(annotationsToAdd[i], ((TemporaryAnnotation) annotationsToAdd[i]).getPosition());
+			}
+			modelExtension.replaceAnnotations(annotationsToRemove, annotationsToAddMap);
+		}
+
+		else {
+			for (int j = 0; j < annotationsToAdd.length; j++) {
+				annotationModel.addAnnotation((TemporaryAnnotation) annotationsToAdd[j], ((TemporaryAnnotation) annotationsToAdd[j]).getPosition());
+			}
+			for (int j = 0; j < annotationsToRemove.length; j++) {
+				annotationModel.removeAnnotation(annotationsToRemove[j]);
+			}
+ 		}
+ 	}
+	
 	/**
 	 * @param partition
 	 * @see org.eclipse.jface.text.reconciler.IReconcilingStrategy#reconcile(org.eclipse.jface.text.IRegion)

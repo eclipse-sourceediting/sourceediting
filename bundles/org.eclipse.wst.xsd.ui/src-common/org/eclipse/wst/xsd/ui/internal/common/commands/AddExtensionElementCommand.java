@@ -42,6 +42,7 @@ public class AddExtensionElementCommand extends AddExtensionCommand
       beginRecording(component.getElement());
       super.execute();
       addAnnotationSet(component.getSchema(), extensionsSchemaSpec);
+      formatChild(component.getElement());
     }
     finally
     {
@@ -72,23 +73,33 @@ public class AddExtensionElementCommand extends AddExtensionCommand
   }
 
   private void addAnnotationSet(SpecificationForExtensionsSchema spec, XSDAnnotation xsdAnnotation)
-  {
-    appInfo = xsdAnnotation.createApplicationInformation(spec.getNamespaceURI());
+  {     
+    XSDSchema schema= xsdAnnotation.getSchema();
+    Element schemaElement = schema.getElement();
+
+    if (xsdAnnotation.getApplicationInformation().size() == 0)
+    {
+      appInfo = xsdAnnotation.createApplicationInformation(null);
+      xsdAnnotation.getElement().appendChild(appInfo);
+      List appInfos = xsdAnnotation.getApplicationInformation();
+      appInfos.add(appInfo);
+    }
+    else
+    {
+      // use the first appInfo
+      appInfo = (Element)xsdAnnotation.getApplicationInformation().get(0);
+    }
+
+    String prefix = addNamespaceDeclarationIfRequired(schemaElement, "p", spec.getNamespaceURI());
 
     if (appInfo != null)
     {
       Document doc = appInfo.getOwnerDocument();
-      XSDSchema schema= xsdAnnotation.getSchema();
-      Element schemaElement = schema.getElement();
-      String prefix = addNamespaceDeclarationIfRequired(schemaElement, "p", spec.getNamespaceURI());
-      
+     
       newElement = doc.createElementNS(spec.getNamespaceURI(), element.getName());
       newElement.setPrefix(prefix);   
       appInfo.appendChild(newElement);
 
-      xsdAnnotation.getElement().appendChild(appInfo);
-      List appInfos = xsdAnnotation.getApplicationInformation();
-      appInfos.add(appInfo);
       xsdAnnotation.updateElement();
     }
   }

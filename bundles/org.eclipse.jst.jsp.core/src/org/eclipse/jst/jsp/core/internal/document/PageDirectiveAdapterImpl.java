@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004-2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,20 +10,28 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.core.internal.document;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import com.ibm.icu.util.StringTokenizer;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.content.IContentDescription;
+import org.eclipse.core.runtime.content.IContentType;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentExtension3;
 import org.eclipse.jface.text.IDocumentPartitioner;
+import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.contentproperties.JSPFContentProperties;
 import org.eclipse.jst.jsp.core.internal.modelhandler.EmbeddedTypeStateData;
+import org.eclipse.jst.jsp.core.internal.provisional.contenttype.ContentTypeIdForJSP;
+import org.eclipse.jst.jsp.core.internal.provisional.contenttype.IContentDescriptionForJSP;
 import org.eclipse.jst.jsp.core.internal.text.StructuredTextPartitionerForJSP;
+import org.eclipse.wst.html.core.internal.provisional.contenttype.ContentTypeFamilyForHTML;
 import org.eclipse.wst.sse.core.internal.ltk.modelhandler.EmbeddedTypeHandler;
 import org.eclipse.wst.sse.core.internal.modelhandler.EmbeddedTypeRegistry;
 import org.eclipse.wst.sse.core.internal.modelhandler.EmbeddedTypeRegistryImpl;
@@ -33,8 +41,11 @@ import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitioning;
 import org.eclipse.wst.sse.core.internal.util.Debug;
+import org.eclipse.wst.sse.core.internal.util.DocumentInputStream;
 import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
+
+import com.ibm.icu.util.StringTokenizer;
 
 /**
  * This class has the responsibility to provide an embedded factory registry
@@ -369,7 +380,7 @@ public class PageDirectiveAdapterImpl implements PageDirectiveAdapter {
 		}
 		// BUG136468
 		if (type == null)
-            type = "text/html"; //$NON-NLS-1$
+			type = "text/html"; //$NON-NLS-1$
 		return type;
 	}
 
@@ -408,53 +419,79 @@ public class PageDirectiveAdapterImpl implements PageDirectiveAdapter {
 	 *            The cachedContentType to set
 	 */
 	public void setCachedContentType(String newContentType) {
-		// if the passed in value is the same as existing, there's nothing to
-		// do.
-		// if its different, then we need to change the contentHandler as well
-		// and, more to the point, signal a re-initializtation is needed.
-		// Note: if the value we're getting set to does not have a handler in
-		// the registry,
-		// we'll actually not set it to null or anything, we'll just continue
-		// on with the one
-		// we have. This is pretty important to avoid re-initializing on every
-		// key stroke if someone
-		// is typing in a new content type, but haven't yet finished the whole
-		// "word".
-		// However, if an contentType is not recognized, the registry returns
-		// the one
-		// for XML.
-		// if (this.cachedContentType != null &&
-		// this.cachedContentType.equalsIgnoreCase(newContentType)) { // then
-		// do nothing
-		// } else {
+		/*
+		 * if the passed in value is the same as existing, there's nothing to
+		 * do. if its different, then we need to change the contentHandler as
+		 * well and, more to the point, signal a re-initializtation is needed.
+		 * 
+		 * Note: if the value we're getting set to does not have a handler in
+		 * the registry, we'll actually not set it to null or anything, we'll
+		 * just continue on with the one we have. This is pretty important to
+		 * avoid re-initializing on every key stroke if someone is typing in a
+		 * new content type, but haven't yet finished the whole "word".
+		 * However, if an contentType is not recognized, the registry returns
+		 * the one for XML.
+		 */
+		
+		/* set the actual value first, the rest is "side effect" */
 		this.cachedContentType = newContentType;
-		// see if we can update embedded handler
-		// if (this.cachedContentType == null ||
-		// this.cachedContentType.length() == 0) { // do nothing, don't can't
-		// get a new handler, so we'll keep what we have
-		// } else {
 
-		// getHandler should always return something (never null), based
-		// on the rules in the factory.
-		EmbeddedTypeHandler handler = getHandlerFor(this.cachedContentType);
-		// we do this check for re-init here, instead of in setEmbeddedType,
-		// since setEmbeddedType is called during the normal initializtion
-		// process, when re-init is not needed (since there is no content)
-		if (embeddedTypeHandler != null && handler != null && embeddedTypeHandler != handler) {
-			// changing this embedded handler here may
-			// be in the middle of anotify loop, not sure
-			// if that'll cause problems.
+		/* see if we need to update embedded handler */
 
-			// be sure to hold oldHandler in temp var
-			// or else setEmbeddedType will "reset" it
-			// before modelReinitNeeded(oldHandler, handler) is called
-			EmbeddedTypeHandler oldHandler = embeddedTypeHandler;
-			setEmbeddedType(handler);
-			modelReinitNeeded(oldHandler, handler);
+		/*
+		 * If the document is a type of XHTML, we do not use the page
+		 * directive's contentType to determine the embedded type ... its
+		 * XHTML! ... and, eventually, the DOCTYPE adapter should determine
+		 * if/when it needs to change.
+		 */
+
+		/* just safety check, can be removed later, early in release cycle */
+		if (model == null) {
+			// throw IllegalStateException("model should never be null in
+			// PageDirective Adapter");
+			Logger.log(Logger.ERROR, "model should never be null in PageDirective Adapter");
+			return;
 		}
-		// }
 
-		// }
+		EmbeddedTypeHandler potentialNewandler = null;
+		IContentDescription contentDescription = getContentDescription(model.getStructuredDocument());
+		Object prop = contentDescription.getProperty(IContentDescriptionForJSP.CONTENT_FAMILY_ATTRIBUTE);
+		if (prop != null) {
+			if (ContentTypeFamilyForHTML.HTML_FAMILY.equals(prop)) {
+				potentialNewandler = EmbeddedTypeRegistryImpl.getInstance().getTypeFor("text/html");
+			}
+		}
+
+		if (potentialNewandler == null) {
+			/*
+			 * getHandler should always return something (never null), based
+			 * on the rules in the factory.
+			 */
+			potentialNewandler = getHandlerFor(this.cachedContentType);
+		}
+		/*
+		 * we do this check for re-init here, instead of in setEmbeddedType,
+		 * since setEmbeddedType is called during the normal initializtion
+		 * process, when re-init is not needed (since there is no content)
+		 */
+		if (embeddedTypeHandler == null) {
+			setEmbeddedType(potentialNewandler);
+		}
+		else if (potentialNewandler != null && embeddedTypeHandler != potentialNewandler) {
+			/*
+			 * changing this embedded handler here may be in the middle of a
+			 * notify loop. That's why we set that "it's needed". Then the
+			 * model decides when its "safe" to actually do the re-init.
+			 * 
+			 * be sure to hold oldHandler in temp var or else setEmbeddedType
+			 * will "reset" it before modelReinitNeeded(oldHandler, handler)
+			 * is called
+			 * 
+			 */
+			EmbeddedTypeHandler oldHandler = embeddedTypeHandler;
+			setEmbeddedType(potentialNewandler);
+			modelReinitNeeded(oldHandler, potentialNewandler);
+		}
 
 	}
 
@@ -505,30 +542,18 @@ public class PageDirectiveAdapterImpl implements PageDirectiveAdapter {
 	}
 
 	public void setCachedLanguage(String newLanguage) {
-		if (cachedLanguage != null && languageStateChanged(cachedLanguage, newLanguage)) { // a
-			// complete
-			// re-init
-			// overkill
-			// in
-			// current
-			// system,
-			// since
-			// really
-			// just
-			// need
-			// for
-			// the line style providers,
-			// BUT, a change in language could effect other things,
-			// and we don't expect to happen often so a little overkill isn't
-			// too bad.
-			// The deep problem is that there is no way to get at the "edit
-			// side" adpapters
-			// specifically here in model class.
-			// we have to do the model changed sequence to get the
-			// screen to update.
-			// do not signal again, if signaled once (the reinit state data
-			// will be wrong.
-			// (this needs to be improved in future)
+		if (cachedLanguage != null && languageStateChanged(cachedLanguage, newLanguage)) {
+			/*
+			 * a complete re-init overkill in current system, since really
+			 * just need for the line style providers, BUT, a change in
+			 * language could effect other things, and we don't expect to
+			 * happen often so a little overkill isn't too bad. The deep
+			 * problem is that there is no way to get at the "edit side"
+			 * adpapters specifically here in model class. we have to do the
+			 * model changed sequence to get the screen to update. do not
+			 * signal again, if signaled once (the reinit state data will be
+			 * wrong. (this needs to be improved in future)
+			 */
 			if (!model.isReinitializationNeeded()) {
 				modelReinitNeeded(cachedLanguage, newLanguage);
 			}
@@ -634,5 +659,46 @@ public class PageDirectiveAdapterImpl implements PageDirectiveAdapter {
 			// initializeFactoryRegistry was called from JSPModelLoader
 			embeddedTypeHandler = null;
 		}
+	}
+
+	private IContentDescription getContentDescription(IDocument doc) {
+		if (doc == null)
+			return null;
+		DocumentInputStream in = new DocumentInputStream(doc);
+		return getContentDescription(in);
+	}
+
+	/**
+	 * Returns content description for an input stream Assumes it's JSP
+	 * content. Closes the input stream when finished.
+	 * 
+	 * @param in
+	 * @return the IContentDescription for in, or null if in is null
+	 */
+	private IContentDescription getContentDescription(DocumentInputStream in) {
+
+		if (in == null)
+			return null;
+
+		IContentDescription desc = null;
+		try {
+
+			IContentType contentTypeJSP = Platform.getContentTypeManager().getContentType(ContentTypeIdForJSP.ContentTypeID_JSP);
+			desc = contentTypeJSP.getDescriptionFor(in, IContentDescription.ALL);
+		}
+		catch (IOException e) {
+			Logger.logException(e);
+		}
+		finally {
+			if (in != null) {
+				try {
+					in.close();
+				}
+				catch (IOException e) {
+					Logger.logException(e);
+				}
+			}
+		}
+		return desc;
 	}
 }

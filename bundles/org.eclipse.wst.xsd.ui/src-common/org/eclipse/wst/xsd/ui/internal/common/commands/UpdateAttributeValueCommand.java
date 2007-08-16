@@ -29,11 +29,17 @@ public class UpdateAttributeValueCommand  extends BaseCommand
    *   be set is an empty String or null  */
   protected boolean deleteIfValueEmpty = false;
   
-  public UpdateAttributeValueCommand(Element element, String attributeName, String attributeValue)
+  public UpdateAttributeValueCommand(Element element, String attributeName, String attributeValue, boolean deleteIfValueEmpty)
   {
     this.element = element;
     this.attributeName = attributeName;
     this.attributeValue = attributeValue;
+    this.deleteIfValueEmpty = deleteIfValueEmpty;
+  }
+  
+  public UpdateAttributeValueCommand(Element element, String attributeName, String attributeValue)
+  {
+    this(element, attributeName, attributeValue, false);       
   }
 
   public void setDeleteIfEmpty(boolean v)

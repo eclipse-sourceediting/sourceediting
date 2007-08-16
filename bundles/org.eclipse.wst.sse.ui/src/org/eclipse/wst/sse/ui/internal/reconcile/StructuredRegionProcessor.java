@@ -86,6 +86,52 @@ public class StructuredRegionProcessor extends DocumentRegionProcessor {
 
 	private IModelLifecycleListener fLifeCycleListener = new ModelLifecycleListener();
 
+	/**
+	 * @deprecated use getOuterRegion() instead
+	 */
+	protected boolean contains(DirtyRegion root, DirtyRegion possible) {
+		// remove method post wtp 1.5.1
+		// this method is a performance hit
+		// look for alternatives
+
+		// call super to just check if possible is already contained within
+		// root based on offsets
+		boolean contains = super.contains(root, possible);
+		if (!contains) {
+			IStructuredModel sModel = getStructuredModelForRead(getDocument());
+			try {
+				if (sModel != null) {
+					// first just check if possregion appears after rootregion
+					IndexedRegion rootRegion = sModel.getIndexedRegion(root.getOffset());
+					IndexedRegion possRegion = sModel.getIndexedRegion(possible.getOffset());
+					if (rootRegion != null && possRegion != null) {
+						int rootStart = rootRegion.getStartOffset();
+						int possStart = possRegion.getStartOffset();
+						if (rootStart <= possStart) {
+							// then check if rootregion's end appears after
+							// possregion's end
+							IndexedRegion rootRegion2 = sModel.getIndexedRegion(root.getOffset() + root.getLength());
+							int rootEnd = rootRegion2 != null ? rootRegion2.getEndOffset() : getDocument().getLength();
+							IndexedRegion possRegion2 = sModel.getIndexedRegion(possible.getOffset() + possible.getLength());
+							int possEnd = possRegion2 != null ? possRegion2.getEndOffset() : getDocument().getLength();
+
+							if (rootEnd >= possEnd) {
+								contains = true;
+							}
+							if (DEBUG)
+								System.out.println("checking if [" + rootStart + ":" + rootEnd + "] contains [" + possStart + ":" + possEnd + "] ... " + contains); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+						}
+					}
+				}
+			}
+			finally {
+				if (sModel != null)
+					sModel.releaseFromRead();
+			}
+		}
+		return contains;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -235,7 +281,7 @@ public class StructuredRegionProcessor extends DocumentRegionProcessor {
 	}
 
 	protected void process(DirtyRegion dirtyRegion) {
-		if (getDocument() == null)
+		if (getDocument() == null || isInRewriteSession())
 			return;
 
 		// use structured model to determine area to process

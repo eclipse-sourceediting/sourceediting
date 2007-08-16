@@ -12,13 +12,13 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.ui.internal.contentassist;
 
-import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 
 
 /**
@@ -39,7 +39,7 @@ public class ContentAssistUtils {
 	 *            be computed
 	 * @return an IndexedRegion
 	 */
-	public static IndexedRegion getNodeAt(ITextViewer viewer, int documentOffset) {
+	public static IndexedRegion getNodeAt(StructuredTextViewer viewer, int documentOffset) {
 
 		if (viewer == null)
 			return null;
@@ -74,7 +74,7 @@ public class ContentAssistUtils {
 	 * @return the closest IStructuredDocumentRegion for the offest and
 	 *         viewer.
 	 */
-	public static IStructuredDocumentRegion getStructuredDocumentRegion(ITextViewer viewer, int documentOffset) {
+	public static IStructuredDocumentRegion getStructuredDocumentRegion(StructuredTextViewer viewer, int documentOffset) {
 		IStructuredDocumentRegion sdRegion = null;
 		if (viewer == null || viewer.getDocument() == null)
 			return null;

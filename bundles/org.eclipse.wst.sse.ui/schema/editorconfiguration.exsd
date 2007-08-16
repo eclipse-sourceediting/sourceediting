@@ -128,7 +128,7 @@
       <annotation>
          <documentation>
             Declares a class fulfilling the requirements of a type to be used for the given target(s).
-Note: this is not API and is only used for provisional configuration types.
+&lt;br /&gt;Note: this is not API and is only used for provisional configuration types.
          </documentation>
       </annotation>
       <complexType>
@@ -163,7 +163,7 @@ Note: this is not API and is only used for provisional configuration types.
       <annotation>
          <documentation>
             Defines a value for a type to be used for the given target(s).
-Note: this is not API and is only used for provisional configuration types.
+&lt;br /&gt;Note: this is not API and is only used for provisional configuration types.
          </documentation>
       </annotation>
       <complexType>

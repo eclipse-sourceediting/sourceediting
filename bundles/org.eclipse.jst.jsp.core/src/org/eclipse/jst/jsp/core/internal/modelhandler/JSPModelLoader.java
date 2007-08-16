@@ -43,6 +43,7 @@ import org.eclipse.jst.jsp.core.internal.parser.JSPSourceParser;
 import org.eclipse.jst.jsp.core.internal.provisional.contenttype.ContentTypeIdForJSP;
 import org.eclipse.jst.jsp.core.internal.provisional.contenttype.IContentDescriptionForJSP;
 import org.eclipse.jst.jsp.core.internal.text.StructuredTextPartitionerForJSP;
+import org.eclipse.wst.html.core.internal.provisional.contenttype.ContentTypeFamilyForHTML;
 import org.eclipse.wst.html.core.internal.provisional.contenttype.ContentTypeIdForHTML;
 import org.eclipse.wst.html.core.internal.text.StructuredTextPartitionerForHTML;
 import org.eclipse.wst.sse.core.internal.PropagatingAdapter;
@@ -242,7 +243,12 @@ public class JSPModelLoader extends AbstractModelLoader {
 		if (buf != null) {
 			doc = buf.getDocument();
 		}
-		return (doc != null) ? getContentDescription(doc) : null;
+
+		IContentDescription contentDescription = null;
+		if (doc != null) {
+			contentDescription = getContentDescription(doc);
+		}
+		return contentDescription;
 	}
 
 	/**
@@ -494,12 +500,26 @@ public class JSPModelLoader extends AbstractModelLoader {
 		IDOMModel domModel = (IDOMModel) model;
 
 		String possibleFileBaseLocation = model.getBaseLocation();
-		IContentDescription desc = getContentDescription(possibleFileBaseLocation);
-		if (desc != null) {
-			Object prop = null;
-			prop = desc.getProperty(IContentDescriptionForJSP.CONTENT_TYPE_ATTRIBUTE);
-			if (prop != null) {
-				embeddedContentType = EmbeddedTypeRegistryImpl.getInstance().getTypeFor((String) prop);
+
+		if (embeddedContentType == null) {
+			IContentDescription desc = getContentDescription(possibleFileBaseLocation);
+			if (desc != null) {
+				Object prop = null;
+
+				prop = desc.getProperty(IContentDescriptionForJSP.CONTENT_FAMILY_ATTRIBUTE);
+				if (prop != null) {
+					if (ContentTypeFamilyForHTML.HTML_FAMILY.equals(prop)) {
+						embeddedContentType = EmbeddedTypeRegistryImpl.getInstance().getTypeFor("text/html");
+					}
+				}
+
+				if (embeddedContentType == null) {
+
+					prop = desc.getProperty(IContentDescriptionForJSP.CONTENT_TYPE_ATTRIBUTE);
+					if (prop != null) {
+						embeddedContentType = EmbeddedTypeRegistryImpl.getInstance().getTypeFor((String) prop);
+					}
+				}
 			}
 		}
 
