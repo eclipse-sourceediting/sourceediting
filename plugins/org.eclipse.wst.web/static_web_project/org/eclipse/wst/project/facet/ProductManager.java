@@ -91,10 +91,6 @@ public class ProductManager {
 				return FINAL_PERSPECTIVE;
 			else if (key.equals(IProductConstants.FINAL_PERSPECTIVE_WEB))
 				return FINAL_PERSPECTIVE;
-			else if (key.equals(IProductConstants.USE_EAR_LIBRARIES))
-				return USE_EAR_LIBRARIES;
-			else if (key.equals(IProductConstants.USE_WEB_APP_LIBRARIES))
-				return USE_WEB_APP_LIBRARIES;
 		}
 		return value;
 	}

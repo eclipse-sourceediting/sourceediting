@@ -50,10 +50,4 @@ public interface IProductConstants {
 	public static final String DEFAULT_RUNTIME_2 = "defaultRuntime2"; //$NON-NLS-1$
 	public static final String DEFAULT_RUNTIME_3 = "defaultRuntime3"; //$NON-NLS-1$
 	
-	/**
-	 * enables/disables EAR Libraries and Web App Libraries classpath containers
-	 */
-	public final static String USE_EAR_LIBRARIES = "use_ear_libraries"; //$NON-NLS-1$
-    public final static String USE_WEB_APP_LIBRARIES = "use_web_app_libraries"; //$NON-NLS-1$
-	
 }
