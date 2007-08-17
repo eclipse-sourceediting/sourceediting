@@ -31,7 +31,7 @@ public class DebugAdapterFactory extends AbstractAdapterFactory implements Propa
 	}
 
 	/**
-	 * Constructor for DebugAdapterFactory.
+	 * Constructor  for DebugAdapterFactory.
 	 * 
 	 * @param fAdapterKey
 	 * @param registerAdapters
