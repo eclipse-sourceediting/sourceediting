@@ -138,11 +138,13 @@ public class XSDEditSchemaInfoDialog extends EditSchemaInfoDialog implements Sel
   public void setIsElementQualified(String state)
   {
     elementFormCombo.setText(state);
+    elementFormQualified = state;
   }
   
   public void setIsAttributeQualified(String state)
   {
     attributeFormCombo.setText(state);
+    attributeFormQualified = state;
   }
   
   public String getElementFormQualified()
