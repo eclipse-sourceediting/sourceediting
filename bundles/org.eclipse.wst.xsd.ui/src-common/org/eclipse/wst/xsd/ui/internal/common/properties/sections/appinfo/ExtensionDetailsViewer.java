@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,6 +19,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
@@ -105,12 +107,14 @@ public class ExtensionDetailsViewer extends Viewer
             labelProvider.getText(o) :
               o.toString();
             combo.add(displayName);
-      }   
+      }
+      combo.addSelectionListener(internalControlListener);
       control = combo;
     }
     if (control == null)
     {
       Text text = widgetFactory.createText(composite,value);
+      text.addKeyListener(internalControlListener);
       control = text; 
     } 
     control.setData(ITEM_DATA, item);
@@ -164,6 +168,7 @@ public class ExtensionDetailsViewer extends Viewer
           control.removeFocusListener(internalFocusListener);
         }  
       } */ 
+      removeListeners();
       composite.dispose();       
     }   
 
@@ -239,19 +244,24 @@ public class ExtensionDetailsViewer extends Viewer
     }              
   }
   
-  class InternalControlListener implements FocusListener, SelectionListener
+  class InternalControlListener implements FocusListener, SelectionListener, KeyListener
   {
     public void widgetSelected(SelectionEvent e)
     {
       // for button controls we handle selection events
       //        
       Object item = e.widget.getData(EDITOR_CONFIGURATION_DATA);
+      if (item == null)
+        item = e.widget.getData(ITEM_DATA);    
       if (item instanceof DialogNodeEditorConfiguration)
       {
         DialogNodeEditorConfiguration dialogNodeEditorConfiguration = (DialogNodeEditorConfiguration)item;        
         dialogNodeEditorConfiguration.invokeDialog();               
-        //applyEdit((ExtensionItem)item, e.widget);
-      }             
+      }
+      else if (item instanceof ExtensionItem)
+      {
+        applyEdit((ExtensionItem)item, e.widget);
+      }      
     }
     
     public void widgetDefaultSelected(SelectionEvent e)
@@ -267,13 +277,50 @@ public class ExtensionDetailsViewer extends Viewer
     {
       // apply edits for text and combo box controls
       // via the focusLost event
-      // TODO (cs) handle explict ENTER key
-      //
       Object item = e.widget.getData(ITEM_DATA);
       if (item instanceof ExtensionItem)
       {
         applyEdit((ExtensionItem)item, e.widget);
       }      
+    }
+
+    public void keyPressed(KeyEvent e)
+    {
+      // handle explict ENTER key
+      Object item = e.widget.getData(ITEM_DATA);
+      if (item instanceof ExtensionItem)
+      {
+        if (e.character == SWT.CR)
+          applyEdit((ExtensionItem)item, e.widget);
+      }      
+    }
+
+    public void keyReleased(KeyEvent e)
+    {
+      // Ignore these events
+    }
+  }
+  
+  public void removeListeners()
+  {
+    if (composite != null && !composite.isDisposed())
+    {
+      Control [] children = composite.getChildren();
+      int length = children.length;
+      for (int i = 0; i < length; i++)
+      {
+        Control o = children[i];
+        if (o instanceof CCombo)
+        {
+          ((CCombo)o).removeSelectionListener(internalControlListener);
+          o.removeFocusListener(internalControlListener);
+        }
+        else if (o instanceof Text)
+        {
+          ((Text)o).removeKeyListener(internalControlListener);
+          o.removeFocusListener(internalControlListener);
+        }
+      }
     }
   }
 }
