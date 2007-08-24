@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,16 +10,12 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.common.actions;
 
-import java.util.Iterator;
-
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDBaseAdapter;
 import org.eclipse.wst.xsd.ui.internal.common.commands.AddXSDAnyElementCommand;
 import org.eclipse.wst.xsd.ui.internal.common.util.Messages;
 import org.eclipse.xsd.XSDModelGroup;
-import org.eclipse.xsd.XSDParticle;
-import org.eclipse.xsd.XSDWildcard;
 
 public class AddXSDAnyElementAction extends XSDBaseAction
 {
@@ -56,29 +52,4 @@ public class AddXSDAnyElementAction extends XSDBaseAction
     }
     return null;
   }
-
-  protected boolean calculateEnabled()
-  {
-    boolean rc = super.calculateEnabled();
-    if (rc)
-    {
-      XSDModelGroup modelGroup = getModelGroup();
-      if (modelGroup != null)
-      {
-        boolean hasAnyElement = false;
-        for (Iterator i = modelGroup.getContents().iterator(); i.hasNext();)
-        {
-          XSDParticle obj = (XSDParticle) i.next();
-          if (obj.getContent() instanceof XSDWildcard)
-          {
-            hasAnyElement = true;
-            break;
-          }
-        }
-        return !hasAnyElement;
-      }
-    }
-    return rc;
-  }
-
 }
