@@ -32,6 +32,7 @@ import org.eclipse.wst.xsd.ui.internal.common.commands.UpdateNameCommand;
 import org.eclipse.wst.xsd.ui.internal.common.util.Messages;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorCSHelpIds;
 import org.eclipse.wst.xsd.ui.internal.util.TypesHelper;
+import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDModelGroupDefinition;
 import org.eclipse.xsd.XSDNamedComponent;
 import org.eclipse.xsd.util.XSDConstants;
@@ -220,6 +221,20 @@ public class XSDModelGroupDefinitionSection extends MultiplicitySection
       TypesHelper helper = new TypesHelper(xsdSchema);
       List items = new ArrayList();
       items = helper.getModelGroups();
+      if (input instanceof XSDModelGroupDefinition)
+      {
+        XSDModelGroupDefinition group = (XSDModelGroupDefinition) input;
+        XSDConcreteComponent parent = group.getContainer();
+        while (parent != null)
+        {
+          if (parent instanceof XSDModelGroupDefinition)
+          {
+            items.remove(((XSDModelGroupDefinition)parent).getQName());
+            break;
+          }
+          parent = parent.getContainer();
+        }
+      }
       items.add(0, ""); //$NON-NLS-1$
       componentNameCombo.setItems((String [])items.toArray(new String[0]));
     }

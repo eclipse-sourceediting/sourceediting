@@ -61,11 +61,19 @@ public class AddXSDModelGroupDefinitionCommand extends BaseCommand
         XSDParticle particle = XSDFactory.eINSTANCE.createXSDParticle();
         particle.setContent(def);
         List list = parent.getSchema().getModelGroupDefinitions();
-        if (list.size() > 0)
+        int length = list.size();
+        if (length > 1)
         {
-          def.setResolvedModelGroupDefinition((XSDModelGroupDefinition) list.get(0));
+          for (int i = 0; i < length; i++)
+          {
+            XSDModelGroupDefinition gr = (XSDModelGroupDefinition) list.get(i);
+            if (gr.getModelGroup() != parent)
+            {
+              def.setResolvedModelGroupDefinition(gr);
+            }
+          }
         }
-        else
+        else if (length <= 1)
         {
           XSDModelGroupDefinition newGroupDef = createXSDModelGroupDefinition();
           def.setResolvedModelGroupDefinition(newGroupDef);
