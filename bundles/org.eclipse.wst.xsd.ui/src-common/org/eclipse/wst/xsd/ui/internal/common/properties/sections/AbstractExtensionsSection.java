@@ -412,13 +412,21 @@ public abstract class AbstractExtensionsSection extends AbstractSection
       extensionDetailsViewer.setInput(null);
       tree.removeAll();
       
+      addButton.setEnabled(!isReadOnly);
+      
       extensionTreeViewer.setInput(input);
       if (tree.getSelectionCount() == 0 && tree.getItemCount() > 0)
       {       
         TreeItem treeItem = tree.getItem(0);     
         extensionTreeViewer.setSelection(new StructuredSelection(treeItem.getData()));
       }
-      removeButton.setEnabled(tree.getSelectionCount() > 0);      
+      removeButton.setEnabled(tree.getSelectionCount() > 0  && !isReadOnly);
+      // Bugzilla 197315.  Make this bulletproof for maintenance release.
+      Control detailsViewerControl = extensionDetailsViewer.getControl();
+      if (detailsViewerControl != null && !detailsViewerControl.isDisposed())
+      {
+        detailsViewerControl.setEnabled(!isReadOnly);
+      }
     }
     setListenerEnabled(true);
   }
@@ -575,7 +583,7 @@ public abstract class AbstractExtensionsSection extends AbstractSection
           }
         }
       }
-      removeButton.setEnabled(isDeleteEnabled);
+      removeButton.setEnabled(isDeleteEnabled && !isReadOnly);
     }
   }
 
