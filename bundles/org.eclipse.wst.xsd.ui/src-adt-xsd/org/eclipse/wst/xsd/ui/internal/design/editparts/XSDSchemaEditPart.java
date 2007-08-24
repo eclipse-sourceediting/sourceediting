@@ -25,6 +25,7 @@ import org.eclipse.draw2d.ToolbarLayout;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
+import org.eclipse.osgi.util.TextProcessor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.xsd.ui.internal.adapters.CategoryAdapter;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDSchemaAdapter;
@@ -138,6 +139,8 @@ public class XSDSchemaEditPart extends BaseEditPart
     outer.repaint();
     
     String targetNamespaceValue = ((XSDSchema) ((XSDSchemaAdapter) getModel()).getTarget()).getTargetNamespace();
+    targetNamespaceValue = TextProcessor.process(targetNamespaceValue);
+
     if (targetNamespaceValue == null || targetNamespaceValue.length() == 0)
     {
       targetNamespaceValue = Messages._UI_GRAPH_XSDSCHEMA_NO_NAMESPACE;

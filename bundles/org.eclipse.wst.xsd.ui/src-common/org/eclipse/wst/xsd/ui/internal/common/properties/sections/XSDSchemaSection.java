@@ -15,6 +15,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.osgi.util.TextProcessor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.StyleRange;
@@ -157,7 +158,8 @@ public class XSDSchemaSection extends AbstractSection
       String tns = element.getAttribute(XSDConstants.TARGETNAMESPACE_ATTRIBUTE);
       if (tns != null && tns.length() > 0)
       {
-        targetNamespaceText.setText(tns);
+        String processedString = TextProcessor.process(tns);
+        targetNamespaceText.setText(processedString);
       }
       else
       {

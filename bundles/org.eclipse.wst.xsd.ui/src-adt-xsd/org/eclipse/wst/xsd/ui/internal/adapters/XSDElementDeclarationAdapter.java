@@ -15,6 +15,7 @@ import java.util.List;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.gef.commands.Command;
+import org.eclipse.osgi.util.TextProcessor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.BaseSelectionAction;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.DeleteAction;
@@ -180,7 +181,9 @@ public class XSDElementDeclarationAdapter extends XSDParticleAdapter implements 
       result.append(resolvedElementDeclaration.getTypeDefinition().getName());
     }
 
-    return result.toString();
+    String text = result.toString();
+    String processedString = TextProcessor.process(text, ":");
+    return processedString;
 
   }
 
