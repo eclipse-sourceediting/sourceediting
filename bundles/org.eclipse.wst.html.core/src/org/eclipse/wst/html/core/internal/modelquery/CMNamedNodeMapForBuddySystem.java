@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,6 +13,7 @@ package org.eclipse.wst.html.core.internal.modelquery;
 
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.Locale;
 
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
@@ -104,6 +105,12 @@ abstract class CMNamedNodeMapForBuddySystem implements CMNamedNodeMap {
 	}
 
 	private String canonicalName(String name) {
-		return name.toUpperCase();
+		// see https://bugs.eclipse.org/bugs/show_bug.cgi?id=171918
+		// we are able to "cheat" here a little and use US Locale
+		// to get a good canonical form, since we are using this only
+		// for HTML and JSP standard tags.
+		// Long term, for similar needs with XML 1.1 (for example)
+		// we should use a class such as com.ibm.icu.text.Normalizer
+		return name.toUpperCase(Locale.US);
 	}
 }
