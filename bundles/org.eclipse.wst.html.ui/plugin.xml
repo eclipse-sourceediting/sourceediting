@@ -263,8 +263,6 @@
 				nameFilter="*.wml">
 			</filter>
          	<contentTypeBinding contentTypeId="org.eclipse.wst.html.core.htmlsource"/>			
-			<projectNature id=""/>
-			<enablement></enablement>
 			<helper class="org.eclipse.wst.html.internal.validation.HTMLValidationWorkbenchHelper"/>
 			<run
 				async="true"
