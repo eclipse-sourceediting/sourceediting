@@ -11,9 +11,13 @@
 package org.eclipse.wst.project.facet;
 
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jem.util.logger.proxy.Logger;
@@ -38,9 +42,19 @@ public class SimpleWebFacetInstallDelegate implements IDelegate {
 			addNatures(project);
 			final IVirtualComponent c = ComponentCore.createComponent(project);
 			c.create(0, null);
+			
+			final IWorkspace ws = ResourcesPlugin.getWorkspace();
+			final IPath pjpath = project.getFullPath();
+			final IPath contentdir = setContentPropertyIfNeeded(model, pjpath, project);
+			mkdirs(ws.getRoot().getFolder(contentdir));
+			
 			final IVirtualFolder webroot = c.getRootFolder();
-			webroot.createLink(new Path("/" + model.getStringProperty(ISimpleWebFacetInstallDataModelProperties.CONTENT_DIR)), 0, null); //$NON-NLS-1$
+			if (webroot.getProjectRelativePath().equals(new Path("/"))) { //$NON-NLS-1$
+				webroot.createLink(new Path("/" + model.getStringProperty(ISimpleWebFacetInstallDataModelProperties.CONTENT_DIR)), 0, null); //$NON-NLS-1$
+			}
+			
 			ComponentUtilities.setServerContextRoot(project,model.getStringProperty(ISimpleWebFacetInstallDataModelProperties.CONTEXT_ROOT));
+			
 			try {
 				((IDataModelOperation) model.getProperty(FacetDataModelProvider.NOTIFICATION_OPERATION)).execute(monitor, null);
 			} catch (ExecutionException e) {
@@ -51,6 +65,16 @@ public class SimpleWebFacetInstallDelegate implements IDelegate {
 				monitor.done();
 		}
 	}
+	
+	private IPath setContentPropertyIfNeeded(final IDataModel model, final IPath pjpath, IProject project) {
+		IVirtualComponent c = ComponentCore.createComponent(project);
+		if (c.exists()) {
+			if( !c.getRootFolder().getProjectRelativePath().isRoot() ){
+				return c.getRootFolder().getUnderlyingResource().getFullPath();
+			}
+		}
+		return pjpath.append(model.getStringProperty(ISimpleWebFacetInstallDataModelProperties.CONTENT_DIR));
+	}
 
 	private void addNatures(final IProject project) throws CoreException {
 		final IProjectDescription desc = project.getDescription();
@@ -60,6 +84,15 @@ public class SimpleWebFacetInstallDelegate implements IDelegate {
 		replacement[current.length] = IModuleConstants.MODULE_NATURE_ID;
 		desc.setNatureIds(replacement);
 		project.setDescription(desc, null);
+	}
+	
+	private static void mkdirs(final IFolder folder) throws CoreException {
+		if (!folder.exists()) {
+			if (folder.getParent() instanceof IFolder) {
+				mkdirs((IFolder) folder.getParent());
+			}
+			folder.create(true, true, null);
+		}
 	}
 
 }
