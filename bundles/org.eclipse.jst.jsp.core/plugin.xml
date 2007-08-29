@@ -196,7 +196,6 @@
 			<!-- needed until bug 181443 is implemented -->
          	<contentTypeBinding contentTypeId="org.eclipse.jst.jsp.core.jspfragmentsource"/>
          	<contentTypeBinding contentTypeId="org.eclipse.jst.jsp.core.tagsource"/>
-			<enablement/>
 			<helper class="org.eclipse.wst.validation.internal.operations.WorkbenchContext"/>
 			<run
 				enabled="true"
@@ -232,8 +231,7 @@
 			</filter>
          	<contentTypeBinding contentTypeId="org.eclipse.jst.jsp.core.jspsource"/>			
          	<!-- <contentTypeBinding contentTypeId="org.eclipse.jst.jsp.core.jspfragmentsource"/> -->
-         	<!-- <contentTypeBinding contentTypeId="org.eclipse.jst.jsp.core.tagsource"/> -->
-			<enablement />			
+         	<!-- <contentTypeBinding contentTypeId="org.eclipse.jst.jsp.core.tagsource"/> -->			
 			<helper class="org.eclipse.wst.validation.internal.operations.WorkbenchContext"/>
 			<run
 				async="true"
