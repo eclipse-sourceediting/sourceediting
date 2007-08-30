@@ -108,8 +108,11 @@ public class XSDModelReconcileAdapter extends ModelReconcileAdapter
 
     String nodeNamespace = changedNode.getNamespaceURI();
     String schemaNamespace = schema.getSchemaForSchemaNamespace();
-
-    if (!schemaNamespace.equals(nodeNamespace))
+    // If the document node changes, then the nodeNamespace is null
+    // so we do want to reconcile.  This change is needed for
+    // https://bugs.eclipse.org/bugs/show_bug.cgi?id=148842 and
+    // read only file support.
+    if (!schemaNamespace.equals(nodeNamespace) && nodeNamespace != null)
     {
       return false;
     }

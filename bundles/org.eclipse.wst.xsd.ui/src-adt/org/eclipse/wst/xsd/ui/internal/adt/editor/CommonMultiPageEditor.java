@@ -61,7 +61,10 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.IPartListener;
+import org.eclipse.ui.IPartService;
 import org.eclipse.ui.IPropertyListener;
+import org.eclipse.ui.IWindowListener;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
@@ -98,6 +101,7 @@ public abstract class CommonMultiPageEditor extends MultiPageEditorPart implemen
   protected Composite toolbar;
   protected ModeComboListener modeComboListener;
   protected int maxLength = 0;
+  protected ActivationListener fActivationListener;
   
   public CommonMultiPageEditor()
   {
@@ -349,6 +353,11 @@ public abstract class CommonMultiPageEditor extends MultiPageEditorPart implemen
       modeComboListener = null;
     }
     
+    if (fActivationListener != null) {
+      fActivationListener.dispose();
+      fActivationListener = null;
+    }
+   
     super.dispose();
   }
 
@@ -385,6 +394,8 @@ public abstract class CommonMultiPageEditor extends MultiPageEditorPart implemen
       title = getEditorInput().getName();
     }
     setPartName(title);
+    
+    fActivationListener = new ActivationListener(site.getWorkbenchWindow().getPartService());
   }
 
   protected void initializeActionRegistry()
@@ -718,4 +729,146 @@ public abstract class CommonMultiPageEditor extends MultiPageEditorPart implemen
   {
     // Don't do anything as default.  Allow extenders to implement.
   }
+  
+  
+  /**
+   * Internal part activation listener, copied from AbstractTextEditor
+   */
+  class ActivationListener implements IPartListener, IWindowListener {
+
+    /** Cache of the active workbench part. */
+    private IWorkbenchPart fActivePart;
+    /** Indicates whether activation handling is currently be done. */
+    private boolean fIsHandlingActivation = false;
+    /**
+     * The part service.
+     * 
+     * @since 3.1
+     */
+    private IPartService fPartService;
+
+    /**
+     * Creates this activation listener.
+     * 
+     * @param partService
+     *            the part service on which to add the part listener
+     * @since 3.1
+     */
+    public ActivationListener(IPartService partService) {
+      fPartService = partService;
+      fPartService.addPartListener(this);
+      PlatformUI.getWorkbench().addWindowListener(this);
+    }
+
+    /**
+     * Disposes this activation listener.
+     * 
+     * @since 3.1
+     */
+    public void dispose() {
+      fPartService.removePartListener(this);
+      PlatformUI.getWorkbench().removeWindowListener(this);
+      fPartService = null;
+    }
+
+    /*
+     * @see IPartListener#partActivated(org.eclipse.ui.IWorkbenchPart)
+     */
+    public void partActivated(IWorkbenchPart part) {
+      fActivePart = part;
+      handleActivation();
+    }
+
+    /*
+     * @see IPartListener#partBroughtToTop(org.eclipse.ui.IWorkbenchPart)
+     */
+    public void partBroughtToTop(IWorkbenchPart part) {
+      // do nothing
+    }
+
+    /*
+     * @see IPartListener#partClosed(org.eclipse.ui.IWorkbenchPart)
+     */
+    public void partClosed(IWorkbenchPart part) {
+      // do nothing
+    }
+
+    /*
+     * @see IPartListener#partDeactivated(org.eclipse.ui.IWorkbenchPart)
+     */
+    public void partDeactivated(IWorkbenchPart part) {
+      fActivePart = null;
+    }
+
+    /*
+     * @see IPartListener#partOpened(org.eclipse.ui.IWorkbenchPart)
+     */
+    public void partOpened(IWorkbenchPart part) {
+      // do nothing
+    }
+
+    /**
+     * Handles the activation triggering a element state check in the
+     * editor.
+     */
+    void handleActivation() {
+      if (fIsHandlingActivation || (getTextEditor() == null)) {
+        return;
+      }
+
+      if (fActivePart == CommonMultiPageEditor.this) {
+        fIsHandlingActivation = true;
+        try {
+          getTextEditor().safelySanityCheckState(getEditorInput());
+        }
+        finally {
+          fIsHandlingActivation = false;
+        }
+      }
+    }
+
+    /*
+     * @see org.eclipse.ui.IWindowListener#windowActivated(org.eclipse.ui.IWorkbenchWindow)
+     * @since 3.1
+     */
+    public void windowActivated(IWorkbenchWindow window) {
+      if (window == getEditorSite().getWorkbenchWindow()) {
+        /*
+         * Workaround for problem described in
+         * http://dev.eclipse.org/bugs/show_bug.cgi?id=11731 Will be
+         * removed when SWT has solved the problem.
+         */
+        window.getShell().getDisplay().asyncExec(new Runnable() {
+          public void run() {
+            handleActivation();
+          }
+        });
+      }
+    }
+
+    /*
+     * @see org.eclipse.ui.IWindowListener#windowDeactivated(org.eclipse.ui.IWorkbenchWindow)
+     * @since 3.1
+     */
+    public void windowDeactivated(IWorkbenchWindow window) {
+      // do nothing
+    }
+
+    /*
+     * @see org.eclipse.ui.IWindowListener#windowClosed(org.eclipse.ui.IWorkbenchWindow)
+     * @since 3.1
+     */
+    public void windowClosed(IWorkbenchWindow window) {
+      // do nothing
+    }
+
+    /*
+     * @see org.eclipse.ui.IWindowListener#windowOpened(org.eclipse.ui.IWorkbenchWindow)
+     * @since 3.1
+     */
+    public void windowOpened(IWorkbenchWindow window) {
+      // do nothing
+    }
+  }
+
 }
