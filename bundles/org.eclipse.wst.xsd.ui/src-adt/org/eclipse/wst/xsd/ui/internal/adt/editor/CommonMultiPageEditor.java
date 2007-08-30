@@ -101,7 +101,7 @@ public abstract class CommonMultiPageEditor extends MultiPageEditorPart implemen
   protected Composite toolbar;
   protected ModeComboListener modeComboListener;
   protected int maxLength = 0;
-  protected ActivationListener fActivationListener;
+  protected CommonActivationListener fActivationListener;
   
   public CommonMultiPageEditor()
   {
@@ -395,7 +395,7 @@ public abstract class CommonMultiPageEditor extends MultiPageEditorPart implemen
     }
     setPartName(title);
     
-    fActivationListener = new ActivationListener(site.getWorkbenchWindow().getPartService());
+    fActivationListener = new CommonActivationListener(site.getWorkbenchWindow().getPartService());
   }
 
   protected void initializeActionRegistry()
@@ -731,7 +731,7 @@ public abstract class CommonMultiPageEditor extends MultiPageEditorPart implemen
   }
   
   
-  protected class ActivationListener implements IPartListener, IWindowListener
+  protected class CommonActivationListener implements IPartListener, IWindowListener
   {
 
     /** Cache of the active workbench part. */
@@ -752,7 +752,7 @@ public abstract class CommonMultiPageEditor extends MultiPageEditorPart implemen
      *          the part service on which to add the part listener
      * @since 3.1
      */
-    public ActivationListener(IPartService partService)
+    public CommonActivationListener(IPartService partService)
     {
       fPartService = partService;
       fPartService.addPartListener(this);
