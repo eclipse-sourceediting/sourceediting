@@ -41,6 +41,7 @@ import org.eclipse.wst.sse.core.internal.provisional.IModelLifecycleListener;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IModelStateListener;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.sse.core.internal.provisional.exceptions.ResourceInUse;
 import org.eclipse.wst.xml.core.internal.Logger;
 import org.eclipse.wst.xml.core.internal.document.DocumentTypeImpl;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
@@ -300,11 +301,37 @@ public class EMF2DOMSSERenderer extends EMF2DOMRenderer implements IModelStateLi
 		if (file == null || !file.exists())
 			throw new FileNotFoundException((file == null) ? "null" : file.getFullPath().toOSString()); //$NON-NLS-1$
 		try {
+			IModelManager manager = getModelManager();
+			String id = manager.calculateId(file);
 			if (forWrite) {
-				setXMLModel((IDOMModel) getModelManager().getModelForEdit(file));
+				IDOMModel mod = (IDOMModel)manager.getExistingModelForEdit(id);
+				if (mod == null)
+					setXMLModel((IDOMModel) manager.getModelForEdit(file));
+				else {
+					if(mod.isShared())
+						try {
+							setXMLModel((IDOMModel) manager.copyModelForEdit(id, id+System.currentTimeMillis()));
+						} catch (ResourceInUse e) {
+							Logger.logException(e);
+						}
+					else
+						setXMLModel(mod);
+				}
 			}
 			else {
-				setXMLModel((IDOMModel) getModelManager().getModelForRead(file));
+				IDOMModel mod = (IDOMModel)manager.getExistingModelForRead(id);
+				if (mod == null)
+					setXMLModel((IDOMModel) manager.getModelForRead(file));
+				else {
+					if(mod.isShared())
+						try {
+							setXMLModel((IDOMModel) manager.copyModelForEdit(id, id+System.currentTimeMillis()));
+						} catch (ResourceInUse e) {
+							Logger.logException(e);
+						}
+					else
+						setXMLModel(mod);
+				}
 			}
 			setXMLModelId(getXMLModel().getId());
 			needsToCreateDOM = false;
