@@ -241,7 +241,7 @@ public class BreakpointProviderBuilder extends RegistryReader {
 				while (tokenizer.hasMoreTokens()) {
 					String type = tokenizer.nextToken();
 					IContentType contentType = Platform.getContentTypeManager().getContentType(type);
-					if (contentType != null && testType != null && contentType.isKindOf(testType)) {
+					if (contentType != null && testType != null && testType.isKindOf(contentType)) {
 						add = true;
 						break;
 					}
