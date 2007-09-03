@@ -606,6 +606,24 @@ class ProjectDescription {
 				projectsProcessed.add(buildpathProjects[i]);
 				ProjectDescription description = TaglibIndex.getInstance().createDescription(buildpathProjects[i]);
 				description.addBuildPathReferences(references, projectsProcessed, true);
+				
+				/*
+				 * 199843 (183756) - JSP Validation Cannot Find Tag Library
+				 * Descriptor in Referenced Projects
+				 * 
+				 * Add any TLD records having URI values from projects on the
+				 * build path
+				 */
+				Map[] rootReferences = (Map[]) description.fImplicitReferences.values().toArray(new Map[description.fImplicitReferences.size()]);
+				for (int j = 0; j < rootReferences.length; j++) {
+					Iterator implicitRecords = rootReferences[j].values().iterator();
+					while (implicitRecords.hasNext()) {
+						ITaglibRecord record = (ITaglibRecord) implicitRecords.next();
+						if (record.getRecordType() == ITaglibRecord.TLD && ((ITLDRecord) record).getURI() != null) {
+							references.put(((ITLDRecord) record).getURI(), record);
+						}
+					}
+				}
 			}
 		}
 	}
