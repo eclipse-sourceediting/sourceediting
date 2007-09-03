@@ -117,12 +117,12 @@ final class Tag20ElementCollection extends JSPElementCollection implements JSP20
 			adec.usage = CMAttributeDeclaration.OPTIONAL;
 			declarations.putNamedItem(JSP20Namespace.ATTR_NAME_FRAGMENT, adec);
 
-			adec = new AttrDecl(JSP20Namespace.ATTR_NAME_RTXPRVALUE);
+			adec = new AttrDecl(JSP20Namespace.ATTR_NAME_RTEXPRVALUE);
 			adec.type = new HTMLCMDataTypeImpl(CMDataType.ENUM);
 			values = new String[]{ATTR_VALUE_TRUE, ATTR_VALUE_FALSE};
 			adec.type.setEnumValues(values);
 			adec.usage = CMAttributeDeclaration.OPTIONAL;
-			declarations.putNamedItem(JSP20Namespace.ATTR_NAME_RTXPRVALUE, adec);
+			declarations.putNamedItem(JSP20Namespace.ATTR_NAME_RTEXPRVALUE, adec);
 
 			adec = new AttrDecl(JSP20Namespace.ATTR_NAME_TYPE);
 			adec.type = new HTMLCMDataTypeImpl(CMDataType.CDATA);

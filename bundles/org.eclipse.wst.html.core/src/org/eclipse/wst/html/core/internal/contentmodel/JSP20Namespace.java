@@ -50,7 +50,7 @@ public interface JSP20Namespace extends JSP11Namespace {
 
 	String ATTR_NAME_REQUIRED = "required"; //$NON-NLS-1$
 	String ATTR_NAME_FRAGMENT = "fragment"; //$NON-NLS-1$
-	String ATTR_NAME_RTXPRVALUE = "rtxprvalue"; //$NON-NLS-1$
+	String ATTR_NAME_RTEXPRVALUE = "rtexprvalue"; //$NON-NLS-1$
 	String ATTR_NAME_TYPE = "type"; //$NON-NLS-1$
 
 	String ATTR_NAME_NAME_GIVEN = "name-given"; //$NON-NLS-1$
