@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,8 +9,6 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 package org.eclipse.wst.html.core.internal.contentmodel;
-
-
 
 import java.lang.reflect.Field;
 
@@ -204,6 +202,28 @@ final class Tag20ElementCollection extends JSPElementCollection implements JSP20
 			declarations.putNamedItem(JSP20Namespace.ATTR_NAME_ISELIGNORED, adec);
 		}
 
+		/*
+		 * Changed in 2.0
+		 */
+		private void createForDirTaglib() {
+			// ("uri" URI OPTIONAL)
+			AttrDecl adec = new AttrDecl(ATTR_NAME_URI);
+			adec.type = new HTMLCMDataTypeImpl(CMDataType.URI);
+			adec.usage = CMAttributeDeclaration.OPTIONAL;
+			declarations.putNamedItem(ATTR_NAME_URI, adec);
+
+			adec = new AttrDecl(JSP20Namespace.ATTR_NAME_TAGDIR);
+			adec.type = new HTMLCMDataTypeImpl(CMDataType.URI);
+			adec.usage = CMAttributeDeclaration.OPTIONAL;
+			declarations.putNamedItem(JSP20Namespace.ATTR_NAME_TAGDIR, adec);
+
+			// ("prefix" CDATA REQUIRED)
+			adec = new AttrDecl(ATTR_NAME_PREFIX);
+			adec.type = new HTMLCMDataTypeImpl(CMDataType.CDATA);
+			adec.usage = CMAttributeDeclaration.REQUIRED;
+			declarations.putNamedItem(ATTR_NAME_PREFIX, adec);
+		}
+
 		private void createForDirVariable() {
 			AttrDecl adec = new AttrDecl(JSP20Namespace.ATTR_NAME_NAME_GIVEN);
 			adec.type = new HTMLCMDataTypeImpl(CMDataType.CDATA);
@@ -333,6 +353,9 @@ final class Tag20ElementCollection extends JSPElementCollection implements JSP20
 					break;
 				case TagIds20.ID_DIRECTIVE_ATTRIBUTE :
 					createForDirAttribute();
+					break;
+				case Ids.ID_DIRECTIVE_TAGLIB :
+					createForDirTaglib();
 					break;
 				case TagIds20.ID_ATTRIBUTE :
 					createForAttribute();
