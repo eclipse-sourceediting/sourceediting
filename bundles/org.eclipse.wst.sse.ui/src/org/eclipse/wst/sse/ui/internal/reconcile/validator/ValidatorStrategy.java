@@ -84,6 +84,8 @@ public class ValidatorStrategy extends StructuredTextReconcilingStrategy {
 	public void beginProcessing() {
 		if (fTotalScopeValidatorsAlreadyRun == null)
 			fTotalScopeValidatorsAlreadyRun = new ArrayList();
+		else
+			fTotalScopeValidatorsAlreadyRun.clear();
 	}
 
 	/**

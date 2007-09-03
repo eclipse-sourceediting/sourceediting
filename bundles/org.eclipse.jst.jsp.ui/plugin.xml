@@ -78,8 +78,6 @@
 				</partitionType>
 				<partitionType id="org.eclipse.jst.jsp.SCRIPT.JAVA">
 				</partitionType>
-				<partitionType id="org.eclipse.jst.jsp.SCRIPT.DELIMITER">
-				</partitionType>
 				<partitionType id="org.eclipse.jst.jsp.JSP_DIRECTIVE">
 				</partitionType>
 			</contentTypeIdentifier>
@@ -409,6 +407,10 @@
 		<actionSetPartAssociation
 			targetID="org.eclipse.ui.NavigateActionSet">
 			<part id="org.eclipse.jst.jsp.core.jspsource.source" />
+		</actionSetPartAssociation>
+		<actionSetPartAssociation
+            targetID="org.eclipse.debug.ui.launchActionSet">
+            <part id="org.eclipse.jst.jsp.core.jspsource.source"/>
 		</actionSetPartAssociation>
 	</extension>
 

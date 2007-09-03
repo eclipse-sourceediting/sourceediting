@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITypedRegion;
+import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.reconciler.DirtyRegion;
 import org.eclipse.jface.text.reconciler.IReconcilingStrategy;
 import org.eclipse.jface.text.source.ISourceViewer;
@@ -199,7 +200,27 @@ public class DocumentRegionProcessor extends DirtyRegionProcessor {
 			fSpellcheckStrategy.setDocument(doc);
 		}
 	}
+	 
+	protected void setEntireDocumentDirty(IDocument document) {
+		super.setEntireDocumentDirty(document);
 
+		// make the entire document dirty
+		// this also happens on a "save as"
+		if (document != null && isInstalled() && fLastPartitions != null && document.getLength() == 0) {
+			/**
+			 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=199053
+			 * 
+			 * Process the strategies for the last known-good partitions.
+			 */
+			for (int i = 0; i < fLastPartitions.length; i++) {
+				getValidatorStrategy().reconcile(fLastPartitions[i], createDirtyRegion(fLastPartitions[i], DirtyRegion.REMOVE));
+			}
+			if (fSpellcheckStrategy != null) {
+				fSpellcheckStrategy.reconcile(new Region(0, document.getLength()));
+			}
+		}
+	}
+	
 	/**
 	 * @see org.eclipse.wst.sse.ui.internal.reconcile.DirtyRegionProcessor#uninstall()
 	 */
