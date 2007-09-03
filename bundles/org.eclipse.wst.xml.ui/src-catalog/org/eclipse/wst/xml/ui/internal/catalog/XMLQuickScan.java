@@ -12,12 +12,15 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.ui.internal.catalog;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.eclipse.wst.xml.ui.internal.Logger;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -49,7 +52,18 @@ public class XMLQuickScan {
 			SAXParser parser = factory.newSAXParser();
 			parser.parse(new InputSource(input), handler);
 		}
-		catch (Exception e) {
+		catch (StopParseException e) {
+			// this is a normal exception to stop parsing early,
+			// when info is found, so we can safely ignore
+		}
+		catch (ParserConfigurationException e) {
+			Logger.logException(e);
+		}
+		catch (SAXException e) {
+			Logger.logException(e);
+		}
+		catch (IOException e) {
+			Logger.logException(e);
 		}
 		finally {
 			Thread.currentThread().setContextClassLoader(prevClassLoader);
@@ -57,7 +71,22 @@ public class XMLQuickScan {
 		return handler.targetNamespaceURI;
 	}
 
-	protected static class TargetNamespaceURIContentHandler extends DefaultHandler {
+	/**
+	 * This is a special exception that is used to stop parsing when required
+	 * information is found.
+	 */
+	static class StopParseException extends org.xml.sax.SAXException {
+		static final long serialVersionUID = 1L;
+
+		/**
+		 * Constructor StopParseException.
+		 */
+		StopParseException() {
+			super("targetnamespace found, no need to continue the parse");
+		}
+	}
+
+	static class TargetNamespaceURIContentHandler extends DefaultHandler {
 		public String targetNamespaceURI;
 
 		public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
@@ -72,10 +101,7 @@ public class XMLQuickScan {
 					}
 				}
 			}
-			// todo there's a nice way to do this I'm sure
-			// here I intentially cause an exception...
-			String x = null;
-			x.length();
+			throw new StopParseException();
 		}
 	}
 }
