@@ -42,8 +42,6 @@ public class ProductManager {
 							new String[]{IProductConstants.DEFAULT_RUNTIME_1,
 										IProductConstants.DEFAULT_RUNTIME_2,
 										IProductConstants.DEFAULT_RUNTIME_3};
-	private final static String USE_EAR_LIBRARIES = "true";  //$NON-NLS-1$
-	private final static String USE_WEB_APP_LIBRARIES = "true"; //$NON-NLS-1$
 	
 	/**
 	 * Return the value for the associated key from the Platform Product registry or return the
