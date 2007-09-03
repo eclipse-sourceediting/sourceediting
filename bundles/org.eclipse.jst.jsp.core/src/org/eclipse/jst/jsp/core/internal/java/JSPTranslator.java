@@ -51,6 +51,7 @@ import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.JSP12TLDNa
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDElementDeclaration;
 import org.eclipse.jst.jsp.core.internal.contenttype.DeploymentDescriptorPropertyCache;
 import org.eclipse.jst.jsp.core.internal.contenttype.DeploymentDescriptorPropertyCache.PropertyGroup;
+import org.eclipse.jst.jsp.core.internal.parser.JSPSourceParser;
 import org.eclipse.jst.jsp.core.internal.provisional.JSP11Namespace;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.jst.jsp.core.internal.taglib.TaglibHelper;
@@ -58,9 +59,11 @@ import org.eclipse.jst.jsp.core.internal.taglib.TaglibHelperManager;
 import org.eclipse.jst.jsp.core.internal.taglib.TaglibVariable;
 import org.eclipse.jst.jsp.core.internal.util.ZeroStructuredDocumentRegion;
 import org.eclipse.jst.jsp.core.jspel.IJSPELTranslator;
+import org.eclipse.jst.jsp.core.taglib.TaglibIndex;
 import org.eclipse.wst.html.core.internal.contentmodel.JSP20Namespace;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.ltk.parser.BlockMarker;
+import org.eclipse.wst.sse.core.internal.ltk.parser.TagMarker;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
@@ -1001,9 +1004,8 @@ public class JSPTranslator {
 	}
 
 	private void handleScopingIfNecessary(ITextRegionCollection containerRegion) {
-		if (true)
-			return;
-
+		/* 199047 - Braces missing from translation of custom tags not defining variables */
+		
 		// code within a custom tag gets its own scope
 		// so if we encounter a start of a custom tag, we add '{'
 		// and for the end of a custom tag we add '}'
@@ -1056,8 +1058,20 @@ public class JSPTranslator {
 		if (tagName == null)
 			return false;
 
-		if (tagName.indexOf(":") > 0 && !tagName.startsWith("jsp")) //$NON-NLS-1$  //$NON-NLS-2$
-			return true;
+		JSPSourceParser parser = (JSPSourceParser) fStructuredDocument.getParser();
+		int colonIndex = tagName.indexOf(":");
+		if (colonIndex > 0) {
+			String prefix = tagName.substring(0, colonIndex);
+			if (prefix.equals("jsp")) { //$NON-NLS-1$
+				return false;
+			}
+			TagMarker[] prefixes = (TagMarker[]) parser.getNestablePrefixes().toArray(new TagMarker[0]);
+			for (int i = 0; i < prefixes.length; i++) {
+				if (prefix.equals(prefixes[i].getTagName())) {
+					return true;
+				}
+			}
+		}
 
 		return false;
 	}
@@ -1918,20 +1932,21 @@ public class JSPTranslator {
 
 	protected void handleIncludeFile(String filename) {
 		if (filename != null && fProcessIncludes) {
-			String fileLocation = null;
-			if (getResolver() != null) {
-				fileLocation = (getIncludes().empty()) ? getResolver().getLocationByURI(StringUtils.strip(filename)) : getResolver().getLocationByURI(StringUtils.strip(filename), (String) getIncludes().peek());
+			IPath basePath = new Path(getBaseLocation());
+			IPath localRoot = TaglibIndex.getContextRoot(basePath);
+			String uri = StringUtils.strip(filename);
+			String filePath = null;
+			if(uri.startsWith(Path.ROOT.toString())) {
+				filePath = localRoot.append(uri).toString();
 			}
 			else {
-				// shouldn't happen
-				fileLocation = StringUtils.strip(filename);
+				filePath = basePath.removeLastSegments(1).append(uri).toString();
 			}
-			// hopefully, a resolver is present and has returned a canonical
-			// file path
-			if (!getIncludes().contains(fileLocation) && getBaseLocation() != null && !fileLocation.equals(getBaseLocation())) {
-				getIncludes().push(fileLocation);
+
+			if (!getIncludes().contains(filePath) && getBaseLocation() != null && !filePath.equals(getBaseLocation())) {
+				getIncludes().push(filePath);
 				JSPIncludeRegionHelper helper = new JSPIncludeRegionHelper(this);
-				helper.parse(fileLocation);
+				helper.parse(filePath);
 				getIncludes().pop();
 			}
 		}

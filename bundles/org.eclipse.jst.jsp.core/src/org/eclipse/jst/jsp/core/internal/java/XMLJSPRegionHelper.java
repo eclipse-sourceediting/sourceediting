@@ -92,12 +92,12 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 	 * 
 	 * @param filename @return
 	 */
-	public boolean parse(String filename) {
+	public boolean parse(String filePath) {
 		getLocalParser().removeStructuredDocumentRegionHandler(this);
 		// from outer class
 		List blockMarkers = this.fTranslator.getBlockMarkers();
 		IStructuredDocument document = StructuredDocumentFactory.getNewStructuredDocumentInstance(getLocalParser());
-		String contents = getContents(filename);
+		String contents = getContents(filePath);
 		if (contents == null)
 			return false;
 		// this adds the current markers from the outer class list
@@ -201,9 +201,7 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 
 
 	private void handleScopingIfNecessary(IStructuredDocumentRegion sdRegion) {
-		if (true)
-			return;
-
+		/* 199047 - Braces missing from translation of custom tags not defining variables */
 		// fix to make sure custom tag block have their own scope
 		// we add '{' for custom tag open and '}' for custom tag close
 		// in the translation
@@ -462,7 +460,22 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 	}
 
 	protected boolean isPossibleCustomTag(String tagName) {
-		return tagName.indexOf(":") > 0 && !tagName.startsWith("jsp"); //$NON-NLS-1$  //$NON-NLS-2$
+		int colonIndex = tagName.indexOf(":");
+		if (colonIndex > 0) {
+			String prefix = tagName.substring(0, colonIndex);
+			if (prefix.equals("jsp")) { //$NON-NLS-1$
+				return false;
+			}
+			if (prefix.length() > 0) {
+				Object[] prefixes = fLocalParser.getNestablePrefixes().toArray();
+				for (int i = 0; i < prefixes.length; i++) {
+					if (prefix.equals(prefixes[i])) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
 	}
 
 	protected boolean isTaglibDirective(String tagName) {
@@ -490,11 +503,11 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 	/**
 	 * get the contents of a file as a String
 	 * 
-	 * @param fileName
+	 * @param filePath - the path to the file
 	 * @return the contents, null if the file could not be found
 	 */
-	protected String getContents(String fileName) {
-		IPath filePath = new Path(fileName);
-		return FileContentCache.getInstance().getContents(filePath.makeAbsolute());
+	protected String getContents(String filePath) {
+		IPath path = new Path(filePath);
+		return FileContentCache.getInstance().getContents(path.makeAbsolute());
 	}
 }
