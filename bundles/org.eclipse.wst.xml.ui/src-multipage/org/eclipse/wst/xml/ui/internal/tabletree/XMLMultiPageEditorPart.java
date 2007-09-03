@@ -319,7 +319,9 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 					INodeNotifier notifier = (INodeNotifier) node;
 					if (node.getNodeType() != Node.DOCUMENT_NODE) {
 						IJFaceNodeAdapter adapter = (IJFaceNodeAdapter) notifier.getAdapterFor(IJFaceNodeAdapter.class);
-						s.insert(0, adapter.getLabelText(node));
+						if (adapter != null) {
+							s.insert(0, adapter.getLabelText(node));
+						}
 					}
 					node = node.getParentNode();
 					if (node != null && node.getNodeType() != Node.DOCUMENT_NODE)
@@ -417,7 +419,7 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 		 */
 		if (fDesignViewer.getSelectionProvider() instanceof IPostSelectionProvider) {
 			((IPostSelectionProvider) fDesignViewer.getSelectionProvider()).addPostSelectionChangedListener(new ISelectionChangedListener() {
-				public void selectionChanged(SelectionChangedEvent event) {
+				public void selectionChanged(final SelectionChangedEvent event) {
 					/*
 					 * Only force selection update if source page is not
 					 * active
@@ -425,8 +427,14 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 					if (getActivePage() != fSourcePageIndex) {
 						getTextEditor().getSelectionProvider().setSelection(event.getSelection());
 					}
-					if (fDesignViewer.equals(event.getSource()))
-						updateStatusLine(event.getSelection());
+					if (fDesignViewer.equals(event.getSource())) {
+						try {
+							updateStatusLine(event.getSelection());
+						}
+						catch (Exception exception) {
+							Logger.logException(exception);
+						}						
+					}
 				}
 			});
 		}
