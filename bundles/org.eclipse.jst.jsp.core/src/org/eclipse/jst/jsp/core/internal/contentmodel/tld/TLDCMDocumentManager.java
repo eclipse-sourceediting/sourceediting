@@ -982,13 +982,13 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 		IStructuredDocumentRegion anchor = new ZeroStructuredDocumentRegion(null, -1);
 		fProcessIncludes = false;
 
-		IPath currentBaseLocation = getCurrentBaseLocation();
-		if (currentBaseLocation != null) {
-			PropertyGroup propertyGroup = DeploymentDescriptorPropertyCache.getInstance().getPropertyGroup(currentBaseLocation);
-			if (propertyGroup != null) {
-				IPath[] preludes = propertyGroup.getIncludePrelude();
+		IPath currentPath = getCurrentParserPath();
+		if (currentPath != null) {
+			PropertyGroup[] propertyGroups = DeploymentDescriptorPropertyCache.getInstance().getPropertyGroups(currentPath);
+			for(int k = 0; k < propertyGroups.length; k++) {
+				IPath[] preludes = propertyGroups[k].getIncludePrelude();
 				for (int i = 0; i < preludes.length; i++) {
-					if (!getIncludes().contains(preludes[i]) && !preludes[i].equals(currentBaseLocation)) {
+					if (!getIncludes().contains(preludes[i]) && !preludes[i].equals(currentPath)) {
 						getIncludes().push(preludes[i]);
 						if (getParser() != null) {
 							IncludeHelper includeHelper = new IncludeHelper(anchor, getParser());

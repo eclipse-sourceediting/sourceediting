@@ -2595,16 +2595,30 @@ public class JSPTranslator {
 	public IStructuredDocument getStructuredDocument() {
 		return fStructuredDocument;
 	}
+	
+	private IPath getModelPath() {
+		IPath path = null;
+		IStructuredModel sModel = StructuredModelManager.getModelManager().getModelForRead(getStructuredDocument());
+		try {
+			if (sModel != null)
+				path = new Path(sModel.getBaseLocation());
+		}
+		finally {
+			if (sModel != null)
+				sModel.releaseFromRead();
+		}
+		return path;
+	}
 
 	private void translateCodas() {
 		fProcessIncludes = false;
-		if (getBaseLocation() != null) {
-			Path basePath = new Path(getBaseLocation());
-			PropertyGroup propertyGroup = DeploymentDescriptorPropertyCache.getInstance().getPropertyGroup(basePath);
-			if (propertyGroup != null) {
-				IPath[] codas = propertyGroup.getIncludeCoda();
+		IPath modelpath = getModelPath();
+		if (modelpath != null) {
+			PropertyGroup[] propertyGroups = DeploymentDescriptorPropertyCache.getInstance().getPropertyGroups(modelpath);
+			for(int j = 0; j < propertyGroups.length; j++) {
+				IPath[] codas = propertyGroups[j].getIncludeCoda();
 				for (int i = 0; i < codas.length; i++) {
-					if (!getIncludes().contains(codas[i].toString()) && !codas[i].equals(basePath)) {
+					if (!getIncludes().contains(codas[i].toString()) && !codas[i].equals(modelpath)) {
 						getIncludes().push(codas[i]);
 						JSPIncludeRegionHelper helper = new JSPIncludeRegionHelper(this);
 						helper.parse(codas[i].toString());
@@ -2618,13 +2632,13 @@ public class JSPTranslator {
 
 	private void translatePreludes() {
 		fProcessIncludes = false;
-		if (getBaseLocation() != null) {
-			Path basePath = new Path(getBaseLocation());
-			PropertyGroup propertyGroup = DeploymentDescriptorPropertyCache.getInstance().getPropertyGroup(basePath);
-			if (propertyGroup != null) {
-				IPath[] preludes = propertyGroup.getIncludePrelude();
+		IPath modelpath = getModelPath();
+		if (modelpath != null) {
+			PropertyGroup[] propertyGroups = DeploymentDescriptorPropertyCache.getInstance().getPropertyGroups(modelpath);
+			for(int j = 0; j < propertyGroups.length; j++) {
+				IPath[] preludes = propertyGroups[j].getIncludePrelude();
 				for (int i = 0; i < preludes.length; i++) {
-					if (!getIncludes().contains(preludes[i].toString()) && !preludes[i].equals(basePath)) {
+					if (!getIncludes().contains(preludes[i].toString()) && !preludes[i].equals(modelpath)) {
 						getIncludes().push(preludes[i]);
 						JSPIncludeRegionHelper helper = new JSPIncludeRegionHelper(this);
 						helper.parse(preludes[i].toString());

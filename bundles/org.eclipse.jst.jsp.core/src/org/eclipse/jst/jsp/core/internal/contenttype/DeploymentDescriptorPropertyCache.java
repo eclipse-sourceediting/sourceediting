@@ -61,6 +61,8 @@ import org.xml.sax.SAXParseException;
  * is not persisted.
  */
 public class DeploymentDescriptorPropertyCache {
+	private static final PropertyGroup[] NO_PROPERTY_GROUPS = new PropertyGroup[0];
+
 	private static class DeploymentDescriptor {
 		PropertyGroup[] groups;
 		long modificationStamp;
@@ -77,8 +79,8 @@ public class DeploymentDescriptorPropertyCache {
 	 * deployment descriptor.
 	 */
 	public static final class PropertyGroup {
-		static PropertyGroup createFrom(IPath path, Node propertyGroupNode) {
-			PropertyGroup group = new PropertyGroup(path);
+		static PropertyGroup createFrom(IPath path, Node propertyGroupNode, int groupNumber) {
+			PropertyGroup group = new PropertyGroup(path, groupNumber);
 			Node propertyGroupID = propertyGroupNode.getAttributes().getNamedItem(ID);
 			if (propertyGroupID != null) {
 				group.setId(propertyGroupID.getNodeValue());
@@ -132,10 +134,13 @@ public class DeploymentDescriptorPropertyCache {
 		private boolean scripting_invalid;
 		String url_pattern;
 		private IPath webxmlPath;
+		
+		int number;
 
-		private PropertyGroup(IPath path) {
+		private PropertyGroup(IPath path, int number) {
 			super();
 			this.webxmlPath = path;
+			this.number = number;
 		}
 
 		private void addCoda(String containedText) {
@@ -219,6 +224,10 @@ public class DeploymentDescriptorPropertyCache {
 			if (url_pattern != null && url_pattern.length() > 0) {
 				this.matcher = new StringMatcher(url_pattern);
 			}
+		}
+		
+		public String toString() {
+			return number + ":" + url_pattern;
 		}
 	}
 
@@ -622,7 +631,7 @@ public class DeploymentDescriptorPropertyCache {
 		int length = propertyGroupElements.getLength();
 		subMonitor.beginTask("Reading Property Groups", length);
 		for (int i = 0; i < length; i++) {
-			PropertyGroup group = PropertyGroup.createFrom(file.getFullPath(), propertyGroupElements.item(i));
+			PropertyGroup group = PropertyGroup.createFrom(file.getFullPath(), propertyGroupElements.item(i), i);
 			subMonitor.worked(1);
 			if (group != null) {
 				groupList.add(group);
@@ -726,7 +735,7 @@ public class DeploymentDescriptorPropertyCache {
 		}
 
 		if (groups == null) {
-			groups = new PropertyGroup[0];
+			groups = NO_PROPERTY_GROUPS;
 		}
 
 		DeploymentDescriptor deploymentDescriptor = new DeploymentDescriptor();
@@ -845,21 +854,21 @@ public class DeploymentDescriptorPropertyCache {
 
 	/**
 	 * @param jspFilePath
-	 * @return a PropertyGroup containing the property group information
-	 *         matching the file at the given path or null if no web.xml file
-	 *         exists or no matching property group was defined. A returned
-	 *         PropertyGroup object should be considered short-lived and not
-	 *         saved for later use.
+	 * @return PropertyGroups matching the file at the given path or an empty
+	 *         array if no web.xml file exists or no matching property group
+	 *         was defined. A returned PropertyGroup object should be
+	 *         considered short-lived and not saved for later use.
 	 */
-	public PropertyGroup getPropertyGroup(IPath jspFilePath) {
+	public PropertyGroup[] getPropertyGroups(IPath jspFilePath) {
+		List matchingGroups = new ArrayList(1);
 		IPath contextRoot = TaglibIndex.getContextRoot(jspFilePath);
 		if (contextRoot == null)
-			return null;
+			return NO_PROPERTY_GROUPS;
 
 		IPath webxmlPath = contextRoot.append(WEB_INF_WEB_XML);
 		IFile webxmlFile = ResourcesPlugin.getWorkspace().getRoot().getFile(webxmlPath);
 		if (!webxmlFile.isAccessible())
-			return null;
+			return NO_PROPERTY_GROUPS;
 
 		Reference descriptorHolder = (Reference) fDeploymentDescriptors.get(webxmlPath);
 		DeploymentDescriptor descriptor = null;
@@ -868,19 +877,19 @@ public class DeploymentDescriptorPropertyCache {
 			descriptor = fetchDescriptor(webxmlFile, new NullProgressMonitor());
 		}
 
-		PropertyGroup matchingGroup = null;
-
-		for (int i = 0; i < descriptor.groups.length && matchingGroup == null; i++) {
-			if (descriptor.groups[i].matches(jspFilePath.removeFirstSegments(contextRoot.segmentCount()).toString(), false)) {
-				matchingGroup = descriptor.groups[i];
+		for (int i = 0; i < descriptor.groups.length; i++) {
+			if (descriptor.groups[i].matches(jspFilePath.removeFirstSegments(contextRoot.segmentCount()).makeAbsolute().toString(), false)) {
+				matchingGroups.add(descriptor.groups[i]);
 			}
 		}
-		for (int i = 0; i < descriptor.groups.length && matchingGroup == null; i++) {
-			if (descriptor.groups[i].matches(jspFilePath.removeFirstSegments(contextRoot.segmentCount()).toString(), true)) {
-				matchingGroup = descriptor.groups[i];
+		if (matchingGroups.isEmpty()) {
+			for (int i = 0; i < descriptor.groups.length; i++) {
+				if (descriptor.groups[i].matches(jspFilePath.removeFirstSegments(contextRoot.segmentCount()).toString(), true)) {
+					matchingGroups.add(descriptor.groups[i]);
+				}
 			}
 		}
-		return matchingGroup;
+		return (PropertyGroup[]) matchingGroups.toArray(new PropertyGroup[matchingGroups.size()]);
 	}
 
 	private void updateCacheEntry(IPath fullPath) {
