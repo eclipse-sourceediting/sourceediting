@@ -12,11 +12,13 @@
 package org.eclipse.wst.xml.ui.internal.editor;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.SWTException;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
@@ -76,9 +78,20 @@ public class CMImageUtil {
 					URL imageURL = new URL(imageURLString);
 					URLConnection connection = imageURL.openConnection();
 					connection.setUseCaches(false);
-					ImageData data = new ImageData(connection.getInputStream());
-					descriptor = ImageDescriptor.createFromImageData(data);
-					XMLUIPlugin.getInstance().getImageRegistry().put(imageURLString, descriptor);
+					InputStream inputStream = connection.getInputStream();
+					try {
+						ImageData data = new ImageData(inputStream);
+						descriptor = ImageDescriptor.createFromImageData(data);
+						XMLUIPlugin.getInstance().getImageRegistry().put(imageURLString, descriptor);
+					}
+					catch (SWTException e) {
+						/*
+						 * There was a problem loading image from stream
+						 * (corrupt, missing, etc.)
+						 */
+						if (inputStream != null)
+							inputStream.close();
+					}
 				}
 				catch (MalformedURLException e) {
 					descriptor = null;
