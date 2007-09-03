@@ -13,7 +13,8 @@
 package org.eclipse.wst.sse.ui;
 
 import java.io.IOException;
-import java.lang.ref.WeakReference;
+import java.lang.ref.Reference;
+import java.lang.ref.SoftReference;
 import java.lang.reflect.Method;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -565,7 +566,7 @@ public class StructuredTextEditor extends TextEditor {
 		 * possibly not need to reference the model directly.
 		 */
 		private static class StructuredTextSelection extends TextSelection implements IStructuredSelection, ITextSelection {
-			private WeakReference weakSelectedStructured;
+			private Reference selectedStructured;
 			private InternalTextSelection fInternalTextSelection;
 
 			StructuredTextSelection(ITextSelection selection, IDocument document, IStructuredModel model) {
@@ -575,19 +576,19 @@ public class StructuredTextEditor extends TextEditor {
 				// TextSelection" instead of ITextSelection.
 				super(selection.getOffset(), selection.getLength());
 				fInternalTextSelection = new InternalTextSelection(document, selection.getOffset(), selection.getLength());
-				weakSelectedStructured = new WeakReference(initializeInferredSelectedObjects(selection, model));
+				selectedStructured = new SoftReference(initializeInferredSelectedObjects(selection, model));
 			}
 
 			StructuredTextSelection(ITextSelection selection, Object[] selectedObjects, IDocument document) {
 				super(selection.getOffset(), selection.getLength());
 				fInternalTextSelection = new InternalTextSelection(document, selection.getOffset(), selection.getLength());
-				weakSelectedStructured = new WeakReference(selectedObjects);
+				selectedStructured = new SoftReference(selectedObjects);
 			}
 
 			StructuredTextSelection(IDocument document, int offset, int length, Object[] selectedObjects) {
 				super(offset, length);
 				fInternalTextSelection = new InternalTextSelection(document, offset, length);
-				weakSelectedStructured = new WeakReference(selectedObjects);
+				selectedStructured = new SoftReference(selectedObjects);
 			}
 
 			public Object getFirstElement() {
@@ -596,7 +597,7 @@ public class StructuredTextEditor extends TextEditor {
 			}
 
 			private Object[] getSelectedStructures() {
-				Object[] selectedStructures = (Object[]) weakSelectedStructured.get();
+				Object[] selectedStructures = (Object[]) selectedStructured.get();
 				if (selectedStructures == null) {
 					selectedStructures = new Object[0];
 				}
@@ -633,7 +634,8 @@ public class StructuredTextEditor extends TextEditor {
 			}
 
 			public boolean isEmpty() {
-				return fInternalTextSelection.isEmpty() && getSelectedStructures().length == 0;
+				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=191327
+				return fInternalTextSelection.isEmpty() || getSelectedStructures().length == 0;
 			}
 
 			public Iterator iterator() {
@@ -660,7 +662,7 @@ public class StructuredTextEditor extends TextEditor {
 			private static class InternalTextSelection implements ITextSelection {
 
 
-				private WeakReference weakDocument;
+				private SoftReference weakDocument;
 
 				/** Offset of the selection */
 				private int fOffset;
@@ -696,7 +698,7 @@ public class StructuredTextEditor extends TextEditor {
 				 *            the length of the selected range
 				 */
 				InternalTextSelection(IDocument document, int offset, int length) {
-					weakDocument = new WeakReference(document);
+					weakDocument = new SoftReference(document);
 					fOffset = offset;
 					fLength = length;
 				}
@@ -855,7 +857,7 @@ public class StructuredTextEditor extends TextEditor {
 			}
 		}
 
-		private WeakReference weakDocument;
+		private SoftReference weakDocument;
 		private ISelectionProvider fParentProvider = null;
 		private boolean isFiringSelection = false;
 		private ListenerList listeners = new ListenerList();
@@ -863,12 +865,12 @@ public class StructuredTextEditor extends TextEditor {
 		private ISelection fLastSelection = null;
 		private ISelectionProvider fLastSelectionProvider = null;
 		private SelectionChangedEvent fLastUpdatedSelectionChangedEvent = null;
-		private WeakReference weakEditor;
+		private SoftReference weakEditor;
 
 
 		StructuredSelectionProvider(ISelectionProvider parentProvider, StructuredTextEditor structuredTextEditor) {
 			fParentProvider = parentProvider;
-			weakEditor = new WeakReference(structuredTextEditor);
+			weakEditor = new SoftReference(structuredTextEditor);
 			IDocument document = structuredTextEditor.getDocumentProvider().getDocument(structuredTextEditor.getEditorInput());
 			if (document != null) {
 				setDocument(document);
@@ -1095,7 +1097,7 @@ public class StructuredTextEditor extends TextEditor {
 		}
 
 		public void setDocument(IDocument document) {
-			weakDocument = new WeakReference(document);
+			weakDocument = new SoftReference(document);
 		}
 	}
 
