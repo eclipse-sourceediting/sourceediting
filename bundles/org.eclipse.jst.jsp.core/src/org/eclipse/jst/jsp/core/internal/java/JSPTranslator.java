@@ -2598,7 +2598,7 @@ public class JSPTranslator {
 	
 	private IPath getModelPath() {
 		IPath path = null;
-		IStructuredModel sModel = StructuredModelManager.getModelManager().getModelForRead(getStructuredDocument());
+		IStructuredModel sModel = StructuredModelManager.getModelManager().getExistingModelForRead(getStructuredDocument());
 		try {
 			if (sModel != null)
 				path = new Path(sModel.getBaseLocation());
