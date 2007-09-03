@@ -27,6 +27,7 @@ import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.content.IContentDescription;
@@ -277,6 +278,9 @@ class WorkspaceTaskScanner {
 			}
 			catch (CoreException e1) {
 				Logger.logException(e1);
+			}
+			catch(OperationCanceledException e) {
+				// not an error condition
 			}
 		}
 	}

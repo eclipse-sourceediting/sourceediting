@@ -53,7 +53,7 @@ public class TaskScanningScheduler {
 				if (resource.getType() == IResource.ROOT)
 					return true;
 				else if (resource.getType() == IResource.PROJECT) {
-					fJob.addDelta(delta);
+					fJob.addProjectDelta(delta);
 					return false;
 				}
 			}
@@ -103,7 +103,9 @@ public class TaskScanningScheduler {
 		/*
 		 * According to
 		 * http://www.eclipse.org/eclipse/development/performance/bloopers.html,
-		 * POST_CHANGE listeners add a trivial performance cost
+		 * POST_CHANGE listeners add a trivial performance cost.
+		 * 
+		 * Always add listener since we might be enabled per-project even if disabled workspace-wide.
 		 */
 		ResourcesPlugin.getWorkspace().addResourceChangeListener(scheduler.visitor, IResourceChangeEvent.POST_CHANGE);
 
