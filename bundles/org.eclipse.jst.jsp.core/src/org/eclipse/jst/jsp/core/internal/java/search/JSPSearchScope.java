@@ -104,9 +104,7 @@ public class JSPSearchScope implements IJavaSearchScope {
 	}
 
 	public IPath[] enclosingProjectsAndJars() {
-
-		// pa_TODO
-		return null;
+		return (IPath[]) fResourcePaths.toArray(new IPath[fResourcePaths.size()]);
 	}
 
 	public boolean includesBinaries() {
