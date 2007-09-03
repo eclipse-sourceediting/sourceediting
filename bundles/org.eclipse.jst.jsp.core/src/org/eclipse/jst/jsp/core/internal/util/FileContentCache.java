@@ -50,7 +50,10 @@ public class FileContentCache {
 		}
 
 		private IFile getFile(IPath path) {
-			return ResourcesPlugin.getWorkspace().getRoot().getFile(path);
+			if (path.segmentCount() > 1) {
+				return ResourcesPlugin.getWorkspace().getRoot().getFile(path);
+			}
+			return null;
 		}
 
 		boolean isStale() {
@@ -105,7 +108,7 @@ public class FileContentCache {
 
 		private long getModificationStamp(IPath filePath) {
 			IFile f = getFile(filePath);
-			if (f.isAccessible()) {
+			if (f != null && f.isAccessible()) {
 				return f.getModificationStamp();
 			}
 			File file = filePath.toFile();
@@ -121,7 +124,7 @@ public class FileContentCache {
 			InputStream is = null;
 			try {
 				IFile f = getFile(filePath);
-				if (f.isAccessible()) {
+				if (f != null && f.isAccessible()) {
 					String charset = detectCharset(f);
 					is = f.getContents();
 					Reader reader = new InputStreamReader(is, charset);
@@ -155,12 +158,19 @@ public class FileContentCache {
 					ITextFileBuffer buffer = FileBuffers.getTextFileBufferManager().getTextFileBuffer(filePath, LocationKind.LOCATION);
 					if (buffer != null) {
 						s.append(buffer.getDocument().get());
-						FileBuffers.getTextFileBufferManager().disconnect(filePath, LocationKind.LOCATION, new NullProgressMonitor());
 					}
 				}
 				catch (CoreException e) {
 					// nothing to do
-					e.printStackTrace();
+					Logger.logException(e);
+				}
+				finally {
+					try {
+						FileBuffers.getTextFileBufferManager().disconnect(filePath, LocationKind.LOCATION, new NullProgressMonitor());
+					}
+					catch (CoreException e) {
+						Logger.logException(e);
+					}
 				}
 			}
 			return s.toString();
