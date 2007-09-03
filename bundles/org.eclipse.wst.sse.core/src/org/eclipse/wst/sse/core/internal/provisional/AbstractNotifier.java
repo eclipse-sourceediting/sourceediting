@@ -157,7 +157,7 @@ public abstract class AbstractNotifier implements INodeNotifier {
 		INodeAdapter result = null;
 		for (int i = 0; i < adapterCount; i++) {
 			INodeAdapter a = fAdapters[i];
-			if (a.isAdapterForType(type)) {
+			if (a != null && a.isAdapterForType(type)) {
 				result = a;
 				break;
 			}
