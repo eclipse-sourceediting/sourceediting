@@ -25,10 +25,20 @@ import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.internal.core.ClasspathEntry;
+import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDDocument;
+import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDElementDeclaration;
 import org.eclipse.jst.jsp.core.taglib.IJarRecord;
 import org.eclipse.jst.jsp.core.taglib.ITaglibRecord;
 import org.eclipse.jst.jsp.core.taglib.IURLRecord;
 import org.eclipse.jst.jsp.core.taglib.TaglibIndex;
+import org.eclipse.wst.sse.core.StructuredModelManager;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
+import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
+import org.eclipse.wst.xml.core.internal.provisional.contentmodel.CMNodeWrapper;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 /**
  * Tests for the TaglibIndex.
@@ -190,6 +200,39 @@ public class TestIndex extends TestCase {
 		assertEquals("wrong number of taglib records found after copying", 4, records.length);
 	}
 
+	public void testUtilityProjectSupport() throws Exception {
+		// Create project 1
+		IProject project = BundleResourceUtil.createSimpleProject("test-jar", null, null);
+		assertTrue(project.exists());
+		BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/bug183756/test-jar", "/test-jar");
+
+		// Create project 2
+		IProject project2 = BundleResourceUtil.createSimpleProject("test-war", null, null);
+		assertTrue(project2.exists());
+		BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/bug183756/test-war", "/test-war");
+
+		IFile testFile = project2.getFile(new Path("src/main/webapp/test.jsp"));
+		assertTrue("missing test JSP file!", testFile.isAccessible());
+
+		IDOMModel jspModel = null;
+		try {
+			jspModel = (IDOMModel) StructuredModelManager.getModelManager().getModelForRead(testFile);
+			NodeList tests = jspModel.getDocument().getElementsByTagName("test:test");
+			assertTrue("test:test element not found", tests.getLength() > 0);
+			CMElementDeclaration elementDecl = ModelQueryUtil.getModelQuery(jspModel).getCMElementDeclaration(((Element) tests.item(0)));
+			assertNotNull("No element declaration was found for test:test at runtime", elementDecl);
+			assertTrue("element declaration was not the expected kind", elementDecl instanceof CMNodeWrapper);
+			CMNode originNode = ((CMNodeWrapper) elementDecl).getOriginNode();
+			assertTrue("element declaration was not from a tag library", originNode instanceof TLDElementDeclaration);
+			assertEquals("element declaration was not from expected tag library", "http://foo.com/testtags", ((TLDDocument) ((TLDElementDeclaration) originNode).getOwnerDocument()).getUri());
+		}
+		finally {
+			if (jspModel != null) {
+				jspModel.releaseFromRead();
+			}
+		}
+	}
+	
 	public void testWebXMLTaglibMappingsToJARs() throws Exception {
 		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject("bug_148717");
 		if (!project.exists()) {
