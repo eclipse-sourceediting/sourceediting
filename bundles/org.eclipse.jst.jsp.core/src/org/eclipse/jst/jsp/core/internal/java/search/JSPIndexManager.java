@@ -178,7 +178,7 @@ public class JSPIndexManager {
 
 		private void deleteIndex(IFile folder) {
 			// cleanup index
-			IndexManager im = JavaModelManager.getJavaModelManager().getIndexManager();
+			IndexManager im = JavaModelManager.getIndexManager();
 			IPath folderPath = folder.getFullPath();
 			IPath indexLocation = JSPSearchSupport.getInstance().computeIndexLocation(folderPath);
 			im.removeIndex(indexLocation);
@@ -505,7 +505,7 @@ public class JSPIndexManager {
 	// https://w3.opensource.ibm.com/bugzilla/show_bug.cgi?id=5091
 	// makes sure IndexManager is aware of our indexes
 	void saveIndexes() {
-		IndexManager indexManager = JavaModelManager.getJavaModelManager().getIndexManager();
+		IndexManager indexManager = JavaModelManager.getIndexManager();
 		IPath jspModelWorkingLocation = JSPSearchSupport.getInstance().getModelJspPluginWorkingLocation();
 
 		File folder = new File(jspModelWorkingLocation.toOSString());

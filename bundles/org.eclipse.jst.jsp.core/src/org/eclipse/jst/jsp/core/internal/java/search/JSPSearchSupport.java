@@ -488,7 +488,7 @@ public class JSPSearchSupport {
             // pa_TODO need to add to java path too, so JDT search support knows
             // there should be a non internal way to do this.
             // https://bugs.eclipse.org/bugs/show_bug.cgi?id=77564
-            JavaModelManager.getJavaModelManager().getIndexManager().indexLocations.put(containerPath, indexLocation);
+            JavaModelManager.getIndexManager().indexLocations.put(containerPath, indexLocation);
         //}
         return indexLocation;
     }
