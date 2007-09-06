@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,8 +23,12 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
+import java.util.zip.ZipInputStream;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.wst.sse.core.internal.Logger;
 
 
@@ -121,15 +125,77 @@ public class JarUtilities {
 		}
 		return cache;
 	}
+	
+	private static InputStream copyAndCloseStream(InputStream original) {
+		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+		InputStream cachedCopy = null;
+		
+		if (original != null) {
+			int c;
+			// array dim restriction?
+			byte bytes[] = new byte[2048];
+			try {
+				while ((c = original.read(bytes)) >= 0) {
+					buffer.write(bytes, 0, c);
+				}
+				cachedCopy = new ByteArrayInputStream(buffer.toByteArray());
+				closeStream(original);
+			}
+			catch (IOException ioe) {
+				// no cleanup can be done
+			}
+		}
+		return cachedCopy;
+	}
 
 	public static String[] getEntryNames(IResource jarResource) {
-		if (jarResource == null || jarResource.getLocation() == null)
+		if (jarResource == null || jarResource.getType() != IResource.FILE)
 			return new String[0];
+		if(jarResource.getLocation() == null) {
+			try {
+				return getEntryNames(new ZipInputStream(((IFile)jarResource).getContents()), true);
+			}
+			catch (CoreException e) {
+				Logger.logException("Problem reading contents of " + jarResource.getFullPath(), e);  //$NON-NLS-1$
+			}
+		}
 		return getEntryNames(jarResource.getLocation().toString());
 	}
 
 	public static String[] getEntryNames(String jarFilename) {
 		return getEntryNames(jarFilename, true);
+	}
+
+	private static String[] getEntryNames(ZipInputStream jarInputStream, boolean excludeDirectories) {
+		List entryNames = new ArrayList();
+		try {
+			ZipEntry z = jarInputStream.getNextEntry();
+			while (z != null) {
+				if (!(z.isDirectory() && excludeDirectories))
+					entryNames.add(z.getName());
+				z = jarInputStream.getNextEntry();
+			}
+		}
+		catch (ZipException zExc) {
+			Logger.log(Logger.WARNING, "JarUtilities ZipException: (stream) " + zExc.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+		catch (IOException ioExc) {
+			Logger.log(Logger.WARNING, "JarUtilities IOException: (stream) " + ioExc.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+		finally {
+			closeStream(jarInputStream);
+		}
+		String[] names = (String[]) entryNames.toArray(new String[0]);
+		return names;
+	}
+
+	private static void closeStream(InputStream inputStream) {
+		try {
+			inputStream.close();
+		}
+		catch (IOException e) {
+			// nothing to do
+		}
 	}
 
 	public static String[] getEntryNames(String jarFilename, boolean excludeDirectories) {
@@ -158,9 +224,43 @@ public class JarUtilities {
 	}
 
 	public static InputStream getInputStream(IResource jarResource, String entryName) {
-		if (jarResource == null)
+		if (jarResource == null || jarResource.getType() != IResource.FILE)
 			return null;
-		return getInputStream(jarResource.getLocation().toString(), entryName);
+		IPath location = jarResource.getLocation();
+		if(location == null) {
+			try {
+				InputStream zipStream = ((IFile)jarResource).getContents();
+				return getInputStream(new ZipInputStream(zipStream), entryName);
+			}
+			catch (CoreException e) {
+				Logger.logException("Problem reading contents of " + jarResource.getFullPath(), e);  //$NON-NLS-1$
+				return null;
+			}
+		}
+		return getInputStream(location.toString(), entryName);
+	}
+	
+	private static InputStream getInputStream(ZipInputStream zip, String entryName) {
+		InputStream result = null;
+		try {
+			ZipEntry z = zip.getNextEntry();
+			while (z != null && !z.getName().equals(entryName)) {
+				z = zip.getNextEntry();
+			}
+			if(z != null) {				
+				result = copyAndCloseStream(zip);
+			}
+		}
+		catch (ZipException zExc) {
+			Logger.log(Logger.WARNING, "JarUtilities ZipException: (stream) " + zExc.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+		catch (IOException ioExc) {
+			Logger.log(Logger.WARNING, "JarUtilities IOException: (stream) " + ioExc.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+		finally {
+			closeStream(zip);
+		}
+		return result;
 	}
 
 	public static InputStream getInputStream(String jarFilename, String entryName) {

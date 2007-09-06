@@ -146,6 +146,7 @@ public class FileBufferModelManager {
 		}
 
 		public void setFileBaseLocation(String newLocation) {
+			fLocation = new Path(newLocation);
 		}
 
 		public void setProject(IProject newProject) {
@@ -157,18 +158,19 @@ public class FileBufferModelManager {
 	 * resolver
 	 */
 	class CommonURIResolver implements URIResolver {
-		IPath fLocation;
+		String fLocation;
 		IPath fPath;
+		private IProject fProject;
 		final static String SEPARATOR = "/"; //$NON-NLS-1$ 
 		final static String FILE_PREFIX = "file://"; //$NON-NLS-1$
 
-		CommonURIResolver(IPath path, IPath location) {
-			fLocation = location;
-			fPath = path;
+		CommonURIResolver(IFile workspaceFile) {
+			fPath = workspaceFile.getFullPath();
+			fProject = workspaceFile.getProject();
 		}
 
 		public String getFileBaseLocation() {
-			return fLocation.toString();
+			return fLocation;
 		}
 
 		public String getLocationByURI(String uri) {
@@ -203,7 +205,7 @@ public class FileBufferModelManager {
 		}
 
 		public IProject getProject() {
-			return ResourcesPlugin.getWorkspace().getRoot().getProject(fPath.segment(0));
+			return fProject;
 		}
 
 		public IContainer getRootLocation() {
@@ -211,7 +213,7 @@ public class FileBufferModelManager {
 			IFile[] files = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocation(new Path(root));
 			for (int i = 0; i < files.length; i++) {
 				if ((files[i].getType() & IResource.FOLDER) == IResource.FOLDER) {
-					if (((IFolder) files[i]).getFullPath().isPrefixOf(fPath)) {
+					if (fPath.isPrefixOf(((IFolder) files[i]).getFullPath())) {
 						return (IFolder) files[i];
 					}
 				}
@@ -224,9 +226,11 @@ public class FileBufferModelManager {
 		}
 
 		public void setFileBaseLocation(String newLocation) {
+			fLocation = newLocation;
 		}
 
 		public void setProject(IProject newProject) {
+			fProject = newProject;
 		}
 	}
 
@@ -414,9 +418,20 @@ public class FileBufferModelManager {
 			IProject project = workspaceFile.getProject();
 			resolver = (URIResolver) project.getAdapter(URIResolver.class);
 			if (resolver == null) {
-				resolver = new CommonURIResolver(workspaceFile.getFullPath(), workspaceFile.getLocation());
+				resolver = new CommonURIResolver(workspaceFile);
 			}
-			resolver.setFileBaseLocation(workspaceFile.getLocation().toString());
+			
+			String baseLocation = null;
+			if (workspaceFile.getLocation() != null) {
+				baseLocation = workspaceFile.getLocation().toString();
+			}
+			if (baseLocation == null && workspaceFile.getLocationURI() != null) {
+				baseLocation = workspaceFile.getLocationURI().toString();
+			}
+			if (baseLocation == null) {
+				baseLocation = workspaceFile.getFullPath().toString();
+			}
+			resolver.setFileBaseLocation(baseLocation);
 		}
 		else {
 			resolver = new ExternalURIResolver(location);
@@ -572,7 +587,7 @@ public class FileBufferModelManager {
 		ITextFileBufferManager bufferManager = FileBuffers.getTextFileBufferManager();
 		try {
 			if (Logger.DEBUG_FILEBUFFERMODELMANAGEMENT) {
-				Logger.log(Logger.INFO, "FileBufferModelManager connecting to IFile " + file.getLocation()); //$NON-NLS-1$
+				Logger.log(Logger.INFO, "FileBufferModelManager connecting to IFile " + file.getFullPath()); //$NON-NLS-1$
 			}
 			// see TextFileDocumentProvider#createFileInfo about why we use
 			// IFile#getFullPath
@@ -622,7 +637,7 @@ public class FileBufferModelManager {
 			}
 		}
 		catch (CoreException e) {
-			Logger.logException("Error getting model for " + file.getLocation(), e); //$NON-NLS-1$
+			Logger.logException("Error getting model for " + file.getFullPath(), e); //$NON-NLS-1$
 		}
 		return model;
 	}

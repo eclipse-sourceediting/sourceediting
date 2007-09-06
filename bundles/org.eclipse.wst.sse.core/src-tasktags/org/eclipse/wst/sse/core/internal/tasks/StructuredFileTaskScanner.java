@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -214,7 +214,7 @@ public abstract class StructuredFileTaskScanner implements IFileTaskScanner {
 			Logger.logException("Exception with " + file.getFullPath().toString(), e); //$NON-NLS-1$
 		}
 		catch (CharacterCodingException e) {
-			Logger.log(Logger.INFO, "StructuredFileTaskScanner encountered CharacterCodingException reading " + file.getLocation()); //$NON-NLS-1$
+			Logger.log(Logger.INFO, "StructuredFileTaskScanner encountered CharacterCodingException reading " + file.getFullPath()); //$NON-NLS-1$
 		}
 		catch (Exception e) {
 			Logger.logException("Exception with " + file.getFullPath().toString(), e); //$NON-NLS-1$
@@ -239,7 +239,7 @@ public abstract class StructuredFileTaskScanner implements IFileTaskScanner {
 			findTasks(file, taskTags, monitor);
 		}
 		if (Logger.DEBUG_TASKSPERF) {
-			System.out.println("" + (System.currentTimeMillis() - time0) + "ms for " + file.getLocation()); //$NON-NLS-1$ //$NON-NLS-2$
+			System.out.println("" + (System.currentTimeMillis() - time0) + "ms for " + file.getFullPath()); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		return (Map[]) fNewMarkerAttributeMaps.toArray(new Map[fNewMarkerAttributeMaps.size()]);
 	}

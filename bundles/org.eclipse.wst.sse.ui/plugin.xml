@@ -44,17 +44,13 @@
 		</actionSetPartAssociation>
 		<actionSetPartAssociation
 			targetID="org.eclipse.ui.NavigateActionSet">
-			<!--
-				<part id="org.eclipse.ui.views.ResourceNavigator"/>
-				<part id="org.eclipse.ui.views.ContentOutline"/>
-			-->
-			<!--
-				should probably only "force" association of action sets for workbench parts that we own
-				or only if the view is focusse in the XMLPerspective
-			-->
 			<part
 				id="org.eclipse.wst.sse.ui.StructuredTextEditor">
 			</part>
+		</actionSetPartAssociation>
+		<actionSetPartAssociation
+            targetID="org.eclipse.debug.ui.launchActionSet">
+            <part id="org.eclipse.wst.sse.ui.StructuredTextEditor"/>
 		</actionSetPartAssociation>
 	</extension>
 	

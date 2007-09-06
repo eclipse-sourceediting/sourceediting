@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,12 +15,14 @@ package org.eclipse.wst.sse.core.internal.util;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import com.ibm.icu.util.StringTokenizer;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
+
+import com.ibm.icu.util.StringTokenizer;
 
 /**
  * @deprecated The URIResolver interface is deprecated. Use the resolver from
@@ -96,13 +98,24 @@ public class ProjectResolver implements URIResolver {
 		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=71223
 		// Workaround for problem in URIHelper; uris starting with '/' are
 		// returned as-is.
-		String location = uri;
+		String location = null;
 		if (uri.startsWith("/")) { //$NON-NLS-1$
 			IProject p = getProject();
-			if (p != null && p.exists())
-				location = p.getLocation().toString() + uri;
+			if (p != null && p.isAccessible()) {
+				IFile file = p.getFile(uri);
+				
+				if (file.getLocation() != null) {
+					location = file.getLocation().toString();
+				}
+				if (location == null && file.getLocationURI() != null) {
+					location = file.getLocationURI().toString();
+				}
+				if (location == null) {
+					location = file.getFullPath().toString();
+				}
+			}
 		}
-		else {
+		if(location == null) {
 			location = URIHelper.normalize(uri, baseReference, getRootLocationString());
 		}
 		return location;
@@ -188,7 +201,17 @@ public class ProjectResolver implements URIResolver {
 	}
 
 	protected String getRootLocationString() {
-		return fProject.getLocation().toString();
+		String location = null;
+		if (fProject.getLocation() != null) {
+			location = fProject.getLocation().toString();
+		}
+		if (location == null && fProject.getLocationURI() != null) {
+			location = fProject.getLocationURI().toString();
+		}
+		if (location == null) {
+			location = fProject.getFullPath().toString();
+		}
+		return location;
 	}
 
 	public InputStream getURIStream(String uri) {

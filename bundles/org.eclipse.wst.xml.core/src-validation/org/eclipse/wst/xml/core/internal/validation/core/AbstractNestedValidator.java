@@ -21,7 +21,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
@@ -176,7 +175,7 @@ public abstract class AbstractNestedValidator implements IValidatorJob
    */
   public void validate(IValidationContext arg0, IReporter arg1) throws ValidationException 
   {  
-	// This method should not be implemented by validtors implementing the validateInJob
+	// This method should not be implemented by validators implementing the validateInJob
 	// method.
   }
 	
@@ -224,8 +223,17 @@ public abstract class AbstractNestedValidator implements IValidatorJob
 	Message message = new LocalizedMessage(IMessage.LOW_SEVERITY, file.getFullPath().toString());
     reporter.displaySubtask(this, message);
     
-	IPath path = file.getLocation();
-	String uri = createURIForFilePath(path.toString());
+	String locationString = null;		
+	if (file.getLocation() != null) {
+		locationString = file.getLocation().toString();
+	}
+	if (locationString == null && file.getLocationURI() != null) {
+		locationString = file.getLocationURI().toString();
+	}
+	if (locationString == null) {
+		locationString = file.getFullPath().toString();
+	}
+	String uri = createURIForFilePath(locationString);
 
 	clearMarkers(file, this, reporter);
 	ValidationReport valreport = validate(uri, inputstream, context);

@@ -68,19 +68,19 @@ public abstract class ContentSettingsPropertyPage extends PropertyPage {
 		if (!(file.isReadOnly()))
 			return STATUS_OK;
 
-		IPath fullIPath = file.getLocation();
+		IPath location = file.getLocation();
 
-		final long beforeModifiedFromJavaIO = fullIPath.toFile().lastModified();
+		final long beforeModifiedFromJavaIO = (location != null) ? location.toFile().lastModified() : IResource.NULL_STAMP;
 		final long beforeModifiedFromIFile = file.getModificationStamp();
 
 		IStatus status = ResourcesPlugin.getWorkspace().validateEdit(new IFile[]{file}, context);
 		if (!status.isOK())
 			return status;
 
-		final long afterModifiedFromJavaIO = fullIPath.toFile().lastModified();
+		final long afterModifiedFromJavaIO = (location != null) ? location.toFile().lastModified() : IResource.NULL_STAMP;
 		final long afterModifiedFromIFile = file.getModificationStamp();
 
-		if (beforeModifiedFromJavaIO != afterModifiedFromJavaIO) {
+		if (beforeModifiedFromJavaIO != afterModifiedFromJavaIO || beforeModifiedFromIFile != afterModifiedFromIFile) {
 			IModelManager manager = StructuredModelManager.getModelManager();
 			IStructuredModel model = manager.getExistingModelForRead(file);
 			if (model != null) {

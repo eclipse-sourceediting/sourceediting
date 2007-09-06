@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -28,10 +28,10 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.wst.sse.core.internal.Logger;
+import org.eclipse.wst.sse.core.internal.SSECorePlugin;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -477,43 +477,27 @@ public class ContentSettings implements IContentSettings {
 	}
 
 	private String getContentSettingsPath(IResource resource) {
-		String projectPath = getProjectOf(resource);
-		StringBuffer strbuf = new StringBuffer(""); //$NON-NLS-1$
-		if (projectPath != null) {
-			strbuf.append(projectPath);
-			strbuf.append(IPath.SEPARATOR);
-			strbuf.append(contentSettingsName);
-		}
+		IProject project = null;
+		if (resource.getType() == IResource.PROJECT)
+			project = (IProject) resource;
 		else
-			return null;
+			project = resource.getProject();
 
-		String str = strbuf.toString();
-		strbuf.delete(0, strbuf.length());
-		return str;
+		IPath projectLocation = project.getLocation();
+		if (projectLocation == null) {
+			/**
+			 * As a deprecated class, perfect operation in new scenarios such
+			 * as with EFS is not promised.
+			 */
+			return SSECorePlugin.getDefault().getStateLocation().append(rootElementName).append(project.getName()).toString();
+		}
+
+		return projectLocation.addTrailingSeparator().append(contentSettingsName).toString();
 	}
 
 	public final String getPathAttr() {
 		return PATHATTR;
 	}
-
-
-	private String getProjectOf(IResource resource) {
-		// if (resource==null) return null;
-		currProject = resource.getProject();
-		// String projectPath=null;
-
-		IPath path = currProject.getLocation();
-		if (path == null) {
-			path = ResourcesPlugin.getWorkspace().getRoot().getLocation();
-			if (path != null) {
-				path = path.addTrailingSeparator();
-				path = path.append(currProject.getName());
-			}
-		}
-		return (path != null) ? path.toString() : null;
-
-	}
-
 
 	public synchronized Map getProperties(final IResource resource) {
 		if (resource == null)

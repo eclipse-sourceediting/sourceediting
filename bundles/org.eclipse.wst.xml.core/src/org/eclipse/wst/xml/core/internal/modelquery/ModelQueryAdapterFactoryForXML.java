@@ -14,11 +14,8 @@ package org.eclipse.wst.xml.core.internal.modelquery;
 
 
 
-import java.io.File;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver;
 import org.eclipse.wst.sse.core.internal.provisional.AbstractAdapterFactory;
@@ -27,6 +24,7 @@ import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapterFactory;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.sse.core.internal.util.Debug;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.CMDocumentManager;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.CMDocumentCache;
@@ -141,39 +139,24 @@ public class ModelQueryAdapterFactoryForXML extends AbstractAdapterFactory {
 				IStructuredModel model = xmlNode.getModel();
 				stateNotifier = xmlNode.getModel();
 				stateNotifier.addModelStateListener(getInternalModelStateListener());
-				String baseLocation = null;
-				String modelBaseLocation = model.getBaseLocation();
-				if (modelBaseLocation != null) {
-					File file = new Path(modelBaseLocation).toFile();
-					if (file.exists()) {
-						baseLocation = file.getAbsolutePath();
-					}
-					else {
-						IPath basePath = new Path(modelBaseLocation);
-						IPath derivedPath = null;
-						if (basePath.segmentCount() > 1)
-							derivedPath = ResourcesPlugin.getWorkspace().getRoot().getFile(basePath).getLocation();
-						else
-							derivedPath = ResourcesPlugin.getWorkspace().getRoot().getLocation().append(basePath);
-						if (derivedPath != null) {
-							baseLocation = derivedPath.toString();
-						}
-					}
+
+				org.eclipse.wst.sse.core.internal.util.URIResolver resolver = model.getResolver();
+				if (Debug.displayInfo)
+					System.out.println("----------------ModelQueryAdapterFactoryForXML... baseLocation : " + resolver.getFileBaseLocation()); //$NON-NLS-1$
+
+				/**
+				 * XMLCatalogIdResolver currently requires a filesystem
+				 * location string. Customarily this will be what is in the
+				 * deprecated SSE URIResolver and required by the Common URI
+				 * Resolver.
+				 */
+				URIResolver idResolver = null;
+				if (resolver != null) {
+					idResolver = new XMLCatalogIdResolver(resolver.getFileBaseLocation(), resolver);
 				}
-				if (org.eclipse.wst.sse.core.internal.util.Debug.displayInfo)
-					System.out.println("----------------ModelQueryAdapterFactoryForXML... baseLocation : " + baseLocation); //$NON-NLS-1$
 
 				CMDocumentCache cmDocumentCache = new CMDocumentCache();
-				ModelQuery modelQuery = null;
-				URIResolver idResolver = null;
-
-				if (org.eclipse.wst.sse.core.internal.util.Debug.displayInfo)
-					System.out.println("********XMLModelQueryImpl"); //$NON-NLS-1$
-				org.eclipse.wst.sse.core.internal.util.URIResolver resolver = model.getResolver();
-				if (baseLocation != null || resolver != null) {
-					idResolver = new XMLCatalogIdResolver(baseLocation, resolver);
-				}
-				modelQuery = new XMLModelQueryImpl(cmDocumentCache, idResolver);
+				ModelQuery modelQuery = new XMLModelQueryImpl(cmDocumentCache, idResolver);
 
 				// cs todo...
 				// for now we create a CMDocumentCache on a 'per editor' basis
@@ -200,10 +183,22 @@ public class ModelQueryAdapterFactoryForXML extends AbstractAdapterFactory {
 	}
 
 	protected void updateResolver(IStructuredModel model) {
+
 		String baseLocation = model.getBaseLocation();
 		IFile baseFile = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(model.getBaseLocation()));
 		if (baseFile != null) {
-			baseLocation = baseFile.getLocation().toString();
+			if (baseFile.getLocation() != null) {
+				baseLocation = baseFile.getLocation().toString();
+			}
+			if (baseLocation == null && baseFile.getLocationURI() != null) {
+				baseLocation = baseFile.getLocationURI().toString();
+			}
+			if (baseLocation == null) {
+				baseLocation = baseFile.getFullPath().toString();
+			}
+		}
+		else {
+			baseLocation = model.getBaseLocation();
 		}
 		modelQueryAdapterImpl.setIdResolver(new XMLCatalogIdResolver(baseLocation, model.getResolver()));
 	}

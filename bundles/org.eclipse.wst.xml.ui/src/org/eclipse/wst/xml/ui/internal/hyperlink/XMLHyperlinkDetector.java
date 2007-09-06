@@ -150,23 +150,30 @@ public class XMLHyperlinkDetector extends AbstractHyperlinkDetector {
 	 * Get the base location from the current model (local file system)
 	 */
 	private String getBaseLocation(IDocument document) {
-		String baseLoc = null;
+		String result = null;
 
 		// get the base location from the current model
 		IStructuredModel sModel = null;
 		try {
 			sModel = StructuredModelManager.getModelManager().getExistingModelForRead(document);
 			if (sModel != null) {
-				IPath location = new Path(sModel.getBaseLocation());
-				if (location.toFile().exists()) {
-					baseLoc = location.toString();
-				}
-				else {
-					if (location.segmentCount() > 1) {
-						baseLoc = ResourcesPlugin.getWorkspace().getRoot().getFile(location).getLocation().toString();
-					}
-					else {
-						baseLoc = ResourcesPlugin.getWorkspace().getRoot().getLocation().append(location).toString();
+				result = sModel.getBaseLocation();
+				
+				IPath path = new Path(result);
+				if (path.segmentCount() > 1) {
+					IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
+					if (file.exists()) {
+						String baseLocation = null;
+						if (file.getLocation() != null) {
+							baseLocation = file.getLocation().toString();
+						}
+						if (baseLocation == null && file.getLocationURI() != null) {
+							baseLocation = file.getLocationURI().toString();
+						}
+						if (baseLocation == null) {
+							baseLocation = file.getFullPath().toString();
+						}
+						result = baseLocation;
 					}
 				}
 			}
@@ -176,7 +183,7 @@ public class XMLHyperlinkDetector extends AbstractHyperlinkDetector {
 				sModel.releaseFromRead();
 			}
 		}
-		return baseLoc;
+		return result;
 	}
 
 	/**
@@ -264,7 +271,11 @@ public class XMLHyperlinkDetector extends AbstractHyperlinkDetector {
 		IFile file = null;
 
 		if (fileString != null) {
-			IFile[] files = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocation(new Path(fileString));
+			Path filePath = new Path(fileString);
+			if (filePath.segmentCount() > 1 && ResourcesPlugin.getWorkspace().getRoot().getFile(filePath).exists()) {
+				return ResourcesPlugin.getWorkspace().getRoot().getFile(filePath);
+			}
+			IFile[] files = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocation(filePath);
 			for (int i = 0; (i < files.length) && (file == null); i++) {
 				if (files[i].exists()) {
 					file = files[i];
@@ -504,6 +515,9 @@ public class XMLHyperlinkDetector extends AbstractHyperlinkDetector {
 			if (file != null) {
 				isValid = file.isFile();
 			}
+			if(!isValid) {
+			}
+			
 		}
 		return isValid;
 	}

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -484,7 +484,19 @@ public class ModelManagerImpl implements IModelManager {
 		URIResolver resolver = (URIResolver) project.getAdapter(URIResolver.class);
 		if (resolver == null)
 			resolver = new ProjectResolver(project);
-		resolver.setFileBaseLocation(file.getLocation().toString());
+
+		String locationString = null;		
+		if (file.getLocation() != null) {
+			locationString = file.getLocation().toString();
+		}
+		if (locationString == null && file.getLocationURI() != null) {
+			locationString = file.getLocationURI().toString();
+		}
+		if (locationString == null) {
+			locationString = file.getFullPath().toString();
+		}
+		resolver.setFileBaseLocation(locationString);
+
 		return resolver;
 	}
 
@@ -1611,7 +1623,7 @@ public class ModelManagerImpl implements IModelManager {
 	public void saveStructuredDocument(IStructuredDocument structuredDocument, IFile iFile, EncodingRule encodingRule) throws UnsupportedEncodingException, CoreException, IOException {
 		if (FileBufferModelManager.getInstance().isExistingBuffer(structuredDocument)) {
 			ITextFileBuffer buffer = FileBufferModelManager.getInstance().getBuffer(structuredDocument);
-			if (iFile.getLocation().equals(buffer.getLocation())) {
+			if (buffer.getLocation().equals(iFile.getLocation())) {
 				buffer.commit(new NullProgressMonitor(), true);
 			}
 		}
