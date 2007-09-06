@@ -24,6 +24,7 @@ import org.eclipse.jst.jsp.core.internal.util.FileContentCache;
 import org.eclipse.wst.sse.core.internal.document.StructuredDocumentFactory;
 import org.eclipse.wst.sse.core.internal.ltk.parser.BlockMarker;
 import org.eclipse.wst.sse.core.internal.ltk.parser.StructuredDocumentRegionHandler;
+import org.eclipse.wst.sse.core.internal.ltk.parser.TagMarker;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
@@ -467,9 +468,10 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 				return false;
 			}
 			if (prefix.length() > 0) {
-				Object[] prefixes = fLocalParser.getNestablePrefixes().toArray();
+				List nestablePrefixes = fLocalParser.getNestablePrefixes();
+				TagMarker[] prefixes = (TagMarker[]) nestablePrefixes.toArray(new TagMarker[0]);
 				for (int i = 0; i < prefixes.length; i++) {
-					if (prefix.equals(prefixes[i])) {
+					if (prefix.equals(prefixes[i].getTagName())) {
 						return true;
 					}
 				}
