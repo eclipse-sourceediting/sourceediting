@@ -36,14 +36,37 @@ public class JSDTHtmlCompletionProcessor {
 	
 	public ICompletionProposal getEndScriptProposal(ITextViewer viewer, int offset) {
 		/* add </script if necisary */
-		ArrayList allProposals = new ArrayList();
+	
 		JsTranslation tran = getJSPTranslation(viewer);
 		int missingAtOffset = tran.getMissingTagStart();
 		
 		if(offset>=missingAtOffset&& missingAtOffset>-1) {
-			String text = "\n</script>\n";
-			String displayText = "<> end with </script>";
-			return new CustomCompletionProposal(text,offset,0,offset,null,displayText,null,"Close the script tag.",100);
+			
+			String allText = viewer.getDocument().get();
+			String text = "</script>";
+			
+			int startInTag = -1;
+			int replaceLength =0;
+			
+			for(int i=0;i<text.length() && allText.length()>offset-1;i++) {
+				if(allText.charAt(offset-1)==text.charAt(i)) {
+					startInTag = i;
+					break;
+				}
+			}
+			
+			if(startInTag==-1 ) {
+				String displayText = "<> end with </script>";
+				return new CustomCompletionProposal("\n" + text + "\n" ,offset,0,offset,null,displayText,null,"Close the script tag.",100);
+			}
+			
+			String text1 = allText.substring(offset - startInTag - 1, offset).toLowerCase();
+			String text2 = text.substring(0, startInTag+1).toLowerCase();
+			if(startInTag>-1  && text2.compareTo(text1)==0 ) {
+				String displayText = "<> end with </script>";
+				return new CustomCompletionProposal(text  ,offset-startInTag-1,0,text.length(),null,displayText,null,"Close the script tag.",100);
+			}
+			
 		}
 		
 		return null;
