@@ -129,12 +129,13 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
 		BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/" + testName, "/" + testName);
 		BundleResourceUtil.copyBundleEntryIntoWorkspace("/testfiles/struts.jar", "/" + testName + "/struts.jar");
 		project.build(IncrementalProjectBuilder.CLEAN_BUILD, new NullProgressMonitor());
-		project.build(IncrementalProjectBuilder.FULL_BUILD, new NullProgressMonitor());
 		project.build(IncrementalProjectBuilder.FULL_BUILD, "org.eclipse.wst.validation.validationbuilder", null, new NullProgressMonitor());
+		project.build(IncrementalProjectBuilder.FULL_BUILD, new NullProgressMonitor());
 		try {
-			Job.getJobManager().join(ValidatorManager.VALIDATOR_JOB_FAMILY, new NullProgressMonitor());
 			Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, new NullProgressMonitor());
 			Job.getJobManager().join(ResourcesPlugin.FAMILY_MANUAL_BUILD, new NullProgressMonitor());
+			Job.getJobManager().join(ValidatorManager.VALIDATOR_JOB_FAMILY, new NullProgressMonitor());
+			Job.getJobManager().beginRule(ResourcesPlugin.getWorkspace().getRoot(), null);
 		}
 		catch (InterruptedException e) {
 			e.printStackTrace();
@@ -142,12 +143,15 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
 		catch (OperationCanceledException e) {
 			e.printStackTrace();
 		}
+		finally {
+			Job.getJobManager().endRule(ResourcesPlugin.getWorkspace().getRoot());
+		}
 		JSPCorePlugin.getDefault().getPluginPreferences().setValue(JSPCorePreferenceNames.VALIDATE_FRAGMENTS, doValidateSegments);
 		IFile main = project.getFile("main.jsp");
 		IMarker[] markers = main.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_ZERO);
 		StringBuffer s = new StringBuffer();
 		for (int i = 0; i < markers.length; i++) {
-			s.append("\n" + markers[i].getAttribute(IMarker.LINE_NUMBER) + ":" + markers[i].getAttribute(IMarker.MESSAGE));
+			s.append("\nproblem marker on line " + markers[i].getAttribute(IMarker.LINE_NUMBER) + ": \"" + markers[i].getAttribute(IMarker.MESSAGE) + "\" ");
 		}
 		assertEquals("problem markers found" + s.toString(), 0, markers.length);
 	}
