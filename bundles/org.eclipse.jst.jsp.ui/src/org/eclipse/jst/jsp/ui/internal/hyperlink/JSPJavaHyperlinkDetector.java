@@ -170,7 +170,11 @@ public class JSPJavaHyperlinkDetector extends AbstractHyperlinkDetector {
 		IFile file = null;
 
 		if (fileString != null) {
-			IFile[] files = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocation(new Path(fileString));
+			Path filePath = new Path(fileString);
+			if (filePath.segmentCount() > 1 && ResourcesPlugin.getWorkspace().getRoot().getFile(filePath).exists()) {
+				return ResourcesPlugin.getWorkspace().getRoot().getFile(filePath);
+			}
+			IFile[] files = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocation(filePath);
 			for (int i = 0; i < files.length && file == null; i++)
 				if (files[i].exists())
 					file = files[i];
