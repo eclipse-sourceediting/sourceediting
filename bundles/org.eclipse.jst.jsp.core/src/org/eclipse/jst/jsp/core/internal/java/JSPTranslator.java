@@ -1943,7 +1943,7 @@ public class JSPTranslator {
 					filePath = basePath.removeLastSegments(1).append(uri).toString();
 				}
 	
-				if (!getIncludes().contains(filePath) && !filePath.equals(basePath)) {
+				if (!getIncludes().contains(filePath) && !filePath.equals(basePath.toString())) {
 					getIncludes().push(filePath);
 					JSPIncludeRegionHelper helper = new JSPIncludeRegionHelper(this);
 					helper.parse(filePath);
