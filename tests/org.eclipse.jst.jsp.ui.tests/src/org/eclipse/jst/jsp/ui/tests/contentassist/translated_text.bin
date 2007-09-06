@@ -28,6 +28,8 @@ i
 javax.swing.JButton BEAN_includedBean = new javax.swing.JButton();
  int include_include_int = 5; 
 javax.swing.JButton includesUseBean = new javax.swing.JButton();
+{ // <gifts:gift>
+} // </gifts:gift>
 out.print(""+
    
 );

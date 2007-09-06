@@ -86,7 +86,7 @@ public class JSPTranslationTest extends TestCase {
 		JSPTranslation translation = adapter.getJSPTranslation();
 		try {
 			HashMap java2jsp = translation.getJava2JspMap();
-			assertEquals("java2jsp map size:", 11, java2jsp.size());
+			assertEquals("java2jsp map size:", 13, java2jsp.size());
 
 			HashMap jsp2java = translation.getJsp2JavaMap();
 			assertEquals("jsp2java map size:", 3, jsp2java.size());
@@ -100,7 +100,7 @@ public class JSPTranslationTest extends TestCase {
 			
 			int jspTestPosition = translation.getJspText().indexOf("<%= ") + 4;
 			int javaOffset = translation.getJavaOffset(jspTestPosition) - classnameLength;
-			assertEquals("JSPTranslation java offset:", 972, javaOffset);
+			assertEquals("JSPTranslation java offset:", 1009, javaOffset);
 			
 			// (<%= | %>)
 			int javaTestPostition = translation.getJavaText().indexOf("out.print(\"\"+\n   \n);") + 14;
