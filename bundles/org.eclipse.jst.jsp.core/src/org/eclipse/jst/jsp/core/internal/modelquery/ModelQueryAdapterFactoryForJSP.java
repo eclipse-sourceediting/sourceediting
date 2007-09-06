@@ -10,11 +10,8 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.core.internal.modelquery;
 
-import java.io.File;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver;
 import org.eclipse.wst.sse.core.internal.provisional.AbstractAdapterFactory;
@@ -60,38 +57,34 @@ public class ModelQueryAdapterFactoryForJSP extends AbstractAdapterFactory imple
 	 * createAdapter method comment.
 	 */
 	protected INodeAdapter createAdapter(INodeNotifier target) {
-
 		if (Debug.displayInfo)
 			System.out.println("-----------------------ModelQueryAdapterFactoryForJSP.createAdapter" + target); //$NON-NLS-1$
 		if (modelQueryAdapterImpl == null) {
 			if (target instanceof IDOMNode) {
 				IDOMNode xmlNode = (IDOMNode) target;
 				IStructuredModel model = stateNotifier = xmlNode.getModel();
-				String baseLocation = model.getBaseLocation();
-				// continue only if the location is known
-				if (baseLocation != null) {
+				if(model.getBaseLocation() != null) {
 					stateNotifier.addModelStateListener(this);
-					File file = new Path(model.getBaseLocation()).toFile();
-					if (file.exists()) {
-						baseLocation = file.getAbsolutePath();
-					}
-					else {
-						IPath basePath = new Path(model.getBaseLocation());
-						IPath derivedPath = null;
-						if (basePath.segmentCount() > 1)
-							derivedPath = ResourcesPlugin.getWorkspace().getRoot().getFile(basePath).getLocation();
-						else
-							derivedPath = ResourcesPlugin.getWorkspace().getRoot().getLocation().append(basePath);
-						if (derivedPath != null) {
-							baseLocation = derivedPath.toString();
-						}
-					}
-					URIResolver resolver = new XMLCatalogIdResolver(baseLocation, model.getResolver());
-
-					ModelQuery modelQuery = createModelQuery(model, resolver);
-					modelQuery.setEditMode(ModelQuery.EDIT_MODE_UNCONSTRAINED);
-					modelQueryAdapterImpl = new JSPModelQueryAdapterImpl(new CMDocumentCache(), modelQuery, resolver);
 				}
+
+				org.eclipse.wst.sse.core.internal.util.URIResolver resolver = model.getResolver();
+				if (Debug.displayInfo)
+					System.out.println("----------------ModelQueryAdapterFactoryForJSP... baseLocation : " + resolver.getFileBaseLocation()); //$NON-NLS-1$
+
+				/**
+				 * XMLCatalogIdResolver currently requires a filesystem
+				 * location string. Customarily this will be what is in the
+				 * deprecated SSE URIResolver and required by the Common URI
+				 * Resolver.
+				 */
+				URIResolver idResolver = null;
+				if (resolver != null) {
+					idResolver = new XMLCatalogIdResolver(resolver.getFileBaseLocation(), resolver);
+				}
+
+				ModelQuery modelQuery = createModelQuery(model, idResolver);
+				modelQuery.setEditMode(ModelQuery.EDIT_MODE_UNCONSTRAINED);
+				modelQueryAdapterImpl = new JSPModelQueryAdapterImpl(new CMDocumentCache(), modelQuery, idResolver);
 			}
 		}
 		return modelQueryAdapterImpl;
@@ -152,14 +145,22 @@ public class ModelQueryAdapterFactoryForJSP extends AbstractAdapterFactory imple
 
 	protected void updateResolver(IStructuredModel model) {
 		String baseLocation = model.getBaseLocation();
-		Path path = new Path(model.getBaseLocation());
-		if (path.segmentCount() > 1) {
-			IFile baseFile = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
-			if (baseFile.isAccessible()) {
+		IFile baseFile = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(model.getBaseLocation()));
+		if (baseFile != null) {
+			if (baseFile.getLocation() != null) {
 				baseLocation = baseFile.getLocation().toString();
-				modelQueryAdapterImpl.setIdResolver(new XMLCatalogIdResolver(baseLocation, model.getResolver()));
+			}
+			if (baseLocation == null && baseFile.getLocationURI() != null) {
+				baseLocation = baseFile.getLocationURI().toString();
+			}
+			if (baseLocation == null) {
+				baseLocation = baseFile.getFullPath().toString();
 			}
 		}
+		else {
+			baseLocation = model.getBaseLocation();
+		}
+		modelQueryAdapterImpl.setIdResolver(new XMLCatalogIdResolver(baseLocation, model.getResolver()));
 	}
 
 	public void modelAboutToBeReinitialized(IStructuredModel structuredModel) {
