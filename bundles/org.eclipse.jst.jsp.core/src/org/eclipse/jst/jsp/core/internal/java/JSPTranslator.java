@@ -71,7 +71,6 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
-import org.eclipse.wst.sse.core.internal.util.URIResolver;
 import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
@@ -1932,38 +1931,26 @@ public class JSPTranslator {
 
 	protected void handleIncludeFile(String filename) {
 		if (filename != null && fProcessIncludes) {
-			IPath basePath = new Path(getBaseLocation());
-			IPath localRoot = TaglibIndex.getContextRoot(basePath);
-			String uri = StringUtils.strip(filename);
-			String filePath = null;
-			if(uri.startsWith(Path.ROOT.toString())) {
-				filePath = localRoot.append(uri).toString();
-			}
-			else {
-				filePath = basePath.removeLastSegments(1).append(uri).toString();
-			}
-
-			if (!getIncludes().contains(filePath) && getBaseLocation() != null && !filePath.equals(getBaseLocation())) {
-				getIncludes().push(filePath);
-				JSPIncludeRegionHelper helper = new JSPIncludeRegionHelper(this);
-				helper.parse(filePath);
-				getIncludes().pop();
+			IPath basePath = getModelPath();
+			if(basePath != null) {
+				IPath localRoot = TaglibIndex.getContextRoot(basePath);
+				String uri = StringUtils.strip(filename);
+				String filePath = null;
+				if(uri.startsWith(Path.ROOT.toString())) {
+					filePath = localRoot.append(uri).toString();
+				}
+				else {
+					filePath = basePath.removeLastSegments(1).append(uri).toString();
+				}
+	
+				if (!getIncludes().contains(filePath) && !filePath.equals(basePath)) {
+					getIncludes().push(filePath);
+					JSPIncludeRegionHelper helper = new JSPIncludeRegionHelper(this);
+					helper.parse(filePath);
+					getIncludes().pop();
+				}
 			}
 		}
-	}
-
-	private URIResolver getResolver() {
-		return (fStructuredModel != null) ? fStructuredModel.getResolver() : null;
-	}
-
-	/**
-	 * 
-	 * @return java.lang.String
-	 */
-	private String getBaseLocation() {
-		if (getResolver() == null)
-			return null;
-		return getResolver().getFileBaseLocation();
 	}
 
 	private Stack getIncludes() {
