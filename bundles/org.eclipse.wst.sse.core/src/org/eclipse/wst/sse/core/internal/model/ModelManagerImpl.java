@@ -141,14 +141,12 @@ public class ModelManagerImpl implements IModelManager {
 		}
 	}
 
-	private Exception debugException = null;
-
 	/**
 	 * Our singleton instance
 	 */
 	private static ModelManagerImpl instance;
-	private final static int READ_BUFFER_SIZE = 4096;
 
+	private final static int READ_BUFFER_SIZE = 4096;
 	/**
 	 * Not to be called by clients, will be made restricted access.
 	 * 
@@ -161,6 +159,8 @@ public class ModelManagerImpl implements IModelManager {
 		}
 		return instance;
 	}
+
+	private Exception debugException = null;
 
 	private final ReadEditType EDIT = new ReadEditType("edit"); //$NON-NLS-1$
 	/**
@@ -498,6 +498,32 @@ public class ModelManagerImpl implements IModelManager {
 		resolver.setFileBaseLocation(locationString);
 
 		return resolver;
+	}
+
+	private void cleanupDiscardedModel(IStructuredModel structuredModel) {
+		IStructuredDocument structuredDocument = structuredModel.getStructuredDocument();
+		/*
+		 * This call (and setting the StructuredDocument to null) were
+		 * previously done within the model itself, but for concurrency it
+		 * must be done here during a synchronized release.
+		 */
+		structuredModel.getFactoryRegistry().release();
+
+		/*
+		 * For structured documents originating from file buffers, disconnect
+		 * us from the file buffer, now.
+		 */
+		FileBufferModelManager.getInstance().releaseModel(structuredDocument);
+
+		/*
+		 * Setting the document to null is required since some subclasses of
+		 * model might have "cleanup" of listeners, etc., to remove, which
+		 * were initialized during the initial setStructuredDocument.
+		 * 
+		 * The model itself in particular may have internal listeners used to
+		 * coordinate the document with its own "structure".
+		 */
+		structuredModel.setStructuredDocument(null);
 	}
 
 	/*
@@ -846,6 +872,17 @@ public class ModelManagerImpl implements IModelManager {
 				Logger.log(Logger.INFO, "ModelMangerImpl::createUnManagedStructuredModelFor. Model unexpectedly in use."); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		return result;
+	}
+
+	private void discardModel(Object id, SharedObject sharedObject) {
+		fManagedObjects.remove(id);
+		IStructuredDocument structuredDocument = sharedObject.theSharedModel.getStructuredDocument();
+
+		if (structuredDocument == null) {
+			Platform.getLog(SSECorePlugin.getDefault().getBundle()).log(new Status(IStatus.ERROR, SSECorePlugin.ID, IStatus.ERROR, "Attempted to discard a structured model but the underlying document has already been set to null: " + sharedObject.theSharedModel.getBaseLocation(), null));
+		}
+
+		cleanupDiscardedModel(sharedObject.theSharedModel);
 	}
 
 	private EnumeratedModelIds getEnumeratedModelIds() {
@@ -1325,7 +1362,7 @@ public class ModelManagerImpl implements IModelManager {
 		// remember -- we didn't open stream ... so we don't close it
 		return buffer.toString();
 	}
-
+	
 	/*
 	 * @see IModelManager#reinitialize(IStructuredModel)
 	 */
@@ -1347,7 +1384,6 @@ public class ModelManagerImpl implements IModelManager {
 		// its embedded content checking and initialization
 		return model;
 	}
-
 	synchronized void releaseFromEdit(IStructuredModel structuredModel) {
 		Object id = structuredModel.getId();
 		if (id.equals(UNMANAGED_MODEL) || id.equals(DUPLICATED_MODEL)) {
@@ -1358,17 +1394,7 @@ public class ModelManagerImpl implements IModelManager {
 		}
 
 	}
-	
-	synchronized void releaseFromRead(IStructuredModel structuredModel) {
-		Object id = structuredModel.getId();
-		if (id.equals(UNMANAGED_MODEL) || id.equals(DUPLICATED_MODEL)) {
-			cleanupDiscardedModel(structuredModel);
-		}
-		else {
-			releaseFromRead(id);
-		}
 
-	}
 	/**
 	 * default for use in same package, not subclasses
 	 * 
@@ -1414,61 +1440,15 @@ public class ModelManagerImpl implements IModelManager {
 		}
 	}
 
-	// private for now, though public forms have been requested, in past.
-	private void revertModel(Object id, SharedObject sharedObject) {
-		IStructuredDocument structuredDocument = sharedObject.theSharedModel.getStructuredDocument();
-		FileBufferModelManager.getInstance().revert(structuredDocument);
-	}
-
-	private void signalPreLifeCycleListenerRevert(IStructuredModel structuredModel) {
-		int type = ModelLifecycleEvent.MODEL_REVERT | ModelLifecycleEvent.PRE_EVENT;
-		// what's wrong with this design that a cast is needed here!?
-		ModelLifecycleEvent event = new ModelLifecycleEvent(structuredModel, type);
-		((AbstractStructuredModel) structuredModel).signalLifecycleEvent(event);
-	}
-
-	private void signalPostLifeCycleListenerRevert(IStructuredModel structuredModel) {
-		int type = ModelLifecycleEvent.MODEL_REVERT | ModelLifecycleEvent.POST_EVENT;
-		// what's wrong with this design that a cast is needed here!?
-		ModelLifecycleEvent event = new ModelLifecycleEvent(structuredModel, type);
-		((AbstractStructuredModel) structuredModel).signalLifecycleEvent(event);
-	}
-
-	private void discardModel(Object id, SharedObject sharedObject) {
-		fManagedObjects.remove(id);
-		IStructuredDocument structuredDocument = sharedObject.theSharedModel.getStructuredDocument();
-
-		if (structuredDocument == null) {
-			Platform.getLog(SSECorePlugin.getDefault().getBundle()).log(new Status(IStatus.ERROR, SSECorePlugin.ID, IStatus.ERROR, "Attempted to discard a structured model but the underlying document has already been set to null: " + sharedObject.theSharedModel.getBaseLocation(), null));
+	synchronized void releaseFromRead(IStructuredModel structuredModel) {
+		Object id = structuredModel.getId();
+		if (id.equals(UNMANAGED_MODEL) || id.equals(DUPLICATED_MODEL)) {
+			cleanupDiscardedModel(structuredModel);
+		}
+		else {
+			releaseFromRead(id);
 		}
 
-		cleanupDiscardedModel(sharedObject.theSharedModel);
-	}
-
-	private void cleanupDiscardedModel(IStructuredModel structuredModel) {
-		IStructuredDocument structuredDocument = structuredModel.getStructuredDocument();
-		/*
-		 * This call (and setting the StructuredDocument to null) were
-		 * previously done within the model itself, but for concurrency it
-		 * must be done here during a synchronized release.
-		 */
-		structuredModel.getFactoryRegistry().release();
-
-		/*
-		 * For structured documents originating from file buffers, disconnect
-		 * us from the file buffer, now.
-		 */
-		FileBufferModelManager.getInstance().releaseModel(structuredDocument);
-
-		/*
-		 * Setting the document to null is required since some subclasses of
-		 * model might have "cleanup" of listeners, etc., to remove, which
-		 * were initialized during the initial setStructuredDocument.
-		 * 
-		 * The model itself in particular may have internal listeners used to
-		 * coordinate the document with its own "structure".
-		 */
-		structuredModel.setStructuredDocument(null);
 	}
 
 	/**
@@ -1525,6 +1505,12 @@ public class ModelManagerImpl implements IModelManager {
 			trace("re-loading model", id); //$NON-NLS-1$
 		}
 		return structuredModel;
+	}
+
+	// private for now, though public forms have been requested, in past.
+	private void revertModel(Object id, SharedObject sharedObject) {
+		IStructuredDocument structuredDocument = sharedObject.theSharedModel.getStructuredDocument();
+		FileBufferModelManager.getInstance().revert(structuredDocument);
 	}
 
 	public void saveModel(IFile iFile, String id, EncodingRule encodingRule) throws UnsupportedEncodingException, IOException, CoreException {
@@ -1654,6 +1640,20 @@ public class ModelManagerImpl implements IModelManager {
 			codedByteStream.close();
 			codedStream.close();
 		}
+	}
+
+	private void signalPostLifeCycleListenerRevert(IStructuredModel structuredModel) {
+		int type = ModelLifecycleEvent.MODEL_REVERT | ModelLifecycleEvent.POST_EVENT;
+		// what's wrong with this design that a cast is needed here!?
+		ModelLifecycleEvent event = new ModelLifecycleEvent(structuredModel, type);
+		((AbstractStructuredModel) structuredModel).signalLifecycleEvent(event);
+	}
+
+	private void signalPreLifeCycleListenerRevert(IStructuredModel structuredModel) {
+		int type = ModelLifecycleEvent.MODEL_REVERT | ModelLifecycleEvent.PRE_EVENT;
+		// what's wrong with this design that a cast is needed here!?
+		ModelLifecycleEvent event = new ModelLifecycleEvent(structuredModel, type);
+		((AbstractStructuredModel) structuredModel).signalLifecycleEvent(event);
 	}
 
 	/**
