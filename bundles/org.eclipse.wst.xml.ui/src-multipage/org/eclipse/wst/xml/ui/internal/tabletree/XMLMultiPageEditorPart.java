@@ -18,6 +18,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextInputListener;
 import org.eclipse.jface.text.ITextSelection;
+import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.IPostSelectionProvider;
 import org.eclipse.jface.viewers.ISelection;
@@ -25,6 +26,8 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.search.ui.text.ISearchEditorAccess;
+import org.eclipse.search.ui.text.Match;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Control;
@@ -702,6 +705,25 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 				result = new IGotoMarker() {
 					public void gotoMarker(IMarker marker) {
 						XMLMultiPageEditorPart.this.gotoMarker(marker);
+					}
+				};
+			}
+			else if (ISearchEditorAccess.class.equals(key)) {
+				result = new ISearchEditorAccess() {
+					public IDocument getDocument(Match match) {
+						IDocument document = null;
+						if (fTextEditor != null) {
+							document = fTextEditor.getDocumentProvider().getDocument(fTextEditor.getEditorInput());
+						}
+						return document;
+					}
+					
+					public IAnnotationModel getAnnotationModel(Match match) {
+						IAnnotationModel annoModel = null;
+						if (fTextEditor != null) {
+							annoModel = fTextEditor.getDocumentProvider().getAnnotationModel(fTextEditor.getEditorInput());
+						}
+						return annoModel;
 					}
 				};
 			}
