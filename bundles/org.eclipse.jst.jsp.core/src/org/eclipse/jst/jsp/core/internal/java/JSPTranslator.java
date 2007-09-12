@@ -57,9 +57,9 @@ import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.jst.jsp.core.internal.taglib.TaglibHelper;
 import org.eclipse.jst.jsp.core.internal.taglib.TaglibHelperManager;
 import org.eclipse.jst.jsp.core.internal.taglib.TaglibVariable;
+import org.eclipse.jst.jsp.core.internal.util.FacetModuleCoreSupport;
 import org.eclipse.jst.jsp.core.internal.util.ZeroStructuredDocumentRegion;
 import org.eclipse.jst.jsp.core.jspel.IJSPELTranslator;
-import org.eclipse.jst.jsp.core.taglib.TaglibIndex;
 import org.eclipse.wst.html.core.internal.contentmodel.JSP20Namespace;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.ltk.parser.BlockMarker;
@@ -108,28 +108,19 @@ public class JSPTranslator {
 
 	public static final String ENDL = "\n"; //$NON-NLS-1$
 
-	String fClassHeader = "public class _JSPServlet extends "; //$NON-NLS-1$
-	String fClassname = "_JSPServlet"; //$NON-NLS-1$
+	String fClassHeader = null;
+	String fClassname = null;
 
-	String fImplicitImports = "import javax.servlet.*;" + ENDL + //$NON-NLS-1$
-				"import javax.servlet.http.*;" + ENDL + //$NON-NLS-1$
-				"import javax.servlet.jsp.*;" + ENDL + ENDL; //$NON-NLS-1$
+	String fImplicitImports = null;
 
-	String fServiceHeader = "public void _jspService(javax.servlet.http.HttpServletRequest request," + //$NON-NLS-1$
-				" javax.servlet.http.HttpServletResponse response)" + ENDL + //$NON-NLS-1$
-				"\t\tthrows java.io.IOException, javax.servlet.ServletException {" + ENDL + //$NON-NLS-1$
-				"javax.servlet.jsp.PageContext pageContext = null;" + ENDL + //$NON-NLS-1$
-				"javax.servlet.http.HttpSession session = null;" + ENDL + //$NON-NLS-1$
-				"javax.servlet.ServletContext application = null;" + ENDL + //$NON-NLS-1$
-				"javax.servlet.ServletConfig config = null;" + ENDL + //$NON-NLS-1$ 
-				"javax.servlet.jsp.JspWriter out = null;" + ENDL + //$NON-NLS-1$
-				"Object page = null;" + ENDL; //$NON-NLS-1$
+	String fServiceHeader = null;
 
+	private String fSessionVariableDeclaration = "javax.servlet.http.HttpSession session = null;" + ENDL; //$NON-NLS-1$
 	private String fFooter = "}}"; //$NON-NLS-1$
 	private String fException = "Throwable exception = null;"; //$NON-NLS-1$
 	public static final String EXPRESSION_PREFIX = "out.print(\"\"+"; //$NON-NLS-1$
 	public static final String EXPRESSION_SUFFIX = ");"; //$NON-NLS-1$
-	String fSuperclass = "javax.servlet.http.HttpServlet"; //$NON-NLS-1$
+	String fSuperclass = null;
 
 	private String fTryCatchStart = ENDL + "try {" + ENDL; //$NON-NLS-1$
 	private String fTryCatchEnd = " } catch (java.lang.Exception e) {} " + ENDL; //$NON-NLS-1$
@@ -140,8 +131,10 @@ public class JSPTranslator {
 	private int fRelativeOffset = -1;
 	/** fCursorPosition = offset in the translated java document */
 	private int fCursorPosition = -1;
+	
 	/** some page directive attributes */
 	private boolean fIsErrorPage, fCursorInExpression = false;
+	private boolean fIsInASession = true;
 
 	/** user java code in body of the service method */
 	private StringBuffer fUserCode = new StringBuffer();
@@ -535,6 +528,11 @@ public class JSPTranslator {
 
 		fResult.append(fServiceHeader);
 		javaOffset += fServiceHeader.length();
+		// session participant
+		if(fIsInASession) {
+			fResult.append(fSessionVariableDeclaration);
+			javaOffset += fSessionVariableDeclaration.length();
+		}
 		// error page
 		if (fIsErrorPage) {
 			fResult.append(fException);
@@ -915,7 +913,6 @@ public class JSPTranslator {
 					" javax.servlet.http.HttpServletResponse response)" + ENDL + //$NON-NLS-1$
 					"\t\tthrows java.io.IOException, javax.servlet.ServletException {" + ENDL + //$NON-NLS-1$
 					"javax.servlet.jsp.PageContext pageContext = null;" + ENDL + //$NON-NLS-1$
-					"javax.servlet.http.HttpSession session = null;" + ENDL + //$NON-NLS-1$
 					"javax.servlet.ServletContext application = null;" + ENDL + //$NON-NLS-1$
 					"javax.servlet.ServletConfig config = null;" + ENDL + //$NON-NLS-1$ 
 					"javax.servlet.jsp.JspWriter out = null;" + ENDL + //$NON-NLS-1$
@@ -981,6 +978,24 @@ public class JSPTranslator {
 					translateJSPNode(region, regions, type, EMBEDDED_JSP);
 				}
 				else {
+					/**
+					 * LIMITATION - Normally the script content within a
+					 * script tag is a single document region with a single
+					 * BLOCK_TEXT text region within it. Any JSP scripting
+					 * will be within its own region container (for the sake
+					 * of keeping the scripting open/content/end as a group)
+					 * also of BLOCK_TEXT. That ignores custom tags that might
+					 * be in there, though, as they require proper scoping and
+					 * variable declaration to be performed even though
+					 * they're not proper nodes in the DOM. The only way to
+					 * really do this is to treat the entire script content as
+					 * JSP content on its own, akin to an included segment.
+					 * Further complicating this solution is that tagdependent
+					 * custom tags have their comment marked as BLOCK_TEXT as
+					 * well, so there's no clear way to tell the two cases
+					 * apart.
+					 */
+
 					// ////////////////////////////////////////////////////////////////////////////////
 					// THIS EMBEDDED JSP TEXT WILL COME OUT LATER WHEN
 					// PARTITIONING HAS
@@ -1437,10 +1452,8 @@ public class JSPTranslator {
 				contentRegion = getCurrentNode();
 			}
 			else if (JSPType == EMBEDDED_JSP && region instanceof ITextRegionCollection) {
-
 				translateEmbeddedJSPInBlock((ITextRegionCollection) region);
 				// ensure the rest of this method won't be called
-				contentRegion = null;
 			}
 			if (contentRegion != null) {
 				if (type == DOMJSPRegionContexts.JSP_EXPRESSION_OPEN) {
@@ -1615,7 +1628,6 @@ public class JSPTranslator {
 			}
 			else {
 				type = null;
-				content = null;
 			}
 		}
 	}
@@ -1776,7 +1788,7 @@ public class JSPTranslator {
 				// this check is to be safer
 				if (sdRegion != null && !sdRegion.isDeleted()) {
 					taglibRegions = sdRegion.getRegions().iterator();
-					while (sdRegion != null && !sdRegion.isDeleted() && taglibRegions.hasNext()) {
+					while (!sdRegion.isDeleted() && taglibRegions.hasNext()) {
 						r = (ITextRegion) taglibRegions.next();
 						if (r.getType().equals(DOMJSPRegionContexts.JSP_DIRECTIVE_NAME)) {
 							if (sdRegion.getText(r).equals(JSP12TLDNames.TAGLIB)) {
@@ -1908,9 +1920,9 @@ public class JSPTranslator {
 			addImports(attrValue);
 		}
 		else if (attrName.equals("session")) //$NON-NLS-1$
-		{
-			// fSession = ("true".equalsIgnoreCase(attrValue)); //$NON-NLS-1$
-		}
+ 		{
+			fIsInASession = "true".equalsIgnoreCase(attrValue);
+ 		}
 		else if (attrName.equals("buffer")) //$NON-NLS-1$
 		{
 			// ignore for now
@@ -1925,7 +1937,7 @@ public class JSPTranslator {
 		}
 		else if (attrName.equals("isErrorPage")) //$NON-NLS-1$
 		{
-			fIsErrorPage = Boolean.valueOf(attrValue).booleanValue();
+			fIsErrorPage = "true".equalsIgnoreCase(attrValue);
 		}
 	}
 
@@ -1933,15 +1945,7 @@ public class JSPTranslator {
 		if (filename != null && fProcessIncludes) {
 			IPath basePath = getModelPath();
 			if(basePath != null) {
-				IPath localRoot = TaglibIndex.getContextRoot(basePath);
-				String uri = StringUtils.strip(filename);
-				String filePath = null;
-				if(uri.startsWith(Path.ROOT.toString())) {
-					filePath = localRoot.append(uri).toString();
-				}
-				else {
-					filePath = basePath.removeLastSegments(1).append(uri).toString();
-				}
+				String filePath = FacetModuleCoreSupport.resolve(basePath, filename).toString();
 	
 				if (!getIncludes().contains(filePath) && !filePath.equals(basePath.toString())) {
 					getIncludes().push(filePath);

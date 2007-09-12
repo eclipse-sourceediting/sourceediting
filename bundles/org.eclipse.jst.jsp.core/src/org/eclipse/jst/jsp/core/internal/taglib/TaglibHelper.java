@@ -164,6 +164,9 @@ public class TaglibHelper {
 		Iterator it = list.iterator();
 		while (it.hasNext()) {
 			TLDVariable var = (TLDVariable) it.next();
+			if(!var.getDeclare())
+				continue;
+			
 			String varName = var.getNameGiven();
 			if (varName == null) {
 				// 2.0
@@ -394,25 +397,23 @@ public class TaglibHelper {
 		fProjectEntries.add(p.getFullPath().toString());
 
 		// add things on classpath that we are interested in
-		if (p != null) {
-			try {
-				if (p.hasNature(JavaCore.NATURE_ID)) {
+		try {
+			if (p.hasNature(JavaCore.NATURE_ID)) {
 
-					IJavaProject project = JavaCore.create(p);
+				IJavaProject project = JavaCore.create(p);
 
-					try {
-						IClasspathEntry[] entries = project.getRawClasspath();
-						addDefaultDirEntry(loader, project);
-						addClasspathEntries(loader, project, entries);
-					}
-					catch (JavaModelException e) {
-						Logger.logException(e);
-					}
+				try {
+					IClasspathEntry[] entries = project.getRawClasspath();
+					addDefaultDirEntry(loader, project);
+					addClasspathEntries(loader, project, entries);
+				}
+				catch (JavaModelException e) {
+					Logger.logException(e);
 				}
 			}
-			catch (CoreException e) {
-				Logger.logException(e);
-			}
+		}
+		catch (CoreException e) {
+			Logger.logException(e);
 		}
 	}
 
