@@ -59,6 +59,7 @@ import org.eclipse.wst.xml.core.internal.provisional.contenttype.ContentTypeIdFo
 import org.eclipse.wst.xml.ui.internal.Logger;
 import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeLabelProvider;
+import org.w3c.dom.Attr;
 import org.w3c.dom.Node;
 
 public class XMLMultiPageEditorPart extends MultiPageEditorPart {
@@ -312,8 +313,12 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 			if (element == null)
 				return null;
 
-			StringBuffer s = new StringBuffer();
 			Node node = (Node) element;
+			if (node.getNodeType() == Node.ATTRIBUTE_NODE) {
+				return getText(((Attr) node).getOwnerElement());
+			}
+
+			StringBuffer s = new StringBuffer();
 			if (node.getNodeType() != Node.DOCUMENT_NODE) {
 				while (node != null && node instanceof INodeNotifier) {
 					INodeNotifier notifier = (INodeNotifier) node;
@@ -329,6 +334,17 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 				}
 			}
 			return s.toString();
+		}
+
+		public Image getImage(Object element) {
+			if (element == null)
+				return null;
+
+			Node node = (Node) element;
+			if (node.getNodeType() == Node.ATTRIBUTE_NODE) {
+				return getImage(((Attr) node).getOwnerElement());
+			}
+			return super.getImage(element);
 		}
 	}
 

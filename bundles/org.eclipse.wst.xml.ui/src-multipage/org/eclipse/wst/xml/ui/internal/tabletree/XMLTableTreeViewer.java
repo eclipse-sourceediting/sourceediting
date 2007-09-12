@@ -13,11 +13,16 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.CellEditor;
+import org.eclipse.jface.viewers.IPostSelectionProvider;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
@@ -38,12 +43,17 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.eclipse.wst.xml.ui.internal.actions.NodeAction;
 import org.eclipse.wst.xml.ui.internal.contentoutline.XMLNodeActionManager;
 import org.eclipse.wst.xml.ui.internal.dnd.DragNodeCommand;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 
 public class XMLTableTreeViewer extends TreeViewer implements IDesignViewer {
 
@@ -63,12 +73,70 @@ public class XMLTableTreeViewer extends TreeViewer implements IDesignViewer {
 			nodeActionManager.fillContextMenu(menuManager, getSelection());
 		}
 	}
+	
+	private class SelectionProvider implements IPostSelectionProvider {
+
+		public void addPostSelectionChangedListener(ISelectionChangedListener listener) {
+			XMLTableTreeViewer.this.addPostSelectionChangedListener(listener);
+		}
+
+		public void removePostSelectionChangedListener(ISelectionChangedListener listener) {
+			XMLTableTreeViewer.this.removePostSelectionChangedListener(listener);
+		}
+
+		public void addSelectionChangedListener(ISelectionChangedListener listener) {
+			XMLTableTreeViewer.this.addSelectionChangedListener(listener);
+		}
+
+		public ISelection getSelection() {
+			return XMLTableTreeViewer.this.getSelection();
+		}
+
+		public void removeSelectionChangedListener(ISelectionChangedListener listener) {
+			XMLTableTreeViewer.this.removeSelectionChangedListener(listener);
+		}
+
+		public void setSelection(ISelection selection) {
+			boolean selectionSet = false;
+			if (!selection.isEmpty() && selection instanceof IStructuredSelection) {
+				IStructuredSelection structuredSelection = (IStructuredSelection) selection;
+				if (selection instanceof ITextSelection) {
+					ITextSelection textSelection = (ITextSelection) selection;
+					if (structuredSelection.size() == 1) {
+						if (structuredSelection.getFirstElement() instanceof IDOMNode) {
+							IDOMNode domNode = (IDOMNode) structuredSelection.getFirstElement();
+							IStructuredDocumentRegion startStructuredDocumentRegion = domNode.getStartStructuredDocumentRegion();
+							if (startStructuredDocumentRegion != null) {
+								ITextRegion matchingRegion = startStructuredDocumentRegion.getRegionAtCharacterOffset(textSelection.getOffset());
+								while (matchingRegion != null && !matchingRegion.getType().equals(DOMRegionContext.XML_TAG_ATTRIBUTE_NAME)) {
+									matchingRegion = startStructuredDocumentRegion.getRegionAtCharacterOffset(startStructuredDocumentRegion.getStartOffset(matchingRegion) - 1);
+								}
+								if (matchingRegion != null && matchingRegion.getType().equals(DOMRegionContext.XML_TAG_ATTRIBUTE_NAME)) {
+									String attrName = startStructuredDocumentRegion.getText(matchingRegion);
+									Node attr = domNode.getAttributes().getNamedItem(attrName);
+									if (attr != null) {
+										selectionSet = true;
+										XMLTableTreeViewer.this.setSelection(new StructuredSelection(attr));
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+			if (!selectionSet) {
+				XMLTableTreeViewer.this.setSelection(selection);
+			}
+		}
+	}
 
 	protected CellEditor cellEditor;
 
 	int count = 0;
 
 	protected XMLTreeExtension treeExtension;
+	
+	private ISelectionProvider fSelectionProvider = new SelectionProvider();
 
 	public XMLTableTreeViewer(Composite parent) {
 		super(parent, SWT.FULL_SELECTION | SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
@@ -197,7 +265,7 @@ public class XMLTableTreeViewer extends TreeViewer implements IDesignViewer {
 	}
 
 	public ISelectionProvider getSelectionProvider() {
-		return this;
+		return fSelectionProvider;
 	}
 
 	public String getTitle() {
