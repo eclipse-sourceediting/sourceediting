@@ -135,8 +135,7 @@ public class JsWebNature implements IProjectNature {
 			// , fOutputLocation
 			if (!hasProjectClassPathFile()) {
 				fJavaProject.setRawClasspath((IClasspathEntry[]) classPathEntries.toArray(new IClasspathEntry[] {}), fOutputLocation, monitor);
-			}
-			if (hasProjectClassPathFile()) {
+			}else{
 				fJavaProject.setRawClasspath((IClasspathEntry[]) classPathEntries.toArray(new IClasspathEntry[] {}), monitor);
 			}
 		} catch (Exception e) {
