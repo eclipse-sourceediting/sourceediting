@@ -12,11 +12,11 @@ public class __2F_INCLUDES_TESTS_2F_jsp_include_test_2E_jsp extends javax.servle
 public void _jspService(javax.servlet.http.HttpServletRequest request, javax.servlet.http.HttpServletResponse response)
 		throws java.io.IOException, javax.servlet.ServletException {
 javax.servlet.jsp.PageContext pageContext = null;
-javax.servlet.http.HttpSession session = null;
 javax.servlet.ServletContext application = null;
 javax.servlet.ServletConfig config = null;
 javax.servlet.jsp.JspWriter out = null;
 Object page = null;
+javax.servlet.http.HttpSession session = null;
 
 try {
  String localIncludedString = globalIncludedString;
