@@ -2133,7 +2133,7 @@ public class StructuredTextEditor extends TextEditor {
 		}
 
 		if (fProjectionModelUpdater != null)
-			fProjectionModelUpdater.initialize();
+			updateProjectionSupport();
 
 		// start editor with smart insert mode
 		setInsertMode(SMART_INSERT);
@@ -2777,6 +2777,33 @@ public class StructuredTextEditor extends TextEditor {
 
 		if (isFoldingEnabled())
 			projectionViewer.doOperation(ProjectionViewer.TOGGLE);
+	}
+	
+	/**
+	 * Install everything necessary to get document folding working and enable
+	 * document folding
+	 */
+	private void updateProjectionSupport() {
+		// dispose of previous document folding support
+		if (fProjectionModelUpdater != null) {
+			fProjectionModelUpdater.uninstall();
+			fProjectionModelUpdater = null;
+		}
+		
+		ProjectionViewer projectionViewer = (ProjectionViewer) getSourceViewer();
+		IStructuredTextFoldingProvider updater = null;
+		ExtendedConfigurationBuilder builder = ExtendedConfigurationBuilder.getInstance();
+		String[] ids = getConfigurationPoints();
+		for (int i = 0; updater == null && i < ids.length; i++) {
+			updater = (IStructuredTextFoldingProvider) builder.getConfiguration(IStructuredTextFoldingProvider.ID, ids[i]);
+		}
+
+		fProjectionModelUpdater = updater;
+		if (fProjectionModelUpdater != null)
+			fProjectionModelUpdater.install(projectionViewer);
+		
+		if (fProjectionModelUpdater != null)
+			fProjectionModelUpdater.initialize();
 	}
 
 	/**
