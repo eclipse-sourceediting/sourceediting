@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.jobs.Job;
@@ -41,59 +42,16 @@ public class FormatActionDelegate extends ResourceActionDelegate {
 			super(name);
 		}
 
-		/**
-		 * @param container
-		 * @return
-		 */
-		private int getResourceCount(IResource[] members) {
-			int count = 0;
-
-			for (int i = 0; i < members.length; i++) {
-				if (members[i] instanceof IContainer) {
-					IContainer container = (IContainer) members[i];
-					try {
-						count += getResourceCount(container.members());
-					} catch (CoreException e) {
-						// skip counting
-					}
-				} else
-					count++;
-			}
-
-			return count;
-		}
-
-		/**
-		 * @param elements
-		 * @return
-		 */
-		private int getResourceCount(Object[] elements) {
-			int count = 0;
-
-			for (int i = 0; i < elements.length; i++) {
-				if (elements[i] instanceof IContainer) {
-					IContainer container = (IContainer) elements[i];
-					try {
-						count += getResourceCount(container.members());
-					} catch (CoreException e) {
-						// skip counting
-					}
-				} else
-					count++;
-			}
-
-			return count;
-		}
-
 		protected IStatus run(IProgressMonitor monitor) {
 			IStatus status = Status.OK_STATUS;
 
 			Object[] elements = fSelection.toArray();
-			int resourceCount = getResourceCount(elements);
-			monitor.beginTask("", resourceCount); //$NON-NLS-1$
+			monitor.beginTask("", elements.length); //$NON-NLS-1$
 			for (int i = 0; i < elements.length; i++) {
 				if (elements[i] instanceof IResource) {
-					process(monitor, (IResource) elements[i]);
+					process(new SubProgressMonitor(monitor, 1), (IResource) elements[i]);
+				}
+				else {
 					monitor.worked(1);
 				}
 			}
@@ -113,19 +71,20 @@ public class FormatActionDelegate extends ResourceActionDelegate {
 
 	protected void format(IProgressMonitor monitor, IFile file) {
 		try {
-			monitor.worked(1);
+			monitor.beginTask("", 100);
 			IContentDescription contentDescription = file.getContentDescription();
-			if (contentDescription == null)
-				return;
-
-			IContentType contentType = contentDescription.getContentType();
-			IStructuredFormatProcessor formatProcessor = getFormatProcessor(contentType.getId());
-			if (formatProcessor != null && (monitor == null || !monitor.isCanceled())) {
-				String message = NLS.bind(SSEUIMessages.FormatActionDelegate_3, new String[]{file.getFullPath().toString()});
-				monitor.subTask(message);
-				formatProcessor.setProgressMonitor(monitor);
-				formatProcessor.formatFile(file);
+			monitor.worked(5);
+			if (contentDescription != null) {
+				IContentType contentType = contentDescription.getContentType();
+				IStructuredFormatProcessor formatProcessor = getFormatProcessor(contentType.getId());
+				if (formatProcessor != null && (monitor == null || !monitor.isCanceled())) {
+					String message = NLS.bind(SSEUIMessages.FormatActionDelegate_3, new String[]{file.getFullPath().toString().substring(1)});					monitor.subTask(message);
+					formatProcessor.setProgressMonitor(monitor);
+					formatProcessor.formatFile(file);
+				}
 			}
+			monitor.worked(95);
+			monitor.done();
 		} catch (MalformedInputExceptionWithDetail e) {
 			String message = NLS.bind(SSEUIMessages.FormatActionDelegate_5, new String[]{file.getFullPath().toString()});
 			fErrorStatus.add(new Status(IStatus.ERROR, SSEUIPlugin.ID, IStatus.ERROR, message, e));
@@ -149,10 +108,12 @@ public class FormatActionDelegate extends ResourceActionDelegate {
 
 			try {
 				IResource[] members = container.members();
+				monitor.beginTask("", members.length);
 				for (int i = 0; i < members.length; i++) {
 					if (monitor == null || !monitor.isCanceled())
-						format(monitor, members[i]);
+						format(new SubProgressMonitor(monitor, 1), members[i]);
 				}
+				monitor.done();
 			} catch (CoreException e) {
 				String message = NLS.bind(SSEUIMessages.FormatActionDelegate_4, new String[]{resource.getFullPath().toString()});
 				fErrorStatus.add(new Status(IStatus.ERROR, SSEUIPlugin.ID, IStatus.ERROR, message, e));
@@ -175,14 +136,16 @@ public class FormatActionDelegate extends ResourceActionDelegate {
 	 *      org.eclipse.core.resources.IResource)
 	 */
 	protected void process(IProgressMonitor monitor, IResource resource) {
-		format(monitor, resource);
+		monitor.beginTask("", 100);
+		format(new SubProgressMonitor(monitor, 98), resource);
 
 		try {
-			resource.refreshLocal(IResource.DEPTH_INFINITE, null);
+			resource.refreshLocal(IResource.DEPTH_INFINITE, new SubProgressMonitor(monitor, 2));
 		} catch (CoreException e) {
 			String message = NLS.bind(SSEUIMessages.FormatActionDelegate_4, new String[]{resource.getFullPath().toString()});
 			fErrorStatus.add(new Status(IStatus.ERROR, SSEUIPlugin.ID, IStatus.ERROR, message, e));
 		}
+		monitor.done();
 	}
 
 	/* (non-Javadoc)

@@ -305,9 +305,6 @@ class WorkspaceTaskScanner {
 			internalScan(project, project, scanMonitor);
 			shutdownDelegates(project);
 		}
-		else {
-			scanMonitor.done();
-		}
 		if (Logger.DEBUG_TASKSOVERALLPERF) {
 			System.out.println("" + (System.currentTimeMillis() - time0) + "ms for " + project.getFullPath()); //$NON-NLS-1$ //$NON-NLS-2$
 		}

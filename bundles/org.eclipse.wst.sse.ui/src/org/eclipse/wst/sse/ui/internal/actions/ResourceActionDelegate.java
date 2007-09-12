@@ -18,9 +18,31 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IActionDelegate;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
 
 public class ResourceActionDelegate implements IActionDelegate {
 	protected IStructuredSelection fSelection;
+
+	private IWorkbenchSiteProgressService getActiveProgressService() {
+		IWorkbenchSiteProgressService service = null;
+		if (PlatformUI.isWorkbenchRunning()) {
+			IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+			if (activeWorkbenchWindow != null) {
+				IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
+				if (activePage != null) {
+					IWorkbenchPart activePart = activePage.getActivePart();
+					if (activePart != null) {
+						service = (IWorkbenchSiteProgressService) activePart.getSite().getAdapter(IWorkbenchSiteProgressService.class);
+					}
+				}
+			}
+		}
+		return service;
+	}
 
 	protected Job getJob() {
 		// ResourceActionDelegate does not create background job
@@ -42,8 +64,15 @@ public class ResourceActionDelegate implements IActionDelegate {
 	public void run(IAction action) {
 		if (fSelection != null && !fSelection.isEmpty()) {
 			Job job = getJob();
-			if (job != null)
-				job.schedule();
+			if (job != null) {
+				IWorkbenchSiteProgressService progressService = getActiveProgressService();
+				if (progressService != null) {
+					progressService.schedule(job);
+				}
+				else {
+					job.schedule();
+				}
+			}
 		}
 	}
 

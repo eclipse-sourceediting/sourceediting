@@ -154,13 +154,12 @@ public abstract class StructuredFileTaskScanner implements IFileTaskScanner {
 		}
 	}
 
-	private void findTasks(IFile file, final TaskTag[] taskTags, IProgressMonitor monitor) {
+	private void findTasks(IFile file, final TaskTag[] taskTags, final IProgressMonitor monitor) {
 		try {
 			IModelHandler handler = ModelHandlerRegistry.getInstance().getHandlerFor(file);
 
 			// records if the optimized streamish parse was possible
 			boolean didStreamParse = false;
-			final IProgressMonitor progressMonitor = monitor;
 			final IEncodedDocument defaultDocument = handler.getDocumentLoader().createNewStructuredDocument();
 			if (defaultDocument instanceof IStructuredDocument) {
 				RegionParser parser = ((IStructuredDocument) defaultDocument).getParser();
@@ -170,6 +169,7 @@ public abstract class StructuredFileTaskScanner implements IFileTaskScanner {
 					StructuredDocumentRegionParser documentParser = (StructuredDocumentRegionParser) parser;
 					final IDocument textDocument = new Document();
 					setDocumentContent(textDocument, file.getContents(true), charset);
+					monitor.beginTask("", textDocument.getLength());
 					documentParser.reset(new DocumentReader(textDocument));
 					documentParser.addStructuredDocumentRegionHandler(new StructuredDocumentRegionHandler() {
 						public void nodeParsed(IStructuredDocumentRegion documentRegion) {
@@ -183,9 +183,10 @@ public abstract class StructuredFileTaskScanner implements IFileTaskScanner {
 								documentRegion.getPrevious().setPrevious(null);
 								documentRegion.getPrevious().setNext(null);
 							}
-							if (progressMonitor.isCanceled()) {
+							if (monitor.isCanceled()) {
 								textDocument.set(""); //$NON-NLS-1$
 							}
+							monitor.worked(documentRegion.getLength());
 						}
 
 						public void resetNodes() {
@@ -197,6 +198,7 @@ public abstract class StructuredFileTaskScanner implements IFileTaskScanner {
 			if (!didStreamParse) {
 				// Use a StructuredDocument
 				IEncodedDocument document = handler.getDocumentLoader().createNewStructuredDocument(file);
+				monitor.beginTask("", document.getLength());
 				if (document instanceof IStructuredDocument) {
 					IStructuredDocumentRegion documentRegion = ((IStructuredDocument) document).getFirstStructuredDocumentRegion();
 					while (documentRegion != null) {
@@ -205,6 +207,7 @@ public abstract class StructuredFileTaskScanner implements IFileTaskScanner {
 							ITextRegion comment = regions.get(j);
 							findTasks(document, taskTags, documentRegion, comment);
 						}
+						monitor.worked(documentRegion.getLength());
 						documentRegion = documentRegion.getNext();
 					}
 				}
@@ -219,6 +222,7 @@ public abstract class StructuredFileTaskScanner implements IFileTaskScanner {
 		catch (Exception e) {
 			Logger.logException("Exception with " + file.getFullPath().toString(), e); //$NON-NLS-1$
 		}
+		monitor.done();
 	}
 
 	protected String getCommentedText(IDocument document, int begin, int length) throws BadLocationException {
