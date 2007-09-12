@@ -674,5 +674,19 @@
 	            id="org.eclipse.wst.jsdt.launching.WebProject">
 	      </classpathContainerInitializer>
   	 </extension>
-  	 
+  	   <extension
+         point="org.eclipse.ui.popupMenus">
+ 		<objectContribution
+            objectClass="org.eclipse.core.resources.IProject"
+            adaptable="true"
+            id="org.eclipse.wst.jsdt.web.ui.jsdtSetup">
+         <action
+            label="Add Support for JavaScript in HTML"
+            class="org.eclipse.wst.jsdt.web.ui.SetupProjectsWizzard"
+            menubarPath="org.eclipse.wst.jsdt.ui.project.tools/group0"
+            enablesFor="+"
+            id="org.eclipse.wst.jsdt.web.internal.ui.convertProjects">
+      	</action>
+   		</objectContribution>
+   </extension>  
 </plugin>

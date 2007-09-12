@@ -11,7 +11,14 @@ import org.eclipse.wst.common.componentcore.resources.IVirtualFolder;
 public class WebRootFinder {
 	public static IPath getServerContextRoot(IProject project) {
 		String contextRoot = ComponentUtilities.getServerContextRoot(project);
+		if(contextRoot==null) {
+			contextRoot = project.getName();
+		}
 		return new Path(contextRoot);
+	}
+	
+	private static String getProjectRoot(IProject project) {
+		return project.getLocation().toString();
 	}
 	
 	public static IPath getWebContentFolder(IProject project) {

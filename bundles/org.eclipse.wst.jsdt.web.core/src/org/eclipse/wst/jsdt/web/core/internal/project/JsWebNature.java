@@ -114,16 +114,20 @@ public class JsWebNature implements IProjectNature {
 	}
 	
 	public void configure() throws CoreException {
-		if (hasProjectClassPathFile()) {
-			IClasspathEntry[] entries = getRawClassPath();
-			if (entries != null && entries.length > 0) {
-				classPathEntries.addAll(Arrays.asList(entries));
-			}
-		}
+
 		initOutputPath();
 		createSourceClassPath();
 		initJREEntry();
 		initLocalClassPath();
+		
+		if (hasProjectClassPathFile()) {
+			IClasspathEntry[] entries = getRawClassPath();
+			if (entries != null && entries.length > 0) {
+				classPathEntries.removeAll(Arrays.asList(entries));
+				classPathEntries.addAll(Arrays.asList(entries));
+			}
+		}
+		
 		JsWebNature.addJsNature(fCurrProject, monitor);
 		fJavaProject = (JavaProject) JavaCore.create(fCurrProject);
 		fJavaProject.setProject(fCurrProject);
@@ -171,20 +175,6 @@ public class JsWebNature implements IProjectNature {
 		getJavaProject().deconfigure();
 		JsWebNature.removeJsNature(fCurrProject, monitor);
 		fCurrProject.refreshLocal(IResource.DEPTH_INFINITE, monitor);
-	}
-	
-	private IPath getCurrentOutputPath() {
-		IPath outputLocation = null;
-		if (hasProjectClassPathFile()) {
-			try {
-				System.out.println("Project Scope already configured!!!!!!  please validate nature installer");
-			} catch (Exception e) {
-				if (DEBUG) {
-					System.out.println("Error checking sourcepath:" + e);
-				}
-			}
-		}
-		return outputLocation;
 	}
 	
 	public JavaProject getJavaProject() {
@@ -259,9 +249,6 @@ public class JsWebNature implements IProjectNature {
 	}
 	
 	private void initOutputPath() {
-		if (fOutputLocation == null) {
-			fOutputLocation = getCurrentOutputPath();
-		}
 		if (fOutputLocation == null) {
 			fOutputLocation = fCurrProject.getFullPath();
 		}
