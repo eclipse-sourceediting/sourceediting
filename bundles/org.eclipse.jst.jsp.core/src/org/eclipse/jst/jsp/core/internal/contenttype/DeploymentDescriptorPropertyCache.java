@@ -13,7 +13,6 @@ package org.eclipse.jst.jsp.core.internal.contenttype;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.StringReader;
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
@@ -25,6 +24,7 @@ import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
@@ -39,8 +39,8 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.util.CommonXML;
+import org.eclipse.jst.jsp.core.internal.util.FacetModuleCoreSupport;
 import org.eclipse.jst.jsp.core.internal.util.FileContentCache;
-import org.eclipse.jst.jsp.core.taglib.TaglibIndex;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
@@ -69,13 +69,8 @@ public class DeploymentDescriptorPropertyCache {
 		Float version = new Float(defaultWebAppVersion);
 	}
 
-	private static class FacetCore {
-		long modificationStamp;
-		float version = defaultWebAppVersion;
-	}
-
 	/**
-	 * Represntation of the JSP 2.0 property-group definitions from a servlet
+	 * Representation of the JSP 2.0 property-group definitions from a servlet
 	 * deployment descriptor.
 	 */
 	public static final class PropertyGroup {
@@ -134,7 +129,7 @@ public class DeploymentDescriptorPropertyCache {
 		private boolean scripting_invalid;
 		String url_pattern;
 		private IPath webxmlPath;
-		
+
 		int number;
 
 		private PropertyGroup(IPath path, int number) {
@@ -225,7 +220,7 @@ public class DeploymentDescriptorPropertyCache {
 				this.matcher = new StringMatcher(url_pattern);
 			}
 		}
-		
+
 		public String toString() {
 			return number + ":" + url_pattern;
 		}
@@ -539,10 +534,6 @@ public class DeploymentDescriptorPropertyCache {
 
 	private static final float defaultWebAppVersion = 2.4f;
 	private static String EL_IGNORED = "el-ignored";
-	private static final String FACET_FACET = "facet";
-	private static final String FACET_INSTALLED = "installed";
-	private static final String FACET_VERSION = "version";
-	private static final String FACET_WEB_APP = "jst.web";
 	private static String ID = "id";
 	private static String INCLUDE_CODA = "include-coda";
 	private static String INCLUDE_PRELUDE = "include-prelude";
@@ -559,7 +550,9 @@ public class DeploymentDescriptorPropertyCache {
 	private static final String WEB_APP_VERSION_NAME = "version";
 	private static final String WEB_INF = "WEB-INF";
 	private static final String WEB_XML = "web.xml";
-	private static final String WEB_INF_WEB_XML = WEB_INF + IPath.SEPARATOR + WEB_XML;
+	// private static final String WEB_INF_WEB_XML = WEB_INF + IPath.SEPARATOR
+	// + WEB_XML;
+	private static final String SLASH_WEB_INF_WEB_XML = Path.ROOT.toString() + WEB_INF + IPath.SEPARATOR + WEB_XML;
 
 	static String getContainedText(Node parent) {
 		NodeList children = parent.getChildNodes();
@@ -601,7 +594,6 @@ public class DeploymentDescriptorPropertyCache {
 	private ResourceErrorHandler errorHandler;
 
 	private Map fDeploymentDescriptors = new Hashtable();
-	private Map fFacetCores = new Hashtable();
 
 	private IResourceChangeListener fResourceChangeListener = new ResourceChangeListener();
 
@@ -679,11 +671,10 @@ public class DeploymentDescriptorPropertyCache {
 		DocumentBuilder builder = CommonXML.getDocumentBuilder(false);
 		builder.setEntityResolver(getEntityResolver());
 		builder.setErrorHandler(getErrorHandler(file.getFullPath()));
-		InputStream is = null;
-		try {
+		try {			
 			InputSource inputSource = new InputSource();
-			is = file.getContents();
-			inputSource.setByteStream(is);
+			String s = FileContentCache.getInstance().getContents(file.getFullPath());
+			inputSource.setCharacterStream(new StringReader(s));
 			inputSource.setSystemId(file.getFullPath().toString());
 			Document document = builder.parse(inputSource);
 			_parseDocument(file, version, groupList, subMonitor, document);
@@ -715,21 +706,7 @@ public class DeploymentDescriptorPropertyCache {
 		catch (IOException e1) {
 			/* file is unreadable, create no property groups */
 		}
-		catch (CoreException e) {
-			/*
-			 * file is unreadable, create no property groups but log the
-			 * exception
-			 */
-			Logger.logException(e);
-		}
 		finally {
-			if (is != null)
-				try {
-					is.close();
-				}
-				catch (IOException e) {
-					// nothing to do
-				}
 			groups = (PropertyGroup[]) groupList.toArray(new PropertyGroup[groupList.size()]);
 			subMonitor.done();
 		}
@@ -745,45 +722,6 @@ public class DeploymentDescriptorPropertyCache {
 		monitor.done();
 		fDeploymentDescriptors.put(file.getFullPath(), new SoftReference(deploymentDescriptor));
 		return deploymentDescriptor;
-	}
-
-	private FacetCore fetchFacetCore(IFile facetConfigFile) {
-		FacetCore facetCore = new FacetCore();
-		facetCore.modificationStamp = facetConfigFile.getModificationStamp();
-		facetCore.version = defaultWebAppVersion;
-
-		DocumentBuilder builder = CommonXML.getDocumentBuilder(false);
-		builder.setEntityResolver(getEntityResolver());
-		builder.setErrorHandler(getErrorHandler(facetConfigFile.getFullPath()));
-		String input = null;
-		try {
-			InputSource inputSource = new InputSource();
-			input = FileContentCache.getInstance().getContents(facetConfigFile.getFullPath());
-			inputSource.setCharacterStream(new StringReader(input));
-			inputSource.setSystemId(facetConfigFile.getFullPath().toString());
-			Document document = builder.parse(inputSource);
-			NodeList installedList = document.getElementsByTagName(FACET_INSTALLED);
-			for (int i = 0; i < installedList.getLength(); i++) {
-				Element installed = (Element) installedList.item(i);
-				String facetName = installed.getAttribute(FACET_FACET);
-				if (FACET_WEB_APP.equals(facetName)) {
-					try {
-						facetCore.version = Float.valueOf(installed.getAttribute(FACET_VERSION)).floatValue();
-					}
-					catch (NumberFormatException e) {
-						// badly written file
-					}
-				}
-			}
-		}
-		catch (SAXException e1) {
-			Logger.logException(e1);
-		}
-		catch (IOException e1) {
-			// unlikely
-		}
-		fFacetCores.put(facetConfigFile.getFullPath(), new SoftReference(facetCore));
-		return facetCore;
 	}
 
 	private EntityResolver getEntityResolver() {
@@ -819,9 +757,9 @@ public class DeploymentDescriptorPropertyCache {
 	 */
 	public float getJSPVersion(IPath fullPath) {
 		float version = defaultWebAppVersion;
-		IPath contextRoot = TaglibIndex.getContextRoot(fullPath);
-		if (contextRoot != null) {
-			IPath webxmlPath = contextRoot.append(WEB_INF_WEB_XML);
+		/* try applicable web.xml file first */
+		IPath webxmlPath = FacetModuleCoreSupport.resolve(fullPath, SLASH_WEB_INF_WEB_XML);
+		if (webxmlPath != null) {
 			IFile webxmlFile = ResourcesPlugin.getWorkspace().getRoot().getFile(webxmlPath);
 			if (webxmlFile.isAccessible()) {
 				Reference descriptorHolder = (Reference) fDeploymentDescriptors.get(webxmlPath);
@@ -837,18 +775,11 @@ public class DeploymentDescriptorPropertyCache {
 				}
 			}
 		}
-		// Parse the .settings/org.eclipse.wst.common.project.facet.core.xml
-		IPath facetConfigPath = new Path(fullPath.makeAbsolute().segment(0)).append(".settings/org.eclipse.wst.common.project.facet.core.xml");
-		IFile facetConfigFile = ResourcesPlugin.getWorkspace().getRoot().getFile(facetConfigPath);
-		if (facetConfigFile.isAccessible()) {
-			FacetCore facetCore = null;
-			Reference facetCoreHolder = (Reference) fFacetCores.get(facetConfigPath);
-			if (facetCoreHolder == null || ((facetCore = (FacetCore) facetCoreHolder.get()) == null) || (facetCore.modificationStamp == IResource.NULL_STAMP) || (facetCore.modificationStamp != facetConfigFile.getModificationStamp())) {
-				facetCore = fetchFacetCore(facetConfigFile);
-				version = facetCore.version;
-			}
 
-		}
+		/* check facet settings */
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(fullPath.segment(0));
+		version = FacetModuleCoreSupport.getDynamicWebProjectVersion(project);
+
 		return convertSpecVersions(version);
 	}
 
@@ -861,11 +792,10 @@ public class DeploymentDescriptorPropertyCache {
 	 */
 	public PropertyGroup[] getPropertyGroups(IPath jspFilePath) {
 		List matchingGroups = new ArrayList(1);
-		IPath contextRoot = TaglibIndex.getContextRoot(jspFilePath);
-		if (contextRoot == null)
+		IPath webxmlPath = FacetModuleCoreSupport.resolve(jspFilePath, SLASH_WEB_INF_WEB_XML);
+		if (webxmlPath == null)
 			return NO_PROPERTY_GROUPS;
 
-		IPath webxmlPath = contextRoot.append(WEB_INF_WEB_XML);
 		IFile webxmlFile = ResourcesPlugin.getWorkspace().getRoot().getFile(webxmlPath);
 		if (!webxmlFile.isAccessible())
 			return NO_PROPERTY_GROUPS;
@@ -878,13 +808,13 @@ public class DeploymentDescriptorPropertyCache {
 		}
 
 		for (int i = 0; i < descriptor.groups.length; i++) {
-			if (descriptor.groups[i].matches(jspFilePath.removeFirstSegments(contextRoot.segmentCount()).makeAbsolute().toString(), false)) {
+			if (descriptor.groups[i].matches(FacetModuleCoreSupport.getRuntimePath(jspFilePath).toString(), false)) {
 				matchingGroups.add(descriptor.groups[i]);
 			}
 		}
 		if (matchingGroups.isEmpty()) {
 			for (int i = 0; i < descriptor.groups.length; i++) {
-				if (descriptor.groups[i].matches(jspFilePath.removeFirstSegments(contextRoot.segmentCount()).toString(), true)) {
+				if (descriptor.groups[i].matches(FacetModuleCoreSupport.getRuntimePath(jspFilePath).toString(), true)) {
 					matchingGroups.add(descriptor.groups[i]);
 				}
 			}

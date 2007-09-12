@@ -24,6 +24,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jst.jsp.core.internal.provisional.JSP11Namespace;
+import org.eclipse.jst.jsp.core.internal.util.FacetModuleCoreSupport;
 import org.eclipse.jst.jsp.core.taglib.IJarRecord;
 import org.eclipse.jst.jsp.core.taglib.ITLDRecord;
 import org.eclipse.jst.jsp.core.taglib.ITagDirRecord;
@@ -68,7 +69,7 @@ public class JSPTaglibDirectiveContentAssistProcessor extends JSPDummyContentAss
 				ITLDRecord record = (ITLDRecord) taglibRecord;
 				IResource file = ResourcesPlugin.getWorkspace().getRoot().getFile(record.getPath());
 				if (file.getLocation() != null && record.getDescriptor().getSmallIcon().length() > 0) {
-					url = "file:" + URIHelper.normalize(record.getDescriptor().getSmallIcon(), file.getFullPath().toString(), TaglibIndex.getContextRoot(file.getFullPath()).toString()); //$NON-NLS-1$
+					url = "file:" + FacetModuleCoreSupport.resolve(file.getFullPath(), record.getDescriptor().getSmallIcon()); //$NON-NLS-1$
 				}
 			}
 				break;
@@ -161,7 +162,7 @@ public class JSPTaglibDirectiveContentAssistProcessor extends JSPDummyContentAss
 						case ITaglibRecord.JAR : {
 							IPath location = ((IJarRecord) taglibRecord).getLocation();
 							IFile[] files = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocation(location);
-							IPath localContextRoot = TaglibIndex.getContextRoot(basePath);
+							IPath localContextRoot = FacetModuleCoreSupport.getWebContentRootPath(ResourcesPlugin.getWorkspace().getRoot().getProject(basePath.segment(0)));
 							for (int fileNumber = 0; fileNumber < files.length; fileNumber++) {
 								if (localContextRoot.isPrefixOf(files[fileNumber].getFullPath())) {
 									uri = IPath.SEPARATOR + files[fileNumber].getFullPath().removeFirstSegments(localContextRoot.segmentCount()).toString();
@@ -172,7 +173,7 @@ public class JSPTaglibDirectiveContentAssistProcessor extends JSPDummyContentAss
 						}
 						case ITaglibRecord.TLD : {
 							IPath path = ((ITLDRecord) taglibRecord).getPath();
-							IPath localContextRoot = TaglibIndex.getContextRoot(basePath);
+							IPath localContextRoot = FacetModuleCoreSupport.getWebContentRootPath(ResourcesPlugin.getWorkspace().getRoot().getProject(basePath.segment(0)));
 							if (localContextRoot.isPrefixOf(path)) {
 								uri = IPath.SEPARATOR + path.removeFirstSegments(localContextRoot.segmentCount()).toString();
 								uriToRecords.put(uri, taglibRecord);

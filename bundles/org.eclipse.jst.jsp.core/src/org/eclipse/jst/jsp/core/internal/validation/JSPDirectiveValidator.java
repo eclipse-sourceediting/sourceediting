@@ -19,12 +19,12 @@ import java.util.Locale;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jst.jsp.core.internal.JSPCoreMessages;
 import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.provisional.JSP11Namespace;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
+import org.eclipse.jst.jsp.core.internal.util.FacetModuleCoreSupport;
 import org.eclipse.jst.jsp.core.taglib.ITaglibRecord;
 import org.eclipse.jst.jsp.core.taglib.TaglibIndex;
 import org.eclipse.osgi.util.NLS;
@@ -183,13 +183,8 @@ public class JSPDirectiveValidator extends JSPValidator {
 				reporter.addMessage(fMessageOriginator, message);
 			}
 			else if (fSeverityIncludeFileMissing != NO_SEVERITY) {
-				IPath testPath = null;
-				if (fileValue.startsWith("/")) {
-					testPath = TaglibIndex.getContextRoot(file.getFullPath()).append(new Path(fileValue));
-				}
-				else {
-					testPath = file.getFullPath().removeLastSegments(1).append(new Path(fileValue));
-				}
+				IPath testPath = FacetModuleCoreSupport.resolve(file.getFullPath(), fileValue);
+
 				IFile testFile = file.getWorkspace().getRoot().getFile(testPath);
 				if (!testFile.isAccessible()) {
 					// File not found
@@ -394,16 +389,14 @@ public class JSPDirectiveValidator extends JSPValidator {
 					LocalizedMessage message = (file == null ? new LocalizedMessage(severity, msgText) : new LocalizedMessage(severity, msgText, file));
 
 					// if there's a message, there was an error found
-					if (message != null) {
-						int start = documentRegion.getStartOffset(valueRegion);
-						int length = valueRegion.getTextLength();
-						int lineNo = document.getLineOfOffset(start);
-						message.setLineNo(lineNo);
-						message.setOffset(start);
-						message.setLength(length);
+					int start = documentRegion.getStartOffset(valueRegion);
+					int length = valueRegion.getTextLength();
+					int lineNo = document.getLineOfOffset(start);
+					message.setLineNo(lineNo);
+					message.setOffset(start);
+					message.setLength(length);
 
-						reporter.addMessage(fMessageOriginator, message);
-					}
+					reporter.addMessage(fMessageOriginator, message);
 				}
 			}
 		}

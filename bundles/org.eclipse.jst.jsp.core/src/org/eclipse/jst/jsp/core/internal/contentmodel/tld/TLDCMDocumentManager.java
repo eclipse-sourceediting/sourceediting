@@ -40,6 +40,7 @@ import org.eclipse.jst.jsp.core.internal.contenttype.DeploymentDescriptorPropert
 import org.eclipse.jst.jsp.core.internal.parser.JSPSourceParser;
 import org.eclipse.jst.jsp.core.internal.provisional.JSP12Namespace;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
+import org.eclipse.jst.jsp.core.internal.util.FacetModuleCoreSupport;
 import org.eclipse.jst.jsp.core.internal.util.FileContentCache;
 import org.eclipse.jst.jsp.core.internal.util.ZeroStructuredDocumentRegion;
 import org.eclipse.jst.jsp.core.taglib.IJarRecord;
@@ -245,16 +246,11 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 				// strip any extraneous quotes and white space
 				includedFile = StringUtils.strip(includedFile).trim();
 				IPath filePath = null;
-				if (includedFile.startsWith("/")) { //$NON-NLS-1$
-					IPath contextRoot = TaglibIndex.getContextRoot(TaglibController.getFileBuffer(TLDCMDocumentManager.this).getLocation());
-					filePath = contextRoot.append(includedFile);
-				}
-				else {
-					if (getIncludes().isEmpty())
-						filePath = TaglibController.getFileBuffer(TLDCMDocumentManager.this).getLocation().removeLastSegments(1).append(includedFile);
-					else
-						filePath = ((IPath) getIncludes().peek()).removeLastSegments(1).append(includedFile);
-				}
+				if (getIncludes().isEmpty())
+					filePath = FacetModuleCoreSupport.resolve(TaglibController.getFileBuffer(TLDCMDocumentManager.this).getLocation(), includedFile);
+				else
+					filePath = FacetModuleCoreSupport.resolve((IPath) getIncludes().peek(), includedFile);
+
 				// check for "loops"
 				if (filePath != null && !getIncludes().contains(filePath) && !filePath.equals(TaglibController.getFileBuffer(TLDCMDocumentManager.this).getLocation())) {
 					/*

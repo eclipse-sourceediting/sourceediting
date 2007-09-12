@@ -35,6 +35,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.jobs.ILock;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jdt.core.ElementChangedEvent;
 import org.eclipse.jdt.core.IElementChangedListener;
 import org.eclipse.jdt.core.IJavaElement;
@@ -205,7 +206,7 @@ public final class TaglibIndex {
 							IResourceDelta[] deltas = new IResourceDelta[]{event.getDelta()};
 							IProject[] projects = null;
 
-							if (deltas != null && deltas.length > 0) {
+							if (deltas.length > 0) {
 								IResource resource = null;
 								if (deltas[0] != null) {
 									resource = deltas[0].getResource();
@@ -258,7 +259,7 @@ public final class TaglibIndex {
 							IResourceDelta[] deltas = new IResourceDelta[]{event.getDelta()};
 							IProject[] projects = null;
 
-							if (deltas != null && deltas.length > 0) {
+							if (deltas.length > 0) {
 								IResource resource = null;
 								if (deltas[0] != null) {
 									resource = deltas[0].getResource();
@@ -348,7 +349,7 @@ public final class TaglibIndex {
 	private static final String DIRTY = "DIRTY";
 	static boolean ENABLED = false;
 
-	static ILock LOCK = Platform.getJobManager().newLock();
+	static ILock LOCK = Job.getJobManager().newLock();
 
 	/**
 	 * NOT API.
@@ -357,14 +358,8 @@ public final class TaglibIndex {
 	 *            the listener to be added
 	 */
 	public static void addTaglibIndexListener(ITaglibIndexListener listener) {
-		try {
-			LOCK.acquire();
-			if (getInstance().isInitialized())
-				getInstance().internalAddTaglibIndexListener(listener);
-		}
-		finally {
-			LOCK.release();
-		}
+		if (getInstance().isInitialized())
+			getInstance().internalAddTaglibIndexListener(listener);
 	}
 
 	static void fireTaglibDelta(ITaglibIndexDelta delta) {
@@ -418,9 +413,6 @@ public final class TaglibIndex {
 	 * Finds all of the visible ITaglibRecords for the given path in the
 	 * workspace. Taglib mappings from web.xml files are only visible to paths
 	 * within the web.xml's corresponding web content folder.
-	 * <p>
-	 * Values defined within the XML Catalog will not be returned.
-	 * </p>
 	 * 
 	 * @param fullPath -
 	 *            a path within the workspace
@@ -430,21 +422,15 @@ public final class TaglibIndex {
 		if (!_instance.isInitialized()) {
 			return new ITaglibRecord[0];
 		}
-		try {
-			LOCK.acquire();
-			ITaglibRecord[] records = null;
-			if (getInstance().isInitialized()) {
-				records = getInstance().internalGetAvailableTaglibRecords(fullPath);
-			}
-			else {
-				records = new ITaglibRecord[0];
-			}
-			return records;
+		ITaglibRecord[] records = null;
+		if (getInstance().isInitialized()) {
+			records = getInstance().internalGetAvailableTaglibRecords(fullPath);
 		}
-		finally {
-			LOCK.release();
-			getInstance().fireCurrentDelta("enumerate: " + fullPath); //$NON-NLS-1$
+		else {
+			records = new ITaglibRecord[0];
 		}
+		getInstance().fireCurrentDelta("enumerate: " + fullPath); //$NON-NLS-1$
+		return records;
 	}
 
 	/**
@@ -484,14 +470,8 @@ public final class TaglibIndex {
 	public static void removeTaglibIndexListener(ITaglibIndexListener listener) {
 		if (!getInstance().isInitialized())
 			return;
-		try {
-			LOCK.acquire();
-			if (getInstance().isInitialized())
-				getInstance().internalRemoveTaglibIndexListener(listener);
-		}
-		finally {
-			LOCK.release();
-		}
+		if (getInstance().isInitialized())
+			getInstance().internalRemoveTaglibIndexListener(listener);
 	}
 
 	/**
@@ -514,14 +494,8 @@ public final class TaglibIndex {
 	 */
 	public static ITaglibRecord resolve(String basePath, String reference, boolean crossProjects) {
 		ITaglibRecord result = null;
-		try {
-			LOCK.acquire();
-			if (getInstance().isInitialized()) {
-				result = getInstance().internalResolve(basePath, reference, crossProjects);
-			}
-		}
-		finally {
-			LOCK.release();
+		if (getInstance().isInitialized()) {
+			result = getInstance().internalResolve(basePath, reference, crossProjects);
 		}
 		getInstance().fireCurrentDelta("resolve: " + reference); //$NON-NLS-1$
 		if (_debugResolution) {
@@ -679,6 +653,7 @@ public final class TaglibIndex {
 	 */
 	ProjectDescription createDescription(IProject project) {
 		ProjectDescription description = null;
+		LOCK.acquire();
 		description = (ProjectDescription) fProjectDescriptions.get(project);
 		if (description == null) {
 			// Once we've started indexing, we're dirty again
@@ -688,6 +663,7 @@ public final class TaglibIndex {
 			description = new ProjectDescription(project, computeIndexLocation(project.getFullPath()));
 			fProjectDescriptions.put(project, description);
 		}
+		LOCK.release();
 		return description;
 	}
 
@@ -747,15 +723,21 @@ public final class TaglibIndex {
 	}
 
 	private void internalAddTaglibIndexListener(ITaglibIndexListener listener) {
-		if (fTaglibIndexListeners == null) {
-			fTaglibIndexListeners = new ITaglibIndexListener[]{listener};
-		}
-		else {
-			List listeners = new ArrayList(Arrays.asList(fTaglibIndexListeners));
-			if (!listeners.contains(listener)) {
-				listeners.add(listener);
+		try {
+			LOCK.acquire();
+			if (fTaglibIndexListeners == null) {
+				fTaglibIndexListeners = new ITaglibIndexListener[]{listener};
 			}
-			fTaglibIndexListeners = (ITaglibIndexListener[]) listeners.toArray(new ITaglibIndexListener[0]);
+			else {
+				List listeners = new ArrayList(Arrays.asList(fTaglibIndexListeners));
+				if (!listeners.contains(listener)) {
+					listeners.add(listener);
+				}
+				fTaglibIndexListeners = (ITaglibIndexListener[]) listeners.toArray(new ITaglibIndexListener[0]);
+			}
+		}
+		finally {
+			LOCK.release();
 		}
 	}
 
@@ -802,16 +784,20 @@ public final class TaglibIndex {
 		IPath root = path.makeAbsolute();
 		while (root.segmentCount() > 0 && !root.isRoot())
 			root = root.removeLastSegments(1);
-		if (root == null)
-			root = path;
 		return root;
 	}
 
 	private void internalRemoveTaglibIndexListener(ITaglibIndexListener listener) {
-		if (fTaglibIndexListeners != null) {
-			List listeners = new ArrayList(Arrays.asList(fTaglibIndexListeners));
-			listeners.remove(listener);
-			fTaglibIndexListeners = (ITaglibIndexListener[]) listeners.toArray(new ITaglibIndexListener[0]);
+		try {
+			LOCK.acquire();
+			if (fTaglibIndexListeners != null) {
+				List listeners = new ArrayList(Arrays.asList(fTaglibIndexListeners));
+				listeners.remove(listener);
+				fTaglibIndexListeners = (ITaglibIndexListener[]) listeners.toArray(new ITaglibIndexListener[0]);
+			}
+		}
+		finally {
+			LOCK.release();
 		}
 	}
 
@@ -825,7 +811,7 @@ public final class TaglibIndex {
 		if (baseResource == null) {
 			IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
 			// Try the base path as a folder first
-			if (baseResource == null && baseIPath.segmentCount() > 1) {
+			if (baseIPath.segmentCount() > 1) {
 				baseResource = workspaceRoot.getFolder(baseIPath);
 			}
 			// If not a folder, then try base path as a file

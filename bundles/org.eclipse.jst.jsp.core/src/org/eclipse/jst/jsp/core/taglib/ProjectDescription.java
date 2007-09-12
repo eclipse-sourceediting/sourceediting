@@ -57,6 +57,8 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.jobs.ILock;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jdt.core.IClasspathContainer;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaElement;
@@ -70,6 +72,7 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.JSP11TLDNames;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.JSP12TLDNames;
+import org.eclipse.jst.jsp.core.internal.contenttype.DeploymentDescriptorPropertyCache;
 import org.eclipse.jst.jsp.core.internal.util.DocumentProvider;
 import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
 import org.eclipse.wst.sse.core.internal.util.JarUtilities;
@@ -536,6 +539,8 @@ class ProjectDescription {
 	IResourceDeltaVisitor fVisitor;
 	Hashtable fWebXMLReferences;
 
+	ILock LOCK = Job.getJobManager().newLock();
+
 	private long time0;
 
 	ProjectDescription(IProject project, String saveStateFile) {
@@ -606,7 +611,7 @@ class ProjectDescription {
 				projectsProcessed.add(buildpathProjects[i]);
 				ProjectDescription description = TaglibIndex.getInstance().createDescription(buildpathProjects[i]);
 				description.addBuildPathReferences(references, projectsProcessed, true);
-				
+
 				/*
 				 * 199843 (183756) - JSP Validation Cannot Find Tag Library
 				 * Descriptor in Referenced Projects
@@ -888,6 +893,8 @@ class ProjectDescription {
 	}
 
 	private void ensureUpTodate() {
+		LOCK.acquire();
+
 		if (!fBuildPathIsDirty) {
 			/*
 			 * Double-check that the number of build path entries has not
@@ -909,6 +916,8 @@ class ProjectDescription {
 			indexClasspath();
 			fBuildPathIsDirty = false;
 		}
+
+		LOCK.release();
 	}
 
 	private TaglibInfo extractInfo(String basePath, InputStream tldContents) {
@@ -957,23 +966,36 @@ class ProjectDescription {
 		return info;
 	}
 
-	synchronized List getAvailableTaglibRecords(IPath path) {
+	List getAvailableTaglibRecords(IPath path) {
 		ensureUpTodate();
+
+		float jspVersion = DeploymentDescriptorPropertyCache.getInstance().getJSPVersion(path);
+
+		LOCK.acquire();
 
 		Collection implicitReferences = new HashSet(getImplicitReferences(path.toString()).values());
 		Collection records = new ArrayList(fTLDReferences.size() + fTagDirReferences.size() + fJARReferences.size() + fWebXMLReferences.size());
 		records.addAll(fTLDReferences.values());
-		records.addAll(fTagDirReferences.values());
-		records.addAll(_getJSP11AndWebXMLJarReferences(fJARReferences.values()));
-		records.addAll(implicitReferences);
+		if (jspVersion >= 1.1) {
+			records.addAll(_getJSP11AndWebXMLJarReferences(fJARReferences.values()));
+		}
 
-		Map buildPathReferences = new HashMap();
-		List projectsProcessed = new ArrayList(fClasspathProjects.size() + 1);
-		projectsProcessed.add(fProject);
-		addBuildPathReferences(buildPathReferences, projectsProcessed, false);
-		records.addAll(buildPathReferences.values());
+		if (jspVersion >= 1.2) {
+			records.addAll(implicitReferences);
+
+			Map buildPathReferences = new HashMap();
+			List projectsProcessed = new ArrayList(fClasspathProjects.size() + 1);
+			projectsProcessed.add(fProject);
+			addBuildPathReferences(buildPathReferences, projectsProcessed, false);
+			records.addAll(buildPathReferences.values());
+		}
+		if (jspVersion >= 2.0) {
+			records.addAll(fTagDirReferences.values());
+		}
 
 		records.addAll(getCatalogRecords());
+
+		LOCK.release();
 
 		return new ArrayList(records);
 	}
@@ -1079,6 +1101,7 @@ class ProjectDescription {
 	/**
 	 * @param basePath
 	 * @return the applicable Web context root path, if one exists
+	 * @deprecated
 	 */
 	IPath getLocalRoot(IPath basePath) {
 		IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
@@ -1462,6 +1485,9 @@ class ProjectDescription {
 
 		ITaglibRecord record = null;
 		String path = null;
+		float jspVersion = DeploymentDescriptorPropertyCache.getInstance().getJSPVersion(new Path(basePath));
+
+		LOCK.acquire();
 
 		/**
 		 * Workaround for problem in URIHelper; uris starting with '/' are
@@ -1473,33 +1499,30 @@ class ProjectDescription {
 		else {
 			path = URIHelper.normalize(reference, basePath, getLocalRoot(basePath));
 		}
+
 		// order dictated by JSP spec 2.0 section 7.2.3
-		// if (record == null) {
-		// record = (ITaglibRecord) fWebXMLReferences.get(path);
-		// }
-		if (record == null) {
-			record = (ITaglibRecord) fJARReferences.get(path);
-			// only if 1.1 TLD was found
-			if (record instanceof JarRecord && !((JarRecord) record).has11TLD) {
-				record = null;
-			}
+		record = (ITaglibRecord) fJARReferences.get(path);
+
+		// only if 1.1 TLD was found
+		if (jspVersion < 1.1 || (record instanceof JarRecord && !((JarRecord) record).has11TLD)) {
+			record = null;
 		}
 		if (record == null) {
 			record = (ITaglibRecord) fTLDReferences.get(path);
 		}
-		if (record == null) {
+		if (record == null && jspVersion >= 1.2) {
 			record = (ITaglibRecord) getImplicitReferences(basePath).get(reference);
 		}
 
 
-		if (record == null) {
+		if (record == null && jspVersion >= 2.0) {
 			record = (ITaglibRecord) fTagDirReferences.get(path);
 		}
 
-		if (record == null) {
+		if (record == null && jspVersion >= 1.2) {
 			record = (ITaglibRecord) fClasspathReferences.get(reference);
 		}
-		if (record == null) {
+		if (record == null && jspVersion >= 1.2) {
 			Map buildPathReferences = new HashMap();
 			List projectsProcessed = new ArrayList(fClasspathProjects.size() + 1);
 			projectsProcessed.add(fProject);
@@ -1533,8 +1556,10 @@ class ProjectDescription {
 			}
 		}
 
-		// If no records were found and no local-root applies, check ALL of
-		// the web.xml files as a fallback
+		/*
+		 * If no records were found and no local-root applies, check ALL
+		 * of the web.xml files as a fallback
+		 */
 		if (record == null && fProject.getFullPath().toString().equals(getLocalRoot(basePath))) {
 			WebXMLRecord[] webxmls = (WebXMLRecord[]) fWebXMLReferences.values().toArray(new WebXMLRecord[0]);
 			for (int i = 0; i < webxmls.length; i++) {
@@ -1543,8 +1568,9 @@ class ProjectDescription {
 				record = (ITaglibRecord) getImplicitReferences(webxmls[i].path.toString()).get(reference);
 			}
 		}
-
-
+		
+		LOCK.release();
+		
 		return record;
 	}
 

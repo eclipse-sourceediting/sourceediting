@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006 IBM Corporation and others.
+ * Copyright (c) 2006 ,2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -29,15 +29,11 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jst.jsp.core.internal.JSPCorePlugin;
 import org.eclipse.jst.jsp.core.internal.preferences.JSPCorePreferenceNames;
 import org.eclipse.jst.jsp.core.internal.provisional.contenttype.ContentTypeIdForJSP;
+import org.eclipse.jst.jsp.core.internal.util.FacetModuleCoreSupport;
 import org.eclipse.jst.jsp.ui.internal.JSPUIMessages;
 import org.eclipse.jst.jsp.ui.internal.Logger;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.dialogs.WizardNewFileCreationPage;
-import org.eclipse.wst.common.componentcore.ComponentCore;
-import org.eclipse.wst.common.componentcore.internal.util.IModuleConstants;
-import org.eclipse.wst.common.componentcore.resources.IVirtualComponent;
-import org.eclipse.wst.common.project.facet.core.IFacetedProject;
-import org.eclipse.wst.common.project.facet.core.ProjectFacetsManager;
 
 class NewJSPFileWizardPage extends WizardNewFileCreationPage {
 
@@ -224,18 +220,8 @@ class NewJSPFileWizardPage extends WizardNewFileCreationPage {
 	 * @return true if the project is web project, otherwise false
 	 */
 	private boolean isDynamicWebProject(IProject project) {
-		IFacetedProject faceted = null;
-		try {
-			faceted = ProjectFacetsManager.create(project);
-			if (faceted != null && faceted.hasProjectFacet(ProjectFacetsManager.getProjectFacet(IModuleConstants.JST_WEB_MODULE))) {
-				return true;
-			}
-		}
-		catch (CoreException e) {
-			Logger.log(Logger.WARNING_DEBUG, e.getMessage(), e);
-		}
-
-		return false;
+		boolean is = FacetModuleCoreSupport.isDynamicWebProject(project);
+		return is;
 	}
 
 	/**
@@ -265,13 +251,7 @@ class NewJSPFileWizardPage extends WizardNewFileCreationPage {
 	 * @return IPath of the web contents folder
 	 */
 	private IPath getWebContentPath(IProject project) {
-		IPath path = null;
-
-		if (project != null && isDynamicWebProject(project)) {
-			IVirtualComponent component = ComponentCore.createComponent(project);
-			path = component.getRootFolder().getWorkspaceRelativePath();
-		}
-
+		IPath path = FacetModuleCoreSupport.getWebContentRootPath(project);
 		return path;
 	}
 }

@@ -45,12 +45,12 @@ import org.eclipse.jst.jsp.core.internal.provisional.JSP11Namespace;
 import org.eclipse.jst.jsp.core.internal.provisional.JSP20Namespace;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.jst.jsp.core.internal.util.DocumentProvider;
+import org.eclipse.jst.jsp.core.internal.util.FacetModuleCoreSupport;
 import org.eclipse.jst.jsp.core.taglib.IJarRecord;
 import org.eclipse.jst.jsp.core.taglib.ITLDRecord;
 import org.eclipse.jst.jsp.core.taglib.ITagDirRecord;
 import org.eclipse.jst.jsp.core.taglib.ITaglibRecord;
 import org.eclipse.jst.jsp.core.taglib.IURLRecord;
-import org.eclipse.jst.jsp.core.taglib.TaglibIndex;
 import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
@@ -766,13 +766,7 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 						IPath filePath = null;
 						String text = attributes.getValue(JSP11Namespace.ATTR_NAME_FILE);
 						if (text != null) {
-							if (text.startsWith("/")) { //$NON-NLS-1$
-								IPath contextRoot = TaglibIndex.getContextRoot(new Path(((CMDocumentImpl) ed.getOwnerDocument()).getBaseLocation()));
-								filePath = contextRoot.append(text);
-							}
-							else {
-								filePath = new Path(((CMDocumentImpl) ed.getOwnerDocument()).getBaseLocation()).removeLastSegments(1).append(text);
-							}
+							filePath = FacetModuleCoreSupport.resolve(new Path(((CMDocumentImpl) ed.getOwnerDocument()).getBaseLocation()), text);
 							IFile includedFile = ResourcesPlugin.getWorkspace().getRoot().getFile(filePath);
 							if (includedFile.isAccessible()) {
 								loadTagXFile(ed, includedFile, false);
@@ -943,14 +937,8 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 								else if (region.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE && attrName != null) {
 									text = StringUtils.strip(text);
 									if (JSP11Namespace.ATTR_NAME_FILE.equals(attrName)) {
-										IPath filePath = null;
-										if (text.startsWith("/")) { //$NON-NLS-1$
-											IPath contextRoot = TaglibIndex.getContextRoot(new Path(((CMDocumentImpl) ed.getOwnerDocument()).getBaseLocation()));
-											filePath = contextRoot.append(text);
-										}
-										else {
-											filePath = new Path(((CMDocumentImpl) ed.getOwnerDocument()).getBaseLocation()).removeLastSegments(1).append(text);
-										}
+										IPath filePath = FacetModuleCoreSupport.resolve(new Path(((CMDocumentImpl) ed.getOwnerDocument()).getBaseLocation()), text);
+
 										IFile includedFile = ResourcesPlugin.getWorkspace().getRoot().getFile(filePath);
 										if (includedFile.isAccessible()) {
 											loadTagFile(ed, includedFile, false);
