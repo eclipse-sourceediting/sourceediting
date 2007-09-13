@@ -156,9 +156,8 @@ public class JSPIndexManager {
 			// performance
 			// checking name from the delta before getting
 			// resource because it's lighter
-			int numSegments = delta.getFullPath().segmentCount();
-			String filename = delta.getFullPath().segment(numSegments - 1);
-			if (getJspContentType().isAssociatedWith(filename)) {
+			String filename = delta.getFullPath().lastSegment();
+			if (filename != null && getJspContentType().isAssociatedWith(filename)) {
 				IResource r = delta.getResource();
 				if (r != null && r.exists() && r.getType() == IResource.FILE) {
 					this.jspFiles.put(r.getFullPath(), r);

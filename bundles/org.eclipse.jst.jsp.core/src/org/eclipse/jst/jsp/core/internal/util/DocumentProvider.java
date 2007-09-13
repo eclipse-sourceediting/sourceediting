@@ -96,7 +96,6 @@ public class DocumentProvider {
 				result = builder.parse(is, getBaseReference());
 		}
 		catch (SAXException e) {
-			result = null;
 			// parsing exception, notify the user?
 			Logger.log(Logger.WARNING, "SAXException while reading descriptor " + _getFileName() + " " + e); //$NON-NLS-1$ //$NON-NLS-2$
 		}

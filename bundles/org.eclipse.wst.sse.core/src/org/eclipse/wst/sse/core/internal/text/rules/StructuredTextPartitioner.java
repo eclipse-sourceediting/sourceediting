@@ -504,23 +504,29 @@ public class StructuredTextPartitioner implements IDocumentPartitioner, IStructu
 		IStructuredDocumentRegion structuredDocumentRegion = fStructuredDocument.getRegionAtCharacterOffset(offset);
 		// flatNode is null if empty document
 		// this is king of a "normal case" for empty document
-		if (structuredDocumentRegion == null && docLength == 0) {
-			// In order to prevent infinite error loops, this partition must
-			// never have a zero length
-			// unless the document is also zero length
-			setInternalPartition(offset, 0, getDefaultPartitionType());
-			partitionFound = true;
-		} else if (structuredDocumentRegion == null && docLength != 0) {
-			// this case is "unusual". When would region be null, and document
-			// longer
-			// than 0. I think this means somethings "out of sync". And we may
-			// want
-			// to "flag" that fact and just return one big region of
-			// 'unknown', instead
-			// of one character at a time.
-			setInternalPartition(offset, 1, getUnknown());
-			partitionFound = true;
-		} else if (checkBetween) {
+		if (structuredDocumentRegion == null) {
+			if (docLength == 0) {
+				/*
+				 * In order to prevent infinite error loops, this partition
+				 * must never have a zero length unless the document is also
+				 * zero length
+				 */
+				setInternalPartition(offset, 0, getDefaultPartitionType());
+				partitionFound = true;
+			}
+			else {
+				/*
+				 * This case is "unusual". When would region be null, and
+				 * document longer than 0. I think this means something's "out
+				 * of sync". And we may want to "flag" that fact and just
+				 * return one big region of 'unknown', instead of one
+				 * character at a time.
+				 */
+				setInternalPartition(offset, 1, getUnknown());
+				partitionFound = true;
+			}
+		}	
+		else if (checkBetween) {
 			// dmw: minimizes out to the first if test above
 			//			if (structuredDocumentRegion == null && docLength == 0) {
 			//				// known special case for an empty document
@@ -537,14 +543,8 @@ public class StructuredTextPartitioner implements IDocumentPartitioner, IStructu
 				}
 			}
 		}
-		// dmw: Given the first two tests above minimize to this, this block
-		// can never run, right?
-		//		else if (structuredDocumentRegion == null) {
-		//			setInternalPartition(offset, 0, getDefault());
-		//			partitionFound = true;
-		//		}
 
-		if (!partitionFound) {
+		if (!partitionFound && structuredDocumentRegion != null) {
 			ITextRegion resultRegion = structuredDocumentRegion.getRegionAtCharacterOffset(offset);
 			partitionFound = isDocumentRegionBasedPartition(structuredDocumentRegion, resultRegion, offset);
 			if (!partitionFound) {

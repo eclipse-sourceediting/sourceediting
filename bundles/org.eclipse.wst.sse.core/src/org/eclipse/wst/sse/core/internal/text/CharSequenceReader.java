@@ -43,10 +43,10 @@ public class CharSequenceReader extends Reader {
 	}
 
 	/**
-	 * @param lock
+	 * @param lockObject
 	 */
-	CharSequenceReader(Object lock) {
-		super(lock);
+	CharSequenceReader(Object lockObject) {
+		super(lockObject);
 		// for thread safety, may need to add back locking mechanism
 		// in our custom constructor. This constructor left here just
 		// for a reminder.

@@ -690,13 +690,11 @@ public class PageDirectiveAdapterImpl implements PageDirectiveAdapter {
 			Logger.logException(e);
 		}
 		finally {
-			if (in != null) {
-				try {
-					in.close();
-				}
-				catch (IOException e) {
-					Logger.logException(e);
-				}
+			try {
+				in.close();
+			}
+			catch (IOException e) {
+				Logger.logException(e);
 			}
 		}
 		return desc;

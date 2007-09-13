@@ -653,17 +653,21 @@ public final class TaglibIndex {
 	 */
 	ProjectDescription createDescription(IProject project) {
 		ProjectDescription description = null;
-		LOCK.acquire();
-		description = (ProjectDescription) fProjectDescriptions.get(project);
-		if (description == null) {
-			// Once we've started indexing, we're dirty again
-			if (fProjectDescriptions.isEmpty()) {
-				setState(DIRTY);
+		try {
+			LOCK.acquire();
+			description = (ProjectDescription) fProjectDescriptions.get(project);
+			if (description == null) {
+				// Once we've started indexing, we're dirty again
+				if (fProjectDescriptions.isEmpty()) {
+					setState(DIRTY);
+				}
+				description = new ProjectDescription(project, computeIndexLocation(project.getFullPath()));
+				fProjectDescriptions.put(project, description);
 			}
-			description = new ProjectDescription(project, computeIndexLocation(project.getFullPath()));
-			fProjectDescriptions.put(project, description);
 		}
-		LOCK.release();
+		finally {
+			LOCK.release();
+		}
 		return description;
 	}
 

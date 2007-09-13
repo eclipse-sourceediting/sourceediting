@@ -147,8 +147,7 @@ public class IndexWorkspaceJob extends Job {
 				e.printStackTrace();
 		}
 		finally {
-			if(monitor != null)
-				monitor.done();
+			monitor.done();
 		}
 		long finish = System.currentTimeMillis();
 		if(DEBUG)

@@ -15,20 +15,20 @@ import org.eclipse.jface.text.Position;
 class ReadOnlyPosition extends Position {
 	private boolean fIncludeStartOffset = false;
 
-	public ReadOnlyPosition(int offset, int length, boolean includeStart) {
-		super(offset, length);
+	public ReadOnlyPosition(int newOffset, int newLength, boolean includeStart) {
+		super(newOffset, newLength);
 		fIncludeStartOffset = includeStart;
 	}
 
-	public boolean overlapsWith(int offset, int length) {
-		boolean overlapsWith = super.overlapsWith(offset, length);
+	public boolean overlapsWith(int newOffset, int newLength) {
+		boolean overlapsWith = super.overlapsWith(newOffset, newLength);
 		if (overlapsWith) {
 			/*
 			 * BUG157526 If at the start of the read only region and length =
 			 * 0 most likely asking to insert and want to all inserting before
 			 * read only region
 			 */
-			if (fIncludeStartOffset && (length == 0) && (this.length != 0) && (offset == this.offset)) {
+			if (fIncludeStartOffset && (newLength == 0) && (this.length != 0) && (newOffset == this.offset)) {
 				overlapsWith = false;
 			}
 		}
