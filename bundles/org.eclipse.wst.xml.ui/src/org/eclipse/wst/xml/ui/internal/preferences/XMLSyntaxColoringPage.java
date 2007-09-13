@@ -323,7 +323,7 @@ public final class XMLSyntaxColoringPage extends PreferencePage implements IWork
 		fDocument.set(getExampleText());
 		viewer.setDocument(fDocument);
 
-		top.setWeights(new int[]{2, 1});
+		top.setWeights(new int[]{1, 1});
 		editor.setWeights(new int[]{1, 1});
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(pageComponent, IHelpContextIds.XML_PREFWEBX_STYLES_HELPID);
 

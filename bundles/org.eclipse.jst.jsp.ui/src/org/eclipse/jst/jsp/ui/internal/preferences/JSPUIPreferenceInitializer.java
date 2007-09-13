@@ -24,14 +24,15 @@ public class JSPUIPreferenceInitializer extends AbstractPreferenceInitializer {
 
 		// setting the same as HTML
 		store.setDefault(JSPUIPreferenceNames.AUTO_PROPOSE, true);
-		store.setDefault(JSPUIPreferenceNames.AUTO_PROPOSE_CODE, "<");//$NON-NLS-1$
+		store.setDefault(JSPUIPreferenceNames.AUTO_PROPOSE_CODE, "<=");//$NON-NLS-1$
 
 		// JSP Style Preferences
 		String NOBACKGROUNDBOLD = " | null | false"; //$NON-NLS-1$
+		String JUSTITALIC = " | null | false | true"; //$NON-NLS-1$
 		String styleValue = ColorHelper.getColorString(127, 0, 127) + NOBACKGROUNDBOLD;
 		store.setDefault(IStyleConstantsXML.TAG_ATTRIBUTE_NAME, styleValue);
 
-		styleValue = ColorHelper.getColorString(42, 0, 255) + NOBACKGROUNDBOLD;
+		styleValue = ColorHelper.getColorString(42, 0, 255) + JUSTITALIC;
 		store.setDefault(IStyleConstantsXML.TAG_ATTRIBUTE_VALUE, styleValue);
 
 		styleValue = "null" + NOBACKGROUNDBOLD; //$NON-NLS-1$

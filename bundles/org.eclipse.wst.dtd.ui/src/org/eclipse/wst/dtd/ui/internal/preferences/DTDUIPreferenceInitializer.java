@@ -32,6 +32,7 @@ public class DTDUIPreferenceInitializer extends AbstractPreferenceInitializer {
 
 		// DTD Style Preferences
 		String NOBACKGROUNDBOLD = " | null | false"; //$NON-NLS-1$
+		String JUSTITALIC = " | null | false | true"; //$NON-NLS-1$
 		String styleValue = ColorHelper.getColorString(0, 0, 0) + NOBACKGROUNDBOLD;
 		store.setDefault(IStyleConstantsDTD.DTD_DEFAULT, styleValue); // black
 
@@ -46,7 +47,7 @@ public class DTDUIPreferenceInitializer extends AbstractPreferenceInitializer {
 		store.setDefault(IStyleConstantsDTD.DTD_KEYWORD, styleValue); // dark
 		// red
 
-		styleValue = ColorHelper.getColorString(63, 159, 95) + NOBACKGROUNDBOLD;
+		styleValue = ColorHelper.getColorString(63, 159, 95) + JUSTITALIC;
 		store.setDefault(IStyleConstantsDTD.DTD_STRING, styleValue); // green
 
 		styleValue = ColorHelper.getColorString(191, 95, 95) + NOBACKGROUNDBOLD;

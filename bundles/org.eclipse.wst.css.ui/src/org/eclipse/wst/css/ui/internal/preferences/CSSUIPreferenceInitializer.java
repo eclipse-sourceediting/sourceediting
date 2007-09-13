@@ -19,6 +19,7 @@ public class CSSUIPreferenceInitializer extends AbstractPreferenceInitializer {
 		IPreferenceStore store = CSSUIPlugin.getDefault().getPreferenceStore();
 		// CSS Style Preferences
 		String NOBACKGROUNDBOLD = " | null | false"; //$NON-NLS-1$
+		String JUSTITALIC = " | null | false | true"; //$NON-NLS-1$
 		String styleValue = "null" + NOBACKGROUNDBOLD; //$NON-NLS-1$
 		store.setDefault(IStyleConstantsCSS.NORMAL, styleValue);
 
@@ -35,7 +36,7 @@ public class CSSUIPreferenceInitializer extends AbstractPreferenceInitializer {
 		styleValue = ColorHelper.getColorString(127, 0, 127) + NOBACKGROUNDBOLD;
 		store.setDefault(IStyleConstantsCSS.PROPERTY_NAME, styleValue);
 
-		styleValue = ColorHelper.getColorString(42, 0, 225) + NOBACKGROUNDBOLD;
+		styleValue = ColorHelper.getColorString(42, 0, 225) + JUSTITALIC;
 		store.setDefault(IStyleConstantsCSS.PROPERTY_VALUE, styleValue);
 		store.setDefault(IStyleConstantsCSS.URI, styleValue);
 		store.setDefault(IStyleConstantsCSS.STRING, styleValue);

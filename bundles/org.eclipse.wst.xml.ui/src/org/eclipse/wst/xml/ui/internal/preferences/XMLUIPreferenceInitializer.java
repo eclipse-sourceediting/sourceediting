@@ -33,17 +33,18 @@ public class XMLUIPreferenceInitializer extends AbstractPreferenceInitializer {
 		IPreferenceStore store = XMLUIPlugin.getDefault().getPreferenceStore();
 
 		store.setDefault(XMLUIPreferenceNames.AUTO_PROPOSE, true);
-		store.setDefault(XMLUIPreferenceNames.AUTO_PROPOSE_CODE, "<"); //$NON-NLS-1$
+		store.setDefault(XMLUIPreferenceNames.AUTO_PROPOSE_CODE, "<="); //$NON-NLS-1$
 		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=140946
 		store.setDefault(XMLUIPreferenceNames.SUGGESTION_STRATEGY, XMLUIPreferenceNames.SUGGESTION_STRATEGY_VALUE_STRICT);
 		store.setDefault(XMLUIPreferenceNames.USE_INFERRED_GRAMMAR, true);
 
 		// XML Style Preferences
 		String NOBACKGROUNDBOLD = " | null | false"; //$NON-NLS-1$
+		String JUSTITALIC = " | null | false | true"; //$NON-NLS-1$
 		String styleValue = ColorHelper.getColorString(127, 0, 127) + NOBACKGROUNDBOLD;
 		store.setDefault(IStyleConstantsXML.TAG_ATTRIBUTE_NAME, styleValue);
 
-		styleValue = ColorHelper.getColorString(42, 0, 255) + NOBACKGROUNDBOLD;
+		styleValue = ColorHelper.getColorString(42, 0, 255) + JUSTITALIC;
 		store.setDefault(IStyleConstantsXML.TAG_ATTRIBUTE_VALUE, styleValue);
 
 		styleValue = "null" + NOBACKGROUNDBOLD; //$NON-NLS-1$
