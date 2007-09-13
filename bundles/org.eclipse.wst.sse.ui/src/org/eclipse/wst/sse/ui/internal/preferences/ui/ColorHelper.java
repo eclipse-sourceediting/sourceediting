@@ -130,7 +130,7 @@ public class ColorHelper {
 	 * 
 	 * @param preference
 	 *            should be in the form of Foreground RGB String | Background
-	 *            RGB String | Bold true/false
+	 *            RGB String | Bold true/false | Italic true/false | Strikethrough true/false | Underline true/false
 	 * @return String[] where String[0] = Foreground RGB String, String[1] =
 	 *         Background RGB String, String[2] = Bold true/false, 3 = Italic
 	 *         true/false, 4 = Strikethrough true/false, 5 = Underline
