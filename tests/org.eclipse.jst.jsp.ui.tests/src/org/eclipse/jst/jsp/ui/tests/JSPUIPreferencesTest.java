@@ -70,7 +70,7 @@ public class JSPUIPreferencesTest extends TestCase {
 		IPreferenceStore store = JSPUIPlugin.getDefault().getPreferenceStore();
 
 		pluginGetDefaultPreference(store, JSPUIPreferenceNames.AUTO_PROPOSE, Boolean.toString(true));
-		pluginGetDefaultPreference(store, JSPUIPreferenceNames.AUTO_PROPOSE_CODE, "<");
+		pluginGetDefaultPreference(store, JSPUIPreferenceNames.AUTO_PROPOSE_CODE, "<=");
 	}
 
 	private void pluginGetDefaultPreference(IPreferenceStore store, String prefKey, String expected) {

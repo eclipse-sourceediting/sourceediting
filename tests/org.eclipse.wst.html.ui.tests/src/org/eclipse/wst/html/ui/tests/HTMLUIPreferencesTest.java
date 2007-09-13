@@ -70,7 +70,7 @@ public class HTMLUIPreferencesTest extends TestCase {
 		IPreferenceStore store = HTMLUIPlugin.getDefault().getPreferenceStore();
 
 		pluginGetDefaultPreference(store, HTMLUIPreferenceNames.AUTO_PROPOSE, Boolean.toString(true));
-		pluginGetDefaultPreference(store, HTMLUIPreferenceNames.AUTO_PROPOSE_CODE, "<");
+		pluginGetDefaultPreference(store, HTMLUIPreferenceNames.AUTO_PROPOSE_CODE, "<=");
 	}
 
 	private void pluginGetDefaultPreference(IPreferenceStore store, String prefKey, String expected) {

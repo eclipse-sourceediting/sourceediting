@@ -70,7 +70,7 @@ public class XMLUIPreferencesTest extends TestCase {
 		IPreferenceStore store = XMLUIPlugin.getDefault().getPreferenceStore();
 		
 		pluginGetDefaultPreference(store, XMLUIPreferenceNames.AUTO_PROPOSE, Boolean.toString(true));
-		pluginGetDefaultPreference(store, XMLUIPreferenceNames.AUTO_PROPOSE_CODE, "<");
+		pluginGetDefaultPreference(store, XMLUIPreferenceNames.AUTO_PROPOSE_CODE, "<=");
 		pluginGetDefaultPreference(store, XMLUIPreferenceNames.USE_INFERRED_GRAMMAR, Boolean.toString(true));
 	}
 	
