@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -250,7 +250,6 @@ public class XSDComplexTypeDefinitionAdapter extends XSDTypeDefinitionAdapter im
     
     list.add(AddXSDElementAction.ID);
     list.add(AddXSDElementAction.REF_ID);
-    list.add(BaseSelectionAction.SEPARATOR_ID);
     list.add(AddXSDAttributeDeclarationAction.ID);
     list.add(AddXSDAttributeDeclarationAction.REF_ID);
     list.add(AddXSDAttributeGroupDefinitionAction.REF_ID);
@@ -258,7 +257,7 @@ public class XSDComplexTypeDefinitionAdapter extends XSDTypeDefinitionAdapter im
     list.add(BaseSelectionAction.SEPARATOR_ID);
     list.add(AddXSDModelGroupAction.SEQUENCE_ID);
     list.add(AddXSDModelGroupAction.CHOICE_ID);
-    list.add(AddXSDModelGroupAction.ALL_ID);
+
     list.add(BaseSelectionAction.SEPARATOR_ID);
     list.add(DeleteAction.ID);
     list.add(BaseSelectionAction.SEPARATOR_ID);

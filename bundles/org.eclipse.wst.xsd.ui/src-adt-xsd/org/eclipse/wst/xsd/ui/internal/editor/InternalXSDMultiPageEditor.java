@@ -28,7 +28,6 @@ import org.eclipse.gef.ui.actions.ActionRegistry;
 import org.eclipse.gef.ui.actions.GEFActionConstants;
 import org.eclipse.gef.ui.actions.PrintAction;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
@@ -509,113 +508,77 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
     action = new DeleteAction(this);
     action.setSelectionProvider(getSelectionManager());
     registry.registerAction(action);
-
     action = new AddXSDElementAction(this, AddXSDElementAction.ID, Messages._UI_ACTION_ADD_ELEMENT, false);
     action.setSelectionProvider(getSelectionManager());
-    action.setImageDescriptor(ImageDescriptor.createFromFile(XSDEditorPlugin.class, "icons/XSDElement.gif"));
     registry.registerAction(action);
-
     action = new AddXSDElementAction(this, AddXSDElementAction.REF_ID, Messages._UI_ACTION_ADD_ELEMENT_REF, true);
     action.setSelectionProvider(getSelectionManager());
-    action.setImageDescriptor(ImageDescriptor.createFromFile(XSDEditorPlugin.class, "icons/XSDElementRef.gif"));
     registry.registerAction(action);
-
     action = new AddXSDModelGroupAction(this, XSDCompositor.SEQUENCE_LITERAL, AddXSDModelGroupAction.SEQUENCE_ID);
     action.setSelectionProvider(getSelectionManager());
-    action.setImageDescriptor(ImageDescriptor.createFromFile(XSDEditorPlugin.class, "icons/XSDSequence.gif"));
     registry.registerAction(action);
-
     action = new AddXSDModelGroupAction(this, XSDCompositor.CHOICE_LITERAL, AddXSDModelGroupAction.CHOICE_ID);
     action.setSelectionProvider(getSelectionManager());
-    action.setImageDescriptor(ImageDescriptor.createFromFile(XSDEditorPlugin.class, "icons/XSDChoice.gif"));
     registry.registerAction(action);
-    
     action = new AddXSDModelGroupAction(this, XSDCompositor.ALL_LITERAL, AddXSDModelGroupAction.ALL_ID);
     action.setSelectionProvider(getSelectionManager());
-    action.setImageDescriptor(ImageDescriptor.createFromFile(XSDEditorPlugin.class, "icons/XSDAll.gif"));
     registry.registerAction(action);
-
     action = new AddXSDModelGroupDefinitionAction(this, false);
     action.setId(AddXSDModelGroupDefinitionAction.MODELGROUPDEFINITION_ID);
     action.setSelectionProvider(getSelectionManager());
-    action.setImageDescriptor(ImageDescriptor.createFromFile(XSDEditorPlugin.class, "icons/XSDGroup.gif"));
     registry.registerAction(action);
-
     action = new AddXSDModelGroupDefinitionAction(this, true);
     action.setId(AddXSDModelGroupDefinitionAction.MODELGROUPDEFINITIONREF_ID);
     action.setSelectionProvider(getSelectionManager());
-    action.setImageDescriptor(XSDEditorPlugin.getImageDescriptor("icons/obj16/XSDGroupRef.gif"));
     registry.registerAction(action);
-
     action = new AddXSDComplexTypeDefinitionAction(this);
     action.setSelectionProvider(getSelectionManager());
-    action.setImageDescriptor(ImageDescriptor.createFromFile(XSDEditorPlugin.class, "icons/XSDComplexType.gif"));
     registry.registerAction(action);
-
     action = new AddXSDSimpleTypeDefinitionAction(this);
     action.setSelectionProvider(getSelectionManager());
-    action.setImageDescriptor(ImageDescriptor.createFromFile(XSDEditorPlugin.class, "icons/XSDSimpleType.gif"));
     registry.registerAction(action);
-
     action = new AddXSDAttributeDeclarationAction(this);
     action.setSelectionProvider(getSelectionManager());
-    action.setImageDescriptor(ImageDescriptor.createFromFile(XSDEditorPlugin.class, "icons/XSDAttribute.gif"));
     registry.registerAction(action);
-
     action = new AddXSDAttributeDeclarationAction(this, AddXSDAttributeDeclarationAction.REF_ID, Messages._UI_ACTION_ADD_ATTRIBUTE_REF, true);
     action.setSelectionProvider(getSelectionManager());
-    action.setImageDescriptor(ImageDescriptor.createFromFile(XSDEditorPlugin.class, "icons/XSDAttributeRef.gif"));
     registry.registerAction(action);
-
     action = new OpenInNewEditor(this);
     action.setSelectionProvider(getSelectionManager());
     registry.registerAction(action);
-
     action = new ShowPropertiesViewAction(this);
     registry.registerAction(action);
-
     action = new AddXSDAttributeGroupDefinitionAction(this);
     action.setSelectionProvider(getSelectionManager());
-    action.setImageDescriptor(ImageDescriptor.createFromFile(XSDEditorPlugin.class, "icons/XSDAttributeGroup.gif"));
     registry.registerAction(action);
-
     action = new AddXSDAttributeGroupDefinitionAction(this, AddXSDAttributeGroupDefinitionAction.REF_ID);
     action.setSelectionProvider(getSelectionManager());
-    action.setImageDescriptor(ImageDescriptor.createFromFile(XSDEditorPlugin.class, "icons/XSDAttributeGroupRef.gif"));
-    registry.registerAction(action);
-
+    registry.registerAction(action);    
     action = new DeleteXSDConcreteComponentAction(this);
     action.setSelectionProvider(getSelectionManager());
     registry.registerAction(action);
-
     action = new AddXSDAnyElementAction(this);
     action.setSelectionProvider(getSelectionManager());
-    action.setImageDescriptor(ImageDescriptor.createFromFile(XSDEditorPlugin.class, "icons/XSDAny.gif"));
     registry.registerAction(action);
     
     action = new AddXSDAnyAttributeAction(this);
     action.setSelectionProvider(getSelectionManager());
-    action.setImageDescriptor(ImageDescriptor.createFromFile(XSDEditorPlugin.class, "icons/XSDAnyAttribute.gif"));
     registry.registerAction(action);
     
     action = new AddXSDSchemaDirectiveAction(this, AddXSDSchemaDirectiveAction.INCLUDE_ID, Messages._UI_ACTION_ADD_INCLUDE);
     action.setSelectionProvider(getSelectionManager());
-    action.setImageDescriptor(ImageDescriptor.createFromFile(XSDEditorPlugin.class, "icons/XSDInclude.gif"));
     registry.registerAction(action);
 
     action = new AddXSDSchemaDirectiveAction(this, AddXSDSchemaDirectiveAction.IMPORT_ID, Messages._UI_ACTION_ADD_IMPORT);
     action.setSelectionProvider(getSelectionManager());
-    action.setImageDescriptor(ImageDescriptor.createFromFile(XSDEditorPlugin.class, "icons/XSDImport.gif"));
     registry.registerAction(action);
 
     action = new AddXSDSchemaDirectiveAction(this, AddXSDSchemaDirectiveAction.REDEFINE_ID, Messages._UI_ACTION_ADD_REDEFINE);
     action.setSelectionProvider(getSelectionManager());
-    action.setImageDescriptor(ImageDescriptor.createFromFile(XSDEditorPlugin.class, "icons/XSDRedefine.gif"));
     registry.registerAction(action);
     
     SetTypeAction setNewComplexTypeAction = new SetTypeAction(Messages._UI_ACTION_NEW, SetTypeAction.SET_NEW_TYPE_ID, this);
     setNewComplexTypeAction.setSelectionProvider(getSelectionManager());
-    
     registry.registerAction(setNewComplexTypeAction);
         
     SetTypeAction setExistingTypeAction = new SetTypeAction(Messages._UI_ACTION_BROWSE, SetTypeAction.SELECT_EXISTING_TYPE_ID, this);

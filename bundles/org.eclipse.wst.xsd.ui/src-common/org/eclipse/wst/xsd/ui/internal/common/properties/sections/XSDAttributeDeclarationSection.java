@@ -13,14 +13,11 @@ package org.eclipse.wst.xsd.ui.internal.common.properties.sections;
 import org.apache.xerces.util.XMLChar;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.jface.window.Window;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.RowLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Text;
@@ -43,9 +40,8 @@ import org.w3c.dom.Element;
 
 public class XSDAttributeDeclarationSection extends RefactoringSection
 {
-  protected Text nameText, defaultOrFixedText;
-  protected CCombo typeCombo, usageCombo, formCombo;
-  protected Button defaultButton, fixedButton;
+  protected Text nameText;
+  protected CCombo typeCombo, usageCombo;
   protected String typeName = ""; //$NON-NLS-1$
   boolean isAttributeReference;
   
@@ -135,76 +131,6 @@ public class XSDAttributeDeclarationSection extends RefactoringSection
     usageCombo.add("optional"); //$NON-NLS-1$
     usageCombo.add("prohibited"); //$NON-NLS-1$
     usageCombo.addSelectionListener(this);
-    
-    // dummy
-    getWidgetFactory().createCLabel(composite, ""); //$NON-NLS-1$
-    
-    // ------------------------------------------------------------------
-    // defaultLabel
-    // ------------------------------------------------------------------
-    data = new GridData();
-    data.horizontalAlignment = GridData.HORIZONTAL_ALIGN_BEGINNING;
-    data.grabExcessHorizontalSpace = false;
-    CLabel defaultLabel = getWidgetFactory().createCLabel(composite, org.eclipse.wst.xsd.ui.internal.common.util.Messages._UI_VALUE_COLON);
-    defaultLabel.setLayoutData(data);
-    
-    Composite radio = getWidgetFactory().createComposite(composite);
-    radio.setLayout(new RowLayout());
-    
-    defaultButton = new Button(radio, SWT.RADIO);
-    defaultButton.setText(org.eclipse.wst.xsd.ui.internal.common.util.Messages._UI_DEFAULT);
-    defaultButton.setBackground(parent.getBackground());
-    defaultButton.addSelectionListener(this);
-    
-    fixedButton = new Button(radio, SWT.RADIO);
-    fixedButton.setText(org.eclipse.wst.xsd.ui.internal.common.util.Messages._UI_FIXED);  
-    fixedButton.setBackground(parent.getBackground());
-    fixedButton.addSelectionListener(this);
-    
-    // dummy
-    getWidgetFactory().createCLabel(composite, ""); //$NON-NLS-1$
-    
-    // dummy
-    getWidgetFactory().createCLabel(composite, ""); //$NON-NLS-1$
-
-    // ------------------------------------------------------------------
-    // defaultText
-    // ------------------------------------------------------------------
-    data = new GridData();
-    data.grabExcessHorizontalSpace = true;
-    data.horizontalAlignment = GridData.FILL;
-    defaultOrFixedText = getWidgetFactory().createText(composite, ""); //$NON-NLS-1$
-    defaultOrFixedText.setLayoutData(data);
-    applyAllListeners(defaultOrFixedText);
-    
-    //PlatformUI.getWorkbench().getHelpSystem().setHelp(nameText,
-    //		XSDEditorCSHelpIds.GENERAL_TAB__ATTRIBUTE__DEFAULT);
-    
-    // dummy
-    getWidgetFactory().createCLabel(composite, ""); //$NON-NLS-1$
-    
-    // ------------------------------------------------------------------
-    // FormLabel
-    // ------------------------------------------------------------------
-    data = new GridData();
-    data.horizontalAlignment = GridData.HORIZONTAL_ALIGN_BEGINNING;
-    data.grabExcessHorizontalSpace = false;
-    CLabel formLabel = getWidgetFactory().createCLabel(composite, org.eclipse.wst.xsd.ui.internal.common.util.Messages._UI_FORM);
-    formLabel.setLayoutData(data);
-
-    // ------------------------------------------------------------------
-    // FormCombo
-    // ------------------------------------------------------------------
-    data = new GridData();
-    data.grabExcessHorizontalSpace = true;
-    data.horizontalAlignment = GridData.FILL;
-    formCombo = getWidgetFactory().createCCombo(composite);
-    formCombo.setLayoutData(data);
-    formCombo.addSelectionListener(this);
-    formCombo.add("");
-    formCombo.add("qualified"); //$NON-NLS-1$
-    formCombo.add("unqualified"); //$NON-NLS-1$
-    formCombo.addSelectionListener(this);
     
     // dummy
     getWidgetFactory().createCLabel(composite, ""); //$NON-NLS-1$
@@ -326,51 +252,6 @@ public class XSDAttributeDeclarationSection extends RefactoringSection
             usageCombo.setText(usage);
           }
         }
-        
-        defaultOrFixedText.setText(""); //$NON-NLS-1$
-       
-        boolean hasDefaultAttribute = false, hasFixedAttribute = false;
-        if (element != null)
-        {
-          hasDefaultAttribute = element.hasAttribute(XSDConstants.DEFAULT_ATTRIBUTE);
-          hasFixedAttribute = element.hasAttribute(XSDConstants.FIXED_ATTRIBUTE);
-
-          // Case where no fixed or default attributes exist, so ensure one of the radio buttons is selected
-          if (!hasDefaultAttribute && !hasFixedAttribute)
-          {
-            if (!defaultButton.getSelection() && !fixedButton.getSelection()) // if none are selected then pick fixed
-              fixedButton.setSelection(true);
-          }
-          else
-          {
-            // if both are present in source (an error!), assume that *fixed* takes "precedence"
-            defaultButton.setSelection(!hasFixedAttribute && hasDefaultAttribute);
-            fixedButton.setSelection(hasFixedAttribute);
-            if (hasDefaultAttribute)
-            {
-              String theDefault = element.getAttribute(XSDConstants.DEFAULT_ATTRIBUTE);
-            	defaultOrFixedText.setText(theDefault);
-            }
-            if (hasFixedAttribute) // will overwrite default if both present
-	          {
-        	    String fixed = element.getAttribute(XSDConstants.FIXED_ATTRIBUTE);
-        	    defaultOrFixedText.setText(fixed);
-	          }
-          }
-        }
-        
-        formCombo.setText(""); 
-        formCombo.setEnabled(!xsdAttribute.isGlobal());
-        boolean hasFormAttribute = false;
-        if (element != null)
-        {
-          hasFormAttribute = element.hasAttribute(XSDConstants.FORM_ATTRIBUTE);
-          if (hasFormAttribute)
-          {
-            String form = element.getAttribute(XSDConstants.FORM_ATTRIBUTE);
-            formCombo.setText(form);
-          }
-        }
       }
     }
 
@@ -422,65 +303,18 @@ public class XSDAttributeDeclarationSection extends RefactoringSection
           manager.modifyComponentReference(input, newValue);
       }
     } 
-    else 
+    else if (e.widget == usageCombo)
     {
-    	XSDAttributeDeclaration xsdAttribute = ((XSDAttributeDeclaration) input).getResolvedAttributeDeclaration();
-    	Element element = xsdAttribute.getElement();
-      if (e.widget == usageCombo)
-	    {	      
-	      String newValue = usageCombo.getText();
-	      
-	      if (element != null)
-	      {
-	        if (newValue.length() == 0)
-	          element.removeAttribute(XSDConstants.USE_ATTRIBUTE);
-	        else
-	          element.setAttribute(XSDConstants.USE_ATTRIBUTE, newValue);
-	      }
-	    }
-	    else if (e.widget == formCombo)
-	    {
-	      String newValue = formCombo.getText();
-	      if (element != null)
-	      {
-	        if (newValue.length() == 0)
-	          element.removeAttribute(XSDConstants.FORM_ATTRIBUTE);
-	        else
-	          element.setAttribute(XSDConstants.FORM_ATTRIBUTE, newValue);
-	      }
-	    }
-	    else if (e.widget == defaultButton)
-	    {
-	    	boolean newValue = defaultButton.getSelection();
-	    	if (element != null)
-	    	{
-	    		if (newValue)
-	    		{
-	    			if (element.hasAttribute(XSDConstants.FIXED_ATTRIBUTE))
-	    			{
-	            String value = element.getAttribute(XSDConstants.FIXED_ATTRIBUTE);
-	            element.removeAttribute(XSDConstants.FIXED_ATTRIBUTE);
-	            element.setAttribute(XSDConstants.DEFAULT_ATTRIBUTE, value);
-	    			}
-	    		}
-	    	}
-	    }
-	    else if (e.widget == fixedButton)
-	    {
-	    	boolean newValue = fixedButton.getSelection();
-	    	if (element != null)
-	    	{
-	    		if (newValue)
-	    		{
-	    			if (element.hasAttribute(XSDConstants.DEFAULT_ATTRIBUTE))
-	    			{
-	            String value = element.getAttribute(XSDConstants.DEFAULT_ATTRIBUTE);
-	            element.removeAttribute(XSDConstants.DEFAULT_ATTRIBUTE);
-	            element.setAttribute(XSDConstants.FIXED_ATTRIBUTE, value);
-	    			}
-	    		}
-	    	}
-	    }
+      XSDAttributeDeclaration xsdAttribute = ((XSDAttributeDeclaration) input).getResolvedAttributeDeclaration();
+      String newValue = usageCombo.getText();
+      Element element = xsdAttribute.getElement();
+      if (element != null)
+      {
+        if (newValue.length() == 0)
+          element.removeAttribute(XSDConstants.USE_ATTRIBUTE);
+        else
+          element.setAttribute(XSDConstants.USE_ATTRIBUTE, newValue);
+      }
     }
     super.doWidgetSelected(e);
   }
@@ -530,27 +364,6 @@ public class XSDAttributeDeclarationSection extends RefactoringSection
 //          refreshRefCombo();
         }
 
-      }
-    }
-    else if (event.widget == defaultOrFixedText)
-    {
-      XSDAttributeDeclaration xsdAttribute = ((XSDAttributeDeclaration) input).getResolvedAttributeDeclaration();
-      String newValue = defaultOrFixedText.getText();
-      Element element = xsdAttribute.getElement();
-      if (element != null)
-      {
-        if (newValue.length() == 0)
-        {
-          element.removeAttribute(XSDConstants.DEFAULT_ATTRIBUTE);
-          element.removeAttribute(XSDConstants.FIXED_ATTRIBUTE);
-        }
-        else
-        {
-          element.removeAttribute(fixedButton.getSelection() 
-        		  ? XSDConstants.DEFAULT_ATTRIBUTE : XSDConstants.FIXED_ATTRIBUTE);
-          element.setAttribute(fixedButton.getSelection() 
-        		  ? XSDConstants.FIXED_ATTRIBUTE : XSDConstants.DEFAULT_ATTRIBUTE, newValue);
-        }
       }
     }
   }
