@@ -168,7 +168,7 @@ public class EMF2DOMSSEAdapter extends EMF2DOMAdapterImpl implements INodeAdapte
 	 * Indent before the end tag of the <node>passed in.
 	 */
 	protected void indentEndTag(String indentString, Node node, Translator map) {
-		if (!map.shouldIndentEndTag())
+		if (!map.shouldIndentEndTag(node))
 			return;
 		String domPath = map.getDOMPath();
 
