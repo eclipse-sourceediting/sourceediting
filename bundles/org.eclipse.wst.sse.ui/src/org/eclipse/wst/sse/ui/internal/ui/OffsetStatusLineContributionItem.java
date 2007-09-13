@@ -14,6 +14,7 @@ package org.eclipse.wst.sse.ui.internal.ui;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -51,6 +52,7 @@ import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
@@ -272,6 +274,15 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 			annotationsComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
 			final TableViewer annotationsTable = new TableViewer(annotationsComposite, SWT.SINGLE | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+			annotationsTable.setComparator(new ViewerComparator(new Comparator() {
+				public int compare(Object o1, Object o2) {
+					Annotation annotation1 = (Annotation) o1;
+					Annotation annotation2 = (Annotation) o2;
+					String line1 = getLineNumber(annotation1);
+					String line2 = getLineNumber(annotation2);
+					return Integer.parseInt(line1) - Integer.parseInt(line2);
+				}
+			}));
 			annotationsTable.setContentProvider(new ArrayContentProvider());
 			annotationsTable.getTable().setHeaderVisible(true);
 			annotationsTable.getTable().setLinesVisible(true);
