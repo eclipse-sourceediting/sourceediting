@@ -340,7 +340,7 @@ public class EMF2DOMSSERenderer extends EMF2DOMRenderer implements IModelStateLi
 			Logger.logException(e);
 			return null;
 		}
-		String id = getModelManager().calculateId(file);
+		String id = getXMLModel().getId();
 		syncReferenceCounts(id, forWrite);
 		if (xmlModel != null)
 			document = xmlModel.getDocument();
