@@ -35,6 +35,7 @@ import org.eclipse.wst.xsd.ui.internal.adt.facade.IModel;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IType;
 import org.eclipse.wst.xsd.ui.internal.adt.outline.ITreeElement;
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDAnyAttributeAction;
+import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDAnyElementAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDAttributeDeclarationAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDAttributeGroupDefinitionAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDElementAction;
@@ -250,6 +251,7 @@ public class XSDComplexTypeDefinitionAdapter extends XSDTypeDefinitionAdapter im
     
     list.add(AddXSDElementAction.ID);
     list.add(AddXSDElementAction.REF_ID);
+    list.add(AddXSDAnyElementAction.ID);
     list.add(BaseSelectionAction.SEPARATOR_ID);
     list.add(AddXSDAttributeDeclarationAction.ID);
     list.add(AddXSDAttributeDeclarationAction.REF_ID);
