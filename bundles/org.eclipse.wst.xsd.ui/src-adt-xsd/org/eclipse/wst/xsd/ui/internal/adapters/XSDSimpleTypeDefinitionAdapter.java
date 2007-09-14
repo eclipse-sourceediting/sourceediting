@@ -20,6 +20,7 @@ import org.eclipse.wst.xsd.ui.internal.adt.actions.ShowPropertiesViewAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.DeleteXSDConcreteComponentAction;
 import org.eclipse.wst.xsd.ui.internal.editor.Messages;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
+import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.eclipse.xsd.XSDVariety;
 import org.eclipse.xsd.util.XSDConstants;
@@ -147,5 +148,11 @@ public class XSDSimpleTypeDefinitionAdapter extends XSDTypeDefinitionAdapter
     list.add(ShowPropertiesViewAction.ID);
     
     return (String [])list.toArray(new String[0]);
+  }
+
+  public boolean isAnonymous()
+  {
+    XSDSimpleTypeDefinition xsdSimpleTypeDefinition = (XSDSimpleTypeDefinition) target;
+    return !(xsdSimpleTypeDefinition.eContainer() instanceof XSDSchema);
   }
 }

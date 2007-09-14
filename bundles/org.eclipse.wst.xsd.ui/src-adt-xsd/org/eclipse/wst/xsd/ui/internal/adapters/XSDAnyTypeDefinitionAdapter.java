@@ -25,5 +25,10 @@ public class XSDAnyTypeDefinitionAdapter extends XSDTypeDefinitionAdapter
   public String[] getActions(Object object)
   {
 	return null;
+  }
+
+  public boolean isAnonymous()
+  {
+    return false;
   } 
 }

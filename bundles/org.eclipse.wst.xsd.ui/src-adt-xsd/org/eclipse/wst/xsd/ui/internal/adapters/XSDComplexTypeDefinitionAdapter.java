@@ -416,4 +416,10 @@ public class XSDComplexTypeDefinitionAdapter extends XSDTypeDefinitionAdapter im
   {
     return true;
   }
+
+  public boolean isAnonymous()
+  {
+    XSDComplexTypeDefinition xsdComplexTypeDefinition = (XSDComplexTypeDefinition) target;
+    return !(xsdComplexTypeDefinition.eContainer() instanceof XSDSchema);
+  }
 }

@@ -18,6 +18,7 @@ public interface IType extends IADTObject
   String getName();
   String getQualifier();
   boolean isComplexType();
+  boolean isAnonymous();
   
   Command getUpdateNameCommand(String newName);
 }

@@ -46,7 +46,7 @@ public class DeleteAction extends BaseSelectionAction
       {
         command = ((IComplexType)selection).getDeleteCommand();
         model = ((IComplexType)selection).getModel();
-        doReselect = true;
+        doReselect = !((IComplexType)selection).isAnonymous();
       }
       else if (selection instanceof IField)
       {
