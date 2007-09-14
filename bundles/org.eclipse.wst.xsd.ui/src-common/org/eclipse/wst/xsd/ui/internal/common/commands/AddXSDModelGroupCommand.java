@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,6 +16,7 @@ import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDElementDeclaration;
 import org.eclipse.xsd.XSDFactory;
 import org.eclipse.xsd.XSDModelGroup;
+import org.eclipse.xsd.XSDModelGroupDefinition;
 import org.eclipse.xsd.XSDParticle;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.eclipse.xsd.util.XSDSchemaBuildingTools;
@@ -126,6 +127,21 @@ public class AddXSDModelGroupCommand extends BaseCommand
           newParent.getContents().add(newModelGroup.getContainer());
         }
         
+      }
+    }
+    else if (parent instanceof XSDModelGroupDefinition)
+    {
+      XSDModelGroupDefinition modelGroupDefinition = (XSDModelGroupDefinition)parent;
+      owner = null;
+      newModelGroup = createModelGroup();
+      if (modelGroupDefinition.getModelGroup() != null)
+      {
+        XSDModelGroup newParent = modelGroupDefinition.getModelGroup();
+        newParent.getContents().add(newModelGroup.getContainer());
+      }
+      else
+      {
+        modelGroupDefinition.setModelGroup(newModelGroup);
       }
     }
     return owner;

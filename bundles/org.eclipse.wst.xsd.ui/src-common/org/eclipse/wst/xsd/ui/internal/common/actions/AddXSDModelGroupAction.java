@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,6 +23,7 @@ import org.eclipse.xsd.XSDCompositor;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDElementDeclaration;
 import org.eclipse.xsd.XSDModelGroup;
+import org.eclipse.xsd.XSDModelGroupDefinition;
 
 public class AddXSDModelGroupAction extends XSDBaseAction
 {
@@ -60,7 +61,8 @@ public class AddXSDModelGroupAction extends XSDBaseAction
         command = new AddXSDModelGroupCommand(getLabel(xsdCompositor), xsdModelGroup, xsdCompositor);
         getCommandStack().execute(command);
       }
-      else if (xsdComponent instanceof XSDComplexTypeDefinition)
+      else if (xsdComponent instanceof XSDComplexTypeDefinition
+               || xsdComponent instanceof XSDModelGroupDefinition)
       {
         command = new AddXSDModelGroupCommand(getLabel(xsdCompositor), xsdComponent, xsdCompositor);
         getCommandStack().execute(command);
