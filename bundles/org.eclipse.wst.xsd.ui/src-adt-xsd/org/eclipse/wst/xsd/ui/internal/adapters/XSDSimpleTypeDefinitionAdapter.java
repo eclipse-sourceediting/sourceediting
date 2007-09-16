@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,8 +16,10 @@ import java.util.List;
 
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.BaseSelectionAction;
+import org.eclipse.wst.xsd.ui.internal.adt.actions.SetInputToGraphView;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.ShowPropertiesViewAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.DeleteXSDConcreteComponentAction;
+import org.eclipse.wst.xsd.ui.internal.common.actions.OpenInNewEditor;
 import org.eclipse.wst.xsd.ui.internal.editor.Messages;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.xsd.XSDSchema;
@@ -144,6 +146,19 @@ public class XSDSimpleTypeDefinitionAdapter extends XSDTypeDefinitionAdapter
   {
     List list = new ArrayList();
     list.add(DeleteXSDConcreteComponentAction.DELETE_XSD_COMPONENT_ID);
+    list.add(BaseSelectionAction.SEPARATOR_ID);
+    Object schema = getEditorSchema();
+    if (getXSDTypeDefinition().getSchema() == schema)
+    {
+      if (getXSDTypeDefinition().getContainer() == schema)
+      {
+        list.add(SetInputToGraphView.ID);
+      }
+    }
+    else
+    {
+      list.add(OpenInNewEditor.ID);
+    }
     list.add(BaseSelectionAction.SEPARATOR_ID);
     list.add(ShowPropertiesViewAction.ID);
     

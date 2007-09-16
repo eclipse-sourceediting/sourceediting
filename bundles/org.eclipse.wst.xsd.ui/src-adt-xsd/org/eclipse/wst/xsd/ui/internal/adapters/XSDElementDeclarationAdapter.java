@@ -19,6 +19,7 @@ import org.eclipse.osgi.util.TextProcessor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.BaseSelectionAction;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.DeleteAction;
+import org.eclipse.wst.xsd.ui.internal.adt.actions.SetInputToGraphView;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.ShowPropertiesViewAction;
 import org.eclipse.wst.xsd.ui.internal.adt.design.IAnnotationProvider;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IActionProvider;
@@ -28,6 +29,7 @@ import org.eclipse.wst.xsd.ui.internal.adt.facade.IModel;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IType;
 import org.eclipse.wst.xsd.ui.internal.adt.outline.ITreeElement;
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDElementAction;
+import org.eclipse.wst.xsd.ui.internal.common.actions.OpenInNewEditor;
 import org.eclipse.wst.xsd.ui.internal.common.actions.SetMultiplicityAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.SetTypeAction;
 import org.eclipse.wst.xsd.ui.internal.common.commands.DeleteCommand;
@@ -285,6 +287,19 @@ public class XSDElementDeclarationAdapter extends XSDParticleAdapter implements 
 
     list.add(BaseSelectionAction.SEPARATOR_ID);
     list.add(DeleteAction.ID);
+    list.add(BaseSelectionAction.SEPARATOR_ID);
+    Object schema = getEditorSchema();
+    if (getXSDElementDeclaration().getSchema() == schema)
+    {
+      if (getXSDElementDeclaration().getContainer() == schema)
+      {
+        list.add(SetInputToGraphView.ID);
+      }
+    }
+    else
+    {
+      list.add(OpenInNewEditor.ID);
+    }
     list.add(BaseSelectionAction.SEPARATOR_ID);
     list.add(ShowPropertiesViewAction.ID);
     return (String [])list.toArray(new String[0]);

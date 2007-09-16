@@ -19,6 +19,7 @@ import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.BaseSelectionAction;
+import org.eclipse.wst.xsd.ui.internal.adt.actions.SetInputToGraphView;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.ShowPropertiesViewAction;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IActionProvider;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IGraphElement;
@@ -30,6 +31,7 @@ import org.eclipse.wst.xsd.ui.internal.adt.outline.ITreeElement;
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDElementAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDModelGroupAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.DeleteXSDConcreteComponentAction;
+import org.eclipse.wst.xsd.ui.internal.common.actions.OpenInNewEditor;
 import org.eclipse.wst.xsd.ui.internal.common.actions.SetMultiplicityAction;
 import org.eclipse.wst.xsd.ui.internal.common.commands.DeleteCommand;
 import org.eclipse.wst.xsd.ui.internal.editor.Messages;
@@ -131,7 +133,19 @@ public class XSDModelGroupDefinitionAdapter extends XSDParticleAdapter implement
       list.add(SetMultiplicityAction.ONE_OR_MORE_ID);    
       list.add(BaseSelectionAction.SUBMENU_END_ID); 
     }
-    
+    list.add(BaseSelectionAction.SEPARATOR_ID);
+    Object schema = getEditorSchema();
+    if (getXSDModelGroupDefinition().getSchema() == schema)
+    {
+      if (getXSDModelGroupDefinition().getContainer() == schema)
+      {
+        list.add(SetInputToGraphView.ID);
+      }
+    }
+    else
+    {
+      list.add(OpenInNewEditor.ID);
+    }
     list.add(BaseSelectionAction.SEPARATOR_ID);
     list.add(ShowPropertiesViewAction.ID);
 

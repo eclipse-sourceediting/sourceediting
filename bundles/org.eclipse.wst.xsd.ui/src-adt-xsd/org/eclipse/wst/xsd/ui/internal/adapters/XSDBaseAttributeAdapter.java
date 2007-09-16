@@ -18,12 +18,14 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.BaseSelectionAction;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.DeleteAction;
+import org.eclipse.wst.xsd.ui.internal.adt.actions.SetInputToGraphView;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.ShowPropertiesViewAction;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IGraphElement;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IField;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IModel;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IType;
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDAttributeDeclarationAction;
+import org.eclipse.wst.xsd.ui.internal.common.actions.OpenInNewEditor;
 import org.eclipse.wst.xsd.ui.internal.common.commands.DeleteCommand;
 import org.eclipse.wst.xsd.ui.internal.common.commands.UpdateNameCommand;
 import org.eclipse.wst.xsd.ui.internal.editor.Messages;
@@ -51,7 +53,19 @@ public abstract class XSDBaseAttributeAdapter extends XSDBaseAdapter implements 
     list.add(BaseSelectionAction.SEPARATOR_ID);
     //list.add(DeleteXSDConcreteComponentAction.DELETE_XSD_COMPONENT_ID);
     list.add(DeleteAction.ID);
-
+    list.add(BaseSelectionAction.SEPARATOR_ID);
+    Object schema = getEditorSchema();
+    if (getXSDAttributeDeclaration().getSchema() == schema)
+    {
+      if (getXSDAttributeDeclaration().getContainer() == schema)
+      {
+        list.add(SetInputToGraphView.ID);
+      }
+    }
+    else
+    {
+      list.add(OpenInNewEditor.ID);
+    }
     list.add(BaseSelectionAction.SEPARATOR_ID);
     list.add(ShowPropertiesViewAction.ID);
     return (String[]) list.toArray(new String[0]);

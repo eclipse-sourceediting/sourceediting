@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,6 +18,7 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
@@ -195,5 +196,11 @@ public class XSDBaseAdapter extends AdapterImpl implements IADTObject, ITreeElem
     return true;
   }
 
-
+  protected Object getEditorSchema()
+  {
+    IWorkbench workbench = PlatformUI.getWorkbench();
+    IWorkbenchWindow workbenchWindow = workbench.getActiveWorkbenchWindow();
+    IEditorPart editorPart = workbenchWindow.getActivePage().getActiveEditor();
+    return editorPart.getAdapter(XSDSchema.class);
+  }
 }

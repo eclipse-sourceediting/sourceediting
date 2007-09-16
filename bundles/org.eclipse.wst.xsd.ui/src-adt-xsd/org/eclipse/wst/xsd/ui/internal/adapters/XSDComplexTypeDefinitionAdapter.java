@@ -20,10 +20,6 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.jface.action.Action;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.BaseSelectionAction;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.DeleteAction;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.SetInputToGraphView;
@@ -244,10 +240,7 @@ public class XSDComplexTypeDefinitionAdapter extends XSDTypeDefinitionAdapter im
   public String[] getActions(Object object)
   {
     List list = new ArrayList();
-    IWorkbench workbench = PlatformUI.getWorkbench();
-    IWorkbenchWindow workbenchWindow = workbench.getActiveWorkbenchWindow();
-    IEditorPart editorPart = workbenchWindow.getActivePage().getActiveEditor();
-    Object schema = editorPart.getAdapter(XSDSchema.class);
+    Object schema = getEditorSchema();
     
     list.add(AddXSDElementAction.ID);
     list.add(AddXSDElementAction.REF_ID);
