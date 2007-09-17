@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,12 +17,17 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.GraphicalViewer;
+import org.eclipse.gef.ui.actions.ActionRegistry;
 import org.eclipse.gef.ui.parts.GraphicalViewerKeyHandler;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editpolicies.KeyBoardAccessibilityEditPolicy;
+import org.eclipse.wst.xsd.ui.internal.common.actions.OpenInNewEditor;
 
 /**
  * This key handler is designed to be re-used by both the WSDL and XSD editor
@@ -97,7 +102,20 @@ public class BaseGraphicalViewerKeyHandler extends GraphicalViewerKeyHandler
       {  
         if (scrollPage(event, PositionConstants.NORTH))
           return true;
-      } 
+      }
+      case SWT.F3 :
+      {
+        IWorkbench workbench = PlatformUI.getWorkbench();
+        IWorkbenchWindow workbenchWindow = workbench.getActiveWorkbenchWindow();
+        IEditorPart editorPart = workbenchWindow.getActivePage().getActiveEditor();
+        ActionRegistry registry = (ActionRegistry) editorPart.getAdapter(ActionRegistry.class);
+        if (registry != null)
+        {
+          IAction action = registry.getAction(OpenInNewEditor.ID);
+          if (action != null)
+          action.run();
+        }
+      }
       /*
       case SWT.F5 :
       {
