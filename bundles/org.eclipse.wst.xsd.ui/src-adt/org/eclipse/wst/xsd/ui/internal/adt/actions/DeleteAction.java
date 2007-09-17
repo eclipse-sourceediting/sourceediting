@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,10 +12,16 @@ package org.eclipse.wst.xsd.ui.internal.adt.actions;
 
 import java.util.Iterator;
 
+import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.wst.xsd.ui.internal.adt.design.DesignViewGraphicalViewer;
 import org.eclipse.wst.xsd.ui.internal.adt.editor.Messages;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IComplexType;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IField;
@@ -67,6 +73,29 @@ public class DeleteAction extends BaseSelectionAction
 
       if (command != null)
       {
+        IWorkbench workbench = PlatformUI.getWorkbench();
+        if (workbench != null)
+        {
+          IWorkbenchWindow workbenchWindow = workbench.getActiveWorkbenchWindow();
+          if (workbenchWindow != null && workbenchWindow.getActivePage() != null)
+          {
+            IEditorPart editorPart = workbenchWindow.getActivePage().getActiveEditor();
+            if (editorPart != null)
+            {
+              Object viewer = editorPart.getAdapter(GraphicalViewer.class);
+              if (viewer instanceof DesignViewGraphicalViewer)
+              { 
+                Object input = ((DesignViewGraphicalViewer)viewer).getInput();
+                if (input != selection)
+                {
+                  // Bug 86218 : Don't switch to top level view if the object we're deleting
+                  // is not the input to the viewer
+                  doReselect = false;
+                }
+              }
+            }
+          }
+        }
         command.execute();
         if (model != null && doReselect)
           provider.setSelection(new StructuredSelection(model));
