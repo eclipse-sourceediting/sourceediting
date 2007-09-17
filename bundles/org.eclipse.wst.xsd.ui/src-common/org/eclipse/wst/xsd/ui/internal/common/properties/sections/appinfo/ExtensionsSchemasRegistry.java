@@ -19,10 +19,8 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
-import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalog;
-import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalogEntry;
-import org.eclipse.wst.xml.core.internal.catalog.provisional.INextCatalog;
+import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver;
+import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolverPlugin;
 import org.eclipse.wst.xsd.ui.internal.common.commands.ExtensibleAddExtensionCommand;
 import org.eclipse.wst.xsd.ui.internal.common.commands.ExtensibleRemoveExtensionNodeCommand;
 import org.w3c.dom.Element;
@@ -44,7 +42,6 @@ public class ExtensionsSchemasRegistry
   protected String extensionId;
 
   protected ArrayList nsURIProperties, categoryProviderList;
-  private ICatalog systemCatalog;
   private String deprecatedExtensionId;
   
   public ExtensionsSchemasRegistry(String appinfo_extensionid)
@@ -325,37 +322,9 @@ public class ExtensionsSchemasRegistry
    */
   private String locateFileUsingCatalog(String namespaceURI)
   {
-    retrieveCatalog();
-
-    ICatalogEntry[] entries = systemCatalog.getCatalogEntries();
-    for (int i = 0; i < entries.length; i++)
-    {
-      if (entries[i].getKey().equals(namespaceURI))
-        return entries[i].getURI();
-    }
-
-    return null;
-  }
-
-  private void retrieveCatalog()
-  {
-    if (systemCatalog != null)
-      return;
-
-    ICatalog defaultCatalog = XMLCorePlugin.getDefault().getDefaultXMLCatalog();
-    INextCatalog[] nextCatalogs = defaultCatalog.getNextCatalogs();
-    for (int i = 0; i < nextCatalogs.length; i++)
-    {
-      INextCatalog catalog = nextCatalogs[i];
-      ICatalog referencedCatalog = catalog.getReferencedCatalog();
-      if (referencedCatalog != null)
-      {
-        if (XMLCorePlugin.SYSTEM_CATALOG_ID.equals(referencedCatalog.getId()))
-        {
-          systemCatalog = referencedCatalog;
-        }
-      }
-    }
+    URIResolver resolver = URIResolverPlugin.createResolver();
+    String result = resolver.resolve("", namespaceURI, "");
+    return resolver.resolvePhysicalLocation("", namespaceURI, result);
   }
 
 }
