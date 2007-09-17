@@ -90,8 +90,9 @@ public class XSDSchemaEditPart extends BaseEditPart
   {
     XSDSchemaAdapter schemaAdapter = (XSDSchemaAdapter) getModel();
     List list = new ArrayList();
-    
-    schemaAdapter.updateCategories();
+
+// Bug 103870: undo blanks out schema view    
+//    schemaAdapter.updateCategories();
 
     List templist = new ArrayList();
     templist.add(schemaAdapter.getCategory(CategoryAdapter.DIRECTIVES));
