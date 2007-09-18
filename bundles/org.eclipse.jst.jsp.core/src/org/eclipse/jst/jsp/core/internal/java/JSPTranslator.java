@@ -125,6 +125,7 @@ public class JSPTranslator {
 				"javax.servlet.jsp.JspWriter out = null;" + ENDL + //$NON-NLS-1$
 				"Object page = null;" + ENDL; //$NON-NLS-1$
 
+	private String fSessionVariableDeclaration = "javax.servlet.http.HttpSession session = null;" + ENDL; //$NON-NLS-1$
 	private String fFooter = "}}"; //$NON-NLS-1$
 	private String fException = "Throwable exception = null;"; //$NON-NLS-1$
 	public static final String EXPRESSION_PREFIX = "out.print(\"\"+"; //$NON-NLS-1$
@@ -142,6 +143,7 @@ public class JSPTranslator {
 	private int fCursorPosition = -1;
 	/** some page directive attributes */
 	private boolean fIsErrorPage, fCursorInExpression = false;
+	private boolean fIsInASession = true;
 
 	/** user java code in body of the service method */
 	private StringBuffer fUserCode = new StringBuffer();
@@ -535,6 +537,11 @@ public class JSPTranslator {
 
 		fResult.append(fServiceHeader);
 		javaOffset += fServiceHeader.length();
+		// session participant
+		if(fIsInASession) {
+			fResult.append(fSessionVariableDeclaration);
+			javaOffset += fSessionVariableDeclaration.length();
+		}
 		// error page
 		if (fIsErrorPage) {
 			fResult.append(fException);
@@ -915,7 +922,6 @@ public class JSPTranslator {
 					" javax.servlet.http.HttpServletResponse response)" + ENDL + //$NON-NLS-1$
 					"\t\tthrows java.io.IOException, javax.servlet.ServletException {" + ENDL + //$NON-NLS-1$
 					"javax.servlet.jsp.PageContext pageContext = null;" + ENDL + //$NON-NLS-1$
-					"javax.servlet.http.HttpSession session = null;" + ENDL + //$NON-NLS-1$
 					"javax.servlet.ServletContext application = null;" + ENDL + //$NON-NLS-1$
 					"javax.servlet.ServletConfig config = null;" + ENDL + //$NON-NLS-1$ 
 					"javax.servlet.jsp.JspWriter out = null;" + ENDL + //$NON-NLS-1$
@@ -1909,7 +1915,7 @@ public class JSPTranslator {
 		}
 		else if (attrName.equals("session")) //$NON-NLS-1$
 		{
-			// fSession = ("true".equalsIgnoreCase(attrValue)); //$NON-NLS-1$
+			fIsInASession = "true".equalsIgnoreCase(attrValue); //$NON-NLS-1$
 		}
 		else if (attrName.equals("buffer")) //$NON-NLS-1$
 		{
