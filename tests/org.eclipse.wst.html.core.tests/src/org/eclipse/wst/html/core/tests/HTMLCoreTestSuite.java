@@ -19,6 +19,7 @@ import org.eclipse.wst.html.core.tests.misc.HTMLTagInfoTest;
 import org.eclipse.wst.html.core.tests.model.BUG124835SetStyleAttributeValueTest;
 import org.eclipse.wst.html.core.tests.model.GetOverrideStyleTest;
 import org.eclipse.wst.html.core.tests.model.ModelModifications;
+import org.eclipse.wst.html.core.tests.model.TestCatalogContentModels;
 import org.eclipse.wst.html.core.tests.model.TestForNPEInCSSCreation;
 
 
@@ -45,5 +46,6 @@ public class HTMLCoreTestSuite extends TestSuite {
 		addTest(new TestSuite(GetOverrideStyleTest.class));
 		addTest(new TestSuite(BUG124835SetStyleAttributeValueTest.class));
 		addTest(new TestSuite(TestFormatProcessorHTML.class));
+		addTest(new TestSuite(TestCatalogContentModels.class));
 	}
 }
