@@ -417,4 +417,9 @@ public class XSDComplexTypeDefinitionAdapter extends XSDTypeDefinitionAdapter im
     XSDComplexTypeDefinition xsdComplexTypeDefinition = (XSDComplexTypeDefinition) target;
     return !(xsdComplexTypeDefinition.eContainer() instanceof XSDSchema);
   }
+
+  public IADTObject getTopContainer()
+  {
+    return this;
+  }
 }

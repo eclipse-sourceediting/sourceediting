@@ -12,6 +12,7 @@ package org.eclipse.wst.xsd.ui.internal.adapters;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IActionProvider;
+import org.eclipse.wst.xsd.ui.internal.adt.facade.IADTObject;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IModel;
 import org.eclipse.xsd.XSDAttributeDeclaration;
 import org.eclipse.xsd.XSDAttributeUse;
@@ -86,6 +87,11 @@ public class XSDAttributeUseAdapter extends XSDBaseAttributeAdapter implements I
       return type.getTargetNamespace();
     }
     return "";
+  }
+
+  public IADTObject getTopContainer()
+  {
+    return getGlobalXSDContainer(getXSDAttributeUse());
   }
 
 }

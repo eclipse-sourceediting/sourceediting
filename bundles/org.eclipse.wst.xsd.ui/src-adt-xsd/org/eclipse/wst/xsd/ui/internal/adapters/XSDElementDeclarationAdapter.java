@@ -24,6 +24,7 @@ import org.eclipse.wst.xsd.ui.internal.adt.actions.ShowPropertiesViewAction;
 import org.eclipse.wst.xsd.ui.internal.adt.design.IAnnotationProvider;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IActionProvider;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IGraphElement;
+import org.eclipse.wst.xsd.ui.internal.adt.facade.IADTObject;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IField;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IModel;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IType;
@@ -314,5 +315,14 @@ public class XSDElementDeclarationAdapter extends XSDParticleAdapter implements 
   public boolean isFocusAllowed()
   {
     return isGlobal();
+  }
+
+  public IADTObject getTopContainer()
+  {
+    if (!isGlobal())
+    {
+      return getGlobalXSDContainer(getXSDElementDeclaration());
+    }
+    return null;
   }
 }

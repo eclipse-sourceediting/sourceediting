@@ -19,6 +19,8 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.BaseSelectionAction;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.ShowPropertiesViewAction;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IActionProvider;
+import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IGraphElement;
+import org.eclipse.wst.xsd.ui.internal.adt.facade.IADTObject;
 import org.eclipse.wst.xsd.ui.internal.adt.outline.ITreeElement;
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDAnyElementAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDElementAction;
@@ -38,7 +40,7 @@ import org.eclipse.xsd.XSDWildcard;
 import org.eclipse.xsd.util.XSDConstants;
 import org.w3c.dom.Element;
 
-public class XSDModelGroupAdapter extends XSDParticleAdapter implements IActionProvider
+public class XSDModelGroupAdapter extends XSDParticleAdapter implements IActionProvider, IGraphElement
 {
   XSDModelGroup getXSDModelGroup()
   {
@@ -228,6 +230,17 @@ public class XSDModelGroupAdapter extends XSDParticleAdapter implements IActionP
   public int getMinOccurs()
   {
     return getMinOccurs(getXSDModelGroup());
+  }
+
+  public IADTObject getTopContainer()
+  {
+    XSDModelGroup xsdModelGroup = getXSDModelGroup();
+    return getGlobalXSDContainer(xsdModelGroup);
+  }
+
+  public boolean isFocusAllowed()
+  {
+    return false;
   }
 
 }

@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.swt.graphics.Image;
@@ -202,5 +203,18 @@ public class XSDBaseAdapter extends AdapterImpl implements IADTObject, ITreeElem
     IWorkbenchWindow workbenchWindow = workbench.getActiveWorkbenchWindow();
     IEditorPart editorPart = workbenchWindow.getActivePage().getActiveEditor();
     return editorPart.getAdapter(XSDSchema.class);
+  }
+  
+  protected IADTObject getGlobalXSDContainer(XSDConcreteComponent component)
+  {
+    XSDConcreteComponent c = component.getContainer();
+    while (c != null && !(c.getContainer() instanceof XSDSchema))
+    {
+      c = c.getContainer();
+    }
+    Adapter adapter = XSDAdapterFactory.getInstance().adapt(c);
+    if (adapter instanceof IADTObject)
+      return (IADTObject)adapter;
+    return null;
   }
 }

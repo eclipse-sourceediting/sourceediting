@@ -241,4 +241,9 @@ public class XSDModelGroupDefinitionAdapter extends XSDParticleAdapter implement
     return getMinOccurs(getXSDModelGroupDefinition());
   }
 
+  public IADTObject getTopContainer()
+  {
+    return getGlobalXSDContainer(getXSDModelGroupDefinition());
+  }
+
 }

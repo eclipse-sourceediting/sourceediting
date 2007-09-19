@@ -22,6 +22,7 @@ import org.eclipse.wst.xsd.ui.internal.adt.actions.SetInputToGraphView;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.ShowPropertiesViewAction;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IActionProvider;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IGraphElement;
+import org.eclipse.wst.xsd.ui.internal.adt.facade.IADTObject;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IModel;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IStructure;
 import org.eclipse.wst.xsd.ui.internal.adt.outline.ITreeElement;
@@ -150,6 +151,11 @@ public class XSDAttributeGroupDefinitionAdapter extends XSDBaseAdapter implement
       return false;
     }
     return true;
+  }
+
+  public IADTObject getTopContainer()
+  {
+    return getGlobalXSDContainer(getXSDAttributeGroupDefinition());
   }
   
 

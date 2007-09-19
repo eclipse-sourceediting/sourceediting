@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,6 +18,8 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.BaseSelectionAction;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.ShowPropertiesViewAction;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IActionProvider;
+import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IGraphElement;
+import org.eclipse.wst.xsd.ui.internal.adt.facade.IADTObject;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IField;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IModel;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IType;
@@ -28,7 +30,7 @@ import org.eclipse.xsd.XSDWildcard;
 import org.eclipse.xsd.util.XSDConstants;
 import org.w3c.dom.Element;
 
-public class XSDWildcardAdapter extends XSDParticleAdapter implements IField, IActionProvider
+public class XSDWildcardAdapter extends XSDParticleAdapter implements IField, IActionProvider, IGraphElement
 {
 //  public static final Image ANYELEMENT_ICON = XSDEditorPlugin.getPlugin().getIcon("obj16/XSDAny.gif"); //$NON-NLS-1$
 //  public static final Image ANYELEMENT_DISABLED_ICON = XSDEditorPlugin.getPlugin().getIcon("obj16/XSDAny.gif"); //$NON-NLS-1$
@@ -211,7 +213,6 @@ public class XSDWildcardAdapter extends XSDParticleAdapter implements IField, IA
 
   public boolean isReference()
   {
-    // TODO Auto-generated method stub
     return false;
   }
 
@@ -222,6 +223,16 @@ public class XSDWildcardAdapter extends XSDParticleAdapter implements IField, IA
     actionIDs.add(BaseSelectionAction.SEPARATOR_ID);
     actionIDs.add(ShowPropertiesViewAction.ID);
     return (String [])actionIDs.toArray(new String[0]);
+  }
+
+  public IADTObject getTopContainer()
+  {
+    return getGlobalXSDContainer((XSDWildcard) target);
+  }
+
+  public boolean isFocusAllowed()
+  {
+    return false;
   }
   
 }
