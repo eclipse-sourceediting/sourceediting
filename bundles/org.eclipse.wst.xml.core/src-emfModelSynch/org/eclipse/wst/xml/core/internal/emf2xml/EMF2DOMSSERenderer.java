@@ -18,8 +18,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -199,6 +201,8 @@ public class EMF2DOMSSERenderer extends EMF2DOMRenderer implements IModelStateLi
 	}
 
 	private void deregisterFromXMLModel() {
+		String id = getXMLModel().getId();
+		decrementCacheCount(id);
 		deRegisterAsModelStateListener();
 		deRegisterAsModelLifecycleListener();
 		// This try/catch block is a hack to fix defect 204114. This occurs
@@ -296,6 +300,47 @@ public class EMF2DOMSSERenderer extends EMF2DOMRenderer implements IModelStateLi
 	public String getXMLModelId() {
 		return xmlModelId;
 	}
+	
+	private static int uniqueCount = 0;
+	
+	private static synchronized String getUniqueID(String id){
+		return id+uniqueCount++;
+	}
+	
+	private static WeakHashMap resourceMap = new WeakHashMap();
+	private static HashMap resourceCount = new HashMap();
+	
+	private static synchronized Object getCachedResource(String id){
+		Object obj = resourceMap.get(id);
+		return obj;
+	}
+	
+	private static synchronized void incrementCacheCount(String id, Object resource){
+		resourceMap.put(id, resource);
+		if(resourceCount.containsKey(id)){
+			Integer integer = (Integer)resourceCount.get(id);
+			Integer newInteger = new Integer(integer.intValue() + 1);
+			resourceCount.put(id, newInteger);
+		} else {
+			resourceCount.put(id, new Integer(1));
+		}
+	}
+	
+	private static void decrementCacheCount(String id){
+		if(resourceCount.containsKey(id)){
+			Integer integer = (Integer)resourceCount.get(id);
+			if(integer.intValue() > 1){
+				Integer newInteger = new Integer(integer.intValue() - 1);
+				resourceCount.put(id, newInteger);
+			} else {
+				resourceCount.remove(id);
+				resourceMap.remove(id);
+			}
+		} else {
+			resourceMap.remove(id);
+		}
+	}
+	
 
 	private IDOMModel initializeXMLModel(IFile file, boolean forWrite) throws UnsupportedEncodingException, IOException {
 		if (file == null || !file.exists())
@@ -303,14 +348,24 @@ public class EMF2DOMSSERenderer extends EMF2DOMRenderer implements IModelStateLi
 		try {
 			IModelManager manager = getModelManager();
 			String id = manager.calculateId(file);
+			Object cachedResource = getCachedResource(id);
+			boolean needCopy = false;
+			if(null != cachedResource && cachedResource != resource){
+				needCopy = true;
+			} else {
+				incrementCacheCount(id, resource);
+			}
+			
 			if (forWrite) {
 				IDOMModel mod = (IDOMModel)manager.getExistingModelForEdit(id);
 				if (mod == null)
 					setXMLModel((IDOMModel) manager.getModelForEdit(file));
 				else {
-					if(mod.isShared())
+					if(needCopy)
 						try {
-							setXMLModel((IDOMModel) manager.copyModelForEdit(id, id+System.currentTimeMillis()));
+							String uniqueID = getUniqueID(id);
+							incrementCacheCount(id, resource);
+							setXMLModel((IDOMModel) manager.copyModelForEdit(id, uniqueID));
 						} catch (ResourceInUse e) {
 							Logger.logException(e);
 						}
@@ -323,9 +378,11 @@ public class EMF2DOMSSERenderer extends EMF2DOMRenderer implements IModelStateLi
 				if (mod == null)
 					setXMLModel((IDOMModel) manager.getModelForRead(file));
 				else {
-					if(mod.isShared())
+					if(needCopy)
 						try {
-							setXMLModel((IDOMModel) manager.copyModelForEdit(id, id+System.currentTimeMillis()));
+							String uniqueID = getUniqueID(id);
+							incrementCacheCount(id, resource);
+							setXMLModel((IDOMModel) manager.copyModelForEdit(id, uniqueID));
 						} catch (ResourceInUse e) {
 							Logger.logException(e);
 						}
