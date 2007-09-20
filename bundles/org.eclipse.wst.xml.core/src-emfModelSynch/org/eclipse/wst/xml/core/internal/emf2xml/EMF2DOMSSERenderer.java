@@ -201,8 +201,10 @@ public class EMF2DOMSSERenderer extends EMF2DOMRenderer implements IModelStateLi
 	}
 
 	private void deregisterFromXMLModel() {
-		String id = getXMLModel().getId();
-		decrementCacheCount(id);
+		if (getXMLModel() != null) {
+			String id = getXMLModel().getId();
+			decrementCacheCount(id);
+		}
 		deRegisterAsModelStateListener();
 		deRegisterAsModelLifecycleListener();
 		// This try/catch block is a hack to fix defect 204114. This occurs
