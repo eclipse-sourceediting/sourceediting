@@ -12,8 +12,13 @@ package org.eclipse.wst.html.core.internal.modelquery;
 
 
 
+import java.io.File;
+import java.net.URI;
+
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver;
 import org.eclipse.wst.html.core.internal.Logger;
@@ -185,6 +190,42 @@ public class ModelQueryAdapterFactoryForHTML extends AbstractAdapterFactory {
 				URIResolver idResolver = null;
 				if (resolver != null) {
 					idResolver = new XMLCatalogIdResolver(resolver.getFileBaseLocation(), resolver);
+				}
+				else {
+					/*
+					 * 203649 - this block may be necessary due to ordering of
+					 * setting the resolver into the model
+					 */
+					String baseLocation = null;
+					String modelsBaseLocation = model.getBaseLocation();
+					if (modelsBaseLocation != null) {
+						File file = new Path(modelsBaseLocation).toFile();
+						if (file.exists()) {
+							baseLocation = file.getAbsolutePath();
+						}
+						else {
+							IPath basePath = new Path(model.getBaseLocation());
+							IResource derivedResource = null;
+							if (basePath.segmentCount() > 1)
+								derivedResource = ResourcesPlugin.getWorkspace().getRoot().getFile(basePath);
+							else
+								derivedResource = ResourcesPlugin.getWorkspace().getRoot().getProject(basePath.segment(0));
+							IPath derivedPath = derivedResource.getLocation();
+							if (derivedPath != null) {
+								baseLocation = derivedPath.toString();
+							}
+							else {
+								URI uri = derivedResource.getLocationURI();
+								if (uri != null) {
+									baseLocation = uri.toString();
+								}
+							}
+							if(baseLocation == null) {
+								baseLocation = modelsBaseLocation;
+							}
+						}
+					}
+					idResolver = new XMLCatalogIdResolver(baseLocation, null);
 				}
 				CMDocumentCache documentCache = new CMDocumentCache();
 				ModelQuery modelQuery = new HTMLModelQueryImpl(documentCache, idResolver);
