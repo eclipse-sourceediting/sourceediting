@@ -305,7 +305,7 @@ public class XSDComplexTypeDefinitionAdapter extends XSDTypeDefinitionAdapter im
       Object obj = i.next();
       if (obj instanceof XSDAttributeUse)
       {
-        list.add(obj);
+        list.add(((XSDAttributeUse)obj).getAttributeDeclaration());
       }
       else if (obj instanceof XSDAttributeGroupDefinition)
       {
