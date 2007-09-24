@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,11 +19,13 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDAdapterFactory;
+import org.eclipse.wst.xsd.ui.internal.adapters.XSDAttributeUseAdapter;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDBaseAdapter;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDElementDeclarationAdapter;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDParticleAdapter;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IADTObjectListener;
 import org.eclipse.wst.xsd.ui.internal.text.XSDModelAdapter;
+import org.eclipse.xsd.XSDAttributeUse;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDElementDeclaration;
 
@@ -81,6 +83,12 @@ public class XSDTabbedPropertySheetPage extends TabbedPropertySheetPage implemen
             XSDElementDeclarationAdapter resolvedElementAdapter = (XSDElementDeclarationAdapter)XSDAdapterFactory.getInstance().adapt(elem.getResolvedElementDeclaration());
             resolvedElementAdapter.registerListener(this);
           }
+        }
+        else if (adapter instanceof XSDAttributeUseAdapter)
+        {
+          XSDAttributeUseAdapter attributeUse = (XSDAttributeUseAdapter) adapter;
+          XSDAttributeUse xsdAttrUse = (XSDAttributeUse) attributeUse.getTarget();
+          adapter = (XSDBaseAdapter) XSDAdapterFactory.getInstance().adapt(xsdAttrUse.getAttributeDeclaration());
         }
         adapter.registerListener(this);
         oldSelection = adapter;
