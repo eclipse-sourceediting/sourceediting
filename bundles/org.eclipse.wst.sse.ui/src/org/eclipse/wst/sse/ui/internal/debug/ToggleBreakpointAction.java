@@ -106,16 +106,16 @@ public class ToggleBreakpointAction extends BreakpointRulerAction {
 			}
 		}
 
+		IStatus status = null;
 		if (errors.size() > 0) {
 			Shell shell = editor.getSite().getShell();
-			IStatus status = null;
 			if (errors.size() > 1) {
-				status = new MultiStatus(SSEUIPlugin.ID, IStatus.ERROR, (IStatus[]) errors.toArray(new IStatus[0]), SSEUIMessages.ManageBreakpoints_error_adding_message1, null); //$NON-NLS-1$
+				status = new MultiStatus(SSEUIPlugin.ID, IStatus.OK, (IStatus[]) errors.toArray(new IStatus[0]), SSEUIMessages.ManageBreakpoints_error_adding_message1, null); //$NON-NLS-1$
 			}
 			else {
 				status = (IStatus) errors.get(0);
 			}
-			if (status.getSeverity() > IStatus.OK) {
+			if ((status.getSeverity() > IStatus.INFO) || (Platform.inDebugMode() && !status.isOK())) {
 				Platform.getLog(SSEUIPlugin.getDefault().getBundle()).log(status);
 			}
 			/*
@@ -123,7 +123,7 @@ public class ToggleBreakpointAction extends BreakpointRulerAction {
 			 * breakpoints were created
 			 */
 			if (status.getSeverity() > IStatus.INFO || getBreakpoints(getMarkers()).length < 1) {
-				ErrorDialog.openError(shell, SSEUIMessages.ManageBreakpoints_error_adding_title1, null, status); //$NON-NLS-1$ //$NON-NLS-2$
+				ErrorDialog.openError(shell, SSEUIMessages.ManageBreakpoints_error_adding_title1, status.getMessage(), status); //$NON-NLS-1$ //$NON-NLS-2$
 				return false;
 			}
 		}
@@ -131,7 +131,7 @@ public class ToggleBreakpointAction extends BreakpointRulerAction {
 		 * Although no errors were reported, no breakpoints exist on this line
 		 * after having run the existing providers. Run the fallback action.
 		 */
-		else if (fFallbackAction != null && !hasMarkers()) {
+		if ((status == null || status.getSeverity() < IStatus.WARNING) && fFallbackAction != null && !hasMarkers()) {
 			if (fFallbackAction instanceof ISelectionListener) {
 				((ISelectionListener) fFallbackAction).selectionChanged(null, null);
 			}
