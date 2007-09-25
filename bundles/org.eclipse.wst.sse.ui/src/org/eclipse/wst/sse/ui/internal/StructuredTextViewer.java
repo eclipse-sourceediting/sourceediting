@@ -508,7 +508,14 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 		if (doc instanceof IStructuredDocument) {
 			IStructuredDocument structuredDocument = (IStructuredDocument) doc;
 			IStructuredTextUndoManager undoManager = structuredDocument.getUndoManager();
-			undoManager.endRecording(this, cursorPosition, selectionLength);
+			
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=198617
+			// undo after paste in document with folds - wrong behavior
+			IRegion widgetSelection = new Region(cursorPosition, selectionLength);
+			IRegion documentSelection = widgetRange2ModelRange(widgetSelection);
+			if (documentSelection == null)
+				documentSelection = widgetSelection;
+			undoManager.endRecording(this, documentSelection.getOffset(), documentSelection.getLength());
 		}
 		else {
 			// TODO: how to handle other document types?
@@ -520,7 +527,14 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 		if (doc instanceof IStructuredDocument) {
 			IStructuredDocument structuredDocument = (IStructuredDocument) doc;
 			IStructuredTextUndoManager undoManager = structuredDocument.getUndoManager();
-			undoManager.beginRecording(this, label, description, cursorPosition, selectionLength);
+			
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=198617
+			// undo after paste in document with folds - wrong behavior
+			IRegion widgetSelection = new Region(cursorPosition, selectionLength);
+			IRegion documentSelection = widgetRange2ModelRange(widgetSelection);
+			if (documentSelection == null)
+				documentSelection = widgetSelection;
+			undoManager.beginRecording(this, label, description, documentSelection.getOffset(), documentSelection.getLength());
 		}
 		else {
 			// TODO: how to handle other document types?
