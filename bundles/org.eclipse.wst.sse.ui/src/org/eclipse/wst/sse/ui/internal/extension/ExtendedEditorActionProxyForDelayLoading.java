@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -37,7 +37,9 @@ public class ExtendedEditorActionProxyForDelayLoading implements IExtendedEditor
     private String p_id;
     private boolean set_p_id;
     private String p_text;
+    private String p_description;
     private boolean set_p_text;
+    private boolean set_p_description;
     private String p_toolTipText;
     private boolean set_p_toolTipText;
     private String p_actionDefinitionId;
@@ -120,11 +122,10 @@ public class ExtendedEditorActionProxyForDelayLoading implements IExtendedEditor
     public String getDescription() {
         //        System.out.println(p_id + ": getDescription");
         //        System.out.flush();
-        realize();
         if (proxy != null) {
             return proxy.getDescription();
         }
-        return null;
+        return p_description;
     }
 
     /*
@@ -253,6 +254,17 @@ public class ExtendedEditorActionProxyForDelayLoading implements IExtendedEditor
         }
         return p_toolTipText;
     }
+    
+	/**
+	 * Check if the contributing bundle is active
+	 */
+	public boolean isBundleActive() {
+		Bundle bundle = Platform.getBundle(element.getDeclaringExtension().getNamespace());
+		if (bundle != null && bundle.getState() != Bundle.ACTIVE) {
+			return false;
+		}
+		return true;
+	}
 
     /*
      * (non-Javadoc)
@@ -377,14 +389,15 @@ public class ExtendedEditorActionProxyForDelayLoading implements IExtendedEditor
      * 
      * @see org.eclipse.jface.action.IAction#setDescription(java.lang.String)
      */
-    public void setDescription(String text) {
-        //        System.out.println(p_id + ": setDescription");
-        //        System.out.flush();
-        realize();
+    public void setDescription(String description) {
+        p_description = description;
+        set_p_description = true;
+        // don't realize class.
+        // realize();
         if (proxy != null) {
-            proxy.setDescription(text);
+            proxy.setDescription(description);
         } else {
-        	dummy.setDescription(text);
+        	dummy.setDescription(description);
         }
     }
 
@@ -694,6 +707,11 @@ public class ExtendedEditorActionProxyForDelayLoading implements IExtendedEditor
 	            if (set_p_text == true) {
 	                if (p_text != null) {
 	                    proxy.setText(p_text);
+	                }
+	            }
+	            if (set_p_description == true) {
+	                if (p_description != null) {
+	                    proxy.setDescription(p_description);
 	                }
 	            }
 	            if (set_p_toolTipText == true) {
