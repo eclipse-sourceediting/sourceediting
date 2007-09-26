@@ -401,11 +401,11 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 			case CONTENTASSIST_CONTEXT_INFORMATION :
 				if (fContentAssistant != null) {
 					String err = fContentAssistant.showContextInformation();
-					PlatformStatusLineUtil.displayErrorMessage(err);
+					if (err != null) {
+						// don't wanna beep if there is no error
+						PlatformStatusLineUtil.displayErrorMessage(err);
+					}
 					PlatformStatusLineUtil.addOneTimeClearListener();
-					// setErrorMessage(err);
-					// new OneTimeListener(getTextWidget(), new
-					// ClearErrorMessage());
 				}
 				break;
 			case SHIFT_RIGHT :

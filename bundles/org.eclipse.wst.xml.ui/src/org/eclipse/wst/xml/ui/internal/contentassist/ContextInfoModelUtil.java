@@ -58,7 +58,8 @@ public class ContextInfoModelUtil {
 			xmlNode = (IDOMNode) xmlModel.getIndexedRegion(offset);
 		}
 		finally {
-			xmlModel.releaseFromRead();
+			if (xmlModel != null)
+				xmlModel.releaseFromRead();
 		}
 		return xmlNode;
 	}
