@@ -53,6 +53,7 @@ import org.eclipse.wst.xml.ui.internal.actions.NodeAction;
 import org.eclipse.wst.xml.ui.internal.contentoutline.XMLNodeActionManager;
 import org.eclipse.wst.xml.ui.internal.dnd.DragNodeCommand;
 import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
 public class XMLTableTreeViewer extends TreeViewer implements IDesignViewer {
@@ -102,21 +103,27 @@ public class XMLTableTreeViewer extends TreeViewer implements IDesignViewer {
 				IStructuredSelection structuredSelection = (IStructuredSelection) selection;
 				if (selection instanceof ITextSelection) {
 					ITextSelection textSelection = (ITextSelection) selection;
+					
 					if (structuredSelection.size() == 1) {
 						if (structuredSelection.getFirstElement() instanceof IDOMNode) {
 							IDOMNode domNode = (IDOMNode) structuredSelection.getFirstElement();
 							IStructuredDocumentRegion startStructuredDocumentRegion = domNode.getStartStructuredDocumentRegion();
 							if (startStructuredDocumentRegion != null) {
 								ITextRegion matchingRegion = startStructuredDocumentRegion.getRegionAtCharacterOffset(textSelection.getOffset());
-								while (matchingRegion != null && !matchingRegion.getType().equals(DOMRegionContext.XML_TAG_ATTRIBUTE_NAME)) {
+								int allowedIterations = 40;
+								while (matchingRegion != null && !matchingRegion.getType().equals(DOMRegionContext.XML_TAG_ATTRIBUTE_NAME) && allowedIterations > 0) {
 									matchingRegion = startStructuredDocumentRegion.getRegionAtCharacterOffset(startStructuredDocumentRegion.getStartOffset(matchingRegion) - 1);
+									allowedIterations--;
 								}
 								if (matchingRegion != null && matchingRegion.getType().equals(DOMRegionContext.XML_TAG_ATTRIBUTE_NAME)) {
 									String attrName = startStructuredDocumentRegion.getText(matchingRegion);
-									Node attr = domNode.getAttributes().getNamedItem(attrName);
-									if (attr != null) {
-										selectionSet = true;
-										XMLTableTreeViewer.this.setSelection(new StructuredSelection(attr));
+									NamedNodeMap attributes = domNode.getAttributes();
+									if (attributes != null && attrName.length() > 0) {
+										Node attr = attributes.getNamedItem(attrName);
+										if (attr != null) {
+											selectionSet = true;
+											XMLTableTreeViewer.this.setSelection(new StructuredSelection(attr));
+										}
 									}
 								}
 							}
@@ -131,8 +138,6 @@ public class XMLTableTreeViewer extends TreeViewer implements IDesignViewer {
 	}
 
 	protected CellEditor cellEditor;
-
-	int count = 0;
 
 	protected XMLTreeExtension treeExtension;
 	
