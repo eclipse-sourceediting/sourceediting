@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -317,6 +317,14 @@ public abstract class XMLSearchParticipant extends SearchParticipant {
         return true;
       
       String fileProtocol = "file:///";             //$NON-NLS-1$
+      
+      // Fix for bug 204174 - Begin
+      if(target.charAt(fileProtocol.length()) == '/')  //$NON-NLS-1$
+      {
+          target = fileProtocol + target.substring(fileProtocol.length() + 1);
+      }
+      // Fix for bug 204174 - End
+            
       if (source.startsWith(fileProtocol))
       {    
         
