@@ -32,7 +32,7 @@ import org.eclipse.core.runtime.Path;
  * already been acquired.
  */
 public final class FacetModuleCoreSupport {
-	static final boolean _dump_NCDFE = true;
+	static final boolean _dump_NCDFE = false;
 	private static final String WEB_INF = "WEB-INF"; //$NON-NLS-1$
 	private static final IPath WEB_INF_PATH = new Path(WEB_INF);
 
