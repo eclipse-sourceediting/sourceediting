@@ -36,8 +36,11 @@ import org.eclipse.wst.common.project.facet.core.ProjectFacetsManager;
 final class FacetModuleCoreSupportDelegate {
 	private static final String SLASH = "/";
 
-	/*
-	 * org.eclipse.wst.common.componentcore.internal.util.IModuleConstants.JST_WEB_MODULE
+	/**
+	 * Copied to avoid unneeded extra dependency (plus it's unclear why the
+	 * value is in that plug-in).
+	 * 
+	 * @see org.eclipse.wst.common.componentcore.internal.util.IModuleConstants.JST_WEB_MODULE
 	 */
 	private final static String JST_WEB_MODULE = "jst.web"; //$NON-NLS-1$
 
@@ -133,7 +136,7 @@ final class FacetModuleCoreSupportDelegate {
 	static IPath resolve(IPath basePath, String reference) {
 		if (reference == null || basePath == null || basePath.segmentCount() == 0)
 			return null;
-		
+
 		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(basePath.segment(0));
 
 		if (!ModuleCoreNature.isFlexibleProject(project))

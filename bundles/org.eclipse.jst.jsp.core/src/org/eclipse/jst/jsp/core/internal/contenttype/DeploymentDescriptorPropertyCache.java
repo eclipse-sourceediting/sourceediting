@@ -60,7 +60,7 @@ import org.xml.sax.SAXParseException;
  * A cache fo property group information stored in web.xml files. Information
  * is not persisted.
  */
-public class DeploymentDescriptorPropertyCache {
+public final class DeploymentDescriptorPropertyCache {
 	private static final PropertyGroup[] NO_PROPERTY_GROUPS = new PropertyGroup[0];
 
 	private static class DeploymentDescriptor {
@@ -583,10 +583,16 @@ public class DeploymentDescriptorPropertyCache {
 		return _instance;
 	}
 
+	/**
+	 * This method is not meant to be called by clients.
+	 */
 	public static void start() {
 		ResourcesPlugin.getWorkspace().addResourceChangeListener(getInstance().fResourceChangeListener, IResourceChangeEvent.POST_CHANGE);
 	}
 
+	/**
+	 * This method is not meant to be called by clients.
+	 */
 	public static void stop() {
 		ResourcesPlugin.getWorkspace().removeResourceChangeListener(getInstance().fResourceChangeListener);
 	}
@@ -598,7 +604,6 @@ public class DeploymentDescriptorPropertyCache {
 	private IResourceChangeListener fResourceChangeListener = new ResourceChangeListener();
 
 	private EntityResolver resolver;
-
 
 	private DeploymentDescriptorPropertyCache() {
 		super();
