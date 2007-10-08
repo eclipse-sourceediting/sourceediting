@@ -293,22 +293,26 @@ public class CMElementDeclarationImpl implements TLDElementDeclaration {
 	 * 
 	 */
 	public Object getProperty(String propertyName) {
-		if (propertyName != null && propertyName.equals("tagInfo")) { //$NON-NLS-1$
+		if ("tagInfo".equals(propertyName)) { //$NON-NLS-1$
 			return getTagInfo(); // return tag info
 			// bug88336 no need to restore markers
 			// return StringUtils.restoreMarkers(getTagInfo()); // return tag
 			// description
 		}
-		else if (propertyName != null && propertyName.equals("description")) { //$NON-NLS-1$
+		// Bug 155800
+		else if ("name".equals(propertyName)) { //$NON-NLS-1$
+			return getNodeName();
+		}
+		else if ("description".equals(propertyName)) { //$NON-NLS-1$
 			return getDescription();
 			// bug88336 no need to restore markers
 			// return StringUtils.restoreMarkers(getDescription()); // return
 			// tag description
 		}
-		else if (propertyName.equals(TLDDocument.CM_KIND)) {
+		else if (TLDDocument.CM_KIND.equals(propertyName)) {
 			return TLDDocument.JSP_TLD;
 		}
-		else if (propertyName.equals(JSP12TLDNames.SMALL_ICON) || propertyName.equals(JSP12TLDNames.LARGE_ICON)) {
+		else if (JSP12TLDNames.SMALL_ICON.equals(propertyName) || JSP12TLDNames.LARGE_ICON.equals(propertyName)) {
 			if (smallIconURL != null) {
 				return smallIconURL;
 			}
