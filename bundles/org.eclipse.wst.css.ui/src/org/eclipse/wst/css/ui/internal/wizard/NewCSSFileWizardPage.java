@@ -19,7 +19,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
@@ -28,16 +27,10 @@ import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.dialogs.WizardNewFileCreationPage;
-import org.eclipse.wst.common.componentcore.ComponentCore;
-import org.eclipse.wst.common.componentcore.internal.util.IModuleConstants;
-import org.eclipse.wst.common.componentcore.resources.IVirtualComponent;
-import org.eclipse.wst.common.project.facet.core.IFacetedProject;
-import org.eclipse.wst.common.project.facet.core.ProjectFacetsManager;
 import org.eclipse.wst.css.core.internal.CSSCorePlugin;
 import org.eclipse.wst.css.core.internal.preferences.CSSCorePreferenceNames;
 import org.eclipse.wst.css.core.internal.provisional.contenttype.ContentTypeIdForCSS;
 import org.eclipse.wst.css.ui.internal.CSSUIMessages;
-import org.eclipse.wst.css.ui.internal.Logger;
 
 class NewCSSFileWizardPage extends WizardNewFileCreationPage {
 
@@ -216,20 +209,7 @@ class NewCSSFileWizardPage extends WizardNewFileCreationPage {
 	 * @return true if the project is web project, otherwise false
 	 */
 	private boolean isWebProject(IProject project) {
-		IFacetedProject faceted = null;
-		try {
-			faceted = ProjectFacetsManager.create(project);
-		} catch (CoreException e) {
-			Logger.log(Logger.WARNING_DEBUG, e.getMessage(), e);
-		}
-		
-		if (faceted != null && 
-			(faceted.hasProjectFacet(ProjectFacetsManager.getProjectFacet(IModuleConstants.WST_WEB_MODULE)) || 
-			 faceted.hasProjectFacet(ProjectFacetsManager.getProjectFacet(IModuleConstants.JST_WEB_MODULE)))) {
-			return true;
-		}
-		
-		return false;
+		return FacetModuleCoreSupport.isWebProject(project);
 	}
 	
 	/**
@@ -239,14 +219,7 @@ class NewCSSFileWizardPage extends WizardNewFileCreationPage {
 	 * @return IPath of the web contents folder
 	 */
 	private IPath getWebContentPath(IProject project) {
-		IPath path = null;
-		
-		if (project != null && isWebProject(project)) {			
-			IVirtualComponent component = ComponentCore.createComponent(project);
-			path = component.getRootFolder().getWorkspaceRelativePath();
-		}
-		
-		return path;
+		return FacetModuleCoreSupport.getWebContentRootPath(project);
 	}
 
 }
