@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,15 +26,32 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 
 public class TestCSSDecl extends TestCase {
-	public void testDecl() {
+	// commenting out this test because decl.setCssText() is not an implemented method
+//	public void testDecl() {
+//		CSSPropertyContext context = new CSSPropertyContext();
+//		ICSSStyleDeclaration decl = CSSStyleDeclarationFactory.getInstance().createStyleDeclaration();
+//		context.initialize(decl);
+//		decl.setCssText(getString() != null ? getString() : "");//$NON-NLS-1$
+//	}
+//	private String getString() {
+//		return "body {}";
+//	}
+	
+	public void testStandaloneCSSDecl() {
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=202615
 		CSSPropertyContext context = new CSSPropertyContext();
 		ICSSStyleDeclaration decl = CSSStyleDeclarationFactory.getInstance().createStyleDeclaration();
 		context.initialize(decl);
-		decl.setCssText(getString() != null ? getString() : "");//$NON-NLS-1$
-	}
+		String cssText = decl.getCssText();
+		assertEquals("standalone css node was not initialized", "", cssText); //$NON-NLS-1$ //$NON-NLS-2$
 
-	private String getString() {
-		return "body {}";
+		context.setMargin("auto"); //$NON-NLS-1$
+		context.setColor("red"); //$NON-NLS-1$
+		context.setBorder("thick"); //$NON-NLS-1$
+		context.applyFull(decl);
+		cssText = decl.getCssText();
+		String expected = "color: red; border: thick; margin: auto"; //$NON-NLS-1$
+		assertEquals("standalone css node's properties were not set as expected", expected, cssText);  //$NON-NLS-1$
 	}
 
 	public void testCSSStyleDeclItem() {
@@ -86,8 +103,7 @@ public class TestCSSDecl extends TestCase {
 
 			IStructuredDocumentRegion region = structuredDocument.getFirstStructuredDocumentRegion();
 			assertNotNull(region);
-		}
-		finally {
+		} finally {
 			if (model != null) {
 				model.releaseFromEdit();
 			}

@@ -20,6 +20,7 @@ import org.eclipse.wst.css.core.tests.model.CSSMediaRuleTest;
 import org.eclipse.wst.css.core.tests.model.CSSPageRuleTest;
 import org.eclipse.wst.css.core.tests.model.CSSStyleRuleTest;
 import org.eclipse.wst.css.core.tests.model.CSSStyleSheetTest;
+import org.eclipse.wst.css.core.tests.model.TestCSSDecl;
 import org.eclipse.wst.css.core.tests.source.CSSSelectorTest;
 import org.eclipse.wst.css.core.tests.source.CSSSourceParserTest;
 import org.eclipse.wst.css.core.tests.source.CSSTextParserTest;
@@ -54,5 +55,6 @@ public class CSSAllTests extends TestSuite {
 		suite.addTestSuite(CSSFontFaceRuleTest.class);
 		suite.addTestSuite(TestFormatProcessorCSS.class);
 		suite.addTestSuite(TestCleanupProcessorCSS.class);
+		suite.addTestSuite(TestCSSDecl.class);
 	}
 }
