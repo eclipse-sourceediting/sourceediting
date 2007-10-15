@@ -329,7 +329,7 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
         return page;
       }
     }
-    else if (type == XSDElementReferenceEditManager.class)
+    else if (type == XSDAttributeReferenceEditManager.class)
     {
     	IEditorInput editorInput = getEditorInput();
     	if (editorInput instanceof IFileEditorInput)
@@ -342,8 +342,24 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
     		// an array of schemas
     		// hmm.. perhaps just pass in a ResourceSet
     		XSDSchema[] schemas = {xsdSchema};
-    		return new XSDElementReferenceEditManager(fileEditorInput.getFile(), schemas);
+    		return new XSDAttributeReferenceEditManager(fileEditorInput.getFile(), schemas);
     	}
+    }
+    else if (type == XSDElementReferenceEditManager.class)
+    {
+      IEditorInput editorInput = getEditorInput();
+      if (editorInput instanceof IFileEditorInput)
+      {
+        IFileEditorInput fileEditorInput = (IFileEditorInput) editorInput;
+        // TODO (cs) currently we assume the schema editor will only ever edit a
+        // single schema
+        /// but if we want to enable the schema editor to edit wsdl files we
+        // should pass in
+        // an array of schemas
+        // hmm.. perhaps just pass in a ResourceSet
+        XSDSchema[] schemas = {xsdSchema};
+        return new XSDElementReferenceEditManager(fileEditorInput.getFile(), schemas);
+      }
     }
     else if (type == XSDTypeReferenceEditManager.class)
     {

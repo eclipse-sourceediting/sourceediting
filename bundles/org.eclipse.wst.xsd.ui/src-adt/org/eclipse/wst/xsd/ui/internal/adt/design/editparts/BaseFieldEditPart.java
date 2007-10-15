@@ -52,8 +52,6 @@ public class BaseFieldEditPart extends BaseTypeConnectingEditPart implements INa
 {
   protected TypeReferenceConnection connectionFigure;
   protected ADTDirectEditPolicy adtDirectEditPolicy = new ADTDirectEditPolicy();
-  protected TypeUpdateCommand typeUpdateCommand = new TypeUpdateCommand();
-  protected ElementReferenceUpdateCommand elementUpdateCommand = new ElementReferenceUpdateCommand();
   protected TypeReferenceConnection connectionFeedbackFigure;
   
   protected IFigure createFigure()
@@ -253,6 +251,7 @@ public class BaseFieldEditPart extends BaseTypeConnectingEditPart implements INa
         if (hitTest(fieldFigure.getTypeLabel(), p))
         {
           TypeReferenceDirectEditManager manager = new TypeReferenceDirectEditManager((IField)model, this, fieldFigure.getTypeLabel());
+          TypeUpdateCommand typeUpdateCommand = new TypeUpdateCommand();
           typeUpdateCommand.setDelegate(manager);
           adtDirectEditPolicy.setUpdateCommand(typeUpdateCommand);
           manager.show();
@@ -268,15 +267,17 @@ public class BaseFieldEditPart extends BaseTypeConnectingEditPart implements INa
     }
   }
   
-  private void directEditNameField() {
-	Object model = getModel();
-	IFieldFigure fieldFigure = getFieldFigure();
+  protected void directEditNameField()
+  {
+	  Object model = getModel();
+	  IFieldFigure fieldFigure = getFieldFigure();
   	if ( model instanceof IField) 
     {
       IField field = (IField) model;
       if (field.isReference())
       {
         ElementReferenceDirectEditManager manager = new ElementReferenceDirectEditManager((IField) model, this, fieldFigure.getNameLabel());
+        ReferenceUpdateCommand elementUpdateCommand = new ReferenceUpdateCommand();
         elementUpdateCommand.setDelegate(manager);
         adtDirectEditPolicy.setUpdateCommand(elementUpdateCommand);
         manager.show();
@@ -316,7 +317,7 @@ public class BaseFieldEditPart extends BaseTypeConnectingEditPart implements INa
 
   }
   
-  class NameUpdateCommandWrapper extends Command implements IADTUpdateCommand
+  protected class NameUpdateCommandWrapper extends Command implements IADTUpdateCommand
   {
     Command command;
     protected DirectEditRequest request;
@@ -384,12 +385,12 @@ public class BaseFieldEditPart extends BaseTypeConnectingEditPart implements INa
     }
   }
   
-  class ElementReferenceUpdateCommand extends Command implements IADTUpdateCommand
+  protected class ReferenceUpdateCommand extends Command implements IADTUpdateCommand
   {
 	    protected ComboBoxCellEditorManager delegate;
 	    protected DirectEditRequest request;
 	    
-	    public ElementReferenceUpdateCommand()
+	    public ReferenceUpdateCommand()
 	    {
 	      super(Messages._UI_ACTION_UPDATE_ELEMENT_REFERENCE);
 	    }

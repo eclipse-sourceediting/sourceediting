@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -27,6 +27,7 @@ public class XSDSearchListDialogDelegate implements IComponentDialog
 {
   public final static QualifiedName TYPE_META_NAME = new QualifiedName(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001, "type"); //$NON-NLS-1$
   public final static QualifiedName ELEMENT_META_NAME = new QualifiedName(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001, "element"); //$NON-NLS-1$
+  public final static QualifiedName ATTRIBUTE_META_NAME = new QualifiedName(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001, "attribute"); //$NON-NLS-1$
   // protected Object setObject;
   protected ComponentSpecification selection;
   protected IFile currentFile;
@@ -83,6 +84,18 @@ public class XSDSearchListDialogDelegate implements IComponentDialog
 //        configuration.setNewComponentHandler(new NewElementButtonHandler());
         //TODO externalize string
         dialog = new ScopedComponentSearchListDialog(shell, Messages._UI_LABEL_SET_ELEMENT_REFERENCE, configuration);     
+    }
+    else if ( metaName == ATTRIBUTE_META_NAME)
+    {
+      XSDComponentDescriptionProvider descriptionProvider = new XSDComponentDescriptionProvider();
+      final XSDAttributeSearchListProvider searchListProvider = new XSDAttributeSearchListProvider(currentFile, schemas);
+      ComponentSearchListDialogConfiguration configuration = new ComponentSearchListDialogConfiguration();
+      
+        configuration.setDescriptionProvider(descriptionProvider);
+        configuration.setSearchListProvider(searchListProvider);
+        configuration.setFilterLabelText(Messages._UI_LABEL_NAME_SEARCH_FILTER_TEXT);
+        configuration.setListLabelText(Messages._UI_LABEL_ATTRIBUTES_COLON);
+        dialog = new ScopedComponentSearchListDialog(shell, Messages._UI_LABEL_SET_ATTRIBUTE_REFERENCE, configuration);     
     }
     else if (metaName == TYPE_META_NAME)
     {

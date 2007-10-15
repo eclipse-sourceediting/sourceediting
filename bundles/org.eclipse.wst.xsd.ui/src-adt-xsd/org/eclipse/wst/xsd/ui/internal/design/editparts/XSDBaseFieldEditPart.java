@@ -14,8 +14,15 @@ import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.wst.xsd.ui.internal.adapters.XSDAttributeDeclarationAdapter;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDBaseAdapter;
+import org.eclipse.wst.xsd.ui.internal.adapters.XSDElementDeclarationAdapter;
 import org.eclipse.wst.xsd.ui.internal.adt.design.IAnnotationProvider;
+import org.eclipse.wst.xsd.ui.internal.adt.design.directedit.AttributeReferenceDirectEditManager;
+import org.eclipse.wst.xsd.ui.internal.adt.design.directedit.ElementReferenceDirectEditManager;
+import org.eclipse.wst.xsd.ui.internal.adt.design.directedit.LabelCellEditorLocator;
+import org.eclipse.wst.xsd.ui.internal.adt.design.directedit.LabelEditManager;
+import org.eclipse.wst.xsd.ui.internal.adt.design.directedit.ReferenceDirectEditManager;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.BaseFieldEditPart;
 import org.eclipse.wst.xsd.ui.internal.adt.design.figures.IFieldFigure;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IField;
@@ -95,5 +102,41 @@ public class XSDBaseFieldEditPart extends BaseFieldEditPart
     super.createEditPolicies();
     installEditPolicy(EditPolicy.SELECTION_FEEDBACK_ROLE, selectionHandlesEditPolicy);
     installEditPolicy(EditPolicy.PRIMARY_DRAG_ROLE, new DragAndDropEditPolicy(getViewer(), selectionHandlesEditPolicy));
+  }
+  
+  protected void directEditNameField()
+  {
+    Object model = getModel();
+    IFieldFigure fieldFigure = getFieldFigure();
+    if ( model instanceof IField) 
+    {
+      IField field = (IField) model;
+      if (field.isReference())
+      {
+        ReferenceDirectEditManager manager = null;
+        if (field instanceof XSDElementDeclarationAdapter)
+        {
+          manager = new ElementReferenceDirectEditManager((IField) model, this, fieldFigure.getNameLabel());
+        }
+        else if (field instanceof XSDAttributeDeclarationAdapter)
+        {
+          manager = new AttributeReferenceDirectEditManager((IField) model, this, fieldFigure.getNameLabel());
+        }
+        if (manager != null)
+        {
+          ReferenceUpdateCommand elementUpdateCommand = new ReferenceUpdateCommand();
+          elementUpdateCommand.setDelegate(manager);
+          adtDirectEditPolicy.setUpdateCommand(elementUpdateCommand);
+          manager.show();
+        }
+      }
+      else
+      {
+        LabelEditManager manager = new LabelEditManager(this, new LabelCellEditorLocator(this, null));
+        NameUpdateCommandWrapper wrapper = new NameUpdateCommandWrapper();
+        adtDirectEditPolicy.setUpdateCommand(wrapper);
+        manager.show();
+      }
+    }
   }
 }

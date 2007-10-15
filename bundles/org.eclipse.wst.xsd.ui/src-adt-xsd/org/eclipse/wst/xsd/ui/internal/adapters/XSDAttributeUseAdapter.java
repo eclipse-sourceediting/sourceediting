@@ -94,4 +94,8 @@ public class XSDAttributeUseAdapter extends XSDBaseAttributeAdapter implements I
     return getGlobalXSDContainer(getXSDAttributeUse());
   }
 
+  public boolean isReference()
+  {
+    return getXSDAttributeUse().getAttributeDeclaration().isAttributeDeclarationReference();
+  }
 }

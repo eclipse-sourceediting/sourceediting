@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,6 +22,7 @@ import org.eclipse.wst.common.ui.internal.search.dialogs.ComponentSpecification;
 import org.eclipse.wst.common.ui.internal.search.dialogs.IComponentDescriptionProvider;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.internal.search.IXSDSearchConstants;
+import org.eclipse.xsd.XSDAttributeDeclaration;
 import org.eclipse.xsd.XSDComplexTypeDefinition;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDElementDeclaration;
@@ -41,6 +42,7 @@ public class XSDComponentDescriptionProvider extends LabelProvider implements IC
   private static final Image SIMPLE_TYPE_IMAGE =  XSDEditorPlugin.getXSDImage("icons/XSDSimpleType.gif");
   private static final Image COMPLEX_TYPE_IMAGE = XSDEditorPlugin.getXSDImage("icons/XSDComplexType.gif");
   private static final Image ELEMENT_IMAGE = XSDEditorPlugin.getXSDImage("icons/XSDElement.gif");
+  private static final Image ATTRIBUTE_IMAGE = XSDEditorPlugin.getXSDImage("icons/XSDAttribute.gif");
   //private final static Image BUILT_IN_TYPE)IMAGE = 
     
   public String getQualifier(Object component)
@@ -172,6 +174,8 @@ public class XSDComponentDescriptionProvider extends LabelProvider implements IC
     		  result = COMPLEX_TYPE_IMAGE;
     	  else if ( qualifiedName.equals(IXSDSearchConstants.ELEMENT_META_NAME))
     		  result = ELEMENT_IMAGE;
+    	  else if ( qualifiedName.equals(IXSDSearchConstants.ATTRIBUTE_META_NAME))
+    	    result = ATTRIBUTE_IMAGE;
       }
     }      
     else if (component instanceof XSDComplexTypeDefinition)
@@ -180,6 +184,8 @@ public class XSDComponentDescriptionProvider extends LabelProvider implements IC
       result = SIMPLE_TYPE_IMAGE;
     else if (component instanceof XSDElementDeclaration)
       result = ELEMENT_IMAGE;
+    else if (component instanceof XSDAttributeDeclaration)
+      result = ATTRIBUTE_IMAGE;
     return result;
   }
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,7 @@ package org.eclipse.wst.xsd.ui.internal.common.properties.sections;
 
 import org.apache.xerces.util.XMLChar;
 import org.eclipse.gef.commands.Command;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
@@ -22,9 +23,11 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.common.ui.internal.search.dialogs.ComponentSpecification;
 import org.eclipse.wst.xsd.ui.internal.adt.edit.ComponentReferenceEditManager;
@@ -32,6 +35,7 @@ import org.eclipse.wst.xsd.ui.internal.adt.edit.IComponentDialog;
 import org.eclipse.wst.xsd.ui.internal.common.commands.UpdateNameCommand;
 import org.eclipse.wst.xsd.ui.internal.dialogs.NewTypeDialog;
 import org.eclipse.wst.xsd.ui.internal.editor.Messages;
+import org.eclipse.wst.xsd.ui.internal.editor.XSDAttributeReferenceEditManager;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorCSHelpIds;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDTypeReferenceEditManager;
@@ -44,9 +48,9 @@ import org.w3c.dom.Element;
 public class XSDAttributeDeclarationSection extends RefactoringSection
 {
   protected Text nameText, defaultOrFixedText;
-  protected CCombo typeCombo, usageCombo, formCombo;
+  protected CCombo componentNameCombo, typeCombo, usageCombo, formCombo;
   protected Button defaultButton, fixedButton;
-  protected String typeName = ""; //$NON-NLS-1$
+  protected String typeName = "", refName = ""; //$NON-NLS-1$
   boolean isAttributeReference;
   
   public XSDAttributeDeclarationSection()
@@ -81,6 +85,7 @@ public class XSDAttributeDeclarationSection extends RefactoringSection
     data.horizontalAlignment = GridData.FILL;
     nameText = getWidgetFactory().createText(composite, ""); //$NON-NLS-1$
     nameText.setLayoutData(data);
+    nameText.setEnabled(!isAttributeReference);
     applyAllListeners(nameText);
     
     PlatformUI.getWorkbench().getHelpSystem().setHelp(nameText,
@@ -90,7 +95,37 @@ public class XSDAttributeDeclarationSection extends RefactoringSection
     // Refactor/rename hyperlink
     // ------------------------------------------------------------------
     createRenameHyperlink(composite);
+    setRenameHyperlinkEnabled(!isAttributeReference);
 
+    // ------------------------------------------------------------------
+    // Ref Label
+    // ------------------------------------------------------------------
+    if (isAttributeReference)
+    {
+      data = new GridData();
+      data.horizontalAlignment = GridData.HORIZONTAL_ALIGN_BEGINNING;
+      data.grabExcessHorizontalSpace = false;
+      CLabel refLabel = getWidgetFactory().createCLabel(composite, org.eclipse.wst.xsd.ui.internal.common.util.Messages._UI_LABEL_REFERENCE);
+      refLabel.setLayoutData(data);
+
+      // ------------------------------------------------------------------
+      // Ref Combo
+      // ------------------------------------------------------------------
+
+      data = new GridData();
+      data.grabExcessHorizontalSpace = true;
+      data.horizontalAlignment = GridData.FILL;
+
+      componentNameCombo = getWidgetFactory().createCCombo(composite, SWT.FLAT);
+      componentNameCombo.addSelectionListener(this);
+      componentNameCombo.setLayoutData(data);
+      
+      PlatformUI.getWorkbench().getHelpSystem().setHelp(componentNameCombo,
+          XSDEditorCSHelpIds.GENERAL_TAB__ATTRIBUTE__NAME);
+
+      getWidgetFactory().createCLabel(composite, ""); //$NON-NLS-1$
+    }
+    
     // ------------------------------------------------------------------
     // typeLabel
     // ------------------------------------------------------------------
@@ -104,6 +139,7 @@ public class XSDAttributeDeclarationSection extends RefactoringSection
     data.horizontalAlignment = GridData.FILL;
     typeCombo = getWidgetFactory().createCCombo(composite);
     typeCombo.setLayoutData(data);
+    typeCombo.setEnabled(!isAttributeReference);
     typeCombo.addSelectionListener(this);
     
     PlatformUI.getWorkbench().getHelpSystem().setHelp(typeCombo,
@@ -277,6 +313,11 @@ public class XSDAttributeDeclarationSection extends RefactoringSection
         nameText.setText(name);
       }
     }
+    
+    if (isAttributeReference)
+    {
+      refreshRefCombo();
+    }
 
     // refresh type
 
@@ -421,10 +462,48 @@ public class XSDAttributeDeclarationSection extends RefactoringSection
         if (newValue != null)
           manager.modifyComponentReference(input, newValue);
       }
-    } 
+    }
+    else if (e.widget == componentNameCombo)
+    {
+      IEditorPart editor = getActiveEditor();
+      if (editor == null) return;
+      ComponentReferenceEditManager manager = (ComponentReferenceEditManager)editor.getAdapter(XSDAttributeReferenceEditManager.class);    
+
+      String selection = componentNameCombo.getText();
+      ComponentSpecification newValue;
+      IComponentDialog dialog= null;
+      if ( selection.equals(Messages._UI_ACTION_BROWSE))
+      {
+        dialog = manager.getBrowseDialog();
+      }
+      else if ( selection.equals(Messages._UI_ACTION_NEW))
+      {
+        dialog = manager.getNewDialog();
+      }
+
+      if (dialog != null)
+      {
+        if (dialog.createAndOpen() == Window.OK)
+        {
+          newValue = dialog.getSelectedComponent();
+          manager.modifyComponentReference(input, newValue);
+        }
+        else
+        {
+          componentNameCombo.setText(refName);
+        }
+      }
+      else //use the value from selected quickPick item
+      {
+        newValue = getComponentSpecFromQuickPickForValue(selection, manager);
+        if (newValue != null)
+          manager.modifyComponentReference(input, newValue);
+      }
+
+    }
     else 
     {
-    	XSDAttributeDeclaration xsdAttribute = ((XSDAttributeDeclaration) input).getResolvedAttributeDeclaration();
+    	XSDAttributeDeclaration xsdAttribute = (XSDAttributeDeclaration) input;
     	Element element = xsdAttribute.getElement();
       if (e.widget == usageCombo)
 	    {	      
@@ -534,7 +613,7 @@ public class XSDAttributeDeclarationSection extends RefactoringSection
     }
     else if (event.widget == defaultOrFixedText)
     {
-      XSDAttributeDeclaration xsdAttribute = ((XSDAttributeDeclaration) input).getResolvedAttributeDeclaration();
+      XSDAttributeDeclaration xsdAttribute = (XSDAttributeDeclaration) input;
       String newValue = defaultOrFixedText.getText();
       Element element = xsdAttribute.getElement();
       if (element != null)
@@ -576,11 +655,107 @@ public class XSDAttributeDeclarationSection extends RefactoringSection
   
   public void dispose()
   {
+    if (componentNameCombo != null && !componentNameCombo.isDisposed())
+      componentNameCombo.removeSelectionListener(this);
     if (nameText != null && !nameText.isDisposed())
       removeListeners(nameText);
     if (typeCombo != null && !typeCombo.isDisposed())
       typeCombo.removeSelectionListener(this);
     super.dispose();
+  }
+
+  public void setInput(IWorkbenchPart part, ISelection selection)
+  {
+    super.setInput(part, selection);
+    setListenerEnabled(false);
+    init();
+    relayout();
+    
+    setListenerEnabled(true);
+  }
+  
+  protected void init()
+  {
+    if (input instanceof XSDAttributeDeclaration)
+    {
+      XSDAttributeDeclaration xsdAttribute = (XSDAttributeDeclaration) input;
+      isAttributeReference = xsdAttribute.isAttributeDeclarationReference();
+    }
+  }
+
+  protected void relayout()
+  {
+    Composite parentComposite = composite.getParent();
+    parentComposite.getParent().setRedraw(false);
+
+    if (parentComposite != null && !parentComposite.isDisposed())
+    {
+      Control[] children = parentComposite.getChildren();
+      for (int i = 0; i < children.length; i++)
+      {
+        children[i].dispose();
+      }
+    }
+
+    // Now initialize the new handler
+    createContents(parentComposite);
+    parentComposite.getParent().layout(true, true);
+
+    // Now turn painting back on
+    parentComposite.getParent().setRedraw(true);
+    refresh();
+  }
+  
+  protected void refreshRefCombo()
+  {
+    componentNameCombo.setText(""); //$NON-NLS-1$
+    fillComponentNameCombo();
+  }
+  
+  private void fillComponentNameCombo()
+  {
+    IEditorPart editor = getActiveEditor();
+    ComponentReferenceEditManager manager = (ComponentReferenceEditManager)editor.getAdapter(XSDAttributeReferenceEditManager.class);    
+    
+    componentNameCombo.removeAll();
+    componentNameCombo.add(Messages._UI_ACTION_BROWSE);
+    componentNameCombo.add(Messages._UI_ACTION_NEW);
+    ComponentSpecification[] quickPicks = manager.getQuickPicks();
+    if (quickPicks != null)
+    {
+      for (int i=0; i < quickPicks.length; i++)
+      {
+        ComponentSpecification componentSpecification = quickPicks[i];
+        componentNameCombo.add(componentSpecification.getName());
+      }  
+    }
+    ComponentSpecification[] history = manager.getHistory();
+    if (history != null)
+    {
+      for (int i=0; i < history.length; i++)
+      {
+        ComponentSpecification componentSpecification = history[i];
+        componentNameCombo.add(componentSpecification.getName());
+      }  
+    }
+    
+    XSDAttributeDeclaration namedComponent = (XSDAttributeDeclaration) input;
+    Element element = namedComponent.getElement();
+    if (element != null)
+    {
+      String attrValue = element.getAttribute(XSDConstants.REF_ATTRIBUTE);
+      if (attrValue == null)
+      {
+        attrValue = ""; //$NON-NLS-1$
+      }
+      ComponentSpecification ret = getComponentSpecFromQuickPickForValue(attrValue, manager);
+      if (ret == null)
+      {
+        componentNameCombo.add(attrValue);
+      }
+      componentNameCombo.setText(attrValue);
+      refName = attrValue;
+    } 
   }
 
 }

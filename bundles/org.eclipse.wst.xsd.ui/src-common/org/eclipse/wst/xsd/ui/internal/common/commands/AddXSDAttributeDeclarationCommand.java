@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -32,6 +32,7 @@ public class AddXSDAttributeDeclarationCommand extends BaseCommand
   XSDModelGroup xsdModelGroup;
   XSDConcreteComponent parent;
   boolean isReference;
+  private String nameToAdd;
 
   public AddXSDAttributeDeclarationCommand(String label, XSDComplexTypeDefinition xsdComplexTypeDefinition)
   {
@@ -55,7 +56,7 @@ public class AddXSDAttributeDeclarationCommand extends BaseCommand
         beginRecording(xsdComplexTypeDefinition.getElement());
         if (!isReference)
         {
-          attribute.setName(getNewName("NewAttribute")); //$NON-NLS-1$
+          attribute.setName(getNewName(nameToAdd == null ? "NewAttribute" : nameToAdd)); //$NON-NLS-1$
           attribute.setTypeDefinition(xsdComplexTypeDefinition.getSchema().getSchemaForSchema().resolveSimpleTypeDefinition("string")); //$NON-NLS-1$
         }
         else
@@ -117,6 +118,11 @@ public class AddXSDAttributeDeclarationCommand extends BaseCommand
   }
 
   ArrayList names;
+
+  public void setNameToAdd(String name)
+  {
+    nameToAdd = name;
+  }
 
   protected String getNewName(String description)
   {

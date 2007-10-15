@@ -34,6 +34,11 @@ public class XSDAttributeDeclarationAdapter extends XSDBaseAttributeAdapter impl
   {
     return getXSDAttributeDeclaration().eContainer() instanceof XSDSchema;
   }
+  
+  public boolean isReference()
+  {
+    return getXSDAttributeDeclaration().isAttributeDeclarationReference();
+  }
 
   public IModel getModel()
   {

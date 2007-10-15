@@ -148,6 +148,7 @@ public class XSDElementDeclarationSection extends MultiplicitySection
     typeCombo = getWidgetFactory().createCCombo(composite); //$NON-NLS-1$
     typeCombo.setEditable(false);
     typeCombo.setLayoutData(data);
+    typeCombo.setEnabled(!isElementReference);
     typeCombo.addSelectionListener(this);
     PlatformUI.getWorkbench().getHelpSystem().setHelp(typeCombo,
     		XSDEditorCSHelpIds.GENERAL_TAB__ELEMENT__TYPE);

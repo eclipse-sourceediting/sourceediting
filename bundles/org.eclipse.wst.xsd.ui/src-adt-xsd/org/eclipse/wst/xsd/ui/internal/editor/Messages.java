@@ -75,6 +75,7 @@ public class Messages extends NLS
   public static String _UI_LABEL_COMPLEX_TYPE;
   public static String _UI_LABEL_SIMPLE_TYPE;
   public static String _UI_LABEL_NEW_ELEMENT;
+  public static String _UI_LABEL_NEW_ATTRIBUTE;
   public static String _UI_MENU_XSD_EDITOR;
   public static String _UI_LABEL_SOURCE;
   public static String _UI_ACTION_ADD_ELEMENT;
@@ -82,13 +83,16 @@ public class Messages extends NLS
   public static String _UI_ACTION_NEW;
   public static String _UI_ACTION_BROWSE;
   public static String _UI_ACTION_UPDATE_ELEMENT_REFERENCE;
+  public static String _UI_ACTION_UPDATE_ATTRIBUTE_REFERENCE;
   public static String _UI_LABEL_TARGET_NAMESPACE;
   public static String _UI_LABEL_NO_NAMESPACE;
   public static String _UI_ACTION_ADD_COMPLEX_TYPE;
   public static String _UI_ACTION_ADD_SIMPLE_TYPE;
   public static String _UI_LABEL_NAME_SEARCH_FILTER_TEXT;
   public static String _UI_LABEL_ELEMENTS_COLON;
+  public static String _UI_LABEL_ATTRIBUTES_COLON;
   public static String _UI_LABEL_SET_ELEMENT_REFERENCE;
+  public static String _UI_LABEL_SET_ATTRIBUTE_REFERENCE;
   public static String _UI_LABEL_TYPES_COLON;
   public static String _UI_LABEL_SET_TYPE;
 
@@ -105,6 +109,7 @@ public class Messages extends NLS
   public static String _UI_ACTION_ADD_INCLUDE;
   public static String _UI_ACTION_ADD_IMPORT;
   public static String _UI_ACTION_ADD_REDEFINE;
+  public static String _UI_ACTION_ADD_ATTRIBUTE;
   public static String _UI_ACTION_ADD_ATTRIBUTE_REF;
 
   public static String _UI_LABEL_ELEMENTFORMDEFAULT;

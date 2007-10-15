@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,23 +15,24 @@ import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.wst.xsd.ui.internal.adt.edit.ComponentReferenceEditManager;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IField;
-import org.eclipse.wst.xsd.ui.internal.editor.XSDElementReferenceEditManager;
+import org.eclipse.wst.xsd.ui.internal.editor.XSDAttributeReferenceEditManager;
 
-public class ElementReferenceDirectEditManager extends ReferenceDirectEditManager
+public class AttributeReferenceDirectEditManager extends ReferenceDirectEditManager
 {
-  public ElementReferenceDirectEditManager(IField parameter, AbstractGraphicalEditPart source, Label label)
+  public AttributeReferenceDirectEditManager(IField parameter, AbstractGraphicalEditPart source, Label label)
   {
     super(parameter, source, label);
   }
-  
+
   protected ComponentReferenceEditManager getComponentReferenceEditManager()
   {
     ComponentReferenceEditManager result = null;
     IEditorPart editor = getActiveEditor();
     if (editor != null)
     {
-      result = (ComponentReferenceEditManager)editor.getAdapter(XSDElementReferenceEditManager.class);
+      result = (ComponentReferenceEditManager)editor.getAdapter(XSDAttributeReferenceEditManager.class);
     }  
     return result;
   }
+  
 }
