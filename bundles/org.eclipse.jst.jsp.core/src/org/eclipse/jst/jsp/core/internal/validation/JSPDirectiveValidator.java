@@ -281,7 +281,7 @@ public class JSPDirectiveValidator extends JSPValidator {
 		}
 		else if (fSeverityTaglibMissingURI != NO_SEVERITY) {
 			// URI not specified or empty string
-			String msgText = NLS.bind(JSPCoreMessages.JSPDirectiveValidator_3, JSP11Namespace.ATTR_NAME_URI);
+			String msgText = NLS.bind(JSPCoreMessages.JSPDirectiveValidator_7, new String[]{JSP20Namespace.ATTR_NAME_TAGDIR, JSP11Namespace.ATTR_NAME_URI});
 			LocalizedMessage message = new LocalizedMessage(fSeverityTaglibMissingURI, msgText, file);
 			int start = documentRegion.getStartOffset();
 			int length = documentRegion.getTextLength();

@@ -114,13 +114,14 @@ final class JSP20ElementCollection extends JSPElementCollection implements JSP20
 		/**
 		 * Changed in 2.0
 		 */
-		private void createForDirTaglib() {
+		void createForDirTaglib() {
 			// ("uri" URI OPTIONAL)
 			AttrDecl adec = new AttrDecl(ATTR_NAME_URI);
 			adec.type = new HTMLCMDataTypeImpl(CMDataType.URI);
 			adec.usage = CMAttributeDeclaration.OPTIONAL;
 			declarations.putNamedItem(ATTR_NAME_URI, adec);
 
+			// ("tagdir" URI OPTIONAL)
 			adec = new AttrDecl(JSP20Namespace.ATTR_NAME_TAGDIR);
 			adec.type = new HTMLCMDataTypeImpl(CMDataType.URI);
 			adec.usage = CMAttributeDeclaration.OPTIONAL;

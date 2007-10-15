@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.wst.html.core.internal.contentmodel;
 
+
+
 import java.lang.reflect.Field;
 
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
@@ -202,16 +204,17 @@ final class Tag20ElementCollection extends JSPElementCollection implements JSP20
 			declarations.putNamedItem(JSP20Namespace.ATTR_NAME_ISELIGNORED, adec);
 		}
 
-		/*
-		 * Changed in 2.0
+		/**
+		 * Changed in 2.0 (tagdir added)
 		 */
-		private void createForDirTaglib() {
+		void createForDirTaglib() {
 			// ("uri" URI OPTIONAL)
 			AttrDecl adec = new AttrDecl(ATTR_NAME_URI);
 			adec.type = new HTMLCMDataTypeImpl(CMDataType.URI);
 			adec.usage = CMAttributeDeclaration.OPTIONAL;
 			declarations.putNamedItem(ATTR_NAME_URI, adec);
 
+			// ("tagdir" URI OPTIONAL)
 			adec = new AttrDecl(JSP20Namespace.ATTR_NAME_TAGDIR);
 			adec.type = new HTMLCMDataTypeImpl(CMDataType.URI);
 			adec.usage = CMAttributeDeclaration.OPTIONAL;
@@ -354,7 +357,7 @@ final class Tag20ElementCollection extends JSPElementCollection implements JSP20
 				case TagIds20.ID_DIRECTIVE_ATTRIBUTE :
 					createForDirAttribute();
 					break;
-				case Ids.ID_DIRECTIVE_TAGLIB :
+				case TagIds20.ID_DIRECTIVE_TAGLIB :
 					createForDirTaglib();
 					break;
 				case TagIds20.ID_ATTRIBUTE :
@@ -491,6 +494,13 @@ final class Tag20ElementCollection extends JSPElementCollection implements JSP20
 			case TagIds20.ID_DIRECTIVE_ATTRIBUTE :
 				// directive.taglib
 				packet.name = DIRECTIVE_ATTRIBUTE;
+				packet.omit = HTMLElementDeclaration.OMIT_END;
+				packet.layout = HTMLElementDeclaration.LAYOUT_HIDDEN;
+				packet.format = HTMLElementDeclaration.FORMAT_JSP_DIRECTIVE;
+				break;
+			case TagIds20.ID_DIRECTIVE_TAGLIB :
+				// directive.taglib
+				packet.name = DIRECTIVE_TAGLIB;
 				packet.omit = HTMLElementDeclaration.OMIT_END;
 				packet.layout = HTMLElementDeclaration.LAYOUT_HIDDEN;
 				packet.format = HTMLElementDeclaration.FORMAT_JSP_DIRECTIVE;
