@@ -184,20 +184,21 @@ public class JSPDirectiveValidator extends JSPValidator {
 			}
 			else if (fSeverityIncludeFileMissing != NO_SEVERITY) {
 				IPath testPath = FacetModuleCoreSupport.resolve(file.getFullPath(), fileValue);
+				if (testPath.segmentCount() > 1) {
+					IFile testFile = file.getWorkspace().getRoot().getFile(testPath);
+					if (!testFile.isAccessible()) {
+						// File not found
+						String msgText = NLS.bind(JSPCoreMessages.JSPDirectiveValidator_4, new String[]{fileValue, testPath.toString()});
+						LocalizedMessage message = new LocalizedMessage(fSeverityIncludeFileMissing, msgText, file);
+						int start = documentRegion.getStartOffset(fileValueRegion);
+						int length = fileValueRegion.getTextLength();
+						int lineNo = sDoc.getLineOfOffset(start);
+						message.setLineNo(lineNo);
+						message.setOffset(start);
+						message.setLength(length);
 
-				IFile testFile = file.getWorkspace().getRoot().getFile(testPath);
-				if (!testFile.isAccessible()) {
-					// File not found
-					String msgText = NLS.bind(JSPCoreMessages.JSPDirectiveValidator_4, new String[]{fileValue, testPath.toString()});
-					LocalizedMessage message = new LocalizedMessage(fSeverityIncludeFileMissing, msgText, file);
-					int start = documentRegion.getStartOffset(fileValueRegion);
-					int length = fileValueRegion.getTextLength();
-					int lineNo = sDoc.getLineOfOffset(start);
-					message.setLineNo(lineNo);
-					message.setOffset(start);
-					message.setLength(length);
-
-					reporter.addMessage(fMessageOriginator, message);
+						reporter.addMessage(fMessageOriginator, message);
+					}
 				}
 			}
 		}
