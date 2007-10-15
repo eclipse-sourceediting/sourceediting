@@ -142,7 +142,7 @@ public class AddXSDAttributeDeclarationCommand extends BaseCommand
     ensureSchemaElement(xsdSchema);
     XSDAttributeDeclaration attribute = XSDFactory.eINSTANCE.createXSDAttributeDeclaration();
     attribute.setTypeDefinition(xsdSchema.getSchemaForSchema().resolveSimpleTypeDefinition("string")); //$NON-NLS-1$
-    attribute.setName(XSDCommonUIUtils.createUniqueElementName("NewAttribute", xsdSchema.getAttributeDeclarations())); //$NON-NLS-1$
+    attribute.setName(XSDCommonUIUtils.createUniqueElementName(nameToAdd == null ? "NewAttribute" : nameToAdd, xsdSchema.getAttributeDeclarations())); //$NON-NLS-1$
     Text textNode = xsdSchema.getDocument().createTextNode("\n"); //$NON-NLS-1$
     xsdSchema.getElement().appendChild(textNode);
     xsdSchema.getContents().add(attribute);
