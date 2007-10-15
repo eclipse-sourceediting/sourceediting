@@ -50,12 +50,14 @@ import org.w3c.dom.Attr;
 import org.w3c.dom.NamedNodeMap;
 
 /**
- * Checks for: - missing required attributes & undefined attributes in jsp
- * action tags such as jsp directives and jsp custom tags
+ * Checks for: missing required attributes & undefined attributes in jsp
+ * action tags such as jsp directives and jsp custom tags as well as non-empty
+ * inline jsp action tags
  */
 public class JSPActionValidator extends JSPValidator {
 	private int fSeverityMissingRequiredAttribute = IMessage.HIGH_SEVERITY;
 	private int fSeverityUnknownAttribute = IMessage.NORMAL_SEVERITY;
+	private int fSeverityNonEmptyInlineTag = IMessage.NORMAL_SEVERITY;
 	private IValidator fMessageOriginator;
 	private HashSet fTaglibPrefixes = new HashSet();
 
@@ -65,6 +67,21 @@ public class JSPActionValidator extends JSPValidator {
 
 	public JSPActionValidator(IValidator validator) {
 		this.fMessageOriginator = validator;
+	}
+
+	private void checkNonEmptyInlineTag(IDOMElement element, CMElementDeclaration cmElementDecl, IReporter reporter, IFile file, IStructuredDocument document) {
+		if (cmElementDecl.getContentType() == CMElementDeclaration.EMPTY && element.getChildNodes().getLength() > 0) {
+			String msgText = NLS.bind(JSPCoreMessages.JSPActionValidator_0, element.getNodeName());
+			LocalizedMessage message = new LocalizedMessage(fSeverityNonEmptyInlineTag, msgText, file);
+			int start = element.getStartOffset();
+			int length = element.getStartEndOffset() - start;
+			int lineNo = document.getLineOfOffset(start);
+			message.setLineNo(lineNo);
+			message.setOffset(start);
+			message.setLength(length);
+
+			reporter.addMessage(fMessageOriginator, message);
+		}
 	}
 
 	private void checkRequiredAttributes(IDOMElement element, CMNamedNodeMap attrMap, IReporter reporter, IFile file, IStructuredDocument document, IStructuredDocumentRegion documentRegion) {
@@ -236,6 +253,8 @@ public class JSPActionValidator extends JSPValidator {
 					// missing required attributes
 					if (!foundjspattribute)
 						checkRequiredAttributes(element, cmAttributes, reporter, file, model.getStructuredDocument(), documentRegion);
+					
+					checkNonEmptyInlineTag(element, cmElement, reporter, file, model.getStructuredDocument());
 				}
 			}
 		}
