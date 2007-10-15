@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -181,6 +181,7 @@ public class StructuredTextFoldingProviderXML implements IStructuredTextFoldingP
 			return;
 		}
 
+		long start = System.currentTimeMillis();
 		// clear out old info
 		projectionDisabled();
 
@@ -192,10 +193,22 @@ public class StructuredTextFoldingProviderXML implements IStructuredTextFoldingP
 			if (factory != null) {
 				factory.addProjectionViewer(fViewer);
 			}
-
-			addAllAdapters();
+			try {
+				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=198304
+				// disable redraw while adding all adapters
+				fViewer.setRedraw(false);
+				addAllAdapters();
+			}
+			finally {
+				fViewer.setRedraw(true);
+			}
 		}
 		fProjectionNeedsToBeEnabled = false;
+
+		if (debugProjectionPerf) {
+			long end = System.currentTimeMillis();
+			System.out.println("StructuredTextFoldingProviderXML.initialize: " + (end - start)); //$NON-NLS-1$
+		}
 	}
 
 	/**
