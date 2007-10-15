@@ -115,12 +115,14 @@ public class JFaceNodeAdapter implements IJFaceNodeAdapter {
 		// performance enhancement: using child.getNextSibling() rather than
 		// nodeList(item) for O(n) vs. O(n*n)
 		//
-		Node node = (Node) object;
 		ArrayList v = new ArrayList();
-		for (Node child = node.getFirstChild(); child != null; child = child.getNextSibling()) {
-			Node n = child;
-			if (n.getNodeType() != Node.TEXT_NODE) {
-				v.add(n);
+		if (object instanceof Node) {
+			Node node = (Node) object;
+			for (Node child = node.getFirstChild(); child != null; child = child.getNextSibling()) {
+				Node n = child;
+				if (n.getNodeType() != Node.TEXT_NODE) {
+					v.add(n);
+				}
 			}
 		}
 		return v.toArray();
@@ -138,15 +140,18 @@ public class JFaceNodeAdapter implements IJFaceNodeAdapter {
 	 * Fetches the label image specific to this object instance.
 	 */
 	public Image getLabelImage(Object node) {
-		Image image = CMImageUtil.getImage(CMImageUtil.getDeclaration((Node) node));
-		if ((image == null) && (JFaceResources.getImageRegistry() != null)) {
-			ImageRegistry imageRegistry = JFaceResources.getImageRegistry();
-			String nodeName = getNodeName(node);
-			image = imageRegistry.get(nodeName);
-			if (image == null) {
-				image = createImage(node);
-				if (image != null) {
-					imageRegistry.put(nodeName, image);
+		Image image = null;
+		if (node instanceof Node) {
+			image = CMImageUtil.getImage(CMImageUtil.getDeclaration((Node) node));
+			if ((image == null) && (JFaceResources.getImageRegistry() != null)) {
+				ImageRegistry imageRegistry = JFaceResources.getImageRegistry();
+				String nodeName = getNodeName(node);
+				image = imageRegistry.get(nodeName);
+				if (image == null) {
+					image = createImage(node);
+					if (image != null) {
+						imageRegistry.put(nodeName, image);
+					}
 				}
 			}
 		}
@@ -162,19 +167,25 @@ public class JFaceNodeAdapter implements IJFaceNodeAdapter {
 
 	private String getNodeName(Object object) {
 		StringBuffer nodeName = new StringBuffer();
-		Node node = (Node) object;
-		nodeName.append(node.getNodeName());
+		if (object instanceof Node) {
+			Node node = (Node) object;
+			nodeName.append(node.getNodeName());
 
-		if (node.getNodeType() == Node.DOCUMENT_TYPE_NODE) {
-			nodeName.insert(0, "DOCTYPE:"); //$NON-NLS-1$
+			if (node.getNodeType() == Node.DOCUMENT_TYPE_NODE) {
+				nodeName.insert(0, "DOCTYPE:"); //$NON-NLS-1$
+			}
+
 		}
 		return nodeName.toString();
 	}
 
 
 	public Object getParent(Object object) {
-		Node node = (Node) object;
-		return node.getParentNode();
+		if (object instanceof Node) {
+			Node node = (Node) object;
+			return node.getParentNode();
+		}
+		return null;
 	}
 
 	private synchronized RefreshStructureJob getRefreshJob() {
