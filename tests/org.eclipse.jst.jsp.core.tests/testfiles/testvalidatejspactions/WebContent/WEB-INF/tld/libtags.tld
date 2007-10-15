@@ -36,4 +36,9 @@
 		<tagclass>nothing.taglib.emptyme</tagclass>
 		<bodycontent>JSP</bodycontent>
 	</tag>
+	<tag>
+		<name>emptybodycontent</name>
+		<tagclass>nothing.taglib.emptyme</tagclass>
+		<bodycontent>empty</bodycontent>
+	</tag>
 </taglib>

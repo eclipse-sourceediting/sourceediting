@@ -30,6 +30,7 @@ public class JSPActionValidatorTest extends TestCase {
 	private static final String PROJECT_NAME = "testvalidatejspactions";
 	private static final String UNDEFINED_ATTR_IDONT = "idont";
 	private static final String REQUIRED_ATTR_NAME = "name";
+	private static final String NONEMPTY_INLINE_TAG_NAME = "libtags:emptybodycontent";
 
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -95,7 +96,7 @@ public class JSPActionValidatorTest extends TestCase {
 
 		assertTrue("jsp action validator did not detect missing required attributes", foundError);
 	}
-	
+
 	private boolean errorMessageFound(IReporter reporter, String errorMessage, int errorLineNumber) {
 		boolean foundError = false;
 		List messages = reporter.getMessages();
@@ -127,5 +128,26 @@ public class JSPActionValidatorTest extends TestCase {
 		validator.validate(helper, reporter);
 
 		assertTrue("jsp action validator found errors when it should not have", reporter.getMessages().isEmpty());
+	}
+
+	/**
+	 * Tests if non-empty inline tags are flagged as warnings
+	 * 
+	 * @throws Exception
+	 */
+	public void testNonEmptyInlineTag() throws Exception {
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=203254
+		JSPActionValidator validator = new JSPActionValidator();
+		IReporter reporter = new ReporterForTest();
+		ValidationContextForTest helper = new ValidationContextForTest();
+		String filePath = "/" + PROJECT_NAME + "/WebContent/nonemptyinlinetag.jsp";
+		assertTrue("unable to find file: " + filePath, ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(filePath)).exists());
+
+		helper.setURI(filePath);
+		validator.validate(helper, reporter);
+
+		boolean foundError = errorMessageFound(reporter, NLS.bind(JSPCoreMessages.JSPDirectiveValidator_7, NONEMPTY_INLINE_TAG_NAME), 10);
+
+		assertTrue("jsp action validator had problems detecting an error with content in an inline tag", foundError);
 	}
 }
