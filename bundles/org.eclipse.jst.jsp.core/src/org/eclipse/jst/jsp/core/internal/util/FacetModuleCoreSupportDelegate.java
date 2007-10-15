@@ -55,7 +55,7 @@ final class FacetModuleCoreSupportDelegate {
 		float version = 2.5f;
 		try {
 			IFacetedProject faceted = ProjectFacetsManager.create(project);
-			if (faceted != null) {
+			if (faceted != null && ProjectFacetsManager.isProjectFacetDefined(JST_WEB_MODULE)) {
 				IProjectFacet webModuleFacet = ProjectFacetsManager.getProjectFacet(JST_WEB_MODULE);
 				if (faceted.hasProjectFacet(webModuleFacet)) {
 					version = Float.parseFloat(faceted.getInstalledVersion(webModuleFacet).getVersionString());
@@ -113,10 +113,12 @@ final class FacetModuleCoreSupportDelegate {
 	 */
 	static boolean isDynamicWebProject(IProject project) {
 		try {
-			IFacetedProject faceted = ProjectFacetsManager.create(project);
-			IProjectFacet webModuleFacet = ProjectFacetsManager.getProjectFacet(JST_WEB_MODULE);
-			if (faceted != null && faceted.hasProjectFacet(webModuleFacet)) {
-				return true;
+			if (ProjectFacetsManager.isProjectFacetDefined(JST_WEB_MODULE)) {
+				IFacetedProject faceted = ProjectFacetsManager.create(project);
+				IProjectFacet webModuleFacet = ProjectFacetsManager.getProjectFacet(JST_WEB_MODULE);
+				if (faceted != null && faceted.hasProjectFacet(webModuleFacet)) {
+					return true;
+				}
 			}
 		}
 		catch (CoreException e) {

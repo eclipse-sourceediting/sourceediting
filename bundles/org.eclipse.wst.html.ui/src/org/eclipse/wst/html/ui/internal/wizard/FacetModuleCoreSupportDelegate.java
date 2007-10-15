@@ -64,17 +64,21 @@ final class FacetModuleCoreSupportDelegate {
 	 * @throws CoreException
 	 */
 	static boolean isWebProject(IProject project) {
+		boolean is = false;
 		try {
 			IFacetedProject faceted = ProjectFacetsManager.create(project);
-			IProjectFacet jstModuleFacet = ProjectFacetsManager.getProjectFacet(JST_WEB_MODULE);
-			IProjectFacet wstModuleFacet = ProjectFacetsManager.getProjectFacet(WST_WEB_MODULE);
-			if (faceted != null && (faceted.hasProjectFacet(jstModuleFacet) || faceted.hasProjectFacet(wstModuleFacet))) {
-				return true;
+			if (ProjectFacetsManager.isProjectFacetDefined(JST_WEB_MODULE)) {
+				IProjectFacet facet = ProjectFacetsManager.getProjectFacet(JST_WEB_MODULE);
+				is = is || (faceted != null && faceted.hasProjectFacet(facet));
+			}
+			if (ProjectFacetsManager.isProjectFacetDefined(WST_WEB_MODULE)) {
+				IProjectFacet facet = ProjectFacetsManager.getProjectFacet(WST_WEB_MODULE);
+				is = is || (faceted != null && faceted.hasProjectFacet(facet));
 			}
 		}
 		catch (CoreException e) {
 			Logger.logException(e);
 		}
-		return false;
+		return is;
 	}
 }
