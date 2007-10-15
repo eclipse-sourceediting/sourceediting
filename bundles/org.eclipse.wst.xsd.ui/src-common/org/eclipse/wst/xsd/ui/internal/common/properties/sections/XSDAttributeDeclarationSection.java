@@ -326,9 +326,9 @@ public class XSDAttributeDeclarationSection extends RefactoringSection
     {
       if (input instanceof XSDAttributeDeclaration)
       {
-        XSDAttributeDeclaration xsdAttribute = ((XSDAttributeDeclaration) input).getResolvedAttributeDeclaration();
+        XSDAttributeDeclaration xsdAttribute = (XSDAttributeDeclaration) input;
         isAttributeReference = ((XSDAttributeDeclaration)input).isAttributeDeclarationReference();
-        XSDTypeDefinition typeDef = xsdAttribute.getTypeDefinition();
+        XSDTypeDefinition typeDef = xsdAttribute.getResolvedAttributeDeclaration().getTypeDefinition();
         boolean isAnonymous = xsdAttribute.getAnonymousTypeDefinition() != null;
 
         if (isAnonymous)
@@ -401,7 +401,7 @@ public class XSDAttributeDeclarationSection extends RefactoringSection
         }
         
         formCombo.setText(""); 
-        formCombo.setEnabled(!xsdAttribute.isGlobal());
+        formCombo.setEnabled(!xsdAttribute.isGlobal() && !isAttributeReference);
         boolean hasFormAttribute = false;
         if (element != null)
         {
