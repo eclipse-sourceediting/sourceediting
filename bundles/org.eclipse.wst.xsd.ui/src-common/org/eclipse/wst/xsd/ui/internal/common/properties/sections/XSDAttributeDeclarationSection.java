@@ -139,7 +139,6 @@ public class XSDAttributeDeclarationSection extends RefactoringSection
     data.horizontalAlignment = GridData.FILL;
     typeCombo = getWidgetFactory().createCCombo(composite);
     typeCombo.setLayoutData(data);
-    typeCombo.setEnabled(!isAttributeReference);
     typeCombo.addSelectionListener(this);
     
     PlatformUI.getWorkbench().getHelpSystem().setHelp(typeCombo,
@@ -450,7 +449,8 @@ public class XSDAttributeDeclarationSection extends RefactoringSection
         if (dialog.createAndOpen() == Window.OK)
         {
           newValue = dialog.getSelectedComponent();
-          manager.modifyComponentReference(input, newValue);
+          XSDAttributeDeclaration xsdAttribute = ((XSDAttributeDeclaration) input).getResolvedAttributeDeclaration();
+          manager.modifyComponentReference(xsdAttribute, newValue);
         }
         else{
         	typeCombo.setText(typeName);

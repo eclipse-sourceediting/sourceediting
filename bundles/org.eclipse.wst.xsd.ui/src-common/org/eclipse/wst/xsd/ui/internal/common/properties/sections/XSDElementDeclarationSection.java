@@ -148,7 +148,6 @@ public class XSDElementDeclarationSection extends MultiplicitySection
     typeCombo = getWidgetFactory().createCCombo(composite); //$NON-NLS-1$
     typeCombo.setEditable(false);
     typeCombo.setLayoutData(data);
-    typeCombo.setEnabled(!isElementReference);
     typeCombo.addSelectionListener(this);
     PlatformUI.getWorkbench().getHelpSystem().setHelp(typeCombo,
     		XSDEditorCSHelpIds.GENERAL_TAB__ELEMENT__TYPE);
@@ -382,7 +381,8 @@ public class XSDElementDeclarationSection extends MultiplicitySection
         if (dialog.createAndOpen() == Window.OK)
         {
           newValue = dialog.getSelectedComponent();
-          manager.modifyComponentReference(input, newValue);
+          XSDElementDeclaration elementDeclaration = ((XSDElementDeclaration) input).getResolvedElementDeclaration();
+          manager.modifyComponentReference(elementDeclaration, newValue);
         }
         else
         {
