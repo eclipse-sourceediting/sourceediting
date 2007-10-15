@@ -166,7 +166,7 @@ class JFaceNodeContentProviderCSS implements ITreeContentProvider {
 		if (adaptable instanceof ICSSModel) {
 			adaptable = ((ICSSModel) adaptable).getDocument();
 		}
-		if (adaptable instanceof INodeNotifier) {
+		if (adaptable instanceof ICSSNode && adaptable instanceof INodeNotifier) {
 			INodeAdapter nodeAdapter = ((INodeNotifier) adaptable).getAdapterFor(IJFaceNodeAdapter.class);
 			if (nodeAdapter instanceof IJFaceNodeAdapter)
 				adapter = (IJFaceNodeAdapter) nodeAdapter;
