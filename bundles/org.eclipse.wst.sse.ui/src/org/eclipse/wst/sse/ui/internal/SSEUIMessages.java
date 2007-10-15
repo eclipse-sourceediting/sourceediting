@@ -114,10 +114,6 @@ public class SSEUIMessages extends NLS {
 	public static String OpenFileFromSource_tooltip;
 	public static String OpenFileFromSource_image;
 	public static String OpenFileFromSource_description;
-	public static String ShowTooltipDesc_label;
-	public static String ShowTooltipDesc_tooltip;
-	public static String ShowTooltipDesc_image;
-	public static String ShowTooltipDesc_description;
 	public static String StructureSelectEnclosing_label;
 	public static String StructureSelectEnclosing_tooltip;
 	public static String StructureSelectEnclosing_description;

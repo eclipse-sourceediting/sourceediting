@@ -45,26 +45,18 @@ public class ActionContributorXML extends ActionContributor {
 	private static final String[] EDITOR_IDS = {"org.eclipse.core.runtime.xml.source", "org.eclipse.core.runtime.xml.source2", "org.eclipse.wst.sse.ui.StructuredTextEditor"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	protected RetargetTextEditorAction fCleanupDocument = null;
 	protected RetargetTextEditorAction fComment = null;
-	// tooltip
-	// action
 	protected RetargetTextEditorAction fContentAssist = null;
-	// action
 	protected RetargetTextEditorAction fFindOccurrences = null;
 	protected RetargetTextEditorAction fFormatActiveElements = null;
 	protected RetargetTextEditorAction fFormatDocument = null;
 	protected RetargetTextEditorAction fOpenFileAction = null; // open file
 
-	protected RetargetTextEditorAction fShowTooltipAction = null; // show
 	protected RetargetTextEditorAction fUncomment = null;
 
 	public ActionContributorXML() {
 		super();
 
 		ResourceBundle resourceBundle = XMLUIMessages.getResourceBundle();
-
-		// edit commands
-		fShowTooltipAction = new RetargetTextEditorAction(resourceBundle, ""); //$NON-NLS-1$
-		fShowTooltipAction.setActionDefinitionId(ActionDefinitionIds.INFORMATION);
 
 		fContentAssist = new RetargetTextEditorAction(resourceBundle, ""); //$NON-NLS-1$
 		fContentAssist.setActionDefinitionId(ITextEditorActionDefinitionIds.CONTENT_ASSIST_PROPOSALS);
@@ -96,7 +88,6 @@ public class ActionContributorXML extends ActionContributor {
 			editMenu.add(fCommandsSeparator);
 			editMenu.add(fExpandSelectionToMenu);
 			editMenu.add(fCommandsSeparator);
-			editMenu.add(fShowTooltipAction);
 			editMenu.add(fContentAssist);
 			editMenu.add(fMenuAdditionsGroupMarker);
 		}
@@ -157,7 +148,6 @@ public class ActionContributorXML extends ActionContributor {
 
 		ITextEditor textEditor = getTextEditor(activeEditor);
 
-		fShowTooltipAction.setAction(getAction(textEditor, StructuredTextEditorActionConstants.ACTION_NAME_INFORMATION));
 		fContentAssist.setAction(getAction(textEditor, StructuredTextEditorActionConstants.ACTION_NAME_CONTENTASSIST_PROPOSALS));
 
 		fCleanupDocument.setAction(getAction(textEditor, StructuredTextEditorActionConstants.ACTION_NAME_CLEANUP_DOCUMENT));
@@ -180,7 +170,6 @@ public class ActionContributorXML extends ActionContributor {
 	public void setViewerSpecificContributionsEnabled(boolean enabled) {
 		super.setViewerSpecificContributionsEnabled(enabled);
 
-		fShowTooltipAction.setEnabled(enabled);
 		fContentAssist.setEnabled(enabled);
 		// cleanup and format document actions do not rely on source viewer
 		// being enabled

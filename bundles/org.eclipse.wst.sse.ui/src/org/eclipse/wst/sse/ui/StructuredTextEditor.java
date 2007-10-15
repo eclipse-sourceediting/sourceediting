@@ -1598,14 +1598,6 @@ public class StructuredTextEditor extends TextEditor {
 		action.setActionDefinitionId(IWorkbenchActionDefinitionIds.DELETE);
 		setAction(ITextEditorActionConstants.DELETE, action);
 		helpSystem.setHelp(action, IAbstractTextEditorHelpContextIds.DELETE_ACTION);
-		// SourceView Action - requesting information at
-		// the current insertion
-		// position
-		action = new TextOperationAction(SSEUIMessages.getResourceBundle(), StructuredTextEditorActionConstants.ACTION_NAME_INFORMATION + UNDERSCORE, this, ISourceViewer.INFORMATION, true);
-		action = new InformationDispatchAction(SSEUIMessages.getResourceBundle(), StructuredTextEditorActionConstants.ACTION_NAME_INFORMATION + UNDERSCORE, (TextOperationAction) action);
-		action.setActionDefinitionId(ActionDefinitionIds.INFORMATION);
-		setAction(StructuredTextEditorActionConstants.ACTION_NAME_INFORMATION, action);
-		markAsStateDependentAction(StructuredTextEditorActionConstants.ACTION_NAME_INFORMATION, true);
 		// SourceView Action - requesting content assist to
 		// show completetion
 		// proposals for the current insert position

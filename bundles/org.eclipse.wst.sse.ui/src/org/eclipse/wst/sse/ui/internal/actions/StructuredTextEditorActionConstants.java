@@ -23,7 +23,6 @@ public interface StructuredTextEditorActionConstants {
 	public final static String ACTION_NAME_FIND_OCCURRENCES = "FindOccurrences"; //$NON-NLS-1$
 	public final static String ACTION_NAME_FORMAT_ACTIVE_ELEMENTS = "FormatActiveElements";//$NON-NLS-1$
 	public final static String ACTION_NAME_FORMAT_DOCUMENT = "FormatDocument";//$NON-NLS-1$
-	public final static String ACTION_NAME_INFORMATION = "ShowTooltipDesc";//$NON-NLS-1$
 	public final static String ACTION_NAME_MANAGE_BREAKPOINTS = "ManageBreakpoints";//$NON-NLS-1$
 	public final static String ACTION_NAME_OPEN_FILE = "OpenFileFromSource";//$NON-NLS-1$
 	public final static String ACTION_NAME_REMOVE_BLOCK_COMMENT = "RemoveBlockComment";//$NON-NLS-1$
