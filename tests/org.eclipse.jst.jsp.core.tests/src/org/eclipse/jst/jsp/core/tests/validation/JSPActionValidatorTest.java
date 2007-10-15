@@ -146,7 +146,7 @@ public class JSPActionValidatorTest extends TestCase {
 		helper.setURI(filePath);
 		validator.validate(helper, reporter);
 
-		boolean foundError = errorMessageFound(reporter, NLS.bind(JSPCoreMessages.JSPDirectiveValidator_7, NONEMPTY_INLINE_TAG_NAME), 10);
+		boolean foundError = errorMessageFound(reporter, NLS.bind(JSPCoreMessages.JSPActionValidator_0, NONEMPTY_INLINE_TAG_NAME), 10);
 
 		assertTrue("jsp action validator had problems detecting an error with content in an inline tag", foundError);
 	}
