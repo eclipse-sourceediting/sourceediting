@@ -46,14 +46,6 @@ public abstract class AbstractLineStyleProvider {
 		}
 	}
 
-	// protected IStructuredDocumentRegion currentStructuredDocumentRegion;
-	// Note: the var=x.class contructs were put into this method
-	// as a workaround for slow VAJava class lookups. They compiler
-	// assigns them to a variable in the JDK, but Class.forName("x")
-	// in VAJava. It is workaround specific for VAJava environment, so could
-	// be simplified in future.
-	static Class LineStyleProviderClass = LineStyleProvider.class;
-
 	private IStructuredDocument fDocument;
 	private Highlighter fHighlighter;
 	private boolean fInitialized;
@@ -149,6 +141,10 @@ public abstract class AbstractLineStyleProvider {
 	}
 
 	abstract protected TextAttribute getAttributeFor(ITextRegion region);
+	
+	protected TextAttribute getAttributeFor(ITextRegionCollection collection, ITextRegion region) {
+		return getAttributeFor(region);
+	}
 
 	abstract protected IPreferenceStore getColorPreferences();
 
@@ -195,11 +191,10 @@ public abstract class AbstractLineStyleProvider {
 	}
 
 	/**
-	 * Allowing the INodeAdapter to compare itself against the type allows it
-	 * to return true in more than one case.
+	 * @deprecated - left because it's public, but we aren't adapters any more
 	 */
 	public boolean isAdapterForType(java.lang.Object type) {
-		return type == LineStyleProviderClass;
+		return type == LineStyleProvider.class;
 	}
 
 	/**
@@ -251,7 +246,7 @@ public abstract class AbstractLineStyleProvider {
 				handled = prepareTextRegion((ITextRegionCollection) region, partitionStartOffset, partitionLength, holdResults);
 			} else {
 
-				attr = getAttributeFor(region);
+				attr = getAttributeFor(blockedRegion, region);
 				if (attr != null) {
 					handled = true;
 					// if this region's attr is the same as previous one, then
@@ -304,7 +299,7 @@ public abstract class AbstractLineStyleProvider {
 					handled = prepareTextRegion((ITextRegionCollection) region, partitionStartOffset, partitionLength, holdResults);
 				} else {
 
-					attr = getAttributeFor(region);
+					attr = getAttributeFor(structuredDocumentRegion, region);
 					if (attr != null) {
 						handled = true;
 						// if this region's attr is the same as previous one,
