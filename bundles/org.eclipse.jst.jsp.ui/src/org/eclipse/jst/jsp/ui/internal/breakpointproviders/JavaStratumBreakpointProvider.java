@@ -44,6 +44,7 @@ import org.eclipse.wst.sse.ui.internal.provisional.extensions.breakpoint.IBreakp
  * Source JSP page
  */
 public class JavaStratumBreakpointProvider implements IBreakpointProvider, IExecutableExtension {
+	private static final String DEFAULT_CLASS_PATTERN = "*jsp,jsp_servlet._*";
 	private Object fData = null;
 
 	public IStatus addBreakpoint(IDocument document, IEditorInput input, int editorLineNumber, int offset) throws CoreException {
@@ -78,6 +79,9 @@ public class JavaStratumBreakpointProvider implements IBreakpointProvider, IExec
 				}
 			}
 		}
+		else {
+			status = new Status(IStatus.INFO, JSPUIPlugin.ID, IStatus.INFO, JSPUIMessages.BreakpointNotAllowed, null);
+		}
 		if (status == null) {
 			status = new Status(IStatus.OK, JSPUIPlugin.ID, IStatus.OK, JSPUIMessages.OK, null);
 		}
@@ -97,9 +101,10 @@ public class JavaStratumBreakpointProvider implements IBreakpointProvider, IExec
 				 */
 				return fData + ",_" + shortName;
 			}
-			else if (fData instanceof Map && resource.isAccessible()) {
+			else if (fData instanceof Map && resource.isAccessible() && resource.getType() == IResource.FILE) {
 				IContentType[] types = Platform.getContentTypeManager().findContentTypesFor(resource.getName());
 				if (types.length == 0) {
+					// if failed to find quickly, be more aggressive
 					IContentDescription d = null;
 					try {
 						// optimized description lookup, might not succeed
@@ -115,6 +120,7 @@ public class JavaStratumBreakpointProvider implements IBreakpointProvider, IExec
 						 */
 					}
 				}
+				// wasn't found earlier
 				if (types == null) {
 					types = Platform.getContentTypeManager().findContentTypesFor(resource.getName());
 				}
@@ -129,7 +135,7 @@ public class JavaStratumBreakpointProvider implements IBreakpointProvider, IExec
 				return patternBuffer.toString();
 			}
 		}
-		return "*jsp";
+		return DEFAULT_CLASS_PATTERN;
 	}
 
 	public IResource getResource(IEditorInput input) {
