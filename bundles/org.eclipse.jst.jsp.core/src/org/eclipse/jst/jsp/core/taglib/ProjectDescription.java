@@ -74,6 +74,7 @@ import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.JSP11TLDNa
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.JSP12TLDNames;
 import org.eclipse.jst.jsp.core.internal.contenttype.DeploymentDescriptorPropertyCache;
 import org.eclipse.jst.jsp.core.internal.util.DocumentProvider;
+import org.eclipse.jst.jsp.core.internal.util.FacetModuleCoreSupport;
 import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
 import org.eclipse.wst.sse.core.internal.util.JarUtilities;
 import org.eclipse.wst.sse.core.utils.StringUtils;
@@ -1487,17 +1488,39 @@ class ProjectDescription {
 		String path = null;
 		float jspVersion = DeploymentDescriptorPropertyCache.getInstance().getJSPVersion(new Path(basePath));
 
+		/**
+		 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=196177
+		 * Support resolution in flexible projects
+		 */
+		IPath resourcePath = FacetModuleCoreSupport.resolve(new Path(basePath), reference);
+		if (resourcePath.segmentCount() > 1) {
+			if (resourcePath.toString().toLowerCase(Locale.US).endsWith(".tld")) { //$NON-NLS-1$ 
+				IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(resourcePath);
+				if (file.isAccessible()) {
+					path = resourcePath.toString();
+				}
+			}
+			else if (resourcePath.toString().toLowerCase(Locale.US).endsWith(".jar")) { //$NON-NLS-1$ 
+				IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(resourcePath);
+				if (file.isAccessible()) {
+					path = resourcePath.toString();
+				}
+			}
+		}
+
 		LOCK.acquire();
 
 		/**
 		 * Workaround for problem in URIHelper; uris starting with '/' are
 		 * returned as-is.
 		 */
-		if (reference.startsWith("/")) { //$NON-NLS-1$
-			path = getLocalRoot(basePath) + reference;
-		}
-		else {
-			path = URIHelper.normalize(reference, basePath, getLocalRoot(basePath));
+		if (path == null) {
+			if (reference.startsWith("/")) { //$NON-NLS-1$
+				path = getLocalRoot(basePath) + reference;
+			}
+			else {
+				path = URIHelper.normalize(reference, basePath, getLocalRoot(basePath));
+			}
 		}
 
 		// order dictated by JSP spec 2.0 section 7.2.3
@@ -1570,7 +1593,7 @@ class ProjectDescription {
 		}
 		
 		LOCK.release();
-		
+				
 		return record;
 	}
 
@@ -1591,7 +1614,7 @@ class ProjectDescription {
 				Reader reader = null;
 				try {
 					time0 = System.currentTimeMillis();
-					reader = new InputStreamReader(new BufferedInputStream(new FileInputStream(savedState)), "UTF-16");
+					reader = new InputStreamReader(new BufferedInputStream(new FileInputStream(savedState)), "UTF-16"); //$NON-NLS-1$ 
 					// use a string buffer temporarily to reduce string
 					// creation
 					StringBuffer buffer = new StringBuffer();

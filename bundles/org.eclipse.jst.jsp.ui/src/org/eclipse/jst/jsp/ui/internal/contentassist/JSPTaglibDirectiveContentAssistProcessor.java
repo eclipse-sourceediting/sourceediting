@@ -168,6 +168,10 @@ public class JSPTaglibDirectiveContentAssistProcessor extends JSPDummyContentAss
 									uri = IPath.SEPARATOR + files[fileNumber].getFullPath().removeFirstSegments(localContextRoot.segmentCount()).toString();
 									uriToRecords.put(uri, taglibRecord);
 								}
+								else {
+									uri = FacetModuleCoreSupport.getRuntimePath(files[fileNumber].getFullPath()).toString();
+									uriToRecords.put(uri, taglibRecord);
+								}
 							}
 							break;
 						}
@@ -176,6 +180,10 @@ public class JSPTaglibDirectiveContentAssistProcessor extends JSPDummyContentAss
 							IPath localContextRoot = FacetModuleCoreSupport.getWebContentRootPath(ResourcesPlugin.getWorkspace().getRoot().getProject(basePath.segment(0)));
 							if (localContextRoot.isPrefixOf(path)) {
 								uri = IPath.SEPARATOR + path.removeFirstSegments(localContextRoot.segmentCount()).toString();
+								uriToRecords.put(uri, taglibRecord);
+							}
+							else {
+								uri = FacetModuleCoreSupport.getRuntimePath(path).toString();
 								uriToRecords.put(uri, taglibRecord);
 							}
 							break;
