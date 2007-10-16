@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,7 +23,10 @@ import java.util.Vector;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.DocumentRewriteSession;
+import org.eclipse.jface.text.DocumentRewriteSessionType;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.IDocumentExtension4;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -92,7 +95,7 @@ public abstract class AbstractStructuredCleanupProcessor implements IStructuredC
 			return;
 
 		IStructuredModel structuredModel = null;
-		//OutputStream outputStream = null;
+		// OutputStream outputStream = null;
 		try {
 			// setup structuredModel
 			// Note: We are getting model for edit. Will save model if model
@@ -106,7 +109,7 @@ public abstract class AbstractStructuredCleanupProcessor implements IStructuredC
 			if (!structuredModel.isSharedForEdit() && structuredModel.isSaveNeeded())
 				structuredModel.save();
 		} finally {
-			//ensureClosed(outputStream, null);
+			// ensureClosed(outputStream, null);
 			// release from model manager
 			if (structuredModel != null)
 				structuredModel.releaseFromEdit();
@@ -119,7 +122,7 @@ public abstract class AbstractStructuredCleanupProcessor implements IStructuredC
 
 		if (start >= 0 && length >= 0 && start + length <= document.getLength()) {
 			IStructuredModel structuredModel = null;
-			//OutputStream outputStream = null;
+			// OutputStream outputStream = null;
 			try {
 				// setup structuredModel
 				// Note: We are getting model for edit. Will save model if
@@ -133,7 +136,7 @@ public abstract class AbstractStructuredCleanupProcessor implements IStructuredC
 				if (!structuredModel.isSharedForEdit() && structuredModel.isSaveNeeded())
 					structuredModel.save();
 			} finally {
-				//ensureClosed(outputStream, null);
+				// ensureClosed(outputStream, null);
 				// release from model manager
 				if (structuredModel != null)
 					structuredModel.releaseFromEdit();
@@ -143,7 +146,7 @@ public abstract class AbstractStructuredCleanupProcessor implements IStructuredC
 
 	public void cleanupFile(IFile file) throws IOException, CoreException {
 		IStructuredModel structuredModel = null;
-		//OutputStream outputStream = null;
+		// OutputStream outputStream = null;
 		try {
 			// setup structuredModel
 			structuredModel = StructuredModelManager.getModelManager().getModelForRead(file);
@@ -152,11 +155,11 @@ public abstract class AbstractStructuredCleanupProcessor implements IStructuredC
 			cleanupModel(structuredModel, 0, structuredModel.getStructuredDocument().getLength());
 
 			// save output to file
-			//outputStream = new
+			// outputStream = new
 			// FileOutputStream(file.getLocation().toString());
 			structuredModel.save(file);
 		} finally {
-			//ensureClosed(outputStream, null);
+			// ensureClosed(outputStream, null);
 			// release from model manager
 			if (structuredModel != null)
 				structuredModel.releaseFromRead();
@@ -165,7 +168,7 @@ public abstract class AbstractStructuredCleanupProcessor implements IStructuredC
 
 	public void cleanupFile(IFile file, int start, int length) throws IOException, CoreException {
 		IStructuredModel structuredModel = null;
-		//OutputStream outputStream = null;
+		// OutputStream outputStream = null;
 		try {
 			// setup structuredModel
 			structuredModel = StructuredModelManager.getModelManager().getModelForRead(file);
@@ -174,11 +177,11 @@ public abstract class AbstractStructuredCleanupProcessor implements IStructuredC
 			cleanupModel(structuredModel, start, length);
 
 			// save output to file
-			//outputStream = new
+			// outputStream = new
 			// FileOutputStream(file.getLocation().toString());
 			structuredModel.save(file);
 		} finally {
-			//ensureClosed(outputStream, null);
+			// ensureClosed(outputStream, null);
 			// release from model manager
 			if (structuredModel != null)
 				structuredModel.releaseFromRead();
@@ -188,7 +191,7 @@ public abstract class AbstractStructuredCleanupProcessor implements IStructuredC
 	public void cleanupFileName(String fileName) throws IOException, CoreException {
 		IStructuredModel structuredModel = null;
 		InputStream inputStream = null;
-		//OutputStream outputStream = null;
+		// OutputStream outputStream = null;
 		try {
 			// setup structuredModel
 			inputStream = new FileInputStream(fileName);
@@ -198,10 +201,10 @@ public abstract class AbstractStructuredCleanupProcessor implements IStructuredC
 			cleanupModel(structuredModel, 0, structuredModel.getStructuredDocument().getLength());
 
 			// save output to file
-			//outputStream = new FileOutputStream(fileName);
+			// outputStream = new FileOutputStream(fileName);
 			structuredModel.save();
 		} finally {
-			//ensureClosed(outputStream, inputStream);
+			// ensureClosed(outputStream, inputStream);
 			// release from model manager
 			if (structuredModel != null)
 				structuredModel.releaseFromRead();
@@ -211,7 +214,7 @@ public abstract class AbstractStructuredCleanupProcessor implements IStructuredC
 	public void cleanupFileName(String fileName, int start, int length) throws IOException, CoreException {
 		IStructuredModel structuredModel = null;
 		InputStream inputStream = null;
-		//OutputStream outputStream = null;
+		// OutputStream outputStream = null;
 		try {
 			// setup structuredModel
 			inputStream = new FileInputStream(fileName);
@@ -221,10 +224,10 @@ public abstract class AbstractStructuredCleanupProcessor implements IStructuredC
 			cleanupModel(structuredModel, start, length);
 
 			// save output to file
-			//outputStream = new FileOutputStream(fileName);
+			// outputStream = new FileOutputStream(fileName);
 			structuredModel.save();
 		} finally {
-			//ensureClosed(outputStream, inputStream);
+			// ensureClosed(outputStream, inputStream);
 			// release from model manager
 			if (structuredModel != null)
 				structuredModel.releaseFromRead();
@@ -249,61 +252,88 @@ public abstract class AbstractStructuredCleanupProcessor implements IStructuredC
 					boolean done = false;
 					Node eachNode = firstNode;
 					Node nextNode = null;
-					while (!done) {
-						// update "done"
-						done = (eachNode == lastNode);
+
+					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=123621
+					// if doing any sort of cleanup, set up rewrite session/modelchanged
+					IDocumentExtension4 docExt4 = null;
+					if (structuredModel.getStructuredDocument() instanceof IDocumentExtension4) {
+						docExt4 = (IDocumentExtension4) structuredModel.getStructuredDocument();
+					}
+					DocumentRewriteSession rewriteSession = null;
+
+					try {
+						// whenever formatting model, fire
+						// abouttochange/modelchanged
+						structuredModel.aboutToChangeModel();
+						rewriteSession = (docExt4 == null || docExt4.getActiveRewriteSession() != null) ? null : docExt4.startRewriteSession(DocumentRewriteSessionType.UNRESTRICTED);
+
+						while (!done) {
+							// update "done"
+							done = (eachNode == lastNode);
 
 						// get next sibling before cleanup because eachNode
-						// may
-						// be deleted,
-						// for example when it's an empty text node
-						nextNode = eachNode.getNextSibling();
+							// may
+							// be deleted,
+							// for example when it's an empty text node
+							nextNode = eachNode.getNextSibling();
 
-						// cleanup selected node(s)
-						cleanupNode(eachNode);
+							// cleanup selected node(s)
+							cleanupNode(eachNode);
 
-						// update each node
-						if (nextNode != null && nextNode.getParentNode() == null)
-							// nextNode is deleted during cleanup
-							eachNode = eachNode.getNextSibling();
-						else
-							eachNode = nextNode;
+							// update each node
+							if (nextNode != null && nextNode.getParentNode() == null)
+								// nextNode is deleted during cleanup
+								eachNode = eachNode.getNextSibling();
+							else
+								eachNode = nextNode;
 
-						// This should not be needed, but just in case
-						// something went wrong with with eachNode.
-						// We don't want an infinite loop here.
-						if (eachNode == null)
-							done = true;
-					}
+							// This should not be needed, but just in case
+							// something went wrong with with eachNode.
+							// We don't want an infinite loop here.
+							if (eachNode == null)
+								done = true;
+						}
 
-					// format source
-					if (getFormatSourcePreference(structuredModel)) {
-						// format the document
-						IStructuredFormatProcessor formatProcessor = getFormatProcessor();
-						formatProcessor.formatModel(structuredModel);
-					}
+						// format source
+						if (getFormatSourcePreference(structuredModel)) {
+							// format the document
+							IStructuredFormatProcessor formatProcessor = getFormatProcessor();
+							formatProcessor.formatModel(structuredModel);
+						}
 
-					// convert EOL codes
-					if (getConvertEOLCodesPreference(structuredModel)) {
-						IDocument document = structuredModel.getStructuredDocument();
-						String endOfLineCode = getEOLCodePreference(structuredModel);
-						String endOfLineCodeString = null;
-						if (endOfLineCode.compareTo(CommonEncodingPreferenceNames.LF) == 0)
-							endOfLineCodeString = CommonEncodingPreferenceNames.STRING_LF;
-						else if (endOfLineCode.compareTo(CommonEncodingPreferenceNames.CR) == 0)
-							endOfLineCodeString = CommonEncodingPreferenceNames.STRING_CR;
-						else if (endOfLineCode.compareTo(CommonEncodingPreferenceNames.CRLF) == 0)
-							endOfLineCodeString = CommonEncodingPreferenceNames.STRING_CRLF;
-						if (endOfLineCodeString != null) {
-							convertLineDelimiters(document, endOfLineCodeString);
-							// DMW: 8/24/2002 setting line delimiter in
-							// document allows
-							// subsequent editing to insert the same line
-							// delimiter.
-							if (document instanceof IStructuredDocument) {
-								((IStructuredDocument) document).setLineDelimiter(endOfLineCodeString);
+						// convert EOL codes
+						if (getConvertEOLCodesPreference(structuredModel)) {
+							IDocument document = structuredModel.getStructuredDocument();
+							String endOfLineCode = getEOLCodePreference(structuredModel);
+							String endOfLineCodeString = null;
+							if (endOfLineCode.compareTo(CommonEncodingPreferenceNames.LF) == 0)
+								endOfLineCodeString = CommonEncodingPreferenceNames.STRING_LF;
+							else if (endOfLineCode.compareTo(CommonEncodingPreferenceNames.CR) == 0)
+								endOfLineCodeString = CommonEncodingPreferenceNames.STRING_CR;
+							else if (endOfLineCode.compareTo(CommonEncodingPreferenceNames.CRLF) == 0)
+								endOfLineCodeString = CommonEncodingPreferenceNames.STRING_CRLF;
+							if (endOfLineCodeString != null) {
+								convertLineDelimiters(document, endOfLineCodeString);
+								// DMW: 8/24/2002 setting line delimiter in
+								// document allows
+								// subsequent editing to insert the same line
+								// delimiter.
+								if (document instanceof IStructuredDocument) {
+									((IStructuredDocument) document).setLineDelimiter(endOfLineCodeString);
+								}
+								structuredModel.setDirtyState(true);
 							}
-							structuredModel.setDirtyState(true);
+						}
+					}
+					finally {
+						// we need two finally's, just in case first fails
+						try {
+							if ((docExt4 != null) && (rewriteSession != null))
+								docExt4.stopRewriteSession(rewriteSession);
+						}
+						finally {
+							// always make sure to fire changedmodel when done
+							structuredModel.changedModel();
 						}
 					}
 				}
@@ -334,7 +364,7 @@ public abstract class AbstractStructuredCleanupProcessor implements IStructuredC
 
 	protected void convertLineDelimiters(IDocument document, String newDelimiter) {
 		final int lineCount = document.getNumberOfLines();
-		Map partitioners = TextUtilities.removeDocumentPartitioners(document);		
+		Map partitioners = TextUtilities.removeDocumentPartitioners(document);
 		try {
 			for (int i = 0; i < lineCount; i++) {
 				final String delimiter = document.getLineDelimiter(i);

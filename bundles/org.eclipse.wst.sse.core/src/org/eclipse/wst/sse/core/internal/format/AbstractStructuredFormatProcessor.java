@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -41,6 +41,11 @@ public abstract class AbstractStructuredFormatProcessor implements IStructuredFo
 	protected IStructuredFormatContraints fFormatContraints = null;
 	protected IProgressMonitor fProgressMonitor = null;
 	public boolean refreshFormatPreferences = true; // special flag for JUnit
+	/*
+	 * Max length of text to be formatted to be considered a "small change"
+	 * Used for document rewrite session type.
+	 */
+	private final int MAX_SMALL_FORMAT_SIZE = 1000;
 
 	protected void ensureClosed(OutputStream outputStream, InputStream inputStream) {
 
@@ -161,11 +166,11 @@ public abstract class AbstractStructuredFormatProcessor implements IStructuredFo
 				// Note: We are getting model for edit. Will save model if
 				// model changed.
 				structuredModel = StructuredModelManager.getModelManager().getExistingModelForEdit(document);
-				
+
 				if (structuredModel != null) {
 					// format
 					formatModel(structuredModel, start, length);
-	
+
 					// save model if needed
 					if (!structuredModel.isSharedForEdit() && structuredModel.isSaveNeeded())
 						structuredModel.save();
@@ -315,7 +320,8 @@ public abstract class AbstractStructuredFormatProcessor implements IStructuredFo
 			try {
 				// whenever formatting model, fire abouttochange/modelchanged
 				structuredModel.aboutToChangeModel();
-				rewriteSession = (docExt4 == null) ? null : docExt4.startRewriteSession(DocumentRewriteSessionType.UNRESTRICTED);
+				DocumentRewriteSessionType rewriteType = (length > MAX_SMALL_FORMAT_SIZE) ? DocumentRewriteSessionType.UNRESTRICTED : DocumentRewriteSessionType.UNRESTRICTED_SMALL;
+				rewriteSession = (docExt4 == null || docExt4.getActiveRewriteSession() != null) ? null : docExt4.startRewriteSession(rewriteType);
 
 				if ((start == 0) && (length == structuredModel.getStructuredDocument().getLength()))
 					setFormatWithSiblingIndent(structuredModel, false);
@@ -373,7 +379,7 @@ public abstract class AbstractStructuredFormatProcessor implements IStructuredFo
 					structuredModel.changedModel();
 				}
 			}
-			
+
 			if (Logger.DEBUG_FORMAT) {
 				long endTime = System.currentTimeMillis();
 				System.out.println("formatModel time: " + (endTime - startTime)); //$NON-NLS-1$
