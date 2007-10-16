@@ -13,8 +13,11 @@
 package org.eclipse.wst.sse.ui.internal;
 
 import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.DocumentRewriteSession;
+import org.eclipse.jface.text.DocumentRewriteSessionType;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentAdapter;
+import org.eclipse.jface.text.IDocumentExtension4;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.text.ITextViewerExtension2;
@@ -71,6 +74,11 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 	private static final String TEXT_SHIFT_RIGHT = SSEUIMessages.Text_Shift_Right_UI_; //$NON-NLS-1$ = "Text Shift Right"
 	private static final boolean TRACE_EXCEPTIONS = true;
 
+	/*
+	 * Max length of chars to format before it is considered a "big format"
+	 * This is used to indication a small unrestricted rewrite session.
+	 */
+	private final int MAX_SMALL_FORMAT_LENGTH = 1000;
 	private boolean fBackgroundupdateInProgress;
 	private StructuredContentCleanupHandler fContentCleanupHandler = null;
 	private IDocumentAdapter fDocAdapter;
@@ -427,6 +435,8 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 				endRecording(cursorPosition, selectionLength);
 				break;
 			case FORMAT_DOCUMENT :
+				DocumentRewriteSession rewriteSession = null;
+				IDocument document = getDocument();
 				try {
 					/*
 					 * This command will actually format selection if text is
@@ -446,26 +456,49 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 						region = getModelCoverage();
 						formatDocument = true;
 					}
+
+					if (document instanceof IDocumentExtension4) {
+						IDocumentExtension4 extension = (IDocumentExtension4) document;
+						DocumentRewriteSessionType type = (selection.y == 0 || selection.y > MAX_SMALL_FORMAT_LENGTH) ? DocumentRewriteSessionType.UNRESTRICTED : DocumentRewriteSessionType.UNRESTRICTED_SMALL;
+						rewriteSession = (extension.getActiveRewriteSession() != null) ? null : extension.startRewriteSession(type);
+					}
+					else {
+						setRedraw(false);
+					}
+
 					if (fContentFormatter instanceof IContentFormatterExtension) {
 						IContentFormatterExtension extension = (IContentFormatterExtension) fContentFormatter;
 						IFormattingContext context = new FormattingContext();
 						context.setProperty(FormattingContextProperties.CONTEXT_DOCUMENT, Boolean.valueOf(formatDocument));
 						context.setProperty(FormattingContextProperties.CONTEXT_REGION, region);
-						extension.format(getDocument(), context);
+						extension.format(document, context);
 					}
 					else {
-						fContentFormatter.format(getDocument(), region);
+						fContentFormatter.format(document, region);
 					}
 				}
 				finally {
-					// end recording
-					selection = getTextWidget().getSelection();
-					cursorPosition = selection.x;
-					selectionLength = selection.y - selection.x;
-					endRecording(cursorPosition, selectionLength);
+					try {
+						if (rewriteSession != null) {
+							IDocumentExtension4 extension = (IDocumentExtension4) document;
+							extension.stopRewriteSession(rewriteSession);
+						}
+						else {
+							setRedraw(true);
+						}
+					}
+					finally {
+						// end recording
+						selection = getTextWidget().getSelection();
+						cursorPosition = selection.x;
+						selectionLength = selection.y - selection.x;
+						endRecording(cursorPosition, selectionLength);
+					}
 				}
 				break;
 			case FORMAT_ACTIVE_ELEMENTS :
+				rewriteSession = null;
+				document = getDocument();
 				try {
 					/*
 					 * This command will format the node at cursor position
@@ -479,6 +512,16 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 						// only format node at cursor position
 						region = new Region(s.x, s.y);
 					}
+
+					if (document instanceof IDocumentExtension4) {
+						IDocumentExtension4 extension = (IDocumentExtension4) document;
+						DocumentRewriteSessionType type = (selection.y == 0 || selection.y > MAX_SMALL_FORMAT_LENGTH) ? DocumentRewriteSessionType.UNRESTRICTED : DocumentRewriteSessionType.UNRESTRICTED_SMALL;
+						rewriteSession = (extension.getActiveRewriteSession() != null) ? null : extension.startRewriteSession(type);
+					}
+					else {
+						setRedraw(false);
+					}
+
 					if (fContentFormatter instanceof IContentFormatterExtension) {
 						IContentFormatterExtension extension = (IContentFormatterExtension) fContentFormatter;
 						IFormattingContext context = new FormattingContext();
@@ -491,11 +534,22 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 					}
 				}
 				finally {
-					// end recording
-					selection = getTextWidget().getSelection();
-					cursorPosition = selection.x;
-					selectionLength = selection.y - selection.x;
-					endRecording(cursorPosition, selectionLength);
+					try {
+						if (rewriteSession != null) {
+							IDocumentExtension4 extension = (IDocumentExtension4) document;
+							extension.stopRewriteSession(rewriteSession);
+						}
+						else {
+							setRedraw(true);
+						}
+					}
+					finally {
+						// end recording
+						selection = getTextWidget().getSelection();
+						cursorPosition = selection.x;
+						selectionLength = selection.y - selection.x;
+						endRecording(cursorPosition, selectionLength);
+					}
 				}
 				break;
 			default :
@@ -508,7 +562,7 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 		if (doc instanceof IStructuredDocument) {
 			IStructuredDocument structuredDocument = (IStructuredDocument) doc;
 			IStructuredTextUndoManager undoManager = structuredDocument.getUndoManager();
-			
+
 			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=198617
 			// undo after paste in document with folds - wrong behavior
 			IRegion widgetSelection = new Region(cursorPosition, selectionLength);
@@ -527,7 +581,7 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 		if (doc instanceof IStructuredDocument) {
 			IStructuredDocument structuredDocument = (IStructuredDocument) doc;
 			IStructuredTextUndoManager undoManager = structuredDocument.getUndoManager();
-			
+
 			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=198617
 			// undo after paste in document with folds - wrong behavior
 			IRegion widgetSelection = new Region(cursorPosition, selectionLength);
@@ -765,6 +819,8 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 	}
 
 	private void updateHighlighter(IStructuredDocument document) {
+		boolean documentSet = false;
+
 		// if highlighter has not been created yet, initialize and install it
 		if (fHighlighter == null && fConfiguration instanceof StructuredTextViewerConfiguration) {
 			String[] types = fConfiguration.getConfiguredContentTypes(this);
@@ -788,10 +844,14 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 			// initialize highlighter after linestyleproviders were added
 			if (fHighlighter != null) {
 				fHighlighter.setDocumentPartitioning(fConfiguration.getConfiguredDocumentPartitioning(this));
+				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=203347
+				// make sure to set document before install
+				fHighlighter.setDocument(document);
 				fHighlighter.install(this);
+				documentSet = true;
 			}
 		}
-		if (fHighlighter != null)
+		if (fHighlighter != null && !documentSet)
 			fHighlighter.setDocument(document);
 	}
 
