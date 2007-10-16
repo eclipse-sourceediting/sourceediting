@@ -32,6 +32,7 @@ import org.eclipse.wst.xsd.ui.internal.editor.InternalXSDMultiPageEditor;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDFileEditorInput;
 import org.eclipse.xsd.XSDConcreteComponent;
+import org.eclipse.xsd.XSDFeature;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDSchemaDirective;
 import org.eclipse.xsd.impl.XSDImportImpl;
@@ -61,8 +62,15 @@ public class OpenInNewEditor extends BaseSelectionAction
       XSDBaseAdapter xsdAdapter = (XSDBaseAdapter) selection;
       XSDConcreteComponent fComponent = (XSDConcreteComponent) xsdAdapter.getTarget();
       XSDSchema schema = fComponent.getSchema();
+      
+      boolean isReference = false;
+      if (fComponent instanceof XSDFeature)
+      {
+        isReference = ((XSDFeature)fComponent).isFeatureReference();
+        fComponent = ((XSDFeature)fComponent).getResolvedFeature();
+      }
 
-      if (fComponent.getSchema() != null)
+      if (fComponent.getSchema() != null && fComponent.eContainer() instanceof XSDSchema || isReference)
       {
         String schemaLocation = URIHelper.removePlatformResourceProtocol(fComponent.getSchema().getSchemaLocation());
         IPath schemaPath = new Path(schemaLocation);
@@ -102,7 +110,7 @@ public class OpenInNewEditor extends BaseSelectionAction
               // This first check is to ensure that the schema is actually
               // different than the current one we are editing against in the editor, and that we
               // are in the same resource file....hence multiple schemas in the same file.
-              if (xsdSchema != null && fComponent.getRootContainer().eResource() == xsdSchema.eResource())
+              if (xsdSchema != null && fComponent.getRootContainer().eResource() == xsdSchema.eResource() && xsdSchema != schema)
               {
                 XSDFileEditorInput xsdFileEditorInput = new XSDFileEditorInput(schemaFile, fComponent.getSchema());
                 IEditorPart activeEditor = page.getActiveEditor();

@@ -104,6 +104,7 @@ public class BaseGraphicalViewerKeyHandler extends GraphicalViewerKeyHandler
           return true;
       }
       case SWT.F3 :
+      case SWT.CR :
       {
         IWorkbench workbench = PlatformUI.getWorkbench();
         IWorkbenchWindow workbenchWindow = workbench.getActiveWorkbenchWindow();

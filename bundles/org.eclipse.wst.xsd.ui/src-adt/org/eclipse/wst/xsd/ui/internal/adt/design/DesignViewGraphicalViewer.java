@@ -207,7 +207,7 @@ public class DesignViewGraphicalViewer extends ScrollingGraphicalViewer implemen
     for (Iterator i = parent.getChildren().iterator(); i.hasNext(); )
     {
       EditPart editPart = (EditPart)i.next();
-      if (editPart.getModel() == object && !(editPart instanceof IHolderEditPart))
+      if (editPart.getModel() == object && !(editPart instanceof IHolderEditPart) && !(editPart instanceof RootContentEditPart))
       {  
         result = editPart;
         break;
