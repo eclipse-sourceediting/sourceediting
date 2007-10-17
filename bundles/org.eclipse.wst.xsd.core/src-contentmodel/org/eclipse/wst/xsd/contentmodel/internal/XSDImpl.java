@@ -535,6 +535,14 @@ public class XSDImpl
       return true;
     }
     XSDTypeDefinition rootType = typedef.getRootType();
+    
+    // Need to check if the base type is redefined/circular
+    // otherwise this will be an endless recursive call.
+    if (baseType.isCircular())
+    {
+      return true;
+    }
+    
     if (rootType == baseType)
     {
       // If we've hit the root, we aren't derived from it
