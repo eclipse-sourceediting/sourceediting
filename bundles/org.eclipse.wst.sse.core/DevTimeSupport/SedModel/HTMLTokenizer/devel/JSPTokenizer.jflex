@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,8 +8,6 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-
-/*nlsXXX*/
 
 package org.eclipse.jst.jsp.core.internal.parser.internal;
 
@@ -2358,7 +2356,7 @@ jspDirectiveStart        = {jspScriptletStart}@
 	yybegin(ST_PI);
         return XML_PI_OPEN;
 }
-// the next three are order dependent
+// the next four are order dependent
 <ST_PI> ((X|x)(M|m)(L|l)) {
 	if(Debug.debugTokenizer)
 		dump("XML processing instruction target");//$NON-NLS-1$
@@ -2373,6 +2371,13 @@ jspDirectiveStart        = {jspScriptletStart}@
 	fEmbeddedHint = XML_TAG_ATTRIBUTE_NAME;
 	fEmbeddedPostState = ST_XML_EQUALS;
         yybegin(ST_DHTML_ATTRIBUTE_NAME);
+        return XML_TAG_NAME;
+}
+<ST_PI> xml-stylesheet {
+	if(Debug.debugTokenizer)
+		dump("XSL processing instruction target");//$NON-NLS-1$
+	fEmbeddedPostState = ST_XML_EQUALS;
+        yybegin(ST_XML_PI_ATTRIBUTE_NAME);
         return XML_TAG_NAME;
 }
 <ST_PI> {Name} {

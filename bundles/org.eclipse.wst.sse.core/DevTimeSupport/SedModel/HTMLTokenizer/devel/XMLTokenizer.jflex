@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-/*nlsXXX*/
+
 package org.eclipse.wst.xml.core.internal.parser;
 
 import java.io.CharArrayReader;
@@ -21,7 +21,7 @@ import org.eclipse.wst.sse.core.internal.ltk.parser.BlockMarker;
 import org.eclipse.wst.sse.core.internal.ltk.parser.BlockTokenizer;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.util.Debug;
-import org.eclipse.wst.sse.core.internal.util.StringUtils;
+import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.xml.core.internal.Logger;
 import org.eclipse.wst.xml.core.internal.parser.regions.XMLParserRegionFactory;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
@@ -1062,7 +1062,7 @@ Extender = [\u00B7\u02D0\u02D1\u0387\u0640\u0E46\u0EC6\u3005\u3031-\u3035\u309D-
 	yybegin(ST_PI);
         return XML_PI_OPEN;
 }
-// the next three are order dependent
+// the next four are order dependent
 <ST_PI> ((X|x)(M|m)(L|l)) {
 	if(Debug.debugTokenizer)
 		dump("XML processing instruction target");//$NON-NLS-1$
@@ -1073,6 +1073,12 @@ Extender = [\u00B7\u02D0\u02D1\u0387\u0640\u0E46\u0EC6\u3005\u3031-\u3035\u309D-
 	if(Debug.debugTokenizer)
 		dump("DHTML processing instruction target");//$NON-NLS-1$
         yybegin(ST_DHTML_ATTRIBUTE_NAME);
+        return XML_TAG_NAME;
+}
+<ST_PI> xml-stylesheet {
+	if(Debug.debugTokenizer)
+		dump("XSL processing instruction target");//$NON-NLS-1$
+        yybegin(ST_XML_PI_ATTRIBUTE_NAME);
         return XML_TAG_NAME;
 }
 <ST_PI> {Name} {
