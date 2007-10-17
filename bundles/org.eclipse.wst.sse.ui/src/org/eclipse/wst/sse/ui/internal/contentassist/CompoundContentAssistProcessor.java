@@ -31,6 +31,7 @@ import org.eclipse.jface.text.TextPresentation;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContextInformation;
+import org.eclipse.jface.text.contentassist.IContextInformationExtension;
 import org.eclipse.jface.text.contentassist.IContextInformationPresenter;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
 import org.eclipse.swt.graphics.Image;
@@ -45,7 +46,7 @@ import org.eclipse.wst.sse.ui.internal.IReleasable;
  */
 class CompoundContentAssistProcessor implements IContentAssistProcessor, ISubjectControlContentAssistProcessor {
 
-	private static class WrappedContextInformation implements IContextInformation {
+	private static class WrappedContextInformation implements IContextInformation, IContextInformationExtension {
 		private IContextInformation fInfo;
 		private IContentAssistProcessor fProcessor;
 
@@ -102,6 +103,13 @@ class CompoundContentAssistProcessor implements IContentAssistProcessor, ISubjec
 
 		IContextInformation getContextInformation() {
 			return fInfo;
+		}
+
+		public int getContextInformationPosition() {
+			int position = -1;
+			if (fInfo instanceof IContextInformationExtension)
+				position = ((IContextInformationExtension)fInfo).getContextInformationPosition();
+			return position;
 		}
 	}
 
