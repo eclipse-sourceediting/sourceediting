@@ -106,7 +106,8 @@ public class JsTranslation implements IJsTranslation {
 		if(fDocumentScope==null) {
 			IProject project = getJavaProject().getProject();
 			IResource absoluteRoot = ((IContainer)getJavaProject().getResource()).findMember( WebRootFinder.getWebContentFolder(fJavaProject.getProject()));
-			fDocumentScope = new DocumentContextFragmentRoot(fJavaProject, getFile(), WebRootFinder.getWebContentFolder(fJavaProject.getProject()), WebRootFinder.getServerContextRoot(fJavaProject.getProject()), JsWebNature.VIRTUAL_SCOPE_ENTRY);			fDocumentScope.setIncludedFiles(translator.getRawImports());
+			fDocumentScope = new DocumentContextFragmentRoot(fJavaProject, getFile(), WebRootFinder.getWebContentFolder(fJavaProject.getProject()), WebRootFinder.getServerContextRoot(fJavaProject.getProject()), JsWebNature.VIRTUAL_SCOPE_ENTRY);			
+			fDocumentScope.setIncludedFiles(translator.getRawImports());
 			return fDocumentScope;
 		}
 		
