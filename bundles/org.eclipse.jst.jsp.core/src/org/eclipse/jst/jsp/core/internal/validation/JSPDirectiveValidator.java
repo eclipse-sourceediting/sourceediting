@@ -213,7 +213,7 @@ public class JSPDirectiveValidator extends JSPValidator implements ISourceValida
 			taglibPrefix = StringUtils.stripQuotes(taglibPrefix);
 
 			ITextRegion uriValueRegion = getAttributeValueRegion(sdRegion, "uri"); //$NON-NLS-1$
-			String taglibURI = sdRegion.getText(uriValueRegion);
+			String taglibURI = StringUtils.stripQuotes(sdRegion.getText(uriValueRegion));
 
 			LocalizedMessage message = null;
 
@@ -262,7 +262,7 @@ public class JSPDirectiveValidator extends JSPValidator implements ISourceValida
 				 * 203711 - taglib declarations in JSP fragments
 				 */
 				ITextRegion oldURIRegion = getAttributeValueRegion(existingTaglibDirective, "uri");
-				String oldURI = region.getFullText(oldURIRegion);
+				String oldURI = StringUtils.stripQuotes(region.getText(oldURIRegion));
 				if (collator.compare(uri, oldURI) != 0) {
 					dupe = true;
 				}
