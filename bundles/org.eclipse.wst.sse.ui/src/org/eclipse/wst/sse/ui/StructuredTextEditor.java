@@ -2770,7 +2770,7 @@ public class StructuredTextEditor extends TextEditor {
 		if (isFoldingEnabled())
 			projectionViewer.doOperation(ProjectionViewer.TOGGLE);
 	}
-	
+
 	/**
 	 * Install everything necessary to get document folding working and enable
 	 * document folding
@@ -2781,7 +2781,7 @@ public class StructuredTextEditor extends TextEditor {
 			fProjectionModelUpdater.uninstall();
 			fProjectionModelUpdater = null;
 		}
-		
+
 		ProjectionViewer projectionViewer = (ProjectionViewer) getSourceViewer();
 		IStructuredTextFoldingProvider updater = null;
 		ExtendedConfigurationBuilder builder = ExtendedConfigurationBuilder.getInstance();
@@ -2793,7 +2793,7 @@ public class StructuredTextEditor extends TextEditor {
 		fProjectionModelUpdater = updater;
 		if (fProjectionModelUpdater != null)
 			fProjectionModelUpdater.install(projectionViewer);
-		
+
 		if (fProjectionModelUpdater != null)
 			fProjectionModelUpdater.initialize();
 	}
@@ -3521,5 +3521,18 @@ public class StructuredTextEditor extends TextEditor {
 				statusLineManager.setMessage(image, text);
 			}
 		}
+	}
+
+	protected SourceViewerDecorationSupport getSourceViewerDecorationSupport(ISourceViewer viewer) {
+		/*
+		 * Need to override this method to use special
+		 * StructuredSourceViewerDecorationSupport. See
+		 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=201928
+		 */
+		if (fSourceViewerDecorationSupport == null) {
+			fSourceViewerDecorationSupport = new StructuredSourceViewerDecorationSupport(viewer, getOverviewRuler(), getAnnotationAccess(), getSharedColors());
+			configureSourceViewerDecorationSupport(fSourceViewerDecorationSupport);
+		}
+		return fSourceViewerDecorationSupport;
 	}
 }
