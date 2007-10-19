@@ -507,7 +507,7 @@ final class JSPElementCollection extends DeclCollection implements JSP11Namespac
 			// ("flush" ENUM REQUIRED (true|false)); Defect TORO:185241
 			adec = new AttrDecl(ATTR_NAME_FLUSH);
 			adec.type = new HTMLCMDataTypeImpl(CMDataType.ENUM);
-			adec.usage = CMAttributeDeclaration.REQUIRED;
+			adec.usage = CMAttributeDeclaration.OPTIONAL;
 			String[] values = {ATTR_VALUE_TRUE, ATTR_VALUE_FALSE};
 			adec.type.setEnumValues(values);
 			declarations.putNamedItem(ATTR_NAME_FLUSH, adec);
