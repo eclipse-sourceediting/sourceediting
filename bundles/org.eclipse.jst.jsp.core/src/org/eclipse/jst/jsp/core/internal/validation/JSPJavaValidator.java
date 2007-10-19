@@ -31,6 +31,7 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.compiler.IProblem;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
+import org.eclipse.jface.text.Position;
 import org.eclipse.jst.jsp.core.internal.JSPCorePlugin;
 import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.java.IJSPTranslation;
@@ -244,17 +245,38 @@ public class JSPJavaValidator extends JSPValidator implements ISourceValidator {
 	 *         create one
 	 */
 	private IMessage createMessageFromProblem(IProblem problem, IFile f, JSPTranslation translation, IStructuredDocument structuredDoc) {
-
+		int sev = problem.isError() ? IMessage.HIGH_SEVERITY : IMessage.NORMAL_SEVERITY;
 		int sourceStart = translation.getJspOffset(problem.getSourceStart());
 		int sourceEnd = translation.getJspOffset(problem.getSourceEnd());
-		if (sourceStart == -1)
+		if (sourceStart == -1) {
+			int problemID = problem.getID();
+			/* RATLC00304792 / BUG199053
+			 * 
+			 * Quoting IProblem doc: "When a problem is tagged as Internal, it
+			 * means that no change other than a local source code change can
+			 * fix the corresponding problem." Assuming that our generated
+			 * code is correct, that should reduce the reported problems to
+			 * those the user can correct.
+			 */
+			if (((problemID & IProblem.Internal) != 0) && ((problemID & IProblem.Syntax) != 0)) {
+				// Attach to the last code scripting section
+				Position[] jspPositions = (Position[]) translation.getJsp2JavaMap().keySet().toArray(new Position[translation.getJsp2JavaMap().size()]);
+				for (int i = 0; i < jspPositions.length; i++) {
+					sourceStart = Math.max(sourceStart, jspPositions[i].getOffset());
+				}
+				IMessage m = new LocalizedMessage(sev, problem.getMessage(), f);
+				m.setOffset(sourceStart);
+				m.setLength(1);
+				return m;
+			}
+			else {
 				return null;
+			}
+		}
 
 		// line number for marker starts @ 1
 		// line number from document starts @ 0
 		int lineNo = structuredDoc.getLineOfOffset(sourceStart) + 1;
-
-		int sev = problem.isError() ? IMessage.HIGH_SEVERITY : IMessage.NORMAL_SEVERITY;
 
 		IMessage m = new LocalizedMessage(sev, problem.getMessage(), f);
 

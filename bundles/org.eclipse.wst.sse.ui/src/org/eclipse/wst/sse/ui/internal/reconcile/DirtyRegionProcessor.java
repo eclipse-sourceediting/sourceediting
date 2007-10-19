@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -61,7 +61,7 @@ public class DirtyRegionProcessor extends Job implements IReconciler, IReconcile
 			if (isInRewriteSession() && fReprocessAfterRewrite)
 				return;
 			// save partition type (to see if it changes in documentChanged())
-			fLastPartitions = getPartitions(event.getOffset(), event.getLength());
+			fLastPartitions = getPartitionRegions(event.getOffset(), event.getLength());
 		}
 
 		public void documentChanged(DocumentEvent event) {
@@ -135,14 +135,14 @@ public class DirtyRegionProcessor extends Job implements IReconciler, IReconcile
 				length = event.getText().length();
 			}
 
-			String[] newPartitions = getPartitions(event.getOffset(), length);
+			ITypedRegion[] newPartitions = getPartitionRegions(event.getOffset(), length);
 			if (fLastPartitions != null) {
 				if (fLastPartitions.length != newPartitions.length) {
 					changed = true;
 				}
 				else {
 					for (int i = 0; i < fLastPartitions.length; i++) {
-						if (!fLastPartitions[i].equals(newPartitions[i])) {
+						if (!fLastPartitions[i].getType().equals(newPartitions[i].getType())) {
 							changed = true;
 							break;
 						}
@@ -236,7 +236,7 @@ public class DirtyRegionProcessor extends Job implements IReconciler, IReconcile
 	/**
 	 * so we can tell if a partition changed after the last edit
 	 */
-	String[] fLastPartitions;
+	ITypedRegion[] fLastPartitions;
 
 	List fNonIncrementalStrategiesAlreadyProcessed = new ArrayList(1);
 
@@ -479,6 +479,29 @@ public class DirtyRegionProcessor extends Job implements IReconciler, IReconcile
 		return partitions;
 	}
 
+	ITypedRegion[] getPartitionRegions(int drOffset, int drLength) {
+
+		ITypedRegion[] regions = new ITypedRegion[0];
+		int docLength = getDocument().getLength();
+
+		if (drOffset > docLength) {
+			drOffset = docLength;
+			drLength = 0;
+		}
+		else if (drOffset + drLength > docLength) {
+			drLength = docLength - drOffset;
+		}
+
+		try {
+			regions = TextUtilities.computePartitioning(getDocument(), getDocumentPartitioning(), drOffset, drLength, true);
+		}
+		catch (BadLocationException e) {
+			Logger.logException(e);
+			regions = new ITypedRegion[0];
+		}
+		return regions;
+	}
+
 	/**
 	 * Returns the reconciling strategy registered with the reconciler for the
 	 * specified partition type.
@@ -505,7 +528,7 @@ public class DirtyRegionProcessor extends Job implements IReconciler, IReconcile
 	 */
 	private synchronized DirtyRegion[] getRequests() {
 		DirtyRegion[] toRefresh = (DirtyRegion[]) fDirtyRegionQueue.toArray(new DirtyRegion[fDirtyRegionQueue.size()]);
-		fDirtyRegionQueue.clear();
+		flushDirtyRegionQueue();
 		return toRefresh;
 	}
 
@@ -627,9 +650,10 @@ public class DirtyRegionProcessor extends Job implements IReconciler, IReconcile
 	protected IStatus run(IProgressMonitor monitor) {
 		IStatus status = Status.OK_STATUS;
 		try {
+			DirtyRegion[] toRefresh = getRequests();
+			
 			beginProcessing();
 
-			DirtyRegion[] toRefresh = getRequests();
 			for (int i = 0; i < toRefresh.length; i++) {
 				if (monitor.isCanceled())
 					throw new OperationCanceledException();
@@ -693,8 +717,25 @@ public class DirtyRegionProcessor extends Job implements IReconciler, IReconcile
 
 			// since we're marking the entire doc dirty
 			flushDirtyRegionQueue();
-			DirtyRegion entireDocument = createDirtyRegion(0, document.getLength(), DirtyRegion.INSERT);
-			processDirtyRegion(entireDocument);
+
+			/**
+			 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=199053
+			 * 
+			 * Process the strategies for the last known-good partitions to
+			 * ensure all problem annotations are cleared if needed.
+			 */
+			if (fLastPartitions != null && document.getLength() == 0) {
+				for (int i = 0; i < fLastPartitions.length; i++) {
+					IReconcilingStrategy strategy = getReconcilingStrategy(fLastPartitions[i].getType());
+					if (strategy != null) {
+						strategy.reconcile(fLastPartitions[i]);
+					}
+				}
+			}
+			else {
+				DirtyRegion entireDocument = createDirtyRegion(0, document.getLength(), DirtyRegion.INSERT);
+				processDirtyRegion(entireDocument);
+			}
 		}
 	}
 

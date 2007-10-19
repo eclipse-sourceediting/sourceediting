@@ -13,6 +13,7 @@ package org.eclipse.jst.jsp.core.internal.validation;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Locale;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -38,6 +39,8 @@ import org.eclipse.wst.validation.internal.provisional.core.IReporter;
 import org.eclipse.wst.validation.internal.provisional.core.IValidationContext;
 import org.eclipse.wst.validation.internal.provisional.core.IValidator;
 
+import com.ibm.icu.text.Collator;
+
 /**
  * Checks for: - duplicate taglib prefix values - reserved taglib prefix
  * values
@@ -46,6 +49,7 @@ import org.eclipse.wst.validation.internal.provisional.core.IValidator;
 public class JSPDirectiveValidator extends JSPValidator implements ISourceValidator {
 	private static final boolean DEBUG = Boolean.valueOf(Platform.getDebugOption("org.eclipse.jst.jsp.core/debug/jspvalidator")).booleanValue(); //$NON-NLS-1$
 
+	private static Collator collator = Collator.getInstance(Locale.US);
 	private HashMap fReservedPrefixes = new HashMap();
 	private HashMap fDuplicatePrefixes = new HashMap();
 	private IDocument fDocument;
@@ -208,6 +212,9 @@ public class JSPDirectiveValidator extends JSPValidator implements ISourceValida
 			int length = valueRegion.getTextLength();
 			taglibPrefix = StringUtils.stripQuotes(taglibPrefix);
 
+			ITextRegion uriValueRegion = getAttributeValueRegion(sdRegion, "uri"); //$NON-NLS-1$
+			String taglibURI = sdRegion.getText(uriValueRegion);
+
 			LocalizedMessage message = null;
 
 			// check for errors
@@ -217,7 +224,7 @@ public class JSPDirectiveValidator extends JSPValidator implements ISourceValida
 				String msgText = JSPCoreMessages.JSPDirectiveValidator_0 + taglibPrefix + "'"; //$NON-NLS-2$ //$NON-NLS-1$
 				message = (file == null ? new LocalizedMessage(sev, msgText) : new LocalizedMessage(sev, msgText, file));
 			}
-			else if (isDuplicatePrefix(sdRegion, taglibPrefix)) {
+			else if (isDuplicatePrefix(sdRegion, taglibPrefix, taglibURI)) {
 				int sev = IMessage.NORMAL_SEVERITY;
 				String msgText = JSPCoreMessages.JSPDirectiveValidator_2 + taglibPrefix + "'"; //$NON-NLS-2$ //$NON-NLS-1$
 				message = (file == null ? new LocalizedMessage(sev, msgText) : new LocalizedMessage(sev, msgText, file));
@@ -235,23 +242,30 @@ public class JSPDirectiveValidator extends JSPValidator implements ISourceValida
 		}
 	}
 
-	private boolean isDuplicatePrefix(IStructuredDocumentRegion region, String taglibPrefix) {
+	private boolean isDuplicatePrefix(IStructuredDocumentRegion region, String taglibPrefix, String uri) {
 		boolean dupe = false;
-		Object o = fDuplicatePrefixes.get(taglibPrefix);
-		if (o == null) {
+		IStructuredDocumentRegion existingTaglibDirective = (IStructuredDocumentRegion) fDuplicatePrefixes.get(taglibPrefix);
+		if (existingTaglibDirective == null) {
 			// prefix doesn't exist, not a dupe
 			fDuplicatePrefixes.put(taglibPrefix, region);
 		}
-		else if (o instanceof IStructuredDocumentRegion) {
-			if (((IStructuredDocumentRegion) o).isDeleted()) {
+		else {
+			if (existingTaglibDirective.isDeleted()) {
 				// region was deleted, replace w/ new region
 				// not a dupe
 				fDuplicatePrefixes.put(taglibPrefix, region);
 			}
-			else if (region != o) {
-				// region exists and it's not this one
-				// it's a dupe
-				dupe = true;
+			else if (region != existingTaglibDirective) {
+				/*
+				 * region exists and it's not this one it's a dupe
+				 * 
+				 * 203711 - taglib declarations in JSP fragments
+				 */
+				ITextRegion oldURIRegion = getAttributeValueRegion(existingTaglibDirective, "uri");
+				String oldURI = region.getFullText(oldURIRegion);
+				if (collator.compare(uri, oldURI) != 0) {
+					dupe = true;
+				}
 			}
 		}
 		return dupe;
