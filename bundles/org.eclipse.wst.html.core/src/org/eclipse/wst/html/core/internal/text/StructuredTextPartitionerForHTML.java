@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,6 +21,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentReg
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredTextPartitioner;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
+import org.eclipse.wst.sse.core.internal.text.IRegionComparible;
 import org.eclipse.wst.sse.core.internal.text.rules.IStructuredTypedRegion;
 import org.eclipse.wst.sse.core.internal.util.ScriptLanguageKeys;
 import org.eclipse.wst.sse.core.utils.StringUtils;
@@ -34,11 +35,24 @@ import org.eclipse.wst.xml.core.internal.text.rules.StructuredTextPartitionerFor
  */
 public class StructuredTextPartitionerForHTML extends StructuredTextPartitionerForXML implements IStructuredTextPartitioner {
 
-	private final static String[] configuredContentTypes = new String[]{IHTMLPartitions.HTML_DEFAULT, IHTMLPartitions.HTML_DECLARATION, IHTMLPartitions.HTML_COMMENT, IHTMLPartitions.SCRIPT, ICSSPartitions.STYLE};
+	private final static String[] configuredContentTypes = new String[]{IHTMLPartitions.HTML_DEFAULT, IHTMLPartitions.HTML_DECLARATION, IHTMLPartitions.HTML_COMMENT, IHTMLPartitions.SCRIPT, ICSSPartitions.STYLE,IHTMLPartitions.SCRIPT_EVENTHANDLER};
 
 	public static final String JAVASCRIPT = "javascript"; //$NON-NLS-1$
 	public static final String JAVASCRIPT_APPLICATION = "application/x-javascript"; //$NON-NLS-1$
-
+	
+	private static final String[] EVENT_ATTRIBUTE_NAMES = 
+		{HTML40Namespace.ATTR_NAME_ONCLICK, 
+		HTML40Namespace.ATTR_NAME_ONDBLCLICK,
+		HTML40Namespace.ATTR_NAME_ONMOUSEDOWN,
+		HTML40Namespace.ATTR_NAME_ONMOUSEUP,
+		HTML40Namespace.ATTR_NAME_ONMOUSEOVER,
+		HTML40Namespace.ATTR_NAME_ONMOUSEMOVE,
+		HTML40Namespace.ATTR_NAME_ONMOUSEOUT,
+		HTML40Namespace.ATTR_NAME_ONKEYPRESS,
+		HTML40Namespace.ATTR_NAME_ONKEYDOWN,
+		HTML40Namespace.ATTR_NAME_ONKEYUP,
+		HTML40Namespace.ATTR_NAME_ONHELP};
+	
 	public StructuredTextPartitionerForHTML() {
 		super();
 	}
@@ -133,6 +147,8 @@ public class StructuredTextPartitionerForHTML extends StructuredTextPartitionerF
 			result = IHTMLPartitions.HTML_COMMENT;
 		else if (region.getType() == DOMRegionContext.XML_DOCTYPE_DECLARATION || region.getType() == DOMRegionContext.XML_DECLARATION_OPEN)
 			result = IHTMLPartitions.HTML_DECLARATION;
+		else if (region.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE && isScriptAttributeValue(region, offset))
+			result = IHTMLPartitions.SCRIPT_EVENTHANDLER;
 		else
 			result = super.getPartitionType(region, offset);
 		return result;
@@ -184,6 +200,8 @@ public class StructuredTextPartitionerForHTML extends StructuredTextPartitionerF
 			result = IHTMLPartitions.SCRIPT;
 		else if (tagname.equalsIgnoreCase(HTML40Namespace.ElementName.STYLE))
 			result = ICSSPartitions.STYLE;
+		else if (region.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE && isScriptAttributeValue(region, offset))
+			result = IHTMLPartitions.SCRIPT_EVENTHANDLER;
 		else
 			result = super.getPartitionType(region, offset);
 
@@ -204,5 +222,38 @@ public class StructuredTextPartitionerForHTML extends StructuredTextPartitionerF
 	public static String[] getConfiguredContentTypes() {
 		return configuredContentTypes;
 	}
+	
+	private boolean isScriptAttributeValue(ITextRegion region, int offset) {
+		if (region.getType() != DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE)
+			return false;
 
+		return isAttributeNameForValueAnEventScript(region, offset);
+	}
+
+	private boolean isAttributeNameForValueAnEventScript(ITextRegion attrValueRegion, int offset) {
+		IStructuredDocumentRegion node = fStructuredDocument.getRegionAtCharacterOffset(offset);
+		ITextRegionList regionList = node.getRegions();
+		int currentIndex = regionList.indexOf(attrValueRegion);
+
+		/*
+		 * 4 is the minimum index allowing for the tag's open, name, attribute
+		 * name and equals character to appear first
+		 */
+		if (currentIndex < 4)
+			return false;
+		ITextRegion tagAttrNameRegion = regionList.get(currentIndex - 2);
+		
+		boolean isEvent = false;
+		if (fStructuredDocument instanceof IRegionComparible) {
+			int start = node.getStartOffset(tagAttrNameRegion);
+			for (int i = 0; !isEvent && !isEvent && i < EVENT_ATTRIBUTE_NAMES.length; i++) {
+				isEvent = ((IRegionComparible) fStructuredDocument).regionMatchesIgnoreCase(start, tagAttrNameRegion.getTextLength(), EVENT_ATTRIBUTE_NAMES[i]);
+			}
+		}
+		else {
+			String tagAttrName = node.getText(tagAttrNameRegion);
+			isEvent = StringUtils.contains(EVENT_ATTRIBUTE_NAMES, tagAttrName, false);
+		}
+		return isEvent;
+	}
 }

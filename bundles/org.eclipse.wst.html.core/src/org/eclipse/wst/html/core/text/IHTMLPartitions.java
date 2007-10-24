@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,6 +25,7 @@ public interface IHTMLPartitions {
 	String HTML_COMMENT = "org.eclipse.wst.html.HTML_COMMENT"; //$NON-NLS-1$
 
 	String SCRIPT = "org.eclipse.wst.html.SCRIPT"; //$NON-NLS-1$
+	String SCRIPT_EVENTHANDLER = SCRIPT + ".EVENTHANDLER"; //$NON-NLS-1$
 	String STYLE = "org.eclipse.wst.html.STYLE"; //$NON-NLS-1$
 
 	// ISSUE: I think meta tag areas are here too?
