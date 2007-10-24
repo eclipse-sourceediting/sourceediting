@@ -33,3 +33,4 @@ Import-Package: org.eclipse.swt.widgets,
  org.eclipse.wst.common.componentcore,
  org.eclipse.wst.common.componentcore.internal.util,
  org.eclipse.wst.common.componentcore.resources
+Bundle-RequiredExecutionEnvironment: J2SE-1.4
