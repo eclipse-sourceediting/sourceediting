@@ -246,7 +246,7 @@ public class StructuredTextPartitionerForHTML extends StructuredTextPartitionerF
 		boolean isEvent = false;
 		if (fStructuredDocument instanceof IRegionComparible) {
 			int start = node.getStartOffset(tagAttrNameRegion);
-			for (int i = 0; !isEvent && !isEvent && i < EVENT_ATTRIBUTE_NAMES.length; i++) {
+			for (int i = 0; !isEvent && i < EVENT_ATTRIBUTE_NAMES.length; i++) {
 				isEvent = ((IRegionComparible) fStructuredDocument).regionMatchesIgnoreCase(start, tagAttrNameRegion.getTextLength(), EVENT_ATTRIBUTE_NAMES[i]);
 			}
 		}
