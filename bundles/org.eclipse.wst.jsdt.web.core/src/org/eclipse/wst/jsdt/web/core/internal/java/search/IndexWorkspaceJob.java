@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.wst.jsdt.web.core.internal.java.search;
 
-import org.eclipse.wst.jsdt.web.core.internal.validation.Util;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +26,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.wst.jsdt.web.core.internal.JsCoreMessages;
-import org.eclipse.wst.jsdt.web.core.internal.provisional.contenttype.ContentTypeIdForEmbededJs;
+import org.eclipse.wst.jsdt.web.core.internal.validation.Util;
 
 /**
  * Re-indexes the entire workspace. Ensures the JSP Index is in a stable state

@@ -3,30 +3,18 @@
  */
 package org.eclipse.wst.jsdt.web.ui;
 
-import java.util.ArrayList;
-import java.util.Dictionary;
-import java.util.Vector;
-
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.wizard.Wizard;
-
-
 import org.eclipse.ui.IActionDelegate;
-import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IObjectActionDelegate;
-import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.wst.jsdt.core.IClasspathEntry;
 import org.eclipse.wst.jsdt.core.JavaCore;
 import org.eclipse.wst.jsdt.core.JavaModelException;
-import org.eclipse.wst.jsdt.core.UnimplementedException;
 import org.eclipse.wst.jsdt.internal.core.JavaProject;
-
 import org.eclipse.wst.jsdt.web.core.internal.project.JsWebNature;
 
 /**

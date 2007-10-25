@@ -4,34 +4,17 @@
 package org.eclipse.wst.jsdt.web.ui;
 
 import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
 
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResourceProxy;
-import org.eclipse.core.resources.IResourceProxyVisitor;
-import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.wst.jsdt.core.ClasspathContainerInitializer;
-import org.eclipse.wst.jsdt.core.IAccessRule;
-import org.eclipse.wst.jsdt.core.IClasspathAttribute;
 import org.eclipse.wst.jsdt.core.IClasspathContainer;
 import org.eclipse.wst.jsdt.core.IClasspathEntry;
 import org.eclipse.wst.jsdt.core.IJavaProject;
-import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
-import org.eclipse.wst.jsdt.core.JavaCore;
 import org.eclipse.wst.jsdt.core.compiler.libraries.LibraryLocation;
-import org.eclipse.wst.jsdt.core.compiler.libraries.SystemLibraryLocation;
-import org.eclipse.wst.jsdt.internal.core.ClasspathAttribute;
-import org.eclipse.wst.jsdt.internal.core.ClasspathEntry;
 import org.eclipse.wst.jsdt.internal.ui.IClasspathContainerInitialzerExtension;
-
-
-import org.eclipse.wst.jsdt.web.core.internal.JsCorePlugin;
 import org.eclipse.wst.jsdt.web.core.internal.java.JsNameManglerUtil;
 import org.eclipse.wst.jsdt.web.core.internal.java.WebRootFinder;
 import org.eclipse.wst.jsdt.web.core.internal.project.JsWebNature;

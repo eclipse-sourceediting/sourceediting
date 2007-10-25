@@ -9,7 +9,6 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 package org.eclipse.wst.jsdt.web.core.internal.java.search;
-import org.eclipse.wst.jsdt.web.core.internal.validation.Util;
 import java.util.HashMap;
 
 import org.eclipse.core.resources.IFile;
@@ -21,10 +20,9 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.content.IContentDescription;
-import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.wst.jsdt.core.search.IJavaSearchScope;
 import org.eclipse.wst.jsdt.core.search.SearchPattern;
-import org.eclipse.wst.jsdt.web.core.internal.provisional.contenttype.ContentTypeIdForEmbededJs;
+import org.eclipse.wst.jsdt.web.core.internal.validation.Util;
 
 /**
  * pa_TODO Still need to take into consideration: - focus in workspace - search

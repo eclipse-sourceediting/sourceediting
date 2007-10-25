@@ -18,7 +18,7 @@ public class JSDTContetAssistInvocationContext extends JavaContentAssistInvocati
 	
 	private static JsTranslation getJSPTranslation(ITextViewer viewer) {
 		JsTranslation fTranslation = null;
-		;
+		
 		IDOMModel xmlModel = null;
 		try {
 			xmlModel = (IDOMModel) StructuredModelManager.getModelManager().getExistingModelForRead(viewer.getDocument());

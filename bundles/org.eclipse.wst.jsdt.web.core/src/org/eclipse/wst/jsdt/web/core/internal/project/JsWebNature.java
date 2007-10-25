@@ -18,7 +18,6 @@ import org.eclipse.wst.jsdt.core.JavaCore;
 import org.eclipse.wst.jsdt.core.LibrarySuperType;
 import org.eclipse.wst.jsdt.internal.core.JavaProject;
 import org.eclipse.wst.jsdt.ui.PreferenceConstants;
-import org.eclipse.wst.jsdt.web.core.internal.java.WebRootFinder;
 
 public class JsWebNature implements IProjectNature {
 	//private static final String FILENAME_CLASSPATH = ".classpath"; //$NON-NLS-1$

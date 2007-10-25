@@ -1,10 +1,10 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: JSDT Web Support Core (Incubation)
+Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.eclipse.wst.jsdt.web.core; singleton:=true
 Bundle-Version: 0.0.1.qualifier
 Bundle-Activator: org.eclipse.wst.jsdt.web.core.internal.JsCorePlugin
-Bundle-Vendor: Eclipse.org
+Bundle-Vendor: %Bundle-Vendor.0
 Bundle-Localization: plugin
 Export-Package: org.eclipse.wst.jsdt.web.core.internal;x-friends:="org.eclipse.wst.jsdt.web.ui",
  org.eclipse.wst.jsdt.web.core.internal.java;x-friends:="org.eclipse.wst.jsdt.web.ui",

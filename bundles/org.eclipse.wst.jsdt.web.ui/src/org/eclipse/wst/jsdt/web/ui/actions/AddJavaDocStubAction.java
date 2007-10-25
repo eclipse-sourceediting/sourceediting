@@ -49,7 +49,7 @@ public class AddJavaDocStubAction implements IObjectActionDelegate {
 		IJavaElement parent = elements[0].getParent();
 		/* find the cu */
 		while (parent != null && !(parent instanceof ICompilationUnit)) {
-			;
+			
 		}
 		if (parent != null) {
 			ArrayList members = new ArrayList();

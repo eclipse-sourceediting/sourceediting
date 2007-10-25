@@ -4,8 +4,6 @@
 package org.eclipse.wst.jsdt.web.core.internal.validation;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.content.IContentType;

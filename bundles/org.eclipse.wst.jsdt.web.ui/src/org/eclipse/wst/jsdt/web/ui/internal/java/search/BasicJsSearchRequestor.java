@@ -20,8 +20,8 @@ import org.eclipse.wst.jsdt.core.search.SearchMatch;
 import org.eclipse.wst.jsdt.core.search.SearchParticipant;
 import org.eclipse.wst.jsdt.core.search.SearchRequestor;
 import org.eclipse.wst.jsdt.web.core.internal.java.JsTranslation;
-import org.eclipse.wst.jsdt.web.core.internal.java.search.JsSearchSupport;
 import org.eclipse.wst.jsdt.web.core.internal.java.search.JSDTSearchDocumentDelegate;
+import org.eclipse.wst.jsdt.web.core.internal.java.search.JsSearchSupport;
 
 /**
  * Accepts matches from JSPSearchSupport.search(...) request. Adapts the results

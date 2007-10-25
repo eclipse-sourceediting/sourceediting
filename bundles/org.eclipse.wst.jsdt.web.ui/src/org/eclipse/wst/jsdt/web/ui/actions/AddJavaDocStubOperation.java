@@ -31,7 +31,7 @@ public class AddJavaDocStubOperation extends org.eclipse.wst.jsdt.internal.corex
 	 * @param members
 	 */
 	private JsJfaceNode node;
-	private DocumentChangeListenerToTextEdit textEditListener;;
+	private DocumentChangeListenerToTextEdit textEditListener;
 	
 	public AddJavaDocStubOperation(IMember[] members, JsJfaceNode node) {
 		super(members);
