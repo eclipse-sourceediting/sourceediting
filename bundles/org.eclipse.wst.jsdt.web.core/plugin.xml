@@ -23,13 +23,14 @@
 	
 	</extension>
 	
+	<!-- removed due to JUnit failures during initial WTP build
 	   <extension id="embeded.jsNature" name="%extension.name.0" point="org.eclipse.core.resources.natures"> 
 		   <runtime>          
 		   	<run class="org.eclipse.wst.jsdt.web.core.internal.project.JsWebNature"/>       
 		   </runtime>       
 	 	   <builder id="org.eclipse.wst.jsdt.web.core.embeded.javascript"/>    
 	   </extension> 
-	   
+	-->   
 
 	   	<!-- 
 	   	Not using this at the moment, but everythings in place if we need in the future. 
