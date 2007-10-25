@@ -19,16 +19,13 @@ import org.eclipse.jst.jsp.core.internal.text.StructuredTextPartitionerForJSP;
 import org.eclipse.jst.jsp.core.text.IJSPPartitions;
 import org.eclipse.jst.jsp.ui.StructuredTextViewerConfigurationJSP;
 import org.eclipse.jst.jsp.ui.internal.autoedit.StructuredAutoEditStrategyJSP;
-import org.eclipse.jst.jsp.ui.internal.format.FormattingStrategyJSPJava;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.eclipse.wst.css.core.text.ICSSPartitions;
-import org.eclipse.wst.html.core.internal.format.HTMLFormatProcessorImpl;
 import org.eclipse.wst.html.core.text.IHTMLPartitions;
 import org.eclipse.wst.jsdt.web.ui.StructuredTextViewerConfigurationJSDT;
 import org.eclipse.wst.jsdt.web.ui.StructuredTextViewerConfigurationJSDT.externalTypeExtension;
 import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
 import org.eclipse.wst.sse.ui.internal.ExtendedConfigurationBuilder;
-import org.eclipse.wst.sse.ui.internal.format.StructuredFormattingStrategy;
 import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
 import org.eclipse.wst.xml.core.text.IXMLPartitions;
 
