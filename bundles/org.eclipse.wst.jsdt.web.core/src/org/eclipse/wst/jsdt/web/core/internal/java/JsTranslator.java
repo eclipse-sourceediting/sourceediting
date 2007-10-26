@@ -126,6 +126,7 @@ public class JsTranslator extends Job implements IDocumentListener{
 	}
 	
 	private char[] getPad(int numberOfChars) {
+		if(numberOfChars < 0) return new char[0];
 		final char[] spaceArray = new char[numberOfChars];
 		Arrays.fill(spaceArray, ' ');
 		return spaceArray;
