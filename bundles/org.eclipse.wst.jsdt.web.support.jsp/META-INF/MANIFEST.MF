@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: JSDT support for JSP Plug-in
+Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.eclipse.wst.jsdt.web.support.jsp;singleton:=true
 Bundle-Version: 1.0.0
 Bundle-Activator: org.eclipse.wst.jsdt.web.support.jsp.Activator
@@ -19,3 +19,5 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.wst.jsdt.web.core
 Eclipse-LazyStart: true
 Bundle-RequiredExecutionEnvironment: J2SE-1.4
+Bundle-Vendor: %Bundle-Vendor.0
+Bundle-Localization: plugin
