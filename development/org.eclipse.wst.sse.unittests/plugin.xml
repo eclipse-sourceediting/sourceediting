@@ -29,6 +29,6 @@
 		</editor>
 	</extension>
 
-	<extension-point id="additionalTests" name="%additionalTests"/>
+	<extension-point id="additionalTests" name="%additionalTests" schema="schema/additionalTests.exsd"/>
 
 </plugin>
