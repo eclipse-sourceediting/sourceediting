@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -1442,8 +1442,11 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 			// the previous region...there might be a better way to do this
 			if ((regionText != null) && regionText.trim().equals("") && (documentPosition > 0)) { //$NON-NLS-1$
 				IStructuredDocumentRegion prev = treeNode.getStructuredDocument().getRegionAtCharacterOffset(documentPosition - 1);
-				if ((prev != null) && prev.getFullText().trim().equals("&")) { //$NON-NLS-1$		
-					completionRegion = prev;
+				if ((prev != null) && prev.getText().equals("&")) { //$NON-NLS-1$
+					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=206680
+					// examine previous region
+					sdRegion = prev;
+					completionRegion = prev.getLastRegion();
 					regionText = prev.getFullText();
 					nodeOffset = 1;
 				}
