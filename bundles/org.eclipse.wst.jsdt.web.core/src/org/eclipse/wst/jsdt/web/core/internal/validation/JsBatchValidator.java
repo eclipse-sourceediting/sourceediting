@@ -232,8 +232,7 @@ public final class JsBatchValidator implements IValidatorJob, IExecutableExtensi
 		try {
 			entries = javaProject.getResolvedClasspath(true);
 		} catch (JavaModelException ex) {
-			// TODO Auto-generated catch block
-			ex.printStackTrace();
+			// May run into an exception if the project isn't jsdt.
 		}
 		ArrayList ignorePaths = new ArrayList();
 		nextEntry: for(int i = 0;i<entries.length;i++) {
