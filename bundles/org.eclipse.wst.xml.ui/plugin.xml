@@ -70,6 +70,10 @@
 			type="spellingregions"
 			value="XML_COMMENT_TEXT, XML_CONTENT, XML_DEFAULT"
 			target="org.eclipse.core.runtime.xml, org.eclipse.wst.xml.core.xmlsource" />
+		<documentationTextHover
+        	class="org.eclipse.wst.xml.ui.internal.taginfo.XMLTagInfoHoverProcessor"
+        	target="org.eclipse.wst.xml.XML_DEFAULT">
+  		</documentationTextHover>
 	</extension>
 
 	<extension

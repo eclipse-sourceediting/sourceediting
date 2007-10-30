@@ -19,11 +19,9 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.ITextDoubleClickStrategy;
-import org.eclipse.jface.text.ITextHover;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.formatter.IContentFormatter;
 import org.eclipse.jface.text.formatter.MultiPassContentFormatter;
-import org.eclipse.jface.text.information.IInformationProvider;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.wst.css.core.text.ICSSPartitions;
@@ -40,19 +38,12 @@ import org.eclipse.wst.html.ui.internal.autoedit.StructuredAutoEditStrategyHTML;
 import org.eclipse.wst.html.ui.internal.contentassist.HTMLContentAssistProcessor;
 import org.eclipse.wst.html.ui.internal.contentassist.NoRegionContentAssistProcessorForHTML;
 import org.eclipse.wst.html.ui.internal.style.LineStyleProviderForHTML;
-import org.eclipse.wst.html.ui.internal.taginfo.HTMLInformationProvider;
-import org.eclipse.wst.html.ui.internal.taginfo.HTMLTagInfoHoverProcessor;
 import org.eclipse.wst.javascript.ui.internal.common.contentassist.JavaScriptContentAssistProcessor;
 import org.eclipse.wst.javascript.ui.internal.common.style.LineStyleProviderForJavaScript;
-import org.eclipse.wst.javascript.ui.internal.common.taginfo.JavaScriptInformationProvider;
-import org.eclipse.wst.javascript.ui.internal.common.taginfo.JavaScriptTagInfoHoverProcessor;
 import org.eclipse.wst.sse.core.text.IStructuredPartitions;
 import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
-import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.format.StructuredFormattingStrategy;
 import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
-import org.eclipse.wst.sse.ui.internal.taginfo.TextHoverManager;
-import org.eclipse.wst.sse.ui.internal.util.EditorUtility;
 import org.eclipse.wst.xml.core.internal.provisional.contenttype.ContentTypeIdForXML;
 import org.eclipse.wst.xml.core.internal.text.rules.StructuredTextPartitionerForXML;
 import org.eclipse.wst.xml.core.text.IXMLPartitions;
@@ -93,7 +84,7 @@ public class StructuredTextViewerConfigurationHTML extends StructuredTextViewerC
 	 */
 	private StructuredTextViewerConfiguration fXMLSourceViewerConfiguration;
 	private ILabelProvider fStatusLineLabelProvider;
-
+		
 	/**
 	 * Create new instance of StructuredTextViewerConfigurationHTML
 	 */
@@ -172,7 +163,8 @@ public class StructuredTextViewerConfigurationHTML extends StructuredTextViewerC
 			return getXMLSourceViewerConfiguration().getDoubleClickStrategy(sourceViewer, IXMLPartitions.XML_DEFAULT);
 		}
 		else
-			return super.getDoubleClickStrategy(sourceViewer, contentType);
+		return super.getDoubleClickStrategy(sourceViewer, contentType);
+			
 	}
 
 	public String[] getIndentPrefixes(ISourceViewer sourceViewer, String contentType) {
@@ -216,19 +208,6 @@ public class StructuredTextViewerConfigurationHTML extends StructuredTextViewerC
 		vector.add(""); //$NON-NLS-1$
 
 		return (String[]) vector.toArray(new String[vector.size()]);
-	}
-
-	protected IInformationProvider getInformationProvider(ISourceViewer sourceViewer, String partitionType) {
-		IInformationProvider provider = null;
-		if (partitionType == IHTMLPartitions.HTML_DEFAULT) {
-			// HTML
-			provider = new HTMLInformationProvider();
-		}
-		else if (partitionType == IHTMLPartitions.SCRIPT) {
-			// HTML JavaScript
-			provider = new JavaScriptInformationProvider();
-		}
-		return provider;
 	}
 
 	public LineStyleProvider[] getLineStyleProviders(ISourceViewer sourceViewer, String partitionType) {
@@ -293,45 +272,6 @@ public class StructuredTextViewerConfigurationHTML extends StructuredTextViewerC
 			};
 		}
 		return fStatusLineLabelProvider;
-	}
-
-	public ITextHover getTextHover(ISourceViewer sourceViewer, String contentType, int stateMask) {
-		ITextHover textHover = null;
-
-		// look for appropriate text hover processor to return based on
-		// content type and state mask
-		TextHoverManager manager = SSEUIPlugin.getDefault().getTextHoverManager();
-		TextHoverManager.TextHoverDescriptor[] hoverDescs = manager.getTextHovers();
-		int i = 0;
-		while (i < hoverDescs.length && textHover == null) {
-			if (hoverDescs[i].isEnabled() && EditorUtility.computeStateMask(hoverDescs[i].getModifierString()) == stateMask) {
-				String hoverType = hoverDescs[i].getId();
-				if (TextHoverManager.COMBINATION_HOVER.equalsIgnoreCase(hoverType)) {
-					// check if script or html is needed
-					if (contentType == IHTMLPartitions.SCRIPT) {
-						textHover = manager.createBestMatchHover(new JavaScriptTagInfoHoverProcessor());
-					}
-					else if (contentType == IHTMLPartitions.HTML_DEFAULT) {
-						textHover = manager.createBestMatchHover(new HTMLTagInfoHoverProcessor());
-					}
-				}
-				else if (TextHoverManager.DOCUMENTATION_HOVER.equalsIgnoreCase(hoverType))
-					// check if script or html is needed
-					if (contentType == IHTMLPartitions.SCRIPT) {
-						textHover = new JavaScriptTagInfoHoverProcessor();
-					}
-					else if (contentType == IHTMLPartitions.HTML_DEFAULT) {
-						textHover = new HTMLTagInfoHoverProcessor();
-					}
-			}
-			i++;
-		}
-
-		// no appropriate text hovers found, try super
-		if (textHover == null) {
-			textHover = super.getTextHover(sourceViewer, contentType, stateMask);
-		}
-		return textHover;
 	}
 
 	private StructuredTextViewerConfiguration getXMLSourceViewerConfiguration() {

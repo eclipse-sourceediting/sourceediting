@@ -21,20 +21,15 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.ITextDoubleClickStrategy;
-import org.eclipse.jface.text.ITextHover;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.formatter.IContentFormatter;
 import org.eclipse.jface.text.formatter.MultiPassContentFormatter;
-import org.eclipse.jface.text.information.IInformationProvider;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.wst.sse.core.text.IStructuredPartitions;
 import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
-import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.format.StructuredFormattingStrategy;
 import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
-import org.eclipse.wst.sse.ui.internal.taginfo.TextHoverManager;
-import org.eclipse.wst.sse.ui.internal.util.EditorUtility;
 import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
 import org.eclipse.wst.xml.core.internal.preferences.XMLCorePreferenceNames;
 import org.eclipse.wst.xml.core.internal.provisional.contenttype.ContentTypeIdForXML;
@@ -48,8 +43,6 @@ import org.eclipse.wst.xml.ui.internal.contentassist.XMLContentAssistProcessor;
 import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeLabelProvider;
 import org.eclipse.wst.xml.ui.internal.doubleclick.XMLDoubleClickStrategy;
 import org.eclipse.wst.xml.ui.internal.style.LineStyleProviderForXML;
-import org.eclipse.wst.xml.ui.internal.taginfo.XMLInformationProvider;
-import org.eclipse.wst.xml.ui.internal.taginfo.XMLTagInfoHoverProcessor;
 import org.w3c.dom.Node;
 
 /**
@@ -195,14 +188,6 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 		return (String[]) vector.toArray(new String[vector.size()]);
 	}
 
-	protected IInformationProvider getInformationProvider(ISourceViewer sourceViewer, String partitionType) {
-		IInformationProvider provider = null;
-		if ((partitionType == IStructuredPartitions.DEFAULT_PARTITION) || (partitionType == IXMLPartitions.XML_DEFAULT)) {
-			provider = new XMLInformationProvider();
-		}
-		return provider;
-	}
-
 	public LineStyleProvider[] getLineStyleProviders(ISourceViewer sourceViewer, String partitionType) {
 		LineStyleProvider[] providers = null;
 
@@ -244,38 +229,6 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 			};
 		}
 		return fStatusLineLabelProvider;
-	}
-
-	public ITextHover getTextHover(ISourceViewer sourceViewer, String contentType, int stateMask) {
-		ITextHover textHover = null;
-
-		// look for appropriate text hover processor to return based on
-		// content type and state mask
-		if ((contentType == IStructuredPartitions.DEFAULT_PARTITION) || (contentType == IXMLPartitions.XML_DEFAULT)) {
-			// check which of xml's text hover is handling stateMask
-			TextHoverManager manager = SSEUIPlugin.getDefault().getTextHoverManager();
-			TextHoverManager.TextHoverDescriptor[] hoverDescs = manager.getTextHovers();
-			int i = 0;
-			while ((i < hoverDescs.length) && (textHover == null)) {
-				if (hoverDescs[i].isEnabled() && (EditorUtility.computeStateMask(hoverDescs[i].getModifierString()) == stateMask)) {
-					String hoverType = hoverDescs[i].getId();
-					if (TextHoverManager.COMBINATION_HOVER.equalsIgnoreCase(hoverType)) {
-						textHover = manager.createBestMatchHover(new XMLTagInfoHoverProcessor());
-					}
-					else if (TextHoverManager.DOCUMENTATION_HOVER.equalsIgnoreCase(hoverType)) {
-						textHover = new XMLTagInfoHoverProcessor();
-					}
-				}
-				i++;
-			}
-		}
-
-		// no appropriate text hovers found, try super
-		if (textHover == null) {
-			textHover = super.getTextHover(sourceViewer, contentType, stateMask);
-		}
-
-		return textHover;
 	}
 
 	protected Map getHyperlinkDetectorTargets(ISourceViewer sourceViewer) {

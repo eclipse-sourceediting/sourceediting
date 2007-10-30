@@ -23,13 +23,10 @@ import org.eclipse.jdt.ui.text.JavaSourceViewerConfiguration;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.ITextDoubleClickStrategy;
-import org.eclipse.jface.text.ITextHover;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.formatter.IContentFormatter;
 import org.eclipse.jface.text.formatter.MultiPassContentFormatter;
-import org.eclipse.jface.text.information.IInformationPresenter;
-import org.eclipse.jface.text.information.IInformationProvider;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jst.jsp.core.internal.provisional.contenttype.ContentTypeIdForJSP;
@@ -45,10 +42,6 @@ import org.eclipse.jst.jsp.ui.internal.format.FormattingStrategyJSPJava;
 import org.eclipse.jst.jsp.ui.internal.style.LineStyleProviderForJSP;
 import org.eclipse.jst.jsp.ui.internal.style.java.LineStyleProviderForJava;
 import org.eclipse.jst.jsp.ui.internal.style.jspel.LineStyleProviderForJSPEL;
-import org.eclipse.jst.jsp.ui.internal.taginfo.JSPInformationProvider;
-import org.eclipse.jst.jsp.ui.internal.taginfo.JSPJavaJavadocHoverProcessor;
-import org.eclipse.jst.jsp.ui.internal.taginfo.JSPJavaJavadocInformationProvider;
-import org.eclipse.jst.jsp.ui.internal.taginfo.JSPTagInfoHoverProcessor;
 import org.eclipse.wst.css.core.text.ICSSPartitions;
 import org.eclipse.wst.html.core.internal.format.HTMLFormatProcessorImpl;
 import org.eclipse.wst.html.core.internal.provisional.contenttype.ContentTypeIdForHTML;
@@ -56,11 +49,8 @@ import org.eclipse.wst.html.core.text.IHTMLPartitions;
 import org.eclipse.wst.html.ui.StructuredTextViewerConfigurationHTML;
 import org.eclipse.wst.sse.core.text.IStructuredPartitions;
 import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
-import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.format.StructuredFormattingStrategy;
 import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
-import org.eclipse.wst.sse.ui.internal.taginfo.TextHoverManager;
-import org.eclipse.wst.sse.ui.internal.util.EditorUtility;
 import org.eclipse.wst.xml.core.internal.provisional.contenttype.ContentTypeIdForXML;
 import org.eclipse.wst.xml.core.text.IXMLPartitions;
 import org.eclipse.wst.xml.ui.StructuredTextViewerConfigurationXML;
@@ -275,34 +265,6 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 		return indentations;
 	}
 
-	protected IInformationProvider getInformationProvider(ISourceViewer sourceViewer, String partitionType) {
-		IInformationProvider provider = null;
-		if (partitionType == IHTMLPartitions.HTML_DEFAULT) {
-			// HTML
-			IInformationPresenter htmlPresenter = getHTMLSourceViewerConfiguration().getInformationPresenter(sourceViewer);
-			provider = htmlPresenter.getInformationProvider(IHTMLPartitions.HTML_DEFAULT);
-		}
-		else if (partitionType == IHTMLPartitions.SCRIPT) {
-			// HTML JavaScript
-			IInformationPresenter htmlPresenter = getHTMLSourceViewerConfiguration().getInformationPresenter(sourceViewer);
-			provider = htmlPresenter.getInformationProvider(IHTMLPartitions.SCRIPT);
-		}
-		else if (partitionType == IXMLPartitions.XML_DEFAULT) {
-			// XML
-			IInformationPresenter xmlPresenter = getXMLSourceViewerConfiguration().getInformationPresenter(sourceViewer);
-			provider = xmlPresenter.getInformationProvider(IXMLPartitions.XML_DEFAULT);
-		}
-		else if ((partitionType == IJSPPartitions.JSP_DEFAULT) || (partitionType == IJSPPartitions.JSP_DIRECTIVE)) {
-			// JSP tags
-			provider = new JSPInformationProvider();
-		}
-		else if (partitionType == IJSPPartitions.JSP_CONTENT_JAVA) {
-			// JSP java
-			provider = new JSPJavaJavadocInformationProvider();
-		}
-		return provider;
-	}
-
 	private JavaSourceViewerConfiguration getJavaSourceViewerConfiguration() {
 		if (fJavaSourceViewerConfiguration == null) {
 			IPreferenceStore store = PreferenceConstants.getPreferenceStore();
@@ -392,55 +354,6 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 			};
 		}
 		return fStatusLineLabelProvider;
-	}
-
-	public ITextHover getTextHover(ISourceViewer sourceViewer, String contentType, int stateMask) {
-		ITextHover hover = null;
-
-		if (contentType == IHTMLPartitions.HTML_DEFAULT || contentType == IHTMLPartitions.SCRIPT) {
-			// html and javascript regions
-			hover = getHTMLSourceViewerConfiguration().getTextHover(sourceViewer, contentType, stateMask);
-		}
-		else if (contentType == IXMLPartitions.XML_DEFAULT) {
-			// xml regions
-			hover = getXMLSourceViewerConfiguration().getTextHover(sourceViewer, contentType, stateMask);
-		}
-		else if ((contentType == IJSPPartitions.JSP_DEFAULT) || (contentType == IJSPPartitions.JSP_DIRECTIVE) || (contentType == IJSPPartitions.JSP_CONTENT_JAVA)) {
-			TextHoverManager manager = SSEUIPlugin.getDefault().getTextHoverManager();
-			TextHoverManager.TextHoverDescriptor[] hoverDescs = manager.getTextHovers();
-			int i = 0;
-			while (i < hoverDescs.length && hover == null) {
-				if (hoverDescs[i].isEnabled() && EditorUtility.computeStateMask(hoverDescs[i].getModifierString()) == stateMask) {
-					String hoverType = hoverDescs[i].getId();
-					if (TextHoverManager.COMBINATION_HOVER.equalsIgnoreCase(hoverType)) {
-						if ((contentType == IJSPPartitions.JSP_DEFAULT) || (contentType == IJSPPartitions.JSP_DIRECTIVE)) {
-							// JSP
-							hover = manager.createBestMatchHover(new JSPTagInfoHoverProcessor());
-						}
-						else {
-							// JSP Java
-							hover = manager.createBestMatchHover(new JSPJavaJavadocHoverProcessor());
-						}
-					}
-					else if (TextHoverManager.DOCUMENTATION_HOVER.equalsIgnoreCase(hoverType)) {
-						if ((contentType == IJSPPartitions.JSP_DEFAULT) || (contentType == IJSPPartitions.JSP_DIRECTIVE)) {
-							// JSP
-							hover = new JSPTagInfoHoverProcessor();
-						}
-						else {
-							// JSP Java
-							hover = new JSPJavaJavadocHoverProcessor();
-						}
-					}
-				}
-				i++;
-			}
-		}
-
-		// no appropriate text hovers found, try super
-		if (hover == null)
-			hover = super.getTextHover(sourceViewer, contentType, stateMask);
-		return hover;
 	}
 
 	private StructuredTextViewerConfiguration getXMLSourceViewerConfiguration() {

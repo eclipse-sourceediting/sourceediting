@@ -26,6 +26,10 @@
 		<propertySheetConfiguration
 			class="org.eclipse.wst.xml.ui.views.properties.XMLPropertySheetConfiguration"
 			target="org.eclipse.wst.html.core.htmlsource" />
+  		<documentationTextHover
+        	class="org.eclipse.wst.html.ui.internal.taginfo.HTMLTagInfoHoverProcessor"
+        	target="org.eclipse.wst.html.HTML_DEFAULT">
+  		</documentationTextHover>
 		<provisionalConfiguration
 			type="sourceeditingtexttools"
 			class="org.eclipse.wst.xml.ui.internal.provisional.XMLSourceEditingTextTools"

@@ -62,6 +62,14 @@
 			type="spellingregions"
 			value="XML_COMMENT_TEXT, JSP_COMMENT_TEXT, XML_CONTENT, HTML_CONTENT"
 			target="org.eclipse.jst.jsp.core.jspsource" />
+  		<documentationTextHover
+        	class="org.eclipse.jst.jsp.ui.internal.taginfo.JSPTagInfoHoverProcessor"
+        	target="org.eclipse.jst.jsp.DEFAULT_JSP, org.eclipse.jst.jsp.JSP_DIRECTIVE">
+  		</documentationTextHover>
+  		<documentationTextHover
+        	class="org.eclipse.jst.jsp.ui.internal.taginfo.JSPJavaJavadocHoverProcessor"
+        	target="org.eclipse.jst.jsp.SCRIPT.JAVA">
+  		</documentationTextHover>
 	</extension>
 
 	<!--======================================================================================-->
