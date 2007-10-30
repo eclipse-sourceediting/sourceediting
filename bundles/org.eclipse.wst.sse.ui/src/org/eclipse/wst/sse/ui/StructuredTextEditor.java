@@ -58,14 +58,9 @@ import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.ITextViewerExtension;
 import org.eclipse.jface.text.ITextViewerExtension2;
-import org.eclipse.jface.text.ITextViewerExtension4;
-import org.eclipse.jface.text.ITextViewerExtension5;
 import org.eclipse.jface.text.TextSelection;
-import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.jface.text.contentassist.ContentAssistant;
 import org.eclipse.jface.text.contentassist.IContentAssistant;
-import org.eclipse.jface.text.information.IInformationProvider;
-import org.eclipse.jface.text.information.IInformationProviderExtension2;
 import org.eclipse.jface.text.information.InformationPresenter;
 import org.eclipse.jface.text.source.DefaultCharacterPairMatcher;
 import org.eclipse.jface.text.source.ICharacterPairMatcher;
@@ -133,7 +128,6 @@ import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 import org.eclipse.ui.texteditor.IUpdate;
 import org.eclipse.ui.texteditor.IWorkbenchActionDefinitionIds;
 import org.eclipse.ui.texteditor.SourceViewerDecorationSupport;
-import org.eclipse.ui.texteditor.TextEditorAction;
 import org.eclipse.ui.texteditor.TextOperationAction;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
@@ -144,7 +138,6 @@ import org.eclipse.wst.sse.core.internal.provisional.IModelStateListener;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitioning;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.text.IExecutionDelegatable;
 import org.eclipse.wst.sse.core.internal.undo.IStructuredTextUndoManager;
@@ -1128,127 +1121,6 @@ public class StructuredTextEditor extends TextEditor {
 
 		public StructuredTextViewerConfiguration getConfiguration() {
 			return fConfiguration;
-		}
-	}
-
-	/**
-	 * This action behaves in two different ways: If there is no current text
-	 * hover, the javadoc is displayed using information presenter. If there
-	 * is a current text hover, it is converted into a information presenter
-	 * in order to make it sticky.
-	 * 
-	 * @see org.eclipse.jdt.internal.ui.javaeditor.JavaEditor#InformationDispatchAction
-	 */
-	class InformationDispatchAction extends TextEditorAction {
-
-		/** The wrapped text operation action. */
-		private final TextOperationAction fTextOperationAction;
-
-		/**
-		 * Creates a dispatch action.
-		 * 
-		 * @param resourceBundle
-		 *            the resource bundle
-		 * @param prefix
-		 *            the prefix
-		 * @param textOperationAction
-		 *            the text operation action
-		 */
-		public InformationDispatchAction(ResourceBundle resourceBundle, String prefix, final TextOperationAction textOperationAction) {
-			super(resourceBundle, prefix, StructuredTextEditor.this);
-			if (textOperationAction == null)
-				throw new IllegalArgumentException();
-			fTextOperationAction = textOperationAction;
-		}
-
-		/*
-		 * @see org.eclipse.jface.action.IAction#run()
-		 */
-		public void run() {
-			ISourceViewer sourceViewer = getSourceViewer();
-			if (sourceViewer == null) {
-				fTextOperationAction.run();
-				return;
-			}
-
-			if (sourceViewer instanceof ITextViewerExtension4) {
-				ITextViewerExtension4 extension4 = (ITextViewerExtension4) sourceViewer;
-				if (extension4.moveFocusToWidgetToken())
-					return;
-			}
-
-			if (!(sourceViewer instanceof ITextViewerExtension2)) {
-				fTextOperationAction.run();
-				return;
-			}
-
-			ITextViewerExtension2 textViewerExtension2 = (ITextViewerExtension2) sourceViewer;
-
-			// does a text hover exist?
-			ITextHover textHover = textViewerExtension2.getCurrentTextHover();
-			if (textHover == null) {
-				fTextOperationAction.run();
-				return;
-			}
-
-			Point hoverEventLocation = textViewerExtension2.getHoverEventLocation();
-			int offset = computeOffsetAtLocation(sourceViewer, hoverEventLocation.x, hoverEventLocation.y);
-			if (offset == -1) {
-				fTextOperationAction.run();
-				return;
-			}
-
-			try {
-				// get the text hover content
-				String contentType = TextUtilities.getContentType(sourceViewer.getDocument(), IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING, offset, true);
-
-				IRegion hoverRegion = textHover.getHoverRegion(sourceViewer, offset);
-				if (hoverRegion == null)
-					return;
-
-				String hoverInfo = textHover.getHoverInfo(sourceViewer, hoverRegion);
-
-				IInformationControlCreator controlCreator = null;
-				if (textHover instanceof IInformationProviderExtension2)
-					controlCreator = ((IInformationProviderExtension2) textHover).getInformationPresenterControlCreator();
-
-				IInformationProvider informationProvider = new InformationProvider(hoverRegion, hoverInfo, controlCreator);
-
-				fInformationPresenter.setOffset(offset);
-				fInformationPresenter.setDocumentPartitioning(IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING);
-				fInformationPresenter.setInformationProvider(informationProvider, contentType);
-				fInformationPresenter.showInformation();
-
-			}
-			catch (BadLocationException e) {
-				// No good information to display
-			}
-		}
-
-		// modified version from TextViewer
-		private int computeOffsetAtLocation(ITextViewer textViewer, int x, int y) {
-
-			StyledText styledText = textViewer.getTextWidget();
-			IDocument document = textViewer.getDocument();
-
-			if (document == null)
-				return -1;
-
-			try {
-				int widgetLocation = styledText.getOffsetAtLocation(new Point(x, y));
-				if (textViewer instanceof ITextViewerExtension5) {
-					ITextViewerExtension5 extension = (ITextViewerExtension5) textViewer;
-					return extension.widgetOffset2ModelOffset(widgetLocation);
-				}
-				else {
-					IRegion visibleRegion = textViewer.getVisibleRegion();
-					return widgetLocation + visibleRegion.getOffset();
-				}
-			}
-			catch (IllegalArgumentException e) {
-				return -1;
-			}
-
 		}
 	}
 

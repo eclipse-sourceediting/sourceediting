@@ -16,6 +16,7 @@
             <element ref="sourceViewerConfiguration" minOccurs="0" maxOccurs="unbounded"/>
             <element ref="contentOutlineConfiguration" minOccurs="0" maxOccurs="unbounded"/>
             <element ref="propertySheetConfiguration" minOccurs="0" maxOccurs="unbounded"/>
+            <element ref="documentationTextHover" minOccurs="0" maxOccurs="unbounded"/>
             <element ref="provisionalConfiguration" minOccurs="0" maxOccurs="unbounded"/>
             <element ref="provisionalDefinition" minOccurs="0" maxOccurs="unbounded"/>
          </sequence>
@@ -63,7 +64,7 @@
                   Must subclass org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration:"/>
                </appInfo>
             </annotation>
          </attribute>
@@ -90,7 +91,7 @@
                   Must subclass org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration:"/>
                </appInfo>
             </annotation>
          </attribute>
@@ -117,7 +118,36 @@
                   Must subclass org.eclipse.wst.sse.ui.views.properties.PropertySheetConfiguration
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.wst.sse.ui.views.properties.PropertySheetConfiguration:"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="documentationTextHover">
+      <annotation>
+         <documentation>
+            Defines the text hover processor to use to display documentation information in a text hover
+&lt;br /&gt;
+&lt;i&gt;Since 3.0&lt;/i&gt;
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="target" type="string" use="required">
+            <annotation>
+               <documentation>
+                  A string defining when to use this extension.  Must be a partition type id.  Multiple targets may be given as a comma delimited value.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="class" type="string" use="required">
+            <annotation>
+               <documentation>
+                  Must implement org.eclipse.jface.text.ITextHover
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn=":org.eclipse.jface.text.ITextHover"/>
                </appInfo>
             </annotation>
          </attribute>
@@ -234,21 +264,13 @@ Note: this is not API and is only used for provisional configuration types.
       </documentation>
    </annotation>
 
-   <annotation>
-      <appInfo>
-         <meta.section type="implementation"/>
-      </appInfo>
-      <documentation>
-         
-      </documentation>
-   </annotation>
 
    <annotation>
       <appInfo>
          <meta.section type="copyright"/>
       </appInfo>
       <documentation>
-         Copyright (c) 2005 IBM Corporation and others.
+         Copyright (c) 2005, 2007 IBM Corporation and others.
 All rights reserved. This program and the accompanying materials are made available under the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at &lt;a href=&quot;http://www.eclipse.org/legal/epl-v10.html&quot;&gt;http://www.eclipse.org/legal/epl-v10.html&lt;/a&gt;
       </documentation>
    </annotation>

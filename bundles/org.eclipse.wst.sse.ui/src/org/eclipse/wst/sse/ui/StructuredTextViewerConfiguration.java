@@ -41,6 +41,7 @@ import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
 import org.eclipse.ui.texteditor.ChainedPreferenceStore;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitioning;
+import org.eclipse.wst.sse.ui.internal.ExtendedConfigurationBuilder;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.StructuredTextAnnotationHover;
 import org.eclipse.wst.sse.ui.internal.contentassist.StructuredContentAssistant;
@@ -380,7 +381,8 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 	 * @return IInformationProvider or null if should not be supported
 	 */
 	protected IInformationProvider getInformationProvider(ISourceViewer sourceViewer, String partitionType) {
-		return null;
+		ITextHover bestMatchHover = new BestMatchHover(createDocumentationHover(partitionType));
+		return new TextHoverInformationProvider(bestMatchHover);
 	}
 
 	/**
@@ -519,6 +521,22 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 		return null;
 	}
 
+	/**
+	 * Create a documentation hover based on hovers contributed via
+	 * org.eclipse.wst.sse.ui.editorConfiguration extension point
+	 * 
+	 * @param partitionType
+	 * @return
+	 */
+	private ITextHover createDocumentationHover(String partitionType) {
+		ITextHover textHover = null;
+		Object extendedTextHover = ExtendedConfigurationBuilder.getInstance().getConfiguration(ExtendedConfigurationBuilder.DOCUMENTATIONTEXTHOVER, partitionType);
+		if (extendedTextHover instanceof ITextHover) {
+			textHover = (ITextHover) extendedTextHover;
+		}
+		return textHover;
+	}
+
 	public ITextHover getTextHover(ISourceViewer sourceViewer, String contentType, int stateMask) {
 		ITextHover textHover = null;
 
@@ -536,7 +554,10 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 				else if (TextHoverManager.ANNOTATION_HOVER.equalsIgnoreCase(hoverType))
 					textHover = new AnnotationHoverProcessor();
 				else if (TextHoverManager.COMBINATION_HOVER.equalsIgnoreCase(hoverType))
-					textHover = new BestMatchHover(null);
+					textHover = new BestMatchHover(createDocumentationHover(contentType));
+				else if (TextHoverManager.DOCUMENTATION_HOVER.equalsIgnoreCase(hoverType)) {
+					textHover = createDocumentationHover(contentType);
+				}
 			}
 			i++;
 		}

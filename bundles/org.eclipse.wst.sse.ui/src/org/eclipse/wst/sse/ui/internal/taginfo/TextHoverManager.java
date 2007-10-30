@@ -13,7 +13,6 @@
 package org.eclipse.wst.sse.ui.internal.taginfo;
 
 import java.util.HashMap;
-import com.ibm.icu.util.StringTokenizer;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.ITextHover;
@@ -22,10 +21,10 @@ import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.preferences.EditorPreferenceNames;
 
+import com.ibm.icu.util.StringTokenizer;
+
 /**
  * Manages text hovers for Structured Text editors
- * 
- * @author amywu
  */
 public class TextHoverManager {
 	/**
@@ -149,6 +148,7 @@ public class TextHoverManager {
 	 * 
 	 * @param infoHover
 	 * @return ITextHover
+	 * @deprecated as of WTP 3.0 M3
 	 */
 	public ITextHover createBestMatchHover(ITextHover infoHover) {
 		return new BestMatchHover(infoHover);
