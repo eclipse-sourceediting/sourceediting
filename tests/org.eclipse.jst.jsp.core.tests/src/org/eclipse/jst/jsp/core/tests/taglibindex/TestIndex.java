@@ -336,12 +336,12 @@ public class TestIndex extends TestCase {
 
 		// Create project 1
 		IProject project = BundleResourceUtil.createSimpleProject("testavailable1", null, null);
-		assertTrue(project.exists());
+		assertTrue(project.isAccessible());
 		BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/testavailable1", "/testavailable1");
 
 		// Create project 2
 		IProject project2 = BundleResourceUtil.createSimpleProject("testavailable2", null, null);
-		assertTrue(project2.exists());
+		assertTrue(project2.isAccessible());
 		BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/testavailable2", "/testavailable2");
 		BundleResourceUtil.copyBundleEntryIntoWorkspace("/testfiles/bug_118251-sample/sample_tld.jar", "/testavailable2/WebContent/WEB-INF/lib/sample_tld.jar");
 
@@ -395,7 +395,7 @@ public class TestIndex extends TestCase {
 				assertTrue("/testavailable2/WebContent/WEB-INF/lib/sample_tld.jar was not exported", ((ClasspathEntry) entry).isExported);
 			}
 		}
-		assertTrue("/testavailable2/WebContent/WEB-INF/lib/sample_tld.jar was not found in build path", found);
+		assertTrue("/testavailable2/WebContent/WEB-INF/lib/sample_tld.jar was not found (and exported) in build path", found);
 
 		// project 2 should still have just two taglibs
 		records = TaglibIndex.getAvailableTaglibRecords(new Path("/testavailable2/WebContent"));
@@ -403,7 +403,7 @@ public class TestIndex extends TestCase {
 
 		// now one taglib should be visible from project 1
 		records = TaglibIndex.getAvailableTaglibRecords(new Path("/testavailable1/WebContent"));
-		assertEquals("total ITaglibRecord count doesn't match (after exporting jar)", 1, records.length);
+		assertEquals("total ITaglibRecord count doesn't match (after exporting jar), classpath provider problem?", 1, records.length);
 
 		TaglibIndex.shutdown();
 		TaglibIndex.startup();
