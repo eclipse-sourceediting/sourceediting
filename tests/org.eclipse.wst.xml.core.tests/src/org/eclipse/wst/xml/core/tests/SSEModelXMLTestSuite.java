@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,6 +14,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.eclipse.wst.xml.core.internal.document.test.NodeImplTestCase;
+import org.eclipse.wst.xml.core.tests.contentmodel.TestAttributesOrder;
 import org.eclipse.wst.xml.core.tests.contentmodel.TestCatalogRetrivalAndModelCreation;
 import org.eclipse.wst.xml.core.tests.document.GetDocumentRegionsTest;
 import org.eclipse.wst.xml.core.tests.document.TestStructuredDocument;
@@ -53,5 +54,7 @@ public class SSEModelXMLTestSuite extends TestSuite {
 		addTest(new TestSuite(NodeImplTestCase.class));
 
 		addTest(new TestSuite(TestFormatProcessorXML.class));
+
+		addTest(new TestSuite(TestAttributesOrder.class));
 	}
 }
