@@ -40,7 +40,7 @@ public final class FacetModuleCoreSupport {
 	 * @param project
 	 * @return -1 if the project does not have the JST Web facet, the version
 	 *         number of it otherwise
-	 * @throws CoreException
+	 * @throws org.eclipse.core.runtime.CoreException
 	 */
 	public static float getDynamicWebProjectVersion(IProject project) {
 		// In the absence of any facet information, assume the highest level

@@ -441,7 +441,7 @@ public final class JSPBatchValidator implements IValidatorJob, IExecutableExtens
 	}
 
 	public IStatus validateInJob(final IValidationContext helper, final IReporter reporter) throws ValidationException {
-		Job currentJob = Platform.getJobManager().currentJob();
+		Job currentJob = Job.getJobManager().currentJob();
 		ISchedulingRule rule = null;
 		if (currentJob != null) {
 			rule = currentJob.getRule();
