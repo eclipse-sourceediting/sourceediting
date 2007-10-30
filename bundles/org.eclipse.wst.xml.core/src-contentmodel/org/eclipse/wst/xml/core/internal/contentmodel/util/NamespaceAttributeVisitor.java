@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,15 +8,17 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
+ *     David Carver, STAR - fixed attribute order dependency, get namespaces first
+ *                          bug 198807
  *     
  *******************************************************************************/
 package org.eclipse.wst.xml.core.internal.contentmodel.util;
 
-import com.ibm.icu.util.StringTokenizer;
-
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
+
+import com.ibm.icu.util.StringTokenizer;
 
 
 public class NamespaceAttributeVisitor
@@ -62,6 +64,10 @@ public class NamespaceAttributeVisitor
   {
     NamedNodeMap map = element.getAttributes();
     int mapLength = map.getLength();
+    // First retrieve all the namespaces so that they are loaded before
+    // doing any special prefix handling.  This allows the attributes to be
+    // defined in any order, but the namespaces have to be retrieve first.
+    
     for (int i = 0; i < mapLength; i++)
     {
       Attr attr = (Attr)map.item(i);
@@ -72,8 +78,26 @@ public class NamespaceAttributeVisitor
         if (prefix.equals("xmlns")) //$NON-NLS-1$
         {
           visitXMLNamespaceAttribute(attr, unprefixedName, attr.getValue());
-        } 
-        else if (prefix.equals(xsiPrefix) && unprefixedName.equals("schemaLocation")) //$NON-NLS-1$
+        }
+        else if (unprefixedName != null)
+        {
+          if (unprefixedName.equals("xmlns")) //$NON-NLS-1$
+          {
+            visitXMLNamespaceAttribute(attr, "", attr.getValue()); //$NON-NLS-1$
+          }
+        }      
+
+      }
+    }
+    
+    for (int i = 0; i < mapLength; i++)
+    {
+      Attr attr = (Attr)map.item(i);
+      String prefix = DOMNamespaceHelper.getPrefix(attr.getName());
+      String unprefixedName = DOMNamespaceHelper.getUnprefixedName(attr.getName());
+      if (prefix != null && unprefixedName != null && !prefix.equals("xmlns"))
+      {
+        if (prefix.equals(xsiPrefix) && unprefixedName.equals("schemaLocation")) //$NON-NLS-1$
         {
           visitXSISchemaLocationAttribute(attr, attr.getValue());
         }
@@ -82,13 +106,6 @@ public class NamespaceAttributeVisitor
           visitXSINoNamespaceSchemaLocationAttribute(attr, attr.getValue());
         }
       }
-      else if (unprefixedName != null)
-      {
-        if (unprefixedName.equals("xmlns")) //$NON-NLS-1$
-        {
-          visitXMLNamespaceAttribute(attr, "", attr.getValue()); //$NON-NLS-1$
-        }
-      }      
     }
   }      
 }
