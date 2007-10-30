@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,7 +15,9 @@ import junit.framework.TestCase;
 
 import org.eclipse.wst.sse.ui.internal.ExtendedConfigurationBuilder;
 import org.eclipse.wst.xml.core.internal.provisional.contenttype.ContentTypeIdForXML;
+import org.eclipse.wst.xml.core.text.IXMLPartitions;
 import org.eclipse.wst.xml.ui.StructuredTextViewerConfigurationXML;
+import org.eclipse.wst.xml.ui.internal.taginfo.XMLTagInfoHoverProcessor;
 import org.eclipse.wst.xml.ui.views.contentoutline.XMLContentOutlineConfiguration;
 import org.eclipse.wst.xml.ui.views.properties.XMLPropertySheetConfiguration;
 
@@ -42,5 +44,12 @@ public class TestEditorConfigurationXML extends TestCase {
 		assertNotNull("no property sheet configuration for " + ContentTypeIdForXML.ContentTypeID_XML, o);
 		// check for over-qualified subclasses
 		assertEquals("unexpected property sheet configuration for " + ContentTypeIdForXML.ContentTypeID_XML, o.getClass(), XMLPropertySheetConfiguration.class);
+	}
+	
+	public void testGetDocumentationTextHover() {
+		Object o = ExtendedConfigurationBuilder.getInstance().getConfiguration(ExtendedConfigurationBuilder.DOCUMENTATIONTEXTHOVER, IXMLPartitions.XML_DEFAULT);
+		assertNotNull("no documentation text hover for " + IXMLPartitions.XML_DEFAULT, o);
+		// check for over-qualified subclasses
+		assertEquals("unexpected documentation text hover for " + IXMLPartitions.XML_DEFAULT, o.getClass(), XMLTagInfoHoverProcessor.class);
 	}
 }

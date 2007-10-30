@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,7 +14,9 @@ package org.eclipse.jst.jsp.ui.tests;
 import junit.framework.TestCase;
 
 import org.eclipse.jst.jsp.core.internal.provisional.contenttype.ContentTypeIdForJSP;
+import org.eclipse.jst.jsp.core.text.IJSPPartitions;
 import org.eclipse.jst.jsp.ui.StructuredTextViewerConfigurationJSP;
+import org.eclipse.jst.jsp.ui.internal.taginfo.JSPJavaJavadocHoverProcessor;
 import org.eclipse.jst.jsp.ui.views.contentoutline.JSPContentOutlineConfiguration;
 import org.eclipse.wst.sse.ui.internal.ExtendedConfigurationBuilder;
 import org.eclipse.wst.xml.ui.views.properties.XMLPropertySheetConfiguration;
@@ -42,5 +44,12 @@ public class TestEditorConfigurationJSP extends TestCase {
 		assertNotNull("no property sheet configuration for " + ContentTypeIdForJSP.ContentTypeID_JSP, o);
 		// check for over-qualified subclasses
 		assertEquals("unexpected property sheet configuration for " + ContentTypeIdForJSP.ContentTypeID_JSP, o.getClass(), XMLPropertySheetConfiguration.class);
+	}
+	
+	public void testGetDocumentationTextHover() {
+		Object o = ExtendedConfigurationBuilder.getInstance().getConfiguration(ExtendedConfigurationBuilder.DOCUMENTATIONTEXTHOVER, IJSPPartitions.JSP_CONTENT_JAVA);
+		assertNotNull("no documentation text hover processor for " + IJSPPartitions.JSP_CONTENT_JAVA, o);
+		// check for over-qualified subclasses
+		assertEquals("unexpected documentation text hover processor for " + IJSPPartitions.JSP_CONTENT_JAVA, o.getClass(), JSPJavaJavadocHoverProcessor.class);
 	}
 }

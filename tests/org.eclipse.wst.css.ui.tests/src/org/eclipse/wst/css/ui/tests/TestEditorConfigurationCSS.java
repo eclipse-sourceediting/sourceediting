@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,6 +16,7 @@ package org.eclipse.wst.css.ui.tests;
 import junit.framework.TestCase;
 
 import org.eclipse.wst.css.core.internal.provisional.contenttype.ContentTypeIdForCSS;
+import org.eclipse.wst.css.core.text.ICSSPartitions;
 import org.eclipse.wst.css.ui.StructuredTextViewerConfigurationCSS;
 import org.eclipse.wst.css.ui.views.contentoutline.CSSContentOutlineConfiguration;
 import org.eclipse.wst.css.ui.views.properties.CSSPropertySheetConfiguration;
@@ -44,5 +45,10 @@ public class TestEditorConfigurationCSS extends TestCase {
 		assertNotNull("no property sheet configuration for " + ContentTypeIdForCSS.ContentTypeID_CSS, o);
 		// check for over-qualified subclasses
 		assertEquals("unexpected property sheet configuration for " + ContentTypeIdForCSS.ContentTypeID_CSS, o.getClass(), CSSPropertySheetConfiguration.class);
+	}
+	
+	public void testGetDocumentationTextHover() {
+		Object o = ExtendedConfigurationBuilder.getInstance().getConfiguration(ExtendedConfigurationBuilder.DOCUMENTATIONTEXTHOVER, ICSSPartitions.STYLE);
+		assertNull("unexpected documentation text hover for " + ICSSPartitions.STYLE, o);
 	}
 }
