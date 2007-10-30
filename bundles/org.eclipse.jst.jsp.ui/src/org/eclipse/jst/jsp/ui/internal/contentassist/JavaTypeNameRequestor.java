@@ -11,7 +11,7 @@ import org.eclipse.jdt.ui.text.java.CompletionProposalLabelProvider;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jst.jsp.ui.internal.editor.JSPEditorPluginImageHelper;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.wst.javascript.ui.internal.common.contentassist.IRelevanceConstants;
+import org.eclipse.wst.sse.ui.internal.contentassist.IRelevanceConstants;
 
 /**
  * Use w/ JDT search engine to find all type names.
