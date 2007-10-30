@@ -423,7 +423,7 @@ public class FileBufferModelManager {
 		IPath bufferLocation = info.buffer.getLocation();
 		boolean isOK = true;
 		try {
-			bufferManager.connect(bufferLocation, LocationKind.NORMALIZE, null);
+			bufferManager.connect(bufferLocation, info.locationKind, null);
 		}
 		catch (CoreException e) {
 			Logger.logException(e);
@@ -530,7 +530,7 @@ public class FileBufferModelManager {
 		IPath bufferLocation = info.buffer.getLocation();
 		boolean isOK = true;
 		try {
-			bufferManager.disconnect(bufferLocation, LocationKind.NORMALIZE, null);
+			bufferManager.disconnect(bufferLocation, info.locationKind, null);
 		}
 		catch (CoreException e) {
 			Logger.logException(e);
