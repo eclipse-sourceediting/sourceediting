@@ -59,6 +59,7 @@ import org.eclipse.wst.sse.core.internal.ltk.parser.TagMarker;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.sse.core.internal.util.Assert;
 import org.eclipse.wst.sse.core.internal.util.Debug;
@@ -76,7 +77,7 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 		 * IStructuredDocumentRegion along with position cues during reparses
 		 * allow the JSPSourceParser to enable/ignore the tags as blocks.
 		 */
-		protected void addBlockTag(String tagnameNS, IStructuredDocumentRegion marker) {
+		protected void addBlockTag(String tagnameNS, ITextRegionCollection marker) {
 			if (getParser() == null)
 				return;
 			if (getParser().getBlockMarker(tagnameNS) == null) {
@@ -146,68 +147,47 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 				System.out.println("TLDCMDocumentManager registered a tracker for directory" + tagdir + " with prefix " + prefix); //$NON-NLS-2$//$NON-NLS-1$
 			}
 		}
+		
+		protected void processRegionCollection(ITextRegionCollection regionCollection, IStructuredDocumentRegion anchorStructuredDocumentRegion, JSPSourceParser textSource) {
+			/*
+			 * Would test > 1, but since we only care if there are 8 (<%@,
+			 * taglib, uri, =, where, prefix, =, what) [or 4 for include
+			 * directives]
+			 */
+			if (regionCollection.getNumberOfRegions() > 4 && regionCollection.getRegions().get(1).getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_NAME) {
+				ITextRegion name = regionCollection.getRegions().get(1);
+				boolean taglibDetected = false;
+				boolean taglibDirectiveDetected = false;
+				boolean includeDetected = false;
+				boolean includeDirectiveDetected = false;
+				int startOffset = regionCollection.getStartOffset(name);
+				int textLength = name.getTextLength();
 
-		public void nodeParsed(IStructuredDocumentRegion aCoreStructuredDocumentRegion) {
+				taglibDetected = textSource.regionMatches(startOffset, textLength, JSP12TLDNames.TAGLIB);
+				if (!taglibDetected)
+					taglibDirectiveDetected = textSource.regionMatches(startOffset, textLength, JSP12Namespace.ElementName.DIRECTIVE_TAGLIB);
+				if (!taglibDirectiveDetected)
+					includeDetected = textSource.regionMatches(startOffset, textLength, JSP12TLDNames.INCLUDE);
+				if (!includeDetected)
+					includeDirectiveDetected = textSource.regionMatches(startOffset, textLength, JSP12Namespace.ElementName.DIRECTIVE_INCLUDE);
+				if (taglibDetected || taglibDirectiveDetected) {
+					processTaglib(regionCollection, anchorStructuredDocumentRegion, textSource);
+				}
+				else if (includeDetected || includeDirectiveDetected) {
+					processInclude(regionCollection, anchorStructuredDocumentRegion, textSource);
+				}
+			}
+			else if (regionCollection.getNumberOfRegions() > 1 && DOMRegionContext.XML_TAG_OPEN.equals(regionCollection.getFirstRegion().getType())) {
+				processXMLStartTag(regionCollection, anchorStructuredDocumentRegion, textSource);
+			}			
+		}
+
+		public void nodeParsed(IStructuredDocumentRegion structuredDocumentRegion) {
 			if (!preludesHandled) {
 				handlePreludes();
 				preludesHandled = true;
 			}
-			// could test > 1, but since we only care if there are 8 (<%@,
-			// taglib, uri, =, where, prefix, =, what) [or 4 for includes]
-			if (aCoreStructuredDocumentRegion.getNumberOfRegions() > 4 && aCoreStructuredDocumentRegion.getRegions().get(1).getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_NAME) {
-				ITextRegion name = aCoreStructuredDocumentRegion.getRegions().get(1);
-				try {
-					if (getParser() == null) {
-						Logger.log(Logger.WARNING, "Warning: parser text was requested by " + getClass().getName() + " but none was available; taglib support disabled"); //$NON-NLS-1$ //$NON-NLS-2$
-					}
-					else {
-						boolean taglibDetected = false;
-						boolean taglibDirectiveDetected = false;
-						boolean includeDetected = false;
-						boolean includeDirectiveDetected = false;
-						int startOffset = aCoreStructuredDocumentRegion.getStartOffset(name);
-						int textLength = name.getTextLength();
-
-						if (getParser() != null) {
-							taglibDetected = getParser().regionMatches(startOffset, textLength, JSP12TLDNames.TAGLIB);
-							taglibDirectiveDetected = getParser().regionMatches(startOffset, textLength, JSP12Namespace.ElementName.DIRECTIVE_TAGLIB);
-							includeDetected = getParser().regionMatches(startOffset, textLength, JSP12TLDNames.INCLUDE);
-							includeDirectiveDetected = getParser().regionMatches(startOffset, textLength, JSP12Namespace.ElementName.DIRECTIVE_INCLUDE);
-						}
-						else {
-							// old fashioned way
-							String directiveName = getParser().getText(startOffset, textLength);
-							taglibDetected = directiveName.equals(JSP12TLDNames.TAGLIB);
-							taglibDirectiveDetected = directiveName.equals(JSP12Namespace.ElementName.DIRECTIVE_TAGLIB);
-							includeDetected = directiveName.equals(JSP12TLDNames.INCLUDE);
-							includeDirectiveDetected = directiveName.equals(JSP12Namespace.ElementName.DIRECTIVE_INCLUDE);
-						}
-						if (taglibDetected || taglibDirectiveDetected) {
-							processTaglib(aCoreStructuredDocumentRegion);
-						}
-						else if (includeDetected || includeDirectiveDetected) {
-							processInclude(aCoreStructuredDocumentRegion);
-						}
-					}
-				}
-				catch (StringIndexOutOfBoundsException sioobExc) {
-					// do nothing
-				}
-			}
-			// could test > 1, but since we only care if there are 5 (<,
-			// jsp:root, xmlns:prefix, =, where)
-			else if (aCoreStructuredDocumentRegion.getNumberOfRegions() > 4 && aCoreStructuredDocumentRegion.getRegions().get(1).getType() == DOMJSPRegionContexts.JSP_ROOT_TAG_NAME) {
-				if (getParser() == null) {
-					Logger.log(Logger.WARNING, "Warning: parser text was requested by " + getClass().getName() + " but none was available; taglib support disabled"); //$NON-NLS-1$ //$NON-NLS-2$
-				}
-				else {
-					processJSPRoot(aCoreStructuredDocumentRegion);
-				}
-			}
-		}
-
-		protected void processInclude(IStructuredDocumentRegion aCoreStructuredDocumentRegion) {
-			processInclude(aCoreStructuredDocumentRegion, aCoreStructuredDocumentRegion, getParser());
+			processRegionCollection(structuredDocumentRegion, structuredDocumentRegion, getParser());
 		}
 
 		/**
@@ -216,15 +196,15 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 		 * anchorStructuredDocumentRegion. Includes use the including file as
 		 * the point of reference, not necessarily the "top" file.
 		 */
-		protected void processInclude(IStructuredDocumentRegion includeStructuredDocumentRegion, IStructuredDocumentRegion anchorStructuredDocumentRegion, JSPSourceParser textSource) {
-			ITextRegionList regions = includeStructuredDocumentRegion.getRegions();
+		protected void processInclude(ITextRegionCollection includeDirectiveCollection, IStructuredDocumentRegion anchorStructuredDocumentRegion, JSPSourceParser textSource) {
+			ITextRegionList regions = includeDirectiveCollection.getRegions();
 			String includedFile = null;
 			boolean isFilename = false;
 			try {
-				for (int i = 0; i < regions.size(); i++) {
+				for (int i = 2; includedFile == null && i < regions.size(); i++) {
 					ITextRegion region = regions.get(i);
 					if (region.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME) {
-						if (textSource.getText(includeStructuredDocumentRegion.getStartOffset(region), region.getTextLength()).equals(JSP12TLDNames.FILE)) {
+						if (textSource.regionMatches(includeDirectiveCollection.getStartOffset(region), region.getTextLength(), JSP12TLDNames.FILE)) {
 							isFilename = true;
 						}
 						else {
@@ -232,7 +212,7 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 						}
 					}
 					else if (isFilename && region.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
-						includedFile = textSource.getText(includeStructuredDocumentRegion.getStartOffset(region), region.getTextLength());
+						includedFile = textSource.getText(includeDirectiveCollection.getStartOffset(region), region.getTextLength());
 						isFilename = false;
 					}
 				}
@@ -272,18 +252,20 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 					 */
 					if (hasAnyIncludeBeenModified(filePath)) {
 						getIncludes().push(filePath);
-						if (getParser() != null) {
-							IncludeHelper includeHelper = new IncludeHelper(anchorStructuredDocumentRegion, getParser());
-							includeHelper.parse(filePath);
-							List references = includeHelper.taglibReferences;
-							fTLDCMReferencesMap.put(filePath, references);
-							/*
-							 * TODO: walk up the include hierarchy and add
-							 * these references to each of the parents.
-							 */
+
+						IncludeHelper includeHelper = new IncludeHelper(anchorStructuredDocumentRegion, getParser());
+						includeHelper.parse(filePath);
+						List references = includeHelper.taglibReferences;
+						fTLDCMReferencesMap.put(filePath, references);
+						for (int i = 0; references != null && i < references.size(); i++) {
+							TLDCMDocumentReference reference = (TLDCMDocumentReference) references.get(i);
+							getParser().addNestablePrefix(new TagMarker(reference.prefix + ":")); //$NON-NLS-1$
 						}
-						else
-							Logger.log(Logger.WARNING, "Warning: parser text was requested by " + getClass().getName() + " but none was available; taglib support disabled"); //$NON-NLS-1$ //$NON-NLS-2$
+						/*
+						 * TODO: walk up the include hierarchy and add
+						 * these references to each of the parents?
+						 */
+
 						getIncludes().pop();
 					}
 					else {
@@ -295,7 +277,7 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 							 * The uri might not be resolved properly if
 							 * relative to the JSP fragment.
 							 */
-							enableTaglibFromURI(reference.prefix, reference.uri, includeStructuredDocumentRegion);
+							enableTaglibFromURI(reference.prefix, reference.uri, anchorStructuredDocumentRegion);
 							getParser().addNestablePrefix(new TagMarker(reference.prefix + ":")); //$NON-NLS-1$
 						}
 					}
@@ -307,51 +289,46 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 			}
 		}
 
-		// Pulls the URI and prefix from the given jsp:root
-		// IStructuredDocumentRegion and
-		// makes sure the tags are known.
-		protected void processJSPRoot(IStructuredDocumentRegion jspRootStructuredDocumentRegion) {
-			processJSPRoot(jspRootStructuredDocumentRegion, jspRootStructuredDocumentRegion, getParser());
-		}
-
-		protected void processJSPRoot(IStructuredDocumentRegion taglibStructuredDocumentRegion, IStructuredDocumentRegion anchorStructuredDocumentRegion, JSPSourceParser textSource) {
-			ITextRegionList regions = taglibStructuredDocumentRegion.getRegions();
+		protected void processXMLStartTag(ITextRegionCollection startTagRegionCollection, IStructuredDocumentRegion anchorStructuredDocumentRegion, JSPSourceParser textSource) {
+			ITextRegionList regions = startTagRegionCollection.getRegions();
 			String uri = null;
 			String prefix = null;
-			boolean taglib = false;
-			try {
-				// skip the first two, they're the open bracket and name
-				for (int i = 2; i < regions.size(); i++) {
-					ITextRegion region = regions.get(i);
+			boolean isTaglibValue = false;
+			// skip the first two, they're the open bracket and name
+			for (int i = 2; i < regions.size(); i++) {
+				ITextRegion region = regions.get(i);
+				if (region instanceof ITextRegionCollection) {
+					// Handle nested directives
+					processRegionCollection((ITextRegionCollection) region, anchorStructuredDocumentRegion, textSource);
+				}
+				else {
+					// Handle xmlns:xxx=yyy
+					int regionStartOffset = startTagRegionCollection.getStartOffset(region);
+					int regionTextLength = region.getTextLength();
 					if (region.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME) {
-						String name = textSource.getText(taglibStructuredDocumentRegion.getStartOffset(region), region.getTextLength());
-						if (name.startsWith(XMLNS)) { //$NON-NLS-1$
-							prefix = name.substring(XMLNS_LENGTH);
+						if (regionTextLength > XMLNS_LENGTH && textSource.regionMatches(regionStartOffset, XMLNS_LENGTH, XMLNS)) {
+							prefix = textSource.getText(regionStartOffset + XMLNS_LENGTH, regionTextLength - XMLNS_LENGTH);
 							if (!bannedPrefixes.contains(prefix))
-								taglib = true;
+								isTaglibValue = true;
 						}
 						else {
 							prefix = null;
-							taglib = false;
+							isTaglibValue = false;
 						}
 					}
-					else if (taglib && region.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
+					else if (isTaglibValue && region.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
 						if (prefix != null && prefix.length() > 0) {
-							uri = textSource.getText(taglibStructuredDocumentRegion.getStartOffset(region), region.getTextLength());
+							uri = textSource.getText(regionStartOffset, regionTextLength);
 							uri = StringUtils.strip(uri);
-							if (uri != null && uri.length() > 0) {
-								if (uri.startsWith(URN_TLD)) {
-									uri = uri.substring(URN_TLD.length());
+							int uriLength = uri.length();
+							if (uri != null && uriLength > 0) {
+								if (uriLength > URN_TLD_LENGTH && uri.startsWith(URN_TLD)) {
+									uri = uri.substring(URN_TLD_LENGTH);
 								}
-								else if (uri.startsWith(URN_TAGDIR)) {
-									uri = uri.substring(URN_TAGDIR.length());
+								else if (uriLength > URN_TAGDIR_LENGTH && uri.startsWith(URN_TAGDIR)) {
+									uri = uri.substring(URN_TAGDIR_LENGTH);
 								}
-								if (anchorStructuredDocumentRegion == null) {
-									enableTags(prefix, uri, taglibStructuredDocumentRegion);
-								}
-								else {
-									enableTags(prefix, uri, anchorStructuredDocumentRegion);
-								}
+								enableTags(prefix, uri, anchorStructuredDocumentRegion);
 								uri = null;
 								prefix = null;
 							}
@@ -359,32 +336,23 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 					}
 				}
 			}
-			catch (StringIndexOutOfBoundsException sioobExc) {
-				// nothing to be done
-				uri = null;
-				prefix = null;
-			}
-		}
-
-		protected void processTaglib(IStructuredDocumentRegion taglibStructuredDocumentRegion) {
-			processTaglib(taglibStructuredDocumentRegion, taglibStructuredDocumentRegion, getParser());
 		}
 
 		/**
 		 * Pulls the URI and prefix from the given taglib directive
 		 * IStructuredDocumentRegion and makes sure the tags are known.
 		 */
-		protected void processTaglib(IStructuredDocumentRegion taglibStructuredDocumentRegion, IStructuredDocumentRegion anchorStructuredDocumentRegion, JSPSourceParser textSource) {
-			ITextRegionList regions = taglibStructuredDocumentRegion.getRegions();
+		protected void processTaglib(ITextRegionCollection taglibDirectiveCollection, IStructuredDocumentRegion anchorStructuredDocumentRegion, JSPSourceParser textSource) {
+			ITextRegionList regions = taglibDirectiveCollection.getRegions();
 			String uri = null;
 			String prefix = null;
 			String tagdir = null;
 			String attrName = null;
 			try {
-				for (int i = 0; i < regions.size(); i++) {
+				for (int i = 2; i < regions.size(); i++) {
 					ITextRegion region = regions.get(i);
 					// remember attribute name
-					int startOffset = taglibStructuredDocumentRegion.getStartOffset(region);
+					int startOffset = taglibDirectiveCollection.getStartOffset(region);
 					int textLength = region.getTextLength();
 					if (region.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME) {
 						// String name = textSource.getText(startOffset,
@@ -419,16 +387,10 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 				prefix = null;
 			}
 			if (uri != null && prefix != null && uri.length() > 0 && prefix.length() > 0) {
-				if (anchorStructuredDocumentRegion == null)
-					enableTaglibFromURI(prefix, StringUtils.strip(uri), taglibStructuredDocumentRegion);
-				else
-					enableTaglibFromURI(prefix, uri, anchorStructuredDocumentRegion);
+				enableTaglibFromURI(prefix, StringUtils.strip(uri), anchorStructuredDocumentRegion);
 			}
 			else if (tagdir != null && prefix != null && tagdir.length() > 0 && prefix.length() > 0) {
-				if (anchorStructuredDocumentRegion == null)
-					enableTagsInDir(StringUtils.strip(prefix), StringUtils.strip(tagdir), taglibStructuredDocumentRegion);
-				else
-					enableTagsInDir(StringUtils.strip(prefix), StringUtils.strip(tagdir), anchorStructuredDocumentRegion);
+				enableTagsInDir(StringUtils.strip(prefix), StringUtils.strip(tagdir), anchorStructuredDocumentRegion);
 			}
 		}
 
@@ -524,29 +486,8 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 			return FileContentCache.getInstance().getContents(filePath);
 		}
 
-		public void nodeParsed(IStructuredDocumentRegion aCoreStructuredDocumentRegion) {
-			// could test > 1, but since we only care if there are 8 (<%@,
-			// taglib, uri, =, where, prefix, =, what)
-			if (aCoreStructuredDocumentRegion.getNumberOfRegions() > 1 && aCoreStructuredDocumentRegion.getRegions().get(1).getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_NAME) {
-				ITextRegion name = aCoreStructuredDocumentRegion.getRegions().get(1);
-				try {
-					String directiveName = fLocalParser.getText(aCoreStructuredDocumentRegion.getStartOffset(name), name.getTextLength());
-					if (directiveName.equals(JSP12TLDNames.TAGLIB) || directiveName.equals(JSP12Namespace.ElementName.DIRECTIVE_TAGLIB)) {
-						processTaglib(aCoreStructuredDocumentRegion, fAnchor, fLocalParser);
-					}
-					if (directiveName.equals(JSP12TLDNames.INCLUDE) || directiveName.equals(JSP12Namespace.ElementName.DIRECTIVE_INCLUDE)) {
-						processInclude(aCoreStructuredDocumentRegion, fAnchor, fLocalParser);
-					}
-				}
-				catch (StringIndexOutOfBoundsException sioobExc) {
-					// do nothing
-				}
-			}
-			// could test > 1, but since we only care if there are 5 (<,
-			// jsp:root, xmlns:prefix, =, where)
-			else if (aCoreStructuredDocumentRegion.getNumberOfRegions() > 4 && aCoreStructuredDocumentRegion.getRegions().get(1).getType() == DOMJSPRegionContexts.JSP_ROOT_TAG_NAME) {
-				processJSPRoot(aCoreStructuredDocumentRegion, fAnchor, fLocalParser);
-			}
+		public void nodeParsed(IStructuredDocumentRegion structuredDocumentRegion) {
+			processRegionCollection(structuredDocumentRegion, fAnchor, fLocalParser);
 		}
 
 		/**
@@ -556,13 +497,18 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 		void parse(IPath path) {
 			JSPSourceParser p = new JSPSourceParser();
 			fLocalParser = p;
-			List blockTags = fParentParser.getBlockMarkers();
 			String s = getContents(path);
-			fLocalParser.addStructuredDocumentRegionHandler(this);
+			// Should we consider preludes on this segment?
+			fLocalParser.addStructuredDocumentRegionHandler(IncludeHelper.this);
 			fLocalParser.reset(s);
+			List blockTags = fParentParser.getBlockMarkers();
 			for (int i = 0; i < blockTags.size(); i++) {
 				BlockMarker marker = (BlockMarker) blockTags.get(i);
 				fLocalParser.addBlockMarker(new BlockMarker(marker.getTagName(), null, marker.getContext(), marker.isCaseSensitive()));
+			}
+			TagMarker[] knownPrefixes = (TagMarker[]) fParentParser.getNestablePrefixes().toArray(new TagMarker[0]);
+			for (int i = 0; i < knownPrefixes.length; i++) {
+				fLocalParser.addNestablePrefix(new TagMarker(knownPrefixes[i].getTagName(), null));
 			}
 			// force parse
 			fLocalParser.getDocumentRegions();
@@ -603,11 +549,13 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 	protected static List bannedPrefixes = null;
 
 	private static Hashtable fCache = null;
-	String XMLNS = "xmlns:"; //$NON-NLS-1$ 
-	protected String URN_TAGDIR = "urn:jsptagdir:";
-	protected String URN_TLD = "urn:jsptld:";
+	final String XMLNS = "xmlns:"; //$NON-NLS-1$ 
+	final String URN_TAGDIR = "urn:jsptagdir:";
+	final String URN_TLD = "urn:jsptld:";
 
-	int XMLNS_LENGTH = XMLNS.length();
+	final int XMLNS_LENGTH = XMLNS.length();
+	final int URN_TAGDIR_LENGTH = URN_TAGDIR.length();
+	final int URN_TLD_LENGTH = URN_TLD.length();
 
 	static {
 		bannedPrefixes = new ArrayList(7);

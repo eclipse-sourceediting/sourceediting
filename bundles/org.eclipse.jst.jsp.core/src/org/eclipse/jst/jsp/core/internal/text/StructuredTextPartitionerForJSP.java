@@ -318,7 +318,7 @@ public class StructuredTextPartitionerForJSP extends StructuredTextPartitioner {
 			List fCustomActionPrefixes = ((JSPSourceParser) parser).getNestablePrefixes();
 			for (int i = 0; i < fCustomActionPrefixes.size(); i++)
 				if (tagName.startsWith(((TagMarker) fCustomActionPrefixes.get(i)).getTagName())) {
-					fLastCheckedPrefix = tagName;
+					fLastCheckedPrefix = ((TagMarker) fCustomActionPrefixes.get(i)).getTagName();
 					return true;
 				}
 		}

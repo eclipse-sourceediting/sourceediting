@@ -17,6 +17,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.TLDCMDocumentManager;
+import org.eclipse.jst.jsp.core.internal.contentmodel.tld.TaglibTracker;
 import org.eclipse.jst.jsp.core.internal.parser.JSPSourceParser;
 import org.eclipse.jst.jsp.core.internal.provisional.JSP11Namespace;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
@@ -106,6 +107,18 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 		for (int i = 0; i < blockMarkers.size(); i++) {
 			addBlockMarker((BlockMarker) blockMarkers.get(i));
 		}
+		// RATLC01139770
+//		getLocalParser().getNestablePrefixes().addAll(((JSPSourceParser)fTranslator.getStructuredDocument().getParser()).getNestablePrefixes());
+		TLDCMDocumentManager documentManager = this.fTranslator.getTLDCMDocumentManager();
+		if (documentManager != null) {
+			List trackers = documentManager.getTaglibTrackers();
+			for (Iterator it = trackers.iterator(); it.hasNext();) {
+				TaglibTracker tracker = (TaglibTracker) it.next();
+				String prefix = tracker.getPrefix();
+				getLocalParser().getNestablePrefixes().add(new TagMarker(prefix));
+			}
+		}
+
 		reset(contents);
 		// forceParse();
 		document.set(contents);

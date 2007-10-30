@@ -53,6 +53,7 @@ import org.eclipse.jst.jsp.core.internal.contenttype.DeploymentDescriptorPropert
 import org.eclipse.jst.jsp.core.internal.contenttype.DeploymentDescriptorPropertyCache.PropertyGroup;
 import org.eclipse.jst.jsp.core.internal.parser.JSPSourceParser;
 import org.eclipse.jst.jsp.core.internal.provisional.JSP11Namespace;
+import org.eclipse.jst.jsp.core.internal.provisional.JSP12Namespace;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.jst.jsp.core.internal.taglib.TaglibHelper;
 import org.eclipse.jst.jsp.core.internal.taglib.TaglibHelperManager;
@@ -734,7 +735,7 @@ public class JSPTranslator {
 		addTaglibVariables(tagToAdd, getCurrentNode());
 	}
 
-	protected void addTaglibVariables(String tagToAdd, IStructuredDocumentRegion customTag) {
+	protected void addTaglibVariables(String tagToAdd, ITextRegionCollection customTag) {
 		IFile f = getFile();
 
 		if (f == null || !f.exists())
@@ -1004,6 +1005,9 @@ public class JSPTranslator {
 					decodeScriptBlock(containerRegion.getFullText(region), containerRegion.getStartOffset());
 					// ////////////////////////////////////////////////////////////////////////////////
 				}
+			}
+			if (region instanceof ITextRegionCollection && ((ITextRegionCollection) region).getNumberOfRegions() > 0) {
+				translateRegionContainer((ITextRegionCollection) region, EMBEDDED_JSP);
 			}
 			if (type != null && isJSP(type)) // <%, <%=, <%!, <%@
 			{
@@ -1791,7 +1795,8 @@ public class JSPTranslator {
 					while (!sdRegion.isDeleted() && taglibRegions.hasNext()) {
 						r = (ITextRegion) taglibRegions.next();
 						if (r.getType().equals(DOMJSPRegionContexts.JSP_DIRECTIVE_NAME)) {
-							if (sdRegion.getText(r).equals(JSP12TLDNames.TAGLIB)) {
+							String text = sdRegion.getText(r);
+							if (JSP12TLDNames.TAGLIB.equals(text) || JSP12Namespace.ElementName.DIRECTIVE_TAGLIB.equals(text)) {
 								addBlockMarkers(tracker.getDocument());
 							}
 						}
@@ -1950,6 +1955,7 @@ public class JSPTranslator {
 				if (!getIncludes().contains(filePath) && !filePath.equals(basePath.toString())) {
 					getIncludes().push(filePath);
 					JSPIncludeRegionHelper helper = new JSPIncludeRegionHelper(this);
+					// Should we consider preludes on this segment?
 					helper.parse(filePath);
 					getIncludes().pop();
 				}
