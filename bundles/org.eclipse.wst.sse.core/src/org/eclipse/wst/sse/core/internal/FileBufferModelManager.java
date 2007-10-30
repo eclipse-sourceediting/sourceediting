@@ -410,6 +410,28 @@ public class FileBufferModelManager {
 		return id;
 	}
 
+	/**
+	 * Registers "interest" in a document, or rather the file buffer that
+	 * backs it. Intentionally used to alter the reference count of the file
+	 * buffer so it is not accidentally disposed of.
+	 */
+	public boolean connect(IDocument document) {
+		DocumentInfo info = (DocumentInfo) fDocumentMap.get(document);
+		if( info == null)
+			return false;
+		ITextFileBufferManager bufferManager = FileBuffers.getTextFileBufferManager();
+		IPath bufferLocation = info.buffer.getLocation();
+		boolean isOK = true;
+		try {
+			bufferManager.connect(bufferLocation, info.locationKind, null);
+		}
+		catch (CoreException e) {
+			Logger.logException(e);
+			isOK = false;
+		}
+		return isOK;
+	}
+
 	URIResolver createURIResolver(ITextFileBuffer buffer) {
 		IPath location = buffer.getLocation();
 		IFile workspaceFile = FileBuffers.getWorkspaceFileAtLocation(location);
@@ -493,6 +515,28 @@ public class FileBufferModelManager {
 			type = Platform.getContentTypeManager().getContentType(IContentTypeManager.CT_TEXT);
 		}
 		return type;
+	}
+
+	/**
+	 * Deregisters "interest" in a document, or rather the file buffer that
+	 * backs it. Intentionally used to alter the reference count of the file
+	 * buffer so that it knows it can safely be disposed of.
+	 */
+	public boolean disconnect(IDocument document) {
+		DocumentInfo info = (DocumentInfo) fDocumentMap.get(document);
+		if( info == null)
+			return false;
+		ITextFileBufferManager bufferManager = FileBuffers.getTextFileBufferManager();
+		IPath bufferLocation = info.buffer.getLocation();
+		boolean isOK = true;
+		try {
+			bufferManager.disconnect(bufferLocation, info.locationKind, null);
+		}
+		catch (CoreException e) {
+			Logger.logException(e);
+			isOK = false;
+		}
+		return isOK;
 	}
 
 	public ITextFileBuffer getBuffer(IDocument document) {
