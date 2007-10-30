@@ -11,7 +11,6 @@
 package org.eclipse.wst.html.ui.internal.wizard;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 
 /**
@@ -45,7 +44,7 @@ final class FacetModuleCoreSupport {
 	/**
 	 * @param project
 	 * @return
-	 * @throws CoreException
+	 * @throws org.eclipse.core.runtime.CoreException
 	 */
 	public static boolean isWebProject(IProject project) {
 		try {
