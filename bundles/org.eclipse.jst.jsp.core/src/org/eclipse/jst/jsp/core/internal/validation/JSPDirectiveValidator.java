@@ -51,6 +51,8 @@ public class JSPDirectiveValidator extends JSPValidator {
 	private static Collator collator = Collator.getInstance(Locale.US);
 
 	private static final boolean DEBUG = Boolean.valueOf(Platform.getDebugOption("org.eclipse.jst.jsp.core/debug/jspvalidator")).booleanValue(); //$NON-NLS-1$
+	private static final int NO_SEVERITY = -1;
+
 	private IValidator fMessageOriginator;
 	private HashMap fPrefixValueRegionToDocumentRegionMap = new HashMap();
 
@@ -58,13 +60,12 @@ public class JSPDirectiveValidator extends JSPValidator {
 	private int fSeverityIncludeFileMissing = IMessage.NORMAL_SEVERITY;
 	private int fSeverityIncludeFileNotSpecified = IMessage.NORMAL_SEVERITY;
 	private int fSeverityTaglibDuplicatePrefixWithDifferentURIs = IMessage.NORMAL_SEVERITY;
-	private int fSeverityTaglibDuplicatePrefixWithSameURIs = IMessage.LOW_SEVERITY;
+	private int fSeverityTaglibDuplicatePrefixWithSameURIs = NO_SEVERITY;
 	private int fSeverityTaglibMissingPrefix = IMessage.HIGH_SEVERITY;
 	private int fSeverityTaglibMissingURI = IMessage.HIGH_SEVERITY;
 	private int fSeverityTaglibUnresolvableURI = IMessage.HIGH_SEVERITY;
 
 	private HashMap fTaglibPrefixesInUse = new HashMap();
-	private final int NO_SEVERITY = -1;
 
 	public JSPDirectiveValidator() {
 		initReservedPrefixes();
