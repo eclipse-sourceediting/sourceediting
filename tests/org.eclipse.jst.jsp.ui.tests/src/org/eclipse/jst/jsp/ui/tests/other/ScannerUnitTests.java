@@ -29,6 +29,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegionList;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.sse.core.internal.text.CoreNodeList;
@@ -519,6 +520,16 @@ public class ScannerUnitTests extends TestCase {
 	public void testContentXML() {
 
 		testContent(setUpXML("hello world"));
+	}
+	
+	public void testDirectiveInTagBody() {
+		String text = "<BODY <%@ include file=\"commonEventHandlers.jspf\" %> dir=\"ltr\"> ";
+		IStructuredDocumentRegionList documentRegionList = setUpJSP(text);
+		verifyLengths(0, documentRegionList, text);
+
+		checkSimpleRegionTypes(documentRegionList.item(0).getRegions(), new String[]{DOMRegionContext.XML_TAG_OPEN, DOMRegionContext.XML_TAG_NAME, DOMRegionContext.XML_TAG_ATTRIBUTE_NAME, DOMRegionContext.XML_TAG_ATTRIBUTE_NAME, DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS, DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE, DOMRegionContext.XML_TAG_CLOSE});
+		ITextRegionCollection coll = (ITextRegionCollection) documentRegionList.item(0).getRegions().get(2);
+		checkSimpleRegionTypes(coll.getRegions(), new String[]{DOMJSPRegionContexts.JSP_DIRECTIVE_OPEN, DOMRegionContext.WHITE_SPACE, DOMJSPRegionContexts.JSP_DIRECTIVE_NAME, DOMRegionContext.WHITE_SPACE, DOMRegionContext.XML_TAG_ATTRIBUTE_NAME, DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS, DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE, DOMRegionContext.WHITE_SPACE, DOMJSPRegionContexts.JSP_DIRECTIVE_CLOSE});
 	}
 
 	public void testDollarsign_Leading() {
