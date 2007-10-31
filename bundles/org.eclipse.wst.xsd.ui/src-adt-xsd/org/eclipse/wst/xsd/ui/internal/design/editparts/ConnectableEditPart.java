@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,6 +17,7 @@ import java.util.List;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartFactory;
 import org.eclipse.gef.EditPolicy;
@@ -24,7 +25,10 @@ import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.LayerConstants;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDBaseAdapter;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.BaseEditPart;
+import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.BaseFieldEditPart;
+import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.CompartmentEditPart;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editpolicies.ADTSelectionFeedbackEditPolicy;
+import org.eclipse.wst.xsd.ui.internal.adt.design.editpolicies.KeyBoardAccessibilityEditPolicy;
 import org.eclipse.wst.xsd.ui.internal.design.figures.CenteredIconFigure;
 import org.eclipse.wst.xsd.ui.internal.design.figures.GenericGroupFigure;
 import org.eclipse.wst.xsd.ui.internal.design.figures.IExtendedFigureFactory;
@@ -179,6 +183,7 @@ public abstract class ConnectableEditPart extends BaseEditPart
 
   protected void createEditPolicies()
   {
+    super.createEditPolicies();
     installEditPolicy(EditPolicy.SELECTION_FEEDBACK_ROLE, new ADTSelectionFeedbackEditPolicy());
   }
 
@@ -203,5 +208,68 @@ public abstract class ConnectableEditPart extends BaseEditPart
   {
     return ((GenericGroupFigure)getFigure()).getTargetFigure();
   }
-
+  
+  public EditPart doGetRelativeEditPart(EditPart editPart, int direction)
+  {
+    EditPart result = null;
+    if (direction == PositionConstants.WEST)
+    {
+      if (getParent() instanceof ConnectableEditPart)
+      {
+        result = getParent();
+      }
+      else
+      {
+        result = this;
+      }
+    }
+    else if (direction == PositionConstants.EAST)
+    {    
+      result = (EditPart) editPart.getChildren().get(0);
+      TargetConnectionSpacingFigureEditPart target = null;
+      boolean foundSelectableGroup = false;
+      for (Iterator i = editPart.getChildren().iterator(); i.hasNext(); )
+      {
+        EditPart child = (EditPart)i.next();
+        if (!(child instanceof TargetConnectionSpacingFigureEditPart))
+        {
+          foundSelectableGroup = true;
+          result = child;
+          break;
+        }
+      }
+      if (result instanceof TargetConnectionSpacingFigureEditPart)
+      {
+        target = (TargetConnectionSpacingFigureEditPart) result;
+      }
+      if (!foundSelectableGroup && target != null)
+      {
+        EditPart parent = editPart.getParent();
+        while (!(parent instanceof CompartmentEditPart))
+        {
+          parent = parent.getParent();
+          if (parent == null) break;
+        }
+        for (Iterator i = parent.getChildren().iterator(); i.hasNext(); )
+        {
+          EditPart child = (EditPart) i.next();
+          if (child instanceof BaseFieldEditPart && !(child instanceof SpaceFillerForFieldEditPart))
+          {
+            BaseFieldEditPart field = (BaseFieldEditPart) child;
+            if (field.getFigure().getBounds().getCenter().y < target.getFigure().getBounds().bottom() &&
+                field.getFigure().getBounds().getCenter().y > target.getFigure().getBounds().y)
+            {
+              return child;
+            }
+          }
+        }
+        return editPart;
+      }
+    }
+    else if (direction == KeyBoardAccessibilityEditPolicy.IN_TO_FIRST_CHILD)
+    {
+      result = (EditPart) editPart.getChildren().get(0);
+    }
+    return result;
+  }
 }

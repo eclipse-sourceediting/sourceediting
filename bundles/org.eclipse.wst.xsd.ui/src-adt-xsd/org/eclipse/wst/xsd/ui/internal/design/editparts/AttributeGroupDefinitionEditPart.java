@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,6 +24,7 @@ import org.eclipse.wst.xsd.ui.internal.design.editparts.model.TargetConnectionSp
 import org.eclipse.wst.xsd.ui.internal.design.figures.GenericGroupFigure;
 import org.eclipse.xsd.XSDAttributeGroupContent;
 import org.eclipse.xsd.XSDAttributeGroupDefinition;
+import org.eclipse.xsd.XSDAttributeUse;
 
 public class AttributeGroupDefinitionEditPart extends ConnectableEditPart
 {
@@ -70,6 +71,10 @@ public class AttributeGroupDefinitionEditPart extends ConnectableEditPart
       if (attrGroupContent instanceof XSDAttributeGroupDefinition)
       {
         list.add(XSDAdapterFactory.getInstance().adapt(attrGroupContent));
+      }
+      else if (attrGroupContent instanceof XSDAttributeUse)
+      {
+        list.add(new TargetConnectionSpaceFiller((XSDBaseAdapter)XSDAdapterFactory.getInstance().adapt(((XSDAttributeUse)attrGroupContent).getAttributeDeclaration())));
       }
       else
       {

@@ -55,4 +55,8 @@ public class RootHolderEditPart extends BaseEditPart implements IHolderEditPart
     super.createEditPolicies();
   }
 
+  public boolean isSelectable()
+  {
+    return false;
+  }
 }

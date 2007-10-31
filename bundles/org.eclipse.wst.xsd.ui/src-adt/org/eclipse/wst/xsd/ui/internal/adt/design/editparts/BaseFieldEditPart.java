@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -45,6 +45,9 @@ import org.eclipse.wst.xsd.ui.internal.adt.editor.Messages;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IADTObject;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IField;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IType;
+import org.eclipse.wst.xsd.ui.internal.design.editparts.ConnectableEditPart;
+import org.eclipse.wst.xsd.ui.internal.design.editparts.TargetConnectionSpacingFigureEditPart;
+import org.eclipse.wst.xsd.ui.internal.design.editparts.model.TargetConnectionSpaceFiller;
 import org.eclipse.wst.xsd.ui.internal.design.editpolicies.GraphNodeDragTracker;
 import org.eclipse.xsd.XSDNamedComponent;
 
@@ -122,12 +125,21 @@ public class BaseFieldEditPart extends BaseTypeConnectingEditPart implements INa
     EditPart result = null; 
     IField field = (IField)getModel();
     IType type = field.getType();
-    //System.out.println("createConnectionFigure : " + type);
-    if (type != null) // && type.isComplexType())
+    if (type != null)
     {      
-      result = getTargetEditPart(type);
+      result = getTargetEP(type); //getTargetEditPart(type);
     }
     return result;
+  }
+  
+  /**
+   * Do not override
+   * @param type
+   * @return
+   */
+  protected EditPart getTargetEP(IType type)
+  {
+    return getTargetEditPart(type);
   }
   
   public TypeReferenceConnection createConnectionFigure()
@@ -169,6 +181,30 @@ public class BaseFieldEditPart extends BaseTypeConnectingEditPart implements INa
     {    
       result = getTargetConnectionEditPart();
     }
+    else if (direction == PositionConstants.WEST)
+    {
+      for (Iterator iter = getParent().getChildren().iterator(); iter.hasNext(); )
+      {
+        Object child = iter.next();
+        if (child instanceof SectionEditPart)
+        {
+          SectionEditPart groups = (SectionEditPart) child;
+          for (Iterator i = groups.getChildren().iterator(); i.hasNext(); )
+          {
+            Object groupChild = i.next();
+            EditPart connectable = getParentConnectableEditPart((EditPart)groupChild);
+            if (connectable != null)
+            {
+              result = connectable;
+            }
+          }
+        }
+      }
+      if (result == null)
+      {
+        result = this;
+      }
+    }
     else
     {
       result = super.doGetRelativeEditPart(editPart, direction);
@@ -178,6 +214,37 @@ public class BaseFieldEditPart extends BaseTypeConnectingEditPart implements INa
       }  
     }  
     return result;      
+  }
+  
+  protected ConnectableEditPart getParentConnectableEditPart(EditPart connectable)
+  {
+    if (connectable instanceof TargetConnectionSpacingFigureEditPart)
+    {
+      TargetConnectionSpaceFiller space = (TargetConnectionSpaceFiller) ((TargetConnectionSpacingFigureEditPart)connectable).getModel();
+      if (space.getAdapter() == this.getModel())
+      {
+        return (ConnectableEditPart)connectable;
+      }
+    }
+    
+    for (Iterator i = connectable.getChildren().iterator(); i.hasNext(); )
+    {
+      Object child = i.next();
+      if (child instanceof ConnectableEditPart)
+      {
+        ConnectableEditPart r = getParentConnectableEditPart((EditPart)child);
+        if (r != null) return r;
+      }
+      else if (child instanceof TargetConnectionSpacingFigureEditPart)
+      {
+        TargetConnectionSpaceFiller space = (TargetConnectionSpaceFiller) ((TargetConnectionSpacingFigureEditPart)child).getModel();
+        if (space.getAdapter() == this.getModel() && connectable instanceof ConnectableEditPart)
+        {
+          return (ConnectableEditPart)connectable;
+        }
+      }
+    }
+    return null;
   }
  
   protected void refreshVisuals()

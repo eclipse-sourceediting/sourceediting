@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,33 +13,17 @@ package org.eclipse.wst.xsd.ui.internal.design.editparts;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.draw2d.Figure;
-import org.eclipse.draw2d.IFigure;
-import org.eclipse.draw2d.ToolbarLayout;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDComplexTypeDefinitionAdapter;
-import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.BaseEditPart;
+import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.SectionEditPart;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.Annotation;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IComplexType;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IStructure;
 
-public class XSDAttributesForAnnotationEditPart extends BaseEditPart
+public class XSDAttributesForAnnotationEditPart extends SectionEditPart
 {
-  IComplexType complexType;
   public XSDAttributesForAnnotationEditPart()
   {
     super();
-  }
-
-  protected IFigure createFigure()
-  {
-    Figure fig = new Figure();
-    fig.setLayoutManager(new ToolbarLayout());
-    return fig;
-  }
-
-  protected void createEditPolicies()
-  {
-
   }
 
   protected List getModelChildren()

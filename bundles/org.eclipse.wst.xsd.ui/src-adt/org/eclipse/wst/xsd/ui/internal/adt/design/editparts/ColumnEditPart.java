@@ -116,6 +116,11 @@ public class ColumnEditPart extends BaseEditPart
       refreshConnections(editPart);
     }
   }
+  
+  public boolean isSelectable()
+  {
+    return false;
+  }
 }
 
 

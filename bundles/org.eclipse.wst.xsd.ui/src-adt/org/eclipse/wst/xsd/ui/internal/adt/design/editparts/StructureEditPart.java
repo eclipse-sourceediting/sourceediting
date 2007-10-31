@@ -36,6 +36,7 @@ import org.eclipse.wst.xsd.ui.internal.adt.design.editpolicies.KeyBoardAccessibi
 import org.eclipse.wst.xsd.ui.internal.adt.design.figures.IStructureFigure;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IStructure;
 import org.eclipse.wst.xsd.ui.internal.common.actions.OpenInNewEditor;
+import org.eclipse.wst.xsd.ui.internal.design.editparts.SpaceFillerForFieldEditPart;
 import org.eclipse.xsd.XSDComplexTypeDefinition;
 import org.eclipse.xsd.XSDSchema;
 
@@ -84,8 +85,21 @@ public class StructureEditPart extends BaseTypeConnectingEditPart implements INa
         CompartmentEditPart compartment = (CompartmentEditPart)i.next();
         if (compartment.hasContent())
         {
-          result = (EditPart)compartment.getChildren().get(0);
-          break;
+          for (Iterator contentChildren = compartment.getChildren().iterator(); contentChildren.hasNext(); )
+          {
+            Object child = contentChildren.next();
+            if (child instanceof SectionEditPart)
+            {
+              SectionEditPart part = (SectionEditPart) child;
+              result = (EditPart)part.getChildren().get(0);
+              return result;
+            }
+            else if (child instanceof BaseFieldEditPart && (!(child instanceof SpaceFillerForFieldEditPart)))
+            {
+              result = (EditPart)child;
+              return result;
+            }
+          }
         }  
       }  
     }    

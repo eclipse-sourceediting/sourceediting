@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -144,16 +144,19 @@ public abstract class BaseTypeConnectingEditPart extends BaseEditPart implements
     EditPart result = null;        
     if (direction == PositionConstants.WEST)
     {    
-      result = getSourceConnectionEditPart();
-    }       
+      result = getConnectionEditPart(PositionConstants.WEST);
+    }
+    else if (direction == PositionConstants.EAST)
+    {
+      result = getConnectionEditPart(PositionConstants.EAST);
+    }
     return result;            
   }        
   
-  
-  private EditPart getSourceConnectionEditPart()
+  private EditPart getConnectionEditPart(int direction)
   {
     // find the first connection that targets this editPart
-    // navigate backward along the connection (to the left) to find the sourc edit part
+    // navigate backward along the connection (to the left) to find the source edit part
     EditPart result = null;
     for (Iterator i = getLayer(LayerConstants.CONNECTION_LAYER).getChildren().iterator(); i.hasNext(); )
     {
@@ -161,23 +164,42 @@ public abstract class BaseTypeConnectingEditPart extends BaseEditPart implements
       if (figure instanceof TypeReferenceConnection)
       {
         TypeReferenceConnection typeReferenceConnection = (TypeReferenceConnection)figure;
-        ConnectionAnchor targetAnchor = typeReferenceConnection.getTargetAnchor();
-        if (targetAnchor.getOwner() == getFigure())
-        {  
-          ConnectionAnchor sourceAnchor = typeReferenceConnection.getSourceAnchor();
-          IFigure sourceFigure = sourceAnchor.getOwner();          
-          EditPart part = null;
-          while (part == null && sourceFigure != null) 
+        ConnectionAnchor thisAnchor = null;
+        if (direction == PositionConstants.EAST)
+        {
+          thisAnchor = typeReferenceConnection.getSourceAnchor();
+        }
+        else if (direction == PositionConstants.WEST)
+        {
+          thisAnchor = typeReferenceConnection.getTargetAnchor();
+        }
+        if (thisAnchor != null && thisAnchor.getOwner() == getFigure())
+        {
+          ConnectionAnchor outAnchor = null;
+          if (direction == PositionConstants.EAST)
           {
-            part = (EditPart)getViewer().getVisualPartMap().get(sourceFigure);
-            sourceFigure = sourceFigure.getParent();
-          }          
-          result = part;
-          break;
+            outAnchor = typeReferenceConnection.getTargetAnchor();
+          }
+          else if (direction == PositionConstants.WEST)
+          {
+            outAnchor = typeReferenceConnection.getSourceAnchor();
+          }
+          
+          if (outAnchor != null)
+          {
+            IFigure sourceFigure = outAnchor.getOwner();          
+            EditPart part = null;
+            while (part == null && sourceFigure != null) 
+            {
+              part = (EditPart)getViewer().getVisualPartMap().get(sourceFigure);
+              sourceFigure = sourceFigure.getParent();
+            }          
+            result = part;
+            break;
+          }
         }  
       }                
     }    
     return result;
-  }
-      
+  }      
 }
