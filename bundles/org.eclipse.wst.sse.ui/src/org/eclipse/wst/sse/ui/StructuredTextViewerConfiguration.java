@@ -379,6 +379,10 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 	 *            the partition type for which the information provider is
 	 *            applicable
 	 * @return IInformationProvider or null if should not be supported
+	 * @deprecated instead of overriding this method to provide documentation
+	 *             information, adopters should use the documentationTextHover
+	 *             element in the org.eclipse.wst.sse.ui.editorConfiguration
+	 *             extension point
 	 */
 	protected IInformationProvider getInformationProvider(ISourceViewer sourceViewer, String partitionType) {
 		ITextHover bestMatchHover = new BestMatchHover(createDocumentationHover(partitionType));
