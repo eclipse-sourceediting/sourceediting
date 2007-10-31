@@ -45,7 +45,7 @@ public class JsTranslator extends Job implements IDocumentListener{
 	
 	public static final boolean REMOVE_XML_COMMENT = true;
 	public static final String XML_COMMENT_START = "<!--";
-	public static final String XML_COMMENT_END = "!>";
+	public static final String XML_COMMENT_END = "-->";
 	
 	static {
 		String value = Platform.getDebugOption("org.eclipse.wst.jsdt.web.core/debug/jspjavamapping"); //$NON-NLS-1$
@@ -75,13 +75,18 @@ public class JsTranslator extends Job implements IDocumentListener{
 	}
 	
 	private void cleanupXmlQuotes() {
-		if(!REMOVE_XML_COMMENT) {
+		if(REMOVE_XML_COMMENT) {
 			int index = -1;
 			int replaceLength  = XML_COMMENT_START.length();
 			while((index = fScriptText.indexOf(XML_COMMENT_START, index)) > -1) {
 				fScriptText.replace(index, index + replaceLength, new String(getPad(replaceLength)));
 			}
 			
+			index = -1;
+			replaceLength  = XML_COMMENT_END.length();
+			while((index = fScriptText.indexOf(XML_COMMENT_END, index)) > -1) {
+				fScriptText.replace(index, index + replaceLength, new String(getPad(replaceLength)));
+			}
 		}
 	}
 	
