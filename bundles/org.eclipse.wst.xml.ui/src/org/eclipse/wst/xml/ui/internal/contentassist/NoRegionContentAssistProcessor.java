@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -53,23 +53,18 @@ public class NoRegionContentAssistProcessor implements IContentAssistProcessor, 
 
 	public NoRegionContentAssistProcessor() {
 		super();
-		fPartitionToProcessorMap = new HashMap();
-		fNameToProcessorMap = new HashMap();
-		initNameToProcessorMap();
-		initPartitionToProcessorMap();
-
 	}
 
 	protected void addPartitionProcessor(String key, IContentAssistProcessor processor) {
-		addProcessor(fPartitionToProcessorMap, key, processor);
+		addProcessor(getPartitionToProcessorMap(), key, processor);
 	}
 
 	protected void addNameProcessor(String key, IContentAssistProcessor processor) {
-		addProcessor(fNameToProcessorMap, key, processor);
+		addProcessor(getNameToProcessorMap(), key, processor);
 	}
 
 	protected IContentAssistProcessor getPartitionProcessor(String key) {
-		return (IContentAssistProcessor) fPartitionToProcessorMap.get(key);
+		return (IContentAssistProcessor) getPartitionToProcessorMap().get(key);
 	}
 
 	/**
@@ -156,6 +151,22 @@ public class NoRegionContentAssistProcessor implements IContentAssistProcessor, 
 	public String getErrorMessage() {
 		return fErrorMessage;
 	}
+	
+	private HashMap getNameToProcessorMap() {
+		if (fNameToProcessorMap == null) {
+			fNameToProcessorMap = new HashMap();
+			initNameToProcessorMap();
+		}
+		return fNameToProcessorMap;
+	}
+	
+	private HashMap getPartitionToProcessorMap() {
+		if (fPartitionToProcessorMap == null) {
+			fPartitionToProcessorMap = new HashMap();
+			initPartitionToProcessorMap();
+		}
+		return fPartitionToProcessorMap;
+	}
 
 	/**
 	 * Gives you the document partition type (String) for the given
@@ -212,7 +223,7 @@ public class NoRegionContentAssistProcessor implements IContentAssistProcessor, 
 			String prevPartitionType = getPartitionType((StructuredTextViewer) viewer, documentOffset - 1);
 			// System.out.println("previous partition type is > " +
 			// prevPartitionType);
-			p = (IContentAssistProcessor) fPartitionToProcessorMap.get(prevPartitionType);
+			p = (IContentAssistProcessor) getPartitionToProcessorMap().get(prevPartitionType);
 		}
 		return p;
 	}
@@ -230,7 +241,7 @@ public class NoRegionContentAssistProcessor implements IContentAssistProcessor, 
 	 */
 	protected void initPartitionToProcessorMap() {
 		XMLContentAssistProcessor xmlProcessor = new XMLContentAssistProcessor();
-		addProcessor(fPartitionToProcessorMap, IXMLPartitions.XML_DEFAULT, xmlProcessor);
+		addProcessor(getPartitionToProcessorMap(), IXMLPartitions.XML_DEFAULT, xmlProcessor);
 	}
 
 	public void release() {

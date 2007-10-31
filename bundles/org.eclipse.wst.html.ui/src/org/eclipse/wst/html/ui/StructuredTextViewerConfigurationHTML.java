@@ -38,8 +38,6 @@ import org.eclipse.wst.html.ui.internal.autoedit.StructuredAutoEditStrategyHTML;
 import org.eclipse.wst.html.ui.internal.contentassist.HTMLContentAssistProcessor;
 import org.eclipse.wst.html.ui.internal.contentassist.NoRegionContentAssistProcessorForHTML;
 import org.eclipse.wst.html.ui.internal.style.LineStyleProviderForHTML;
-import org.eclipse.wst.javascript.ui.internal.common.contentassist.JavaScriptContentAssistProcessor;
-import org.eclipse.wst.javascript.ui.internal.common.style.LineStyleProviderForJavaScript;
 import org.eclipse.wst.sse.core.text.IStructuredPartitions;
 import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
 import org.eclipse.wst.sse.ui.internal.format.StructuredFormattingStrategy;
@@ -75,10 +73,6 @@ public class StructuredTextViewerConfigurationHTML extends StructuredTextViewerC
 	 * One instance per configuration
 	 */
 	private LineStyleProvider fLineStyleProviderForHTML;
-	/*
-	 * One instance per configuration
-	 */
-	private LineStyleProvider fLineStyleProviderForJavascript;
 	/*
 	 * One instance per configuration
 	 */
@@ -135,9 +129,6 @@ public class StructuredTextViewerConfigurationHTML extends StructuredTextViewerC
 
 		if ((partitionType == IHTMLPartitions.HTML_DEFAULT) || (partitionType == IHTMLPartitions.HTML_COMMENT)) {
 			processors = new IContentAssistProcessor[]{new HTMLContentAssistProcessor()};
-		}
-		else if (partitionType == IHTMLPartitions.SCRIPT) {
-			processors = new IContentAssistProcessor[]{new JavaScriptContentAssistProcessor()};
 		}
 		else if (partitionType == ICSSPartitions.STYLE) {
 			processors = new IContentAssistProcessor[]{new CSSContentAssistProcessor()};
@@ -216,9 +207,6 @@ public class StructuredTextViewerConfigurationHTML extends StructuredTextViewerC
 		if (partitionType == IHTMLPartitions.HTML_DEFAULT || partitionType == IHTMLPartitions.HTML_COMMENT || partitionType == IHTMLPartitions.HTML_DECLARATION) {
 			providers = new LineStyleProvider[]{getLineStyleProviderForHTML()};
 		}
-		else if (partitionType == IHTMLPartitions.SCRIPT) {
-			providers = new LineStyleProvider[]{getLineStyleProviderForJavascript()};
-		}
 		else if (partitionType == ICSSPartitions.STYLE) {
 			providers = new LineStyleProvider[]{getLineStyleProviderForEmbeddedCSS()};
 		}
@@ -238,13 +226,6 @@ public class StructuredTextViewerConfigurationHTML extends StructuredTextViewerC
 			fLineStyleProviderForHTML = new LineStyleProviderForHTML();
 		}
 		return fLineStyleProviderForHTML;
-	}
-
-	private LineStyleProvider getLineStyleProviderForJavascript() {
-		if (fLineStyleProviderForJavascript == null) {
-			fLineStyleProviderForJavascript = new LineStyleProviderForJavaScript();
-		}
-		return fLineStyleProviderForJavascript;
 	}
 
 	public ILabelProvider getStatusLineLabelProvider(ISourceViewer sourceViewer) {

@@ -17,18 +17,20 @@ import java.util.List;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
+import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.wst.css.ui.internal.contentassist.CSSContentAssistProcessor;
 import org.eclipse.wst.html.core.internal.contentmodel.HTMLCMDocument;
 import org.eclipse.wst.html.core.internal.provisional.HTML40Namespace;
 import org.eclipse.wst.html.core.internal.provisional.HTMLCMProperties;
+import org.eclipse.wst.html.core.text.IHTMLPartitions;
+import org.eclipse.wst.html.ui.StructuredTextViewerConfigurationHTML;
 import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
 import org.eclipse.wst.html.ui.internal.editor.HTMLEditorPluginImageHelper;
 import org.eclipse.wst.html.ui.internal.editor.HTMLEditorPluginImages;
 import org.eclipse.wst.html.ui.internal.preferences.HTMLUIPreferenceNames;
 import org.eclipse.wst.html.ui.internal.templates.TemplateContextTypeIdsHTML;
-import org.eclipse.wst.javascript.ui.internal.common.contentassist.JavaScriptContentAssistProcessor;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapterFactory;
@@ -39,6 +41,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
+import org.eclipse.wst.sse.ui.internal.IReleasable;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
@@ -65,7 +68,7 @@ public class HTMLContentAssistProcessor extends AbstractContentAssistProcessor i
 	protected IPreferenceStore fPreferenceStore = null;
 	protected boolean isXHTML = false;
 	private HTMLTemplateCompletionProcessor fTemplateProcessor = null;
-	private JavaScriptContentAssistProcessor fJSContentAssistProcessor = null;
+	private IContentAssistProcessor fJSContentAssistProcessor = null;
 	private List fTemplateContexts = new ArrayList();
 
 	public HTMLContentAssistProcessor() {
@@ -196,8 +199,11 @@ public class HTMLContentAssistProcessor extends AbstractContentAssistProcessor i
 					while (it.hasNext()) {
 						region = (ITextRegion) it.next();
 						if (fn.getText(region).equalsIgnoreCase("script")) { //$NON-NLS-1$
-							// return JS content assist...
-							return getJSContentAssistProcessor().computeCompletionProposals(textViewer, documentPosition);
+							IContentAssistProcessor jsProcessor = getJSContentAssistProcessor();
+							if (jsProcessor != null) {
+								return jsProcessor.computeCompletionProposals(textViewer, documentPosition);
+							}
+							return new ICompletionProposal[0];
 						}
 					}
 				}
@@ -398,9 +404,9 @@ public class HTMLContentAssistProcessor extends AbstractContentAssistProcessor i
 		return ">"; //$NON-NLS-1$
 	}
 	
-	private JavaScriptContentAssistProcessor getJSContentAssistProcessor() {
+	private IContentAssistProcessor getJSContentAssistProcessor() {
 		if (fJSContentAssistProcessor == null) {
-			fJSContentAssistProcessor = new JavaScriptContentAssistProcessor();
+			fJSContentAssistProcessor = new StructuredTextViewerConfigurationHTML().getContentAssistant(null).getContentAssistProcessor(IHTMLPartitions.SCRIPT);
 		}
 		return fJSContentAssistProcessor;
 	}
@@ -470,8 +476,8 @@ public class HTMLContentAssistProcessor extends AbstractContentAssistProcessor i
 		if (factoryForCSS != null) {
 			factoryForCSS.release();
 		}
-		if (fJSContentAssistProcessor != null) {
-			fJSContentAssistProcessor.release();
+		if (fJSContentAssistProcessor instanceof IReleasable) {
+			((IReleasable)fJSContentAssistProcessor).release();
 		}
 		getPreferenceStore().removePropertyChangeListener(this);
 		super.release();
