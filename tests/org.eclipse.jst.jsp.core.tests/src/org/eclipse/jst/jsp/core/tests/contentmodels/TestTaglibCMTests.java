@@ -92,7 +92,7 @@ public class TestTaglibCMTests extends TestCase {
 			assertNotNull(TAG_NAME + " was missing from document", presents.item(0));
 			ModelQueryAdapter modelQueryAdapter = (ModelQueryAdapter) ((INodeNotifier) presents.item(0)).getAdapterFor(ModelQueryAdapter.class);
 			CMElementDeclaration declaration = modelQueryAdapter.getModelQuery().getCMElementDeclaration((Element) presents.item(0));
-			assertNotNull("no CMElementDelcaration for " + TAG_NAME, declaration);
+			assertNotNull("no CMElementDeclaration for " + TAG_NAME, declaration);
 			assertEquals("qualified name from element declaration was different", declaration.getNodeName(), TAG_NAME);
 		}
 		finally {
