@@ -42,6 +42,11 @@ public class JsTranslator extends Job implements IDocumentListener{
 	private static final boolean DEBUG;
 	private static final boolean DEBUG_SAVE_OUTPUT = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.jsdt.web.core/debug/jsptranslationstodisk")); //$NON-NLS-1$  //$NON-NLS-2$
 	public static final String ENDL = "\n"; //$NON-NLS-1$
+	
+	public static final boolean REMOVE_XML_COMMENT = true;
+	public static final String XML_COMMENT_START = "<!--";
+	public static final String XML_COMMENT_END = "!>";
+	
 	static {
 		String value = Platform.getDebugOption("org.eclipse.wst.jsdt.web.core/debug/jspjavamapping"); //$NON-NLS-1$
 		DEBUG = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
@@ -68,6 +73,20 @@ public class JsTranslator extends Job implements IDocumentListener{
 	private void advanceNextNode() {
 		setCurrentNode(getCurrentNode().getNext());
 	}
+	
+	private void cleanupXmlQuotes() {
+		if(!REMOVE_XML_COMMENT) {
+			int index = -1;
+			int replaceLength  = XML_COMMENT_START.length();
+			while((index = fScriptText.indexOf(XML_COMMENT_START, index)) > -1) {
+				fScriptText.replace(index, index + replaceLength, new String(getPad(replaceLength)));
+			}
+			
+		}
+	}
+	
+	
+	
 	
 	public JsTranslator(IStructuredDocument document, 	String fileName) {
 		super("JavaScript translation for : "  + fileName);
@@ -222,6 +241,7 @@ public class JsTranslator extends Job implements IDocumentListener{
 	}
 	
 	private void finishedTranslation() {
+		cleanupXmlQuotes();
 		if(compUnitBuff!=null) compUnitBuff.setContents(fScriptText.toString());
 	}
 	
