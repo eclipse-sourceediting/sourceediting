@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,6 +22,7 @@ import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.sse.ui.internal.reconcile.AbstractStructuredTextReconcilingStrategy;
 import org.eclipse.wst.sse.ui.internal.reconcile.ReconcileAnnotationKey;
@@ -44,7 +45,7 @@ import org.w3c.dom.Node;
 
 /**
  * Basic XML syntax checking step. Only used as ISourceValidator at the
- * momment
+ * moment
  * 
  * @author pavery
  */
@@ -225,62 +226,66 @@ public class MarkupValidator implements IValidator, ISourceValidator {
 				if ((attrState == 2) && (i >= 2)) {
 					// create annotation
 					ITextRegion nameRegion = textRegions.get(i - 2);
-					Object[] args = {structuredDocumentRegion.getText(nameRegion)};
-					String messageText = NLS.bind(XMLUIMessages.Attribute__is_missing_a_value, args);
+					if (!(nameRegion instanceof ITextRegionContainer)) {
+						Object[] args = {structuredDocumentRegion.getText(nameRegion)};
+						String messageText = NLS.bind(XMLUIMessages.Attribute__is_missing_a_value, args);
 
-					int start = structuredDocumentRegion.getStartOffset(nameRegion);
-					int end = structuredDocumentRegion.getEndOffset();
-					int lineNo = getLineNumber(start);
-					int textLength = structuredDocumentRegion.getText(nameRegion).trim().length();
+						int start = structuredDocumentRegion.getStartOffset(nameRegion);
+						int end = structuredDocumentRegion.getEndOffset();
+						int lineNo = getLineNumber(start);
+						int textLength = structuredDocumentRegion.getText(nameRegion).trim().length();
 
-					LocalizedMessage message = new LocalizedMessage(IMessage.HIGH_SEVERITY, messageText);
-					message.setOffset(start);
-					message.setLength(textLength);
-					message.setLineNo(lineNo);
+						LocalizedMessage message = new LocalizedMessage(IMessage.HIGH_SEVERITY, messageText);
+						message.setOffset(start);
+						message.setLength(textLength);
+						message.setLineNo(lineNo);
 
-					// quick fix info
-					ITextRegion equalsRegion = textRegions.get(i - 2 + 1);
-					int insertOffset = structuredDocumentRegion.getTextEndOffset(equalsRegion) - end;
-					Object[] additionalFixInfo = {structuredDocumentRegion.getText(nameRegion), new Integer(insertOffset)};
+						// quick fix info
+						ITextRegion equalsRegion = textRegions.get(i - 2 + 1);
+						int insertOffset = structuredDocumentRegion.getTextEndOffset(equalsRegion) - end;
+						Object[] additionalFixInfo = {structuredDocumentRegion.getText(nameRegion), new Integer(insertOffset)};
 
-					MarkupQuickAssistProcessor processor = new MarkupQuickAssistProcessor();
-					processor.setProblemId(ProblemIDsXML.MissingAttrValue);
-					processor.setAdditionalFixInfo(additionalFixInfo);
-					message.setAttribute(QUICKASSISTPROCESSOR, processor);
+						MarkupQuickAssistProcessor processor = new MarkupQuickAssistProcessor();
+						processor.setProblemId(ProblemIDsXML.MissingAttrValue);
+						processor.setAdditionalFixInfo(additionalFixInfo);
+						message.setAttribute(QUICKASSISTPROCESSOR, processor);
 
-					AnnotationInfo info = new AnnotationInfo(message);
+						AnnotationInfo info = new AnnotationInfo(message);
 
-					((IncrementalReporter) reporter).addAnnotationInfo(this, info);
+						((IncrementalReporter) reporter).addAnnotationInfo(this, info);
 
-					// annotation.setAdditionalFixInfo(additionalFixInfo);
-					// results.add(annotation);
-					errorCount++;
+						// annotation.setAdditionalFixInfo(additionalFixInfo);
+						// results.add(annotation);
+						errorCount++;
+					}
 				}
 				// name but no '=' (XML only)
 				else if ((attrState == 1) && (i >= 1)) {
 					// create annotation
 					ITextRegion previousRegion = textRegions.get(i - 1);
-					Object[] args = {structuredDocumentRegion.getText(previousRegion)};
-					String messageText = NLS.bind(XMLUIMessages.Attribute__has_no_value, args);
-					int start = structuredDocumentRegion.getStartOffset(previousRegion);
-					int textLength = structuredDocumentRegion.getText(previousRegion).trim().length();
-					int lineNo = getLineNumber(start);
+					if (!(previousRegion instanceof ITextRegionContainer)) {
+						Object[] args = {structuredDocumentRegion.getText(previousRegion)};
+						String messageText = NLS.bind(XMLUIMessages.Attribute__has_no_value, args);
+						int start = structuredDocumentRegion.getStartOffset(previousRegion);
+						int textLength = structuredDocumentRegion.getText(previousRegion).trim().length();
+						int lineNo = getLineNumber(start);
 
-					LocalizedMessage message = new LocalizedMessage(IMessage.HIGH_SEVERITY, messageText);
-					message.setOffset(start);
-					message.setLength(textLength);
-					message.setLineNo(lineNo);
+						LocalizedMessage message = new LocalizedMessage(IMessage.HIGH_SEVERITY, messageText);
+						message.setOffset(start);
+						message.setLength(textLength);
+						message.setLineNo(lineNo);
 
-					MarkupQuickAssistProcessor processor = new MarkupQuickAssistProcessor();
-					processor.setProblemId(ProblemIDsXML.NoAttrValue);
-					processor.setAdditionalFixInfo(structuredDocumentRegion.getText(previousRegion));
-					message.setAttribute(QUICKASSISTPROCESSOR, processor);
+						MarkupQuickAssistProcessor processor = new MarkupQuickAssistProcessor();
+						processor.setProblemId(ProblemIDsXML.NoAttrValue);
+						processor.setAdditionalFixInfo(structuredDocumentRegion.getText(previousRegion));
+						message.setAttribute(QUICKASSISTPROCESSOR, processor);
 
-					AnnotationInfo info = new AnnotationInfo(message);
+						AnnotationInfo info = new AnnotationInfo(message);
 
-					((IncrementalReporter) reporter).addAnnotationInfo(this, info);
+						((IncrementalReporter) reporter).addAnnotationInfo(this, info);
 
-					errorCount++;
+						errorCount++;
+					}
 				}
 				attrState = 1;
 			}
