@@ -15,7 +15,6 @@ package org.eclipse.wst.xml.core.internal.modelquery;
 
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolverPlugin;
 import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
-import org.eclipse.wst.sse.core.internal.util.Assert;
 import org.eclipse.wst.sse.core.internal.util.URIResolver;
 import org.eclipse.wst.xml.core.internal.Logger;
 
@@ -77,8 +76,18 @@ public class XMLCatalogIdResolver implements org.eclipse.wst.common.uriresolver.
 			// passing it thru to URIResolver
 			// bug 117424, we should be able to assume that the base location
 			// is non-null
-			Assert.isNotNull(base, "Base location is expected to be non null."); //$NON-NLS-1$
-			base = URIHelper.addImpliedFileProtocol(base);
+
+			/**
+			 * We shouldn't assert a failure because the catalog does not
+			 * require a base location to operate and it will be called from
+			 * non-file-based scenarios.
+			 * 
+			 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=206176
+			 */
+			// Assert.isNotNull(base, "Base location is expected to be non null."); //$NON-NLS-1$
+			if (base != null) {
+				base = URIHelper.addImpliedFileProtocol(base);
+			}
 		}
 		result = URIResolverPlugin.createResolver().resolve(base, publicId, systemId);
 		return result;
