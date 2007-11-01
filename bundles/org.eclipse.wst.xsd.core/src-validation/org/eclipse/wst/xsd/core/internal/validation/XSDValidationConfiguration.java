@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006 IBM Corporation and others.
+ * Copyright (c) 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     IBM Corporation - initial API and implementation
+ *     David Carver, Standards for Technology in Automotive Retail, bug 1147033
  *******************************************************************************/
 package org.eclipse.wst.xsd.core.internal.validation;
 
@@ -20,7 +21,9 @@ package org.eclipse.wst.xsd.core.internal.validation;
 public class XSDValidationConfiguration 
 {
   public static String HONOUR_ALL_SCHEMA_LOCATIONS = "HONOUR_ALL_SCHEMA_LOCATIONS"; //$NON-NLS-1$
+  public static String FULL_SCHEMA_CONFORMANCE = "FULL_SCHEMA_CONFORMANCE"; //$NON-NLS-1$
   private boolean honour_all_schema_locations = false;
+  private boolean fullSchemaConformance = true;
   
   /**
    * Set a feature of this configuration.
@@ -36,6 +39,8 @@ public class XSDValidationConfiguration
   {
 	if(HONOUR_ALL_SCHEMA_LOCATIONS.equals(feature))
 	  honour_all_schema_locations = value;
+	else if (FULL_SCHEMA_CONFORMANCE.equals(feature))
+		fullSchemaConformance = value;
 	else
 	  throw new Exception("Feature not recognized."); //$NON-NLS-1$
 	
@@ -57,6 +62,8 @@ public class XSDValidationConfiguration
   {
 	if(HONOUR_ALL_SCHEMA_LOCATIONS.equals(feature))
 	  return honour_all_schema_locations;
+	else if (FULL_SCHEMA_CONFORMANCE.equals(feature))
+      return fullSchemaConformance;
 	
 	throw new Exception("Feature not recognized."); //$NON-NLS-1$
   }

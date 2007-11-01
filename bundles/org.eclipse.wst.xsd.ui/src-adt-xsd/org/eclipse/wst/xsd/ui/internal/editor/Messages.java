@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     IBM Corporation - initial API and implementation
+ *     David Carver, Standards for Technology in Automotive Retail, bug 1147033
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.editor;
 
@@ -103,6 +104,7 @@ public class Messages extends NLS
   public static String _UI_QUALIFY_XSD;
   public static String _UI_TEXT_XSD_DEFAULT_TARGET_NAMESPACE;
   public static String _UI_VALIDATING_FILES;
+  public static String _UI_FULL_CONFORMANCE;
   public static String _UI_TEXT_HONOUR_ALL_SCHEMA_LOCATIONS;
   
   public static String _ERROR_LABEL_INVALID_PREFIX;

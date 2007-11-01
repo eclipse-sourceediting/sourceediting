@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,9 +7,11 @@
  * 
  * Contributors:
  *     IBM Corporation - initial API and implementation
+David Carver, Standards for Technology in Automotive Retail, bug 1147033     
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.preferences;
 
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
@@ -45,6 +47,7 @@ public class XSDPreferencePage extends PreferencePage implements IWorkbenchPrefe
   Text defaultTargetNamespaceText;
   Button qualifyXSDLanguage;
   private Button honourAllSchemaLocations = null;
+  private Button fullSchemaConformance = null;
 
   /**
    * Creates preference page controls on demand.
@@ -133,24 +136,31 @@ public class XSDPreferencePage extends PreferencePage implements IWorkbenchPrefe
   
   protected void createContentsForValidatingGroup(Composite parent) 
   {
-	Group validatingGroup = createGroup(parent, 2);
+	Group validatingGroup = createGroup(parent, 1);
 	validatingGroup.setText(Messages._UI_VALIDATING_FILES);
+
+	//GridData
+	GridData data = new GridData(SWT.FILL);
+	data.verticalAlignment = SWT.CENTER;
+	data.horizontalAlignment = SWT.FILL;
 
 	if (honourAllSchemaLocations == null) 
 	{
 		honourAllSchemaLocations = new Button(validatingGroup, SWT.CHECK | SWT.LEFT);
 		honourAllSchemaLocations.setText(Messages._UI_TEXT_HONOUR_ALL_SCHEMA_LOCATIONS);
-
-		//GridData
-		GridData data = new GridData(GridData.FILL);
-		data.verticalAlignment = GridData.CENTER;
-		data.horizontalAlignment = GridData.FILL;
 		honourAllSchemaLocations.setLayoutData(data);
 		
 	    PlatformUI.getWorkbench().getHelpSystem().setHelp(honourAllSchemaLocations,
 	    		XSDEditorCSHelpIds.XMLSCHEMAFILES_PREFERENCES__HONOUR_ALL_SCHEMA_LOCATIONS); 
 
 	}
+	if (fullSchemaConformance == null) 
+	{
+		fullSchemaConformance = new Button(validatingGroup, SWT.CHECK | SWT.LEFT);
+		fullSchemaConformance.setLayoutData(GridDataFactory.copyData(data));
+		fullSchemaConformance.setText(Messages._UI_FULL_CONFORMANCE);
+	}
+
   }
   
   /**
@@ -218,6 +228,7 @@ public class XSDPreferencePage extends PreferencePage implements IWorkbenchPrefe
     qualifyXSDLanguage.setSelection(getPreferenceStore().getDefaultBoolean(XSDEditorPlugin.CONST_XSD_LANGUAGE_QUALIFY));
     defaultTargetNamespaceText.setText(getPreferenceStore().getString(XSDEditorPlugin.CONST_DEFAULT_TARGET_NAMESPACE));
     honourAllSchemaLocations.setSelection(XSDCorePlugin.getDefault().getPluginPreferences().getDefaultBoolean(XSDCorePreferenceNames.HONOUR_ALL_SCHEMA_LOCATIONS));
+    fullSchemaConformance.setSelection(XSDCorePlugin.getDefault().getPluginPreferences().getDefaultBoolean(XSDCorePreferenceNames.FULL_SCHEMA_CONFORMANCE));
   }
 
   /**
@@ -230,6 +241,7 @@ public class XSDPreferencePage extends PreferencePage implements IWorkbenchPrefe
     qualifyXSDLanguage.setSelection(store.getBoolean(XSDEditorPlugin.CONST_XSD_LANGUAGE_QUALIFY));
     defaultTargetNamespaceText.setText(store.getString(XSDEditorPlugin.CONST_DEFAULT_TARGET_NAMESPACE));
     honourAllSchemaLocations.setSelection(XSDCorePlugin.getDefault().getPluginPreferences().getBoolean(XSDCorePreferenceNames.HONOUR_ALL_SCHEMA_LOCATIONS));
+    fullSchemaConformance.setSelection(XSDCorePlugin.getDefault().getPluginPreferences().getBoolean(XSDCorePreferenceNames.FULL_SCHEMA_CONFORMANCE));
   }
 
   /**
@@ -246,6 +258,8 @@ public class XSDPreferencePage extends PreferencePage implements IWorkbenchPrefe
     XSDEditorPlugin.getPlugin().savePluginPreferences();
     
     XSDCorePlugin.getDefault().getPluginPreferences().setValue(XSDCorePreferenceNames.HONOUR_ALL_SCHEMA_LOCATIONS, honourAllSchemaLocations.getSelection());
+    XSDCorePlugin.getDefault().getPluginPreferences().setValue(XSDCorePreferenceNames.FULL_SCHEMA_CONFORMANCE, fullSchemaConformance.getSelection());
+    
     XSDCorePlugin.getDefault().savePluginPreferences();
   }
 

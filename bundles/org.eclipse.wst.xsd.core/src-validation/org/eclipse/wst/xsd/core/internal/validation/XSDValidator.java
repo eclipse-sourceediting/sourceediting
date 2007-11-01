@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     IBM Corporation - initial API and implementation
+ *     David Carver, Standards for Technology in Automotive Retail, bug 1147033
  *******************************************************************************/
 package org.eclipse.wst.xsd.core.internal.validation;
 
@@ -75,7 +76,7 @@ public class XSDValidator
       grammarPreparser.setFeature(Constants.XERCES_FEATURE_PREFIX + Constants.NAMESPACE_PREFIXES_FEATURE, true);
 	  grammarPreparser.setFeature(Constants.XERCES_FEATURE_PREFIX + Constants.VALIDATION_FEATURE, true);
 	  grammarPreparser.setFeature(Constants.XERCES_FEATURE_PREFIX + Constants.SCHEMA_VALIDATION_FEATURE, true);
-      grammarPreparser.setFeature(Constants.XERCES_FEATURE_PREFIX + Constants.SCHEMA_FULL_CHECKING, false);
+
 	  grammarPreparser.setFeature(Constants.XERCES_FEATURE_PREFIX + Constants.EXTERNAL_GENERAL_ENTITIES_FEATURE, true);
 	  grammarPreparser.setFeature(Constants.XERCES_FEATURE_PREFIX + Constants.EXTERNAL_PARAMETER_ENTITIES_FEATURE, true);
 	  grammarPreparser.setFeature(Constants.XERCES_FEATURE_PREFIX + Constants.WARN_ON_DUPLICATE_ATTDEF_FEATURE, true);
@@ -84,12 +85,24 @@ public class XSDValidator
 	  {
 	    try
 	    {
-	      grammarPreparser.setFeature(Constants.XERCES_FEATURE_PREFIX + "honour-all-schemaLocations", true);
+	      grammarPreparser.setFeature(Constants.XERCES_FEATURE_PREFIX + "honour-all-schemaLocations", true); //$NON-NLS-1$
 	    }
         catch (Exception e)
 	    {
 	      // catch the exception and ignore
 	    }
+	  }
+	  
+	  if(configuration.getFeature(XSDValidationConfiguration.FULL_SCHEMA_CONFORMANCE)) {
+		try
+		{
+		  grammarPreparser.setFeature(Constants.XERCES_FEATURE_PREFIX + Constants.SCHEMA_FULL_CHECKING, true);
+		}
+		catch (Exception e)
+		{
+			// ignore since we don't want to set it or can't.
+		}
+		
 	  }
 	      
 	  grammarPreparser.setErrorHandler(errorHandler);
