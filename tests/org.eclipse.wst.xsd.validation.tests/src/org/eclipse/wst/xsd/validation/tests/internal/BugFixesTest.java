@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     IBM Corporation - initial API and implementation
+ *     David Carver, Standards for Technology in Automotive Retail, bug 147033
  *******************************************************************************/
 package org.eclipse.wst.xsd.validation.tests.internal;
 
@@ -211,4 +212,29 @@ public class BugFixesTest extends BaseTestCase
 		}	
 	}
   }
+  
+  /**
+   * Test /BugFixes/FullConformance/FullConformance.xsd
+   * bug 147033
+   */
+  public void testFullConformance()
+  {
+    String testname = "FullConformance";
+    String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + BUGFIXES_DIR + "FullConformance/" + testname + ".xsd";
+    String loglocation = PLUGIN_ABSOLUTE_PATH + GENERATED_RESULTS_DIR + BUGFIXES_DIR + "FullConformance/" + testname + ".xsd-log";
+    String idealloglocation = PLUGIN_ABSOLUTE_PATH + IDEAL_RESULTS_DIR + BUGFIXES_DIR + "FullConformance/" + testname + ".xsd-log";
+    
+    XSDValidationConfiguration configuration = new XSDValidationConfiguration();
+    try
+    {
+      configuration.setFeature(XSDValidationConfiguration.HONOUR_ALL_SCHEMA_LOCATIONS, true);
+      configuration.setFeature(XSDValidationConfiguration.FULL_SCHEMA_CONFORMANCE, true);
+    }
+    catch(Exception e)
+    {
+      fail("Unable to set the FULL_SCHEMA_CONFORMANCE feature to true: " + e);
+    }
+    runTest(testfile, loglocation, idealloglocation, configuration);
+  }
+ 
 }

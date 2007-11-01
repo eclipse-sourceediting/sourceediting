@@ -1,0 +1,6 @@
+number of errors      : 2
+
+------------error list-------------------------------------------
+rcase-Recurse.2: There is not a complete functional mapping between the particles. [35, 43]
+derivation-ok-restriction.5.4.2: Error for type 'RestrictedFoo'.  The particle of the type is not a valid restriction of the particle of the base. [35, 43]
+-----------------------------------------------------------------
