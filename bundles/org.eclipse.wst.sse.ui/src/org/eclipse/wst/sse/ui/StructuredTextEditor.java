@@ -2248,26 +2248,35 @@ public class StructuredTextEditor extends TextEditor {
 	 *             recommended that the current document provider be asked for
 	 *             the current document and the IModelManager then asked for
 	 *             the corresponding model with
-	 *             getExistingModelFor*(IDocument).
+	 *             getExistingModelFor*(IDocument). Supported document
+	 *             providers ensure that the document maps to a shared
+	 *             structured model.
 	 */
 	public IStructuredModel getModel() {
-		if (getDocumentProvider() == null) {
+		IDocumentProvider documentProvider = getDocumentProvider();
+		
+		if (documentProvider == null) {
 			// this indicated an error in startup sequence
 			Logger.trace(getClass().getName(), "Program Info Only: document provider was null when model requested"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
-		boolean initialModelNull = false;
-		if (fStructuredModel == null)
-			initialModelNull = true;
-		if (fStructuredModel == null) {
+		
+		// Remember if we entered this method without a model existing
+		boolean initialModelNull = (fStructuredModel == null);
+		
+		if (fStructuredModel == null && documentProvider != null) {
 			// lazily set the model instance, although this is an ABNORMAL
 			// CODE PATH
-			if (getDocumentProvider() instanceof IModelProvider) {
-				fStructuredModel = ((IModelProvider) getDocumentProvider()).getModel(getEditorInput());
+			if (documentProvider instanceof IModelProvider) {
+				fStructuredModel = ((IModelProvider) documentProvider).getModel(getEditorInput());
 				fisReleased = false;
 			}
 			else {
-				IDocument doc = getDocumentProvider().getDocument(getEditorInput());
+				IDocument doc = documentProvider.getDocument(getEditorInput());
 				if (doc instanceof IStructuredDocument) {
+					/*
+					 * Called in this manner because getExistingModel can skip
+					 * some calculations always performed in getModelForEdit
+					 */
 					IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForEdit(doc);
 					if (model == null) {
 						model = StructuredModelManager.getModelManager().getModelForEdit((IStructuredDocument) doc);
@@ -2277,9 +2286,6 @@ public class StructuredTextEditor extends TextEditor {
 				}
 			}
 
-			// ISSUE: this looks bad ... edit-time factories not initialized
-			// unless someone calls getModel?
-			// factories will not be re-added if already exists
 			EditorModelUtil.addFactoriesTo(fStructuredModel);
 
 			if (initialModelNull && fStructuredModel != null) {
