@@ -29,15 +29,17 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.common.componentcore.datamodel.properties.IFacetProjectCreationDataModelProperties;
+import org.eclipse.wst.common.frameworks.datamodel.DataModelEvent;
 import org.eclipse.wst.common.frameworks.datamodel.DataModelPropertyDescriptor;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
+import org.eclipse.wst.common.frameworks.datamodel.IDataModelListener;
 import org.eclipse.wst.common.frameworks.internal.datamodel.ui.DataModelWizardPage;
 import org.eclipse.wst.common.frameworks.internal.operations.IProjectCreationPropertiesNew;
 import org.eclipse.wst.common.frameworks.internal.ui.NewProjectGroup;
+import org.eclipse.wst.common.project.facet.core.IFacetedProjectWorkingCopy;
 import org.eclipse.wst.common.project.facet.core.runtime.IRuntime;
 import org.eclipse.wst.common.project.facet.ui.ModifyFacetedProjectWizard;
 import org.eclipse.wst.common.project.facet.ui.PresetSelectionPanel;
-import org.eclipse.wst.common.project.facet.ui.internal.ModifyFacetedProjectDataModel;
 import org.eclipse.wst.project.facet.ProductManager;
 import org.eclipse.wst.server.ui.ServerUIUtil;
 import org.eclipse.wst.web.internal.ResourceHandler;
@@ -70,15 +72,12 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
 	}
 
 	protected void createPresetPanel(Composite top) {
-		final ModifyFacetedProjectDataModel model
-            = ( (ModifyFacetedProjectWizard) getWizard() ).getModel();
+		final IFacetedProjectWorkingCopy fpjwc
+            = ( (ModifyFacetedProjectWizard) getWizard() ).getFacetedProjectWorkingCopy();
 
-        final PresetSelectionPanel ppanel 
-            = new PresetSelectionPanel( top, SWT.NONE, model );
+        final PresetSelectionPanel ppanel = new PresetSelectionPanel( top, fpjwc );
         
         ppanel.setLayoutData( gdhfill() );
-        
-        ( (ModifyFacetedProjectWizard) getWizard() ).syncWithPresetsModel( ppanel.getPresetsCombo() );
 	}
 	
 	public static boolean launchNewRuntimeWizard(Shell shell, IDataModel model) {
@@ -152,6 +151,22 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
 		IDataModel nestedProjectDM = model.getNestedModel(NESTED_PROJECT_DM);
 		nestedProjectDM.addListener(this);
 		projectNameGroup = new NewProjectGroup(parent, nestedProjectDM);
+		
+		final IDataModelListener projectNameChangedListener = new IDataModelListener()
+		{
+            public void propertyChanged( final DataModelEvent event )
+            {
+                if( event.getFlag() == IDataModel.VALUE_CHG &&
+                    event.getPropertyName().equals( IProjectCreationPropertiesNew.PROJECT_NAME ) )
+                {
+                    final ModifyFacetedProjectWizard wizard = (ModifyFacetedProjectWizard) getWizard();
+                    final String projectName = (String) event.getProperty();
+                    wizard.getFacetedProjectWorkingCopy().setProjectName( projectName );
+                }
+            }
+		};
+		
+		nestedProjectDM.addListener( projectNameChangedListener );
 	}
 
 	protected String[] getValidationPropertyNames() {
@@ -263,4 +278,5 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
 			return newObjects[0];
 		return null;
 	}
+	
 }

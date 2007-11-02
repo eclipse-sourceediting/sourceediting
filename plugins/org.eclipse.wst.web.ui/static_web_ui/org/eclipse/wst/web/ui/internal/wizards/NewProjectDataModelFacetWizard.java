@@ -30,15 +30,12 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 import org.eclipse.ui.wizards.newresource.BasicNewResourceWizard;
 import org.eclipse.wst.common.componentcore.datamodel.properties.IFacetDataModelProperties;
 import org.eclipse.wst.common.componentcore.datamodel.properties.IFacetProjectCreationDataModelProperties;
-import org.eclipse.wst.common.componentcore.internal.operation.FacetProjectCreationOperation;
 import org.eclipse.wst.common.frameworks.datamodel.AbstractDataModelOperation;
 import org.eclipse.wst.common.frameworks.datamodel.AbstractDataModelProvider;
 import org.eclipse.wst.common.frameworks.datamodel.DataModelEvent;
@@ -50,14 +47,14 @@ import org.eclipse.wst.common.frameworks.internal.datamodel.ui.DataModelWizardPa
 import org.eclipse.wst.common.project.facet.core.FacetedProjectFramework;
 import org.eclipse.wst.common.project.facet.core.IFacetedProject;
 import org.eclipse.wst.common.project.facet.core.IFacetedProjectTemplate;
+import org.eclipse.wst.common.project.facet.core.IFacetedProjectWorkingCopy;
 import org.eclipse.wst.common.project.facet.core.IPreset;
 import org.eclipse.wst.common.project.facet.core.IProjectFacetVersion;
 import org.eclipse.wst.common.project.facet.core.IFacetedProject.Action.Type;
+import org.eclipse.wst.common.project.facet.core.events.IFacetedProjectEvent;
+import org.eclipse.wst.common.project.facet.core.events.IFacetedProjectListener;
 import org.eclipse.wst.common.project.facet.core.runtime.IRuntime;
 import org.eclipse.wst.common.project.facet.ui.ModifyFacetedProjectWizard;
-import org.eclipse.wst.common.project.facet.ui.internal.AbstractDataModel;
-import org.eclipse.wst.common.project.facet.ui.internal.ChangeTargetedRuntimesDataModel;
-import org.eclipse.wst.common.project.facet.ui.internal.ModifyFacetedProjectDataModel;
 import org.eclipse.wst.web.internal.DelegateConfigurationElement;
 import org.eclipse.wst.web.ui.internal.Logger;
 import org.eclipse.wst.web.ui.internal.WSTWebUIPlugin;
@@ -73,14 +70,18 @@ public abstract class NewProjectDataModelFacetWizard extends ModifyFacetedProjec
 		super(null);
 		this.model = model;
 		template = getTemplate();
+		this.getFacetedProjectWorkingCopy().setFixedProjectFacets( this.template.getFixedProjectFacets() );
 		this.setDefaultPageImageDescriptor(getDefaultPageImageDescriptor());
+		this.setShowFacetsSelectionPage( false );
 	}
 
 	public NewProjectDataModelFacetWizard() {
 		super(null);
 		model = createDataModel();
 		template = getTemplate();
+        this.getFacetedProjectWorkingCopy().setFixedProjectFacets( this.template.getFixedProjectFacets() );
 		this.setDefaultPageImageDescriptor(getDefaultPageImageDescriptor());
+		this.setShowFacetsSelectionPage( false );
 	}
 
 	public IDataModel getDataModel() {
@@ -120,15 +121,17 @@ public abstract class NewProjectDataModelFacetWizard extends ModifyFacetedProjec
 
 		super.addPages();
 
-        final Set fixed = this.template.getFixedProjectFacets();
-
-        this.facetsSelectionPage.setFixedProjectFacets(fixed);
-
-        this.facetsSelectionPage.addSelectedFacetsChangedListener(new Listener() {
-            public void handleEvent(Event event) {
-                facetSelectionChangedEvent(event);
-            }
-        });
+        getFacetedProjectWorkingCopy().addListener
+        (
+            new IFacetedProjectListener()
+            {
+                public void handleEvent( final IFacetedProjectEvent event )
+                {
+                    facetSelectionChangedEvent();
+                }
+            },
+            IFacetedProjectEvent.Type.PROJECT_FACETS_CHANGED
+        );
     }
 
 	public void createPageControls(Composite container) {
@@ -149,7 +152,7 @@ public abstract class NewProjectDataModelFacetWizard extends ModifyFacetedProjec
             // If preset is specified, select the runtime only if supports all
             // of the facets included in the preset.
 
-            this.facetsSelectionPage.panel.getDataModel().setSelectedPreset( preset.getId() );
+            getFacetedProjectWorkingCopy().setSelectedPreset( preset.getId() );
             
             boolean supports = false;
             
@@ -169,12 +172,9 @@ public abstract class NewProjectDataModelFacetWizard extends ModifyFacetedProjec
                 }
             }
             
-            final ChangeTargetedRuntimesDataModel rdm
-                = getModel().getTargetedRuntimesDataModel();
-
             if( supports )
             {
-                rdm.setTargetedRuntimes( Collections.singleton( runtime ) );
+                getFacetedProjectWorkingCopy().setTargetedRuntimes( Collections.singleton( runtime ) );
             }
             else
             {
@@ -184,8 +184,7 @@ public abstract class NewProjectDataModelFacetWizard extends ModifyFacetedProjec
         
         synchRuntimes();
         
-        facetsSelectionPage.setInitialSelection(getFacetsFromDataModel());
-       
+        getFacetedProjectWorkingCopy().setProjectFacets( getFacetsFromDataModel() );
 	}
 
 	protected Set getFacetsFromDataModel() {
@@ -225,9 +224,6 @@ public abstract class NewProjectDataModelFacetWizard extends ModifyFacetedProjec
 
 	protected void synchRuntimes() 
     {
-        final ChangeTargetedRuntimesDataModel rdm
-            = getModel().getTargetedRuntimesDataModel();
-        
         final Boolean[] suppressBackEvents = { Boolean.FALSE };
         
 		model.addListener(new IDataModelListener() {
@@ -243,32 +239,31 @@ public abstract class NewProjectDataModelFacetWizard extends ModifyFacetedProjec
 			}
 		});
 
-        rdm.addListener
+        getFacetedProjectWorkingCopy().addListener
         ( 
-            ChangeTargetedRuntimesDataModel.EVENT_PRIMARY_RUNTIME_CHANGED, 
-            new AbstractDataModel.IDataModelListener()
+            new IFacetedProjectListener()
             {
-                public void handleEvent()
+                public void handleEvent( final IFacetedProjectEvent event )
                 {
                     suppressBackEvents[ 0 ] = Boolean.TRUE;
-                    model.setProperty(FACET_RUNTIME, rdm.getPrimaryRuntime());
+                    model.setProperty(FACET_RUNTIME, getFacetedProjectWorkingCopy().getPrimaryRuntime());
                     suppressBackEvents[ 0 ] = Boolean.FALSE;
                 }
-            }
+            },
+            IFacetedProjectEvent.Type.PRIMARY_RUNTIME_CHANGED
         );
 	}
     
     protected void setRuntimeAndDefaultFacets( final IRuntime runtime )
     {
-        final ModifyFacetedProjectDataModel dm = getModel();
-        final ChangeTargetedRuntimesDataModel rdm = dm.getTargetedRuntimesDataModel();
+        final IFacetedProjectWorkingCopy dm = getFacetedProjectWorkingCopy();
 
-        rdm.setTargetedRuntimes( Collections.EMPTY_SET );
-        this.facetsSelectionPage.setDefaultFacetsForRuntime( runtime );
+        dm.setTargetedRuntimes( Collections.EMPTY_SET );
+        dm.setDefaultFacetsForRuntime( runtime );
         
         if( runtime != null )
         {
-            rdm.setTargetedRuntimes( Collections.singleton( runtime ) );
+            dm.setTargetedRuntimes( Collections.singleton( runtime ) );
         }
         
         dm.setSelectedPreset( FacetedProjectFramework.DEFAULT_CONFIGURATION_PRESET_ID );
@@ -286,13 +281,7 @@ public abstract class NewProjectDataModelFacetWizard extends ModifyFacetedProjec
 		monitor.beginTask("", 10); //$NON-NLS-1$
 		storeDefaultSettings();
 		try {
-			FacetProjectCreationOperation operation = new FacetProjectCreationOperation(model);
-			this.fproj = operation.createProject(new SubProgressMonitor(monitor, 2));
-
 			super.performFinish(new SubProgressMonitor(monitor, 8));
-
-			final Set fixed = this.template.getFixedProjectFacets();
-			this.fproj.setFixedProjectFacets(fixed);
 
             try {
                 getFacetProjectNotificationOperation().execute(new NullProgressMonitor(), null);
@@ -436,11 +425,9 @@ public abstract class NewProjectDataModelFacetWizard extends ModifyFacetedProjec
 	/**
 	 * Need to keep the model in sync with the UI. This method will pickup changes coming from the
 	 * UI and push them into the model
-	 * 
-	 * @param event
 	 */
-	protected void facetSelectionChangedEvent(Event event) {
-		Set actions = this.facetsSelectionPage.getActions();
+	protected void facetSelectionChangedEvent() {
+	    Set actions = getFacetedProjectWorkingCopy().getProjectFacetActions();
 		Iterator iterator = actions.iterator();
 		Set activeIds = new HashSet();
 		while (iterator.hasNext()) {
