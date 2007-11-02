@@ -28,6 +28,7 @@ import org.eclipse.wst.xsd.ui.internal.text.XSDModelAdapter;
 import org.eclipse.xsd.XSDAttributeUse;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDElementDeclaration;
+import org.w3c.dom.Element;
 
 public class XSDTabbedPropertySheetPage extends TabbedPropertySheetPage implements IADTObjectListener
 {
@@ -99,7 +100,10 @@ public class XSDTabbedPropertySheetPage extends TabbedPropertySheetPage implemen
           xsdModelAdapter.getModelReconcileAdapter().removeListener(internalNodeAdapter);
         }
         
-        xsdModelAdapter = XSDModelAdapter.lookupOrCreateModelAdapter(((XSDConcreteComponent)adapter.getTarget()).getElement().getOwnerDocument());
+        Element element = ((XSDConcreteComponent)adapter.getTarget()).getElement();
+        if (element != null) {
+          xsdModelAdapter = XSDModelAdapter.lookupOrCreateModelAdapter(element.getOwnerDocument());
+        }
         if (xsdModelAdapter != null && xsdModelAdapter.getModelReconcileAdapter() != null)
         {
           xsdModelAdapter.getModelReconcileAdapter().addListener(internalNodeAdapter);

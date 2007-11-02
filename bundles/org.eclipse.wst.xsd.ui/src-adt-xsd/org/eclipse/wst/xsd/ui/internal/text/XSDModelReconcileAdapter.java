@@ -78,7 +78,19 @@ public class XSDModelReconcileAdapter extends ModelReconcileAdapter
       {
         // if there's no root element clear out the schema
         //
-        schema.getContents().clear();
+        
+        // https://bugs.eclipse.org/bugs/show_bug.cgi?id=203291
+        // Add try-catch to work-around problem at 
+        // XSDConcreteComponentImpl.forceNiceRemoveChild(XSDConcreteComponentImpl.java:1696)
+        // otherwise the statements below don't get run
+        try
+        {
+          schema.getContents().clear();
+        }
+        catch (NullPointerException e)
+        {
+          // workaround
+        }
         // TODO (cs) I'm not sure why the above isn't enough
         // to clear out all of the component lists
         // for now I've just added a few more lines to do additional clearing
@@ -105,6 +117,12 @@ public class XSDModelReconcileAdapter extends ModelReconcileAdapter
   {
     // No need to reconcile if the node is in a different namespace as it is the
     // case for nodes deeply nested in appinfo or documentation elements.
+
+    // https://bugs.eclipse.org/bugs/show_bug.cgi?id=203291
+    if (changedNode instanceof Document)
+    {
+      return true;
+    }
 
     String nodeNamespace = changedNode.getNamespaceURI();
     String schemaNamespace = schema.getSchemaForSchemaNamespace();
