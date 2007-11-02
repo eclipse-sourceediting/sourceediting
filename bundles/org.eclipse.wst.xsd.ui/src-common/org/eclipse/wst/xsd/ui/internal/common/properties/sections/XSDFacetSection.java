@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -548,48 +548,42 @@ public class XSDFacetSection extends AbstractSection
     XSDMinFacet minFacet = type.getMinFacet();
     XSDMaxFacet maxFacet = type.getMaxFacet();
 
-    minimumInclusiveCheckbox.removeSelectionListener(this);
-    maximumInclusiveCheckbox.removeSelectionListener(this);
-    try
+    if (minFacet != null && minFacet.getRootContainer() == xsdSchema)
+    {
+      if (minFacet.getElement().getLocalName().equals(XSDConstants.MINEXCLUSIVE_ELEMENT_TAG) || minFacet.getElement().getLocalName().equals(XSDConstants.MININCLUSIVE_ELEMENT_TAG))
+      {
+        minLengthText.setText(minFacet.getLexicalValue());
+        minimumInclusiveCheckbox.setSelection(minFacet.isInclusive());
+        minimumInclusiveCheckbox.setEnabled(true);
+      }
+      else
+      {
+        minLengthText.setText(""); //$NON-NLS-1$
+      }
+    }
+    else
     {
       minimumInclusiveCheckbox.setSelection(false);
       minimumInclusiveCheckbox.setEnabled(false);
-      if (minFacet != null && minFacet.getRootContainer() == xsdSchema)
-      {
-        if (minFacet.getElement().getLocalName().equals(XSDConstants.MINEXCLUSIVE_ELEMENT_TAG) ||
-            minFacet.getElement().getLocalName().equals(XSDConstants.MININCLUSIVE_ELEMENT_TAG))
-        {
-          minLengthText.setText(minFacet.getLexicalValue());
-          minimumInclusiveCheckbox.setSelection(minFacet.isInclusive());
-          minimumInclusiveCheckbox.setEnabled(true);
-        }
-        else
-        {
-          minLengthText.setText(""); //$NON-NLS-1$
-        }
-      }
+    }
 
-      maximumInclusiveCheckbox.setSelection(false);
-      maximumInclusiveCheckbox.setEnabled(false);
-      if (maxFacet != null && maxFacet.getRootContainer() == xsdSchema)
+    if (maxFacet != null && maxFacet.getRootContainer() == xsdSchema)
+    {
+      if (maxFacet.getElement().getLocalName().equals(XSDConstants.MAXEXCLUSIVE_ELEMENT_TAG) || maxFacet.getElement().getLocalName().equals(XSDConstants.MAXINCLUSIVE_ELEMENT_TAG))
       {
-        if (maxFacet.getElement().getLocalName().equals(XSDConstants.MAXEXCLUSIVE_ELEMENT_TAG) ||
-            maxFacet.getElement().getLocalName().equals(XSDConstants.MAXINCLUSIVE_ELEMENT_TAG))
-        {
-          maxLengthText.setText(maxFacet.getLexicalValue());
-          maximumInclusiveCheckbox.setSelection(maxFacet.isInclusive());
-          maximumInclusiveCheckbox.setEnabled(true);
-        }
-        else
-        {
-          maxLengthText.setText(""); //$NON-NLS-1$
-        }
+        maxLengthText.setText(maxFacet.getLexicalValue());
+        maximumInclusiveCheckbox.setSelection(maxFacet.isInclusive());
+        maximumInclusiveCheckbox.setEnabled(true);
+      }
+      else
+      {
+        maxLengthText.setText(""); //$NON-NLS-1$
       }
     }
-    finally
+    else
     {
-      minimumInclusiveCheckbox.addSelectionListener(this);
-      maximumInclusiveCheckbox.addSelectionListener(this);
+      maximumInclusiveCheckbox.setSelection(false);
+      maximumInclusiveCheckbox.setEnabled(false);
     }
   }
 
@@ -899,6 +893,7 @@ public class XSDFacetSection extends AbstractSection
       }
       
     }
+    refresh();
     if (doSetInput)
       setInput(getPart(), getSelection());
   }
