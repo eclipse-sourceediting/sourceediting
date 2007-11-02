@@ -7,6 +7,8 @@
  * 
  * Contributors:
  *     IBM Corporation - Initial API and implementation
+ *     Eugene Ostroukhov, eugene@genuitec.com - [203291] XSD Editor Source State
+ *                                              not updated in Outline/Graph
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.text;
 
