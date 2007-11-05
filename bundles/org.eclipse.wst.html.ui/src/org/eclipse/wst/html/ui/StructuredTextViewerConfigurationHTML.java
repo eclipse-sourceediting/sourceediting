@@ -34,7 +34,6 @@ import org.eclipse.wst.html.core.internal.provisional.contenttype.ContentTypeIdF
 import org.eclipse.wst.html.core.internal.text.StructuredTextPartitionerForHTML;
 import org.eclipse.wst.html.core.text.IHTMLPartitions;
 import org.eclipse.wst.html.ui.internal.autoedit.AutoEditStrategyForTabs;
-import org.eclipse.wst.html.ui.internal.autoedit.StructuredAutoEditStrategyHTML;
 import org.eclipse.wst.html.ui.internal.contentassist.HTMLContentAssistProcessor;
 import org.eclipse.wst.html.ui.internal.contentassist.NoRegionContentAssistProcessorForHTML;
 import org.eclipse.wst.html.ui.internal.style.LineStyleProviderForHTML;
@@ -93,10 +92,6 @@ public class StructuredTextViewerConfigurationHTML extends StructuredTextViewerC
 		IAutoEditStrategy[] superStrategies = super.getAutoEditStrategies(sourceViewer, contentType);
 		for (int i = 0; i < superStrategies.length; i++) {
 			allStrategies.add(superStrategies[i]);
-		}
-
-		if (contentType == IHTMLPartitions.HTML_DEFAULT || contentType == IHTMLPartitions.HTML_DECLARATION) {
-			allStrategies.add(new StructuredAutoEditStrategyHTML());
 		}
 
 		// be sure this is added last in list, so it has a change to modify

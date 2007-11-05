@@ -46,6 +46,10 @@
 			type="org.eclipse.jface.text.quickassist.IQuickAssistProcessor"
 			class="org.eclipse.wst.xml.ui.internal.correction.XMLQuickAssistProcessor"
 			target="org.eclipse.wst.html.HTML_DEFAULT" />
+		<provisionalConfiguration
+			type="autoeditstrategy"
+			class="org.eclipse.wst.html.ui.internal.autoedit.StructuredAutoEditStrategyHTML"
+			target="org.eclipse.wst.html.HTML_DEFAULT, org.eclipse.wst.html.HTML_DECLARATION" />
 		<provisionalDefinition
 			type="preferencepages"
 			value="org.eclipse.wst.html.ui.preferences, org.eclipse.wst.html.ui.preferences.source, org.eclipse.wst.html.ui.preferences.templates, org.eclipse.wst.html.ui.preferences.styles"

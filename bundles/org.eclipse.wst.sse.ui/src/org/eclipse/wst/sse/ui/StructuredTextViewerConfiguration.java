@@ -12,11 +12,16 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.ui;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.jface.text.DefaultInformationControl;
+import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.IInformationControl;
 import org.eclipse.jface.text.IInformationControlCreator;
+import org.eclipse.jface.text.ITextDoubleClickStrategy;
 import org.eclipse.jface.text.ITextHover;
 import org.eclipse.jface.text.IUndoManager;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
@@ -88,6 +93,11 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 	 * One instance per configuration
 	 */
 	private IReconciler fReconciler;
+	/**
+	 * Extended configuration provisionalConfiguration type to contribute
+	 * additional auto edit strategies
+	 */
+	private final String AUTOEDITSTRATEGY = "autoeditstrategy";
 
 
 	/**
@@ -142,6 +152,23 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 	private Color getColor(String key) {
 		RGB rgb = PreferenceConverter.getColor(fPreferenceStore, key);
 		return EditorUtility.getColor(rgb);
+	}
+
+	public IAutoEditStrategy[] getAutoEditStrategies(ISourceViewer sourceViewer, String contentType) {
+		List allStrategies = new ArrayList(0);
+
+		IAutoEditStrategy[] superStrategies = super.getAutoEditStrategies(sourceViewer, contentType);
+		for (int i = 0; i < superStrategies.length; i++) {
+			allStrategies.add(superStrategies[i]);
+		}
+
+		// add auto edit strategies contributed by clients
+		List extendedAutoEdits = ExtendedConfigurationBuilder.getInstance().getConfigurations(AUTOEDITSTRATEGY, contentType);
+		if (!extendedAutoEdits.isEmpty()) {
+			allStrategies.addAll(extendedAutoEdits);
+		}
+
+		return (IAutoEditStrategy[]) allStrategies.toArray(new IAutoEditStrategy[allStrategies.size()]);
 	}
 
 	/**
@@ -295,6 +322,34 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 	}
 
 	/**
+	 * Returns the double-click strategy ready to be used in this viewer when
+	 * double clicking onto text of the given content type. Note that if
+	 * clients want to contribute their own doubleclick strategy, they should
+	 * use <code>org.eclipse.wst.sse.ui.editorConfiguration</code> extension
+	 * point's <code>doubleClickStrategy</code> element instead of
+	 * overriding this method. If clients do override this method, please
+	 * remember to call <code>super.getDoubleClickStrategy()</code>.
+	 * 
+	 * @param sourceViewer
+	 *            the source viewer to be configured by this configuration
+	 * @param contentType
+	 *            the content type for which the strategy is applicable
+	 * @return a double-click strategy or <code>null</code> if double
+	 *         clicking should not be supported
+	 */
+	public ITextDoubleClickStrategy getDoubleClickStrategy(ISourceViewer sourceViewer, String contentType) {
+		ITextDoubleClickStrategy strategy = null;
+		Object extendedStrategy = ExtendedConfigurationBuilder.getInstance().getConfiguration(ExtendedConfigurationBuilder.DOUBLECLICKSTRATEGY, contentType);
+		if (extendedStrategy instanceof ITextDoubleClickStrategy) {
+			strategy = (ITextDoubleClickStrategy) extendedStrategy;
+		}
+		else {
+			strategy = super.getDoubleClickStrategy(sourceViewer, contentType);
+		}
+		return strategy;
+	}
+
+	/**
 	 * Returns the hyperlink presenter for the given source viewer.<br />
 	 * Note: Clients cannot override this method because this method returns a
 	 * specially configured hyperlink presenter for the StructuredTextViewer.
@@ -380,8 +435,9 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 	 *            applicable
 	 * @return IInformationProvider or null if should not be supported
 	 * @deprecated instead of overriding this method to provide documentation
-	 *             information, adopters should use the documentationTextHover
-	 *             element in the org.eclipse.wst.sse.ui.editorConfiguration
+	 *             information, adopters should use the
+	 *             <code>documentationTextHover</code> element in the
+	 *             <code>org.eclipse.wst.sse.ui.editorConfiguration</code>
 	 *             extension point
 	 */
 	protected IInformationProvider getInformationProvider(ISourceViewer sourceViewer, String partitionType) {
@@ -527,7 +583,8 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 
 	/**
 	 * Create a documentation hover based on hovers contributed via
-	 * org.eclipse.wst.sse.ui.editorConfiguration extension point
+	 * <code>org.eclipse.wst.sse.ui.editorConfiguration</code> extension
+	 * point
 	 * 
 	 * @param partitionType
 	 * @return

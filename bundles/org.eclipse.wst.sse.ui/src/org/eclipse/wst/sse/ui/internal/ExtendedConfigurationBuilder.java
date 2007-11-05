@@ -57,10 +57,15 @@ public class ExtendedConfigurationBuilder extends RegistryReader {
 	 */
 	public static final String SOURCEVIEWERCONFIGURATION = "sourceViewerConfiguration"; //$NON-NLS-1$
 	/**
-	 * Extension type to pass into getConfigurations to get documentation 
-	 * text hover
+	 * Extension type to pass into getConfigurations to get documentation text
+	 * hover
 	 */
 	public static final String DOCUMENTATIONTEXTHOVER = "documentationTextHover"; //$NON-NLS-1$
+	/**
+	 * Extension type to pass into getConfigurations to get double click
+	 * strategy
+	 */
+	public static final String DOUBLECLICKSTRATEGY = "doubleClickStrategy"; //$NON-NLS-1$
 
 	private static final String ATT_CLASS = "class"; //$NON-NLS-1$
 	private static final String ATT_TARGET = "target"; //$NON-NLS-1$

@@ -46,6 +46,14 @@
 		<propertySheetConfiguration
 			class="org.eclipse.wst.xml.ui.views.properties.XMLPropertySheetConfiguration"
 			target="org.eclipse.core.runtime.xml, org.eclipse.wst.xml.core.xmlsource" />
+		<documentationTextHover
+        	class="org.eclipse.wst.xml.ui.internal.taginfo.XMLTagInfoHoverProcessor"
+        	target="org.eclipse.wst.xml.XML_DEFAULT">
+  		</documentationTextHover>
+  		<doubleClickStrategy
+        	class="org.eclipse.wst.xml.ui.internal.doubleclick.XMLDoubleClickStrategy"
+        	target="org.eclipse.wst.xml.XML_DEFAULT">
+  		</doubleClickStrategy>
 		<provisionalConfiguration
 			type="sourceeditingtexttools"
 			class="org.eclipse.wst.xml.ui.internal.provisional.XMLSourceEditingTextTools"
@@ -62,6 +70,10 @@
 			type="org.eclipse.jface.text.quickassist.IQuickAssistProcessor"
 			class="org.eclipse.wst.xml.ui.internal.correction.XMLQuickAssistProcessor"
 			target="org.eclipse.wst.xml.XML_DEFAULT" />
+		<provisionalConfiguration
+			type="autoeditstrategy"
+			class="org.eclipse.wst.xml.ui.internal.autoedit.StructuredAutoEditStrategyXML"
+			target="org.eclipse.wst.xml.XML_DEFAULT" />
 		<provisionalDefinition
 			type="preferencepages"
 			value="org.eclipse.wst.sse.ui.preferences.xml, org.eclipse.wst.sse.ui.preferences.xml.source, org.eclipse.wst.sse.ui.preferences.xml.templates, org.eclipse.wst.sse.ui.preferences.xml.colors"
@@ -70,10 +82,6 @@
 			type="spellingregions"
 			value="XML_COMMENT_TEXT, XML_CONTENT, XML_DEFAULT"
 			target="org.eclipse.core.runtime.xml, org.eclipse.wst.xml.core.xmlsource" />
-		<documentationTextHover
-        	class="org.eclipse.wst.xml.ui.internal.taginfo.XMLTagInfoHoverProcessor"
-        	target="org.eclipse.wst.xml.XML_DEFAULT">
-  		</documentationTextHover>
 	</extension>
 
 	<extension

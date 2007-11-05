@@ -20,7 +20,6 @@ import java.util.Vector;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.text.IAutoEditStrategy;
-import org.eclipse.jface.text.ITextDoubleClickStrategy;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.formatter.IContentFormatter;
 import org.eclipse.jface.text.formatter.MultiPassContentFormatter;
@@ -37,11 +36,9 @@ import org.eclipse.wst.xml.core.internal.provisional.format.FormatProcessorXML;
 import org.eclipse.wst.xml.core.internal.text.rules.StructuredTextPartitionerForXML;
 import org.eclipse.wst.xml.core.text.IXMLPartitions;
 import org.eclipse.wst.xml.ui.internal.autoedit.AutoEditStrategyForTabs;
-import org.eclipse.wst.xml.ui.internal.autoedit.StructuredAutoEditStrategyXML;
 import org.eclipse.wst.xml.ui.internal.contentassist.NoRegionContentAssistProcessor;
 import org.eclipse.wst.xml.ui.internal.contentassist.XMLContentAssistProcessor;
 import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeLabelProvider;
-import org.eclipse.wst.xml.ui.internal.doubleclick.XMLDoubleClickStrategy;
 import org.eclipse.wst.xml.ui.internal.style.LineStyleProviderForXML;
 import org.w3c.dom.Node;
 
@@ -81,10 +78,6 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 		IAutoEditStrategy[] superStrategies = super.getAutoEditStrategies(sourceViewer, contentType);
 		for (int i = 0; i < superStrategies.length; i++) {
 			allStrategies.add(superStrategies[i]);
-		}
-
-		if (contentType == IXMLPartitions.XML_DEFAULT) {
-			allStrategies.add(new StructuredAutoEditStrategyXML());
 		}
 
 		// be sure this is last, so it can modify any results form previous
@@ -127,18 +120,6 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 		formatter.setMasterStrategy(new StructuredFormattingStrategy(new FormatProcessorXML()));
 
 		return formatter;
-	}
-
-	public ITextDoubleClickStrategy getDoubleClickStrategy(ISourceViewer sourceViewer, String contentType) {
-
-		ITextDoubleClickStrategy doubleClickStrategy = null;
-		if (contentType.compareTo(IXMLPartitions.XML_DEFAULT) == 0) {
-			doubleClickStrategy = new XMLDoubleClickStrategy();
-		}
-		else {
-			doubleClickStrategy = super.getDoubleClickStrategy(sourceViewer, contentType);
-		}
-		return doubleClickStrategy;
 	}
 
 	public String[] getIndentPrefixes(ISourceViewer sourceViewer, String contentType) {
