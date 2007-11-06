@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,14 +7,18 @@
  *
  * Contributors:
  *     IBM Corporation - initial API and implementation
+ *     Genuitec, LLC - Fix for bug 203303
  *******************************************************************************/
 package org.eclipse.jst.jsp.ui.internal.contentassist;
 
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.jface.text.contentassist.IContextInformation;
+import org.eclipse.jst.jsp.core.internal.provisional.contenttype.ContentTypeIdForJSP;
 import org.eclipse.jst.jsp.ui.internal.Logger;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.text.edits.InsertEdit;
@@ -81,13 +85,13 @@ public class AutoImportProposal extends JSPCompletionProposal {
 		int pos = 0;
 		IStructuredModel sModel = StructuredModelManager.getModelManager().getExistingModelForRead(doc);
 		try {
-			if(sModel != null) {
-				if(sModel instanceof IDOMModel) {
-					IDOMDocument documentNode = ((IDOMModel)sModel).getDocument();
+			if (sModel != null) {
+				if (sModel instanceof IDOMModel) {
+					IDOMDocument documentNode = ((IDOMModel) sModel).getDocument();
 					Node docElement = documentNode.getDocumentElement();
-					if(docElement != null && docElement instanceof IDOMElement) {
-						IStructuredDocumentRegion sdRegion = ((IDOMElement)docElement).getFirstStructuredDocumentRegion();
-						if(isXml) {
+					if (docElement != null && docElement instanceof IDOMElement) {
+						IStructuredDocumentRegion sdRegion = ((IDOMElement) docElement).getFirstStructuredDocumentRegion();
+						if (isXml) {
 							// insert right after document element
 							pos = sdRegion.getEndOffset();
 						}
@@ -100,11 +104,36 @@ public class AutoImportProposal extends JSPCompletionProposal {
 			}
 		}
 		finally {
-			if(sModel != null)
+			if (sModel != null)
 				sModel.releaseFromRead();
 		}
 		return pos;
 	}
+	
+ 	// Genuitec bug #6227,
+	// https://bugs.eclipse.org/bugs/show_bug.cgi?id=203303
+	private boolean isCustomTagDocument(IDocument doc) {
+		boolean isTag = false;
+		IStructuredModel sModel = StructuredModelManager.getModelManager().getExistingModelForRead(doc);
+		try {
+			if (sModel instanceof IDOMModel) {
+				String contentType = ((IDOMModel) sModel).getContentTypeIdentifier();
+				if (contentType != null) {
+					IContentType modelCT = Platform.getContentTypeManager().getContentType(contentType);
+					IContentType tagCT = Platform.getContentTypeManager().getContentType(ContentTypeIdForJSP.ContentTypeID_JSPTAG);
+					if (modelCT != null && tagCT != null) {
+						isTag = modelCT.isKindOf(tagCT);
+					}
+				}
+			}
+		}
+		finally {
+			if (sModel != null)
+				sModel.releaseFromRead();
+		}
+		return isTag;
+	}
+		 
 	/**
 	 * 
 	 * @param doc
@@ -114,18 +143,18 @@ public class AutoImportProposal extends JSPCompletionProposal {
 		boolean isXml = false;
 		IStructuredModel sModel = StructuredModelManager.getModelManager().getExistingModelForRead(doc);
 		try {
-			if(sModel != null) {
-				if(!isXml) {
-					if(sModel instanceof IDOMModel) {
-						IDOMDocument documentNode = ((IDOMModel)sModel).getDocument();
+			if (sModel != null) {
+				if (!isXml) {
+					if (sModel instanceof IDOMModel) {
+						IDOMDocument documentNode = ((IDOMModel) sModel).getDocument();
 						Element docElement = documentNode.getDocumentElement();
-						isXml = docElement != null && ((docElement.getNodeName().equals("jsp:root")) || ((((IDOMNode) docElement).getStartStructuredDocumentRegion() == null && ((IDOMNode) docElement).getEndStructuredDocumentRegion() == null))); //$NON-NLS-1$
+						isXml = docElement != null && ((docElement.getNodeName().equals("jsp:root")) || docElement.getAttributeNode("xmlns:jsp") != null || ((((IDOMNode) docElement).getStartStructuredDocumentRegion() == null && ((IDOMNode) docElement).getEndStructuredDocumentRegion() == null))); //$NON-NLS-1$
 					}
-				}				
+				}
 			}
 		}
 		finally {
-			if(sModel != null)
+			if (sModel != null)
 				sModel.releaseFromRead();
 		}
 		return isXml;
@@ -137,10 +166,31 @@ public class AutoImportProposal extends JSPCompletionProposal {
 	 * @return appropriate import declaration string depending if document is xml or not
 	 */
 	private String createImportDeclaration(IDocument doc, boolean isXml) {
-		String delim = (doc instanceof IStructuredDocument) ? ((IStructuredDocument)doc).getLineDelimiter() : TextUtilities.getDefaultLineDelimiter(doc);
-		if(isXml)
-			return delim + "<jsp:directive.page import=\""+getImportDeclaration()+"\"/>"; //$NON-NLS-1$ //$NON-NLS-2$
-		return "<%@page import=\"" + getImportDeclaration() + "\"%>" + delim; //$NON-NLS-1$ //$NON-NLS-2$
+		String delim = (doc instanceof IStructuredDocument) ? ((IStructuredDocument) doc).getLineDelimiter() : TextUtilities.getDefaultLineDelimiter(doc);
+		boolean isCustomTag = isCustomTagDocument(doc);
+		final String opening;
+		final String closing;
+		if (isCustomTag) {
+			if (isXml) {
+				opening = "<jsp:directive.tag import=\"";
+				closing = "\"/>";
+			}
+			else {
+				opening = "<%@tag import=\"";
+				closing = "\"%>";
+			}
+		}
+		else {
+			if (isXml) {
+				opening = "<jsp:directive.page import=\"";
+				closing = "\"/>";
+			}
+			else {
+				opening = "<%@page import=\"";
+				closing = "\"%>";
+			}
+		}
+		return delim + opening + getImportDeclaration() + closing; //$NON-NLS-1$ //$NON-NLS-2$	
 	}
 
 	public String getImportDeclaration() {
