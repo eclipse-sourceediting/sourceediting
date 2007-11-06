@@ -19,6 +19,9 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.jface.text.DefaultInformationControl;
 import org.eclipse.jface.text.IAutoEditStrategy;
+import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.IDocumentExtension3;
+import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.jface.text.IInformationControl;
 import org.eclipse.jface.text.IInformationControlCreator;
 import org.eclipse.jface.text.ITextDoubleClickStrategy;
@@ -46,6 +49,7 @@ import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
 import org.eclipse.ui.texteditor.ChainedPreferenceStore;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitioning;
+import org.eclipse.wst.sse.core.internal.text.rules.StructuredTextPartitioner;
 import org.eclipse.wst.sse.ui.internal.ExtendedConfigurationBuilder;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.StructuredTextAnnotationHover;
@@ -318,7 +322,23 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 	 *         not be supported
 	 */
 	public IContentFormatter getContentFormatter(ISourceViewer sourceViewer) {
-		return null;
+		// try to use the StructuredTextMultiPassContentFormatter so that it
+		// picks up any additional formatting strategies contributed via the
+		// editorConfiguration extension point
+		IContentFormatter formatter = null;
+		if (sourceViewer != null) {
+			IDocument document = sourceViewer.getDocument();
+			if (document instanceof IDocumentExtension3) {
+				String partitioning = getConfiguredDocumentPartitioning(sourceViewer);
+				IDocumentPartitioner partitioner = ((IDocumentExtension3) document).getDocumentPartitioner(partitioning);
+				if (partitioner instanceof StructuredTextPartitioner) {
+					String defaultPartitionType = ((StructuredTextPartitioner) partitioner).getDefaultPartitionType();
+					formatter = new StructuredTextMultiPassContentFormatter(partitioning, defaultPartitionType);
+				}
+			}
+		}
+
+		return formatter;
 	}
 
 	/**

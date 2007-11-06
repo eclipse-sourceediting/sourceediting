@@ -6,7 +6,7 @@
          <meta.schema plugin="org.eclipse.wst.sse.core" id="formatProcessors" name="Format Processors Extension Point"/>
       </appInfo>
       <documentation>
-         This extension point is for defining the format processsor for a content type.
+         &lt;b&gt;This extension point is deprecated and should not be used.&lt;/b&gt;
       </documentation>
    </annotation>
 
@@ -69,7 +69,7 @@
          <meta.section type="since"/>
       </appInfo>
       <documentation>
-         &lt;b&gt;This extension point is internal and should not be used by any other plugins.&lt;/b&gt;
+         &lt;b&gt;This extension point is deprecated and should not be used.&lt;/b&gt;
       </documentation>
    </annotation>
 
@@ -90,30 +90,14 @@
       </documentation>
    </annotation>
 
-   <annotation>
-      <appInfo>
-         <meta.section type="apiInfo"/>
-      </appInfo>
-      <documentation>
-         
-      </documentation>
-   </annotation>
 
-   <annotation>
-      <appInfo>
-         <meta.section type="implementation"/>
-      </appInfo>
-      <documentation>
-         
-      </documentation>
-   </annotation>
 
    <annotation>
       <appInfo>
          <meta.section type="copyright"/>
       </appInfo>
       <documentation>
-         Copyright (c) 2005 IBM Corporation and others.&lt;br&gt;
+         Copyright (c) 2005, 2007 IBM Corporation and others.&lt;br&gt;
 All rights reserved. This program and the accompanying materials are made 
 available under the terms of the Eclipse Public License v1.0 which accompanies 
 this distribution, and is available at &lt;a

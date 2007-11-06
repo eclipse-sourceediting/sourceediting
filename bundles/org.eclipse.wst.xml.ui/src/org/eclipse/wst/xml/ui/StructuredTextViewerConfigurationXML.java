@@ -115,9 +115,13 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 	}
 
 	public IContentFormatter getContentFormatter(ISourceViewer sourceViewer) {
-		final MultiPassContentFormatter formatter = new MultiPassContentFormatter(getConfiguredDocumentPartitioning(sourceViewer), IXMLPartitions.XML_DEFAULT);
-
-		formatter.setMasterStrategy(new StructuredFormattingStrategy(new FormatProcessorXML()));
+		IContentFormatter formatter = super.getContentFormatter(sourceViewer);
+		// super was unable to create a formatter, probably because
+		// sourceViewer does not have document set yet, so just create a
+		// generic one
+		if (!(formatter instanceof MultiPassContentFormatter))
+			formatter = new MultiPassContentFormatter(getConfiguredDocumentPartitioning(sourceViewer), IXMLPartitions.XML_DEFAULT);
+		((MultiPassContentFormatter) formatter).setMasterStrategy(new StructuredFormattingStrategy(new FormatProcessorXML()));
 
 		return formatter;
 	}

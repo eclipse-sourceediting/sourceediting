@@ -89,9 +89,14 @@ public class StructuredTextViewerConfigurationCSS extends StructuredTextViewerCo
 	}
 
 	public IContentFormatter getContentFormatter(ISourceViewer sourceViewer) {
-		final MultiPassContentFormatter formatter = new MultiPassContentFormatter(getConfiguredDocumentPartitioning(sourceViewer), ICSSPartitions.STYLE);
+		IContentFormatter formatter = super.getContentFormatter(sourceViewer);
+		// super was unable to create a formatter, probably because
+		// sourceViewer does not have document set yet, so just create a
+		// generic one
+		if (!(formatter instanceof MultiPassContentFormatter))
+			formatter = new MultiPassContentFormatter(getConfiguredDocumentPartitioning(sourceViewer), ICSSPartitions.STYLE);
 
-		formatter.setMasterStrategy(new StructuredFormattingStrategy(new FormatProcessorCSS()));
+		((MultiPassContentFormatter) formatter).setMasterStrategy(new StructuredFormattingStrategy(new FormatProcessorCSS()));
 
 		return formatter;
 	}

@@ -221,10 +221,16 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 	}
 
 	public IContentFormatter getContentFormatter(ISourceViewer sourceViewer) {
-		MultiPassContentFormatter formatter = new MultiPassContentFormatter(getConfiguredDocumentPartitioning(sourceViewer), IXMLPartitions.XML_DEFAULT);
+		IContentFormatter formatter = super.getContentFormatter(sourceViewer);
+		// super was unable to create a formatter, probably because
+		// sourceViewer does not have document set yet, so just create a
+		// generic one
+		if (!(formatter instanceof MultiPassContentFormatter))
+			formatter = new MultiPassContentFormatter(getConfiguredDocumentPartitioning(sourceViewer), IXMLPartitions.XML_DEFAULT);
 
-		formatter.setMasterStrategy(new StructuredFormattingStrategy(new HTMLFormatProcessorImpl()));
-		formatter.setSlaveStrategy(new FormattingStrategyJSPJava(), IJSPPartitions.JSP_CONTENT_JAVA);
+		MultiPassContentFormatter multiFormatter = (MultiPassContentFormatter) formatter;
+		multiFormatter.setMasterStrategy(new StructuredFormattingStrategy(new HTMLFormatProcessorImpl()));
+		multiFormatter.setSlaveStrategy(new FormattingStrategyJSPJava(), IJSPPartitions.JSP_CONTENT_JAVA);
 
 		return formatter;
 	}

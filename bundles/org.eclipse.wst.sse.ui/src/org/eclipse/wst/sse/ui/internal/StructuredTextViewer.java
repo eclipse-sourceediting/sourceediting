@@ -87,6 +87,10 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 
 	// private ViewerSelectionManager fViewerSelectionManager;
 	private SourceViewerConfiguration fConfiguration;
+	/*
+	 * True if formatter has been set
+	 */
+	private boolean fFormatterSet = false;
 
 	/**
 	 * @see org.eclipse.jface.text.source.SourceViewer#SourceViewer(Composite,
@@ -133,7 +137,8 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 			}
 			case FORMAT_DOCUMENT :
 			case FORMAT_ACTIVE_ELEMENTS : {
-				return (fContentFormatter != null && isEditable());
+				// if formatter not set yet, contentformatter can be null
+				return ((fContentFormatter != null || !fFormatterSet) && isEditable());
 			}
 		}
 		return super.canDoOperation(operation);
@@ -745,6 +750,12 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 
 			// notify highlighter
 			updateHighlighter(structuredDocument);
+
+			// set the formatter again now that document has been set
+			if (!fFormatterSet && fConfiguration != null) {
+				fContentFormatter = fConfiguration.getContentFormatter(this);
+				fFormatterSet = true;
+			}
 
 			// set document in the viewer-based undo manager
 			if (fUndoManager != null) {

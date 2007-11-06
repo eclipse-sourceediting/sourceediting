@@ -77,7 +77,7 @@ public class StructuredTextViewerConfigurationHTML extends StructuredTextViewerC
 	 */
 	private StructuredTextViewerConfiguration fXMLSourceViewerConfiguration;
 	private ILabelProvider fStatusLineLabelProvider;
-		
+
 	/**
 	 * Create new instance of StructuredTextViewerConfigurationHTML
 	 */
@@ -136,9 +136,13 @@ public class StructuredTextViewerConfigurationHTML extends StructuredTextViewerC
 	}
 
 	public IContentFormatter getContentFormatter(ISourceViewer sourceViewer) {
-		final MultiPassContentFormatter formatter = new MultiPassContentFormatter(getConfiguredDocumentPartitioning(sourceViewer), IHTMLPartitions.HTML_DEFAULT);
-
-		formatter.setMasterStrategy(new StructuredFormattingStrategy(new HTMLFormatProcessorImpl()));
+		IContentFormatter formatter = super.getContentFormatter(sourceViewer);
+		// super was unable to create a formatter, probably because
+		// sourceViewer does not have document set yet, so just create a
+		// generic one
+		if (!(formatter instanceof MultiPassContentFormatter))
+			formatter = new MultiPassContentFormatter(getConfiguredDocumentPartitioning(sourceViewer), IHTMLPartitions.HTML_DEFAULT);
+		((MultiPassContentFormatter) formatter).setMasterStrategy(new StructuredFormattingStrategy(new HTMLFormatProcessorImpl()));
 
 		return formatter;
 	}
@@ -149,8 +153,8 @@ public class StructuredTextViewerConfigurationHTML extends StructuredTextViewerC
 			return getXMLSourceViewerConfiguration().getDoubleClickStrategy(sourceViewer, IXMLPartitions.XML_DEFAULT);
 		}
 		else
-		return super.getDoubleClickStrategy(sourceViewer, contentType);
-			
+			return super.getDoubleClickStrategy(sourceViewer, contentType);
+
 	}
 
 	public String[] getIndentPrefixes(ISourceViewer sourceViewer, String contentType) {
