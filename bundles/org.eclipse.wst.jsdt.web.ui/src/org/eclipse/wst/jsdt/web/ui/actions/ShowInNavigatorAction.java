@@ -58,7 +58,7 @@ public class ShowInNavigatorAction extends JsElementActionProxy {
 				((ISetSelectionTarget) view).selectReveal(selection);
 			}
 		} catch (PartInitException e) {
-			ExceptionHandler.handle(e, targetWorkbenchPart.getSite().getShell(), "Error Opening in Script View", "Error while displaying element in Script View:\n" + e);
+			ExceptionHandler.handle(e, targetWorkbenchPart.getSite().getShell(), Messages.getString("ShowInNavigatorAction.0"), Messages.getString("ShowInNavigatorAction.1") + e); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 	

@@ -161,6 +161,6 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
 	}
 	
 	private boolean isJSElementParent(Node node) {
-		return (node.getNodeName().equalsIgnoreCase("script"));
+		return (node.getNodeName().equalsIgnoreCase("script")); //$NON-NLS-1$
 	}
 }

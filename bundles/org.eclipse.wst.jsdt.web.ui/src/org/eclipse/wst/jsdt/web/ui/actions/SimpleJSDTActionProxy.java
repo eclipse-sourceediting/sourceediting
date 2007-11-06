@@ -69,7 +69,7 @@ public class SimpleJSDTActionProxy implements IObjectActionDelegate {
 			target = Class.forName(className);
 		} catch (ClassNotFoundException ex) {
 			System.out.println("Error.. Class target of action handler not found: " + action);
-			System.out.println("Exception : " + ex);
+			System.out.println(Messages.getString("SimpleJSDTActionProxy.0") + ex); //$NON-NLS-1$
 		}
 		// use the loaded class
 		Class[] types = new Class[] { IWorkbenchSite.class };
@@ -121,7 +121,7 @@ public class SimpleJSDTActionProxy implements IObjectActionDelegate {
 	public void run(IAction action) {
 		try {
 			Object handler = getActionHandler(action);
-			SimpleJSDTActionProxy.executeMethod(handler, "run", getRunArgTypes(), getRunArgs(action));
+			SimpleJSDTActionProxy.executeMethod(handler, "run", getRunArgTypes(), getRunArgs(action)); //$NON-NLS-1$
 		} catch (IllegalArgumentException ex) {
 			// TODO Auto-generated catch block
 			ex.printStackTrace();
@@ -149,7 +149,7 @@ public class SimpleJSDTActionProxy implements IObjectActionDelegate {
 		
 		try {
 			Object handler = getActionHandler(action);
-			SimpleJSDTActionProxy.executeMethod(handler, "selectionChanged", getSelectionChangeArgTypes(), getSelectionChangeArgs(action, selection));
+			SimpleJSDTActionProxy.executeMethod(handler, "selectionChanged", getSelectionChangeArgTypes(), getSelectionChangeArgs(action, selection)); //$NON-NLS-1$
 		} catch (IllegalArgumentException ex) {
 			// TODO Auto-generated catch block
 			ex.printStackTrace();

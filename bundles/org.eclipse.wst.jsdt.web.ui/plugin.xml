@@ -67,7 +67,7 @@
 		point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectorTargets">
 		<target
 			id="org.eclipse.wst.html.SCRIPT"
-			name="JavaScirpt Source">
+			name="%target.name.0">
 		</target>
 	</extension>
 	
@@ -75,7 +75,7 @@
 		point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectorTargets">
 		<target
 			id="org.eclipse.wst.html.SCRIPT.EVENT"
-			name="JavaScirpt Event Source">
+			name="%target.name.1">
 		</target>
 	</extension>
 	
@@ -84,13 +84,13 @@
       <hyperlinkDetector
             class="org.eclipse.wst.jsdt.web.ui.internal.hyperlink.JSDTHyperlinkDetector"
             id="org.eclipse.wst.jsdt.web.ui.internal.hyperlink.script.JSPJavaHyperlinkDetector"
-            name="Java Element HyperLink Detector"
+            name="%hyperlinkDetector.name.0"
             targetId="org.eclipse.wst.html.SCRIPT">
       </hyperlinkDetector>
       <hyperlinkDetector
             class="org.eclipse.wst.jsdt.web.ui.internal.hyperlink.JSDTHyperlinkDetector"
             id="org.eclipse.wst.jsdt.web.ui.internal.hyperlink.script.event.JSPJavaHyperlinkDetector"
-            name="Java Element HyperLink Detector"
+            name="%hyperlinkDetector.name.1"
             targetId="org.eclipse.wst.html.SCRIPT.EVENT">
       </hyperlinkDetector>  
    </extension>
@@ -105,29 +105,29 @@
             <!-- Declerations Search Menu -->
             <menu
                 id="org.eclipse.wst.jsdt.web.declerations"
-         		label="Declerations"
+         		label="%menu.label.0"
          		path="group.search">
      		 	<separator name="declerations"/>
          </menu>
          <action
-               label="Working Set"          
-               tooltip="Working Set"
+               label="%action.label.0"          
+               tooltip="%action.tooltip.0"
                menubarPath="org.eclipse.wst.jsdt.web.declerations/declerations"
                class="org.eclipse.wst.jsdt.web.ui.actions.FindReferencesInWorkingSetAction"
                enablesFor="1"
                id="org.eclipse.wst.jsdt.ui.actions.FindDeclarationsInWorkingSetAction">
          </action>  
          <action
-               label="Hierarchy"          
-               tooltip="Hierarchy"
+               label="%action.label.1"          
+               tooltip="%action.tooltip.1"
                menubarPath="org.eclipse.wst.jsdt.web.declerations/declerations"
                class="org.eclipse.wst.jsdt.web.ui.actions.FindReferencesAction"
                enablesFor="1"
                id="org.eclipse.wst.jsdt.ui.actions.FindDeclarationsInHierarchyAction">
          </action> 
           <action
-               label="Project"          
-               tooltip="Project"
+               label="%action.label.2"          
+               tooltip="%action.tooltip.2"
                menubarPath="org.eclipse.wst.jsdt.web.declerations/declerations"
                class="org.eclipse.wst.jsdt.web.ui.actions.FindReferencesAction"
                enablesFor="1"
@@ -135,8 +135,8 @@
          </action>
          
          <action
-               label="Workspace"
-               tooltip=""
+               label="%action.label.3"
+               tooltip="%action.tooltip.3"
                menubarPath="org.eclipse.wst.jsdt.web.declerations/declerations"
                class="org.eclipse.wst.jsdt.web.ui.actions.FindReferencesAction"
                enablesFor="1"
@@ -146,29 +146,29 @@
             <!-- Refrences Search menu -->
           <menu
                 id="org.eclipse.wst.jsdt.web.references"
-         		label="References"
+         		label="%menu.label.1"
          		path="group.search">
      		 	<separator name="references"/>
          </menu>
          <action
-               label="Working Set"          
-               tooltip="Working Set"
+               label="%action.label.4"          
+               tooltip="%action.tooltip.4"
                menubarPath="org.eclipse.wst.jsdt.web.references/references"
                class="org.eclipse.wst.jsdt.web.ui.actions.FindReferencesInWorkingSetAction"
                enablesFor="1"
                id="org.eclipse.wst.jsdt.ui.actions.FindReferencesInWorkingSetAction">
          </action>  
          <action
-               label="Hierarchy"          
-               tooltip="Hierarchy"
+               label="%action.label.5"          
+               tooltip="%action.tooltip.5"
                menubarPath="org.eclipse.wst.jsdt.web.references/references"
                class="org.eclipse.wst.jsdt.web.ui.actions.FindReferencesAction"
                enablesFor="1"
                id="org.eclipse.wst.jsdt.ui.actions.FindReferencesInHierarchyAction">
          </action> 
           <action
-               label="Project"          
-               tooltip="Project"
+               label="%action.label.6"          
+               tooltip="%action.tooltip.6"
                menubarPath="org.eclipse.wst.jsdt.web.references/references"
                class="org.eclipse.wst.jsdt.web.ui.actions.FindReferencesAction"
                enablesFor="1"
@@ -176,8 +176,8 @@
          </action>
          
          <action
-               label="Workspace"
-               tooltip=""
+               label="%action.label.7"
+               tooltip="%action.tooltip.7"
                menubarPath="org.eclipse.wst.jsdt.web.references/references"
                class="org.eclipse.wst.jsdt.web.ui.actions.FindReferencesAction"
                enablesFor="1"
@@ -186,21 +186,21 @@
          <!-- Source and Refactoring Menu's -->
           <menu
                 id="org.eclipse.wst.jsdt.web.refactor"
-         		label="Refactor"
+         		label="%menu.label.2"
          		path="group.generate">
      		 	<separator name="refactor"/>
          </menu>
 
          <menu
                 id="org.eclipse.wst.jsdt.web.source"
-         		label="Source"
+         		label="%menu.label.3"
          		path="group.generate">
      		 	<separator name="source"/>
          </menu>
          <!-- Source Actions -->
 		 <action
-               label="Generate Element Comment"          
-               tooltip="Generate Element Comment"
+               label="%action.label.8"          
+               tooltip="%action.tooltip.8"
                menubarPath="org.eclipse.wst.jsdt.web.source/source"
                style="push"
                class="org.eclipse.wst.jsdt.web.ui.actions.AddJavaDocStubAction"
@@ -209,8 +209,8 @@
          </action>
          <!-- Refactor Actions -->
          <action
-               label="Change Function Signature"          
-               tooltip="Change Function Signature"
+               label="%action.label.9"          
+               tooltip="%action.tooltip.9"
                menubarPath="org.eclipse.wst.jsdt.web.refactor/refactor"
                style="push"
                class="org.eclipse.wst.jsdt.web.ui.actions.SourceActionsAction"
@@ -218,8 +218,8 @@
                id="org.eclipse.wst.jsdt.web.ui.change.function.signature">
          </action>
          <action
-               label="Move"          
-               tooltip="Move"
+               label="%action.label.10"          
+               tooltip="%action.tooltip.10"
                menubarPath="org.eclipse.wst.jsdt.web.refactor/refactor"
                style="push"
                class="org.eclipse.wst.jsdt.web.ui.actions.SourceActionsAction"
@@ -227,8 +227,8 @@
                id="org.eclipse.wst.jsdt.web.ui.Move">
          </action>
          <action
-               label="Rename"          
-               tooltip="Rename"
+               label="%action.label.11"          
+               tooltip="%action.tooltip.11"
                menubarPath="org.eclipse.wst.jsdt.web.refactor/refactor"
                style="push"
                class="org.eclipse.wst.jsdt.web.ui.actions.SourceActionsAction"
@@ -239,8 +239,8 @@
          
          <!-- Edit  (cut copy paste etc.. -->
           <action
-               label="Delete"          
-               tooltip="Delete"
+               label="%action.label.12"          
+               tooltip="%action.tooltip.12"
                menubarPath="group.edit"
                style="push"
                class="org.eclipse.wst.jsdt.web.ui.actions.StandardEditorActionsAction"
@@ -249,8 +249,8 @@
          </action>
         
          <action
-               label="Paste After"          
-               tooltip="Paste"
+               label="%action.label.13"          
+               tooltip="%action.tooltip.13"
                      menubarPath="group.edit"
                style="push"
                class="org.eclipse.wst.jsdt.web.ui.actions.StandardEditorActionsAction"
@@ -258,8 +258,8 @@
                id="org.eclipse.wst.jsdt.web.ui.paste.after">
          </action>
           <action
-               label="Paste Before"          
-               tooltip="Paste"
+               label="%action.label.14"          
+               tooltip="%action.tooltip.14"
                      menubarPath="group.edit"
                style="push"
                class="org.eclipse.wst.jsdt.web.ui.actions.StandardEditorActionsAction"
@@ -267,8 +267,8 @@
                id="org.eclipse.wst.jsdt.web.ui.paste.before">
          </action>
          <action
-               label="Copy"          
-               tooltip="Copy"
+               label="%action.label.15"          
+               tooltip="%action.tooltip.15"
                      menubarPath="group.edit"
                style="push"
                class="org.eclipse.wst.jsdt.web.ui.actions.StandardEditorActionsAction"
@@ -277,8 +277,8 @@
          </action>
 
          <action
-               label="Cut"          
-               tooltip="Cut"
+               label="%action.label.16"          
+               tooltip="%action.tooltip.16"
                menubarPath="group.edit"
                style="push"
                class="org.eclipse.wst.jsdt.web.ui.actions.StandardEditorActionsAction"
@@ -289,13 +289,13 @@
          <!-- Show in Script Explorer, History and Navigator -->       
          <menu
                 id="org.eclipse.wst.jsdt.web.showin"
-         		label="Show In"
+         		label="%menu.label.4"
          		path="group.show">
      		 	<separator name="showin"/>
          </menu>  
          <action
-               label="Navigator"          
-               tooltip="Show In Navigator"
+               label="%action.label.17"          
+               tooltip="%action.tooltip.17"
                menubarPath="org.eclipse.wst.jsdt.web.showin/showin"
                style="push"
                class="org.eclipse.wst.jsdt.web.ui.actions.ShowInNavigatorAction"
@@ -315,8 +315,8 @@
          </action> 
          -->
           <action
-               label="Script Explorer"          
-               tooltip="Show In Script Explorer"
+               label="%action.label.18"          
+               tooltip="%action.tooltip.18"
                menubarPath="org.eclipse.wst.jsdt.web.showin/showin"
                style="push"
                class="org.eclipse.wst.jsdt.web.ui.actions.ShowInScriptExplorerAction"
@@ -326,8 +326,8 @@
          
          <!-- Open Call and Type Hierarchies -->
           <action
-               label="Open Call Hierarchy"          
-               tooltip="Open Call Hierarchy"
+               label="%action.label.19"          
+               tooltip="%action.tooltip.19"
              menubarPath="group.show"
              style="push"
                class="org.eclipse.wst.jsdt.web.ui.actions.OpenCallHierarchyAction"
@@ -335,8 +335,8 @@
                id="org.eclipse.wst.jsdt.internal.ui.callhierarchy.OpenCallHierarchyAction">
          </action>
          <action
-               label="Open Type Hierarchy"
-               tooltip="Open Type Hierarchy"
+               label="%action.label.20"
+               tooltip="%action.tooltip.20"
    			menubarPath="group.show"
    			style="push"
                class="org.eclipse.wst.jsdt.web.ui.actions.OpenTypeHierarchy"
@@ -463,7 +463,7 @@
 
 	</extension>
 	-->
-	
+	<!--
 	<extension point="org.eclipse.ui.popupMenus">
 		<viewerContribution
 			targetID="org.eclipse.wst.jsdt.web.core.jspsource.source.RulerContext"
@@ -486,7 +486,10 @@
 
 		</viewerContribution>
 	</extension>
+-->
 
+
+<!--
 	<extension point="org.eclipse.ui.editorActions">
 		<editorContribution
 			id="org.eclipse.wst.jsdt.web.core.jspsource.source.editorActions"
@@ -594,13 +597,14 @@
                id="org.eclipse.ui.texteditor.SelectRulerAction"/>
         </editorContribution>
 	</extension>
+	-->
 		<!--======================================================================================-->
 	<!-- FOR JSP/JAVA RENAME PARTICIPATION                                                    -->
 	<!--======================================================================================-->
 	<extension
 		point="org.eclipse.ltk.core.refactoring.renameParticipants">
 		<renameParticipant
-			name="JSDT Web Rename Participant"
+			name="%renameParticipant.name.0"
 			class="org.eclipse.wst.jsdt.web.ui.internal.java.refactoring.JSPTypeRenameParticipant"
 			id="org.eclipse.wst.jsdt.web.ui.internal.java.refactoring.JSPTypeRenameParticipant">
 			<enablement>
@@ -616,7 +620,7 @@
 			</enablement>
 		</renameParticipant>
 		<renameParticipant
-			name="JSDT Web Rename Participant"
+			name="%renameParticipant.name.1"
 			class="org.eclipse.wst.jsdt.web.ui.internal.java.refactoring.JSPTypeRenameParticipant"
 			id="org.eclipse.wst.jsdt.web.ui.internal.java.refactoring.JSPTypeRenameParticipant">
 			<enablement>
@@ -632,7 +636,7 @@
 			</enablement>
 		</renameParticipant>
 		<renameParticipant
-			name="JSDT Web Rename Participant"
+			name="%renameParticipant.name.2"
 			class="org.eclipse.wst.jsdt.web.ui.internal.java.refactoring.JSPMethodRenameParticipant"
 			id="org.eclipse.wst.jsdt.web.ui.internal.java.refactoring.JSPMethodRenameParticipant">
 			<enablement>
@@ -649,7 +653,7 @@
 			</enablement>
 		</renameParticipant>
 		<renameParticipant
-			name="JSDT Web Rename Participant"
+			name="%renameParticipant.name.3"
 			class="org.eclipse.wst.jsdt.web.ui.internal.java.refactoring.JSPMethodRenameParticipant"
 			id="org.eclipse.wst.jsdt.web.ui.internal.java.refactoring.JSPMethodRenameParticipant">
 			<enablement>
@@ -681,7 +685,7 @@
             adaptable="true"
             id="org.eclipse.wst.jsdt.web.ui.jsdtSetup">
             <menu
-               label="Web Development Tools"
+               label="%menu.label.5"
                id="org.eclipse.wst.jsdt.web.ui.project.tools">
             <separator
                name="group0">
@@ -689,7 +693,7 @@
          </menu>
          <action
             class="org.eclipse.wst.jsdt.web.ui.SetupProjectsWizzard"
-            label="Add JavaScript Support"
+            label="%action.label.21"
             menubarPath="org.eclipse.wst.jsdt.web.ui.project.tools/group0"
             enablesFor="+"
             id="org.eclipse.wst.jsdt.internal.web.ui.convertProjects">

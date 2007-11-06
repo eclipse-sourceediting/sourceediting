@@ -89,7 +89,7 @@ public class JsJfaceNode extends ElementImpl implements IndexedRegion, INodeNoti
 	
 	public boolean contains(int testPosition) {
 		// TODO Auto-generated method stub
-		System.out.println("Umiplement method contains");
+		System.out.println(Messages.getString("JsJfaceNode.0")); //$NON-NLS-1$
 		return false;
 	}
 	
@@ -155,7 +155,7 @@ public class JsJfaceNode extends ElementImpl implements IndexedRegion, INodeNoti
 		if (elements != null) {
 			return elements[0];
 		} else {
-			System.out.println("error in JsJfaceNode... I couldn't retrieve my java element from the original page");
+			System.out.println(Messages.getString("JsJfaceNode.1")); //$NON-NLS-1$
 			return null;
 		}
 	}

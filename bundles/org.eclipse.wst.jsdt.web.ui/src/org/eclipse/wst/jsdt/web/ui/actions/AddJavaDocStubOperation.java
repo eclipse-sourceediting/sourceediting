@@ -46,7 +46,7 @@ public class AddJavaDocStubOperation extends org.eclipse.wst.jsdt.internal.corex
 			MultiTextEdit edits = textEditListener.getTextEdits();
 			model = modelManager.getExistingModelForEdit(doc);
 			model.aboutToChangeModel();
-			model.beginRecording(this, "Generate JsDoc", "Generate JsDoc");
+			model.beginRecording(this, Messages.getString("AddJavaDocStubOperation.0"), Messages.getString("AddJavaDocStubOperation.1")); //$NON-NLS-1$ //$NON-NLS-2$
 			edits.apply(doc);
 		} catch (MalformedTreeException ex) {
 			// TODO Auto-generated catch block

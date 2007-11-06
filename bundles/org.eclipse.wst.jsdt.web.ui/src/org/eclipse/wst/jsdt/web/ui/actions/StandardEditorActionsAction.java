@@ -30,12 +30,12 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
  */
 public class StandardEditorActionsAction implements IObjectActionDelegate {
 	private static final boolean APPEND_NEW_LINES_TO_COPY = true;
-	protected static final String COPY = "org.eclipse.wst.jsdt.web.ui.copy";
-	protected static final String CUT = "org.eclipse.wst.jsdt.web.ui.cut";
-	protected static final String DELETE = "org.eclipse.wst.jsdt.web.ui.delete";
+	protected static final String COPY = "org.eclipse.wst.jsdt.web.ui.copy"; //$NON-NLS-1$
+	protected static final String CUT = "org.eclipse.wst.jsdt.web.ui.cut"; //$NON-NLS-1$
+	protected static final String DELETE = "org.eclipse.wst.jsdt.web.ui.delete"; //$NON-NLS-1$
 	private static final char NEW_LINE = '\n';
-	protected static final String PASTE_AFTER = "org.eclipse.wst.jsdt.web.ui.paste.after";
-	protected static final String PASTE_BEFORE = "org.eclipse.wst.jsdt.web.ui.paste.before";
+	protected static final String PASTE_AFTER = "org.eclipse.wst.jsdt.web.ui.paste.after"; //$NON-NLS-1$
+	protected static final String PASTE_BEFORE = "org.eclipse.wst.jsdt.web.ui.paste.before"; //$NON-NLS-1$
 	protected ISelection selection;
 	
 	/*
@@ -109,11 +109,11 @@ public class StandardEditorActionsAction implements IObjectActionDelegate {
 						model.beginRecording(action, "Delete JavaScript Element", "Delete JavaScript Element");
 					}
 				}
-				doc.replaceText(action, start, length, "");
+				doc.replaceText(action, start, length, ""); //$NON-NLS-1$
 			}
 			model.endRecording(action);
 		} catch (Exception e) {
-			System.out.println("Error in Standard Editor Action : " + e);
+			System.out.println(Messages.getString("StandardEditorActionsAction.8") + e); //$NON-NLS-1$
 		} finally {
 			if (model != null) {
 				model.changedModel();
@@ -175,7 +175,7 @@ public class StandardEditorActionsAction implements IObjectActionDelegate {
 			String pasteString = (String) clipboard.getContents(TextTransfer.getInstance());
 			model = modelManager.getExistingModelForEdit(doc);
 			model.aboutToChangeModel();
-			model.beginRecording(action, "Insert Text " + (atEnd ? "before" : "after") + " a JavaScript Element.", "Insert Text " + (atEnd ? "before" : "after") + " a JavaScript Element.");
+			model.beginRecording(action, Messages.getString("StandardEditorActionsAction.9") + (atEnd ? Messages.getString("StandardEditorActionsAction.10") : Messages.getString("StandardEditorActionsAction.11")) + Messages.getString("StandardEditorActionsAction.12"), Messages.getString("StandardEditorActionsAction.13") + (atEnd ? Messages.getString("StandardEditorActionsAction.14") : Messages.getString("StandardEditorActionsAction.15")) + Messages.getString("StandardEditorActionsAction.16")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
 			doc.replaceText(action, startOfPaste, 0, pasteString);
 		} finally {
 			if (clipboard != null) {

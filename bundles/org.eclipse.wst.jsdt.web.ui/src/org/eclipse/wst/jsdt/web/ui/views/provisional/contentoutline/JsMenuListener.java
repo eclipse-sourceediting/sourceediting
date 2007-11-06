@@ -27,7 +27,7 @@ import org.eclipse.wst.xml.ui.internal.contentoutline.XMLNodeActionManager;
  * 
  */
 public class JsMenuListener extends XMLNodeActionManager implements IMenuListener, IReleasable {
-	public static final String EDIT_GROUP_ID = "group.edit";
+	public static final String EDIT_GROUP_ID = "group.edit"; //$NON-NLS-1$
 	CompilationUnitEditorActionContributor contrib;
 	private XMLNodeActionManager fActionManager;
 	private TreeViewer fTreeViewer;

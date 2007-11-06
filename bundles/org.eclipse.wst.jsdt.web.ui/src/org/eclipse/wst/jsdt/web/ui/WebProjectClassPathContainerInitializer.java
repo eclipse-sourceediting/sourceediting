@@ -24,12 +24,12 @@ import org.eclipse.wst.jsdt.web.core.internal.project.JsWebNature;
  * 
  */
 public class WebProjectClassPathContainerInitializer extends ClasspathContainerInitializer implements IClasspathContainerInitialzerExtension {
-	private static final String CONTAINER_DESCRIPTION = "Web Project support for JSDT";
+	private static final String CONTAINER_DESCRIPTION = Messages.getString("WebProjectClassPathContainerInitializer.0"); //$NON-NLS-1$
 	
 	public static final char[] LIB_NAME = {'b','r','o','w','s','e','r','W','i','n','d','o','w','.','j','s'};
 	/* Some tokens for us to identify mangled paths */
-	private static final String MANGLED_BUTT1 = "htm";
-	private static final String MANGLED_BUTT2 = ".js";
+	private static final String MANGLED_BUTT1 = "htm"; //$NON-NLS-1$
+	private static final String MANGLED_BUTT2 = ".js"; //$NON-NLS-1$
 	
 	//private IJavaProject javaProject;
 	
@@ -86,7 +86,7 @@ public class WebProjectClassPathContainerInitializer extends ClasspathContainerI
 		String containerPathString = containerPath.toString();
 		IPath webContext = getWebContextRoot(javaProject);
 		String fileExtension = containerPath.getFileExtension();
-		if(containerPath.equals(getWebContextRoot(javaProject)) || (fileExtension!=null && fileExtension.equals("js"))) {
+		if(containerPath.equals(getWebContextRoot(javaProject)) || (fileExtension!=null && fileExtension.equals("js"))) { //$NON-NLS-1$
 			return webContext.toString();
 		}
 		String unmangled = WebProjectClassPathContainerInitializer.getUnmangedHtmlPath(containerPathString);
@@ -94,7 +94,7 @@ public class WebProjectClassPathContainerInitializer extends ClasspathContainerI
 			IPath projectPath = javaProject.getPath();
 			/* Replace the project path with the project name */
 			if (unmangled.indexOf(projectPath.toString()) >= 0) {
-				unmangled = javaProject.getDisplayName() + ":" + unmangled.substring(projectPath.toString().length());
+				unmangled = javaProject.getDisplayName() + ":" + unmangled.substring(projectPath.toString().length()); //$NON-NLS-1$
 			}
 			return unmangled;
 		}
@@ -143,7 +143,7 @@ public class WebProjectClassPathContainerInitializer extends ClasspathContainerI
 	 * @see org.eclipse.wst.jsdt.internal.ui.IClasspathContainerInitialzerExtension#getImage(org.eclipse.core.runtime.IPath, java.lang.String, org.eclipse.wst.jsdt.core.IJavaProject)
 	 */
 	public ImageDescriptor getImage(IPath containerPath, String element, IJavaProject project) {
-		return ImageDescriptor.createFromFile(this.getClass(),"web1.JPG");
+		return ImageDescriptor.createFromFile(this.getClass(),"web1.JPG"); //$NON-NLS-1$
 	}
 	public IClasspathEntry[] getClasspathEntries() {
 		

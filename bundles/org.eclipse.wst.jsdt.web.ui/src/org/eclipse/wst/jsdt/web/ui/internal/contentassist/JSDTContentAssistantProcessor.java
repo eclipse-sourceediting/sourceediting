@@ -218,7 +218,7 @@ public class JSDTContentAssistantProcessor extends AbstractContentAssistProcesso
 	protected void initializeJavaPlugins() {
 		try {
 			Bundle bundle = Platform.getBundle(JSDTContentAssistantProcessor.JSDT_CORE_PLUGIN_ID);
-			bundle.loadClass("dummyClassNameThatShouldNeverExist");
+			bundle.loadClass("dummyClassNameThatShouldNeverExist"); //$NON-NLS-1$
 		} catch (ClassNotFoundException e) {
 			// this is the expected result, we just want to
 			// nudge the bundle to be sure its activated.

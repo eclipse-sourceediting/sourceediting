@@ -30,7 +30,7 @@ public class AddJavaDocStubAction implements IObjectActionDelegate {
 	private IWorkbenchPart targetPart;
 	
 	public String getDialogTitle() {
-		return "JavaScript Doc";
+		return ActionMessages.AddJavaDocStubAction_0;
 	}
 	
 	public Shell getShell() {

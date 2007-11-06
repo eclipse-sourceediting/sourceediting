@@ -42,7 +42,7 @@ public class JSDTHtmlCompletionProcessor {
 		if(offset>=missingAtOffset&& missingAtOffset>-1) {
 			
 			String allText = viewer.getDocument().get();
-			String text = "</script>";
+			String text = "</script>"; //$NON-NLS-1$
 			
 			int startInTag = -1;
 			int replaceLength =0;
@@ -55,15 +55,15 @@ public class JSDTHtmlCompletionProcessor {
 			}
 			
 			if(startInTag==-1 ) {
-				String displayText = "<> end with </script>";
-				return new CustomCompletionProposal("\n" + text + "\n" ,offset,0,offset,null,displayText,null,"Close the script tag.",100);
+				String displayText = Messages.getString("JSDTHtmlCompletionProcessor.1"); //$NON-NLS-1$
+				return new CustomCompletionProposal("\n" + text + "\n" ,offset,0,offset,null,displayText,null,Messages.getString("JSDTHtmlCompletionProcessor.4"),100); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			}
 			
 			String text1 = allText.substring(offset - startInTag - 1, offset).toLowerCase();
 			String text2 = text.substring(0, startInTag+1).toLowerCase();
 			if(startInTag>-1  && text2.compareTo(text1)==0 ) {
-				String displayText = "<> end with </script>";
-				return new CustomCompletionProposal(text  ,offset-startInTag-1,0,text.length(),null,displayText,null,"Close the script tag.",100);
+				String displayText = Messages.getString("JSDTHtmlCompletionProcessor.5"); //$NON-NLS-1$
+				return new CustomCompletionProposal(text  ,offset-startInTag-1,0,text.length(),null,displayText,null,Messages.getString("JSDTHtmlCompletionProcessor.6"),100); //$NON-NLS-1$
 			}
 			
 		}

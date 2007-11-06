@@ -21,7 +21,7 @@ public class FindReferencesInWorkingSetAction extends FindReferencesAction {
 			if (elements == null || elements.length == 0) {
 				return;
 			}
-			SimpleJSDTActionProxy.executeMethod(handler, "run", new Class[] { IJavaElement.class }, new Object[] { elements[0] });
+			SimpleJSDTActionProxy.executeMethod(handler, "run", new Class[] { IJavaElement.class }, new Object[] { elements[0] }); //$NON-NLS-1$
 		} catch (IllegalArgumentException ex) {
 			// TODO Auto-generated catch block
 			ex.printStackTrace();
