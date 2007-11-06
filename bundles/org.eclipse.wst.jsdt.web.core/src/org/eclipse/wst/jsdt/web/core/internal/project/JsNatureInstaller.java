@@ -16,7 +16,7 @@ public class JsNatureInstaller implements IDelegate {
 		if (monitor == null) {
 			monitor = new NullProgressMonitor();
 		}
-		monitor.beginTask("Installing Facet for JavaScript Development Tools" + ".", 100); //$NON-NLS-1$
+		monitor.beginTask("Installing Facet for JavaScript Development Tools" + ".", 100); //$NON-NLS-1$ //$NON-NLS-2$
 		try {
 			installNature(project, monitor);
 		} finally {
@@ -25,8 +25,8 @@ public class JsNatureInstaller implements IDelegate {
 	}
 	
 	public void installNature(IProject project, IProgressMonitor monitor) throws CoreException {
-		monitor.beginTask("Installing JavaScript Development Tools...", 100);
-		monitor.subTask("Adding JavaScript Development Toolkit Nature...");
+		monitor.beginTask(Messages.getString("JsNatureInstaller.1"), 100); //$NON-NLS-1$
+		monitor.subTask(Messages.getString("JsNatureInstaller.2")); //$NON-NLS-1$
 		SubProgressMonitor sub = new SubProgressMonitor(monitor, 25);
 		try {
 			monitor.worked(20);
@@ -35,7 +35,7 @@ public class JsNatureInstaller implements IDelegate {
 			jsNature.configure();
 			monitor.worked(40);
 		} catch (Exception e) {
-			throw new CoreException(new Status(IStatus.ERROR, JsCorePlugin.PLUGIN_ID, IStatus.OK, "Error installing runtime! JavaScript Development Tools could not be added..", e));
+			throw new CoreException(new Status(IStatus.ERROR, JsCorePlugin.PLUGIN_ID, IStatus.OK, Messages.getString("JsNatureInstaller.3"), e)); //$NON-NLS-1$
 		}
 	}
 }

@@ -27,7 +27,7 @@ public class WebRootFinder {
 			IVirtualFolder rootFolder = comp.getRootFolder();
 			return rootFolder.getUnderlyingFolder().getProjectRelativePath();
 		}
-		return new Path("");
+		return new Path(""); //$NON-NLS-1$
 	}
 	
 	public static String getWebContext(IProject project) {

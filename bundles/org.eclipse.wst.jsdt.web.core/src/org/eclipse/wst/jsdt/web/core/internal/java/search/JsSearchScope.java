@@ -127,7 +127,7 @@ public class JsSearchScope implements IJavaSearchScope {
 	 */
 	public boolean shouldExclude(String container, String resourceName) {
 		// TODO Auto-generated method stub
-		System.out.println("Unimplemented method:JsSearchScope.shouldExclude");
+		System.out.println("Unimplemented method:JsSearchScope.shouldExclude"); //$NON-NLS-1$
 		return false;
 	}
 

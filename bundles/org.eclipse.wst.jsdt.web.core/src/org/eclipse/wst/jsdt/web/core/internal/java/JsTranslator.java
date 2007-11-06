@@ -44,8 +44,8 @@ public class JsTranslator extends Job implements IDocumentListener{
 	public static final String ENDL = "\n"; //$NON-NLS-1$
 	
 	public static final boolean REMOVE_XML_COMMENT = true;
-	public static final String XML_COMMENT_START = "<!--";
-	public static final String XML_COMMENT_END = "-->";
+	public static final String XML_COMMENT_START = "<!--"; //$NON-NLS-1$
+	public static final String XML_COMMENT_END = "-->"; //$NON-NLS-1$
 	
 	static {
 		String value = Platform.getDebugOption("org.eclipse.wst.jsdt.web.core/debug/jspjavamapping"); //$NON-NLS-1$
@@ -94,7 +94,7 @@ public class JsTranslator extends Job implements IDocumentListener{
 	
 	
 	public JsTranslator(IStructuredDocument document, 	String fileName) {
-		super("JavaScript translation for : "  + fileName);
+		super("JavaScript translation for : "  + fileName); //$NON-NLS-1$
 		fStructuredDocument = document;
 		
 		fStructuredDocument.addDocumentListener(this);
@@ -105,7 +105,7 @@ public class JsTranslator extends Job implements IDocumentListener{
 	}
 		
 	public JsTranslator(IStructuredDocument document, 	String fileName, boolean listenForChanges) {
-		super("JavaScript translation for : "  + fileName);
+		super("JavaScript translation for : "  + fileName); //$NON-NLS-1$
 		fStructuredDocument = document;
 		if(listenForChanges) {
 			fStructuredDocument.addDocumentListener(this);
@@ -209,7 +209,7 @@ public class JsTranslator extends Job implements IDocumentListener{
 				// i.println("/---------------------------------------------------");
 				if (getCurrentNode().getType() == DOMRegionContext.XML_TAG_NAME) {
 					NodeHelper nh = new NodeHelper(getCurrentNode());
-					if ((!nh.isEndTag() || nh.isSelfClosingTag()) && nh.nameEquals("script")) {
+					if ((!nh.isEndTag() || nh.isSelfClosingTag()) && nh.nameEquals("script")) { //$NON-NLS-1$
 						/*
 						 * Handles the following cases: <script
 						 * type="javascriptype"> <script language="javascriptype>
@@ -217,8 +217,8 @@ public class JsTranslator extends Job implements IDocumentListener{
 						 * language=javascripttype <script src=''> global js type.
 						 * <script> (global js type)
 						 */
-						if (NodeHelper.isInArray(JsDataTypes.JSVALIDDATATYPES, nh.getAttributeValue("type")) || NodeHelper.isInArray(JsDataTypes.JSVALIDDATATYPES, nh.getAttributeValue("language")) || isGlobalJs) {
-							if (nh.containsAttribute(new String[] { "src" })) {
+						if (NodeHelper.isInArray(JsDataTypes.JSVALIDDATATYPES, nh.getAttributeValue("type")) || NodeHelper.isInArray(JsDataTypes.JSVALIDDATATYPES, nh.getAttributeValue("language")) || isGlobalJs) { //$NON-NLS-1$ //$NON-NLS-2$
+							if (nh.containsAttribute(new String[] { "src" })) { //$NON-NLS-1$
 								// Handle import
 								translateScriptImportNode(getCurrentNode());
 							}
@@ -232,9 +232,9 @@ public class JsTranslator extends Job implements IDocumentListener{
 					} else if (nh.containsAttribute(JsDataTypes.HTMLATREVENTS)) {
 						/* Check for embeded JS events in any tags */
 						translateInlineJSNode(getCurrentNode());
-					} else if (nh.nameEquals("META") && nh.attrEquals("http-equiv", "Content-Script-Type") && nh.containsAttribute(new String[] { "content" })) {
+					} else if (nh.nameEquals("META") && nh.attrEquals("http-equiv", "Content-Script-Type") && nh.containsAttribute(new String[] { "content" })) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 						// <META http-equiv="Content-Script-Type" content="type">
-						isGlobalJs = NodeHelper.isInArray(JsDataTypes.JSVALIDDATATYPES, nh.getAttributeValue("content"));
+						isGlobalJs = NodeHelper.isInArray(JsDataTypes.JSVALIDDATATYPES, nh.getAttributeValue("content")); //$NON-NLS-1$
 					} // End big if of JS types
 				}
 				if (getCurrentNode() != null) {
@@ -301,7 +301,7 @@ public class JsTranslator extends Job implements IDocumentListener{
 							// Position inScript = new Position(scriptOffset,
 							// rawText.length());
 							/* Quoted text starts +1 and ends -1 char */
-							if(ADD_SEMICOLON_AT_INLINE) rawText = rawText + ";";
+							if(ADD_SEMICOLON_AT_INLINE) rawText = rawText + ";"; //$NON-NLS-1$
 							Position inHtml = new Position(valStartOffset, rawText.length());
 							scriptLocationInHtml.add(inHtml);
 							/* need to pad the script text with spaces */
@@ -361,7 +361,7 @@ public class JsTranslator extends Job implements IDocumentListener{
 			NodeHelper nh = new NodeHelper(endTag);
 			String name = nh.getTagName();
 			
-			if(name==null || !name.trim().equalsIgnoreCase("script") || !nh.isEndTag()) {
+			if(name==null || !name.trim().equalsIgnoreCase("script") || !nh.isEndTag()) { //$NON-NLS-1$
 				missingEndTagRegionStart = container.getStartOffset();
 			}
 		}
@@ -369,8 +369,8 @@ public class JsTranslator extends Job implements IDocumentListener{
 	
 	public void translateScriptImportNode(IStructuredDocumentRegion region) {
 		NodeHelper nh = new NodeHelper(region);
-		String importName = nh.getAttributeValue("src");
-		if (importName != null && !importName.equals("")) {
+		String importName = nh.getAttributeValue("src"); //$NON-NLS-1$
+		if (importName != null && !importName.equals("")) { //$NON-NLS-1$
 			rawImports.add(importName);
 			Position inHtml = new Position(region.getStartOffset(), region.getEndOffset());
 			importLocationsInHtml.add(inHtml);

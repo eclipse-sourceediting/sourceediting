@@ -27,14 +27,14 @@ public class JsWebNature implements IProjectNature {
 	// //$NON-NLS-1$
 	private static final String NATURE_IDS[] = { JavaCore.NATURE_ID };
 
-	public static final IPath VIRTUAL_BROWSER_CLASSPATH = new Path("org.eclipse.wst.jsdt.launching.baseBrowserLibrary");
-	public static final String VIRTUAL_CONTAINER = "org.eclipse.wst.jsdt.launching.WebProject";
+	public static final IPath VIRTUAL_BROWSER_CLASSPATH = new Path("org.eclipse.wst.jsdt.launching.baseBrowserLibrary"); //$NON-NLS-1$
+	public static final String VIRTUAL_CONTAINER = "org.eclipse.wst.jsdt.launching.WebProject"; //$NON-NLS-1$
 	public static final IClasspathEntry VIRTUAL_SCOPE_ENTRY = JavaCore.newContainerEntry(new Path(VIRTUAL_CONTAINER));
-	private static final String SUPER_TYPE_NAME = "Window";
-	private static final String SUPER_TYPE_LIBRARY = "org.eclipse.wst.jsdt.launching.baseBrowserLibrary";
+	private static final String SUPER_TYPE_NAME = "Window"; //$NON-NLS-1$
+	private static final String SUPER_TYPE_LIBRARY = "org.eclipse.wst.jsdt.launching.baseBrowserLibrary"; //$NON-NLS-1$
 	
 	/* Default JRE entry */
-	private static final String DEFAULT_JRE_PATH = "org.eclipse.wst.jsdt.launching.JRE_CONTAINER";
+	private static final String DEFAULT_JRE_PATH = "org.eclipse.wst.jsdt.launching.JRE_CONTAINER"; //$NON-NLS-1$
 	
 	public static void addJsNature(IProject project, IProgressMonitor monitor) throws CoreException {
 		if (monitor != null && monitor.isCanceled()) {
@@ -208,7 +208,7 @@ public class JsWebNature implements IProjectNature {
 				}
 			} catch (Exception e) {
 				if (DEBUG) {
-					System.out.println("Error checking sourcepath:" + e);
+					System.out.println(Messages.getString("JsWebNature.5") + e); //$NON-NLS-1$
 				}
 			}
 		}
@@ -238,7 +238,7 @@ public class JsWebNature implements IProjectNature {
 			classPathEntries.add(defaultJRELibrary);
 		} catch (Exception e) {
 			if (DEBUG) {
-				System.out.println("Error checking sourcepath:" + e);
+				System.out.println(Messages.getString("JsWebNature.6") + e); //$NON-NLS-1$
 			}
 		}
 	}

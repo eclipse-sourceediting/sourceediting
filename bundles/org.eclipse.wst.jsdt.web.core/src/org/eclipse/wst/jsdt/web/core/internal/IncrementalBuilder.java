@@ -21,7 +21,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
  */
 public class IncrementalBuilder extends IncrementalProjectBuilder {
 	public IncrementalBuilder() {
-		System.out.println("Unimplemented method:IncrementalProjectBuilder()");
+		System.out.println("Unimplemented method:IncrementalProjectBuilder()"); //$NON-NLS-1$
 	}
 	
 	/*
@@ -33,7 +33,7 @@ public class IncrementalBuilder extends IncrementalProjectBuilder {
 	
 	protected IProject[] build(int kind, Map args, IProgressMonitor monitor) throws CoreException {
 		// TODO Auto-generated method stub
-		System.out.println("Unimplemented method:IncrementalBuilder.build");
+		System.out.println("Unimplemented method:IncrementalBuilder.build"); //$NON-NLS-1$
 		return null;
 	}
 }

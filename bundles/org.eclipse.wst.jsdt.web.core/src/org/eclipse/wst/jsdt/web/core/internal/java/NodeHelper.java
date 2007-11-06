@@ -54,13 +54,13 @@ public class NodeHelper {
 		ITextRegionList t = region.getRegions();
 		ITextRegion r;
 		Iterator regionIterator = t.iterator();
-		String StructuredValue = "Tag name:" + getTagName() + "\tAttribute\tValue\n";
+		String StructuredValue = Messages.getString("NodeHelper.0") + getTagName() + Messages.getString("NodeHelper.1"); //$NON-NLS-1$ //$NON-NLS-2$
 		while (regionIterator.hasNext()) {
 			r = (ITextRegion) regionIterator.next();
 			if (r.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME) {
 				int start = r.getStart();
 				int offset = r.getTextEnd();
-				StructuredValue += "\t\t" + region.getText().substring(start, offset);
+				StructuredValue += "\t\t" + region.getText().substring(start, offset); //$NON-NLS-1$
 				/*
 				 * Theres a XML_TAG_ATTRIBUTE_EQUALS after the
 				 * XML_TAG_ATTRIBUTE_NAME we have to get rid of
@@ -71,11 +71,11 @@ public class NodeHelper {
 				if (regionIterator.hasNext()) {
 					r = ((ITextRegion) regionIterator.next());
 				}
-				System.out.println("attrib type");
+				System.out.println(Messages.getString("NodeHelper.3")); //$NON-NLS-1$
 				if (r.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
 					int valStart = r.getStart();
 					int valOffset = r.getTextEnd();
-					StructuredValue += "\t\t" + stripEndQuotes(region.getText().substring(valStart, valOffset)) + "\n";
+					StructuredValue += "\t\t" + stripEndQuotes(region.getText().substring(valStart, valOffset)) + "\n"; //$NON-NLS-1$ //$NON-NLS-2$
 				}
 			}
 		}
@@ -157,7 +157,7 @@ public class NodeHelper {
 		if (fullRegionText == null) {
 			return null;
 		}
-		return fullRegionText.replaceAll("[^a-zA-Z0-9]", "");
+		return fullRegionText.replaceAll("[^a-zA-Z0-9]", ""); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 	
 	public String getTagName() {
@@ -232,7 +232,7 @@ public class NodeHelper {
 		while (regionIterator.hasNext()) {
 			ITextRegion r = (ITextRegion) regionIterator.next();
 			String nodeType = r.getType();
-			nodeText += ("\tNode Type:" + nodeType + " \t\tValue:" + region.getText().substring(r.getStart(), r.getTextEnd()) + "\n");
+			nodeText += (Messages.getString("NodeHelper.11") + nodeType + Messages.getString("NodeHelper.12") + region.getText().substring(r.getStart(), r.getTextEnd()) + "\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
 		return nodeText;
 	}

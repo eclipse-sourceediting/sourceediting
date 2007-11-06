@@ -50,7 +50,7 @@ public class JsValidator implements IValidator{
 	private static final boolean DEBUG = Boolean.valueOf(Platform.getDebugOption("org.eclipse.wst.jsdt.web.core/debug/jspvalidator")).booleanValue(); //$NON-NLS-1$
 	private IValidator fMessageOriginator;
 	
-	private static String [] jsdtValidator = {"org.eclipse.wst.jsdt.web.core.internal.validation.JsBatchValidator"};
+	private static String [] jsdtValidator = {"org.eclipse.wst.jsdt.web.core.internal.validation.JsBatchValidator"}; //$NON-NLS-1$
 
 	
 	protected class LocalizedMessage extends Message {
@@ -194,7 +194,7 @@ public class JsValidator implements IValidator{
 				if (currentFile != null && currentFile.exists()) {
 					if (shouldValidate(currentFile) ){ //&& fragmentCheck(currentFile)) {
 						int percent = (i * 100) / uris.length + 1;
-						Message message = new LocalizedMessage(IMessage.LOW_SEVERITY, percent + "% " + uris[i]);
+						Message message = new LocalizedMessage(IMessage.LOW_SEVERITY, percent + "% " + uris[i]); //$NON-NLS-1$
 						reporter.displaySubtask(this, message);
 						validateFile(currentFile, reporter);
 					}
@@ -220,7 +220,7 @@ public class JsValidator implements IValidator{
 				for (int i = 0; i < files.length && !reporter.isCancelled(); i++) {
 					if (shouldValidate(files[i])) {
 						int percent = (i * 100) / files.length + 1;
-						Message message = new LocalizedMessage(IMessage.LOW_SEVERITY, percent + "% " + files[i].getFullPath().toString());
+						Message message = new LocalizedMessage(IMessage.LOW_SEVERITY, percent + "% " + files[i].getFullPath().toString()); //$NON-NLS-1$
 						reporter.displaySubtask(this, message);
 						validateFile(files[i], reporter);
 					}

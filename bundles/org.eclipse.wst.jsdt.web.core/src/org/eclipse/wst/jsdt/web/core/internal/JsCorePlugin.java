@@ -20,7 +20,7 @@ import org.osgi.framework.BundleContext;
 public class JsCorePlugin extends Plugin {
 	// The shared instance.
 	private static JsCorePlugin plugin;
-	public static final String PLUGIN_ID = "org.eclipse.wst.jsdt.web.core";
+	public static final String PLUGIN_ID = "org.eclipse.wst.jsdt.web.core"; //$NON-NLS-1$
 	
 	/**
 	 * Returns the shared instance.

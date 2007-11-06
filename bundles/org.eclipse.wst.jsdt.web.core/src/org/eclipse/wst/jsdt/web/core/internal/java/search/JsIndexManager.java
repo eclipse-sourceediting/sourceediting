@@ -220,7 +220,7 @@ public class JsIndexManager {
 		private boolean isHiddenResource(IPath p) {
 			String[] segments = p.segments();
 			for (int i = 0; i < segments.length; i++) {
-				if (segments[i].startsWith(".")) {
+				if (segments[i].startsWith(".")) { //$NON-NLS-1$
 					return true;
 				}
 			}

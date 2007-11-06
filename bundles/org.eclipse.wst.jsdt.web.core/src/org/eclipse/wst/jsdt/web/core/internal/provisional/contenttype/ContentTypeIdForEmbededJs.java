@@ -25,7 +25,7 @@ public class ContentTypeIdForEmbededJs {
 	public final static String[] ContentTypeIds = ContentTypeIdForEmbededJs. getJsConstantString();
 
 	static String[] getJsConstantString() {
-		return new String[] {"org.eclipse.wst.html.core.htmlsource","org.eclipse.jst.jsp.core.jspsource"}; //$NON-NLS-1$
+		return new String[] {"org.eclipse.wst.html.core.htmlsource","org.eclipse.jst.jsp.core.jspsource"}; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 	
 	private ContentTypeIdForEmbededJs() {

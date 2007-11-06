@@ -37,17 +37,17 @@ public class DocumentChangeListenerToTextEdit implements IDocumentListener {
 			/* inserting text operation */
 			InsertEdit edit = new InsertEdit(offset, text);
 			textEdit.addChild(edit);
-			System.out.println("-------------Insert Text Edit");
-		} else if (text == null || text.equals("")) {
+			System.out.println("-------------Insert Text Edit"); //$NON-NLS-1$
+		} else if (text == null || text.equals("")) { //$NON-NLS-1$
 			/* delete operation */
 			DeleteEdit edit = new DeleteEdit(offset, length);
 			textEdit.addChild(edit);
-			System.out.println("-------------Delete Text Edit");
+			System.out.println("-------------Delete Text Edit"); //$NON-NLS-1$
 		} else if (length > 0) {
 			/* replace text operation */
 			ReplaceEdit edit = new ReplaceEdit(offset, length, text);
 			textEdit.addChild(edit);
-			System.out.println("-------------Replace Text Edit");
+			System.out.println("-------------Replace Text Edit"); //$NON-NLS-1$
 		}
 	}
 	

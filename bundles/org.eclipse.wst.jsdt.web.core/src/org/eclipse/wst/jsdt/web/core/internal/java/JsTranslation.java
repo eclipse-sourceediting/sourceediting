@@ -63,8 +63,8 @@ public class JsTranslation implements IJsTranslation {
 	private String fModelBaseLocation;
 	
 	
-	private static final String SUPER_TYPE_NAME = "Window";
-	private static final String SUPER_TYPE_LIBRARY = "org.eclipse.wst.jsdt.launching.baseBrowserLibrary";
+	private static final String SUPER_TYPE_NAME = "Window"; //$NON-NLS-1$
+	private static final String SUPER_TYPE_LIBRARY = "org.eclipse.wst.jsdt.launching.baseBrowserLibrary"; //$NON-NLS-1$
 	
 	private JsTranslator translator;
 	
@@ -158,7 +158,7 @@ public class JsTranslation implements IJsTranslation {
 		
 		IPackageFragmentRoot root = getDocScope(true);
 		//String directoryUnderWebroot = getDirectoryUnderRoot();
-		ICompilationUnit cu = root.getPackageFragment("").getCompilationUnit(getMangledName() + JsDataTypes.BASE_FILE_EXTENSION).getWorkingCopy(getWorkingCopyOwner(), getProblemRequestor(), getProgressMonitor());
+		ICompilationUnit cu = root.getPackageFragment("").getCompilationUnit(getMangledName() + JsDataTypes.BASE_FILE_EXTENSION).getWorkingCopy(getWorkingCopyOwner(), getProblemRequestor(), getProgressMonitor()); //$NON-NLS-1$
 		//ICompilationUnit cu = fDocumentScope.getDefaultPackageFragment().getCompilationUnit(getMangledName() + JsDataTypes.BASE_FILE_EXTENSION,SUPER_TYPE_NAME).getWorkingCopy(getWorkingCopyOwner(), getProblemRequestor(), getProgressMonitor());
 		
 		IBuffer buffer;
@@ -178,7 +178,7 @@ public class JsTranslation implements IJsTranslation {
 		if (displayString == null) {
 			return null;
 		}
-		return displayString.replaceAll(getMangledName() + ".js", getHtmlPageName());
+		return displayString.replaceAll(getMangledName() + ".js", getHtmlPageName()); //$NON-NLS-1$
 	}
 	
 	public IJavaElement[] getAllElementsInJsRange(int javaPositionStart, int javaPositionEnd) {
@@ -275,7 +275,7 @@ public class JsTranslation implements IJsTranslation {
 		//ICompilationUnit cu = getCompilationUnit();
 		//IPath realCuPath = cu.getPath();
 		IPath rootPath = new Path(fModelBaseLocation).removeLastSegments(1);
-		String cuPath = rootPath.append("/" + getMangledName() + JsDataTypes.BASE_FILE_EXTENSION ).toString();
+		String cuPath = rootPath.append("/" + getMangledName() + JsDataTypes.BASE_FILE_EXTENSION ).toString(); //$NON-NLS-1$
 		return cuPath;
 	}
 	

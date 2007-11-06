@@ -359,9 +359,9 @@ public class JsSearchSupport {
 	// copied from JDT IndexManager
 	public IPath getModelJspPluginWorkingLocation(IProject project) {
 		if (project == null) {
-			System.out.println("Null project");
+			System.out.println("Null project"); //$NON-NLS-1$
 		}
-		IPath workingLocationFile = project.getWorkingLocation(JsCorePlugin.PLUGIN_ID).append("jspsearch");
+		IPath workingLocationFile = project.getWorkingLocation(JsCorePlugin.PLUGIN_ID).append("jspsearch"); //$NON-NLS-1$
 		// ensure that it exists on disk
 		File folder = new File(workingLocationFile.toOSString());
 		if (!folder.isDirectory()) {

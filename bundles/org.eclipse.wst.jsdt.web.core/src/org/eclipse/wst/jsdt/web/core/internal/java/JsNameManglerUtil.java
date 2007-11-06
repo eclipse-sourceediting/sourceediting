@@ -94,7 +94,7 @@ public class JsNameManglerUtil {
 		StringBuffer buf = new StringBuffer();
 		String possible = ""; //$NON-NLS-1$
 		// remove the .java extension if there is one
-		if (qualifiedTypeName.endsWith(".js")) {
+		if (qualifiedTypeName.endsWith(".js")) { //$NON-NLS-1$
 			qualifiedTypeName = qualifiedTypeName.substring(0, qualifiedTypeName.length() - 3);
 		}
 		for (int i = 1; i < qualifiedTypeName.length(); i++) { // start at

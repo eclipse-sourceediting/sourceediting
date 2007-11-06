@@ -17,7 +17,7 @@ public class JsNatureUninstaller implements IDelegate {
 		if (monitor == null) {
 			monitor = new NullProgressMonitor();
 		}
-		monitor.beginTask("Uninstalling Facet for JavaScript Development Tools" + ".", 100); //$NON-NLS-1$
+		monitor.beginTask("Uninstalling Facet for JavaScript Development Tools" + ".", 100); //$NON-NLS-1$ //$NON-NLS-2$
 		try {
 			uninstallNature(project, monitor);
 		} finally {
@@ -26,9 +26,9 @@ public class JsNatureUninstaller implements IDelegate {
 	}
 	
 	public void uninstallNature(IProject project, IProgressMonitor monitor) throws CoreException {
-		monitor.beginTask("Uninstalling JavaScript Development Tools...", 100);
+		monitor.beginTask(Messages.getString("JsNatureUninstaller.1"), 100); //$NON-NLS-1$
 		// by using natures we can leverage the precondition support
-		monitor.subTask("Removing JavaScript Development Toolking Nature...");
+		monitor.subTask(Messages.getString("JsNatureUninstaller.2")); //$NON-NLS-1$
 		SubProgressMonitor sub = new SubProgressMonitor(monitor, 25);
 		if (!JsWebNature.hasNature(project)) {
 			return;
@@ -40,7 +40,7 @@ public class JsNatureUninstaller implements IDelegate {
 			jsNature.deconfigure();
 			monitor.worked(20);
 		} catch (CoreException e) {
-			throw new CoreException(new Status(IStatus.ERROR, JsCorePlugin.PLUGIN_ID, IStatus.OK, "Error installing runtime! JavaScript Development Tools could not be removed, or is not present in target project..", e));
+			throw new CoreException(new Status(IStatus.ERROR, JsCorePlugin.PLUGIN_ID, IStatus.OK, Messages.getString("JsNatureUninstaller.3"), e)); //$NON-NLS-1$
 		}
 	}
 }

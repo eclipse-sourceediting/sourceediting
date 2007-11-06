@@ -95,7 +95,7 @@ public class WebResourceChangeHandler implements IResourceChangeListener, IDocum
 					xmlModel.changedModel();
 				}
 			} catch (Exception e) {
-				System.out.println("Error when trying to agitate the model..");
+				System.out.println(Messages.getString("WebResourceChangeHandler.0")); //$NON-NLS-1$
 			} finally {
 				if (xmlModel != null) {
 					xmlModel.releaseFromEdit();

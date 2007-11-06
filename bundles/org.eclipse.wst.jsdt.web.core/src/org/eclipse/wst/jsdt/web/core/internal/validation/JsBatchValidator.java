@@ -71,7 +71,7 @@ public final class JsBatchValidator implements IValidatorJob, IExecutableExtensi
 	private static final String PLUGIN_ID_JSP_CORE = "org.eclipse.wst.jsdt.web.core"; //$NON-NLS-1$
 	private IPath[] excludeLibPaths;
 	
-	private final static String [] rhinoValidator = {"org.eclipse.atf.javascript.internal.validation.JSSyntaxValidator"};
+	private final static String [] rhinoValidator = {"org.eclipse.atf.javascript.internal.validation.JSSyntaxValidator"}; //$NON-NLS-1$
       static { 
               // Temp code to clear Rhino Syntax validation markers.
               IWorkspace workspace = ResourcesPlugin.getWorkspace();
@@ -239,7 +239,7 @@ public final class JsBatchValidator implements IValidatorJob, IExecutableExtensi
 			if(entries[i].getEntryKind() == IClasspathEntry.CPE_LIBRARY) {
 				IClasspathAttribute[] attribs = entries[i].getExtraAttributes();
 				for(int k=0; attribs!=null && k<attribs.length;k++) {
-					if(attribs[k].getName().equalsIgnoreCase("validate") && attribs[k].getValue().equalsIgnoreCase("false")) {
+					if(attribs[k].getName().equalsIgnoreCase("validate") && attribs[k].getValue().equalsIgnoreCase("false")) { //$NON-NLS-1$ //$NON-NLS-2$
 						ignorePaths.add(entries[i].getPath());
 						continue nextEntry;
 					}
@@ -263,7 +263,7 @@ public final class JsBatchValidator implements IValidatorJob, IExecutableExtensi
 				currentFile = wsRoot.getFile(new Path(uris[i]));
 				if (currentFile != null && currentFile.exists()) {
 					if (shouldValidate(currentFile) ) {
-						Message message = new LocalizedMessage(IMessage.LOW_SEVERITY, "" + (i + 1) + "/" + uris.length + " - " + currentFile.getFullPath().toString().substring(1));
+						Message message = new LocalizedMessage(IMessage.LOW_SEVERITY, "" + (i + 1) + "/" + uris.length + " - " + currentFile.getFullPath().toString().substring(1)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 						reporter.displaySubtask(this, message);
 						reporter.removeAllMessages(this, currentFile);
 						validateFile(currentFile, reporter);
@@ -291,7 +291,7 @@ public final class JsBatchValidator implements IValidatorJob, IExecutableExtensi
 				IFile[] files = visitor.getFiles();
 				for (int i = 0; i < files.length && !reporter.isCancelled(); i++) {
 					if (shouldValidate(files[i]) ) {
-						message = new LocalizedMessage(IMessage.LOW_SEVERITY, "" + (i + 1) + "/" + files.length + " - " + files[i].getFullPath().toString().substring(1));
+						message = new LocalizedMessage(IMessage.LOW_SEVERITY, "" + (i + 1) + "/" + files.length + " - " + files[i].getFullPath().toString().substring(1)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 						reporter.displaySubtask(this, message);
 						validateFile(files[i], reporter);
 					}
