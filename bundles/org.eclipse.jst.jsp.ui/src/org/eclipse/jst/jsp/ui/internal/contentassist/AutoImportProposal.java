@@ -148,7 +148,7 @@ public class AutoImportProposal extends JSPCompletionProposal {
 					if (sModel instanceof IDOMModel) {
 						IDOMDocument documentNode = ((IDOMModel) sModel).getDocument();
 						Element docElement = documentNode.getDocumentElement();
-						isXml = docElement != null && ((docElement.getNodeName().equals("jsp:root")) || docElement.getAttributeNode("xmlns:jsp") != null || ((((IDOMNode) docElement).getStartStructuredDocumentRegion() == null && ((IDOMNode) docElement).getEndStructuredDocumentRegion() == null))); //$NON-NLS-1$
+						isXml = docElement != null && ((docElement.getNodeName().equals("jsp:root")) || docElement.getAttributeNode("xmlns:jsp") != null || ((((IDOMNode) docElement).getStartStructuredDocumentRegion() == null && ((IDOMNode) docElement).getEndStructuredDocumentRegion() == null))); //$NON-NLS-1$  //$NON-NLS-2$
 					}
 				}
 			}
@@ -172,25 +172,25 @@ public class AutoImportProposal extends JSPCompletionProposal {
 		final String closing;
 		if (isCustomTag) {
 			if (isXml) {
-				opening = "<jsp:directive.tag import=\"";
-				closing = "\"/>";
+				opening = "<jsp:directive.tag import=\""; //$NON-NLS-1$
+				closing = "\"/>"; //$NON-NLS-1$
 			}
 			else {
-				opening = "<%@tag import=\"";
-				closing = "\"%>";
+				opening = "<%@tag import=\""; //$NON-NLS-1$
+				closing = "\"%>"; //$NON-NLS-1$
 			}
 		}
 		else {
 			if (isXml) {
-				opening = "<jsp:directive.page import=\"";
-				closing = "\"/>";
+				opening = "<jsp:directive.page import=\""; //$NON-NLS-1$
+				closing = "\"/>"; //$NON-NLS-1$
 			}
 			else {
-				opening = "<%@page import=\"";
-				closing = "\"%>";
+				opening = "<%@page import=\""; //$NON-NLS-1$
+				closing = "\"%>"; //$NON-NLS-1$
 			}
 		}
-		return delim + opening + getImportDeclaration() + closing; //$NON-NLS-1$ //$NON-NLS-2$	
+		return delim + opening + getImportDeclaration() + closing;
 	}
 
 	public String getImportDeclaration() {
