@@ -112,21 +112,23 @@ public class XMLSourceParser implements RegionParser, BlockTagParser, Structured
 	}
 
 	protected void fireNodeParsed(IStructuredDocumentRegion fCurrentNode) {
-		// never let an Exceptions from foreign code interfere with completion
-		// of parsing. To get an exception here is definitely a program error
-		// somewhere,
-		// we can't afford to interrupt the flow of control. or backwards
-		// typing can result!
-		// 
-		// 
+		/*
+		 * Never let an Exceptions from foreign code interfere with completion
+		 * of parsing. To get an exception here is definitely a program error
+		 * somewhere, but we can't afford to interrupt the flow of control. or
+		 * backwards typing can result!
+		 * 
+		 * Protect the user's data above everything.
+		 */
 		try {
 			if (fCurrentNode != null && fStructuredDocumentRegionHandlers != null) {
-				for (int i = 0; i < fStructuredDocumentRegionHandlers.size(); i++)
+				for (int i = 0; i < fStructuredDocumentRegionHandlers.size(); i++) {
 					((StructuredDocumentRegionHandler) fStructuredDocumentRegionHandlers.get(i)).nodeParsed(fCurrentNode);
+				}
 			}
 		}
 		catch (Exception e) {
-			Logger.log(Logger.ERROR, e.getMessage());
+		    Logger.log(Logger.ERROR, "Error occurred while firing Node Parsed event for "+fDocumentInput.toString(), e); //$NON-NLS-1$
 		}
 	}
 
@@ -232,7 +234,7 @@ public class XMLSourceParser implements RegionParser, BlockTagParser, Structured
 	}
 
 	/**
-	 * 
+	 * @deprecated - use the add/remove methods instead
 	 * @return java.util.List
 	 */
 	public List getStructuredDocumentRegionHandlers() {
