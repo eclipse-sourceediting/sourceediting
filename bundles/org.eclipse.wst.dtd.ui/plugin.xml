@@ -217,6 +217,10 @@
 			class="org.eclipse.wst.dtd.ui.internal.templates.TemplateContextTypeDTD"
 			id="dtd_new">
 		</contextType>
+  <include
+        file="templates/dtddefault-templates.xml"
+        translations="$nl$/templates/dtddefault-templates.properties">
+  </include>
 	</extension>
 
    <extension
