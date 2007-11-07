@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,6 +23,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -55,11 +56,19 @@ public class XMLCatalogEntriesView extends Composite {
 		this.setLayout(gridLayout);
 
 		tableViewer = createTableViewer(this);
-		tableViewer.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
 		tableViewer.setInput("dummy"); //$NON-NLS-1$
+		
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=202692
+		// specifically set size of tree before expanding it
+		Point initialSize = tableViewer.getTree().computeSize(SWT.DEFAULT, SWT.DEFAULT);
+		GridData gridData = new GridData(GridData.FILL_BOTH);
+		gridData.widthHint = initialSize.x;
+		gridData.heightHint = initialSize.y;
+		tableViewer.getControl().setLayoutData(gridData);
+		
 		tableViewer.expandToLevel(2);
 		tableViewer.reveal(XMLCatalogTreeViewer.USER_SPECIFIED_ENTRIES_OBJECT);
-
+		
 		ISelectionChangedListener listener = new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
 				updateWidgetEnabledState();
