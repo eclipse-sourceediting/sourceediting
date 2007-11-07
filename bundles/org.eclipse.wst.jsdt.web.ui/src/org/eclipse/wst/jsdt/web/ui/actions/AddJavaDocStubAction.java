@@ -16,7 +16,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.jsdt.core.ICompilationUnit;
 import org.eclipse.wst.jsdt.core.IJavaElement;
 import org.eclipse.wst.jsdt.core.IMember;
-import org.eclipse.wst.jsdt.internal.ui.actions.ActionMessages;
 import org.eclipse.wst.jsdt.internal.ui.actions.WorkbenchRunnableAdapter;
 import org.eclipse.wst.jsdt.internal.ui.util.ExceptionHandler;
 import org.eclipse.wst.jsdt.web.ui.views.contentoutline.JsJfaceNode;
@@ -30,7 +29,7 @@ public class AddJavaDocStubAction implements IObjectActionDelegate {
 	private IWorkbenchPart targetPart;
 	
 	public String getDialogTitle() {
-		return ActionMessages.AddJavaDocStubAction_0;
+		return Messages.getString("AddJavaDocStubAction.0"); //$NON-NLS-1$
 	}
 	
 	public Shell getShell() {
@@ -69,7 +68,7 @@ public class AddJavaDocStubAction implements IObjectActionDelegate {
 			AddJavaDocStubOperation op = new AddJavaDocStubOperation(members, node);
 			PlatformUI.getWorkbench().getProgressService().runInUI(PlatformUI.getWorkbench().getProgressService(), new WorkbenchRunnableAdapter(op, op.getScheduleRule()), op.getScheduleRule());
 		} catch (InvocationTargetException e) {
-			ExceptionHandler.handle(e, getShell(), getDialogTitle(), ActionMessages.AddJavaDocStubsAction_error_actionFailed);
+			ExceptionHandler.handle(e, getShell(), getDialogTitle(), Messages.getString("AddJavaDocStubAction.1")); //$NON-NLS-1$
 		} catch (InterruptedException e) {
 			// operation canceled
 		}
