@@ -57,6 +57,7 @@ import org.eclipse.xsd.XSDMinLengthFacet;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.eclipse.xsd.XSDTypeDefinition;
+import org.eclipse.xsd.XSDVariety;
 import org.eclipse.xsd.XSDWhiteSpace;
 import org.eclipse.xsd.XSDWhiteSpaceFacet;
 import org.eclipse.xsd.util.XSDConstants;
@@ -77,6 +78,7 @@ public class XSDFacetSection extends AbstractSection
   Button minimumInclusiveCheckbox;
   Button maximumInclusiveCheckbox;
   boolean isNumericBaseType;
+  boolean isSimpleTypeRestriction;
   private XSDTypeDefinition typeDefinition;
   private XSDSimpleTypeDefinition xsdSimpleTypeDefinition;
   private XSDSimpleTypeDefinition currentPrimitiveType, previousPrimitiveType;
@@ -295,6 +297,8 @@ public class XSDFacetSection extends AbstractSection
     
     if (xsdSimpleTypeDefinition != null)
     {
+      isSimpleTypeRestriction = xsdSimpleTypeDefinition.getVariety().getValue() == XSDVariety.ATOMIC;
+      
       XSDSimpleTypeDefinition targetST = xsdSimpleTypeDefinition;
       
       while (!XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001.equals(targetST.getTargetNamespace()) && targetST != null)
@@ -449,7 +453,29 @@ public class XSDFacetSection extends AbstractSection
     }
     constraintsWidget.setInput(xsdSimpleTypeDefinition);
 
+    setWidgetsEnabled(isSimpleTypeRestriction);
+    composite.setEnabled(isSimpleTypeRestriction);
+    
     setListenerEnabled(true);
+  }
+  
+  private void setWidgetsEnabled(boolean isEnabled)
+  {
+    if (collapseWhitespaceButton != null && !collapseWhitespaceButton.isDisposed())
+      collapseWhitespaceButton.setEnabled(isEnabled);
+    if (useEnumerationsButton != null && !useEnumerationsButton.isDisposed())
+      useEnumerationsButton.setEnabled(isEnabled);
+    if (usePatternsButton != null && !usePatternsButton.isDisposed())
+      usePatternsButton.setEnabled(isEnabled);
+    if (minimumInclusiveCheckbox != null && !minimumInclusiveCheckbox.isDisposed())
+      minimumInclusiveCheckbox.setEnabled(isEnabled);
+    if (maximumInclusiveCheckbox != null && !maximumInclusiveCheckbox.isDisposed())
+      maximumInclusiveCheckbox.setEnabled(isEnabled);
+    if (constraintsWidget != null && !constraintsWidget.getControl().isDisposed())
+    {
+      constraintsWidget.addButton.setEnabled(isEnabled);
+      constraintsWidget.addUsingDialogButton.setEnabled(isEnabled);
+    }
   }
 
   protected void relayout()
