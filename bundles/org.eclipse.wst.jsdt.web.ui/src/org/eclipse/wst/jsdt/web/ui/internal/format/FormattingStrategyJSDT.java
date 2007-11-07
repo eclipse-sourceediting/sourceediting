@@ -95,7 +95,7 @@ public class FormattingStrategyJSDT extends ContextBasedFormattingStrategy {
 					 * 
 					 */
 					document.replaceText(document, partition.getOffset(), partition.getLength(), replaceText);
-					document.addDocumentPartitioningListener(new ModelIrritant(document));
+				//	document.addDocumentPartitioningListener(new ModelIrritant(document));
 				}
 			} catch (BadLocationException e) {
 			} catch (JavaModelException e) {
