@@ -103,6 +103,10 @@ public class DesignViewGraphicalViewer extends ScrollingGraphicalViewer implemen
             if (field.getContainerType() != null)
               setInput(field.getContainerType());
           }
+          else if (field.isGlobal() && !(getInput() instanceof IModel))
+          {
+            setInput(field);
+          }
         }
       }
       else if (selectedObject instanceof IField)
