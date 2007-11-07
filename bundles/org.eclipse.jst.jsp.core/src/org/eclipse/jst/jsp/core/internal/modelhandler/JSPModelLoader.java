@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,11 +13,10 @@ package org.eclipse.jst.jsp.core.internal.modelhandler;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.core.filebuffers.FileBuffers;
-import org.eclipse.core.filebuffers.ITextFileBuffer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
@@ -47,6 +46,7 @@ import org.eclipse.wst.html.core.internal.provisional.contenttype.ContentTypeFam
 import org.eclipse.wst.html.core.internal.provisional.contenttype.ContentTypeIdForHTML;
 import org.eclipse.wst.html.core.internal.text.StructuredTextPartitionerForHTML;
 import org.eclipse.wst.sse.core.internal.PropagatingAdapter;
+import org.eclipse.wst.sse.core.internal.document.DocumentReader;
 import org.eclipse.wst.sse.core.internal.document.IDocumentLoader;
 import org.eclipse.wst.sse.core.internal.document.StructuredDocumentFactory;
 import org.eclipse.wst.sse.core.internal.ltk.modelhandler.EmbeddedTypeHandler;
@@ -63,7 +63,6 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.text.BasicStructuredDocument;
 import org.eclipse.wst.sse.core.internal.util.Assert;
 import org.eclipse.wst.sse.core.internal.util.Debug;
-import org.eclipse.wst.sse.core.internal.util.DocumentInputStream;
 import org.eclipse.wst.xml.core.internal.DebugAdapterFactory;
 import org.eclipse.wst.xml.core.internal.document.DOMModelImpl;
 import org.eclipse.wst.xml.core.internal.propagate.PropagatingAdapterFactoryImpl;
@@ -224,60 +223,39 @@ public class JSPModelLoader extends AbstractModelLoader {
 	private IContentDescription getContentDescription(IDocument doc) {
 		if (doc == null)
 			return null;
-		DocumentInputStream in = new DocumentInputStream(doc);
-		return getContentDescription(in);
-	}
-
-	/**
-	 * 
-	 * @param filePath
-	 * @return the content description, or null if there's no buffer for the
-	 *         filepath
-	 */
-	private IContentDescription getContentDescription(String filePath) {
-		if (filePath == null)
-			return null;
-
-		IDocument doc = null;
-		ITextFileBuffer buf = FileBuffers.getTextFileBufferManager().getTextFileBuffer(new Path(filePath));
-		if (buf != null) {
-			doc = buf.getDocument();
-		}
-
-		IContentDescription contentDescription = null;
-		if (doc != null) {
-			contentDescription = getContentDescription(doc);
-		}
-		return contentDescription;
+		DocumentReader reader = new DocumentReader(doc);
+		return getContentDescription(reader);
 	}
 
 	/**
 	 * Returns content description for an input stream Assumes it's JSP
 	 * content. Closes the input stream when finished.
 	 * 
-	 * @param in
+	 * @param reader
 	 * @return the IContentDescription for in, or null if in is null
 	 */
-	private IContentDescription getContentDescription(InputStream in) {
+	private IContentDescription getContentDescription(Reader reader) {
 
-		if (in == null)
+		if (reader == null)
 			return null;
 
 		IContentDescription desc = null;
 		try {
 
 			IContentType contentTypeJSP = Platform.getContentTypeManager().getContentType(ContentTypeIdForJSP.ContentTypeID_JSP);
-			desc = contentTypeJSP.getDescriptionFor(in, IContentDescription.ALL);
+			desc = contentTypeJSP.getDescriptionFor(reader, IContentDescription.ALL);
 		}
 		catch (IOException e) {
 			Logger.logException(e);
 		}
 		finally {
-			try {
-				in.close();
-			}
-			catch (IOException e) {
-				Logger.logException(e);
+			if (reader != null) {
+				try {
+					reader.close();
+				}
+				catch (IOException e) {
+					Logger.logException(e);
+				}
 			}
 		}
 		return desc;
@@ -497,10 +475,8 @@ public class JSPModelLoader extends AbstractModelLoader {
 		EmbeddedTypeHandler embeddedContentType = null;
 		IDOMModel domModel = (IDOMModel) model;
 
-		String possibleFileBaseLocation = model.getBaseLocation();
-
 		if (embeddedContentType == null) {
-			IContentDescription desc = getContentDescription(possibleFileBaseLocation);
+			IContentDescription desc = getContentDescription(model.getStructuredDocument());
 			if (desc != null) {
 				Object prop = null;
 

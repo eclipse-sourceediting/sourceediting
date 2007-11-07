@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004-2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,7 @@
 package org.eclipse.jst.jsp.core.internal.document;
 
 import java.io.IOException;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -32,6 +33,7 @@ import org.eclipse.jst.jsp.core.internal.provisional.contenttype.ContentTypeIdFo
 import org.eclipse.jst.jsp.core.internal.provisional.contenttype.IContentDescriptionForJSP;
 import org.eclipse.jst.jsp.core.internal.text.StructuredTextPartitionerForJSP;
 import org.eclipse.wst.html.core.internal.provisional.contenttype.ContentTypeFamilyForHTML;
+import org.eclipse.wst.sse.core.internal.document.DocumentReader;
 import org.eclipse.wst.sse.core.internal.ltk.modelhandler.EmbeddedTypeHandler;
 import org.eclipse.wst.sse.core.internal.modelhandler.EmbeddedTypeRegistry;
 import org.eclipse.wst.sse.core.internal.modelhandler.EmbeddedTypeRegistryImpl;
@@ -41,7 +43,6 @@ import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitioning;
 import org.eclipse.wst.sse.core.internal.util.Debug;
-import org.eclipse.wst.sse.core.internal.util.DocumentInputStream;
 import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 
@@ -664,7 +665,7 @@ public class PageDirectiveAdapterImpl implements PageDirectiveAdapter {
 	private IContentDescription getContentDescription(IDocument doc) {
 		if (doc == null)
 			return null;
-		DocumentInputStream in = new DocumentInputStream(doc);
+		DocumentReader in = new DocumentReader(doc);
 		return getContentDescription(in);
 	}
 
@@ -675,7 +676,7 @@ public class PageDirectiveAdapterImpl implements PageDirectiveAdapter {
 	 * @param in
 	 * @return the IContentDescription for in, or null if in is null
 	 */
-	private IContentDescription getContentDescription(DocumentInputStream in) {
+	private IContentDescription getContentDescription(Reader in) {
 
 		if (in == null)
 			return null;
