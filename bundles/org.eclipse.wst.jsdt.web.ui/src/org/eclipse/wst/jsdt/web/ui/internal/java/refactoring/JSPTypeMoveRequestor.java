@@ -14,7 +14,7 @@ import java.text.MessageFormat;
 
 import org.eclipse.wst.jsdt.core.IJavaElement;
 import org.eclipse.wst.jsdt.core.search.SearchMatch;
-import org.eclipse.wst.jsdt.web.core.internal.java.JsTranslation;
+//import org.eclipse.wst.jsdt.web.core.internal.java.JsTranslation;
 import org.eclipse.wst.jsdt.web.core.internal.java.search.JSDTSearchDocumentDelegate;
 import org.eclipse.wst.jsdt.web.ui.internal.JsUIMessages;
 
@@ -46,8 +46,8 @@ public class JSPTypeMoveRequestor extends BasicRefactorSearchRequestor {
 	
 	protected String getRenameText(JSDTSearchDocumentDelegate searchDoc, SearchMatch javaMatch) {
 		String renameText = getElement().getElementName();
-		JsTranslation trans = searchDoc.getJspTranslation();
-		String matchText = trans.getJsText().substring(javaMatch.getOffset(), javaMatch.getOffset() + javaMatch.getLength());
+	//	JsTranslation trans = searchDoc.getJspTranslation();
+		//String matchText = trans.getJsText().substring(javaMatch.getOffset(), javaMatch.getOffset() + javaMatch.getLength());
 		// if it's an import or jsp:useBean, we need to add the package name as
 		// well
 // if (trans.isImport(javaMatch.getOffset())

@@ -23,7 +23,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.content.IContentType;
+//import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.wst.jsdt.web.core.internal.JsCoreMessages;
 import org.eclipse.wst.jsdt.web.core.internal.validation.Util;
@@ -93,7 +93,7 @@ public class IndexWorkspaceJob extends Job {
 			return true;
 		}
 	}
-	private IContentType fContentTypeJSP = null;
+	//private IContentType fContentTypeJSP = null;
 	
 	public IndexWorkspaceJob() {
 		// pa_TODO may want to say something like "Rebuilding JSP Index" to be
@@ -130,9 +130,7 @@ public class IndexWorkspaceJob extends Job {
 				e.printStackTrace();
 			}
 		} finally {
-			if (monitor != null) {
-				monitor.done();
-			}
+			monitor.done();
 		}
 		long finish = System.currentTimeMillis();
 		if (IndexWorkspaceJob.DEBUG) {

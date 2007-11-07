@@ -30,7 +30,7 @@ import org.eclipse.wst.jsdt.web.core.internal.java.JsTranslationAdapter;
 import org.eclipse.wst.jsdt.web.ui.internal.Logger;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
-import org.eclipse.wst.sse.core.internal.util.URIResolver;
+//import org.eclipse.wst.sse.core.internal.util.URIResolver;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 
@@ -51,11 +51,12 @@ public class JSDTHyperlinkDetector extends AbstractHyperlinkDetector {
 				try {
 					sModel = StructuredModelManager.getModelManager().getExistingModelForRead(document);
 					if (sModel != null) {
-						URIResolver resolver = sModel.getResolver();
-						if (resolver != null) {
-							String uriString = resolver.getFileBaseLocation();
+						//URIResolver resolver = sModel.getResolver();
+						//if (resolver != null) {
+						//	String uriString = resolver.getFileBaseLocation();
+						String uriString = sModel.getBaseLocation();
 							file = getFile(uriString);
-						}
+					//	}
 					}
 				} finally {
 					if (sModel != null) {

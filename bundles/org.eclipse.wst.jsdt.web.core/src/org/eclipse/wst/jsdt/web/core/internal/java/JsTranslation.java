@@ -15,10 +15,10 @@ import java.util.List;
 import java.util.Vector;
 
 import org.eclipse.core.filebuffers.FileBuffers;
-import org.eclipse.core.resources.IContainer;
+//import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
+//import org.eclipse.core.resources.IProject;
+//import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -33,7 +33,7 @@ import org.eclipse.wst.jsdt.core.IJavaProject;
 import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
 import org.eclipse.wst.jsdt.core.ISourceRange;
 import org.eclipse.wst.jsdt.core.JavaModelException;
-import org.eclipse.wst.jsdt.core.LibrarySuperType;
+//import org.eclipse.wst.jsdt.core.LibrarySuperType;
 import org.eclipse.wst.jsdt.core.WorkingCopyOwner;
 import org.eclipse.wst.jsdt.internal.core.DocumentContextFragmentRoot;
 import org.eclipse.wst.jsdt.internal.core.SourceRefElement;
@@ -69,7 +69,7 @@ public class JsTranslation implements IJsTranslation {
 	private JsTranslator translator;
 	
 	private String mangledName;
-	private boolean listenForChanges;
+	//private boolean listenForChanges;
 	
 //	public JsTranslation(IStructuredDocument htmlDocument, IJavaProject javaProj) {
 //		fLock = new byte[0];
@@ -88,7 +88,7 @@ public class JsTranslation implements IJsTranslation {
 		setBaseLocation();
 		translator = new JsTranslator(htmlDocument, fModelBaseLocation,listenForChanges);
 		mangledName = createMangledName();	
-		this.listenForChanges=listenForChanges;
+	//	this.listenForChanges=listenForChanges;
 	}
 	
 	public IJavaProject getJavaProject() {
@@ -97,8 +97,8 @@ public class JsTranslation implements IJsTranslation {
 
 	private IPackageFragmentRoot getDocScope(boolean reset) {
 		if(fDocumentScope==null) {
-			IProject project = getJavaProject().getProject();
-			IResource absoluteRoot = ((IContainer)getJavaProject().getResource()).findMember( WebRootFinder.getWebContentFolder(fJavaProject.getProject()));
+		//	IProject project = getJavaProject().getProject();
+		//	IResource absoluteRoot = ((IContainer)getJavaProject().getResource()).findMember( WebRootFinder.getWebContentFolder(fJavaProject.getProject()));
 			fDocumentScope = new DocumentContextFragmentRoot(fJavaProject, getFile(), WebRootFinder.getWebContentFolder(fJavaProject.getProject()), WebRootFinder.getServerContextRoot(fJavaProject.getProject()), JsWebNature.VIRTUAL_SCOPE_ENTRY);			
 			fDocumentScope.setIncludedFiles(translator.getRawImports());
 			return fDocumentScope;
@@ -154,7 +154,7 @@ public class JsTranslation implements IJsTranslation {
 	 */
 	private ICompilationUnit createCompilationUnit() throws JavaModelException {
 		//System.out.println("------------------------- CREATING CU ----------------------------");
-		LibrarySuperType superType = new LibrarySuperType(SUPER_TYPE_LIBRARY, fJavaProject, SUPER_TYPE_NAME);
+	//	LibrarySuperType superType = new LibrarySuperType(SUPER_TYPE_LIBRARY, fJavaProject, SUPER_TYPE_NAME);
 		
 		IPackageFragmentRoot root = getDocScope(true);
 		//String directoryUnderWebroot = getDirectoryUnderRoot();
@@ -191,7 +191,7 @@ public class JsTranslation implements IJsTranslation {
 		}
 		Vector validChildren = new Vector();
 		for (int i = 0; i < allChildren.length; i++) {
-			if (allChildren[i] instanceof IJavaElement && allChildren[i].getElementType() != IJavaElement.PACKAGE_DECLARATION) {
+			if ( allChildren[i].getElementType() != IJavaElement.PACKAGE_DECLARATION) {
 				ISourceRange range = getJSSourceRangeOf(allChildren[i]);
 				if (javaPositionStart <= range.getOffset() && range.getLength() + range.getOffset() <= (javaPositionEnd)) {
 					validChildren.add(allChildren[i]);

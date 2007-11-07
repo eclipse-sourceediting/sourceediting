@@ -1,6 +1,6 @@
 package org.eclipse.wst.jsdt.web.core.internal.java;
 
-import org.eclipse.wst.html.core.internal.provisional.HTML40Namespace;
+
 import org.eclipse.wst.html.core.text.IHTMLPartitions;
 
 public interface JsDataTypes extends HTML40Namespace {
