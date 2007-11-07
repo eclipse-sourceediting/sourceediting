@@ -11,6 +11,9 @@
 
 package org.eclipse.wst.xml.core.internal.emf2xml;
 
+import java.util.Collection;
+import java.util.Iterator;
+
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.text.BadLocationException;
@@ -267,7 +270,24 @@ public class EMF2DOMSSEAdapter extends EMF2DOMAdapterImpl implements INodeAdapte
 	}
 
 	protected EMF2DOMAdapter primGetExistingAdapter(Node aNode) {
-		return (EMF2DOMAdapter) ((IDOMNode) aNode).getExistingAdapter(EMF2DOMAdapter.ADAPTER_CLASS);
+		
+		INodeNotifier sseNode = (INodeNotifier)aNode;
+		Collection adapters = sseNode.getAdapters();
+		INodeAdapter result = null;
+		for (Iterator iterator = adapters.iterator(); iterator.hasNext();) {
+			INodeAdapter a = (INodeAdapter) iterator.next();
+			if (a != null && a.isAdapterForType(EMF2DOMAdapter.ADAPTER_CLASS)) { //First Check if its an EMF2DOMAdapter
+				//Cast to EMF2DOMAdapter
+				EMF2DOMAdapter e2DAdapter = (EMF2DOMAdapter)a;
+				if (e2DAdapter.getTarget() == getTarget()) {//Now check if its the right one  (Multiple resources could be attached)
+					result = a;
+					break;
+				}
+			}
+		}
+		// if we didn't find one in our list,
+		// return the null result
+		return (EMF2DOMAdapter)result;
 
 	}
 
