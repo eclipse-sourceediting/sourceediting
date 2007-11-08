@@ -11,11 +11,11 @@
 package org.eclipse.wst.web.internal.operation;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.wst.common.frameworks.internal.DoNotUseMeThisWillBeDeletedPost15;
 import org.eclipse.wst.web.internal.ISimpleWebModuleConstants;
-import org.eclipse.wst.web.internal.WSTWebPlugin;
 
 /**
  * This has been slated for removal post WTP 1.5. Do not use this class/interface/method/field
@@ -52,7 +52,7 @@ public class LibModule implements ILibModule, DoNotUseMeThisWillBeDeletedPost15 
 	 * @see ILibModule#getProject()
 	 */
 	public IProject getProject() {
-		return (IProject) WSTWebPlugin.getWorkspace().getRoot().findMember(projectName);
+		return ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
 	}
 
 	/**
