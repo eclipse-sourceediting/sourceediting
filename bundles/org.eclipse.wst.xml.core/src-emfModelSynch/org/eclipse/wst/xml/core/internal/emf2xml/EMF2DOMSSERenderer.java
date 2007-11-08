@@ -18,19 +18,19 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.WeakHashMap;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jem.util.emf.workbench.ProjectResourceSet;
+import org.eclipse.jem.util.emf.workbench.WorkbenchResourceHelperBase;
 import org.eclipse.wst.common.internal.emf.resource.EMF2DOMAdapter;
 import org.eclipse.wst.common.internal.emf.resource.EMF2DOMRenderer;
 import org.eclipse.wst.common.internal.emf.resource.TranslatorResource;
@@ -43,7 +43,6 @@ import org.eclipse.wst.sse.core.internal.provisional.IModelLifecycleListener;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IModelStateListener;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
-import org.eclipse.wst.sse.core.internal.provisional.exceptions.ResourceInUse;
 import org.eclipse.wst.xml.core.internal.Logger;
 import org.eclipse.wst.xml.core.internal.document.DocumentTypeImpl;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
@@ -201,10 +200,7 @@ public class EMF2DOMSSERenderer extends EMF2DOMRenderer implements IModelStateLi
 	}
 
 	private void deregisterFromXMLModel() {
-		if (getXMLModel() != null) {
-			String id = getXMLModel().getId();
-			decrementCacheCount(id);
-		}
+		
 		deRegisterAsModelStateListener();
 		deRegisterAsModelLifecycleListener();
 		// This try/catch block is a hack to fix defect 204114. This occurs
@@ -301,78 +297,20 @@ public class EMF2DOMSSERenderer extends EMF2DOMRenderer implements IModelStateLi
 
 	public String getXMLModelId() {
 		return xmlModelId;
-	}
+	}	
 	
-	private static int uniqueCount = 0;
-	
-	private static synchronized String getUniqueID(String id){
-		return id+uniqueCount++;
-	}
-	
-	private static WeakHashMap resourceMap = new WeakHashMap();
-	private static HashMap resourceCount = new HashMap();
-	
-	private static synchronized Object getCachedResource(String id){
-		Object obj = resourceMap.get(id);
-		return obj;
-	}
-	
-	private static synchronized void incrementCacheCount(String id, Object resource){
-		resourceMap.put(id, resource);
-		if(resourceCount.containsKey(id)){
-			Integer integer = (Integer)resourceCount.get(id);
-			Integer newInteger = new Integer(integer.intValue() + 1);
-			resourceCount.put(id, newInteger);
-		} else {
-			resourceCount.put(id, new Integer(1));
-		}
-	}
-	
-	private static void decrementCacheCount(String id){
-		if(resourceCount.containsKey(id)){
-			Integer integer = (Integer)resourceCount.get(id);
-			if(integer.intValue() > 1){
-				Integer newInteger = new Integer(integer.intValue() - 1);
-				resourceCount.put(id, newInteger);
-			} else {
-				resourceCount.remove(id);
-				resourceMap.remove(id);
-			}
-		} else {
-			resourceMap.remove(id);
-		}
-	}
-	
-
 	private IDOMModel initializeXMLModel(IFile file, boolean forWrite) throws UnsupportedEncodingException, IOException {
 		if (file == null || !file.exists())
 			throw new FileNotFoundException((file == null) ? "null" : file.getFullPath().toOSString()); //$NON-NLS-1$
 		try {
 			IModelManager manager = getModelManager();
-			String id = manager.calculateId(file);
-			Object cachedResource = getCachedResource(id);
-			boolean needCopy = false;
-			if(null != cachedResource && cachedResource != resource){
-				needCopy = true;
-			} else {
-				incrementCacheCount(id, resource);
-			}
-			
+			String id = manager.calculateId(file);			
 			if (forWrite) {
 				IDOMModel mod = (IDOMModel)manager.getExistingModelForEdit(id);
 				if (mod == null)
 					setXMLModel((IDOMModel) manager.getModelForEdit(file));
 				else {
-					if(needCopy)
-						try {
-							String uniqueID = getUniqueID(id);
-							incrementCacheCount(id, resource);
-							setXMLModel((IDOMModel) manager.copyModelForEdit(id, uniqueID));
-						} catch (ResourceInUse e) {
-							Logger.logException(e);
-						}
-					else
-						setXMLModel(mod);
+					setXMLModel(mod);
 				}
 			}
 			else {
@@ -380,16 +318,7 @@ public class EMF2DOMSSERenderer extends EMF2DOMRenderer implements IModelStateLi
 				if (mod == null)
 					setXMLModel((IDOMModel) manager.getModelForRead(file));
 				else {
-					if(needCopy)
-						try {
-							String uniqueID = getUniqueID(id);
-							incrementCacheCount(id, resource);
-							setXMLModel((IDOMModel) manager.copyModelForEdit(id, uniqueID));
-						} catch (ResourceInUse e) {
-							Logger.logException(e);
-						}
-					else
-						setXMLModel(mod);
+					setXMLModel(mod);
 				}
 			}
 			setXMLModelId(getXMLModel().getId());
@@ -458,14 +387,17 @@ public class EMF2DOMSSERenderer extends EMF2DOMRenderer implements IModelStateLi
 			return;
 		try {
 			if (aboutToChangeNode != null && model.getStructuredDocument() != null && model.getStructuredDocument().getFirstStructuredDocumentRegion() != aboutToChangeNode) {
-				modelAccessForWrite();
+				String id = getModelManagerId();
+				IStructuredModel tempModel = null;
 				try {
+					tempModel = getModelManager().getExistingModelForEdit(id);
 					xmlModelReverted = true;
 					resource.unload();
 				}
 				finally {
-					if (getXMLModel() != null)
-						getXMLModel().releaseFromEdit();
+					if (tempModel != null) {
+						tempModel.releaseFromEdit();
+					}
 				}
 			}
 		}
@@ -479,7 +411,8 @@ public class EMF2DOMSSERenderer extends EMF2DOMRenderer implements IModelStateLi
 			resource.setModified(false);
 			long stamp = WorkbenchResourceHelper.computeModificationStamp(resource);
 			WorkbenchResourceHelper.setSynhronizationStamp(resource, stamp);
-			ResourceSetWorkbenchEditSynchronizer synchronizer = (ResourceSetWorkbenchEditSynchronizer) ((ProjectResourceSet) resource.getResourceSet()).getSynchronizer();
+			IProject proj = WorkbenchResourceHelper.getProject(resource);
+			ResourceSetWorkbenchEditSynchronizer synchronizer = (ResourceSetWorkbenchEditSynchronizer) ((ProjectResourceSet) WorkbenchResourceHelperBase.getResourceSet(proj)).getSynchronizer();
 			IFile aFile = WorkbenchResourceHelper.getFile(resource);
 			synchronizer.preSave(aFile);
 		}
