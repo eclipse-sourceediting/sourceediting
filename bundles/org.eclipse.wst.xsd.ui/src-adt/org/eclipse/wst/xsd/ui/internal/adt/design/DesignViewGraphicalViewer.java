@@ -98,7 +98,8 @@ public class DesignViewGraphicalViewer extends ScrollingGraphicalViewer implemen
         if (selectedObject instanceof IField) 
         {
           IField field = (IField)selectedObject;
-          if (!field.isGlobal() && getInput() instanceof IModel)
+          if ( (!field.isGlobal() && getInput() instanceof IModel) ||
+               (!field.isGlobal() && !(event.getSource() instanceof CommonSelectionManager)))
           {
             IADTObject obj = ((IGraphElement)selectedObject).getTopContainer();
             if (obj != null)
