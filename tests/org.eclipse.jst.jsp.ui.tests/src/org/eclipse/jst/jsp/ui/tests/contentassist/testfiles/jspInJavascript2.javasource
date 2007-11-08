@@ -1,0 +1,36 @@
+import javax.servlet.*;
+import javax.servlet.http.*;
+import javax.servlet.jsp.*;
+
+public class _testfiles_2F_jspInJavascript2_2E_jsp extends javax.servlet.http.HttpServlet{
+String testJspString = "testJspString"; 
+
+public void _jspService(javax.servlet.http.HttpServletRequest request, javax.servlet.http.HttpServletResponse response)
+		throws java.io.IOException, javax.servlet.ServletException {
+javax.servlet.jsp.PageContext pageContext = null;
+javax.servlet.ServletContext application = null;
+javax.servlet.ServletConfig config = null;
+javax.servlet.jsp.JspWriter out = null;
+Object page = null;
+javax.servlet.http.HttpSession session = null;
+
+try {
+out.print(""+
+ testJspString 
+);
+  
+
+        if( request.getAttribute("SoapURL") != null )
+        {
+        
+out.print(""+
+ (String)request.getAttribute("SoapURL")
+);
+
+        }
+        else
+        { 
+        
+ } 
+ } catch (java.lang.Exception e) {} 
+}}
