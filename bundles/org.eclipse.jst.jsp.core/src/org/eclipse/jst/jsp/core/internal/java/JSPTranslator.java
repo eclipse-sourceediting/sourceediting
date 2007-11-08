@@ -1006,9 +1006,9 @@ public class JSPTranslator {
 					// ////////////////////////////////////////////////////////////////////////////////
 				}
 			}
-			if (region instanceof ITextRegionCollection && ((ITextRegionCollection) region).getNumberOfRegions() > 0) {
-				translateRegionContainer((ITextRegionCollection) region, EMBEDDED_JSP);
-			}
+//			if (region instanceof ITextRegionCollection && ((ITextRegionCollection) region).getNumberOfRegions() > 0) {
+//				translateRegionContainer((ITextRegionCollection) region, EMBEDDED_JSP);
+//			}
 			if (type != null && isJSP(type)) // <%, <%=, <%!, <%@
 			{
 				// translateJSPNode(region, regions, type, JSPType);
