@@ -69,6 +69,7 @@ public class DeleteAction extends BaseSelectionAction
         IStructure structure = (IStructure)selection; 
         model = structure.getModel();
         command = structure.getDeleteCommand();
+        doReselect = true;
       }  
 
       if (command != null)

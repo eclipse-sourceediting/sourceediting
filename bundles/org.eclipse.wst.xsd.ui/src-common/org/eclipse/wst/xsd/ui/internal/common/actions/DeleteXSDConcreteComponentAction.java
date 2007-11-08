@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,13 +12,17 @@ package org.eclipse.wst.xsd.ui.internal.common.actions;
 
 import java.util.Iterator;
 
+import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.wst.xsd.ui.internal.adapters.XSDAdapterFactory;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDBaseAdapter;
 import org.eclipse.wst.xsd.ui.internal.common.commands.DeleteCommand;
 import org.eclipse.wst.xsd.ui.internal.common.util.Messages;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.xsd.XSDConcreteComponent;
+import org.eclipse.xsd.XSDSchema;
 
 public class DeleteXSDConcreteComponentAction extends XSDBaseAction
 {
@@ -37,7 +41,8 @@ public class DeleteXSDConcreteComponentAction extends XSDBaseAction
     for (Iterator i = ((IStructuredSelection) getSelection()).iterator(); i.hasNext();)
     {
       Object selection = i.next();
-
+      boolean doReselect = false;
+      
       if (selection instanceof XSDBaseAdapter)
       {
         selection = ((XSDBaseAdapter) selection).getTarget();
@@ -45,9 +50,21 @@ public class DeleteXSDConcreteComponentAction extends XSDBaseAction
 
       if (selection instanceof XSDConcreteComponent)
       {
-        DeleteCommand command = new DeleteCommand(getText(), (XSDConcreteComponent) selection);
+        XSDConcreteComponent xsdComponent = (XSDConcreteComponent) selection;
+        XSDSchema model = xsdComponent.getSchema();
+        
+        doReselect = xsdComponent.eContainer() instanceof XSDSchema;
+        
+        DeleteCommand command = new DeleteCommand(getText(), xsdComponent);
         getCommandStack().execute(command);
-      }
+        
+        if (model != null && doReselect)
+        {
+          Adapter adapter = XSDAdapterFactory.getInstance().adapt(model);
+          if (adapter != null)
+            provider.setSelection(new StructuredSelection(adapter));
+        }
+       }
     }
   }
 }
