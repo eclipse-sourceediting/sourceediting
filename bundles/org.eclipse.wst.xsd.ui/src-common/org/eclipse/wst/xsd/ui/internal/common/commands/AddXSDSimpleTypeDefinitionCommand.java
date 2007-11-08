@@ -52,7 +52,7 @@ public final class AddXSDSimpleTypeDefinitionCommand extends BaseCommand
 
       if (parent instanceof XSDSchema)
       {
-        typeDef.setName(XSDCommonUIUtils.createUniqueElementName(nameToAdd == null ? "XSDSimpleType" : nameToAdd, ((XSDSchema) parent).getTypeDefinitions())); //$NON-NLS-1$
+        typeDef.setName(XSDCommonUIUtils.createUniqueElementName(nameToAdd == null ? "NewSimpleType" : nameToAdd, ((XSDSchema) parent).getTypeDefinitions())); //$NON-NLS-1$
         createdSimpleType = typeDef;
         try
         {

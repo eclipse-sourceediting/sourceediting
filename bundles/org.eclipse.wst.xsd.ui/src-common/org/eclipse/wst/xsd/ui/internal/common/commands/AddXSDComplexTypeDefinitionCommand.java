@@ -53,7 +53,7 @@ public final class AddXSDComplexTypeDefinitionCommand extends BaseCommand
       XSDFactory factory = XSDSchemaBuildingTools.getXSDFactory();
       XSDComplexTypeDefinition complexType = factory.createXSDComplexTypeDefinition();
       addedXSDConcreteComponent = complexType;
-      String newName = getNewName(nameToAdd == null ? "NewXSDComplexType" : nameToAdd, parent.getSchema()); //$NON-NLS-1$
+      String newName = getNewName(nameToAdd == null ? "NewComplexType" : nameToAdd, parent.getSchema()); //$NON-NLS-1$
       complexType.setName(newName);
       if (parent instanceof XSDSchema)
       {
