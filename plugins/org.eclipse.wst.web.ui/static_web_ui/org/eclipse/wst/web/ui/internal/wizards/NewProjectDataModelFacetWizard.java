@@ -66,22 +66,20 @@ public abstract class NewProjectDataModelFacetWizard extends ModifyFacetedProjec
 	private IWizardPage[] beginingPages;
 	private IConfigurationElement configurationElement;
 
-	public NewProjectDataModelFacetWizard(IDataModel model) {
-		super(null);
-		this.model = model;
-		template = getTemplate();
-		this.getFacetedProjectWorkingCopy().setFixedProjectFacets( this.template.getFixedProjectFacets() );
-		this.setDefaultPageImageDescriptor(getDefaultPageImageDescriptor());
-		this.setShowFacetsSelectionPage( false );
+	public NewProjectDataModelFacetWizard(IDataModel model) 
+	{
+		this.model = ( model == null ? createDataModel() : model );
+		this.template = getTemplate();
+		
+		setFacetedProjectWorkingCopy((IFacetedProjectWorkingCopy)this.model.getProperty(FACETED_PROJECT_WORKING_COPY));
+		getFacetedProjectWorkingCopy().setFixedProjectFacets( this.template.getFixedProjectFacets() );
+		setDefaultPageImageDescriptor(getDefaultPageImageDescriptor());
+		setShowFacetsSelectionPage( false );
 	}
-
-	public NewProjectDataModelFacetWizard() {
-		super(null);
-		model = createDataModel();
-		template = getTemplate();
-        this.getFacetedProjectWorkingCopy().setFixedProjectFacets( this.template.getFixedProjectFacets() );
-		this.setDefaultPageImageDescriptor(getDefaultPageImageDescriptor());
-		this.setShowFacetsSelectionPage( false );
+	
+	public NewProjectDataModelFacetWizard() 
+	{
+	    this( null );
 	}
 
 	public IDataModel getDataModel() {
@@ -457,20 +455,6 @@ public abstract class NewProjectDataModelFacetWizard extends ModifyFacetedProjec
 			}
 		}
 		model.notifyPropertyChange(FACET_RUNTIME, IDataModel.VALID_VALUES_CHG);
-	}
-
-	public Object getConfig(IProjectFacetVersion fv, Type type, String pjname) throws CoreException {
-		FacetDataModelMap map = (FacetDataModelMap) model.getProperty(FACET_DM_MAP);
-		IDataModel configDM = (IDataModel) map.get(fv.getProjectFacet().getId());
-		if (configDM == null) {
-			final Object config = fv.createActionConfig(type, pjname);
-			if (config == null || !(config instanceof IDataModel))
-				return null;
-			configDM = (IDataModel) config;
-			map.add(configDM);
-		}
-		configDM.setProperty(IFacetDataModelProperties.FACET_VERSION, fv);
-		return configDM;
 	}
 
 	protected void storeDefaultSettings() {
