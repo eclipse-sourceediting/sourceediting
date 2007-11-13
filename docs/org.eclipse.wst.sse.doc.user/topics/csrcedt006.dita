@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
+<!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN"
  "..\dtd\concept.dtd">
 <concept id="csrcedt006" xml:lang="en-us">
@@ -11,8 +11,6 @@ for completion.</shortdesc>
 <prolog><metadata>
 <keywords><indexterm>content assistance<indexterm>overview</indexterm></indexterm>
 <indexterm>structured text editors<indexterm>content assistance</indexterm></indexterm>
-
-
 </keywords>
 </metadata></prolog>
 <conbody>
@@ -67,37 +65,16 @@ sometimes cause the <tm tmclass="special" tmowner="Sun Microsystems, Inc."
 tmtype="tm" trademark="Java">Java</tm> VM to terminate. Instead of double-clicking
 on the list, use the arrows and Enter keys to make the selection from the
 list.</note></section>
-<section><title><tm tmclass="special" tmowner="Sun Microsystems, Inc." tmtype="tm"
-trademark="JavaScript">JavaScript</tm> content assist</title><p>Items in the <tm
-tmclass="special" tmowner="Sun Microsystems, Inc." tmtype="tm" trademark="JavaScript">JavaScript</tm> content
-assist list are preceded by an Internet Explorer icon, a Netscape icon, or
-both, to indicate whether specific <tm tmclass="special" tmowner="Sun Microsystems, Inc."
-tmtype="tm" trademark="JavaScript">JavaScript</tm> objects, methods, or functions
-are supported by one or both browsers. If the Internet Explorer icon is present,
-it indicates that the object, method, or function is supported by Internet
-Explorer Version 5.0 or higher.  If the Netscape icon is present, it indicates
-that the object, method, or function is supported by Netscape Navigator Version
-4.7 or higher. A question mark icon (<image alt="Question mark icon" href="../images/nquest.gif"
-placement="inline"></image>) in place of one of the browser icons indicates
-that it is unknown whether the browser supports the object, method, or function.</p><p>The
-picture below shows the default content assist list within a <tm tmclass="special"
-tmowner="Sun Microsystems, Inc." tmtype="tm" trademark="JavaScript">JavaScript</tm> file:<image
-alt="JavaScript content assist" href="../images/njscdast.gif" placement="break">
-</image></p><p>Code proposals are listed alphabetically. If you type a <codeph>. </codeph> (include
-the space) before prompting for content assist, and begin typing the first
-one or two letters of the code that you want to add, the proposal list automatically
-refreshes to reflect proposals that match the pattern you have typed, to reduce
-(somewhat) the amount of scrolling to locate the desired code.</p></section>
-<section><title>JSP content assist</title><p>You have many options for embedding <tm
-tmclass="special" tmowner="Sun Microsystems, Inc." tmtype="tm" trademark="Java">Java</tm> and
-HTML code in your JSP pages by using content assist.</p><p>All of the JSP
-tags are included both in the template list and in XML format (for example, <codeph>&lt;jsp:expression></codeph>).
-To add JSP scriptlet tags, for example, move the cursor to the appropriate
-position in the file and press Ctrl+Space to use content assist. Select <image
-alt="JSP scriptlet content assist" href="../images/nmacscrp.gif" placement="inline">
-</image> from the proposal list to insert <codeph>&lt;% %></codeph>  in the
-document.</p><p>Scriptlets are inserted in a tag <codeph>&lt;% %></codeph>.
-For example: <codeblock>&lt;% System.currentTimeMillis() %></codeblock></p><p>This
+<section><?Pub Caret1?><title>JSP content assist</title><p>You have many options
+for embedding <tm tmclass="special" tmowner="Sun Microsystems, Inc." tmtype="tm"
+trademark="Java">Java</tm> and HTML code in your JSP pages by using content
+assist.</p><p>All of the JSP tags are included both in the template list and
+in XML format (for example, <codeph>&lt;jsp:expression></codeph>). To add
+JSP scriptlet tags, for example, move the cursor to the appropriate position
+in the file and press Ctrl+Space to use content assist. Select <image alt="JSP scriptlet content assist"
+href="../images/nmacscrp.gif" placement="inline"></image> from the proposal
+list to insert <codeph>&lt;% %></codeph>  in the document.</p><p>Scriptlets
+are inserted in a tag <codeph>&lt;% %></codeph>. For example: <codeblock>&lt;% System.currentTimeMillis() %></codeblock></p><p>This
 example will evaluate the <tm tmclass="special" tmowner="Sun Microsystems, Inc."
 tmtype="tm" trademark="Java">Java</tm> statement to get the current time in
 milliseconds.</p><p>To have the result of the statement inserted in the file,
@@ -135,3 +112,4 @@ text editors</linktext></link>
 </linkpool>
 </related-links>
 </concept>
+<?Pub *0000008076?>
