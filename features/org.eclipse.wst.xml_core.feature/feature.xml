@@ -24,14 +24,14 @@
    <requires>
       <import plugin="org.eclipse.osgi"/>
       <import plugin="org.apache.xml.resolver"/>
-      <import plugin="org.eclipse.wst.xml.core" version="1.1.0" match="equivalent"/>
-      <import plugin="org.eclipse.wst.sse.core" version="1.1.0" match="equivalent"/>
+      <import plugin="org.eclipse.wst.xml.core" version="1.1.0" />
+      <import plugin="org.eclipse.wst.sse.core" version="1.1.0" />
       <import plugin="org.apache.xerces" version="2.8.0" match="compatible"/>
       <import plugin="org.eclipse.core.runtime" version="3.2.0" match="compatible"/>
       <import plugin="org.eclipse.core.resources" version="3.2.0" match="compatible"/>
-      <import plugin="org.eclipse.wst.common.uriresolver" version="1.1.0" match="equivalent"/>
-      <import plugin="org.eclipse.wst.validation" version="1.1.0" match="equivalent"/>
-      <import plugin="org.eclipse.wst.common.core" version="1.1.0" match="equivalent"/>
+      <import plugin="org.eclipse.wst.common.uriresolver" version="1.1.0" />
+      <import plugin="org.eclipse.wst.validation" version="1.1.0" />
+      <import plugin="org.eclipse.wst.common.core" version="1.1.0" />
       <import plugin="com.ibm.icu" version="3.4.4" match="compatible"/>
       <import plugin="org.eclipse.emf.ecore" version="2.2.0" match="compatible"/>
       <import plugin="org.eclipse.jface.text" version="3.2.0" match="compatible"/>
