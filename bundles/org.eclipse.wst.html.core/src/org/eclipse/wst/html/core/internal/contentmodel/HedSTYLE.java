@@ -17,6 +17,7 @@ import java.util.Arrays;
 import org.eclipse.wst.html.core.internal.provisional.HTML40Namespace;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMContent;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMDataType;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 
 /**
@@ -54,6 +55,7 @@ final class HedSTYLE extends HTMLElemDeclImpl {
 		attributeCollection.getDeclarations(attributes, Arrays.asList(names).iterator());
 		// (type %ContentType; #REQUIRED) ... should be defined locally.
 		HTMLCMDataTypeImpl atype = new HTMLCMDataTypeImpl(HTMLCMDataType.CONTENT_TYPE);
+		atype.setImpliedValue(CMDataType.IMPLIED_VALUE_DEFAULT, "text/css"); //$NON-NLS-1$
 		HTMLAttrDeclImpl attr = new HTMLAttrDeclImpl(HTML40Namespace.ATTR_NAME_TYPE, atype, CMAttributeDeclaration.REQUIRED);
 		attributes.putNamedItem(HTML40Namespace.ATTR_NAME_TYPE, attr);
 	}
