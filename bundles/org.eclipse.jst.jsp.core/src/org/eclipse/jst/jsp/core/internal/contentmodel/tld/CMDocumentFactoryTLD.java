@@ -294,17 +294,25 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 
 	protected CMElementDeclaration createElementDeclaration(CMDocumentImpl document, Element tagFileNode, String path) {
 		CMElementDeclarationImpl ed = new CMElementDeclarationImpl(document);
-		// preload with information from the tag file--it can be overwritten
-		// by the values from the TLD
-		IPath tagPath = new Path(document.getBaseLocation()).removeLastSegments(1).append(path);
-		IFile tagFile = ResourcesPlugin.getWorkspace().getRoot().getFile(tagPath);
-		if (tagFile.isAccessible()) {
-			ed.setPath(tagFile.getFullPath().toString());
-			if (tagPath.getFileExtension().equals("tag")) {
-				loadTagFile(ed, tagFile, true);
-			}
-			else if (tagPath.getFileExtension().equals("tagx")) {
-				loadTagXFile(ed, tagFile, true);
+		/*
+		 * Preload with information from the tag file--it can be overwritten
+		 * by the values from the TLD
+		 */
+		IPath tagPath = FacetModuleCoreSupport.resolve(new Path(document.getBaseLocation()), path);
+		if (tagPath.segmentCount() > 1) {
+			IFile tagFile = ResourcesPlugin.getWorkspace().getRoot().getFile(tagPath);
+			if (tagFile.isAccessible()) {
+				ed.setPath(tagFile.getFullPath().toString());
+				if (tagPath.getFileExtension().equals("tag")) {
+					loadTagFile(ed, tagFile, true);
+				}
+				else if (tagPath.getFileExtension().equals("tagx")) {
+					loadTagXFile(ed, tagFile, true);
+				}
+
+				if (tagFile.getLocation() != null && ed.getSmallIcon() != null) {
+					ed.setSmallIconURL(URIHelper.normalize(ed.getSmallIcon(), "file:" + tagFile.getLocation().toString(), tagFile.getLocation().removeLastSegments(1).toString()));
+				}
 			}
 		}
 
@@ -338,10 +346,6 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 			child = child.getNextSibling();
 		}
 		
-		if (tagFile.getLocation() != null && ed.getSmallIcon() != null) {
-			ed.setSmallIconURL(URIHelper.normalize(ed.getSmallIcon(), "file:" + tagFile.getLocation().toString(), tagFile.getLocation().removeLastSegments(1).toString()));
-		}
-
 		return ed;
 	}
 
@@ -606,6 +610,9 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 				continue;
 			}
 			String nodeName = child.getNodeName();
+			if(nodeName.indexOf(':') > 0) {
+				nodeName = nodeName.substring(nodeName.indexOf(':'));
+			}
 			// tag
 			if (nodeName.equals(JSP11TLDNames.TAG)) {
 				CMElementDeclaration ed = createElementDeclaration(document, child);
@@ -616,12 +623,18 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 			// tag-file
 			else if (nodeName.equals(JSP20TLDNames.TAG_FILE) && child.getNodeType() == Node.ELEMENT_NODE && child.hasChildNodes()) {
 				Element tagFileElement = (Element) child;
-				String path = tagFileElement.getAttribute(JSP20TLDNames.PATH);
-				if (path != null && path.length() > 0) {
-					CMElementDeclarationImpl ed = (CMElementDeclarationImpl) createElementDeclaration(document, tagFileElement, path);
-					if (ed != null) {
-						document.fElements.setNamedItem(ed.getNodeName(), ed);
+				Node path = tagFileElement.getFirstChild();
+				while (path != null) {
+					if (path.getNodeType() == Node.ELEMENT_NODE && (JSP20TLDNames.PATH.equals(path.getNodeName()) || JSP20TLDNames.PATH.equals(path.getLocalName()))) {
+						String pathValue = getContainedText(path);
+						if (pathValue != null && pathValue.length() > 0) {
+							CMElementDeclarationImpl ed = (CMElementDeclarationImpl) createElementDeclaration(document, tagFileElement, pathValue);
+							if (ed != null) {
+								document.fElements.setNamedItem(ed.getNodeName(), ed);
+							}
+						}
 					}
+					path = path.getNextSibling();
 				}
 			}
 			// other one-of-a-kind children
