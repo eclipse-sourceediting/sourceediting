@@ -66,4 +66,70 @@
     </markerResolutionGenerator>
   </extension>
 
+	<extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            name="%perspective.name"
+            icon="icons/full/cview16/web_perspective.gif"
+            class="org.eclipse.wst.web.ui.internal.WebDevelopmentPerspective"
+            id="org.eclipse.wst.web.ui.webDevPerspective">
+      </perspective>
+   </extension>
+   <extension point="org.eclipse.ui.perspectiveExtensions"> 
+        <perspectiveExtension targetID="org.eclipse.wst.web.ui.webDevPerspective">
+        	
+        	<actionSet id="org.eclipse.debug.ui.launchActionSet"/>
+        	<actionSet id="org.eclipse.wst.web.ui.wizardsActionSet" />
+        	<actionSet id="org.eclipse.wst.server.ui.internal.webbrowser.actionSet"/>
+         
+            <newWizardShortcut id="org.eclipse.wst.web.ui.internal.wizards.SimpleWebProjectWizard"/>
+            <newWizardShortcut id="org.eclipse.jst.servlet.ui.project.facet.WebProjectWizard"/>
+            <newWizardShortcut id="org.eclipse.wst.css.ui.internal.wizard.NewCSSWizard"/>
+            <newWizardShortcut id="org.eclipse.wst.html.ui.internal.wizard.NewHTMLWizard"/>
+            <newWizardShortcut id="org.eclipse.wst.javascript.ui.internal.wizard.NewJSWizard"/>
+            <newWizardShortcut id="org.eclipse.ui.wizards.new.folder"/>
+            <newWizardShortcut id="org.eclipse.ui.wizards.new.file"/>
+            
+            <viewShortcut id="org.eclipse.ui.navigator.ProjectExplorer"/> 
+            <viewShortcut id="org.eclipse.ui.views.ContentOutline"/> 
+            <viewShortcut id="org.eclipse.ui.views.PropertySheet"/> 
+            <viewShortcut id="org.eclipse.ui.views.ProblemView"/> 
+            <viewShortcut id="org.eclipse.wst.server.ui.ServersView"/>
+
+            <perspectiveShortcut id="org.eclipse.jdt.ui.JavaPerspective"/>
+        </perspectiveExtension> 
+    </extension>
+
+	<!-- Toolbar action set for web project and HTML, JS and CSS files -->
+	<extension point="org.eclipse.ui.actionSets">
+		<actionSet
+				id="org.eclipse.wst.web.ui.wizardsActionSet"
+				label="%webActionSet.label">
+			<action
+					class="org.eclipse.wst.web.ui.internal.actions.OpenCSSWizardAction"
+					icon="platform:/plugin/org.eclipse.wst.css.ui/icons/full/etool16/newcss_wiz.gif"
+					id="org.eclipse.wst.web.ui.actions.newCSSFile"
+					label="%action.label.CSS"
+					style="push"
+					toolbarPath="Normal/webActions"
+					tooltip="%action.tooltip.CSS" />
+			<action
+					class="org.eclipse.wst.web.ui.internal.actions.OpenJSWizardAction"
+					icon="platform:/plugin/org.eclipse.wst.javascript.ui/icons/full/ctool16/newjscript_wiz.gif"
+					id="org.eclipse.wst.web.ui.actions.newJSFile"
+					label="%action.label.JS"
+					style="push"
+					toolbarPath="Normal/webActions"
+					tooltip="%action.tooltip.JS" />
+			<action
+					class="org.eclipse.wst.web.ui.internal.actions.OpenHTMLWizardAction"
+					icon="platform:/plugin/org.eclipse.wst.html.ui/icons/full/etool16/newhtml_wiz.gif"
+					id="org.eclipse.wst.web.ui.actions.newHTMLFile"
+					label="%action.label.HTML"
+					style="push"
+					toolbarPath="Normal/webActions"
+					tooltip="%action.tooltip.HTML" />
+		</actionSet>
+	</extension>
+
 </plugin>
