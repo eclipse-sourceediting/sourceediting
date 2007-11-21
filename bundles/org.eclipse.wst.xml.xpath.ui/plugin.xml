@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.views">
+      <category      
+            name="%xmlCategoryName"
+            id="org.eclipse.wst.xml"/>
+      <view
+            class="org.eclipse.wst.xml.xpath.ui.views.XPathNavigator"
+            icon="icons/xslt-16.gif"
+            category="org.eclipse.wst.xml"
+            name="%xpathNavigatorName"
+            id="org.eclipse.wst.xml.xpath.ui.views.XPathNavigator"/>
+   </extension>
+   
+</plugin>
