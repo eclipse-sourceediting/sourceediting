@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension point="org.eclipse.ui.editors.templates">
+		<include file="templates/file_templates.xml"/>
+    </extension>
+   <extension
+         point="org.eclipse.wst.xml.core.catalogContributions">
+      <catalogContribution
+            id="org.eclipse.wst.xsl.catalogs">
+         <system
+               id="org.eclipse.wst.xsl.catalogs.xslt_1.0_system"
+               systemId="http://www.w3.org/1999/XSL/Transform"
+               uri="catalogs/xslt-1.0.dtd">
+         </system>
+         <system
+               id="org.eclipse.wst.xsl.catalogs.xsl_fo_1.0_system"
+               systemId="http://www.w3.org/1999/XSL/Format"
+               uri="catalogs/xsl-fo-1.0.dtd">
+         </system>
+      </catalogContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="org.eclipse.wst.xsl.ui.XSLPerspective"
+            icon="icons/xslt-16.gif"
+            id="org.eclipse.wst.xsl.ui.perspective1"
+            name="%perspectiveName">
+      </perspective>
+   </extension>
+</plugin>
