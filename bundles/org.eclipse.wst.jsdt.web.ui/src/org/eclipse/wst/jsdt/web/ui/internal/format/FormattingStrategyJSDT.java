@@ -85,6 +85,8 @@ public class FormattingStrategyJSDT extends ContextBasedFormattingStrategy {
 					int javaLength = partition.getLength();
 					TextEdit edit = CodeFormatterUtil.format2(CodeFormatter.K_COMPILATION_UNIT, cuSource, javaStart, javaLength, startIndentLevel, TextUtilities.getDefaultLineDelimiter(document), getPreferences());
 					IDocument doc = new Document(translation.getJsText());
+					/* error formating the code so abort */
+					if(edit==null) return;
 					edit.apply(doc);
 					String replaceText = TextUtilities.getDefaultLineDelimiter(document) + getIndentationString(getPreferences(), startIndentLevel) + (doc.get(edit.getOffset(), edit.getLength())).trim() + TextUtilities.getDefaultLineDelimiter(document);
 					/*

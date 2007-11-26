@@ -27,6 +27,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
@@ -336,7 +337,11 @@ public class JsTranslator extends Job implements IDocumentListener{
 			String type = region.getType();
 			// content assist was not showing up in JSP inside a javascript
 			// region
-			if (type == DOMRegionContext.BLOCK_TEXT) {
+			
+			//System.out.println("Region text: " + container.getText().substring(region.getStart(), region.getEnd()));
+			boolean isBlockRegion = region instanceof ITextRegionContainer;
+			/* make sure its not a sub container region, probably JSP */
+			if (type == DOMRegionContext.BLOCK_TEXT ) {
 				int scriptStart = container.getStartOffset();
 				int scriptTextEnd = container.getEndOffset() - container.getStartOffset();
 				String regionText = container.getText().substring(region.getStart(), region.getEnd());
@@ -348,7 +353,14 @@ public class JsTranslator extends Job implements IDocumentListener{
 				spaces = getPad(scriptStart - scriptOffset);
 				fScriptText.append(spaces); 	
 				// fJsToHTMLRanges.put(inScript, inHtml);
-				fScriptText.append(regionText);
+				if(isBlockRegion) {
+					spaces = getPad(regionLength);
+					fScriptText.append(spaces); 	
+				}else {
+					fScriptText.append(regionText);
+				}
+				
+				
 				scriptOffset = fScriptText.length();
 			}
 		}
