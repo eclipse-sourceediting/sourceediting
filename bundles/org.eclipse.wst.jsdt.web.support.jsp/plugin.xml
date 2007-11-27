@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.2"?>
 <plugin>
-
+    <!--
 	<extension point="org.eclipse.wst.sse.ui.editorConfiguration">
 		<sourceViewerConfiguration
 			class="org.eclipse.wst.jsdt.web.support.jsp.JSDTStructuredTextViewerConfigurationJSP"
 			target="org.eclipse.jst.jsp.core.jspsource.source" />
 		
-		<!--
+		
 		<contentOutlineConfiguration
 			class="org.eclipse.jst.jsp.ui.views.contentoutline.JSPContentOutlineConfiguration"
 			target="org.eclipse.jst.jsp.core.jspsource" />
-		-->
+		
 		
 	</extension>
+	-->
 	
 	<extension
 		point="org.eclipse.wst.sse.ui.adapterFactoryDescription">
