@@ -4,69 +4,51 @@
 
  	<extension point="org.eclipse.wst.sse.ui.editorConfiguration">
  	
- 		<!--
  		<sourceViewerConfiguration
 			class="org.eclipse.wst.jsdt.web.ui.StructuredTextViewerConfigurationJSDT"
 			target="org.eclipse.wst.html.core.htmlsource.source" />
 			
-		-->
 		
  		<contentOutlineConfiguration
 			class="org.eclipse.wst.jsdt.web.ui.views.provisional.contentoutline.JsContentOutlineConfig"
 			target="org.eclipse.wst.html.core.htmlsource.source" />		
+		
+		<!--
 		<provisionalConfiguration
 			type="contentassistprocessor"
 			class="org.eclipse.wst.jsdt.web.ui.internal.contentassist.JSDTContentAssistant"
-			target="org.eclipse.wst.html.SCRIPT,org.eclipse.wst.html.SCRIPT.EVENTHANDLER" />
-	
+			target="org.eclipse.wst.html.SCRIPT,org.eclipse.wst.html.SCRIPT.EVENT" />
+		-->
 		
 		<provisionalConfiguration
 			type="linestyleprovider"
 			class="org.eclipse.wst.jsdt.web.ui.internal.style.java.LineStyleProviderForJSDT"
-			target="org.eclipse.wst.html.SCRIPT,org.eclipse.wst.html.SCRIPT.EVENTHANDLER" />
-		<documentationTextHover
+			target="org.eclipse.wst.html.SCRIPT,org.eclipse.wst.html.SCRIPT.EVENT" />
+		<provisionalConfiguration
+			type="texthover"
 			class="org.eclipse.wst.jsdt.web.ui.internal.taginfo.JSDTHoverProcessor"
-			target="org.eclipse.wst.html.SCRIPT,org.eclipse.wst.html.SCRIPT.EVENTHANDLER" />
-	<!-- Not sure on information provider extension -->
+			target="org.eclipse.wst.html.SCRIPT,org.eclipse.wst.html.SCRIPT.EVENT" />
 		<provisionalConfiguration
 			type="informationpresenter"
 			class="org.eclipse.wst.jsdt.web.ui.internal.taginfo.JSDTInformationProvider"
-			target="org.eclipse.wst.html.SCRIPT,org.eclipse.wst.html.SCRIPT.EVENTHANDLER" />
-
+			target="org.eclipse.wst.html.SCRIPT,org.eclipse.wst.html.SCRIPT.EVENT" />
 		<provisionalConfiguration
 			type="characterpairmatcher"
 			class="org.eclipse.wst.jsdt.web.ui.internal.text.JsDocumentRegionEdgeMatcher"
-			target="org.eclipse.wst.html.SCRIPT,org.eclipse.wst.html.SCRIPT.EVENTHANDLER" />
+			target="org.eclipse.wst.html.SCRIPT,org.eclipse.wst.html.SCRIPT.EVENT" />
 		<provisionalConfiguration
 			type="autoeditstrategy"
 			class="org.eclipse.wst.jsdt.web.ui.internal.autoedit.AutoEditStrategyForJs"
-			target="org.eclipse.wst.html.SCRIPT,org.eclipse.wst.html.SCRIPT.EVENTHANDLER" />
+			target="org.eclipse.wst.html.SCRIPT,org.eclipse.wst.html.SCRIPT.EVENT" />
 		<provisionalConfiguration
-			type="slaveformattingstrategy"
+			type="contentformater"
 			class="org.eclipse.wst.jsdt.web.ui.internal.format.FormattingStrategyJSDT"
 			target="org.eclipse.wst.html.SCRIPT" />
-		<!--
 		<provisionalConfiguration
 			type="hyperlinkdetector"
 			class="org.eclipse.wst.jsdt.web.ui.internal.hyperlink.JSDTHyperlinkDetector"
 			target="org.eclipse.wst.html.SCRIPT" />
-			
-		-->
 	</extension>
-	
-	<extension
-		point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectors">
-		<hyperlinkDetector
-			class="org.eclipse.wst.jsdt.web.ui.internal.hyperlink.JSDTHyperlinkDetector"
-			id="org.eclipse.wst.jsdt.web.ui.internal.hyperlink.JSDTHyperlinkDetector"
-			name="%hyperlinkDetector.name.2"
-			targetId="org.eclipse.wst.html.core.htmlsource">
-		</hyperlinkDetector>
-		
-   </extension>
-	
-	
-	
 	<extension point = "org.eclipse.wst.sse.ui.extendedEditorActions">
 		<editorContribution 
             targetID="com.ibm.sse.editor.StructuredTextEditor" 
@@ -92,7 +74,7 @@
 	<extension
 		point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectorTargets">
 		<target
-			id="org.eclipse.wst.html.SCRIPT.EVENTHANDLER"
+			id="org.eclipse.wst.html.SCRIPT.EVENT"
 			name="%target.name.1">
 		</target>
 	</extension>
@@ -109,7 +91,7 @@
             class="org.eclipse.wst.jsdt.web.ui.internal.hyperlink.JSDTHyperlinkDetector"
             id="org.eclipse.wst.jsdt.web.ui.internal.hyperlink.script.event.JSPJavaHyperlinkDetector"
             name="%hyperlinkDetector.name.1"
-            targetId="org.eclipse.wst.html.SCRIPT.EVENTHANDLER">
+            targetId="org.eclipse.wst.html.SCRIPT.EVENT">
       </hyperlinkDetector>  
    </extension>
   
@@ -377,7 +359,7 @@
 			id="org.eclipse.wst.jsdt.web.jspsourcevalidator">
 			<contentTypeIdentifier id="org.eclipse.wst.html.core.htmlsource">
 				<partitionType id="org.eclipse.wst.html.SCRIPT"></partitionType>
-				<partitionType id="org.eclipse.wst.html.SCRIPT.EVENTHANDLER"></partitionType>
+				<partitionType id="org.eclipse.wst.html.SCRIPT.EVENT"></partitionType>
 			</contentTypeIdentifier>
 		</validator>
 
