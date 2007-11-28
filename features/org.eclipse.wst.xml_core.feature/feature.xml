@@ -46,14 +46,14 @@
          id="org.apache.xml.resolver"
          download-size="71"
          install-size="71"
-         version="1.1.0.qualifier"
+         version="1.2.0.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.apache.xerces"
          download-size="1200"
          install-size="1200"
-         version="2.8.0.qualifier"
+         version="2.9.0.qualifier"
          unpack="false"/>
 
    <plugin
