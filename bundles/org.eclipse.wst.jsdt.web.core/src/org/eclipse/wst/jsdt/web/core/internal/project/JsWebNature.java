@@ -219,7 +219,7 @@ public class JsWebNature implements IProjectNature {
 		if (fCurrProject == null) {
 			return false;
 		}
-		return fCurrProject.getFile(JavaProject.CLASSPATH_FILENAME).exists();
+		return fCurrProject.getFolder(JavaProject.DEFAULT_PREFERENCES_DIRNAME).getFile(JavaProject.CLASSPATH_FILENAME).exists();
 	}
 	
 	private IClasspathEntry getJreEntry() {
