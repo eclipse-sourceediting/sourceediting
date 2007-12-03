@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.wst.xml_core.feature"
       label="%featureName"
-      version="2.1.0.qualifier"
+      version="3.0.0.qualifier"
       provider-name="%providerName">
 
    <description>
@@ -33,11 +33,11 @@
       <import plugin="org.eclipse.text" version="3.2.0" match="compatible"/>
       <import plugin="org.eclipse.core.filebuffers" version="3.2.0" match="compatible"/>
       <import plugin="org.eclipse.emf.common" version="2.2.0" match="compatible"/>
-      <import plugin="org.eclipse.wst.xml.core" version="1.1.0" match="equivalent"/>
-      <import plugin="org.eclipse.wst.sse.core" version="1.1.0" match="equivalent"/>
-      <import plugin="org.eclipse.wst.common.uriresolver" version="1.1.0" match="equivalent"/>
-      <import plugin="org.eclipse.wst.common.core" version="1.1.0" match="equivalent"/>
-      <import plugin="org.eclipse.wst.validation" version="1.1.0" match="equivalent"/>
+      <import plugin="org.eclipse.wst.xml.core" version="1.1.0" match="compatible"/>
+      <import plugin="org.eclipse.wst.sse.core" version="1.1.0" match="compatible"/>
+      <import plugin="org.eclipse.wst.common.uriresolver" version="1.1.0" match="compatible"/>
+      <import plugin="org.eclipse.wst.common.core" version="1.1.0" match="compatible"/>
+      <import plugin="org.eclipse.wst.validation" version="1.1.0" match="compatible"/>
    </requires>
 
    <plugin
