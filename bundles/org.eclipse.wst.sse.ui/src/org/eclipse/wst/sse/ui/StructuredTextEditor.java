@@ -85,11 +85,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DropTarget;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseMoveListener;
-import org.eclipse.swt.events.MouseTrackAdapter;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
@@ -346,67 +341,6 @@ public class StructuredTextEditor extends TextEditor {
 			else {
 				// otherwise force the runnable to run on the display thread.
 				getDisplay().asyncExec(r);
-			}
-		}
-	}
-
-	class MouseTracker extends MouseTrackAdapter implements MouseMoveListener {
-		/** The tracker's subject control. */
-		private Control fSubjectControl;
-
-		/**
-		 * Creates a new mouse tracker.
-		 */
-		public MouseTracker() {
-			// do nothing
-		}
-
-		public void mouseHover(MouseEvent event) {
-			// System.out.println("hover: "+event.x + "x" + event.y);
-			hoverX = event.x;
-			hoverY = event.y;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.swt.events.MouseMoveListener#mouseMove(org.eclipse.swt.events.MouseEvent)
-		 */
-		public void mouseMove(MouseEvent e) {
-			hoverX = e.x;
-			hoverY = e.y;
-		}
-
-		/**
-		 * Starts this mouse tracker. The given control becomes this tracker's
-		 * subject control. Installs itself as mouse track listener on the
-		 * subject control.
-		 * 
-		 * @param subjectControl
-		 *            the subject control
-		 */
-		public void start(Control subjectControl) {
-			fSubjectControl = subjectControl;
-			if (fSubjectControl != null && !fSubjectControl.isDisposed()) {
-				fSubjectControl.addMouseMoveListener(this);
-				fSubjectControl.addMouseTrackListener(this);
-				fSubjectControl.addDisposeListener(new DisposeListener() {
-					public void widgetDisposed(DisposeEvent e) {
-						stop();
-					}
-				});
-			}
-		}
-
-		/**
-		 * Stops this mouse tracker. Removes itself as mouse track, mouse
-		 * move, and shell listener from the subject control.
-		 */
-		public void stop() {
-			if (fSubjectControl != null && !fSubjectControl.isDisposed()) {
-				fSubjectControl.removeMouseMoveListener(this);
-				fSubjectControl.removeMouseTrackListener(this);
-				fSubjectControl = null;
 			}
 		}
 	}
@@ -1172,7 +1106,6 @@ public class StructuredTextEditor extends TextEditor {
 	private IEditorPart fEditorPart;
 	private IDocumentListener fInternalDocumentListener;
 	private InternalModelStateListener fInternalModelStateListener;
-	private MouseTracker fMouseTracker;
 	private IContentOutlinePage fOutlinePage;
 
 	private OutlinePageListener fOutlinePageListener = null;
@@ -1202,8 +1135,6 @@ public class StructuredTextEditor extends TextEditor {
 	/** The information presenter. */
 	private InformationPresenter fInformationPresenter;
 	private boolean fUpdateMenuTextPending;
-	int hoverX = -1;
-	int hoverY = -1;
 
 	private boolean shouldClose = false;
 	private long startPerfTime;
@@ -1794,13 +1725,6 @@ public class StructuredTextEditor extends TextEditor {
 		if (fFoldingGroup != null) {
 			fFoldingGroup.dispose();
 			fFoldingGroup = null;
-		}
-
-		// subclass may not have mouse tracker created
-		// need to check for null before stopping
-		if (fMouseTracker != null) {
-			fMouseTracker.stop();
-			fMouseTracker = null;
 		}
 
 		// dispose of menus that were being tracked
@@ -2598,8 +2522,6 @@ public class StructuredTextEditor extends TextEditor {
 	protected void initSourceViewer(StructuredTextViewer sourceViewer) {
 		// ensure decoration support is configured
 		getSourceViewerDecorationSupport(sourceViewer);
-		fMouseTracker = new MouseTracker();
-		fMouseTracker.start(sourceViewer.getTextWidget());
 	}
 
 	protected void installTextDragAndDrop(ISourceViewer viewer) {
