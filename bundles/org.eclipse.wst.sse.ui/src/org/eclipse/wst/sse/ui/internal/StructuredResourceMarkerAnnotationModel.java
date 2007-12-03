@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,7 +26,17 @@ import org.eclipse.wst.sse.ui.internal.provisional.extensions.breakpoint.IBreakp
  * Source editor resource marker annotation model implementation
  */
 public class StructuredResourceMarkerAnnotationModel extends ResourceMarkerAnnotationModel {
+	/**
+	 * Loading of markers when working with non-IResources is accomplished by
+	 * adding the markers to the workspace root with an additional key, whose
+	 * value uses '/' for segment separators when representing paths,
+	 * determining whether they're added into the annotation model.
+	 * 
+	 * Setters of this attribute should use '/'for segment separators when
+	 * representing paths.
+	 */
 	public final static String SECONDARY_ID_KEY = IBreakpointConstants.RESOURCE_PATH;
+	
 	protected IResource fMarkerResource;
 	protected String fSecondaryMarkerAttributeValue;
 
@@ -91,7 +101,7 @@ public class StructuredResourceMarkerAnnotationModel extends ResourceMarkerAnnot
 	protected boolean isAcceptable(IMarker marker) {
 		try {
 			Object attr = marker.getAttribute(IBreakpointConstants.ATTR_HIDDEN);
-			if (attr != null && ((Boolean) attr).equals(Boolean.TRUE))
+			if (attr != null && Boolean.TRUE.equals(attr))
 				return false;
 		}
 		catch (CoreException e) {
