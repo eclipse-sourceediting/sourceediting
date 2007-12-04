@@ -85,7 +85,8 @@ public class DesignViewGraphicalViewer extends ScrollingGraphicalViewer implemen
       }
       else if (selectedObject instanceof IGraphElement)
       {
-        if (((IGraphElement)selectedObject).isFocusAllowed() && (event.getSource() instanceof ADTContentOutlinePage))
+        if (((IGraphElement)selectedObject).isFocusAllowed() && ((event.getSource() instanceof ADTContentOutlinePage) ||
+            (event.getSource() instanceof org.eclipse.jface.viewers.IPostSelectionProvider && !(getInput() instanceof IModel))))
         {
           setInput((IADTObject)selectedObject);              
         }
@@ -230,8 +231,8 @@ public class DesignViewGraphicalViewer extends ScrollingGraphicalViewer implemen
           // First check to see if there is a selection
           ISelection currentSelection = getSelection();
           
-          // If there is a selection then we will try to find the 
-          // target edit part that is a child of the enclosing container.
+          // If there is a selection then we will try to select 
+          // the target edit part that is one of its children
           // This is handy when you add an element to a structured edit part
           // then you want to select the element immediately and put it in
           // direct edit mode

@@ -29,9 +29,12 @@ import org.eclipse.wst.xsd.ui.internal.adt.facade.IADTObject;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IADTObjectListener;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IComplexType;
 import org.eclipse.wst.xsd.ui.internal.adt.outline.ITreeElement;
+import org.eclipse.xsd.XSDAttributeGroupDefinition;
 import org.eclipse.xsd.XSDComplexTypeDefinition;
 import org.eclipse.xsd.XSDConcreteComponent;
+import org.eclipse.xsd.XSDModelGroupDefinition;
 import org.eclipse.xsd.XSDSchema;
+import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.w3c.dom.Element;
 
 public class XSDBaseAdapter extends AdapterImpl implements IADTObject, ITreeElement
@@ -208,7 +211,13 @@ public class XSDBaseAdapter extends AdapterImpl implements IADTObject, ITreeElem
   protected IADTObject getGlobalXSDContainer(XSDConcreteComponent component)
   {
     XSDConcreteComponent c = component.getContainer();
-    while (c != null && !(c.getContainer() instanceof XSDSchema))
+    // We want the top most structural component
+    while (c != null && 
+           !(c.getContainer() instanceof XSDSchema) && 
+           !(c instanceof XSDComplexTypeDefinition) &&
+           !(c instanceof XSDSimpleTypeDefinition) &&
+           !(c instanceof XSDModelGroupDefinition) &&
+           !(c instanceof XSDAttributeGroupDefinition))
     {
       c = c.getContainer();
     }

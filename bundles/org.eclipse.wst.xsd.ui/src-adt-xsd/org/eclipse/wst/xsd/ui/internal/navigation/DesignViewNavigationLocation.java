@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -124,11 +124,11 @@ public class DesignViewNavigationLocation extends NavigationLocation
       this.name = name;
     }
   }
-  static class Path
+  protected static class Path
   {
     List segments = new ArrayList();
 
-    static XSDConcreteComponent computeComponent(XSDSchema schema, Path path)
+    public static XSDConcreteComponent computeComponent(XSDSchema schema, Path path)
     {
       PathResolvingXSDVisitor visitor = new PathResolvingXSDVisitor(path);
       visitor.visitSchema(schema);
@@ -176,7 +176,7 @@ public class DesignViewNavigationLocation extends NavigationLocation
       return path;
     }
 
-    static Path computePath(XSDConcreteComponent component)
+    public static Path computePath(XSDConcreteComponent component)
     {
       Path path = new Path();
       for (EObject c = component; c != null; c = c.eContainer())

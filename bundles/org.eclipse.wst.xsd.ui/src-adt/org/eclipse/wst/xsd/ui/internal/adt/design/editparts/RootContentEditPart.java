@@ -28,7 +28,7 @@ import org.eclipse.wst.xsd.ui.internal.adt.facade.IModel;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IStructure;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IType;
 
-public class RootContentEditPart extends AbstractGraphicalEditPart
+public class RootContentEditPart extends BaseEditPart
 {
   List collections = null;
   Figure contentPane;
