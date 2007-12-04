@@ -37,6 +37,8 @@ import org.eclipse.wst.common.frameworks.internal.datamodel.ui.DataModelWizardPa
 import org.eclipse.wst.common.frameworks.internal.operations.IProjectCreationPropertiesNew;
 import org.eclipse.wst.common.frameworks.internal.ui.NewProjectGroup;
 import org.eclipse.wst.common.project.facet.core.IFacetedProjectWorkingCopy;
+import org.eclipse.wst.common.project.facet.core.events.IFacetedProjectEvent;
+import org.eclipse.wst.common.project.facet.core.events.IFacetedProjectListener;
 import org.eclipse.wst.common.project.facet.core.runtime.IRuntime;
 import org.eclipse.wst.common.project.facet.ui.ModifyFacetedProjectWizard;
 import org.eclipse.wst.common.project.facet.ui.PresetSelectionPanel;
@@ -46,8 +48,16 @@ import org.eclipse.wst.web.internal.ResourceHandler;
 
 public class DataModelFacetCreationWizardPage extends DataModelWizardPage implements IFacetProjectCreationDataModelProperties {
 
-	private static String NULL_RUNTIME = "NULL_RUNTIME"; //$NON-NLS-1$
-	private static String MRU_RUNTIME_STORE = "MRU_RUNTIME_STORE"; //$NON-NLS-1$
+	private static final String NULL_RUNTIME = "NULL_RUNTIME"; //$NON-NLS-1$
+	private static final String MRU_RUNTIME_STORE = "MRU_RUNTIME_STORE"; //$NON-NLS-1$
+	
+	private static final String[] VALIDATION_PROPERTIES = 
+	{
+	    IProjectCreationPropertiesNew.PROJECT_NAME, 
+	    IProjectCreationPropertiesNew.PROJECT_LOCATION, 
+	    FACET_RUNTIME,
+	    FACETED_PROJECT_WORKING_COPY
+	};
 	
 	protected static GridData gdhfill() {
 		return new GridData(GridData.FILL_HORIZONTAL);
@@ -119,9 +129,24 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
 	
 	protected Combo serverTargetCombo;
 	protected NewProjectGroup projectNameGroup;
+	private final IFacetedProjectWorkingCopy fpjwc;
+	private final IFacetedProjectListener fpjwcListener;
 
-	public DataModelFacetCreationWizardPage(IDataModel dataModel, String pageName) {
+	public DataModelFacetCreationWizardPage(IDataModel dataModel, String pageName) 
+	{
 		super(dataModel, pageName);
+		
+        this.fpjwc = (IFacetedProjectWorkingCopy) this.model.getProperty( FACETED_PROJECT_WORKING_COPY );
+        
+        this.fpjwcListener = new IFacetedProjectListener()
+        {
+            public void handleEvent( final IFacetedProjectEvent event )
+            {
+                validatePage();
+            }
+        };
+        
+        this.fpjwc.addListener( this.fpjwcListener, IFacetedProjectEvent.Type.VALIDATION_PROBLEMS_CHANGED );
 	}
 
 	protected void createServerTargetComposite(Composite parent) {
@@ -169,14 +194,17 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
 		nestedProjectDM.addListener( projectNameChangedListener );
 	}
 
-	protected String[] getValidationPropertyNames() {
-		return new String[]{IProjectCreationPropertiesNew.PROJECT_NAME, IProjectCreationPropertiesNew.PROJECT_LOCATION, FACET_RUNTIME};
+	protected String[] getValidationPropertyNames() 
+	{
+	    return VALIDATION_PROPERTIES;
 	}
 
 	public void dispose() {
 		super.dispose();
 		if (projectNameGroup != null)
 			projectNameGroup.dispose();
+		
+		this.fpjwc.removeListener( this.fpjwcListener );
 	}
 
 	public void storeDefaultSettings() {

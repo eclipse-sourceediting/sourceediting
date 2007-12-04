@@ -50,7 +50,6 @@ import org.eclipse.wst.common.project.facet.core.IFacetedProjectTemplate;
 import org.eclipse.wst.common.project.facet.core.IFacetedProjectWorkingCopy;
 import org.eclipse.wst.common.project.facet.core.IPreset;
 import org.eclipse.wst.common.project.facet.core.IProjectFacetVersion;
-import org.eclipse.wst.common.project.facet.core.IFacetedProject.Action.Type;
 import org.eclipse.wst.common.project.facet.core.events.IFacetedProjectEvent;
 import org.eclipse.wst.common.project.facet.core.events.IFacetedProjectListener;
 import org.eclipse.wst.common.project.facet.core.runtime.IRuntime;
@@ -181,29 +180,8 @@ public abstract class NewProjectDataModelFacetWizard extends ModifyFacetedProjec
         }
         
         synchRuntimes();
-        
-        getFacetedProjectWorkingCopy().setProjectFacets( getFacetsFromDataModel() );
 	}
 
-	protected Set getFacetsFromDataModel() {
-		Set facetVersions = new HashSet();
-		FacetDataModelMap map = (FacetDataModelMap) model.getProperty(FACET_DM_MAP);
-		for (Iterator iterator = map.values().iterator(); iterator.hasNext();) {
-			IDataModel facetModel = (IDataModel) iterator.next();
-			if(facetModel.getBooleanProperty(IFacetDataModelProperties.SHOULD_EXECUTE)){
-				facetVersions.add(facetModel.getProperty(IFacetDataModelProperties.FACET_VERSION));
-			}
-		}
-		
-		FacetActionMap mapAction = (FacetActionMap) model.getProperty(FACET_ACTION_MAP);
-		for (Iterator iterator = mapAction.values().iterator(); iterator.hasNext();) {
-		    IFacetedProject.Action action = (IFacetedProject.Action) iterator.next();            
-		    facetVersions.add(action.getProjectFacetVersion());
-		}
-		return facetVersions;
-	}
-
-	
 	public IWizardPage[] getPages() {
 		final IWizardPage[] base = super.getPages();
 		final IWizardPage[] pages = new IWizardPage[base.length + beginingPages.length];
