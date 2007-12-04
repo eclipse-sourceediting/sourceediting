@@ -38,6 +38,7 @@ import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.ADTEditPartFactory;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IModel;
 import org.eclipse.wst.xsd.ui.internal.adt.outline.ADTContentOutlinePage;
 import org.eclipse.wst.xsd.ui.internal.adt.outline.ADTLabelProvider;
+import org.eclipse.wst.xsd.ui.internal.adt.outline.ExtensibleContentOutlinePage;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 
 public abstract class ADTMultiPageEditor extends CommonMultiPageEditor
@@ -125,14 +126,23 @@ public abstract class ADTMultiPageEditor extends CommonMultiPageEditor
   {
     if (fOutlinePage == null || fOutlinePage.getControl() == null || fOutlinePage.getControl().isDisposed())
     {
-      ADTContentOutlinePage outlinePage = new ADTContentOutlinePage(this);
-      //outlinePage.getTreeViewer().removeF(filter);
+      final ProductCustomizationProvider productCustomizationProvider = (ProductCustomizationProvider)getAdapter(ProductCustomizationProvider.class);
+      ExtensibleContentOutlinePage outlinePage = null;
+      if (productCustomizationProvider != null)
+      {
+        outlinePage = productCustomizationProvider.getProductContentOutlinePage();
+      }
+      
+      if (outlinePage == null)
+      {
+        outlinePage = new ADTContentOutlinePage();
+      }
+      outlinePage.setEditor(this);
       ITreeContentProvider provider = (ITreeContentProvider)getEditorModeManager().getCurrentMode().getOutlineProvider();
       outlinePage.setContentProvider(provider);
       ADTLabelProvider adtLabelProvider = new ADTLabelProvider();
       outlinePage.setLabelProvider(adtLabelProvider);
       outlinePage.setModel(getModel());
-      
       fOutlinePage = outlinePage;
     }
     return fOutlinePage;

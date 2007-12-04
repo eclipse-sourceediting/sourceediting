@@ -16,7 +16,6 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -27,54 +26,22 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.part.MultiPageSelectionProvider;
-import org.eclipse.ui.views.contentoutline.ContentOutlinePage;
 import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeLabelProvider;
 import org.eclipse.wst.xsd.ui.internal.adt.design.DesignViewContextMenuProvider;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IModelProxy;
-import org.eclipse.wst.xsd.ui.internal.adt.editor.ADTMultiPageEditor;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IModel;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDSchema;
 
-public class ADTContentOutlinePage extends ContentOutlinePage
+public class ADTContentOutlinePage extends ExtensibleContentOutlinePage
 {
-  protected ADTMultiPageEditor editor;
   protected int level = 0;
-  protected Object model;
-  protected ITreeContentProvider contentProvider;
-  protected ILabelProvider labelProvider;
   protected MultiPageSelectionProvider selectionManager;
   protected SelectionManagerSelectionChangeListener selectionManagerSelectionChangeListener = new SelectionManagerSelectionChangeListener();
-//  protected TreeSelectionChangeListener treeSelectionChangeListener = new TreeSelectionChangeListener();
 
-  /**
-   * 
-   */
-  public ADTContentOutlinePage(ADTMultiPageEditor editor)
+  public ADTContentOutlinePage()
   {
     super();
-    this.editor = editor;
-  }
-
-  public void setModel(Object newModel)
-  {
-    model = newModel;
-  }
-
-  public void setContentProvider(ITreeContentProvider contentProvider)
-  {
-    this.contentProvider = contentProvider;
-  }
-
-  public void setLabelProvider(ILabelProvider labelProvider)
-  {
-    this.labelProvider = labelProvider;
-  }
-
-  // expose
-  public TreeViewer getTreeViewer()
-  {
-    return super.getTreeViewer();
   }
 
   public void createControl(Composite parent)
@@ -172,7 +139,7 @@ public class ADTContentOutlinePage extends ContentOutlinePage
     }
   }
 
-  class SelectionManagerSelectionChangeListener implements ISelectionChangedListener
+  protected class SelectionManagerSelectionChangeListener implements ISelectionChangedListener
   {
     public void selectionChanged(SelectionChangedEvent event)
     {
@@ -221,7 +188,7 @@ public class ADTContentOutlinePage extends ContentOutlinePage
 //  }
   
   
-  void updateStatusLine(IStatusLineManager mgr, ISelection selection)
+  protected void updateStatusLine(IStatusLineManager mgr, ISelection selection)
   {
     String text = null;
     Image image = null;
@@ -242,7 +209,7 @@ public class ADTContentOutlinePage extends ContentOutlinePage
     }
   }
   
-  private class StatusLineLabelProvider extends JFaceNodeLabelProvider
+  protected class StatusLineLabelProvider extends JFaceNodeLabelProvider
   {
     TreeViewer treeViewer = null;
 
