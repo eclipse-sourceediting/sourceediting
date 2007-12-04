@@ -320,6 +320,10 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	 */
 	private long fModificationStamp;
 	/**
+	 * Keeps track of next modification stamp.
+	 */
+	private long fNextModificationStamp= IDocumentExtension4.UNKNOWN_MODIFICATION_STAMP;
+	/**
 	 * debug variable only
 	 * 
 	 * @param parser
@@ -1938,8 +1942,10 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 			// documentAboutToBeChanged state
 
 			// increment modification stamp if modifications were made
-			if (result != null && !(result instanceof NoChangeEvent))
+			if (result != null && !(result instanceof NoChangeEvent)) {
 				fModificationStamp++;
+				fNextModificationStamp= Math.max(fModificationStamp, fNextModificationStamp);
+			}
 
 			if (result == null) {
 				// result should not be null, but if an exception was thrown,
@@ -2391,7 +2397,21 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	}
 
 	public StructuredDocumentEvent replaceText(Object requester, int start, int replacementLength, String changes, boolean ignoreReadOnlySettings) {
-		return internalReplaceText(requester, start, replacementLength, changes, ignoreReadOnlySettings);
+		long modificationStamp;
+		
+		if (replacementLength == 0 && (changes == null || changes.length() == 0))
+			modificationStamp = getModificationStamp();
+		else
+			modificationStamp = getNextModificationStamp();
+		
+		return replaceText(requester, start, replacementLength, changes, ignoreReadOnlySettings, modificationStamp);
+	}
+	
+	private StructuredDocumentEvent replaceText(Object requester, int start, int replacementLength, String changes, boolean ignoreReadOnlySettings, long modificationStamp) {
+		StructuredDocumentEvent event = internalReplaceText(requester, start, replacementLength, changes, ignoreReadOnlySettings);
+		fModificationStamp = modificationStamp;
+		fNextModificationStamp= Math.max(fModificationStamp, fNextModificationStamp);
+		return event;
 	}
 
 	void resetParser(int startOffset, int endOffset) {
@@ -2575,10 +2595,9 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	 * One of the APIs to manipulate the IStructuredDocument in terms of text.
 	 */
 	public StructuredDocumentEvent setText(Object requester, String theString) {
-
 		StructuredDocumentEvent result = null;
 
-		result = replaceText(requester, 0, getLength(), theString, true);
+		result = replaceText(requester, 0, getLength(), theString, true, getNextModificationStamp());
 
 		return result;
 	}
@@ -2672,6 +2691,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 			fPositionManager.updatePositions(new DocumentEvent(this, start, lengthToReplace, changes));
 		}
 		fModificationStamp++;
+		fNextModificationStamp= Math.max(fModificationStamp, fNextModificationStamp);
 		resumePostNotificationProcessing();
 	}
 
@@ -2893,8 +2913,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	 *      java.lang.String, long)
 	 */
 	public void replace(int offset, int length, String text, long modificationStamp) throws BadLocationException {
-		replaceText(this, offset, length, text);
-		fModificationStamp = modificationStamp;
+		replaceText(this, offset, length, text, false, modificationStamp);
 	}
 
 	/*
@@ -2905,9 +2924,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	 */
 	public void set(String text, long modificationStamp) {
 		// bug 151069 - overwrite read only regions when setting entire document
-		 replaceText(null, 0, getLength(), text, true);
-
-		fModificationStamp = modificationStamp;
+		 replaceText(null, 0, getLength(), text, true, modificationStamp);
 	}
 
 	/*
@@ -2917,6 +2934,15 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	 */
 	public long getModificationStamp() {
 		return fModificationStamp;
+	}
+	
+	private long getNextModificationStamp() {
+		if (fNextModificationStamp == Long.MAX_VALUE || fNextModificationStamp == IDocumentExtension4.UNKNOWN_MODIFICATION_STAMP)
+			fNextModificationStamp= 0;
+		else
+			fNextModificationStamp= fNextModificationStamp + 1;
+
+		return fNextModificationStamp;
 	}
 
 	/**
