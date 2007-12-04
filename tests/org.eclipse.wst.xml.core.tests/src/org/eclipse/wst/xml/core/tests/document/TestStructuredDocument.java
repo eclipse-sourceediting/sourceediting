@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.BadPositionCategoryException;
+import org.eclipse.jface.text.IDocumentExtension4;
 import org.eclipse.jface.text.Position;
 import org.eclipse.osgi.service.datalocation.Location;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -232,15 +233,67 @@ public class TestStructuredDocument extends TestCase {
 			}
 		}
 	}
+	
+	public void testReplace() throws BadLocationException, IOException, CoreException {
+		IStructuredModel model = getTestModel();
+		try {
+			IStructuredDocument sDoc = model.getStructuredDocument();
+			long modificationStamp = -1;
+			if (sDoc instanceof IDocumentExtension4) {
+				modificationStamp = ((IDocumentExtension4)sDoc).getModificationStamp();
+			}
+			sDoc.replace(0, sDoc.getLength(), "replaced");
+
+			String text = sDoc.getText();
+			assertEquals("replaced", text);
+
+			if (modificationStamp > -1)
+				assertTrue("replace text modification stamp failed", modificationStamp !=((IDocumentExtension4)sDoc).getModificationStamp());
+		}
+		finally {
+			if (model != null) {
+				model.releaseFromEdit();
+			}
+		}
+	}
+	
+	public void testReplaceWithModificationStamp() throws BadLocationException, IOException, CoreException {
+		IStructuredModel model = getTestModel();
+		try {
+			IStructuredDocument sDoc = model.getStructuredDocument();
+			if (sDoc instanceof IDocumentExtension4) {
+				IDocumentExtension4 ext4 = (IDocumentExtension4)sDoc;
+				long modificationStamp = ext4.getModificationStamp() + 1;
+				
+				ext4.replace(0, sDoc.getLength(), "replaced", modificationStamp);
+				String text = sDoc.getText();
+				assertEquals("replaced", text);
+				
+				assertTrue("replace text modification stamp failed", modificationStamp ==((IDocumentExtension4)sDoc).getModificationStamp());
+			}
+		}
+		finally {
+			if (model != null) {
+				model.releaseFromEdit();
+			}
+		}
+	}
 
 	public void testReplaceText() throws BadLocationException, IOException, CoreException {
 		IStructuredModel model = getTestModel();
 		try {
 			IStructuredDocument sDoc = model.getStructuredDocument();
-			sDoc.replace(0, sDoc.getLength(), "replaced");
+			long modificationStamp = -1;
+			if (sDoc instanceof IDocumentExtension4) {
+				modificationStamp = ((IDocumentExtension4)sDoc).getModificationStamp();
+			}
+			sDoc.replaceText(this, 0, sDoc.getLength(), "replaced");
 
 			String text = sDoc.getText();
 			assertEquals("replaced", text);
+
+			if (modificationStamp > -1)
+				assertTrue("replace text modification stamp failed", modificationStamp !=((IDocumentExtension4)sDoc).getModificationStamp());
 		}
 		finally {
 			if (model != null) {
@@ -254,11 +307,69 @@ public class TestStructuredDocument extends TestCase {
 		try {
 			IStructuredDocument sDoc = model.getStructuredDocument();
 			sDoc.makeReadOnly(0, 1);
+			
+			long modificationStamp = -1;
+			if (sDoc instanceof IDocumentExtension4) {
+				modificationStamp = ((IDocumentExtension4)sDoc).getModificationStamp();
+			}
+			
 			sDoc.replaceText(this, 0, sDoc.getLength(), "replaced");
 			assertNotSame("text should not have been replacable (read only)", "replaced", sDoc.getText());
-
+			
+			if (modificationStamp > -1)
+				assertTrue("replace text modification stamp (read only) failed", modificationStamp !=((IDocumentExtension4)sDoc).getModificationStamp());
+			
+			modificationStamp = -1;
+			if (sDoc instanceof IDocumentExtension4) {
+				modificationStamp = ((IDocumentExtension4)sDoc).getModificationStamp();
+			}
+			
 			sDoc.replaceText(this, 0, sDoc.getLength(), "replaced", true);
 			assertEquals("text should have been forced replaced", "replaced", sDoc.getText());
+			
+			if (modificationStamp > -1)
+				assertTrue("replace text modification stamp failed", modificationStamp !=((IDocumentExtension4)sDoc).getModificationStamp());
+		}
+		finally {
+			if (model != null) {
+				model.releaseFromEdit();
+			}
+		}
+	}
+	
+	public void testSet() throws IOException, CoreException {
+		IStructuredModel model = getTestModel();
+		try {
+			IStructuredDocument sDoc = model.getStructuredDocument();
+			long modificationStamp = -1;
+			if (sDoc instanceof IDocumentExtension4) {
+				modificationStamp = ((IDocumentExtension4)sDoc).getModificationStamp();
+			}
+			sDoc.set("set text");
+
+			assertEquals("set text failed", "set text", sDoc.getText());
+			if (modificationStamp > -1)
+				assertTrue("set text modification stamp failed", modificationStamp !=((IDocumentExtension4)sDoc).getModificationStamp());
+		}
+		finally {
+			if (model != null) {
+				model.releaseFromEdit();
+			}
+		}
+	}
+	
+	public void testSetWithModificationStamp() throws IOException, CoreException {
+		IStructuredModel model = getTestModel();
+		try {
+			IStructuredDocument sDoc = model.getStructuredDocument();
+			if (sDoc instanceof IDocumentExtension4) {
+				IDocumentExtension4 ext4 = (IDocumentExtension4)sDoc;
+				long modificationStamp = ext4.getModificationStamp() + 1;
+				ext4.set("set text", modificationStamp);
+
+				assertEquals("set text failed", "set text", sDoc.getText());
+				assertTrue("set text modification stamp failed", modificationStamp ==((IDocumentExtension4)sDoc).getModificationStamp());
+			}
 		}
 		finally {
 			if (model != null) {
@@ -271,9 +382,15 @@ public class TestStructuredDocument extends TestCase {
 		IStructuredModel model = getTestModel();
 		try {
 			IStructuredDocument sDoc = model.getStructuredDocument();
+			long modificationStamp = -1;
+			if (sDoc instanceof IDocumentExtension4) {
+				modificationStamp = ((IDocumentExtension4)sDoc).getModificationStamp();
+			}
 			sDoc.setText(this, "set text");
 
 			assertEquals("set text failed", "set text", sDoc.getText());
+			if (modificationStamp > -1)
+				assertTrue("set text modification stamp failed", modificationStamp !=((IDocumentExtension4)sDoc).getModificationStamp());
 		}
 		finally {
 			if (model != null) {
