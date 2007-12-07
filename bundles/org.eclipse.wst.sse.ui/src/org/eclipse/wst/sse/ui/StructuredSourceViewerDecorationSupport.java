@@ -37,6 +37,10 @@ class StructuredSourceViewerDecorationSupport extends SourceViewerDecorationSupp
 		painter.addTextStyleStrategy(AnnotationPreference.STYLE_SQUIGGLES, null);
 		// use old one
 		painter.addDrawingStrategy(AnnotationPreference.STYLE_SQUIGGLES, new AnnotationPainter.SquigglesStrategy());
+		// dont use new problem underline painter
+		painter.addTextStyleStrategy(AnnotationPreference.STYLE_PROBLEM_UNDERLINE, null);
+		// use old one
+		painter.addDrawingStrategy(AnnotationPreference.STYLE_PROBLEM_UNDERLINE, new AnnotationPainter.SquigglesStrategy());
 		return painter;
 	}
 }
