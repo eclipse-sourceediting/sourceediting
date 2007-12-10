@@ -95,7 +95,7 @@
 			</helper>
 
 			<run
-				enabled="true"
+				enabled="false"
 				class="org.eclipse.wst.jsdt.web.core.internal.validation.JsBatchValidator">
 			</run>
 		</validator>
