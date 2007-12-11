@@ -294,6 +294,9 @@ public class JsTranslator extends Job implements IDocumentListener{
 									rawText = rawText.substring(1);
 									valStartOffset++;
 							}
+							if (rawText == null || rawText.length() == 0) {
+								return;
+							}
 							switch (rawText.charAt(rawText.length() - 1)) {
 								case '\'':
 								case '"':
