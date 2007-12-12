@@ -3,3 +3,4 @@ build.xml
 dev.properties
 temp.folder
 csscoretests.jar
+javaCompiler.csscoretests.jar.args

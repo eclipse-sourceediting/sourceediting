@@ -4,3 +4,4 @@ build.xml
 dev.properties
 htmlcoretests.jar
 temp.folder
+javaCompiler.htmlcoretests.jar.args

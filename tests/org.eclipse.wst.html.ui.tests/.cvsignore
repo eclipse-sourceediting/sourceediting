@@ -3,3 +3,4 @@ bin.project
 build.xml
 htmluitests.jar
 temp.folder
+javaCompiler.htmluitests.jar.args

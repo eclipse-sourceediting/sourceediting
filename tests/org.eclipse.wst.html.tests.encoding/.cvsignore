@@ -2,3 +2,4 @@ bin
 build.xml
 temp.folder
 htmlencodingtests.jar
+javaCompiler.htmlencodingtests.jar.args
