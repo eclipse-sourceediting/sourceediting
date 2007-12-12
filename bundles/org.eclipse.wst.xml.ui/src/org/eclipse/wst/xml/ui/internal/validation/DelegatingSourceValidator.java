@@ -64,6 +64,7 @@ public abstract class DelegatingSourceValidator implements IValidator {
 	protected static final String FIRST_NON_WHITESPACE_TEXT = "FIRST_NON_WHITESPACE_TEXT"; //$NON-NLS-1$
 	protected static final String TEXT_ENTITY_REFERENCE = "TEXT_ENTITY_REFERENCE"; //$NON-NLS-1$
 	protected static final String VALUE_OF_ATTRIBUTE_WITH_GIVEN_VALUE = "VALUE_OF_ATTRIBUTE_WITH_GIVEN_VALUE"; //$NON-NLS-1$
+	protected static final String END_TAG = "END_TAG"; //$NON-NLS-1$
 
 	/**
 	 * This constant specifies the attribute name that specifies the side of
@@ -396,6 +397,14 @@ public abstract class DelegatingSourceValidator implements IValidator {
 						IDOMElement element = (IDOMElement) node;
 						startEndPositions[0] = element.getStartOffset() + 1;
 						startEndPositions[1] = startEndPositions[0] + element.getTagName().length();
+					}
+				}
+				else if (END_TAG.equals(selectionStrategy)) {// then we want to
+					// underline the end tag
+					if (node.getNodeType() == Node.ELEMENT_NODE) {
+						IDOMElement element = (IDOMElement) node;
+						startEndPositions[0] = element.getEndStartOffset();
+						startEndPositions[1] = element.getEndOffset();
 					}
 				}
 				else if (ATTRIBUTE_NAME.equals(selectionStrategy)) { // in

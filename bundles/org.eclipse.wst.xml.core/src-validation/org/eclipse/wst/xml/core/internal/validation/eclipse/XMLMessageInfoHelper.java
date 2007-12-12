@@ -96,9 +96,13 @@ public class XMLMessageInfoHelper
         nameOrValue = (String)messageArguments[0];
       }
       else if (errorKey.equals("ElementUnterminated")) //$NON-NLS-1$
-	  {
-		selectionStrategy = "ENTIRE_ELEMENT"; //$NON-NLS-1$
-	  }
+      {
+        selectionStrategy = "ENTIRE_ELEMENT"; //$NON-NLS-1$
+      }
+      else if (errorKey.equals("ETagUnterminated") || errorKey.equals("ETagRequired"))  //$NON-NLS-1$  //$NON-NLS-2$
+      {
+        selectionStrategy = "END_TAG";   //$NON-NLS-1$
+      }
     }
     String messageInfo[] = new String[2];
     messageInfo[0] = selectionStrategy != null? selectionStrategy: ""; //$NON-NLS-1$
