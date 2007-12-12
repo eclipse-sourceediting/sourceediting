@@ -31,6 +31,7 @@ import org.eclipse.wst.xml.core.internal.contentmodel.CMDataType;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
+import org.eclipse.wst.xml.core.internal.contentmodel.util.DOMNamespaceHelper;
 import org.eclipse.wst.xml.core.internal.document.DocumentTypeAdapter;
 import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
@@ -132,7 +133,7 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 	}
 
 	private String[] _getValidFixedStrings(CMAttributeDeclaration attrDecl, CMDataType helper) {
-		String attributeName = attrDecl.getAttrName();
+		String attributeName = DOMNamespaceHelper.computeName(attrDecl, fNode, null);
 		List values = new ArrayList(1);
 		String impliedValue = helper.getImpliedValue();
 		if (impliedValue != null) {
@@ -152,7 +153,7 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 	}
 
 	private String[] _getValidStrings(CMAttributeDeclaration attrDecl, CMDataType valuesHelper) {
-		String attributeName = attrDecl.getAttrName();
+		String attributeName = DOMNamespaceHelper.computeName(attrDecl, fNode, null);
 		List values = new ArrayList(1);
 		boolean currentValueKnown = false;
 		boolean checkIfCurrentValueIsKnown = ((fNode.getAttributes() != null) && (fNode.getAttributes().getNamedItem(attributeName) != null) && (fNode.getAttributes().getNamedItem(attributeName).getNodeValue() != null));
@@ -228,7 +229,8 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 		// the displayName MUST be set
 		EnumeratedStringPropertyDescriptor descriptor = new EnumeratedStringPropertyDescriptor(attrDecl.getAttrName(), attrDecl.getAttrName(), _getValidStrings(attrDecl, valuesHelper));
 		descriptor.setCategory(getCategory(attrDecl));
-		descriptor.setDescription(attrDecl.getAttrName());
+		String attrName = DOMNamespaceHelper.computeName(attrDecl, fNode, null);
+		descriptor.setDescription(attrName);
 		if ((attrDecl.getUsage() != CMAttributeDeclaration.REQUIRED) && fSetExpertFilter) {
 			descriptor.setFilterFlags(new String[]{IPropertySheetEntry.FILTER_ID_EXPERT});
 		}
@@ -247,7 +249,7 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 		// the displayName MUST be set
 		EnumeratedStringPropertyDescriptor descriptor = new EnumeratedStringPropertyDescriptor(attrDecl.getNodeName(), attrDecl.getNodeName(), _getValidFixedStrings(attrDecl, helper));
 		descriptor.setCategory(getCategory(attrDecl));
-		descriptor.setDescription(attrDecl.getAttrName());
+		descriptor.setDescription(DOMNamespaceHelper.computeName(attrDecl,fNode,null));
 		return descriptor;
 	}
 
@@ -339,7 +341,8 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 		if (attrMap != null) {
 			for (int i = 0; i < attrMap.getLength(); i++) {
 				attrDecl = (CMAttributeDeclaration) attrMap.item(i);
-				if (!names.contains(attrDecl.getAttrName())) {
+				String attrName = DOMNamespaceHelper.computeName(attrDecl, fNode, null);
+				if (!names.contains(attrName)) {
 					IPropertyDescriptor holdDescriptor = createPropertyDescriptor(attrDecl);
 					if (holdDescriptor != null) {
 						descriptorList.add(holdDescriptor);
@@ -356,9 +359,10 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 	}
 
 	private IPropertyDescriptor createTextPropertyDescriptor(CMAttributeDeclaration attrDecl) {
-		TextPropertyDescriptor descriptor = new TextPropertyDescriptor(attrDecl.getAttrName(), attrDecl.getAttrName());
+		String attrName = DOMNamespaceHelper.computeName(attrDecl,fNode,null);
+		TextPropertyDescriptor descriptor = new TextPropertyDescriptor(attrName, attrName);
 		descriptor.setCategory(getCategory(attrDecl));
-		descriptor.setDescription(attrDecl.getAttrName());
+		descriptor.setDescription(attrName);
 		if ((attrDecl.getUsage() != CMAttributeDeclaration.REQUIRED) && fSetExpertFilter) {
 			descriptor.setFilterFlags(new String[]{IPropertySheetEntry.FILTER_ID_EXPERT});
 		}
@@ -657,7 +661,7 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 			CMAttributeDeclaration attrDecl = null;
 			for (int i = 0; i < attrMap.getLength(); i++) {
 				attrDecl = (CMAttributeDeclaration) attrMap.item(i);
-				String attrName = attrDecl.getAttrName();
+				String attrName = DOMNamespaceHelper.computeName(attrDecl, fNode, null);
 				if (!declaredNames.contains(attrName)) {
 					declaredNames.add(attrName);
 				}
@@ -711,7 +715,7 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 			CMAttributeDeclaration attrDecl = null;
 			for (int i = 0; i < attrMap.getLength(); i++) {
 				attrDecl = (CMAttributeDeclaration) attrMap.item(i);
-				String attrName = attrDecl.getAttrName();
+				String attrName = DOMNamespaceHelper.computeName(attrDecl, fNode, null);
 				if (fCaseSensitive) {
 					if (!descriptorNames.contains(attrName)) {
 						IPropertyDescriptor descriptor = createPropertyDescriptor(attrDecl);
