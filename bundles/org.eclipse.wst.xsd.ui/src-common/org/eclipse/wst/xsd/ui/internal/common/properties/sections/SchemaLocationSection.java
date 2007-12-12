@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,6 +24,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
@@ -113,11 +114,21 @@ public class SchemaLocationSection extends CommonDirectivesSection
 			if (event.widget == wizardButton)
       {
 				Shell shell = Display.getCurrent().getActiveShell();
-			    
-				IFile currentIFile = ((IFileEditorInput)getActiveEditor().getEditorInput()).getFile();
-				ViewerFilter filter = new ResourceFilter(new String[] { ".xsd" },  //$NON-NLS-1$
-			            new IFile[] { currentIFile },
-			            null);
+
+				IFile currentIFile = null;
+        IEditorInput editorInput = getActiveEditor().getEditorInput();
+        ViewerFilter filter;
+        if (editorInput instanceof IFileEditorInput)
+        {
+          currentIFile = ((IFileEditorInput)editorInput).getFile();
+          filter = new ResourceFilter(new String[] { ".xsd" }, //$NON-NLS-1$ 
+              new IFile[] { currentIFile }, null);
+        }
+        else
+        {
+          filter = new ResourceFilter(new String[] { ".xsd" }, //$NON-NLS-1$ 
+              null, null);
+        }
 			      
 			  XSDSelectIncludeFileWizard fileSelectWizard = 
 			      new XSDSelectIncludeFileWizard(xsdSchema, true,
@@ -137,9 +148,13 @@ public class SchemaLocationSection extends CommonDirectivesSection
           errorText.setText(""); //$NON-NLS-1$
 	        IFile selectedIFile = fileSelectWizard.getResultFile();
 	        String schemaFileString = value;
-	        if (selectedIFile != null) 
+	        if (selectedIFile != null && currentIFile != null)
 	        {
 	          schemaFileString = URIHelper.getRelativeURI(selectedIFile.getLocation(), currentIFile.getLocation());
+	        }
+	        else if (selectedIFile != null && currentIFile == null)
+	        {
+	          schemaFileString = selectedIFile.getLocationURI().toString();
 	        }
 	        else
 	        {
@@ -149,7 +164,7 @@ public class SchemaLocationSection extends CommonDirectivesSection
           handleSchemaLocationChange(schemaFileString, fileSelectWizard.getNamespace(), null);
 	        refresh();
 			  } 
-			}
+      }
 		}
 
 		/*

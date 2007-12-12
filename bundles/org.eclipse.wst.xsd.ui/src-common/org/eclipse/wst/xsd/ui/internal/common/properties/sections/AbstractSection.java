@@ -28,8 +28,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbench;
@@ -37,6 +39,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.FormColors;
+import org.eclipse.ui.ide.FileStoreEditorInput;
 import org.eclipse.ui.views.properties.tabbed.AbstractPropertySection;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
@@ -105,7 +108,8 @@ public abstract class AbstractSection extends AbstractPropertySection implements
         super.dispose();
     }
 
-    public void setInput(IWorkbenchPart part, ISelection selection) {
+    public void setInput(IWorkbenchPart part, ISelection selection)
+    {
         super.setInput(part, selection);
         isSimple = getIsSimple();
         Object input = ((IStructuredSelection)selection).getFirstElement();
@@ -137,20 +141,17 @@ public abstract class AbstractSection extends AbstractPropertySection implements
           isReadOnly = true;
         }
 
+        IEditorInput editorInput = owningEditor.getEditorInput();
+        if (!(editorInput instanceof IFileEditorInput || editorInput instanceof FileStoreEditorInput))
+        {
+          isReadOnly = true;
+        }
     }
 
     public void refresh()
     {
       super.refresh();
-
-      if (isReadOnly)
-      {
-        composite.setEnabled(false);
-      }
-      else
-      {
-        composite.setEnabled(true);
-      }
+      composite.setEnabled(!isReadOnly);
     }
 
     public void applyAllListeners(Control control)

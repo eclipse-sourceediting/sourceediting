@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.common.properties.sections;
 
+import java.util.HashMap;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.swt.custom.StyleRange;
@@ -18,6 +20,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
 import org.eclipse.wst.xsd.ui.internal.common.util.Messages;
@@ -56,13 +59,18 @@ public abstract class CommonDirectivesSection extends AbstractSection
 
         try
         {
-          IFile currentIFile = ((IFileEditorInput)getActiveEditor().getEditorInput()).getFile();
-
+          IFile currentIFile = null;
+          IEditorInput editorInput = getActiveEditor().getEditorInput();
+          if (editorInput instanceof IFileEditorInput)
+          {
+            currentIFile = ((IFileEditorInput)editorInput).getFile();
+          }
+          
           URI newURI = URI.createURI(xsdModelFile);
           String xsdFile = URIHelper.getRelativeURI(newURI.toString(), currentIFile.getFullPath().toString());
           final String normalizedXSDFile = URIHelper.normalize(xsdFile, currentIFile.getLocation().toString(), ""); //$NON-NLS-1$
           
-          XSDParser parser = new XSDParser();
+          XSDParser parser = new XSDParser(new HashMap());
           parser.parse(normalizedXSDFile);
           
           externalSchema = parser.getSchema();

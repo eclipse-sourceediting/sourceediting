@@ -13,11 +13,14 @@ package org.eclipse.wst.xsd.ui.internal.common.properties.providers;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.ide.FileStoreEditorInput;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDAdapterFactory;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDBaseAdapter;
 import org.eclipse.wst.xsd.ui.internal.adt.outline.ITreeElement;
@@ -127,7 +130,13 @@ public class XSDSectionLabelProvider extends LabelProvider
             {
               IEditorPart editorPart = page.getActiveEditor();
               XSDSchema xsdSchema = ((XSDConcreteComponent) selected).getSchema();
-              if (editorPart != null && xsdSchema != editorPart.getAdapter(XSDSchema.class))
+              IEditorInput editorInput = editorPart.getEditorInput();
+              boolean isReadOnly = false;
+              if (!(editorInput instanceof IFileEditorInput || editorInput instanceof FileStoreEditorInput))
+              {
+                isReadOnly = true;
+              }
+              if (editorPart != null && xsdSchema != editorPart.getAdapter(XSDSchema.class) || isReadOnly)
               {
                 sb.append(" (" + Messages.UI_LABEL_READ_ONLY + ")"); //$NON-NLS-1$ //$NON-NLS-2$
               }

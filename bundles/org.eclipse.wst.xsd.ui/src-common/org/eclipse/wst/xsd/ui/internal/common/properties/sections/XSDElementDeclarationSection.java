@@ -231,30 +231,33 @@ public class XSDElementDeclarationSection extends MultiplicitySection
   private void fillTypesCombo()
   {
     IEditorPart editor = getActiveEditor();
-    ComponentReferenceEditManager manager = (ComponentReferenceEditManager)editor.getAdapter(XSDTypeReferenceEditManager.class);    
-    ComponentSpecification[] items = manager.getQuickPicks();
-    
-    typeCombo.removeAll();
-    typeCombo.add(Messages._UI_ACTION_BROWSE);
-    typeCombo.add(Messages._UI_ACTION_NEW);
-    for (int i = 0; i < items.length; i++)
+    ComponentReferenceEditManager manager = (ComponentReferenceEditManager)editor.getAdapter(XSDTypeReferenceEditManager.class);
+    if (manager != null)
     {
-      typeCombo.add(items[i].getName());
-    }
-    // Add the current Type of this element if needed
-    XSDElementDeclaration namedComponent = ((XSDElementDeclaration) input).getResolvedElementDeclaration();
-    XSDTypeDefinition td = namedComponent.getType();
-    if (td != null)
-    {  
-      String currentTypeName = td.getQName(xsdSchema);
-      if (currentTypeName == null) // anonymous type
-    	currentTypeName = "**Anonymous**";
-      ComponentSpecification ret = getComponentSpecFromQuickPickForValue(currentTypeName,manager);
-      if (ret == null && currentTypeName != null) //not in quickPick
+      ComponentSpecification[] items = manager.getQuickPicks();
+
+      typeCombo.removeAll();
+      typeCombo.add(Messages._UI_ACTION_BROWSE);
+      typeCombo.add(Messages._UI_ACTION_NEW);
+      for (int i = 0; i < items.length; i++)
       {
-        typeCombo.add(currentTypeName);
+        typeCombo.add(items[i].getName());
       }
-    } 
+      // Add the current Type of this element if needed
+      XSDElementDeclaration namedComponent = ((XSDElementDeclaration) input).getResolvedElementDeclaration();
+      XSDTypeDefinition td = namedComponent.getType();
+      if (td != null)
+      {
+        String currentTypeName = td.getQName(xsdSchema);
+        if (currentTypeName == null) // anonymous type
+          currentTypeName = "**Anonymous**";
+        ComponentSpecification ret = getComponentSpecFromQuickPickForValue(currentTypeName, manager);
+        if (ret == null && currentTypeName != null) // not in quickPick
+        {
+          typeCombo.add(currentTypeName);
+        }
+      }
+    }
   }
   
   private ComponentSpecification getComponentSpecFromQuickPickForValue(String value, ComponentReferenceEditManager editManager)
@@ -542,31 +545,33 @@ public class XSDElementDeclarationSection extends MultiplicitySection
   {
     IEditorPart editor = getActiveEditor();
     ComponentReferenceEditManager manager = (ComponentReferenceEditManager)editor.getAdapter(XSDElementReferenceEditManager.class);    
-    
-    componentNameCombo.removeAll();
-    componentNameCombo.add(Messages._UI_ACTION_BROWSE);
-    componentNameCombo.add(Messages._UI_ACTION_NEW);
-    ComponentSpecification[] quickPicks = manager.getQuickPicks();
-    if (quickPicks != null)
+    if (manager != null)
     {
-      for (int i=0; i < quickPicks.length; i++)
+      componentNameCombo.removeAll();
+      componentNameCombo.add(Messages._UI_ACTION_BROWSE);
+      componentNameCombo.add(Messages._UI_ACTION_NEW);
+      ComponentSpecification[] quickPicks = manager.getQuickPicks();
+      if (quickPicks != null)
       {
-        ComponentSpecification componentSpecification = quickPicks[i];
-        componentNameCombo.add(componentSpecification.getName());
-      }  
-    }
-    ComponentSpecification[] history = manager.getHistory();
-    if (history != null)
-    {
-      for (int i=0; i < history.length; i++)
+        for (int i = 0; i < quickPicks.length; i++)
+        {
+          ComponentSpecification componentSpecification = quickPicks[i];
+          componentNameCombo.add(componentSpecification.getName());
+        }
+      }
+      ComponentSpecification[] history = manager.getHistory();
+      if (history != null)
       {
-        ComponentSpecification componentSpecification = history[i];
-        componentNameCombo.add(componentSpecification.getName());
-      }  
+        for (int i = 0; i < history.length; i++)
+        {
+          ComponentSpecification componentSpecification = history[i];
+          componentNameCombo.add(componentSpecification.getName());
+        }
+      }
     }
-    
     XSDElementDeclaration namedComponent = (XSDElementDeclaration) input;
     Element element = namedComponent.getElement();
+    
     if (element != null)
     {
       String attrValue = element.getAttribute(XSDConstants.REF_ATTRIBUTE);
@@ -580,7 +585,7 @@ public class XSDElementDeclarationSection extends MultiplicitySection
         componentNameCombo.add(attrValue);
       }
       componentNameCombo.setText(attrValue);
-    } 
+    }
   }
 
 }

@@ -248,25 +248,29 @@ public class XSDAttributeDeclarationSection extends RefactoringSection
   private void fillTypesCombo()
   {
     IEditorPart editor = getActiveEditor();
-    XSDTypeReferenceEditManager manager = (XSDTypeReferenceEditManager)editor.getAdapter(XSDTypeReferenceEditManager.class);    
-    ComponentSpecification[] items = manager.getQuickPicks();
-    
-    typeCombo.removeAll();
-    typeCombo.add(Messages._UI_ACTION_BROWSE);
-    typeCombo.add(Messages._UI_ACTION_NEW);
-    for (int i = 0; i < items.length; i++)
+    XSDTypeReferenceEditManager manager = (XSDTypeReferenceEditManager)editor.getAdapter(XSDTypeReferenceEditManager.class);
+    if (manager != null)
     {
-      typeCombo.add(items[i].getName());
-    }
+      ComponentSpecification[] items = manager.getQuickPicks();
 
-    XSDAttributeDeclaration namedComponent = ((XSDAttributeDeclaration) input).getResolvedAttributeDeclaration();
-    XSDTypeDefinition namedComponentType = namedComponent.getType();
-    if (namedComponentType != null)
-    {
-      String currentTypeName = namedComponentType.getQName(xsdSchema); // no prefix
-      ComponentSpecification ret = getComponentSpecFromQuickPickForValue(currentTypeName, manager);
-      if (ret == null) //not in quickPick
-        typeCombo.add(currentTypeName);
+      typeCombo.removeAll();
+      typeCombo.add(Messages._UI_ACTION_BROWSE);
+      typeCombo.add(Messages._UI_ACTION_NEW);
+      for (int i = 0; i < items.length; i++)
+      {
+        typeCombo.add(items[i].getName());
+      }
+
+      XSDAttributeDeclaration namedComponent = ((XSDAttributeDeclaration) input).getResolvedAttributeDeclaration();
+      XSDTypeDefinition namedComponentType = namedComponent.getType();
+      if (namedComponentType != null)
+      {
+        String currentTypeName = namedComponentType.getQName(xsdSchema); // no
+                                                                          // prefix
+        ComponentSpecification ret = getComponentSpecFromQuickPickForValue(currentTypeName, manager);
+        if (ret == null) // not in quickPick
+          typeCombo.add(currentTypeName);
+      }
     }
   }
   

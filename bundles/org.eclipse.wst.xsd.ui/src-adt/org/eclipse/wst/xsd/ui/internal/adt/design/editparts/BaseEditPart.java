@@ -12,6 +12,7 @@ package org.eclipse.wst.xsd.ui.internal.adt.design.editparts;
 
 import java.util.Iterator;
 import java.util.List;
+
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPart;
@@ -21,10 +22,14 @@ import org.eclipse.gef.editparts.ScalableRootEditPart;
 import org.eclipse.gef.editparts.ZoomListener;
 import org.eclipse.gef.editparts.ZoomManager;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.ide.FileStoreEditorInput;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IActionProvider;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IFeedbackHandler;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editpolicies.KeyBoardAccessibilityEditPolicy;
@@ -195,5 +200,31 @@ public abstract class BaseEditPart extends AbstractGraphicalEditPart implements 
   public EditPart doGetRelativeEditPart(EditPart editPart, int direction)
   {   
     return null;      
-  }  
+  }
+  
+  protected boolean isFileReadOnly()
+  {
+    IWorkbench workbench = PlatformUI.getWorkbench();
+    if (workbench != null)
+    {
+      IWorkbenchWindow workbenchWindow = workbench.getActiveWorkbenchWindow();
+      if (workbenchWindow != null)
+      {
+        IWorkbenchPage page = workbenchWindow.getActivePage();
+        if (page != null)
+        {
+          IEditorPart editor = page.getActiveEditor();
+          if (editor != null)
+          {
+            IEditorInput editorInput = editor.getEditorInput();
+            if (!(editorInput instanceof IFileEditorInput || editorInput instanceof FileStoreEditorInput))
+            {
+              return true;
+            }
+          }
+        }
+      }
+    }
+    return false;
+  }
 }

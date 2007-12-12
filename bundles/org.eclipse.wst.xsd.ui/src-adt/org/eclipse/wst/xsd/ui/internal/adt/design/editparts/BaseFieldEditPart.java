@@ -301,7 +301,7 @@ public class BaseFieldEditPart extends BaseTypeConnectingEditPart implements INa
   
   public void performRequest(Request request)
   {  
-    if (((IADTObject)getModel()).isReadOnly())
+    if (((IADTObject)getModel()).isReadOnly() || isFileReadOnly())
     {
       return;
     }
@@ -336,6 +336,7 @@ public class BaseFieldEditPart extends BaseTypeConnectingEditPart implements INa
   
   protected void directEditNameField()
   {
+    if (isFileReadOnly()) return;
 	  Object model = getModel();
 	  IFieldFigure fieldFigure = getFieldFigure();
   	if ( model instanceof IField) 

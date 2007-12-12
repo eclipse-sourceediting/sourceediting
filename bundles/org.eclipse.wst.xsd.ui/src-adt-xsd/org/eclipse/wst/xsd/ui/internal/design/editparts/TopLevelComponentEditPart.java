@@ -39,7 +39,6 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDBaseAdapter;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDSchemaDirectiveAdapter;
-import org.eclipse.wst.xsd.ui.internal.adt.actions.SetInputToGraphView;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.BaseEditPart;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.INamedEditPart;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.RootContentEditPart;
@@ -49,6 +48,7 @@ import org.eclipse.wst.xsd.ui.internal.adt.design.editpolicies.ADTDirectEditPoli
 import org.eclipse.wst.xsd.ui.internal.adt.design.editpolicies.IADTUpdateCommand;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editpolicies.SimpleDirectEditPolicy;
 import org.eclipse.wst.xsd.ui.internal.adt.typeviz.design.figures.FieldFigure;
+import org.eclipse.wst.xsd.ui.internal.common.actions.OpenInNewEditor;
 import org.eclipse.wst.xsd.ui.internal.common.commands.UpdateNameCommand;
 import org.eclipse.wst.xsd.ui.internal.common.util.XSDCommonUIUtils;
 import org.eclipse.wst.xsd.ui.internal.design.editpolicies.SelectionHandlesEditPolicyImpl;
@@ -268,7 +268,7 @@ public class TopLevelComponentEditPart extends BaseEditPart implements IFeedback
               schemaLocation = URIHelper.removePlatformResourceProtocol(dir.getResolvedSchema().getSchemaLocation());
               if (schemaLocation != null)
               {
-                OpenOnSelectionHelper.openXSDEditor(schemaLocation);
+                OpenOnSelectionHelper.openXSDEditor(dir.getResolvedSchema());
               }
             }
           }
@@ -294,9 +294,17 @@ public class TopLevelComponentEditPart extends BaseEditPart implements IFeedback
         if (editPart instanceof RootContentEditPart)
         {
           IEditorPart editorPart = getEditorPart();
+//          ActionRegistry registry = (ActionRegistry) editorPart.getAdapter(ActionRegistry.class);
+//          IAction action = registry.getAction(SetInputToGraphView.ID);
+//          action.run();
           ActionRegistry registry = (ActionRegistry) editorPart.getAdapter(ActionRegistry.class);
-          IAction action = registry.getAction(SetInputToGraphView.ID);
-          action.run();
+          if (registry != null)
+          {
+            IAction action = registry.getAction(OpenInNewEditor.ID);
+            if (action != null)
+            action.run();
+            return;
+          }
         }
       }
     };

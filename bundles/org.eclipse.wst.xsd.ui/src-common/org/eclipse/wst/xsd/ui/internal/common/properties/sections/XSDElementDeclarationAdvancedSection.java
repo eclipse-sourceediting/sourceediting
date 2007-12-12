@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -322,26 +322,29 @@ public class XSDElementDeclarationAdvancedSection extends AbstractSection
   private void fillSubstitutionGroupCombo()
   {
     IEditorPart editor = getActiveEditor();
-    ComponentReferenceEditManager manager = (ComponentReferenceEditManager)editor.getAdapter(XSDSubstitutionGroupEditManager.class);    
-    ComponentSpecification[] items = manager.getQuickPicks();
-    
-    substGroupCombo.removeAll();
-    substGroupCombo.add(Messages._UI_ACTION_BROWSE);
-    substGroupCombo.add(Messages._UI_ACTION_NEW);
-    for (int i = 0; i < items.length; i++)
+    ComponentReferenceEditManager manager = (ComponentReferenceEditManager)editor.getAdapter(XSDSubstitutionGroupEditManager.class);
+    if (manager != null)
     {
-      substGroupCombo.add(items[i].getName());
-    }
-    // Add the current substitution group if needed
-    XSDElementDeclaration namedComponent = ((XSDElementDeclaration) input).getSubstitutionGroupAffiliation();
-    if (namedComponent != null)
-    {  
-      ComponentSpecification ret = getComponentSpecFromQuickPickForValue(namedComponent.getName(),manager);
-      if (ret == null)
+      ComponentSpecification[] items = manager.getQuickPicks();
+
+      substGroupCombo.removeAll();
+      substGroupCombo.add(Messages._UI_ACTION_BROWSE);
+      substGroupCombo.add(Messages._UI_ACTION_NEW);
+      for (int i = 0; i < items.length; i++)
       {
-        substGroupCombo.add(namedComponent.getQName(xsdSchema));
+        substGroupCombo.add(items[i].getName());
       }
-    } 
+      // Add the current substitution group if needed
+      XSDElementDeclaration namedComponent = ((XSDElementDeclaration) input).getSubstitutionGroupAffiliation();
+      if (namedComponent != null)
+      {
+        ComponentSpecification ret = getComponentSpecFromQuickPickForValue(namedComponent.getName(), manager);
+        if (ret == null)
+        {
+          substGroupCombo.add(namedComponent.getQName(xsdSchema));
+        }
+      }
+    }
   }
   
   private ComponentSpecification getComponentSpecFromQuickPickForValue(String value, ComponentReferenceEditManager editManager)

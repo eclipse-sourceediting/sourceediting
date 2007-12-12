@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -29,6 +29,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.common.ui.internal.viewers.ResourceFilter;
@@ -208,9 +209,20 @@ public class XSDImportSection extends SchemaLocationSection
       setListenerEnabled(false);
       Shell shell = Display.getCurrent().getActiveShell();
 
-      IFile currentIFile = ((IFileEditorInput) getActiveEditor().getEditorInput()).getFile();
-      ViewerFilter filter = new ResourceFilter(new String[] { ".xsd" }, //$NON-NLS-1$ 
-          new IFile[] { currentIFile }, null);
+      IFile currentIFile = null;
+      IEditorInput editorInput = getActiveEditor().getEditorInput();
+      ViewerFilter filter;
+      if (editorInput instanceof IFileEditorInput)
+      {
+        currentIFile = ((IFileEditorInput)editorInput).getFile();
+        filter = new ResourceFilter(new String[] { ".xsd" }, //$NON-NLS-1$ 
+            new IFile[] { currentIFile }, null);
+      }
+      else
+      {
+        filter = new ResourceFilter(new String[] { ".xsd" }, //$NON-NLS-1$ 
+            null, null);
+      }
 
       XSDSelectIncludeFileWizard fileSelectWizard = new XSDSelectIncludeFileWizard(xsdSchema, false, XSDEditorPlugin.getXSDString("_UI_FILEDIALOG_SELECT_XML_SCHEMA"), //$NON-NLS-1$
           XSDEditorPlugin.getXSDString("_UI_FILEDIALOG_SELECT_XML_DESC"), //$NON-NLS-1$
@@ -228,9 +240,13 @@ public class XSDImportSection extends SchemaLocationSection
         errorText.setText("");
         IFile selectedIFile = fileSelectWizard.getResultFile();
         String schemaFileString = value;
-        if (selectedIFile != null)
+        if (selectedIFile != null && currentIFile != null)
         {
           schemaFileString = URIHelper.getRelativeURI(selectedIFile.getLocation(), currentIFile.getLocation());
+        }
+        else if (selectedIFile != null && currentIFile == null)
+        {
+          schemaFileString = selectedIFile.getLocationURI().toString();
         }
         else
         {
@@ -246,6 +262,23 @@ public class XSDImportSection extends SchemaLocationSection
       }
       setListenerEnabled(true);
       prefixText.addListener(SWT.Modify, this);
+//      }
+//      else
+//      {
+//        BrowseInWorkspaceAction browseInWorkspace = new BrowseInWorkspaceAction(shell);
+//        browseInWorkspace.run();
+//        IFile selectedIFile = browseInWorkspace.getSelectedFile();
+//        String value = schemaLocationText.getText();
+//        String schemaFileString = value;
+//        if (selectedIFile != null) 
+//        {
+//          //schemaFileString = URIHelper.getRelativeURI(selectedIFile.getLocation(), currentIFile.getLocation());
+//          schemaFileString = selectedIFile.getLocationURI().toString();
+//          handleSchemaLocationChange(schemaFileString, "", null);
+//          refresh();
+//        }
+//
+//      }
     }
   }
 

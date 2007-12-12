@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -702,27 +702,30 @@ public class XSDSimpleTypeSection extends RefactoringSection
     typesCombo.removeAll();
     
     IEditorPart editor = getActiveEditor();
-    ComponentReferenceEditManager manager = (ComponentReferenceEditManager)editor.getAdapter(XSDTypeReferenceEditManager.class);    
-    ComponentSpecification[] items = manager.getQuickPicks();
-    
-    typesCombo.add(org.eclipse.wst.xsd.ui.internal.adt.editor.Messages._UI_ACTION_BROWSE);
-    typesCombo.add(org.eclipse.wst.xsd.ui.internal.editor.Messages._UI_ACTION_NEW);
-    
-    for (int i = 0; i < items.length; i++)
+    ComponentReferenceEditManager manager = (ComponentReferenceEditManager)editor.getAdapter(XSDTypeReferenceEditManager.class);
+    if (manager != null)
     {
-      typesCombo.add(items[i].getName());
-    }
+      ComponentSpecification[] items = manager.getQuickPicks();
 
-    // Add the current Type of this attribute if needed
-    XSDSimpleTypeDefinition simpleType = (XSDSimpleTypeDefinition) input;
-    XSDTypeDefinition baseType = simpleType.getBaseType();
-    if (baseType != null && baseType.getQName() != null)
-    {
-      String currentTypeName = baseType.getQName(xsdSchema); //no prefix
-      ComponentSpecification ret = getComponentSpecFromQuickPickForValue(currentTypeName,manager);
-      if (ret == null && currentTypeName != null) //not in quickPick
+      typesCombo.add(org.eclipse.wst.xsd.ui.internal.adt.editor.Messages._UI_ACTION_BROWSE);
+      typesCombo.add(org.eclipse.wst.xsd.ui.internal.editor.Messages._UI_ACTION_NEW);
+
+      for (int i = 0; i < items.length; i++)
       {
-        typesCombo.add(currentTypeName);
+        typesCombo.add(items[i].getName());
+      }
+
+      // Add the current Type of this attribute if needed
+      XSDSimpleTypeDefinition simpleType = (XSDSimpleTypeDefinition) input;
+      XSDTypeDefinition baseType = simpleType.getBaseType();
+      if (baseType != null && baseType.getQName() != null)
+      {
+        String currentTypeName = baseType.getQName(xsdSchema); // no prefix
+        ComponentSpecification ret = getComponentSpecFromQuickPickForValue(currentTypeName, manager);
+        if (ret == null && currentTypeName != null) // not in quickPick
+        {
+          typesCombo.add(currentTypeName);
+        }
       }
     }
   }

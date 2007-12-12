@@ -52,6 +52,7 @@ import org.eclipse.ui.INavigationLocation;
 import org.eclipse.ui.INavigationLocationProvider;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.ide.FileStoreEditorInput;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.ui.views.properties.tabbed.ITabbedPropertySheetPageContributor;
@@ -78,6 +79,7 @@ import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.RootContentEditPart;
 import org.eclipse.wst.xsd.ui.internal.adt.editor.ADTMultiPageEditor;
 import org.eclipse.wst.xsd.ui.internal.adt.editor.EditorMode;
 import org.eclipse.wst.xsd.ui.internal.adt.editor.EditorModeManager;
+import org.eclipse.wst.xsd.ui.internal.adt.editor.IADTEditorInput;
 import org.eclipse.wst.xsd.ui.internal.adt.editor.ProductCustomizationProvider;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IADTObject;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IModel;
@@ -156,17 +158,20 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
       IEditorInput editorInput = getEditorInput();
       
       // If the input schema is from the WSDL Editor, then use that inline schema
-      if (editorInput instanceof XSDFileEditorInput)
+      if (editorInput instanceof IADTEditorInput)
       {
-        xsdSchema = ((XSDFileEditorInput) editorInput).getSchema();
-        model = (IModel) XSDAdapterFactory.getInstance().adapt(xsdSchema);
+        xsdSchema = ((IADTEditorInput) editorInput).getSchema();
+        if (xsdSchema != null)
+          model = (IModel) XSDAdapterFactory.getInstance().adapt(xsdSchema);
       }
       
       Document document = null;
       IDocument doc = structuredTextEditor.getDocumentProvider().getDocument(getEditorInput());
       if (doc instanceof IStructuredDocument)
       {
-        IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForEdit(doc);
+        IStructuredModel model = null;
+        // TODO: for StorageEditorInputs, should be forRead
+        model = StructuredModelManager.getModelManager().getExistingModelForEdit(doc);
         if (model == null) {
           model = StructuredModelManager.getModelManager().getModelForEdit((IStructuredDocument) doc);
         }
@@ -181,10 +186,10 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
       xsdSchema = XSDModelAdapter.lookupOrCreateSchema(document);
       model = (IModel) XSDAdapterFactory.getInstance().adapt(xsdSchema);              
     }
-    catch (Exception e) {
-      e.printStackTrace();
-    }
+    catch (Exception e)
+    {
 
+    }
     
 //    try
 //    {
@@ -282,7 +287,7 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
   protected void initializeGraphicalViewer()
   {
     RootContentEditPart root = new RootContentEditPart();
-    if (!(getEditorInput() instanceof XSDFileEditorInput))
+    if (!(getEditorInput() instanceof IADTEditorInput))
     {
       root.setModel(model);
     }
@@ -515,10 +520,21 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
     }
   }
 
+  public boolean isReadOnly()
+  {
+    IEditorInput editorInput = getEditorInput();
+    return !(editorInput instanceof IFileEditorInput || editorInput instanceof FileStoreEditorInput);
+  }
+  
   protected void createActions()
   {
     super.createActions();
+    
     ActionRegistry registry = getActionRegistry();
+    
+    // add an isReadOnly method to the editorPart instead
+    if (!isReadOnly())
+    {
     BaseSelectionAction action = new AddFieldAction(this);
     action.setSelectionProvider(getSelectionManager());
     registry.registerAction(action);
@@ -646,6 +662,20 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
     BaseDirectEditAction directEditAction = new BaseDirectEditAction(this);
     directEditAction.setSelectionProvider(getSelectionManager());
     registry.registerAction(directEditAction);
+    
+    }
+    else
+    {
+      BaseSelectionAction action = new OpenInNewEditor(this);
+      action.setSelectionProvider(getSelectionManager());
+      registry.registerAction(action);
+
+      action = new ShowPropertiesViewAction(this);
+      registry.registerAction(action);
+      
+      PrintAction printAction = new PrintAction(this);
+      registry.registerAction(printAction);
+    }
   }
   
   protected void addMultiplicityMenu(ActionRegistry registry)

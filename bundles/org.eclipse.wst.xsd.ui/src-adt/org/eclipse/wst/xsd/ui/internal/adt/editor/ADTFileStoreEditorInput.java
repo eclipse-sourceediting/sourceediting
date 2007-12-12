@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,32 +8,22 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.xsd.ui.internal.editor;
+package org.eclipse.wst.xsd.ui.internal.adt.editor;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.ui.part.FileEditorInput;
-import org.eclipse.wst.xsd.ui.internal.adt.editor.IADTEditorInput;
+import org.eclipse.core.filesystem.IFileStore;
+import org.eclipse.ui.ide.FileStoreEditorInput;
+import org.eclipse.wst.xsd.ui.internal.editor.Messages;
 import org.eclipse.xsd.XSDSchema;
 
-public class XSDFileEditorInput extends FileEditorInput implements IADTEditorInput
+public class ADTFileStoreEditorInput extends FileStoreEditorInput implements IADTEditorInput
 {
-  private IFile file;
   private XSDSchema schema;
   private String editorName;
 
-  public XSDFileEditorInput(IFile file, XSDSchema schema) {
-    super(file);
-    if (file == null) {
-      throw new IllegalArgumentException();
-    }
-    this.file = file;
-    this.schema = schema;
-    editorName = file.getName();
-  }
-
-  public IFile getFile()
+  public ADTFileStoreEditorInput(IFileStore fileStore, XSDSchema xsdSchema)
   {
-    return file;
+    super(fileStore);
+    this.schema = xsdSchema;
   }
 
   public XSDSchema getSchema()
@@ -45,7 +35,7 @@ public class XSDFileEditorInput extends FileEditorInput implements IADTEditorInp
   {
     editorName = name;
   }
- 
+
   public String getName()
   {
     if (editorName != null)
@@ -54,7 +44,7 @@ public class XSDFileEditorInput extends FileEditorInput implements IADTEditorInp
     }
     return super.getName();
   }
-  
+
   public String getToolTipText()
   {
     if (schema != null)

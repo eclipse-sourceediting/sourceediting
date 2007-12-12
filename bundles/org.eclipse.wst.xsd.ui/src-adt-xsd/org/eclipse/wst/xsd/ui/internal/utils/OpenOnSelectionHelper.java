@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,13 +20,16 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
+import org.eclipse.wst.xsd.ui.internal.common.actions.OpenInNewEditor;
 import org.eclipse.wst.xsd.ui.internal.editor.InternalXSDMultiPageEditor;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.xsd.XSDAttributeDeclaration;
@@ -63,10 +66,17 @@ public class OpenOnSelectionHelper
 
   boolean lastResult;
   
+  public static void openXSDEditor(XSDSchema schema)
+  {
+    IEditorInput editorInput = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor().getEditorInput();
+    
+    OpenInNewEditor.openXSDEditor(editorInput, schema, schema);    
+   
+  }
+  
   public static void openXSDEditor(String schemaLocation)
   {
-		IPath schemaPath = new Path(schemaLocation);
-		
+    IPath schemaPath = new Path(schemaLocation);
 		final IFile schemaFile = ResourcesPlugin.getWorkspace().getRoot().getFile(schemaPath);
 	
 		Display.getDefault().asyncExec(new Runnable()

@@ -453,8 +453,8 @@ public class XSDFacetSection extends AbstractSection
     }
     constraintsWidget.setInput(xsdSimpleTypeDefinition);
 
-    setWidgetsEnabled(isSimpleTypeRestriction);
-    composite.setEnabled(isSimpleTypeRestriction);
+    setWidgetsEnabled(isSimpleTypeRestriction && !isReadOnly);
+    composite.setEnabled(isSimpleTypeRestriction && !isReadOnly);
     
     setListenerEnabled(true);
   }

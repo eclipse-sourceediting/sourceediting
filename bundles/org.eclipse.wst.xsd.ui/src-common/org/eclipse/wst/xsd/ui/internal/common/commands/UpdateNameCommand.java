@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,11 @@
 package org.eclipse.wst.xsd.ui.internal.common.commands;
 
 import org.eclipse.ltk.core.refactoring.participants.RenameRefactoring;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 import org.eclipse.wst.xsd.ui.internal.refactor.PerformUnsavedRefactoringOperation;
 import org.eclipse.wst.xsd.ui.internal.refactor.RefactoringComponent;
@@ -68,17 +73,34 @@ public class UpdateNameCommand extends BaseCommand
   {
     // this is a 'globally' defined component (e.g. global element)    
     if (component.eContainer() instanceof XSDSchema)
-    {  
-      RefactoringComponent refactoringComponent = new XMLRefactoringComponent(
-          component,
-          (IDOMElement)component.getElement(), 
-          component.getName(),
-          component.getTargetNamespace());
+    {
+      IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+      if (workbenchWindow != null)
+      {
+        IWorkbenchPage page = workbenchWindow.getActivePage();
+        if (page != null)
+        {
+          IEditorInput editorInput = page.getActiveEditor().getEditorInput();
+          if (editorInput instanceof FileEditorInput)
+          {
+            RefactoringComponent refactoringComponent = new XMLRefactoringComponent(
+              component,
+              (IDOMElement)component.getElement(), 
+              component.getName(),
+              component.getTargetNamespace());
 
-      RenameComponentProcessor processor = new RenameComponentProcessor(refactoringComponent, newName, true);    
-      RenameRefactoring refactoring = new RenameRefactoring(processor);
-      PerformUnsavedRefactoringOperation operation = new PerformUnsavedRefactoringOperation(refactoring);
-      operation.run(null);
+            RenameComponentProcessor processor = new RenameComponentProcessor(refactoringComponent, newName, true);    
+            RenameRefactoring refactoring = new RenameRefactoring(processor);
+            PerformUnsavedRefactoringOperation operation = new PerformUnsavedRefactoringOperation(refactoring);
+            operation.run(null);
+          }
+          else
+          {
+            // We can't refactor rename external files
+            component.setName(newName);
+          }
+        }
+      }
     } 
     else
     {

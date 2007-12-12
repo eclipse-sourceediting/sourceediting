@@ -39,7 +39,7 @@ public class XSDEditorPlugin extends AbstractUIPlugin
   public static final String EXTENSIONS_SCHEMAS_EXTENSIONID = "org.eclipse.wst.xsd.ui.extensionCategories"; //$NON-NLS-1$
   private static final String DEPRECATED_EXTENSIONS_SCHEMAS_EXTENSIONID = "org.eclipse.wst.xsd.ui.ExtensionsSchemasDescription"; //$NON-NLS-1$  
   public final static String DEFAULT_TARGET_NAMESPACE = "http://www.example.org"; //$NON-NLS-1$
-  
+  public final static String XSD_CONTENT_TYPE_ID = "org.eclipse.wst.xsd.core.xsdsource"; //$NON-NLS-1$
   
 	//The shared instance.
 	private static XSDEditorPlugin plugin;

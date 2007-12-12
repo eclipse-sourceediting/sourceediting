@@ -135,6 +135,7 @@ public class XSDSchemaSection extends AbstractSection
    */
   public void refresh()
   {
+    super.refresh();
     setListenerEnabled(false);
 
     Element element = xsdSchema.getElement();
