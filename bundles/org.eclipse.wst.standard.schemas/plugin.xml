@@ -85,14 +85,6 @@
                 name="http://schemas.xmlsoap.org/soap/encoding/"
                 uri="xsd/soapenc.xsd" />
 
-            <uri
-                name="http://www.w3.org/1999/XMLSchema"
-                uri="xsd/xslt.xsd" />
-
-            <uri
-                name="http://www.w3.org/2001/XMLSchema"
-                uri="xsd/schema-for-xslt20.xsd" />
-
 
             <!-- these are removed from the catalog, since they are -not- 
             the same as those in the xsd.ui plugin, which 
