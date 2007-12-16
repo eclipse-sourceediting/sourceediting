@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension
+         point="org.eclipse.wst.xsl.launching.processorType">
+      <processorType
+            featureProperties="XalanFeatures.properties"
+            id="org.eclipse.wst.xsl.xalan.processorType"
+            label="Xalan"
+            outputProperties="XalanOutputProperties.properties"
+            transformerFactory="org.apache.xalan.processor.TransformerFactoryImpl">
+      </processorType>
+   </extension>
+   <extension
+         point="org.eclipse.wst.xsl.launching.debugger">
+      <debugger
+            className="org.eclipse.wst.xsl.xalan.debugger.XalanDebugger"
+            classpath="xalan-debugger.jar"
+            id="org.eclipse.wst.xsl.xalan.debugger"
+            name="Xalan Debugger"
+            processorTypeId="org.eclipse.wst.xsl.xalan.processorType">
+      </debugger>
+   </extension>
+   <extension
+         point="org.eclipse.wst.xsl.launching.processor">
+      <processor
+            classpath="xalan2.7.0.jar;serializer2.7.0.jar"
+            id="org.eclipse.wst.xsl.launching.xalan.2_7_0"
+            label="Xalan 2.7.0"
+            processorTypeId="org.eclipse.wst.xsl.xalan.processorType"
+            debuggerId="org.eclipse.wst.xsl.xalan.debugger"
+            supports="1.0">
+      </processor>
+   </extension>
+</plugin>

@@ -1,0 +1,23 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: XSL Debug UI Plug-in
+Bundle-SymbolicName: org.eclipse.wst.xsl.debug.ui;singleton:=true
+Bundle-Version: 1.0.0
+Bundle-Activator: org.eclipse.wst.xsl.debug.ui.XSLDebugUIPlugin
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.core.resources,
+ org.eclipse.core.variables,
+ org.eclipse.debug.core,
+ org.eclipse.debug.ui,
+ org.eclipse.jdt.debug.ui,
+ org.eclipse.jdt.launching,
+ org.eclipse.jface.text,
+ org.eclipse.ui.editors,
+ org.eclipse.ui.ide,
+ org.eclipse.ui.workbench.texteditor,
+ org.eclipse.wst.sse.ui,
+ org.eclipse.wst.xsl.launching,
+ org.eclipse.wst.xsl.debug
+Eclipse-LazyStart: true
+Bundle-RequiredExecutionEnvironment: J2SE-1.5

@@ -1,0 +1,23 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: XSL Launching Plug-in
+Bundle-SymbolicName: org.eclipse.wst.xsl.launching;singleton:=true
+Bundle-Version: 1.0.0
+Bundle-Activator: org.eclipse.wst.xsl.internal.launching.LaunchingPlugin
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.core.expressions,
+ org.eclipse.core.filesystem,
+ org.eclipse.core.resources,
+ org.eclipse.core.variables,
+ org.eclipse.debug.core,
+ org.eclipse.ui,
+ org.eclipse.ui.ide,
+ org.eclipse.jdt.core,
+ org.eclipse.jdt.launching,
+ org.eclipse.wst.xsl.debug
+Eclipse-LazyStart: true
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-ClassPath: .
+Export-Package: org.eclipse.wst.xsl.launching,
+ org.eclipse.wst.xsl.launching.config,
+ org.eclipse.wst.xsl.launching.model

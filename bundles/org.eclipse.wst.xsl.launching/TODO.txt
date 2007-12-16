@@ -1,0 +1,11 @@
+INTEGRATE ORANGEVOLT PARTS:
+
+- console line tracker
+- launch configuration type image
+- launch shortcuts (class looks better) + icon + contextual launch
+- keywords
+- launch config export
+
+XALAN
+
+- does xalan belong in an org.apache.xalan plugin?
