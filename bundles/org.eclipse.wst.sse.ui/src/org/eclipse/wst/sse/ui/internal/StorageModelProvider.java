@@ -239,15 +239,11 @@ public class StorageModelProvider extends StorageDocumentProvider implements IMo
 		 * 
 		 */
 		String path = null;
-		boolean addHash = false;
 		try {
 			IStorage storage = input.getStorage();
 			if (storage != null) {
 				IPath storagePath = storage.getFullPath();
 				String name = storage.getName();
-				// if either the name or storage path are null or they are
-				// identical, add a hash to it to guarantee uniqueness
-				addHash = storagePath == null || storagePath.toString().equals(name);
 				if (storagePath != null) {
 					// If they are different, the IStorage contract is not
 					// being honored
@@ -272,8 +268,13 @@ public class StorageModelProvider extends StorageDocumentProvider implements IMo
 			if (path == null)
 				path = ""; //$NON-NLS-1$
 		}
-		if (addHash)
-			path = input.hashCode() + path;
+		/*
+		 * Prepend the hash to the path value so that we have a 1:1:1 match
+		 * between editor inputs, element info, and models. The editor manager
+		 * should help prevent needlessly duplicated models as long as two
+		 * editor inputs from the same storage indicate they're equals().
+		 */
+		path = input.hashCode() + "#" + path; //$NON-NLS-1$
 		return path;
 	}
 
