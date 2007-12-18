@@ -38,6 +38,25 @@ public final class FacetModuleCoreSupport {
 
 	/**
 	 * @param project
+	 * @return the computed IPath to the "root" of the web contents, either from facet knowledge or hueristics, or null if one can not be determined
+	 */
+	public static IPath computeWebContentRootPath(IPath path) {
+		IPath root = null;
+		try {
+			root = FacetModuleCoreSupportDelegate.getWebContentRootPath(ResourcesPlugin.getWorkspace().getRoot().getProject(path.segment(0)));
+		}
+		catch (NoClassDefFoundError e) {
+			if (_dump_NCDFE)
+				e.printStackTrace();
+		}
+		if(root == null) {
+//			root = getLocalRoot(path);
+		}
+		return root;
+	}
+
+	/**
+	 * @param project
 	 * @return -1 if the project does not have the JST Web facet, the version
 	 *         number of it otherwise
 	 * @throws org.eclipse.core.runtime.CoreException

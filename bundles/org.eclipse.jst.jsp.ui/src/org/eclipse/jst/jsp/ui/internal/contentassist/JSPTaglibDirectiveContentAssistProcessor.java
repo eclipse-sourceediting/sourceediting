@@ -162,7 +162,7 @@ public class JSPTaglibDirectiveContentAssistProcessor extends JSPDummyContentAss
 						case ITaglibRecord.JAR : {
 							IPath location = ((IJarRecord) taglibRecord).getLocation();
 							IFile[] files = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocation(location);
-							IPath localContextRoot = FacetModuleCoreSupport.getWebContentRootPath(ResourcesPlugin.getWorkspace().getRoot().getProject(basePath.segment(0)));
+							IPath localContextRoot = FacetModuleCoreSupport.computeWebContentRootPath(basePath);
 							for (int fileNumber = 0; fileNumber < files.length; fileNumber++) {
 								if (localContextRoot.isPrefixOf(files[fileNumber].getFullPath())) {
 									uri = IPath.SEPARATOR + files[fileNumber].getFullPath().removeFirstSegments(localContextRoot.segmentCount()).toString();
@@ -177,7 +177,7 @@ public class JSPTaglibDirectiveContentAssistProcessor extends JSPDummyContentAss
 						}
 						case ITaglibRecord.TLD : {
 							IPath path = ((ITLDRecord) taglibRecord).getPath();
-							IPath localContextRoot = FacetModuleCoreSupport.getWebContentRootPath(ResourcesPlugin.getWorkspace().getRoot().getProject(basePath.segment(0)));
+							IPath localContextRoot = FacetModuleCoreSupport.computeWebContentRootPath(basePath);
 							if (localContextRoot.isPrefixOf(path)) {
 								uri = IPath.SEPARATOR + path.removeFirstSegments(localContextRoot.segmentCount()).toString();
 								uriToRecords.put(uri, taglibRecord);
