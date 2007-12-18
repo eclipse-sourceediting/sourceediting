@@ -30,7 +30,7 @@
 			id="org.eclipse.wst.xml.core.ui.catalogFileType.tld">
 		</fileType>
 	</extension>
-	
+
 	<!--The org.eclipse.wst.xml.core.xmlsource content type is only for
 		handling some special cases of ill-formed xml in a reasonable
 		manner, and should not be emulated by clients. The two content
@@ -552,4 +552,38 @@
 			targetId="org.eclipse.core.runtime.xml">
 		</hyperlinkDetector>
    </extension>
+ <extension
+       point="org.eclipse.ui.importWizards">
+    <category
+          id="org.eclipse.wst.XMLCategory"
+          name="%_UI_WIZARD_NEW_XML">
+    </category>
+    <wizard
+          category="org.eclipse.wst.XMLCategory"
+          class="org.eclipse.wst.xml.ui.internal.wizards.ImportXMLCatalogWizard"
+          icon="icons/xmldoc.gif"
+          id="org.eclipse.wst.xml.ui.internal.wizards.ImportXMLCatalogWizard"
+          name="%_UI_WIZARD_IMPORT_XMLCATALOG">
+       <description>
+          %_UI_IMPORT_XML_CATALOG_FILE
+       </description>
+    </wizard>
+ </extension>
+ <extension
+       point="org.eclipse.ui.exportWizards">
+    <category
+          id="org.eclipse.wst.XMLCategory"
+          name="%_UI_WIZARD_NEW_XML">
+    </category>
+    <wizard
+          category="org.eclipse.wst.XMLCategory"
+          class="org.eclipse.wst.xml.ui.internal.wizards.ExportXMLCatalogWizard"
+          icon="icons/xmldoc.gif"
+          id="org.eclipse.wst.xml.ui.internal.wizards.ExportXMLCatalogWizard"
+          name="%_UI_WIZARD_EXPORT_XMLCATALOG">
+       <description>
+          %_UI_EXPORT_XML_CATALOG_FILE
+       </description>
+    </wizard>
+ </extension>
 </plugin>

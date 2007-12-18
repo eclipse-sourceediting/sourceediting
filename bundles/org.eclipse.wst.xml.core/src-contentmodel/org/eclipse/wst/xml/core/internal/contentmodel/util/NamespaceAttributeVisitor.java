@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
- *     
+ *     David Carver - STAR - bug 198807 - attribute order dependancy.
  *******************************************************************************/
 package org.eclipse.wst.xml.core.internal.contentmodel.util;
 
@@ -62,6 +62,11 @@ public class NamespaceAttributeVisitor
   {
     NamedNodeMap map = element.getAttributes();
     int mapLength = map.getLength();
+    
+    // First retrieve all the namespaces so that they are loaded before
+    // doing any special prefix handling.  This allows the attributes to be
+    // defined in any order, but the namespaces have to be retrieved first.
+    
     for (int i = 0; i < mapLength; i++)
     {
       Attr attr = (Attr)map.item(i);
@@ -72,14 +77,6 @@ public class NamespaceAttributeVisitor
         if (prefix.equals("xmlns")) //$NON-NLS-1$
         {
           visitXMLNamespaceAttribute(attr, unprefixedName, attr.getValue());
-        } 
-        else if (prefix.equals(xsiPrefix) && unprefixedName.equals("schemaLocation")) //$NON-NLS-1$
-        {
-          visitXSISchemaLocationAttribute(attr, attr.getValue());
-        }
-        else if (prefix.equals(xsiPrefix) && unprefixedName.equals("noNamespaceSchemaLocation")) //$NON-NLS-1$
-        {
-          visitXSINoNamespaceSchemaLocationAttribute(attr, attr.getValue());
         }
       }
       else if (unprefixedName != null)
@@ -89,6 +86,25 @@ public class NamespaceAttributeVisitor
           visitXMLNamespaceAttribute(attr, "", attr.getValue()); //$NON-NLS-1$
         }
       }      
+
+    }
+
+    for (int i = 0; i < mapLength; i++)
+    {
+      Attr attr = (Attr)map.item(i);
+      String prefix = DOMNamespaceHelper.getPrefix(attr.getName());
+      String unprefixedName = DOMNamespaceHelper.getUnprefixedName(attr.getName());
+      if (prefix != null && unprefixedName != null)
+      {
+       	if (prefix.equals(xsiPrefix) && unprefixedName.equals("schemaLocation")) //$NON-NLS-1$
+        {
+          visitXSISchemaLocationAttribute(attr, attr.getValue());
+        }
+        else if (prefix.equals(xsiPrefix) && unprefixedName.equals("noNamespaceSchemaLocation")) //$NON-NLS-1$
+        {
+          visitXSINoNamespaceSchemaLocationAttribute(attr, attr.getValue());
+        }
+      }
     }
   }      
 }

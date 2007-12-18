@@ -6,6 +6,7 @@
  * 
  * Contributors: 
  * IBM - Initial API and implementation
+ * David Carver/STAR Standard - d_a_carver@yahoo.com - bug 192568
  **********************************************************************/
 package org.eclipse.wst.xml.ui.internal.wizards;
 
@@ -80,7 +81,11 @@ public class XMLWizardsMessages extends NLS {
 	public static String NewXMLTemplatesWizardPage_4;
 	public static String NewXMLTemplatesWizardPage_5;
 	public static String NewXMLTemplatesWizardPage_6;
-
+	
+	public static String _UI_DIALOG_XMLCATALOG_IMPORT_TITLE;
+	public static String _UI_DIALOG_XMLCATALOG_EXPORT_TITLE;
+	public static String _UI_DIALOG_XMLCATALOG_EXPORT_DESCRIPTION;
+    public static String _UI_DIALOG_XMLCATALOG_IMPORT_DESCRIPTION;
 	static {
 		// load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, XMLWizardsMessages.class);

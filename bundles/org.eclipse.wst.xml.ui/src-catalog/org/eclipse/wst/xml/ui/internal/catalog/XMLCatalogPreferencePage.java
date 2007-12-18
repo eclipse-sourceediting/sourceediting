@@ -8,6 +8,9 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
+ *     David Carver/STAR Standard - d_a_carver@yahoo.com - bug 192568
+ *            Removed Advanced button - Functionality is now in the
+ *            Import/Export XML Catalog Wizards. 
  *     
  *******************************************************************************/
 package org.eclipse.wst.xml.ui.internal.catalog;
@@ -105,13 +108,17 @@ public class XMLCatalogPreferencePage extends PreferencePage implements IWorkben
 		composite.setLayoutData(new GridData(GridData.FILL_BOTH));
 		createCatalogEntriesView(composite);
 		createCatalogDetailsView(composite);
-		createAdvancedButton(composite);
+		//createAdvancedButton(composite);
 		// catalogEntriesView.updatePage();
 		applyDialogFont(composite);
 
 		return composite;
 	}
 
+	/**
+	 * @deprecated
+	 * @param composite
+	 */
 	protected void createAdvancedButton(Composite composite) {
 		Composite panel = new Composite(composite, SWT.NONE);
 		GridLayout gridLayout = new GridLayout();
