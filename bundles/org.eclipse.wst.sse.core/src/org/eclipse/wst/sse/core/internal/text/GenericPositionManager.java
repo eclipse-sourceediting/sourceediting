@@ -74,7 +74,7 @@ public class GenericPositionManager {
 	 * @see org.eclipse.jface.text.IDocument#addPosition(java.lang.String,
 	 *      org.eclipse.jface.text.Position)
 	 */
-	public void addPosition(String category, Position position) throws BadLocationException, BadPositionCategoryException {
+	public synchronized void addPosition(String category, Position position) throws BadLocationException, BadPositionCategoryException {
 
 		if ((0 > position.offset) || (0 > position.length) || (position.offset + position.length > getDocumentLength()))
 			throw new BadLocationException();
@@ -153,7 +153,7 @@ public class GenericPositionManager {
 	 * 
 	 * @see IDocument#computeIndexInCategory(String, int)
 	 */
-	protected int computeIndexInPositionList(List positions, int offset) {
+	protected synchronized int computeIndexInPositionList(List positions, int offset) {
 
 		if (positions.size() == 0)
 			return 0;
@@ -302,7 +302,7 @@ public class GenericPositionManager {
 	 * @see org.eclipse.jface.text.IDocument#insertPositionUpdater(org.eclipse.jface.text.IPositionUpdater,
 	 *      int)
 	 */
-	public void insertPositionUpdater(IPositionUpdater updater, int index) {
+	public synchronized void insertPositionUpdater(IPositionUpdater updater, int index) {
 
 		for (int i = fPositionUpdaters.size() - 1; i >= 0; i--) {
 			if (fPositionUpdaters.get(i) == updater)
@@ -329,7 +329,7 @@ public class GenericPositionManager {
 	 * @see org.eclipse.jface.text.IDocument#removePosition(java.lang.String,
 	 *      org.eclipse.jface.text.Position)
 	 */
-	public void removePosition(String category, Position position) throws BadPositionCategoryException {
+	public synchronized void removePosition(String category, Position position) throws BadPositionCategoryException {
 
 		if (position == null)
 			return;
@@ -368,7 +368,7 @@ public class GenericPositionManager {
 	/*
 	 * @see org.eclipse.jface.text.IDocument#removePositionUpdater(org.eclipse.jface.text.IPositionUpdater)
 	 */
-	public void removePositionUpdater(IPositionUpdater updater) {
+	public synchronized void removePositionUpdater(IPositionUpdater updater) {
 		for (int i = fPositionUpdaters.size() - 1; i >= 0; i--) {
 			if (fPositionUpdaters.get(i) == updater) {
 				fPositionUpdaters.remove(i);
@@ -387,7 +387,7 @@ public class GenericPositionManager {
 	 *            the document event describing the change to which to adapt
 	 *            the positions
 	 */
-	protected void updatePositions(DocumentEvent event) {
+	protected synchronized void updatePositions(DocumentEvent event) {
 		List list = new ArrayList(fPositionUpdaters);
 		Iterator e = list.iterator();
 		while (e.hasNext()) {
