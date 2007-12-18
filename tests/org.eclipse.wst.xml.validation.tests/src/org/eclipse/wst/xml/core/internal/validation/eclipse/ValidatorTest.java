@@ -160,9 +160,9 @@ public class ValidatorTest extends TestCase
   /**
    * Test that the warn no grammar preference is read from the XML core preferences.
    * There are three tests to perform.
-   * 1. Test that the default preference is disabled.
-   * 2. Test that setting the preference to enabled works.
-   * 3. Test that setting the preference to disabled works.
+   * 1. Test that the default preference is enabled.
+   * 2. Test that setting the preference to disabled works.
+   * 3. Test that setting the preference to enabled works.
    */
   public void testWarnNoGrammarPreference()
   {
@@ -170,16 +170,15 @@ public class ValidatorTest extends TestCase
 	validator.setupValidation(null);
 	assertTrue("The default warn no grammar preference is not false.", validator.getWarnNoGrammarPreference());
 	
-	// Test that the preference is read when enabled.
-	XMLCorePlugin.getDefault().getPluginPreferences().setValue(XMLCorePreferenceNames.WARN_NO_GRAMMAR, true);
-	validator.setupValidation(null);
-	assertTrue("The warn no grammar preference is not true when the preference is set to true.", validator.getWarnNoGrammarPreference());
-	
-	
 	// Test that the preference is read when disabled.
 	XMLCorePlugin.getDefault().getPluginPreferences().setValue(XMLCorePreferenceNames.WARN_NO_GRAMMAR, false);
 	validator.setupValidation(null);
 	assertFalse("The warn no grammar preference is not false when the preference is set to false.", validator.getWarnNoGrammarPreference());
+
+	// Test that the preference is read when enabled.
+	XMLCorePlugin.getDefault().getPluginPreferences().setValue(XMLCorePreferenceNames.WARN_NO_GRAMMAR, true);
+	validator.setupValidation(null);
+	assertTrue("The warn no grammar preference is not true when the preference is set to true.", validator.getWarnNoGrammarPreference());
 	
   }
 
