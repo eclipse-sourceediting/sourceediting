@@ -1136,16 +1136,22 @@ public class XSDImpl
 				if(!isDataInNamespaceList(namespaceList, 0, schema.getTargetNamespace())) {
 					NamespaceInfo info = new NamespaceInfo();
 					info.uri = schema.getTargetNamespace();
-					info.prefix = getPrefix(schema,schema.getTargetNamespace());
 					info.isPrefixRequired = isPrefixRequired(schema);
-	    			int n = 1;
-	    			if(info.prefix == null || info.prefix.equals("")) {
-	    				info.prefix = "p";
-	    			}
-	    			String prefix = info.prefix;
-	    			while(isDataInNamespaceList(namespaceList, 1, info.prefix)) {
-	    				info.prefix = prefix + n++;
-	    			}
+					info.prefix = getPrefix(schema,schema.getTargetNamespace());
+					if("http://www.w3.org/XML/1998/namespace".equals(info.uri)) {
+    					info.prefix = "xml";
+    				} else if("http://www.w3.org/2000/xmlns".equals(info.uri)) {
+    					info.prefix = "xmlns";
+    				} else {
+    					int n = 1;
+    	    			if(info.prefix == null || info.prefix.equals("")) {
+    	    				info.prefix = "p";
+    	    			}
+    	    			String prefix = info.prefix;
+    	    			while(isDataInNamespaceList(namespaceList, 1, info.prefix)) {
+    	    				info.prefix = prefix + n++;
+    	    			}
+    				}
 	    			URI relative = URI.createURI(xsdSchema.getSchemaLocation(), true);
 					URI absolute = URI.createURI(schema.getSchemaLocation(), true);
 					URI resolvedRelative = absolute.deresolve(relative);
