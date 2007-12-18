@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     IBM Corporation - initial API and implementation
+ *     David Carver - STAR - Added content Assist check in testIgnoresAttributesOrder
  *******************************************************************************/
 package org.eclipse.wst.xml.core.tests.contentmodel;
 
@@ -67,8 +68,6 @@ public class TestAttributesOrder extends TestCase
    */
   public void testIgnoresAttributesOrder() throws IOException, CoreException
   {
-    if(true) return; //workaround for now
-
     // Tests the scenario that used to succeed, where the namespace prefix is
     // declared before the schemaLocation.
 
@@ -132,6 +131,7 @@ public class TestAttributesOrder extends TestCase
       assertNotNull("missing document element", documentElement); //$NON-NLS-1$
       CMElementDeclaration cmElementDeclaration = modelQuery.getCMElementDeclaration(documentElement);
       assertNotNull("No element declaration for" + documentElement.getNodeName() + " ("+documentElement.getNamespaceURI()+")", cmElementDeclaration); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      assertNotNull("No content assist available for" + documentElement.getNodeName() + " (" + documentElement.getNamespaceURI() + ")",modelQuery.getAvailableContent(documentElement, cmElementDeclaration, ModelQuery.INCLUDE_CHILD_NODES));
     }
     finally
     {

@@ -139,11 +139,12 @@ public class TestReconcilerXML extends TestCase {
 		try {
 			Thread.sleep(5000);
 			Iterator iter = annoModel.getAnnotationIterator();
+			// make sure the only problem we find is the lack of a specified grammar
 			while (iter.hasNext()) {
 				Annotation anno = (Annotation) iter.next();
 				String annoType = anno.getType();
 				if ((annotationAccess.isSubtype(annoType, ANNOTATION_ERROR)) || (annotationAccess.isSubtype(annoType, ANNOTATION_WARNING))) {
-					assertTrue("testReconciler: Unexpected initial annotations" + anno.getText(), false);
+					assertTrue("testReconciler: Unexpected initial annotations" + anno.getText(), anno.getText().indexOf("No grammar constraints") > -1);
 				}
 			}
 		}
