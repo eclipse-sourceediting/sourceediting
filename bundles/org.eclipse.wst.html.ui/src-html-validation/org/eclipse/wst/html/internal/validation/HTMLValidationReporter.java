@@ -78,15 +78,15 @@ public class HTMLValidationReporter implements ValidationReporter {
 	public void report(ValidationMessage message) {
 		if (message == null)
 			return;
-		if (this.file == null)
-			return;
-
 		IMessage mes = translateMessage(message);
 
 		if (this.reporter != null) {
 			this.reporter.addMessage(this.owner, mes);
 		}
 		else {
+			if (this.file == null)
+				return;
+
 			// add by myself?
 			String id = HTMLValidator.class.getName();
 			String location = Integer.toString(mes.getLineNumber());

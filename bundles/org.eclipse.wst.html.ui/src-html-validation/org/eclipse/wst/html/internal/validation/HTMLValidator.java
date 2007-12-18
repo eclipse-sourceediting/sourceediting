@@ -24,6 +24,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
@@ -267,16 +268,28 @@ public class HTMLValidator implements IValidatorJob, ISourceValidator, IExecutab
 				document = ((IDOMModel) model).getDocument();
 			}
 
-			if (document == null || !hasHTMLFeature(document))
-				return; // ignore
+			if (document == null || !hasHTMLFeature(document)) {
+				model.releaseFromRead();
+				return; //ignore
+			}
+			
+			IPath filePath = null;
+			IFile file = null;
 
 			ITextFileBuffer fb = FileBufferModelManager.getInstance().getBuffer(fDocument);
-			if (fb == null)
-				return;
+			if (fb != null) {
+				filePath = fb.getLocation();
 
-			IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(fb.getLocation());
-			if (file == null || !file.exists())
-				return;
+				if (filePath.segmentCount() > 1) {
+					file = ResourcesPlugin.getWorkspace().getRoot().getFile(filePath);
+					if (!file.isAccessible()) {
+						file = null;
+					}
+				}
+			}
+			else {
+				filePath = new Path(model.getId());
+			}
 
 			// this will be the wrong region if it's Text (instead of Element)
 			// we don't know how to validate Text
@@ -302,7 +315,7 @@ public class HTMLValidator implements IValidatorJob, ISourceValidator, IExecutab
 					rep.clear();
 					adapter.setReporter(rep);
 
-					Message mess = new LocalizedMessage(IMessage.LOW_SEVERITY, file.getFullPath().toString().substring(1));
+					Message mess = new LocalizedMessage(IMessage.LOW_SEVERITY, filePath.toString().substring(1));
 					reporter.displaySubtask(this, mess);
 				}
 				adapter.validate(ir);
