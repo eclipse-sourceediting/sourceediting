@@ -73,7 +73,7 @@ public class TestTaglibCMTests extends TestCase {
 			ModelQueryAdapter modelQueryAdapter = (ModelQueryAdapter) ((INodeNotifier) presents.item(0)).getAdapterFor(ModelQueryAdapter.class);
 			CMElementDeclaration declaration = modelQueryAdapter.getModelQuery().getCMElementDeclaration((Element) presents.item(0));
 			assertNotNull("no CMElementDelcaration for " + TAG_NAME, declaration);
-			assertEquals("qualified name from element declaration was different", declaration.getNodeName(), TAG_NAME);
+			assertEquals("qualified name from element declaration was different", TAG_NAME, declaration.getNodeName());
 		}
 		finally {
 			if (model != null) {
@@ -93,7 +93,37 @@ public class TestTaglibCMTests extends TestCase {
 			ModelQueryAdapter modelQueryAdapter = (ModelQueryAdapter) ((INodeNotifier) presents.item(0)).getAdapterFor(ModelQueryAdapter.class);
 			CMElementDeclaration declaration = modelQueryAdapter.getModelQuery().getCMElementDeclaration((Element) presents.item(0));
 			assertNotNull("no CMElementDeclaration for " + TAG_NAME, declaration);
-			assertEquals("qualified name from element declaration was different", declaration.getNodeName(), TAG_NAME);
+			assertEquals("qualified name from element declaration was different", TAG_NAME, declaration.getNodeName());
+		}
+		finally {
+			if (model != null) {
+				model.releaseFromEdit();
+			}
+		}
+	}
+	
+	public void testTagFileReferencedInTLD() throws IOException, CoreException {
+		String DPROJECT_NAME = "DynamicWebProject";
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(DPROJECT_NAME);
+		if (!project.exists()) {
+			// Create new project
+			project = BundleResourceUtil.createSimpleProject(DPROJECT_NAME, null, null);
+			BundleResourceUtil.copyBundleZippedEntriesIntoWorkspace("/testfiles/jspErrorProject.zip", Path.ROOT);
+		}
+		project.refreshLocal(IResource.DEPTH_INFINITE, null);
+
+		IFile jspFile = ResourcesPlugin.getWorkspace().getRoot().getFile(Path.ROOT.append("DynamicWebProject/WebContent/index.jsp"));
+
+		IDOMModel model = null;
+		try {
+			model = (IDOMModel) StructuredModelManager.getModelManager().getModelForEdit(jspFile);
+			String DTAGNAME = "date:returndate";
+			NodeList returnDates = model.getDocument().getElementsByTagName(DTAGNAME);
+			assertNotNull("date:returndate was missing from document", returnDates.item(0));
+			ModelQueryAdapter modelQueryAdapter = (ModelQueryAdapter) ((INodeNotifier) returnDates.item(0)).getAdapterFor(ModelQueryAdapter.class);
+			CMElementDeclaration declaration = modelQueryAdapter.getModelQuery().getCMElementDeclaration((Element) returnDates.item(0));
+			assertNotNull("no CMElementDeclaration for date:returndate", declaration);
+			assertEquals("qualified name from element declaration was different", DTAGNAME, declaration.getNodeName());
 		}
 		finally {
 			if (model != null) {

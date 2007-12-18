@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -64,13 +66,15 @@ public class BundleResourceUtil {
 		URL entry = JSPCoreTestsPlugin.getDefault().getBundle().getEntry(entryname);
 		if (entry != null) {
 			IPath path = new Path(fullPath);
-//			for (int j = 1; j <= path.segmentCount() - 2; j++) {
-//				IPath folderPath = path.removeLastSegments(path.segmentCount() - j);
-//				IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getFolder(folderPath);
-//				if (!folder.exists()) {
-//					folder.create(true, true, null);
-//				}
-//			}
+			// for (int j = 1; j <= path.segmentCount() - 2; j++) {
+			// IPath folderPath = path.removeLastSegments(path.segmentCount()
+			// - j);
+			// IFolder folder =
+			// ResourcesPlugin.getWorkspace().getRoot().getFolder(folderPath);
+			// if (!folder.exists()) {
+			// folder.create(true, true, null);
+			// }
+			// }
 			try {
 				byte[] b = new byte[2048];
 				InputStream input = entry.openStream();
@@ -124,6 +128,72 @@ public class BundleResourceUtil {
 		};
 		ResourcesPlugin.getWorkspace().run(runnable, new NullProgressMonitor());
 		return file[0];
+	}
+
+	public static void copyBundleZippedEntriesIntoWorkspace(final String zipFileEntry, final IPath fullTargetPath) throws CoreException {
+		IWorkspaceRunnable runnable = new IWorkspaceRunnable() {
+			public void run(IProgressMonitor monitor) throws CoreException {
+				IFile file = null;
+				URL entry = JSPCoreTestsPlugin.getDefault().getBundle().getEntry(zipFileEntry);
+				if (entry != null) {
+					try {
+						byte[] b = new byte[2048];
+						ZipInputStream input = new ZipInputStream(entry.openStream());
+
+						ZipEntry nextEntry = input.getNextEntry();
+						while (nextEntry != null) {
+							IPath path = fullTargetPath.append(nextEntry.getName());
+
+							if (nextEntry.isDirectory()) {
+								IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getFolder(path);
+								if (!folder.exists()) {
+									folder.create(true, true, null);
+								}
+							}
+							else {
+								IPath folderPath = path.removeLastSegments(1);
+								for (int i = folderPath.segmentCount(); i > 0; i--) {
+									IPath parentFolderPath = path.removeLastSegments(i);
+									if (parentFolderPath.segmentCount() > 1) {
+										IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getFolder(parentFolderPath);
+										if (!folder.exists()) {
+											folder.create(true, true, null);
+										}
+									}
+								}
+								file = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
+								ByteArrayOutputStream output = new ByteArrayOutputStream();
+								int i = -1;
+								while ((i = input.read(b)) > -1) {
+									output.write(b, 0, i);
+								}
+								if (!file.exists()) {
+									file.create(new ByteArrayInputStream(output.toByteArray()), true, new NullProgressMonitor());
+								}
+								else {
+									file.setContents(new ByteArrayInputStream(output.toByteArray()), true, false, new NullProgressMonitor());
+								}
+							}
+							ResourcesPlugin.getWorkspace().checkpoint(true);
+							nextEntry = input.getNextEntry();
+						}
+					}
+					catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					catch (CoreException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				else {
+					System.err.println("can't find " + zipFileEntry);
+				}
+				ResourcesPlugin.getWorkspace().checkpoint(true);
+			}
+		};
+		ResourcesPlugin.getWorkspace().run(runnable, new NullProgressMonitor());
 	}
 
 	/**
