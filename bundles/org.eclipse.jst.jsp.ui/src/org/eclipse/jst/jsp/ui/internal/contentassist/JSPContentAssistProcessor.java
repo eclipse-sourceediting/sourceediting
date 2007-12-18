@@ -49,8 +49,8 @@ import org.eclipse.wst.html.core.internal.contentmodel.HTMLElementDeclaration;
 import org.eclipse.wst.html.core.internal.contentmodel.JSPCMDocument;
 import org.eclipse.wst.html.core.internal.provisional.HTMLCMProperties;
 import org.eclipse.wst.html.core.text.IHTMLPartitions;
+import org.eclipse.wst.html.ui.StructuredTextViewerConfigurationHTML;
 import org.eclipse.wst.html.ui.internal.contentassist.HTMLContentAssistProcessor;
-import org.eclipse.wst.javascript.ui.internal.common.contentassist.JavaScriptContentAssistProcessor;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.ltk.parser.BlockMarker;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
@@ -118,6 +118,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor {
 	private final ICompletionProposal[] EMPTY_PROPOSAL_SET = new ICompletionProposal[0];
 	private JSPTemplateCompletionProcessor fTemplateProcessor = null;
 	private List fTemplateContexts = new ArrayList();
+	private IContentAssistProcessor fJSContentAssistProcessor;
 
 	public JSPContentAssistProcessor() {
 		super();
@@ -147,7 +148,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor {
 		HTMLContentAssistProcessor htmlProcessor = new HTMLContentAssistProcessor();
 		JSPJavaContentAssistProcessor jspJavaProcessor = new JSPJavaContentAssistProcessor();
 		XMLContentAssistProcessor xmlProcessor = new XMLContentAssistProcessor();
-		JavaScriptContentAssistProcessor javascriptProcessor = new JavaScriptContentAssistProcessor();
+		IContentAssistProcessor javascriptProcessor = getJSContentAssistProcessor();
 
 		fPartitionToProcessorMap.put(IHTMLPartitions.HTML_DEFAULT, htmlProcessor);
 		fPartitionToProcessorMap.put(IXMLPartitions.XML_DEFAULT, xmlProcessor);
@@ -155,9 +156,11 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor {
 		fPartitionToProcessorMap.put(IJSPPartitions.JSP_DEFAULT, jspJavaProcessor);
 		fPartitionToProcessorMap.put(IJSPPartitions.JSP_DIRECTIVE, xmlProcessor);
 		fPartitionToProcessorMap.put(IHTMLPartitions.HTML_COMMENT, htmlProcessor);
-		fPartitionToProcessorMap.put(IJSPPartitions.JSP_CONTENT_JAVASCRIPT, javascriptProcessor);
 		fPartitionToProcessorMap.put(IJSPPartitions.JSP_DEFAULT_EL, jspJavaProcessor);
-		fPartitionToProcessorMap.put(IHTMLPartitions.SCRIPT, javascriptProcessor); // default
+		if (javascriptProcessor != null) {
+			fPartitionToProcessorMap.put(IJSPPartitions.JSP_CONTENT_JAVASCRIPT, javascriptProcessor);
+			fPartitionToProcessorMap.put(IHTMLPartitions.SCRIPT, javascriptProcessor); // default
+		}
 		// to
 		// javascript
 		// for
@@ -898,7 +901,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor {
 
 		// fix for:
 		// HTML content assist give JSP tags in between empty script tags
-		if (!(p instanceof JavaScriptContentAssistProcessor || p instanceof CSSContentAssistProcessor)) {
+		if (!((getJSContentAssistProcessor() != null && getJSContentAssistProcessor().getClass().isInstance(p)) || p instanceof CSSContentAssistProcessor)) {
 			fTemplateContexts.clear();
 			jspResults = super.computeCompletionProposals(viewer, documentPosition);
 		}
@@ -991,6 +994,13 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor {
 
 		Collections.sort(results, new ProposalComparator());
 		return (ICompletionProposal[]) results.toArray(new ICompletionProposal[results.size()]);
+	}
+
+	private IContentAssistProcessor getJSContentAssistProcessor() {
+		if (fJSContentAssistProcessor == null) {
+			fJSContentAssistProcessor = new StructuredTextViewerConfigurationHTML().getContentAssistant(null).getContentAssistProcessor(IHTMLPartitions.SCRIPT);
+		}
+		return fJSContentAssistProcessor;
 	}
 
 	/*
