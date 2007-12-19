@@ -529,20 +529,14 @@ public class XSDImpl
       // typedef is a root type like xsd:anyType, so it has no base
       return false;
     }
+    
     // As this convenience method if our parameters match
     if (baseType.hasNameAndTargetNamespace(localName, namespace))
     {
       return true;
     }
     XSDTypeDefinition rootType = typedef.getRootType();
-    
-    // Need to check if the base type is redefined/circular
-    // otherwise this will be an endless recursive call.
-    if (baseType.isCircular())
-    {
-      return true;
-    }
-    
+
     if (rootType == baseType)
     {
       // If we've hit the root, we aren't derived from it
@@ -550,6 +544,14 @@ public class XSDImpl
     }
     else
     {
+      // Need to check if the base type is redefined/circular
+      // otherwise this will be an endless recursive call.
+      // Moved.  See https://bugs.eclipse.org/bugs/show_bug.cgi?id=213543
+      // This method should be replaced with     XSDConstants.isOrIsDerivedFrom(baseType, localName, namespace);
+      if (rootType.isCircular())
+      {
+        return true;
+      }
       // Otherwise continue to traverse upwards
       return isTypeDerivedFrom(baseType, namespace, localName);
     }
