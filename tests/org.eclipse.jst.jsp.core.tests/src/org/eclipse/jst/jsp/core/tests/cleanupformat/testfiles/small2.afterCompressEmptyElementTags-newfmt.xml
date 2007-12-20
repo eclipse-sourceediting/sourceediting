@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<XMI xmi.version="1.0" timestamp="Tue Nov 28 08:19:21 EST 2000">
+	<XMI.header>
+		<XMI.documentation>
+			<XMI.exporter>XMI Toolkit</XMI.exporter>
+			<XMI.exporterVersion>1.05</XMI.exporterVersion>
+		</XMI.documentation>
+		<XMI.documentation>
+			<XMI.exporterVersion />
+		</XMI.documentation>
+		<XMI.documentation>
+			<XMI.exporterVersion />
+		</XMI.documentation>
+		<XMI.documentation>
+			<XMI.documentation>
+				<XMI.exporterVersion>1.05</XMI.exporterVersion>
+			</XMI.documentation>
+			<XMI.documentation>
+				<XMI.exporterVersion>1.05</XMI.exporterVersion>
+			</XMI.documentation>
+			<XMI.documentation>
+				<XMI.exporterVersion xmi.name="UML" xmi.version="1.1" />
+			</XMI.documentation>
+			<XMI.documentation>
+				<XMI.exporterVersion xmi.name="UML" xmi.version="1.1" />
+			</XMI.documentation>
+			<XMI.metamodel xmi.name="UML" xmi.version="1.1" />
+	</XMI.header>
+	<XMI.content>
+		<Model_Manage xmi.id="_1" xmi.uuid="Name">
+			<Foundation.Core xmi.value="public" />
+			<XMI.extension xmi.extender="IXT" xmi.extenderID="">
+				<ixts s="IDL">
+					<ixttv t="uuid" v="DCE" />
+				</ixts>
+				<ixts s="Rose">
+					<ixttv t="quid" v="3780E272032D" />
+					<ixttv t="is_unit" v="TRUE" />
+					<ixttv t="file_name"
+						v="&#34;$ECLIPSE_RESOURCES\\eTools EJB libraries\\ejbschema.cat&#34;" />
+					<ixttv t="is_loaded" v="TRUE" />
+				</ixts>
+				<ixts s="RosePetal">
+					<ixttv t="charSet" v="0" />
+					<ixttv t="version" v="43" />
+					<ixttv t="_written" v="&#34;Rose 6.5.9232.10&#34;" />
+				</ixts>
+			</XMI.extension>
+		</Model_Manage>
+	</XMI.content>
+</XMI>
