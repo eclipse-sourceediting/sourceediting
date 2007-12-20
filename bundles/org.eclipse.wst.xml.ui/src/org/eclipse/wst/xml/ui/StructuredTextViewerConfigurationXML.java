@@ -27,14 +27,13 @@ import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.wst.sse.core.text.IStructuredPartitions;
 import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
-import org.eclipse.wst.sse.ui.internal.format.StructuredFormattingStrategy;
 import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
 import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
 import org.eclipse.wst.xml.core.internal.preferences.XMLCorePreferenceNames;
 import org.eclipse.wst.xml.core.internal.provisional.contenttype.ContentTypeIdForXML;
-import org.eclipse.wst.xml.core.internal.provisional.format.FormatProcessorXML;
 import org.eclipse.wst.xml.core.internal.text.rules.StructuredTextPartitionerForXML;
 import org.eclipse.wst.xml.core.text.IXMLPartitions;
+import org.eclipse.wst.xml.ui.internal.XMLFormattingStrategy;
 import org.eclipse.wst.xml.ui.internal.autoedit.AutoEditStrategyForTabs;
 import org.eclipse.wst.xml.ui.internal.contentassist.NoRegionContentAssistProcessor;
 import org.eclipse.wst.xml.ui.internal.contentassist.XMLContentAssistProcessor;
@@ -121,7 +120,8 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 		// generic one
 		if (!(formatter instanceof MultiPassContentFormatter))
 			formatter = new MultiPassContentFormatter(getConfiguredDocumentPartitioning(sourceViewer), IXMLPartitions.XML_DEFAULT);
-		((MultiPassContentFormatter) formatter).setMasterStrategy(new StructuredFormattingStrategy(new FormatProcessorXML()));
+		((MultiPassContentFormatter) formatter).setMasterStrategy(new XMLFormattingStrategy());		
+//		((MultiPassContentFormatter) formatter).setMasterStrategy(new StructuredFormattingStrategy(new FormatProcessorXML()));
 
 		return formatter;
 	}

@@ -19,9 +19,9 @@ import org.eclipse.wst.sse.core.internal.cleanup.IStructuredCleanupPreferences;
 import org.eclipse.wst.sse.core.internal.cleanup.StructuredCleanupPreferences;
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatProcessor;
 import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
+import org.eclipse.wst.xml.core.internal.formatter.XMLFormatterFormatProcessor;
 import org.eclipse.wst.xml.core.internal.preferences.XMLCorePreferenceNames;
 import org.eclipse.wst.xml.core.internal.provisional.contenttype.ContentTypeIdForXML;
-import org.eclipse.wst.xml.core.internal.provisional.format.FormatProcessorXML;
 import org.w3c.dom.Node;
 
 
@@ -75,7 +75,7 @@ public class CleanupProcessorXML extends AbstractStructuredCleanupProcessor {
 	}
 
 	protected IStructuredFormatProcessor getFormatProcessor() {
-		return new FormatProcessorXML();
+		return new XMLFormatterFormatProcessor();
 	}
 
 	protected Preferences getModelPreferences() {

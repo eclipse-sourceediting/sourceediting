@@ -97,7 +97,7 @@
 	
 	<extension point="org.eclipse.wst.sse.core.formatProcessors">
 		<processor
-			class="org.eclipse.wst.xml.core.internal.provisional.format.FormatProcessorXML"
+			class="org.eclipse.wst.xml.core.internal.formatter.XMLFormatterFormatProcessor"
 			contentTypeId="org.eclipse.core.runtime.xml">
 		</processor>
 	</extension>

@@ -28,6 +28,7 @@ Export-Package: org.eclipse.wst.xml.core.internal;x-friends:="org.eclipse.wst.dt
  org.eclipse.wst.xml.core.internal.document;x-friends:="org.eclipse.wst.dtd.core,org.eclipse.wst.dtd.ui,org.eclipse.wst.xml.ui,org.eclipse.wst.xsd.core,org.eclipse.wst.xsd.ui",
  org.eclipse.wst.xml.core.internal.emf2xml;x-friends:="org.eclipse.wst.dtd.core,org.eclipse.wst.dtd.ui,org.eclipse.wst.xml.ui,org.eclipse.wst.xsd.core,org.eclipse.wst.xsd.ui",
  org.eclipse.wst.xml.core.internal.encoding;x-friends:="org.eclipse.wst.dtd.core,org.eclipse.wst.dtd.ui,org.eclipse.wst.xml.ui,org.eclipse.wst.xsd.core,org.eclipse.wst.xsd.ui",
+ org.eclipse.wst.xml.core.internal.formatter;x-friends:="org.eclipse.wst.dtd.core,org.eclipse.wst.dtd.ui,org.eclipse.wst.xml.ui,org.eclipse.wst.xsd.core,org.eclipse.wst.xsd.ui",
  org.eclipse.wst.xml.core.internal.modelhandler;x-friends:="org.eclipse.wst.dtd.core,org.eclipse.wst.dtd.ui,org.eclipse.wst.xml.ui,org.eclipse.wst.xsd.core,org.eclipse.wst.xsd.ui",
  org.eclipse.wst.xml.core.internal.modelquery;x-friends:="org.eclipse.wst.dtd.core,org.eclipse.wst.dtd.ui,org.eclipse.wst.xml.ui,org.eclipse.wst.xsd.core,org.eclipse.wst.xsd.ui",
  org.eclipse.wst.xml.core.internal.parser;x-friends:="org.eclipse.wst.dtd.core,org.eclipse.wst.dtd.ui,org.eclipse.wst.xml.ui,org.eclipse.wst.xsd.core,org.eclipse.wst.xsd.ui",

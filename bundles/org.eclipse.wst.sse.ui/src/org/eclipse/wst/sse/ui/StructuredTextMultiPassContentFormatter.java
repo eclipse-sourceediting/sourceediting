@@ -19,6 +19,7 @@ import org.eclipse.jface.text.formatter.FormattingContextProperties;
 import org.eclipse.jface.text.formatter.IFormattingContext;
 import org.eclipse.jface.text.formatter.IFormattingStrategy;
 import org.eclipse.jface.text.formatter.MultiPassContentFormatter;
+import org.eclipse.wst.sse.core.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.ExtendedConfigurationBuilder;
 
 /**
@@ -46,6 +47,18 @@ class StructuredTextMultiPassContentFormatter extends MultiPassContentFormatter 
 	 */
 	public StructuredTextMultiPassContentFormatter(final String partitioning, final String type) {
 		super(partitioning, type);
+	}
+
+	protected void formatMaster(IFormattingContext context, IDocument document, int offset, int length) {
+		// for debugging purposes
+		long startTime = System.currentTimeMillis();
+
+		super.formatMaster(context, document, offset, length);
+
+		if (Logger.DEBUG_FORMAT) {
+			long endTime = System.currentTimeMillis();
+			System.out.println("formatModel time: " + (endTime - startTime)); //$NON-NLS-1$
+		}
 	}
 
 	/*
