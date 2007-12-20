@@ -318,5 +318,11 @@ public class XSDSchemaEditPart extends BaseEditPart
     {
       super.createEditPolicies();
     }
+    
+    public boolean isSelectable()
+    {
+      return false;
+    }
+
   }
 }
