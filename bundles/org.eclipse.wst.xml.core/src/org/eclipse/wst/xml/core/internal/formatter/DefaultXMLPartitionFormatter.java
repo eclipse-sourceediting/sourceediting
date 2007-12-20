@@ -468,7 +468,23 @@ public class DefaultXMLPartitionFormatter {
 				// end tag's indent level should be same as start tag's
 				childrenConstraints.setIndentLevel(thisConstraints.getIndentLevel());
 				// format end tag
-				if (nextRegion.getFirstRegion().getType() == DOMRegionContext.XML_END_TAG_OPEN)
+				boolean formatEndTag = false;
+				if (nextRegion != null && currentDOMNode != null) {
+					ITextRegionList rs = nextRegion.getRegions();
+					if (rs.size() > 1) {
+						ITextRegion r = rs.get(0);
+						if (r != null && r.getType() == DOMRegionContext.XML_END_TAG_OPEN) {
+							r = rs.get(1);
+							if (r != null && r.getType() == DOMRegionContext.XML_TAG_NAME) {
+								String tagName = nextRegion.getText(r);
+								if (tagName != null && tagName.equals(currentDOMNode.getNodeName()))
+									formatEndTag = true;
+							}
+						}
+
+					}
+				}
+				if (formatEndTag)
 					formatEndTag(textEdit, formatRange, childrenConstraints, currentDOMRegion, previousDocumentRegion);
 				else {
 					// missing end tag so return last formatted document
