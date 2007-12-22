@@ -17,7 +17,7 @@ import org.eclipse.wst.xsl.launching.IProcessorInvokerDescriptor;
 
 public class InvokerRegistry
 {
-	private final Map invokers = new HashMap();
+	private final Map<String, IProcessorInvokerDescriptor> invokers = new HashMap<String, IProcessorInvokerDescriptor>();
 
 	public InvokerRegistry()
 	{

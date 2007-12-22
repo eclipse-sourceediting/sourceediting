@@ -33,7 +33,7 @@ import org.w3c.dom.NodeList;
 
 public class LaunchPipeline
 {
-	private List transformDefs = new ArrayList();
+	private List<LaunchTransform> transformDefs = new ArrayList<LaunchTransform>();
 	private final Properties outputProperties = new Properties();
 
 	public Properties getOutputProperties()
@@ -46,12 +46,12 @@ public class LaunchPipeline
 		outputProperties.put(name, value);
 	}
 
-	public List getTransformDefs()
+	public List<LaunchTransform> getTransformDefs()
 	{
 		return transformDefs;
 	}
 
-	public void setTransformDefs(List transforms)
+	public void setTransformDefs(List<LaunchTransform> transforms)
 	{
 		transformDefs = transforms;
 	}
@@ -87,7 +87,7 @@ public class LaunchPipeline
 				opEl.appendChild(propEl);
 			}
 
-			for (Iterator iter = transformDefs.iterator(); iter.hasNext();)
+			for (Iterator<LaunchTransform> iter = transformDefs.iterator(); iter.hasNext();)
 			{
 				LaunchTransform tdef = (LaunchTransform) iter.next();
 				Element tdefEl = tdef.asXML(doc);

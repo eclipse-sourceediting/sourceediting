@@ -15,7 +15,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.JavaConventions;
 import org.eclipse.wst.xsl.launching.IFeature;
 
-public class Feature implements IFeature, Comparable
+public class Feature implements IFeature, Comparable<Object>
 {
 	private final String uri;
 	private final String description;

@@ -41,9 +41,9 @@ public class ProcessorType implements IProcessorType
 	private IFeature[] features;
 	private IOutputProperty[] outputProperties;
 	private Properties outputPropertyValues;
-	private Map featureValues;
+	private Map<String, String> featureValues;
 
-	public ProcessorType(String id, String name, URL featurePropertiesURL, URL outputPropertiesURL, Map featureValues, Properties outputPropertyValues, String transFactoryName)
+	public ProcessorType(String id, String name, URL featurePropertiesURL, URL outputPropertiesURL, Map<String, String> featureValues, Properties outputPropertyValues, String transFactoryName)
 	{
 		this.id = id;
 		this.name = name;
@@ -64,17 +64,20 @@ public class ProcessorType implements IProcessorType
 		return name;
 	}
 
-	public Map getFeatureValues()
+	public Map<String, String> getFeatureValues()
 	{
 		return featureValues;
 	}
 
 	public IFeature[] getFeatures()
 	{
-		if (features == null && featurePropertiesURL != null)
-			features = loadFeatures();
-		else
-			features = new IFeature[0];
+		if (features == null)
+		{
+			if (featurePropertiesURL != null)
+				features = loadFeatures();
+			else
+				features = new IFeature[0];
+		}
 		return features;
 	}
 
@@ -95,17 +98,20 @@ public class ProcessorType implements IProcessorType
 
 	public IOutputProperty[] getOutputProperties()
 	{
-		if (outputProperties == null && outputPropertiesURL != null)
-			outputProperties = loadOutputProperties();
-		else
-			outputProperties = new IOutputProperty[0];
+		if (outputProperties == null)
+		{
+			if (outputPropertiesURL != null)
+				outputProperties = loadOutputProperties();
+			else
+				outputProperties = new IOutputProperty[0];
+		}
 		return outputProperties;
 	}
 
 	private IOutputProperty[] loadOutputProperties()
 	{
 		BufferedInputStream is = null;
-		List outputs = new ArrayList();
+		List<OutputProperty> outputs = new ArrayList<OutputProperty>();
 		Properties props = new Properties();
 		try
 		{
@@ -157,7 +163,7 @@ public class ProcessorType implements IProcessorType
 	private IFeature[] loadFeatures()
 	{
 		BufferedInputStream is = null;
-		List featuresList = new ArrayList();
+		List<Feature> featuresList = new ArrayList<Feature>();
 		try
 		{
 			is = new BufferedInputStream(featurePropertiesURL.openStream());

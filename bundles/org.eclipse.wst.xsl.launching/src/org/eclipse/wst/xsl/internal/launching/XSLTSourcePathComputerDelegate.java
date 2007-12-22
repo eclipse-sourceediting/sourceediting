@@ -38,7 +38,7 @@ public class XSLTSourcePathComputerDelegate implements ISourcePathComputerDelega
 {
 	public ISourceContainer[] computeSourceContainers(ILaunchConfiguration configuration, IProgressMonitor monitor) throws CoreException
 	{
-		List containers = new ArrayList();
+		List<ISourceContainer> containers = new ArrayList<ISourceContainer>();
 
 		String sourceFileExpr = configuration.getAttribute(XSLLaunchConfigurationConstants.ATTR_INPUT_FILE, (String) null);
 		IPath sourceFile = getSubstitutedPath(sourceFileExpr);
@@ -47,7 +47,7 @@ public class XSLTSourcePathComputerDelegate implements ISourcePathComputerDelega
 		// TODO have some way of knowing whether it is an IResource or not
 		containers.add(new DirectorySourceContainer(sourceFile, false));
 
-		for (Iterator iter = pipeline.getTransformDefs().iterator(); iter.hasNext();)
+		for (Iterator<?> iter = pipeline.getTransformDefs().iterator(); iter.hasNext();)
 		{
 			LaunchTransform transform = (LaunchTransform) iter.next();
 			IPath path = transform.getPath();

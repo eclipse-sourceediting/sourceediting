@@ -24,8 +24,8 @@ import org.eclipse.wst.xsl.internal.launching.registry.ProcessorRegistryReader;
 public class ProcessorRegistry
 {
 	private final ListenerList fgProcessorListeners = new ListenerList();
-	private final List contributedInstalls = new ArrayList();
-	private List userInstalls = new ArrayList();
+	private final List<ProcessorInstall> contributedInstalls = new ArrayList<ProcessorInstall>();
+	private List<IProcessorInstall> userInstalls = new ArrayList<IProcessorInstall>();
 	private IProcessorInstall defaultProcessor;
 	private IProcessorInstall jreDefaultProcessor;
 	private IProcessorInstall[] installs;
@@ -41,7 +41,7 @@ public class ProcessorRegistry
 		ProcessorRegistryReader registryReader = new ProcessorRegistryReader();
 		registryReader.addConfigs(this);
 		// find the jre default
-		for (Iterator iter = contributedInstalls.iterator(); iter.hasNext();)
+		for (Iterator<ProcessorInstall> iter = contributedInstalls.iterator(); iter.hasNext();)
 		{
 			IProcessorInstall install = (IProcessorInstall) iter.next();
 			if (install.getId().equals(XSLTRuntime.JRE_DEFAULT_PROCESSOR_ID))
@@ -68,7 +68,7 @@ public class ProcessorRegistry
 				ProcessorPreferences prefs = ProcessorPreferences.fromXML(inputStream);
 				String defaultProcessorId = prefs.getDefaultProcessorId();
 				userInstalls = prefs.getProcessors();
-				for (Iterator iter = userInstalls.iterator(); iter.hasNext();)
+				for (Iterator<IProcessorInstall> iter = userInstalls.iterator(); iter.hasNext();)
 				{
 					IProcessorInstall install = (IProcessorInstall) iter.next();
 					if (install.getId().equals(defaultProcessorId))
@@ -78,7 +78,7 @@ public class ProcessorRegistry
 				}
 				if (defaultProcessor == null)
 				{
-					for (Iterator iter = contributedInstalls.iterator(); iter.hasNext();)
+					for (Iterator<ProcessorInstall> iter = contributedInstalls.iterator(); iter.hasNext();)
 					{
 						IProcessorInstall install = (IProcessorInstall) iter.next();
 						if (defaultProcessor == null && install.getId().equals(defaultProcessorId))
@@ -151,7 +151,7 @@ public class ProcessorRegistry
 	public IProcessorInstall[] getProcessors(String id)
 	{
 		IProcessorInstall[] installs = getProcessors();
-		List result = new ArrayList();
+		List<IProcessorInstall> result = new ArrayList<IProcessorInstall>();
 		for (IProcessorInstall type : installs)
 		{
 			if (type.getProcessorTypeId().equals(id))

@@ -75,7 +75,7 @@ public class FeaturesBlock extends AbstractTableBlock
 	private LaunchFeatures launchFeatures;
 	private LaunchFeatures featuresFromPreferences;
 	private Button changePreferences;
-	private final Map processorFeatures = new HashMap();
+	private final Map<IProcessorType, LaunchFeatures> processorFeatures = new HashMap<IProcessorType, LaunchFeatures>();
 	private Button useSpecificFeaturesRadio;
 
 	@Override
@@ -194,7 +194,7 @@ public class FeaturesBlock extends AbstractTableBlock
 		tViewer.setContentProvider(new IStructuredContentProvider()
 		{
 
-			private Set typedFeatures;
+			private Set<?> typedFeatures;
 
 			public Object[] getElements(Object inputElement)
 			{
@@ -207,7 +207,7 @@ public class FeaturesBlock extends AbstractTableBlock
 
 			public void inputChanged(Viewer viewer, Object oldInput, Object newInput)
 			{
-				typedFeatures = (Set) newInput;
+				typedFeatures = (Set<?>) newInput;
 			}
 		});
 		tViewer.setLabelProvider(new ITableLabelProvider()
@@ -451,7 +451,7 @@ public class FeaturesBlock extends AbstractTableBlock
 		LaunchFeatures featuresFromPreferences = new LaunchFeatures();
 
 		IFeature[] features = processorType.getFeatures();
-		Map values = processorType.getFeatureValues();
+		Map<?, ?> values = processorType.getFeatureValues();
 		for (IFeature feature : features)
 		{
 			featuresFromPreferences.addFeature(new LaunchAttribute(feature.getURI(), feature.getType(), (String) values.get(feature.getURI())));

@@ -32,7 +32,7 @@ public class LaunchTransform
 	private final String stylesheet;
 	private final String pathType;
 	private String resolver;
-	private final Set parameters = new HashSet();
+	private final Set<LaunchAttribute> parameters = new HashSet<LaunchAttribute>();
 	private LaunchPipeline pipeline;
 
 	/**
@@ -50,7 +50,7 @@ public class LaunchTransform
 		this.pathType = pathType;
 	}
 
-	public Set getParameters()
+	public Set<LaunchAttribute> getParameters()
 	{
 		return parameters;
 	}
@@ -113,7 +113,7 @@ public class LaunchTransform
 			tdefEl.setAttribute("uriResolver", resolver);
 		Element paramsEl = doc.createElement("Parameters");
 		tdefEl.appendChild(paramsEl);
-		for (Iterator iter = parameters.iterator(); iter.hasNext();)
+		for (Iterator<LaunchAttribute> iter = parameters.iterator(); iter.hasNext();)
 		{
 			LaunchAttribute param = (LaunchAttribute) iter.next();
 			Element propEl = doc.createElement("Parameter");

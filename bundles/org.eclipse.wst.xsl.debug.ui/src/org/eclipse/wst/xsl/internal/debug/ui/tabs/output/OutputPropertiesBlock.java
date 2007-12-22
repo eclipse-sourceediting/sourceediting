@@ -63,7 +63,7 @@ public class OutputPropertiesBlock extends AbstractTableBlock
 	private TableViewer tViewer;
 	private Text descriptionText;
 	private IProcessorType processorType;
-	private final Map typeProperties = new HashMap();
+	private final Map<IProcessorType, LaunchProperties> typeProperties = new HashMap<IProcessorType, LaunchProperties>();
 	private Button usePropertiesFromPreferencesRadio;
 	private Button changePreferences;
 	private Button useSpecificFeaturesRadio;
@@ -348,7 +348,7 @@ public class OutputPropertiesBlock extends AbstractTableBlock
 
 		IProcessorType jreDefaultType = XSLTRuntime.getProcessorType(XSLTRuntime.JRE_DEFAULT_PROCESSOR_TYPE_ID);
 		IOutputProperty[] features = jreDefaultType.getOutputProperties();
-		Map values = jreDefaultType.getOutputPropertyValues();
+		Map<?, ?> values = jreDefaultType.getOutputPropertyValues();
 		for (IOutputProperty feature : features)
 		{
 			String key = feature.getKey();
@@ -391,7 +391,7 @@ public class OutputPropertiesBlock extends AbstractTableBlock
 			IOutputProperty[] props = new IOutputProperty[specificProps.length + defaultProps.length];
 			System.arraycopy(specificProps, 0, props, 0, specificProps.length);
 			System.arraycopy(defaultProps, 0, props, specificProps.length, defaultProps.length);
-			for (Iterator iterator = overrideFeatures.getProperties().keySet().iterator(); iterator.hasNext();)
+			for (Iterator<?> iterator = overrideFeatures.getProperties().keySet().iterator(); iterator.hasNext();)
 			{
 				String key = (String) iterator.next();
 				launchFeatures.removeProperty(key);

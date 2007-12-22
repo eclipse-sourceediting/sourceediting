@@ -27,9 +27,9 @@ import org.w3c.dom.NodeList;
 
 public class LaunchProperties
 {
-	private final Map properties = new HashMap();
+	private final Map<String, String> properties = new HashMap<String, String>();
 
-	public Map getProperties()
+	public Map<String, String> getProperties()
 	{
 		return properties;
 	}
@@ -56,7 +56,7 @@ public class LaunchProperties
 		Element featuresEl = doc.createElement("Properties");
 		doc.appendChild(featuresEl);
 
-		for (Iterator iter = properties.entrySet().iterator(); iter.hasNext();)
+		for (Iterator<?> iter = properties.entrySet().iterator(); iter.hasNext();)
 		{
 			Map.Entry entry = (Map.Entry) iter.next();
 			String name = (String) entry.getKey();

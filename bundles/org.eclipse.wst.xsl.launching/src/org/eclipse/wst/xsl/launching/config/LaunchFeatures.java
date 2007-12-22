@@ -27,9 +27,9 @@ import org.w3c.dom.NodeList;
 
 public class LaunchFeatures
 {
-	private final Set features = new HashSet();
+	private final Set<LaunchAttribute> features = new HashSet<LaunchAttribute>();
 
-	public Set getFeatures()
+	public Set<LaunchAttribute> getFeatures()
 	{
 		return features;
 	}
@@ -41,7 +41,7 @@ public class LaunchFeatures
 
 	public LaunchAttribute getFeature(String uri)
 	{
-		for (Iterator iter = features.iterator(); iter.hasNext();)
+		for (Iterator<LaunchAttribute> iter = features.iterator(); iter.hasNext();)
 		{
 			LaunchAttribute tv = (LaunchAttribute) iter.next();
 			if (tv.uri.equals(uri))
@@ -52,7 +52,7 @@ public class LaunchFeatures
 
 	public void removeFeature(String uri)
 	{
-		for (Iterator iter = features.iterator(); iter.hasNext();)
+		for (Iterator<LaunchAttribute> iter = features.iterator(); iter.hasNext();)
 		{
 			LaunchAttribute feature = (LaunchAttribute) iter.next();
 			if (feature.uri.equals(uri))
@@ -67,7 +67,7 @@ public class LaunchFeatures
 		Element featuresEl = doc.createElement("Features");
 		doc.appendChild(featuresEl);
 
-		for (Iterator iter = features.iterator(); iter.hasNext();)
+		for (Iterator<LaunchAttribute> iter = features.iterator(); iter.hasNext();)
 		{
 			LaunchAttribute feature = (LaunchAttribute) iter.next();
 			if (feature.value == null)

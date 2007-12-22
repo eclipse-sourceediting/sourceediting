@@ -40,7 +40,7 @@ import org.eclipse.wst.xsl.launching.XSLTRuntime;
 
 public class FeaturesPreferencePage extends PreferencePage implements IWorkbenchPreferencePage
 {
-	private final Map typeFeatureMap = new HashMap();
+	private final Map<IProcessorType, Map<String, String>> typeFeatureMap = new HashMap<IProcessorType, Map<String, String>>();
 	private ComboViewer cViewer;
 	private FeaturesBlock featuresBlock;
 
@@ -115,12 +115,12 @@ public class FeaturesPreferencePage extends PreferencePage implements IWorkbench
 				IProcessorType type = (IProcessorType) selection.getFirstElement();
 				if (type != null)
 				{
-					featuresBlock.setFeatureValues((Map) typeFeatureMap.get(type));
+					featuresBlock.setFeatureValues((Map<String, String>) typeFeatureMap.get(type));
 					featuresBlock.setInput(type.getFeatures());
 				}
 				else
 				{
-					featuresBlock.setFeatureValues(new HashMap());
+					featuresBlock.setFeatureValues(new HashMap<String, String>());
 					featuresBlock.setInput(new IFeature[0]);
 				}
 			}

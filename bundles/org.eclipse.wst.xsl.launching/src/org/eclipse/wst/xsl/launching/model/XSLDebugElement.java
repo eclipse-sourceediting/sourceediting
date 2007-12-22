@@ -45,6 +45,7 @@ public abstract class XSLDebugElement extends PlatformObject implements IDebugEl
 		return getDebugTarget().getLaunch();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Object getAdapter(Class adapter)
 	{

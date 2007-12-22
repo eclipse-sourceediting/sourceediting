@@ -105,13 +105,13 @@ public class XSLLaunchShortcut implements ILaunchShortcut
 
 	protected ILaunchConfiguration findLaunchConfiguration(IFile sourceXML, IFile[] stylesheets, ILaunchConfigurationType configType)
 	{
-		List candidateConfigs = Collections.EMPTY_LIST;
+		List<ILaunchConfiguration> candidateConfigs = Collections.EMPTY_LIST;
 		if (sourceXML != null)
 		{
 			try
 			{
 				ILaunchConfiguration[] configs = getLaunchManager().getLaunchConfigurations(configType);
-				candidateConfigs = new ArrayList(configs.length);
+				candidateConfigs = new ArrayList<ILaunchConfiguration>(configs.length);
 				for (ILaunchConfiguration config : configs)
 				{
 					String inputFile = config.getAttribute(XSLLaunchConfigurationConstants.ATTR_INPUT_FILE, (String) null);
@@ -126,7 +126,7 @@ public class XSLLaunchShortcut implements ILaunchShortcut
 						for (IFile stylesheet : stylesheets)
 						{
 							found = false;
-							for (Iterator iter = lh.getPipeline().getTransformDefs().iterator(); iter.hasNext();)
+							for (Iterator<?> iter = lh.getPipeline().getTransformDefs().iterator(); iter.hasNext();)
 							{
 								LaunchTransform lt = (LaunchTransform) iter.next();
 								if (lt.getLocation().equals(stylesheet.getLocation()))
@@ -181,7 +181,7 @@ public class XSLLaunchShortcut implements ILaunchShortcut
 		return null;
 	}
 
-	protected ILaunchConfiguration chooseConfiguration(List configList)
+	protected ILaunchConfiguration chooseConfiguration(List<ILaunchConfiguration> configList)
 	{
 		IDebugModelPresentation labelProvider = DebugUITools.newDebugModelPresentation();
 		ElementListSelectionDialog dialog = new ElementListSelectionDialog(getShell(), labelProvider);

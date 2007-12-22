@@ -36,7 +36,7 @@ public class ProcessorTypeRegistry
 	protected static final String DESC_SUFFIX = ".DESC";
 	protected static final String TYPE_SUFFIX = ".TYPE";
 
-	private final List elements = new ArrayList();
+	private final List<IConfigurationElement> elements = new ArrayList<IConfigurationElement>();
 	private IProcessorType[] installTypes;
 
 	public ProcessorTypeRegistry()
@@ -49,7 +49,7 @@ public class ProcessorTypeRegistry
 	{
 		if (installTypes == null)
 		{
-			List types = new ArrayList();
+			List<ProcessorType> types = new ArrayList<ProcessorType>();
 			String featureXMLString = XSLTRuntime.getPreferences().getString(XSLTRuntime.PREF_FEATURE_XML);
 			// If the preference was found, load VMs from it into memory
 			FeaturePreferences prefs = null;
@@ -82,13 +82,13 @@ public class ProcessorTypeRegistry
 				}
 			}
 
-			for (Iterator iter = elements.iterator(); iter.hasNext();)
+			for (Iterator<IConfigurationElement> iter = elements.iterator(); iter.hasNext();)
 			{
 				IConfigurationElement element = (IConfigurationElement) iter.next();
 				String id = element.getAttribute(ProcessorTypeRegistryReader.ATT_ID);
 				String label = element.getAttribute(ProcessorTypeRegistryReader.ATT_LABEL);
 				String transFactoryName = element.getAttribute(ProcessorTypeRegistryReader.ATT_TRANSFORMER_FACTORY_NAME);
-				Map featureValues = new HashMap();
+				Map<String, String> featureValues = new HashMap<String, String>();
 				Properties propertyValues = new Properties();
 				if (prefs != null && prefs.getFeaturesValues(id) != null)
 					featureValues.putAll(prefs.getFeaturesValues(id));
@@ -110,7 +110,7 @@ public class ProcessorTypeRegistry
 	public IProcessorType[] getProcessorTypesExclJREDefault()
 	{
 		IProcessorType[] installTypes = getProcessorTypes();
-		List exclTypes = new ArrayList(installTypes.length - 1);
+		List<IProcessorType> exclTypes = new ArrayList<IProcessorType>(installTypes.length - 1);
 		for (IProcessorType type : installTypes)
 		{
 			if (!type.isJREDefault())

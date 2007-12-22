@@ -118,13 +118,13 @@ public abstract class AbstractStylesheetAction extends SelectionListenerAction
 		return DEFAULT;
 	}
 
-	protected List getOrderedSelection()
+	protected List<?> getOrderedSelection()
 	{
-		List selection = ((IStructuredSelection) getViewer().getSelection()).toList();
+		List<?> selection = ((IStructuredSelection) getViewer().getSelection()).toList();
 		return selection;
 	}
 
-	protected List getEntriesAsList()
+	protected List<LaunchTransform> getEntriesAsList()
 	{
 		// IStylesheetEntry[] entries = getViewer().getEntries();
 		// List list = new ArrayList(entries.length);
@@ -135,7 +135,7 @@ public abstract class AbstractStylesheetAction extends SelectionListenerAction
 		return lp.getTransformDefs();
 	}
 
-	protected void setEntries(List list)
+	protected void setEntries(List<?> list)
 	{
 		getViewer().setEntries((LaunchTransform[]) list.toArray(new LaunchTransform[list.size()]));
 		// // update all selection listeners
@@ -148,8 +148,8 @@ public abstract class AbstractStylesheetAction extends SelectionListenerAction
 		{
 			return false;
 		}
-		Iterator entries = selection.iterator();
-		List list = getEntriesAsList();
+		Iterator<?> entries = selection.iterator();
+		List<?> list = getEntriesAsList();
 		while (entries.hasNext())
 		{
 			Object next = entries.next();

@@ -27,14 +27,14 @@ import org.w3c.dom.Element;
 
 public class FeaturePreferences
 {
-	private Map typeFeatures;
+	private Map<String, Map<String, String>> typeFeatures;
 
-	public Map getFeaturesValues(String typeId)
+	public Map<String, String> getFeaturesValues(String typeId)
 	{
-		return (Map) typeFeatures.get(typeId);
+		return typeFeatures.get(typeId);
 	}
 
-	public void setTypeFeatures(Map typeFeatures)
+	public void setTypeFeatures(Map<String, Map<String, String>> typeFeatures)
 	{
 		this.typeFeatures = typeFeatures;
 	}
@@ -45,12 +45,12 @@ public class FeaturePreferences
 		Element config = doc.createElement("featurePreferences"); 
 		doc.appendChild(config);
 
-		for (Iterator iter = typeFeatures.entrySet().iterator(); iter.hasNext();)
+		for (Iterator<?> iter = typeFeatures.entrySet().iterator(); iter.hasNext();)
 		{
 			Map.Entry entry = (Map.Entry) iter.next();
 			ProcessorType type = (ProcessorType) entry.getKey();
 			Element processorTypeElement = typeAsElement(doc, type.getId());
-			Map featureValues = (Map) entry.getValue();
+			Map<?, ?> featureValues = (Map<?, ?>) entry.getValue();
 			featureValuesAsElement(doc, processorTypeElement, featureValues);
 			config.appendChild(processorTypeElement);
 		}
@@ -67,13 +67,13 @@ public class FeaturePreferences
 		Document doc = PreferenceUtil.getDocument(inputStream);
 		Element config = doc.getDocumentElement();
 
-		Map typeFeatures = new HashMap();
+		Map<String, Map<String, String>> typeFeatures = new HashMap<String, Map<String, String>>();
 		Element[] processorTypeEls = PreferenceUtil.getChildElements(config, "processorType");
 		for (int i = 0; i < processorTypeEls.length; ++i)
 		{
 			Element processorTypeEl = processorTypeEls[i];
 			String type = elementAsType(processorTypeEl);
-			Map featureValues = elementAsFeatureValues(processorTypeEl);
+			Map<String, String> featureValues = elementAsFeatureValues(processorTypeEl);
 			typeFeatures.put(type, featureValues);
 		}
 
@@ -95,10 +95,10 @@ public class FeaturePreferences
 		return element;
 	}
 
-	private static Map elementAsFeatureValues(Element element)
+	private static Map<String, String> elementAsFeatureValues(Element element)
 	{
 		Element[] featureEls = PreferenceUtil.getChildElements(element, "feature");
-		Map featureValues = new HashMap(featureEls.length);
+		Map<String, String> featureValues = new HashMap<String, String>(featureEls.length);
 		for (Element featureEl : featureEls)
 		{
 			String uri = featureEl.getAttribute("uri");
@@ -108,11 +108,11 @@ public class FeaturePreferences
 		return featureValues;
 	}
 
-	private static void featureValuesAsElement(Document doc, Element featuresEl, Map featureValues)
+	private static void featureValuesAsElement(Document doc, Element featuresEl, Map<?, ?> featureValues)
 	{
 		if (featureValues != null)
 		{
-			for (Iterator iterator = featureValues.entrySet().iterator(); iterator.hasNext();)
+			for (Iterator<?> iterator = featureValues.entrySet().iterator(); iterator.hasNext();)
 			{
 				Map.Entry entry2 = (Map.Entry) iterator.next();
 				String uri = (String) entry2.getKey();

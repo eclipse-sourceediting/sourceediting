@@ -31,14 +31,14 @@ import org.w3c.dom.Text;
 public class ProcessorPreferences
 {
 	private String defaultProcessorId;
-	private List processors = new ArrayList();
+	private List<IProcessorInstall> processors = new ArrayList<IProcessorInstall>();
 
-	public void setProcessors(List processors)
+	public void setProcessors(List<IProcessorInstall> processors)
 	{
 		this.processors = processors;
 	}
 
-	public List getProcessors()
+	public List<IProcessorInstall> getProcessors()
 	{
 		return processors;
 	}
@@ -65,7 +65,7 @@ public class ProcessorPreferences
 			config.setAttribute("defaultProcessor", defaultProcessorId); 
 		}
 
-		for (Iterator iter = processors.iterator(); iter.hasNext();)
+		for (Iterator<IProcessorInstall> iter = processors.iterator(); iter.hasNext();)
 		{
 			IProcessorInstall install = (IProcessorInstall) iter.next();
 			if (!install.isContributed())
@@ -89,7 +89,7 @@ public class ProcessorPreferences
 		// Populate the default VM-related fields
 		prefs.setDefaultProcessorId(config.getAttribute("defaultProcessor"));
 
-		List processors = new ArrayList();
+		List<IProcessorInstall> processors = new ArrayList<IProcessorInstall>();
 		// Traverse the parsed structure and populate the VMType to VM Map
 		Element[] processorEls = PreferenceUtil.getChildElements(config, "processor");
 		for (int i = 0; i < processorEls.length; ++i)
@@ -136,7 +136,7 @@ public class ProcessorPreferences
 	private static IProcessorJar[] elementAsJars(Element element)
 	{
 		Element[] jarEls = PreferenceUtil.getChildElements(element, "jar");
-		List jars = new ArrayList(jarEls.length);
+		List<ProcessorJar> jars = new ArrayList<ProcessorJar>(jarEls.length);
 		for (Element jarEl : jarEls)
 		{
 			Node node = jarEl.getFirstChild();

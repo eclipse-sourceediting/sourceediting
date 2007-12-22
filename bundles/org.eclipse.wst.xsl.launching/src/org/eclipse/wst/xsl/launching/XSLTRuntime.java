@@ -235,7 +235,7 @@ public class XSLTRuntime
 
 	public static void saveToLaunchConfiguration(ILaunchConfigurationWorkingCopy configuration, IStylesheetEntry[] entries) throws CoreException
 	{
-		List list = new ArrayList();
+		List<String> list = new ArrayList<String>();
 		if (entries != null)
 		{
 			for (IStylesheetEntry entry : entries)
@@ -248,11 +248,11 @@ public class XSLTRuntime
 
 	public static IStylesheetEntry[] loadFromLaunchConfiguration(ILaunchConfiguration configuration) throws CoreException
 	{
-		List list = configuration.getAttribute(XSLLaunchConfigurationConstants.ATTR_STYLESHEETS_LIST, (List) null);
+		List<?> list = configuration.getAttribute(XSLLaunchConfigurationConstants.ATTR_STYLESHEETS_LIST, (List<?>) null);
 		if (list != null)
 		{
-			List entries = new ArrayList();
-			for (Iterator iter = list.iterator(); iter.hasNext();)
+			List<IStylesheetEntry> entries = new ArrayList<IStylesheetEntry>();
+			for (Iterator<?> iter = list.iterator(); iter.hasNext();)
 			{
 				String entry = (String) iter.next();
 				IPath path = Path.fromPortableString(entry);
@@ -270,7 +270,7 @@ public class XSLTRuntime
 		{
 			try
 			{
-				Class clazz = Class.forName("org.apache.xalan.Version");
+				Class<?> clazz = Class.forName("org.apache.xalan.Version");
 				if (clazz != null)
 				{
 					BeanInfo info = Introspector.getBeanInfo(clazz);

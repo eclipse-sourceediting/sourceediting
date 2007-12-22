@@ -64,7 +64,7 @@ public class XSLDebugTarget extends XSLDebugElement implements IDebugTarget
 	private final EventDispatchJob eventDispatch;
 	private final LaunchHelper launchHelper;
 
-	private final Map valueMapCache = new HashMap();
+	private final Map<XSLVariable, XSLValue> valueMapCache = new HashMap<XSLVariable, XSLValue>();
 	private String name;
 	private boolean suspended;
 	private boolean terminated;
@@ -149,7 +149,7 @@ public class XSLDebugTarget extends XSLDebugElement implements IDebugTarget
 			{
 				ILineBreakpoint lb = (ILineBreakpoint) breakpoint;
 				IMarker marker = lb.getMarker();
-				for (Iterator iter = launchHelper.getPipeline().getTransformDefs().iterator(); iter.hasNext();)
+				for (Iterator<?> iter = launchHelper.getPipeline().getTransformDefs().iterator(); iter.hasNext();)
 				{
 					LaunchTransform lt = (LaunchTransform) iter.next();
 					if (marker.getResource().getLocation().equals(lt.getLocation()))

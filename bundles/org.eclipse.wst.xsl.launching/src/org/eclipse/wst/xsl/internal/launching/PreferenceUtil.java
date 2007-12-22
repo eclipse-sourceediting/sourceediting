@@ -72,7 +72,7 @@ public class PreferenceUtil
 
 	public static Element[] getChildElements(Element parent, String name)
 	{
-		List children = new ArrayList();
+		List<Element> children = new ArrayList<Element>();
 		NodeList list = parent.getChildNodes();
 		int length = list.getLength();
 		for (int i = 0; i < length; ++i)

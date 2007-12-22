@@ -18,7 +18,7 @@ import org.eclipse.wst.xsl.launching.IDebugger;
 
 public class DebuggerRegistry
 {
-	private final Map debuggers = new HashMap();
+	private final Map<String, DebuggerDescriptor> debuggers = new HashMap<String, DebuggerDescriptor>();
 
 	public DebuggerRegistry()
 	{

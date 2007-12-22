@@ -32,7 +32,7 @@ public class RemoveParameterAction extends AbstractParameterAction
 		{
 			LaunchAttribute[] entries = new LaunchAttribute[sel.size()];
 			int i = 0;
-			for (Iterator iter = sel.iterator(); iter.hasNext(); i++)
+			for (Iterator<?> iter = sel.iterator(); iter.hasNext(); i++)
 			{
 				LaunchAttribute att = (LaunchAttribute) iter.next();
 				entries[i] = att;

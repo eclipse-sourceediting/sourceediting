@@ -115,19 +115,19 @@ public class LaunchHelper
 			file.createNewFile();
 			writer = new BufferedWriter(new FileWriter(file));
 			PipelineDefinition pdef = new PipelineDefinition();
-			for (Iterator iter = features.getFeatures().iterator(); iter.hasNext();)
+			for (Iterator<?> iter = features.getFeatures().iterator(); iter.hasNext();)
 			{
 				LaunchAttribute att = (LaunchAttribute) iter.next();
 				pdef.addFeature(new TypedValue(att.uri, att.type, att.value));
 			}
-			for (Iterator iter = pipeline.getTransformDefs().iterator(); iter.hasNext();)
+			for (Iterator<?> iter = pipeline.getTransformDefs().iterator(); iter.hasNext();)
 			{
 				LaunchTransform lt = (LaunchTransform) iter.next();
 				TransformDefinition tdef = new TransformDefinition();
 				URL url = pathToURL(lt.getLocation());
 				tdef.setStylesheetURL(url.toExternalForm());
 				tdef.setResolverClass(lt.getResolver());
-				for (Iterator iterator = lt.getParameters().iterator(); iterator.hasNext();)
+				for (Iterator<?> iterator = lt.getParameters().iterator(); iterator.hasNext();)
 				{
 					LaunchAttribute att = (LaunchAttribute) iterator.next();
 					tdef.addParameter(new TypedValue(att.uri, att.type, att.value));
@@ -135,7 +135,7 @@ public class LaunchHelper
 				// set the output props for the LAST transform only
 				if (!iter.hasNext())
 				{
-					for (Iterator iterator = outputProperties.getProperties().entrySet().iterator(); iterator.hasNext();)
+					for (Iterator<?> iterator = outputProperties.getProperties().entrySet().iterator(); iterator.hasNext();)
 					{
 						Map.Entry entry = (Map.Entry) iterator.next();
 						String name = (String) entry.getKey();
@@ -225,7 +225,7 @@ public class LaunchHelper
 				IOutputProperty[] props = new IOutputProperty[specificProps.length + defaultProps.length];
 				System.arraycopy(specificProps, 0, props, 0, specificProps.length);
 				System.arraycopy(defaultProps, 0, props, specificProps.length, defaultProps.length);
-				for (Iterator iterator = properties.getProperties().keySet().iterator(); iterator.hasNext();)
+				for (Iterator<?> iterator = properties.getProperties().keySet().iterator(); iterator.hasNext();)
 				{
 					String key = (String) iterator.next();
 					boolean found = false;
@@ -252,8 +252,8 @@ public class LaunchHelper
 		{
 			features = new LaunchFeatures();
 			IProcessorType pt = getProcessorInstall(configuration).getProcessorType();
-			Map fvals = pt.getFeatureValues();
-			for (Iterator iter = fvals.entrySet().iterator(); iter.hasNext();)
+			Map<?, ?> fvals = pt.getFeatureValues();
+			for (Iterator<?> iter = fvals.entrySet().iterator(); iter.hasNext();)
 			{
 				Map.Entry entry = (Map.Entry) iter.next();
 				String uri = (String) entry.getKey();

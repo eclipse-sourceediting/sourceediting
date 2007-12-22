@@ -30,7 +30,7 @@ import org.eclipse.wst.xsl.launching.XSLTRuntime;
 public class OutputUpdater
 {
 
-	public boolean updateOutputSettings(Map typeProperties)
+	public boolean updateOutputSettings(Map<?, ?> typeProperties)
 	{
 		OutputPropertyPreferences prefs = new OutputPropertyPreferences();
 		// first copy all the current values across...
@@ -40,7 +40,7 @@ public class OutputUpdater
 			prefs.setOutputPropertyValues(type.getId(), type.getOutputPropertyValues());
 		}
 		// now override with the new values...
-		for (Iterator iter = typeProperties.entrySet().iterator(); iter.hasNext();)
+		for (Iterator<?> iter = typeProperties.entrySet().iterator(); iter.hasNext();)
 		{
 			Map.Entry entry = (Map.Entry) iter.next();
 			IProcessorType type = (IProcessorType) entry.getKey();

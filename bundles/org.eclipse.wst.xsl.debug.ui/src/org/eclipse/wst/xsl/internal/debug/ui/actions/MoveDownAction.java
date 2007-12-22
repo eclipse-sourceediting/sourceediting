@@ -14,6 +14,7 @@ import java.util.List;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.wst.xsl.internal.debug.ui.tabs.main.StylesheetViewer;
+import org.eclipse.wst.xsl.launching.config.LaunchTransform;
 
 public class MoveDownAction extends AbstractStylesheetAction
 {
@@ -25,12 +26,12 @@ public class MoveDownAction extends AbstractStylesheetAction
 	@Override
 	public void run()
 	{
-		List targets = getOrderedSelection();
+		List<?> targets = getOrderedSelection();
 		if (targets.isEmpty())
 		{
 			return;
 		}
-		List list = getEntriesAsList();
+		List<LaunchTransform> list = getEntriesAsList();
 		int bottom = list.size() - 1;
 		int index = 0;
 		for (int i = targets.size() - 1; i >= 0; i--)
@@ -41,8 +42,8 @@ public class MoveDownAction extends AbstractStylesheetAction
 			{
 				bottom = index + 1;
 				Object temp = list.get(bottom);
-				list.set(bottom, target);
-				list.set(index, temp);
+				list.set(bottom, (LaunchTransform)target);
+				list.set(index, (LaunchTransform)temp);
 			}
 			bottom = index;
 		}

@@ -46,7 +46,7 @@ public class FeaturesBlock extends AbstractTableBlock
 {
 	private Table table;
 	private TableViewer tViewer;
-	private Map featureValues;
+	private Map<String, String> featureValues;
 	private Text descriptionText;
 
 	@Override
@@ -185,7 +185,7 @@ public class FeaturesBlock extends AbstractTableBlock
 				if (value == null || "".equals(value))
 					featureValues.remove(feature.getURI());
 				else
-					featureValues.put(feature.getURI(), value);
+					featureValues.put(feature.getURI(), (String)value);
 				tViewer.update(feature, null);
 			}
 		});
@@ -248,9 +248,9 @@ public class FeaturesBlock extends AbstractTableBlock
 		tViewer.setInput(input);
 	}
 
-	protected void setFeatureValues(Map featureValues)
+	protected void setFeatureValues(Map<String, String> map)
 	{
-		this.featureValues = featureValues;
+		this.featureValues = map;
 	}
 
 	public String getName()

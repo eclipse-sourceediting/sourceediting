@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.wst.xsl.internal.debug.ui.preferences;
 
-import java.util.Map;
 import java.util.Properties;
 
 import org.eclipse.debug.core.ILaunchConfiguration;
@@ -42,7 +41,7 @@ public class OutputBlock extends AbstractTableBlock
 {
 	private Table table;
 	private TableViewer tViewer;
-	private Map properties;
+	private Properties properties;
 
 	@Override
 	protected IDialogSettings getDialogSettings()

@@ -13,7 +13,6 @@ package org.eclipse.wst.xsl.internal.debug.ui.preferences;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -30,19 +29,16 @@ import org.eclipse.wst.xsl.launching.XSLTRuntime;
 public class FeaturesUpdater
 {
 
-	public boolean updateFeatureSettings(Map typeFeatures)
+	public boolean updateFeatureSettings(Map<IProcessorType,Map<String,String>> typeFeatures)
 	{
 		FeaturePreferences prefs = new FeaturePreferences();
-		Map typeIdFeatures = new HashMap(typeFeatures.size());
-		for (Iterator iter = typeIdFeatures.entrySet().iterator(); iter.hasNext();)
+		Map<String,Map<String,String>> typeIdFeatures = new HashMap<String,Map<String,String>>(typeFeatures.size());
+		for (IProcessorType type : typeFeatures.keySet())
 		{
-			Map.Entry entry = (Map.Entry) iter.next();
-			IProcessorType type = (IProcessorType) entry.getKey();
-			Map values = (Map) entry.getValue();
+			Map<String,String> values = type.getFeatureValues();
 			typeIdFeatures.put(type.getId(), values);
 		}
-
-		prefs.setTypeFeatures(typeFeatures);
+		prefs.setTypeFeatures(typeIdFeatures);
 		saveSettings(prefs);
 		return true;
 	}

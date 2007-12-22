@@ -46,7 +46,7 @@ public class StylesheetContentProvider implements IStructuredContentProvider
 
 	public void setEntries(LaunchTransform[] transforms)
 	{
-		pipeline.setTransformDefs(new ArrayList(Arrays.asList(transforms)));
+		pipeline.setTransformDefs(new ArrayList<LaunchTransform>(Arrays.asList(transforms)));
 		tableViewer.refresh();
 	}
 

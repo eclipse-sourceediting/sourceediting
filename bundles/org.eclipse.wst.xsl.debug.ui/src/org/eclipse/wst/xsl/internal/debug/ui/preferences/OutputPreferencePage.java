@@ -48,7 +48,7 @@ public class OutputPreferencePage extends PreferencePage implements IWorkbenchPr
 	private ComboViewer cViewer;
 	private OutputBlock outputBlock;
 	private OutputBlock standardOutputBlock;
-	private Map typePropertyMap = new HashMap();
+	private Map<IProcessorType, Properties> typePropertyMap = new HashMap<IProcessorType, Properties>();
 	private Text descriptionText;
 
 	public OutputPreferencePage()
@@ -228,8 +228,8 @@ public class OutputPreferencePage extends PreferencePage implements IWorkbenchPr
 	@Override
 	protected void performDefaults()
 	{
-		Map newMap = new HashMap(typePropertyMap.size());
-		for (Iterator iter = typePropertyMap.entrySet().iterator(); iter.hasNext();)
+		Map<IProcessorType, Properties> newMap = new HashMap<IProcessorType, Properties>(typePropertyMap.size());
+		for (Iterator<?> iter = typePropertyMap.entrySet().iterator(); iter.hasNext();)
 		{
 			Map.Entry entry = (Map.Entry) iter.next();
 			IProcessorType type = (IProcessorType) entry.getKey();

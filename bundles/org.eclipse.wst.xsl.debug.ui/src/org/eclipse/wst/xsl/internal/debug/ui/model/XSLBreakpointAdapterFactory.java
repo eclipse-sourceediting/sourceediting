@@ -20,6 +20,7 @@ import org.eclipse.ui.texteditor.ITextEditor;
  */
 public class XSLBreakpointAdapterFactory implements IAdapterFactory
 {
+	@SuppressWarnings("unchecked")
 	public Object getAdapter(Object adaptableObject, Class adapterType)
 	{
 		if (adaptableObject instanceof ITextEditor)
@@ -38,6 +39,7 @@ public class XSLBreakpointAdapterFactory implements IAdapterFactory
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
 	public Class[] getAdapterList()
 	{
 		return new Class[]

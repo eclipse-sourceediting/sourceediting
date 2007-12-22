@@ -29,7 +29,7 @@ public interface IProcessorType
 
 	IFeature[] getFeatures();
 
-	Map getFeatureValues();
+	Map<String, String> getFeatureValues();
 
 	IOutputProperty[] getOutputProperties();
 

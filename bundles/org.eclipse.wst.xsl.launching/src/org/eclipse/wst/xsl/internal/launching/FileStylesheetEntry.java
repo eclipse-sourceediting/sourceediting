@@ -21,7 +21,7 @@ import org.eclipse.wst.xsl.launching.IStylesheetParameter;
 public class FileStylesheetEntry implements IStylesheetEntry
 {
 	private final IPath path;
-	private final List parameters = new ArrayList();
+	private final List<IStylesheetParameter> parameters = new ArrayList<IStylesheetParameter>();
 
 	public FileStylesheetEntry(IPath path)
 	{
@@ -43,7 +43,7 @@ public class FileStylesheetEntry implements IStylesheetEntry
 		return WORKSPACE_FILE;
 	}
 
-	public List getParameters()
+	public List<IStylesheetParameter> getParameters()
 	{
 		return parameters;
 	}

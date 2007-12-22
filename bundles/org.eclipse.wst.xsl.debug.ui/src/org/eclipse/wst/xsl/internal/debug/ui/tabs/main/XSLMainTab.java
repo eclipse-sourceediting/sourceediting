@@ -158,7 +158,7 @@ public class XSLMainTab extends XSLLaunchConfigurationTab
 		// project = ResourcesPlugin.getWorkspace().getRoot().getProject( s);
 
 		IWorkbenchPage page = XSLDebugUIPlugin.getActivePage();
-		List resources = new ArrayList();
+		List<Object> resources = new ArrayList<Object>();
 		if (page != null)
 		{
 			// use selections to find the project
@@ -166,7 +166,7 @@ public class XSLMainTab extends XSLLaunchConfigurationTab
 			if (selection != null && !selection.isEmpty() && selection instanceof IStructuredSelection)
 			{
 				IStructuredSelection ss = (IStructuredSelection) selection;
-				for (Iterator iter = ss.iterator(); iter.hasNext();)
+				for (Iterator<?> iter = ss.iterator(); iter.hasNext();)
 				{
 					Object element = iter.next();
 					if (element instanceof IResource)
@@ -200,7 +200,7 @@ public class XSLMainTab extends XSLLaunchConfigurationTab
 
 	private IFile[] getXSLStylesheets(IResource[] context)
 	{
-		List stylesheets = new ArrayList();
+		List<IResource> stylesheets = new ArrayList<IResource>();
 		for (IResource resource : context)
 		{
 			if (resource instanceof IFile && "xsl".equalsIgnoreCase(resource.getFileExtension()))

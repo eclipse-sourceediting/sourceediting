@@ -68,7 +68,7 @@ public class XSLBreakpointProvider implements IBreakpointProvider, IExecutableEx
 				{
 					id = ((IStorageEditorInput) input).getStorage().getFullPath().toString();
 				}
-				Map attributes = new HashMap();
+				Map<String, String> attributes = new HashMap<String, String>();
 				attributes.put(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY, id);
 				IBreakpoint point = new XSLLineBreakpoint(res, editorLineNumber, pos, pos);
 				if (point == null)

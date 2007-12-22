@@ -326,7 +326,7 @@ public class XSLTLaunchConfigurationDelegate extends JavaLaunchDelegate implemen
 		IProcessorInvokerDescriptor invoker = getProcessorInvokerDescriptor(configuration);
 		String[] userEntries = invoker.getClasspathEntries();
 
-		List invokerCP = new ArrayList();
+		List<String> invokerCP = new ArrayList<String>();
 		// in dev, add the bin dir
 		if (Platform.inDevelopmentMode())
 			invokerCP.add(getFileURL(invoker.getBundleId(), "/bin"));

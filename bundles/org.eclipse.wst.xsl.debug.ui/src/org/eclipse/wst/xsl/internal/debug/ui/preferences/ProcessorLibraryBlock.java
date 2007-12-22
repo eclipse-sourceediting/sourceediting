@@ -322,8 +322,8 @@ public class ProcessorLibraryBlock implements SelectionListener, ISelectionChang
 
 	private void remove(IStructuredSelection selection)
 	{
-		List currentJars = new ArrayList(Arrays.asList(install.getProcessorJars()));
-		for (Iterator iter = selection.iterator(); iter.hasNext();)
+		List<IProcessorJar> currentJars = new ArrayList<IProcessorJar>(Arrays.asList(install.getProcessorJars()));
+		for (Iterator<?> iter = selection.iterator(); iter.hasNext();)
 		{
 			currentJars.remove(iter.next());
 		}

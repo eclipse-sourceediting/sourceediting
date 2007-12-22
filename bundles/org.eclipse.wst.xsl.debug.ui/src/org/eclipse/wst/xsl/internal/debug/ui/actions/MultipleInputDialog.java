@@ -32,6 +32,7 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Scrollable;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.wst.xsl.debug.ui.XSLDebugUIPlugin;
@@ -46,10 +47,10 @@ public class MultipleInputDialog extends Dialog
 
 	protected Composite panel;
 
-	protected List fieldList = new ArrayList();
-	protected List controlList = new ArrayList();
-	protected List validators = new ArrayList();
-	protected Map valueMap = new HashMap();
+	protected List<FieldSummary> fieldList = new ArrayList<FieldSummary>();
+	protected List<Scrollable> controlList = new ArrayList<Scrollable>();
+	protected List<Validator> validators = new ArrayList<Validator>();
+	protected Map<Object, Comparable> valueMap = new HashMap<Object, Comparable>();
 
 	private final String title;
 
@@ -97,7 +98,7 @@ public class MultipleInputDialog extends Dialog
 		panel.setLayout(layout);
 		panel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-		for (Iterator i = fieldList.iterator(); i.hasNext();)
+		for (Iterator<FieldSummary> i = fieldList.iterator(); i.hasNext();)
 		{
 			FieldSummary field = (FieldSummary) i.next();
 			switch (field.type)
@@ -286,7 +287,7 @@ public class MultipleInputDialog extends Dialog
 	@Override
 	protected void okPressed()
 	{
-		for (Iterator i = controlList.iterator(); i.hasNext();)
+		for (Iterator<Scrollable> i = controlList.iterator(); i.hasNext();)
 		{
 			Control control = (Control) i.next();
 			if (control instanceof Text)
@@ -327,7 +328,7 @@ public class MultipleInputDialog extends Dialog
 
 	public void validateFields()
 	{
-		for (Iterator i = validators.iterator(); i.hasNext();)
+		for (Iterator<Validator> i = validators.iterator(); i.hasNext();)
 		{
 			Validator validator = (Validator) i.next();
 			if (!validator.validate())

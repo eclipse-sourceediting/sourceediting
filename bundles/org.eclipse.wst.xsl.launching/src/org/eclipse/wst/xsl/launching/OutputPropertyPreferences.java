@@ -27,7 +27,7 @@ import org.w3c.dom.Element;
 
 public class OutputPropertyPreferences
 {
-	private final Map typeProperties = new HashMap();
+	private final Map<String, Properties> typeProperties = new HashMap<String, Properties>();
 
 	public Properties getOutputPropertyValues(String typeId)
 	{
@@ -45,7 +45,7 @@ public class OutputPropertyPreferences
 		Element config = doc.createElement("outputPropertyPreferences");
 		doc.appendChild(config);
 
-		for (Iterator iter = typeProperties.entrySet().iterator(); iter.hasNext();)
+		for (Iterator<?> iter = typeProperties.entrySet().iterator(); iter.hasNext();)
 		{
 			Map.Entry entry = (Map.Entry) iter.next();
 			String type = (String) entry.getKey();

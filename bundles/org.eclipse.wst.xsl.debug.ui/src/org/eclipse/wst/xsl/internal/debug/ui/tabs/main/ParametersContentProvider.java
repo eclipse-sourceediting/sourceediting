@@ -54,7 +54,7 @@ public class ParametersContentProvider implements IStructuredContentProvider
 			stylesheetEntry.getParameters().remove(parameter);
 		}
 		TableItem[] items = parameterViewer.getTable().getItems();
-		List entryList = Arrays.asList(entries);
+		List<LaunchAttribute> entryList = Arrays.asList(entries);
 		Object sel = null;
 		for (int i = items.length - 1; i >= 0; i--)
 		{

@@ -42,5 +42,5 @@ public interface IStylesheetEntry
 
 	void removeParameter(IStylesheetParameter parameter);
 
-	List getParameters();
+	List<?> getParameters();
 }

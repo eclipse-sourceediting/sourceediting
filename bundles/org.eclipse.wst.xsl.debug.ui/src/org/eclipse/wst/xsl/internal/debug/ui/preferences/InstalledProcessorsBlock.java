@@ -65,7 +65,7 @@ import org.eclipse.wst.xsl.launching.XSLTRuntime;
 public class InstalledProcessorsBlock extends AbstractTableBlock implements ISelectionProvider
 {
 	private Composite fControl;
-	private final List processors = new ArrayList();
+	private final List<IProcessorInstall> processors = new ArrayList<IProcessorInstall>();
 	private CheckboxTableViewer tableViewer;
 	private Button fAddButton;
 	private Button fRemoveButton;
@@ -296,7 +296,7 @@ public class InstalledProcessorsBlock extends AbstractTableBlock implements ISel
 
 	protected void fillWithWorkspaceProcessors()
 	{
-		List standins = new ArrayList();
+		List<InstallStandin> standins = new ArrayList<InstallStandin>();
 		IProcessorType[] types = XSLTRuntime.getProcessorTypes();
 		for (IProcessorType type : types)
 		{
@@ -397,7 +397,7 @@ public class InstalledProcessorsBlock extends AbstractTableBlock implements ISel
 		fEditButton.setEnabled(selectionCount == 1);
 		if (selectionCount > 0 && selectionCount < tableViewer.getTable().getItemCount())
 		{
-			Iterator iterator = selection.iterator();
+			Iterator<?> iterator = selection.iterator();
 			while (iterator.hasNext())
 			{
 				IProcessorInstall install = (IProcessorInstall) iterator.next();
@@ -504,7 +504,7 @@ public class InstalledProcessorsBlock extends AbstractTableBlock implements ISel
 	{
 		IStructuredSelection selection = (IStructuredSelection) tableViewer.getSelection();
 		IProcessorInstall[] vms = new IProcessorInstall[selection.size()];
-		Iterator iter = selection.iterator();
+		Iterator<?> iter = selection.iterator();
 		int i = 0;
 		while (iter.hasNext())
 		{

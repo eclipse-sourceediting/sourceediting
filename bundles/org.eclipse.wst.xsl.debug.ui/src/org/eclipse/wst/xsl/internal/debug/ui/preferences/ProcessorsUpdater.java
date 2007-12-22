@@ -34,7 +34,7 @@ public class ProcessorsUpdater
 		ProcessorPreferences prefs = new ProcessorPreferences();
 		if (defaultInstall != null)
 			prefs.setDefaultProcessorId(defaultInstall.getId());
-		prefs.setProcessors(new ArrayList(Arrays.asList(installs)));
+		prefs.setProcessors(new ArrayList<IProcessorInstall>(Arrays.asList(installs)));
 		saveSettings(prefs);
 		return true;
 	}
