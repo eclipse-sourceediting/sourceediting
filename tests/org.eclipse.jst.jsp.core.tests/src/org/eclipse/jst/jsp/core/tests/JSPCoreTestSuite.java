@@ -23,7 +23,6 @@ import org.eclipse.jst.jsp.core.tests.model.TestModelIncludes;
 import org.eclipse.jst.jsp.core.tests.model.TestModelRelease;
 import org.eclipse.jst.jsp.core.tests.model.TestModelWithNoFile;
 import org.eclipse.jst.jsp.core.tests.source.JSPTokenizerTest;
-import org.eclipse.jst.jsp.core.tests.taglibindex.TestIndex;
 import org.eclipse.jst.jsp.core.tests.translation.JSPJavaTranslatorCoreTest;
 import org.eclipse.jst.jsp.core.tests.validation.JSPActionValidatorTest;
 import org.eclipse.jst.jsp.core.tests.validation.JSPJavaValidatorTest;
@@ -51,7 +50,8 @@ public class JSPCoreTestSuite extends TestSuite {
 		addTest(new TestSuite(FormatTester.class, "FormatTester"));
 		addTest(new TestSuite(TestModelRelease.class, "JSP Model Tests"));
 		addTest(new TestSuite(TestModelWithNoFile.class, "JSP Model with no file Tests"));
-		addTest(new TestSuite(TestIndex.class, "TaglibIndex Tests"));
+		// temporarily removed since unstable, see https://bugs.eclipse.org/bugs/show_bug.cgi?id=213754 
+		// addTest(new TestSuite(TestIndex.class, "TaglibIndex Tests"));
 		addTest(new TestSuite(JSPTokenizerTest.class, "Special Parsing Tests"));
 		addTest(new TestSuite(JSPJavaTranslatorCoreTest.class));
 		addTest(new TestSuite(TestModelIncludes.class));

@@ -18,7 +18,9 @@ import junit.framework.TestCase;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IClasspathEntry;
@@ -58,6 +60,7 @@ public class TestIndex extends TestCase {
 		super.tearDown();
 		if (wtp_autotest_noninteractive != null)
 			System.setProperty("wtp.autotest.noninteractive", wtp_autotest_noninteractive);
+		removeAllProjects();
 	}
 
 	public void testAvailableAfterAddingJARToBuildPath() throws Exception {
@@ -415,5 +418,12 @@ public class TestIndex extends TestCase {
 		// and one taglib should still be visible from project 1
 		records = TaglibIndex.getAvailableTaglibRecords(new Path("/testavailable1/WebContent"));
 		assertEquals("total ITaglibRecord count doesn't match (after exporting jar and restarting)", 1, records.length);
+	}
+	private void removeAllProjects() throws CoreException {
+		IWorkspace workspace = ResourcesPlugin.getWorkspace();
+		IProject[] projects = workspace.getRoot().getProjects();
+		for (int i = 0; i < projects.length; i++) {
+			projects[i].delete(true, null);
+		}
 	}
 }
