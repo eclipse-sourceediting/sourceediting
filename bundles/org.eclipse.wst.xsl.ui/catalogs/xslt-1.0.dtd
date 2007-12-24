@@ -1,27 +1,8 @@
-<!--*
-    * XSLT DTD.  Mostly copied from appendix C of the XSLT spec
-    * (http://www.w3.org/TR/xslt#dtd), but with some minor changes by
-    * CMSMcQ, mostly added commentary.
-    * Revisions:
-    * 2006-12-31 : MSM : move to /People/cmsmcq/lib
-    * 2006-12-30 : MSM : move to www.w3.org/XML/Public
-    * 2001-10-27 : MSM : add pe to allow adding attributes to top level,
-    *   to allow use of Saxon-specific elements
-    * 2001-07-06 : MSM : copy to SGML/Public/W3C, add to .emacs
-    * 2001-02-01/02 : MSM : made file (Bergen) as part of schemas for specs TF
-    *-->
-<!--* PEs intended for modification by user: *-->
-<!ENTITY % result-elements "">
-<!ENTITY % non-xsl-instructions "">
+<!ENTITY % result-elements "
+  | fo:inline-sequence
+  | fo:block
+">
 
-<!--*
-    * From here, copied without change except for adding comments on
-    * MSM's test schema for XSLT.
-    *-->
-
-<!--* make char-instruction an abstract element, head of a 
-    * substitution group, and member of substitution group of 'instruction'.
-    *-->
 <!ENTITY % char-instructions "
   | xsl:apply-templates
   | xsl:call-template
@@ -39,78 +20,59 @@
   | xsl:fallback
 ">
 
-<!--* make instruction an abstract element, head of a 
-    * substitution group
-    *-->
 <!ENTITY % instructions "
   %char-instructions;
   | xsl:processing-instruction
   | xsl:comment
   | xsl:element
   | xsl:attribute
-  %non-xsl-instructions;
 ">
 
-<!--* make char-template a complex type *-->
 <!ENTITY % char-template "
  (#PCDATA
   %char-instructions;)*
 ">
 
-<!--* make template a complex type *-->
 <!ENTITY % template "
  (#PCDATA
   %instructions;
   %result-elements;)*
 ">
 
-<!--* use simple type xsd:uriReference *-->
 <!-- Used for the type of an attribute value that is a URI reference.-->
 <!ENTITY % URI "CDATA">
 
-<!--* make simple type xslt:Pattern *-->
 <!-- Used for the type of an attribute value that is a pattern.-->
 <!ENTITY % pattern "CDATA">
 
-<!--* make simple type xslt:avt *-->
 <!-- Used for the type of an attribute value that is an
      attribute value template.-->
 <!ENTITY % avt "CDATA">
 
-<!--* make simple type xslt:QName from simple type xsd:QName *-->
 <!-- Used for the type of an attribute value that is a QName; the prefix
      gets expanded by the XSLT processor. -->
 <!ENTITY % qname "NMTOKEN">
 
-<!--* make simple type xslt:QNameList *-->
 <!-- Like qname but a whitespace-separated list of QNames. -->
 <!ENTITY % qnames "NMTOKENS">
 
-<!--* make simple type xslt:Expression from simple type XPath:Expr *-->
 <!-- Used for the type of an attribute value that is an expression.-->
 <!ENTITY % expr "CDATA">
 
-<!--* make simple type xslt:Char from simple type xsd:string *-->
 <!-- Used for the type of an attribute value that consists
      of a single character.-->
 <!ENTITY % char "CDATA">
 
-<!--* make simple type xslt:Priority from simple type xsd:float *-->
 <!-- Used for the type of an attribute value that is a priority. -->
 <!ENTITY % priority "NMTOKEN">
 
-<!--* do nothing with this.  Just refer in appropriate places to
-    * xml:space
-    *-->
 <!ENTITY % space-att "xml:space (default|preserve) #IMPLIED">
 
-<!--* make named model group xslt:non-xsl-top-level (empty choice) *-->
 <!-- This may be overridden to customize the set of elements allowed
 at the top-level. -->
 
 <!ENTITY % non-xsl-top-level "">
 
-<!--* make complex type top-level, for stylesheet and transform *-->
 <!ENTITY % top-level "
  (xsl:import*,
   (xsl:include
@@ -127,18 +89,15 @@ at the top-level. -->
   %non-xsl-top-level;)*)
 ">
 
-<!ENTITY % x-top-level-atts "">
 <!ENTITY % top-level-atts '
   extension-element-prefixes CDATA #IMPLIED
   exclude-result-prefixes CDATA #IMPLIED
   id ID #IMPLIED
   version NMTOKEN #REQUIRED
   xmlns:xsl CDATA #FIXED "http://www.w3.org/1999/XSL/Transform"
-  %x-top-level-atts;
   %space-att;
 '>
 
-<!--* make attribute group, for target-NS elements *-->
 <!-- This entity is defined for use in the ATTLIST declaration
 for result elements. -->
 
@@ -149,7 +108,6 @@ for result elements. -->
   xsl:version NMTOKEN #IMPLIED
 '>
 
-<!--* make top level elements *-->
 <!ELEMENT xsl:stylesheet %top-level;>
 <!ATTLIST xsl:stylesheet %top-level-atts;>
 
@@ -197,14 +155,12 @@ for result elements. -->
   infinity CDATA "Infinity"
   minus-sign %char; "-"
   NaN CDATA "NaN"
-  percent %char; "&#x25;"
+  percent %char; "%"
   per-mille %char; "&#x2030;"
   zero-digit %char; "0"
   digit %char; "#"
   pattern-separator %char; ";"
 >
-<!--* default value of percent was "%", indirection added to get
-    * it past Saxon *-->
 
 <!ELEMENT xsl:namespace-alias EMPTY>
 <!ATTLIST xsl:namespace-alias
