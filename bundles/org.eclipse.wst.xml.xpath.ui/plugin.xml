@@ -9,7 +9,6 @@
             id="org.eclipse.wst.xml"/>
       <view
             class="org.eclipse.wst.xml.xpath.ui.views.XPathNavigator"
-            icon="icons/xslt-16.gif"
             category="org.eclipse.wst.xml"
             name="%xpathNavigatorName"
             id="org.eclipse.wst.xml.xpath.ui.views.XPathNavigator"/>
