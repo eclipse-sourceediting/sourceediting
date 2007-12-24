@@ -171,6 +171,7 @@ public class FeaturesBlock extends AbstractTableBlock
 		});
 		tViewer.setColumnProperties(new String[]
 		{ "name", "type", "value" });
+		final String[] valid = new String[]{null};
 		tViewer.setCellModifier(new ICellModifier()
 		{
 			public boolean canModify(Object element, String property)
@@ -192,18 +193,8 @@ public class FeaturesBlock extends AbstractTableBlock
 				if (value == null || "".equals(value))
 					featureValues.remove(feature.getURI());
 				else
-					featureValues.put(feature.getURI(), (String)value);
-				String valid = null;
-				IStatus validStatus = feature.validateValue((String) value);
-				if (validStatus != null && validStatus.getSeverity() == IStatus.ERROR)
-				{
-					valid = validStatus.getMessage();
-					setErrorMessage(valid);
-				}
-				else
-				{
-					setErrorMessage(null);
-				}
+					featureValues.put(feature.getURI(), (String)value);				
+				setErrorMessage(valid[0]);
 				tViewer.update(feature, null);
 			}
 		});
@@ -226,13 +217,14 @@ public class FeaturesBlock extends AbstractTableBlock
 			{
 				IStructuredSelection sel = (IStructuredSelection) tViewer.getSelection();
 				IFeature feature = (IFeature) sel.getFirstElement();
-				String valid = null;
 				IStatus validStatus = feature.validateValue((String) value);
-				if (validStatus != null && validStatus.getSeverity() == IStatus.ERROR)
-				{
-					valid = validStatus.getMessage();
-				}
-				return valid;
+				if (value == null || "".equals(value))
+					valid[0] = null;
+				else if (validStatus != null && validStatus.getSeverity() == IStatus.ERROR)
+					valid[0] = validStatus.getMessage();
+				else
+					valid[0] = null;
+				return valid[0];
 			}
 		});
 
