@@ -15,6 +15,7 @@ import java.util.Map;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
+import org.eclipse.jface.dialogs.DialogPage;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ICellEditorValidator;
@@ -48,6 +49,12 @@ public class FeaturesBlock extends AbstractTableBlock
 	private TableViewer tViewer;
 	private Map<String, String> featureValues;
 	private Text descriptionText;
+	private DialogPage dialogPage;
+
+	public FeaturesBlock(DialogPage dialogPage)
+	{
+		this.dialogPage = dialogPage;
+	}
 
 	@Override
 	protected IDialogSettings getDialogSettings()
@@ -186,6 +193,17 @@ public class FeaturesBlock extends AbstractTableBlock
 					featureValues.remove(feature.getURI());
 				else
 					featureValues.put(feature.getURI(), (String)value);
+				String valid = null;
+				IStatus validStatus = feature.validateValue((String) value);
+				if (validStatus != null && validStatus.getSeverity() == IStatus.ERROR)
+				{
+					valid = validStatus.getMessage();
+					setErrorMessage(valid);
+				}
+				else
+				{
+					setErrorMessage(null);
+				}
 				tViewer.update(feature, null);
 			}
 		});
@@ -268,6 +286,12 @@ public class FeaturesBlock extends AbstractTableBlock
 
 	public void setDefaults(ILaunchConfigurationWorkingCopy configuration)
 	{
+	}
+	
+	@Override
+	protected void setErrorMessage(String errorMessage)
+	{
+		dialogPage.setErrorMessage(errorMessage);
 	}
 
 }

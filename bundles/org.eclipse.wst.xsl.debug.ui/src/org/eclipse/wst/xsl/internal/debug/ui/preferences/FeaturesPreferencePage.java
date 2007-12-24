@@ -137,7 +137,7 @@ public class FeaturesPreferencePage extends PreferencePage implements IWorkbench
 
 		});
 
-		featuresBlock = new FeaturesBlock();
+		featuresBlock = new FeaturesBlock(this);
 		featuresBlock.createControl(parent);
 
 		setInput();
@@ -158,6 +158,13 @@ public class FeaturesPreferencePage extends PreferencePage implements IWorkbench
 
 	public void init(IWorkbench workbench)
 	{
+	}
+	
+	@Override
+	public void setErrorMessage(String newMessage)
+	{
+		// TODO Auto-generated method stub
+		super.setErrorMessage(newMessage);
 	}
 
 	@Override

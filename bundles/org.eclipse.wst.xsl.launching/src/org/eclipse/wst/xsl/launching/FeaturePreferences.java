@@ -13,7 +13,6 @@ package org.eclipse.wst.xsl.launching;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -21,7 +20,6 @@ import javax.xml.transform.TransformerException;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.wst.xsl.internal.launching.PreferenceUtil;
-import org.eclipse.wst.xsl.internal.launching.ProcessorType;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -44,13 +42,11 @@ public class FeaturePreferences
 		Document doc = PreferenceUtil.getDocument();
 		Element config = doc.createElement("featurePreferences"); 
 		doc.appendChild(config);
-
-		for (Iterator<?> iter = typeFeatures.entrySet().iterator(); iter.hasNext();)
+		
+		for (String typeId : typeFeatures.keySet())
 		{
-			Map.Entry entry = (Map.Entry) iter.next();
-			ProcessorType type = (ProcessorType) entry.getKey();
-			Element processorTypeElement = typeAsElement(doc, type.getId());
-			Map<?, ?> featureValues = (Map<?, ?>) entry.getValue();
+			Element processorTypeElement = typeAsElement(doc, typeId);
+			Map<String, String> featureValues = typeFeatures.get(typeId);
 			featureValuesAsElement(doc, processorTypeElement, featureValues);
 			config.appendChild(processorTypeElement);
 		}
@@ -108,13 +104,12 @@ public class FeaturePreferences
 		return featureValues;
 	}
 
-	private static void featureValuesAsElement(Document doc, Element featuresEl, Map<?, ?> featureValues)
+	private static void featureValuesAsElement(Document doc, Element featuresEl, Map<String, String> featureValues)
 	{
 		if (featureValues != null)
 		{
-			for (Iterator<?> iterator = featureValues.entrySet().iterator(); iterator.hasNext();)
+			for (Map.Entry<String,String> entry2 : featureValues.entrySet())
 			{
-				Map.Entry entry2 = (Map.Entry) iterator.next();
 				String uri = (String) entry2.getKey();
 				String value = (String) entry2.getValue();
 				Element element = doc.createElement("feature");

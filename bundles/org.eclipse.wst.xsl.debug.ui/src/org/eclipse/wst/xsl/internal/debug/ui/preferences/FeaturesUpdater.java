@@ -35,7 +35,7 @@ public class FeaturesUpdater
 		Map<String,Map<String,String>> typeIdFeatures = new HashMap<String,Map<String,String>>(typeFeatures.size());
 		for (IProcessorType type : typeFeatures.keySet())
 		{
-			Map<String,String> values = type.getFeatureValues();
+			Map<String,String> values = typeFeatures.get(type);
 			typeIdFeatures.put(type.getId(), values);
 		}
 		prefs.setTypeFeatures(typeIdFeatures);
