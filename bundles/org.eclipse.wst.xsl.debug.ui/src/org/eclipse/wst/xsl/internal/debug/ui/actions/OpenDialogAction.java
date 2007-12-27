@@ -11,7 +11,7 @@
 package org.eclipse.wst.xsl.internal.debug.ui.actions;
 
 import org.eclipse.jface.dialogs.IDialogSettings;
-import org.eclipse.wst.xsl.debug.ui.XSLDebugUIPlugin;
+import org.eclipse.wst.xsl.internal.debug.ui.XSLDebugUIPlugin;
 import org.eclipse.wst.xsl.internal.debug.ui.tabs.main.StylesheetViewer;
 
 public class OpenDialogAction extends AbstractStylesheetAction

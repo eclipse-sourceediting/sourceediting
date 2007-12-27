@@ -35,7 +35,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Scrollable;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.wst.xsl.debug.ui.XSLDebugUIPlugin;
+import org.eclipse.wst.xsl.internal.debug.ui.XSLDebugUIPlugin;
 
 public class MultipleInputDialog extends Dialog
 {

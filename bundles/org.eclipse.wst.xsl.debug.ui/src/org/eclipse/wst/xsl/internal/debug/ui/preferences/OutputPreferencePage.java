@@ -39,7 +39,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
-import org.eclipse.wst.xsl.debug.ui.XSLDebugUIPlugin;
+import org.eclipse.wst.xsl.internal.debug.ui.XSLDebugUIPlugin;
 import org.eclipse.wst.xsl.launching.IOutputProperty;
 import org.eclipse.wst.xsl.launching.IProcessorType;
 import org.eclipse.wst.xsl.launching.XSLTRuntime;

@@ -35,7 +35,6 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.dialogs.ElementListSelectionDialog;
-import org.eclipse.wst.xsl.debug.ui.XSLDebugUIPlugin;
 import org.eclipse.wst.xsl.launching.XSLLaunchConfigurationConstants;
 import org.eclipse.wst.xsl.launching.config.LaunchHelper;
 import org.eclipse.wst.xsl.launching.config.LaunchPipeline;
@@ -105,7 +104,7 @@ public class XSLLaunchShortcut implements ILaunchShortcut
 
 	protected ILaunchConfiguration findLaunchConfiguration(IFile sourceXML, IFile[] stylesheets, ILaunchConfigurationType configType)
 	{
-		List<ILaunchConfiguration> candidateConfigs = Collections.EMPTY_LIST;
+		List<ILaunchConfiguration> candidateConfigs = Collections.emptyList();
 		if (sourceXML != null)
 		{
 			try

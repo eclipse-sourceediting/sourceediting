@@ -47,7 +47,7 @@ import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.eclipse.ui.views.navigator.ResourceComparator;
-import org.eclipse.wst.xsl.debug.ui.XSLDebugUIPlugin;
+import org.eclipse.wst.xsl.internal.debug.ui.XSLDebugUIPlugin;
 import org.eclipse.wst.xsl.internal.debug.ui.tabs.processor.JarContentProvider;
 import org.eclipse.wst.xsl.internal.debug.ui.tabs.processor.JarLabelProvider;
 import org.eclipse.wst.xsl.internal.debug.ui.tabs.processor.ProcessorMessages;

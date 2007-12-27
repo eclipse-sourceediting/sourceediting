@@ -128,10 +128,10 @@
  <extension
        point="org.eclipse.debug.ui.launchShortcuts">
     <shortcut
-          class="org.eclipse.wst.xsl.debug.ui.LaunchShortcut1"
-          id="org.eclipse.wst.xsl.debug.ui.shortcut1"
-          label="label"
-          modes="org.eclipse.wst.xsl.debug.ui.shortcut1">
+          class="org.eclipse.wst.xsl.internal.debug.ui.XSLLaunchShortcut"
+          id="org.eclipse.wst.xsl.internal.debug.ui.XSLLaunchShortcut"
+          label="XSLT Transformation"
+          modes="run,debug,profile">
        <contextualLaunch></contextualLaunch>
     </shortcut>
  </extension>

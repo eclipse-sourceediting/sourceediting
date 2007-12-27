@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.wst.xsl.internal.debug.ui;
 
-import org.eclipse.wst.xsl.debug.ui.XSLDebugUIPlugin;
 
 public class XSLDebugUIConstants
 {

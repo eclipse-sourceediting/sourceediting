@@ -1,4 +1,4 @@
-package org.eclipse.wst.xsl.debug.ui;
+package org.eclipse.wst.xsl.internal.debug.ui;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
