@@ -8,47 +8,45 @@
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.xsl.launching;
+package org.eclipse.wst.xsl.internal.launching;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.wst.xsl.internal.launching.PreferenceUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-public class OutputPropertyPreferences
+public class FeaturePreferences
 {
-	private final Map<String, Properties> typeProperties = new HashMap<String, Properties>();
+	private Map<String, Map<String, String>> typeFeatures;
 
-	public Properties getOutputPropertyValues(String typeId)
+	public Map<String, String> getFeaturesValues(String typeId)
 	{
-		return (Properties) typeProperties.get(typeId);
+		return typeFeatures.get(typeId);
 	}
 
-	public void setOutputPropertyValues(String typeId, Properties properties)
+	public void setTypeFeatures(Map<String, Map<String, String>> typeFeatures)
 	{
-		typeProperties.put(typeId, properties);
+		this.typeFeatures = typeFeatures;
 	}
 
 	public String getAsXML() throws ParserConfigurationException, IOException, TransformerException
 	{
 		Document doc = PreferenceUtil.getDocument();
-		Element config = doc.createElement("outputPropertyPreferences");
+		Element config = doc.createElement("featurePreferences"); 
 		doc.appendChild(config);
-
-		for (String type : typeProperties.keySet())
+		
+		for (String typeId : typeFeatures.keySet())
 		{
-			Element processorTypeElement = typeAsElement(doc, type);
-			Properties propertyValues = (Properties) typeProperties.get(type);
-			featureValuesAsElement(doc, processorTypeElement, propertyValues);
+			Element processorTypeElement = typeAsElement(doc, typeId);
+			Map<String, String> featureValues = typeFeatures.get(typeId);
+			featureValuesAsElement(doc, processorTypeElement, featureValues);
 			config.appendChild(processorTypeElement);
 		}
 
@@ -56,22 +54,25 @@ public class OutputPropertyPreferences
 		return PreferenceUtil.serializeDocument(doc);
 	}
 
-	public static OutputPropertyPreferences fromXML(InputStream inputStream) throws CoreException
+	public static FeaturePreferences fromXML(InputStream inputStream) throws CoreException
 	{
-		OutputPropertyPreferences prefs = new OutputPropertyPreferences();
+		FeaturePreferences prefs = new FeaturePreferences();
 
 		// Do the parsing and obtain the top-level node
 		Document doc = PreferenceUtil.getDocument(inputStream);
 		Element config = doc.getDocumentElement();
 
+		Map<String, Map<String, String>> typeFeatures = new HashMap<String, Map<String, String>>();
 		Element[] processorTypeEls = PreferenceUtil.getChildElements(config, "processorType");
 		for (int i = 0; i < processorTypeEls.length; ++i)
 		{
 			Element processorTypeEl = processorTypeEls[i];
 			String type = elementAsType(processorTypeEl);
-			Properties featureValues = elementAsPropertyValues(processorTypeEl);
-			prefs.setOutputPropertyValues(type, featureValues);
+			Map<String, String> featureValues = elementAsFeatureValues(processorTypeEl);
+			typeFeatures.put(type, featureValues);
 		}
+
+		prefs.setTypeFeatures(typeFeatures);
 
 		return prefs;
 	}
@@ -89,29 +90,29 @@ public class OutputPropertyPreferences
 		return element;
 	}
 
-	private static Properties elementAsPropertyValues(Element element)
+	private static Map<String, String> elementAsFeatureValues(Element element)
 	{
-		Element[] propertyEls = PreferenceUtil.getChildElements(element, "property");
-		Properties propertyValues = new Properties();
-		for (Element featureEl : propertyEls)
+		Element[] featureEls = PreferenceUtil.getChildElements(element, "feature");
+		Map<String, String> featureValues = new HashMap<String, String>(featureEls.length);
+		for (Element featureEl : featureEls)
 		{
-			String name = featureEl.getAttribute("name");
+			String uri = featureEl.getAttribute("uri");
 			String value = featureEl.getAttribute("value");
-			propertyValues.put(name, value);
+			featureValues.put(uri, value);
 		}
-		return propertyValues;
+		return featureValues;
 	}
 
-	private static void featureValuesAsElement(Document doc, Element featuresEl, Properties propertyValues)
+	private static void featureValuesAsElement(Document doc, Element featuresEl, Map<String, String> featureValues)
 	{
-		if (propertyValues != null)
+		if (featureValues != null)
 		{
-			for (Map.Entry<Object,Object> entry2 : propertyValues.entrySet())
+			for (Map.Entry<String,String> entry2 : featureValues.entrySet())
 			{
-				String name = (String) entry2.getKey();
+				String uri = (String) entry2.getKey();
 				String value = (String) entry2.getValue();
-				Element element = doc.createElement("property");
-				element.setAttribute("name", name);
+				Element element = doc.createElement("feature");
+				element.setAttribute("uri", uri);
 				element.setAttribute("value", value);
 				featuresEl.appendChild(element);
 			}

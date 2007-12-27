@@ -18,8 +18,6 @@ import javax.xml.transform.TransformerException;
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
-import org.eclipse.wst.xsl.launching.OutputPropertyPreferences;
-import org.eclipse.wst.xsl.launching.ProcessorPreferences;
 import org.eclipse.wst.xsl.launching.XSLLaunchConfigurationConstants;
 import org.eclipse.wst.xsl.launching.XSLTRuntime;
 

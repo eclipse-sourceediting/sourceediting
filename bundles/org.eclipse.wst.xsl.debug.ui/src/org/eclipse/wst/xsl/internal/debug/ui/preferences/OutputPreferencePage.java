@@ -10,10 +10,13 @@
  *******************************************************************************/
 package org.eclipse.wst.xsl.internal.debug.ui.preferences;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -26,7 +29,6 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
@@ -37,6 +39,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.eclipse.wst.xsl.debug.ui.XSLDebugUIPlugin;
 import org.eclipse.wst.xsl.launching.IOutputProperty;
 import org.eclipse.wst.xsl.launching.IProcessorType;
 import org.eclipse.wst.xsl.launching.XSLTRuntime;
@@ -247,32 +250,28 @@ public class OutputPreferencePage extends PreferencePage implements IWorkbenchPr
 	@Override
 	public boolean performOk()
 	{
-		if (!save())
-			return false;
-		// save column widths
 		outputBlock.saveColumnSettings();
-		return super.performOk();
-	}
-
-	private boolean save()
-	{
-		final boolean[] canceled = new boolean[]
-		{ false };
-		BusyIndicator.showWhile(null, new Runnable()
+		final boolean[] ok = new boolean[1];
+		try
 		{
-			public void run()
+			IRunnableWithProgress runnable = new IRunnableWithProgress()
 			{
-				OutputUpdater updater = new OutputUpdater();
-				if (!updater.updateOutputSettings(typePropertyMap))
+				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException
 				{
-					canceled[0] = true;
+					XSLTRuntime.saveOutputPropertyPreferences(typePropertyMap,monitor);
+					ok[0] = !monitor.isCanceled();
 				}
-			}
-		});
-		if (canceled[0])
-		{
-			return false;
+			};
+			XSLDebugUIPlugin.getDefault().getWorkbench().getProgressService().busyCursorWhile(runnable);
 		}
-		return true;
+		catch (InvocationTargetException e)
+		{
+			XSLDebugUIPlugin.log(e);
+		}
+		catch (InterruptedException e)
+		{
+			XSLDebugUIPlugin.log(e);
+		}
+		return ok[0];
 	}
 }

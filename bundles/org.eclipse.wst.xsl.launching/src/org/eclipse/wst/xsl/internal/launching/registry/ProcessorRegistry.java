@@ -17,10 +17,10 @@ import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.wst.xsl.internal.launching.LaunchingPlugin;
+import org.eclipse.wst.xsl.internal.launching.ProcessorPreferences;
 import org.eclipse.wst.xsl.launching.IProcessorInstall;
 import org.eclipse.wst.xsl.launching.IProcessorJar;
 import org.eclipse.wst.xsl.launching.ProcessorInstall;
-import org.eclipse.wst.xsl.launching.ProcessorPreferences;
 import org.eclipse.wst.xsl.launching.XSLTRuntime;
 
 public class ProcessorRegistry

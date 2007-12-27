@@ -24,11 +24,11 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.wst.xsl.internal.launching.FeaturePreferences;
 import org.eclipse.wst.xsl.internal.launching.LaunchingPlugin;
+import org.eclipse.wst.xsl.internal.launching.OutputPropertyPreferences;
 import org.eclipse.wst.xsl.internal.launching.ProcessorType;
-import org.eclipse.wst.xsl.launching.FeaturePreferences;
 import org.eclipse.wst.xsl.launching.IProcessorType;
-import org.eclipse.wst.xsl.launching.OutputPropertyPreferences;
 import org.eclipse.wst.xsl.launching.XSLTRuntime;
 
 public class ProcessorTypeRegistry

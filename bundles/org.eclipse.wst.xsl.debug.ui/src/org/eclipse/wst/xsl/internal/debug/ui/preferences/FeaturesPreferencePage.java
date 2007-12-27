@@ -10,9 +10,12 @@
  *******************************************************************************/
 package org.eclipse.wst.xsl.internal.debug.ui.preferences;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -25,7 +28,6 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
@@ -34,6 +36,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.eclipse.wst.xsl.debug.ui.XSLDebugUIPlugin;
 import org.eclipse.wst.xsl.launching.IFeature;
 import org.eclipse.wst.xsl.launching.IProcessorType;
 import org.eclipse.wst.xsl.launching.XSLTRuntime;
@@ -177,26 +180,28 @@ public class FeaturesPreferencePage extends PreferencePage implements IWorkbench
 	@Override
 	public boolean performOk()
 	{
-		final boolean[] canceled = new boolean[]
-		{ false };
-		BusyIndicator.showWhile(null, new Runnable()
-		{
-			public void run()
-			{
-				FeaturesUpdater updater = new FeaturesUpdater();
-				if (!updater.updateFeatureSettings(typeFeatureMap))
-				{
-					canceled[0] = true;
-				}
-			}
-		});
-		if (canceled[0])
-		{
-			return false;
-		}
-
-		// save column widths
 		featuresBlock.saveColumnSettings();
-		return super.performOk();
+		final boolean[] ok = new boolean[1];
+		try
+		{
+			IRunnableWithProgress runnable = new IRunnableWithProgress()
+			{
+				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException
+				{
+					XSLTRuntime.saveFeaturePreferences(typeFeatureMap,monitor);
+					ok[0] = !monitor.isCanceled();
+				}
+			};
+			XSLDebugUIPlugin.getDefault().getWorkbench().getProgressService().busyCursorWhile(runnable);
+		}
+		catch (InvocationTargetException e)
+		{
+			XSLDebugUIPlugin.log(e);
+		}
+		catch (InterruptedException e)
+		{
+			XSLDebugUIPlugin.log(e);
+		}
+		return ok[0];
 	}
 }

@@ -8,7 +8,7 @@
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.xsl.launching;
+package org.eclipse.wst.xsl.internal.launching;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,8 +21,9 @@ import javax.xml.transform.TransformerException;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.wst.xsl.internal.launching.PreferenceUtil;
-import org.eclipse.wst.xsl.internal.launching.ProcessorJar;
+import org.eclipse.wst.xsl.launching.IProcessorInstall;
+import org.eclipse.wst.xsl.launching.IProcessorJar;
+import org.eclipse.wst.xsl.launching.ProcessorInstall;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;

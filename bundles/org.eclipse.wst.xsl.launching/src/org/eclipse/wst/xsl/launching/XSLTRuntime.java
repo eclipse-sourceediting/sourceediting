@@ -10,17 +10,29 @@
  *******************************************************************************/
 package org.eclipse.wst.xsl.launching;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.debug.core.ILaunchConfiguration;
+import org.eclipse.wst.xsl.internal.launching.FeaturePreferences;
 import org.eclipse.wst.xsl.internal.launching.LaunchingPlugin;
+import org.eclipse.wst.xsl.internal.launching.OutputPropertyPreferences;
 import org.eclipse.wst.xsl.internal.launching.ProcessorJar;
+import org.eclipse.wst.xsl.internal.launching.ProcessorPreferences;
 import org.eclipse.wst.xsl.internal.launching.registry.DebuggerRegistry;
 import org.eclipse.wst.xsl.internal.launching.registry.InvokerRegistry;
 import org.eclipse.wst.xsl.internal.launching.registry.ProcessorRegistry;
@@ -196,6 +208,125 @@ public class XSLTRuntime
 			// force the registries to be re-initialised next time it is required
 			processorRegistry = null;
 			processorTypeRegistry = null;
+		}
+	}
+
+	public static void saveFeaturePreferences(Map<IProcessorType, Map<String, String>> typeFeatures, IProgressMonitor monitor)
+	{
+		if (monitor.isCanceled())
+			return;
+		try
+		{
+			monitor.beginTask("Saving features...", 100);
+			FeaturePreferences prefs = new FeaturePreferences();
+			Map<String,Map<String,String>> typeIdFeatures = new HashMap<String,Map<String,String>>(typeFeatures.size());
+			for (IProcessorType type : typeFeatures.keySet())
+			{
+				Map<String,String> values = typeFeatures.get(type);
+				typeIdFeatures.put(type.getId(), values);
+			}
+			prefs.setTypeFeatures(typeIdFeatures);
+			String xml = prefs.getAsXML();
+			monitor.worked(40);
+			if (monitor.isCanceled())
+				return;
+			XSLTRuntime.getPreferences().setValue(XSLTRuntime.PREF_FEATURE_XML, xml);
+			monitor.worked(30);
+			if (monitor.isCanceled())
+				return;
+			XSLTRuntime.savePreferences();
+			monitor.worked(30);
+		}
+		catch (IOException ioe)
+		{
+			LaunchingPlugin.log(ioe);
+		}
+		catch (ParserConfigurationException e)
+		{
+			LaunchingPlugin.log(e);
+		}
+		catch (TransformerException e)
+		{
+			LaunchingPlugin.log(e);
+		}
+		finally
+		{
+			monitor.done();
+		}
+	}
+
+	public static void saveOutputPropertyPreferences(Map<IProcessorType, Properties> typeProperties, IProgressMonitor monitor)
+	{
+		if (monitor.isCanceled())
+			return;
+		try
+		{
+			monitor.beginTask("Saving properties...", 100);
+			OutputPropertyPreferences prefs = new OutputPropertyPreferences();
+			for (IProcessorType type : typeProperties.keySet())
+			{
+				prefs.setOutputPropertyValues(type.getId(), typeProperties.get(type));
+			}
+			String xml = prefs.getAsXML();
+			monitor.worked(40);
+			if (monitor.isCanceled())
+				return;
+			XSLTRuntime.getPreferences().setValue(XSLTRuntime.PREF_OUTPUT_PROPERTIES_XML, xml);
+			monitor.worked(30);
+			if (monitor.isCanceled())
+				return;
+			XSLTRuntime.savePreferences();
+			monitor.worked(30);
+		}
+		catch (IOException ioe)
+		{
+			LaunchingPlugin.log(ioe);
+		}
+		catch (ParserConfigurationException e)
+		{
+			LaunchingPlugin.log(e);
+		}
+		catch (TransformerException e)
+		{
+			LaunchingPlugin.log(e);
+		}
+		finally
+		{
+			monitor.done();
+		}
+	}
+
+	public static void saveProcessorPreferences(IProcessorInstall[] installs, IProcessorInstall defaultInstall, IProgressMonitor monitor)
+	{
+		try
+		{
+			monitor.beginTask("Saving processors...", 100);
+			ProcessorPreferences prefs = new ProcessorPreferences();
+			if (defaultInstall != null)
+				prefs.setDefaultProcessorId(defaultInstall.getId());
+			prefs.setProcessors(new ArrayList<IProcessorInstall>(Arrays.asList(installs)));
+			String xml = prefs.getAsXML();
+			monitor.worked(40);
+			XSLTRuntime.getPreferences().setValue(XSLTRuntime.PREF_PROCESSOR_XML, xml);
+			monitor.worked(30);
+			XSLTRuntime.savePreferences();
+			monitor.worked(30);
+		}
+		catch (IOException ioe)
+		{
+			LaunchingPlugin.log(ioe);
+		}
+		catch (ParserConfigurationException e)
+		{
+			LaunchingPlugin.log(e);
+		}
+		catch (TransformerException e)
+		{
+			LaunchingPlugin.log(e);
+		}
+		finally
+		{
+			monitor.done();
 		}
 	}
 

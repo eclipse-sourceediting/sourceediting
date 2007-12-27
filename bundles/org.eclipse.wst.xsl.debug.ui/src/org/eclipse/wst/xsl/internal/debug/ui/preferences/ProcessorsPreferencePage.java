@@ -10,16 +10,20 @@
  *******************************************************************************/
 package org.eclipse.wst.xsl.internal.debug.ui.preferences;
 
+import java.lang.reflect.InvocationTargetException;
+
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.eclipse.wst.xsl.debug.ui.XSLDebugUIPlugin;
 import org.eclipse.wst.xsl.launching.IProcessorInstall;
 import org.eclipse.wst.xsl.launching.XSLTRuntime;
 
@@ -86,31 +90,29 @@ public class ProcessorsPreferencePage extends PreferencePage implements IWorkben
 	@Override
 	public boolean performOk()
 	{
-		final boolean[] canceled = new boolean[]
-		{ false };
-		BusyIndicator.showWhile(null, new Runnable()
-		{
-			public void run()
-			{
-				IProcessorInstall defaultInstall = getCurrentDefaultProcessor();
-				IProcessorInstall[] installs = processorsBlock.getProcessors();
-				ProcessorsUpdater updater = new ProcessorsUpdater();
-				if (!updater.updateProcessorSettings(installs, defaultInstall))
-				{
-					canceled[0] = true;
-				}
-			}
-		});
-
-		if (canceled[0])
-		{
-			return false;
-		}
-
-		// save column widths
 		processorsBlock.saveColumnSettings();
-
-		return super.performOk();
+		final boolean[] ok = new boolean[1];
+		try
+		{
+			IRunnableWithProgress runnable = new IRunnableWithProgress()
+			{
+				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException
+				{
+					XSLTRuntime.saveProcessorPreferences(processorsBlock.getProcessors(),getCurrentDefaultProcessor(),monitor);
+					ok[0] = !monitor.isCanceled();
+				}
+			};
+			XSLDebugUIPlugin.getDefault().getWorkbench().getProgressService().busyCursorWhile(runnable);
+		}
+		catch (InvocationTargetException e)
+		{
+			XSLDebugUIPlugin.log(e);
+		}
+		catch (InterruptedException e)
+		{
+			XSLDebugUIPlugin.log(e);
+		}
+		return ok[0];
 	}
 
 	private void initDefaultInstall()
