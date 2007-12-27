@@ -14,8 +14,10 @@ import java.util.Map;
 import java.util.Properties;
 
 /**
- * Represents a particular type of XSLT Processor for which there may be any
- * number of installations.
+ * A particular type of XSLT Processor (e.g. Xalan) for which there may be any number of installs.
+ * 
+ * @see IProcessorInstall
+ * @author Doug Satchwell
  */
 public interface IProcessorType
 {

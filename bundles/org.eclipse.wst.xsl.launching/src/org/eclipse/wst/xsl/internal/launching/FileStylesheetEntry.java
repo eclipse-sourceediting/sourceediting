@@ -10,18 +10,12 @@
  *******************************************************************************/
 package org.eclipse.wst.xsl.internal.launching;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.wst.xsl.launching.IStylesheetEntry;
-import org.eclipse.wst.xsl.launching.IStylesheetParameter;
 
 public class FileStylesheetEntry implements IStylesheetEntry
 {
 	private final IPath path;
-	private final List<IStylesheetParameter> parameters = new ArrayList<IStylesheetParameter>();
 
 	public FileStylesheetEntry(IPath path)
 	{
@@ -31,30 +25,5 @@ public class FileStylesheetEntry implements IStylesheetEntry
 	public IPath getPath()
 	{
 		return path;
-	}
-
-	public String getMemento() throws CoreException
-	{
-		return null;
-	}
-
-	public int getType()
-	{
-		return WORKSPACE_FILE;
-	}
-
-	public List<IStylesheetParameter> getParameters()
-	{
-		return parameters;
-	}
-
-	public void addParameter(IStylesheetParameter parameter)
-	{
-		parameters.add(parameter);
-	}
-
-	public void removeParameter(IStylesheetParameter parameter)
-	{
-		parameters.remove(parameter);
 	}
 }

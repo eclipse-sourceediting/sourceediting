@@ -6,7 +6,7 @@
          <meta.schema plugin="org.eclipse.wst.xsl.launching" id="processorType" name="XSLT Processor Type"/>
       </appInfo>
       <documentation>
-         Contribute a processor type (e.g. Xalan, Saxon). The processor type defines which features and output properies are supported.
+         Contribute a Java XSLT processor type (e.g. Xalan, Saxon). The processor type defines which features and output properies are supported.
       </documentation>
    </annotation>
 
@@ -95,7 +95,7 @@
          <meta.section type="since"/>
       </appInfo>
       <documentation>
-         [Enter the first release in which this extension point appears.]
+         
       </documentation>
    </annotation>
 
@@ -104,7 +104,18 @@
          <meta.section type="examples"/>
       </appInfo>
       <documentation>
-         [Enter extension point usage example here.]
+         &lt;pre&gt;
+   &lt;extension
+         point=&quot;org.eclipse.wst.xsl.launching.processorType&quot;&gt;
+      &lt;processorType
+            featureProperties=&quot;XalanFeatures.properties&quot;
+            id=&quot;org.eclipse.wst.xsl.xalan.processorType&quot;
+            label=&quot;Xalan&quot;
+            outputProperties=&quot;XalanOutputProperties.properties&quot;
+            transformerFactory=&quot;org.apache.xalan.processor.TransformerFactoryImpl&quot;&gt;
+      &lt;/processorType&gt;
+   &lt;/extension&gt;
+&lt;/pre&gt;
       </documentation>
    </annotation>
 
@@ -113,7 +124,7 @@
          <meta.section type="apiInfo"/>
       </appInfo>
       <documentation>
-         [Enter API information here.]
+         
       </documentation>
    </annotation>
 
@@ -122,7 +133,7 @@
          <meta.section type="implementation"/>
       </appInfo>
       <documentation>
-         [Enter information about supplied implementation of this extension point.]
+         
       </documentation>
    </annotation>
 

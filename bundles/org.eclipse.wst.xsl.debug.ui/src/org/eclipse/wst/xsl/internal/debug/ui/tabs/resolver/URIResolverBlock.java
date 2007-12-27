@@ -168,15 +168,15 @@ public class URIResolverBlock extends ResourceSelectionBlock
 
 	public void performApply(ILaunchConfigurationWorkingCopy configuration)
 	{
-		if (workingDirRelativeRadio.getSelection())
-			configuration.setAttribute(XSLLaunchConfigurationConstants.ATTR_BASE_URI_TYPE, XSLLaunchConfigurationConstants.BASE_URI_WORKING_DIR_RELATIVE);
-		else if (stylesheetRelativeRadio.getSelection())
-			configuration.setAttribute(XSLLaunchConfigurationConstants.ATTR_BASE_URI_TYPE, XSLLaunchConfigurationConstants.BASE_URI_STYLESHEET_RELATIVE);
-		else if (otherRadio.getSelection())
-		{
-			configuration.setAttribute(XSLLaunchConfigurationConstants.ATTR_BASE_URI_TYPE, XSLLaunchConfigurationConstants.BASE_URI_ABSOLUTE);
-			configuration.setAttribute(XSLLaunchConfigurationConstants.ATTR_BASE_URI_DIRECTORY, getText());
-		}
+//		if (workingDirRelativeRadio.getSelection())
+//			configuration.setAttribute(XSLLaunchConfigurationConstants.ATTR_BASE_URI_TYPE, XSLLaunchConfigurationConstants.BASE_URI_WORKING_DIR_RELATIVE);
+//		else if (stylesheetRelativeRadio.getSelection())
+//			configuration.setAttribute(XSLLaunchConfigurationConstants.ATTR_BASE_URI_TYPE, XSLLaunchConfigurationConstants.BASE_URI_STYLESHEET_RELATIVE);
+//		else if (otherRadio.getSelection())
+//		{
+//			configuration.setAttribute(XSLLaunchConfigurationConstants.ATTR_BASE_URI_TYPE, XSLLaunchConfigurationConstants.BASE_URI_ABSOLUTE);
+//			configuration.setAttribute(XSLLaunchConfigurationConstants.ATTR_BASE_URI_DIRECTORY, getText());
+//		}
 	}
 
 	public void setDefaults(ILaunchConfigurationWorkingCopy config)

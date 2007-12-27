@@ -6,7 +6,7 @@
          <meta.schema plugin="org.eclipse.wst.xsl.launching" id="debugger" name="XSLT Debugger"/>
       </appInfo>
       <documentation>
-         [Enter description of this extension point.]
+         &lt;b&gt;This extension point is internal and should not be used by any other plugins.&lt;/b&gt;
       </documentation>
    </annotation>
 
@@ -87,7 +87,7 @@
          <meta.section type="since"/>
       </appInfo>
       <documentation>
-         [Enter the first release in which this extension point appears.]
+         &lt;b&gt;This extension point is internal and should not be used by any other plugins.&lt;/b&gt;
       </documentation>
    </annotation>
 
@@ -96,7 +96,7 @@
          <meta.section type="examples"/>
       </appInfo>
       <documentation>
-         [Enter extension point usage example here.]
+         
       </documentation>
    </annotation>
 
@@ -105,7 +105,7 @@
          <meta.section type="apiInfo"/>
       </appInfo>
       <documentation>
-         [Enter API information here.]
+         
       </documentation>
    </annotation>
 
@@ -114,7 +114,7 @@
          <meta.section type="implementation"/>
       </appInfo>
       <documentation>
-         [Enter information about supplied implementation of this extension point.]
+         
       </documentation>
    </annotation>
 

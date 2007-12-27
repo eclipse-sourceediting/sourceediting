@@ -275,7 +275,7 @@ public class AddProcessorDialog extends StatusDialog
 		{
 			processorTypeField.getCombo().setEnabled(false);
 			processorTypeField.setSelection(new StructuredSelection(standinProcessor.getProcessorType()));
-			processorNameField.setText(standinProcessor.getLabel());
+			processorNameField.setText(standinProcessor.getName());
 
 			supportsVerson10Checkbox.setSelection(standinProcessor.supports("1.0"));
 			supportsVerson20Checkbox.setSelection(standinProcessor.supports("2.0"));
@@ -295,7 +295,7 @@ public class AddProcessorDialog extends StatusDialog
 		}
 		else
 		{
-			if (block.isDuplicateName(name) && (standinProcessor == null || !name.equals(standinProcessor.getLabel())))
+			if (block.isDuplicateName(name) && (standinProcessor == null || !name.equals(standinProcessor.getName())))
 			{
 				status = new Status(IStatus.ERROR, XSLDebugUIPlugin.PLUGIN_ID, IStatus.OK, ProcessorMessages.AddProcessorDialog_duplicateName, null);
 			}
@@ -360,7 +360,7 @@ public class AddProcessorDialog extends StatusDialog
 
 	protected void setFieldValuesToProcessor(IProcessorInstall processor)
 	{
-		processor.setLabel(processorNameField.getText());
+		processor.setName(processorNameField.getText());
 		processor.setProcessorTypeId(selectedProcessorType.getId());
 
 		IDebugger[] debuggers = XSLTRuntime.getDebuggers();

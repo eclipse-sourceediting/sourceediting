@@ -14,14 +14,12 @@ import org.eclipse.wst.xsl.launching.IOutputProperty;
 
 public class OutputProperty implements IOutputProperty
 {
-	private final String key;
 	private final String name;
 	private final String desc;
 
-	public OutputProperty(String name, String key, String desc)
+	public OutputProperty(String key, String desc)
 	{
-		this.name = name;
-		this.key = key;
+		this.name = key;
 		this.desc = desc;
 	}
 
@@ -30,12 +28,7 @@ public class OutputProperty implements IOutputProperty
 		return desc;
 	}
 
-	public String getKey()
-	{
-		return key;
-	}
-
-	public String getName()
+	public String getURI()
 	{
 		return name;
 	}

@@ -12,7 +12,6 @@ package org.eclipse.wst.xsl.internal.debug.ui.preferences;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
@@ -30,22 +29,12 @@ import org.eclipse.wst.xsl.launching.XSLTRuntime;
 public class OutputUpdater
 {
 
-	public boolean updateOutputSettings(Map<?, ?> typeProperties)
+	public boolean updateOutputSettings(Map<IProcessorType, Properties> typeProperties)
 	{
 		OutputPropertyPreferences prefs = new OutputPropertyPreferences();
-		// first copy all the current values across...
-		IProcessorType[] types = XSLTRuntime.getProcessorTypes();
-		for (IProcessorType type : types)
+		for (IProcessorType type : typeProperties.keySet())
 		{
-			prefs.setOutputPropertyValues(type.getId(), type.getOutputPropertyValues());
-		}
-		// now override with the new values...
-		for (Iterator<?> iter = typeProperties.entrySet().iterator(); iter.hasNext();)
-		{
-			Map.Entry entry = (Map.Entry) iter.next();
-			IProcessorType type = (IProcessorType) entry.getKey();
-			Properties props = (Properties) entry.getValue();
-			prefs.setOutputPropertyValues(type.getId(), props);
+			prefs.setOutputPropertyValues(type.getId(), typeProperties.get(type));
 		}
 		saveSettings(prefs);
 		return true;

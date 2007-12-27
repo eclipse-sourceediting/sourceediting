@@ -131,7 +131,7 @@ public class XSLDebugTarget extends XSLDebugElement implements IDebugTarget
 			{
 				IProcessorInstall install = XSLTLaunchConfigurationDelegate.getProcessorInstall(getLaunch().getLaunchConfiguration(), ILaunchManager.DEBUG_MODE);
 				String type = install.getProcessorType().getLabel();
-				name = type + " [" + install.getLabel() + "]";
+				name = type + " [" + install.getName() + "]";
 			}
 			catch (CoreException e)
 			{

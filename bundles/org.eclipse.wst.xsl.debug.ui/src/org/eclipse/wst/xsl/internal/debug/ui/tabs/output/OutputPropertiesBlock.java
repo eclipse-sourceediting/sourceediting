@@ -66,8 +66,8 @@ public class OutputPropertiesBlock extends AbstractTableBlock
 	private final Map<IProcessorType, LaunchProperties> typeProperties = new HashMap<IProcessorType, LaunchProperties>();
 	private Button usePropertiesFromPreferencesRadio;
 	private Button changePreferences;
-	private Button useSpecificFeaturesRadio;
-	private LaunchProperties launchFeatures;
+	private Button useSpecificPropertiesRadio;
+	private LaunchProperties launchProperties;
 
 	public OutputPropertiesBlock(XSLMainTab main)
 	{
@@ -126,11 +126,11 @@ public class OutputPropertiesBlock extends AbstractTableBlock
 			}
 		});
 
-		useSpecificFeaturesRadio = new Button(parent, SWT.RADIO);
+		useSpecificPropertiesRadio = new Button(parent, SWT.RADIO);
 		gd = new GridData(SWT.LEFT, SWT.CENTER, false, false);
-		useSpecificFeaturesRadio.setLayoutData(gd);
-		useSpecificFeaturesRadio.setText("Use specific properties");
-		useSpecificFeaturesRadio.addSelectionListener(new SelectionListener()
+		useSpecificPropertiesRadio.setLayoutData(gd);
+		useSpecificPropertiesRadio.setText("Use specific properties");
+		useSpecificPropertiesRadio.addSelectionListener(new SelectionListener()
 		{
 
 			public void widgetDefaultSelected(SelectionEvent e)
@@ -173,7 +173,7 @@ public class OutputPropertiesBlock extends AbstractTableBlock
 
 			public Object[] getElements(Object inputElement)
 			{
-				return launchFeatures.getProperties().keySet().toArray(new String[0]);
+				return launchProperties.getProperties().keySet().toArray(new String[0]);
 			}
 
 			public void dispose()
@@ -201,7 +201,7 @@ public class OutputPropertiesBlock extends AbstractTableBlock
 					case 0:
 						return prop;
 					case 1:
-						return launchFeatures.getProperty(prop);
+						return launchProperties.getProperty(prop);
 				}
 				return "!!";
 			}
@@ -238,7 +238,7 @@ public class OutputPropertiesBlock extends AbstractTableBlock
 			public Object getValue(Object element, String property)
 			{
 				String prop = (String) element;
-				String value = launchFeatures.getProperty(prop);
+				String value = launchProperties.getProperty(prop);
 				return value == null ? "" : value;
 			}
 
@@ -247,9 +247,9 @@ public class OutputPropertiesBlock extends AbstractTableBlock
 				Item item = (Item) element;
 				String prop = (String) item.getData();
 				if (value == null || "".equals(value))
-					launchFeatures.removeProperty(prop);
+					launchProperties.removeProperty(prop);
 				else
-					launchFeatures.setProperty(prop, (String) value);
+					launchProperties.setProperty(prop, (String) value);
 				tViewer.update(prop, null);
 				updateLaunchConfigurationDialog();
 			}
@@ -282,7 +282,7 @@ public class OutputPropertiesBlock extends AbstractTableBlock
 						for (int j = 0; j < property.length; j++)
 						{
 							IOutputProperty outputProperty = property[j];
-							if (outputProperty.getKey().equals(prop))
+							if (outputProperty.getURI().equals(prop))
 							{
 								text = outputProperty.getDescription();
 								break outer;
@@ -317,24 +317,24 @@ public class OutputPropertiesBlock extends AbstractTableBlock
 
 		if (selected)
 		{
-			launchFeatures = initializeFeaturesFromPreferences();
+			launchProperties = initializeFeaturesFromPreferences();
 		}
 		else
 		{
-			launchFeatures = (LaunchProperties) typeProperties.get(processorType);
+			launchProperties = (LaunchProperties) typeProperties.get(processorType);
 
-			if (launchFeatures == null)
+			if (launchProperties == null)
 			{// make a copy of the features for the processor type
-				launchFeatures = new LaunchProperties();
-				typeProperties.put(processorType, launchFeatures);
+				launchProperties = new LaunchProperties();
+				typeProperties.put(processorType, launchProperties);
 				for (int i = 0; i < processorType.getOutputProperties().length; i++)
 				{
 					IOutputProperty property = processorType.getOutputProperties()[i];
-					launchFeatures.setProperty(property.getName(), null);
+					launchProperties.setProperty(property.getURI(), null);
 				}
 			}
 		}
-		tViewer.setInput(launchFeatures);
+		tViewer.setInput(launchProperties);
 	}
 
 	public String getName()
@@ -351,7 +351,7 @@ public class OutputPropertiesBlock extends AbstractTableBlock
 		Map<?, ?> values = jreDefaultType.getOutputPropertyValues();
 		for (IOutputProperty feature : features)
 		{
-			String key = feature.getKey();
+			String key = feature.getURI();
 			preferences.setProperty(key, (String) values.get(key));
 		}
 
@@ -359,7 +359,7 @@ public class OutputPropertiesBlock extends AbstractTableBlock
 		values = processorType.getOutputPropertyValues();
 		for (IOutputProperty feature : features)
 		{
-			String key = feature.getKey();
+			String key = feature.getURI();
 			preferences.setProperty(key, (String) values.get(key));
 		}
 
@@ -374,13 +374,13 @@ public class OutputPropertiesBlock extends AbstractTableBlock
 		IOutputProperty[] defaultProps = jreDefaultType.getOutputProperties();
 		for (IOutputProperty feature : defaultProps)
 		{
-			String key = feature.getKey();
+			String key = feature.getURI();
 			launchFeatures.setProperty(key, null);
 		}
 		IOutputProperty[] specificProps = processorType.getOutputProperties();
 		for (IOutputProperty feature : specificProps)
 		{
-			String key = feature.getKey();
+			String key = feature.getURI();
 			launchFeatures.setProperty(key, null);
 		}
 
@@ -397,7 +397,7 @@ public class OutputPropertiesBlock extends AbstractTableBlock
 				launchFeatures.removeProperty(key);
 				for (IOutputProperty prop : props)
 				{
-					if (prop.getKey().equals(key))
+					if (prop.getURI().equals(key))
 					{
 						launchFeatures.setProperty(key, overrideFeatures.getProperty(key));
 						break;
@@ -430,7 +430,7 @@ public class OutputPropertiesBlock extends AbstractTableBlock
 
 			boolean useFeaturesFromPreferences = configuration.getAttribute(XSLLaunchConfigurationConstants.ATTR_USE_PROPERTIES_FROM_PREFERENCES, true);
 
-			useSpecificFeaturesRadio.setSelection(!useFeaturesFromPreferences);
+			useSpecificPropertiesRadio.setSelection(!useFeaturesFromPreferences);
 			usePropertiesFromPreferencesRadio.setSelection(useFeaturesFromPreferences);
 			handleUsePropertiesFromPreferences(useFeaturesFromPreferences);
 		}
@@ -446,7 +446,7 @@ public class OutputPropertiesBlock extends AbstractTableBlock
 		String xml;
 		try
 		{
-			xml = launchFeatures.toXML();
+			xml = launchProperties.toXML();
 			configuration.setAttribute(XSLLaunchConfigurationConstants.ATTR_OUTPUT_PROPERTIES, xml);
 		}
 		catch (Exception e)

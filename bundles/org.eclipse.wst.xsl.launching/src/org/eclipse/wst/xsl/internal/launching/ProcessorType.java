@@ -128,7 +128,7 @@ public class ProcessorType implements IProcessorType
 					String desc = props.getProperty(key + DESC_SUFFIX);
 					if (uri != null && name != null && desc != null)
 					{
-						OutputProperty prop = new OutputProperty(name.trim(), uri.trim(), desc);
+						OutputProperty prop = new OutputProperty(uri.trim(), desc);
 						outputs.add(prop);
 					}
 					else

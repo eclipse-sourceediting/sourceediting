@@ -18,6 +18,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -32,7 +33,6 @@ import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.wst.xsl.internal.launching.FileStylesheetEntry;
 import org.eclipse.wst.xsl.internal.launching.LaunchingPlugin;
 import org.eclipse.wst.xsl.internal.launching.ProcessorJar;
-import org.eclipse.wst.xsl.internal.launching.StylesheetParameter;
 import org.eclipse.wst.xsl.internal.launching.registry.DebuggerRegistry;
 import org.eclipse.wst.xsl.internal.launching.registry.InvokerRegistry;
 import org.eclipse.wst.xsl.internal.launching.registry.ProcessorTypeRegistry;
@@ -207,6 +207,7 @@ public class XSLTRuntime
 		{
 			// force the registry to be re-initialised next time it is required
 			processorRegistry = null;
+			processorTypeRegistry = null;
 		}
 		// getProcessorRegistry();
 	}
@@ -307,13 +308,15 @@ public class XSLTRuntime
 		return jreXalanVersion;
 	}
 
-	public static IStylesheetParameter createVariableParameter(String name, String value)
+	public static Properties createDefaultOutputProperties(String typeId)
 	{
-		return new StylesheetParameter(name, value, IStylesheetParameter.VARIABLE_TYPE);
-	}
-
-	public static IStylesheetParameter createConstantParameter(String name, String value)
-	{
-		return new StylesheetParameter(name, value, IStylesheetParameter.CONSTANT_TYPE);
+		Properties props = new Properties();
+		if (JRE_DEFAULT_PROCESSOR_TYPE_ID.equals(typeId))
+			props.put("indent", "yes");
+		else if (XSLLaunchConfigurationConstants.XALAN_TYPE_ID.equals(typeId))
+			props.put("{http://xml.apache.org/xslt}indent-amount", "4");
+		else if (XSLLaunchConfigurationConstants.SAXONB_TYPE_ID.equals(typeId))
+			props.put("{http://saxon.sf.net/}indent-spaces", "4");
+		return props;
 	}
 }

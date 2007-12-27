@@ -161,10 +161,17 @@ public class FeaturesPreferencePage extends PreferencePage implements IWorkbench
 	}
 	
 	@Override
-	public void setErrorMessage(String newMessage)
+	protected void performDefaults()
 	{
-		// TODO Auto-generated method stub
-		super.setErrorMessage(newMessage);
+		IProcessorType[] types = XSLTRuntime.getProcessorTypes();
+		for (IProcessorType type : types)
+		{
+			typeFeatureMap.put(type, new HashMap<String,String>());
+		}
+		cViewer.setInput(XSLTRuntime.getProcessorTypes());
+		cViewer.setSelection(new StructuredSelection(XSLTRuntime.getProcessorTypesExclJREDefault()[0]), true);
+		
+		super.performDefaults();
 	}
 
 	@Override

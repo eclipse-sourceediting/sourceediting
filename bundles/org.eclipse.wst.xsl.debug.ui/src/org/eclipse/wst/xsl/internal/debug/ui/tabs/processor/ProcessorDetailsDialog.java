@@ -56,7 +56,7 @@ public class ProcessorDetailsDialog extends Dialog
 
 		// name
 		createLabel(parent, ProcessorMessages.ProcessorDetailsDialog_installName);
-		createLabel(parent, install.getLabel());
+		createLabel(parent, install.getName());
 
 		// jars
 		Label label = createLabel(parent, ProcessorMessages.ProcessorDetailsDialog_installClasspath);

@@ -126,8 +126,8 @@ public class ProcessorsPreferencePage extends PreferencePage implements IWorkben
 			else
 			{
 				IProcessorInstall standin = getEquivalent(standins, install);
-				if (!standin.getLabel().equals(install.getLabel()))
-					install.setLabel(standin.getLabel());
+				if (!standin.getName().equals(install.getName()))
+					install.setName(standin.getName());
 				if (!standin.getProcessorTypeId().equals(install.getProcessorTypeId()))
 					install.setProcessorTypeId(standin.getProcessorTypeId());
 

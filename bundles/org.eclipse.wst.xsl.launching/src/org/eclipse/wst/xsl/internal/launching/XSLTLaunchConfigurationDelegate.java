@@ -180,7 +180,7 @@ public class XSLTLaunchConfigurationDelegate extends JavaLaunchDelegate implemen
 						String debuggerName = processor.getDebugger().getName();
 
 						IWorkbenchWindow dw = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-						result[0] = MessageDialog.openQuestion(dw.getShell(), "XSLT Processor Debugger", "The " + install.getLabel() + " XSLT processor does not support debugging.\n"
+						result[0] = MessageDialog.openQuestion(dw.getShell(), "XSLT Processor Debugger", "The " + install.getName() + " XSLT processor does not support debugging.\n"
 								+ "Would you like to use the default debugger " + debuggerName + " instead?");
 					}
 				});

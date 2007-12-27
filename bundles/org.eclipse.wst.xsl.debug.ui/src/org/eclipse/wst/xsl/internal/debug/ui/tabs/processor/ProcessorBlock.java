@@ -272,7 +272,7 @@ public class ProcessorBlock extends AbstractLaunchConfigurationTab
 		public String getText(Object element)
 		{
 			IProcessorInstall install = (IProcessorInstall) element;
-			return install.getLabel();
+			return install.getName();
 		}
 	}
 }

@@ -11,7 +11,6 @@
 package org.eclipse.wst.xsl.internal.debug.ui.preferences;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
@@ -40,7 +39,6 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.wst.xsl.launching.IOutputProperty;
 import org.eclipse.wst.xsl.launching.IProcessorType;
-import org.eclipse.wst.xsl.launching.PreferenceInitializer;
 import org.eclipse.wst.xsl.launching.XSLTRuntime;
 
 public class OutputPreferencePage extends PreferencePage implements IWorkbenchPreferencePage
@@ -208,9 +206,10 @@ public class OutputPreferencePage extends PreferencePage implements IWorkbenchPr
 	private void setInput()
 	{
 		IProcessorType[] types = XSLTRuntime.getProcessorTypes();
+		typePropertyMap.clear();
 		for (IProcessorType type : types)
 		{
-			typePropertyMap.put(type, type.getOutputPropertyValues());
+			typePropertyMap.put(type, (Properties)type.getOutputPropertyValues().clone());
 		}
 
 		IProcessorType jreDefaultType = XSLTRuntime.getProcessorType(XSLTRuntime.JRE_DEFAULT_PROCESSOR_TYPE_ID);
@@ -228,26 +227,19 @@ public class OutputPreferencePage extends PreferencePage implements IWorkbenchPr
 	@Override
 	protected void performDefaults()
 	{
-		Map<IProcessorType, Properties> newMap = new HashMap<IProcessorType, Properties>(typePropertyMap.size());
-		for (Iterator<?> iter = typePropertyMap.entrySet().iterator(); iter.hasNext();)
+		IProcessorType[] types = XSLTRuntime.getProcessorTypes();
+		typePropertyMap.clear();
+		for (IProcessorType type : types)
 		{
-			Map.Entry entry = (Map.Entry) iter.next();
-			IProcessorType type = (IProcessorType) entry.getKey();
-			newMap.put(type, PreferenceInitializer.createDefaultOutputProperties(type.getId()));
+			typePropertyMap.put(type, XSLTRuntime.createDefaultOutputProperties(type.getId()));
 		}
-		typePropertyMap = newMap;
 
 		IProcessorType jreDefaultType = XSLTRuntime.getProcessorType(XSLTRuntime.JRE_DEFAULT_PROCESSOR_TYPE_ID);
 		standardOutputBlock.setOutputPropertyValues(jreDefaultType, (Properties) typePropertyMap.get(jreDefaultType));
 		standardOutputBlock.setInput(jreDefaultType.getOutputProperties());
 
-		IStructuredSelection selection = (IStructuredSelection) cViewer.getSelection();
-		IProcessorType type = (IProcessorType) selection.getFirstElement();
-		if (type != null)
-		{
-			outputBlock.setOutputPropertyValues(type, (Properties) typePropertyMap.get(type));
-			outputBlock.setInput(type.getOutputProperties());
-		}
+		cViewer.setInput(types);
+		cViewer.setSelection(new StructuredSelection(XSLTRuntime.getProcessorTypesExclJREDefault()[0]), true);
 
 		super.performDefaults();
 	}

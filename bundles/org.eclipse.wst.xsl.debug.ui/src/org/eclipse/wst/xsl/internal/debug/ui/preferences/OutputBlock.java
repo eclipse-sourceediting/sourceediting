@@ -113,9 +113,9 @@ public class OutputBlock extends AbstractTableBlock
 				switch (columnIndex)
 				{
 					case 0:
-						return prop.getKey();
+						return prop.getURI();
 					case 1:
-						return (String) properties.get(prop.getKey());
+						return (String) properties.get(prop.getURI());
 				}
 				return "!!";
 			}
@@ -150,7 +150,7 @@ public class OutputBlock extends AbstractTableBlock
 			public Object getValue(Object element, String property)
 			{
 				IOutputProperty prop = (IOutputProperty) element;
-				String value = (String) properties.get(prop.getKey());
+				String value = (String) properties.get(prop.getURI());
 				return value == null ? "" : value;
 			}
 
@@ -159,9 +159,9 @@ public class OutputBlock extends AbstractTableBlock
 				Item item = (Item) element;
 				IOutputProperty prop = (IOutputProperty) item.getData();
 				if (value == null || "".equals(value))
-					properties.remove(prop.getKey());
+					properties.remove(prop.getURI());
 				else
-					properties.put(prop.getKey(), value);
+					properties.put(prop.getURI(), value);
 				tViewer.update(prop, null);
 			}
 		});
@@ -172,7 +172,7 @@ public class OutputBlock extends AbstractTableBlock
 			{
 				IOutputProperty prop1 = (IOutputProperty) e1;
 				IOutputProperty prop2 = (IOutputProperty) e2;
-				return prop1.getName().compareTo(prop2.getName());
+				return prop1.getURI().compareTo(prop2.getURI());
 			}
 		});
 

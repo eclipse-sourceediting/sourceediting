@@ -377,7 +377,7 @@ public class InstalledProcessorsBlock extends AbstractTableBlock implements ISel
 				{
 					IProcessorInstall left = (IProcessorInstall) e1;
 					IProcessorInstall right = (IProcessorInstall) e2;
-					return left.getLabel().compareToIgnoreCase(right.getLabel());
+					return left.getName().compareToIgnoreCase(right.getName());
 				}
 				return super.compare(viewer, e1, e2);
 			}
@@ -466,7 +466,7 @@ public class InstalledProcessorsBlock extends AbstractTableBlock implements ISel
 		for (int i = 0; i < processors.size(); i++)
 		{
 			IProcessorInstall install = (IProcessorInstall) processors.get(i);
-			if (install.getLabel().equals(name))
+			if (install.getName().equals(name))
 			{
 				return true;
 			}
@@ -636,7 +636,7 @@ public class InstalledProcessorsBlock extends AbstractTableBlock implements ISel
 				switch (columnIndex)
 				{
 					case 0:
-						return install.getLabel();
+						return install.getName();
 					case 1:
 						return install.getProcessorType().getLabel();
 					case 2:

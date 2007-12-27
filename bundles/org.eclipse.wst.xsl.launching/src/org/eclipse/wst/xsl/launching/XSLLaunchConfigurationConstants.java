@@ -40,10 +40,6 @@ public class XSLLaunchConfigurationConstants
 	public static final String ATTR_PIPELINE = LaunchingPlugin.PLUGIN_ID + ".ATTR_PIPELINE";
 	public static final String ATTR_DEFAULT_DEBUGGING_INSTALL_ID = LaunchingPlugin.PLUGIN_ID + ".ATTR_DEFAULT_DEBUGGING_INSTALL_ID";;
 
-	public static final String BASE_URI_WORKING_DIR_RELATIVE = "BASE_URI_WORKING_DIR_RELATIVE";
-	public static final String BASE_URI_STYLESHEET_RELATIVE = "BASE_URI_STYLESHEET_RELATIVE";
-	public static final String BASE_URI_ABSOLUTE = "BASE_URI_ABSOLUTE";
-
 	public static final String XALAN_TYPE_ID = "org.eclipse.wst.xsl.xalan.processorType";
 	public static final String SAXONB_TYPE_ID = "org.eclipse.wst.xsl.saxon.processorType";
 }

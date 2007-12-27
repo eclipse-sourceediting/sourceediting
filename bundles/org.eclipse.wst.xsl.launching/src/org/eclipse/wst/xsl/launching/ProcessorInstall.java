@@ -10,12 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.xsl.launching;
 
-import java.beans.PropertyChangeEvent;
-import java.io.File;
-
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.wst.xsl.internal.launching.PluginProcessorJar;
 
 public class ProcessorInstall implements IProcessorInstall
@@ -25,7 +20,6 @@ public class ProcessorInstall implements IProcessorInstall
 	private String type;
 	private IProcessorJar[] jars;
 	private final boolean contributed;
-	private final boolean notify;
 	private String debuggerId;
 	private String supports;
 
@@ -38,7 +32,6 @@ public class ProcessorInstall implements IProcessorInstall
 		this.contributed = contributed;
 		this.jars = jars;
 		this.supports = supports;
-		notify = true;
 	}
 
 	public String getId()
@@ -46,20 +39,14 @@ public class ProcessorInstall implements IProcessorInstall
 		return id;
 	}
 
-	public String getLabel()
+	public String getName()
 	{
 		return name;
 	}
 
-	public void setLabel(String name)
+	public void setName(String name)
 	{
-		String previous = this.name;
 		this.name = name;
-		if (notify)
-		{
-			PropertyChangeEvent event = new PropertyChangeEvent(this, IProcessorInstallChangedListener.PROPERTY_NAME, previous, name);
-			XSLTRuntime.getProcessorRegistry().fireProcessorChanged(event);
-		}
 	}
 
 	public IProcessorJar[] getProcessorJars()
@@ -69,13 +56,7 @@ public class ProcessorInstall implements IProcessorInstall
 
 	public void setProcessorJars(IProcessorJar[] jars)
 	{
-		IProcessorJar[] previous = jars;
 		this.jars = jars;
-		if (notify)
-		{
-			PropertyChangeEvent event = new PropertyChangeEvent(this, IProcessorInstallChangedListener.PROPERTY_JARS, previous, jars);
-			XSLTRuntime.getProcessorRegistry().fireProcessorChanged(event);
-		}
 	}
 
 	public String getProcessorTypeId()
@@ -90,21 +71,7 @@ public class ProcessorInstall implements IProcessorInstall
 
 	public void setProcessorTypeId(String id)
 	{
-		String oldId = id;
 		type = id;
-		if (notify)
-		{
-			PropertyChangeEvent event = new PropertyChangeEvent(this, IProcessorInstallChangedListener.PROPERTY_TYPE, oldId, id);
-			XSLTRuntime.getProcessorRegistry().fireProcessorChanged(event);
-		}
-	}
-
-	public IStatus validateInstallLocation(File installLocation)
-	{
-		if (contributed)
-			return Status.OK_STATUS;
-		// TODO validate install location for user-created installs
-		return null;
 	}
 
 	public boolean isContributed()

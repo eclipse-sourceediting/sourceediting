@@ -67,7 +67,7 @@
  	
 	<extension point="org.eclipse.core.runtime.preferences">
 		<initializer
-			class="org.eclipse.wst.xsl.launching.PreferenceInitializer">
+			class="org.eclipse.wst.xsl.internal.launching.PreferenceInitializer">
 		</initializer>
 	</extension>
  

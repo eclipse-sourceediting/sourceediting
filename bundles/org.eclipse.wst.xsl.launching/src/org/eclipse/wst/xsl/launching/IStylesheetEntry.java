@@ -10,37 +10,18 @@
  *******************************************************************************/
 package org.eclipse.wst.xsl.launching;
 
-import java.util.List;
-
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 
+/**
+ * An XSLT stylesheet.
+ * 
+ * @author Doug Satchwell
+ */
 public interface IStylesheetEntry
 {
 	/**
-	 * Type identifier for project file workspace files.
+	 * Get the path to the stylesheet.
+	 * @return a path to the stylesheet
 	 */
-	int WORKSPACE_FILE = 1;
-
-	/**
-	 * Type identifier for external files
-	 */
-	int EXTERNAL_FILE = 2;
-
-	/**
-	 * Type identifier for URL's
-	 */
-	int URL = 3;
-
-	int getType();
-
-	String getMemento() throws CoreException;
-
 	IPath getPath();
-
-	void addParameter(IStylesheetParameter parameter);
-
-	void removeParameter(IStylesheetParameter parameter);
-
-	List<?> getParameters();
 }

@@ -231,7 +231,7 @@ public class LaunchHelper
 					boolean found = false;
 					for (IOutputProperty outputProperty : props)
 					{
-						if (outputProperty.getKey().equals(key))
+						if (outputProperty.getURI().equals(key))
 						{
 							found = true;
 						}

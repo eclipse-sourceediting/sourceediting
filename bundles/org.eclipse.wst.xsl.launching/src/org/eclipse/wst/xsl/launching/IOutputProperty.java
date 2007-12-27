@@ -10,11 +10,22 @@
  *******************************************************************************/
 package org.eclipse.wst.xsl.launching;
 
+/**
+ * An output property supported by an XSLT processor. 
+ * 
+ * @author Doug Satchwell
+ */
 public interface IOutputProperty
 {
-	String getName();
+	/**
+	 * Get the URI of this output property. 
+	 * @return a unique URI
+	 */
+	String getURI();
 
-	String getKey();
-
+	/**
+	 * Get a description for this output property. 
+	 * @return a description
+	 */
 	String getDescription();
 }

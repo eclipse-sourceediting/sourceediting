@@ -114,7 +114,6 @@ public class ProcessorRegistry
 		System.arraycopy(installs, 0, newinstalls, 0, installs.length);
 		newinstalls[installs.length] = install;
 		installs = newinstalls;
-		fireProcessorAdded(install);
 	}
 
 	public void removeProcessor(int index)
@@ -126,7 +125,6 @@ public class ProcessorRegistry
 		System.arraycopy(installs, 0, newinstalls, 0, index);
 		System.arraycopy(installs, index + 1, newinstalls, index, newinstalls.length - index);
 		installs = newinstalls;
-		fireProcessorRemoved(removed);
 	}
 
 	public IProcessorInstall[] getProcessors()
@@ -164,7 +162,6 @@ public class ProcessorRegistry
 	{
 		IProcessorInstall previous = getDefaultProcessor();
 		defaultProcessor = defaultInstall;
-		notifyDefaultProcessorChanged(previous, defaultInstall);
 	}
 
 	public IProcessorInstall getDefaultProcessor()
@@ -175,92 +172,6 @@ public class ProcessorRegistry
 	public IProcessorInstall getJREDefaultProcessor()
 	{
 		return jreDefaultProcessor;
-	}
-
-	/**
-	 * Adds the given listener to the list of registered Processor install
-	 * changed listeners. Has no effect if an identical listener is already
-	 * registered.
-	 * 
-	 * @param listener
-	 *            the listener to add
-	 */
-	public void addProcessorInstallChangedListener(IProcessorInstallChangedListener listener)
-	{
-		fgProcessorListeners.add(listener);
-	}
-
-	/**
-	 * Removes the given listener from the list of registered Processor install
-	 * changed listeners. Has no effect if an identical listener is not already
-	 * registered.
-	 * 
-	 * @param listener
-	 *            the listener to remove
-	 */
-	public void removeProcessorInstallChangedListener(IProcessorInstallChangedListener listener)
-	{
-		fgProcessorListeners.remove(listener);
-	}
-
-	private void notifyDefaultProcessorChanged(IProcessorInstall previous, IProcessorInstall current)
-	{
-		Object[] listeners = fgProcessorListeners.getListeners();
-		for (Object element : listeners)
-		{
-			IProcessorInstallChangedListener listener = (IProcessorInstallChangedListener) element;
-			listener.defaultProcessorInstallChanged(previous, current);
-		}
-	}
-
-	/**
-	 * Notifies all Processor install changed listeners of the given property
-	 * change.
-	 * 
-	 * @param event
-	 *            event describing the change.
-	 */
-	public void fireProcessorChanged(PropertyChangeEvent event)
-	{
-		Object[] listeners = fgProcessorListeners.getListeners();
-		for (Object element : listeners)
-		{
-			IProcessorInstallChangedListener listener = (IProcessorInstallChangedListener) element;
-			listener.processorChanged(event);
-		}
-	}
-
-	/**
-	 * Notifies all Processor install changed listeners of the Processor
-	 * addition
-	 * 
-	 * @param Processor
-	 *            the Processor that has been added
-	 */
-	private void fireProcessorAdded(IProcessorInstall Processor)
-	{
-		Object[] listeners = fgProcessorListeners.getListeners();
-		for (Object element : listeners)
-		{
-			IProcessorInstallChangedListener listener = (IProcessorInstallChangedListener) element;
-			listener.processorAdded(Processor);
-		}
-	}
-
-	/**
-	 * Notifies all Processor install changed listeners of the Processor removal
-	 * 
-	 * @param Processor
-	 *            the Processor that has been removed
-	 */
-	private void fireProcessorRemoved(IProcessorInstall Processor)
-	{
-		Object[] listeners = fgProcessorListeners.getListeners();
-		for (Object element : listeners)
-		{
-			IProcessorInstallChangedListener listener = (IProcessorInstallChangedListener) element;
-			listener.processorRemoved(Processor);
-		}
 	}
 
 	public IProcessorInstall[] getContributedProcessors()

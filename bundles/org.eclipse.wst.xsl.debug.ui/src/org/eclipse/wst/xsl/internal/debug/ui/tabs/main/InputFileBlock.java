@@ -14,7 +14,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.variables.IStringVariableManager;
 import org.eclipse.core.variables.VariablesPlugin;
@@ -22,13 +21,11 @@ import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.wst.xsl.debug.ui.XSLDebugUIPlugin;
 import org.eclipse.wst.xsl.internal.debug.ui.ResourceSelectionBlock;
-import org.eclipse.wst.xsl.launching.FastXMLInfo;
 import org.eclipse.wst.xsl.launching.XSLLaunchConfigurationConstants;
 
 public class InputFileBlock extends ResourceSelectionBlock
 {
 	private final IFile defaultFile;
-	private final ListenerList listeners = new ListenerList();
 
 	public InputFileBlock(IFile defaultFile)
 	{
@@ -105,37 +102,6 @@ public class InputFileBlock extends ResourceSelectionBlock
 		{
 			path = new Path(workingDirPath);
 		}
-		if (path != null && path.toFile().isFile())
-		{
-			try
-			{
-				FastXMLInfo info = FastXMLInfo.getBasicInfo(path.toFile());
-				notifyFileChanged(info);
-			}
-			catch (CoreException e)
-			{
-				e.printStackTrace();
-			}
-		}
-	}
-
-	private void notifyFileChanged(FastXMLInfo info)
-	{
-		Object[] l = listeners.getListeners();
-		for (Object element : l)
-		{
-			((IInputFileChangedListener) element).fileChanged(info);
-		}
-	}
-
-	public void addInputFileChangedListener(IInputFileChangedListener listener)
-	{
-		listeners.add(listener);
-	}
-
-	public void removeInputFileChangedListener(IInputFileChangedListener listener)
-	{
-		listeners.remove(listener);
 	}
 
 	@Override

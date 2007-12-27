@@ -14,19 +14,23 @@ import java.net.URL;
 
 import org.eclipse.core.runtime.IPath;
 
+/**
+ * A jar file for an XSLT processor
+ * 
+ * @see IProcessorInstall
+ * @author Doug Satchwell
+ */
 public interface IProcessorJar
 {
 	/**
 	 * The path may be relative or absolute; in the workspace or external.
-	 * 
 	 * @return the path to this jar
 	 */
 	IPath getPath();
 
 	/**
 	 * The URL will always be absolute and can be opened.
-	 * 
-	 * @return
+	 * @return a URL to the jar
 	 */
 	URL asURL();
 }
