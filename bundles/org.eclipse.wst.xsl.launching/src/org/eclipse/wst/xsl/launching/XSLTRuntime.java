@@ -10,31 +10,20 @@
  *******************************************************************************/
 package org.eclipse.wst.xsl.launching;
 
-import java.beans.BeanInfo;
-import java.beans.IntrospectionException;
-import java.beans.Introspector;
-import java.beans.MethodDescriptor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Properties;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.debug.core.ILaunchConfiguration;
-import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
-import org.eclipse.wst.xsl.internal.launching.FileStylesheetEntry;
 import org.eclipse.wst.xsl.internal.launching.LaunchingPlugin;
 import org.eclipse.wst.xsl.internal.launching.ProcessorJar;
 import org.eclipse.wst.xsl.internal.launching.registry.DebuggerRegistry;
 import org.eclipse.wst.xsl.internal.launching.registry.InvokerRegistry;
+import org.eclipse.wst.xsl.internal.launching.registry.ProcessorRegistry;
 import org.eclipse.wst.xsl.internal.launching.registry.ProcessorTypeRegistry;
 
 public class XSLTRuntime
@@ -52,7 +41,6 @@ public class XSLTRuntime
 	private static ProcessorTypeRegistry processorTypeRegistry;
 	private static ProcessorRegistry processorRegistry;
 	private static InvokerRegistry invokerRegistry;
-	private static String jreXalanVersion;
 	private static DebuggerRegistry debuggerRegistry;
 
 	private static ProcessorTypeRegistry getProcessorTypeRegistry()
@@ -205,21 +193,10 @@ public class XSLTRuntime
 		LaunchingPlugin.getDefault().savePluginPreferences();
 		synchronized (REGISTRY_LOCK)
 		{
-			// force the registry to be re-initialised next time it is required
+			// force the registries to be re-initialised next time it is required
 			processorRegistry = null;
 			processorTypeRegistry = null;
 		}
-		// getProcessorRegistry();
-	}
-
-	public static IStylesheetEntry newStylesheetEntry(IResource elem)
-	{
-		return new FileStylesheetEntry(elem.getFullPath());
-	}
-
-	public static IStylesheetEntry newStylesheetEntry(IPath path)
-	{
-		return new FileStylesheetEntry(path);
 	}
 
 	public static IProject getProject(ILaunchConfiguration configuration) throws CoreException
@@ -232,80 +209,6 @@ public class XSLTRuntime
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		IProject javaProject = workspace.getRoot().getProject(projectName);
 		return javaProject;
-	}
-
-	public static void saveToLaunchConfiguration(ILaunchConfigurationWorkingCopy configuration, IStylesheetEntry[] entries) throws CoreException
-	{
-		List<String> list = new ArrayList<String>();
-		if (entries != null)
-		{
-			for (IStylesheetEntry entry : entries)
-			{
-				list.add(entry.getPath().toPortableString());
-			}
-		}
-		configuration.setAttribute(XSLLaunchConfigurationConstants.ATTR_STYLESHEETS_LIST, list);
-	}
-
-	public static IStylesheetEntry[] loadFromLaunchConfiguration(ILaunchConfiguration configuration) throws CoreException
-	{
-		List<?> list = configuration.getAttribute(XSLLaunchConfigurationConstants.ATTR_STYLESHEETS_LIST, (List<?>) null);
-		if (list != null)
-		{
-			List<IStylesheetEntry> entries = new ArrayList<IStylesheetEntry>();
-			for (Iterator<?> iter = list.iterator(); iter.hasNext();)
-			{
-				String entry = (String) iter.next();
-				IPath path = Path.fromPortableString(entry);
-				XSLTRuntime.newStylesheetEntry(path);
-				entries.add(XSLTRuntime.newStylesheetEntry(path));
-			}
-			return (IStylesheetEntry[]) entries.toArray(new IStylesheetEntry[0]);
-		}
-		return null;
-	}
-
-	public static synchronized String getEclipseJAXPImplInfo()
-	{
-		if (jreXalanVersion == null)
-		{
-			try
-			{
-				Class<?> clazz = Class.forName("org.apache.xalan.Version");
-				if (clazz != null)
-				{
-					BeanInfo info = Introspector.getBeanInfo(clazz);
-					MethodDescriptor[] methods = info.getMethodDescriptors();
-					for (MethodDescriptor descriptor : methods)
-					{
-						if (descriptor.getName().equals("getVersion"))
-						{
-							Object result = descriptor.getMethod().invoke(null, null);
-							if (result != null)
-								jreXalanVersion = result.toString();
-							break;
-						}
-					}
-				}
-				// TODO do the same for Saxon
-			}
-			catch (ClassNotFoundException e)
-			{
-			}
-			catch (IntrospectionException e)
-			{
-			}
-			catch (IllegalArgumentException e)
-			{
-			}
-			catch (IllegalAccessException e)
-			{
-			}
-			catch (InvocationTargetException e)
-			{
-			}
-		}
-		return jreXalanVersion;
 	}
 
 	public static Properties createDefaultOutputProperties(String typeId)

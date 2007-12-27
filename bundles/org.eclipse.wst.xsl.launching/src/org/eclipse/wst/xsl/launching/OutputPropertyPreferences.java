@@ -13,7 +13,6 @@ package org.eclipse.wst.xsl.launching;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
@@ -45,12 +44,10 @@ public class OutputPropertyPreferences
 		Element config = doc.createElement("outputPropertyPreferences");
 		doc.appendChild(config);
 
-		for (Iterator<?> iter = typeProperties.entrySet().iterator(); iter.hasNext();)
+		for (String type : typeProperties.keySet())
 		{
-			Map.Entry entry = (Map.Entry) iter.next();
-			String type = (String) entry.getKey();
 			Element processorTypeElement = typeAsElement(doc, type);
-			Properties propertyValues = (Properties) entry.getValue();
+			Properties propertyValues = (Properties) typeProperties.get(type);
 			featureValuesAsElement(doc, processorTypeElement, propertyValues);
 			config.appendChild(processorTypeElement);
 		}
@@ -109,9 +106,8 @@ public class OutputPropertyPreferences
 	{
 		if (propertyValues != null)
 		{
-			for (Object element2 : propertyValues.entrySet())
+			for (Map.Entry<Object,Object> entry2 : propertyValues.entrySet())
 			{
-				Map.Entry entry2 = (Map.Entry) element2;
 				String name = (String) entry2.getKey();
 				String value = (String) entry2.getValue();
 				Element element = doc.createElement("property");

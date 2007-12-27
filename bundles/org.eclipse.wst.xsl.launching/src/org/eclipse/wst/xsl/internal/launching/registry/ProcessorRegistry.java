@@ -8,22 +8,23 @@
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.xsl.launching;
+package org.eclipse.wst.xsl.internal.launching.registry;
 
-import java.beans.PropertyChangeEvent;
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.wst.xsl.internal.launching.LaunchingPlugin;
-import org.eclipse.wst.xsl.internal.launching.registry.ProcessorRegistryReader;
+import org.eclipse.wst.xsl.launching.IProcessorInstall;
+import org.eclipse.wst.xsl.launching.IProcessorJar;
+import org.eclipse.wst.xsl.launching.ProcessorInstall;
+import org.eclipse.wst.xsl.launching.ProcessorPreferences;
+import org.eclipse.wst.xsl.launching.XSLTRuntime;
 
 public class ProcessorRegistry
 {
-	private final ListenerList fgProcessorListeners = new ListenerList();
 	private final List<ProcessorInstall> contributedInstalls = new ArrayList<ProcessorInstall>();
 	private List<IProcessorInstall> userInstalls = new ArrayList<IProcessorInstall>();
 	private IProcessorInstall defaultProcessor;
@@ -160,7 +161,6 @@ public class ProcessorRegistry
 
 	public void setDefaultProcessor(IProcessorInstall defaultInstall)
 	{
-		IProcessorInstall previous = getDefaultProcessor();
 		defaultProcessor = defaultInstall;
 	}
 

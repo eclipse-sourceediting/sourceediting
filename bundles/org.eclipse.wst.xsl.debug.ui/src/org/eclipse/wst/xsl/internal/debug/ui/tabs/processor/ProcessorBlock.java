@@ -173,7 +173,7 @@ public class ProcessorBlock extends AbstractLaunchConfigurationTab
 	{
 		XSLDebugUIPlugin.showPreferencePage(id, page);
 		// now refresh everything
-		runComboViewer.refresh();
+		runComboViewer.setInput(XSLTRuntime.getProcessors());
 		runComboViewer.setSelection(new StructuredSelection(getRunProcessorPreference()), true);
 		// preferencesSelected();
 	}

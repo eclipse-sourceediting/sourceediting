@@ -20,9 +20,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
-import org.eclipse.wst.xsl.internal.debug.ui.tabs.processor.ProcessorMessages;
 import org.eclipse.wst.xsl.launching.IProcessorInstall;
-import org.eclipse.wst.xsl.launching.IProcessorJar;
 import org.eclipse.wst.xsl.launching.XSLTRuntime;
 
 public class ProcessorsPreferencePage extends PreferencePage implements IWorkbenchPreferencePage
@@ -109,87 +107,10 @@ public class ProcessorsPreferencePage extends PreferencePage implements IWorkben
 			return false;
 		}
 
-		IProcessorInstall[] standins = processorsBlock.getProcessors();
-		// add the added processors:
-		for (IProcessorInstall standin : standins)
-		{
-			if (getEquivalent(XSLTRuntime.getProcessors(), standin) == null)
-				XSLTRuntime.getProcessorRegistry().addProcessor(standin);
-		}
-
-		// remove the removed processors + update the updated ones:
-		for (int i = 0; i < XSLTRuntime.getProcessors().length; i++)
-		{
-			IProcessorInstall install = XSLTRuntime.getProcessors()[i];
-			if (getEquivalent(standins, install) == null)
-				XSLTRuntime.getProcessorRegistry().removeProcessor(i);
-			else
-			{
-				IProcessorInstall standin = getEquivalent(standins, install);
-				if (!standin.getName().equals(install.getName()))
-					install.setName(standin.getName());
-				if (!standin.getProcessorTypeId().equals(install.getProcessorTypeId()))
-					install.setProcessorTypeId(standin.getProcessorTypeId());
-
-				install.setDebuggerId(standin.hasDebugger() ? standin.getDebugger().getId() : null);
-				install.setSupports(standin.getSupports());
-
-				if (standin.getProcessorJars().length != install.getProcessorJars().length)
-					install.setProcessorJars(standin.getProcessorJars());
-				else
-				{
-					for (int j = 0; j < standin.getProcessorJars().length; j++)
-					{
-						IProcessorJar standinjar = standin.getProcessorJars()[j];
-						IProcessorJar realjar = getEquivalent(install.getProcessorJars(), standinjar);
-						if (realjar == null)
-						{
-							install.setProcessorJars(standin.getProcessorJars());
-							break;
-						}
-					}
-				}
-			}
-		}
-
-		// set the new default if it changed:
-		IProcessorInstall defaultInstallStandin = getCurrentDefaultProcessor();
-		IProcessorInstall realDefault = null;
-		for (int i = 0; i < XSLTRuntime.getProcessors().length; i++)
-		{
-			IProcessorInstall install = XSLTRuntime.getProcessors()[i];
-			if (install.getId().equals(defaultInstallStandin.getId()))
-			{
-				realDefault = install;
-				break;
-			}
-		}
-		XSLTRuntime.getProcessorRegistry().setDefaultProcessor(realDefault);
-
 		// save column widths
 		processorsBlock.saveColumnSettings();
 
 		return super.performOk();
-	}
-
-	private IProcessorInstall getEquivalent(IProcessorInstall[] installs, IProcessorInstall standin)
-	{
-		for (IProcessorInstall install : installs)
-		{
-			if (install.getId().equals(standin.getId()))
-				return install;
-		}
-		return null;
-	}
-
-	private IProcessorJar getEquivalent(IProcessorJar[] jars, IProcessorJar standinJar)
-	{
-		for (IProcessorJar jar : jars)
-		{
-			if (jar.getPath().equals(standinJar.getPath()))
-				return jar;
-		}
-		return null;
 	}
 
 	private void initDefaultInstall()

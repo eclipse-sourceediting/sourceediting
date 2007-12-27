@@ -14,7 +14,6 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.wst.xsl.internal.launching.LaunchingPlugin;
-import org.eclipse.wst.xsl.launching.ProcessorRegistry;
 
 public class ProcessorRegistryReader extends AbstractRegistryReader
 {
