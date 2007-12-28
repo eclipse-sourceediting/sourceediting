@@ -14,6 +14,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.PreferencePage;
@@ -38,6 +39,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.wst.xsl.internal.debug.ui.XSLDebugUIPlugin;
 import org.eclipse.wst.xsl.launching.IFeature;
+import org.eclipse.wst.xsl.launching.IProcessorInstall;
 import org.eclipse.wst.xsl.launching.IProcessorType;
 import org.eclipse.wst.xsl.launching.XSLTRuntime;
 
@@ -156,7 +158,15 @@ public class FeaturesPreferencePage extends PreferencePage implements IWorkbench
 			typeFeatureMap.put(type, type.getFeatureValues());
 		}
 		cViewer.setInput(XSLTRuntime.getProcessorTypes());
-		cViewer.setSelection(new StructuredSelection(XSLTRuntime.getProcessorTypesExclJREDefault()[0]), true);
+		cViewer.setSelection(new StructuredSelection(getInitialType()), true);
+	}
+	
+	static IProcessorType getInitialType()
+	{
+		IProcessorInstall install = XSLTRuntime.getDefaultProcessor();
+		if (install != XSLTRuntime.getJREDefaultProcessor())
+			return install.getProcessorType();
+		return XSLTRuntime.getProcessorTypesExclJREDefault()[0];
 	}
 
 	public void init(IWorkbench workbench)
@@ -172,7 +182,7 @@ public class FeaturesPreferencePage extends PreferencePage implements IWorkbench
 			typeFeatureMap.put(type, new HashMap<String,String>());
 		}
 		cViewer.setInput(XSLTRuntime.getProcessorTypes());
-		cViewer.setSelection(new StructuredSelection(XSLTRuntime.getProcessorTypesExclJREDefault()[0]), true);
+		cViewer.setSelection(new StructuredSelection(getInitialType()), true);
 		
 		super.performDefaults();
 	}
@@ -188,7 +198,14 @@ public class FeaturesPreferencePage extends PreferencePage implements IWorkbench
 			{
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException
 				{
-					XSLTRuntime.saveFeaturePreferences(typeFeatureMap,monitor);
+					try
+					{
+						XSLTRuntime.saveFeaturePreferences(typeFeatureMap,monitor);
+					}
+					catch (CoreException e)
+					{
+						XSLDebugUIPlugin.log(e);
+					}
 					ok[0] = !monitor.isCanceled();
 				}
 			};

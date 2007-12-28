@@ -58,7 +58,7 @@ public class ProcessorRegistry
 	private void addPersistedVMs()
 	{
 		// Try retrieving the VM preferences from the preference store
-		String vmXMLString = XSLTRuntime.getPreferences().getString(XSLTRuntime.PREF_PROCESSOR_XML);
+		String vmXMLString = LaunchingPlugin.getDefault().getPluginPreferences().getString(XSLTRuntime.PREF_PROCESSOR_XML);
 
 		// If the preference was found, load VMs from it into memory
 		if (vmXMLString.length() > 0)

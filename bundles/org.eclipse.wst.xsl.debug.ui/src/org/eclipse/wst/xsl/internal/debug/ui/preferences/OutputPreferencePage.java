@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.PreferencePage;
@@ -220,7 +221,7 @@ public class OutputPreferencePage extends PreferencePage implements IWorkbenchPr
 		standardOutputBlock.setInput(jreDefaultType.getOutputProperties());
 
 		cViewer.setInput(types);
-		cViewer.setSelection(new StructuredSelection(XSLTRuntime.getProcessorTypesExclJREDefault()[0]), true);
+		cViewer.setSelection(new StructuredSelection(FeaturesPreferencePage.getInitialType()), true);
 	}
 
 	public void init(IWorkbench workbench)
@@ -242,7 +243,7 @@ public class OutputPreferencePage extends PreferencePage implements IWorkbenchPr
 		standardOutputBlock.setInput(jreDefaultType.getOutputProperties());
 
 		cViewer.setInput(types);
-		cViewer.setSelection(new StructuredSelection(XSLTRuntime.getProcessorTypesExclJREDefault()[0]), true);
+		cViewer.setSelection(new StructuredSelection(FeaturesPreferencePage.getInitialType()), true);
 
 		super.performDefaults();
 	}
@@ -258,7 +259,14 @@ public class OutputPreferencePage extends PreferencePage implements IWorkbenchPr
 			{
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException
 				{
-					XSLTRuntime.saveOutputPropertyPreferences(typePropertyMap,monitor);
+					try
+					{
+						XSLTRuntime.saveOutputPropertyPreferences(typePropertyMap,monitor);
+					}
+					catch (CoreException e)
+					{
+						XSLDebugUIPlugin.log(e);
+					}
 					ok[0] = !monitor.isCanceled();
 				}
 			};

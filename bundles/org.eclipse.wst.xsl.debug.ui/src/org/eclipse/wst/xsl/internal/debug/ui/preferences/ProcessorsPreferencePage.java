@@ -12,6 +12,7 @@ package org.eclipse.wst.xsl.internal.debug.ui.preferences;
 
 import java.lang.reflect.InvocationTargetException;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.PreferencePage;
@@ -94,11 +95,20 @@ public class ProcessorsPreferencePage extends PreferencePage implements IWorkben
 		final boolean[] ok = new boolean[1];
 		try
 		{
+			final IProcessorInstall[] installs = processorsBlock.getProcessors();
+			final IProcessorInstall defaultProcessor = getCurrentDefaultProcessor();
 			IRunnableWithProgress runnable = new IRunnableWithProgress()
 			{
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException
 				{
-					XSLTRuntime.saveProcessorPreferences(processorsBlock.getProcessors(),getCurrentDefaultProcessor(),monitor);
+					try
+					{
+						XSLTRuntime.saveProcessorPreferences(installs,defaultProcessor,monitor);
+					}
+					catch (CoreException e)
+					{
+						XSLDebugUIPlugin.log(e);
+					}
 					ok[0] = !monitor.isCanceled();
 				}
 			};

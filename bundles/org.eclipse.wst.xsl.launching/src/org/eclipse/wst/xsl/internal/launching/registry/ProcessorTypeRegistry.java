@@ -50,7 +50,7 @@ public class ProcessorTypeRegistry
 		if (installTypes == null)
 		{
 			List<ProcessorType> types = new ArrayList<ProcessorType>();
-			String featureXMLString = XSLTRuntime.getPreferences().getString(XSLTRuntime.PREF_FEATURE_XML);
+			String featureXMLString = LaunchingPlugin.getDefault().getPluginPreferences().getString(XSLTRuntime.PREF_FEATURE_XML);
 			// If the preference was found, load VMs from it into memory
 			FeaturePreferences prefs = null;
 			if (featureXMLString.length() > 0)
@@ -66,7 +66,7 @@ public class ProcessorTypeRegistry
 				}
 			}
 
-			String propXMLString = XSLTRuntime.getPreferences().getString(XSLTRuntime.PREF_OUTPUT_PROPERTIES_XML);
+			String propXMLString = LaunchingPlugin.getDefault().getPluginPreferences().getString(XSLTRuntime.PREF_OUTPUT_PROPERTIES_XML);
 			// If the preference was found, load VMs from it into memory
 			OutputPropertyPreferences outputprefs = null;
 			if (propXMLString.length() > 0)

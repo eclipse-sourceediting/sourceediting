@@ -10,24 +10,18 @@
  *******************************************************************************/
 package org.eclipse.wst.xsl.launching;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
-
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Preferences;
-import org.eclipse.debug.core.ILaunchConfiguration;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.wst.xsl.internal.launching.FeaturePreferences;
 import org.eclipse.wst.xsl.internal.launching.LaunchingPlugin;
 import org.eclipse.wst.xsl.internal.launching.OutputPropertyPreferences;
@@ -93,6 +87,17 @@ public class XSLTRuntime
 				debuggerRegistry = new DebuggerRegistry();
 		}
 		return debuggerRegistry;
+	}
+	
+	private static void savePreferences()
+	{
+		LaunchingPlugin.getDefault().savePluginPreferences();
+		synchronized (REGISTRY_LOCK)
+		{
+			// force the registries to be re-initialised next time it is required
+			processorRegistry = null;
+			processorTypeRegistry = null;
+		}
 	}
 
 	/**
@@ -195,23 +200,12 @@ public class XSLTRuntime
 		return getInvokerRegistry().getProcessorInvokers();
 	}
 
-	public static Preferences getPreferences()
+	private static Preferences getPreferences()
 	{
 		return LaunchingPlugin.getDefault().getPluginPreferences();
 	}
 
-	public static void savePreferences()
-	{
-		LaunchingPlugin.getDefault().savePluginPreferences();
-		synchronized (REGISTRY_LOCK)
-		{
-			// force the registries to be re-initialised next time it is required
-			processorRegistry = null;
-			processorTypeRegistry = null;
-		}
-	}
-
-	public static void saveFeaturePreferences(Map<IProcessorType, Map<String, String>> typeFeatures, IProgressMonitor monitor)
+	public static void saveFeaturePreferences(Map<IProcessorType, Map<String, String>> typeFeatures, IProgressMonitor monitor) throws CoreException
 	{
 		if (monitor.isCanceled())
 			return;
@@ -237,17 +231,9 @@ public class XSLTRuntime
 			XSLTRuntime.savePreferences();
 			monitor.worked(30);
 		}
-		catch (IOException ioe)
+		catch (Exception e)
 		{
-			LaunchingPlugin.log(ioe);
-		}
-		catch (ParserConfigurationException e)
-		{
-			LaunchingPlugin.log(e);
-		}
-		catch (TransformerException e)
-		{
-			LaunchingPlugin.log(e);
+			throw new CoreException(new Status(IStatus.ERROR,LaunchingPlugin.PLUGIN_ID,"Failed to save feature preferences",e));
 		}
 		finally
 		{
@@ -255,7 +241,7 @@ public class XSLTRuntime
 		}
 	}
 
-	public static void saveOutputPropertyPreferences(Map<IProcessorType, Properties> typeProperties, IProgressMonitor monitor)
+	public static void saveOutputPropertyPreferences(Map<IProcessorType, Properties> typeProperties, IProgressMonitor monitor) throws CoreException
 	{
 		if (monitor.isCanceled())
 			return;
@@ -278,17 +264,9 @@ public class XSLTRuntime
 			XSLTRuntime.savePreferences();
 			monitor.worked(30);
 		}
-		catch (IOException ioe)
+		catch (Exception e)
 		{
-			LaunchingPlugin.log(ioe);
-		}
-		catch (ParserConfigurationException e)
-		{
-			LaunchingPlugin.log(e);
-		}
-		catch (TransformerException e)
-		{
-			LaunchingPlugin.log(e);
+			throw new CoreException(new Status(IStatus.ERROR,LaunchingPlugin.PLUGIN_ID,"Failed to save output property preferences",e));
 		}
 		finally
 		{
@@ -296,8 +274,10 @@ public class XSLTRuntime
 		}
 	}
 
-	public static void saveProcessorPreferences(IProcessorInstall[] installs, IProcessorInstall defaultInstall, IProgressMonitor monitor)
+	public static void saveProcessorPreferences(IProcessorInstall[] installs, IProcessorInstall defaultInstall, IProgressMonitor monitor) throws CoreException
 	{
+		if (monitor.isCanceled())
+			return;
 		try
 		{
 			monitor.beginTask("Saving processors...", 100);
@@ -307,39 +287,23 @@ public class XSLTRuntime
 			prefs.setProcessors(new ArrayList<IProcessorInstall>(Arrays.asList(installs)));
 			String xml = prefs.getAsXML();
 			monitor.worked(40);
+			if (monitor.isCanceled())
+				return;
 			XSLTRuntime.getPreferences().setValue(XSLTRuntime.PREF_PROCESSOR_XML, xml);
 			monitor.worked(30);
+			if (monitor.isCanceled())
+				return;
 			XSLTRuntime.savePreferences();
 			monitor.worked(30);
 		}
-		catch (IOException ioe)
+		catch (Exception e)
 		{
-			LaunchingPlugin.log(ioe);
-		}
-		catch (ParserConfigurationException e)
-		{
-			LaunchingPlugin.log(e);
-		}
-		catch (TransformerException e)
-		{
-			LaunchingPlugin.log(e);
+			throw new CoreException(new Status(IStatus.ERROR,LaunchingPlugin.PLUGIN_ID,"Failed to save process preferences",e));
 		}
 		finally
 		{
 			monitor.done();
 		}
-	}
-
-	public static IProject getProject(ILaunchConfiguration configuration) throws CoreException
-	{
-		String projectName = configuration.getAttribute(XSLLaunchConfigurationConstants.ATTR_PROJECT_NAME, (String) null);
-		if ((projectName == null) || (projectName.trim().length() < 1))
-		{
-			return null;
-		}
-		IWorkspace workspace = ResourcesPlugin.getWorkspace();
-		IProject javaProject = workspace.getRoot().getProject(projectName);
-		return javaProject;
 	}
 
 	public static Properties createDefaultOutputProperties(String typeId)
