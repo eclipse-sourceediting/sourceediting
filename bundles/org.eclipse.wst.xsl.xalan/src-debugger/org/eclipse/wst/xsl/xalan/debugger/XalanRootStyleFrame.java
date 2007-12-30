@@ -14,15 +14,14 @@ import java.util.List;
 
 import org.apache.xalan.templates.ElemTemplateElement;
 import org.apache.xpath.VariableStack;
-import org.eclipse.wst.xsl.debugger.StyleFrame;
 
 public class XalanRootStyleFrame extends XalanStyleFrame
 {
 	private final List globals;
 
-	public XalanRootStyleFrame(StyleFrame parent, ElemTemplateElement element, VariableStack varStack, List globals)
+	public XalanRootStyleFrame(ElemTemplateElement element, VariableStack varStack, List globals)
 	{
-		super(parent, element, varStack);
+		super(null, element, varStack);
 		this.globals = globals;
 	}
 

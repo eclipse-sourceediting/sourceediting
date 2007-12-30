@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.xsl.xalan.debugger;
 
+import java.util.Map;
 import java.util.TooManyListenersException;
 
 import javax.xml.transform.Transformer;
@@ -29,12 +30,18 @@ public class XalanDebugger extends AbstractDebugger
 		tfi.setAttribute(TransformerFactoryImpl.FEATURE_OPTIMIZE, Boolean.FALSE);
 	}
 
-	public void addTransformer(Transformer transformer)
+	public void addTransformer(Transformer transformer, Map locations)
 	{
 		TransformerImpl transformerImpl = (TransformerImpl) transformer;
 		TraceManager trMgr = transformerImpl.getTraceManager();
 		try
 		{
+//			XalanPrintTraceListener printer = new XalanPrintTraceListener(new PrintWriter(System.err));
+//			printer.m_traceElements = true;
+//			printer.m_traceSelection = true;
+//			printer.m_traceTemplates = true;
+//			trMgr.addTraceListener(printer);
+			
 			XalanTraceListener traceListener = new XalanTraceListener(transformerImpl.getXPathContext().getVarStack(), this);
 			trMgr.addTraceListener(traceListener);
 		}

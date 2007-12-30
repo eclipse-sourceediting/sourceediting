@@ -17,12 +17,20 @@
             className="org.eclipse.wst.xsl.xalan.debugger.XalanDebugger"
             classpath="xalan-debugger.jar"
             id="org.eclipse.wst.xsl.xalan.debugger"
-            name="Xalan Debugger"
+            name="Xalan 2.5.1 or greater"
             processorTypeId="org.eclipse.wst.xsl.xalan.processorType">
       </debugger>
    </extension>
    <extension
          point="org.eclipse.wst.xsl.launching.processor">
+      <processor
+            classpath="xalan2.5.1.jar"
+            debuggerId="org.eclipse.wst.xsl.xalan.debugger"
+            id="org.eclipse.wst.xsl.launching.xalan.2_5_1"
+            label="Xalan 2.5.1"
+            processorTypeId="org.eclipse.wst.xsl.xalan.processorType"
+            supports="1.0">
+      </processor>
       <processor
             classpath="xalan2.7.0.jar;serializer2.7.0.jar"
             id="org.eclipse.wst.xsl.launching.xalan.2_7_0"

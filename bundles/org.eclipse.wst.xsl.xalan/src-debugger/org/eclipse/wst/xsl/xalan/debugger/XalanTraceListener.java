@@ -11,9 +11,7 @@
 package org.eclipse.wst.xsl.xalan.debugger;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Vector;
 
 import javax.xml.transform.TransformerException;
 
@@ -21,133 +19,112 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.xalan.templates.Constants;
 import org.apache.xalan.templates.ElemTemplateElement;
-import org.apache.xalan.templates.ElemVariable;
-import org.apache.xalan.templates.StylesheetRoot;
 import org.apache.xalan.trace.EndSelectionEvent;
+import org.apache.xalan.trace.ExtensionEvent;
 import org.apache.xalan.trace.GenerateEvent;
 import org.apache.xalan.trace.SelectionEvent;
 import org.apache.xalan.trace.TraceListenerEx2;
 import org.apache.xalan.trace.TracerEvent;
 import org.apache.xpath.VariableStack;
 import org.eclipse.wst.xsl.debugger.BreakPoint;
-import org.eclipse.wst.xsl.debugger.StyleFrame;
-import org.eclipse.wst.xsl.debugger.Variable;
 
-public class XalanTraceListener implements TraceListenerEx2
+public class XalanTraceListener implements TraceListenerEx2 //TraceListenerEx3
 {
 	private static final Log log = LogFactory.getLog(XalanTraceListener.class);
 
 	private final XalanDebugger debugger;
 	private final VariableStack varStack;
 	private boolean started;
-
-	public XalanTraceListener(VariableStack stack, XalanDebugger debugger)
+	
+	public XalanTraceListener(VariableStack varStack, XalanDebugger debugger)
 	{
 		this.debugger = debugger;
-		varStack = stack;
-	}
-
-	public void generated(GenerateEvent ev)
-	{
-		// TODO here we could build up the output tree into a string, and return to the UI if requested?
-	}
-
-	// These events are thrown when hitting xsl:when or xsl:if
-	public void selected(SelectionEvent ev) throws TransformerException
-	{
-	}
-
-	public void selectEnd(EndSelectionEvent ev) throws TransformerException
-	{
+		this.varStack = varStack;
 	}
 
 	public void trace(TracerEvent ev)
 	{
-		// log.debug("trace: "+ev);
-		// There is one XalanTraceListener for each stylesheet in the pipeline.
-		// So if this is the first trace event, we clear down the debugger's
-		// state from the previous transformation.
+		XalanStyleFrame styleFrame = null;
 		if (!started)
-		{
+		{// this is the root of the stack
 			started = true;
 			debugger.debuggerTransformStarted();
+			List globals = new ArrayList(); 
+			// TODO put back in
+			// List globals = getGlobals(el.getStylesheetRoot());
+			styleFrame = new XalanRootStyleFrame(ev.m_styleNode, varStack, globals);
+			debugger.pushStyleFrame(styleFrame);
 		}
-		StyleFrame styleFrame = pushStyleFrame(ev);
-		if (styleFrame == null)
-			return;
-		debugger.checkStopped();
-		BreakPoint breakpoint = new BreakPoint(styleFrame.getFilename(), styleFrame.getLine());
-		debugger.checkSuspended(styleFrame, breakpoint);
+		else if (ev.m_styleNode.getOwnerXSLTemplate() == ev.m_styleNode)
+		{// this is an xsl:template, so add to template stack
+			styleFrame = new XalanStyleFrame(debugger.peekStyleFrame(), ev.m_styleNode, varStack);
+			debugger.pushStyleFrame(styleFrame);
+		}
+		else if (ev.m_styleNode.getXSLToken() != Constants.ELEMNAME_TEXTLITERALRESULT)
+		{// add to current template element stack
+			styleFrame = (XalanStyleFrame) debugger.peekStyleFrame();
+			styleFrame.pushElement(ev.m_styleNode);
+		}
+		else
+		{
+			log.error(ev.m_styleNode.getLocalName());
+		}
+		check(styleFrame);
 	}
 
 	public void traceEnd(TracerEvent ev)
 	{
-		// log.debug("traceEnd: "+ev);
-		XalanStyleFrame styleFrame = popStyleFrame(ev);
-		debugger.checkStopped();
-		BreakPoint breakpoint = new BreakPoint(styleFrame.getFilename(), styleFrame.getEndLine());
-		debugger.checkSuspended(styleFrame, breakpoint);
-		// consistency check
-		log.debug(styleFrame.getFilename() + " " + styleFrame.getName() + " " + styleFrame.getLine() + " " + styleFrame.getEndLine());
-	}
-
-	private XalanStyleFrame pushStyleFrame(TracerEvent ev)
-	{
-		StyleFrame parent = debugger.peekStyleFrame();
-		XalanStyleFrame styleFrame;
-		if (parent == null)
-		{
-			List globals = getGlobals(ev.m_styleNode.getStylesheetRoot());
-			styleFrame = new XalanRootStyleFrame(parent, ev.m_styleNode, varStack, globals);
+		XalanStyleFrame styleFrame = (XalanStyleFrame) debugger.peekStyleFrame();
+		ElemTemplateElement tel = null;
+		if (ev.m_styleNode.getOwnerXSLTemplate() == ev.m_styleNode)
+		{// end of template, so remove from stack
+			tel = styleFrame.popElement();
+		}
+		else if (ev.m_styleNode.getXSLToken() != Constants.ELEMNAME_TEXTLITERALRESULT)
+		{// remove from current templates element stack
+			tel = styleFrame.popElement();
+		}
+		check(styleFrame);
+		if (ev.m_styleNode.getOwnerXSLTemplate() == ev.m_styleNode)
+		{// end of template, so remove from stack
+			debugger.popStyleFrame();
 		}
 		else
-			styleFrame = new XalanStyleFrame(parent, ev.m_styleNode, varStack);
-		debugger.pushStyleFrame(styleFrame);
-		return styleFrame;
-	}
-
-	private List getGlobals(StylesheetRoot root)
-	{
-		List vars = new ArrayList();
-		Vector composedVars = root.getVariablesAndParamsComposed();
-		int i = 0;
-		for (Iterator iter = composedVars.iterator(); iter.hasNext();)
-		{
-			ElemVariable variable = (ElemVariable) iter.next();
-			int token = variable.getXSLToken();
-			if ((token == Constants.ELEMNAME_PARAMVARIABLE || token == Constants.ELEMNAME_VARIABLE) && variable.getIsTopLevel())
+		{// because we don't get selectEnd events, we need to do this check
+			tel = styleFrame.peekElement();
+			// if the parent is a choose, move on to it
+			switch (tel.getXSLToken())
 			{
-				vars.add(new XalanVariable(varStack, Variable.GLOBAL_SCOPE, i, variable));
-				++i;
+				case Constants.ELEMNAME_CHOOSE:
+					styleFrame.popElement();
+					check(styleFrame);
 			}
 		}
-		return vars;
 	}
-
-	private XalanStyleFrame popStyleFrame(TracerEvent ev)
+	
+	private void check(XalanStyleFrame styleFrame)
 	{
-		ElemTemplateElement element = ev.m_styleNode;
-		String filename = element.getSystemId();
-		int line = element.getLineNumber();
-
-		// why the while loop? Because Xalan doesn't report xsl:when or xsl:if
-		// as TracerEvents
-		// ...so it is a workaround to make sure we get to the right frame
-		XalanStyleFrame styleFrame;
-		while ((styleFrame = (XalanStyleFrame) debugger.popStyleFrame()) != null)
+		debugger.checkStopped();
+		if (styleFrame!=null)
 		{
-			if (styleFrame.getFilename().equals(filename) && styleFrame.getLine() == line)
-			{
-				String name = element.getNodeName();
-				if (name.equals("param") || name.equals("variable"))
-				{
-					XalanStyleFrame parent = (XalanStyleFrame) styleFrame.getParent();
-					parent.addVariable((ElemVariable) element);
-				}
-				styleFrame.setEndLine(line);
-				return styleFrame;
-			}
+			BreakPoint breakpoint = new BreakPoint(styleFrame.getFilename(), styleFrame.getCurrentLine());
+			debugger.checkSuspended(styleFrame, breakpoint);
 		}
-		return null;
 	}
+
+	public void selected(SelectionEvent ev) throws TransformerException
+	{}
+
+	public void selectEnd(EndSelectionEvent ev) throws TransformerException
+	{}
+
+	public void generated(GenerateEvent ev)
+	{}
+
+	public void extension(ExtensionEvent ee)
+	{}
+
+	public void extensionEnd(ExtensionEvent ee)
+	{}
+
 }

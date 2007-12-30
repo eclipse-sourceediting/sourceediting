@@ -12,7 +12,10 @@ package org.eclipse.wst.xsl.xalan.debugger;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.xalan.templates.ElemCallTemplate;
 import org.apache.xalan.templates.ElemTemplate;
 import org.apache.xalan.templates.ElemTemplateElement;
@@ -25,36 +28,27 @@ import org.eclipse.wst.xsl.debugger.Variable;
 
 public class XalanStyleFrame extends StyleFrame
 {
+	private static final Log log = LogFactory.getLog(XalanStyleFrame.class);
+	
 	private final List localVariables = new ArrayList();
 	private final ElemTemplateElement element;
 	private final VariableStack varStack;
+	private final Stack elementStack = new Stack();
+	private int currentLine;
 
 	public XalanStyleFrame(StyleFrame parent, ElemTemplateElement element, VariableStack varStack)
 	{
 		super(parent);
 		this.element = element;
 		this.varStack = varStack;
+		pushElement(element);
 	}
-
-	
-	public int getColumn()
-	{
-		return element.getColumnNumber();
-	}
-
 	
 	public String getFilename()
 	{
-		return element.getSystemId();
+		return element.getStylesheet().getSystemId();
 	}
 
-	
-	public int getLine()
-	{
-		return element.getLineNumber();
-	}
-
-	
 	public String getName()
 	{
 		String name = element.getNodeName();
@@ -83,7 +77,6 @@ public class XalanStyleFrame extends StyleFrame
 		}
 		return name;
 	}
-
 	
 	public List getVariableStack()
 	{
@@ -92,7 +85,6 @@ public class XalanStyleFrame extends StyleFrame
 		fillWithGlobals(vars);
 		return vars;
 	}
-
 	
 	public Variable getVariable(String scope, int slotNumber)
 	{
@@ -110,7 +102,39 @@ public class XalanStyleFrame extends StyleFrame
 		Variable xvar = new XalanVariable(varStack, scope, localVariables.size(), variable);
 		localVariables.add(xvar);
 	}
+	
+	public Object getTemplate()
+	{
+		return element.getOwnerXSLTemplate();
+	}
+	
+	public int getCurrentLine()
+	{
+		return currentLine;
+	}
+	
+	public void pushElement(ElemTemplateElement e)
+	{
+		currentLine = e.getLineNumber();
+		elementStack.push(e);
+		log.debug("Pushed element "+e);
+	}
 
+	public ElemTemplateElement popElement()
+	{
+		ElemTemplateElement e = (ElemTemplateElement)elementStack.pop();
+		log.debug("Popped element "+e);
+		currentLine = e.getEndLineNumber();
+		return e;
+	}
+
+	public ElemTemplateElement peekElement()
+	{
+		if (elementStack.isEmpty())
+			return null;
+		return (ElemTemplateElement)elementStack.peek();
+	}
+	
 	private void fillWithLocals(List vars)
 	{
 		XalanStyleFrame frame = this;
