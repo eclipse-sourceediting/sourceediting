@@ -48,6 +48,7 @@ import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.eclipse.ui.views.navigator.ResourceComparator;
 import org.eclipse.wst.xsl.internal.debug.ui.XSLDebugUIPlugin;
+import org.eclipse.wst.xsl.internal.debug.ui.tabs.processor.InstallStandin;
 import org.eclipse.wst.xsl.internal.debug.ui.tabs.processor.JarContentProvider;
 import org.eclipse.wst.xsl.internal.debug.ui.tabs.processor.JarLabelProvider;
 import org.eclipse.wst.xsl.internal.debug.ui.tabs.processor.ProcessorMessages;
@@ -61,7 +62,7 @@ public class ProcessorLibraryBlock implements SelectionListener, ISelectionChang
 	protected static final String LAST_PATH_SETTING = "LAST_PATH_SETTING";
 	protected static final String LAST_WORKSPACE_PATH_SETTING = "LAST_WORKSPACE_PATH_SETTING";
 	protected static final String DIALOG_SETTINGS_PREFIX = "ProcessorLibraryBlock";
-	protected IProcessorInstall install;
+	protected InstallStandin install;
 	protected IProcessorType installType;
 	protected AddProcessorDialog addDialog = null;
 	protected TableViewer tableViewer;
@@ -156,9 +157,9 @@ public class ProcessorLibraryBlock implements SelectionListener, ISelectionChang
 		label.setLayoutData(gd);
 	}
 
-	public void initializeFrom(IProcessorInstall vm, IProcessorType type)
+	public void initializeFrom(InstallStandin standin, IProcessorType type)
 	{
-		install = vm;
+		install = standin;
 		installType = type;
 		if (install != null)
 			tableViewer.setInput(install);
@@ -180,9 +181,9 @@ public class ProcessorLibraryBlock implements SelectionListener, ISelectionChang
 		addDialog.updateStatusLine();
 	}
 
-	public void performApply(IProcessorInstall vm)
+	public void performApply(InstallStandin standin)
 	{
-		vm.setProcessorJars(install.getProcessorJars());
+		standin.setProcessorJars(install.getProcessorJars());
 	}
 
 	protected IProcessorInstall getVMInstall()

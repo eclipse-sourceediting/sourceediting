@@ -642,7 +642,7 @@ public class InstalledProcessorsBlock extends AbstractTableBlock implements ISel
 					case 2:
 						return install.getSupports();
 					case 3:
-						if (install.hasDebugger())
+						if (install.getDebugger() != null)
 						{
 							return install.getDebugger().getName();
 						}

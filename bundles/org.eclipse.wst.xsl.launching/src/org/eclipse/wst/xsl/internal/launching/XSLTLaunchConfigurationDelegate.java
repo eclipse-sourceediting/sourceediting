@@ -165,7 +165,7 @@ public class XSLTLaunchConfigurationDelegate extends JavaLaunchDelegate implemen
 		if (mode.equals(ILaunchManager.DEBUG_MODE))
 		{
 			final IProcessorInstall install = getProcessorInstall(configuration, ILaunchManager.RUN_MODE);
-			if (!install.hasDebugger())
+			if (install.getDebugger() == null)
 			{
 				final boolean[] result = new boolean[]
 				{ false };
@@ -177,11 +177,10 @@ public class XSLTLaunchConfigurationDelegate extends JavaLaunchDelegate implemen
 					{
 						String debuggingInstallId = LaunchingPlugin.getDefault().getPluginPreferences().getString(XSLLaunchConfigurationConstants.ATTR_DEFAULT_DEBUGGING_INSTALL_ID);
 						IProcessorInstall processor = XSLTRuntime.getProcessor(debuggingInstallId);
-						String debuggerName = processor.getDebugger().getName();
 
 						IWorkbenchWindow dw = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 						result[0] = MessageDialog.openQuestion(dw.getShell(), "XSLT Processor Debugger", "The " + install.getName() + " XSLT processor does not support debugging.\n"
-								+ "Would you like to use the default debugger " + debuggerName + " instead?");
+								+ "Would you like to debug using the default " + processor.getName() + " processor instead?");
 					}
 				});
 				return result[0];
@@ -242,7 +241,7 @@ public class XSLTLaunchConfigurationDelegate extends JavaLaunchDelegate implemen
 			String processorId = configuration.getAttribute(XSLLaunchConfigurationConstants.ATTR_PROCESSOR, "");
 			install = XSLTRuntime.getProcessor(processorId);
 		}
-		if (mode.equals(ILaunchManager.DEBUG_MODE) && !install.hasDebugger())
+		if (mode.equals(ILaunchManager.DEBUG_MODE) && install.getDebugger() != null)
 		{
 			String debuggingInstallId = LaunchingPlugin.getDefault().getPluginPreferences().getString(XSLLaunchConfigurationConstants.ATTR_DEFAULT_DEBUGGING_INSTALL_ID);
 			install = XSLTRuntime.getProcessor(debuggingInstallId);
@@ -304,7 +303,7 @@ public class XSLTLaunchConfigurationDelegate extends JavaLaunchDelegate implemen
 		if (ILaunchManager.DEBUG_MODE.equals(mode))
 		{
 			IProcessorInstall install = getProcessorInstall(configuration, mode);
-			if (install.hasDebugger())
+			if (install.getDebugger() != null)
 			{
 				IDebugger debugger = install.getDebugger();
 				String className = debugger.getClassName();
@@ -340,7 +339,7 @@ public class XSLTLaunchConfigurationDelegate extends JavaLaunchDelegate implemen
 		// add the various debuggers...
 
 		IProcessorInstall install = getProcessorInstall(configuration, mode);
-		if (ILaunchManager.DEBUG_MODE.equals(mode) && install.hasDebugger())
+		if (ILaunchManager.DEBUG_MODE.equals(mode) && install.getDebugger() != null)
 		{
 			IDebugger debugger = install.getDebugger();
 			// in dev, add the bin dir

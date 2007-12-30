@@ -48,8 +48,7 @@ import org.eclipse.wst.xsl.launching.XSLTRuntime;
 
 public class AddProcessorDialog extends StatusDialog
 {
-	private IProcessorInstall editedProcessor;
-	private final IProcessorInstall standinProcessor;
+	private final InstallStandin standinProcessor;
 	private final IProcessorType[] processorTypes;
 	private IProcessorType selectedProcessorType;
 	private ComboViewer processorTypeField;
@@ -74,17 +73,17 @@ public class AddProcessorDialog extends StatusDialog
 		}
 		processorTypes = types;
 		selectedProcessorType = install != null ? install.getProcessorType() : types[0];
+		InstallStandin standin = null;
 		if (install == null)
 		{
 			adding = true;
-			install = new InstallStandin(XSLTRuntime.createUniqueProcessorId(selectedProcessorType), "", selectedProcessorType.getId(), null, new IProcessorJar[0]);
+			standin = new InstallStandin(XSLTRuntime.createUniqueProcessorId(selectedProcessorType), "", selectedProcessorType.getId(), null, new IProcessorJar[0]);
 		}
 		else
 		{
-			editedProcessor = install;
-			install = new InstallStandin(install);
+			standin = new InstallStandin(install);
 		}
-		standinProcessor = install;
+		standinProcessor = standin;
 	}
 
 	@Override
@@ -354,11 +353,11 @@ public class AddProcessorDialog extends StatusDialog
 			setFieldValuesToProcessor(standinProcessor);
 			block.processorAdded(standinProcessor);
 		}
-		else
-			setFieldValuesToProcessor(editedProcessor);
+//		else
+//			setFieldValuesToProcessor((ProcessorInstall)editedProcessor);
 	}
 
-	protected void setFieldValuesToProcessor(IProcessorInstall processor)
+	protected void setFieldValuesToProcessor(InstallStandin processor)
 	{
 		processor.setName(processorNameField.getText());
 		processor.setProcessorTypeId(selectedProcessorType.getId());

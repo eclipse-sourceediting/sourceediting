@@ -18,7 +18,7 @@ public class InstallStandin extends ProcessorInstall
 {
 	public InstallStandin(IProcessorInstall install)
 	{
-		super(install.getId(), install.getName(), install.getProcessorTypeId(), install.getProcessorJars(), install.getDebugger() != null ? install.getDebugger().getId() : null, install
+		super(install.getId(), install.getName(), install.getProcessorType().getId(), install.getProcessorJars(), install.getDebugger() != null ? install.getDebugger().getId() : null, install
 				.getSupports(), install.isContributed());
 	}
 

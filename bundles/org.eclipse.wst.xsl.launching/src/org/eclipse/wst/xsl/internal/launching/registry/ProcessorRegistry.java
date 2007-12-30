@@ -153,7 +153,7 @@ public class ProcessorRegistry
 		List<IProcessorInstall> result = new ArrayList<IProcessorInstall>();
 		for (IProcessorInstall type : installs)
 		{
-			if (type.getProcessorTypeId().equals(id))
+			if (type.getProcessorType().getId().equals(id))
 				result.add(type);
 		}
 		return (IProcessorInstall[]) result.toArray(new IProcessorInstall[0]);

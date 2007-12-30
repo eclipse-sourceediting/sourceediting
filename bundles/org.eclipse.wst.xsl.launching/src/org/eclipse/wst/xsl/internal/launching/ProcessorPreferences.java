@@ -127,9 +127,9 @@ public class ProcessorPreferences
 		Element element = doc.createElement("processor");
 		element.setAttribute("id", install.getId());
 		element.setAttribute("label", install.getName());
-		element.setAttribute("type", install.getProcessorTypeId());
+		element.setAttribute("type", install.getProcessorType().getId());
 		element.setAttribute("supports", install.getSupports());
-		element.setAttribute("debuggerId", install.hasDebugger() ? install.getDebugger().getId() : null);
+		element.setAttribute("debuggerId", install.getDebugger() != null ? install.getDebugger().getId() : null);
 		element.appendChild(jarsAsElement(doc, install.getProcessorJars()));
 		return element;
 	}
