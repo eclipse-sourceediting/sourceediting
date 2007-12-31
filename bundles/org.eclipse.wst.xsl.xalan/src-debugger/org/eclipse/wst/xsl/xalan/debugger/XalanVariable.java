@@ -20,17 +20,20 @@ import org.apache.xpath.objects.XNodeSet;
 import org.apache.xpath.objects.XObject;
 import org.eclipse.wst.xsl.debugger.Variable;
 
-public class XalanVariable extends Variable
+public class XalanVariable extends Variable implements Comparable
 {
 	private final Log log = LogFactory.getLog(XalanVariable.class);
 	private final ElemVariable elemVariable;
 	private final VariableStack varStack;
+	private int stackFrame;
 
 	public XalanVariable(VariableStack varStack, String scope, int slotNumber, ElemVariable elemVariable)
 	{
-		super(getName(elemVariable), scope, slotNumber);
+		super(getName(elemVariable), scope, slotNumber+varStack.getStackFrame());
 		this.elemVariable = elemVariable;
 		this.varStack = varStack;
+		// get the stack frame at this current point in time
+		this.stackFrame = varStack.getStackFrame();
 	}
 
 	private static String getName(ElemVariable elemVariable)
@@ -51,7 +54,6 @@ public class XalanVariable extends Variable
 
 	public String getValue()
 	{
-		log.debug("Getting value for " + getName() + " in scope " + getScope() + " with index " + getSlotNumber());
 		String value = "???";
 		try
 		{
@@ -61,18 +63,18 @@ public class XalanVariable extends Variable
 				int xalanType = xobject.getType();
 				switch (xalanType)
 				{
-					case XObject.CLASS_BOOLEAN:
-					case XObject.CLASS_NUMBER:
-					case XObject.CLASS_STRING:
-					case XObject.CLASS_UNKNOWN:
-						value = xobject.toString();
+					case XObject.CLASS_UNRESOLVEDVARIABLE:
+						value = "";
 						break;
 					case XObject.CLASS_NODESET:
 						value = ((XNodeSet) xobject).xstr().toString();
 						break;
-					case XObject.CLASS_UNRESOLVEDVARIABLE:
+					case XObject.CLASS_BOOLEAN:
+					case XObject.CLASS_NUMBER:
+					case XObject.CLASS_STRING:
+					case XObject.CLASS_UNKNOWN:
 					default:
-						value = "";
+						value = xobject.toString();
 						break;
 				}
 			}
@@ -81,18 +83,27 @@ public class XalanVariable extends Variable
 		{
 			e.printStackTrace();
 		}
+//		value = getScope()+"."+getSlotNumber()+")"+getName();	
+		log.debug(getScope()+"."+getSlotNumber()+")"+getName() + "=" + value);
 		return value;
 	}
 
 	private XObject getXObject() throws TransformerException
 	{
-		XObject xvalue = null;
-		int index = elemVariable.getIndex();
-		int frame = varStack.getStackFrame();
+		XObject xvalue;
 		if (elemVariable.getIsTopLevel())
-			xvalue = varStack.elementAt(index);
+			xvalue = varStack.elementAt(slotNumber);
 		else
-			xvalue = varStack.getLocalVariable(index, frame);
+			xvalue = varStack.getLocalVariable(elemVariable.getIndex(), stackFrame);
 		return xvalue;
+	}
+
+	public int compareTo(Object arg0)
+	{
+		XalanVariable xvar = (XalanVariable)arg0;
+		int comp = xvar.stackFrame - stackFrame;
+		if (comp == 0)
+			comp = slotNumber - xvar.slotNumber;
+		return comp;
 	}
 }

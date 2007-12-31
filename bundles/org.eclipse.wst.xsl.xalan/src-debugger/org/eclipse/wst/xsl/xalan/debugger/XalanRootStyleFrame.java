@@ -10,23 +10,42 @@
  *******************************************************************************/
 package org.eclipse.wst.xsl.xalan.debugger;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
-import org.apache.xalan.templates.ElemTemplateElement;
+import org.apache.xalan.templates.ElemVariable;
+import org.apache.xalan.templates.StylesheetRoot;
+import org.apache.xalan.trace.TracerEvent;
 import org.apache.xpath.VariableStack;
+import org.eclipse.wst.xsl.debugger.Variable;
 
 public class XalanRootStyleFrame extends XalanStyleFrame
 {
-	private final List globals;
+	private final List globals = new ArrayList();
 
-	public XalanRootStyleFrame(ElemTemplateElement element, VariableStack varStack, List globals)
+	public XalanRootStyleFrame(TracerEvent event)
 	{
-		super(null, element, varStack);
-		this.globals = globals;
+		super(null, event);
+		fillGlobals(event);
 	}
 
-	public List getGlobals()
+	protected List getGlobals()
 	{
 		return globals;
+	}
+	
+	private void fillGlobals(TracerEvent event)
+	{
+		VariableStack vs = event.m_processor.getXPathContext().getVarStack();
+	    StylesheetRoot sr = event.m_styleNode.getStylesheetRoot();
+	    Vector vars = sr.getVariablesAndParamsComposed();
+	    int i = vars.size();
+	    while (--i >= 0)
+		{
+			ElemVariable variable = (ElemVariable) vars.elementAt(i);
+			XalanVariable xvar = new XalanVariable(vs,Variable.GLOBAL_SCOPE,i,variable);
+			globals.add(xvar);
+		}
 	}
 }

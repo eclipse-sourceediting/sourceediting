@@ -42,7 +42,7 @@ public class XalanDebugger extends AbstractDebugger
 //			printer.m_traceTemplates = true;
 //			trMgr.addTraceListener(printer);
 			
-			XalanTraceListener traceListener = new XalanTraceListener(transformerImpl.getXPathContext().getVarStack(), this);
+			XalanTraceListener traceListener = new XalanTraceListener(this);
 			trMgr.addTraceListener(traceListener);
 		}
 		catch (TooManyListenersException e)

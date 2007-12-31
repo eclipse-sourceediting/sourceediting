@@ -10,22 +10,19 @@
  *******************************************************************************/
 package org.eclipse.wst.xsl.xalan.debugger;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.xml.transform.TransformerException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.xalan.templates.Constants;
 import org.apache.xalan.templates.ElemTemplateElement;
+import org.apache.xalan.templates.ElemVariable;
 import org.apache.xalan.trace.EndSelectionEvent;
 import org.apache.xalan.trace.ExtensionEvent;
 import org.apache.xalan.trace.GenerateEvent;
 import org.apache.xalan.trace.SelectionEvent;
 import org.apache.xalan.trace.TraceListenerEx2;
 import org.apache.xalan.trace.TracerEvent;
-import org.apache.xpath.VariableStack;
 import org.eclipse.wst.xsl.debugger.BreakPoint;
 
 public class XalanTraceListener implements TraceListenerEx2 //TraceListenerEx3
@@ -33,13 +30,11 @@ public class XalanTraceListener implements TraceListenerEx2 //TraceListenerEx3
 	private static final Log log = LogFactory.getLog(XalanTraceListener.class);
 
 	private final XalanDebugger debugger;
-	private final VariableStack varStack;
 	private boolean started;
 	
-	public XalanTraceListener(VariableStack varStack, XalanDebugger debugger)
+	public XalanTraceListener(XalanDebugger debugger)
 	{
 		this.debugger = debugger;
-		this.varStack = varStack;
 	}
 
 	public void trace(TracerEvent ev)
@@ -49,25 +44,22 @@ public class XalanTraceListener implements TraceListenerEx2 //TraceListenerEx3
 		{// this is the root of the stack
 			started = true;
 			debugger.debuggerTransformStarted();
-			List globals = new ArrayList(); 
-			// TODO put back in
-			// List globals = getGlobals(el.getStylesheetRoot());
-			styleFrame = new XalanRootStyleFrame(ev.m_styleNode, varStack, globals);
+			styleFrame = new XalanRootStyleFrame(ev);
 			debugger.pushStyleFrame(styleFrame);
 		}
 		else if (ev.m_styleNode.getOwnerXSLTemplate() == ev.m_styleNode)
 		{// this is an xsl:template, so add to template stack
-			styleFrame = new XalanStyleFrame(debugger.peekStyleFrame(), ev.m_styleNode, varStack);
+			styleFrame = new XalanStyleFrame(debugger.peekStyleFrame(), ev);
 			debugger.pushStyleFrame(styleFrame);
 		}
 		else if (ev.m_styleNode.getXSLToken() != Constants.ELEMNAME_TEXTLITERALRESULT)
 		{// add to current template element stack
 			styleFrame = (XalanStyleFrame) debugger.peekStyleFrame();
-			styleFrame.pushElement(ev.m_styleNode);
+			styleFrame.pushElement(ev);
 		}
 		else
 		{
-			log.error(ev.m_styleNode.getLocalName());
+			log.debug("Skipped push for element "+ev.m_styleNode.getLocalName());
 		}
 		check(styleFrame);
 	}
@@ -75,14 +67,17 @@ public class XalanTraceListener implements TraceListenerEx2 //TraceListenerEx3
 	public void traceEnd(TracerEvent ev)
 	{
 		XalanStyleFrame styleFrame = (XalanStyleFrame) debugger.peekStyleFrame();
-		ElemTemplateElement tel = null;
 		if (ev.m_styleNode.getOwnerXSLTemplate() == ev.m_styleNode)
-		{// end of template, so remove from stack
-			tel = styleFrame.popElement();
+		{// remove from current template element stack
+			styleFrame.popElement();
 		}
 		else if (ev.m_styleNode.getXSLToken() != Constants.ELEMNAME_TEXTLITERALRESULT)
-		{// remove from current templates element stack
-			tel = styleFrame.popElement();
+		{// remove from current template element stack
+			styleFrame.popElement();
+		}
+		else
+		{
+			log.debug("Skipped pop for element "+ev.m_styleNode.getLocalName());
 		}
 		check(styleFrame);
 		if (ev.m_styleNode.getOwnerXSLTemplate() == ev.m_styleNode)
@@ -91,9 +86,9 @@ public class XalanTraceListener implements TraceListenerEx2 //TraceListenerEx3
 		}
 		else
 		{// because we don't get selectEnd events, we need to do this check
-			tel = styleFrame.peekElement();
+			TracerEvent tel = styleFrame.peekElement();
 			// if the parent is a choose, move on to it
-			switch (tel.getXSLToken())
+			switch (tel.m_styleNode.getXSLToken())
 			{
 				case Constants.ELEMNAME_CHOOSE:
 					styleFrame.popElement();

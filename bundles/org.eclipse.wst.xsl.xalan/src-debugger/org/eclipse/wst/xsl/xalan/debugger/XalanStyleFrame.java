@@ -11,7 +11,11 @@
 package org.eclipse.wst.xsl.xalan.debugger;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 
 import org.apache.commons.logging.Log;
@@ -20,6 +24,7 @@ import org.apache.xalan.templates.ElemCallTemplate;
 import org.apache.xalan.templates.ElemTemplate;
 import org.apache.xalan.templates.ElemTemplateElement;
 import org.apache.xalan.templates.ElemVariable;
+import org.apache.xalan.trace.TracerEvent;
 import org.apache.xml.utils.QName;
 import org.apache.xpath.VariableStack;
 import org.apache.xpath.XPath;
@@ -29,32 +34,34 @@ import org.eclipse.wst.xsl.debugger.Variable;
 public class XalanStyleFrame extends StyleFrame
 {
 	private static final Log log = LogFactory.getLog(XalanStyleFrame.class);
-	
-	private final List localVariables = new ArrayList();
-	private final ElemTemplateElement element;
-	private final VariableStack varStack;
-	private final Stack elementStack = new Stack();
+
+	private final Map varNames;
+	private final Stack eventStack = new Stack();
+	final TracerEvent event;
 	private int currentLine;
 
-	public XalanStyleFrame(StyleFrame parent, ElemTemplateElement element, VariableStack varStack)
+	public XalanStyleFrame(StyleFrame parent, TracerEvent event)
 	{
 		super(parent);
-		this.element = element;
-		this.varStack = varStack;
-		pushElement(element);
+		this.event = event;
+		if (parent != null)
+			this.varNames = new HashMap(((XalanStyleFrame)parent).varNames);
+		else
+			this.varNames = new HashMap();
+		pushElement(event);
 	}
-	
+
 	public String getFilename()
 	{
-		return element.getStylesheet().getSystemId();
+		return event.m_styleNode.getStylesheet().getSystemId();
 	}
 
 	public String getName()
 	{
-		String name = element.getNodeName();
-		if (element instanceof ElemTemplate)
+		String name = event.m_styleNode.getNodeName();
+		if (event.m_styleNode instanceof ElemTemplate)
 		{
-			ElemTemplate et = (ElemTemplate) element;
+			ElemTemplate et = (ElemTemplate) event.m_styleNode;
 			QName q = et.getName();
 			if (q != null)
 			{
@@ -66,9 +73,9 @@ public class XalanStyleFrame extends StyleFrame
 				name += " match=\"" + xp.getPatternString() + "\"";
 			}
 		}
-		else if (element instanceof ElemCallTemplate)
+		else if (event.m_styleNode instanceof ElemCallTemplate)
 		{
-			ElemCallTemplate et = (ElemCallTemplate) element;
+			ElemCallTemplate et = (ElemCallTemplate) event.m_styleNode;
 			QName q = et.getName();
 			if (q != null)
 			{
@@ -77,74 +84,90 @@ public class XalanStyleFrame extends StyleFrame
 		}
 		return name;
 	}
-	
+
 	public List getVariableStack()
 	{
 		List vars = new ArrayList();
-		fillWithLocals(vars);
-		fillWithGlobals(vars);
+		vars.addAll(getLocals());
+		vars.addAll(getGlobals());
 		return vars;
 	}
-	
+
 	public Variable getVariable(String scope, int slotNumber)
 	{
-		List vars = new ArrayList();
 		if (Variable.GLOBAL_SCOPE.equals(scope))
-			fillWithGlobals(vars);
+		{
+			List vars = getGlobals();
+			for (Iterator iterator = vars.iterator(); iterator.hasNext();)
+			{
+				Variable var = (Variable) iterator.next();
+				if (var.getSlotNumber() == slotNumber)
+					return var;
+			}
+		}
 		else if (Variable.LOCAL_SCOPE.equals(scope))
-			fillWithLocals(vars);
-		return (Variable) vars.get(slotNumber);
+		{
+			List vars = getLocals();
+			for (Iterator iterator = vars.iterator(); iterator.hasNext();)
+			{
+				Variable var = (Variable) iterator.next();
+				if (var.getSlotNumber() == slotNumber)
+					return var;
+			}
+		}
+		return null;
 	}
 
-	public void addVariable(ElemVariable variable)
-	{
-		String scope = variable.getIsTopLevel() ? Variable.GLOBAL_SCOPE : Variable.LOCAL_SCOPE;
-		Variable xvar = new XalanVariable(varStack, scope, localVariables.size(), variable);
-		localVariables.add(xvar);
-	}
-	
-	public Object getTemplate()
-	{
-		return element.getOwnerXSLTemplate();
-	}
-	
 	public int getCurrentLine()
 	{
 		return currentLine;
 	}
-	
-	public void pushElement(ElemTemplateElement e)
+
+	public void pushElement(TracerEvent e)
 	{
-		currentLine = e.getLineNumber();
-		elementStack.push(e);
-		log.debug("Pushed element "+e);
+		currentLine = e.m_styleNode.getLineNumber();
+		eventStack.push(e);
+		log.debug("Pushed element " + e);
 	}
 
-	public ElemTemplateElement popElement()
+	public TracerEvent popElement()
 	{
-		ElemTemplateElement e = (ElemTemplateElement)elementStack.pop();
-		log.debug("Popped element "+e);
-		currentLine = e.getEndLineNumber();
+		TracerEvent e = (TracerEvent) eventStack.pop();
+		log.debug("Popped element " + e);
+		currentLine = e.m_styleNode.getEndLineNumber();
+
+		ElemTemplateElement element = e.m_styleNode;
+		String name = element.getNodeName();
+		if (name.equals("param") || name.equals("variable"))
+			addVariable((ElemVariable) e.m_styleNode);
+
 		return e;
 	}
 
-	public ElemTemplateElement peekElement()
+	public TracerEvent peekElement()
 	{
-		if (elementStack.isEmpty())
+		if (eventStack.isEmpty())
 			return null;
-		return (ElemTemplateElement)elementStack.peek();
-	}
-	
-	private void fillWithLocals(List vars)
-	{
-		XalanStyleFrame frame = this;
-		while ((frame = (XalanStyleFrame) frame.getParent()) != null)
-		{
-			vars.addAll(frame.localVariables);
-		}
+		return (TracerEvent) eventStack.peek();
 	}
 
-	private void fillWithGlobals(List vars)
+	private void addVariable(ElemVariable variable)
+	{
+		String scope = variable.getIsTopLevel() ? Variable.GLOBAL_SCOPE : Variable.LOCAL_SCOPE;
+		VariableStack vs = event.m_processor.getXPathContext().getVarStack();
+		Variable xvar = new XalanVariable(vs, scope, variable.getIndex(), variable);
+		varNames.put(variable.getName(),xvar);
+	}
+
+	private List getLocals()
+	{
+		List locals = new ArrayList(varNames.values());
+		// sort by slotNumber
+		Collections.sort(locals);
+		return locals;
+	}
+
+	protected List getGlobals()
 	{
 		XalanStyleFrame frame = this;
 		while ((frame = (XalanStyleFrame) frame.getParent()) != null)
@@ -152,22 +175,9 @@ public class XalanStyleFrame extends StyleFrame
 			if (frame instanceof XalanRootStyleFrame)
 			{
 				XalanRootStyleFrame root = (XalanRootStyleFrame) frame;
-				vars.addAll(root.getGlobals());
-				break;
+				return root.getGlobals();
 			}
 		}
-
-		// if (template != null)
-		// {
-		// Stylesheet sheet = template.getStylesheet();
-		// for (int i = 0; i < sheet.getVariableOrParamCount(); i++)
-		// {
-		// ElemVariable variable = sheet.getVariableOrParam(i);
-		// Variable var = new
-		// XalanVariable(this,variable.getName().getLocalName(),Variable.GLOBAL_SCOPE,i,variable);
-		// vars.add(var);
-		// }
-		// }
-
+		return null;
 	}
 }
