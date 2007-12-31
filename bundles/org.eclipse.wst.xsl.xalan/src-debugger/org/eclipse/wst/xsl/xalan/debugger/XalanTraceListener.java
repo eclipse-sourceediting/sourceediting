@@ -15,8 +15,6 @@ import javax.xml.transform.TransformerException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.xalan.templates.Constants;
-import org.apache.xalan.templates.ElemTemplateElement;
-import org.apache.xalan.templates.ElemVariable;
 import org.apache.xalan.trace.EndSelectionEvent;
 import org.apache.xalan.trace.ExtensionEvent;
 import org.apache.xalan.trace.GenerateEvent;

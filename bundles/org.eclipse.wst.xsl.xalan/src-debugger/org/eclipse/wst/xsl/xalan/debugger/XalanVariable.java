@@ -84,7 +84,7 @@ public class XalanVariable extends Variable implements Comparable
 			e.printStackTrace();
 		}
 //		value = getScope()+"."+getSlotNumber()+")"+getName();	
-		log.debug(getScope()+"."+getSlotNumber()+")"+getName() + "=" + value);
+//		log.debug(getScope()+"."+getSlotNumber()+")"+getName() + "=" + value);
 		return value;
 	}
 

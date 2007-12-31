@@ -77,7 +77,7 @@
 		<shortcut
 			class="org.eclipse.wst.xsl.internal.debug.ui.XSLLaunchShortcut"
 			id="org.eclipse.wst.xsl.debug.ui.launchshortcut"
-			label="XSL Transformation" modes="run, debug">
+			label="XSL Transformation" modes="run, debug, profile">
 			<contextualLaunch>
 				<enablement>
 					<with variable="selection">

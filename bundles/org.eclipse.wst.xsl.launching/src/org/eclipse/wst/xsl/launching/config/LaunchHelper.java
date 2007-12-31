@@ -373,6 +373,7 @@ public class LaunchHelper
 		}
 		catch (IOException e)
 		{
+			LaunchingPlugin.log(e);
 		}
 		finally
 		{
@@ -384,6 +385,7 @@ public class LaunchHelper
 				}
 				catch (IOException e)
 				{
+					LaunchingPlugin.log(e);
 				}
 			}
 		}

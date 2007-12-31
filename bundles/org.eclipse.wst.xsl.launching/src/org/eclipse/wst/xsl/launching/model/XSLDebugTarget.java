@@ -14,6 +14,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.ConnectException;
 import java.net.MalformedURLException;
 import java.net.Socket;
 import java.net.URL;
@@ -55,6 +56,9 @@ public class XSLDebugTarget extends XSLDebugElement implements IDebugTarget
 	private final byte[] VALUE_MAP_LOCK = new byte[0];
 	private final byte[] WRITE_LOCK = new byte[0];
 
+	private final int CONNECT_ATTEMPTS = 10;
+	private final int CONNECT_WAIT = 1000;
+
 	private final IProcess process;
 	private final ILaunch launch;
 	private final XSLThread thread;
@@ -85,15 +89,11 @@ public class XSLDebugTarget extends XSLDebugElement implements IDebugTarget
 
 		try
 		{
-			this.requestSocket = new Socket("localhost", launchHelper.getRequestPort());
+			this.requestSocket = attemptConnect(launchHelper.getRequestPort());
 			this.requestWriter = new PrintWriter(requestSocket.getOutputStream());
 			this.requestReader = new BufferedReader(new InputStreamReader(requestSocket.getInputStream()));
-			this.eventSocket = new Socket("localhost", launchHelper.getEventPort());
+			this.eventSocket = attemptConnect(launchHelper.getEventPort());
 			this.eventReader = new BufferedReader(new InputStreamReader(eventSocket.getInputStream()));
-		}
-		catch (UnknownHostException e)
-		{
-			abort("Unable to connect to debugger", e);
 		}
 		catch (IOException e)
 		{
@@ -106,6 +106,33 @@ public class XSLDebugTarget extends XSLDebugElement implements IDebugTarget
 		this.eventDispatch.schedule();
 
 		DebugPlugin.getDefault().getBreakpointManager().addBreakpointListener(this);
+	}
+	
+	private Socket attemptConnect(int port) throws CoreException
+	{
+		Socket socket = null;
+		for(int i=0;i<CONNECT_ATTEMPTS;i++)
+		{	
+			try
+			{
+				socket = new Socket("localhost",port);
+			}
+			catch (ConnectException e)
+			{}
+			catch (IOException e)
+			{}
+			if (socket != null)
+				break;
+			try
+			{
+				Thread.sleep(CONNECT_WAIT);
+			}
+			catch (InterruptedException e)
+			{}
+		}
+		if (socket == null)
+			throw new CoreException(new Status(Status.ERROR, LaunchingPlugin.PLUGIN_ID, "Could not connect to socket "+port+" after "+CONNECT_ATTEMPTS+" attempts"));
+		return socket;
 	}
 
 	public IProcess getProcess()
