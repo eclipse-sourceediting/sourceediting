@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: XSL Launching Plug-in
+Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.eclipse.wst.xsl.launching;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.eclipse.wst.xsl.internal.launching.LaunchingPlugin
@@ -21,3 +21,4 @@ Bundle-ClassPath: .
 Export-Package: org.eclipse.wst.xsl.launching,
  org.eclipse.wst.xsl.launching.config,
  org.eclipse.wst.xsl.launching.model
+Bundle-Localization: plugin

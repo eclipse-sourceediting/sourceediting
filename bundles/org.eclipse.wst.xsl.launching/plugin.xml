@@ -16,13 +16,13 @@
             sourcePathComputerId="org.eclipse.wst.xsl.launching.sourcePathComputer"
 			delegate="org.eclipse.wst.xsl.internal.launching.XSLTLaunchConfigurationDelegate"
 			id="org.eclipse.wst.xsl.launching.launchConfigurationType"
-			modes="run, debug" name="XSL" />
+			modes="run, debug" name="%launchConfigurationType.name.0" />
 	</extension>
 	
    <extension
          point="org.eclipse.debug.core.sourceLocators">
       <sourceLocator
-            name="XSLT Source Lookup Director"
+            name="%sourceLocator.name.0"
             class="org.eclipse.wst.xsl.internal.launching.XSLTSourceLookupDirector"
             id="org.eclipse.wst.xsl.launching.sourceLookupDirector">
       </sourceLocator>
@@ -76,7 +76,7 @@
      <processorType
             featureProperties="W3CProcessorFeatures.properties"
             id="org.eclipse.wst.xsl.launching.processorType.jreDefault"
-            label="JRE Default"
+            label="%processorType.label.0"
             outputProperties="W3COutputProperties.properties" />
 	 </extension>
 
@@ -85,7 +85,7 @@
         <processor
               classpath=""
               id="org.eclipse.wst.xsl.launching.jre.default"
-              label="JRE Instance Default"
+              label="%processor.label.0"
               processorTypeId="org.eclipse.wst.xsl.launching.processorType.jreDefault"
               supports="1.0"/>
 	 </extension>
