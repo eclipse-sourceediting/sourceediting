@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.wst.xsl.feature"
       label="%featureName"
-      version="1.0.0"
+      version="1.0.0.qualifier"
       provider-name="%providerName">
 
    <description>
@@ -47,12 +47,5 @@
          download-size="0"
          install-size="0"
          version="0.0.0"/>
-
-   <plugin
-         id="org.eclipse.wst.xsl.saxon"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
 
 </feature>

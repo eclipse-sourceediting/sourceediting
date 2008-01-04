@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Xalan Plug-in
 Bundle-SymbolicName: org.eclipse.wst.xsl.xalan;singleton:=true
-Bundle-Version: 1.0.0
+Bundle-Version: 1.0.0.qualifier
 Require-Bundle: org.eclipse.wst.xsl.debug
 Bundle-ClassPath: xalan2.7.0.jar,
  xalan-debugger.jar
