@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.2"?>
 <plugin>
-	<extension-point id="invoke" name="XSLT Processor Invoker"
+	<extension-point id="invoke" name="%extension-point.name.0"
 		schema="schema/invoke.exsd" />
-	<extension-point id="processorType" name="XSLT Processor Type"
+	<extension-point id="processorType" name="%extension-point.name.1"
 		schema="schema/processorType.exsd" />
-	<extension-point id="processor" name="XSLT Processor"
+	<extension-point id="processor" name="%extension-point.name.2"
 		schema="schema/processor.exsd" />
-	<extension-point id="debugger" name="XSLT Debugger" schema="schema/debugger.exsd"/>
+	<extension-point id="debugger" name="%extension-point.name.3" schema="schema/debugger.exsd"/>
 
 	<extension
 		point="org.eclipse.debug.core.launchConfigurationTypes">

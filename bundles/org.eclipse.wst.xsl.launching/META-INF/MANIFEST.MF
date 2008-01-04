@@ -22,3 +22,4 @@ Export-Package: org.eclipse.wst.xsl.launching,
  org.eclipse.wst.xsl.launching.config,
  org.eclipse.wst.xsl.launching.model
 Bundle-Localization: plugin
+Bundle-Vendor: %Bundle-Vendor.0

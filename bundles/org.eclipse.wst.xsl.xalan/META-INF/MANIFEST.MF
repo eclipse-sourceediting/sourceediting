@@ -8,3 +8,4 @@ Bundle-ClassPath: xalan2.7.0.jar,
  xalan-debugger.jar
 Bundle-RequiredExecutionEnvironment: J2SE-1.4
 Bundle-Localization: plugin
+Bundle-Vendor: %Bundle-Vendor.0
