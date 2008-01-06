@@ -190,12 +190,12 @@ public class XSLTRuntime
 		return getProcessorTypeRegistry().getProcessorType(id);
 	}
 
-	public static IProcessorInvokerDescriptor getProcessorInvoker(String invokerId)
+	public static IProcessorInvoker getProcessorInvoker(String invokerId)
 	{
 		return getInvokerRegistry().getProcessorInvoker(invokerId);
 	}
 
-	public static IProcessorInvokerDescriptor[] getProcessorInvokers()
+	public static IProcessorInvoker[] getProcessorInvokers()
 	{
 		return getInvokerRegistry().getProcessorInvokers();
 	}

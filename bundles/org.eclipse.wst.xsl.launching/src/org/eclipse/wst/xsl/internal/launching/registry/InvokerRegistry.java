@@ -13,11 +13,11 @@ package org.eclipse.wst.xsl.internal.launching.registry;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.wst.xsl.launching.IProcessorInvokerDescriptor;
+import org.eclipse.wst.xsl.launching.IProcessorInvoker;
 
 public class InvokerRegistry
 {
-	private final Map<String, IProcessorInvokerDescriptor> invokers = new HashMap<String, IProcessorInvokerDescriptor>();
+	private final Map<String, IProcessorInvoker> invokers = new HashMap<String, IProcessorInvoker>();
 
 	public InvokerRegistry()
 	{
@@ -25,17 +25,17 @@ public class InvokerRegistry
 		registryReader.addConfigs(this);
 	}
 
-	public IProcessorInvokerDescriptor getProcessorInvoker(String id)
+	public IProcessorInvoker getProcessorInvoker(String id)
 	{
-		return (IProcessorInvokerDescriptor) invokers.get(id);
+		return (IProcessorInvoker) invokers.get(id);
 	}
 
-	public IProcessorInvokerDescriptor[] getProcessorInvokers()
+	public IProcessorInvoker[] getProcessorInvokers()
 	{
-		return (IProcessorInvokerDescriptor[]) invokers.values().toArray(new IProcessorInvokerDescriptor[0]);
+		return (IProcessorInvoker[]) invokers.values().toArray(new IProcessorInvoker[0]);
 	}
 
-	public void addInvokerDescriptor(IProcessorInvokerDescriptor desc)
+	public void addInvokerDescriptor(IProcessorInvoker desc)
 	{
 		invokers.put(desc.getId(), desc);
 	}
