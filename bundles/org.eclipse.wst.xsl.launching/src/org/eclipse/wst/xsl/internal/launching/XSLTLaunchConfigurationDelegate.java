@@ -192,7 +192,7 @@ public class XSLTLaunchConfigurationDelegate extends JavaLaunchDelegate implemen
 	@Override
 	public IVMRunner getVMRunner(ILaunchConfiguration configuration, String mode) throws CoreException
 	{
-		// always get the run mode when it is debug mode...
+		// comment this out in order to get java debugging as well as XSL debugging
 //		if (ILaunchManager.DEBUG_MODE.equals(mode))
 //			return super.getVMRunner(configuration, ILaunchManager.RUN_MODE);
 		return super.getVMRunner(configuration, mode);
