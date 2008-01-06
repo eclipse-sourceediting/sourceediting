@@ -10,11 +10,9 @@
  *******************************************************************************/
 package org.eclipse.wst.xsl.launching;
 
-public interface IProcessorInvokerDescriptor
+public interface IProcessorInvoker
 {
 	String getId();
-
-	String getBundleId();
 
 	String getInvokerClassName();
 
