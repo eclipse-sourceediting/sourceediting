@@ -11,15 +11,5 @@
             transformerFactory="net.sf.saxon.TransformerFactoryImpl">
       </processorType>
    </extension>
-   <extension
-         point="org.eclipse.wst.xsl.launching.debugger">
-      <debugger
-            className="org.eclipse.wst.xsl.xalan.debugger.SaxonDebugger"
-            classpath="saxon-debugger.jar"
-            id="org.eclipse.wst.xsl.saxon.debugger"
-            name="Saxon Debugger"
-            processorTypeId="org.eclipse.wst.xsl.saxon.processorType">
-      </debugger>
-   </extension>
 
 </plugin>

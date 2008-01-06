@@ -3,6 +3,5 @@
 	<classpathentry kind="src" path="src-debugger"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.4"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
-	<classpathentry kind="lib" path="C:/Documents and Settings/Doug/workspace-xslt/uk.co.chasetechnology.xsl.saxon8_8/saxon8.jar" sourcepath="C:/Documents and Settings/Doug/workspace-xslt/uk.co.chasetechnology.xsl.saxon8_8/saxon8_8src.zip"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
