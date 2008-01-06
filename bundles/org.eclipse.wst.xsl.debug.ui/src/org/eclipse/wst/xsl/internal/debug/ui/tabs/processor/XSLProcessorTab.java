@@ -15,7 +15,7 @@ import org.eclipse.debug.ui.ILaunchConfigurationTab;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.wst.xsl.internal.debug.ui.XSLLaunchConfigurationTab;
-import org.eclipse.wst.xsl.launching.IProcessorInvokerDescriptor;
+import org.eclipse.wst.xsl.launching.IProcessorInvoker;
 import org.eclipse.wst.xsl.launching.XSLLaunchConfigurationConstants;
 import org.eclipse.wst.xsl.launching.XSLTRuntime;
 
@@ -49,7 +49,7 @@ public class XSLProcessorTab extends XSLLaunchConfigurationTab
 	{
 		super.performApply(configuration);
 		// TODO make a new block to allow user to select the invoker
-		IProcessorInvokerDescriptor invoker = XSLTRuntime.getProcessorInvokers()[0];
+		IProcessorInvoker invoker = XSLTRuntime.getProcessorInvokers()[0];
 		configuration.setAttribute(XSLLaunchConfigurationConstants.INVOKER_DESCRIPTOR, invoker.getId());
 	}
 
