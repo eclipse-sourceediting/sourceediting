@@ -24,14 +24,6 @@
    <extension
          point="org.eclipse.wst.xsl.launching.processor">
       <processor
-            classpath="xalan2.5.1.jar"
-            debuggerId="org.eclipse.wst.xsl.xalan.debugger"
-            id="org.eclipse.wst.xsl.launching.xalan.2_5_1"
-            label="%processor.label.0"
-            processorTypeId="org.eclipse.wst.xsl.xalan.processorType"
-            supports="1.0">
-      </processor>
-      <processor
             classpath="xalan2.7.0.jar;serializer2.7.0.jar"
             id="org.eclipse.wst.xsl.launching.xalan.2_7_0"
             label="%processor.label.1"
