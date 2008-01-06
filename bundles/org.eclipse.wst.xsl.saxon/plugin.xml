@@ -6,7 +6,7 @@
       <processorType
             featureProperties="SaxonFeatures.properties"
             id="org.eclipse.wst.xsl.saxon.processorType"
-            label="Saxon"
+            label="%processorType.label.0"
             outputProperties="SaxonOutputProperties.properties"
             transformerFactory="net.sf.saxon.TransformerFactoryImpl">
       </processorType>
